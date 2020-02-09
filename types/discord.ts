@@ -9,7 +9,7 @@ export interface DiscordPayload {
 	t?: string
 }
 
-export interface DiscordBotGateway {
+export interface DiscordBotGatewayData {
 	/** The WSS URL that can be used for connecting to the gateway. */
 	url: string
 	/** The recommended number of shards to use when connecting. */
@@ -35,7 +35,7 @@ export enum GatewayOpcode {
 	Identify,
 	StatusUpdate,
 	VoiceStateUpdate,
-	Resume,
+	Resume = 6,
 	Reconnect,
 	RequestGuildMembers,
 	InvalidSession,
@@ -153,4 +153,43 @@ export enum JSONErrorCode {
 	InvalidAPIVersion = 50041,
 	ReactionBlocked = 90001,
 	ResourceOverloaded = 130000
+}
+
+export interface Properties {
+	$os: string;
+	$browser: string;
+	$device: string;
+}
+
+export interface Timestamps {
+	start?: number;
+	end?: number;
+}
+
+export interface Emoji {
+	name: string;
+	id?: string;
+	animated?: boolean;
+}
+
+export interface Activity {
+	name: string;
+	type: number;
+	url?: string;
+	created_at: number;
+	timestamps: Timestamps;
+	details?: string;
+}
+
+export enum StatusType {
+	Online = 'online',
+	DoNotDisturb = 'dnd',
+	Idle = 'idle',
+	Invisible = 'invisible',
+	Offline = 'offline'
+}
+
+export interface Status {
+	afk: boolean;
+	status: StatusType;
 }
