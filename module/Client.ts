@@ -13,7 +13,7 @@ import {
 // import { BufReader } from "https://deno.land/std/io/bufio.ts"
 // import { TextProtoReader } from "https://deno.land/std/textproto/mod.ts"
 import { blue, green, red, yellow } from "https://deno.land/std/fmt/colors.ts"
-import { keepDiscordWebsocketAlive } from "./websocket";
+import { keepDiscordWebsocketAlive } from "./websocket.ts";
 
 class Client {
   /** The bot's token. This should never be used by end users. It is meant to be used internally to make requests to the Discord API. */
