@@ -24,3 +24,31 @@ export interface DiscordBotGateway {
 		reset_after: number
 	}
 }
+
+export enum OpCode {
+	Dispatch = 0,
+	Heartbeat,
+	Identify,
+	StatusUpdate,
+	VoiceStateUpdate,
+	Resume,
+	Reconnect,
+	RequestGuildMembers,
+	InvalidSession,
+	Hello,
+	HeartbeatACK
+}
+
+export enum GatewayCloseEvent {
+	UnknownError = 4000,
+	UnknownOpcode,
+	DecodeError,
+	NotAuthenticated,
+	AuthenticationFailed,
+	AlreadyAuthenticated,
+	InvalidSeq = 4007,
+	RateLimited,
+	SessionTimeout,
+	InvalidShard,
+	ShardingRequired
+}
