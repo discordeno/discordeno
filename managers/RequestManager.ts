@@ -1,6 +1,6 @@
 import Client from "../module/Client.ts";
 
-class RequestHandler {
+class RequestManager {
 	client: Client
 	token: string
 
@@ -28,4 +28,4 @@ class RequestHandler {
 	}
 }
 
-export default RequestHandler
+export default RequestManager
