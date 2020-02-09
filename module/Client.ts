@@ -12,8 +12,8 @@ import {
 // import { encode } from "https://deno.land/std/strings/mod.ts"
 // import { BufReader } from "https://deno.land/std/io/bufio.ts"
 // import { TextProtoReader } from "https://deno.land/std/textproto/mod.ts"
-import { blue, green, red, yellow } from "https://deno.land/std/fmt/colors.ts"
 import { keepDiscordWebsocketAlive, updatePreviousSequenceNumber } from "./websocket.ts";
+import { logGreen, logRed, logYellow, logBlue } from "../utils/logger.ts";
 
 class Client {
   /** The bot's token. This should never be used by end users. It is meant to be used internally to make requests to the Discord API. */
@@ -37,7 +37,7 @@ class Client {
     // Open a WS with the url from discord.
     const sock = await connectWebSocket(data.url);
     console.log(sock)
-    console.log(green("ws connected! (type 'close' to quit)"));
+    logGreen("ws connected! (type 'close' to quit)");
 
     for await (const msg of sock.receive()) {
       if (typeof msg === "string") {
@@ -45,15 +45,15 @@ class Client {
           const json = JSON.parse(msg)
           this.handleDiscordPayload(json, sock)
         } catch {
-          console.log(red(`Invalid JSON String send by discord: ${msg}`))
+          logRed(`Invalid JSON String send by discord: ${msg}`)
         }
-        console.log(yellow("< " + msg));
+        logYellow("< " + msg);
       } else if (isWebSocketPingEvent(msg)) {
-        console.log(blue("< ping"));
+        logBlue("< ping");
       } else if (isWebSocketPongEvent(msg)) {
-        console.log(blue("< pong"));
+        logBlue("< pong");
       } else if (isWebSocketCloseEvent(msg)) {
-        console.log(red(`closed: code=${msg.code}, reason=${msg.reason}`));
+        logRed(`closed: code=${msg.code}, reason=${msg.reason}`);
       }
     }
 
