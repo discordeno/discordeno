@@ -28,3 +28,129 @@ export interface DiscordBotGateway {
 export interface DiscordHeartbeatPayload {
 	heartbeat_interval: number
 }
+
+export enum GatewayOpcode {
+	Dispatch = 0,
+	Heartbeat,
+	Identify,
+	StatusUpdate,
+	VoiceStateUpdate,
+	Resume,
+	Reconnect,
+	RequestGuildMembers,
+	InvalidSession,
+	Hello,
+	HeartbeatACK
+}
+
+export enum GatewayCloseEventCode {
+	UnknownError = 4000,
+	UnknownOpcode,
+	DecodeError,
+	NotAuthenticated,
+	AuthenticationFailed,
+	AlreadyAuthenticated,
+	InvalidSeq = 4007,
+	RateLimited,
+	SessionTimeout,
+	InvalidShard,
+	ShardingRequired
+}
+
+export enum VoiceOpcode {
+	Identify,
+	SelectProtocol,
+	Ready,
+	Heartbeat,
+	SessionDescription,
+	Speaking,
+	HeartbeatACK,
+	Resume,
+	Hello,
+	Resumed,
+	ClientDisconnect = 13
+}
+
+export enum VoiceCloseEventCode {
+	UnknownOpcode = 4001,
+	NotAuthenticated = 4003,
+	AuthenticationFailed,
+	AlreadyAuthenticated,
+	SessionNoLongerValid,
+	SessionTimeout = 4009,
+	ServerNotFound = 4011,
+	UnknownProtocol,
+	Disconnected = 4014,
+	VoiceServerCrashed,
+	UnknownEncryptionMode
+}
+
+export enum HttpResponseCode {
+	Ok = 200,
+	Created,
+	NoContent = 204,
+	NotModified = 304,
+	BadRequest = 400,
+	Unauthorized = 401,
+	Forbidden = 403,
+	NotFound,
+	MethodNotAllowed,
+	TooManyRequests = 429,
+	GatewayUnavailable = 502,
+	// ServerError left untyped because it's 5xx.
+}
+
+export enum JSONErrorCode {
+	UnknownAccount = 10001,
+	UnknownApplication,
+	UnknownChannel,
+	UnknownGuild,
+	UnknownIntegration,
+	UnknownInvite,
+	UnknownMember,
+	UnknownMessge,
+	UnknownOverwrite,
+	UnknownProvider,
+	UnknownRole,
+	UnknownToken = 10012,
+	UnknownUser,
+	UnknownEmoji,
+	UnknownWebhook,
+	BotsCannotUse = 20001,
+	OnlyBotsCanUse,
+	MaxGuildsReached = 30001,
+	MaxFriendsReached,
+	MaxPinsReached,
+	MaxGuildRolesReached = 30005,
+	MaxReactionsReached = 30010,
+	MaxGuildChannelsReached = 30013,
+	MaxInvitesReached = 30016,
+	Unathorized = 40001,
+	UserIsBannedFromGuild = 40007,
+	MissingAccess = 50001,
+	InvalidAccountType = 50002,
+	CannotExecuteOnDMChannel,
+	WidgetDisabled,
+	CannotEditMessageByAnotherUser,
+	CannotSendEmptyMessage,
+	CannotSendMessageToUser,
+	CannotSendMessageInVoiceChannel,
+	ChannelVerificationTooHigh,
+	OAuth2ApplicationNoBot,
+	OAuth2ApplicationLimitReached,
+	InvalidOAuthState,
+	MissingPermissions,
+	InvalidAuthenticationToken,
+	NoteIsTooLong,
+	TooFewOrTooManyMessagesToDelete,
+	MessageCanOnlyBePinnedInParentChannel = 50019,
+	InviteCodeTakenOrInvalid,
+	CannotExecuteOnSystemMessage,
+	InvalidOAuth2AccessToken,
+	MessageProvidedTooOldToBulkDelet = 50034,
+	InvalidFormBody,
+	InviteAcceptedToGuildApplicationBotNotIn,
+	InvalidAPIVersion = 50041,
+	ReactionBlocked = 90001,
+	ResourceOverloaded = 130000
+}
