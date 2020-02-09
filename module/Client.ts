@@ -13,7 +13,7 @@ import {
 // import { BufReader } from "https://deno.land/std/io/bufio.ts"
 // import { TextProtoReader } from "https://deno.land/std/textproto/mod.ts"
 import { blue, green, red, yellow } from "https://deno.land/std/fmt/colors.ts"
-import { keepDiscordWebsocketAlive } from "./websocket.ts";
+import { keepDiscordWebsocketAlive, updatePreviousSequenceNumber } from "./websocket.ts";
 
 class Client {
   /** The bot's token. This should never be used by end users. It is meant to be used internally to make requests to the Discord API. */
@@ -65,6 +65,10 @@ class Client {
     switch (data.op) {
       case 10: // Initial Heartbeat
         keepDiscordWebsocketAlive(socket, (data.d as DiscordHeartbeatPayload).heartbeat_interval, data.s)
+        break
+      case 11:
+        updatePreviousSequenceNumber(data.s)
+        break
     }
   }
 

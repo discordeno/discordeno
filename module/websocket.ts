@@ -1,15 +1,17 @@
 import { WebSocket } from "https://deno.land/std/ws/mod.ts";
 
-export const keepDiscordWebsocketAlive = (socket: WebSocket, millesecondsInterval: number, payload: number | null = null) => {
-	let previousSequenceNumber = payload
+let previousSequenceNumber: number | null = null
 
+export const keepDiscordWebsocketAlive = (socket: WebSocket, millesecondsInterval: number, payload: number | null = null) => {
 	setInterval(() => {
-		const response = await socket.send(JSON.stringify({
+		socket.send(JSON.stringify({
 			op: 1,
 			d: previousSequenceNumber
 		}))
 
-		console.log(response)
-
 	}, millesecondsInterval)
+}
+
+export const updatePreviousSequenceNumber = (sequence: number | null = null) => {
+  previousSequenceNumber = sequence
 }
