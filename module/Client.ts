@@ -6,7 +6,8 @@ import {
   connectWebSocket,
   isWebSocketCloseEvent,
   isWebSocketPingEvent,
-  isWebSocketPongEvent
+  isWebSocketPongEvent,
+  WebSocket
 } from "https://deno.land/std/ws/mod.ts";
 // import { encode } from "https://deno.land/std/strings/mod.ts"
 // import { BufReader } from "https://deno.land/std/io/bufio.ts"
@@ -42,7 +43,7 @@ class Client {
       if (typeof msg === "string") {
         try {
           const json = JSON.parse(msg)
-          this.handleDiscordPayload(json)
+          this.handleDiscordPayload(json, sock)
         } catch {
           console.log(red(`Invalid JSON String send by discord: ${msg}`))
         }
@@ -60,10 +61,10 @@ class Client {
     this.spawnShards(data.shards);
   }
 
-  handleDiscordPayload(data: DiscordPayload) {
+  handleDiscordPayload(data: DiscordPayload, socket: WebSocket) {
     switch (data.op) {
       case 10: // Initial Heartbeat
-        keepDiscordWebsocketAlive((data.d as DiscordHeartbeatPayload).heartbeat_interval, data.s)
+        keepDiscordWebsocketAlive(socket, (data.d as DiscordHeartbeatPayload).heartbeat_interval, data.s)
     }
   }
 
@@ -74,3 +75,4 @@ class Client {
 }
 
 export default Client;
+
