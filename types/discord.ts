@@ -24,3 +24,7 @@ export interface DiscordBotGateway {
 		reset_after: number
 	}
 }
+
+export interface DiscordHeartbeatPayload {
+	heartbeat_interval: number
+}
