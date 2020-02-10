@@ -2,7 +2,7 @@ import Client from "../module/Client"
 import { endpoints } from "../constants/discord"
 import { formatImageURL } from "../utils/cdn"
 
-interface CreateGuildPayload {
+export interface CreateGuildPayload {
 	/** The guild id */
 	id: string
 	/** The guild name 2-100 characters */
@@ -63,7 +63,7 @@ interface CreateGuildPayload {
 	preferred_locale: string
 }
 
-interface Guild {
+export interface Guild {
 	/** The guild id */
 	id: string
 	/** The guild name 2-100 characters */
