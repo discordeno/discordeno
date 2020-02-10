@@ -7,6 +7,7 @@ export const baseEndpoints = {
 export const endpoints = {
 	GATEWAY_BOT: `${baseEndpoints.BASE_URL}/gateway/bot`,
 	GUILD_BANNER: (id: string, icon: string) => `${baseEndpoints.CDN_URL}/banners/${id}/${icon}`,
+	GUILD_CHANNELS: (id: string) => `/guilds/${id}/channels`,
 	GUILD_ICON: (id: string, icon: string) => `${baseEndpoints.CDN_URL}/icons/${id}/${icon}`,
 	GUILD_SPLASH: (id: string, icon: string) => `${baseEndpoints.CDN_URL}/splashes/${id}/${icon}`
 }

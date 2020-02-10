@@ -1,6 +1,7 @@
 import { endpoints } from "../constants/discord.ts";
 import RequestManager from "../managers/RequestManager.ts";
-import { DiscordBotGateway, DiscordPayload, DiscordHeartbeatPayload } from "../types/discord.ts";
+import { DiscordBotGateway, DiscordPayload,
+  DiscordHeartbeatPayload } from "../types/discord.ts";
 import ShardingManager from "../managers/ShardingManager.ts";
 import {
   connectWebSocket,
@@ -12,7 +13,8 @@ import {
 // import { encode } from "https://deno.land/std/strings/mod.ts"
 // import { BufReader } from "https://deno.land/std/io/bufio.ts"
 // import { TextProtoReader } from "https://deno.land/std/textproto/mod.ts"
-import { keepDiscordWebsocketAlive, updatePreviousSequenceNumber } from "./websocket.ts";
+import { keepDiscordWebsocketAlive,
+  updatePreviousSequenceNumber } from "./websocket.ts";
 import { logGreen, logRed, logYellow, logBlue } from "../utils/logger.ts";
 
 class Client {
@@ -36,16 +38,16 @@ class Client {
     )) as DiscordBotGateway;
     // Open a WS with the url from discord.
     const sock = await connectWebSocket(data.url);
-    console.log(sock)
+    console.log(sock);
     logGreen("ws connected! (type 'close' to quit)");
 
     for await (const msg of sock.receive()) {
       if (typeof msg === "string") {
         try {
-          const json = JSON.parse(msg)
-          this.handleDiscordPayload(json, sock)
+          const json = JSON.parse(msg);
+          this.handleDiscordPayload(json, sock);
         } catch {
-          logRed(`Invalid JSON String send by discord: ${msg}`)
+          logRed(`Invalid JSON String send by discord: ${msg}`);
         }
         logYellow("< " + msg);
       } else if (isWebSocketPingEvent(msg)) {
@@ -64,11 +66,15 @@ class Client {
   handleDiscordPayload(data: DiscordPayload, socket: WebSocket) {
     switch (data.op) {
       case 10: // Initial Heartbeat
-        keepDiscordWebsocketAlive(socket, (data.d as DiscordHeartbeatPayload).heartbeat_interval, data.s)
-        break
+        keepDiscordWebsocketAlive(
+          socket,
+          (data.d as DiscordHeartbeatPayload).heartbeat_interval,
+          data.s
+        );
+        break;
       case 11:
-        updatePreviousSequenceNumber(data.s)
-        break
+        updatePreviousSequenceNumber(data.s);
+        break;
     }
   }
 
@@ -79,4 +85,3 @@ class Client {
 }
 
 export default Client;
-
