@@ -1,12 +1,12 @@
-import Client from "../module/Client.ts";
+import Client from '../module/Client.ts'
 
 class RequestManager {
-  client: Client;
-  token: string;
+  client: Client
+  token: string
 
   constructor(client: Client, token: string) {
-    this.client = client;
-    this.token = token;
+    this.client = client
+    this.token = token
   }
 
   async get(url: string, payload?: unknown) {
@@ -18,15 +18,14 @@ class RequestManager {
     // let attempts = 0
     const headers = {
       Authorization: this.token,
-      "User-Agent":
-        `DiscordBot (https://github.com/skillz4killz/discordeno, 0.0.1)`
-    };
+      'User-Agent': `DiscordBot (https://github.com/skillz4killz/discordeno, 0.0.1)`
+    }
 
-    console.log("payload", payload);
+    console.log('payload', payload)
 
-    const data = await fetch(url, { headers }).then(res => res.json());
-    return data;
+    const data = await fetch(url, { headers }).then(res => res.json())
+    return data
   }
 }
 
-export default RequestManager;
+export default RequestManager

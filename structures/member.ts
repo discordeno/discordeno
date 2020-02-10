@@ -1,3 +1,3 @@
 export const createMember = (data: unknown) => {
-  console.log(data);
-};
+  console.log(data)
+}

@@ -1,4 +1,3 @@
-class ShardingManager extends Map {
-}
+class ShardingManager extends Map {}
 
-export default ShardingManager;
+export default ShardingManager
