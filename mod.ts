@@ -3,7 +3,6 @@ import { configs } from "./configs.ts"
 import { StatusType, GatewayOpcode } from "./types/discord.ts";
 
 (async function () {
-    console.log({ configs });
     const client = new Client({
         token: configs.token
     });
