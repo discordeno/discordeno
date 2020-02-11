@@ -9,10 +9,6 @@ import {
   isWebSocketPongEvent,
   WebSocket
 } from 'https://deno.land/std/ws/mod.ts'
-// import { encode } from "https://deno.land/std/strings/mod.ts"
-// import { BufReader } from "https://deno.land/std/io/bufio.ts"
-// import { TextProtoReader } from "https://deno.land/std/textproto/mod.ts"
-import { blue, green, red, yellow } from 'https://deno.land/std/fmt/colors.ts';
 import Gateway from './gateway.ts'
 import { ClientOptions, FulfilledClientOptions } from '../types/options.ts'
 import { CollectedMessageType } from '../types/message-type.ts'

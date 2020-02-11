@@ -7,10 +7,10 @@ class RequestManager {
 	client: Client;
 	token: string;
 
-	constructor(client: Client, token: string) {
-		this.client = client
-		this.token = token
-	}
+  constructor(client: Client, token: string) {
+    this.client = client
+    this.token = token
+  }
 
 	async get(url: string) {
 		const headers = this.getDiscordHeaders();

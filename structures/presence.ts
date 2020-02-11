@@ -42,3 +42,7 @@ export interface ClientStatusPayload {
     /** The user's status set for an active web (browser, bot account) application session */
     web?: StatusType;
 }
+
+export const createPresence = (data: unknown) => {
+  console.log(data)
+}

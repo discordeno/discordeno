@@ -1,18 +1,7 @@
 {
   "deno.enable": true,
+  "editor.formatOnSave": true,
   "[typescript]": {
-    "editor.defaultFormatter": "axetroy.vscode-deno"
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "axetroy.vscode-deno"
-  },
-  "[javascript]": {
-    "editor.defaultFormatter": "axetroy.vscode-deno"
-  },
-  "[javascriptreact]": {
-    "editor.defaultFormatter": "axetroy.vscode-deno"
-  },
-  "[markdown]": {
     "editor.defaultFormatter": "axetroy.vscode-deno"
   },
   "[json]": {
