@@ -1,4 +1,4 @@
-import Client from '../module/Client'
+import Client from '../module/client'
 import { endpoints } from '../constants/discord'
 import { formatImageURL } from '../utils/cdn'
 import { create_role } from './role'
