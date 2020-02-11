@@ -3,7 +3,7 @@ import { RequestMethod } from "../types/fetch";
 
 type RequestBody = string | Blob | ArrayBufferView | ArrayBuffer | FormData | URLSearchParams | null | undefined;
 
-class RequestManager {
+export default class DiscordDiscordRequestManager {
 	client: Client;
 	token: string;
 
@@ -43,5 +43,3 @@ class RequestManager {
 		};
 	}
 }
-
-export default RequestManager
