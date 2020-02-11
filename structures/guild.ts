@@ -129,13 +129,118 @@ interface Guild {
   /** The preferred local of this guild only set if guild has the DISCOVERABLE feature, defaults to en-US */
   preferredLocale: string
   /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
-  iconURL(): string | undefined
+  iconURL(size?: ImageSize, format?: ImageFormats): string | undefined
   /** The full URL of the splash from Discords CDN. Undefined if no splash is set. */
-  splashURL(): string | undefined
+  splashURL(size?: ImageSize, format?: ImageFormats): string | undefined
   /** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
-  bannerURL(): string | undefined
+  bannerURL(size?: ImageSize, format?: ImageFormats): string | undefined
   /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
   createChannel(name: string, options: ChannelCreateOptions): Promise<Channel>
+  /** Create an emoji in the server. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. */
+  createEmoji(name: string, image: string, options: CreateEmojisOptions): Promise<Emoji>
+  /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */
+  editEmoji(id: string, options: EditEmojisOptions): Promise<Emoji>
+  /** Delete the given emoji. Requires the MANAGE_EMOJIS permission. Returns 204 No Content on success. */
+  deleteEmoji(id: string, reason?: string): Promise<void>
+  /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
+  createRole(options: CreateRoleOptions): Promise<Role>
+  /** Edi a guild role. Requires the MANAGE_ROLES permission. */
+  editRole(id: string, options: CreateRoleOptions): Promise<Role>
+  /** Delete a guild role. Requires the MANAGE_ROLES permission. */
+  deleteRole(id: string): Promise<void>
+  /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
+  getPruneCount(days: number): Promise<number>
+  /** Begin pruning all members in the given time period */
+  pruneMembers(days: number): Promise<void>
+  getAuditLogs(options: GetAuditLogsOptions): Promise<AuditLog>
+
+  leaveVoiceChannel(): Promise<void>
+}
+
+export interface GetAuditLogsOptions {
+  /** Filter the logs for actions made by this user. */
+  user_id?: string
+  /** The type of audit log. */
+  action_type?: AuditLogType
+  /** Filter the logs before a certain log entry. */
+  before?: string
+  /** How many entries are returned. Between 1-100. Default 50. */
+  limit?: number
+}
+
+export type AuditLogType =
+  | `GUILD_UPDATE`
+  | `CHANNEL_CREATE`
+  | `CHANNEL_UPDATE`
+  | `CHANNEL_DELETE`
+  | `CHANNEL_OVERWRITE_CREATE`
+  | `CHANNEL_OVERWRITE_UPDATE`
+  | `CHANNEL_OVERWRITE_DELETE`
+  | `MEMBER_KICK`
+  | `MEMBER_PRUNE`
+  | `MEMBER_BAN_ADD`
+  | `MEMBER_BAN_REMOVE`
+  | `MEMBER_UPDATE`
+  | `MEMBER_ROLE_UPDATE`
+  | `MEMBER_MOVE`
+  | `MEMBER_DISCONNECT`
+  | `BOT_ADD`
+  | `ROLE_CREATE`
+  | `ROLE_UPDATE`
+  | `ROLE_DELETE`
+  | `INVITE_CREATE`
+  | `INVITE_UPDATE`
+  | `INVITE_DELETE`
+  | `WEBHOOK_CREATE`
+  | `WEBHOOK_UPDATE`
+  | `WEBHOOK_DELETE`
+  | `EMOJI_CREATE`
+  | `EMOJI_UPDATE`
+  | `EMOJI_DELETE`
+  | `MESSAGE_DELETE`
+  | `MESSAGE_BULK_DELETE`
+  | `MESSAGE_PIN`
+  | `MESSAGE_UNPIN`
+  | `INTEGRATION_CREATE`
+  | `INTEGRATION_UPDATE`
+  | `INTEGRATION_DELETE`
+
+export enum AuditLogs {
+  GUILD_UPDATE = 1,
+  CHANNEL_CREATE = 10,
+  CHANNEL_UPDATE,
+  CHANNEL_DELETE,
+  CHANNEL_OVERWRITE_CREATE,
+  CHANNEL_OVERWRITE_UPDATE,
+  CHANNEL_OVERWRITE_DELETE,
+  MEMBER_KICK = 20,
+  MEMBER_PRUNE,
+  MEMBER_BAN_ADD,
+  MEMBER_BAN_REMOVE,
+  MEMBER_UPDATE,
+  MEMBER_ROLE_UPDATE,
+  MEMBER_MOVE,
+  MEMBER_DISCONNECT,
+  BOT_ADD,
+  ROLE_CREATE = 30,
+  ROLE_UPDATE,
+  ROLE_DELETE,
+  INVITE_CREATE = 40,
+  INVITE_UPDATE,
+  INVITE_DELETE,
+  WEBHOOK_CREATE = 50,
+  WEBHOOK_UPDATE,
+  WEBHOOK_DELETE,
+  EMOJI_CREATE = 60,
+  EMOJI_UPDATE,
+  EMOJI_DELETE,
+  MESSAGE_DELETE = 72,
+  MESSAGE_BULK_DELETE,
+  MESSAGE_PIN,
+  MESSAGE_UNPIN,
+  INTEGRATION_CREATE = 80,
+  INTEGRATION_UPDATE,
+  INTEGRATION_DELETE
 }
 
 export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048
@@ -246,6 +351,34 @@ export interface ChannelCreateOptions {
   parent_id?: string
   /** Whether the channel is nsfw */
   nsfw?: boolean
+  /** The reason to add in the Audit Logs. */
+  reason?: string
+}
+
+export interface CreateEmojisOptions {
+  /** The roles for which this emoji will be whitelisted. Only the users with one of these roles can use this emoji. */
+  roles: string[]
+  /** The reason to have in the Audit Logs. */
+  reason: string
+}
+
+export interface EditEmojisOptions {
+  /** The name of the emoji */
+  name: string
+  /** The roles for which this emoji will be whitelisted. Only the users with one of these roles can use this emoji. */
+  roles: string[]
+}
+
+export interface CreateRoleOptions {
+  name?: string
+  permissions?: Permission[]
+  color?: number
+  hoist?: boolean
+  mentionable?: boolean
+}
+
+export interface PrunePayload {
+  pruned: number
 }
 
 export const createGuild = (data: CreateGuildPayload, client: Client) => {
@@ -280,27 +413,81 @@ export const createGuild = (data: CreateGuildPayload, client: Client) => {
     premiumTier: data.premium_tier,
     premiumSubscriptionCount: data.premium_subscription_count,
     preferredLocale: data.preferred_locale,
-    iconURL: (size: ImageSize = 128, format?: ImageFormats) =>
+    iconURL: (size, format) =>
       data.icon ? formatImageURL(endpoints.GUILD_ICON(data.id, data.icon), size, format) : undefined,
-    splashURL: (size: ImageSize = 128, format?: ImageFormats) =>
+    splashURL: (size, format) =>
       data.splash ? formatImageURL(endpoints.GUILD_SPLASH(data.id, data.splash), size, format) : undefined,
-    bannerURL: (size: ImageSize = 128, format?: ImageFormats) =>
+    bannerURL: (size, format) =>
       data.banner ? formatImageURL(endpoints.GUILD_BANNER(data.id, data.banner), size, format) : undefined,
-    createChannel: (name: string, options?: ChannelCreateOptions) => {
+    createChannel: (name, options) => {
       // TODO: Check if the bot has `MANAGE_CHANNELS` permission before making a channel
       return client.RequestManager.post(endpoints.GUILD_CHANNELS(data.id), {
         name,
         type: options?.type ? ChannelTypes[options.type] : undefined,
         permission_overwrites: options?.permission_overwrites
           ? options.permission_overwrites.map(perm => ({
+              ...perm,
               allow: perm.allow.map(p => Permissions[p]),
-              deny: perm.deny.map(p => Permissions[p]),
-              ...perm
+              deny: perm.deny.map(p => Permissions[p])
             }))
           : undefined,
         ...options
       })
-    }
+    },
+    createEmoji: (name, image, options) => {
+      // TODO: Check if the bot has `MANAGE_EMOJIS` permission
+      return client.RequestManager.post(endpoints.GUILD_EMOJIS(data.id), {
+        ...options,
+        name,
+        image
+      })
+    },
+    editEmoji: (id, options) => {
+      // TODO: check if the bot has `MANAGE_EMOJIS` permission
+      return client.RequestManager.patch(endpoints.GUILD_EMOJI(data.id, id), {
+        name: options.name,
+        roles: options.roles
+      })
+    },
+    deleteEmoji: (id, reason) => {
+      // TODO: check if the bot has `MANAGE_EMOJIS` permission
+      return client.RequestManager.delete(endpoints.GUILD_EMOJI(data.id, id), { reason })
+    },
+    createRole: async options => {
+      // TODO: check if the bot has the `MANAGE_ROLES` permission.
+      const role = await client.RequestManager.post(endpoints.GUILD_ROLES(data.id), {
+        ...options,
+        permissions: options.permissions?.map(perm => Permissions[perm])
+      })
+      // TODO: cache this role
+
+      return role
+    },
+    editRole: (id, options) => {
+      return client.RequestManager.patch(endpoints.GUILD_ROLE(data.id, id), options)
+    },
+    deleteRole: id => {
+      return client.RequestManager.delete(endpoints.GUILD_ROLE(data.id, id))
+    },
+    getPruneCount: async days => {
+      if (days < 1) throw `The number of days to count prune for must be 1 or more.`
+      // TODO: check if the bot has `KICK_MEMBERS` permission
+      const result = (await client.RequestManager.get(endpoints.GUILD_PRUNE(data.id), { days })) as PrunePayload
+      return result.pruned
+    },
+    pruneMembers: days => {
+      if (days < 1) throw `The number of days must be 1 or more.`
+      // TODO: check if the bot has `KICK_MEMBERS` permission.
+      return client.RequestManager.post(endpoints.GUILD_PRUNE(data.id), { days })
+    },
+    getAuditLogs: options => {
+      // TODO: check if the bot has VIEW_AUDIT_LOGS permission
+      return client.RequestManager.get(endpoints.GUILD_AUDIT_LOGS(data.id), {
+        ...options,
+        limit: options.limit && options.limit >= 1 && options.limit <= 100 ? options.limit : 50
+      })
+    },
+    leaveVoiceChannel: () => {}
   }
 
   return guild
