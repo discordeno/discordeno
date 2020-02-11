@@ -9,20 +9,20 @@ export interface DiscordPayload {
   t?: string
 }
 
-export interface DiscordBotGateway {
-  /** The WSS URL that can be used for connecting to the gateway. */
-  url: string
-  /** The recommended number of shards to use when connecting. */
-  shards: number
-  /** Info on the current start limit. */
-  session_start_limit: {
-    /** The total number of session starts the current user is allowed. */
-    total: number
-    /** The remaining number of session starts the current user is allowed. */
-    remaining: number
-    /** Milliseconds left until limit is reset. */
-    reset_after: number
-  }
+export interface DiscordBotGatewayData {
+	/** The WSS URL that can be used for connecting to the gateway. */
+	url: string
+	/** The recommended number of shards to use when connecting. */
+	shards: number
+	/** Info on the current start limit. */
+	session_start_limit: {
+		/** The total number of session starts the current user is allowed. */
+		total: number
+		/** The remaining number of session starts the current user is allowed. */
+		remaining: number
+		/** Milliseconds left until limit is reset. */
+		reset_after: number
+	}
 }
 
 export interface DiscordHeartbeatPayload {
@@ -30,17 +30,17 @@ export interface DiscordHeartbeatPayload {
 }
 
 export enum GatewayOpcode {
-  Dispatch = 0,
-  Heartbeat,
-  Identify,
-  StatusUpdate,
-  VoiceStateUpdate,
-  Resume,
-  Reconnect,
-  RequestGuildMembers,
-  InvalidSession,
-  Hello,
-  HeartbeatACK
+	Dispatch = 0,
+	Heartbeat,
+	Identify,
+	StatusUpdate,
+	VoiceStateUpdate,
+	Resume = 6,
+	Reconnect,
+	RequestGuildMembers,
+	InvalidSession,
+	Hello,
+	HeartbeatACK
 }
 
 export enum GatewayCloseEventCode {
@@ -153,4 +153,34 @@ export enum JSONErrorCode {
   InvalidAPIVersion = 50041,
   ReactionBlocked = 90001,
   ResourceOverloaded = 130000
+}
+
+export interface Properties {
+	$os: string;
+	$browser: string;
+	$device: string;
+}
+
+export interface Timestamps {
+	start?: number;
+	end?: number;
+}
+
+export interface Emoji {
+	name: string;
+	id?: string;
+	animated?: boolean;
+}
+
+export enum StatusType {
+	Online = 'online',
+	DoNotDisturb = 'dnd',
+	Idle = 'idle',
+	Invisible = 'invisible',
+	Offline = 'offline'
+}
+
+export interface Status {
+	afk: boolean;
+	status: StatusType;
 }
