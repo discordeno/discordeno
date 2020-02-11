@@ -172,15 +172,6 @@ export interface Emoji {
 	animated?: boolean;
 }
 
-export interface Activity {
-	name: string;
-	type: number;
-	url?: string;
-	created_at: number;
-	timestamps: Timestamps;
-	details?: string;
-}
-
 export enum StatusType {
 	Online = 'online',
 	DoNotDisturb = 'dnd',
