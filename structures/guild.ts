@@ -114,8 +114,8 @@ interface Guild {
   /** Users in the guild */
   members: Map<string, Member>
   /** Channels in the guild */
-  channels: Channel[]
-  presences: Presence[]
+  channels: Map<string, Channel>
+  presences: Map<string, Presence>
   /** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.) */
   max_presences?: number | null
   /** The maximum amount of members for the guild */
@@ -483,8 +483,8 @@ export const createGuild = (data: CreateGuildPayload, client: Client) => {
     joinedAt: Date.parse(data.joined_at),
     voiceStates: new Map(data.voice_states.map(vs => [vs.id, create_voice_state(vs)])),
     members: new Map(data.members.map(m => [m.id, create_member(m)])),
-    channels: data.channels.map(channel => create_channel(channel)),
-    presences: data.presences.map(presence => createPresence(presence)),
+    channels: new Map(data.channels.map(c => [c.id, create_channel(c)])),
+    presences: new Map(data.presences.map(p => [p.id, create_presence(p)])),
     icon_url: (size, format) =>
       data.icon ? formatImageURL(endpoints.GUILD_ICON(data.id, data.icon), size, format) : undefined,
     splash_url: (size, format) =>
