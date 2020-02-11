@@ -1,31 +1,47 @@
-import Client from '../module/Client.ts'
+import Client from "../module/Client.ts";
+import { RequestMethod } from "../types/fetch";
+
+type RequestBody = string | Blob | ArrayBufferView | ArrayBuffer | FormData | URLSearchParams | null | undefined;
 
 class RequestManager {
-  client: Client
-  token: string
+	client: Client;
+	token: string;
 
   constructor(client: Client, token: string) {
     this.client = client
     this.token = token
   }
 
-  async get(url: string, payload?: unknown) {
-    // THIS IS IMPORTANT. It keeps clean stack errors in the users own files to better help debug errors.
-    // const stackHolder = {};
-    // TODO: Figure out why this doesnt work
-    // Error.captureStackTrace(stackHolder)
+	async get(url: string) {
+		const headers = this.getDiscordHeaders();
+		return fetch(url, { headers }).then(res => res.json())
+	}
 
-    // let attempts = 0
-    const headers = {
-      Authorization: this.token,
-      'User-Agent': `DiscordBot (https://github.com/skillz4killz/discordeno, 0.0.1)`
-    }
+	async post (url: string, body: RequestBody) {
+		const headers = this.getDiscordHeaders();
+		return fetch(url, {
+			method: RequestMethod.Post,
+			headers,
+			body
+		});
+	}
 
-    console.log('payload', payload)
+	async delete (url: string, body: RequestBody) {
+		const headers = this.getDiscordHeaders();
+		return fetch(url, {
+			method: RequestMethod.Delete,
+			headers,
+			body
+		});
+	}
 
-    const data = await fetch(url, { headers }).then(res => res.json())
-    return data
-  }
+	// The Record type here plays nice with Deno's `fetch.headers` expected type.
+	getDiscordHeaders (): Record<string, string> {
+		return {
+			Authorization: this.token,
+			"User-Agent": `DiscordBot (https://github.com/skillz4killz/discordeno, 0.0.1)`,
+		};
+	}
 }
 
 export default RequestManager

@@ -1,6 +1,6 @@
 import { endpoints } from '../constants/discord.ts'
 import RequestManager from '../managers/RequestManager.ts'
-import { DiscordBotGateway, DiscordPayload, DiscordHeartbeatPayload } from '../types/discord.ts'
+import { DiscordBotGatewayData, DiscordPayload, DiscordHeartbeatPayload, GatewayOpcode } from '../types/discord.ts'
 import ShardingManager from '../managers/ShardingManager.ts'
 import {
   connectWebSocket,
@@ -9,11 +9,9 @@ import {
   isWebSocketPongEvent,
   WebSocket
 } from 'https://deno.land/std/ws/mod.ts'
-// import { encode } from "https://deno.land/std/strings/mod.ts"
-// import { BufReader } from "https://deno.land/std/io/bufio.ts"
-// import { TextProtoReader } from "https://deno.land/std/textproto/mod.ts"
-import { keepDiscordWebsocketAlive, updatePreviousSequenceNumber } from './websocket.ts'
-import { logGreen, logRed, logYellow, logBlue } from '../utils/logger.ts'
+import Gateway from './gateway.ts'
+import { ClientOptions, FulfilledClientOptions } from '../types/options.ts'
+import { CollectedMessageType } from '../types/message-type.ts'
 
 class Client {
   /** The bot's token. This should never be used by end users. It is meant to be used internally to make requests to the Discord API. */
@@ -23,35 +21,94 @@ class Client {
   /** Creates and handles all the shards necessary for the bot. */
   ShardingManager: ShardingManager
 
-  constructor(token: string) {
-    this.token = `Bot ${token}`
-    this.RequestManager = new RequestManager(this, this.token)
+  /** The options (with defaults) passed to the `Client` constructor. */
+  options: FulfilledClientOptions
+
+  protected authorization: string
+
+  constructor(options: ClientOptions) {
+    // Assign some defaults to the options to make them fulfilled / not annoying to use.
+    this.options = Object.assign(
+      {
+        properties: {
+          $os: '...',
+          $browser: '...',
+          $device: '...'
+        },
+        compress: false
+      },
+      options
+    )
+    this.token = options.token
+    this.authorization = `Bot ${this.options.token}`
+    this.RequestManager = new RequestManager(this, this.authorization)
     this.ShardingManager = new ShardingManager()
   }
 
-  /** Begins initial handshake, creates the websocket with Discord and spawns all necessary shards. */
-  async connect() {
-    const data = (await this.RequestManager.get(endpoints.GATEWAY_BOT)) as DiscordBotGateway
-    // Open a WS with the url from discord.
-    const sock = await connectWebSocket(data.url)
-    console.log(sock)
-    logGreen("ws connected! (type 'close' to quit)")
+  getGatewayData() {
+    return this.RequestManager.get(endpoints.GATEWAY_BOT) as Promise<DiscordBotGatewayData>
+  }
 
-    for await (const msg of sock.receive()) {
-      if (typeof msg === 'string') {
-        try {
-          const json = JSON.parse(msg)
-          this.handleDiscordPayload(json, sock)
-        } catch {
-          logRed(`Invalid JSON String send by discord: ${msg}`)
+  createWebsocketConnection(data: DiscordBotGatewayData) {
+    console.log({ data })
+    return connectWebSocket(data.url)
+  }
+
+  async bootstrap() {
+    const data = await this.getGatewayData()
+    const socket = await this.createWebsocketConnection(data);
+	const gateway = new Gateway(socket);
+	const messages = this.collectMessages(gateway);
+	await gateway.identify(this.options);
+    return {
+      data,
+      socket,
+	  gateway,
+	  messages,
+      connection: this.connect(gateway, data)
+    }
+  }
+
+  async *collectMessages(gateway: Gateway) {
+    const { socket } = gateway
+    for await (const message of socket.receive()) {
+      if (typeof message === 'string') {
+        yield {
+          type: CollectedMessageType.Message,
+          data: JSON.parse(message)
         }
-        logYellow('< ' + msg)
-      } else if (isWebSocketPingEvent(msg)) {
-        logBlue('< ping')
-      } else if (isWebSocketPongEvent(msg)) {
-        logBlue('< pong')
-      } else if (isWebSocketCloseEvent(msg)) {
-        logRed(`closed: code=${msg.code}, reason=${msg.reason}`)
+      } else if (isWebSocketCloseEvent(message)) {
+        yield { type: CollectedMessageType.Close, ...message }
+        return
+      } else if (isWebSocketPingEvent(message)) {
+        yield { type: CollectedMessageType.Ping }
+      } else if (isWebSocketPongEvent(message)) {
+        yield { type: CollectedMessageType.Pong }
+      }
+    }
+  }
+
+  /** Begins initial handshake, creates the websocket with Discord and spawns all necessary shards. */
+  async *connect(gateway: Gateway, data: DiscordBotGatewayData): AsyncGenerator<{ type: CollectedMessageType, data?: DiscordPayload, action?: Promise<void> }> {
+    for await (const message of this.collectMessages(gateway)) {
+      switch (message.type) {
+        case CollectedMessageType.Ping:
+		  console.log('Ping!')
+		  yield message;
+          break
+        case CollectedMessageType.Pong:
+		  console.log('Pong!')
+		  yield message;
+          break
+        case CollectedMessageType.Close:
+		  console.log('Close :(', message)
+		  yield message;
+          break
+        case CollectedMessageType.Message:
+		await this.handleDiscordPayload(message.data, gateway);
+		  yield message;
+		console.log({ yay: true, ...message });
+          break
       }
     }
 
@@ -59,15 +116,15 @@ class Client {
     this.spawnShards(data.shards)
   }
 
-  handleDiscordPayload(data: DiscordPayload, socket: WebSocket) {
+   handleDiscordPayload(data: DiscordPayload, gateway: Gateway) {
     switch (data.op) {
-      case 10: // Initial Heartbeat
-        keepDiscordWebsocketAlive(socket, (data.d as DiscordHeartbeatPayload).heartbeat_interval, data.s)
-        break
-      case 11:
-        updatePreviousSequenceNumber(data.s)
-        break
-    }
+      case GatewayOpcode.Hello:
+		  console.log('heartbeating...');
+        return gateway.sendConstantHeartbeats((data.d as DiscordHeartbeatPayload).heartbeat_interval, data.s);
+	}
+
+	// Make all code paths return a promise for consistency.
+	return Promise.resolve(undefined);
   }
 
   spawnShards(total: number, id = 1) {

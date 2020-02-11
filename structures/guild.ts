@@ -8,239 +8,132 @@ import { createMember } from './member'
 import { createChannel } from './channel'
 import { createPresence } from './presence'
 
-interface CreateGuildPayload {
-  /** The guild id */
-  id: string
-  /** The guild name 2-100 characters */
-  name: string
-  /** The guild icon image hash */
-  icon: string | null
-  /** The guild splash image hash */
-  splash: string | null
-  /** The id of the owner */
-  owner_id: string
-  /** The voice region id for the guild */
-  region: string
-  /** The afk channel id */
-  afk_channel_id: string | null
-  /** AFK Timeout in seconds. */
-  afk_timeout: number
-  /** The verification level required for the guild */
-  verification_level: number
-  /** The roles in the guild */
-  roles: Role[]
-  /** The custom guild emojis */
-  emojis: Emoji[]
-  /** Enabled guild features */
-  features: GuildFeatures[]
-  /** Required MFA level for the guild */
-  mfa_level: number
-  /** The id of the channel to which system mesages are sent */
-  system_channel_id: string | null
-  /** When this guild was joined at */
-  joined_at: string
-  /** Whether this is considered a large guild */
-  large: boolean
-  /** Whether this guild is unavailable */
-  unavailable: boolean
-  /** Total number of members in this guild */
-  member_count: number
-  voice_states: VoiceState[]
-  /** Users in the guild */
-  members: Member[]
-  /** Channels in the guild */
-  channels: Channel[]
-  presences: Presence[]
-  /** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.) */
-  max_presences?: number | null
-  /** The maximum amount of members for the guild */
-  max_members?: number
-  /** The vanity url code for the guild */
-  vanity_url_code: string | null
-  /** The description for the guild */
-  description: string | null
-  /** The banner hash */
-  banner: string | null
-  /** The premium tier */
-  premium_tier: number
-  /** The total number of users currently boosting this server. */
-  premium_subscription_count: number
-  /** The preferred local of this guild only set if guild has the DISCOVERABLE feature, defaults to en-US */
-  preferred_locale: string
+export interface CreateGuildPayload {
+	/** The guild id */
+	id: string
+	/** The guild name 2-100 characters */
+	name: string
+	/** The guild icon image hash */
+	icon: string | null
+	/** The guild splash image hash */
+	splash: string | null
+	/** The id of the owner */
+	owner_id: string
+	/** The voice region id for the guild */
+	region: string
+	/** The afk channel id */
+	afk_channel_id: string | null
+	/** AFK Timeout in seconds. */
+	afk_timeout: number
+	/** The verification level required for the guild */
+	verification_level: number
+	/** The roles in the guild */
+	roles: Role[]
+	/** The custom guild emojis */
+	emojis: Emoji[]
+	/** Enabled guild features */
+	features: GuildFeatures[]
+	/** Required MFA level for the guild */
+	mfa_level: number
+	/** The id of the channel to which system mesages are sent */
+	system_channel_id: string | null
+	/** When this guild was joined at */
+	joined_at: string
+	/** Whether this is considered a large guild */
+	large: boolean
+	/** Whether this guild is unavailable */
+	unavailable: boolean
+	/** Total number of members in this guild */
+	member_count: number
+	voice_states: VoiceState[]
+	/** Users in the guild */
+	members: Member[]
+	/** Channels in the guild */
+	channels: Channel[]
+	presences: Presence[]
+	/** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.) */
+	max_presences?: number | null
+	/** The maximum amount of members for the guild */
+	max_members?: number
+	/** The vanity url code for the guild */
+	vanity_url_code: string | null
+	/** The description for the guild */
+	description: string | null
+	/** The banner hash */
+	banner: string | null
+	/** The premium tier */
+	premium_tier: number
+	/** The total number of users currently boosting this server. */
+	premium_subscription_count: number
+	/** The preferred local of this guild only set if guild has the DISCOVERABLE feature, defaults to en-US */
+	preferred_locale: string
 }
 
-interface Guild {
-  /** The guild id */
-  id: string
-  /** The guild name 2-100 characters */
-  name: string
-  /** The guild icon image hash */
-  icon: string | null
-  /** The guild splash image hash */
-  splash: string | null
-  /** The id of the owner */
-  ownerID: string
-  /** The voice region id for the guild */
-  region: string
-  /** The afk channel id */
-  afkChannelID: string | null
-  /** AFK Timeout in seconds. */
-  afkTimeout: number
-  /** The verification level required for the guild */
-  verificationLevel: number
-  /** The roles in the guild */
-  roles: Role[]
-  /** The custom guild emojis */
-  emojis: Emoji[]
-  /** Enabled guild features */
-  features: GuildFeatures[]
-  /** Required MFA level for the guild */
-  mfaLevel: number
-  /** The id of the channel to which system mesages are sent */
-  systemChannelID: string | null
-  /** When this guild was joined at */
-  joinedAt: number
-  /** Whether this is considered a large guild */
-  large: boolean
-  /** Whether this guild is unavailable */
-  unavailable: boolean
-  /** Total number of members in this guild */
-  memberCount: number
-  voiceStates: VoiceState[]
-  /** Users in the guild */
-  members: Member[]
-  /** Channels in the guild */
-  channels: Channel[]
-  presences: Presence[]
-  /** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.) */
-  maxPresences?: number | null
-  /** The maximum amount of members for the guild */
-  maxMembers?: number
-  /** The vanity url code for the guild */
-  vanityURLCode: string | null
-  /** The description for the guild */
-  description: string | null
-  /** The banner hash */
-  banner: string | null
-  /** The premium tier */
-  premiumTier: number
-  /** The total number of users currently boosting this server. */
-  premiumSubscriptionCount: number
-  /** The preferred local of this guild only set if guild has the DISCOVERABLE feature, defaults to en-US */
-  preferredLocale: string
-  /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
-  iconURL(size?: ImageSize, format?: ImageFormats): string | undefined
-  /** The full URL of the splash from Discords CDN. Undefined if no splash is set. */
-  splashURL(size?: ImageSize, format?: ImageFormats): string | undefined
-  /** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
-  bannerURL(size?: ImageSize, format?: ImageFormats): string | undefined
-  /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-  createChannel(name: string, options: ChannelCreateOptions): Promise<Channel>
-  /** Create an emoji in the server. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. */
-  createEmoji(name: string, image: string, options: CreateEmojisOptions): Promise<Emoji>
-  /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */
-  editEmoji(id: string, options: EditEmojisOptions): Promise<Emoji>
-  /** Delete the given emoji. Requires the MANAGE_EMOJIS permission. Returns 204 No Content on success. */
-  deleteEmoji(id: string, reason?: string): Promise<void>
-  /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
-  createRole(options: CreateRoleOptions): Promise<Role>
-  /** Edi a guild role. Requires the MANAGE_ROLES permission. */
-  editRole(id: string, options: CreateRoleOptions): Promise<Role>
-  /** Delete a guild role. Requires the MANAGE_ROLES permission. */
-  deleteRole(id: string): Promise<void>
-  /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
-  getPruneCount(days: number): Promise<number>
-  /** Begin pruning all members in the given time period */
-  pruneMembers(days: number): Promise<void>
-  getAuditLogs(options: GetAuditLogsOptions): Promise<AuditLog>
-
-  leaveVoiceChannel(): Promise<void>
-}
-
-export interface GetAuditLogsOptions {
-  /** Filter the logs for actions made by this user. */
-  user_id?: string
-  /** The type of audit log. */
-  action_type?: AuditLogType
-  /** Filter the logs before a certain log entry. */
-  before?: string
-  /** How many entries are returned. Between 1-100. Default 50. */
-  limit?: number
-}
-
-export type AuditLogType =
-  | `GUILD_UPDATE`
-  | `CHANNEL_CREATE`
-  | `CHANNEL_UPDATE`
-  | `CHANNEL_DELETE`
-  | `CHANNEL_OVERWRITE_CREATE`
-  | `CHANNEL_OVERWRITE_UPDATE`
-  | `CHANNEL_OVERWRITE_DELETE`
-  | `MEMBER_KICK`
-  | `MEMBER_PRUNE`
-  | `MEMBER_BAN_ADD`
-  | `MEMBER_BAN_REMOVE`
-  | `MEMBER_UPDATE`
-  | `MEMBER_ROLE_UPDATE`
-  | `MEMBER_MOVE`
-  | `MEMBER_DISCONNECT`
-  | `BOT_ADD`
-  | `ROLE_CREATE`
-  | `ROLE_UPDATE`
-  | `ROLE_DELETE`
-  | `INVITE_CREATE`
-  | `INVITE_UPDATE`
-  | `INVITE_DELETE`
-  | `WEBHOOK_CREATE`
-  | `WEBHOOK_UPDATE`
-  | `WEBHOOK_DELETE`
-  | `EMOJI_CREATE`
-  | `EMOJI_UPDATE`
-  | `EMOJI_DELETE`
-  | `MESSAGE_DELETE`
-  | `MESSAGE_BULK_DELETE`
-  | `MESSAGE_PIN`
-  | `MESSAGE_UNPIN`
-  | `INTEGRATION_CREATE`
-  | `INTEGRATION_UPDATE`
-  | `INTEGRATION_DELETE`
-
-export enum AuditLogs {
-  GUILD_UPDATE = 1,
-  CHANNEL_CREATE = 10,
-  CHANNEL_UPDATE,
-  CHANNEL_DELETE,
-  CHANNEL_OVERWRITE_CREATE,
-  CHANNEL_OVERWRITE_UPDATE,
-  CHANNEL_OVERWRITE_DELETE,
-  MEMBER_KICK = 20,
-  MEMBER_PRUNE,
-  MEMBER_BAN_ADD,
-  MEMBER_BAN_REMOVE,
-  MEMBER_UPDATE,
-  MEMBER_ROLE_UPDATE,
-  MEMBER_MOVE,
-  MEMBER_DISCONNECT,
-  BOT_ADD,
-  ROLE_CREATE = 30,
-  ROLE_UPDATE,
-  ROLE_DELETE,
-  INVITE_CREATE = 40,
-  INVITE_UPDATE,
-  INVITE_DELETE,
-  WEBHOOK_CREATE = 50,
-  WEBHOOK_UPDATE,
-  WEBHOOK_DELETE,
-  EMOJI_CREATE = 60,
-  EMOJI_UPDATE,
-  EMOJI_DELETE,
-  MESSAGE_DELETE = 72,
-  MESSAGE_BULK_DELETE,
-  MESSAGE_PIN,
-  MESSAGE_UNPIN,
-  INTEGRATION_CREATE = 80,
-  INTEGRATION_UPDATE,
-  INTEGRATION_DELETE
+export interface Guild {
+	/** The guild id */
+	id: string
+	/** The guild name 2-100 characters */
+	name: string
+	/** The guild icon image hash */
+	icon: string | null
+	/** The guild splash image hash */
+	splash: string | null
+	/** The id of the owner */
+	ownerID: string
+	/** The voice region id for the guild */
+	region: string
+	/** The afk channel id */
+	afkChannelID: string | null
+	/** AFK Timeout in seconds. */
+	afkTimeout: number
+	/** The verification level required for the guild */
+	verificationLevel: number
+	/** The roles in the guild */
+	roles: Role[]
+	/** The custom guild emojis */
+	emojis: Emoji[]
+	/** Enabled guild features */
+	features: GuildFeatures[]
+	/** Required MFA level for the guild */
+	mfaLevel: number
+	/** The id of the channel to which system mesages are sent */
+	systemChannelID: string | null
+	/** When this guild was joined at */
+	joinedAt: number
+	/** Whether this is considered a large guild */
+	large: boolean
+	/** Whether this guild is unavailable */
+	unavailable: boolean
+	/** Total number of members in this guild */
+	memberCount: number
+	voiceStates: VoiceState[]
+	/** Users in the guild */
+	members: Member[]
+	/** Channels in the guild */
+	channels: Channel[]
+	presences: Presence[]
+	/** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.) */
+	maxPresences?: number | null
+	/** The maximum amount of members for the guild */
+	maxMembers?: number
+	/** The vanity url code for the guild */
+	vanityURLCode: string | null
+	/** The description for the guild */
+	description: string | null
+	/** The banner hash */
+	banner: string | null
+	/** The premium tier */
+	premiumTier: number
+	/** The total number of users currently boosting this server. */
+	premiumSubscriptionCount: number
+	/** The preferred local of this guild only set if guild has the DISCOVERABLE feature, defaults to en-US */
+	preferredLocale: string
+	/** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
+	iconURL(): string | undefined
+	/** The full URL of the splash from Discords CDN. Undefined if no splash is set. */
+	splashURL(): string | undefined
+	/** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
+	bannerURL(): string | undefined
 }
 
 export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048
