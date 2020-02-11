@@ -1,5 +1,5 @@
 import { endpoints } from '../constants/discord.ts'
-import RequestManager from '../managers/RequestManager.ts'
+import DiscordRequestManager from '../managers/DiscordRequestManager.ts'
 import { DiscordBotGatewayData, DiscordPayload, DiscordHeartbeatPayload, GatewayOpcode } from '../types/discord.ts'
 import ShardingManager from '../managers/ShardingManager.ts'
 import {
@@ -17,9 +17,9 @@ class Client {
   /** The bot's token. This should never be used by end users. It is meant to be used internally to make requests to the Discord API. */
   token: string
   /** The Rate limit manager to handle all outgoing requests to discord. Not meant to be used by users. */
-  RequestManager: RequestManager
+  discordRequestManager: DiscordRequestManager
   /** Creates and handles all the shards necessary for the bot. */
-  ShardingManager: ShardingManager
+  shardingManager: ShardingManager
 
   /** The options (with defaults) passed to the `Client` constructor. */
   options: FulfilledClientOptions
@@ -41,12 +41,12 @@ class Client {
     )
     this.token = options.token
     this.authorization = `Bot ${this.options.token}`
-    this.RequestManager = new RequestManager(this, this.authorization)
-    this.ShardingManager = new ShardingManager()
+    this.discordRequestManager = new DiscordRequestManager(this, this.authorization)
+    this.shardingManager = new ShardingManager()
   }
 
   getGatewayData() {
-    return this.RequestManager.get(endpoints.GATEWAY_BOT) as Promise<DiscordBotGatewayData>
+    return this.discordRequestManager.get(endpoints.GATEWAY_BOT) as Promise<DiscordBotGatewayData>
   }
 
   createWebsocketConnection(data: DiscordBotGatewayData) {
