@@ -1,11 +1,11 @@
 import Client from '../module/Client'
 import { endpoints } from '../constants/discord'
 import { formatImageURL } from '../utils/cdn'
-import { createRole } from './role'
-import { createEmoji } from './emoji'
+import { create_role } from './role'
+import { create_emoji } from './emoji'
 import { createVoiceState } from './voiceState'
 import { createMember } from './member'
-import { createChannel } from './channel'
+import { create_channel } from './channel'
 import { createPresence } from './presence'
 
 interface CreateGuildPayload {
@@ -25,6 +25,10 @@ interface CreateGuildPayload {
   afk_channel_id: string | null
   /** AFK Timeout in seconds. */
   afk_timeout: number
+  /** Whether this guild is embeddable (widget) */
+  embed_enabled?: boolean
+  /** If not null, the channel id that the widge will generate an invite to. */
+  embed_channel_id?: string | null
   /** The verification level required for the guild */
   verification_level: number
   /** The roles in the guild */
@@ -79,15 +83,15 @@ interface Guild {
   /** The guild splash image hash */
   splash: string | null
   /** The id of the owner */
-  ownerID: string
+  owner_id: string
   /** The voice region id for the guild */
   region: string
   /** The afk channel id */
-  afkChannelID: string | null
+  afk_channel_id: string | null
   /** AFK Timeout in seconds. */
-  afkTimeout: number
+  afk_timeout: number
   /** The verification level required for the guild */
-  verificationLevel: number
+  verification_level: number
   /** The roles in the guild */
   roles: Role[]
   /** The custom guild emojis */
@@ -95,69 +99,159 @@ interface Guild {
   /** Enabled guild features */
   features: GuildFeatures[]
   /** Required MFA level for the guild */
-  mfaLevel: number
+  mfa_level: number
   /** The id of the channel to which system mesages are sent */
-  systemChannelID: string | null
+  system_channel_id: string | null
   /** When this guild was joined at */
-  joinedAt: number
+  joined_at: number
   /** Whether this is considered a large guild */
   large: boolean
   /** Whether this guild is unavailable */
   unavailable: boolean
   /** Total number of members in this guild */
-  memberCount: number
-  voiceStates: VoiceState[]
+  member_count: number
+  voice_states: VoiceState[]
   /** Users in the guild */
   members: Member[]
   /** Channels in the guild */
   channels: Channel[]
   presences: Presence[]
   /** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.) */
-  maxPresences?: number | null
+  max_presences?: number | null
   /** The maximum amount of members for the guild */
-  maxMembers?: number
+  max_members?: number
   /** The vanity url code for the guild */
-  vanityURLCode: string | null
+  vanity_url_code: string | null
   /** The description for the guild */
   description: string | null
   /** The banner hash */
   banner: string | null
   /** The premium tier */
-  premiumTier: number
+  premium_tier: number
   /** The total number of users currently boosting this server. */
-  premiumSubscriptionCount: number
+  premium_subscription_count: number
   /** The preferred local of this guild only set if guild has the DISCOVERABLE feature, defaults to en-US */
-  preferredLocale: string
+  preferred_locale: string
   /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
-  iconURL(size?: ImageSize, format?: ImageFormats): string | undefined
+  icon_url(size?: Image_Size, format?: Image_Formats): string | undefined
   /** The full URL of the splash from Discords CDN. Undefined if no splash is set. */
-  splashURL(size?: ImageSize, format?: ImageFormats): string | undefined
+  splash_url(size?: Image_Size, format?: Image_Formats): string | undefined
   /** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
-  bannerURL(size?: ImageSize, format?: ImageFormats): string | undefined
+  banner_url(size?: Image_Size, format?: Image_Formats): string | undefined
   /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-  createChannel(name: string, options: ChannelCreateOptions): Promise<Channel>
+  create_channel(name: string, options: ChannelCreate_Options): Promise<Channel>
   /** Create an emoji in the server. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. */
-  createEmoji(name: string, image: string, options: CreateEmojisOptions): Promise<Emoji>
+  create_emoji(name: string, image: string, options: Create_Emojis_Options): Promise<Emoji>
   /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */
-  editEmoji(id: string, options: EditEmojisOptions): Promise<Emoji>
+  edit_emoji(id: string, options: Edit_Emojis_Options): Promise<Emoji>
   /** Delete the given emoji. Requires the MANAGE_EMOJIS permission. Returns 204 No Content on success. */
-  deleteEmoji(id: string, reason?: string): Promise<void>
+  delete_emoji(id: string, reason?: string): Promise<void>
   /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
-  createRole(options: CreateRoleOptions): Promise<Role>
+  create_role(options: Create_Role_Options): Promise<Role>
   /** Edi a guild role. Requires the MANAGE_ROLES permission. */
-  editRole(id: string, options: CreateRoleOptions): Promise<Role>
+  edit_role(id: string, options: Create_Role_Options): Promise<Role>
   /** Delete a guild role. Requires the MANAGE_ROLES permission. */
-  deleteRole(id: string): Promise<void>
+  delete_role(id: string): Promise<void>
   /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
-  getPruneCount(days: number): Promise<number>
+  get_prune_count(days: number): Promise<number>
   /** Begin pruning all members in the given time period */
-  pruneMembers(days: number): Promise<void>
-  getAuditLogs(options: GetAuditLogsOptions): Promise<AuditLog>
+  prune_members(days: number): Promise<void>
+  /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
+  get_audit_logs(options: Get_audit_logsOptions): Promise<AuditLog>
+  /** Returns the guild embed object. Requires the MANAGE_GUILD permission. */
+  get_embed(): Promise<Guild_Embed>
+  /** Modify a guild embed object for the guild. Requires the MANAGE_GUILD permission. */
+  edit_embed(enabled: boolean, channel_id?: string | null): Promise<Guild_Embed>
+  /** Returns the code and uses of the vanity url for this server if it is enabled. Requires the MANAGE_GUILD permission. */
+  get_vanity_url(): Promise<Vanity_Invite>
+  /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
+  get_integrations(): Promise<Guild_Integration[]>
 
-  leaveVoiceChannel(): Promise<void>
+  leave_voice_channel(): Promise<void>
 }
 
-export interface GetAuditLogsOptions {
+export interface Guild_Integration {
+  /** The integrations unique id */
+  id: string
+  /** the integrations name */
+  name: string
+  /** The integration type like twitch, youtube etc */
+  type: string
+  /** Is this integration enabled */
+  enabled: boolean
+  /** is this integration syncing */
+  syncing: boolean
+  /** id that this integration uses for "subscribers" */
+  role_id: string
+  /** The behavior of expiring subscribers */
+  expire_behavior: number
+  /** The grace period before expiring subscribers */
+  expire_grace_period: number
+  /** The user for this integration */
+  user: User_Data
+  /** The integration account information */
+  account: Account
+  /** When this integration was last synced */
+  synced_at: string
+}
+
+export interface User_Data {
+  /** The user's id */
+  id: string
+  /** the user's username, not unique across the platform */
+  username: string
+  /** The user's 4 digit discord tag */
+  discriminator: string
+  /** The user's avatar hash */
+  avatar: string | null
+  /** Whether the user is a bot */
+  bot?: boolean
+  /** Whether the user is an official discord system user (part of the urgent message system.) */
+  system?: boolean
+  /** Whether the user has two factor enabled on their account */
+  mfa_enabled?: boolean
+  /** the user's chosen language option */
+  locale?: string
+  /** Whether the email on this account has been verified */
+  verified?: boolean
+  /** The user's email */
+  email?: string
+  /** The flags on a user's account. */
+  flags?: number
+  /** The type of Nitro subscription on a user's account. */
+  premium_type?: number
+}
+
+export enum User_Flags {
+  NONE,
+  DISCORD_EMPLOYEE,
+  DISCORD_PARTNER,
+  HYPE_SQUAD_EVENTS = 1 << 2,
+  BUG_HUNTER = 1 << 3,
+  HOUSE_BRAVERY = 1 << 6,
+  HOUSE_BRILLIANCE = 1 << 7,
+  HOUSE_BALANCE = 1 << 8,
+  EARLY_SUPPORTER = 1 << 9,
+  TEAM_USER = 1 << 10,
+  SYSTEM = 1 << 12
+}
+
+export enum Nitro_Types {
+  NITRO_CLASSIC = 1,
+  NITRO
+}
+
+export interface Vanity_Invite {
+  code: string | null
+  uses: number
+}
+
+export interface Guild_Embed {
+  /** Whether the embed is enbaled. */
+  enabled: boolean
+}
+
+export interface Get_audit_logsOptions {
   /** Filter the logs for actions made by this user. */
   user_id?: string
   /** The type of audit log. */
@@ -243,8 +337,8 @@ export enum AuditLogs {
   INTEGRATION_DELETE
 }
 
-export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048
-export type ImageFormats = 'jpg' | 'jpeg' | 'png' | 'webp' | 'gif'
+export type Image_Size = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048
+export type Image_Formats = 'jpg' | 'jpeg' | 'png' | 'webp' | 'gif'
 export type ChannelType = 'text' | 'dm' | 'news' | 'voice' | 'category' | 'store'
 
 export type Permission =
@@ -332,7 +426,7 @@ export enum Permissions {
   MANAGE_EMOJIS = 0x40000000
 }
 
-export interface ChannelCreateOptions {
+export interface ChannelCreate_Options {
   /** The type of the channel */
   type?: ChannelType
   /** The channel topic. (0-1024 characters) */
@@ -355,21 +449,21 @@ export interface ChannelCreateOptions {
   reason?: string
 }
 
-export interface CreateEmojisOptions {
+export interface Create_Emojis_Options {
   /** The roles for which this emoji will be whitelisted. Only the users with one of these roles can use this emoji. */
   roles: string[]
   /** The reason to have in the Audit Logs. */
   reason: string
 }
 
-export interface EditEmojisOptions {
+export interface Edit_Emojis_Options {
   /** The name of the emoji */
   name: string
   /** The roles for which this emoji will be whitelisted. Only the users with one of these roles can use this emoji. */
   roles: string[]
 }
 
-export interface CreateRoleOptions {
+export interface Create_Role_Options {
   name?: string
   permissions?: Permission[]
   color?: number
@@ -383,43 +477,21 @@ export interface PrunePayload {
 
 export const createGuild = (data: CreateGuildPayload, client: Client) => {
   const guild: Guild = {
-    id: data.id,
-    name: data.name,
-    icon: data.icon,
-    splash: data.splash,
-    ownerID: data.owner_id,
-    region: data.region,
-    afkChannelID: data.afk_channel_id,
-    afkTimeout: data.afk_timeout,
-    verificationLevel: data.verification_level,
-    roles: data.roles.map(role => createRole(role)),
-    emojis: data.emojis.map(emoji => createEmoji(emoji)),
-    features: data.features,
-    mfaLevel: data.mfa_level,
-    systemChannelID: data.system_channel_id,
+    ...data,
+    roles: data.roles.map(role => create_role(role)),
+    emojis: data.emojis.map(emoji => create_emoji(emoji)),
     joinedAt: Date.parse(data.joined_at),
-    large: data.large,
-    unavailable: data.unavailable,
-    memberCount: data.member_count,
     voiceStates: data.voice_states.map(voiceState => createVoiceState(voiceState)),
     members: data.members.map(member => createMember(member)),
-    channels: data.channels.map(channel => createChannel(channel)),
+    channels: data.channels.map(channel => create_channel(channel)),
     presences: data.presences.map(presence => createPresence(presence)),
-    maxPresences: data.max_presences,
-    maxMembers: data.max_members,
-    vanityURLCode: data.vanity_url_code,
-    description: data.description,
-    banner: data.banner,
-    premiumTier: data.premium_tier,
-    premiumSubscriptionCount: data.premium_subscription_count,
-    preferredLocale: data.preferred_locale,
-    iconURL: (size, format) =>
+    icon_url: (size, format) =>
       data.icon ? formatImageURL(endpoints.GUILD_ICON(data.id, data.icon), size, format) : undefined,
-    splashURL: (size, format) =>
+    splash_url: (size, format) =>
       data.splash ? formatImageURL(endpoints.GUILD_SPLASH(data.id, data.splash), size, format) : undefined,
-    bannerURL: (size, format) =>
+    banner_url: (size, format) =>
       data.banner ? formatImageURL(endpoints.GUILD_BANNER(data.id, data.banner), size, format) : undefined,
-    createChannel: (name, options) => {
+    create_channel: (name, options) => {
       // TODO: Check if the bot has `MANAGE_CHANNELS` permission before making a channel
       return client.RequestManager.post(endpoints.GUILD_CHANNELS(data.id), {
         name,
@@ -434,7 +506,7 @@ export const createGuild = (data: CreateGuildPayload, client: Client) => {
         ...options
       })
     },
-    createEmoji: (name, image, options) => {
+    create_emoji: (name, image, options) => {
       // TODO: Check if the bot has `MANAGE_EMOJIS` permission
       return client.RequestManager.post(endpoints.GUILD_EMOJIS(data.id), {
         ...options,
@@ -442,18 +514,18 @@ export const createGuild = (data: CreateGuildPayload, client: Client) => {
         image
       })
     },
-    editEmoji: (id, options) => {
+    edit_emoji: (id, options) => {
       // TODO: check if the bot has `MANAGE_EMOJIS` permission
       return client.RequestManager.patch(endpoints.GUILD_EMOJI(data.id, id), {
         name: options.name,
         roles: options.roles
       })
     },
-    deleteEmoji: (id, reason) => {
+    delete_emoji: (id, reason) => {
       // TODO: check if the bot has `MANAGE_EMOJIS` permission
       return client.RequestManager.delete(endpoints.GUILD_EMOJI(data.id, id), { reason })
     },
-    createRole: async options => {
+    create_role: async options => {
       // TODO: check if the bot has the `MANAGE_ROLES` permission.
       const role = await client.RequestManager.post(endpoints.GUILD_ROLES(data.id), {
         ...options,
@@ -463,31 +535,49 @@ export const createGuild = (data: CreateGuildPayload, client: Client) => {
 
       return role
     },
-    editRole: (id, options) => {
+    edit_role: (id, options) => {
       return client.RequestManager.patch(endpoints.GUILD_ROLE(data.id, id), options)
     },
-    deleteRole: id => {
+    delete_role: id => {
       return client.RequestManager.delete(endpoints.GUILD_ROLE(data.id, id))
     },
-    getPruneCount: async days => {
+    get_prune_count: async days => {
       if (days < 1) throw `The number of days to count prune for must be 1 or more.`
       // TODO: check if the bot has `KICK_MEMBERS` permission
       const result = (await client.RequestManager.get(endpoints.GUILD_PRUNE(data.id), { days })) as PrunePayload
       return result.pruned
     },
-    pruneMembers: days => {
+    prune_members: days => {
       if (days < 1) throw `The number of days must be 1 or more.`
       // TODO: check if the bot has `KICK_MEMBERS` permission.
       return client.RequestManager.post(endpoints.GUILD_PRUNE(data.id), { days })
     },
-    getAuditLogs: options => {
+    fetchAllMembers: () => {
+      // TODO: REQUEST THIS OVER WEBSOCKET WITH GET_GUILD_MEMBERS ENDPOINT
+    },
+    get_audit_logs: options => {
       // TODO: check if the bot has VIEW_AUDIT_LOGS permission
       return client.RequestManager.get(endpoints.GUILD_AUDIT_LOGS(data.id), {
         ...options,
         limit: options.limit && options.limit >= 1 && options.limit <= 100 ? options.limit : 50
       })
     },
-    leaveVoiceChannel: () => {}
+    get_embed: () => {
+      // TODO: check if the bot has the MANAGE_GUILD permission
+      return client.RequestManager.get(endpoints.GUILD_EMBED(data.id))
+    },
+    edit_embed: (enabled, channel_id) => {
+      // TODO: Requires the MANAGE_GUILD permission.
+      return client.RequestManager.patch(endpoints.GUILD_EMBED(data.id), { enabled, channel_id })
+    },
+    get_vanity_url: () => {
+      return client.RequestManager.get(endpoints.GUILD_VANITY_URL(data.id))
+    },
+    get_integrations: () => {
+      // TODO: requires the MANAGE_GUILD permission
+      return client.RequestManager.get(endpoints.GUILD_INTEGRATIONS(data.id))
+    },
+    leave_voice_channel: () => {}
   }
 
   return guild
