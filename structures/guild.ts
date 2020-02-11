@@ -93,9 +93,9 @@ interface Guild {
   /** The verification level required for the guild */
   verification_level: number
   /** The roles in the guild */
-  roles: Role[]
+  roles: Map<string, Role>
   /** The custom guild emojis */
-  emojis: Emoji[]
+  emojis: Map<string, Emoji>
   /** Enabled guild features */
   features: GuildFeatures[]
   /** Required MFA level for the guild */
@@ -110,9 +110,9 @@ interface Guild {
   unavailable: boolean
   /** Total number of members in this guild */
   member_count: number
-  voice_states: VoiceState[]
+  voice_states: Map<string, Voice_State>
   /** Users in the guild */
-  members: Member[]
+  members: Map<string, Member>
   /** Channels in the guild */
   channels: Channel[]
   presences: Presence[]
@@ -478,11 +478,11 @@ export interface PrunePayload {
 export const createGuild = (data: CreateGuildPayload, client: Client) => {
   const guild: Guild = {
     ...data,
-    roles: data.roles.map(role => create_role(role)),
-    emojis: data.emojis.map(emoji => create_emoji(emoji)),
+    roles: new Map(data.roles.map(r => [r.id, create_role(r)])),
+    emojis: new Map(data.emojis.map(e => [e.id, create_emoji(e)])),
     joinedAt: Date.parse(data.joined_at),
-    voiceStates: data.voice_states.map(voiceState => createVoiceState(voiceState)),
-    members: data.members.map(member => createMember(member)),
+    voiceStates: new Map(data.voice_states.map(vs => [vs.id, create_voice_state(vs)])),
+    members: new Map(data.members.map(m => [m.id, create_member(m)])),
     channels: data.channels.map(channel => create_channel(channel)),
     presences: data.presences.map(presence => createPresence(presence)),
     icon_url: (size, format) =>
