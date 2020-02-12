@@ -166,8 +166,48 @@ interface Guild {
   get_vanity_url(): Promise<Vanity_Invite>
   /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
   get_integrations(): Promise<Guild_Integration[]>
-
+  /** Modify the behavior and settings of an integration object for the guild. Requires the MANAGE_GUILD permission. */
+  edit_integration(id: string, options: EditIntegrationOptions): Promise<void>
+  /** Delete the attached integration object for the guild with this id. Requires MANAGE_GUILD permission. */
+  delete_integration(id: string): Promise<void>
+  edit(options: GuildEditOptions): Promise<Guild>
   leave_voice_channel(): Promise<void>
+}
+
+export interface GuildEditOptions {
+  /** The guild name */
+  name?: string
+  /** The guild voice region id */
+  region?: string
+  /** The verification level. 0 is UNRESTRICTED. 1 is Verified email. 2 is 5 minutes user. 3 is 10 minutes member in guild. 4 is verified phone number */
+  verification_level?: 0 | 1 | 2 | 3
+  /** The default message notification level. 0 is ALL_MESSAGES and 1 is ONLY_MENTINS */
+  default_message_notifications?: 0 | 1
+  /** Explicit content filter level. 0 is DISABLED 1 is members without roles. 2 is all members */
+  explicit_content_filter?: 0 | 1 | 2
+  /** The id for the afk channel. */
+  afk_channel_id?: string
+  /** The afk timeout in seconds. */
+  afk_timeout?: number
+  /** base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has ANIMATED_ICON feature) */
+  icon?: string
+  /** user id to transfer guild ownership to (must be owner) */
+  owner_id?: string
+  /** base64 16:9 png/jpeg image for the guild splash (when the server has INVITE_SPLASH feature) */
+  splash?: string
+  /** base64 16:9 png/jpeg image for the guild banner (when the server has BANNER feature) */
+  banner?: string
+  /** the id of the channel to which system messages are sent */
+  system_channel_id?: string
+}
+
+export interface EditIntegrationOptions {
+  /** The behavior when an integration subscription lapses. */
+  expire_behavior: number
+  /** The period in seconds where the integration will ignore lapsed subscriptions */
+  expire_grace_period: number
+  /** Whether emoticons should be synced for this integrations (twitch only currently) */
+  enable_emoticons: boolean
 }
 
 export interface Guild_Integration {
@@ -577,8 +617,18 @@ export const createGuild = (data: CreateGuildPayload, client: Client) => {
       // TODO: requires the MANAGE_GUILD permission
       return client.RequestManager.get(endpoints.GUILD_INTEGRATIONS(data.id))
     },
+    edit_integration: (id, options) => {
+      // TODO: requires the MANAGE_GUILD permission
+      return client.RequestManager.patch(endpoints.GUILD_INTEGRATION(data.id, id), options)
+    },
+    delete_integration: id => {
+      // TODO: requires the MANAGE_GUILD permission
+      return client.RequestManager.delete(endpoints.GUILD_INTEGRATION(data.id, id))
+    },
     leave_voice_channel: () => {}
   }
+
+  guild.edit({ default_message_notifications: 5 })
 
   return guild
 }
