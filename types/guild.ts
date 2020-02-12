@@ -1,3 +1,6 @@
+import { Role } from './role'
+import { Emoji } from './discord'
+
 export interface CreateGuildPayload {
   /** The guild id */
   id: string
@@ -26,7 +29,7 @@ export interface CreateGuildPayload {
   /** The custom guild emojis */
   emojis: Emoji[]
   /** Enabled guild features */
-  features: GuildFeatures[]
+  features: Guild_Features[]
   /** Required MFA level for the guild */
   mfa_level: number
   /** The id of the channel to which system mesages are sent */
@@ -188,16 +191,30 @@ export interface Guild {
   /** Remove the ban for a user. REquires BAN_MEMBERS permission */
   unban(id: string): Promise<void>
   /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
-	edit(options: Guild_Edit_Options): Promise<Guild>
-	/** Get all the invites for this guild. Requires MANAGE_GUILD permission */
-	get_invites(): Promise<Invite[]>
+  edit(options: Guild_Edit_Options): Promise<Guild>
+  /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
+  get_invites(): Promise<Invite[]>
   /** Leave a guild */
   leave(): Promise<void>
   /** Returns a list of voice region objects for the guild. Unlike the similar /voice route, this returns VIP servers when the guild is VIP-enabled. */
-	get_voice_regions(): Promise<Voice_Region[]>
-	/** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
-	get_webhooks(): Promise<Webhook[]>
+  get_voice_regions(): Promise<Voice_Region[]>
+  /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
+  get_webhooks(): Promise<Webhook[]>
 }
+
+export type Guild_Features =
+  | `INVITE_SPLASH`
+  | `VIP_REGIONS`
+  | `VANITY_URL`
+  | `VERIFIED`
+  | `PARTNERED`
+  | `PUBLIC`
+  | `COMMERCE`
+  | `NEWS`
+  | `DISCOVERABLE`
+  | `FEATURABLE`
+  | `ANIMATED_ICON`
+  | `BANNER`
 
 export interface Voice_Region {
   /** unique ID for the region */

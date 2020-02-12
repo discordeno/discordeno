@@ -2,12 +2,13 @@ import Client from '../module/client'
 import { endpoints } from '../constants/discord'
 import { formatImageURL } from '../utils/cdn'
 import { Guild, CreateGuildPayload, ChannelTypes, Permissions, PrunePayload } from '../types/guild'
+import { create_role } from './role'
 
 export const createGuild = (data: CreateGuildPayload, client: Client) => {
   const guild: Guild = {
     ...data,
     roles: new Map(data.roles.map(r => [r.id, create_role(r)])),
-    emojis: new Map(data.emojis.map(e => [e.id, create_emoji(e)])),
+    emojis: new Map(data.emojis.map(e => [e.id, e])),
     joined_at: Date.parse(data.joined_at),
     voice_states: new Map(data.voice_states.map(vs => [vs.id, create_voice_state(vs)])),
     members: new Map(data.members.map(m => [m.id, create_member(m)])),
