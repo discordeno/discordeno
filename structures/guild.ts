@@ -73,7 +73,7 @@ interface CreateGuildPayload {
   preferred_locale: string
 }
 
-interface Guild {
+export interface Guild {
   /** The guild id */
   id: string
   /** The guild name 2-100 characters */
@@ -140,6 +140,18 @@ interface Guild {
   banner_url(size?: Image_Size, format?: Image_Formats): string | undefined
   /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
   create_channel(name: string, options: ChannelCreate_Options): Promise<Channel>
+  /** Returns a list of guild channel objects.
+   *
+   * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
+   */
+  get_channels(): Promise<Channel[]>
+  /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
+  swap_channels(channel_positions: Position_Swap[]): Promise<void>
+  /** Returns a guild member object for the specified user.
+   *
+   * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your members will be cached in your guild.**
+   */
+  get_member(id: string): Promise<Member>
   /** Create an emoji in the server. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. */
   create_emoji(name: string, image: string, options: Create_Emojis_Options): Promise<Emoji>
   /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */
@@ -152,6 +164,13 @@ interface Guild {
   edit_role(id: string, options: Create_Role_Options): Promise<Role>
   /** Delete a guild role. Requires the MANAGE_ROLES permission. */
   delete_role(id: string): Promise<void>
+  /** Returns a list of role objects for the guild.
+   *
+   * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your roles will be cached in your guild.**
+   */
+  get_roles(): Promise<Role[]>
+  /** Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. */
+  swap_roles(role_positions: Position_Swap): Promise<Role[]>
   /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
   get_prune_count(days: number): Promise<number>
   /** Begin pruning all members in the given time period */
@@ -167,14 +186,63 @@ interface Guild {
   /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
   get_integrations(): Promise<Guild_Integration[]>
   /** Modify the behavior and settings of an integration object for the guild. Requires the MANAGE_GUILD permission. */
-  edit_integration(id: string, options: EditIntegrationOptions): Promise<void>
+  edit_integration(id: string, options: Edit_Integration_Options): Promise<void>
   /** Delete the attached integration object for the guild with this id. Requires MANAGE_GUILD permission. */
   delete_integration(id: string): Promise<void>
-  edit(options: GuildEditOptions): Promise<Guild>
+  /** Sync an integration. Requires teh MANAGE_GUILD permission. */
+  sync_integration(id: string): Promise<void>
+  /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
+  get_bans(): Promise<BannedUser[]>
+  /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires teh BAN_MEMBERS permission. */
+  ban(id: string, options: BanOptions): Promise<void>
+  /** Remove the ban for a user. REquires BAN_MEMBERS permission */
+  unban(id: string): Promise<void>
+  /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
+  edit(options: Guild_Edit_Options): Promise<Guild>
+  /** Leave a guild */
+  leave(): Promise<void>
+  /** Returns a list of voice region objects for the guild. Unlike the similar /voice route, this returns VIP servers when the guild is VIP-enabled. */
+  get_voice_regions(): Promise<Voice_Region[]>
   leave_voice_channel(): Promise<void>
 }
 
-export interface GuildEditOptions {
+export interface Voice_Region {
+  /** unique ID for the region */
+  id: string
+  /** name of the region */
+  name: string
+  /** true if this is a vip-only server */
+  vip: boolean
+  /** true for a single server that is closest to the current user's client */
+  optimal: boolean
+  /** whether this is a deprecated voice region (avoid switching to these) */
+  deprecated: boolean
+  /** whether this is a custom voice region (used for events/etc) */
+  custom: boolean
+}
+
+export interface BanOptions {
+  /** number of days to delete messages for (0-7) */
+  delete_message_days?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
+  /** The reason for the ban. */
+  reason?: string
+}
+
+export interface BannedUser {
+  /** The reason for the ban */
+  reason?: string
+  /** The banned user object */
+  user: User
+}
+
+export interface Position_Swap {
+  /** The unique id */
+  id: string
+  /** The sorting position number. */
+  position: number
+}
+
+export interface Guild_Edit_Options {
   /** The guild name */
   name?: string
   /** The guild voice region id */
@@ -201,7 +269,7 @@ export interface GuildEditOptions {
   system_channel_id?: string
 }
 
-export interface EditIntegrationOptions {
+export interface Edit_Integration_Options {
   /** The behavior when an integration subscription lapses. */
   expire_behavior: number
   /** The period in seconds where the integration will ignore lapsed subscriptions */
@@ -291,7 +359,7 @@ export interface Guild_Embed {
   enabled: boolean
 }
 
-export interface Get_audit_logsOptions {
+export interface Get_Audit_Logs_Options {
   /** Filter the logs for actions made by this user. */
   user_id?: string
   /** The type of audit log. */
@@ -546,6 +614,16 @@ export const createGuild = (data: CreateGuildPayload, client: Client) => {
         ...options
       })
     },
+    get_channels: () => {
+      return client.RequestManager.get(endpoints.GUILD_CHANNELS(data.id))
+    },
+    swap_channels: channel_positions => {
+      if (channel_positions.length < 2) throw 'You must provide atleast two channels to be swapped.'
+      return client.RequestManager.patch(endpoints.GUILD_CHANNELS(data.id), channel_positions)
+    },
+    get_member: id => {
+      return client.RequestManager.get(endpoints.GUILD_MEMBER(data.id, id))
+    },
     create_emoji: (name, image, options) => {
       // TODO: Check if the bot has `MANAGE_EMOJIS` permission
       return client.RequestManager.post(endpoints.GUILD_EMOJIS(data.id), {
@@ -576,10 +654,20 @@ export const createGuild = (data: CreateGuildPayload, client: Client) => {
       return role
     },
     edit_role: (id, options) => {
+      // TODO: check if the bot has the `MANAGE_ROLES` permission.
       return client.RequestManager.patch(endpoints.GUILD_ROLE(data.id, id), options)
     },
     delete_role: id => {
+      // TODO: check if the bot has the `MANAGE_ROLES` permission.
       return client.RequestManager.delete(endpoints.GUILD_ROLE(data.id, id))
+    },
+    get_roles: () => {
+      // TODO: check if the bot has the `MANAGE_ROLES` permission.
+      return client.RequestManager.get(endpoints.GUILD_ROLES(data.id))
+    },
+    swap_roles: rolePositons => {
+      // TODO: check if the bot has the `MANAGE_ROLES` permission.
+      return client.RequestManager.patch(endpoints.GUILD_ROLES(data.id), rolePositons)
     },
     get_prune_count: async days => {
       if (days < 1) throw `The number of days to count prune for must be 1 or more.`
@@ -592,7 +680,7 @@ export const createGuild = (data: CreateGuildPayload, client: Client) => {
       // TODO: check if the bot has `KICK_MEMBERS` permission.
       return client.RequestManager.post(endpoints.GUILD_PRUNE(data.id), { days })
     },
-    fetchAllMembers: () => {
+    fetch_all_members: () => {
       // TODO: REQUEST THIS OVER WEBSOCKET WITH GET_GUILD_MEMBERS ENDPOINT
     },
     get_audit_logs: options => {
@@ -625,10 +713,41 @@ export const createGuild = (data: CreateGuildPayload, client: Client) => {
       // TODO: requires the MANAGE_GUILD permission
       return client.RequestManager.delete(endpoints.GUILD_INTEGRATION(data.id, id))
     },
-    leave_voice_channel: () => {}
+    sync_integration: id => {
+      // TODO: requires MANAGE_GUILD
+      return client.RequestManager.post(endpoints.GUILD_INTEGRATION_SYNC(data.id, id))
+    },
+    get_bans: () => {
+      // TODO: requires the BAN_MEMBERS permission
+      return client.RequestManager.get(endpoints.GUILD_BANS(data.id))
+    },
+    ban: (id, options) => {
+      // TODO: requires the BAN_MEMBERS permission
+      return client.RequestManager.put(endpoints.GUILD_BAN(data.id, id), options)
+    },
+    unban: id => {
+      // TODO: requires the BAN_MEMBERS permission
+      return client.RequestManager.delete(endpoints.GUILD_BAN(data.id, id))
+    },
+    edit: options => {
+      // TODO: requires the MANAGE_GUILD permission
+      return client.RequestManager.patch(endpoints.GUILD(data.id), options)
+    },
+    get_invites: () => {
+      // TODO: requires MANAGE_GUILD permission
+      return client.RequestManager.get(endpoints.GUILD_INVITES(data.id))
+    },
+    leave: () => {
+      return client.RequestManager.delete(endpoints.GUILD_LEAVE(data.id))
+    },
+    get_voice_regions: () => {
+      return client.RequestManager.get(endpoints.GUILD_REGIONS(data.id))
+    },
+    get_webhooks: () => {
+      // TODO: requires MANAGE_WEBHOOKS
+      return client.RequestManager.get(endpoints.GUILD_WEBHOOKS(data.id))
+    }
   }
-
-  guild.edit({ default_message_notifications: 5 })
 
   return guild
 }
