@@ -166,7 +166,7 @@ export interface Guild {
   /** Begin pruning all members in the given time period */
   prune_members(days: number): Promise<void>
   /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
-  get_audit_logs(options: Get_audit_logsOptions): Promise<AuditLog>
+  get_audit_logs(options: Get_Audit_Logs_Options): Promise<AuditLog>
   /** Returns the guild embed object. Requires the MANAGE_GUILD permission. */
   get_embed(): Promise<Guild_Embed>
   /** Modify a guild embed object for the guild. Requires the MANAGE_GUILD permission. */
@@ -194,8 +194,9 @@ export interface Guild {
   /** Leave a guild */
   leave(): Promise<void>
   /** Returns a list of voice region objects for the guild. Unlike the similar /voice route, this returns VIP servers when the guild is VIP-enabled. */
-  get_voice_regions(): Promise<Voice_Region[]>
-  leave_voice_channel(): Promise<void>
+	get_voice_regions(): Promise<Voice_Region[]>
+	/** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
+	get_webhooks(): Promise<Webhook[]>
 }
 
 export interface Voice_Region {
