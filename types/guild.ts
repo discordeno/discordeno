@@ -88,9 +88,9 @@ export interface Guild {
   /** The roles in the guild */
   roles: Map<string, Role>
   /** The custom guild emojis */
-  emojis: Map<string, Emoji>
+  emojis: Emoji[]
   /** Enabled guild features */
-  features: GuildFeatures[]
+  features: Guild_Features[]
   /** Required MFA level for the guild */
   mfa_level: number
   /** The id of the channel to which system mesages are sent */

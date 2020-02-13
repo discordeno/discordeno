@@ -6,6 +6,8 @@ export const baseEndpoints = {
 
 export const endpoints = {
   GATEWAY_BOT: `${baseEndpoints.BASE_URL}/gateway/bot`,
+
+  // Guild Endpoints
   GUILD: (id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}`,
   GUILD_AUDIT_LOGS: (id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}/audit-logs`,
   GUILD_BAN: (id: string, user_id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}/bans/${user_id}`,
@@ -24,11 +26,16 @@ export const endpoints = {
 	GUILD_INVITES: (id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}/invites`,
 	GUILD_LEAVE: (id: string) => `${baseEndpoints.BASE_URL}/users/@me/guilds/${id}`,
   GUILD_MEMBER: (id: string, member_id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}/members/${member_id}`,
+  GUILD_MEMBER_ROLE: (id: string, member_id: string, role_id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}/members/${member_id}/roles/${role_id}`,
   GUILD_PRUNE: (id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}/prune`,
   GUILD_REGIONS: (id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}/regions`,
   GUILD_ROLE: (id: string, role_id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}/roles/${role_id}`,
   GUILD_ROLES: (id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}/roles`,
   GUILD_SPLASH: (id: string, icon: string) => `${baseEndpoints.CDN_URL}/splashes/${id}/${icon}`,
 	GUILD_VANITY_URL: (id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}/vanity-url`,
-	GUILD_WEBHOOKS: (id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}/webhooks`
+  GUILD_WEBHOOKS: (id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}/webhooks`,
+
+  // User endpoints
+  USER_AVATAR: (id: string, icon: string) => `${baseEndpoints.CDN_URL}/avatars/${id}/${icon}`,
+  USER_DEFAULT_AVATAR: (icon: number) => `${baseEndpoints.CDN_URL}/embed/avatars${icon}.png`
 }
