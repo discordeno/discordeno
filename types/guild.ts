@@ -1,5 +1,6 @@
 import { Role } from './role'
 import { Emoji } from './discord'
+import { Member } from '../structures/member'
 
 export interface CreateGuildPayload {
   /** The guild id */
