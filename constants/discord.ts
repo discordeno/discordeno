@@ -7,6 +7,10 @@ export const baseEndpoints = {
 export const endpoints = {
   GATEWAY_BOT: `${baseEndpoints.BASE_URL}/gateway/bot`,
 
+  // Channel Endpoints
+  CHANNEL_MESSAGE: (id: string, message_id: string) => `${baseEndpoints.BASE_URL}/channels/${id}/messages/${message_id}`,
+  CHANNEL_MESSAGES: (id: string) => `${baseEndpoints.BASE_URL}/channels/${id}`
+
   // Guild Endpoints
   GUILD: (id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}`,
   GUILD_AUDIT_LOGS: (id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}/audit-logs`,

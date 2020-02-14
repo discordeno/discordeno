@@ -503,6 +503,17 @@ export interface Overwrite {
   deny: Permission[]
 }
 
+export interface Raw_Overwrite {
+  /** The role or user id */
+  id: string
+  /** Whether this is a role or a member */
+  type: 'role' | 'member'
+  /** The permissions that this id is allowed to do. (This will mark it as a green check.) */
+  allow: number
+  /** The permissions that this id is NOT allowed to do. (This will mark it as a red x.) */
+  deny: number
+}
+
 export enum ChannelTypes {
   text,
   dm,
