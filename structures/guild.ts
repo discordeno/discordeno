@@ -3,6 +3,8 @@ import { endpoints } from '../constants/discord'
 import { formatImageURL } from '../utils/cdn'
 import { Guild, CreateGuildPayload, ChannelTypes, Permissions, PrunePayload } from '../types/guild'
 import { create_role } from './role'
+import { create_member } from './member'
+import { create_channel } from './channel'
 
 export const createGuild = (data: CreateGuildPayload, client: Client) => {
   const guild: Guild = {
@@ -12,7 +14,7 @@ export const createGuild = (data: CreateGuildPayload, client: Client) => {
     joined_at: Date.parse(data.joined_at),
     voice_states: new Map(data.voice_states.map(vs => [vs.id, create_voice_state(vs)])),
     members: new Map(data.members.map(m => [m.id, create_member(m)])),
-    channels: new Map(data.channels.map(c => [c.id, create_channel(c)])),
+    channels: new Map(data.channels.map(c => [c.id, create_channel(c, data, client)])),
     presences: new Map(data.presences.map(p => [p.id, create_presence(p)])),
     icon_url: (size, format) =>
       data.icon ? formatImageURL(endpoints.GUILD_ICON(data.id, data.icon), size, format) : undefined,

@@ -1,53 +1,7 @@
-import { Channel_Create_Options, Channel_Types } from '../types/channel'
+import { Channel_Create_Options, Channel_Types, Get_Messages_After, Get_Messages_Around, Get_Messages, Get_Messages_Before, MessageContent, Create_Invite_Options } from '../types/channel'
 import { Guild, Permission, Permissions } from '../types/guild'
 import Client from '../module/client'
 import { endpoints } from '../constants/discord'
-
-export interface MessageContent {
-  /** The message contents, up to 2000 characters */
-  content?: string
-  /** A nonce that can be used for optimistic message sending. */
-  nonce?: number | string
-  /** Whether this is a TextToSpeech message */
-  tts?: boolean
-  /** The contents of the file being sent */
-  file?: File_Content
-  /** Embed object */
-  embed?: Embed_Object
-  /** JSON encoded body of any additional request fields. */
-  payload_json?: string
-}
-
-export interface Get_Messages {
-  /** Max number of messages to return(1-100). Defaults to 50. */
-  limit?: number
-}
-
-export interface Get_Messages_After extends Get_Messages {
-  /** Get messages after this message id */
-  after: string
-}
-
-export interface Get_Messages_Before extends Get_Messages {
-  /** Get messages before this message id */
-  before: string
-}
-
-export interface Get_Messages_Around extends Get_Messages {
-  /** Get messages around this message id. */
-  around: string
-}
-
-export interface Create_Invite_Options {
-  /** Duration of invite in seconds before expiry, or 0 for never. Defaults to 86400 (24 hours) */
-  max_age: number
-  /** Max number of uses or 0 for unlimited. Default 0 */
-  max_uses: number
-  /** Whether this invite only grants temporary membership. */
-  temporary: boolean
-  /** If true, don't try to reuse a similar invite (useful for creating many unique one time use invites.) */
-  unique: boolean
-}
 
 export const create_channel = (data: Channel_Create_Options, guild: Guild, client: Client) => {
   const base_channel = {
