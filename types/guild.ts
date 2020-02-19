@@ -2,8 +2,10 @@ import { Emoji } from './discord'
 import { Member } from '../structures/member'
 import { User } from '../structures/user'
 import { Permission } from './permission'
-import { Role } from '../structures/role'
 import { Channel } from '../structures/channel'
+import { create_guild } from '../structures/guild'
+import { Role_Data } from './role'
+import { Member_Create_Payload } from './member'
 
 export interface Create_Guild_Payload {
   /** The guild id */
@@ -29,7 +31,7 @@ export interface Create_Guild_Payload {
   /** The verification level required for the guild */
   verification_level: number
   /** The roles in the guild */
-  roles: Role[]
+  roles: Role_Data[]
   /** The custom guild emojis */
   emojis: Emoji[]
   /** Enabled guild features */
@@ -46,7 +48,7 @@ export interface Create_Guild_Payload {
   unavailable: boolean
   /** Total number of members in this guild */
   member_count: number
-  voice_states: VoiceState[]
+  voice_states: Voice_State[]
   /** Users in the guild */
   members: Member[]
   /** Channels in the guild */
@@ -404,3 +406,30 @@ export interface Create_Role_Options {
 export interface PrunePayload {
   pruned: number
 }
+
+export interface Voice_State {
+  /** the guild id this voice state is for */
+  guild_id?: string
+  /** the channel id this user is connected to */
+  channel_id: string | null
+  /** the user id this voice state is for */
+  user_id: string
+  /** the guild member this voice state is for */
+  member?: Member_Create_Payload
+  /** the session id for this voice state */
+  session_id: string
+  /** whether this user is deafened by the server */
+  deaf: boolean
+  /** whether this user is muted by the server */
+  mute: boolean
+  /** whether this user is locally deafened */
+  self_deaf: boolean
+  /** whether this user is locally muted */
+  self_mute: boolean
+  /** whether this user is streaming using "Go Live" */
+  self_stream?: boolean
+  /** whether this user is muted by the current user */
+  suppress: boolean
+}
+
+export type Guild = ReturnType<typeof create_guild>

@@ -1,6 +1,6 @@
-import { Image_Formats, Image_Size } from '../types/guild'
 import { format_image_url } from '../utils/cdn'
 import { endpoints } from '../constants/discord'
+import { Image_Size, Image_Formats } from '../types/cdn'
 
 export interface User_Payload {
   /** The user's id */
@@ -44,7 +44,7 @@ export const create_user = (data: User_Payload) => ({
   discriminator: () => data.discriminator,
   tag: () => `${data.username}#${data.discriminator}`,
   avatar: () => data.avatar,
-  avatar_url: (size: Image_Size, format: Image_Formats) =>
+  avatar_url: (size: Image_Size = 128, format?: Image_Formats) =>
     data.avatar
       ? format_image_url(endpoints.USER_AVATAR(data.id, data.avatar), size, format)
       : endpoints.USER_DEFAULT_AVATAR(Number(data.discriminator) % 5),
