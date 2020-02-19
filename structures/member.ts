@@ -4,11 +4,8 @@ import { format_image_url } from '../utils/cdn'
 import { Member_Create_Payload, Edit_Member_Options } from '../types/member'
 import { Image_Size, Image_Formats } from '../types/cdn'
 import { Permission, Permissions } from '../types/permission'
-import { cache } from '../utils/cache'
 
-export const create_member = (data: Member_Create_Payload, guild_id: string, client: Client) => {
-  const guild = cache.guilds.get(guild_id)
-
+export const create_member = (data: Member_Create_Payload, guild: Guild, client: Client) => {
   return {
     /** The complete raw data from the member create payload */
     raw: () => data,
@@ -97,4 +94,4 @@ export const create_member = (data: Member_Create_Payload, guild_id: string, cli
   }
 }
 
-export type Member = ReturnType<typeof create_member>
+

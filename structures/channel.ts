@@ -1,4 +1,13 @@
-import { Channel_Create_Options, Channel_Types, Get_Messages_After, Get_Messages_Around, Get_Messages, Get_Messages_Before, MessageContent, Create_Invite_Options } from '../types/channel'
+import {
+  Channel_Create_Options,
+  Channel_Types,
+  Get_Messages_After,
+  Get_Messages_Around,
+  Get_Messages,
+  Get_Messages_Before,
+  MessageContent,
+  Create_Invite_Options
+} from '../types/channel'
 import Client from '../module/client'
 import { endpoints } from '../constants/discord'
 import { create_message, Message } from './message'
@@ -32,12 +41,15 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
       // TODO: check if the user has VIEW_CHANNEL and READ_MESSAGE_HISTORY
       if (options?.limit && options.limit > 100) return
 
-      const result = await client.RequestManager.get(endpoints.CHANNEL_MESSAGES(data.id), options) as Message_Create_Options[]
+      const result = (await client.RequestManager.get(
+        endpoints.CHANNEL_MESSAGES(data.id),
+        options
+      )) as Message_Create_Options[]
       return result.map(res => create_message(res, client))
     },
     /** Get pinned messages in this channel. */
     get_pins: async () => {
-      const result = await client.RequestManager.get(endpoints.CHANNEL_PINS(data.id)) as Message_Create_Options[]
+      const result = (await client.RequestManager.get(endpoints.CHANNEL_PINS(data.id))) as Message_Create_Options[]
       return result.map(res => create_message(res, client))
     },
     /** Send a message to the channel. Requires SEND_MESSAGES permission. */
@@ -79,7 +91,7 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
     permission_overwrites: () => data.permission_overwrites,
     /** Check whether a member has certain permissions in this channel. */
     has_permissions: (id: string, permissions: Permission[]) => {
-      if (id === guild.owner_id) return true
+      if (id === guild.owner_id()) return true
 
       const member = guild.members.get(id)
       if (!member)
@@ -89,7 +101,7 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
         const role = guild.roles.get(role_id)
         if (!role) return bits
 
-        bits |= role.permissions
+        bits |= role.permissions()
 
         return bits
       }, 0)
@@ -165,5 +177,3 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
     mention: () => `<#${data.id}>`
   }
 }
-
-export type Channel = ReturnType<typeof create_channel>

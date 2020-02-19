@@ -180,6 +180,8 @@ export enum StatusType {
 	Offline = 'offline'
 }
 
+export type Status_Type = 'online' | 'dnd' | 'idle' | 'invisible' | 'offline'
+
 export interface Status {
 	afk: boolean;
 	status: StatusType;

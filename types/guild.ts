@@ -1,11 +1,12 @@
-import { Emoji } from './discord'
-import { Member } from '../structures/member'
+import { Emoji, StatusType } from './discord'
 import { User } from '../structures/user'
 import { Permission } from './permission'
-import { Channel } from '../structures/channel'
 import { create_guild } from '../structures/guild'
 import { Role_Data } from './role'
 import { Member_Create_Payload } from './member'
+import { Activity } from './message'
+import { ClientStatusPayload } from '../structures/presence'
+import { Channel_Create_Options } from './channel'
 
 export interface Create_Guild_Payload {
   /** The guild id */
@@ -50,9 +51,9 @@ export interface Create_Guild_Payload {
   member_count: number
   voice_states: Voice_State[]
   /** Users in the guild */
-  members: Member[]
+  members: Member_Create_Payload[]
   /** Channels in the guild */
-  channels: Channel[]
+  channels: Channel_Create_Options[]
   presences: Presence[]
   /** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.) */
   max_presences?: number | null
@@ -430,6 +431,23 @@ export interface Voice_State {
   self_stream?: boolean
   /** whether this user is muted by the current user */
   suppress: boolean
+}
+
+export interface Presence {
+  /** The user presence is being updated for */
+  user: User_Data
+  /** The roles this user is in */
+  roles: string[]
+  /** null, or the user's current activity */
+  game: Activity | null
+  /** The id of the guild */
+  guild_id: string
+  /** Either idle */
+  status: StatusType
+  activities: Activity[]
+  client_status: ClientStatusPayload
+  premium_since?: string | null
+  nick?: string | null
 }
 
 export type Guild = ReturnType<typeof create_guild>

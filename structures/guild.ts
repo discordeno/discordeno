@@ -17,9 +17,10 @@ import {
 import { create_role, Role } from './role'
 import { create_member } from './member'
 import { create_channel } from './channel'
-import { Channel_Create_Options } from '../types/channel'
+import { Channel_Create_Options, Channel } from '../types/channel'
 import { Image_Size, Image_Formats } from '../types/cdn'
 import { Permissions } from '../types/permission'
+import { Member } from '../types/member'
 
 export const create_guild = (data: Create_Guild_Payload, client: Client) => {
   const guild = {
@@ -64,11 +65,11 @@ export const create_guild = (data: Create_Guild_Payload, client: Client) => {
     /** The current open voice states in the guild. */
     voice_states: () => data.voice_states,
     /** The users in this guild. */
-    members: new Map(data.members.map(m => [m.id, create_member(m)])),
+    members: new Map<string, Member>(),
     /** The channels in the guild */
-    channels: new Map(data.channels.map(c => [c.id, create_channel(c, data, client)])),
+    channels: new Map<string, Channel>(),
     /** The presences of all the users in the guild. */
-    presences: new Map(data.presences.map(p => [p.id, create_presence(p)])),
+    presences: new Map(data.presences.map(p => [p.user.id, p])),
     /** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.)  */
     max_presences: () => data.max_presences,
     /** The maximum amount of members for the guild */
@@ -284,6 +285,7 @@ export const create_guild = (data: Create_Guild_Payload, client: Client) => {
   }
 
   data.roles.forEach(r => guild.roles.set(r.id, create_role(r)))
-
+  data.members.forEach(m => guild.members.set(m.user.id, create_member(m, guild, client)))
+  data.channels.forEach(c => guild.channels.set(c.id, create_channel(c, guild, client)))
   return guild
 }

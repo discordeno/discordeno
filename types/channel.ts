@@ -1,4 +1,5 @@
 import { Raw_Overwrite, Overwrite } from './guild'
+import { create_channel } from '../structures/channel'
 
 export interface Base_Channel_Create {
   /** The id of this channel */
@@ -103,3 +104,5 @@ export interface Create_Invite_Options {
   /** If true, don't try to reuse a similar invite (useful for creating many unique one time use invites.) */
   unique: boolean
 }
+
+export type Channel = ReturnType<typeof create_channel>

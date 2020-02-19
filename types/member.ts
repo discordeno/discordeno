@@ -1,4 +1,5 @@
 import { User_Payload } from "../structures/user";
+import { create_member } from "../structures/member";
 
 export interface Edit_Member_Options {
   /** Value to set users nickname to. Requires MANAGE_NICKNAMES permission. */
@@ -29,3 +30,5 @@ export interface Member_Create_Payload {
   /** Whether the user is muted in voice channels */
   mute: boolean
 }
+
+export type Member = ReturnType<typeof create_member>
