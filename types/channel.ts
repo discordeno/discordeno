@@ -1,6 +1,6 @@
-import { Raw_Overwrite } from './guild'
+import { Raw_Overwrite, Overwrite } from './guild'
 
-export interface Channel_Create_Options {
+export interface Base_Channel_Create {
   /** The id of this channel */
   id: string
   /** The type of the channel */
@@ -9,26 +9,34 @@ export interface Channel_Create_Options {
   guild_id?: string
   /** Sorting position of the channel */
   position?: number
+  /** The name of the channel (2-100 characters) */
+  name?: string
+  /** The channel topic (0-1024 characters) */
+  topic?: string
+  /** Whether the channel is nsfw */
+  nsfw?: boolean
+  /** The id of the last message sent in this channel (may not point to an existing or valid message) */
+  last_message_id?: string | null
+  /** The bitrate (in bits) of the voice channel */
+  bitrate?: number
+  /** The user limit of the voice channel */
+  user_limit?: number
+  /** Amount of seconds a user has to wait before sending another message (0-21600) Bots and users with the permission MANAGE_MESSAGES or MANAGE_CHANNEL are unaffected. */
+  rate_limit_per_user?: number
+  /** The parent category id */
+  parent_id?: string | null
+  /** When the last pinned message was pinned */
+  last_pin_timestamp?: string
+}
+
+export interface Channel_Create_Payload extends Base_Channel_Create {
   /** Explicit permission overwrites for members and roles */
   permission_overwrites?: Raw_Overwrite[]
-  /** The name of the channel (2-100 characters) */
-	name?: string
-	/** The channel topic (0-1024 characters) */
-	topic?: string
-	/** Whether the channel is nsfw */
-	nsfw?: boolean
-	/** The id of the last message sent in this channel (may not point to an existing or valid message) */
-	last_message_id?: string | null
-	/** The bitrate (in bits) of the voice channel */
-	bitrate?: number
-	/** The user limit of the voice channel */
-	user_limit?: number
-	/** Amount of seconds a user has to wait before sending another message (0-21600) Bots and users with the permission MANAGE_MESSAGES or MANAGE_CHANNEL are unaffected. */
-	rate_limit_per_user?: number
-	/** The parent category id */
-	parent_id?: string | null
-	/** When the last pinned message was pinned */
-	last_pin_timestamp?: string
+}
+
+export interface Channel_Create_Options extends Base_Channel_Create {
+  /** Explicit permission overwrites for members and roles */
+  permission_overwrites?: Overwrite[]
 }
 
 export type Channel_Type = 0 | 1 | 2 | 4 | 5 | 6

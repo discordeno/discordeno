@@ -1,5 +1,6 @@
 import { Member } from '../structures/member'
-import { ChannelType } from './guild'
+import { ChannelType, User_Data } from './guild'
+import { User } from '../structures/user'
 
 export interface MentionedUser extends User {
   member: Member
@@ -223,7 +224,7 @@ export interface Message_Create_Options {
   /** The id of the guild the message was sent in */
   guild_id?: string
   /** The author of this message (not guaranteed to be a valid user such as a webhook.) */
-  author: User
+  author: User_Data
   /** The member properties for this message's author. Can be partial. */
   member?: Member
   /** The contents of the message */

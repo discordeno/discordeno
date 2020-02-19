@@ -1,3 +1,5 @@
+import { User } from "../structures/user";
+
 export interface Emoji {
   /** emoji id. It will be null for default discord emojis. */
   id: string | null

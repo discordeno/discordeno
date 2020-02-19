@@ -3,6 +3,7 @@ import { Message_Create_Options } from '../types/message'
 import { endpoints } from '../constants/discord'
 import { Channel_Types, MessageContent } from '../types/channel'
 import { cache } from '../utils/cache'
+import { create_user, User_Payload } from './user'
 
 export const create_message = (data: Message_Create_Options, client: Client) => {
   const base_message = {
@@ -31,11 +32,11 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
     }),
     flags: () => data.flags || 0,
     channel_id: () => data.channel_id,
-    channel: () => client.channels.get(data.channel_id),
+    channel: () => cache.channels.get(data.channel_id),
 
     delete: (reason: string) => {
       // TODO: Requires MANAGE_MESSAGES
-      if (data.author.id !== client.bot_id) checkPermission()
+      if (data.author.id !== client.bot_id) {}
 
       client.RequestManager.delete(endpoints.CHANNEL_MESSAGE(data.channel_id, data.id), { reason })
     },
@@ -67,8 +68,9 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
       client.RequestManager.delete(endpoints.CHANNEL_MESSAGE_REACTION(data.channel_id, data.id, reaction))
     },
     /** Get a list of users that reacted with this emoji. */
-    get_reactions: (reaction: string) => {
-      return client.RequestManager.get(endpoints.CHANNEL_MESSAGE_REACTION(data.channel_id, data.id, reaction)) as User[]
+    get_reactions: async (reaction: string) => {
+      const result = await client.RequestManager.get(endpoints.CHANNEL_MESSAGE_REACTION(data.channel_id, data.id, reaction)) as User_Payload[]
+      return result.map(res => create_user(res))
     },
     /** Edit the message. */
     edit: async (content: string | MessageContent) => {
@@ -92,7 +94,7 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
   if (!data.guild_id) {
     return {
       ...base_message,
-      author: create_user(data.author, client)
+      author: create_user({ ...data.author, avatar: data.author.avatar || '' })
     }
   }
 
@@ -104,3 +106,5 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
     member: () => data.member
   }
 }
+
+export type Message = ReturnType<typeof create_message>

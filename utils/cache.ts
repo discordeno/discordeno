@@ -1,4 +1,6 @@
-import { Guild } from "../types/guild";
+import { User } from "../structures/user";
+import { Channel } from "../structures/channel";
+import { Guild } from "../structures/guild";
 
 export const cache = {
 	guilds: new Map<string, Guild>(),

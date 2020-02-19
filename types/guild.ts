@@ -1,8 +1,11 @@
-import { Role } from './role'
 import { Emoji } from './discord'
 import { Member } from '../structures/member'
+import { User } from '../structures/user'
+import { Permission } from './permission'
+import { Role } from '../structures/role'
+import { Channel } from '../structures/channel'
 
-export interface CreateGuildPayload {
+export interface Create_Guild_Payload {
   /** The guild id */
   id: string
   /** The guild name 2-100 characters */
@@ -65,142 +68,6 @@ export interface CreateGuildPayload {
   premium_subscription_count: number
   /** The preferred local of this guild only set if guild has the DISCOVERABLE feature, defaults to en-US */
   preferred_locale: string
-}
-
-export interface Guild {
-  /** The guild id */
-  id: string
-  /** The guild name 2-100 characters */
-  name: string
-  /** The guild icon image hash */
-  icon: string | null
-  /** The guild splash image hash */
-  splash: string | null
-  /** The id of the owner */
-  owner_id: string
-  /** The voice region id for the guild */
-  region: string
-  /** The afk channel id */
-  afk_channel_id: string | null
-  /** AFK Timeout in seconds. */
-  afk_timeout: number
-  /** The verification level required for the guild */
-  verification_level: number
-  /** The roles in the guild */
-  roles: Map<string, Role>
-  /** The custom guild emojis */
-  emojis: Emoji[]
-  /** Enabled guild features */
-  features: Guild_Features[]
-  /** Required MFA level for the guild */
-  mfa_level: number
-  /** The id of the channel to which system mesages are sent */
-  system_channel_id: string | null
-  /** When this guild was joined at */
-  joined_at: number
-  /** Whether this is considered a large guild */
-  large: boolean
-  /** Whether this guild is unavailable */
-  unavailable: boolean
-  /** Total number of members in this guild */
-  member_count: number
-  voice_states: Map<string, Voice_State>
-  /** Users in the guild */
-  members: Map<string, Member>
-  /** Channels in the guild */
-  channels: Map<string, Channel>
-  presences: Map<string, Presence>
-  /** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.) */
-  max_presences?: number | null
-  /** The maximum amount of members for the guild */
-  max_members?: number
-  /** The vanity url code for the guild */
-  vanity_url_code: string | null
-  /** The description for the guild */
-  description: string | null
-  /** The banner hash */
-  banner: string | null
-  /** The premium tier */
-  premium_tier: number
-  /** The total number of users currently boosting this server. */
-  premium_subscription_count: number
-  /** The preferred local of this guild only set if guild has the DISCOVERABLE feature, defaults to en-US */
-  preferred_locale: string
-  /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
-  icon_url(size?: Image_Size, format?: Image_Formats): string | undefined
-  /** The full URL of the splash from Discords CDN. Undefined if no splash is set. */
-  splash_url(size?: Image_Size, format?: Image_Formats): string | undefined
-  /** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
-  banner_url(size?: Image_Size, format?: Image_Formats): string | undefined
-  /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-  create_channel(name: string, options: ChannelCreate_Options): Promise<Channel>
-  /** Returns a list of guild channel objects.
-   *
-   * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
-   */
-  get_channels(): Promise<Channel[]>
-  /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
-  swap_channels(channel_positions: Position_Swap[]): Promise<void>
-  /** Returns a guild member object for the specified user.
-   *
-   * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your members will be cached in your guild.**
-   */
-  get_member(id: string): Promise<Member>
-  /** Create an emoji in the server. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. */
-  create_emoji(name: string, image: string, options: Create_Emojis_Options): Promise<Emoji>
-  /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */
-  edit_emoji(id: string, options: Edit_Emojis_Options): Promise<Emoji>
-  /** Delete the given emoji. Requires the MANAGE_EMOJIS permission. Returns 204 No Content on success. */
-  delete_emoji(id: string, reason?: string): Promise<void>
-  /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
-  create_role(options: Create_Role_Options): Promise<Role>
-  /** Edi a guild role. Requires the MANAGE_ROLES permission. */
-  edit_role(id: string, options: Create_Role_Options): Promise<Role>
-  /** Delete a guild role. Requires the MANAGE_ROLES permission. */
-  delete_role(id: string): Promise<void>
-  /** Returns a list of role objects for the guild.
-   *
-   * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your roles will be cached in your guild.**
-   */
-  get_roles(): Promise<Role[]>
-  /** Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. */
-  swap_roles(role_positions: Position_Swap): Promise<Role[]>
-  /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
-  get_prune_count(days: number): Promise<number>
-  /** Begin pruning all members in the given time period */
-  prune_members(days: number): Promise<void>
-  /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
-  get_audit_logs(options: Get_Audit_Logs_Options): Promise<AuditLog>
-  /** Returns the guild embed object. Requires the MANAGE_GUILD permission. */
-  get_embed(): Promise<Guild_Embed>
-  /** Modify a guild embed object for the guild. Requires the MANAGE_GUILD permission. */
-  edit_embed(enabled: boolean, channel_id?: string | null): Promise<Guild_Embed>
-  /** Returns the code and uses of the vanity url for this server if it is enabled. Requires the MANAGE_GUILD permission. */
-  get_vanity_url(): Promise<Vanity_Invite>
-  /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
-  get_integrations(): Promise<Guild_Integration[]>
-  /** Modify the behavior and settings of an integration object for the guild. Requires the MANAGE_GUILD permission. */
-  edit_integration(id: string, options: Edit_Integration_Options): Promise<void>
-  /** Delete the attached integration object for the guild with this id. Requires MANAGE_GUILD permission. */
-  delete_integration(id: string): Promise<void>
-  /** Sync an integration. Requires teh MANAGE_GUILD permission. */
-  sync_integration(id: string): Promise<void>
-  /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
-  get_bans(): Promise<BannedUser[]>
-  /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires teh BAN_MEMBERS permission. */
-  ban(id: string, options: BanOptions): Promise<void>
-  /** Remove the ban for a user. REquires BAN_MEMBERS permission */
-  unban(id: string): Promise<void>
-  /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
-  edit(options: Guild_Edit_Options): Promise<Guild>
-  /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
-  get_invites(): Promise<Invite[]>
-  /** Leave a guild */
-  leave(): Promise<void>
-  /** Returns a list of voice region objects for the guild. Unlike the similar /voice route, this returns VIP servers when the guild is VIP-enabled. */
-  get_voice_regions(): Promise<Voice_Region[]>
-  /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
-  get_webhooks(): Promise<Webhook[]>
 }
 
 export type Guild_Features =
@@ -456,41 +323,7 @@ export enum AuditLogs {
   INTEGRATION_DELETE
 }
 
-export type Image_Size = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048
-export type Image_Formats = 'jpg' | 'jpeg' | 'png' | 'webp' | 'gif'
 export type ChannelType = 'text' | 'dm' | 'news' | 'voice' | 'category' | 'store'
-
-export type Permission =
-  | `CREATE_INSTANT_INVITE`
-  | `KICK_MEMBERS`
-  | `BAN_MEMBERS`
-  | `ADMINISTRATOR`
-  | `MANAGE_CHANNELS`
-  | `MANAGE_GUILD`
-  | `ADD_REACTIONS`
-  | `VIEW_AUDIT_LOG`
-  | `VIEW_CHANNEL`
-  | `SEND_MESSAGES`
-  | `SEND_TTS_MESSAGES`
-  | `MANAGE_MESSAGES`
-  | `EMBED_LINKS`
-  | `ATTACH_FILES`
-  | `READ_MESSAGE_HISTORY`
-  | `MENTION_EVERYONE`
-  | `USE_EXTERNAL_EMOJIS`
-  | `CONNECT`
-  | `SPEAK`
-  | `MUTE_MEMBERS`
-  | `DEAFEN_MEMBERS`
-  | `MOVE_MEMBERS`
-  | `USE_VAD`
-  | `PRIORITY_SPEAKER`
-  | `STREAM`
-  | `CHANGE_NICKNAME`
-  | `MANAGE_NICKNAMES`
-  | `MANAGE_ROLES`
-  | `MANAGE_WEBHOOKS`
-  | `MANAGE_EMOJIS`
 
 export interface Overwrite {
   /** The role or user id */
@@ -521,39 +354,6 @@ export enum ChannelTypes {
   category = 4,
   news,
   store
-}
-
-export enum Permissions {
-  CREATE_INSTANT_INVITE = 0x00000001,
-  KICK_MEMBERS = 0x00000002,
-  BAN_MEMBERS = 0x00000004,
-  ADMINISTRATOR = 0x00000008,
-  MANAGE_CHANNELS = 0x00000010,
-  MANAGE_GUILD = 0x00000020,
-  ADD_REACTIONS = 0x00000040,
-  VIEW_AUDIT_LOG = 0x00000080,
-  VIEW_CHANNEL = 0x00000400,
-  SEND_MESSAGES = 0x00000800,
-  SEND_TTS_MESSAGES = 0x00001000,
-  MANAGE_MESSAGES = 0x00002000,
-  EMBED_LINKS = 0x00004000,
-  ATTACH_FILES = 0x00008000,
-  READ_MESSAGE_HISTORY = 0x00010000,
-  MENTION_EVERYONE = 0x00020000,
-  USE_EXTERNAL_EMOJIS = 0x00040000,
-  CONNECT = 0x00100000,
-  SPEAK = 0x00200000,
-  MUTE_MEMBERS = 0x00400000,
-  DEAFEN_MEMBERS = 0x00800000,
-  MOVE_MEMBERS = 0x01000000,
-  USE_VAD = 0x02000000,
-  PRIORITY_SPEAKER = 0x00000100,
-  STREAM = 0x00000200,
-  CHANGE_NICKNAME = 0x04000000,
-  MANAGE_NICKNAMES = 0x08000000,
-  MANAGE_ROLES = 0x10000000,
-  MANAGE_WEBHOOKS = 0x20000000,
-  MANAGE_EMOJIS = 0x40000000
 }
 
 export interface ChannelCreate_Options {
