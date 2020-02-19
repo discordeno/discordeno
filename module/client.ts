@@ -6,14 +6,14 @@ import {
   connectWebSocket,
   isWebSocketCloseEvent,
   isWebSocketPingEvent,
-  isWebSocketPongEvent,
-  WebSocket
+  isWebSocketPongEvent
 } from 'https://deno.land/std/ws/mod.ts'
 import Gateway from './gateway.ts'
 import { ClientOptions, FulfilledClientOptions } from '../types/options.ts'
 import { CollectedMessageType } from '../types/message-type.ts'
 
 class Client {
+  bot_id: string
   /** The bot's token. This should never be used by end users. It is meant to be used internally to make requests to the Discord API. */
   token: string
   /** The Rate limit manager to handle all outgoing requests to discord. Not meant to be used by users. */
@@ -39,6 +39,7 @@ class Client {
       },
       options
     )
+    this.bot_id = options.bot_id
     this.token = options.token
     this.authorization = `Bot ${this.options.token}`
     this.RequestManager = new RequestManager(this, this.authorization)

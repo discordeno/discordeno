@@ -2,6 +2,7 @@ import { Channel_Create_Options, Channel_Types, Get_Messages_After, Get_Messages
 import { Guild, Permission, Permissions } from '../types/guild'
 import Client from '../module/client'
 import { endpoints } from '../constants/discord'
+import { create_message } from './message'
 
 export const create_channel = (data: Channel_Create_Options, guild: Guild, client: Client) => {
   const base_channel = {

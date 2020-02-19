@@ -17,6 +17,10 @@ export const endpoints = {
   CHANNEL_BULK_DELETE: (id: string) => `${baseEndpoints.BASE_URL}/channels/${id}/messages/bulk-delete`,
   CHANNEL_INVITES: (id: string) => `${baseEndpoints.BASE_URL}/channels/${id}/invites`,
   CHANNEL_WEBHOOKS: (id: string) => `${baseEndpoints.BASE_URL}/channels/${id}/webhooks`,
+  CHANNEL_MESSAGE_REACTION_ME: (id: string, message_id: string, emoji: string) => `${baseEndpoints.BASE_URL}/channels/${id}/messages/${message_id}/reactions/${emoji}/@me`,
+  CHANNEL_MESSAGE_REACTIONS: (id: string, message_id: string) => `${baseEndpoints.BASE_URL}/channels/${id}/messages/${message_id}/reactions`,
+  CHANNEL_MESSAGE_REACTION: (id: string, message_id: string, emoji: string) => `${baseEndpoints.BASE_URL}/channels/${id}/messages/${message_id}/reactions/${emoji}`,
+
 
   // Guild Endpoints
   GUILD: (id: string) => `${GUILDS_BASE(id)}`,
