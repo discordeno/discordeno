@@ -4,8 +4,11 @@ import { format_image_url } from '../utils/cdn'
 import { Member_Create_Payload, Edit_Member_Options } from '../types/member'
 import { Image_Size, Image_Formats } from '../types/cdn'
 import { Permission, Permissions } from '../types/permission'
+import { cache } from '../utils/cache'
 
-export const create_member = (data: Member_Create_Payload, guild: Guild, client: Client) => {
+export const create_member = (data: Member_Create_Payload, guild_id: string, client: Client) => {
+  const guild = cache.guilds.get(guild_id)
+
   return {
     /** The complete raw data from the member create payload */
     raw: () => data,
@@ -41,17 +44,17 @@ export const create_member = (data: Member_Create_Payload, guild: Guild, client:
     /** Add a role to the member */
     add_role: (role_id: string, reason?: string) => {
       // TODO: check if the bot has MANAGE_ROLE and its highest role is above this one
-      return client.RequestManager.put(endpoints.GUILD_MEMBER_ROLE(guild.id, data.user.id, role_id), { reason })
+      return client.RequestManager.put(endpoints.GUILD_MEMBER_ROLE(guild_id, data.user.id, role_id), { reason })
     },
     /** Remove a role from the member */
     remove_role: (role_id: string, reason?: string) => {
       // TODO: check if the bot has MANAGE_ROLE permissions and its highest role is above this role
-      return client.RequestManager.delete(endpoints.GUILD_MEMBER_ROLE(guild.id, data.user.id, role_id), { reason })
+      return client.RequestManager.delete(endpoints.GUILD_MEMBER_ROLE(guild_id, data.user.id, role_id), { reason })
     },
     /** Kick a member from the server */
     kick: (reason?: string) => {
       // TODO: check if bot has KICK_MEMBER permissions
-      return client.RequestManager.delete(endpoints.GUILD_MEMBER(guild.id, data.user.id), { reason })
+      return client.RequestManager.delete(endpoints.GUILD_MEMBER(guild_id, data.user.id), { reason })
     },
     /** Ban a member from the server */
     ban: (delete_message_days = 0, reason?: string) => {
@@ -89,7 +92,7 @@ export const create_member = (data: Member_Create_Payload, guild: Guild, client:
       // TODO: if channel id is provided check if the bot has CONNECT and MOVE in channel and current channel
       options.channel_id = undefined
 
-      return client.RequestManager.patch(endpoints.GUILD_MEMBER(guild.id, data.user.id), options)
+      return client.RequestManager.patch(endpoints.GUILD_MEMBER(guild_id, data.user.id), options)
     }
   }
 }

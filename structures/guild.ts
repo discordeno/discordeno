@@ -1,6 +1,6 @@
-import Client from '../module/client'
-import { endpoints } from '../constants/discord'
-import { format_image_url } from '../utils/cdn'
+import Client from '../module/client.ts'
+import { endpoints } from '../constants/discord.ts'
+import { format_image_url } from '../utils/cdn.ts'
 import {
   Create_Guild_Payload,
   ChannelTypes,
@@ -14,7 +14,7 @@ import {
   Edit_Emojis_Options,
   Create_Role_Options
 } from '../types/guild'
-import { create_role, Role } from './role'
+import { create_role, Role } from './role.ts'
 import { create_member } from './member'
 import { create_channel } from './channel'
 import { Channel_Create_Options, Channel } from '../types/channel'
@@ -285,7 +285,7 @@ export const create_guild = (data: Create_Guild_Payload, client: Client) => {
   }
 
   data.roles.forEach(r => guild.roles.set(r.id, create_role(r)))
-  data.members.forEach(m => guild.members.set(m.user.id, create_member(m, guild, client)))
+  data.members.forEach(m => guild.members.set(m.user.id, create_member(m, data.id, client)))
   data.channels.forEach(c => guild.channels.set(c.id, create_channel(c, guild, client)))
   return guild
 }
