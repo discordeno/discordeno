@@ -1,7 +1,6 @@
 import { Emoji, StatusType } from './discord'
 import { User } from '../structures/user'
 import { Permission } from './permission'
-import { create_guild } from '../structures/guild'
 import { Role_Data } from './role'
 import { Member_Create_Payload } from './member'
 import { Activity } from './message'
@@ -449,5 +448,3 @@ export interface Presence {
   premium_since?: string | null
   nick?: string | null
 }
-
-export type Guild = ReturnType<typeof create_guild>

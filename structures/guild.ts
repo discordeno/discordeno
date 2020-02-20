@@ -22,6 +22,8 @@ import { Image_Size, Image_Formats } from '../types/cdn'
 import { Permissions } from '../types/permission'
 import { Member } from '../types/member'
 
+export type Guild = ReturnType<typeof create_guild>;
+
 export const create_guild = (data: Create_Guild_Payload, client: Client) => {
   const guild = {
     /** The raw create guild payload data. */
