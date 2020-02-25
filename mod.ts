@@ -1,4 +1,4 @@
-import Client from "./module/Client.ts"
+import Client from "./module/client.ts"
 import { configs } from "./configs.ts"
 import { StatusType, GatewayOpcode } from "./types/discord.ts";
 

@@ -1,4 +1,4 @@
-import { endpoints } from '../constants/discord.ts'
+import { endpoints } from '../constants/discord'
 import DiscordRequestManager from '../managers/DiscordRequestManager.ts'
 import { DiscordBotGatewayData, DiscordPayload, DiscordHeartbeatPayload, GatewayOpcode } from '../types/discord.ts'
 import ShardingManager from '../managers/ShardingManager.ts'
@@ -130,7 +130,7 @@ class Client {
 
   spawnShards(total: number, id = 1) {
     // this.ShardingManager.spawnShard(id);
-    if (id < total) this.spawnShards(total, id + 1)
+    if (id < total) this.spawnShards(total, id + 1);
   }
 }
 

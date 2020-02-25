@@ -38,38 +38,38 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
       // TODO: Requires MANAGE_MESSAGES
       if (data.author.id !== client.bot_id) {}
 
-      client.RequestManager.delete(endpoints.CHANNEL_MESSAGE(data.channel_id, data.id), { reason })
+      client.discordRequestManager.delete(endpoints.CHANNEL_MESSAGE(data.channel_id, data.id), { reason })
     },
     /** Pin a message in a channel. Requires MANAGE_MESSAGES. Max pins allowed in a channel = 50. */
     pin: () => {
       // TODO: Requires MANAGE_MESSAGES
-      client.RequestManager.put(endpoints.CHANNEL_MESSAGE(data.channel_id, data.id))
+      client.discordRequestManager.put(endpoints.CHANNEL_MESSAGE(data.channel_id, data.id))
     },
     unpin: () => {
       // TODO: Requires MANAGE_MESSAGES
-      client.RequestManager.delete(endpoints.CHANNEL_MESSAGE(data.channel_id, data.id))
+      client.discordRequestManager.delete(endpoints.CHANNEL_MESSAGE(data.channel_id, data.id))
     },
     /** Create a reaction for the message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS */
     add_reaction: (reaction: string) => {
-      client.RequestManager.put(endpoints.CHANNEL_MESSAGE_REACTION_ME(data.channel_id, data.id, reaction))
+      client.discordRequestManager.put(endpoints.CHANNEL_MESSAGE_REACTION_ME(data.channel_id, data.id, reaction))
     },
     /** Removes a reaction from the bot on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
     remove_reaction: (reaction: string) => {
-      client.RequestManager.delete(endpoints.CHANNEL_MESSAGE_REACTION_ME(data.channel_id, data.id, reaction))
+      client.discordRequestManager.delete(endpoints.CHANNEL_MESSAGE_REACTION_ME(data.channel_id, data.id, reaction))
     },
     /** Removes all reactions for all emojis on this message. */
     remove_all_reactions: () => {
       // TODO: Requires MANAGE_MESSAGES
-      client.RequestManager.delete(endpoints.CHANNEL_MESSAGE_REACTIONS(data.channel_id, data.id))
+      client.discordRequestManager.delete(endpoints.CHANNEL_MESSAGE_REACTIONS(data.channel_id, data.id))
     },
     /** Removes all reactions for a single emoji on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
     remove_reaction_emoji: (reaction: string) => {
       // TODO: Requires MANAGE_MESSAGES
-      client.RequestManager.delete(endpoints.CHANNEL_MESSAGE_REACTION(data.channel_id, data.id, reaction))
+      client.discordRequestManager.delete(endpoints.CHANNEL_MESSAGE_REACTION(data.channel_id, data.id, reaction))
     },
     /** Get a list of users that reacted with this emoji. */
     get_reactions: async (reaction: string) => {
-      const result = await client.RequestManager.get(endpoints.CHANNEL_MESSAGE_REACTION(data.channel_id, data.id, reaction)) as User_Payload[]
+      const result = await client.discordRequestManager.get(endpoints.CHANNEL_MESSAGE_REACTION(data.channel_id, data.id, reaction)) as User_Payload[]
       return result.map(res => create_user(res))
     },
     /** Edit the message. */
@@ -86,7 +86,7 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
 
       // TODO: Check content length
 
-      const result = await client.RequestManager.patch(endpoints.CHANNEL_MESSAGES(data.id), content)
+      const result = await client.discordRequestManager.patch(endpoints.CHANNEL_MESSAGES(data.id), content)
       return create_message(result, client)
     }
   }

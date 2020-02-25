@@ -9,12 +9,11 @@ import {
   Create_Invite_Options
 } from '../types/channel'
 import Client from '../module/client'
-import { endpoints } from '../constants/discord'
+import { endpoints } from '../constants/discord.ts'
 import { create_message, Message } from './message'
 import { Message_Create_Options } from '../types/message'
 import { Permission, Permissions } from '../types/permission'
-import { Guild } from '../types/guild'
-
+import { Guild } from '../types/return-type'
 
 export const create_channel = (data: Channel_Create_Options, guild: Guild, client: Client) => {
   const base_channel = {
@@ -34,7 +33,7 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
     /** Fetch a single message from the server. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
     get_message: async (id: string) => {
       // TODO: check if the user has VIEW_CHANNEL and READ_MESSAGE_HISTORY
-      const result = await client.RequestManager.get(endpoints.CHANNEL_MESSAGE(data.id, id))
+      const result = await client.discordRequestManager.get(endpoints.CHANNEL_MESSAGE(data.id, id))
       return create_message(result, client)
     },
     /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
@@ -42,7 +41,7 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
       // TODO: check if the user has VIEW_CHANNEL and READ_MESSAGE_HISTORY
       if (options?.limit && options.limit > 100) return
 
-      const result = (await client.RequestManager.get(
+      const result = (await client.discordRequestManager.get(
         endpoints.CHANNEL_MESSAGES(data.id),
         options
       )) as Message_Create_Options[]
@@ -50,7 +49,7 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
     },
     /** Get pinned messages in this channel. */
     get_pins: async () => {
-      const result = (await client.RequestManager.get(endpoints.CHANNEL_PINS(data.id))) as Message_Create_Options[]
+      const result = (await client.discordRequestManager.get(endpoints.CHANNEL_PINS(data.id))) as Message_Create_Options[]
       return result.map(res => create_message(res, client))
     },
     /** Send a message to the channel. Requires SEND_MESSAGES permission. */
@@ -66,7 +65,7 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
 
       // TODO: Check content length
 
-      const result = await client.RequestManager.post(endpoints.CHANNEL_MESSAGES(data.id), content)
+      const result = await client.discordRequestManager.post(endpoints.CHANNEL_MESSAGES(data.id), content)
       return create_message(result, client)
     }
   }
@@ -111,6 +110,8 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
         permissionBits = (permissionBits & ~overwrite.deny) | overwrite.allow
       })
 
+      if (permissionBits & Permissions.ADMINISTRATOR) return true
+
       return permissions.every(permission => permissionBits & Permissions[permission])
     }
   }
@@ -132,7 +133,7 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
           console.warn(
             `This endpoint only accepts a maximum of 100 messages. Deleting the first 100 message ids provided.`
           )
-        return client.RequestManager.POST(endpoints.CHANNEL_BULK_DELETE(data.id), {
+        return client.discordRequestManager.POST(endpoints.CHANNEL_BULK_DELETE(data.id), {
           messages: ids.splice(0, 100),
           reason
         })
@@ -140,17 +141,17 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
       /** Gets the invites for this channel. Requires MANAGE_CHANNEL */
       get_invites: () => {
         // TODO: Requires the MANAGE_CHANNELS permission
-        return client.RequestManager.get(endpoints.CHANNEL_INVITES(data.id))
+        return client.discordRequestManager.get(endpoints.CHANNEL_INVITES(data.id))
       },
       /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
       create_invite: (options: Create_Invite_Options) => {
         // TODO: Requires CREATE_INSTANT_INVITE permissin.
-        return client.RequestManager.post(endpoints.CHANNEL_INVITES(data.id), options)
+        return client.discordRequestManager.post(endpoints.CHANNEL_INVITES(data.id), options)
       },
       /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
       get_webhooks: () => {
         // TODO: Requires MANAGE_WEBHOOKS
-        return client.RequestManager.get(endpoints.CHANNEL_WEBHOOKS(data.id))
+        return client.discordRequestManager.get(endpoints.CHANNEL_WEBHOOKS(data.id))
       }
     }
 
