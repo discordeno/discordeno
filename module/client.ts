@@ -1,6 +1,6 @@
 import { endpoints } from "../constants/discord.ts"
 import DiscordRequestManager from "./discord-request-manager.ts"
-import { DiscordBotGatewayData, DiscordPayload, DiscordHeartbeatPayload, GatewayOpcode, StatusType } from "../types/discord.ts"
+import { DiscordBotGatewayData, DiscordPayload, DiscordHeartbeatPayload, GatewayOpcode } from "../types/discord.ts"
 import { spawnShards } from "./sharding-manager.ts"
 import {
   connectWebSocket,
@@ -11,7 +11,7 @@ import {
 } from "https://deno.land/std/ws/mod.ts"
 import { ClientOptions, FulfilledClientOptions } from "../types/options.ts"
 import { CollectedMessageType } from "../types/message-type.ts"
-import { sendConstantHeartbeats } from "./gateway.ts"
+import { send_constant_heartbeats, update_previous_sequence_number } from "./gateway.ts"
 
 const defaultOptions = {
   properties: {
@@ -50,7 +50,7 @@ class Client {
   }
 
   async bootstrap() {
-    const data = await this.discordRequestManager.get(endpoints.GATEWAY_BOT) as DiscordBotGatewayData
+    const data = (await this.discordRequestManager.get(endpoints.GATEWAY_BOT)) as DiscordBotGatewayData
     const socket = await connectWebSocket(data.url)
     this.collectMessages(socket)
     // Intial identify with the gateway
@@ -68,13 +68,11 @@ class Client {
     )
 
     for await (const message of this.connect(socket, data)) {
-      console.log("mymessage", message)
-      if (message.data?.op === GatewayOpcode.Hello) {
-        await message.action
-      }
+      if (message.data?.op === GatewayOpcode.Hello) await message.action
+      // if (message.data?.op === GatewayOpcode.HeartbeatACK) return this.options.eventHandlers.heartbeat()
 
-      if (message.data?.t === 'READY') {
-        console.log('ready event was received')
+      if (message.data?.t === "READY") {
+        console.log("ready event was received")
         // this.options.eventHandlers.ready()
       }
     }
@@ -130,14 +128,15 @@ class Client {
   }
 
   handleDiscordPayload(data: DiscordPayload, socket: WebSocket) {
+    // Update the sequence number if it is present so that heartbeating can be accurate
+    if (data.s) update_previous_sequence_number(data.s)
+
     switch (data.op) {
       case GatewayOpcode.Hello:
-        sendConstantHeartbeats(socket, (data.d as DiscordHeartbeatPayload).heartbeat_interval, data.s)
+        send_constant_heartbeats(socket, (data.d as DiscordHeartbeatPayload).heartbeat_interval)
         return
     }
   }
-
-
 }
 
 export default Client
