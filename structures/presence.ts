@@ -1,10 +1,10 @@
-import { UserPayload } from "./user.ts";
-import { ActivityPayload } from "./activity";
-import { StatusType } from "../types/discord";
+import { User_Payload } from "./user.ts";
+import { ActivityPayload } from "./activity.ts";
+import { StatusType } from "../types/discord.ts";
 
 export type PresencePayload = Partial<{
     /** The user presence is being updated for */
-    user: UserPayload;
+    user: User_Payload;
 
     /** Roles this user is in */
     roles: string[];

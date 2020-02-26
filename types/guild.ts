@@ -1,11 +1,11 @@
-import { Emoji, StatusType } from './discord'
-import { User } from '../structures/user'
-import { Permission } from './permission'
-import { Role_Data } from './role'
-import { Member_Create_Payload } from './member'
-import { Activity } from './message'
-import { ClientStatusPayload } from '../structures/presence'
-import { Channel_Create_Options } from './channel'
+import { Emoji, StatusType } from './discord.ts'
+import { User } from '../structures/user.ts'
+import { Permission } from './permission.ts'
+import { Role_Data } from './role.ts'
+import { Member_Create_Payload } from './member.ts'
+import { Activity } from './message.ts'
+import { ClientStatusPayload } from '../structures/presence.ts'
+import { Channel_Create_Options } from './channel.ts'
 
 export interface Create_Guild_Payload {
   /** The guild id */

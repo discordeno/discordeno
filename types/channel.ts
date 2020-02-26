@@ -1,5 +1,5 @@
-import { Raw_Overwrite, Overwrite } from './guild'
-import { create_channel } from '../structures/channel'
+import { Raw_Overwrite, Overwrite } from './guild.ts'
+import { Embed } from './message.ts'
 
 export interface Base_Channel_Create {
   /** The id of this channel */
@@ -69,7 +69,7 @@ export interface MessageContent {
   /** The contents of the file being sent */
   file?: File_Content
   /** Embed object */
-  embed?: Embed_Object
+  embed?: Embed
   /** JSON encoded body of any additional request fields. */
   payload_json?: string
 }
@@ -105,4 +105,3 @@ export interface Create_Invite_Options {
   unique: boolean
 }
 
-export type Channel = ReturnType<typeof create_channel>

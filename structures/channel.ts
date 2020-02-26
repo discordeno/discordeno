@@ -7,13 +7,13 @@ import {
   Get_Messages_Before,
   MessageContent,
   Create_Invite_Options
-} from '../types/channel'
-import Client from '../module/client'
+} from '../types/channel.ts'
+import Client from '../module/client.ts'
 import { endpoints } from '../constants/discord.ts'
-import { create_message, Message } from './message'
-import { Message_Create_Options } from '../types/message'
-import { Permission, Permissions } from '../types/permission'
-import { Guild } from '../types/return-type'
+import { create_message, Message } from './message.ts'
+import { Message_Create_Options } from '../types/message.ts'
+import { Permission, Permissions } from '../types/permission.ts'
+import { Guild } from '../types/return-type.ts'
 
 export const create_channel = (data: Channel_Create_Options, guild: Guild, client: Client) => {
   const base_channel = {
@@ -49,7 +49,9 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
     },
     /** Get pinned messages in this channel. */
     get_pins: async () => {
-      const result = (await client.discordRequestManager.get(endpoints.CHANNEL_PINS(data.id))) as Message_Create_Options[]
+      const result = (await client.discordRequestManager.get(
+        endpoints.CHANNEL_PINS(data.id)
+      )) as Message_Create_Options[]
       return result.map(res => create_message(res, client))
     },
     /** Send a message to the channel. Requires SEND_MESSAGES permission. */
@@ -71,11 +73,12 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
   }
 
   // If it is a dm channel
-  if (data.type === Channel_Types.DM)
+  if (data.type === Channel_Types.DM) {
     return {
       ...base_channel,
       ...base_text_channel
     }
+  }
 
   // GUILD CHANNEL ONLY
   const base_guild_channel = {
@@ -94,8 +97,9 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
       if (id === guild.owner_id()) return true
 
       const member = guild.members.get(id)
-      if (!member)
+      if (!member) {
         throw 'Invalid member id provided. This member was not found in the cache. Please fetch them with getMember on guild.'
+      }
 
       let permissionBits = member.roles().reduce((bits, role_id) => {
         const role = guild.roles.get(role_id)
@@ -117,7 +121,7 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
   }
 
   // Guild Text Channel
-  if ([Channel_Types.GUILD_TEXT, Channel_Types.GUILD_NEWS].includes(data.type))
+  if ([Channel_Types.GUILD_TEXT, Channel_Types.GUILD_NEWS].includes(data.type)) {
     return {
       ...base_guild_channel,
       ...base_text_channel,
@@ -128,11 +132,14 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
       /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */
       delete_messages: (ids: string[], reason?: string) => {
         // TODO: Requires the MANAGE_MESSAGES permission.
-        if (ids.length < 2) throw 'This endpoint will only accept 2-100 message ids.'
-        if (ids.length > 100)
+        if (ids.length < 2) {
+          throw 'This endpoint will only accept 2-100 message ids.'
+        }
+        if (ids.length > 100) {
           console.warn(
             `This endpoint only accepts a maximum of 100 messages. Deleting the first 100 message ids provided.`
           )
+        }
         return client.discordRequestManager.POST(endpoints.CHANNEL_BULK_DELETE(data.id), {
           messages: ids.splice(0, 100),
           reason
@@ -154,16 +161,18 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
         return client.discordRequestManager.get(endpoints.CHANNEL_WEBHOOKS(data.id))
       }
     }
+  }
 
-  if (data.type === Channel_Types.GUILD_CATEGORY)
+  if (data.type === Channel_Types.GUILD_CATEGORY) {
     return {
       ...base_guild_channel,
       /** Gets an array of all the channels ids that are the children of this category. */
       children_ids: () =>
         Object.keys(guild.channels).filter(channel => guild.channels.get(channel).parent_id === data.id)
     }
+  }
 
-  if (data.type === Channel_Types.GUILD_VOICE)
+  if (data.type === Channel_Types.GUILD_VOICE) {
     return {
       ...base_guild_channel,
       // TODO: after learning opus and stuff
@@ -172,6 +181,7 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
       /** Leave a voice channel */
       leave: () => {}
     }
+  }
 
   return {
     ...data,

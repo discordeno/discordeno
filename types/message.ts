@@ -1,6 +1,6 @@
-import { Member } from '../structures/member'
-import { ChannelType, User_Data } from './guild'
-import { User } from '../structures/user'
+import { ChannelType, User_Data } from './guild.ts'
+import { User } from '../structures/user.ts'
+import { Member } from './member.ts'
 
 export interface MentionedUser extends User {
   member: Member
