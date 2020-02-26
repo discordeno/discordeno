@@ -66,7 +66,7 @@ export const create_guild = (data: Create_Guild_Payload, client: Client) => {
     /** The users in this guild. */
     members: new Map(data.members.map(m => [m.user.id, create_member(m, data.id, data.roles, data.owner_id, client)])),
     /** The channels in the guild */
-    channels: new Map(data.channels.map(c => [c.id, create_channel(c, guild, client)])),
+    channels: new Map(data.channels.map(c => [c.id, create_channel(c, client)])),
     /** The presences of all the users in the guild. */
     presences: new Map(data.presences.map(p => [p.user.id, p])),
     /** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.)  */
@@ -279,7 +279,7 @@ export const create_guild = (data: Create_Guild_Payload, client: Client) => {
       }
 
       let permissionBits = member.roles().reduce((bits, role_id) => {
-        const role = guild.roles.get(role_id)
+        const role = guild.roles().get(role_id)
         if (!role) return bits
 
         bits |= role.permissions()

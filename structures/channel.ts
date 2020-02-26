@@ -112,7 +112,7 @@ export const create_channel = (data: Channel_Create_Options, client: Client) => 
             `This endpoint only accepts a maximum of 100 messages. Deleting the first 100 message ids provided.`
           )
         }
-        return client.discordRequestManager.POST(endpoints.CHANNEL_BULK_DELETE(data.id), {
+        return client.discordRequestManager.post(endpoints.CHANNEL_BULK_DELETE(data.id), {
           messages: ids.splice(0, 100),
           reason
         })
