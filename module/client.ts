@@ -68,9 +68,6 @@ class Client {
     )
 
     for await (const message of this.connect(socket, data)) {
-      if (message.data?.op === GatewayOpcode.Hello) await message.action
-      // if (message.data?.op === GatewayOpcode.HeartbeatACK) return this.options.eventHandlers.heartbeat()
-
       if (message.data?.t === "READY") {
         console.log("ready event was received")
         // this.options.eventHandlers.ready()
@@ -101,7 +98,7 @@ class Client {
   async *connect(
     socket: WebSocket,
     data: DiscordBotGatewayData
-  ): AsyncGenerator<{ type: CollectedMessageType; data?: DiscordPayload; action?: Promise<void> }> {
+  ): AsyncGenerator<{ type: CollectedMessageType; data?: DiscordPayload; }> {
     for await (const message of this.collectMessages(socket)) {
       switch (message.type) {
         case CollectedMessageType.Ping:
