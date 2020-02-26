@@ -1,5 +1,5 @@
 import {
-  Channel_Create_Options,
+  Channel_Create_Payload,
   Channel_Types,
   Get_Messages_After,
   Get_Messages_Around,
@@ -13,17 +13,23 @@ import { endpoints } from "../constants/discord.ts"
 import { create_message, Message } from "./message.ts"
 import { Message_Create_Options } from "../types/message.ts"
 
-export const create_channel = (data: Channel_Create_Options, client: Client) => {
+export const create_channel = (data: Channel_Create_Payload, client: Client) => {
   const base_channel = {
+    /** The raw channel data */
+    raw: () => data,
     /** The unique id of the channel */
     id: data.id,
     /** The type of the channel. */
     type: () => data.type,
     /** The id of the guild where this channel exists */
-    guild_id: () => data.guild_id
+    guild_id: () => data.guild_id,
+    // TODO: fix this from being number on allow and deny to being array of strings
+    /** The permission overwrites for this channel */
+    permission_overwrites: () => data.permission_overwrites
   }
 
   const base_text_channel = {
+    ...base_channel,
     /** A short collection of recently sent messages since bot started. */
     messages: new Map<string, Message>(),
     /** The last message id in this channel */
@@ -71,12 +77,7 @@ export const create_channel = (data: Channel_Create_Options, client: Client) => 
   }
 
   // If it is a dm channel
-  if (data.type === Channel_Types.DM) {
-    return {
-      ...base_channel,
-      ...base_text_channel
-    }
-  }
+  if (data.type === Channel_Types.DM) return base_text_channel
 
   // GUILD CHANNEL ONLY
   const base_guild_channel = {
@@ -86,10 +87,7 @@ export const create_channel = (data: Channel_Create_Options, client: Client) => 
     /** The position of the channel in the server. */
     position: () => data.position!,
     /** The category id for this channel. */
-    parent_id: () => data.parent_id,
-    // TODO: fix this from being number on allow and deny to being array of strings
-    /** Fetch the permission overwrites */
-    permission_overwrites: () => data.permission_overwrites
+    parent_id: () => data.parent_id
   }
 
   // Guild Text Channel
@@ -150,6 +148,7 @@ export const create_channel = (data: Channel_Create_Options, client: Client) => 
 
   return {
     ...data,
+    ...base_channel,
     /** The channel mention */
     mention: () => `<#${data.id}>`
   }

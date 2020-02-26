@@ -1,11 +1,11 @@
-import { Emoji, StatusType } from './discord.ts'
-import { User } from '../structures/user.ts'
-import { Permission } from './permission.ts'
-import { Role_Data } from './role.ts'
-import { Member_Create_Payload } from './member.ts'
-import { Activity } from './message.ts'
-import { ClientStatusPayload } from '../structures/presence.ts'
-import { Channel_Create_Options } from './channel.ts'
+import { Emoji, StatusType } from "./discord.ts"
+import { User } from "../structures/user.ts"
+import { Permission } from "./permission.ts"
+import { Role_Data } from "./role.ts"
+import { Member_Create_Payload } from "./member.ts"
+import { Activity } from "./message.ts"
+import { ClientStatusPayload } from "../structures/presence.ts"
+import { Channel_Create_Payload } from "./channel.ts"
 
 export interface Create_Guild_Payload {
   /** The guild id */
@@ -52,7 +52,7 @@ export interface Create_Guild_Payload {
   /** Users in the guild */
   members: Member_Create_Payload[]
   /** Channels in the guild */
-  channels: Channel_Create_Options[]
+  channels: Channel_Create_Payload[]
   presences: Presence[]
   /** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.) */
   max_presences?: number | null
@@ -181,6 +181,13 @@ export interface Guild_Integration {
   account: Account
   /** When this integration was last synced */
   synced_at: string
+}
+
+export interface Account {
+  /** id of the account */
+  id: string
+  /** name of the account */
+  name: string
 }
 
 export interface User_Data {
@@ -325,13 +332,13 @@ export enum AuditLogs {
   INTEGRATION_DELETE
 }
 
-export type ChannelType = 'text' | 'dm' | 'news' | 'voice' | 'category' | 'store'
+export type ChannelType = "text" | "dm" | "news" | "voice" | "category" | "store"
 
 export interface Overwrite {
   /** The role or user id */
   id: string
   /** Whether this is a role or a member */
-  type: 'role' | 'member'
+  type: "role" | "member"
   /** The permissions that this id is allowed to do. (This will mark it as a green check.) */
   allow: Permission[]
   /** The permissions that this id is NOT allowed to do. (This will mark it as a red x.) */
@@ -342,7 +349,7 @@ export interface Raw_Overwrite {
   /** The role or user id */
   id: string
   /** Whether this is a role or a member */
-  type: 'role' | 'member'
+  type: "role" | "member"
   /** The permissions that this id is allowed to do. (This will mark it as a green check.) */
   allow: number
   /** The permissions that this id is NOT allowed to do. (This will mark it as a red x.) */
