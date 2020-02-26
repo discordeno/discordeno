@@ -70,7 +70,6 @@ class Client {
     for await (const message of this.connect(socket, data)) {
       if (message.data?.t === "READY") {
         console.log("ready event was received")
-        // this.options.eventHandlers.ready()
       }
     }
   }
