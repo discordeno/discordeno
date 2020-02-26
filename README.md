@@ -6,7 +6,7 @@ Discord API library wrapper in Deno
 ## TODO
 
 - [Review compression of payloads with GZIP](https://discordapp.com/developers/docs/topics/gateway#sending-payloads-example-gateway-dispatch)
--
+- Handle checking if guild is unavailable before taking guild related actions.
 
 ## Motivations/Features
 
