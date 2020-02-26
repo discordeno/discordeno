@@ -1,16 +1,16 @@
-import { endpoints } from '../constants/discord'
-import DiscordRequestManager from '../managers/DiscordRequestManager.ts'
-import { DiscordBotGatewayData, DiscordPayload, DiscordHeartbeatPayload, GatewayOpcode } from '../types/discord.ts'
-import ShardingManager from '../managers/ShardingManager.ts'
+import { endpoints } from "../constants/discord.ts"
+import DiscordRequestManager from "./discord-request-manager.ts"
+import { DiscordBotGatewayData, DiscordPayload, DiscordHeartbeatPayload, GatewayOpcode } from "../types/discord.ts"
+import ShardingManager from "./sharding-manager.ts"
 import {
   connectWebSocket,
   isWebSocketCloseEvent,
   isWebSocketPingEvent,
   isWebSocketPongEvent
-} from 'https://deno.land/std/ws/mod.ts'
-import Gateway from './gateway.ts'
-import { ClientOptions, FulfilledClientOptions } from '../types/options.ts'
-import { CollectedMessageType } from '../types/message-type.ts'
+} from "https://deno.land/std/ws/mod.ts"
+import Gateway from "./gateway.ts"
+import { ClientOptions, FulfilledClientOptions } from "../types/options.ts"
+import { CollectedMessageType } from "../types/message-type.ts"
 
 class Client {
   bot_id: string
@@ -31,9 +31,9 @@ class Client {
     this.options = Object.assign(
       {
         properties: {
-          $os: '...',
-          $browser: '...',
-          $device: '...'
+          $os: "...",
+          $browser: "...",
+          $device: "..."
         },
         compress: false
       },
@@ -57,15 +57,15 @@ class Client {
 
   async bootstrap() {
     const data = await this.getGatewayData()
-    const socket = await this.createWebsocketConnection(data);
-	const gateway = new Gateway(socket);
-	const messages = this.collectMessages(gateway);
-	await gateway.identify(this.options);
+    const socket = await this.createWebsocketConnection(data)
+    const gateway = new Gateway(socket)
+    const messages = this.collectMessages(gateway)
+    await gateway.identify(this.options)
     return {
       data,
       socket,
-	  gateway,
-	  messages,
+      gateway,
+      messages,
       connection: this.connect(gateway, data)
     }
   }
@@ -73,7 +73,7 @@ class Client {
   async *collectMessages(gateway: Gateway) {
     const { socket } = gateway
     for await (const message of socket.receive()) {
-      if (typeof message === 'string') {
+      if (typeof message === "string") {
         yield {
           type: CollectedMessageType.Message,
           data: JSON.parse(message)
@@ -90,25 +90,28 @@ class Client {
   }
 
   /** Begins initial handshake, creates the websocket with Discord and spawns all necessary shards. */
-  async *connect(gateway: Gateway, data: DiscordBotGatewayData): AsyncGenerator<{ type: CollectedMessageType, data?: DiscordPayload, action?: Promise<void> }> {
+  async *connect(
+    gateway: Gateway,
+    data: DiscordBotGatewayData
+  ): AsyncGenerator<{ type: CollectedMessageType; data?: DiscordPayload; action?: Promise<void> }> {
     for await (const message of this.collectMessages(gateway)) {
       switch (message.type) {
         case CollectedMessageType.Ping:
-		  console.log('Ping!')
-		  yield message;
+          console.log("Ping!")
+          yield message
           break
         case CollectedMessageType.Pong:
-		  console.log('Pong!')
-		  yield message;
+          console.log("Pong!")
+          yield message
           break
         case CollectedMessageType.Close:
-		  console.log('Close :(', message)
-		  yield message;
+          console.log("Close :(", message)
+          yield message
           break
         case CollectedMessageType.Message:
-		await this.handleDiscordPayload(message.data, gateway);
-		  yield message;
-		console.log({ yay: true, ...message });
+          await this.handleDiscordPayload(message.data, gateway)
+          yield message
+          console.log({ yay: true, ...message })
           break
       }
     }
@@ -117,20 +120,20 @@ class Client {
     this.spawnShards(data.shards)
   }
 
-   handleDiscordPayload(data: DiscordPayload, gateway: Gateway) {
+  handleDiscordPayload(data: DiscordPayload, gateway: Gateway) {
     switch (data.op) {
       case GatewayOpcode.Hello:
-		  console.log('heartbeating...');
-        return gateway.sendConstantHeartbeats((data.d as DiscordHeartbeatPayload).heartbeat_interval, data.s);
-	}
+        console.log("heartbeating...")
+        return gateway.sendConstantHeartbeats((data.d as DiscordHeartbeatPayload).heartbeat_interval, data.s)
+    }
 
-	// Make all code paths return a promise for consistency.
-	return Promise.resolve(undefined);
+    // Make all code paths return a promise for consistency.
+    return Promise.resolve(undefined)
   }
 
   spawnShards(total: number, id = 1) {
     // this.ShardingManager.spawnShard(id);
-    if (id < total) this.spawnShards(total, id + 1);
+    if (id < total) this.spawnShards(total, id + 1)
   }
 }
 

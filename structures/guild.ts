@@ -1,6 +1,6 @@
-import Client from '../module/client.ts'
-import { endpoints } from '../constants/discord.ts'
-import { format_image_url } from '../utils/cdn.ts'
+import Client from "../module/client.ts"
+import { endpoints } from "../constants/discord.ts"
+import { format_image_url } from "../utils/cdn.ts"
 import {
   Create_Guild_Payload,
   ChannelTypes,
@@ -13,13 +13,13 @@ import {
   Create_Emojis_Options,
   Edit_Emojis_Options,
   Create_Role_Options
-} from '../types/guild.ts'
-import { create_role } from './role.ts'
-import { create_member } from './member.ts'
-import { create_channel } from './channel.ts'
-import { Channel_Create_Options } from '../types/channel.ts'
-import { Image_Size, Image_Formats } from '../types/cdn.ts'
-import { Permissions, Permission } from '../types/permission.ts'
+} from "../types/guild.ts"
+import { create_role } from "./role.ts"
+import { create_member } from "./member.ts"
+import { create_channel } from "./channel.ts"
+import { Channel_Create_Options } from "../types/channel.ts"
+import { Image_Size, Image_Formats } from "../types/cdn.ts"
+import { Permissions, Permission } from "../types/permission.ts"
 
 export const create_guild = (data: Create_Guild_Payload, client: Client) => {
   const guild = {
@@ -66,7 +66,7 @@ export const create_guild = (data: Create_Guild_Payload, client: Client) => {
     /** The users in this guild. */
     members: new Map(data.members.map(m => [m.user.id, create_member(m, data.id, data.roles, data.owner_id, client)])),
     /** The channels in the guild */
-    channels: new Map(data.channels.map(c => [c.id, create_channel(c, client)])),
+    channels: new Map(data.channels.map(c => [c.id, create_channel(c, guild, client)])),
     /** The presences of all the users in the guild. */
     presences: new Map(data.presences.map(p => [p.user.id, p])),
     /** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.)  */
@@ -85,6 +85,8 @@ export const create_guild = (data: Create_Guild_Payload, client: Client) => {
     premium_subscription_count: () => data.premium_subscription_count,
     /** The preferred locale of this guild only set if the guild has the  DISCOVERABLE feature, defaults to en-US */
     preferred_locale: () => data.preferred_locale,
+    /** Gets an array of all the channels ids that are the children of this category. */
+    category_children_ids: (id: string) => data.channels.filter(c => c.parent_id === id).map(c => c.id),
     /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
     icon_url: (size: Image_Size = 128, format?: Image_Formats) =>
       data.icon ? format_image_url(endpoints.GUILD_ICON(data.id, data.icon), size, format) : undefined,
@@ -120,7 +122,7 @@ export const create_guild = (data: Create_Guild_Payload, client: Client) => {
     /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
     swap_channels: (channel_positions: Position_Swap[]) => {
       if (channel_positions.length < 2) {
-        throw 'You must provide atleast two channels to be swapped.'
+        throw "You must provide atleast two channels to be swapped."
       }
       return client.discordRequestManager.patch(endpoints.GUILD_CHANNELS(data.id), channel_positions)
     },
@@ -268,12 +270,12 @@ export const create_guild = (data: Create_Guild_Payload, client: Client) => {
 
       const member = guild.members.get(member_id)
       if (!member) {
-        throw 'Invalid member id provided. This member was not found in the cache. Please fetch them with getMember on guild.'
+        throw "Invalid member id provided. This member was not found in the cache. Please fetch them with getMember on guild."
       }
 
       const channel = guild.channels.get(channel_id)
       if (!channel) {
-        throw 'Invalid channel id provided. This channel was not found in the cache.'
+        throw "Invalid channel id provided. This channel was not found in the cache."
       }
 
       let permissionBits = member.roles().reduce((bits, role_id) => {
@@ -285,7 +287,7 @@ export const create_guild = (data: Create_Guild_Payload, client: Client) => {
         return bits
       }, 0)
 
-      data.permission_overwrites?.forEach(overwrite => {
+      channel.permission_overwrites?.forEach(overwrite => {
         permissionBits = (permissionBits & ~overwrite.deny) | overwrite.allow
       })
 
@@ -317,7 +319,6 @@ export const create_guild = (data: Create_Guild_Payload, client: Client) => {
       return client.discordRequestManager.get(endpoints.GUILD_WEBHOOKS(data.id))
     }
   }
-
 
   return guild
 }

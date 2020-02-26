@@ -7,15 +7,13 @@ import {
   Get_Messages_Before,
   MessageContent,
   Create_Invite_Options
-} from '../types/channel.ts'
-import Client from '../module/client.ts'
-import { endpoints } from '../constants/discord.ts'
-import { create_message, Message } from './message.ts'
-import { Message_Create_Options } from '../types/message.ts'
-import { Permission, Permissions } from '../types/permission.ts'
-import { Guild } from '../types/return-type.ts'
+} from "../types/channel.ts"
+import Client from "../module/client.ts"
+import { endpoints } from "../constants/discord.ts"
+import { create_message, Message } from "./message.ts"
+import { Message_Create_Options } from "../types/message.ts"
 
-export const create_channel = (data: Channel_Create_Options, guild: Guild, client: Client) => {
+export const create_channel = (data: Channel_Create_Options, client: Client) => {
   const base_channel = {
     /** The unique id of the channel */
     id: data.id,
@@ -60,7 +58,7 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
         // TODO: check if the bot has SEND_MESSAGES permission
       }
 
-      if (typeof content === 'string') content = { content }
+      if (typeof content === "string") content = { content }
       if (content.tts) {
         // TODO: check if the bot has SEND_TTS_MESSAGE
       }
@@ -91,33 +89,7 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
     parent_id: () => data.parent_id,
     // TODO: fix this from being number on allow and deny to being array of strings
     /** Fetch the permission overwrites */
-    permission_overwrites: () => data.permission_overwrites,
-    /** Check whether a member has certain permissions in this channel. */
-    has_permissions: (id: string, permissions: Permission[]) => {
-      if (id === guild.owner_id()) return true
-
-      const member = guild.members.get(id)
-      if (!member) {
-        throw 'Invalid member id provided. This member was not found in the cache. Please fetch them with getMember on guild.'
-      }
-
-      let permissionBits = member.roles().reduce((bits, role_id) => {
-        const role = guild.roles.get(role_id)
-        if (!role) return bits
-
-        bits |= role.permissions()
-
-        return bits
-      }, 0)
-
-      data.permission_overwrites?.forEach(overwrite => {
-        permissionBits = (permissionBits & ~overwrite.deny) | overwrite.allow
-      })
-
-      if (permissionBits & Permissions.ADMINISTRATOR) return true
-
-      return permissions.every(permission => permissionBits & Permissions[permission])
-    }
+    permission_overwrites: () => data.permission_overwrites
   }
 
   // Guild Text Channel
@@ -133,7 +105,7 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
       delete_messages: (ids: string[], reason?: string) => {
         // TODO: Requires the MANAGE_MESSAGES permission.
         if (ids.length < 2) {
-          throw 'This endpoint will only accept 2-100 message ids.'
+          throw "This endpoint will only accept 2-100 message ids."
         }
         if (ids.length > 100) {
           console.warn(
@@ -163,14 +135,7 @@ export const create_channel = (data: Channel_Create_Options, guild: Guild, clien
     }
   }
 
-  if (data.type === Channel_Types.GUILD_CATEGORY) {
-    return {
-      ...base_guild_channel,
-      /** Gets an array of all the channels ids that are the children of this category. */
-      children_ids: () =>
-        Object.keys(guild.channels).filter(channel => guild.channels.get(channel).parent_id === data.id)
-    }
-  }
+  if (data.type === Channel_Types.GUILD_CATEGORY) return base_guild_channel
 
   if (data.type === Channel_Types.GUILD_VOICE) {
     return {

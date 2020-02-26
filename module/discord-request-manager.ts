@@ -1,5 +1,5 @@
 import Client from "../module/Client.ts";
-import { RequestMethod } from "../types/fetch";
+import { RequestMethod } from "../types/fetch.ts";
 
 type RequestBody = string | Blob | ArrayBufferView | ArrayBuffer | FormData | URLSearchParams | null | undefined;
 
@@ -12,9 +12,9 @@ export default class DiscordDiscordRequestManager {
     this.token = token
   }
 
-	async get(url: string) {
+	async get(url: string, body?: RequestBody) {
 		const headers = this.getDiscordHeaders();
-		return fetch(url, { headers }).then(res => res.json())
+		return fetch(url, { headers, body }).then(res => res.json())
 	}
 
 	async post (url: string, body: RequestBody) {
@@ -26,7 +26,7 @@ export default class DiscordDiscordRequestManager {
 		});
 	}
 
-	async delete (url: string, body: RequestBody) {
+	async delete (url: string, body?: RequestBody) {
 		const headers = this.getDiscordHeaders();
 		return fetch(url, {
 			method: RequestMethod.Delete,

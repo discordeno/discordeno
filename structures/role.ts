@@ -1,4 +1,4 @@
-import { Role_Data } from '../types/role'
+import { Role_Data } from '../types/role.ts'
 
 export const create_role = (data: Role_Data) => ({
   /** The entire raw Role data */
