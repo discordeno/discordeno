@@ -1,4 +1,4 @@
-import Client from "../module/Client.ts"
+import Client from "../module/client.ts"
 import { RequestMethod } from "../types/fetch.ts"
 
 // type RequestBody = string | Blob | ArrayBufferView | ArrayBuffer | FormData | URLSearchParams | null | undefined
