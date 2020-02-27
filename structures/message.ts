@@ -1,9 +1,9 @@
-import Client from '../module/client'
-import { Message_Create_Options } from '../types/message'
-import { endpoints } from '../constants/discord'
-import { Channel_Types, MessageContent } from '../types/channel'
-import { cache } from '../utils/cache'
-import { create_user, User_Payload } from './user'
+import Client from '../module/client.ts'
+import { Message_Create_Options } from '../types/message.ts'
+import { endpoints } from '../constants/discord.ts'
+import { Channel_Types, MessageContent } from '../types/channel.ts'
+import { cache } from '../utils/cache.ts'
+import { create_user, User_Payload } from './user.ts'
 
 export const create_message = (data: Message_Create_Options, client: Client) => {
   const base_message = {

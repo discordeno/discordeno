@@ -12,6 +12,30 @@ import {
 import { ClientOptions, FulfilledClientOptions } from "../types/options.ts"
 import { CollectedMessageType } from "../types/message-type.ts"
 import { send_constant_heartbeats, update_previous_sequence_number } from "./gateway.ts"
+import { create_guild } from "../structures/guild.ts"
+import { handle_internal_guild_create } from "../events/guilds.ts"
+import { Create_Guild_Payload, Voice_State } from "../types/guild.ts"
+import { Guild, Channel } from "../types/return-type.ts"
+import { create_channel } from "../structures/channel.ts"
+import { Channel_Create_Payload, Channel_Types } from "../types/channel.ts"
+import {
+  handle_internal_channel_create,
+  handle_internal_channel_update,
+  handle_internal_channel_delete
+} from "../events/channels.ts"
+import { cache } from "../utils/cache.ts"
+
+export let eventHandlers = {
+  channel_create: (channel: Channel) => channel && undefined,
+  channel_update: (channel: Channel, cachedChannel: Channel) => channel && cachedChannel && undefined,
+  channel_delete: (channel: Channel) => channel && undefined,
+  guild_create: (guild: Guild) => guild && undefined,
+  heartbeat: () => undefined,
+  ready: () => undefined,
+  voice_channel_leave: (voice_state: Voice_State) => voice_state && undefined
+}
+
+export type EventHandlers = typeof eventHandlers
 
 const defaultOptions = {
   properties: {
@@ -46,6 +70,7 @@ class Client {
     this.authorization = `Bot ${this.options.token}`
     this.discordRequestManager = new DiscordRequestManager(this, this.authorization)
 
+    if (options.eventHandlers) eventHandlers = options.eventHandlers
     this.bootstrap()
   }
 
@@ -67,14 +92,9 @@ class Client {
       })
     )
 
-    for await (const message of this.connect(socket, data)) {
-      if (message.data?.op === GatewayOpcode.Hello) await message.action
-      // if (message.data?.op === GatewayOpcode.HeartbeatACK) return this.options.eventHandlers.heartbeat()
+    this.connect(socket, data)
 
-      if (message.data?.t === "READY") {
-        console.log("ready event was received")
-        // this.options.eventHandlers.ready()
-      }
+    for await (const _message of this.connect(socket, data)) {
     }
   }
 
@@ -98,10 +118,7 @@ class Client {
   }
 
   /** Begins initial handshake, creates the websocket with Discord and spawns all necessary shards. */
-  async *connect(
-    socket: WebSocket,
-    data: DiscordBotGatewayData
-  ): AsyncGenerator<{ type: CollectedMessageType; data?: DiscordPayload; action?: Promise<void> }> {
+  async *connect(socket: WebSocket, data: DiscordBotGatewayData) {
     for await (const message of this.collectMessages(socket)) {
       switch (message.type) {
         case CollectedMessageType.Ping:
@@ -134,6 +151,69 @@ class Client {
     switch (data.op) {
       case GatewayOpcode.Hello:
         send_constant_heartbeats(socket, (data.d as DiscordHeartbeatPayload).heartbeat_interval)
+        return
+      case GatewayOpcode.HeartbeatACK:
+        // Incase the user wants to listen to heartbeat responses
+        return eventHandlers.heartbeat()
+      case GatewayOpcode.Reconnect:
+        // TODO: Reconnect to the gateway https://discordapp.com/developers/docs/topics/gateway#reconnect
+        return
+      case GatewayOpcode.Dispatch:
+        if (data.t === "READY") return eventHandlers.ready()
+
+        if (data.t === "CHANNEL_CREATE") {
+          const channel = create_channel(data.d as Channel_Create_Payload, this)
+          handle_internal_channel_create(channel)
+          return eventHandlers.channel_create(channel)
+        }
+
+        if (data.t === "CHANNEL_UPDATE") {
+          const options = data.d as Channel_Create_Payload
+          const cachedChannel = cache.channels.get(options.id)
+          const channel = create_channel(options, this)
+          handle_internal_channel_update(channel)
+          if (!cachedChannel) return
+
+          return eventHandlers.channel_update(channel, cachedChannel)
+        }
+
+        if (data.t === "CHANNEL_DELETE") {
+          const options = data.d as Channel_Create_Payload
+          const cachedChannel = cache.channels.get(options.id)
+          if (!cachedChannel) return
+          if (cachedChannel.type() === Channel_Types.GUILD_VOICE) {
+            const guild_id = cachedChannel.guild_id()
+            if (!guild_id) return
+
+            const guild = cache.guilds.get(guild_id)
+            if (!guild) return
+
+            guild.voice_states().forEach(vs => {
+              if (vs.channel_id !== options.id) return
+              eventHandlers.voice_channel_leave(vs)
+            })
+            cache.guilds.set(guild.id(), {
+              ...guild,
+              voice_states: () => [...guild.voice_states().filter(vs => vs.channel_id !== options.id)]
+            })
+          }
+          handle_internal_channel_delete(cachedChannel)
+
+          return eventHandlers.channel_delete(cachedChannel)
+        }
+
+        if (data.t === "GUILD_CREATE") {
+          const guild = create_guild(data.d as Create_Guild_Payload, this)
+          handle_internal_guild_create(guild)
+          return eventHandlers.guild_create(guild)
+        }
+
+        if (data.t === 'GUILD_UPDATE') {
+          
+        }
+
+        return console.log("UNKNOWN EVENT:", data)
+      default:
         return
     }
   }

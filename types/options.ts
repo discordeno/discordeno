@@ -1,4 +1,5 @@
 import { Properties } from "./discord.ts"
+import { EventHandlers } from "../module/client.ts";
 
 export interface FulfilledClientOptions {
   token: string
@@ -13,6 +14,7 @@ export interface ClientOptions {
   compress?: boolean
   bot_id: string
   intents: Intents[]
+  eventHandlers?: EventHandlers
 }
 
 export enum Intents {
