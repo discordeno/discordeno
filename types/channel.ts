@@ -59,6 +59,10 @@ export enum Channel_Types {
   GUILD_STORE
 }
 
+// export interface File_Content {
+
+// }
+
 export interface MessageContent {
   /** The message contents, up to 2000 characters */
   content?: string
@@ -66,8 +70,9 @@ export interface MessageContent {
   nonce?: number | string
   /** Whether this is a TextToSpeech message */
   tts?: boolean
+  // file?: File_Content
   /** The contents of the file being sent */
-  file?: File_Content
+  file?: unknown
   /** Embed object */
   embed?: Embed
   /** JSON encoded body of any additional request fields. */

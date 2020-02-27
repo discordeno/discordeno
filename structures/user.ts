@@ -1,6 +1,6 @@
-import { format_image_url } from '../utils/cdn'
-import { endpoints } from '../constants/discord'
-import { Image_Size, Image_Formats } from '../types/cdn'
+import { format_image_url } from '../utils/cdn.ts'
+import { endpoints } from '../constants/discord.ts'
+import { Image_Size, Image_Formats } from '../types/cdn.ts'
 
 export interface User_Payload {
   /** The user's id */

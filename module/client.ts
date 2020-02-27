@@ -9,13 +9,12 @@ import {
   isWebSocketPongEvent,
   WebSocket
 } from "https://deno.land/std/ws/mod.ts"
-import { ClientOptions, FulfilledClientOptions } from "../types/options.ts"
+import { ClientOptions, FulfilledClientOptions, Event_Handlers } from "../types/options.ts"
 import { CollectedMessageType } from "../types/message-type.ts"
 import { send_constant_heartbeats, update_previous_sequence_number } from "./gateway.ts"
 import { create_guild } from "../structures/guild.ts"
-import { handle_internal_guild_create } from "../events/guilds.ts"
-import { Create_Guild_Payload, Voice_State } from "../types/guild.ts"
-import { Guild, Channel } from "../types/return-type.ts"
+import { handle_internal_guild_create, handle_internal_guild_update } from "../events/guilds.ts"
+import { Create_Guild_Payload, Guild_Delete_Payload } from "../types/guild.ts"
 import { create_channel } from "../structures/channel.ts"
 import { Channel_Create_Payload, Channel_Types } from "../types/channel.ts"
 import {
@@ -24,18 +23,6 @@ import {
   handle_internal_channel_delete
 } from "../events/channels.ts"
 import { cache } from "../utils/cache.ts"
-
-export let eventHandlers = {
-  channel_create: (channel: Channel) => channel && undefined,
-  channel_update: (channel: Channel, cachedChannel: Channel) => channel && cachedChannel && undefined,
-  channel_delete: (channel: Channel) => channel && undefined,
-  guild_create: (guild: Guild) => guild && undefined,
-  heartbeat: () => undefined,
-  ready: () => undefined,
-  voice_channel_leave: (voice_state: Voice_State) => voice_state && undefined
-}
-
-export type EventHandlers = typeof eventHandlers
 
 const defaultOptions = {
   properties: {
@@ -55,6 +42,7 @@ class Client {
 
   /** The options (with defaults) passed to the `Client` constructor. */
   options: FulfilledClientOptions
+  event_handlers: Event_Handlers
 
   protected authorization: string
 
@@ -68,9 +56,9 @@ class Client {
     this.bot_id = options.bot_id
     this.token = options.token
     this.authorization = `Bot ${this.options.token}`
-    this.discordRequestManager = new DiscordRequestManager(this, this.authorization)
+    this.discordRequestManager = new DiscordRequestManager(this)
+    this.event_handlers = options.event_handlers || {}
 
-    if (options.eventHandlers) eventHandlers = options.eventHandlers
     this.bootstrap()
   }
 
@@ -152,17 +140,17 @@ class Client {
         return
       case GatewayOpcode.HeartbeatACK:
         // Incase the user wants to listen to heartbeat responses
-        return eventHandlers.heartbeat()
+        return this.event_handlers.heartbeat?.()
       case GatewayOpcode.Reconnect:
         // TODO: Reconnect to the gateway https://discordapp.com/developers/docs/topics/gateway#reconnect
         return
       case GatewayOpcode.Dispatch:
-        if (data.t === "READY") return eventHandlers.ready()
+        if (data.t === "READY") return this.event_handlers.ready?.()
 
         if (data.t === "CHANNEL_CREATE") {
           const channel = create_channel(data.d as Channel_Create_Payload, this)
           handle_internal_channel_create(channel)
-          return eventHandlers.channel_create(channel)
+          return this.event_handlers.channel_create?.(channel)
         }
 
         if (data.t === "CHANNEL_UPDATE") {
@@ -172,7 +160,7 @@ class Client {
           handle_internal_channel_update(channel)
           if (!cachedChannel) return
 
-          return eventHandlers.channel_update(channel, cachedChannel)
+          return this.event_handlers.channel_update?.(channel, cachedChannel)
         }
 
         if (data.t === "CHANNEL_DELETE") {
@@ -188,7 +176,7 @@ class Client {
 
             guild.voice_states().forEach(vs => {
               if (vs.channel_id !== options.id) return
-              eventHandlers.voice_channel_leave(vs)
+              this.event_handlers.voice_channel_leave?.(vs)
             })
             cache.guilds.set(guild.id(), {
               ...guild,
@@ -197,16 +185,32 @@ class Client {
           }
           handle_internal_channel_delete(cachedChannel)
 
-          return eventHandlers.channel_delete(cachedChannel)
+          return this.event_handlers.channel_delete?.(cachedChannel)
         }
 
         if (data.t === "GUILD_CREATE") {
           const guild = create_guild(data.d as Create_Guild_Payload, this)
           handle_internal_guild_create(guild)
-          return eventHandlers.guild_create(guild)
+          return this.event_handlers.guild_create?.(guild)
         }
 
         if (data.t === "GUILD_UPDATE") {
+          const options = data.d as Create_Guild_Payload
+          const cached_guild = cache.guilds.get(options.id)
+          const guild = create_guild(options, this)
+          handle_internal_guild_update(guild)
+          if (!cached_guild) return
+
+          return this.event_handlers.guild_update?.(guild, cached_guild)
+        }
+
+        if (data.t === 'GUILD_DELETE') {
+          const options = data.d as Guild_Delete_Payload
+          const guild = cache.guilds.get(options.id)
+          if (!guild) return
+
+          guild.channels.forEach((_channel, id) => cache.channels.delete(id))
+          return options.unavailable ? undefined : this.event_handlers.guild_delete?.(guild)
         }
 
         return console.log("UNKNOWN EVENT:", data)

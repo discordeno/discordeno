@@ -7,6 +7,11 @@ import { Activity } from "./message.ts"
 import { ClientStatusPayload } from "../structures/presence.ts"
 import { Channel_Create_Payload } from "./channel.ts"
 
+export interface Guild_Delete_Payload {
+  id: string
+  unavailable?: boolean
+}
+
 export interface Create_Guild_Payload {
   /** The guild id */
   id: string

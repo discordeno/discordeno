@@ -6,7 +6,10 @@ const startup = async () => {
   new Client({
     token: configs.token,
     bot_id: "675412054529540107",
-    intents: [Intents.GUILDS, Intents.GUILD_MESSAGES]
+    intents: [Intents.GUILDS, Intents.GUILD_MESSAGES],
+    event_handlers: {
+      guild_create: (guild) => console.log(guild.roles())
+    }
   })
 }
 

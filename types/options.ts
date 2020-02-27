@@ -1,10 +1,11 @@
 import { Properties } from "./discord.ts"
-import { EventHandlers } from "../module/client.ts";
+import { Channel, Guild } from "./return-type.ts"
+import { Voice_State } from "./guild.ts"
 
 export interface FulfilledClientOptions {
   token: string
   properties: Properties
-  compress: boolean,
+  compress: boolean
   intents: number
 }
 
@@ -14,7 +15,19 @@ export interface ClientOptions {
   compress?: boolean
   bot_id: string
   intents: Intents[]
-  eventHandlers?: EventHandlers
+  event_handlers?: Event_Handlers
+}
+
+export interface Event_Handlers {
+  channel_create?: (channel: Channel) => unknown
+  channel_update?: (channel: Channel, cached_channel: Channel) => unknown
+  channel_delete?: (channel: Channel) => unknown
+  guild_create?: (guild: Guild) => unknown
+  guild_update?: (guild: Guild, cached_guild: Guild) => unknown
+  guild_delete?: (guild: Guild) => unknown
+  heartbeat?: () => unknown
+  ready?: () => unknown
+  voice_channel_leave?: (voice_state: Voice_State) => unknown
 }
 
 export enum Intents {
@@ -29,7 +42,7 @@ export enum Intents {
    * - CHANNEL_DELETE
    * - CHANNEL_PINS_UPDATE
    */
-   GUILDS = 1 << 0,
+  GUILDS = 1 << 0,
   /** Enables the following events:
    * - GUILD_MEMBER_ADD
    * - GUILD_MEMBER_UPDATE
