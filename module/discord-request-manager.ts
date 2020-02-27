@@ -3,61 +3,55 @@ import { RequestMethod } from "../types/fetch.ts"
 
 // type RequestBody = string | Blob | ArrayBufferView | ArrayBuffer | FormData | URLSearchParams | null | undefined
 
-export default class DiscordDiscordRequestManager {
-  client: Client
-  token: string
-
-  constructor(client: Client, token: string) {
-    this.client = client
-    this.token = token
+export default class DiscordRequestManager {
+  token = this.client.token;
+  constructor(public client: Client) {
+    this.client = client;
   }
 
   async get(url: string, body?: unknown) {
-    const headers = this.getDiscordHeaders()
-    return fetch(url, { headers, body: body ? JSON.stringify(body) : undefined }).then(res => res.json())
+    return this.thenToJSON(this.runMethod(RequestMethod.Get, url, body));
   }
 
   async post(url: string, body?: unknown) {
-    const headers = this.getDiscordHeaders()
-    return fetch(url, {
-      method: RequestMethod.Post,
-      headers,
-      body: body ? JSON.stringify(body) : undefined
-    }).then(res => res.json())
+    return this.thenToJSON(this.runMethod(RequestMethod.Post, url, body));
   }
 
   async delete(url: string, body?: unknown) {
-    const headers = this.getDiscordHeaders()
-    return fetch(url, {
-      method: RequestMethod.Delete,
-      headers,
-      body: body ? JSON.stringify(body) : undefined
-    })
+    return this.runMethod(RequestMethod.Delete, url, body);
   }
 
   async patch(url: string, body: unknown) {
-    const headers = this.getDiscordHeaders()
-    return fetch(url, {
-      method: RequestMethod.Patch,
-      headers,
-      body: body ? JSON.stringify(body) : undefined
-    }).then(res => res.json())
+    return this.thenToJSON(this.runMethod(RequestMethod.Patch, url, body));
 	}
 
 	async put(url: string, body: unknown) {
-    const headers = this.getDiscordHeaders()
-    return fetch(url, {
-      method: RequestMethod.Put,
+    return this.runMethod(RequestMethod.Put, url, body);
+  }
+
+  protected async thenToJSON (promise: Promise<Response>) {
+    return promise.then(response => response.json());
+  }
+
+  protected async runMethod (method: RequestMethod, url: string, body?: unknown) {
+    const headers = this.getDiscordHeaders();
+    return fetch(this.resolveURL(url), {
+      method,
       headers,
       body: body ? JSON.stringify(body) : undefined
-    }).then(res => res.json())
+    });
+  }
+
+  // A hook for the RouteAwareRequestManager to override URLs.
+  protected resolveURL (url: string) {
+    return url;
   }
 
   // The Record type here plays nice with Deno's `fetch.headers` expected type.
   getDiscordHeaders(): Record<string, string> {
     return {
       Authorization: this.token,
-      "User-Agent": `DiscordBot (https://github.com/skillz4killz/discordeno, 0.0.1)`
+      "User-Agent": `Discordeno (https://github.com/skillz4killz/discordeno, 0.0.1)`
     }
   }
 }

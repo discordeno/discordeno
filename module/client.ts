@@ -92,8 +92,6 @@ class Client {
       })
     )
 
-    this.connect(socket, data)
-
     for await (const _message of this.connect(socket, data)) {
     }
   }
@@ -208,8 +206,7 @@ class Client {
           return eventHandlers.guild_create(guild)
         }
 
-        if (data.t === 'GUILD_UPDATE') {
-          
+        if (data.t === "GUILD_UPDATE") {
         }
 
         return console.log("UNKNOWN EVENT:", data)
