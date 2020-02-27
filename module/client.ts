@@ -44,7 +44,7 @@ class Client {
   options: FulfilledClientOptions
   event_handlers: Event_Handlers
 
-  protected authorization: string
+  authorization: string
 
   constructor(options: ClientOptions) {
     // Assign some defaults to the options to make them fulfilled / not annoying to use.
