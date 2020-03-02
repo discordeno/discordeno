@@ -3,11 +3,13 @@ import { Message_Create_Options } from '../types/message.ts'
 import { endpoints } from '../constants/discord.ts'
 import { Channel_Types, MessageContent } from '../types/channel.ts'
 import { cache } from '../utils/cache.ts'
-import { create_user, User_Payload } from './user.ts'
+import { create_user } from './user.ts'
+import { User_Payload } from '../types/guild.ts'
 
 export const create_message = (data: Message_Create_Options, client: Client) => {
   const base_message = {
     raw: () => data,
+    id: () => data.id,
     type: () => data.type,
     timestamp: () => Date.parse(data.timestamp),
     content: () => data.content,

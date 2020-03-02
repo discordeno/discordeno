@@ -5,4 +5,5 @@ export const cache = {
 	guilds: new Map<string, Guild>(),
 	users: new Map<string, User>(),
 	channels: new Map<string, Channel>(),
+	unavailableGuilds: new Map<string, number>()
 }

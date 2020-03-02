@@ -1,5 +1,5 @@
-import { User_Payload } from "../structures/user.ts"
 import { create_member } from "../structures/member.ts"
+import { User_Payload } from "./guild.ts"
 
 export interface Edit_Member_Options {
   /** Value to set users nickname to. Requires MANAGE_NICKNAMES permission. */

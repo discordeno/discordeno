@@ -1,6 +1,10 @@
-import { Properties } from "./discord.ts"
+import { Properties, Emoji, DiscordPayload } from "./discord.ts"
 import { Channel, Guild } from "./return-type.ts"
 import { Voice_State } from "./guild.ts"
+import { User } from "../structures/user.ts"
+import { Member } from "./member.ts"
+import { Role } from "../structures/role.ts"
+import { Message } from "../structures/message.ts"
 
 export interface FulfilledClientOptions {
   token: string
@@ -22,12 +26,27 @@ export interface Event_Handlers {
   channel_create?: (channel: Channel) => unknown
   channel_update?: (channel: Channel, cached_channel: Channel) => unknown
   channel_delete?: (channel: Channel) => unknown
+  guild_ban_add?: (guild: Guild, user: User) => unknown
+  guild_ban_remove?: (guild: Guild, user: User) => unknown
   guild_create?: (guild: Guild) => unknown
   guild_update?: (guild: Guild, cached_guild: Guild) => unknown
   guild_delete?: (guild: Guild) => unknown
+  guild_emojis_update?: (guild: Guild, emojis: Emoji[], cached_emojis: Emoji[]) => unknown
+  guild_member_add?: (guild: Guild, member: Member) => unknown
+  guild_member_remove?: (guild: Guild, member: Member | User) => unknown
+  guild_member_update?: (guild: Guild, member: Member, cached_member?: Member) => unknown
   heartbeat?: () => unknown
+  message_create?: (message: Message) => unknown
+  message_delete?: (message: Message | Partial_Message) => unknown
+  nickname_update?: (guild: Guild, member: Member, nickname: string, old_nickname?: string) => unknown
   ready?: () => unknown
+  role_create?: (guild: Guild, role: Role) => unknown
+  role_delete?: (guild: Guild, role: Role) => unknown
+  role_update?: (guild: Guild, role: Role, cached_role: Role) => unknown
+  role_gained?: (guild: Guild, member: Member, role_id: string) => unknown
+  role_lost?: (guild: Guild, member: Member, role_id: string) => unknown
   voice_channel_leave?: (voice_state: Voice_State) => unknown
+  raw?: (data: DiscordPayload) => unknown
 }
 
 export enum Intents {

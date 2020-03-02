@@ -1,6 +1,7 @@
-import { ChannelType, User_Data } from './guild.ts'
+import { ChannelType, User_Payload } from './guild.ts'
 import { User } from '../structures/user.ts'
 import { Member } from './member.ts'
+import { Channel } from './return-type.ts'
 
 export interface MentionedUser extends User {
   member: Member
@@ -224,7 +225,7 @@ export interface Message_Create_Options {
   /** The id of the guild the message was sent in */
   guild_id?: string
   /** The author of this message (not guaranteed to be a valid user such as a webhook.) */
-  author: User_Data
+  author: User_Payload
   /** The member properties for this message's author. Can be partial. */
   member?: Member
   /** The contents of the message */
@@ -265,4 +266,26 @@ export interface Message_Create_Options {
   message_reference?: Reference
   /** The message flags combined like permission bits describe extra features of the message */
   flags?: 1 | 2 | 4 | 8 | 16
+}
+
+export interface Base_Message_Delete_Payload {
+  /** The id of the channel */
+  channel_id: string
+  /** The id of the guild */
+  guild_id?: string
+}
+
+export interface Message_Delete_Payload extends Base_Message_Delete_Payload {
+  /** The id of the message */
+  id: string
+}
+
+export interface Message_Delete_Bulk_Payload extends Base_Message_Delete_Payload {
+  /** The ids of the messages */
+  ids: string[]
+}
+
+export interface Partial_Message {
+  id: string,
+  channel: Channel
 }

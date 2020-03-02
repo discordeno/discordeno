@@ -7,8 +7,57 @@ import { Activity } from "./message.ts"
 import { ClientStatusPayload } from "../structures/presence.ts"
 import { Channel_Create_Payload } from "./channel.ts"
 
+export interface Guild_Role_Payload {
+  /** The id of the guild */
+  guild_id: string
+  /** The role object of the role created, deleted, or updated */
+  role: Role_Data
+}
+
+export interface Guild_Member_Chunk_Payload {
+  /** The id of the guild */
+  guild_id: string
+  /** The set of guild members */
+  members: Member_Create_Payload[]
+  /** if passing an invalid id, it will be found here */
+  not_found?: string[]
+  /** if passing true, presences of the members will be here */
+  presences?: Presence[]
+}
+
+export interface Guild_Member_Update_Payload {
+  /** The id of the guild */
+  guild_id: string
+  /** The user's role ids */
+  roles: string[]
+  /** The user */
+  user: User_Payload
+  /** The nickname of the user in the guild */
+  nick: string
+  /** When the user used their nitro boost on the guild. */
+  premium_since: string | null
+}
+
+export interface Guild_Member_Add_Payload extends Member_Create_Payload {
+  guild_id: string
+}
+
+export interface Guild_Emojis_Update_Payload {
+  guild_id: string
+  emojis: Emoji[]
+}
+
+export interface Guild_Ban_Payload {
+  /** The id of the guild */
+  guild_id: string
+  /** The banned user. Not a member as you can ban users outside of your guild. */
+  user: User_Payload
+}
+
 export interface Guild_Delete_Payload {
+  /** The id of the guild */
   id: string
+  /** Whether this guild went unavailable. */
   unavailable?: boolean
 }
 
@@ -181,7 +230,7 @@ export interface Guild_Integration {
   /** The grace period before expiring subscribers */
   expire_grace_period: number
   /** The user for this integration */
-  user: User_Data
+  user: User_Payload
   /** The integration account information */
   account: Account
   /** When this integration was last synced */
@@ -195,7 +244,7 @@ export interface Account {
   name: string
 }
 
-export interface User_Data {
+export interface User_Payload {
   /** The user's id */
   id: string
   /** the user's username, not unique across the platform */
@@ -446,7 +495,7 @@ export interface Voice_State {
 
 export interface Presence {
   /** The user presence is being updated for */
-  user: User_Data
+  user: User_Payload
   /** The roles this user is in */
   roles: string[]
   /** null, or the user's current activity */

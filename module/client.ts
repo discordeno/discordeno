@@ -13,8 +13,21 @@ import { ClientOptions, FulfilledClientOptions, Event_Handlers } from "../types/
 import { CollectedMessageType } from "../types/message-type.ts"
 import { send_constant_heartbeats, update_previous_sequence_number } from "./gateway.ts"
 import { create_guild } from "../structures/guild.ts"
-import { handle_internal_guild_create, handle_internal_guild_update } from "../events/guilds.ts"
-import { Create_Guild_Payload, Guild_Delete_Payload } from "../types/guild.ts"
+import {
+  handle_internal_guild_create,
+  handle_internal_guild_update,
+  handle_internal_guild_delete
+} from "../events/guilds.ts"
+import {
+  Create_Guild_Payload,
+  Guild_Delete_Payload,
+  Guild_Ban_Payload,
+  Guild_Emojis_Update_Payload,
+  Guild_Member_Add_Payload,
+  Guild_Member_Update_Payload,
+  Guild_Member_Chunk_Payload,
+  Guild_Role_Payload
+} from "../types/guild.ts"
 import { create_channel } from "../structures/channel.ts"
 import { Channel_Create_Payload, Channel_Types } from "../types/channel.ts"
 import {
@@ -23,6 +36,11 @@ import {
   handle_internal_channel_delete
 } from "../events/channels.ts"
 import { cache } from "../utils/cache.ts"
+import { create_user } from "../structures/user.ts"
+import { create_member } from "../structures/member.ts"
+import { create_role } from "../structures/role.ts"
+import { create_message } from "../structures/message.ts"
+import { Message_Create_Options, Message_Delete_Payload, Message_Delete_Bulk_Payload } from "../types/message.ts"
 
 const defaultOptions = {
   properties: {
@@ -191,6 +209,10 @@ class Client {
         if (data.t === "GUILD_CREATE") {
           const guild = create_guild(data.d as Create_Guild_Payload, this)
           handle_internal_guild_create(guild)
+          if (cache.unavailableGuilds.get(guild.id())) {
+            cache.unavailableGuilds.delete(guild.id())
+            return
+          }
           return this.event_handlers.guild_create?.(guild)
         }
 
@@ -204,16 +226,187 @@ class Client {
           return this.event_handlers.guild_update?.(guild, cached_guild)
         }
 
-        if (data.t === 'GUILD_DELETE') {
+        if (data.t === "GUILD_DELETE") {
           const options = data.d as Guild_Delete_Payload
           const guild = cache.guilds.get(options.id)
           if (!guild) return
 
           guild.channels.forEach((_channel, id) => cache.channels.delete(id))
-          return options.unavailable ? undefined : this.event_handlers.guild_delete?.(guild)
+          if (options.unavailable) return cache.unavailableGuilds.set(options.id, Date.now())
+
+          handle_internal_guild_delete(guild)
+          return this.event_handlers.guild_delete?.(guild)
         }
 
-        return console.log("UNKNOWN EVENT:", data)
+        if (data.t && ["GUILD_BAN_ADD", "GUILD_BAN_REMOVE"].includes(data.t)) {
+          const options = data.d as Guild_Ban_Payload
+          const guild = cache.guilds.get(options.guild_id)
+          if (!guild) return
+
+          const user = create_user(options.user)
+          return data.t === "GUILD_BAN_ADD"
+            ? this.event_handlers.guild_ban_add?.(guild, user)
+            : this.event_handlers.guild_ban_remove?.(guild, user)
+        }
+
+        if (data.t === "GUILD_EMOJIS_UPDATE") {
+          const options = data.d as Guild_Emojis_Update_Payload
+          const guild = cache.guilds.get(options.guild_id)
+          if (!guild) return
+
+          const cached_emojis = guild.emojis()
+          guild.emojis = () => options.emojis
+
+          return this.event_handlers.guild_emojis_update?.(guild, options.emojis, cached_emojis)
+        }
+
+        if (data.t === "GUILD_MEMBER_ADD") {
+          const options = data.d as Guild_Member_Add_Payload
+          const guild = cache.guilds.get(options.guild_id)
+          if (!guild) return
+
+          const member_count = guild.member_count() + 1
+          guild.member_count = () => member_count
+          const member = create_member(
+            options,
+            options.guild_id,
+            [...guild.roles().values()].map(role => role.raw()),
+            guild.owner_id(),
+            this
+          )
+          guild.members.set(options.user.id, member)
+
+          return this.event_handlers.guild_member_add?.(guild, member)
+        }
+
+        if (data.t === "GUILD_MEMBER_REMOVE") {
+          const options = data.d as Guild_Ban_Payload
+          const guild = cache.guilds.get(options.guild_id)
+          if (!guild) return
+
+          const member_count = guild.member_count() - 1
+          guild.member_count = () => member_count
+
+          const member = guild.members.get(options.user.id)
+          return this.event_handlers.guild_member_remove?.(guild, member || create_user(options.user))
+        }
+
+        if (data.t === "GUILD_MEMBER_UPDATE") {
+          const options = data.d as Guild_Member_Update_Payload
+          const guild = cache.guilds.get(options.guild_id)
+          if (!guild) return
+
+          const cached_member = guild.members.get(options.user.id)
+
+          const new_member_data = {
+            ...options,
+            premium_since: options.premium_since || undefined,
+            joined_at: new Date(cached_member?.joined_at() || Date.now()).toISOString(),
+            deaf: cached_member?.deaf() || false,
+            mute: cached_member?.mute() || false
+          }
+          const member = create_member(
+            new_member_data,
+            options.guild_id,
+            [...guild.roles().values()].map(r => r.raw()),
+            guild.owner_id(),
+            this
+          )
+          guild.members.set(options.user.id, member)
+
+          if (cached_member?.nick() !== options.nick)
+            this.event_handlers.nickname_update?.(guild, member, options.nick, cached_member?.nick())
+          const role_ids = cached_member?.roles() || []
+
+          role_ids.forEach(id => {
+            if (!options.roles.includes(id)) this.event_handlers.role_lost?.(guild, member, id)
+          })
+
+          options.roles.forEach(id => {
+            if (!role_ids.includes(id)) this.event_handlers.role_gained?.(guild, member, id)
+          })
+
+          return this.event_handlers.guild_member_update?.(guild, member, cached_member)
+        }
+
+        if (data.t === "GUILD_MEMBERS_CHUNK") {
+          const options = data.d as Guild_Member_Chunk_Payload
+          const guild = cache.guilds.get(options.guild_id)
+          if (!guild) return
+
+          options.members.forEach(member =>
+            guild.members.set(
+              member.user.id,
+              create_member(
+                member,
+                options.guild_id,
+                [...guild.roles().values()].map(r => r.raw()),
+                guild.owner_id(),
+                this
+              )
+            )
+          )
+        }
+
+        if (data.t && ['GUILD_ROLE_CREATE', 'GUILD_ROLE_DELETE', 'GUILD_ROLE_UPDATE'].includes(data.t)) {
+          const options = data.d as Guild_Role_Payload
+          const guild = cache.guilds.get(options.guild_id)
+          if (!guild) return
+
+          if (data.t === 'GUILD_ROLE_CREATE') {
+            const role = create_role(options.role)
+            const roles = guild.roles().set(options.role.id, role)
+            guild.roles = () => roles
+            return this.event_handlers.role_create?.(guild, role)
+          }
+
+          const cached_role = guild.roles().get(options.role.id)
+          if (!cached_role) return
+
+          if (data.t === 'GUILD_ROLE_DELETE') {
+            const roles = guild.roles()
+            roles.delete(options.role.id)
+            guild.roles = () => roles
+            return this.event_handlers.role_delete?.(guild, cached_role)
+          }
+
+          if (data.t === 'GUILD_ROLE_UPDATE') {
+            const role = create_role(options.role)
+            return this.event_handlers.role_update?.(guild, role, cached_role)
+          }
+        }
+
+        if (data.t === 'MESSAGE_CREATE') {
+          const options = data.d as Message_Create_Options
+          const message = create_message(options, this)
+          const channel = message.channel()
+          if (channel) {
+            channel.last_message_id = () => options.id
+            if (channel.messages().size > 99) {
+              // TODO: LIMIT THIS TO 100 messages
+            }
+          }
+          return this.event_handlers.message_create?.(message)
+        }
+
+        if (data.t && ['MESSAGE_DELETE', 'MESSAGE_DELETE_BULK'].includes(data.t)) {
+          const options = data.d as Message_Delete_Payload
+          const deleted_messages = data.t === 'MESSAGE_DELETE' ? [options.id] : (data.d as Message_Delete_Bulk_Payload).ids
+
+          const channel = cache.channels.get(options.channel_id)
+          if (!channel) return
+
+          deleted_messages.forEach(id => {
+            const message = channel.messages().get(id)
+            if (message) {
+              // TODO: update the messages cache
+            }
+
+            return this.event_handlers.message_delete?.(message || { id, channel })
+          })
+        }
+
+        return this.event_handlers.raw?.(data)
       default:
         return
     }
