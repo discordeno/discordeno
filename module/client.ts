@@ -1,6 +1,6 @@
 import { endpoints } from "../constants/discord.ts"
 import DiscordRequestManager from "./discord-request-manager.ts"
-import { DiscordBotGatewayData, DiscordPayload, DiscordHeartbeatPayload, GatewayOpcode } from "../types/discord.ts"
+import { DiscordBotGatewayData, DiscordPayload, DiscordHeartbeatPayload, GatewayOpcode, Webhook_Update_Payload } from "../types/discord.ts"
 import { spawnShards } from "./sharding-manager.ts"
 import {
   connectWebSocket,
@@ -348,12 +348,12 @@ class Client {
           )
         }
 
-        if (data.t && ['GUILD_ROLE_CREATE', 'GUILD_ROLE_DELETE', 'GUILD_ROLE_UPDATE'].includes(data.t)) {
+        if (data.t && ["GUILD_ROLE_CREATE", "GUILD_ROLE_DELETE", "GUILD_ROLE_UPDATE"].includes(data.t)) {
           const options = data.d as Guild_Role_Payload
           const guild = cache.guilds.get(options.guild_id)
           if (!guild) return
 
-          if (data.t === 'GUILD_ROLE_CREATE') {
+          if (data.t === "GUILD_ROLE_CREATE") {
             const role = create_role(options.role)
             const roles = guild.roles().set(options.role.id, role)
             guild.roles = () => roles
@@ -363,20 +363,20 @@ class Client {
           const cached_role = guild.roles().get(options.role.id)
           if (!cached_role) return
 
-          if (data.t === 'GUILD_ROLE_DELETE') {
+          if (data.t === "GUILD_ROLE_DELETE") {
             const roles = guild.roles()
             roles.delete(options.role.id)
             guild.roles = () => roles
             return this.event_handlers.role_delete?.(guild, cached_role)
           }
 
-          if (data.t === 'GUILD_ROLE_UPDATE') {
+          if (data.t === "GUILD_ROLE_UPDATE") {
             const role = create_role(options.role)
             return this.event_handlers.role_update?.(guild, role, cached_role)
           }
         }
 
-        if (data.t === 'MESSAGE_CREATE') {
+        if (data.t === "MESSAGE_CREATE") {
           const options = data.d as Message_Create_Options
           const message = create_message(options, this)
           const channel = message.channel()
@@ -389,9 +389,10 @@ class Client {
           return this.event_handlers.message_create?.(message)
         }
 
-        if (data.t && ['MESSAGE_DELETE', 'MESSAGE_DELETE_BULK'].includes(data.t)) {
+        if (data.t && ["MESSAGE_DELETE", "MESSAGE_DELETE_BULK"].includes(data.t)) {
           const options = data.d as Message_Delete_Payload
-          const deleted_messages = data.t === 'MESSAGE_DELETE' ? [options.id] : (data.d as Message_Delete_Bulk_Payload).ids
+          const deleted_messages =
+            data.t === "MESSAGE_DELETE" ? [options.id] : (data.d as Message_Delete_Bulk_Payload).ids
 
           const channel = cache.channels.get(options.channel_id)
           if (!channel) return
@@ -404,6 +405,11 @@ class Client {
 
             return this.event_handlers.message_delete?.(message || { id, channel })
           })
+        }
+
+        if (data.t === 'WEBHOOKS_UPDATE') {
+          const options = data.d as Webhook_Update_Payload
+          return this.event_handlers.webhooks_update?.(options.channel_id, options.guild_id)
         }
 
         return this.event_handlers.raw?.(data)

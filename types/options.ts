@@ -48,6 +48,7 @@ export interface Event_Handlers {
   role_lost?: (guild: Guild, member: Member, role_id: string) => unknown
   voice_channel_leave?: (voice_state: Voice_State) => unknown
   raw?: (data: DiscordPayload) => unknown
+  webhooks_update?: (channel_id: string, guild_id: string) => unknown
 }
 
 export enum Intents {
