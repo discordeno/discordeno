@@ -186,3 +186,8 @@ export interface Status {
 	afk: boolean;
 	status: StatusType;
 }
+
+export interface Webhook_Update_Payload {
+  channel_id: string
+  guild_id: string
+}
