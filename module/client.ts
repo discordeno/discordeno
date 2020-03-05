@@ -381,10 +381,10 @@ class Client {
           const message = create_message(options, this)
           const channel = message.channel()
           if (channel) {
-            channel.last_message_id = () => options.id
-            if (channel.messages().size > 99) {
-              // TODO: LIMIT THIS TO 100 messages
-            }
+            // channel.last_message_id = () => options.id
+            // if (channel.messages().size > 99) {
+            //   // TODO: LIMIT THIS TO 100 messages
+            // }
           }
           return this.event_handlers.message_create?.(message)
         }
@@ -398,12 +398,13 @@ class Client {
           if (!channel) return
 
           deleted_messages.forEach(id => {
-            const message = channel.messages().get(id)
-            if (message) {
-              // TODO: update the messages cache
-            }
+            console.log(id)
+          //   const message = channel.messages().get(id)
+          //   if (message) {
+          //     // TODO: update the messages cache
+          //   }
 
-            return this.event_handlers.message_delete?.(message || { id, channel })
+          //   return this.event_handlers.message_delete?.(message || { id, channel })
           })
         }
 
