@@ -5,7 +5,7 @@ import { User } from "../structures/user.ts"
 import { Member } from "./member.ts"
 import { Role } from "../structures/role.ts"
 import { Message } from "../structures/message.ts"
-import { Partial_Message } from "./message.ts"
+import { Partial_Message, Message_Reaction_Payload, Reaction, Reaction_Payload } from "./message.ts"
 
 export interface FulfilledClientOptions {
   token: string
@@ -41,6 +41,8 @@ export interface Event_Handlers {
   message_delete?: (message: Message | Partial_Message) => unknown
   nickname_update?: (guild: Guild, member: Member, nickname: string, old_nickname?: string) => unknown
   ready?: () => unknown
+  reaction_add?: (message: Message | Message_Reaction_Payload, emoji: Reaction_Payload, user_id: string) => unknown
+  reaction_remove?: (message: Message | Message_Reaction_Payload, emoji: Reaction_Payload, user_id: string) => unknown
   role_create?: (guild: Guild, role: Role) => unknown
   role_delete?: (guild: Guild, role: Role) => unknown
   role_update?: (guild: Guild, role: Role, cached_role: Role) => unknown

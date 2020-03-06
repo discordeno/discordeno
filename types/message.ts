@@ -1,6 +1,6 @@
 import { ChannelType, User_Payload } from './guild.ts'
 import { User } from '../structures/user.ts'
-import { Member } from './member.ts'
+import { Member, Member_Create_Payload } from './member.ts'
 import { Channel } from './return-type.ts'
 
 export interface MentionedUser extends User {
@@ -217,6 +217,15 @@ export interface Emoji {
   animated?: boolean
 }
 
+export interface Reaction_Payload {
+  /** The id of the reaction. Null usually if it is a default discord emoji. */
+  id: string | null
+  /** The name of the reaction. Null if it was deleted from the guild and the custom data is no longer available */
+  name: string | null
+  /** If the reaction is an animated emoji. */
+  animated?: boolean
+}
+
 export interface Message_Create_Options {
   /** The id of the message */
   id: string
@@ -283,6 +292,28 @@ export interface Message_Delete_Payload extends Base_Message_Delete_Payload {
 export interface Message_Delete_Bulk_Payload extends Base_Message_Delete_Payload {
   /** The ids of the messages */
   ids: string[]
+}
+
+export interface Message_Update_Payload {
+  /** The message id */
+  id: string
+  /** The channel id */
+  channel_id: string
+}
+
+export interface Message_Reaction_Payload {
+  /** The id of the user */
+  user_id: string
+  /** The id of the channel */
+  channel_id: string
+  /** The id of the message */
+  message_id: string
+  /** The id of the guild */
+  guild_id?: string
+  /** The member who reacted if this happened in a guild. Not available for MESSAGE_REACTION_REMOVE */
+  member?: Member_Create_Payload
+  /** The emoji used to react */
+  emoji: Reaction_Payload
 }
 
 export interface Partial_Message {

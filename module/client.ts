@@ -1,6 +1,12 @@
 import { endpoints } from "../constants/discord.ts"
 import DiscordRequestManager from "./discord-request-manager.ts"
-import { DiscordBotGatewayData, DiscordPayload, DiscordHeartbeatPayload, GatewayOpcode, Webhook_Update_Payload } from "../types/discord.ts"
+import {
+  DiscordBotGatewayData,
+  DiscordPayload,
+  DiscordHeartbeatPayload,
+  GatewayOpcode,
+  Webhook_Update_Payload
+} from "../types/discord.ts"
 import { spawnShards } from "./sharding-manager.ts"
 import {
   connectWebSocket,
@@ -40,7 +46,13 @@ import { create_user } from "../structures/user.ts"
 import { create_member } from "../structures/member.ts"
 import { create_role } from "../structures/role.ts"
 import { create_message } from "../structures/message.ts"
-import { Message_Create_Options, Message_Delete_Payload, Message_Delete_Bulk_Payload } from "../types/message.ts"
+import {
+  Message_Create_Options,
+  Message_Delete_Payload,
+  Message_Delete_Bulk_Payload,
+  Message_Update_Payload,
+  Message_Reaction_Payload
+} from "../types/message.ts"
 
 const defaultOptions = {
   properties: {
@@ -399,16 +411,55 @@ class Client {
 
           deleted_messages.forEach(id => {
             console.log(id)
-          //   const message = channel.messages().get(id)
-          //   if (message) {
-          //     // TODO: update the messages cache
-          //   }
+            //   const message = channel.messages().get(id)
+            //   if (message) {
+            //     // TODO: update the messages cache
+            //   }
 
-          //   return this.event_handlers.message_delete?.(message || { id, channel })
+            //   return this.event_handlers.message_delete?.(message || { id, channel })
           })
         }
 
-        if (data.t === 'WEBHOOKS_UPDATE') {
+        if (data.t === "MESSAGE_UPDATE") {
+          const options = data.d as Message_Update_Payload
+          const channel = cache.channels.get(options.channel_id)
+          if (!channel) return
+
+          // const cachedMessage = channel.messages().get(options.id)
+          // return this.event_handlers.message_update?.(message, cachedMessage)
+        }
+
+        if (data.t && ["MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE"].includes(data.t)) {
+          const options = data.d as Message_Reaction_Payload
+          const message = cache.messages.get(options.message_id)
+          const isAdd = data.t === "MESSAGE_REACTION_ADD"
+
+          if (message) {
+            const previous_reactions = message.reactions()
+            const reaction_existed = previous_reactions.find(
+              reaction => reaction.emoji.id === options.emoji.id && reaction.emoji.name === options.emoji.name
+            )
+            if (reaction_existed)
+              reaction_existed.count = isAdd ? reaction_existed.count + 1 : reaction_existed.count - 1
+            else
+              message.reactions = () => [
+                ...message.reactions(),
+                {
+                  count: 1,
+                  me: options.user_id === this.bot_id,
+                  emoji: { ...options.emoji, id: options.emoji.id || undefined }
+                }
+              ]
+
+            cache.messages.set(options.message_id, message)
+          }
+
+          return isAdd
+            ? this.event_handlers.reaction_add?.(message || options, options.emoji, options.user_id)
+            : this.event_handlers.reaction_remove?.(message || options, options.emoji, options.user_id)
+        }
+
+        if (data.t === "WEBHOOKS_UPDATE") {
           const options = data.d as Webhook_Update_Payload
           return this.event_handlers.webhooks_update?.(options.channel_id, options.guild_id)
         }
