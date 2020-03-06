@@ -1,3 +1,8 @@
+import { Activity } from "./message.ts"
+import { Client_Status_Payload } from "../structures/presence.ts"
+import { Partial_User } from "./guild.ts"
+import { Member_Create_Payload } from "./member.ts"
+
 export interface DiscordPayload {
   /** OP code for the payload */
   op: number
@@ -10,19 +15,19 @@ export interface DiscordPayload {
 }
 
 export interface DiscordBotGatewayData {
-	/** The WSS URL that can be used for connecting to the gateway. */
-	url: string
-	/** The recommended number of shards to use when connecting. */
-	shards: number
-	/** Info on the current start limit. */
-	session_start_limit: {
-		/** The total number of session starts the current user is allowed. */
-		total: number
-		/** The remaining number of session starts the current user is allowed. */
-		remaining: number
-		/** Milliseconds left until limit is reset. */
-		reset_after: number
-	}
+  /** The WSS URL that can be used for connecting to the gateway. */
+  url: string
+  /** The recommended number of shards to use when connecting. */
+  shards: number
+  /** Info on the current start limit. */
+  session_start_limit: {
+    /** The total number of session starts the current user is allowed. */
+    total: number
+    /** The remaining number of session starts the current user is allowed. */
+    remaining: number
+    /** Milliseconds left until limit is reset. */
+    reset_after: number
+  }
 }
 
 export interface DiscordHeartbeatPayload {
@@ -30,17 +35,17 @@ export interface DiscordHeartbeatPayload {
 }
 
 export enum GatewayOpcode {
-	Dispatch = 0,
-	Heartbeat,
-	Identify,
-	StatusUpdate,
-	VoiceStateUpdate,
-	Resume = 6,
-	Reconnect,
-	RequestGuildMembers,
-	InvalidSession,
-	Hello,
-	HeartbeatACK
+  Dispatch = 0,
+  Heartbeat,
+  Identify,
+  StatusUpdate,
+  VoiceStateUpdate,
+  Resume = 6,
+  Reconnect,
+  RequestGuildMembers,
+  InvalidSession,
+  Hello,
+  HeartbeatACK
 }
 
 export enum GatewayCloseEventCode {
@@ -156,38 +161,72 @@ export enum JSONErrorCode {
 }
 
 export interface Properties {
-	$os: string;
-	$browser: string;
-	$device: string;
+  $os: string
+  $browser: string
+  $device: string
 }
 
 export interface Timestamps {
-	start?: number;
-	end?: number;
+  start?: number
+  end?: number
 }
 
 export interface Emoji {
-	name: string;
-	id?: string;
-	animated?: boolean;
+  name: string
+  id?: string
+  animated?: boolean
 }
 
 export enum StatusType {
-	Online = 'online',
-	DoNotDisturb = 'dnd',
-	Idle = 'idle',
-	Invisible = 'invisible',
-	Offline = 'offline'
+  Online = "online",
+  DoNotDisturb = "dnd",
+  Idle = "idle",
+  Invisible = "invisible",
+  Offline = "offline"
 }
 
-export type Status_Type = 'online' | 'dnd' | 'idle' | 'invisible' | 'offline'
+export type Status_Type = "online" | "dnd" | "idle" | "invisible" | "offline"
 
 export interface Status {
-	afk: boolean;
-	status: StatusType;
+  afk: boolean
+  status: StatusType
 }
 
 export interface Webhook_Update_Payload {
   channel_id: string
   guild_id: string
+}
+
+export interface Presence_Update_Payload {
+  /** The user presence is being updated for. */
+  user: Partial_User
+  /** The roles this user is in */
+  roles: string[]
+  /** null, or the user's current activity */
+  game: Activity | null
+  /** The id of the guild */
+  guild_id: string
+  /** Either idle, dnd, online, or offline */
+  status: Status_Type
+  /** All user's current activity */
+  activities: Activity[]
+  /** The user's platform dependent status */
+  client_status: Client_Status_Payload
+  /** When the user has started boosting the guild */
+  premium_since?: string | null
+  /** This users guild nickname (if one is set) */
+  nick?: string | null
+}
+
+export interface Typing_Start_Payload {
+  /** The id of the channel */
+  channel_id: string
+  /** The id of the guild */
+  guild_id?: string
+  /** The id of the user */
+  user_id: string
+  /** The unix time in seconds of when the user started typing */
+  timestamp: number
+  /** The member who started typing if this happened in a guild */
+  member?: Member_Create_Payload
 }

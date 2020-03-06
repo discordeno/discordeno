@@ -23,7 +23,7 @@ export type PresencePayload = Partial<{
   activities: ActivityPayload[]
 
   /** User's platform-dependent status */
-  client_status: ClientStatusPayload
+  client_status: Client_Status_Payload
 
   /** When the user used their Nitro boost on the server */
   premium_since: string
@@ -32,7 +32,7 @@ export type PresencePayload = Partial<{
   nick: string
 }> & { id: string }
 
-export interface ClientStatusPayload {
+export interface Client_Status_Payload {
   /** The user's status set for an active desktop (Windows, Linux, Mac) application session */
   desktop?: StatusType
 

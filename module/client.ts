@@ -5,7 +5,9 @@ import {
   DiscordPayload,
   DiscordHeartbeatPayload,
   GatewayOpcode,
-  Webhook_Update_Payload
+  Webhook_Update_Payload,
+  Presence_Update_Payload,
+  Typing_Start_Payload
 } from "../types/discord.ts"
 import { spawnShards } from "./sharding-manager.ts"
 import {
@@ -32,7 +34,8 @@ import {
   Guild_Member_Add_Payload,
   Guild_Member_Update_Payload,
   Guild_Member_Chunk_Payload,
-  Guild_Role_Payload
+  Guild_Role_Payload,
+  User_Payload
 } from "../types/guild.ts"
 import { create_channel } from "../structures/channel.ts"
 import { Channel_Create_Payload, Channel_Types } from "../types/channel.ts"
@@ -467,6 +470,22 @@ class Client {
 
         if (data.t === "MESSAGE_REACTION_REMOVE_EMOJI") {
           return this.event_handlers.reaction_remove_emoji?.(data.d as Message_Reaction_Remove_Emoji_Payload)
+        }
+
+        if (data.t === 'PRESENCE_UPDATE') {
+          return this.event_handlers.presence_update?.(data.d as Presence_Update_Payload)
+        }
+
+        if (data.t === 'TYPING_START') {
+          return this.event_handlers.typing_start?.(data.d as Typing_Start_Payload)
+        }
+
+        if (data.t === 'USER_UPDATE') {
+          const user_data = data.d as User_Payload
+          const cached_user = cache.users.get(this.bot_id)
+          const user = create_user(user_data)
+          cache.users.set(user_data.id, user)
+          return this.event_handlers.bot_update?.(user, cached_user)
         }
 
         if (data.t === "WEBHOOKS_UPDATE") {
