@@ -5,7 +5,7 @@ import { User } from "../structures/user.ts"
 import { Member } from "./member.ts"
 import { Role } from "../structures/role.ts"
 import { Message } from "../structures/message.ts"
-import { Partial_Message, Message_Reaction_Payload, Reaction, Reaction_Payload, Base_Message_Reaction_Payload, Message_Reaction_Remove_Emoji_Payload } from "./message.ts"
+import { Partial_Message, Message_Reaction_Payload, Reaction_Payload, Base_Message_Reaction_Payload, Message_Reaction_Remove_Emoji_Payload } from "./message.ts"
 
 export interface FulfilledClientOptions {
   token: string
