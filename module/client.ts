@@ -51,7 +51,11 @@ import {
   Message_Delete_Payload,
   Message_Delete_Bulk_Payload,
   Message_Update_Payload,
-  Message_Reaction_Payload
+  Message_Reaction_Payload,
+  Message_Reaction_Remove_All_Payload,
+  Base_Message_Reaction_Payload,
+  Message_Reaction_Remove_Emoji,
+  Message_Reaction_Remove_Emoji_Payload
 } from "../types/message.ts"
 
 const defaultOptions = {
@@ -457,6 +461,14 @@ class Client {
           return isAdd
             ? this.event_handlers.reaction_add?.(message || options, options.emoji, options.user_id)
             : this.event_handlers.reaction_remove?.(message || options, options.emoji, options.user_id)
+        }
+
+        if (data.t === 'MESSAGE_REACTION_REMOVE_ALL') {
+          return this.event_handlers.reaction_remove_all?.(data.d as Base_Message_Reaction_Payload)
+        }
+
+        if (data.t === 'MESSAGE_REACTION_REMOVE_EMOJI') {
+          return this.event_handlers.reaction_remove_emoji?.(data.d as Message_Reaction_Remove_Emoji_Payload)
         }
 
         if (data.t === "WEBHOOKS_UPDATE") {

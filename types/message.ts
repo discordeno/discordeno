@@ -301,18 +301,27 @@ export interface Message_Update_Payload {
   channel_id: string
 }
 
-export interface Message_Reaction_Payload {
-  /** The id of the user */
-  user_id: string
+export interface Base_Message_Reaction_Payload {
+
   /** The id of the channel */
   channel_id: string
   /** The id of the message */
   message_id: string
   /** The id of the guild */
   guild_id?: string
+}
+
+export interface Message_Reaction_Payload extends Base_Message_Reaction_Payload {
+  /** The id of the user */
+  user_id: string
   /** The member who reacted if this happened in a guild. Not available for MESSAGE_REACTION_REMOVE */
   member?: Member_Create_Payload
   /** The emoji used to react */
+  emoji: Reaction_Payload
+}
+
+export interface Message_Reaction_Remove_Emoji_Payload extends Base_Message_Reaction_Payload {
+  /** The emoji that was removed. */
   emoji: Reaction_Payload
 }
 
