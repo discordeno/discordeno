@@ -7,7 +7,8 @@ import {
   GatewayOpcode,
   Webhook_Update_Payload,
   Presence_Update_Payload,
-  Typing_Start_Payload
+  Typing_Start_Payload,
+  Voice_State_Update_Payload
 } from "../types/discord.ts"
 import { spawnShards } from "./sharding-manager.ts"
 import {
@@ -211,8 +212,13 @@ class Client {
 
             guild.voice_states().forEach(vs => {
               if (vs.channel_id !== options.id) return
-              this.event_handlers.voice_channel_leave?.(vs)
+
+              const member = guild.members.get(vs.user_id)
+              if (!member) return
+
+              this.event_handlers.voice_channel_leave?.(member, vs.channel_id)
             })
+
             cache.guilds.set(guild.id(), {
               ...guild,
               voice_states: () => [...guild.voice_states().filter(vs => vs.channel_id !== options.id)]
@@ -472,20 +478,52 @@ class Client {
           return this.event_handlers.reaction_remove_emoji?.(data.d as Message_Reaction_Remove_Emoji_Payload)
         }
 
-        if (data.t === 'PRESENCE_UPDATE') {
+        if (data.t === "PRESENCE_UPDATE") {
           return this.event_handlers.presence_update?.(data.d as Presence_Update_Payload)
         }
 
-        if (data.t === 'TYPING_START') {
+        if (data.t === "TYPING_START") {
           return this.event_handlers.typing_start?.(data.d as Typing_Start_Payload)
         }
 
-        if (data.t === 'USER_UPDATE') {
+        if (data.t === "USER_UPDATE") {
           const user_data = data.d as User_Payload
           const cached_user = cache.users.get(this.bot_id)
           const user = create_user(user_data)
           cache.users.set(user_data.id, user)
           return this.event_handlers.bot_update?.(user, cached_user)
+        }
+
+        if (data.t === "VOICE_STATE_UPDATE") {
+          const payload = data.d as Voice_State_Update_Payload
+          if (!payload.guild_id) return
+
+          const guild = cache.guilds.get(payload.guild_id)
+          if (!guild) return
+
+          const member = guild.members.get(payload.user_id)
+          if (!member) return
+
+          const cached_state = guild.voice_states().find(state => state.user_id === payload.user_id)
+          // No cached state before so lets make one for em
+          if (!cached_state) return (guild.voice_states = () => [...guild.voice_states(), payload])
+
+          if (cached_state.channel_id !== payload.channel_id) {
+            // Either joined or moved channels
+            if (payload.channel_id) {
+              cached_state.channel_id
+                ? // Was in a channel before
+                  this.event_handlers.voice_channel_switch?.(member, payload.channel_id, cached_state.channel_id)
+                : // Was not in a channel before so user just joined
+                  this.event_handlers.voice_channel_join?.(member, payload.channel_id)
+            }
+            // Left the channel
+            else if (cached_state.channel_id) {
+              this.event_handlers.voice_channel_leave?.(member, cached_state.channel_id)
+            }
+          }
+
+          return this.event_handlers.voice_state_update?.(member, payload)
         }
 
         if (data.t === "WEBHOOKS_UPDATE") {

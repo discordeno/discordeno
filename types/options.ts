@@ -1,6 +1,5 @@
-import { Properties, Emoji, DiscordPayload, Presence_Update_Payload, Typing_Start_Payload } from "./discord.ts"
+import { Properties, Emoji, DiscordPayload, Presence_Update_Payload, Typing_Start_Payload, Voice_State_Update_Payload } from "./discord.ts"
 import { Channel, Guild } from "./return-type.ts"
-import { Voice_State } from "./guild.ts"
 import { User } from "../structures/user.ts"
 import { Member } from "./member.ts"
 import { Role } from "../structures/role.ts"
@@ -42,6 +41,7 @@ export interface Event_Handlers {
   message_delete?: (message: Message | Partial_Message) => unknown
   nickname_update?: (guild: Guild, member: Member, nickname: string, old_nickname?: string) => unknown
   presence_update?: (data: Presence_Update_Payload) => unknown
+  raw?: (data: DiscordPayload) => unknown
   ready?: () => unknown
   reaction_add?: (message: Message | Message_Reaction_Payload, emoji: Reaction_Payload, user_id: string) => unknown
   reaction_remove?: (message: Message | Message_Reaction_Payload, emoji: Reaction_Payload, user_id: string) => unknown
@@ -52,9 +52,11 @@ export interface Event_Handlers {
   role_update?: (guild: Guild, role: Role, cached_role: Role) => unknown
   role_gained?: (guild: Guild, member: Member, role_id: string) => unknown
   role_lost?: (guild: Guild, member: Member, role_id: string) => unknown
-  voice_channel_leave?: (voice_state: Voice_State) => unknown
-  raw?: (data: DiscordPayload) => unknown
   typing_start?: (data: Typing_Start_Payload) => unknown
+  voice_channel_join?: (member: Member, channel_id: string) => unknown
+  voice_channel_leave?: (member: Member, channel_id: string) => unknown
+  voice_channel_switch?: (member: Member, channel_id: string, old_channel_id: string) => unknown
+  voice_state_update?: (member: Member, voice_state: Voice_State_Update_Payload) => unknown
   webhooks_update?: (channel_id: string, guild_id: string) => unknown
 }
 
