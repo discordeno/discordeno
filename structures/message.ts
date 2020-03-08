@@ -5,7 +5,7 @@ import { Channel_Types, MessageContent } from '../types/channel.ts'
 import { cache } from '../utils/cache.ts'
 import { create_user } from './user.ts'
 import { User_Payload } from '../types/guild.ts'
-import { Channel } from '../types/return-type'
+import { Channel } from '../types/return-type.ts'
 
 export const create_message = (data: Message_Create_Options, client: Client) => {
   const base_message = {
