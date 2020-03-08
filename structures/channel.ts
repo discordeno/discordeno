@@ -25,7 +25,9 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
     guild_id: () => data.guild_id,
     // TODO: fix this from being number on allow and deny to being array of strings
     /** The permission overwrites for this channel */
-    permission_overwrites: () => data.permission_overwrites
+    permission_overwrites: () => data.permission_overwrites,
+    /** Whether this channel is nsfw or not */
+    nsfw: () => false
   }
 
   const base_text_channel = {
