@@ -59,6 +59,7 @@ import {
   Base_Message_Reaction_Payload,
   Message_Reaction_Remove_Emoji_Payload
 } from "../types/message.ts"
+import { logRed } from "../utils/logger.ts"
 
 const defaultOptions = {
   properties: {
@@ -122,7 +123,6 @@ class Client {
 
   async *collectMessages(socket: WebSocket) {
     for await (const message of socket.receive()) {
-      console.log("collecting", message)
       if (typeof message === "string") {
         yield {
           type: CollectedMessageType.Message,
@@ -144,15 +144,15 @@ class Client {
     for await (const message of this.collectMessages(socket)) {
       switch (message.type) {
         case CollectedMessageType.Ping:
-          console.log("Ping!")
+          logRed("Ping!")
           yield message
           break
         case CollectedMessageType.Pong:
-          console.log("Pong!")
+          logRed("Pong!")
           yield message
           break
         case CollectedMessageType.Close:
-          console.log("Close :(", message)
+          logRed(`Close :( ${message}`)
           yield message
           break
         case CollectedMessageType.Message:
