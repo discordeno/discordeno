@@ -5,6 +5,7 @@ import { Channel_Types, MessageContent } from '../types/channel.ts'
 import { cache } from '../utils/cache.ts'
 import { create_user } from './user.ts'
 import { User_Payload } from '../types/guild.ts'
+import { Channel } from '../types/return-type'
 
 export const create_message = (data: Message_Create_Options, client: Client) => {
   const base_message = {
@@ -34,7 +35,7 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
     }),
     flags: () => data.flags || 0,
     channel_id: () => data.channel_id,
-    channel: () => cache.channels.get(data.channel_id),
+    channel: () => cache.channels.get(data.channel_id) as Channel,
 
     delete: (reason: string) => {
       // TODO: Requires MANAGE_MESSAGES
