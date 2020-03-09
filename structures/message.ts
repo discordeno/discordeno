@@ -36,6 +36,7 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
     flags: () => data.flags || 0,
     channel_id: () => data.channel_id,
     channel: () => cache.channels.get(data.channel_id) as Channel,
+    author: () => create_user({ ...data.author, avatar: data.author.avatar || '' }),
 
     delete: (reason: string) => {
       // TODO: Requires MANAGE_MESSAGES
@@ -94,12 +95,7 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
     }
   }
 
-  if (!data.guild_id) {
-    return {
-      ...base_message,
-      author: create_user({ ...data.author, avatar: data.author.avatar || '' })
-    }
-  }
+  if (!data.guild_id) return base_message
 
   const guild = cache.guilds.get(data.guild_id)
 
