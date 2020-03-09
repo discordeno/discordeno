@@ -12,7 +12,7 @@ Discord API library wrapper in Deno
 
 If you are just starting out, you can use the Discordeno Template repo to get the base of your bot pre-built for you. As other developers create other command frameworks for this library, those frameworks will be listed here:
 
-**Official Boilerplate:** This is a very minimalistic design for a boilerplate for your bot to get you started.
+**[Official Boilerplate](https://github.com/Skillz4Killz/Discordeno-bot-template):** This is a very minimalistic design for a boilerplate for your bot to get you started.
 
 ## Motivations/Features
 
