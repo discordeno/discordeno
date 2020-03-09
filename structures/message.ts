@@ -10,6 +10,7 @@ import { Channel } from '../types/return-type.ts'
 export const create_message = (data: Message_Create_Options, client: Client) => {
   const base_message = {
     raw: () => data,
+    author: () => create_user({ ...data.author, avatar: data.author.avatar || '' }),
     id: () => data.id,
     type: () => data.type,
     timestamp: () => Date.parse(data.timestamp),
@@ -36,7 +37,6 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
     flags: () => data.flags || 0,
     channel_id: () => data.channel_id,
     channel: () => cache.channels.get(data.channel_id) as Channel,
-    author: () => create_user({ ...data.author, avatar: data.author.avatar || '' }),
 
     delete: (reason: string) => {
       // TODO: Requires MANAGE_MESSAGES
