@@ -1,5 +1,5 @@
 import { Activity } from "./message.ts"
-import { Client_Status_Payload } from "../structures/presence.ts"
+import { Client_Status_Payload } from "./presence.ts"
 import { Partial_User } from "./guild.ts"
 import { Member_Create_Payload } from "./member.ts"
 

@@ -4,7 +4,7 @@ import { Permission } from "./permission.ts"
 import { Role_Data } from "./role.ts"
 import { Member_Create_Payload } from "./member.ts"
 import { Activity } from "./message.ts"
-import { Client_Status_Payload } from "../structures/presence.ts"
+import { Client_Status_Payload } from "./presence.ts"
 import { Channel_Create_Payload } from "./channel.ts"
 
 export interface Guild_Role_Payload {
