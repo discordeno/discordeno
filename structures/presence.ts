@@ -1,4 +1,4 @@
-import { ActivityPayload } from "./activity.ts"
+import { ActivityPayload } from "../types/activity.ts"
 import { StatusType } from "../types/discord.ts"
 import { User_Payload } from "../types/guild.ts"
 
