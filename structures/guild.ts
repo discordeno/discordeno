@@ -169,7 +169,6 @@ export const create_guild = (data: Create_Guild_Payload, client: Client) => {
         ...options,
         permissions: options.permissions?.map(perm => Permissions[perm])
       })
-      // TODO: cache this role
 
       return role
     },
