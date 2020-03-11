@@ -288,7 +288,7 @@ export const create_guild = (data: Create_Guild_Payload, client: Client) => {
       }, 0)
 
       // channel.permission_overwrites()?.forEach(overwrite => {
-        // permissionBits = (permissionBits & ~overwrite.deny) | overwrite.allow
+      // permissionBits = (permissionBits & ~overwrite.deny) | overwrite.allow
       // })
 
       if (permissionBits & Permissions.ADMINISTRATOR) return true

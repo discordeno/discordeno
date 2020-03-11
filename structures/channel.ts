@@ -82,17 +82,16 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
     },
     /** Send a message to the channel. Requires SEND_MESSAGES permission. */
     send_message: async (content: string | MessageContent) => {
+      if (typeof content === "string") content = { content }
+
       if (data.guild_id) {
         if (!bot_has_permission(data.guild_id, client.bot_id, [Permissions.SEND_MESSAGES]))
           throw new Error(Errors.MISSING_SEND_MESSAGES)
+        if (content.tts && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.SEND_TTS_MESSAGES]))
+          throw new Error(Errors.MISSING_SEND_TTS_MESSAGE)
       }
 
-      if (typeof content === "string") content = { content }
-      if (content.tts) {
-        // TODO: check if the bot has SEND_TTS_MESSAGE
-      }
-
-      // TODO: Check content length
+      if (content.content && content.content.length > 2000) throw new Error(Errors.MESSAGE_MAX_LENGTH)
 
       const result = await client.discordRequestManager.post(endpoints.CHANNEL_MESSAGES(data.id), content)
       return create_message(result, client)
