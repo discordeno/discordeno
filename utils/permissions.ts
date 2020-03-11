@@ -24,18 +24,12 @@ export const member_has_permission = (
   return permissions.every(permission => permissionBits & Permissions[permission])
 }
 
-export const bot_has_permission = (
-	guild_id: string,
-	bot_id: string,
-  permissions: Permissions[]
-) => {
+export const bot_has_permission = (guild_id: string, bot_id: string, permissions: Permissions[]) => {
   const guild = cache.guilds.get(guild_id)
-	if (!guild) return false
+  if (!guild) return false
 
-	const member = guild.members.get(bot_id)
-	if (!member) return false
-
-
+  const member = guild.members.get(bot_id)
+  if (!member) return false
 
   const permissionBits = [...guild.roles().values()]
     .map(role => role.raw())
