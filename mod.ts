@@ -9,7 +9,8 @@ const startup = async () => {
     bot_id: "675412054529540107",
     intents: [Intents.GUILDS, Intents.GUILD_MESSAGES],
     event_handlers: {
-      guild_create: guild => logYellow(guild.roles().toString())
+      ready: () => logYellow("Bot ready emitted"),
+      channel_create: channel => console.log(channel.permission_overwrites() || "can;t find")
     }
   })
 }

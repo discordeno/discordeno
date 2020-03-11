@@ -6,6 +6,7 @@ import { Image_Size, Image_Formats } from "../types/cdn.ts"
 import { Permission, Permissions } from "../types/permission.ts"
 import { Role_Data } from "../types/role.ts"
 import { member_has_permission, bot_has_permission } from "../utils/permissions.ts"
+import { Errors } from "../types/errors.ts"
 
 export const create_member = (
   data: Member_Create_Payload,
@@ -48,38 +49,38 @@ export const create_member = (
   /** Add a role to the member */
   add_role: (role_id: string, reason?: string) => {
     // TODO: check if the bots highest role is above this one
-    if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_ROLES])) throw 'MISSING_MANAGE_ROLES'
+    if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_ROLES])) throw new Error(Errors.MISSING_MANAGE_ROLES)
     return client.discordRequestManager.put(endpoints.GUILD_MEMBER_ROLE(guild_id, data.user.id, role_id), { reason })
   },
   /** Remove a role from the member */
   remove_role: (role_id: string, reason?: string) => {
     // TODO: check if the bots highest role is above this role
-    if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_ROLES])) throw 'MISSING_MANAGE_ROLES'
+    if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_ROLES])) throw new Error(Errors.MISSING_MANAGE_ROLES)
     return client.discordRequestManager.delete(endpoints.GUILD_MEMBER_ROLE(guild_id, data.user.id, role_id), { reason })
   },
   /** Kick a member from the server */
   kick: (reason?: string) => {
     // TODO: Check if the bot is above the user so it is capable of kicking
-    if (!bot_has_permission(guild_id, client.bot_id, [Permissions.KICK_MEMBERS])) throw 'MISSING_KICK_MEMBERS'
+    if (!bot_has_permission(guild_id, client.bot_id, [Permissions.KICK_MEMBERS])) throw new Error(Errors.MISSING_KICK_MEMBERS)
     return client.discordRequestManager.delete(endpoints.GUILD_MEMBER(guild_id, data.user.id), { reason })
   },
   /** Edit the member */
   edit: (options: Edit_Member_Options) => {
     if (options.nick) {
-      if (options.nick.length > 32) throw "NICKNAMES_MAX_LENGTH"
-      if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_NICKNAMES])) throw "MISSING_MANAGE_NICKNAME"
+      if (options.nick.length > 32) throw new Error(Errors.NICKNAMES_MAX_LENGTH)
+      if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_NICKNAMES])) throw new Error(Errors.MISSING_MANAGE_NICKNAMES)
     }
 
     if (options.roles && !bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_ROLES]))
-      throw "MISSING_MANAGE_ROLES"
+      throw new Error(Errors.MISSING_MANAGE_ROLES)
 
     if (options.mute) {
       // TODO: This should check if the member is in a voice channel
-      if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MUTE_MEMBERS])) throw "MISSING_MUTE_MEMBERS"
+      if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MUTE_MEMBERS])) throw new Error(Errors.MISSING_MUTE_MEMBERS)
     }
 
     if (options.deaf && !bot_has_permission(guild_id, client.bot_id, [Permissions.DEAFEN_MEMBERS]))
-      throw "MISSING_DEAFEN_MEMBERS"
+      throw new Error(Errors.MISSING_DEAFEN_MEMBERS)
 
     // TODO: if channel id is provided check if the bot has CONNECT and MOVE in channel and current channel
 

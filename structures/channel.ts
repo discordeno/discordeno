@@ -12,6 +12,9 @@ import Client from "../module/client.ts"
 import { endpoints } from "../constants/discord.ts"
 import { create_message, Message } from "./message.ts"
 import { Message_Create_Options } from "../types/message.ts"
+import { calculate_permissions, bot_has_permission } from "../utils/permissions.ts"
+import { Permissions } from "../types/permission.ts"
+import { Errors } from "../types/errors.ts"
 
 export const create_channel = (data: Channel_Create_Payload, client: Client) => {
   const base_channel = {
@@ -23,9 +26,15 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
     type: () => data.type,
     /** The id of the guild where this channel exists */
     guild_id: () => data.guild_id,
-    // TODO: fix this from being number on allow and deny to being array of strings
     /** The permission overwrites for this channel */
-    permission_overwrites: () => data.permission_overwrites,
+    permission_overwrites: () =>
+      data.permission_overwrites
+        ? data.permission_overwrites.map(perm => ({
+            ...perm,
+            allow: calculate_permissions(perm.allow),
+            deny: calculate_permissions(perm.deny)
+          }))
+        : [],
     /** Whether this channel is nsfw or not */
     nsfw: () => false
   }
@@ -38,13 +47,24 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
     last_message_id: () => data.last_message_id,
     /** Fetch a single message from the server. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
     get_message: async (id: string) => {
-      // TODO: check if the user has VIEW_CHANNEL and READ_MESSAGE_HISTORY
+      if (data.guild_id) {
+        if (!bot_has_permission(data.guild_id, client.bot_id, [Permissions.VIEW_CHANNEL]))
+          throw new Error(Errors.MISSING_VIEW_CHANNEL)
+        if (!bot_has_permission(data.guild_id, client.bot_id, [Permissions.READ_MESSAGE_HISTORY]))
+          throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY)
+      }
       const result = await client.discordRequestManager.get(endpoints.CHANNEL_MESSAGE(data.id, id))
       return create_message(result, client)
     },
     /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
     get_messages: async (options?: Get_Messages_After | Get_Messages_Before | Get_Messages_Around | Get_Messages) => {
-      // TODO: check if the user has VIEW_CHANNEL and READ_MESSAGE_HISTORY
+      if (data.guild_id) {
+        if (!bot_has_permission(data.guild_id, client.bot_id, [Permissions.VIEW_CHANNEL]))
+          throw new Error(Errors.MISSING_VIEW_CHANNEL)
+        if (!bot_has_permission(data.guild_id, client.bot_id, [Permissions.READ_MESSAGE_HISTORY]))
+          throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY)
+      }
+
       if (options?.limit && options.limit > 100) return
 
       const result = (await client.discordRequestManager.get(
@@ -62,8 +82,9 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
     },
     /** Send a message to the channel. Requires SEND_MESSAGES permission. */
     send_message: async (content: string | MessageContent) => {
-      if (data.type !== Channel_Types.DM) {
-        // TODO: check if the bot has SEND_MESSAGES permission
+      if (data.guild_id) {
+        if (!bot_has_permission(data.guild_id, client.bot_id, [Permissions.SEND_MESSAGES]))
+          throw new Error(Errors.MISSING_SEND_MESSAGES)
       }
 
       if (typeof content === "string") content = { content }
