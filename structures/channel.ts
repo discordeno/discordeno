@@ -123,15 +123,15 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
       mention: () => `<#${data.id}>`,
       /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */
       delete_messages: (ids: string[], reason?: string) => {
-        // TODO: Requires the MANAGE_MESSAGES permission.
-        if (ids.length < 2) {
-          throw "This endpoint will only accept 2-100 message ids."
-        }
-        if (ids.length > 100) {
+        if (data.guild_id && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.MANAGE_MESSAGES]))
+          throw new Error(Errors.MISSING_MANAGE_MESSAGES)
+        if (ids.length < 2) throw new Error(Errors.DELETE_MESSAGES_MIN)
+
+        if (ids.length > 100)
           console.warn(
             `This endpoint only accepts a maximum of 100 messages. Deleting the first 100 message ids provided.`
           )
-        }
+
         return client.discordRequestManager.post(endpoints.CHANNEL_BULK_DELETE(data.id), {
           messages: ids.splice(0, 100),
           reason
@@ -139,17 +139,20 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
       },
       /** Gets the invites for this channel. Requires MANAGE_CHANNEL */
       get_invites: () => {
-        // TODO: Requires the MANAGE_CHANNELS permission
+        if (data.guild_id && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.MANAGE_CHANNELS]))
+          throw new Error(Errors.MISSING_MANAGE_CHANNELS)
         return client.discordRequestManager.get(endpoints.CHANNEL_INVITES(data.id))
       },
       /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
       create_invite: (options: Create_Invite_Options) => {
-        // TODO: Requires CREATE_INSTANT_INVITE permissin.
+        if (data.guild_id && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.CREATE_INSTANT_INVITE]))
+          throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE)
         return client.discordRequestManager.post(endpoints.CHANNEL_INVITES(data.id), options)
       },
       /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
       get_webhooks: () => {
-        // TODO: Requires MANAGE_WEBHOOKS
+        if (data.guild_id && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.MANAGE_WEBHOOKS]))
+          throw new Error(Errors.MISSING_MANAGE_WEBHOOKS)
         return client.discordRequestManager.get(endpoints.CHANNEL_WEBHOOKS(data.id))
       }
     }
