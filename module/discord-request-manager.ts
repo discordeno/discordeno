@@ -1,19 +1,27 @@
 import Client from "../module/client.ts"
 import { RequestMethod } from "../types/fetch.ts"
+import { Ratelimiter } from './ratelimiter';
 
 // type RequestBody = string | Blob | ArrayBufferView | ArrayBuffer | FormData | URLSearchParams | null | undefined
 
 export default class DiscordRequestManager {
+  public ratelimiter = new Ratelimiter();
+
   constructor(public client: Client) {
     this.client = client
   }
 
   async get(url: string, body?: unknown) {
-    const response = await fetch(this.resolveURL(url), {
-      headers: this.getDiscordHeaders(),
-      body: body ? JSON.stringify(body) : undefined
-    })
-    return await response.json()
+    return this.runMethod(RequestMethod.Get, url, body);
+  }
+
+  protected async addBucket (headers: Headers) {
+    this.ratelimiter.addBucket(headers.get('X-RateLimit-Bucket')!, {
+      retryAfter: parseInt(headers.get('X-RateLimit-Retry-After')!),
+      limit: parseInt(headers.get('X-RateLimit-Limit')!),
+      remaining: parseInt(headers.get('X-RateLimit-Remaining')!),
+      reset: parseInt(headers.get('X-RateLimit-Reset')!)
+    });
   }
 
   async post(url: string, body?: unknown) {
@@ -32,16 +40,17 @@ export default class DiscordRequestManager {
     return this.runMethod(RequestMethod.Put, url, body)
   }
 
-  async runMethod(method: RequestMethod, url: string, body?: unknown) {
-    const response = await fetch(this.resolveURL(url), {
+  protected async baseCreateRequestForMethod (method: RequestMethod, url: string, body?: unknown) {
+    return fetch(this.resolveURL(url), {
       method,
       headers: this.getDiscordHeaders(),
       body: body ? JSON.stringify(body) : undefined
     })
+  }
 
-    const json = await response.json()
-
-    return json
+  async runMethod(method: RequestMethod, url: string, body?: unknown) {
+    const response = await this.baseCreateRequestForMethod(method, url, body);
+    return response.json();
   }
 
   // A hook for the RouteAwareRequestManager to override URLs.
