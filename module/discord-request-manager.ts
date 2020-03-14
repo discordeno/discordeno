@@ -5,7 +5,7 @@ import { Ratelimiter } from './ratelimiter.ts';
 // type RequestBody = string | Blob | ArrayBufferView | ArrayBuffer | FormData | URLSearchParams | null | undefined
 
 export default class DiscordRequestManager {
-  public ratelimiter = new Ratelimiter();
+  ratelimiter = new Ratelimiter();
 
   constructor(public client: Client) {
     this.client = client

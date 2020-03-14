@@ -8,7 +8,7 @@ export interface Ratelimit {
 }
 
 export class Ratelimiter {
-    public buckets: Record<string, Ratelimit> = {};
+    buckets: Record<string, Ratelimit> = {};
 
     awaitRatelimit (ratelimit: Ratelimit): Promise<unknown> {
         if (ratelimit.remaining === 0) {

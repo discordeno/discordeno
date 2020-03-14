@@ -7,7 +7,7 @@ import { RequestMethod } from '../types/fetch.ts';
 
 export class RouteAwareDiscordRequestManager extends DiscordRequestManager {
   protected currentRatelimit?: Ratelimit;
-  public ratelimiter = new Ratelimiter();
+  ratelimiter = new Ratelimiter();
 
   constructor(public client: Client, public routeName: string) {
     super(client)
