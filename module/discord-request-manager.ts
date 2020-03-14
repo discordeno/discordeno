@@ -1,27 +1,27 @@
 import Client from "../module/client.ts"
 import { RequestMethod } from "../types/fetch.ts"
-import { Ratelimiter } from './ratelimiter.ts';
+import { Ratelimiter } from "./ratelimiter.ts"
 
 // type RequestBody = string | Blob | ArrayBufferView | ArrayBuffer | FormData | URLSearchParams | null | undefined
 
-export default class DiscordRequestManager {
-  ratelimiter = new Ratelimiter();
+export default class Request_Manager {
+  ratelimiter = new Ratelimiter()
 
   constructor(public client: Client) {
     this.client = client
   }
 
   async get(url: string, body?: unknown) {
-    return this.runMethod(RequestMethod.Get, url, body);
+    return this.runMethod(RequestMethod.Get, url, body)
   }
 
-  protected async addBucket (headers: Headers) {
-    this.ratelimiter.addBucket(headers.get('X-RateLimit-Bucket')!, {
-      retryAfter: parseInt(headers.get('X-RateLimit-Retry-After')!),
-      limit: parseInt(headers.get('X-RateLimit-Limit')!),
-      remaining: parseInt(headers.get('X-RateLimit-Remaining')!),
-      reset: parseInt(headers.get('X-RateLimit-Reset')!)
-    });
+  protected async addBucket(headers: Headers) {
+    this.ratelimiter.addBucket(headers.get("X-RateLimit-Bucket")!, {
+      retryAfter: parseInt(headers.get("X-RateLimit-Retry-After")!),
+      limit: parseInt(headers.get("X-RateLimit-Limit")!),
+      remaining: parseInt(headers.get("X-RateLimit-Remaining")!),
+      reset: parseInt(headers.get("X-RateLimit-Reset")!)
+    })
   }
 
   async post(url: string, body?: unknown) {
@@ -40,7 +40,7 @@ export default class DiscordRequestManager {
     return this.runMethod(RequestMethod.Put, url, body)
   }
 
-  protected async baseCreateRequestForMethod (method: RequestMethod, url: string, body?: unknown) {
+  protected async baseCreateRequestForMethod(method: RequestMethod, url: string, body?: unknown) {
     return fetch(this.resolveURL(url), {
       method,
       headers: this.getDiscordHeaders(),
@@ -49,8 +49,8 @@ export default class DiscordRequestManager {
   }
 
   async runMethod(method: RequestMethod, url: string, body?: unknown) {
-    const response = await this.baseCreateRequestForMethod(method, url, body);
-    return response.json();
+    const response = await this.baseCreateRequestForMethod(method, url, body)
+    return response.json()
   }
 
   // A hook for the RouteAwareRequestManager to override URLs.

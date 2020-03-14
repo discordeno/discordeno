@@ -49,26 +49,30 @@ export const create_member = (
   /** Add a role to the member */
   add_role: (role_id: string, reason?: string) => {
     // TODO: check if the bots highest role is above this one
-    if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_ROLES])) throw new Error(Errors.MISSING_MANAGE_ROLES)
-    return client.discordRequestManager.put(endpoints.GUILD_MEMBER_ROLE(guild_id, data.user.id, role_id), { reason })
+    if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_ROLES]))
+      throw new Error(Errors.MISSING_MANAGE_ROLES)
+    return client.request_manager.put(endpoints.GUILD_MEMBER_ROLE(guild_id, data.user.id, role_id), { reason })
   },
   /** Remove a role from the member */
   remove_role: (role_id: string, reason?: string) => {
     // TODO: check if the bots highest role is above this role
-    if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_ROLES])) throw new Error(Errors.MISSING_MANAGE_ROLES)
-    return client.discordRequestManager.delete(endpoints.GUILD_MEMBER_ROLE(guild_id, data.user.id, role_id), { reason })
+    if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_ROLES]))
+      throw new Error(Errors.MISSING_MANAGE_ROLES)
+    return client.request_manager.delete(endpoints.GUILD_MEMBER_ROLE(guild_id, data.user.id, role_id), { reason })
   },
   /** Kick a member from the server */
   kick: (reason?: string) => {
     // TODO: Check if the bot is above the user so it is capable of kicking
-    if (!bot_has_permission(guild_id, client.bot_id, [Permissions.KICK_MEMBERS])) throw new Error(Errors.MISSING_KICK_MEMBERS)
-    return client.discordRequestManager.delete(endpoints.GUILD_MEMBER(guild_id, data.user.id), { reason })
+    if (!bot_has_permission(guild_id, client.bot_id, [Permissions.KICK_MEMBERS]))
+      throw new Error(Errors.MISSING_KICK_MEMBERS)
+    return client.request_manager.delete(endpoints.GUILD_MEMBER(guild_id, data.user.id), { reason })
   },
   /** Edit the member */
   edit: (options: Edit_Member_Options) => {
     if (options.nick) {
       if (options.nick.length > 32) throw new Error(Errors.NICKNAMES_MAX_LENGTH)
-      if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_NICKNAMES])) throw new Error(Errors.MISSING_MANAGE_NICKNAMES)
+      if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_NICKNAMES]))
+        throw new Error(Errors.MISSING_MANAGE_NICKNAMES)
     }
 
     if (options.roles && !bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_ROLES]))
@@ -76,7 +80,8 @@ export const create_member = (
 
     if (options.mute) {
       // TODO: This should check if the member is in a voice channel
-      if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MUTE_MEMBERS])) throw new Error(Errors.MISSING_MUTE_MEMBERS)
+      if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MUTE_MEMBERS]))
+        throw new Error(Errors.MISSING_MUTE_MEMBERS)
     }
 
     if (options.deaf && !bot_has_permission(guild_id, client.bot_id, [Permissions.DEAFEN_MEMBERS]))
@@ -84,7 +89,7 @@ export const create_member = (
 
     // TODO: if channel id is provided check if the bot has CONNECT and MOVE in channel and current channel
 
-    return client.discordRequestManager.patch(endpoints.GUILD_MEMBER(guild_id, data.user.id), options)
+    return client.request_manager.patch(endpoints.GUILD_MEMBER(guild_id, data.user.id), options)
   },
   /** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
   has_permissions: (permissions: Permission[]) => {

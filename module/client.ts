@@ -1,5 +1,5 @@
 import { endpoints } from "../constants/discord.ts"
-import DiscordRequestManager from "./discord-request-manager.ts"
+import Request_Manager from "./discord-request-manager.ts"
 import {
   DiscordBotGatewayData,
   DiscordPayload,
@@ -18,7 +18,7 @@ import {
   isWebSocketPongEvent,
   WebSocket
 } from "https://deno.land/std/ws/mod.ts"
-import { ClientOptions, FulfilledClientOptions, Event_Handlers } from "../types/options.ts"
+import { Client_Options, Fulfilled_Client_Options, Event_Handlers } from "../types/options.ts"
 import { CollectedMessageType } from "../types/message-type.ts"
 import { send_constant_heartbeats, update_previous_sequence_number } from "./gateway.ts"
 import { create_guild } from "../structures/guild.ts"
@@ -75,15 +75,15 @@ class Client {
   /** The bot's token. This should never be used by end users. It is meant to be used internally to make requests to the Discord API. */
   token: string
   /** The Rate limit manager to handle all outgoing requests to discord. Not meant to be used by users. */
-  discordRequestManager: DiscordRequestManager
+  request_manager: Request_Manager
 
   /** The options (with defaults) passed to the `Client` constructor. */
-  options: FulfilledClientOptions
+  options: Fulfilled_Client_Options
   event_handlers: Event_Handlers
 
   authorization: string
 
-  constructor(options: ClientOptions) {
+  constructor(options: Client_Options) {
     // Assign some defaults to the options to make them fulfilled / not annoying to use.
     this.options = {
       ...defaultOptions,
@@ -93,14 +93,14 @@ class Client {
     this.bot_id = options.bot_id
     this.token = options.token
     this.authorization = `Bot ${this.options.token}`
-    this.discordRequestManager = new DiscordRequestManager(this)
+    this.request_manager = new Request_Manager(this)
     this.event_handlers = options.event_handlers || {}
 
     this.bootstrap()
   }
 
   async bootstrap() {
-    const data = (await this.discordRequestManager.get(endpoints.GATEWAY_BOT)) as DiscordBotGatewayData
+    const data = (await this.request_manager.get(endpoints.GATEWAY_BOT)) as DiscordBotGatewayData
     const socket = await connectWebSocket(data.url)
     this.collectMessages(socket)
     // Intial identify with the gateway

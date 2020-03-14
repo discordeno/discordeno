@@ -47,7 +47,7 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
       if (!bot_has_permission(data.guild_id, client.bot_id, [Permissions.READ_MESSAGE_HISTORY]))
         throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY)
     }
-    const result = await client.discordRequestManager.get(endpoints.CHANNEL_MESSAGE(data.id, id))
+    const result = await client.request_manager.get(endpoints.CHANNEL_MESSAGE(data.id, id))
     return create_message(result, client)
   },
   /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
@@ -61,7 +61,7 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
 
     if (options?.limit && options.limit > 100) return
 
-    const result = (await client.discordRequestManager.get(
+    const result = (await client.request_manager.get(
       endpoints.CHANNEL_MESSAGES(data.id),
       options
     )) as Message_Create_Options[]
@@ -69,7 +69,7 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
   },
   /** Get pinned messages in this channel. */
   get_pins: async () => {
-    const result = (await client.discordRequestManager.get(endpoints.CHANNEL_PINS(data.id))) as Message_Create_Options[]
+    const result = (await client.request_manager.get(endpoints.CHANNEL_PINS(data.id))) as Message_Create_Options[]
     return result.map(res => create_message(res, client))
   },
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
@@ -85,7 +85,7 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
 
     if (content.content && content.content.length > 2000) throw new Error(Errors.MESSAGE_MAX_LENGTH)
 
-    const result = await client.discordRequestManager.post(endpoints.CHANNEL_MESSAGES(data.id), content)
+    const result = await client.request_manager.post(endpoints.CHANNEL_MESSAGES(data.id), content)
     return create_message(result, client)
   },
   /** The position of the channel in the server. If this channel does not have a position for example DM channels, it will be -1 */
@@ -107,7 +107,7 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
     if (ids.length > 100)
       console.warn(`This endpoint only accepts a maximum of 100 messages. Deleting the first 100 message ids provided.`)
 
-    return client.discordRequestManager.post(endpoints.CHANNEL_BULK_DELETE(data.id), {
+    return client.request_manager.post(endpoints.CHANNEL_BULK_DELETE(data.id), {
       messages: ids.splice(0, 100),
       reason
     })
@@ -116,19 +116,19 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
   get_invites: () => {
     if (data.guild_id && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.MANAGE_CHANNELS]))
       throw new Error(Errors.MISSING_MANAGE_CHANNELS)
-    return client.discordRequestManager.get(endpoints.CHANNEL_INVITES(data.id))
+    return client.request_manager.get(endpoints.CHANNEL_INVITES(data.id))
   },
   /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
   create_invite: (options: Create_Invite_Options) => {
     if (data.guild_id && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.CREATE_INSTANT_INVITE]))
       throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE)
-    return client.discordRequestManager.post(endpoints.CHANNEL_INVITES(data.id), options)
+    return client.request_manager.post(endpoints.CHANNEL_INVITES(data.id), options)
   },
   /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
   get_webhooks: () => {
     if (data.guild_id && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.MANAGE_WEBHOOKS]))
       throw new Error(Errors.MISSING_MANAGE_WEBHOOKS)
-    return client.discordRequestManager.get(endpoints.CHANNEL_WEBHOOKS(data.id))
+    return client.request_manager.get(endpoints.CHANNEL_WEBHOOKS(data.id))
   }
   // TODO: after learning opus and stuff
   /** Join a voice channel. */
