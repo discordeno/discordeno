@@ -1,6 +1,6 @@
 import Client from "../module/client.ts"
 import { RequestMethod } from "../types/fetch.ts"
-import { Ratelimiter } from './ratelimiter';
+import { Ratelimiter } from './ratelimiter.ts';
 
 // type RequestBody = string | Blob | ArrayBufferView | ArrayBuffer | FormData | URLSearchParams | null | undefined
 
