@@ -2,8 +2,8 @@ import DiscordRequestManager from "./discord-request-manager.ts"
 import Client from "./client.ts"
 import { resolveURLs } from "./url.ts"
 import { baseEndpoints } from "../constants/discord.ts"
-import { Ratelimit, Ratelimiter } from './ratelimiter';
-import { RequestMethod } from '../types/fetch';
+import { Ratelimit, Ratelimiter } from './ratelimiter.ts';
+import { RequestMethod } from '../types/fetch.ts';
 
 export class RouteAwareDiscordRequestManager extends DiscordRequestManager {
   protected currentRatelimit?: Ratelimit;
@@ -29,8 +29,8 @@ export class RouteAwareDiscordRequestManager extends DiscordRequestManager {
     return response.json();
   }
 
-  protected createRatelimitFromRequest (request: Request) {
-    
+  protected createRatelimitFromRequest (_request: Request) {
+
   }
 }
 
