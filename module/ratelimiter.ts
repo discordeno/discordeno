@@ -1,4 +1,4 @@
-import { sleep } from './asyncutil';
+import { sleep } from "../utils/utils.ts";
 
 export interface Ratelimit {
     retryAfter: number;
