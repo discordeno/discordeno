@@ -9,7 +9,7 @@ import {
   Typing_Start_Payload,
   Voice_State_Update_Payload
 } from "../types/discord.ts"
-import { spawnShards } from "./sharding-manager.ts"
+import { spawnShards } from "./sharding_manager.ts"
 import {
   connectWebSocket,
   isWebSocketCloseEvent,

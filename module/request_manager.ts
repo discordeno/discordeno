@@ -1,18 +1,24 @@
 import { RequestMethod } from "../types/fetch.ts"
 import { authorization } from "./client.ts"
+import { sleep } from "../utils/utils.ts"
 
 // const queue = new Map<string, Queued_Request>()
-// const ratelimited_paths = new Map<string, Rate_Limited_Path>()
+const ratelimited_paths = new Map<string, Rate_Limited_Path>()
+
+export interface Rate_Limited_Path {
+  url: string
+  reset_timestamp: number
+}
 
 export const Request_Manager = {
   // Something off about using run_method with get breaks when using fetch
-  get: (url: string, body?: unknown) => {
-    // TODO: Check rate limit
-
+  get: async (url: string, body?: unknown) => {
+    await check_ratelimits(url)
     const result = await fetch(url, create_request_body(body))
 
     // TODO: Handle rate limiting
-    console.log('GET headers', result.headers)
+    console.log("GET headers", result.headers)
+    process_headers(url, result.headers)
 
     return result.json()
   },
@@ -42,13 +48,55 @@ const create_request_body = (body: unknown, method?: RequestMethod) => {
   }
 }
 
-const run_method = (method: RequestMethod, url: string, body?: unknown) => {
-  // TODO: Check if this url is rate limited
-
+const run_method = async (method: RequestMethod, url: string, body?: unknown) => {
+  await check_ratelimits(url)
   const response = await fetch(url, create_request_body(body, method))
 
   // TODO: Handle ratelimiting
   console.log(`${method} HEADERS:`, response.headers)
 
   return response.json()
+}
+
+const check_ratelimits = async (url: string) => {
+  const ratelimited = ratelimited_paths.get(url)
+  const global = ratelimited_paths.get("global")
+
+  const now = Date.now()
+  if (ratelimited && now < ratelimited.reset_timestamp) await sleep(now - ratelimited.reset_timestamp)
+  if (global && now < global.reset_timestamp) await sleep(now - global.reset_timestamp)
+}
+
+const process_headers = (url: string, headers: Headers) => {
+  // If a rate limit response is encountered this will become true and returned
+  let ratelimited = false
+
+  // Get all useful headers
+  const remaining = headers.get("x-ratelimit-remaining")
+  const reset_timestamp = headers.get("x-ratelimit-reset")
+  const retry_after = headers.get('retry-after')
+  const global = headers.get('x-ratelimit-global')
+
+  // If there is no remaining rate limit for this endpoint, we save it in cache
+  if (remaining && remaining === "0") {
+    ratelimited = true
+
+    ratelimited_paths.set(url, {
+      url,
+      reset_timestamp: Number(reset_timestamp)
+    })
+  }
+
+  // If there is no remaining global limit, we save it in cache
+  if (global) {
+    ratelimited = true
+
+    ratelimited_paths.set('global', {
+      url: 'global',
+      reset_timestamp: Date.now() + Number(retry_after)
+    })
+  }
+
+  // Returns a boolean to check if we need to request again once the rate limit resets
+  return ratelimited
 }
