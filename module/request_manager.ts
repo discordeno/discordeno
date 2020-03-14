@@ -63,6 +63,7 @@ const run_method = async (method: RequestMethod, url: string, body?: unknown) =>
 
   // TODO: Handle ratelimiting
   console.log(`${method} HEADERS:`, response.headers)
+  console.log(response)
 
   return response.json()
 }
