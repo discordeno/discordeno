@@ -59,7 +59,7 @@ import {
   Message_Reaction_Remove_Emoji_Payload
 } from "../types/message.ts"
 import { logRed } from "../utils/logger.ts"
-import { Request_Manager } from "./Request_Manager.ts"
+import { Request_Manager } from "./request_manager.ts"
 
 const defaultOptions = {
   properties: {
