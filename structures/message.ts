@@ -10,6 +10,7 @@ import { bot_has_permission } from "../utils/permissions.ts"
 import { Errors } from "../types/errors.ts"
 import { Permissions } from "../types/permission.ts"
 import { Request_Manager } from "../module/request_manager.ts"
+import { logYellow } from "../utils/logger.ts"
 
 export const create_message = (data: Message_Create_Options, client: Client) => ({
   raw: () => data,
@@ -39,7 +40,10 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
   }),
   flags: () => data.flags || 0,
   channel_id: () => data.channel_id,
-  channel: () => cache.channels.get(data.channel_id) as Channel,
+  channel: () => {
+    logYellow('Getting channel')
+    return cache.channels.get(data.channel_id) as Channel
+  },
 
   delete: (reason: string) => {
     if (data.guild_id && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.MANAGE_MESSAGES]))
