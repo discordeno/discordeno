@@ -10,6 +10,14 @@ export interface Rate_Limited_Path {
   reset_timestamp: number
 }
 
+setInterval(() => {
+  const now = Date.now()
+  ratelimited_paths.forEach((value, key) => {
+    if (value.reset_timestamp > now) return
+    ratelimited_paths.delete(key)
+  })
+}, 1000)
+
 export const Request_Manager = {
   // Something off about using run_method with get breaks when using fetch
   get: async (url: string, body?: unknown) => {
