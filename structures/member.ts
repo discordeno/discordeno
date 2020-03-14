@@ -7,7 +7,7 @@ import { Permission, Permissions } from "../types/permission.ts"
 import { Role_Data } from "../types/role.ts"
 import { member_has_permission, bot_has_permission } from "../utils/permissions.ts"
 import { Errors } from "../types/errors.ts"
-import { Request_Manager } from "../module/Request_Manager.ts"
+import { Request_Manager } from "../module/request_manager.ts"
 
 export const create_member = (
   data: Member_Create_Payload,

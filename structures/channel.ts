@@ -14,7 +14,7 @@ import { Message_Create_Options } from "../types/message.ts"
 import { calculate_permissions, bot_has_permission } from "../utils/permissions.ts"
 import { Permissions } from "../types/permission.ts"
 import { Errors } from "../types/errors.ts"
-import { Request_Manager } from "../module/Request_Manager.ts"
+import { Request_Manager } from "../module/request_manager.ts"
 
 export const create_channel = (data: Channel_Create_Payload, client: Client) => ({
   /** The raw channel data */
@@ -62,10 +62,7 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
 
     if (options?.limit && options.limit > 100) return
 
-    const result = (await Request_Manager.get(
-      endpoints.CHANNEL_MESSAGES(data.id),
-      options
-    )) as Message_Create_Options[]
+    const result = (await Request_Manager.get(endpoints.CHANNEL_MESSAGES(data.id), options)) as Message_Create_Options[]
     return result.map(res => create_message(res, client))
   },
   /** Get pinned messages in this channel. */

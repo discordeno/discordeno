@@ -22,7 +22,7 @@ import { Image_Size, Image_Formats } from "../types/cdn.ts"
 import { Permissions, Permission } from "../types/permission.ts"
 import { bot_has_permission } from "../utils/permissions.ts"
 import { Errors } from "../types/errors.ts"
-import { Request_Manager } from "../module/Request_Manager.ts"
+import { Request_Manager } from "../module/request_manager.ts"
 
 export const create_guild = (data: Create_Guild_Payload, client: Client) => {
   const guild = {

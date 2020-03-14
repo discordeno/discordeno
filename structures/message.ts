@@ -9,7 +9,7 @@ import { Channel } from "../types/return-type.ts"
 import { bot_has_permission } from "../utils/permissions.ts"
 import { Errors } from "../types/errors.ts"
 import { Permissions } from "../types/permission.ts"
-import { Request_Manager } from "../module/Request_Manager.ts"
+import { Request_Manager } from "../module/request_manager.ts"
 
 export const create_message = (data: Message_Create_Options, client: Client) => ({
   raw: () => data,
