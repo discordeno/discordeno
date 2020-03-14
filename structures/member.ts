@@ -7,6 +7,7 @@ import { Permission, Permissions } from "../types/permission.ts"
 import { Role_Data } from "../types/role.ts"
 import { member_has_permission, bot_has_permission } from "../utils/permissions.ts"
 import { Errors } from "../types/errors.ts"
+import { Request_Manager } from "../module/Request_Manager.ts"
 
 export const create_member = (
   data: Member_Create_Payload,
@@ -51,21 +52,21 @@ export const create_member = (
     // TODO: check if the bots highest role is above this one
     if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_ROLES]))
       throw new Error(Errors.MISSING_MANAGE_ROLES)
-    return client.request_manager.put(endpoints.GUILD_MEMBER_ROLE(guild_id, data.user.id, role_id), { reason })
+    return Request_Manager.put(endpoints.GUILD_MEMBER_ROLE(guild_id, data.user.id, role_id), { reason })
   },
   /** Remove a role from the member */
   remove_role: (role_id: string, reason?: string) => {
     // TODO: check if the bots highest role is above this role
     if (!bot_has_permission(guild_id, client.bot_id, [Permissions.MANAGE_ROLES]))
       throw new Error(Errors.MISSING_MANAGE_ROLES)
-    return client.request_manager.delete(endpoints.GUILD_MEMBER_ROLE(guild_id, data.user.id, role_id), { reason })
+    return Request_Manager.delete(endpoints.GUILD_MEMBER_ROLE(guild_id, data.user.id, role_id), { reason })
   },
   /** Kick a member from the server */
   kick: (reason?: string) => {
     // TODO: Check if the bot is above the user so it is capable of kicking
     if (!bot_has_permission(guild_id, client.bot_id, [Permissions.KICK_MEMBERS]))
       throw new Error(Errors.MISSING_KICK_MEMBERS)
-    return client.request_manager.delete(endpoints.GUILD_MEMBER(guild_id, data.user.id), { reason })
+    return Request_Manager.delete(endpoints.GUILD_MEMBER(guild_id, data.user.id), { reason })
   },
   /** Edit the member */
   edit: (options: Edit_Member_Options) => {
@@ -89,7 +90,7 @@ export const create_member = (
 
     // TODO: if channel id is provided check if the bot has CONNECT and MOVE in channel and current channel
 
-    return client.request_manager.patch(endpoints.GUILD_MEMBER(guild_id, data.user.id), options)
+    return Request_Manager.patch(endpoints.GUILD_MEMBER(guild_id, data.user.id), options)
   },
   /** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
   has_permissions: (permissions: Permission[]) => {

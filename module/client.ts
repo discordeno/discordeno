@@ -1,5 +1,4 @@
 import { endpoints } from "../constants/discord.ts"
-import Request_Manager from "./discord-request-manager.ts"
 import {
   DiscordBotGatewayData,
   DiscordPayload,
@@ -60,6 +59,7 @@ import {
   Message_Reaction_Remove_Emoji_Payload
 } from "../types/message.ts"
 import { logRed } from "../utils/logger.ts"
+import { Request_Manager } from "./Request_Manager.ts"
 
 const defaultOptions = {
   properties: {
@@ -70,18 +70,16 @@ const defaultOptions = {
   compress: false
 }
 
+export let authorization = ""
+
 class Client {
   bot_id: string
   /** The bot's token. This should never be used by end users. It is meant to be used internally to make requests to the Discord API. */
   token: string
-  /** The Rate limit manager to handle all outgoing requests to discord. Not meant to be used by users. */
-  request_manager: Request_Manager
 
   /** The options (with defaults) passed to the `Client` constructor. */
   options: Fulfilled_Client_Options
   event_handlers: Event_Handlers
-
-  authorization: string
 
   constructor(options: Client_Options) {
     // Assign some defaults to the options to make them fulfilled / not annoying to use.
@@ -92,15 +90,14 @@ class Client {
     }
     this.bot_id = options.bot_id
     this.token = options.token
-    this.authorization = `Bot ${this.options.token}`
-    this.request_manager = new Request_Manager(this)
     this.event_handlers = options.event_handlers || {}
 
+    authorization = `Bot ${options.token}`
     this.bootstrap()
   }
 
   async bootstrap() {
-    const data = (await this.request_manager.get(endpoints.GATEWAY_BOT)) as DiscordBotGatewayData
+    const data = (await Request_Manager.get(endpoints.GATEWAY_BOT)) as DiscordBotGatewayData
     const socket = await connectWebSocket(data.url)
     this.collectMessages(socket)
     // Intial identify with the gateway

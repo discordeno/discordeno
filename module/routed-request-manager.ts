@@ -1,4 +1,4 @@
-import Request_Manager from "./discord-request-manager.ts"
+import Request_Manager from "./request_manager.ts"
 import Client from "./client.ts"
 import { resolveURLs } from "./url.ts"
 import { baseEndpoints } from "../constants/discord.ts"
