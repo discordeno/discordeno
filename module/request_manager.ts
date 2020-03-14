@@ -82,8 +82,8 @@ const process_headers = (url: string, headers: Headers) => {
   // Get all useful headers
   const remaining = headers.get("x-ratelimit-remaining")
   const reset_timestamp = headers.get("x-ratelimit-reset")
-  const retry_after = headers.get('retry-after')
-  const global = headers.get('x-ratelimit-global')
+  const retry_after = headers.get("retry-after")
+  const global = headers.get("x-ratelimit-global")
 
   // If there is no remaining rate limit for this endpoint, we save it in cache
   if (remaining && remaining === "0") {
@@ -99,8 +99,8 @@ const process_headers = (url: string, headers: Headers) => {
   if (global) {
     ratelimited = true
 
-    ratelimited_paths.set('global', {
-      url: 'global',
+    ratelimited_paths.set("global", {
+      url: "global",
       reset_timestamp: Date.now() + Number(retry_after)
     })
   }

@@ -72,6 +72,7 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
   },
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
   send_message: async (content: string | MessageContent) => {
+    console.log('SENDING_MESSAGE:', content)
     if (typeof content === "string") content = { content }
 
     if (data.guild_id) {
@@ -83,7 +84,9 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
 
     if (content.content && content.content.length > 2000) throw new Error(Errors.MESSAGE_MAX_LENGTH)
 
+    console.log(endpoints.CHANNEL_MESSAGES(data.id))
     const result = await Request_Manager.post(endpoints.CHANNEL_MESSAGES(data.id), content)
+    console.log(result)
     return create_message(result, client)
   },
   /** The position of the channel in the server. If this channel does not have a position for example DM channels, it will be -1 */
