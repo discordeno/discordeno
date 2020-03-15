@@ -92,6 +92,9 @@ export const create_channel = (data: Channel_Create_Payload, client: Client) => 
       console.log(endpoints.CHANNEL_MESSAGES(data.id))
       const result = await Request_Manager.post(endpoints.CHANNEL_MESSAGES(data.id), content)
       console.log(result)
+      console.log(result.status)
+      console.log(result.headers)
+      console.log(await result.json())
       return create_message(result, client)
     },
     /** The position of the channel in the server. If this channel does not have a position for example DM channels, it will be -1 */
