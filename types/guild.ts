@@ -298,7 +298,6 @@ export interface Partial_User {
   premium_type?: number
 }
 
-
 export enum User_Flags {
   NONE,
   DISCORD_EMPLOYEE,
@@ -436,15 +435,6 @@ export interface Raw_Overwrite {
   allow: number
   /** The permissions that this id is NOT allowed to do. (This will mark it as a red x.) */
   deny: number
-}
-
-export enum ChannelTypes {
-  text,
-  dm,
-  voice,
-  category = 4,
-  news,
-  store
 }
 
 export interface ChannelCreate_Options {

@@ -37,8 +37,7 @@ import {
   Guild_Role_Payload,
   User_Payload
 } from "../types/guild.ts"
-import { create_channel } from "../structures/channel.ts"
-import { Channel_Create_Payload, Channel_Types } from "../types/channel.ts"
+import { Channel_Create_Payload } from "../types/channel.ts"
 import {
   handle_internal_channel_create,
   handle_internal_channel_update,
@@ -71,6 +70,7 @@ const defaultOptions = {
 }
 
 export let authorization = ""
+export let event_handlers: Event_Handlers = {}
 
 class Client {
   bot_id: string
@@ -79,7 +79,6 @@ class Client {
 
   /** The options (with defaults) passed to the `Client` constructor. */
   options: Fulfilled_Client_Options
-  event_handlers: Event_Handlers
 
   constructor(options: Client_Options) {
     // Assign some defaults to the options to make them fulfilled / not annoying to use.
@@ -90,7 +89,7 @@ class Client {
     }
     this.bot_id = options.bot_id
     this.token = options.token
-    this.event_handlers = options.event_handlers || {}
+    if (options.event_handlers) event_handlers = options.event_handlers
 
     authorization = `Bot ${options.token}`
     this.bootstrap()
@@ -173,58 +172,15 @@ class Client {
         return
       case GatewayOpcode.HeartbeatACK:
         // Incase the user wants to listen to heartbeat responses
-        return this.event_handlers.heartbeat?.()
+        return event_handlers.heartbeat?.()
       case GatewayOpcode.Reconnect:
         // TODO: Reconnect to the gateway https://discordapp.com/developers/docs/topics/gateway#reconnect
         return
       case GatewayOpcode.Dispatch:
-        if (data.t === "READY") return this.event_handlers.ready?.()
-
-        if (data.t === "CHANNEL_CREATE") {
-          const channel = create_channel(data.d as Channel_Create_Payload, this)
-          handle_internal_channel_create(channel)
-          return this.event_handlers.channel_create?.(channel)
-        }
-
-        if (data.t === "CHANNEL_UPDATE") {
-          const options = data.d as Channel_Create_Payload
-          const cachedChannel = cache.channels.get(options.id)
-          const channel = create_channel(options, this)
-          handle_internal_channel_update(channel)
-          if (!cachedChannel) return
-
-          return this.event_handlers.channel_update?.(channel, cachedChannel)
-        }
-
-        if (data.t === "CHANNEL_DELETE") {
-          const options = data.d as Channel_Create_Payload
-          const cachedChannel = cache.channels.get(options.id)
-          if (!cachedChannel) return
-          if (cachedChannel.type() === Channel_Types.GUILD_VOICE) {
-            const guild_id = cachedChannel.guild_id()
-            if (!guild_id) return
-
-            const guild = cache.guilds.get(guild_id)
-            if (!guild) return
-
-            guild.voice_states().forEach(vs => {
-              if (vs.channel_id !== options.id) return
-
-              const member = guild.members.get(vs.user_id)
-              if (!member) return
-
-              this.event_handlers.voice_channel_leave?.(member, vs.channel_id)
-            })
-
-            cache.guilds.set(guild.id(), {
-              ...guild,
-              voice_states: () => [...guild.voice_states().filter(vs => vs.channel_id !== options.id)]
-            })
-          }
-          handle_internal_channel_delete(cachedChannel)
-
-          return this.event_handlers.channel_delete?.(cachedChannel)
-        }
+        if (data.t === "READY") return event_handlers.ready?.()
+        if (data.t === "CHANNEL_CREATE") return handle_internal_channel_create(data.d as Channel_Create_Payload, this)
+        if (data.t === "CHANNEL_UPDATE") return handle_internal_channel_update(data.d as Channel_Create_Payload, this)
+        if (data.t === "CHANNEL_DELETE") return handle_internal_channel_delete(data.d as Channel_Create_Payload)
 
         if (data.t === "GUILD_CREATE") {
           const guild = create_guild(data.d as Create_Guild_Payload, this)
@@ -233,7 +189,7 @@ class Client {
             cache.unavailableGuilds.delete(guild.id())
             return
           }
-          return this.event_handlers.guild_create?.(guild)
+          return event_handlers.guild_create?.(guild)
         }
 
         if (data.t === "GUILD_UPDATE") {
@@ -243,7 +199,7 @@ class Client {
           handle_internal_guild_update(guild)
           if (!cached_guild) return
 
-          return this.event_handlers.guild_update?.(guild, cached_guild)
+          return event_handlers.guild_update?.(guild, cached_guild)
         }
 
         if (data.t === "GUILD_DELETE") {
@@ -255,7 +211,7 @@ class Client {
           if (options.unavailable) return cache.unavailableGuilds.set(options.id, Date.now())
 
           handle_internal_guild_delete(guild)
-          return this.event_handlers.guild_delete?.(guild)
+          return event_handlers.guild_delete?.(guild)
         }
 
         if (data.t && ["GUILD_BAN_ADD", "GUILD_BAN_REMOVE"].includes(data.t)) {
@@ -265,8 +221,8 @@ class Client {
 
           const user = create_user(options.user)
           return data.t === "GUILD_BAN_ADD"
-            ? this.event_handlers.guild_ban_add?.(guild, user)
-            : this.event_handlers.guild_ban_remove?.(guild, user)
+            ? event_handlers.guild_ban_add?.(guild, user)
+            : event_handlers.guild_ban_remove?.(guild, user)
         }
 
         if (data.t === "GUILD_EMOJIS_UPDATE") {
@@ -277,7 +233,7 @@ class Client {
           const cached_emojis = guild.emojis()
           guild.emojis = () => options.emojis
 
-          return this.event_handlers.guild_emojis_update?.(guild, options.emojis, cached_emojis)
+          return event_handlers.guild_emojis_update?.(guild, options.emojis, cached_emojis)
         }
 
         if (data.t === "GUILD_MEMBER_ADD") {
@@ -296,7 +252,7 @@ class Client {
           )
           guild.members.set(options.user.id, member)
 
-          return this.event_handlers.guild_member_add?.(guild, member)
+          return event_handlers.guild_member_add?.(guild, member)
         }
 
         if (data.t === "GUILD_MEMBER_REMOVE") {
@@ -308,7 +264,7 @@ class Client {
           guild.member_count = () => member_count
 
           const member = guild.members.get(options.user.id)
-          return this.event_handlers.guild_member_remove?.(guild, member || create_user(options.user))
+          return event_handlers.guild_member_remove?.(guild, member || create_user(options.user))
         }
 
         if (data.t === "GUILD_MEMBER_UPDATE") {
@@ -335,18 +291,18 @@ class Client {
           guild.members.set(options.user.id, member)
 
           if (cached_member?.nick() !== options.nick)
-            this.event_handlers.nickname_update?.(guild, member, options.nick, cached_member?.nick())
+            event_handlers.nickname_update?.(guild, member, options.nick, cached_member?.nick())
           const role_ids = cached_member?.roles() || []
 
           role_ids.forEach(id => {
-            if (!options.roles.includes(id)) this.event_handlers.role_lost?.(guild, member, id)
+            if (!options.roles.includes(id)) event_handlers.role_lost?.(guild, member, id)
           })
 
           options.roles.forEach(id => {
-            if (!role_ids.includes(id)) this.event_handlers.role_gained?.(guild, member, id)
+            if (!role_ids.includes(id)) event_handlers.role_gained?.(guild, member, id)
           })
 
-          return this.event_handlers.guild_member_update?.(guild, member, cached_member)
+          return event_handlers.guild_member_update?.(guild, member, cached_member)
         }
 
         if (data.t === "GUILD_MEMBERS_CHUNK") {
@@ -377,7 +333,7 @@ class Client {
             const role = create_role(options.role)
             const roles = guild.roles().set(options.role.id, role)
             guild.roles = () => roles
-            return this.event_handlers.role_create?.(guild, role)
+            return event_handlers.role_create?.(guild, role)
           }
 
           const cached_role = guild.roles().get(options.role.id)
@@ -387,12 +343,12 @@ class Client {
             const roles = guild.roles()
             roles.delete(options.role.id)
             guild.roles = () => roles
-            return this.event_handlers.role_delete?.(guild, cached_role)
+            return event_handlers.role_delete?.(guild, cached_role)
           }
 
           if (data.t === "GUILD_ROLE_UPDATE") {
             const role = create_role(options.role)
-            return this.event_handlers.role_update?.(guild, role, cached_role)
+            return event_handlers.role_update?.(guild, role, cached_role)
           }
         }
 
@@ -403,10 +359,10 @@ class Client {
           if (channel) {
             // channel.last_message_id = () => options.id
             // if (channel.messages().size > 99) {
-            //   // TODO: LIMIT THIS TO 100 messages
+            // TODO: LIMIT THIS TO 100 messages
             // }
           }
-          return this.event_handlers.message_create?.(message)
+          return event_handlers.message_create?.(message)
         }
 
         if (data.t && ["MESSAGE_DELETE", "MESSAGE_DELETE_BULK"].includes(data.t)) {
@@ -424,7 +380,7 @@ class Client {
             //     // TODO: update the messages cache
             //   }
 
-            //   return this.event_handlers.message_delete?.(message || { id, channel })
+            //   return event_handlers.message_delete?.(message || { id, channel })
           })
         }
 
@@ -434,7 +390,7 @@ class Client {
           if (!channel) return
 
           // const cachedMessage = channel.messages().get(options.id)
-          // return this.event_handlers.message_update?.(message, cachedMessage)
+          // return event_handlers.message_update?.(message, cachedMessage)
         }
 
         if (data.t && ["MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE"].includes(data.t)) {
@@ -463,24 +419,24 @@ class Client {
           }
 
           return isAdd
-            ? this.event_handlers.reaction_add?.(message || options, options.emoji, options.user_id)
-            : this.event_handlers.reaction_remove?.(message || options, options.emoji, options.user_id)
+            ? event_handlers.reaction_add?.(message || options, options.emoji, options.user_id)
+            : event_handlers.reaction_remove?.(message || options, options.emoji, options.user_id)
         }
 
         if (data.t === "MESSAGE_REACTION_REMOVE_ALL") {
-          return this.event_handlers.reaction_remove_all?.(data.d as Base_Message_Reaction_Payload)
+          return event_handlers.reaction_remove_all?.(data.d as Base_Message_Reaction_Payload)
         }
 
         if (data.t === "MESSAGE_REACTION_REMOVE_EMOJI") {
-          return this.event_handlers.reaction_remove_emoji?.(data.d as Message_Reaction_Remove_Emoji_Payload)
+          return event_handlers.reaction_remove_emoji?.(data.d as Message_Reaction_Remove_Emoji_Payload)
         }
 
         if (data.t === "PRESENCE_UPDATE") {
-          return this.event_handlers.presence_update?.(data.d as Presence_Update_Payload)
+          return event_handlers.presence_update?.(data.d as Presence_Update_Payload)
         }
 
         if (data.t === "TYPING_START") {
-          return this.event_handlers.typing_start?.(data.d as Typing_Start_Payload)
+          return event_handlers.typing_start?.(data.d as Typing_Start_Payload)
         }
 
         if (data.t === "USER_UPDATE") {
@@ -488,7 +444,7 @@ class Client {
           const cached_user = cache.users.get(this.bot_id)
           const user = create_user(user_data)
           cache.users.set(user_data.id, user)
-          return this.event_handlers.bot_update?.(user, cached_user)
+          return event_handlers.bot_update?.(user, cached_user)
         }
 
         if (data.t === "VOICE_STATE_UPDATE") {
@@ -510,25 +466,25 @@ class Client {
             if (payload.channel_id) {
               cached_state.channel_id
                 ? // Was in a channel before
-                  this.event_handlers.voice_channel_switch?.(member, payload.channel_id, cached_state.channel_id)
+                  event_handlers.voice_channel_switch?.(member, payload.channel_id, cached_state.channel_id)
                 : // Was not in a channel before so user just joined
-                  this.event_handlers.voice_channel_join?.(member, payload.channel_id)
+                  event_handlers.voice_channel_join?.(member, payload.channel_id)
             }
             // Left the channel
             else if (cached_state.channel_id) {
-              this.event_handlers.voice_channel_leave?.(member, cached_state.channel_id)
+              event_handlers.voice_channel_leave?.(member, cached_state.channel_id)
             }
           }
 
-          return this.event_handlers.voice_state_update?.(member, payload)
+          return event_handlers.voice_state_update?.(member, payload)
         }
 
         if (data.t === "WEBHOOKS_UPDATE") {
           const options = data.d as Webhook_Update_Payload
-          return this.event_handlers.webhooks_update?.(options.channel_id, options.guild_id)
+          return event_handlers.webhooks_update?.(options.channel_id, options.guild_id)
         }
 
-        return this.event_handlers.raw?.(data)
+        return event_handlers.raw?.(data)
       default:
         return
     }
