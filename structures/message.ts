@@ -107,7 +107,7 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
 
     if (content.content && content.content.length > 2000) throw new Error(Errors.MESSAGE_MAX_LENGTH)
 
-    const result = await Request_Manager.patch(endpoints.CHANNEL_MESSAGES(data.id), content)
+    const result = await Request_Manager.patch(endpoints.CHANNEL_MESSAGE(data.channel_id, data.id), content)
     return create_message(result, client)
   }
 })
