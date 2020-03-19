@@ -49,11 +49,11 @@ const create_request_body = (body: unknown, method?: RequestMethod) => {
   return {
     headers: {
       Authorization: authorization,
-      "User-Agent": `Discordeno (https://github.com/skillz4killz/discordeno, 0.0.1)`,
+      "User-Agent": `DiscordBot (https://github.com/skillz4killz/discordeno, 0.0.1)`,
       "Content-Type": "application/json"
     },
     body: body ? JSON.stringify(body) : undefined,
-    method
+    method: method?.toUpperCase()
   }
 }
 
@@ -65,7 +65,7 @@ const run_method = async (method: RequestMethod, url: string, body?: unknown) =>
   console.log(`${method} HEADERS:`, response.headers)
   console.log(response)
 
-  return response.json()
+  return await response.json()
 }
 
 const check_ratelimits = async (url: string) => {

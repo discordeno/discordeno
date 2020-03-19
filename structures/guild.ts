@@ -3,7 +3,6 @@ import { endpoints } from "../constants/discord.ts"
 import { format_image_url } from "../utils/cdn.ts"
 import {
   Create_Guild_Payload,
-  ChannelTypes,
   PrunePayload,
   Position_Swap,
   Get_Audit_Logs_Options,
@@ -17,7 +16,7 @@ import {
 import { create_role } from "./role.ts"
 import { create_member } from "./member.ts"
 import { create_channel } from "./channel.ts"
-import { Channel_Create_Options } from "../types/channel.ts"
+import { Channel_Create_Options, Channel_Types } from "../types/channel.ts"
 import { Image_Size, Image_Formats } from "../types/cdn.ts"
 import { Permissions, Permission } from "../types/permission.ts"
 import { bot_has_permission } from "../utils/permissions.ts"
@@ -105,7 +104,7 @@ export const create_guild = (data: Create_Guild_Payload, client: Client) => {
         throw new Error(Errors.MISSING_MANAGE_CHANNELS)
       return Request_Manager.post(endpoints.GUILD_CHANNELS(data.id), {
         name,
-        type: options?.type ? ChannelTypes[options.type] : undefined,
+        type: options?.type ? Channel_Types[options.type] : undefined,
         permission_overwrites: options?.permission_overwrites
           ? options.permission_overwrites.map(perm => ({
               ...perm,
