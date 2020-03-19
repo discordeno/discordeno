@@ -50,7 +50,8 @@ const create_request_body = (body: unknown, method?: RequestMethod) => {
     headers: {
       Authorization: authorization,
       "User-Agent": `Discordeno (https://github.com/skillz4killz/discordeno, 0.0.1)`,
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      "X-Audit-Log-Reason": body?.reason,
     },
     body: body ? JSON.stringify(body) : undefined,
     method
