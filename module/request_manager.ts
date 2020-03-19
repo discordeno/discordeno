@@ -23,9 +23,6 @@ export const Request_Manager = {
   get: async (url: string, body?: unknown) => {
     await check_ratelimits(url)
     const result = await fetch(url, create_request_body(body))
-
-    // TODO: Handle rate limiting
-    console.log("GET headers", result.headers)
     process_headers(url, result.headers)
 
     return result.json()
@@ -61,10 +58,7 @@ const create_request_body = (body: any, method?: RequestMethod) => {
 const run_method = async (method: RequestMethod, url: string, body?: unknown) => {
   await check_ratelimits(url)
   const response = await fetch(url, create_request_body(body, method))
-
-  // TODO: Handle ratelimiting
-  console.log(`${method} HEADERS:`, response.headers)
-  console.log(response)
+  process_headers(url, response.headers)
 
   return await response.json()
 }
