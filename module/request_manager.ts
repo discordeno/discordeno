@@ -44,13 +44,14 @@ export const Request_Manager = {
   }
 }
 
-const create_request_body = (body: unknown, method?: RequestMethod) => {
+const create_request_body = (body: any, method?: RequestMethod) => {
   // TODO: REASON should be added as a header if present in the body
   return {
     headers: {
       Authorization: authorization,
       "User-Agent": `DiscordBot (https://github.com/skillz4killz/discordeno, 0.0.1)`,
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      "X-Audit-Log-Reason": body?.reason,
     },
     body: body ? JSON.stringify(body) : undefined,
     method: method?.toUpperCase()
