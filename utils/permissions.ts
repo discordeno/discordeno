@@ -46,8 +46,6 @@ export const bot_has_permission = (guild_id: string, bot_id: string, permissions
 }
 
 export const calculate_permissions = (permission_bits: number) => {
-  console.log("calculating")
-  // console.log(Object.keys(Permissions))
   return Object.keys(Permissions).filter(perm => {
     return permission_bits & Permissions[perm as Permission]
   })
