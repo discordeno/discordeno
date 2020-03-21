@@ -3,11 +3,6 @@ Discord API library wrapper in Deno
 
 [Discord Server](https://discord.gg/rFJzqex)
 
-## TODO
-
-- [Review compression of payloads with GZIP](https://discordapp.com/developers/docs/topics/gateway#sending-payloads-example-gateway-dispatch)
-- Handle checking if guild is unavailable before taking guild related actions.
-
 ## Bot Boilerplate Template / Frameworks
 
 If you are just starting out, you can use the Discordeno Template repo to get the base of your bot pre-built for you. As other developers create other command frameworks for this library, those frameworks will be listed here:
