@@ -60,6 +60,9 @@ const run_method = async (method: RequestMethod, url: string, body?: unknown) =>
   const response = await fetch(url, create_request_body(body, method))
   process_headers(url, response.headers)
 
+  // Sometimes Discord returns an empty 204 response that can't be made to JSON.
+  if (response.status === 204) return
+
   return await response.json()
 }
 

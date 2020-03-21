@@ -41,7 +41,8 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
   channel_id: () => data.channel_id,
   channel: () => cache.channels.get(data.channel_id) as Channel,
 
-  delete: (reason: string) => {
+  /** Delete a message */
+  delete: (reason?: string) => {
     if (data.guild_id && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.MANAGE_MESSAGES]))
       throw new Error(Errors.MISSING_MANAGE_MESSAGES)
     if (data.author.id !== client.bot_id) {
