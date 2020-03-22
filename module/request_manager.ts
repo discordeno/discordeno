@@ -2,7 +2,6 @@ import { RequestMethod } from "../types/fetch.ts"
 import { authorization } from "./client.ts"
 import { sleep } from "../utils/utils.ts"
 
-// const queue = new Map<string, Queued_Request>()
 const ratelimited_paths = new Map<string, Rate_Limited_Path>()
 
 export interface Rate_Limited_Path {
@@ -42,7 +41,6 @@ export const Request_Manager = {
 }
 
 const create_request_body = (body: any, method?: RequestMethod) => {
-  // TODO: REASON should be added as a header if present in the body
   return {
     headers: {
       Authorization: authorization,
