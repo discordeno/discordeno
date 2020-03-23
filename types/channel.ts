@@ -2,8 +2,6 @@ import { Raw_Overwrite, Overwrite } from './guild.ts'
 import { Embed } from './message.ts'
 
 export interface Base_Channel_Create {
-  /** The id of this channel */
-  id: string
   /** The type of the channel */
   type: Channel_Type
   /** The id of the guild */
@@ -31,6 +29,8 @@ export interface Base_Channel_Create {
 }
 
 export interface Channel_Create_Payload extends Base_Channel_Create {
+  /** The id of this channel */
+  id: string
   /** Explicit permission overwrites for members and roles */
   permission_overwrites?: Raw_Overwrite[]
 }
