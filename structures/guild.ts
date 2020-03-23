@@ -16,7 +16,7 @@ import {
 import { create_role } from "./role.ts"
 import { create_member } from "./member.ts"
 import { create_channel } from "./channel.ts"
-import { Channel_Create_Options, Channel_Types } from "../types/channel.ts"
+import { Channel_Create_Options, Channel_Types, Channel_Create_Payload } from "../types/channel.ts"
 import { Image_Size, Image_Formats } from "../types/cdn.ts"
 import { Permissions, Permission } from "../types/permission.ts"
 import { bot_has_permission } from "../utils/permissions.ts"
@@ -100,21 +100,25 @@ export const create_guild = (data: Create_Guild_Payload) => {
     banner_url: (size: Image_Size = 128, format?: Image_Formats) =>
       data.banner ? format_image_url(endpoints.GUILD_BANNER(data.id, data.banner), size, format) : undefined,
     /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-    create_channel: (name: string, options: Channel_Create_Options) => {
+    create_channel: async (name: string, options: Channel_Create_Options) => {
       if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_CHANNELS]))
         throw new Error(Errors.MISSING_MANAGE_CHANNELS)
-      return Request_Manager.post(endpoints.GUILD_CHANNELS(data.id), {
-        name,
-        type: options?.type ? Channel_Types[options.type] : undefined,
-        permission_overwrites: options?.permission_overwrites
-          ? options.permission_overwrites.map(perm => ({
-              ...perm,
-              allow: perm.allow.map(p => Permissions[p]),
-              deny: perm.deny.map(p => Permissions[p])
-            }))
-          : undefined,
-        ...options
-      })
+        const result = await Request_Manager.post(endpoints.GUILD_CHANNELS(data.id), {
+          name,
+          type: options.type ? Channel_Types[options.type] : undefined,
+          permission_overwrites: options?.permission_overwrites
+            ? options.permission_overwrites.map(perm => ({
+                ...perm,
+                allow: perm.allow.map(p => Permissions[p]),
+                deny: perm.deny.map(p => Permissions[p])
+              }))
+            : undefined,
+          ...options
+        }) as Channel_Create_Payload
+
+        const channel = create_channel(result)
+        guild.channels.set(result.id, channel)
+        return channel
     },
     /** Returns a list of guild channel objects.
      *
