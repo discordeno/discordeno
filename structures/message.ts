@@ -1,4 +1,3 @@
-import Client from "../module/client.ts"
 import { Message_Create_Options } from "../types/message.ts"
 import { endpoints } from "../constants/discord.ts"
 import { MessageContent } from "../types/channel.ts"
@@ -10,8 +9,9 @@ import { bot_has_permission } from "../utils/permissions.ts"
 import { Errors } from "../types/errors.ts"
 import { Permissions } from "../types/permission.ts"
 import { Request_Manager } from "../module/request_manager.ts"
+import { bot_id } from "../module/client.ts"
 
-export const create_message = (data: Message_Create_Options, client: Client) => ({
+export const create_message = (data: Message_Create_Options) => ({
   raw: () => data,
   author: () => create_user({ ...data.author, avatar: data.author.avatar || "" }),
   id: () => data.id,
@@ -43,21 +43,21 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
 
   /** Delete a message */
   delete: (reason?: string) => {
-    if (data.guild_id && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.MANAGE_MESSAGES]))
+    if (data.guild_id && !bot_has_permission(data.guild_id, bot_id, [Permissions.MANAGE_MESSAGES]))
       throw new Error(Errors.MISSING_MANAGE_MESSAGES)
-    if (data.author.id !== client.bot_id) {
+    if (data.author.id !== bot_id) {
     }
 
     Request_Manager.delete(endpoints.CHANNEL_MESSAGE(data.channel_id, data.id), { reason })
   },
   /** Pin a message in a channel. Requires MANAGE_MESSAGES. Max pins allowed in a channel = 50. */
   pin: () => {
-    if (data.guild_id && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.MANAGE_MESSAGES]))
+    if (data.guild_id && !bot_has_permission(data.guild_id, bot_id, [Permissions.MANAGE_MESSAGES]))
       throw new Error(Errors.MISSING_MANAGE_MESSAGES)
     Request_Manager.put(endpoints.CHANNEL_MESSAGE(data.channel_id, data.id))
   },
   unpin: () => {
-    if (data.guild_id && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.MANAGE_MESSAGES]))
+    if (data.guild_id && !bot_has_permission(data.guild_id, bot_id, [Permissions.MANAGE_MESSAGES]))
       throw new Error(Errors.MISSING_MANAGE_MESSAGES)
     Request_Manager.delete(endpoints.CHANNEL_MESSAGE(data.channel_id, data.id))
   },
@@ -71,13 +71,13 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
   },
   /** Removes all reactions for all emojis on this message. */
   remove_all_reactions: () => {
-    if (data.guild_id && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.MANAGE_MESSAGES]))
+    if (data.guild_id && !bot_has_permission(data.guild_id, bot_id, [Permissions.MANAGE_MESSAGES]))
       throw new Error(Errors.MISSING_MANAGE_MESSAGES)
     Request_Manager.delete(endpoints.CHANNEL_MESSAGE_REACTIONS(data.channel_id, data.id))
   },
   /** Removes all reactions for a single emoji on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
   remove_reaction_emoji: (reaction: string) => {
-    if (data.guild_id && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.MANAGE_MESSAGES]))
+    if (data.guild_id && !bot_has_permission(data.guild_id, bot_id, [Permissions.MANAGE_MESSAGES]))
       throw new Error(Errors.MISSING_MANAGE_MESSAGES)
     Request_Manager.delete(endpoints.CHANNEL_MESSAGE_REACTION(data.channel_id, data.id, reaction))
   },
@@ -90,22 +90,22 @@ export const create_message = (data: Message_Create_Options, client: Client) => 
   },
   /** Edit the message. */
   edit: async (content: string | MessageContent) => {
-    if (data.author.id !== client.bot_id) throw "You can only edit a message that was sent by the bot."
+    if (data.author.id !== bot_id) throw "You can only edit a message that was sent by the bot."
 
     if (typeof content === "string") content = { content }
 
     if (data.guild_id) {
-      if (!bot_has_permission(data.guild_id, client.bot_id, [Permissions.SEND_MESSAGES]))
+      if (!bot_has_permission(data.guild_id, bot_id, [Permissions.SEND_MESSAGES]))
         throw new Error(Errors.MISSING_SEND_MESSAGES)
 
-      if (content.tts && !bot_has_permission(data.guild_id, client.bot_id, [Permissions.SEND_TTS_MESSAGES]))
+      if (content.tts && !bot_has_permission(data.guild_id, bot_id, [Permissions.SEND_TTS_MESSAGES]))
         throw new Error(Errors.MISSING_SEND_TTS_MESSAGE)
     }
 
     if (content.content && content.content.length > 2000) throw new Error(Errors.MESSAGE_MAX_LENGTH)
 
     const result = await Request_Manager.patch(endpoints.CHANNEL_MESSAGE(data.channel_id, data.id), content)
-    return create_message(result, client)
+    return create_message(result)
   }
 })
 
