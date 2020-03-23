@@ -1,5 +1,26 @@
-import { Raw_Overwrite, Overwrite } from './guild.ts'
-import { Embed } from './message.ts'
+import { Raw_Overwrite, Overwrite } from "./guild.ts"
+import { Embed } from "./message.ts"
+
+export interface Channel_Edit_Options {
+  /** 2-100 character channel name. All */
+  name?: string
+  /**	the position of the channel in the left-hand listing	All  */
+  position?: number
+  /** 0-1024 character channel topic. Text */
+  topic?: string
+  /** whether the channel is nsfw	Text */
+  nsfw?: boolean
+  /**	amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission manage_messages or manage_channel, are unaffected	Text  */
+  rate_limit_per_user?: number
+  /**	the bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers)	Voice  */
+  bitrate?: number
+  /**	the user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit	Voice  */
+  user_limit?: number
+  /** channel or category-specific permissions	All */
+  permission_overwrites?: Overwrite[]
+  /** id of the new parent category for a channel	Text, Voice */
+  parent_id?: string
+}
 
 export interface Base_Channel_Create {
   /** The type of the channel */
@@ -109,4 +130,3 @@ export interface Create_Invite_Options {
   /** If true, don't try to reuse a similar invite (useful for creating many unique one time use invites.) */
   unique: boolean
 }
-

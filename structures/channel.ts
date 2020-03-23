@@ -5,7 +5,8 @@ import {
   Get_Messages,
   Get_Messages_Before,
   MessageContent,
-  Create_Invite_Options
+  Create_Invite_Options,
+  Channel_Edit_Options
 } from "../types/channel.ts"
 import { bot_id } from "../module/client.ts"
 import { endpoints } from "../constants/discord.ts"
@@ -134,6 +135,9 @@ export const create_channel = (data: Channel_Create_Payload) => {
       if (data.guild_id && !bot_has_permission(data.guild_id, bot_id, [Permissions.MANAGE_WEBHOOKS]))
         throw new Error(Errors.MISSING_MANAGE_WEBHOOKS)
       return Request_Manager.get(endpoints.CHANNEL_WEBHOOKS(data.id))
+    },
+    edit: (options: Channel_Edit_Options) => {
+      return Request_Manager.patch(endpoints.GUILD_CHANNELS(data.id), options)
     }
     // TODO: after learning opus and stuff
     /** Join a voice channel. */
