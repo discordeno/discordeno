@@ -23,8 +23,6 @@ export interface Channel_Edit_Options {
 }
 
 export interface Base_Channel_Create {
-  /** The type of the channel */
-  type: Channel_Type
   /** The id of the guild */
   guild_id?: string
   /** Sorting position of the channel */
@@ -52,11 +50,15 @@ export interface Base_Channel_Create {
 export interface Channel_Create_Payload extends Base_Channel_Create {
   /** The id of this channel */
   id: string
+  /** The type of the channel */
+  type: Channel_Type
   /** Explicit permission overwrites for members and roles */
   permission_overwrites?: Raw_Overwrite[]
 }
 
 export interface Channel_Create_Options extends Base_Channel_Create {
+  /** The type of the channel */
+  type: Channel_Types
   /** Explicit permission overwrites for members and roles */
   permission_overwrites?: Overwrite[]
 }
