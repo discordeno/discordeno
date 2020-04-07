@@ -100,7 +100,7 @@ export const create_client = async (data: Client_Options) => {
   for await (const _message of connect(socket, bot_gateway_data)) {
   }
 
-  spawnShardss(bot_gateway_data.shards, socket, payload, bot_gateway_data)
+  spawnShards(bot_gateway_data.shards, socket, payload, bot_gateway_data)
 }
 
 async function* collect_messages(socket: WebSocket) {
