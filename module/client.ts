@@ -9,7 +9,7 @@ import {
   Typing_Start_Payload,
   Voice_State_Update_Payload
 } from "../types/discord.ts"
-import { spawnShards } from "./sharding_manager.ts"
+// import { spawnShards } from "./sharding_manager.ts"
 import { connectWebSocket, isWebSocketCloseEvent, WebSocket } from "https://deno.land/std/ws/mod.ts"
 import { Client_Options, Event_Handlers } from "../types/options.ts"
 import { CollectedMessageType } from "../types/message-type.ts"
@@ -97,10 +97,10 @@ export const create_client = async (data: Client_Options) => {
   // Intial identify with the gateway
   await socket.send(JSON.stringify({ op: GatewayOpcode.Identify, d: payload }))
 
-  for await (const _message of connect(socket, bot_gateway_data)) {
+  for await (const _message of connect(socket)) {
   }
 
-  spawnShards(bot_gateway_data.shards, socket, payload, bot_gateway_data)
+  // spawnShards(bot_gateway_data, 1, socket, payload)
 }
 
 async function* collect_messages(socket: WebSocket) {
@@ -118,7 +118,7 @@ async function* collect_messages(socket: WebSocket) {
 }
 
 /** Begins initial handshake, creates the websocket with Discord and spawns all necessary shards. */
-async function* connect(socket: WebSocket, data: DiscordBotGatewayData) {
+async function* connect(socket: WebSocket) {
   for await (const message of collect_messages(socket)) {
     switch (message.type) {
       case CollectedMessageType.Ping:
