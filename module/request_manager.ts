@@ -46,9 +46,9 @@ const create_request_body = (body: any, method?: RequestMethod) => {
       Authorization: authorization,
       "User-Agent": `DiscordBot (https://github.com/skillz4killz/discordeno, 0.0.1)`,
       "Content-Type": "application/json",
-      "X-Audit-Log-Reason": body && body.reason ? encodeURIComponent(body.reason) : undefined,
+      "X-Audit-Log-Reason": body && body.reason ? encodeURIComponent(body.reason) : '',
     },
-    body: body ? JSON.stringify(body) : undefined,
+    body: JSON.stringify(body),
     method: method?.toUpperCase()
   }
 }
