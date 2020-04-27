@@ -37,7 +37,7 @@ export const Request_Manager = {
   },
   put: (url: string, body?: unknown) => {
     return run_method(RequestMethod.Put, url, body)
-  }
+  },
 }
 
 const create_request_body = (body: any, method?: RequestMethod) => {
@@ -46,10 +46,10 @@ const create_request_body = (body: any, method?: RequestMethod) => {
       Authorization: authorization,
       "User-Agent": `DiscordBot (https://github.com/skillz4killz/discordeno, 0.0.1)`,
       "Content-Type": "application/json",
-      "X-Audit-Log-Reason": encodeURIComponent(body.reason)
+      "X-Audit-Log-Reason": body ? encodeURIComponent(body.reason) : "",
     },
     body: JSON.stringify(body),
-    method: method?.toUpperCase()
+    method: method?.toUpperCase(),
   }
 }
 
@@ -89,7 +89,7 @@ const process_headers = (url: string, headers: Headers) => {
 
     ratelimited_paths.set(url, {
       url,
-      reset_timestamp: Number(reset_timestamp)
+      reset_timestamp: Number(reset_timestamp),
     })
   }
 
@@ -99,7 +99,7 @@ const process_headers = (url: string, headers: Headers) => {
 
     ratelimited_paths.set("global", {
       url: "global",
-      reset_timestamp: Date.now() + Number(retry_after)
+      reset_timestamp: Date.now() + Number(retry_after),
     })
   }
 
