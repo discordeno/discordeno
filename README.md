@@ -1,7 +1,8 @@
 # Discordeno
+
 Discord API library wrapper in Deno
 
-[Discord Server](https://discord.gg/rFJzqex)
+[Discord Server](https://discord.gg/J4NqJ72)
 
 ## Bot Boilerplate Template / Frameworks
 

@@ -45,7 +45,7 @@ export enum GatewayOpcode {
   RequestGuildMembers,
   InvalidSession,
   Hello,
-  HeartbeatACK
+  HeartbeatACK,
 }
 
 export enum GatewayCloseEventCode {
@@ -59,7 +59,7 @@ export enum GatewayCloseEventCode {
   RateLimited,
   SessionTimeout,
   InvalidShard,
-  ShardingRequired
+  ShardingRequired,
 }
 
 export enum VoiceOpcode {
@@ -73,7 +73,7 @@ export enum VoiceOpcode {
   Resume,
   Hello,
   Resumed,
-  ClientDisconnect = 13
+  ClientDisconnect = 13,
 }
 
 export enum VoiceCloseEventCode {
@@ -87,7 +87,7 @@ export enum VoiceCloseEventCode {
   UnknownProtocol,
   Disconnected = 4014,
   VoiceServerCrashed,
-  UnknownEncryptionMode
+  UnknownEncryptionMode,
 }
 
 export enum HttpResponseCode {
@@ -101,7 +101,7 @@ export enum HttpResponseCode {
   NotFound,
   MethodNotAllowed,
   TooManyRequests = 429,
-  GatewayUnavailable = 502
+  GatewayUnavailable = 502,
   // ServerError left untyped because it's 5xx.
 }
 
@@ -157,7 +157,7 @@ export enum JSONErrorCode {
   InviteAcceptedToGuildApplicationBotNotIn,
   InvalidAPIVersion = 50041,
   ReactionBlocked = 90001,
-  ResourceOverloaded = 130000
+  ResourceOverloaded = 130000,
 }
 
 export interface Properties {
@@ -182,7 +182,7 @@ export enum StatusType {
   DoNotDisturb = "dnd",
   Idle = "idle",
   Invisible = "invisible",
-  Offline = "offline"
+  Offline = "offline",
 }
 
 export type Status_Type = "online" | "dnd" | "idle" | "invisible" | "offline"
@@ -254,4 +254,11 @@ export interface Voice_State_Update_Payload {
   self_stream?: boolean
   /** Whether this user is muted by the bot */
   suppress: boolean
+}
+
+export interface ReadyPayload {
+  /** used for resuming connections */
+  session_id: string
+  /** (shard_id, num_shards)	the shard information associated with this session, if sent when identifying */
+  shard?: [number, number]
 }

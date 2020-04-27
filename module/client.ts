@@ -8,12 +8,12 @@ import {
   Presence_Update_Payload,
   Typing_Start_Payload,
   Voice_State_Update_Payload,
+  ReadyPayload,
 } from "../types/discord.ts"
 // import { spawnShards } from "./sharding_manager.ts"
 import { connectWebSocket, isWebSocketCloseEvent, WebSocket } from "https://deno.land/std@v0.41.0/ws/mod.ts"
 import { Client_Options, Event_Handlers } from "../types/options.ts"
-import { CollectedMessageType } from "../types/message-type.ts"
-import { send_constant_heartbeats, update_previous_sequence_number } from "./gateway.ts"
+import { send_constant_heartbeats, update_previous_sequence_number, previous_sequence_number } from "./gateway.ts"
 import { create_guild } from "../structures/guild.ts"
 import {
   handle_internal_guild_create,
@@ -67,6 +67,8 @@ export let authorization = ""
 export let bot_id = ""
 /** The bot's token. This should never be used by end users. It is meant to be used internally to make requests to the Discord API. */
 export let token = ""
+/** The session id is needed for RESUME functionality when discord disconnects randomly. */
+export let sessionID = ""
 export let event_handlers: Event_Handlers = {}
 
 export const create_client = async (data: Client_Options) => {
@@ -83,8 +85,7 @@ export const create_client = async (data: Client_Options) => {
 
   // Initial API connection to get info about bots connection
   const bot_gateway_data = (await Request_Manager.get(endpoints.GATEWAY_BOT)) as DiscordBotGatewayData
-  const socket = await connectWebSocket(bot_gateway_data.url)
-  collect_messages(socket)
+  let socket = await connectWebSocket(bot_gateway_data.url)
 
   const payload = {
     token: data.token,
@@ -97,48 +98,28 @@ export const create_client = async (data: Client_Options) => {
   // Intial identify with the gateway
   await socket.send(JSON.stringify({ op: GatewayOpcode.Identify, d: payload }))
 
-  for await (const _message of connect(socket)) {
+  for await (const message of socket.receive()) {
+    if (typeof message === "string") {
+      handle_discord_payload(JSON.parse(message), socket)
+    } else if (isWebSocketCloseEvent(message)) {
+      logRed(`Close :( ${message}`)
+      // RESUME: Websocket closed/disconnected so we should try and resume the connection.
+      socket = await connectWebSocket(bot_gateway_data.url)
+
+      await socket.send(
+        JSON.stringify({
+          op: GatewayOpcode.Resume,
+          d: {
+            token: data.token,
+            session_id: sessionID,
+            seq: previous_sequence_number,
+          },
+        })
+      )
+    }
   }
 
   // spawnShards(bot_gateway_data, 1, socket, payload)
-}
-
-async function* collect_messages(socket: WebSocket) {
-  for await (const message of socket.receive()) {
-    if (typeof message === "string") {
-      yield {
-        type: CollectedMessageType.Message,
-        data: JSON.parse(message),
-      }
-    } else if (isWebSocketCloseEvent(message)) {
-      yield { type: CollectedMessageType.Close, ...message }
-      return
-    }
-  }
-}
-
-/** Begins initial handshake, creates the websocket with Discord and spawns all necessary shards. */
-async function* connect(socket: WebSocket) {
-  for await (const message of collect_messages(socket)) {
-    switch (message.type) {
-      case CollectedMessageType.Ping:
-        logRed("Ping!")
-        yield message
-        break
-      case CollectedMessageType.Pong:
-        logRed("Pong!")
-        yield message
-        break
-      case CollectedMessageType.Close:
-        logRed(`Close :( ${message}`)
-        yield message
-        break
-      case CollectedMessageType.Message:
-        handle_discord_payload(message.data, socket)
-        yield message
-        break
-    }
-  }
 }
 
 function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
@@ -153,11 +134,12 @@ function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
       // Incase the user wants to listen to heartbeat responses
       return event_handlers.heartbeat?.()
     case GatewayOpcode.Reconnect:
+    case GatewayOpcode.InvalidSession:
       // TODO: Reconnect to the gateway https://discordapp.com/developers/docs/topics/gateway#reconnect
       return
     case GatewayOpcode.Dispatch:
       if (data.t === "READY") {
-        console.debug(data)
+        sessionID = (data.d as ReadyPayload).session_id
         return event_handlers.ready?.()
       }
       if (data.t === "CHANNEL_CREATE") return handle_internal_channel_create(data.d as Channel_Create_Payload)
