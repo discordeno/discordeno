@@ -7,10 +7,10 @@ import {
   Webhook_Update_Payload,
   Presence_Update_Payload,
   Typing_Start_Payload,
-  Voice_State_Update_Payload
+  Voice_State_Update_Payload,
 } from "../types/discord.ts"
 // import { spawnShards } from "./sharding_manager.ts"
-import { connectWebSocket, isWebSocketCloseEvent, WebSocket } from "https://deno.land/std/ws/mod.ts"
+import { connectWebSocket, isWebSocketCloseEvent, WebSocket } from "https://deno.land/std@v0.41.0/ws/mod.ts"
 import { Client_Options, Event_Handlers } from "../types/options.ts"
 import { CollectedMessageType } from "../types/message-type.ts"
 import { send_constant_heartbeats, update_previous_sequence_number } from "./gateway.ts"
@@ -18,7 +18,7 @@ import { create_guild } from "../structures/guild.ts"
 import {
   handle_internal_guild_create,
   handle_internal_guild_update,
-  handle_internal_guild_delete
+  handle_internal_guild_delete,
 } from "../events/guilds.ts"
 import {
   Create_Guild_Payload,
@@ -29,13 +29,13 @@ import {
   Guild_Member_Update_Payload,
   Guild_Member_Chunk_Payload,
   Guild_Role_Payload,
-  User_Payload
+  User_Payload,
 } from "../types/guild.ts"
 import { Channel_Create_Payload } from "../types/channel.ts"
 import {
   handle_internal_channel_create,
   handle_internal_channel_update,
-  handle_internal_channel_delete
+  handle_internal_channel_delete,
 } from "../events/channels.ts"
 import { cache } from "../utils/cache.ts"
 import { create_user } from "../structures/user.ts"
@@ -49,7 +49,7 @@ import {
   Message_Update_Payload,
   Message_Reaction_Payload,
   Base_Message_Reaction_Payload,
-  Message_Reaction_Remove_Emoji_Payload
+  Message_Reaction_Remove_Emoji_Payload,
 } from "../types/message.ts"
 import { logRed } from "../utils/logger.ts"
 import { Request_Manager } from "./request_manager.ts"
@@ -58,9 +58,9 @@ const defaultOptions = {
   properties: {
     $os: "linux",
     $browser: "Discordeno",
-    $device: "Discordeno"
+    $device: "Discordeno",
   },
-  compress: false
+  compress: false,
 }
 
 export let authorization = ""
@@ -74,7 +74,7 @@ export const create_client = async (data: Client_Options) => {
   const options = {
     ...defaultOptions,
     ...data,
-    intents: data.intents.reduce((bits, next) => (bits |= next), 0)
+    intents: data.intents.reduce((bits, next) => (bits |= next), 0),
   }
   bot_id = data.bot_id
   token = data.token
@@ -92,7 +92,7 @@ export const create_client = async (data: Client_Options) => {
     compress: false,
     properties: options.properties,
     intents: options.intents,
-    shards: [0, bot_gateway_data.shards]
+    shards: [0, bot_gateway_data.shards],
   }
   // Intial identify with the gateway
   await socket.send(JSON.stringify({ op: GatewayOpcode.Identify, d: payload }))
@@ -108,7 +108,7 @@ async function* collect_messages(socket: WebSocket) {
     if (typeof message === "string") {
       yield {
         type: CollectedMessageType.Message,
-        data: JSON.parse(message)
+        data: JSON.parse(message),
       }
     } else if (isWebSocketCloseEvent(message)) {
       yield { type: CollectedMessageType.Close, ...message }
@@ -156,7 +156,10 @@ function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
       // TODO: Reconnect to the gateway https://discordapp.com/developers/docs/topics/gateway#reconnect
       return
     case GatewayOpcode.Dispatch:
-      if (data.t === "READY") return event_handlers.ready?.()
+      if (data.t === "READY") {
+        console.debug(data)
+        return event_handlers.ready?.()
+      }
       if (data.t === "CHANNEL_CREATE") return handle_internal_channel_create(data.d as Channel_Create_Payload)
       if (data.t === "CHANNEL_UPDATE") return handle_internal_channel_update(data.d as Channel_Create_Payload)
       if (data.t === "CHANNEL_DELETE") return handle_internal_channel_delete(data.d as Channel_Create_Payload)
@@ -225,7 +228,7 @@ function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
         const member = create_member(
           options,
           options.guild_id,
-          [...guild.roles().values()].map(role => role.raw()),
+          [...guild.roles().values()].map((role) => role.raw()),
           guild.owner_id()
         )
         guild.members.set(options.user.id, member)
@@ -257,12 +260,12 @@ function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
           premium_since: options.premium_since || undefined,
           joined_at: new Date(cached_member?.joined_at() || Date.now()).toISOString(),
           deaf: cached_member?.deaf() || false,
-          mute: cached_member?.mute() || false
+          mute: cached_member?.mute() || false,
         }
         const member = create_member(
           new_member_data,
           options.guild_id,
-          [...guild.roles().values()].map(r => r.raw()),
+          [...guild.roles().values()].map((r) => r.raw()),
           guild.owner_id()
         )
         guild.members.set(options.user.id, member)
@@ -271,11 +274,11 @@ function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
           event_handlers.nickname_update?.(guild, member, options.nick, cached_member?.nick())
         const role_ids = cached_member?.roles() || []
 
-        role_ids.forEach(id => {
+        role_ids.forEach((id) => {
           if (!options.roles.includes(id)) event_handlers.role_lost?.(guild, member, id)
         })
 
-        options.roles.forEach(id => {
+        options.roles.forEach((id) => {
           if (!role_ids.includes(id)) event_handlers.role_gained?.(guild, member, id)
         })
 
@@ -287,13 +290,13 @@ function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
         const guild = cache.guilds.get(options.guild_id)
         if (!guild) return
 
-        options.members.forEach(member =>
+        options.members.forEach((member) =>
           guild.members.set(
             member.user.id,
             create_member(
               member,
               options.guild_id,
-              [...guild.roles().values()].map(r => r.raw()),
+              [...guild.roles().values()].map((r) => r.raw()),
               guild.owner_id()
             )
           )
@@ -349,7 +352,7 @@ function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
         const channel = cache.channels.get(options.channel_id)
         if (!channel) return
 
-        deleted_messages.forEach(id => {
+        deleted_messages.forEach((id) => {
           console.log(id)
           //   const message = channel.messages().get(id)
           //   if (message) {
@@ -377,7 +380,7 @@ function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
         if (message) {
           const previous_reactions = message.reactions()
           const reaction_existed = previous_reactions.find(
-            reaction => reaction.emoji.id === options.emoji.id && reaction.emoji.name === options.emoji.name
+            (reaction) => reaction.emoji.id === options.emoji.id && reaction.emoji.name === options.emoji.name
           )
           if (reaction_existed) reaction_existed.count = isAdd ? reaction_existed.count + 1 : reaction_existed.count - 1
           else
@@ -386,8 +389,8 @@ function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
               {
                 count: 1,
                 me: options.user_id === bot_id,
-                emoji: { ...options.emoji, id: options.emoji.id || undefined }
-              }
+                emoji: { ...options.emoji, id: options.emoji.id || undefined },
+              },
             ]
 
           cache.messages.set(options.message_id, message)
@@ -432,7 +435,7 @@ function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
         const member = guild.members.get(payload.user_id)
         if (!member) return
 
-        const cached_state = guild.voice_states().find(state => state.user_id === payload.user_id)
+        const cached_state = guild.voice_states().find((state) => state.user_id === payload.user_id)
         // No cached state before so lets make one for em
         if (!cached_state) return (guild.voice_states = () => [...guild.voice_states(), payload])
 

@@ -1,6 +1,6 @@
-import { WebSocket } from "https://deno.land/std/ws/mod.ts"
+import { WebSocket } from "https://deno.land/std@v0.41.0/ws/mod.ts"
 import { GatewayOpcode } from "../types/discord.ts"
-import { delay } from "https://deno.land/std/util/async.ts"
+import { delay } from "https://deno.land/std@v0.41.0/util/async.ts"
 
 // Discord requests null if no number has yet been sent by discord
 let previous_sequence_number: number | null = null
