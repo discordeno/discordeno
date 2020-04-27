@@ -1,67 +1,67 @@
 import { Emoji, StatusType } from "./discord.ts"
 import { User } from "../structures/user.ts"
 import { Permission } from "./permission.ts"
-import { Role_Data } from "./role.ts"
-import { Member_Create_Payload } from "./member.ts"
+import { RoleData } from "./role.ts"
+import { MemberCreatePayload } from "./member.ts"
 import { Activity } from "./message.ts"
 import { Client_Status_Payload } from "./presence.ts"
-import { Channel_Create_Payload } from "./channel.ts"
+import { ChannelCreatePayload } from "./channel.ts"
 
-export interface Guild_Role_Payload {
+export interface GuildRolePayload {
   /** The id of the guild */
   guild_id: string
   /** The role object of the role created, deleted, or updated */
-  role: Role_Data
+  role: RoleData
 }
 
-export interface Guild_Member_Chunk_Payload {
+export interface GuildMemberChunkPayload {
   /** The id of the guild */
   guild_id: string
   /** The set of guild members */
-  members: Member_Create_Payload[]
+  members: MemberCreatePayload[]
   /** if passing an invalid id, it will be found here */
   not_found?: string[]
   /** if passing true, presences of the members will be here */
   presences?: Presence[]
 }
 
-export interface Guild_Member_Update_Payload {
+export interface GuildMemberUpdatePayload {
   /** The id of the guild */
   guild_id: string
   /** The user's role ids */
   roles: string[]
   /** The user */
-  user: User_Payload
+  user: UserPayload
   /** The nickname of the user in the guild */
   nick: string
   /** When the user used their nitro boost on the guild. */
   premium_since: string | null
 }
 
-export interface Guild_Member_Add_Payload extends Member_Create_Payload {
+export interface GuildMemberAddPayload extends MemberCreatePayload {
   guild_id: string
 }
 
-export interface Guild_Emojis_Update_Payload {
+export interface GuildEmojisUpdatePayload {
   guild_id: string
   emojis: Emoji[]
 }
 
-export interface Guild_Ban_Payload {
+export interface GuildBanPayload {
   /** The id of the guild */
   guild_id: string
   /** The banned user. Not a member as you can ban users outside of your guild. */
-  user: User_Payload
+  user: UserPayload
 }
 
-export interface Guild_Delete_Payload {
+export interface GuildDeletePayload {
   /** The id of the guild */
   id: string
   /** Whether this guild went unavailable. */
   unavailable?: boolean
 }
 
-export interface Create_Guild_Payload {
+export interface CreateGuildPayload {
   /** The guild id */
   id: string
   /** The guild name 2-100 characters */
@@ -85,7 +85,7 @@ export interface Create_Guild_Payload {
   /** The verification level required for the guild */
   verification_level: number
   /** The roles in the guild */
-  roles: Role_Data[]
+  roles: RoleData[]
   /** The custom guild emojis */
   emojis: Emoji[]
   /** Enabled guild features */
@@ -101,12 +101,12 @@ export interface Create_Guild_Payload {
   /** Whether this guild is unavailable */
   unavailable: boolean
   /** Total number of members in this guild */
-  member_count: number
+  memberCount: number
   voice_states: Voice_State[]
   /** Users in the guild */
-  members: Member_Create_Payload[]
+  members: MemberCreatePayload[]
   /** Channels in the guild */
-  channels: Channel_Create_Payload[]
+  channels: ChannelCreatePayload[]
   presences: Presence[]
   /** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.) */
   max_presences?: number | null
@@ -169,14 +169,14 @@ export interface BannedUser {
   user: User
 }
 
-export interface Position_Swap {
+export interface PositionSwap {
   /** The unique id */
   id: string
   /** The sorting position number. */
   position: number
 }
 
-export interface Guild_Edit_Options {
+export interface GuildEditOptions {
   /** The guild name */
   name?: string
   /** The guild voice region id */
@@ -203,7 +203,7 @@ export interface Guild_Edit_Options {
   system_channel_id?: string
 }
 
-export interface Edit_Integration_Options {
+export interface EditIntegrationOptions {
   /** The behavior when an integration subscription lapses. */
   expire_behavior: number
   /** The period in seconds where the integration will ignore lapsed subscriptions */
@@ -230,7 +230,7 @@ export interface Guild_Integration {
   /** The grace period before expiring subscribers */
   expire_grace_period: number
   /** The user for this integration */
-  user: User_Payload
+  user: UserPayload
   /** The integration account information */
   account: Account
   /** When this integration was last synced */
@@ -244,7 +244,7 @@ export interface Account {
   name: string
 }
 
-export interface User_Payload {
+export interface UserPayload {
   /** The user's id */
   id: string
   /** the user's username, not unique across the platform */
@@ -309,12 +309,12 @@ export enum User_Flags {
   HOUSE_BALANCE = 1 << 8,
   EARLY_SUPPORTER = 1 << 9,
   TEAM_USER = 1 << 10,
-  SYSTEM = 1 << 12
+  SYSTEM = 1 << 12,
 }
 
 export enum Nitro_Types {
   NITRO_CLASSIC = 1,
-  NITRO
+  NITRO,
 }
 
 export interface Vanity_Invite {
@@ -327,7 +327,7 @@ export interface Guild_Embed {
   enabled: boolean
 }
 
-export interface Get_Audit_Logs_Options {
+export interface GetAuditLogsOptions {
   /** Filter the logs for actions made by this user. */
   user_id?: string
   /** The type of audit log. */
@@ -410,7 +410,7 @@ export enum AuditLogs {
   MESSAGE_UNPIN,
   INTEGRATION_CREATE = 80,
   INTEGRATION_UPDATE,
-  INTEGRATION_DELETE
+  INTEGRATION_DELETE,
 }
 
 export type ChannelType = "text" | "dm" | "news" | "voice" | "category" | "store"
@@ -460,21 +460,21 @@ export interface ChannelCreate_Options {
   reason?: string
 }
 
-export interface Create_Emojis_Options {
+export interface CreateEmojisOptions {
   /** The roles for which this emoji will be whitelisted. Only the users with one of these roles can use this emoji. */
   roles: string[]
   /** The reason to have in the Audit Logs. */
   reason: string
 }
 
-export interface Edit_Emojis_Options {
+export interface EditEmojisOptions {
   /** The name of the emoji */
   name: string
   /** The roles for which this emoji will be whitelisted. Only the users with one of these roles can use this emoji. */
   roles: string[]
 }
 
-export interface Create_Role_Options {
+export interface CreateRoleOptions {
   name?: string
   permissions?: Permission[]
   color?: number
@@ -494,7 +494,7 @@ export interface Voice_State {
   /** the user id this voice state is for */
   user_id: string
   /** the guild member this voice state is for */
-  member?: Member_Create_Payload
+  member?: MemberCreatePayload
   /** the session id for this voice state */
   session_id: string
   /** whether this user is deafened by the server */
@@ -513,7 +513,7 @@ export interface Voice_State {
 
 export interface Presence {
   /** The user presence is being updated for */
-  user: User_Payload
+  user: UserPayload
   /** The roles this user is in */
   roles: string[]
   /** null, or the user's current activity */

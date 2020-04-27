@@ -1,26 +1,11 @@
-import { Role_Data } from '../types/role.ts'
+import { RoleData } from "../types/role.ts"
 
-export const create_role = (data: Role_Data) => ({
+export const createRole = (data: RoleData) => ({
+  ...data,
   /** The entire raw Role data */
-  raw: () => data,
-  /** role id */
-  id: () => data.id,
-  /** role name */
-  name: () => data.name,
-  /** integer representation of hexadecimal color code */
-  color: () => data.color,
-  /** if this role is pinned in the user listing */
-  hoist: () => data.hoist,
-  /** position of this role */
-  position: () => data.position,
-  /** permission bit set */
-  permissions: () => data.permissions,
-  /** whether this role is managed by an integration */
-  managed: () => data.managed,
-  /** whether this role is mentionable */
-  mentionable: () => data.mentionable,
+  raw: data,
   /** The @ mention of the role in a string. */
-  mention: () => `<@&${data.id}>`
+  mention: `<@&${data.id}>`,
 })
 
-export type Role = ReturnType<typeof create_role>
+export type Role = ReturnType<typeof createRole>

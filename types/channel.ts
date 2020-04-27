@@ -1,7 +1,7 @@
 import { Raw_Overwrite, Overwrite } from "./guild.ts"
 import { Embed } from "./message.ts"
 
-export interface Channel_Edit_Options {
+export interface ChannelEditOptions {
   /** 2-100 character channel name. All */
   name?: string
   /**	the position of the channel in the left-hand listing	All  */
@@ -47,7 +47,7 @@ export interface Base_Channel_Create {
   last_pin_timestamp?: string
 }
 
-export interface Channel_Create_Payload extends Base_Channel_Create {
+export interface ChannelCreatePayload extends Base_Channel_Create {
   /** The id of this channel */
   id: string
   /** The type of the channel */
@@ -56,16 +56,16 @@ export interface Channel_Create_Payload extends Base_Channel_Create {
   permission_overwrites?: Raw_Overwrite[]
 }
 
-export interface Channel_Create_Options extends Base_Channel_Create {
+export interface CreateChannelOptions extends Base_Channel_Create {
   /** The type of the channel */
-  type: Channel_Types
+  type: ChannelTypes
   /** Explicit permission overwrites for members and roles */
   permission_overwrites?: Overwrite[]
 }
 
 export type Channel_Type = 0 | 1 | 2 | 4 | 5 | 6
 
-export enum Channel_Types {
+export enum ChannelTypes {
   /** A text channel within a server */
   GUILD_TEXT,
   /** A direct message between users */
@@ -79,7 +79,7 @@ export enum Channel_Types {
   /** A channel that users can follow and crosspost into their own server. */
   GUILD_NEWS,
   /** A channel in which game developers can sell their game on Discord. */
-  GUILD_STORE
+  GUILD_STORE,
 }
 
 // export interface File_Content {
@@ -102,27 +102,27 @@ export interface MessageContent {
   payload_json?: string
 }
 
-export interface Get_Messages {
+export interface GetMessages {
   /** Max number of messages to return(1-100). Defaults to 50. */
   limit?: number
 }
 
-export interface Get_Messages_After extends Get_Messages {
+export interface GetMessagesAfter extends GetMessages {
   /** Get messages after this message id */
   after: string
 }
 
-export interface Get_Messages_Before extends Get_Messages {
+export interface GetMessagesBefore extends GetMessages {
   /** Get messages before this message id */
   before: string
 }
 
-export interface Get_Messages_Around extends Get_Messages {
+export interface GetMessagesAround extends GetMessages {
   /** Get messages around this message id. */
   around: string
 }
 
-export interface Create_Invite_Options {
+export interface CreateInviteOptions {
   /** Duration of invite in seconds before expiry, or 0 for never. Defaults to 86400 (24 hours) */
   max_age: number
   /** Max number of uses or 0 for unlimited. Default 0 */

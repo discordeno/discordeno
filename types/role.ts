@@ -1,4 +1,4 @@
-export interface Role_Data {
+export interface RoleData {
   /** role id */
   id: string
   /** role name */

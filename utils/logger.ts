@@ -15,18 +15,18 @@ export const getTime = () => {
   return `${hour >= 10 ? hour : `0${hour}`}:${minute >= 10 ? minute : `0${minute}`} ${amOrPm}`
 }
 
-export const logGreen = (text: string) => {
-  console.log(green(`[${getTime()}] => ${text}`))
+export const logGreen = (text: unknown) => {
+  console.log(green(`[${getTime()}] => ${JSON.stringify(text)}`))
 }
 
-export const logBlue = (text: string) => {
-  console.log(blue(`[${getTime()}] => ${text}`))
+export const logBlue = (text: unknown) => {
+  console.log(blue(`[${getTime()}] => ${JSON.stringify(text)}`))
 }
 
-export const logRed = (text: string) => {
-  console.log(red(`[${getTime()}] => ${text}`))
+export const logRed = (text: unknown) => {
+  console.log(red(`[${getTime()}] => ${JSON.stringify(text)}`))
 }
 
-export const logYellow = (text: string) => {
-  console.log(yellow(`[${getTime()}] => ${text}`))
+export const logYellow = (text: unknown) => {
+  console.log(yellow(`[${getTime()}] => ${JSON.stringify(text)}`))
 }

@@ -1,357 +1,286 @@
-import { bot_id } from "../module/client.ts"
+import { botID } from "../module/client.ts"
 import { endpoints } from "../constants/discord.ts"
-import { format_image_url } from "../utils/cdn.ts"
+import { formatImageURL } from "../utils/cdn.ts"
 import {
-  Create_Guild_Payload,
+  CreateGuildPayload,
   PrunePayload,
-  Position_Swap,
-  Get_Audit_Logs_Options,
-  Edit_Integration_Options,
+  PositionSwap,
+  GetAuditLogsOptions,
+  EditIntegrationOptions,
   BanOptions,
-  Guild_Edit_Options,
-  Create_Emojis_Options,
-  Edit_Emojis_Options,
-  Create_Role_Options
+  GuildEditOptions,
+  CreateEmojisOptions,
+  EditEmojisOptions,
+  CreateRoleOptions,
 } from "../types/guild.ts"
-import { create_role } from "./role.ts"
-import { create_member } from "./member.ts"
-import { create_channel } from "./channel.ts"
-import { Channel_Create_Options, Channel_Types, Channel_Create_Payload } from "../types/channel.ts"
-import { Image_Size, Image_Formats } from "../types/cdn.ts"
+import { createRole } from "./role.ts"
+import { createMember } from "./member.ts"
+import { createChannel } from "./channel.ts"
+import { CreateChannelOptions, ChannelTypes, ChannelCreatePayload } from "../types/channel.ts"
+import { ImageSize, ImageFormats } from "../types/cdn.ts"
 import { Permissions, Permission } from "../types/permission.ts"
-import { bot_has_permission } from "../utils/permissions.ts"
+import { botHasPermission } from "../utils/permissions.ts"
 import { Errors } from "../types/errors.ts"
-import { Request_Manager } from "../module/request_manager.ts"
-import { Role_Data } from "../types/role.ts"
+import { RequestManager } from "../module/requestManager.ts"
+import { RoleData } from "../types/role.ts"
 
-export const create_guild = (data: Create_Guild_Payload) => {
+export const createGuild = (data: CreateGuildPayload) => {
   const guild = {
+    ...data,
     /** The raw create guild payload data. */
-    raw: () => data,
-    /** The guild id */
-    id: () => data.id,
-    /** The guild name. 2-100 characters */
-    name: () => data.name,
-    /** The guild icon image hash */
-    icon: () => data.icon,
-    /** The guild splash image hash */
-    splash: () => data.splash,
-    /** The id of the guild owner */
-    owner_id: () => data.owner_id,
-    /** The voice region id for the guild */
-    region: () => data.region,
-    /** The afk channel id */
-    afk_channel_id: () => data.afk_channel_id,
-    /** The AFK timeout in seconds */
-    afk_timeout: () => data.afk_timeout,
-    /** The verification level required for the guild */
-    verification_level: () => data.verification_level,
+    raw: data,
     /** The roles in the guild */
-    roles: () => new Map(data.roles.map(r => [r.id, create_role(r)])),
-    /** The custom guild emojis */
-    emojis: () => data.emojis,
-    /** The enabled guild features. */
-    features: () => data.features,
-    /** The required MFA level for the guild. */
-    mfa_level: () => data.mfa_level,
-    /** The id of the channel to which system messages are sent. */
-    system_channel_id: () => data.system_channel_id,
+    roles: new Map(data.roles.map((r) => [r.id, createRole(r)])),
     /** When this guild was joined at. */
-    joined_at: Date.parse(data.joined_at),
-    /** Whether this is considered a large guild. */
-    large: () => data.large,
-    /** Whether this guild is unavailable */
-    unavailable: () => data.unavailable,
-    /** The total number of members in this guild. */
-    member_count: () => data.member_count,
-    /** The current open voice states in the guild. */
-    voice_states: () => data.voice_states,
+    joinedAt: Date.parse(data.joined_at),
     /** The users in this guild. */
-    members: new Map(data.members.map(m => [m.user.id, create_member(m, data.id, data.roles, data.owner_id)])),
+    members: new Map(data.members.map((m) => [m.user.id, createMember(m, data.id, data.roles, data.owner_id)])),
     /** The channels in the guild */
-    channels: new Map(data.channels.map(c => [c.id, create_channel(c)])),
+    channels: new Map(data.channels.map((c) => [c.id, createChannel(c)])),
     /** The presences of all the users in the guild. */
-    presences: new Map(data.presences.map(p => [p.user.id, p])),
-    /** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.)  */
-    max_presences: () => data.max_presences,
-    /** The maximum amount of members for the guild */
-    max_members: () => data.max_members,
-    /** The vanity url code for the guild */
-    vanity_url_code: () => data.vanity_url_code,
-    /** The description for the guild */
-    description: () => data.description,
-    /** The banner hash */
-    banner: () => data.banner,
-    /** The current premium tier of the guild */
-    premium_tier: () => data.premium_tier,
-    /** The total number of users currently boosting this server. */
-    premium_subscription_count: () => data.premium_subscription_count,
-    /** The preferred locale of this guild only set if the guild has the  DISCOVERABLE feature, defaults to en-US */
-    preferred_locale: () => data.preferred_locale,
-    /** Gets an array of all the channels ids that are the children of this category. */
-    category_children_ids: (id: string) => data.channels.filter(c => c.parent_id === id).map(c => c.id),
-    /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
-    icon_url: (size: Image_Size = 128, format?: Image_Formats) =>
-      data.icon ? format_image_url(endpoints.GUILD_ICON(data.id, data.icon), size, format) : undefined,
-    /** The full URL of the splash from Discords CDN. Undefined if no splash is set. */
-    splash_url: (size: Image_Size = 128, format?: Image_Formats) =>
-      data.splash ? format_image_url(endpoints.GUILD_SPLASH(data.id, data.splash), size, format) : undefined,
-    /** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
-    banner_url: (size: Image_Size = 128, format?: Image_Formats) =>
-      data.banner ? format_image_url(endpoints.GUILD_BANNER(data.id, data.banner), size, format) : undefined,
-    /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-    create_channel: async (name: string, options: Channel_Create_Options) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_CHANNELS]))
-        throw new Error(Errors.MISSING_MANAGE_CHANNELS)
-        const result = await Request_Manager.post(endpoints.GUILD_CHANNELS(data.id), {
-          name,
-          type: options.type ? Channel_Types[options.type] : undefined,
-          permission_overwrites: options?.permission_overwrites
-            ? options.permission_overwrites.map(perm => ({
-                ...perm,
-                allow: perm.allow.map(p => Permissions[p]),
-                deny: perm.deny.map(p => Permissions[p])
-              }))
-            : undefined,
-          ...options
-        }) as Channel_Create_Payload
+    presences: new Map(data.presences.map((p) => [p.user.id, p])),
 
-        const channel = create_channel(result)
-        guild.channels.set(result.id, channel)
-        return channel
+    /** Gets an array of all the channels ids that are the children of this category. */
+    categoryChildrenIDs: (id: string) => data.channels.filter((c) => c.parent_id === id).map((c) => c.id),
+    /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
+    iconURL: (size: ImageSize = 128, format?: ImageFormats) =>
+      data.icon ? formatImageURL(endpoints.GUILD_ICON(data.id, data.icon), size, format) : undefined,
+    /** The full URL of the splash from Discords CDN. Undefined if no splash is set. */
+    splashURL: (size: ImageSize = 128, format?: ImageFormats) =>
+      data.splash ? formatImageURL(endpoints.GUILD_SPLASH(data.id, data.splash), size, format) : undefined,
+    /** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
+    bannerURL: (size: ImageSize = 128, format?: ImageFormats) =>
+      data.banner ? formatImageURL(endpoints.GUILD_BANNER(data.id, data.banner), size, format) : undefined,
+    /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
+    createChannel: async (name: string, options: CreateChannelOptions) => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_CHANNELS]))
+        throw new Error(Errors.MISSING_MANAGE_CHANNELS)
+      const result = (await RequestManager.post(endpoints.GUILD_CHANNELS(data.id), {
+        name,
+        type: options.type ? ChannelTypes[options.type] : undefined,
+        permission_overwrites: options?.permission_overwrites
+          ? options.permission_overwrites.map((perm) => ({
+              ...perm,
+              allow: perm.allow.map((p) => Permissions[p]),
+              deny: perm.deny.map((p) => Permissions[p]),
+            }))
+          : undefined,
+        ...options,
+      })) as ChannelCreatePayload
+
+      const channel = createChannel(result)
+      guild.channels.set(result.id, channel)
+      return channel
     },
     /** Returns a list of guild channel objects.
      *
      * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
      */
-    get_channels: () => {
-      return Request_Manager.get(endpoints.GUILD_CHANNELS(data.id))
+    getChannels: () => {
+      return RequestManager.get(endpoints.GUILD_CHANNELS(data.id))
     },
     /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
-    swap_channels: (channel_positions: Position_Swap[]) => {
-      if (channel_positions.length < 2) {
+    swapChannels: (channelPositions: PositionSwap[]) => {
+      if (channelPositions.length < 2) {
         throw "You must provide atleast two channels to be swapped."
       }
-      return Request_Manager.patch(endpoints.GUILD_CHANNELS(data.id), channel_positions)
+      return RequestManager.patch(endpoints.GUILD_CHANNELS(data.id), channelPositions)
     },
     /** Returns a guild member object for the specified user.
      *
      * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your members will be cached in your guild.**
      */
-    get_member: (id: string) => {
-      return Request_Manager.get(endpoints.GUILD_MEMBER(data.id, id))
+    getMember: (id: string) => {
+      return RequestManager.get(endpoints.GUILD_MEMBER(data.id, id))
     },
     /** Create an emoji in the server. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. */
-    create_emoji: (name: string, image: string, options: Create_Emojis_Options) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_EMOJIS]))
-        throw new Error(Errors.MISSING_MANAGE_EMOJIS)
-      return Request_Manager.post(endpoints.GUILD_EMOJIS(data.id), {
+    createEmoji: (name: string, image: string, options: CreateEmojisOptions) => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_EMOJIS])) throw new Error(Errors.MISSING_MANAGE_EMOJIS)
+      return RequestManager.post(endpoints.GUILD_EMOJIS(data.id), {
         ...options,
         name,
-        image
+        image,
       })
     },
     /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */
-    edit_emoji: (id: string, options: Edit_Emojis_Options) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_EMOJIS]))
-        throw new Error(Errors.MISSING_MANAGE_EMOJIS)
-      return Request_Manager.patch(endpoints.GUILD_EMOJI(data.id, id), {
+    editEmoji: (id: string, options: EditEmojisOptions) => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_EMOJIS])) throw new Error(Errors.MISSING_MANAGE_EMOJIS)
+      return RequestManager.patch(endpoints.GUILD_EMOJI(data.id, id), {
         name: options.name,
-        roles: options.roles
+        roles: options.roles,
       })
     },
     /** Delete the given emoji. Requires the MANAGE_EMOJIS permission. Returns 204 No Content on success. */
-    delete_emoji: (id: string, reason?: string) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_EMOJIS]))
-        throw new Error(Errors.MISSING_MANAGE_EMOJIS)
-      return Request_Manager.delete(endpoints.GUILD_EMOJI(data.id, id), { reason })
+    deleteEmoji: (id: string, reason?: string) => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_EMOJIS])) throw new Error(Errors.MISSING_MANAGE_EMOJIS)
+      return RequestManager.delete(endpoints.GUILD_EMOJI(data.id, id), { reason })
     },
     /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
-    create_role: async (options: Create_Role_Options, reason?: string) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_ROLES]))
-        throw new Error(Errors.MISSING_MANAGE_ROLES)
-      const role_data = await Request_Manager.post(endpoints.GUILD_ROLES(data.id), {
+    createRole: async (options: CreateRoleOptions, reason?: string) => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_ROLES])) throw new Error(Errors.MISSING_MANAGE_ROLES)
+      const role_data = await RequestManager.post(endpoints.GUILD_ROLES(data.id), {
         ...options,
-        permissions: options.permissions?.map(perm => Permissions[perm]),
-        reason
+        permissions: options.permissions?.map((perm) => Permissions[perm]),
+        reason,
       })
 
-      const role = create_role(role_data as Role_Data)
-      guild.roles().set(role_data.id, role)
+      const role = createRole(role_data as RoleData)
+      guild.roles.set(role_data.id, role)
       return role
     },
     /** Edit a guild role. Requires the MANAGE_ROLES permission. */
-    edit_role: (id: string, options: Create_Role_Options) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_ROLES]))
-        throw new Error(Errors.MISSING_MANAGE_ROLES)
-      return Request_Manager.patch(endpoints.GUILD_ROLE(data.id, id), options)
+    editRole: (id: string, options: CreateRoleOptions) => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_ROLES])) throw new Error(Errors.MISSING_MANAGE_ROLES)
+      return RequestManager.patch(endpoints.GUILD_ROLE(data.id, id), options)
     },
     /** Delete a guild role. Requires the MANAGE_ROLES permission. */
-    delete_role: (id: string) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_ROLES]))
-        throw new Error(Errors.MISSING_MANAGE_ROLES)
-      return Request_Manager.delete(endpoints.GUILD_ROLE(data.id, id))
+    deleteRole: (id: string) => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_ROLES])) throw new Error(Errors.MISSING_MANAGE_ROLES)
+      return RequestManager.delete(endpoints.GUILD_ROLE(data.id, id))
     },
     /** Returns a list of role objects for the guild.
      *
      * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your roles will be cached in your guild.**
      */
-    get_roles: () => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_ROLES]))
-        throw new Error(Errors.MISSING_MANAGE_ROLES)
-      return Request_Manager.get(endpoints.GUILD_ROLES(data.id))
+    getRoles: () => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_ROLES])) throw new Error(Errors.MISSING_MANAGE_ROLES)
+      return RequestManager.get(endpoints.GUILD_ROLES(data.id))
     },
     /** Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. */
-    swap_roles: (rolePositons: Position_Swap) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_ROLES]))
-        throw new Error(Errors.MISSING_MANAGE_ROLES)
-      return Request_Manager.patch(endpoints.GUILD_ROLES(data.id), rolePositons)
+    swapRoles: (rolePositons: PositionSwap) => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_ROLES])) throw new Error(Errors.MISSING_MANAGE_ROLES)
+      return RequestManager.patch(endpoints.GUILD_ROLES(data.id), rolePositons)
     },
     /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
-    get_prune_count: async (days: number) => {
+    getPruneCount: async (days: number) => {
       if (days < 1) throw new Error(Errors.PRUNE_MIN_DAYS)
-      if (!bot_has_permission(data.id, bot_id, [Permissions.KICK_MEMBERS]))
-        throw new Error(Errors.MISSING_KICK_MEMBERS)
-      const result = (await Request_Manager.get(endpoints.GUILD_PRUNE(data.id), { days })) as PrunePayload
+      if (!botHasPermission(data.id, botID, [Permissions.KICK_MEMBERS])) throw new Error(Errors.MISSING_KICK_MEMBERS)
+      const result = (await RequestManager.get(endpoints.GUILD_PRUNE(data.id), { days })) as PrunePayload
       return result.pruned
     },
     /** Begin pruning all members in the given time period */
-    prune_members: (days: number) => {
+    pruneMembers: (days: number) => {
       if (days < 1) throw new Error(Errors.PRUNE_MIN_DAYS)
-      if (!bot_has_permission(data.id, bot_id, [Permissions.KICK_MEMBERS]))
-        throw new Error(Errors.MISSING_KICK_MEMBERS)
-      return Request_Manager.post(endpoints.GUILD_PRUNE(data.id), { days })
+      if (!botHasPermission(data.id, botID, [Permissions.KICK_MEMBERS])) throw new Error(Errors.MISSING_KICK_MEMBERS)
+      return RequestManager.post(endpoints.GUILD_PRUNE(data.id), { days })
     },
     // TODO: REQUEST THIS OVER WEBSOCKET WITH GET_GUILD_MEMBERS ENDPOINT
     // fetch_all_members: () => {
     // },
     /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
-    get_audit_logs: (options: Get_Audit_Logs_Options) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.VIEW_AUDIT_LOG]))
+    getAuditLogs: (options: GetAuditLogsOptions) => {
+      if (!botHasPermission(data.id, botID, [Permissions.VIEW_AUDIT_LOG]))
         throw new Error(Errors.MISSING_VIEW_AUDIT_LOG)
 
-      return Request_Manager.get(endpoints.GUILD_AUDIT_LOGS(data.id), {
+      return RequestManager.get(endpoints.GUILD_AUDIT_LOGS(data.id), {
         ...options,
-        limit: options.limit && options.limit >= 1 && options.limit <= 100 ? options.limit : 50
+        limit: options.limit && options.limit >= 1 && options.limit <= 100 ? options.limit : 50,
       })
     },
     /** Returns the guild embed object. Requires the MANAGE_GUILD permission. */
-    get_embed: () => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_GUILD]))
-        throw new Error(Errors.MISSING_MANAGE_GUILD)
-      return Request_Manager.get(endpoints.GUILD_EMBED(data.id))
+    getEmbed: () => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])) throw new Error(Errors.MISSING_MANAGE_GUILD)
+      return RequestManager.get(endpoints.GUILD_EMBED(data.id))
     },
     /** Modify a guild embed object for the guild. Requires the MANAGE_GUILD permission. */
-    edit_embed: (enabled: boolean, channel_id?: string | null) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_GUILD]))
-        throw new Error(Errors.MISSING_MANAGE_GUILD)
-      return Request_Manager.patch(endpoints.GUILD_EMBED(data.id), { enabled, channel_id })
+    editEmbed: (enabled: boolean, channel_id?: string | null) => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])) throw new Error(Errors.MISSING_MANAGE_GUILD)
+      return RequestManager.patch(endpoints.GUILD_EMBED(data.id), { enabled, channel_id })
     },
     /** Returns the code and uses of the vanity url for this server if it is enabled. Requires the MANAGE_GUILD permission. */
-    get_vanity_url: () => {
-      return Request_Manager.get(endpoints.GUILD_VANITY_URL(data.id))
+    getVanityURL: () => {
+      return RequestManager.get(endpoints.GUILD_VANITY_URL(data.id))
     },
     /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
-    get_integrations: () => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_GUILD]))
-        throw new Error(Errors.MISSING_MANAGE_GUILD)
-      return Request_Manager.get(endpoints.GUILD_INTEGRATIONS(data.id))
+    getIntegrations: () => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])) throw new Error(Errors.MISSING_MANAGE_GUILD)
+      return RequestManager.get(endpoints.GUILD_INTEGRATIONS(data.id))
     },
     /** Modify the behavior and settings of an integration object for the guild. Requires the MANAGE_GUILD permission. */
-    edit_integration: (id: string, options: Edit_Integration_Options) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_GUILD]))
-        throw new Error(Errors.MISSING_MANAGE_GUILD)
-      return Request_Manager.patch(endpoints.GUILD_INTEGRATION(data.id, id), options)
+    editIntegration: (id: string, options: EditIntegrationOptions) => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])) throw new Error(Errors.MISSING_MANAGE_GUILD)
+      return RequestManager.patch(endpoints.GUILD_INTEGRATION(data.id, id), options)
     },
     /** Delete the attached integration object for the guild with this id. Requires MANAGE_GUILD permission. */
-    delete_integration: (id: string) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_GUILD]))
-        throw new Error(Errors.MISSING_MANAGE_GUILD)
-      return Request_Manager.delete(endpoints.GUILD_INTEGRATION(data.id, id))
+    deleteIntegration: (id: string) => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])) throw new Error(Errors.MISSING_MANAGE_GUILD)
+      return RequestManager.delete(endpoints.GUILD_INTEGRATION(data.id, id))
     },
     /** Sync an integration. Requires teh MANAGE_GUILD permission. */
-    sync_integration: (id: string) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_GUILD]))
-        throw new Error(Errors.MISSING_MANAGE_GUILD)
-      return Request_Manager.post(endpoints.GUILD_INTEGRATION_SYNC(data.id, id))
+    syncIntegration: (id: string) => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])) throw new Error(Errors.MISSING_MANAGE_GUILD)
+      return RequestManager.post(endpoints.GUILD_INTEGRATION_SYNC(data.id, id))
     },
     /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
-    get_bans: () => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.BAN_MEMBERS]))
-        throw new Error(Errors.MISSING_BAN_MEMBERS)
-      return Request_Manager.get(endpoints.GUILD_BANS(data.id))
+    getBans: () => {
+      if (!botHasPermission(data.id, botID, [Permissions.BAN_MEMBERS])) throw new Error(Errors.MISSING_BAN_MEMBERS)
+      return RequestManager.get(endpoints.GUILD_BANS(data.id))
     },
     /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires teh BAN_MEMBERS permission. */
     ban: (id: string, options: BanOptions) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.BAN_MEMBERS]))
-        throw new Error(Errors.MISSING_BAN_MEMBERS)
-      return Request_Manager.put(endpoints.GUILD_BAN(data.id, id), options)
+      if (!botHasPermission(data.id, botID, [Permissions.BAN_MEMBERS])) throw new Error(Errors.MISSING_BAN_MEMBERS)
+      return RequestManager.put(endpoints.GUILD_BAN(data.id, id), options)
     },
     /** Remove the ban for a user. REquires BAN_MEMBERS permission */
     unban: (id: string) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.BAN_MEMBERS]))
-        throw new Error(Errors.MISSING_BAN_MEMBERS)
-      return Request_Manager.delete(endpoints.GUILD_BAN(data.id, id))
+      if (!botHasPermission(data.id, botID, [Permissions.BAN_MEMBERS])) throw new Error(Errors.MISSING_BAN_MEMBERS)
+      return RequestManager.delete(endpoints.GUILD_BAN(data.id, id))
     },
     /** Check whether a member has certain permissions in this channel. */
-    channel_has_permissions: (channel_id: string, member_id: string, permissions: Permission[]) => {
-      if (member_id === data.owner_id) return true
+    channelHasPermissions: (channelID: string, memberID: string, permissions: Permission[]) => {
+      if (memberID === data.owner_id) return true
 
-      const member = guild.members.get(member_id)
+      const member = guild.members.get(memberID)
       if (!member) {
         throw "Invalid member id provided. This member was not found in the cache. Please fetch them with getMember on guild."
       }
 
-      const channel = guild.channels.get(channel_id)
+      const channel = guild.channels.get(channelID)
       if (!channel) {
         throw "Invalid channel id provided. This channel was not found in the cache."
       }
 
-      let permissionBits = member.roles().reduce((bits, role_id) => {
-        const role = guild.roles().get(role_id)
+      let permissionBits = member.roles.reduce((bits, roleID) => {
+        const role = guild.roles.get(roleID)
         if (!role) return bits
 
-        bits |= role.permissions()
+        bits |= role.permissions
 
         return bits
       }, 0)
 
-      // channel.permission_overwrites()?.forEach(overwrite => {
-      // permissionBits = (permissionBits & ~overwrite.deny) | overwrite.allow
-      // })
-
       if (permissionBits & Permissions.ADMINISTRATOR) return true
 
-      return permissions.every(permission => permissionBits & Permissions[permission])
+      return permissions.every((permission) => permissionBits & Permissions[permission])
     },
     /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
-    edit: (options: Guild_Edit_Options) => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_GUILD]))
-        throw new Error(Errors.MISSING_MANAGE_GUILD)
-      return Request_Manager.patch(endpoints.GUILD(data.id), options)
+    edit: (options: GuildEditOptions) => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])) throw new Error(Errors.MISSING_MANAGE_GUILD)
+      return RequestManager.patch(endpoints.GUILD(data.id), options)
     },
     /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
-    get_invites: () => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_GUILD]))
-        throw new Error(Errors.MISSING_MANAGE_GUILD)
-      return Request_Manager.get(endpoints.GUILD_INVITES(data.id))
+    getInvites: () => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])) throw new Error(Errors.MISSING_MANAGE_GUILD)
+      return RequestManager.get(endpoints.GUILD_INVITES(data.id))
     },
     /** Leave a guild */
     leave: () => {
-      return Request_Manager.delete(endpoints.GUILD_LEAVE(data.id))
+      return RequestManager.delete(endpoints.GUILD_LEAVE(data.id))
     },
     /** Returns a list of voice region objects for the guild. Unlike the similar /voice route, this returns VIP servers when the guild is VIP-enabled. */
-    get_voice_regions: () => {
-      return Request_Manager.get(endpoints.GUILD_REGIONS(data.id))
+    getVoiceRegions: () => {
+      return RequestManager.get(endpoints.GUILD_REGIONS(data.id))
     },
     /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
-    get_webhooks: () => {
-      if (!bot_has_permission(data.id, bot_id, [Permissions.MANAGE_WEBHOOKS]))
+    getWebhooks: () => {
+      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_WEBHOOKS]))
         throw new Error(Errors.MISSING_MANAGE_WEBHOOKS)
 
-      return Request_Manager.get(endpoints.GUILD_WEBHOOKS(data.id))
-    }
+      return RequestManager.get(endpoints.GUILD_WEBHOOKS(data.id))
+    },
   }
 
   return guild
 }
+
+export type Guild = ReturnType<typeof createGuild>

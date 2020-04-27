@@ -2,22 +2,23 @@ import {
   Properties,
   Emoji,
   DiscordPayload,
-  Presence_Update_Payload,
-  Typing_Start_Payload,
-  Voice_State_Update_Payload
+  PresenceUpdatePayload,
+  TypingStartPayload,
+  VoiceStateUpdatePayload,
 } from "./discord.ts"
-import { Channel, Guild } from "./return-type.ts"
 import { User } from "../structures/user.ts"
 import { Member } from "./member.ts"
 import { Role } from "../structures/role.ts"
 import { Message } from "../structures/message.ts"
 import {
   Partial_Message,
-  Message_Reaction_Payload,
+  MessageReactionPayload,
   Reaction_Payload,
-  Base_Message_Reaction_Payload,
-  Message_Reaction_Remove_Emoji_Payload
+  BaseMessageReactionPayload,
+  MessageReactionRemoveEmojiPayload,
 } from "./message.ts"
+import { Channel } from "../structures/channel.ts"
+import { Guild } from "../structures/guild.ts"
 
 export interface Fulfilled_Client_Options {
   token: string
@@ -26,51 +27,51 @@ export interface Fulfilled_Client_Options {
   intents: number
 }
 
-export interface Client_Options {
+export interface ClientOptions {
   token: string
   properties?: Properties
   compress?: boolean
-  bot_id: string
+  botID: string
   intents: Intents[]
-  event_handlers?: Event_Handlers
+  eventHandlers?: EventHandlers
 }
 
-export interface Event_Handlers {
-  bot_update?: (user: User, cached_user?: User) => unknown
-  channel_create?: (channel: Channel) => unknown
-  channel_update?: (channel: Channel, cached_channel: Channel) => unknown
-  channel_delete?: (channel: Channel) => unknown
-  guild_ban_add?: (guild: Guild, user: User) => unknown
-  guild_ban_remove?: (guild: Guild, user: User) => unknown
-  guild_create?: (guild: Guild) => unknown
-  guild_update?: (guild: Guild, cached_guild: Guild) => unknown
-  guild_delete?: (guild: Guild) => unknown
-  guild_emojis_update?: (guild: Guild, emojis: Emoji[], cached_emojis: Emoji[]) => unknown
-  guild_member_add?: (guild: Guild, member: Member) => unknown
-  guild_member_remove?: (guild: Guild, member: Member | User) => unknown
-  guild_member_update?: (guild: Guild, member: Member, cached_member?: Member) => unknown
+export interface EventHandlers {
+  botUpdate?: (user: User, cachedUser?: User) => unknown
+  channelCreate?: (channel: Channel) => unknown
+  channel_update?: (channel: Channel, cachedChannel: Channel) => unknown
+  channelDelete?: (channel: Channel) => unknown
+  guildBanAdd?: (guild: Guild, user: User) => unknown
+  guildBanRemove?: (guild: Guild, user: User) => unknown
+  guildCreate?: (guild: Guild) => unknown
+  guildUpdate?: (guild: Guild, cachedGuild: Guild) => unknown
+  guildDelete?: (guild: Guild) => unknown
+  guildEmojisUpdate?: (guild: Guild, emojis: Emoji[], cachedEmojis: Emoji[]) => unknown
+  guildMemberAdd?: (guild: Guild, member: Member) => unknown
+  guildMemberRemove?: (guild: Guild, member: Member | User) => unknown
+  guild_member_update?: (guild: Guild, member: Member, cachedMember?: Member) => unknown
   heartbeat?: () => unknown
-  message_create?: (message: Message) => unknown
+  messageCreate?: (message: Message) => unknown
   message_delete?: (message: Message | Partial_Message) => unknown
-  nickname_update?: (guild: Guild, member: Member, nickname: string, old_nickname?: string) => unknown
-  presence_update?: (data: Presence_Update_Payload) => unknown
+  nicknameUpdate?: (guild: Guild, member: Member, nickname: string, old_nickname?: string) => unknown
+  presenceUpdate?: (data: PresenceUpdatePayload) => unknown
   raw?: (data: DiscordPayload) => unknown
   ready?: () => unknown
-  reaction_add?: (message: Message | Message_Reaction_Payload, emoji: Reaction_Payload, user_id: string) => unknown
-  reaction_remove?: (message: Message | Message_Reaction_Payload, emoji: Reaction_Payload, user_id: string) => unknown
-  reaction_remove_all?: (data: Base_Message_Reaction_Payload) => unknown
-  reaction_remove_emoji?: (data: Message_Reaction_Remove_Emoji_Payload) => unknown
-  role_create?: (guild: Guild, role: Role) => unknown
-  role_delete?: (guild: Guild, role: Role) => unknown
-  role_update?: (guild: Guild, role: Role, cached_role: Role) => unknown
+  reactionAdd?: (message: Message | MessageReactionPayload, emoji: Reaction_Payload, user_id: string) => unknown
+  reactionRemove?: (message: Message | MessageReactionPayload, emoji: Reaction_Payload, user_id: string) => unknown
+  reactionRemoveAll?: (data: BaseMessageReactionPayload) => unknown
+  reactionRemoveEmoji?: (data: MessageReactionRemoveEmojiPayload) => unknown
+  roleCreate?: (guild: Guild, role: Role) => unknown
+  roleDelete?: (guild: Guild, role: Role) => unknown
+  roleUpdate?: (guild: Guild, role: Role, cached_role: Role) => unknown
   role_gained?: (guild: Guild, member: Member, role_id: string) => unknown
   role_lost?: (guild: Guild, member: Member, role_id: string) => unknown
-  typing_start?: (data: Typing_Start_Payload) => unknown
-  voice_channel_join?: (member: Member, channel_id: string) => unknown
-  voice_channel_leave?: (member: Member, channel_id: string) => unknown
-  voice_channel_switch?: (member: Member, channel_id: string, old_channel_id: string) => unknown
-  voice_state_update?: (member: Member, voice_state: Voice_State_Update_Payload) => unknown
-  webhooks_update?: (channel_id: string, guild_id: string) => unknown
+  typingStart?: (data: TypingStartPayload) => unknown
+  voiceChannelJoin?: (member: Member, channel_id: string) => unknown
+  voiceChannelLeave?: (member: Member, channel_id: string) => unknown
+  voiceChannelSwitch?: (member: Member, channel_id: string, old_channel_id: string) => unknown
+  voiceStateUpdate?: (member: Member, voice_state: VoiceStateUpdatePayload) => unknown
+  webhooksUpdate?: (channel_id: string, guild_id: string) => unknown
 }
 
 export enum Intents {
@@ -157,5 +158,5 @@ export enum Intents {
   /** Enables the following events:
    * - TYPING_START
    */
-  DIRECT_MESSAGE_TYPING = 1 << 14
+  DIRECT_MESSAGE_TYPING = 1 << 14,
 }

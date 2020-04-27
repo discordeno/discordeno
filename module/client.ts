@@ -4,55 +4,52 @@ import {
   DiscordPayload,
   DiscordHeartbeatPayload,
   GatewayOpcode,
-  Webhook_Update_Payload,
-  Presence_Update_Payload,
-  Typing_Start_Payload,
-  Voice_State_Update_Payload,
+  WebhookUpdatePayload,
+  PresenceUpdatePayload,
+  TypingStartPayload,
+  VoiceStateUpdatePayload,
   ReadyPayload,
 } from "../types/discord.ts"
 // import { spawnShards } from "./sharding_manager.ts"
 import { connectWebSocket, isWebSocketCloseEvent, WebSocket } from "https://deno.land/std@v0.41.0/ws/mod.ts"
-import { Client_Options, Event_Handlers } from "../types/options.ts"
-import { send_constant_heartbeats, update_previous_sequence_number, previous_sequence_number } from "./gateway.ts"
-import { create_guild } from "../structures/guild.ts"
+import { ClientOptions, EventHandlers } from "../types/options.ts"
+import { sendConstantHeartbeats, updatePreviousSequenceNumber, previousSequenceNumber } from "./gateway.ts"
+import { createGuild } from "../structures/guild.ts"
+import { handleInternalGuildCreate, handleInternalGuildUpdate, handleInternalGuildDelete } from "../events/guilds.ts"
 import {
-  handle_internal_guild_create,
-  handle_internal_guild_update,
-  handle_internal_guild_delete,
-} from "../events/guilds.ts"
-import {
-  Create_Guild_Payload,
-  Guild_Delete_Payload,
-  Guild_Ban_Payload,
-  Guild_Emojis_Update_Payload,
-  Guild_Member_Add_Payload,
-  Guild_Member_Update_Payload,
-  Guild_Member_Chunk_Payload,
-  Guild_Role_Payload,
-  User_Payload,
+  CreateGuildPayload,
+  GuildDeletePayload,
+  GuildBanPayload,
+  GuildEmojisUpdatePayload,
+  GuildMemberAddPayload,
+  GuildMemberUpdatePayload,
+  GuildMemberChunkPayload,
+  GuildRolePayload,
+  UserPayload,
 } from "../types/guild.ts"
-import { Channel_Create_Payload } from "../types/channel.ts"
+import { ChannelCreatePayload } from "../types/channel.ts"
 import {
-  handle_internal_channel_create,
-  handle_internal_channel_update,
-  handle_internal_channel_delete,
+  handleInternalChannelCreate,
+  handleInternalChannelUpdate,
+  handleInternalChannelDelete,
 } from "../events/channels.ts"
 import { cache } from "../utils/cache.ts"
-import { create_user } from "../structures/user.ts"
-import { create_member } from "../structures/member.ts"
-import { create_role } from "../structures/role.ts"
-import { create_message } from "../structures/message.ts"
+import { createUser } from "../structures/user.ts"
+import { createMember } from "../structures/member.ts"
+import { createRole } from "../structures/role.ts"
+import { createMessage } from "../structures/message.ts"
 import {
-  Message_Create_Options,
-  Message_Delete_Payload,
-  Message_Delete_Bulk_Payload,
-  Message_Update_Payload,
-  Message_Reaction_Payload,
-  Base_Message_Reaction_Payload,
-  Message_Reaction_Remove_Emoji_Payload,
+  MessageCreateOptions,
+  MessageDeletePayload,
+  MessageDeleteBulkPayload,
+  MessageUpdatePayload,
+  MessageReactionPayload,
+  BaseMessageReactionPayload,
+  MessageReactionRemoveEmojiPayload,
 } from "../types/message.ts"
 import { logRed } from "../utils/logger.ts"
-import { Request_Manager } from "./request_manager.ts"
+import { RequestManager } from "./requestManager.ts"
+import { Channel } from "../structures/channel.ts"
 
 const defaultOptions = {
   properties: {
@@ -64,32 +61,32 @@ const defaultOptions = {
 }
 
 export let authorization = ""
-export let bot_id = ""
+export let botID = ""
 /** The bot's token. This should never be used by end users. It is meant to be used internally to make requests to the Discord API. */
 export let token = ""
 /** The session id is needed for RESUME functionality when discord disconnects randomly. */
 export let sessionID = ""
-export let event_handlers: Event_Handlers = {}
+export let eventHandlers: EventHandlers = {}
 
-let bot_gateway_data: DiscordBotGatewayData
+let botGatewayData: DiscordBotGatewayData
 let socket: WebSocket
 let resumeInterval: number
 
-export const create_client = async (data: Client_Options) => {
+export const createClient = async (data: ClientOptions) => {
   // Assign some defaults to the options to make them fulfilled / not annoying to use.
   const options = {
     ...defaultOptions,
     ...data,
     intents: data.intents.reduce((bits, next) => (bits |= next), 0),
   }
-  bot_id = data.bot_id
+  botID = data.botID
   token = data.token
-  if (data.event_handlers) event_handlers = data.event_handlers
+  if (data.eventHandlers) eventHandlers = data.eventHandlers
   authorization = `Bot ${data.token}`
 
   // Initial API connection to get info about bots connection
-  bot_gateway_data = (await Request_Manager.get(endpoints.GATEWAY_BOT)) as DiscordBotGatewayData
-  socket = await connectWebSocket(bot_gateway_data.url)
+  botGatewayData = await RequestManager.get(endpoints.GATEWAY_BOT)
+  socket = await connectWebSocket(botGatewayData.url)
 
   const payload = {
     token: data.token,
@@ -97,63 +94,51 @@ export const create_client = async (data: Client_Options) => {
     compress: false,
     properties: options.properties,
     intents: options.intents,
-    shards: [0, bot_gateway_data.shards],
+    shards: [0, botGatewayData.shards],
   }
   // Intial identify with the gateway
   await socket.send(JSON.stringify({ op: GatewayOpcode.Identify, d: payload }))
 
   for await (const message of socket.receive()) {
     if (typeof message === "string") {
-      handle_discord_payload(JSON.parse(message), socket)
+      handleDiscordPayload(JSON.parse(message), socket)
     } else if (isWebSocketCloseEvent(message)) {
-      logRed(`Close :( ${message}`)
-      // RESUME: Websocket closed/disconnected so we should try and resume the connection.
+      logRed(`Close :( ${JSON.stringify(message)}`)
       resumeConnection(payload)
-      socket = await connectWebSocket(bot_gateway_data.url)
-
-      await socket.send(
-        JSON.stringify({
-          op: GatewayOpcode.Resume,
-          d: {
-            ...payload,
-            session_id: sessionID,
-            seq: previous_sequence_number,
-          },
-        })
-      )
     }
   }
 
-  // spawnShards(bot_gateway_data, 1, socket, payload)
+  // spawnShards(botGatewayData, 1, socket, payload)
 }
 
 async function resumeConnection(payload: object) {
   resumeInterval = setInterval(async () => {
-    socket = await connectWebSocket(bot_gateway_data.url)
+    socket = await connectWebSocket(botGatewayData.url)
     await socket.send(
       JSON.stringify({
         op: GatewayOpcode.Resume,
         d: {
           ...payload,
           session_id: sessionID,
-          seq: previous_sequence_number,
+          seq: previousSequenceNumber,
         },
       })
     )
   }, 1000 * 15)
 }
 
-function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
-  // Update the sequence number if it is present so that heartbeating can be accurate
-  if (data.s) update_previous_sequence_number(data.s)
+function handleDiscordPayload(data: DiscordPayload, socket: WebSocket) {
+  // Update the sequence number if it is present
+  if (data.s) updatePreviousSequenceNumber(data.s)
+  eventHandlers.raw?.(data)
 
   switch (data.op) {
     case GatewayOpcode.Hello:
-      send_constant_heartbeats(socket, (data.d as DiscordHeartbeatPayload).heartbeat_interval)
+      sendConstantHeartbeats(socket, (data.d as DiscordHeartbeatPayload).heartbeat_interval)
       return
     case GatewayOpcode.HeartbeatACK:
       // Incase the user wants to listen to heartbeat responses
-      return event_handlers.heartbeat?.()
+      return eventHandlers.heartbeat?.()
     case GatewayOpcode.Reconnect:
     case GatewayOpcode.InvalidSession:
       // Reconnect to the gateway https://discordapp.com/developers/docs/topics/gateway#reconnect
@@ -163,276 +148,274 @@ function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
       return clearInterval(resumeInterval)
     case GatewayOpcode.Dispatch:
       if (data.t === "READY") {
+        // Important for RESUME
         sessionID = (data.d as ReadyPayload).session_id
-        return event_handlers.ready?.()
+        return eventHandlers.ready?.()
       }
-      if (data.t === "CHANNEL_CREATE") return handle_internal_channel_create(data.d as Channel_Create_Payload)
-      if (data.t === "CHANNEL_UPDATE") return handle_internal_channel_update(data.d as Channel_Create_Payload)
-      if (data.t === "CHANNEL_DELETE") return handle_internal_channel_delete(data.d as Channel_Create_Payload)
+
+      if (data.t === "CHANNEL_CREATE") return handleInternalChannelCreate(data.d as ChannelCreatePayload)
+      if (data.t === "CHANNEL_UPDATE") return handleInternalChannelUpdate(data.d as ChannelCreatePayload)
+      if (data.t === "CHANNEL_DELETE") return handleInternalChannelDelete(data.d as ChannelCreatePayload)
 
       if (data.t === "GUILD_CREATE") {
-        const guild = create_guild(data.d as Create_Guild_Payload)
-        handle_internal_guild_create(guild)
-        if (cache.unavailableGuilds.get(guild.id())) {
-          cache.unavailableGuilds.delete(guild.id())
-          return
-        }
-        return event_handlers.guild_create?.(guild)
+        const guild = createGuild(data.d as CreateGuildPayload)
+        handleInternalGuildCreate(guild)
+        if (cache.unavailableGuilds.get(guild.id)) return cache.unavailableGuilds.delete(guild.id)
+        return eventHandlers.guildCreate?.(guild)
       }
 
       if (data.t === "GUILD_UPDATE") {
-        const options = data.d as Create_Guild_Payload
-        const cached_guild = cache.guilds.get(options.id)
-        const guild = create_guild(options)
-        handle_internal_guild_update(guild)
-        if (!cached_guild) return
+        const options = data.d as CreateGuildPayload
+        const cachedGuild = cache.guilds.get(options.id)
+        const guild = createGuild(options)
+        handleInternalGuildUpdate(guild)
+        if (!cachedGuild) return
 
-        return event_handlers.guild_update?.(guild, cached_guild)
+        return eventHandlers.guildUpdate?.(guild, cachedGuild)
       }
 
       if (data.t === "GUILD_DELETE") {
-        const options = data.d as Guild_Delete_Payload
+        const options = data.d as GuildDeletePayload
         const guild = cache.guilds.get(options.id)
         if (!guild) return
 
-        guild.channels.forEach((_channel, id) => cache.channels.delete(id))
+        guild.channels.forEach((channel) => cache.channels.delete(channel.id))
         if (options.unavailable) return cache.unavailableGuilds.set(options.id, Date.now())
 
-        handle_internal_guild_delete(guild)
-        return event_handlers.guild_delete?.(guild)
+        handleInternalGuildDelete(guild)
+        return eventHandlers.guildDelete?.(guild)
       }
 
       if (data.t && ["GUILD_BAN_ADD", "GUILD_BAN_REMOVE"].includes(data.t)) {
-        const options = data.d as Guild_Ban_Payload
+        const options = data.d as GuildBanPayload
         const guild = cache.guilds.get(options.guild_id)
         if (!guild) return
 
-        const user = create_user(options.user)
+        const user = createUser(options.user)
         return data.t === "GUILD_BAN_ADD"
-          ? event_handlers.guild_ban_add?.(guild, user)
-          : event_handlers.guild_ban_remove?.(guild, user)
+          ? eventHandlers.guildBanAdd?.(guild, user)
+          : eventHandlers.guildBanRemove?.(guild, user)
       }
 
       if (data.t === "GUILD_EMOJIS_UPDATE") {
-        const options = data.d as Guild_Emojis_Update_Payload
+        const options = data.d as GuildEmojisUpdatePayload
         const guild = cache.guilds.get(options.guild_id)
         if (!guild) return
 
-        const cached_emojis = guild.emojis()
-        guild.emojis = () => options.emojis
+        const cachedEmojis = guild.emojis
+        guild.emojis = options.emojis
 
-        return event_handlers.guild_emojis_update?.(guild, options.emojis, cached_emojis)
+        return eventHandlers.guildEmojisUpdate?.(guild, options.emojis, cachedEmojis)
       }
 
       if (data.t === "GUILD_MEMBER_ADD") {
-        const options = data.d as Guild_Member_Add_Payload
+        const options = data.d as GuildMemberAddPayload
         const guild = cache.guilds.get(options.guild_id)
         if (!guild) return
 
-        const member_count = guild.member_count() + 1
-        guild.member_count = () => member_count
-        const member = create_member(
+        const memberCount = guild.memberCount + 1
+        guild.memberCount = memberCount
+        const member = createMember(
           options,
           options.guild_id,
-          [...guild.roles().values()].map((role) => role.raw()),
-          guild.owner_id()
+          [...guild.roles.values()].map((role) => role.raw),
+          guild.owner_id
         )
         guild.members.set(options.user.id, member)
 
-        return event_handlers.guild_member_add?.(guild, member)
+        return eventHandlers.guildMemberAdd?.(guild, member)
       }
 
       if (data.t === "GUILD_MEMBER_REMOVE") {
-        const options = data.d as Guild_Ban_Payload
+        const options = data.d as GuildBanPayload
         const guild = cache.guilds.get(options.guild_id)
         if (!guild) return
 
-        const member_count = guild.member_count() - 1
-        guild.member_count = () => member_count
+        const memberCount = guild.memberCount - 1
+        guild.memberCount = memberCount
 
         const member = guild.members.get(options.user.id)
-        return event_handlers.guild_member_remove?.(guild, member || create_user(options.user))
+        return eventHandlers.guildMemberRemove?.(guild, member || createUser(options.user))
       }
 
       if (data.t === "GUILD_MEMBER_UPDATE") {
-        const options = data.d as Guild_Member_Update_Payload
+        const options = data.d as GuildMemberUpdatePayload
         const guild = cache.guilds.get(options.guild_id)
         if (!guild) return
 
-        const cached_member = guild.members.get(options.user.id)
+        const cachedMember = guild.members.get(options.user.id)
 
-        const new_member_data = {
+        const newMemberData = {
           ...options,
           premium_since: options.premium_since || undefined,
-          joined_at: new Date(cached_member?.joined_at() || Date.now()).toISOString(),
-          deaf: cached_member?.deaf() || false,
-          mute: cached_member?.mute() || false,
+          joined_at: new Date(cachedMember?.joined_at || Date.now()).toISOString(),
+          deaf: cachedMember?.deaf || false,
+          mute: cachedMember?.mute || false,
         }
-        const member = create_member(
-          new_member_data,
+        const member = createMember(
+          newMemberData,
           options.guild_id,
-          [...guild.roles().values()].map((r) => r.raw()),
-          guild.owner_id()
+          [...guild.roles.values()].map((r) => r.raw),
+          guild.owner_id
         )
         guild.members.set(options.user.id, member)
 
-        if (cached_member?.nick() !== options.nick)
-          event_handlers.nickname_update?.(guild, member, options.nick, cached_member?.nick())
-        const role_ids = cached_member?.roles() || []
+        if (cachedMember?.nick !== options.nick)
+          eventHandlers.nicknameUpdate?.(guild, member, options.nick, cachedMember?.nick)
+        const roleIDs = cachedMember?.roles || []
 
-        role_ids.forEach((id) => {
-          if (!options.roles.includes(id)) event_handlers.role_lost?.(guild, member, id)
+        roleIDs.forEach((id) => {
+          if (!options.roles.includes(id)) eventHandlers.role_lost?.(guild, member, id)
         })
 
         options.roles.forEach((id) => {
-          if (!role_ids.includes(id)) event_handlers.role_gained?.(guild, member, id)
+          if (!roleIDs.includes(id)) eventHandlers.role_gained?.(guild, member, id)
         })
 
-        return event_handlers.guild_member_update?.(guild, member, cached_member)
+        return eventHandlers.guild_member_update?.(guild, member, cachedMember)
       }
 
       if (data.t === "GUILD_MEMBERS_CHUNK") {
-        const options = data.d as Guild_Member_Chunk_Payload
+        const options = data.d as GuildMemberChunkPayload
         const guild = cache.guilds.get(options.guild_id)
         if (!guild) return
 
         options.members.forEach((member) =>
           guild.members.set(
             member.user.id,
-            create_member(
+            createMember(
               member,
               options.guild_id,
-              [...guild.roles().values()].map((r) => r.raw()),
-              guild.owner_id()
+              [...guild.roles.values()].map((r) => r.raw),
+              guild.owner_id
             )
           )
         )
       }
 
       if (data.t && ["GUILD_ROLE_CREATE", "GUILD_ROLE_DELETE", "GUILD_ROLE_UPDATE"].includes(data.t)) {
-        const options = data.d as Guild_Role_Payload
+        const options = data.d as GuildRolePayload
         const guild = cache.guilds.get(options.guild_id)
         if (!guild) return
 
         if (data.t === "GUILD_ROLE_CREATE") {
-          const role = create_role(options.role)
-          const roles = guild.roles().set(options.role.id, role)
-          guild.roles = () => roles
-          return event_handlers.role_create?.(guild, role)
+          const role = createRole(options.role)
+          const roles = guild.roles.set(options.role.id, role)
+          guild.roles = roles
+          return eventHandlers.roleCreate?.(guild, role)
         }
 
-        const cached_role = guild.roles().get(options.role.id)
+        const cached_role = guild.roles.get(options.role.id)
         if (!cached_role) return
 
         if (data.t === "GUILD_ROLE_DELETE") {
-          const roles = guild.roles()
+          const roles = guild.roles
           roles.delete(options.role.id)
-          guild.roles = () => roles
-          return event_handlers.role_delete?.(guild, cached_role)
+          guild.roles = roles
+          return eventHandlers.roleDelete?.(guild, cached_role)
         }
 
         if (data.t === "GUILD_ROLE_UPDATE") {
-          const role = create_role(options.role)
-          return event_handlers.role_update?.(guild, role, cached_role)
+          const role = createRole(options.role)
+          return eventHandlers.roleUpdate?.(guild, role, cached_role)
         }
       }
 
       if (data.t === "MESSAGE_CREATE") {
-        const options = data.d as Message_Create_Options
-        const message = create_message(options)
-        const channel = message.channel()
+        const options = data.d as MessageCreateOptions
+        const channel = cache.channels.get(options.channel_id)
+        const message = createMessage(options)
+
         if (channel) {
           // channel.last_message_id = () => options.id
           // if (channel.messages().size > 99) {
           // TODO: LIMIT THIS TO 100 messages
           // }
         }
-        return event_handlers.message_create?.(message)
+        return eventHandlers.messageCreate?.(message)
       }
 
       if (data.t && ["MESSAGE_DELETE", "MESSAGE_DELETE_BULK"].includes(data.t)) {
-        const options = data.d as Message_Delete_Payload
-        const deleted_messages =
-          data.t === "MESSAGE_DELETE" ? [options.id] : (data.d as Message_Delete_Bulk_Payload).ids
+        const options = data.d as MessageDeletePayload
+        const deletedMessages = data.t === "MESSAGE_DELETE" ? [options.id] : (data.d as MessageDeleteBulkPayload).ids
 
         const channel = cache.channels.get(options.channel_id)
         if (!channel) return
 
-        deleted_messages.forEach((id) => {
+        deletedMessages.forEach((id) => {
           console.log(id)
           //   const message = channel.messages().get(id)
           //   if (message) {
           //     // TODO: update the messages cache
           //   }
 
-          //   return event_handlers.message_delete?.(message || { id, channel })
+          //   return eventHandlers.message_delete?.(message || { id, channel })
         })
       }
 
       if (data.t === "MESSAGE_UPDATE") {
-        const options = data.d as Message_Update_Payload
+        const options = data.d as MessageUpdatePayload
         const channel = cache.channels.get(options.channel_id)
         if (!channel) return
 
         // const cachedMessage = channel.messages().get(options.id)
-        // return event_handlers.message_update?.(message, cachedMessage)
+        // return eventHandlers.message_update?.(message, cachedMessage)
       }
 
       if (data.t && ["MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE"].includes(data.t)) {
-        const options = data.d as Message_Reaction_Payload
+        const options = data.d as MessageReactionPayload
         const message = cache.messages.get(options.message_id)
         const isAdd = data.t === "MESSAGE_REACTION_ADD"
 
         if (message) {
-          const previous_reactions = message.reactions()
-          const reaction_existed = previous_reactions.find(
+          const previousReactions = message.reactions
+          const reactionExisted = previousReactions?.find(
             (reaction) => reaction.emoji.id === options.emoji.id && reaction.emoji.name === options.emoji.name
           )
-          if (reaction_existed) reaction_existed.count = isAdd ? reaction_existed.count + 1 : reaction_existed.count - 1
-          else
-            message.reactions = () => [
-              ...message.reactions(),
-              {
-                count: 1,
-                me: options.user_id === bot_id,
-                emoji: { ...options.emoji, id: options.emoji.id || undefined },
-              },
-            ]
+          if (reactionExisted) reactionExisted.count = isAdd ? reactionExisted.count + 1 : reactionExisted.count - 1
+          else {
+            const newReaction = {
+              count: 1,
+              me: options.user_id === botID,
+              emoji: { ...options.emoji, id: options.emoji.id || undefined },
+            }
+            message.reactions = message.reactions ? [...message.reactions, newReaction] : [newReaction]
+          }
 
           cache.messages.set(options.message_id, message)
         }
 
         return isAdd
-          ? event_handlers.reaction_add?.(message || options, options.emoji, options.user_id)
-          : event_handlers.reaction_remove?.(message || options, options.emoji, options.user_id)
+          ? eventHandlers.reactionAdd?.(message || options, options.emoji, options.user_id)
+          : eventHandlers.reactionRemove?.(message || options, options.emoji, options.user_id)
       }
 
       if (data.t === "MESSAGE_REACTION_REMOVE_ALL") {
-        return event_handlers.reaction_remove_all?.(data.d as Base_Message_Reaction_Payload)
+        return eventHandlers.reactionRemoveAll?.(data.d as BaseMessageReactionPayload)
       }
 
       if (data.t === "MESSAGE_REACTION_REMOVE_EMOJI") {
-        return event_handlers.reaction_remove_emoji?.(data.d as Message_Reaction_Remove_Emoji_Payload)
+        return eventHandlers.reactionRemoveEmoji?.(data.d as MessageReactionRemoveEmojiPayload)
       }
 
       if (data.t === "PRESENCE_UPDATE") {
-        return event_handlers.presence_update?.(data.d as Presence_Update_Payload)
+        return eventHandlers.presenceUpdate?.(data.d as PresenceUpdatePayload)
       }
 
       if (data.t === "TYPING_START") {
-        return event_handlers.typing_start?.(data.d as Typing_Start_Payload)
+        return eventHandlers.typingStart?.(data.d as TypingStartPayload)
       }
 
       if (data.t === "USER_UPDATE") {
-        const user_data = data.d as User_Payload
-        const cached_user = cache.users.get(bot_id)
-        const user = create_user(user_data)
-        cache.users.set(user_data.id, user)
-        return event_handlers.bot_update?.(user, cached_user)
+        const userData = data.d as UserPayload
+        const cachedUser = cache.users.get(botID)
+        const user = createUser(userData)
+        cache.users.set(userData.id, user)
+        return eventHandlers.botUpdate?.(user, cachedUser)
       }
 
       if (data.t === "VOICE_STATE_UPDATE") {
-        const payload = data.d as Voice_State_Update_Payload
+        const payload = data.d as VoiceStateUpdatePayload
         if (!payload.guild_id) return
 
         const guild = cache.guilds.get(payload.guild_id)
@@ -441,37 +424,44 @@ function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
         const member = guild.members.get(payload.user_id)
         if (!member) return
 
-        const cached_state = guild.voice_states().find((state) => state.user_id === payload.user_id)
+        const cached_state = guild.voice_states.find((state) => state.user_id === payload.user_id)
         // No cached state before so lets make one for em
-        if (!cached_state) return (guild.voice_states = () => [...guild.voice_states(), payload])
+        if (!cached_state) {
+          guild.voice_states = [...guild.voice_states, payload]
+          return
+        }
 
         if (cached_state.channel_id !== payload.channel_id) {
           // Either joined or moved channels
           if (payload.channel_id) {
             cached_state.channel_id
               ? // Was in a channel before
-                event_handlers.voice_channel_switch?.(member, payload.channel_id, cached_state.channel_id)
+                eventHandlers.voiceChannelSwitch?.(member, payload.channel_id, cached_state.channel_id)
               : // Was not in a channel before so user just joined
-                event_handlers.voice_channel_join?.(member, payload.channel_id)
+                eventHandlers.voiceChannelJoin?.(member, payload.channel_id)
           }
           // Left the channel
           else if (cached_state.channel_id) {
-            event_handlers.voice_channel_leave?.(member, cached_state.channel_id)
+            eventHandlers.voiceChannelLeave?.(member, cached_state.channel_id)
           }
         }
 
-        return event_handlers.voice_state_update?.(member, payload)
+        return eventHandlers.voiceStateUpdate?.(member, payload)
       }
 
       if (data.t === "WEBHOOKS_UPDATE") {
-        const options = data.d as Webhook_Update_Payload
-        return event_handlers.webhooks_update?.(options.channel_id, options.guild_id)
+        const options = data.d as WebhookUpdatePayload
+        return eventHandlers.webhooksUpdate?.(options.channel_id, options.guild_id)
       }
 
-      return event_handlers.raw?.(data)
+      return
     default:
       return
   }
 }
 
-export default create_client
+export default createClient
+
+export const updateChannelCache = (key: string, value: Channel) => {
+  cache.channels.set(key, value)
+}

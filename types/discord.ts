@@ -1,7 +1,7 @@
 import { Activity } from "./message.ts"
 import { Client_Status_Payload } from "./presence.ts"
 import { Partial_User } from "./guild.ts"
-import { Member_Create_Payload } from "./member.ts"
+import { MemberCreatePayload } from "./member.ts"
 
 export interface DiscordPayload {
   /** OP code for the payload */
@@ -192,12 +192,12 @@ export interface Status {
   status: StatusType
 }
 
-export interface Webhook_Update_Payload {
+export interface WebhookUpdatePayload {
   channel_id: string
   guild_id: string
 }
 
-export interface Presence_Update_Payload {
+export interface PresenceUpdatePayload {
   /** The user presence is being updated for. */
   user: Partial_User
   /** The roles this user is in */
@@ -218,7 +218,7 @@ export interface Presence_Update_Payload {
   nick?: string | null
 }
 
-export interface Typing_Start_Payload {
+export interface TypingStartPayload {
   /** The id of the channel */
   channel_id: string
   /** The id of the guild */
@@ -228,10 +228,10 @@ export interface Typing_Start_Payload {
   /** The unix time in seconds of when the user started typing */
   timestamp: number
   /** The member who started typing if this happened in a guild */
-  member?: Member_Create_Payload
+  member?: MemberCreatePayload
 }
 
-export interface Voice_State_Update_Payload {
+export interface VoiceStateUpdatePayload {
   /** The guild id this voice state is for */
   guild_id?: string
   /** The channel id this user is connected to */
@@ -239,7 +239,7 @@ export interface Voice_State_Update_Payload {
   /** The user id this voice state is for */
   user_id: string
   /** The guild member this voice state is for */
-  member?: Member_Create_Payload
+  member?: MemberCreatePayload
   /** The session id for this voice state */
   session_id: string
   /** Whether this user is deafened by the server */

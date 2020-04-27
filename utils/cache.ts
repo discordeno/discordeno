@@ -1,11 +1,20 @@
-import { User } from "../structures/user.ts";
-import { Guild, Channel } from "../types/return-type.ts";
-import { Message } from "../structures/message.ts";
+import { User } from "../structures/user.ts"
+import { Message } from "../structures/message.ts"
+import { Guild } from "../structures/guild.ts"
+import { Channel } from "../structures/channel.ts"
 
-export const cache = {
-	guilds: new Map<string, Guild>(),
-	users: new Map<string, User>(),
-	channels: new Map<string, Channel>(),
-	messages: new Map<string, Message>(),
-	unavailableGuilds: new Map<string, number>()
+export interface CacheData {
+  guilds: Map<string, Guild>
+  users: Map<string, User>
+  channels: Map<string, Channel>
+  messages: Map<string, Message>
+  unavailableGuilds: Map<string, number>
+}
+
+export const cache: CacheData = {
+  guilds: new Map(),
+  users: new Map(),
+  channels: new Map(),
+  messages: new Map(),
+  unavailableGuilds: new Map(),
 }

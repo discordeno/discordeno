@@ -1,7 +1,7 @@
-import { create_member } from "../structures/member.ts"
-import { User_Payload } from "./guild.ts"
+import { createMember } from "../structures/member.ts"
+import { UserPayload } from "./guild.ts"
 
-export interface Edit_Member_Options {
+export interface EditMemberOptions {
   /** Value to set users nickname to. Requires MANAGE_NICKNAMES permission. */
   nick?: string
   /** Array of role ids the member is assigned. Requires MANAGE_ROLES permission. */
@@ -14,9 +14,9 @@ export interface Edit_Member_Options {
   channel_id?: string | null
 }
 
-export interface Member_Create_Payload {
+export interface MemberCreatePayload {
   /** The user this guild member represents */
-  user: User_Payload
+  user: UserPayload
   /** The user's guild nickname if one is set. */
   nick?: string
   /** Array of role ids that the member has */
@@ -31,4 +31,4 @@ export interface Member_Create_Payload {
   mute: boolean
 }
 
-export type Member = ReturnType<typeof create_member>
+export type Member = ReturnType<typeof createMember>

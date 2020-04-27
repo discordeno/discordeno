@@ -1,7 +1,7 @@
-import { ChannelType, User_Payload } from './guild.ts'
-import { User } from '../structures/user.ts'
-import { Member, Member_Create_Payload } from './member.ts'
-import { Channel } from './return-type.ts'
+import { ChannelType, UserPayload } from "./guild.ts"
+import { User } from "../structures/user.ts"
+import { Member, MemberCreatePayload } from "./member.ts"
+import { Channel } from "../structures/channel.ts"
 
 export interface MentionedUser extends User {
   member: Member
@@ -65,12 +65,12 @@ export interface Embed {
 }
 
 export interface Embed_Footer {
-	/** The text of the footer */
-	text: string
-	/** The url of the footer icon. Only supports http(s) and attachments */
-	icon_url?: string
-	/** A proxied url of footer icon */
-	proxy_icon_url?: string
+  /** The text of the footer */
+  text: string
+  /** The url of the footer icon. Only supports http(s) and attachments */
+  iconURL?: string
+  /** A proxied url of footer icon */
+  proxy_icon_url?: string
 }
 
 export interface Embed_Image {
@@ -117,7 +117,7 @@ export interface Embed_Author {
   /** The url of the author */
   url?: string
   /** The url of the author icon (supports http(s) and attachments) */
-  icon_url?: string
+  iconURL?: string
   /** A proxied url of author icon */
   proxy_icon_url?: string
 }
@@ -160,7 +160,7 @@ export enum Activity_Types {
   JOIN = 1,
   SPECTATE,
   LISTEN,
-  JOIN_REQUEST = 5
+  JOIN_REQUEST = 5,
 }
 
 export interface Activity {
@@ -197,7 +197,7 @@ export enum Message_Flags {
   IS_CROSSPOST = 1 << 1,
   SUPPRESS_EMBEDS = 1 << 2,
   SOURCE_MESSAGE_DELETED = 1 << 3,
-  URGENT = 1 << 4
+  URGENT = 1 << 4,
 }
 
 export interface Emoji {
@@ -226,7 +226,7 @@ export interface Reaction_Payload {
   animated?: boolean
 }
 
-export interface Message_Create_Options {
+export interface MessageCreateOptions {
   /** The id of the message */
   id: string
   /** The id of the channel the message was sent in */
@@ -234,7 +234,7 @@ export interface Message_Create_Options {
   /** The id of the guild the message was sent in */
   guild_id?: string
   /** The author of this message (not guaranteed to be a valid user such as a webhook.) */
-  author: User_Payload
+  author: UserPayload
   /** The member properties for this message's author. Can be partial. */
   member?: Member
   /** The contents of the message */
@@ -284,25 +284,24 @@ export interface Base_Message_Delete_Payload {
   guild_id?: string
 }
 
-export interface Message_Delete_Payload extends Base_Message_Delete_Payload {
+export interface MessageDeletePayload extends Base_Message_Delete_Payload {
   /** The id of the message */
   id: string
 }
 
-export interface Message_Delete_Bulk_Payload extends Base_Message_Delete_Payload {
+export interface MessageDeleteBulkPayload extends Base_Message_Delete_Payload {
   /** The ids of the messages */
   ids: string[]
 }
 
-export interface Message_Update_Payload {
+export interface MessageUpdatePayload {
   /** The message id */
   id: string
   /** The channel id */
   channel_id: string
 }
 
-export interface Base_Message_Reaction_Payload {
-
+export interface BaseMessageReactionPayload {
   /** The id of the channel */
   channel_id: string
   /** The id of the message */
@@ -311,21 +310,21 @@ export interface Base_Message_Reaction_Payload {
   guild_id?: string
 }
 
-export interface Message_Reaction_Payload extends Base_Message_Reaction_Payload {
+export interface MessageReactionPayload extends BaseMessageReactionPayload {
   /** The id of the user */
   user_id: string
   /** The member who reacted if this happened in a guild. Not available for MESSAGE_REACTION_REMOVE */
-  member?: Member_Create_Payload
+  member?: MemberCreatePayload
   /** The emoji used to react */
   emoji: Reaction_Payload
 }
 
-export interface Message_Reaction_Remove_Emoji_Payload extends Base_Message_Reaction_Payload {
+export interface MessageReactionRemoveEmojiPayload extends BaseMessageReactionPayload {
   /** The emoji that was removed. */
   emoji: Reaction_Payload
 }
 
 export interface Partial_Message {
-  id: string,
+  id: string
   channel: Channel
 }
