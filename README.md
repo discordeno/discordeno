@@ -16,6 +16,11 @@ This project began out of the desire to want to learn and enhance my developer s
 
 - **TYPESCRIPT:**
   - First class support for Typescript!
+  - **STABILITY:**
+    - One of the biggest issues with almost every library is stability. None of the libraries gave much love and attention to Typescript developers the way it deserves.
+      - Discord.JS developers continues to make breaking changes(on "stable" version) to TS projects without bumping the MAJOR version causing headaches for TS developers.
+      - Eris was the most stable when it comes to JS, but in regards to TS, I was personally maintaing the typings and this was just a hassle to try and maintain when very few others cared to keep it properly maintained.
+      - Detritus was in fact the best library for TS, but once again it lacked in proper stability. It only had 1 master branch and no signs of a proper stable version where I would not have to worry about breaking changes.
 - **SECURITY:**
   - Check all permissions necessary before sending a request to the API.
   - Prevent supporting self-bots and abusive behavior.
