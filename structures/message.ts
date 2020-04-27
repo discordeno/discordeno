@@ -17,7 +17,7 @@ export function createMessage(data: MessageCreateOptions) {
     author: createUser({ ...data.author, avatar: data.author.avatar || "" }),
     timestamp: Date.parse(data.timestamp),
     editedTimestamp: data.edited_timestamp ? Date.parse(data.edited_timestamp) : undefined,
-    channel: cache.channels.get(data.channel_id),
+    channel: cache.channels.get(data.channel_id)!,
 
     /** Delete a message */
     delete: (reason?: string) => {
