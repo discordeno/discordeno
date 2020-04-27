@@ -71,6 +71,10 @@ export let token = ""
 export let sessionID = ""
 export let event_handlers: Event_Handlers = {}
 
+let bot_gateway_data: DiscordBotGatewayData
+let socket: WebSocket
+let resumeInterval: number
+
 export const create_client = async (data: Client_Options) => {
   // Assign some defaults to the options to make them fulfilled / not annoying to use.
   const options = {
@@ -84,8 +88,8 @@ export const create_client = async (data: Client_Options) => {
   authorization = `Bot ${data.token}`
 
   // Initial API connection to get info about bots connection
-  const bot_gateway_data = (await Request_Manager.get(endpoints.GATEWAY_BOT)) as DiscordBotGatewayData
-  let socket = await connectWebSocket(bot_gateway_data.url)
+  bot_gateway_data = (await Request_Manager.get(endpoints.GATEWAY_BOT)) as DiscordBotGatewayData
+  socket = await connectWebSocket(bot_gateway_data.url)
 
   const payload = {
     token: data.token,
@@ -104,13 +108,14 @@ export const create_client = async (data: Client_Options) => {
     } else if (isWebSocketCloseEvent(message)) {
       logRed(`Close :( ${message}`)
       // RESUME: Websocket closed/disconnected so we should try and resume the connection.
+      resumeConnection(payload)
       socket = await connectWebSocket(bot_gateway_data.url)
 
       await socket.send(
         JSON.stringify({
           op: GatewayOpcode.Resume,
           d: {
-            token: data.token,
+            ...payload,
             session_id: sessionID,
             seq: previous_sequence_number,
           },
@@ -120,6 +125,22 @@ export const create_client = async (data: Client_Options) => {
   }
 
   // spawnShards(bot_gateway_data, 1, socket, payload)
+}
+
+async function resumeConnection(payload: object) {
+  resumeInterval = setInterval(async () => {
+    socket = await connectWebSocket(bot_gateway_data.url)
+    await socket.send(
+      JSON.stringify({
+        op: GatewayOpcode.Resume,
+        d: {
+          ...payload,
+          session_id: sessionID,
+          seq: previous_sequence_number,
+        },
+      })
+    )
+  }, 1000 * 15)
 }
 
 function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
@@ -135,8 +156,11 @@ function handle_discord_payload(data: DiscordPayload, socket: WebSocket) {
       return event_handlers.heartbeat?.()
     case GatewayOpcode.Reconnect:
     case GatewayOpcode.InvalidSession:
-      // TODO: Reconnect to the gateway https://discordapp.com/developers/docs/topics/gateway#reconnect
+      // Reconnect to the gateway https://discordapp.com/developers/docs/topics/gateway#reconnect
+      // I think this should be handled automatically when the websocket closes
       return
+    case GatewayOpcode.Resume:
+      return clearInterval(resumeInterval)
     case GatewayOpcode.Dispatch:
       if (data.t === "READY") {
         sessionID = (data.d as ReadyPayload).session_id
