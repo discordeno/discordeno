@@ -1,5 +1,7 @@
 # Discordeno
 
+Note: This lib is still very much in development. There are open issues that need attention. If you are brave enough to help test it, I would welcome your help but please under no means should you use it in production at this time.
+
 Discord API library wrapper in Deno
 
 [Discord Server](https://discord.gg/J4NqJ72)
