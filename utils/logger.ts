@@ -1,4 +1,4 @@
-import { blue, green, red, yellow } from "https://deno.land/std@v0.41.0/fmt/colors.ts"
+import { blue, green, red, yellow } from "https://deno.land/std@v1.0.0-rc1/fmt/colors.ts"
 
 export const getTime = () => {
   const now = new Date()
