@@ -26,7 +26,7 @@ jobs:
       run: cp configs.ts.example configs.ts
         
     - name: Setup Deno environment
-      uses: denolib/setup-deno@v1.2.0
+      uses: denolib/setup-deno@master
 
     - name: Deno Fetch
       run: deno cache mod.ts
