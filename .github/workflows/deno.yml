@@ -29,4 +29,4 @@ jobs:
       uses: denolib/setup-deno@v1.2.0
 
     - name: Deno Fetch
-      run: deno fetch mod.ts
+      run: deno cache mod.ts
