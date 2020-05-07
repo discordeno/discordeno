@@ -26,7 +26,7 @@ export function createMessage(data: MessageCreateOptions) {
       if (data.author.id !== botID) {
       }
 
-      RequestManager.delete(endpoints.CHANNEL_MESSAGE(data.channel_id, data.id), { reason })
+      return RequestManager.delete(endpoints.CHANNEL_MESSAGE(data.channel_id, data.id), { reason })
     },
     /** Pin a message in a channel. Requires MANAGE_MESSAGES. Max pins allowed in a channel = 50. */
     pin: () => {
