@@ -55,7 +55,7 @@ import { MessageUpdatePayload } from "../types/message.ts";
 import { MessageReactionPayload } from "../types/message.ts";
 import { BaseMessageReactionPayload } from "../types/message.ts";
 import { MessageReactionRemoveEmojiPayload } from "../types/message.ts";
-
+import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
 /** The session id is needed for RESUME functionality when discord disconnects randomly. */
 let sessionID = "";
 let shardCounter = 0;
@@ -78,6 +78,8 @@ export const spawnShards = async (
   id = 1,
 ) => {
   createShardWorker();
+  // 5 second delay per shard
+  await delay(5000);
   if (id < data.shards) spawnShards(data, payload, id + 1);
 };
 
