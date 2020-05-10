@@ -2,8 +2,6 @@ import {
   DiscordBotGatewayData,
   DiscordPayload,
   GatewayOpcode,
-  DiscordHeartbeatPayload,
-  ReadyPayload,
   PresenceUpdatePayload,
   TypingStartPayload,
   VoiceStateUpdatePayload,
@@ -11,54 +9,52 @@ import {
 } from "../types/discord.ts";
 import {
   eventHandlers,
-  botID,
   botGatewayData,
   identifyPayload,
+  botID,
 } from "./client.ts";
+import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
 import {
   updatePreviousSequenceNumber,
-  sendConstantHeartbeats,
-  previousSequenceNumber,
 } from "./gateway.ts";
 import {
-  WebSocket,
-  connectWebSocket,
-} from "https://deno.land/std@0.50.0/ws/mod.ts";
-import { handleInternalChannelCreate } from "../events/channels.ts";
-import { handleInternalChannelUpdate } from "../events/channels.ts";
-import { handleInternalChannelDelete } from "../events/channels.ts";
+  handleInternalChannelCreate,
+  handleInternalChannelUpdate,
+  handleInternalChannelDelete,
+} from "../events/channels.ts";
+import { ChannelCreatePayload } from "../types/channel.ts";
 import { createGuild } from "../structures/guild.ts";
-import { handleInternalGuildCreate } from "../events/guilds.ts";
-import { cache } from "../utils/cache.ts";
-import { handleInternalGuildUpdate } from "../events/guilds.ts";
 import {
   CreateGuildPayload,
+  GuildDeletePayload,
+  GuildBanPayload,
+  GuildEmojisUpdatePayload,
+  GuildMemberAddPayload,
+  GuildMemberUpdatePayload,
   GuildMemberChunkPayload,
   GuildRolePayload,
   UserPayload,
 } from "../types/guild.ts";
-import { GuildDeletePayload } from "../types/guild.ts";
-import { handleInternalGuildDelete } from "../events/guilds.ts";
-import { GuildBanPayload } from "../types/guild.ts";
+import {
+  handleInternalGuildCreate,
+  handleInternalGuildUpdate,
+  handleInternalGuildDelete,
+} from "../events/guilds.ts";
+import { cache } from "../utils/cache.ts";
 import { createUser } from "../structures/user.ts";
-import { GuildEmojisUpdatePayload } from "../types/guild.ts";
-import { GuildMemberAddPayload } from "../types/guild.ts";
 import { createMember } from "../structures/member.ts";
-import { GuildMemberUpdatePayload } from "../types/guild.ts";
-import { ChannelCreatePayload } from "../types/channel.ts";
 import { createRole } from "../structures/role.ts";
-import { MessageCreateOptions } from "../types/message.ts";
+import {
+  MessageCreateOptions,
+  MessageDeletePayload,
+  MessageDeleteBulkPayload,
+  MessageUpdatePayload,
+  MessageReactionPayload,
+  BaseMessageReactionPayload,
+  MessageReactionRemoveEmojiPayload,
+} from "../types/message.ts";
 import { createMessage } from "../structures/message.ts";
-import { MessageDeletePayload } from "../types/message.ts";
-import { MessageDeleteBulkPayload } from "../types/message.ts";
-import { MessageUpdatePayload } from "../types/message.ts";
-import { MessageReactionPayload } from "../types/message.ts";
-import { BaseMessageReactionPayload } from "../types/message.ts";
-import { MessageReactionRemoveEmojiPayload } from "../types/message.ts";
-import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
 
-/** The session id is needed for RESUME functionality when discord disconnects randomly. */
-let sessionID = "";
 let shardCounter = 0;
 
 function createShardWorker() {
@@ -68,8 +64,14 @@ function createShardWorker() {
     if (message.data.type === "REQUEST_CLIENT_OPTIONS") {
       identifyPayload.shard = [shardCounter++, botGatewayData.shards];
       shard.postMessage(
-        { type: "CREATE_SHARD", botGatewayData, identifyPayload },
+        {
+          type: "CREATE_SHARD",
+          botGatewayData,
+          identifyPayload,
+        },
       );
+    } else if (message.data.type === "HANDLE_DISCORD_PAYLOAD") {
+      handleDiscordPayload(JSON.parse(message.data.payload));
     }
   };
 }
@@ -85,43 +87,22 @@ export const spawnShards = async (
   if (id < data.shards) spawnShards(data, payload, id + 1);
 };
 
-export function handleDiscordPayload(
-  data: DiscordPayload,
-  socket: WebSocket,
-  resumeInterval: number,
-) {
-  console.log("inside handle discord payloa", data.t, eventHandlers);
+function handleDiscordPayload(data: DiscordPayload) {
   // Update the sequence number if it is present
   if (data.s) updatePreviousSequenceNumber(data.s);
   eventHandlers.raw?.(data);
 
   switch (data.op) {
-    case GatewayOpcode.Hello:
-      sendConstantHeartbeats(
-        socket,
-        (data.d as DiscordHeartbeatPayload).heartbeat_interval,
-      );
-      return;
     case GatewayOpcode.HeartbeatACK:
       // Incase the user wants to listen to heartbeat responses
       return eventHandlers.heartbeat?.();
-    case GatewayOpcode.Reconnect:
-    case GatewayOpcode.InvalidSession:
-      // Reconnect to the gateway https://discordapp.com/developers/docs/topics/gateway#reconnect
-      // I think this should be handled automatically when the websocket closes
-      return;
-    case GatewayOpcode.Resume:
-      return clearInterval(resumeInterval);
     case GatewayOpcode.Dispatch:
-      if (data.t === "READY") {
-        // Important for RESUME
-        sessionID = (data.d as ReadyPayload).session_id;
-        return eventHandlers.ready?.();
-      }
+      if (data.t === "READY") return eventHandlers.ready?.();
 
       if (data.t === "CHANNEL_CREATE") {
         return handleInternalChannelCreate(data.d as ChannelCreatePayload);
       }
+
       if (data.t === "CHANNEL_UPDATE") {
         return handleInternalChannelUpdate(data.d as ChannelCreatePayload);
       }
@@ -345,7 +326,6 @@ export function handleDiscordPayload(
         if (!channel) return;
 
         deletedMessages.forEach((_id) => {
-          // console.log(id);
           //   const message = channel.messages().get(id)
           //   if (message) {
           //     // TODO: update the messages cache
@@ -490,20 +470,4 @@ export function handleDiscordPayload(
     default:
       return;
   }
-}
-
-export async function resumeConnection(payload: object, socket: WebSocket) {
-  return setInterval(async () => {
-    socket = await connectWebSocket(botGatewayData.url);
-    await socket.send(
-      JSON.stringify({
-        op: GatewayOpcode.Resume,
-        d: {
-          ...payload,
-          session_id: sessionID,
-          seq: previousSequenceNumber,
-        },
-      }),
-    );
-  }, 1000 * 15);
 }
