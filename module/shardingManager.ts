@@ -62,10 +62,9 @@ let sessionID = "";
 let shardCounter = 0;
 
 function createShardWorker() {
-  const shard = new Worker(
-    "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/master/module/shard.ts",
-    { type: "module", deno: true },
-  );
+  const path = new URL("./shard.ts", import.meta.url).toString();
+  console.log("path", path);
+  const shard = new Worker(path, { type: "module", deno: true });
   shard.onmessage = (message) => {
     if (message.data.type === "REQUEST_CLIENT_OPTIONS") {
       identifyPayload.shard = [shardCounter++, botGatewayData.shards];
@@ -92,6 +91,7 @@ export function handleDiscordPayload(
   socket: WebSocket,
   resumeInterval: number,
 ) {
+  console.log("inside handle discord payloa", data);
   // Update the sequence number if it is present
   if (data.s) updatePreviousSequenceNumber(data.s);
   eventHandlers.raw?.(data);

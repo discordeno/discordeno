@@ -18,6 +18,7 @@ export const createShard = async (
     JSON.stringify({ op: GatewayOpcode.Identify, d: identifyPayload }),
   );
   for await (const message of shardSocket) {
+    console.log("inside socket", message);
     if (typeof message === "string") {
       handleDiscordPayload(JSON.parse(message), shardSocket, resumeInterval);
     } else if (isWebSocketCloseEvent(message)) {
