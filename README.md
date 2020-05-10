@@ -26,6 +26,7 @@ This project began out of the desire to want to learn and enhance my developer s
 - **SECURITY:**
   - Check all permissions necessary before sending a request to the API.
   - Prevent supporting self-bots and abusive behavior.
+  - Never supporting undocumented features.
 - **Functional API:**
   - This will overall make a cleaner and more performant API, while removing the headaches of extending built-in classes, and inheritance.
   - Avoid as many headaches and issues related to `class` and `this`
