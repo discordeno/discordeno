@@ -62,8 +62,10 @@ let sessionID = "";
 let shardCounter = 0;
 
 function createShardWorker() {
-  const path = Deno.realPathSync("./module/shard.ts");
-  const shard = new Worker(path, { type: "module", deno: true });
+  const shard = new Worker(
+    "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/master/module/shard.ts",
+    { type: "module", deno: true },
+  );
   shard.onmessage = (message) => {
     if (message.data.type === "REQUEST_CLIENT_OPTIONS") {
       identifyPayload.shard = [shardCounter++, botGatewayData.shards];
