@@ -1,12 +1,12 @@
-import { Timestamps } from "../types/discord.ts"
+import { Timestamps } from "../types/discord.ts";
 
 export interface ActivityPayload {
-  name: string
-  type: number
-  url?: string
-  created_at: number
-  timestamps: Timestamps
-  details?: string
+  name: string;
+  type: number;
+  url?: string;
+  created_at: number;
+  timestamps: Timestamps;
+  details?: string;
 }
 
 export enum ActivityType {

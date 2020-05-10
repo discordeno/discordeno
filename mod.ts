@@ -1,7 +1,7 @@
-import Client from "./module/client.ts"
-import { configs } from "./configs.ts"
-import { Intents } from "./types/options.ts"
-import { logYellow, logGreen } from "./utils/logger.ts"
+import Client from "./module/client.ts";
+import { configs } from "./configs.ts";
+import { Intents } from "./types/options.ts";
+import { logYellow, logGreen } from "./utils/logger.ts";
 
 Client({
   token: configs.token,
@@ -11,4 +11,4 @@ Client({
     ready: () => logYellow("Bot ready emitted"),
     raw: (data) => logGreen("[RAW] => " + JSON.stringify(data)),
   },
-})
+});

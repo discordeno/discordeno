@@ -1,14 +1,14 @@
-import { User } from "../structures/user.ts"
-import { Message } from "../structures/message.ts"
-import { Guild } from "../structures/guild.ts"
-import { Channel } from "../structures/channel.ts"
+import { User } from "../structures/user.ts";
+import { Message } from "../structures/message.ts";
+import { Guild } from "../structures/guild.ts";
+import { Channel } from "../structures/channel.ts";
 
 export interface CacheData {
-  guilds: Map<string, Guild>
-  users: Map<string, User>
-  channels: Map<string, Channel>
-  messages: Map<string, Message>
-  unavailableGuilds: Map<string, number>
+  guilds: Map<string, Guild>;
+  users: Map<string, User>;
+  channels: Map<string, Channel>;
+  messages: Map<string, Message>;
+  unavailableGuilds: Map<string, number>;
 }
 
 export const cache: CacheData = {
@@ -17,4 +17,4 @@ export const cache: CacheData = {
   channels: new Map(),
   messages: new Map(),
   unavailableGuilds: new Map(),
-}
+};

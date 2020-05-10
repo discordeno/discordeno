@@ -1,37 +1,37 @@
-import { Activity } from "./message.ts"
-import { Client_Status_Payload } from "./presence.ts"
-import { Partial_User } from "./guild.ts"
-import { MemberCreatePayload } from "./member.ts"
+import { Activity } from "./message.ts";
+import { Client_Status_Payload } from "./presence.ts";
+import { Partial_User } from "./guild.ts";
+import { MemberCreatePayload } from "./member.ts";
 
 export interface DiscordPayload {
   /** OP code for the payload */
-  op: number
+  op: number;
   /** The real event data. Any JSON value basically. */
-  d: unknown
+  d: unknown;
   /** The sequence number, used for resuming sessions and heartbeats. ONLY for OPCode 0 */
-  s?: number
+  s?: number;
   /** The event name for this payload. ONLY for OPCode 0 */
-  t?: string
+  t?: string;
 }
 
 export interface DiscordBotGatewayData {
   /** The WSS URL that can be used for connecting to the gateway. */
-  url: string
+  url: string;
   /** The recommended number of shards to use when connecting. */
-  shards: number
+  shards: number;
   /** Info on the current start limit. */
   session_start_limit: {
     /** The total number of session starts the current user is allowed. */
-    total: number
+    total: number;
     /** The remaining number of session starts the current user is allowed. */
-    remaining: number
+    remaining: number;
     /** Milliseconds left until limit is reset. */
-    reset_after: number
-  }
+    reset_after: number;
+  };
 }
 
 export interface DiscordHeartbeatPayload {
-  heartbeat_interval: number
+  heartbeat_interval: number;
 }
 
 export enum GatewayOpcode {
@@ -161,20 +161,20 @@ export enum JSONErrorCode {
 }
 
 export interface Properties {
-  $os: string
-  $browser: string
-  $device: string
+  $os: string;
+  $browser: string;
+  $device: string;
 }
 
 export interface Timestamps {
-  start?: number
-  end?: number
+  start?: number;
+  end?: number;
 }
 
 export interface Emoji {
-  name: string
-  id?: string
-  animated?: boolean
+  name: string;
+  id?: string;
+  animated?: boolean;
 }
 
 export enum StatusType {
@@ -185,80 +185,80 @@ export enum StatusType {
   Offline = "offline",
 }
 
-export type Status_Type = "online" | "dnd" | "idle" | "invisible" | "offline"
+export type Status_Type = "online" | "dnd" | "idle" | "invisible" | "offline";
 
 export interface Status {
-  afk: boolean
-  status: StatusType
+  afk: boolean;
+  status: StatusType;
 }
 
 export interface WebhookUpdatePayload {
-  channel_id: string
-  guild_id: string
+  channel_id: string;
+  guild_id: string;
 }
 
 export interface PresenceUpdatePayload {
   /** The user presence is being updated for. */
-  user: Partial_User
+  user: Partial_User;
   /** The roles this user is in */
-  roles: string[]
+  roles: string[];
   /** null, or the user's current activity */
-  game: Activity | null
+  game: Activity | null;
   /** The id of the guild */
-  guild_id: string
+  guild_id: string;
   /** Either idle, dnd, online, or offline */
-  status: Status_Type
+  status: Status_Type;
   /** All user's current activity */
-  activities: Activity[]
+  activities: Activity[];
   /** The user's platform dependent status */
-  client_status: Client_Status_Payload
+  client_status: Client_Status_Payload;
   /** When the user has started boosting the guild */
-  premium_since?: string | null
+  premium_since?: string | null;
   /** This users guild nickname (if one is set) */
-  nick?: string | null
+  nick?: string | null;
 }
 
 export interface TypingStartPayload {
   /** The id of the channel */
-  channel_id: string
+  channel_id: string;
   /** The id of the guild */
-  guild_id?: string
+  guild_id?: string;
   /** The id of the user */
-  user_id: string
+  user_id: string;
   /** The unix time in seconds of when the user started typing */
-  timestamp: number
+  timestamp: number;
   /** The member who started typing if this happened in a guild */
-  member?: MemberCreatePayload
+  member?: MemberCreatePayload;
 }
 
 export interface VoiceStateUpdatePayload {
   /** The guild id this voice state is for */
-  guild_id?: string
+  guild_id?: string;
   /** The channel id this user is connected to */
-  channel_id: string | null
+  channel_id: string | null;
   /** The user id this voice state is for */
-  user_id: string
+  user_id: string;
   /** The guild member this voice state is for */
-  member?: MemberCreatePayload
+  member?: MemberCreatePayload;
   /** The session id for this voice state */
-  session_id: string
+  session_id: string;
   /** Whether this user is deafened by the server */
-  deaf: boolean
+  deaf: boolean;
   /** Whether this user is muted by the server */
-  mute: boolean
+  mute: boolean;
   /** Whether this user is locally deafened */
-  self_deaf: boolean
+  self_deaf: boolean;
   /** Whether this user is locally muted */
-  self_mute: boolean
+  self_mute: boolean;
   /** Whether this user is streaming using Go Live */
-  self_stream?: boolean
+  self_stream?: boolean;
   /** Whether this user is muted by the bot */
-  suppress: boolean
+  suppress: boolean;
 }
 
 export interface ReadyPayload {
   /** used for resuming connections */
-  session_id: string
+  session_id: string;
   /** (shard_id, num_shards)	the shard information associated with this session, if sent when identifying */
-  shard?: [number, number]
+  shard?: [number, number];
 }

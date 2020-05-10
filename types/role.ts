@@ -1,18 +1,18 @@
 export interface RoleData {
   /** role id */
-  id: string
+  id: string;
   /** role name */
-  name: string
+  name: string;
   /** integer representation of hexadecimal color code */
-  color: number
+  color: number;
   /** if this role is pinned in the user listing */
-  hoist: boolean
+  hoist: boolean;
   /** position of this role */
-  position: number
+  position: number;
   /** permission bit set */
-  permissions: number
+  permissions: number;
   /** whether this role is managed by an integration */
-  managed: boolean
+  managed: boolean;
   /** whether this role is mentionable */
-  mentionable: boolean
+  mentionable: boolean;
 }

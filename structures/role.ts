@@ -1,4 +1,4 @@
-import { RoleData } from "../types/role.ts"
+import { RoleData } from "../types/role.ts";
 
 export const createRole = (data: RoleData) => ({
   ...data,
@@ -6,6 +6,6 @@ export const createRole = (data: RoleData) => ({
   raw: data,
   /** The @ mention of the role in a string. */
   mention: `<@&${data.id}>`,
-})
+});
 
-export type Role = ReturnType<typeof createRole>
+export type Role = ReturnType<typeof createRole>;
