@@ -56,12 +56,14 @@ import { MessageReactionPayload } from "../types/message.ts";
 import { BaseMessageReactionPayload } from "../types/message.ts";
 import { MessageReactionRemoveEmojiPayload } from "../types/message.ts";
 import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
+
 /** The session id is needed for RESUME functionality when discord disconnects randomly. */
 let sessionID = "";
 let shardCounter = 0;
 
 function createShardWorker() {
-  const shard = new Worker("./module/shard.ts", { type: "module", deno: true });
+  const path = Deno.realPathSync("./module/shard.ts");
+  const shard = new Worker(path, { type: "module", deno: true });
   shard.onmessage = (message) => {
     if (message.data.type === "REQUEST_CLIENT_OPTIONS") {
       identifyPayload.shard = [shardCounter++, botGatewayData.shards];
@@ -341,8 +343,8 @@ export function handleDiscordPayload(
         const channel = cache.channels.get(options.channel_id);
         if (!channel) return;
 
-        deletedMessages.forEach((id) => {
-          console.log(id);
+        deletedMessages.forEach((_id) => {
+          // console.log(id);
           //   const message = channel.messages().get(id)
           //   if (message) {
           //     // TODO: update the messages cache
