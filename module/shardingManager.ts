@@ -90,7 +90,7 @@ export function handleDiscordPayload(
   socket: WebSocket,
   resumeInterval: number,
 ) {
-  console.log("inside handle discord payloa", data.t);
+  console.log("inside handle discord payloa", data.t, eventHandlers);
   // Update the sequence number if it is present
   if (data.s) updatePreviousSequenceNumber(data.s);
   eventHandlers.raw?.(data);

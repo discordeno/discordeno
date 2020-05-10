@@ -32,6 +32,7 @@ export const createClient = async (data: ClientOptions) => {
   botID = data.botID;
   token = data.token;
   if (data.eventHandlers) eventHandlers = data.eventHandlers;
+  console.log("starting", eventHandlers);
   authorization = `Bot ${data.token}`;
 
   // Initial API connection to get info about bots connection
