@@ -117,7 +117,7 @@ export interface Embed_Author {
   /** The url of the author */
   url?: string;
   /** The url of the author icon (supports http(s) and attachments) */
-  iconURL?: string;
+  icon_url?: string;
   /** A proxied url of author icon */
   proxy_icon_url?: string;
 }
