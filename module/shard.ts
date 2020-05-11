@@ -95,7 +95,10 @@ export const createShard = async (
   }
 };
 
+// TODO: Remove ts-ignore when deno fixes
+// @ts-ignore
 postMessage({ type: "REQUEST_CLIENT_OPTIONS" });
+// @ts-ignore
 onmessage = (message) => {
   if (message.data.type === "CREATE_SHARD") {
     console.log("shard need to make shard");
