@@ -41,7 +41,6 @@ export const createShard = async (
   botGatewayData: DiscordBotGatewayData,
   identifyPayload: object,
 ) => {
-  console.log("inside create shard");
   const shardSocket = await connectWebSocket(botGatewayData.url);
   let resumeInterval = 0;
 
@@ -101,7 +100,6 @@ postMessage({ type: "REQUEST_CLIENT_OPTIONS" });
 // @ts-ignore
 onmessage = (message) => {
   if (message.data.type === "CREATE_SHARD") {
-    console.log("shard need to make shard");
     createShard(
       message.data.botGatewayData,
       message.data.identifyPayload,
