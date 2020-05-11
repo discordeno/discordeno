@@ -58,14 +58,14 @@ import { createMessage } from "../structures/message.ts";
 let shardCounter = 0;
 
 function createShardWorker() {
-  console.log("shard creating url", import.meta.url);
+  // console.log("shard creating url", import.meta.url);
   const path = new URL("./shard.ts", import.meta.url).toString();
-  console.log("shard creating path", path);
+  // console.log("shard creating path", path);
   const shard = new Worker(path, { type: "module", deno: true });
-  console.log("shard made on manager");
+  // console.log("shard made on manager");
   shard.onmessage = (message) => {
     if (message.data.type === "REQUEST_CLIENT_OPTIONS") {
-      console.log("sending client options");
+      // console.log("sending client options");
       identifyPayload.shard = [shardCounter++, botGatewayData.shards];
       shard.postMessage(
         {
@@ -75,7 +75,7 @@ function createShardWorker() {
         },
       );
     } else if (message.data.type === "HANDLE_DISCORD_PAYLOAD") {
-      console.log("manager payload");
+      // console.log("manager payload");
       handleDiscordPayload(JSON.parse(message.data.payload));
     }
   };

@@ -16,6 +16,27 @@ import { sendConstantHeartbeats, previousSequenceNumber } from "./gateway.ts";
 /** The session id is needed for RESUME functionality when discord disconnects randomly. */
 let sessionID = "";
 console.log("shard made");
+
+async function resumeConnection(
+  payload: object,
+  botGatewayData: DiscordBotGatewayData,
+  socket: WebSocket,
+) {
+  return setInterval(async () => {
+    socket = await connectWebSocket(botGatewayData.url);
+    await socket.send(
+      JSON.stringify({
+        op: GatewayOpcode.Resume,
+        d: {
+          ...payload,
+          session_id: sessionID,
+          seq: previousSequenceNumber,
+        },
+      }),
+    );
+  }, 1000 * 15);
+}
+
 export const createShard = async (
   botGatewayData: DiscordBotGatewayData,
   identifyPayload: object,
@@ -84,23 +105,3 @@ onmessage = (message) => {
     );
   }
 };
-
-async function resumeConnection(
-  payload: object,
-  botGatewayData: DiscordBotGatewayData,
-  socket: WebSocket,
-) {
-  return setInterval(async () => {
-    socket = await connectWebSocket(botGatewayData.url);
-    await socket.send(
-      JSON.stringify({
-        op: GatewayOpcode.Resume,
-        d: {
-          ...payload,
-          session_id: sessionID,
-          seq: previousSequenceNumber,
-        },
-      }),
-    );
-  }, 1000 * 15);
-}
