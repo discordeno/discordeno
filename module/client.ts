@@ -5,11 +5,8 @@ import { RequestManager } from "./requestManager.ts";
 import { Channel } from "../structures/channel.ts";
 import { spawnShards } from "./shardingManager.ts";
 import { cache } from "../utils/cache.ts";
-import { USELESS_ARG_TO_MAKE_DENO_CACHE_WORK } from "./shard.ts";
-
-if (USELESS_ARG_TO_MAKE_DENO_CACHE_WORK) {
-  console.log(USELESS_ARG_TO_MAKE_DENO_CACHE_WORK);
-}
+// // USELESS_ARG_TO_MAKE_DENO_CACHE_WORK
+// import "./shard.ts";
 
 export let authorization = "";
 export let botID = "";
