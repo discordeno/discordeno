@@ -58,7 +58,9 @@ import { createMessage } from "../structures/message.ts";
 let shardCounter = 0;
 
 function createShardWorker() {
+  console.log("shard creating url", import.meta.url);
   const path = new URL("./shard.ts", import.meta.url).toString();
+  console.log("shard creating path", path);
   const shard = new Worker(path, { type: "module", deno: true });
   shard.onmessage = (message) => {
     if (message.data.type === "REQUEST_CLIENT_OPTIONS") {
@@ -471,3 +473,7 @@ function handleDiscordPayload(data: DiscordPayload) {
       return;
   }
 }
+
+
+shard creating url file:///Users/Dr.Zishan/Desktop/idk/G4M3R/Discordeno/module/shardingManager.ts
+shard creating path file:///Users/Dr.Zishan/Desktop/idk/G4M3R/Discordeno/module/shard.ts
