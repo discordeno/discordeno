@@ -473,6 +473,3 @@ function handleDiscordPayload(data: DiscordPayload) {
       return;
   }
 }
-
-
-
