@@ -14,11 +14,12 @@ import { sendConstantHeartbeats, previousSequenceNumber } from "./gateway.ts";
 
 /** The session id is needed for RESUME functionality when discord disconnects randomly. */
 let sessionID = "";
-
+console.log("shard made");
 export const createShard = async (
   botGatewayData: DiscordBotGatewayData,
   identifyPayload: object,
 ) => {
+  console.log("inside create shard");
   const shardSocket = await connectWebSocket(botGatewayData.url);
   let resumeInterval = 0;
 
@@ -37,7 +38,7 @@ export const createShard = async (
             shardSocket,
             (data.d as DiscordHeartbeatPayload).heartbeat_interval,
           );
-            break;
+          break;
         case GatewayOpcode.Reconnect:
         case GatewayOpcode.InvalidSession:
           // Reconnect to the gateway https://discordapp.com/developers/docs/topics/gateway#reconnect
@@ -75,6 +76,7 @@ export const createShard = async (
 postMessage({ type: "REQUEST_CLIENT_OPTIONS" });
 onmessage = (message) => {
   if (message.data.type === "CREATE_SHARD") {
+    console.log("shard need to make shard");
     createShard(
       message.data.botGatewayData,
       message.data.identifyPayload,
