@@ -12,7 +12,7 @@ import {
 import { logRed } from "../utils/logger.ts";
 import { sendConstantHeartbeats, previousSequenceNumber } from "./gateway.ts";
 
-export const USELESS_ARG_TO_MAKE_DENO_CACHE_WORK = undefined
+export const USELESS_ARG_TO_MAKE_DENO_CACHE_WORK = undefined;
 /** The session id is needed for RESUME functionality when discord disconnects randomly. */
 let sessionID = "";
 console.log("shard made");
@@ -74,7 +74,7 @@ export const createShard = async (
           if (data.t === "READY") {
             sessionID = (data.d as ReadyPayload).session_id;
           }
-          console.log("about to post");
+
           // @ts-ignore
           postMessage(
             {
