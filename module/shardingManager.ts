@@ -188,6 +188,7 @@ function handleDiscordPayload(data: DiscordPayload) {
           guild.owner_id,
         );
         guild.members.set(options.user.id, member);
+        cache.users.set(options.user.id, createUser(member.user));
 
         return eventHandlers.guildMemberAdd?.(guild, member);
       }
@@ -229,6 +230,7 @@ function handleDiscordPayload(data: DiscordPayload) {
           guild.owner_id,
         );
         guild.members.set(options.user.id, member);
+        cache.users.set(options.user.id, createUser(member.user));
 
         if (cachedMember?.nick !== options.nick) {
           eventHandlers.nicknameUpdate?.(
@@ -260,7 +262,7 @@ function handleDiscordPayload(data: DiscordPayload) {
         const guild = cache.guilds.get(options.guild_id);
         if (!guild) return;
 
-        options.members.forEach((member) =>
+        options.members.forEach((member) => {
           guild.members.set(
             member.user.id,
             createMember(
@@ -269,8 +271,9 @@ function handleDiscordPayload(data: DiscordPayload) {
               [...guild.roles.values()].map((r) => r.raw),
               guild.owner_id,
             ),
-          )
-        );
+          );
+          cache.users.set(member.user.id, createUser(member.user));
+        });
       }
 
       if (
@@ -309,7 +312,7 @@ function handleDiscordPayload(data: DiscordPayload) {
         const options = data.d as MessageCreateOptions;
         const channel = cache.channels.get(options.channel_id);
         const message = createMessage(options);
-        cache.messages.set(options.id, message)
+        cache.messages.set(options.id, message);
 
         if (channel) {
           // channel.last_message_id = () => options.id
