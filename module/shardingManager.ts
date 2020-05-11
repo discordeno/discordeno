@@ -64,6 +64,7 @@ function createShardWorker() {
   const shard = new Worker(path, { type: "module", deno: true });
   shard.onmessage = (message) => {
     if (message.data.type === "REQUEST_CLIENT_OPTIONS") {
+      console.log("sending client options");
       identifyPayload.shard = [shardCounter++, botGatewayData.shards];
       shard.postMessage(
         {
@@ -73,6 +74,7 @@ function createShardWorker() {
         },
       );
     } else if (message.data.type === "HANDLE_DISCORD_PAYLOAD") {
+      console.log("manager payload");
       handleDiscordPayload(JSON.parse(message.data.payload));
     }
   };
