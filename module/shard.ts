@@ -75,6 +75,7 @@ export const createShard = async (
             sessionID = (data.d as ReadyPayload).session_id;
           }
           console.log("about to post");
+          // @ts-ignore
           postMessage(
             {
               type: "HANDLE_DISCORD_PAYLOAD",
