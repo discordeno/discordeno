@@ -309,6 +309,7 @@ function handleDiscordPayload(data: DiscordPayload) {
         const options = data.d as MessageCreateOptions;
         const channel = cache.channels.get(options.channel_id);
         const message = createMessage(options);
+        cache.messages.set(options.id, message)
 
         if (channel) {
           // channel.last_message_id = () => options.id
@@ -356,7 +357,7 @@ function handleDiscordPayload(data: DiscordPayload) {
         const options = data.d as MessageReactionPayload;
         const message = cache.messages.get(options.message_id);
         const isAdd = data.t === "MESSAGE_REACTION_ADD";
-
+        console.log("reaction adding", isAdd, data);
         if (message) {
           const previousReactions = message.reactions;
           const reactionExisted = previousReactions?.find(
