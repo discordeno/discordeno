@@ -311,15 +311,24 @@ function handleDiscordPayload(data: DiscordPayload) {
       if (data.t === "MESSAGE_CREATE") {
         const options = data.d as MessageCreateOptions;
         const channel = cache.channels.get(options.channel_id);
+        if (channel) channel.last_message_id = options.id;
+
         const message = createMessage(options);
         cache.messages.set(options.id, message);
-
-        if (channel) {
-          // channel.last_message_id = () => options.id
-          // if (channel.messages().size > 99) {
-          // TODO: LIMIT THIS TO 100 messages
-          // }
+        if (options.member && options.guild_id) {
+          const guild = cache.guilds.get(options.guild_id);
+          guild?.members.set(
+            options.author.id,
+            createMember(
+              options.member,
+              options.guild_id,
+              [...guild.roles.values()].map((r) => r.raw),
+              guild.owner_id,
+            ),
+          );
         }
+        cache.users.set(message.author.id, message.author);
+
         return eventHandlers.messageCreate?.(message);
       }
 
@@ -384,6 +393,23 @@ function handleDiscordPayload(data: DiscordPayload) {
           }
 
           cache.messages.set(options.message_id, message);
+        }
+
+        if (options.member && options.guild_id) {
+          const guild = cache.guilds.get(options.guild_id);
+          if (guild) {
+            const member = createMember(
+              options.member,
+              options.guild_id,
+              [...guild.roles.values()].map((r) => r.raw),
+              guild.owner_id,
+            );
+            guild.members.set(
+              options.member.user.id,
+              member,
+            );
+            cache.users.set(options.member.user.id, createUser(member.user));
+          }
         }
 
         return isAdd
