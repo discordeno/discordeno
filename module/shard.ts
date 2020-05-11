@@ -1,3 +1,4 @@
+console.log("start of shard file");
 import {
   connectWebSocket,
   isWebSocketCloseEvent,
