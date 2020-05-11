@@ -1,4 +1,3 @@
-console.log("start of shard file");
 import {
   connectWebSocket,
   isWebSocketCloseEvent,
@@ -13,6 +12,7 @@ import {
 import { logRed } from "../utils/logger.ts";
 import { sendConstantHeartbeats, previousSequenceNumber } from "./gateway.ts";
 
+export const USELESS_ARG_TO_MAKE_DENO_CACHE_WORK = undefined
 /** The session id is needed for RESUME functionality when discord disconnects randomly. */
 let sessionID = "";
 console.log("shard made");
