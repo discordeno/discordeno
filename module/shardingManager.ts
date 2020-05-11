@@ -59,9 +59,9 @@ let shardCounter = 0;
 
 function createShardWorker() {
   // console.log("shard creating url", import.meta.url);
-  // const path = new URL("./shard.ts", import.meta.url).toString();
+  const path = new URL("./shard.ts", import.meta.url).toString();
   // console.log("shard creating path", path);
-  const shard = new Worker("https://raw.githubusercontent.com/Skillz4Killz/Discordeno/master/module/shard.ts", { type: "module", deno: true });
+  const shard = new Worker(path, { type: "module", deno: true });
   // console.log("shard made on manager");
   shard.onmessage = (message) => {
     if (message.data.type === "REQUEST_CLIENT_OPTIONS") {
