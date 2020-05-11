@@ -316,6 +316,7 @@ function handleDiscordPayload(data: DiscordPayload) {
         const message = createMessage(options);
         cache.messages.set(options.id, message);
         if (options.member && options.guild_id) {
+          console.log("message create member", options);
           const guild = cache.guilds.get(options.guild_id);
           guild?.members.set(
             options.author.id,
