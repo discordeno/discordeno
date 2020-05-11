@@ -475,5 +475,4 @@ function handleDiscordPayload(data: DiscordPayload) {
 }
 
 
-shard creating url file:///Users/Dr.Zishan/Desktop/idk/G4M3R/Discordeno/module/shardingManager.ts
-shard creating path file:///Users/Dr.Zishan/Desktop/idk/G4M3R/Discordeno/module/shard.ts
+
