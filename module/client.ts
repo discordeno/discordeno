@@ -10,8 +10,6 @@ import { cache } from "../utils/cache.ts";
 
 export let authorization = "";
 export let botID = "";
-/** The bot's token. This should never be used by end users. It is meant to be used internally to make requests to the Discord API. */
-export let token = "";
 
 export let eventHandlers: EventHandlers = {};
 
@@ -31,7 +29,6 @@ export const identifyPayload = {
 
 export const createClient = async (data: ClientOptions) => {
   botID = data.botID;
-  token = data.token;
   if (data.eventHandlers) eventHandlers = data.eventHandlers;
   authorization = `Bot ${data.token}`;
 

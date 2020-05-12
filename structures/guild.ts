@@ -229,11 +229,10 @@ export const createGuild = (data: CreateGuildPayload) => {
       ) {
         throw new Error(Errors.MISSING_KICK_MEMBERS);
       }
-      const result =
-        (await RequestManager.get(
-          endpoints.GUILD_PRUNE(data.id),
-          { days },
-        )) as PrunePayload;
+      const result = (await RequestManager.get(
+        endpoints.GUILD_PRUNE(data.id),
+        { days },
+      )) as PrunePayload;
       return result.pruned;
     },
     /** Begin pruning all members in the given time period */

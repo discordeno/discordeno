@@ -315,7 +315,7 @@ function handleDiscordPayload(data: DiscordPayload) {
           guild?.members.set(
             options.author.id,
             createMember(
-              options.member,
+              { ...options.member, user: options.author },
               options.guild_id,
               [...guild.roles.values()].map((r) => r.raw),
               guild.owner_id,

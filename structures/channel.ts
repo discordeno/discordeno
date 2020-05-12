@@ -88,19 +88,17 @@ export function createChannel(data: ChannelCreatePayload) {
 
       if (options?.limit && options.limit > 100) return;
 
-      const result =
-        (await RequestManager.get(
-          endpoints.CHANNEL_MESSAGES(data.id),
-          options,
-        )) as MessageCreateOptions[];
+      const result = (await RequestManager.get(
+        endpoints.CHANNEL_MESSAGES(data.id),
+        options,
+      )) as MessageCreateOptions[];
       return result.map((res) => createMessage(res));
     },
     /** Get pinned messages in this channel. */
     getPins: async () => {
-      const result =
-        (await RequestManager.get(
-          endpoints.CHANNEL_PINS(data.id),
-        )) as MessageCreateOptions[];
+      const result = (await RequestManager.get(
+        endpoints.CHANNEL_PINS(data.id),
+      )) as MessageCreateOptions[];
       return result.map((res) => createMessage(res));
     },
     /** Send a message to the channel. Requires SEND_MESSAGES permission. */
@@ -133,6 +131,7 @@ export function createChannel(data: ChannelCreatePayload) {
         endpoints.CHANNEL_MESSAGES(data.id),
         content,
       );
+      console.log(result);
       return createMessage(result);
     },
 
