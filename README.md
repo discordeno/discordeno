@@ -40,5 +40,5 @@ This project began out of the desire to want to learn and enhance my developer s
 - **LATEST AND GREATEST JAVASCRIPT:**
   - Backwards compatibility is the death of code. It causes clutter and uglyness to pile up and makes developers lazier.
   - There will be no such thing as backwards compatibility reasons in Discordeno.
-  - We will always support the latest and greatest of JS. The end!
-  - That said, we don't expect many things to be changing drastically after v1. As you can imagine Typescript allows the latest and greatest of JS so we will be ahead of the curve for years to come.
+  - We will always support the latest and greatest of JS in our code internally. The end!
+  - That said, we don't expect many things to be changing drastically in regards to the public API after v1. As you can imagine Typescript allows the latest and greatest of JS so we will be ahead of the curve for years to come.
