@@ -36,7 +36,7 @@ This project began out of the desire to want to learn and enhance my developer s
   - Prevent as many "options" for the sake of customizability. Prefer defaults that Discord recommends.
 - **DOCUMENTATION:**
   - All of Discord API Documentation available inside your VSC while you code.
-  - The entire libraries documentation is automatically available to you throw intellisense.
+  - The entire libraries documentation is automatically available to you through intellisense.
 - **LATEST AND GREATEST JAVASCRIPT:**
   - Backwards compatibility is the death of code. It causes clutter and uglyness to pile up and makes developers lazier.
   - There will be no such thing as backwards compatibility reasons in Discordeno.
