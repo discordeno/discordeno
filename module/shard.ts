@@ -62,7 +62,11 @@ export const createShard = async (
         case GatewayOpcode.Reconnect:
         case GatewayOpcode.InvalidSession:
           // Reconnect to the gateway https://discordapp.com/developers/docs/topics/gateway#reconnect
-          // I think this should be handled automatically when the websocket closes
+          resumeInterval = await resumeConnection(
+            identifyPayload,
+            botGatewayData,
+            shardSocket,
+          );
           break;
         case GatewayOpcode.Resume:
           clearInterval(resumeInterval);
