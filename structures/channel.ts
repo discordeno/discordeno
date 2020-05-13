@@ -131,8 +131,8 @@ export function createChannel(data: ChannelCreatePayload) {
         endpoints.CHANNEL_MESSAGES(data.id),
         content,
       );
-      console.log(result);
-      return createMessage(result);
+
+      return createMessage(result as MessageCreateOptions);
     },
 
     /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */

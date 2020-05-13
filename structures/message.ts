@@ -146,7 +146,7 @@ export function createMessage(data: MessageCreateOptions) {
         endpoints.CHANNEL_MESSAGE(data.channel_id, data.id),
         content,
       );
-      return createMessage(result);
+      return createMessage(result as MessageCreateOptions);
     },
   };
 }
