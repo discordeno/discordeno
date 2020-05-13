@@ -1,10 +1,9 @@
 import { RequestMethod } from "../types/fetch.ts";
 import { authorization } from "./client.ts";
-import { logRed, logBlue } from "../utils/logger.ts";
 import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
 import { Errors } from "../types/errors.ts";
 
-const queue: Array<() => Promise<void>> = [];
+const queue: Array<() => Promise<unknown>> = [];
 const ratelimitedPaths = new Map<string, RateLimitedPath>();
 let globallyRateLimited = false;
 let queueInProcess = false;
@@ -28,9 +27,7 @@ async function processRateLimitedPaths() {
 
 async function processQueue() {
   if (queue.length && !globallyRateLimited) {
-    logBlue("Queue is filled.");
     const callback = queue.shift();
-    console.log(callback);
     if (callback) await callback();
   }
 
@@ -63,7 +60,7 @@ export const RequestManager = {
   },
 };
 
-const createRequestBody = (body: any, method?: RequestMethod) => {
+function createRequestBody (body: any, method?: RequestMethod) {
   return {
     headers: {
       Authorization: authorization,
@@ -90,13 +87,12 @@ async function checkRatelimits(url: string) {
   }
 }
 
-const runMethod = async (
+async function runMethod(
   method: RequestMethod,
   url: string,
   body?: unknown,
   retryCount = 0,
-) => {
-  console.log("inside the runmethods");
+) {
   return new Promise((resolve, reject) => {
     const callback = async () => {
       try {
@@ -111,11 +107,9 @@ const runMethod = async (
         if (
           json.retry_after || json.message === "You are being rate limited."
         ) {
-          logRed(`Rate Limited: ${json}`);
           if (retryCount > 10) throw new Error(Errors.RATE_LIMIT_RETRY_MAXED);
           await delay(json.retry_after);
-          queue.push(callback);
-          return;
+          return runMethod(method, url, body, retryCount++)
         }
 
         return resolve(json);
@@ -132,7 +126,7 @@ const runMethod = async (
   });
 };
 
-const processHeaders = (url: string, headers: Headers) => {
+function processHeaders(url: string, headers: Headers) {
   // If a rate limit response is encountered this will become true and returned
   let ratelimited = false;
 
