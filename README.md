@@ -1,6 +1,6 @@
 # Discordeno
 
-Note: This lib is still very much in development. There are open issues that need attention. If you are brave enough to help test it, I would welcome your help but please under no means should you use it in production at this time. A lot of this is untested and is me actively coding and commiting across various computers. It is guaranteed to break 100%. Once it is ready for use, I will remove this note.
+Note: This lib is still very much in development. The major blocker at the moment, is proper rate limit handling. If you are brave enough to help test it, I would welcome your help but please under no means should you use it in production at this time. A lot of this is untested and is me actively coding and commiting across various computers. It is guaranteed to break 100%. Once it is ready for use, I will remove this note.
 
 Discord API library wrapper in Deno
 
@@ -36,9 +36,9 @@ This project began out of the desire to want to learn and enhance my developer s
   - Prevent as many "options" for the sake of customizability. Prefer defaults that Discord recommends.
 - **DOCUMENTATION:**
   - All of Discord API Documentation available inside your VSC while you code.
-  - The entire libraries documentation is automatically available to you throw intellisense.
+  - The entire libraries documentation is automatically available to you through intellisense.
 - **LATEST AND GREATEST JAVASCRIPT:**
   - Backwards compatibility is the death of code. It causes clutter and uglyness to pile up and makes developers lazier.
   - There will be no such thing as backwards compatibility reasons in Discordeno.
-  - We will always support the latest and greatest of JS. The end!
-  - That said, we don't expect many things to be changing drastically after v1. As you can imagine Typescript allows the latest and greatest of JS so we will be ahead of the curve for years to come.
+  - We will always support the latest and greatest of JS in our code internally. The end!
+  - That said, we don't expect many things to be changing drastically in regards to the public API after v1. As you can imagine Typescript allows the latest and greatest of JS so we will be ahead of the curve for years to come.
