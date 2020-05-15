@@ -19,10 +19,16 @@ export interface GuildMemberChunkPayload {
   guild_id: string
   /** The set of guild members */
   members: MemberCreatePayload[]
+  /** The chunk index in the expected chunks for this response */
+  chunk_index: number
+  /** The total number of expected chunks for this response */
+  chunk_count: number
   /** if passing an invalid id, it will be found here */
   not_found?: string[]
   /** if passing true, presences of the members will be here */
   presences?: Presence[]
+  /** The nonce to help identify */
+  nonce?: string
 }
 
 export interface GuildMemberUpdatePayload {
@@ -101,7 +107,7 @@ export interface CreateGuildPayload {
   /** Whether this guild is unavailable */
   unavailable: boolean
   /** Total number of members in this guild */
-  memberCount: number
+  member_count?: number
   voice_states: Voice_State[]
   /** Users in the guild */
   members: MemberCreatePayload[]
@@ -526,4 +532,16 @@ export interface Presence {
   client_status: Client_Status_Payload
   premium_since?: string | null
   nick?: string | null
+}
+
+export interface FetchMembersOptions {
+  /** Used to specify if you want the presences of the matched members. Default = false. */
+  presences?: boolean
+  /** Only returns members whose username or nickname starts with this string. DO NOT INCLUDE discriminators. If a string is provided, the max amount of members that can be fetched is 100. Default = return all members. */
+  query?: string
+  /** Used to specify which users to fetch specifically. */
+  userIDs?: string[]
+  /** Maximum number of members to return that match the query. Default = 0 which will return all members. */
+  limit?: number
+
 }

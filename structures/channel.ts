@@ -19,6 +19,7 @@ import {
 import { Permissions } from "../types/permission.ts";
 import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
+import { logYellow } from "../utils/logger.ts";
 
 export function createChannel(data: ChannelCreatePayload) {
   const channel = {
@@ -146,7 +147,7 @@ export function createChannel(data: ChannelCreatePayload) {
       if (ids.length < 2) throw new Error(Errors.DELETE_MESSAGES_MIN);
 
       if (ids.length > 100) {
-        console.warn(
+        logYellow(
           `This endpoint only accepts a maximum of 100 messages. Deleting the first 100 message ids provided.`,
         );
       }

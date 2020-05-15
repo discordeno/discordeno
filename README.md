@@ -170,7 +170,7 @@ This section will list out all the available methods and functionality in the li
 - .swapRoles(rolePositons)
 - .getPruneCount(days)
 - .pruneMembers(days)
-// - fetchAllMembers()
+- .fetchMembers(options)
 - .getAuditLogs(options)
 - .getEmbed()
 - .editEmbed(enabled, channel_id)
