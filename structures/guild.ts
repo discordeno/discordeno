@@ -257,14 +257,6 @@ export const createGuild = (data: CreateGuildPayload) => {
       return new Promise((resolve) => {
         requestAllMembers(data.id, resolve, guild.memberCount, options)
       })
-    // return new Promise((res) => this.requestMembersPromise[guildID] = {
-    //     res: res,
-    //     received: 0,
-    //     timeout: setTimeout(() => {
-    //         res(this.requestMembersPromise[guildID].received);
-    //         delete this.requestMembersPromise[guildID];
-    //     }, timeout || this.client.options.requestTimeout)
-    // });
     },
     /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
     getAuditLogs: (options: GetAuditLogsOptions) => {
