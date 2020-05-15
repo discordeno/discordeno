@@ -11,8 +11,10 @@ import {
 } from "../types/discord.ts";
 import { logRed } from "../utils/logger.ts";
 import { sendConstantHeartbeats, previousSequenceNumber } from "./gateway.ts";
+import { FetchMembersOptions } from "../types/guild.ts";
 
-export const USELESS_ARG_TO_MAKE_DENO_CACHE_WORK = undefined;
+let shardSocket: WebSocket;
+
 /** The session id is needed for RESUME functionality when discord disconnects randomly. */
 let sessionID = "";
 
@@ -40,7 +42,7 @@ export const createShard = async (
   botGatewayData: DiscordBotGatewayData,
   identifyPayload: object,
 ) => {
-  const shardSocket = await connectWebSocket(botGatewayData.url);
+  shardSocket = await connectWebSocket(botGatewayData.url);
   let resumeInterval = 0;
 
   // Intial identify with the gateway
@@ -48,64 +50,100 @@ export const createShard = async (
     JSON.stringify({ op: GatewayOpcode.Identify, d: identifyPayload }),
   );
 
-  for await (const message of shardSocket) {
-    if (typeof message === "string") {
-      const data = JSON.parse(message);
+  try {
+    for await (const message of shardSocket) {
+      if (typeof message === "string") {
+        const data = JSON.parse(message);
 
-      switch (data.op) {
-        case GatewayOpcode.Hello:
-          sendConstantHeartbeats(
-            shardSocket,
-            (data.d as DiscordHeartbeatPayload).heartbeat_interval,
-          );
-          break;
-        case GatewayOpcode.Reconnect:
-        case GatewayOpcode.InvalidSession:
-          // Reconnect to the gateway https://discordapp.com/developers/docs/topics/gateway#reconnect
-          resumeInterval = await resumeConnection(
-            identifyPayload,
-            botGatewayData,
-            shardSocket,
-          );
-          break;
-        case GatewayOpcode.Resume:
-          clearInterval(resumeInterval);
-          break;
-        default:
-          // Important for RESUME
-          if (data.t === "READY") {
-            sessionID = (data.d as ReadyPayload).session_id;
-          }
-          // @ts-ignore
-          postMessage(
-            {
-              type: "HANDLE_DISCORD_PAYLOAD",
-              payload: message,
-              resumeInterval,
-            },
-          );
-          break;
+        switch (data.op) {
+          case GatewayOpcode.Hello:
+            sendConstantHeartbeats(
+              shardSocket,
+              (data.d as DiscordHeartbeatPayload).heartbeat_interval,
+            );
+            break;
+          case GatewayOpcode.Reconnect:
+          case GatewayOpcode.InvalidSession:
+            // Reconnect to the gateway https://discordapp.com/developers/docs/topics/gateway#reconnect
+            resumeInterval = await resumeConnection(
+              identifyPayload,
+              botGatewayData,
+              shardSocket,
+            );
+            break;
+          case GatewayOpcode.Resume:
+            clearInterval(resumeInterval);
+            break;
+          default:
+            // Important for RESUME
+            if (data.t === "READY") {
+              sessionID = (data.d as ReadyPayload).session_id;
+            }
+            // @ts-ignore
+            postMessage(
+              {
+                type: "HANDLE_DISCORD_PAYLOAD",
+                payload: message,
+                resumeInterval,
+              },
+            );
+            break;
+        }
+      } else if (isWebSocketCloseEvent(message)) {
+        logRed(`Close :( ${JSON.stringify(message)}`);
+        resumeInterval = await resumeConnection(
+          identifyPayload,
+          botGatewayData,
+          shardSocket,
+        );
       }
-    } else if (isWebSocketCloseEvent(message)) {
-      logRed(`Close :( ${JSON.stringify(message)}`);
-      resumeInterval = await resumeConnection(
-        identifyPayload,
-        botGatewayData,
-        shardSocket,
+    }
+  } catch (error) {
+    logRed(error);
+  }
+};
+
+export function requestGuildMembers(
+  guildID: string,
+  nonce: string,
+  options?: FetchMembersOptions,
+) {
+  shardSocket.send(JSON.stringify({
+    op: GatewayOpcode.RequestGuildMembers,
+    d: {
+      guild_id: guildID,
+      query: options?.query || "",
+      limit: options?.query || 0,
+      presences: options?.presences || false,
+      user_ids: options?.userIDs,
+      nonce,
+    },
+  }));
+}
+
+// TODO: Remove ts-ignore once https://github.com/denoland/deno/issues/5262 fixed
+// @ts-ignore
+if (typeof self.postMessage === "function") {
+  // @ts-ignore
+  postMessage({ type: "REQUEST_CLIENT_OPTIONS" });
+}
+// @ts-ignore
+if (typeof self.onmessage === "function") {
+  // @ts-ignore
+  onmessage = (message) => {
+    if (message.data.type === "CREATE_SHARD") {
+      createShard(
+        message.data.botGatewayData,
+        message.data.identifyPayload,
       );
     }
-  }
-};
 
-// TODO: Remove ts-ignore when deno fixes
-// @ts-ignore
-postMessage({ type: "REQUEST_CLIENT_OPTIONS" });
-// @ts-ignore
-onmessage = (message) => {
-  if (message.data.type === "CREATE_SHARD") {
-    createShard(
-      message.data.botGatewayData,
-      message.data.identifyPayload,
-    );
-  }
-};
+    if (message.data.type === "FETCH_MEMBERS") {
+      requestGuildMembers(
+        message.data.guildID,
+        message.data.nonce,
+        message.data.options,
+      );
+    }
+  };
+}

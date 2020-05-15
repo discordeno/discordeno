@@ -34,6 +34,7 @@ import {
   GuildMemberChunkPayload,
   GuildRolePayload,
   UserPayload,
+  FetchMembersOptions,
 } from "../types/guild.ts";
 import {
   handleInternalGuildCreate,
@@ -57,12 +58,27 @@ import { createMessage } from "../structures/message.ts";
 
 let shardCounter = 0;
 
-function createShardWorker() {
+export interface FetchAllMembersRequest {
+  resolve: Function;
+  requestedMax: number;
+  receivedAmount: number;
+}
+
+const fetchAllMembersProcessingRequests = new Map<
+  string,
+  FetchAllMembersRequest
+>();
+const shards: Worker[] = [];
+
+export function createShardWorker(shardID?: number) {
   const path = new URL("./shard.ts", import.meta.url).toString();
   const shard = new Worker(path, { type: "module", deno: true });
   shard.onmessage = (message) => {
     if (message.data.type === "REQUEST_CLIENT_OPTIONS") {
-      identifyPayload.shard = [shardCounter++, botGatewayData.shards];
+      identifyPayload.shard = [
+        shardID || shardCounter++,
+        botGatewayData.shards,
+      ];
       shard.postMessage(
         {
           type: "CREATE_SHARD",
@@ -74,6 +90,7 @@ function createShardWorker() {
       handleDiscordPayload(JSON.parse(message.data.payload));
     }
   };
+  shards.push(shard);
 }
 
 export const spawnShards = async (
@@ -269,6 +286,19 @@ function handleDiscordPayload(data: DiscordPayload) {
           );
           cache.users.set(member.user.id, createUser(member.user));
         });
+
+        // Check if its necessary to resolve the fetchmembers promise for this chunk or if more chunks will be coming
+        if (
+          options.nonce
+        ) {
+          const request = fetchAllMembersProcessingRequests.get(options.nonce);
+          if (!request) return;
+
+          if (options.chunk_index + 1 === options.chunk_count) {
+            fetchAllMembersProcessingRequests.delete(options.nonce);
+            request.resolve();
+          }
+        }
       }
 
       if (
@@ -338,13 +368,11 @@ function handleDiscordPayload(data: DiscordPayload) {
         const channel = cache.channels.get(options.channel_id);
         if (!channel) return;
 
-        deletedMessages.forEach((_id) => {
-          //   const message = channel.messages().get(id)
-          //   if (message) {
-          //     // TODO: update the messages cache
-          //   }
-
-          //   return eventHandlers.message_delete?.(message || { id, channel })
+        deletedMessages.forEach((id) => {
+          const message = cache.messages.get(id);
+          if (!message) return;
+          eventHandlers.message_delete?.(message || { id, channel });
+          cache.messages.delete(id);
         });
       }
 
@@ -500,4 +528,29 @@ function handleDiscordPayload(data: DiscordPayload) {
     default:
       return;
   }
+}
+
+export function requestAllMembers(
+  guildID: string,
+  resolve: Function,
+  memberCount: number,
+  options?: FetchMembersOptions,
+) {
+  const payload = {
+    resolve,
+    requestedMax: options?.query
+      ? 100
+      : options?.userIDs?.length || options?.limit || memberCount,
+    receivedAmount: 0,
+  };
+
+  const nonce = Math.random().toString();
+  fetchAllMembersProcessingRequests.set(nonce, payload);
+
+  return shards[0].postMessage({
+    type: "FETCH_MEMBERS",
+    guildID,
+    nonce,
+    options,
+  });
 }
