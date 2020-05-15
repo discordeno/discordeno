@@ -82,7 +82,6 @@ export const createGuild = (data: CreateGuildPayload) => {
       const result =
         (await RequestManager.post(endpoints.GUILD_CHANNELS(data.id), {
           name,
-          type: options.type ? ChannelTypes[options.type] : undefined,
           permission_overwrites: options?.permission_overwrites
             ? options.permission_overwrites.map((perm) => ({
               ...perm,
@@ -91,6 +90,7 @@ export const createGuild = (data: CreateGuildPayload) => {
             }))
             : undefined,
           ...options,
+          type: options.type ? ChannelTypes[options.type] : undefined,
         })) as ChannelCreatePayload;
 
       const channel = createChannel(result);
