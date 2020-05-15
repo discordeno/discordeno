@@ -1,4 +1,4 @@
-import { botID } from "../module/client.ts";
+import { botID, identifyPayload } from "../module/client.ts";
 import { endpoints } from "../constants/discord.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import {
@@ -12,6 +12,7 @@ import {
   CreateEmojisOptions,
   EditEmojisOptions,
   CreateRoleOptions,
+  FetchMembersOptions,
 } from "../types/guild.ts";
 import { createRole } from "./role.ts";
 import { createMember } from "./member.ts";
@@ -27,6 +28,8 @@ import { botHasPermission } from "../utils/permissions.ts";
 import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { RoleData } from "../types/role.ts";
+import { Intents } from "../types/options.ts";
+import { requestAllMembers } from "../module/shardingManager.ts";
 
 export const createGuild = (data: CreateGuildPayload) => {
   const guild = {
@@ -47,6 +50,8 @@ export const createGuild = (data: CreateGuildPayload) => {
     channels: new Map(data.channels.map((c) => [c.id, createChannel(c)])),
     /** The presences of all the users in the guild. */
     presences: new Map(data.presences.map((p) => [p.user.id, p])),
+    /** The total number of members in this guild. This value is updated as members leave and join the server. However, if you do not have the intent enabled to be able to listen to these events, then this will not be accurate. */
+    memberCount: data.member_count || 0,
 
     /** Gets an array of all the channels ids that are the children of this category. */
     categoryChildrenIDs: (id: string) =>
@@ -82,7 +87,6 @@ export const createGuild = (data: CreateGuildPayload) => {
       const result =
         (await RequestManager.post(endpoints.GUILD_CHANNELS(data.id), {
           name,
-          type: options.type ? ChannelTypes[options.type] : undefined,
           permission_overwrites: options?.permission_overwrites
             ? options.permission_overwrites.map((perm) => ({
               ...perm,
@@ -91,6 +95,7 @@ export const createGuild = (data: CreateGuildPayload) => {
             }))
             : undefined,
           ...options,
+          type: options.type ? ChannelTypes[options.type] : undefined,
         })) as ChannelCreatePayload;
 
       const channel = createChannel(result);
@@ -246,9 +251,13 @@ export const createGuild = (data: CreateGuildPayload) => {
       }
       return RequestManager.post(endpoints.GUILD_PRUNE(data.id), { days });
     },
-    // TODO: REQUEST THIS OVER WEBSOCKET WITH GET_GUILD_MEMBERS ENDPOINT
-    // fetch_all_members: () => {
-    // },
+    fetchMembers: (options?: FetchMembersOptions) => {
+      if (!(identifyPayload.intents & Intents.GUILD_MEMBERS)) throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS)
+
+      return new Promise((resolve) => {
+        requestAllMembers(data.id, resolve, guild.memberCount, options)
+      })
+    },
     /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
     getAuditLogs: (options: GetAuditLogsOptions) => {
       if (!botHasPermission(data.id, botID, [Permissions.VIEW_AUDIT_LOG])) {

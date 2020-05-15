@@ -42,3 +42,258 @@ This project began out of the desire to want to learn and enhance my developer s
   - There will be no such thing as backwards compatibility reasons in Discordeno.
   - We will always support the latest and greatest of JS in our code internally. The end!
   - That said, we don't expect many things to be changing drastically in regards to the public API after v1. As you can imagine Typescript allows the latest and greatest of JS so we will be ahead of the curve for years to come.
+
+# Overview
+
+This section will list out all the available methods and functionality in the library. When you use them in your editor you will be able to get much more useful information. Documentation is built into your editor.
+
+## Events
+
+```ts
+.botUpdate(user, cachedUser)
+.channelCreate(channel)
+.channel_update(channel, cachedChannel)
+.channelDelete(channel)
+.guildBanAdd(guild, user)
+.guildBanRemove(guild, user)
+.guildCreate(guild)
+.guildUpdate(guild, cachedGuild)
+.guildDelete(guild)
+.guildEmojisUpdate(guild, emojis, cachedEmojis)
+.guildMemberAdd(guild, member)
+.guildMemberRemove(guild, member)
+.guild_member_update(guild, member, cachedMember)
+.heartbeat()
+.messageCreate(message)
+.message_delete(message)
+.nicknameUpdate(guild, member, nickname, old_nickname)
+.presenceUpdate(data)
+.raw(data)
+.ready()
+.reactionAdd(message, emoji, user_id)
+.reactionRemove(message, emoji, user_id)
+.reactionRemoveAll(data)
+.reactionRemoveEmoji(dataReactionRemoveEmojiPayload)
+.roleCreate(guild, role)
+.roleDelete(guild, role)
+.roleUpdate(guild, role, cached_role)
+.role_gained(guild, member, role_id)
+.role_lost(guild, member, role_id)
+.typingStart(data)
+.voiceChannelJoin(member, channel_id)
+.voiceChannelLeave(member, channel_id)
+.voiceChannelSwitch(member, channel_id, old_channel_id)
+.voiceStateUpdate(member, voice_state)
+.webhooksUpdate(channel_id, guild_id)
+```
+
+## Channel
+
+- id
+- type
+- permission_overwrites
+- guild_id
+- position
+- name
+- topic
+- last_message_id
+- bitrate
+- user_limit
+- rate_limit_per_user
+- parent_id
+- last_pin_timestamp
+- permissions
+- nsfw
+- mention
+- raw
+```ts
+- .getMessage(id)
+- .getMessages(options)
+- .getPins()
+- .sendMessages(content)
+- .deleteMessages(ids, reason)
+- .getInvites()
+- .createInvite(options)
+- .getWebhooks()
+```
+
+## Guild
+
+- id
+- name
+- icon
+- splash
+- owner_id
+- region
+- afk_channel_id
+- afk_timeout
+- embed_enabled
+- embed_channel_id
+- verification_level
+- roles
+- emojis
+- features
+- mfa_level
+- system_channel_id
+- large
+- unavailable
+- memberCount
+- voice_states
+- members
+- channels
+- presences
+- max_presences
+- max_members
+- vanity_url_code
+- description
+- banner
+- premium_tier
+- premium_subscription_count
+- preferred_locale
+- raw
+- joinedAt
+```ts
+- .categoryChildrenIDs(id)
+- .iconURL(size, format)
+- .splashURL(size, format)
+- .bannerURL(size, format)
+- .createChannel(name, options)
+- .getChannels()
+- .swapChannels(channelPositions)
+- .getMember(id)
+- .editEmoji(id, options)
+- .deleteEmoji(id, reason)
+- .createRole(options, reason)
+- .editRole(id, options)
+- .deleteRole(id)
+- .getRoles()
+- .swapRoles(rolePositons)
+- .getPruneCount(days)
+- .pruneMembers(days)
+- .fetchMembers(options)
+- .getAuditLogs(options)
+- .getEmbed()
+- .editEmbed(enabled, channel_id)
+- .getVanityURL()
+- .getIntegrations()
+- .editIntegration(id, options)
+- .deleteIntegration(id)
+- .syncIntegration(id)
+- .getBans()
+- .ban(id, options: BanOptions)
+- .unban(id)
+- .edit(options)
+- .getInvites()
+- .leave()
+- .getVoiceRegions()
+- .getWebhooks()
+```
+
+## Member
+
+- user
+  - id
+  - username
+  - discriminator
+  - avatar
+  - bot
+  - system
+  - mfa_enabled
+  - locale
+  - verified
+  - email
+  - flags
+  - premium_type
+- nick
+- roles
+- deaf
+- mute
+- raw
+- joinedAt
+- premiumSince
+- tag
+- mention
+```ts
+- .avatarURL(size, format)
+- .addRole(roleID, reason)
+- .remove_role(roleID, reason)
+- .kick(reason)
+- .edit(options)
+- .hasPermissions(permissions)
+```
+
+## Message
+
+- id
+- channel_id
+- guild_id?
+- author
+- member?
+- content
+- timestamp
+- edited_timestamp
+- tts
+- mentions_everyone
+- mentions
+- mention_roles
+- mention_channels?
+- attachments
+- embeds
+- reactions?
+- nonce?
+- pinned
+- webhook_id?
+- type
+- activity?
+- applications?
+- message_reference?
+- flags?
+- raw
+- author
+- timestamp
+- editedTimestamp
+- channel
+```ts
+- .delete(reason)
+- .pin()
+- .unpin()
+- .addReaction(reaction)
+- .removeReaction(reaction)
+- .removeAllReactions()
+- .removeReactionEmoji(reaction)
+- .getReactions(reaction)
+- .edit(content)
+```
+
+## Role
+
+- id
+- name
+- color
+- hoist
+- position
+- permissions
+- managed
+- mentionable
+- raw
+- mention
+
+## User
+
+- id
+- username
+- discriminator
+- avatar
+- bot
+- system
+- mfa_enabled
+- locale
+- verified
+- email
+- flags
+- premium_type
+- mention
+- tag
+```ts
+- .avatarURL(size, format)
+```
