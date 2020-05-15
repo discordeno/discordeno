@@ -7,5 +7,5 @@ export const formatImageURL = (
 ) => {
   return `${url}.${
     format || url.includes("/a_") ? "gif" : "jpg"
-  }/?size=${size}`;
+  }?size=${size}`;
 };
