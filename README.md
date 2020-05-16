@@ -304,3 +304,9 @@ This section will list out all the available methods and functionality in the li
 ```ts
 - .avatarURL(size, format)
 ```
+
+## Utils
+
+```ts
+.editBotsStatus(status, name, type)
+```
