@@ -145,5 +145,22 @@ if (typeof self.onmessage === "function") {
         message.data.options,
       );
     }
+
+    if (message.data.type === "EDIT_BOTS_STATUS") {
+      shardSocket.send(JSON.stringify({
+        op: GatewayOpcode.StatusUpdate,
+        d: {
+          since: null,
+          game: message.data.game.name
+            ? {
+              name: message.data.game.name,
+              type: message.data.game.type,
+            }
+            : null,
+          status: message.data.status,
+          afk: false,
+        },
+      }));
+    }
   };
 }

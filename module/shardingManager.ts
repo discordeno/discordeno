@@ -554,3 +554,12 @@ export function requestAllMembers(
     options,
   });
 }
+
+export function sendGatewayCommand(type: "EDIT_BOTS_STATUS", payload: object) {
+  shards.forEach((shard) => {
+    shard.postMessage({
+      type,
+      ...payload,
+    });
+  });
+}

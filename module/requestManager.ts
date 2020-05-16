@@ -41,7 +41,7 @@ processRateLimitedPaths();
 export const RequestManager = {
   // Something off about using runMethod with get breaks when using fetch
   get: async (url: string, body?: unknown) => {
-    return runMethod(RequestMethod.Get, url, body)
+    return runMethod(RequestMethod.Get, url, body);
   },
   post: (url: string, body?: unknown) => {
     return runMethod(RequestMethod.Post, url, body);

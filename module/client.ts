@@ -5,7 +5,6 @@ import { RequestManager } from "./requestManager.ts";
 import { Channel } from "../structures/channel.ts";
 import { spawnShards } from "./shardingManager.ts";
 import { cache } from "../utils/cache.ts";
-// // USELESS_ARG_TO_MAKE_DENO_CACHE_WORK
 // import "./shard.ts";
 
 export let authorization = "";
@@ -33,7 +32,9 @@ export const createClient = async (data: ClientOptions) => {
   authorization = `Bot ${data.token}`;
 
   // Initial API connection to get info about bots connection
-  botGatewayData = await RequestManager.get(endpoints.GATEWAY_BOT) as DiscordBotGatewayData;
+  botGatewayData = await RequestManager.get(
+    endpoints.GATEWAY_BOT,
+  ) as DiscordBotGatewayData;
 
   identifyPayload.token = data.token;
   identifyPayload.intents = data.intents.reduce(
