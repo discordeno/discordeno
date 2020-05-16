@@ -60,7 +60,7 @@ export const RequestManager = {
   },
 };
 
-function createRequestBody (body: any, method?: RequestMethod) {
+function createRequestBody(body: any, method?: RequestMethod) {
   return {
     headers: {
       Authorization: authorization,
@@ -72,7 +72,7 @@ function createRequestBody (body: any, method?: RequestMethod) {
     body: JSON.stringify(body),
     method: method?.toUpperCase(),
   };
-};
+}
 
 async function checkRatelimits(url: string) {
   const ratelimited = ratelimitedPaths.get(url);
@@ -109,7 +109,7 @@ async function runMethod(
         ) {
           if (retryCount > 10) throw new Error(Errors.RATE_LIMIT_RETRY_MAXED);
           await delay(json.retry_after);
-          return runMethod(method, url, body, retryCount++)
+          return runMethod(method, url, body, retryCount++);
         }
 
         return resolve(json);
@@ -124,7 +124,7 @@ async function runMethod(
       processQueue();
     }
   });
-};
+}
 
 function processHeaders(url: string, headers: Headers) {
   // If a rate limit response is encountered this will become true and returned
@@ -160,4 +160,4 @@ function processHeaders(url: string, headers: Headers) {
 
   // Returns a boolean to check if we need to request again once the rate limit resets
   return ratelimited;
-};
+}

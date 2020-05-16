@@ -14,7 +14,7 @@ export function createMessage(data: MessageCreateOptions) {
   return {
     ...data,
     raw: data,
-    mentions: data.mentions.map(user => createUser(user)),
+    mentions: data.mentions.map((user) => createUser(user)),
     author: createUser({ ...data.author, avatar: data.author.avatar || "" }),
     timestamp: Date.parse(data.timestamp),
     editedTimestamp: data.edited_timestamp
