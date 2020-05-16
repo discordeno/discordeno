@@ -2,6 +2,7 @@ import { RequestMethod } from "../types/fetch.ts";
 import { authorization } from "./client.ts";
 import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
 import { Errors } from "../types/errors.ts";
+import { HttpResponseCode } from "../types/discord.ts";
 
 const queue: Array<() => Promise<unknown>> = [];
 const ratelimitedPaths = new Map<string, RateLimitedPath>();
@@ -42,6 +43,7 @@ export const RequestManager = {
   get: async (url: string, body?: unknown) => {
     await checkRatelimits(url);
     const result = await fetch(url, createRequestBody(body));
+    handleStatusCode(result.status);
     processHeaders(url, result.headers);
 
     return result.json();
@@ -99,13 +101,15 @@ async function runMethod(
         await checkRatelimits(url);
         const response = await fetch(url, createRequestBody(body, method));
         processHeaders(url, response.headers);
+        handleStatusCode(response.status);
 
         // Sometimes Discord returns an empty 204 response that can't be made to JSON.
         if (response.status === 204) resolve();
 
         const json = await response.json();
         if (
-          json.retry_after || json.message === "You are being rate limited."
+          json.retry_after ||
+          json.message === "You are being rate limited."
         ) {
           if (retryCount > 10) throw new Error(Errors.RATE_LIMIT_RETRY_MAXED);
           await delay(json.retry_after);
@@ -124,6 +128,27 @@ async function runMethod(
       processQueue();
     }
   });
+}
+
+function handleStatusCode(status: number): boolean {
+  if (status >= 200 && status < 400) {
+    return true;
+  }
+
+  switch (status) {
+    case HttpResponseCode.BadRequest:
+    case HttpResponseCode.Unauthorized:
+    case HttpResponseCode.Forbidden:
+    case HttpResponseCode.NotFound:
+    case HttpResponseCode.MethodNotAllowed:
+    case HttpResponseCode.TooManyRequests:
+      throw new Error(Errors.REQUEST_CLIENT_ERROR);
+    case HttpResponseCode.GatewayUnavailable:
+      throw new Error(Errors.REQUEST_SERVER_ERROR);
+  }
+
+  // left are all unknown
+  throw new Error(Errors.REQUEST_UNKNOWN_ERROR);
 }
 
 function processHeaders(url: string, headers: Headers) {
