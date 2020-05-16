@@ -41,12 +41,7 @@ processRateLimitedPaths();
 export const RequestManager = {
   // Something off about using runMethod with get breaks when using fetch
   get: async (url: string, body?: unknown) => {
-    await checkRatelimits(url);
-    const result = await fetch(url, createRequestBody(body));
-    handleStatusCode(result.status);
-    processHeaders(url, result.headers);
-
-    return result.json();
+    return runMethod(RequestMethod.Get, url, body)
   },
   post: (url: string, body?: unknown) => {
     return runMethod(RequestMethod.Post, url, body);
@@ -62,7 +57,7 @@ export const RequestManager = {
   },
 };
 
-function createRequestBody(body: any, method?: RequestMethod) {
+function createRequestBody(body: any, method: RequestMethod) {
   return {
     headers: {
       Authorization: authorization,
@@ -72,7 +67,7 @@ function createRequestBody(body: any, method?: RequestMethod) {
       "X-Audit-Log-Reason": body ? encodeURIComponent(body.reason) : "",
     },
     body: JSON.stringify(body),
-    method: method?.toUpperCase(),
+    method: method.toUpperCase(),
   };
 }
 

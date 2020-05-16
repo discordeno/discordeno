@@ -59,7 +59,7 @@ export function createChannel(data: ChannelCreatePayload) {
       }
       const result = await RequestManager.get(
         endpoints.CHANNEL_MESSAGE(data.id, id),
-      );
+      ) as MessageCreateOptions;
       return createMessage(result);
     },
     /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
