@@ -252,11 +252,13 @@ export const createGuild = (data: CreateGuildPayload) => {
       return RequestManager.post(endpoints.GUILD_PRUNE(data.id), { days });
     },
     fetchMembers: (options?: FetchMembersOptions) => {
-      if (!(identifyPayload.intents & Intents.GUILD_MEMBERS)) throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS)
+      if (!(identifyPayload.intents & Intents.GUILD_MEMBERS)) {
+        throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
+      }
 
       return new Promise((resolve) => {
-        requestAllMembers(data.id, resolve, guild.memberCount, options)
-      })
+        requestAllMembers(data.id, resolve, guild.memberCount, options);
+      });
     },
     /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
     getAuditLogs: (options: GetAuditLogsOptions) => {

@@ -6,8 +6,8 @@ jobs:
   greeting:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/first-interaction@v1
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: 'Thank you for helping contribute to Discordeno. I really do appreciate any and all contributions! Hopefully, together we will be able to make the very best bot Discord API module in the world. Since, this is your very first issue, feel free to look around the repository and then hop on into the Discord server, where you can chat with me directly. https://discord.gg/J4NqJ72'
-        pr-message: 'Thank you for helping contribute to Discordeno. I really do appreciate any and all contributions! Hopefully, together we will be able to make the very best Discord API module in the world. Since, this is your very first pull request, feel free to look around the repository and then hop on into the Discord server, where you can chat with me directly. https://discord.gg/J4NqJ72'
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: "Thank you for helping contribute to Discordeno. I really do appreciate any and all contributions! Hopefully, together we will be able to make the very best bot Discord API module in the world. Since, this is your very first issue, feel free to look around the repository and then hop on into the Discord server, where you can chat with me directly. https://discord.gg/J4NqJ72"
+          pr-message: "Thank you for helping contribute to Discordeno. I really do appreciate any and all contributions! Hopefully, together we will be able to make the very best Discord API module in the world. Since, this is your very first pull request, feel free to look around the repository and then hop on into the Discord server, where you can chat with me directly. https://discord.gg/J4NqJ72"

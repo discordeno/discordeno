@@ -17,7 +17,6 @@ Client({
           if (!message.guild_id) return;
           const guild = cache.guilds.get(message.guild_id);
           if (!guild) return logYellow("no guild");
-
         }
       }
     },
