@@ -39,7 +39,6 @@ async function processQueue() {
 processRateLimitedPaths();
 
 export const RequestManager = {
-  // Something off about using runMethod with get breaks when using fetch
   get: async (url: string, body?: unknown) => {
     return runMethod(RequestMethod.Get, url, body);
   },
