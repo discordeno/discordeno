@@ -125,7 +125,7 @@ async function runMethod(
   });
 }
 
-function handleStatusCode(status: number): boolean {
+function handleStatusCode(status: number) {
   if (status >= 200 && status < 400) {
     return true;
   }

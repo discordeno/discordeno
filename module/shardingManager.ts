@@ -15,9 +15,6 @@ import {
 } from "./client.ts";
 import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
 import {
-  updatePreviousSequenceNumber,
-} from "./gateway.ts";
-import {
   handleInternalChannelCreate,
   handleInternalChannelUpdate,
   handleInternalChannelDelete,
@@ -105,8 +102,6 @@ export const spawnShards = async (
 };
 
 function handleDiscordPayload(data: DiscordPayload) {
-  // Update the sequence number if it is present
-  if (data.s) updatePreviousSequenceNumber(data.s);
   eventHandlers.raw?.(data);
 
   switch (data.op) {

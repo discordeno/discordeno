@@ -10,45 +10,62 @@ import {
   ReadyPayload,
 } from "../types/discord.ts";
 import { logRed } from "../utils/logger.ts";
-import { sendConstantHeartbeats, previousSequenceNumber } from "./gateway.ts";
 import { FetchMembersOptions } from "../types/guild.ts";
-
+import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
 let shardSocket: WebSocket;
 
 /** The session id is needed for RESUME functionality when discord disconnects randomly. */
 let sessionID = "";
 
-async function resumeConnection(
-  payload: object,
-  botGatewayData: DiscordBotGatewayData,
-  socket: WebSocket,
+// Discord requests null if no number has yet been sent by discord
+export let previousSequenceNumber: number | null = null;
+let needToResume = false;
+
+// TODO: If a client does not receive a heartbeat ack between its attempts at sending heartbeats, it should immediately terminate the connection with a non-1000 close code, reconnect, and attempt to resume.
+async function sendConstantHeartbeats(
+  interval: number,
 ) {
-  return setInterval(async () => {
-    socket = await connectWebSocket(botGatewayData.url);
-    await socket.send(
-      JSON.stringify({
-        op: GatewayOpcode.Resume,
-        d: {
-          ...payload,
-          session_id: sessionID,
-          seq: previousSequenceNumber,
-        },
-      }),
-    );
-  }, 1000 * 15);
+  await delay(interval);
+  shardSocket.send(
+    JSON.stringify({ op: GatewayOpcode.Heartbeat, d: previousSequenceNumber }),
+  );
+  sendConstantHeartbeats(interval);
+}
+
+async function resumeConnection(
+  botGatewayData: DiscordBotGatewayData,
+  identifyPayload: object,
+) {
+  // Run it once
+  createShard(botGatewayData, identifyPayload, true);
+  // Then retry every 15 seconds
+  await delay(1000 * 15);
+  if (needToResume) resumeConnection(botGatewayData, identifyPayload);
 }
 
 export const createShard = async (
   botGatewayData: DiscordBotGatewayData,
   identifyPayload: object,
+  resuming = false,
 ) => {
   shardSocket = await connectWebSocket(botGatewayData.url);
   let resumeInterval = 0;
 
-  // Intial identify with the gateway
-  await shardSocket.send(
-    JSON.stringify({ op: GatewayOpcode.Identify, d: identifyPayload }),
-  );
+  if (!resuming) {
+    // Intial identify with the gateway
+    await shardSocket.send(
+      JSON.stringify({ op: GatewayOpcode.Identify, d: identifyPayload }),
+    );
+  } else {
+    await shardSocket.send(JSON.stringify({
+      op: GatewayOpcode.Resume,
+      d: {
+        ...identifyPayload,
+        session_id: sessionID,
+        seq: previousSequenceNumber,
+      },
+    }));
+  }
 
   try {
     for await (const message of shardSocket) {
@@ -58,27 +75,27 @@ export const createShard = async (
         switch (data.op) {
           case GatewayOpcode.Hello:
             sendConstantHeartbeats(
-              shardSocket,
               (data.d as DiscordHeartbeatPayload).heartbeat_interval,
             );
             break;
           case GatewayOpcode.Reconnect:
           case GatewayOpcode.InvalidSession:
-            // Reconnect to the gateway https://discordapp.com/developers/docs/topics/gateway#reconnect
-            resumeInterval = await resumeConnection(
-              identifyPayload,
-              botGatewayData,
-              shardSocket,
-            );
-            break;
-          case GatewayOpcode.Resume:
-            clearInterval(resumeInterval);
+            needToResume = true;
+            resumeConnection(botGatewayData, identifyPayload);
             break;
           default:
+            if (data.t === "RESUMED") {
+              needToResume = false;
+              break;
+            }
             // Important for RESUME
             if (data.t === "READY") {
               sessionID = (data.d as ReadyPayload).session_id;
             }
+
+            // Update the sequence number if it is present
+            if (data.s) previousSequenceNumber = data.s;
+
             // @ts-ignore
             postMessage(
               {
@@ -91,11 +108,8 @@ export const createShard = async (
         }
       } else if (isWebSocketCloseEvent(message)) {
         logRed(`Close :( ${JSON.stringify(message)}`);
-        resumeInterval = await resumeConnection(
-          identifyPayload,
-          botGatewayData,
-          shardSocket,
-        );
+        needToResume = true;
+        resumeConnection(botGatewayData, identifyPayload);
       }
     }
   } catch (error) {
