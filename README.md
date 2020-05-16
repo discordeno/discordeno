@@ -16,7 +16,7 @@ If you are just starting out, you can use the Discordeno Template repo to get th
 
 | Bot Name           | Developer          | Links |
 |--------------------|--------------------|---------------------------------------------------------|
-| DenoBot            | NTM Nathan#0001    | [Github](https://github.com/ntm-development/DenoBot) [Support Server](https://discord.com/invite/G2rb53z) |
+| DenoBot            | NTM Nathan#0001    | [Github](https://github.com/ntm-development/DenoBot), [Support Server](https://discord.com/invite/G2rb53z) |
 | discordeno-mattis  | Mattis6666         | [Github](https://github.com/Mattis6666/discordeno-mattis/) |
 
 ## Motivations/Features
