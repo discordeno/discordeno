@@ -50,7 +50,7 @@ export const createMember = (
     );
   },
   /** Remove a role from the member */
-  remove_role: (roleID: string, reason?: string) => {
+  removeRole: (roleID: string, reason?: string) => {
     // TODO: check if the bots highest role is above this role
     if (
       !botHasPermission(guildID, botID, [Permissions.MANAGE_ROLES])

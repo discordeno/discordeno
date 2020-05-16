@@ -14,8 +14,8 @@ Client({
     messageCreate: async (message) => {
       if (message.author.id === "130136895395987456") {
         if (message.content.startsWith("!test")) {
-          if (!message.guild_id) return;
-          const guild = cache.guilds.get(message.guild_id);
+          if (!message.guildID) return;
+          const guild = cache.guilds.get(message.guildID);
           if (!guild) return logYellow("no guild");
 
         }

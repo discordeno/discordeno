@@ -39,7 +39,7 @@ export interface ClientOptions {
 export interface EventHandlers {
   botUpdate?: (user: User, cachedUser?: User) => unknown;
   channelCreate?: (channel: Channel) => unknown;
-  channel_update?: (channel: Channel, cachedChannel: Channel) => unknown;
+  channelUpdate?: (channel: Channel, cachedChannel: Channel) => unknown;
   channelDelete?: (channel: Channel) => unknown;
   guildBanAdd?: (guild: Guild, user: User) => unknown;
   guildBanRemove?: (guild: Guild, user: User) => unknown;
@@ -53,19 +53,19 @@ export interface EventHandlers {
   ) => unknown;
   guildMemberAdd?: (guild: Guild, member: Member) => unknown;
   guildMemberRemove?: (guild: Guild, member: Member | User) => unknown;
-  guild_member_update?: (
+  guildMemberUpdate?: (
     guild: Guild,
     member: Member,
     cachedMember?: Member,
   ) => unknown;
   heartbeat?: () => unknown;
   messageCreate?: (message: Message) => unknown;
-  message_delete?: (message: Message | Partial_Message) => unknown;
+  messageDelete?: (message: Message | Partial_Message) => unknown;
   nicknameUpdate?: (
     guild: Guild,
     member: Member,
     nickname: string,
-    old_nickname?: string,
+    oldNickname?: string,
   ) => unknown;
   presenceUpdate?: (data: PresenceUpdatePayload) => unknown;
   raw?: (data: DiscordPayload) => unknown;
@@ -73,33 +73,33 @@ export interface EventHandlers {
   reactionAdd?: (
     message: Message | MessageReactionPayload,
     emoji: Reaction_Payload,
-    user_id: string,
+    userID: string,
   ) => unknown;
   reactionRemove?: (
     message: Message | MessageReactionPayload,
     emoji: Reaction_Payload,
-    user_id: string,
+    userID: string,
   ) => unknown;
   reactionRemoveAll?: (data: BaseMessageReactionPayload) => unknown;
   reactionRemoveEmoji?: (data: MessageReactionRemoveEmojiPayload) => unknown;
   roleCreate?: (guild: Guild, role: Role) => unknown;
   roleDelete?: (guild: Guild, role: Role) => unknown;
-  roleUpdate?: (guild: Guild, role: Role, cached_role: Role) => unknown;
-  role_gained?: (guild: Guild, member: Member, role_id: string) => unknown;
-  role_lost?: (guild: Guild, member: Member, role_id: string) => unknown;
+  roleUpdate?: (guild: Guild, role: Role, cachedRole: Role) => unknown;
+  roleGained?: (guild: Guild, member: Member, roleID: string) => unknown;
+  roleLost?: (guild: Guild, member: Member, roleID: string) => unknown;
   typingStart?: (data: TypingStartPayload) => unknown;
-  voiceChannelJoin?: (member: Member, channel_id: string) => unknown;
-  voiceChannelLeave?: (member: Member, channel_id: string) => unknown;
+  voiceChannelJoin?: (member: Member, channelID: string) => unknown;
+  voiceChannelLeave?: (member: Member, channelID: string) => unknown;
   voiceChannelSwitch?: (
     member: Member,
-    channel_id: string,
-    old_channel_id: string,
+    channelID: string,
+    oldChannelID: string,
   ) => unknown;
   voiceStateUpdate?: (
     member: Member,
-    voice_state: VoiceStateUpdatePayload,
+    voiceState: VoiceStateUpdatePayload,
   ) => unknown;
-  webhooksUpdate?: (channel_id: string, guild_id: string) => unknown;
+  webhooksUpdate?: (channelID: string, guildID: string) => unknown;
 }
 
 export enum Intents {

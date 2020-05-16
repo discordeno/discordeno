@@ -9,7 +9,7 @@ import {
   DiscordHeartbeatPayload,
   ReadyPayload,
 } from "../types/discord.ts";
-import { logRed } from "../utils/logger.ts";
+import { logRed, logBlue } from "../utils/logger.ts";
 import { sendConstantHeartbeats, previousSequenceNumber } from "./gateway.ts";
 import { FetchMembersOptions } from "../types/guild.ts";
 
@@ -18,14 +18,12 @@ let shardSocket: WebSocket;
 /** The session id is needed for RESUME functionality when discord disconnects randomly. */
 let sessionID = "";
 
-async function resumeConnection(
-  payload: object,
-  botGatewayData: DiscordBotGatewayData,
-  socket: WebSocket,
-) {
+async function resumeConnection(payload: object, botGatewayData: DiscordBotGatewayData) {
   return setInterval(async () => {
-    socket = await connectWebSocket(botGatewayData.url);
-    await socket.send(
+    console.log("in resume interval");
+    shardSocket = await connectWebSocket(botGatewayData.url);
+    console.log("after connect");
+    await shardSocket.send(
       JSON.stringify({
         op: GatewayOpcode.Resume,
         d: {
@@ -35,6 +33,7 @@ async function resumeConnection(
         },
       }),
     );
+    console.log("after sending resume");
   }, 1000 * 15);
 }
 
@@ -68,10 +67,10 @@ export const createShard = async (
             resumeInterval = await resumeConnection(
               identifyPayload,
               botGatewayData,
-              shardSocket,
             );
             break;
           case GatewayOpcode.Resume:
+            logBlue("Got RESUME EVENT");
             clearInterval(resumeInterval);
             break;
           default:
@@ -94,7 +93,6 @@ export const createShard = async (
         resumeInterval = await resumeConnection(
           identifyPayload,
           botGatewayData,
-          shardSocket,
         );
       }
     }

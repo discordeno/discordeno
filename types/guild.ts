@@ -543,5 +543,4 @@ export interface FetchMembersOptions {
   userIDs?: string[]
   /** Maximum number of members to return that match the query. Default = 0 which will return all members. */
   limit?: number
-
 }

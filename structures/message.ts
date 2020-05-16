@@ -14,6 +14,15 @@ export function createMessage(data: MessageCreateOptions) {
   return {
     ...data,
     raw: data,
+    channelID: data.channel_id,
+    guildID: data.guild_id,
+    mentionsEveryone: data.mentions_everyone,
+    mentionRoles: data.mention_roles,
+    mentionChannels: data.mention_channels,
+    mentions: data.mentions.map(user => createUser(user)),
+    webhookID: data.webhook_id,
+    messageReference: data.message_reference,
+
     author: createUser({ ...data.author, avatar: data.author.avatar || "" }),
     timestamp: Date.parse(data.timestamp),
     editedTimestamp: data.edited_timestamp

@@ -26,6 +26,18 @@ export function createChannel(data: ChannelCreatePayload) {
     ...data,
     /** The raw channel data */
     raw: data,
+    /** The guild id of the channel if it is a guild channel. */
+    guildID: data.guild_id,
+    /** The id of the last message sent in this channel */
+    lastMessageID: data.last_message_id,
+    /** The amount of users allowed in this voice channel. */
+    userLimit: data.user_limit,
+    /** The rate limit(slowmode) in this text channel that users can send messages. */
+    rateLimitPerUser: data.rate_limit_per_user,
+    /** The category id for this channel */
+    parentID: data.parent_id,
+    /** The last time when a message was pinned in this channel */
+    lastPinTimestamp: data.last_pin_timestamp,
     /** The permission overwrites for this channel */
     permissions: data.permission_overwrites
       ? data.permission_overwrites.map((perm) => ({

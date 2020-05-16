@@ -3,16 +3,16 @@ import { RoleData } from "../types/role.ts";
 import { cache } from "./cache.ts";
 
 export const memberHasPermission = (
-  member_id: string,
-  owner_id: string,
-  role_data: RoleData[],
-  member_role_ids: string[],
+  memberID: string,
+  ownerID: string,
+  roleData: RoleData[],
+  memberRoleIDs: string[],
   permissions: Permission[],
 ) => {
-  if (member_id === owner_id) return true;
+  if (memberID === ownerID) return true;
 
-  const permissionBits = role_data
-    .filter((role) => member_role_ids.includes(role.id))
+  const permissionBits = roleData
+    .filter((role) => memberRoleIDs.includes(role.id))
     .reduce((bits, data) => {
       bits |= data.permissions;
 
@@ -27,11 +27,11 @@ export const memberHasPermission = (
 };
 
 export const botHasPermission = (
-  guild_id: string,
+  guildID: string,
   botID: string,
   permissions: Permissions[],
 ) => {
-  const guild = cache.guilds.get(guild_id);
+  const guild = cache.guilds.get(guildID);
   if (!guild) return false;
 
   const member = guild.members.get(botID);
@@ -51,8 +51,8 @@ export const botHasPermission = (
   return permissions.every((permission) => permissionBits & permission);
 };
 
-export const calculatePermissions = (permission_bits: number) => {
+export const calculatePermissions = (permissionBits: number) => {
   return Object.keys(Permissions).filter((perm) => {
-    return permission_bits & Permissions[perm as Permission];
+    return permissionBits & Permissions[perm as Permission];
   });
 };

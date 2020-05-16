@@ -10,8 +10,8 @@ export const endpoints = {
   GATEWAY_BOT: `${baseEndpoints.BASE_URL}/gateway/bot`,
 
   // Channel Endpoints
-  CHANNEL_MESSAGE: (id: string, message_id: string) =>
-    `${baseEndpoints.BASE_URL}/channels/${id}/messages/${message_id}`,
+  CHANNEL_MESSAGE: (id: string, messageID: string) =>
+    `${baseEndpoints.BASE_URL}/channels/${id}/messages/${messageID}`,
   CHANNEL_MESSAGES: (id: string) =>
     `${baseEndpoints.BASE_URL}/channels/${id}/messages`,
   CHANNEL_PINS: (id: string) => `${baseEndpoints.BASE_URL}/channels/${id}/pins`,
@@ -23,20 +23,20 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/channels/${id}/webhooks`,
   CHANNEL_MESSAGE_REACTION_ME: (
     id: string,
-    message_id: string,
+    messageID: string,
     emoji: string,
   ) =>
-    `${baseEndpoints.BASE_URL}/channels/${id}/messages/${message_id}/reactions/${emoji}/@me`,
-  CHANNEL_MESSAGE_REACTIONS: (id: string, message_id: string) =>
-    `${baseEndpoints.BASE_URL}/channels/${id}/messages/${message_id}/reactions`,
-  CHANNEL_MESSAGE_REACTION: (id: string, message_id: string, emoji: string) =>
-    `${baseEndpoints.BASE_URL}/channels/${id}/messages/${message_id}/reactions/${emoji}`,
+    `${baseEndpoints.BASE_URL}/channels/${id}/messages/${messageID}/reactions/${emoji}/@me`,
+  CHANNEL_MESSAGE_REACTIONS: (id: string, messageID: string) =>
+    `${baseEndpoints.BASE_URL}/channels/${id}/messages/${messageID}/reactions`,
+  CHANNEL_MESSAGE_REACTION: (id: string, messageID: string, emoji: string) =>
+    `${baseEndpoints.BASE_URL}/channels/${id}/messages/${messageID}/reactions/${emoji}`,
 
   // Guild Endpoints
   GUILD: (id: string) => `${GUILDS_BASE(id)}`,
   GUILD_AUDIT_LOGS: (id: string) => `${GUILDS_BASE(id)}/audit-logs`,
-  GUILD_BAN: (id: string, user_id: string) =>
-    `${GUILDS_BASE(id)}/bans/${user_id}`,
+  GUILD_BAN: (id: string, userID: string) =>
+    `${GUILDS_BASE(id)}/bans/${userID}`,
   GUILD_BANS: (id: string) => `${GUILDS_BASE(id)}/bans`,
   GUILD_BANNER: (id: string, icon: string) =>
     `${baseEndpoints.CDN_URL}/banners/${id}/${icon}`,
@@ -47,22 +47,22 @@ export const endpoints = {
   GUILD_EMOJIS: (id: string) => `${GUILDS_BASE(id)}/emojis`,
   GUILD_ICON: (id: string, icon: string) =>
     `${baseEndpoints.CDN_URL}/icons/${id}/${icon}`,
-  GUILD_INTEGRATION: (id: string, integration_id: string) =>
-    `${GUILDS_BASE(id)}/integrations/${integration_id}`,
-  GUILD_INTEGRATION_SYNC: (id: string, integration_id: string) =>
-    `${GUILDS_BASE(id)}/integrations/${integration_id}/sync`,
+  GUILD_INTEGRATION: (id: string, integrationID: string) =>
+    `${GUILDS_BASE(id)}/integrations/${integrationID}`,
+  GUILD_INTEGRATION_SYNC: (id: string, integrationID: string) =>
+    `${GUILDS_BASE(id)}/integrations/${integrationID}/sync`,
   GUILD_INTEGRATIONS: (id: string) => `${GUILDS_BASE(id)}/integrations`,
   GUILD_INVITES: (id: string) => `${GUILDS_BASE(id)}/invites`,
   GUILD_LEAVE: (id: string) =>
     `${baseEndpoints.BASE_URL}/users/@me/guilds/${id}`,
-  GUILD_MEMBER: (id: string, member_id: string) =>
-    `${GUILDS_BASE(id)}/members/${member_id}`,
-  GUILD_MEMBER_ROLE: (id: string, member_id: string, role_id: string) =>
-    `${GUILDS_BASE(id)}/members/${member_id}/roles/${role_id}`,
+  GUILD_MEMBER: (id: string, memberID: string) =>
+    `${GUILDS_BASE(id)}/members/${memberID}`,
+  GUILD_MEMBER_ROLE: (id: string, memberID: string, roleID: string) =>
+    `${GUILDS_BASE(id)}/members/${memberID}/roles/${roleID}`,
   GUILD_PRUNE: (id: string) => `${GUILDS_BASE(id)}/prune`,
   GUILD_REGIONS: (id: string) => `${GUILDS_BASE(id)}/regions`,
-  GUILD_ROLE: (id: string, role_id: string) =>
-    `${GUILDS_BASE(id)}/roles/${role_id}`,
+  GUILD_ROLE: (id: string, roleID: string) =>
+    `${GUILDS_BASE(id)}/roles/${roleID}`,
   GUILD_ROLES: (id: string) => `${GUILDS_BASE(id)}/roles`,
   GUILD_SPLASH: (id: string, icon: string) =>
     `${baseEndpoints.CDN_URL}/splashes/${id}/${icon}`,

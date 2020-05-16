@@ -36,6 +36,35 @@ export const createGuild = (data: CreateGuildPayload) => {
     ...data,
     /** The raw create guild payload data. */
     raw: data,
+    /** The owner id of the guild. */
+    ownerID: data.owner_id,
+    /** The afk channel id for this guild. */
+    afkChannelID: data.afk_channel_id,
+    /** The amount of time before a user is moved to AFK. */
+    afkTimeout: data.afk_timeout,
+    /** Whether or not the embed is enabled in this server. */
+    embedEnabled: data.embed_enabled,
+    /** The channel id for the guild embed in this server. */
+    embedChannelID: data.embed_channel_id,
+    /** The verification level for this server. */
+    verificationLevel: data.verification_level,
+    /** The MFA level for this server. */
+    mfaLevel: data.mfa_level,
+    /** The system channel id for this server. */
+    systemChannelID: data.system_channel_id,
+    /** The max presences for this server. */
+    maxPresences: data.max_presences,
+    /** The maximum members in this server. */
+    maxMembers: data.max_members,
+    /** The vanity URL code for this server. */
+    vanityURLCode: data.vanity_url_code,
+    /** The premium tier for this server. */
+    premiumTier: data.premium_tier,
+    /** The subscription count for this server. */
+    premiumSubscriptionCount: data.premium_subscription_count,
+    /** The preferred language in this server. */
+    preferredLocale: data.preferred_locale,
+
     /** The roles in the guild */
     roles: new Map(data.roles.map((r) => [r.id, createRole(r)])),
     /** When this guild was joined at. */
@@ -52,6 +81,17 @@ export const createGuild = (data: CreateGuildPayload) => {
     presences: new Map(data.presences.map((p) => [p.user.id, p])),
     /** The total number of members in this guild. This value is updated as members leave and join the server. However, if you do not have the intent enabled to be able to listen to these events, then this will not be accurate. */
     memberCount: data.member_count || 0,
+    /** The Voice State data for each user in a voice channel in this server. */
+    voiceStates: new Map(data.voice_states.map((vs) => [vs.user_id, {
+      ...vs,
+      guildID: vs.guild_id,
+      channelID: vs.channel_id,
+      userID: vs.user_id,
+      sessionID: vs.session_id,
+      selfDeaf: vs.self_deaf,
+      selfMute: vs.self_mute,
+      selfStream: vs.self_stream,
+    }])),
 
     /** Gets an array of all the channels ids that are the children of this category. */
     categoryChildrenIDs: (id: string) =>
@@ -252,11 +292,13 @@ export const createGuild = (data: CreateGuildPayload) => {
       return RequestManager.post(endpoints.GUILD_PRUNE(data.id), { days });
     },
     fetchMembers: (options?: FetchMembersOptions) => {
-      if (!(identifyPayload.intents & Intents.GUILD_MEMBERS)) throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS)
+      if (!(identifyPayload.intents & Intents.GUILD_MEMBERS)) {
+        throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
+      }
 
       return new Promise((resolve) => {
-        requestAllMembers(data.id, resolve, guild.memberCount, options)
-      })
+        requestAllMembers(data.id, resolve, guild.memberCount, options);
+      });
     },
     /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
     getAuditLogs: (options: GetAuditLogsOptions) => {
@@ -281,7 +323,7 @@ export const createGuild = (data: CreateGuildPayload) => {
       return RequestManager.get(endpoints.GUILD_EMBED(data.id));
     },
     /** Modify a guild embed object for the guild. Requires the MANAGE_GUILD permission. */
-    editEmbed: (enabled: boolean, channel_id?: string | null) => {
+    editEmbed: (enabled: boolean, channelID?: string | null) => {
       if (
         !botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])
       ) {
@@ -289,7 +331,7 @@ export const createGuild = (data: CreateGuildPayload) => {
       }
       return RequestManager.patch(
         endpoints.GUILD_EMBED(data.id),
-        { enabled, channel_id },
+        { enabled, channel_id: channelID },
       );
     },
     /** Returns the code and uses of the vanity url for this server if it is enabled. Requires the MANAGE_GUILD permission. */

@@ -52,7 +52,7 @@ This section will list out all the available methods and functionality in the li
 ```ts
 .botUpdate(user, cachedUser)
 .channelCreate(channel)
-.channel_update(channel, cachedChannel)
+.channelUpdate(channel, cachedChannel)
 .channelDelete(channel)
 .guildBanAdd(guild, user)
 .guildBanRemove(guild, user)
@@ -62,47 +62,47 @@ This section will list out all the available methods and functionality in the li
 .guildEmojisUpdate(guild, emojis, cachedEmojis)
 .guildMemberAdd(guild, member)
 .guildMemberRemove(guild, member)
-.guild_member_update(guild, member, cachedMember)
+.guildMemberUpdate(guild, member, cachedMember)
 .heartbeat()
 .messageCreate(message)
-.message_delete(message)
-.nicknameUpdate(guild, member, nickname, old_nickname)
+.messageDelete(message)
+.nicknameUpdate(guild, member, nickname, oldNickname)
 .presenceUpdate(data)
 .raw(data)
 .ready()
-.reactionAdd(message, emoji, user_id)
-.reactionRemove(message, emoji, user_id)
+.reactionAdd(message, emoji, userID)
+.reactionRemove(message, emoji, userID)
 .reactionRemoveAll(data)
 .reactionRemoveEmoji(dataReactionRemoveEmojiPayload)
 .roleCreate(guild, role)
 .roleDelete(guild, role)
-.roleUpdate(guild, role, cached_role)
-.role_gained(guild, member, role_id)
-.role_lost(guild, member, role_id)
+.roleUpdate(guild, role, cachedRole)
+.roleGained(guild, member, roleID)
+.roleLost(guild, member, roleID)
 .typingStart(data)
-.voiceChannelJoin(member, channel_id)
-.voiceChannelLeave(member, channel_id)
-.voiceChannelSwitch(member, channel_id, old_channel_id)
-.voiceStateUpdate(member, voice_state)
-.webhooksUpdate(channel_id, guild_id)
+.voiceChannelJoin(member, channelID)
+.voiceChannelLeave(member, channelID)
+.voiceChannelSwitch(member, channelID, oldChannelID)
+.voiceStateUpdate(member, voiceState)
+.webhooksUpdate(channelID, guildID)
 ```
 
 ## Channel
 
 - id
 - type
-- permission_overwrites
-- guild_id
+- permission_overwrites (Raw Permission Bits provided by discord). Advanced only.
+- permissions (Permission Strings For Better User Experience).
+- guildID
 - position
 - name
 - topic
-- last_message_id
+- lastMessageID
 - bitrate
-- user_limit
-- rate_limit_per_user
-- parent_id
-- last_pin_timestamp
-- permissions
+- userLimit
+- rateLimitPerUser
+- parentID
+- lastPinTimestamp
 - nsfw
 - mention
 - raw
@@ -123,33 +123,33 @@ This section will list out all the available methods and functionality in the li
 - name
 - icon
 - splash
-- owner_id
+- ownerID
 - region
-- afk_channel_id
-- afk_timeout
-- embed_enabled
-- embed_channel_id
-- verification_level
+- afkChannelID
+- afkTimeout
+- embedEnabled
+- embedChannelID
+- verificationLevel
 - roles
 - emojis
 - features
-- mfa_level
-- system_channel_id
+- mfaLevel
+- systemChannelID
 - large
 - unavailable
 - memberCount
-- voice_states
+- voiceStates
 - members
 - channels
 - presences
-- max_presences
-- max_members
-- vanity_url_code
+- maxPresences
+- maxMembers
+- vanityUrlCode
 - description
 - banner
-- premium_tier
-- premium_subscription_count
-- preferred_locale
+- premiumTier
+- premiumSubscriptionCount
+- preferredLocale
 - raw
 - joinedAt
 ```ts
@@ -173,7 +173,7 @@ This section will list out all the available methods and functionality in the li
 - .fetchMembers(options)
 - .getAuditLogs(options)
 - .getEmbed()
-- .editEmbed(enabled, channel_id)
+- .editEmbed(enabled, channelID)
 - .getVanityURL()
 - .getIntegrations()
 - .editIntegration(id, options)
@@ -198,12 +198,12 @@ This section will list out all the available methods and functionality in the li
   - avatar
   - bot
   - system
-  - mfa_enabled
+  - mfaEnabled
   - locale
   - verified
   - email
   - flags
-  - premium_type
+  - premiumType
 - nick
 - roles
 - deaf
@@ -216,7 +216,7 @@ This section will list out all the available methods and functionality in the li
 ```ts
 - .avatarURL(size, format)
 - .addRole(roleID, reason)
-- .remove_role(roleID, reason)
+- .removeRole(roleID, reason)
 - .kick(reason)
 - .edit(options)
 - .hasPermissions(permissions)
@@ -225,29 +225,26 @@ This section will list out all the available methods and functionality in the li
 ## Message
 
 - id
-- channel_id
-- guild_id?
-- author
-- member?
+- channelID
+- guildID
+- member
 - content
-- timestamp
-- edited_timestamp
 - tts
-- mentions_everyone
+- mentionsEveryone
 - mentions
-- mention_roles
-- mention_channels?
+- mentionRoles
+- mentionChannels
 - attachments
 - embeds
-- reactions?
-- nonce?
+- reactions
+- nonce
 - pinned
-- webhook_id?
+- webhook
 - type
-- activity?
-- applications?
-- message_reference?
-- flags?
+- activity
+- applications
+- messageReference
+- flags
 - raw
 - author
 - timestamp
@@ -286,12 +283,12 @@ This section will list out all the available methods and functionality in the li
 - avatar
 - bot
 - system
-- mfa_enabled
+- mfaEnabled
 - locale
 - verified
 - email
 - flags
-- premium_type
+- premiumType
 - mention
 - tag
 ```ts
