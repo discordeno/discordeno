@@ -22,9 +22,9 @@ export const handleInternalChannelUpdate = (data: ChannelCreatePayload) => {
   if (!cachedChannel) return;
 
   if (channel.guild_id) {
-    const guild = cache.guilds.get(channel.guild_id)
+    const guild = cache.guilds.get(channel.guild_id);
     if (guild) {
-      guild.channels.set(channel.id, channel)
+      guild.channels.set(channel.id, channel);
     }
   }
 
@@ -56,7 +56,7 @@ export const handleInternalChannelDelete = (data: ChannelCreatePayload) => {
       });
     }
 
-    guild?.channels.delete(data.id)
+    guild?.channels.delete(data.id);
   }
 
   cache.channels.delete(data.id);
