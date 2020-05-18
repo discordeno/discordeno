@@ -50,3 +50,7 @@ export default createClient;
 export const updateChannelCache = (key: string, value: Channel) => {
   cache.channels.set(key, value);
 };
+
+export function updateEventHandlers(newEventHandlers: EventHandlers) {
+  eventHandlers = newEventHandlers;
+}
