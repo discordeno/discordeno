@@ -311,4 +311,5 @@ This section will list out all the available methods and functionality in the li
 
 ```ts
 .editBotsStatus(status, name, type)
+updateEventHandlers(eventHandlers)
 ```
