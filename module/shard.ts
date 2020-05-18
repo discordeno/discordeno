@@ -144,6 +144,7 @@ function requestGuildMembers(
 }
 
 // TODO: Errors need to be fixed by VSC plugin
+// @ts-ignore
 postMessage({ type: "REQUEST_CLIENT_OPTIONS" });
 // @ts-ignore
 onmessage = (message: MessageEvent) => {
