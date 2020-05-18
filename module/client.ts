@@ -52,5 +52,5 @@ export const updateChannelCache = (key: string, value: Channel) => {
 };
 
 export function updateEventHandlers(newEventHandlers: EventHandlers) {
-  eventHandlers = newEventHandlers
+  eventHandlers = newEventHandlers;
 }
