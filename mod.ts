@@ -1,6 +1,5 @@
 export * from "./module/client.ts";
 export * from "./module/requestManager.ts";
-export * from "./module/shard.ts";
 export * from "./module/shardingManager.ts";
 
 export * from "./structures/channel.ts";
