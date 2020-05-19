@@ -190,7 +190,7 @@ function handleDiscordPayload(data: DiscordPayload) {
         guild.memberCount = memberCount;
         const member = createMember(
           options,
-          options.guild_id,
+          guild.id,
           [...guild.roles.values()].map((role) => role.raw),
           guild.owner_id,
         );

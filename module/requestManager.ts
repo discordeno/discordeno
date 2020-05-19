@@ -36,6 +36,7 @@ async function processRateLimitedPaths() {
 async function processQueue() {
   if (queue.length && !globallyRateLimited) {
     const request = queue.shift();
+
     if (request?.bucketID) {
       const rateLimitResetIn = checkRatelimits(request.bucketID);
       const rateLimitedURLResetIn = checkRatelimits(request.url);
@@ -46,7 +47,7 @@ async function processQueue() {
         // This URL is rate limited readd to queue
         queue.push(request);
       } else {
-        // This request is not rate limite so it should be run
+        // This request is not rate limited so it should be run
         await request.callback();
       }
     } else {

@@ -1,13 +1,18 @@
-import { botID } from "../module/client.ts";
 import { endpoints } from "../constants/discord.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import { MemberCreatePayload, EditMemberOptions } from "../types/member.ts";
 import { ImageSize, ImageFormats } from "../types/cdn.ts";
 import { Permission, Permissions } from "../types/permission.ts";
 import { RoleData } from "../types/role.ts";
-import { memberHasPermission, botHasPermission } from "../utils/permissions.ts";
+import {
+  memberHasPermission,
+  botHasPermission,
+  highestRole,
+  higherRolePosition,
+} from "../utils/permissions.ts";
 import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
+import { botID } from "../module/client.ts";
 
 export const createMember = (
   data: MemberCreatePayload,
@@ -38,12 +43,18 @@ export const createMember = (
       : endpoints.USER_DEFAULT_AVATAR(Number(data.user.discriminator) % 5),
   /** Add a role to the member */
   addRole: (roleID: string, reason?: string) => {
-    // TODO: check if the bots highest role is above this one
+    const botsHighestRole = highestRole(guildID, botID);
     if (
-      !botHasPermission(guildID, botID, [Permissions.MANAGE_ROLES])
+      botsHighestRole &&
+      !higherRolePosition(guildID, botsHighestRole.id, roleID)
     ) {
+      throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
+    }
+
+    if (!botHasPermission(guildID, [Permissions.MANAGE_ROLES])) {
       throw new Error(Errors.MISSING_MANAGE_ROLES);
     }
+
     return RequestManager.put(
       endpoints.GUILD_MEMBER_ROLE(guildID, data.user.id, roleID),
       { reason },
@@ -51,10 +62,15 @@ export const createMember = (
   },
   /** Remove a role from the member */
   remove_role: (roleID: string, reason?: string) => {
-    // TODO: check if the bots highest role is above this role
+    const botsHighestRole = highestRole(guildID, botID);
     if (
-      !botHasPermission(guildID, botID, [Permissions.MANAGE_ROLES])
+      botsHighestRole &&
+      !higherRolePosition(guildID, botsHighestRole.id, roleID)
     ) {
+      throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
+    }
+
+    if (!botHasPermission(guildID, [Permissions.MANAGE_ROLES])) {
       throw new Error(Errors.MISSING_MANAGE_ROLES);
     }
     return RequestManager.delete(
@@ -64,10 +80,16 @@ export const createMember = (
   },
   /** Kick a member from the server */
   kick: (reason?: string) => {
-    // TODO: Check if the bot is above the user so it is capable of kicking
+    const botsHighestRole = highestRole(guildID, botID);
+    const membersHighestRole = highestRole(guildID, data.user.id);
     if (
-      !botHasPermission(guildID, botID, [Permissions.KICK_MEMBERS])
+      botsHighestRole && membersHighestRole &&
+      botsHighestRole.position <= membersHighestRole.position
     ) {
+      throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
+    }
+
+    if (!botHasPermission(guildID, [Permissions.KICK_MEMBERS])) {
       throw new Error(Errors.MISSING_KICK_MEMBERS);
     }
     return RequestManager.delete(
@@ -81,14 +103,14 @@ export const createMember = (
       if (options.nick.length > 32) {
         throw new Error(Errors.NICKNAMES_MAX_LENGTH);
       }
-      if (!botHasPermission(guildID, botID, [Permissions.MANAGE_NICKNAMES])) {
+      if (!botHasPermission(guildID, [Permissions.MANAGE_NICKNAMES])) {
         throw new Error(Errors.MISSING_MANAGE_NICKNAMES);
       }
     }
 
     if (
       options.roles &&
-      !botHasPermission(guildID, botID, [Permissions.MANAGE_ROLES])
+      !botHasPermission(guildID, [Permissions.MANAGE_ROLES])
     ) {
       throw new Error(Errors.MISSING_MANAGE_ROLES);
     }
@@ -96,7 +118,7 @@ export const createMember = (
     if (options.mute) {
       // TODO: This should check if the member is in a voice channel
       if (
-        !botHasPermission(guildID, botID, [Permissions.MUTE_MEMBERS])
+        !botHasPermission(guildID, [Permissions.MUTE_MEMBERS])
       ) {
         throw new Error(Errors.MISSING_MUTE_MEMBERS);
       }
@@ -104,7 +126,7 @@ export const createMember = (
 
     if (
       options.deaf &&
-      !botHasPermission(guildID, botID, [Permissions.DEAFEN_MEMBERS])
+      !botHasPermission(guildID, [Permissions.DEAFEN_MEMBERS])
     ) {
       throw new Error(Errors.MISSING_DEAFEN_MEMBERS);
     }
@@ -127,3 +149,34 @@ export const createMember = (
     );
   },
 });
+
+
+      
+| Name                                                         | Language         |
+| ------------------------------------------------------------ | ----------       |
+| [discljord](https://github.com/igjoshua/discljord)           | Clojure          |
+| [aegis.cpp](https://github.com/zeroxs/aegis.cpp)             | C++              |
+| [discordcr](https://github.com/discordcr/discordcr)          | Crystal          |
+| [Discord.Net](https://github.com/RogueException/Discord.Net) | C#               |
+| [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus)       | C#               |
+| [dscord](https://github.com/b1naryth1ef/dscord)              | D                |
+| [DiscordGo](https://github.com/bwmarrin/discordgo)           | Go               |
+| [DisGord](https://github.com/andersfylling/disgord)          | Go               |
+| [catnip](https://github.com/mewna/catnip)                    | Java             |
+| [Discord4J](https://discord4j.com/)                          | Java             |
+| [Javacord](https://github.com/Javacord/Javacord)             | Java             |
+| [JDA](https://github.com/DV8FromTheWorld/JDA)                | Java             |
+| [discord.js](https://github.com/discordjs/discord.js)        | JavaScript       |
+| [Eris](https://github.com/abalabahaha/eris)                  | JavaScript       |
+| [Discord.jl](https://github.com/Xh4H/Discord.jl)             | Julia            |
+| [Discordia](https://github.com/SinisterRectus/Discordia)     | Lua              |
+| [discordnim](https://github.com/Krognol/discordnim)          | Nim              |
+| [RestCord](https://www.restcord.com/)                        | PHP              |
+| [discord.py](https://github.com/Rapptz/discord.py)           | Python           |
+| [disco](https://github.com/b1naryth1ef/disco)                | Python           |
+| [discordrb](https://github.com/discordrb/discordrb)          | Ruby             |
+| [discord-rs](https://github.com/SpaceManiac/discord-rs)      | Rust             |
+| [Serenity](https://github.com/serenity-rs/serenity)          | Rust             |
+| [AckCord](https://github.com/Katrix/AckCord)                 | Scala            |
+| [Sword](https://github.com/Azoy/Sword)                       | Swift            |
+| [Discordeno](https://github.com/Skillz4Killz/Discordeno)     | Typescript(Deno) |

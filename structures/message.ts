@@ -26,7 +26,7 @@ export function createMessage(data: MessageCreateOptions) {
     delete: (reason?: string) => {
       if (
         data.guild_id &&
-        !botHasPermission(data.guild_id, botID, [Permissions.MANAGE_MESSAGES])
+        !botHasPermission(data.guild_id, [Permissions.MANAGE_MESSAGES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_MESSAGES);
       }
@@ -42,7 +42,7 @@ export function createMessage(data: MessageCreateOptions) {
     pin: () => {
       if (
         data.guild_id &&
-        !botHasPermission(data.guild_id, botID, [Permissions.MANAGE_MESSAGES])
+        !botHasPermission(data.guild_id, [Permissions.MANAGE_MESSAGES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_MESSAGES);
       }
@@ -51,7 +51,7 @@ export function createMessage(data: MessageCreateOptions) {
     unpin: () => {
       if (
         data.guild_id &&
-        !botHasPermission(data.guild_id, botID, [Permissions.MANAGE_MESSAGES])
+        !botHasPermission(data.guild_id, [Permissions.MANAGE_MESSAGES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_MESSAGES);
       }
@@ -83,7 +83,7 @@ export function createMessage(data: MessageCreateOptions) {
     removeAllReactions: () => {
       if (
         data.guild_id &&
-        !botHasPermission(data.guild_id, botID, [Permissions.MANAGE_MESSAGES])
+        !botHasPermission(data.guild_id, [Permissions.MANAGE_MESSAGES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_MESSAGES);
       }
@@ -95,7 +95,7 @@ export function createMessage(data: MessageCreateOptions) {
     removeReactionEmoji: (reaction: string) => {
       if (
         data.guild_id &&
-        !botHasPermission(data.guild_id, botID, [Permissions.MANAGE_MESSAGES])
+        !botHasPermission(data.guild_id, [Permissions.MANAGE_MESSAGES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_MESSAGES);
       }
@@ -122,7 +122,7 @@ export function createMessage(data: MessageCreateOptions) {
 
       if (data.guild_id) {
         if (
-          !botHasPermission(data.guild_id, botID, [Permissions.SEND_MESSAGES])
+          !botHasPermission(data.guild_id, [Permissions.SEND_MESSAGES])
         ) {
           throw new Error(Errors.MISSING_SEND_MESSAGES);
         }
@@ -131,7 +131,6 @@ export function createMessage(data: MessageCreateOptions) {
           content.tts &&
           !botHasPermission(
             data.guild_id,
-            botID,
             [Permissions.SEND_TTS_MESSAGES],
           )
         ) {

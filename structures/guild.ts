@@ -1,4 +1,4 @@
-import { botID, identifyPayload } from "../module/client.ts";
+import { identifyPayload } from "../module/client.ts";
 import { endpoints } from "../constants/discord.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import {
@@ -81,7 +81,7 @@ export const createGuild = (data: CreateGuildPayload) => {
         : undefined,
     /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
     createChannel: async (name: string, options: CreateChannelOptions) => {
-      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_CHANNELS])) {
+      if (!botHasPermission(data.id, [Permissions.MANAGE_CHANNELS])) {
         throw new Error(Errors.MISSING_MANAGE_CHANNELS);
       }
       const result =
@@ -133,7 +133,7 @@ export const createGuild = (data: CreateGuildPayload) => {
       options: CreateEmojisOptions,
     ) => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_EMOJIS])
+        !botHasPermission(data.id, [Permissions.MANAGE_EMOJIS])
       ) {
         throw new Error(Errors.MISSING_MANAGE_EMOJIS);
       }
@@ -146,7 +146,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */
     editEmoji: (id: string, options: EditEmojisOptions) => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_EMOJIS])
+        !botHasPermission(data.id, [Permissions.MANAGE_EMOJIS])
       ) {
         throw new Error(Errors.MISSING_MANAGE_EMOJIS);
       }
@@ -158,7 +158,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Delete the given emoji. Requires the MANAGE_EMOJIS permission. Returns 204 No Content on success. */
     deleteEmoji: (id: string, reason?: string) => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_EMOJIS])
+        !botHasPermission(data.id, [Permissions.MANAGE_EMOJIS])
       ) {
         throw new Error(Errors.MISSING_MANAGE_EMOJIS);
       }
@@ -170,7 +170,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
     createRole: async (options: CreateRoleOptions, reason?: string) => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_ROLES])
+        !botHasPermission(data.id, [Permissions.MANAGE_ROLES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_ROLES);
       }
@@ -191,7 +191,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Edit a guild role. Requires the MANAGE_ROLES permission. */
     editRole: (id: string, options: CreateRoleOptions) => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_ROLES])
+        !botHasPermission(data.id, [Permissions.MANAGE_ROLES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_ROLES);
       }
@@ -200,7 +200,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Delete a guild role. Requires the MANAGE_ROLES permission. */
     deleteRole: (id: string) => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_ROLES])
+        !botHasPermission(data.id, [Permissions.MANAGE_ROLES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_ROLES);
       }
@@ -212,7 +212,7 @@ export const createGuild = (data: CreateGuildPayload) => {
      */
     getRoles: () => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_ROLES])
+        !botHasPermission(data.id, [Permissions.MANAGE_ROLES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_ROLES);
       }
@@ -221,7 +221,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. */
     swapRoles: (rolePositons: PositionSwap) => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_ROLES])
+        !botHasPermission(data.id, [Permissions.MANAGE_ROLES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_ROLES);
       }
@@ -231,7 +231,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     getPruneCount: async (days: number) => {
       if (days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
       if (
-        !botHasPermission(data.id, botID, [Permissions.KICK_MEMBERS])
+        !botHasPermission(data.id, [Permissions.KICK_MEMBERS])
       ) {
         throw new Error(Errors.MISSING_KICK_MEMBERS);
       }
@@ -245,7 +245,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     pruneMembers: (days: number) => {
       if (days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
       if (
-        !botHasPermission(data.id, botID, [Permissions.KICK_MEMBERS])
+        !botHasPermission(data.id, [Permissions.KICK_MEMBERS])
       ) {
         throw new Error(Errors.MISSING_KICK_MEMBERS);
       }
@@ -262,7 +262,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     },
     /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
     getAuditLogs: (options: GetAuditLogsOptions) => {
-      if (!botHasPermission(data.id, botID, [Permissions.VIEW_AUDIT_LOG])) {
+      if (!botHasPermission(data.id, [Permissions.VIEW_AUDIT_LOG])) {
         throw new Error(Errors.MISSING_VIEW_AUDIT_LOG);
       }
 
@@ -276,7 +276,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Returns the guild embed object. Requires the MANAGE_GUILD permission. */
     getEmbed: () => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])
+        !botHasPermission(data.id, [Permissions.MANAGE_GUILD])
       ) {
         throw new Error(Errors.MISSING_MANAGE_GUILD);
       }
@@ -285,7 +285,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Modify a guild embed object for the guild. Requires the MANAGE_GUILD permission. */
     editEmbed: (enabled: boolean, channel_id?: string | null) => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])
+        !botHasPermission(data.id, [Permissions.MANAGE_GUILD])
       ) {
         throw new Error(Errors.MISSING_MANAGE_GUILD);
       }
@@ -301,7 +301,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
     getIntegrations: () => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])
+        !botHasPermission(data.id, [Permissions.MANAGE_GUILD])
       ) {
         throw new Error(Errors.MISSING_MANAGE_GUILD);
       }
@@ -310,7 +310,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Modify the behavior and settings of an integration object for the guild. Requires the MANAGE_GUILD permission. */
     editIntegration: (id: string, options: EditIntegrationOptions) => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])
+        !botHasPermission(data.id, [Permissions.MANAGE_GUILD])
       ) {
         throw new Error(Errors.MISSING_MANAGE_GUILD);
       }
@@ -322,7 +322,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Delete the attached integration object for the guild with this id. Requires MANAGE_GUILD permission. */
     deleteIntegration: (id: string) => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])
+        !botHasPermission(data.id, [Permissions.MANAGE_GUILD])
       ) {
         throw new Error(Errors.MISSING_MANAGE_GUILD);
       }
@@ -331,7 +331,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Sync an integration. Requires teh MANAGE_GUILD permission. */
     syncIntegration: (id: string) => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])
+        !botHasPermission(data.id, [Permissions.MANAGE_GUILD])
       ) {
         throw new Error(Errors.MISSING_MANAGE_GUILD);
       }
@@ -340,7 +340,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
     getBans: () => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.BAN_MEMBERS])
+        !botHasPermission(data.id, [Permissions.BAN_MEMBERS])
       ) {
         throw new Error(Errors.MISSING_BAN_MEMBERS);
       }
@@ -349,7 +349,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires teh BAN_MEMBERS permission. */
     ban: (id: string, options: BanOptions) => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.BAN_MEMBERS])
+        !botHasPermission(data.id, [Permissions.BAN_MEMBERS])
       ) {
         throw new Error(Errors.MISSING_BAN_MEMBERS);
       }
@@ -358,7 +358,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Remove the ban for a user. REquires BAN_MEMBERS permission */
     unban: (id: string) => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.BAN_MEMBERS])
+        !botHasPermission(data.id, [Permissions.BAN_MEMBERS])
       ) {
         throw new Error(Errors.MISSING_BAN_MEMBERS);
       }
@@ -400,7 +400,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
     edit: (options: GuildEditOptions) => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])
+        !botHasPermission(data.id, [Permissions.MANAGE_GUILD])
       ) {
         throw new Error(Errors.MISSING_MANAGE_GUILD);
       }
@@ -409,7 +409,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
     getInvites: () => {
       if (
-        !botHasPermission(data.id, botID, [Permissions.MANAGE_GUILD])
+        !botHasPermission(data.id, [Permissions.MANAGE_GUILD])
       ) {
         throw new Error(Errors.MISSING_MANAGE_GUILD);
       }
@@ -425,7 +425,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     },
     /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
     getWebhooks: () => {
-      if (!botHasPermission(data.id, botID, [Permissions.MANAGE_WEBHOOKS])) {
+      if (!botHasPermission(data.id, [Permissions.MANAGE_WEBHOOKS])) {
         throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
       }
 
