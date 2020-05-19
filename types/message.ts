@@ -137,7 +137,7 @@ export interface Reaction {
   /** Whether the current user reacted using this emoji */
   me: boolean;
   /** The emoji information. Can be partial. */
-  emoji: Emoji;
+  emoji: EmojiReaction;
 }
 
 export enum Message_Types {
@@ -200,7 +200,7 @@ export enum Message_Flags {
   URGENT = 1 << 4,
 }
 
-export interface Emoji {
+export interface EmojiReaction {
   /** The emoji id. */
   id?: string;
   /** The emoji name. Null in reaction emoji object if emoji is no longer on the server */

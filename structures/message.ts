@@ -19,7 +19,7 @@ export function createMessage(data: MessageCreateOptions) {
     mentionsEveryone: data.mentions_everyone,
     mentionRoles: data.mention_roles,
     mentionChannels: data.mention_channels,
-    mentions: data.mentions.map(user => createUser(user)),
+    mentions: data.mentions.map((user) => createUser(user)),
     webhookID: data.webhook_id,
     messageReference: data.message_reference,
 
@@ -34,7 +34,7 @@ export function createMessage(data: MessageCreateOptions) {
     delete: (reason?: string) => {
       if (
         data.guild_id &&
-        !botHasPermission(data.guild_id, botID, [Permissions.MANAGE_MESSAGES])
+        !botHasPermission(data.guild_id, [Permissions.MANAGE_MESSAGES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_MESSAGES);
       }
@@ -50,16 +50,17 @@ export function createMessage(data: MessageCreateOptions) {
     pin: () => {
       if (
         data.guild_id &&
-        !botHasPermission(data.guild_id, botID, [Permissions.MANAGE_MESSAGES])
+        !botHasPermission(data.guild_id, [Permissions.MANAGE_MESSAGES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_MESSAGES);
       }
       RequestManager.put(endpoints.CHANNEL_MESSAGE(data.channel_id, data.id));
     },
+    /** Unpin a message in a channel. Requires MANAGE_MESSAGES. */
     unpin: () => {
       if (
         data.guild_id &&
-        !botHasPermission(data.guild_id, botID, [Permissions.MANAGE_MESSAGES])
+        !botHasPermission(data.guild_id, [Permissions.MANAGE_MESSAGES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_MESSAGES);
       }
@@ -91,7 +92,7 @@ export function createMessage(data: MessageCreateOptions) {
     removeAllReactions: () => {
       if (
         data.guild_id &&
-        !botHasPermission(data.guild_id, botID, [Permissions.MANAGE_MESSAGES])
+        !botHasPermission(data.guild_id, [Permissions.MANAGE_MESSAGES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_MESSAGES);
       }
@@ -103,7 +104,7 @@ export function createMessage(data: MessageCreateOptions) {
     removeReactionEmoji: (reaction: string) => {
       if (
         data.guild_id &&
-        !botHasPermission(data.guild_id, botID, [Permissions.MANAGE_MESSAGES])
+        !botHasPermission(data.guild_id, [Permissions.MANAGE_MESSAGES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_MESSAGES);
       }
@@ -130,7 +131,7 @@ export function createMessage(data: MessageCreateOptions) {
 
       if (data.guild_id) {
         if (
-          !botHasPermission(data.guild_id, botID, [Permissions.SEND_MESSAGES])
+          !botHasPermission(data.guild_id, [Permissions.SEND_MESSAGES])
         ) {
           throw new Error(Errors.MISSING_SEND_MESSAGES);
         }
@@ -139,7 +140,6 @@ export function createMessage(data: MessageCreateOptions) {
           content.tts &&
           !botHasPermission(
             data.guild_id,
-            botID,
             [Permissions.SEND_TTS_MESSAGES],
           )
         ) {

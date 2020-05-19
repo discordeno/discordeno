@@ -1,5 +1,6 @@
 {
   "deno.enable": true,
   "editor.formatOnSave": true,
+  "deno.autoFmtOnSave": true,
   "deno.unstable": true
 }

@@ -32,7 +32,9 @@ export const createClient = async (data: ClientOptions) => {
   authorization = `Bot ${data.token}`;
 
   // Initial API connection to get info about bots connection
-  botGatewayData = await RequestManager.get(endpoints.GATEWAY_BOT);
+  botGatewayData = await RequestManager.get(
+    endpoints.GATEWAY_BOT,
+  ) as DiscordBotGatewayData;
 
   identifyPayload.token = data.token;
   identifyPayload.intents = data.intents.reduce(
@@ -48,3 +50,7 @@ export default createClient;
 export const updateChannelCache = (key: string, value: Channel) => {
   cache.channels.set(key, value);
 };
+
+export function updateEventHandlers(newEventHandlers: EventHandlers) {
+  eventHandlers = newEventHandlers;
+}

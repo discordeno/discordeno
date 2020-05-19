@@ -10,8 +10,12 @@ export interface ActivityPayload {
 }
 
 export enum ActivityType {
+  /** Example: "Playing Rocket League" */
   Game,
+  /** Example: "Streaming Rocket League" */
   Streaming,
+  /** Example: "Listening to spotify" */
   Listening,
+  /** Example: ":smiley: I am cool" */
   Custom = 4,
 }

@@ -1,25 +1,30 @@
-import Client from "./module/client.ts";
-import { configs } from "./configs.ts";
-import { Intents } from "./types/options.ts";
-import { logYellow } from "./utils/logger.ts";
-import { cache } from "./utils/cache.ts";
+export * from "./module/client.ts";
+export * from "./module/requestManager.ts";
+export * from "./module/shardingManager.ts";
 
-Client({
-  token: configs.token,
-  botID: "675412054529540107",
-  intents: [Intents.GUILDS, Intents.GUILD_MESSAGES, Intents.GUILD_MEMBERS],
-  eventHandlers: {
-    ready: () => logYellow("Bot ready emitted"),
-    // raw: (data) => logGreen("[RAW] => " + JSON.stringify(data)),
-    messageCreate: async (message) => {
-      if (message.author.id === "130136895395987456") {
-        if (message.content.startsWith("!test")) {
-          if (!message.guildID) return;
-          const guild = cache.guilds.get(message.guildID);
-          if (!guild) return logYellow("no guild");
+export * from "./structures/channel.ts";
+export * from "./structures/guild.ts";
+export * from "./structures/member.ts";
+export * from "./structures/message.ts";
+export * from "./structures/role.ts";
+export * from "./structures/user.ts";
 
-        }
-      }
-    },
-  },
-});
+export * from "./types/activity.ts";
+export * from "./types/cdn.ts";
+export * from "./types/channel.ts";
+export * from "./types/discord.ts";
+export * from "./types/errors.ts";
+export * from "./types/fetch.ts";
+export * from "./types/guild.ts";
+export * from "./types/member.ts";
+export * from "./types/message.ts";
+export * from "./types/options.ts";
+export * from "./types/permission.ts";
+export * from "./types/presence.ts";
+export * from "./types/role.ts";
+
+export * from "./utils/cache.ts";
+export * from "./utils/cdn.ts";
+export * from "./utils/logger.ts";
+export * from "./utils/permissions.ts";
+export * from "./utils/utils.ts";

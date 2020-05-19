@@ -2,13 +2,13 @@
 
 name: Testing/Linting
 
-# Controls when the action will run. Triggers the workflow on push or pull request 
+# Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -19,14 +19,17 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-    
-    - name: Setup project
-      run: cp configs.ts.example configs.ts
-        
-    - name: Setup Deno environment
-      uses: denolib/setup-deno@master
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
 
-    - name: Deno Fetch
-      run: deno cache mod.ts
+      - name: Setup project
+        run: cp configs.ts.example configs.ts
+
+      - name: Setup Deno environment
+        uses: denolib/setup-deno@master
+
+      - name: Deno Fetch
+        run: deno cache mod.ts
+
+      - name: Deno Format Check
+        run: deno fmt --check

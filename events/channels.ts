@@ -6,6 +6,10 @@ import { eventHandlers } from "../module/client.ts";
 export const handleInternalChannelCreate = (data: ChannelCreatePayload) => {
   const channel = createChannel(data);
   cache.channels.set(channel.id, channel);
+  if (channel.guildID) {
+    const guild = cache.guilds.get(channel.guildID);
+    guild?.channels.set(channel.id, channel);
+  }
   eventHandlers.channelCreate?.(channel);
 };
 
@@ -14,6 +18,11 @@ export const handleInternalChannelUpdate = (data: ChannelCreatePayload) => {
   const channel = createChannel(data);
   cache.channels.set(channel.id, channel);
   if (!cachedChannel) return;
+
+  if (channel.guildID) {
+    const guild = cache.guilds.get(channel.guildID);
+    guild?.channels.set(channel.id, channel);
+  }
 
   eventHandlers.channelUpdate?.(channel, cachedChannel);
 };
@@ -38,6 +47,8 @@ export const handleInternalChannelDelete = (data: ChannelCreatePayload) => {
         eventHandlers.voiceChannelLeave?.(member, vs.channelID);
       });
     }
+
+    guild?.channels.delete(data.id);
   }
 
   cache.channels.delete(data.id);

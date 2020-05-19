@@ -15,9 +15,6 @@ import {
 } from "./client.ts";
 import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
 import {
-  updatePreviousSequenceNumber,
-} from "./gateway.ts";
-import {
   handleInternalChannelCreate,
   handleInternalChannelUpdate,
   handleInternalChannelDelete,
@@ -105,8 +102,6 @@ export const spawnShards = async (
 };
 
 function handleDiscordPayload(data: DiscordPayload) {
-  // Update the sequence number if it is present
-  if (data.s) updatePreviousSequenceNumber(data.s);
   eventHandlers.raw?.(data);
 
   switch (data.op) {
@@ -195,7 +190,7 @@ function handleDiscordPayload(data: DiscordPayload) {
         guild.memberCount = memberCount;
         const member = createMember(
           options,
-          options.guild_id,
+          guild.id,
           [...guild.roles.values()].map((role) => role.raw),
           guild.ownerID,
         );
@@ -559,5 +554,14 @@ export function requestAllMembers(
     guildID,
     nonce,
     options,
+  });
+}
+
+export function sendGatewayCommand(type: "EDIT_BOTS_STATUS", payload: object) {
+  shards.forEach((shard) => {
+    shard.postMessage({
+      type,
+      ...payload,
+    });
   });
 }

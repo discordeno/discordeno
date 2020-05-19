@@ -8,7 +8,7 @@ import {
   CreateInviteOptions,
   ChannelEditOptions,
 } from "../types/channel.ts";
-import { botID, updateChannelCache } from "../module/client.ts";
+import { updateChannelCache } from "../module/client.ts";
 import { endpoints } from "../constants/discord.ts";
 import { createMessage } from "./message.ts";
 import { MessageCreateOptions } from "../types/message.ts";
@@ -55,14 +55,13 @@ export function createChannel(data: ChannelCreatePayload) {
     getMessage: async (id: string) => {
       if (data.guild_id) {
         if (
-          !botHasPermission(data.guild_id, botID, [Permissions.VIEW_CHANNEL])
+          !botHasPermission(data.guild_id, [Permissions.VIEW_CHANNEL])
         ) {
           throw new Error(Errors.MISSING_VIEW_CHANNEL);
         }
         if (
           !botHasPermission(
             data.guild_id,
-            botID,
             [Permissions.READ_MESSAGE_HISTORY],
           )
         ) {
@@ -71,7 +70,7 @@ export function createChannel(data: ChannelCreatePayload) {
       }
       const result = await RequestManager.get(
         endpoints.CHANNEL_MESSAGE(data.id, id),
-      );
+      ) as MessageCreateOptions;
       return createMessage(result);
     },
     /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
@@ -84,14 +83,13 @@ export function createChannel(data: ChannelCreatePayload) {
     ) => {
       if (data.guild_id) {
         if (
-          !botHasPermission(data.guild_id, botID, [Permissions.VIEW_CHANNEL])
+          !botHasPermission(data.guild_id, [Permissions.VIEW_CHANNEL])
         ) {
           throw new Error(Errors.MISSING_VIEW_CHANNEL);
         }
         if (
           !botHasPermission(
             data.guild_id,
-            botID,
             [Permissions.READ_MESSAGE_HISTORY],
           )
         ) {
@@ -120,7 +118,7 @@ export function createChannel(data: ChannelCreatePayload) {
 
       if (data.guild_id) {
         if (
-          !botHasPermission(data.guild_id, botID, [Permissions.SEND_MESSAGES])
+          !botHasPermission(data.guild_id, [Permissions.SEND_MESSAGES])
         ) {
           throw new Error(Errors.MISSING_SEND_MESSAGES);
         }
@@ -128,7 +126,6 @@ export function createChannel(data: ChannelCreatePayload) {
           content.tts &&
           !botHasPermission(
             data.guild_id,
-            botID,
             [Permissions.SEND_TTS_MESSAGES],
           )
         ) {
@@ -152,7 +149,7 @@ export function createChannel(data: ChannelCreatePayload) {
     deleteMessages: (ids: string[], reason?: string) => {
       if (
         data.guild_id &&
-        !botHasPermission(data.guild_id, botID, [Permissions.MANAGE_MESSAGES])
+        !botHasPermission(data.guild_id, [Permissions.MANAGE_MESSAGES])
       ) {
         throw new Error(Errors.MISSING_MANAGE_MESSAGES);
       }
@@ -173,7 +170,7 @@ export function createChannel(data: ChannelCreatePayload) {
     getInvites: () => {
       if (
         data.guild_id &&
-        !botHasPermission(data.guild_id, botID, [Permissions.MANAGE_CHANNELS])
+        !botHasPermission(data.guild_id, [Permissions.MANAGE_CHANNELS])
       ) {
         throw new Error(Errors.MISSING_MANAGE_CHANNELS);
       }
@@ -185,7 +182,6 @@ export function createChannel(data: ChannelCreatePayload) {
         data.guild_id &&
         !botHasPermission(
           data.guild_id,
-          botID,
           [Permissions.CREATE_INSTANT_INVITE],
         )
       ) {
@@ -197,7 +193,7 @@ export function createChannel(data: ChannelCreatePayload) {
     getWebhooks: () => {
       if (
         data.guild_id &&
-        !botHasPermission(data.guild_id, botID, [Permissions.MANAGE_WEBHOOKS])
+        !botHasPermission(data.guild_id, [Permissions.MANAGE_WEBHOOKS])
       ) {
         throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
       }

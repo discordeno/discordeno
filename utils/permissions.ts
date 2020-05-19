@@ -1,14 +1,16 @@
 import { Permission, Permissions } from "../types/permission.ts";
 import { RoleData } from "../types/role.ts";
 import { cache } from "./cache.ts";
+import { botID } from "../module/client.ts";
+import { Role } from "../structures/role.ts";
 
-export const memberHasPermission = (
+export function memberHasPermission(
   memberID: string,
   ownerID: string,
   roleData: RoleData[],
   memberRoleIDs: string[],
   permissions: Permission[],
-) => {
+) {
   if (memberID === ownerID) return true;
 
   const permissionBits = roleData
@@ -24,13 +26,9 @@ export const memberHasPermission = (
   return permissions.every((permission) =>
     permissionBits & Permissions[permission]
   );
-};
+}
 
-export const botHasPermission = (
-  guildID: string,
-  botID: string,
-  permissions: Permissions[],
-) => {
+export function botHasPermission(guildID: string, permissions: Permissions[]) {
   const guild = cache.guilds.get(guildID);
   if (!guild) return false;
 
@@ -49,10 +47,48 @@ export const botHasPermission = (
   if (permissionBits & Permissions.ADMINISTRATOR) return true;
 
   return permissions.every((permission) => permissionBits & permission);
-};
+}
 
-export const calculatePermissions = (permissionBits: number) => {
+export function calculatePermissions(permissionBits: number) {
   return Object.keys(Permissions).filter((perm) => {
     return permissionBits & Permissions[perm as Permission];
   });
-};
+}
+
+export function highestRole(guildID: string, memberID: string) {
+  const guild = cache.guilds.get(guildID);
+  if (!guild) return;
+
+  const member = guild?.members.get(memberID);
+  if (!member) return;
+
+  let memberHighestRole: Role | undefined;
+
+  for (const roleID of member.roles) {
+    const role = guild.roles.get(roleID);
+    if (!role) continue;
+
+    if (
+      !memberHighestRole || memberHighestRole.position < role.position
+    ) {
+      memberHighestRole = role;
+    }
+  }
+
+  return memberHighestRole || (guild.roles.get(guild.id) as Role);
+}
+
+export function higherRolePosition(
+  guildID: string,
+  roleID: string,
+  otherRoleID: string,
+) {
+  const guild = cache.guilds.get(guildID);
+  if (!guild) return;
+
+  const role = guild.roles.get(roleID);
+  const otherRole = guild.roles.get(otherRoleID);
+  if (!role || !otherRole) return;
+
+  return role.position > otherRole.position;
+}
