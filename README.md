@@ -49,7 +49,12 @@ This project began out of the desire to want to learn and enhance my developer s
   - There will be no such thing as backwards compatibility reasons in Discordeno.
   - We will always support the latest and greatest of JS in our code internally. The end!
   - That said, we don't expect many things to be changing drastically in regards to the public API after v1. As you can imagine Typescript allows the latest and greatest of JS so we will be ahead of the curve for years to come.
-
+- **Unique 2 Versioning Systems**
+  - Discordeno will have releases that comply with SemVer. To use this system you will simply use the `v2.0.0` system in your version.
+    - `Note:` This means for every tiny bug fix/change you need to manually update the code every time. So if a new feature is added, you would need to bump the version in your code.
+  - Each version is also available through a specific branch. For example `v2` branch holds all the version 2 code. This branch is always updated whenever a MINOR or PATCH update is made that will NOT break your bots.
+    - `Note:` This means you never have to update your code EXCEPT when you are ready to bump to next MAJOR version. So if a new feature is added, it will be added automatically. If a small bug is fixed it will be automatic.
+  
 # Overview
 
 This section will list out all the available methods and functionality in the library. When you use them in your editor you will be able to get much more useful information. Documentation is built into your editor.
