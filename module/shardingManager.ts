@@ -192,7 +192,7 @@ function handleDiscordPayload(data: DiscordPayload) {
           options,
           guild.id,
           [...guild.roles.values()].map((role) => role.raw),
-          guild.owner_id,
+          guild.ownerID,
         );
         guild.members.set(options.user.id, member);
         cache.users.set(options.user.id, createUser(member.user));
@@ -234,7 +234,7 @@ function handleDiscordPayload(data: DiscordPayload) {
           newMemberData,
           options.guild_id,
           [...guild.roles.values()].map((r) => r.raw),
-          guild.owner_id,
+          guild.ownerID,
         );
         guild.members.set(options.user.id, member);
         cache.users.set(options.user.id, createUser(member.user));
@@ -251,17 +251,17 @@ function handleDiscordPayload(data: DiscordPayload) {
 
         roleIDs.forEach((id) => {
           if (!options.roles.includes(id)) {
-            eventHandlers.role_lost?.(guild, member, id);
+            eventHandlers.roleLost?.(guild, member, id);
           }
         });
 
         options.roles.forEach((id) => {
           if (!roleIDs.includes(id)) {
-            eventHandlers.role_gained?.(guild, member, id);
+            eventHandlers.roleGained?.(guild, member, id);
           }
         });
 
-        return eventHandlers.guild_member_update?.(guild, member, cachedMember);
+        return eventHandlers.guildMemberUpdate?.(guild, member, cachedMember);
       }
 
       if (data.t === "GUILD_MEMBERS_CHUNK") {
@@ -276,7 +276,7 @@ function handleDiscordPayload(data: DiscordPayload) {
               member,
               options.guild_id,
               [...guild.roles.values()].map((r) => r.raw),
-              guild.owner_id,
+              guild.ownerID,
             ),
           );
           cache.users.set(member.user.id, createUser(member.user));
@@ -312,19 +312,19 @@ function handleDiscordPayload(data: DiscordPayload) {
           return eventHandlers.roleCreate?.(guild, role);
         }
 
-        const cached_role = guild.roles.get(options.role.id);
-        if (!cached_role) return;
+        const cachedRole = guild.roles.get(options.role.id);
+        if (!cachedRole) return;
 
         if (data.t === "GUILD_ROLE_DELETE") {
           const roles = guild.roles;
           roles.delete(options.role.id);
           guild.roles = roles;
-          return eventHandlers.roleDelete?.(guild, cached_role);
+          return eventHandlers.roleDelete?.(guild, cachedRole);
         }
 
         if (data.t === "GUILD_ROLE_UPDATE") {
           const role = createRole(options.role);
-          return eventHandlers.roleUpdate?.(guild, role, cached_role);
+          return eventHandlers.roleUpdate?.(guild, role, cachedRole);
         }
       }
 
@@ -343,7 +343,7 @@ function handleDiscordPayload(data: DiscordPayload) {
               { ...options.member, user: options.author },
               options.guild_id,
               [...guild.roles.values()].map((r) => r.raw),
-              guild.owner_id,
+              guild.ownerID,
             ),
           );
         }
@@ -366,7 +366,7 @@ function handleDiscordPayload(data: DiscordPayload) {
         deletedMessages.forEach((id) => {
           const message = cache.messages.get(id);
           if (!message) return;
-          eventHandlers.message_delete?.(message || { id, channel });
+          eventHandlers.messageDelete?.(message || { id, channel });
           cache.messages.delete(id);
         });
       }
@@ -420,7 +420,7 @@ function handleDiscordPayload(data: DiscordPayload) {
               options.member,
               options.guild_id,
               [...guild.roles.values()].map((r) => r.raw),
-              guild.owner_id,
+              guild.ownerID,
             );
             guild.members.set(
               options.member.user.id,
@@ -481,30 +481,37 @@ function handleDiscordPayload(data: DiscordPayload) {
         const member = guild.members.get(payload.user_id);
         if (!member) return;
 
-        const cached_state = guild.voice_states.find((state) =>
-          state.user_id === payload.user_id
-        );
         // No cached state before so lets make one for em
-        if (!cached_state) {
-          guild.voice_states = [...guild.voice_states, payload];
+        const cachedState = guild.voiceStates.get(payload.user_id);
+        if (!cachedState) {
+          guild.voiceStates.set(payload.user_id, {
+            ...payload,
+            guildID: payload.guild_id,
+            channelID: payload.channel_id,
+            userID: payload.user_id,
+            sessionID: payload.session_id,
+            selfDeaf: payload.self_deaf,
+            selfMute: payload.self_mute,
+            selfStream: payload.self_stream,
+          });
           return;
         }
 
-        if (cached_state.channel_id !== payload.channel_id) {
+        if (cachedState.channelID !== payload.channel_id) {
           // Either joined or moved channels
           if (payload.channel_id) {
-            cached_state.channel_id
+            cachedState.channelID
               ? // Was in a channel before
                 eventHandlers.voiceChannelSwitch?.(
                   member,
                   payload.channel_id,
-                  cached_state.channel_id,
+                  cachedState.channelID,
                 )
               : // Was not in a channel before so user just joined
                 eventHandlers.voiceChannelJoin?.(member, payload.channel_id);
           } // Left the channel
-          else if (cached_state.channel_id) {
-            eventHandlers.voiceChannelLeave?.(member, cached_state.channel_id);
+          else if (cachedState.channelID) {
+            eventHandlers.voiceChannelLeave?.(member, cachedState.channelID);
           }
         }
 
