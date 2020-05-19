@@ -4,20 +4,27 @@ import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
 import { Errors } from "../types/errors.ts";
 import { HttpResponseCode } from "../types/discord.ts";
 
-const queue: Array<() => Promise<unknown>> = [];
+const queue: QueuedRequest[] = [];
 const ratelimitedPaths = new Map<string, RateLimitedPath>();
 let globallyRateLimited = false;
 let queueInProcess = false;
 
+export interface QueuedRequest {
+  callback: () => Promise<unknown>;
+  bucketID?: string | null;
+  url: string;
+}
+
 export interface RateLimitedPath {
   url: string;
   resetTimestamp: number;
+  bucketID: string | null;
 }
 
 async function processRateLimitedPaths() {
   const now = Date.now();
   ratelimitedPaths.forEach((value, key) => {
-    if (value.resetTimestamp > now) return;
+    if (value.resetTimestamp < now) return;
     ratelimitedPaths.delete(key);
     if (key === "global") globallyRateLimited = false;
   });
@@ -28,8 +35,24 @@ async function processRateLimitedPaths() {
 
 async function processQueue() {
   if (queue.length && !globallyRateLimited) {
-    const callback = queue.shift();
-    if (callback) await callback();
+    const request = queue.shift();
+    if (request?.bucketID) {
+      const rateLimitResetIn = checkRatelimits(request.bucketID);
+      const rateLimitedURLResetIn = checkRatelimits(request.url);
+      if (rateLimitResetIn) {
+        // This request is still rate limited readd to queue
+        queue.push(request);
+      } else if (rateLimitedURLResetIn) {
+        // This URL is rate limited readd to queue
+        queue.push(request);
+      } else {
+        // This request is not rate limite so it should be run
+        await request.callback();
+      }
+    } else {
+      // This request has no bucket id so it should be processed
+      await request?.callback();
+    }
   }
 
   if (queue.length) processQueue();
@@ -70,17 +93,19 @@ function createRequestBody(body: any, method: RequestMethod) {
   };
 }
 
-async function checkRatelimits(url: string) {
+function checkRatelimits(url: string) {
   const ratelimited = ratelimitedPaths.get(url);
   const global = ratelimitedPaths.get("global");
 
   const now = Date.now();
   if (ratelimited && now < ratelimited.resetTimestamp) {
-    await delay(now - ratelimited.resetTimestamp);
+    return ratelimited.resetTimestamp - now;
   }
   if (global && now < global.resetTimestamp) {
-    await delay(now - global.resetTimestamp);
+    return global.resetTimestamp - now;
   }
+
+  return false;
 }
 
 async function runMethod(
@@ -88,13 +113,21 @@ async function runMethod(
   url: string,
   body?: unknown,
   retryCount = 0,
+  bucketID?: string | null,
 ) {
   return new Promise((resolve, reject) => {
     const callback = async () => {
       try {
-        await checkRatelimits(url);
+        const rateLimitResetIn = checkRatelimits(url);
+        if (rateLimitResetIn) {
+          return setTimeout(
+            () => runMethod(method, url, body, retryCount++, bucketID),
+            rateLimitResetIn,
+          );
+        }
+
         const response = await fetch(url, createRequestBody(body, method));
-        processHeaders(url, response.headers);
+        const bucketIDFromHeaders = processHeaders(url, response.headers);
         handleStatusCode(response.status);
 
         // Sometimes Discord returns an empty 204 response that can't be made to JSON.
@@ -107,7 +140,13 @@ async function runMethod(
         ) {
           if (retryCount > 10) throw new Error(Errors.RATE_LIMIT_RETRY_MAXED);
           await delay(json.retry_after);
-          return runMethod(method, url, body, retryCount++);
+          return runMethod(
+            method,
+            url,
+            body,
+            retryCount++,
+            bucketIDFromHeaders,
+          );
         }
 
         return resolve(json);
@@ -116,7 +155,11 @@ async function runMethod(
       }
     };
 
-    queue.push(callback);
+    queue.push({
+      callback,
+      bucketID,
+      url,
+    });
     if (!queueInProcess) {
       queueInProcess = true;
       processQueue();
@@ -146,7 +189,6 @@ function handleStatusCode(status: number) {
 }
 
 function processHeaders(url: string, headers: Headers) {
-  // If a rate limit response is encountered this will become true and returned
   let ratelimited = false;
 
   // Get all useful headers
@@ -154,7 +196,7 @@ function processHeaders(url: string, headers: Headers) {
   const resetTimestamp = headers.get("x-ratelimit-reset");
   const retryAfter = headers.get("retry-after");
   const global = headers.get("x-ratelimit-global");
-  // const bucketID = headers.get("x-ratelimit-bucket");
+  const bucketID = headers.get("x-ratelimit-bucket");
 
   // If there is no remaining rate limit for this endpoint, we save it in cache
   if (remaining && remaining === "0") {
@@ -162,8 +204,17 @@ function processHeaders(url: string, headers: Headers) {
 
     ratelimitedPaths.set(url, {
       url,
-      resetTimestamp: Number(resetTimestamp),
+      resetTimestamp: Number(resetTimestamp) * 1000,
+      bucketID,
     });
+
+    if (bucketID) {
+      ratelimitedPaths.set(bucketID, {
+        url,
+        resetTimestamp: Number(resetTimestamp) * 1000,
+        bucketID,
+      });
+    }
   }
 
   // If there is no remaining global limit, we save it in cache
@@ -174,9 +225,17 @@ function processHeaders(url: string, headers: Headers) {
     ratelimitedPaths.set("global", {
       url: "global",
       resetTimestamp: Date.now() + Number(retryAfter),
+      bucketID,
     });
+
+    if (bucketID) {
+      ratelimitedPaths.set(bucketID, {
+        url: "global",
+        resetTimestamp: Date.now() + Number(retryAfter),
+        bucketID,
+      });
+    }
   }
 
-  // Returns a boolean to check if we need to request again once the rate limit resets
-  return ratelimited;
+  return ratelimited ? bucketID : undefined;
 }
