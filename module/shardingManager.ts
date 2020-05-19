@@ -482,7 +482,7 @@ function handleDiscordPayload(data: DiscordPayload) {
         if (!member) return;
 
         // No cached state before so lets make one for em
-        const cachedState = guild.voiceStates.get(payload.user_id)
+        const cachedState = guild.voiceStates.get(payload.user_id);
         if (!cachedState) {
           guild.voiceStates.set(payload.user_id, {
             ...payload,
@@ -492,8 +492,8 @@ function handleDiscordPayload(data: DiscordPayload) {
             sessionID: payload.session_id,
             selfDeaf: payload.self_deaf,
             selfMute: payload.self_mute,
-            selfStream: payload.self_stream
-          })
+            selfStream: payload.self_stream,
+          });
           return;
         }
 
