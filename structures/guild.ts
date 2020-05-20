@@ -221,7 +221,7 @@ export const createGuild = (data: CreateGuildPayload) => {
 
       const roleData = role_data as RoleData;
       const role = createRole(roleData);
-      // guild.roles.set(roleData.id, role);
+      guild.roles.set(roleData.id, role);
       return role;
     },
     /** Edit a guild role. Requires the MANAGE_ROLES permission. */
