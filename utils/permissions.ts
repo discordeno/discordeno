@@ -1,25 +1,32 @@
 import { Permission, Permissions } from "../types/permission.ts";
-import { RoleData } from "../types/role.ts";
 import { cache } from "./cache.ts";
 import { botID } from "../module/client.ts";
 import { Role } from "../structures/role.ts";
+import { Guild } from "../structures/guild.ts";
 
 export function memberHasPermission(
   memberID: string,
-  ownerID: string,
-  roleData: RoleData[],
+  guild: Guild,
   memberRoleIDs: string[],
   permissions: Permission[],
 ) {
-  if (memberID === ownerID) return true;
+  if (memberID === guild.ownerID) return true;
 
-  const permissionBits = roleData
-    .filter((role) => memberRoleIDs.includes(role.id))
-    .reduce((bits, data) => {
-      bits |= data.permissions;
-
+  const permissionBits = memberRoleIDs.map((id) =>
+    guild.roles.get(id)?.permissions || 0
+  )
+    .reduce((bits, permissions) => {
+      bits |= permissions;
       return bits;
     }, 0);
+
+  // const permissionBits = [...guild.roles.values()]
+  //   .filter((role) => memberRoleIDs.includes(role.id))
+  //   .map((role) => role.permissions)
+  //   .reduce((bits, permissions) => {
+  //     bits |= permissions;
+  //     return bits;
+  //   }, 0);
 
   if (permissionBits & Permissions.ADMINISTRATOR) return true;
 

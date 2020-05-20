@@ -7,7 +7,6 @@ import {
   VoiceStateUpdatePayload,
 } from "./discord.ts";
 import { User } from "../structures/user.ts";
-import { Member } from "./member.ts";
 import { Role } from "../structures/role.ts";
 import { Message } from "../structures/message.ts";
 import {
@@ -19,6 +18,7 @@ import {
 } from "./message.ts";
 import { Channel } from "../structures/channel.ts";
 import { Guild } from "../structures/guild.ts";
+import { Member } from "../structures/member.ts";
 
 export interface Fulfilled_Client_Options {
   token: string;

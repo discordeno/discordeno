@@ -190,9 +190,7 @@ function handleDiscordPayload(data: DiscordPayload) {
         guild.memberCount = memberCount;
         const member = createMember(
           options,
-          guild.id,
-          [...guild.roles.values()].map((role) => role.raw),
-          guild.ownerID,
+          guild,
         );
         guild.members.set(options.user.id, member);
         cache.users.set(options.user.id, createUser(member.user));
@@ -232,9 +230,7 @@ function handleDiscordPayload(data: DiscordPayload) {
         };
         const member = createMember(
           newMemberData,
-          options.guild_id,
-          [...guild.roles.values()].map((r) => r.raw),
-          guild.ownerID,
+          guild,
         );
         guild.members.set(options.user.id, member);
         cache.users.set(options.user.id, createUser(member.user));
@@ -274,9 +270,7 @@ function handleDiscordPayload(data: DiscordPayload) {
             member.user.id,
             createMember(
               member,
-              options.guild_id,
-              [...guild.roles.values()].map((r) => r.raw),
-              guild.ownerID,
+              guild,
             ),
           );
           cache.users.set(member.user.id, createUser(member.user));
@@ -341,9 +335,7 @@ function handleDiscordPayload(data: DiscordPayload) {
             options.author.id,
             createMember(
               { ...options.member, user: options.author },
-              options.guild_id,
-              [...guild.roles.values()].map((r) => r.raw),
-              guild.ownerID,
+              guild,
             ),
           );
         }
@@ -418,9 +410,7 @@ function handleDiscordPayload(data: DiscordPayload) {
           if (guild) {
             const member = createMember(
               options.member,
-              options.guild_id,
-              [...guild.roles.values()].map((r) => r.raw),
-              guild.ownerID,
+              guild,
             );
             guild.members.set(
               options.member.user.id,

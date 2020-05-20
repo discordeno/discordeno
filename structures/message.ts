@@ -160,4 +160,4 @@ export function createMessage(data: MessageCreateOptions) {
   };
 }
 
-export type Message = ReturnType<typeof createMessage>;
+export interface Message extends ReturnType<typeof createMessage> {}

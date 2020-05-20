@@ -1,4 +1,3 @@
-import { createMember } from "../structures/member.ts";
 import { UserPayload } from "./guild.ts";
 
 export interface EditMemberOptions {
@@ -30,5 +29,3 @@ export interface MemberCreatePayload {
   /** Whether the user is muted in voice channels */
   mute: boolean;
 }
-
-export type Member = ReturnType<typeof createMember>;

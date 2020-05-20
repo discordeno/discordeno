@@ -213,4 +213,4 @@ export function createChannel(data: ChannelCreatePayload) {
   return channel;
 }
 
-export type Channel = ReturnType<typeof createChannel>;
+export interface Channel extends ReturnType<typeof createChannel> {}
