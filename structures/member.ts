@@ -3,7 +3,6 @@ import { formatImageURL } from "../utils/cdn.ts";
 import { MemberCreatePayload, EditMemberOptions } from "../types/member.ts";
 import { ImageSize, ImageFormats } from "../types/cdn.ts";
 import { Permission, Permissions } from "../types/permission.ts";
-import { RoleData } from "../types/role.ts";
 import {
   memberHasPermission,
   botHasPermission,
@@ -13,13 +12,10 @@ import {
 import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { botID } from "../module/client.ts";
+import { Guild } from "./guild.ts";
+import { cache } from "../utils/cache.ts";
 
-export const createMember = (
-  data: MemberCreatePayload,
-  guildID: string,
-  roleData: RoleData[],
-  ownerID: string,
-) => ({
+export const createMember = (data: MemberCreatePayload, guild: Guild) => ({
   ...data,
   /** The complete raw data from the member create payload */
   raw: data,
@@ -31,7 +27,11 @@ export const createMember = (
   tag: `${data.user.username}#${data.user.discriminator}`,
   /** The user mention with nickname if possible */
   mention: `<@!${data.user.id}>`,
+  /** The guild id where this member exists */
+  guildID: guild.id,
 
+  /** Gets the guild object from cache for this member. This is a method instead of a prop to preserve memory. */
+  guild: () => cache.guilds.get(guild.id)!,
   /** The users custom avatar or the default avatar */
   avatarURL: (size: ImageSize = 128, format?: ImageFormats) =>
     data.user.avatar
@@ -43,45 +43,45 @@ export const createMember = (
       : endpoints.USER_DEFAULT_AVATAR(Number(data.user.discriminator) % 5),
   /** Add a role to the member */
   addRole: (roleID: string, reason?: string) => {
-    const botsHighestRole = highestRole(guildID, botID);
+    const botsHighestRole = highestRole(guild.id, botID);
     if (
       botsHighestRole &&
-      !higherRolePosition(guildID, botsHighestRole.id, roleID)
+      !higherRolePosition(guild.id, botsHighestRole.id, roleID)
     ) {
       throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
     }
 
-    if (!botHasPermission(guildID, [Permissions.MANAGE_ROLES])) {
+    if (!botHasPermission(guild.id, [Permissions.MANAGE_ROLES])) {
       throw new Error(Errors.MISSING_MANAGE_ROLES);
     }
 
     return RequestManager.put(
-      endpoints.GUILD_MEMBER_ROLE(guildID, data.user.id, roleID),
+      endpoints.GUILD_MEMBER_ROLE(guild.id, data.user.id, roleID),
       { reason },
     );
   },
   /** Remove a role from the member */
   removeRole: (roleID: string, reason?: string) => {
-    const botsHighestRole = highestRole(guildID, botID);
+    const botsHighestRole = highestRole(guild.id, botID);
     if (
       botsHighestRole &&
-      !higherRolePosition(guildID, botsHighestRole.id, roleID)
+      !higherRolePosition(guild.id, botsHighestRole.id, roleID)
     ) {
       throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
     }
 
-    if (!botHasPermission(guildID, [Permissions.MANAGE_ROLES])) {
+    if (!botHasPermission(guild.id, [Permissions.MANAGE_ROLES])) {
       throw new Error(Errors.MISSING_MANAGE_ROLES);
     }
     return RequestManager.delete(
-      endpoints.GUILD_MEMBER_ROLE(guildID, data.user.id, roleID),
+      endpoints.GUILD_MEMBER_ROLE(guild.id, data.user.id, roleID),
       { reason },
     );
   },
   /** Kick a member from the server */
   kick: (reason?: string) => {
-    const botsHighestRole = highestRole(guildID, botID);
-    const membersHighestRole = highestRole(guildID, data.user.id);
+    const botsHighestRole = highestRole(guild.id, botID);
+    const membersHighestRole = highestRole(guild.id, data.user.id);
     if (
       botsHighestRole && membersHighestRole &&
       botsHighestRole.position <= membersHighestRole.position
@@ -89,11 +89,11 @@ export const createMember = (
       throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
     }
 
-    if (!botHasPermission(guildID, [Permissions.KICK_MEMBERS])) {
+    if (!botHasPermission(guild.id, [Permissions.KICK_MEMBERS])) {
       throw new Error(Errors.MISSING_KICK_MEMBERS);
     }
     return RequestManager.delete(
-      endpoints.GUILD_MEMBER(guildID, data.user.id),
+      endpoints.GUILD_MEMBER(guild.id, data.user.id),
       { reason },
     );
   },
@@ -103,14 +103,14 @@ export const createMember = (
       if (options.nick.length > 32) {
         throw new Error(Errors.NICKNAMES_MAX_LENGTH);
       }
-      if (!botHasPermission(guildID, [Permissions.MANAGE_NICKNAMES])) {
+      if (!botHasPermission(guild.id, [Permissions.MANAGE_NICKNAMES])) {
         throw new Error(Errors.MISSING_MANAGE_NICKNAMES);
       }
     }
 
     if (
       options.roles &&
-      !botHasPermission(guildID, [Permissions.MANAGE_ROLES])
+      !botHasPermission(guild.id, [Permissions.MANAGE_ROLES])
     ) {
       throw new Error(Errors.MISSING_MANAGE_ROLES);
     }
@@ -118,7 +118,7 @@ export const createMember = (
     if (options.mute) {
       // TODO: This should check if the member is in a voice channel
       if (
-        !botHasPermission(guildID, [Permissions.MUTE_MEMBERS])
+        !botHasPermission(guild.id, [Permissions.MUTE_MEMBERS])
       ) {
         throw new Error(Errors.MISSING_MUTE_MEMBERS);
       }
@@ -126,7 +126,7 @@ export const createMember = (
 
     if (
       options.deaf &&
-      !botHasPermission(guildID, [Permissions.DEAFEN_MEMBERS])
+      !botHasPermission(guild.id, [Permissions.DEAFEN_MEMBERS])
     ) {
       throw new Error(Errors.MISSING_DEAFEN_MEMBERS);
     }
@@ -134,7 +134,7 @@ export const createMember = (
     // TODO: if channel id is provided check if the bot has CONNECT and MOVE in channel and current channel
 
     return RequestManager.patch(
-      endpoints.GUILD_MEMBER(guildID, data.user.id),
+      endpoints.GUILD_MEMBER(guild.id, data.user.id),
       options,
     );
   },
@@ -142,10 +142,11 @@ export const createMember = (
   hasPermissions: (permissions: Permission[]) => {
     return memberHasPermission(
       data.user.id,
-      ownerID,
-      roleData,
+      guild,
       data.roles,
       permissions,
     );
   },
 });
+
+export interface Member extends ReturnType<typeof createMember> {}

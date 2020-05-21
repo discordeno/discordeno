@@ -1,7 +1,8 @@
 import { ChannelType, UserPayload } from "./guild.ts";
 import { User } from "../structures/user.ts";
-import { Member, MemberCreatePayload } from "./member.ts";
+import { MemberCreatePayload } from "./member.ts";
 import { Channel } from "../structures/channel.ts";
+import { Member } from "../structures/member.ts";
 
 export interface MentionedUser extends User {
   member: Member;

@@ -8,4 +8,4 @@ export const createRole = (data: RoleData) => ({
   mention: `<@&${data.id}>`,
 });
 
-export type Role = ReturnType<typeof createRole>;
+export interface Role extends ReturnType<typeof createRole> {}

@@ -15,7 +15,7 @@ import {
   FetchMembersOptions,
 } from "../types/guild.ts";
 import { createRole } from "./role.ts";
-import { createMember } from "./member.ts";
+import { createMember, Member } from "./member.ts";
 import { createChannel } from "./channel.ts";
 import {
   CreateChannelOptions,
@@ -70,11 +70,7 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** When this guild was joined at. */
     joinedAt: Date.parse(data.joined_at),
     /** The users in this guild. */
-    members: new Map(
-      data.members.map((
-        m,
-      ) => [m.user.id, createMember(m, data.id, data.roles, data.owner_id)]),
-    ),
+    members: new Map<string, Member>(),
     /** The channels in the guild */
     channels: new Map(data.channels.map((c) => [c.id, createChannel(c)])),
     /** The presences of all the users in the guild. */
@@ -473,7 +469,11 @@ export const createGuild = (data: CreateGuildPayload) => {
     },
   };
 
+  data.members.forEach((m) =>
+    guild.members.set(m.user.id, createMember(m, guild))
+  );
+
   return guild;
 };
 
-export type Guild = ReturnType<typeof createGuild>;
+export interface Guild extends ReturnType<typeof createGuild> {}

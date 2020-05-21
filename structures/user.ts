@@ -29,4 +29,4 @@ export const createUser = (data: UserPayload) => ({
       : endpoints.USER_DEFAULT_AVATAR(Number(data.discriminator) % 5),
 });
 
-export type User = ReturnType<typeof createUser>;
+export interface User extends ReturnType<typeof createUser> {}

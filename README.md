@@ -119,6 +119,7 @@ This section will list out all the available methods and functionality in the li
 - mention
 - raw
 ```ts
+- .hasPermission(id, permissions)
 - .getMessage(id)
 - .getMessages(options)
 - .getPins()
@@ -225,7 +226,9 @@ This section will list out all the available methods and functionality in the li
 - premiumSince
 - tag
 - mention
+- guildID
 ```ts
+- .guild()
 - .avatarURL(size, format)
 - .addRole(roleID, reason)
 - .removeRole(roleID, reason)

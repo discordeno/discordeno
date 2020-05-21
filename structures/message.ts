@@ -11,7 +11,7 @@ import { botID } from "../module/client.ts";
 import { cache } from "../utils/cache.ts";
 
 export function createMessage(data: MessageCreateOptions) {
-  return {
+  const message = {
     ...data,
     raw: data,
     channelID: data.channel_id,
@@ -19,11 +19,11 @@ export function createMessage(data: MessageCreateOptions) {
     mentionsEveryone: data.mentions_everyone,
     mentionRoles: data.mention_roles,
     mentionChannels: data.mention_channels,
-    mentions: data.mentions.map((user) => createUser(user)),
+    mentions: data.mentions.map((user) => cache.users.get(user.id)!),
     webhookID: data.webhook_id,
     messageReference: data.message_reference,
 
-    author: createUser({ ...data.author, avatar: data.author.avatar || "" }),
+    author: cache.users.get(data.author.id)!,
     timestamp: Date.parse(data.timestamp),
     editedTimestamp: data.edited_timestamp
       ? Date.parse(data.edited_timestamp)
@@ -32,13 +32,14 @@ export function createMessage(data: MessageCreateOptions) {
 
     /** Delete a message */
     delete: (reason?: string) => {
-      if (
-        data.guild_id &&
-        !botHasPermission(data.guild_id, [Permissions.MANAGE_MESSAGES])
-      ) {
-        throw new Error(Errors.MISSING_MANAGE_MESSAGES);
-      }
       if (data.author.id !== botID) {
+        // This needs to check the channels permission not the guild permission
+        if (
+          !message.guildID ||
+          !message.channel.hasPermission(botID, [Permissions.MANAGE_MESSAGES])
+        ) {
+          throw new Error(Errors.MISSING_MANAGE_MESSAGES);
+        }
       }
 
       return RequestManager.delete(
@@ -158,6 +159,8 @@ export function createMessage(data: MessageCreateOptions) {
       return createMessage(result as MessageCreateOptions);
     },
   };
+
+  return message;
 }
 
-export type Message = ReturnType<typeof createMessage>;
+export interface Message extends ReturnType<typeof createMessage> {}

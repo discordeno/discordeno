@@ -190,9 +190,7 @@ function handleDiscordPayload(data: DiscordPayload) {
         guild.memberCount = memberCount;
         const member = createMember(
           options,
-          guild.id,
-          [...guild.roles.values()].map((role) => role.raw),
-          guild.ownerID,
+          guild,
         );
         guild.members.set(options.user.id, member);
         cache.users.set(options.user.id, createUser(member.user));
@@ -232,9 +230,7 @@ function handleDiscordPayload(data: DiscordPayload) {
         };
         const member = createMember(
           newMemberData,
-          options.guild_id,
-          [...guild.roles.values()].map((r) => r.raw),
-          guild.ownerID,
+          guild,
         );
         guild.members.set(options.user.id, member);
         cache.users.set(options.user.id, createUser(member.user));
@@ -274,9 +270,7 @@ function handleDiscordPayload(data: DiscordPayload) {
             member.user.id,
             createMember(
               member,
-              options.guild_id,
-              [...guild.roles.values()].map((r) => r.raw),
-              guild.ownerID,
+              guild,
             ),
           );
           cache.users.set(member.user.id, createUser(member.user));
@@ -334,20 +328,36 @@ function handleDiscordPayload(data: DiscordPayload) {
         if (channel) channel.last_message_id = options.id;
 
         const message = createMessage(options);
+        // Cache the message
         cache.messages.set(options.id, message);
-        if (options.member && options.guild_id) {
-          const guild = cache.guilds.get(options.guild_id);
+        const guild = options.guild_id
+          ? cache.guilds.get(options.guild_id)
+          : undefined;
+
+        if (options.member) {
+          // If in a guild cache the author as a member
           guild?.members.set(
             options.author.id,
             createMember(
               { ...options.member, user: options.author },
-              options.guild_id,
-              [...guild.roles.values()].map((r) => r.raw),
-              guild.ownerID,
+              guild,
             ),
           );
         }
+        // Cache the message author themself
         cache.users.set(message.author.id, message.author);
+
+        options.mentions.forEach((mention) => {
+          // For each mention cache the user
+          cache.users.set(mention.id, createUser(mention));
+          // Cache the member if its a valid member
+          if (mention.member) {
+            guild?.members.set(
+              mention.id,
+              createMember({ ...mention.member, user: mention }, guild),
+            );
+          }
+        });
 
         return eventHandlers.messageCreate?.(message);
       }
@@ -418,9 +428,7 @@ function handleDiscordPayload(data: DiscordPayload) {
           if (guild) {
             const member = createMember(
               options.member,
-              options.guild_id,
-              [...guild.roles.values()].map((r) => r.raw),
-              guild.ownerID,
+              guild,
             );
             guild.members.set(
               options.member.user.id,
