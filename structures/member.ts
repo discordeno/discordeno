@@ -13,6 +13,7 @@ import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { botID } from "../module/client.ts";
 import { Guild } from "./guild.ts";
+import { cache } from "../utils/cache.ts";
 
 export const createMember = (data: MemberCreatePayload, guild: Guild) => ({
   ...data,
@@ -26,7 +27,11 @@ export const createMember = (data: MemberCreatePayload, guild: Guild) => ({
   tag: `${data.user.username}#${data.user.discriminator}`,
   /** The user mention with nickname if possible */
   mention: `<@!${data.user.id}>`,
+  /** The guild id where this member exists */
+  guildID: guild.id,
 
+  /** Gets the guild object from cache for this member. This is a method instead of a prop to preserve memory. */
+  guild: () => cache.guilds.get(guild.id)!,
   /** The users custom avatar or the default avatar */
   avatarURL: (size: ImageSize = 128, format?: ImageFormats) =>
     data.user.avatar

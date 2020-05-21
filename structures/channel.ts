@@ -51,6 +51,23 @@ export function createChannel(data: ChannelCreatePayload) {
     /** The mention of the channel */
     mention: `<#${data.id}>`,
 
+    /** Checks if a user id or a role id has permission in this channel */
+    hasPermission: function (id: string, permissions: Permissions[]) {
+      const overwrite = data.permission_overwrites?.find((perm) =>
+        perm.id === id
+      ) ||
+        data.permission_overwrites?.find((perm) => perm.id === channel.guildID);
+      if (!overwrite) return false;
+
+      return permissions.every((perm) => {
+        if (overwrite.deny & perm) return false;
+        if (overwrite.allow & perm) return true;
+        if (channel.guildID) {
+          return botHasPermission(channel.guildID, [perm]);
+        }
+        return false;
+      });
+    },
     /** Fetch a single message from the server. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
     getMessage: async (id: string) => {
       if (data.guild_id) {
