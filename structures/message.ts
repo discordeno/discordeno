@@ -29,6 +29,8 @@ export function createMessage(data: MessageCreateOptions) {
       ? Date.parse(data.edited_timestamp)
       : undefined,
     channel: cache.channels.get(data.channel_id)!,
+    guild: () => data.guild_id ? cache.guilds.get(data.guild_id) : undefined,
+    member: () => message.guild()?.members.get(data.author.id)!,
 
     /** Delete a message */
     delete: (reason?: string) => {
