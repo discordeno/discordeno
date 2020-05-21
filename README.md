@@ -128,6 +128,7 @@ This section will list out all the available methods and functionality in the li
 - .getInvites()
 - .createInvite(options)
 - .getWebhooks()
+- .edit(options)
 ```
 
 ## Guild
