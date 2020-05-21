@@ -21,13 +21,13 @@ import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { logYellow } from "../utils/logger.ts";
 
-export function createChannel(data: ChannelCreatePayload) {
+export function createChannel(data: ChannelCreatePayload, guildID?: string) {
   const channel = {
     ...data,
     /** The raw channel data */
     raw: data,
     /** The guild id of the channel if it is a guild channel. */
-    guildID: data.guild_id,
+    guildID: guildID || data.guild_id,
     /** The id of the last message sent in this channel */
     lastMessageID: data.last_message_id,
     /** The amount of users allowed in this voice channel. */

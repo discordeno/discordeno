@@ -13,9 +13,6 @@ import { configs } from "./configs.ts";
 import { Intents } from "./types/options.ts";
 import { logYellow } from "./utils/logger.ts";
 import { cache } from "./utils/cache.ts";
-import { editBotsStatus } from "./utils/utils.ts";
-import { StatusType } from "./types/discord.ts";
-import { ActivityType } from "./types/activity.ts";
 
 Client({
   token: configs.token,
@@ -24,11 +21,6 @@ Client({
   eventHandlers: {
     ready: () => {
       logYellow("Bot ready emitted");
-      editBotsStatus(
-        StatusType.DoNotDisturb,
-        "Testing Name DND",
-        ActivityType.Listening,
-      );
     },
     // raw: (data) => logGreen("[RAW] => " + JSON.stringify(data)),
     messageCreate: async (message) => {
