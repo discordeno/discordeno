@@ -346,7 +346,6 @@ function handleDiscordPayload(data: DiscordPayload) {
               guild,
             ),
           );
-          message.member = guild?.members.get(options.author.id);
         }
 
         options.mentions.forEach((mention) => {
