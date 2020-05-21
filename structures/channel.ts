@@ -57,11 +57,12 @@ export function createChannel(data: ChannelCreatePayload, guildID?: string) {
         perm.id === id
       ) ||
         data.permission_overwrites?.find((perm) => perm.id === channel.guildID);
-      if (!overwrite) return false;
 
       return permissions.every((perm) => {
-        if (overwrite.deny & perm) return false;
-        if (overwrite.allow & perm) return true;
+        if (overwrite) {
+          if (overwrite.deny & perm) return false;
+          if (overwrite.allow & perm) return true;
+        }
         if (channel.guildID) {
           return botHasPermission(channel.guildID, [perm]);
         }
