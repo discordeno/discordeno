@@ -327,6 +327,9 @@ function handleDiscordPayload(data: DiscordPayload) {
         const channel = cache.channels.get(options.channel_id);
         if (channel) channel.last_message_id = options.id;
 
+        // Cache the message author themself
+        cache.users.set(options.author.id, createUser(options.author));
+
         const message = createMessage(options);
         // Cache the message
         cache.messages.set(options.id, message);
@@ -344,8 +347,6 @@ function handleDiscordPayload(data: DiscordPayload) {
             ),
           );
         }
-        // Cache the message author themself
-        cache.users.set(message.author.id, message.author);
 
         options.mentions.forEach((mention) => {
           // For each mention cache the user
