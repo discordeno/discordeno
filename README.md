@@ -85,7 +85,7 @@ This section will list out all the available methods and functionality in the li
 .reactionAdd(message, emoji, userID)
 .reactionRemove(message, emoji, userID)
 .reactionRemoveAll(data)
-.reactionRemoveEmoji(dataReactionRemoveEmojiPayload)
+.reactionRemoveEmoji(data)
 .roleCreate(guild, role)
 .roleDelete(guild, role)
 .roleUpdate(guild, role, cachedRole)
