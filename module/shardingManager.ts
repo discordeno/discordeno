@@ -98,7 +98,7 @@ export const spawnShards = async (
   payload: unknown,
   id = 1,
 ) => {
-  if (id < data.shards) {
+  if ((data.shards === 1 && id === 1) || id < data.shards) {
     if (createNextShard) {
       createNextShard = false;
       createShardWorker();
