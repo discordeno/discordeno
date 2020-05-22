@@ -42,9 +42,8 @@ export function botHasPermission(guildID: string, permissions: Permissions[]) {
   const member = guild.members.get(botID);
   if (!member) return false;
 
-  const permissionBits = [...guild.roles.values()]
-    .map((role) => role.raw)
-    .filter((role) => member.roles.includes(role.id))
+  const permissionBits = member.roles
+    .map((id) => guild.roles.get(id)!)
     .reduce((bits, data) => {
       bits |= data.permissions;
 

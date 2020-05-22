@@ -54,7 +54,7 @@ This project began out of the desire to want to learn and enhance my developer s
     - `Note:` This means for every tiny bug fix/change you need to manually update the code every time. So if a new feature is added, you would need to bump the version in your code.
   - Each version is also available through a specific branch. For example `v2` branch holds all the version 2 code. This branch is always updated whenever a MINOR or PATCH update is made that will NOT break your bots.
     - `Note:` This means you never have to update your code EXCEPT when you are ready to bump to next MAJOR version. So if a new feature is added, it will be added automatically. If a small bug is fixed it will be automatic.
-  
+
 # Overview
 
 This section will list out all the available methods and functionality in the library. When you use them in your editor you will be able to get much more useful information. Documentation is built into your editor.
@@ -80,7 +80,6 @@ This section will list out all the available methods and functionality in the li
 .messageDelete(message)
 .nicknameUpdate(guild, member, nickname, oldNickname)
 .presenceUpdate(data)
-.raw(data)
 .ready()
 .reactionAdd(message, emoji, userID)
 .reactionRemove(message, emoji, userID)
@@ -117,7 +116,6 @@ This section will list out all the available methods and functionality in the li
 - lastPinTimestamp
 - nsfw
 - mention
-- raw
 ```ts
 - .hasPermission(id, permissions)
 - .getMessage(id)
@@ -164,7 +162,6 @@ This section will list out all the available methods and functionality in the li
 - premiumTier
 - premiumSubscriptionCount
 - preferredLocale
-- raw
 - joinedAt
 ```ts
 - .categoryChildrenIDs(id)
@@ -222,7 +219,6 @@ This section will list out all the available methods and functionality in the li
 - roles
 - deaf
 - mute
-- raw
 - joinedAt
 - premiumSince
 - tag
@@ -261,7 +257,6 @@ This section will list out all the available methods and functionality in the li
 - applications
 - messageReference
 - flags
-- raw
 - author
 - timestamp
 - editedTimestamp
@@ -288,7 +283,6 @@ This section will list out all the available methods and functionality in the li
 - permissions
 - managed
 - mentionable
-- raw
 - mention
 
 ## User
