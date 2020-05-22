@@ -33,10 +33,10 @@ import {
   UserPayload,
   FetchMembersOptions,
   GuildRoleDeletePayload,
+  UpdateGuildPayload,
 } from "../types/guild.ts";
 import {
   handleInternalGuildCreate,
-  handleInternalGuildUpdate,
   handleInternalGuildDelete,
 } from "../events/guilds.ts";
 import { cache } from "../utils/cache.ts";
@@ -53,6 +53,8 @@ import {
   MessageReactionRemoveEmojiPayload,
 } from "../types/message.ts";
 import { createMessage } from "../structures/message.ts";
+import { logGreen, logBlue } from "../utils/logger.ts";
+import { GuildUpdateChange } from "../types/options.ts";
 
 let shardCounter = 0;
 
@@ -98,7 +100,7 @@ export const spawnShards = async (
   payload: unknown,
   id = 1,
 ) => {
-  if ((data.shards === 1 && id === 1) || id < data.shards) {
+  if ((data.shards === 1 && id === 1) || id <= data.shards) {
     if (createNextShard) {
       createNextShard = false;
       createShardWorker();
@@ -147,13 +149,43 @@ async function handleDiscordPayload(data: DiscordPayload) {
       }
 
       if (data.t === "GUILD_UPDATE") {
-        const options = data.d as CreateGuildPayload;
+        const options = data.d as UpdateGuildPayload;
         const cachedGuild = cache.guilds.get(options.id);
-        const guild = createGuild(options);
-        handleInternalGuildUpdate(guild);
         if (!cachedGuild) return;
 
-        return eventHandlers.guildUpdate?.(guild, cachedGuild);
+        const keysToSkip = [
+          "roles",
+          "guild_hashes",
+          "guild_id",
+          "max_members",
+          "emojis",
+        ];
+        const changes = Object.entries(options)
+          .map(([key, value]) => {
+            if (keysToSkip.includes(key)) return;
+
+            // @ts-ignore
+            const cachedValue = cachedGuild[key];
+            if (cachedValue !== value) {
+              // Guild create sends undefined and update sends false.
+              if (!cachedValue && !value) return;
+
+              if (Array.isArray(cachedValue) && Array.isArray(value)) {
+                const different = (cachedValue.length !== value.length) ||
+                  cachedValue.find((val) => !value.includes(val)) ||
+                  value.find((val) => !cachedValue.includes(val));
+                if (!different) return;
+              }
+
+              // This will update the cached guild with the new values
+              // @ts-ignore
+              cachedGuild[key] = value
+              return { key, oldValue: cachedValue, value };
+            }
+            return;
+          }).filter((change) => change) as GuildUpdateChange[];
+
+        return eventHandlers.guildUpdate?.(cachedGuild, changes);
       }
 
       if (data.t === "GUILD_DELETE") {
