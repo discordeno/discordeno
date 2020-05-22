@@ -36,6 +36,12 @@ export interface ClientOptions {
   eventHandlers?: EventHandlers;
 }
 
+export interface GuildUpdateChange {
+  key: string;
+  oldValue?: unknown;
+  value?: unknown;
+}
+
 export interface EventHandlers {
   botUpdate?: (user: User, cachedUser?: User) => unknown;
   channelCreate?: (channel: Channel) => unknown;
@@ -44,7 +50,7 @@ export interface EventHandlers {
   guildBanAdd?: (guild: Guild, user: User) => unknown;
   guildBanRemove?: (guild: Guild, user: User) => unknown;
   guildCreate?: (guild: Guild) => unknown;
-  guildUpdate?: (guild: Guild, cachedGuild: Guild) => unknown;
+  guildUpdate?: (guild: Guild, changes: GuildUpdateChange[]) => unknown;
   guildDelete?: (guild: Guild) => unknown;
   guildEmojisUpdate?: (
     guild: Guild,
