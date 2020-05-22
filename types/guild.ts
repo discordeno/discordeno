@@ -14,6 +14,13 @@ export interface GuildRolePayload {
   role: RoleData;
 }
 
+export interface GuildRoleDeletePayload {
+  /** The id of the guild */
+  guild_id: string;
+  /** The id of the role */
+  role_id: string;
+}
+
 export interface GuildMemberChunkPayload {
   /** The id of the guild */
   guild_id: string;

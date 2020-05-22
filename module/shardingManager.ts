@@ -32,6 +32,7 @@ import {
   GuildRolePayload,
   UserPayload,
   FetchMembersOptions,
+  GuildRoleDeletePayload,
 } from "../types/guild.ts";
 import {
   handleInternalGuildCreate,
@@ -66,6 +67,7 @@ const fetchAllMembersProcessingRequests = new Map<
   FetchAllMembersRequest
 >();
 const shards: Worker[] = [];
+let createNextShard = true;
 
 export function createShardWorker(shardID?: number) {
   const path = new URL("./shard.ts", import.meta.url).toString();
@@ -76,6 +78,7 @@ export function createShardWorker(shardID?: number) {
         shardID || shardCounter++,
         botGatewayData.shards,
       ];
+
       shard.postMessage(
         {
           type: "CREATE_SHARD",
@@ -95,13 +98,19 @@ export const spawnShards = async (
   payload: unknown,
   id = 1,
 ) => {
-  createShardWorker();
-  // 5 second delay per shard
-  await delay(5000);
-  if (id < data.shards) spawnShards(data, payload, id + 1);
+  if (id < data.shards) {
+    if (createNextShard) {
+      createNextShard = false;
+      createShardWorker();
+      spawnShards(data, payload, id + 1);
+    } else {
+      await delay(1000);
+      spawnShards(data, payload, id);
+    }
+  }
 };
 
-function handleDiscordPayload(data: DiscordPayload) {
+async function handleDiscordPayload(data: DiscordPayload) {
   eventHandlers.raw?.(data);
 
   switch (data.op) {
@@ -109,7 +118,13 @@ function handleDiscordPayload(data: DiscordPayload) {
       // Incase the user wants to listen to heartbeat responses
       return eventHandlers.heartbeat?.();
     case GatewayOpcode.Dispatch:
-      if (data.t === "READY") return eventHandlers.ready?.();
+      if (data.t === "READY") {
+        // Triggered on each shard
+        eventHandlers.ready?.();
+        // Wait 5 seconds to spawn next shard
+        await delay(5000);
+        createNextShard = true;
+      }
 
       if (data.t === "CHANNEL_CREATE") {
         return handleInternalChannelCreate(data.d as ChannelCreatePayload);
@@ -290,9 +305,19 @@ function handleDiscordPayload(data: DiscordPayload) {
         }
       }
 
+      if (data.t === "GUILD_ROLE_DELETE") {
+        const options = data.d as GuildRoleDeletePayload;
+        const guild = cache.guilds.get(options.guild_id);
+        if (!guild) return;
+
+        const cachedRole = guild.roles.get(options.role_id)!;
+        guild.roles.delete(options.role_id);
+        return eventHandlers.roleDelete?.(guild, cachedRole);
+      }
+
       if (
         data.t &&
-        ["GUILD_ROLE_CREATE", "GUILD_ROLE_DELETE", "GUILD_ROLE_UPDATE"]
+        ["GUILD_ROLE_CREATE", "GUILD_ROLE_UPDATE"]
           .includes(data.t)
       ) {
         const options = data.d as GuildRolePayload;
@@ -308,13 +333,6 @@ function handleDiscordPayload(data: DiscordPayload) {
 
         const cachedRole = guild.roles.get(options.role.id);
         if (!cachedRole) return;
-
-        if (data.t === "GUILD_ROLE_DELETE") {
-          const roles = guild.roles;
-          roles.delete(options.role.id);
-          guild.roles = roles;
-          return eventHandlers.roleDelete?.(guild, cachedRole);
-        }
 
         if (data.t === "GUILD_ROLE_UPDATE") {
           const role = createRole(options.role);

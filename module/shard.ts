@@ -80,6 +80,11 @@ const createShard = async (
           break;
         case GatewayOpcode.Reconnect:
         case GatewayOpcode.InvalidSession:
+          // When d is false we need to reidentify
+          if (!data.d) {
+            createShard(botGatewayData, identifyPayload);
+            break;
+          }
           needToResume = true;
           resumeConnection(botGatewayData, identifyPayload);
           break;
