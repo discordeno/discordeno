@@ -74,7 +74,7 @@ export interface GuildDeletePayload {
   unavailable?: boolean;
 }
 
-export interface CreateGuildPayload {
+export interface UpdateGuildPayload {
   /** The guild id */
   id: string;
   /** The guild name 2-100 characters */
@@ -83,6 +83,8 @@ export interface CreateGuildPayload {
   icon: string | null;
   /** The guild splash image hash */
   splash: string | null;
+  /** Discovery splash has; only present for guilds with the "DISCOVERABLE" feature */
+  disovery_splash: string | null;
   /** The id of the owner */
   owner_id: string;
   /** The voice region id for the guild */
@@ -97,6 +99,10 @@ export interface CreateGuildPayload {
   embed_channel_id?: string | null;
   /** The verification level required for the guild */
   verification_level: number;
+  /** Default message notifications level */
+  default_message_notifications: number;
+  /** Explicit content filter level */
+  explicit_content_filter: number;
   /** The roles in the guild */
   roles: RoleData[];
   /** The custom guild emojis */
@@ -105,22 +111,16 @@ export interface CreateGuildPayload {
   features: Guild_Features[];
   /** Required MFA level for the guild */
   mfa_level: number;
+  /** True if the server widget is enabled */
+  widget_enabled?: boolean;
+  /** The channel id that the widget will generate an invite to, or null if set to no invite. */
+  widget_channel_id?: string | null;
   /** The id of the channel to which system mesages are sent */
   system_channel_id: string | null;
-  /** When this guild was joined at */
-  joined_at: string;
-  /** Whether this is considered a large guild */
-  large: boolean;
-  /** Whether this guild is unavailable */
-  unavailable: boolean;
-  /** Total number of members in this guild */
-  member_count?: number;
-  voice_states: Voice_State[];
-  /** Users in the guild */
-  members: MemberCreatePayload[];
-  /** Channels in the guild */
-  channels: ChannelCreatePayload[];
-  presences: Presence[];
+  /** System channel flags */
+  system_channel_flags: number;
+  /** The id of the channel where guilds with the PUBLIC feature can display rules and or guidelines. */
+  rules_channel_id: string | null;
   /** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.) */
   max_presences?: number | null;
   /** The maximum amount of members for the guild */
@@ -137,6 +137,31 @@ export interface CreateGuildPayload {
   premium_subscription_count: number;
   /** The preferred local of this guild only set if guild has the DISCOVERABLE feature, defaults to en-US */
   preferred_locale: string;
+  /** The id of the channel where admins and moderators of guilds with the PUBLIC feature receive notices from Discord */
+  public_updates_channel_id: string | null;
+  /** The maximum amount of users in a video channel. */
+  max_video_channel_users?: number;
+  /** The approximate number of members in this guild, returned from the GET /guild/id endpoint when with_counts is true */
+  approximate_member_count?: number;
+  /** The approximate number of non-offline members in this guild, returned from the GET /guild/id endpoint when with_counts is true */
+  approximate_presence_count?: number;
+}
+
+export interface CreateGuildPayload extends UpdateGuildPayload {
+  /** When this guild was joined at */
+  joined_at: string;
+  /** Whether this is considered a large guild */
+  large: boolean;
+  /** Whether this guild is unavailable */
+  unavailable: boolean;
+  /** Total number of members in this guild */
+  member_count?: number;
+  voice_states: Voice_State[];
+  /** Users in the guild */
+  members: MemberCreatePayload[];
+  /** Channels in the guild */
+  channels: ChannelCreatePayload[];
+  presences: Presence[];
 }
 
 export type Guild_Features =
