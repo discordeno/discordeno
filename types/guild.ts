@@ -4,7 +4,7 @@ import { Permission } from "./permission.ts";
 import { RoleData } from "./role.ts";
 import { MemberCreatePayload } from "./member.ts";
 import { Activity } from "./message.ts";
-import { Client_Status_Payload } from "./presence.ts";
+import { ClientStatusPayload } from "./presence.ts";
 import { ChannelCreatePayload } from "./channel.ts";
 
 export interface GuildRolePayload {
@@ -567,7 +567,7 @@ export interface Presence {
   /** Either idle */
   status: StatusType;
   activities: Activity[];
-  client_status: Client_Status_Payload;
+  client_status: ClientStatusPayload;
   premium_since?: string | null;
   nick?: string | null;
 }

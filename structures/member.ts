@@ -18,7 +18,7 @@ import { createUser } from "./user.ts";
 
 export const createMember = (data: MemberCreatePayload, guild: Guild) => {
   // Add the user to cache as well
-  cache.users.set(data.user.id, createUser(data.user))
+  cache.users.set(data.user.id, createUser(data.user));
 
   return {
     ...data,

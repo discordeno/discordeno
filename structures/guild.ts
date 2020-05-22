@@ -70,7 +70,9 @@ export const createGuild = (data: CreateGuildPayload) => {
     /** The users in this guild. */
     members: new Map<string, Member>(),
     /** The channels in the guild */
-    channels: new Map(data.channels.map((c) => [c.id, createChannel(c, data.id)])),
+    channels: new Map(
+      data.channels.map((c) => [c.id, createChannel(c, data.id)]),
+    ),
     /** The presences of all the users in the guild. */
     presences: new Map(data.presences.map((p) => [p.user.id, p])),
     /** The total number of members in this guild. This value is updated as members leave and join the server. However, if you do not have the intent enabled to be able to listen to these events, then this will not be accurate. */

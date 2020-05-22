@@ -1,5 +1,5 @@
 import { Activity } from "./message.ts";
-import { Client_Status_Payload } from "./presence.ts";
+import { ClientStatusPayload } from "./presence.ts";
 import { Partial_User } from "./guild.ts";
 import { MemberCreatePayload } from "./member.ts";
 
@@ -211,7 +211,7 @@ export interface PresenceUpdatePayload {
   /** All user's current activity */
   activities: Activity[];
   /** The user's platform dependent status */
-  client_status: Client_Status_Payload;
+  client_status: ClientStatusPayload;
   /** When the user has started boosting the guild */
   premium_since?: string | null;
   /** This users guild nickname (if one is set) */
