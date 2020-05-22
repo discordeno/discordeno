@@ -303,6 +303,7 @@ This section will list out all the available methods and functionality in the li
 - tag
 ```ts
 - .avatarURL(size, format)
+- .sendMessage(content)
 ```
 
 ## Utils
