@@ -47,6 +47,24 @@ export interface Base_Channel_Create {
   last_pin_timestamp?: string;
 }
 
+export interface DMChannelCreatePayload {
+  /** This is a unique channel id. It is NOT the users id. */
+  id: string;
+  /** The id of the last message sent in this dm channel */
+  last_message_id: string;
+  /** The type of channel */
+  type: 1;
+  /** The user */
+  recipients: {
+    /** This is the user ID */
+    id: string;
+    username: string;
+    avatar: string;
+    discriminator: string;
+    public_flags: number;
+  }[];
+}
+
 export interface ChannelCreatePayload extends Base_Channel_Create {
   /** The id of this channel */
   id: string;

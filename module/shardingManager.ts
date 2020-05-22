@@ -179,7 +179,7 @@ async function handleDiscordPayload(data: DiscordPayload) {
 
               // This will update the cached guild with the new values
               // @ts-ignore
-              cachedGuild[key] = value
+              cachedGuild[key] = value;
               return { key, oldValue: cachedValue, value };
             }
             return;
