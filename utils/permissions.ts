@@ -20,14 +20,6 @@ export function memberHasPermission(
       return bits;
     }, 0);
 
-  // const permissionBits = [...guild.roles.values()]
-  //   .filter((role) => memberRoleIDs.includes(role.id))
-  //   .map((role) => role.permissions)
-  //   .reduce((bits, permissions) => {
-  //     bits |= permissions;
-  //     return bits;
-  //   }, 0);
-
   if (permissionBits & Permissions.ADMINISTRATOR) return true;
 
   return permissions.every((permission) =>
