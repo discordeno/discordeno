@@ -559,12 +559,18 @@ async function handleDiscordPayload(data: DiscordPayload) {
   }
 }
 
-export function requestAllMembers(
+export async function requestAllMembers(
   guildID: string,
   resolve: Function,
   memberCount: number,
   options?: FetchMembersOptions,
 ) {
+  if (fetchAllMembersProcessingRequests.size >= 5) {
+    await delay(1000);
+    requestAllMembers(guildID, resolve, memberCount, options);
+    return;
+  }
+
   const payload = {
     resolve,
     requestedMax: options?.query
