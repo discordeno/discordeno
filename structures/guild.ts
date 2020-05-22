@@ -34,8 +34,6 @@ import { requestAllMembers } from "../module/shardingManager.ts";
 export const createGuild = (data: CreateGuildPayload) => {
   const guild = {
     ...data,
-    /** The raw create guild payload data. */
-    raw: data,
     /** The owner id of the guild. */
     ownerID: data.owner_id,
     /** The afk channel id for this guild. */

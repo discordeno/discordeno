@@ -24,8 +24,6 @@ import { logYellow } from "../utils/logger.ts";
 export function createChannel(data: ChannelCreatePayload, guildID?: string) {
   const channel = {
     ...data,
-    /** The raw channel data */
-    raw: data,
     /** The guild id of the channel if it is a guild channel. */
     guildID: guildID || data.guild_id,
     /** The id of the last message sent in this channel */

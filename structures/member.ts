@@ -22,8 +22,6 @@ export const createMember = (data: MemberCreatePayload, guild: Guild) => {
 
   return {
     ...data,
-    /** The complete raw data from the member create payload */
-    raw: data,
     /** When the user joined the guild */
     joinedAt: Date.parse(data.joined_at),
     /** When the user used their nitro boost on the server. */

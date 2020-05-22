@@ -13,7 +13,6 @@ import { cache } from "../utils/cache.ts";
 export function createMessage(data: MessageCreateOptions) {
   const message = {
     ...data,
-    raw: data,
     channelID: data.channel_id,
     guildID: data.guild_id,
     mentionsEveryone: data.mentions_everyone,
