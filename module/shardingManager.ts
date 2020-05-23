@@ -581,13 +581,12 @@ async function handleDiscordPayload(data: DiscordPayload, shardID: number) {
             selfMute: payload.self_mute,
             selfStream: payload.self_stream,
           });
-          return;
         }
 
-        if (cachedState.channelID !== payload.channel_id) {
+        if (cachedState?.channelID !== payload.channel_id) {
           // Either joined or moved channels
           if (payload.channel_id) {
-            cachedState.channelID
+            cachedState?.channelID
               ? // Was in a channel before
                 eventHandlers.voiceChannelSwitch?.(
                   member,
@@ -597,7 +596,7 @@ async function handleDiscordPayload(data: DiscordPayload, shardID: number) {
               : // Was not in a channel before so user just joined
                 eventHandlers.voiceChannelJoin?.(member, payload.channel_id);
           } // Left the channel
-          else if (cachedState.channelID) {
+          else if (cachedState?.channelID) {
             eventHandlers.voiceChannelLeave?.(member, cachedState.channelID);
           }
         }
