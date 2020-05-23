@@ -7,7 +7,6 @@ export * from "./structures/guild.ts";
 export * from "./structures/member.ts";
 export * from "./structures/message.ts";
 export * from "./structures/role.ts";
-export * from "./structures/user.ts";
 
 export * from "./types/activity.ts";
 export * from "./types/cdn.ts";
