@@ -9,7 +9,7 @@ import {
   DiscordHeartbeatPayload,
   ReadyPayload,
 } from "../types/discord.ts";
-import { logRed } from "../utils/logger.ts";
+import { logRed, logBlue } from "../utils/logger.ts";
 import { FetchMembersOptions } from "../types/guild.ts";
 import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
 
@@ -21,6 +21,45 @@ let sessionID = "";
 // Discord requests null if no number has yet been sent by discord
 let previousSequenceNumber: number | null = null;
 let needToResume = false;
+let shardID = 0;
+
+const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
+let processQueue = false;
+
+interface RequestMemberQueuedRequest {
+  guildID: string;
+  nonce: string;
+  options?: FetchMembersOptions;
+}
+
+async function processRequestMembersQueue() {
+  if (!RequestMembersQueue.length) {
+    processQueue = false;
+    return;
+  }
+
+  // 2 events per second is the rate limit.
+  const request = RequestMembersQueue.shift();
+  if (request) {
+    requestGuildMembers(request.guildID, request.nonce, request.options, true);
+
+    const secondRequest = RequestMembersQueue.shift();
+    if (secondRequest) {
+      requestGuildMembers(
+        secondRequest.guildID,
+        secondRequest.nonce,
+        secondRequest.options,
+        true,
+      );
+    }
+  }
+
+  await delay(1500);
+  logBlue(
+    `There are still ${RequestMembersQueue.length} requests in queue on shard ${shardID}`,
+  );
+  processRequestMembersQueue();
+}
 
 // TODO: If a client does not receive a heartbeat ack between its attempts at sending heartbeats, it should immediately terminate the connection with a non-1000 close code, reconnect, and attempt to resume.
 async function sendConstantHeartbeats(
@@ -107,14 +146,16 @@ const createShard = async (
               type: "HANDLE_DISCORD_PAYLOAD",
               payload: message,
               resumeInterval,
+              shardID,
             },
           );
           break;
       }
     } else if (isWebSocketCloseEvent(message)) {
-      logRed(`Close :( ${JSON.stringify(message)}`);
+      logRed(`Closeing: ${JSON.stringify(message)}`);
       // These error codes should just crash the projects
       if ([4004, 4005, 4012, 4013, 4014].includes(message.code)) {
+        logRed(`Close :( ${JSON.stringify(message)}`);
         throw new Error(
           "Shard.ts: Error occurred that is not resumeable or able to be reconnected.",
         );
@@ -134,7 +175,29 @@ function requestGuildMembers(
   guildID: string,
   nonce: string,
   options?: FetchMembersOptions,
+  queuedRequest = false,
 ) {
+  // This request was not from this queue so we add it to queue first
+  if (!queuedRequest) {
+    RequestMembersQueue.push({
+      guildID,
+      nonce,
+      options,
+    });
+
+    if (!processQueue) {
+      processQueue = true;
+      processRequestMembersQueue();
+    }
+    return;
+  }
+
+  // If its closed add back to queue to redo on resume
+  if (shardSocket.isClosed) {
+    requestGuildMembers(guildID, nonce, options);
+    return;
+  }
+
   shardSocket.send(JSON.stringify({
     op: GatewayOpcode.RequestGuildMembers,
     d: {
@@ -158,6 +221,7 @@ onmessage = (message: MessageEvent) => {
       message.data.botGatewayData,
       message.data.identifyPayload,
     );
+    shardID = message.data.shardID;
   }
 
   if (message.data.type === "FETCH_MEMBERS") {

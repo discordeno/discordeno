@@ -1,5 +1,4 @@
 import { Emoji, StatusType } from "./discord.ts";
-import { User } from "../structures/user.ts";
 import { Permission } from "./permission.ts";
 import { RoleData } from "./role.ts";
 import { MemberCreatePayload } from "./member.ts";
@@ -204,7 +203,7 @@ export interface BannedUser {
   /** The reason for the ban */
   reason?: string;
   /** The banned user object */
-  user: User;
+  user: UserPayload;
 }
 
 export interface PositionSwap {

@@ -31,9 +31,11 @@ import { RoleData } from "../types/role.ts";
 import { Intents } from "../types/options.ts";
 import { requestAllMembers } from "../module/shardingManager.ts";
 
-export const createGuild = (data: CreateGuildPayload) => {
+export const createGuild = (data: CreateGuildPayload, shardID: number) => {
   const guild = {
     ...data,
+    /** The shard id that this guild is on */
+    shardID,
     /** The owner id of the guild. */
     ownerID: data.owner_id,
     /** The afk channel id for this guild. */
@@ -293,7 +295,7 @@ export const createGuild = (data: CreateGuildPayload) => {
       }
 
       return new Promise((resolve) => {
-        requestAllMembers(data.id, resolve, guild.memberCount, options);
+        requestAllMembers(guild, resolve, options);
       });
     },
     /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */

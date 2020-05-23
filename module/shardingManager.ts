@@ -20,7 +20,7 @@ import {
   handleInternalChannelDelete,
 } from "../events/channels.ts";
 import { ChannelCreatePayload } from "../types/channel.ts";
-import { createGuild } from "../structures/guild.ts";
+import { createGuild, Guild } from "../structures/guild.ts";
 import {
   CreateGuildPayload,
   GuildDeletePayload,
@@ -40,20 +40,17 @@ import {
   handleInternalGuildDelete,
 } from "../events/guilds.ts";
 import { cache } from "../utils/cache.ts";
-import { createUser } from "../structures/user.ts";
 import { createMember } from "../structures/member.ts";
 import { createRole } from "../structures/role.ts";
 import {
   MessageCreateOptions,
   MessageDeletePayload,
   MessageDeleteBulkPayload,
-  MessageUpdatePayload,
   MessageReactionPayload,
   BaseMessageReactionPayload,
   MessageReactionRemoveEmojiPayload,
 } from "../types/message.ts";
 import { createMessage } from "../structures/message.ts";
-import { logGreen, logBlue } from "../utils/logger.ts";
 import { GuildUpdateChange } from "../types/options.ts";
 
 let shardCounter = 0;
@@ -66,7 +63,7 @@ export interface FetchAllMembersRequest {
 
 const fetchAllMembersProcessingRequests = new Map<
   string,
-  FetchAllMembersRequest
+  Function
 >();
 const shards: Worker[] = [];
 let createNextShard = true;
@@ -77,7 +74,7 @@ export function createShardWorker(shardID?: number) {
   shard.onmessage = (message) => {
     if (message.data.type === "REQUEST_CLIENT_OPTIONS") {
       identifyPayload.shard = [
-        shardID || shardCounter++,
+        shardID || shardCounter,
         botGatewayData.shards,
       ];
 
@@ -86,10 +83,16 @@ export function createShardWorker(shardID?: number) {
           type: "CREATE_SHARD",
           botGatewayData,
           identifyPayload,
+          shardID: shardCounter,
         },
       );
+      // Update the shard counter
+      shardCounter++;
     } else if (message.data.type === "HANDLE_DISCORD_PAYLOAD") {
-      handleDiscordPayload(JSON.parse(message.data.payload));
+      handleDiscordPayload(
+        JSON.parse(message.data.payload),
+        message.data.shardID,
+      );
     }
   };
   shards.push(shard);
@@ -112,7 +115,7 @@ export const spawnShards = async (
   }
 };
 
-async function handleDiscordPayload(data: DiscordPayload) {
+async function handleDiscordPayload(data: DiscordPayload, shardID: number) {
   eventHandlers.raw?.(data);
 
   switch (data.op) {
@@ -140,11 +143,18 @@ async function handleDiscordPayload(data: DiscordPayload) {
       }
 
       if (data.t === "GUILD_CREATE") {
-        const guild = createGuild(data.d as CreateGuildPayload);
-        handleInternalGuildCreate(guild);
-        if (cache.unavailableGuilds.get(guild.id)) {
-          return cache.unavailableGuilds.delete(guild.id);
+        const options = data.d as CreateGuildPayload;
+        // When shards resume they emit GUILD_CREATE again.
+        if (cache.guilds.has(options.id)) {
+          return;
         }
+
+        const guild = createGuild(data.d as CreateGuildPayload, shardID);
+        handleInternalGuildCreate(guild);
+        if (cache.unavailableGuilds.get(options.id)) {
+          cache.unavailableGuilds.delete(options.id);
+        }
+
         return eventHandlers.guildCreate?.(guild);
       }
 
@@ -207,10 +217,11 @@ async function handleDiscordPayload(data: DiscordPayload) {
         const guild = cache.guilds.get(options.guild_id);
         if (!guild) return;
 
-        const user = createUser(options.user);
+        const member = guild.members.get(options.user.id);
+
         return data.t === "GUILD_BAN_ADD"
-          ? eventHandlers.guildBanAdd?.(guild, user)
-          : eventHandlers.guildBanRemove?.(guild, user);
+          ? eventHandlers.guildBanAdd?.(guild, member || options.user)
+          : eventHandlers.guildBanRemove?.(guild, member || options.user);
       }
 
       if (data.t === "GUILD_EMOJIS_UPDATE") {
@@ -240,7 +251,6 @@ async function handleDiscordPayload(data: DiscordPayload) {
           guild,
         );
         guild.members.set(options.user.id, member);
-        cache.users.set(options.user.id, createUser(member.user));
 
         return eventHandlers.guildMemberAdd?.(guild, member);
       }
@@ -256,7 +266,7 @@ async function handleDiscordPayload(data: DiscordPayload) {
         const member = guild.members.get(options.user.id);
         return eventHandlers.guildMemberRemove?.(
           guild,
-          member || createUser(options.user),
+          member || options.user,
         );
       }
 
@@ -280,7 +290,6 @@ async function handleDiscordPayload(data: DiscordPayload) {
           guild,
         );
         guild.members.set(options.user.id, member);
-        cache.users.set(options.user.id, createUser(member.user));
 
         if (cachedMember?.nick !== options.nick) {
           eventHandlers.nicknameUpdate?.(
@@ -320,19 +329,18 @@ async function handleDiscordPayload(data: DiscordPayload) {
               guild,
             ),
           );
-          cache.users.set(member.user.id, createUser(member.user));
         });
 
         // Check if its necessary to resolve the fetchmembers promise for this chunk or if more chunks will be coming
         if (
           options.nonce
         ) {
-          const request = fetchAllMembersProcessingRequests.get(options.nonce);
-          if (!request) return;
+          const resolve = fetchAllMembersProcessingRequests.get(options.nonce);
+          if (!resolve) return;
 
           if (options.chunk_index + 1 === options.chunk_count) {
             fetchAllMembersProcessingRequests.delete(options.nonce);
-            request.resolve();
+            resolve();
           }
         }
       }
@@ -377,9 +385,6 @@ async function handleDiscordPayload(data: DiscordPayload) {
         const channel = cache.channels.get(options.channel_id);
         if (channel) channel.last_message_id = options.id;
 
-        // Cache the message author themself
-        cache.users.set(options.author.id, createUser(options.author));
-
         const message = createMessage(options);
         // Cache the message
         cache.messages.set(options.id, message);
@@ -399,8 +404,6 @@ async function handleDiscordPayload(data: DiscordPayload) {
         }
 
         options.mentions.forEach((mention) => {
-          // For each mention cache the user
-          cache.users.set(mention.id, createUser(mention));
           // Cache the member if its a valid member
           if (mention.member) {
             guild?.members.set(
@@ -433,12 +436,31 @@ async function handleDiscordPayload(data: DiscordPayload) {
       }
 
       if (data.t === "MESSAGE_UPDATE") {
-        const options = data.d as MessageUpdatePayload;
+        const options = data.d as MessageCreateOptions;
         const channel = cache.channels.get(options.channel_id);
         if (!channel) return;
 
-        // const cachedMessage = channel.messages().get(options.id)
-        // return eventHandlers.message_update?.(message, cachedMessage)
+        const cachedMessage = cache.messages.get(options.id);
+        if (!cachedMessage) return;
+
+        const oldMessage = {
+          attachments: cachedMessage.attachments,
+          content: cachedMessage.content,
+          embeds: cachedMessage.embeds,
+          editedTimestamp: cachedMessage.editedTimestamp,
+          tts: cachedMessage.tts,
+          pinned: cachedMessage.pinned,
+        };
+
+        // Messages with embeds can trigger update but they wont have edited_timestamp
+        if (
+          !options.edited_timestamp ||
+          (cachedMessage.content !== options.content)
+        ) {
+          return;
+        }
+
+        return eventHandlers.messageUpdate?.(cachedMessage, oldMessage);
       }
 
       if (
@@ -476,17 +498,13 @@ async function handleDiscordPayload(data: DiscordPayload) {
 
         if (options.member && options.guild_id) {
           const guild = cache.guilds.get(options.guild_id);
-          if (guild) {
-            const member = createMember(
+          guild?.members.set(
+            options.member.user.id,
+            createMember(
               options.member,
               guild,
-            );
-            guild.members.set(
-              options.member.user.id,
-              member,
-            );
-            cache.users.set(options.member.user.id, createUser(member.user));
-          }
+            ),
+          );
         }
 
         return isAdd
@@ -524,10 +542,19 @@ async function handleDiscordPayload(data: DiscordPayload) {
 
       if (data.t === "USER_UPDATE") {
         const userData = data.d as UserPayload;
-        const cachedUser = cache.users.get(botID);
-        const user = createUser(userData);
-        cache.users.set(userData.id, user);
-        return eventHandlers.botUpdate?.(user, cachedUser);
+
+        cache.guilds.forEach((guild) => {
+          const member = guild.members.get(userData.id);
+          if (!member) return;
+          // member.author = userData;
+          Object.entries(userData).forEach(([key, value]) => {
+            // @ts-ignore
+            if (member[key] === value) return;
+            // @ts-ignore
+            member[key] = value;
+          });
+        });
+        return eventHandlers.botUpdate?.(userData);
       }
 
       if (data.t === "VOICE_STATE_UPDATE") {
@@ -537,7 +564,8 @@ async function handleDiscordPayload(data: DiscordPayload) {
         const guild = cache.guilds.get(payload.guild_id);
         if (!guild) return;
 
-        const member = guild.members.get(payload.user_id);
+        const member = guild.members.get(payload.user_id) ||
+          (payload.member ? createMember(payload.member, guild) : undefined);
         if (!member) return;
 
         // No cached state before so lets make one for em
@@ -592,31 +620,16 @@ async function handleDiscordPayload(data: DiscordPayload) {
 }
 
 export async function requestAllMembers(
-  guildID: string,
+  guild: Guild,
   resolve: Function,
-  memberCount: number,
   options?: FetchMembersOptions,
 ) {
-  if (fetchAllMembersProcessingRequests.size >= 5) {
-    await delay(1000);
-    requestAllMembers(guildID, resolve, memberCount, options);
-    return;
-  }
-
-  const payload = {
-    resolve,
-    requestedMax: options?.query
-      ? 100
-      : options?.userIDs?.length || options?.limit || memberCount,
-    receivedAmount: 0,
-  };
-
   const nonce = Math.random().toString();
-  fetchAllMembersProcessingRequests.set(nonce, payload);
+  fetchAllMembersProcessingRequests.set(nonce, resolve);
 
-  return shards[0].postMessage({
+  shards[guild.shardID].postMessage({
     type: "FETCH_MEMBERS",
-    guildID,
+    guildID: guild.id,
     nonce,
     options,
   });

@@ -6,7 +6,6 @@ import {
   TypingStartPayload,
   VoiceStateUpdatePayload,
 } from "./discord.ts";
-import { User } from "../structures/user.ts";
 import { Role } from "../structures/role.ts";
 import { Message } from "../structures/message.ts";
 import {
@@ -21,6 +20,7 @@ import {
 import { Channel } from "../structures/channel.ts";
 import { Guild } from "../structures/guild.ts";
 import { Member } from "../structures/member.ts";
+import { UserPayload } from "./guild.ts";
 
 export interface Fulfilled_Client_Options {
   token: string;
@@ -54,12 +54,12 @@ export interface OldMessage {
 }
 
 export interface EventHandlers {
-  botUpdate?: (user: User, cachedUser?: User) => unknown;
+  botUpdate?: (user: UserPayload) => unknown;
   channelCreate?: (channel: Channel) => unknown;
   channelUpdate?: (channel: Channel, cachedChannel: Channel) => unknown;
   channelDelete?: (channel: Channel) => unknown;
-  guildBanAdd?: (guild: Guild, user: User) => unknown;
-  guildBanRemove?: (guild: Guild, user: User) => unknown;
+  guildBanAdd?: (guild: Guild, user: Member | UserPayload) => unknown;
+  guildBanRemove?: (guild: Guild, user: Member | UserPayload) => unknown;
   guildCreate?: (guild: Guild) => unknown;
   guildUpdate?: (guild: Guild, changes: GuildUpdateChange[]) => unknown;
   guildDelete?: (guild: Guild) => unknown;
@@ -69,7 +69,7 @@ export interface EventHandlers {
     cachedEmojis: Emoji[],
   ) => unknown;
   guildMemberAdd?: (guild: Guild, member: Member) => unknown;
-  guildMemberRemove?: (guild: Guild, member: Member | User) => unknown;
+  guildMemberRemove?: (guild: Guild, member: Member | UserPayload) => unknown;
   guildMemberUpdate?: (
     guild: Guild,
     member: Member,

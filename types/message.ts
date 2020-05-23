@@ -1,10 +1,9 @@
 import { ChannelType, UserPayload } from "./guild.ts";
-import { User } from "../structures/user.ts";
 import { MemberCreatePayload } from "./member.ts";
 import { Channel } from "../structures/channel.ts";
 import { Member } from "../structures/member.ts";
 
-export interface MentionedUser extends User {
+export interface MentionedUser extends UserPayload {
   member: Member;
 }
 
@@ -209,7 +208,7 @@ export interface EmojiReaction {
   /** The roles this emoji is whitelisted to */
   roles?: string[];
   /** The user that created this emoji */
-  user?: User;
+  user?: UserPayload;
   /** Whether this emoji must be wrapped in colons */
   require_colons?: boolean;
   /** Whether this emoji is managed */

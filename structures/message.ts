@@ -1,7 +1,6 @@
 import { MessageCreateOptions } from "../types/message.ts";
 import { endpoints } from "../constants/discord.ts";
 import { MessageContent } from "../types/channel.ts";
-import { createUser } from "./user.ts";
 import { UserPayload } from "../types/guild.ts";
 import { botHasPermission } from "../utils/permissions.ts";
 import { Errors } from "../types/errors.ts";
@@ -18,18 +17,16 @@ export function createMessage(data: MessageCreateOptions) {
     mentionsEveryone: data.mentions_everyone,
     mentionRoles: data.mention_roles,
     mentionChannels: data.mention_channels,
-    mentions: data.mentions.map((user) => cache.users.get(user.id)!),
     webhookID: data.webhook_id,
     messageReference: data.message_reference,
-
-    author: cache.users.get(data.author.id)!,
     timestamp: Date.parse(data.timestamp),
     editedTimestamp: data.edited_timestamp
-      ? Date.parse(data.edited_timestamp)
-      : undefined,
+    ? Date.parse(data.edited_timestamp)
+    : undefined,
     channel: cache.channels.get(data.channel_id)!,
     guild: () => data.guild_id ? cache.guilds.get(data.guild_id) : undefined,
     member: () => message.guild()?.members.get(data.author.id)!,
+    mentions: () => data.mentions.map((mention) => message.guild()?.members.get(mention.id) || mention),
 
     /** Delete a message */
     delete: (reason?: string) => {
@@ -119,7 +116,11 @@ export function createMessage(data: MessageCreateOptions) {
       const result = (await RequestManager.get(
         endpoints.CHANNEL_MESSAGE_REACTION(data.channel_id, data.id, reaction),
       )) as UserPayload[];
-      return result.map((res) => createUser(res));
+      const guild = message.guild();
+
+      return result.map((res) => {
+        return guild?.members.get(res.id) || res;
+      });
     },
     /** Edit the message. */
     edit: async (content: string | MessageContent) => {

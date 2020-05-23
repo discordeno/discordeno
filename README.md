@@ -62,18 +62,18 @@ This section will list out all the available methods and functionality in the li
 ## Events
 
 ```ts
-.botUpdate(user, cachedUser)
+.botUpdate(userData)
 .channelCreate(channel)
 .channelUpdate(channel, cachedChannel)
 .channelDelete(channel)
-.guildBanAdd(guild, user)
-.guildBanRemove(guild, user)
+.guildBanAdd(guild, memberOrUserData)
+.guildBanRemove(guild, memberOrUserData)
 .guildCreate(guild)
 .guildUpdate(guild, cachedGuild)
 .guildDelete(guild)
 .guildEmojisUpdate(guild, emojis, cachedEmojis)
 .guildMemberAdd(guild, member)
-.guildMemberRemove(guild, member)
+.guildMemberRemove(guild, memberOrUserData)
 .guildMemberUpdate(guild, member, cachedMember)
 .heartbeat()
 .messageCreate(message)
@@ -285,27 +285,6 @@ This section will list out all the available methods and functionality in the li
 - managed
 - mentionable
 - mention
-
-## User
-
-- id
-- username
-- discriminator
-- avatar
-- bot
-- system
-- mfaEnabled
-- locale
-- verified
-- email
-- flags
-- premiumType
-- mention
-- tag
-```ts
-- .avatarURL(size, format)
-- .sendMessage(content)
-```
 
 ## Utils
 
