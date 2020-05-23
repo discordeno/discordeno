@@ -21,12 +21,15 @@ export function createMessage(data: MessageCreateOptions) {
     messageReference: data.message_reference,
     timestamp: Date.parse(data.timestamp),
     editedTimestamp: data.edited_timestamp
-    ? Date.parse(data.edited_timestamp)
-    : undefined,
+      ? Date.parse(data.edited_timestamp)
+      : undefined,
     channel: cache.channels.get(data.channel_id)!,
     guild: () => data.guild_id ? cache.guilds.get(data.guild_id) : undefined,
     member: () => message.guild()?.members.get(data.author.id)!,
-    mentions: () => data.mentions.map((mention) => message.guild()?.members.get(mention.id) || mention),
+    mentions: () =>
+      data.mentions.map((mention) =>
+        message.guild()?.members.get(mention.id) || mention
+      ),
 
     /** Delete a message */
     delete: (reason?: string) => {
