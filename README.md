@@ -78,6 +78,7 @@ This section will list out all the available methods and functionality in the li
 .heartbeat()
 .messageCreate(message)
 .messageDelete(message)
+.messageUpdate(message, oldMessage)
 .nicknameUpdate(guild, member, nickname, oldNickname)
 .presenceUpdate(data)
 .ready()

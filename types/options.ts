@@ -15,6 +15,8 @@ import {
   Reaction_Payload,
   BaseMessageReactionPayload,
   MessageReactionRemoveEmojiPayload,
+  Embed,
+  Attachment,
 } from "./message.ts";
 import { Channel } from "../structures/channel.ts";
 import { Guild } from "../structures/guild.ts";
@@ -42,6 +44,15 @@ export interface GuildUpdateChange {
   value?: unknown;
 }
 
+export interface OldMessage {
+  attachments: Attachment[];
+  content: string;
+  embeds: Embed[];
+  editedTimestamp?: number;
+  tts: boolean;
+  pinned: boolean;
+}
+
 export interface EventHandlers {
   botUpdate?: (user: User, cachedUser?: User) => unknown;
   channelCreate?: (channel: Channel) => unknown;
@@ -67,6 +78,7 @@ export interface EventHandlers {
   heartbeat?: () => unknown;
   messageCreate?: (message: Message) => unknown;
   messageDelete?: (message: Message | Partial_Message) => unknown;
+  messageUpdate?: (message: Message, cachedMessage: OldMessage) => unknown;
   nicknameUpdate?: (
     guild: Guild,
     member: Member,
