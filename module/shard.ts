@@ -9,7 +9,7 @@ import {
   DiscordHeartbeatPayload,
   ReadyPayload,
 } from "../types/discord.ts";
-import { logRed, logBlue } from "../utils/logger.ts";
+import { logRed } from "../utils/logger.ts";
 import { FetchMembersOptions } from "../types/guild.ts";
 import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
 
@@ -55,9 +55,6 @@ async function processRequestMembersQueue() {
   }
 
   await delay(1500);
-  logBlue(
-    `There are still ${RequestMembersQueue.length} requests in queue on shard ${shardID}`,
-  );
   processRequestMembersQueue();
 }
 
@@ -152,7 +149,6 @@ const createShard = async (
           break;
       }
     } else if (isWebSocketCloseEvent(message)) {
-      logRed(`Closeing: ${JSON.stringify(message)}`);
       // These error codes should just crash the projects
       if ([4004, 4005, 4012, 4013, 4014].includes(message.code)) {
         logRed(`Close :( ${JSON.stringify(message)}`);
