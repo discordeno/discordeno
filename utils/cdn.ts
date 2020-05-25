@@ -5,5 +5,5 @@ export const formatImageURL = (
   size: ImageSize = 128,
   format?: ImageFormats,
 ) => {
-  return `${url}.${format || url.includes("/a_") ? "gif" : "jpg"}?size=${size}`;
+  return `${url}.${format || (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
 };
