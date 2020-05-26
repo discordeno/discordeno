@@ -1,3 +1,4 @@
+import Collection from "../utils/collection.ts";
 import { identifyPayload } from "../module/client.ts";
 import { endpoints } from "../constants/discord.ts";
 import { formatImageURL } from "../utils/cdn.ts";
@@ -66,21 +67,21 @@ export const createGuild = (data: CreateGuildPayload, shardID: number) => {
     preferredLocale: data.preferred_locale,
 
     /** The roles in the guild */
-    roles: new Map(data.roles.map((r) => [r.id, createRole(r)])),
+    roles: new Collection(data.roles.map((r) => [r.id, createRole(r)])),
     /** When this guild was joined at. */
     joinedAt: Date.parse(data.joined_at),
     /** The users in this guild. */
-    members: new Map<string, Member>(),
+    members: new Collection<string, Member>(),
     /** The channels in the guild */
-    channels: new Map(
+    channels: new Collection(
       data.channels.map((c) => [c.id, createChannel(c, data.id)]),
     ),
     /** The presences of all the users in the guild. */
-    presences: new Map(data.presences.map((p) => [p.user.id, p])),
+    presences: new Collection(data.presences.map((p) => [p.user.id, p])),
     /** The total number of members in this guild. This value is updated as members leave and join the server. However, if you do not have the intent enabled to be able to listen to these events, then this will not be accurate. */
     memberCount: data.member_count || 0,
     /** The Voice State data for each user in a voice channel in this server. */
-    voiceStates: new Map(data.voice_states.map((vs) => [vs.user_id, {
+    voiceStates: new Collection(data.voice_states.map((vs) => [vs.user_id, {
       ...vs,
       guildID: vs.guild_id,
       channelID: vs.channel_id,
