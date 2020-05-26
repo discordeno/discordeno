@@ -18,7 +18,6 @@ If you would like to start from scratch without any boilerplate/framework:
 ```ts
 import Client from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v4/module/client.ts";
 import { Intents } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v4/types/options.ts";
-import { Message } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v4/structures/message.ts";
 
 const BotOptions = {
     token: "token",
@@ -28,7 +27,7 @@ const BotOptions = {
         ready: () => {
             console.log(`Logged!`);
         },
-        messageCreate: (message: Message) => {
+        messageCreate: (message) => {
             if(message.content === "!ping"){
                 message.channel.sendMessage("Pong!");
             }
