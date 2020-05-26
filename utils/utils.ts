@@ -13,3 +13,7 @@ export function editBotsStatus(
 ) {
   sendGatewayCommand("EDIT_BOTS_STATUS", { status, game: { name, type } });
 }
+
+export function chooseRandom<T>(array: T[]) {
+  return array[Math.floor(Math.random() * array.length)];
+}
