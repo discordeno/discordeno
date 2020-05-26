@@ -27,9 +27,7 @@ export function createMessage(data: MessageCreateOptions) {
     guild: () => data.guild_id ? cache.guilds.get(data.guild_id) : undefined,
     member: () => message.guild()?.members.get(data.author.id)!,
     mentions: () =>
-      data.mentions.map((mention) =>
-        message.guild()?.members.get(mention.id)!
-      ),
+      data.mentions.map((mention) => message.guild()?.members.get(mention.id)!),
 
     /** Delete a message */
     delete: (reason?: string) => {
