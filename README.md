@@ -13,6 +13,32 @@ If you are just starting out, you can use the Discordeno Template repo to get th
 | Official Boilerplate | Skillz4Killz#4500 | [Github](https://github.com/Skillz4Killz/Discordeno-bot-template), [Support Server](https://discord.gg/J4NqJ72) | This is a very minimalistic design for a boilerplate for your bot to get you started. |
 | DenoBot            | NTM Nathan#0001    | [Github](https://github.com/ntm-development/DenoBot), [Support Server](https://discord.com/invite/G2rb53z) | Another boilerplate example of the first one, with more commands and improvements. |
 
+If you would like to start from scratch without any boilerplate/framework:
+
+```ts
+import Client from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v4/module/client.ts";
+import { Intents } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v4/types/options.ts";
+import { Message } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v4/structures/message.ts";
+
+const BotOptions = {
+    token: "token",
+    botID: "client ID",
+    intents: [Intents.GUILD_MESSAGES],
+    eventHandlers: {
+        ready: () => {
+            console.log(`Logged!`);
+        },
+        messageCreate: (message: Message) => {
+            if(message.content === "!ping"){
+                message.channel.sendMessage("Pong!");
+            }
+        }
+    }
+};
+
+Client(BotOptions);
+```
+
 ## Open Source Bots Using Discordeno
 
 | Bot Name           | Developer          | Links |
