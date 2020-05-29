@@ -66,6 +66,7 @@ This section will list out all the available methods and functionality in the li
 .channelCreate(channel)
 .channelUpdate(channel, cachedChannel)
 .channelDelete(channel)
+.debug(details)
 .guildBanAdd(guild, memberOrUserData)
 .guildBanRemove(guild, memberOrUserData)
 .guildCreate(guild)
