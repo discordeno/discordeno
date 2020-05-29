@@ -2,10 +2,7 @@ import { endpoints } from "../constants/discord.ts";
 import { DiscordBotGatewayData } from "../types/discord.ts";
 import { ClientOptions, EventHandlers } from "../types/options.ts";
 import { RequestManager } from "./requestManager.ts";
-import { Channel } from "../structures/channel.ts";
 import { spawnShards } from "./shardingManager.ts";
-import { cache } from "../utils/cache.ts";
-// import "./shard.ts";
 
 export let authorization = "";
 export let botID = "";
@@ -46,10 +43,6 @@ export const createClient = async (data: ClientOptions) => {
 };
 
 export default createClient;
-
-export const updateChannelCache = (key: string, value: Channel) => {
-  cache.channels.set(key, value);
-};
 
 export function updateEventHandlers(newEventHandlers: EventHandlers) {
   eventHandlers = newEventHandlers;
