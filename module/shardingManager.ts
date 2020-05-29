@@ -204,6 +204,10 @@ async function handleDiscordPayload(data: DiscordPayload, shardID: number) {
         if (!guild) return;
 
         guild.channels.forEach((channel) => cache.channels.delete(channel.id));
+        cache.messages.forEach((message) => {
+          if (message.guildID === guild.id) cache.messages.delete(message.id);
+        });
+        
         if (options.unavailable) {
           return cache.unavailableGuilds.set(options.id, Date.now());
         }
