@@ -1,3 +1,3 @@
 export const configs = {
-  token: "BOT TOKEN HERE",
+  token: "BOT_TOKEN_HERE",
 };

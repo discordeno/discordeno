@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Setup project
-        run: cp configs.ts.example configs.ts
+        run: cp configs.example.ts configs.ts
 
       - name: Setup Deno environment
         uses: denolib/setup-deno@master
