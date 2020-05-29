@@ -16,6 +16,7 @@ import {
   ChannelEditOptions,
 } from "../types/channel.ts";
 import { logYellow } from "../utils/logger.ts";
+import { eventHandlers } from "../module/client.ts";
 
 /** Checks if a user id or a role id has permission in this channel */
 export function hasChannelPermission(
@@ -45,6 +46,7 @@ export async function getMessage(channel: Channel, id: string) {
     if (
       !botHasPermission(channel.guildID, [Permissions.VIEW_CHANNEL])
     ) {
+      eventHandlers.error?.(Errors.MISSING_VIEW_CHANNEL);
       throw new Error(Errors.MISSING_VIEW_CHANNEL);
     }
     if (
@@ -53,6 +55,7 @@ export async function getMessage(channel: Channel, id: string) {
         [Permissions.READ_MESSAGE_HISTORY],
       )
     ) {
+      eventHandlers.error?.(Errors.MISSING_READ_MESSAGE_HISTORY);
       throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
     }
   }
@@ -75,6 +78,7 @@ export async function getMessages(
     if (
       !botHasPermission(channel.guildID, [Permissions.VIEW_CHANNEL])
     ) {
+      eventHandlers.error?.(Errors.MISSING_VIEW_CHANNEL);
       throw new Error(Errors.MISSING_VIEW_CHANNEL);
     }
     if (
@@ -83,6 +87,7 @@ export async function getMessages(
         [Permissions.READ_MESSAGE_HISTORY],
       )
     ) {
+      eventHandlers.error?.(Errors.MISSING_READ_MESSAGE_HISTORY);
       throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
     }
   }
@@ -115,6 +120,7 @@ export async function sendMessage(
     if (
       !botHasPermission(channel.guildID, [Permissions.SEND_MESSAGES])
     ) {
+      eventHandlers.error?.(Errors.MISSING_SEND_MESSAGES);
       throw new Error(Errors.MISSING_SEND_MESSAGES);
     }
     if (
@@ -124,11 +130,13 @@ export async function sendMessage(
         [Permissions.SEND_TTS_MESSAGES],
       )
     ) {
+      eventHandlers.error?.(Errors.MISSING_SEND_TTS_MESSAGE);
       throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
     }
   }
 
   if (content.content && content.content.length > 2000) {
+    eventHandlers.error?.(Errors.MESSAGE_MAX_LENGTH);
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
   }
 
@@ -150,9 +158,13 @@ export function deleteMessages(
     channel.guildID &&
     !botHasPermission(channel.guildID, [Permissions.MANAGE_MESSAGES])
   ) {
+    eventHandlers.error?.(Errors.MISSING_MANAGE_MESSAGES);
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
-  if (ids.length < 2) throw new Error(Errors.DELETE_MESSAGES_MIN);
+  if (ids.length < 2) {
+    eventHandlers.error?.(Errors.DELETE_MESSAGES_MIN);
+    throw new Error(Errors.DELETE_MESSAGES_MIN);
+  }
 
   if (ids.length > 100) {
     logYellow(
@@ -172,6 +184,7 @@ export function getChannelInvites(channel: Channel) {
     channel.guildID &&
     !botHasPermission(channel.guildID, [Permissions.MANAGE_CHANNELS])
   ) {
+    eventHandlers.error?.(Errors.MISSING_MANAGE_CHANNELS);
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
   return RequestManager.get(endpoints.CHANNEL_INVITES(channel.id));
@@ -186,6 +199,7 @@ export function createInvite(channel: Channel, options: CreateInviteOptions) {
       [Permissions.CREATE_INSTANT_INVITE],
     )
   ) {
+    eventHandlers.error?.(Errors.MISSING_CREATE_INSTANT_INVITE);
     throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE);
   }
   return RequestManager.post(endpoints.CHANNEL_INVITES(channel.id), options);
@@ -197,6 +211,7 @@ export function getChannelWebhooks(channel: Channel) {
     channel.guildID &&
     !botHasPermission(channel.guildID, [Permissions.MANAGE_WEBHOOKS])
   ) {
+    eventHandlers.error?.(Errors.MISSING_MANAGE_WEBHOOKS);
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
   return RequestManager.get(endpoints.CHANNEL_WEBHOOKS(channel.id));

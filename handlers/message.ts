@@ -1,6 +1,6 @@
 import { Message, createMessage } from "../structures/message.ts";
 import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
-import { botID } from "../module/client.ts";
+import { botID, eventHandlers } from "../module/client.ts";
 import { hasChannelPermission } from "./channel.ts";
 import { Permissions } from "../types/permission.ts";
 import { Errors } from "../types/errors.ts";
@@ -27,6 +27,7 @@ export async function deleteMessage(
         [Permissions.MANAGE_MESSAGES],
       )
     ) {
+      eventHandlers.error?.(Errors.MISSING_MANAGE_MESSAGES);
       throw new Error(Errors.MISSING_MANAGE_MESSAGES);
     }
   }
@@ -45,6 +46,7 @@ export function pin(message: Message) {
     message.guildID &&
     !botHasPermission(message.guildID, [Permissions.MANAGE_MESSAGES])
   ) {
+    eventHandlers.error?.(Errors.MISSING_MANAGE_MESSAGES);
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
   RequestManager.put(endpoints.CHANNEL_MESSAGE(message.channelID, message.id));
@@ -56,6 +58,7 @@ export function unpin(message: Message) {
     message.guildID &&
     !botHasPermission(message.guildID, [Permissions.MANAGE_MESSAGES])
   ) {
+    eventHandlers.error?.(Errors.MISSING_MANAGE_MESSAGES);
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
   RequestManager.delete(
@@ -91,6 +94,7 @@ export function removeAllReactions(message: Message) {
     message.guildID &&
     !botHasPermission(message.guildID, [Permissions.MANAGE_MESSAGES])
   ) {
+    eventHandlers.error?.(Errors.MISSING_MANAGE_MESSAGES);
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
   RequestManager.delete(
@@ -104,6 +108,7 @@ export function removeReactionEmoji(message: Message, reaction: string) {
     message.guildID &&
     !botHasPermission(message.guildID, [Permissions.MANAGE_MESSAGES])
   ) {
+    eventHandlers.error?.(Errors.MISSING_MANAGE_MESSAGES);
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
   RequestManager.delete(
@@ -140,6 +145,7 @@ export async function editMessage(
     if (
       !botHasPermission(message.guildID, [Permissions.SEND_MESSAGES])
     ) {
+      eventHandlers.error?.(Errors.MISSING_SEND_MESSAGES);
       throw new Error(Errors.MISSING_SEND_MESSAGES);
     }
 
@@ -150,11 +156,13 @@ export async function editMessage(
         [Permissions.SEND_TTS_MESSAGES],
       )
     ) {
+      eventHandlers.error?.(Errors.MISSING_SEND_TTS_MESSAGE);
       throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
     }
   }
 
   if (content.content && content.content.length > 2000) {
+    eventHandlers.error?.(Errors.MESSAGE_MAX_LENGTH);
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
   }
 

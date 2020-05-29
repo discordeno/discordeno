@@ -141,7 +141,10 @@ async function runMethod(
           json.retry_after ||
           json.message === "You are being rate limited."
         ) {
-          if (retryCount > 10) throw new Error(Errors.RATE_LIMIT_RETRY_MAXED);
+          if (retryCount > 10) {
+            eventHandlers.error?.(Errors.RATE_LIMIT_RETRY_MAXED);
+            throw new Error(Errors.RATE_LIMIT_RETRY_MAXED);
+          }
           await delay(json.retry_after);
           return runMethod(
             method,
@@ -184,12 +187,15 @@ function handleStatusCode(status: number) {
     case HttpResponseCode.NotFound:
     case HttpResponseCode.MethodNotAllowed:
     case HttpResponseCode.TooManyRequests:
-      throw new Error(Errors.REQUEST_CLIENT_ERROR);
+    eventHandlers.error?.(Errors.REQUEST_CLIENT_ERROR)  ;
+    throw new Error(Errors.REQUEST_CLIENT_ERROR);
     case HttpResponseCode.GatewayUnavailable:
-      throw new Error(Errors.REQUEST_SERVER_ERROR);
+    eventHandlers.error?.(Errors.REQUEST_SERVER_ERROR)  ;
+    throw new Error(Errors.REQUEST_SERVER_ERROR);
   }
 
   // left are all unknown
+  eventHandlers.error?.(Errors.REQUEST_UNKNOWN_ERROR);
   throw new Error(Errors.REQUEST_UNKNOWN_ERROR);
 }
 

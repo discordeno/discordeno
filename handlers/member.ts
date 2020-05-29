@@ -7,7 +7,7 @@ import {
   higherRolePosition,
   botHasPermission,
 } from "../utils/permissions.ts";
-import { botID } from "../module/client.ts";
+import { botID, eventHandlers } from "../module/client.ts";
 import { Guild } from "../structures/guild.ts";
 import { Permissions } from "../types/permission.ts";
 import { Errors } from "../types/errors.ts";
@@ -45,10 +45,12 @@ export function addRole(
     botsHighestRole &&
     !higherRolePosition(guild.id, botsHighestRole.id, roleID)
   ) {
+    eventHandlers.error?.(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
   if (!botHasPermission(guild.id, [Permissions.MANAGE_ROLES])) {
+    eventHandlers.error?.(Errors.MISSING_MANAGE_ROLES);
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
@@ -70,10 +72,12 @@ export function removeRole(
     botsHighestRole &&
     !higherRolePosition(guild.id, botsHighestRole.id, roleID)
   ) {
+    eventHandlers.error?.(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
   if (!botHasPermission(guild.id, [Permissions.MANAGE_ROLES])) {
+    eventHandlers.error?.(Errors.MISSING_MANAGE_ROLES);
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
   return RequestManager.delete(
@@ -114,10 +118,12 @@ export function kick(guild: Guild, memberID: string, reason?: string) {
     botsHighestRole && membersHighestRole &&
     botsHighestRole.position <= membersHighestRole.position
   ) {
+    eventHandlers.error?.(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
   if (!botHasPermission(guild.id, [Permissions.KICK_MEMBERS])) {
+    eventHandlers.error?.(Errors.MISSING_KICK_MEMBERS);
     throw new Error(Errors.MISSING_KICK_MEMBERS);
   }
   return RequestManager.delete(
@@ -134,9 +140,11 @@ export function editMember(
 ) {
   if (options.nick) {
     if (options.nick.length > 32) {
+      eventHandlers.error?.(Errors.NICKNAMES_MAX_LENGTH);
       throw new Error(Errors.NICKNAMES_MAX_LENGTH);
     }
     if (!botHasPermission(guild.id, [Permissions.MANAGE_NICKNAMES])) {
+      eventHandlers.error?.(Errors.MISSING_MANAGE_NICKNAMES);
       throw new Error(Errors.MISSING_MANAGE_NICKNAMES);
     }
   }
@@ -145,6 +153,7 @@ export function editMember(
     options.roles &&
     !botHasPermission(guild.id, [Permissions.MANAGE_ROLES])
   ) {
+    eventHandlers.error?.(Errors.MISSING_MANAGE_ROLES);
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
@@ -153,6 +162,7 @@ export function editMember(
     if (
       !botHasPermission(guild.id, [Permissions.MUTE_MEMBERS])
     ) {
+      eventHandlers.error?.(Errors.MISSING_MUTE_MEMBERS);
       throw new Error(Errors.MISSING_MUTE_MEMBERS);
     }
   }
@@ -161,6 +171,7 @@ export function editMember(
     options.deaf &&
     !botHasPermission(guild.id, [Permissions.DEAFEN_MEMBERS])
   ) {
+    eventHandlers.error?.(Errors.MISSING_DEAFEN_MEMBERS);
     throw new Error(Errors.MISSING_DEAFEN_MEMBERS);
   }
 
