@@ -52,5 +52,8 @@ export const handleInternalChannelDelete = (data: ChannelCreatePayload) => {
   }
 
   cache.channels.delete(data.id);
+  cache.messages.forEach((message) => {
+    if (message.channelID === data.id) cache.messages.delete(message.id);
+  });
   eventHandlers.channelDelete?.(cachedChannel);
 };
