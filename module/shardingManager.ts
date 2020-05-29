@@ -286,7 +286,7 @@ async function handleDiscordPayload(data: DiscordPayload, shardID: number) {
         const newMemberData = {
           ...options,
           premium_since: options.premium_since || undefined,
-          joined_at: new Date(cachedMember?.joined_at || Date.now())
+          joined_at: new Date(cachedMember?.joinedAt || Date.now())
             .toISOString(),
           deaf: cachedMember?.deaf || false,
           mute: cachedMember?.mute || false,
@@ -389,7 +389,7 @@ async function handleDiscordPayload(data: DiscordPayload, shardID: number) {
       if (data.t === "MESSAGE_CREATE") {
         const options = data.d as MessageCreateOptions;
         const channel = cache.channels.get(options.channel_id);
-        if (channel) channel.last_message_id = options.id;
+        if (channel) channel.lastMessageID = options.id;
 
         const message = createMessage(options);
         // Cache the message
