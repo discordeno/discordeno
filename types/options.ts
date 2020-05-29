@@ -21,7 +21,6 @@ import { Channel } from "../structures/channel.ts";
 import { Guild } from "../structures/guild.ts";
 import { Member } from "../structures/member.ts";
 import { UserPayload } from "./guild.ts";
-import { Errors } from "./errors.ts";
 
 export interface Fulfilled_Client_Options {
   token: string;
@@ -66,7 +65,6 @@ export interface EventHandlers {
   channelUpdate?: (channel: Channel, cachedChannel: Channel) => unknown;
   channelDelete?: (channel: Channel) => unknown;
   debug?: (args: DebugArg) => unknown;
-  error?: (type: Errors) => unknown;
   guildBanAdd?: (guild: Guild, user: Member | UserPayload) => unknown;
   guildBanRemove?: (guild: Guild, user: Member | UserPayload) => unknown;
   guildCreate?: (guild: Guild) => unknown;

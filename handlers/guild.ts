@@ -16,7 +16,7 @@ import { CreateEmojisOptions, PositionSwap, EditEmojisOptions, CreateRoleOptions
 import { RoleData } from "../types/role.ts"
 import { createRole } from "../structures/role.ts"
 import { Intents } from "../types/options.ts"
-import { identifyPayload, eventHandlers } from "../module/client.ts"
+import { identifyPayload } from "../module/client.ts"
 import { requestAllMembers } from "../module/shardingManager.ts"
 
 /** Gets an array of all the channels ids that are the children of this category. */
@@ -64,7 +64,6 @@ export function guildBannerURL(guild: Guild, size: ImageSize = 128, format?: Ima
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createGuildChannel(guild: Guild, name: string, options: CreateChannelOptions) {
 if (!botHasPermission(guild.id, [Permissions.MANAGE_CHANNELS])) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_CHANNELS);
 	throw new Error(Errors.MISSING_MANAGE_CHANNELS);
 }
 const result =
@@ -123,7 +122,6 @@ options: CreateEmojisOptions,
 if (
 	!botHasPermission(guildID, [Permissions.MANAGE_EMOJIS])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_EMOJIS);
 	throw new Error(Errors.MISSING_MANAGE_EMOJIS);
 }
 return RequestManager.post(endpoints.GUILD_EMOJIS(guildID), {
@@ -138,7 +136,6 @@ export function editEmoji(guildID: string, id: string, options: EditEmojisOption
 if (
 	!botHasPermission(guildID, [Permissions.MANAGE_EMOJIS])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_EMOJIS);
 	throw new Error(Errors.MISSING_MANAGE_EMOJIS);
 }
 return RequestManager.patch(endpoints.GUILD_EMOJI(guildID, id), {
@@ -152,7 +149,6 @@ export function deleteEmoji(guildID: string, id: string, reason?: string) {
 if (
 	!botHasPermission(guildID, [Permissions.MANAGE_EMOJIS])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_EMOJIS);
 	throw new Error(Errors.MISSING_MANAGE_EMOJIS);
 }
 return RequestManager.delete(
@@ -166,7 +162,6 @@ export async function createGuildRole(guild: Guild, options: CreateRoleOptions, 
 if (
 	!botHasPermission(guild.id, [Permissions.MANAGE_ROLES])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_ROLES);
 	throw new Error(Errors.MISSING_MANAGE_ROLES);
 }
 const role_data = await RequestManager.post(
@@ -189,7 +184,6 @@ export function editRole(guildID: string, id: string, options: CreateRoleOptions
 if (
 	!botHasPermission(guildID, [Permissions.MANAGE_ROLES])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_ROLES);
 	throw new Error(Errors.MISSING_MANAGE_ROLES);
 }
 return RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), options);
@@ -200,7 +194,6 @@ export function deleteRole(guildID: string, id: string) {
 if (
 	!botHasPermission(guildID, [Permissions.MANAGE_ROLES])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_ROLES);
 	throw new Error(Errors.MISSING_MANAGE_ROLES);
 }
 return RequestManager.delete(endpoints.GUILD_ROLE(guildID, id));
@@ -214,7 +207,6 @@ export function getRoles(guildID: string) {
 if (
 	!botHasPermission(guildID, [Permissions.MANAGE_ROLES])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_ROLES);
 	throw new Error(Errors.MISSING_MANAGE_ROLES);
 }
 return RequestManager.get(endpoints.GUILD_ROLES(guildID));
@@ -225,7 +217,6 @@ export function swapRoles(guildID: string, rolePositons: PositionSwap) {
 if (
 	!botHasPermission(guildID, [Permissions.MANAGE_ROLES])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_ROLES);
 	throw new Error(Errors.MISSING_MANAGE_ROLES);
 }
 return RequestManager.patch(endpoints.GUILD_ROLES(guildID), rolePositons);
@@ -234,13 +225,11 @@ return RequestManager.patch(endpoints.GUILD_ROLES(guildID), rolePositons);
 /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
 export async function getPruneCount(guildID: string, days: number) {
 if (days < 1) {
-	eventHandlers.error?.(Errors.PRUNE_MIN_DAYS);
 	throw new Error(Errors.PRUNE_MIN_DAYS);
 }
 if (
 	!botHasPermission(guildID, [Permissions.KICK_MEMBERS])
 ) {
-	eventHandlers.error?.(Errors.MISSING_KICK_MEMBERS);
 	throw new Error(Errors.MISSING_KICK_MEMBERS);
 }
 const result = (await RequestManager.get(
@@ -253,13 +242,11 @@ return result.pruned;
 /** Begin pruning all members in the given time period */
 export function pruneMembers(guildID: string, days: number) {
 if (days < 1) {
-	eventHandlers.error?.(Errors.PRUNE_MIN_DAYS);
 	throw new Error(Errors.PRUNE_MIN_DAYS);
 }
 if (
 	!botHasPermission(guildID, [Permissions.KICK_MEMBERS])
 ) {
-	eventHandlers.error?.(Errors.MISSING_KICK_MEMBERS);
 	throw new Error(Errors.MISSING_KICK_MEMBERS);
 }
 return RequestManager.post(endpoints.GUILD_PRUNE(guildID), { days });
@@ -267,7 +254,6 @@ return RequestManager.post(endpoints.GUILD_PRUNE(guildID), { days });
 
 export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
 if (!(identifyPayload.intents & Intents.GUILD_MEMBERS)) {
-	eventHandlers.error?.(Errors.MISSING_INTENT_GUILD_MEMBERS);
 	throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
 }
 
@@ -279,7 +265,6 @@ return new Promise((resolve) => {
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
 export function getAuditLogs(guildID: string, options: GetAuditLogsOptions) {
 if (!botHasPermission(guildID, [Permissions.VIEW_AUDIT_LOG])) {
-	eventHandlers.error?.(Errors.MISSING_VIEW_AUDIT_LOG);
 	throw new Error(Errors.MISSING_VIEW_AUDIT_LOG);
 }
 
@@ -296,7 +281,6 @@ export function getEmbed(guildID: string, ) {
 if (
 	!botHasPermission(guildID, [Permissions.MANAGE_GUILD])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_GUILD);
 	throw new Error(Errors.MISSING_MANAGE_GUILD);
 }
 return RequestManager.get(endpoints.GUILD_EMBED(guildID));
@@ -307,7 +291,6 @@ export function editEmbed(guildID: string, enabled: boolean, channelID?: string 
 if (
 	!botHasPermission(guildID, [Permissions.MANAGE_GUILD])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_GUILD);
 	throw new Error(Errors.MISSING_MANAGE_GUILD);
 }
 return RequestManager.patch(
@@ -326,7 +309,6 @@ export function getIntegrations(guildID: string, ) {
 if (
 	!botHasPermission(guildID, [Permissions.MANAGE_GUILD])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_GUILD);
 	throw new Error(Errors.MISSING_MANAGE_GUILD);
 }
 return RequestManager.get(endpoints.GUILD_INTEGRATIONS(guildID));
@@ -337,7 +319,6 @@ export function editIntegration(guildID: string, id: string, options: EditIntegr
 if (
 	!botHasPermission(guildID, [Permissions.MANAGE_GUILD])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_GUILD);
 	throw new Error(Errors.MISSING_MANAGE_GUILD);
 }
 return RequestManager.patch(
@@ -351,7 +332,6 @@ export function deleteIntegration(guildID: string, id: string) {
 if (
 	!botHasPermission(guildID, [Permissions.MANAGE_GUILD])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_GUILD);
 	throw new Error(Errors.MISSING_MANAGE_GUILD);
 }
 return RequestManager.delete(endpoints.GUILD_INTEGRATION(guildID, id));
@@ -362,7 +342,6 @@ export function syncIntegration(guildID: string, id: string) {
 if (
 	!botHasPermission(guildID, [Permissions.MANAGE_GUILD])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_GUILD);
 	throw new Error(Errors.MISSING_MANAGE_GUILD);
 }
 return RequestManager.post(endpoints.GUILD_INTEGRATION_SYNC(guildID, id));
@@ -373,7 +352,6 @@ export function getBans(guildID: string) {
 if (
 	!botHasPermission(guildID, [Permissions.BAN_MEMBERS])
 ) {
-	eventHandlers.error?.(Errors.MISSING_BAN_MEMBERS);
 	throw new Error(Errors.MISSING_BAN_MEMBERS);
 }
 return RequestManager.get(endpoints.GUILD_BANS(guildID));
@@ -384,7 +362,6 @@ export function ban(guildID: string, id: string, options: BanOptions) {
 if (
 	!botHasPermission(guildID, [Permissions.BAN_MEMBERS])
 ) {
-	eventHandlers.error?.(Errors.MISSING_BAN_MEMBERS);
 	throw new Error(Errors.MISSING_BAN_MEMBERS);
 }
 return RequestManager.put(endpoints.GUILD_BAN(guildID, id), options);
@@ -395,7 +372,6 @@ export function unban(guildID: string, id: string) {
 if (
 	!botHasPermission(guildID, [Permissions.BAN_MEMBERS])
 ) {
-	eventHandlers.error?.(Errors.MISSING_BAN_MEMBERS);
 	throw new Error(Errors.MISSING_BAN_MEMBERS);
 }
 return RequestManager.delete(endpoints.GUILD_BAN(guildID, id));
@@ -441,7 +417,6 @@ export function editGuild(guildID: string, options: GuildEditOptions) {
 if (
 	!botHasPermission(guildID, [Permissions.MANAGE_GUILD])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_GUILD);
 	throw new Error(Errors.MISSING_MANAGE_GUILD);
 }
 return RequestManager.patch(endpoints.GUILD(guildID), options);
@@ -452,7 +427,6 @@ export function getInvites(guildID: string, ) {
 if (
 	!botHasPermission(guildID, [Permissions.MANAGE_GUILD])
 ) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_GUILD);
 	throw new Error(Errors.MISSING_MANAGE_GUILD);
 }
 return RequestManager.get(endpoints.GUILD_INVITES(guildID));
@@ -471,7 +445,6 @@ return RequestManager.get(endpoints.GUILD_REGIONS(guildID));
 /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
 export function getWebhooks(guildID: string, ) {
 if (!botHasPermission(guildID, [Permissions.MANAGE_WEBHOOKS])) {
-	eventHandlers.error?.(Errors.MISSING_MANAGE_WEBHOOKS);
 	throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
 }
 
