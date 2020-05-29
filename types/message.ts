@@ -1,10 +1,9 @@
 import { ChannelType, UserPayload } from "./guild.ts";
 import { MemberCreatePayload } from "./member.ts";
 import { Channel } from "../structures/channel.ts";
-import { Member } from "../structures/member.ts";
 
 export interface MentionedUser extends UserPayload {
-  member: Member;
+  member: MemberCreatePayload;
 }
 
 export interface Mentioned_Channel {
@@ -236,7 +235,7 @@ export interface MessageCreateOptions {
   /** The author of this message (not guaranteed to be a valid user such as a webhook.) */
   author: UserPayload;
   /** The member properties for this message's author. Can be partial. */
-  member?: Member;
+  member?: MemberCreatePayload;
   /** The contents of the message */
   content: string;
   /** When this message was sent */
