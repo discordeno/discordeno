@@ -1,5 +1,5 @@
 import { RequestMethod } from "../types/fetch.ts";
-import { authorization } from "./client.ts";
+import { authorization, eventHandlers } from "./client.ts";
 import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
 import { Errors } from "../types/errors.ts";
 import { HttpResponseCode } from "../types/discord.ts";
@@ -116,6 +116,8 @@ async function runMethod(
   retryCount = 0,
   bucketID?: string | null,
 ) {
+  eventHandlers.debug?.({ type: 'requestManager', data: { method, url, body, retryCount, bucketID } });
+
   return new Promise((resolve, reject) => {
     const callback = async () => {
       try {
@@ -150,8 +152,10 @@ async function runMethod(
           );
         }
 
+        eventHandlers.debug?.({ type: 'requestManagerSuccess', data: { method, url, body, retryCount, bucketID } });
         return resolve(json);
       } catch (error) {
+        eventHandlers.debug?.({ type: 'requestManagerFailed', data: { method, url, body, retryCount, bucketID } });
         return reject(error);
       }
     };
@@ -220,19 +224,21 @@ function processHeaders(url: string, headers: Headers) {
 
   // If there is no remaining global limit, we save it in cache
   if (global) {
+    const reset = Date.now() + Number(retryAfter);
+    eventHandlers.debug?.({ type: 'globallyRateLimited', data: { url, reset }})
     globallyRateLimited = true;
     ratelimited = true;
 
     ratelimitedPaths.set("global", {
       url: "global",
-      resetTimestamp: Date.now() + Number(retryAfter),
+      resetTimestamp: reset,
       bucketID,
     });
 
     if (bucketID) {
       ratelimitedPaths.set(bucketID, {
         url: "global",
-        resetTimestamp: Date.now() + Number(retryAfter),
+        resetTimestamp: reset,
         bucketID,
       });
     }

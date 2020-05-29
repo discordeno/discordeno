@@ -53,11 +53,18 @@ export interface OldMessage {
   pinned: boolean;
 }
 
+export interface DebugArg {
+  /** Red is for errors or urgent issues. Yellow is for warnings/alerts. Green is for actions being taken. Blue is for  */
+  type?: "requestManager" | 'globallyRateLimited' | 'requestManagerSuccess' | 'requestManagerFailed' | 'requestMembersProcessing' | 'heartbeat' | 'createShard' | 'invalidSession' | 'resuming' | 'resumed' | 'websocketClose' | 'websocketErrored' | 'websocketReconnecting';
+  data: unknown;
+}
+
 export interface EventHandlers {
   botUpdate?: (user: UserPayload) => unknown;
   channelCreate?: (channel: Channel) => unknown;
   channelUpdate?: (channel: Channel, cachedChannel: Channel) => unknown;
   channelDelete?: (channel: Channel) => unknown;
+  debug?: (args: DebugArg) => unknown;
   guildBanAdd?: (guild: Guild, user: Member | UserPayload) => unknown;
   guildBanRemove?: (guild: Guild, user: Member | UserPayload) => unknown;
   guildCreate?: (guild: Guild) => unknown;

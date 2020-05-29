@@ -93,6 +93,8 @@ export function createShardWorker(shardID?: number) {
         JSON.parse(message.data.payload),
         message.data.shardID,
       );
+    } else if (message.data.type === 'DEBUG_LOG') {
+      eventHandlers.debug?.(message.data.details)
     }
   };
   shards.push(shard);
@@ -207,7 +209,7 @@ async function handleDiscordPayload(data: DiscordPayload, shardID: number) {
         cache.messages.forEach((message) => {
           if (message.guildID === guild.id) cache.messages.delete(message.id);
         });
-        
+
         if (options.unavailable) {
           return cache.unavailableGuilds.set(options.id, Date.now());
         }
