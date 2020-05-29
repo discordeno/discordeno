@@ -4,6 +4,7 @@ import { botID } from "../module/client.ts";
 import { Role } from "../structures/role.ts";
 import { Guild } from "../structures/guild.ts";
 
+/** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
 export function memberHasPermission(
   memberID: string,
   guild: Guild,
