@@ -37,3 +37,13 @@ export const logRed = (text: unknown) => {
 export const logYellow = (text: unknown) => {
   console.log(yellow(`[${getTime()}] => ${JSON.stringify(text)}`));
 };
+
+export const logger = {
+  getTime,
+  sucess: logGreen,
+  info: logBlue,
+  error: logRed,
+  warn: logYellow,
+}
+
+export default logger
