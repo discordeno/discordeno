@@ -69,7 +69,7 @@ async function sendConstantHeartbeats(
   shardSocket.send(
     JSON.stringify({ op: GatewayOpcode.Heartbeat, d: previousSequenceNumber }),
   );
-  postDebug({ type: 'heartbeat', data: { interval, previousSequenceNumber }})
+  postDebug({ type: 'heartbeat', data: { interval, previousSequenceNumber, shardID }})
 
   sendConstantHeartbeats(interval);
 }
