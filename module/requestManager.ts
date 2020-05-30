@@ -116,7 +116,12 @@ async function runMethod(
   retryCount = 0,
   bucketID?: string | null,
 ) {
-  eventHandlers.debug?.({ type: 'requestManager', data: { method, url, body, retryCount, bucketID } });
+  eventHandlers.debug?.(
+    {
+      type: "requestManager",
+      data: { method, url, body, retryCount, bucketID },
+    },
+  );
 
   return new Promise((resolve, reject) => {
     const callback = async () => {
@@ -144,20 +149,28 @@ async function runMethod(
           if (retryCount > 10) {
             throw new Error(Errors.RATE_LIMIT_RETRY_MAXED);
           }
-          await delay(json.retry_after);
-          return runMethod(
-            method,
-            url,
-            body,
-            retryCount++,
-            bucketIDFromHeaders,
+
+          return setTimeout(
+            () =>
+              runMethod(method, url, body, retryCount++, bucketIDFromHeaders),
+            json.retry_after,
           );
         }
 
-        eventHandlers.debug?.({ type: 'requestManagerSuccess', data: { method, url, body, retryCount, bucketID } });
+        eventHandlers.debug?.(
+          {
+            type: "requestManagerSuccess",
+            data: { method, url, body, retryCount, bucketID },
+          },
+        );
         return resolve(json);
       } catch (error) {
-        eventHandlers.debug?.({ type: 'requestManagerFailed', data: { method, url, body, retryCount, bucketID } });
+        eventHandlers.debug?.(
+          {
+            type: "requestManagerFailed",
+            data: { method, url, body, retryCount, bucketID },
+          },
+        );
         return reject(error);
       }
     };
@@ -175,7 +188,10 @@ async function runMethod(
 }
 
 function handleStatusCode(status: number) {
-  if (status >= 200 && status < 400) {
+  if (
+    (status >= 200 && status < 400) ||
+    status === HttpResponseCode.TooManyRequests
+  ) {
     return true;
   }
 
@@ -185,10 +201,9 @@ function handleStatusCode(status: number) {
     case HttpResponseCode.Forbidden:
     case HttpResponseCode.NotFound:
     case HttpResponseCode.MethodNotAllowed:
-    case HttpResponseCode.TooManyRequests:
-    throw new Error(Errors.REQUEST_CLIENT_ERROR);
+      throw new Error(Errors.REQUEST_CLIENT_ERROR);
     case HttpResponseCode.GatewayUnavailable:
-    throw new Error(Errors.REQUEST_SERVER_ERROR);
+      throw new Error(Errors.REQUEST_SERVER_ERROR);
   }
 
   // left are all unknown
@@ -227,7 +242,9 @@ function processHeaders(url: string, headers: Headers) {
   // If there is no remaining global limit, we save it in cache
   if (global) {
     const reset = Date.now() + Number(retryAfter);
-    eventHandlers.debug?.({ type: 'globallyRateLimited', data: { url, reset }})
+    eventHandlers.debug?.(
+      { type: "globallyRateLimited", data: { url, reset } },
+    );
     globallyRateLimited = true;
     ratelimited = true;
 

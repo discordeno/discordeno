@@ -204,6 +204,85 @@ export function getChannelWebhooks(channel: Channel) {
   return RequestManager.get(endpoints.CHANNEL_WEBHOOKS(channel.id));
 }
 
+interface EditChannelRequest {
+  amount: number;
+  timestamp: number;
+  channelID: string;
+  items: {
+    channel: Channel;
+    options: ChannelEditOptions;
+  }[];
+}
+
+const editChannelNameTopicQueue = new Map<string, EditChannelRequest>();
+let editChannelProcessing = false;
+
+function processEditChannelQueue() {
+  if (!editChannelProcessing) return;
+
+  const now = Date.now();
+  editChannelNameTopicQueue.forEach((request) => {
+    if (now > request.timestamp) return;
+    // 10 minutes have passed so we can reset this channel again
+    if (!request.items.length) {
+      return editChannelNameTopicQueue.delete(request.channelID);
+    }
+    request.amount = 0;
+    // There are items to process for this request
+    const details = request.items.shift();
+
+    if (!details) return;
+
+    editChannel(details.channel, details.options);
+    const secondDetails = request.items.shift();
+    if (!secondDetails) return;
+
+    return editChannel(secondDetails.channel, secondDetails.options);
+  });
+
+  if (editChannelNameTopicQueue.size) {
+    setTimeout(() => processEditChannelQueue(), 600000);
+  } else {
+    editChannelProcessing = false;
+  }
+}
+
 export function editChannel(channel: Channel, options: ChannelEditOptions) {
-  return RequestManager.patch(endpoints.GUILD_CHANNELS(channel.id), options);
+  if (!channel.guildID) throw new Error(Errors.CHANNEL_NOT_IN_GUILD);
+  console.log(1);
+  if (
+    !botHasPermission(channel.guildID, [Permissions.MANAGE_CHANNELS])
+  ) {
+    throw new Error(Errors.MISSING_MANAGE_CHANNELS);
+  }
+  console.log(2);
+  if (options.name || options.topic) {
+    const request = editChannelNameTopicQueue.get(channel.id);
+    if (!request) {
+      // If this hasnt been done before simply add 1 for it
+      editChannelNameTopicQueue.set(channel.id, {
+        channelID: channel.id,
+        amount: 1,
+        // 10 minutes from now
+        timestamp: Date.now() + 600000,
+        items: [],
+      });
+    } else if (request.amount === 1) {
+      // Start queuing future requests to this channel
+      request.amount = 2;
+      request.timestamp = Date.now() + 600000;
+    } else {
+      // 2 have already been used add to queue
+      request.items.push({ channel, options });
+      if (editChannelProcessing) return;
+      editChannelProcessing = true;
+      processEditChannelQueue();
+      return;
+    }
+  }
+
+  return RequestManager.patch(
+    endpoints.GUILD_CHANNEL(channel.id),
+    options,
+  );
 }
