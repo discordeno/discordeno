@@ -249,13 +249,13 @@ function processEditChannelQueue() {
 
 export function editChannel(channel: Channel, options: ChannelEditOptions) {
   if (!channel.guildID) throw new Error(Errors.CHANNEL_NOT_IN_GUILD);
-  console.log(1);
+
   if (
     !botHasPermission(channel.guildID, [Permissions.MANAGE_CHANNELS])
   ) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
-  console.log(2);
+
   if (options.name || options.topic) {
     const request = editChannelNameTopicQueue.get(channel.id);
     if (!request) {
