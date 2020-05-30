@@ -40,7 +40,7 @@ export const logYellow = (text: unknown) => {
 
 export const logger = {
   getTime,
-  sucess: logGreen,
+  success: logGreen,
   info: logBlue,
   error: logRed,
   warn: logYellow,
