@@ -27,10 +27,10 @@ export const createMember = (data: MemberCreatePayload, guild: Guild) => {
   };
 
   // Remove excess properties to preserve cache.
-  delete member.joined_at;
-  delete member.premium_since;
-  delete member.user.mfa_enabled;
-  delete member.user.premium_type;
+  // delete member.joined_at;
+  // delete member.premium_since;
+  // delete member.user.mfa_enabled;
+  // delete member.user.premium_type;
 
   return member;
 };
