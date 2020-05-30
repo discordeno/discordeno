@@ -1,6 +1,17 @@
 import { chooseRandom } from "./utils.ts";
 
 export default class Collection<K, V> extends Map<K, V> {
+  maxSize?: number
+
+  set(key: K, value: V) {
+    // When this collection is maxSizeed make sure we can add first
+    if (this.maxSize || this.maxSize === 0) {
+      if (this.size >= this.maxSize) return this;
+    }
+
+    return super.set(key, value);
+  }
+
   array() {
     return [...this.values()];
   }
