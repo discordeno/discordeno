@@ -6,12 +6,14 @@ import {
   TypingStartPayload,
   VoiceStateUpdatePayload,
   WebhookUpdatePayload,
+  ReadyPayload,
 } from "../types/discord.ts";
 import {
   eventHandlers,
   botGatewayData,
   identifyPayload,
   botID,
+  setBotID,
 } from "./client.ts";
 import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
 import {
@@ -93,8 +95,8 @@ export function createShardWorker(shardID?: number) {
         JSON.parse(message.data.payload),
         message.data.shardID,
       );
-    } else if (message.data.type === 'DEBUG_LOG') {
-      eventHandlers.debug?.(message.data.details)
+    } else if (message.data.type === "DEBUG_LOG") {
+      eventHandlers.debug?.(message.data.details);
     }
   };
   shards.push(shard);
@@ -126,6 +128,7 @@ async function handleDiscordPayload(data: DiscordPayload, shardID: number) {
       return eventHandlers.heartbeat?.();
     case GatewayOpcode.Dispatch:
       if (data.t === "READY") {
+        setBotID((data.d as ReadyPayload).user.id)
         // Triggered on each shard
         eventHandlers.ready?.();
         // Wait 5 seconds to spawn next shard

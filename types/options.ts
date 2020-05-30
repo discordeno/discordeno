@@ -33,7 +33,6 @@ export interface ClientOptions {
   token: string;
   properties?: Properties;
   compress?: boolean;
-  botID: string;
   intents: Intents[];
   eventHandlers?: EventHandlers;
 }

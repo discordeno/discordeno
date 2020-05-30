@@ -24,7 +24,6 @@ export const identifyPayload = {
 };
 
 export const createClient = async (data: ClientOptions) => {
-  botID = data.botID;
   if (data.eventHandlers) eventHandlers = data.eventHandlers;
   authorization = `Bot ${data.token}`;
 
@@ -46,4 +45,8 @@ export default createClient;
 
 export function updateEventHandlers(newEventHandlers: EventHandlers) {
   eventHandlers = newEventHandlers;
+}
+
+export function setBotID(id: string) {
+  botID = id;
 }

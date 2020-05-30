@@ -1,6 +1,6 @@
 import { Activity } from "./message.ts";
 import { ClientStatusPayload } from "./presence.ts";
-import { Partial_User } from "./guild.ts";
+import { Partial_User, UserPayload } from "./guild.ts";
 import { MemberCreatePayload } from "./member.ts";
 
 export interface DiscordPayload {
@@ -261,4 +261,5 @@ export interface ReadyPayload {
   session_id: string;
   /** (shard_id, num_shards)	the shard information associated with this session, if sent when identifying */
   shard?: [number, number];
+  user: UserPayload
 }
