@@ -35,4 +35,6 @@ export const createMember = (data: MemberCreatePayload, guild: Guild) => {
   return member;
 };
 
-export interface Member extends Omit<ReturnType<typeof createMember>, 'joined_at' | 'premium_since'> {}
+export interface Member
+  extends
+    Omit<ReturnType<typeof createMember>, "joined_at" | "premium_since"> {}

@@ -128,7 +128,7 @@ async function handleDiscordPayload(data: DiscordPayload, shardID: number) {
       return eventHandlers.heartbeat?.();
     case GatewayOpcode.Dispatch:
       if (data.t === "READY") {
-        setBotID((data.d as ReadyPayload).user.id)
+        setBotID((data.d as ReadyPayload).user.id);
         // Triggered on each shard
         eventHandlers.ready?.();
         // Wait 5 seconds to spawn next shard

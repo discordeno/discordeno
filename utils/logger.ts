@@ -44,6 +44,6 @@ export const logger = {
   info: logBlue,
   error: logRed,
   warn: logYellow,
-}
+};
 
-export default logger
+export default logger;

@@ -90,25 +90,24 @@ export const createGuild = (data: CreateGuildPayload, shardID: number) => {
   return guild;
 };
 
-export interface Guild
-  extends
-    Omit<
-      ReturnType<typeof createGuild>,
-      | "owner_id"
-      | "afk_channel_id"
-      | "afk_timeout"
-      | "embed_enabled"
-      | "embed_channel_id"
-      | "verification_level"
-      | "mfa_level"
-      | "system_channel_id"
-      | "max_presences"
-      | "max_members"
-      | "vanity_url_code"
-      | "premium_tier"
-      | "premium_subscription_count"
-      | "preferred_locale"
-      | "joined_at"
-      | "member_count"
-      | "voice_states"
-    > {}
+export interface Guild extends
+  Omit<
+    ReturnType<typeof createGuild>,
+    | "owner_id"
+    | "afk_channel_id"
+    | "afk_timeout"
+    | "embed_enabled"
+    | "embed_channel_id"
+    | "verification_level"
+    | "mfa_level"
+    | "system_channel_id"
+    | "max_presences"
+    | "max_members"
+    | "vanity_url_code"
+    | "premium_tier"
+    | "premium_subscription_count"
+    | "preferred_locale"
+    | "joined_at"
+    | "member_count"
+    | "voice_states"
+  > {}

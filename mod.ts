@@ -35,4 +35,4 @@ export * from "./utils/logger.ts";
 export * from "./utils/permissions.ts";
 export * from "./utils/utils.ts";
 
-export default createClient
+export default createClient;

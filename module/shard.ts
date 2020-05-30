@@ -57,7 +57,12 @@ async function processRequestMembersQueue() {
 
   await delay(1500);
 
-  postDebug({ type: 'requestMembersProcessing', data: { shardID, remaining: RequestMembersQueue.length }})
+  postDebug(
+    {
+      type: "requestMembersProcessing",
+      data: { shardID, remaining: RequestMembersQueue.length },
+    },
+  );
   processRequestMembersQueue();
 }
 
@@ -69,7 +74,9 @@ async function sendConstantHeartbeats(
   shardSocket.send(
     JSON.stringify({ op: GatewayOpcode.Heartbeat, d: previousSequenceNumber }),
   );
-  postDebug({ type: 'heartbeat', data: { interval, previousSequenceNumber, shardID }})
+  postDebug(
+    { type: "heartbeat", data: { interval, previousSequenceNumber, shardID } },
+  );
 
   sendConstantHeartbeats(interval);
 }
@@ -78,7 +85,7 @@ async function resumeConnection(
   botGatewayData: DiscordBotGatewayData,
   identifyPayload: object,
 ) {
-  postDebug({ type: 'resuming', data: { shardID }})
+  postDebug({ type: "resuming", data: { shardID } });
   // Run it once
   createShard(botGatewayData, identifyPayload, true);
   // Then retry every 15 seconds
@@ -91,7 +98,7 @@ const createShard = async (
   identifyPayload: object,
   resuming = false,
 ) => {
-  postDebug({ type: 'createShard', data: { shardID }})
+  postDebug({ type: "createShard", data: { shardID } });
 
   shardSocket = await connectWebSocket(botGatewayData.url);
   let resumeInterval = 0;
@@ -126,7 +133,7 @@ const createShard = async (
         case GatewayOpcode.InvalidSession:
           // When d is false we need to reidentify
           if (!data.d) {
-            postDebug({ type: 'invalidSession', data: { shardID }})
+            postDebug({ type: "invalidSession", data: { shardID } });
             createShard(botGatewayData, identifyPayload);
             break;
           }
@@ -135,7 +142,7 @@ const createShard = async (
           break;
         default:
           if (data.t === "RESUMED") {
-            postDebug({ type: 'resumed', data: { shardID }})
+            postDebug({ type: "resumed", data: { shardID } });
 
             needToResume = false;
             break;
@@ -160,12 +167,12 @@ const createShard = async (
           break;
       }
     } else if (isWebSocketCloseEvent(message)) {
-      postDebug({ type: 'websocketClose', data: { shardID, message }})
+      postDebug({ type: "websocketClose", data: { shardID, message } });
 
       // These error codes should just crash the projects
       if ([4004, 4005, 4012, 4013, 4014].includes(message.code)) {
         logRed(`Close :( ${JSON.stringify(message)}`);
-        postDebug({ type: 'websocketErrored', data: { shardID, message }})
+        postDebug({ type: "websocketErrored", data: { shardID, message } });
 
         throw new Error(
           "Shard.ts: Error occurred that is not resumeable or able to be reconnected.",
@@ -173,7 +180,9 @@ const createShard = async (
       }
       // These error codes can not be resumed but need to reconnect from start
       if ([4003, 4007, 4008, 4009].includes(message.code)) {
-        postDebug({ type: 'websocketReconnecting', data: { shardID, message }})
+        postDebug(
+          { type: "websocketReconnecting", data: { shardID, message } },
+        );
         createShard(botGatewayData, identifyPayload);
       } else {
         needToResume = true;
