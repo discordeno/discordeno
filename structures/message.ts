@@ -35,16 +35,15 @@ export function createMessage(data: MessageCreateOptions) {
   return message;
 }
 
-export interface Message
-  extends
-    Omit<
-      ReturnType<typeof createMessage>,
-      | "channel_id"
-      | "guild_id"
-      | "mentions_everyone"
-      | "mention_channels"
-      | "mention_roles"
-      | "webhook_id"
-      | "message_reference"
-      | "edited_timestamp"
-    > {}
+export interface Message extends
+  Omit<
+    ReturnType<typeof createMessage>,
+    | "channel_id"
+    | "guild_id"
+    | "mentions_everyone"
+    | "mention_channels"
+    | "mention_roles"
+    | "webhook_id"
+    | "message_reference"
+    | "edited_timestamp"
+  > {}
