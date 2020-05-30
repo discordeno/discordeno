@@ -60,24 +60,24 @@ export function addRole(
 
 /** Remove a role from the member */
 export function removeRole(
-  guild: Guild,
+  guildID: string,
   memberID: string,
   roleID: string,
   reason?: string,
 ) {
-  const botsHighestRole = highestRole(guild.id, botID);
+  const botsHighestRole = highestRole(guildID, botID);
   if (
     botsHighestRole &&
-    !higherRolePosition(guild.id, botsHighestRole.id, roleID)
+    !higherRolePosition(guildID, botsHighestRole.id, roleID)
   ) {
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
-  if (!botHasPermission(guild.id, [Permissions.MANAGE_ROLES])) {
+  if (!botHasPermission(guildID, [Permissions.MANAGE_ROLES])) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
   return RequestManager.delete(
-    endpoints.GUILD_MEMBER_ROLE(guild.id, memberID, roleID),
+    endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
     { reason },
   );
 }
