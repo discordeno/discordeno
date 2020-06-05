@@ -16,12 +16,11 @@ If you are just starting out, you can use the Discordeno Template repo to get th
 If you would like to start from scratch without any boilerplate/framework:
 
 ```ts
-import Client from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v4/module/client.ts";
-import { Intents } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v4/types/options.ts";
+import Client from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v5/module/client.ts";
+import { Intents } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v5/types/options.ts";
 
 const BotOptions = {
     token: "token",
-    botID: "client ID",
     intents: [Intents.GUILD_MESSAGES],
     eventHandlers: {
         ready: () => {
