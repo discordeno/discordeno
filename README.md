@@ -8,15 +8,16 @@ Discord API library wrapper in Deno
 
 If you are just starting out, you can use the Discordeno Template repo to get the base of your bot pre-built for you. As other developers create other command frameworks for this library, those frameworks will be listed here:
 
-| Bot Name           | Developer          | Links | Description |
-|--------------------|--------------------|---------------------------------------------------------|-----|
+| Bot Name             | Developer         | Links                                                                                                           | Description                                                                           |
+| -------------------- | ----------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | Official Boilerplate | Skillz4Killz#4500 | [Github](https://github.com/Skillz4Killz/Discordeno-bot-template), [Support Server](https://discord.gg/J4NqJ72) | This is a very minimalistic design for a boilerplate for your bot to get you started. |
-| DenoBot            | NTM Nathan#0001    | [Github](https://github.com/ntm-development/DenoBot), [Support Server](https://discord.com/invite/G2rb53z) | Another boilerplate example of the first one, with more commands and improvements. |
+| DenoBot              | NTM Nathan#0001   | [Github](https://github.com/ntm-development/DenoBot), [Support Server](https://discord.com/invite/G2rb53z)      | Another boilerplate example of the first one, with more commands and improvements.    |
 
 If you would like to start from scratch without any boilerplate/framework:
 
 ```ts
 import Client from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v5/module/client.ts";
+import { sendMessage } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v5/handlers/channel.ts";
 import { Intents } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v5/types/options.ts";
 
 const BotOptions = {
@@ -27,8 +28,8 @@ const BotOptions = {
             console.log(`Logged!`);
         },
         messageCreate: (message) => {
-            if(message.content === "!ping"){
-                message.channel.sendMessage("Pong!");
+            if (message.content === "!ping") {
+                sendMessage(message.channel, "Pong");
             }
         }
     }
@@ -36,12 +37,6 @@ const BotOptions = {
 
 Client(BotOptions);
 ```
-
-## Open Source Bots Using Discordeno
-
-| Bot Name           | Developer          | Links |
-|--------------------|--------------------|---------------------------------------------------------|
-| discordeno-mattis  | Mattis6666         | [Github](https://github.com/Mattis6666/discordeno-mattis/) |
 
 ## Motivations/Features
 
@@ -79,241 +74,5 @@ This project began out of the desire to want to learn and enhance my developer s
   - Each version is also available through a specific branch. For example `v2` branch holds all the version 2 code. This branch is always updated whenever a MINOR or PATCH update is made that will NOT break your bots.
     - `Note:` This means you never have to update your code EXCEPT when you are ready to bump to next MAJOR version. So if a new feature is added, it will be added automatically. If a small bug is fixed it will be automatic.
 
-# Overview
-
-This section will list out all the available methods and functionality in the library. When you use them in your editor you will be able to get much more useful information. Documentation is built into your editor.
-
-## Events
-
-```ts
-.botUpdate(userData)
-.channelCreate(channel)
-.channelUpdate(channel, cachedChannel)
-.channelDelete(channel)
-.debug(details)
-.guildBanAdd(guild, memberOrUserData)
-.guildBanRemove(guild, memberOrUserData)
-.guildCreate(guild)
-.guildUpdate(guild, cachedGuild)
-.guildDelete(guild)
-.guildEmojisUpdate(guild, emojis, cachedEmojis)
-.guildMemberAdd(guild, member)
-.guildMemberRemove(guild, memberOrUserData)
-.guildMemberUpdate(guild, member, cachedMember)
-.heartbeat()
-.messageCreate(message)
-.messageDelete(message)
-.messageUpdate(message, oldMessage)
-.nicknameUpdate(guild, member, nickname, oldNickname)
-.presenceUpdate(data)
-.ready()
-.reactionAdd(message, emoji, userID)
-.reactionRemove(message, emoji, userID)
-.reactionRemoveAll(data)
-.reactionRemoveEmoji(data)
-.roleCreate(guild, role)
-.roleDelete(guild, role)
-.roleUpdate(guild, role, cachedRole)
-.roleGained(guild, member, roleID)
-.roleLost(guild, member, roleID)
-.typingStart(data)
-.voiceChannelJoin(member, channelID)
-.voiceChannelLeave(member, channelID)
-.voiceChannelSwitch(member, channelID, oldChannelID)
-.voiceStateUpdate(member, voiceState)
-.webhooksUpdate(channelID, guildID)
-```
-
-## Channel
-
-- id
-- type
-- permission_overwrites (Raw Permission Bits provided by discord). Advanced only.
-- permissions (Permission Strings For Better User Experience).
-- guildID
-- position
-- name
-- topic
-- lastMessageID
-- bitrate
-- userLimit
-- rateLimitPerUser
-- parentID
-- lastPinTimestamp
-- nsfw
-- mention
-```ts
-- .hasPermission(id, permissions)
-- .getMessage(id)
-- .getMessages(options)
-- .getPins()
-- .sendMessages(content)
-- .deleteMessages(ids, reason)
-- .getInvites()
-- .createInvite(options)
-- .getWebhooks()
-- .edit(options)
-```
-
-## Guild
-
-- id
-- name
-- icon
-- splash
-- ownerID
-- region
-- afkChannelID
-- afkTimeout
-- embedEnabled
-- embedChannelID
-- verificationLevel
-- roles
-- emojis
-- features
-- mfaLevel
-- systemChannelID
-- large
-- unavailable
-- memberCount
-- voiceStates
-- members
-- channels
-- presences
-- maxPresences
-- maxMembers
-- vanityUrlCode
-- description
-- banner
-- premiumTier
-- premiumSubscriptionCount
-- preferredLocale
-- joinedAt
-```ts
-- .categoryChildrenIDs(id)
-- .iconURL(size, format)
-- .splashURL(size, format)
-- .bannerURL(size, format)
-- .createChannel(name, options)
-- .getChannels()
-- .swapChannels(channelPositions)
-- .getMember(id)
-- .editEmoji(id, options)
-- .deleteEmoji(id, reason)
-- .createRole(options, reason)
-- .editRole(id, options)
-- .deleteRole(id)
-- .getRoles()
-- .swapRoles(rolePositons)
-- .getPruneCount(days)
-- .pruneMembers(days)
-- .fetchMembers(options)
-- .getAuditLogs(options)
-- .getEmbed()
-- .editEmbed(enabled, channelID)
-- .getVanityURL()
-- .getIntegrations()
-- .editIntegration(id, options)
-- .deleteIntegration(id)
-- .syncIntegration(id)
-- .getBans()
-- .ban(id, options: BanOptions)
-- .unban(id)
-- .edit(options)
-- .getInvites()
-- .leave()
-- .getVoiceRegions()
-- .getWebhooks()
-```
-
-## Member
-
-- user
-  - id
-  - username
-  - discriminator
-  - avatar
-  - bot
-  - system
-  - mfaEnabled
-  - locale
-  - verified
-  - email
-  - flags
-  - premiumType
-- nick
-- roles
-- deaf
-- mute
-- joinedAt
-- premiumSince
-- tag
-- mention
-- guildID
-```ts
-- .guild()
-- .avatarURL(size, format)
-- .addRole(roleID, reason)
-- .removeRole(roleID, reason)
-- .kick(reason)
-- .edit(options)
-- .hasPermissions(permissions)
-```
-
-## Message
-
-- id
-- channelID
-- guildID
-- member
-- content
-- tts
-- mentionsEveryone
-- mentions
-- mentionRoles
-- mentionChannels
-- attachments
-- embeds
-- reactions
-- nonce
-- pinned
-- webhook
-- type
-- activity
-- applications
-- messageReference
-- flags
-- author
-- timestamp
-- editedTimestamp
-- channel
-```ts
-- .delete(reason)
-- .pin()
-- .unpin()
-- .addReaction(reaction)
-- .removeReaction(reaction)
-- .removeAllReactions()
-- .removeReactionEmoji(reaction)
-- .getReactions(reaction)
-- .edit(content)
-```
-
-## Role
-
-- id
-- name
-- color
-- hoist
-- position
-- permissions
-- managed
-- mentionable
-- mention
-
-## Utils
-
-```ts
-.editBotsStatus(status, name, type)
-updateEventHandlers(eventHandlers)
-```
+Documentation: https://doc.deno.land/https/deno.land/x/discordeno/mod.ts
+Website: https://discordeno.js.org
