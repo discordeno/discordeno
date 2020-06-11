@@ -75,4 +75,5 @@ This project began out of the desire to want to learn and enhance my developer s
     - `Note:` This means you never have to update your code EXCEPT when you are ready to bump to next MAJOR version. So if a new feature is added, it will be added automatically. If a small bug is fixed it will be automatic.
 
 Documentation: https://doc.deno.land/https/deno.land/x/discordeno/mod.ts
+
 Website: https://discordeno.js.org
