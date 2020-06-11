@@ -30,7 +30,6 @@ Client({
     },
     messageCreate: (message) => {
       if (message.content === "!ping") {
-        console.log(message);
         sendMessage(message.channel, "Pong");
       }
     },
