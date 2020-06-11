@@ -19,23 +19,23 @@ If you would like to start from scratch without any boilerplate/framework:
 import Client from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v5/module/client.ts";
 import { sendMessage } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v5/handlers/channel.ts";
 import { Intents } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v5/types/options.ts";
+import config from "./config.ts";
 
-const BotOptions = {
-    token: "token",
-    intents: [Intents.GUILD_MESSAGES],
-    eventHandlers: {
-        ready: () => {
-            console.log(`Logged!`);
-        },
-        messageCreate: (message) => {
-            if (message.content === "!ping") {
-                sendMessage(message.channel, "Pong");
-            }
-        }
-    }
-};
-
-Client(BotOptions);
+Client({
+  token: config.token,
+  intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
+  eventHandlers: {
+    ready: () => {
+      console.log(`Logged!`);
+    },
+    messageCreate: (message) => {
+      if (message.content === "!ping") {
+        console.log(message);
+        sendMessage(message.channel, "Pong");
+      }
+    },
+  },
+});
 ```
 
 ## Motivations/Features
