@@ -17,7 +17,7 @@ export interface ChannelEditOptions {
   /**	the user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit	Voice  */
   user_limit?: number;
   /** channel or category-specific permissions	All */
-  permission_overwrites?: Overwrite[];
+  permission_overwrites?: Raw_Overwrite[];
   /** id of the new parent category for a channel	Text, Voice */
   parent_id?: string;
 }
