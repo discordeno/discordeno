@@ -51,7 +51,7 @@ export function botHasPermission(guildID: string, permissions: Permissions[]) {
 export function calculatePermissions(permissionBits: number) {
   return Object.keys(Permissions).filter((perm) => {
     return permissionBits & Permissions[perm as Permission];
-  });
+  }) as Permission[];
 }
 
 export function highestRole(guildID: string, memberID: string) {
