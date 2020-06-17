@@ -139,7 +139,7 @@ export function swapChannels(
 
 /** Returns a guild member object for the specified user.
 *
-* ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your members will be cached in your guild.**
+* ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
 */
 export async function getMember(guildID: string, id: string) {
   const guild = cache.guilds.get(guildID)
