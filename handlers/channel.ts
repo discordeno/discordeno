@@ -287,14 +287,18 @@ export function editChannel(channel: Channel, options: ChannelEditOptions) {
       (overwrite) => {
         return {
           ...overwrite,
-          allow: overwrite.allow.reduce((bits, perm) =>
-            bits |= Permissions[perm], 0),
-          deny: overwrite.deny.reduce((bits, perm) =>
-            bits |= Permissions[perm], 0),
+          allow: overwrite.allow.reduce(
+            (bits, perm) => bits |= Permissions[perm],
+            0,
+          ),
+          deny: overwrite.deny.reduce(
+            (bits, perm) => bits |= Permissions[perm],
+            0,
+          ),
         };
       },
-    )
-  }
+    ),
+  };
 
   return RequestManager.patch(
     endpoints.GUILD_CHANNEL(channel.id),

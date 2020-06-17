@@ -142,14 +142,16 @@ export function swapChannels(
 * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
 */
 export async function getMember(guildID: string, id: string) {
-  const guild = cache.guilds.get(guildID)
-  if (!guild) return
+  const guild = cache.guilds.get(guildID);
+  if (!guild) return;
 
-  const data = await RequestManager.get(endpoints.GUILD_MEMBER(guildID, id)) as MemberCreatePayload;
+  const data = await RequestManager.get(
+    endpoints.GUILD_MEMBER(guildID, id),
+  ) as MemberCreatePayload;
 
-  const member = createMember(data, guild)
-  guild.members.set(id, member)
-  return member
+  const member = createMember(data, guild);
+  guild.members.set(id, member);
+  return member;
 }
 
 /** Create an emoji in the server. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. */
