@@ -33,6 +33,9 @@ import { createRole } from "../structures/role.ts";
 import { Intents } from "../types/options.ts";
 import { identifyPayload } from "../module/client.ts";
 import { requestAllMembers } from "../module/shardingManager.ts";
+import { MemberCreatePayload } from "../types/member.ts";
+import { cache } from "../utils/cache.ts";
+import { createMember } from "../structures/member.ts";
 
 /** Gets an array of all the channels ids that are the children of this category. */
 export function categoryChildrenIDs(guild: Guild, id: string) {
@@ -138,8 +141,15 @@ export function swapChannels(
 *
 * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your members will be cached in your guild.**
 */
-export function getMember(guildID: string, id: string) {
-  return RequestManager.get(endpoints.GUILD_MEMBER(guildID, id));
+export async function getMember(guildID: string, id: string) {
+  const guild = cache.guilds.get(guildID)
+  if (!guild) return
+
+  const data = await RequestManager.get(endpoints.GUILD_MEMBER(guildID, id)) as MemberCreatePayload;
+
+  const member = createMember(data, guild)
+  guild.members.set(id, member)
+  return member
 }
 
 /** Create an emoji in the server. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. */
