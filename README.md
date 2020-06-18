@@ -3,6 +3,7 @@
 Discord API library wrapper in Deno
 
 [Discord Server](https://discord.gg/J4NqJ72)
+
 [Website](https://discordeno.netlify.app)
 
 ## Bot Boilerplate Template / Frameworks
