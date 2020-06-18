@@ -1,0 +1,35 @@
+{
+  "name": "discordeno-docs",
+  "version": "0.0.1",
+  "description": "Discordeno is a Deno Library for the Discord API",
+  "scripts": {
+    "docs:dev": "vuepress dev",
+    "docs:build": "vuepress build docs"
+  },
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NTMNathan/discordeno-docs"
+  },
+  "keywords": [
+    "discordeno",
+    "documentation",
+    "discord",
+    "discordapi"
+  ],
+  "bugs": {
+    "url": "https://github.com/skills4killz"
+  },
+  "homepage": "https://discordeno.js.org/",
+  "directories": {
+    "doc": "docs"
+  },
+  "author": "NTM Nathan @ NTM Development",
+  "license": "MIT",
+  "devDependencies": {
+    "vuepress": "^1.5.0"
+  },
+  "dependencies": {
+    "vuepress-theme-yuu": "^2.3.0"
+  }
+}

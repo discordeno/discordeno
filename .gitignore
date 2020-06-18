@@ -1,1 +1,9 @@
 configs.ts
+documentation/.vuepress/dist
+
+.DS_Store
+.lock
+node_modules
+
+# Log files
+npm-debug.log*
