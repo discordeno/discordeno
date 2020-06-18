@@ -7,8 +7,6 @@ name: Testing/Linting
 on:
   push:
     branches: [master]
-  pull_request:
-    branches: [master]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -22,11 +20,5 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Setup Deno environment
-        uses: denolib/setup-deno@master
-
-      - name: Deno Fetch
-        run: deno cache mod.ts
-
-      - name: Deno Format Check
-        run: deno fmt --check
+      - name: Build Documentation
+        run: deploy.sh
