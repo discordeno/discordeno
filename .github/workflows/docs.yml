@@ -22,5 +22,6 @@ jobs:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         TARGET_REPO: Skillz4Killz/Discordeno
         TARGET_BRANCH: master
-        BUILD_SCRIPT: npm i && npm run docs:build
+        BUILD_SCRIPT: cd docs && npm i && npm run docs:build
         BUILD_DIR: docs/.vuepress/dist/
+        CNAME: discordeno.js.org
