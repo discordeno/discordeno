@@ -29,4 +29,4 @@ jobs:
         run: deno cache mod.ts
 
       - name: Deno Format Check
-        run: deno fmt --check
+        run: deno fmt *.ts --check
