@@ -3,6 +3,7 @@
 Discord API library wrapper in Deno
 
 [Discord Server](https://discord.gg/J4NqJ72)
+[Website](https://discordeno.netlify.app)
 
 ## Bot Boilerplate Template / Frameworks
 
@@ -72,7 +73,3 @@ This project began out of the desire to want to learn and enhance my developer s
     - `Note:` This means for every tiny bug fix/change you need to manually update the code every time. So if a new feature is added, you would need to bump the version in your code.
   - Each version is also available through a specific branch. For example `v2` branch holds all the version 2 code. This branch is always updated whenever a MINOR or PATCH update is made that will NOT break your bots.
     - `Note:` This means you never have to update your code EXCEPT when you are ready to bump to next MAJOR version. So if a new feature is added, it will be added automatically. If a small bug is fixed it will be automatic.
-
-Documentation: https://doc.deno.land/https/deno.land/x/discordeno/mod.ts
-
-Website: https://discordeno.js.org
