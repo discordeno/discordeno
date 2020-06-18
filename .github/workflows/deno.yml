@@ -33,3 +33,6 @@ jobs:
 
       - name: Deno Format Check
         run: deno fmt --check
+
+      - name: Build Documentation
+        run: deploy.sh
