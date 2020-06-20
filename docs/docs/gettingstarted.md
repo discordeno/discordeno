@@ -52,7 +52,7 @@ const BotOptions = {
         ready: () => {
             console.log(`Logged!`);
         },
-        messageCreate: (message) => {
+        messageCreate: (message: any) => {
             if (message.content === "!ping") {
                 sendMessage(message.channel, "Pong");
             }
