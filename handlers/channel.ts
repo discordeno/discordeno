@@ -1,6 +1,9 @@
 import { Permissions } from "../types/permission.ts";
 import { Channel } from "../structures/channel.ts";
-import { botHasPermission } from "../utils/permissions.ts";
+import {
+  botHasPermission,
+  botHasChannelPermissions,
+} from "../utils/permissions.ts";
 import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { endpoints } from "../constants/discord.ts";
@@ -43,13 +46,13 @@ export function hasChannelPermission(
 export async function getMessage(channel: Channel, id: string) {
   if (channel.guildID) {
     if (
-      !botHasPermission(channel.guildID, [Permissions.VIEW_CHANNEL])
+      !botHasChannelPermissions(channel.id, [Permissions.VIEW_CHANNEL])
     ) {
       throw new Error(Errors.MISSING_VIEW_CHANNEL);
     }
     if (
-      !botHasPermission(
-        channel.guildID,
+      !botHasChannelPermissions(
+        channel.id,
         [Permissions.READ_MESSAGE_HISTORY],
       )
     ) {
@@ -73,13 +76,13 @@ export async function getMessages(
 ) {
   if (channel.guildID) {
     if (
-      !botHasPermission(channel.guildID, [Permissions.VIEW_CHANNEL])
+      !botHasChannelPermissions(channel.id, [Permissions.VIEW_CHANNEL])
     ) {
       throw new Error(Errors.MISSING_VIEW_CHANNEL);
     }
     if (
-      !botHasPermission(
-        channel.guildID,
+      !botHasChannelPermissions(
+        channel.id,
         [Permissions.READ_MESSAGE_HISTORY],
       )
     ) {
@@ -110,16 +113,15 @@ export async function sendMessage(
   content: string | MessageContent,
 ) {
   if (typeof content === "string") content = { content };
-
   if (channel.guildID) {
     if (
-      !botHasPermission(channel.guildID, [Permissions.SEND_MESSAGES])
+      !botHasChannelPermissions(channel.id, [Permissions.SEND_MESSAGES])
     ) {
       throw new Error(Errors.MISSING_SEND_MESSAGES);
     }
     if (
       content.tts &&
-      !botHasPermission(
+      !botHasChannelPermissions(
         channel.guildID,
         [Permissions.SEND_TTS_MESSAGES],
       )
@@ -148,7 +150,7 @@ export function deleteMessages(
 ) {
   if (
     channel.guildID &&
-    !botHasPermission(channel.guildID, [Permissions.MANAGE_MESSAGES])
+    !botHasChannelPermissions(channel.id, [Permissions.MANAGE_MESSAGES])
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
@@ -172,7 +174,7 @@ export function deleteMessages(
 export function getChannelInvites(channel: Channel) {
   if (
     channel.guildID &&
-    !botHasPermission(channel.guildID, [Permissions.MANAGE_CHANNELS])
+    !botHasChannelPermissions(channel.id, [Permissions.MANAGE_CHANNELS])
   ) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
@@ -183,8 +185,8 @@ export function getChannelInvites(channel: Channel) {
 export function createInvite(channel: Channel, options: CreateInviteOptions) {
   if (
     channel.guildID &&
-    !botHasPermission(
-      channel.guildID,
+    !botHasChannelPermissions(
+      channel.id,
       [Permissions.CREATE_INSTANT_INVITE],
     )
   ) {
@@ -196,8 +198,7 @@ export function createInvite(channel: Channel, options: CreateInviteOptions) {
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
 export function getChannelWebhooks(channel: Channel) {
   if (
-    channel.guildID &&
-    !botHasPermission(channel.guildID, [Permissions.MANAGE_WEBHOOKS])
+    !botHasChannelPermissions(channel.id, [Permissions.MANAGE_WEBHOOKS])
   ) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
@@ -251,7 +252,7 @@ export function editChannel(channel: Channel, options: ChannelEditOptions) {
   if (!channel.guildID) throw new Error(Errors.CHANNEL_NOT_IN_GUILD);
 
   if (
-    !botHasPermission(channel.guildID, [Permissions.MANAGE_CHANNELS])
+    !botHasChannelPermissions(channel.id, [Permissions.MANAGE_CHANNELS])
   ) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }

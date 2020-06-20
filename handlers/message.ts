@@ -6,7 +6,7 @@ import { Permissions } from "../types/permission.ts";
 import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { endpoints } from "../constants/discord.ts";
-import { botHasPermission } from "../utils/permissions.ts";
+import { botHasChannelPermissions } from "../utils/permissions.ts";
 import { MessageContent } from "../types/channel.ts";
 import { UserPayload } from "../types/guild.ts";
 import { MessageCreateOptions } from "../types/message.ts";
@@ -42,8 +42,7 @@ export async function deleteMessage(
 /** Pin a message in a channel. Requires MANAGE_MESSAGES. Max pins allowed in a channel = 50. */
 export function pin(message: Message) {
   if (
-    message.guildID &&
-    !botHasPermission(message.guildID, [Permissions.MANAGE_MESSAGES])
+    !botHasChannelPermissions(message.channelID, [Permissions.MANAGE_MESSAGES])
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
@@ -53,8 +52,7 @@ export function pin(message: Message) {
 /** Unpin a message in a channel. Requires MANAGE_MESSAGES. */
 export function unpin(message: Message) {
   if (
-    message.guildID &&
-    !botHasPermission(message.guildID, [Permissions.MANAGE_MESSAGES])
+    !botHasChannelPermissions(message.channelID, [Permissions.MANAGE_MESSAGES])
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
@@ -88,8 +86,7 @@ export function removeReaction(message: Message, reaction: string) {
 /** Removes all reactions for all emojis on this message. */
 export function removeAllReactions(message: Message) {
   if (
-    message.guildID &&
-    !botHasPermission(message.guildID, [Permissions.MANAGE_MESSAGES])
+    !botHasChannelPermissions(message.channelID, [Permissions.MANAGE_MESSAGES])
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
@@ -101,8 +98,7 @@ export function removeAllReactions(message: Message) {
 /** Removes all reactions for a single emoji on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
 export function removeReactionEmoji(message: Message, reaction: string) {
   if (
-    message.guildID &&
-    !botHasPermission(message.guildID, [Permissions.MANAGE_MESSAGES])
+    !botHasChannelPermissions(message.channelID, [Permissions.MANAGE_MESSAGES])
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
@@ -136,22 +132,20 @@ export async function editMessage(
 
   if (typeof content === "string") content = { content };
 
-  if (message.guildID) {
-    if (
-      !botHasPermission(message.guildID, [Permissions.SEND_MESSAGES])
-    ) {
-      throw new Error(Errors.MISSING_SEND_MESSAGES);
-    }
+  if (
+    !botHasChannelPermissions(message.channelID, [Permissions.SEND_MESSAGES])
+  ) {
+    throw new Error(Errors.MISSING_SEND_MESSAGES);
+  }
 
-    if (
-      content.tts &&
-      !botHasPermission(
-        message.guildID,
-        [Permissions.SEND_TTS_MESSAGES],
-      )
-    ) {
-      throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
-    }
+  if (
+    content.tts &&
+    !botHasChannelPermissions(
+      message.channelID,
+      [Permissions.SEND_TTS_MESSAGES],
+    )
+  ) {
+    throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
   }
 
   if (content.content && content.content.length > 2000) {

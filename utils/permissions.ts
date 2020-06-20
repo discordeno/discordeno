@@ -48,6 +48,82 @@ export function botHasPermission(guildID: string, permissions: Permissions[]) {
   return permissions.every((permission) => permissionBits & permission);
 }
 
+/** Checks if the bot has the permissions in a channel */
+export function botHasChannelPermissions(channelID: string, permissions: Permissions[]) {
+  return hasChannelPermissions(channelID, botID, permissions)
+}
+
+/** Checks if a user has permissions in a channel. */
+export function hasChannelPermissions(
+  channelID: string,
+  memberID: string,
+  permissions: Permissions[],
+) {
+  const channel = cache.channels.get(channelID);
+  if (!channel?.guildID) return true;
+
+  const guild = cache.guilds.get(channel.guildID);
+  if (!guild) return false;
+
+  if (guild.ownerID === memberID) return true;
+
+  const member = guild.members.get(memberID);
+  if (!member) return false;
+
+  const memberOverwrite = channel.permission_overwrites?.find((o) =>
+    o.id === memberID
+  );
+
+  const rolesOverwrites = channel.permission_overwrites?.filter((o) =>
+    member.roles.includes(o.id)
+  );
+
+  const everyoneOverwrite = channel.permission_overwrites?.find((o) =>
+    o.id === guild.id
+  );
+
+  // One of the necessary permissions is denied
+  if (
+    memberOverwrite && permissions.some((perm) => memberOverwrite.deny & perm)
+  ) {
+    return false;
+  }
+
+  // Check the necessary permissions for roles
+  if (rolesOverwrites?.length) {
+    if (
+      rolesOverwrites.some((overwrite) =>
+        permissions.some((perm) =>
+          (overwrite.deny & perm) &&
+          // If another role allows these perms then they are not denied
+          !rolesOverwrites.some((o) => o.allow & perm) &&
+          // Make sure the memberOverwrite does not allow this perm
+          !(memberOverwrite && memberOverwrite.allow & perm)
+        )
+      )
+    ) {
+      return false;
+    }
+  }
+
+  // Check the necessary permissions for everyone
+  if (
+    everyoneOverwrite
+  ) {
+    if (permissions.some((perm) => everyoneOverwrite.deny & perm)) {
+      return false;
+    }
+    // If all permissions are granted
+    if (
+      permissions.every((perm) => everyoneOverwrite.allow & perm)
+    ) {
+      return true;
+    }
+  }
+
+  return botHasPermission(guild.id, permissions)
+}
+
 export function calculatePermissions(permissionBits: number) {
   return Object.keys(Permissions).filter((perm) => {
     return permissionBits & Permissions[perm as Permission];
