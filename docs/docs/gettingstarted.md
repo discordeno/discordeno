@@ -44,10 +44,11 @@ Starting with Discordeno is very simple, you can start from scratch without any 
 import Client from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v5/module/client.ts";
 import { sendMessage } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v5/handlers/channel.ts";
 import { Intents } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v5/types/options.ts";
+import config from "./config.ts";
 
-const BotOptions = {
-    token: "token",
-    intents: [Intents.GUILD_MESSAGES],
+Client({
+    token: config.token,
+    intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
     eventHandlers: {
         ready: () => {
             console.log(`Logged!`);
@@ -58,9 +59,7 @@ const BotOptions = {
             }
         }
     }
-};
-
-Client(BotOptions);
+});
 ```
 
 Alternatively, you can use boilerplate template repositories that were created by wonderful developers. This will get the base of your bot pre-built for you. Overtime, developers create other command frameworks for this library and they will be listed here:
