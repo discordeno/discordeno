@@ -26,10 +26,8 @@
   },
   "author": "NTM Nathan @ NTM Development",
   "license": "MIT",
-  "devDependencies": {
-    "vuepress": "^1.5.0"
-  },
   "dependencies": {
+    "vuepress": "^1.5.0",
     "vuepress-theme-yuu": "^2.3.0"
   }
 }
