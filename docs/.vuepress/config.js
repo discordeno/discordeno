@@ -3,10 +3,12 @@ const nav = require("./navbar");
 const head = require("./head");
 
 const config = {
+    base: "/docs/",
     title: "Discordeno",
     head,
     theme: "yuu",
     themeConfig: {
+        base: "/docs/",
         yuu: { 
             disableThemeIgnore: true 
         },
