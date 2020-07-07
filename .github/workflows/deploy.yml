@@ -24,4 +24,4 @@ jobs:
         uses: denolib/setup-deno@master
 
       - name: Build Documentation
-        run: deploy.sh
+        run: ./deploy.sh
