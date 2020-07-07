@@ -16,12 +16,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@master
 
-    - name: vuepress-deploy
-      uses: jenkey2011/vuepress-deploy@master
-      env:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        TARGET_REPO: Skillz4Killz/Discordeno
-        TARGET_BRANCH: gh-pages
-        BUILD_SCRIPT: cd docs && npm i && npm run docs:build
-        BUILD_DIR: docs/.vuepress/dist/
-        CNAME: discordeno.js.org
+#    - name: vuepress-deploy
+#      uses: jenkey2011/vuepress-deploy@master
+#      env:
+#        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+#        TARGET_REPO: Skillz4Killz/Discordeno
+#        TARGET_BRANCH: gh-pages
+#        BUILD_SCRIPT: cd docs && npm i && npm run docs:build
+#        BUILD_DIR: docs/.vuepress/dist/
+#        CNAME: discordeno.js.org
