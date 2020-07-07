@@ -8,7 +8,6 @@ const config = {
     head,
     theme: "yuu",
     themeConfig: {
-        base: "/docs/",
         yuu: { 
             disableThemeIgnore: true 
         },
