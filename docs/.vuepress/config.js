@@ -3,7 +3,7 @@ const nav = require("./navbar");
 const head = require("./head");
 
 const config = {
-    base: "/docs/",
+    base: "/Discordeno/",
     title: "Discordeno",
     head,
     theme: "yuu",
