@@ -21,4 +21,4 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build Documentation
-        run: ./deploy.sh
+        run: chmod +x deploy.sh
