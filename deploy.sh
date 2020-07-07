@@ -4,10 +4,12 @@
 set -e
 
 # build
+cd docs
+npm ci
 npm run docs:build
 
 # navigate into the build output directory
-cd docs/.vuepress/dist
+cd .vuepress/dist
 
 # if you are deploying to a custom domain
 echo 'discordeno.js.org' > CNAME
