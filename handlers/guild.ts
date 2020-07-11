@@ -218,7 +218,11 @@ export async function createGuildRole(
     endpoints.GUILD_ROLES(guild.id),
     {
       ...options,
-      permissions: options.permissions?.map((perm) => Permissions[perm]),
+      permissions: options.permissions
+        ?.reduce((subtotal, perm) => {
+          subtotal |= Permissions[perm];
+          return subtotal;
+        }, 0),
       reason,
     },
   );

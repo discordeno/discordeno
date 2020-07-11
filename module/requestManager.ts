@@ -3,6 +3,7 @@ import { authorization, eventHandlers } from "./client.ts";
 import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
 import { Errors } from "../types/errors.ts";
 import { HttpResponseCode } from "../types/discord.ts";
+import { logRed } from "../utils/logger.ts";
 
 const queue: QueuedRequest[] = [];
 const ratelimitedPaths = new Map<string, RateLimitedPath>();
@@ -136,7 +137,7 @@ async function runMethod(
 
         const response = await fetch(url, createRequestBody(body, method));
         const bucketIDFromHeaders = processHeaders(url, response.headers);
-        handleStatusCode(response.status);
+        handleStatusCode(response);
 
         // Sometimes Discord returns an empty 204 response that can't be made to JSON.
         if (response.status === 204) resolve();
@@ -187,13 +188,17 @@ async function runMethod(
   });
 }
 
-function handleStatusCode(status: number) {
+function handleStatusCode(response: Response) {
+  const status = response.status;
+
   if (
     (status >= 200 && status < 400) ||
     status === HttpResponseCode.TooManyRequests
   ) {
     return true;
   }
+
+  logRed(response);
 
   switch (status) {
     case HttpResponseCode.BadRequest:
