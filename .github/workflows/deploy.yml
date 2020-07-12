@@ -20,8 +20,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: Load Config
+        run: git config user.email "you@example.com" && git config user.name "Skillz4KillzGHA"
+
       - name: Build Documentation
-        run: chmod +x deploy.sh 
-          git config user.email "you@example.com"
-          git config user.name "Skillz4KillzGHA"
-          ./deploy.sh
+        run:  chmod +x deploy.sh && ./deploy.sh
