@@ -21,4 +21,4 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build Documentation
-        run: chmod +x deploy.sh && ./deploy.sh
+        run: chmod +x deploy.sh && git config user.email "you@example.com" && git config user.name "Skillz4KillzGHA" && ./deploy.sh
