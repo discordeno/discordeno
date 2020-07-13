@@ -9,4 +9,8 @@ Discord API library wrapper in Deno
 ![Documentation](https://github.com/Skillz4Killz/Discordeno/workflows/Documentation/badge.svg)
 ![Testing](https://github.com/Skillz4Killz/Discordeno/workflows/Testing/Linting/badge.svg)
 
-![image](https://i.imgur.com/m7T8Y7v.png)
+![image](https://i.imgur.com/z1BfUnt.png)
+
+#### Dark Mode
+
+![image](https://i.imgur.com/Vr2Bebr.png)
