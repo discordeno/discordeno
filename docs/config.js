@@ -31,6 +31,9 @@ const config = {
   sidebar: {
     forcedNavOrder: [
       "/introduction",
+      "/faq",
+      "/gettingstarted",
+      "/guides",
     ],
     collapsedNav: [],
     links: [
