@@ -430,6 +430,7 @@ export function ban(guildID: string, id: string, options: BanOptions) {
   ) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
+
   return RequestManager.put(endpoints.GUILD_BAN(guildID, id), options);
 }
 
