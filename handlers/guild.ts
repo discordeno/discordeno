@@ -203,6 +203,11 @@ export function deleteEmoji(guildID: string, id: string, reason?: string) {
   );
 }
 
+/** Creates a url to the emoji from the Discord CDN. */
+export function emojiURL(id: string, animated = false) {
+  return `https://cdn.discordapp.com/emojis/${id}.${animated ? 'gif' : 'jpg'}`
+}
+
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
 export async function createGuildRole(
   guild: Guild,
