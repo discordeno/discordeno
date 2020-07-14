@@ -27,6 +27,7 @@ import {
   BanOptions,
   GuildEditOptions,
   PruneOptions,
+  PrunePayload,
 } from "../types/guild.ts";
 import { RoleData } from "../types/role.ts";
 import { createRole } from "../structures/role.ts";
@@ -205,7 +206,7 @@ export function deleteEmoji(guildID: string, id: string, reason?: string) {
 
 /** Creates a url to the emoji from the Discord CDN. */
 export function emojiURL(id: string, animated = false) {
-  return `https://cdn.discordapp.com/emojis/${id}.${animated ? 'gif' : 'jpg'}`
+  return `https://cdn.discordapp.com/emojis/${id}.${animated ? "gif" : "jpg"}`;
 }
 
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
@@ -296,15 +297,17 @@ export async function getPruneCount(guildID: string, options: PruneOptions) {
     throw new Error(Errors.MISSING_KICK_MEMBERS);
   }
 
-  RequestManager.get(
+  const result = await RequestManager.get(
     endpoints.GUILD_PRUNE(guildID),
     options,
-  );
+  ) as PrunePayload;
+
+  return result.pruned;
 }
 
 /** Begin pruning all members in the given time period */
-export function pruneMembers(guildID: string, days: number) {
-  if (days < 1) {
+export function pruneMembers(guildID: string, options: PruneOptions) {
+  if (options.days < 1) {
     throw new Error(Errors.PRUNE_MIN_DAYS);
   }
   if (
@@ -312,7 +315,8 @@ export function pruneMembers(guildID: string, days: number) {
   ) {
     throw new Error(Errors.MISSING_KICK_MEMBERS);
   }
-  return RequestManager.post(endpoints.GUILD_PRUNE(guildID), { days });
+
+  RequestManager.post(endpoints.GUILD_PRUNE(guildID), options);
 }
 
 export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
