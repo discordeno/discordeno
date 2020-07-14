@@ -16,9 +16,9 @@ export const createGuild = (data: CreateGuildPayload, shardID: number) => {
     /** The amount of time before a user is moved to AFK. */
     afkTimeout: data.afk_timeout,
     /** Whether or not the embed is enabled in this server. */
-    embedEnabled: data.embed_enabled,
+    widgetEnabled: data.widget_enabled,
     /** The channel id for the guild embed in this server. */
-    embedChannelID: data.embed_channel_id,
+    widgetChannelID: data.widget_channel_id,
     /** The verification level for this server. */
     verificationLevel: data.verification_level,
     /** The MFA level for this server. */
@@ -73,8 +73,8 @@ export const createGuild = (data: CreateGuildPayload, shardID: number) => {
   delete guild.owner_id;
   delete guild.afk_channel_id;
   delete guild.afk_timeout;
-  delete guild.embed_enabled;
-  delete guild.embed_channel_id;
+  delete guild.widget_enabled;
+  delete guild.widget_channel_id;
   delete guild.verification_level;
   delete guild.mfa_level;
   delete guild.system_channel_id;
@@ -96,8 +96,8 @@ export interface Guild extends
     | "owner_id"
     | "afk_channel_id"
     | "afk_timeout"
-    | "embed_enabled"
-    | "embed_channel_id"
+    | "widget_enabled"
+    | "widget_channel_id"
     | "verification_level"
     | "mfa_level"
     | "system_channel_id"

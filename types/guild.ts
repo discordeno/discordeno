@@ -92,10 +92,6 @@ export interface UpdateGuildPayload {
   afk_channel_id: string | null;
   /** AFK Timeout in seconds. */
   afk_timeout: number;
-  /** Whether this guild is embeddable (widget) */
-  embed_enabled?: boolean;
-  /** If not null, the channel id that the widge will generate an invite to. */
-  embed_channel_id?: string | null;
   /** The verification level required for the guild */
   verification_level: number;
   /** Default message notifications level */
