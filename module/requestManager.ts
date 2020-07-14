@@ -82,15 +82,26 @@ export const RequestManager = {
 };
 
 function createRequestBody(body: any, method: RequestMethod) {
+  const headers = {
+    Authorization: authorization,
+    "User-Agent":
+      `DiscordBot (https://github.com/skillz4killz/discordeno, 6.0.0)`,
+    "Content-Type": "application/json",
+    "X-Audit-Log-Reason": body ? encodeURIComponent(body.reason) : "",
+  };
+
+  if (body?.file) {
+    const form = new FormData();
+    form.append("file", body.file.blob, body.file.name);
+    form.append("payload_json", JSON.stringify({ ...body, file: undefined }));
+    body.file = form;
+
+    delete headers["Content-Type"];
+  }
+
   return {
-    headers: {
-      Authorization: authorization,
-      "User-Agent":
-        `DiscordBot (https://github.com/skillz4killz/discordeno, 0.0.1)`,
-      "Content-Type": "application/json",
-      "X-Audit-Log-Reason": body ? encodeURIComponent(body.reason) : "",
-    },
-    body: JSON.stringify(body),
+    headers,
+    body: body?.file || JSON.stringify(body),
     method: method.toUpperCase(),
   };
 }

@@ -119,9 +119,8 @@ export interface MessageContent {
   nonce?: number | string;
   /** Whether this is a TextToSpeech message */
   tts?: boolean;
-  // file?: File_Content
   /** The contents of the file being sent */
-  file?: unknown;
+  file?: { blob: unknown, name: string };
   /** Embed object */
   embed?: Embed;
   /** JSON encoded body of any additional request fields. */
