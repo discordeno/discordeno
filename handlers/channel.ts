@@ -134,6 +134,32 @@ export async function sendMessage(
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
   }
 
+  if (content.mentions) {
+    if (content.mentions.users?.length) {
+      if (content.mentions.parse.includes("users")) {
+        content.mentions.parse = content.mentions.parse.filter((p) =>
+          p !== "users"
+        );
+      }
+
+      if (content.mentions.users.length > 100) {
+        content.mentions.users = content.mentions.users.slice(0, 100);
+      }
+    }
+
+    if (content.mentions.roles?.length) {
+      if (content.mentions.parse.includes("roles")) {
+        content.mentions.parse = content.mentions.parse.filter((p) =>
+          p !== "roles"
+        );
+      }
+
+      if (content.mentions.roles.length > 100) {
+        content.mentions.roles = content.mentions.roles.slice(0, 100);
+      }
+    }
+  }
+
   const result = await RequestManager.post(
     endpoints.CHANNEL_MESSAGES(channel.id),
     content,
