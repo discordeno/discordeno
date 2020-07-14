@@ -190,7 +190,7 @@ export interface Voice_Region {
 
 export interface BanOptions {
   /** number of days to delete messages for (0-7) */
-  delete_message_days?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  days?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
   /** The reason for the ban. */
   reason?: string;
 }
@@ -528,8 +528,8 @@ export interface PrunePayload {
 export interface PruneOptions {
   /** number of days to count prune for (1 or more). Defaults to 7 days. */
   days: number;
-  /** comma-delimited array of role ids */
-  include_roles: string;
+  /** Include members with these role ids */
+  roles: string[];
 }
 
 export interface Voice_State {

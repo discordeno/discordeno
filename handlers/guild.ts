@@ -299,7 +299,7 @@ export async function getPruneCount(guildID: string, options: PruneOptions) {
 
   const result = await RequestManager.get(
     endpoints.GUILD_PRUNE(guildID),
-    options,
+    { ...options, include_roles: options.roles.join(",") },
   ) as PrunePayload;
 
   return result.pruned;
@@ -316,7 +316,10 @@ export function pruneMembers(guildID: string, options: PruneOptions) {
     throw new Error(Errors.MISSING_KICK_MEMBERS);
   }
 
-  RequestManager.post(endpoints.GUILD_PRUNE(guildID), options);
+  RequestManager.post(
+    endpoints.GUILD_PRUNE(guildID),
+    { ...options, include_roles: options.roles.join(",") },
+  );
 }
 
 export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
@@ -440,7 +443,7 @@ export function ban(guildID: string, id: string, options: BanOptions) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
 
-  return RequestManager.put(endpoints.GUILD_BAN(guildID, id), options);
+  return RequestManager.put(endpoints.GUILD_BAN(guildID, id), { ...options, delete_message_days: options.days });
 }
 
 /** Remove the ban for a user. REquires BAN_MEMBERS permission */
