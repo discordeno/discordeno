@@ -525,6 +525,13 @@ export interface PrunePayload {
   pruned: number;
 }
 
+export interface PruneOptions {
+  /** number of days to count prune for (1 or more). Defaults to 7 days. */
+  days: number;
+  /** comma-delimited array of role ids */
+  include_roles: string;
+}
+
 export interface Voice_State {
   /** the guild id this voice state is for */
   guild_id?: string;

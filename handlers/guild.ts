@@ -21,12 +21,12 @@ import {
   PositionSwap,
   EditEmojisOptions,
   CreateRoleOptions,
-  PrunePayload,
   FetchMembersOptions,
   GetAuditLogsOptions,
   EditIntegrationOptions,
   BanOptions,
   GuildEditOptions,
+  PruneOptions,
 } from "../types/guild.ts";
 import { RoleData } from "../types/role.ts";
 import { createRole } from "../structures/role.ts";
@@ -281,8 +281,8 @@ export function swapRoles(guildID: string, rolePositons: PositionSwap) {
 }
 
 /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
-export async function getPruneCount(guildID: string, days: number) {
-  if (days < 1) {
+export async function getPruneCount(guildID: string, options: PruneOptions) {
+  if (options.days < 1) {
     throw new Error(Errors.PRUNE_MIN_DAYS);
   }
   if (
@@ -290,11 +290,11 @@ export async function getPruneCount(guildID: string, days: number) {
   ) {
     throw new Error(Errors.MISSING_KICK_MEMBERS);
   }
-  const result = (await RequestManager.get(
+
+  RequestManager.get(
     endpoints.GUILD_PRUNE(guildID),
-    { days },
-  )) as PrunePayload;
-  return result.pruned;
+    options,
+  );
 }
 
 /** Begin pruning all members in the given time period */
