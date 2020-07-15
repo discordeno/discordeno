@@ -49,8 +49,11 @@ export function botHasPermission(guildID: string, permissions: Permissions[]) {
 }
 
 /** Checks if the bot has the permissions in a channel */
-export function botHasChannelPermissions(channelID: string, permissions: Permissions[]) {
-  return hasChannelPermissions(channelID, botID, permissions)
+export function botHasChannelPermissions(
+  channelID: string,
+  permissions: Permissions[],
+) {
+  return hasChannelPermissions(channelID, botID, permissions);
 }
 
 /** Checks if a user has permissions in a channel. */
@@ -66,6 +69,7 @@ export function hasChannelPermissions(
   if (!guild) return false;
 
   if (guild.ownerID === memberID) return true;
+  if (botHasPermission(guild.id, [Permissions.ADMINISTRATOR])) return true;
 
   const member = guild.members.get(memberID);
   if (!member) return false;
@@ -121,7 +125,7 @@ export function hasChannelPermissions(
     }
   }
 
-  return botHasPermission(guild.id, permissions)
+  return botHasPermission(guild.id, permissions);
 }
 
 export function calculatePermissions(permissionBits: number) {
