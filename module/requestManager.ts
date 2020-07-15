@@ -155,7 +155,7 @@ async function runMethod(
             .join("&")
           : "";
         const urlToUse = method === "get" && query ? `${url}?${query}` : url;
-        console.log("url thing", urlToUse);
+
         const response = await fetch(urlToUse, createRequestBody(body, method));
         const bucketIDFromHeaders = processHeaders(url, response.headers);
         handleStatusCode(response);
