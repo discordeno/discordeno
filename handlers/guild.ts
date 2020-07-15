@@ -37,6 +37,7 @@ import { requestAllMembers } from "../module/shardingManager.ts";
 import { MemberCreatePayload } from "../types/member.ts";
 import { cache } from "../utils/cache.ts";
 import { createMember } from "../structures/member.ts";
+import { urlToBase64 } from "../utils/utils.ts";
 
 /** Gets an array of all the channels ids that are the children of this category. */
 export function categoryChildrenIDs(guild: Guild, id: string) {
@@ -155,8 +156,8 @@ export async function getMember(guildID: string, id: string) {
   return member;
 }
 
-/** Create an emoji in the server. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. */
-export function createEmoji(
+/** Create an emoji in the server. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. */
+export async function createEmoji(
   guildID: string,
   name: string,
   image: string,
@@ -167,6 +168,11 @@ export function createEmoji(
   ) {
     throw new Error(Errors.MISSING_MANAGE_EMOJIS);
   }
+
+  if (image && !image.startsWith("data:image/")) {
+    image = await urlToBase64(image);
+  }
+
   return RequestManager.post(endpoints.GUILD_EMOJIS(guildID), {
     ...options,
     name,
@@ -443,7 +449,10 @@ export function ban(guildID: string, id: string, options: BanOptions) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
 
-  return RequestManager.put(endpoints.GUILD_BAN(guildID, id), { ...options, delete_message_days: options.days });
+  return RequestManager.put(
+    endpoints.GUILD_BAN(guildID, id),
+    { ...options, delete_message_days: options.days },
+  );
 }
 
 /** Remove the ban for a user. REquires BAN_MEMBERS permission */
@@ -496,12 +505,25 @@ export function channelHasPermissions(
 }
 
 /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
-export function editGuild(guildID: string, options: GuildEditOptions) {
+export async function editGuild(guildID: string, options: GuildEditOptions) {
   if (
     !botHasPermission(guildID, [Permissions.MANAGE_GUILD])
   ) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
+
+  if (options.icon && !options.icon.startsWith("data:image/")) {
+    options.icon = await urlToBase64(options.icon);
+  }
+
+  if (options.banner && !options.banner.startsWith("data:image/")) {
+    options.banner = await urlToBase64(options.banner);
+  }
+
+  if (options.splash && !options.splash.startsWith("data:image/")) {
+    options.splash = await urlToBase64(options.splash);
+  }
+
   return RequestManager.patch(endpoints.GUILD(guildID), options);
 }
 

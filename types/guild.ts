@@ -224,13 +224,13 @@ export interface GuildEditOptions {
   afk_channel_id?: string;
   /** The afk timeout in seconds. */
   afk_timeout?: number;
-  /** base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has ANIMATED_ICON feature) */
+  /** If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has ANIMATED_ICON feature) */
   icon?: string;
   /** user id to transfer guild ownership to (must be owner) */
   owner_id?: string;
-  /** base64 16:9 png/jpeg image for the guild splash (when the server has INVITE_SPLASH feature) */
+  /** If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. base64 16:9 png/jpeg image for the guild splash (when the server has INVITE_SPLASH feature) */
   splash?: string;
-  /** base64 16:9 png/jpeg image for the guild banner (when the server has BANNER feature) */
+  /** If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. base64 16:9 png/jpeg image for the guild banner (when the server has BANNER feature) */
   banner?: string;
   /** the id of the channel to which system messages are sent */
   system_channel_id?: string;
