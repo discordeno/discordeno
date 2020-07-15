@@ -90,6 +90,8 @@ function createRequestBody(body: any, method: RequestMethod) {
     "X-Audit-Log-Reason": body ? encodeURIComponent(body.reason) : "",
   };
 
+  if (method === "get") body = undefined;
+
   if (body?.file) {
     const form = new FormData();
     form.append("file", body.file.blob, body.file.name);
@@ -146,7 +148,15 @@ async function runMethod(
           );
         }
 
-        const response = await fetch(url, createRequestBody(body, method));
+        const query = method === "get" && body
+          ? Object.entries(body as any).map(([key, value]) =>
+            `${encodeURIComponent(key)}=${encodeURIComponent(value as any)}`
+          )
+            .join("&")
+          : "";
+        const urlToUse = method === "get" && query ? `${url}?${query}` : url;
+        console.log("url thing", urlToUse);
+        const response = await fetch(urlToUse, createRequestBody(body, method));
         const bucketIDFromHeaders = processHeaders(url, response.headers);
         handleStatusCode(response);
 
