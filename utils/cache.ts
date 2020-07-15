@@ -2,7 +2,7 @@ import Collection from "./collection.ts";
 import { Message } from "../structures/message.ts";
 import { Guild } from "../structures/guild.ts";
 import { Channel } from "../structures/channel.ts";
-import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
+import { delay } from "https://deno.land/std@0.61.0/async/delay.ts";
 
 export interface CacheData {
   guilds: Collection<string, Guild>;

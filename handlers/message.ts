@@ -1,5 +1,5 @@
 import { Message, createMessage } from "../structures/message.ts";
-import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
+import { delay } from "https://deno.land/std@0.61.0/async/delay.ts";
 import { botID } from "../module/client.ts";
 import { hasChannelPermission } from "./channel.ts";
 import { Permissions } from "../types/permission.ts";

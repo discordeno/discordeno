@@ -1,6 +1,6 @@
 import { RequestMethod } from "../types/fetch.ts";
 import { authorization, eventHandlers } from "./client.ts";
-import { delay } from "https://deno.land/std@0.50.0/async/delay.ts";
+import { delay } from "https://deno.land/std@0.61.0/async/delay.ts";
 import { Errors } from "../types/errors.ts";
 import { HttpResponseCode } from "../types/discord.ts";
 import { logRed } from "../utils/logger.ts";
