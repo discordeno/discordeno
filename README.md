@@ -12,9 +12,9 @@ Discord API library wrapper in Deno
 Starting with Discordeno is very simple, you can start from scratch without any boilerplates/frameworks: Add this snippet of code into a new TypeScript file:
 
 ```typescript
-import Client from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v5/module/client.ts";
-import { sendMessage } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v5/handlers/channel.ts";
-import { Intents } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v5/types/options.ts";
+import Client from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v6/module/client.ts";
+import { sendMessage } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v6/handlers/channel.ts";
+import { Intents } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v6/types/options.ts";
 import config from "./config.ts";
 
 Client({
