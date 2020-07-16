@@ -14,6 +14,7 @@ import {
   identifyPayload,
   botID,
   setBotID,
+  IdentifyPayload,
 } from "./client.ts";
 import { delay } from "https://deno.land/std@0.61.0/async/delay.ts";
 import {
@@ -54,6 +55,7 @@ import {
 } from "../types/message.ts";
 import { createMessage } from "../structures/message.ts";
 import { GuildUpdateChange } from "../types/options.ts";
+import { createBasicShard } from "./basicShard.ts";
 
 let shardCounter = 0;
 
@@ -104,13 +106,16 @@ export function createShardWorker(shardID?: number) {
 
 export const spawnShards = async (
   data: DiscordBotGatewayData,
-  payload: unknown,
+  payload: IdentifyPayload,
   id = 1,
 ) => {
   if ((data.shards === 1 && id === 1) || id <= data.shards) {
     if (createNextShard) {
       createNextShard = false;
-      createShardWorker();
+      if (data.shards >= 25) createShardWorker();
+      else {
+        createBasicShard(data, payload, false, id - 1);
+      }
       spawnShards(data, payload, id + 1);
     } else {
       await delay(1000);
@@ -119,7 +124,10 @@ export const spawnShards = async (
   }
 };
 
-async function handleDiscordPayload(data: DiscordPayload, shardID: number) {
+export async function handleDiscordPayload(
+  data: DiscordPayload,
+  shardID: number,
+) {
   eventHandlers.raw?.(data);
 
   switch (data.op) {
