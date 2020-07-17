@@ -76,7 +76,7 @@ export interface ChannelCreatePayload extends Base_Channel_Create {
 
 export interface CreateChannelOptions extends Base_Channel_Create {
   /** The type of the channel */
-  type: ChannelTypes;
+  type?: ChannelTypes;
   /** Explicit permission overwrites for members and roles */
   permission_overwrites?: Overwrite[];
 }

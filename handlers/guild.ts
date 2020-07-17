@@ -93,23 +93,22 @@ export function guildBannerURL(
 export async function createGuildChannel(
   guild: Guild,
   name: string,
-  options: CreateChannelOptions,
+  options?: CreateChannelOptions,
 ) {
   if (!botHasPermission(guild.id, [Permissions.MANAGE_CHANNELS])) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
+
   const result =
     (await RequestManager.post(endpoints.GUILD_CHANNELS(guild.id), {
-      name,
-      permission_overwrites: options?.permission_overwrites
-        ? options.permission_overwrites.map((perm) => ({
-          ...perm,
-          allow: perm.allow.map((p) => Permissions[p]),
-          deny: perm.deny.map((p) => Permissions[p]),
-        }))
-        : undefined,
       ...options,
-      type: options.type ? ChannelTypes[options.type] : undefined,
+      name,
+      permission_overwrites: options?.permission_overwrites?.map((perm) => ({
+        ...perm,
+        allow: perm.allow.map((p) => Permissions[p]),
+        deny: perm.deny.map((p) => Permissions[p]),
+      })),
+      type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
 
   const channel = createChannel(result);
