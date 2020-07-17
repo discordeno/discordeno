@@ -49,7 +49,7 @@ export const createClient = async (data: ClientOptions) => {
     (bits, next) => (bits |= next),
     0,
   );
-  identifyPayload.shard = [0, botGatewayData.shards]
+  identifyPayload.shard = [0, botGatewayData.shards];
 
   spawnShards(botGatewayData, identifyPayload);
 };

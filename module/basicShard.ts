@@ -17,6 +17,8 @@ import {
 import { DiscordHeartbeatPayload } from "../types/discord.ts";
 import { logRed } from "../utils/logger.ts";
 import { handleDiscordPayload } from "./shardingManager.ts";
+import { FetchMembersOptions } from "../types/guild.ts";
+import { BotStatusRequest } from "../utils/utils.ts";
 
 const basicShards = new Map<number, BasicShard>();
 
@@ -27,6 +29,16 @@ export interface BasicShard {
   sessionID: string;
   previousSequenceNumber: number | null;
   needToResume: boolean;
+}
+
+const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
+let processQueue = false;
+
+interface RequestMemberQueuedRequest {
+  guildID: string;
+  shardID: number;
+  nonce: string;
+  options?: FetchMembersOptions;
 }
 
 export async function createBasicShard(
@@ -163,6 +175,8 @@ async function heartbeat(
   interval: number,
 ) {
   await delay(interval);
+  if (shard.socket.isClosed) return;
+
   shard.socket.send(
     JSON.stringify(
       { op: GatewayOpcode.Heartbeat, d: shard.previousSequenceNumber },
@@ -200,4 +214,120 @@ async function resumeConnection(
   // Then retry every 15 seconds
   await delay(1000 * 15);
   if (shard.needToResume) resumeConnection(botGatewayData, payload);
+}
+
+export function requestGuildMembers(
+  guildID: string,
+  shardID: number,
+  nonce: string,
+  options?: FetchMembersOptions,
+  queuedRequest = false,
+) {
+  const shard = basicShards.get(shardID);
+
+  // This request was not from this queue so we add it to queue first
+  if (!queuedRequest) {
+    RequestMembersQueue.push({
+      guildID,
+      shardID,
+      nonce,
+      options,
+    });
+
+    if (!processQueue) {
+      processQueue = true;
+      processGatewayQueue();
+    }
+    return;
+  }
+
+  // If its closed add back to queue to redo on resume
+  if (shard?.socket.isClosed) {
+    requestGuildMembers(guildID, shardID, nonce, options);
+    return;
+  }
+
+  shard?.socket.send(JSON.stringify({
+    op: GatewayOpcode.RequestGuildMembers,
+    d: {
+      guild_id: guildID,
+      query: options?.query || "",
+      limit: options?.query || 0,
+      presences: options?.presences || false,
+      user_ids: options?.userIDs,
+      nonce,
+    },
+  }));
+}
+
+async function processGatewayQueue() {
+  if (!RequestMembersQueue.length) {
+    processQueue = false;
+    return;
+  }
+
+  basicShards.forEach((shard) => {
+    const index = RequestMembersQueue.findIndex((q) => q.shardID === shard.id);
+    // 2 events per second is the rate limit.
+    const request = RequestMembersQueue[index];
+    if (request) {
+      requestGuildMembers(
+        request.guildID,
+        request.shardID,
+        request.nonce,
+        request.options,
+        true,
+      );
+      // Remove item from queue
+      RequestMembersQueue.splice(index, 1);
+
+      const secondIndex = RequestMembersQueue.findIndex((q) =>
+        q.shardID === shard.id
+      );
+      const secondRequest = RequestMembersQueue[secondIndex];
+      if (secondRequest) {
+        requestGuildMembers(
+          request.guildID,
+          request.shardID,
+          secondRequest.nonce,
+          secondRequest.options,
+          true,
+        );
+        // Remove item from queue
+        RequestMembersQueue.splice(secondIndex, 1);
+      }
+    }
+  });
+
+  await delay(1500);
+
+  eventHandlers.debug?.(
+    {
+      type: "requestMembersProcessing",
+      data: {
+        remaining: RequestMembersQueue.length,
+        first: RequestMembersQueue[0],
+      },
+    },
+  );
+  processGatewayQueue();
+}
+
+export function botGatewayStatusRequest(payload: BotStatusRequest) {
+  basicShards.forEach((shard) => {
+    shard.socket.send(JSON.stringify({
+      op: GatewayOpcode.StatusUpdate,
+      d: {
+        since: null,
+        game: payload.game.name
+          ? {
+            name: payload.game.name,
+            type: payload.game.type,
+          }
+          : null,
+        status: payload.status,
+        afk: false,
+      },
+    }));
+  });
 }

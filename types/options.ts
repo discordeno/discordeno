@@ -125,6 +125,7 @@ export interface EventHandlers {
   roleUpdate?: (guild: Guild, role: Role, cachedRole: Role) => unknown;
   roleGained?: (guild: Guild, member: Member, roleID: string) => unknown;
   roleLost?: (guild: Guild, member: Member, roleID: string) => unknown;
+  shardReady?: (shardID: number) => unknown;
   typingStart?: (data: TypingStartPayload) => unknown;
   voiceChannelJoin?: (member: Member, channelID: string) => unknown;
   voiceChannelLeave?: (member: Member, channelID: string) => unknown;

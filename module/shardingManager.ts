@@ -55,9 +55,15 @@ import {
 } from "../types/message.ts";
 import { createMessage } from "../structures/message.ts";
 import { GuildUpdateChange } from "../types/options.ts";
-import { createBasicShard } from "./basicShard.ts";
+import {
+  createBasicShard,
+  requestGuildMembers,
+  botGatewayStatusRequest,
+} from "./basicShard.ts";
+import { BotStatusRequest } from "../utils/utils.ts";
 
 let shardCounter = 0;
+let basicSharding = false;
 
 export interface FetchAllMembersRequest {
   resolve: Function;
@@ -114,6 +120,7 @@ export const spawnShards = async (
       createNextShard = false;
       if (data.shards >= 25) createShardWorker();
       else {
+        basicSharding = true;
         createBasicShard(data, payload, false, id - 1);
       }
       spawnShards(data, payload, id + 1);
@@ -136,9 +143,11 @@ export async function handleDiscordPayload(
       return eventHandlers.heartbeat?.();
     case GatewayOpcode.Dispatch:
       if (data.t === "READY") {
-        setBotID((data.d as ReadyPayload).user.id);
+        const payload = data.d as ReadyPayload;
+        setBotID(payload.user.id);
         // Triggered on each shard
-        eventHandlers.ready?.();
+        eventHandlers.shardReady?.(shardID);
+        if (payload.shard && shardID === payload.shard[1] - 1) eventHandlers.ready?.()
         // Wait 5 seconds to spawn next shard
         await delay(5000);
         createNextShard = true;
@@ -643,6 +652,10 @@ export async function requestAllMembers(
   const nonce = Math.random().toString();
   fetchAllMembersProcessingRequests.set(nonce, resolve);
 
+  if (basicSharding) {
+    return requestGuildMembers(guild.id, guild.shardID, nonce, options);
+  }
+
   shards[guild.shardID].postMessage({
     type: "FETCH_MEMBERS",
     guildID: guild.id,
@@ -652,6 +665,13 @@ export async function requestAllMembers(
 }
 
 export function sendGatewayCommand(type: "EDIT_BOTS_STATUS", payload: object) {
+  if (basicSharding) {
+    if (type === "EDIT_BOTS_STATUS") {
+      botGatewayStatusRequest(payload as BotStatusRequest);
+    }
+
+    return;
+  }
   shards.forEach((shard) => {
     shard.postMessage({
       type,

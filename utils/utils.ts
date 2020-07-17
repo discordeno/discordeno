@@ -7,6 +7,14 @@ export const sleep = (timeout: number) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
 };
 
+export interface BotStatusRequest {
+  status: StatusType;
+  game: {
+    name?: string;
+    type: ActivityType;
+  };
+}
+
 export function editBotsStatus(
   status: StatusType,
   name?: string,
