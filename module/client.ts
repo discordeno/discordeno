@@ -11,7 +11,7 @@ export let eventHandlers: EventHandlers = {};
 
 export let botGatewayData: DiscordBotGatewayData;
 
-export const identifyPayload = {
+export const identifyPayload: IdentifyPayload = {
   token: "",
   compress: false,
   properties: {
@@ -22,6 +22,18 @@ export const identifyPayload = {
   intents: 0,
   shard: [0, 0],
 };
+
+export interface IdentifyPayload {
+  token: string;
+  compress: boolean;
+  properties: {
+    $os: string;
+    $browser: string;
+    $device: string;
+  };
+  intents: number;
+  shard: [number, number];
+}
 
 export const createClient = async (data: ClientOptions) => {
   if (data.eventHandlers) eventHandlers = data.eventHandlers;
@@ -37,6 +49,7 @@ export const createClient = async (data: ClientOptions) => {
     (bits, next) => (bits |= next),
     0,
   );
+  identifyPayload.shard = [0, botGatewayData.shards];
 
   spawnShards(botGatewayData, identifyPayload);
 };
