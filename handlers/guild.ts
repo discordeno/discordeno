@@ -116,6 +116,15 @@ export async function createGuildChannel(
   return channel;
 }
 
+/** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
+export function deleteChannel(guildID: string, channelID: string, reason?: string) {
+  if (!botHasPermission(guildID, [Permissions.MANAGE_CHANNELS])) {
+    throw new Error(Errors.MISSING_MANAGE_CHANNELS);
+  }
+
+  return RequestManager.delete(endpoints.CHANNEL(channelID), { reason })
+}
+
 /** Returns a list of guild channel objects.
 *
 * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
