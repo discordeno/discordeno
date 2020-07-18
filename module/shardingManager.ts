@@ -148,6 +148,8 @@ export async function handleDiscordPayload(
         // Triggered on each shard
         eventHandlers.shardReady?.(shardID);
         if (payload.shard && shardID === payload.shard[1] - 1) {
+          // Delay 10 seconds to let all the guilds on this last shard load before ready is sent
+          await delay(10000);
           eventHandlers.ready?.();
         }
         // Wait 5 seconds to spawn next shard
@@ -598,18 +600,17 @@ export async function handleDiscordPayload(
 
         // No cached state before so lets make one for em
         const cachedState = guild.voiceStates.get(payload.user_id);
-        if (!cachedState) {
-          guild.voiceStates.set(payload.user_id, {
-            ...payload,
-            guildID: payload.guild_id,
-            channelID: payload.channel_id,
-            userID: payload.user_id,
-            sessionID: payload.session_id,
-            selfDeaf: payload.self_deaf,
-            selfMute: payload.self_mute,
-            selfStream: payload.self_stream,
-          });
-        }
+
+        guild.voiceStates.set(payload.user_id, {
+          ...payload,
+          guildID: payload.guild_id,
+          channelID: payload.channel_id,
+          userID: payload.user_id,
+          sessionID: payload.session_id,
+          selfDeaf: payload.self_deaf,
+          selfMute: payload.self_mute,
+          selfStream: payload.self_stream,
+        });
 
         if (cachedState?.channelID !== payload.channel_id) {
           // Either joined or moved channels
@@ -625,22 +626,9 @@ export async function handleDiscordPayload(
                 eventHandlers.voiceChannelJoin?.(member, payload.channel_id);
           } // Left the channel
           else if (cachedState?.channelID) {
+            guild.voiceStates.delete(payload.user_id);
             eventHandlers.voiceChannelLeave?.(member, cachedState.channelID);
           }
-        }
-
-        // If it existed we should update to latest data using payload.
-        if (cachedState) {
-          guild.voiceStates.set(payload.user_id, {
-            ...payload,
-            guildID: payload.guild_id,
-            channelID: payload.channel_id,
-            userID: payload.user_id,
-            sessionID: payload.session_id,
-            selfDeaf: payload.self_deaf,
-            selfMute: payload.self_mute,
-            selfStream: payload.self_stream,
-          });
         }
 
         return eventHandlers.voiceStateUpdate?.(member, payload);
