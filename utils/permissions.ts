@@ -86,11 +86,19 @@ export function hasChannelPermissions(
     o.id === guild.id
   );
 
-  // One of the necessary permissions is denied
-  if (
-    memberOverwrite && permissions.some((perm) => memberOverwrite.deny & perm)
-  ) {
-    return false;
+  const allowedPermissions = new Set<Permissions>();
+
+  if (memberOverwrite) {
+    // One of the necessary permissions is denied
+    if (permissions.some((perm) => memberOverwrite.deny & perm)) {
+      return false;
+    }
+    permissions.forEach((perm) => {
+      // Already allowed perm
+      if (allowedPermissions.has(perm)) return;
+      // This perm is allowed so we save it
+      if (memberOverwrite.allow & perm) allowedPermissions.add(perm);
+    });
   }
 
   // Check the necessary permissions for roles
@@ -108,13 +116,26 @@ export function hasChannelPermissions(
     ) {
       return false;
     }
+
+    permissions.forEach((perm) => {
+      // Already allowed perm
+      if (allowedPermissions.has(perm)) return;
+      rolesOverwrites.forEach((overwrite) => {
+        // This perm is allowed so we save it
+        if (overwrite.allow & perm) allowedPermissions.add(perm);
+      });
+    });
   }
 
   // Check the necessary permissions for everyone
   if (
     everyoneOverwrite
   ) {
-    if (permissions.some((perm) => everyoneOverwrite.deny & perm)) {
+    if (
+      permissions.some((perm) =>
+        everyoneOverwrite.deny & perm && !allowedPermissions.has(perm)
+      )
+    ) {
       return false;
     }
     // If all permissions are granted
