@@ -9,9 +9,9 @@ import {
 import { Role } from "../structures/role.ts";
 import { Message } from "../structures/message.ts";
 import {
-  Partial_Message,
+  PartialMessage,
   MessageReactionPayload,
-  Reaction_Payload,
+  ReactionPayload,
   BaseMessageReactionPayload,
   MessageReactionRemoveEmojiPayload,
   Embed,
@@ -97,7 +97,7 @@ export interface EventHandlers {
   ) => unknown;
   heartbeat?: () => unknown;
   messageCreate?: (message: Message) => unknown;
-  messageDelete?: (message: Message | Partial_Message) => unknown;
+  messageDelete?: (message: Message | PartialMessage) => unknown;
   messageUpdate?: (message: Message, cachedMessage: OldMessage) => unknown;
   nicknameUpdate?: (
     guild: Guild,
@@ -110,12 +110,12 @@ export interface EventHandlers {
   ready?: () => unknown;
   reactionAdd?: (
     message: Message | MessageReactionPayload,
-    emoji: Reaction_Payload,
+    emoji: ReactionPayload,
     userID: string,
   ) => unknown;
   reactionRemove?: (
     message: Message | MessageReactionPayload,
-    emoji: Reaction_Payload,
+    emoji: ReactionPayload,
     userID: string,
   ) => unknown;
   reactionRemoveAll?: (data: BaseMessageReactionPayload) => unknown;
