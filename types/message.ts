@@ -6,7 +6,7 @@ export interface MentionedUser extends UserPayload {
   member: MemberCreatePayload;
 }
 
-export interface Mentioned_Channel {
+export interface MentionedChannel {
   /** The id of the channel */
   id: string;
   /** The id of the guild containing the channel */
@@ -48,31 +48,31 @@ export interface Embed {
   /** The color code of the embed */
   color?: number;
   /** The footer information */
-  footer?: Embed_Footer;
+  footer?: EmbedFooter;
   /** The image information */
-  image?: Embed_Image;
+  image?: EmbedImage;
   /** The thumbnail information */
-  thumbnail?: Embed_Thumbnail;
+  thumbnail?: EmbedThumbnail;
   /** The video information */
-  video?: Embed_Video;
+  video?: EmbedVideo;
   /** Provider information */
-  provider?: Embed_Provider;
+  provider?: EmbedProvider;
   /** Author information */
-  author?: Embed_Author;
+  author?: EmbedAuthor;
   /** Fields information */
-  fields?: Embed_Field[];
+  fields?: EmbedField[];
 }
 
-export interface Embed_Footer {
+export interface EmbedFooter {
   /** The text of the footer */
   text: string;
   /** The url of the footer icon. Only supports http(s) and attachments */
-  iconURL?: string;
+  icon_url?: string;
   /** A proxied url of footer icon */
   proxy_icon_url?: string;
 }
 
-export interface Embed_Image {
+export interface EmbedImage {
   /** The source url of image (only supports http(s) and attachments) */
   url?: string;
   /** A proxied url of the image */
@@ -83,7 +83,7 @@ export interface Embed_Image {
   width?: number;
 }
 
-export interface Embed_Thumbnail {
+export interface EmbedThumbnail {
   /** The source url of image (only supports http(s) and attachments) */
   url?: string;
   /** A proxied url of the thumbnail */
@@ -94,7 +94,7 @@ export interface Embed_Thumbnail {
   width?: number;
 }
 
-export interface Embed_Video {
+export interface EmbedVideo {
   /** The source url of video */
   url?: string;
   /** The height of the video */
@@ -103,14 +103,14 @@ export interface Embed_Video {
   width?: number;
 }
 
-export interface Embed_Provider {
+export interface EmbedProvider {
   /** The name of the provider */
   name?: string;
   /** The url of the provider */
   url?: string;
 }
 
-export interface Embed_Author {
+export interface EmbedAuthor {
   /** The name of the author */
   name?: string;
   /** The url of the author */
@@ -121,7 +121,7 @@ export interface Embed_Author {
   proxy_icon_url?: string;
 }
 
-export interface Embed_Field {
+export interface EmbedField {
   /** The name of the field */
   name: string;
   /** The value of the field */
@@ -139,7 +139,7 @@ export interface Reaction {
   emoji: EmojiReaction;
 }
 
-export enum Message_Types {
+export enum MessageTypes {
   DEFAULT,
   RECIPIENT_ADD,
   RECIPIENT_REMOVE,
@@ -155,7 +155,7 @@ export enum Message_Types {
   CHANNEL_FOLLOW_ADD,
 }
 
-export enum Activity_Types {
+export enum ActivityTypes {
   JOIN = 1,
   SPECTATE,
   LISTEN,
@@ -191,7 +191,7 @@ export interface Reference {
   guild_id?: string;
 }
 
-export enum Message_Flags {
+export enum MessageFlags {
   CROSSPOSTED = 1 << 0,
   IS_CROSSPOST = 1 << 1,
   SUPPRESS_EMBEDS = 1 << 2,
@@ -216,7 +216,7 @@ export interface EmojiReaction {
   animated?: boolean;
 }
 
-export interface Reaction_Payload {
+export interface ReactionPayload {
   /** The id of the reaction. Null usually if it is a default discord emoji. */
   id: string | null;
   /** The name of the reaction. Null if it was deleted from the guild and the custom data is no longer available */
@@ -251,7 +251,7 @@ export interface MessageCreateOptions {
   /** Roles specifically mentioned in this message */
   mention_roles: string[];
   /** Channels specifically mentioned in this message */
-  mention_channels?: Mentioned_Channel[];
+  mention_channels?: MentionedChannel[];
   /** Any attached files */
   attachments: Attachment[];
   /** Any embedded content */
@@ -276,19 +276,19 @@ export interface MessageCreateOptions {
   flags?: 1 | 2 | 4 | 8 | 16;
 }
 
-export interface Base_Message_Delete_Payload {
+export interface BaseMessageDeletePayload {
   /** The id of the channel */
   channel_id: string;
   /** The id of the guild */
   guild_id?: string;
 }
 
-export interface MessageDeletePayload extends Base_Message_Delete_Payload {
+export interface MessageDeletePayload extends BaseMessageDeletePayload {
   /** The id of the message */
   id: string;
 }
 
-export interface MessageDeleteBulkPayload extends Base_Message_Delete_Payload {
+export interface MessageDeleteBulkPayload extends BaseMessageDeletePayload {
   /** The ids of the messages */
   ids: string[];
 }
@@ -315,16 +315,16 @@ export interface MessageReactionPayload extends BaseMessageReactionPayload {
   /** The member who reacted if this happened in a guild. Not available for MESSAGE_REACTION_REMOVE */
   member?: MemberCreatePayload;
   /** The emoji used to react */
-  emoji: Reaction_Payload;
+  emoji: ReactionPayload;
 }
 
 export interface MessageReactionRemoveEmojiPayload
   extends BaseMessageReactionPayload {
   /** The emoji that was removed. */
-  emoji: Reaction_Payload;
+  emoji: ReactionPayload;
 }
 
-export interface Partial_Message {
+export interface PartialMessage {
   id: string;
   channel: Channel;
 }
