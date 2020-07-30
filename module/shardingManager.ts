@@ -564,7 +564,7 @@ export async function handleDiscordPayload(
 
       if (data.t === "PRESENCE_UPDATE") {
         const payload = data.d as PresenceUpdatePayload;
-        const oldPresence = cache.presences.get(payload.user.id) ?? null;
+        const oldPresence = cache.presences.get(payload.user.id);
         cache.presences.set(payload.user.id, payload);
         return eventHandlers.presenceUpdate?.(oldPresence, payload);
       }
