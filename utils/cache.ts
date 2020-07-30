@@ -3,12 +3,14 @@ import { Message } from "../structures/message.ts";
 import { Guild } from "../structures/guild.ts";
 import { Channel } from "../structures/channel.ts";
 import { delay } from "https://deno.land/std@0.61.0/async/delay.ts";
+import { PresenceUpdatePayload } from "../types/discord.ts";
 
 export interface CacheData {
   guilds: Collection<string, Guild>;
   channels: Collection<string, Channel>;
   messages: Collection<string, Message>;
   unavailableGuilds: Collection<string, number>;
+  presences: Collection<string, PresenceUpdatePayload>;
 }
 
 export const cache: CacheData = {
@@ -16,6 +18,7 @@ export const cache: CacheData = {
   channels: new Collection(),
   messages: new Collection(),
   unavailableGuilds: new Collection(),
+  presences: new Collection(),
 };
 
 async function cleanMessageCache() {
