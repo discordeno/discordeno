@@ -14,13 +14,11 @@ For the purposes of this guide, I wanted to find a moderation bot that is totall
 
 For the purposes of this guide, I will be using the current [latest commit](https://github.com/Nukestye/Zodiac/tree/213891a38af1b7ecbd068b661ef9062ab58cc818)
 
-Note:
-
 ## Preparations
 
-- Create a Discordeno Bot using the [Generator Boilerplate](https://github.com/Skillz4Killz/Discordeno-bot-template) I will name it Zodiac.
+- First, create a Discordeno Bot using the [Generator Boilerplate](https://github.com/Skillz4Killz/Discordeno-bot-template) I will name it Zodiac.
 
-- `git clone https://github.com/Skillz4Killz/Zodiac.git`
+- Then `git clone https://github.com/Skillz4Killz/Zodiac.git`
 
 Now that I had the repository cloned, I could begin. Note that although the bot we are converting is built in JavaScript, I converted all code to TypeScript in this Guide as Discordeno is designed to be the best lib for TypeScript developers.
 
@@ -180,7 +178,7 @@ botCache.eventHandlers.ready = function () {
 };
 ```
 
-To understand this code, we are setting the a function to be run when the bot is `ready`. Then the bot will edit the bots status every 5 seconds. Notice, that Discordeno provides a nice clean util function to choose a random item from an array. You also have beautiful enums provided that prevent you from making any typos/mistakes.
+To understand this code, we are setting a function to be run when the bot is `ready`. Then the bot will edit the bots status every 5 seconds. Notice, that Discordeno provides a nice clean util function to choose a random item from an array. You also have beautiful enums provided that prevent you from making any typos/mistakes.
 
 We have now converted the entire `main.js` file, in a matter of seconds. The Discordeno official generator took care of the majority of workload and we just modified the `ready.ts` file.
 
