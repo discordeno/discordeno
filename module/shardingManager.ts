@@ -563,7 +563,10 @@ export async function handleDiscordPayload(
       }
 
       if (data.t === "PRESENCE_UPDATE") {
-        return eventHandlers.presenceUpdate?.(data.d as PresenceUpdatePayload);
+        const payload = data.d as PresenceUpdatePayload;
+        const oldPresence = cache.presences.get(payload.user.id);
+        cache.presences.set(payload.user.id, payload);
+        return eventHandlers.presenceUpdate?.(payload, oldPresence);
       }
 
       if (data.t === "TYPING_START") {

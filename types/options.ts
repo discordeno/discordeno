@@ -105,7 +105,10 @@ export interface EventHandlers {
     nickname: string,
     oldNickname?: string,
   ) => unknown;
-  presenceUpdate?: (data: PresenceUpdatePayload) => unknown;
+  presenceUpdate?: (
+    presence: PresenceUpdatePayload,
+    oldPresence?: PresenceUpdatePayload,
+  ) => unknown;
   raw?: (data: DiscordPayload) => unknown;
   ready?: () => unknown;
   reactionAdd?: (
