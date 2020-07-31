@@ -47,12 +47,14 @@ export async function createBasicShard(
   resuming = false,
   shardID = 0,
 ) {
+  const oldShard = basicShards.get(shardID);
+
   const basicShard: BasicShard = {
     id: shardID,
-    socket: await connectWebSocket(data.url),
+    socket: await connectWebSocket(`${data.url}?v=6&encoding=json`),
     resumeInterval: 0,
-    sessionID: "",
-    previousSequenceNumber: 0,
+    sessionID: oldShard?.sessionID || "",
+    previousSequenceNumber: oldShard?.previousSequenceNumber || 0,
     needToResume: false,
   };
 
@@ -68,22 +70,29 @@ export async function createBasicShard(
   for await (const message of basicShard.socket) {
     if (typeof message === "string") {
       const data = JSON.parse(message);
-
+      if (!data.t) eventHandlers.rawGateway?.(data);
       switch (data.op) {
         case GatewayOpcode.Hello:
-          heartbeat(
-            basicShard,
-            identifyPayload,
-            (data.d as DiscordHeartbeatPayload).heartbeat_interval,
-          );
+          if (!resuming) {
+            heartbeat(
+              basicShard,
+              (data.d as DiscordHeartbeatPayload).heartbeat_interval,
+            );
+          }
           break;
         case GatewayOpcode.Reconnect:
+          eventHandlers.debug?.(
+            { type: "reconnect", data: { shardID: basicShard.id } },
+          );
+          basicShard.needToResume = true;
+          resumeConnection(botGatewayData, identifyPayload);
+          break;
         case GatewayOpcode.InvalidSession:
+          eventHandlers.debug?.(
+            { type: "invalidSession", data: { shardID: basicShard.id, data } },
+          );
           // When d is false we need to reidentify
           if (!data.d) {
-            eventHandlers.debug?.(
-              { type: "invalidSession", data: { shardID: basicShard.id } },
-            );
             createBasicShard(botGatewayData, identifyPayload, false, shardID);
             break;
           }
@@ -146,8 +155,16 @@ export async function createBasicShard(
   }
 }
 
-async function identify(shard: BasicShard, payload: IdentifyPayload) {
-  await shard.socket.send(
+function identify(shard: BasicShard, payload: IdentifyPayload) {
+  eventHandlers.debug?.(
+    {
+      type: "identifying",
+      data: {
+        shardID: shard.id,
+      },
+    },
+  );
+  return shard.socket.send(
     JSON.stringify(
       {
         op: GatewayOpcode.Identify,
@@ -157,11 +174,11 @@ async function identify(shard: BasicShard, payload: IdentifyPayload) {
   );
 }
 
-async function resume(shard: BasicShard, payload: IdentifyPayload) {
-  await shard.socket.send(JSON.stringify({
+function resume(shard: BasicShard, payload: IdentifyPayload) {
+  return shard.socket.send(JSON.stringify({
     op: GatewayOpcode.Resume,
     d: {
-      ...payload,
+      token: payload.token,
       session_id: shard.sessionID,
       seq: shard.previousSequenceNumber,
     },
@@ -171,10 +188,8 @@ async function resume(shard: BasicShard, payload: IdentifyPayload) {
 // TODO: If a client does not receive a heartbeat ack between its attempts at sending heartbeats, it should immediately terminate the connection with a non-1000 close code, reconnect, and attempt to resume.
 async function heartbeat(
   shard: BasicShard,
-  payload: IdentifyPayload,
   interval: number,
 ) {
-  await delay(interval);
   if (shard.socket.isClosed) return;
 
   shard.socket.send(
@@ -192,8 +207,8 @@ async function heartbeat(
       },
     },
   );
-
-  heartbeat(shard, payload, interval);
+  await delay(interval);
+  heartbeat(shard, interval);
 }
 
 async function resumeConnection(
@@ -207,6 +222,8 @@ async function resumeConnection(
     );
     return;
   }
+
+  if (!shard.needToResume) return;
 
   eventHandlers.debug?.({ type: "resuming", data: { shardID: shard.id } });
   // Run it once

@@ -55,6 +55,7 @@ export interface OldMessage {
 export interface DebugArg {
   /** Red is for errors or urgent issues. Yellow is for warnings/alerts. Green is for actions being taken. Blue is for  */
   type?:
+    | "identifying"
     | "requestManager"
     | "globallyRateLimited"
     | "requestManagerSuccess"
@@ -63,6 +64,7 @@ export interface DebugArg {
     | "heartbeat"
     | "createShard"
     | "invalidSession"
+    | "reconnect"
     | "resuming"
     | "resumed"
     | "websocketClose"
@@ -110,6 +112,7 @@ export interface EventHandlers {
     oldPresence?: PresenceUpdatePayload,
   ) => unknown;
   raw?: (data: DiscordPayload) => unknown;
+  rawGateway?: (data: unknown) => unknown;
   ready?: () => unknown;
   reactionAdd?: (
     message: Message | MessageReactionPayload,
