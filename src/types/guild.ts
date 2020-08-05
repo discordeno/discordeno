@@ -446,7 +446,7 @@ export enum AuditLogs {
   INTEGRATION_DELETE,
 }
 
-export type ChannelType =
+export type ChannelTypeText =
   | "text"
   | "dm"
   | "news"
@@ -482,7 +482,7 @@ export interface RawOverwrite {
 
 export interface ChannelCreateOptions {
   /** The type of the channel */
-  type?: ChannelType;
+  type?: ChannelTypeText;
   /** The channel topic. (0-1024 characters) */
   topic?: string;
   /** The bitrate(in bits) of the voice channel. */
