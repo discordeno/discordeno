@@ -8,7 +8,6 @@ import {
   botHasPermission,
 } from "../utils/permissions.ts";
 import { botID } from "../module/client.ts";
-import { Guild } from "../structures/guild.ts";
 import { Permissions } from "../types/permission.ts";
 import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
@@ -35,25 +34,25 @@ export function avatarURL(
 
 /** Add a role to the member */
 export function addRole(
-  guild: Guild,
+  guildID: string,
   memberID: string,
   roleID: string,
   reason?: string,
 ) {
-  const botsHighestRole = highestRole(guild.id, botID);
+  const botsHighestRole = highestRole(guildID, botID);
   if (
     botsHighestRole &&
-    !higherRolePosition(guild.id, botsHighestRole.id, roleID)
+    !higherRolePosition(guildID, botsHighestRole.id, roleID)
   ) {
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
-  if (!botHasPermission(guild.id, [Permissions.MANAGE_ROLES])) {
+  if (!botHasPermission(guildID, [Permissions.MANAGE_ROLES])) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
   return RequestManager.put(
-    endpoints.GUILD_MEMBER_ROLE(guild.id, memberID, roleID),
+    endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
     { reason },
   );
 }
@@ -107,9 +106,9 @@ export async function sendDirectMessage(
 }
 
 /** Kick a member from the server */
-export function kick(guild: Guild, memberID: string, reason?: string) {
-  const botsHighestRole = highestRole(guild.id, botID);
-  const membersHighestRole = highestRole(guild.id, memberID);
+export function kick(guildID: string, memberID: string, reason?: string) {
+  const botsHighestRole = highestRole(guildID, botID);
+  const membersHighestRole = highestRole(guildID, memberID);
   if (
     botsHighestRole && membersHighestRole &&
     botsHighestRole.position <= membersHighestRole.position
@@ -117,18 +116,18 @@ export function kick(guild: Guild, memberID: string, reason?: string) {
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
-  if (!botHasPermission(guild.id, [Permissions.KICK_MEMBERS])) {
+  if (!botHasPermission(guildID, [Permissions.KICK_MEMBERS])) {
     throw new Error(Errors.MISSING_KICK_MEMBERS);
   }
   return RequestManager.delete(
-    endpoints.GUILD_MEMBER(guild.id, memberID),
+    endpoints.GUILD_MEMBER(guildID, memberID),
     { reason },
   );
 }
 
 /** Edit the member */
 export function editMember(
-  guild: Guild,
+  guildID: string,
   memberID: string,
   options: EditMemberOptions,
 ) {
@@ -136,14 +135,14 @@ export function editMember(
     if (options.nick.length > 32) {
       throw new Error(Errors.NICKNAMES_MAX_LENGTH);
     }
-    if (!botHasPermission(guild.id, [Permissions.MANAGE_NICKNAMES])) {
+    if (!botHasPermission(guildID, [Permissions.MANAGE_NICKNAMES])) {
       throw new Error(Errors.MISSING_MANAGE_NICKNAMES);
     }
   }
 
   if (
     options.roles &&
-    !botHasPermission(guild.id, [Permissions.MANAGE_ROLES])
+    !botHasPermission(guildID, [Permissions.MANAGE_ROLES])
   ) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
@@ -151,7 +150,7 @@ export function editMember(
   if (options.mute) {
     // TODO: This should check if the member is in a voice channel
     if (
-      !botHasPermission(guild.id, [Permissions.MUTE_MEMBERS])
+      !botHasPermission(guildID, [Permissions.MUTE_MEMBERS])
     ) {
       throw new Error(Errors.MISSING_MUTE_MEMBERS);
     }
@@ -159,7 +158,7 @@ export function editMember(
 
   if (
     options.deaf &&
-    !botHasPermission(guild.id, [Permissions.DEAFEN_MEMBERS])
+    !botHasPermission(guildID, [Permissions.DEAFEN_MEMBERS])
   ) {
     throw new Error(Errors.MISSING_DEAFEN_MEMBERS);
   }
@@ -167,7 +166,7 @@ export function editMember(
   // TODO: if channel id is provided check if the bot has CONNECT and MOVE in channel and current channel
 
   return RequestManager.patch(
-    endpoints.GUILD_MEMBER(guild.id, memberID),
+    endpoints.GUILD_MEMBER(guildID, memberID),
     options,
   );
 }

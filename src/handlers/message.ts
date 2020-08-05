@@ -40,70 +40,78 @@ export async function deleteMessage(
 }
 
 /** Pin a message in a channel. Requires MANAGE_MESSAGES. Max pins allowed in a channel = 50. */
-export function pin(message: Message) {
+export function pin(channelID: string, messageID: string) {
   if (
-    !botHasChannelPermissions(message.channelID, [Permissions.MANAGE_MESSAGES])
+    !botHasChannelPermissions(channelID, [Permissions.MANAGE_MESSAGES])
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
-  RequestManager.put(endpoints.CHANNEL_MESSAGE(message.channelID, message.id));
+  RequestManager.put(endpoints.CHANNEL_MESSAGE(channelID, messageID));
 }
 
 /** Unpin a message in a channel. Requires MANAGE_MESSAGES. */
-export function unpin(message: Message) {
+export function unpin(channelID: string, messageID: string) {
   if (
-    !botHasChannelPermissions(message.channelID, [Permissions.MANAGE_MESSAGES])
+    !botHasChannelPermissions(channelID, [Permissions.MANAGE_MESSAGES])
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
   RequestManager.delete(
-    endpoints.CHANNEL_MESSAGE(message.channelID, message.id),
+    endpoints.CHANNEL_MESSAGE(channelID, messageID),
   );
 }
 
 /** Create a reaction for the message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS */
-export function addReaction(message: Message, reaction: string) {
+export function addReaction(
+  channelID: string,
+  messageID: string,
+  reaction: string,
+) {
   RequestManager.put(
     endpoints.CHANNEL_MESSAGE_REACTION_ME(
-      message.channelID,
-      message.id,
+      channelID,
+      messageID,
       reaction,
     ),
   );
 }
 
 /** Removes a reaction from the bot on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
-export function removeReaction(message: Message, reaction: string) {
+export function removeReaction(
+  channelID: string,
+  messageID: string,
+  reaction: string,
+) {
   RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTION_ME(
-      message.channelID,
-      message.id,
+      channelID,
+      messageID,
       reaction,
     ),
   );
 }
 
 /** Removes all reactions for all emojis on this message. */
-export function removeAllReactions(message: Message) {
+export function removeAllReactions(channelID: string, messageID: string) {
   if (
-    !botHasChannelPermissions(message.channelID, [Permissions.MANAGE_MESSAGES])
+    !botHasChannelPermissions(channelID, [Permissions.MANAGE_MESSAGES])
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
   RequestManager.delete(
-    endpoints.CHANNEL_MESSAGE_REACTIONS(message.channelID, message.id),
+    endpoints.CHANNEL_MESSAGE_REACTIONS(channelID, messageID),
   );
 }
 
 /** Removes all reactions for a single emoji on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
-export function removeReactionEmoji(message: Message, reaction: string) {
+export function removeReactionEmoji(channelID: string, messageID: string, reaction: string) {
   if (
-    !botHasChannelPermissions(message.channelID, [Permissions.MANAGE_MESSAGES])
+    !botHasChannelPermissions(channelID, [Permissions.MANAGE_MESSAGES])
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
   RequestManager.delete(
-    endpoints.CHANNEL_MESSAGE_REACTION(message.channelID, message.id, reaction),
+    endpoints.CHANNEL_MESSAGE_REACTION(channelID, messageID, reaction),
   );
 }
 

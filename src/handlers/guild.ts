@@ -235,17 +235,17 @@ export function emojiURL(id: string, animated = false) {
 
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
 export async function createGuildRole(
-  guild: Guild,
+  guildID: string,
   options: CreateRoleOptions,
   reason?: string,
 ) {
   if (
-    !botHasPermission(guild.id, [Permissions.MANAGE_ROLES])
+    !botHasPermission(guildID, [Permissions.MANAGE_ROLES])
   ) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
-  const role_data = await RequestManager.post(
-    endpoints.GUILD_ROLES(guild.id),
+  const result = await RequestManager.post(
+    endpoints.GUILD_ROLES(guildID),
     {
       ...options,
       permissions: options.permissions
@@ -257,9 +257,10 @@ export async function createGuildRole(
     },
   );
 
-  const roleData = role_data as RoleData;
+  const roleData = result as RoleData;
   const role = createRole(roleData);
-  guild.roles.set(role.id, role);
+  const guild = cache.guilds.get(guildID)
+  guild?.roles.set(role.id, role);
   return role;
 }
 
