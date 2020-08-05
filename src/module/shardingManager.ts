@@ -148,8 +148,7 @@ export async function handleDiscordPayload(
         // Triggered on each shard
         eventHandlers.shardReady?.(shardID);
         if (payload.shard && shardID === payload.shard[1] - 1) {
-          // Delay 10 seconds to let all the guilds on this last shard load before ready is sent
-          await delay(10000);
+          cache.isReady = true;
           eventHandlers.ready?.();
         }
         // Wait 5 seconds to spawn next shard
@@ -181,6 +180,7 @@ export async function handleDiscordPayload(
           cache.unavailableGuilds.delete(options.id);
         }
 
+        if (!cache.isReady) return eventHandlers.guildLoaded?.(guild);
         return eventHandlers.guildCreate?.(guild);
       }
 

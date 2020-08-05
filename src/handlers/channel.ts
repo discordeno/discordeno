@@ -32,8 +32,8 @@ export function hasChannelPermission(
 
   return permissions.every((perm) => {
     if (overwrite) {
-      if (overwrite.deny & perm) return false;
-      if (overwrite.allow & perm) return true;
+      if (BigInt(overwrite.deny_new) & BigInt(perm)) return false;
+      if (BigInt(overwrite.allow_new) & BigInt(perm)) return true;
     }
     if (channel.guildID) {
       return botHasPermission(channel.guildID, [perm]);
@@ -122,7 +122,7 @@ export async function sendMessage(
     if (
       content.tts &&
       !botHasChannelPermissions(
-        channel.guildID,
+        channel.id,
         [Permissions.SEND_TTS_MESSAGES],
       )
     ) {
@@ -130,7 +130,12 @@ export async function sendMessage(
     }
   }
 
-  if (content.content && content.content.length > 2000) {
+  if (content.embed && !botHasChannelPermissions(channel.id, [Permissions.EMBED_LINKS])) {
+    throw new Error(Errors.MISSING_EMBED_LINKS)
+  }
+
+  // Use ... for content length due to unicode characters and js .length handling
+  if (content.content && [...content.content].length > 2000) {
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
   }
 
@@ -315,12 +320,12 @@ export function editChannel(channel: Channel, options: ChannelEditOptions) {
         return {
           ...overwrite,
           allow: overwrite.allow.reduce(
-            (bits, perm) => bits |= Permissions[perm],
-            0,
+            (bits, perm) => bits |= BigInt(Permissions[perm]),
+            BigInt(0),
           ),
           deny: overwrite.deny.reduce(
-            (bits, perm) => bits |= Permissions[perm],
-            0,
+            (bits, perm) => bits |= BigInt(Permissions[perm]),
+            BigInt(0),
           ),
         };
       },

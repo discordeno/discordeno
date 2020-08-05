@@ -465,7 +465,7 @@ export interface Overwrite {
   deny: Permission[];
 }
 
-export interface Raw_Overwrite {
+export interface RawOverwrite {
   /** The role or user id */
   id: string;
   /** Whether this is a role or a member */
@@ -474,6 +474,10 @@ export interface Raw_Overwrite {
   allow: number;
   /** The permissions that this id is NOT allowed to do. (This will mark it as a red x.) */
   deny: number;
+  /** permission bit set for new perms until new api version released. */
+  allow_new: string;
+  /** permission bit set for new perms until new api version released. */
+  deny_new: string;
 }
 
 export interface ChannelCreate_Options {

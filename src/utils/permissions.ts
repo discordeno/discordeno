@@ -1,4 +1,7 @@
-import { Permission, Permissions } from "../types/permission.ts";
+import {
+  Permission,
+  Permissions,
+} from "../types/permission.ts";
 import { cache } from "./cache.ts";
 import { botID } from "../module/client.ts";
 import { Role } from "../structures/role.ts";
@@ -14,17 +17,20 @@ export function memberHasPermission(
   if (memberID === guild.ownerID) return true;
 
   const permissionBits = memberRoleIDs.map((id) =>
-    guild.roles.get(id)?.permissions || 0
+    guild.roles.get(id)?.permissions || []
   )
     .reduce((bits, permissions) => {
-      bits |= permissions;
+      bits |= permissions.reduce(
+        (b, p) => b & BigInt(Permissions[p]),
+        BigInt(0),
+      );
       return bits;
-    }, 0);
+    }, BigInt(0));
 
-  if (permissionBits & Permissions.ADMINISTRATOR) return true;
+  if (permissionBits & BigInt(Permissions.ADMINISTRATOR)) return true;
 
   return permissions.every((permission) =>
-    permissionBits & Permissions[permission]
+    permissionBits & BigInt(Permissions[permission])
   );
 }
 
@@ -38,14 +44,17 @@ export function botHasPermission(guildID: string, permissions: Permissions[]) {
   const permissionBits = member.roles
     .map((id) => guild.roles.get(id)!)
     .reduce((bits, data) => {
-      bits |= data.permissions;
+      bits |= data.permissions.reduce(
+        (b, p) => b & BigInt(Permissions[p]),
+        BigInt(0),
+      );
 
       return bits;
-    }, 0);
+    }, BigInt(0));
 
-  if (permissionBits & Permissions.ADMINISTRATOR) return true;
+  if (permissionBits & BigInt(Permissions.ADMINISTRATOR)) return true;
 
-  return permissions.every((permission) => permissionBits & permission);
+  return permissions.every((permission) => permissionBits & BigInt(permission));
 }
 
 /** Checks if the bot has the permissions in a channel */
@@ -90,14 +99,20 @@ export function hasChannelPermissions(
 
   if (memberOverwrite) {
     // One of the necessary permissions is denied
-    if (permissions.some((perm) => memberOverwrite.deny & perm)) {
+    if (
+      permissions.some((perm) =>
+        BigInt(memberOverwrite.deny_new) & BigInt(perm)
+      )
+    ) {
       return false;
     }
     permissions.forEach((perm) => {
       // Already allowed perm
       if (allowedPermissions.has(perm)) return;
       // This perm is allowed so we save it
-      if (memberOverwrite.allow & perm) allowedPermissions.add(perm);
+      if (BigInt(memberOverwrite.allow_new) & BigInt(perm)) {
+        allowedPermissions.add(perm);
+      }
     });
   }
 
@@ -106,11 +121,11 @@ export function hasChannelPermissions(
     if (
       rolesOverwrites.some((overwrite) =>
         permissions.some((perm) =>
-          (overwrite.deny & perm) &&
+          (BigInt(overwrite.deny_new) & BigInt(perm)) &&
           // If another role allows these perms then they are not denied
-          !rolesOverwrites.some((o) => o.allow & perm) &&
+          !rolesOverwrites.some((o) => BigInt(o.allow_new) & BigInt(perm)) &&
           // Make sure the memberOverwrite does not allow this perm
-          !(memberOverwrite && memberOverwrite.allow & perm)
+          !(memberOverwrite && BigInt(memberOverwrite.allow_new) & BigInt(perm))
         )
       )
     ) {
@@ -122,7 +137,9 @@ export function hasChannelPermissions(
       if (allowedPermissions.has(perm)) return;
       rolesOverwrites.forEach((overwrite) => {
         // This perm is allowed so we save it
-        if (overwrite.allow & perm) allowedPermissions.add(perm);
+        if (BigInt(overwrite.allow_new) & BigInt(perm)) {
+          allowedPermissions.add(perm);
+        }
       });
     });
   }
@@ -133,14 +150,17 @@ export function hasChannelPermissions(
   ) {
     if (
       permissions.some((perm) =>
-        everyoneOverwrite.deny & perm && !allowedPermissions.has(perm)
+        BigInt(everyoneOverwrite.deny_new) & BigInt(perm) &&
+        !allowedPermissions.has(perm)
       )
     ) {
       return false;
     }
     // If all permissions are granted
     if (
-      permissions.every((perm) => everyoneOverwrite.allow & perm)
+      permissions.every((perm) =>
+        BigInt(everyoneOverwrite.allow_new) & BigInt(perm)
+      )
     ) {
       return true;
     }
@@ -149,9 +169,10 @@ export function hasChannelPermissions(
   return botHasPermission(guild.id, permissions);
 }
 
-export function calculatePermissions(permissionBits: number) {
+export function calculatePermissions(permissionBits: bigint) {
   return Object.keys(Permissions).filter((perm) => {
-    return permissionBits & Permissions[perm as Permission];
+    if (typeof perm !== "number") return false;
+    return permissionBits & BigInt(Permissions[perm as Permission]);
   }) as Permission[];
 }
 

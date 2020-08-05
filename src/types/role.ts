@@ -11,6 +11,8 @@ export interface RoleData {
   position: number;
   /** permission bit set */
   permissions: number;
+  /** permission bit set */
+  permissions_new: string;
   /** whether this role is managed by an integration */
   managed: boolean;
   /** whether this role is mentionable */

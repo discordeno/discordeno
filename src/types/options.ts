@@ -83,6 +83,7 @@ export interface EventHandlers {
   guildBanAdd?: (guild: Guild, user: Member | UserPayload) => unknown;
   guildBanRemove?: (guild: Guild, user: Member | UserPayload) => unknown;
   guildCreate?: (guild: Guild) => unknown;
+  guildLoaded?: (guild: Guild) => unknown;
   guildUpdate?: (guild: Guild, changes: GuildUpdateChange[]) => unknown;
   guildDelete?: (guild: Guild) => unknown;
   guildEmojisUpdate?: (

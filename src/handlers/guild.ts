@@ -105,8 +105,14 @@ export async function createGuildChannel(
       name,
       permission_overwrites: options?.permission_overwrites?.map((perm) => ({
         ...perm,
-        allow: perm.allow.map((p) => Permissions[p]),
-        deny: perm.deny.map((p) => Permissions[p]),
+        allow: perm.allow.reduce(
+          (bits, p) => bits & BigInt(Permissions[p]),
+          BigInt(0),
+        ).toString(),
+        deny: perm.deny.reduce(
+          (bits, p) => bits & BigInt(Permissions[p]),
+          BigInt(0),
+        ).toString(),
       })),
       type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
@@ -117,12 +123,16 @@ export async function createGuildChannel(
 }
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-export function deleteChannel(guildID: string, channelID: string, reason?: string) {
+export function deleteChannel(
+  guildID: string,
+  channelID: string,
+  reason?: string,
+) {
   if (!botHasPermission(guildID, [Permissions.MANAGE_CHANNELS])) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
 
-  return RequestManager.delete(endpoints.CHANNEL(channelID), { reason })
+  return RequestManager.delete(endpoints.CHANNEL(channelID), { reason });
 }
 
 /** Returns a list of guild channel objects.
@@ -500,15 +510,18 @@ export function channelHasPermissions(
     const role = guild.roles.get(roleID);
     if (!role) return bits;
 
-    bits |= role.permissions;
+    bits |= role.permissions.reduce(
+      (bits, p) => bits & BigInt(Permissions[p]),
+      BigInt(0),
+    );
 
     return bits;
-  }, 0);
+  }, BigInt(0));
 
-  if (permissionBits & Permissions.ADMINISTRATOR) return true;
+  if (permissionBits & BigInt(Permissions.ADMINISTRATOR)) return true;
 
   return permissions.every((permission) =>
-    permissionBits & Permissions[permission]
+    permissionBits & BigInt(Permissions[permission])
   );
 }
 

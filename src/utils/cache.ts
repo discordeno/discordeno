@@ -6,6 +6,7 @@ import { delay } from "https://deno.land/std@0.61.0/async/delay.ts";
 import { PresenceUpdatePayload } from "../types/discord.ts";
 
 export interface CacheData {
+  isReady: boolean;
   guilds: Collection<string, Guild>;
   channels: Collection<string, Channel>;
   messages: Collection<string, Message>;
@@ -14,6 +15,7 @@ export interface CacheData {
 }
 
 export const cache: CacheData = {
+  isReady: false,
   guilds: new Collection(),
   channels: new Collection(),
   messages: new Collection(),

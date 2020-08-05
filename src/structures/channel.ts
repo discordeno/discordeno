@@ -21,8 +21,8 @@ export function createChannel(data: ChannelCreatePayload, guildID?: string) {
     permissions: data.permission_overwrites
       ? data.permission_overwrites.map((perm) => ({
         ...perm,
-        allow: calculatePermissions(perm.allow),
-        deny: calculatePermissions(perm.deny),
+        allow: calculatePermissions(BigInt(perm.allow_new)),
+        deny: calculatePermissions(BigInt(perm.deny_new)),
       }))
       : [],
     /** Whether this channel is nsfw or not */

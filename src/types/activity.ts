@@ -1,4 +1,4 @@
-import { Timestamps } from "../types/discord.ts";
+import { Timestamps } from "./discord.ts";
 
 export interface ActivityPayload {
   name: string;

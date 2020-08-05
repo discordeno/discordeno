@@ -1,4 +1,4 @@
-import { Raw_Overwrite, Overwrite } from "./guild.ts";
+import { RawOverwrite, Overwrite } from "./guild.ts";
 import { Embed } from "./message.ts";
 
 export interface ChannelEditOptions {
@@ -71,14 +71,28 @@ export interface ChannelCreatePayload extends Base_Channel_Create {
   /** The type of the channel */
   type: Channel_Type;
   /** Explicit permission overwrites for members and roles */
-  permission_overwrites?: Raw_Overwrite[];
+  permission_overwrites?: RawOverwrite[];
 }
 
-export interface CreateChannelOptions extends Base_Channel_Create {
+export interface CreateChannelOptions {
   /** The type of the channel */
   type?: ChannelTypes;
+  /** The channel topic (0-1024 characters) */
+  topic?: string;
+  /** The bitrate (in bits) of the voice channel */
+  bitrate?: number;
+  /** The user limit of the voice channel */
+  user_limit?: number;
+  /** Amount of seconds a user has to wait before sending another message (0-21600) Bots and users with the permission MANAGE_MESSAGES or MANAGE_CHANNEL are unaffected. */
+  rate_limit_per_user?: number;
+  /** Sorting position of the channel */
+  position?: number;
   /** Explicit permission overwrites for members and roles */
   permission_overwrites?: Overwrite[];
+  /** The parent category id */
+  parent_id?: string | null;
+  /** Whether the channel is nsfw */
+  nsfw?: boolean;
 }
 
 export type Channel_Type = 0 | 1 | 2 | 4 | 5 | 6;
