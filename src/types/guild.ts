@@ -103,7 +103,7 @@ export interface UpdateGuildPayload {
   /** The custom guild emojis */
   emojis: Emoji[];
   /** Enabled guild features */
-  features: Guild_Features[];
+  features: GuildFeatures[];
   /** Required MFA level for the guild */
   mfa_level: number;
   /** True if the server widget is enabled */
@@ -151,7 +151,7 @@ export interface CreateGuildPayload extends UpdateGuildPayload {
   unavailable: boolean;
   /** Total number of members in this guild */
   member_count?: number;
-  voice_states: Voice_State[];
+  voice_states: VoiceState[];
   /** Users in the guild */
   members: MemberCreatePayload[];
   /** Channels in the guild */
@@ -159,7 +159,7 @@ export interface CreateGuildPayload extends UpdateGuildPayload {
   presences: Presence[];
 }
 
-export type Guild_Features =
+export type GuildFeatures =
   | "INVITE_SPLASH"
   | "VIP_REGIONS"
   | "VANITY_URL"
@@ -173,7 +173,7 @@ export type Guild_Features =
   | "ANIMATED_ICON"
   | "BANNER";
 
-export interface Voice_Region {
+export interface VoiceRegion {
   /** unique ID for the region */
   id: string;
   /** name of the region */
@@ -245,7 +245,7 @@ export interface EditIntegrationOptions {
   enable_emoticons: boolean;
 }
 
-export interface Guild_Integration {
+export interface GuildIntegration {
   /** The integrations unique id */
   id: string;
   /** the integrations name */
@@ -304,7 +304,7 @@ export interface UserPayload {
   premium_type?: number;
 }
 
-export interface Partial_User {
+export interface PartialUser {
   /** The user's id */
   id: string;
   /** the user's username, not unique across the platform */
@@ -331,7 +331,7 @@ export interface Partial_User {
   premium_type?: number;
 }
 
-export enum User_Flags {
+export enum UserFlags {
   NONE,
   DISCORD_EMPLOYEE,
   DISCORD_PARTNER,
@@ -345,17 +345,17 @@ export enum User_Flags {
   SYSTEM = 1 << 12,
 }
 
-export enum Nitro_Types {
+export enum NitroTypes {
   NITRO_CLASSIC = 1,
   NITRO,
 }
 
-export interface Vanity_Invite {
+export interface VanityInvite {
   code: string | null;
   uses: number;
 }
 
-export interface Guild_Embed {
+export interface GuildEmbed {
   /** Whether the embed is enbaled. */
   enabled: boolean;
 }
@@ -480,7 +480,7 @@ export interface RawOverwrite {
   deny_new: string;
 }
 
-export interface ChannelCreate_Options {
+export interface ChannelCreateOptions {
   /** The type of the channel */
   type?: ChannelType;
   /** The channel topic. (0-1024 characters) */
@@ -536,7 +536,7 @@ export interface PruneOptions {
   roles: string[];
 }
 
-export interface Voice_State {
+export interface VoiceState {
   /** the guild id this voice state is for */
   guild_id?: string;
   /** the channel id this user is connected to */

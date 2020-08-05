@@ -11,7 +11,6 @@ import { endpoints } from "../constants/discord.ts";
 import { Errors } from "../types/errors.ts";
 import { Permissions, Permission } from "../types/permission.ts";
 import {
-  CreateChannelOptions,
   ChannelCreatePayload,
   ChannelTypes,
 } from "../types/channel.ts";
@@ -28,6 +27,7 @@ import {
   GuildEditOptions,
   PruneOptions,
   PrunePayload,
+  ChannelCreateOptions,
 } from "../types/guild.ts";
 import { RoleData } from "../types/role.ts";
 import { createRole } from "../structures/role.ts";
@@ -93,7 +93,7 @@ export function guildBannerURL(
 export async function createGuildChannel(
   guild: Guild,
   name: string,
-  options?: CreateChannelOptions,
+  options?: ChannelCreateOptions,
 ) {
   if (!botHasPermission(guild.id, [Permissions.MANAGE_CHANNELS])) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
@@ -510,10 +510,7 @@ export function channelHasPermissions(
     const role = guild.roles.get(roleID);
     if (!role) return bits;
 
-    bits |= role.permissions.reduce(
-      (bits, p) => bits & BigInt(Permissions[p]),
-      BigInt(0),
-    );
+    bits |= BigInt(role.permissions_new)
 
     return bits;
   }, BigInt(0));

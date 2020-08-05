@@ -17,13 +17,10 @@ export function memberHasPermission(
   if (memberID === guild.ownerID) return true;
 
   const permissionBits = memberRoleIDs.map((id) =>
-    guild.roles.get(id)?.permissions || []
+    guild.roles.get(id)?.permissions_new
   )
     .reduce((bits, permissions) => {
-      bits |= permissions.reduce(
-        (b, p) => b & BigInt(Permissions[p]),
-        BigInt(0),
-      );
+      bits |= BigInt(permissions)
       return bits;
     }, BigInt(0));
 
@@ -44,10 +41,7 @@ export function botHasPermission(guildID: string, permissions: Permissions[]) {
   const permissionBits = member.roles
     .map((id) => guild.roles.get(id)!)
     .reduce((bits, data) => {
-      bits |= data.permissions.reduce(
-        (b, p) => b & BigInt(Permissions[p]),
-        BigInt(0),
-      );
+      bits |= BigInt(data.permissions_new)
 
       return bits;
     }, BigInt(0));

@@ -1,6 +1,6 @@
 import { Activity } from "./message.ts";
 import { ClientStatusPayload } from "./presence.ts";
-import { Partial_User, UserPayload } from "./guild.ts";
+import { PartialUser, UserPayload } from "./guild.ts";
 import { MemberCreatePayload } from "./member.ts";
 
 export interface DiscordPayload {
@@ -177,7 +177,7 @@ export interface Emoji {
   animated?: boolean;
 }
 
-export enum StatusType {
+export enum StatusTypes {
   Online = "online",
   DoNotDisturb = "dnd",
   Idle = "idle",
@@ -185,7 +185,7 @@ export enum StatusType {
   Offline = "offline",
 }
 
-export type Status_Type = "online" | "dnd" | "idle" | "invisible" | "offline";
+export type StatusType = "online" | "dnd" | "idle" | "invisible" | "offline";
 
 export interface Status {
   afk: boolean;
@@ -199,7 +199,7 @@ export interface WebhookUpdatePayload {
 
 export interface PresenceUpdatePayload {
   /** The user presence is being updated for. */
-  user: Partial_User;
+  user: PartialUser;
   /** The roles this user is in */
   roles: string[];
   /** null, or the user's current activity */
@@ -207,7 +207,7 @@ export interface PresenceUpdatePayload {
   /** The id of the guild */
   guild_id: string;
   /** Either idle, dnd, online, or offline */
-  status: Status_Type;
+  status: StatusType;
   /** All user's current activity */
   activities: Activity[];
   /** The user's platform dependent status */
