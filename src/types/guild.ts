@@ -4,7 +4,7 @@ import { RoleData } from "./role.ts";
 import { MemberCreatePayload } from "./member.ts";
 import { Activity } from "./message.ts";
 import { ClientStatusPayload } from "./presence.ts";
-import { ChannelCreatePayload } from "./channel.ts";
+import { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
 
 export interface GuildRolePayload {
   /** The id of the guild */
@@ -446,14 +446,6 @@ export enum AuditLogs {
   INTEGRATION_DELETE,
 }
 
-export type ChannelTypeText =
-  | "text"
-  | "dm"
-  | "news"
-  | "voice"
-  | "category"
-  | "store";
-
 export interface Overwrite {
   /** The role or user id */
   id: string;
@@ -482,7 +474,7 @@ export interface RawOverwrite {
 
 export interface ChannelCreateOptions {
   /** The type of the channel */
-  type?: ChannelTypeText;
+  type?: ChannelTypes;
   /** The channel topic. (0-1024 characters) */
   topic?: string;
   /** The bitrate(in bits) of the voice channel. */

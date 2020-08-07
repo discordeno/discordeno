@@ -20,7 +20,7 @@ export function memberHasPermission(
     guild.roles.get(id)?.permissions_new
   )
     .reduce((bits, permissions) => {
-      bits |= BigInt(permissions)
+      bits |= BigInt(permissions);
       return bits;
     }, BigInt(0));
 
@@ -41,7 +41,7 @@ export function botHasPermission(guildID: string, permissions: Permissions[]) {
   const permissionBits = member.roles
     .map((id) => guild.roles.get(id)!)
     .reduce((bits, data) => {
-      bits |= BigInt(data.permissions_new)
+      bits |= BigInt(data.permissions_new);
 
       return bits;
     }, BigInt(0));

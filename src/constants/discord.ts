@@ -1,4 +1,4 @@
-let VERSION = 'v7'
+let VERSION = "v7";
 
 export const baseEndpoints = {
   /** Although, the version can be defaulted, keep the v6 as it can be changed to test newer versions when necessary. */
@@ -7,7 +7,7 @@ export const baseEndpoints = {
 };
 
 export function changeAPIVersion(number = 7) {
-  VERSION = `v${number}`
+  VERSION = `v${number}`;
 }
 
 const GUILDS_BASE = (id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}`;

@@ -259,7 +259,7 @@ export async function createGuildRole(
 
   const roleData = result as RoleData;
   const role = createRole(roleData);
-  const guild = cache.guilds.get(guildID)
+  const guild = cache.guilds.get(guildID);
   guild?.roles.set(role.id, role);
   return role;
 }
@@ -511,7 +511,7 @@ export function channelHasPermissions(
     const role = guild.roles.get(roleID);
     if (!role) return bits;
 
-    bits |= BigInt(role.permissions_new)
+    bits |= BigInt(role.permissions_new);
 
     return bits;
   }, BigInt(0));

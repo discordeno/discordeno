@@ -130,8 +130,11 @@ export async function sendMessage(
     }
   }
 
-  if (content.embed && !botHasChannelPermissions(channel.id, [Permissions.EMBED_LINKS])) {
-    throw new Error(Errors.MISSING_EMBED_LINKS)
+  if (
+    content.embed &&
+    !botHasChannelPermissions(channel.id, [Permissions.EMBED_LINKS])
+  ) {
+    throw new Error(Errors.MISSING_EMBED_LINKS);
   }
 
   // Use ... for content length due to unicode characters and js .length handling
