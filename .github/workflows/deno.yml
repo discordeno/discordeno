@@ -30,3 +30,6 @@ jobs:
 
       - name: Deno Format Check
         run: deno fmt *.ts --check
+
+      - name: Deno Format Check src/
+        run: deno fmt src/* --check
