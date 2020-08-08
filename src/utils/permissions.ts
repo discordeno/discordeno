@@ -8,6 +8,23 @@ import { Role } from "../structures/role.ts";
 import { Guild } from "../structures/guild.ts";
 
 /** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
+export function memberIDHasPermission(
+  memberID: string,
+  guildID: string,
+  permissions: Permission[],
+) {
+  const guild = cache.guilds.get(guildID);
+  if (!guild) return false;
+
+  if (memberID === guild.ownerID) return true;
+
+  const member = guild.members.get(memberID);
+  if (!member) return false;
+
+  return memberHasPermission(member.guildID, guild, member.roles, permissions)
+}
+
+/** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
 export function memberHasPermission(
   memberID: string,
   guild: Guild,
