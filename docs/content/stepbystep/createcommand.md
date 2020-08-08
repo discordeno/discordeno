@@ -600,6 +600,8 @@ interface FunArgs {
 }
 ```
 
+> **Note:** The imports in this are a bit different. I did this to show you that you can also import everything grouped like this through the `deps.ts` which will make everything available to you at ease.
+
 Take a minute to realize what just happened. This has made 18 different unique commands dynamically. In 1 file, using the same piece of code, we created so many commands. You can easily add more commands to this. For example, if you wanted to add weeb(animated) versions of these commands. Then you are at 36 commands with 1 simple command file.
 
 **That ladies and gentleman is the power and magic of Discordeno!**
@@ -608,4 +610,4 @@ Take a minute to stand up, step back and make some room around you. Now start da
 
 > **Note:** The command above uses translations which we will cover in depth in a later section of this guide.
 
-Once you are ready, let's proceed to making our inhibitors.
+Once you are ready, let's proceed to making our events.
