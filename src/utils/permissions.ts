@@ -205,5 +205,10 @@ export function higherRolePosition(
   const otherRole = guild.roles.get(otherRoleID);
   if (!role || !otherRole) return;
 
+  // Rare edge case handling
+  if (role.position === otherRole.position) {
+    return role.id < otherRole.id
+  }
+
   return role.position > otherRole.position;
 }

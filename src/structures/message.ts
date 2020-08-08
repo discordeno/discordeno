@@ -5,7 +5,7 @@ export function createMessage(data: MessageCreateOptions) {
   const message = {
     ...data,
     channelID: data.channel_id,
-    guildID: data.guild_id,
+    guildID: data.guild_id || "",
     mentionsEveryone: data.mentions_everyone,
     mentionRoles: data.mention_roles,
     mentionChannels: data.mention_channels,

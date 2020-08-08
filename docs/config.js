@@ -33,9 +33,16 @@ const config = {
       "/introduction",
       "/faq",
       "/gettingstarted",
-      "/guides",
+      "/stepbystep",
+      "/createbot",
+      "/createcommand",
+      "/permlevels",
+      "/djs",
     ],
-    collapsedNav: [],
+    collapsedNav: [
+      "/createbot",
+      "/createcommand",
+    ],
     links: [
       {
         text: "Documentation",
