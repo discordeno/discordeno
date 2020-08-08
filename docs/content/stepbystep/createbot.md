@@ -24,9 +24,16 @@ Let's take a minute to review all the options we have available to us.
 The `configs.ts` file is where you will keep all your secret info you don't want to share with anyone else. As long as `.gitignore` file is ignoring configs.ts your configurations will be kept private!
 
 ```ts
+// Step 1: Remove the `.example` from this file name so it is called `configs.ts`
+// Step 2: Add all your bot's information below. The only required one is token and prefix. NOTE: As long as `.gitignore` file is ignoring configs.ts your configurations will be kept private!
+// Step 3: Remove these comments if you like.
+
 export const configs = {
+  // Your bot token goes here
   token: "",
+  // The default prefix for your bot. Don't worry guilds can change this later.
   prefix: "!",
+  // This isn't required but you can add bot list api keys here.
   botListTokens: {
     DISCORD_BOT_ORG: "",
     BOTS_ON_DISCORD: "",
@@ -36,10 +43,31 @@ export const configs = {
     DISCORD_BOTS_GG: "",
     DISCORD_BOTS_GROUP: "",
   },
+  // This is the server id for your bot's main server where users can get help/support
+  supportServerID: "",
+  // These are channel ids that will enable some functionality
   channelIDs: {
+    // When a translation is missing this is the channel you will be alerted in.
     missingTranslation: "",
+    // When an error occurs, we will try and log it to this channel
+    errorChannelID: ""
   },
+  // These are the role ids that will enable some functionality.
+  roleIDs: {
+    // If you have a patreon set up you can add the patreon vip role id here.
+    patreonVIPRoleID: "",
+  },
+  // These are the user ids that will enable some functionality.
+  userIDs: {
+    // The user ids for the support team
+    botSupporters: [],
+    // The user ids for the other devs on your team
+    botDevs: [],
+    // The user ids who have complete 100% access to your bot
+    botOwners: []
+  }
 };
+
 ```
 
 #### Token
@@ -64,9 +92,17 @@ For now just remember, that Discordeno provides you a built in way to update mos
 
 #### Channel IDs
 
-The channelIDs section holds the useful for specific features to help give you alerts/notifications. For example, the `missingTranslation` channel will be where messages are sent alerting you that somewhere in your code you are trying to use a translation key that you never created.
+The channelIDs section holds the channel IDs that are useful for specific features to help give you alerts/notifications. For example, the `missingTranslation` channel will be where messages are sent alerting you that somewhere in your code you are trying to use a translation key that you never created.
 
 When you get to around 25,000 Discord servers on your bot, you may want to convert these channel IDs to webhooks.
+
+#### Role IDs
+
+The roleIDs section holds the role IDs that are useful for specific features. For example, the `patreonVIPRoleID` role can be used easily to enable vip features later in this guide.
+
+#### User IDs
+
+The userIDs section holds the user IDs that are useful for specific features. For example, the `botDevs` and such are useful for permission levels as you will see in the Permission Level part of the guide.
 
 ## It's Alive!
 
