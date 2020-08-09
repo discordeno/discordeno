@@ -57,8 +57,10 @@ async function processQueue() {
     }
   }
 
-  if (queue.length) processQueue();
-  else queueInProcess = false;
+  if (queue.length) {
+    await delay(1000);
+    processQueue();
+  } else queueInProcess = false;
 }
 
 processRateLimitedPaths();
