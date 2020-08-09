@@ -67,13 +67,31 @@ export function addReaction(
   messageID: string,
   reaction: string,
 ) {
-  RequestManager.put(
+  return RequestManager.put(
     endpoints.CHANNEL_MESSAGE_REACTION_ME(
       channelID,
       messageID,
       reaction,
     ),
   );
+}
+
+/** Adds multiple reactions to a message. If `ordered` is true(default is false), it will add the reactions one at a time in the order provided. Note: Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS */
+export async function addReactions(
+  channelID: string,
+  messageID: string,
+  reactions: string[],
+  ordered = false,
+) {
+  if (!ordered) {
+    reactions.forEach((reaction) =>
+      addReaction(channelID, messageID, reaction)
+    );
+  } else {
+    for (const reaction of reactions) {
+      await addReaction(channelID, messageID, reaction)
+    }
+  }
 }
 
 /** Removes a reaction from the bot on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
