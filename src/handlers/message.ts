@@ -89,7 +89,7 @@ export async function addReactions(
     );
   } else {
     for (const reaction of reactions) {
-      await addReaction(channelID, messageID, reaction)
+      await addReaction(channelID, messageID, reaction);
     }
   }
 }

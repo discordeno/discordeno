@@ -21,7 +21,7 @@ export function memberIDHasPermission(
   const member = guild.members.get(memberID);
   if (!member) return false;
 
-  return memberHasPermission(member.guildID, guild, member.roles, permissions)
+  return memberHasPermission(member.guildID, guild, member.roles, permissions);
 }
 
 /** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
@@ -224,7 +224,7 @@ export function higherRolePosition(
 
   // Rare edge case handling
   if (role.position === otherRole.position) {
-    return role.id < otherRole.id
+    return role.id < otherRole.id;
   }
 
   return role.position > otherRole.position;
