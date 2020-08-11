@@ -75,9 +75,9 @@ The Collection class is an exception in the library where a class was allowed. T
 
 ## Why Are there no options in Discordeno?
 
-Discordeno is not a library that handles code in the exact way every person wants it to. It is opinionated. Discordeno defaults to the Discord recommended options or the best options for majority of developers needs. For example, there is no option of sharding or not sharding or only sharding a custom amount of shards. This is just going to cause confusion and lead to users needing guides on what sharding is or isnt or how to enable or disable. In Discordeno, we follow Discords recommended sharding solution and it just works internally. The End! No fuss! No Muss! Just good stuff!
+Discordeno is not a library that handles code in the exact way every person wants it to. It is opinionated. Discordeno defaults to the Discord recommended options or the best options for majority of developers needs. For example, there is no option of fetching all members startup. This is a practice that Discord does not recommend or want users doing. By default, we don't support stuff like this. In Discordeno, we follow Discords recommended solution and it just works internally. The End! No fuss! No Muss! Just good stuff!
 
-Now, I understand that there are times when it's necessary to be able to customize the amount of shards or do something special for it. This should be done by simply forking the repo and using the commit your on. If you are advanced enough to need these options, you should be able to simply modify the repo slightly to your specific needs. The main module should remain minimalistic and easy to use for 99% of users.
+Now, I understand that there are times when it's necessary to be able to customize this and fetch them all. If you are advanced enough to need these options, you should be able to simply do it yourself. For most users, this is just an unnecessary option. The main module should remain minimalistic and easy to use for 99% of users.
 
 ## Why Do I See errors Like "MISSING_VIEW_CHANNEL" or "BOTS_HIGHEST_ROLE_TOO_LOW"?
 
