@@ -55,9 +55,9 @@ The instructions below are meant for advanced developers!
 Starting with Discordeno is very simple, you can start from scratch without any boilerplates/frameworks: Add this snippet of code into a new TypeScript file:
 
 ```typescript
-import Client from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/module/client.ts";
-import { sendMessage } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/handlers/channel.ts";
-import { Intents } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/types/options.ts";
+import Client from "https://x.nest.land/Discordeno@7.3.0/src/module/client.ts";
+import { sendMessage } from "https://x.nest.land/Discordeno@7.3.0/src/handlers/channel.ts";
+import { Intents } from "https://x.nest.land/Discordeno@7.3.0/src/types/options.ts";
 import config from "./config.ts";
 
 Client({

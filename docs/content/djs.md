@@ -106,13 +106,13 @@ Discordeno Version:
 ```ts
 import Client, {
   updateEventHandlers,
-} from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/module/client.ts";
+} from "https://x.nest.land/Discordeno@7.3.0/src/module/client.ts";
 import { configs } from "./configs.ts";
-import { Intents } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/types/options.ts";
+import { Intents } from "https://x.nest.land/Discordeno@7.3.0/src/types/options.ts";
 import { eventHandlers } from "./src/events/eventHandlers.ts";
-import { Message } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/structures/message.ts";
+import { Message } from "https://x.nest.land/Discordeno@7.3.0/src/structures/message.ts";
 import { Command } from "./src/types/commands.ts";
-import { Guild } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/structures/guild.ts";
+import { Guild } from "https://x.nest.land/Discordeno@7.3.0/src/structures/guild.ts";
 
 export const botCache = {
   commands: new Map<string, Command>(),
@@ -162,10 +162,10 @@ In our `ready.ts` file we can add the `ready` event listener.
 ```ts
 import { botCache } from "../../mod.ts";
 import { configs } from "../../configs.ts";
-import { cache } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/utils/cache.ts";
-import { editBotsStatus, chooseRandom } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/utils/utils.ts";
-import { StatusType } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/types/discord.ts";
-import { ActivityType } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/types/activity.ts";
+import { cache } from "https://x.nest.land/Discordeno@7.3.0/src/utils/cache.ts";
+import { editBotsStatus, chooseRandom } from "https://x.nest.land/Discordeno@7.3.0/src/utils/utils.ts";
+import { StatusType } from "https://x.nest.land/Discordeno@7.3.0/src/types/discord.ts";
+import { ActivityType } from "https://x.nest.land/Discordeno@7.3.0/src/types/activity.ts";
 
 botCache.eventHandlers.ready = function () {
   console.log(`[READY] Bot is online and ready in ${cache.guilds.size} guild(s)!`);
@@ -241,7 +241,7 @@ module.exports = class addRoleCommand extends Command {
 This is how to do it with Discordeno:
 ```ts
 import { botCache } from "../../mod.ts";
-import { addRole } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/handlers/member.ts";
+import { addRole } from "https://x.nest.land/Discordeno@7.3.0/src/handlers/member.ts";
 import { sendAlertResponse, sendResponse } from "../utils/helpers.ts";
 
 botCache.commands.set(`addrole`, {
@@ -345,10 +345,10 @@ module.exports = class kickCommand extends Command {
 
 Discordeno Version
 ```ts
-import { sendMessage } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/handlers/channel.ts";
-import { Member } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/structures/member.ts";
-import { kick } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/handlers/member.ts";
-import { deleteMessage } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/handlers/message.ts";
+import { sendMessage } from "https://x.nest.land/Discordeno@7.3.0/src/handlers/channel.ts";
+import { Member } from "https://x.nest.land/Discordeno@7.3.0/src/structures/member.ts";
+import { kick } from "https://x.nest.land/Discordeno@7.3.0/src/handlers/member.ts";
+import { deleteMessage } from "https://x.nest.land/Discordeno@7.3.0/src/handlers/message.ts";
 import { botCache } from "../../mod.ts";
 import { createCommandAliases, sendResponse } from "../utils/helpers.ts";
 import { Embed } from "../utils/Embed.ts";

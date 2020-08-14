@@ -75,7 +75,7 @@ The permission options are the exact same from the commands guide. These options
 
 ```ts
 import { botCache } from "../../mod.ts";
-import { deleteMessage } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v7/src/handlers/message.ts";
+import { deleteMessage } from "https://x.nest.land/Discordeno@7.3.0/src/handlers/message.ts";
 import { translate } from "../utils/i18next.ts";
 import { sendAlertResponse } from "../utils/helpers.ts";
 
@@ -107,4 +107,4 @@ botCache.monitors.set("inviteFilter", {
 });
 ```
 
-Nice! Now take some time and add these translation keys to their appropriate files. 
+Nice! Now take some time and add these translation keys to their appropriate files.

@@ -10,7 +10,7 @@ metaDescription: "Discordeno is a Third Party Deno Library for interacting with 
 
 Discordeno provides first class support for TypeScript! Since Deno provides support for Typescript, that also comes into Discordeno. This means you don't need to compile TypeScript before you use it. However, this isn't really why Discordeno is the best library for TypeScript developers. When I developed this library, I was experimenting with a lot of different things and one of them was automated typings.
 
-Whenever I used other libraries, I was always seeing typings being inaccurate or problematic. This is because in any Discord API library, the majority is not used by the library itself so TypeScript doesn't warn the library developers. This makes it extremely likely that those typings become inaccurate or out of date because of simple mistakes like forgetting to update typings. Sometimes libraries will add a property and forget to add that on their typings. This makes it useable for JavaScript developers but not for TypeScript devs. For TypeScript developers, typings is everything! So I asked myself how could I solve this in my own library because I didn't want to have to suffer these problems again. The best solution was to not have any typings for the module at all.
+Whenever I used other libraries, I was always seeing typings being inaccurate or problematic. This is because in any Discord API library, the majority is not used by the library itself so TypeScript doesn't warn the library developers. This makes it extremely likely that those typings become inaccurate or out of date because of simple mistakes like forgetting to update typings. Sometimes libraries will add a property and forget to add that on their typings. This makes it usable for JavaScript developers but not for TypeScript devs. For TypeScript developers, typings are everything! So I asked myself how could I solve this in my own library because I didn't want to have to suffer these problems again. The best solution was to not have any typings for the module at all.
 
 In Discordeno, there are no typings created/maintained manually. It is all done **automatically** by TypeScript because of the design decisions of the code itself. **When the code is changed, the typings are automatically updated.** Never again will you suffer the problems of other libraries forgetting to keep their typings up to date properly.
 
@@ -20,7 +20,7 @@ The types folder is typings built for Discord API Payload not for this lib. Disc
 
 ## How Stable Is Discordeno?
 
-One of the biggest issues with almost every library(I have used) is stability. None of the libraries gave much love and attention to Typescript developers the way it deserves. Discord.JS developers continues to make breaking changes(on "stable" version) to TS projects without bumping the MAJOR version causing TS developers to have their bots break. Eris was the most stable when it comes to JS, but in regards to TS, I was personally maintaing the typings and this was just a hassle to try and maintain when very few others cared to keep it properly maintained. Detritus was in fact the best library for TS, but once again it lacked in proper stability. It only had 1 master branch and no signs of a proper stable version where I would not have to worry about breaking changes.
+One of the biggest issues with almost every library(I have used) is stability. None of the libraries gave much love and attention to Typescript developers the way it deserves. Sometimes TS projects would break because breaking changes to typings did not make a MAJOR bump so TS bots in production would break. Sometimes I was personally maintaing the typings because no one else was for that lib. Some libs were pre 1.0 and didn't even have a stable branch/version where I would not have to worry about breaking changes.
 
 This is why I made it one of my foundational goals of this library to have the best stability for TypeScript developers. No matter how small, a breaking change is a breaking change when it affects the public API. I could care less if we end up at version 500. Being afraid to bump a MAJOR because it's a small change or a typing change is a terrible decision as a library maintainer and destroys the experience for end users. Discordeno provides 2 separate versioning systems to provide you as much flexibility and stability as you like.
 
@@ -44,7 +44,7 @@ At the end of the day, I think both systems can work and I am curious how everyo
 
 ## Why Doesn't Discordeno Use Classes or EventEmitter?
 
-This is a design decision for the lib itself. You can still use class if you want on your bot. In fact, I hope someone makes a framework/boilerplate for this lib one day using classes so that devs have a choice on which style they prefer. Without trying to write an entire thesis statement on the reasons why Classes are bad in JavaScript, I will just link to the best resources I believe help explain it.
+This is a design decision for the lib itself. You can still use class if you want on your bot. In fact, I hope someone makes a framework/boilerplate for this lib one day using classes so that devs have a choice on which style they prefer. Without trying to write an entire thesis statement on the reasons why I avoided Classes in this lib, I will just link to the best resources I believe help explain it.
 
 - Really good article: https://dannyfritz.wordpress.com/2014/10/11/class-free-object-oriented-programming/
 - Lecture by one of the developers who makes JavaScript: https://www.youtube.com/watch?v=PSGEjv3Tqo0
@@ -57,13 +57,9 @@ EventEmitter.emit('guildCreate', guild);
 // Discordeno Example
 eventHandlers.guildCreate?.(guild);
 ```
-There isn't really any difference especially for users when they use it. One bad thing about EventEmitter is that it can crash your code or cause memory leak issues. For example this screenshot is taken with the same bot token running the same minimal ping command example code and fetching all members on startup on 2 different libs:
+There isn't really any difference especially for users when they use it. One bad thing about EventEmitter is that if misused it can cause memory leaks. It is very easy to open yourself up to these memory leak issues. It has happened to me when I started coding as well. This is why I wanted Discordeno's implementation to help devs avoid the issues I had. It prevents anyone from having this as a potential issue. Another issue with EventEmitter is trying to update the code in those functions without having to deal with headaches left and right of removing and adding listeners.
 
-![image](https://user-images.githubusercontent.com/23035000/82705428-a13c9500-9c45-11ea-8dd7-a88f05c8120f.png)
-
-It is very easy to open yourself up to these memory leak issues when you use something like EventEmitter. Another issue with EventEmitter is trying to update the code in those functions without having to deal with headaches left and right.
-
-In Discordeno, this is extremely simple:
+In Discordeno, this is extremely simple, you just simply give it the new event handlers.
 
 ```typescript
 updateEventHandlers(newEventHandlers)
