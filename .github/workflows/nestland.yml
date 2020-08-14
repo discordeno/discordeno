@@ -1,19 +1,20 @@
-name: Publish Egg
+name: Ship Nest.Land
 
 on:
   release:
     types: [published]
 
 jobs:
-  publish-egg:
+  release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: denolib/setup-deno@master
-        with:
-          deno-version: 1.1.1
-      - run: deno install -A -f --unstable -n eggs https://x.nest.land/eggs@0.2.1/mod.ts
-      - run: |
-          export PATH="/home/runner/.deno/bin:$PATH"
-          eggs link ${{ secrets.NESTAPIKEY }}
-          eggs publish
+      - name: Setup repo
+        uses: actions/checkout@v2
+
+      - name: Setup Deno
+        uses: denolib/setup-deno@v2
+
+      - name: Publish module
+        run: |
+          deno run -A --unstable https://x.nest.land/eggs@0.2.1/mod.ts link ${{ secrets.NESTAPIKEY }}
+          deno run -A --unstable https://x.nest.land/eggs@0.2.1/mod.ts publish --version ${{ github.event.inputs.tags }}
