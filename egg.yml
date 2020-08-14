@@ -5,4 +5,8 @@ description: >-
 version: 7.1.0
 stable: true
 files:
-  - ''
+  - ./src/**/*
+  - LICENSE
+  - mod.ts
+  - README.md
+  - tsconfig.json

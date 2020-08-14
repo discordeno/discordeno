@@ -6,6 +6,7 @@ Discord API library wrapper in Deno
 
 [Website](https://discordeno.netlify.app)
 
+[![nest badge](https://nest.land/badge-large.svg)](https://nest.land/package/your-package)
 ![Documentation](https://github.com/Skillz4Killz/Discordeno/workflows/Documentation/badge.svg)
 ![Testing](https://github.com/Skillz4Killz/Discordeno/workflows/Testing/Linting/badge.svg)
 
@@ -75,7 +76,7 @@ Client({
 });
 ```
 
-Alternatively, you can use boilerplate template repositories that were created by wonderful developers. Review the list on the website, and add any of yours if you make your own. 
+Alternatively, you can use boilerplate template repositories that were created by wonderful developers. Review the list on the website, and add any of yours if you make your own.
 
 ![image](https://i.imgur.com/z1BfUnt.png)
 
