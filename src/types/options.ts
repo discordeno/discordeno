@@ -60,6 +60,8 @@ export interface DebugArg {
     | "globallyRateLimited"
     | "requestManagerSuccess"
     | "requestManagerFailed"
+    | "requestManagerFetching"
+    | "requestManagerFetched"
     | "requestMembersProcessing"
     | "heartbeat"
     | "createShard"

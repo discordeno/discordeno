@@ -11,7 +11,13 @@ let globallyRateLimited = false;
 let queueInProcess = false;
 
 export interface QueuedRequest {
-  callback: () => Promise<unknown>;
+  callback: () => Promise<
+    void | {
+      rateLimited: any;
+      beforeFetch: boolean;
+      bucketID?: string | null;
+    }
+  >;
   bucketID?: string | null;
   url: string;
 }
@@ -25,7 +31,7 @@ export interface RateLimitedPath {
 async function processRateLimitedPaths() {
   const now = Date.now();
   ratelimitedPaths.forEach((value, key) => {
-    if (value.resetTimestamp < now) return;
+    if (value.resetTimestamp > now) return;
     ratelimitedPaths.delete(key);
     if (key === "global") globallyRateLimited = false;
   });
@@ -37,10 +43,12 @@ async function processRateLimitedPaths() {
 async function processQueue() {
   if (queue.length && !globallyRateLimited) {
     const request = queue.shift();
+    if (!request) return;
 
-    if (request?.bucketID) {
-      const rateLimitResetIn = checkRatelimits(request.bucketID);
-      const rateLimitedURLResetIn = checkRatelimits(request.url);
+    const rateLimitedURLResetIn = await checkRatelimits(request.url);
+
+    if (request.bucketID) {
+      const rateLimitResetIn = await checkRatelimits(request.bucketID);
       if (rateLimitResetIn) {
         // This request is still rate limited readd to queue
         queue.push(request);
@@ -49,11 +57,26 @@ async function processQueue() {
         queue.push(request);
       } else {
         // This request is not rate limited so it should be run
-        await request.callback();
+        const result = await request.callback();
+        if (result && result.rateLimited) {
+          queue.push(
+            { ...request, bucketID: result.bucketID || request.bucketID },
+          );
+        }
       }
     } else {
-      // This request has no bucket id so it should be processed
-      await request?.callback();
+      if (rateLimitedURLResetIn) {
+        // This URL is rate limited readd to queue
+        queue.push(request);
+      } else {
+        // This request has no bucket id so it should be processed
+        const result = await request.callback();
+        if (request && result && result.rateLimited) {
+          queue.push(
+            { ...request, bucketID: result.bucketID || request.bucketID },
+          );
+        }
+      }
     }
   }
 
@@ -110,11 +133,11 @@ function createRequestBody(body: any, method: RequestMethod) {
   };
 }
 
-function checkRatelimits(url: string) {
+async function checkRatelimits(url: string) {
   const ratelimited = ratelimitedPaths.get(url);
   const global = ratelimitedPaths.get("global");
-
   const now = Date.now();
+
   if (ratelimited && now < ratelimited.resetTimestamp) {
     return ratelimited.resetTimestamp - now;
   }
@@ -142,12 +165,9 @@ async function runMethod(
   return new Promise((resolve, reject) => {
     const callback = async () => {
       try {
-        const rateLimitResetIn = checkRatelimits(url);
+        const rateLimitResetIn = await checkRatelimits(url);
         if (rateLimitResetIn) {
-          return setTimeout(
-            () => runMethod(method, url, body, retryCount++, bucketID),
-            rateLimitResetIn,
-          );
+          return { rateLimited: rateLimitResetIn, beforeFetch: true, bucketID };
         }
 
         const query = method === "get" && body
@@ -158,7 +178,19 @@ async function runMethod(
           : "";
         const urlToUse = method === "get" && query ? `${url}?${query}` : url;
 
+        eventHandlers.debug?.(
+          {
+            type: "requestManagerFetching",
+            data: { method, url, body, retryCount, bucketID },
+          },
+        );
         const response = await fetch(urlToUse, createRequestBody(body, method));
+        eventHandlers.debug?.(
+          {
+            type: "requestManagerFetched",
+            data: { method, url, body, retryCount, bucketID, response },
+          },
+        );
         const bucketIDFromHeaders = processHeaders(url, response.headers);
         handleStatusCode(response);
 
@@ -174,11 +206,11 @@ async function runMethod(
             throw new Error(Errors.RATE_LIMIT_RETRY_MAXED);
           }
 
-          return setTimeout(
-            () =>
-              runMethod(method, url, body, retryCount++, bucketIDFromHeaders),
-            json.retry_after,
-          );
+          return {
+            rateLimited: json.retry_after,
+            beforeFetch: false,
+            bucketID: bucketIDFromHeaders,
+          };
         }
 
         eventHandlers.debug?.(
