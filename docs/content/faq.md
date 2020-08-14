@@ -8,7 +8,7 @@ metaDescription: "Discordeno is a Third Party Deno Library for interacting with 
 
 ## Does Discordeno Support TypeScript?
 
-Discordeno provides first class support for TypeScript! Since Deno provides support for Typescript, that also comes into Discordeno. This means you don't need to compile TypeScript before you use it. However, this isn't really why Discordeno is the best library for TypeScript developers. When I developed this library, I was experimenting with a lot of different things and one of them was automated typings.
+Discordeno provides first class support for TypeScript! Since Deno provides support for TypeScript, that also comes into Discordeno. This means you don't need to compile TypeScript before you use it. However, this isn't really why Discordeno is the best library for TypeScript developers. When I developed this library, I was experimenting with a lot of different things and one of them was automated typings.
 
 Whenever I used other libraries, I was always seeing typings being inaccurate or problematic. This is because in any Discord API library, the majority is not used by the library itself so TypeScript doesn't warn the library developers. This makes it extremely likely that those typings become inaccurate or out of date because of simple mistakes like forgetting to update typings. Sometimes libraries will add a property and forget to add that on their typings. This makes it usable for JavaScript developers but not for TypeScript devs. For TypeScript developers, typings are everything! So I asked myself how could I solve this in my own library because I didn't want to have to suffer these problems again. The best solution was to not have any typings for the module at all.
 
@@ -20,7 +20,7 @@ The types folder is typings built for Discord API Payload not for this lib. Disc
 
 ## How Stable Is Discordeno?
 
-One of the biggest issues with almost every library(I have used) is stability. None of the libraries gave much love and attention to Typescript developers the way it deserves. Sometimes TS projects would break because breaking changes to typings did not make a MAJOR bump so TS bots in production would break. Sometimes I was personally maintaing the typings because no one else was for that lib. Some libs were pre 1.0 and didn't even have a stable branch/version where I would not have to worry about breaking changes.
+One of the biggest issues with almost every library(I have used) is stability. None of the libraries gave much love and attention to TypeScript developers the way it deserves. Sometimes TypeScript projects would break because breaking changes to typings did not make a MAJOR bump so TypeScript bots in production would break. Sometimes I was personally maintaing the typings because no one else was for that lib. Some libs were pre 1.0 and didn't even have a stable branch/version where I would not have to worry about breaking changes.
 
 This is why I made it one of my foundational goals of this library to have the best stability for TypeScript developers. No matter how small, a breaking change is a breaking change when it affects the public API. I could care less if we end up at version 500. Being afraid to bump a MAJOR because it's a small change or a typing change is a terrible decision as a library maintainer and destroys the experience for end users. Discordeno provides 2 separate versioning systems to provide you as much flexibility and stability as you like.
 
