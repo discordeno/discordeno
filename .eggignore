@@ -1,0 +1,11 @@
+# files and directories are specified one by line, as a glob expr
+.git*/**
+.idea/**
+.vscode/**
+benchmarks/**
+eggs-debug.log
+configs.ts
+debug.ts
+
+# you can also exclude particular files, just like .gitignore
+!benchmarks/README.md
