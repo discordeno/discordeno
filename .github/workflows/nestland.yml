@@ -1,12 +1,8 @@
 name: Ship Nest.Land
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Version"
-        required: true
-
+  release:
+    types: [published]
 
 jobs:
   release:
