@@ -77,6 +77,8 @@ export const endpoints = {
   GUILD_VANITY_URL: (id: string) => `${GUILDS_BASE(id)}/vanity-url`,
   GUILD_WEBHOOKS: (id: string) => `${GUILDS_BASE(id)}/webhooks`,
 
+  WEBHOOK: (id: string, token: string) => `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}`,
+
   // User endpoints
   USER_AVATAR: (id: string, icon: string) =>
     `${baseEndpoints.CDN_URL}/avatars/${id}/${icon}`,
