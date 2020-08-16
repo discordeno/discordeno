@@ -7,7 +7,6 @@ Discord API library wrapper in Deno
 [Website](https://discordeno.netlify.app)
 
 [![nest badge](https://nest.land/badge-large.svg)](https://nest.land/package/Discordeno)
-![Documentation](https://github.com/Skillz4Killz/Discordeno/workflows/Documentation/badge.svg)
 ![Testing](https://github.com/Skillz4Killz/Discordeno/workflows/Testing/Linting/badge.svg)
 
 ## Beginner Developers
