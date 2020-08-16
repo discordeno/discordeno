@@ -195,7 +195,7 @@ async function runMethod(
         handleStatusCode(response);
 
         // Sometimes Discord returns an empty 204 response that can't be made to JSON.
-        if (response.status === 204) resolve();
+        if (response.status === 204) return resolve();
 
         const json = await response.json();
         if (
