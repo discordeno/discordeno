@@ -10,9 +10,9 @@ Discordeno will help make Discord bot development much easier. Don't worry, as y
 
 > This guide is going to assume you already have the basic requirements to make a bot ready. This includes github, git, a code editor like Visual Studio Code. If you don't have these yet please prepare them first before going forward.
 
-- First, create a Discordeno Bot using the [Generator Boilerplate](https://github.com/Skillz4Killz/Discordeno-bot-template). Give it any name you like. For the purpose of this guide we will call it, Stargate.
+- First, create a Discordeno Bot using the [Generator Boilerplate](https://github.com/Skillz4Killz/Discordeno-bot-template/generate). Give it any name you like. For the purpose of this guide we will call it, Stargate.
 
-- Then `git clone https://github.com/Skillz4Killz/Stargate.git`
+- Then `git clone https://github.com/Skillz4Killz/Stargate.git` Replace **Stargate** with the name you chose.
 
 - When that is done, go ahead and open up the folder with VSC.
 - Create a new file called `configs.ts`. Open the `configs.example.ts` file and copy everything over.
