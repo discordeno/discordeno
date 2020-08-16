@@ -539,14 +539,21 @@ export async function handleDiscordPayload(
           );
         }
 
+        const uncachedOptions = {
+          ...options,
+          id: options.message_id,
+          channelID: options.channel_id,
+          guildID: options.guild_id
+        }
+
         return isAdd
           ? eventHandlers.reactionAdd?.(
-            message || options,
+            message || uncachedOptions,
             options.emoji,
             options.user_id,
           )
           : eventHandlers.reactionRemove?.(
-            message || options,
+            message || uncachedOptions,
             options.emoji,
             options.user_id,
           );

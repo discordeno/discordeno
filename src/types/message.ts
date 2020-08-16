@@ -319,6 +319,12 @@ export interface MessageReactionPayload extends BaseMessageReactionPayload {
   emoji: ReactionPayload;
 }
 
+export interface MessageReactionUncachedPayload extends MessageReactionPayload {
+  id: string;
+  channelID: string;
+  guildID?: string;
+}
+
 export interface MessageReactionRemoveEmojiPayload
   extends BaseMessageReactionPayload {
   /** The emoji that was removed. */

@@ -10,12 +10,12 @@ import { Role } from "../structures/role.ts";
 import { Message } from "../structures/message.ts";
 import {
   PartialMessage,
-  MessageReactionPayload,
   ReactionPayload,
   BaseMessageReactionPayload,
   MessageReactionRemoveEmojiPayload,
   Embed,
   Attachment,
+  MessageReactionUncachedPayload,
 } from "./message.ts";
 import { Channel } from "../structures/channel.ts";
 import { Guild } from "../structures/guild.ts";
@@ -118,12 +118,12 @@ export interface EventHandlers {
   rawGateway?: (data: unknown) => unknown;
   ready?: () => unknown;
   reactionAdd?: (
-    message: Message | MessageReactionPayload,
+    message: Message | MessageReactionUncachedPayload,
     emoji: ReactionPayload,
     userID: string,
   ) => unknown;
   reactionRemove?: (
-    message: Message | MessageReactionPayload,
+    message: Message | MessageReactionUncachedPayload,
     emoji: ReactionPayload,
     userID: string,
   ) => unknown;
