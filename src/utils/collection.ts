@@ -1,6 +1,6 @@
 import { chooseRandom } from "./utils.ts";
 
-export default class Collection<K, V> extends Map<K, V> {
+export class Collection<K, V> extends Map<K, V> {
   maxSize?: number;
 
   set(key: K, value: V) {
