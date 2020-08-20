@@ -1,4 +1,4 @@
-import Collection from "./collection.ts";
+import { Collection } from "./collection.ts";
 import { Message } from "../structures/message.ts";
 import { Guild } from "../structures/guild.ts";
 import { Channel } from "../structures/channel.ts";

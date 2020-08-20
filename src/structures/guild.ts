@@ -1,5 +1,5 @@
 import { CreateGuildPayload } from "../types/guild.ts";
-import Collection from "../utils/collection.ts";
+import { Collection } from "../utils/collection.ts";
 import { createRole } from "./role.ts";
 import { createMember, Member } from "./member.ts";
 import { createChannel } from "./channel.ts";
