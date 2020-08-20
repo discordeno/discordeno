@@ -113,7 +113,7 @@ async function processQueue() {
   if (Object.keys(pathQueues).length) {
     await delay(1000);
     processQueue();
-    cleanupQueues()
+    cleanupQueues();
   } else queueInProcess = false;
 }
 

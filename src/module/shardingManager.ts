@@ -543,8 +543,8 @@ export async function handleDiscordPayload(
           ...options,
           id: options.message_id,
           channelID: options.channel_id,
-          guildID: options.guild_id
-        }
+          guildID: options.guild_id,
+        };
 
         return isAdd
           ? eventHandlers.reactionAdd?.(
