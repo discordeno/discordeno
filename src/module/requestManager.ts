@@ -4,8 +4,9 @@ import { delay } from "https://deno.land/std@0.61.0/async/delay.ts";
 import { Errors } from "../types/errors.ts";
 import { HttpResponseCode } from "../types/discord.ts";
 import { logRed } from "../utils/logger.ts";
+import { baseEndpoints } from "../constants/discord.ts";
 
-const queue: QueuedRequest[] = [];
+const pathQueues: { [key: string]: QueuedRequest[] } = {};
 const ratelimitedPaths = new Map<string, RateLimitedPath>();
 let globallyRateLimited = false;
 let queueInProcess = false;
@@ -40,49 +41,79 @@ async function processRateLimitedPaths() {
   processRateLimitedPaths();
 }
 
-async function processQueue() {
-  if (queue.length && !globallyRateLimited) {
-    const request = queue.shift();
-    if (!request) return;
+function addToQueue(request: QueuedRequest) {
+  const route = request.url.substring(baseEndpoints.BASE_URL.length + 1);
+  const parts = route.split("/");
+  // Remove the major param
+  parts.shift();
+  const [id] = parts;
 
-    const rateLimitedURLResetIn = await checkRatelimits(request.url);
+  if (pathQueues[id]) {
+    pathQueues[id].push(request);
+  } else {
+    pathQueues[id] = [request];
+  }
+}
 
-    if (request.bucketID) {
-      const rateLimitResetIn = await checkRatelimits(request.bucketID);
-      if (rateLimitResetIn) {
-        // This request is still rate limited readd to queue
-        queue.push(request);
-      } else if (rateLimitedURLResetIn) {
-        // This URL is rate limited readd to queue
-        queue.push(request);
-      } else {
-        // This request is not rate limited so it should be run
-        const result = await request.callback();
-        if (result && result.rateLimited) {
-          queue.push(
-            { ...request, bucketID: result.bucketID || request.bucketID },
-          );
-        }
-      }
-    } else {
-      if (rateLimitedURLResetIn) {
-        // This URL is rate limited readd to queue
-        queue.push(request);
-      } else {
-        // This request has no bucket id so it should be processed
-        const result = await request.callback();
-        if (request && result && result.rateLimited) {
-          queue.push(
-            { ...request, bucketID: result.bucketID || request.bucketID },
-          );
-        }
-      }
+async function cleanupQueues() {
+  Object.entries(pathQueues).map(([key, value]) => {
+    if (!value.length) {
+      // Remove it entirely
+      delete pathQueues[key];
     }
+  });
+}
+
+async function processQueue() {
+  if (
+    (Object.keys(pathQueues).length) && !globallyRateLimited
+  ) {
+    await Promise.allSettled(
+      Object.values(pathQueues).map(async (pathQueue) => {
+        const request = pathQueue.shift();
+        if (!request) return;
+
+        const rateLimitedURLResetIn = await checkRatelimits(request.url);
+
+        if (request.bucketID) {
+          const rateLimitResetIn = await checkRatelimits(request.bucketID);
+          if (rateLimitResetIn) {
+            // This request is still rate limited readd to queue
+            addToQueue(request);
+          } else if (rateLimitedURLResetIn) {
+            // This URL is rate limited readd to queue
+            addToQueue(request);
+          } else {
+            // This request is not rate limited so it should be run
+            const result = await request.callback();
+            if (result && result.rateLimited) {
+              addToQueue(
+                { ...request, bucketID: result.bucketID || request.bucketID },
+              );
+            }
+          }
+        } else {
+          if (rateLimitedURLResetIn) {
+            // This URL is rate limited readd to queue
+            addToQueue(request);
+          } else {
+            // This request has no bucket id so it should be processed
+            const result = await request.callback();
+            if (request && result && result.rateLimited) {
+              addToQueue(
+                { ...request, bucketID: result.bucketID || request.bucketID },
+              );
+            }
+          }
+        }
+      }),
+    );
   }
 
-  if (queue.length) {
+  if (Object.keys(pathQueues).length) {
     await delay(1000);
     processQueue();
+    cleanupQueues()
   } else queueInProcess = false;
 }
 
@@ -231,7 +262,7 @@ async function runMethod(
       }
     };
 
-    queue.push({
+    addToQueue({
       callback,
       bucketID,
       url,
