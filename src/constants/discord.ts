@@ -34,6 +34,13 @@ export const endpoints = {
     emoji: string,
   ) =>
     `${baseEndpoints.BASE_URL}/channels/${id}/messages/${messageID}/reactions/${emoji}/@me`,
+  CHANNEL_MESSAGE_REACTION_USER: (
+    id: string,
+    messageID: string,
+    emoji: string,
+    userId: string,
+  ) =>
+    `${baseEndpoints.BASE_URL}/channels/${id}/messages/${messageID}/reactions/${emoji}/${userId}`,
   CHANNEL_MESSAGE_REACTIONS: (id: string, messageID: string) =>
     `${baseEndpoints.BASE_URL}/channels/${id}/messages/${messageID}/reactions`,
   CHANNEL_MESSAGE_REACTION: (id: string, messageID: string, emoji: string) =>
