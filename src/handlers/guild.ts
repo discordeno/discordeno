@@ -174,6 +174,19 @@ export async function getMember(guildID: string, id: string) {
   return member;
 }
 
+/** Returns guild member objects for the specified user by their nickname/username.
+*
+* ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
+*/
+export async function getMembersByQuery(guildID: string, name: string, limit = 1) {
+  const guild = cache.guilds.get(guildID);
+  if (!guild) return;
+
+  return new Promise((resolve) => {
+    requestAllMembers(guild, resolve, { query: name, limit });
+  })
+}
+
 /** Create an emoji in the server. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. */
 export async function createEmoji(
   guildID: string,

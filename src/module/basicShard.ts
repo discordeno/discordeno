@@ -269,7 +269,7 @@ export function requestGuildMembers(
     d: {
       guild_id: guildID,
       query: options?.query || "",
-      limit: options?.query || 0,
+      limit: options?.limit || 0,
       presences: options?.presences || false,
       user_ids: options?.userIDs,
       nonce,

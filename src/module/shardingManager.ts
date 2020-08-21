@@ -372,7 +372,11 @@ export async function handleDiscordPayload(
 
           if (options.chunk_index + 1 === options.chunk_count) {
             fetchAllMembersProcessingRequests.delete(options.nonce);
-            resolve();
+            resolve(
+              options.members.map((member) =>
+                guild.members.get(member.user.id)
+              ),
+            );
           }
         }
       }
