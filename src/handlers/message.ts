@@ -109,6 +109,23 @@ export function removeReaction(
   );
 }
 
+/** Removes a reaction from the specified user on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
+export function removeUserReaction(
+  channelID: string,
+  messageID: string,
+  reaction: string,
+  userID: string,
+) {
+  RequestManager.delete(
+    endpoints.CHANNEL_MESSAGE_REACTION_USER(
+      channelID,
+      messageID,
+      reaction,
+      userID,
+    ),
+  );
+}
+
 /** Removes all reactions for all emojis on this message. */
 export function removeAllReactions(channelID: string, messageID: string) {
   if (
