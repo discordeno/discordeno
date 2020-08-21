@@ -114,14 +114,14 @@ export function removeUserReaction(
   channelID: string,
   messageID: string,
   reaction: string,
-  userId: string,
+  userID: string,
 ) {
   RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTION_USER(
       channelID,
       messageID,
       reaction,
-      userId,
+      userID,
     ),
   );
 }
