@@ -19,7 +19,7 @@ export async function deleteMessage(
   if (message.author.id !== botID) {
     // This needs to check the channels permission not the guild permission
     if (
-      !message.guildID ||
+      !message.channel.guildID ||
       !botHasChannelPermissions(
         message.channel.id,
         [Permissions.MANAGE_MESSAGES],
