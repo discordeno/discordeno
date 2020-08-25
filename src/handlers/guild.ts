@@ -139,8 +139,30 @@ export function deleteChannel(
 *
 * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
 */
-export function getChannels(guildID: string) {
-  return RequestManager.get(endpoints.GUILD_CHANNELS(guildID));
+export async function getChannels(guildID: string, addToCache = true) {
+  const result = await RequestManager.get(
+    endpoints.GUILD_CHANNELS(guildID),
+  ) as ChannelCreatePayload[];
+  return result.map((res) => {
+    const channel = createChannel(res, guildID);
+    if (addToCache) {
+      cache.channels.set(channel.id, channel);
+    }
+    return channel;
+  });
+}
+
+/** Fetches a single channel object from the api.
+*
+* ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
+*/
+export async function getChannel(channelID: string, addToCache = true) {
+  const result = await RequestManager.get(
+    endpoints.GUILD_CHANNEL(channelID),
+  ) as ChannelCreatePayload;
+  const channel = createChannel(result, result.guild_id);
+  if (addToCache) cache.channels.set(channel.id, channel);
+  return channel;
 }
 
 /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
@@ -178,13 +200,17 @@ export async function getMember(guildID: string, id: string) {
 *
 * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
 */
-export async function getMembersByQuery(guildID: string, name: string, limit = 1) {
+export async function getMembersByQuery(
+  guildID: string,
+  name: string,
+  limit = 1,
+) {
   const guild = cache.guilds.get(guildID);
   if (!guild) return;
 
   return new Promise((resolve) => {
     requestAllMembers(guild, resolve, { query: name, limit });
-  })
+  });
 }
 
 /** Create an emoji in the server. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. */
