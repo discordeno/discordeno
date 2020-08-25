@@ -1,7 +1,6 @@
 import { Message, createMessage } from "../structures/message.ts";
 import { delay } from "https://deno.land/std@0.61.0/async/delay.ts";
 import { botID } from "../module/client.ts";
-import { hasChannelPermission } from "./channel.ts";
 import { Permissions } from "../types/permission.ts";
 import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
@@ -21,9 +20,8 @@ export async function deleteMessage(
     // This needs to check the channels permission not the guild permission
     if (
       !message.guildID ||
-      !hasChannelPermission(
-        message.channel,
-        botID,
+      !botHasChannelPermissions(
+        message.channel.id,
         [Permissions.MANAGE_MESSAGES],
       )
     ) {
