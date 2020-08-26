@@ -19,7 +19,7 @@ export function createMessage(data: MessageCreateOptions) {
     guild: () => data.guild_id ? cache.guilds.get(data.guild_id) : undefined,
     member: () => message.guild()?.members.get(data.author.id),
     mentions: () =>
-      data.mentions.map((mention) => message.guild()?.members.get(mention.id)!),
+      data.mentions.map((mention) => message.guild()?.members.get(mention.id)! || cache.guilds.find(g => g.members.has(mention.id))?.members.get(mention.id)),
   };
 
   // Remove excess properties to preserve cache.
