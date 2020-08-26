@@ -20,7 +20,7 @@ export class Collection<K, V> extends Map<K, V> {
     return this.values().next().value;
   }
 
-  last() {
+  last(): V {
     return [...this.values()][this.size - 1];
   }
 
