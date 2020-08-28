@@ -65,6 +65,16 @@ export function addReaction(
   messageID: string,
   reaction: string,
 ) {
+  if (!botHasChannelPermissions(channelID, [Permissions.ADD_REACTIONS])) {
+    throw new Error(Errors.MISSING_ADD_REACTIONS);
+  }
+
+  if (
+    !botHasChannelPermissions(channelID, [Permissions.READ_MESSAGE_HISTORY])
+  ) {
+    throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
+  }
+
   return RequestManager.put(
     endpoints.CHANNEL_MESSAGE_REACTION_ME(
       channelID,
@@ -114,6 +124,10 @@ export function removeUserReaction(
   reaction: string,
   userID: string,
 ) {
+  if (!botHasChannelPermissions(channelID, [Permissions.MANAGE_MESSAGES])) {
+    throw new Error(Errors.MISSING_MANAGE_MESSAGES);
+  }
+
   RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTION_USER(
       channelID,
