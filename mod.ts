@@ -14,6 +14,7 @@ export * from "./src/handlers/channel.ts";
 export * from "./src/handlers/guild.ts";
 export * from "./src/handlers/member.ts";
 export * from "./src/handlers/message.ts";
+export * from "./src/handlers/webhook.ts";
 
 export * from "./src/types/activity.ts";
 export * from "./src/types/cdn.ts";

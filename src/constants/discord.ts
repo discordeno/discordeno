@@ -87,6 +87,7 @@ export const endpoints = {
 
   WEBHOOK: (id: string, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}`,
+  WEBHOOK_ID: (id: string) => `${baseEndpoints.BASE_URL}/webhooks/${id}`,
 
   // User endpoints
   USER_AVATAR: (id: string, icon: string) =>

@@ -100,3 +100,7 @@ export async function executeWebhook(
 
   return createMessage(result as MessageCreateOptions);
 }
+
+export function getWebhook(webhookID: string) {
+  return RequestManager.get(endpoints.WEBHOOK_ID(webhookID))
+}
