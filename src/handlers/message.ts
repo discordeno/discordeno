@@ -75,6 +75,12 @@ export function addReaction(
     throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
   }
 
+  if (reaction.startsWith("<:")) {
+    reaction = reaction.substring(2, reaction.length - 1);
+  } else if (reaction.startsWith("<a:")) {
+    reaction = reaction.substring(3, reaction.length - 1);
+  }
+
   return RequestManager.put(
     endpoints.CHANNEL_MESSAGE_REACTION_ME(
       channelID,
