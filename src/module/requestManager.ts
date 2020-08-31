@@ -138,11 +138,10 @@ export const RequestManager = {
 };
 
 function createRequestBody(body: any, method: RequestMethod) {
-  const headers = {
+  const headers: { [key: string]: string } = {
     Authorization: authorization,
     "User-Agent":
       `DiscordBot (https://github.com/skillz4killz/discordeno, 6.0.0)`,
-    "Content-Type": "application/json",
     "X-Audit-Log-Reason": body ? encodeURIComponent(body.reason) : "",
   };
 
@@ -153,8 +152,8 @@ function createRequestBody(body: any, method: RequestMethod) {
     form.append("file", body.file.blob, body.file.name);
     form.append("payload_json", JSON.stringify({ ...body, file: undefined }));
     body.file = form;
-
-    delete headers["Content-Type"];
+  } else {
+    headers["Content-Type"] = "application/json";
   }
 
   return {
