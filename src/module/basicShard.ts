@@ -8,12 +8,12 @@ import {
   botGatewayData,
   IdentifyPayload,
 } from "./client.ts";
-import { delay } from "https://deno.land/std@0.61.0/async/delay.ts";
+import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
 import {
   connectWebSocket,
   isWebSocketCloseEvent,
   WebSocket,
-} from "https://deno.land/std@0.61.0/ws/mod.ts";
+} from "https://deno.land/std@0.67.0/ws/mod.ts";
 import { DiscordHeartbeatPayload } from "../types/discord.ts";
 import { logRed } from "../utils/logger.ts";
 import { handleDiscordPayload } from "./shardingManager.ts";

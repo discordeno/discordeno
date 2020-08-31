@@ -3,7 +3,7 @@ import {
   green,
   red,
   yellow,
-} from "https://deno.land/std@0.61.0/fmt/colors.ts";
+} from "https://deno.land/std@0.67.0/fmt/colors.ts";
 
 export const getTime = () => {
   const now = new Date();
