@@ -17,6 +17,7 @@ import {
   MessageContent,
   CreateInviteOptions,
   ChannelEditOptions,
+  FollowedChannelPayload,
 } from "../types/channel.ts";
 import { logYellow } from "../utils/logger.ts";
 
@@ -339,4 +340,25 @@ export function editChannel(channel: Channel, options: ChannelEditOptions) {
     endpoints.GUILD_CHANNEL(channel.id),
     payload,
   );
+}
+
+/** Follow a News Channel to send messages to a target channel. Requires the `MANAGE_WEBHOOKS` permission in the target channel. Returns the webhook id. */
+export async function followChannel(
+  sourceChannelID: string,
+  targetChannelID: string,
+) {
+  if (
+    !botHasChannelPermissions(targetChannelID, [Permissions.MANAGE_WEBHOOKS])
+  ) {
+    throw new Error(Errors.MISSING_MANAGE_CHANNELS);
+  }
+
+  const data = await RequestManager.post(
+    endpoints.CHANNEL_FOLLOW(sourceChannelID),
+    {
+      webhook_channel_id: targetChannelID,
+    },
+  ) as FollowedChannelPayload;
+
+  return data.webhook_id;
 }

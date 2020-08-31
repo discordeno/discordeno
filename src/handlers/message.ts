@@ -223,3 +223,11 @@ export async function editMessage(
   );
   return createMessage(result as MessageCreateOptions);
 }
+
+export async function publishMessage(channelID: string, messageID: string) {
+  const data = await RequestManager.post(
+    endpoints.CHANNEL_MESSAGE_CROSSPOST(channelID, messageID),
+  ) as MessageCreateOptions;
+
+  return createMessage(data);
+}

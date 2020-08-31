@@ -45,6 +45,10 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/channels/${id}/messages/${messageID}/reactions`,
   CHANNEL_MESSAGE_REACTION: (id: string, messageID: string, emoji: string) =>
     `${baseEndpoints.BASE_URL}/channels/${id}/messages/${messageID}/reactions/${emoji}`,
+  CHANNEL_FOLLOW: (id: string) =>
+    `${baseEndpoints.BASE_URL}/channels/${id}/followers`,
+  CHANNEL_MESSAGE_CROSSPOST: (id: string, messageID: string) =>
+    `${baseEndpoints.BASE_URL}/channels/${id}/messages/${messageID}/crosspost`,
 
   // Guild Endpoints
   GUILD: (id: string) => `${GUILDS_BASE(id)}`,

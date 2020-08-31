@@ -146,3 +146,10 @@ export interface CreateInviteOptions {
   /** If true, don't try to reuse a similar invite (useful for creating many unique one time use invites.) */
   unique: boolean;
 }
+
+export interface FollowedChannelPayload {
+  /** The source channel id */
+  channel_id: string;
+  /** The webhook id */
+  webhook_id: string;
+}
