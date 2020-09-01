@@ -20,7 +20,7 @@ export function createMessage(data: MessageCreateOptions) {
     guildID: guildID || "",
     mentionsEveryone,
     mentionRoles,
-    mentionChannels,
+    mentionChannels: mentionChannels || [],
     webhookID,
     messageReference,
     timestamp: Date.parse(data.timestamp),
