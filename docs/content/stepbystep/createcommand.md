@@ -12,8 +12,8 @@ Let's first start by taking an existing command and slightly modifying it to you
 
 ```ts
 import { botCache } from "../../mod.ts";
-import { sendMessage } from "https://x.nest.land/Discordeno@7.3.0/src/handlers/channel.ts";
-import { botID } from "https://x.nest.land/Discordeno@7.3.0/src/module/client.ts";
+import { sendMessage } from "https://x.nest.land/Discordeno@8.4.1/src/handlers/channel.ts";
+import { botID } from "https://x.nest.land/Discordeno@8.4.1/src/module/client.ts";
 
 botCache.commands.set("invite", {
   name: "invite",
@@ -122,7 +122,7 @@ Let's make a command that will allow guild admins to give or take roles from a m
 
 ```ts
 import { botCache } from "../../mod.ts";
-import { sendMessage } from "https://x.nest.land/Discordeno@7.3.0/src/handlers/channel.ts";
+import { sendMessage } from "https://x.nest.land/Discordeno@8.4.1/src/handlers/channel.ts";
 import { PermissionLevels } from "../types/commands.ts";
 import { createCommandAliases } from "../utils/helpers";
 

@@ -75,7 +75,7 @@ The permission options are the exact same from the commands guide. These options
 
 ```ts
 import { botCache } from "../../mod.ts";
-import { deleteMessage } from "https://x.nest.land/Discordeno@7.3.0/src/handlers/message.ts";
+import { deleteMessage } from "https://x.nest.land/Discordeno@8.4.1/src/handlers/message.ts";
 import { translate } from "../utils/i18next.ts";
 import { sendAlertResponse } from "../utils/helpers.ts";
 
