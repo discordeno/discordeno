@@ -394,7 +394,7 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
 
   return new Promise((resolve) => {
     requestAllMembers(guild, resolve, options);
-  });
+  }) as Promise<Collection<string, Member>>;
 }
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
