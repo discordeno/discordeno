@@ -28,6 +28,7 @@ import {
   PruneOptions,
   PrunePayload,
   ChannelCreateOptions,
+  BannedUser,
 } from "../types/guild.ts";
 import { RoleData } from "../types/role.ts";
 import { createRole } from "../structures/role.ts";
@@ -491,13 +492,20 @@ export function syncIntegration(guildID: string, id: string) {
 }
 
 /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
-export function getBans(guildID: string) {
+export async function getBans(guildID: string) {
   if (
     !botHasPermission(guildID, [Permissions.BAN_MEMBERS])
   ) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
-  return RequestManager.get(endpoints.GUILD_BANS(guildID));
+
+  const results = await RequestManager.get(
+    endpoints.GUILD_BANS(guildID),
+  ) as BannedUser[];
+
+  return new Collection<string, BannedUser>(
+    results.map((res) => [res.user.id, res]),
+  );
 }
 
 /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires teh BAN_MEMBERS permission. */
