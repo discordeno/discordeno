@@ -171,7 +171,10 @@ export async function sendMessage(
 
   const result = await RequestManager.post(
     endpoints.CHANNEL_MESSAGES(channel.id),
-    content,
+    {
+      ...content,
+      allowed_mentions: content.mentions,
+    },
   );
 
   return createMessage(result as MessageCreateOptions);
