@@ -114,7 +114,7 @@ export function removeReaction(
   messageID: string,
   reaction: string,
 ) {
-  RequestManager.delete(
+  return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTION_ME(
       channelID,
       messageID,
@@ -134,7 +134,7 @@ export function removeUserReaction(
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
 
-  RequestManager.delete(
+  return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTION_USER(
       channelID,
       messageID,
@@ -151,7 +151,7 @@ export function removeAllReactions(channelID: string, messageID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
-  RequestManager.delete(
+  return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTIONS(channelID, messageID),
   );
 }
@@ -167,7 +167,7 @@ export function removeReactionEmoji(
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
-  RequestManager.delete(
+  return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTION(channelID, messageID, reaction),
   );
 }
