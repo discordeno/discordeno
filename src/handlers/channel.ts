@@ -145,7 +145,7 @@ export async function sendMessage(
 
   if (content.mentions) {
     if (content.mentions.users?.length) {
-      if (content.mentions.parse.includes("users")) {
+      if (content.mentions.parse?.includes("users")) {
         content.mentions.parse = content.mentions.parse.filter((p) =>
           p !== "users"
         );
@@ -157,7 +157,7 @@ export async function sendMessage(
     }
 
     if (content.mentions.roles?.length) {
-      if (content.mentions.parse.includes("roles")) {
+      if (content.mentions.parse?.includes("roles")) {
         content.mentions.parse = content.mentions.parse.filter((p) =>
           p !== "roles"
         );
