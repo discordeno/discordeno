@@ -17,19 +17,32 @@ import { createChannel } from "../structures/channel.ts";
 import { EditMemberOptions } from "../types/member.ts";
 import { sendMessage } from "./channel.ts";
 
+/** The users custom avatar or the default avatar if you don't have a member object. */
+export function rawAvatarURL(
+  userID: string,
+  discriminator: string,
+  avatar?: string | null,
+  size: ImageSize = 128,
+  format?: ImageFormats,
+) {
+  return avatar
+    ? formatImageURL(endpoints.USER_AVATAR(userID, avatar), size, format)
+    : endpoints.USER_DEFAULT_AVATAR(Number(discriminator) % 5);
+}
+
 /** The users custom avatar or the default avatar */
 export function avatarURL(
   member: Member,
   size: ImageSize = 128,
   format?: ImageFormats,
 ) {
-  return member.user.avatar
-    ? formatImageURL(
-      endpoints.USER_AVATAR(member.user.id, member.user.avatar),
-      size,
-      format,
-    )
-    : endpoints.USER_DEFAULT_AVATAR(Number(member.user.discriminator) % 5);
+  return rawAvatarURL(
+    member.user.id,
+    member.user.discriminator,
+    member.user.avatar,
+    size,
+    format,
+  );
 }
 
 /** Add a role to the member */
