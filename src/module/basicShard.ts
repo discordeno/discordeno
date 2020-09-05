@@ -33,6 +33,7 @@ export interface BasicShard {
 
 const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
 let processQueue = false;
+let heartbeating = false;
 
 interface RequestMemberQueuedRequest {
   guildID: string;
@@ -73,7 +74,7 @@ export async function createBasicShard(
       if (!data.t) eventHandlers.rawGateway?.(data);
       switch (data.op) {
         case GatewayOpcode.Hello:
-          if (!resuming) {
+          if (!heartbeating) {
             heartbeat(
               basicShard,
               (data.d as DiscordHeartbeatPayload).heartbeat_interval,
@@ -190,7 +191,12 @@ async function heartbeat(
   shard: BasicShard,
   interval: number,
 ) {
-  if (shard.socket.isClosed) return;
+  if (shard.socket.isClosed) {
+    heartbeating = false;
+    return;
+  }
+
+  if (!heartbeating) heartbeating = true;
 
   shard.socket.send(
     JSON.stringify(
