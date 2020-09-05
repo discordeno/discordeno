@@ -29,6 +29,7 @@ import {
   PrunePayload,
   ChannelCreateOptions,
   BannedUser,
+  UserPayload,
 } from "../types/guild.ts";
 import { RoleData } from "../types/role.ts";
 import { createRole } from "../structures/role.ts";
@@ -621,4 +622,9 @@ export function getWebhooks(guildID: string) {
   }
 
   return RequestManager.get(endpoints.GUILD_WEBHOOKS(guildID));
+}
+
+/** This function will return the raw user payload in the rare cases you need to fetch a user directly from the API. */
+export function getUser(userID: string) {
+  return RequestManager.get(endpoints.USER(userID)) as Promise<UserPayload>;
 }
