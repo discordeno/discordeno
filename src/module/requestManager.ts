@@ -155,7 +155,9 @@ function createRequestBody(body: any, method: RequestMethod) {
     form.append("file", body.file.blob, body.file.name);
     form.append("payload_json", JSON.stringify({ ...body, file: undefined }));
     body.file = form;
-  } else if (body) {
+  } else if (
+    body && ![RequestMethod.Get, RequestMethod.Delete].includes(method)
+  ) {
     headers["Content-Type"] = "application/json";
   }
 
