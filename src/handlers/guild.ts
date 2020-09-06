@@ -509,6 +509,19 @@ export async function getBans(guildID: string) {
   );
 }
 
+/** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
+export function getBan(guildID: string, memberID: string) {
+  if (
+    !botHasPermission(guildID, [Permissions.BAN_MEMBERS])
+  ) {
+    throw new Error(Errors.MISSING_BAN_MEMBERS);
+  }
+
+  return RequestManager.get(
+    endpoints.GUILD_BAN(guildID, memberID),
+  ) as Promise<BannedUser>;
+}
+
 /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires teh BAN_MEMBERS permission. */
 export function ban(guildID: string, id: string, options: BanOptions) {
   if (
