@@ -142,17 +142,20 @@ function createRequestBody(body: any, method: RequestMethod) {
     Authorization: authorization,
     "User-Agent":
       `DiscordBot (https://github.com/skillz4killz/discordeno, 6.0.0)`,
-    "X-Audit-Log-Reason": body ? encodeURIComponent(body.reason) : "",
   };
 
   if (method === "get") body = undefined;
+
+  if (body?.reason) {
+    headers["X-Audit-Log-Reason"] = encodeURIComponent(body.reason);
+  }
 
   if (body?.file) {
     const form = new FormData();
     form.append("file", body.file.blob, body.file.name);
     form.append("payload_json", JSON.stringify({ ...body, file: undefined }));
     body.file = form;
-  } else {
+  } else if (body) {
     headers["Content-Type"] = "application/json";
   }
 
@@ -283,6 +286,7 @@ function handleStatusCode(response: Response) {
     return true;
   }
 
+  console.error(response);
   logRed(response);
 
   switch (status) {
