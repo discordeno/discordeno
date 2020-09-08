@@ -109,11 +109,11 @@ export async function createGuildChannel(
       permission_overwrites: options?.permission_overwrites?.map((perm) => ({
         ...perm,
         allow: perm.allow.reduce(
-          (bits, p) => bits & BigInt(Permissions[p]),
+          (bits, p) => bits |= BigInt(Permissions[p]),
           BigInt(0),
         ).toString(),
         deny: perm.deny.reduce(
-          (bits, p) => bits & BigInt(Permissions[p]),
+          (bits, p) => bits |= BigInt(Permissions[p]),
           BigInt(0),
         ).toString(),
       })),
