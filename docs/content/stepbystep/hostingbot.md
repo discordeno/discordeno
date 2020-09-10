@@ -4,7 +4,7 @@ metaTitle: "Hosting Your Bot | Discordeno"
 metaDescription: "Let's create our very own bot with Discordeno!"
 ---
 
-Once you feel that you are ready to get your bot to stay online 24/7, follow the guide below. This guide, is going to use Hyper Expert as our hosting provider. You can use any you wish, but I recommend using Hyper Expert for the following reasons.
+Once you feel that you are ready to get your bot to stay online 24/7, follow the guide below. This guide, is going to use [Hyper Expert](https://p.hyper.expert/aff.php?aff=125) as our hosting provider. You can use any you wish, but I recommend using [Hyper Expert](https://p.hyper.expert/aff.php?aff=125) for the following reasons.
 
 - I host all my bots on it. That's currently 6 bots with over 2 million users and 10K servers. They could grow to another 3-5 times their current size without issues.
 - Launch a high performance server in seconds.
@@ -21,7 +21,7 @@ For most people, this is where you are going to want to be.
 
 ### Buying The VPS
 
-Go to the [Hyper Expert Website](p.hyper.expert/aff.php?aff=125) and get a VPS of your choice. Depending on your needs, you can choose a larger more powerful VPS, but I recommend starting out with the base model and then raise it when you need to.
+Go to the [Hyper Expert Website](https://p.hyper.expert/aff.php?aff=125) and get a VPS of your choice. Depending on your needs, you can choose a larger more powerful VPS, but I recommend starting out with the base model and then raise it when you need to.
 
 ### Setting Up The VPS
 
