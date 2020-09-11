@@ -21,6 +21,7 @@ import { FetchMembersOptions } from "../types/guild.ts";
 import { BotStatusRequest } from "../utils/utils.ts";
 
 const basicShards = new Map<number, BasicShard>();
+const heartbeating = new Set<number>();
 
 export interface BasicShard {
   id: number;
@@ -33,7 +34,6 @@ export interface BasicShard {
 
 const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
 let processQueue = false;
-let heartbeating = false;
 
 interface RequestMemberQueuedRequest {
   guildID: string;
@@ -74,7 +74,7 @@ export async function createBasicShard(
       if (!data.t) eventHandlers.rawGateway?.(data);
       switch (data.op) {
         case GatewayOpcode.Hello:
-          if (!heartbeating) {
+          if (!heartbeating.has(basicShard.id)) {
             heartbeat(
               basicShard,
               (data.d as DiscordHeartbeatPayload).heartbeat_interval,
@@ -86,7 +86,7 @@ export async function createBasicShard(
             { type: "reconnect", data: { shardID: basicShard.id } },
           );
           basicShard.needToResume = true;
-          resumeConnection(botGatewayData, identifyPayload);
+          resumeConnection(botGatewayData, identifyPayload, basicShard.id);
           break;
         case GatewayOpcode.InvalidSession:
           eventHandlers.debug?.(
@@ -98,7 +98,7 @@ export async function createBasicShard(
             break;
           }
           basicShard.needToResume = true;
-          resumeConnection(botGatewayData, identifyPayload);
+          resumeConnection(botGatewayData, identifyPayload, basicShard.id);
           break;
         default:
           if (data.t === "RESUMED") {
@@ -150,7 +150,7 @@ export async function createBasicShard(
         createBasicShard(botGatewayData, identifyPayload, false, shardID);
       } else {
         basicShard.needToResume = true;
-        resumeConnection(botGatewayData, identifyPayload);
+        resumeConnection(botGatewayData, identifyPayload, basicShard.id);
       }
     }
   }
@@ -165,6 +165,7 @@ function identify(shard: BasicShard, payload: IdentifyPayload) {
       },
     },
   );
+
   return shard.socket.send(
     JSON.stringify(
       {
@@ -192,11 +193,11 @@ async function heartbeat(
   interval: number,
 ) {
   if (shard.socket.isClosed) {
-    heartbeating = false;
+    heartbeating.delete(shard.id);
     return;
   }
 
-  if (!heartbeating) heartbeating = true;
+  if (!heartbeating.has(shard.id)) heartbeating.add(shard.id);
 
   shard.socket.send(
     JSON.stringify(
@@ -220,11 +221,12 @@ async function heartbeat(
 async function resumeConnection(
   botGatewayData: DiscordBotGatewayData,
   payload: IdentifyPayload,
+  shardID: number,
 ) {
-  const shard = basicShards.get(payload.shard[0]);
+  const shard = basicShards.get(shardID);
   if (!shard) {
     eventHandlers.debug?.(
-      { type: "missingShard", data: { shardID: payload.shard[0] } },
+      { type: "missingShard", data: { shardID: shardID } },
     );
     return;
   }
@@ -236,7 +238,7 @@ async function resumeConnection(
   createBasicShard(botGatewayData, payload, true, shard.id);
   // Then retry every 15 seconds
   await delay(1000 * 15);
-  if (shard.needToResume) resumeConnection(botGatewayData, payload);
+  if (shard.needToResume) resumeConnection(botGatewayData, payload, shardID);
 }
 
 export function requestGuildMembers(
@@ -294,6 +296,15 @@ async function processGatewayQueue() {
     // 2 events per second is the rate limit.
     const request = RequestMembersQueue[index];
     if (request) {
+      eventHandlers.debug?.(
+        {
+          type: "requestMembersProcessing",
+          data: {
+            remaining: RequestMembersQueue.length,
+            request,
+          },
+        },
+      );
       requestGuildMembers(
         request.guildID,
         request.shardID,
@@ -309,9 +320,18 @@ async function processGatewayQueue() {
       );
       const secondRequest = RequestMembersQueue[secondIndex];
       if (secondRequest) {
+        eventHandlers.debug?.(
+          {
+            type: "requestMembersProcessing",
+            data: {
+              remaining: RequestMembersQueue.length,
+              request,
+            },
+          },
+        );
         requestGuildMembers(
-          request.guildID,
-          request.shardID,
+          secondRequest.guildID,
+          secondRequest.shardID,
           secondRequest.nonce,
           secondRequest.options,
           true,
@@ -324,15 +344,6 @@ async function processGatewayQueue() {
 
   await delay(1500);
 
-  eventHandlers.debug?.(
-    {
-      type: "requestMembersProcessing",
-      data: {
-        remaining: RequestMembersQueue.length,
-        first: RequestMembersQueue[0],
-      },
-    },
-  );
   processGatewayQueue();
 }
 

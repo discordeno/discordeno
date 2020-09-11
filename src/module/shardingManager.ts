@@ -296,10 +296,11 @@ export async function handleDiscordPayload(
         guild.memberCount = memberCount;
 
         const member = guild.members.get(options.user.id);
-        return eventHandlers.guildMemberRemove?.(
+        eventHandlers.guildMemberRemove?.(
           guild,
           member || options.user,
         );
+        return guild.members.delete(options.user.id);
       }
 
       if (data.t === "GUILD_MEMBER_UPDATE") {
@@ -665,7 +666,7 @@ export async function requestAllMembers(
   resolve: Function,
   options?: FetchMembersOptions,
 ) {
-  const nonce = Math.random().toString();
+  const nonce = `${guild.id}-${Math.random().toString()}`;
   fetchAllMembersProcessingRequests.set(nonce, resolve);
 
   if (basicSharding) {
