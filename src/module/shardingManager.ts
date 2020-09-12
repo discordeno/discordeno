@@ -6,27 +6,17 @@ import {
   TypingStartPayload,
   VoiceStateUpdatePayload,
   WebhookUpdatePayload,
-  ReadyPayload,
 } from "../types/discord.ts";
 import {
   eventHandlers,
   botGatewayData,
   identifyPayload,
   botID,
-  setBotID,
   IdentifyPayload,
 } from "./client.ts";
 import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
-import {
-  handleInternalChannelCreate,
-  handleInternalChannelUpdate,
-  handleInternalChannelDelete,
-} from "../events/channels.ts";
-import { ChannelCreatePayload } from "../types/channel.ts";
 import { Guild } from "../structures/guild.ts";
 import {
-  CreateGuildPayload,
-  GuildDeletePayload,
   GuildBanPayload,
   GuildEmojisUpdatePayload,
   GuildMemberAddPayload,
@@ -36,12 +26,7 @@ import {
   UserPayload,
   FetchMembersOptions,
   GuildRoleDeletePayload,
-  UpdateGuildPayload,
 } from "../types/guild.ts";
-import {
-  handleInternalGuildCreate,
-  handleInternalGuildDelete,
-} from "../events/guilds.ts";
 import { cache } from "../utils/cache.ts";
 import {
   MessageCreateOptions,
@@ -51,7 +36,6 @@ import {
   BaseMessageReactionPayload,
   MessageReactionRemoveEmojiPayload,
 } from "../types/message.ts";
-import { GuildUpdateChange } from "../types/options.ts";
 import {
   createBasicShard,
   requestGuildMembers,
@@ -149,84 +133,6 @@ export async function handleDiscordPayload(
       if (!data.t) return;
       // Run the appropriate controller for this event.
       controllers[data.t]?.(data, shardID);
-
-      if (data.t === "GUILD_CREATE") {
-        const options = data.d as CreateGuildPayload;
-        // When shards resume they emit GUILD_CREATE again.
-        if (cache.guilds.has(options.id)) {
-          return;
-        }
-
-        const guild = structures.createGuild(
-          data.d as CreateGuildPayload,
-          shardID,
-        );
-        handleInternalGuildCreate(guild);
-        if (cache.unavailableGuilds.get(options.id)) {
-          cache.unavailableGuilds.delete(options.id);
-        }
-
-        if (!cache.isReady) return eventHandlers.guildLoaded?.(guild);
-        return eventHandlers.guildCreate?.(guild);
-      }
-
-      if (data.t === "GUILD_UPDATE") {
-        const options = data.d as UpdateGuildPayload;
-        const cachedGuild = cache.guilds.get(options.id);
-        if (!cachedGuild) return;
-
-        const keysToSkip = [
-          "roles",
-          "guild_hashes",
-          "guild_id",
-          "max_members",
-          "emojis",
-        ];
-        const changes = Object.entries(options)
-          .map(([key, value]) => {
-            if (keysToSkip.includes(key)) return;
-
-            // @ts-ignore
-            const cachedValue = cachedGuild[key];
-            if (cachedValue !== value) {
-              // Guild create sends undefined and update sends false.
-              if (!cachedValue && !value) return;
-
-              if (Array.isArray(cachedValue) && Array.isArray(value)) {
-                const different = (cachedValue.length !== value.length) ||
-                  cachedValue.find((val) => !value.includes(val)) ||
-                  value.find((val) => !cachedValue.includes(val));
-                if (!different) return;
-              }
-
-              // This will update the cached guild with the new values
-              // @ts-ignore
-              cachedGuild[key] = value;
-              return { key, oldValue: cachedValue, value };
-            }
-            return;
-          }).filter((change) => change) as GuildUpdateChange[];
-
-        return eventHandlers.guildUpdate?.(cachedGuild, changes);
-      }
-
-      if (data.t === "GUILD_DELETE") {
-        const options = data.d as GuildDeletePayload;
-        const guild = cache.guilds.get(options.id);
-        if (!guild) return;
-
-        guild.channels.forEach((channel) => cache.channels.delete(channel.id));
-        cache.messages.forEach((message) => {
-          if (message.guildID === guild.id) cache.messages.delete(message.id);
-        });
-
-        if (options.unavailable) {
-          return cache.unavailableGuilds.set(options.id, Date.now());
-        }
-
-        handleInternalGuildDelete(guild);
-        return eventHandlers.guildDelete?.(guild);
-      }
 
       if (data.t && ["GUILD_BAN_ADD", "GUILD_BAN_REMOVE"].includes(data.t)) {
         const options = data.d as GuildBanPayload;
