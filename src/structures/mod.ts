@@ -13,7 +13,7 @@ export let structures = {
   createRole,
 };
 
-export type Structures = typeof structures[keyof typeof structures];
+export type Structures = typeof structures;
 
 /** This function is used to update/reload/customize the internal structure of Discordeno.
  *

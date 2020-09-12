@@ -28,7 +28,20 @@ export interface DiscordPayload {
     | "GUILD_MEMBERS_CHUNK"
     | "GUILD_ROLE_CREATE"
     | "GUILD_ROLE_DELETE"
-    | "GUILD_ROLE_UPDATE";
+    | "GUILD_ROLE_UPDATE"
+    | "MESSAGE_CREATE"
+    | "MESSAGE_DELETE"
+    | "MESSAGE_DELETE_BULK"
+    | "MESSAGE_UPDATE"
+    | "MESSAGE_REACTION_ADD"
+    | "MESSAGE_REACTION_REMOVE"
+    | "MESSAGE_REACTION_REMOVE_ALL"
+    | "MESSAGE_REACTION_REMOVE_EMOJI"
+    | "PRESENCE_UPDATE"
+    | "TYPING_START"
+    | "USER_UPDATE"
+    | "VOICE_STATE_UPDATE"
+    | "WEBHOOKS_UPDATE";
 }
 
 export interface DiscordBotGatewayData {
