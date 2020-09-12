@@ -11,7 +11,14 @@ export interface DiscordPayload {
   /** The sequence number, used for resuming sessions and heartbeats. ONLY for OPCode 0 */
   s?: number;
   /** The event name for this payload. ONLY for OPCode 0 */
-  t?: string;
+  t?:
+    | "READY"
+    | "CHANNEL_CREATE"
+    | "CHANNEL_UPDATE"
+    | "CHANNEL_DELETE"
+    | "GUILD_CREATE"
+    | "GUILD_DELETE"
+    | "GUILD_UPDATE";
 }
 
 export interface DiscordBotGatewayData {

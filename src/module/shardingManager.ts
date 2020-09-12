@@ -59,6 +59,7 @@ import {
 } from "./basicShard.ts";
 import { BotStatusRequest } from "../utils/utils.ts";
 import { structures } from "../structures/mod.ts";
+import { controllers } from "../controllers/mod.ts";
 
 let shardCounter = 0;
 let basicSharding = false;
@@ -75,6 +76,11 @@ const fetchAllMembersProcessingRequests = new Map<
 >();
 const shards: Worker[] = [];
 let createNextShard = true;
+
+/** This function is meant to be used on the ready event to alert the library to start the next shard. */
+export function allowNextShard(enabled = true) {
+  createNextShard = enabled;
+}
 
 export function createShardWorker(shardID?: number) {
   const path = new URL("./shard.ts", import.meta.url).toString();
@@ -140,32 +146,9 @@ export async function handleDiscordPayload(
       // Incase the user wants to listen to heartbeat responses
       return eventHandlers.heartbeat?.();
     case GatewayOpcode.Dispatch:
-      if (data.t === "READY") {
-        const payload = data.d as ReadyPayload;
-        setBotID(payload.user.id);
-        // Triggered on each shard
-        eventHandlers.shardReady?.(shardID);
-        if (payload.shard && shardID === payload.shard[1] - 1) {
-          // Wait 10 seconds to allow all guild create events to be processed
-          await delay(10000);
-          cache.isReady = true;
-          eventHandlers.ready?.();
-        }
-        // Wait 5 seconds to spawn next shard
-        await delay(5000);
-        createNextShard = true;
-      }
-
-      if (data.t === "CHANNEL_CREATE") {
-        return handleInternalChannelCreate(data.d as ChannelCreatePayload);
-      }
-
-      if (data.t === "CHANNEL_UPDATE") {
-        return handleInternalChannelUpdate(data.d as ChannelCreatePayload);
-      }
-      if (data.t === "CHANNEL_DELETE") {
-        return handleInternalChannelDelete(data.d as ChannelCreatePayload);
-      }
+      if (!data.t) return;
+      // Run the appropriate controller for this event.
+      controllers[data.t]?.(data, shardID);
 
       if (data.t === "GUILD_CREATE") {
         const options = data.d as CreateGuildPayload;

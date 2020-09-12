@@ -61,5 +61,5 @@ export function updateEventHandlers(newEventHandlers: EventHandlers) {
 }
 
 export function setBotID(id: string) {
-  botID = id;
+  if (botID !== id) botID = id;
 }
