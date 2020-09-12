@@ -134,18 +134,6 @@ export async function handleDiscordPayload(
       // Run the appropriate controller for this event.
       controllers[data.t]?.(data, shardID);
 
-      if (data.t && ["GUILD_BAN_ADD", "GUILD_BAN_REMOVE"].includes(data.t)) {
-        const options = data.d as GuildBanPayload;
-        const guild = cache.guilds.get(options.guild_id);
-        if (!guild) return;
-
-        const member = guild.members.get(options.user.id);
-
-        return data.t === "GUILD_BAN_ADD"
-          ? eventHandlers.guildBanAdd?.(guild, member || options.user)
-          : eventHandlers.guildBanRemove?.(guild, member || options.user);
-      }
-
       if (data.t === "GUILD_EMOJIS_UPDATE") {
         const options = data.d as GuildEmojisUpdatePayload;
         const guild = cache.guilds.get(options.guild_id);

@@ -1,4 +1,8 @@
 import {
+  handleInternalGuildBanAdd,
+  handleInternalGuildBanRemove,
+} from "./bans.ts";
+import {
   handleInternalChannelCreate,
   handleInternalChannelDelete,
   handleInternalChannelUpdate,
@@ -18,4 +22,6 @@ export let controllers = {
   GUILD_CREATE: handleInternalGuildCreate,
   GUILD_DELETE: handleInternalGuildDelete,
   GUILD_UPDATE: handleInternalGuildUpdate,
+  GUILD_BAN_ADD: handleInternalGuildBanAdd,
+  GUILD_BAN_REMOVE: handleInternalGuildBanRemove,
 };

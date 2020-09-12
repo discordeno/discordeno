@@ -18,7 +18,9 @@ export interface DiscordPayload {
     | "CHANNEL_DELETE"
     | "GUILD_CREATE"
     | "GUILD_DELETE"
-    | "GUILD_UPDATE";
+    | "GUILD_UPDATE"
+    | "GUILD_BAN_ADD"
+    | "GUILD_BAN_REMOVE";
 }
 
 export interface DiscordBotGatewayData {
