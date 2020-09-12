@@ -78,8 +78,11 @@ export let controllers = {
   WEBHOOKS_UPDATE: handleInternalWebhooksUpdate,
 };
 
-export type Controllers = typeof controllers
+export type Controllers = typeof controllers;
 
 export function updateControllers(newControllers: Controllers) {
-  controllers = newControllers
+  controllers = {
+    ...controllers,
+    ...newControllers,
+  };
 }
