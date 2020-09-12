@@ -1,4 +1,4 @@
-import { Message, createMessage } from "../structures/message.ts";
+import { Message } from "../structures/message.ts";
 import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
 import { botID } from "../module/client.ts";
 import { Permissions } from "../types/permission.ts";
@@ -9,6 +9,7 @@ import { botHasChannelPermissions } from "../utils/permissions.ts";
 import { MessageContent } from "../types/channel.ts";
 import { UserPayload } from "../types/guild.ts";
 import { MessageCreateOptions } from "../types/message.ts";
+import { structures } from "../structures/mod.ts";
 
 /** Delete a message */
 export async function deleteMessage(
@@ -221,7 +222,7 @@ export async function editMessage(
     endpoints.CHANNEL_MESSAGE(message.channelID, message.id),
     content,
   );
-  return createMessage(result as MessageCreateOptions);
+  return structures.createMessage(result as MessageCreateOptions);
 }
 
 export async function publishMessage(channelID: string, messageID: string) {
@@ -229,5 +230,5 @@ export async function publishMessage(channelID: string, messageID: string) {
     endpoints.CHANNEL_MESSAGE_CROSSPOST(channelID, messageID),
   ) as MessageCreateOptions;
 
-  return createMessage(data);
+  return structures.createMessage(data);
 }

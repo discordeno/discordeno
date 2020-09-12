@@ -13,9 +13,9 @@ import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { MessageContent, DMChannelCreatePayload } from "../types/channel.ts";
 import { cache } from "../utils/cache.ts";
-import { createChannel } from "../structures/channel.ts";
 import { EditMemberOptions } from "../types/member.ts";
 import { sendMessage } from "./channel.ts";
+import { structures } from "../structures/mod.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
 export function rawAvatarURL(
@@ -108,7 +108,7 @@ export async function sendDirectMessage(
     ) as DMChannelCreatePayload;
     // Channel create event will have added this channel to the cache
     cache.channels.delete(dmChannelData.id);
-    const channel = createChannel(dmChannelData);
+    const channel = structures.createChannel(dmChannelData);
     // Recreate the channel and add it undert he users id
     cache.channels.set(memberID, channel);
     dmChannel = channel;

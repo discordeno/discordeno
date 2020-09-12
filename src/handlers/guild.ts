@@ -1,13 +1,8 @@
 import { Guild } from "../structures/guild.ts";
-import { createChannel } from "../structures/channel.ts";
-
 import { formatImageURL } from "../utils/cdn.ts";
 import { botHasPermission } from "../utils/permissions.ts";
-
 import { RequestManager } from "../module/requestManager.ts";
-
 import { endpoints } from "../constants/discord.ts";
-
 import { Errors } from "../types/errors.ts";
 import { Permissions, Permission } from "../types/permission.ts";
 import {
@@ -32,15 +27,15 @@ import {
   UserPayload,
 } from "../types/guild.ts";
 import { RoleData } from "../types/role.ts";
-import { createRole } from "../structures/role.ts";
 import { Intents } from "../types/options.ts";
 import { identifyPayload } from "../module/client.ts";
 import { requestAllMembers } from "../module/shardingManager.ts";
 import { MemberCreatePayload } from "../types/member.ts";
 import { cache } from "../utils/cache.ts";
-import { createMember, Member } from "../structures/member.ts";
+import { Member } from "../structures/member.ts";
 import { urlToBase64 } from "../utils/utils.ts";
 import { Collection } from "../utils/collection.ts";
+import { structures } from "../structures/mod.ts";
 
 /** Gets an array of all the channels ids that are the children of this category. */
 export function categoryChildrenIDs(guild: Guild, id: string) {
@@ -120,7 +115,7 @@ export async function createGuildChannel(
       type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
 
-  const channel = createChannel(result);
+  const channel = structures.createChannel(result);
   guild.channels.set(result.id, channel);
   return channel;
 }
@@ -147,7 +142,7 @@ export async function getChannels(guildID: string, addToCache = true) {
     endpoints.GUILD_CHANNELS(guildID),
   ) as ChannelCreatePayload[];
   return result.map((res) => {
-    const channel = createChannel(res, guildID);
+    const channel = structures.createChannel(res, guildID);
     if (addToCache) {
       cache.channels.set(channel.id, channel);
     }
@@ -163,7 +158,7 @@ export async function getChannel(channelID: string, addToCache = true) {
   const result = await RequestManager.get(
     endpoints.GUILD_CHANNEL(channelID),
   ) as ChannelCreatePayload;
-  const channel = createChannel(result, result.guild_id);
+  const channel = structures.createChannel(result, result.guild_id);
   if (addToCache) cache.channels.set(channel.id, channel);
   return channel;
 }
@@ -194,7 +189,7 @@ export async function getMember(guildID: string, id: string) {
     endpoints.GUILD_MEMBER(guildID, id),
   ) as MemberCreatePayload;
 
-  const member = createMember(data, guild);
+  const member = structures.createMember(data, guild);
   guild.members.set(id, member);
   return member;
 }
@@ -300,7 +295,7 @@ export async function createGuildRole(
   );
 
   const roleData = result as RoleData;
-  const role = createRole(roleData);
+  const role = structures.createRole(roleData);
   const guild = cache.guilds.get(guildID);
   guild?.roles.set(role.id, role);
   return role;

@@ -23,7 +23,7 @@ import {
   handleInternalChannelDelete,
 } from "../events/channels.ts";
 import { ChannelCreatePayload } from "../types/channel.ts";
-import { createGuild, Guild } from "../structures/guild.ts";
+import { Guild } from "../structures/guild.ts";
 import {
   CreateGuildPayload,
   GuildDeletePayload,
@@ -43,8 +43,6 @@ import {
   handleInternalGuildDelete,
 } from "../events/guilds.ts";
 import { cache } from "../utils/cache.ts";
-import { createMember } from "../structures/member.ts";
-import { createRole } from "../structures/role.ts";
 import {
   MessageCreateOptions,
   MessageDeletePayload,
@@ -53,7 +51,6 @@ import {
   BaseMessageReactionPayload,
   MessageReactionRemoveEmojiPayload,
 } from "../types/message.ts";
-import { createMessage } from "../structures/message.ts";
 import { GuildUpdateChange } from "../types/options.ts";
 import {
   createBasicShard,
@@ -61,6 +58,7 @@ import {
   botGatewayStatusRequest,
 } from "./basicShard.ts";
 import { BotStatusRequest } from "../utils/utils.ts";
+import { structures } from "../structures/mod.ts";
 
 let shardCounter = 0;
 let basicSharding = false;
@@ -176,7 +174,10 @@ export async function handleDiscordPayload(
           return;
         }
 
-        const guild = createGuild(data.d as CreateGuildPayload, shardID);
+        const guild = structures.createGuild(
+          data.d as CreateGuildPayload,
+          shardID,
+        );
         handleInternalGuildCreate(guild);
         if (cache.unavailableGuilds.get(options.id)) {
           cache.unavailableGuilds.delete(options.id);
@@ -278,7 +279,7 @@ export async function handleDiscordPayload(
 
         const memberCount = guild.memberCount + 1;
         guild.memberCount = memberCount;
-        const member = createMember(
+        const member = structures.createMember(
           options,
           guild,
         );
@@ -318,7 +319,7 @@ export async function handleDiscordPayload(
           deaf: cachedMember?.deaf || false,
           mute: cachedMember?.mute || false,
         };
-        const member = createMember(
+        const member = structures.createMember(
           newMemberData,
           guild,
         );
@@ -357,7 +358,7 @@ export async function handleDiscordPayload(
         options.members.forEach((member) => {
           guild.members.set(
             member.user.id,
-            createMember(
+            structures.createMember(
               member,
               guild,
             ),
@@ -398,7 +399,7 @@ export async function handleDiscordPayload(
         if (!guild) return;
 
         if (data.t === "GUILD_ROLE_CREATE") {
-          const role = createRole(options.role);
+          const role = structures.createRole(options.role);
           const roles = guild.roles.set(options.role.id, role);
           guild.roles = roles;
           return eventHandlers.roleCreate?.(guild, role);
@@ -408,7 +409,7 @@ export async function handleDiscordPayload(
         if (!cachedRole) return;
 
         if (data.t === "GUILD_ROLE_UPDATE") {
-          const role = createRole(options.role);
+          const role = structures.createRole(options.role);
           return eventHandlers.roleUpdate?.(guild, role, cachedRole);
         }
       }
@@ -418,7 +419,7 @@ export async function handleDiscordPayload(
         const channel = cache.channels.get(options.channel_id);
         if (channel) channel.lastMessageID = options.id;
 
-        const message = createMessage(options);
+        const message = structures.createMessage(options);
         // Cache the message
         cache.messages.set(options.id, message);
         const guild = options.guild_id
@@ -429,7 +430,7 @@ export async function handleDiscordPayload(
           // If in a guild cache the author as a member
           guild?.members.set(
             options.author.id,
-            createMember(
+            structures.createMember(
               { ...options.member, user: options.author },
               guild,
             ),
@@ -441,7 +442,10 @@ export async function handleDiscordPayload(
           if (mention.member) {
             guild?.members.set(
               mention.id,
-              createMember({ ...mention.member, user: mention }, guild),
+              structures.createMember(
+                { ...mention.member, user: mention },
+                guild,
+              ),
             );
           }
         });
@@ -533,7 +537,7 @@ export async function handleDiscordPayload(
           const guild = cache.guilds.get(options.guild_id);
           guild?.members.set(
             options.member.user.id,
-            createMember(
+            structures.createMember(
               options.member,
               guild,
             ),
@@ -608,7 +612,9 @@ export async function handleDiscordPayload(
         if (!guild) return;
 
         const member = guild.members.get(payload.user_id) ||
-          (payload.member ? createMember(payload.member, guild) : undefined);
+          (payload.member
+            ? structures.createMember(payload.member, guild)
+            : undefined);
         if (!member) return;
 
         // No cached state before so lets make one for em

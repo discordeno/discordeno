@@ -1,10 +1,9 @@
 import { CreateGuildPayload } from "../types/guild.ts";
 import { Collection } from "../utils/collection.ts";
-import { createRole } from "./role.ts";
-import { createMember, Member } from "./member.ts";
-import { createChannel } from "./channel.ts";
+import { structures } from "./mod.ts";
+import { Member } from "./member.ts";
 
-export const createGuild = (data: CreateGuildPayload, shardID: number) => {
+export function createGuild(data: CreateGuildPayload, shardID: number) {
   const {
     owner_id: ownerID,
     afk_channel_id: afkChannelID,
@@ -60,14 +59,16 @@ export const createGuild = (data: CreateGuildPayload, shardID: number) => {
     preferredLocale,
 
     /** The roles in the guild */
-    roles: new Collection(data.roles.map((r) => [r.id, createRole(r)])),
+    roles: new Collection(
+      data.roles.map((r) => [r.id, structures.createRole(r)]),
+    ),
     /** When this guild was joined at. */
     joinedAt: Date.parse(joinedAt),
     /** The users in this guild. */
     members: new Collection<string, Member>(),
     /** The channels in the guild */
     channels: new Collection(
-      data.channels.map((c) => [c.id, createChannel(c, data.id)]),
+      data.channels.map((c) => [c.id, structures.createChannel(c, data.id)]),
     ),
     /** The presences of all the users in the guild. */
     presences: new Collection(data.presences.map((p) => [p.user.id, p])),
@@ -87,10 +88,10 @@ export const createGuild = (data: CreateGuildPayload, shardID: number) => {
   };
 
   data.members.forEach((m) =>
-    guild.members.set(m.user.id, createMember(m, guild))
+    guild.members.set(m.user.id, structures.createMember(m, guild))
   );
 
   return guild;
-};
+}
 
 export interface Guild extends ReturnType<typeof createGuild> {}

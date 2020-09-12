@@ -8,7 +8,6 @@ import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { endpoints } from "../constants/discord.ts";
 import { MessageCreateOptions } from "../types/message.ts";
-import { createMessage } from "../structures/message.ts";
 import {
   GetMessagesAfter,
   GetMessagesBefore,
@@ -20,6 +19,7 @@ import {
   FollowedChannelPayload,
 } from "../types/channel.ts";
 import { logYellow } from "../utils/logger.ts";
+import { structures } from "../structures/mod.ts";
 
 /** Checks if a user id or a role id has permission in this channel */
 export function hasChannelPermission(
@@ -63,7 +63,7 @@ export async function getMessage(channel: Channel, id: string) {
   const result = await RequestManager.get(
     endpoints.CHANNEL_MESSAGE(channel.id, id),
   ) as MessageCreateOptions;
-  return createMessage(result);
+  return structures.createMessage(result);
 }
 
 /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
@@ -97,7 +97,7 @@ export async function getMessages(
     endpoints.CHANNEL_MESSAGES(channel.id),
     options,
   )) as MessageCreateOptions[];
-  return result.map((res) => createMessage(res));
+  return result.map((res) => structures.createMessage(res));
 }
 
 /** Get pinned messages in this channel. */
@@ -105,7 +105,7 @@ export async function getPins(channelID: string) {
   const result = (await RequestManager.get(
     endpoints.CHANNEL_PINS(channelID),
   )) as MessageCreateOptions[];
-  return result.map((res) => createMessage(res));
+  return result.map((res) => structures.createMessage(res));
 }
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
@@ -177,7 +177,7 @@ export async function sendMessage(
     },
   );
 
-  return createMessage(result as MessageCreateOptions);
+  return structures.createMessage(result as MessageCreateOptions);
 }
 
 /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */

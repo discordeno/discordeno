@@ -1,10 +1,10 @@
 import { cache } from "../utils/cache.ts";
 import { ChannelCreatePayload, ChannelTypes } from "../types/channel.ts";
-import { createChannel } from "../structures/channel.ts";
 import { eventHandlers } from "../module/client.ts";
+import { structures } from "../structures/mod.ts";
 
 export const handleInternalChannelCreate = (data: ChannelCreatePayload) => {
-  const channel = createChannel(data);
+  const channel = structures.createChannel(data);
   cache.channels.set(channel.id, channel);
   if (channel.guildID) {
     const guild = cache.guilds.get(channel.guildID);
@@ -15,7 +15,7 @@ export const handleInternalChannelCreate = (data: ChannelCreatePayload) => {
 
 export const handleInternalChannelUpdate = (data: ChannelCreatePayload) => {
   const cachedChannel = cache.channels.get(data.id);
-  const channel = createChannel(data);
+  const channel = structures.createChannel(data);
   cache.channels.set(channel.id, channel);
   if (!cachedChannel) return;
 
