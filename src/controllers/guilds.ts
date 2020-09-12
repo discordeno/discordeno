@@ -1,6 +1,11 @@
 import { cache } from "../utils/cache.ts";
 import { DiscordPayload } from "../types/discord.ts";
-import { CreateGuildPayload, GuildDeletePayload, UpdateGuildPayload } from "../types/guild.ts";
+import {
+  CreateGuildPayload,
+  GuildDeletePayload,
+  GuildEmojisUpdatePayload,
+  UpdateGuildPayload,
+} from "../types/guild.ts";
 import { structures } from "../structures/mod.ts";
 import { eventHandlers } from "../module/client.ts";
 import { GuildUpdateChange } from "../types/options.ts";
@@ -45,7 +50,6 @@ export function handleInternalGuildDelete(data: DiscordPayload) {
   if (payload.unavailable) {
     return cache.unavailableGuilds.set(payload.id, Date.now());
   }
-
 
   const guild = cache.guilds.get(payload.id);
   if (!guild) return;
@@ -93,6 +97,21 @@ export function handleInternalGuildUpdate(data: DiscordPayload) {
     }).filter((change) => change) as GuildUpdateChange[];
 
   return eventHandlers.guildUpdate?.(cachedGuild, changes);
+}
 
-  
+export function handleInternalGuildEmojisUpdate(data: DiscordPayload) {
+  if (data.t !== "GUILD_EMOJIS_UPDATE") return;
+
+  const payload = data.d as GuildEmojisUpdatePayload;
+  const guild = cache.guilds.get(payload.guild_id);
+  if (!guild) return;
+
+  const cachedEmojis = guild.emojis;
+  guild.emojis = payload.emojis;
+
+  return eventHandlers.guildEmojisUpdate?.(
+    guild,
+    payload.emojis,
+    cachedEmojis,
+  );
 }

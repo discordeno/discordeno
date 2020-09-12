@@ -14,13 +14,21 @@ export interface DiscordPayload {
   t?:
     | "READY"
     | "CHANNEL_CREATE"
-    | "CHANNEL_UPDATE"
     | "CHANNEL_DELETE"
+    | "CHANNEL_UPDATE"
     | "GUILD_CREATE"
     | "GUILD_DELETE"
     | "GUILD_UPDATE"
     | "GUILD_BAN_ADD"
-    | "GUILD_BAN_REMOVE";
+    | "GUILD_BAN_REMOVE"
+    | "GUILD_EMOJIS_UPDATE"
+    | "GUILD_MEMBER_ADD"
+    | "GUILD_MEMBER_REMOVE"
+    | "GUILD_MEMBER_UPDATE"
+    | "GUILD_MEMBERS_CHUNK"
+    | "GUILD_ROLE_CREATE"
+    | "GUILD_ROLE_DELETE"
+    | "GUILD_ROLE_UPDATE";
 }
 
 export interface DiscordBotGatewayData {

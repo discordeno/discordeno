@@ -12,6 +12,7 @@ export interface CacheData {
   messages: Collection<string, Message>;
   unavailableGuilds: Collection<string, number>;
   presences: Collection<string, PresenceUpdatePayload>;
+  fetchAllMembersProcessingRequests: Collection<string, Function>;
 }
 
 export const cache: CacheData = {
@@ -21,6 +22,7 @@ export const cache: CacheData = {
   messages: new Collection(),
   unavailableGuilds: new Collection(),
   presences: new Collection(),
+  fetchAllMembersProcessingRequests: new Collection<string, Function>(),
 };
 
 async function cleanMessageCache() {

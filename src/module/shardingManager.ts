@@ -17,11 +17,6 @@ import {
 import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
 import { Guild } from "../structures/guild.ts";
 import {
-  GuildBanPayload,
-  GuildEmojisUpdatePayload,
-  GuildMemberAddPayload,
-  GuildMemberUpdatePayload,
-  GuildMemberChunkPayload,
   GuildRolePayload,
   UserPayload,
   FetchMembersOptions,
@@ -48,16 +43,6 @@ import { controllers } from "../controllers/mod.ts";
 let shardCounter = 0;
 let basicSharding = false;
 
-export interface FetchAllMembersRequest {
-  resolve: Function;
-  requestedMax: number;
-  receivedAmount: number;
-}
-
-const fetchAllMembersProcessingRequests = new Map<
-  string,
-  Function
->();
 const shards: Worker[] = [];
 let createNextShard = true;
 
@@ -133,163 +118,6 @@ export async function handleDiscordPayload(
       if (!data.t) return;
       // Run the appropriate controller for this event.
       controllers[data.t]?.(data, shardID);
-
-      if (data.t === "GUILD_EMOJIS_UPDATE") {
-        const options = data.d as GuildEmojisUpdatePayload;
-        const guild = cache.guilds.get(options.guild_id);
-        if (!guild) return;
-
-        const cachedEmojis = guild.emojis;
-        guild.emojis = options.emojis;
-
-        return eventHandlers.guildEmojisUpdate?.(
-          guild,
-          options.emojis,
-          cachedEmojis,
-        );
-      }
-
-      if (data.t === "GUILD_MEMBER_ADD") {
-        const options = data.d as GuildMemberAddPayload;
-        const guild = cache.guilds.get(options.guild_id);
-        if (!guild) return;
-
-        const memberCount = guild.memberCount + 1;
-        guild.memberCount = memberCount;
-        const member = structures.createMember(
-          options,
-          guild,
-        );
-        guild.members.set(options.user.id, member);
-
-        return eventHandlers.guildMemberAdd?.(guild, member);
-      }
-
-      if (data.t === "GUILD_MEMBER_REMOVE") {
-        const options = data.d as GuildBanPayload;
-        const guild = cache.guilds.get(options.guild_id);
-        if (!guild) return;
-
-        const memberCount = guild.memberCount - 1;
-        guild.memberCount = memberCount;
-
-        const member = guild.members.get(options.user.id);
-        eventHandlers.guildMemberRemove?.(
-          guild,
-          member || options.user,
-        );
-        return guild.members.delete(options.user.id);
-      }
-
-      if (data.t === "GUILD_MEMBER_UPDATE") {
-        const options = data.d as GuildMemberUpdatePayload;
-        const guild = cache.guilds.get(options.guild_id);
-        if (!guild) return;
-
-        const cachedMember = guild.members.get(options.user.id);
-
-        const newMemberData = {
-          ...options,
-          premium_since: options.premium_since || undefined,
-          joined_at: new Date(cachedMember?.joinedAt || Date.now())
-            .toISOString(),
-          deaf: cachedMember?.deaf || false,
-          mute: cachedMember?.mute || false,
-        };
-        const member = structures.createMember(
-          newMemberData,
-          guild,
-        );
-        guild.members.set(options.user.id, member);
-
-        if (cachedMember?.nick !== options.nick) {
-          eventHandlers.nicknameUpdate?.(
-            guild,
-            member,
-            options.nick,
-            cachedMember?.nick,
-          );
-        }
-        const roleIDs = cachedMember?.roles || [];
-
-        roleIDs.forEach((id) => {
-          if (!options.roles.includes(id)) {
-            eventHandlers.roleLost?.(guild, member, id);
-          }
-        });
-
-        options.roles.forEach((id) => {
-          if (!roleIDs.includes(id)) {
-            eventHandlers.roleGained?.(guild, member, id);
-          }
-        });
-
-        return eventHandlers.guildMemberUpdate?.(guild, member, cachedMember);
-      }
-
-      if (data.t === "GUILD_MEMBERS_CHUNK") {
-        const options = data.d as GuildMemberChunkPayload;
-        const guild = cache.guilds.get(options.guild_id);
-        if (!guild) return;
-
-        options.members.forEach((member) => {
-          guild.members.set(
-            member.user.id,
-            structures.createMember(
-              member,
-              guild,
-            ),
-          );
-        });
-
-        // Check if its necessary to resolve the fetchmembers promise for this chunk or if more chunks will be coming
-        if (
-          options.nonce
-        ) {
-          const resolve = fetchAllMembersProcessingRequests.get(options.nonce);
-          if (!resolve) return;
-
-          if (options.chunk_index + 1 === options.chunk_count) {
-            fetchAllMembersProcessingRequests.delete(options.nonce);
-            resolve(guild.members);
-          }
-        }
-      }
-
-      if (data.t === "GUILD_ROLE_DELETE") {
-        const options = data.d as GuildRoleDeletePayload;
-        const guild = cache.guilds.get(options.guild_id);
-        if (!guild) return;
-
-        const cachedRole = guild.roles.get(options.role_id)!;
-        guild.roles.delete(options.role_id);
-        return eventHandlers.roleDelete?.(guild, cachedRole);
-      }
-
-      if (
-        data.t &&
-        ["GUILD_ROLE_CREATE", "GUILD_ROLE_UPDATE"]
-          .includes(data.t)
-      ) {
-        const options = data.d as GuildRolePayload;
-        const guild = cache.guilds.get(options.guild_id);
-        if (!guild) return;
-
-        if (data.t === "GUILD_ROLE_CREATE") {
-          const role = structures.createRole(options.role);
-          const roles = guild.roles.set(options.role.id, role);
-          guild.roles = roles;
-          return eventHandlers.roleCreate?.(guild, role);
-        }
-
-        const cachedRole = guild.roles.get(options.role.id);
-        if (!cachedRole) return;
-
-        if (data.t === "GUILD_ROLE_UPDATE") {
-          const role = structures.createRole(options.role);
-          return eventHandlers.roleUpdate?.(guild, role, cachedRole);
-        }
-      }
 
       if (data.t === "MESSAGE_CREATE") {
         const options = data.d as MessageCreateOptions;
@@ -550,7 +378,7 @@ export async function requestAllMembers(
   options?: FetchMembersOptions,
 ) {
   const nonce = `${guild.id}-${Math.random().toString()}`;
-  fetchAllMembersProcessingRequests.set(nonce, resolve);
+  cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
 
   if (basicSharding) {
     return requestGuildMembers(guild.id, guild.shardID, nonce, options);
