@@ -75,17 +75,14 @@ Once the bot is started try `!help invite` again and you will see the change! ðŸ
 
 ## Command Aliases
 
-Now, let's make this a little bit easier. What if we wanted this command to also work with other names besides `invite`. For example, as a shortcut what if users could just type `!inv` or as an alias type `!join`. Let's go ahead and set that up. Go to the very last line of invite command file and type in `alias`. You will see a popup showing you an autocompleted version of `createCommandAliases`. Press enter and boom the magic is happening!
+Now, let's make this a little bit easier. What if we wanted this command to also work with other names besides `invite`. For example, as a shortcut what if users could just type `!inv` or as an alias type `!join`. Let's go ahead and set that up. Add a `aliases` property, I usually recommend under the name property. Aliases takes an array of strings that will be the names you would like to use as aliases.
 
-The createCommandAliases takes in two arguments. The first argument is always the command name. In this case it is `invite`. The second argument is the aliases you want to provide. Let's add in the two aliases we wanted.
+Let's add in the two aliases we wanted.
 
 ```ts
- `https://discordapp.com/oauth2/authorize?client_id=${botID}&scope=bot&permissions=68640`,
-    );
-  },
-});
-
-createCommandAliases('invite', ['inv', 'join'])
+  name: "invite",
+  aliases: ["inv", "join"],
+  description: "Like the bot? Use this link to add it to your server!"
 ```
 
 > **Note:** If you only want to add 1 alias, you can pass in a simple string instead of an array as well as the second argument.
@@ -128,6 +125,7 @@ import { createCommandAliases } from "../utils/helpers";
 
 botCache.commands.set("commandname", {
   name: "commandname",
+  aliases: [],
   dmOnly: false,
   guildOnly: false,
   nsfw: false,
@@ -174,7 +172,7 @@ For the purpose of this guide, we want our `role` comamnd to only be run in a se
 
 ## NSFW Option
 
-NSFW stands for **Not Safe For Work**. One of Discord's rules is that you enforce that NSFW content is sent only in NSFW channels. Discordeno has this built in. You simple tell Discordeno, that you want a command to be considered `nsfw` or not.
+NSFW stands for **Not Safe For Work**. One of Discord's rules is that you enforce that NSFW content is sent only in NSFW channels. Discordeno has this built in. You simply tell Discordeno, that you want a command to be considered `nsfw` or not.
 
 If this option is enabled, this command will only be able to be used in a `nsfw` channel on a server. Discord does not consider Direct Messages as nsfw safe!
 
