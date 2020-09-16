@@ -31,11 +31,11 @@ import { Intents } from "../types/options.ts";
 import { identifyPayload } from "../module/client.ts";
 import { requestAllMembers } from "../module/shardingManager.ts";
 import { MemberCreatePayload } from "../types/member.ts";
-import { cache } from "../utils/cache.ts";
 import { Member } from "../structures/member.ts";
 import { urlToBase64 } from "../utils/utils.ts";
 import { Collection } from "../utils/collection.ts";
 import { structures } from "../structures/mod.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
 
 /** Gets an array of all the channels ids that are the children of this category. */
 export function categoryChildrenIDs(guild: Guild, id: string) {
@@ -144,7 +144,7 @@ export async function getChannels(guildID: string, addToCache = true) {
   return result.map((res) => {
     const channel = structures.createChannel(res, guildID);
     if (addToCache) {
-      cache.channels.set(channel.id, channel);
+      cacheHandlers.set("channels", channel.id, channel);
     }
     return channel;
   });
@@ -159,7 +159,7 @@ export async function getChannel(channelID: string, addToCache = true) {
     endpoints.GUILD_CHANNEL(channelID),
   ) as ChannelCreatePayload;
   const channel = structures.createChannel(result, result.guild_id);
-  if (addToCache) cache.channels.set(channel.id, channel);
+  if (addToCache) cacheHandlers.set("channels", channel.id, channel);
   return channel;
 }
 
@@ -182,7 +182,7 @@ export function swapChannels(
 * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
 */
 export async function getMember(guildID: string, id: string) {
-  const guild = cache.guilds.get(guildID);
+  const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return;
 
   const data = await RequestManager.get(
@@ -203,7 +203,7 @@ export async function getMembersByQuery(
   name: string,
   limit = 1,
 ) {
-  const guild = cache.guilds.get(guildID);
+  const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return;
 
   return new Promise((resolve) => {
@@ -296,7 +296,7 @@ export async function createGuildRole(
 
   const roleData = result as RoleData;
   const role = structures.createRole(roleData);
-  const guild = cache.guilds.get(guildID);
+  const guild = await cacheHandlers.get("guilds", guildID);
   guild?.roles.set(role.id, role);
   return role;
 }

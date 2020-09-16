@@ -2,18 +2,18 @@ import {
   Permission,
   Permissions,
 } from "../types/permission.ts";
-import { cache } from "./cache.ts";
 import { botID } from "../module/client.ts";
 import { Role } from "../structures/role.ts";
 import { Guild } from "../structures/guild.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
 
 /** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
-export function memberIDHasPermission(
+export async function memberIDHasPermission(
   memberID: string,
   guildID: string,
   permissions: Permission[],
 ) {
-  const guild = cache.guilds.get(guildID);
+  const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return false;
 
   if (memberID === guild.ownerID) return true;
@@ -48,8 +48,8 @@ export function memberHasPermission(
   );
 }
 
-export function botHasPermission(guildID: string, permissions: Permissions[]) {
-  const guild = cache.guilds.get(guildID);
+export async function botHasPermission(guildID: string, permissions: Permissions[]) {
+  const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return false;
 
   const member = guild.members.get(botID);
@@ -77,15 +77,15 @@ export function botHasChannelPermissions(
 }
 
 /** Checks if a user has permissions in a channel. */
-export function hasChannelPermissions(
+export async function hasChannelPermissions(
   channelID: string,
   memberID: string,
   permissions: Permissions[],
 ) {
-  const channel = cache.channels.get(channelID);
+  const channel = await cacheHandlers.get("channels", channelID);
   if (!channel?.guildID) return true;
 
-  const guild = cache.guilds.get(channel.guildID);
+  const guild = await cacheHandlers.get("guilds", channel.guildID);
   if (!guild) return false;
 
   if (guild.ownerID === memberID) return true;
@@ -187,8 +187,8 @@ export function calculatePermissions(permissionBits: bigint) {
   }) as Permission[];
 }
 
-export function highestRole(guildID: string, memberID: string) {
-  const guild = cache.guilds.get(guildID);
+export async function highestRole(guildID: string, memberID: string) {
+  const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return;
 
   const member = guild?.members.get(memberID);
@@ -210,12 +210,12 @@ export function highestRole(guildID: string, memberID: string) {
   return memberHighestRole || (guild.roles.get(guild.id) as Role);
 }
 
-export function higherRolePosition(
+export async function higherRolePosition(
   guildID: string,
   roleID: string,
   otherRoleID: string,
 ) {
-  const guild = cache.guilds.get(guildID);
+  const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return;
 
   const role = guild.roles.get(roleID);

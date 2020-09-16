@@ -12,6 +12,7 @@ import {
 } from "../types/discord.ts";
 import { UserPayload } from "../types/guild.ts";
 import { cache } from "../utils/cache.ts";
+import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalReady(
   data: DiscordPayload,
@@ -36,12 +37,13 @@ export async function handleInternalReady(
   allowNextShard();
 }
 
-export function handleInternalPresenceUpdate(data: DiscordPayload) {
+export async function handleInternalPresenceUpdate(data: DiscordPayload) {
   if (data.t !== "PRESENCE_UPDATE") return;
 
   const payload = data.d as PresenceUpdatePayload;
-  const oldPresence = cache.presences.get(payload.user.id);
-  cache.presences.set(payload.user.id, payload);
+  const oldPresence = await cacheHandlers.get("presences", payload.user.id);
+  cacheHandlers.set("presences", payload.user.id, payload);
+
   return eventHandlers.presenceUpdate?.(payload, oldPresence);
 }
 
@@ -55,7 +57,7 @@ export function handleInternalUserUpdate(data: DiscordPayload) {
 
   const userData = data.d as UserPayload;
 
-  cache.guilds.forEach((guild) => {
+  cacheHandlers.forEach("guilds", (guild) => {
     const member = guild.members.get(userData.id);
     if (!member) return;
     // member.author = userData;
@@ -69,13 +71,13 @@ export function handleInternalUserUpdate(data: DiscordPayload) {
   return eventHandlers.botUpdate?.(userData);
 }
 
-export function handleInternalVoiceStateUpdate(data: DiscordPayload) {
+export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
   if (data.t !== "VOICE_STATE_UPDATE") return;
 
   const payload = data.d as VoiceStateUpdatePayload;
   if (!payload.guild_id) return;
 
-  const guild = cache.guilds.get(payload.guild_id);
+  const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
   const member = guild.members.get(payload.user_id) ||

@@ -12,10 +12,10 @@ import { Permissions } from "../types/permission.ts";
 import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { MessageContent, DMChannelCreatePayload } from "../types/channel.ts";
-import { cache } from "../utils/cache.ts";
 import { EditMemberOptions } from "../types/member.ts";
 import { sendMessage } from "./channel.ts";
 import { structures } from "../structures/mod.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
 export function rawAvatarURL(
@@ -46,13 +46,13 @@ export function avatarURL(
 }
 
 /** Add a role to the member */
-export function addRole(
+export async function addRole(
   guildID: string,
   memberID: string,
   roleID: string,
   reason?: string,
 ) {
-  const botsHighestRole = highestRole(guildID, botID);
+  const botsHighestRole = await highestRole(guildID, botID);
   if (
     botsHighestRole &&
     !higherRolePosition(guildID, botsHighestRole.id, roleID)
@@ -71,13 +71,13 @@ export function addRole(
 }
 
 /** Remove a role from the member */
-export function removeRole(
+export async function removeRole(
   guildID: string,
   memberID: string,
   roleID: string,
   reason?: string,
 ) {
-  const botsHighestRole = highestRole(guildID, botID);
+  const botsHighestRole = await highestRole(guildID, botID);
   if (
     botsHighestRole &&
     !higherRolePosition(guildID, botsHighestRole.id, roleID)
@@ -99,7 +99,7 @@ export async function sendDirectMessage(
   memberID: string,
   content: string | MessageContent,
 ) {
-  let dmChannel = cache.channels.get(memberID);
+  let dmChannel = await cacheHandlers.get("channels", memberID);
   if (!dmChannel) {
     // If not available in cache create a new one.
     const dmChannelData = await RequestManager.post(
@@ -107,10 +107,10 @@ export async function sendDirectMessage(
       { recipient_id: memberID },
     ) as DMChannelCreatePayload;
     // Channel create event will have added this channel to the cache
-    cache.channels.delete(dmChannelData.id);
+    cacheHandlers.delete("channels", dmChannelData.id);
     const channel = structures.createChannel(dmChannelData);
     // Recreate the channel and add it undert he users id
-    cache.channels.set(memberID, channel);
+    cacheHandlers.set("channels", memberID, channel);
     dmChannel = channel;
   }
 
@@ -119,9 +119,9 @@ export async function sendDirectMessage(
 }
 
 /** Kick a member from the server */
-export function kick(guildID: string, memberID: string, reason?: string) {
-  const botsHighestRole = highestRole(guildID, botID);
-  const membersHighestRole = highestRole(guildID, memberID);
+export async function kick(guildID: string, memberID: string, reason?: string) {
+  const botsHighestRole = await highestRole(guildID, botID);
+  const membersHighestRole = await highestRole(guildID, memberID);
   if (
     botsHighestRole && membersHighestRole &&
     botsHighestRole.position <= membersHighestRole.position

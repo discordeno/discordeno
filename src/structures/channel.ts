@@ -1,6 +1,6 @@
 import { ChannelCreatePayload } from "../types/channel.ts";
 import { calculatePermissions } from "../utils/permissions.ts";
-import { cache } from "../utils/cache.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
 
 export function createChannel(data: ChannelCreatePayload, guildID?: string) {
   const {
@@ -41,7 +41,7 @@ export function createChannel(data: ChannelCreatePayload, guildID?: string) {
     mention: `<#${data.id}>`,
   };
 
-  cache.channels.set(data.id, channel);
+  cacheHandlers.set("channels", data.id, channel);
   return channel;
 }
 

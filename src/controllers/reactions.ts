@@ -4,15 +4,15 @@ import { DiscordPayload } from "../types/discord.ts";
 import {
   BaseMessageReactionPayload,
   MessageReactionPayload,
-	MessageReactionRemoveEmojiPayload,
+  MessageReactionRemoveEmojiPayload,
 } from "../types/message.ts";
-import { cache } from "../utils/cache.ts";
+import { cacheHandlers } from "./cache.ts";
 
-export function handleInternalMessageReactionAdd(data: DiscordPayload) {
+export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
   if (data.t !== "MESSAGE_REACTION_ADD") return;
 
   const payload = data.d as MessageReactionPayload;
-  const message = cache.messages.get(payload.message_id);
+  const message = await cacheHandlers.get("messages", payload.message_id);
 
   if (message) {
     const previousReactions = message.reactions;
@@ -34,11 +34,11 @@ export function handleInternalMessageReactionAdd(data: DiscordPayload) {
         : [newReaction];
     }
 
-    cache.messages.set(payload.message_id, message);
+    cacheHandlers.set("messages", payload.message_id, message);
   }
 
   if (payload.member && payload.guild_id) {
-    const guild = cache.guilds.get(payload.guild_id);
+    const guild = await cacheHandlers.get("guilds", payload.guild_id);
     guild?.members.set(
       payload.member.user.id,
       structures.createMember(
@@ -62,11 +62,13 @@ export function handleInternalMessageReactionAdd(data: DiscordPayload) {
   );
 }
 
-export function handleInternalMessageReactionRemove(data: DiscordPayload) {
+export async function handleInternalMessageReactionRemove(
+  data: DiscordPayload,
+) {
   if (data.t !== "MESSAGE_REACTION_REMOVE") return;
 
   const payload = data.d as MessageReactionPayload;
-  const message = cache.messages.get(payload.message_id);
+  const message = await cacheHandlers.get("messages", payload.message_id);
 
   if (message) {
     const previousReactions = message.reactions;
@@ -88,11 +90,11 @@ export function handleInternalMessageReactionRemove(data: DiscordPayload) {
         : [newReaction];
     }
 
-    cache.messages.set(payload.message_id, message);
+    cacheHandlers.set("messages", payload.message_id, message);
   }
 
   if (payload.member && payload.guild_id) {
-    const guild = cache.guilds.get(payload.guild_id);
+    const guild = await cacheHandlers.get("guilds", payload.guild_id);
     guild?.members.set(
       payload.member.user.id,
       structures.createMember(
@@ -125,5 +127,7 @@ export function handleInternalMessageReactionRemoveAll(data: DiscordPayload) {
 export function handleInternalMessageReactionRemoveEmoji(data: DiscordPayload) {
   if (data.t !== "MESSAGE_REACTION_REMOVE_EMOJI") return;
 
-  eventHandlers.reactionRemoveEmoji?.(data.d as MessageReactionRemoveEmojiPayload);
+  eventHandlers.reactionRemoveEmoji?.(
+    data.d as MessageReactionRemoveEmojiPayload,
+  );
 }

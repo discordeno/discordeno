@@ -2,13 +2,13 @@ import { eventHandlers } from "../module/client.ts";
 import { structures } from "../structures/mod.ts";
 import { DiscordPayload } from "../types/discord.ts";
 import { GuildRoleDeletePayload, GuildRolePayload } from "../types/guild.ts";
-import { cache } from "../utils/cache.ts";
+import { cacheHandlers } from "./cache.ts";
 
-export function handleInternalGuildRoleCreate(data: DiscordPayload) {
+export async function handleInternalGuildRoleCreate(data: DiscordPayload) {
   if (data.t !== "GUILD_ROLE_CREATE") return;
 
   const payload = data.d as GuildRolePayload;
-  const guild = cache.guilds.get(payload.guild_id);
+  const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
   const role = structures.createRole(payload.role);
@@ -17,11 +17,11 @@ export function handleInternalGuildRoleCreate(data: DiscordPayload) {
   return eventHandlers.roleCreate?.(guild, role);
 }
 
-export function handleInternalGuildRoleDelete(data: DiscordPayload) {
+export async function handleInternalGuildRoleDelete(data: DiscordPayload) {
   if (data.t !== "GUILD_ROLE_DELETE") return;
 
   const payload = data.d as GuildRoleDeletePayload;
-  const guild = cache.guilds.get(payload.guild_id);
+  const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
   const cachedRole = guild.roles.get(payload.role_id)!;
@@ -29,11 +29,11 @@ export function handleInternalGuildRoleDelete(data: DiscordPayload) {
   eventHandlers.roleDelete?.(guild, cachedRole);
 }
 
-export function handleInternalGuildRoleUpdate(data: DiscordPayload) {
+export async function handleInternalGuildRoleUpdate(data: DiscordPayload) {
   if (data.t !== "GUILD_ROLE_UPDATE") return;
 
   const payload = data.d as GuildRolePayload;
-  const guild = cache.guilds.get(payload.guild_id);
+  const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
   const cachedRole = guild.roles.get(payload.role.id);

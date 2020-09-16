@@ -8,12 +8,13 @@ import {
   GuildMemberUpdatePayload,
 } from "../types/guild.ts";
 import { cache } from "../utils/cache.ts";
+import { cacheHandlers } from "./cache.ts";
 
-export function handleInternalGuildMemberAdd(data: DiscordPayload) {
+export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
   if (data.t !== "GUILD_MEMBER_ADD") return;
 
   const payload = data.d as GuildMemberAddPayload;
-  const guild = cache.guilds.get(payload.guild_id);
+  const guild = await cacheHandlers.get("guilds", payload.guild_id)
   if (!guild) return;
 
   guild.memberCount++;
@@ -26,11 +27,11 @@ export function handleInternalGuildMemberAdd(data: DiscordPayload) {
   eventHandlers.guildMemberAdd?.(guild, member);
 }
 
-export function handleInternalGuildMemberRemove(data: DiscordPayload) {
+export async function handleInternalGuildMemberRemove(data: DiscordPayload) {
   if (data.t !== "GUILD_MEMBER_REMOVE") return;
 
   const payload = data.d as GuildBanPayload;
-  const guild = cache.guilds.get(payload.guild_id);
+  const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
   guild.memberCount--;
@@ -48,11 +49,11 @@ export function handleInternalGuildMemberRemove(data: DiscordPayload) {
   guild.members.delete(payload.user.id);
 }
 
-export function handleInternalGuildMemberUpdate(data: DiscordPayload) {
+export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
   if (data.t !== "GUILD_MEMBER_UPDATE") return;
 
   const payload = data.d as GuildMemberUpdatePayload;
-  const guild = cache.guilds.get(payload.guild_id);
+  const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
   const cachedMember = guild.members.get(payload.user.id);
@@ -96,11 +97,11 @@ export function handleInternalGuildMemberUpdate(data: DiscordPayload) {
   eventHandlers.guildMemberUpdate?.(guild, member, cachedMember);
 }
 
-export function handleInternalGuildMembersChunk(data: DiscordPayload) {
+export async function handleInternalGuildMembersChunk(data: DiscordPayload) {
   if (data.t !== "GUILD_MEMBERS_CHUNK") return;
 
   const payload = data.d as GuildMemberChunkPayload;
-  const guild = cache.guilds.get(payload.guild_id);
+  const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
   payload.members.forEach((member) => {
