@@ -115,7 +115,7 @@ export async function sendDirectMessage(
   }
 
   // If it does exist try sending a message to this user
-  return sendMessage(dmChannel, content);
+  return sendMessage(dmChannel.id, content);
 }
 
 /** Kick a member from the server */
