@@ -230,8 +230,6 @@ export interface WebhookUpdatePayload {
 export interface PresenceUpdatePayload {
   /** The user presence is being updated for. */
   user: PartialUser;
-  /** The roles this user is in */
-  roles: string[];
   /** null, or the user's current activity */
   game: Activity | null;
   /** The id of the guild */
@@ -242,10 +240,6 @@ export interface PresenceUpdatePayload {
   activities: Activity[];
   /** The user's platform dependent status */
   client_status: ClientStatusPayload;
-  /** When the user has started boosting the guild */
-  premium_since?: string | null;
-  /** This users guild nickname (if one is set) */
-  nick?: string | null;
 }
 
 export interface TypingStartPayload {
