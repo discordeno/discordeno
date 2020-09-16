@@ -80,15 +80,25 @@ function forEach(
 }
 
 export let cacheHandlers = {
+  /** Deletes all items from the cache */
+  clear: async function (table: TableName) {
+    return cache[table].clear();
+  },
+  /** Deletes 1 item from cache using the key */
   delete: async function (table: TableName, key: string) {
     return cache[table].delete(key);
   },
+  /** Check if something exists in cache with a key */
   has: async function (table: TableName, key: string) {
     return cache[table].has(key);
   },
+
   // Done differently to have overloads
+  /** Add a key value pair to the cache */
   set,
+  /** Get the value from the cache using its key */
   get,
+  /** Run a function on all items in this cache */
   forEach,
 };
 

@@ -2,6 +2,7 @@ import createClient from "./src/module/client.ts";
 
 export * from "./src/controllers/mod.ts";
 export * from "./src/controllers/bans.ts";
+export * from "./src/controllers/cache.ts";
 export * from "./src/controllers/channels.ts";
 export * from "./src/controllers/guilds.ts";
 export * from "./src/controllers/members.ts";
