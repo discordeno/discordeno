@@ -1,7 +1,6 @@
 import { MemberCreatePayload } from "../types/member.ts";
-import { Guild } from "./guild.ts";
 
-export function createMember(data: MemberCreatePayload, guild: Guild) {
+export function createMember(data: MemberCreatePayload, guildID: string) {
   const {
     joined_at: joinedAt,
     premium_since: premiumSince,
@@ -27,7 +26,7 @@ export function createMember(data: MemberCreatePayload, guild: Guild) {
     /** The user mention with nickname if possible */
     mention: `<@!${data.user.id}>`,
     /** The guild id where this member exists */
-    guildID: guild.id,
+    guildID,
     /** Whether or not this user has 2FA enabled. */
     mfaEnabled,
     /** The premium type for this user */
@@ -35,8 +34,6 @@ export function createMember(data: MemberCreatePayload, guild: Guild) {
   };
 
   return member;
-};
+}
 
-export interface Member
-  extends
-    Omit<ReturnType<typeof createMember>, "joined_at" | "premium_since"> {}
+export interface Member extends ReturnType<typeof createMember> {}

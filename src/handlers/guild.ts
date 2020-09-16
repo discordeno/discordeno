@@ -184,7 +184,7 @@ export async function getMember(guildID: string, id: string) {
     endpoints.GUILD_MEMBER(guildID, id),
   ) as MemberCreatePayload;
 
-  const member = structures.createMember(data, guild);
+  const member = structures.createMember(data, guild.id);
   guild.members.set(id, member);
   return member;
 }

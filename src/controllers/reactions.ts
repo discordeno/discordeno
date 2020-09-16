@@ -43,7 +43,7 @@ export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
       payload.member.user.id,
       structures.createMember(
         payload.member,
-        guild,
+        guild.id,
       ),
     );
   }
@@ -99,7 +99,7 @@ export async function handleInternalMessageReactionRemove(
       payload.member.user.id,
       structures.createMember(
         payload.member,
-        guild,
+        guild.id,
       ),
     );
   }

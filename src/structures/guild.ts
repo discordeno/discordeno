@@ -88,7 +88,7 @@ export function createGuild(data: CreateGuildPayload, shardID: number) {
   };
 
   data.members.forEach((m) =>
-    guild.members.set(m.user.id, structures.createMember(m, guild))
+    guild.members.set(m.user.id, structures.createMember(m, guild.id))
   );
 
   return guild;

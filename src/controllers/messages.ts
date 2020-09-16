@@ -28,7 +28,7 @@ export async function handleInternalMessageCreate(data: DiscordPayload) {
       payload.author.id,
       structures.createMember(
         { ...payload.member, user: payload.author },
-        guild,
+        guild.id,
       ),
     );
   }
@@ -40,7 +40,7 @@ export async function handleInternalMessageCreate(data: DiscordPayload) {
         mention.id,
         structures.createMember(
           { ...mention.member, user: mention },
-          guild,
+          guild.id,
         ),
       );
     }

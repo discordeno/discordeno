@@ -20,7 +20,7 @@ export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
   guild.memberCount++;
   const member = structures.createMember(
     payload,
-    guild,
+    guild.id,
   );
   guild.members.set(payload.user.id, member);
 
@@ -68,7 +68,7 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
   };
   const member = structures.createMember(
     newMemberData,
-    guild,
+    guild.id,
   );
   guild.members.set(payload.user.id, member);
 
@@ -109,7 +109,7 @@ export async function handleInternalGuildMembersChunk(data: DiscordPayload) {
       member.user.id,
       structures.createMember(
         member,
-        guild,
+        guild.id,
       ),
     );
   });
