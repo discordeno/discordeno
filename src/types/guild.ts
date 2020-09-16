@@ -467,9 +467,9 @@ export interface RawOverwrite {
   /** The permissions that this id is NOT allowed to do. (This will mark it as a red x.) */
   deny: number;
   /** permission bit set for new perms until new api version released. */
-  allow_new: string;
+  allow: string;
   /** permission bit set for new perms until new api version released. */
-  deny_new: string;
+  deny: string;
 }
 
 export interface ChannelCreateOptions {

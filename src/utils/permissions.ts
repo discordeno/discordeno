@@ -48,7 +48,10 @@ export function memberHasPermission(
   );
 }
 
-export async function botHasPermission(guildID: string, permissions: Permissions[]) {
+export async function botHasPermission(
+  guildID: string,
+  permissions: Permissions[],
+) {
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return false;
 
@@ -111,9 +114,7 @@ export async function hasChannelPermissions(
   if (memberOverwrite) {
     // One of the necessary permissions is denied
     if (
-      permissions.some((perm) =>
-        BigInt(memberOverwrite.deny_new) & BigInt(perm)
-      )
+      permissions.some((perm) => BigInt(memberOverwrite.deny) & BigInt(perm))
     ) {
       return false;
     }
@@ -121,7 +122,7 @@ export async function hasChannelPermissions(
       // Already allowed perm
       if (allowedPermissions.has(perm)) return;
       // This perm is allowed so we save it
-      if (BigInt(memberOverwrite.allow_new) & BigInt(perm)) {
+      if (BigInt(memberOverwrite.allow) & BigInt(perm)) {
         allowedPermissions.add(perm);
       }
     });
@@ -132,11 +133,11 @@ export async function hasChannelPermissions(
     if (
       rolesOverwrites.some((overwrite) =>
         permissions.some((perm) =>
-          (BigInt(overwrite.deny_new) & BigInt(perm)) &&
+          (BigInt(overwrite.deny) & BigInt(perm)) &&
           // If another role allows these perms then they are not denied
-          !rolesOverwrites.some((o) => BigInt(o.allow_new) & BigInt(perm)) &&
+          !rolesOverwrites.some((o) => BigInt(o.allow) & BigInt(perm)) &&
           // Make sure the memberOverwrite does not allow this perm
-          !(memberOverwrite && BigInt(memberOverwrite.allow_new) & BigInt(perm))
+          !(memberOverwrite && BigInt(memberOverwrite.allow) & BigInt(perm))
         )
       )
     ) {
@@ -148,7 +149,7 @@ export async function hasChannelPermissions(
       if (allowedPermissions.has(perm)) return;
       rolesOverwrites.forEach((overwrite) => {
         // This perm is allowed so we save it
-        if (BigInt(overwrite.allow_new) & BigInt(perm)) {
+        if (BigInt(overwrite.allow) & BigInt(perm)) {
           allowedPermissions.add(perm);
         }
       });
@@ -161,7 +162,7 @@ export async function hasChannelPermissions(
   ) {
     if (
       permissions.some((perm) =>
-        BigInt(everyoneOverwrite.deny_new) & BigInt(perm) &&
+        BigInt(everyoneOverwrite.deny) & BigInt(perm) &&
         !allowedPermissions.has(perm)
       )
     ) {
@@ -170,7 +171,7 @@ export async function hasChannelPermissions(
     // If all permissions are granted
     if (
       permissions.every((perm) =>
-        BigInt(everyoneOverwrite.allow_new) & BigInt(perm)
+        BigInt(everyoneOverwrite.allow) & BigInt(perm)
       )
     ) {
       return true;

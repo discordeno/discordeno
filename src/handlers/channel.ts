@@ -33,8 +33,8 @@ export function hasChannelPermission(
 
   return permissions.every((perm) => {
     if (overwrite) {
-      if (BigInt(overwrite.deny_new) & BigInt(perm)) return false;
-      if (BigInt(overwrite.allow_new) & BigInt(perm)) return true;
+      if (BigInt(overwrite.deny) & BigInt(perm)) return false;
+      if (BigInt(overwrite.allow) & BigInt(perm)) return true;
     }
     if (channel.guildID) {
       return botHasPermission(channel.guildID, [perm]);
