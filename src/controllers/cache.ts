@@ -10,8 +10,7 @@ export type TableName =
   | "channels"
   | "messages"
   | "presences"
-  | "unavailableGuilds"
-  | "fetchAllMembersProcessingRequests";
+  | "unavailableGuilds";
 
 function set(
   table: "guilds",
@@ -38,20 +37,21 @@ function set(
   key: string,
   value: number,
 ): Promise<Collection<string, number>>;
-function set(
-  table: "fetchAllMembersProcessingRequests",
-  key: string,
-  value: number,
-): Promise<Collection<string, number>>;
 async function set(table: TableName, key: string, value: any) {
   return cache[table].set(key, value);
 }
 
-function get(table: "guilds", key: string): Promise<Guild>;
-function get(table: "channels", key: string): Promise<Channel>;
-function get(table: "messages", key: string): Promise<Message>;
-function get(table: "presences", key: string): Promise<PresenceUpdatePayload>;
-function get(table: "unavailableGuilds", key: string): Promise<Guild>;
+function get(table: "guilds", key: string): Promise<Guild | undefined>;
+function get(table: "channels", key: string): Promise<Channel | undefined>;
+function get(table: "messages", key: string): Promise<Message | undefined>;
+function get(
+  table: "presences",
+  key: string,
+): Promise<PresenceUpdatePayload | undefined>;
+function get(
+  table: "unavailableGuilds",
+  key: string,
+): Promise<Guild | undefined>;
 async function get(table: TableName, key: string) {
   return cache[table].get(key);
 }
@@ -101,12 +101,3 @@ export let cacheHandlers = {
   /** Run a function on all items in this cache */
   forEach,
 };
-
-export type CacheHandlers = typeof cacheHandlers;
-
-export function updateCacheHandlers(newCacheHandlers: CacheHandlers) {
-  cacheHandlers = {
-    ...cacheHandlers,
-    ...newCacheHandlers,
-  };
-}

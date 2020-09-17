@@ -1,6 +1,7 @@
+import { Unpromise } from "../types/misc.ts";
 import { RoleData } from "../types/role.ts";
 
-export function createRole(data: RoleData) {
+export async function createRole(data: RoleData) {
   return {
     ...data,
     /** The @ mention of the role in a string. */
@@ -8,4 +9,4 @@ export function createRole(data: RoleData) {
   };
 }
 
-export interface Role extends ReturnType<typeof createRole> {}
+export interface Role extends Unpromise<ReturnType<typeof createRole>> {}

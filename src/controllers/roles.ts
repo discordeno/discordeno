@@ -11,7 +11,7 @@ export async function handleInternalGuildRoleCreate(data: DiscordPayload) {
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
-  const role = structures.createRole(payload.role);
+  const role = await structures.createRole(payload.role);
   const roles = guild.roles.set(payload.role.id, role);
   guild.roles = roles;
   return eventHandlers.roleCreate?.(guild, role);
@@ -39,6 +39,6 @@ export async function handleInternalGuildRoleUpdate(data: DiscordPayload) {
   const cachedRole = guild.roles.get(payload.role.id);
   if (!cachedRole) return;
 
-  const role = structures.createRole(payload.role);
+  const role = await structures.createRole(payload.role);
   eventHandlers.roleUpdate?.(guild, role, cachedRole);
 }

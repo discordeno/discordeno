@@ -18,7 +18,7 @@ export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
   if (!guild) return;
 
   guild.memberCount++;
-  const member = structures.createMember(
+  const member = await structures.createMember(
     payload,
     guild.id,
   );
@@ -66,7 +66,7 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
     deaf: cachedMember?.deaf || false,
     mute: cachedMember?.mute || false,
   };
-  const member = structures.createMember(
+  const member = await structures.createMember(
     newMemberData,
     guild.id,
   );
@@ -104,10 +104,10 @@ export async function handleInternalGuildMembersChunk(data: DiscordPayload) {
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
-  payload.members.forEach((member) => {
+  payload.members.forEach(async (member) => {
     guild.members.set(
       member.user.id,
-      structures.createMember(
+      await structures.createMember(
         member,
         guild.id,
       ),

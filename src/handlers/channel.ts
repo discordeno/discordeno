@@ -91,7 +91,7 @@ export async function getMessages(
     endpoints.CHANNEL_MESSAGES(channelID),
     options,
   )) as MessageCreateOptions[];
-  return result.map((res) => structures.createMessage(res));
+  return Promise.all(result.map((res) => structures.createMessage(res)));
 }
 
 /** Get pinned messages in this channel. */
@@ -99,7 +99,7 @@ export async function getPins(channelID: string) {
   const result = (await RequestManager.get(
     endpoints.CHANNEL_PINS(channelID),
   )) as MessageCreateOptions[];
-  return result.map((res) => structures.createMessage(res));
+  return Promise.all(result.map((res) => structures.createMessage(res)));
 }
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */

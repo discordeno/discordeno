@@ -82,7 +82,7 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
 
   const member = guild.members.get(payload.user_id) ||
     (payload.member
-      ? structures.createMember(payload.member, guild.id)
+      ? await structures.createMember(payload.member, guild.id)
       : undefined);
   if (!member) return;
 

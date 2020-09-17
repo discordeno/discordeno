@@ -110,7 +110,7 @@ export async function createGuildChannel(
       type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
 
-  const channel = structures.createChannel(result);
+  const channel = await structures.createChannel(result);
   guild.channels.set(result.id, channel);
   return channel;
 }
@@ -136,13 +136,13 @@ export async function getChannels(guildID: string, addToCache = true) {
   const result = await RequestManager.get(
     endpoints.GUILD_CHANNELS(guildID),
   ) as ChannelCreatePayload[];
-  return result.map((res) => {
-    const channel = structures.createChannel(res, guildID);
+  return Promise.all(result.map(async (res) => {
+    const channel = await structures.createChannel(res, guildID);
     if (addToCache) {
       cacheHandlers.set("channels", channel.id, channel);
     }
     return channel;
-  });
+  }));
 }
 
 /** Fetches a single channel object from the api.
@@ -153,7 +153,7 @@ export async function getChannel(channelID: string, addToCache = true) {
   const result = await RequestManager.get(
     endpoints.GUILD_CHANNEL(channelID),
   ) as ChannelCreatePayload;
-  const channel = structures.createChannel(result, result.guild_id);
+  const channel = await structures.createChannel(result, result.guild_id);
   if (addToCache) cacheHandlers.set("channels", channel.id, channel);
   return channel;
 }
@@ -184,7 +184,7 @@ export async function getMember(guildID: string, id: string) {
     endpoints.GUILD_MEMBER(guildID, id),
   ) as MemberCreatePayload;
 
-  const member = structures.createMember(data, guild.id);
+  const member = await structures.createMember(data, guild.id);
   guild.members.set(id, member);
   return member;
 }
@@ -290,7 +290,7 @@ export async function createGuildRole(
   );
 
   const roleData = result as RoleData;
-  const role = structures.createRole(roleData);
+  const role = await structures.createRole(roleData);
   const guild = await cacheHandlers.get("guilds", guildID);
   guild?.roles.set(role.id, role);
   return role;

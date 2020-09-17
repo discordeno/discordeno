@@ -1,8 +1,12 @@
 import { ChannelCreatePayload } from "../types/channel.ts";
 import { calculatePermissions } from "../utils/permissions.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
+import { Unpromise } from "../types/misc.ts";
 
-export function createChannel(data: ChannelCreatePayload, guildID?: string) {
+export async function createChannel(
+  data: ChannelCreatePayload,
+  guildID?: string,
+) {
   const {
     guild_id: rawGuildID,
     last_message_id: lastMessageID,
@@ -45,4 +49,4 @@ export function createChannel(data: ChannelCreatePayload, guildID?: string) {
   return channel;
 }
 
-export interface Channel extends ReturnType<typeof createChannel> {}
+export interface Channel extends Unpromise<ReturnType<typeof createChannel>> {}

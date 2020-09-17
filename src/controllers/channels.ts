@@ -8,7 +8,7 @@ export async function handleInternalChannelCreate(data: DiscordPayload) {
   if (data.t !== "CHANNEL_CREATE") return;
 
   const payload = data.d as ChannelCreatePayload;
-  const channel = structures.createChannel(payload);
+  const channel = await structures.createChannel(payload);
   await cacheHandlers.set("channels", channel.id, channel);
 
   if (channel.guildID) {
@@ -61,7 +61,7 @@ export async function handleInternalChannelUpdate(data: DiscordPayload) {
 
   const payload = data.d as ChannelCreatePayload;
   const cachedChannel = await cacheHandlers.get("channels", payload.id);
-  const channel = structures.createChannel(payload);
+  const channel = await structures.createChannel(payload);
   cacheHandlers.set("channels", channel.id, channel);
 
   if (!cachedChannel) return;

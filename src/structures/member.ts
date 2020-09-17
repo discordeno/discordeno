@@ -1,6 +1,7 @@
 import { MemberCreatePayload } from "../types/member.ts";
+import { Unpromise } from "../types/misc.ts";
 
-export function createMember(data: MemberCreatePayload, guildID: string) {
+export async function createMember(data: MemberCreatePayload, guildID: string) {
   const {
     joined_at: joinedAt,
     premium_since: premiumSince,
@@ -36,4 +37,4 @@ export function createMember(data: MemberCreatePayload, guildID: string) {
   return member;
 }
 
-export interface Member extends ReturnType<typeof createMember> {}
+export interface Member extends Unpromise<ReturnType<typeof createMember>> {}
