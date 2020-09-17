@@ -12,7 +12,7 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
     mfa_enabled: mfaEnabled,
     premium_type: premiumType,
     ...user
-  } = data.user;
+  } = data.user || {};
 
   const member = {
     ...rest,
