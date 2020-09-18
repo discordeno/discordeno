@@ -22,10 +22,6 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
     joinedAt: Date.parse(joinedAt),
     /** When the user used their nitro boost on the server. */
     premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
-    /** The full username#discriminator */
-    tag: `${data.user.username}#${data.user.discriminator}`,
-    /** The user mention with nickname if possible */
-    mention: `<@!${data.user.id}>`,
     /** The guild id where this member exists */
     guildID,
     /** Whether or not this user has 2FA enabled. */
