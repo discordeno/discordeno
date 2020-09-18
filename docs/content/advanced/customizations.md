@@ -73,19 +73,19 @@ Now we have a base to work with. We can now add a `tag`, `avatarURL`, `mention`,
 import { rawAvatarURL } from "../../deps.ts";
 
 async function createMember(data: MemberCreatePayload, guildID: string) {
-	// Hidden code here to make it easier to see the changes
+  // Hidden code here to make it easier to see the changes
 
   const member = {
     ...rest,
-		// Hidden code here to make it easier to see the changes
+    // Hidden code here to make it easier to see the changes
 
     /** The premium type for this user */
-		premiumType,
-		/** The username#discriminator tag for this member. */
-		tag: `${user.username}#${user.discriminator}`,
-		/** The avatarURL made easily accessible */
-		avatarURL: rawAvatarURL(data.id, user.discriminator, user.avatar),
-		/** The guild object for where this member is located */
+    premiumType,
+    /** The username#discriminator tag for this member. */
+    tag: `${user.username}#${user.discriminator}`,
+    /** The avatarURL made easily accessible */
+    avatarURL: rawAvatarURL(data.id, user.discriminator, user.avatar),
+    /** The guild object for where this member is located */
     guild: await cacheHandler.get("guilds", guildID),
     /** Easily mention the member */
     mention: `<@${data.user.id}>`
@@ -109,6 +109,7 @@ declare module "../../deps.ts" {
     tag: string;
     avatarURL: string;
     guild: Guild;
+    mention: string;
   }
 }
 ```
@@ -147,10 +148,10 @@ async function createMember(data: MemberCreatePayload, guildID: string) {
     /** The premium type for this user */
     premiumType,
     /** The username#discriminator tag for this member. */
-		tag: `${user.username}#${user.discriminator}`,
-		/** The avatarURL made easily accessible */
-		avatarURL: rawAvatarURL(data.id, user.discriminator, user.avatar),
-		/** The guild object for where this member is located */
+    tag: `${user.username}#${user.discriminator}`,
+    /** The avatarURL made easily accessible */
+    avatarURL: rawAvatarURL(data.id, user.discriminator, user.avatar),
+    /** The guild object for where this member is located */
     guild: await cacheHandler.get("guilds", guildID),
     /** Easily mention the member */
     mention: `<@${data.user.id}>`
@@ -166,6 +167,7 @@ declare module "../../deps.ts" {
     tag: string;
     avatarURL: string;
     guild: Guild;
+    mention: string;
   }
 }
 ```
@@ -282,7 +284,7 @@ cacheHandlers.has = async function (table, key) {
 };
 ```
 
-This code now overrides the `has` method which will check from Redis. The basic concept is that the function for `has` takes a table name and a key. Using this the `has` method returns whether or not a value exists. You can do anything you like inside this function, like connecting to a database or any other solution you would like to use.
+This code now overrides the `has` method which will check from Redis. The basic concept is that the function `has` takes a table name and a key. The `has` method returns whether or not a value exists. You can do anything you like inside this function, like connecting to a database or any other solution you would like to use.
 
 Similarily, since we want to use Redis we would want to customize all the methods on the cacheHandlers. The current list of methods available are:
 
