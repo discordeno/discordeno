@@ -1,16 +1,17 @@
-import { Message } from "../structures/message.ts";
+import type { Message } from "../structures/message.ts";
+import type { MessageContent } from "../types/channel.ts";
+import type { UserPayload } from "../types/guild.ts";
+import type { MessageCreateOptions } from "../types/message.ts";
+
 import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
+import { structures } from "../structures/mod.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../module/client.ts";
 import { Permissions } from "../types/permission.ts";
 import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { endpoints } from "../constants/discord.ts";
 import { botHasChannelPermissions } from "../utils/permissions.ts";
-import { MessageContent } from "../types/channel.ts";
-import { UserPayload } from "../types/guild.ts";
-import { MessageCreateOptions } from "../types/message.ts";
-import { structures } from "../structures/mod.ts";
-import { cacheHandlers } from "../controllers/cache.ts";
 
 /** Delete a message */
 export async function deleteMessage(

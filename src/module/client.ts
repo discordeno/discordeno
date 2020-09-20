@@ -1,8 +1,9 @@
-import { endpoints } from "../constants/discord.ts";
-import { DiscordBotGatewayData } from "../types/discord.ts";
-import { ClientOptions, EventHandlers } from "../types/options.ts";
-import { RequestManager } from "./requestManager.ts";
+import type { ClientOptions, EventHandlers } from "../types/options.ts";
+import type { DiscordBotGatewayData } from "../types/discord.ts";
+
 import { spawnShards } from "./shardingManager.ts";
+import { endpoints } from "../constants/discord.ts";
+import { RequestManager } from "./requestManager.ts";
 
 export let authorization = "";
 export let botID = "";

@@ -1,4 +1,4 @@
-import {
+import type {
   Properties,
   Emoji,
   DiscordPayload,
@@ -6,9 +6,9 @@ import {
   TypingStartPayload,
   VoiceStateUpdatePayload,
 } from "./discord.ts";
-import { Role } from "../structures/role.ts";
-import { Message } from "../structures/message.ts";
-import {
+import type { Role } from "../structures/role.ts";
+import type { Message } from "../structures/message.ts";
+import type {
   PartialMessage,
   ReactionPayload,
   BaseMessageReactionPayload,
@@ -17,10 +17,10 @@ import {
   Attachment,
   MessageReactionUncachedPayload,
 } from "./message.ts";
-import { Channel } from "../structures/channel.ts";
-import { Guild } from "../structures/guild.ts";
-import { Member } from "../structures/member.ts";
-import { UserPayload } from "./guild.ts";
+import type { Channel } from "../structures/channel.ts";
+import type { Guild } from "../structures/guild.ts";
+import type { Member } from "../structures/member.ts";
+import type { UserPayload } from "./guild.ts";
 
 export interface Fulfilled_Client_Options {
   token: string;

@@ -1,9 +1,4 @@
-import { Permissions } from "../types/permission.ts";
-import { botHasChannelPermissions } from "../utils/permissions.ts";
-import { Errors } from "../types/errors.ts";
-import { RequestManager } from "../module/requestManager.ts";
-import { endpoints } from "../constants/discord.ts";
-import { MessageCreateOptions } from "../types/message.ts";
+import type { MessageCreateOptions } from "../types/message.ts";
 import {
   GetMessagesAfter,
   GetMessagesBefore,
@@ -14,9 +9,15 @@ import {
   ChannelEditOptions,
   FollowedChannelPayload,
 } from "../types/channel.ts";
+import type { RawOverwrite } from "../types/guild.ts";
+
 import { logYellow } from "../utils/logger.ts";
+import { endpoints } from "../constants/discord.ts";
+import { RequestManager } from "../module/requestManager.ts";
+import { Errors } from "../types/errors.ts";
+import { Permissions } from "../types/permission.ts";
+import { botHasChannelPermissions } from "../utils/permissions.ts";
 import { structures } from "../structures/mod.ts";
-import { RawOverwrite } from "../types/guild.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(

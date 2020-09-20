@@ -1,12 +1,13 @@
-import { eventHandlers } from "../module/client.ts";
-import { structures } from "../structures/mod.ts";
-import { DiscordPayload } from "../types/discord.ts";
-import {
+import type { DiscordPayload } from "../types/discord.ts";
+import type {
   GuildBanPayload,
   GuildMemberAddPayload,
   GuildMemberChunkPayload,
   GuildMemberUpdatePayload,
 } from "../types/guild.ts";
+
+import { eventHandlers } from "../module/client.ts";
+import { structures } from "../structures/mod.ts";
 import { cache } from "../utils/cache.ts";
 import { cacheHandlers } from "./cache.ts";
 
@@ -14,7 +15,7 @@ export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
   if (data.t !== "GUILD_MEMBER_ADD") return;
 
   const payload = data.d as GuildMemberAddPayload;
-  const guild = await cacheHandlers.get("guilds", payload.guild_id)
+  const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
   guild.memberCount++;

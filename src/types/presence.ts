@@ -1,4 +1,4 @@
-import { StatusType } from "./discord.ts";
+import type { StatusType } from "./discord.ts";
 
 export interface ClientStatusPayload {
   /** The user's status set for an active desktop (Windows, Linux, Mac) application session */

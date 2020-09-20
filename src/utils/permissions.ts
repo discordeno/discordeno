@@ -1,10 +1,9 @@
-import {
-  Permission,
-  Permissions,
-} from "../types/permission.ts";
+import type { Permission } from "../types/permission.ts";
+import type { Role } from "../structures/role.ts";
+import type { Guild } from "../structures/guild.ts";
+
+import { Permissions } from "../types/permission.ts";
 import { botID } from "../module/client.ts";
-import { Role } from "../structures/role.ts";
-import { Guild } from "../structures/guild.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 
 /** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */

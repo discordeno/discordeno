@@ -1,8 +1,5 @@
-import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
-import { eventHandlers, setBotID } from "../module/client.ts";
-import { allowNextShard } from "../module/shardingManager.ts";
-import { structures } from "../structures/mod.ts";
-import {
+import type { UserPayload } from "../types/guild.ts";
+import type {
   DiscordPayload,
   PresenceUpdatePayload,
   ReadyPayload,
@@ -10,7 +7,11 @@ import {
   VoiceStateUpdatePayload,
   WebhookUpdatePayload,
 } from "../types/discord.ts";
-import { UserPayload } from "../types/guild.ts";
+
+import { allowNextShard } from "../module/shardingManager.ts";
+import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
+import { eventHandlers, setBotID } from "../module/client.ts";
+import { structures } from "../structures/mod.ts";
 import { cache } from "../utils/cache.ts";
 import { cacheHandlers } from "./cache.ts";
 

@@ -1,16 +1,10 @@
-import { Guild } from "../structures/guild.ts";
-import { formatImageURL } from "../utils/cdn.ts";
-import { botHasPermission } from "../utils/permissions.ts";
-import { RequestManager } from "../module/requestManager.ts";
-import { endpoints } from "../constants/discord.ts";
-import { Errors } from "../types/errors.ts";
-import { Permissions } from "../types/permission.ts";
+import type { Guild } from "../structures/guild.ts";
 import {
   ChannelCreatePayload,
   ChannelTypes,
 } from "../types/channel.ts";
-import { ImageFormats, ImageSize } from "../types/cdn.ts";
-import {
+import type { ImageFormats, ImageSize } from "../types/cdn.ts";
+import type {
   CreateEmojisOptions,
   PositionSwap,
   EditEmojisOptions,
@@ -26,16 +20,23 @@ import {
   BannedUser,
   UserPayload,
 } from "../types/guild.ts";
-import { RoleData } from "../types/role.ts";
+import type { RoleData } from "../types/role.ts";
+import type { MemberCreatePayload } from "../types/member.ts";
+import type { Member } from "../structures/member.ts";
+
+import { Collection } from "../utils/collection.ts";
+import { urlToBase64 } from "../utils/utils.ts";
 import { Intents } from "../types/options.ts";
 import { identifyPayload } from "../module/client.ts";
 import { requestAllMembers } from "../module/shardingManager.ts";
-import { MemberCreatePayload } from "../types/member.ts";
-import { Member } from "../structures/member.ts";
-import { urlToBase64 } from "../utils/utils.ts";
-import { Collection } from "../utils/collection.ts";
+import { botHasPermission } from "../utils/permissions.ts";
+import { RequestManager } from "../module/requestManager.ts";
+import { endpoints } from "../constants/discord.ts";
+import { Errors } from "../types/errors.ts";
+import { Permissions } from "../types/permission.ts";
 import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
+import { formatImageURL } from "../utils/cdn.ts";
 
 /** Gets an array of all the channels ids that are the children of this category. */
 export function categoryChildrenIDs(guild: Guild, id: string) {

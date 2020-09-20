@@ -1,14 +1,15 @@
-import {
+import type {
   WebhookCreateOptions,
   WebhookPayload,
   ExecuteWebhookOptions,
 } from "../types/webhook.ts";
+import type { MessageCreateOptions } from "../types/message.ts";
+
 import { botHasChannelPermissions } from "../utils/permissions.ts";
 import { Permissions } from "../types/permission.ts";
 import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { endpoints } from "../constants/discord.ts";
-import { MessageCreateOptions } from "../types/message.ts";
 import { urlToBase64 } from "../utils/utils.ts";
 import { structures } from "../structures/mod.ts";
 
@@ -102,5 +103,5 @@ export async function executeWebhook(
 }
 
 export function getWebhook(webhookID: string) {
-  return RequestManager.get(endpoints.WEBHOOK_ID(webhookID))
+  return RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
 }

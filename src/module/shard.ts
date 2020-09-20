@@ -1,18 +1,19 @@
-import {
-  connectWebSocket,
-  isWebSocketCloseEvent,
-  WebSocket,
-} from "https://deno.land/std@0.67.0/ws/mod.ts";
-import {
-  GatewayOpcode,
+import type { WebSocket } from "https://deno.land/std@0.67.0/ws/mod.ts";
+import type {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
   ReadyPayload,
 } from "../types/discord.ts";
+import type { FetchMembersOptions } from "../types/guild.ts";
+import type { DebugArg } from "../types/options.ts";
+
+import { GatewayOpcode } from "../types/discord.ts";
 import { logRed } from "../utils/logger.ts";
-import { FetchMembersOptions } from "../types/guild.ts";
 import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
-import { DebugArg } from "../types/options.ts";
+import {
+  connectWebSocket,
+  isWebSocketCloseEvent,
+} from "https://deno.land/std@0.67.0/ws/mod.ts";
 
 let shardSocket: WebSocket;
 

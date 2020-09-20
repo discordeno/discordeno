@@ -1,7 +1,9 @@
-import { ChannelCreatePayload, ChannelTypes } from "../types/channel.ts";
-import { eventHandlers } from "../module/client.ts";
+import type { ChannelCreatePayload } from "../types/channel.ts";
+import type { DiscordPayload } from "../types/discord.ts";
+
+import { ChannelTypes } from "../types/channel.ts";
 import { structures } from "../structures/mod.ts";
-import { DiscordPayload } from "../types/discord.ts";
+import { eventHandlers } from "../module/client.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalChannelCreate(data: DiscordPayload) {

@@ -1,5 +1,5 @@
-import { Unpromise } from "../types/misc.ts";
-import { RoleData } from "../types/role.ts";
+import type { Unpromise } from "../types/misc.ts";
+import type { RoleData } from "../types/role.ts";
 
 export async function createRole(data: RoleData) {
   return {

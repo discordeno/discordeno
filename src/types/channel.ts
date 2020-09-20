@@ -1,5 +1,5 @@
-import { RawOverwrite, Overwrite } from "./guild.ts";
-import { Embed } from "./message.ts";
+import type { RawOverwrite, Overwrite } from "./guild.ts";
+import type { Embed } from "./message.ts";
 
 export interface ChannelEditOptions {
   /** 2-100 character channel name. All */

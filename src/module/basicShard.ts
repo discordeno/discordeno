@@ -1,24 +1,22 @@
-import {
-  DiscordBotGatewayData,
-  GatewayOpcode,
-  ReadyPayload,
-} from "../types/discord.ts";
-import {
-  eventHandlers,
-  botGatewayData,
-  IdentifyPayload,
-} from "./client.ts";
-import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
+import type { DiscordBotGatewayData, ReadyPayload } from "../types/discord.ts";
+import type { IdentifyPayload } from "./client.ts";
 import {
   connectWebSocket,
   isWebSocketCloseEvent,
   WebSocket,
 } from "https://deno.land/std@0.67.0/ws/mod.ts";
-import { DiscordHeartbeatPayload } from "../types/discord.ts";
-import { logRed } from "../utils/logger.ts";
+import type { DiscordHeartbeatPayload } from "../types/discord.ts";
+import type { FetchMembersOptions } from "../types/guild.ts";
+import type { BotStatusRequest } from "../utils/utils.ts";
+
 import { handleDiscordPayload } from "./shardingManager.ts";
-import { FetchMembersOptions } from "../types/guild.ts";
-import { BotStatusRequest } from "../utils/utils.ts";
+import { logRed } from "../utils/logger.ts";
+import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
+import { GatewayOpcode } from "../types/discord.ts";
+import {
+  eventHandlers,
+  botGatewayData,
+} from "./client.ts";
 
 const basicShards = new Map<number, BasicShard>();
 const heartbeating = new Set<number>();

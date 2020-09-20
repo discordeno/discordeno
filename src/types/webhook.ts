@@ -1,5 +1,5 @@
-import { UserPayload } from "./guild.ts";
-import { Embed } from "./message.ts";
+import type { UserPayload } from "./guild.ts";
+import type { Embed } from "./message.ts";
 
 export interface WebhookPayload {
   /** The id of the webhook */

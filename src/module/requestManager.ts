@@ -1,10 +1,11 @@
-import { RequestMethod } from "../types/fetch.ts";
-import { authorization, eventHandlers } from "./client.ts";
-import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
-import { Errors } from "../types/errors.ts";
 import { HttpResponseCode } from "../types/discord.ts";
-import { logRed } from "../utils/logger.ts";
+import { authorization, eventHandlers } from "./client.ts";
 import { baseEndpoints } from "../constants/discord.ts";
+import type { RequestMethods } from "../types/fetch.ts";
+
+import { Errors } from "../types/errors.ts";
+import { logRed } from "../utils/logger.ts";
+import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
 
 const pathQueues: { [key: string]: QueuedRequest[] } = {};
 const ratelimitedPaths = new Map<string, RateLimitedPath>();
@@ -121,23 +122,23 @@ processRateLimitedPaths();
 
 export const RequestManager = {
   get: async (url: string, body?: unknown) => {
-    return runMethod(RequestMethod.Get, url, body);
+    return runMethod("get", url, body);
   },
   post: (url: string, body?: unknown) => {
-    return runMethod(RequestMethod.Post, url, body);
+    return runMethod("post", url, body);
   },
   delete: (url: string, body?: unknown) => {
-    return runMethod(RequestMethod.Delete, url, body);
+    return runMethod("delete", url, body);
   },
   patch: (url: string, body?: unknown) => {
-    return runMethod(RequestMethod.Patch, url, body);
+    return runMethod("patch", url, body);
   },
   put: (url: string, body?: unknown) => {
-    return runMethod(RequestMethod.Put, url, body);
+    return runMethod("put", url, body);
   },
 };
 
-function createRequestBody(body: any, method: RequestMethod) {
+function createRequestBody(body: any, method: RequestMethods) {
   const headers: { [key: string]: string } = {
     Authorization: authorization,
     "User-Agent":
@@ -156,7 +157,7 @@ function createRequestBody(body: any, method: RequestMethod) {
     form.append("payload_json", JSON.stringify({ ...body, file: undefined }));
     body.file = form;
   } else if (
-    body && ![RequestMethod.Get, RequestMethod.Delete].includes(method)
+    body && !["get", "delete"].includes(method)
   ) {
     headers["Content-Type"] = "application/json";
   }
@@ -184,7 +185,7 @@ async function checkRatelimits(url: string) {
 }
 
 async function runMethod(
-  method: RequestMethod,
+  method: RequestMethods,
   url: string,
   body?: unknown,
   retryCount = 0,

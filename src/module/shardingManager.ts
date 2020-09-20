@@ -1,27 +1,26 @@
-import {
+import type { IdentifyPayload } from "./client.ts";
+import type { Guild } from "../structures/guild.ts";
+import type { FetchMembersOptions } from "../types/guild.ts";
+import type {
   DiscordBotGatewayData,
   DiscordPayload,
-  GatewayOpcode,
 } from "../types/discord.ts";
-import {
-  eventHandlers,
-  botGatewayData,
-  identifyPayload,
-  IdentifyPayload,
-} from "./client.ts";
-import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
-import { Guild } from "../structures/guild.ts";
-import {
-  FetchMembersOptions,
-} from "../types/guild.ts";
+import type { BotStatusRequest } from "../utils/utils.ts";
+
+import { controllers } from "../controllers/mod.ts";
 import { cache } from "../utils/cache.ts";
 import {
   createBasicShard,
   requestGuildMembers,
   botGatewayStatusRequest,
 } from "./basicShard.ts";
-import { BotStatusRequest } from "../utils/utils.ts";
-import { controllers } from "../controllers/mod.ts";
+import {
+  eventHandlers,
+  botGatewayData,
+  identifyPayload,
+} from "./client.ts";
+import { GatewayOpcode } from "../types/discord.ts";
+import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
 
 let shardCounter = 0;
 let basicSharding = false;

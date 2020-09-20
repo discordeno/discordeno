@@ -1,21 +1,25 @@
-import { Member } from "../structures/member.ts";
-import { ImageSize, ImageFormats } from "../types/cdn.ts";
+import type { Member } from "../structures/member.ts";
+import type { ImageSize, ImageFormats } from "../types/cdn.ts";
+import type {
+  MessageContent,
+  DMChannelCreatePayload,
+} from "../types/channel.ts";
+import type { EditMemberOptions } from "../types/member.ts";
+
+import { sendMessage } from "./channel.ts";
+import { structures } from "../structures/mod.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import { endpoints } from "../constants/discord.ts";
+import { botID } from "../module/client.ts";
+import { Permissions } from "../types/permission.ts";
+import { Errors } from "../types/errors.ts";
+import { RequestManager } from "../module/requestManager.ts";
 import {
   highestRole,
   higherRolePosition,
   botHasPermission,
 } from "../utils/permissions.ts";
-import { botID } from "../module/client.ts";
-import { Permissions } from "../types/permission.ts";
-import { Errors } from "../types/errors.ts";
-import { RequestManager } from "../module/requestManager.ts";
-import { MessageContent, DMChannelCreatePayload } from "../types/channel.ts";
-import { EditMemberOptions } from "../types/member.ts";
-import { sendMessage } from "./channel.ts";
-import { structures } from "../structures/mod.ts";
-import { cacheHandlers } from "../controllers/cache.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
 export function rawAvatarURL(

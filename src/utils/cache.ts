@@ -1,8 +1,8 @@
 import { Collection } from "./collection.ts";
-import { Message } from "../structures/message.ts";
-import { Guild } from "../structures/guild.ts";
-import { Channel } from "../structures/channel.ts";
-import { PresenceUpdatePayload } from "../types/discord.ts";
+import type { Message } from "../structures/message.ts";
+import type { Guild } from "../structures/guild.ts";
+import type { Channel } from "../structures/channel.ts";
+import type { PresenceUpdatePayload } from "../types/discord.ts";
 
 export interface CacheData {
   isReady: boolean;
@@ -23,5 +23,3 @@ export const cache: CacheData = {
   presences: new Collection(),
   fetchAllMembersProcessingRequests: new Collection<string, Function>(),
 };
-
-

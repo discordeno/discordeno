@@ -1,4 +1,4 @@
-import { UserPayload } from "./guild.ts";
+import type { UserPayload } from "./guild.ts";
 
 export interface EditMemberOptions {
   /** Value to set users nickname to. Requires MANAGE_NICKNAMES permission. */
