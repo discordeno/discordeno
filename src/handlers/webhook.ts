@@ -102,5 +102,5 @@ export async function executeWebhook(
 }
 
 export function getWebhook(webhookID: string) {
-  return RequestManager.get(endpoints.WEBHOOK_ID(webhookID))
+  return RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
 }
