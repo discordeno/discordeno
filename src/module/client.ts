@@ -36,6 +36,7 @@ export interface IdentifyPayload {
 }
 
 export const createClient = async (data: ClientOptions) => {
+  if (data.properties) identifyPayload.properties = data.properties;
   if (data.eventHandlers) eventHandlers = data.eventHandlers;
   authorization = `Bot ${data.token}`;
 
