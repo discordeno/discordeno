@@ -14,7 +14,7 @@ export let botGatewayData: DiscordBotGatewayData;
 
 export const identifyPayload: IdentifyPayload = {
   token: "",
-  compress: false,
+  compress: true,
   properties: {
     $os: "linux",
     $browser: "Discordeno",

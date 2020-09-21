@@ -1,5 +1,5 @@
 import type { MessageCreateOptions } from "../types/message.ts";
-import {
+import type {
   GetMessagesAfter,
   GetMessagesBefore,
   GetMessagesAround,

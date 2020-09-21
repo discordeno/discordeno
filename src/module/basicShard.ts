@@ -3,6 +3,8 @@ import type { IdentifyPayload } from "./client.ts";
 import {
   connectWebSocket,
   isWebSocketCloseEvent,
+  isWebSocketPingEvent,
+  isWebSocketPongEvent,
   WebSocket,
 } from "https://deno.land/std@0.67.0/ws/mod.ts";
 import type { DiscordHeartbeatPayload } from "../types/discord.ts";
@@ -11,12 +13,14 @@ import type { BotStatusRequest } from "../utils/utils.ts";
 
 import { handleDiscordPayload } from "./shardingManager.ts";
 import { logRed } from "../utils/logger.ts";
-import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
 import { GatewayOpcode } from "../types/discord.ts";
 import {
   eventHandlers,
   botGatewayData,
 } from "./client.ts";
+import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
+import { cache } from "../utils/cache.ts";
+import { inflate } from "https://deno.land/x/zlib.es@v1.0.0/mod.ts";
 
 const basicShards = new Map<number, BasicShard>();
 const heartbeating = new Set<number>();
@@ -66,7 +70,48 @@ export async function createBasicShard(
     await resume(basicShard, identifyPayload);
   }
 
-  for await (const message of basicShard.socket) {
+  for await (let message of basicShard.socket) {
+    if (isWebSocketCloseEvent(message)) {
+      eventHandlers.debug?.(
+        { type: "websocketClose", data: { shardID: basicShard.id, message } },
+      );
+
+      // These error codes should just crash the projects
+      if ([4004, 4005, 4012, 4013, 4014].includes(message.code)) {
+        logRed(`Close :( ${JSON.stringify(message)}`);
+        eventHandlers.debug?.(
+          {
+            type: "websocketErrored",
+            data: { shardID: basicShard.id, message },
+          },
+        );
+
+        throw new Error(
+          "Shard.ts: Error occurred that is not resumeable or able to be reconnected.",
+        );
+      }
+      // These error codes can not be resumed but need to reconnect from start
+      if ([4003, 4007, 4008, 4009].includes(message.code)) {
+        eventHandlers.debug?.(
+          {
+            type: "websocketReconnecting",
+            data: { shardID: basicShard.id, message },
+          },
+        );
+        createBasicShard(botGatewayData, identifyPayload, false, shardID);
+      } else {
+        basicShard.needToResume = true;
+        resumeConnection(botGatewayData, identifyPayload, basicShard.id);
+      }
+      continue;
+    } else if (isWebSocketPingEvent(message) || isWebSocketPongEvent(message)) {
+      continue;
+    }
+
+    if (message instanceof Uint8Array) {
+      message = new TextDecoder().decode(inflate(message as Uint8Array));
+    }
+
     if (typeof message === "string") {
       const data = JSON.parse(message);
       if (!data.t) eventHandlers.rawGateway?.(data);
@@ -117,38 +162,6 @@ export async function createBasicShard(
 
           handleDiscordPayload(data, basicShard.id);
           break;
-      }
-    } else if (isWebSocketCloseEvent(message)) {
-      eventHandlers.debug?.(
-        { type: "websocketClose", data: { shardID: basicShard.id, message } },
-      );
-
-      // These error codes should just crash the projects
-      if ([4004, 4005, 4012, 4013, 4014].includes(message.code)) {
-        logRed(`Close :( ${JSON.stringify(message)}`);
-        eventHandlers.debug?.(
-          {
-            type: "websocketErrored",
-            data: { shardID: basicShard.id, message },
-          },
-        );
-
-        throw new Error(
-          "Shard.ts: Error occurred that is not resumeable or able to be reconnected.",
-        );
-      }
-      // These error codes can not be resumed but need to reconnect from start
-      if ([4003, 4007, 4008, 4009].includes(message.code)) {
-        eventHandlers.debug?.(
-          {
-            type: "websocketReconnecting",
-            data: { shardID: basicShard.id, message },
-          },
-        );
-        createBasicShard(botGatewayData, identifyPayload, false, shardID);
-      } else {
-        basicShard.needToResume = true;
-        resumeConnection(botGatewayData, identifyPayload, basicShard.id);
       }
     }
   }
