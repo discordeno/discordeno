@@ -4,7 +4,6 @@ import { baseEndpoints } from "../constants/discord.ts";
 import type { RequestMethods } from "../types/fetch.ts";
 
 import { Errors } from "../types/errors.ts";
-import { logRed } from "../utils/logger.ts";
 import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
 
 const pathQueues: { [key: string]: QueuedRequest[] } = {};
@@ -290,7 +289,6 @@ function handleStatusCode(response: Response) {
   }
 
   console.error(response);
-  logRed(response);
 
   switch (status) {
     case HttpResponseCode.BadRequest:

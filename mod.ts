@@ -45,7 +45,6 @@ export * from "./src/types/role.ts";
 export * from "./src/utils/cache.ts";
 export * from "./src/utils/cdn.ts";
 export * from "./src/utils/collection.ts";
-export * from "./src/utils/logger.ts";
 export * from "./src/utils/permissions.ts";
 export * from "./src/utils/utils.ts";
 

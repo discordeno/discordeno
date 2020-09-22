@@ -99,6 +99,7 @@ export async function createGuildChannel(
       name,
       permission_overwrites: options?.permission_overwrites?.map((perm) => ({
         ...perm,
+        
         allow: perm.allow.reduce(
           (bits, p) => bits |= BigInt(Permissions[p]),
           BigInt(0),

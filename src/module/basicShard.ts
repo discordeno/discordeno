@@ -12,14 +12,12 @@ import type { FetchMembersOptions } from "../types/guild.ts";
 import type { BotStatusRequest } from "../utils/utils.ts";
 
 import { handleDiscordPayload } from "./shardingManager.ts";
-import { logRed } from "../utils/logger.ts";
 import { GatewayOpcode } from "../types/discord.ts";
 import {
   eventHandlers,
   botGatewayData,
 } from "./client.ts";
 import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
-import { cache } from "../utils/cache.ts";
 import { inflate } from "https://deno.land/x/zlib.es@v1.0.0/mod.ts";
 
 const basicShards = new Map<number, BasicShard>();
@@ -78,7 +76,7 @@ export async function createBasicShard(
 
       // These error codes should just crash the projects
       if ([4004, 4005, 4012, 4013, 4014].includes(message.code)) {
-        logRed(`Close :( ${JSON.stringify(message)}`);
+        console.error(`Close :( ${JSON.stringify(message)}`);
         eventHandlers.debug?.(
           {
             type: "websocketErrored",
