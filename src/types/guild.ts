@@ -450,18 +450,23 @@ export interface Overwrite {
   /** The role or user id */
   id: string;
   /** Whether this is a role or a member */
-  type: "role" | "member";
+  type: OverwriteType;
   /** The permissions that this id is allowed to do. (This will mark it as a green check.) */
   allow: Permission[];
   /** The permissions that this id is NOT allowed to do. (This will mark it as a red x.) */
   deny: Permission[];
 }
 
+export enum OverwriteType {
+  ROLE,
+  MEMBER,
+}
+
 export interface RawOverwrite {
   /** The role or user id */
   id: string;
   /** Whether this is a role or a member */
-  type: "role" | "member";
+  type: OverwriteType;
   /** The permissions that this id is allowed to do. (This will mark it as a green check.) */
   allow: number;
   /** The permissions that this id is NOT allowed to do. (This will mark it as a red x.) */

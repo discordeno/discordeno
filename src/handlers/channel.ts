@@ -11,7 +11,6 @@ import type {
 } from "../types/channel.ts";
 import type { RawOverwrite } from "../types/guild.ts";
 
-import { logYellow } from "../utils/logger.ts";
 import { endpoints } from "../constants/discord.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { Errors } from "../types/errors.ts";
@@ -189,7 +188,7 @@ export function deleteMessages(
   }
 
   if (ids.length > 100) {
-    logYellow(
+    console.warn(
       `This endpoint only accepts a maximum of 100 messages. Deleting the first 100 message ids provided.`,
     );
   }
@@ -326,11 +325,11 @@ export function editChannel(
           allow: overwrite.allow.reduce(
             (bits, perm) => bits |= BigInt(Permissions[perm]),
             BigInt(0),
-          ),
+          ).toString(),
           deny: overwrite.deny.reduce(
             (bits, perm) => bits |= BigInt(Permissions[perm]),
             BigInt(0),
-          ),
+          ).toString(),
         };
       },
     ),
