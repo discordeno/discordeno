@@ -18,6 +18,7 @@ export async function createMessage(data: MessageCreateOptions) {
     ...rest,
     channelID,
     guildID: guildID || "",
+    mentions: data.mentions.map((m) => m.id),
     mentionsEveryone,
     mentionRoles,
     mentionChannels: mentionChannels || [],
