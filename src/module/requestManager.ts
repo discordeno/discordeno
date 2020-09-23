@@ -197,6 +197,9 @@ async function runMethod(
     },
   );
 
+  const errorStack = new Error("Location In Your Files:");
+  Error.captureStackTrace(errorStack);
+
   return new Promise((resolve, reject) => {
     const callback = async () => {
       try {
@@ -227,7 +230,7 @@ async function runMethod(
           },
         );
         const bucketIDFromHeaders = processHeaders(url, response.headers);
-        handleStatusCode(response);
+        handleStatusCode(response, errorStack);
 
         // Sometimes Discord returns an empty 204 response that can't be made to JSON.
         if (response.status === 204) return resolve();
@@ -238,6 +241,12 @@ async function runMethod(
           json.message === "You are being rate limited."
         ) {
           if (retryCount > 10) {
+            eventHandlers.debug?.(
+              {
+                type: "error",
+                data: { method, url, body, retryCount, bucketID, errorStack },
+              },
+            );
             throw new Error(Errors.RATE_LIMIT_RETRY_MAXED);
           }
 
@@ -258,8 +267,8 @@ async function runMethod(
       } catch (error) {
         eventHandlers.debug?.(
           {
-            type: "requestManagerFailed",
-            data: { method, url, body, retryCount, bucketID },
+            type: "error",
+            data: { method, url, body, retryCount, bucketID, errorStack },
           },
         );
         return reject(error);
@@ -278,7 +287,7 @@ async function runMethod(
   });
 }
 
-function handleStatusCode(response: Response) {
+function handleStatusCode(response: Response, errorStack?: unknown) {
   const status = response.status;
 
   if (
@@ -288,6 +297,12 @@ function handleStatusCode(response: Response) {
     return true;
   }
 
+  eventHandlers.debug?.(
+    {
+      type: "error",
+      data: { errorStack },
+    },
+  );
   console.error(response);
 
   switch (status) {

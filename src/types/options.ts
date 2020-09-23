@@ -56,10 +56,10 @@ export interface DebugArg {
   /** Red is for errors or urgent issues. Yellow is for warnings/alerts. Green is for actions being taken. Blue is for  */
   type?:
     | "identifying"
+    | "error"
     | "requestManager"
     | "globallyRateLimited"
     | "requestManagerSuccess"
-    | "requestManagerFailed"
     | "requestManagerFetching"
     | "requestManagerFetched"
     | "requestMembersProcessing"
