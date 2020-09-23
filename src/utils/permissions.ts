@@ -33,7 +33,7 @@ export function memberHasPermission(
   if (memberID === guild.ownerID) return true;
 
   const permissionBits = memberRoleIDs.map((id) =>
-    guild.roles.get(id)?.permissions_new
+    guild.roles.get(id)?.permissions
   )
     .reduce((bits, permissions) => {
       bits |= BigInt(permissions);
@@ -60,7 +60,7 @@ export async function botHasPermission(
   const permissionBits = member.roles
     .map((id) => guild.roles.get(id)!)
     .reduce((bits, data) => {
-      bits |= BigInt(data.permissions_new);
+      bits |= BigInt(data.permissions);
 
       return bits;
     }, BigInt(0));
