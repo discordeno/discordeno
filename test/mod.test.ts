@@ -47,7 +47,6 @@ Deno.test({
 
     guildID = result.id;
     await delay(15000);
-    assertEquals(typeof result.id, "string");
   },
   sanitizeOps: false,
 });
@@ -57,8 +56,6 @@ Deno.test({
   fn: async () => {
     if (!guildID) throw "The guild id was not present.";
     await leave(guildID);
-
-    assertEquals(typeof "", "string");
   },
   sanitizeOps: false,
 });
