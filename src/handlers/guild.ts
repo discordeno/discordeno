@@ -584,7 +584,7 @@ export function getInvites(guildID: string) {
 }
 
 /** Leave a guild */
-export function leave(guildID: string) {
+export function leaveGuild(guildID: string) {
   return RequestManager.delete(endpoints.GUILD_LEAVE(guildID));
 }
 
