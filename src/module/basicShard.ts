@@ -19,8 +19,9 @@ import {
 } from "./client.ts";
 import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
 import { inflate } from "https://deno.land/x/zlib.es@v1.0.0/mod.ts";
+import { Collection } from "../utils/collection.ts";
 
-const basicShards = new Map<number, BasicShard>();
+export const basicShards = new Collection<number, BasicShard>();
 const heartbeating = new Set<number>();
 
 export interface BasicShard {

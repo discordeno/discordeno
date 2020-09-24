@@ -17,7 +17,7 @@ export class Collection<K, V> extends Map<K, V> {
   }
 
   first() {
-    return this.values().next().value;
+    return this.values().next().value as V;
   }
 
   last(): V {
