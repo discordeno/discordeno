@@ -1,0 +1,15 @@
+name: Test
+on:
+  push:
+    branches:
+      - master
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denolib/setup-deno@master
+      - name: Cache dependencies
+        run: deno cache mod.ts test/mod.test.ts
+      - name: Run test script
+        run: deno test -A
