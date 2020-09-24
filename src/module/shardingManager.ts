@@ -20,7 +20,7 @@ import {
   identifyPayload,
 } from "./client.ts";
 import { GatewayOpcode } from "../types/discord.ts";
-import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
+import { delay } from "../../deps.ts";
 
 let shardCounter = 0;
 let basicSharding = false;
