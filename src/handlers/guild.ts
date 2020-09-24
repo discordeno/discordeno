@@ -44,6 +44,12 @@ export function createServer(options: CreateServerOptions) {
   return RequestManager.post(endpoints.GUILDS, options);
 }
 
+/** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event.
+ */
+export function deleteServer(guildID: string) {
+  return RequestManager.delete(endpoints.GUILD(guildID));
+}
+
 /** Gets an array of all the channels ids that are the children of this category. */
 export function categoryChildrenIDs(guild: Guild, id: string) {
   return guild.channels.filter((channel) => channel.parentID === id);
