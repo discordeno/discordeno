@@ -19,6 +19,7 @@ import type {
   ChannelCreateOptions,
   BannedUser,
   UserPayload,
+  CreateServerOptions,
 } from "../types/guild.ts";
 import type { RoleData } from "../types/role.ts";
 import type { MemberCreatePayload } from "../types/member.ts";
@@ -37,6 +38,11 @@ import { Permissions } from "../types/permission.ts";
 import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { formatImageURL } from "../utils/cdn.ts";
+
+/** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
+export function createServer(options: CreateServerOptions) {
+  return RequestManager.post(endpoints.GUILDS, options);
+}
 
 /** Gets an array of all the channels ids that are the children of this category. */
 export function categoryChildrenIDs(guild: Guild, id: string) {
@@ -99,7 +105,7 @@ export async function createGuildChannel(
       name,
       permission_overwrites: options?.permission_overwrites?.map((perm) => ({
         ...perm,
-        
+
         allow: perm.allow.reduce(
           (bits, p) => bits |= BigInt(Permissions[p]),
           BigInt(0),

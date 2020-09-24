@@ -51,6 +51,7 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/channels/${id}/messages/${messageID}/crosspost`,
 
   // Guild Endpoints
+  GUILDS: `${baseEndpoints.BASE_URL}/guilds`,
   GUILD: (id: string) => `${GUILDS_BASE(id)}`,
   GUILD_AUDIT_LOGS: (id: string) => `${GUILDS_BASE(id)}/audit-logs`,
   GUILD_BAN: (id: string, userID: string) =>

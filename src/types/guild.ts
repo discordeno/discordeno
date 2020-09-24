@@ -583,3 +583,28 @@ export interface FetchMembersOptions {
   /** Maximum number of members to return that match the query. Default = 0 which will return all members. */
   limit?: number;
 }
+
+export interface CreateServerOptions {
+  /** name of the guild (2-100 characters) */
+  name: string;
+  /** voice region id */
+  region?: string;
+  /** guild icon image url or base64 128x128 image for the guild icon */
+  icon?: string;
+  /** verification level */
+  verification_level?: number;
+  /** default message notification level */
+  default_message_notifications?: number;
+  /** explicit content filter level */
+  explicit_content_filter?: number;
+  /** array of role objects	new guild roles */
+  roles?: RoleData[];
+  /** array of partial channel objects	new guild's channels */
+  channels?: ChannelCreatePayload[];
+  /** id for afk channel */
+  afk_channel_id?: string;
+  /** afk timeout in seconds */
+  afk_timeout?: number;
+  /** the id of the channel where guild notices such as welcome messages and boost events are posted */
+  system_channel_id?: string;
+}
