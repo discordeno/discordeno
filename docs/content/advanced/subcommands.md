@@ -40,7 +40,7 @@ botCache.commands.set("prefix", {
       `)
       .setTimestamp();
 
-    sendEmbed(message.channel, embed);
+    sendEmbed(message.channelID, embed);
   },
 });
 
@@ -74,7 +74,7 @@ createSubcommand("prefix", {
       `)
       .setTimestamp();
 
-    sendEmbed(message.channel, embed);
+    sendEmbed(message.channelID, embed);
   },
 });
 ```
@@ -102,7 +102,7 @@ botCache.commands.set("prefix", {
       `)
       .setTimestamp();
 
-    sendEmbed(message.channel, embed);
+    sendEmbed(message.channelID, embed);
   },
 });
 ```
@@ -140,7 +140,7 @@ createSubcommand("prefix", {
       `)
       .setTimestamp();
 
-    sendEmbed(message.channel, embed);
+    sendEmbed(message.channelID, embed);
   },
 });
 ```
@@ -221,4 +221,4 @@ createSubcommand("settings-feedback", {
 
 ---
 
-**THE POWER AND MAGIC OF DISCORDENO AT YOUR FINGERTIPS!** 
+**THE POWER AND MAGIC OF DISCORDENO AT YOUR FINGERTIPS!**

@@ -8,9 +8,9 @@ import { Permissions } from "../types/permission.ts";
 import { Errors } from "../types/errors.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { endpoints } from "../constants/discord.ts";
-import { createMessage } from "../structures/message.ts";
 import { MessageCreateOptions } from "../types/message.ts";
 import { urlToBase64 } from "../utils/utils.ts";
+import { structures } from "../structures/mod.ts";
 
 /** Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
 *
@@ -98,7 +98,7 @@ export async function executeWebhook(
   );
   if (!options.wait) return;
 
-  return createMessage(result as MessageCreateOptions);
+  return structures.createMessage(result as MessageCreateOptions);
 }
 
 export function getWebhook(webhookID: string) {

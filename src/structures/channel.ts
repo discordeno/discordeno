@@ -1,8 +1,12 @@
 import { ChannelCreatePayload } from "../types/channel.ts";
 import { calculatePermissions } from "../utils/permissions.ts";
-import { cache } from "../utils/cache.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
+import { Unpromise } from "../types/misc.ts";
 
-export function createChannel(data: ChannelCreatePayload, guildID?: string) {
+export async function createChannel(
+  data: ChannelCreatePayload,
+  guildID?: string,
+) {
   const {
     guild_id: rawGuildID,
     last_message_id: lastMessageID,
@@ -31,8 +35,8 @@ export function createChannel(data: ChannelCreatePayload, guildID?: string) {
     permissions: data.permission_overwrites
       ? data.permission_overwrites.map((perm) => ({
         ...perm,
-        allow: calculatePermissions(BigInt(perm.allow_new)),
-        deny: calculatePermissions(BigInt(perm.deny_new)),
+        allow: calculatePermissions(BigInt(perm.allow)),
+        deny: calculatePermissions(BigInt(perm.deny)),
       }))
       : [],
     /** Whether this channel is nsfw or not */
@@ -41,8 +45,8 @@ export function createChannel(data: ChannelCreatePayload, guildID?: string) {
     mention: `<#${data.id}>`,
   };
 
-  cache.channels.set(data.id, channel);
+  cacheHandlers.set("channels", data.id, channel);
   return channel;
 }
 
-export interface Channel extends ReturnType<typeof createChannel> {}
+export interface Channel extends Unpromise<ReturnType<typeof createChannel>> {}

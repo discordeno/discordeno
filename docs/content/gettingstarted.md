@@ -60,7 +60,7 @@ Client({
         },
         messageCreate: (message) => {
             if (message.content === "!ping") {
-                sendMessage(message.channel, "Pong");
+                sendMessage(message.channelID, "Pong");
             }
         }
     }

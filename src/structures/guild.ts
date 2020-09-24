@@ -1,10 +1,10 @@
 import { CreateGuildPayload } from "../types/guild.ts";
 import { Collection } from "../utils/collection.ts";
-import { createRole } from "./role.ts";
-import { createMember, Member } from "./member.ts";
-import { createChannel } from "./channel.ts";
+import { structures } from "./mod.ts";
+import { Member } from "./member.ts";
+import { Unpromise } from "../types/misc.ts";
 
-export const createGuild = (data: CreateGuildPayload, shardID: number) => {
+export async function createGuild(data: CreateGuildPayload, shardID: number) {
   const {
     owner_id: ownerID,
     afk_channel_id: afkChannelID,
@@ -25,6 +25,13 @@ export const createGuild = (data: CreateGuildPayload, shardID: number) => {
     voice_states: voiceStates,
     ...rest
   } = data;
+
+  const roles = await Promise.all(
+    data.roles.map((r) => structures.createRole(r)),
+  );
+  const channels = await Promise.all(
+    data.channels.map((c) => structures.createChannel(c, data.id)),
+  );
 
   const guild = {
     ...rest,
@@ -60,15 +67,13 @@ export const createGuild = (data: CreateGuildPayload, shardID: number) => {
     preferredLocale,
 
     /** The roles in the guild */
-    roles: new Collection(data.roles.map((r) => [r.id, createRole(r)])),
+    roles: new Collection(roles.map((r) => [r.id, r])),
     /** When this guild was joined at. */
     joinedAt: Date.parse(joinedAt),
     /** The users in this guild. */
     members: new Collection<string, Member>(),
     /** The channels in the guild */
-    channels: new Collection(
-      data.channels.map((c) => [c.id, createChannel(c, data.id)]),
-    ),
+    channels: new Collection(channels.map((c) => [c.id, c])),
     /** The presences of all the users in the guild. */
     presences: new Collection(data.presences.map((p) => [p.user.id, p])),
     /** The total number of members in this guild. This value is updated as members leave and join the server. However, if you do not have the intent enabled to be able to listen to these events, then this will not be accurate. */
@@ -86,11 +91,11 @@ export const createGuild = (data: CreateGuildPayload, shardID: number) => {
     }])),
   };
 
-  data.members.forEach((m) =>
-    guild.members.set(m.user.id, createMember(m, guild))
+  data.members.forEach(async (m) =>
+    guild.members.set(m.user.id, await structures.createMember(m, guild.id))
   );
 
   return guild;
-};
+}
 
-export interface Guild extends ReturnType<typeof createGuild> {}
+export interface Guild extends Unpromise<ReturnType<typeof createGuild>> {}

@@ -1,15 +1,10 @@
 import { Guild } from "../structures/guild.ts";
-import { createChannel } from "../structures/channel.ts";
-
 import { formatImageURL } from "../utils/cdn.ts";
 import { botHasPermission } from "../utils/permissions.ts";
-
 import { RequestManager } from "../module/requestManager.ts";
-
 import { endpoints } from "../constants/discord.ts";
-
 import { Errors } from "../types/errors.ts";
-import { Permissions, Permission } from "../types/permission.ts";
+import { Permissions } from "../types/permission.ts";
 import {
   ChannelCreatePayload,
   ChannelTypes,
@@ -32,24 +27,19 @@ import {
   UserPayload,
 } from "../types/guild.ts";
 import { RoleData } from "../types/role.ts";
-import { createRole } from "../structures/role.ts";
 import { Intents } from "../types/options.ts";
 import { identifyPayload } from "../module/client.ts";
 import { requestAllMembers } from "../module/shardingManager.ts";
 import { MemberCreatePayload } from "../types/member.ts";
-import { cache } from "../utils/cache.ts";
-import { createMember, Member } from "../structures/member.ts";
+import { Member } from "../structures/member.ts";
 import { urlToBase64 } from "../utils/utils.ts";
 import { Collection } from "../utils/collection.ts";
+import { structures } from "../structures/mod.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
 
 /** Gets an array of all the channels ids that are the children of this category. */
 export function categoryChildrenIDs(guild: Guild, id: string) {
-  const channelIDs: string[] = [];
-  guild.channels.forEach((channel) => {
-    if (channel.parentID === id) channelIDs.push(channel.id);
-  });
-
-  return channelIDs;
+  return guild.channels.filter((channel) => channel.parentID === id);
 }
 
 /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
@@ -120,7 +110,7 @@ export async function createGuildChannel(
       type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
 
-  const channel = createChannel(result);
+  const channel = await structures.createChannel(result);
   guild.channels.set(result.id, channel);
   return channel;
 }
@@ -146,13 +136,13 @@ export async function getChannels(guildID: string, addToCache = true) {
   const result = await RequestManager.get(
     endpoints.GUILD_CHANNELS(guildID),
   ) as ChannelCreatePayload[];
-  return result.map((res) => {
-    const channel = createChannel(res, guildID);
+  return Promise.all(result.map(async (res) => {
+    const channel = await structures.createChannel(res, guildID);
     if (addToCache) {
-      cache.channels.set(channel.id, channel);
+      cacheHandlers.set("channels", channel.id, channel);
     }
     return channel;
-  });
+  }));
 }
 
 /** Fetches a single channel object from the api.
@@ -163,8 +153,8 @@ export async function getChannel(channelID: string, addToCache = true) {
   const result = await RequestManager.get(
     endpoints.GUILD_CHANNEL(channelID),
   ) as ChannelCreatePayload;
-  const channel = createChannel(result, result.guild_id);
-  if (addToCache) cache.channels.set(channel.id, channel);
+  const channel = await structures.createChannel(result, result.guild_id);
+  if (addToCache) cacheHandlers.set("channels", channel.id, channel);
   return channel;
 }
 
@@ -187,14 +177,14 @@ export function swapChannels(
 * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
 */
 export async function getMember(guildID: string, id: string) {
-  const guild = cache.guilds.get(guildID);
+  const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return;
 
   const data = await RequestManager.get(
     endpoints.GUILD_MEMBER(guildID, id),
   ) as MemberCreatePayload;
 
-  const member = createMember(data, guild);
+  const member = await structures.createMember(data, guild.id);
   guild.members.set(id, member);
   return member;
 }
@@ -208,7 +198,7 @@ export async function getMembersByQuery(
   name: string,
   limit = 1,
 ) {
-  const guild = cache.guilds.get(guildID);
+  const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return;
 
   return new Promise((resolve) => {
@@ -300,8 +290,8 @@ export async function createGuildRole(
   );
 
   const roleData = result as RoleData;
-  const role = createRole(roleData);
-  const guild = cache.guilds.get(guildID);
+  const role = await structures.createRole(roleData);
+  const guild = await cacheHandlers.get("guilds", guildID);
   guild?.roles.set(role.id, role);
   return role;
 }
@@ -482,7 +472,7 @@ export function deleteIntegration(guildID: string, id: string) {
   return RequestManager.delete(endpoints.GUILD_INTEGRATION(guildID, id));
 }
 
-/** Sync an integration. Requires teh MANAGE_GUILD permission. */
+/** Sync an integration. Requires the MANAGE_GUILD permission. */
 export function syncIntegration(guildID: string, id: string) {
   if (
     !botHasPermission(guildID, [Permissions.MANAGE_GUILD])
@@ -522,7 +512,7 @@ export function getBan(guildID: string, memberID: string) {
   ) as Promise<BannedUser>;
 }
 
-/** Ban a user from the guild and optionally delete previous messages sent by the user. Requires teh BAN_MEMBERS permission. */
+/** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
 export function ban(guildID: string, id: string, options: BanOptions) {
   if (
     !botHasPermission(guildID, [Permissions.BAN_MEMBERS])
@@ -544,45 +534,6 @@ export function unban(guildID: string, id: string) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
   return RequestManager.delete(endpoints.GUILD_BAN(guildID, id));
-}
-
-/** Check whether a member has certain permissions in this channel. */
-export function channelHasPermissions(
-  guild: Guild,
-  channelID: string,
-  memberID: string,
-  permissions: Permission[],
-) {
-  if (memberID === guild.ownerID) return true;
-
-  const member = guild.members.get(memberID);
-  if (!member) {
-    throw new Error(
-      "Invalid member id provided. This member was not found in the cache. Please fetch them with getMember on guild.",
-    );
-  }
-
-  const channel = guild.channels.get(channelID);
-  if (!channel) {
-    throw new Error(
-      "Invalid channel id provided. This channel was not found in the cache.",
-    );
-  }
-
-  let permissionBits = member.roles.reduce((bits, roleID) => {
-    const role = guild.roles.get(roleID);
-    if (!role) return bits;
-
-    bits |= BigInt(role.permissions_new);
-
-    return bits;
-  }, BigInt(0));
-
-  if (permissionBits & BigInt(Permissions.ADMINISTRATOR)) return true;
-
-  return permissions.every((permission) =>
-    permissionBits & BigInt(Permissions[permission])
-  );
 }
 
 /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */

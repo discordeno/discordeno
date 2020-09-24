@@ -20,7 +20,7 @@ botCache.commands.set("invite", {
   execute: function (message) {
     // Replace the permission number at the end to request the permissions you wish to request. By default, this will request Admin perms.
     sendMessage(
-      message.channel,
+      message.channelID,
       `https://discordapp.com/oauth2/authorize?client_id=${botID}&scope=bot&permissions=8`,
     );
   },
@@ -584,7 +584,7 @@ funCommandData.forEach((data) => {
         )
         .setImage(chooseRandom(data.gifs));
 
-      return sendEmbed(message.channel, embed);
+      return sendEmbed(message.channelID, embed);
     },
   });
 

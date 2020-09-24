@@ -101,7 +101,7 @@ nekosEndpoints.forEach((endpoint) => {
     execute: async function (message) {
       const url = `https://nekos.life/api/v2${endpoint.path}`;
       const result = await fetch(url).then((res) => res.json());
-      sendMessage(message.channel, result?.url);
+      sendMessage(message.channelID, result?.url);
     },
   });
 });
@@ -124,7 +124,7 @@ nekosEndpoints.forEach((endpoint) => {
     execute: async function (message) {
       const url = `https://nekos.life/api/v2${endpoint.path}`;
       const result = await fetch(url).then((res) => res.json());
-      sendMessage(message.channel, result?.url);
+      sendMessage(message.channelID, result?.url);
     },
   });
 });
@@ -142,7 +142,7 @@ botCache.commands.set(endpoint.name, {
 	execute: async function (message) {
 		const url = `https://nekos.life/api/v2${endpoint.path}`;
 		const result = await fetch(url).then((res) => res.json());
-		sendMessage(message.channel, result?.url);
+		sendMessage(message.channelID, result?.url);
 	},
 });
 ```
