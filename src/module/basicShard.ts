@@ -6,19 +6,18 @@ import {
   isWebSocketPingEvent,
   isWebSocketPongEvent,
   WebSocket,
-} from "https://deno.land/std@0.67.0/ws/mod.ts";
+} from "../../deps.ts";
 import type { DiscordHeartbeatPayload } from "../types/discord.ts";
 import type { FetchMembersOptions } from "../types/guild.ts";
 import type { BotStatusRequest } from "../utils/utils.ts";
-
 import { handleDiscordPayload } from "./shardingManager.ts";
 import { GatewayOpcode } from "../types/discord.ts";
 import {
   eventHandlers,
   botGatewayData,
 } from "./client.ts";
-import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
-import { inflate } from "https://deno.land/x/zlib.es@v1.0.0/mod.ts";
+import { delay } from "../../deps.ts";
+import { inflate } from "../../deps.ts";
 import { Collection } from "../utils/collection.ts";
 
 export const basicShards = new Collection<number, BasicShard>();

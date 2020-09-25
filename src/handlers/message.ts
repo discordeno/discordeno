@@ -3,7 +3,7 @@ import type { MessageContent } from "../types/channel.ts";
 import type { UserPayload } from "../types/guild.ts";
 import type { MessageCreateOptions } from "../types/message.ts";
 
-import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
+import { delay } from "../../deps.ts";
 import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../module/client.ts";

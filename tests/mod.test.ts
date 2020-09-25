@@ -1,7 +1,5 @@
 import { createClient, Intents, botID } from "../mod.ts";
-import {
-  assertEquals,
-} from "https://deno.land/std/testing/asserts.ts";
+import { assertEquals } from "../deps.ts";
 import {
   createGuildRole,
   createServer,
@@ -9,7 +7,7 @@ import {
   deleteServer,
 } from "../src/handlers/guild.ts";
 import { CreateGuildPayload } from "../src/types/guild.ts";
-import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
+import { delay } from "../deps.ts";
 
 let guildID = "";
 let roleToDelete = "";
