@@ -1,10 +1,10 @@
 import { createClient, Intents, botID } from "../mod.ts";
 import {
   assertEquals,
-} from "https://deno.land/std/testing/asserts.ts";
+} from "../deps.ts";
 import { createServer, deleteServer } from "../src/handlers/guild.ts";
 import { CreateGuildPayload } from "../src/types/guild.ts";
-import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
+import { delay } from "../deps.ts";
 
 const token = Deno.env.get("DISCORD_TOKEN");
 if (!token) throw "No Token Provided!";
