@@ -4,7 +4,7 @@ import { baseEndpoints } from "../constants/discord.ts";
 import type { RequestMethods } from "../types/fetch.ts";
 
 import { Errors } from "../types/errors.ts";
-import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
+import { delay } from "../../deps.ts";
 
 const pathQueues: { [key: string]: QueuedRequest[] } = {};
 const ratelimitedPaths = new Map<string, RateLimitedPath>();
