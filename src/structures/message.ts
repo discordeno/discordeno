@@ -1,7 +1,7 @@
-import { MessageCreateOptions } from "../types/message.ts";
-import { cache } from "../utils/cache.ts";
+import type { MessageCreateOptions } from "../types/message.ts";
+import type { Unpromise } from "../types/misc.ts";
 
-export function createMessage(data: MessageCreateOptions) {
+export async function createMessage(data: MessageCreateOptions) {
   const {
     guild_id: guildID,
     channel_id: channelID,
@@ -18,6 +18,7 @@ export function createMessage(data: MessageCreateOptions) {
     ...rest,
     channelID,
     guildID: guildID || "",
+    mentions: data.mentions.map((m) => m.id),
     mentionsEveryone,
     mentionRoles,
     mentionChannels: mentionChannels || [],
@@ -25,24 +26,9 @@ export function createMessage(data: MessageCreateOptions) {
     messageReference,
     timestamp: Date.parse(data.timestamp),
     editedTimestamp: editedTimestamp ? Date.parse(editedTimestamp) : undefined,
-    channel: cache.channels.get(data.channel_id)!,
-    guild: () => data.guild_id ? cache.guilds.get(data.guild_id) : undefined,
-    member: () => message.guild()?.members.get(data.author.id),
-    mentions: () =>
-      data.mentions.map((mention) =>
-        message.guild()?.members.get(mention.id)! ||
-        cache.guilds.find((g) => g.members.has(mention.id))?.members.get(
-          mention.id,
-        )
-      ),
   };
-
-  // Add guildID when not sent by Discord.
-  if (!message.guildID) {
-    if (message.channel.guildID) message.guildID = message.channel.guildID;
-  }
 
   return message;
 }
 
-export interface Message extends ReturnType<typeof createMessage> {}
+export interface Message extends Unpromise<ReturnType<typeof createMessage>> {}

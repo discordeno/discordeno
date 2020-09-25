@@ -1,15 +1,5 @@
-import { Permissions } from "../types/permission.ts";
-import { Channel } from "../structures/channel.ts";
-import {
-  botHasPermission,
-  botHasChannelPermissions,
-} from "../utils/permissions.ts";
-import { Errors } from "../types/errors.ts";
-import { RequestManager } from "../module/requestManager.ts";
-import { endpoints } from "../constants/discord.ts";
-import { MessageCreateOptions } from "../types/message.ts";
-import { createMessage } from "../structures/message.ts";
-import {
+import type { MessageCreateOptions } from "../types/message.ts";
+import type {
   GetMessagesAfter,
   GetMessagesBefore,
   GetMessagesAround,
@@ -19,85 +9,89 @@ import {
   ChannelEditOptions,
   FollowedChannelPayload,
 } from "../types/channel.ts";
-import { logYellow } from "../utils/logger.ts";
+import type { RawOverwrite } from "../types/guild.ts";
 
-/** Checks if a user id or a role id has permission in this channel */
-export function hasChannelPermission(
-  channel: Channel,
+import { endpoints } from "../constants/discord.ts";
+import { RequestManager } from "../module/requestManager.ts";
+import { Errors } from "../types/errors.ts";
+import { Permissions } from "../types/permission.ts";
+import { botHasChannelPermissions } from "../utils/permissions.ts";
+import { structures } from "../structures/mod.ts";
+
+/** Checks if a channel overwrite for a user id or a role id has permission in this channel */
+export function channelOverwriteHasPermission(
+  guildID: string,
   id: string,
+  overwrites: RawOverwrite[],
   permissions: Permissions[],
 ) {
-  const overwrite =
-    channel.permission_overwrites?.find((perm) => perm.id === id) ||
-    channel.permission_overwrites?.find((perm) => perm.id === channel.guildID);
+  const overwrite = overwrites.find((perm) => perm.id === id) ||
+    overwrites.find((perm) => perm.id === guildID);
 
   return permissions.every((perm) => {
     if (overwrite) {
-      if (BigInt(overwrite.deny_new) & BigInt(perm)) return false;
-      if (BigInt(overwrite.allow_new) & BigInt(perm)) return true;
-    }
-    if (channel.guildID) {
-      return botHasPermission(channel.guildID, [perm]);
+      if (BigInt(overwrite.deny) & BigInt(perm)) return false;
+      if (BigInt(overwrite.allow) & BigInt(perm)) return true;
     }
     return false;
   });
 }
 
 /** Fetch a single message from the server. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
-export async function getMessage(channel: Channel, id: string) {
-  if (channel.guildID) {
-    if (
-      !botHasChannelPermissions(channel.id, [Permissions.VIEW_CHANNEL])
-    ) {
-      throw new Error(Errors.MISSING_VIEW_CHANNEL);
-    }
-    if (
-      !botHasChannelPermissions(
-        channel.id,
-        [Permissions.READ_MESSAGE_HISTORY],
-      )
-    ) {
-      throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
-    }
+export async function getMessage(
+  channelID: string,
+  id: string,
+) {
+  if (
+    !botHasChannelPermissions(channelID, [Permissions.VIEW_CHANNEL])
+  ) {
+    throw new Error(Errors.MISSING_VIEW_CHANNEL);
   }
+  if (
+    !botHasChannelPermissions(
+      channelID,
+      [Permissions.READ_MESSAGE_HISTORY],
+    )
+  ) {
+    throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
+  }
+
   const result = await RequestManager.get(
-    endpoints.CHANNEL_MESSAGE(channel.id, id),
+    endpoints.CHANNEL_MESSAGE(channelID, id),
   ) as MessageCreateOptions;
-  return createMessage(result);
+  return structures.createMessage(result);
 }
 
 /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
 export async function getMessages(
-  channel: Channel,
+  channelID: string,
   options?:
     | GetMessagesAfter
     | GetMessagesBefore
     | GetMessagesAround
     | GetMessages,
 ) {
-  if (channel.guildID) {
-    if (
-      !botHasChannelPermissions(channel.id, [Permissions.VIEW_CHANNEL])
-    ) {
-      throw new Error(Errors.MISSING_VIEW_CHANNEL);
-    }
-    if (
-      !botHasChannelPermissions(
-        channel.id,
-        [Permissions.READ_MESSAGE_HISTORY],
-      )
-    ) {
-      throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
-    }
+  if (
+    !botHasChannelPermissions(channelID, [Permissions.VIEW_CHANNEL])
+  ) {
+    throw new Error(Errors.MISSING_VIEW_CHANNEL);
+  }
+  if (
+    !botHasChannelPermissions(
+      channelID,
+      [Permissions.READ_MESSAGE_HISTORY],
+    )
+  ) {
+    throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
   }
 
   if (options?.limit && options.limit > 100) return;
 
   const result = (await RequestManager.get(
-    endpoints.CHANNEL_MESSAGES(channel.id),
+    endpoints.CHANNEL_MESSAGES(channelID),
     options,
   )) as MessageCreateOptions[];
-  return result.map((res) => createMessage(res));
+  return Promise.all(result.map((res) => structures.createMessage(res)));
 }
 
 /** Get pinned messages in this channel. */
@@ -105,35 +99,33 @@ export async function getPins(channelID: string) {
   const result = (await RequestManager.get(
     endpoints.CHANNEL_PINS(channelID),
   )) as MessageCreateOptions[];
-  return result.map((res) => createMessage(res));
+  return Promise.all(result.map((res) => structures.createMessage(res)));
 }
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(
-  channel: Channel,
+  channelID: string,
   content: string | MessageContent,
 ) {
   if (typeof content === "string") content = { content };
-  if (channel.guildID) {
-    if (
-      !botHasChannelPermissions(channel.id, [Permissions.SEND_MESSAGES])
-    ) {
-      throw new Error(Errors.MISSING_SEND_MESSAGES);
-    }
-    if (
-      content.tts &&
-      !botHasChannelPermissions(
-        channel.id,
-        [Permissions.SEND_TTS_MESSAGES],
-      )
-    ) {
-      throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
-    }
+  if (
+    !botHasChannelPermissions(channelID, [Permissions.SEND_MESSAGES])
+  ) {
+    throw new Error(Errors.MISSING_SEND_MESSAGES);
+  }
+  if (
+    content.tts &&
+    !botHasChannelPermissions(
+      channelID,
+      [Permissions.SEND_TTS_MESSAGES],
+    )
+  ) {
+    throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
   }
 
   if (
     content.embed &&
-    !botHasChannelPermissions(channel.id, [Permissions.EMBED_LINKS])
+    !botHasChannelPermissions(channelID, [Permissions.EMBED_LINKS])
   ) {
     throw new Error(Errors.MISSING_EMBED_LINKS);
   }
@@ -170,25 +162,24 @@ export async function sendMessage(
   }
 
   const result = await RequestManager.post(
-    endpoints.CHANNEL_MESSAGES(channel.id),
+    endpoints.CHANNEL_MESSAGES(channelID),
     {
       ...content,
       allowed_mentions: content.mentions,
     },
   );
 
-  return createMessage(result as MessageCreateOptions);
+  return structures.createMessage(result as MessageCreateOptions);
 }
 
 /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */
 export function deleteMessages(
-  channel: Channel,
+  channelID: string,
   ids: string[],
   reason?: string,
 ) {
   if (
-    channel.guildID &&
-    !botHasChannelPermissions(channel.id, [Permissions.MANAGE_MESSAGES])
+    !botHasChannelPermissions(channelID, [Permissions.MANAGE_MESSAGES])
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
@@ -197,50 +188,48 @@ export function deleteMessages(
   }
 
   if (ids.length > 100) {
-    logYellow(
+    console.warn(
       `This endpoint only accepts a maximum of 100 messages. Deleting the first 100 message ids provided.`,
     );
   }
 
-  return RequestManager.post(endpoints.CHANNEL_BULK_DELETE(channel.id), {
+  return RequestManager.post(endpoints.CHANNEL_BULK_DELETE(channelID), {
     messages: ids.splice(0, 100),
     reason,
   });
 }
 
 /** Gets the invites for this channel. Requires MANAGE_CHANNEL */
-export function getChannelInvites(channel: Channel) {
+export function getChannelInvites(channelID: string) {
   if (
-    channel.guildID &&
-    !botHasChannelPermissions(channel.id, [Permissions.MANAGE_CHANNELS])
+    !botHasChannelPermissions(channelID, [Permissions.MANAGE_CHANNELS])
   ) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
-  return RequestManager.get(endpoints.CHANNEL_INVITES(channel.id));
+  return RequestManager.get(endpoints.CHANNEL_INVITES(channelID));
 }
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
-export function createInvite(channel: Channel, options: CreateInviteOptions) {
+export function createInvite(channelID: string, options: CreateInviteOptions) {
   if (
-    channel.guildID &&
     !botHasChannelPermissions(
-      channel.id,
+      channelID,
       [Permissions.CREATE_INSTANT_INVITE],
     )
   ) {
     throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE);
   }
-  return RequestManager.post(endpoints.CHANNEL_INVITES(channel.id), options);
+  return RequestManager.post(endpoints.CHANNEL_INVITES(channelID), options);
 }
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
-export function getChannelWebhooks(channel: Channel) {
+export function getChannelWebhooks(channelID: string) {
   if (
-    !botHasChannelPermissions(channel.id, [Permissions.MANAGE_WEBHOOKS])
+    !botHasChannelPermissions(channelID, [Permissions.MANAGE_WEBHOOKS])
   ) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
-  return RequestManager.get(endpoints.CHANNEL_WEBHOOKS(channel.id));
+  return RequestManager.get(endpoints.CHANNEL_WEBHOOKS(channelID));
 }
 
 interface EditChannelRequest {
@@ -248,7 +237,7 @@ interface EditChannelRequest {
   timestamp: number;
   channelID: string;
   items: {
-    channel: Channel;
+    channelID: string;
     options: ChannelEditOptions;
   }[];
 }
@@ -272,11 +261,14 @@ function processEditChannelQueue() {
 
     if (!details) return;
 
-    editChannel(details.channel, details.options);
+    editChannel(details.channelID, details.options);
     const secondDetails = request.items.shift();
     if (!secondDetails) return;
 
-    return editChannel(secondDetails.channel, secondDetails.options);
+    return editChannel(
+      secondDetails.channelID,
+      secondDetails.options,
+    );
   });
 
   if (editChannelNameTopicQueue.size) {
@@ -286,21 +278,22 @@ function processEditChannelQueue() {
   }
 }
 
-export function editChannel(channel: Channel, options: ChannelEditOptions) {
-  if (!channel.guildID) throw new Error(Errors.CHANNEL_NOT_IN_GUILD);
-
+export function editChannel(
+  channelID: string,
+  options: ChannelEditOptions,
+) {
   if (
-    !botHasChannelPermissions(channel.id, [Permissions.MANAGE_CHANNELS])
+    !botHasChannelPermissions(channelID, [Permissions.MANAGE_CHANNELS])
   ) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
 
   if (options.name || options.topic) {
-    const request = editChannelNameTopicQueue.get(channel.id);
+    const request = editChannelNameTopicQueue.get(channelID);
     if (!request) {
       // If this hasnt been done before simply add 1 for it
-      editChannelNameTopicQueue.set(channel.id, {
-        channelID: channel.id,
+      editChannelNameTopicQueue.set(channelID, {
+        channelID: channelID,
         amount: 1,
         // 10 minutes from now
         timestamp: Date.now() + 600000,
@@ -312,7 +305,7 @@ export function editChannel(channel: Channel, options: ChannelEditOptions) {
       request.timestamp = Date.now() + 600000;
     } else {
       // 2 have already been used add to queue
-      request.items.push({ channel, options });
+      request.items.push({ channelID, options });
       if (editChannelProcessing) return;
       editChannelProcessing = true;
       processEditChannelQueue();
@@ -322,25 +315,28 @@ export function editChannel(channel: Channel, options: ChannelEditOptions) {
 
   const payload = {
     ...options,
-    permission_overwrites: options.permission_overwrites?.map(
+    rate_limit_per_user: options.slowmode,
+    parent_id: options.parentID,
+    user_limit: options.userLimit,
+    permission_overwrites: options.overwrites?.map(
       (overwrite) => {
         return {
           ...overwrite,
           allow: overwrite.allow.reduce(
             (bits, perm) => bits |= BigInt(Permissions[perm]),
             BigInt(0),
-          ),
+          ).toString(),
           deny: overwrite.deny.reduce(
             (bits, perm) => bits |= BigInt(Permissions[perm]),
             BigInt(0),
-          ),
+          ).toString(),
         };
       },
     ),
   };
 
   return RequestManager.patch(
-    endpoints.GUILD_CHANNEL(channel.id),
+    endpoints.GUILD_CHANNEL(channelID),
     payload,
   );
 }

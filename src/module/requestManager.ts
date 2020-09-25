@@ -1,10 +1,10 @@
-import { RequestMethod } from "../types/fetch.ts";
-import { authorization, eventHandlers } from "./client.ts";
-import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
-import { Errors } from "../types/errors.ts";
 import { HttpResponseCode } from "../types/discord.ts";
-import { logRed } from "../utils/logger.ts";
+import { authorization, eventHandlers } from "./client.ts";
 import { baseEndpoints } from "../constants/discord.ts";
+import type { RequestMethods } from "../types/fetch.ts";
+
+import { Errors } from "../types/errors.ts";
+import { delay } from "../../deps.ts";
 
 const pathQueues: { [key: string]: QueuedRequest[] } = {};
 const ratelimitedPaths = new Map<string, RateLimitedPath>();
@@ -121,23 +121,23 @@ processRateLimitedPaths();
 
 export const RequestManager = {
   get: async (url: string, body?: unknown) => {
-    return runMethod(RequestMethod.Get, url, body);
+    return runMethod("get", url, body);
   },
   post: (url: string, body?: unknown) => {
-    return runMethod(RequestMethod.Post, url, body);
+    return runMethod("post", url, body);
   },
   delete: (url: string, body?: unknown) => {
-    return runMethod(RequestMethod.Delete, url, body);
+    return runMethod("delete", url, body);
   },
   patch: (url: string, body?: unknown) => {
-    return runMethod(RequestMethod.Patch, url, body);
+    return runMethod("patch", url, body);
   },
   put: (url: string, body?: unknown) => {
-    return runMethod(RequestMethod.Put, url, body);
+    return runMethod("put", url, body);
   },
 };
 
-function createRequestBody(body: any, method: RequestMethod) {
+function createRequestBody(body: any, method: RequestMethods) {
   const headers: { [key: string]: string } = {
     Authorization: authorization,
     "User-Agent":
@@ -156,7 +156,7 @@ function createRequestBody(body: any, method: RequestMethod) {
     form.append("payload_json", JSON.stringify({ ...body, file: undefined }));
     body.file = form;
   } else if (
-    body && ![RequestMethod.Get, RequestMethod.Delete].includes(method)
+    body && !["get", "delete"].includes(method)
   ) {
     headers["Content-Type"] = "application/json";
   }
@@ -184,7 +184,7 @@ async function checkRatelimits(url: string) {
 }
 
 async function runMethod(
-  method: RequestMethod,
+  method: RequestMethods,
   url: string,
   body?: unknown,
   retryCount = 0,
@@ -196,6 +196,9 @@ async function runMethod(
       data: { method, url, body, retryCount, bucketID },
     },
   );
+
+  const errorStack = new Error("Location In Your Files:");
+  Error.captureStackTrace(errorStack);
 
   return new Promise((resolve, reject) => {
     const callback = async () => {
@@ -227,7 +230,7 @@ async function runMethod(
           },
         );
         const bucketIDFromHeaders = processHeaders(url, response.headers);
-        handleStatusCode(response);
+        handleStatusCode(response, errorStack);
 
         // Sometimes Discord returns an empty 204 response that can't be made to JSON.
         if (response.status === 204) return resolve();
@@ -238,6 +241,12 @@ async function runMethod(
           json.message === "You are being rate limited."
         ) {
           if (retryCount > 10) {
+            eventHandlers.debug?.(
+              {
+                type: "error",
+                data: { method, url, body, retryCount, bucketID, errorStack },
+              },
+            );
             throw new Error(Errors.RATE_LIMIT_RETRY_MAXED);
           }
 
@@ -258,8 +267,8 @@ async function runMethod(
       } catch (error) {
         eventHandlers.debug?.(
           {
-            type: "requestManagerFailed",
-            data: { method, url, body, retryCount, bucketID },
+            type: "error",
+            data: { method, url, body, retryCount, bucketID, errorStack },
           },
         );
         return reject(error);
@@ -278,7 +287,7 @@ async function runMethod(
   });
 }
 
-function handleStatusCode(response: Response) {
+function handleStatusCode(response: Response, errorStack?: unknown) {
   const status = response.status;
 
   if (
@@ -288,8 +297,13 @@ function handleStatusCode(response: Response) {
     return true;
   }
 
+  eventHandlers.debug?.(
+    {
+      type: "error",
+      data: { errorStack },
+    },
+  );
   console.error(response);
-  logRed(response);
 
   switch (status) {
     case HttpResponseCode.BadRequest:

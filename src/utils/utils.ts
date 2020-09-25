@@ -1,7 +1,8 @@
-import { StatusType } from "../types/discord.ts";
+import type { StatusType } from "../types/discord.ts";
+
 import { ActivityType } from "../types/activity.ts";
 import { sendGatewayCommand } from "../module/shardingManager.ts";
-import { encode } from "https://deno.land/std@0.67.0/encoding/base64.ts";
+import { encode } from "../../deps.ts";
 
 export const sleep = (timeout: number) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));

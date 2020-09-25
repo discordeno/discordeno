@@ -1,7 +1,7 @@
-import { Activity } from "./message.ts";
-import { ClientStatusPayload } from "./presence.ts";
-import { PartialUser, UserPayload } from "./guild.ts";
-import { MemberCreatePayload } from "./member.ts";
+import type { Activity } from "./message.ts";
+import type { ClientStatusPayload } from "./presence.ts";
+import type { PartialUser, UserPayload } from "./guild.ts";
+import type { MemberCreatePayload } from "./member.ts";
 
 export interface DiscordPayload {
   /** OP code for the payload */
@@ -11,7 +11,37 @@ export interface DiscordPayload {
   /** The sequence number, used for resuming sessions and heartbeats. ONLY for OPCode 0 */
   s?: number;
   /** The event name for this payload. ONLY for OPCode 0 */
-  t?: string;
+  t?:
+    | "READY"
+    | "CHANNEL_CREATE"
+    | "CHANNEL_DELETE"
+    | "CHANNEL_UPDATE"
+    | "GUILD_CREATE"
+    | "GUILD_DELETE"
+    | "GUILD_UPDATE"
+    | "GUILD_BAN_ADD"
+    | "GUILD_BAN_REMOVE"
+    | "GUILD_EMOJIS_UPDATE"
+    | "GUILD_MEMBER_ADD"
+    | "GUILD_MEMBER_REMOVE"
+    | "GUILD_MEMBER_UPDATE"
+    | "GUILD_MEMBERS_CHUNK"
+    | "GUILD_ROLE_CREATE"
+    | "GUILD_ROLE_DELETE"
+    | "GUILD_ROLE_UPDATE"
+    | "MESSAGE_CREATE"
+    | "MESSAGE_DELETE"
+    | "MESSAGE_DELETE_BULK"
+    | "MESSAGE_UPDATE"
+    | "MESSAGE_REACTION_ADD"
+    | "MESSAGE_REACTION_REMOVE"
+    | "MESSAGE_REACTION_REMOVE_ALL"
+    | "MESSAGE_REACTION_REMOVE_EMOJI"
+    | "PRESENCE_UPDATE"
+    | "TYPING_START"
+    | "USER_UPDATE"
+    | "VOICE_STATE_UPDATE"
+    | "WEBHOOKS_UPDATE";
 }
 
 export interface DiscordBotGatewayData {
@@ -200,10 +230,6 @@ export interface WebhookUpdatePayload {
 export interface PresenceUpdatePayload {
   /** The user presence is being updated for. */
   user: PartialUser;
-  /** The roles this user is in */
-  roles: string[];
-  /** null, or the user's current activity */
-  game: Activity | null;
   /** The id of the guild */
   guild_id: string;
   /** Either idle, dnd, online, or offline */
@@ -212,10 +238,6 @@ export interface PresenceUpdatePayload {
   activities: Activity[];
   /** The user's platform dependent status */
   client_status: ClientStatusPayload;
-  /** When the user has started boosting the guild */
-  premium_since?: string | null;
-  /** This users guild nickname (if one is set) */
-  nick?: string | null;
 }
 
 export interface TypingStartPayload {

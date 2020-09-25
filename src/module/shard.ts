@@ -1,18 +1,18 @@
-import {
-  connectWebSocket,
-  isWebSocketCloseEvent,
-  WebSocket,
-} from "https://deno.land/std@0.67.0/ws/mod.ts";
-import {
-  GatewayOpcode,
+import type { WebSocket } from "../../deps.ts";
+import type {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
   ReadyPayload,
 } from "../types/discord.ts";
-import { logRed } from "../utils/logger.ts";
-import { FetchMembersOptions } from "../types/guild.ts";
-import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
-import { DebugArg } from "../types/options.ts";
+import type { FetchMembersOptions } from "../types/guild.ts";
+import type { DebugArg } from "../types/options.ts";
+
+import { GatewayOpcode } from "../types/discord.ts";
+import { delay } from "../../deps.ts";
+import {
+  connectWebSocket,
+  isWebSocketCloseEvent,
+} from "../../deps.ts";
 
 let shardSocket: WebSocket;
 
@@ -171,7 +171,7 @@ const createShard = async (
 
       // These error codes should just crash the projects
       if ([4004, 4005, 4012, 4013, 4014].includes(message.code)) {
-        logRed(`Close :( ${JSON.stringify(message)}`);
+        console.error(`Close :( ${JSON.stringify(message)}`);
         postDebug({ type: "websocketErrored", data: { shardID, message } });
 
         throw new Error(

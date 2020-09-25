@@ -20,14 +20,14 @@ import { cache } from "https://x.nest.land/Discordeno@8.4.1/src/utils/cache.ts";
 import logger from "https://x.nest.land/Discordeno@8.4.1/src/utils/logger.ts";
 
 botCache.eventHandlers.ready = function () {
-  logger.info(`Loaded ${botCache.arguments.size} Argument(s)`);
-  logger.info(`Loaded ${botCache.commands.size} Command(s)`);
-  logger.info(`Loaded ${Object.keys(botCache.eventHandlers).length} Event(s)`);
-  logger.info(`Loaded ${botCache.inhibitors.size} Inhibitor(s)`);
-  logger.info(`Loaded ${botCache.monitors.size} Monitor(s)`);
-  logger.info(`Loaded ${botCache.tasks.size} Task(s)`);
+  console.log(`Loaded ${botCache.arguments.size} Argument(s)`);
+  console.log(`Loaded ${botCache.commands.size} Command(s)`);
+  console.log(`Loaded ${Object.keys(botCache.eventHandlers).length} Event(s)`);
+  console.log(`Loaded ${botCache.inhibitors.size} Inhibitor(s)`);
+  console.log(`Loaded ${botCache.monitors.size} Monitor(s)`);
+  console.log(`Loaded ${botCache.tasks.size} Task(s)`);
 
-  logger.success(
+  console.log(
     `[READY] Bot is online and ready in ${cache.guilds.size} guild(s)!`,
   );
 };

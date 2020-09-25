@@ -1,9 +1,21 @@
 import createClient from "./src/module/client.ts";
 
+export * from "./src/controllers/mod.ts";
+export * from "./src/controllers/bans.ts";
+export * from "./src/controllers/cache.ts";
+export * from "./src/controllers/channels.ts";
+export * from "./src/controllers/guilds.ts";
+export * from "./src/controllers/members.ts";
+export * from "./src/controllers/messages.ts";
+export * from "./src/controllers/misc.ts";
+export * from "./src/controllers/reactions.ts";
+export * from "./src/controllers/roles.ts";
+
 export * from "./src/module/client.ts";
 export * from "./src/module/requestManager.ts";
 export * from "./src/module/shardingManager.ts";
 
+export * from "./src/structures/mod.ts";
 export * from "./src/structures/channel.ts";
 export * from "./src/structures/guild.ts";
 export * from "./src/structures/member.ts";
@@ -33,7 +45,6 @@ export * from "./src/types/role.ts";
 export * from "./src/utils/cache.ts";
 export * from "./src/utils/cdn.ts";
 export * from "./src/utils/collection.ts";
-export * from "./src/utils/logger.ts";
 export * from "./src/utils/permissions.ts";
 export * from "./src/utils/utils.ts";
 

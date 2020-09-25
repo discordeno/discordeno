@@ -1,40 +1,36 @@
-import { MemberCreatePayload } from "../types/member.ts";
-import { Guild } from "./guild.ts";
-import { cache } from "../utils/cache.ts";
+import type { MemberCreatePayload } from "../types/member.ts";
+import type { Unpromise } from "../types/misc.ts";
 
-export const createMember = (data: MemberCreatePayload, guild: Guild) => {
+export async function createMember(data: MemberCreatePayload, guildID: string) {
+  const {
+    joined_at: joinedAt,
+    premium_since: premiumSince,
+    ...rest
+  } = data;
+
+  const {
+    mfa_enabled: mfaEnabled,
+    premium_type: premiumType,
+    ...user
+  } = data.user || {};
+
   const member = {
-    ...data,
+    ...rest,
+    // Only use those that we have not removed above
+    user: user,
     /** When the user joined the guild */
-    joinedAt: Date.parse(data.joined_at),
+    joinedAt: Date.parse(joinedAt),
     /** When the user used their nitro boost on the server. */
-    premiumSince: data.premium_since
-      ? Date.parse(data.premium_since)
-      : undefined,
-    /** The full username#discriminator */
-    tag: `${data.user.username}#${data.user.discriminator}`,
-    /** The user mention with nickname if possible */
-    mention: `<@!${data.user.id}>`,
+    premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
     /** The guild id where this member exists */
-    guildID: guild.id,
+    guildID,
     /** Whether or not this user has 2FA enabled. */
-    mfaEnabled: data.user.mfa_enabled,
+    mfaEnabled,
     /** The premium type for this user */
-    premiumType: data.user.premium_type,
-
-    /** Gets the guild object from cache for this member. This is a method instead of a prop to preserve memory. */
-    guild: () => cache.guilds.get(guild.id)!,
+    premiumType,
   };
 
-  // Remove excess properties to preserve cache.
-  // delete member.joined_at;
-  // delete member.premium_since;
-  // delete member.user.mfa_enabled;
-  // delete member.user.premium_type;
-
   return member;
-};
+}
 
-export interface Member
-  extends
-    Omit<ReturnType<typeof createMember>, "joined_at" | "premium_since"> {}
+export interface Member extends Unpromise<ReturnType<typeof createMember>> {}

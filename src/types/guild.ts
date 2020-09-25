@@ -1,10 +1,10 @@
-import { Emoji, StatusType } from "./discord.ts";
-import { Permission } from "./permission.ts";
-import { RoleData } from "./role.ts";
-import { MemberCreatePayload } from "./member.ts";
-import { Activity } from "./message.ts";
-import { ClientStatusPayload } from "./presence.ts";
-import { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
+import type { Emoji, StatusType } from "./discord.ts";
+import type { Permission } from "./permission.ts";
+import type { RoleData } from "./role.ts";
+import type { MemberCreatePayload } from "./member.ts";
+import type { Activity } from "./message.ts";
+import type { ClientStatusPayload } from "./presence.ts";
+import type { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
 
 export interface GuildRolePayload {
   /** The id of the guild */
@@ -450,26 +450,27 @@ export interface Overwrite {
   /** The role or user id */
   id: string;
   /** Whether this is a role or a member */
-  type: "role" | "member";
+  type: OverwriteType;
   /** The permissions that this id is allowed to do. (This will mark it as a green check.) */
   allow: Permission[];
   /** The permissions that this id is NOT allowed to do. (This will mark it as a red x.) */
   deny: Permission[];
 }
 
+export enum OverwriteType {
+  ROLE,
+  MEMBER,
+}
+
 export interface RawOverwrite {
   /** The role or user id */
   id: string;
   /** Whether this is a role or a member */
-  type: "role" | "member";
+  type: OverwriteType;
   /** The permissions that this id is allowed to do. (This will mark it as a green check.) */
   allow: number;
   /** The permissions that this id is NOT allowed to do. (This will mark it as a red x.) */
   deny: number;
-  /** permission bit set for new perms until new api version released. */
-  allow_new: string;
-  /** permission bit set for new perms until new api version released. */
-  deny_new: string;
 }
 
 export interface ChannelCreateOptions {
@@ -560,8 +561,6 @@ export interface Presence {
   user: UserPayload;
   /** The roles this user is in */
   roles: string[];
-  /** null, or the user's current activity */
-  game: Activity | null;
   /** The id of the guild */
   guild_id: string;
   /** Either idle */
@@ -581,4 +580,29 @@ export interface FetchMembersOptions {
   userIDs?: string[];
   /** Maximum number of members to return that match the query. Default = 0 which will return all members. */
   limit?: number;
+}
+
+export interface CreateServerOptions {
+  /** name of the guild (2-100 characters) */
+  name: string;
+  /** voice region id */
+  region?: string;
+  /** guild icon image url or base64 128x128 image for the guild icon */
+  icon?: string;
+  /** verification level */
+  verification_level?: number;
+  /** default message notification level */
+  default_message_notifications?: number;
+  /** explicit content filter level */
+  explicit_content_filter?: number;
+  /** array of role objects	new guild roles */
+  roles?: RoleData[];
+  /** array of partial channel objects	new guild's channels */
+  channels?: ChannelCreatePayload[];
+  /** id for afk channel */
+  afk_channel_id?: string;
+  /** afk timeout in seconds */
+  afk_timeout?: number;
+  /** the id of the channel where guild notices such as welcome messages and boost events are posted */
+  system_channel_id?: string;
 }
