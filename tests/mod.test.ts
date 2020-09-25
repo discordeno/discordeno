@@ -5,8 +5,6 @@ import {
 import { createServer, deleteServer } from "../src/handlers/guild.ts";
 import { CreateGuildPayload } from "../src/types/guild.ts";
 import { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
-import { basicShards } from "../src/module/basicShard.ts";
-import { DISTANCE_EXTRA_BIT_BASE } from "https://deno.land/x/zlib.es@v1.0.0/const.ts";
 
 const token = Deno.env.get("DISCORD_TOKEN");
 if (!token) throw "No Token Provided!";
@@ -61,9 +59,8 @@ Deno.test({
 Deno.test({
   name: "Closing Bot! Tests Complete!",
   fn: async () => {
-    const shard = basicShards.first();
-
-    await shard.socket.close();
-    await delay(120000);
+    Deno.exit();
   },
+  sanitizeOps: false,
+  sanitizeResources: false,
 });
