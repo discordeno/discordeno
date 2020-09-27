@@ -145,7 +145,7 @@ import { PermissionLevels } from "../types/commands.ts";
 import { configs } from "../../configs.ts";
 
 botCache.permissionLevels.set(
-  PermissionLevels,
+  PermissionLevels.NITRO_BOOSTER,
   async (message) => {
 		const guild = message.guild();
 		if (!guild) return false;
