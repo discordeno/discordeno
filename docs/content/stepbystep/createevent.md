@@ -16,8 +16,7 @@ Go ahead and open up the `src/events/ready.ts` file. When you open this file, yo
 
 ```ts
 import { botCache } from "../../mod.ts";
-import { cache } from "https://x.nest.land/Discordeno@8.4.1/src/utils/cache.ts";
-import logger from "https://x.nest.land/Discordeno@8.4.1/src/utils/logger.ts";
+import { cache } from "https://x.nest.land/Discordeno@9.0.0/src/utils/cache.ts";
 
 botCache.eventHandlers.ready = function () {
   console.log(`Loaded ${botCache.arguments.size} Argument(s)`);
@@ -64,7 +63,7 @@ import { botCache } from "../../mod.ts";
 import { Embed } from "../utils/Embed.ts";
 import { cache } from "../../deps.ts";
 import { configs } from "../../configs.ts";
-import { sendMessage } from "https://x.nest.land/Discordeno@8.4.1/src/handlers/channel.ts";
+import { sendMessage } from "https://x.nest.land/Discordeno@9.0.0/src/handlers/channel.ts";
 import { sendEmbed } from "../utils/helpers.ts";
 
 botCache.eventHandlers.discordLog = function (error) {
