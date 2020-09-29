@@ -1,163 +1,139 @@
-import { createClient, Intents, botID } from "../mod.ts";
-import { assertEquals } from "../deps.ts";
+import { assertEquals, delay } from "../deps.ts";
 import {
+  botID,
+  cache,
+  createClient,
   createGuildRole,
-  createServer,
   deleteRole,
   deleteServer,
   editRole,
-} from "../src/handlers/guild.ts";
-import { CreateGuildPayload } from "../src/types/guild.ts";
-import { delay } from "../deps.ts";
-import { cache } from "../src/utils/cache.ts";
+  Intents,
+} from "../mod.ts";
+import { createServer } from "../src/handlers/guild.ts";
+import { Guild } from "../src/structures/guild.ts";
+import { Role } from "../src/structures/role.ts";
 
-let guildID = "";
-let roleToDelete = "";
-let roleID = "";
-
-const token = Deno.env.get("DISCORD_TOKEN");
+const token = "NzUxNzkyMDE3MzUyMjk0NDQx.X1OO4A.GFAh2FCeDNChFQfd3ZNiu6dEAmQ";
+//const token = Deno.env.get("DISCORD_TOKEN");
 if (!token) throw "No Token Provided!";
 
 createClient({
   token,
   intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
-  eventHandlers: {
-    // debug: function (data) {
-    //   console.log(data);
-    // },
-  },
 });
 
+const testOptions = {
+  sanitizeOps: false,
+  sanitizeResources: false,
+};
+
 Deno.test({
-  name: "Connecting to gateway",
+  name: "Connecting to the gateway",
   fn: async () => {
     await delay(15000);
     assertEquals(botID, "675412054529540107");
   },
-  sanitizeResources: false,
+  ...testOptions,
 });
 
-Deno.test({
-  name: "Creating a new guild(Fresh Env)",
-  fn: async () => {
-    const result = await createServer({ name: "Discordeno Test Zone" }).catch(
-      (error) => console.error(error),
-    ) as CreateGuildPayload;
+let createdGuild: Guild;
 
-    guildID = result.id;
-    assertEquals(typeof result.id, "string");
+Deno.test({
+  name: "Create a guild with and without options",
+  async fn() {
+    // Create a test guild
+    const guild = (await createServer({
+      name: "Discordeno Test",
+    })) as Guild;
+    assertEquals(typeof guild.id, "string");
+    createdGuild = guild;
   },
-  sanitizeOps: false,
+  ...testOptions,
 });
 
-Deno.test({
-  name: "Create Role 1: Nothing Provided.",
-  fn: async () => {
-    if (!guildID) throw "The guild id was not present";
+// Roles
 
-    const role = await createGuildRole(guildID, {});
-    assertEquals(typeof role.id, "string");
-    roleToDelete = role.id;
+let createdRole: Role;
+
+Deno.test({
+  name: "Create a role with and without options",
+  fn: async () => {
+    if (!createdGuild.id) throw "The test guild does not exist.";
+
+    const role1 = await createGuildRole(createdGuild.id, {
+      name: "Role 1",
+    });
+    assertEquals(role1.id, "string");
+
+    // with options
+    const role2 = await createGuildRole(createdGuild.id, {
+      name: "Role 2",
+      color: 15277667,
+      hoist: true,
+      permissions: ["ADMINISTRATOR"],
+      mentionable: true,
+    });
+    assertEquals(typeof role2.id, "string");
+    assertEquals(role2.name, "Role 2");
+    assertEquals(role2.color, 15277667);
+    assertEquals(role2.hoist, true);
+    assertEquals(role2.mentionable, true);
+    assertEquals(role2.permissions, 0x00000008);
+    createdRole = role2;
   },
-  sanitizeOps: false,
+  ...testOptions,
 });
 
 Deno.test({
-  name: "Create Role 2: Custom Options.",
+  name: "Edit a role",
   fn: async () => {
-    if (!guildID) throw "The guild id was not present";
+    if (!createdGuild.id) throw "The guild id was not present";
 
-    const role = await createGuildRole(
-      guildID,
-      {
-        name: "Discordeno",
-        color: 15277667,
-        hoist: true,
-        permissions: ["ADMINISTRATOR"],
-        mentionable: true,
-      },
-    );
-    assertEquals(typeof role.id, "string");
-    assertEquals(role.name, "Discordeno");
-    assertEquals(role.color, 15277667);
-    assertEquals(role.hoist, true);
-    assertEquals(role.mentionable, true);
-    if (
-      !role.permissions.includes("ADMINISTRATOR")
-    ) {
-      throw "Missing admin perms on creation.";
-    }
-
-    roleID = role.id;
-  },
-  sanitizeOps: false,
-});
-
-Deno.test({
-  name: "Edit Role",
-  fn: async () => {
-    if (!guildID) throw "The guild id was not present";
-
-    await editRole(guildID, roleToDelete, {
-      name: "Discordeno Edited",
+    await editRole(createdGuild.id, createdRole.id, {
+      name: "Edited Role",
       color: 4320244,
       hoist: false,
       permissions: ["READ_MESSAGE_HISTORY"],
       mentionable: false,
     });
 
-    const role = cache.guilds.get(guildID)?.roles.get(roleToDelete);
+    const role = cache.guilds.get(createdRole.id)?.roles.get(createdRole.id);
     if (!role) throw "Role not found on edit.";
-
     assertEquals(typeof role.id, "string");
     assertEquals(role.name, "Discordeno Edited");
     assertEquals(role.color, 4320244);
     assertEquals(role.hoist, false);
     assertEquals(role.mentionable, false);
-    if (
-      role.permissions.includes("ADMINISTRATOR")
-    ) {
-      throw "Still have admin perms on edit.";
-    }
-
-    if (
-      !role.permissions.includes("READ_MESSAGE_HISTORY")
-    ) {
-      throw "Missing read message history perms on edit.";
-    }
-
-    roleID = role.id;
+    createdRole = role;
   },
-  sanitizeOps: false,
+  ...testOptions,
 });
 
 Deno.test({
   name: "Delete Role",
   fn: async () => {
-    await deleteRole(guildID, roleToDelete);
-    roleToDelete = "";
-    assertEquals(roleToDelete, "");
+    await deleteRole(createdGuild.id, createdRole.id);
+    createdRole.id = "";
+    assertEquals(createdRole.id, "");
   },
 });
 
 Deno.test({
   name: "Deleting guild(Bot is owner)",
   fn: async () => {
-    if (!guildID) throw "The guild id was not present.";
-    await deleteServer(guildID);
-    guildID = "";
-
-    assertEquals(guildID, "");
+    if (!createdGuild.id) throw "The guild id was not present.";
+    await deleteServer(createdGuild.id);
+    createdGuild.id = "";
+    assertEquals(createdGuild, "");
   },
-  sanitizeOps: false,
+  ...testOptions,
 });
 
 // This is meant to be the final test that forcefully crashes the bot
 Deno.test({
-  name: "Closing Bot! Tests Complete!",
-  fn: async () => {
-    Deno.exit();
+  name: "Exit the process forcefully after all the tests have passed",
+  async fn() {
+    Deno.exit(1);
   },
-  sanitizeOps: false,
-  sanitizeResources: false,
+  ...testOptions,
 });
