@@ -5,9 +5,11 @@ import {
   createServer,
   deleteRole,
   deleteServer,
+  editRole,
 } from "../src/handlers/guild.ts";
 import { CreateGuildPayload } from "../src/types/guild.ts";
 import { delay } from "../deps.ts";
+import { cache } from "../src/utils/cache.ts";
 
 let guildID = "";
 let roleToDelete = "";
@@ -84,6 +86,44 @@ Deno.test({
       !role.permissions.includes("ADMINISTRATOR")
     ) {
       throw "Missing admin perms on creation.";
+    }
+
+    roleID = role.id;
+  },
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Edit Role",
+  fn: async () => {
+    if (!guildID) throw "The guild id was not present";
+
+    await editRole(guildID, roleToDelete, {
+      name: "Discordeno Edited",
+      color: 4320244,
+      hoist: false,
+      permissions: ["READ_MESSAGE_HISTORY"],
+      mentionable: false,
+    });
+
+    const role = cache.guilds.get(guildID)?.roles.get(roleToDelete);
+    if (!role) throw "Role not found on edit.";
+
+    assertEquals(typeof role.id, "string");
+    assertEquals(role.name, "Discordeno Edited");
+    assertEquals(role.color, 4320244);
+    assertEquals(role.hoist, false);
+    assertEquals(role.mentionable, false);
+    if (
+      role.permissions.includes("ADMINISTRATOR")
+    ) {
+      throw "Still have admin perms on edit.";
+    }
+
+    if (
+      !role.permissions.includes("READ_MESSAGE_HISTORY")
+    ) {
+      throw "Missing read message history perms on edit.";
     }
 
     roleID = role.id;
