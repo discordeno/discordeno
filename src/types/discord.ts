@@ -230,8 +230,6 @@ export interface WebhookUpdatePayload {
 export interface PresenceUpdatePayload {
   /** The user presence is being updated for. */
   user: PartialUser;
-  /** null, or the user's current activity */
-  game: Activity | null;
   /** The id of the guild */
   guild_id: string;
   /** Either idle, dnd, online, or offline */

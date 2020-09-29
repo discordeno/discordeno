@@ -13,6 +13,24 @@ import { RequestManager } from "../module/requestManager.ts";
 import { endpoints } from "../constants/discord.ts";
 import { botHasChannelPermissions } from "../utils/permissions.ts";
 
+/** Delete a message with the channel id and message id only. */
+export async function deleteMessageByID(
+  channelID: string,
+  messageID: string,
+  reason?: string,
+  delayMilliseconds = 0,
+) {
+  const message = await cacheHandlers.get("messages", messageID);
+  if (message) return deleteMessage(message, reason, delayMilliseconds);
+
+  if (delayMilliseconds) await delay(delayMilliseconds);
+
+  return RequestManager.delete(
+    endpoints.CHANNEL_MESSAGE(channelID, messageID),
+    { reason },
+  );
+}
+
 /** Delete a message */
 export async function deleteMessage(
   message: Message,
