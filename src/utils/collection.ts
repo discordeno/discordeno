@@ -29,8 +29,7 @@ export class Collection<K, V> extends Map<K, V> {
   }
 
   find(callback: (value: V, key: K) => boolean) {
-    for (const key of this.keys()) {
-      const value = this.get(key)!;
+    for (const [key, value] of this) {
       if (callback(value, key)) return value;
     }
     // If nothing matched
