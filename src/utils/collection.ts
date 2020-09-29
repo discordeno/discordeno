@@ -47,16 +47,15 @@ export class Collection<K, V> extends Map<K, V> {
 
   map<T>(callback: (value: V, key: K) => T) {
     const results = [];
-    for (const key of this.keys()) {
-      const value = this.get(key)!;
+    for (const [key, value] of this) {
       results.push(callback(value, key));
     }
+
     return results;
   }
 
   some(callback: (value: V, key: K) => boolean) {
-    for (const key of this.keys()) {
-      const value = this.get(key)!;
+    for (const [key, value] of this) {
       if (callback(value, key)) return true;
     }
 
@@ -64,8 +63,7 @@ export class Collection<K, V> extends Map<K, V> {
   }
 
   every(callback: (value: V, key: K) => boolean) {
-    for (const key of this.keys()) {
-      const value = this.get(key)!;
+    for (const [key, value] of this) {
       if (!callback(value, key)) return false;
     }
 
@@ -78,8 +76,7 @@ export class Collection<K, V> extends Map<K, V> {
   ): T {
     let accumulator: T = initialValue!;
 
-    for (const key of this.keys()) {
-      const value = this.get(key)!;
+    for (const [key, value] of this) {
       accumulator = callback(accumulator, value, key);
     }
 
