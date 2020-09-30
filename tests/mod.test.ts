@@ -30,7 +30,7 @@ const testOptions = {
 Deno.test({
   name: "connect to the gateway",
   fn: async () => {
-    // Delay the execution by 15 seconds
+    // Delay the execution by 15 seconds (15000 ms)
     await delay(15000);
 
     // Check whether botID is nil or not
@@ -42,9 +42,9 @@ Deno.test({
 let guildID: string;
 
 Deno.test({
-  name: "create a guild (without options)",
+  name: "create a guild",
   async fn() {
-    // Create a test guild with the name "Discordeno Test"
+    // Create a guild "Discordeno Test"
     const createdGuild = (await createServer({
       name: "Discordeno Test",
     })) as Guild;
@@ -61,9 +61,9 @@ Deno.test({
 let roleID: string;
 
 Deno.test({
-  name: "create a role in a guild (~with~ and without options)",
+  name: "create a role in a guild",
   async fn() {
-    // Create a role "Role 1" in the test guild
+    // Create a role "Role 1" in the guild "Discordeno Test"
     const createdRole = await createGuildRole(guildID, {
       name: "Role 1",
     });
@@ -79,7 +79,8 @@ Deno.test({
 Deno.test({
   name: "edit a role in a guild",
   async fn() {
-    const updatedRole = (await editRole(guildID, roleID, {
+    // Edit a role "Role 1" in the guild "Discordeno Test"
+    const editedRole = (await editRole(guildID, roleID, {
       name: "Edited Role",
       color: 4320244,
       hoist: false,
@@ -87,13 +88,13 @@ Deno.test({
     })) as Role;
 
     // Assertions
-    assert(updatedRole.id);
-    assertEquals(updatedRole.name, "Edited Role");
-    assertEquals(updatedRole.color, 4320244);
-    assertEquals(updatedRole.hoist, false);
-    assertEquals(updatedRole.mentionable, false);
+    assert(editedRole.id);
+    assertEquals(editedRole.name, "Edited Role");
+    assertEquals(editedRole.color, 4320244);
+    assertEquals(editedRole.hoist, false);
+    assertEquals(editedRole.mentionable, false);
 
-    roleID = updatedRole.id;
+    roleID = editedRole.id;
   },
   ...testOptions,
 });
