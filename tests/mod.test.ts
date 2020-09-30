@@ -28,7 +28,7 @@ const testOptions = {
 };
 
 Deno.test({
-  name: "Connecting to the gateway",
+  name: "connect to the gateway",
   fn: async () => {
     // Delay the execution by 15 seconds
     await delay(15000);
@@ -42,7 +42,7 @@ Deno.test({
 let guildID: string;
 
 Deno.test({
-  name: "Create a guild (without options)",
+  name: "create a guild (without options)",
   async fn() {
     // Create a test guild with the name "Discordeno Test"
     const createdGuild = (await createServer({
@@ -61,8 +61,8 @@ Deno.test({
 let roleID: string;
 
 Deno.test({
-  name: "Create a role in a guild (~with~ and without options)",
-  fn: async () => {
+  name: "create a role in a guild (~with~ and without options)",
+  async fn() {
     // Create a role "Role 1" in the test guild
     const createdRole = await createGuildRole(guildID, {
       name: "Role 1",
@@ -77,8 +77,8 @@ Deno.test({
 });
 
 Deno.test({
-  name: "Edit a role in a guild",
-  fn: async () => {
+  name: "edit a role in a guild",
+  async fn() {
     const updatedRole = (await editRole(guildID, roleID, {
       name: "Edited Role",
       color: 4320244,
@@ -99,7 +99,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "Delete a role from the guild",
+  name: "delete a role from the guild",
   async fn() {
     await deleteRole(guildID, roleID);
     roleID = "";
@@ -108,7 +108,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "Delete a guild",
+  name: "delete a guild",
   async fn() {
     await deleteServer(guildID);
     guildID = "";
@@ -119,7 +119,7 @@ Deno.test({
 
 // This is meant to be the final test that forcefully crashes the bot
 Deno.test({
-  name: "Exit the process forcefully after all the tests have passed",
+  name: "exit the process forcefully after all the tests are done",
   async fn() {
     Deno.exit(1);
   },
