@@ -10,7 +10,11 @@ import {
   Intents,
   Role,
 } from "../mod.ts";
-import { channelOverwriteHasPermission } from "../src/handlers/channel.ts";
+import {
+  channelOverwriteHasPermission,
+  getMessage,
+  sendMessage,
+} from "../src/handlers/channel.ts";
 import { createGuildChannel, createServer } from "../src/handlers/guild.ts";
 import { Guild } from "../src/structures/guild.ts";
 import { OverwriteType } from "../src/types/guild.ts";
@@ -63,6 +67,7 @@ Deno.test({
 
 // Roles
 let roleID: string;
+let channelID: string;
 
 Deno.test({
   name: "create a role in a guild",
@@ -146,8 +151,20 @@ Deno.test({
         [Permissions.MANAGE_MESSAGES],
       ),
     );
+
+    channelID = channel.id;
   },
   ...testOptions,
+});
+
+Deno.test({
+  name: "get message",
+  async fn() {
+    const message = await sendMessage(channelID, "Test message 1");
+    const rawMessage = await getMessage(channelID, message.id);
+
+    assertEquals(message.id, rawMessage.id);
+  },
 });
 
 Deno.test({
