@@ -180,11 +180,20 @@ export async function hasChannelPermissions(
   return botHasPermission(guild.id, permissions);
 }
 
+/** This function converts a bitwise string to permission strings */
 export function calculatePermissions(permissionBits: bigint) {
   return Object.keys(Permissions).filter((perm) => {
     if (typeof perm !== "number") return false;
     return permissionBits & BigInt(Permissions[perm as Permission]);
   }) as Permission[];
+}
+
+/** This function converts an array of permissions into the bitwise string. */
+export function calculateBits(permissions: Permission[]) {
+  return permissions.reduce(
+    (bits, perm) => bits |= BigInt(Permissions[perm]),
+    BigInt(0),
+  ).toString();
 }
 
 export async function highestRole(guildID: string, memberID: string) {

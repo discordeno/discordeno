@@ -30,7 +30,7 @@ import { urlToBase64 } from "../utils/utils.ts";
 import { Intents } from "../types/options.ts";
 import { identifyPayload } from "../module/client.ts";
 import { requestAllMembers } from "../module/shardingManager.ts";
-import { botHasPermission } from "../utils/permissions.ts";
+import { botHasPermission, calculateBits } from "../utils/permissions.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { endpoints } from "../constants/discord.ts";
 import { Errors } from "../types/errors.ts";
@@ -321,7 +321,12 @@ export function editRole(
   ) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
-  return RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), options);
+  return RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), {
+    ...options,
+    permissions: options.permissions
+      ? calculateBits(options.permissions)
+      : undefined,
+  });
 }
 
 /** Delete a guild role. Requires the MANAGE_ROLES permission. */
