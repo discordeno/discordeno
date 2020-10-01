@@ -66,7 +66,7 @@ const config = {
     title: "Discordeno",
     description: "Easy Deno module for Discord API interactions..",
     ogImage: "https://i.imgur.com/7O5E6hI.png",
-    docsLocation: "https://github.com/Skillz4Killz/Discordeno",
+    docsLocation: "https://github.com/Skillz4Killz/Discordeno/tree/master/docs/content",
     favicon: "",
   },
   pwa: {
