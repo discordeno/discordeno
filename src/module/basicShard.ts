@@ -107,7 +107,9 @@ export async function createBasicShard(
     }
 
     if (message instanceof Uint8Array) {
-      message = new TextDecoder().decode(inflate(message as Uint8Array));
+      message = new TextDecoder().decode(
+        inflate(message as Uint8Array) as Uint8Array,
+      );
     }
 
     if (typeof message === "string") {
