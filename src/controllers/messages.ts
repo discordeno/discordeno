@@ -1,12 +1,11 @@
+import { eventHandlers } from "../module/client.ts";
+import { structures } from "../structures/mod.ts";
 import type { DiscordPayload } from "../types/discord.ts";
 import type {
   MessageCreateOptions,
-  MessageDeletePayload,
   MessageDeleteBulkPayload,
+  MessageDeletePayload,
 } from "../types/message.ts";
-
-import { eventHandlers } from "../module/client.ts";
-import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalMessageCreate(data: DiscordPayload) {
@@ -16,9 +15,6 @@ export async function handleInternalMessageCreate(data: DiscordPayload) {
   const channel = await cacheHandlers.get("channels", payload.channel_id);
   if (channel) channel.lastMessageID = payload.id;
 
-  const message = await structures.createMessage(payload);
-  // Cache the message
-  cacheHandlers.set("messages", payload.id, message);
   const guild = payload.guild_id
     ? await cacheHandlers.get("guilds", payload.guild_id)
     : undefined;
@@ -46,6 +42,10 @@ export async function handleInternalMessageCreate(data: DiscordPayload) {
       );
     }
   });
+
+  const message = await structures.createMessage(payload);
+  // Cache the message
+  cacheHandlers.set("messages", payload.id, message);
 
   eventHandlers.messageCreate?.(message);
 }
