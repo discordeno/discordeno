@@ -561,8 +561,6 @@ export interface Presence {
   user: UserPayload;
   /** The roles this user is in */
   roles: string[];
-  /** null, or the user's current activity */
-  game: Activity | null;
   /** The id of the guild */
   guild_id: string;
   /** Either idle */

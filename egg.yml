@@ -2,11 +2,18 @@ name: Discordeno
 description: >-
   Discord Deno TypeScript API library wrapper(Officially vetted library by
   Discord Team) https://discordeno.netlify.app
-version: 8.7.3
+version: 9.0.1
 stable: true
+entry: /mod.ts
+repository: 'https://github.com/Skillz4Killz/Discordeno'
 files:
   - ./src/**/*
   - LICENSE
   - mod.ts
   - README.md
   - tsconfig.json
+  - ./deps.ts
+  - ./mod.ts
+  - ./mod.ts
+checkAll: false
+unlisted: false

@@ -38,7 +38,7 @@ Now you've created an Application but it will need some code in order for it to 
 
 You can install Discordeno by importing:
 ```ts
-import Client from "https://x.nest.land/Discordeno@8.4.1/src/module/client.ts";
+import Client from "https://x.nest.land/Discordeno@9.0.1/src/module/client.ts";
 ```
 
 ## Example Usage
@@ -46,12 +46,12 @@ import Client from "https://x.nest.land/Discordeno@8.4.1/src/module/client.ts";
 Starting with Discordeno is very simple, you can start from scratch without any boilerplates/frameworks: Add this snippet of code into a new TypeScript file:
 
 ```ts
-import Client from "https://x.nest.land/Discordeno@8.4.1/src/module/client.ts";
-import { sendMessage } from "https://x.nest.land/Discordeno@8.4.1/src/handlers/channel.ts";
-import { Intents } from "https://x.nest.land/Discordeno@8.4.1/src/types/options.ts";
+import StartBot from "https://x.nest.land/Discordeno@9.0.1/src/module/client.ts";
+import { sendMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts";
+import { Intents } from "https://x.nest.land/Discordeno@9.0.1/src/types/options.ts";
 import config from "./config.ts";
 
-Client({
+StartBot({
     token: config.token,
     intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
     eventHandlers: {
