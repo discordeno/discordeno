@@ -7,4 +7,4 @@ export {
   isWebSocketPongEvent,
 } from "https://deno.land/std@0.67.0/ws/mod.ts";
 export type { WebSocket } from "https://deno.land/std@0.67.0/ws/mod.ts";
-export { decompress as inflate } from "https://unpkg.com/@evan/wasm@0.0.9/target/zlib/deno.js";
+export { decompress_with as inflate } from "https://unpkg.com/@evan/wasm@0.0.11/target/zlib/deno.js";
