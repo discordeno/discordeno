@@ -1,7 +1,7 @@
-import type { Activity } from "./message.ts";
-import type { ClientStatusPayload } from "./presence.ts";
 import type { PartialUser, UserPayload } from "./guild.ts";
 import type { MemberCreatePayload } from "./member.ts";
+import type { Activity } from "./message.ts";
+import type { ClientStatusPayload } from "./presence.ts";
 
 export interface DiscordPayload {
   /** OP code for the payload */

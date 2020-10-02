@@ -1,3 +1,5 @@
+import { eventHandlers } from "../module/client.ts";
+import { structures } from "../structures/mod.ts";
 import type { DiscordPayload } from "../types/discord.ts";
 import type {
   GuildBanPayload,
@@ -5,9 +7,6 @@ import type {
   GuildMemberChunkPayload,
   GuildMemberUpdatePayload,
 } from "../types/guild.ts";
-
-import { eventHandlers } from "../module/client.ts";
-import { structures } from "../structures/mod.ts";
 import { cache } from "../utils/cache.ts";
 import { cacheHandlers } from "./cache.ts";
 

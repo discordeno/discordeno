@@ -1,4 +1,7 @@
-import type { UserPayload } from "../types/guild.ts";
+import { delay } from "../../deps.ts";
+import { eventHandlers, setBotID } from "../module/client.ts";
+import { allowNextShard } from "../module/shardingManager.ts";
+import { structures } from "../structures/mod.ts";
 import type {
   DiscordPayload,
   PresenceUpdatePayload,
@@ -7,11 +10,7 @@ import type {
   VoiceStateUpdatePayload,
   WebhookUpdatePayload,
 } from "../types/discord.ts";
-
-import { allowNextShard } from "../module/shardingManager.ts";
-import { delay } from "../../deps.ts";
-import { eventHandlers, setBotID } from "../module/client.ts";
-import { structures } from "../structures/mod.ts";
+import type { UserPayload } from "../types/guild.ts";
 import { cache } from "../utils/cache.ts";
 import { cacheHandlers } from "./cache.ts";
 

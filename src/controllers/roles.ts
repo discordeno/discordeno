@@ -1,11 +1,10 @@
+import { eventHandlers } from "../module/client.ts";
+import { structures } from "../structures/mod.ts";
 import type { DiscordPayload } from "../types/discord.ts";
 import type {
   GuildRoleDeletePayload,
   GuildRolePayload,
 } from "../types/guild.ts";
-
-import { eventHandlers } from "../module/client.ts";
-import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildRoleCreate(data: DiscordPayload) {
