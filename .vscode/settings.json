@@ -3,5 +3,6 @@
   "editor.formatOnSave": true,
   "deno.import_intellisense_origins": {
     "https://deno.land": true
-  }
+  },
+  "editor.defaultFormatter": "denoland.vscode-deno"
 }
