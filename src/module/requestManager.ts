@@ -1,10 +1,9 @@
-import { HttpResponseCode } from "../types/discord.ts";
-import { authorization, eventHandlers } from "./client.ts";
-import { baseEndpoints } from "../constants/discord.ts";
-import type { RequestMethods } from "../types/fetch.ts";
-
-import { Errors } from "../types/errors.ts";
 import { delay } from "../../deps.ts";
+import { baseEndpoints } from "../constants/discord.ts";
+import { HttpResponseCode } from "../types/discord.ts";
+import { Errors } from "../types/errors.ts";
+import type { RequestMethods } from "../types/fetch.ts";
+import { authorization, eventHandlers } from "./client.ts";
 
 const pathQueues: { [key: string]: QueuedRequest[] } = {};
 const ratelimitedPaths = new Map<string, RateLimitedPath>();

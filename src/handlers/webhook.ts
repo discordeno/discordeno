@@ -1,17 +1,16 @@
+import { endpoints } from "../constants/discord.ts";
+import { RequestManager } from "../module/requestManager.ts";
+import { structures } from "../structures/mod.ts";
+import { Errors } from "../types/errors.ts";
+import type { MessageCreateOptions } from "../types/message.ts";
+import { Permissions } from "../types/permission.ts";
 import type {
+  ExecuteWebhookOptions,
   WebhookCreateOptions,
   WebhookPayload,
-  ExecuteWebhookOptions,
 } from "../types/webhook.ts";
-import type { MessageCreateOptions } from "../types/message.ts";
-
 import { botHasChannelPermissions } from "../utils/permissions.ts";
-import { Permissions } from "../types/permission.ts";
-import { Errors } from "../types/errors.ts";
-import { RequestManager } from "../module/requestManager.ts";
-import { endpoints } from "../constants/discord.ts";
 import { urlToBase64 } from "../utils/utils.ts";
-import { structures } from "../structures/mod.ts";
 
 /** Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
 *

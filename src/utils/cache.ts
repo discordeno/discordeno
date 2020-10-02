@@ -1,8 +1,8 @@
-import { Collection } from "./collection.ts";
-import type { Message } from "../structures/message.ts";
-import type { Guild } from "../structures/guild.ts";
 import type { Channel } from "../structures/channel.ts";
+import type { Guild } from "../structures/guild.ts";
+import type { Message } from "../structures/message.ts";
 import type { PresenceUpdatePayload } from "../types/discord.ts";
+import { Collection } from "./collection.ts";
 
 export interface CacheData {
   isReady: boolean;

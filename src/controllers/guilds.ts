@@ -1,15 +1,14 @@
+import { eventHandlers } from "../module/client.ts";
+import { structures } from "../structures/mod.ts";
 import type { DiscordPayload } from "../types/discord.ts";
-import type { GuildUpdateChange } from "../types/options.ts";
 import type {
   CreateGuildPayload,
   GuildDeletePayload,
   GuildEmojisUpdatePayload,
   UpdateGuildPayload,
 } from "../types/guild.ts";
-
+import type { GuildUpdateChange } from "../types/options.ts";
 import { cache } from "../utils/cache.ts";
-import { structures } from "../structures/mod.ts";
-import { eventHandlers } from "../module/client.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildCreate(
