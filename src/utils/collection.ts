@@ -75,7 +75,7 @@ export class Collection<K, V> extends Map<K, V> {
 
   reduce<T>(
     callback: (accumulator: T, value: V, key: K) => T,
-    initialValue?: T
+    initialValue?: T,
   ): T {
     let accumulator: T = initialValue!;
 
