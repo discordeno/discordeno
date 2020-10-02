@@ -1,7 +1,11 @@
-## Description
+**Please describe the changes this PR makes and why it should be merged:**
 
-<!-- Describe the changes you made. -->
+**Status**
 
-## Issues
+- [ ] Code changes have been tested against the Discord API, or there are no code changes
 
-<!-- Link any relevant issues here if you like? -->
+**Semantic versioning classification:**
+
+- [ ] This PR changes the library's interface (methods or parameters added)
+  - [ ] This PR includes breaking changes (methods removed or renamed, parameters moved or removed)
+- [ ] This PR **only** includes non-code changes, like changes to documentation, README, etc.
