@@ -1,13 +1,12 @@
 # Discordeno
 
-Discord API library wrapper in Deno
+> Discord API library wrapper in Deno
 
-[Discord Server](https://discord.gg/J4NqJ72)
+[![Discord](https://img.shields.io/discord/223909216866402304?color=7289da&logo=discord&logoColor=white)](https://discord.gg/J4NqJ72)
+![Testing/Linting](https://github.com/Skillz4Killz/Discordeno/workflows/Testing/Linting/badge.svg)
+[![nest.land](https://nest.land/badge-large.svg)](https://nest.land/package/Discordeno)
 
 [Website](https://discordeno.netlify.app)
-
-[![nest badge](https://nest.land/badge-large.svg)](https://nest.land/package/Discordeno)
-![Testing](https://github.com/Skillz4Killz/Discordeno/workflows/Testing/Linting/badge.svg)
 
 ## Beginner Developers
 
@@ -43,12 +42,15 @@ Don't worry a lot of developers start out coding their first projects as a Disco
   - Supports nested folders to keep cleaner translation files
 
 **Hot Reloadable**
-  - Easily update your code without having to restart the bot everytime.
+
+- Easily update your code without having to restart the bot everytime.
 
 **Step By Step Guide**
-  - There is a step by step walkthrough to learn how to create Discord bots with Discordeno on our website!
+
+- There is a step by step walkthrough to learn how to create Discord bots with Discordeno on our website!
 
 ## Advanced Developers
+
 The instructions below are meant for advanced developers!
 
 Starting with Discordeno is very simple, you can start from scratch without any boilerplates/frameworks: Add this snippet of code into a new TypeScript file:
@@ -60,18 +62,18 @@ import { Intents } from "https://x.nest.land/Discordeno@9.0.1/src/types/options.
 import config from "./config.ts";
 
 StartBot({
-    token: config.token,
-    intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
-    eventHandlers: {
-        ready: () => {
-            console.log(`Logged!`);
-        },
-        messageCreate: (message) => {
-            if (message.content === "!ping") {
-                sendMessage(message.channelID, "Pong");
-            }
-        }
-    }
+  token: config.token,
+  intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
+  eventHandlers: {
+    ready: () => {
+      console.log(`Logged!`);
+    },
+    messageCreate: (message) => {
+      if (message.content === "!ping") {
+        sendMessage(message.channelID, "Pong");
+      }
+    },
+  },
 });
 ```
 
