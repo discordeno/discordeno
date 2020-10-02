@@ -1,10 +1,12 @@
 import {
   connectWebSocket,
   delay,
-  inflate,
+
   isWebSocketCloseEvent,
   isWebSocketPingEvent,
   isWebSocketPongEvent,
+  unzlib,
+
   WebSocket,
 } from "../../deps.ts";
 import type {
@@ -109,7 +111,7 @@ export async function createBasicShard(
     }
 
     if (message instanceof Uint8Array) {
-      message = new TextDecoder().decode(inflate(message as Uint8Array));
+      message = new TextDecoder().decode(unzlib(message));
     }
 
     if (typeof message === "string") {
