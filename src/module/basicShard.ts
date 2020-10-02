@@ -24,6 +24,7 @@ import { handleDiscordPayload } from "./shardingManager.ts";
 
 const basicShards = new Map<number, BasicShard>();
 const heartbeating = new Set<number>();
+const utf8decoder = new TextDecoder();
 
 export interface BasicShard {
   id: number;
@@ -109,7 +110,11 @@ export async function createBasicShard(
     }
 
     if (message instanceof Uint8Array) {
-      message = new TextDecoder().decode(inflate(message, 9));
+      message = inflate(
+        message,
+        0,
+        (slice: Uint8Array) => utf8decoder.decode(slice),
+      );
     }
 
     if (typeof message === "string") {
