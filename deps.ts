@@ -1,4 +1,8 @@
-export { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+export {
+  assert,
+  assertArrayContains,
+  assertEquals,
+} from "https://deno.land/std/testing/asserts.ts";
 export { delay } from "https://deno.land/std@0.67.0/async/delay.ts";
 export { encode } from "https://deno.land/std@0.67.0/encoding/base64.ts";
 export {
