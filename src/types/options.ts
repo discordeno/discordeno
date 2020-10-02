@@ -1,26 +1,30 @@
-import type {
-  Properties,
-  Emoji,
-  DiscordPayload,
-  PresenceUpdatePayload,
-  TypingStartPayload,
-  VoiceStateUpdatePayload,
-} from "./discord.ts";
-import type { Role } from "../structures/role.ts";
-import type { Message } from "../structures/message.ts";
-import type {
-  PartialMessage,
-  ReactionPayload,
-  BaseMessageReactionPayload,
-  MessageReactionRemoveEmojiPayload,
-  Embed,
-  Attachment,
-  MessageReactionUncachedPayload,
-} from "./message.ts";
 import type { Channel } from "../structures/channel.ts";
 import type { Guild } from "../structures/guild.ts";
 import type { Member } from "../structures/member.ts";
+import type { Message } from "../structures/message.ts";
+import type { Role } from "../structures/role.ts";
+import type {
+  DiscordPayload,
+  Emoji,
+
+  PresenceUpdatePayload,
+  Properties,
+
+  TypingStartPayload,
+  VoiceStateUpdatePayload,
+} from "./discord.ts";
 import type { UserPayload } from "./guild.ts";
+import type {
+  Attachment,
+  BaseMessageReactionPayload,
+
+  Embed,
+  MessageReactionRemoveEmojiPayload,
+
+  MessageReactionUncachedPayload,
+  PartialMessage,
+  ReactionPayload,
+} from "./message.ts";
 
 export interface Fulfilled_Client_Options {
   token: string;

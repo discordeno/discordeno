@@ -1,4 +1,4 @@
-import type { RawOverwrite, Overwrite } from "./guild.ts";
+import type { Overwrite, RawOverwrite } from "./guild.ts";
 import type { Embed } from "./message.ts";
 
 export interface ChannelEditOptions {

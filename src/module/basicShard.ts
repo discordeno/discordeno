@@ -1,24 +1,26 @@
-import type { DiscordBotGatewayData, ReadyPayload } from "../types/discord.ts";
-import type { IdentifyPayload } from "./client.ts";
 import {
   connectWebSocket,
+  delay,
+  inflate,
   isWebSocketCloseEvent,
   isWebSocketPingEvent,
   isWebSocketPongEvent,
   WebSocket,
 } from "../../deps.ts";
-import type { DiscordHeartbeatPayload } from "../types/discord.ts";
+import type {
+  DiscordBotGatewayData,
+  DiscordHeartbeatPayload,
+  ReadyPayload,
+} from "../types/discord.ts";
+import { GatewayOpcode } from "../types/discord.ts";
 import type { FetchMembersOptions } from "../types/guild.ts";
 import type { BotStatusRequest } from "../utils/utils.ts";
-
-import { handleDiscordPayload } from "./shardingManager.ts";
-import { GatewayOpcode } from "../types/discord.ts";
+import type { IdentifyPayload } from "./client.ts";
 import {
-  eventHandlers,
   botGatewayData,
+  eventHandlers,
 } from "./client.ts";
-import { delay } from "../../deps.ts";
-import { inflate } from "../../deps.ts";
+import { handleDiscordPayload } from "./shardingManager.ts";
 
 const basicShards = new Map<number, BasicShard>();
 const heartbeating = new Set<number>();

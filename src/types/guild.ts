@@ -1,10 +1,10 @@
+import type { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
 import type { Emoji, StatusType } from "./discord.ts";
-import type { Permission } from "./permission.ts";
-import type { RoleData } from "./role.ts";
 import type { MemberCreatePayload } from "./member.ts";
 import type { Activity } from "./message.ts";
+import type { Permission } from "./permission.ts";
 import type { ClientStatusPayload } from "./presence.ts";
-import type { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
+import type { RoleData } from "./role.ts";
 
 export interface GuildRolePayload {
   /** The id of the guild */
