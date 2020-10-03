@@ -3,7 +3,6 @@ import { structures } from "../structures/mod.ts";
 import type { DiscordPayload } from "../types/discord.ts";
 import type {
   MessageCreateOptions,
-
   MessageDeleteBulkPayload,
   MessageDeletePayload,
 } from "../types/message.ts";

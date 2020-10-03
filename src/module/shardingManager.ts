@@ -15,12 +15,7 @@ import {
   requestGuildMembers,
 } from "./basicShard.ts";
 import type { IdentifyPayload } from "./client.ts";
-import {
-  botGatewayData,
-  eventHandlers,
-
-  identifyPayload,
-} from "./client.ts";
+import { botGatewayData, eventHandlers, identifyPayload } from "./client.ts";
 
 let shardCounter = 0;
 let basicSharding = false;

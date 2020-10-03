@@ -16,10 +16,7 @@ import { GatewayOpcode } from "../types/discord.ts";
 import type { FetchMembersOptions } from "../types/guild.ts";
 import type { BotStatusRequest } from "../utils/utils.ts";
 import type { IdentifyPayload } from "./client.ts";
-import {
-  botGatewayData,
-  eventHandlers,
-} from "./client.ts";
+import { botGatewayData, eventHandlers } from "./client.ts";
 import { handleDiscordPayload } from "./shardingManager.ts";
 
 const basicShards = new Map<number, BasicShard>();

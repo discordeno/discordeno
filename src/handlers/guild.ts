@@ -7,33 +7,23 @@ import type { Guild } from "../structures/guild.ts";
 import type { Member } from "../structures/member.ts";
 import { structures } from "../structures/mod.ts";
 import type { ImageFormats, ImageSize } from "../types/cdn.ts";
-import {
-  ChannelCreatePayload,
-  ChannelTypes,
-} from "../types/channel.ts";
+import { ChannelCreatePayload, ChannelTypes } from "../types/channel.ts";
 import { Errors } from "../types/errors.ts";
 import type {
   BannedUser,
   BanOptions,
-
   ChannelCreateOptions,
   CreateEmojisOptions,
-
   CreateRoleOptions,
-
   CreateServerOptions,
   EditEmojisOptions,
-
   EditIntegrationOptions,
   FetchMembersOptions,
   GetAuditLogsOptions,
-
   GuildEditOptions,
   PositionSwap,
-
   PruneOptions,
   PrunePayload,
-
   UserPayload,
 } from "../types/guild.ts";
 import type { MemberCreatePayload } from "../types/member.ts";

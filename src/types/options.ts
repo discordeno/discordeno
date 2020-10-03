@@ -6,10 +6,8 @@ import type { Role } from "../structures/role.ts";
 import type {
   DiscordPayload,
   Emoji,
-
   PresenceUpdatePayload,
   Properties,
-
   TypingStartPayload,
   VoiceStateUpdatePayload,
 } from "./discord.ts";
@@ -17,10 +15,8 @@ import type { UserPayload } from "./guild.ts";
 import type {
   Attachment,
   BaseMessageReactionPayload,
-
   Embed,
   MessageReactionRemoveEmojiPayload,
-
   MessageReactionUncachedPayload,
   PartialMessage,
   ReactionPayload,
