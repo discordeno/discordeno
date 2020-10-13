@@ -1,5 +1,5 @@
 export const baseEndpoints = {
-  BASE_URL: `https://discord.com/api/V8`,
+  BASE_URL: `https://discord.com/api/v8`,
   CDN_URL: "https://cdn.discordapp.com",
 };
 
