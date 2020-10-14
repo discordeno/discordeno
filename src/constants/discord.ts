@@ -1,14 +1,7 @@
-let API_VERSION = "v8";
-
 export const baseEndpoints = {
-  /** Although, the version can be defaulted, keep the v6 as it can be changed to test newer versions when necessary. */
-  BASE_URL: `https://discord.com/api/${API_VERSION}`,
+  BASE_URL: "https://discord.com/api/v8",
   CDN_URL: "https://cdn.discordapp.com",
 };
-
-export function changeAPIVersion(number = 7) {
-  API_VERSION = `v${number}`;
-}
 
 const GUILDS_BASE = (id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}`;
 
