@@ -20,8 +20,10 @@ import { botGatewayData, eventHandlers } from "./client.ts";
 import { handleDiscordPayload } from "./shardingManager.ts";
 
 const basicShards = new Map<number, BasicShard>();
-const heartbeating = new Set<number>();
+const heartbeating = new Map<number, boolean>();
 const utf8decoder = new TextDecoder();
+const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
+let processQueue = false;
 
 export interface BasicShard {
   id: number;
@@ -31,9 +33,6 @@ export interface BasicShard {
   previousSequenceNumber: number | null;
   needToResume: boolean;
 }
-
-const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
-let processQueue = false;
 
 interface RequestMemberQueuedRequest {
   guildID: string;
@@ -126,6 +125,9 @@ export async function createBasicShard(
             );
           }
           break;
+        case GatewayOpcode.HeartbeatACK:
+          heartbeating.set(shardID, true);
+          break;
         case GatewayOpcode.Reconnect:
           eventHandlers.debug?.(
             { type: "reconnect", data: { shardID: basicShard.id } },
@@ -200,7 +202,6 @@ function resume(shard: BasicShard, payload: IdentifyPayload) {
   }));
 }
 
-// TODO: If a client does not receive a heartbeat ack between its attempts at sending heartbeats, it should immediately terminate the connection with a non-1000 close code, reconnect, and attempt to resume.
 async function heartbeat(
   shard: BasicShard,
   interval: number,
@@ -210,7 +211,13 @@ async function heartbeat(
     return;
   }
 
-  if (!heartbeating.has(shard.id)) heartbeating.add(shard.id);
+  if (!heartbeating.has(shard.id)) heartbeating.set(shard.id, false);
+  else {
+    const receivedACK = heartbeating.get(shard.id);
+    if (!receivedACK) {
+      shard.socket.send(JSON.stringify({ op: 4009 }));
+    }
+  }
 
   shard.socket.send(
     JSON.stringify(
