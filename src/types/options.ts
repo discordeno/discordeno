@@ -64,6 +64,7 @@ export interface DebugArg {
     | "requestManagerFetched"
     | "requestMembersProcessing"
     | "heartbeat"
+    | "heartbeatStopped"
     | "createShard"
     | "invalidSession"
     | "reconnect"

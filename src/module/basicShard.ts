@@ -211,13 +211,26 @@ async function heartbeat(
     return;
   }
 
-  if (!heartbeating.has(shard.id)) heartbeating.set(shard.id, false);
-  else {
+  if (heartbeating.has(shard.id)) {
     const receivedACK = heartbeating.get(shard.id);
+    // If a ACK response was not received since last heartbeat, issue invalid session close
     if (!receivedACK) {
-      shard.socket.send(JSON.stringify({ op: 4009 }));
+      eventHandlers.debug?.(
+        {
+          type: "heartbeatStopped",
+          data: {
+            interval,
+            previousSequenceNumber: shard.previousSequenceNumber,
+            shardID: shard.id,
+          },
+        },
+      );
+      return shard.socket.send(JSON.stringify({ op: 4009 }));
     }
   }
+
+  // Set it to false as we are issuing a new heartbeat
+  heartbeating.set(shard.id, false);
 
   shard.socket.send(
     JSON.stringify(
