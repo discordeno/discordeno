@@ -122,6 +122,7 @@ export async function createBasicShard(
             heartbeat(
               basicShard,
               (data.d as DiscordHeartbeatPayload).heartbeat_interval,
+              identifyPayload,
             );
           }
           break;
@@ -205,8 +206,12 @@ function resume(shard: BasicShard, payload: IdentifyPayload) {
 async function heartbeat(
   shard: BasicShard,
   interval: number,
+  payload: IdentifyPayload,
 ) {
+  // We lost socket connection between heartbeats, resume connection
   if (shard.socket.isClosed) {
+    shard.needToResume = true;
+    resumeConnection(botGatewayData, payload, shard.id);
     heartbeating.delete(shard.id);
     return;
   }
@@ -248,7 +253,7 @@ async function heartbeat(
     },
   );
   await delay(interval);
-  heartbeat(shard, interval);
+  heartbeat(shard, interval, payload);
 }
 
 async function resumeConnection(
