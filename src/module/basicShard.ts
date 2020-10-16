@@ -206,7 +206,7 @@ function resume(shard: BasicShard, payload: IdentifyPayload) {
 async function heartbeat(
   shard: BasicShard,
   interval: number,
-  payload: IdentifyPayload
+  payload: IdentifyPayload,
 ) {
   // We lost socket connection between heartbeats, resume connection
   if (shard.socket.isClosed) {
