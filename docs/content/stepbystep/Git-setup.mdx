@@ -1,0 +1,60 @@
+---
+title: 'Git setup'
+metaTitle: 'Installing and using git | Discordeno'
+metaDescription: 'Setting up git for your pc'
+---
+
+# Installing
+
+## Installing the CLI
+
+We will now be installing the CLI. This is the terminal interface for git.
+
+First, go to the [Git download page](https://git-scm.com/downloads) and install the version for your OS. I'm using windows so I'll use <https://git-scm.com/download/win>
+
+Once downloaded click next and next again(unless you need to change the install location)
+
+Make sure that on the select component screen all these are selected:
+
+- Git LFS
+- Associate .git files
+
+I have some extras selected as seen below
+
+![picture](https://i.imgur.com/5VG67xw.png)
+
+Now click next, If you have a start menu folder screen just click next.
+
+Now it will ask you for your default editor. For now set this to custom and make it `notepad`
+
+![picture](https://i.imgur.com/tiR6YFC.png)
+
+Next, it will ask you for your `PATH environment`, make sure it is the second option(`Git from the command line and also third-party software`)
+
+![picture](https://i.imgur.com/4ul0tMV.png)
+
+It will now ask you for your HTTPS backend, set this to `openSSL`
+
+![picture](https://i.imgur.com/hIGarS7.png)
+
+It will ask you for your line endings, this is how file editors see your code. CRLF(\r\n) is windows one while LF(\n) in linuxes one. I personally set this to `Checkout as-is, commit Unix-style`
+
+Now for git bash, set this to whichever you think you like. I choose MinTTY because it looks better than Command prompt
+
+![picture](https://i.imgur.com/zPpzMf7.png)
+
+Set `git pull`s behavior to `Default`. This is the best option as it doesn't override other peoples changes but tries to merge them.
+
+![picture](https://i.imgur.com/ULk8Pdn.png)
+
+For the credential manager, set this to `Git credential manager` or `Git credential manager core`
+
+![picture](https://i.imgur.com/bgR3VgD.png)
+
+For extra options keep this as default
+
+![picture](https://i.imgur.com/xtPq3dM.png)
+
+Don't enable any bleeding-edge features as it might break things. Now click install
+
+Git is now installed! Open a terminal and run `git --version`. If you get something similar to `git version 2.28.0.windows.1` then you're good to go!
