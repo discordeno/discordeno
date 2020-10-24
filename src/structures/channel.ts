@@ -20,7 +20,7 @@ export async function createChannel(
   const channel = {
     ...rest,
     /** The guild id of the channel if it is a guild channel. */
-    guildID: guildID || rawGuildID,
+    guildID: guildID || rawGuildID || "",
     /** The id of the last message sent in this channel */
     lastMessageID,
     /** The amount of users allowed in this voice channel. */
