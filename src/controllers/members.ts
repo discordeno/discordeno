@@ -41,11 +41,6 @@ export async function handleInternalGuildMemberRemove(data: DiscordPayload) {
     member || payload.user,
   );
 
-  eventHandlers.guildMemberRemove?.(
-    guild,
-    member || payload.user,
-  );
-
   guild.members.delete(payload.user.id);
 }
 
