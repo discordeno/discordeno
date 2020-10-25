@@ -19,5 +19,5 @@ export enum ActivityType {
   /** Example: ":smiley: I am cool" */
   Custom = 4,
   /** Example: "Competing in Arena World Champions" */
-  Competing
+  Competing,
 }
