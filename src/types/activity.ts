@@ -18,4 +18,6 @@ export enum ActivityType {
   Listening,
   /** Example: ":smiley: I am cool" */
   Custom = 4,
+  /** Example: "Competing in Arena World Champions" */
+  Competing
 }
