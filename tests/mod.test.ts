@@ -21,6 +21,7 @@ import {
 import { editChannel } from "../src/handlers/channel.ts";
 import { getChannel } from "../src/handlers/guild.ts";
 
+// TODO: add DISCORD_TOKEN variable to GitHub secrets
 const token = Deno.env.get("DISCORD_TOKEN");
 if (!token) throw "Token is not provided";
 
