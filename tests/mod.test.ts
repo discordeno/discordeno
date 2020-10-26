@@ -1,30 +1,21 @@
 import { assert, assertArrayContains, assertEquals, delay } from "../deps.ts";
 import {
   botID,
-
   cache,
   Channel,
   createClient,
-
   createGuildChannel,
   createGuildRole,
-
   createServer,
   deleteChannel,
-
   deleteRole,
-
   deleteServer,
   editRole,
-
   getMessage,
-
   Guild,
   Intents,
-
   OverwriteType,
   Role,
-
   sendMessage,
 } from "../mod.ts";
 import { editChannel } from "../src/handlers/channel.ts";
