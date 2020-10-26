@@ -58,6 +58,8 @@ export async function botHasPermission(
 
   const permissionBits = member.roles
     .map((id) => guild.roles.get(id)!)
+    // Remove any edge case undefined
+    .filter((r) => r)
     .reduce((bits, data) => {
       bits |= BigInt(data.permissions);
 
