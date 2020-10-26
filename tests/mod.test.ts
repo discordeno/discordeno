@@ -48,7 +48,11 @@ Deno.test({
   ...testOptions,
 });
 
-let guildID: string;
+const data = {
+  guildID: "",
+  roleID: "",
+  channelID: "",
+};
 
 Deno.test({
   name: "create a guild",
@@ -61,26 +65,25 @@ Deno.test({
     // Check whether createdGuild is nil or not
     assert(createdGuild);
 
-    guildID = createdGuild.id;
+    data.guildID = createdGuild.id;
   },
   ...testOptions,
 });
 
 // Role
-let roleID: string;
 
 Deno.test({
   name: "create a role in a guild",
   async fn() {
     // Create a role "Role 1" in the guild "Discordeno Test"
-    const createdRole = await createGuildRole(guildID, {
+    const createdRole = await createGuildRole(data.guildID, {
       name: "Role 1",
     });
 
     // Check whether the created role is nil or not
     assert(createdRole);
 
-    roleID = createdRole.id;
+    data.roleID = createdRole.id;
   },
   ...testOptions,
 });
@@ -89,7 +92,7 @@ Deno.test({
   name: "edit a role in a guild",
   async fn() {
     // Edit a role "Role 1" in the guild "Discordeno Test"
-    const editedRole = (await editRole(guildID, roleID, {
+    const editedRole = (await editRole(data.guildID, data.roleID, {
       name: "Edited Role",
       color: 4320244,
       hoist: false,
@@ -103,26 +106,24 @@ Deno.test({
     assertEquals(editedRole.hoist, false);
     assertEquals(editedRole.mentionable, false);
 
-    roleID = editedRole.id;
+    data.roleID = editedRole.id;
   },
   ...testOptions,
 });
 
 // Channel
 
-let channelID: string;
-
 Deno.test({
   name: "create a channel in a guild",
   async fn() {
-    const guild = cache.guilds.get(guildID);
+    const guild = cache.guilds.get(data.guildID);
     if (!guild) throw "Guild not found";
     const createdChannel = await createGuildChannel(guild, "test");
 
     // Check whether the created channel is nil or not
     assert(createdChannel);
 
-    channelID = createdChannel.id;
+    data.channelID = createdChannel.id;
   },
   ...testOptions,
 });
@@ -130,9 +131,9 @@ Deno.test({
 Deno.test({
   name: "get a channel in a guild",
   async fn() {
-    const channel = await getChannel(channelID);
+    const channel = await getChannel(data.channelID);
 
-    assertEquals(channel.id, channelID);
+    assertEquals(channel.id, data.channelID);
   },
   ...testOptions,
 });
@@ -140,24 +141,24 @@ Deno.test({
 Deno.test({
   name: "edit a channel in a guild",
   async fn() {
-    const channel = await editChannel(channelID, {
+    const channel = await editChannel(data.channelID, {
       name: "edited channel",
     }) as Channel;
 
     assert(channel);
 
-    channelID = channel.id;
+    data.channelID = channel.id;
   },
 });
 
 Deno.test({
   name: "channel overwrite has permission",
   async fn() {
-    const channel = cache.channels.get(channelID);
+    const channel = cache.channels.get(data.channelID);
     if (!channel) throw "Channel not found";
     assertArrayContains(channel.permission_overwrites!, [
       {
-        id: roleID,
+        id: data.roleID,
         type: OverwriteType.ROLE,
         // The type for Channel#permission_overwrites is "RawOverwrite[] | undefined"
         // not "Overwrite[]"; therefore, permission strings cannot be used.
@@ -180,7 +181,7 @@ let messageID: string;
 Deno.test({
   name: "create a message in a guild",
   async fn() {
-    const createdMessage = await sendMessage(channelID, "test");
+    const createdMessage = await sendMessage(data.channelID, "test");
 
     // Check whether the created message is nil or not
     assert(createdMessage);
@@ -192,7 +193,7 @@ Deno.test({
 Deno.test({
   name: "get a message in a guild",
   async fn() {
-    const message = await getMessage(channelID, messageID);
+    const message = await getMessage(data.channelID, messageID);
 
     assertEquals(messageID, message.id);
   },
@@ -203,16 +204,16 @@ Deno.test({
 Deno.test({
   name: "delete a role from the guild",
   async fn() {
-    await deleteRole(guildID, roleID);
-    roleID = "";
-    assertEquals(roleID, "");
+    await deleteRole(data.guildID, data.roleID);
+    data.roleID = "";
+    assertEquals(data.roleID, "");
   },
 });
 
 Deno.test({
   name: "delete a channel in the guild",
   async fn() {
-    await deleteChannel(guildID, channelID);
+    await deleteChannel(data.guildID, data.channelID);
   },
   ...testOptions,
 });
@@ -220,9 +221,9 @@ Deno.test({
 Deno.test({
   name: "delete a guild",
   async fn() {
-    await deleteServer(guildID);
-    guildID = "";
-    assertEquals(guildID, "");
+    await deleteServer(data.guildID);
+    data.guildID = "";
+    assertEquals(data.guildID, "");
   },
   ...testOptions,
 });
