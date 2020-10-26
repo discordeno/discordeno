@@ -14,17 +14,16 @@ import type {
 } from "../types/discord.ts";
 import { GatewayOpcode } from "../types/discord.ts";
 import type { FetchMembersOptions } from "../types/guild.ts";
-import { Collection } from "../utils/collection.ts";
 import type { BotStatusRequest } from "../utils/utils.ts";
 import type { IdentifyPayload } from "./client.ts";
-import {
-  botGatewayData,
-  eventHandlers,
-} from "./client.ts";
+import { botGatewayData, eventHandlers } from "./client.ts";
 import { handleDiscordPayload } from "./shardingManager.ts";
 
-export const basicShards = new Collection<number, BasicShard>();
-const heartbeating = new Set<number>();
+const basicShards = new Map<number, BasicShard>();
+const heartbeating = new Map<number, boolean>();
+const utf8decoder = new TextDecoder();
+const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
+let processQueue = false;
 
 export interface BasicShard {
   id: number;
@@ -34,9 +33,6 @@ export interface BasicShard {
   previousSequenceNumber: number | null;
   needToResume: boolean;
 }
-
-const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
-let processQueue = false;
 
 interface RequestMemberQueuedRequest {
   guildID: string;
@@ -110,7 +106,11 @@ export async function createBasicShard(
     }
 
     if (message instanceof Uint8Array) {
-      message = new TextDecoder().decode(inflate(message as Uint8Array));
+      message = inflate(
+        message,
+        0,
+        (slice: Uint8Array) => utf8decoder.decode(slice),
+      );
     }
 
     if (typeof message === "string") {
@@ -122,8 +122,12 @@ export async function createBasicShard(
             heartbeat(
               basicShard,
               (data.d as DiscordHeartbeatPayload).heartbeat_interval,
+              identifyPayload,
             );
           }
+          break;
+        case GatewayOpcode.HeartbeatACK:
+          heartbeating.set(shardID, true);
           break;
         case GatewayOpcode.Reconnect:
           eventHandlers.debug?.(
@@ -199,17 +203,39 @@ function resume(shard: BasicShard, payload: IdentifyPayload) {
   }));
 }
 
-// TODO: If a client does not receive a heartbeat ack between its attempts at sending heartbeats, it should immediately terminate the connection with a non-1000 close code, reconnect, and attempt to resume.
 async function heartbeat(
   shard: BasicShard,
   interval: number,
+  payload: IdentifyPayload,
 ) {
+  // We lost socket connection between heartbeats, resume connection
   if (shard.socket.isClosed) {
+    shard.needToResume = true;
+    resumeConnection(botGatewayData, payload, shard.id);
     heartbeating.delete(shard.id);
     return;
   }
 
-  if (!heartbeating.has(shard.id)) heartbeating.add(shard.id);
+  if (heartbeating.has(shard.id)) {
+    const receivedACK = heartbeating.get(shard.id);
+    // If a ACK response was not received since last heartbeat, issue invalid session close
+    if (!receivedACK) {
+      eventHandlers.debug?.(
+        {
+          type: "heartbeatStopped",
+          data: {
+            interval,
+            previousSequenceNumber: shard.previousSequenceNumber,
+            shardID: shard.id,
+          },
+        },
+      );
+      return shard.socket.send(JSON.stringify({ op: 4009 }));
+    }
+  }
+
+  // Set it to false as we are issuing a new heartbeat
+  heartbeating.set(shard.id, false);
 
   shard.socket.send(
     JSON.stringify(
@@ -227,7 +253,7 @@ async function heartbeat(
     },
   );
   await delay(interval);
-  heartbeat(shard, interval);
+  heartbeat(shard, interval, payload);
 }
 
 async function resumeConnection(

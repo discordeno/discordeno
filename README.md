@@ -56,9 +56,7 @@ The instructions below are meant for advanced developers!
 Starting with Discordeno is very simple, you can start from scratch without any boilerplates/frameworks: Add this snippet of code into a new TypeScript file:
 
 ```typescript
-import StartBot from "https://x.nest.land/Discordeno@9.0.1/src/module/client.ts";
-import { sendMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts";
-import { Intents } from "https://x.nest.land/Discordeno@9.0.1/src/types/options.ts";
+import StartBot, { sendMessage, Intents } from "https://x.nest.land/Discordeno@9.0.1/mod.ts";
 import config from "./config.ts";
 
 StartBot({
