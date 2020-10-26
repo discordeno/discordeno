@@ -84,3 +84,7 @@ Alternatively, you can use boilerplate template repositories that were created b
 #### Dark Mode
 
 ![image](https://i.imgur.com/Vr2Bebr.png)
+
+### Tests
+
+![Test](https://github.com/Skillz4Killz/Discordeno/workflows/Test/badge.svg)
