@@ -57,6 +57,11 @@ export interface DiscordBotGatewayData {
     remaining: number;
     /** Milliseconds left until limit is reset. */
     reset_after: number;
+    /** The number of identify requests allowed per 5 seconds.
+     * So, if you had a max concurrency of 16, and 16 shards for example, you could start them all up at the same time.
+     * Whereas if you had 32 shards, if you tried to start up shard 0 and 16 at the same time for example, it would not work. You can start shards 0-15 concurrently, then 16-31...
+     * */
+    max_concurrency: number;
   };
 }
 
