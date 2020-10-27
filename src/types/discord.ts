@@ -196,11 +196,6 @@ export interface Properties {
   $device: string;
 }
 
-export interface Timestamps {
-  start?: number;
-  end?: number;
-}
-
 export interface Emoji {
   name: string;
   id?: string;
