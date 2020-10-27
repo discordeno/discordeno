@@ -51,7 +51,7 @@ export async function createBasicShard(
 
   const basicShard: BasicShard = {
     id: shardID,
-    socket: await connectWebSocket(`${data.url}?v=6&encoding=json`),
+    socket: await connectWebSocket(`${data.url}?v=8&encoding=json`),
     resumeInterval: 0,
     sessionID: oldShard?.sessionID || "",
     previousSequenceNumber: oldShard?.previousSequenceNumber || 0,
