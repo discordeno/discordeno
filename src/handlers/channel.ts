@@ -1,8 +1,10 @@
 import { endpoints } from "../constants/discord.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { structures } from "../structures/mod.ts";
-import type {
+import {
   ChannelEditOptions,
+  ChannelTypes,
   CreateInviteOptions,
   FollowedChannelPayload,
   GetMessages,
@@ -159,6 +161,10 @@ export async function sendMessage(
       }
     }
   }
+
+  const channel = await cacheHandlers.get("channels", channelID);
+  if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);
+  if (![ChannelTypes.DM, ChannelTypes.GUILD_NEWS, ChannelTypes.GUILD_TEXT].includes(channel.type)) throw new Error(Errors.CHANNEL_NOT_TEXT_BASED)
 
   const result = await RequestManager.post(
     endpoints.CHANNEL_MESSAGES(channelID),
