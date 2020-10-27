@@ -86,7 +86,8 @@ export async function hasChannelPermissions(
   permissions: Permissions[],
 ) {
   const channel = await cacheHandlers.get("channels", channelID);
-  if (!channel?.guildID) return true;
+  if (!channel) return false;
+  if (!channel.guildID) return true;
 
   const guild = await cacheHandlers.get("guilds", channel.guildID);
   if (!guild) return false;
