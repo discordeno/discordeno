@@ -4,8 +4,7 @@
 
 [![Discord](https://img.shields.io/discord/223909216866402304?color=7289da&logo=discord&logoColor=white)](https://discord.gg/J4NqJ72)
 ![Testing/Linting](https://github.com/Skillz4Killz/Discordeno/workflows/Testing/Linting/badge.svg)
-[![nest.land](https://nest.land/badge-large.svg)](https://nest.land/package/Discordeno)
-
+[![nest badge](https://nest.land/badge.svg)](https://nest.land/package/Discordeno)
 [Website](https://discordeno.netlify.app)
 
 ## Beginner Developers
