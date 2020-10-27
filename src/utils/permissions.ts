@@ -93,7 +93,7 @@ export async function hasChannelPermissions(
   if (!guild) return false;
 
   if (guild.ownerID === memberID) return true;
-  if (botHasPermission(guild.id, [Permissions.ADMINISTRATOR])) return true;
+  if (await memberIDHasPermission(memberID, guild.id, ["ADMINISTRATOR"])) return true;
 
   const member = guild.members.get(memberID);
   if (!member) return false;
