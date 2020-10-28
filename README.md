@@ -2,15 +2,19 @@
 
 > Discord API library wrapper in Deno
 
-[![Discord](https://img.shields.io/discord/223909216866402304?color=7289da&logo=discord&logoColor=white)](https://discord.gg/J4NqJ72)
+[![Discord](https://img.shields.io/discord/223909216866402304?color=7289da&logo=discord&logoColor=dark)](https://discord.gg/J4NqJ72)
 ![Testing/Linting](https://github.com/Skillz4Killz/Discordeno/workflows/Testing/Linting/badge.svg)
-[![nest.land](https://nest.land/badge-large.svg)](https://nest.land/package/Discordeno)
+[![nest badge](https://nest.land/badge.svg)](https://nest.land/package/Discordeno)
 
-[Website](https://discordeno.netlify.app)
+[WIP] ![Test](https://github.com/Skillz4Killz/Discordeno/workflows/Test/badge.svg)
 
-## Beginner Developers
+## Why Discordeno?
 
-Don't worry a lot of developers start out coding their first projects as a Discord bot(I did 😉) and it is not so easy. With Discordeno, I tried to build it in a way that solved all the headaches I had when first starting out coding bots. If you are a beginner developer, please use a boilerplate: The official one is at: [GitHub](https://github.com/Skillz4Killz/Discordeno-bot-template) but there will be more listed on the website. It is a beautiful website indeed! Check it out!
+### Beginner Developers
+
+Don't worry a lot of developers start out coding their first projects as a Discord bot (I did 😉) and it is not so easy to do so. Discordeno is built considering all the issues wit pre-existing libraries, such as discord.js, and issues that I had when I first started out coding bots. 
+
+If you are a beginner developer, please use this official boilerplate: [GitHub](https://github.com/Skillz4Killz/Discordeno-bot-template) but there will be more listed on the website. It is a beautiful website indeed! Check it out!
 
 **Modular commands, arguments, events, inhibitors, monitors, tasks.**
 
@@ -41,15 +45,10 @@ Don't worry a lot of developers start out coding their first projects as a Disco
   - Uses i18next, one of the best localization tools available.
   - Supports nested folders to keep cleaner translation files
 
-**Hot Reloadable**
+- **Hot Reloadable**: Easily update your code without having to restart the bot everytime.
+- **Step By Step Guide**: There is a step by step walkthrough to learn how to create Discord bots with Discordeno on our website!
 
-- Easily update your code without having to restart the bot everytime.
-
-**Step By Step Guide**
-
-- There is a step by step walkthrough to learn how to create Discord bots with Discordeno on our website!
-
-## Advanced Developers
+### Advanced Developers
 
 The instructions below are meant for advanced developers!
 
@@ -64,7 +63,7 @@ StartBot({
   intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
   eventHandlers: {
     ready: () => {
-      console.log(`Logged!`);
+      console.log('Successfully connected to gateway');
     },
     messageCreate: (message) => {
       if (message.content === "!ping") {
@@ -77,12 +76,13 @@ StartBot({
 
 Alternatively, you can use boilerplate template repositories that were created by wonderful developers. Review the list on the website, and add any of yours if you make your own.
 
-![image](https://i.imgur.com/z1BfUnt.png)
+## Documentation
 
-#### Dark Mode
+- [API Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
+- [Guide](https://discordeno.netlify.com)
+- [Support server](https://discord.gg/J4NqJ72)
+- [Contributing Guide](https://github.com/Skillz4Killz/Discordeno/blob/master/.github/CONTRIBUTING.md)
 
-![image](https://i.imgur.com/Vr2Bebr.png)
+## License
 
-### Tests
-
-![Test](https://github.com/Skillz4Killz/Discordeno/workflows/Test/badge.svg)
+MIT © Skillz4Killz 

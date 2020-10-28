@@ -286,6 +286,23 @@ async function runMethod(
   });
 }
 
+async function logErrors(response: Response, errorStack?: unknown) {
+  try {
+    const error = await response.json();
+    console.error(error);
+
+    eventHandlers.debug?.({ type: "error", data: { errorStack, error } });
+  } catch {
+    eventHandlers.debug?.(
+      {
+        type: "error",
+        data: { errorStack },
+      },
+    );
+    console.error(response);
+  }
+}
+
 function handleStatusCode(response: Response, errorStack?: unknown) {
   const status = response.status;
 
@@ -296,13 +313,7 @@ function handleStatusCode(response: Response, errorStack?: unknown) {
     return true;
   }
 
-  eventHandlers.debug?.(
-    {
-      type: "error",
-      data: { errorStack },
-    },
-  );
-  console.error(response);
+  logErrors(response, errorStack);
 
   switch (status) {
     case HttpResponseCode.BadRequest:
