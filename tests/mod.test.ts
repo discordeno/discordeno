@@ -1,4 +1,4 @@
-import { assert, assertArrayContains, assertEquals, delay } from "../deps.ts";
+import { assert, assertArrayIncludes, assertEquals, delay } from "../deps.ts";
 import {
   botID,
   cache,
@@ -156,7 +156,7 @@ Deno.test({
   async fn() {
     const channel = cache.channels.get(data.channelID);
     if (!channel) throw "Channel not found";
-    assertArrayContains(channel.permission_overwrites!, [
+    assertArrayIncludes(channel.permission_overwrites!, [
       {
         id: data.roleID,
         type: OverwriteType.ROLE,
