@@ -13,3 +13,5 @@ jobs:
         run: deno cache mod.ts
       - name: Run test script
         run: deno test -A
+    env:
+      DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
