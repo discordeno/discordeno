@@ -6,6 +6,8 @@
 ![Testing/Linting](https://github.com/Skillz4Killz/Discordeno/workflows/Testing/Linting/badge.svg)
 [![nest badge](https://nest.land/badge.svg)](https://nest.land/package/Discordeno)
 
+[WIP] ![Test](https://github.com/Skillz4Killz/Discordeno/workflows/Test/badge.svg)
+
 ## Why Discordeno?
 
 ### Beginner Developers

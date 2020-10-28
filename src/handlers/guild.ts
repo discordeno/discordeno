@@ -32,7 +32,7 @@ import { Permissions } from "../types/permission.ts";
 import type { RoleData } from "../types/role.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import { Collection } from "../utils/collection.ts";
-import { botHasPermission } from "../utils/permissions.ts";
+import { botHasPermission, calculateBits } from "../utils/permissions.ts";
 import { urlToBase64 } from "../utils/utils.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
@@ -317,7 +317,12 @@ export function editRole(
   ) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
-  return RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), options);
+  return RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), {
+    ...options,
+    permissions: options.permissions
+      ? calculateBits(options.permissions)
+      : undefined,
+  });
 }
 
 /** Delete a guild role. Requires the MANAGE_ROLES permission. */
