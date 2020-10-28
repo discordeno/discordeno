@@ -2,9 +2,9 @@ import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../module/client.ts";
 import type { Guild } from "../structures/guild.ts";
 import type { Role } from "../structures/role.ts";
-import { RawOverwrite } from "../types/guild.ts";
+import type { RawOverwrite } from "../types/guild.ts";
 import type { Permission } from "../types/permission.ts";
-import { Permissions } from "../types/permission.ts";
+import type { Permissions } from "../types/permission.ts";
 
 /** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
 export async function memberIDHasPermission(
