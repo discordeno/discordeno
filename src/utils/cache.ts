@@ -21,5 +21,5 @@ export const cache: CacheData = {
   messages: new Collection(),
   unavailableGuilds: new Collection(),
   presences: new Collection(),
-  fetchAllMembersProcessingRequests: new Collection<string, Function>(),
+  fetchAllMembersProcessingRequests: new Collection(),
 };
