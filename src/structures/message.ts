@@ -1,5 +1,5 @@
-import type { MessageCreateOptions } from "../types/message.ts";
-import type { Unpromise } from "../types/misc.ts";
+import { MessageCreateOptions } from "../types/message.ts";
+import { Unpromise } from "../types/misc.ts";
 
 export async function createMessage(data: MessageCreateOptions) {
   const {

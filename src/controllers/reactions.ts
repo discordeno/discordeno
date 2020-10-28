@@ -1,7 +1,7 @@
 import { botID, eventHandlers } from "../module/client.ts";
 import { structures } from "../structures/mod.ts";
-import type { DiscordPayload } from "../types/discord.ts";
-import type {
+import { DiscordPayload } from "../types/discord.ts";
+import {
   BaseMessageReactionPayload,
   MessageReactionPayload,
   MessageReactionRemoveEmojiPayload,

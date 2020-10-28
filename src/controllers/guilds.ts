@@ -1,13 +1,13 @@
 import { eventHandlers } from "../module/client.ts";
 import { structures } from "../structures/mod.ts";
-import type { DiscordPayload } from "../types/discord.ts";
-import type {
+import { DiscordPayload } from "../types/discord.ts";
+import {
   CreateGuildPayload,
   GuildDeletePayload,
   GuildEmojisUpdatePayload,
   UpdateGuildPayload,
 } from "../types/guild.ts";
-import type { GuildUpdateChange } from "../types/options.ts";
+import { GuildUpdateChange } from "../types/options.ts";
 import { cache } from "../utils/cache.ts";
 import { cacheHandlers } from "./cache.ts";
 

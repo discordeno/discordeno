@@ -14,8 +14,8 @@ import {
   MessageContent,
 } from "../types/channel.ts";
 import { Errors } from "../types/errors.ts";
-import type { RawOverwrite } from "../types/guild.ts";
-import type { MessageCreateOptions } from "../types/message.ts";
+import { RawOverwrite } from "../types/guild.ts";
+import { MessageCreateOptions } from "../types/message.ts";
 import { Permissions } from "../types/permission.ts";
 import { botHasChannelPermissions } from "../utils/permissions.ts";
 

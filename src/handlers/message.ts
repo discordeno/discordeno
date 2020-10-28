@@ -3,12 +3,12 @@ import { endpoints } from "../constants/discord.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../module/client.ts";
 import { RequestManager } from "../module/requestManager.ts";
-import type { Message } from "../structures/message.ts";
+import { Message } from "../structures/message.ts";
 import { structures } from "../structures/mod.ts";
-import type { MessageContent } from "../types/channel.ts";
+import { MessageContent } from "../types/channel.ts";
 import { Errors } from "../types/errors.ts";
-import type { UserPayload } from "../types/guild.ts";
-import type { MessageCreateOptions } from "../types/message.ts";
+import { UserPayload } from "../types/guild.ts";
+import { MessageCreateOptions } from "../types/message.ts";
 import { Permissions } from "../types/permission.ts";
 import { botHasChannelPermissions } from "../utils/permissions.ts";
 
