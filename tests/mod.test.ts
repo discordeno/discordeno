@@ -247,7 +247,7 @@ Deno.test({
 Deno.test({
   name: "exit the process forcefully after all the tests are done",
   async fn() {
-    Deno.exit(0);
+    Deno.exit();
   },
   ...testOptions,
 });
