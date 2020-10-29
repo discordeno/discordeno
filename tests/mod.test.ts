@@ -2,7 +2,6 @@ import { assert, assertEquals, delay } from "../deps.ts";
 import {
   botID,
   cache,
-  Channel,
   createClient,
   createGuildChannel,
   createGuildRole,
@@ -144,7 +143,7 @@ Deno.test({
 Deno.test({
   name: "edit a channel in a guild",
   async fn() {
-     await editChannel(data.channelID, {
+    await editChannel(data.channelID, {
       name: "edited-channel",
       overwrites: [
         {
@@ -181,8 +180,8 @@ Deno.test({
       data.guildID,
       data.roleID,
       channel.permission_overwrites,
-      [Permissions.USE_EXTERNAL_EMOJIS]
-    )
+      [Permissions.USE_EXTERNAL_EMOJIS],
+    );
 
     assertEquals(hasPerm, true);
     assertEquals(missingPerm, false);
@@ -248,7 +247,7 @@ Deno.test({
 Deno.test({
   name: "exit the process forcefully after all the tests are done",
   async fn() {
-    Deno.exit(1);
+    Deno.exit(0);
   },
   ...testOptions,
 });
