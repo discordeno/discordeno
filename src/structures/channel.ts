@@ -32,7 +32,7 @@ export async function createChannel(
     /** The last time when a message was pinned in this channel */
     lastPinTimestamp,
     /** The permission overwrites for this channel */
-    permissions: data.permission_overwrites
+    permissionOverwrites: data.permission_overwrites
       ? data.permission_overwrites.map((perm) => ({
         ...perm,
         allow: calculatePermissions(BigInt(perm.allow)),

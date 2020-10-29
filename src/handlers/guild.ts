@@ -105,7 +105,7 @@ export async function createGuildChannel(
     (await RequestManager.post(endpoints.GUILD_CHANNELS(guild.id), {
       ...options,
       name,
-      permission_overwrites: options?.permission_overwrites?.map((perm) => ({
+      permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
         ...perm,
 
         allow: perm.allow.reduce(

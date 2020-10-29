@@ -156,7 +156,7 @@ Deno.test({
   async fn() {
     const channel = cache.channels.get(data.channelID);
     if (!channel) throw "Channel not found";
-    assertArrayIncludes(channel.permission_overwrites!, [
+    assertArrayIncludes(channel.permissionOverwrites!, [
       {
         id: data.roleID,
         type: OverwriteType.ROLE,
