@@ -1,4 +1,4 @@
-import { assert, assertArrayIncludes, assertEquals, delay } from "../deps.ts";
+import { assert, assertEquals, delay } from "../deps.ts";
 import {
   botID,
   cache,
@@ -18,10 +18,13 @@ import {
   Role,
   sendMessage,
 } from "../mod.ts";
-import { editChannel } from "../src/handlers/channel.ts";
+import {
+  channelOverwriteHasPermission,
+  editChannel,
+} from "../src/handlers/channel.ts";
 import { getChannel } from "../src/handlers/guild.ts";
+import { Permissions } from "../src/types/permission.ts";
 
-// TODO: add DISCORD_TOKEN variable to GitHub secrets
 const token = Deno.env.get("DISCORD_TOKEN");
 if (!token) throw "Token is not provided";
 
@@ -143,11 +146,19 @@ Deno.test({
   async fn() {
     const channel = await editChannel(data.channelID, {
       name: "edited channel",
+      overwrites: [
+        {
+          id: data.roleID,
+          type: OverwriteType.ROLE,
+          allow: ["VIEW_CHANNEL", "SEND_MESSAGES"],
+          deny: ["USE_EXTERNAL_EMOJIS"],
+        },
+      ],
     }) as Channel;
+    const editedChannel = await getChannel(data.channelID);
 
     assert(channel);
-
-    data.channelID = channel.id;
+    assertEquals(editedChannel.name, "edited channel");
   },
 });
 
@@ -156,20 +167,24 @@ Deno.test({
   async fn() {
     const channel = cache.channels.get(data.channelID);
     if (!channel) throw "Channel not found";
-    assertArrayIncludes(channel.permission_overwrites!, [
-      {
-        id: data.roleID,
-        type: OverwriteType.ROLE,
-        // The type for Channel#permission_overwrites is "RawOverwrite[] | undefined"
-        // not "Overwrite[]"; therefore, permission strings cannot be used.
-        // allow: ["VIEW_CHANNEL", "SEND_MESSAGES"],
-        // deny: ["USE_EXTERNAL_EMOJIS"],
-      },
-    ]);
 
-    // THIS TEST CASE SHOULD BE REFACTORED AND IMPROVED
-    // CURRENTLY, IT USES Channel#permission_overwrites
-    // but preferably, it should use the channelOverwriteHasPermission()
+    if (!channel.permission_overwrites) throw "Channel overwrites not found.";
+
+    const hasPerm = channelOverwriteHasPermission(
+      data.guildID,
+      data.roleID,
+      channel.permission_overwrites,
+      [Permissions.VIEW_CHANNEL, Permissions.SEND_MESSAGES],
+    );
+    const missingPerm = channelOverwriteHasPermission(
+      data.guildID,
+      data.roleID,
+      channel.permission_overwrites,
+      [Permissions.USE_EXTERNAL_EMOJIS]
+    )
+
+    assertEquals(hasPerm, true);
+    assertEquals(missingPerm, false);
   },
   ...testOptions,
 });
