@@ -1,5 +1,6 @@
 import { cacheHandlers } from "../controllers/cache.ts";
 import { ChannelCreatePayload } from "../types/channel.ts";
+import { PermissionOverwrite } from "../types/guild.ts";
 import { Unpromise } from "../types/misc.ts";
 import { calculatePermissions } from "../utils/permissions.ts";
 
@@ -33,13 +34,14 @@ export async function createChannel(
     /** The last time when a message was pinned in this channel */
     lastPinTimestamp,
     /** The permission overwrites for this channel */
-    permissionOverwrites: data.permission_overwrites
-      ? data.permission_overwrites.map((perm) => ({
-        ...perm,
-        allow: calculatePermissions(BigInt(perm.allow)),
-        deny: calculatePermissions(BigInt(perm.deny)),
-      }))
-      : [],
+    permissionOverwrites:
+      (data.permission_overwrites
+        ? data.permission_overwrites.map((perm) => ({
+          ...perm,
+          allow: calculatePermissions(BigInt(perm.allow)),
+          deny: calculatePermissions(BigInt(perm.deny)),
+        }))
+        : []) as PermissionOverwrite[],
     /** Whether this channel is nsfw or not */
     nsfw: data.nsfw || false,
     /** The mention of the channel */
