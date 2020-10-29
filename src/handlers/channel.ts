@@ -14,16 +14,19 @@ import {
   MessageContent,
 } from "../types/channel.ts";
 import { Errors } from "../types/errors.ts";
-import { RawOverwrite } from "../types/guild.ts";
+import { PermissionOverwrite } from "../types/guild.ts";
 import { MessageCreateOptions } from "../types/message.ts";
 import { Permissions } from "../types/permission.ts";
-import { botHasChannelPermissions } from "../utils/permissions.ts";
+import {
+  botHasChannelPermissions,
+  calculateBits,
+} from "../utils/permissions.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(
   guildID: string,
   id: string,
-  overwrites: RawOverwrite[],
+  overwrites: PermissionOverwrite[],
   permissions: Permissions[],
 ) {
   const overwrite = overwrites.find((perm) => perm.id === id) ||
@@ -31,8 +34,10 @@ export function channelOverwriteHasPermission(
 
   return permissions.every((perm) => {
     if (overwrite) {
-      if (BigInt(overwrite.deny) & BigInt(perm)) return false;
-      if (BigInt(overwrite.allow) & BigInt(perm)) return true;
+      const allowBits = calculateBits(overwrite.allow);
+      const denyBits = calculateBits(overwrite.deny);
+      if (BigInt(denyBits) & BigInt(perm)) return false;
+      if (BigInt(allowBits) & BigInt(perm)) return true;
     }
     return false;
   });
