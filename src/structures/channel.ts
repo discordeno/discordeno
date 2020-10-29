@@ -14,6 +14,7 @@ export async function createChannel(
     rate_limit_per_user: rateLimitPerUser,
     parent_id: parentID,
     last_pin_timestamp: lastPinTimestamp,
+    permission_overwrites,
     ...rest
   } = data;
 
@@ -43,6 +44,8 @@ export async function createChannel(
     nsfw: data.nsfw || false,
     /** The mention of the channel */
     mention: `<#${data.id}>`,
+    /** Raw permissions */
+    _rawPermissionOverwrites: permission_overwrites,
   };
 
   cacheHandlers.set("channels", data.id, channel);
