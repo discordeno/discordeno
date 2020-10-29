@@ -46,8 +46,6 @@ export async function createChannel(
     nsfw: data.nsfw || false,
     /** The mention of the channel */
     mention: `<#${data.id}>`,
-    /** Raw permissions */
-    _rawPermissionOverwrites: permission_overwrites,
   };
 
   cacheHandlers.set("channels", data.id, channel);
