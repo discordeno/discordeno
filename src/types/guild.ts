@@ -1,10 +1,10 @@
-import type { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
-import type { Emoji, StatusType } from "./discord.ts";
-import type { MemberCreatePayload } from "./member.ts";
-import type { Activity } from "./message.ts";
-import type { Permission } from "./permission.ts";
-import type { ClientStatusPayload } from "./presence.ts";
-import type { RoleData } from "./role.ts";
+import { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
+import { Emoji, StatusType } from "./discord.ts";
+import { MemberCreatePayload } from "./member.ts";
+import { Activity } from "./message.ts";
+import { Permission } from "./permission.ts";
+import { ClientStatusPayload } from "./presence.ts";
+import { RoleData } from "./role.ts";
 
 export interface GuildRolePayload {
   /** The id of the guild */
@@ -473,6 +473,12 @@ export interface RawOverwrite {
   deny: number;
 }
 
+export interface PermissionOverwrite
+  extends Omit<RawOverwrite, "allow" | "deny"> {
+  allow: Permission[];
+  deny: Permission[];
+}
+
 export interface ChannelCreateOptions {
   /** The type of the channel */
   type?: ChannelTypes;
@@ -487,7 +493,7 @@ export interface ChannelCreateOptions {
   /** The sorting position of the channel */
   position?: number;
   /** The channel's permission overwrites */
-  permission_overwrites?: Overwrite[];
+  permissionOverwrites?: Overwrite[];
   /** The id of the parent category for the channel */
   parent_id?: string;
   /** Whether the channel is nsfw */

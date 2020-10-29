@@ -3,13 +3,13 @@ import { cacheHandlers } from "../controllers/cache.ts";
 import { identifyPayload } from "../module/client.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { requestAllMembers } from "../module/shardingManager.ts";
-import type { Guild } from "../structures/guild.ts";
-import type { Member } from "../structures/member.ts";
+import { Guild } from "../structures/guild.ts";
+import { Member } from "../structures/member.ts";
 import { structures } from "../structures/mod.ts";
-import type { ImageFormats, ImageSize } from "../types/cdn.ts";
+import { ImageFormats, ImageSize } from "../types/cdn.ts";
 import { ChannelCreatePayload, ChannelTypes } from "../types/channel.ts";
 import { Errors } from "../types/errors.ts";
-import type {
+import {
   BannedUser,
   BanOptions,
   ChannelCreateOptions,
@@ -26,13 +26,13 @@ import type {
   PrunePayload,
   UserPayload,
 } from "../types/guild.ts";
-import type { MemberCreatePayload } from "../types/member.ts";
+import { MemberCreatePayload } from "../types/member.ts";
 import { Intents } from "../types/options.ts";
 import { Permissions } from "../types/permission.ts";
-import type { RoleData } from "../types/role.ts";
+import { RoleData } from "../types/role.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import { Collection } from "../utils/collection.ts";
-import { botHasPermission } from "../utils/permissions.ts";
+import { botHasPermission, calculateBits } from "../utils/permissions.ts";
 import { urlToBase64 } from "../utils/utils.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
@@ -105,7 +105,7 @@ export async function createGuildChannel(
     (await RequestManager.post(endpoints.GUILD_CHANNELS(guild.id), {
       ...options,
       name,
-      permission_overwrites: options?.permission_overwrites?.map((perm) => ({
+      permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
         ...perm,
 
         allow: perm.allow.reduce(
@@ -317,7 +317,12 @@ export function editRole(
   ) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
-  return RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), options);
+  return RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), {
+    ...options,
+    permissions: options.permissions
+      ? calculateBits(options.permissions)
+      : undefined,
+  });
 }
 
 /** Delete a guild role. Requires the MANAGE_ROLES permission. */

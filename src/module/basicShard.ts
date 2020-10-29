@@ -7,21 +7,22 @@ import {
   isWebSocketPongEvent,
   WebSocket,
 } from "../../deps.ts";
-import type {
+import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
+  GatewayOpcode,
   ReadyPayload,
 } from "../types/discord.ts";
-import { GatewayOpcode } from "../types/discord.ts";
-import type { FetchMembersOptions } from "../types/guild.ts";
-import type { BotStatusRequest } from "../utils/utils.ts";
-import type { IdentifyPayload } from "./client.ts";
-import { botGatewayData, eventHandlers } from "./client.ts";
+import { FetchMembersOptions } from "../types/guild.ts";
+import { BotStatusRequest } from "../utils/utils.ts";
+import { botGatewayData, eventHandlers, IdentifyPayload } from "./client.ts";
 import { handleDiscordPayload } from "./shardingManager.ts";
 
 const basicShards = new Map<number, BasicShard>();
-const heartbeating = new Set<number>();
+const heartbeating = new Map<number, boolean>();
 const utf8decoder = new TextDecoder();
+const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
+let processQueue = false;
 
 export interface BasicShard {
   id: number;
@@ -31,9 +32,6 @@ export interface BasicShard {
   previousSequenceNumber: number | null;
   needToResume: boolean;
 }
-
-const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
-let processQueue = false;
 
 interface RequestMemberQueuedRequest {
   guildID: string;
@@ -52,7 +50,7 @@ export async function createBasicShard(
 
   const basicShard: BasicShard = {
     id: shardID,
-    socket: await connectWebSocket(`${data.url}?v=6&encoding=json`),
+    socket: await connectWebSocket(`${data.url}?v=8&encoding=json`),
     resumeInterval: 0,
     sessionID: oldShard?.sessionID || "",
     previousSequenceNumber: oldShard?.previousSequenceNumber || 0,
@@ -123,8 +121,12 @@ export async function createBasicShard(
             heartbeat(
               basicShard,
               (data.d as DiscordHeartbeatPayload).heartbeat_interval,
+              identifyPayload,
             );
           }
+          break;
+        case GatewayOpcode.HeartbeatACK:
+          heartbeating.set(shardID, true);
           break;
         case GatewayOpcode.Reconnect:
           eventHandlers.debug?.(
@@ -200,17 +202,39 @@ function resume(shard: BasicShard, payload: IdentifyPayload) {
   }));
 }
 
-// TODO: If a client does not receive a heartbeat ack between its attempts at sending heartbeats, it should immediately terminate the connection with a non-1000 close code, reconnect, and attempt to resume.
 async function heartbeat(
   shard: BasicShard,
   interval: number,
+  payload: IdentifyPayload,
 ) {
+  // We lost socket connection between heartbeats, resume connection
   if (shard.socket.isClosed) {
+    shard.needToResume = true;
+    resumeConnection(botGatewayData, payload, shard.id);
     heartbeating.delete(shard.id);
     return;
   }
 
-  if (!heartbeating.has(shard.id)) heartbeating.add(shard.id);
+  if (heartbeating.has(shard.id)) {
+    const receivedACK = heartbeating.get(shard.id);
+    // If a ACK response was not received since last heartbeat, issue invalid session close
+    if (!receivedACK) {
+      eventHandlers.debug?.(
+        {
+          type: "heartbeatStopped",
+          data: {
+            interval,
+            previousSequenceNumber: shard.previousSequenceNumber,
+            shardID: shard.id,
+          },
+        },
+      );
+      return shard.socket.send(JSON.stringify({ op: 4009 }));
+    }
+  }
+
+  // Set it to false as we are issuing a new heartbeat
+  heartbeating.set(shard.id, false);
 
   shard.socket.send(
     JSON.stringify(
@@ -228,7 +252,7 @@ async function heartbeat(
     },
   );
   await delay(interval);
-  heartbeat(shard, interval);
+  heartbeat(shard, interval, payload);
 }
 
 async function resumeConnection(

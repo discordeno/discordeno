@@ -1,21 +1,25 @@
 import { delay } from "../../deps.ts";
 import { controllers } from "../controllers/mod.ts";
-import type { Guild } from "../structures/guild.ts";
-import type {
+import { Guild } from "../structures/guild.ts";
+import {
   DiscordBotGatewayData,
   DiscordPayload,
+  GatewayOpcode,
 } from "../types/discord.ts";
-import { GatewayOpcode } from "../types/discord.ts";
-import type { FetchMembersOptions } from "../types/guild.ts";
+import { FetchMembersOptions } from "../types/guild.ts";
 import { cache } from "../utils/cache.ts";
-import type { BotStatusRequest } from "../utils/utils.ts";
+import { BotStatusRequest } from "../utils/utils.ts";
 import {
   botGatewayStatusRequest,
   createBasicShard,
   requestGuildMembers,
 } from "./basicShard.ts";
-import type { IdentifyPayload } from "./client.ts";
-import { botGatewayData, eventHandlers, identifyPayload } from "./client.ts";
+import {
+  botGatewayData,
+  eventHandlers,
+  IdentifyPayload,
+  identifyPayload,
+} from "./client.ts";
 
 let shardCounter = 0;
 let basicSharding = false;

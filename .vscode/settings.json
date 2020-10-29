@@ -4,5 +4,8 @@
   "deno.import_intellisense_origins": {
     "https://deno.land": true
   },
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
   "editor.defaultFormatter": "denoland.vscode-deno"
 }

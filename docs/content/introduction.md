@@ -19,6 +19,12 @@ Discordeno is a Third Party Deno Library for interacting with the Discord API.
 - Latest and Greatest JavaScript
 - Actively Maintained!
 
+### User Reviews
+
+If you wish to leave a review for other users, please send a PR adding your review to this section!
+
+Using the Discord API with types but such a simple language like TypeScript is so easy now. Discordeno is A W E S O M E! -[LukasDoesDev](https://github.com/LukasDoesDev)
+
 ## Read me first...
 Discordeno is cool right? You could make the next big bot! Who knows, but before we get right into developing our Bot. We want to get started with learning the basics...
 

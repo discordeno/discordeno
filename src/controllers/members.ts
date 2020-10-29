@@ -1,7 +1,7 @@
 import { eventHandlers } from "../module/client.ts";
 import { structures } from "../structures/mod.ts";
-import type { DiscordPayload } from "../types/discord.ts";
-import type {
+import { DiscordPayload } from "../types/discord.ts";
+import {
   GuildBanPayload,
   GuildMemberAddPayload,
   GuildMemberChunkPayload,
@@ -36,11 +36,6 @@ export async function handleInternalGuildMemberRemove(data: DiscordPayload) {
 
   guild.memberCount--;
   const member = guild.members.get(payload.user.id);
-  eventHandlers.guildMemberRemove?.(
-    guild,
-    member || payload.user,
-  );
-
   eventHandlers.guildMemberRemove?.(
     guild,
     member || payload.user,

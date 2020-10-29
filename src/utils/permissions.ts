@@ -1,9 +1,9 @@
 import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../module/client.ts";
-import type { Guild } from "../structures/guild.ts";
-import type { Role } from "../structures/role.ts";
-import type { Permission } from "../types/permission.ts";
-import { Permissions } from "../types/permission.ts";
+import { Guild } from "../structures/guild.ts";
+import { Role } from "../structures/role.ts";
+import { PermissionOverwrite } from "../types/guild.ts";
+import { Permission, Permissions } from "../types/permission.ts";
 
 /** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
 export async function memberIDHasPermission(
@@ -34,6 +34,8 @@ export function memberHasPermission(
   const permissionBits = memberRoleIDs.map((id) =>
     guild.roles.get(id)?.permissions
   )
+    // Removes any edge case undefined
+    .filter((id) => id)
     .reduce((bits, permissions) => {
       bits |= BigInt(permissions);
       return bits;
@@ -58,6 +60,8 @@ export async function botHasPermission(
 
   const permissionBits = member.roles
     .map((id) => guild.roles.get(id)!)
+    // Remove any edge case undefined
+    .filter((r) => r)
     .reduce((bits, data) => {
       bits |= BigInt(data.permissions);
 
@@ -84,106 +88,117 @@ export async function hasChannelPermissions(
   permissions: Permissions[],
 ) {
   const channel = await cacheHandlers.get("channels", channelID);
-  if (!channel?.guildID) return true;
+  if (!channel) return false;
+  if (!channel.guildID) return true;
 
   const guild = await cacheHandlers.get("guilds", channel.guildID);
   if (!guild) return false;
 
   if (guild.ownerID === memberID) return true;
-  if (botHasPermission(guild.id, [Permissions.ADMINISTRATOR])) return true;
+  if (
+    await memberIDHasPermission(memberID, guild.id, ["ADMINISTRATOR"])
+  ) {
+    return true;
+  }
 
   const member = guild.members.get(memberID);
   if (!member) return false;
 
-  const memberOverwrite = channel.permission_overwrites?.find((o) =>
-    o.id === memberID
-  );
+  let memberOverwrite: PermissionOverwrite | undefined;
+  let everyoneOverwrite: PermissionOverwrite | undefined;
+  let rolesOverwrites: PermissionOverwrite[] = [];
 
-  const rolesOverwrites = channel.permission_overwrites?.filter((o) =>
-    member.roles.includes(o.id)
-  );
-
-  const everyoneOverwrite = channel.permission_overwrites?.find((o) =>
-    o.id === guild.id
-  );
+  for (const overwrite of channel.permissionOverwrites || []) {
+    // If the overwrite on this channel is specific to this member
+    if (overwrite.id === memberID) memberOverwrite = overwrite;
+    // If it is the everyone role overwrite
+    if (overwrite.id === guild.id) everyoneOverwrite = overwrite;
+    // If it is one of the roles the member has
+    if (member.roles.includes(overwrite.id)) rolesOverwrites.push(overwrite);
+  }
 
   const allowedPermissions = new Set<Permissions>();
 
+  // Member perms override everything so we must check them first
   if (memberOverwrite) {
-    // One of the necessary permissions is denied
-    if (
-      permissions.some((perm) => BigInt(memberOverwrite.deny) & BigInt(perm))
-    ) {
-      return false;
-    }
-    permissions.forEach((perm) => {
+    const allowBits = calculateBits(memberOverwrite.allow);
+    const denyBits = calculateBits(memberOverwrite.deny);
+    for (const perm of permissions) {
+      // One of the necessary permissions is denied. Since this is main permission we can cancel if its denied.
+      if (BigInt(denyBits) & BigInt(perm)) return false;
       // Already allowed perm
-      if (allowedPermissions.has(perm)) return;
+      if (allowedPermissions.has(perm)) continue;
+
       // This perm is allowed so we save it
-      if (BigInt(memberOverwrite.allow) & BigInt(perm)) {
+      if (BigInt(allowBits) & BigInt(perm)) {
         allowedPermissions.add(perm);
       }
-    });
+    }
   }
 
   // Check the necessary permissions for roles
-  if (rolesOverwrites?.length) {
-    if (
-      rolesOverwrites.some((overwrite) =>
-        permissions.some((perm) =>
-          (BigInt(overwrite.deny) & BigInt(perm)) &&
-          // If another role allows these perms then they are not denied
-          !rolesOverwrites.some((o) => BigInt(o.allow) & BigInt(perm)) &&
-          // Make sure the memberOverwrite does not allow this perm
-          !(memberOverwrite && BigInt(memberOverwrite.allow) & BigInt(perm))
-        )
-      )
-    ) {
-      return false;
-    }
+  for (const perm of permissions) {
+    // If this is already allowed, skip
+    if (allowedPermissions.has(perm)) continue;
 
-    permissions.forEach((perm) => {
+    for (const overwrite of rolesOverwrites) {
+      const allowBits = calculateBits(overwrite.allow);
+      // This perm is allowed so we save it
+      if (BigInt(allowBits) & BigInt(perm)) {
+        allowedPermissions.add(perm);
+        break;
+      }
+
+      const denyBits = calculateBits(overwrite.deny);
+      // If this role denies it we need to save and check if another role allows it, allows > deny
+      if (BigInt(denyBits) & BigInt(perm)) {
+        // This role denies his perm, but before denying we need to check all other roles if any allow as allow > deny
+        const isAllowed = rolesOverwrites.some((o) =>
+          BigInt(calculateBits(o.allow)) & BigInt(perm)
+        );
+        if (isAllowed) continue;
+        // This permission is in fact denied. Since Roles overrule everything below here we can cancel ou here
+        return false;
+      }
+    }
+  }
+
+  if (everyoneOverwrite) {
+    const allowBits = calculateBits(everyoneOverwrite.allow);
+    const denyBits = calculateBits(everyoneOverwrite.deny);
+    for (const perm of permissions) {
       // Already allowed perm
-      if (allowedPermissions.has(perm)) return;
-      rolesOverwrites.forEach((overwrite) => {
-        // This perm is allowed so we save it
-        if (BigInt(overwrite.allow) & BigInt(perm)) {
-          allowedPermissions.add(perm);
-        }
-      });
-    });
-  }
-
-  // Check the necessary permissions for everyone
-  if (
-    everyoneOverwrite
-  ) {
-    if (
-      permissions.some((perm) =>
-        BigInt(everyoneOverwrite.deny) & BigInt(perm) &&
-        !allowedPermissions.has(perm)
-      )
-    ) {
-      return false;
-    }
-    // If all permissions are granted
-    if (
-      permissions.every((perm) =>
-        BigInt(everyoneOverwrite.allow) & BigInt(perm)
-      )
-    ) {
-      return true;
+      if (allowedPermissions.has(perm)) continue;
+      // One of the necessary permissions is denied. Since everyone overwrite overrides role perms we can cancel here
+      if (BigInt(denyBits) & BigInt(perm)) return false;
+      // This perm is allowed so we save it
+      if (BigInt(allowBits) & BigInt(perm)) {
+        allowedPermissions.add(perm);
+      }
     }
   }
 
+  // Is there any remaining permission to check role perms or can we determine that permissions are allowed
+  if (permissions.every((perm) => allowedPermissions.has(perm))) return true;
+
+  // Some permission was not explicitly allowed so we default to checking role perms directly
   return botHasPermission(guild.id, permissions);
 }
 
+/** This function converts a bitwise string to permission strings */
 export function calculatePermissions(permissionBits: bigint) {
   return Object.keys(Permissions).filter((perm) => {
     if (typeof perm !== "number") return false;
     return permissionBits & BigInt(Permissions[perm as Permission]);
   }) as Permission[];
+}
+
+/** This function converts an array of permissions into the bitwise string. */
+export function calculateBits(permissions: Permission[]) {
+  return permissions.reduce(
+    (bits, perm) => bits |= BigInt(Permissions[perm]),
+    BigInt(0),
+  ).toString();
 }
 
 export async function highestRole(guildID: string, memberID: string) {

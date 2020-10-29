@@ -75,7 +75,8 @@ Alternatively, you can use boilerplate template repositories that were created b
 | DenoBot              | NTM Nathan#0001   | [GitHub](https://github.com/ntm-development/DenoBot), [Support Server](https://discord.com/invite/G2rb53z)      | Another boilerplate example of the first one, with more commands and improvements.    |
 | Discordeno Helper    | Suyashtnt         | [Github](https://github.com/Suyashtnt/discordeno-helper-template/) | A reimplementation of DenoBot using the [discordeno-helper](https://github.com/Suyashtnt/discordeno-helper) framework
 
-Open Sourced Bots:
+**Open Sourced Bots:**
+
 | Bot Name          | Developer  | Links                                                      |
 | ----------------- | ---------- | ---------------------------------------------------------- |
 | discordeno-mattis | Mattis6666 | [Github](https://github.com/Mattis6666/discordeno-mattis/) |
