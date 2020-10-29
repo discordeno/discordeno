@@ -2,7 +2,7 @@ import { delay } from "../../deps.ts";
 import { baseEndpoints } from "../constants/discord.ts";
 import { HttpResponseCode } from "../types/discord.ts";
 import { Errors } from "../types/errors.ts";
-import type { RequestMethods } from "../types/fetch.ts";
+import { RequestMethods } from "../types/fetch.ts";
 import { authorization, eventHandlers } from "./client.ts";
 
 const pathQueues: { [key: string]: QueuedRequest[] } = {};

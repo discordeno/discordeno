@@ -1,13 +1,17 @@
-import type { WebSocket } from "../../deps.ts";
-import { connectWebSocket, delay, isWebSocketCloseEvent } from "../../deps.ts";
-import type {
+import {
+  connectWebSocket,
+  delay,
+  isWebSocketCloseEvent,
+  WebSocket,
+} from "../../deps.ts";
+import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
+  GatewayOpcode,
   ReadyPayload,
 } from "../types/discord.ts";
-import { GatewayOpcode } from "../types/discord.ts";
-import type { FetchMembersOptions } from "../types/guild.ts";
-import type { DebugArg } from "../types/options.ts";
+import { FetchMembersOptions } from "../types/guild.ts";
+import { DebugArg } from "../types/options.ts";
 
 let shardSocket: WebSocket;
 

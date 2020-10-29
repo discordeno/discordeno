@@ -1,9 +1,9 @@
-import type { Channel } from "../structures/channel.ts";
-import type { Guild } from "../structures/guild.ts";
-import type { Member } from "../structures/member.ts";
-import type { Message } from "../structures/message.ts";
-import type { Role } from "../structures/role.ts";
-import type {
+import { Channel } from "../structures/channel.ts";
+import { Guild } from "../structures/guild.ts";
+import { Member } from "../structures/member.ts";
+import { Message } from "../structures/message.ts";
+import { Role } from "../structures/role.ts";
+import {
   DiscordPayload,
   Emoji,
   PresenceUpdatePayload,
@@ -11,8 +11,8 @@ import type {
   TypingStartPayload,
   VoiceStateUpdatePayload,
 } from "./discord.ts";
-import type { UserPayload } from "./guild.ts";
-import type {
+import { UserPayload } from "./guild.ts";
+import {
   Attachment,
   BaseMessageReactionPayload,
   Embed,

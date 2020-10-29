@@ -7,16 +7,15 @@ import {
   isWebSocketPongEvent,
   WebSocket,
 } from "../../deps.ts";
-import type {
+import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
+  GatewayOpcode,
   ReadyPayload,
 } from "../types/discord.ts";
-import { GatewayOpcode } from "../types/discord.ts";
-import type { FetchMembersOptions } from "../types/guild.ts";
-import type { BotStatusRequest } from "../utils/utils.ts";
-import type { IdentifyPayload } from "./client.ts";
-import { botGatewayData, eventHandlers } from "./client.ts";
+import { FetchMembersOptions } from "../types/guild.ts";
+import { BotStatusRequest } from "../utils/utils.ts";
+import { botGatewayData, eventHandlers, IdentifyPayload } from "./client.ts";
 import { handleDiscordPayload } from "./shardingManager.ts";
 
 const basicShards = new Map<number, BasicShard>();

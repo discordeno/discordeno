@@ -2,9 +2,9 @@ import { endpoints } from "../constants/discord.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { structures } from "../structures/mod.ts";
 import { Errors } from "../types/errors.ts";
-import type { MessageCreateOptions } from "../types/message.ts";
+import { MessageCreateOptions } from "../types/message.ts";
 import { Permissions } from "../types/permission.ts";
-import type {
+import {
   ExecuteWebhookOptions,
   WebhookCreateOptions,
   WebhookPayload,

@@ -3,13 +3,13 @@ import { cacheHandlers } from "../controllers/cache.ts";
 import { identifyPayload } from "../module/client.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { requestAllMembers } from "../module/shardingManager.ts";
-import type { Guild } from "../structures/guild.ts";
-import type { Member } from "../structures/member.ts";
+import { Guild } from "../structures/guild.ts";
+import { Member } from "../structures/member.ts";
 import { structures } from "../structures/mod.ts";
-import type { ImageFormats, ImageSize } from "../types/cdn.ts";
+import { ImageFormats, ImageSize } from "../types/cdn.ts";
 import { ChannelCreatePayload, ChannelTypes } from "../types/channel.ts";
 import { Errors } from "../types/errors.ts";
-import type {
+import {
   BannedUser,
   BanOptions,
   ChannelCreateOptions,
@@ -26,10 +26,10 @@ import type {
   PrunePayload,
   UserPayload,
 } from "../types/guild.ts";
-import type { MemberCreatePayload } from "../types/member.ts";
+import { MemberCreatePayload } from "../types/member.ts";
 import { Intents } from "../types/options.ts";
 import { Permissions } from "../types/permission.ts";
-import type { RoleData } from "../types/role.ts";
+import { RoleData } from "../types/role.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import { Collection } from "../utils/collection.ts";
 import { botHasPermission, calculateBits } from "../utils/permissions.ts";

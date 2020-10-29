@@ -2,15 +2,12 @@ import { endpoints } from "../constants/discord.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../module/client.ts";
 import { RequestManager } from "../module/requestManager.ts";
-import type { Member } from "../structures/member.ts";
+import { Member } from "../structures/member.ts";
 import { structures } from "../structures/mod.ts";
-import type { ImageFormats, ImageSize } from "../types/cdn.ts";
-import type {
-  DMChannelCreatePayload,
-  MessageContent,
-} from "../types/channel.ts";
+import { ImageFormats, ImageSize } from "../types/cdn.ts";
+import { DMChannelCreatePayload, MessageContent } from "../types/channel.ts";
 import { Errors } from "../types/errors.ts";
-import type { EditMemberOptions } from "../types/member.ts";
+import { EditMemberOptions } from "../types/member.ts";
 import { Permissions } from "../types/permission.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import {

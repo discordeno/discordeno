@@ -1,7 +1,7 @@
-import type { Channel } from "../structures/channel.ts";
-import type { Guild } from "../structures/guild.ts";
-import type { Message } from "../structures/message.ts";
-import type { PresenceUpdatePayload } from "../types/discord.ts";
+import { Channel } from "../structures/channel.ts";
+import { Guild } from "../structures/guild.ts";
+import { Message } from "../structures/message.ts";
+import { PresenceUpdatePayload } from "../types/discord.ts";
 import { Collection } from "./collection.ts";
 
 export interface CacheData {

@@ -110,9 +110,9 @@ import Client, {
 import { configs } from "./configs.ts";
 import { Intents } from "https://x.nest.land/Discordeno@9.0.1/src/types/options.ts";
 import { eventHandlers } from "./src/events/eventHandlers.ts";
-import type { Message } from "https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts";
-import type { Command } from "./src/types/commands.ts";
-import type { Guild } from "https://x.nest.land/Discordeno@9.0.1/src/structures/guild.ts";
+import { Message } from "https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts";
+import { Command } from "./src/types/commands.ts";
+import { Guild } from "https://x.nest.land/Discordeno@9.0.1/src/structures/guild.ts";
 
 export const botCache = {
   commands: new Map<string, Command>(),
@@ -346,7 +346,7 @@ module.exports = class kickCommand extends Command {
 Discordeno Version
 ```ts
 import { sendMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts";
-import type { Member } from "https://x.nest.land/Discordeno@9.0.1/src/structures/member.ts";
+import { Member } from "https://x.nest.land/Discordeno@9.0.1/src/structures/member.ts";
 import { kick } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/member.ts";
 import { deleteMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/message.ts";
 import { botCache } from "../../mod.ts";

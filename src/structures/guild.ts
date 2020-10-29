@@ -1,7 +1,7 @@
-import type { CreateGuildPayload } from "../types/guild.ts";
-import type { Unpromise } from "../types/misc.ts";
+import { CreateGuildPayload } from "../types/guild.ts";
+import { Unpromise } from "../types/misc.ts";
 import { Collection } from "../utils/collection.ts";
-import type { Member } from "./member.ts";
+import { Member } from "./member.ts";
 import { structures } from "./mod.ts";
 
 export async function createGuild(data: CreateGuildPayload, shardID: number) {

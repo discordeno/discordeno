@@ -1,5 +1,5 @@
-import type { MemberCreatePayload } from "../types/member.ts";
-import type { Unpromise } from "../types/misc.ts";
+import { MemberCreatePayload } from "../types/member.ts";
+import { Unpromise } from "../types/misc.ts";
 
 export async function createMember(data: MemberCreatePayload, guildID: string) {
   const {
