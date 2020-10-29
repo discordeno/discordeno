@@ -144,8 +144,8 @@ Deno.test({
 Deno.test({
   name: "edit a channel in a guild",
   async fn() {
-    const channel = await editChannel(data.channelID, {
-      name: "edited channel",
+     await editChannel(data.channelID, {
+      name: "edited-channel",
       overwrites: [
         {
           id: data.roleID,
@@ -154,11 +154,12 @@ Deno.test({
           deny: ["USE_EXTERNAL_EMOJIS"],
         },
       ],
-    }) as Channel;
+    });
+    // Wait 5 seconds for it to update
+    await delay(5000);
     const editedChannel = await getChannel(data.channelID);
 
-    assert(channel);
-    assertEquals(editedChannel.name, "edited channel");
+    assertEquals(editedChannel.name, "edited-channel");
   },
 });
 
