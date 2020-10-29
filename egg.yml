@@ -4,7 +4,7 @@ description: >-
   Discord Team) https://discordeno.netlify.app
 version: 9.0.15
 stable: true
-entry: /mod.ts
+entry: mod.ts
 repository: 'https://github.com/Skillz4Killz/Discordeno'
 files:
   - ./src/**/*
@@ -12,7 +12,6 @@ files:
   - README.md
   - tsconfig.json
   - ./deps.ts
-  - mod.ts
   - mod.ts
 checkAll: false
 unlisted: false
