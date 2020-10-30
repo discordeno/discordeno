@@ -5,6 +5,7 @@ import { ClientOptions, EventHandlers } from "../types/options.ts";
 import { botGatewayData } from "./client.ts";
 
 const botOptions = {
+  createNextShard: false,
   workers: new Map<number, Worker>(),
   eventHandlers: {} as EventHandlers,
   botGatewayData: {} as DiscordBotGatewayData,
@@ -54,26 +55,29 @@ async function spawnBigBrainBotShards(shardID = 0, skipChecks = 0) {
   if (shardID >= botOptions.botGatewayData.shards) return;
 
   // 25 shards but shards start at 0 so we use 24
-  const workerID = shardID % 24;
+  const workerID = shardID % botOptions.shardsPerWorker - 1;
   const worker = botOptions.workers.get(workerID)
 
   // High max concurrency allows starting shards faster
   if (skipChecks) {
     // If the worker exists we just need to add
     if (worker) {
-      addShardToWorker(workerID, shardID);
+      worker.postMessage({ type: "CREATE_SHARD", shardID, workerID, botOptions });
     } else {
-      createShardWorker(workerID, shardID);
+      const path = new URL("./shard.ts", import.meta.url).toString();
+      const newWorker = new Worker(path, { type: "module", deno: true });
+      // Add to worker map
+      botOptions.workers.set(workerID, newWorker);
+      newWorker.postMessage({ type: "CREATE_SHARD", shardID, workerID, botOptions });
     }
 
     spawnBigBrainBotShards(shardID + 1, skipChecks - 1);
   }
 
   // Make sure we can create a shard or we are waiting for shards to connect still.
-  if (createNextShard) {
+  if (botOptions.createNextShard) {
     // !(shardid % botOptions.botGatewayData.session_start_limit.max_concurrency)
-    createNextShard = false;
-    if (botOptions.botGatewayData.shards >= 25) createShardWorker();
+    botOptions.createNextShard = false;
     // Start the next few shards based on max concurrency
     spawnBigBrainBotShards(shardID + 1, botOptions.botGatewayData.session_start_limit.max_concurrency);
     return;
@@ -81,14 +85,6 @@ async function spawnBigBrainBotShards(shardID = 0, skipChecks = 0) {
 
   await delay(1000);
   spawnBigBrainBotShards(shardID);
-}
-
-export function createShardWorker(workerID: number, shardID: number) {
-  const path = new URL("./shard.ts", import.meta.url).toString();
-  const shard = new Worker(path, { type: "module", deno: true });
-  // Add to worker map
-  botOptions.workers.set(workerID, shard)
-  
 }
 
 export interface BigBrainBotOptions extends ClientOptions {
@@ -102,4 +98,6 @@ export interface BigBrainBotOptions extends ClientOptions {
    * @default 25
    */
   shardsPerWorker?: number;
+  /** The absolute file path to the file where the worker will run.  */
+  workerFilePath?: string;
 }
