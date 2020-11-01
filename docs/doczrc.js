@@ -1,5 +1,6 @@
 export default {
   title: "Discordeno",
+  base: "/discordeno",
   menu: [
     "Home",
     "Introduction",
@@ -15,9 +16,9 @@ export default {
         "Creating Inhibitors",
         "Creating Languages",
         "Creating Monitors",
-        "Creating Tasks"
-      ]
+        "Creating Tasks",
+      ],
     },
-    { name: "Advanced", menu: ["Introduction"] }
-  ]
+    { name: "Advanced", menu: ["Introduction"] },
+  ],
 };
