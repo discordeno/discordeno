@@ -1,6 +1,7 @@
 export default {
   title: "Discordeno",
   src: "./src",
+  dest: "./dist",
   menu: [
     "Home",
     "Introduction",
