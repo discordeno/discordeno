@@ -1,7 +1,2 @@
-public
-.cache
+.docz
 node_modules
-*DS_Store
-*.env
-
-.idea/
