@@ -1,6 +1,5 @@
 export default {
   title: "Discordeno",
-  base: "/discordeno",
   menu: [
     "Home",
     "Introduction",
