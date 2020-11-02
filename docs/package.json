@@ -8,7 +8,7 @@
     "serve": "docz serve"
   },
   "dependencies": {
-    "docz": "latest",
+    "docz": "^2.3.1",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-helmet-async": "^1.0.7"
