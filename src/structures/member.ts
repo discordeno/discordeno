@@ -33,4 +33,4 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
   return member;
 }
 
-export interface Member extends Unpromise<ReturnType<typeof createMember>> {}
+export type Member = Unpromise<ReturnType<typeof createMember>>;

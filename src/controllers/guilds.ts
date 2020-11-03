@@ -83,8 +83,7 @@ export async function handleInternalGuildUpdate(data: DiscordPayload) {
     .map(([key, value]) => {
       if (keysToSkip.includes(key)) return;
 
-      // @ts-ignore
-      const cachedValue = cachedGuild[key];
+      const cachedValue = (cachedGuild as any)[key];
       if (cachedValue !== value) {
         // Guild create sends undefined and update sends false.
         if (!cachedValue && !value) return;

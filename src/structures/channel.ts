@@ -49,4 +49,4 @@ export async function createChannel(
   return channel;
 }
 
-export interface Channel extends Unpromise<ReturnType<typeof createChannel>> {}
+export type Channel = Unpromise<ReturnType<typeof createChannel>>;

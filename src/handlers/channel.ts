@@ -325,9 +325,13 @@ export function editChannel(
 
   const payload = {
     ...options,
+    // deno-lint-ignore camelcase
     rate_limit_per_user: options.slowmode,
+    // deno-lint-ignore camelcase
     parent_id: options.parentID,
+    // deno-lint-ignore camelcase
     user_limit: options.userLimit,
+    // deno-lint-ignore camelcase
     permission_overwrites: options.overwrites?.map(
       (overwrite) => {
         return {

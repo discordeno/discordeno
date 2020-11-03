@@ -98,4 +98,4 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
   return guild;
 }
 
-export interface Guild extends Unpromise<ReturnType<typeof createGuild>> {}
+export type Guild = Unpromise<ReturnType<typeof createGuild>>;

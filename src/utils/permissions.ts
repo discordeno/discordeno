@@ -106,7 +106,7 @@ export async function hasChannelPermissions(
 
   let memberOverwrite: RawOverwrite | undefined;
   let everyoneOverwrite: RawOverwrite | undefined;
-  let rolesOverwrites: RawOverwrite[] = [];
+  const rolesOverwrites: RawOverwrite[] = [];
 
   for (const overwrite of channel.permission_overwrites || []) {
     // If the overwrite on this channel is specific to this member

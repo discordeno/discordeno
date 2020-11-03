@@ -1,6 +1,5 @@
 import { MessageCreateOptions } from "../types/message.ts";
 import { Unpromise } from "../types/misc.ts";
-
 export async function createMessage(data: MessageCreateOptions) {
   const {
     guild_id: guildID,
@@ -31,4 +30,4 @@ export async function createMessage(data: MessageCreateOptions) {
   return message;
 }
 
-export interface Message extends Unpromise<ReturnType<typeof createMessage>> {}
+export type Message = Unpromise<ReturnType<typeof createMessage>>;

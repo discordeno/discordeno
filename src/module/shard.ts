@@ -100,7 +100,7 @@ const createShard = async (
   postDebug({ type: "createShard", data: { shardID } });
 
   shardSocket = await connectWebSocket(botGatewayData.url);
-  let resumeInterval = 0;
+  const resumeInterval = 0;
 
   if (!resuming) {
     // Intial identify with the gateway

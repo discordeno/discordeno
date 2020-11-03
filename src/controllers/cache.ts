@@ -79,6 +79,7 @@ function forEach(
   return cache[table].forEach(callback);
 }
 
+// deno-lint-ignore prefer-const
 export let cacheHandlers = {
   /** Deletes all items from the cache */
   clear: async function (table: TableName) {
