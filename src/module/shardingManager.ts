@@ -60,6 +60,31 @@ export function createShardWorker(shardID?: number) {
   shards.push(shard);
 }
 
+export async function spawnBigBrainBotShards(data: DiscordBotGatewayData, payload: IdentifyPayload, shardID: number, lastShardID: number, skipChecks?: number) {
+  // All shards on this worker have started! Cancel out.
+  if (shardID > lastShardID) return;
+
+  if (skipChecks) {
+    payload.shard = [shardID, data.shards];
+    // Start The shard
+    createBasicShard(data, payload, false, shardID);
+    // Spawn next shard
+    spawnBigBrainBotShards(data, payload, shardID, lastShardID, skipChecks - 1);
+    return;
+  }
+
+  // Make sure we can create a shard or we are waiting for shards to connect still.
+  if (createNextShard) {
+    createNextShard = false;
+    // Start the next few shards based on max concurrency
+    spawnBigBrainBotShards(data, payload, shardID + 1, lastShardID, data.session_start_limit.max_concurrency);
+    return;
+  }
+
+  await delay(1000);
+  spawnBigBrainBotShards(data, payload, shardID, lastShardID, skipChecks);
+}
+
 export const spawnShards = async (
   data: DiscordBotGatewayData,
   payload: IdentifyPayload,
