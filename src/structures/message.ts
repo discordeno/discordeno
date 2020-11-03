@@ -30,4 +30,4 @@ export async function createMessage(data: MessageCreateOptions) {
   return message;
 }
 
-export type Message = Unpromise<ReturnType<typeof createMessage>>;
+export interface Message extends Unpromise<ReturnType<typeof createMessage>> {}

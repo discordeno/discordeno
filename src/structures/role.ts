@@ -9,4 +9,4 @@ export async function createRole(data: RoleData) {
   };
 }
 
-export type Role = Unpromise<ReturnType<typeof createRole>>;
+export interface Role extends Unpromise<ReturnType<typeof createRole>> {}
