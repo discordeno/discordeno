@@ -4,9 +4,8 @@
 
 [![Discord](https://img.shields.io/discord/223909216866402304?color=7289da&logo=discord&logoColor=dark)](https://discord.gg/J4NqJ72)
 ![Testing/Linting](https://github.com/Skillz4Killz/Discordeno/workflows/Testing/Linting/badge.svg)
+![Test](https://github.com/Skillz4Killz/Discordeno/workflows/Test/badge.svg)
 [![nest badge](https://nest.land/badge.svg)](https://nest.land/package/Discordeno)
-
-[WIP] ![Test](https://github.com/Skillz4Killz/Discordeno/workflows/Test/badge.svg)
 
 ## Why Discordeno?
 
