@@ -6,6 +6,11 @@ export async function createRole(data: RoleData) {
     ...data,
     /** The @ mention of the role in a string. */
     mention: `<@&${data.id}>`,
+    tags: {
+      botID: data.tags?.botID,
+      premiumSubscriber: "premium_subscriber" in (data.tags ?? {}),
+      integrationID: data.tags?.integrationID,
+    },
   };
 }
 

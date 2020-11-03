@@ -15,4 +15,12 @@ export interface RoleData {
   managed: boolean;
   /** whether this role is mentionable */
   mentionable: boolean;
+  /**  */
+  tags: RoleTags | null;
+}
+
+export interface RoleTags {
+  botID?: string;
+  premiumSubscriber?: boolean;
+  integrationID?: string;
 }
