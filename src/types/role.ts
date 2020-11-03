@@ -20,7 +20,7 @@ export interface RoleData {
 }
 
 export interface RoleTags {
-  botID?: string;
-  premiumSubscriber?: boolean;
-  integrationID?: string;
+  bot_id?: string;
+  premium_subscriber?: boolean;
+  integration_id?: string;
 }
