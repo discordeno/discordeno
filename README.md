@@ -11,7 +11,7 @@
 
 ### Beginner Developers
 
-Don't worry a lot of developers start out coding their first projects as a Discord bot (I did 😉) and it is not so easy to do so. Discordeno is built considering all the issues wit pre-existing libraries, such as discord.js, and issues that I had when I first started out coding bots. 
+Don't worry a lot of developers start out coding their first projects as a Discord bot (I did 😉) and it is not so easy to do so. Discordeno is built considering all the issues with pre-existing libraries and issues that I had when I first started out coding bots. 
 If you are a beginner developer, you may check out these awesome official and unofficial boilerplates:
 
 - Official Discordeno Boilerplate
