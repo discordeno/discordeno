@@ -43,16 +43,22 @@ export async function getMessage(
   channelID: string,
   id: string,
 ) {
+  const hasViewChannelPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.VIEW_CHANNEL],
+  );
   if (
-    !botHasChannelPermissions(channelID, [Permissions.VIEW_CHANNEL])
+    !hasViewChannelPerm
   ) {
     throw new Error(Errors.MISSING_VIEW_CHANNEL);
   }
+
+  const hasReadMessageHistoryPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.READ_MESSAGE_HISTORY],
+  );
   if (
-    !botHasChannelPermissions(
-      channelID,
-      [Permissions.READ_MESSAGE_HISTORY],
-    )
+    !hasReadMessageHistoryPerm
   ) {
     throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
   }
@@ -72,16 +78,22 @@ export async function getMessages(
     | GetMessagesAround
     | GetMessages,
 ) {
+  const hasViewChannelPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.VIEW_CHANNEL],
+  );
   if (
-    !botHasChannelPermissions(channelID, [Permissions.VIEW_CHANNEL])
+    !hasViewChannelPerm
   ) {
     throw new Error(Errors.MISSING_VIEW_CHANNEL);
   }
+
+  const hasReadMessageHistoryPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.READ_MESSAGE_HISTORY],
+  );
   if (
-    !botHasChannelPermissions(
-      channelID,
-      [Permissions.READ_MESSAGE_HISTORY],
-    )
+    !hasReadMessageHistoryPerm
   ) {
     throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
   }
@@ -109,24 +121,34 @@ export async function sendMessage(
   content: string | MessageContent,
 ) {
   if (typeof content === "string") content = { content };
+  const hasSendMessagesPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.SEND_MESSAGES],
+  );
   if (
-    !botHasChannelPermissions(channelID, [Permissions.SEND_MESSAGES])
+    !hasSendMessagesPerm
   ) {
     throw new Error(Errors.MISSING_SEND_MESSAGES);
   }
+
+  const hasSendTtsMessagesPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.SEND_TTS_MESSAGES],
+  );
   if (
     content.tts &&
-    !botHasChannelPermissions(
-      channelID,
-      [Permissions.SEND_TTS_MESSAGES],
-    )
+    !hasSendTtsMessagesPerm
   ) {
     throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
   }
 
+  const hasEmbedLinksPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.EMBED_LINKS],
+  );
   if (
     content.embed &&
-    !botHasChannelPermissions(channelID, [Permissions.EMBED_LINKS])
+    !hasEmbedLinksPerm
   ) {
     throw new Error(Errors.MISSING_EMBED_LINKS);
   }
@@ -183,13 +205,17 @@ export async function sendMessage(
 }
 
 /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */
-export function deleteMessages(
+export async function deleteMessages(
   channelID: string,
   ids: string[],
   reason?: string,
 ) {
+  const hasManageMessages = await botHasChannelPermissions(
+    channelID,
+    [Permissions.MANAGE_MESSAGES],
+  );
   if (
-    !botHasChannelPermissions(channelID, [Permissions.MANAGE_MESSAGES])
+    !hasManageMessages
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
@@ -210,9 +236,13 @@ export function deleteMessages(
 }
 
 /** Gets the invites for this channel. Requires MANAGE_CHANNEL */
-export function getChannelInvites(channelID: string) {
+export async function getChannelInvites(channelID: string) {
+  const hasManagaChannels = await botHasChannelPermissions(
+    channelID,
+    [Permissions.MANAGE_CHANNELS],
+  );
   if (
-    !botHasChannelPermissions(channelID, [Permissions.MANAGE_CHANNELS])
+    !hasManagaChannels
   ) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
@@ -220,12 +250,16 @@ export function getChannelInvites(channelID: string) {
 }
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
-export function createInvite(channelID: string, options: CreateInviteOptions) {
+export async function createInvite(
+  channelID: string,
+  options: CreateInviteOptions,
+) {
+  const hasCreateInstantInvitePerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.CREATE_INSTANT_INVITE],
+  );
   if (
-    !botHasChannelPermissions(
-      channelID,
-      [Permissions.CREATE_INSTANT_INVITE],
-    )
+    !hasCreateInstantInvitePerm
   ) {
     throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE);
   }
@@ -233,9 +267,13 @@ export function createInvite(channelID: string, options: CreateInviteOptions) {
 }
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
-export function getChannelWebhooks(channelID: string) {
+export async function getChannelWebhooks(channelID: string) {
+  const hasManageWebhooksPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.MANAGE_WEBHOOKS],
+  );
   if (
-    !botHasChannelPermissions(channelID, [Permissions.MANAGE_WEBHOOKS])
+    !hasManageWebhooksPerm
   ) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
@@ -288,12 +326,16 @@ function processEditChannelQueue() {
   }
 }
 
-export function editChannel(
+export async function editChannel(
   channelID: string,
   options: ChannelEditOptions,
 ) {
+  const hasManageChannelsPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.MANAGE_CHANNELS],
+  );
   if (
-    !botHasChannelPermissions(channelID, [Permissions.MANAGE_CHANNELS])
+    !hasManageChannelsPerm
   ) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
@@ -356,8 +398,12 @@ export async function followChannel(
   sourceChannelID: string,
   targetChannelID: string,
 ) {
+  const hasManageWebhooksPerm = await botHasChannelPermissions(
+    targetChannelID,
+    [Permissions.MANAGE_WEBHOOKS],
+  );
   if (
-    !botHasChannelPermissions(targetChannelID, [Permissions.MANAGE_WEBHOOKS])
+    !hasManageWebhooksPerm
   ) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
