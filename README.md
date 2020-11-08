@@ -57,4 +57,4 @@ Alternatively, you can use boilerplate template repositories that were created b
 
 ## License
 
-MIT © Skillz4Killz 
+[MIT © Skillz4Killz](https://github.com/Skillz4Killz/Discordeno/blob/master/LICENSE)
