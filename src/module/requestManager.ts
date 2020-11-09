@@ -64,56 +64,60 @@ async function cleanupQueues() {
 }
 
 async function processQueue() {
-  if (
-    (Object.keys(pathQueues).length) && !globallyRateLimited
-  ) {
-    await Promise.allSettled(
-      Object.values(pathQueues).map(async (pathQueue) => {
-        const request = pathQueue.shift();
-        if (!request) return;
+  // Putting this code inside a function like this allows us to use tail recursion like a while loop without hitting the max stack error.
+  async function avoidMaxStackError() {
+    if (
+      (Object.keys(pathQueues).length) && !globallyRateLimited
+    ) {
+      await Promise.allSettled(
+        Object.values(pathQueues).map(async (pathQueue) => {
+          const request = pathQueue.shift();
+          if (!request) return;
 
-        const rateLimitedURLResetIn = await checkRatelimits(request.url);
+          const rateLimitedURLResetIn = await checkRatelimits(request.url);
 
-        if (request.bucketID) {
-          const rateLimitResetIn = await checkRatelimits(request.bucketID);
-          if (rateLimitResetIn) {
-            // This request is still rate limited readd to queue
-            addToQueue(request);
-          } else if (rateLimitedURLResetIn) {
-            // This URL is rate limited readd to queue
-            addToQueue(request);
+          if (request.bucketID) {
+            const rateLimitResetIn = await checkRatelimits(request.bucketID);
+            if (rateLimitResetIn) {
+              // This request is still rate limited readd to queue
+              addToQueue(request);
+            } else if (rateLimitedURLResetIn) {
+              // This URL is rate limited readd to queue
+              addToQueue(request);
+            } else {
+              // This request is not rate limited so it should be run
+              const result = await request.callback();
+              if (result && result.rateLimited) {
+                addToQueue(
+                  { ...request, bucketID: result.bucketID || request.bucketID },
+                );
+              }
+            }
           } else {
-            // This request is not rate limited so it should be run
-            const result = await request.callback();
-            if (result && result.rateLimited) {
-              addToQueue(
-                { ...request, bucketID: result.bucketID || request.bucketID },
-              );
+            if (rateLimitedURLResetIn) {
+              // This URL is rate limited readd to queue
+              addToQueue(request);
+            } else {
+              // This request has no bucket id so it should be processed
+              const result = await request.callback();
+              if (request && result && result.rateLimited) {
+                addToQueue(
+                  { ...request, bucketID: result.bucketID || request.bucketID },
+                );
+              }
             }
           }
-        } else {
-          if (rateLimitedURLResetIn) {
-            // This URL is rate limited readd to queue
-            addToQueue(request);
-          } else {
-            // This request has no bucket id so it should be processed
-            const result = await request.callback();
-            if (request && result && result.rateLimited) {
-              addToQueue(
-                { ...request, bucketID: result.bucketID || request.bucketID },
-              );
-            }
-          }
-        }
-      }),
-    );
+        }),
+      );
+    }
+
+    if (Object.keys(pathQueues).length) {
+      avoidMaxStackError();
+      cleanupQueues();
+    } else queueInProcess = false;
   }
 
-  if (Object.keys(pathQueues).length) {
-    await delay(1000);
-    processQueue();
-    cleanupQueues();
-  } else queueInProcess = false;
+  return avoidMaxStackError();
 }
 
 processRateLimitedPaths();
