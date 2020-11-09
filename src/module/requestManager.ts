@@ -117,7 +117,7 @@ async function processQueue() {
     } else queueInProcess = false;
   }
 
-  return avoidMaxStackError()
+  return avoidMaxStackError();
 }
 
 processRateLimitedPaths();
