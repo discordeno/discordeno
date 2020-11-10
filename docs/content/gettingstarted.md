@@ -91,7 +91,6 @@ Web-Mystery Tutorials:
 
 YouTube Tutorials:
 - [Discordeno Bot Tutorials YouTube series](https://youtu.be/rIph9-BGsuQ)
-- Coming soon to [NTM Development](https://www.youtube.com/channel/UCkOFck-WCQtolha4NJuK7zA/)
 
 ---
 
