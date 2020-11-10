@@ -16,7 +16,6 @@ This website serves as the purpose for introducing Discordeno to developers. The
 - [GitHub Repository](https://github.com/Skillz4Killz/Discordeno)
 - [Deno Page](https://deno.land/x/discordeno)
 - [Website](https://discordeno.js.org/)
-- [Discordeno Bot Tutorials YouTube series](https://youtu.be/rIph9-BGsuQ)
 
 ## Requirements
 
@@ -91,6 +90,7 @@ Web-Mystery Tutorials:
 - <a href="https://web-mystery.com/articles/running-discord-bot-written-deno-docker" target="_blank">Running a Discord bot written in Deno in Docker</a>
 
 YouTube Tutorials:
+- [Discordeno Bot Tutorials YouTube series](https://youtu.be/rIph9-BGsuQ)
 - Coming soon to [NTM Development](https://www.youtube.com/channel/UCkOFck-WCQtolha4NJuK7zA/)
 
 ---
