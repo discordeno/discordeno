@@ -16,6 +16,7 @@ This website serves as the purpose for introducing Discordeno to developers. The
 - [GitHub Repository](https://github.com/Skillz4Killz/Discordeno)
 - [Deno Page](https://deno.land/x/discordeno)
 - [Website](https://discordeno.js.org/)
+- [Discordeno Bot Tutorials YouTube series](https://youtu.be/rIph9-BGsuQ)
 
 ## Requirements
 
