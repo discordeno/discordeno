@@ -20,11 +20,12 @@ export async function createWebhook(
   channelID: string,
   options: WebhookCreateOptions,
 ) {
+  const hasManageWebhooksPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.MANAGE_WEBHOOKS],
+  );
   if (
-    !botHasChannelPermissions(
-      channelID,
-      [Permissions.MANAGE_WEBHOOKS],
-    )
+    !hasManageWebhooksPerm
   ) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
