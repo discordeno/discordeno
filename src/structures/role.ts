@@ -6,7 +6,7 @@ export async function createRole(data: RoleData) {
 
   const roleTags = {
     botID: tags?.bot_id,
-    premiumSubscriber: Boolean(data.tags?.premium_subscriber),
+    premiumSubscriber: "premium_subscriber" in (data.tags ?? {}),
     integrationID: data.tags?.integration_id,
   };
 
