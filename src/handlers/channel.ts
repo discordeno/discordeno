@@ -329,7 +329,7 @@ function processEditChannelQueue() {
 export async function editChannel(
   channelID: string,
   options: ChannelEditOptions,
-  reason: string,
+  reason?: string,
 ) {
   const hasManageChannelsPerm = await botHasChannelPermissions(
     channelID,
