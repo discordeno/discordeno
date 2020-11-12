@@ -96,6 +96,7 @@ export const endpoints = {
 
   // User endpoints
   USER: (id: string) => `${baseEndpoints.BASE_URL}/users/${id}`,
+  USER_BOT: `${baseEndpoints.BASE_URL}/users/@me`,
   USER_AVATAR: (id: string, icon: string) =>
     `${baseEndpoints.CDN_URL}/avatars/${id}/${icon}`,
   USER_DEFAULT_AVATAR: (icon: number) =>
