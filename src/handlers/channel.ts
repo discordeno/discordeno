@@ -329,6 +329,7 @@ function processEditChannelQueue() {
 export async function editChannel(
   channelID: string,
   options: ChannelEditOptions,
+  reason: string,
 ) {
   const hasManageChannelsPerm = await botHasChannelPermissions(
     channelID,
@@ -389,7 +390,10 @@ export async function editChannel(
 
   return RequestManager.patch(
     endpoints.GUILD_CHANNEL(channelID),
-    payload,
+    {
+      ...payload,
+      reason,
+    },
   );
 }
 
