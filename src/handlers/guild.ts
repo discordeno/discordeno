@@ -617,5 +617,8 @@ export function getUser(userID: string) {
  * So it does not cache the guild, you must do it manually.
  * */
 export function getGuild(guildID: string, counts = true) {
-  return RequestManager.get(endpoints.GUILD(guildID), { with_counts: counts }) as Promise<UpdateGuildPayload>
+  return RequestManager.get(
+    endpoints.GUILD(guildID),
+    { with_counts: counts },
+  ) as Promise<UpdateGuildPayload>;
 }
