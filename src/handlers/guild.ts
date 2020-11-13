@@ -24,6 +24,7 @@ import {
   PositionSwap,
   PruneOptions,
   PrunePayload,
+  UpdateGuildPayload,
   UserPayload,
 } from "../types/guild.ts";
 import { MemberCreatePayload } from "../types/member.ts";
@@ -606,4 +607,15 @@ export function getWebhooks(guildID: string) {
 /** This function will return the raw user payload in the rare cases you need to fetch a user directly from the API. */
 export function getUser(userID: string) {
   return RequestManager.get(endpoints.USER(userID)) as Promise<UserPayload>;
+}
+
+/**
+ * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()
+ *
+ * Advanced Devs:
+ * This function fetches a guild's data. This is not the same data as a GUILD_CREATE.
+ * So it does not cache the guild, you must do it manually.
+ * */
+export function getGuild(guildID: string, counts = true) {
+  return RequestManager.get(endpoints.GUILD(guildID), { with_counts: counts }) as Promise<UpdateGuildPayload>
 }
