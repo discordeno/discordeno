@@ -623,30 +623,99 @@ export function getGuild(guildID: string, counts = true) {
   ) as Promise<UpdateGuildPayload>;
 }
 
-/** 
- * Get a template by its code
- * @param code The code of the template
+/**
+ * Returns the guild template if it exists
+ * @param guildID The ID of the guild
+ * @param code The code of the template to get
  */
-export function getTemplate(code: string) {
-  const endpoint = `${endpoints.GUILDS}/templates/${code}`;
+export function getGuildTemplate(guildID: string, code: string) {
+  const endpoint = `${endpoints.GUILD_TEMPLATES(guildID)}/${code}`;
   return RequestManager.get(endpoint);
 }
 
 /**
- * Create a new guild based on a template.
+ * Create a new guild based on a template
  * NOTE: This endpoint can be used only by bots in less than 10 guilds.
- * @param code the code of the template to create a new guild from
- * @param name name of the guild (2-100 characters)
- * @param icon base64 128x128 image for the guild icon
+ * @param code The code of the template to create a guild from
  */
 export function createGuildFromTemplate(
   code: string,
-  name: string,
-  icon?: any,
+  data: CreateGuildFromTemplate,
 ) {
-  const endpoint = `${endpoints.GUILDS}/templates/${code}`;
-  return RequestManager.post(endpoint, {
-    name,
-    icon,
-  });
+  return RequestManager.post(endpoints.GUILD_TEMPLATE(code), data);
+}
+
+export interface CreateGuildFromTemplate {
+  /** name of the guild (2-100 characters) */
+  name: string;
+  /** base64 128x128 image for the guild icon */
+  icon?: string;
+}
+
+/**
+ * Returns an array of guild templates
+ * @param guildID The ID of the guild
+ */
+export function getGuildTemplates(guildID: string) {
+  return RequestManager.get(endpoints.GUILD_TEMPLATES(guildID));
+}
+
+/**
+ * Deletes a template from a guild
+ * @param guildID The guild ID to delete the template from
+ */
+export function deleteGuildTemplate(guildID: string, code: string) {
+  const endpoint = `${endpoints.GUILD_TEMPLATES(guildID)}/${code}`;
+  return RequestManager.delete(endpoint);
+}
+
+/**
+ * Creates a template for the guild
+ * @param guildID The ID of the guild to create a template in
+ * @param name name of the template (1-100 characters)
+ * @param description description for the template (0-120 characters
+ */
+export function createGuildTemplate(
+  guildID: string,
+  data: CreateGuildTemplate,
+) {
+  return RequestManager.post(endpoints.GUILD_TEMPLATES(guildID), data);
+}
+
+export interface CreateGuildTemplate {
+  /** name of the template (1-100 characters) */
+  name: string;
+  /** description for the template (0-120 characters) */
+  description?: string | null;
+}
+
+/**
+ * Syncs the template to the guild's current state
+ * @param guildID The ID of the guild
+ * @param code The code of the template to sync
+ */
+export function syncGuildTemplate(guildID: string, code: string) {
+  const endpoint = `${endpoints.GUILD_TEMPLATES(guildID)}/${code}`;
+  return RequestManager.put(endpoint);
+}
+
+/**
+ * Edit a template's metadata
+ * @param guildID The ID of the guild
+ * @param code The code of the template to edit
+ */
+export function editGuildTemplate(
+  guildID: string,
+  code: string,
+  data: EditGuildTemplate,
+) {
+  const endpoint = `${endpoints.GUILD_TEMPLATES(guildID)}/${code}`;
+  return RequestManager.patch(endpoint, data);
+}
+
+export interface EditGuildTemplate {
+  /** name of the template (1-100 characters) */
+  name?: string;
+  /** description for the template (0-120 characters) */
+  description?: string | null;
 }
