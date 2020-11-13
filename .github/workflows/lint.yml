@@ -13,4 +13,4 @@ jobs:
       - name: Cache the dependencies
         run: deno cache mod.ts
       - name: Run format script with --check
-        run: deno fmt *.ts --check
+        run: deno fmt --ignore=./docs --check
