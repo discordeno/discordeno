@@ -622,3 +622,31 @@ export function getGuild(guildID: string, counts = true) {
     { with_counts: counts },
   ) as Promise<UpdateGuildPayload>;
 }
+
+/** 
+ * Get a template by its code
+ * @param code The code of the template
+ */
+export function getTemplate(code: string) {
+  const endpoint = `${endpoints.GUILDS}/templates/${code}`;
+  return RequestManager.get(endpoint);
+}
+
+/**
+ * Create a new guild based on a template.
+ * NOTE: This endpoint can be used only by bots in less than 10 guilds.
+ * @param code the code of the template to create a new guild from
+ * @param name name of the guild (2-100 characters)
+ * @param icon base64 128x128 image for the guild icon
+ */
+export function createGuildFromTemplate(
+  code: string,
+  name: string,
+  icon?: any,
+) {
+  const endpoint = `${endpoints.GUILDS}/templates/${code}`;
+  return RequestManager.post(endpoint, {
+    name,
+    icon,
+  });
+}

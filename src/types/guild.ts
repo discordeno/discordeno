@@ -1,3 +1,4 @@
+import { Guild } from "../structures/guild.ts";
 import { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
 import { Emoji, StatusType } from "./discord.ts";
 import { MemberCreatePayload } from "./member.ts";
@@ -605,4 +606,30 @@ export interface CreateServerOptions {
   afk_timeout?: number;
   /** the id of the channel where guild notices such as welcome messages and boost events are posted */
   system_channel_id?: string;
+}
+
+// https://discord.com/developers/docs/resources/template#template-object
+export interface GuildTemplate {
+  /** the template code (unique ID) */
+  code: string;
+  /** template name */
+  name: string;
+  /** the description for the template */
+  description: string | null;
+  /** number of times this template has been used */
+  usage_count: number;
+  /** the ID of the user who created the template */
+  creator_id: string;
+  /** the user who created the template */
+  user: UserPayload;
+  /** when this template was created */
+  created_at: string;
+  /** when this template was last synced to the source guild */
+  updated_at: string;
+  /** the ID of the guild this template is based on */
+  source_guild_id: string;
+  /** the guild snapshot this template contains */
+  serialized_source_guild: Guild;
+  /** whether the template has unsynced changes */
+  is_dirty: boolean | null;
 }
