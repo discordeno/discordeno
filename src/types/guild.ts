@@ -609,7 +609,7 @@ export interface CreateServerOptions {
 }
 
 // https://discord.com/developers/docs/resources/template#template-object
-export interface GuildTemplate {
+export interface Template {
   /** the template code (unique ID) */
   code: string;
   /** template name */
