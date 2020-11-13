@@ -421,3 +421,30 @@ export async function followChannel(
 
   return data.webhook_id;
 }
+
+/**
+ * Checks whether a channel is synchronized with its parent/category channel or not.
+ * @param channelID The ID of the channel to test for synchronization
+ * @return Returns `true` if the channel is synchronized, otherwise `false`. Returns `false` if the channel is not cached.
+ */
+export async function isChannelSynced(channelID: string) {
+  const channel = await cacheHandlers.get("channels", channelID);
+  if (!channel?.parentID) return false;
+
+  const parentChannel = await cacheHandlers.get("channels", channel.parentID);
+  if (!parentChannel) return false;
+
+  return channel.permission_overwrites?.every((overwrite) => {
+    const permission = parentChannel.permission_overwrites?.find((ow) =>
+      ow.id === overwrite.id
+    );
+    if (!permission) return false;
+    if (
+      overwrite.allow !== permission.allow || overwrite.deny !== permission.deny
+    ) {
+      return false;
+    }
+
+    return true;
+  });
+}
