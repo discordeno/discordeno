@@ -637,7 +637,7 @@ export function getGuildTemplate(
 ) {
   return RequestManager.get(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
-  ) as any;
+  ) as Promise<Template>;
 }
 
 /**
