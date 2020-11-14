@@ -24,6 +24,7 @@ import {
   PositionSwap,
   PruneOptions,
   PrunePayload,
+  Template,
   UpdateGuildPayload,
   UserPayload,
 } from "../types/guild.ts";
@@ -624,10 +625,13 @@ export function getGuild(guildID: string, counts = true) {
 }
 
 /** Returns the guild template if it exists */
-export function getGuildTemplate(guildID: string, templateCode: string) {
+export function getGuildTemplate(
+  guildID: string,
+  templateCode: string,
+): Promise<Template> {
   return RequestManager.get(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
-  );
+  ) as any;
 }
 
 /**
