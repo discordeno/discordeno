@@ -652,5 +652,5 @@ export interface EditGuildTemplate {
   /** name of the template (1-100 characters) */
   name?: string;
   /** description for the template (0-120 characters) */
-  description?: string;
+  description?: string | null;
 }
