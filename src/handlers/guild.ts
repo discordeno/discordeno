@@ -739,7 +739,7 @@ export async function syncGuildTemplate(guildID: string, templateCode: string) {
   const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
   if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
 
-  const template: GuildTemplate = await RequestManager.put(
+  const template = await RequestManager.put(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
   ) as GuildTemplate;
   return structures.createTemplate(template);
