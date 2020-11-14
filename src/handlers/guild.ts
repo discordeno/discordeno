@@ -625,8 +625,9 @@ export function getGuild(guildID: string, counts = true) {
 
 /** Returns the guild template if it exists */
 export function getGuildTemplate(guildID: string, templateCode: string) {
-  const endpoint = `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`;
-  return RequestManager.get(endpoint);
+  return RequestManager.get(
+    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
+  );
 }
 
 /**
@@ -654,8 +655,9 @@ export function getGuildTemplates(guildID: string) {
 
 /** Deletes a template from a guild */
 export function deleteGuildTemplate(guildID: string, templateCode: string) {
-  const endpoint = `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`;
-  return RequestManager.delete(endpoint);
+  return RequestManager.delete(
+    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
+  );
 }
 
 /**
@@ -680,8 +682,9 @@ export interface CreateGuildTemplate {
 
 /** Syncs the template to the guild's current state */
 export function syncGuildTemplate(guildID: string, templateCode: string) {
-  const endpoint = `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`;
-  return RequestManager.put(endpoint);
+  return RequestManager.put(
+    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
+  );
 }
 
 /** Edit a template's metadata */
@@ -690,8 +693,10 @@ export function editGuildTemplate(
   templateCode: string,
   data: EditGuildTemplate,
 ) {
-  const endpoint = `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`;
-  return RequestManager.patch(endpoint, data);
+  return RequestManager.patch(
+    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
+    data,
+  );
 }
 
 export interface EditGuildTemplate {
