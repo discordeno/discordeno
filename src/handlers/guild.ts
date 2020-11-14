@@ -741,7 +741,7 @@ export async function syncGuildTemplate(guildID: string, templateCode: string) {
 
   const template: GuildTemplate = await RequestManager.put(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
-  ) as any;
+  ) as GuildTemplate;
   return structures.createTemplate(template);
 }
 
