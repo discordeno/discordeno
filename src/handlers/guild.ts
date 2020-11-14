@@ -694,7 +694,7 @@ export async function deleteGuildTemplate(
   const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
   if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
 
-  const deletedTemplate: GuildTemplate = await RequestManager.delete(
+  const deletedTemplate = await RequestManager.delete(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
   ) as any;
   return structures.createTemplate(deletedTemplate);
