@@ -633,3 +633,24 @@ export interface Template {
   /** whether the template has unsynced changes */
   is_dirty: boolean | null;
 }
+
+export interface CreateGuildFromTemplate {
+  /** name of the guild (2-100 characters) */
+  name: string;
+  /** base64 128x128 image for the guild icon */
+  icon?: string;
+}
+
+export interface CreateGuildTemplate {
+  /** name of the template (1-100 characters) */
+  name: string;
+  /** description for the template (0-120 characters) */
+  description?: string;
+}
+
+export interface EditGuildTemplate {
+  /** name of the template (1-100 characters) */
+  name?: string;
+  /** description for the template (0-120 characters) */
+  description?: string;
+}

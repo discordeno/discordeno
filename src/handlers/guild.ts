@@ -14,9 +14,12 @@ import {
   BanOptions,
   ChannelCreateOptions,
   CreateEmojisOptions,
+  CreateGuildFromTemplate,
+  CreateGuildTemplate,
   CreateRoleOptions,
   CreateServerOptions,
   EditEmojisOptions,
+  EditGuildTemplate,
   EditIntegrationOptions,
   FetchMembersOptions,
   GetAuditLogsOptions,
@@ -32,6 +35,7 @@ import { MemberCreatePayload } from "../types/member.ts";
 import { Intents } from "../types/options.ts";
 import { Permissions } from "../types/permission.ts";
 import { RoleData } from "../types/role.ts";
+import { cache } from "../utils/cache.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import { Collection } from "../utils/collection.ts";
 import { botHasPermission, calculateBits } from "../utils/permissions.ts";
@@ -638,27 +642,47 @@ export function getGuildTemplate(
  * Create a new guild based on a template
  * NOTE: This endpoint can be used only by bots in less than 10 guilds.
  */
-export function createGuildFromTemplate(
+export async function createGuildFromTemplate(
   templateCode: string,
   data: CreateGuildFromTemplate,
-) {
-  return RequestManager.post(endpoints.GUILD_TEMPLATE(templateCode), data);
-}
+): Promise<Guild> {
+  if (cache.guilds.size >= 10) {
+    throw new Error(
+      "This function can only be used by bots in less than 10 guilds.",
+    );
+  }
 
-export interface CreateGuildFromTemplate {
-  /** name of the guild (2-100 characters) */
-  name: string;
-  /** base64 128x128 image for the guild icon */
-  icon?: string;
+  if (data.icon) {
+    data.icon = await urlToBase64(data.icon);
+  }
+
+  try {
+    const guild = RequestManager.post(
+      endpoints.GUILD_TEMPLATE(templateCode),
+      data,
+    ) as any;
+    return guild;
+  } catch (error) {
+    throw error;
+  }
 }
 
 /** Returns an array of guild templates */
-export function getGuildTemplates(guildID: string) {
+export async function getGuildTemplates(guildID: string) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+
   return RequestManager.get(endpoints.GUILD_TEMPLATES(guildID));
 }
 
 /** Deletes a template from a guild */
-export function deleteGuildTemplate(guildID: string, templateCode: string) {
+export async function deleteGuildTemplate(
+  guildID: string,
+  templateCode: string,
+) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+
   return RequestManager.delete(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
   );
@@ -670,42 +694,59 @@ export function deleteGuildTemplate(guildID: string, templateCode: string) {
  * @param name name of the template (1-100 characters)
  * @param description description for the template (0-120 characters
  */
-export function createGuildTemplate(
+export async function createGuildTemplate(
   guildID: string,
   data: CreateGuildTemplate,
 ) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+
+  if (data.name.length < 1 || data.name.length > 100) {
+    throw new Error("The name can only be in between 1-100 characters.");
+  }
+
+  if (
+    data.description?.length &&
+    data.description.length > 120
+  ) {
+    throw new Error("The description can only be in between 0-120 characters.");
+  }
+
   return RequestManager.post(endpoints.GUILD_TEMPLATES(guildID), data);
 }
 
-export interface CreateGuildTemplate {
-  /** name of the template (1-100 characters) */
-  name: string;
-  /** description for the template (0-120 characters) */
-  description?: string | null;
-}
-
 /** Syncs the template to the guild's current state */
-export function syncGuildTemplate(guildID: string, templateCode: string) {
+export async function syncGuildTemplate(guildID: string, templateCode: string) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+
   return RequestManager.put(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
   );
 }
 
 /** Edit a template's metadata */
-export function editGuildTemplate(
+export async function editGuildTemplate(
   guildID: string,
   templateCode: string,
   data: EditGuildTemplate,
 ) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+
+  if (data.name?.length && (data.name.length < 1 || data.name.length > 100)) {
+    throw new Error("The name can only be in between 1-100 characters.");
+  }
+
+  if (
+    data.description?.length &&
+    data.description.length > 120
+  ) {
+    throw new Error("The description can only be in between 0-120 characters.");
+  }
+
   return RequestManager.patch(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
     data,
   );
-}
-
-export interface EditGuildTemplate {
-  /** name of the template (1-100 characters) */
-  name?: string;
-  /** description for the template (0-120 characters) */
-  description?: string | null;
 }
