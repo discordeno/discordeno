@@ -634,7 +634,7 @@ export function getGuild(guildID: string, counts = true) {
 export function getGuildTemplate(
   guildID: string,
   templateCode: string,
-): Promise<Template> {
+) {
   return RequestManager.get(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
   ) as any;
