@@ -37,7 +37,6 @@ import { MemberCreatePayload } from "../types/member.ts";
 import { Intents } from "../types/options.ts";
 import { Permissions } from "../types/permission.ts";
 import { RoleData } from "../types/role.ts";
-import { cache } from "../utils/cache.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import { Collection } from "../utils/collection.ts";
 import { botHasPermission, calculateBits } from "../utils/permissions.ts";
@@ -648,7 +647,7 @@ export async function createGuildFromTemplate(
   templateCode: string,
   data: CreateGuildFromTemplate,
 ) {
-  if (cache.guilds.size >= 10) {
+  if (cacheHandlers.size("guilds") >= 10) {
     throw new Error(
       "This function can only be used by bots in less than 10 guilds.",
     );
