@@ -6,6 +6,7 @@ import { requestAllMembers } from "../module/shardingManager.ts";
 import { Guild } from "../structures/guild.ts";
 import { Member } from "../structures/member.ts";
 import { structures } from "../structures/mod.ts";
+import { Template } from "../structures/template.ts";
 import { ImageFormats, ImageSize } from "../types/cdn.ts";
 import { ChannelCreatePayload, ChannelTypes } from "../types/channel.ts";
 import { Errors } from "../types/errors.ts";
@@ -15,6 +16,7 @@ import {
   ChannelCreateOptions,
   CreateEmojisOptions,
   CreateGuildFromTemplate,
+  CreateGuildPayload,
   CreateGuildTemplate,
   CreateRoleOptions,
   CreateServerOptions,
@@ -24,10 +26,10 @@ import {
   FetchMembersOptions,
   GetAuditLogsOptions,
   GuildEditOptions,
+  GuildTemplate,
   PositionSwap,
   PruneOptions,
   PrunePayload,
-  Template,
   UpdateGuildPayload,
   UserPayload,
 } from "../types/guild.ts";
@@ -645,7 +647,7 @@ export function getGuildTemplate(
 export async function createGuildFromTemplate(
   templateCode: string,
   data: CreateGuildFromTemplate,
-): Promise<Guild> {
+) {
   if (cache.guilds.size >= 10) {
     throw new Error(
       "This function can only be used by bots in less than 10 guilds.",
@@ -657,7 +659,7 @@ export async function createGuildFromTemplate(
   }
 
   try {
-    const guild = RequestManager.post(
+    const guild: CreateGuildPayload = await RequestManager.post(
       endpoints.GUILD_TEMPLATE(templateCode),
       data,
     ) as any;
@@ -667,15 +669,24 @@ export async function createGuildFromTemplate(
   }
 }
 
-/** Returns an array of guild templates */
+/**
+ * Returns an array of templates.
+ * Requires the `MANAGE_GUILD` permission.
+ */
 export async function getGuildTemplates(guildID: string) {
   const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
   if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
 
-  return RequestManager.get(endpoints.GUILD_TEMPLATES(guildID));
+  const templates = await RequestManager.get(
+    endpoints.GUILD_TEMPLATES(guildID),
+  ) as GuildTemplate[];
+  return templates.map((template) => structures.createTemplate(template));
 }
 
-/** Deletes a template from a guild */
+/**
+ * Deletes a template from a guild.
+ * Requires the `MANAGE_GUILD` permission.
+ */
 export async function deleteGuildTemplate(
   guildID: string,
   templateCode: string,
@@ -683,14 +694,15 @@ export async function deleteGuildTemplate(
   const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
   if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
 
-  return RequestManager.delete(
+  const deletedTemplate: GuildTemplate = await RequestManager.delete(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
-  );
+  ) as any;
+  return structures.createTemplate(deletedTemplate);
 }
 
 /**
- * Creates a template for the guild
- * @param guildID The ID of the guild to create a template in
+ * Creates a template for the guild.
+ * Requires the `MANAGE_GUILD` permission.
  * @param name name of the template (1-100 characters)
  * @param description description for the template (0-120 characters
  */
@@ -712,20 +724,31 @@ export async function createGuildTemplate(
     throw new Error("The description can only be in between 0-120 characters.");
   }
 
-  return RequestManager.post(endpoints.GUILD_TEMPLATES(guildID), data);
+  const template = await RequestManager.post(
+    endpoints.GUILD_TEMPLATES(guildID),
+    data,
+  ) as GuildTemplate;
+  return structures.createTemplate(template);
 }
 
-/** Syncs the template to the guild's current state */
+/**
+ * Syncs the template to the guild's current state.
+ * Requires the `MANAGE_GUILD` permission.
+ */
 export async function syncGuildTemplate(guildID: string, templateCode: string) {
   const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
   if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
 
-  return RequestManager.put(
+  const template: GuildTemplate = await RequestManager.put(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
-  );
+  ) as any;
+  return structures.createTemplate(template);
 }
 
-/** Edit a template's metadata */
+/**
+ * Edit a template's metadata.
+ * Requires the `MANAGE_GUILD` permission.
+ */
 export async function editGuildTemplate(
   guildID: string,
   templateCode: string,
@@ -745,8 +768,9 @@ export async function editGuildTemplate(
     throw new Error("The description can only be in between 0-120 characters.");
   }
 
-  return RequestManager.patch(
+  const template: GuildTemplate = await RequestManager.patch(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
     data,
-  );
+  ) as any;
+  return structures.createTemplate(template);
 }

@@ -3,6 +3,7 @@ import { createGuild } from "./guild.ts";
 import { createMember } from "./member.ts";
 import { createMessage } from "./message.ts";
 import { createRole } from "./role.ts";
+import { createTemplate } from "./template.ts";
 
 /** This is the placeholder where the structure creation functions are kept. */
 export let structures = {
@@ -11,6 +12,7 @@ export let structures = {
   createMember,
   createMessage,
   createRole,
+  createTemplate,
 };
 
 export type Structures = typeof structures;
