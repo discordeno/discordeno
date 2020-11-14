@@ -94,7 +94,7 @@ export let cacheHandlers = {
   },
 
   /** Get the number of key-value pairs */
-  size: (table: TableName) => {
+  size: async (table: TableName) => {
     return cache[table].size;
   },
 
