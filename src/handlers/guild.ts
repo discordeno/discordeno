@@ -647,7 +647,7 @@ export async function createGuildFromTemplate(
   templateCode: string,
   data: CreateGuildFromTemplate,
 ) {
-  if (cacheHandlers.size("guilds") >= 10) {
+  if (await cacheHandlers.size("guilds") >= 10) {
     throw new Error(
       "This function can only be used by bots in less than 10 guilds.",
     );
