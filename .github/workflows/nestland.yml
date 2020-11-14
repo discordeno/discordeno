@@ -1,8 +1,8 @@
 name: Ship Nest.Land
 
 on:
-  release:
-    types: [published]
+  create:
+    ref_type: "tag"
 
 jobs:
   release:
@@ -16,5 +16,6 @@ jobs:
 
       - name: Publish module
         run: |
-          deno run -A --unstable https://x.nest.land/eggs@0.2.1/mod.ts link ${{ secrets.NESTAPIKEY }}
-          deno run -A --unstable https://x.nest.land/eggs@0.2.1/mod.ts publish --version ${{ github.event.inputs.tags }}
+          deno install -A --unstable https://x.nest.land/eggs@0.3.2/eggs.ts
+          eggs link ${{ secrets.NESTAPIKEY }}
+          eggs publish --yes --no-check --version $(git describe --tags $(git rev-list --tags --max-count=1))

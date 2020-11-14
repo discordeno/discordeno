@@ -15,6 +15,7 @@ import {
   higherRolePosition,
   highestRole,
 } from "../utils/permissions.ts";
+import { urlToBase64 } from "../utils/utils.ts";
 import { sendMessage } from "./channel.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
@@ -181,5 +182,50 @@ export function editMember(
   return RequestManager.patch(
     endpoints.GUILD_MEMBER(guildID, memberID),
     options,
+  );
+}
+
+/**
+ * Move a member from a voice channel to another.
+ * @param guildID the id of the guild which the channel exists in
+ * @param memberID the id of the member to move.
+ * @param channelID id of channel to move user to (if they are connected to voice)
+ */
+export function moveMember(
+  guildID: string,
+  memberID: string,
+  channelID: string,
+) {
+  return editMember(guildID, memberID, { channel_id: channelID });
+}
+
+/** Modifies the bot's username or avatar.
+ * NOTE: username: if changed may cause the bot's discriminator to be randomized.
+ */
+export function editBotProfile(username?: string, avatarURL?: string) {
+  // Nothing was edited
+  if (!username && !avatarURL) return;
+  // Check username requirements if username was provided
+  if (username) {
+    if (username.length > 32) {
+      throw new Error(Errors.USERNAME_MAX_LENGTH);
+    }
+    if (username.length < 2) {
+      throw new Error(Errors.USERNAME_MIN_LENGTH);
+    }
+    if (["@", "#", ":", "```"].some((char) => username.includes(char))) {
+      throw new Error(Errors.USERNAME_INVALID_CHARACTER);
+    }
+    if (["discordtag", "everyone", "here"].includes(username)) {
+      throw new Error(Errors.USERNAME_INVALID_USERNAME);
+    }
+  }
+
+  RequestManager.patch(
+    endpoints.USER_BOT,
+    {
+      username: username?.trim(),
+      avatar: avatarURL ? urlToBase64(avatarURL) : undefined,
+    },
   );
 }

@@ -6,6 +6,7 @@ import { requestAllMembers } from "../module/shardingManager.ts";
 import { Guild } from "../structures/guild.ts";
 import { Member } from "../structures/member.ts";
 import { structures } from "../structures/mod.ts";
+import { Template } from "../structures/template.ts";
 import { ImageFormats, ImageSize } from "../types/cdn.ts";
 import { ChannelCreatePayload, ChannelTypes } from "../types/channel.ts";
 import { Errors } from "../types/errors.ts";
@@ -14,16 +15,22 @@ import {
   BanOptions,
   ChannelCreateOptions,
   CreateEmojisOptions,
+  CreateGuildFromTemplate,
+  CreateGuildPayload,
+  CreateGuildTemplate,
   CreateRoleOptions,
   CreateServerOptions,
   EditEmojisOptions,
+  EditGuildTemplate,
   EditIntegrationOptions,
   FetchMembersOptions,
   GetAuditLogsOptions,
   GuildEditOptions,
+  GuildTemplate,
   PositionSwap,
   PruneOptions,
   PrunePayload,
+  UpdateGuildPayload,
   UserPayload,
 } from "../types/guild.ts";
 import { MemberCreatePayload } from "../types/member.ts";
@@ -606,4 +613,159 @@ export function getWebhooks(guildID: string) {
 /** This function will return the raw user payload in the rare cases you need to fetch a user directly from the API. */
 export function getUser(userID: string) {
   return RequestManager.get(endpoints.USER(userID)) as Promise<UserPayload>;
+}
+
+/**
+ * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()
+ *
+ * Advanced Devs:
+ * This function fetches a guild's data. This is not the same data as a GUILD_CREATE.
+ * So it does not cache the guild, you must do it manually.
+ * */
+export function getGuild(guildID: string, counts = true) {
+  return RequestManager.get(
+    endpoints.GUILD(guildID),
+    { with_counts: counts },
+  ) as Promise<UpdateGuildPayload>;
+}
+
+/** Returns the guild template if it exists */
+export function getGuildTemplate(
+  guildID: string,
+  templateCode: string,
+) {
+  return RequestManager.get(
+    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
+  ) as Promise<Template>;
+}
+
+/**
+ * Create a new guild based on a template
+ * NOTE: This endpoint can be used only by bots in less than 10 guilds.
+ */
+export async function createGuildFromTemplate(
+  templateCode: string,
+  data: CreateGuildFromTemplate,
+) {
+  if (await cacheHandlers.size("guilds") >= 10) {
+    throw new Error(
+      "This function can only be used by bots in less than 10 guilds.",
+    );
+  }
+
+  if (data.icon) {
+    data.icon = await urlToBase64(data.icon);
+  }
+
+  const guild = await RequestManager.post(
+    endpoints.GUILD_TEMPLATE(templateCode),
+    data,
+  ) as Promise<CreateGuildPayload>;
+  return guild;
+}
+
+/**
+ * Returns an array of templates.
+ * Requires the `MANAGE_GUILD` permission.
+ */
+export async function getGuildTemplates(guildID: string) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+
+  const templates = await RequestManager.get(
+    endpoints.GUILD_TEMPLATES(guildID),
+  ) as GuildTemplate[];
+  return templates.map((template) => structures.createTemplate(template));
+}
+
+/**
+ * Deletes a template from a guild.
+ * Requires the `MANAGE_GUILD` permission.
+ */
+export async function deleteGuildTemplate(
+  guildID: string,
+  templateCode: string,
+) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+
+  const deletedTemplate = await RequestManager.delete(
+    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
+  ) as GuildTemplate;
+  return structures.createTemplate(deletedTemplate);
+}
+
+/**
+ * Creates a template for the guild.
+ * Requires the `MANAGE_GUILD` permission.
+ * @param name name of the template (1-100 characters)
+ * @param description description for the template (0-120 characters
+ */
+export async function createGuildTemplate(
+  guildID: string,
+  data: CreateGuildTemplate,
+) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+
+  if (data.name.length < 1 || data.name.length > 100) {
+    throw new Error("The name can only be in between 1-100 characters.");
+  }
+
+  if (
+    data.description?.length &&
+    data.description.length > 120
+  ) {
+    throw new Error("The description can only be in between 0-120 characters.");
+  }
+
+  const template = await RequestManager.post(
+    endpoints.GUILD_TEMPLATES(guildID),
+    data,
+  ) as GuildTemplate;
+  return structures.createTemplate(template);
+}
+
+/**
+ * Syncs the template to the guild's current state.
+ * Requires the `MANAGE_GUILD` permission.
+ */
+export async function syncGuildTemplate(guildID: string, templateCode: string) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+
+  const template = await RequestManager.put(
+    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
+  ) as GuildTemplate;
+  return structures.createTemplate(template);
+}
+
+/**
+ * Edit a template's metadata.
+ * Requires the `MANAGE_GUILD` permission.
+ */
+export async function editGuildTemplate(
+  guildID: string,
+  templateCode: string,
+  data: EditGuildTemplate,
+) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+
+  if (data.name?.length && (data.name.length < 1 || data.name.length > 100)) {
+    throw new Error("The name can only be in between 1-100 characters.");
+  }
+
+  if (
+    data.description?.length &&
+    data.description.length > 120
+  ) {
+    throw new Error("The description can only be in between 0-120 characters.");
+  }
+
+  const template = await RequestManager.patch(
+    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
+    data,
+  ) as GuildTemplate;
+  return structures.createTemplate(template);
 }

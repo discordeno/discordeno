@@ -83,6 +83,7 @@ export interface EventHandlers {
   channelUpdate?: (channel: Channel, cachedChannel: Channel) => unknown;
   channelDelete?: (channel: Channel) => unknown;
   debug?: (args: DebugArg) => unknown;
+  dispatchRequirements?: (data: DiscordPayload, shardID: number) => unknown;
   guildBanAdd?: (guild: Guild, user: Member | UserPayload) => unknown;
   guildBanRemove?: (guild: Guild, user: Member | UserPayload) => unknown;
   guildCreate?: (guild: Guild) => unknown;

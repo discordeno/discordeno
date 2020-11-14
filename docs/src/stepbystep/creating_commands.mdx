@@ -66,7 +66,7 @@ Let's add a custom description to our invite command.
 🎉 It's that simple. So let's restart the bot and see how it changed. Use **CTRL + C** to shut down the bot. Then run the command from earlier.
 
 ```shell
-deno run --allow-net --allow-read mod.ts
+deno run --allow-net --allow-read --no-check --config tsconfig.json mod.ts
 ```
 
 To access this easily, most likely all you need to do is press the **UP ARROW** key. Feel free to copy paste this if it doesn't work.

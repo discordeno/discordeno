@@ -113,7 +113,7 @@ Oh my god! You now have a bot with a bunch of features already! You don't believ
 3. Run the script below:
 
 ```shell
-deno run --allow-net --allow-read mod.ts
+deno run --allow-net --allow-read --no-check --config tsconfig.json mod.ts
 ```
 
 The first time you run it, you may see a lot of files being loaded. This is preparing all the magic behind the scene. Once it is ready, you will see something like this:
