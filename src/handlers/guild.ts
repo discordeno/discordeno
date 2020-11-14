@@ -104,7 +104,11 @@ export async function createGuildChannel(
   name: string,
   options?: ChannelCreateOptions,
 ) {
-  if (!botHasPermission(guild.id, [Permissions.MANAGE_CHANNELS])) {
+  const hasPerm = await botHasPermission(
+    guild.id,
+    [Permissions.MANAGE_CHANNELS],
+  );
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
 
@@ -133,12 +137,16 @@ export async function createGuildChannel(
 }
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-export function deleteChannel(
+export async function deleteChannel(
   guildID: string,
   channelID: string,
   reason?: string,
 ) {
-  if (!botHasPermission(guildID, [Permissions.MANAGE_CHANNELS])) {
+  const hasPerm = await botHasPermission(
+    guildID,
+    [Permissions.MANAGE_CHANNELS],
+  );
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
 
@@ -230,9 +238,8 @@ export async function createEmoji(
   image: string,
   options: CreateEmojisOptions,
 ) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_EMOJIS])
-  ) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_EMOJIS]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_EMOJIS);
   }
 
@@ -248,16 +255,16 @@ export async function createEmoji(
 }
 
 /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */
-export function editEmoji(
+export async function editEmoji(
   guildID: string,
   id: string,
   options: EditEmojisOptions,
 ) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_EMOJIS])
-  ) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_EMOJIS]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_EMOJIS);
   }
+
   return RequestManager.patch(endpoints.GUILD_EMOJI(guildID, id), {
     name: options.name,
     roles: options.roles,
@@ -265,12 +272,16 @@ export function editEmoji(
 }
 
 /** Delete the given emoji. Requires the MANAGE_EMOJIS permission. Returns 204 No Content on success. */
-export function deleteEmoji(guildID: string, id: string, reason?: string) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_EMOJIS])
-  ) {
+export async function deleteEmoji(
+  guildID: string,
+  id: string,
+  reason?: string,
+) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_EMOJIS]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_EMOJIS);
   }
+
   return RequestManager.delete(
     endpoints.GUILD_EMOJI(guildID, id),
     { reason },
@@ -288,11 +299,11 @@ export async function createGuildRole(
   options: CreateRoleOptions,
   reason?: string,
 ) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_ROLES])
-  ) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_ROLES]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
+
   const result = await RequestManager.post(
     endpoints.GUILD_ROLES(guildID),
     {
@@ -314,16 +325,16 @@ export async function createGuildRole(
 }
 
 /** Edit a guild role. Requires the MANAGE_ROLES permission. */
-export function editRole(
+export async function editRole(
   guildID: string,
   id: string,
   options: CreateRoleOptions,
 ) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_ROLES])
-  ) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_ROLES]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
+
   return RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), {
     ...options,
     permissions: options.permissions
@@ -333,12 +344,12 @@ export function editRole(
 }
 
 /** Delete a guild role. Requires the MANAGE_ROLES permission. */
-export function deleteRole(guildID: string, id: string) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_ROLES])
-  ) {
+export async function deleteRole(guildID: string, id: string) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_ROLES]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
+
   return RequestManager.delete(endpoints.GUILD_ROLE(guildID, id));
 }
 
@@ -346,22 +357,22 @@ export function deleteRole(guildID: string, id: string) {
 *
 * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your roles will be cached in your guild.**
 */
-export function getRoles(guildID: string) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_ROLES])
-  ) {
+export async function getRoles(guildID: string) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_ROLES]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
+
   return RequestManager.get(endpoints.GUILD_ROLES(guildID));
 }
 
 /** Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. */
-export function swapRoles(guildID: string, rolePositons: PositionSwap) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_ROLES])
-  ) {
+export async function swapRoles(guildID: string, rolePositons: PositionSwap) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_ROLES]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
+
   return RequestManager.patch(endpoints.GUILD_ROLES(guildID), rolePositons);
 }
 
@@ -370,9 +381,9 @@ export async function getPruneCount(guildID: string, options: PruneOptions) {
   if (options.days < 1) {
     throw new Error(Errors.PRUNE_MIN_DAYS);
   }
-  if (
-    !botHasPermission(guildID, [Permissions.KICK_MEMBERS])
-  ) {
+
+  const hasPerm = await botHasPermission(guildID, [Permissions.KICK_MEMBERS]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_KICK_MEMBERS);
   }
 
@@ -385,13 +396,13 @@ export async function getPruneCount(guildID: string, options: PruneOptions) {
 }
 
 /** Begin pruning all members in the given time period */
-export function pruneMembers(guildID: string, options: PruneOptions) {
+export async function pruneMembers(guildID: string, options: PruneOptions) {
   if (options.days < 1) {
     throw new Error(Errors.PRUNE_MIN_DAYS);
   }
-  if (
-    !botHasPermission(guildID, [Permissions.KICK_MEMBERS])
-  ) {
+
+  const hasPerm = await botHasPermission(guildID, [Permissions.KICK_MEMBERS]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_KICK_MEMBERS);
   }
 
@@ -412,8 +423,12 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
 }
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
-export function getAuditLogs(guildID: string, options: GetAuditLogsOptions) {
-  if (!botHasPermission(guildID, [Permissions.VIEW_AUDIT_LOG])) {
+export async function getAuditLogs(
+  guildID: string,
+  options: GetAuditLogsOptions,
+) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.VIEW_AUDIT_LOG]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_VIEW_AUDIT_LOG);
   }
 
@@ -426,26 +441,26 @@ export function getAuditLogs(guildID: string, options: GetAuditLogsOptions) {
 }
 
 /** Returns the guild embed object. Requires the MANAGE_GUILD permission. */
-export function getEmbed(guildID: string) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_GUILD])
-  ) {
+export async function getEmbed(guildID: string) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
+
   return RequestManager.get(endpoints.GUILD_EMBED(guildID));
 }
 
 /** Modify a guild embed object for the guild. Requires the MANAGE_GUILD permission. */
-export function editEmbed(
+export async function editEmbed(
   guildID: string,
   enabled: boolean,
   channelID?: string | null,
 ) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_GUILD])
-  ) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
+
   return RequestManager.patch(
     endpoints.GUILD_EMBED(guildID),
     { enabled, channel_id: channelID },
@@ -458,26 +473,26 @@ export function getVanityURL(guildID: string) {
 }
 
 /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
-export function getIntegrations(guildID: string) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_GUILD])
-  ) {
+export async function getIntegrations(guildID: string) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
+
   return RequestManager.get(endpoints.GUILD_INTEGRATIONS(guildID));
 }
 
 /** Modify the behavior and settings of an integration object for the guild. Requires the MANAGE_GUILD permission. */
-export function editIntegration(
+export async function editIntegration(
   guildID: string,
   id: string,
   options: EditIntegrationOptions,
 ) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_GUILD])
-  ) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
+
   return RequestManager.patch(
     endpoints.GUILD_INTEGRATION(guildID, id),
     options,
@@ -485,30 +500,29 @@ export function editIntegration(
 }
 
 /** Delete the attached integration object for the guild with this id. Requires MANAGE_GUILD permission. */
-export function deleteIntegration(guildID: string, id: string) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_GUILD])
-  ) {
+export async function deleteIntegration(guildID: string, id: string) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
+
   return RequestManager.delete(endpoints.GUILD_INTEGRATION(guildID, id));
 }
 
 /** Sync an integration. Requires the MANAGE_GUILD permission. */
-export function syncIntegration(guildID: string, id: string) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_GUILD])
-  ) {
+export async function syncIntegration(guildID: string, id: string) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
+
   return RequestManager.post(endpoints.GUILD_INTEGRATION_SYNC(guildID, id));
 }
 
 /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
 export async function getBans(guildID: string) {
-  if (
-    !botHasPermission(guildID, [Permissions.BAN_MEMBERS])
-  ) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.BAN_MEMBERS]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
 
@@ -522,10 +536,9 @@ export async function getBans(guildID: string) {
 }
 
 /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
-export function getBan(guildID: string, memberID: string) {
-  if (
-    !botHasPermission(guildID, [Permissions.BAN_MEMBERS])
-  ) {
+export async function getBan(guildID: string, memberID: string) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.BAN_MEMBERS]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
 
@@ -535,10 +548,9 @@ export function getBan(guildID: string, memberID: string) {
 }
 
 /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
-export function ban(guildID: string, id: string, options: BanOptions) {
-  if (
-    !botHasPermission(guildID, [Permissions.BAN_MEMBERS])
-  ) {
+export async function ban(guildID: string, id: string, options: BanOptions) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.BAN_MEMBERS]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
 
@@ -549,10 +561,9 @@ export function ban(guildID: string, id: string, options: BanOptions) {
 }
 
 /** Remove the ban for a user. REquires BAN_MEMBERS permission */
-export function unban(guildID: string, id: string) {
-  if (
-    !botHasPermission(guildID, [Permissions.BAN_MEMBERS])
-  ) {
+export async function unban(guildID: string, id: string) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.BAN_MEMBERS]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
   return RequestManager.delete(endpoints.GUILD_BAN(guildID, id));
@@ -560,9 +571,8 @@ export function unban(guildID: string, id: string) {
 
 /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
 export async function editGuild(guildID: string, options: GuildEditOptions) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_GUILD])
-  ) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
 
@@ -582,12 +592,12 @@ export async function editGuild(guildID: string, options: GuildEditOptions) {
 }
 
 /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
-export function getInvites(guildID: string) {
-  if (
-    !botHasPermission(guildID, [Permissions.MANAGE_GUILD])
-  ) {
+export async function getInvites(guildID: string) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_GUILD]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
+
   return RequestManager.get(endpoints.GUILD_INVITES(guildID));
 }
 
@@ -602,8 +612,12 @@ export function getVoiceRegions(guildID: string) {
 }
 
 /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
-export function getWebhooks(guildID: string) {
-  if (!botHasPermission(guildID, [Permissions.MANAGE_WEBHOOKS])) {
+export async function getWebhooks(guildID: string) {
+  const hasPerm = await botHasPermission(
+    guildID,
+    [Permissions.MANAGE_WEBHOOKS],
+  );
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
 
