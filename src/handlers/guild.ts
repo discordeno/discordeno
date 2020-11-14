@@ -696,7 +696,7 @@ export async function deleteGuildTemplate(
 
   const deletedTemplate = await RequestManager.delete(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
-  ) as any;
+  ) as GuildTemplate;
   return structures.createTemplate(deletedTemplate);
 }
 
