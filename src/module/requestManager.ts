@@ -365,7 +365,7 @@ function processHeaders(url: string, headers: Headers) {
 
   // If there is no remaining global limit, we save it in cache
   if (global) {
-    const reset = Date.now() + Number(retryAfter);
+    const reset = Date.now() + (Number(retryAfter) * 1000);
     eventHandlers.debug?.(
       { type: "globallyRateLimited", data: { url, reset } },
     );
