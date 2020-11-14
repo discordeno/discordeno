@@ -658,15 +658,11 @@ export async function createGuildFromTemplate(
     data.icon = await urlToBase64(data.icon);
   }
 
-  try {
-    const guild: CreateGuildPayload = await RequestManager.post(
-      endpoints.GUILD_TEMPLATE(templateCode),
-      data,
-    ) as any;
-    return guild;
-  } catch (error) {
-    throw error;
-  }
+  const guild = await RequestManager.post(
+    endpoints.GUILD_TEMPLATE(templateCode),
+    data,
+  ) as Promise<CreateGuildPayload>;
+  return guild;
 }
 
 /**
@@ -768,9 +764,9 @@ export async function editGuildTemplate(
     throw new Error("The description can only be in between 0-120 characters.");
   }
 
-  const template: GuildTemplate = await RequestManager.patch(
+  const template = await RequestManager.patch(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
     data,
-  ) as any;
+  ) as GuildTemplate;
   return structures.createTemplate(template);
 }
