@@ -1,4 +1,3 @@
-import { endpoints } from "../constants/discord.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../module/client.ts";
 import { RequestManager } from "../module/requestManager.ts";
@@ -10,6 +9,7 @@ import { Errors } from "../types/errors.ts";
 import { EditMemberOptions } from "../types/member.ts";
 import { Permissions } from "../types/permission.ts";
 import { formatImageURL } from "../utils/cdn.ts";
+import { endpoints } from "../utils/constants.ts";
 import {
   botHasPermission,
   higherRolePosition,
