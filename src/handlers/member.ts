@@ -54,14 +54,19 @@ export async function addRole(
   reason?: string,
 ) {
   const botsHighestRole = await highestRole(guildID, botID);
-  if (
-    botsHighestRole &&
-    !higherRolePosition(guildID, botsHighestRole.id, roleID)
-  ) {
-    throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
+  if (botsHighestRole) {
+    const hasHigherRolePosition = await higherRolePosition(
+      guildID,
+      botsHighestRole.id,
+      roleID,
+    );
+    if (!hasHigherRolePosition) {
+      throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
+    }
   }
 
-  if (!botHasPermission(guildID, [Permissions.MANAGE_ROLES])) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_ROLES]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
@@ -79,16 +84,23 @@ export async function removeRole(
   reason?: string,
 ) {
   const botsHighestRole = await highestRole(guildID, botID);
-  if (
-    botsHighestRole &&
-    !higherRolePosition(guildID, botsHighestRole.id, roleID)
-  ) {
-    throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
+
+  if (botsHighestRole) {
+    const hasHigherRolePosition = await higherRolePosition(
+      guildID,
+      botsHighestRole.id,
+      roleID,
+    );
+    if (!hasHigherRolePosition) {
+      throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
+    }
   }
 
-  if (!botHasPermission(guildID, [Permissions.MANAGE_ROLES])) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_ROLES]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
+
   return RequestManager.delete(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
     { reason },
@@ -130,9 +142,11 @@ export async function kick(guildID: string, memberID: string, reason?: string) {
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
-  if (!botHasPermission(guildID, [Permissions.KICK_MEMBERS])) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.KICK_MEMBERS]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_KICK_MEMBERS);
   }
+
   return RequestManager.delete(
     endpoints.GUILD_MEMBER(guildID, memberID),
     { reason },
@@ -140,7 +154,7 @@ export async function kick(guildID: string, memberID: string, reason?: string) {
 }
 
 /** Edit the member */
-export function editMember(
+export async function editMember(
   guildID: string,
   memberID: string,
   options: EditMemberOptions,
@@ -149,30 +163,47 @@ export function editMember(
     if (options.nick.length > 32) {
       throw new Error(Errors.NICKNAMES_MAX_LENGTH);
     }
-    if (!botHasPermission(guildID, [Permissions.MANAGE_NICKNAMES])) {
+
+    const hasManageNickPerm = await botHasPermission(
+      guildID,
+      [Permissions.MANAGE_NICKNAMES],
+    );
+    if (!hasManageNickPerm) {
       throw new Error(Errors.MISSING_MANAGE_NICKNAMES);
     }
   }
 
+  const hasManageRolesPerm = await botHasPermission(
+    guildID,
+    [Permissions.MANAGE_ROLES],
+  );
   if (
     options.roles &&
-    !botHasPermission(guildID, [Permissions.MANAGE_ROLES])
+    !hasManageRolesPerm
   ) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
   if (options.mute) {
+    const hasMuteMembersPerm = await botHasPermission(
+      guildID,
+      [Permissions.MUTE_MEMBERS],
+    );
     // TODO: This should check if the member is in a voice channel
     if (
-      !botHasPermission(guildID, [Permissions.MUTE_MEMBERS])
+      !hasMuteMembersPerm
     ) {
       throw new Error(Errors.MISSING_MUTE_MEMBERS);
     }
   }
 
+  const hasDeafenMembersPerm = await botHasPermission(
+    guildID,
+    [Permissions.DEAFEN_MEMBERS],
+  );
   if (
     options.deaf &&
-    !botHasPermission(guildID, [Permissions.DEAFEN_MEMBERS])
+    !hasDeafenMembersPerm
   ) {
     throw new Error(Errors.MISSING_DEAFEN_MEMBERS);
   }
