@@ -200,7 +200,7 @@ async function runMethod(
     },
   );
 
-  const errorStack = new Error("Location In Your Files:");
+  const errorStack = new Error("Location:");
   Error.captureStackTrace(errorStack);
 
   return new Promise((resolve, reject) => {
@@ -321,13 +321,25 @@ function handleStatusCode(response: Response, errorStack?: unknown) {
 
   switch (status) {
     case HttpResponseCode.BadRequest:
+      throw new Error(
+        "The request was improperly formatted, or the server couldn't understand it.",
+      );
     case HttpResponseCode.Unauthorized:
+      throw new Error("The Authorization header was missing or invalid.");
     case HttpResponseCode.Forbidden:
+      throw new Error(
+        "The Authorization token you passed did not have permission to the resource.",
+      );
     case HttpResponseCode.NotFound:
+      throw new Error("The resource at the location specified doesn't exist.");
     case HttpResponseCode.MethodNotAllowed:
-      throw new Error(Errors.REQUEST_CLIENT_ERROR);
+      throw new Error(
+        "The HTTP method used is not valid for the location specified.",
+      );
     case HttpResponseCode.GatewayUnavailable:
-      throw new Error(Errors.REQUEST_SERVER_ERROR);
+      throw new Error(
+        "There was not a gateway available to process your request. Wait a bit and retry.",
+      );
   }
 
   // left are all unknown
