@@ -1,4 +1,3 @@
-import { endpoints } from "../constants/discord.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { structures } from "../structures/mod.ts";
 import { Errors } from "../types/errors.ts";
@@ -9,6 +8,7 @@ import {
   WebhookCreateOptions,
   WebhookPayload,
 } from "../types/webhook.ts";
+import { endpoints } from "../utils/constants.ts";
 import { botHasChannelPermissions } from "../utils/permissions.ts";
 import { urlToBase64 } from "../utils/utils.ts";
 

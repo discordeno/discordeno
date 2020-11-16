@@ -1,4 +1,3 @@
-import { endpoints } from "../constants/discord.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { structures } from "../structures/mod.ts";
@@ -17,6 +16,7 @@ import { Errors } from "../types/errors.ts";
 import { RawOverwrite } from "../types/guild.ts";
 import { MessageCreateOptions } from "../types/message.ts";
 import { Permissions } from "../types/permission.ts";
+import { endpoints } from "../utils/constants.ts";
 import { botHasChannelPermissions } from "../utils/permissions.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */

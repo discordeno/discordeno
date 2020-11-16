@@ -1,4 +1,3 @@
-import { endpoints } from "../constants/discord.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { identifyPayload } from "../module/client.ts";
 import { RequestManager } from "../module/requestManager.ts";
@@ -39,6 +38,7 @@ import { Permissions } from "../types/permission.ts";
 import { RoleData } from "../types/role.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import { Collection } from "../utils/collection.ts";
+import { endpoints } from "../utils/constants.ts";
 import { botHasPermission, calculateBits } from "../utils/permissions.ts";
 import { urlToBase64 } from "../utils/utils.ts";
 
