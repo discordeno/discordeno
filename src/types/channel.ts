@@ -101,7 +101,7 @@ export interface MessageContent {
     roles?: string[];
     /** Array of user_ids to mention (Max size of 100) */
     users?: string[];
-    /** Should the message author from the original message be mention. By default this is false.  */
+    /** Should the message author from the original message be mention. By default this is true.  */
     repliedUser?: boolean;
   };
   /** The message contents, up to 2000 characters */

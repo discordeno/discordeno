@@ -211,10 +211,12 @@ export async function sendMessage(
       allowed_mentions: content.mentions
         ? {
           ...content.mentions,
-          replied_user: content.mentions.repliedUser === true,
+          replied_user: content.mentions.repliedUser !== false,
         }
         : undefined,
-      message_reference: content.replyMessageID,
+      message_reference: {
+        message_id: content.replyMessageID,
+      }
     },
   );
 
