@@ -175,7 +175,8 @@ export async function hasChannelPermissions(
   if (permissions.every((perm) => allowedPermissions.has(perm))) return true;
 
   // Some permission was not explicitly allowed so we default to checking role perms directly
-  return botHasPermission(guild.id, permissions);
+  const hasPerms = await botHasPermission(guild.id, permissions);
+  return hasPerms;
 }
 
 /** This function converts a bitwise string to permission strings */

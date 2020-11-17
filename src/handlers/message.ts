@@ -1,5 +1,4 @@
 import { delay } from "../../deps.ts";
-import { endpoints } from "../constants/discord.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../module/client.ts";
 import { RequestManager } from "../module/requestManager.ts";
@@ -10,6 +9,7 @@ import { Errors } from "../types/errors.ts";
 import { UserPayload } from "../types/guild.ts";
 import { MessageCreateOptions } from "../types/message.ts";
 import { Permissions } from "../types/permission.ts";
+import { endpoints } from "../utils/constants.ts";
 import { botHasChannelPermissions } from "../utils/permissions.ts";
 
 /** Delete a message with the channel id and message id only. */
