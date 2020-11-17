@@ -182,6 +182,17 @@ export async function sendMessage(
         content.mentions.roles = content.mentions.roles.slice(0, 100);
       }
     }
+
+    if (content.mentions.repliedUser) {
+      if (
+        !(await botHasChannelPermissions(
+          channelID,
+          [Permissions.READ_MESSAGE_HISTORY],
+        ))
+      ) {
+        throw new Error(Errors.MISSING_SEND_MESSAGES);
+      }
+    }
   }
 
   const channel = await cacheHandlers.get("channels", channelID);
@@ -197,7 +208,15 @@ export async function sendMessage(
     endpoints.CHANNEL_MESSAGES(channelID),
     {
       ...content,
-      allowed_mentions: content.mentions,
+      allowed_mentions: content.mentions
+        ? {
+          ...content.mentions,
+          replied_user: content.mentions.repliedUser !== false,
+        }
+        : undefined,
+      message_reference: {
+        message_id: content.replyMessageID,
+      },
     },
   );
 

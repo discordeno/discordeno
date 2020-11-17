@@ -321,29 +321,36 @@ function handleStatusCode(response: Response, errorStack?: unknown) {
 
   switch (status) {
     case HttpResponseCode.BadRequest:
-      throw new Error(
+      console.error(
         "The request was improperly formatted, or the server couldn't understand it.",
       );
+      throw errorStack;
     case HttpResponseCode.Unauthorized:
-      throw new Error("The Authorization header was missing or invalid.");
+      console.error("The Authorization header was missing or invalid.");
+      throw errorStack;
     case HttpResponseCode.Forbidden:
-      throw new Error(
+      console.error(
         "The Authorization token you passed did not have permission to the resource.",
       );
+      throw errorStack;
     case HttpResponseCode.NotFound:
-      throw new Error("The resource at the location specified doesn't exist.");
+      console.error("The resource at the location specified doesn't exist.");
+      throw errorStack;
     case HttpResponseCode.MethodNotAllowed:
-      throw new Error(
+      console.error(
         "The HTTP method used is not valid for the location specified.",
       );
+      throw errorStack;
     case HttpResponseCode.GatewayUnavailable:
-      throw new Error(
+      console.error(
         "There was not a gateway available to process your request. Wait a bit and retry.",
       );
+      throw errorStack;
+      // left are all unknown
+    default:
+      console.error(Errors.REQUEST_UNKNOWN_ERROR);
+      throw errorStack;
   }
-
-  // left are all unknown
-  throw new Error(Errors.REQUEST_UNKNOWN_ERROR);
 }
 
 function processHeaders(url: string, headers: Headers) {
