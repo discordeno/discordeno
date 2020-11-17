@@ -201,16 +201,20 @@ export function swapChannels(
 *
 * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
 */
-export async function getMember(guildID: string, id: string) {
+export async function getMember(
+  guildID: string,
+  id: string,
+  options?: { force?: boolean },
+) {
   const guild = await cacheHandlers.get("guilds", guildID);
-  if (!guild) return;
+  if (!guild && !options?.force) return;
 
   const data = await RequestManager.get(
     endpoints.GUILD_MEMBER(guildID, id),
   ) as MemberCreatePayload;
 
-  const member = await structures.createMember(data, guild.id);
-  guild.members.set(id, member);
+  const member = await structures.createMember(data, guildID);
+  guild?.members.set(id, member);
   return member;
 }
 
