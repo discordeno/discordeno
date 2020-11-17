@@ -216,7 +216,7 @@ export async function sendMessage(
         : undefined,
       message_reference: {
         message_id: content.replyMessageID,
-      }
+      },
     },
   );
 
