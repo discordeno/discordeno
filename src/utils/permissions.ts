@@ -58,7 +58,8 @@ export async function botHasPermission(
   const member = guild.members.get(botID);
   if (!member) return false;
 
-  const permissionBits = member.roles
+  // The everyone role is not in member.roles
+  const permissionBits = [...member.roles, guild.id]
     .map((id) => guild.roles.get(id)!)
     // Remove any edge case undefined
     .filter((r) => r)
