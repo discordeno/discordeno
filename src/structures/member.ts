@@ -7,6 +7,7 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
   const {
     joined_at: joinedAt,
     premium_since: premiumSince,
+    user: userData,
     ...rest
   } = data;
 
@@ -52,10 +53,6 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
     ...rest,
     // Only use those that we have not removed above
     ...user,
-    /** When the user joined the guild */
-    joinedAt: Date.parse(joinedAt),
-    /** When the user used their nitro boost on the server. */
-    premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
     /** Whether or not this user has 2FA enabled. */
     mfaEnabled,
     /** The premium type for this user */
