@@ -2,7 +2,7 @@ import { assert, assertEquals, delay } from "../deps.ts";
 import {
   botID,
   cache,
-  createClient,
+  startBot,
   createGuildChannel,
   createGuildRole,
   createServer,
@@ -26,7 +26,7 @@ import { getChannel } from "../src/handlers/guild.ts";
 const token = Deno.env.get("DISCORD_TOKEN");
 if (!token) throw "Token is not provided";
 
-createClient({
+startBot({
   token,
   intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
 });
