@@ -68,6 +68,9 @@ Deno.test({
     assert(createdGuild);
 
     data.guildID = createdGuild.id;
+
+    // Delay the execution by 5 seconds to allow the guild create event to be received
+    await delay(5000);
   },
   ...testOptions,
 });
@@ -81,6 +84,8 @@ Deno.test({
     const createdRole = await createGuildRole(data.guildID, {
       name: "Role 1",
     });
+
+    console.log(createdRole);
 
     // Check whether the created role is nil or not
     assert(createdRole);

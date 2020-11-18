@@ -55,6 +55,9 @@ export async function botHasPermission(
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return false;
 
+  // Check if the bot is the owner of the guild, if it is, returns true
+  if (guild.ownerID === botID) return true;
+
   const member = guild.members.get(botID);
   if (!member) return false;
 
