@@ -55,8 +55,6 @@ export async function startBot(data: ClientOptions) {
   spawnShards(botGatewayData, identifyPayload, 0, botGatewayData.shards);
 }
 
-export default createClient;
-
 export function updateEventHandlers(newEventHandlers: EventHandlers) {
   eventHandlers = newEventHandlers;
 }
