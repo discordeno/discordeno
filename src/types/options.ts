@@ -22,17 +22,8 @@ import {
   ReactionPayload,
 } from "./message.ts";
 
-export interface Fulfilled_Client_Options {
-  token: string;
-  properties: Properties;
-  compress: boolean;
-  intents: number;
-}
-
 export interface ClientOptions {
   token: string;
-  /** @deprecated Will be removed in next major version! */
-  properties?: Properties;
   compress?: boolean;
   intents: Intents[];
   eventHandlers?: EventHandlers;
