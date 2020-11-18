@@ -1,7 +1,6 @@
 import { CreateGuildPayload } from "../types/guild.ts";
 import { Unpromise } from "../types/misc.ts";
 import { Collection } from "../utils/collection.ts";
-import { Member } from "./member.ts";
 import { structures } from "./mod.ts";
 
 export async function createGuild(data: CreateGuildPayload, shardID: number) {
@@ -23,6 +22,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     joined_at: joinedAt,
     member_count: memberCount,
     voice_states: voiceStates,
+    channels,
     ...rest
   } = data;
 
@@ -31,7 +31,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
   );
 
   await Promise.all(
-    data.channels.map((c) => structures.createChannel(c, data.id)),
+    channels.map((c) => structures.createChannel(c, data.id)),
   );
 
   const guild = {
@@ -70,8 +70,6 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     roles: new Collection(roles.map((r) => [r.id, r])),
     /** When this guild was joined at. */
     joinedAt: Date.parse(joinedAt),
-    /** The users in this guild. */
-    members: new Collection<string, Member>(),
     /** The presences of all the users in the guild. */
     presences: new Collection(data.presences.map((p) => [p.user.id, p])),
     /** The total number of members in this guild. This value is updated as members leave and join the server. However, if you do not have the intent enabled to be able to listen to these events, then this will not be accurate. */
@@ -89,9 +87,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     }])),
   };
 
-  data.members.forEach(async (m) =>
-    guild.members.set(m.user.id, await structures.createMember(m, guild.id))
-  );
+  data.members.forEach((m) => structures.createMember(m, guild.id));
 
   return guild;
 }

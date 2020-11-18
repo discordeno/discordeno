@@ -22,7 +22,6 @@ export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
     payload,
     guild.id,
   );
-  guild.members.set(payload.user.id, member);
 
   eventHandlers.guildMemberAdd?.(guild, member);
 }
@@ -35,13 +34,14 @@ export async function handleInternalGuildMemberRemove(data: DiscordPayload) {
   if (!guild) return;
 
   guild.memberCount--;
-  const member = guild.members.get(payload.user.id);
+  const member = await cacheHandlers.get("members", payload.user.id);
   eventHandlers.guildMemberRemove?.(
     guild,
     member || payload.user,
   );
 
-  guild.members.delete(payload.user.id);
+  member?.guilds.delete(guild.id);
+  if (member && !member.guilds.size) cacheHandlers.delete("members", member.id);
 }
 
 export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
@@ -51,7 +51,7 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
-  const cachedMember = guild.members.get(payload.user.id);
+  const cachedMember = await cacheHandlers.get("members", payload.user.id);
 
   const newMemberData = {
     ...payload,
@@ -60,12 +60,12 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
       .toISOString(),
     deaf: cachedMember?.deaf || false,
     mute: cachedMember?.mute || false,
+    roles: payload.roles,
   };
   const member = await structures.createMember(
     newMemberData,
     guild.id,
   );
-  guild.members.set(payload.user.id, member);
 
   if (cachedMember?.nick !== payload.nick) {
     eventHandlers.nicknameUpdate?.(
@@ -99,15 +99,9 @@ export async function handleInternalGuildMembersChunk(data: DiscordPayload) {
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
-  payload.members.forEach(async (member) => {
-    guild.members.set(
-      member.user.id,
-      await structures.createMember(
-        member,
-        guild.id,
-      ),
-    );
-  });
+  await Promise.all(
+    payload.members.map((member) => structures.createMember(member, guild.id)),
+  );
 
   // Check if its necessary to resolve the fetchmembers promise for this chunk or if more chunks will be coming
   if (
@@ -118,7 +112,7 @@ export async function handleInternalGuildMembersChunk(data: DiscordPayload) {
 
     if (payload.chunk_index + 1 === payload.chunk_count) {
       cache.fetchAllMembersProcessingRequests.delete(payload.nonce);
-      resolve(guild.members);
+      resolve(await cacheHandlers.filter("members", (m) => m.guilds.has(guild.id)));
     }
   }
 }

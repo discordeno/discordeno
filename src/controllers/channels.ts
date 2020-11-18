@@ -11,11 +11,6 @@ export async function handleInternalChannelCreate(data: DiscordPayload) {
   const channel = await structures.createChannel(payload);
   await cacheHandlers.set("channels", channel.id, channel);
 
-  if (channel.guildID) {
-    const guild = await cacheHandlers.get("guilds", channel.guildID);
-    guild?.channels.set(channel.id, channel);
-  }
-
   eventHandlers.channelCreate?.(channel);
 }
 
@@ -31,20 +26,18 @@ export async function handleInternalChannelDelete(data: DiscordPayload) {
     const guild = await cacheHandlers.get("guilds", payload.guild_id);
 
     if (guild) {
-      guild.voiceStates.forEach((vs, key) => {
+      guild.voiceStates.forEach(async (vs, key) => {
         if (vs.channelID !== payload.id) return;
 
         // Since this channel was deleted all voice states for this channel should be deleted
         guild.voiceStates.delete(key);
 
-        const member = guild.members.get(vs.userID);
+        const member = await cacheHandlers.get("members", vs.userID);
         if (!member) return;
 
         eventHandlers.voiceChannelLeave?.(member, vs.channelID);
       });
     }
-
-    guild?.channels.delete(payload.id);
   }
 
   cacheHandlers.delete("channels", payload.id);
@@ -65,11 +58,6 @@ export async function handleInternalChannelUpdate(data: DiscordPayload) {
   cacheHandlers.set("channels", channel.id, channel);
 
   if (!cachedChannel) return;
-
-  if (channel.guildID) {
-    const guild = await cacheHandlers.get("guilds", channel.guildID);
-    guild?.channels.set(channel.id, channel);
-  }
 
   eventHandlers.channelUpdate?.(channel, cachedChannel);
 }

@@ -216,7 +216,6 @@ export async function getMember(
   ) as MemberCreatePayload;
 
   const member = await structures.createMember(data, guildID);
-  guild?.members.set(id, member);
   return member;
 }
 

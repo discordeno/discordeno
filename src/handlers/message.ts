@@ -225,11 +225,11 @@ export async function getReactions(message: Message, reaction: string) {
   const result = (await RequestManager.get(
     endpoints.CHANNEL_MESSAGE_REACTION(message.channelID, message.id, reaction),
   )) as UserPayload[];
-  const guild = await cacheHandlers.get("guilds", message.guildID);
 
-  return result.map((res) => {
-    return guild?.members.get(res.id) || res;
-  });
+  return Promise.all(result.map(async (res) => {
+    const member = await cacheHandlers.get("members", res.id);
+    return member || res;
+  }));
 }
 
 /** Edit the message. */
