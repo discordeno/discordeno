@@ -17,7 +17,10 @@ import { PermissionOverwrite } from "../types/guild.ts";
 import { MessageCreateOptions } from "../types/message.ts";
 import { Permissions } from "../types/permission.ts";
 import { endpoints } from "../utils/constants.ts";
-import { botHasChannelPermissions, calculateBits } from "../utils/permissions.ts";
+import {
+  botHasChannelPermissions,
+  calculateBits,
+} from "../utils/permissions.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(

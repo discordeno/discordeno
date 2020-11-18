@@ -55,7 +55,10 @@ export function deleteServer(guildID: string) {
 
 /** Gets an array of all the channels ids that are the children of this category. */
 export function categoryChildrenIDs(guildID: string, id: string) {
-  return cacheHandlers.filter("channels", (channel) => channel.parentID === id && channel.guildID === guildID);
+  return cacheHandlers.filter(
+    "channels",
+    (channel) => channel.parentID === id && channel.guildID === guildID,
+  );
 }
 
 /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */

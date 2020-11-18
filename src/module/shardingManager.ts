@@ -34,7 +34,10 @@ export async function spawnShards(
   if (shardID >= lastShardID) return;
 
   if (skipChecks) {
-    payload.shard = [shardID, data.shards];
+    payload.shard = [
+      shardID,
+      data.shards > lastShardID ? data.shards : lastShardID,
+    ];
     // Start The shard
     createShard(data, payload, false, shardID);
     // Spawn next shard
