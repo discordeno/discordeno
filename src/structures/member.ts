@@ -8,6 +8,8 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
     joined_at: joinedAt,
     premium_since: premiumSince,
     user: userData,
+    roles,
+    deaf,
     ...rest
   } = data;
 
@@ -37,13 +39,13 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
       /** The user's guild nickname if one is set. */
       nick: data.nick,
       /** Array of role ids that the member has */
-      roles: data.roles,
+      roles: roles,
       /** When the user joined the guild. */
       joinedAt: Date.parse(joinedAt),
       /** When the user used their nitro boost on the server. */
       premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
       /** Whether the user is deafened in voice channels */
-      deaf: data.deaf,
+      deaf: deaf,
       /** Whether the user is muted in voice channels */
       mute: data.mute,
     });
@@ -63,10 +65,10 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
 
   member.guilds.set(guildID, {
     nick: data.nick,
-    roles: data.roles,
+    roles: roles,
     joinedAt: Date.parse(joinedAt),
     premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
-    deaf: data.deaf,
+    deaf: deaf,
     mute: data.mute,
   });
 
