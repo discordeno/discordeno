@@ -2,7 +2,7 @@ import { delay } from "../../deps.ts";
 import { HttpResponseCode } from "../types/discord.ts";
 import { Errors } from "../types/errors.ts";
 import { RequestMethods } from "../types/fetch.ts";
-import { baseEndpoints } from "../utils/constants.ts";
+import { baseEndpoints, discordAPIURLS } from "../utils/constants.ts";
 import { authorization, eventHandlers } from "./client.ts";
 
 const pathQueues: { [key: string]: QueuedRequest[] } = {};
@@ -144,7 +144,7 @@ function createRequestBody(body: any, method: RequestMethods) {
   const headers: { [key: string]: string } = {
     Authorization: authorization,
     "User-Agent":
-      `DiscordBot (https://github.com/skillz4killz/discordeno, 6.0.0)`,
+      `DiscordBot (https://github.com/skillz4killz/discordeno, v10)`,
   };
 
   if (method === "get") body = undefined;
@@ -203,6 +203,20 @@ async function runMethod(
   const errorStack = new Error("Location:");
   Error.captureStackTrace(errorStack);
 
+  // For proxies we don't need to do any of the legwork so we just forward the request
+  if (
+    !url.startsWith(discordAPIURLS.BASE_URL) &&
+    !url.startsWith(discordAPIURLS.CDN_URL)
+  ) {
+    return fetch(url, { method, body: body ? JSON.stringify(body) : undefined })
+      .then((res) => res.json())
+      .catch((error) => {
+        console.error(error);
+        throw errorStack;
+      });
+  }
+
+  // No proxy so we need to handl all rate limiting and such
   return new Promise((resolve, reject) => {
     const callback = async () => {
       try {

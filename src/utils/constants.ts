@@ -1,6 +1,13 @@
-export const baseEndpoints = {
-  BASE_URL: "https://discord.com/api/v8",
+// These will never be modified and remain constants
+export const discordAPIURLS = {
+  BASE_URL: `https://discord.com/api/v8`,
   CDN_URL: "https://cdn.discordapp.com",
+};
+
+// This can be modified by big brain bots and use a proxy
+export const baseEndpoints = {
+  BASE_URL: discordAPIURLS.BASE_URL,
+  CDN_URL: discordAPIURLS.CDN_URL,
 };
 
 const GUILDS_BASE = (id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}`;

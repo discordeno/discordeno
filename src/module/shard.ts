@@ -1,9 +1,13 @@
 import {
   connectWebSocket,
   delay,
+  inflate,
   isWebSocketCloseEvent,
+  isWebSocketPingEvent,
+  isWebSocketPongEvent,
   WebSocket,
 } from "../../deps.ts";
+import { eventHandlers } from "../../mod.ts";
 import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
@@ -11,167 +15,75 @@ import {
   ReadyPayload,
 } from "../types/discord.ts";
 import { FetchMembersOptions } from "../types/guild.ts";
-import { DebugArg } from "../types/options.ts";
+import { BotStatusRequest } from "../utils/utils.ts";
+import { IdentifyPayload, proxyWSURL } from "./client.ts";
+import { handleDiscordPayload } from "./shardingManager.ts";
 
-let shardSocket: WebSocket;
-
-/** The session id is needed for RESUME functionality when discord disconnects randomly. */
-let sessionID = "";
-
-// Discord requests null if no number has yet been sent by discord
-let previousSequenceNumber: number | null = null;
-let needToResume = false;
-let shardID = 0;
-
+const basicShards = new Map<number, BasicShard>();
+const heartbeating = new Map<number, boolean>();
+const utf8decoder = new TextDecoder();
 const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
 let processQueue = false;
 
+export interface BasicShard {
+  id: number;
+  socket: WebSocket;
+  resumeInterval: number;
+  sessionID: string;
+  previousSequenceNumber: number | null;
+  needToResume: boolean;
+}
+
 interface RequestMemberQueuedRequest {
   guildID: string;
+  shardID: number;
   nonce: string;
   options?: FetchMembersOptions;
 }
 
-async function processRequestMembersQueue() {
-  if (!RequestMembersQueue.length) {
-    processQueue = false;
-    return;
-  }
-
-  // 2 events per second is the rate limit.
-  const request = RequestMembersQueue.shift();
-  if (request) {
-    requestGuildMembers(request.guildID, request.nonce, request.options, true);
-
-    const secondRequest = RequestMembersQueue.shift();
-    if (secondRequest) {
-      requestGuildMembers(
-        secondRequest.guildID,
-        secondRequest.nonce,
-        secondRequest.options,
-        true,
-      );
-    }
-  }
-
-  await delay(1500);
-
-  postDebug(
-    {
-      type: "requestMembersProcessing",
-      data: { shardID, remaining: RequestMembersQueue.length },
-    },
-  );
-  processRequestMembersQueue();
-}
-
-// TODO: If a client does not receive a heartbeat ack between its attempts at sending heartbeats, it should immediately terminate the connection with a non-1000 close code, reconnect, and attempt to resume.
-async function sendConstantHeartbeats(
-  interval: number,
-) {
-  await delay(interval);
-  shardSocket.send(
-    JSON.stringify({ op: GatewayOpcode.Heartbeat, d: previousSequenceNumber }),
-  );
-  postDebug(
-    { type: "heartbeat", data: { interval, previousSequenceNumber, shardID } },
-  );
-
-  sendConstantHeartbeats(interval);
-}
-
-async function resumeConnection(
-  botGatewayData: DiscordBotGatewayData,
-  identifyPayload: object,
-) {
-  postDebug({ type: "resuming", data: { shardID } });
-  // Run it once
-  createShard(botGatewayData, identifyPayload, true);
-  // Then retry every 15 seconds
-  await delay(1000 * 15);
-  if (needToResume) resumeConnection(botGatewayData, identifyPayload);
-}
-
-const createShard = async (
-  botGatewayData: DiscordBotGatewayData,
-  identifyPayload: object,
+export async function createShard(
+  data: DiscordBotGatewayData,
+  identifyPayload: IdentifyPayload,
   resuming = false,
-) => {
-  postDebug({ type: "createShard", data: { shardID } });
+  shardID = 0,
+) {
+  const oldShard = basicShards.get(shardID);
 
-  shardSocket = await connectWebSocket(botGatewayData.url);
-  let resumeInterval = 0;
+  const basicShard: BasicShard = {
+    id: shardID,
+    socket: await connectWebSocket(
+      proxyWSURL || `${data.url}?v=8&encoding=json`,
+    ),
+    resumeInterval: 0,
+    sessionID: oldShard?.sessionID || "",
+    previousSequenceNumber: oldShard?.previousSequenceNumber || 0,
+    needToResume: false,
+  };
+
+  basicShards.set(basicShard.id, basicShard);
 
   if (!resuming) {
     // Intial identify with the gateway
-    await shardSocket.send(
-      JSON.stringify({ op: GatewayOpcode.Identify, d: identifyPayload }),
-    );
+    await identify(basicShard, identifyPayload);
   } else {
-    await shardSocket.send(JSON.stringify({
-      op: GatewayOpcode.Resume,
-      d: {
-        ...identifyPayload,
-        session_id: sessionID,
-        seq: previousSequenceNumber,
-      },
-    }));
+    await resume(basicShard, identifyPayload);
   }
 
-  for await (const message of shardSocket) {
-    if (typeof message === "string") {
-      const data = JSON.parse(message);
-
-      switch (data.op) {
-        case GatewayOpcode.Hello:
-          sendConstantHeartbeats(
-            (data.d as DiscordHeartbeatPayload).heartbeat_interval,
-          );
-          break;
-        case GatewayOpcode.Reconnect:
-        case GatewayOpcode.InvalidSession:
-          // When d is false we need to reidentify
-          if (!data.d) {
-            postDebug({ type: "invalidSession", data: { shardID } });
-            createShard(botGatewayData, identifyPayload);
-            break;
-          }
-          needToResume = true;
-          resumeConnection(botGatewayData, identifyPayload);
-          break;
-        default:
-          if (data.t === "RESUMED") {
-            postDebug({ type: "resumed", data: { shardID } });
-
-            needToResume = false;
-            break;
-          }
-          // Important for RESUME
-          if (data.t === "READY") {
-            sessionID = (data.d as ReadyPayload).session_id;
-          }
-
-          // Update the sequence number if it is present
-          if (data.s) previousSequenceNumber = data.s;
-
-          // @ts-ignore
-          postMessage(
-            {
-              type: "HANDLE_DISCORD_PAYLOAD",
-              payload: message,
-              resumeInterval,
-              shardID,
-            },
-          );
-          break;
-      }
-    } else if (isWebSocketCloseEvent(message)) {
-      postDebug({ type: "websocketClose", data: { shardID, message } });
+  for await (let message of basicShard.socket) {
+    if (isWebSocketCloseEvent(message)) {
+      eventHandlers.debug?.(
+        { type: "websocketClose", data: { shardID: basicShard.id, message } },
+      );
 
       // These error codes should just crash the projects
       if ([4004, 4005, 4012, 4013, 4014].includes(message.code)) {
         console.error(`Close :( ${JSON.stringify(message)}`);
-        postDebug({ type: "websocketErrored", data: { shardID, message } });
+        eventHandlers.debug?.(
+          {
+            type: "websocketErrored",
+            data: { shardID: basicShard.id, message },
+          },
+        );
 
         throw new Error(
           "Shard.ts: Error occurred that is not resumeable or able to be reconnected.",
@@ -179,51 +91,235 @@ const createShard = async (
       }
       // These error codes can not be resumed but need to reconnect from start
       if ([4003, 4007, 4008, 4009].includes(message.code)) {
-        postDebug(
-          { type: "websocketReconnecting", data: { shardID, message } },
+        eventHandlers.debug?.(
+          {
+            type: "websocketReconnecting",
+            data: { shardID: basicShard.id, message },
+          },
         );
-        createShard(botGatewayData, identifyPayload);
+        createShard(data, identifyPayload, false, shardID);
       } else {
-        needToResume = true;
-        resumeConnection(botGatewayData, identifyPayload);
+        basicShard.needToResume = true;
+        resumeConnection(data, identifyPayload, basicShard.id);
+      }
+      continue;
+    } else if (isWebSocketPingEvent(message) || isWebSocketPongEvent(message)) {
+      continue;
+    }
+
+    if (message instanceof Uint8Array) {
+      message = inflate(
+        message,
+        0,
+        (slice: Uint8Array) => utf8decoder.decode(slice),
+      );
+    }
+
+    if (typeof message === "string") {
+      const data = JSON.parse(message);
+      if (!data.t) eventHandlers.rawGateway?.(data);
+      switch (data.op) {
+        case GatewayOpcode.Hello:
+          if (!heartbeating.has(basicShard.id)) {
+            heartbeat(
+              basicShard,
+              (data.d as DiscordHeartbeatPayload).heartbeat_interval,
+              identifyPayload,
+              data,
+            );
+          }
+          break;
+        case GatewayOpcode.HeartbeatACK:
+          heartbeating.set(shardID, true);
+          break;
+        case GatewayOpcode.Reconnect:
+          eventHandlers.debug?.(
+            { type: "reconnect", data: { shardID: basicShard.id } },
+          );
+          basicShard.needToResume = true;
+          resumeConnection(data, identifyPayload, basicShard.id);
+          break;
+        case GatewayOpcode.InvalidSession:
+          eventHandlers.debug?.(
+            { type: "invalidSession", data: { shardID: basicShard.id, data } },
+          );
+          // When d is false we need to reidentify
+          if (!data.d) {
+            createShard(data, identifyPayload, false, shardID);
+            break;
+          }
+          basicShard.needToResume = true;
+          resumeConnection(data, identifyPayload, basicShard.id);
+          break;
+        default:
+          if (data.t === "RESUMED") {
+            eventHandlers.debug?.(
+              { type: "resumed", data: { shardID: basicShard.id } },
+            );
+
+            basicShard.needToResume = false;
+            break;
+          }
+          // Important for RESUME
+          if (data.t === "READY") {
+            basicShard.sessionID = (data.d as ReadyPayload).session_id;
+          }
+
+          // Update the sequence number if it is present
+          if (data.s) basicShard.previousSequenceNumber = data.s;
+
+          handleDiscordPayload(data, basicShard.id);
+          break;
       }
     }
   }
-};
+}
 
-function requestGuildMembers(
+function identify(shard: BasicShard, payload: IdentifyPayload) {
+  eventHandlers.debug?.(
+    {
+      type: "identifying",
+      data: {
+        shardID: shard.id,
+      },
+    },
+  );
+
+  return shard.socket.send(
+    JSON.stringify(
+      {
+        op: GatewayOpcode.Identify,
+        d: { ...payload, shard: [shard.id, payload.shard[1]] },
+      },
+    ),
+  );
+}
+
+function resume(shard: BasicShard, payload: IdentifyPayload) {
+  return shard.socket.send(JSON.stringify({
+    op: GatewayOpcode.Resume,
+    d: {
+      token: payload.token,
+      session_id: shard.sessionID,
+      seq: shard.previousSequenceNumber,
+    },
+  }));
+}
+
+async function heartbeat(
+  shard: BasicShard,
+  interval: number,
+  payload: IdentifyPayload,
+  data: DiscordBotGatewayData,
+) {
+  // We lost socket connection between heartbeats, resume connection
+  if (shard.socket.isClosed) {
+    shard.needToResume = true;
+    resumeConnection(data, payload, shard.id);
+    heartbeating.delete(shard.id);
+    return;
+  }
+
+  if (heartbeating.has(shard.id)) {
+    const receivedACK = heartbeating.get(shard.id);
+    // If a ACK response was not received since last heartbeat, issue invalid session close
+    if (!receivedACK) {
+      eventHandlers.debug?.(
+        {
+          type: "heartbeatStopped",
+          data: {
+            interval,
+            previousSequenceNumber: shard.previousSequenceNumber,
+            shardID: shard.id,
+          },
+        },
+      );
+      return shard.socket.send(JSON.stringify({ op: 4009 }));
+    }
+  }
+
+  // Set it to false as we are issuing a new heartbeat
+  heartbeating.set(shard.id, false);
+
+  shard.socket.send(
+    JSON.stringify(
+      { op: GatewayOpcode.Heartbeat, d: shard.previousSequenceNumber },
+    ),
+  );
+  eventHandlers.debug?.(
+    {
+      type: "heartbeat",
+      data: {
+        interval,
+        previousSequenceNumber: shard.previousSequenceNumber,
+        shardID: shard.id,
+      },
+    },
+  );
+  await delay(interval);
+  heartbeat(shard, interval, payload, data);
+}
+
+async function resumeConnection(
+  data: DiscordBotGatewayData,
+  payload: IdentifyPayload,
+  shardID: number,
+) {
+  const shard = basicShards.get(shardID);
+  if (!shard) {
+    eventHandlers.debug?.(
+      { type: "missingShard", data: { shardID: shardID } },
+    );
+    return;
+  }
+
+  if (!shard.needToResume) return;
+
+  eventHandlers.debug?.({ type: "resuming", data: { shardID: shard.id } });
+  // Run it once
+  createShard(data, payload, true, shard.id);
+  // Then retry every 15 seconds
+  await delay(1000 * 15);
+  if (shard.needToResume) resumeConnection(data, payload, shardID);
+}
+
+export function requestGuildMembers(
   guildID: string,
+  shardID: number,
   nonce: string,
   options?: FetchMembersOptions,
   queuedRequest = false,
 ) {
+  const shard = basicShards.get(shardID);
+
   // This request was not from this queue so we add it to queue first
   if (!queuedRequest) {
     RequestMembersQueue.push({
       guildID,
+      shardID,
       nonce,
       options,
     });
 
     if (!processQueue) {
       processQueue = true;
-      processRequestMembersQueue();
+      processGatewayQueue();
     }
     return;
   }
 
   // If its closed add back to queue to redo on resume
-  if (shardSocket.isClosed) {
-    requestGuildMembers(guildID, nonce, options);
+  if (shard?.socket.isClosed) {
+    requestGuildMembers(guildID, shardID, nonce, options);
     return;
   }
 
-  shardSocket.send(JSON.stringify({
+  shard?.socket.send(JSON.stringify({
     op: GatewayOpcode.RequestGuildMembers,
     d: {
       guild_id: guildID,
       query: options?.query || "",
-      limit: options?.query || 0,
+      limit: options?.limit || 0,
       presences: options?.presences || false,
       user_ids: options?.userIDs,
       nonce,
@@ -231,46 +327,83 @@ function requestGuildMembers(
   }));
 }
 
-// TODO: Errors need to be fixed by VSC plugin
-// @ts-ignore
-postMessage({ type: "REQUEST_CLIENT_OPTIONS" });
-// @ts-ignore
-onmessage = (message: MessageEvent) => {
-  if (message.data.type === "CREATE_SHARD") {
-    createShard(
-      message.data.botGatewayData,
-      message.data.identifyPayload,
-    );
-    shardID = message.data.shardID;
+async function processGatewayQueue() {
+  if (!RequestMembersQueue.length) {
+    processQueue = false;
+    return;
   }
 
-  if (message.data.type === "FETCH_MEMBERS") {
-    requestGuildMembers(
-      message.data.guildID,
-      message.data.nonce,
-      message.data.options,
-    );
-  }
+  basicShards.forEach((shard) => {
+    const index = RequestMembersQueue.findIndex((q) => q.shardID === shard.id);
+    // 2 events per second is the rate limit.
+    const request = RequestMembersQueue[index];
+    if (request) {
+      eventHandlers.debug?.(
+        {
+          type: "requestMembersProcessing",
+          data: {
+            remaining: RequestMembersQueue.length,
+            request,
+          },
+        },
+      );
+      requestGuildMembers(
+        request.guildID,
+        request.shardID,
+        request.nonce,
+        request.options,
+        true,
+      );
+      // Remove item from queue
+      RequestMembersQueue.splice(index, 1);
 
-  if (message.data.type === "EDIT_BOTS_STATUS") {
-    shardSocket.send(JSON.stringify({
+      const secondIndex = RequestMembersQueue.findIndex((q) =>
+        q.shardID === shard.id
+      );
+      const secondRequest = RequestMembersQueue[secondIndex];
+      if (secondRequest) {
+        eventHandlers.debug?.(
+          {
+            type: "requestMembersProcessing",
+            data: {
+              remaining: RequestMembersQueue.length,
+              request,
+            },
+          },
+        );
+        requestGuildMembers(
+          secondRequest.guildID,
+          secondRequest.shardID,
+          secondRequest.nonce,
+          secondRequest.options,
+          true,
+        );
+        // Remove item from queue
+        RequestMembersQueue.splice(secondIndex, 1);
+      }
+    }
+  });
+
+  await delay(1500);
+
+  processGatewayQueue();
+}
+
+export function botGatewayStatusRequest(payload: BotStatusRequest) {
+  basicShards.forEach((shard) => {
+    shard.socket.send(JSON.stringify({
       op: GatewayOpcode.StatusUpdate,
       d: {
         since: null,
-        game: message.data.game.name
+        game: payload.game.name
           ? {
-            name: message.data.game.name,
-            type: message.data.game.type,
+            name: payload.game.name,
+            type: payload.game.type,
           }
           : null,
-        status: message.data.status,
+        status: payload.status,
         afk: false,
       },
     }));
-  }
-};
-
-function postDebug(details: DebugArg) {
-  // TODO: Errors need to be fixed by VSC plugin
-  postMessage({ type: "DEBUG_LOG", details });
+  });
 }

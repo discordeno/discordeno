@@ -1,5 +1,3 @@
-import createClient from "./src/module/client.ts";
-
 export * from "./src/controllers/bans.ts";
 export * from "./src/controllers/cache.ts";
 export * from "./src/controllers/channels.ts";
@@ -42,5 +40,3 @@ export * from "./src/utils/cdn.ts";
 export * from "./src/utils/collection.ts";
 export * from "./src/utils/permissions.ts";
 export * from "./src/utils/utils.ts";
-
-export default createClient;
