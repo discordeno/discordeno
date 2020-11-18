@@ -7,7 +7,6 @@ import { ImageFormats, ImageSize } from "../types/cdn.ts";
 import { DMChannelCreatePayload, MessageContent } from "../types/channel.ts";
 import { Errors } from "../types/errors.ts";
 import { EditMemberOptions } from "../types/member.ts";
-import { Permissions } from "../types/permission.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import { endpoints } from "../utils/constants.ts";
 import {
@@ -65,7 +64,7 @@ export async function addRole(
     }
   }
 
-  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_ROLES]);
+  const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
@@ -96,7 +95,7 @@ export async function removeRole(
     }
   }
 
-  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_ROLES]);
+  const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
@@ -142,7 +141,7 @@ export async function kick(guildID: string, memberID: string, reason?: string) {
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
-  const hasPerm = await botHasPermission(guildID, [Permissions.KICK_MEMBERS]);
+  const hasPerm = await botHasPermission(guildID, ["KICK_MEMBERS"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_KICK_MEMBERS);
   }
@@ -166,7 +165,7 @@ export async function editMember(
 
     const hasManageNickPerm = await botHasPermission(
       guildID,
-      [Permissions.MANAGE_NICKNAMES],
+      ["MANAGE_NICKNAMES"],
     );
     if (!hasManageNickPerm) {
       throw new Error(Errors.MISSING_MANAGE_NICKNAMES);
@@ -175,7 +174,7 @@ export async function editMember(
 
   const hasManageRolesPerm = await botHasPermission(
     guildID,
-    [Permissions.MANAGE_ROLES],
+    ["MANAGE_ROLES"],
   );
   if (
     options.roles &&
@@ -187,7 +186,7 @@ export async function editMember(
   if (options.mute) {
     const hasMuteMembersPerm = await botHasPermission(
       guildID,
-      [Permissions.MUTE_MEMBERS],
+      ["MUTE_MEMBERS"],
     );
     // TODO: This should check if the member is in a voice channel
     if (
@@ -199,7 +198,7 @@ export async function editMember(
 
   const hasDeafenMembersPerm = await botHasPermission(
     guildID,
-    [Permissions.DEAFEN_MEMBERS],
+    ["DEAFEN_MEMBERS"],
   );
   if (
     options.deaf &&

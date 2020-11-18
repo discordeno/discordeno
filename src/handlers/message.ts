@@ -8,7 +8,6 @@ import { MessageContent } from "../types/channel.ts";
 import { Errors } from "../types/errors.ts";
 import { UserPayload } from "../types/guild.ts";
 import { MessageCreateOptions } from "../types/message.ts";
-import { Permissions } from "../types/permission.ts";
 import { endpoints } from "../utils/constants.ts";
 import { botHasChannelPermissions } from "../utils/permissions.ts";
 
@@ -40,7 +39,7 @@ export async function deleteMessage(
     // This needs to check the channels permission not the guild permission
     const hasManageMessages = await botHasChannelPermissions(
       message.channelID,
-      [Permissions.MANAGE_MESSAGES],
+      ["MANAGE_MESSAGES"],
     );
     if (
       !hasManageMessages
@@ -61,7 +60,7 @@ export async function deleteMessage(
 export async function pin(channelID: string, messageID: string) {
   const hasManageMessagesPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.MANAGE_MESSAGES],
+    ["MANAGE_MESSAGES"],
   );
   if (
     !hasManageMessagesPerm
@@ -75,7 +74,7 @@ export async function pin(channelID: string, messageID: string) {
 export async function unpin(channelID: string, messageID: string) {
   const hasManageMessagesPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.MANAGE_MESSAGES],
+    ["MANAGE_MESSAGES"],
   );
   if (
     !hasManageMessagesPerm
@@ -95,7 +94,7 @@ export async function addReaction(
 ) {
   const hasAddReactionsPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.ADD_REACTIONS],
+    ["ADD_REACTIONS"],
   );
   if (!hasAddReactionsPerm) {
     throw new Error(Errors.MISSING_ADD_REACTIONS);
@@ -103,7 +102,7 @@ export async function addReaction(
 
   const hasReadMessageHistoryPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.READ_MESSAGE_HISTORY],
+    ["READ_MESSAGE_HISTORY"],
   );
   if (
     !hasReadMessageHistoryPerm
@@ -168,7 +167,7 @@ export async function removeUserReaction(
 ) {
   const hasManageMessagesPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.MANAGE_MESSAGES],
+    ["MANAGE_MESSAGES"],
   );
   if (!hasManageMessagesPerm) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
@@ -188,7 +187,7 @@ export async function removeUserReaction(
 export async function removeAllReactions(channelID: string, messageID: string) {
   const hasManageMessagesPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.MANAGE_MESSAGES],
+    ["MANAGE_MESSAGES"],
   );
   if (
     !hasManageMessagesPerm
@@ -208,7 +207,7 @@ export async function removeReactionEmoji(
 ) {
   const hasManageMessagesPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.MANAGE_MESSAGES],
+    ["MANAGE_MESSAGES"],
   );
   if (
     !hasManageMessagesPerm
@@ -247,7 +246,7 @@ export async function editMessage(
 
   const hasSendMessagesPerm = await botHasChannelPermissions(
     message.channelID,
-    [Permissions.SEND_MESSAGES],
+    ["SEND_MESSAGES"],
   );
   if (
     !hasSendMessagesPerm
@@ -257,7 +256,7 @@ export async function editMessage(
 
   const hasSendTtsMessagesPerm = await botHasChannelPermissions(
     message.channelID,
-    [Permissions.SEND_TTS_MESSAGES],
+    ["SEND_TTS_MESSAGES"],
   );
   if (
     content.tts &&

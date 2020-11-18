@@ -22,7 +22,6 @@ import {
   editChannel,
 } from "../src/handlers/channel.ts";
 import { getChannel } from "../src/handlers/guild.ts";
-import { Permissions } from "../src/types/permission.ts";
 
 const token = Deno.env.get("DISCORD_TOKEN");
 if (!token) throw "Token is not provided";
@@ -179,13 +178,13 @@ Deno.test({
       data.guildID,
       data.roleID,
       channel.permissionOverwrites,
-      [Permissions.VIEW_CHANNEL, Permissions.SEND_MESSAGES],
+      ["VIEW_CHANNEL", "SEND_MESSAGES"],
     );
     const missingPerm = channelOverwriteHasPermission(
       data.guildID,
       data.roleID,
       channel.permissionOverwrites,
-      [Permissions.USE_EXTERNAL_EMOJIS],
+      ["USE_EXTERNAL_EMOJIS"],
     );
 
     assertEquals(hasPerm, true);

@@ -2,7 +2,6 @@ import { RequestManager } from "../module/requestManager.ts";
 import { structures } from "../structures/mod.ts";
 import { Errors } from "../types/errors.ts";
 import { MessageCreateOptions } from "../types/message.ts";
-import { Permissions } from "../types/permission.ts";
 import {
   ExecuteWebhookOptions,
   WebhookCreateOptions,
@@ -22,7 +21,7 @@ export async function createWebhook(
 ) {
   const hasManageWebhooksPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.MANAGE_WEBHOOKS],
+    ["MANAGE_WEBHOOKS"],
   );
   if (
     !hasManageWebhooksPerm
