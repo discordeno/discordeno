@@ -60,7 +60,7 @@ export async function botHasPermission(
   // Check if the bot is the owner of the guild, if it is, returns true
   if (guild.ownerID === botID) return true;
 
-  const member = await cacheHandlers.get("members", botID);
+  const member = (await cacheHandlers.get("members", botID))?.guilds.get(guildID);
   if (!member) return false;
 
   // The everyone role is not in member.roles
@@ -216,7 +216,7 @@ export async function highestRole(guildID: string, memberID: string) {
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return;
 
-  const member = await cacheHandlers.get("members", memberID);
+  const member = (await cacheHandlers.get("members", memberID))?.guilds.get(guildID);
   if (!member) return;
 
   let memberHighestRole: Role | undefined;
