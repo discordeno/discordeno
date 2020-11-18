@@ -36,7 +36,7 @@ export interface IdentifyPayload {
   shard: [number, number];
 }
 
-export async function createClient(data: ClientOptions) {
+export async function startBot(data: ClientOptions) {
   if (data.eventHandlers) eventHandlers = data.eventHandlers;
   authorization = `Bot ${data.token}`;
 
