@@ -168,18 +168,18 @@ Deno.test({
     const channel = cache.channels.get(data.channelID);
     if (!channel) throw "Channel not found";
 
-    if (!channel.permission_overwrites) throw "Channel overwrites not found.";
+    if (!channel.permissionOverwrites) throw "Channel overwrites not found.";
 
     const hasPerm = channelOverwriteHasPermission(
       data.guildID,
       data.roleID,
-      channel.permission_overwrites,
+      channel.permissionOverwrites,
       [Permissions.VIEW_CHANNEL, Permissions.SEND_MESSAGES],
     );
     const missingPerm = channelOverwriteHasPermission(
       data.guildID,
       data.roleID,
-      channel.permission_overwrites,
+      channel.permissionOverwrites,
       [Permissions.USE_EXTERNAL_EMOJIS],
     );
 

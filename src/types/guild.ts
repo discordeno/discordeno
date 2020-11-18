@@ -474,6 +474,12 @@ export interface RawOverwrite {
   deny: number;
 }
 
+export interface PermissionOverwrite
+  extends Omit<RawOverwrite, "allow" | "deny"> {
+  allow: Permission[];
+  deny: Permission[];
+}
+
 export interface ChannelCreateOptions {
   /** The type of the channel */
   type?: ChannelTypes;
@@ -488,7 +494,7 @@ export interface ChannelCreateOptions {
   /** The sorting position of the channel */
   position?: number;
   /** The channel's permission overwrites */
-  permission_overwrites?: Overwrite[];
+  permissionOverwrites?: Overwrite[];
   /** The id of the parent category for the channel */
   parent_id?: string;
   /** Whether the channel is nsfw */
