@@ -31,7 +31,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           personal_token: ${{ secrets.ACCESS_TOKEN }}
-          publish_dir: ./public
           cname: discordeno.js.org
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
