@@ -10,6 +10,7 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
     user: userData,
     roles,
     deaf,
+    mute,
     ...rest
   } = data;
 
@@ -47,7 +48,7 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
       /** Whether the user is deafened in voice channels */
       deaf: deaf,
       /** Whether the user is muted in voice channels */
-      mute: data.mute,
+      mute: mute,
     });
   }
 
@@ -69,7 +70,7 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
     joinedAt: Date.parse(joinedAt),
     premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
     deaf: deaf,
-    mute: data.mute,
+    mute: mute,
   });
 
   await cacheHandlers.set("members", member.id, member);
