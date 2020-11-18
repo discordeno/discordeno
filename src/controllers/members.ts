@@ -112,7 +112,9 @@ export async function handleInternalGuildMembersChunk(data: DiscordPayload) {
 
     if (payload.chunk_index + 1 === payload.chunk_count) {
       cache.fetchAllMembersProcessingRequests.delete(payload.nonce);
-      resolve(await cacheHandlers.filter("members", (m) => m.guilds.has(guild.id)));
+      resolve(
+        await cacheHandlers.filter("members", (m) => m.guilds.has(guild.id)),
+      );
     }
   }
 }

@@ -15,9 +15,9 @@ import {
 import { Errors } from "../types/errors.ts";
 import { RawOverwrite } from "../types/guild.ts";
 import { MessageCreateOptions } from "../types/message.ts";
-import { Permissions, Permission } from "../types/permission.ts";
+import { Permission, Permissions } from "../types/permission.ts";
 import { endpoints } from "../utils/constants.ts";
-import { botHasChannelPermissions, } from "../utils/permissions.ts";
+import { botHasChannelPermissions } from "../utils/permissions.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(

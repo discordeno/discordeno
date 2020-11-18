@@ -29,16 +29,16 @@ export async function handleInternalGuildRoleDelete(data: DiscordPayload) {
   eventHandlers.roleDelete?.(guild, cachedRole);
 
   // For bots without GUILD_MEMBERS member.roles is never updated breaking permissions checking.
-  cacheHandlers.forEach("members", member => {
+  cacheHandlers.forEach("members", (member) => {
     // Not in the relevant guild so just skip.
     if (!member.guilds.has(guild.id)) return;
 
-    member.guilds.forEach(g => {
+    member.guilds.forEach((g) => {
       // Member does not have this role
       if (!g.roles.includes(payload.role_id)) return;
       // Remove this role from the members cache
-      g.roles = g.roles.filter(id => id !== payload.role_id);
-    })
+      g.roles = g.roles.filter((id) => id !== payload.role_id);
+    });
   });
 }
 

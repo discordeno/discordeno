@@ -93,8 +93,8 @@ export async function handleInternalMessageReactionRemove(
     const guild = await cacheHandlers.get("guilds", payload.guild_id);
     if (guild) {
       await structures.createMember(
-          payload.member,
-          guild.id,
+        payload.member,
+        guild.id,
       );
     }
   }

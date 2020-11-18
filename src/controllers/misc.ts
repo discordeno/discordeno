@@ -77,8 +77,8 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
   if (!guild) return;
 
   const member = payload.member
-      ? await structures.createMember(payload.member, guild.id)
-      : await cacheHandlers.get("members", payload.user_id);
+    ? await structures.createMember(payload.member, guild.id)
+    : await cacheHandlers.get("members", payload.user_id);
   if (!member) return;
 
   // No cached state before so lets make one for em

@@ -16,7 +16,9 @@ export async function memberIDHasPermission(
 
   if (memberID === guild.ownerID) return true;
 
-  const member = (await cacheHandlers.get("members", memberID))?.guilds.get(guildID);
+  const member = (await cacheHandlers.get("members", memberID))?.guilds.get(
+    guildID,
+  );
   if (!member) return false;
 
   return memberHasPermission(memberID, guild, member.roles, permissions);
@@ -74,7 +76,9 @@ export async function botHasPermission(
 
   if (permissionBits & BigInt(Permissions.ADMINISTRATOR)) return true;
 
-  return permissions.every((permission) => permissionBits & BigInt(Permissions[permission]));
+  return permissions.every((permission) =>
+    permissionBits & BigInt(Permissions[permission])
+  );
 }
 
 /** Checks if the bot has the permissions in a channel */
@@ -105,7 +109,9 @@ export async function hasChannelPermissions(
     return true;
   }
 
-  const member = (await cacheHandlers.get("members", memberID))?.guilds.get(guild.id);
+  const member = (await cacheHandlers.get("members", memberID))?.guilds.get(
+    guild.id,
+  );
   if (!member) return false;
 
   let memberOverwrite: RawOverwrite | undefined;
