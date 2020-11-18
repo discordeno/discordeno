@@ -52,21 +52,17 @@ export function handleInternalTypingStart(data: DiscordPayload) {
   eventHandlers.typingStart?.(data.d as TypingStartPayload);
 }
 
-export function handleInternalUserUpdate(data: DiscordPayload) {
+export async function handleInternalUserUpdate(data: DiscordPayload) {
   if (data.t !== "USER_UPDATE") return;
 
   const userData = data.d as UserPayload;
 
-  cacheHandlers.forEach("guilds", (guild) => {
-    const member = guild.members.get(userData.id);
-    if (!member) return;
-    // member.author = userData;
-    Object.entries(userData).forEach(([key, value]) => {
-      // @ts-ignore
-      if (member[key] === value) return;
-      // @ts-ignore
-      member[key] = value;
-    });
+  const member = await cacheHandlers.get("members", userData.id);
+  if (!member) return;
+
+  Object.entries(userData).forEach(([key, value]) => {
+    // @ts-ignore
+    if (member[key] !== value) return member[key] = value;
   });
   return eventHandlers.botUpdate?.(userData);
 }
@@ -80,10 +76,9 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
-  const member = guild.members.get(payload.user_id) ||
-    (payload.member
+  const member = payload.member
       ? await structures.createMember(payload.member, guild.id)
-      : undefined);
+      : await cacheHandlers.get("members", payload.user_id);
   if (!member) return;
 
   // No cached state before so lets make one for em

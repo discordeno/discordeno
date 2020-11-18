@@ -1,5 +1,6 @@
 import { Channel } from "../structures/channel.ts";
 import { Guild } from "../structures/guild.ts";
+import { Member } from "../structures/member.ts";
 import { Message } from "../structures/message.ts";
 import { PresenceUpdatePayload } from "../types/discord.ts";
 import { cache } from "../utils/cache.ts";
@@ -7,10 +8,11 @@ import { Collection } from "../utils/collection.ts";
 
 export type TableName =
   | "guilds"
+  | "unavailableGuilds"
   | "channels"
   | "messages"
-  | "presences"
-  | "unavailableGuilds";
+  | "members"
+  | "presences";
 
 function set(
   table: "guilds",
@@ -28,6 +30,11 @@ function set(
   value: Message,
 ): Promise<Collection<string, Message>>;
 function set(
+  table: "members",
+  key: string,
+  value: Member,
+): Promise<Collection<string, Member>>;
+function set(
   table: "presences",
   key: string,
   value: PresenceUpdatePayload,
@@ -44,6 +51,7 @@ async function set(table: TableName, key: string, value: any) {
 function get(table: "guilds", key: string): Promise<Guild | undefined>;
 function get(table: "channels", key: string): Promise<Channel | undefined>;
 function get(table: "messages", key: string): Promise<Message | undefined>;
+function get(table: "members", key: string): Promise<Member | undefined>;
 function get(
   table: "presences",
   key: string,
@@ -73,6 +81,10 @@ function forEach(
   callback: (value: Message, key: string, map: Map<string, Message>) => unknown,
 ): void;
 function forEach(
+  table: "members",
+  callback: (value: Member, key: string, map: Map<string, Member>) => unknown,
+): void;
+function forEach(
   table: TableName,
   callback: (value: any, key: string, map: Map<string, any>) => unknown,
 ) {
@@ -82,20 +94,24 @@ function forEach(
 function filter(
   table: "guilds",
   callback: (value: Guild, key: string) => boolean,
-): Collection<string, Guild>;
+): Promise<Collection<string, Guild>>;
 function filter(
   table: "unavailableGuilds",
   callback: (value: Guild, key: string) => boolean,
-): Collection<string, Guild>;
+): Promise<Collection<string, Guild>>;
 function filter(
   table: "channels",
   callback: (value: Channel, key: string) => boolean,
-): Collection<string, Channel>;
+): Promise<Collection<string, Channel>>;
 function filter(
   table: "messages",
   callback: (value: Message, key: string) => boolean,
-): Collection<string, Message>;
+): Promise<Collection<string, Message>>;
 function filter(
+  table: "members",
+  callback: (value: Member, key: string) => boolean,
+): Promise<Collection<string, Member>>;
+async function filter(
   table: TableName,
   callback: (value: any, key: string) => boolean,
 ) {
