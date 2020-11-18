@@ -7,7 +7,6 @@ import {
   DiscordPayload,
   Emoji,
   PresenceUpdatePayload,
-  Properties,
   TypingStartPayload,
   VoiceStateUpdatePayload,
 } from "./discord.ts";
