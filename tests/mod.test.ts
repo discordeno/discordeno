@@ -40,8 +40,8 @@ const testOptions = {
 Deno.test({
   name: "connect to the gateway",
   fn: async () => {
-    // Delay the execution by 15 seconds (15000 ms)
-    await delay(15000);
+    // Delay the execution by 10 seconds (15000 ms)
+    await delay(10000);
 
     // Check whether botID is nil or not
     assert(botID);
@@ -83,8 +83,6 @@ Deno.test({
     const createdRole = await createGuildRole(data.guildID, {
       name: "Role 1",
     });
-
-    console.log(createdRole);
 
     // Check whether the created role is nil or not
     assert(createdRole);
