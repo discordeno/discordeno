@@ -1,9 +1,9 @@
-import type { Channel } from "../structures/channel.ts";
-import type { Guild } from "../structures/guild.ts";
-import type { Message } from "../structures/message.ts";
-import type { PresenceUpdatePayload } from "../types/discord.ts";
+import { Channel } from "../structures/channel.ts";
+import { Guild } from "../structures/guild.ts";
+import { Message } from "../structures/message.ts";
+import { PresenceUpdatePayload } from "../types/discord.ts";
 import { cache } from "../utils/cache.ts";
-import type { Collection } from "../utils/collection.ts";
+import { Collection } from "../utils/collection.ts";
 
 export type TableName =
   | "guilds"
@@ -91,6 +91,11 @@ export let cacheHandlers = {
   /** Check if something exists in cache with a key */
   has: async function (table: TableName, key: string) {
     return cache[table].has(key);
+  },
+
+  /** Get the number of key-value pairs */
+  size: async (table: TableName) => {
+    return cache[table].size;
   },
 
   // Done differently to have overloads

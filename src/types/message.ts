@@ -1,7 +1,7 @@
-import type { Channel } from "../structures/channel.ts";
-import type { ChannelType } from "./channel.ts";
-import type { UserPayload } from "./guild.ts";
-import type { MemberCreatePayload } from "./member.ts";
+import { Channel } from "../structures/channel.ts";
+import { ChannelType } from "./channel.ts";
+import { UserPayload } from "./guild.ts";
+import { MemberCreatePayload } from "./member.ts";
 
 export interface MentionedUser extends UserPayload {
   member: MemberCreatePayload;
@@ -154,6 +154,11 @@ export enum MessageTypes {
   USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2,
   USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3,
   CHANNEL_FOLLOW_ADD,
+  GUILD_DISCOVERY_DISQUALIFIED = 14,
+  GUILD_DISCOVERY_REQUALIFIED,
+  GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING,
+  GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING,
+  REPLY = 19,
 }
 
 export enum ActivityTypes {
@@ -275,6 +280,8 @@ export interface MessageCreateOptions {
   message_reference?: Reference;
   /** The message flags combined like permission bits describe extra features of the message */
   flags?: 1 | 2 | 4 | 8 | 16;
+  /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
+  referenced_message?: MessageCreateOptions | null;
 }
 
 export interface BaseMessageDeletePayload {

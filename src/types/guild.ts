@@ -1,10 +1,11 @@
-import type { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
-import type { Emoji, StatusType } from "./discord.ts";
-import type { MemberCreatePayload } from "./member.ts";
-import type { Activity } from "./message.ts";
-import type { Permission } from "./permission.ts";
-import type { ClientStatusPayload } from "./presence.ts";
-import type { RoleData } from "./role.ts";
+import { Guild } from "../structures/guild.ts";
+import { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
+import { Emoji, StatusType } from "./discord.ts";
+import { MemberCreatePayload } from "./member.ts";
+import { Activity } from "./message.ts";
+import { Permission } from "./permission.ts";
+import { ClientStatusPayload } from "./presence.ts";
+import { RoleData } from "./role.ts";
 
 export interface GuildRolePayload {
   /** The id of the guild */
@@ -605,4 +606,51 @@ export interface CreateServerOptions {
   afk_timeout?: number;
   /** the id of the channel where guild notices such as welcome messages and boost events are posted */
   system_channel_id?: string;
+}
+
+// https://discord.com/developers/docs/resources/template#template-object
+export interface GuildTemplate {
+  /** the template code (unique ID) */
+  code: string;
+  /** template name */
+  name: string;
+  /** the description for the template */
+  description: string | null;
+  /** number of times this template has been used */
+  usage_count: number;
+  /** the ID of the user who created the template */
+  creator_id: string;
+  /** the user who created the template */
+  user: UserPayload;
+  /** when this template was created */
+  created_at: string;
+  /** when this template was last synced to the source guild */
+  updated_at: string;
+  /** the ID of the guild this template is based on */
+  source_guild_id: string;
+  /** the guild snapshot this template contains */
+  serialized_source_guild: Guild;
+  /** whether the template has unsynced changes */
+  is_dirty: boolean | null;
+}
+
+export interface CreateGuildFromTemplate {
+  /** name of the guild (2-100 characters) */
+  name: string;
+  /** base64 128x128 image for the guild icon */
+  icon?: string;
+}
+
+export interface CreateGuildTemplate {
+  /** name of the template (1-100 characters) */
+  name: string;
+  /** description for the template (0-120 characters) */
+  description?: string;
+}
+
+export interface EditGuildTemplate {
+  /** name of the template (1-100 characters) */
+  name?: string;
+  /** description for the template (0-120 characters) */
+  description?: string | null;
 }

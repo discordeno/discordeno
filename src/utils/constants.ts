@@ -89,6 +89,9 @@ export const endpoints = {
     `${baseEndpoints.CDN_URL}/splashes/${id}/${icon}`,
   GUILD_VANITY_URL: (id: string) => `${GUILDS_BASE(id)}/vanity-url`,
   GUILD_WEBHOOKS: (id: string) => `${GUILDS_BASE(id)}/webhooks`,
+  GUILD_TEMPLATE: (code: string) =>
+    `${baseEndpoints.BASE_URL}/guilds/templates/${code}`,
+  GUILD_TEMPLATES: (id: string) => `${GUILDS_BASE(id)}/templates`,
 
   WEBHOOK: (id: string, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}`,
@@ -96,6 +99,7 @@ export const endpoints = {
 
   // User endpoints
   USER: (id: string) => `${baseEndpoints.BASE_URL}/users/${id}`,
+  USER_BOT: `${baseEndpoints.BASE_URL}/users/@me`,
   USER_AVATAR: (id: string, icon: string) =>
     `${baseEndpoints.CDN_URL}/avatars/${id}/${icon}`,
   USER_DEFAULT_AVATAR: (icon: number) =>
