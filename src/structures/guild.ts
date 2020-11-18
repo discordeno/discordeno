@@ -29,7 +29,8 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
   const roles = await Promise.all(
     data.roles.map((r) => structures.createRole(r)),
   );
-  const channels = await Promise.all(
+
+  await Promise.all(
     data.channels.map((c) => structures.createChannel(c, data.id)),
   );
 
@@ -65,15 +66,12 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     premiumSubscriptionCount,
     /** The preferred language in this server. */
     preferredLocale,
-
     /** The roles in the guild */
     roles: new Collection(roles.map((r) => [r.id, r])),
     /** When this guild was joined at. */
     joinedAt: Date.parse(joinedAt),
     /** The users in this guild. */
     members: new Collection<string, Member>(),
-    /** The channels in the guild */
-    channels: new Collection(channels.map((c) => [c.id, c])),
     /** The presences of all the users in the guild. */
     presences: new Collection(data.presences.map((p) => [p.user.id, p])),
     /** The total number of members in this guild. This value is updated as members leave and join the server. However, if you do not have the intent enabled to be able to listen to these events, then this will not be accurate. */

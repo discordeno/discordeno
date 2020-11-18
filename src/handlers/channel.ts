@@ -17,7 +17,7 @@ import { PermissionOverwrite } from "../types/guild.ts";
 import { MessageCreateOptions } from "../types/message.ts";
 import { Permissions } from "../types/permission.ts";
 import { endpoints } from "../utils/constants.ts";
-import { botHasChannelPermissions } from "../utils/permissions.ts";
+import { botHasChannelPermissions, calculateBits } from "../utils/permissions.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(
@@ -455,8 +455,8 @@ export async function isChannelSynced(channelID: string) {
   const parentChannel = await cacheHandlers.get("channels", channel.parentID);
   if (!parentChannel) return false;
 
-  return channel.permission_overwrites?.every((overwrite) => {
-    const permission = parentChannel.permission_overwrites?.find((ow) =>
+  return channel.permissionOverwrites?.every((overwrite) => {
+    const permission = parentChannel.permissionOverwrites?.find((ow) =>
       ow.id === overwrite.id
     );
     if (!permission) return false;

@@ -79,6 +79,29 @@ function forEach(
   return cache[table].forEach(callback);
 }
 
+function filter(
+  table: "guilds",
+  callback: (value: Guild, key: string) => boolean,
+): Collection<string, Guild>;
+function filter(
+  table: "unavailableGuilds",
+  callback: (value: Guild, key: string) => boolean,
+): Collection<string, Guild>;
+function filter(
+  table: "channels",
+  callback: (value: Channel, key: string) => boolean,
+): Collection<string, Channel>;
+function filter(
+  table: "messages",
+  callback: (value: Message, key: string) => boolean,
+): Collection<string, Message>;
+function filter(
+  table: TableName,
+  callback: (value: any, key: string) => boolean,
+) {
+  return cache[table].filter(callback);
+}
+
 export let cacheHandlers = {
   /** Deletes all items from the cache */
   clear: async function (table: TableName) {
@@ -105,4 +128,6 @@ export let cacheHandlers = {
   get,
   /** Run a function on all items in this cache */
   forEach,
+  /** Allows you to filter our all items in this cache. */
+  filter,
 };

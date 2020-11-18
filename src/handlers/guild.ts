@@ -54,8 +54,8 @@ export function deleteServer(guildID: string) {
 }
 
 /** Gets an array of all the channels ids that are the children of this category. */
-export function categoryChildrenIDs(guild: Guild, id: string) {
-  return guild.channels.filter((channel) => channel.parentID === id);
+export function categoryChildrenIDs(guildID: string, id: string) {
+  return cacheHandlers.filter("channels", (channel) => channel.parentID === id && channel.guildID === guildID);
 }
 
 /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
@@ -132,7 +132,6 @@ export async function createGuildChannel(
     })) as ChannelCreatePayload;
 
   const channel = await structures.createChannel(result);
-  guild.channels.set(result.id, channel);
   return channel;
 }
 
