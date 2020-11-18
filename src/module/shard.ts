@@ -7,6 +7,7 @@ import {
   isWebSocketPongEvent,
   WebSocket,
 } from "../../deps.ts";
+import { eventHandlers } from "../../mod.ts";
 import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
@@ -15,7 +16,7 @@ import {
 } from "../types/discord.ts";
 import { FetchMembersOptions } from "../types/guild.ts";
 import { BotStatusRequest } from "../utils/utils.ts";
-import { botGatewayData, eventHandlers, IdentifyPayload } from "./client.ts";
+import { IdentifyPayload, proxyWSURL } from "./client.ts";
 import { handleDiscordPayload } from "./shardingManager.ts";
 
 const basicShards = new Map<number, BasicShard>();
@@ -40,7 +41,7 @@ interface RequestMemberQueuedRequest {
   options?: FetchMembersOptions;
 }
 
-export async function createBasicShard(
+export async function createShard(
   data: DiscordBotGatewayData,
   identifyPayload: IdentifyPayload,
   resuming = false,
@@ -50,7 +51,9 @@ export async function createBasicShard(
 
   const basicShard: BasicShard = {
     id: shardID,
-    socket: await connectWebSocket(`${data.url}?v=8&encoding=json`),
+    socket: await connectWebSocket(
+      proxyWSURL || `${data.url}?v=8&encoding=json`,
+    ),
     resumeInterval: 0,
     sessionID: oldShard?.sessionID || "",
     previousSequenceNumber: oldShard?.previousSequenceNumber || 0,
@@ -94,10 +97,10 @@ export async function createBasicShard(
             data: { shardID: basicShard.id, message },
           },
         );
-        createBasicShard(botGatewayData, identifyPayload, false, shardID);
+        createShard(data, identifyPayload, false, shardID);
       } else {
         basicShard.needToResume = true;
-        resumeConnection(botGatewayData, identifyPayload, basicShard.id);
+        resumeConnection(data, identifyPayload, basicShard.id);
       }
       continue;
     } else if (isWebSocketPingEvent(message) || isWebSocketPongEvent(message)) {
@@ -122,6 +125,7 @@ export async function createBasicShard(
               basicShard,
               (data.d as DiscordHeartbeatPayload).heartbeat_interval,
               identifyPayload,
+              data,
             );
           }
           break;
@@ -133,7 +137,7 @@ export async function createBasicShard(
             { type: "reconnect", data: { shardID: basicShard.id } },
           );
           basicShard.needToResume = true;
-          resumeConnection(botGatewayData, identifyPayload, basicShard.id);
+          resumeConnection(data, identifyPayload, basicShard.id);
           break;
         case GatewayOpcode.InvalidSession:
           eventHandlers.debug?.(
@@ -141,11 +145,11 @@ export async function createBasicShard(
           );
           // When d is false we need to reidentify
           if (!data.d) {
-            createBasicShard(botGatewayData, identifyPayload, false, shardID);
+            createShard(data, identifyPayload, false, shardID);
             break;
           }
           basicShard.needToResume = true;
-          resumeConnection(botGatewayData, identifyPayload, basicShard.id);
+          resumeConnection(data, identifyPayload, basicShard.id);
           break;
         default:
           if (data.t === "RESUMED") {
@@ -206,11 +210,12 @@ async function heartbeat(
   shard: BasicShard,
   interval: number,
   payload: IdentifyPayload,
+  data: DiscordBotGatewayData,
 ) {
   // We lost socket connection between heartbeats, resume connection
   if (shard.socket.isClosed) {
     shard.needToResume = true;
-    resumeConnection(botGatewayData, payload, shard.id);
+    resumeConnection(data, payload, shard.id);
     heartbeating.delete(shard.id);
     return;
   }
@@ -252,11 +257,11 @@ async function heartbeat(
     },
   );
   await delay(interval);
-  heartbeat(shard, interval, payload);
+  heartbeat(shard, interval, payload, data);
 }
 
 async function resumeConnection(
-  botGatewayData: DiscordBotGatewayData,
+  data: DiscordBotGatewayData,
   payload: IdentifyPayload,
   shardID: number,
 ) {
@@ -272,10 +277,10 @@ async function resumeConnection(
 
   eventHandlers.debug?.({ type: "resuming", data: { shardID: shard.id } });
   // Run it once
-  createBasicShard(botGatewayData, payload, true, shard.id);
+  createShard(data, payload, true, shard.id);
   // Then retry every 15 seconds
   await delay(1000 * 15);
-  if (shard.needToResume) resumeConnection(botGatewayData, payload, shardID);
+  if (shard.needToResume) resumeConnection(data, payload, shardID);
 }
 
 export function requestGuildMembers(

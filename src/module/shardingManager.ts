@@ -11,20 +11,11 @@ import { cache } from "../utils/cache.ts";
 import { BotStatusRequest } from "../utils/utils.ts";
 import {
   botGatewayStatusRequest,
-  createBasicShard,
+  createShard,
   requestGuildMembers,
-} from "./basicShard.ts";
-import {
-  botGatewayData,
-  eventHandlers,
-  IdentifyPayload,
-  identifyPayload,
-} from "./client.ts";
+} from "./shard.ts";
+import { eventHandlers, IdentifyPayload } from "./client.ts";
 
-let shardCounter = 0;
-let basicSharding = false;
-
-const shards: Worker[] = [];
 let createNextShard = true;
 
 /** This function is meant to be used on the ready event to alert the library to start the next shard. */
@@ -32,48 +23,28 @@ export function allowNextShard(enabled = true) {
   createNextShard = enabled;
 }
 
-export function createShardWorker(shardID?: number) {
-  const path = new URL("./shard.ts", import.meta.url).toString();
-  const shard = new Worker(path, { type: "module", deno: true });
-  shard.onmessage = (message) => {
-    if (message.data.type === "REQUEST_CLIENT_OPTIONS") {
-      identifyPayload.shard = [
-        shardID || shardCounter,
-        botGatewayData.shards,
-      ];
-
-      shard.postMessage(
-        {
-          type: "CREATE_SHARD",
-          botGatewayData,
-          identifyPayload,
-          shardID: shardCounter,
-        },
-      );
-      // Update the shard counter
-      shardCounter++;
-    } else if (message.data.type === "HANDLE_DISCORD_PAYLOAD") {
-      handleDiscordPayload(
-        JSON.parse(message.data.payload),
-        message.data.shardID,
-      );
-    } else if (message.data.type === "DEBUG_LOG") {
-      eventHandlers.debug?.(message.data.details);
-    }
-  };
-  shards.push(shard);
-}
-
-export async function spawnBigBrainBotShards(data: DiscordBotGatewayData, payload: IdentifyPayload, shardID: number, lastShardID: number, skipChecks?: number) {
+export async function spawnShards(
+  data: DiscordBotGatewayData,
+  payload: IdentifyPayload,
+  shardID: number,
+  lastShardID: number,
+  skipChecks?: number,
+) {
   // All shards on this worker have started! Cancel out.
-  if (shardID > lastShardID) return;
+  if (shardID >= lastShardID) return;
 
   if (skipChecks) {
     payload.shard = [shardID, data.shards];
     // Start The shard
-    createBasicShard(data, payload, false, shardID);
+    createShard(data, payload, false, shardID);
     // Spawn next shard
-    spawnBigBrainBotShards(data, payload, shardID, lastShardID, skipChecks - 1);
+    spawnShards(
+      data,
+      payload,
+      shardID + 1,
+      lastShardID,
+      skipChecks - 1,
+    );
     return;
   }
 
@@ -81,34 +52,19 @@ export async function spawnBigBrainBotShards(data: DiscordBotGatewayData, payloa
   if (createNextShard) {
     createNextShard = false;
     // Start the next few shards based on max concurrency
-    spawnBigBrainBotShards(data, payload, shardID + 1, lastShardID, data.session_start_limit.max_concurrency);
+    spawnShards(
+      data,
+      payload,
+      shardID,
+      lastShardID,
+      data.session_start_limit.max_concurrency,
+    );
     return;
   }
 
   await delay(1000);
-  spawnBigBrainBotShards(data, payload, shardID, lastShardID, skipChecks);
+  spawnShards(data, payload, shardID, lastShardID, skipChecks);
 }
-
-export const spawnShards = async (
-  data: DiscordBotGatewayData,
-  payload: IdentifyPayload,
-  id = 1,
-) => {
-  if ((data.shards === 1 && id === 1) || id <= data.shards) {
-    if (createNextShard) {
-      createNextShard = false;
-      if (data.shards >= 25) createShardWorker();
-      else {
-        basicSharding = true;
-        createBasicShard(data, payload, false, id - 1);
-      }
-      spawnShards(data, payload, id + 1);
-    } else {
-      await delay(1000);
-      spawnShards(data, payload, id);
-    }
-  }
-};
 
 export async function handleDiscordPayload(
   data: DiscordPayload,
@@ -138,30 +94,13 @@ export async function requestAllMembers(
   const nonce = `${guild.id}-${Math.random().toString()}`;
   cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
 
-  if (basicSharding) {
-    return requestGuildMembers(guild.id, guild.shardID, nonce, options);
-  }
-
-  shards[guild.shardID].postMessage({
-    type: "FETCH_MEMBERS",
-    guildID: guild.id,
-    nonce,
-    options,
-  });
+  return requestGuildMembers(guild.id, guild.shardID, nonce, options);
 }
 
 export function sendGatewayCommand(type: "EDIT_BOTS_STATUS", payload: object) {
-  if (basicSharding) {
-    if (type === "EDIT_BOTS_STATUS") {
-      botGatewayStatusRequest(payload as BotStatusRequest);
-    }
-
-    return;
+  if (type === "EDIT_BOTS_STATUS") {
+    botGatewayStatusRequest(payload as BotStatusRequest);
   }
-  shards.forEach((shard) => {
-    shard.postMessage({
-      type,
-      ...payload,
-    });
-  });
+
+  return;
 }
