@@ -1,6 +1,6 @@
 const config = {
   gatsby: {
-    pathPrefix: "/",
+    pathPrefix: "/Discordeno",
     siteUrl: "https://discordeno.js.org",
     gaTrackingId: null,
     trailingSlash: false,
