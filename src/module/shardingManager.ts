@@ -90,6 +90,7 @@ export async function handleDiscordPayload(
   shardID: number,
 ) {
   eventHandlers.raw?.(data);
+  await eventHandlers.dispatchRequirements?.(data, shardID);
 
   switch (data.op) {
     case GatewayOpcode.HeartbeatACK:

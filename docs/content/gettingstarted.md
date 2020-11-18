@@ -90,7 +90,7 @@ Web-Mystery Tutorials:
 - <a href="https://web-mystery.com/articles/running-discord-bot-written-deno-docker" target="_blank">Running a Discord bot written in Deno in Docker</a>
 
 YouTube Tutorials:
-- Coming soon to [NTM Development](https://www.youtube.com/channel/UCkOFck-WCQtolha4NJuK7zA/)
+- [Discordeno Bot Tutorials YouTube series](https://youtu.be/rIph9-BGsuQ)
 
 ---
 

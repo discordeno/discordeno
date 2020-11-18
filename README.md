@@ -3,7 +3,7 @@
 > Discord API library wrapper in Deno
 
 [![Discord](https://img.shields.io/discord/223909216866402304?color=7289da&logo=discord&logoColor=dark)](https://discord.gg/J4NqJ72)
-![Testing/Linting](https://github.com/Skillz4Killz/Discordeno/workflows/Testing/Linting/badge.svg)
+![Lint](https://github.com/Skillz4Killz/Discordeno/workflows/Lint/badge.svg)
 ![Test](https://github.com/Skillz4Killz/Discordeno/workflows/Test/badge.svg)
 [![nest badge](https://nest.land/badge.svg)](https://nest.land/package/Discordeno)
 
@@ -27,7 +27,7 @@ The instructions below are meant for advanced developers!
 Starting with Discordeno is very simple, you can start from scratch without any boilerplates/frameworks: Add this snippet of code into a new TypeScript file:
 
 ```typescript
-import StartBot, { sendMessage, Intents } from "https://x.nest.land/Discordeno@9.0.1/mod.ts";
+import StartBot, { sendMessage, Intents } from "https://x.nest.land/Discordeno@9.0.15/mod.ts";
 import config from "./config.ts";
 
 StartBot({
@@ -57,4 +57,4 @@ Alternatively, you can use boilerplate template repositories that were created b
 
 ## License
 
-MIT © Skillz4Killz 
+[MIT © Skillz4Killz](https://github.com/Skillz4Killz/Discordeno/blob/master/LICENSE)

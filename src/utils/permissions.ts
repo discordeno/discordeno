@@ -58,7 +58,8 @@ export async function botHasPermission(
   const member = guild.members.get(botID);
   if (!member) return false;
 
-  const permissionBits = member.roles
+  // The everyone role is not in member.roles
+  const permissionBits = [...member.roles, guild.id]
     .map((id) => guild.roles.get(id)!)
     // Remove any edge case undefined
     .filter((r) => r)
@@ -182,7 +183,8 @@ export async function hasChannelPermissions(
   if (permissions.every((perm) => allowedPermissions.has(perm))) return true;
 
   // Some permission was not explicitly allowed so we default to checking role perms directly
-  return botHasPermission(guild.id, permissions);
+  const hasPerms = await botHasPermission(guild.id, permissions);
+  return hasPerms;
 }
 
 /** This function converts a bitwise string to permission strings */

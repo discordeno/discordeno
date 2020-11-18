@@ -101,6 +101,8 @@ export interface MessageContent {
     roles?: string[];
     /** Array of user_ids to mention (Max size of 100) */
     users?: string[];
+    /** Should the message author from the original message be mention. By default this is true.  */
+    repliedUser?: boolean;
   };
   /** The message contents, up to 2000 characters */
   content?: string;
@@ -114,6 +116,8 @@ export interface MessageContent {
   embed?: Embed;
   /** JSON encoded body of any additional request fields. */
   payload_json?: string;
+  /** If you want to send a reply message, provide the original message id here */
+  replyMessageID?: string;
 }
 
 export interface GetMessages {

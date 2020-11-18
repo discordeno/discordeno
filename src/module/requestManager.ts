@@ -1,8 +1,8 @@
 import { delay } from "../../deps.ts";
-import { baseEndpoints } from "../constants/discord.ts";
 import { HttpResponseCode } from "../types/discord.ts";
 import { Errors } from "../types/errors.ts";
 import { RequestMethods } from "../types/fetch.ts";
+import { baseEndpoints } from "../utils/constants.ts";
 import { authorization, eventHandlers } from "./client.ts";
 
 const pathQueues: { [key: string]: QueuedRequest[] } = {};
@@ -64,56 +64,60 @@ async function cleanupQueues() {
 }
 
 async function processQueue() {
-  if (
-    (Object.keys(pathQueues).length) && !globallyRateLimited
-  ) {
-    await Promise.allSettled(
-      Object.values(pathQueues).map(async (pathQueue) => {
-        const request = pathQueue.shift();
-        if (!request) return;
+  // Putting this code inside a function like this allows us to use tail recursion like a while loop without hitting the max stack error.
+  async function avoidMaxStackError() {
+    if (
+      (Object.keys(pathQueues).length) && !globallyRateLimited
+    ) {
+      await Promise.allSettled(
+        Object.values(pathQueues).map(async (pathQueue) => {
+          const request = pathQueue.shift();
+          if (!request) return;
 
-        const rateLimitedURLResetIn = await checkRatelimits(request.url);
+          const rateLimitedURLResetIn = await checkRatelimits(request.url);
 
-        if (request.bucketID) {
-          const rateLimitResetIn = await checkRatelimits(request.bucketID);
-          if (rateLimitResetIn) {
-            // This request is still rate limited readd to queue
-            addToQueue(request);
-          } else if (rateLimitedURLResetIn) {
-            // This URL is rate limited readd to queue
-            addToQueue(request);
+          if (request.bucketID) {
+            const rateLimitResetIn = await checkRatelimits(request.bucketID);
+            if (rateLimitResetIn) {
+              // This request is still rate limited readd to queue
+              addToQueue(request);
+            } else if (rateLimitedURLResetIn) {
+              // This URL is rate limited readd to queue
+              addToQueue(request);
+            } else {
+              // This request is not rate limited so it should be run
+              const result = await request.callback();
+              if (result && result.rateLimited) {
+                addToQueue(
+                  { ...request, bucketID: result.bucketID || request.bucketID },
+                );
+              }
+            }
           } else {
-            // This request is not rate limited so it should be run
-            const result = await request.callback();
-            if (result && result.rateLimited) {
-              addToQueue(
-                { ...request, bucketID: result.bucketID || request.bucketID },
-              );
+            if (rateLimitedURLResetIn) {
+              // This URL is rate limited readd to queue
+              addToQueue(request);
+            } else {
+              // This request has no bucket id so it should be processed
+              const result = await request.callback();
+              if (request && result && result.rateLimited) {
+                addToQueue(
+                  { ...request, bucketID: result.bucketID || request.bucketID },
+                );
+              }
             }
           }
-        } else {
-          if (rateLimitedURLResetIn) {
-            // This URL is rate limited readd to queue
-            addToQueue(request);
-          } else {
-            // This request has no bucket id so it should be processed
-            const result = await request.callback();
-            if (request && result && result.rateLimited) {
-              addToQueue(
-                { ...request, bucketID: result.bucketID || request.bucketID },
-              );
-            }
-          }
-        }
-      }),
-    );
+        }),
+      );
+    }
+
+    if (Object.keys(pathQueues).length) {
+      avoidMaxStackError();
+      cleanupQueues();
+    } else queueInProcess = false;
   }
 
-  if (Object.keys(pathQueues).length) {
-    await delay(1000);
-    processQueue();
-    cleanupQueues();
-  } else queueInProcess = false;
+  return avoidMaxStackError();
 }
 
 processRateLimitedPaths();
@@ -196,7 +200,7 @@ async function runMethod(
     },
   );
 
-  const errorStack = new Error("Location In Your Files:");
+  const errorStack = new Error("Location:");
   Error.captureStackTrace(errorStack);
 
   return new Promise((resolve, reject) => {
@@ -317,17 +321,36 @@ function handleStatusCode(response: Response, errorStack?: unknown) {
 
   switch (status) {
     case HttpResponseCode.BadRequest:
+      console.error(
+        "The request was improperly formatted, or the server couldn't understand it.",
+      );
+      throw errorStack;
     case HttpResponseCode.Unauthorized:
+      console.error("The Authorization header was missing or invalid.");
+      throw errorStack;
     case HttpResponseCode.Forbidden:
+      console.error(
+        "The Authorization token you passed did not have permission to the resource.",
+      );
+      throw errorStack;
     case HttpResponseCode.NotFound:
+      console.error("The resource at the location specified doesn't exist.");
+      throw errorStack;
     case HttpResponseCode.MethodNotAllowed:
-      throw new Error(Errors.REQUEST_CLIENT_ERROR);
+      console.error(
+        "The HTTP method used is not valid for the location specified.",
+      );
+      throw errorStack;
     case HttpResponseCode.GatewayUnavailable:
-      throw new Error(Errors.REQUEST_SERVER_ERROR);
+      console.error(
+        "There was not a gateway available to process your request. Wait a bit and retry.",
+      );
+      throw errorStack;
+      // left are all unknown
+    default:
+      console.error(Errors.REQUEST_UNKNOWN_ERROR);
+      throw errorStack;
   }
-
-  // left are all unknown
-  throw new Error(Errors.REQUEST_UNKNOWN_ERROR);
 }
 
 function processHeaders(url: string, headers: Headers) {
@@ -361,7 +384,7 @@ function processHeaders(url: string, headers: Headers) {
 
   // If there is no remaining global limit, we save it in cache
   if (global) {
-    const reset = Date.now() + Number(retryAfter);
+    const reset = Date.now() + (Number(retryAfter) * 1000);
     eventHandlers.debug?.(
       { type: "globallyRateLimited", data: { url, reset } },
     );

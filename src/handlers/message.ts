@@ -1,5 +1,4 @@
 import { delay } from "../../deps.ts";
-import { endpoints } from "../constants/discord.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../module/client.ts";
 import { RequestManager } from "../module/requestManager.ts";
@@ -10,6 +9,7 @@ import { Errors } from "../types/errors.ts";
 import { UserPayload } from "../types/guild.ts";
 import { MessageCreateOptions } from "../types/message.ts";
 import { Permissions } from "../types/permission.ts";
+import { endpoints } from "../utils/constants.ts";
 import { botHasChannelPermissions } from "../utils/permissions.ts";
 
 /** Delete a message with the channel id and message id only. */
@@ -38,11 +38,12 @@ export async function deleteMessage(
 ) {
   if (message.author.id !== botID) {
     // This needs to check the channels permission not the guild permission
+    const hasManageMessages = await botHasChannelPermissions(
+      message.channelID,
+      [Permissions.MANAGE_MESSAGES],
+    );
     if (
-      !botHasChannelPermissions(
-        message.channelID,
-        [Permissions.MANAGE_MESSAGES],
-      )
+      !hasManageMessages
     ) {
       throw new Error(Errors.MISSING_MANAGE_MESSAGES);
     }
@@ -57,9 +58,13 @@ export async function deleteMessage(
 }
 
 /** Pin a message in a channel. Requires MANAGE_MESSAGES. Max pins allowed in a channel = 50. */
-export function pin(channelID: string, messageID: string) {
+export async function pin(channelID: string, messageID: string) {
+  const hasManageMessagesPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.MANAGE_MESSAGES],
+  );
   if (
-    !botHasChannelPermissions(channelID, [Permissions.MANAGE_MESSAGES])
+    !hasManageMessagesPerm
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
@@ -67,9 +72,13 @@ export function pin(channelID: string, messageID: string) {
 }
 
 /** Unpin a message in a channel. Requires MANAGE_MESSAGES. */
-export function unpin(channelID: string, messageID: string) {
+export async function unpin(channelID: string, messageID: string) {
+  const hasManageMessagesPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.MANAGE_MESSAGES],
+  );
   if (
-    !botHasChannelPermissions(channelID, [Permissions.MANAGE_MESSAGES])
+    !hasManageMessagesPerm
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
@@ -79,17 +88,25 @@ export function unpin(channelID: string, messageID: string) {
 }
 
 /** Create a reaction for the message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS */
-export function addReaction(
+export async function addReaction(
   channelID: string,
   messageID: string,
   reaction: string,
 ) {
-  if (!botHasChannelPermissions(channelID, [Permissions.ADD_REACTIONS])) {
+  const hasAddReactionsPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.ADD_REACTIONS],
+  );
+  if (!hasAddReactionsPerm) {
     throw new Error(Errors.MISSING_ADD_REACTIONS);
   }
 
+  const hasReadMessageHistoryPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.READ_MESSAGE_HISTORY],
+  );
   if (
-    !botHasChannelPermissions(channelID, [Permissions.READ_MESSAGE_HISTORY])
+    !hasReadMessageHistoryPerm
   ) {
     throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
   }
@@ -143,13 +160,17 @@ export function removeReaction(
 }
 
 /** Removes a reaction from the specified user on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
-export function removeUserReaction(
+export async function removeUserReaction(
   channelID: string,
   messageID: string,
   reaction: string,
   userID: string,
 ) {
-  if (!botHasChannelPermissions(channelID, [Permissions.MANAGE_MESSAGES])) {
+  const hasManageMessagesPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.MANAGE_MESSAGES],
+  );
+  if (!hasManageMessagesPerm) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
 
@@ -164,9 +185,13 @@ export function removeUserReaction(
 }
 
 /** Removes all reactions for all emojis on this message. */
-export function removeAllReactions(channelID: string, messageID: string) {
+export async function removeAllReactions(channelID: string, messageID: string) {
+  const hasManageMessagesPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.MANAGE_MESSAGES],
+  );
   if (
-    !botHasChannelPermissions(channelID, [Permissions.MANAGE_MESSAGES])
+    !hasManageMessagesPerm
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
@@ -176,13 +201,17 @@ export function removeAllReactions(channelID: string, messageID: string) {
 }
 
 /** Removes all reactions for a single emoji on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
-export function removeReactionEmoji(
+export async function removeReactionEmoji(
   channelID: string,
   messageID: string,
   reaction: string,
 ) {
+  const hasManageMessagesPerm = await botHasChannelPermissions(
+    channelID,
+    [Permissions.MANAGE_MESSAGES],
+  );
   if (
-    !botHasChannelPermissions(channelID, [Permissions.MANAGE_MESSAGES])
+    !hasManageMessagesPerm
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
@@ -216,18 +245,23 @@ export async function editMessage(
 
   if (typeof content === "string") content = { content };
 
+  const hasSendMessagesPerm = await botHasChannelPermissions(
+    message.channelID,
+    [Permissions.SEND_MESSAGES],
+  );
   if (
-    !botHasChannelPermissions(message.channelID, [Permissions.SEND_MESSAGES])
+    !hasSendMessagesPerm
   ) {
     throw new Error(Errors.MISSING_SEND_MESSAGES);
   }
 
+  const hasSendTtsMessagesPerm = await botHasChannelPermissions(
+    message.channelID,
+    [Permissions.SEND_TTS_MESSAGES],
+  );
   if (
     content.tts &&
-    !botHasChannelPermissions(
-      message.channelID,
-      [Permissions.SEND_TTS_MESSAGES],
-    )
+    !hasSendTtsMessagesPerm
   ) {
     throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
   }

@@ -1,4 +1,3 @@
-import { endpoints } from "../constants/discord.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../module/client.ts";
 import { RequestManager } from "../module/requestManager.ts";
@@ -10,11 +9,13 @@ import { Errors } from "../types/errors.ts";
 import { EditMemberOptions } from "../types/member.ts";
 import { Permissions } from "../types/permission.ts";
 import { formatImageURL } from "../utils/cdn.ts";
+import { endpoints } from "../utils/constants.ts";
 import {
   botHasPermission,
   higherRolePosition,
   highestRole,
 } from "../utils/permissions.ts";
+import { urlToBase64 } from "../utils/utils.ts";
 import { sendMessage } from "./channel.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
@@ -53,14 +54,19 @@ export async function addRole(
   reason?: string,
 ) {
   const botsHighestRole = await highestRole(guildID, botID);
-  if (
-    botsHighestRole &&
-    !higherRolePosition(guildID, botsHighestRole.id, roleID)
-  ) {
-    throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
+  if (botsHighestRole) {
+    const hasHigherRolePosition = await higherRolePosition(
+      guildID,
+      botsHighestRole.id,
+      roleID,
+    );
+    if (!hasHigherRolePosition) {
+      throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
+    }
   }
 
-  if (!botHasPermission(guildID, [Permissions.MANAGE_ROLES])) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_ROLES]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
@@ -78,16 +84,23 @@ export async function removeRole(
   reason?: string,
 ) {
   const botsHighestRole = await highestRole(guildID, botID);
-  if (
-    botsHighestRole &&
-    !higherRolePosition(guildID, botsHighestRole.id, roleID)
-  ) {
-    throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
+
+  if (botsHighestRole) {
+    const hasHigherRolePosition = await higherRolePosition(
+      guildID,
+      botsHighestRole.id,
+      roleID,
+    );
+    if (!hasHigherRolePosition) {
+      throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
+    }
   }
 
-  if (!botHasPermission(guildID, [Permissions.MANAGE_ROLES])) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.MANAGE_ROLES]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
+
   return RequestManager.delete(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
     { reason },
@@ -129,9 +142,11 @@ export async function kick(guildID: string, memberID: string, reason?: string) {
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
-  if (!botHasPermission(guildID, [Permissions.KICK_MEMBERS])) {
+  const hasPerm = await botHasPermission(guildID, [Permissions.KICK_MEMBERS]);
+  if (!hasPerm) {
     throw new Error(Errors.MISSING_KICK_MEMBERS);
   }
+
   return RequestManager.delete(
     endpoints.GUILD_MEMBER(guildID, memberID),
     { reason },
@@ -139,7 +154,7 @@ export async function kick(guildID: string, memberID: string, reason?: string) {
 }
 
 /** Edit the member */
-export function editMember(
+export async function editMember(
   guildID: string,
   memberID: string,
   options: EditMemberOptions,
@@ -148,30 +163,47 @@ export function editMember(
     if (options.nick.length > 32) {
       throw new Error(Errors.NICKNAMES_MAX_LENGTH);
     }
-    if (!botHasPermission(guildID, [Permissions.MANAGE_NICKNAMES])) {
+
+    const hasManageNickPerm = await botHasPermission(
+      guildID,
+      [Permissions.MANAGE_NICKNAMES],
+    );
+    if (!hasManageNickPerm) {
       throw new Error(Errors.MISSING_MANAGE_NICKNAMES);
     }
   }
 
+  const hasManageRolesPerm = await botHasPermission(
+    guildID,
+    [Permissions.MANAGE_ROLES],
+  );
   if (
     options.roles &&
-    !botHasPermission(guildID, [Permissions.MANAGE_ROLES])
+    !hasManageRolesPerm
   ) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
   if (options.mute) {
+    const hasMuteMembersPerm = await botHasPermission(
+      guildID,
+      [Permissions.MUTE_MEMBERS],
+    );
     // TODO: This should check if the member is in a voice channel
     if (
-      !botHasPermission(guildID, [Permissions.MUTE_MEMBERS])
+      !hasMuteMembersPerm
     ) {
       throw new Error(Errors.MISSING_MUTE_MEMBERS);
     }
   }
 
+  const hasDeafenMembersPerm = await botHasPermission(
+    guildID,
+    [Permissions.DEAFEN_MEMBERS],
+  );
   if (
     options.deaf &&
-    !botHasPermission(guildID, [Permissions.DEAFEN_MEMBERS])
+    !hasDeafenMembersPerm
   ) {
     throw new Error(Errors.MISSING_DEAFEN_MEMBERS);
   }
@@ -184,7 +216,7 @@ export function editMember(
   );
 }
 
-/** 
+/**
  * Move a member from a voice channel to another.
  * @param guildID the id of the guild which the channel exists in
  * @param memberID the id of the member to move.
@@ -196,4 +228,35 @@ export function moveMember(
   channelID: string,
 ) {
   return editMember(guildID, memberID, { channel_id: channelID });
+}
+
+/** Modifies the bot's username or avatar.
+ * NOTE: username: if changed may cause the bot's discriminator to be randomized.
+ */
+export function editBotProfile(username?: string, avatarURL?: string) {
+  // Nothing was edited
+  if (!username && !avatarURL) return;
+  // Check username requirements if username was provided
+  if (username) {
+    if (username.length > 32) {
+      throw new Error(Errors.USERNAME_MAX_LENGTH);
+    }
+    if (username.length < 2) {
+      throw new Error(Errors.USERNAME_MIN_LENGTH);
+    }
+    if (["@", "#", ":", "```"].some((char) => username.includes(char))) {
+      throw new Error(Errors.USERNAME_INVALID_CHARACTER);
+    }
+    if (["discordtag", "everyone", "here"].includes(username)) {
+      throw new Error(Errors.USERNAME_INVALID_USERNAME);
+    }
+  }
+
+  RequestManager.patch(
+    endpoints.USER_BOT,
+    {
+      username: username?.trim(),
+      avatar: avatarURL ? urlToBase64(avatarURL) : undefined,
+    },
+  );
 }

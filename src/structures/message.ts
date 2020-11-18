@@ -11,11 +11,14 @@ export async function createMessage(data: MessageCreateOptions) {
     webhook_id: webhookID,
     message_reference: messageReference,
     edited_timestamp: editedTimestamp,
+    referenced_message: referencedMessageID,
     ...rest
   } = data;
 
   const message = {
     ...rest,
+    /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
+    referencedMessageID,
     channelID,
     guildID: guildID || "",
     mentions: data.mentions.map((m) => m.id),
