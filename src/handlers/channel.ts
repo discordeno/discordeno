@@ -13,29 +13,26 @@ import {
   MessageContent,
 } from "../types/channel.ts";
 import { Errors } from "../types/errors.ts";
-import { PermissionOverwrite } from "../types/guild.ts";
+import { RawOverwrite } from "../types/guild.ts";
 import { MessageCreateOptions } from "../types/message.ts";
-import { Permissions } from "../types/permission.ts";
+import { Permissions, Permission } from "../types/permission.ts";
 import { endpoints } from "../utils/constants.ts";
-import {
-  botHasChannelPermissions,
-  calculateBits,
-} from "../utils/permissions.ts";
+import { botHasChannelPermissions, } from "../utils/permissions.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(
   guildID: string,
   id: string,
-  overwrites: PermissionOverwrite[],
-  permissions: Permissions[],
+  overwrites: RawOverwrite[],
+  permissions: Permission[],
 ) {
   const overwrite = overwrites.find((perm) => perm.id === id) ||
     overwrites.find((perm) => perm.id === guildID);
 
   return permissions.every((perm) => {
     if (overwrite) {
-      const allowBits = calculateBits(overwrite.allow);
-      const denyBits = calculateBits(overwrite.deny);
+      const allowBits = overwrite.allow;
+      const denyBits = overwrite.deny;
       if (BigInt(denyBits) & BigInt(perm)) return false;
       if (BigInt(allowBits) & BigInt(perm)) return true;
     }
@@ -50,7 +47,7 @@ export async function getMessage(
 ) {
   const hasViewChannelPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.VIEW_CHANNEL],
+    ["VIEW_CHANNEL"],
   );
   if (
     !hasViewChannelPerm
@@ -60,7 +57,7 @@ export async function getMessage(
 
   const hasReadMessageHistoryPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.READ_MESSAGE_HISTORY],
+    ["READ_MESSAGE_HISTORY"],
   );
   if (
     !hasReadMessageHistoryPerm
@@ -85,7 +82,7 @@ export async function getMessages(
 ) {
   const hasViewChannelPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.VIEW_CHANNEL],
+    ["VIEW_CHANNEL"],
   );
   if (
     !hasViewChannelPerm
@@ -95,7 +92,7 @@ export async function getMessages(
 
   const hasReadMessageHistoryPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.READ_MESSAGE_HISTORY],
+    ["READ_MESSAGE_HISTORY"],
   );
   if (
     !hasReadMessageHistoryPerm
@@ -128,7 +125,7 @@ export async function sendMessage(
   if (typeof content === "string") content = { content };
   const hasSendMessagesPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.SEND_MESSAGES],
+    ["SEND_MESSAGES"],
   );
   if (
     !hasSendMessagesPerm
@@ -138,7 +135,7 @@ export async function sendMessage(
 
   const hasSendTtsMessagesPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.SEND_TTS_MESSAGES],
+    ["SEND_TTS_MESSAGES"],
   );
   if (
     content.tts &&
@@ -149,7 +146,7 @@ export async function sendMessage(
 
   const hasEmbedLinksPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.EMBED_LINKS],
+    ["EMBED_LINKS"],
   );
   if (
     content.embed &&
@@ -192,7 +189,7 @@ export async function sendMessage(
       if (
         !(await botHasChannelPermissions(
           channelID,
-          [Permissions.READ_MESSAGE_HISTORY],
+          ["READ_MESSAGE_HISTORY"],
         ))
       ) {
         throw new Error(Errors.MISSING_SEND_MESSAGES);
@@ -236,7 +233,7 @@ export async function deleteMessages(
 ) {
   const hasManageMessages = await botHasChannelPermissions(
     channelID,
-    [Permissions.MANAGE_MESSAGES],
+    ["MANAGE_MESSAGES"],
   );
   if (
     !hasManageMessages
@@ -263,7 +260,7 @@ export async function deleteMessages(
 export async function getChannelInvites(channelID: string) {
   const hasManagaChannels = await botHasChannelPermissions(
     channelID,
-    [Permissions.MANAGE_CHANNELS],
+    ["MANAGE_CHANNELS"],
   );
   if (
     !hasManagaChannels
@@ -280,7 +277,7 @@ export async function createInvite(
 ) {
   const hasCreateInstantInvitePerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.CREATE_INSTANT_INVITE],
+    ["CREATE_INSTANT_INVITE"],
   );
   if (
     !hasCreateInstantInvitePerm
@@ -294,7 +291,7 @@ export async function createInvite(
 export async function getChannelWebhooks(channelID: string) {
   const hasManageWebhooksPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.MANAGE_WEBHOOKS],
+    ["MANAGE_WEBHOOKS"],
   );
   if (
     !hasManageWebhooksPerm
@@ -357,7 +354,7 @@ export async function editChannel(
 ) {
   const hasManageChannelsPerm = await botHasChannelPermissions(
     channelID,
-    [Permissions.MANAGE_CHANNELS],
+    ["MANAGE_CHANNELS"],
   );
   if (
     !hasManageChannelsPerm
@@ -428,7 +425,7 @@ export async function followChannel(
 ) {
   const hasManageWebhooksPerm = await botHasChannelPermissions(
     targetChannelID,
-    [Permissions.MANAGE_WEBHOOKS],
+    ["MANAGE_WEBHOOKS"],
   );
   if (
     !hasManageWebhooksPerm

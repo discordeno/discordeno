@@ -50,7 +50,7 @@ export function memberHasPermission(
 
 export async function botHasPermission(
   guildID: string,
-  permissions: Permissions[],
+  permissions: Permission[],
 ) {
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return false;
@@ -74,13 +74,13 @@ export async function botHasPermission(
 
   if (permissionBits & BigInt(Permissions.ADMINISTRATOR)) return true;
 
-  return permissions.every((permission) => permissionBits & BigInt(permission));
+  return permissions.every((permission) => permissionBits & BigInt(Permissions[permission]));
 }
 
 /** Checks if the bot has the permissions in a channel */
 export function botHasChannelPermissions(
   channelID: string,
-  permissions: Permissions[],
+  permissions: Permission[],
 ) {
   return hasChannelPermissions(channelID, botID, permissions);
 }
@@ -89,7 +89,7 @@ export function botHasChannelPermissions(
 export async function hasChannelPermissions(
   channelID: string,
   memberID: string,
-  permissions: Permissions[],
+  permissions: Permission[],
 ) {
   const channel = await cacheHandlers.get("channels", channelID);
   if (!channel) return false;
@@ -121,7 +121,7 @@ export async function hasChannelPermissions(
     if (member.roles.includes(overwrite.id)) rolesOverwrites.push(overwrite);
   }
 
-  const allowedPermissions = new Set<Permissions>();
+  const allowedPermissions = new Set<Permission>();
 
   // Member perms override everything so we must check them first
   if (memberOverwrite) {
@@ -129,12 +129,12 @@ export async function hasChannelPermissions(
     const denyBits = memberOverwrite.deny;
     for (const perm of permissions) {
       // One of the necessary permissions is denied. Since this is main permission we can cancel if its denied.
-      if (BigInt(denyBits) & BigInt(perm)) return false;
+      if (BigInt(denyBits) & BigInt(Permissions[perm])) return false;
       // Already allowed perm
       if (allowedPermissions.has(perm)) continue;
 
       // This perm is allowed so we save it
-      if (BigInt(allowBits) & BigInt(perm)) {
+      if (BigInt(allowBits) & BigInt(Permissions[perm])) {
         allowedPermissions.add(perm);
       }
     }
@@ -148,17 +148,17 @@ export async function hasChannelPermissions(
     for (const overwrite of rolesOverwrites) {
       const allowBits = overwrite.allow;
       // This perm is allowed so we save it
-      if (BigInt(allowBits) & BigInt(perm)) {
+      if (BigInt(allowBits) & BigInt(Permissions[perm])) {
         allowedPermissions.add(perm);
         break;
       }
 
       const denyBits = overwrite.deny;
       // If this role denies it we need to save and check if another role allows it, allows > deny
-      if (BigInt(denyBits) & BigInt(perm)) {
+      if (BigInt(denyBits) & BigInt(Permissions[perm])) {
         // This role denies his perm, but before denying we need to check all other roles if any allow as allow > deny
         const isAllowed = rolesOverwrites.some((o) =>
-          BigInt(o.allow) & BigInt(perm)
+          BigInt(o.allow) & BigInt(Permissions[perm])
         );
         if (isAllowed) continue;
         // This permission is in fact denied. Since Roles overrule everything below here we can cancel ou here
@@ -174,9 +174,9 @@ export async function hasChannelPermissions(
       // Already allowed perm
       if (allowedPermissions.has(perm)) continue;
       // One of the necessary permissions is denied. Since everyone overwrite overrides role perms we can cancel here
-      if (BigInt(denyBits) & BigInt(perm)) return false;
+      if (BigInt(denyBits) & BigInt(Permissions[perm])) return false;
       // This perm is allowed so we save it
-      if (BigInt(allowBits) & BigInt(perm)) {
+      if (BigInt(allowBits) & BigInt(Permissions[perm])) {
         allowedPermissions.add(perm);
       }
     }
