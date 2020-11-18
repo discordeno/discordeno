@@ -23,6 +23,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     member_count: memberCount,
     voice_states: voiceStates,
     channels,
+    members,
     ...rest
   } = data;
 
@@ -87,7 +88,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     }])),
   };
 
-  data.members.forEach((m) => structures.createMember(m, guild.id));
+  members.forEach((m) => structures.createMember(m, guild.id));
 
   return guild;
 }
