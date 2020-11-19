@@ -65,7 +65,7 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
   };
   const member = await structures.createMember(
     newMemberData,
-    guild.id,
+    payload.guild_id,
   );
 
   if (guildMember?.nick !== payload.nick) {
@@ -73,7 +73,7 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
       guild,
       member,
       payload.nick,
-      cachedMember?.nick,
+      guildMember?.nick,
     );
   }
   const roleIDs = guildMember?.roles || [];
