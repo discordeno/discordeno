@@ -21,6 +21,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/src/.vuepress/dist
           commit_message: ${{ github.event.head_commit.message }}
-          cname: discordeno.js.org
+          cname: discordeno.mod.land
           keep_files: true
           enable_jekyll: false

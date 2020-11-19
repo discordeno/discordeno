@@ -9,7 +9,7 @@ This website serves as the purpose for introducing Discordeno to developers. The
 ## Useful Links
 - [GitHub Repository](https://github.com/Skillz4Killz/Discordeno)
 - [Deno Page](https://deno.land/x/discordeno)
-- [Website](https://discordeno.js.org/)
+- [Website](https://discordeno.mod.land)
 
 ## Requirements
 
