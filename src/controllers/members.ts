@@ -20,7 +20,7 @@ export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
   guild.memberCount++;
   const member = await structures.createMember(
     payload,
-    guild.id,
+    payload.guild_id,
   );
 
   eventHandlers.guildMemberAdd?.(guild, member);
@@ -52,14 +52,15 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
   if (!guild) return;
 
   const cachedMember = await cacheHandlers.get("members", payload.user.id);
+  const guildMember = cachedMember?.guilds.get(payload.guild_id);
 
   const newMemberData = {
     ...payload,
     premium_since: payload.premium_since || undefined,
-    joined_at: new Date(cachedMember?.joinedAt || Date.now())
+    joined_at: new Date(guildMember?.joinedAt || Date.now())
       .toISOString(),
-    deaf: cachedMember?.deaf || false,
-    mute: cachedMember?.mute || false,
+    deaf: guildMember?.deaf || false,
+    mute: guildMember?.mute || false,
     roles: payload.roles,
   };
   const member = await structures.createMember(
@@ -67,7 +68,7 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
     guild.id,
   );
 
-  if (cachedMember?.nick !== payload.nick) {
+  if (guildMember?.nick !== payload.nick) {
     eventHandlers.nicknameUpdate?.(
       guild,
       member,
@@ -75,7 +76,7 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
       cachedMember?.nick,
     );
   }
-  const roleIDs = cachedMember?.roles || [];
+  const roleIDs = guildMember?.roles || [];
 
   roleIDs.forEach((id) => {
     if (!payload.roles.includes(id)) {
