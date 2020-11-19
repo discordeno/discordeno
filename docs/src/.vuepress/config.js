@@ -1,16 +1,12 @@
 const { description, repository } = require("../../package");
 
-const discordLink = "";
+const title = "Discordeno";
+const discordLink = "https://discord.com/invite/J4NqJ72";
 
 module.exports = {
-  title: "Discordeno",
+  base: `/${title}/`,
+  title,
   description,
-
-  /**
-   * Extra tags to be injected to the page HTML `<head>`
-   *
-   * ref： https://v1.vuepress.vuejs.org/config/#head
-   */
   head: [
     ["meta", { name: "theme-color", content: "#3eaf7c" }],
     ["meta", { name: "apple-mobile-web-app-capable", content: "yes" }],
@@ -18,24 +14,32 @@ module.exports = {
       "meta",
       { name: "apple-mobile-web-app-status-bar-style", content: "black" },
     ],
+    ["meta", { name: "og:title", content: title }],
+    [
+      "meta",
+      {
+        name: "og:description",
+        content: description,
+      },
+    ],
+    ["meta", { name: "og:type", content: "website" }],
+    ["meta", { name: "og:url", content: "https://discordeno.mod.land" }],
   ],
-
-  /**
-   * Theme configuration, here is the default theme configuration for VuePress.
-   *
-   * ref：https://v1.vuepress.vuejs.org/theme/default-theme-config.html
-   */
+  theme: "yuu",
   themeConfig: {
     repo: repository,
+    docsDir: "src",
     editLinks: true,
-    docsDir: "docs",
-    editLinkText: "Help us improve this page!",
     lastUpdated: true,
-    smoothScroll: true,
+    sidebarDepth: 0,
     nav: [
       {
-        text: "Guide",
-        link: "/guide/",
+        text: "Home",
+        link: "/",
+      },
+      {
+        text: "Docs",
+        link: "https://doc.deno.land/https/deno.land/x/discordeno/mod.ts",
       },
       {
         text: "Discord",
@@ -44,22 +48,45 @@ module.exports = {
       },
     ],
     sidebar: {
-      "/guide/": [
+      "/": [
         {
-          title: "Guide",
-          collapsable: false,
+          title: "Home",
           children: [
-            "",
-            "using-vue",
+            "/",
+            "faq",
+            "gettingstarted",
+            "djs",
+          ],
+        },
+        {
+          title: "Step By Step Guide",
+          children: [
+            "/stepbystep/",
+            "/stepbystep/createbot",
+            "/stepbystep/createcommand",
+            "/stepbystep/createevent",
+            "/stepbystep/createinhibitor",
+            "/stepbystep/createlanguage",
+            "/stepbystep/createmonitor",
+            "/stepbystep/createtask",
+            "/stepbystep/hostingbot",
+          ],
+        },
+        {
+          title: "Advanced Guide",
+          children: [
+            "/advanced/",
+            "/advanced/arguments",
+            "/advanced/customizations",
+            "/advanced/dockerhosting",
+            "/advanced/dynamiccommands",
+            "/advanced/permlevels",
+            "/advanced/subcommands",
           ],
         },
       ],
     },
   },
-
-  /**
-   * Apply plugins， ref： https://v1.vuepress.vuejs.org/zh/plugin/
-   */
   plugins: [
     "@vuepress/plugin-back-to-top",
     "@vuepress/plugin-medium-zoom",

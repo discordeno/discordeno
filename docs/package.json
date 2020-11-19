@@ -4,11 +4,12 @@
   "description": "Docs for Discordeno",
   "repository": "https://github.com/Skillz4Killz/Discordeno/docs",
   "scripts": {
-    "dev": "vuepress dev src",
-    "build": "vuepress build src"
+    "docs:dev": "vuepress dev src --host localhost",
+    "docs:build": "vuepress build src"
   },
   "license": "MIT",
   "devDependencies": {
-    "vuepress": "^1.5.3"
+    "vuepress": "^1.5.3",
+    "vuepress-theme-yuu": "^2.3.0"
   }
 }

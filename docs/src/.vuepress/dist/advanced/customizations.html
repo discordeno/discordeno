@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Customizing Discordeno | Discordeno</title>
+    <meta name="generator" content="VuePress 1.7.1">
+    
+    <meta name="description" content="Docs for Discordeno">
+    <meta name="theme-color" content="#3eaf7c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="og:title" content="Discordeno">
+    <meta name="og:description" content="Docs for Discordeno">
+    <meta name="og:type" content="website">
+    <meta name="og:url" content="https://discordeno.mod.land">
+    
+    <link rel="preload" href="/Discordeno/assets/css/0.styles.3d549681.css" as="style"><link rel="preload" href="/Discordeno/assets/js/app.046a4882.js" as="script"><link rel="preload" href="/Discordeno/assets/js/2.a56932ae.js" as="script"><link rel="preload" href="/Discordeno/assets/js/10.18d86839.js" as="script"><link rel="prefetch" href="/Discordeno/assets/js/11.32f69a96.js"><link rel="prefetch" href="/Discordeno/assets/js/12.6fe1830a.js"><link rel="prefetch" href="/Discordeno/assets/js/13.0f506ae5.js"><link rel="prefetch" href="/Discordeno/assets/js/14.28eb75de.js"><link rel="prefetch" href="/Discordeno/assets/js/15.01804fb5.js"><link rel="prefetch" href="/Discordeno/assets/js/16.fa4e653d.js"><link rel="prefetch" href="/Discordeno/assets/js/17.7e5e6c7d.js"><link rel="prefetch" href="/Discordeno/assets/js/18.c78efeaa.js"><link rel="prefetch" href="/Discordeno/assets/js/19.e3827020.js"><link rel="prefetch" href="/Discordeno/assets/js/20.db5f38e7.js"><link rel="prefetch" href="/Discordeno/assets/js/21.26aa85d3.js"><link rel="prefetch" href="/Discordeno/assets/js/22.8fadfcbb.js"><link rel="prefetch" href="/Discordeno/assets/js/23.9efe4f07.js"><link rel="prefetch" href="/Discordeno/assets/js/24.c54ff941.js"><link rel="prefetch" href="/Discordeno/assets/js/25.6b00eca8.js"><link rel="prefetch" href="/Discordeno/assets/js/26.f80b3333.js"><link rel="prefetch" href="/Discordeno/assets/js/3.53698a31.js"><link rel="prefetch" href="/Discordeno/assets/js/4.44444bb2.js"><link rel="prefetch" href="/Discordeno/assets/js/5.28c5a3a6.js"><link rel="prefetch" href="/Discordeno/assets/js/6.c21bf358.js"><link rel="prefetch" href="/Discordeno/assets/js/7.784d0523.js"><link rel="prefetch" href="/Discordeno/assets/js/8.226ba84f.js"><link rel="prefetch" href="/Discordeno/assets/js/9.a70c93b5.js">
+    <link rel="stylesheet" href="/Discordeno/assets/css/0.styles.3d549681.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/Discordeno/" class="home-link router-link-active"><!----> <span class="site-name">Discordeno</span></a> <div class="links"><!----> <div class="user-settings"><a href="#" class="settings-button"><svg aria-hidden="true" data-prefix="fas" data-icon="cog" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-cog fa-w-16 settings-icon"><path fill="currentColor" d="M444.788 291.1l42.616 24.599c4.867 2.809 7.126 8.618 5.459 13.985-11.07 35.642-29.97 67.842-54.689 94.586a12.016 12.016 0 0 1-14.832 2.254l-42.584-24.595a191.577 191.577 0 0 1-60.759 35.13v49.182a12.01 12.01 0 0 1-9.377 11.718c-34.956 7.85-72.499 8.256-109.219.007-5.49-1.233-9.403-6.096-9.403-11.723v-49.184a191.555 191.555 0 0 1-60.759-35.13l-42.584 24.595a12.016 12.016 0 0 1-14.832-2.254c-24.718-26.744-43.619-58.944-54.689-94.586-1.667-5.366.592-11.175 5.459-13.985L67.212 291.1a193.48 193.48 0 0 1 0-70.199l-42.616-24.599c-4.867-2.809-7.126-8.618-5.459-13.985 11.07-35.642 29.97-67.842 54.689-94.586a12.016 12.016 0 0 1 14.832-2.254l42.584 24.595a191.577 191.577 0 0 1 60.759-35.13V25.759a12.01 12.01 0 0 1 9.377-11.718c34.956-7.85 72.499-8.256 109.219-.007 5.49 1.233 9.403 6.096 9.403 11.723v49.184a191.555 191.555 0 0 1 60.759 35.13l42.584-24.595a12.016 12.016 0 0 1 14.832 2.254c24.718 26.744 43.619 58.944 54.689 94.586 1.667 5.366-.592 11.175-5.459 13.985L444.788 220.9a193.485 193.485 0 0 1 0 70.2zM336 256c0-44.112-35.888-80-80-80s-80 35.888-80 80 35.888 80 80 80 80-35.888 80-80z"></path></svg></a> <div class="user-settings-menu" style="display:none;"><div class="theme-options"><!----> <!----> <div class="dark-theme-options toggle-option"><label for="dark-theme-toggle">Enable Dark Theme?</label> <input id="dark-theme-toggle" type="checkbox"></div> <!----> <!----></div></div></div> <!----> <div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/Discordeno/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="https://doc.deno.land/https/deno.land/x/discordeno/mod.ts" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Docs
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://discord.com/invite/J4NqJ72" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Discord
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/Skillz4Killz/Discordeno/docs" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/Discordeno/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="https://doc.deno.land/https/deno.land/x/discordeno/mod.ts" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Docs
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://discord.com/invite/J4NqJ72" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Discord
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/Skillz4Killz/Discordeno/docs" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Home</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Step By Step Guide</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>Advanced Guide</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/Discordeno/advanced/" aria-current="page" class="sidebar-link">Advanced Guide</a></li><li><a href="/Discordeno/advanced/arguments.html" class="sidebar-link">Command Arguments</a></li><li><a href="/Discordeno/advanced/customizations.html" aria-current="page" class="active sidebar-link">Customizing Discordeno</a></li><li><a href="/Discordeno/advanced/dockerhosting.html" class="sidebar-link">Docker Hosting</a></li><li><a href="/Discordeno/advanced/dynamiccommands.html" class="sidebar-link">Dynamic Command Creation!</a></li><li><a href="/Discordeno/advanced/permlevels.html" class="sidebar-link">Permission Levels!</a></li><li><a href="/Discordeno/advanced/subcommands.html" class="sidebar-link">Subcommands Inside Subcommands!</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="customizing-discordeno"><a href="#customizing-discordeno" class="header-anchor">#</a> Customizing Discordeno</h1> <p>This guide is only for extremely advanced developers. This feature is extremely powerful but comes with huge risks. When I was building Discordeno, there was always one goal I had in my mind that I wanted because when I used other libraries I always felt this was missing. I hated forking a library just to customize it as then it made staying up to date a much larger hassle. Discordeno was designed with customizability in mind. A vast majority of the library can be overridden allowing you to make it work however you would like for your bot.</p> <h2 id="customizing-structures"><a href="#customizing-structures" class="header-anchor">#</a> Customizing Structures</h2> <p>Discordeno provides the ability to customize structures. You have the ability to override the function that creates the structures inside Discordeno. <strong>THIS DOES NOT MODIFY THE PROTOTYPE!</strong> I wanted to make sure that Discordeno handled this without encouraging bad practices such as prototype pollution which can make your bots inherintly unstable and unpredictable. Discordeno allows you to take control over the functions that create the structures.</p> <h3 id="customizing-member-structure"><a href="#customizing-member-structure" class="header-anchor">#</a> Customizing Member Structure</h3> <p>Let's take into consideration that you wanted to add some custom properties to the member structure. For instance, let's add a couple of properties that could help make working with the bot easier such as <code>member.tag</code>, <code>member.guild</code>, <code>member.avatarURL</code>. We are going to add these, simple as an example for the purpose of this guide. Please note, that these don't exist in the library itself because they take up quite a bit of RAM/memory since as your bot grows you can hit millions of members which adds up to GB of memory. Keeping this minimal can help allow your bots to grow larger without increasing the cost. However, if you are advanced enough and feel adding/customizing the structures is necessary then this feature allows you to do that.</p> <p>To begin customizing, create a file in the structures folder called <code>member.ts</code>. The name of the file is not important at all.</p> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">createMember</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+<span class="token punctuation">}</span>
+</code></pre></div><p>We start by declaring a function that will be run to create the structure. Once again the name here is not important. The function must take the same arguments that the internal function takes. In this case the createMember function takes 2 arguments. <code>data: MemberCreatePayload, guildID: string</code></p> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">createMember</span><span class="token punctuation">(</span>data<span class="token operator">:</span> MemberCreatePayload<span class="token punctuation">,</span> guildID<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+<span class="token punctuation">}</span>
+</code></pre></div><p>The next step is to fill in this function. You can make this do whatever you want. My recommendation is to start by copying the current code from the internal libraries structure.</p> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">createMember</span><span class="token punctuation">(</span>data<span class="token operator">:</span> MemberCreatePayload<span class="token punctuation">,</span> guildID<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">const</span> <span class="token punctuation">{</span>
+    joined_at<span class="token operator">:</span> joinedAt<span class="token punctuation">,</span>
+    premium_since<span class="token operator">:</span> premiumSince<span class="token punctuation">,</span>
+    <span class="token operator">...</span>rest
+  <span class="token punctuation">}</span> <span class="token operator">=</span> data<span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    mfa_enabled<span class="token operator">:</span> mfaEnabled<span class="token punctuation">,</span>
+    premium_type<span class="token operator">:</span> premiumType<span class="token punctuation">,</span>
+    <span class="token operator">...</span>user
+  <span class="token punctuation">}</span> <span class="token operator">=</span> data<span class="token punctuation">.</span>user <span class="token operator">||</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> member <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span>rest<span class="token punctuation">,</span>
+    <span class="token comment">// Only use those that we have not removed above</span>
+    user<span class="token punctuation">,</span>
+    <span class="token comment">/** When the user joined the guild */</span>
+    joinedAt<span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>joinedAt<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token comment">/** When the user used their nitro boost on the server. */</span>
+    premiumSince<span class="token operator">:</span> premiumSince <span class="token operator">?</span> Date<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>premiumSince<span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token keyword">undefined</span><span class="token punctuation">,</span>
+    <span class="token comment">/** The guild id where this member exists */</span>
+    guildID<span class="token punctuation">,</span>
+    <span class="token comment">/** Whether or not this user has 2FA enabled. */</span>
+    mfaEnabled<span class="token punctuation">,</span>
+    <span class="token comment">/** The premium type for this user */</span>
+    premiumType<span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> member<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>Now we have a base to work with. We can now add a <code>tag</code>, <code>avatarURL</code>, <code>mention</code>, and <code>guild</code> properties to the member.</p> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token keyword">import</span> <span class="token punctuation">{</span> rawAvatarURL <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&quot;../../deps.ts&quot;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">createMember</span><span class="token punctuation">(</span>data<span class="token operator">:</span> MemberCreatePayload<span class="token punctuation">,</span> guildID<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Hidden code here to make it easier to see the changes</span>
+
+  <span class="token keyword">const</span> member <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span>rest<span class="token punctuation">,</span>
+    <span class="token comment">// Hidden code here to make it easier to see the changes</span>
+
+    <span class="token comment">/** The premium type for this user */</span>
+    premiumType<span class="token punctuation">,</span>
+    <span class="token comment">/** The username#discriminator tag for this member. */</span>
+    tag<span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>user<span class="token punctuation">.</span>username<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">#</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>user<span class="token punctuation">.</span>discriminator<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+    <span class="token comment">/** The avatarURL made easily accessible */</span>
+    avatarURL<span class="token operator">:</span> <span class="token function">rawAvatarURL</span><span class="token punctuation">(</span>data<span class="token punctuation">.</span>id<span class="token punctuation">,</span> user<span class="token punctuation">.</span>discriminator<span class="token punctuation">,</span> user<span class="token punctuation">.</span>avatar<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token comment">/** The guild object for where this member is located */</span>
+    guild<span class="token operator">:</span> <span class="token keyword">await</span> cacheHandler<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">&quot;guilds&quot;</span><span class="token punctuation">,</span> guildID<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token comment">/** Easily mention the member */</span>
+    mention<span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">&lt;@</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>data<span class="token punctuation">.</span>user<span class="token punctuation">.</span>id<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&gt;</span><span class="token template-punctuation string">`</span></span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> member<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>Now we need to use this function and telling Discordeno to override the internal createMember function. To do this, we will modify the internal functions. This is where we reassign the value of the function.</p> <div class="language-ts extra-class"><pre class="language-ts"><code>structures<span class="token punctuation">.</span>createMember <span class="token operator">=</span> createMember<span class="token punctuation">;</span>
+</code></pre></div><p>Awesome. Now, we have one more step to complete which is to declare these new properties on our typings for the member structure. At the bottom, of the file we will write the following code.</p> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token keyword">declare</span> <span class="token keyword">module</span> <span class="token string">&quot;../../deps.ts&quot;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">interface</span> <span class="token class-name">Member</span> <span class="token punctuation">{</span>
+    tag<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+    avatarURL<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+    guild<span class="token operator">:</span> Guild<span class="token punctuation">;</span>
+    mention<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><blockquote><p><strong>Important:</strong> when you modify structures, it is important to restart the bot so it takes effect on all members that have already be constructed.</p></blockquote> <p>The code should look like this right now:</p> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">createMember</span><span class="token punctuation">(</span>data<span class="token operator">:</span> MemberCreatePayload<span class="token punctuation">,</span> guildID<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">const</span> <span class="token punctuation">{</span>
+    joined_at<span class="token operator">:</span> joinedAt<span class="token punctuation">,</span>
+    premium_since<span class="token operator">:</span> premiumSince<span class="token punctuation">,</span>
+    <span class="token operator">...</span>rest
+  <span class="token punctuation">}</span> <span class="token operator">=</span> data<span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    mfa_enabled<span class="token operator">:</span> mfaEnabled<span class="token punctuation">,</span>
+    premium_type<span class="token operator">:</span> premiumType<span class="token punctuation">,</span>
+    <span class="token operator">...</span>user
+  <span class="token punctuation">}</span> <span class="token operator">=</span> data<span class="token punctuation">.</span>user <span class="token operator">||</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> member <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span>rest<span class="token punctuation">,</span>
+    <span class="token comment">// Only use those that we have not removed above</span>
+    user<span class="token punctuation">,</span>
+    <span class="token comment">/** When the user joined the guild */</span>
+    joinedAt<span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>joinedAt<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token comment">/** When the user used their nitro boost on the server. */</span>
+    premiumSince<span class="token operator">:</span> premiumSince <span class="token operator">?</span> Date<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>premiumSince<span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token keyword">undefined</span><span class="token punctuation">,</span>
+    <span class="token comment">/** The guild id where this member exists */</span>
+    guildID<span class="token punctuation">,</span>
+    <span class="token comment">/** Whether or not this user has 2FA enabled. */</span>
+    mfaEnabled<span class="token punctuation">,</span>
+    <span class="token comment">/** The premium type for this user */</span>
+    premiumType<span class="token punctuation">,</span>
+    <span class="token comment">/** The username#discriminator tag for this member. */</span>
+    tag<span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>user<span class="token punctuation">.</span>username<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">#</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>user<span class="token punctuation">.</span>discriminator<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+    <span class="token comment">/** The avatarURL made easily accessible */</span>
+    avatarURL<span class="token operator">:</span> <span class="token function">rawAvatarURL</span><span class="token punctuation">(</span>data<span class="token punctuation">.</span>id<span class="token punctuation">,</span> user<span class="token punctuation">.</span>discriminator<span class="token punctuation">,</span> user<span class="token punctuation">.</span>avatar<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token comment">/** The guild object for where this member is located */</span>
+    guild<span class="token operator">:</span> <span class="token keyword">await</span> cacheHandler<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">&quot;guilds&quot;</span><span class="token punctuation">,</span> guildID<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token comment">/** Easily mention the member */</span>
+    mention<span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">&lt;@</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>data<span class="token punctuation">.</span>user<span class="token punctuation">.</span>id<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&gt;</span><span class="token template-punctuation string">`</span></span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> member<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+structures<span class="token punctuation">.</span>createMember <span class="token operator">=</span> createMember<span class="token punctuation">;</span>
+
+<span class="token keyword">declare</span> <span class="token keyword">module</span> <span class="token string">&quot;../../deps.ts&quot;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">interface</span> <span class="token class-name">Member</span> <span class="token punctuation">{</span>
+    tag<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+    avatarURL<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+    guild<span class="token operator">:</span> Guild<span class="token punctuation">;</span>
+    mention<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4 id="removing-properties"><a href="#removing-properties" class="header-anchor">#</a> Removing Properties</h4> <p>Now, that we have added the properties we want, we can discuss how to remove properties we don't want. Remember every property that exists on member can become very expensive as your bot grows.</p> <p>To do a little easy math, let's suppose we had 1,000,000 member objects. Each one of them could possibly store an avatar string which can take up about 32 bytes. Now that comes to a total of around 32MB for every 1 million members.</p> <p>Now let's go ahead and delete the <code>avatar</code>, <code>username</code> and <code>discriminator</code> strings since we already used them and don't really want them to be duplicated as we will never need their raw counterparts in our bot(Note: You may in your bot and this is why this is an advanced feature. Decide carefully what you wish to add or remove). In fact, for the purposes of this guide let's go a little crazy and remove everything we don't specifically want to have.</p> <p>The following is the current base data available to us when we create the member.</p> <div class="language-ts extra-class"><pre class="language-ts"><code>  user<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token comment">/** The user's id */</span>
+    id<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+    <span class="token comment">/** the user's username, not unique across the platform */</span>
+    username<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+    <span class="token comment">/** The user's 4 digit discord tag */</span>
+    discriminator<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+    <span class="token comment">/** The user's avatar hash */</span>
+    avatar<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token comment">/** Whether the user is a bot */</span>
+    bot<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">boolean</span><span class="token punctuation">;</span>
+    <span class="token comment">/** Whether the user is an official discord system user (part of the urgent message system.) */</span>
+    system<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">boolean</span><span class="token punctuation">;</span>
+    <span class="token comment">/** Whether the user has two factor enabled on their account */</span>
+    mfa_enabled<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">boolean</span><span class="token punctuation">;</span>
+    <span class="token comment">/** the user's chosen language option */</span>
+    locale<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+    <span class="token comment">/** Whether the email on this account has been verified */</span>
+    verified<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">boolean</span><span class="token punctuation">;</span>
+    <span class="token comment">/** The user's email */</span>
+    email<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+    <span class="token comment">/** The flags on a user's account. */</span>
+    flags<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">;</span>
+    <span class="token comment">/** The type of Nitro subscription on a user's account. */</span>
+    premium_type<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token comment">/** The user's guild nickname if one is set. */</span>
+  nick<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+  <span class="token comment">/** Array of role ids that the member has */</span>
+  roles<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token comment">/** When the user joined the guild. */</span>
+  joined_at<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+  <span class="token comment">/** When the user used their nitro boost on the server. */</span>
+  premium_since<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+  <span class="token comment">/** Whether the user is deafened in voice channels */</span>
+  deaf<span class="token operator">:</span> <span class="token builtin">boolean</span><span class="token punctuation">;</span>
+  <span class="token comment">/** Whether the user is muted in voice channels */</span>
+  mute<span class="token operator">:</span> <span class="token builtin">boolean</span><span class="token punctuation">;</span>
+</code></pre></div><p>Let's just keep <code>nick</code>, <code>roles</code>, <code>joinedAt</code>, <code>bot</code> and <code>id</code> plus the new stuff we have added above.</p> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token keyword">import</span> <span class="token punctuation">{</span> cacheHandlers<span class="token punctuation">,</span> Guild<span class="token punctuation">,</span> MemberCreatePayload<span class="token punctuation">,</span> rawAvatarURL <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&quot;../../deps.ts&quot;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">createMember</span><span class="token punctuation">(</span>data<span class="token operator">:</span> MemberCreatePayload<span class="token punctuation">,</span> guildID<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    id<span class="token punctuation">,</span>
+    bot<span class="token punctuation">,</span>
+    username<span class="token punctuation">,</span>
+    discriminator<span class="token punctuation">,</span>
+    avatar<span class="token punctuation">,</span>
+    <span class="token operator">...</span>user
+  <span class="token punctuation">}</span> <span class="token operator">=</span> data<span class="token punctuation">.</span>user <span class="token operator">||</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>
+    id<span class="token punctuation">,</span>
+    bot<span class="token punctuation">,</span>
+    nick<span class="token operator">:</span> data<span class="token punctuation">.</span>nick<span class="token punctuation">,</span>
+    roles<span class="token operator">:</span> data<span class="token punctuation">.</span>roles<span class="token punctuation">,</span>
+    joinedAt<span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">.</span>joined_at<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    tag<span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>username<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">#</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>discriminator<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+    avatarURL<span class="token operator">:</span> <span class="token function">rawAvatarURL</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> discriminator<span class="token punctuation">,</span> avatar<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    guild<span class="token operator">:</span> <span class="token keyword">await</span> cacheHandlers<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">&quot;guilds&quot;</span><span class="token punctuation">,</span> guildID<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    mention<span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">&lt;@</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>id<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&gt;</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+structures<span class="token punctuation">.</span>createMember <span class="token operator">=</span> createMember<span class="token punctuation">;</span>
+
+<span class="token keyword">declare</span> <span class="token keyword">module</span> <span class="token string">&quot;../../deps.ts&quot;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">interface</span> <span class="token class-name">Member</span> <span class="token punctuation">{</span>
+    bot<span class="token operator">:</span> <span class="token builtin">boolean</span><span class="token punctuation">;</span>
+    tag<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+    avatarURL<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+    guild<span class="token operator">:</span> Guild<span class="token punctuation">;</span>
+    mention<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>You might be seeing an error on <code>structures.createMember</code>. This is happening because our new member structures is modifying/removing existing properties that the lib internally said it would have. To solve this, simply just add a ts-ignore above it as you know better than TS that the typings are being overwritten.</p> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token comment">// @ts-ignore</span>
+structures<span class="token punctuation">.</span>createMember <span class="token operator">=</span> createMember<span class="token punctuation">;</span>
+</code></pre></div><h2 id="custom-cache"><a href="#custom-cache" class="header-anchor">#</a> Custom Cache</h2> <p>One of the features that Discordeno has is the ability to customize the cache. In order to do this, we will simply override the cache handlers. For the purposes of this guide, we are going to use Redis for our custom cache solution. You can use anything you like, this guide purpose is just to teach the basics of how to customize. We will not be discussing how to use Redis.</p> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token keyword">import</span> <span class="token punctuation">{</span> cacheHandlers <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&quot;../../../deps.ts&quot;</span><span class="token punctuation">;</span>
+
+cacheHandlers<span class="token punctuation">.</span><span class="token function-variable function">has</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>table<span class="token punctuation">,</span> key<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> Redis<span class="token punctuation">.</span><span class="token function">tables</span><span class="token punctuation">(</span>table<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">has</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre></div><p>This code now overrides the <code>has</code> method which will check from Redis. The basic concept is that the function <code>has</code> takes a table name and a key. The <code>has</code> method returns whether or not a value exists. You can do anything you like inside this function, like connecting to a database or any other solution you would like to use.</p> <p>Similarily, since we want to use Redis we would want to customize all the methods on the cacheHandlers. The current list of methods available are:</p> <ul><li>has</li> <li>get</li> <li>delete</li> <li>clear</li> <li>set</li> <li>forEach</li></ul> <h2 id="custom-gateway-payload-handling-controllers"><a href="#custom-gateway-payload-handling-controllers" class="header-anchor">#</a> Custom Gateway Payload Handling (Controllers)</h2> <p>Controllers are one of the most powerful features of Discordeno. They allow you to take control of how Discordeno handles the Discord payloads from the gateway. When an event comes in, you can override and control how you want it to work. For example, if your bot does not use emojis at all, you could simply just take control over the GUILD_EMOJIS_UPDATE event and prevent anyone from caching any emojis at all. Another example, is if you are building a custom module/framework around Discordeno and you want to provide more custom events such as when someone boosts the server or some other custom event this is possible as well.</p> <p>Someone once asked if it was possible to make Discordeno, show the number of users currently typing in the server. He had managed to build this himself in his bot, but he wanted to do it inside the library itself. In order to keep Discordeno minimalistic and memory efficient I avoided adding this. So let's see how we could achieve this same thing with Controllers.</p> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token keyword">import</span> <span class="token punctuation">{</span>
+  controllers<span class="token punctuation">,</span>
+  eventHandlers<span class="token punctuation">,</span>
+  TypingStartPayload<span class="token punctuation">,</span>
+<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&quot;../../../deps.ts&quot;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> typingUsers <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Map<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> <span class="token builtin">number</span><span class="token operator">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">function</span> <span class="token function">createTimeout</span><span class="token punctuation">(</span>userID<span class="token operator">:</span> String<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    typingUsers<span class="token punctuation">.</span><span class="token keyword">delete</span><span class="token punctuation">(</span>userID<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">10000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+controllers<span class="token punctuation">.</span><span class="token function-variable function">TYPING_START</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>data<span class="token punctuation">.</span>t <span class="token operator">!==</span> <span class="token string">&quot;TYPING_START&quot;</span><span class="token punctuation">)</span> <span class="token keyword">return</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> payload <span class="token operator">=</span> data<span class="token punctuation">.</span>d <span class="token keyword">as</span> TypingStartPayload<span class="token punctuation">;</span>
+  eventHandlers<span class="token punctuation">.</span>typingStart<span class="token operator">?.</span><span class="token punctuation">(</span>payload<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>typingUsers<span class="token punctuation">.</span><span class="token function">has</span><span class="token punctuation">(</span>payload<span class="token punctuation">.</span>user_id<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">clearTimeout</span><span class="token punctuation">(</span>typingUsers<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span>payload<span class="token punctuation">.</span>user_id<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  typingUsers<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span>payload<span class="token punctuation">.</span>user_id<span class="token punctuation">,</span> <span class="token function">createTimeout</span><span class="token punctuation">(</span>payload<span class="token punctuation">.</span>user_id<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre></div><p>Controllers are amazing in so many ways. This is just a basic example but it's true potential is only limited by your imagination. I would love to see what you all can create with controllers.</p> <p>Something worth noting about why Discordeno controllers are so amazing is that it allows you to never depend on me. When Discord releases something new, you don't need to wait for me to update the library to access it. Without controllers, if you wanted access to a feature you would need to wait for the library to be updated or have to fork it, modify it and modify your code for it. Then when the library does get updated, you need to switch back to it and modify your code again possibly to how the lib designed it. With controllers, you never have to fork or anything. Just take control!</p> <p>Controllers are extremely powerful. <strong>Remember with great power comes great bugs!</strong></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/Skillz4Killz/Discordeno/docs/edit/master/src/advanced/customizations.md" target="_blank" rel="noopener noreferrer">Edit this page</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/Discordeno/advanced/arguments.html" class="prev">
+        Command Arguments
+      </a></span> <span class="next"><a href="/Discordeno/advanced/dockerhosting.html">
+        Docker Hosting
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/Discordeno/assets/js/app.046a4882.js" defer></script><script src="/Discordeno/assets/js/2.a56932ae.js" defer></script><script src="/Discordeno/assets/js/10.18d86839.js" defer></script>
+  </body>
+</html>
