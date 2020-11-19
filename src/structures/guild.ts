@@ -91,7 +91,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     }])),
   };
 
-  initialMemberLoadQueue.set(guild.id, members)
+  initialMemberLoadQueue.set(guild.id, members);
   // members.forEach((m) => structures.createMember(m, guild.id));
 
   return guild;

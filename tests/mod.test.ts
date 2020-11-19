@@ -2,7 +2,6 @@ import { assert, assertEquals, delay } from "../deps.ts";
 import {
   botID,
   cache,
-  startBot,
   createGuildChannel,
   createGuildRole,
   createServer,
@@ -16,6 +15,7 @@ import {
   OverwriteType,
   Role,
   sendMessage,
+  startBot,
 } from "../mod.ts";
 import {
   channelOverwriteHasPermission,
