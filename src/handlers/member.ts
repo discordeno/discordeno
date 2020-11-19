@@ -37,9 +37,9 @@ export function avatarURL(
   format?: ImageFormats,
 ) {
   return rawAvatarURL(
-    member.user.id,
-    member.user.discriminator,
-    member.user.avatar,
+    member.id,
+    member.discriminator,
+    member.avatar,
     size,
     format,
   );
