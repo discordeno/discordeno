@@ -13,7 +13,7 @@ jobs:
       - name: Install dependencies
         run: cd docs && yarn install
       - name: Build the documentation
-        run: yarn docs:build
+        run: cd docs && yarn docs:build
       - name: Deploy the documentation
         if: success()
         uses: peaceiris/actions-gh-pages@v3
