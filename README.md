@@ -50,8 +50,7 @@ Alternatively, you can use boilerplate template repositories that were created b
 
 ## Documentation
 
-- [API Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
-- [Guide](https://discordeno.netlify.com)
+- [Website](https://discordeno.mod.land)
 - [Support server](https://discord.gg/J4NqJ72)
 - [Contributing Guide](https://github.com/Skillz4Killz/Discordeno/blob/master/.github/CONTRIBUTING.md)
 
