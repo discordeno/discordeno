@@ -1,10 +1,10 @@
-const { description, repository } = require("../../package");
+const { name, description, repository } = require("../../package");
 
-const title = "Discordeno";
+const title = name[0].toUpperCase() + name.slice(1);
 const discordLink = "https://discord.com/invite/J4NqJ72";
 
 module.exports = {
-  base: `/${title}/`,
+  base: `/`,
   title,
   description,
   head: [
