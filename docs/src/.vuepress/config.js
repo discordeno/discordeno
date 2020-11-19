@@ -23,7 +23,7 @@ module.exports = {
       },
     ],
     ["meta", { name: "og:type", content: "website" }],
-    ["meta", { name: "og:url", content: "https://discordeno.mod.land" }],
+    ["meta", { name: "og:url", content: "https://discordeno.js.org" }],
   ],
   theme: "yuu",
   themeConfig: {

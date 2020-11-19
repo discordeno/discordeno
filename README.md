@@ -50,7 +50,7 @@ Alternatively, you can use boilerplate template repositories that were created b
 
 ## Documentation
 
-- [Website](https://discordeno.mod.land)
+- [Website](https://discordeno.js.org)
 - [Support server](https://discord.gg/J4NqJ72)
 - [Contributing Guide](https://github.com/Skillz4Killz/Discordeno/blob/master/.github/CONTRIBUTING.md)
 
