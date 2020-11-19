@@ -51,9 +51,7 @@ export async function createShard(
 
   const basicShard: BasicShard = {
     id: shardID,
-    socket: await connectWebSocket(
-      proxyWSURL || `${data.url}?v=8&encoding=json`,
-    ),
+    socket: await connectWebSocket(proxyWSURL),
     resumeInterval: 0,
     sessionID: oldShard?.sessionID || "",
     previousSequenceNumber: oldShard?.previousSequenceNumber || 0,

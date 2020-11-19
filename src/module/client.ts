@@ -10,7 +10,7 @@ export let botID = "";
 export let eventHandlers: EventHandlers = {};
 
 export let botGatewayData: DiscordBotGatewayData;
-export let proxyWSURL = "";
+export let proxyWSURL = "wss://gateway.discord.gg?v=8&encoding=json";
 
 export const identifyPayload: IdentifyPayload = {
   token: "",
@@ -45,6 +45,7 @@ export async function startBot(data: ClientOptions) {
     endpoints.GATEWAY_BOT,
   ) as DiscordBotGatewayData;
 
+  proxyWSURL = botGatewayData.url;
   identifyPayload.token = data.token;
   identifyPayload.intents = data.intents.reduce(
     (bits, next) => (bits |= next),
@@ -93,6 +94,7 @@ export async function startBigBrainBot(data: BigBrainBotOptions) {
     endpoints.GATEWAY_BOT,
   ) as DiscordBotGatewayData;
 
+  if (!data.wsURL) proxyWSURL = botGatewayData.url
   spawnShards(
     botGatewayData,
     identifyPayload,
