@@ -1,4 +1,5 @@
 import { delay } from "../../deps.ts";
+import { initialMemberLoadQueue } from "../../mod.ts";
 import { eventHandlers, setBotID } from "../module/client.ts";
 import { allowNextShard } from "../module/shardingManager.ts";
 import { structures } from "../structures/mod.ts";
@@ -30,6 +31,13 @@ export async function handleInternalReady(
     await delay(5000);
     cache.isReady = true;
     eventHandlers.ready?.();
+
+    // All the members that came in on guild creates should now be processed 1 by 1
+    for (const [guildID, members] of initialMemberLoadQueue.entries()) {
+      for (const member of members) {
+        structures.createMember(member, guildID);
+      }
+    }
   }
 
   // Wait 5 seconds to spawn next shard

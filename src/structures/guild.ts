@@ -1,7 +1,10 @@
 import { CreateGuildPayload } from "../types/guild.ts";
+import { MemberCreatePayload } from "../types/member.ts";
 import { Unpromise } from "../types/misc.ts";
 import { Collection } from "../utils/collection.ts";
 import { structures } from "./mod.ts";
+
+export const initialMemberLoadQueue = new Map<string, MemberCreatePayload[]>();
 
 export async function createGuild(data: CreateGuildPayload, shardID: number) {
   const {
@@ -88,7 +91,8 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     }])),
   };
 
-  members.forEach((m) => structures.createMember(m, guild.id));
+  initialMemberLoadQueue.set(guild.id, members)
+  // members.forEach((m) => structures.createMember(m, guild.id));
 
   return guild;
 }
