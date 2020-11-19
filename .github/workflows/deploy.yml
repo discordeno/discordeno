@@ -1,0 +1,26 @@
+name: Deployment
+on:
+  push:
+    branches: master
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - name: Install dependencies
+        run: yarn install
+      - name: Build the documentation
+        run: yarn docs:build
+      - name: Deploy the documentation
+        if: success()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/.vuepress/dist
+          commit_message: ${{ github.event.head_commit.message }}
+          cname: discordeno.mod.land
+          keep_files: true
+          enable_jekyll: false
