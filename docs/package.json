@@ -2,11 +2,6 @@
   "name": "docs",
   "version": "0.0.1",
   "description": "Docs for Discordeno",
-  "main": "index.js",
-  "authors": {
-    "name": "ayntee",
-    "email": ""
-  },
   "repository": "https://github.com/Skillz4Killz/Discordeno/docs",
   "scripts": {
     "dev": "vuepress dev src",

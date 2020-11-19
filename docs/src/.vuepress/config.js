@@ -1,24 +1,23 @@
-const { description } = require('../../package')
+const { description, repository } = require("../../package");
+
+const discordLink = "";
 
 module.exports = {
-  /**
-   * Ref：https://v1.vuepress.vuejs.org/config/#title
-   */
-  title: 'Vuepress Docs Boilerplate',
-  /**
-   * Ref：https://v1.vuepress.vuejs.org/config/#description
-   */
-  description: description,
+  title: "Discordeno",
+  description,
 
   /**
    * Extra tags to be injected to the page HTML `<head>`
    *
-   * ref：https://v1.vuepress.vuejs.org/config/#head
+   * ref： https://v1.vuepress.vuejs.org/config/#head
    */
   head: [
-    ['meta', { name: 'theme-color', content: '#3eaf7c' }],
-    ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
-    ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }]
+    ["meta", { name: "theme-color", content: "#3eaf7c" }],
+    ["meta", { name: "apple-mobile-web-app-capable", content: "yes" }],
+    [
+      "meta",
+      { name: "apple-mobile-web-app-status-bar-style", content: "black" },
+    ],
   ],
 
   /**
@@ -27,44 +26,42 @@ module.exports = {
    * ref：https://v1.vuepress.vuejs.org/theme/default-theme-config.html
    */
   themeConfig: {
-    repo: '',
-    editLinks: false,
-    docsDir: '',
-    editLinkText: '',
-    lastUpdated: false,
+    repo: repository,
+    editLinks: true,
+    docsDir: "docs",
+    editLinkText: "Help us improve this page!",
+    lastUpdated: true,
+    smoothScroll: true,
     nav: [
       {
-        text: 'Guide',
-        link: '/guide/',
+        text: "Guide",
+        link: "/guide/",
       },
       {
-        text: 'Config',
-        link: '/config/'
+        text: "Discord",
+        link: discordLink,
+        target: "_blank",
       },
-      {
-        text: 'VuePress',
-        link: 'https://v1.vuepress.vuejs.org'
-      }
     ],
     sidebar: {
-      '/guide/': [
+      "/guide/": [
         {
-          title: 'Guide',
+          title: "Guide",
           collapsable: false,
           children: [
-            '',
-            'using-vue',
-          ]
-        }
+            "",
+            "using-vue",
+          ],
+        },
       ],
-    }
+    },
   },
 
   /**
-   * Apply plugins，ref：https://v1.vuepress.vuejs.org/zh/plugin/
+   * Apply plugins， ref： https://v1.vuepress.vuejs.org/zh/plugin/
    */
   plugins: [
-    '@vuepress/plugin-back-to-top',
-    '@vuepress/plugin-medium-zoom',
-  ]
-}
+    "@vuepress/plugin-back-to-top",
+    "@vuepress/plugin-medium-zoom",
+  ],
+};
