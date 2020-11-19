@@ -1,6 +1,7 @@
 import { cacheHandlers } from "../controllers/cache.ts";
 import { GuildMember, MemberCreatePayload } from "../types/member.ts";
 import { Unpromise } from "../types/misc.ts";
+import { cache } from "../utils/cache.ts";
 import { Collection } from "../utils/collection.ts";
 
 export async function createMember(data: MemberCreatePayload, guildID: string) {
@@ -20,6 +21,18 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
     premium_type: premiumType,
     ...user
   } = data.user || {};
+
+  let member = {
+    ...rest,
+    // Only use those that we have not removed above
+    ...user,
+    /** Whether or not this user has 2FA enabled. */
+    mfaEnabled,
+    /** The premium type for this user */
+    premiumType,
+    /** The guild related data mapped by guild id */
+    guilds: new Collection<string, GuildMember>(),
+  };
 
   const cached = await cacheHandlers.get("members", user.id);
   if (cached) {
@@ -51,20 +64,13 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
       /** Whether the user is muted in voice channels */
       mute: mute,
     });
+
+    // Hack to get around Member returning Member creating Member
+    member = cached;
+    return member;
   }
 
-  const member = {
-    ...rest,
-    // Only use those that we have not removed above
-    ...user,
-    /** Whether or not this user has 2FA enabled. */
-    mfaEnabled,
-    /** The premium type for this user */
-    premiumType,
-    /** The guild related data mapped by guild id */
-    guilds: new Collection<string, GuildMember>(),
-  };
-
+  // User was never cached before
   member.guilds.set(guildID, {
     nick: nick,
     roles: roles,
