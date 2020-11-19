@@ -17,7 +17,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/.vuepress/dist
+          publish_dir: ./docs/src/.vuepress/dist
           commit_message: ${{ github.event.head_commit.message }}
           cname: discordeno.mod.land
           keep_files: true
