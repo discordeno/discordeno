@@ -10,3 +10,5 @@ npm-debug.log*
 
 # Docs
 dist/
+public/
+.cache/
