@@ -192,7 +192,7 @@ export async function sendMessage(
           ["READ_MESSAGE_HISTORY"],
         ))
       ) {
-        throw new Error(Errors.MISSING_SEND_MESSAGES);
+        throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
       }
     }
   }
@@ -213,7 +213,7 @@ export async function sendMessage(
       allowed_mentions: content.mentions
         ? {
           ...content.mentions,
-          replied_user: content.mentions.repliedUser !== false,
+          replied_user: content.mentions.repliedUser,
         }
         : undefined,
       message_reference: {

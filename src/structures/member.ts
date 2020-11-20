@@ -1,7 +1,6 @@
 import { cacheHandlers } from "../controllers/cache.ts";
 import { GuildMember, MemberCreatePayload } from "../types/member.ts";
 import { Unpromise } from "../types/misc.ts";
-import { cache } from "../utils/cache.ts";
 import { Collection } from "../utils/collection.ts";
 
 export async function createMember(data: MemberCreatePayload, guildID: string) {
@@ -22,7 +21,7 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
     ...user
   } = data.user || {};
 
-  let member = {
+  const member = {
     ...rest,
     // Only use those that we have not removed above
     ...user,
@@ -36,38 +35,9 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
 
   const cached = await cacheHandlers.get("members", user.id);
   if (cached) {
-    // Check if any of the others need updating
-    if (mfaEnabled) cached.mfaEnabled = mfaEnabled;
-    if (premiumType) cached.premiumType = premiumType;
-    if (user.username) cached.username = user.username;
-    if (user.discriminator) cached.discriminator = user.discriminator;
-    if (user.avatar) cached.avatar = user.avatar;
-    if (user.bot) cached.bot = user.bot;
-    if (user.system) cached.system = user.system;
-    if (user.locale) cached.locale = user.locale;
-    if (user.verified) cached.verified = user.verified;
-    if (user.email) cached.email = user.email;
-    if (user.flags) cached.flags = user.flags;
-
-    // Set the guild data
-    cached.guilds.set(guildID, {
-      /** The user's guild nickname if one is set. */
-      nick: nick,
-      /** Array of role ids that the member has */
-      roles: roles,
-      /** When the user joined the guild. */
-      joinedAt: Date.parse(joinedAt),
-      /** When the user used their nitro boost on the server. */
-      premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
-      /** Whether the user is deafened in voice channels */
-      deaf: deaf,
-      /** Whether the user is muted in voice channels */
-      mute: mute,
-    });
-
-    // Hack to get around Member returning Member creating Member
-    member = cached;
-    return member;
+    for (const [id, guild] of cached.guilds.entries()) {
+      member.guilds.set(id, guild)
+    }
   }
 
   // User was never cached before

@@ -110,7 +110,6 @@ export async function hasChannelPermissions(
   ) {
     return true;
   }
-
   const member = (await cacheHandlers.get("members", memberID))?.guilds.get(
     guild.id,
   );
