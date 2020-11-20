@@ -7,7 +7,14 @@
 ![Test](https://github.com/Skillz4Killz/Discordeno/workflows/Test/badge.svg)
 [![nest badge](https://nest.land/badge.svg)](https://nest.land/package/Discordeno)
 
-## Why Discordeno?
+## Features
+
+- First-class TypeScript & JavaScript support
+- Security & stable
+- Builtin Documentation
+- Minimalistic
+- Functional API
+- Actively maintained
 
 ### Beginner Developers
 
@@ -22,31 +29,24 @@ If you do not wish to use a boilerplate, you may continue reading.
 
 ### Advanced Developers
 
-The instructions below are meant for advanced developers!
-
-Starting with Discordeno is very simple, you can start from scratch without any boilerplates/frameworks: Add this snippet of code into a new TypeScript file:
+Here's a minimal example to get started with:
 
 ```typescript
 import StartBot, { sendMessage, Intents } from "https://x.nest.land/Discordeno@9.0.15/mod.ts";
-import config from "./config.ts";
 
 StartBot({
-  token: config.token,
+  token: "BOT TOKEN",
   intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
   eventHandlers: {
-    ready: () => {
-      console.log('Successfully connected to gateway');
-    },
+    ready: () => console.log('Successfully connected to gateway'),
     messageCreate: (message) => {
-      if (message.content === "!ping") {
-        sendMessage(message.channelID, "Pong");
+      if (message.content === "hello") {
+        sendMessage(message.channelID, "Hi there!");
       }
     },
   },
 });
 ```
-
-Alternatively, you can use boilerplate template repositories that were created by wonderful developers. Review the list on the website, and add any of yours if you make your own.
 
 ## Documentation
 
