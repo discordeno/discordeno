@@ -280,6 +280,8 @@ export interface MessageCreateOptions {
   message_reference?: Reference;
   /** The message flags combined like permission bits describe extra features of the message */
   flags?: 1 | 2 | 4 | 8 | 16;
+  /** the stickers sent with the message (bots currently can only receive messages with stickers, not send) */
+  stickers?: MessageSticker[];
   /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
   referenced_message?: MessageCreateOptions | null;
 }
@@ -341,4 +343,29 @@ export interface MessageReactionRemoveEmojiPayload
 export interface PartialMessage {
   id: string;
   channel: Channel;
+}
+
+export interface MessageSticker {
+  /** id of the sticker */
+  id: string;
+  /** id of the pack the sticker is from */
+  pack_id: string;
+  /** name of the sticker */
+  name: string;
+  /** description of the sticker */
+  description: string;
+  /** a comma-separated list of tags for the sticker */
+  tags?: string;
+  /** sticker asset hash. The URL for fetching sticker assets is currently private. */
+  asset: string;
+  /** sticker preview asset hash. The URL for fetching sticker assets is currently private. */
+  preview_asset: string | null;
+  /** type of sticker format */
+  format_type: MessageStickerFormat;
+}
+
+export enum MessageStickerFormat {
+  PNG = 1,
+  APNG,
+  LOTTIE,
 }
