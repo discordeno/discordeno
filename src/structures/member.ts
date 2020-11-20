@@ -36,7 +36,7 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
   const cached = await cacheHandlers.get("members", user.id);
   if (cached) {
     for (const [id, guild] of cached.guilds.entries()) {
-      member.guilds.set(id, guild)
+      member.guilds.set(id, guild);
     }
   }
 
