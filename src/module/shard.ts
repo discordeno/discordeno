@@ -1,12 +1,4 @@
-import {
-  connectWebSocket,
-  delay,
-  inflate,
-  isWebSocketCloseEvent,
-  isWebSocketPingEvent,
-  isWebSocketPongEvent,
-  WebSocket,
-} from "../../deps.ts";
+import { delay, inflate } from "../../deps.ts";
 import { eventHandlers } from "../../mod.ts";
 import {
   DiscordBotGatewayData,
@@ -49,9 +41,10 @@ export async function createShard(
 ) {
   const oldShard = basicShards.get(shardID);
 
+  const socket = new WebSocket(proxyWSURL);
   const basicShard: BasicShard = {
     id: shardID,
-    socket: await connectWebSocket(proxyWSURL),
+    socket,
     resumeInterval: 0,
     sessionID: oldShard?.sessionID || "",
     previousSequenceNumber: oldShard?.previousSequenceNumber || 0,
@@ -60,6 +53,7 @@ export async function createShard(
 
   basicShards.set(basicShard.id, basicShard);
 
+  // TODO: do something about this
   if (!resuming) {
     // Intial identify with the gateway
     await identify(basicShard, identifyPayload);
@@ -67,44 +61,7 @@ export async function createShard(
     await resume(basicShard, identifyPayload);
   }
 
-  for await (let message of basicShard.socket) {
-    if (isWebSocketCloseEvent(message)) {
-      eventHandlers.debug?.(
-        { type: "websocketClose", data: { shardID: basicShard.id, message } },
-      );
-
-      // These error codes should just crash the projects
-      if ([4004, 4005, 4012, 4013, 4014].includes(message.code)) {
-        console.error(`Close :( ${JSON.stringify(message)}`);
-        eventHandlers.debug?.(
-          {
-            type: "websocketErrored",
-            data: { shardID: basicShard.id, message },
-          },
-        );
-
-        throw new Error(
-          "Shard.ts: Error occurred that is not resumeable or able to be reconnected.",
-        );
-      }
-      // These error codes can not be resumed but need to reconnect from start
-      if ([4003, 4007, 4008, 4009].includes(message.code)) {
-        eventHandlers.debug?.(
-          {
-            type: "websocketReconnecting",
-            data: { shardID: basicShard.id, message },
-          },
-        );
-        createShard(data, identifyPayload, false, shardID);
-      } else {
-        basicShard.needToResume = true;
-        resumeConnection(data, identifyPayload, basicShard.id);
-      }
-      continue;
-    } else if (isWebSocketPingEvent(message) || isWebSocketPongEvent(message)) {
-      continue;
-    }
-
+  socket.onmessage = ({ data: message }) => {
     if (message instanceof Uint8Array) {
       message = inflate(
         message,
@@ -170,7 +127,44 @@ export async function createShard(
           break;
       }
     }
-  }
+  };
+
+  // TODO(ayntee): better ws* event names
+  socket.onclose = ({ reason, code, wasClean }) => {
+    eventHandlers.debug?.(
+      {
+        type: "websocketClose",
+        data: { shardID: basicShard.id, code, reason, wasClean },
+      },
+    );
+
+    // These error codes should just crash the projects
+    if ([4004, 4005, 4012, 4013, 4014].includes(code)) {
+      eventHandlers.debug?.(
+        {
+          type: "websocketErrored",
+          data: { shardID: basicShard.id, code, reason, wasClean },
+        },
+      );
+
+      throw new Error(
+        "Shard.ts: Error occurred that is not resumeable or able to be reconnected.",
+      );
+    }
+    // These error codes can not be resumed but need to reconnect from start
+    if ([4003, 4007, 4008, 4009].includes(code)) {
+      eventHandlers.debug?.(
+        {
+          type: "websocketReconnecting",
+          data: { shardID: basicShard.id, code, reason, wasClean },
+        },
+      );
+      createShard(data, identifyPayload, false, shardID);
+    } else {
+      basicShard.needToResume = true;
+      resumeConnection(data, identifyPayload, basicShard.id);
+    }
+  };
 }
 
 function identify(shard: BasicShard, payload: IdentifyPayload) {
@@ -211,7 +205,7 @@ async function heartbeat(
   data: DiscordBotGatewayData,
 ) {
   // We lost socket connection between heartbeats, resume connection
-  if (shard.socket.isClosed) {
+  if (shard.socket.readyState === WebSocket.CLOSED) {
     shard.needToResume = true;
     resumeConnection(data, payload, shard.id);
     heartbeating.delete(shard.id);
@@ -307,7 +301,7 @@ export function requestGuildMembers(
   }
 
   // If its closed add back to queue to redo on resume
-  if (shard?.socket.isClosed) {
+  if (shard?.socket.readyState === WebSocket.CLOSED) {
     requestGuildMembers(guildID, shardID, nonce, options);
     return;
   }
