@@ -53,6 +53,7 @@ export async function createShard(
 
   basicShards.set(basicShard.id, basicShard);
 
+  // TODO: do something about this
   // TODO(ayntee): check if the readyState of the websocket is OPEN (not sure if this is the solution)
   if (!resuming) {
     // Intial identify with the gateway
