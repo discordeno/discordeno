@@ -16,6 +16,7 @@ import { Errors } from "../types/errors.ts";
 import { RawOverwrite } from "../types/guild.ts";
 import { MessageCreateOptions } from "../types/message.ts";
 import { Permission, Permissions } from "../types/permission.ts";
+import { WebhookPayload } from "../types/webhook.ts";
 import { endpoints } from "../utils/constants.ts";
 import { botHasChannelPermissions } from "../utils/permissions.ts";
 
@@ -298,7 +299,9 @@ export async function getChannelWebhooks(channelID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
-  return RequestManager.get(endpoints.CHANNEL_WEBHOOKS(channelID));
+  return RequestManager.get(endpoints.CHANNEL_WEBHOOKS(channelID)) as Promise<
+    WebhookPayload[]
+  >;
 }
 
 interface EditChannelRequest {
