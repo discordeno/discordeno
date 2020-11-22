@@ -57,7 +57,7 @@ export async function createShard(
   // TODO(ayntee): check if the readyState of the websocket is OPEN (not sure if this is the solution)
   socket.onopen = async () => {
     if (!resuming) {
-      // Intial identify with the gateway
+      // Initial identify with the gateway
       await identify(basicShard, identifyPayload);
     } else {
       await resume(basicShard, identifyPayload);
