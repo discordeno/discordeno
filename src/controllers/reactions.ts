@@ -48,7 +48,7 @@ export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
     ...payload,
     id: payload.message_id,
     channelID: payload.channel_id,
-    guildID: payload.guild_id,
+    guildID: payload.guild_id || "",
   };
 
   eventHandlers.reactionAdd?.(
