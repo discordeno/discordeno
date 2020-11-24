@@ -63,8 +63,9 @@ export async function createShard(
     }
   };
 
-  // TODO: handle the WebSocket#error event
-  // socket.onerror = () => {};
+  socket.onerror = ({ timeStamp }) => {
+    eventHandlers.debug?.({ type: "websocketErrored", data: { timeStamp } });
+  };
 
   socket.onmessage = ({ data: message }) => {
     if (message instanceof ArrayBuffer) {
@@ -160,6 +161,7 @@ export async function createShard(
         "Shard.ts: Error occurred that is not resumeable or able to be reconnected.",
       );
     }
+
     // These error codes can not be resumed but need to reconnect from start
     if ([4003, 4007, 4008, 4009].includes(code)) {
       eventHandlers.debug?.(
