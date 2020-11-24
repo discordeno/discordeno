@@ -52,6 +52,18 @@ StartBot({
 - [Support server](https://discord.gg/J4NqJ72)
 - [Contributing Guide](https://github.com/Skillz4Killz/Discordeno/blob/master/.github/CONTRIBUTING.md)
 
-## License
+## Contributing
+
+## Code of Conduct
+
+Discordeno expects participants to adhere to our [Code of Conduct](https://github.com/Skillz4Killz/Discordeno/blob/master/.github/CODE_OF_CONDUCT.md).
+
+## Contributing Guide
+
+We appreciate your help!
+
+Before contributing, please read the [Contributing Guide](https://github.com/Skillz4Killz/Discordeno/blob/master/.github/CONTRIBUTING.md).
+
+### License
 
 [MIT © Skillz4Killz](https://github.com/Skillz4Killz/Discordeno/blob/master/LICENSE)
