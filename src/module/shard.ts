@@ -42,6 +42,7 @@ export async function createShard(
   const oldShard = basicShards.get(shardID);
 
   const socket = new WebSocket(proxyWSURL);
+  socket.binaryType = "arraybuffer";
   const basicShard: BasicShard = {
     id: shardID,
     socket,
@@ -53,7 +54,6 @@ export async function createShard(
 
   basicShards.set(basicShard.id, basicShard);
 
-  // TODO: do something about this
   socket.onopen = async () => {
     if (!resuming) {
       // Initial identify with the gateway
@@ -64,9 +64,13 @@ export async function createShard(
   };
 
   // TODO: handle the WebSocket#error event
-  socket.onerror = () => {};
+  // socket.onerror = () => {};
 
   socket.onmessage = ({ data: message }) => {
+    if (message instanceof ArrayBuffer) {
+      message = new Uint8Array(message);
+    }
+
     if (message instanceof Uint8Array) {
       message = inflate(
         message,
