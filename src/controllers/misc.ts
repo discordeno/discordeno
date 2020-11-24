@@ -1,7 +1,8 @@
 import { delay } from "../../deps.ts";
-import { initialMemberLoadQueue } from "../../mod.ts";
+import { initialMemberLoadQueue, VoiceServerUpdatePayload } from "../../mod.ts";
 import { eventHandlers, setBotID } from "../module/client.ts";
 import { allowNextShard } from "../module/shardingManager.ts";
+import { connectVoice } from "../module/voice.ts";
 import { structures } from "../structures/mod.ts";
 import {
   DiscordPayload,
@@ -133,4 +134,8 @@ export function handleInternalWebhooksUpdate(data: DiscordPayload) {
     options.channel_id,
     options.guild_id,
   );
+}
+
+export function handleInternalVoiceServerUpdate(data: DiscordPayload) {
+  connectVoice(data.d as VoiceServerUpdatePayload);
 }

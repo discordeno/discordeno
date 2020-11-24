@@ -285,3 +285,12 @@ export interface ReadyPayload {
   shard?: [number, number];
   user: UserPayload;
 }
+
+export interface VoiceServerUpdatePayload {
+  /** voice connection token */
+  token: string;
+  /** the guild this voice server update is for */
+  guild_id: string;
+  /** the voice server host */
+  endpoint: string;
+}

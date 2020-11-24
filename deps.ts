@@ -5,4 +5,5 @@ export {
   assertArrayIncludes,
   assertEquals,
 } from "https://deno.land/std@0.75.0/testing/asserts.ts";
-export { decompress_with as inflate } from "https://unpkg.com/@evan/wasm@0.0.12/target/zlib/deno.js";
+export * from "https://esm.sh/@evan/wasm@0.0.15/target/nacl/deno.js";
+export { decompress_with as inflate } from "https://esm.sh/@evan/wasm@0.0.15/target/zlib/deno.js";

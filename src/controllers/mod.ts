@@ -1,3 +1,4 @@
+import { handleInternalVoiceServerUpdate } from "../../mod.ts";
 import {
   handleInternalGuildBanAdd,
   handleInternalGuildBanRemove,
@@ -74,6 +75,7 @@ export let controllers = {
   PRESENCE_UPDATE: handleInternalPresenceUpdate,
   TYPING_START: handleInternalTypingStart,
   USER_UPDATE: handleInternalUserUpdate,
+  VOICE_SERVER_UPDATE: handleInternalVoiceServerUpdate,
   VOICE_STATE_UPDATE: handleInternalVoiceStateUpdate,
   WEBHOOKS_UPDATE: handleInternalWebhooksUpdate,
 };
