@@ -7,8 +7,6 @@
 ![Test](https://github.com/Skillz4Killz/Discordeno/workflows/Test/badge.svg)
 [![nest badge](https://nest.land/badge.svg)](https://nest.land/package/Discordeno)
 
-## Features
-
 - First-class TypeScript & JavaScript support
 - Security & stable
 - Builtin Documentation
