@@ -14,7 +14,7 @@ import { handleDiscordPayload } from "./shardingManager.ts";
 const basicShards = new Map<number, BasicShard>();
 const heartbeating = new Map<number, boolean>();
 const utf8decoder = new TextDecoder();
-const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
+const GatewayQueue: (RequestMemberQueuedRequest | RawGatewayRequest)[] = [];
 let processQueue = false;
 
 export interface BasicShard {
@@ -27,10 +27,17 @@ export interface BasicShard {
 }
 
 interface RequestMemberQueuedRequest {
+  type: 1;
   guildID: string;
   shardID: number;
   nonce: string;
   options?: FetchMembersOptions;
+}
+
+interface RawGatewayRequest {
+  type: 2;
+  shardID: number;
+  payload: Record<string, unknown>;
 }
 
 export async function createShard(
@@ -297,7 +304,8 @@ export function requestGuildMembers(
 
   // This request was not from this queue so we add it to queue first
   if (!queuedRequest) {
-    RequestMembersQueue.push({
+    GatewayQueue.push({
+      type: 1,
       guildID,
       shardID,
       nonce,
@@ -331,21 +339,38 @@ export function requestGuildMembers(
 }
 
 async function processGatewayQueue() {
-  if (!RequestMembersQueue.length) {
+  if (!GatewayQueue.length) {
     processQueue = false;
     return;
   }
 
   basicShards.forEach((shard) => {
-    const index = RequestMembersQueue.findIndex((q) => q.shardID === shard.id);
+    const index = GatewayQueue.findIndex((q) => q.shardID === shard.id);
     // 2 events per second is the rate limit.
-    const request = RequestMembersQueue[index];
+    const request = GatewayQueue[index];
     if (request) {
+      if (request.type === 2) {
+        eventHandlers.debug?.(
+          {
+            type: "gatewayRequestProcessing",
+            data: {
+              remaining: GatewayQueue.length,
+              request,
+            },
+          },
+        );
+
+        const shard = basicShards.get(request.shardID);
+        if (!shard) return;
+
+        return shard.socket.send(JSON.stringify(request.payload));
+      }
+
       eventHandlers.debug?.(
         {
           type: "requestMembersProcessing",
           data: {
-            remaining: RequestMembersQueue.length,
+            remaining: GatewayQueue.length,
             request,
           },
         },
@@ -358,18 +383,33 @@ async function processGatewayQueue() {
         true,
       );
       // Remove item from queue
-      RequestMembersQueue.splice(index, 1);
+      GatewayQueue.splice(index, 1);
 
-      const secondIndex = RequestMembersQueue.findIndex((q) =>
-        q.shardID === shard.id
-      );
-      const secondRequest = RequestMembersQueue[secondIndex];
+      const secondIndex = GatewayQueue.findIndex((q) => q.shardID === shard.id);
+      const secondRequest = GatewayQueue[secondIndex];
       if (secondRequest) {
+        if (secondRequest.type === 2) {
+          eventHandlers.debug?.(
+            {
+              type: "gatewayRequestProcessing",
+              data: {
+                remaining: GatewayQueue.length,
+                secondRequest,
+              },
+            },
+          );
+
+          const shard = basicShards.get(secondRequest.shardID);
+          if (!shard) return;
+
+          return shard.socket.send(JSON.stringify(secondRequest.payload));
+        }
+
         eventHandlers.debug?.(
           {
             type: "requestMembersProcessing",
             data: {
-              remaining: RequestMembersQueue.length,
+              remaining: GatewayQueue.length,
               request,
             },
           },
@@ -382,7 +422,7 @@ async function processGatewayQueue() {
           true,
         );
         // Remove item from queue
-        RequestMembersQueue.splice(secondIndex, 1);
+        GatewayQueue.splice(secondIndex, 1);
       }
     }
   });
@@ -409,4 +449,15 @@ export function botGatewayStatusRequest(payload: BotStatusRequest) {
       },
     }));
   });
+}
+
+export function sendRawGatewayCommand(
+  shardID: number,
+  payload: Record<string, unknown>,
+) {
+  GatewayQueue.unshift({ type: 2, shardID, payload });
+  if (!processQueue) {
+    processQueue = true;
+    processGatewayQueue();
+  }
 }

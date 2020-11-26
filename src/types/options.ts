@@ -54,6 +54,7 @@ export interface DebugArg {
     | "requestManagerFetching"
     | "requestManagerFetched"
     | "requestMembersProcessing"
+    | "gatewayRequestProcessing"
     | "heartbeat"
     | "heartbeatStopped"
     | "createShard"
