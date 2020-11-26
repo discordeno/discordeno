@@ -363,6 +363,8 @@ async function processGatewayQueue() {
         const shard = basicShards.get(request.shardID);
         if (!shard) return;
 
+        GatewayQueue.splice(index, 1);
+
         return shard.socket.send(JSON.stringify(request.payload));
       }
 
@@ -401,6 +403,8 @@ async function processGatewayQueue() {
 
           const shard = basicShards.get(secondRequest.shardID);
           if (!shard) return;
+
+          GatewayQueue.splice(secondIndex, 1);
 
           return shard.socket.send(JSON.stringify(secondRequest.payload));
         }
