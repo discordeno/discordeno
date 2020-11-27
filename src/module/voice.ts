@@ -1,4 +1,4 @@
-import { delay } from "../../deps.ts";
+import { delay, secretbox } from "../../deps.ts";
 import { VoiceConnection } from "../handlers/voice.ts";
 import { GuildVoiceState } from "../structures/guild.ts";
 import {
@@ -12,6 +12,65 @@ import { eventHandlers } from "./client.ts";
 
 const heartbeating = new Map<string, boolean>();
 export const voiceConnections = new Map<string, VoiceConnection>();
+
+
+
+
+
+export function setSpeaking(channelID: string, value: boolean) {
+  const voice = voiceConnections.get(channelID);
+  if (!voice?.ws || !voice.ssrc) return;
+
+  const data = JSON.stringify({
+    op: VoiceOpcode.Speaking,
+    d: {
+      delay: 0,
+      ssrc: voice.ssrc,
+      speaking: value,
+    },
+  });
+
+  voice.ws?.send(data);
+}
+
+
+const u16_max = 2 ** 16;
+const u32_max = 2 ** 32;
+const frame_duration = 20;
+const sampling_rate = 48000;
+let frame = new Uint8Array(28 + 3 * 1276);
+const frame_size = sampling_rate * frame_duration / 1000;
+let sequence: number;
+let timestamp = 0;
+let seq = 0;
+
+frame[0] = 0x80;
+frame[1] = 0x78;
+frame = frame.slice();
+
+const key = new Uint8Array(secretbox.key_length);
+const frame_view = new DataView(frame.buffer);
+const nonce = new Uint8Array(secretbox.nonce_length);
+
+export function sendVoice(channelID: string, opus: any) {
+  const voice = voiceConnections.get(channelID);
+  if (!voice?.connection || !voice.addr) return;
+
+  if (u16_max <= ++sequence) sequence -= u16_max;
+  if (u32_max <= (timestamp += frame_size)) timestamp %= u32_max;
+
+  frame_view.setUint16(2, seq, false);
+  frame_view.setUint32(4, timestamp, false);
+
+  nonce.set(frame.subarray(0, 12));
+  const sealed = secretbox.seal(opus, key, nonce);
+
+  frame.set(sealed, 12);
+  return voice.connection.send(
+    frame.subarray(0, 12 + sealed.length),
+    voice.addr,
+  );
+}
 
 export async function establishVoiceConnection(
   payload: DiscordPayload,
@@ -45,81 +104,104 @@ export async function establishVoiceConnection(
     }));
   };
 
+  ws.onclose = console.log;
+
   ws.onmessage = async (message) => {
-    const payload = JSON.parse(message.data) as DiscordPayload;
-    console.log(payload);
-    eventHandlers.debug?.({ type: "voiceRaw", data: { ...payload } });
+      const payload = JSON.parse(message.data) as DiscordPayload;
+      eventHandlers.debug?.({ type: "voiceRaw", data: { ...payload } });
 
-    switch (payload.op) {
-      case VoiceOpcode.Ready:
-        if (!voiceState.channelID) return;
-        const { ssrc, port, modes, ip } = payload.d as any;
+      switch (payload.op) {
+        case VoiceOpcode.Ready:
+          if (!voiceState.channelID) return;
+          console.log(1);
+          const { ssrc, port, modes, ip } = payload.d as any;
+          frame_view.setUint32(8, ssrc, false);
 
-        const udp = Deno.listenDatagram({
-          port,
-          transport: "udp",
-        });
+          const mode = modes.find(x => [
+            'xsalsa20_poly1305',
+            // 'xsalsa20_poly1305_lite',
+            // 'xsalsa20_poly1305_suffix',
+          ].includes(x));
+          if (!mode) throw new Error(`failed to select supported mode (${modes})`);
+          console.log(2);
 
-        const addr: Deno.NetAddr = { port, hostname: ip, transport: "udp" };
+          const udp = Deno.listenDatagram({
+            port: 1337,
+            transport: "udp",
+            hostname: '0.0.0.0',
+          });
+          console.log(3);
 
-        {
+          const addr: Deno.NetAddr = { port, hostname: ip, transport: "udp" };
+          console.log(4);
+
           const buffArr = new Uint8Array(70);
           new DataView(buffArr.buffer).setUint32(0, ssrc, false);
-          udp.send(buffArr, addr);
-        }
+          udp.send(buffArr, addr).catch(console.error);
+          console.log(5);
 
-        if (voiceConnections.has(voiceState.channelID)) {
-          voiceConnections.set(
-            voiceState.channelID,
-            {
-              ...voiceConnections.get(voiceState.channelID!)!,
-              connection: udp,
-              addr,
-              ssrc,
+          if (voiceConnections.has(voiceState.channelID)) {
+            voiceConnections.set(
+              voiceState.channelID,
+              {
+                ...voiceConnections.get(voiceState.channelID!)!,
+                connection: udp,
+                addr,
+                ssrc,
+              },
+            );
+          } else {
+            voiceConnections.set(
+              voiceState.channelID,
+              { id: voiceState.channelID, connection: udp, addr, ssrc },
+            );
+          }
+
+          console.log(6, udp.addr, udp.rid);
+          const [arr] = await udp.receive().catch((error) => {
+            console.error(error);
+            return [];
+          })
+          console.log(7);
+          
+          const newAddr = {
+            port: new DataView(arr.buffer).getUint16(arr.length - 2, false),
+            hostname: (Deno as any).core.decode(
+              arr.subarray(1 + arr.indexOf(0, 3), arr.indexOf(0, 4)),
+            ),
+          };
+          console.log(8);
+
+          const selectProtocolPayload = JSON.stringify({
+            op: VoiceOpcode.SelectProtocol,
+            d: {
+              protocol: "udp",
+              data: {
+                mode,
+                port: newAddr.port,
+                address: newAddr.hostname,
+              },
             },
-          );
-        } else {
-          voiceConnections.set(
-            voiceState.channelID,
-            { id: voiceState.channelID, connection: udp, addr, ssrc },
-          );
-        }
-
-        const [arr] = await udp.receive();
-        const newAddr = {
-          port: new DataView(arr.buffer).getUint16(arr.length - 2, false),
-          hostname: (Deno as any).core.decode(
-            arr.subarray(1 + arr.indexOf(0, 3), arr.indexOf(0, 4)),
-          ),
-        };
-
-        const selectProtocolPayload = JSON.stringify({
-          op: VoiceOpcode.SelectProtocol,
-          d: {
-            protocol: "udp",
-            data: {
-              mode: modes["xsalsa20_poly1305"],
-              port: newAddr.port,
-              address: newAddr.hostname,
-            },
-          },
-        });
-
-        ws.send(selectProtocolPayload);
-        break;
-      case VoiceOpcode.Hello:
-        if (!heartbeating.has(guild_id)) {
-          heartbeat(
-            ws,
-            payload,
-            voiceState,
-          );
-        }
-        break;
-      case VoiceOpcode.HeartbeatACK:
-        heartbeating.set(guild_id, true);
-        break;
-    }
+          });
+console.log(9);
+          ws.send(selectProtocolPayload);
+          break;
+        case VoiceOpcode.Hello:
+          if (!heartbeating.has(guild_id)) {
+            heartbeat(
+              ws,
+              payload,
+              voiceState,
+            );
+          }
+          break;
+        case VoiceOpcode.HeartbeatACK:
+          heartbeating.set(guild_id, true);
+          break;
+        default:
+          console.log("Unknown OP Code", payload);
+          break;
+      }
   };
 }
 
