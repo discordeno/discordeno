@@ -88,7 +88,8 @@ export async function establishVoiceConnection(
 
   ws.onmessage = (message) => {
     const payload = JSON.parse(message.data) as DiscordPayload;
-    console.log('voiceraw', payload);
+    
+    eventHandlers.debug?.({ type: "voiceRaw", data: { ...payload } });
     switch (payload.op) {
       case VoiceOpcode.Hello:
         if (!heartbeating.has(guild_id)) {
