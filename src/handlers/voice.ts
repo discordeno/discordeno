@@ -1,18 +1,92 @@
+import { inflate } from "../../deps.ts";
+import {
+  botHasChannelPermissions,
+  Errors,
+  GuildVoiceState,
+} from "../../mod.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { sendRawGatewayCommand } from "../module/shard.ts";
-import { GatewayOpcode } from "../types/discord.ts";
+import {
+  DiscordPayload,
+  GatewayOpcode,
+  VoiceOpcode,
+  VoiceServerUpdatePayload,
+} from "../types/discord.ts";
 
-export async function joinVoiceChannel(guildID: string, channelID: string) {
-  const shardID = (await cacheHandlers.get("guilds", guildID))?.shardID;
-  if (shardID === undefined) return;
+let currentVoiceChannel: string;
 
-  sendRawGatewayCommand(shardID, {
+export async function joinVoiceChannel(
+  guildID: string,
+  channelID: string,
+  { self_deaf = false, self_mute = false }: Partial<JoinVoiceChannelOptions> =
+    {},
+) {
+  currentVoiceChannel = channelID;
+  const hasPerm = await botHasChannelPermissions(channelID, ["CONNECT"]);
+  if (!hasPerm) {
+    throw new Error(Errors.MISSING_CONNECT);
+  }
+
+  const guild = await cacheHandlers.get("guilds", guildID);
+  if (!guild) return;
+
+  sendRawGatewayCommand(guild.shardID, {
     op: GatewayOpcode.VoiceStateUpdate,
     d: {
       guild_id: guildID,
       channel_id: channelID,
-      self_mute: false,
-      self_deaf: false,
+      self_deaf,
+      self_mute,
     },
   });
+}
+
+export interface JoinVoiceChannelOptions {
+  self_mute: boolean;
+  self_deaf: boolean;
+}
+
+export async function establishVoiceConnection(
+  payload: DiscordPayload,
+  voiceState: GuildVoiceState,
+) {
+  let { endpoint, token } = payload.d as VoiceServerUpdatePayload;
+
+  endpoint = `wss://${endpoint}`;
+  const ws = new WebSocket(endpoint);
+
+  ws.binaryType = "arraybuffer";
+
+  ws.onopen = async () => {
+    // Send identify once the WebSocket is in OPEN state
+    const identifyPayload = JSON.stringify({
+      op: VoiceOpcode.Identify,
+      d: {
+        token,
+        user_id: voiceState.userID,
+        session_id: voiceState.sessionID,
+        server_id: "781606036242694184",
+      },
+    });
+
+    console.log(identifyPayload);
+    ws.send(identifyPayload);
+  };
+
+  ws.onmessage = ({ data }) => {
+    console.log(data);
+    if (data instanceof ArrayBuffer) {
+      data = new Uint8Array(data);
+    }
+
+    if (data instanceof Uint8Array) {
+      data = inflate(
+        data,
+        0,
+        (slice: Uint8Array) => new TextDecoder().decode(slice),
+      );
+    }
+  };
+
+  ws.onclose = console.log;
 }

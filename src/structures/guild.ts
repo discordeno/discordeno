@@ -88,13 +88,28 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
       selfDeaf: vs.self_deaf,
       selfMute: vs.self_mute,
       selfStream: vs.self_stream,
-    }])),
+    }])) as Collection<string, GuildVoiceState>,
   };
 
   initialMemberLoadQueue.set(guild.id, members);
   // members.forEach((m) => structures.createMember(m, guild.id));
 
   return guild;
+}
+
+export interface GuildVoiceState {
+  guildID?: string;
+  channelID: string | null;
+  userID: string;
+  selfDeaf: boolean;
+  selfMute: boolean;
+  selfStream?: boolean;
+  sessionID: string;
+  deaf: boolean;
+  mute: boolean;
+  suppress: boolean;
+  selfVideo?: boolean;
+  member?: MemberCreatePayload;
 }
 
 export interface Guild extends Unpromise<ReturnType<typeof createGuild>> {}

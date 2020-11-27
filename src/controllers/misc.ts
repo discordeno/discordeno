@@ -1,14 +1,15 @@
 import { delay } from "../../deps.ts";
-import { initialMemberLoadQueue, VoiceServerUpdatePayload } from "../../mod.ts";
-import { eventHandlers, setBotID } from "../module/client.ts";
+import { initialMemberLoadQueue } from "../../mod.ts";
+import { establishVoiceConnection } from "../handlers/voice.ts";
+import { botID, eventHandlers, setBotID } from "../module/client.ts";
 import { allowNextShard } from "../module/shardingManager.ts";
-import { connectVoice } from "../module/voice.ts";
 import { structures } from "../structures/mod.ts";
 import {
   DiscordPayload,
   PresenceUpdatePayload,
   ReadyPayload,
   TypingStartPayload,
+  VoiceServerUpdatePayload,
   VoiceStateUpdatePayload,
   WebhookUpdatePayload,
 } from "../types/discord.ts";
@@ -136,6 +137,15 @@ export function handleInternalWebhooksUpdate(data: DiscordPayload) {
   );
 }
 
-export function handleInternalVoiceServerUpdate(data: DiscordPayload) {
-  connectVoice(data.d as VoiceServerUpdatePayload);
+export async function handleInternalVoiceServerUpdate(payload: DiscordPayload) {
+  const guild = await cacheHandlers.get(
+    "guilds",
+    (payload.d as VoiceServerUpdatePayload).guild_id,
+  );
+  if (!guild) return;
+
+  const voiceState = guild.voiceStates.get(botID);
+  if (!voiceState) return;
+
+  await establishVoiceConnection(payload, voiceState);
 }
