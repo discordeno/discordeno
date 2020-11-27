@@ -1,5 +1,4 @@
 import { delay } from "https://deno.land/std@0.75.0/async/delay.ts";
-import { inflate } from "../../deps.ts";
 import {
   botHasChannelPermissions,
   Errors,
@@ -24,12 +23,12 @@ export interface VoiceConnection {
   id: string;
   /** Whether this connection is need of resuming */
   needToResume: boolean;
-};
+}
 
 export async function joinVoiceChannel(
   guildID: string,
   channelID: string,
-  options: Partial<JoinVoiceChannelOptions> = {}
+  options: Partial<JoinVoiceChannelOptions> = {},
 ) {
   const hasPerm = await botHasChannelPermissions(channelID, ["CONNECT"]);
   if (!hasPerm) {
@@ -68,19 +67,22 @@ export async function establishVoiceConnection(
   ws.binaryType = "arraybuffer";
 
   const identifyPayload = {
-      token,
-      server_id: guild_id,
-      user_id: voiceState.userID,
-      session_id: voiceState.sessionID,
-    };
+    token,
+    server_id: guild_id,
+    user_id: voiceState.userID,
+    session_id: voiceState.sessionID,
+  };
 
-  voiceConnections.set(voiceState.channelID, { id: voiceState.channelID, needToResume: false });
+  voiceConnections.set(
+    voiceState.channelID,
+    { id: voiceState.channelID, needToResume: false },
+  );
 
   ws.onopen = () => {
     // Send identify once the WebSocket is in OPEN state
     ws.send(JSON.stringify({
       op: VoiceOpcode.Identify,
-      d: identifyPayload
+      d: identifyPayload,
     }));
   };
 
@@ -92,9 +94,8 @@ export async function establishVoiceConnection(
         if (!heartbeating.has(guild_id)) {
           heartbeat(
             ws,
-            (payload.d as DiscordHeartbeatPayload).heartbeat_interval,
             payload,
-            voiceState
+            voiceState,
           );
         }
         break;
@@ -112,10 +113,10 @@ export async function establishVoiceConnection(
 
 async function heartbeat(
   ws: WebSocket,
-  interval: number,
   payload: DiscordPayload,
   voiceState: GuildVoiceState,
 ) {
+  const interval = (payload.d as DiscordHeartbeatPayload).heartbeat_interval;
   // We lost socket connection between heartbeats, resume connection
   if (ws.readyState === WebSocket.CLOSED) {
     resumeConnection(payload, voiceState);
@@ -127,7 +128,9 @@ async function heartbeat(
     const receivedACK = heartbeating.get(voiceState.guildID);
     // If a ACK response was not received since last heartbeat, issue invalid session close
     if (!receivedACK) {
-      eventHandlers.debug?.({ type: "voiceHeartbeatStopped", data: { interval, } });
+      eventHandlers.debug?.(
+        { type: "voiceHeartbeatStopped", data: { interval } },
+      );
       return ws.send(JSON.stringify({ op: 4009 }));
     }
   }
@@ -141,7 +144,7 @@ async function heartbeat(
     ),
   );
 
-  eventHandlers.debug?.({ type: "voiceHeartbeat", data: { interval, } });
+  eventHandlers.debug?.({ type: "voiceHeartbeat", data: { interval } });
 
   await delay(interval);
   heartbeat(ws, interval, payload, voiceState);
@@ -156,5 +159,7 @@ async function resumeConnection(
   establishVoiceConnection(payload, voiceState);
   // Then retry every 15 seconds
   await delay(1000 * 15);
-  if (voiceConnections.get(voiceState.guildID!)?.needToResume) resumeConnection(payload, voiceState);
+  if (voiceConnections.get(voiceState.guildID!)?.needToResume) {
+    resumeConnection(payload, voiceState);
+  }
 }

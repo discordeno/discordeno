@@ -565,7 +565,7 @@ export async function ban(guildID: string, id: string, options: BanOptions) {
   );
 }
 
-/** Remove the ban for a user. REquires BAN_MEMBERS permission */
+/** Remove the ban for a user. Requires BAN_MEMBERS permission */
 export async function unban(guildID: string, id: string) {
   const hasPerm = await botHasPermission(guildID, ["BAN_MEMBERS"]);
   if (!hasPerm) {
