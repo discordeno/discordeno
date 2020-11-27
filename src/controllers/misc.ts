@@ -1,8 +1,8 @@
 import { delay } from "../../deps.ts";
 import { initialMemberLoadQueue } from "../../mod.ts";
-import { establishVoiceConnection } from "../handlers/voice.ts";
 import { botID, eventHandlers, setBotID } from "../module/client.ts";
 import { allowNextShard } from "../module/shardingManager.ts";
+import { establishVoiceConnection } from "../module/voice.ts";
 import { structures } from "../structures/mod.ts";
 import {
   DiscordPayload,

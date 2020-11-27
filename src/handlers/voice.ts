@@ -1,31 +1,21 @@
-import { delay } from "https://deno.land/std@0.75.0/async/delay.ts";
-import {
-  botHasChannelPermissions,
-  Errors,
-  GuildVoiceState,
-} from "../../mod.ts";
+import { secretbox } from "../../deps.ts";
+import { botHasChannelPermissions, Errors } from "../../mod.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
-import { eventHandlers } from "../module/client.ts";
 import { sendRawGatewayCommand } from "../module/shard.ts";
-import {
-  DiscordHeartbeatPayload,
-  DiscordPayload,
-  GatewayOpcode,
-  VoiceOpcode,
-  VoiceServerUpdatePayload,
-} from "../types/discord.ts";
-
-const heartbeating = new Map<string, boolean>();
-const voiceConnections = new Map<string, VoiceConnection>();
+import { voiceConnections } from "../module/voice.ts";
+import { GatewayOpcode, VoiceOpcode } from "../types/discord.ts";
 
 export interface VoiceConnection {
   /** The channel id for this connection */
   id: string;
   /** Whether this connection is need of resuming */
-  needToResume: boolean;
+  needToResume?: boolean;
   // TODO: fix the type
   /** The connection through udp */
-  connection?: any;
+  connection?: Deno.DatagramConn;
+  addr?: Deno.NetAddr;
+  ws?: WebSocket;
+  ssrc?: string;
 }
 
 export async function joinVoiceChannel(
@@ -57,158 +47,56 @@ export interface JoinVoiceChannelOptions {
   selfDeaf: boolean;
 }
 
-export async function establishVoiceConnection(
-  payload: DiscordPayload,
-  voiceState: GuildVoiceState,
-) {
-  const data = payload.d as VoiceServerUpdatePayload;
-  let { endpoint, token, guild_id } = data;
+const u16_max = 2 ** 16;
+const u32_max = 2 ** 32;
+const frame_duration = 20;
+const sampling_rate = 48000;
+let frame = new Uint8Array(28 + 3 * 1276);
+const frame_size = sampling_rate * frame_duration / 1000;
+let sequence: number;
+let timestamp = 0;
+let seq = 0;
 
-  endpoint = `wss://${endpoint}?v=4`;
-  const ws = new WebSocket(endpoint);
+frame[0] = 0x80;
+frame[1] = 0x78;
+frame = frame.slice();
 
-  ws.binaryType = "arraybuffer";
+const key = new Uint8Array(secretbox.key_length);
+const frame_view = new DataView(frame.buffer);
+const nonce = new Uint8Array(secretbox.nonce_length);
 
-  const identifyPayload = {
-    token,
-    server_id: guild_id,
-    user_id: voiceState.userID,
-    session_id: voiceState.sessionID,
-  };
-
-  voiceConnections.set(
-    voiceState.channelID!,
-    { id: voiceState.channelID, needToResume: false },
-  );
-
-  ws.onopen = () => {
-    // Send identify once the WebSocket is in OPEN state
-    ws.send(JSON.stringify({
-      op: VoiceOpcode.Identify,
-      d: identifyPayload,
-    }));
-  };
-
-  ws.onmessage = async (message) => {
-    const payload = JSON.parse(message.data) as DiscordPayload;
-    eventHandlers.debug?.({ type: "voiceRaw", data: { ...payload } });
-    
-    switch (payload.op) {
-      case VoiceOpcode.Ready:
-        const { ssrc, port, modes, ip, experiments } = payload.d as any;
-        const addr: Deno.NetAddr = { port, hostname: ip, transport: "udp" };
-
-        const udp = Deno.listenDatagram({
-          port,
-          transport: "udp",
-          hostname: "0.0.0.0",
-        });
-
-        const buffArr = new Uint8Array(70);
-        new DataView(buffArr.buffer).setUint32(0, ssrc, false);
-        udp.send(buffArr, addr);
-
-        if (voiceConnections.has(voiceState.channelID!)) {
-          voiceConnections.set(voiceState.channelID!, { ...voiceConnections.get(voiceState.channelID!)!, connection: udp });
-        } else {
-          voiceConnections.set(voiceState.channelID!, { connection: udp });
-        }
-
-        const [arr] = await udp.receive();
-        const newAddr = {
-          port: new DataView(arr.buffer).getUint16(arr.length - 2, false),
-          hostname: (Deno as any).core.decode(
-            arr.subarray(1 + arr.indexOf(0, 3), arr.indexOf(0, 4)),
-          ),
-        };
-
-        const selectProtocolPayload = JSON.stringify({
-          op: VoiceOpcode.SelectProtocol,
-          d: {
-            protocol: "udp",
-            data: {
-              mode: modes["xsalsa20_poly1305"],
-              port: newAddr.port,
-              address: newAddr.hostname,
-            },
-          },
-        });
-
-        ws.send(selectProtocolPayload);
-        break;
-      case VoiceOpcode.Hello:
-        if (!heartbeating.has(guild_id)) {
-          heartbeat(
-            ws,
-            payload,
-            voiceState,
-          );
-        }
-        break;
-      case VoiceOpcode.HeartbeatACK:
-        heartbeating.set(guild_id, true);
-        break;
-    }
-  };
-}
-
-async function heartbeat(
-  ws: WebSocket,
-  payload: DiscordPayload,
-  voiceState: GuildVoiceState,
-) {
-  const interval = (payload.d as DiscordHeartbeatPayload).heartbeat_interval;
-  // We lost socket connection between heartbeats, resume connection
-  if (ws.readyState === WebSocket.CLOSED) {
-    resumeConnection(payload, voiceState);
-    heartbeating.delete(voiceState.guildID);
-    return;
-  }
-
-  if (heartbeating.has(voiceState.guildID)) {
-    const receivedACK = heartbeating.get(voiceState.guildID);
-    // If a ACK response was not received since last heartbeat, issue invalid session close
-    if (!receivedACK) {
-      eventHandlers.debug?.(
-        { type: "voiceHeartbeatStopped", data: { interval } },
-      );
-      return ws.send(JSON.stringify({ op: 4009 }));
-    }
-  }
-
-  // Set it to false as we are issuing a new heartbeat
-  heartbeating.set(voiceState.guildID, false);
-
-  ws.send(
-    JSON.stringify(
-      { op: GatewayOpcode.Heartbeat, d: 1 },
-    ),
-  );
-
-  eventHandlers.debug?.({ type: "voiceHeartbeat", data: { interval } });
-
-  await delay(interval);
-  heartbeat(ws, payload, voiceState);
-}
-
-async function resumeConnection(
-  payload: DiscordPayload,
-  voiceState: GuildVoiceState,
-) {
-  eventHandlers.debug?.({ type: "voiceResuming", data: { ...payload } });
-  // Run it once
-  establishVoiceConnection(payload, voiceState);
-  // Then retry every 15 seconds
-  await delay(1000 * 15);
-  if (voiceConnections.get(voiceState.guildID!)?.needToResume) {
-    resumeConnection(payload, voiceState);
-  }
-}
-
-
-export function sendVoice(channelID: string) {
+export function sendVoice(channelID: string, opus: any) {
   const voice = voiceConnections.get(channelID);
-  if (!voice) return;
+  if (!voice?.connection || !voice.addr) return;
 
-  console.log(voice)
+  if (u16_max <= ++sequence) sequence -= u16_max;
+  if (u32_max <= (timestamp += frame_size)) timestamp %= u32_max;
+
+  frame_view.setUint16(2, seq, false);
+  frame_view.setUint32(4, timestamp, false);
+
+  nonce.set(frame.subarray(0, 12));
+  const sealed = secretbox.seal(opus, key, nonce);
+
+  frame.set(sealed, 12);
+  return voice.connection.send(
+    frame.subarray(0, 12 + sealed.length),
+    voice.addr,
+  );
+}
+
+export function setSpeaking(channelID: string, value: boolean) {
+  const voice = voiceConnections.get(channelID);
+  if (!voice?.ws || !voice.ssrc) return;
+
+  const data = JSON.stringify({
+    op: VoiceOpcode.Speaking,
+    d: {
+      delay: 0,
+      ssrc: voice.ssrc,
+      speaking: value,
+    },
+  });
+
+  voice.ws?.send(data);
 }
