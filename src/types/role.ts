@@ -15,4 +15,15 @@ export interface RoleData {
   managed: boolean;
   /** whether this role is mentionable */
   mentionable: boolean;
+  /** Certain roles may have tags that allow you to determine if this role is related to a bot, an integration, or the booster role. */
+  tags: RoleTags | null;
+}
+
+export interface RoleTags {
+  /** the id of the bot who has this role */
+  bot_id?: string;
+  /** whether this is the premium subscriber role for this guild */
+  premium_subscriber?: null;
+  /** the id of the integration this role belongs to */
+  integration_id?: string;
 }
