@@ -147,7 +147,7 @@ async function heartbeat(
   eventHandlers.debug?.({ type: "voiceHeartbeat", data: { interval } });
 
   await delay(interval);
-  heartbeat(ws, interval, payload, voiceState);
+  heartbeat(ws, payload, voiceState);
 }
 
 async function resumeConnection(
