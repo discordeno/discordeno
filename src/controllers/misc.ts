@@ -138,6 +138,7 @@ export function handleInternalWebhooksUpdate(data: DiscordPayload) {
 }
 
 export async function handleInternalVoiceServerUpdate(payload: DiscordPayload) {
+  if (payload.t !== "VOICE_SERVER_UPDATE") return;
   const guild = await cacheHandlers.get(
     "guilds",
     (payload.d as VoiceServerUpdatePayload).guild_id,
