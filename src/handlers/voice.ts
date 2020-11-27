@@ -85,7 +85,7 @@ export async function establishVoiceConnection(
   };
 
   ws.onmessage = (message) => {
-    const payload = message.data as DiscordPayload;
+    const payload = JSON.parse(message.data) as DiscordPayload;
     console.log('voiceraw', payload);
     switch (payload.op) {
       case VoiceOpcode.Hello:
@@ -98,10 +98,11 @@ export async function establishVoiceConnection(
           );
         }
         break;
-      case GatewayOpcode.HeartbeatACK:
+      case VoiceOpcode.HeartbeatACK:
         heartbeating.set(guild_id, true);
         break;
-      case VoiceOpcode.Heartbeat:
+      default:
+          console.error("Unknown OP code:", payload);
     }
   };
 
