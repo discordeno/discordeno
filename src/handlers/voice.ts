@@ -58,23 +58,20 @@ export async function establishVoiceConnection(
   ws.binaryType = "arraybuffer";
 
   ws.onopen = async () => {
-    // Send identify once the WebSocket is in OPEN state
     const identifyPayload = JSON.stringify({
       op: VoiceOpcode.Identify,
       d: {
         token,
         user_id: voiceState.userID,
         session_id: voiceState.sessionID,
-        server_id: "781606036242694184",
+        server_id: voiceState.channelID,
       },
     });
 
-    console.log(identifyPayload);
     ws.send(identifyPayload);
   };
 
   ws.onmessage = ({ data }) => {
-    console.log(data);
     if (data instanceof ArrayBuffer) {
       data = new Uint8Array(data);
     }
@@ -88,5 +85,6 @@ export async function establishVoiceConnection(
     }
   };
 
+  // For debugging purposes
   ws.onclose = console.log;
 }
