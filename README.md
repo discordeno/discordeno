@@ -7,8 +7,6 @@
 ![Test](https://github.com/Skillz4Killz/Discordeno/workflows/Test/badge.svg)
 [![nest badge](https://nest.land/badge.svg)](https://nest.land/package/Discordeno)
 
-## Features
-
 - First-class TypeScript & JavaScript support
 - Security & stable
 - Builtin Documentation
@@ -32,7 +30,7 @@ If you do not wish to use a boilerplate, you may continue reading.
 Here's a minimal example to get started with:
 
 ```typescript
-import StartBot, { sendMessage, Intents } from "https://x.nest.land/Discordeno@9.0.15/mod.ts";
+import StartBot, { sendMessage, Intents } from "https://x.nest.land/Discordeno@9.4.0/mod.ts";
 
 StartBot({
   token: "BOT TOKEN",
@@ -54,6 +52,18 @@ StartBot({
 - [Support server](https://discord.gg/J4NqJ72)
 - [Contributing Guide](https://github.com/Skillz4Killz/Discordeno/blob/master/.github/CONTRIBUTING.md)
 
-## License
+## Contributing
+
+## Code of Conduct
+
+Discordeno expects participants to adhere to our [Code of Conduct](https://github.com/Skillz4Killz/Discordeno/blob/master/.github/CODE_OF_CONDUCT.md).
+
+## Contributing Guide
+
+We appreciate your help!
+
+Before contributing, please read the [Contributing Guide](https://github.com/Skillz4Killz/Discordeno/blob/master/.github/CONTRIBUTING.md).
+
+### License
 
 [MIT © Skillz4Killz](https://github.com/Skillz4Killz/Discordeno/blob/master/LICENSE)
