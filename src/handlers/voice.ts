@@ -74,8 +74,8 @@ export async function establishVoiceConnection(
   };
 
   voiceConnections.set(
-    voiceState.channelID,
-    { id: voiceState.channelID, needToResume: false, ws },
+    voiceState.channelID!,
+    { id: voiceState.channelID, needToResume: false },
   );
 
   ws.onopen = () => {
@@ -88,7 +88,7 @@ export async function establishVoiceConnection(
 
   ws.onmessage = async (message) => {
     const payload = JSON.parse(message.data) as DiscordPayload;
-    console.log(Deno.inspect(payload, { depth: 2 }));
+    eventHandlers.debug?.({ type: "voiceRaw", data: { ...payload } });
     switch (payload.op) {
       case VoiceOpcode.Ready:
         const { ssrc, port, modes, ip, experiments } = payload.d as any;

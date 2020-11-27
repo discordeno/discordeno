@@ -68,7 +68,8 @@ export interface DebugArg {
     | "missingShard"
     | "voiceHeartbeat"
     | "voiceHeartbeatStopped"
-    | "voiceResuming";
+    | "voiceResuming"
+    | "voiceRaw";
   data: unknown;
 }
 
