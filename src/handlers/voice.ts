@@ -13,15 +13,12 @@ import {
   VoiceServerUpdatePayload,
 } from "../types/discord.ts";
 
-let currentVoiceChannel: string;
-
 export async function joinVoiceChannel(
   guildID: string,
   channelID: string,
   { self_deaf = false, self_mute = false }: Partial<JoinVoiceChannelOptions> =
     {},
 ) {
-  currentVoiceChannel = channelID;
   const hasPerm = await botHasChannelPermissions(channelID, ["CONNECT"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_CONNECT);
