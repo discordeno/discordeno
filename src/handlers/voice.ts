@@ -23,6 +23,9 @@ export interface VoiceConnection {
   id: string;
   /** Whether this connection is need of resuming */
   needToResume: boolean;
+  // TODO: fix the type
+  /** The connection through udp */
+  connection?: any;
 }
 
 export async function joinVoiceChannel(
@@ -89,6 +92,7 @@ export async function establishVoiceConnection(
   ws.onmessage = async (message) => {
     const payload = JSON.parse(message.data) as DiscordPayload;
     eventHandlers.debug?.({ type: "voiceRaw", data: { ...payload } });
+    
     switch (payload.op) {
       case VoiceOpcode.Ready:
         const { ssrc, port, modes, ip, experiments } = payload.d as any;
@@ -103,6 +107,12 @@ export async function establishVoiceConnection(
         const buffArr = new Uint8Array(70);
         new DataView(buffArr.buffer).setUint32(0, ssrc, false);
         udp.send(buffArr, addr);
+
+        if (voiceConnections.has(voiceState.channelID!)) {
+          voiceConnections.set(voiceState.channelID!, { ...voiceConnections.get(voiceState.channelID!)!, connection: udp });
+        } else {
+          voiceConnections.set(voiceState.channelID!, { connection: udp });
+        }
 
         const [arr] = await udp.receive();
         const newAddr = {
@@ -193,4 +203,12 @@ async function resumeConnection(
   if (voiceConnections.get(voiceState.guildID!)?.needToResume) {
     resumeConnection(payload, voiceState);
   }
+}
+
+
+export function sendVoice(channelID: string) {
+  const voice = voiceConnections.get(channelID);
+  if (!voice) return;
+
+  console.log(voice)
 }
