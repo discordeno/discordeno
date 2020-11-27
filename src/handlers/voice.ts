@@ -105,6 +105,7 @@ export async function establishVoiceConnection(
     }
   };
 
+  // For debugging purposes
   ws.onclose = console.log;
 }
 

@@ -40,6 +40,7 @@ export interface DiscordPayload {
     | "PRESENCE_UPDATE"
     | "TYPING_START"
     | "USER_UPDATE"
+    | "VOICE_SERVER_UPDATE"
     | "VOICE_STATE_UPDATE"
     | "WEBHOOKS_UPDATE";
 }
