@@ -75,7 +75,7 @@ export async function establishVoiceConnection(
 
   voiceConnections.set(
     voiceState.channelID,
-    { id: voiceState.channelID, needToResume: false },
+    { id: voiceState.channelID, needToResume: false, ws },
   );
 
   ws.onopen = () => {
@@ -86,10 +86,46 @@ export async function establishVoiceConnection(
     }));
   };
 
-  ws.onmessage = (message) => {
+  ws.onmessage = async (message) => {
     const payload = JSON.parse(message.data) as DiscordPayload;
-    console.log('voiceraw', payload);
+    console.log(Deno.inspect(payload, { depth: 2 }));
     switch (payload.op) {
+      case VoiceOpcode.Ready:
+        const { ssrc, port, modes, ip, experiments } = payload.d as any;
+        const addr: Deno.NetAddr = { port, hostname: ip, transport: "udp" };
+
+        const udp = Deno.listenDatagram({
+          port,
+          transport: "udp",
+          hostname: "0.0.0.0",
+        });
+
+        const buffArr = new Uint8Array(70);
+        new DataView(buffArr.buffer).setUint32(0, ssrc, false);
+        udp.send(buffArr, addr);
+
+        const [arr] = await udp.receive();
+        const newAddr = {
+          port: new DataView(arr.buffer).getUint16(arr.length - 2, false),
+          hostname: (Deno as any).core.decode(
+            arr.subarray(1 + arr.indexOf(0, 3), arr.indexOf(0, 4)),
+          ),
+        };
+
+        const selectProtocolPayload = JSON.stringify({
+          op: VoiceOpcode.SelectProtocol,
+          d: {
+            protocol: "udp",
+            data: {
+              mode: modes["xsalsa20_poly1305"],
+              port: newAddr.port,
+              address: newAddr.hostname,
+            },
+          },
+        });
+
+        ws.send(selectProtocolPayload);
+        break;
       case VoiceOpcode.Hello:
         if (!heartbeating.has(guild_id)) {
           heartbeat(
@@ -102,13 +138,8 @@ export async function establishVoiceConnection(
       case VoiceOpcode.HeartbeatACK:
         heartbeating.set(guild_id, true);
         break;
-      default:
-          console.error("Unknown OP code:", payload);
     }
   };
-
-  // For debugging purposes
-  ws.onclose = console.log;
 }
 
 async function heartbeat(
