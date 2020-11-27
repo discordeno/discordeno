@@ -74,7 +74,7 @@ export async function establishVoiceConnection(
   };
 
   voiceConnections.set(
-    voiceState.channelID,
+    voiceState.channelID!,
     { id: voiceState.channelID, needToResume: false },
   );
 
