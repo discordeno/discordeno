@@ -89,6 +89,7 @@ export function setSpeaking(channelID: string, value: boolean) {
   const voice = voiceConnections.get(channelID);
   if (!voice?.ws || !voice.ssrc) return;
 
+  console.log(voice);
   const data = JSON.stringify({
     op: VoiceOpcode.Speaking,
     d: {

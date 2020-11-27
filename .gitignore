@@ -12,3 +12,6 @@ npm-debug.log*
 dist/
 public/
 .cache/
+
+# Ignore test.ts so I dont have to regenerate my token 50 times
+test.ts

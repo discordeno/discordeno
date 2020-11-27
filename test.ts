@@ -9,19 +9,19 @@ import {
 import { startBot } from "./src/module/client.ts";
 
 startBot({
-  token: "NzcxMDU2NzQzNTI1Nzc3NDM4.X5mkjQ.pwnil2Fram9kSVM3-Rp8jvMSZVs",
+  token: "NzcxMDU2NzQzNTI1Nzc3NDM4.X5mkjQ.NrFOEXFpWX7NWQ-WPeaTmiWe7GE",
   intents: [Intents.GUILDS, Intents.GUILD_MESSAGES, Intents.GUILD_VOICE_STATES],
   eventHandlers: {
     ready: () => console.log("Successfully logged in"),
     messageCreate: async (message) => {
       if (message.content === "milo join") {
+        const voiceChannel = "781956635382906900";
         await addReaction(message.channelID, message.id, "👍");
-        await joinVoiceChannel(message.guildID, "781606036242694184");
+        await joinVoiceChannel(message.guildID, voiceChannel);
         await delay(5000);
-        await setSpeaking("781606036242694184", true);
-        await delay(5000);
+        await setSpeaking(voiceChannel, true);
         await sendVoice(
-          "781606036242694184",
+          voiceChannel,
           new Uint8Array([0xf8, 0xff, 0xfe]),
         );
       }

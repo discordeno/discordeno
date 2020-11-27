@@ -47,7 +47,6 @@ export async function establishVoiceConnection(
 
   ws.onmessage = async (message) => {
     const payload = JSON.parse(message.data) as DiscordPayload;
-    console.log(payload);
     eventHandlers.debug?.({ type: "voiceRaw", data: { ...payload } });
 
     switch (payload.op) {
