@@ -65,7 +65,10 @@ export interface DebugArg {
     | "websocketClose"
     | "websocketErrored"
     | "websocketReconnecting"
-    | "missingShard";
+    | "missingShard"
+    | "voiceHeartbeat"
+    | "voiceHeartbeatStopped"
+    | "voiceResuming";
   data: unknown;
 }
 

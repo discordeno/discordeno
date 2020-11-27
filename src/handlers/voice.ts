@@ -1,3 +1,4 @@
+import { delay } from "https://deno.land/std@0.75.0/async/delay.ts";
 import { inflate } from "../../deps.ts";
 import {
   botHasChannelPermissions,
@@ -5,23 +6,31 @@ import {
   GuildVoiceState,
 } from "../../mod.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
+import { eventHandlers } from "../module/client.ts";
 import { sendRawGatewayCommand } from "../module/shard.ts";
 import {
+  DiscordHeartbeatPayload,
   DiscordPayload,
   GatewayOpcode,
   VoiceOpcode,
   VoiceServerUpdatePayload,
 } from "../types/discord.ts";
 
-let currentVoiceChannel: string;
+const heartbeating = new Map<string, boolean>();
+const voiceConnections = new Map<string, VoiceConnection>();
+
+export interface VoiceConnection {
+  /** The channel id for this connection */
+  id: string;
+  /** Whether this connection is need of resuming */
+  needToResume: boolean;
+};
 
 export async function joinVoiceChannel(
   guildID: string,
   channelID: string,
-  { self_deaf = false, self_mute = false }: Partial<JoinVoiceChannelOptions> =
-    {},
+  options: Partial<JoinVoiceChannelOptions> = {}
 ) {
-  currentVoiceChannel = channelID;
   const hasPerm = await botHasChannelPermissions(channelID, ["CONNECT"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_CONNECT);
@@ -35,58 +44,115 @@ export async function joinVoiceChannel(
     d: {
       guild_id: guildID,
       channel_id: channelID,
-      self_deaf,
-      self_mute,
+      self_deaf: options.selfDeaf || false,
+      self_mute: options.selfMute || false,
     },
   });
 }
 
 export interface JoinVoiceChannelOptions {
-  self_mute: boolean;
-  self_deaf: boolean;
+  selfMute: boolean;
+  selfDeaf: boolean;
 }
 
 export async function establishVoiceConnection(
   payload: DiscordPayload,
   voiceState: GuildVoiceState,
 ) {
-  let { endpoint, token } = payload.d as VoiceServerUpdatePayload;
+  const data = payload.d as VoiceServerUpdatePayload;
+  let { endpoint, token, guild_id } = data;
 
-  endpoint = `wss://${endpoint}`;
+  endpoint = `wss://${endpoint}?v=4`;
   const ws = new WebSocket(endpoint);
 
   ws.binaryType = "arraybuffer";
 
-  ws.onopen = async () => {
-    // Send identify once the WebSocket is in OPEN state
-    const identifyPayload = JSON.stringify({
-      op: VoiceOpcode.Identify,
-      d: {
-        token,
-        user_id: voiceState.userID,
-        session_id: voiceState.sessionID,
-        server_id: "781606036242694184",
-      },
-    });
+  const identifyPayload = {
+      token,
+      server_id: guild_id,
+      user_id: voiceState.userID,
+      session_id: voiceState.sessionID,
+    };
 
-    console.log(identifyPayload);
-    ws.send(identifyPayload);
+  voiceConnections.set(voiceState.channelID, { id: voiceState.channelID, needToResume: false });
+
+  ws.onopen = () => {
+    // Send identify once the WebSocket is in OPEN state
+    ws.send(JSON.stringify({
+      op: VoiceOpcode.Identify,
+      d: identifyPayload
+    }));
   };
 
-  ws.onmessage = ({ data }) => {
-    console.log(data);
-    if (data instanceof ArrayBuffer) {
-      data = new Uint8Array(data);
-    }
-
-    if (data instanceof Uint8Array) {
-      data = inflate(
-        data,
-        0,
-        (slice: Uint8Array) => new TextDecoder().decode(slice),
-      );
+  ws.onmessage = (message) => {
+    const payload = message.data as DiscordPayload;
+    console.log('voiceraw', payload);
+    switch (payload.op) {
+      case VoiceOpcode.Hello:
+        if (!heartbeating.has(guild_id)) {
+          heartbeat(
+            ws,
+            (payload.d as DiscordHeartbeatPayload).heartbeat_interval,
+            payload,
+            voiceState
+          );
+        }
+        break;
+      case GatewayOpcode.HeartbeatACK:
+        heartbeating.set(guild_id, true);
+        break;
+      case VoiceOpcode.Heartbeat:
     }
   };
 
   ws.onclose = console.log;
+}
+
+async function heartbeat(
+  ws: WebSocket,
+  interval: number,
+  payload: DiscordPayload,
+  voiceState: GuildVoiceState,
+) {
+  // We lost socket connection between heartbeats, resume connection
+  if (ws.readyState === WebSocket.CLOSED) {
+    resumeConnection(payload, voiceState);
+    heartbeating.delete(voiceState.guildID);
+    return;
+  }
+
+  if (heartbeating.has(voiceState.guildID)) {
+    const receivedACK = heartbeating.get(voiceState.guildID);
+    // If a ACK response was not received since last heartbeat, issue invalid session close
+    if (!receivedACK) {
+      eventHandlers.debug?.({ type: "voiceHeartbeatStopped", data: { interval, } });
+      return ws.send(JSON.stringify({ op: 4009 }));
+    }
+  }
+
+  // Set it to false as we are issuing a new heartbeat
+  heartbeating.set(voiceState.guildID, false);
+
+  ws.send(
+    JSON.stringify(
+      { op: GatewayOpcode.Heartbeat, d: 1 },
+    ),
+  );
+
+  eventHandlers.debug?.({ type: "voiceHeartbeat", data: { interval, } });
+
+  await delay(interval);
+  heartbeat(ws, interval, payload, voiceState);
+}
+
+async function resumeConnection(
+  payload: DiscordPayload,
+  voiceState: GuildVoiceState,
+) {
+  eventHandlers.debug?.({ type: "voiceResuming", data: { ...payload } });
+  // Run it once
+  establishVoiceConnection(payload, voiceState);
+  // Then retry every 15 seconds
+  await delay(1000 * 15);
+  if (voiceConnections.get(voiceState.guildID!)?.needToResume) resumeConnection(payload, voiceState);
 }
