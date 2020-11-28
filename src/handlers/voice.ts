@@ -8,7 +8,6 @@ export interface VoiceConnection {
   id: string;
   /** Whether this connection is need of resuming */
   needToResume?: boolean;
-  // TODO: fix the type
   /** The connection through udp */
   connection?: Deno.DatagramConn;
   addr?: Deno.NetAddr;
