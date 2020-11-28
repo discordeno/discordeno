@@ -189,9 +189,6 @@ export async function establishVoiceConnection(
       case VoiceOpcode.SessionDescription:
         key.set((payload.d as any).secret_key);
         break;
-      default:
-        console.log("Unknown OP Code", payload);
-        break;
     }
   };
 }
