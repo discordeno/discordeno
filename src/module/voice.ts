@@ -152,9 +152,7 @@ export async function establishVoiceConnection(
         new DataView(buffArr.buffer).setUint32(0, ssrc, false);
         udp.send(buffArr, addr).catch(console.error);
 
-        console.log(6, udp.addr, udp.rid);
         udp.receive().then(([buffer]) => {
-          console.log('inside the then');
           const newaddr = {
             port: new DataView(buffer.buffer).getUint16(
               buffer.length - 2,
@@ -203,7 +201,7 @@ async function heartbeat(
   voiceState: GuildVoiceState,
 ) {
   if (!voiceState.guildID) return;
-  console.log('hb 1');
+
   const interval = (payload.d as DiscordHeartbeatPayload).heartbeat_interval;
   // We lost socket connection between heartbeats, resume connection
   if (ws.readyState === WebSocket.CLOSED) {
@@ -212,7 +210,6 @@ async function heartbeat(
     return;
   }
 
-  console.log('hb 2');
   if (heartbeating.has(voiceState.guildID)) {
     const receivedACK = heartbeating.get(voiceState.guildID);
     // If a ACK response was not received since last heartbeat, issue invalid session close
@@ -224,7 +221,6 @@ async function heartbeat(
     }
   }
 
-  console.log('hb 3');
   // Set it to false as we are issuing a new heartbeat
   heartbeating.set(voiceState.guildID, false);
 
