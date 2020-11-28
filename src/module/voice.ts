@@ -4,9 +4,8 @@ import { GuildVoiceState } from "../structures/guild.ts";
 import {
   DiscordHeartbeatPayload,
   DiscordPayload,
-  GatewayOpcode,
   VoiceOpcode,
-  VoiceServerUpdatePayload
+  VoiceServerUpdatePayload,
 } from "../types/discord.ts";
 import { eventHandlers } from "./client.ts";
 
@@ -86,7 +85,6 @@ export async function establishVoiceConnection(
     session_id: voiceState.sessionID,
   };
 
-  console.log(identifyPayload)
   voiceConnections.set(
     voiceState.channelID!,
     { id: voiceState.channelID, needToResume: false, ws },
@@ -187,6 +185,9 @@ export async function establishVoiceConnection(
         break;
       case VoiceOpcode.HeartbeatACK:
         heartbeating.set(guild_id, true);
+        break;
+      case VoiceOpcode.SessionDescription:
+        key.set((payload.d as any).secret_key);
         break;
       default:
         console.log("Unknown OP Code", payload);
