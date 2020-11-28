@@ -113,33 +113,24 @@ export async function establishVoiceConnection(
       switch (payload.op) {
         case VoiceOpcode.Ready:
           if (!voiceState.channelID) return;
-          console.log(1);
+
           const { ssrc, port, modes, ip } = payload.d as any;
           frame_view.setUint32(8, ssrc, false);
-
+          
+          const addr: Deno.NetAddr = { port, hostname: ip, transport: "udp" };
           const mode = modes.find(x => [
             'xsalsa20_poly1305',
             // 'xsalsa20_poly1305_lite',
             // 'xsalsa20_poly1305_suffix',
           ].includes(x));
           if (!mode) throw new Error(`failed to select supported mode (${modes})`);
-          console.log(2);
 
           const udp = Deno.listenDatagram({
             port: 1337,
             transport: "udp",
             hostname: '0.0.0.0',
           });
-          console.log(3);
-
-          const addr: Deno.NetAddr = { port, hostname: ip, transport: "udp" };
-          console.log(4);
-
-          const buffArr = new Uint8Array(70);
-          new DataView(buffArr.buffer).setUint32(0, ssrc, false);
-          udp.send(buffArr, addr).catch(console.error);
-          console.log(5);
-
+          
           if (voiceConnections.has(voiceState.channelID)) {
             voiceConnections.set(
               voiceState.channelID,
@@ -155,6 +146,13 @@ export async function establishVoiceConnection(
               voiceState.channelID,
               { id: voiceState.channelID, connection: udp, addr, ssrc },
             );
+          }
+
+          {
+            const buffArr = new Uint8Array(70);
+            new DataView(buffArr.buffer).setUint32(0, ssrc, false);
+            await udp.send(buffArr, addr).catch(console.error);
+            console.log(5);
           }
 
           console.log(6, udp.addr, udp.rid);
