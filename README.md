@@ -23,7 +23,7 @@ If you are a beginner developer, you may check out these awesome official and un
   - [GitHub](https://github.com/Skillz4Killz/Discordeno-bot-template)
   - [Features](https://github.com/Skillz4Killz/Discordeno-bot-template#features)
 - Dencord Starter
-  - [GitHub[(https://github.com/ayntee/dencord-starter)
+  - [GitHub](https://github.com/ayntee/dencord-starter)
 
 If you do not wish to use a boilerplate, you may continue reading.
 
