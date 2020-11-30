@@ -233,7 +233,7 @@ export function moveMember(
 /** Modifies the bot's username or avatar.
  * NOTE: username: if changed may cause the bot's discriminator to be randomized.
  */
-export function editBotProfile(username?: string, avatarURL?: string) {
+export async function editBotProfile(username?: string, avatarURL?: string) {
   // Nothing was edited
   if (!username && !avatarURL) return;
   // Check username requirements if username was provided
@@ -252,11 +252,12 @@ export function editBotProfile(username?: string, avatarURL?: string) {
     }
   }
 
+  const avatar = avatarURL ? await urlToBase64(avatarURL) : undefined;
   RequestManager.patch(
     endpoints.USER_BOT,
     {
       username: username?.trim(),
-      avatar: avatarURL ? urlToBase64(avatarURL) : undefined,
+      avatar,
     },
   );
 }
