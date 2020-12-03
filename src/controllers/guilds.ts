@@ -37,7 +37,7 @@ export async function handleInternalGuildCreate(
 }
 
 export async function handleInternalGuildDelete(data: DiscordPayload) {
-  if (data.t !== "GUILD_CREATE") return;
+  if (data.t !== "GUILD_DELETE") return;
 
   const payload = data.d as GuildDeletePayload;
   cacheHandlers.forEach("messages", (message) => {
