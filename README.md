@@ -1,6 +1,6 @@
 # Discordeno
 
-> Discord API library wrapper in Deno
+> Discord API library for Deno
 
 [![Discord](https://img.shields.io/discord/223909216866402304?color=7289da&logo=discord&logoColor=dark)](https://discord.gg/J4NqJ72)
 ![Lint](https://github.com/Skillz4Killz/Discordeno/workflows/Lint/badge.svg)
