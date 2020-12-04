@@ -45,7 +45,7 @@ import { urlToBase64 } from "../utils/utils.ts";
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createServer(options: CreateServerOptions) {
   const guild = await RequestManager.post(endpoints.GUILDS, options);
-  return structures.createGuild(guild);
+  return structures.createGuild(guild, 0);
 }
 
 /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event.
