@@ -43,7 +43,7 @@ import { botHasPermission, calculateBits } from "../utils/permissions.ts";
 import { urlToBase64 } from "../utils/utils.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
-export function createServer(options: CreateServerOptions) {
+export async function createServer(options: CreateServerOptions) {
   const guild = await RequestManager.post(endpoints.GUILDS, options);
   return structures.createGuild(guild);
 }
