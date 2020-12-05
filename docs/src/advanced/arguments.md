@@ -16,6 +16,8 @@ Discordeno comes with the most useful command arguments already built for you. T
 - `member` When you want a member object and the user can provide a member id, @mention or their username/nickname.
 - `number` When you want a number.
 - `role` When you want a role object. The user can provide the role id, mention or role name.
+- `snowflake` When you just want a snowflake.
+- `..snowflakes` When you want to check if the mentioned ID is a valid snowflake.
 - `subcommand` When your command has subcommands.
 
 
@@ -39,7 +41,7 @@ Suppose you wanted to make it possible so that the boolean argument could accept
 What if we also wanted to support, `yes` and `no`? Let's open up the `boolean.ts` file in the arguments folder and get started.
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache } from "../../deps.ts";
 
 botCache.arguments.set("boolean", {
   name: "boolean",
@@ -55,7 +57,7 @@ botCache.arguments.set("boolean", {
 Simply update the code so it looks like the following:
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache } from "../../deps.ts";
 
 botCache.arguments.set("boolean", {
   name: "boolean",
@@ -80,7 +82,7 @@ First, we need to update the **CommandArgument** interface in `src/types/command
 - Once that's done, we can go and create the code for it. Now, lets create a new file in `src/arguments` folder called `url.ts` and paste the base snippet for a command argument below.
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache } from "../../deps.ts";
 
 botCache.arguments.set("argumentname", {
   name: "argumentname",
@@ -93,7 +95,7 @@ botCache.arguments.set("argumentname", {
 First let's change the `argumentname` to be `url`. Then we can start adding the pseudo-code.
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache } from "../../deps.ts";
 
 botCache.arguments.set("url", {
   name: "url",
@@ -111,7 +113,7 @@ botCache.arguments.set("url", {
 Now we can get started.
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache } from "../../deps.ts";
 
 botCache.arguments.set("url", {
   name: "url",
@@ -163,6 +165,6 @@ arguments: [
 ]
 ```
 
-We already covered using the arguments in a command in our guide when we created the role command, so we can skip that here. To re-read that you can check it out [here](https://discordeno.netlify.app/stepbystep/createcommand#arguments).
+We already covered using the arguments in a command in our guide when we created the role command, so we can skip that here. To re-read that you can check it out [here](https://discordeno.mod.land/stepbystep/createcommand.html#arguments).
 
 Command arguments are an extremely powerful feature that can help make creating bots a lot easier. Discordeno provides extremely flexible command arguments. As a side benefit, command arguments are designed to be hot reloadable from the reload command. 🎉

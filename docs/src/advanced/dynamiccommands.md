@@ -15,12 +15,9 @@ Let's create all the commands for the entire Nekos.Life API in a very short time
 - Create a file in the commands folder called `nekos.ts` which will create all our fun commands.
 
 ```ts
-import { botCache } from "../../mod.ts";
-import { sendMessage } from "../../deps.ts";
+import { botCache,sendMessage } from "../../deps.ts";
 
 const nekosEndpoints = [
-	{ name: "spank", path: "/img/spank", nsfw: true },
-  { name: "gasm", path: "/img/gasm", nsfw: true },
   { name: "tickle", path: "/img/tickle", nsfw: false },
   { name: "slap", path: "/img/slap", nsfw: false },
   { name: "poke", path: "/img/poke", nsfw: false },
@@ -50,43 +47,7 @@ const nekosEndpoints = [
   { name: "gecg", path: "/img/gecg", nsfw: false },
   { name: "avatar", path: "/img/avatar", nsfw: false },
   { name: "waifu", path: "/img/waifu", nsfw: false },
-  // The follow name and paths have been hidden for this guide as they are NSFW.
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
-  { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
+  // All other paths have been removed for this guide as they are NSFW.
   { name: "nsfw_endpoint", path: "/img/nsfw_example", nsfw: true },
 ];
 
@@ -98,13 +59,15 @@ nekosEndpoints.forEach((endpoint) => {
     execute: async function (message) {
       const url = `https://nekos.life/api/v2${endpoint.path}`;
       const result = await fetch(url).then((res) => res.json());
-      sendMessage(message.channelID, result?.url);
+      sendMessage(message.channelID, result?.url || result[endpoint.name]);
     },
   });
 });
 ```
 
-Take a minute to realize what just happened. This has made 68 different unique commands dynamically. In 1 file, using the same piece of code, we created so many commands. You can easily add more commands to this.
+> **Note:** We have removed the endpoints that were leading to NSFW content. With them, we would just have created 68 different commands.
+
+Take a minute to realize what just happened. This has made 29 different unique commands dynamically. In 1 file, using the same piece of code, we created so many commands. You can easily add more commands to this.
 
 **That ladies and gentleman is the power and magic of Discordeno!**
 
@@ -113,23 +76,13 @@ Take a minute to realize what just happened. This has made 68 different unique c
 If your still a little confused, don't worry. Let's break it down.
 
 ```ts
-nekosEndpoints.forEach((endpoint) => {
-  botCache.commands.set(endpoint.name, {
-    name: endpoint.name,
-    nsfw: endpoint.nsfw,
-    botChannelPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
-    execute: async function (message) {
-      const url = `https://nekos.life/api/v2${endpoint.path}`;
-      const result = await fetch(url).then((res) => res.json());
-      sendMessage(message.channelID, result?.url);
-    },
-  });
-});
+const nekosEndpoints = [
+  { name: "tickle", path: "/img/tickle", nsfw: false },
+  // ...
+]
 ```
 
-This is the part where we are doing the magical stuff. So let's take a look at this a bit. Above this we had an array of all the endpoints on the API giving a name, a path, and a boolean to say if it is NSFW or not.
-
-We ran a loop `nekosEndpoints.forEach()` on that array and for each item in that array, we created a command.
+This is just an array of all the endpoints on the API giving a name, a path, and a boolean to say if it is NSFW or not.
 
 ```ts
 botCache.commands.set(endpoint.name, {
@@ -139,14 +92,17 @@ botCache.commands.set(endpoint.name, {
 	execute: async function (message) {
 		const url = `https://nekos.life/api/v2${endpoint.path}`;
 		const result = await fetch(url).then((res) => res.json());
-		sendMessage(message.channelID, result?.url);
+		sendMessage(message.channelID, result?.url || result[endpoint.name]);
 	},
 });
 ```
 
-For the command name, we used the `endpoint.name` property. For the `nsfw` property we used the `endpoint.nsfw` property. Since all of these commands, send a message that is a URL we simply required those permissions in all 68 of these commands.
+This is the part where we are doing the magical stuff. So let's take a look at this a bit. 
+
+We ran a loop `nekosEndpoints.forEach()` on that array and for each item in that array, we created a command.
+
+For the command name, we used the `endpoint.name` property. For the `nsfw` property we used the `endpoint.nsfw` property. Since all of these commands, send a message that is a URL we simply required those permissions in all 29 of these commands.
 
 Then we simply write the code for the commands and it all just works. If you were to reload/restart your bot now with this. You will see that you have access to 68 new commands.
 
 Take a minute and try out some of the commands and how they function.
-
