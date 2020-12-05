@@ -28,6 +28,8 @@ botCache.eventHandlers.ready = function () {
 };
 ```
 
+> **Note:** Some of the code from the ready.ts file was removed here to make it easier to understand.
+
 Overall, this code is pretty self-explanatory. When the bot is ready, it logs all these things to the console for you.
 
 ## Creating A Custom Event
@@ -35,7 +37,7 @@ Overall, this code is pretty self-explanatory. When the bot is ready, it logs al
 Make a new file in the events folder called `discordLog.ts` that will send a message to a discord channel whenever we get an error so we don't need to always be watching the console to see errors. Once you made the file, go ahead and paste the base event snippet below.
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache } from "../../deps.ts";
 
 botCache.eventHandlers.eventname = function () {
   // Your code goes here
@@ -48,18 +50,16 @@ botCache.eventHandlers.eventname = function () {
 ```ts
 // This interface is a placeholder that allows you to easily add on custom events for your need.
 export interface CustomEvents extends EventHandlers {
-  discordLog: () => unknown;
+  discordLog: (error: Error) => unknown;
 }
 ```
 
 Awesome, now we can get started on adding the code.
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache, cache, sendMessage } from "../../deps.ts";
 import { Embed } from "../utils/Embed.ts";
-import { cache } from "../../deps.ts";
 import { configs } from "../../configs.ts";
-import { sendMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts";
 import { sendEmbed } from "../utils/helpers.ts";
 
 botCache.eventHandlers.discordLog = function (error) {
@@ -67,12 +67,12 @@ botCache.eventHandlers.discordLog = function (error) {
     .setDescription([
       "```ts",
       error,
-      "```",
+      "```"
     ].join("\n"))
     .setTimestamp();
 
   // Get the channel we need to send this error to
-  const errorChannel = cache.channels.get(configs.channelIDs.errorChannelID);
+  const errorChannel = configs.channelIDs.errorChannelID;
   // If the channel is not found cancel out
   if (!errorChannel) return;
 
@@ -89,6 +89,7 @@ Now that we have fully covered events, it would be a good time to get some pract
   channelUpdate?: (channel: Channel, cachedChannel: Channel) => unknown;
   channelDelete?: (channel: Channel) => unknown;
   debug?: (args: DebugArg) => unknown;
+  dispatchRequirements?: (data: DiscordPayload, shardID: number) => unknown;
   guildBanAdd?: (guild: Guild, user: Member | UserPayload) => unknown;
   guildBanRemove?: (guild: Guild, user: Member | UserPayload) => unknown;
   guildCreate?: (guild: Guild) => unknown;

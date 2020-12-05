@@ -1,13 +1,13 @@
 # Creating Tasks
 
-Phenomenal! Now that you have mastered monitors, let's move on to one of the final parts, Tasks. A lot of times, you will want to do something over and over again. To do this, you can use tasks. You could technically just do this with `setInterval` but, with tasks you gain a little more advantage like having reloadability. The functions that are run can be easily reloaded meaning, you don't need to restart your whole bot just for little change.
+Phenomenal! Now that you have mastered inhibitors, let's move on to one of the final parts, Tasks. A lot of times, you will want to do something over and over again. To do this, you can use tasks. You could technically just do this with `setInterval` but, with tasks you gain a little more advantage like having reloadability. The functions that are run can be easily reloaded meaning, you don't need to restart your whole bot just for little change.
 
 ## What is a Task?
 
 A task is used to conduct a function every so often. For example, Discordeno comes with a built in task called `botlists`. This task runs every so often and updates your data in all the bot lists apis. Let's create a new task to really understand the gist of it. Let's create a task that will run every 5 minutes which will keep our cache clean and minimal allowing your bot to grow and scale much larger without needing a much bigger server to host it on. Start by pasting the following snippet below:
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache } from "../../deps.ts";
 import { Milliseconds } from "../utils/constants/time.ts";
 
 botCache.tasks.set(`taskname`, {
@@ -27,7 +27,7 @@ botCache.tasks.set(`taskname`, {
 
 ## What is Cache and Why Should We Sweep It?
 
-Your bot's cache is the memory it is holding on to since it started. To understand this slightly easier, when you are buying a server to host your bot on you can check how much RAM(memory) it has. That amount of memory can be expensive $$$ so it is best to build a bot that does not use a ton of memory. You can use this task to tell your bot to delete any memory it is holding on to that is not necessary.
+Your bot's cache is the memory it is holding on to since it started. To understand this slightly easier we have an example: when you buy a server to host your bot on you can check how much RAM (memory) it has. That amount of memory can be expensive $$$ so it is best to build a bot that does not use a ton of memory. You can use this task to tell your bot to delete any memory it is holding on to that is not necessary.
 
 - Suppose we don't want to keep any presence cached.
 - Remove any members from cache that have not been active in the last 30 minutes.
@@ -36,7 +36,7 @@ Your bot's cache is the memory it is holding on to since it started. To understa
 ## Adding Pseudo Code
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache } from "../../deps.ts";
 import { Milliseconds } from "../utils/constants/time.ts";
 
 botCache.tasks.set(`taskname`, {
@@ -59,9 +59,8 @@ botCache.tasks.set(`taskname`, {
 Now that we have a plan in place, let's add the code.
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache, cache } from "../../deps.ts";
 import { Milliseconds } from "../utils/constants/time.ts";
-import { cache } from "../../deps.ts";
 
 const MESSAGE_LIFETIME = Milliseconds.MINUTE * 10
 const MEMBER_LIFETIME = Milliseconds.MINUTE * 30
@@ -95,7 +94,7 @@ Alrighty, we managed to add most of the code. But we hit a small obstacle. There
 
 ## Adding Member Activity Tracker
 
-Let's go to the botCache in `mod.ts` file and add a `new Collection` that will hold the member's id + server id as the key since a member can be in multiple servers. The value for the map will be a timestamp showing when they were last active. We will be able to use this check, how long ago they were last active.
+Let's go to the botCache in `cache.ts` file and add a `new Collection` that will hold the member's id + server id as the key since a member can be in multiple servers. The value for the map will be a timestamp showing when they were last active. We will be able to use this check, how long ago they were last active.
 
 ```ts
 memberLastActive: new Collection<string, number>()
@@ -135,7 +134,7 @@ botCache.tasks.set(`sweeper`, {
       guild.presences.clear();
       // Delete any member who has not been active in the last 30 minutes and is not currently in a voice channel
       guild.members.forEach((member) => {
-				// The user is currently active in a voice channel
+        // The user is currently active in a voice channel
         if (guild.voiceStates.has(member.user.id)) return;
 
         const lastActive = botCache.memberLastActive.get(member.user.id);

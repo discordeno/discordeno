@@ -64,5 +64,5 @@ deno install --allow-read --allow-run --allow-write --allow-net -f -q --unstable
 Once, that is done you can simply run the bot.
 
 ```shell
-denon run --allow-read --allow-net mod.ts
+denon run --allow-net --allow-read --no-check --config tsconfig.json mod.ts
 ```
