@@ -16,8 +16,8 @@ Discordeno comes with the most useful command arguments already built for you. T
 - `member` When you want a member object and the user can provide a member id, @mention or their username/nickname.
 - `number` When you want a number.
 - `role` When you want a role object. The user can provide the role id, mention or role name.
-- `snowflake` When you just want a snowflake.
-- `..snowflakes` When you want to check if the mentioned ID is a valid snowflake.
+- `snowflake` When you just want a snowflake. A snowflake is an ID generation format from Twitter that Discord uses to make their IDs unique. These IDs do never change and are used to identify users, guilds, emojis, and more.
+- `...snowflakes` When you want to check if the mentioned ID is a valid snowflake. Note that this is similar to ...string, it will take all coming arguments and check them. This should always be your FINAL argument.
 - `subcommand` When your command has subcommands.
 
 
