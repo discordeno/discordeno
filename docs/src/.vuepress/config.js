@@ -27,8 +27,8 @@ module.exports = {
   ],
   theme: "yuu",
   themeConfig: {
-    repo: repository,
-    docsDir: "src",
+    repo: "discordeno/Discordeno",
+    docsDir: "docs/src",
     editLinks: true,
     lastUpdated: true,
     sidebarDepth: 0,
