@@ -10,6 +10,7 @@ import { ImageFormats, ImageSize } from "../types/cdn.ts";
 import { ChannelCreatePayload, ChannelTypes } from "../types/channel.ts";
 import { Errors } from "../types/errors.ts";
 import {
+  AuditLogs,
   BannedUser,
   BanOptions,
   ChannelCreateOptions,
@@ -439,6 +440,7 @@ export async function getAuditLogs(
 
   return RequestManager.get(endpoints.GUILD_AUDIT_LOGS(guildID), {
     ...options,
+    action_type: options.action_type ? AuditLogs[options.action_type] : undefined,
     limit: options.limit && options.limit >= 1 && options.limit <= 100
       ? options.limit
       : 50,
