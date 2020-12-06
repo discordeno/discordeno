@@ -68,4 +68,4 @@ Before contributing, please read the [Contributing Guide](https://github.com/Ski
 
 ### License
 
-[MIT © Skillz4Killz](https://github.com/Skillz4Killz/Discordeno/blob/master/LICENSE)
+[MIT © discordeno](https://github.com/discordeno/Discordeno/blob/master/LICENSE)
