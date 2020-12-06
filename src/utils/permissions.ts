@@ -200,7 +200,7 @@ export async function hasChannelPermissions(
 /** This function converts a bitwise string to permission strings */
 export function calculatePermissions(permissionBits: bigint) {
   return Object.keys(Permissions).filter((perm) => {
-    if (typeof perm !== "number") return false;
+    if (Number(perm)) return false;
     return permissionBits & BigInt(Permissions[perm as Permission]);
   }) as Permission[];
 }
