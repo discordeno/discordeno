@@ -1,10 +1,10 @@
 # Creating Inhibitors!
 
-Woah! You are almost half way done with understanding all of Discordeno. Amazing isn't it? Something you may have noticed in the last section was there were some options that prevented some commands from running like `dmOnly` or the permission options. we created a setting to prevent the monitor from running in certain channels. What if we wanted to do prevent commands from happening? How would we prevent commands from running?
+Woah! You are almost half way done with understanding all of Discordeno. Amazing isn't it? Something you may have noticed in the last section was there were some options that prevented some commands from running like `dmOnly` or the permission options. We created a setting to prevent the monitor from running in certain channels. What if we wanted to do prevent commands from happening? How would we prevent commands from running?
 
 ## What is an Inhibitor?
 
-An Inhibitor is very similar to how monitors work. A monitor runs on every message but an inhibitor runs on every command. Remember all those command options like cooldown, permissions, permissionLevel, nsfw, etc... Each and every one of these options has an inhibitor in that checks commands for these settings.
+Inhibitors are very similar to how monitors work. A monitor runs on every message but an inhibitor runs on every command. Remember all those command options like cooldown, permissions, permissionLevel, nsfw, etc... each and every one of these options has an inhibitor that checks commands for these settings.
 
 Let's create our own inhibitor that would prevent commands from being used if the user is not a VIP user.
 
@@ -15,7 +15,7 @@ Let's create our own inhibitor that would prevent commands from being used if th
 Let's start by creating a file inside the inhibitors folder called `boosted.ts` and paste the following snippet of code:
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache } from "../../deps.ts";
 
 botCache.inhibitors.set("inhibitorname", async function (message, command, guild) {
 	// Your code goes here
@@ -64,7 +64,7 @@ return true;
 Since we need a new option on our commands we need to add that. Open the `src/types/commands.ts` file and add in the following
 
 ```ts
-  vipOnly?: boolean;
+vipOnly?: boolean;
 ```
 
 Once that is added, you can go into any command and mark them as vip only commands.
@@ -77,4 +77,4 @@ You can now try and get a little more practice with inhibitors by trying to chal
 
 Majority of Discordeno bots do not use many custom inhibitors because most of the necessary/important ones already come built for you in the inhibitors folder.
 
-Next we will try our hands at creating a monitor.
+Next we will try our hands on creating tasks.

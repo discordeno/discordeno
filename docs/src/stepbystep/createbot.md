@@ -68,7 +68,7 @@ export const configs = {
 
 #### Token
 
-First, add your bot token. This is **required** for the bot to start. Review the [instructions](https://discordeno.netlify.app/gettingstarted#creatingyourfirstdiscordbotapplication) if you have not made your token yet.
+First, add your bot token. This is **required** for the bot to start. Review the [instructions](https://discordeno.mod.land/gettingstarted.html#creating-your-first-discord-bot-application) if you have not made your token yet.
 
 #### Prefix
 

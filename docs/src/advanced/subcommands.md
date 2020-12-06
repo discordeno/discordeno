@@ -9,14 +9,14 @@ A subcommand can have it's own settings for example, you can allow 1 subcommand 
 Let's start by understanding the `prefix` command which uses subcommands. It is a good basic example, to help us understand how to create a subcommand.
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache } from "../../deps.ts";
 import { PermissionLevels } from "../types/commands.ts";
-import { sendResponse, sendEmbed, createSubcommand } from "../utils/helpers.ts";
+import { sendResponse, sendEmbed, createSubcommand, createCommand } from "../utils/helpers.ts";
 import { parsePrefix } from "../monitors/commandHandler.ts";
 import { Embed } from "../utils/Embed.ts";
 
 // This command will only execute if there was no valid sub command: !prefix
-botCache.commands.set("prefix", {
+createCommand({
   name: "prefix",
   arguments: [
     {
@@ -31,7 +31,7 @@ botCache.commands.set("prefix", {
     const embed = new Embed()
       .setTitle("Prefix Information")
       .setDescription(`
-            **Guild**: \`${message.guild()?.name}\`
+            **Guild**: \`${message.guild?.name}\`
             **Current Prefix**: \`${parsePrefix(message.guildID)}\`
       `)
       .setTimestamp();
@@ -49,7 +49,7 @@ createSubcommand("prefix", {
       type: "string",
       required: true,
       missing: (message) => {
-        sendResponse(message, `${message.member()} please provid a prefix`);
+        sendResponse(message, `${message.member} please provid a prefix`);
       },
     },
   ],
@@ -78,7 +78,7 @@ createSubcommand("prefix", {
 Let's separate this to understand what is happening here. The first half of the code is the main command. This is like any other command. However, the important thing is in the arguments we requested a subcommand!
 
 ```ts
-botCache.commands.set("prefix", {
+createCommand({
 	name: "prefix",
   arguments: [
 		{
@@ -93,7 +93,7 @@ botCache.commands.set("prefix", {
     const embed = new Embed()
       .setTitle("Prefix Information")
       .setDescription(`
-            **Guild**: \`${message.guild()?.name}\`
+            **Guild**: \`${message.guild?.name}\`
             **Current Prefix**: \`${parsePrefix(message.guildID)}\`
       `)
       .setTimestamp();
@@ -115,7 +115,7 @@ createSubcommand("prefix", {
       type: "string",
       required: true,
       missing: (message) => {
-        sendResponse(message, `${message.member()} please provid a prefix`);
+        sendResponse(message, `${message.member} please provid a prefix`);
       },
     },
   ],
