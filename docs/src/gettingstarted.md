@@ -7,7 +7,7 @@ This website serves as the purpose for introducing Discordeno to developers. The
 [View Documentation on Deno](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
 
 ## Useful Links
-- [GitHub Repository](https://github.com/Skillz4Killz/Discordeno)
+- [GitHub Repository](https://github.com/discordeno/discordeno)
 - [Deno Page](https://deno.land/x/discordeno)
 - [Website](https://discordeno.mod.land)
 
