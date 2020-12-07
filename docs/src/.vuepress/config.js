@@ -1,7 +1,7 @@
 const { name, description, repository } = require("../../package");
 
 const title = name[0].toUpperCase() + name.slice(1);
-const discordLink = "https://discord.com/invite/J4NqJ72";
+const discordLink = "https://discord.com/invite/5vBgXk3UcZ";
 
 module.exports = {
   base: `/`,
@@ -28,7 +28,7 @@ module.exports = {
   theme: "yuu",
   themeConfig: {
     repo: repository,
-    docsDir: "src",
+    docsDir: "docs/src",
     editLinks: true,
     lastUpdated: true,
     sidebarDepth: 0,
@@ -65,9 +65,9 @@ module.exports = {
             "/stepbystep/createbot",
             "/stepbystep/createcommand",
             "/stepbystep/createevent",
-            "/stepbystep/createinhibitor",
             "/stepbystep/createlanguage",
             "/stepbystep/createmonitor",
+            "/stepbystep/createinhibitor",
             "/stepbystep/createtask",
             "/stepbystep/hostingbot",
           ],

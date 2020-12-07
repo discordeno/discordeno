@@ -21,7 +21,7 @@ Any of these can be easily modified, in their files. Let's go ahead and try and 
 If you have a bot support server, you might also have a role setup for your bot's support team. So to make life easier, it would be nice if someone with that role could use the command without having to modify the configs file every time.
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache } from "../../deps.ts";
 import { PermissionLevels } from "../types/commands.ts";
 import { configs } from "../../configs.ts";
 
@@ -38,17 +38,17 @@ Let's add some pseudo-code first.
 botCache.permissionLevels.set(
   PermissionLevels.BOT_SUPPORT,
   async (message) => {
-		// If the user id exists in the configs allow the command
-		if (configs.userIDs.botSupporters.includes(message.author.id)) return true
-
-		// The users id was not in the configs, check if they have the role in bot server
-
-		// Get the bots support server
-
+    // If the user id exists in the configs allow the command
+    if (configs.userIDs.botSupporters.includes(message.author.id)) return true
+    
+    // The users id was not in the configs, check if they have the role in bot server
+    
+    // Get the bots support server
+    
     // If the user is not a member of the support server they can't be one of the support staff.
 
     // If they have the role allow the command otherwise it will be false and block the command.
-	},
+  },
 );
 ```
 
@@ -58,12 +58,12 @@ Awesome, now that the plan is in place, let's add the code.
 botCache.permissionLevels.set(
   PermissionLevels.BOT_SUPPORT,
   async (message) => {
-		// If the user id exists in the configs allow the command
-		if (configs.userIDs.botSupporters.includes(message.author.id)) return true
-
-		// The users id was not in the configs, check if they have the role in bot server
-
-		// Get the bots support server
+    // If the user id exists in the configs allow the command
+    if (configs.userIDs.botSupporters.includes(message.author.id)) return true
+    
+    // The users id was not in the configs, check if they have the role in bot server
+    
+    // Get the bots support server
     const guild = cache.guilds.get(configs.supportServerID)
     if (!guild) return false
 
@@ -73,7 +73,7 @@ botCache.permissionLevels.set(
 
     // If they have the role allow the command otherwise it will be false and block the command.
     return member.roles.includes('BOT_SUPPORT_ROLE_ID_HERE')
-	},
+  },
 );
 ```
 
@@ -101,8 +101,8 @@ Let's add a new one for a Nitro Booster role. You can add it in any order here y
 
 ```ts
 export enum PermissionLevels {
-	MEMBER,
-	NITRO_BOOSTER,
+  MEMBER,
+  NITRO_BOOSTER,
   MODERATOR,
   ADMIN,
   SERVER_OWNER,
@@ -115,19 +115,19 @@ export enum PermissionLevels {
 Once that's done, we can go and create the code for it. Now, lets create a new file in `permissionLevels` folder called `booster.ts` and paste the base snippet for a permission level below.
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache } from "../../deps.ts";
 import { PermissionLevels } from "../types/commands.ts";
 import { configs } from "../../configs.ts";
 
 botCache.permissionLevels.set(
   PermissionLevels,
   async (message) => {
-		// Code goes here
-	}
+    // Code goes here
+  }
 );
 ```
 
-**NOTE:** You will see an error in the `PermissionLevels,` line because we need to select one of the permission levels. In this case we want the NITRO_BOOSTER level we just created above.
+> **NOTE:** You will see an error in the `PermissionLevels,` line because we need to select one of the permission levels. In this case we want the NITRO_BOOSTER level we just created above.
 
 ```ts
 PermissionLevels.NITRO_BOOSTER
@@ -136,7 +136,7 @@ PermissionLevels.NITRO_BOOSTER
 Next we can add the code in place.
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache } from "../../deps.ts";
 import { PermissionLevels } from "../types/commands.ts";
 import { configs } from "../../configs.ts";
 
@@ -164,7 +164,7 @@ Awesome! You just created your very own permission level. Now let's check out ho
 There are two ways to use permission levels. You can provide an array of PermissionLevels or you can provide a custom function.
 
 ```ts
-botCache.commands.set(`reload`, {
+createCommand({
   name: `reload`,
   permissionLevels: [PermissionLevels.BOT_OWNER],
   botChannelPermissions: ["SEND_MESSAGES"],
@@ -185,7 +185,7 @@ If you provide an array of permission levels, only one of these is necessary to 
 There is another way to use permission levels. You can provide a custom function that must return a boolean. For example,
 
 ```ts
-botCache.commands.set(`example`, {
+createCommand({
   name: `example`,
   permissionLevels: (message, command, guild) => {
 		// Anything you'd like to check here and return a boolean. Must return true or false.
