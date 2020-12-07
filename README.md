@@ -50,7 +50,7 @@ StartBot({
 ## Documentation
 
 - [Website](https://discordeno.mod.land)
-- [Support server](https://discord.gg/J4NqJ72)
+- [Support server](https://discord.com/invite/5vBgXk3UcZ)
 - [Contributing Guide](https://github.com/discordeno/discordeno/blob/master/.github/CONTRIBUTING.md)
 
 ## Contributing
