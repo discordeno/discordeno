@@ -420,4 +420,4 @@ Let's take a minute and explain the differences here. The first thing you will p
 
 ### Need More Examples/Help
 
-If you still need more help converting other aspects of your bot please contact me at [Discord](https://discord.gg/J4NqJ72). I will continue adding more examples to this guide as more people request them.
+If you still need more help converting other aspects of your bot please contact me at [Discord](https://discord.com/invite/5vBgXk3UcZ). I will continue adding more examples to this guide as more people request them.
