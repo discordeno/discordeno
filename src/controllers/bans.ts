@@ -11,7 +11,7 @@ export async function handleInternalGuildBanAdd(data: DiscordPayload) {
   if (!guild) return;
 
   const member = await cacheHandlers.get("members", payload.user.id);
-  eventHandlers.guildBanAdd?.(guild, member || payload.user);
+  eventHandlers.guildBanAdd?.(guild, payload.user, member);
 }
 
 export async function handleInternalGuildBanRemove(data: DiscordPayload) {
@@ -22,5 +22,5 @@ export async function handleInternalGuildBanRemove(data: DiscordPayload) {
   if (!guild) return;
 
   const member = await cacheHandlers.get("members", payload.user.id);
-  eventHandlers.guildBanRemove?.(guild, member || payload.user);
+  eventHandlers.guildBanRemove?.(guild, payload.user, member);
 }
