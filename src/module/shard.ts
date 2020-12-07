@@ -5,13 +5,13 @@ import {
   WebSocket,
 } from "../../deps.ts";
 import {
+  DebugArg,
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
+  FetchMembersOptions,
   GatewayOpcode,
   ReadyPayload,
-} from "../types/discord.ts";
-import { FetchMembersOptions } from "../types/guild.ts";
-import { DebugArg } from "../types/options.ts";
+} from "../types/types.ts";
 
 let shardSocket: WebSocket;
 
@@ -272,5 +272,6 @@ onmessage = (message: MessageEvent) => {
 
 function postDebug(details: DebugArg) {
   // TODO: Errors need to be fixed by VSC plugin
+  // @ts-ignore
   postMessage({ type: "DEBUG_LOG", details });
 }

@@ -1,16 +1,16 @@
 import { delay } from "../../deps.ts";
 import { eventHandlers, setBotID } from "../module/client.ts";
 import { allowNextShard } from "../module/shardingManager.ts";
-import { structures } from "../structures/mod.ts";
+import { structures } from "../structures/structures.ts";
 import {
   DiscordPayload,
   PresenceUpdatePayload,
   ReadyPayload,
   TypingStartPayload,
+  UserPayload,
   VoiceStateUpdatePayload,
   WebhookUpdatePayload,
-} from "../types/discord.ts";
-import { UserPayload } from "../types/guild.ts";
+} from "../types/types.ts";
 import { cache } from "../utils/cache.ts";
 import { cacheHandlers } from "./cache.ts";
 

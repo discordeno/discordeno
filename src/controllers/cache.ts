@@ -1,6 +1,4 @@
-import { Channel } from "../structures/channel.ts";
-import { Guild } from "../structures/guild.ts";
-import { Message } from "../structures/message.ts";
+import { Channel, Guild, Message } from "../structures/structures.ts";
 import { PresenceUpdatePayload } from "../types/discord.ts";
 import { cache } from "../utils/cache.ts";
 import { Collection } from "../utils/collection.ts";

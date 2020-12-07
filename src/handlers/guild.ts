@@ -2,17 +2,18 @@ import { cacheHandlers } from "../controllers/cache.ts";
 import { identifyPayload } from "../module/client.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { requestAllMembers } from "../module/shardingManager.ts";
-import { Guild } from "../structures/guild.ts";
-import { Member } from "../structures/member.ts";
-import { structures } from "../structures/mod.ts";
-import { Template } from "../structures/template.ts";
-import { ImageFormats, ImageSize } from "../types/cdn.ts";
-import { ChannelCreatePayload, ChannelTypes } from "../types/channel.ts";
-import { Errors } from "../types/errors.ts";
+import {
+  Guild,
+  Member,
+  structures,
+  Template,
+} from "../structures/structures.ts";
 import {
   BannedUser,
   BanOptions,
   ChannelCreateOptions,
+  ChannelCreatePayload,
+  ChannelTypes,
   CreateEmojisOptions,
   CreateGuildFromTemplate,
   CreateGuildPayload,
@@ -22,20 +23,23 @@ import {
   EditEmojisOptions,
   EditGuildTemplate,
   EditIntegrationOptions,
+  Errors,
   FetchMembersOptions,
   GetAuditLogsOptions,
   GuildEditOptions,
   GuildTemplate,
+  ImageFormats,
+  ImageSize,
+  Intents,
+  MemberCreatePayload,
+  Permissions,
   PositionSwap,
   PruneOptions,
   PrunePayload,
+  RoleData,
   UpdateGuildPayload,
   UserPayload,
-} from "../types/guild.ts";
-import { MemberCreatePayload } from "../types/member.ts";
-import { Intents } from "../types/options.ts";
-import { Permissions } from "../types/permission.ts";
-import { RoleData } from "../types/role.ts";
+} from "../types/types.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import { Collection } from "../utils/collection.ts";
 import { endpoints } from "../utils/constants.ts";

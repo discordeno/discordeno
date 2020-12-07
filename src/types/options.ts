@@ -1,8 +1,10 @@
-import { Channel } from "../structures/channel.ts";
-import { Guild } from "../structures/guild.ts";
-import { Member } from "../structures/member.ts";
-import { Message } from "../structures/message.ts";
-import { Role } from "../structures/role.ts";
+import {
+  Channel,
+  Guild,
+  Member,
+  Message,
+  Role,
+} from "../structures/structures.ts";
 import {
   DiscordPayload,
   Emoji,

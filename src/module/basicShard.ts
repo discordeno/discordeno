@@ -10,10 +10,10 @@ import {
 import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
+  FetchMembersOptions,
   GatewayOpcode,
   ReadyPayload,
-} from "../types/discord.ts";
-import { FetchMembersOptions } from "../types/guild.ts";
+} from "../types/types.ts";
 import { BotStatusRequest } from "../utils/utils.ts";
 import { botGatewayData, eventHandlers, IdentifyPayload } from "./client.ts";
 import { handleDiscordPayload } from "./shardingManager.ts";

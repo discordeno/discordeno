@@ -1,4 +1,4 @@
-import { Guild } from "../structures/guild.ts";
+import { Guild } from "../structures/structures.ts";
 import { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
 import { Emoji, StatusType } from "./discord.ts";
 import { MemberCreatePayload } from "./member.ts";

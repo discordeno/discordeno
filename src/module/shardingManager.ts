@@ -1,12 +1,12 @@
 import { delay } from "../../deps.ts";
 import { controllers } from "../controllers/mod.ts";
-import { Guild } from "../structures/guild.ts";
+import { Guild } from "../structures/structures.ts";
 import {
   DiscordBotGatewayData,
   DiscordPayload,
+  FetchMembersOptions,
   GatewayOpcode,
-} from "../types/discord.ts";
-import { FetchMembersOptions } from "../types/guild.ts";
+} from "../types/types.ts";
 import { cache } from "../utils/cache.ts";
 import { BotStatusRequest } from "../utils/utils.ts";
 import {

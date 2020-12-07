@@ -1,7 +1,5 @@
 import { delay } from "../../deps.ts";
-import { HttpResponseCode } from "../types/discord.ts";
-import { Errors } from "../types/errors.ts";
-import { RequestMethods } from "../types/fetch.ts";
+import { Errors, HttpResponseCode, RequestMethods } from "../types/types.ts";
 import { baseEndpoints } from "../utils/constants.ts";
 import { authorization, eventHandlers } from "./client.ts";
 

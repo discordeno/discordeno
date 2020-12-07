@@ -22,7 +22,7 @@ import {
   editChannel,
 } from "../src/handlers/channel.ts";
 import { getChannel } from "../src/handlers/guild.ts";
-import { Permissions } from "../src/types/permission.ts";
+import { Permissions } from "../src/types/types.ts";
 
 const token = Deno.env.get("DISCORD_TOKEN");
 if (!token) throw "Token is not provided";
