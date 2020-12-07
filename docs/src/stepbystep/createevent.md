@@ -81,10 +81,6 @@ botCache.eventHandlers.discordLog = function (error) {
 };
 ```
 
-## Intents
-
-When you have read over the mod.ts file you have for shure seen following: `intents: [Intents.GUILDS, Intents.GUILD_MESSAGES]`. Intents are important for many different things, but especially for events. Since Discord has already a well explination about Intents you can read more about them [here](https://discord.com/developers/docs/topics/gateway#gateway-intents)
-
 Now that we have fully covered events, it would be a good time to get some practice here. Feel free to make more events that you would like in your bot. The following is a list of all the events available to you by the library at the time of writing this guide. There may be more or some may have been removed. I'll try to keep this updated but either way, VSC will let you know through autocompletion what is and isn't available.
 
 ```ts
