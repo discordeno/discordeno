@@ -5,7 +5,6 @@
 [![Discord](https://img.shields.io/discord/223909216866402304?color=7289da&logo=discord&logoColor=dark)](https://discord.gg/J4NqJ72)
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
-![nest badge](https://nest.land/badge.svg)
 
 - First-class TypeScript & JavaScript support
 - Security & stable
@@ -32,7 +31,7 @@ If you do not wish to use a boilerplate, you may continue reading.
 Here's a minimal example to get started with:
 
 ```typescript
-import StartBot, { sendMessage, Intents } from "https://x.nest.land/Discordeno@9.4.0/mod.ts";
+import StartBot, { sendMessage, Intents } from "https://deno.land/x/discordeno@9.4.0/mod.ts";
 
 StartBot({
   token: "BOT TOKEN",
