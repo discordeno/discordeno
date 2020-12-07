@@ -8,8 +8,8 @@ Let's first start by taking an existing command and slightly modifying it to you
 
 ```ts
 import { botCache } from "../../mod.ts";
-import { sendMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts";
-import { botID } from "https://x.nest.land/Discordeno@9.0.1/src/module/client.ts";
+import { sendMessage } from "https://deno.land/x/discordeno@9.4.0/src/handlers/channel.ts";
+import { botID } from "https://deno.land/x/discordeno@9.4.0/src/module/client.ts";
 import { createCommand } from "../utils/helpers.ts"
 
 createCommand({
@@ -114,7 +114,7 @@ Let's make a command that will allow guild admins to give or take roles from a m
 
 ```ts
 import { botCache } from "../../mod.ts";
-import { sendMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts";
+import { sendMessage } from "https://deno.land/x/discordeno@9.4.0/src/handlers/channel.ts";
 import { PermissionLevels } from "../types/commands.ts";
 import { createCommandAliases } from "../utils/helpers";
 

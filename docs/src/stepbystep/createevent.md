@@ -12,7 +12,7 @@ Go ahead and open up the `src/events/ready.ts` file. When you open this file, yo
 
 ```ts
 import { botCache } from "../../mod.ts";
-import { cache } from "https://x.nest.land/Discordeno@9.0.1/src/utils/cache.ts";
+import { cache } from "https://deno.land/x/discordeno@9.4.0/src/utils/cache.ts";
 
 botCache.eventHandlers.ready = function () {
   console.log(`Loaded ${botCache.arguments.size} Argument(s)`);
