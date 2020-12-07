@@ -15,7 +15,7 @@ export async function handleInternalGuildBanAdd(data: DiscordPayload) {
 }
 
 export async function handleInternalGuildBanRemove(data: DiscordPayload) {
-  if (data.t !== "GUILD_BAN_ADD") return;
+  if (data.t !== "GUILD_BAN_REMOVE") return;
 
   const payload = data.d as GuildBanPayload;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
