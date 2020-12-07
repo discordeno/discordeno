@@ -3,9 +3,9 @@
 > Discord API library for Deno
 
 [![Discord](https://img.shields.io/discord/223909216866402304?color=7289da&logo=discord&logoColor=dark)](https://discord.gg/J4NqJ72)
-![Lint](https://github.com/Skillz4Killz/Discordeno/workflows/Lint/badge.svg)
-![Test](https://github.com/Skillz4Killz/Discordeno/workflows/Test/badge.svg)
-[![nest badge](https://nest.land/badge.svg)](https://nest.land/package/Discordeno)
+![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
+![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
+![nest badge](https://nest.land/badge.svg)
 
 - First-class TypeScript & JavaScript support
 - Security & stable
@@ -52,20 +52,20 @@ StartBot({
 
 - [Website](https://discordeno.mod.land)
 - [Support server](https://discord.gg/J4NqJ72)
-- [Contributing Guide](https://github.com/Skillz4Killz/Discordeno/blob/master/.github/CONTRIBUTING.md)
+- [Contributing Guide](https://github.com/discordeno/discordeno/blob/master/.github/CONTRIBUTING.md)
 
 ## Contributing
 
 ## Code of Conduct
 
-Discordeno expects participants to adhere to our [Code of Conduct](https://github.com/Skillz4Killz/Discordeno/blob/master/.github/CODE_OF_CONDUCT.md).
+Discordeno expects participants to adhere to our [Code of Conduct](https://github.com/discordeno/discordeno/blob/master/.github/CODE_OF_CONDUCT.md).
 
 ## Contributing Guide
 
 We appreciate your help!
 
-Before contributing, please read the [Contributing Guide](https://github.com/Skillz4Killz/Discordeno/blob/master/.github/CONTRIBUTING.md).
+Before contributing, please read the [Contributing Guide](https://github.com/discordeno/discordeno/blob/master/.github/CONTRIBUTING.md).
 
 ### License
 
-[MIT © discordeno](https://github.com/discordeno/Discordeno/blob/master/LICENSE)
+[MIT © discordeno](https://github.com/discordeno/discordeno/blob/master/LICENSE)
