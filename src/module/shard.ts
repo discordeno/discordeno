@@ -321,7 +321,8 @@ export function requestGuildMembers(
     op: GatewayOpcode.RequestGuildMembers,
     d: {
       guild_id: guildID,
-      query: options?.query || "",
+      // If a query is provided use it, OR if a limit is NOT provided use ""
+      query: options?.query || (options?.limit ? undefined : ""),
       limit: options?.limit || 0,
       presences: options?.presences || false,
       user_ids: options?.userIDs,
