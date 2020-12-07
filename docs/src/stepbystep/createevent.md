@@ -90,8 +90,8 @@ Now that we have fully covered events, it would be a good time to get some pract
   channelDelete?: (channel: Channel) => unknown;
   debug?: (args: DebugArg) => unknown;
   dispatchRequirements?: (data: DiscordPayload, shardID: number) => unknown;
-  guildBanAdd?: (guild: Guild, user: Member | UserPayload) => unknown;
-  guildBanRemove?: (guild: Guild, user: Member | UserPayload) => unknown;
+  guildBanAdd?: (guild: Guild, user: UserPayload, member?: Member) => unknown;
+  guildBanRemove?: (guild: Guild, user: UserPayload, member?: Member) => unknown;
   guildCreate?: (guild: Guild) => unknown;
   guildLoaded?: (guild: Guild) => unknown;
   guildUpdate?: (guild: Guild, changes: GuildUpdateChange[]) => unknown;
