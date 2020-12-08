@@ -53,6 +53,16 @@ export async function addRole(
   roleID: string,
   reason?: string,
 ) {
+  const guild = await cacheHandlers.get("guilds", guildID);
+  if (!guild) return;
+  
+  if (guild.ownerID === botID) {
+    return RequestManager.put(
+      endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
+      { reason },
+    );
+  }
+  
   const botsHighestRole = await highestRole(guildID, botID);
   if (botsHighestRole) {
     const hasHigherRolePosition = await higherRolePosition(
