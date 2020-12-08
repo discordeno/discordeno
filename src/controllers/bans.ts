@@ -1,6 +1,5 @@
 import { eventHandlers } from "../module/client.ts";
-import { DiscordPayload } from "../types/discord.ts";
-import { GuildBanPayload } from "../types/guild.ts";
+import { DiscordPayload, GuildBanPayload } from "../types/types.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildBanAdd(data: DiscordPayload) {

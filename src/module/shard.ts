@@ -3,10 +3,10 @@ import { eventHandlers } from "../../mod.ts";
 import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
+  FetchMembersOptions,
   GatewayOpcode,
   ReadyPayload,
-} from "../types/discord.ts";
-import { FetchMembersOptions } from "../types/guild.ts";
+} from "../types/types.ts";
 import { BotStatusRequest } from "../utils/utils.ts";
 import { IdentifyPayload, proxyWSURL } from "./client.ts";
 import { handleDiscordPayload } from "./shardingManager.ts";

@@ -1,5 +1,8 @@
-import { DiscordBotGatewayData } from "../types/discord.ts";
-import { ClientOptions, EventHandlers } from "../types/options.ts";
+import {
+  ClientOptions,
+  DiscordBotGatewayData,
+  EventHandlers,
+} from "../types/types.ts";
 import { baseEndpoints, endpoints } from "../utils/constants.ts";
 import { RequestManager } from "./requestManager.ts";
 import { spawnShards } from "./shardingManager.ts";

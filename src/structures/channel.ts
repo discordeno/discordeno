@@ -1,6 +1,5 @@
 import { cacheHandlers } from "../controllers/cache.ts";
-import { ChannelCreatePayload } from "../types/channel.ts";
-import { Unpromise } from "../types/misc.ts";
+import { ChannelCreatePayload, Unpromise } from "../types/types.ts";
 
 export async function createChannel(
   data: ChannelCreatePayload,

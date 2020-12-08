@@ -1,6 +1,8 @@
-import { CreateGuildPayload } from "../types/guild.ts";
-import { MemberCreatePayload } from "../types/member.ts";
-import { Unpromise } from "../types/misc.ts";
+import {
+  CreateGuildPayload,
+  MemberCreatePayload,
+  Unpromise,
+} from "../types/types.ts";
 import { Collection } from "../utils/collection.ts";
 import { structures } from "./mod.ts";
 

@@ -1,8 +1,5 @@
-import { Channel } from "../structures/channel.ts";
-import { Guild } from "../structures/guild.ts";
-import { Member } from "../structures/member.ts";
-import { Message } from "../structures/message.ts";
-import { PresenceUpdatePayload } from "../types/discord.ts";
+import { Channel, Guild, Member, Message } from "../structures/structures.ts";
+import { PresenceUpdatePayload } from "../types/types.ts";
 import { cache } from "../utils/cache.ts";
 import { Collection } from "../utils/collection.ts";
 
@@ -79,6 +76,10 @@ function forEach(
 function forEach(
   table: "messages",
   callback: (value: Message, key: string, map: Map<string, Message>) => unknown,
+): void;
+function forEach(
+  table: "members",
+  callback: (value: Member, key: string, map: Map<string, Member>) => unknown,
 ): void;
 function forEach(
   table: "members",
