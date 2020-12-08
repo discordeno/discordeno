@@ -82,10 +82,6 @@ function forEach(
   callback: (value: Member, key: string, map: Map<string, Member>) => unknown,
 ): void;
 function forEach(
-  table: "members",
-  callback: (value: Member, key: string, map: Map<string, Member>) => unknown,
-): void;
-function forEach(
   table: TableName,
   callback: (value: any, key: string, map: Map<string, any>) => unknown,
 ) {
