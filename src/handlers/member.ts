@@ -1,12 +1,15 @@
 import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../module/client.ts";
 import { RequestManager } from "../module/requestManager.ts";
-import { Member } from "../structures/member.ts";
-import { structures } from "../structures/mod.ts";
-import { ImageFormats, ImageSize } from "../types/cdn.ts";
-import { DMChannelCreatePayload, MessageContent } from "../types/channel.ts";
-import { Errors } from "../types/errors.ts";
-import { EditMemberOptions } from "../types/member.ts";
+import { Member, structures } from "../structures/structures.ts";
+import {
+  DMChannelCreatePayload,
+  EditMemberOptions,
+  Errors,
+  ImageFormats,
+  ImageSize,
+  MessageContent,
+} from "../types/types.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import { endpoints } from "../utils/constants.ts";
 import {
