@@ -1,11 +1,11 @@
 import { eventHandlers } from "../module/client.ts";
-import { structures } from "../structures/mod.ts";
-import { DiscordPayload } from "../types/discord.ts";
+import { structures } from "../structures/structures.ts";
 import {
+  DiscordPayload,
   MessageCreateOptions,
   MessageDeleteBulkPayload,
   MessageDeletePayload,
-} from "../types/message.ts";
+} from "../types/types.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalMessageCreate(data: DiscordPayload) {

@@ -1,4 +1,4 @@
-import { GuildTemplate } from "../types/guild.ts";
+import { GuildTemplate } from "../types/types.ts";
 
 export function createTemplate(
   data: GuildTemplate,

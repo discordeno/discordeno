@@ -1,4 +1,4 @@
-import { Channel } from "../structures/channel.ts";
+import { Channel } from "../structures/structures.ts";
 import { ChannelType } from "./channel.ts";
 import { UserPayload } from "./guild.ts";
 import { MemberCreatePayload } from "./member.ts";

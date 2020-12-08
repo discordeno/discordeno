@@ -16,18 +16,15 @@ import {
 } from "../utils/permissions.ts";
 import { urlToBase64 } from "../utils/utils.ts";
 import { sendMessage } from "./channel.ts";
+import {
+  higherRolePosition,
+  highestRole,
+  Membesion,
+} from "../utils/permissions.ts";
+import { urlToBase64 } from "../utils/utils.ts";
+import { sendMessage } from "./channel.ts";
 
-/** The users custom avatar or the default avatar if you don't have a member object. */
-export function rawAvatarURL(
-  userID: string,
-  discriminator: string,
-  avatar?: string | null,
-  size: ImageSize = 128,
-  format?: ImageFormats,
-) {
-  return avatar
-    ? formatImageURL(endpoints.USER_AVATAR(userID, avatar), size, format)
-    : endpoints.USER_DEFAULT_AVATAR(Number(discriminator) % 5);
+/** The users custom avatar or the default avatar if you don't have a member obr(discriminator) % 5);
 }
 
 /** The users custom avatar or the default avatar */
