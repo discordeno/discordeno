@@ -52,9 +52,10 @@ export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
   };
 
   eventHandlers.reactionAdd?.(
-    message || uncachedOptions,
+    uncachedOptions,
     payload.emoji,
     payload.user_id,
+    message,
   );
 }
 
@@ -107,9 +108,10 @@ export async function handleInternalMessageReactionRemove(
   };
 
   eventHandlers.reactionRemove?.(
-    message || uncachedOptions,
+    uncachedOptions,
     payload.emoji,
     payload.user_id,
+    message,
   );
 }
 

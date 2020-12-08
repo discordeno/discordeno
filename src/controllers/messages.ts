@@ -52,8 +52,8 @@ export async function handleInternalMessageDelete(data: DiscordPayload) {
   if (!channel) return;
 
   eventHandlers.messageDelete?.(
-    await cacheHandlers.get("messages", payload.id) ||
-      { id: payload.id, channel },
+    { id: payload.id, channel },
+    await cacheHandlers.get("messages", payload.id),
   );
 
   cacheHandlers.delete("messages", payload.id);
@@ -68,7 +68,8 @@ export async function handleInternalMessageDeleteBulk(data: DiscordPayload) {
 
   payload.ids.forEach(async (id) => {
     eventHandlers.messageDelete?.(
-      await cacheHandlers.get("messages", id) || { id, channel },
+      { id, channel },
+      await cacheHandlers.get("messages", id),
     );
     cacheHandlers.delete("messages", id);
   });
