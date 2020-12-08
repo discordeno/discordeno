@@ -1,12 +1,15 @@
 import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../module/client.ts";
 import { RequestManager } from "../module/requestManager.ts";
-import { Member } from "../structures/member.ts";
-import { structures } from "../structures/mod.ts";
-import { ImageFormats, ImageSize } from "../types/cdn.ts";
-import { DMChannelCreatePayload, MessageContent } from "../types/channel.ts";
-import { Errors } from "../types/errors.ts";
-import { EditMemberOptions } from "../types/member.ts";
+import { Member, structures } from "../structures/structures.ts";
+import {
+  DMChannelCreatePayload,
+  EditMemberOptions,
+  Errors,
+  ImageFormats,
+  ImageSize,
+  MessageContent,
+} from "../types/types.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import { endpoints } from "../utils/constants.ts";
 import {
@@ -16,15 +19,18 @@ import {
 } from "../utils/permissions.ts";
 import { urlToBase64 } from "../utils/utils.ts";
 import { sendMessage } from "./channel.ts";
-import {
-  higherRolePosition,
-  highestRole,
-  Membesion,
-} from "../utils/permissions.ts";
-import { urlToBase64 } from "../utils/utils.ts";
-import { sendMessage } from "./channel.ts";
 
-/** The users custom avatar or the default avatar if you don't have a member obr(discriminator) % 5);
+/** The users custom avatar or the default avatar if you don't have a member object. */
+export function rawAvatarURL(
+  userID: string,
+  discriminator: string,
+  avatar?: string | null,
+  size: ImageSize = 128,
+  format?: ImageFormats,
+) {
+  return avatar
+    ? formatImageURL(endpoints.USER_AVATAR(userID, avatar), size, format)
+    : endpoints.USER_DEFAULT_AVATAR(Number(discriminator) % 5);
 }
 
 /** The users custom avatar or the default avatar */

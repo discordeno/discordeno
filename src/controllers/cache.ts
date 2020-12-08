@@ -14,17 +14,17 @@ export type TableName =
 function set(
   table: "guilds",
   key: string,
-  value: Guild
+  value: Guild,
 ): Promise<Collection<string, Guild>>;
 function set(
   table: "channels",
   key: string,
-  value: Channel
+  value: Channel,
 ): Promise<Collection<string, Channel>>;
 function set(
   table: "messages",
   key: string,
-  value: Message
+  value: Message,
 ): Promise<Collection<string, Message>>;
 function set(
   table: "members",
@@ -34,12 +34,12 @@ function set(
 function set(
   table: "presences",
   key: string,
-  value: PresenceUpdatePayload
+  value: PresenceUpdatePayload,
 ): Promise<Collection<string, PresenceUpdatePayload>>;
 function set(
   table: "unavailableGuilds",
   key: string,
-  value: number
+  value: number,
 ): Promise<Collection<string, number>>;
 async function set(table: TableName, key: string, value: any) {
   return cache[table].set(key, value);
@@ -51,11 +51,11 @@ function get(table: "messages", key: string): Promise<Message | undefined>;
 function get(table: "members", key: string): Promise<Member | undefined>;
 function get(
   table: "presences",
-  key: string
+  key: string,
 ): Promise<PresenceUpdatePayload | undefined>;
 function get(
   table: "unavailableGuilds",
-  key: string
+  key: string,
 ): Promise<Guild | undefined>;
 async function get(table: TableName, key: string) {
   return cache[table].get(key);
@@ -63,23 +63,23 @@ async function get(table: TableName, key: string) {
 
 function forEach(
   table: "guilds",
-  callback: (value: Guild, key: string, map: Map<string, Guild>) => unknown
+  callback: (value: Guild, key: string, map: Map<string, Guild>) => unknown,
 ): void;
 function forEach(
   table: "unavailableGuilds",
-  callback: (value: Guild, key: string, map: Map<string, Guild>) => unknown
+  callback: (value: Guild, key: string, map: Map<string, Guild>) => unknown,
 ): void;
 function forEach(
   table: "channels",
-  callback: (value: Channel, key: string, map: Map<string, Channel>) => unknown
+  callback: (value: Channel, key: string, map: Map<string, Channel>) => unknown,
 ): void;
 function forEach(
   table: "messages",
-  callback: (value: Message, key: string, map: Map<string, Message>) => unknown
+  callback: (value: Message, key: string, map: Map<string, Message>) => unknown,
 ): void;
 function forEach(
   table: "members",
-  callback: (value: Member, key: string, map: Map<string, Member>) => unknown
+  callback: (value: Member, key: string, map: Map<string, Member>) => unknown,
 ): void;
 function forEach(
   table: "members",
@@ -87,7 +87,7 @@ function forEach(
 ): void;
 function forEach(
   table: TableName,
-  callback: (value: any, key: string, map: Map<string, any>) => unknown
+  callback: (value: any, key: string, map: Map<string, any>) => unknown,
 ) {
   return cache[table].forEach(callback);
 }
