@@ -55,10 +55,6 @@ StartBot({
 
 ## Contributing
 
-## Code of Conduct
-
-Discordeno expects participants to adhere to our [Code of Conduct](https://github.com/discordeno/discordeno/blob/master/.github/CODE_OF_CONDUCT.md).
-
 ## Contributing Guide
 
 We appreciate your help!
