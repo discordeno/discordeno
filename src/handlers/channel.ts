@@ -434,9 +434,7 @@ export async function editChannelOverwrite(
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
 
-  const { allow, deny, ...info } = overwrite;
   let channel = cache.channels.get(channelID);
-
   if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);
 
   const payload = {
@@ -448,9 +446,9 @@ export async function editChannelOverwrite(
         deny: rawOverwrite.deny,
       })),
       {
-        ...info,
-        allow: calculateBits(allow),
-        deny: calculateBits(deny),
+        ...overwrite,
+        allow: calculateBits(overwrite.allow),
+        deny: calculateBits(overwrite.deny),
       },
     ],
   };
