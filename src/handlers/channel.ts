@@ -440,15 +440,15 @@ export async function editChannelOverwrite(
   const { allow, deny, ...info } = overwrite;
   let channel = cache.channels.get(channelID);
 
-  if (!channel) return Errors.CHANNEL_NOT_FOUND;
+  if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);
 
   const payload = {
     permission_overwrites: [
-      ...(channel?.permissionOverwrites || []).map((ro) => ({
-        id: ro.id,
-        type: ro.type,
-        allow: ro.allow,
-        deny: ro.deny,
+      ...(channel?.permissionOverwrites || []).map((rawOverwrite) => ({
+        id: rawOverwrite.id,
+        type: rawOverwrite.type,
+        allow: rawOverwrite.allow,
+        deny: rawOverwrite.deny,
       })),
       {
         ...info,
