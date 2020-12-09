@@ -444,11 +444,11 @@ export async function editChannelOverwrite(
 
   const payload = {
     permission_overwrites: [
-      ...(channel?.permissionOverwrites || []).map((ro) => ({
-        id: ro.id,
-        type: ro.type,
-        allow: ro.allow,
-        deny: ro.deny,
+      ...(channel?.permissionOverwrites || []).map((rawOverwrite) => ({
+        id: rawOverwrite.id,
+        type: rawOverwrite.type,
+        allow: rawOverwrite.allow,
+        deny: rawOverwrite.deny,
       })),
       {
         ...info,
