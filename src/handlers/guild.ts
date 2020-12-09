@@ -33,7 +33,6 @@ import {
   ImageSize,
   Intents,
   MemberCreatePayload,
-  Permissions,
   PositionSwap,
   PruneOptions,
   PrunePayload,
@@ -131,14 +130,8 @@ export async function createGuildChannel(
       permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
         ...perm,
 
-        allow: perm.allow.reduce(
-          (bits, p) => bits |= BigInt(Permissions[p]),
-          BigInt(0),
-        ).toString(),
-        deny: perm.deny.reduce(
-          (bits, p) => bits |= BigInt(Permissions[p]),
-          BigInt(0),
-        ).toString(),
+        allow: calculateBits(perm.allow),
+        deny: calculateBits(perm.deny),
       })),
       type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
@@ -318,15 +311,13 @@ export async function createGuildRole(
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
+  const bits = calculateBits(options.permissions || []);
+
   const result = await RequestManager.post(
     endpoints.GUILD_ROLES(guildID),
     {
       ...options,
-      permissions: options.permissions
-        ?.reduce((subtotal, perm) => {
-          subtotal |= Permissions[perm];
-          return subtotal;
-        }, 0),
+      permissions: calculateBits(options?.permissions || []),
       reason,
     },
   );
@@ -448,7 +439,9 @@ export async function getAuditLogs(
 
   return RequestManager.get(endpoints.GUILD_AUDIT_LOGS(guildID), {
     ...options,
-    action_type: options.action_type ? AuditLogs[options.action_type] : undefined,
+    action_type: options.action_type
+      ? AuditLogs[options.action_type]
+      : undefined,
     limit: options.limit && options.limit >= 1 && options.limit <= 100
       ? options.limit
       : 50,
