@@ -13,11 +13,13 @@ import {
   GetMessagesBefore,
   MessageContent,
   MessageCreateOptions,
+  Overwrite,
   Permission,
   Permissions,
   RawOverwrite,
   WebhookPayload,
 } from "../types/types.ts";
+import { cache } from "../utils/cache.ts";
 import { endpoints } from "../utils/constants.ts";
 import { botHasChannelPermissions } from "../utils/permissions.ts";
 
@@ -411,6 +413,55 @@ export async function editChannel(
         };
       },
     ),
+  };
+
+  return RequestManager.patch(
+    endpoints.GUILD_CHANNEL(channelID),
+    {
+      ...payload,
+      reason,
+    },
+  );
+}
+
+export async function editChannelOverwrite(
+  channelID: string,
+  overwrite: Overwrite,
+  reason?: string,
+) {
+  const hasManageChannelPerm = await botHasChannelPermissions(
+    channelID,
+    ["MANAGE_CHANNELS"],
+  );
+  if (!hasManageChannelPerm) {
+    throw new Error(Errors.MISSING_MANAGE_CHANNELS);
+  }
+
+  const { allow, deny, ...info } = overwrite;
+  let channel = cache.channels.get(channelID);
+
+  if (!channel) return Errors.CHANNEL_NOT_FOUND;
+
+  const payload = {
+    permission_overwrites: [
+      ...(channel?.permissionOverwrites || []).map((ro) => ({
+        id: ro.id,
+        type: ro.type,
+        allow: ro.allow,
+        deny: ro.deny,
+      })),
+      {
+        ...info,
+        allow: allow.reduce(
+          (bits, perm) => bits |= BigInt(Permissions[perm]),
+          BigInt(0),
+        ).toString(),
+        deny: deny.reduce(
+          (bits, perm) => bits |= BigInt(Permissions[perm]),
+          BigInt(0),
+        ).toString(),
+      },
+    ],
   };
 
   return RequestManager.patch(
