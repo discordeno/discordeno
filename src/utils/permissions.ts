@@ -243,6 +243,8 @@ export async function higherRolePosition(
 ) {
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return;
+  
+  if (guild.ownerID === botID) return true;
 
   const role = guild.roles.get(roleID);
   const otherRole = guild.roles.get(otherRoleID);
