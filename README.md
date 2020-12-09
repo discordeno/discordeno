@@ -45,15 +45,13 @@ StartBot({
 });
 ```
 
-## Documentation
+## Useful Links
 
 - [Website](https://discordeno.mod.land)
+- [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
 - [Support server](https://discord.com/invite/5vBgXk3UcZ)
-- [Contributing Guide](https://github.com/discordeno/discordeno/blob/master/.github/CONTRIBUTING.md)
 
 ## Contributing
-
-## Contributing Guide
 
 We appreciate your help!
 
