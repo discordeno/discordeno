@@ -35,10 +35,7 @@ export async function handleInternalGuildMemberRemove(data: DiscordPayload) {
 
   guild.memberCount--;
   const member = await cacheHandlers.get("members", payload.user.id);
-  eventHandlers.guildMemberRemove?.(
-    guild,
-    member || payload.user,
-  );
+  eventHandlers.guildMemberRemove?.(guild, payload.user, member);
 
   member?.guilds.delete(guild.id);
   if (member && !member.guilds.size) cacheHandlers.delete("members", member.id);
