@@ -101,6 +101,9 @@ export const endpoints = {
 
   // Application Endpoints
   COMMANDS: `${baseEndpoints.BASE_URL}/applications/${botID}/commands`,
+  COMMANDS_GUILD: (id: string) => `${baseEndpoints.BASE_URL}/applications/${botID}/guilds/${id}/commands`,
+  COMMANDS: (id: string) => `${baseEndpoints.BASE_URL}/applications/${botID}/commands/${id}`,
+  COMMANDS_GUILD_ID: (id: string, guildID: string) => `${baseEndpoints.BASE_URL}/applications/${botID}/guilds/${guildID}/commands/${id}`,
 
   // User endpoints
   USER: (id: string) => `${baseEndpoints.BASE_URL}/users/${id}`,

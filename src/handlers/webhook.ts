@@ -113,22 +113,45 @@ export function getWebhook(webhookID: string) {
  * - Your app **can** have a global and guild command with the same name
  * - Multiple apps **can** have commands with the same names
  * 
+ * Global commands are cached for **1 hour**. That means that new global commands will fan out slowly across all guilds, and will be guaranteed to be updated in an hour.
+ * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
+ * 
  * To make a **global** Slash Command, make an HTTP POST call like this:
  */
-export function createSlashCommand(name: string, description: string, options: CreateSlashCommandOptions) {
+export function createSlashCommand(options: CreateSlashCommandOptions) {
 
-  return RequestManager.post(endpoints.COMMANDS, {
-    name,
-    description,
+  return RequestManager.post(options.guildID ? endpoints.COMMANDS_GUILD(options.guildID) : endpoints.COMMANDS, {
     ...options
   })
 }
 
-export interface CreateSlashCommandOptions {
-  name: string;
-  description: String;
-  type: SlashCommandOptionType;
-  required: boolean;
-  choices: SlashCommandOptionChoice[];
+/**
+ * Edit an existing slash command. If this command did not exist, it will create it.
+ */
+export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
+  return RequestManager.post(options.guildID ? endpoints.COMMANDS_GUILD_ID(options.id, options.guildID) : endpoints.COMMANDS_ID(options.id), {
+    ...options
+  })
 }
 
+/** Edit an existing slash command. */
+export function editSlashCommand(options: EditSlashCommandOptions) {
+  return RequestManager.patch(options.guildID ? endpoints.COMMANDS_GUILD_ID(options.id, options.guildID) : endpoints.COMMANDS_ID(options.id), {
+    ...options
+  })
+}
+
+/** Deletes a slash command. */
+export function deleteSlashCommand(id: string, guildID?: string) {
+  if (!guildID) return RequestManager.delete(endpoints.COMMANDS_ID(id));
+  return RequestManager.delete(endpoint.COMMANDS_GUILD_ID(id, guildID));
+}
+
+export interface CreateSlashCommandOptions {
+  /** The name of the slash command.  */
+  name: string;
+  /** The description of the slash command. */
+  description: String;
+  /** If a guildID is provided, this will be a GUILD command. If none is provided it will be a GLOBAL command. */
+  guildID?: string;
+}
