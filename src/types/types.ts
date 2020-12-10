@@ -12,4 +12,5 @@ export * from "./options.ts";
 export * from "./permission.ts";
 export * from "./presence.ts";
 export * from "./role.ts";
+export * from "./slash.ts";
 export * from "./webhook.ts";
