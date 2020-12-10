@@ -428,7 +428,10 @@ export async function pruneMembers(guildID: string, options: PruneOptions) {
 */
 export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
   // You can request 1 member without the intent
-  if ((!options?.limit || options.limit > 1) && !(identifyPayload.intents & Intents.GUILD_MEMBERS)) {
+  if (
+    (!options?.limit || options.limit > 1) &&
+    !(identifyPayload.intents & Intents.GUILD_MEMBERS)
+  ) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
@@ -453,7 +456,9 @@ export async function getAuditLogs(
 
   return RequestManager.get(endpoints.GUILD_AUDIT_LOGS(guildID), {
     ...options,
-    action_type: options.action_type ? AuditLogs[options.action_type] : undefined,
+    action_type: options.action_type
+      ? AuditLogs[options.action_type] 
+      : undefined,
     limit: options.limit && options.limit >= 1 && options.limit <= 100
       ? options.limit
       : 50,
