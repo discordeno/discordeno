@@ -104,6 +104,8 @@ export interface EventHandlers {
     cachedMember?: Member,
   ) => unknown;
   heartbeat?: () => unknown;
+  // TODO: FIX THIS 
+  interactionCreate?: (data: unknown) => unknown;
   messageCreate?: (message: Message) => unknown;
   messageDelete?: (partial: PartialMessage, message?: Message) => unknown;
   messageUpdate?: (message: Message, cachedMessage: OldMessage) => unknown;

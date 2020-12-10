@@ -6,8 +6,10 @@ import {
   MessageCreateOptions,
   WebhookCreateOptions,
   WebhookPayload,
+  Embed
 } from "../types/types.ts";
 import { endpoints } from "../utils/constants.ts";
+import { botID } from "../module/client.ts";
 import { botHasChannelPermissions } from "../utils/permissions.ts";
 import { urlToBase64 } from "../utils/utils.ts";
 
@@ -132,8 +134,8 @@ export function createSlashCommand(options: CreateSlashCommandOptions) {
 
   return RequestManager.post(
     options.guildID
-      ? endpoints.COMMANDS_GUILD(options.guildID)
-      : endpoints.COMMANDS,
+      ? endpoints.COMMANDS_GUILD(botID, options.guildID)
+      : endpoints.COMMANDS(botID),
     {
       ...options,
     },
@@ -144,7 +146,7 @@ export function createSlashCommand(options: CreateSlashCommandOptions) {
 export function getSlashCommands(guildID?: string) {
   // TODO: Should this be a returned as a collection?
   return RequestManager.get(
-    guildID ? endpoints.COMMANDS_GUILD(guildID) : endpoints.COMMANDS,
+    guildID ? endpoints.COMMANDS_GUILD(botID, guildID) : endpoints.COMMANDS(botID),
   );
 }
 
@@ -154,8 +156,8 @@ export function getSlashCommands(guildID?: string) {
 export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
   return RequestManager.post(
     options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(options.id, options.guildID)
-      : endpoints.COMMANDS_ID(options.id),
+      ? endpoints.COMMANDS_GUILD_ID(botID, options.id, options.guildID)
+      : endpoints.COMMANDS_ID(botID, options.id),
     {
       ...options,
     },
@@ -166,8 +168,8 @@ export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
 export function editSlashCommand(options: EditSlashCommandOptions) {
   return RequestManager.patch(
     options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(options.id, options.guildID)
-      : endpoints.COMMANDS_ID(options.id),
+      ? endpoints.COMMANDS_GUILD_ID(botID, options.id, options.guildID)
+      : endpoints.COMMANDS_ID(botID, options.id),
     {
       ...options,
     },
@@ -176,8 +178,8 @@ export function editSlashCommand(options: EditSlashCommandOptions) {
 
 /** Deletes a slash command. */
 export function deleteSlashCommand(id: string, guildID?: string) {
-  if (!guildID) return RequestManager.delete(endpoints.COMMANDS_ID(id));
-  return RequestManager.delete(endpoints.COMMANDS_GUILD_ID(id, guildID));
+  if (!guildID) return RequestManager.delete(endpoints.COMMANDS_ID(botID, id));
+  return RequestManager.delete(endpoints.COMMANDS_GUILD_ID(botID, id, guildID));
 }
 
 /**
@@ -194,6 +196,16 @@ export function executeSlashCommand(
   });
 }
 
+/** To delete your initial response to an slash command */
+export function deleteSlashOriginalResponse(id: string, token: string) {
+  return RequestManager.delete(endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token))
+}
+
+/** To delete your initial response to an slash command */
+export function editSlashOriginalResponse(id: string, token: string, options: ) {
+  return RequestManager.delete(endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token))
+}
+
 export interface CreateSlashCommandOptions {
   /** The name of the slash command.  */
   name: string;
@@ -202,7 +214,7 @@ export interface CreateSlashCommandOptions {
   /** If a guildID is provided, this will be a GUILD command. If none is provided it will be a GLOBAL command. */
   guildID?: string;
   /** The options for this command */
-  options?: SlashCommandOption;
+  options?: SlashCommandOption[];
 }
 
 export interface SlashCommand {
@@ -274,4 +286,14 @@ export interface ExecuteSlashCommandOptions {
   };
   /** acceptable values are message flags */
   flags: number;
+}
+
+export interface EditSlashCommandOptions {
+  id: string;
+  guildID?: string;
+}
+
+export interface UpsertSlashCommandOptions {
+  id: string;
+  guildID?: string;
 }

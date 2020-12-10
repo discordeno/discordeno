@@ -29,6 +29,7 @@ export interface DiscordPayload {
     | "GUILD_ROLE_CREATE"
     | "GUILD_ROLE_DELETE"
     | "GUILD_ROLE_UPDATE"
+    | "INTERACTION_CREATE"
     | "MESSAGE_CREATE"
     | "MESSAGE_DELETE"
     | "MESSAGE_DELETE_BULK"

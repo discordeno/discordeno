@@ -1,5 +1,3 @@
-import { botID } from "../module/client.ts";
-
 // These will never be modified and remain constants
 export const discordAPIURLS = {
   BASE_URL: `https://discord.com/api/v8`,
@@ -100,25 +98,25 @@ export const endpoints = {
   WEBHOOK_ID: (id: string) => `${baseEndpoints.BASE_URL}/webhooks/${id}`,
 
   // Application Endpoints
-  COMMANDS: `${baseEndpoints.BASE_URL}/applications/${botID}/commands`,
-  COMMANDS_GUILD: (id: string) =>
+  COMMANDS: (botID: string) => `${baseEndpoints.BASE_URL}/applications/${botID}/commands`,
+  COMMANDS_GUILD: (botID: string, id: string) =>
     `${baseEndpoints.BASE_URL}/applications/${botID}/guilds/${id}/commands`,
-  COMMANDS_ID: (id: string) =>
+  COMMANDS_ID: (botID: string, id: string) =>
     `${baseEndpoints.BASE_URL}/applications/${botID}/commands/${id}`,
-  COMMANDS_GUILD_ID: (id: string, guildID: string) =>
+  COMMANDS_GUILD_ID: (botID: string, id: string, guildID: string) =>
     `${baseEndpoints.BASE_URL}/applications/${botID}/guilds/${guildID}/commands/${id}`,
 
   // Interaction Endpoints
   INTERACTION_ID_TOKEN: (id: string, token: string) =>
     `${baseEndpoints.BASE_URL}/interactions/${id}/${token}/callback`,
-  INTERACTION_FOLLOWUP_EDIT_ORIGINAL_ID_TOKEN: (id: string, token: string) =>
+  INTERACTION_ORIGINAL_ID_TOKEN: (id: string, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages/@original`,
-  INTERACTION_FOLLOWUP_NEW_ID_TOKEN: (id: string, token: string) =>
+  INTERACTION_ID_TOKEN_MESSAGES: (id: string, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages`,
-  INTERACTION_FOLLOWUP_EDIT_ID_TOKEN_MESSAGEID: (
+  INTERACTION_ID_TOKEN_MESSAGEID: (
     id: string,
     token: string,
-    messageID,
+    messageID: string,
   ) =>
     `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages/${messageID}`,
 

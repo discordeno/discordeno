@@ -1,11 +1,15 @@
 import { serveTLS } from "https://deno.land/std@0.80.0/http/server.ts";
 
-// THE CURRENT IMPLEMENTATION SUCKS IT WILL ALLOW BOT FARMS! LETS DO THIS SOME OTHER WAY ONLY ALLOWING 1 BOT PER PROCESS
-
 // TODO: https://github.com/discord/discord-api-docs/pull/2295/files#diff-07978ef9d619062fb1afbb70ea065124531246743444f4354cc9e6c8879f8780R256
 
 // 1. Your endpoint must be prepared to ACK a `PING` message
 // 2. Your endpoint must be set up to properly handle signature headers--more on that in [Security and Authorization]
+
+const serverOptions = {
+    hostname: "localhost",
+    // Made of our favorite numbers for the default port
+    port: 0704,
+};
 
 /**
  * ⚠️ USING THIS DISABLES THE WEBSOCKET GATEWAY INTERACTIONS EVENTS!!!
@@ -15,12 +19,17 @@ import { serveTLS } from "https://deno.land/std@0.80.0/http/server.ts";
  * 
  */
 export async function startServer(options: StartServerOptions) {
-  // const body = "Hello HTTPS";
+  serverOptions.hostname = options.hostname;
+  serverOptions.port = options.port;
+  
+  createApplicationServer(options);
+}
 
-  for await (const req of serveTLS(options)) {
-    console.log("req received");
-    // req.respond({ body });
-  }
+function createApplicationServer(options: StartServerOptions) {
+    for await (const req of serveTLS({ ...options, ...serverOptions })) {
+        console.log("req received");
+        // req.respond({ body });
+      }
 }
 
 export interface StartServerOptions {
