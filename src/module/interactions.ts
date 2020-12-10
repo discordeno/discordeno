@@ -24,8 +24,25 @@ export async function startServer(options: StartServerOptions) {
 }
 
 export interface StartServerOptions {
+    /** The hostname */
     hostname: string;
+    /** The port number */
     port: number;
+    /** Certification path */
     certFilePath: string;
+    /** Key file path */
     keyFilePath: string;
 }
+
+export enum InteractionResponseType {
+    /** ACK a `Ping` */
+    PONG = 1,
+    /** ACK a command without sending a message, eating the user's input */
+    ACKNOWLEDGE,
+    /** respond with a message, eating the user's input */
+    CHANNEL_MESSAGE,
+    /** respond with a message, showing the user's input */
+    CHANNEL_MESSAGE_WITH_SOURCE,
+    /** ACK a command without sending a message, showing the user's input */
+    ACK_WITH_SOURCE,
+  }

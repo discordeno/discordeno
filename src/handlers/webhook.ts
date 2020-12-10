@@ -119,6 +119,14 @@ export function getWebhook(webhookID: string) {
  * To make a **global** Slash Command, make an HTTP POST call like this:
  */
 export function createSlashCommand(options: CreateSlashCommandOptions) {
+  // Use ... for content length due to unicode characters and js .length handling
+  if ([...options.name].length < 2 || [...options.name].length > 32) {
+    throw new Error(Errors.INVALID_SLASH_NAME);
+  }
+
+  if ([...options.description].length < 1 || [...options.description].length > 100) {
+    throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+  }
 
   return RequestManager.post(options.guildID ? endpoints.COMMANDS_GUILD(options.guildID) : endpoints.COMMANDS, {
     ...options
@@ -126,9 +134,9 @@ export function createSlashCommand(options: CreateSlashCommandOptions) {
 }
 
 /** Fetch all of the global commands for your application. */
-export function getSlashCommands() {
+export function getSlashCommands(guildID?: string) {
   // TODO: Should this be a returned as a collection?
-  return RequestManager.get(constants.COMMANDS)
+  return RequestManager.get(guildID ? endpoints.COMMANDS_GUILD(guildID) : endpoints.COMMANDS)
 }
 
 /**
@@ -170,4 +178,78 @@ export interface CreateSlashCommandOptions {
   description: String;
   /** If a guildID is provided, this will be a GUILD command. If none is provided it will be a GLOBAL command. */
   guildID?: string;
+  /** The options for this command */
+  options?: SlashCommandOption;
+}
+
+
+export interface SlashCommand {
+  /** unique id of the command */
+  id: string;
+  /** unique id of the parent application */
+    application_id:string;  
+  /** 3-32 character name */
+  name: string;  
+  /** 1-100 character description */
+  description: string;     
+  /** the parameters for the command */
+  options?: SlashCommandOption[]
+}
+
+export interface SlashCommandOption {
+  /** The type of option */
+  type : SlashCommandOptionType;
+  /** 1-32 character name */
+  name : string;    
+  /** 1-100 character description*/
+  description : string;   
+  /** the first `required` option for the user to complete--only one option can be `default` */
+  default?    : boolean;   
+  /** if the parameter is required or optional--default `false`*/
+  required?   : boolean;
+  /** 
+   * If you specify `choices` for an option, they are the **only** valid values for a user to pick.
+   * choices for `string` and `int` types for the user to pick from 
+  */
+  choices?    : SlashCommandOptionChoice[] 
+  /** if the option is a subcommand or subcommand group type, this nested options will be the parameters */
+  options?    : SlashCommandOption[] 
+}
+
+export enum SlashCommandOptionType {
+  SUB_COMMAND = 1,
+  SUB_COMMAND_GROUP,
+  STRING ,
+  INTEGER ,
+  BOOLEAN   ,
+  USER   ,
+  CHANNEL   ,
+  ROLE   ,
+}
+
+export interface SlashCommandOptionChoice {
+  /** The name of the choice */
+  name: string;
+  /** The value of the choice */
+  value: string | number;
+}
+
+export interface ExecuteSlashCommandOptions {
+   /** is the response TTS  */
+   tts?: boolean;
+   /** message content */
+   content: string;
+   /** supports up to 10 embeds */
+   embeds?: Embed[];
+   /** allowed mentions for the message */
+    mentions?: {
+      /** An array of allowed mention types to parse from the content. */
+      parse: ("roles" | "users" | "everyone")[];
+      /** Array of role_ids to mention (Max size of 100) */
+      roles?: string[];
+      /** Array of user_ids to mention (Max size of 100) */
+      users?: string[];
+    };
+   /** acceptable values are message flags */
+   flags: number;
 }
