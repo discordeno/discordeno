@@ -125,6 +125,12 @@ export function createSlashCommand(options: CreateSlashCommandOptions) {
   })
 }
 
+/** Fetch all of the global commands for your application. */
+export function getSlashCommands() {
+  // TODO: Should this be a returned as a collection?
+  return RequestManager.get(constants.COMMANDS)
+}
+
 /**
  * Edit an existing slash command. If this command did not exist, it will create it.
  */
