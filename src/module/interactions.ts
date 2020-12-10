@@ -8,7 +8,7 @@ import { serveTLS } from "https://deno.land/std@0.80.0/http/server.ts";
 // 2. Your endpoint must be set up to properly handle signature headers--more on that in [Security and Authorization]
 
 /**
- * USING THIS DISABLES THE WEBSOCKET GATEWAY INTERACTIONS EVENTS!!!
+ * ⚠️ USING THIS DISABLES THE WEBSOCKET GATEWAY INTERACTIONS EVENTS!!!
  * 
  * In your application in the Developer Portal, there is a field on the main page called "Interactions Endpoint URL".
  * If you want to receive Interactions via outgoing webhook, you can set your URL in this field.
