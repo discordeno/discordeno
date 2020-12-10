@@ -148,32 +148,38 @@ export async function createShard(
       },
     );
 
-    // These error codes should just crash the projects
-    if ([4004, 4005, 4012, 4013, 4014].includes(code)) {
-      eventHandlers.debug?.(
-        {
-          type: "websocketErrored",
-          data: { shardID: basicShard.id, code, reason, wasClean },
-        },
-      );
-
-      throw new Error(
-        "Shard.ts: Error occurred that is not resumeable or able to be reconnected.",
-      );
-    }
-
-    // These error codes can not be resumed but need to reconnect from start
-    if ([4003, 4007, 4008, 4009].includes(code)) {
-      eventHandlers.debug?.(
-        {
+    switch(code) {
+      case 4000:
+        // TODO: reconnect
+      case 4001:
+        throw new Error("[Unknown opcode] Sent an invalid Gateway opcode or an invalid payload for an opcode.");
+      case 4002:
+        throw new Error("[Decode error] Sent an invalid payload to API.");
+      case 4003:
+        throw new Error("[Not authenticated] Sent a payload prior to identifying.");
+      case 4004:
+        throw new Error("[Authentication failed] The account token sent with your identify payload is incorrect.");
+      case 4005:
+        throw new Error("[Already authenticated] Sent more than one identify payload.");
+      case 4007:
+      case 4008:
+      case 4008:
+        eventHandlers.debug?.({
           type: "websocketReconnecting",
           data: { shardID: basicShard.id, code, reason, wasClean },
-        },
-      );
-      createShard(data, identifyPayload, false, shardID);
-    } else {
-      basicShard.needToResume = true;
-      resumeConnection(data, identifyPayload, basicShard.id);
+        });
+        createShard(data, identifyPayload, false, shardID);
+        break;
+      case 4010:
+        throw new Error("[Invalid shard] Sent an invalid shard when identifying.");
+      case 4011:
+        throw new Error("[Sharding required] The session would have handled too many guilds - you are required to shard your connection in order to connect.");
+      case 4012:
+        throw new Error("[Invalid API version] Sent an invalid version for the gateway.");
+      case 4013:
+        throw new Error("[Invalid intent(s)] Sent an invalid intent for a Gateway Intent.");
+      case 4014:
+        throw new Error("[Disallowed intent(s)] Sent a disallowed intent for a Gateway Intent. You may have tried to specify an intent that you have not enabled or are not whitelisted for.");
     }
   };
 }
