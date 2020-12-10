@@ -15,34 +15,34 @@ import { serveTLS } from "https://deno.land/std@0.80.0/http/server.ts";
  * 
  */
 export async function startServer(options: StartServerOptions) {
-    // const body = "Hello HTTPS";
+  // const body = "Hello HTTPS";
 
-    for await (const req of serveTLS(options)) {
-        console.log('req received');
-        // req.respond({ body });
-    }
+  for await (const req of serveTLS(options)) {
+    console.log("req received");
+    // req.respond({ body });
+  }
 }
 
 export interface StartServerOptions {
-    /** The hostname */
-    hostname: string;
-    /** The port number */
-    port: number;
-    /** Certification path */
-    certFilePath: string;
-    /** Key file path */
-    keyFilePath: string;
+  /** The hostname */
+  hostname: string;
+  /** The port number */
+  port: number;
+  /** Certification path */
+  certFilePath: string;
+  /** Key file path */
+  keyFilePath: string;
 }
 
 export enum InteractionResponseType {
-    /** ACK a `Ping` */
-    PONG = 1,
-    /** ACK a command without sending a message, eating the user's input */
-    ACKNOWLEDGE,
-    /** respond with a message, eating the user's input */
-    CHANNEL_MESSAGE,
-    /** respond with a message, showing the user's input */
-    CHANNEL_MESSAGE_WITH_SOURCE,
-    /** ACK a command without sending a message, showing the user's input */
-    ACK_WITH_SOURCE,
-  }
+  /** ACK a `Ping` */
+  PONG = 1,
+  /** ACK a command without sending a message, eating the user's input */
+  ACKNOWLEDGE,
+  /** respond with a message, eating the user's input */
+  CHANNEL_MESSAGE,
+  /** respond with a message, showing the user's input */
+  CHANNEL_MESSAGE_WITH_SOURCE,
+  /** ACK a command without sending a message, showing the user's input */
+  ACK_WITH_SOURCE,
+}

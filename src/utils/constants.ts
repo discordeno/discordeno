@@ -101,15 +101,26 @@ export const endpoints = {
 
   // Application Endpoints
   COMMANDS: `${baseEndpoints.BASE_URL}/applications/${botID}/commands`,
-  COMMANDS_GUILD: (id: string) => `${baseEndpoints.BASE_URL}/applications/${botID}/guilds/${id}/commands`,
-  COMMANDS_ID: (id: string) => `${baseEndpoints.BASE_URL}/applications/${botID}/commands/${id}`,
-  COMMANDS_GUILD_ID: (id: string, guildID: string) => `${baseEndpoints.BASE_URL}/applications/${botID}/guilds/${guildID}/commands/${id}`,
-  
+  COMMANDS_GUILD: (id: string) =>
+    `${baseEndpoints.BASE_URL}/applications/${botID}/guilds/${id}/commands`,
+  COMMANDS_ID: (id: string) =>
+    `${baseEndpoints.BASE_URL}/applications/${botID}/commands/${id}`,
+  COMMANDS_GUILD_ID: (id: string, guildID: string) =>
+    `${baseEndpoints.BASE_URL}/applications/${botID}/guilds/${guildID}/commands/${id}`,
+
   // Interaction Endpoints
-  INTERACTION_ID_TOKEN: (id: string, token: string) => `${baseEndpoints.BASE_URL}/interactions/${id}/${token}/callback`,
-  INTERACTION_FOLLOWUP_EDIT_ORIGINAL_ID_TOKEN: (id:string, token: string) => `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages/@original`
-  INTERACTION_FOLLOWUP_NEW_ID_TOKEN: (id:string, token: string) => `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages`
-  INTERACTION_FOLLOWUP_EDIT_ID_TOKEN_MESSAGEID: (id:string, token: string, messageID) => `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages/${messageID}`
+  INTERACTION_ID_TOKEN: (id: string, token: string) =>
+    `${baseEndpoints.BASE_URL}/interactions/${id}/${token}/callback`,
+  INTERACTION_FOLLOWUP_EDIT_ORIGINAL_ID_TOKEN: (id: string, token: string) =>
+    `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages/@original`,
+  INTERACTION_FOLLOWUP_NEW_ID_TOKEN: (id: string, token: string) =>
+    `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages`,
+  INTERACTION_FOLLOWUP_EDIT_ID_TOKEN_MESSAGEID: (
+    id: string,
+    token: string,
+    messageID,
+  ) =>
+    `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages/${messageID}`,
 
   // User endpoints
   USER: (id: string) => `${baseEndpoints.BASE_URL}/users/${id}`,

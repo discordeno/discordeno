@@ -124,35 +124,54 @@ export function createSlashCommand(options: CreateSlashCommandOptions) {
     throw new Error(Errors.INVALID_SLASH_NAME);
   }
 
-  if ([...options.description].length < 1 || [...options.description].length > 100) {
+  if (
+    [...options.description].length < 1 || [...options.description].length > 100
+  ) {
     throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
   }
 
-  return RequestManager.post(options.guildID ? endpoints.COMMANDS_GUILD(options.guildID) : endpoints.COMMANDS, {
-    ...options
-  })
+  return RequestManager.post(
+    options.guildID
+      ? endpoints.COMMANDS_GUILD(options.guildID)
+      : endpoints.COMMANDS,
+    {
+      ...options,
+    },
+  );
 }
 
 /** Fetch all of the global commands for your application. */
 export function getSlashCommands(guildID?: string) {
   // TODO: Should this be a returned as a collection?
-  return RequestManager.get(guildID ? endpoints.COMMANDS_GUILD(guildID) : endpoints.COMMANDS)
+  return RequestManager.get(
+    guildID ? endpoints.COMMANDS_GUILD(guildID) : endpoints.COMMANDS,
+  );
 }
 
 /**
  * Edit an existing slash command. If this command did not exist, it will create it.
  */
 export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
-  return RequestManager.post(options.guildID ? endpoints.COMMANDS_GUILD_ID(options.id, options.guildID) : endpoints.COMMANDS_ID(options.id), {
-    ...options
-  })
+  return RequestManager.post(
+    options.guildID
+      ? endpoints.COMMANDS_GUILD_ID(options.id, options.guildID)
+      : endpoints.COMMANDS_ID(options.id),
+    {
+      ...options,
+    },
+  );
 }
 
 /** Edit an existing slash command. */
 export function editSlashCommand(options: EditSlashCommandOptions) {
-  return RequestManager.patch(options.guildID ? endpoints.COMMANDS_GUILD_ID(options.id, options.guildID) : endpoints.COMMANDS_ID(options.id), {
-    ...options
-  })
+  return RequestManager.patch(
+    options.guildID
+      ? endpoints.COMMANDS_GUILD_ID(options.id, options.guildID)
+      : endpoints.COMMANDS_ID(options.id),
+    {
+      ...options,
+    },
+  );
 }
 
 /** Deletes a slash command. */
@@ -165,10 +184,14 @@ export function deleteSlashCommand(id: string, guildID?: string) {
  * Send a response to a users slash command. The command data will have the id and token necessary to respond.
  * Interaction `tokens` are valid for **15 minutes** and can be used to send followup messages.
  */
-export function executeSlashCommand(id: string, token: string, options: ExecuteSlashCommandOptions) {
+export function executeSlashCommand(
+  id: string,
+  token: string,
+  options: ExecuteSlashCommandOptions,
+) {
   return RequestManager.post(endpoints.INTERACTION_ID_TOKEN(id, token), {
-    ...options
-  })
+    ...options,
+  });
 }
 
 export interface CreateSlashCommandOptions {
@@ -182,49 +205,48 @@ export interface CreateSlashCommandOptions {
   options?: SlashCommandOption;
 }
 
-
 export interface SlashCommand {
   /** unique id of the command */
   id: string;
   /** unique id of the parent application */
-    application_id:string;  
+  application_id: string;
   /** 3-32 character name */
-  name: string;  
+  name: string;
   /** 1-100 character description */
-  description: string;     
+  description: string;
   /** the parameters for the command */
-  options?: SlashCommandOption[]
+  options?: SlashCommandOption[];
 }
 
 export interface SlashCommandOption {
   /** The type of option */
-  type : SlashCommandOptionType;
+  type: SlashCommandOptionType;
   /** 1-32 character name */
-  name : string;    
+  name: string;
   /** 1-100 character description*/
-  description : string;   
+  description: string;
   /** the first `required` option for the user to complete--only one option can be `default` */
-  default?    : boolean;   
+  default?: boolean;
   /** if the parameter is required or optional--default `false`*/
-  required?   : boolean;
+  required?: boolean;
   /** 
    * If you specify `choices` for an option, they are the **only** valid values for a user to pick.
    * choices for `string` and `int` types for the user to pick from 
   */
-  choices?    : SlashCommandOptionChoice[] 
+  choices?: SlashCommandOptionChoice[];
   /** if the option is a subcommand or subcommand group type, this nested options will be the parameters */
-  options?    : SlashCommandOption[] 
+  options?: SlashCommandOption[];
 }
 
 export enum SlashCommandOptionType {
   SUB_COMMAND = 1,
   SUB_COMMAND_GROUP,
-  STRING ,
-  INTEGER ,
-  BOOLEAN   ,
-  USER   ,
-  CHANNEL   ,
-  ROLE   ,
+  STRING,
+  INTEGER,
+  BOOLEAN,
+  USER,
+  CHANNEL,
+  ROLE,
 }
 
 export interface SlashCommandOptionChoice {
@@ -235,21 +257,21 @@ export interface SlashCommandOptionChoice {
 }
 
 export interface ExecuteSlashCommandOptions {
-   /** is the response TTS  */
-   tts?: boolean;
-   /** message content */
-   content: string;
-   /** supports up to 10 embeds */
-   embeds?: Embed[];
-   /** allowed mentions for the message */
-    mentions?: {
-      /** An array of allowed mention types to parse from the content. */
-      parse: ("roles" | "users" | "everyone")[];
-      /** Array of role_ids to mention (Max size of 100) */
-      roles?: string[];
-      /** Array of user_ids to mention (Max size of 100) */
-      users?: string[];
-    };
-   /** acceptable values are message flags */
-   flags: number;
+  /** is the response TTS  */
+  tts?: boolean;
+  /** message content */
+  content: string;
+  /** supports up to 10 embeds */
+  embeds?: Embed[];
+  /** allowed mentions for the message */
+  mentions?: {
+    /** An array of allowed mention types to parse from the content. */
+    parse: ("roles" | "users" | "everyone")[];
+    /** Array of role_ids to mention (Max size of 100) */
+    roles?: string[];
+    /** Array of user_ids to mention (Max size of 100) */
+    users?: string[];
+  };
+  /** acceptable values are message flags */
+  flags: number;
 }
