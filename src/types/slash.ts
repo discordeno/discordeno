@@ -1,33 +1,48 @@
-import { UserPayload } from "../../mod.ts";
+import { AllowedMentions } from "./channel.ts";
+import { UserPayload } from "./guild.ts";
 import { Embed } from "./message.ts";
 
-export interface SlashCommand {
-  /** The id of the command */
-  id: string;
-  /** The id of the parent application */
-  application_id: string;
-  /** The command name (3-32 characters) */
+export interface CreateSlashCommandOptions {
+  /** The name of the slash command.  */
   name: string;
-  /** The command description (1-100 characters) */
+  /** The description of the slash command. */
+  description: String;
+  /** If a guildID is provided, this will be a GUILD command. If none is provided it will be a GLOBAL command. */
+  guildID?: string;
+  /** The options for this command */
+  options?: SlashCommandOption[];
+}
+
+export interface SlashCommand {
+  /** unique id of the command */
+  id: string;
+  /** unique id of the parent application */
+  application_id: string;
+  /** 3-32 character name */
+  name: string;
+  /** 1-100 character description */
   description: string;
-  /** The parameters for the command */
-  options: SlashCommandOption[];
+  /** the parameters for the command */
+  options?: SlashCommandOption[];
 }
 
 export interface SlashCommandOption {
-  /** The type of the command option */
+  /** The type of option */
   type: SlashCommandOptionType;
-  /** The name of the option (1-32 characters) */
+  /** 1-32 character name */
   name: string;
-  /** The description of the option (1-100 characters) */
+  /** 1-100 character description*/
   description: string;
-  /** Wether this is the default option **Only one can be default** */
+  /** the first `required` option for the user to complete--only one option can be `default` */
   default?: boolean;
-  /** Wehter this parameter is required (default false) */
+  /** if the parameter is required or optional--default `false`*/
   required?: boolean;
-  /** Choices the user can pick */
+  /** 
+   * If you specify `choices` for an option, they are the **only** valid values for a user to pick.
+   * choices for `string` and `int` types for the user to pick from 
+   */
   choices?: SlashCommandOptionChoice[];
-  /** Options for this command */
+  /** if the option is a subcommand or subcommand group type, this nested options will be the parameters */
   options?: SlashCommandOption[];
 }
 
@@ -92,15 +107,15 @@ export interface InteractionResponse {
 }
 
 export interface SlashCommandCallbackData {
-  /** If the response is TTS */
+  /** is the response TTS  */
   tts?: boolean;
-  /** Message content */
+  /** message content */
   content: string;
-  /** Embeds (up to 10) */
+  /** supports up to 10 embeds */
   embeds?: Embed[];
-  /** Allowed mentions */
-  allowed_mentions?: "rolles" | "users" | "everyone";
-  /** Message flags */
+  /** allowed mentions for the message */
+  mentions?: AllowedMentions;
+  /** acceptable values are message flags */
   flags: number;
 }
 
@@ -115,4 +130,14 @@ export enum InteractionResponseType {
   CHANNEL_MESSAGE = 3,
   CHANNEL_MESSAGE_WITH_SOURCE = 4,
   ACK_WITH_SOURCE = 5,
+}
+
+export interface EditSlashCommandOptions {
+  id: string;
+  guildID?: string;
+}
+
+export interface UpsertSlashCommandOptions {
+  id: string;
+  guildID?: string;
 }

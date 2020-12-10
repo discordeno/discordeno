@@ -1,15 +1,18 @@
+import { botID } from "../module/client.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { structures } from "../structures/structures.ts";
 import {
+  CreateSlashCommandOptions,
+  EditSlashCommandOptions,
   Errors,
   ExecuteWebhookOptions,
   MessageCreateOptions,
+  SlashCommandCallbackData,
+  UpsertSlashCommandOptions,
   WebhookCreateOptions,
   WebhookPayload,
-  Embed
 } from "../types/types.ts";
 import { endpoints } from "../utils/constants.ts";
-import { botID } from "../module/client.ts";
 import { botHasChannelPermissions } from "../utils/permissions.ts";
 import { urlToBase64 } from "../utils/utils.ts";
 
@@ -146,7 +149,9 @@ export function createSlashCommand(options: CreateSlashCommandOptions) {
 export function getSlashCommands(guildID?: string) {
   // TODO: Should this be a returned as a collection?
   return RequestManager.get(
-    guildID ? endpoints.COMMANDS_GUILD(botID, guildID) : endpoints.COMMANDS(botID),
+    guildID
+      ? endpoints.COMMANDS_GUILD(botID, guildID)
+      : endpoints.COMMANDS(botID),
   );
 }
 
@@ -189,7 +194,7 @@ export function deleteSlashCommand(id: string, guildID?: string) {
 export function executeSlashCommand(
   id: string,
   token: string,
-  options: ExecuteSlashCommandOptions,
+  options: SlashCommandCallbackData,
 ) {
   return RequestManager.post(endpoints.INTERACTION_ID_TOKEN(id, token), {
     ...options,
@@ -198,102 +203,18 @@ export function executeSlashCommand(
 
 /** To delete your initial response to an slash command */
 export function deleteSlashOriginalResponse(id: string, token: string) {
-  return RequestManager.delete(endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token))
+  return RequestManager.delete(
+    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token),
+  );
 }
 
 /** To delete your initial response to an slash command */
-export function editSlashOriginalResponse(id: string, token: string, options: ) {
-  return RequestManager.delete(endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token))
-}
-
-export interface CreateSlashCommandOptions {
-  /** The name of the slash command.  */
-  name: string;
-  /** The description of the slash command. */
-  description: String;
-  /** If a guildID is provided, this will be a GUILD command. If none is provided it will be a GLOBAL command. */
-  guildID?: string;
-  /** The options for this command */
-  options?: SlashCommandOption[];
-}
-
-export interface SlashCommand {
-  /** unique id of the command */
-  id: string;
-  /** unique id of the parent application */
-  application_id: string;
-  /** 3-32 character name */
-  name: string;
-  /** 1-100 character description */
-  description: string;
-  /** the parameters for the command */
-  options?: SlashCommandOption[];
-}
-
-export interface SlashCommandOption {
-  /** The type of option */
-  type: SlashCommandOptionType;
-  /** 1-32 character name */
-  name: string;
-  /** 1-100 character description*/
-  description: string;
-  /** the first `required` option for the user to complete--only one option can be `default` */
-  default?: boolean;
-  /** if the parameter is required or optional--default `false`*/
-  required?: boolean;
-  /** 
-   * If you specify `choices` for an option, they are the **only** valid values for a user to pick.
-   * choices for `string` and `int` types for the user to pick from 
-  */
-  choices?: SlashCommandOptionChoice[];
-  /** if the option is a subcommand or subcommand group type, this nested options will be the parameters */
-  options?: SlashCommandOption[];
-}
-
-export enum SlashCommandOptionType {
-  SUB_COMMAND = 1,
-  SUB_COMMAND_GROUP,
-  STRING,
-  INTEGER,
-  BOOLEAN,
-  USER,
-  CHANNEL,
-  ROLE,
-}
-
-export interface SlashCommandOptionChoice {
-  /** The name of the choice */
-  name: string;
-  /** The value of the choice */
-  value: string | number;
-}
-
-export interface ExecuteSlashCommandOptions {
-  /** is the response TTS  */
-  tts?: boolean;
-  /** message content */
-  content: string;
-  /** supports up to 10 embeds */
-  embeds?: Embed[];
-  /** allowed mentions for the message */
-  mentions?: {
-    /** An array of allowed mention types to parse from the content. */
-    parse: ("roles" | "users" | "everyone")[];
-    /** Array of role_ids to mention (Max size of 100) */
-    roles?: string[];
-    /** Array of user_ids to mention (Max size of 100) */
-    users?: string[];
-  };
-  /** acceptable values are message flags */
-  flags: number;
-}
-
-export interface EditSlashCommandOptions {
-  id: string;
-  guildID?: string;
-}
-
-export interface UpsertSlashCommandOptions {
-  id: string;
-  guildID?: string;
+export function editSlashOriginalResponse(
+  id: string,
+  token: string,
+  options: any,
+) {
+  return RequestManager.delete(
+    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token),
+  );
 }
