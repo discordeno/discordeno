@@ -196,14 +196,15 @@ export function executeSlashCommand(
   });
 }
 
-/** To delete your initial response to an slash command */
-export function deleteSlashOriginalResponse(id: string, token: string) {
-  return RequestManager.delete(endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token))
+/** To delete your initial response to an slash command. If a message id is not provided, it will default to deleting the original response. */
+export function deleteSlashResponse(id: string, token: string, messageID?: string) {
+  if (!messageID) return RequestManager.delete(endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token))
+  return RequestManager.delete(endpoints.INTERACTION_ID_TOKEN_MESSAGES(id, token, messageID))
 }
 
-/** To delete your initial response to an slash command */
-export function editSlashOriginalResponse(id: string, token: string, options: ) {
-  return RequestManager.delete(endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token))
+/** To edit your response to an slash command. If a messageID is not provided it will default to editing the original response. */
+export function editSlashResponse(id: string, token: string, options: EditSlashResponseOptions) {
+  return RequestManager.patch(endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token), options)
 }
 
 export interface CreateSlashCommandOptions {
@@ -286,6 +287,11 @@ export interface ExecuteSlashCommandOptions {
   };
   /** acceptable values are message flags */
   flags: number;
+}
+
+export interface EditSlashResponseOptions extends ExecuteSlashCommandOptions {
+  /** If this is not provided, it will default to editing the original response. */
+  messageID?: string;
 }
 
 export interface EditSlashCommandOptions {
