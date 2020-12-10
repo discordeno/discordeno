@@ -1,3 +1,5 @@
+import { botID } from "../module/client.ts";
+
 // These will never be modified and remain constants
 export const discordAPIURLS = {
   BASE_URL: `https://discord.com/api/v8`,
@@ -96,6 +98,9 @@ export const endpoints = {
   WEBHOOK: (id: string, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}`,
   WEBHOOK_ID: (id: string) => `${baseEndpoints.BASE_URL}/webhooks/${id}`,
+
+  // Application Endpoints
+  COMMANDS: `${baseEndpoints.BASE_URL}/applications/${botID}/commands`,
 
   // User endpoints
   USER: (id: string) => `${baseEndpoints.BASE_URL}/users/${id}`,

@@ -115,6 +115,20 @@ export function getWebhook(webhookID: string) {
  * 
  * To make a **global** Slash Command, make an HTTP POST call like this:
  */
-export function registerSlashCommand() {
-  // https://discord.com/api/v8/applications/<my_application_id>/commands
+export function createSlashCommand(name: string, description: string, options: CreateSlashCommandOptions) {
+
+  return RequestManager.post(endpoints.COMMANDS, {
+    name,
+    description,
+    ...options
+  })
 }
+
+export interface CreateSlashCommandOptions {
+  name: string;
+  description: String;
+  type: SlashCommandOptionType;
+  required: boolean;
+  choices: SlashCommandOptionChoice[];
+}
+
