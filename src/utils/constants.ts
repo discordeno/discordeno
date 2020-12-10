@@ -98,7 +98,8 @@ export const endpoints = {
   WEBHOOK_ID: (id: string) => `${baseEndpoints.BASE_URL}/webhooks/${id}`,
 
   // Application Endpoints
-  COMMANDS: (botID: string) => `${baseEndpoints.BASE_URL}/applications/${botID}/commands`,
+  COMMANDS: (botID: string) =>
+    `${baseEndpoints.BASE_URL}/applications/${botID}/commands`,
   COMMANDS_GUILD: (botID: string, id: string) =>
     `${baseEndpoints.BASE_URL}/applications/${botID}/guilds/${id}/commands`,
   COMMANDS_ID: (botID: string, id: string) =>

@@ -1,12 +1,12 @@
 import { RequestManager } from "../module/requestManager.ts";
 import { structures } from "../structures/structures.ts";
 import {
+  Embed,
   Errors,
   ExecuteWebhookOptions,
   MessageCreateOptions,
   WebhookCreateOptions,
   WebhookPayload,
-  Embed
 } from "../types/types.ts";
 import { endpoints } from "../utils/constants.ts";
 import { botID } from "../module/client.ts";
@@ -146,7 +146,9 @@ export function createSlashCommand(options: CreateSlashCommandOptions) {
 export function getSlashCommands(guildID?: string) {
   // TODO: Should this be a returned as a collection?
   return RequestManager.get(
-    guildID ? endpoints.COMMANDS_GUILD(botID, guildID) : endpoints.COMMANDS(botID),
+    guildID
+      ? endpoints.COMMANDS_GUILD(botID, guildID)
+      : endpoints.COMMANDS(botID),
   );
 }
 
@@ -197,14 +199,31 @@ export function executeSlashCommand(
 }
 
 /** To delete your initial response to an slash command. If a message id is not provided, it will default to deleting the original response. */
-export function deleteSlashResponse(id: string, token: string, messageID?: string) {
-  if (!messageID) return RequestManager.delete(endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token))
-  return RequestManager.delete(endpoints.INTERACTION_ID_TOKEN_MESSAGEID(id, token, messageID))
+export function deleteSlashResponse(
+  id: string,
+  token: string,
+  messageID?: string,
+) {
+  if (!messageID) {
+    return RequestManager.delete(
+      endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token),
+    );
+  }
+  return RequestManager.delete(
+    endpoints.INTERACTION_ID_TOKEN_MESSAGEID(id, token, messageID),
+  );
 }
 
 /** To edit your response to an slash command. If a messageID is not provided it will default to editing the original response. */
-export function editSlashResponse(id: string, token: string, options: EditSlashResponseOptions) {
-  return RequestManager.patch(endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token), options)
+export function editSlashResponse(
+  id: string,
+  token: string,
+  options: EditSlashResponseOptions,
+) {
+  return RequestManager.patch(
+    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token),
+    options,
+  );
 }
 
 export interface CreateSlashCommandOptions {
@@ -270,23 +289,26 @@ export interface SlashCommandOptionChoice {
 }
 
 export interface ExecuteSlashCommandOptions {
-  /** is the response TTS  */
-  tts?: boolean;
-  /** message content */
-  content: string;
-  /** supports up to 10 embeds */
-  embeds?: Embed[];
-  /** allowed mentions for the message */
-  mentions?: {
-    /** An array of allowed mention types to parse from the content. */
-    parse: ("roles" | "users" | "everyone")[];
-    /** Array of role_ids to mention (Max size of 100) */
-    roles?: string[];
-    /** Array of user_ids to mention (Max size of 100) */
-    users?: string[];
+  type: InteractionResponseType;
+  data: {
+    /** is the response TTS  */
+    tts?: boolean;
+    /** message content */
+    content: string;
+    /** supports up to 10 embeds */
+    embeds?: Embed[];
+    /** allowed mentions for the message */
+    mentions?: {
+      /** An array of allowed mention types to parse from the content. */
+      parse: ("roles" | "users" | "everyone")[];
+      /** Array of role_ids to mention (Max size of 100) */
+      roles?: string[];
+      /** Array of user_ids to mention (Max size of 100) */
+      users?: string[];
+    };
+    /** acceptable values are message flags */
+    flags?: number;
   };
-  /** acceptable values are message flags */
-  flags: number;
 }
 
 export interface EditSlashResponseOptions extends ExecuteSlashCommandOptions {
@@ -302,4 +324,17 @@ export interface EditSlashCommandOptions {
 export interface UpsertSlashCommandOptions {
   id: string;
   guildID?: string;
+}
+
+export enum InteractionResponseType {
+  /** ACK a `Ping` */
+  PONG = 1,
+  /** ACK a command without sending a message, eating the user's input */
+  ACKNOWLEDGE,
+  /** respond with a message, eating the user's input */
+  CHANNEL_MESSAGE,
+  /** respond with a message, showing the user's input */
+  CHANNEL_MESSAGE_WITH_SOURCE,
+  /** ACK a command without sending a message, showing the user's input */
+  ACK_WITH_SOURCE,
 }
