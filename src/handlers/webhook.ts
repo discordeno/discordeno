@@ -104,3 +104,17 @@ export async function executeWebhook(
 export function getWebhook(webhookID: string) {
   return RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
 }
+
+/**
+ * There are two kinds of Slash Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:
+ *
+ * - Your app **cannot** have two global commands with the same name
+ * - Your app **cannot** have two guild commands within the same name **on the same guild**
+ * - Your app **can** have a global and guild command with the same name
+ * - Multiple apps **can** have commands with the same names
+ * 
+ * To make a **global** Slash Command, make an HTTP POST call like this:
+ */
+export function registerSlashCommand() {
+  // https://discord.com/api/v8/applications/<my_application_id>/commands
+}
