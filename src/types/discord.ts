@@ -12,7 +12,7 @@ export interface DiscordPayload {
   s?: number;
   /** The event name for this payload. ONLY for OPCode 0 */
   t?:
-    | "READY"
+    | "APPLICATION_COMMAND_CREATE"
     | "CHANNEL_CREATE"
     | "CHANNEL_DELETE"
     | "CHANNEL_UPDATE"
@@ -39,6 +39,7 @@ export interface DiscordPayload {
     | "MESSAGE_REACTION_REMOVE_ALL"
     | "MESSAGE_REACTION_REMOVE_EMOJI"
     | "PRESENCE_UPDATE"
+    | "READY"
     | "TYPING_START"
     | "USER_UPDATE"
     | "VOICE_STATE_UPDATE"

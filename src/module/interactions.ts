@@ -6,9 +6,9 @@ import { serveTLS } from "https://deno.land/std@0.80.0/http/server.ts";
 // 2. Your endpoint must be set up to properly handle signature headers--more on that in [Security and Authorization]
 
 const serverOptions = {
-    hostname: "localhost",
-    // Made of our favorite numbers for the default port
-    port: 0704,
+  hostname: "localhost",
+  // Made of our favorite numbers for the default port
+  port: 0704,
 };
 
 /**
@@ -21,15 +21,15 @@ const serverOptions = {
 export async function startServer(options: StartServerOptions) {
   serverOptions.hostname = options.hostname;
   serverOptions.port = options.port;
-  
+
   createApplicationServer(options);
 }
 
 function createApplicationServer(options: StartServerOptions) {
-    for await (const req of serveTLS({ ...options, ...serverOptions })) {
-        console.log("req received");
-        // req.respond({ body });
-      }
+  for await (const req of serveTLS({ ...options, ...serverOptions })) {
+    console.log("req received");
+    // req.respond({ body });
+  }
 }
 
 export interface StartServerOptions {
@@ -41,17 +41,4 @@ export interface StartServerOptions {
   certFilePath: string;
   /** Key file path */
   keyFilePath: string;
-}
-
-export enum InteractionResponseType {
-  /** ACK a `Ping` */
-  PONG = 1,
-  /** ACK a command without sending a message, eating the user's input */
-  ACKNOWLEDGE,
-  /** respond with a message, eating the user's input */
-  CHANNEL_MESSAGE,
-  /** respond with a message, showing the user's input */
-  CHANNEL_MESSAGE_WITH_SOURCE,
-  /** ACK a command without sending a message, showing the user's input */
-  ACK_WITH_SOURCE,
 }
