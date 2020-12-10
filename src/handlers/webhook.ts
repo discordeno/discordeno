@@ -144,7 +144,17 @@ export function editSlashCommand(options: EditSlashCommandOptions) {
 /** Deletes a slash command. */
 export function deleteSlashCommand(id: string, guildID?: string) {
   if (!guildID) return RequestManager.delete(endpoints.COMMANDS_ID(id));
-  return RequestManager.delete(endpoint.COMMANDS_GUILD_ID(id, guildID));
+  return RequestManager.delete(endpoints.COMMANDS_GUILD_ID(id, guildID));
+}
+
+/**
+ * Send a response to a users slash command. The command data will have the id and token necessary to respond.
+ * Interaction `tokens` are valid for **15 minutes** and can be used to send followup messages.
+ */
+export function executeSlashCommand(id: string, token: string, options: ExecuteSlashCommandOptions) {
+  return RequestManager.post(endpoints.INTERACTION_ID_TOKEN(id, token), {
+    ...options
+  })
 }
 
 export interface CreateSlashCommandOptions {
