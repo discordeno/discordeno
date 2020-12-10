@@ -199,7 +199,7 @@ export function executeSlashCommand(
 /** To delete your initial response to an slash command. If a message id is not provided, it will default to deleting the original response. */
 export function deleteSlashResponse(id: string, token: string, messageID?: string) {
   if (!messageID) return RequestManager.delete(endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token))
-  return RequestManager.delete(endpoints.INTERACTION_ID_TOKEN_MESSAGES(id, token, messageID))
+  return RequestManager.delete(endpoints.INTERACTION_ID_TOKEN_MESSAGEID(id, token, messageID))
 }
 
 /** To edit your response to an slash command. If a messageID is not provided it will default to editing the original response. */
