@@ -13,13 +13,11 @@ import {
   GetMessagesBefore,
   MessageContent,
   MessageCreateOptions,
-  Overwrite,
   Permission,
   Permissions,
   RawOverwrite,
   WebhookPayload,
 } from "../types/types.ts";
-import { cache } from "../utils/cache.ts";
 import { endpoints } from "../utils/constants.ts";
 import {
   botHasChannelPermissions,
@@ -410,47 +408,6 @@ export async function editChannel(
         };
       },
     ),
-  };
-
-  return RequestManager.patch(
-    endpoints.GUILD_CHANNEL(channelID),
-    {
-      ...payload,
-      reason,
-    },
-  );
-}
-
-export async function editChannelOverwrite(
-  channelID: string,
-  overwrite: Overwrite,
-  reason?: string,
-) {
-  const hasManageChannelPerm = await botHasChannelPermissions(
-    channelID,
-    ["MANAGE_CHANNELS"],
-  );
-  if (!hasManageChannelPerm) {
-    throw new Error(Errors.MISSING_MANAGE_CHANNELS);
-  }
-
-  let channel = cache.channels.get(channelID);
-  if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);
-
-  const payload = {
-    permission_overwrites: [
-      ...(channel?.permissionOverwrites || []).map((rawOverwrite) => ({
-        id: rawOverwrite.id,
-        type: rawOverwrite.type,
-        allow: rawOverwrite.allow,
-        deny: rawOverwrite.deny,
-      })),
-      {
-        ...overwrite,
-        allow: calculateBits(overwrite.allow),
-        deny: calculateBits(overwrite.deny),
-      },
-    ],
   };
 
   return RequestManager.patch(
