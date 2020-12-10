@@ -2,18 +2,19 @@ import { cacheHandlers } from "../controllers/cache.ts";
 import { identifyPayload } from "../module/client.ts";
 import { RequestManager } from "../module/requestManager.ts";
 import { requestAllMembers } from "../module/shardingManager.ts";
-import { Guild } from "../structures/guild.ts";
-import { Member } from "../structures/member.ts";
-import { structures } from "../structures/mod.ts";
-import { Template } from "../structures/template.ts";
-import { ImageFormats, ImageSize } from "../types/cdn.ts";
-import { ChannelCreatePayload, ChannelTypes } from "../types/channel.ts";
-import { Errors } from "../types/errors.ts";
+import {
+  Guild,
+  Member,
+  structures,
+  Template,
+} from "../structures/structures.ts";
 import {
   AuditLogs,
   BannedUser,
   BanOptions,
   ChannelCreateOptions,
+  ChannelCreatePayload,
+  ChannelTypes,
   CreateEmojisOptions,
   CreateGuildFromTemplate,
   CreateGuildPayload,
@@ -23,20 +24,22 @@ import {
   EditEmojisOptions,
   EditGuildTemplate,
   EditIntegrationOptions,
+  Errors,
   FetchMembersOptions,
   GetAuditLogsOptions,
   GuildEditOptions,
   GuildTemplate,
+  ImageFormats,
+  ImageSize,
+  Intents,
+  MemberCreatePayload,
   PositionSwap,
   PruneOptions,
   PrunePayload,
+  RoleData,
   UpdateGuildPayload,
   UserPayload,
-} from "../types/guild.ts";
-import { MemberCreatePayload } from "../types/member.ts";
-import { Intents } from "../types/options.ts";
-import { Permissions } from "../types/permission.ts";
-import { RoleData } from "../types/role.ts";
+} from "../types/types.ts";
 import { formatImageURL } from "../utils/cdn.ts";
 import { Collection } from "../utils/collection.ts";
 import { endpoints } from "../utils/constants.ts";
@@ -44,8 +47,12 @@ import { botHasPermission, calculateBits } from "../utils/permissions.ts";
 import { urlToBase64 } from "../utils/utils.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
-export function createServer(options: CreateServerOptions) {
-  return RequestManager.post(endpoints.GUILDS, options);
+export async function createServer(options: CreateServerOptions) {
+  const guild = await RequestManager.post(
+    endpoints.GUILDS,
+    options,
+  ) as CreateGuildPayload;
+  return structures.createGuild(guild, 0);
 }
 
 /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event.
@@ -123,14 +130,8 @@ export async function createGuildChannel(
       permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
         ...perm,
 
-        allow: perm.allow.reduce(
-          (bits, p) => bits |= BigInt(Permissions[p]),
-          BigInt(0),
-        ).toString(),
-        deny: perm.deny.reduce(
-          (bits, p) => bits |= BigInt(Permissions[p]),
-          BigInt(0),
-        ).toString(),
+        allow: calculateBits(perm.allow),
+        deny: calculateBits(perm.deny),
       })),
       type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
@@ -310,15 +311,13 @@ export async function createGuildRole(
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
+  const bits = calculateBits(options.permissions || []);
+
   const result = await RequestManager.post(
     endpoints.GUILD_ROLES(guildID),
     {
       ...options,
-      permissions: options.permissions
-        ?.reduce((subtotal, perm) => {
-          subtotal |= Permissions[perm];
-          return subtotal;
-        }, 0),
+      permissions: calculateBits(options?.permissions || []),
       reason,
     },
   );
@@ -457,7 +456,7 @@ export async function getAuditLogs(
   return RequestManager.get(endpoints.GUILD_AUDIT_LOGS(guildID), {
     ...options,
     action_type: options.action_type
-      ? AuditLogs[options.action_type] 
+      ? AuditLogs[options.action_type]
       : undefined,
     limit: options.limit && options.limit >= 1 && options.limit <= 100
       ? options.limit

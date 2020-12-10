@@ -17,7 +17,7 @@ Let's try and create our own monitor so we can understand it better. Suppose we 
 To start, we make a new file in the monitors folder called `inviteFilter.ts`. Then you can paste in the following base monitor snippet.
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache } from "../../deps.ts";
 
 botCache.monitors.set("monitorname", {
 	name: "monitorname",
@@ -64,14 +64,13 @@ The default options were chosen for what the majority of monitors will use to he
 The permission options are the exact same from the commands guide. These options first make sure that either the bot or user has those necessary permissions to run this monitor. For example, our invite filter would mean we need **MANAGE MESSAGES** permission so we can delete messages sent with an invite URL.
 
 ```ts
-  botChannelPermissions: ["MANAGE_MESSAGES"]
+botChannelPermissions: ["MANAGE_MESSAGES"]
 ```
 
 ## Adding The Code
 
 ```ts
-import { botCache } from "../../mod.ts";
-import { deleteMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/message.ts";
+import { botCache, deleteMessage } from "../../deps.ts";
 import { translate } from "../utils/i18next.ts";
 import { sendAlertResponse } from "../utils/helpers.ts";
 
@@ -104,3 +103,4 @@ botCache.monitors.set("inviteFilter", {
 ```
 
 Nice! Now take some time and add these translation keys to their appropriate files.
+Once, you are ready, let's jump into creating some command inhibitors.

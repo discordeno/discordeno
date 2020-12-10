@@ -1,9 +1,8 @@
-configs.ts
-debug.ts
-
 .DS_Store
 .lock
-node_modules
+
+# Node modules - npm
+node_modules/
 
 # Log files
 npm-debug.log*
@@ -12,3 +11,9 @@ npm-debug.log*
 dist/
 public/
 .cache/
+
+# Visual Studio Code
+.vscode/
+
+# IntelliJ IDEA
+.idea/

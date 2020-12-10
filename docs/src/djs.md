@@ -102,13 +102,13 @@ Discordeno Version:
 ```ts
 import Client, {
   updateEventHandlers,
-} from "https://x.nest.land/Discordeno@9.0.1/src/module/client.ts";
+} from "https://deno.land/x/discordeno@9.4.0/src/module/client.ts";
 import { configs } from "./configs.ts";
-import { Intents } from "https://x.nest.land/Discordeno@9.0.1/src/types/options.ts";
+import { Intents } from "https://deno.land/x/discordeno@9.4.0/src/types/options.ts";
 import { eventHandlers } from "./src/events/eventHandlers.ts";
-import { Message } from "https://x.nest.land/Discordeno@9.0.1/src/structures/message.ts";
+import { Message } from "https://deno.land/x/discordeno@9.4.0/src/structures/message.ts";
 import { Command } from "./src/types/commands.ts";
-import { Guild } from "https://x.nest.land/Discordeno@9.0.1/src/structures/guild.ts";
+import { Guild } from "https://deno.land/x/discordeno@9.4.0/src/structures/guild.ts";
 
 export const botCache = {
   commands: new Map<string, Command>(),
@@ -158,10 +158,10 @@ In our `ready.ts` file we can add the `ready` event listener.
 ```ts
 import { botCache } from "../../mod.ts";
 import { configs } from "../../configs.ts";
-import { cache } from "https://x.nest.land/Discordeno@9.0.1/src/utils/cache.ts";
-import { editBotsStatus, chooseRandom } from "https://x.nest.land/Discordeno@9.0.1/src/utils/utils.ts";
-import { StatusType } from "https://x.nest.land/Discordeno@9.0.1/src/types/discord.ts";
-import { ActivityType } from "https://x.nest.land/Discordeno@9.0.1/src/types/activity.ts";
+import { cache } from "https://deno.land/x/discordeno@9.4.0/src/utils/cache.ts";
+import { editBotsStatus, chooseRandom } from "https://deno.land/x/discordeno@9.4.0/src/utils/utils.ts";
+import { StatusType } from "https://deno.land/x/discordeno@9.4.0/src/types/discord.ts";
+import { ActivityType } from "https://deno.land/x/discordeno@9.4.0/src/types/activity.ts";
 
 botCache.eventHandlers.ready = function () {
   console.log(`[READY] Bot is online and ready in ${cache.guilds.size} guild(s)!`);
@@ -237,7 +237,7 @@ module.exports = class addRoleCommand extends Command {
 This is how to do it with Discordeno:
 ```ts
 import { botCache } from "../../mod.ts";
-import { addRole } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/member.ts";
+import { addRole } from "https://deno.land/x/discordeno@9.4.0/src/handlers/member.ts";
 import { sendAlertResponse, sendResponse } from "../utils/helpers.ts";
 
 botCache.commands.set(`addrole`, {
@@ -341,10 +341,10 @@ module.exports = class kickCommand extends Command {
 
 Discordeno Version
 ```ts
-import { sendMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts";
-import { Member } from "https://x.nest.land/Discordeno@9.0.1/src/structures/member.ts";
-import { kick } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/member.ts";
-import { deleteMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/message.ts";
+import { sendMessage } from "https://deno.land/x/discordeno@9.4.0/src/handlers/channel.ts";
+import { Member } from "https://deno.land/x/discordeno@9.4.0/src/structures/member.ts";
+import { kick } from "https://deno.land/x/discordeno@9.4.0/src/handlers/member.ts";
+import { deleteMessage } from "https://deno.land/x/discordeno@9.4.0/src/handlers/message.ts";
 import { botCache } from "../../mod.ts";
 import { createCommandAliases, sendResponse } from "../utils/helpers.ts";
 import { Embed } from "../utils/Embed.ts";
@@ -420,4 +420,4 @@ Let's take a minute and explain the differences here. The first thing you will p
 
 ### Need More Examples/Help
 
-If you still need more help converting other aspects of your bot please contact me at [Discord](https://discord.gg/J4NqJ72). I will continue adding more examples to this guide as more people request them.
+If you still need more help converting other aspects of your bot please contact me at [Discord](https://discord.com/invite/5vBgXk3UcZ). I will continue adding more examples to this guide as more people request them.

@@ -7,7 +7,7 @@ This website serves as the purpose for introducing Discordeno to developers. The
 [View Documentation on Deno](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
 
 ## Useful Links
-- [GitHub Repository](https://github.com/Skillz4Killz/Discordeno)
+- [GitHub Repository](https://github.com/discordeno/discordeno)
 - [Deno Page](https://deno.land/x/discordeno)
 - [Website](https://discordeno.mod.land)
 
@@ -32,7 +32,7 @@ Now you've created an Application but it will need some code in order for it to 
 
 You can install Discordeno by importing:
 ```ts
-import Client from "https://x.nest.land/Discordeno@9.0.1/src/module/client.ts";
+import Client from "https://deno.land/x/discordeno@9.4.0/src/module/client.ts";
 ```
 
 ## Example Usage
@@ -40,7 +40,7 @@ import Client from "https://x.nest.land/Discordeno@9.0.1/src/module/client.ts";
 Starting with Discordeno is very simple, you can start from scratch without any boilerplates/frameworks: Add this snippet of code into a new TypeScript file:
 
 ```ts
-import StartBot, { sendMessage, Intents } from "https://x.nest.land/Discordeno@9.0.1/src/module/client.ts";
+import StartBot, { sendMessage, Intents } from "https://deno.land/x/discordeno@9.4.0/src/module/client.ts";
 import config from "./config.ts";
 
 StartBot({

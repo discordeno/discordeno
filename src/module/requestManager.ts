@@ -1,7 +1,5 @@
 import { delay } from "../../deps.ts";
-import { HttpResponseCode } from "../types/discord.ts";
-import { Errors } from "../types/errors.ts";
-import { RequestMethods } from "../types/fetch.ts";
+import { Errors, HttpResponseCode, RequestMethods } from "../types/types.ts";
 import { baseEndpoints, discordAPIURLS } from "../utils/constants.ts";
 import { authorization, eventHandlers } from "./client.ts";
 
@@ -250,7 +248,7 @@ async function runMethod(
         handleStatusCode(response, errorStack);
 
         // Sometimes Discord returns an empty 204 response that can't be made to JSON.
-        if (response.status === 204) return resolve();
+        if (response.status === 204) return resolve(undefined);
 
         const json = await response.json();
         if (

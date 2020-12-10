@@ -1,6 +1,6 @@
 # Creating Languages!
 
-Woot! You have mastered Discordeno inhibitors already. Now it's time to finally make our bot multi-lingual. Vàmanos!
+Woot! You have mastered Discordeno events already. Now it's time to finally make our bot multi-lingual. Vàmanos!
 
 ## What Is A Discordeno Language?
 
@@ -8,7 +8,7 @@ A Discordeno language is a folder that will hold all our responses that the bot 
 
 ## i18next
 
-By default, Discordeno comes built with support for i18next(one of if not the best localization libraries). If you want to learn more, go to [i18next website](https://www.i18next.com/). For now, there is probably not going to be anything you will need to learn there. As most of the functionality has already been created for you right here in Discordeno.
+By default, Discordeno comes built with support for i18next (one of if not the best localization libraries). If you want to learn more, go to [i18next website](https://www.i18next.com/). For now, there is probably not going to be anything you will need to learn there. As most of the functionality has already been created for you right here in Discordeno.
 
 ## Default Language
 
@@ -16,7 +16,7 @@ The default language with Discordeno is American English which uses the name `en
 
 ## Understanding The Folder Structure
 
-The first folder inside the languages folder must be a language folder following the name pattern like `en_US`. So for example, if we wanted to add a Spanish(Spain) language to our bot we would create a new folder called `es_ES`.
+The first folder inside the languages folder must be a language folder following the name pattern like `en_US`. So for example, if we wanted to add a Spanish (Spain) language to our bot we would create a new folder called `es_ES`.
 
 You can have as many folder in here as you like. For example I can do something like `src/languages/en_US/commands/fun/hug.json`. Notice that I have created categories to help keep them categorized and easier to find. You can do it however you wish to have them. For now, just remember that files must always be `.json` files in these folders. **JSON is required.**
 
@@ -60,7 +60,7 @@ i18next allows you to pass in variables that you can use when you want in your s
 translate(
 	message.guildID,
 	`commands/fun/${data.name}:${type}`,
-	{ mention: message.member()!.mention, user: member.mention },
+	{ mention: message.member!.mention, user: member.mention },
 )
 ```
 
@@ -71,7 +71,9 @@ Here we can see that we passed in:
 
 ## Variables
 
+::: v-pre
 Variables in i18next use the `{{}}` format. So the variable `mention` would be used by doing `{{mention}}`
+:::
 
 ## Key Rules
 
@@ -85,7 +87,7 @@ The first one is the only one that is mandatory. The other two are recommended f
 
 ## Missing Keys
 
-Every developer forgets stuff sometimes. When you forget to translate a key, it will be marked as a missing key and you will be alerted. If you provided a channelID in the configs file, you be be sent a message there and it will also be logged in your console.
+Every developer forgets stuff sometimes. When you forget to translate a key, it will be marked as a missing key and you would be alerted if you have provided a channelID in the configs file, and it will also be logged in your console.
 
 ## Spanish Version
 

@@ -1,12 +1,12 @@
 import { eventHandlers } from "../module/client.ts";
-import { structures } from "../structures/mod.ts";
-import { DiscordPayload } from "../types/discord.ts";
+import { structures } from "../structures/structures.ts";
 import {
+  DiscordPayload,
   GuildBanPayload,
   GuildMemberAddPayload,
   GuildMemberChunkPayload,
   GuildMemberUpdatePayload,
-} from "../types/guild.ts";
+} from "../types/types.ts";
 import { cache } from "../utils/cache.ts";
 import { cacheHandlers } from "./cache.ts";
 
@@ -35,10 +35,7 @@ export async function handleInternalGuildMemberRemove(data: DiscordPayload) {
 
   guild.memberCount--;
   const member = await cacheHandlers.get("members", payload.user.id);
-  eventHandlers.guildMemberRemove?.(
-    guild,
-    member || payload.user,
-  );
+  eventHandlers.guildMemberRemove?.(guild, payload.user, member);
 
   member?.guilds.delete(guild.id);
   if (member && !member.guilds.size) cacheHandlers.delete("members", member.id);

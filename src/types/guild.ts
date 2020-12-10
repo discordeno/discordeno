@@ -1,4 +1,4 @@
-import { Guild } from "../structures/guild.ts";
+import { Guild } from "../structures/structures.ts";
 import { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
 import { Emoji, StatusType } from "./discord.ts";
 import { MemberCreatePayload } from "./member.ts";
@@ -469,9 +469,9 @@ export interface RawOverwrite {
   /** Whether this is a role or a member */
   type: OverwriteType;
   /** The permissions that this id is allowed to do. (This will mark it as a green check.) */
-  allow: number;
+  allow: string;
   /** The permissions that this id is NOT allowed to do. (This will mark it as a red x.) */
-  deny: number;
+  deny: string;
 }
 
 export interface PermissionOverwrite

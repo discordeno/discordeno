@@ -8,10 +8,11 @@ Let's first start by taking an existing command and slightly modifying it to you
 
 ```ts
 import { botCache } from "../../mod.ts";
-import { sendMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts";
-import { botID } from "https://x.nest.land/Discordeno@9.0.1/src/module/client.ts";
+import { sendMessage } from "https://deno.land/x/discordeno@9.4.0/src/handlers/channel.ts";
+import { botID } from "https://deno.land/x/discordeno@9.4.0/src/module/client.ts";
+import { createCommand } from "../utils/helpers.ts"
 
-botCache.commands.set("invite", {
+createCommand({
   name: "invite",
   execute: function (message) {
     // Replace the permission number at the end to request the permissions you wish to request. By default, this will request Admin perms.
@@ -23,25 +24,23 @@ botCache.commands.set("invite", {
 });
 ```
 
-Let's break this down. The first three lines are importing the necessary things from their files so we can use them in this command. Don't worry if this doesn't make sense, most of the time, this will all be done automatically for you if you use a good code editor like Visual Studio Code. We create a command by doing:
+Let's break this down. The first four lines are importing the necessary things from their files so we can use them in this command. Don't worry if this doesn't make sense, most of the time, this will all be done automatically for you if you use a good code editor like Visual Studio Code. We create a command by doing:
 
 ```ts
-botCache.commands.set('commandname', {
-
+createCommand({
+  name: "commandname",
 })
 ```
 
 The command name here must be unique. If it is not unique, your commands will not work properly as you wish. For example, you can't have 2 commands with the `ping` name. In this case, our command is called `invite`.
 
-The `name: 'invite'` is also written as it is useful for our help command and inhibitors! Normally, these two things will be the same. So far it's super easy right.
-
-Next is the `execute`. This is where the magic happens. This is the function that is triggered when the command is ran by a user. In this case, the bot simply sends a message to a channel where the command was ran and sends an invite link. Let's take a minute and optimize this for our case. We don't **NEED** admin permissions for our bot. Let's go to the [permission calculator](https://discordapi.com/permissions.html#0) and figure out the permissions we need for our bot.
+Next is the `execute`. This is where the magic happens. This is the function that is triggered when the command is ran by a user. In this case, the bot simply sends a message to a channel where the command was ran and sends an invite link. Let's take a minute and optimize this for our case. We don't **NEED** admin permissions for our bot. Let's go to the [permission calculator](https://discordapi.com/permissions.html) and figure out the permissions we need for our bot.
 
 Once you have decided which permissions you want to request, you can copy the number and replace it here. For example, if we want `68640` as our permissions. We can modify our command to be:
 
 
 ```ts
-	`https://discordapp.com/oauth2/authorize?client_id=${botID}&scope=bot&permissions=68640`,
+`https://discordapp.com/oauth2/authorize?client_id=${botID}&scope=bot&permissions=68640`,
 ```
 
 Lastly, let's get rid of the comment there as now it is customized to our needs.
@@ -55,8 +54,8 @@ Right now, if you were to go to Discord and type `!help invite`, you would see q
 Let's add a custom description to our invite command.
 
 ```ts
-	name: "invite",
-	description: "Like the bot? Use this link to add it to your server!"
+name: "invite",
+description: "Like the bot? Use this link to add it to your server!",
 ```
 
 🎉 It's that simple. So let's restart the bot and see how it changed. Use **CTRL + C** to shut down the bot. Then run the command from earlier.
@@ -76,9 +75,9 @@ Now, let's make this a little bit easier. What if we wanted this command to also
 Let's add in the two aliases we wanted.
 
 ```ts
-  name: "invite",
-  aliases: ["inv", "join"],
-  description: "Like the bot? Use this link to add it to your server!"
+name: "invite",
+aliases: ["inv", "join"],
+description: "Like the bot? Use this link to add it to your server!",
 ```
 
 > **Note:** If you only want to add 1 alias, you can pass in a simple string instead of an array as well as the second argument.
@@ -111,26 +110,26 @@ If you get stuck, don't worry. When you are ready, let's continue to the next st
 
 ## Creating A Command
 
-Let's make a command that will allow guild admins to give or take roles from a member. Since, we are creating a `Moderation` command to give or take roles, let's go ahead and create a Category folder called `Moderation` and then create a file called `role.ts`. Once the file is made, you can paste this following base snippet to make our first command.
+Let's make a command that will allow guild admins to give or take roles from a member. Since, we are creating a `Moderation` command to give or take roles, let's go ahead and create a category folder called `Moderation` and then create a file called `role.ts`. Once the file is made, you can paste this following base snippet to make our first command.
 
 ```ts
 import { botCache } from "../../mod.ts";
-import { sendMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts";
+import { sendMessage } from "https://deno.land/x/discordeno@9.4.0/src/handlers/channel.ts";
 import { PermissionLevels } from "../types/commands.ts";
 import { createCommandAliases } from "../utils/helpers";
 
-botCache.commands.set("commandname", {
+createCommand({
   name: "commandname",
   aliases: [],
   dmOnly: false,
   guildOnly: false,
   nsfw: false,
-  permissionLevel: [PermissionLevels.MEMBER],
+  permissionLevels: [PermissionLevels.MEMBER],
   botServerPermissions: [],
   botChannelPermissions: [],
   userServerPermissions: [],
   userChannelPermissions: [],
-  description: string,
+  description: "description",
   cooldown: {
     seconds: 0,
     allowedUses: 0,
@@ -184,7 +183,7 @@ Discordeno makes this pretty simple for us.
 permissionLevels: [PermissionLevels.MODERATOR, PermissionLevels.ADMIN]
 ```
 
-We're not going to cover this in detail, here because we will have an entire in depth guide for permission levels. If you want to pause and learn it now, feel free: [Permission Levels Advanced Guide](https://discordeno.netlify.app/advanced/permlevels)
+We're not going to cover this in detail here because we will have an entire in depth guide for permission levels. If you want to pause and learn it now, feel free: [Permission Levels Advanced Guide](https://discordeno.mod.land/advanced/permlevels.html)
 
 ## Permissions Check Options
 
@@ -214,7 +213,7 @@ The cooldown options go hand in hand together.
 
 - `seconds` is how long to make the user wait in seconds before they can use the command again. By default, there is no wait time aka 0 seconds.
 - `allowedUses` is how many times a user is allowed to use a command before they are placed on cooldown.
--
+
 Let's use our command as an example. We don't want someone to start spamming the role command so we can add a cooldown of 60 seconds. However, this would mean every time you give a role to someone, you would need to wait a whole minute to give a role to someone else. This is where `allowedUses` shines! Let's set it to to 5 so that a user can use this command 5 times in a row before being asked to wait for 60 seconds.
 
 ```ts
@@ -285,21 +284,19 @@ execute: function (message, args, guild) {
 > }
 > ```
 
-Let's start out by writing some pseudo-code(comments that will help us plan the code).
+Let's start out by writing some pseudo-code (comments that will help us plan the code).
 
 ```ts
 execute: function (message, args, guild) {
   // If this was the everyone role alert with a silly error
 
-  // If this is a managed role(some bots role) we can't give/remove alert with silly error
+  // If this is a managed role (some bots role) we can't give/remove it alert with silly error
 
   // Get the bots highest role
 
   // Check if the bot has a role higher than the role that it will try to give.
 
   // If the role is too high alert the user.
-
-  // If the user has this role already remove the role from them.
 
   // Check the command author's highest role
 
@@ -330,6 +327,10 @@ if (args.role.id === message.guildID) {
 You might be seeing an error since we didn't provide the accurate typings for the `args` parameter. The message and guild parameter is automated but the args is dynamic depending on your `arguments` option for your command. So let's do this real quick.
 
 ```ts
+import { Role, Member } from "../../deps.ts";
+
+// Lots of code here hidden so you can see the changes easily.
+
 execute: function (message, args: RoleArgs, guild) {
   // If this was the everyone role alert with a silly error
   if (args.role.id === message.guildID) {
@@ -339,6 +340,7 @@ execute: function (message, args: RoleArgs, guild) {
   // Lots of comments here hidden so you can see the changes easily.
 }
 
+// Put this at the end of the file.
 interface RoleArgs {
   role: Role;
   member: Member;
@@ -349,7 +351,8 @@ Awesome! Let's keep going.
 
 
 ```ts
-execute: function (message, args: RoleArgs, guild) {
+// Make the function asynchronous
+execute: async function (message, args: RoleArgs, guild) {
   // If this was the everyone role alert with a silly error
   if (args.role.id === message.guildID) {
     return sendResponse(message, "I don't know if you noticed or not but I'm an extremely arrogant bot who tends to think all of his plans will work. But I can't give the everyone role to someone.");
@@ -393,18 +396,18 @@ execute: function (message, args: RoleArgs, guild) {
   return sendResponse(message, `The role **${args.role.name}** has been added to **${args.member.tag}**.`)
 }
 ```
+> **Note:** Asynchronous functions are an advanced topic, and you do not need to worry about them now. Basically, we need to do that because checking the highest Role requires the use of await.
 
 The final version of the command should look something like this:
 
 ```ts
-import { highestRole, higherRolePosition, botID, removeRole, addRole, Role, Member } from "../../deps.ts";
-import { botCache } from "../../mod.ts";
+import { botCache, highestRole, higherRolePosition, botID, removeRole, addRole, Role, Member } from "../../deps.ts";
 import { PermissionLevels } from "../types/commands.ts";
-import { sendResponse } from "../utils/helpers.ts";
+import { createCommand, sendResponse } from "../utils/helpers.ts";
 
-botCache.commands.set("role", {
+createCommand({
   name: "role",
-  permissionLevel: [PermissionLevels.MODERATOR, PermissionLevels.ADMIN],
+  permissionLevels: [PermissionLevels.MODERATOR, PermissionLevels.ADMIN],
   botServerPermissions: ["MANAGE_ROLES"],
   botChannelPermissions: ["SEND_MESSAGES"],
   cooldown: {
@@ -427,7 +430,7 @@ botCache.commands.set("role", {
 			}
 		}
 	],
-  execute: function (message, args: RoleArgs) {
+  execute: async function (message, args: RoleArgs) {
     // If this was the everyone role alert with a silly error
     if (args.role.id === message.guildID) {
       return sendResponse(
@@ -445,7 +448,7 @@ botCache.commands.set("role", {
     }
 
     // Get the bots highest role
-    const botsHighestRole = highestRole(message.guildID, botID);
+    const botsHighestRole = await highestRole(message.guildID, botID);
 
     // Check if the bot has a role higher than the role that it will try to give. If the role is too high alert the user.
     if (!botsHighestRole || !higherRolePosition(
@@ -460,7 +463,7 @@ botCache.commands.set("role", {
     }
 
     // Check the command author's highest role
-    const membersHighestRole = highestRole(message.guildID, message.author.id);
+    const membersHighestRole = await highestRole(message.guildID, message.author.id);
 
     // If the author does not have a role high enough to give this role alert
     if (!membersHighestRole ||
@@ -473,7 +476,7 @@ botCache.commands.set("role", {
     }
 
     // If the user has this role already we should remove it
-    if (message.member()?.roles.includes(args.role.id)) {
+    if (message.member?.roles.includes(args.role.id)) {
       removeRole(
         message.guildID,
         args.member.user.id,
@@ -504,9 +507,9 @@ interface RoleArgs {
 }
 ```
 
-> **Note:** The response strings are a play on some funny Stargate(my favorite tv show) moments. Feel free to change as you wish to fit your bot's personality.
+> **Note:** The response strings are a play on some funny Stargate (my favorite tv show) moments. Feel free to change as you wish to fit your bot's personality.
 
-## Dynamic(Advanced Level) Command Creation
+## Dynamic (Advanced Level) Command Creation
 
 This is some advanced level super magical command creation skills. Discordeno gives you the power to dynamically create commands. What that means is you can write the code for one command but dynamically create like 50 commands using that same code.
 
@@ -515,9 +518,8 @@ For example, in my main bot I have a lot of "fun" commands like `.hug` or `.kiss
 - Create a file in the commands folder called `fun.ts` which will create all our fun commands.
 
 ```ts
-import { Member, sendMessage, chooseRandom, avatarURL } from "../../deps.ts";
-import { botCache } from "../../mod.ts";
-import { createCommandAliases, sendEmbed } from "../utils/helpers.ts";
+import { botCache, Member, sendMessage, chooseRandom, avatarURL } from "../../deps.ts";
+import { createCommand, createCommandAliases, sendEmbed } from "../utils/helpers.ts";
 import { configs } from "../../configs.ts";
 import { Embed } from "../utils/Embed.ts";
 import { translate } from "../utils/i18next.ts";
@@ -544,7 +546,7 @@ const funCommandData = [
 ];
 
 funCommandData.forEach((data) => {
-  botCache.commands.set(data.name, {
+  botCache.commands.set({
     name: data.name,
     botChannelPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
     cooldown: {
@@ -559,7 +561,7 @@ funCommandData.forEach((data) => {
     ],
     execute: function (message, args: FunArgs) {
 			// If a member is provided use that otherwise set the member themself
-      const member = args.member || message.member()!;
+      const member = args.member || message.member!;
 
       const type = member.user.id === message.author.id
         // Silly response like if user tries to hug themself
@@ -575,7 +577,7 @@ funCommandData.forEach((data) => {
           translate(
             message.guildID,
             `commands/fun/${data.name}:${type}`,
-            { mention: message.member()!.mention, user: member.mention },
+            { mention: message.member!.mention, user: member.mention },
           ),
         )
         .setImage(chooseRandom(data.gifs));
@@ -596,7 +598,9 @@ interface FunArgs {
 
 > **Note:** The imports in this are a bit different. I did this to show you that you can also import everything grouped like this through the `deps.ts` which will make everything available to you at ease.
 
-Take a minute to realize what just happened. This has made 18 different unique commands dynamically. In 1 file, using the same piece of code, we created so many commands. You can easily add more commands to this. For example, if you wanted to add weeb(animated) versions of these commands. Then you are at 36 commands with 1 simple command file.
+> **Note:** This is only an example of dynamic command creation and won't work if you try using this code. Since this is an advanced topic we're not going to cover this in more detail here, because we will have an entire in depth guide for dynamic command creation. If you want to pause and learn it now, feel free: [Dynamic Command Creation Advanced Guide](https://discordeno.mod.land/advanced/dynamiccommands.html)
+
+Take a minute to realize what just happened. This has made 18 different unique commands dynamically. In 1 file, using the same piece of code, we created so many commands. You can easily add more commands to this. For example, if you wanted to add weeb (animated) versions of these commands. Then you are at 36 commands with 1 simple command file.
 
 **That ladies and gentleman is the power and magic of Discordeno!**
 

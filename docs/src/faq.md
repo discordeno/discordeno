@@ -34,9 +34,9 @@ This means you never have to update your code EXCEPT when you are ready to bump 
 
 SemVer means more manual work for you to update code but a more secure module. Automated means almost no manual work for you to update code but a less secure module.
 
-To understand that, SemVer makes it so you are using specific Release versions. In your code, you would do this by targeting the `..../Skillz4Killz/Discordeno/v4.0.0/...` in order to use it. Whenever I make a small bug fix or new feature that does not break your code it would be released in a new release such as today's release of v4.0.1. This means you have to manually update your code to get these latest improvements. Until you do, you may have bugs or possibly missing features. The good part about SemVer is that if I make a mistake that could potentially make the code worse, it's a lot easier to move back to a proper version with SemVer.
+To understand that, SemVer makes it so you are using specific Release versions. In your code, you would do this by targeting the `..../discordeno/discordeno/v4.0.0/...` in order to use it. Whenever I make a small bug fix or new feature that does not break your code it would be released in a new release such as today's release of v4.0.1. This means you have to manually update your code to get these latest improvements. Until you do, you may have bugs or possibly missing features. The good part about SemVer is that if I make a mistake that could potentially make the code worse, it's a lot easier to move back to a proper version with SemVer.
 
-The automated version would just simply be installed as soon as you reloaded cache for deno because it uses the branch itself as its url `.../Skillz4Killz/Discordeno/v4/...` For example, when i start bots I use a script that reloads cache and restarts the bot making it so i am always using the latest code. Deno makes this possible because it can pull the latest code from any URL even github. So using Github branches to it's peak I create a branch for each version. These versions simply update automatically and you dont have to worry about updating. The only time you need to update is when you bump a MAJOR version like from v4 to v5. Because these may need you to make changes in your code. Note, even the good part about SemVer can be slightly removed by just locking a certain commit as well using this method.
+The automated version would just simply be installed as soon as you reloaded cache for deno because it uses the branch itself as its url `.../discordeno/discordeno/v4/...` For example, when i start bots I use a script that reloads cache and restarts the bot making it so i am always using the latest code. Deno makes this possible because it can pull the latest code from any URL even github. So using Github branches to it's peak I create a branch for each version. These versions simply update automatically and you dont have to worry about updating. The only time you need to update is when you bump a MAJOR version like from v4 to v5. Because these may need you to make changes in your code. Note, even the good part about SemVer can be slightly removed by just locking a certain commit as well using this method.
 
 At the end of the day, I think both systems can work and I am curious how everyone feels about them. I will be trying my best to maintain both systems.
 
@@ -44,8 +44,8 @@ At the end of the day, I think both systems can work and I am curious how everyo
 
 This is a design decision for the lib itself. You can still use class if you want on your bot. In fact, I hope someone makes a framework/boilerplate for this lib one day using classes so that devs have a choice on which style they prefer. Without trying to write an entire thesis statement on the reasons why I avoided Classes in this lib, I will just link to the best resources I believe help explain it.
 
-- Really good article: https://dannyfritz.wordpress.com/2014/10/11/class-free-object-oriented-programming/
-- Lecture by one of the developers who makes JavaScript: https://www.youtube.com/watch?v=PSGEjv3Tqo0
+- [Really good article](https://dannyfritz.wordpress.com/2014/10/11/class-free-object-oriented-programming/)
+- [Lecture by one of the developers who makes JavaScript](https://www.youtube.com/watch?v=PSGEjv3Tqo0)
 
 In regards to EventEmitter, I believe a functional event API was a much better choice. EventEmitter at it's core is simply just functions that run when a certain event is emitted. In Discordeno, that function is executed instead of emitting some event to trigger that function.
 
@@ -80,8 +80,8 @@ Discordeno is the only library(that I have used), that has built in permission h
 Discordeno provides you specific keywords that you can use to send a clean response to the end user of your choosing. I have even seen some bots have hundreds of thousands of Missing Permission or Missing Access errors because libraries don't handle it. IMO, this is a crucial part of any good library as much as it is to handle rate limiting.
 
 ```typescript
-import { Errors } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v4/types/errors.ts";
-import { Message } from "https://raw.githubusercontent.com/Skillz4Killz/Discordeno/v4/structures/message.ts";
+import { Errors } from "https://raw.githubusercontent.com/discordeno/discordeno/v4/types/errors.ts";
+import { Message } from "https://raw.githubusercontent.com/discordeno/discordeno/v4/structures/message.ts";
 
 export function handleCommandError(message: Message, type: Errors) {
 	switch (type) {

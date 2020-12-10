@@ -12,7 +12,7 @@ Go ahead and open up the `src/events/ready.ts` file. When you open this file, yo
 
 ```ts
 import { botCache } from "../../mod.ts";
-import { cache } from "https://x.nest.land/Discordeno@9.0.1/src/utils/cache.ts";
+import { cache } from "https://deno.land/x/discordeno@9.4.0/src/utils/cache.ts";
 
 botCache.eventHandlers.ready = function () {
   console.log(`Loaded ${botCache.arguments.size} Argument(s)`);
@@ -28,6 +28,8 @@ botCache.eventHandlers.ready = function () {
 };
 ```
 
+> **Note:** Some of the code from the ready.ts file was removed here to make it easier to understand.
+
 Overall, this code is pretty self-explanatory. When the bot is ready, it logs all these things to the console for you.
 
 ## Creating A Custom Event
@@ -35,7 +37,7 @@ Overall, this code is pretty self-explanatory. When the bot is ready, it logs al
 Make a new file in the events folder called `discordLog.ts` that will send a message to a discord channel whenever we get an error so we don't need to always be watching the console to see errors. Once you made the file, go ahead and paste the base event snippet below.
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache } from "../../deps.ts";
 
 botCache.eventHandlers.eventname = function () {
   // Your code goes here
@@ -48,18 +50,16 @@ botCache.eventHandlers.eventname = function () {
 ```ts
 // This interface is a placeholder that allows you to easily add on custom events for your need.
 export interface CustomEvents extends EventHandlers {
-  discordLog: () => unknown;
+  discordLog: (error: Error) => unknown;
 }
 ```
 
 Awesome, now we can get started on adding the code.
 
 ```ts
-import { botCache } from "../../mod.ts";
+import { botCache, cache, sendMessage } from "../../deps.ts";
 import { Embed } from "../utils/Embed.ts";
-import { cache } from "../../deps.ts";
 import { configs } from "../../configs.ts";
-import { sendMessage } from "https://x.nest.land/Discordeno@9.0.1/src/handlers/channel.ts";
 import { sendEmbed } from "../utils/helpers.ts";
 
 botCache.eventHandlers.discordLog = function (error) {
@@ -67,12 +67,12 @@ botCache.eventHandlers.discordLog = function (error) {
     .setDescription([
       "```ts",
       error,
-      "```",
+      "```"
     ].join("\n"))
     .setTimestamp();
 
   // Get the channel we need to send this error to
-  const errorChannel = cache.channels.get(configs.channelIDs.errorChannelID);
+  const errorChannel = configs.channelIDs.errorChannelID;
   // If the channel is not found cancel out
   if (!errorChannel) return;
 
@@ -89,8 +89,9 @@ Now that we have fully covered events, it would be a good time to get some pract
   channelUpdate?: (channel: Channel, cachedChannel: Channel) => unknown;
   channelDelete?: (channel: Channel) => unknown;
   debug?: (args: DebugArg) => unknown;
-  guildBanAdd?: (guild: Guild, user: Member | UserPayload) => unknown;
-  guildBanRemove?: (guild: Guild, user: Member | UserPayload) => unknown;
+  dispatchRequirements?: (data: DiscordPayload, shardID: number) => unknown;
+  guildBanAdd?: (guild: Guild, user: UserPayload, member?: Member) => unknown;
+  guildBanRemove?: (guild: Guild, user: UserPayload, member?: Member) => unknown;
   guildCreate?: (guild: Guild) => unknown;
   guildLoaded?: (guild: Guild) => unknown;
   guildUpdate?: (guild: Guild, changes: GuildUpdateChange[]) => unknown;
@@ -101,7 +102,7 @@ Now that we have fully covered events, it would be a good time to get some pract
     cachedEmojis: Emoji[],
   ) => unknown;
   guildMemberAdd?: (guild: Guild, member: Member) => unknown;
-  guildMemberRemove?: (guild: Guild, member: Member | UserPayload) => unknown;
+  guildMemberRemove?: (guild: Guild, user: UserPayload, member?: Member) => unknown;
   guildMemberUpdate?: (
     guild: Guild,
     member: Member,
@@ -109,7 +110,7 @@ Now that we have fully covered events, it would be a good time to get some pract
   ) => unknown;
   heartbeat?: () => unknown;
   messageCreate?: (message: Message) => unknown;
-  messageDelete?: (message: Message | PartialMessage) => unknown;
+  messageDelete?: (partial: PartialMessage, message?: Message) => unknown;
   messageUpdate?: (message: Message, cachedMessage: OldMessage) => unknown;
   nicknameUpdate?: (
     guild: Guild,
@@ -125,14 +126,16 @@ Now that we have fully covered events, it would be a good time to get some pract
   rawGateway?: (data: unknown) => unknown;
   ready?: () => unknown;
   reactionAdd?: (
-    message: Message | MessageReactionPayload,
+    payload: MessageReactionPayload
     emoji: ReactionPayload,
     userID: string,
+    message?: Message,
   ) => unknown;
   reactionRemove?: (
-    message: Message | MessageReactionPayload,
+    payload: MessageReactionPayload,
     emoji: ReactionPayload,
     userID: string,
+    message?: Message,
   ) => unknown;
   reactionRemoveAll?: (data: BaseMessageReactionPayload) => unknown;
   reactionRemoveEmoji?: (data: MessageReactionRemoveEmojiPayload) => unknown;

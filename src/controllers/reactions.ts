@@ -1,11 +1,11 @@
 import { botID, eventHandlers } from "../module/client.ts";
-import { structures } from "../structures/mod.ts";
-import { DiscordPayload } from "../types/discord.ts";
+import { structures } from "../structures/structures.ts";
 import {
   BaseMessageReactionPayload,
+  DiscordPayload,
   MessageReactionPayload,
   MessageReactionRemoveEmojiPayload,
-} from "../types/message.ts";
+} from "../types/types.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
@@ -52,9 +52,10 @@ export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
   };
 
   eventHandlers.reactionAdd?.(
-    message || uncachedOptions,
+    uncachedOptions,
     payload.emoji,
     payload.user_id,
+    message,
   );
 }
 
@@ -107,9 +108,10 @@ export async function handleInternalMessageReactionRemove(
   };
 
   eventHandlers.reactionRemove?.(
-    message || uncachedOptions,
+    uncachedOptions,
     payload.emoji,
     payload.user_id,
+    message,
   );
 }
 

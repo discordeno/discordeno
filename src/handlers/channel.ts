@@ -1,24 +1,28 @@
 import { cacheHandlers } from "../controllers/cache.ts";
 import { RequestManager } from "../module/requestManager.ts";
-import { structures } from "../structures/mod.ts";
+import { structures } from "../structures/structures.ts";
 import {
   ChannelEditOptions,
   ChannelTypes,
   CreateInviteOptions,
+  Errors,
   FollowedChannelPayload,
   GetMessages,
   GetMessagesAfter,
   GetMessagesAround,
   GetMessagesBefore,
   MessageContent,
-} from "../types/channel.ts";
-import { Errors } from "../types/errors.ts";
-import { RawOverwrite } from "../types/guild.ts";
-import { MessageCreateOptions } from "../types/message.ts";
-import { Permission, Permissions } from "../types/permission.ts";
-import { WebhookPayload } from "../types/webhook.ts";
+  MessageCreateOptions,
+  Permission,
+  Permissions,
+  RawOverwrite,
+  WebhookPayload,
+} from "../types/types.ts";
 import { endpoints } from "../utils/constants.ts";
-import { botHasChannelPermissions } from "../utils/permissions.ts";
+import {
+  botHasChannelPermissions,
+  calculateBits,
+} from "../utils/permissions.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(
@@ -399,14 +403,8 @@ export async function editChannel(
       (overwrite) => {
         return {
           ...overwrite,
-          allow: overwrite.allow.reduce(
-            (bits, perm) => bits |= BigInt(Permissions[perm]),
-            BigInt(0),
-          ).toString(),
-          deny: overwrite.deny.reduce(
-            (bits, perm) => bits |= BigInt(Permissions[perm]),
-            BigInt(0),
-          ).toString(),
+          allow: calculateBits(overwrite.allow),
+          deny: calculateBits(overwrite.deny),
         };
       },
     ),

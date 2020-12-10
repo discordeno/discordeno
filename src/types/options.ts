@@ -1,8 +1,10 @@
-import { Channel } from "../structures/channel.ts";
-import { Guild } from "../structures/guild.ts";
-import { Member } from "../structures/member.ts";
-import { Message } from "../structures/message.ts";
-import { Role } from "../structures/role.ts";
+import {
+  Channel,
+  Guild,
+  Member,
+  Message,
+  Role,
+} from "../structures/structures.ts";
 import {
   DiscordPayload,
   Emoji,
@@ -75,8 +77,12 @@ export interface EventHandlers {
   channelDelete?: (channel: Channel) => unknown;
   debug?: (args: DebugArg) => unknown;
   dispatchRequirements?: (data: DiscordPayload, shardID: number) => unknown;
-  guildBanAdd?: (guild: Guild, user: Member | UserPayload) => unknown;
-  guildBanRemove?: (guild: Guild, user: Member | UserPayload) => unknown;
+  guildBanAdd?: (guild: Guild, user: UserPayload, member?: Member) => unknown;
+  guildBanRemove?: (
+    guild: Guild,
+    user: UserPayload,
+    member?: Member,
+  ) => unknown;
   guildCreate?: (guild: Guild) => unknown;
   guildLoaded?: (guild: Guild) => unknown;
   guildUpdate?: (guild: Guild, changes: GuildUpdateChange[]) => unknown;
@@ -87,7 +93,11 @@ export interface EventHandlers {
     cachedEmojis: Emoji[],
   ) => unknown;
   guildMemberAdd?: (guild: Guild, member: Member) => unknown;
-  guildMemberRemove?: (guild: Guild, member: Member | UserPayload) => unknown;
+  guildMemberRemove?: (
+    guild: Guild,
+    user: UserPayload,
+    member?: Member,
+  ) => unknown;
   guildMemberUpdate?: (
     guild: Guild,
     member: Member,
@@ -95,7 +105,7 @@ export interface EventHandlers {
   ) => unknown;
   heartbeat?: () => unknown;
   messageCreate?: (message: Message) => unknown;
-  messageDelete?: (message: Message | PartialMessage) => unknown;
+  messageDelete?: (partial: PartialMessage, message?: Message) => unknown;
   messageUpdate?: (message: Message, cachedMessage: OldMessage) => unknown;
   nicknameUpdate?: (
     guild: Guild,
@@ -111,14 +121,16 @@ export interface EventHandlers {
   rawGateway?: (data: unknown) => unknown;
   ready?: () => unknown;
   reactionAdd?: (
-    message: Message | MessageReactionUncachedPayload,
+    payload: MessageReactionUncachedPayload,
     emoji: ReactionPayload,
     userID: string,
+    message?: Message,
   ) => unknown;
   reactionRemove?: (
-    message: Message | MessageReactionUncachedPayload,
+    payload: MessageReactionUncachedPayload,
     emoji: ReactionPayload,
     userID: string,
+    message?: Message,
   ) => unknown;
   reactionRemoveAll?: (data: BaseMessageReactionPayload) => unknown;
   reactionRemoveEmoji?: (data: MessageReactionRemoveEmojiPayload) => unknown;

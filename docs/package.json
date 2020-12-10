@@ -2,7 +2,7 @@
   "name": "discordeno",
   "version": "0.0.1",
   "description": "Docs for Discordeno",
-  "repository": "https://github.com/Skillz4Killz/Discordeno",
+  "repository": "https://github.com/discordeno/discordeno",
   "scripts": {
     "docs:dev": "vuepress dev src --host localhost",
     "docs:build": "vuepress build src"
