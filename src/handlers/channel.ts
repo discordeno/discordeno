@@ -13,13 +13,16 @@ import {
   GetMessagesBefore,
   MessageContent,
   MessageCreateOptions,
+  Overwrite,
   Permission,
   Permissions,
   RawOverwrite,
   WebhookPayload,
 } from "../types/types.ts";
+import { cache } from "../utils/cache.ts";
 import { endpoints } from "../utils/constants.ts";
 import {
+  botDependsPermission,
   botHasChannelPermissions,
   calculateBits,
 } from "../utils/permissions.ts";
@@ -401,6 +404,46 @@ export async function editChannel(
     user_limit: options.userLimit,
     permission_overwrites: options.overwrites?.map(
       (overwrite) => {
+        return {
+          ...overwrite,
+          allow: calculateBits(overwrite.allow),
+          deny: calculateBits(overwrite.deny),
+        };
+      },
+    ),
+  };
+
+  return RequestManager.patch(
+    endpoints.GUILD_CHANNEL(channelID),
+    {
+      ...payload,
+      reason,
+    },
+  );
+}
+
+export async function editChannelOverwrite(
+  channelID: string,
+  overwrites: Overwrite[],
+  reason?: string,
+) {
+  const gid = cache.channels.get(channelID)!.guildID;
+
+  overwrites.forEach(async function (overwrite) {
+    await botDependsPermission(
+      gid,
+      [
+        "MANAGE_CHANNELS",
+        "MANAGE_ROLES",
+        ...overwrite.allow,
+        ...overwrite.deny,
+      ],
+    );
+  });
+
+  const payload = {
+    permission_overwrites: overwrites.map(
+      function (overwrite) {
         return {
           ...overwrite,
           allow: calculateBits(overwrite.allow),

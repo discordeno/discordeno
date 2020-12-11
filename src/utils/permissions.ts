@@ -1,7 +1,12 @@
 import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../module/client.ts";
 import { Guild, Role } from "../structures/structures.ts";
-import { Permission, Permissions, RawOverwrite } from "../types/types.ts";
+import {
+  Errors,
+  Permission,
+  Permissions,
+  RawOverwrite,
+} from "../types/types.ts";
 
 /** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
 export async function memberIDHasPermission(
@@ -79,6 +84,45 @@ export async function botHasPermission(
   return permissions.every((permission) =>
     permissionBits & BigInt(Permissions[permission])
   );
+}
+
+export async function botDependsPermission(
+  guildID: string,
+  permissions: Permission[],
+) {
+  const guild = await cacheHandlers.get("guilds", guildID);
+  if (!guild) return false;
+
+  // Check if the bot is the owner of the guild, if it is, returns true
+  if (guild.ownerID === botID) return true;
+
+  const member = (await cacheHandlers.get("members", botID))?.guilds.get(
+    guildID,
+  );
+  if (!member) return false;
+
+  // The everyone role is not in member.roles
+  const permissionBits = [...member.roles, guild.id]
+    .map(function (id) {
+      return guild.roles.get(id)!;
+    })
+    // Remove any edge case undefined
+    .filter(function (r) {
+      return r;
+    })
+    .reduce(function (bits, data) {
+      bits |= BigInt(data.permissions);
+
+      return bits;
+    }, BigInt(0));
+
+  if (permissionBits & BigInt(Permissions.ADMINISTRATOR)) return true;
+
+  permissions.forEach(function (permission) {
+    if (!(permissionBits & BigInt(Permissions[permission]))) {
+      throw new Error(Errors[`MISSING_${permission}` as Errors]);
+    }
+  });
 }
 
 /** Checks if the bot has the permissions in a channel */
