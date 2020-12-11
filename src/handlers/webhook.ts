@@ -121,8 +121,6 @@ export function getWebhook(webhookID: string) {
  * 
  * Global commands are cached for **1 hour**. That means that new global commands will fan out slowly across all guilds, and will be guaranteed to be updated in an hour.
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
- * 
- * To make a **global** Slash Command, make an HTTP POST call like this:
  */
 export function createSlashCommand(options: CreateSlashCommandOptions) {
   // Use ... for content length due to unicode characters and js .length handling
