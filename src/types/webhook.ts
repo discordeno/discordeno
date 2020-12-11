@@ -173,9 +173,9 @@ export interface SlashCommandCallbackData {
   /** supports up to 10 embeds */
   embeds?: Embed[];
   /** allowed mentions for the message */
-  mentions?: AllowedMentions;
+  allowed_mentions?: AllowedMentions;
   /** acceptable values are message flags */
-  flags: number;
+  flags?: number;
 }
 
 export enum InteractionType {
@@ -184,16 +184,26 @@ export enum InteractionType {
 }
 
 export enum InteractionResponseType {
+  /** ACK a `Ping` */
   PONG = 1,
+  /** ACK a command without sending a message, eating the user's input */
   ACKNOWLEDGE = 2,
+  /** respond with a message, eating the user's input */
   CHANNEL_MESSAGE = 3,
+  /** respond with a message, showing the user's input */
   CHANNEL_MESSAGE_WITH_SOURCE = 4,
+  /** ACK a command without sending a message, showing the user's input */
   ACK_WITH_SOURCE = 5,
 }
 
 export interface EditSlashCommandOptions {
   id: string;
   guildID?: string;
+}
+
+export interface ExecuteSlashCommandOptions {
+  type: InteractionResponseType;
+  data: SlashCommandCallbackData;
 }
 
 export interface EditSlashResponseOptions extends SlashCommandCallbackData {

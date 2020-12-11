@@ -6,9 +6,9 @@ import {
   EditSlashCommandOptions,
   EditSlashResponseOptions,
   Errors,
+  ExecuteSlashCommandOptions,
   ExecuteWebhookOptions,
   MessageCreateOptions,
-  SlashCommandCallbackData,
   UpsertSlashCommandOptions,
   WebhookCreateOptions,
   WebhookPayload,
@@ -195,8 +195,12 @@ export function deleteSlashCommand(id: string, guildID?: string) {
 export function executeSlashCommand(
   id: string,
   token: string,
-  options: SlashCommandCallbackData,
+  options: ExecuteSlashCommandOptions,
 ) {
+  if (!(options.data.allowed_mentions)) {
+    options.data.allowed_mentions = { parse: [] };
+  }
+
   return RequestManager.post(endpoints.INTERACTION_ID_TOKEN(id, token), {
     ...options,
   });
