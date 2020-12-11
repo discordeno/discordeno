@@ -12,6 +12,7 @@ import { endpoints } from "../utils/constants.ts";
 import { botID } from "../module/client.ts";
 import { botHasChannelPermissions } from "../utils/permissions.ts";
 import { urlToBase64 } from "../utils/utils.ts";
+import { cache } from "../utils/cache.ts";
 
 /** Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
 *
@@ -193,6 +194,17 @@ export function executeSlashCommand(
   token: string,
   options: ExecuteSlashCommandOptions,
 ) {
+  // If its already been executed, we need to send a followup response
+  if (cache.executedSlashCommands.has(token)) {
+    return RequestManager.post(endpoints.WEBHOOK(botID, token), {
+      ...options,
+    });
+  } 
+    
+  // Expire in 15 minutes
+  cache.executedSlashCommands.set(token, id);
+  setTimeout(() => cache.executedSlashCommands.delete(token), Date.now() + 900000);
+
   return RequestManager.post(endpoints.INTERACTION_ID_TOKEN(id, token), {
     ...options,
   });
@@ -200,28 +212,26 @@ export function executeSlashCommand(
 
 /** To delete your initial response to an slash command. If a message id is not provided, it will default to deleting the original response. */
 export function deleteSlashResponse(
-  id: string,
   token: string,
   messageID?: string,
 ) {
   if (!messageID) {
     return RequestManager.delete(
-      endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token),
+      endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
     );
   }
   return RequestManager.delete(
-    endpoints.INTERACTION_ID_TOKEN_MESSAGEID(id, token, messageID),
+    endpoints.INTERACTION_ID_TOKEN_MESSAGEID(botID, token, messageID),
   );
 }
 
 /** To edit your response to an slash command. If a messageID is not provided it will default to editing the original response. */
 export function editSlashResponse(
-  id: string,
   token: string,
   options: EditSlashResponseOptions,
 ) {
   return RequestManager.patch(
-    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(id, token),
+    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
     options,
   );
 }

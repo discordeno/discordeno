@@ -112,8 +112,6 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/interactions/${id}/${token}/callback`,
   INTERACTION_ORIGINAL_ID_TOKEN: (id: string, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages/@original`,
-  INTERACTION_ID_TOKEN_MESSAGES: (id: string, token: string) =>
-    `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages`,
   INTERACTION_ID_TOKEN_MESSAGEID: (
     id: string,
     token: string,
