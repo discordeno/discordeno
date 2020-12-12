@@ -103,14 +103,10 @@ export async function botDependsPermission(
 
   // The everyone role is not in member.roles
   const permissionBits = [...member.roles, guild.id]
-    .map(function (id) {
-      return guild.roles.get(id)!;
-    })
+    .map((id) => guild.roles.get(id)!)
     // Remove any edge case undefined
-    .filter(function (r) {
-      return r;
-    })
-    .reduce(function (bits, data) {
+    .filter((role) => role)
+    .reduce((bits, data) => {
       bits |= BigInt(data.permissions);
 
       return bits;
@@ -118,7 +114,7 @@ export async function botDependsPermission(
 
   if (permissionBits & BigInt(Permissions.ADMINISTRATOR)) return true;
 
-  permissions.forEach(function (permission) {
+  permissions.forEach((permission) => {
     if (!(permissionBits & BigInt(Permissions[permission]))) {
       throw new Error(Errors[`MISSING_${permission}` as Errors]);
     }
@@ -322,8 +318,8 @@ export async function dependsChannelPermissions(
       // If this role denies it we need to save and check if another role allows it, allows > deny
       if (BigInt(denyBits) & BigInt(Permissions[perm])) {
         // This role denies his perm, but before denying we need to check all other roles if any allow as allow > deny
-        const isAllowed = rolesOverwrites.some((o) =>
-          BigInt(o.allow) & BigInt(Permissions[perm])
+        const isAllowed = rolesOverwrites.some((over) =>
+          BigInt(over.allow) & BigInt(Permissions[perm])
         );
         if (isAllowed) continue;
         // This permission is in fact denied. Since Roles overrule everything below here we can cancel out here
