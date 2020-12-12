@@ -263,7 +263,7 @@ export async function editMessage(
     content.tts &&
     !hasSendTtsMessagesPerm
   ) {
-    throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
+    throw new Error(Errors.MISSING_SEND_TTS_MESSAGES);
   }
 
   if (content.content && content.content.length > 2000) {

@@ -146,7 +146,7 @@ export async function sendMessage(
     content.tts &&
     !hasSendTtsMessagesPerm
   ) {
-    throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
+    throw new Error(Errors.MISSING_SEND_TTS_MESSAGES);
   }
 
   const hasEmbedLinksPerm = await botHasChannelPermissions(
