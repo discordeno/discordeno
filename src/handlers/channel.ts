@@ -13,17 +13,13 @@ import {
   GetMessagesBefore,
   MessageContent,
   MessageCreateOptions,
-  Overwrite,
   Permission,
   Permissions,
   RawOverwrite,
   WebhookPayload,
 } from "../types/types.ts";
-import { cache } from "../utils/cache.ts";
 import { endpoints } from "../utils/constants.ts";
 import {
-  botDependsChannelPermissions,
-  botDependsPermission,
   botHasChannelPermissions,
   calculateBits,
 } from "../utils/permissions.ts";
@@ -405,49 +401,6 @@ export async function editChannel(
     user_limit: options.userLimit,
     permission_overwrites: options.overwrites?.map(
       (overwrite) => {
-        return {
-          ...overwrite,
-          allow: calculateBits(overwrite.allow),
-          deny: calculateBits(overwrite.deny),
-        };
-      },
-    ),
-  };
-
-  return RequestManager.patch(
-    endpoints.GUILD_CHANNEL(channelID),
-    {
-      ...payload,
-      reason,
-    },
-  );
-}
-
-export async function editChannelOverwrite(
-  channelID: string,
-  overwrites: Overwrite[],
-  reason?: string,
-) {
-  const guildID = cache.channels.get(channelID)?.guildID;
-  // Check if channel is in a guild, if not permissions cannot be set.
-  if (!guildID) throw new Error(Errors.CHANNEL_NOT_IN_GUILD);
-
-  await botDependsChannelPermissions(channelID, ["MANAGE_CHANNELS"]);
-
-  overwrites.forEach(async function (overwrite) {
-    await botDependsPermission(
-      guildID,
-      [
-        "MANAGE_ROLES",
-        ...overwrite.allow,
-        ...overwrite.deny,
-      ],
-    );
-  });
-
-  const payload = {
-    permission_overwrites: overwrites.map(
-      function (overwrite) {
         return {
           ...overwrite,
           allow: calculateBits(overwrite.allow),
