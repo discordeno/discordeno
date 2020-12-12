@@ -29,9 +29,9 @@ If you do not wish to use a boilerplate, you may continue reading.
 Here's a minimal example to get started with:
 
 ```typescript
-import StartBot, { sendMessage, Intents } from "https://deno.land/x/discordeno@9.4.0/mod.ts";
+import startBot, { sendMessage, Intents } from "https://deno.land/x/discordeno@9.4.0/mod.ts";
 
-StartBot({
+startBot({
   token: "BOT TOKEN",
   intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
   eventHandlers: {
