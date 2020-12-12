@@ -91,7 +91,7 @@ export async function botDependsPermission(
   permissions: Permission[],
 ) {
   const guild = await cacheHandlers.get("guilds", guildID);
-  if (!guild) throw new Error("Guild is not cached");
+  if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
   // Check if the bot is the owner of the guild, if it is, returns true
   if (guild.ownerID === botID) return true;
@@ -99,7 +99,7 @@ export async function botDependsPermission(
   const member = (await cacheHandlers.get("members", botID))?.guilds.get(
     guildID,
   );
-  if (!member) throw new Error("Member is not cached");
+  if (!member) throw new Error(Errors.MEMBER_NOT_FOUND);
 
   // The everyone role is not in member.roles
   const permissionBits = [...member.roles, guild.id]
@@ -254,7 +254,7 @@ export async function dependsChannelPermissions(
   if (!channel.guildID) return true;
 
   const guild = await cacheHandlers.get("guilds", channel.guildID);
-  if (!guild) throw new Error("Guild is not cached");
+  if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
   if (guild.ownerID === memberID) return true;
   if (
@@ -265,7 +265,7 @@ export async function dependsChannelPermissions(
   const member = (await cacheHandlers.get("members", memberID))?.guilds.get(
     guild.id,
   );
-  if (!member) throw new Error("Member is not cached");
+  if (!member) throw new Error(Errors.MEMBER_NOT_FOUND);
 
   let memberOverwrite: RawOverwrite | undefined;
   let everyoneOverwrite: RawOverwrite | undefined;
