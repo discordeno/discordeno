@@ -91,7 +91,7 @@ export async function botDependsPermission(
   permissions: Permission[],
 ) {
   const guild = await cacheHandlers.get("guilds", guildID);
-  if (!guild) return false;
+  if (!guild) throw new Error("GUILD_NOT_FOUND");
 
   // Check if the bot is the owner of the guild, if it is, returns true
   if (guild.ownerID === botID) return true;
@@ -99,7 +99,7 @@ export async function botDependsPermission(
   const member = (await cacheHandlers.get("members", botID))?.guilds.get(
     guildID,
   );
-  if (!member) return false;
+  if (!member) throw new Error("MEMBER_NOT_FOUND");
 
   // The everyone role is not in member.roles
   const permissionBits = [...member.roles, guild.id]
@@ -237,6 +237,123 @@ export async function hasChannelPermissions(
   // Some permission was not explicitly allowed so we default to checking role perms directly
   const hasPerms = await botHasPermission(guild.id, permissions);
   return hasPerms;
+}
+
+/** Checks if the bot has the permissions in a channel, if not error will thrown */
+export function botDependsChannelPermissions(
+  channelID: string,
+  permissions: Permission[],
+) {
+  return dependsChannelPermissions(channelID, botID, permissions);
+}
+
+/** Checks if a user has permissions in a channel, if not error will thrown */
+export async function dependsChannelPermissions(
+  channelID: string,
+  memberID: string,
+  permissions: Permission[],
+) {
+  const channel = await cacheHandlers.get("channels", channelID);
+  if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);
+  if (!channel.guildID) return true;
+
+  const guild = await cacheHandlers.get("guilds", channel.guildID);
+  if (!guild) throw new Error("GUILD_NOT_FOUND");
+
+  if (guild.ownerID === memberID) return true;
+  if (
+    await memberIDHasPermission(memberID, guild.id, ["ADMINISTRATOR"])
+  ) {
+    return true;
+  }
+  const member = (await cacheHandlers.get("members", memberID))?.guilds.get(
+    guild.id,
+  );
+  if (!member) throw new Error("MEMBER_NOT_FOUND");
+
+  let memberOverwrite: RawOverwrite | undefined;
+  let everyoneOverwrite: RawOverwrite | undefined;
+  let rolesOverwrites: RawOverwrite[] = [];
+
+  for (const overwrite of channel.permissionOverwrites || []) {
+    // If the overwrite on this channel is specific to this member
+    if (overwrite.id === memberID) memberOverwrite = overwrite;
+    // If it is the everyone role overwrite
+    if (overwrite.id === guild.id) everyoneOverwrite = overwrite;
+    // If it is one of the roles the member has
+    if (member.roles.includes(overwrite.id)) rolesOverwrites.push(overwrite);
+  }
+
+  const allowedPermissions = new Set<Permission>();
+
+  // Member perms override everything so we must check them first
+  if (memberOverwrite) {
+    const allowBits = memberOverwrite.allow;
+    const denyBits = memberOverwrite.deny;
+    for (const perm of permissions) {
+      // One of the necessary permissions is denied. Since this is main permission we can cancel if its denied.
+      if (BigInt(denyBits) & BigInt(Permissions[perm])) {
+        throw new Error(Errors[`MISSING_${perm}` as Errors]);
+      }
+      // Already allowed perm
+      if (allowedPermissions.has(perm)) continue;
+
+      // This perm is allowed so we save it
+      if (BigInt(allowBits) & BigInt(Permissions[perm])) {
+        allowedPermissions.add(perm);
+      }
+    }
+  }
+
+  // Check the necessary permissions for roles
+  for (const perm of permissions) {
+    // If this is already allowed, skip
+    if (allowedPermissions.has(perm)) continue;
+
+    for (const overwrite of rolesOverwrites) {
+      const allowBits = overwrite.allow;
+      // This perm is allowed so we save it
+      if (BigInt(allowBits) & BigInt(Permissions[perm])) {
+        allowedPermissions.add(perm);
+        break;
+      }
+
+      const denyBits = overwrite.deny;
+      // If this role denies it we need to save and check if another role allows it, allows > deny
+      if (BigInt(denyBits) & BigInt(Permissions[perm])) {
+        // This role denies his perm, but before denying we need to check all other roles if any allow as allow > deny
+        const isAllowed = rolesOverwrites.some((o) =>
+          BigInt(o.allow) & BigInt(Permissions[perm])
+        );
+        if (isAllowed) continue;
+        // This permission is in fact denied. Since Roles overrule everything below here we can cancel out here
+        throw new Error(Errors[`MISSING_${perm}` as Errors]);
+      }
+    }
+  }
+
+  if (everyoneOverwrite) {
+    const allowBits = everyoneOverwrite.allow;
+    const denyBits = everyoneOverwrite.deny;
+    for (const perm of permissions) {
+      // Already allowed perm
+      if (allowedPermissions.has(perm)) continue;
+      // One of the necessary permissions is denied. Since everyone overwrite overrides role perms we can cancel here
+      if (BigInt(denyBits) & BigInt(Permissions[perm])) {
+        throw new Error(Errors[`MISSING_${perm}` as Errors]);
+      }
+      // This perm is allowed so we save it
+      if (BigInt(allowBits) & BigInt(Permissions[perm])) {
+        allowedPermissions.add(perm);
+      }
+    }
+  }
+
+  // Is there any remaining permission to check role perms or can we determine that permissions are allowed
+  if (permissions.every((perm) => allowedPermissions.has(perm))) return true;
+
+  // Some permission was not explicitly allowed so we default to checking role perms directly
+  return await botDependsPermission(guild.id, permissions);
 }
 
 /** This function converts a bitwise string to permission strings */

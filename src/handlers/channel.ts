@@ -22,6 +22,7 @@ import {
 import { cache } from "../utils/cache.ts";
 import { endpoints } from "../utils/constants.ts";
 import {
+  botDependsChannelPermissions,
   botDependsPermission,
   botHasChannelPermissions,
   calculateBits,
@@ -427,13 +428,16 @@ export async function editChannelOverwrite(
   overwrites: Overwrite[],
   reason?: string,
 ) {
-  const gid = cache.channels.get(channelID)!.guildID;
+  const guildID = cache.channels.get(channelID)!.guildID;
+  // Check if channel is in a guild, if not permissions cannot be set.
+  if (!guildID) throw new Error(Errors.CHANNEL_NOT_IN_GUILD);
+
+  await botDependsChannelPermissions(channelID, ["MANAGE_CHANNELS"]);
 
   overwrites.forEach(async function (overwrite) {
     await botDependsPermission(
-      gid,
+      guildID,
       [
-        "MANAGE_CHANNELS",
         "MANAGE_ROLES",
         ...overwrite.allow,
         ...overwrite.deny,
