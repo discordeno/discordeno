@@ -57,6 +57,10 @@ export async function executeWebhook(
     throw new Error(Errors.INVALID_WEBHOOK_OPTIONS);
   }
 
+  if (options.content && options.content.length > 2000) {
+    throw Error(Errors.MESSAGE_MAX_LENGTH);
+  }
+
   if (options.embeds && options.embeds.length > 10) {
     options.embeds.splice(10);
   }
@@ -112,6 +116,10 @@ export function editWebhookMessage(
   messageID: string,
   options: EditWebhookMessageOptions,
 ) {
+  if (options.content && options.content.length > 2000) {
+    throw Error(Errors.MESSAGE_MAX_LENGTH);
+  }
+
   if (options.embeds && options.embeds.length > 10) {
     options.embeds.splice(10);
   }
