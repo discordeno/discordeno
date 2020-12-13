@@ -1,6 +1,7 @@
 import { RequestManager } from "../module/requestManager.ts";
 import { structures } from "../structures/structures.ts";
 import {
+  EditWebhookMessageOptions,
   Errors,
   ExecuteWebhookOptions,
   MessageCreateOptions,
@@ -103,4 +104,62 @@ export async function executeWebhook(
 
 export function getWebhook(webhookID: string) {
   return RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
+}
+
+export function editWebhookMessage(
+  webhookID: string,
+  webhookToken: string,
+  messageID: string,
+  options: EditWebhookMessageOptions,
+) {
+  if (options.embeds && options.embeds.length > 10) {
+    options.embeds.splice(10);
+  }
+
+  if (options.allowed_mentions) {
+    if (options.allowed_mentions.users?.length) {
+      if (options.allowed_mentions.parse.includes("users")) {
+        options.allowed_mentions.parse = options.allowed_mentions.parse.filter((
+          p,
+        ) => p !== "users");
+      }
+
+      if (options.allowed_mentions.users.length > 100) {
+        options.allowed_mentions.users = options.allowed_mentions.users.slice(
+          0,
+          100,
+        );
+      }
+    }
+
+    if (options.allowed_mentions.roles?.length) {
+      if (options.allowed_mentions.parse.includes("roles")) {
+        options.allowed_mentions.parse = options.allowed_mentions.parse.filter((
+          p,
+        ) => p !== "roles");
+      }
+
+      if (options.allowed_mentions.roles.length > 100) {
+        options.allowed_mentions.roles = options.allowed_mentions.roles.slice(
+          0,
+          100,
+        );
+      }
+    }
+  }
+
+  return RequestManager.patch(
+    endpoints.WEBHOOK_EDIT(webhookID, webhookToken, messageID),
+    { ...options, allowed_mentions: options.allowed_mentions },
+  );
+}
+
+export function deleteWebhookMessage(
+  webhookID: string,
+  webhookToken: string,
+  messageID: string,
+) {
+  return RequestManager.delete(
+    endpoints.WEBHOOK_DELETE(webhookID, webhookToken, messageID),
+  );
 }
