@@ -237,7 +237,6 @@ export async function throwOnMissingChannelPermission(
     memberID,
     permissions,
   );
-  console.log("calc: ", calculated);
   if (calculated === true) return true;
 
   throw new Error(Errors[`MISSING_${calculated}` as Errors]);
