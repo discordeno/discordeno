@@ -1,3 +1,4 @@
+import { AllowedMentions } from "./channel.ts";
 import { UserPayload } from "./guild.ts";
 import { Embed } from "./message.ts";
 
@@ -58,4 +59,10 @@ export interface ExecuteWebhookOptions {
     /** Array of user_ids to mention (Max size of 100) */
     users?: string[];
   };
+}
+
+export interface EditWebhookMessageOptions {
+  content?: string;
+  embeds?: Embed[];
+  allowed_mentions?: AllowedMentions;
 }

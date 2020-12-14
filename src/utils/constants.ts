@@ -96,6 +96,10 @@ export const endpoints = {
   WEBHOOK: (id: string, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}`,
   WEBHOOK_ID: (id: string) => `${baseEndpoints.BASE_URL}/webhooks/${id}`,
+  WEBHOOK_EDIT: (id: string, token: string, messageID: string) =>
+    `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages/${messageID}`,
+  WEBHOOK_DELETE: (id: string, token: string, messageID: string) =>
+    `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages/${messageID}`,
 
   // User endpoints
   USER: (id: string) => `${baseEndpoints.BASE_URL}/users/${id}`,
