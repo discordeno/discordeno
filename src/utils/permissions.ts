@@ -14,11 +14,11 @@ export async function calculateChannelPermissions(
   permissions: Permission[],
 ) {
   const channel = await cacheHandlers.get("channels", channelID);
-  if (!channel) return "CHANNEL_NOT_FOUND";
+  if (!channel) throw Error(Errors.CHANNEL_NOT_FOUND);
   if (!channel.guildID) return true;
 
   const guild = await cacheHandlers.get("guilds", channel.guildID);
-  if (!guild) return "GUILD_NOT_FOUND";
+  if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
 
   if (guild.ownerID === memberID) return true;
 
@@ -32,7 +32,7 @@ export async function calculateChannelPermissions(
   const member = (await cacheHandlers.get("members", memberID))?.guilds.get(
     guild.id,
   );
-  if (!member) return "MEMBER_NOT_FOUND";
+  if (!member) throw Error(Errors.MEMBER_NOT_FOUND);
 
   let memberOverwrite: RawOverwrite | undefined;
   let everyoneOverwrite: RawOverwrite | undefined;
@@ -112,16 +112,16 @@ export async function calculateChannelPermissions(
   if (permissions.every((perm) => allowedPermissions.has(perm))) return true;
 
   // Some permission was not explicitly allowed so we default to checking role perms directly
-  return await calculateServerPermissions(memberID, guild.id, permissions);
+  return calculateServerPermissions(memberID, guild.id, permissions);
 }
 
 export async function calculateServerPermissions(
   memberID: string,
   guildID: string,
   permissions: Permission[],
-): Promise<true | "GUILD_NOT_FOUND" | "MEMBER_NOT_FOUND" | Permission> {
+) {
   const guild = await cacheHandlers.get("guilds", guildID);
-  if (!guild) return "GUILD_NOT_FOUND";
+  if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
 
   // Check if the bot is the owner of the guild, if it is, returns true
   if (memberID === guild.ownerID) return true;
@@ -129,7 +129,7 @@ export async function calculateServerPermissions(
   const member = (await cacheHandlers.get("members", botID))?.guilds.get(
     guildID,
   );
-  if (!member) return "MEMBER_NOT_FOUND";
+  if (!member) throw Error(Errors.MEMBER_NOT_FOUND);
 
   const permissionBits = [...member.roles, guild.id]
     .map((id) => guild.roles.get(id)!)
@@ -223,7 +223,7 @@ export async function botThrowOnMissingChannelPermission(
   channelID: string,
   permissions: Permission[],
 ) {
-  return await throwOnMissingChannelPermission(channelID, botID, permissions);
+  return throwOnMissingChannelPermission(channelID, botID, permissions);
 }
 
 /** Checks if a user has permissions in a channel, if not error will thrown */
