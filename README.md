@@ -7,11 +7,10 @@
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
 
 - First-class TypeScript & JavaScript support
-- Security & stable
+- Secure & stable
 - Builtin Documentation
 - Minimalistic
-- Functional API
-- Actively maintained
+- Function-based API
 
 ### Beginner Developers
 
