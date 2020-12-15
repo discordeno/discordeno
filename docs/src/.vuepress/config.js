@@ -9,7 +9,7 @@ module.exports = {
   description,
   head: [
     ["link", { rel: "icon", href: "/favicon.png" }],
-    ["meta", { name: "theme-color", content: "#3eaf7c" }],
+    ["meta", { name: "theme-color", content: "#7289DA" }],
     ["meta", { name: "apple-mobile-web-app-capable", content: "yes" }],
     [
       "meta",
