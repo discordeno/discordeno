@@ -1,6 +1,11 @@
 import { Collection, createNewProp, Guild } from "../../mod.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
-import { ChannelCreatePayload, ChannelType, RawOverwrite, Unpromise } from "../types/types.ts";
+import {
+  ChannelCreatePayload,
+  ChannelType,
+  RawOverwrite,
+  Unpromise,
+} from "../types/types.ts";
 import { cache } from "../utils/cache.ts";
 import { Message } from "./message.ts";
 
@@ -9,11 +14,11 @@ const baseChannel: any = {
     return cache.guilds.get(this.guildID);
   },
   get messages() {
-    return cache.messages.filter(m => m.channelID === this.id);
+    return cache.messages.filter((m) => m.channelID === this.id);
   },
   get mention() {
     return `<#${this.id}>`;
-  }
+  },
 };
 
 export async function createChannel(
@@ -45,7 +50,9 @@ export async function createChannel(
     userLimit: createNewProp(userLimit),
     rateLimitPerUser: createNewProp(rateLimitPerUser),
     parentID: createNewProp(parentID || undefined),
-    lastPinTimestamp: createNewProp(lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined),
+    lastPinTimestamp: createNewProp(
+      lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined,
+    ),
     permissionOverwrites: createNewProp(permission_overwrites || []),
     nsfw: createNewProp(data.nsfw || false),
   });
@@ -83,7 +90,7 @@ export interface Channel {
   permissionOverwrites: RawOverwrite[];
   /** Whether this channel is nsfw or not */
   nsfw: boolean;
-  
+
   // GETTERS
 
   /** 

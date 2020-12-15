@@ -35,5 +35,5 @@ export async function urlToBase64(url: string) {
 
 /** Allows easy way to add a prop to a base object when needing to use complicated getters solution. */
 export function createNewProp(value: any) {
-  return { configurable: true, enumerable: true, writable: true, value }
+  return { configurable: true, enumerable: true, writable: true, value };
 }

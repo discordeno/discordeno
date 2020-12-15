@@ -1,4 +1,21 @@
 import { MessageCreateOptions, Unpromise } from "../types/types.ts";
+import { cache } from "../utils/cache.ts";
+
+const baseMessage: any = {
+  get guild() {
+    return cache.guilds.get(this.guildID);
+  },
+  get member() {
+    return cache.members.get(this.authorID);
+  },
+  get guildMember() {
+    return this.member.guilds.get(this.guildID);
+  },
+  get link() {
+    return `https://discord.com/channels/${this.guildID ||
+      "@me"}/${this.channelID}/${this.id}`;
+  },
+};
 
 export async function createMessage(data: MessageCreateOptions) {
   const {
