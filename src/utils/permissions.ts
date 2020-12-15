@@ -244,9 +244,6 @@ export async function higherRolePosition(
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return;
 
-  // If the bot is the owner of the guild, higher-role-checking is not necessary.
-  if (guild.ownerID === botID) return true;
-
   const role = guild.roles.get(roleID);
   const otherRole = guild.roles.get(otherRoleID);
   if (!role || !otherRole) return;
