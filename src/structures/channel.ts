@@ -1,6 +1,6 @@
 import { Collection, createNewProp, Guild } from "../../mod.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
-import { ChannelCreatePayload, RawOverwrite, Unpromise } from "../types/types.ts";
+import { ChannelCreatePayload, ChannelType, RawOverwrite, Unpromise } from "../types/types.ts";
 import { cache } from "../utils/cache.ts";
 import { Message } from "./message.ts";
 
@@ -55,6 +55,18 @@ export async function createChannel(
 }
 
 export interface Channel {
+  /** The id of this channel */
+  id: string;
+  /** Sorting position of the channel */
+  position?: number;
+  /** The name of the channel (2-100 characters) */
+  name?: string;
+  /** The channel topic (0-1024 characters) */
+  topic?: string;
+  /** The bitrate (in bits) of the voice channel */
+  bitrate?: number;
+  /** The type of the channel */
+  type: ChannelType;
   /** The guild id of the channel if it is a guild channel. */
   guildID: string;
   /** The id of the last message sent in this channel */
