@@ -190,6 +190,8 @@ export function deleteSlashCommand(id: string, guildID?: string) {
 /**
  * Send a response to a users slash command. The command data will have the id and token necessary to respond.
  * Interaction `tokens` are valid for **15 minutes** and can be used to send followup messages.
+ * 
+ * NOTE: By default we will suppress mentions. To enable mentions, just pass any mentions object.
  */
 export function executeSlashCommand(
   id: string,
@@ -217,7 +219,7 @@ export function executeSlashCommand(
   });
 }
 
-/** To delete your initial response to an slash command. If a message id is not provided, it will default to deleting the original response. */
+/** To delete your response to a slash command. If a message id is not provided, it will default to deleting the original response. */
 export function deleteSlashResponse(
   token: string,
   messageID?: string,
@@ -232,7 +234,7 @@ export function deleteSlashResponse(
   );
 }
 
-/** To edit your response to an slash command. If a messageID is not provided it will default to editing the original response. */
+/** To edit your response to a slash command. If a messageID is not provided it will default to editing the original response. */
 export function editSlashResponse(
   token: string,
   options: EditSlashResponseOptions,
