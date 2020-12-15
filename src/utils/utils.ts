@@ -32,3 +32,8 @@ export async function urlToBase64(url: string) {
   const type = url.substring(url.lastIndexOf(".") + 1);
   return `data:image/${type};base64,${imageStr}`;
 }
+
+/** Allows easy way to add a prop to a base object when needing to use complicated getters solution. */
+export function createNewProp(value: any) {
+  return { configurable: true, enumerable: true, writable: true, value }
+}
