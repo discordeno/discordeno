@@ -62,7 +62,10 @@ export async function addRole(
       botsHighestRole.id,
       roleID,
     );
-    if (!hasHigherRolePosition) {
+    if (
+      !hasHigherRolePosition &&
+      (await cacheHandlers.get("guilds", guildID))?.ownerID !== botID
+    ) {
       throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
     }
   }
@@ -93,7 +96,10 @@ export async function removeRole(
       botsHighestRole.id,
       roleID,
     );
-    if (!hasHigherRolePosition) {
+    if (
+      !hasHigherRolePosition &&
+      (await cacheHandlers.get("guilds", guildID))?.ownerID !== botID
+    ) {
       throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
     }
   }
