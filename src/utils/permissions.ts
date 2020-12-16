@@ -8,6 +8,41 @@ import {
   RawOverwrite,
 } from "../types/types.ts";
 
+/** Returns you the permission bits from the member in this guild */
+export async function calculateServerPerm(memberID: string, guildID: string) {
+  const guild = await cacheHandlers.get("guilds", guildID);
+  if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
+
+  // Check if the member is the owner of the guild, if he is, returns admin permissions
+  if (memberID === guild.ownerID) return "8";
+
+  const member = (await cacheHandlers.get("members", botID))?.guilds.get(
+    guildID,
+  );
+  if (!member) throw Error(Errors.MEMBER_NOT_FOUND);
+
+  return [...member.roles, guild.id]
+    .map((id) => guild.roles.get(id)!)
+    // Remove any edge case undefined
+    .filter((role) => role)
+    .reduce((bits, data) => {
+      bits |= BigInt(data.permissions);
+
+      return bits;
+    }, BigInt(0)).toString();
+}
+
+/** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
+export async function hasServerPerm(
+  memberID: string,
+  guildID: string,
+  permissions: Permission[],
+) {
+  const permissionBits = await calculateServerPerm(memberID, guildID);
+
+  return validatePerms(permissionBits, permissions);
+}
+
 /** Checks if the member has this permission in the channel. If the member is an owner or has admin perms it will always be true. */
 export async function hasChannelPermissions(
   channelID: string,
@@ -111,48 +146,6 @@ export async function hasChannelPermissions(
   return hasServerPerm(memberID, guild.id, permissions);
 }
 
-/** Returns you the permission bits from the member in this guild */
-export async function calculateServerPerm(memberID: string, guildID: string) {
-  const guild = await cacheHandlers.get("guilds", guildID);
-  if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
-
-  // Check if the member is the owner of the guild, if he is, returns admin permissions
-  if (memberID === guild.ownerID) return "8";
-
-  const member = (await cacheHandlers.get("members", botID))?.guilds.get(
-    guildID,
-  );
-  if (!member) throw Error(Errors.MEMBER_NOT_FOUND);
-
-  return [...member.roles, guild.id]
-    .map((id) => guild.roles.get(id)!)
-    // Remove any edge case undefined
-    .filter((role) => role)
-    .reduce((bits, data) => {
-      bits |= BigInt(data.permissions);
-
-      return bits;
-    }, BigInt(0)).toString();
-}
-
-/** Checks if the permissions matches the permission bits */
-export function validatePerms(perms: string, permissions: Permission[]) {
-  return permissions.every((permission) =>
-    BigInt(perms) & BigInt(Permissions[permission])
-  );
-}
-
-/** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
-export async function hasServerPerm(
-  memberID: string,
-  guildID: string,
-  permissions: Permission[],
-) {
-  const permissionBits = await calculateServerPerm(memberID, guildID);
-
-  return validatePerms(permissionBits, permissions);
-}
-
 /** Returns you an array of the permissions that are not in totalBits */
 export function missingPermissions(
   totalBits: string,
@@ -182,6 +175,13 @@ export async function throwOnMissingServerPermission(
   }
 }
 
+/** Checks if the permissions matches the permission bits */
+export function validatePerms(perms: string, permissions: Permission[]) {
+  return permissions.every((permission) =>
+    BigInt(perms) & BigInt(Permissions[permission])
+  );
+}
+
 /** This function converts a bitwise string to permission strings */
 export function calculatePermissions(permissionBits: bigint) {
   return Object.keys(Permissions).filter((perm) => {
@@ -198,6 +198,7 @@ export function calculateBits(permissions: Permission[]) {
   ).toString();
 }
 
+/** Gets the highest role from the member in this guild */
 export async function highestRole(guildID: string, memberID: string) {
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return;
@@ -223,6 +224,7 @@ export async function highestRole(guildID: string, memberID: string) {
   return memberHighestRole || (guild.roles.get(guild.id) as Role);
 }
 
+/** Checks if the first role is higher than the second role */
 export async function higherRolePosition(
   guildID: string,
   roleID: string,
@@ -241,4 +243,27 @@ export async function higherRolePosition(
   }
 
   return role.position > otherRole.position;
+}
+
+/** Checks if the member has a higher position than the given role */
+export async function isHigherPosition(
+  guildID: string,
+  memberID: string,
+  compareRoleID: string,
+) {
+  const guild = await cacheHandlers.get("guilds", guildID);
+  if (!guild) return;
+
+  if (guild.ownerID === memberID) return true;
+
+  const memberHighestRole = await highestRole(guildID, memberID);
+  const compareRole = guild.roles.get(compareRoleID);
+  if (!memberHighestRole || !compareRole) return;
+
+  // Rare edge case handling
+  if (memberHighestRole.position === compareRole.position) {
+    return memberHighestRole.id < compareRole.id;
+  }
+
+  return memberHighestRole.position > compareRole.position;
 }
