@@ -9,7 +9,10 @@ import {
 } from "../types/types.ts";
 
 /** Returns you the permission bits from the member in this guild */
-export async function calculateServerPerm(memberID: string, guildID: string) {
+export async function calculateServerPermissions(
+  guildID: string,
+  memberID: string,
+) {
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
 
@@ -33,14 +36,24 @@ export async function calculateServerPerm(memberID: string, guildID: string) {
 }
 
 /** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
-export async function hasServerPerm(
+export async function hasServerPermissions(
+  guildID: string,
   memberID: string,
+  permissions: Permission[],
+) {
+  const permissionBits = await calculateServerPermissions(memberID, guildID);
+
+  return validatePermissions(permissionBits, permissions);
+}
+
+/** Checks if the bot has this permission. If the bot is an owner or has admin perms it will always be true. */
+export async function botHasServerPermissions(
   guildID: string,
   permissions: Permission[],
 ) {
-  const permissionBits = await calculateServerPerm(memberID, guildID);
+  const permissionBits = await calculateServerPermissions(botID, guildID);
 
-  return validatePerms(permissionBits, permissions);
+  return validatePermissions(permissionBits, permissions);
 }
 
 /** Checks if the member has this permission in the channel. If the member is an owner or has admin perms it will always be true. */
@@ -58,7 +71,7 @@ export async function hasChannelPermissions(
 
   if (guild.ownerID === memberID) return true;
 
-  if (hasServerPerm(memberID, guild.id, ["ADMINISTRATOR"])) return true;
+  if (hasServerPermissions(memberID, guild.id, ["ADMINISTRATOR"])) return true;
 
   const member = (await cacheHandlers.get("members", memberID))?.guilds.get(
     guild.id,
@@ -143,7 +156,15 @@ export async function hasChannelPermissions(
   if (permissions.every((perm) => allowedPermissions.has(perm))) return true;
 
   // Some permission was not explicitly allowed so we default to checking role perms directly
-  return hasServerPerm(memberID, guild.id, permissions);
+  return hasServerPermissions(memberID, guild.id, permissions);
+}
+
+/** Checks if the bot has this permission in the channel. If the bot is an owner or has admin perms it will always be true. */
+export async function botHasChannelPermissions(
+  channelID: string,
+  permissions: Permission[],
+) {
+  return hasChannelPermissions(channelID, botID, permissions);
 }
 
 /** Returns you an array of the permissions that are not in totalBits */
@@ -167,7 +188,7 @@ export async function throwOnMissingServerPermission(
   guildID: string,
   permissions: Permission[],
 ) {
-  const permissionBits = await calculateServerPerm(memberID, guildID);
+  const permissionBits = await calculateServerPermissions(memberID, guildID);
 
   const missing = missingPermissions(permissionBits, permissions);
   if (missing.length) {
@@ -175,10 +196,21 @@ export async function throwOnMissingServerPermission(
   }
 }
 
+/** Throws an error if the bot has not the permissions in the given guild */
+export async function botThrowOnMissingServerPermission(
+  guildID: string,
+  permissions: Permission[],
+) {
+  return throwOnMissingServerPermission(botID, guildID, permissions);
+}
+
 /** Checks if the permissions matches the permission bits */
-export function validatePerms(perms: string, permissions: Permission[]) {
+export function validatePermissions(
+  permissionBits: string,
+  permissions: Permission[],
+) {
   return permissions.every((permission) =>
-    BigInt(perms) & BigInt(Permissions[permission])
+    BigInt(permissionBits) & BigInt(Permissions[permission])
   );
 }
 
