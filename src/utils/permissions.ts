@@ -56,6 +56,77 @@ export async function botHasServerPermissions(
   return validatePermissions(permissionBits, permissions);
 }
 
+export async function calculateChannelPermissions(
+  channelID: string,
+  memberID: string,
+) {
+  const channel = await cacheHandlers.get("channels", channelID);
+  if (!channel) throw Error(Errors.CHANNEL_NOT_FOUND);
+  if (!channel.guildID) return "8";
+
+  const guild = await cacheHandlers.get("guilds", channel.guildID);
+  if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
+
+  if (hasServerPermissions(memberID, guild.id, ["ADMINISTRATOR"])) return "8";
+
+  const member = (await cacheHandlers.get("members", memberID))?.guilds.get(
+    guild.id,
+  );
+  if (!member) throw Error(Errors.MEMBER_NOT_FOUND);
+
+  let CHANGE_MY_NAME = new Set<Permission>();
+  const roles = [];
+
+  // add everyone role to roles
+  roles.push(guild.roles.get(guild.id));
+  // add all roles from member to roles
+  member.roles.forEach((roleID) => {
+    const role = guild.roles.get(roleID);
+    roles.push(role);
+  });
+  // add role permissions to CHANGE_MY_NAME
+  roles.forEach((role) => {
+    if (!role?.permissions) return;
+    calculatePermissions(BigInt(role.permissions)).forEach((permission) => {
+      CHANGE_MY_NAME.add(permission);
+    });
+  });
+  // add channel role overwrite permissions to CHANGE_MY_NAME
+  channel.permissionOverwrites?.forEach((overwrite) => {
+    if (!member.roles.includes(overwrite.id)) return;
+    calculatePermissions(BigInt(overwrite.allow)).forEach((permission) => {
+      CHANGE_MY_NAME.add(permission);
+    });
+  });
+  // remove denied channel role overwrite permissions from CHANGE_MY_NAME
+  channel.permissionOverwrites?.forEach((overwrite) => {
+    calculatePermissions(BigInt(overwrite.deny)).forEach((permission) => {
+      CHANGE_MY_NAME.delete(permission);
+    });
+  });
+
+  // check if member specific overwrites exists
+  const memberOverwrite = channel.permissionOverwrites?.filter((overwrite) =>
+    overwrite.id === memberID
+  );
+  if (memberOverwrite) {
+    // add member specific permission to CHANGE_MY_NAME
+    calculatePermissions(BigInt(memberOverwrite[0].allow)).forEach(
+      (permission) => {
+        CHANGE_MY_NAME.add(permission);
+      },
+    );
+    // remove denied member specific permissions from CHANGE_MY_NAME
+    calculatePermissions(BigInt(memberOverwrite[0].deny)).forEach(
+      (permission) => {
+        CHANGE_MY_NAME.delete(permission);
+      },
+    );
+  }
+
+  return calculateBits(Array.from(CHANGE_MY_NAME));
+}
+
 /** Checks if the member has this permission in the channel. If the member is an owner or has admin perms it will always be true. */
 export async function hasChannelPermissions(
   channelID: string,
