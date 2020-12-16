@@ -242,11 +242,7 @@ export async function throwOnMissingChannelPermission(
   throw new Error(Errors[`MISSING_${calculated}` as Errors]);
 }
 
-/**
- * ----------------------
- *      THATS WIP
- * ----------------------
- */
+/** Returns you the permission bits from the member in this guild */
 export async function calculateServerPerm(memberID: string, guildID: string) {
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
@@ -270,23 +266,26 @@ export async function calculateServerPerm(memberID: string, guildID: string) {
     }, BigInt(0)).toString();
 }
 
+/** Checks if the permissions matches the permission bits */
 export function validatePerms(perms: string, permissions: Permission[]) {
   return permissions.every((permission) =>
     BigInt(perms) & BigInt(Permissions[permission])
   );
 }
 
+/** Checks if the member has the given permissions in this guild  */
 export async function hasServerPerm(
   memberID: string,
   guildID: string,
   permissions: Permission[],
 ) {
-  const permissionBits = await (await calculateServerPerm(memberID, guildID))
+  const permissionBits = (await calculateServerPerm(memberID, guildID))
     .toString();
 
   return validatePerms(permissionBits, permissions);
 }
 
+/** Returns you an array of the permissions that are not in totalBits */
 export function missingPermissions(
   totalBits: string,
   permissions: Permission[],
@@ -301,6 +300,7 @@ export function missingPermissions(
   return missing;
 }
 
+/** Throws an error if the given member has not the permissions in the given guild */
 export async function throwOnMissingServerPermission(
   memberID: string,
   guildID: string,
@@ -314,11 +314,6 @@ export async function throwOnMissingServerPermission(
     throw new Error(Errors[`MISSING_${missing[0]}` as Errors]);
   }
 }
-/**
- * ----------------------
- *    CLOSE THATS WIP
- * ----------------------
- */
 
 /** This function converts a bitwise string to permission strings */
 export function calculatePermissions(permissionBits: bigint) {
