@@ -242,6 +242,49 @@ export async function throwOnMissingChannelPermission(
   throw new Error(Errors[`MISSING_${calculated}` as Errors]);
 }
 
+/**
+ * ----------------------
+ *      THATS WIP
+ * ----------------------
+ */
+export function validatePerms(perms: string, permissions: Permission[]) {
+  return permissions.every((permission) => {
+    BigInt(perms) & BigInt(Permissions[permission]);
+  });
+}
+
+export function hasServerPern(permissions: Permission[]) {
+  const perms = calculateBits(permissions);
+  return validatePerms(perms, permissions);
+}
+
+export function missingPermissions(
+  totalBits: string,
+  permissions: Permission[],
+) {
+  const missing: Permission[] = [];
+  permissions.forEach((permission) => {
+    if (!(BigInt(totalBits) & BigInt(Permissions[permission]))) {
+      missing.push(permission);
+    }
+  });
+
+  return missing;
+}
+
+export function throwOnMissingServerPermission(permissions: Permission[]) {
+  const perms = calculateBits(permissions);
+  const missing = missingPermissions(perms, permissions);
+  if (missing.length) {
+    throw new Error(Errors[`MISSING_${missing[0]}` as Errors]);
+  }
+}
+/**
+ * ----------------------
+ *    CLOSE THATS WIP
+ * ----------------------
+ */
+
 /** This function converts a bitwise string to permission strings */
 export function calculatePermissions(permissionBits: bigint) {
   return Object.keys(Permissions).filter((perm) => {
