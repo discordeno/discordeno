@@ -248,9 +248,9 @@ export async function throwOnMissingChannelPermission(
  * ----------------------
  */
 export function validatePerms(perms: string, permissions: Permission[]) {
-  return permissions.every((permission) => {
-    BigInt(perms) & BigInt(Permissions[permission]);
-  });
+  return permissions.every((permission) =>
+    BigInt(perms) & BigInt(Permissions[permission])
+  );
 }
 
 export function hasServerPern(permissions: Permission[]) {
