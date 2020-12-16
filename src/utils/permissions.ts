@@ -253,9 +253,33 @@ export function validatePerms(perms: string, permissions: Permission[]) {
   );
 }
 
-export function hasServerPern(permissions: Permission[]) {
-  const perms = calculateBits(permissions);
-  return validatePerms(perms, permissions);
+export async function hasServerPerm(
+  memberID: string,
+  guildID: string,
+  permissions: Permission[],
+) {
+  const guild = await cacheHandlers.get("guilds", guildID);
+  if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
+
+  // Check if the bot is the owner of the guild, if it is, returns true
+  if (memberID === guild.ownerID) return true;
+
+  const member = (await cacheHandlers.get("members", botID))?.guilds.get(
+    guildID,
+  );
+  if (!member) throw Error(Errors.MEMBER_NOT_FOUND);
+
+  const permissionBits = [...member.roles, guild.id]
+    .map((id) => guild.roles.get(id)!)
+    // Remove any edge case undefined
+    .filter((role) => role)
+    .reduce((bits, data) => {
+      bits |= BigInt(data.permissions);
+
+      return bits;
+    }, BigInt(0)).toString();
+
+  return validatePerms(permissionBits, permissions);
 }
 
 export function missingPermissions(
