@@ -247,17 +247,7 @@ export async function throwOnMissingChannelPermission(
  *      THATS WIP
  * ----------------------
  */
-export function validatePerms(perms: string, permissions: Permission[]) {
-  return permissions.every((permission) =>
-    BigInt(perms) & BigInt(Permissions[permission])
-  );
-}
-
-export async function hasServerPerm(
-  memberID: string,
-  guildID: string,
-  permissions: Permission[],
-) {
+export async function calculateServerPerm(memberID: string, guildID: string) {
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
 
@@ -269,7 +259,7 @@ export async function hasServerPerm(
   );
   if (!member) throw Error(Errors.MEMBER_NOT_FOUND);
 
-  const permissionBits = [...member.roles, guild.id]
+  return [...member.roles, guild.id]
     .map((id) => guild.roles.get(id)!)
     // Remove any edge case undefined
     .filter((role) => role)
@@ -278,6 +268,21 @@ export async function hasServerPerm(
 
       return bits;
     }, BigInt(0)).toString();
+}
+
+export function validatePerms(perms: string, permissions: Permission[]) {
+  return permissions.every((permission) =>
+    BigInt(perms) & BigInt(Permissions[permission])
+  );
+}
+
+export async function hasServerPerm(
+  memberID: string,
+  guildID: string,
+  permissions: Permission[],
+) {
+  const permissionBits = await (await calculateServerPerm(memberID, guildID))
+    .toString();
 
   return validatePerms(permissionBits, permissions);
 }
@@ -301,26 +306,8 @@ export async function throwOnMissingServerPermission(
   guildID: string,
   permissions: Permission[],
 ) {
-  const guild = await cacheHandlers.get("guilds", guildID);
-  if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
-
-  // Check if the bot is the owner of the guild, if it is, returns true
-  if (memberID === guild.ownerID) return true;
-
-  const member = (await cacheHandlers.get("members", botID))?.guilds.get(
-    guildID,
-  );
-  if (!member) throw Error(Errors.MEMBER_NOT_FOUND);
-
-  const permissionBits = [...member.roles, guild.id]
-    .map((id) => guild.roles.get(id)!)
-    // Remove any edge case undefined
-    .filter((role) => role)
-    .reduce((bits, data) => {
-      bits |= BigInt(data.permissions);
-
-      return bits;
-    }, BigInt(0)).toString();
+  const permissionBits = await (await calculateServerPerm(memberID, guildID))
+    .toString();
 
   const missing = missingPermissions(permissionBits, permissions);
   if (missing.length) {
