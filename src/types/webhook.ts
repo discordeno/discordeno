@@ -214,6 +214,8 @@ export interface EditSlashResponseOptions extends SlashCommandCallbackData {
 export interface UpsertSlashCommandOptions {
   id: string;
   guildID?: string;
+}
+
 export interface EditWebhookMessageOptions {
   content?: string;
   embeds?: Embed[];
