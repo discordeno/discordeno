@@ -203,11 +203,14 @@ export function executeSlashCommand(
     return RequestManager.post(endpoints.WEBHOOK(botID, token), {
       ...options,
     });
-  } 
-    
+  }
+
   // Expire in 15 minutes
   cache.executedSlashCommands.set(token, id);
-  setTimeout(() => cache.executedSlashCommands.delete(token), Date.now() + 900000);
+  setTimeout(
+    () => cache.executedSlashCommands.delete(token),
+    Date.now() + 900000,
+  );
 
   // IF NO MENTIONS ARE PROVIDED, FORCE DISABLE MENTIONS
   if (!(options.data.allowed_mentions)) {
