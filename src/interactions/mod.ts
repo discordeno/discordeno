@@ -24,18 +24,14 @@ export interface StartServerOptions {
   /** The port number you are wanting to listen to, if you are following the guide, you probably want 80 */
   port: number;
   /** The function you would like to provide to handle your commands. */
-  handleApplicationCommand?(
-    payload: Interaction,
-  ): Promise<{ status?: number; body: InteractionResponse }>;
+  handleApplicationCommand?(payload: Interaction): Promise<{ status?: number, body: InteractionResponse }>;
 }
 
 /** Starts the slash command server */
 export function startServer(options: StartServerOptions) {
   serverOptions.slashHexKey = options.publicKey;
   serverOptions.port = options.port;
-  if (options.handleApplicationCommand) {
-    controllers.handleApplicationCommand = options.handleApplicationCommand;
-  }
+  if (options.handleApplicationCommand) controllers.handleApplicationCommand = options.handleApplicationCommand;
 
   createServer();
 }
