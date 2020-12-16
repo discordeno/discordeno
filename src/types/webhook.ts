@@ -62,6 +62,12 @@ export interface ExecuteWebhookOptions {
   };
 }
 
+export interface EditWebhookMessageOptions {
+  content?: string;
+  embeds?: Embed[];
+  allowed_mentions?: AllowedMentions;
+}
+
 export interface CreateSlashCommandOptions {
   /** The name of the slash command.  */
   name: string;
