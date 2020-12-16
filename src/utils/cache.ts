@@ -11,7 +11,7 @@ export interface CacheData {
   unavailableGuilds: Collection<string, number>;
   presences: Collection<string, PresenceUpdatePayload>;
   fetchAllMembersProcessingRequests: Collection<string, Function>;
-  executedSlashCommands: Collection<string, number>;
+  executedSlashCommands: Collection<string, string>;
 }
 
 export const cache: CacheData = {

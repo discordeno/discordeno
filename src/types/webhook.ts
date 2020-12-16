@@ -1,5 +1,6 @@
 import { AllowedMentions } from "./channel.ts";
 import { UserPayload } from "./guild.ts";
+import { InteractionType } from "./interactions.ts";
 import { Embed } from "./message.ts";
 
 export interface WebhookPayload {
@@ -176,11 +177,6 @@ export interface SlashCommandCallbackData {
   allowed_mentions?: AllowedMentions;
   /** acceptable values are message flags */
   flags?: number;
-}
-
-export enum InteractionType {
-  PING = 1,
-  APPLICATION_COMMAND = 2,
 }
 
 export enum InteractionResponseType {
