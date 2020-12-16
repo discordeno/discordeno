@@ -14,10 +14,10 @@ import {
   WebhookCreateOptions,
   WebhookPayload,
 } from "../types/types.ts";
+import { cache } from "../utils/cache.ts";
 import { endpoints } from "../utils/constants.ts";
 import { botHasChannelPermissions } from "../utils/permissions.ts";
 import { urlToBase64 } from "../utils/utils.ts";
-import { cache } from "../utils/cache.ts";
 
 /** Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
 *
@@ -117,7 +117,67 @@ export function getWebhook(webhookID: string) {
   return RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
 }
 
-<<<<<<< HEAD
+export function editWebhookMessage(
+  webhookID: string,
+  webhookToken: string,
+  messageID: string,
+  options: EditWebhookMessageOptions,
+) {
+  if (options.content && options.content.length > 2000) {
+    throw Error(Errors.MESSAGE_MAX_LENGTH);
+  }
+
+  if (options.embeds && options.embeds.length > 10) {
+    options.embeds.splice(10);
+  }
+
+  if (options.allowed_mentions) {
+    if (options.allowed_mentions.users?.length) {
+      if (options.allowed_mentions.parse.includes("users")) {
+        options.allowed_mentions.parse = options.allowed_mentions.parse.filter((
+          p,
+        ) => p !== "users");
+      }
+
+      if (options.allowed_mentions.users.length > 100) {
+        options.allowed_mentions.users = options.allowed_mentions.users.slice(
+          0,
+          100,
+        );
+      }
+    }
+
+    if (options.allowed_mentions.roles?.length) {
+      if (options.allowed_mentions.parse.includes("roles")) {
+        options.allowed_mentions.parse = options.allowed_mentions.parse.filter((
+          p,
+        ) => p !== "roles");
+      }
+
+      if (options.allowed_mentions.roles.length > 100) {
+        options.allowed_mentions.roles = options.allowed_mentions.roles.slice(
+          0,
+          100,
+        );
+      }
+    }
+  }
+
+  return RequestManager.patch(
+    endpoints.WEBHOOK_EDIT(webhookID, webhookToken, messageID),
+    { ...options, allowed_mentions: options.allowed_mentions },
+  );
+}
+
+export function deleteWebhookMessage(
+  webhookID: string,
+  webhookToken: string,
+  messageID: string,
+) {
+  return RequestManager.delete(
+    endpoints.WEBHOOK_DELETE(webhookID, webhookToken, messageID),
+  );
+}
 /**
  * There are two kinds of Slash Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:
  *
@@ -251,66 +311,5 @@ export function editSlashResponse(
   return RequestManager.patch(
     endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
     options,
-=======
-export function editWebhookMessage(
-  webhookID: string,
-  webhookToken: string,
-  messageID: string,
-  options: EditWebhookMessageOptions,
-) {
-  if (options.content && options.content.length > 2000) {
-    throw Error(Errors.MESSAGE_MAX_LENGTH);
-  }
-
-  if (options.embeds && options.embeds.length > 10) {
-    options.embeds.splice(10);
-  }
-
-  if (options.allowed_mentions) {
-    if (options.allowed_mentions.users?.length) {
-      if (options.allowed_mentions.parse.includes("users")) {
-        options.allowed_mentions.parse = options.allowed_mentions.parse.filter((
-          p,
-        ) => p !== "users");
-      }
-
-      if (options.allowed_mentions.users.length > 100) {
-        options.allowed_mentions.users = options.allowed_mentions.users.slice(
-          0,
-          100,
-        );
-      }
-    }
-
-    if (options.allowed_mentions.roles?.length) {
-      if (options.allowed_mentions.parse.includes("roles")) {
-        options.allowed_mentions.parse = options.allowed_mentions.parse.filter((
-          p,
-        ) => p !== "roles");
-      }
-
-      if (options.allowed_mentions.roles.length > 100) {
-        options.allowed_mentions.roles = options.allowed_mentions.roles.slice(
-          0,
-          100,
-        );
-      }
-    }
-  }
-
-  return RequestManager.patch(
-    endpoints.WEBHOOK_EDIT(webhookID, webhookToken, messageID),
-    { ...options, allowed_mentions: options.allowed_mentions },
-  );
-}
-
-export function deleteWebhookMessage(
-  webhookID: string,
-  webhookToken: string,
-  messageID: string,
-) {
-  return RequestManager.delete(
-    endpoints.WEBHOOK_DELETE(webhookID, webhookToken, messageID),
->>>>>>> 169dfc923b047a1336223ed59013b5c6b5b5c60e
   );
 }
