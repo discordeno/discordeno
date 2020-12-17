@@ -1,11 +1,10 @@
-import { serve, verify } from "./deps.ts";
+import { serve, verify, sign_detached_verify } from "./deps.ts";
 import {
   Interaction,
   InteractionResponse,
   InteractionResponseType,
   InteractionType,
 } from "./types/mod.ts";
-import { sign_detached_verify } from "https://deno.land/x/tweetnacl_deno@v1.0.3/src/sign.ts";
 
 /** This variable is a holder for the public key */
 const serverOptions = {
