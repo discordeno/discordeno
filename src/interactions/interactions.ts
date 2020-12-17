@@ -53,8 +53,8 @@ async function createServer() {
     
     const isVerified = sign_detached_verify(
       new TextEncoder().encode(timestamp + req.body),
-      encode(signature, 'hex'),
-      encode(serverOptions.slashHexKey, 'hex'),
+      encode(signature),
+      encode(serverOptions.slashHexKey),
     );
     if (!isVerified) {
       return req.respond({ status: 401, body: 'invalid request signature' });
