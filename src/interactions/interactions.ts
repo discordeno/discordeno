@@ -51,10 +51,11 @@ async function createServer() {
     const signature = req.headers.get("X-Signature-Ed25519");
     const timestamp = req.headers.get("X-Signature-Timestamp");
     
+    const encoder = new TextEncoder();
     const isVerified = sign_detached_verify(
-      Buffer.from(timestamp + req.body),
-      Buffer.from(signature, 'hex'),
-      Buffer.from(serverOptions.slashHexKey, 'hex')
+      encoder.encode(timestamp + req.body),
+      encoder.encode(signature, 'hex'),
+      encoder.encode(serverOptions.slashHexKey, 'hex')
     );
     if (!isVerified) {
       return req.respond({ status: 401, body: 'invalid request signature' });
