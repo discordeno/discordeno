@@ -8,7 +8,8 @@ module.exports = {
   title,
   description,
   head: [
-    ["meta", { name: "theme-color", content: "#3eaf7c" }],
+    ["link", { rel: "icon", href: "/favicon.png" }],
+    ["meta", { name: "theme-color", content: "#7289DA" }],
     ["meta", { name: "apple-mobile-web-app-capable", content: "yes" }],
     [
       "meta",
@@ -24,6 +25,7 @@ module.exports = {
     ],
     ["meta", { name: "og:type", content: "website" }],
     ["meta", { name: "og:url", content: "https://discordeno.mod.land" }],
+    ["meta", { name: "og:image", content: "/logo.png" }],
   ],
   theme: "yuu",
   themeConfig: {

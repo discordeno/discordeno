@@ -13,3 +13,4 @@ export * from "./permission.ts";
 export * from "./presence.ts";
 export * from "./role.ts";
 export * from "./webhook.ts";
+export * from "./interactions.ts";
