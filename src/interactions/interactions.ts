@@ -5,6 +5,7 @@ import {
   InteractionResponseType,
   InteractionType,
 } from "./types/mod.ts";
+import { sign_detached_verify } from "https://deno.land/x/tweetnacl_deno@v1.0.3/src/sign.ts";
 
 /** This variable is a holder for the public key */
 const serverOptions = {
@@ -50,12 +51,21 @@ async function createServer() {
     const buffer = await Deno.readAll(req.body);
     const signature = req.headers.get("X-Signature-Ed25519");
     const timestamp = req.headers.get("X-Signature-Timestamp");
-
-    const verified = verifySecurity(buffer, signature!, timestamp!);
-    if (!verified) {
-      req.respond({ status: 401, body: "invalid request signature" });
-      continue;
+    
+    const isVerified = sign_detached_verify(
+      Buffer.from(timestamp + req.body),
+      Buffer.from(signature, 'hex'),
+      Buffer.from(PUBLIC_KEY, 'hex')
+    );
+    if (!isVerified) {
+      return res.respond({ status: 401, body: 'invalid request signature' });
     }
+
+    //const verified = verifySecurity(buffer, signature!, timestamp!);
+    //if (!verified) {
+      //req.respond({ status: 401, body: "invalid request signature" });
+      //continue;
+    //}
 
     try {
       const data = JSON.parse(new TextDecoder().decode(buffer));
