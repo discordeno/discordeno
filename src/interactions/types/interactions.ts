@@ -1,6 +1,6 @@
 import { Embed } from "./embed.ts";
 import { AllowedMentions } from "./misc.ts";
-import { UserPayload } from "./user.ts";
+import { MemberCreatePayload } from "./member.ts";
 
 export interface Interaction {
   /** The id of the interaction */
@@ -14,7 +14,7 @@ export interface Interaction {
   /** The id of the channel it was sent from */
   channel_id: string;
   /** The Payload of the member it was sent from */
-  member: UserPayload;
+  member: MemberCreatePayload;
   /** The token for this interaction */
   token: string;
 }

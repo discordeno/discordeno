@@ -24,3 +24,20 @@ export interface UserPayload {
   /** The type of Nitro subscription on a user's account. */
   premium_type?: number;
 }
+
+export interface MemberCreatePayload {
+  /** The user this guild member represents */
+  user: UserPayload;
+  /** The user's guild nickname if one is set. */
+  nick?: string;
+  /** Array of role ids that the member has */
+  roles: string[];
+  /** When the user joined the guild. */
+  joined_at: string;
+  /** When the user used their nitro boost on the server. */
+  premium_since?: string;
+  /** Whether the user is deafened in voice channels */
+  deaf: boolean;
+  /** Whether the user is muted in voice channels */
+  mute: boolean;
+}
