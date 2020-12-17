@@ -57,7 +57,7 @@ async function createServer() {
       Buffer.from(serverOptions.slashHexKey, 'hex')
     );
     if (!isVerified) {
-      return res.respond({ status: 401, body: 'invalid request signature' });
+      return req.respond({ status: 401, body: 'invalid request signature' });
     }
 
     //const verified = verifySecurity(buffer, signature!, timestamp!);
