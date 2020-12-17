@@ -60,6 +60,7 @@ async function createServer() {
     try {
       const data = JSON.parse(new TextDecoder().decode(buffer));
       const response = await controllers.handlePayload(data);
+      console.log('test', response);
       req.respond(
         { status: response.status || 200, body: JSON.stringify(response.body) },
       );
