@@ -7,7 +7,7 @@ import {
 } from "./types/mod.ts";
 
 /** This variable is a holder for the public key */
-const serverOptions = {
+export let serverOptions = {
   slashHexKey: "",
   port: 80,
 };
