@@ -176,10 +176,8 @@ export function deleteWebhookMessage(
 ) {
   return RequestManager.delete(
     endpoints.WEBHOOK_DELETE(webhookID, webhookToken, messageID),
-
   );
 }
-
 
 /**
  * There are two kinds of Slash Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:
@@ -314,5 +312,5 @@ export function editSlashResponse(
   return RequestManager.patch(
     endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
     options,
-  )
+  );
 }
