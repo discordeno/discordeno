@@ -1,4 +1,4 @@
-import { serve, verify, sign_detached_verify } from "./deps.ts";
+import { serve, verify, sign_detached_verify, encode } from "./deps.ts";
 import {
   Interaction,
   InteractionResponse,
@@ -51,11 +51,10 @@ async function createServer() {
     const signature = req.headers.get("X-Signature-Ed25519");
     const timestamp = req.headers.get("X-Signature-Timestamp");
     
-    const encoder = new TextEncoder();
     const isVerified = sign_detached_verify(
-      encoder.encode(timestamp + req.body),
-      encoder.encode(signature, 'hex'),
-      encoder.encode(serverOptions.slashHexKey, 'hex')
+      new TextEncoder().encode(timestamp + req.body),
+      encode(signature, 'hex'),
+      encode(serverOptions.slashHexKey, 'hex'),
     );
     if (!isVerified) {
       return req.respond({ status: 401, body: 'invalid request signature' });
