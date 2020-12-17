@@ -131,13 +131,3 @@ function verifySecurity(buffer: Uint8Array, signature: string, time: string) {
 
   return verify(slash_key, sig, message);
 }
-
-// TODO: delete when deploying
-startServer(
-    {
-      publicKey:
-        "bc1b035c61c1a46b0dd8e26b1de2c2a7bd795621e59c5e2170a08937d836546f",
-      port: 80,
-    },
-  );
-  
