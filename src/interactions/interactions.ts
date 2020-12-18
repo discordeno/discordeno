@@ -7,7 +7,7 @@ import {
 } from "./types/mod.ts";
 
 const fromHexString = (hexString: string) =>
-  new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+  new Uint8Array(hexString.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)));
 
 /** This variable is a holder for the public key */
 const serverOptions = {
