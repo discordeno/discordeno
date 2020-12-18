@@ -6,9 +6,6 @@ import {
   InteractionType,
 } from "./types/mod.ts";
 
-const fromHexString = (hexString: string) =>
-  new Uint8Array(hexString.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)));
-
 /** This variable is a holder for the public key */
 const serverOptions = {
   slashHexKey: "",
@@ -54,20 +51,21 @@ async function createServer() {
     const signature = req.headers.get("X-Signature-Ed25519");
     const timestamp = req.headers.get("X-Signature-Timestamp");
     
-    const isVerified = sign_detached_verify(
-      new TextEncoder().encode(timestamp! + req.body),
-      fromHexString(signature!),
-      fromHexString(serverOptions.slashHexKey),
+    //const isVerified = sign_detached_verify(
+    //  new TextEncoder().encode(timestamp! + req.body),
+    // Find an alternative for Buffer.from(..., "hex");
+    //  NOT WORKING: fromHexString(signature!),
+    //  NOT WORKING: fromHexString(serverOptions.slashHexKey),
     );
-    if (!isVerified) {
-      return req.respond({ status: 401, body: 'invalid request signature' });
-    }
-
-    //const verified = verifySecurity(buffer, signature!, timestamp!);
-    //if (!verified) {
-      //req.respond({ status: 401, body: "invalid request signature" });
-      //continue;
+    //if (!isVerified) {
+    //  return req.respond({ status: 401, body: 'invalid request signature' });
     //}
+
+    const verified = verifySecurity(buffer, signature!, timestamp!);
+    if (!verified) {
+      req.respond({ status: 401, body: "invalid request signature" });
+      continue;
+    }
 
     try {
       const data = JSON.parse(new TextDecoder().decode(buffer));
