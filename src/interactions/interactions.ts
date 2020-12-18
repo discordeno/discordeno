@@ -1,4 +1,4 @@
-import { serve, verify, sign_detached_verify } from "./deps.ts";
+import { serve, verify } from "./deps.ts";
 import {
   Interaction,
   InteractionResponse,
@@ -50,19 +50,14 @@ async function createServer() {
     const buffer = await Deno.readAll(req.body);
     const signature = req.headers.get("X-Signature-Ed25519");
     const timestamp = req.headers.get("X-Signature-Timestamp");
-    
-    //const isVerified = sign_detached_verify(
-    //  new TextEncoder().encode(timestamp! + req.body),
-    // Find an alternative for Buffer.from(..., "hex");
-    //  NOT WORKING: fromHexString(signature!),
-    //  NOT WORKING: fromHexString(serverOptions.slashHexKey),
-    //);
-    //if (!isVerified) {
-    //  return req.respond({ status: 401, body: 'invalid request signature' });
-    //}
 
-    const verified = verifySecurity(buffer, signature!, timestamp!);
-    if (!verified) {
+    if (!signature || !timestamp) {
+      req.respond({ status: 400, body: "bad bad bad request" });
+      continue;
+    }
+
+    const isVerified = verifySecurity(buffer, signature!, timestamp!);
+    if (!isVerified) {
       req.respond({ status: 401, body: "invalid request signature" });
       continue;
     }
