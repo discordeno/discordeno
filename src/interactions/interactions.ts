@@ -56,7 +56,7 @@ async function createServer() {
     // Find an alternative for Buffer.from(..., "hex");
     //  NOT WORKING: fromHexString(signature!),
     //  NOT WORKING: fromHexString(serverOptions.slashHexKey),
-    );
+    //);
     //if (!isVerified) {
     //  return req.respond({ status: 401, body: 'invalid request signature' });
     //}
