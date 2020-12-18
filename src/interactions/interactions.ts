@@ -1,10 +1,13 @@
-import { serve, verify, sign_detached_verify, encode } from "./deps.ts";
+import { serve, verify, sign_detached_verify } from "./deps.ts";
 import {
   Interaction,
   InteractionResponse,
   InteractionResponseType,
   InteractionType,
 } from "./types/mod.ts";
+
+const fromHexString = (hexString: string) =>
+  new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
 
 /** This variable is a holder for the public key */
 const serverOptions = {
@@ -52,9 +55,9 @@ async function createServer() {
     const timestamp = req.headers.get("X-Signature-Timestamp");
     
     const isVerified = sign_detached_verify(
-      new TextEncoder().encode(timestamp + req.body),
-      encode(signature),
-      encode(serverOptions.slashHexKey),
+      new TextEncoder().encode(timestamp! + req.body),
+      fromHexString(signature!),
+      fromHexString(serverOptions.slashHexKey),
     );
     if (!isVerified) {
       return req.respond({ status: 401, body: 'invalid request signature' });
