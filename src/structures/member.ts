@@ -134,7 +134,7 @@ export interface Member {
   /** Get the nickname or the username if no nickname */
   name(guildID: string): string;
   /** Get the nickname */
-  guildMember(guildID: string): GuildMember;
+  guildMember(guildID: string): GuildMember | undefined;
   /** Send a direct message to the user is possible */
   sendDM(content: string | MessageContent): Promise<any>;
   /** Kick the member from a guild */
