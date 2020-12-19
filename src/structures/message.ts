@@ -127,7 +127,7 @@ export async function createMessage(data: MessageCreateOptions) {
     ...rest
   } = data;
 
-  const restProps = {};
+  const restProps: Record<keyof MessageCreateOptions, any> = {};
   for (const key of Object.keys(rest)) {
     // @ts-ignore
     restProps[key] = createNewProp(rest[key]);
