@@ -23,7 +23,7 @@ const baseRole: Partial<Role> = {
   },
 
   // METHODS
-  delete: function (guildID?: string) {
+  delete(guildID?: string) {
     // If not guild id was provided try and find one
     if (!guildID) guildID = guildID || this.guild?.id;
     // If a guild id is still not available error out
