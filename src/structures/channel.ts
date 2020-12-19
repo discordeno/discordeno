@@ -36,10 +36,9 @@ export async function createChannel(
     ...rest
   } = data;
 
-  const restProps: Record<keyof ChannelCreatePayload, any> = {};
+  const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    // @ts-ignore
-    restProps[key] = createNewProp(rest[key]);
+    restProps[key] = createNewProp((rest as any)[key]);
   }
 
   const channel = Object.create(baseChannel, {

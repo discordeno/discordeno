@@ -69,10 +69,9 @@ const baseRole: Partial<Role> = {
 export async function createRole(data: RoleData) {
   const { tags, ...rest } = data;
 
-  const restProps: Record<keyof RoleData, any> = {};
+  const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    // @ts-ignore
-    restProps[key] = createNewProp(rest[key]);
+    restProps[key] = createNewProp((rest as any)[key]);
   }
 
   const role = Object.create(baseRole, {

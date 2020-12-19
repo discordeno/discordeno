@@ -21,11 +21,11 @@ export function createTemplate(
     serialized_source_guild: serializedSourceGuild,
     is_dirty: isDirty,
     ...rest
-  }: { [key: string]: any } = data;
+  } = data;
 
   const restProps: Record<string, Partial<PropertyDescriptor>> = {};
   for (const key of Object.keys(rest)) {
-    restProps[key] = createNewProp(rest[key]);
+    restProps[key] = createNewProp((rest as any)[key]);
   }
 
   const template = Object.create(baseTemplate, {

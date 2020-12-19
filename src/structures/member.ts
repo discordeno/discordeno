@@ -69,10 +69,9 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
     ...user
   } = data.user || {};
 
-  const restProps = {};
+  const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    // @ts-ignore
-    restProps[key] = createNewProp(rest[key]);
+    restProps[key] = createNewProp((rest as any)[key]);
   }
 
   for (const key of Object.keys(user)) {
@@ -81,7 +80,6 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
   }
 
   const member = Object.create(baseMember, {
-    // INCASE DISCORD ADDS MORE DATA USERS OF OUR LIB GET IT INSTANTLY
     ...restProps,
     mfaEnabled: createNewProp(mfaEnabled),
     premiumType: createNewProp(premiumType),
