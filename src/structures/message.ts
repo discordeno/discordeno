@@ -10,12 +10,15 @@ import { Role } from "./role.ts";
 
 const baseMessage: Partial<Message> = {
   get guild() {
+    if (!this.guildID) return;
     return cache.guilds.get(this.guildID);
   },
   get member() {
+    if (!this.author?.id) return;
     return cache.members.get(this.author?.id);
   },
   get guildMember() {
+    if (!this.guildID) return;
     return this.member?.guilds.get(this.guildID);
   },
   get link() {
@@ -37,7 +40,7 @@ const baseMessage: Partial<Message> = {
     return deleteMessageByID(this.channelID!, this.id!, reason, delayMilliseconds);
   },
   edit(content) {
-    return editMessage(this, content);
+    return editMessage(this as Message, content);
   },
   pin() {
     return pin(this.channelID!, this.id!)
@@ -171,6 +174,7 @@ export interface Message {
   referencedMessageID?: MessageCreateOptions | null;
   
   // GETTERS
+
   /** The guild of this message. Can be undefined if not in cache or in DM */
   guild?: Guild;
   /** The member for the user who sent the message. Can be undefined if not in cache or in dm. */
@@ -180,11 +184,11 @@ export interface Message {
   /** The url link to this message */
   link: string;
   /** The role objects for all the roles that were mentioned in this message */
-  mentionedRoles: Role[];
+  mentionedRoles: (Role | undefined)[];
   /** The channel objects for all the channels that were mentioned in this message. */
-  mentionedChannels: Channel[];
+  mentionedChannels: (Channel | undefined)[];
   /** The member objects for all the members that were mentioned in this message. */
-  mentionedMembers: Member[];
+  mentionedMembers: (Member | undefined)[];
 
   // METHODS
 
