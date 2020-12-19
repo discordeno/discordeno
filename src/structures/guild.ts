@@ -1,8 +1,4 @@
-import {
-  CreateGuildPayload,
-  MemberCreatePayload,
-  Unpromise,
-} from "../types/types.ts";
+import { CreateGuildPayload, MemberCreatePayload } from "../types/types.ts";
 import { Collection } from "../utils/collection.ts";
 import { structures } from "./mod.ts";
 
@@ -99,4 +95,4 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
   return guild;
 }
 
-export interface Guild extends Unpromise<ReturnType<typeof createGuild>> {}
+export interface Guild {}

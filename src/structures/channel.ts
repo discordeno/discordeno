@@ -4,7 +4,6 @@ import {
   ChannelCreatePayload,
   ChannelType,
   RawOverwrite,
-  Unpromise,
 } from "../types/types.ts";
 import { cache } from "../utils/cache.ts";
 import { Message } from "./message.ts";

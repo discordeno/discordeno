@@ -1,7 +1,28 @@
 import { Channel } from "../../mod.ts";
 import { sendMessage } from "../handlers/channel.ts";
-import { addReaction, addReactions, deleteMessageByID, editMessage, pin, removeAllReactions, removeReaction, removeReactionEmoji } from "../handlers/message.ts";
-import { Activity, Application, Attachment, Embed, GuildMember, MessageContent, MessageCreateOptions, MessageSticker, Reaction, Reference, Unpromise, UserPayload } from "../types/types.ts";
+import {
+  addReaction,
+  addReactions,
+  deleteMessageByID,
+  editMessage,
+  pin,
+  removeAllReactions,
+  removeReaction,
+  removeReactionEmoji,
+} from "../handlers/message.ts";
+import {
+  Activity,
+  Application,
+  Attachment,
+  Embed,
+  GuildMember,
+  MessageContent,
+  MessageCreateOptions,
+  MessageSticker,
+  Reaction,
+  Reference,
+  UserPayload,
+} from "../types/types.ts";
 import { cache } from "../utils/cache.ts";
 import { createNewProp } from "../utils/utils.ts";
 import { Guild } from "./guild.ts";
@@ -26,24 +47,30 @@ const baseMessage: Partial<Message> = {
       "@me"}/${this.channelID}/${this.id}`;
   },
   get mentionedRoles() {
-    return this.mentionRoleIDs?.map(id => this.guild?.roles.get(id)) || [];
+    // TODO: add getters for Guild structure, that will fix this error
+    return this.mentionRoleIDs?.map((id) => this.guild?.roles.get(id)) || [];
   },
   get mentionedChannels() {
-    return this.mentionChannelIDs?.map(id => cache.channels.get(id)) || [];
+    return this.mentionChannelIDs?.map((id) => cache.channels.get(id)) || [];
   },
   get mentionedMembers() {
-    return this.mentions?.map(id => cache.members.get(id)) || []
+    return this.mentions?.map((id) => cache.members.get(id)) || [];
   },
 
   // METHODS
   delete(reason, delayMilliseconds) {
-    return deleteMessageByID(this.channelID!, this.id!, reason, delayMilliseconds);
+    return deleteMessageByID(
+      this.channelID!,
+      this.id!,
+      reason,
+      delayMilliseconds,
+    );
   },
   edit(content) {
     return editMessage(this as Message, content);
   },
   pin() {
-    return pin(this.channelID!, this.id!)
+    return pin(this.channelID!, this.id!);
   },
   addReaction(reaction) {
     return addReaction(this.channelID!, this.id!, reaction);
@@ -59,17 +86,21 @@ const baseMessage: Partial<Message> = {
         mentions: { ...(content.mentions || {}), repliedUser: true },
         replyMessageID: this.id,
       };
-  
+
     return sendMessage(this.channelID!, contentWithMention);
   },
   reply(content) {
     return sendMessage(this.channelID!, content);
   },
   alert(content, timeout = 10, reason = "") {
-    return sendMessage(this.channelID!, content).then(response => response.delete(reason, timeout * 1000).catch(console.error))
+    return sendMessage(this.channelID!, content).then((response) =>
+      response.delete(reason, timeout * 1000).catch(console.error)
+    );
   },
   alertResponse(content, timeout = 10, reason = "") {
-    return this.sendResponse!(content).then(response => response.delete(reason, timeout * 1000).catch(console.error))
+    return this.sendResponse!(content).then((response) =>
+      response.delete(reason, timeout * 1000).catch(console.error)
+    );
   },
   removeAllReactions() {
     return removeAllReactions(this.channelID!, this.id!);
@@ -111,11 +142,13 @@ export async function createMessage(data: MessageCreateOptions) {
     mentions: createNewProp(data.mentions.map((m) => m.id)),
     mentionsEveryone: createNewProp(mentionsEveryone),
     mentionRoleIDs: createNewProp(mentionRoleIDs),
-    mentionChannelIDs: createNewProp(mentionChannelIDs?.map(m => m.id) || []),
+    mentionChannelIDs: createNewProp(mentionChannelIDs?.map((m) => m.id) || []),
     webhookID: createNewProp(webhookID),
     messageReference: createNewProp(messageReference),
     timestamp: createNewProp(Date.parse(data.timestamp)),
-    editedTimestamp: createNewProp(editedTimestamp ? Date.parse(editedTimestamp) : undefined),
+    editedTimestamp: createNewProp(
+      editedTimestamp ? Date.parse(editedTimestamp) : undefined,
+    ),
   });
 
   return message;
@@ -172,7 +205,7 @@ export interface Message {
   stickers?: MessageSticker[];
   /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
   referencedMessageID?: MessageCreateOptions | null;
-  
+
   // GETTERS
 
   /** The guild of this message. Can be undefined if not in cache or in DM */
@@ -207,9 +240,17 @@ export interface Message {
   /** Send a message to this channel where this message is */
   reply(content: string | MessageContent): Promise<Message>;
   /** Send a message to this channel and then delete it after a bit. By default it will delete after 10 seconds with no reason provided. */
-  alert(content: string | MessageContent, timeout?: number, reason?: string): Promise<void>;
+  alert(
+    content: string | MessageContent,
+    timeout?: number,
+    reason?: string,
+  ): Promise<void>;
   /** Send a inline reply to this message but then delete it after a bit. By default it will delete after 10 seconds with no reason provided.  */
-  alertResponse(content: string | MessageContent, timeout?: number, reason?: string): Promise<unknown>;
+  alertResponse(
+    content: string | MessageContent,
+    timeout?: number,
+    reason?: string,
+  ): Promise<unknown>;
   /** Remove all reactions */
   removeAllReactions(): Promise<unknown>;
   /** Remove all reactions */

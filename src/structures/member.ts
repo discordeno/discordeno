@@ -1,7 +1,19 @@
 import { cacheHandlers } from "../controllers/cache.ts";
 import { ban } from "../handlers/guild.ts";
-import { addRole, editMember, kick, removeRole, sendDirectMessage } from "../handlers/member.ts";
-import { BanOptions, EditMemberOptions, GuildMember, MemberCreatePayload, MessageContent, Unpromise } from "../types/types.ts";
+import {
+  addRole,
+  editMember,
+  kick,
+  removeRole,
+  sendDirectMessage,
+} from "../handlers/member.ts";
+import {
+  BanOptions,
+  EditMemberOptions,
+  GuildMember,
+  MemberCreatePayload,
+  MessageContent,
+} from "../types/types.ts";
 import { cache } from "../utils/cache.ts";
 import { Collection } from "../utils/collection.ts";
 import { createNewProp } from "../utils/utils.ts";
@@ -17,16 +29,16 @@ const baseMember: Partial<Member> = {
     return this.guildMember!(guildID)?.nick || this.username!;
   },
   guildMember(guildID) {
-    return this.guilds?.get(guildID)
+    return this.guilds?.get(guildID);
   },
   sendDM(content) {
     return sendDirectMessage(this.id!, content);
   },
   kick(guildID, reason) {
-    return kick(guildID, this.id!, reason)
+    return kick(guildID, this.id!, reason);
   },
   edit(guildID, options) {
-    return editMember(guildID, this.id!, options)
+    return editMember(guildID, this.id!, options);
   },
   ban(guildID, options) {
     return ban(guildID, this.id!, options);
@@ -37,7 +49,7 @@ const baseMember: Partial<Member> = {
   removeRole(guildID, roleID, reason) {
     return removeRole(guildID, this.id!, roleID, reason);
   },
-}
+};
 
 export async function createMember(data: MemberCreatePayload, guildID: string) {
   const {
@@ -128,7 +140,7 @@ export interface Member {
   guilds: Collection<string, GuildMember>;
 
   // METHODS
-  
+
   /** Returns the guild for this guildID */
   guild(guildID: string): Guild | undefined;
   /** Get the nickname or the username if no nickname */
