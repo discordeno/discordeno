@@ -62,8 +62,7 @@ async function cleanupQueues() {
 }
 
 async function processQueue() {
-  // Putting this code inside a function like this allows us to use tail recursion like a while loop without hitting the max stack error.
-  async function avoidMaxStackError() {
+  while (queueInProcess) {
     if (
       (Object.keys(pathQueues).length) && !globallyRateLimited
     ) {
@@ -110,12 +109,9 @@ async function processQueue() {
     }
 
     if (Object.keys(pathQueues).length) {
-      avoidMaxStackError();
       cleanupQueues();
     } else queueInProcess = false;
   }
-
-  return avoidMaxStackError();
 }
 
 processRateLimitedPaths();
