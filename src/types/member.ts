@@ -28,6 +28,8 @@ export interface MemberCreatePayload {
   deaf: boolean;
   /** Whether the user is muted in voice channels */
   mute: boolean;
+  /** Whether the user has passed the guild's Membership Screening requirements */
+  pending?: boolean;
 }
 
 export interface GuildMember {
@@ -43,4 +45,6 @@ export interface GuildMember {
   deaf: boolean;
   /** Whether the user is muted in voice channels */
   mute: boolean;
+  /** Whether the user has passed the guild's Membership Screening requirements */
+  pending?: boolean;
 }
