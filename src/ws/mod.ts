@@ -1,4 +1,4 @@
-import { eventHandlers } from "../bot.ts";
+import { botGatewayData, eventHandlers } from "../bot.ts";
 import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
@@ -64,7 +64,7 @@ export async function createShard(
   };
 
   socket.onerror = ({ timeStamp }) => {
-    eventHandlers.debug?.({ type: "websocketErrored", data: { timeStamp } });
+    eventHandlers.debug?.({ type: "wsError", data: { timeStamp } });
   };
 
   socket.onmessage = ({ data: message }) => {
@@ -143,24 +143,18 @@ export async function createShard(
   socket.onclose = ({ reason, code, wasClean }) => {
     eventHandlers.debug?.(
       {
-        type: "websocketClose",
+        type: "wsClose",
         data: { shardID: basicShard.id, code, reason, wasClean },
       },
     );
 
     switch (code) {
-      case 4000:
-        // TODO: reconnect
       case 4001:
         throw new Error(
           "[Unknown opcode] Sent an invalid Gateway opcode or an invalid payload for an opcode.",
         );
       case 4002:
         throw new Error("[Decode error] Sent an invalid payload to API.");
-      case 4003:
-        throw new Error(
-          "[Not authenticated] Sent a payload prior to identifying.",
-        );
       case 4004:
         throw new Error(
           "[Authentication failed] The account token sent with your identify payload is incorrect.",
@@ -169,15 +163,6 @@ export async function createShard(
         throw new Error(
           "[Already authenticated] Sent more than one identify payload.",
         );
-      case 4007:
-      case 4008:
-      case 4008:
-        eventHandlers.debug?.({
-          type: "websocketReconnecting",
-          data: { shardID: basicShard.id, code, reason, wasClean },
-        });
-        createShard(data, identifyPayload, false, shardID);
-        break;
       case 4010:
         throw new Error(
           "[Invalid shard] Sent an invalid shard when identifying.",
@@ -198,6 +183,20 @@ export async function createShard(
         throw new Error(
           "[Disallowed intent(s)] Sent a disallowed intent for a Gateway Intent. You may have tried to specify an intent that you have not enabled or are not whitelisted for.",
         );
+      case 4003:
+      case 4007:
+      case 4008:
+      case 4009:
+        eventHandlers.debug?.({
+          type: "wsReconnect",
+          data: { shardID: basicShard.id, code, reason, wasClean },
+        });
+        createShard(data, identifyPayload, false, shardID);
+        break;
+      default:
+        basicShard.needToResume = true;
+        resumeConnection(botGatewayData, identifyPayload, shardID);
+        break;
     }
   };
 }
