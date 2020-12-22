@@ -63,9 +63,9 @@ export interface DebugArg {
     | "reconnect"
     | "resuming"
     | "resumed"
-    | "websocketClose"
-    | "websocketErrored"
-    | "websocketReconnecting"
+    | "wsClose"
+    | "wsError"
+    | "wsReconnect"
     | "missingShard";
   data: unknown;
 }
