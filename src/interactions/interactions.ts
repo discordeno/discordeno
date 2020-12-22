@@ -30,7 +30,9 @@ export interface StartServerConfig {
 }
 
 /** Starts the slash command server */
-export async function startServer({ port, publicKey, handleApplicationCommand }: StartServerConfig) {
+export async function startServer(
+  { port, publicKey, handleApplicationCommand }: StartServerConfig,
+) {
   serverOptions.publicKey = publicKey;
   serverOptions.port = port;
   if (handleApplicationCommand) {
@@ -66,7 +68,6 @@ export async function startServer({ port, publicKey, handleApplicationCommand }:
     }
   }
 }
-
 
 async function handlePayload(payload: Interaction) {
   switch (payload.type) {
