@@ -41,11 +41,8 @@ export function delay(ms: number): Promise<void> {
 }
 
 export function arrayBufferToBase64(buffer: ArrayBuffer) {
-  let binary = "";
-  const bytes = new Uint8Array(buffer);
-  for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-
-  return btoa(binary);
+  const str = Array.from(new Uint8Array(buffer)).map((b) =>
+    String.fromCharCode(b)
+  ).join("");
+  return btoa(str);
 }
