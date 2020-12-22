@@ -1,11 +1,11 @@
 import { botID, eventHandlers } from "../../bot.ts";
-import { structures } from "../structures/structures.ts";
 import {
   BaseMessageReactionPayload,
   DiscordPayload,
   MessageReactionPayload,
   MessageReactionRemoveEmojiPayload,
 } from "../../types/types.ts";
+import { createMember } from "../structures/member.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
@@ -40,7 +40,7 @@ export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
   if (payload.member && payload.guild_id) {
     const guild = await cacheHandlers.get("guilds", payload.guild_id);
     if (guild) {
-      await structures.createMember(payload.member, guild.id);
+      await createMember(payload.member, guild.id);
     }
   }
 
@@ -93,7 +93,7 @@ export async function handleInternalMessageReactionRemove(
   if (payload.member && payload.guild_id) {
     const guild = await cacheHandlers.get("guilds", payload.guild_id);
     if (guild) {
-      await structures.createMember(
+      await createMember(
         payload.member,
         guild.id,
       );

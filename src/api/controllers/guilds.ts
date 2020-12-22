@@ -1,5 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import { structures } from "../structures/structures.ts";
 import {
   CreateGuildPayload,
   DiscordPayload,
@@ -9,6 +8,7 @@ import {
   UpdateGuildPayload,
 } from "../../types/types.ts";
 import { cache } from "../../util/cache.ts";
+import { createGuild } from "../structures/guild.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildCreate(
@@ -21,7 +21,7 @@ export async function handleInternalGuildCreate(
   // When shards resume they emit GUILD_CREATE again.
   if (await cacheHandlers.has("guilds", payload.id)) return;
 
-  const guild = await structures.createGuild(
+  const guild = await createGuild(
     data.d as CreateGuildPayload,
     shardID,
   );

@@ -1,13 +1,5 @@
-import { cacheHandlers } from "../controllers/cache.ts";
 import { identifyPayload } from "../../bot.ts";
 import { RequestManager } from "../../rest/mod.ts";
-import { requestAllMembers } from "../../ws/shard_manager.ts";
-import {
-  Guild,
-  Member,
-  structures,
-  Template,
-} from "../structures/structures.ts";
 import {
   AuditLogs,
   BannedUser,
@@ -45,6 +37,13 @@ import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasPermission, calculateBits } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
+import { requestAllMembers } from "../../ws/shard_manager.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
+import { createChannel } from "../structures/channel.ts";
+import { createGuild, Guild } from "../structures/guild.ts";
+import { createMember, Member } from "../structures/member.ts";
+import { createRole } from "../structures/role.ts";
+import { createTemplate, Template } from "../structures/template.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createServer(options: CreateServerOptions) {
@@ -52,7 +51,7 @@ export async function createServer(options: CreateServerOptions) {
     endpoints.GUILDS,
     options,
   ) as CreateGuildPayload;
-  return structures.createGuild(guild, 0);
+  return createGuild(guild, 0);
 }
 
 /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event.
@@ -136,7 +135,7 @@ export async function createGuildChannel(
       type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
 
-  const channel = await structures.createChannel(result);
+  const channel = await createChannel(result);
   return channel;
 }
 
@@ -166,7 +165,7 @@ export async function getChannels(guildID: string, addToCache = true) {
     endpoints.GUILD_CHANNELS(guildID),
   ) as ChannelCreatePayload[];
   return Promise.all(result.map(async (res) => {
-    const channel = await structures.createChannel(res, guildID);
+    const channel = await createChannel(res, guildID);
     if (addToCache) {
       cacheHandlers.set("channels", channel.id, channel);
     }
@@ -182,7 +181,7 @@ export async function getChannel(channelID: string, addToCache = true) {
   const result = await RequestManager.get(
     endpoints.GUILD_CHANNEL(channelID),
   ) as ChannelCreatePayload;
-  const channel = await structures.createChannel(result, result.guild_id);
+  const channel = await createChannel(result, result.guild_id);
   if (addToCache) cacheHandlers.set("channels", channel.id, channel);
   return channel;
 }
@@ -217,7 +216,7 @@ export async function getMember(
     endpoints.GUILD_MEMBER(guildID, id),
   ) as MemberCreatePayload;
 
-  const member = await structures.createMember(data, guildID);
+  const member = await createMember(data, guildID);
   return member;
 }
 
@@ -323,7 +322,7 @@ export async function createGuildRole(
   );
 
   const roleData = result as RoleData;
-  const role = await structures.createRole(roleData);
+  const role = await createRole(roleData);
   const guild = await cacheHandlers.get("guilds", guildID);
   guild?.roles.set(role.id, role);
   return role;
@@ -713,7 +712,7 @@ export async function getGuildTemplates(guildID: string) {
   const templates = await RequestManager.get(
     endpoints.GUILD_TEMPLATES(guildID),
   ) as GuildTemplate[];
-  return templates.map((template) => structures.createTemplate(template));
+  return templates.map((template) => createTemplate(template));
 }
 
 /**
@@ -730,7 +729,7 @@ export async function deleteGuildTemplate(
   const deletedTemplate = await RequestManager.delete(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
   ) as GuildTemplate;
-  return structures.createTemplate(deletedTemplate);
+  return createTemplate(deletedTemplate);
 }
 
 /**
@@ -761,7 +760,7 @@ export async function createGuildTemplate(
     endpoints.GUILD_TEMPLATES(guildID),
     data,
   ) as GuildTemplate;
-  return structures.createTemplate(template);
+  return createTemplate(template);
 }
 
 /**
@@ -775,7 +774,7 @@ export async function syncGuildTemplate(guildID: string, templateCode: string) {
   const template = await RequestManager.put(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
   ) as GuildTemplate;
-  return structures.createTemplate(template);
+  return createTemplate(template);
 }
 
 /**
@@ -805,5 +804,5 @@ export async function editGuildTemplate(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
     data,
   ) as GuildTemplate;
-  return structures.createTemplate(template);
+  return createTemplate(template);
 }

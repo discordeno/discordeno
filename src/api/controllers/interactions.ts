@@ -1,7 +1,9 @@
-import { DiscordPayload } from "../../types/types.ts";
 import { eventHandlers } from "../../bot.ts";
-import { structures } from "../structures/mod.ts";
-import { InteractionCommandPayload } from "../../types/types.ts";
+import {
+  DiscordPayload,
+  InteractionCommandPayload,
+} from "../../types/types.ts";
+import { createMember } from "../structures/member.ts";
 
 export async function handleInternalInteractionsCreate(data: DiscordPayload) {
   if (data.t !== "INTERACTION_CREATE") return;
@@ -11,7 +13,7 @@ export async function handleInternalInteractionsCreate(data: DiscordPayload) {
   eventHandlers.interactionCreate?.(
     {
       ...payload,
-      member: await structures.createMember(payload.member, payload.guild_id),
+      member: await createMember(payload.member, payload.guild_id),
     },
   );
 }

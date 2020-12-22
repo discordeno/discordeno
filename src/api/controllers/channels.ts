@@ -1,17 +1,17 @@
 import { eventHandlers } from "../../bot.ts";
-import { structures } from "../structures/structures.ts";
 import {
   ChannelCreatePayload,
   ChannelTypes,
   DiscordPayload,
 } from "../../types/types.ts";
+import { createChannel } from "../structures/channel.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalChannelCreate(data: DiscordPayload) {
   if (data.t !== "CHANNEL_CREATE") return;
 
   const payload = data.d as ChannelCreatePayload;
-  const channel = await structures.createChannel(payload);
+  const channel = await createChannel(payload);
   await cacheHandlers.set("channels", channel.id, channel);
 
   eventHandlers.channelCreate?.(channel);
@@ -57,7 +57,7 @@ export async function handleInternalChannelUpdate(data: DiscordPayload) {
 
   const payload = data.d as ChannelCreatePayload;
   const cachedChannel = await cacheHandlers.get("channels", payload.id);
-  const channel = await structures.createChannel(payload);
+  const channel = await createChannel(payload);
   cacheHandlers.set("channels", channel.id, channel);
 
   if (!cachedChannel) return;

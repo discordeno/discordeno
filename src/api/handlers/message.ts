@@ -1,7 +1,5 @@
-import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../../bot.ts";
 import { RequestManager } from "../../rest/mod.ts";
-import { Message, structures } from "../structures/structures.ts";
 import {
   Errors,
   MessageContent,
@@ -11,6 +9,8 @@ import {
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { delay } from "../../util/utils.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
+import { createMessage, Message } from "../structures/message.ts";
 
 /** Delete a message with the channel id and message id only. */
 export async function deleteMessageByID(
@@ -274,7 +274,7 @@ export async function editMessage(
     endpoints.CHANNEL_MESSAGE(message.channelID, message.id),
     content,
   );
-  return structures.createMessage(result as MessageCreateOptions);
+  return createMessage(result as MessageCreateOptions);
 }
 
 export async function publishMessage(channelID: string, messageID: string) {
@@ -282,5 +282,5 @@ export async function publishMessage(channelID: string, messageID: string) {
     endpoints.CHANNEL_MESSAGE_CROSSPOST(channelID, messageID),
   ) as MessageCreateOptions;
 
-  return structures.createMessage(data);
+  return createMessage(data);
 }
