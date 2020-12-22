@@ -1,3 +1,5 @@
+import { ChannelTypes } from "./channel";
+
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-object-audit-log-structure */
 export interface AuditLogPayload {
     /** list of webhooks found in the audit log */
@@ -165,6 +167,52 @@ export interface AuditLogChangeKey {
     hoist: boolean;
     /** role is now mentionable/unmentionable */
     mentionable: boolean;
+    /** a permission on a text or voice channel was allowed for a role */
+    allow: string;
+    /** a permission on a text or voice channel was denied for a role */
+    deny: string;
+    /** invite code changed */
+    code: string;
+    /** channel for invite code changed */
+    channel_id: string;
+    /** person who created invite code changed */
+    inviter_id: string;
+    /** change to max number of times invite code can be used */
+    max_uses: number;
+    /** number of times invite code used changed */
+    uses: number;
+    /** how long invite code lasts changed */
+    max_age: number;
+    /** invite code is temporary/never expires */
+    temporary: boolean;
+    /** user server deafened/undeafened */
+    deaf: boolean;
+    /** user server muted/unmuted */
+    mute: boolean;
+    /** user nickname changed */
+    nick: string;
+    /** user avatar changed */
+    avatar_hash: string;
+    /** the id of the changed entity - sometimes used in conjunction with other keys */
+    id: string;
+    /** type of entity created */
+    type: ChannelTypes | string;
+    /** integration emoticons enabled/disabled */
+    enable_emoticons: boolean;
+    /** integration expiring subscriber behavior changed */
+    expire_behavior: number;
+    /** integration expire grace period changed */
+    expire_grace_period: number;
+}
 
-    // TODO: more types
+/** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
+export interface GetGuildAuditLogParameters {
+    /** filter the log for actions made by a user */
+    user_id: string;
+    /** the type of audit log event */
+    action_type: AuditLogEvents;
+    /** filter the log before a certain entry id */
+    before: string;
+    /** how many entries are returned (default 50, minimum 1, maximum 100) */
+    limit: number;
 }
