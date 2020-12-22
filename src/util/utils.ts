@@ -1,6 +1,6 @@
 import { sendGatewayCommand } from "../ws/shard_manager.ts";
 import { ActivityType, StatusType } from "../types/types.ts";
-import { encode } from "../../deps.ts"
+import { encode } from "../../deps.ts";
 
 export const sleep = (timeout: number) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
