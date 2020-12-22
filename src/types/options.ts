@@ -4,7 +4,7 @@ import {
   Member,
   Message,
   Role,
-} from "../api/structures/structures.ts";
+} from "../api/structures/mod.ts";
 import {
   DiscordPayload,
   Emoji,
