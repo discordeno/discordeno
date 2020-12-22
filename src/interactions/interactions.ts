@@ -6,9 +6,9 @@ import {
   InteractionType,
 } from "./types/mod.ts";
 
-/** This variable is a holder for the public key */
+/** This variable is a holder for the public key and other configuration */
 const serverOptions = {
-  slashHexKey: "",
+  publicKey: "",
   port: 80,
 };
 
@@ -18,7 +18,7 @@ export const controllers = {
   handleApplicationCommand,
 };
 
-export interface StartServerOptions {
+export interface StartServerConfig {
   /** The public key from your discord bot dashboard at discord.dev */
   publicKey: string;
   /** The port number you are wanting to listen to, if you are following the guide, you probably want 80 */
@@ -30,21 +30,14 @@ export interface StartServerOptions {
 }
 
 /** Starts the slash command server */
-export function startServer(options: StartServerOptions) {
-  serverOptions.slashHexKey = options.publicKey;
-  serverOptions.port = options.port;
-  if (options.handleApplicationCommand) {
-    controllers.handleApplicationCommand = options.handleApplicationCommand;
+export async function startServer({ port, publicKey, handleApplicationCommand }: StartServerConfig) {
+  serverOptions.publicKey = publicKey;
+  serverOptions.port = port;
+  if (handleApplicationCommand) {
+    controllers.handleApplicationCommand = handleApplicationCommand;
   }
 
-  createServer();
-}
-
-async function createServer() {
   const server = serve({ port: serverOptions.port });
-  console.log(
-    `Listening to requests at http://localhost:${serverOptions.port}/`,
-  );
 
   for await (const req of server) {
     const buffer = await Deno.readAll(req.body);
@@ -52,13 +45,13 @@ async function createServer() {
     const timestamp = req.headers.get("X-Signature-Timestamp");
 
     if (!signature || !timestamp) {
-      req.respond({ status: 400, body: "bad bad bad request" });
+      req.respond({ status: 400, body: "Bad request" });
       continue;
     }
 
     const isVerified = verifySecurity(buffer, signature!, timestamp!);
     if (!isVerified) {
-      req.respond({ status: 401, body: "invalid request signature" });
+      req.respond({ status: 401, body: "Invalid request signature" });
       continue;
     }
 
@@ -73,6 +66,7 @@ async function createServer() {
     }
   }
 }
+
 
 async function handlePayload(payload: Interaction) {
   switch (payload.type) {
@@ -93,7 +87,7 @@ async function handleApplicationCommand(
       status: 200,
       body: {
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: { content: "Pong! Discordeno best lib!" },
+        data: { content: "Pong from Discordeno!" },
       },
     };
   }
@@ -126,7 +120,7 @@ function verifySecurity(buffer: Uint8Array, signature: string, time: string) {
   let keyoffset = 0;
   while (keyoffset < 2 * 32) {
     slash_key[keyoffset / 2] = parseInt(
-      serverOptions.slashHexKey.substring(keyoffset, keyoffset += 2),
+      serverOptions.publicKey.substring(keyoffset, keyoffset += 2),
       16,
     );
   }
