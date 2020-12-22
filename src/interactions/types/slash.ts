@@ -1,4 +1,7 @@
-import { InteractionResponseType, SlashCommandCallbackData } from "./interactions.ts";
+import {
+  InteractionResponseType,
+  SlashCommandCallbackData,
+} from "./interactions.ts";
 
 export interface CreateSlashCommandOptions {
   /** The name of the slash command.  */
