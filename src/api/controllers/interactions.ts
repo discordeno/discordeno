@@ -1,7 +1,7 @@
-import { DiscordPayload } from "../types/types.ts";
-import { eventHandlers } from "../module/client.ts";
+import { DiscordPayload } from "../../types/types.ts";
+import { eventHandlers } from "../../bot.ts";
 import { structures } from "../structures/mod.ts";
-import { InteractionCommandPayload } from "../types/types.ts";
+import { InteractionCommandPayload } from "../../types/types.ts";
 
 export async function handleInternalInteractionsCreate(data: DiscordPayload) {
   if (data.t !== "INTERACTION_CREATE") return;
