@@ -1,5 +1,6 @@
 import { sendGatewayCommand } from "../ws/shard_manager.ts";
 import { ActivityType, StatusType } from "../types/types.ts";
+import { encode } from "../../deps.ts"
 
 export const sleep = (timeout: number) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -27,7 +28,7 @@ export function chooseRandom<T>(array: T[]) {
 
 export async function urlToBase64(url: string) {
   const buffer = await fetch(url).then((res) => res.arrayBuffer());
-  const imageStr = arrayBufferToBase64(buffer);
+  const imageStr = encode(buffer);
   const type = url.substring(url.lastIndexOf(".") + 1);
   return `data:image/${type};base64,${imageStr}`;
 }
@@ -38,11 +39,4 @@ export function delay(ms: number): Promise<void> {
       res();
     }, ms)
   );
-}
-
-export function arrayBufferToBase64(buffer: ArrayBuffer) {
-  const str = Array.from(new Uint8Array(buffer)).map((b) =>
-    String.fromCharCode(b)
-  ).join("");
-  return btoa(str);
 }
