@@ -101,6 +101,28 @@ export const endpoints = {
   WEBHOOK_DELETE: (id: string, token: string, messageID: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages/${messageID}`,
 
+  // Application Endpoints
+  COMMANDS: (botID: string) =>
+    `${baseEndpoints.BASE_URL}/applications/${botID}/commands`,
+  COMMANDS_GUILD: (botID: string, id: string) =>
+    `${baseEndpoints.BASE_URL}/applications/${botID}/guilds/${id}/commands`,
+  COMMANDS_ID: (botID: string, id: string) =>
+    `${baseEndpoints.BASE_URL}/applications/${botID}/commands/${id}`,
+  COMMANDS_GUILD_ID: (botID: string, id: string, guildID: string) =>
+    `${baseEndpoints.BASE_URL}/applications/${botID}/guilds/${guildID}/commands/${id}`,
+
+  // Interaction Endpoints
+  INTERACTION_ID_TOKEN: (id: string, token: string) =>
+    `${baseEndpoints.BASE_URL}/interactions/${id}/${token}/callback`,
+  INTERACTION_ORIGINAL_ID_TOKEN: (id: string, token: string) =>
+    `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages/@original`,
+  INTERACTION_ID_TOKEN_MESSAGEID: (
+    id: string,
+    token: string,
+    messageID: string,
+  ) =>
+    `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}/messages/${messageID}`,
+
   // User endpoints
   USER: (id: string) => `${baseEndpoints.BASE_URL}/users/${id}`,
   USER_BOT: `${baseEndpoints.BASE_URL}/users/@me`,
