@@ -23,7 +23,7 @@ import {
   ReactionPayload,
 } from "./message.ts";
 
-export interface ClientOptions {
+export interface BotConfig {
   token: string;
   compress?: boolean;
   intents: Intents[];
