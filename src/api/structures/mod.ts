@@ -27,3 +27,22 @@ export function updateStructures(newStructures: Structures) {
     ...newStructures,
   };
 }
+
+export {
+  Channel
+} from "./channel.ts";
+export {
+  Guild
+} from "./guild.ts";
+export {
+  Member
+} from "./member.ts";
+export {
+  Message
+} from "./message.ts";
+export {
+  Role
+} from "./role.ts";
+export {
+  Template
+} from "./template.ts";
