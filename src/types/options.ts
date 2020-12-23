@@ -4,7 +4,7 @@ import {
   Member,
   Message,
   Role,
-} from "../structures/structures.ts";
+} from "../api/structures/mod.ts";
 import {
   DiscordPayload,
   Emoji,
@@ -23,7 +23,7 @@ import {
   ReactionPayload,
 } from "./message.ts";
 
-export interface ClientOptions {
+export interface BotConfig {
   token: string;
   compress?: boolean;
   intents: Intents[];
@@ -63,9 +63,9 @@ export interface DebugArg {
     | "reconnect"
     | "resuming"
     | "resumed"
-    | "websocketClose"
-    | "websocketErrored"
-    | "websocketReconnecting"
+    | "wsClose"
+    | "wsError"
+    | "wsReconnect"
     | "missingShard";
   data: unknown;
 }
@@ -104,6 +104,8 @@ export interface EventHandlers {
     cachedMember?: Member,
   ) => unknown;
   heartbeat?: () => unknown;
+  // TODO: FIX THIS
+  interactionCreate?: (data: unknown) => unknown;
   messageCreate?: (message: Message) => unknown;
   messageDelete?: (partial: PartialMessage, message?: Message) => unknown;
   messageUpdate?: (message: Message, cachedMessage: OldMessage) => unknown;
