@@ -1,6 +1,5 @@
 import { controllers } from "../api/controllers/mod.ts";
-import { Guild } from "../api/structures/guild.ts";
-import { eventHandlers, IdentifyPayload } from "../bot.ts";
+import { Guild } from "../api/structures/structures.ts";
 import {
   DiscordBotGatewayData,
   DiscordPayload,
@@ -14,6 +13,7 @@ import {
   createShard,
   requestGuildMembers,
 } from "./mod.ts";
+import { eventHandlers, IdentifyPayload } from "../bot.ts";
 
 let createNextShard = true;
 

@@ -1,4 +1,5 @@
 import { eventHandlers } from "../../bot.ts";
+import { structures } from "../structures/structures.ts";
 import {
   DiscordPayload,
   GuildBanPayload,
@@ -7,7 +8,6 @@ import {
   GuildMemberUpdatePayload,
 } from "../../types/types.ts";
 import { cache } from "../../util/cache.ts";
-import { createMember } from "../structures/member.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
@@ -18,7 +18,7 @@ export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
   if (!guild) return;
 
   guild.memberCount++;
-  const member = await createMember(
+  const member = await structures.createMember(
     payload,
     payload.guild_id,
   );
@@ -60,7 +60,7 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
     mute: guildMember?.mute || false,
     roles: payload.roles,
   };
-  const member = await createMember(
+  const member = await structures.createMember(
     newMemberData,
     payload.guild_id,
   );
@@ -98,7 +98,7 @@ export async function handleInternalGuildMembersChunk(data: DiscordPayload) {
   if (!guild) return;
 
   await Promise.all(
-    payload.members.map((member) => createMember(member, guild.id)),
+    payload.members.map((member) => structures.createMember(member, guild.id)),
   );
 
   // Check if its necessary to resolve the fetchmembers promise for this chunk or if more chunks will be coming

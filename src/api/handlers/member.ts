@@ -1,5 +1,7 @@
+import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../../bot.ts";
 import { RequestManager } from "../../rest/mod.ts";
+import { Member, structures } from "../structures/structures.ts";
 import {
   DMChannelCreatePayload,
   EditMemberOptions,
@@ -16,9 +18,6 @@ import {
   highestRole,
 } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
-import { cacheHandlers } from "../controllers/cache.ts";
-import { createChannel } from "../structures/channel.ts";
-import { Member } from "../structures/member.ts";
 import { sendMessage } from "./channel.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
@@ -124,7 +123,7 @@ export async function sendDirectMessage(
     ) as DMChannelCreatePayload;
     // Channel create event will have added this channel to the cache
     cacheHandlers.delete("channels", dmChannelData.id);
-    const channel = await createChannel(dmChannelData);
+    const channel = await structures.createChannel(dmChannelData);
     // Recreate the channel and add it undert he users id
     cacheHandlers.set("channels", memberID, channel);
     dmChannel = channel;

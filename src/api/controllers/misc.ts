@@ -1,4 +1,9 @@
+import {
+  initialMemberLoadQueue,
+  structures,
+} from "../structures/structures.ts";
 import { eventHandlers, setBotID } from "../../bot.ts";
+import { allowNextShard } from "../../ws/shard_manager.ts";
 import {
   DiscordPayload,
   PresenceUpdatePayload,
@@ -10,9 +15,6 @@ import {
 } from "../../types/types.ts";
 import { cache } from "../../util/cache.ts";
 import { delay } from "../../util/utils.ts";
-import { allowNextShard } from "../../ws/shard_manager.ts";
-import { initialMemberLoadQueue } from "../structures/guild.ts";
-import { createMember } from "../structures/member.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalReady(
@@ -35,7 +37,7 @@ export async function handleInternalReady(
     // All the members that came in on guild creates should now be processed 1 by 1
     for (const [guildID, members] of initialMemberLoadQueue.entries()) {
       await Promise.all(
-        members.map((member) => createMember(member, guildID)),
+        members.map((member) => structures.createMember(member, guildID)),
       );
     }
   }
@@ -85,7 +87,7 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
   if (!guild) return;
 
   const member = payload.member
-    ? await createMember(payload.member, guild.id)
+    ? await structures.createMember(payload.member, guild.id)
     : await cacheHandlers.get("members", payload.user_id);
   if (!member) return;
 

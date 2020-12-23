@@ -1,12 +1,11 @@
 import { eventHandlers } from "../../bot.ts";
+import { structures } from "../structures/structures.ts";
 import {
   DiscordPayload,
   MessageCreateOptions,
   MessageDeleteBulkPayload,
   MessageDeletePayload,
 } from "../../types/types.ts";
-import { createMember } from "../structures/member.ts";
-import { createMessage } from "../structures/message.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalMessageCreate(data: DiscordPayload) {
@@ -22,7 +21,7 @@ export async function handleInternalMessageCreate(data: DiscordPayload) {
 
   if (payload.member && guild) {
     // If in a guild cache the author as a member
-    await createMember(
+    await structures.createMember(
       { ...payload.member, user: payload.author },
       guild.id,
     );
@@ -31,14 +30,14 @@ export async function handleInternalMessageCreate(data: DiscordPayload) {
   payload.mentions.forEach((mention) => {
     // Cache the member if its a valid member
     if (mention.member && guild) {
-      createMember(
+      structures.createMember(
         { ...mention.member, user: mention },
         guild.id,
       );
     }
   });
 
-  const message = await createMessage(payload);
+  const message = await structures.createMessage(payload);
   // Cache the message
   cacheHandlers.set("messages", payload.id, message);
 

@@ -1,10 +1,7 @@
+import { Channel, Guild, Member, Message } from "../structures/structures.ts";
 import { PresenceUpdatePayload } from "../../types/types.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
-import { Channel } from "../structures/channel.ts";
-import { Guild } from "../structures/guild.ts";
-import { Member } from "../structures/member.ts";
-import { Message } from "../structures/message.ts";
 
 export type TableName =
   | "guilds"

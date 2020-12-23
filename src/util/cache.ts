@@ -1,7 +1,9 @@
-import { Channel } from "../api/structures/channel.ts";
-import { Guild } from "../api/structures/guild.ts";
-import { Member } from "../api/structures/member.ts";
-import { Message } from "../api/structures/message.ts";
+import {
+  Channel,
+  Guild,
+  Member,
+  Message,
+} from "../api/structures/structures.ts";
 import { PresenceUpdatePayload } from "../types/types.ts";
 import { Collection } from "./collection.ts";
 

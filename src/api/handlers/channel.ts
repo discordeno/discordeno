@@ -1,4 +1,6 @@
+import { cacheHandlers } from "../controllers/cache.ts";
 import { RequestManager } from "../../rest/mod.ts";
+import { structures } from "../structures/structures.ts";
 import {
   ChannelEditOptions,
   ChannelTypes,
@@ -21,8 +23,6 @@ import {
   botHasChannelPermissions,
   calculateBits,
 } from "../../util/permissions.ts";
-import { cacheHandlers } from "../controllers/cache.ts";
-import { createMessage } from "../structures/message.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(
@@ -73,7 +73,7 @@ export async function getMessage(
   const result = await RequestManager.get(
     endpoints.CHANNEL_MESSAGE(channelID, id),
   ) as MessageCreateOptions;
-  return createMessage(result);
+  return structures.createMessage(result);
 }
 
 /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
@@ -111,7 +111,7 @@ export async function getMessages(
     endpoints.CHANNEL_MESSAGES(channelID),
     options,
   )) as MessageCreateOptions[];
-  return Promise.all(result.map((res) => createMessage(res)));
+  return Promise.all(result.map((res) => structures.createMessage(res)));
 }
 
 /** Get pinned messages in this channel. */
@@ -119,7 +119,7 @@ export async function getPins(channelID: string) {
   const result = (await RequestManager.get(
     endpoints.CHANNEL_PINS(channelID),
   )) as MessageCreateOptions[];
-  return Promise.all(result.map((res) => createMessage(res)));
+  return Promise.all(result.map((res) => structures.createMessage(res)));
 }
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
@@ -227,7 +227,7 @@ export async function sendMessage(
     },
   );
 
-  return createMessage(result as MessageCreateOptions);
+  return structures.createMessage(result as MessageCreateOptions);
 }
 
 /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */
