@@ -28,21 +28,21 @@ export function updateStructures(newStructures: Structures) {
   };
 }
 
-export {
+export type {
   Channel
 } from "./channel.ts";
-export {
+export type {
   Guild
 } from "./guild.ts";
-export {
+export type {
   Member
 } from "./member.ts";
-export {
+export type {
   Message
 } from "./message.ts";
-export {
+export type {
   Role
 } from "./role.ts";
-export {
+export type {
   Template
 } from "./template.ts";
