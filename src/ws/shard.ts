@@ -1,4 +1,9 @@
-import { botGatewayData, eventHandlers } from "../bot.ts";
+import {
+  botGatewayData,
+  eventHandlers,
+  IdentifyPayload,
+  proxyWSURL,
+} from "../bot.ts";
 import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
@@ -7,9 +12,8 @@ import {
   ReadyPayload,
 } from "../types/types.ts";
 import { BotStatusRequest, delay } from "../util/utils.ts";
-import { IdentifyPayload, proxyWSURL } from "../bot.ts";
-import { handleDiscordPayload } from "./shard_manager.ts";
 import { decompressWith } from "./deps.ts";
+import { handleDiscordPayload } from "./shard_manager.ts";
 
 const basicShards = new Map<number, BasicShard>();
 const heartbeating = new Map<number, boolean>();
@@ -139,7 +143,6 @@ export async function createShard(
     }
   };
 
-  // TODO(ayntee): better ws* event names
   socket.onclose = ({ reason, code, wasClean }) => {
     eventHandlers.debug?.(
       {
