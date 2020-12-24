@@ -1,10 +1,10 @@
-import { cacheHandlers } from "../controllers/cache.ts";
 import {
   GuildMember,
   MemberCreatePayload,
   Unpromise,
 } from "../../types/types.ts";
 import { Collection } from "../../util/collection.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
 
 export async function createMember(data: MemberCreatePayload, guildID: string) {
   const {

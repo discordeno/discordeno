@@ -1,7 +1,7 @@
+import { authorization, eventHandlers } from "../bot.ts";
 import { Errors, HttpResponseCode, RequestMethods } from "../types/types.ts";
 import { baseEndpoints, discordAPIURLS } from "../util/constants.ts";
 import { delay } from "../util/utils.ts";
-import { authorization, eventHandlers } from "../bot.ts";
 
 const pathQueues: { [key: string]: QueuedRequest[] } = {};
 const ratelimitedPaths = new Map<string, RateLimitedPath>();

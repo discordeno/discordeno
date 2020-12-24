@@ -1,5 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import { structures } from "../structures/structures.ts";
 import {
   DiscordPayload,
   GuildBanPayload,
@@ -8,6 +7,7 @@ import {
   GuildMemberUpdatePayload,
 } from "../../types/types.ts";
 import { cache } from "../../util/cache.ts";
+import { structures } from "../structures/structures.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
