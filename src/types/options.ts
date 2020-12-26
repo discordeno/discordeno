@@ -157,6 +157,7 @@ export interface EventHandlers {
   webhooksUpdate?: (channelID: string, guildID: string) => unknown;
 }
 
+/** https://discord.com/developers/docs/topics/gateway#list-of-intents */
 export enum Intents {
   /** Enables the following events:
    * - GUILD_CREATE
