@@ -23,7 +23,7 @@ let processQueue = false;
 
 export interface BasicShard {
   id: number;
-  socket: WebSocket;
+  ws: WebSocket;
   resumeInterval: number;
   sessionID: string;
   previousSequenceNumber: number | null;
@@ -45,11 +45,11 @@ export async function createShard(
 ) {
   const oldShard = basicShards.get(shardID);
 
-  const socket = new WebSocket(proxyWSURL);
-  socket.binaryType = "arraybuffer";
+  const ws = new WebSocket(proxyWSURL);
+  ws.binaryType = "arraybuffer";
   const basicShard: BasicShard = {
     id: shardID,
-    socket,
+    ws,
     resumeInterval: 0,
     sessionID: oldShard?.sessionID || "",
     previousSequenceNumber: oldShard?.previousSequenceNumber || 0,
@@ -58,7 +58,7 @@ export async function createShard(
 
   basicShards.set(basicShard.id, basicShard);
 
-  socket.onopen = async () => {
+  ws.onopen = async () => {
     if (!resuming) {
       // Initial identify with the gateway
       await identify(basicShard, identifyPayload);
@@ -67,11 +67,11 @@ export async function createShard(
     }
   };
 
-  socket.onerror = ({ timeStamp }) => {
+  ws.onerror = ({ timeStamp }) => {
     eventHandlers.debug?.({ type: "wsError", data: { timeStamp } });
   };
 
-  socket.onmessage = ({ data: message }) => {
+  ws.onmessage = ({ data: message }) => {
     if (message instanceof ArrayBuffer) {
       message = new Uint8Array(message);
     }
@@ -143,7 +143,7 @@ export async function createShard(
     }
   };
 
-  socket.onclose = ({ reason, code, wasClean }) => {
+  ws.onclose = ({ reason, code, wasClean }) => {
     eventHandlers.debug?.(
       {
         type: "wsClose",
@@ -214,7 +214,7 @@ function identify(shard: BasicShard, payload: IdentifyPayload) {
     },
   );
 
-  return shard.socket.send(
+  return shard.ws.send(
     JSON.stringify(
       {
         op: GatewayOpcode.Identify,
@@ -225,7 +225,7 @@ function identify(shard: BasicShard, payload: IdentifyPayload) {
 }
 
 function resume(shard: BasicShard, payload: IdentifyPayload) {
-  return shard.socket.send(JSON.stringify({
+  return shard.ws.send(JSON.stringify({
     op: GatewayOpcode.Resume,
     d: {
       token: payload.token,
@@ -242,7 +242,7 @@ async function heartbeat(
   data: DiscordBotGatewayData,
 ) {
   // We lost socket connection between heartbeats, resume connection
-  if (shard.socket.readyState === WebSocket.CLOSED) {
+  if (shard.ws.readyState === WebSocket.CLOSED) {
     shard.needToResume = true;
     resumeConnection(data, payload, shard.id);
     heartbeating.delete(shard.id);
@@ -263,14 +263,14 @@ async function heartbeat(
           },
         },
       );
-      return shard.socket.send(JSON.stringify({ op: 4009 }));
+      return shard.ws.send(JSON.stringify({ op: 4009 }));
     }
   }
 
   // Set it to false as we are issuing a new heartbeat
   heartbeating.set(shard.id, false);
 
-  shard.socket.send(
+  shard.ws.send(
     JSON.stringify(
       { op: GatewayOpcode.Heartbeat, d: shard.previousSequenceNumber },
     ),
@@ -338,12 +338,12 @@ export function requestGuildMembers(
   }
 
   // If its closed add back to queue to redo on resume
-  if (shard?.socket.readyState === WebSocket.CLOSED) {
+  if (shard?.ws.readyState === WebSocket.CLOSED) {
     requestGuildMembers(guildID, shardID, nonce, options);
     return;
   }
 
-  shard?.socket.send(JSON.stringify({
+  shard?.ws.send(JSON.stringify({
     op: GatewayOpcode.RequestGuildMembers,
     d: {
       guild_id: guildID,
@@ -421,7 +421,7 @@ async function processGatewayQueue() {
 
 export function botGatewayStatusRequest(payload: BotStatusRequest) {
   basicShards.forEach((shard) => {
-    shard.socket.send(JSON.stringify({
+    shard.ws.send(JSON.stringify({
       op: GatewayOpcode.StatusUpdate,
       d: {
         since: null,
