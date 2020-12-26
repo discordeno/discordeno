@@ -28,16 +28,22 @@ If you do not wish to use a boilerplate, you may continue reading.
 Here's a minimal example to get started with:
 
 ```typescript
-import startBot, { sendMessage, Intents } from "https://deno.land/x/discordeno@9.4.0/mod.ts";
+import {
+  Intents,
+  sendMessage,
+  startBot,
+} from "https://deno.land/x/discordeno@9.4.0/mod.ts";
 
 startBot({
   token: "BOT TOKEN",
   intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
   eventHandlers: {
-    ready: () => console.log('Successfully connected to gateway'),
-    messageCreate: (message) => {
-      if (message.content === "hello") {
-        sendMessage(message.channelID, "Hi there!");
+    ready() {
+      console.log("Successfully connected to gateway");
+    },
+    messageCreate(message) {
+      if (message.content === "ping") {
+        sendMessage(message.channelID, "Pong using Discordeno!");
       }
     },
   },
