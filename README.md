@@ -32,7 +32,7 @@ import {
   Intents,
   sendMessage,
   startBot,
-} from "https://deno.land/x/discordeno@9.4.0/mod.ts";
+} from "https://deno.land/x/discordeno@10.0.0/mod.ts";
 
 startBot({
   token: "BOT TOKEN",
