@@ -188,7 +188,7 @@ async function runMethod(
 ) {
   eventHandlers.debug?.(
     {
-      type: "requestManager",
+      type: "requestCreate",
       data: { method, url, body, retryCount, bucketID },
     },
   );
@@ -228,14 +228,14 @@ async function runMethod(
 
         eventHandlers.debug?.(
           {
-            type: "requestManagerFetching",
+            type: "requestFetch",
             data: { method, url, body, retryCount, bucketID },
           },
         );
         const response = await fetch(urlToUse, createRequestBody(body, method));
         eventHandlers.debug?.(
           {
-            type: "requestManagerFetched",
+            type: "requestFetched",
             data: { method, url, body, retryCount, bucketID, response },
           },
         );
@@ -269,7 +269,7 @@ async function runMethod(
 
         eventHandlers.debug?.(
           {
-            type: "requestManagerSuccess",
+            type: "requestSuccess",
             data: { method, url, body, retryCount, bucketID },
           },
         );
