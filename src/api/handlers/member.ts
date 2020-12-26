@@ -1,7 +1,5 @@
-import { cacheHandlers } from "../controllers/cache.ts";
 import { botID } from "../../bot.ts";
 import { RequestManager } from "../../rest/mod.ts";
-import { Member, structures } from "../structures/structures.ts";
 import {
   DMChannelCreatePayload,
   EditMemberOptions,
@@ -10,14 +8,15 @@ import {
   ImageSize,
   MessageContent,
 } from "../../types/types.ts";
-import { formatImageURL } from "../../util/cdn.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasPermission,
   higherRolePosition,
   highestRole,
 } from "../../util/permissions.ts";
-import { urlToBase64 } from "../../util/utils.ts";
+import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
+import { Member, structures } from "../structures/structures.ts";
 import { sendMessage } from "./channel.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */

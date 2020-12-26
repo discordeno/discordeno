@@ -14,6 +14,10 @@ import {
   handleInternalGuildUpdate,
 } from "./guilds.ts";
 import {
+  handleInternalInteractionsCommandCreate,
+  handleInternalInteractionsCreate,
+} from "./interactions.ts";
+import {
   handleInternalGuildMemberAdd,
   handleInternalGuildMemberRemove,
   handleInternalGuildMembersChunk,
@@ -44,10 +48,6 @@ import {
   handleInternalGuildRoleDelete,
   handleInternalGuildRoleUpdate,
 } from "./roles.ts";
-import {
-  handleInternalInteractionsCommandCreate,
-  handleInternalInteractionsCreate,
-} from "./interactions.ts";
 
 export let controllers = {
   READY: handleInternalReady,

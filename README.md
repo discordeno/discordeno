@@ -17,10 +17,10 @@
 Don't worry a lot of developers start out coding their first projects as a Discord bot (I did 😉) and it is not so easy to do so. Discordeno is built considering all the issues with pre-existing libraries and issues that I had when I first started out coding bots. 
 If you are a beginner developer, you may check out these awesome official and unofficial boilerplates:
 
-- [Official Discordeno Boilerplate](https://github.com/Skillz4Killz/Discordeno-bot-template)
-- [Dencord Starter](https://github.com/ayntee/dencord-starter)
-- [Add your Own]
-
+- Official Discordeno Boilerplate
+  - [GitHub](https://github.com/Skillz4Killz/Discordeno-bot-template)
+  - [Features](https://github.com/Skillz4Killz/Discordeno-bot-template#features)
+  
 If you do not wish to use a boilerplate, you may continue reading.
 
 ### Advanced Developers
@@ -28,16 +28,22 @@ If you do not wish to use a boilerplate, you may continue reading.
 Here's a minimal example to get started with:
 
 ```typescript
-import startBot, { sendMessage, Intents } from "https://deno.land/x/discordeno@9.4.0/mod.ts";
+import {
+  Intents,
+  sendMessage,
+  startBot,
+} from "https://deno.land/x/discordeno@9.4.0/mod.ts";
 
 startBot({
   token: "BOT TOKEN",
   intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
   eventHandlers: {
-    ready: () => console.log('Successfully connected to gateway'),
-    messageCreate: (message) => {
-      if (message.content === "hello") {
-        sendMessage(message.channelID, "Hi there!");
+    ready() {
+      console.log("Successfully connected to gateway");
+    },
+    messageCreate(message) {
+      if (message.content === "ping") {
+        sendMessage(message.channelID, "Pong using Discordeno!");
       }
     },
   },

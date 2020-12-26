@@ -1,11 +1,11 @@
 import { botID, eventHandlers } from "../../bot.ts";
-import { structures } from "../structures/structures.ts";
 import {
   BaseMessageReactionPayload,
   DiscordPayload,
   MessageReactionPayload,
   MessageReactionRemoveEmojiPayload,
 } from "../../types/types.ts";
+import { structures } from "../structures/structures.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalMessageReactionAdd(data: DiscordPayload) {

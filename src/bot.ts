@@ -1,10 +1,10 @@
+import { RequestManager } from "./rest/mod.ts";
 import {
-  ClientOptions,
+  BotConfig,
   DiscordBotGatewayData,
   EventHandlers,
 } from "./types/types.ts";
 import { baseEndpoints, endpoints } from "./util/constants.ts";
-import { RequestManager } from "./rest/mod.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 
 export let authorization = "";
@@ -39,9 +39,9 @@ export interface IdentifyPayload {
   shard: [number, number];
 }
 
-export async function startBot(data: ClientOptions) {
-  if (data.eventHandlers) eventHandlers = data.eventHandlers;
-  authorization = `Bot ${data.token}`;
+export async function startBot(config: BotConfig) {
+  if (config.eventHandlers) eventHandlers = config.eventHandlers;
+  authorization = `Bot ${config.token}`;
 
   // Initial API connection to get info about bots connection
   botGatewayData = await RequestManager.get(
@@ -49,8 +49,8 @@ export async function startBot(data: ClientOptions) {
   ) as DiscordBotGatewayData;
 
   proxyWSURL = botGatewayData.url;
-  identifyPayload.token = data.token;
-  identifyPayload.intents = data.intents.reduce(
+  identifyPayload.token = config.token;
+  identifyPayload.intents = config.intents.reduce(
     (bits, next) => (bits |= next),
     0,
   );
@@ -75,7 +75,7 @@ export function setBotID(id: string) {
  *
  * Advanced Devs: This function will allow you to have an insane amount of customization potential as when you get to large bots you need to be able to optimize every tiny detail to make you bot work the way you need.
 */
-export async function startBigBrainBot(data: BigBrainBotOptions) {
+export async function startBigBrainBot(data: BigBrainBotConfig) {
   authorization = `Bot ${data.token}`;
   identifyPayload.token = `Bot ${data.token}`;
 
@@ -108,7 +108,7 @@ export async function startBigBrainBot(data: BigBrainBotOptions) {
   );
 }
 
-export interface BigBrainBotOptions extends ClientOptions {
+export interface BigBrainBotConfig extends BotConfig {
   /** The first shard to start at for this worker. Use this to control which shards to run in each worker. */
   firstShardID: number;
   /** The last shard to start for this worker. By default it will be 25 + the firstShardID. */

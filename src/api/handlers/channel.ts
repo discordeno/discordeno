@@ -1,6 +1,4 @@
-import { cacheHandlers } from "../controllers/cache.ts";
 import { RequestManager } from "../../rest/mod.ts";
-import { structures } from "../structures/structures.ts";
 import {
   ChannelEditOptions,
   ChannelTypes,
@@ -23,6 +21,8 @@ import {
   botHasChannelPermissions,
   calculateBits,
 } from "../../util/permissions.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
+import { structures } from "../structures/structures.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(

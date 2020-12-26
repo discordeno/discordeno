@@ -1,9 +1,4 @@
-import {
-  initialMemberLoadQueue,
-  structures,
-} from "../structures/structures.ts";
 import { eventHandlers, setBotID } from "../../bot.ts";
-import { allowNextShard } from "../../ws/shard_manager.ts";
 import {
   DiscordPayload,
   PresenceUpdatePayload,
@@ -15,6 +10,11 @@ import {
 } from "../../types/types.ts";
 import { cache } from "../../util/cache.ts";
 import { delay } from "../../util/utils.ts";
+import { allowNextShard } from "../../ws/shard_manager.ts";
+import {
+  initialMemberLoadQueue,
+  structures,
+} from "../structures/structures.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalReady(

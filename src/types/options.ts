@@ -4,7 +4,7 @@ import {
   Member,
   Message,
   Role,
-} from "../api/structures/structures.ts";
+} from "../api/structures/mod.ts";
 import {
   DiscordPayload,
   Emoji,
@@ -23,7 +23,7 @@ import {
   ReactionPayload,
 } from "./message.ts";
 
-export interface ClientOptions {
+export interface BotConfig {
   token: string;
   compress?: boolean;
   intents: Intents[];
