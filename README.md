@@ -36,7 +36,7 @@ import {
 
 startBot({
   token: "BOT TOKEN",
-  intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
+  intents: [Intents.GUILDS, Intents.GUILD_MESSAGES],
   eventHandlers: {
     ready() {
       console.log("Successfully connected to gateway");
