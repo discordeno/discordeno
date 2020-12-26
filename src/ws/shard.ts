@@ -103,14 +103,14 @@ export async function createShard(
           break;
         case GatewayOpcode.Reconnect:
           eventHandlers.debug?.(
-            { type: "reconnect", data: { shardID: basicShard.id } },
+            { type: "gatewayReconnect", data: { shardID: basicShard.id } },
           );
           basicShard.needToResume = true;
           resumeConnection(data, identifyPayload, basicShard.id);
           break;
         case GatewayOpcode.InvalidSession:
           eventHandlers.debug?.(
-            { type: "invalidSession", data: { shardID: basicShard.id, data } },
+            { type: "gatewayInvalidSession", data: { shardID: basicShard.id, data } },
           );
           // When d is false we need to reidentify
           if (!data.d) {
@@ -123,7 +123,7 @@ export async function createShard(
         default:
           if (data.t === "RESUMED") {
             eventHandlers.debug?.(
-              { type: "resumed", data: { shardID: basicShard.id } },
+              { type: "gatewayResumed", data: { shardID: basicShard.id } },
             );
 
             basicShard.needToResume = false;
@@ -207,7 +207,7 @@ export async function createShard(
 function identify(shard: BasicShard, payload: IdentifyPayload) {
   eventHandlers.debug?.(
     {
-      type: "identifying",
+      type: "gatewayIdentify",
       data: {
         shardID: shard.id,
       },
@@ -255,7 +255,7 @@ async function heartbeat(
     if (!receivedACK) {
       eventHandlers.debug?.(
         {
-          type: "heartbeatStopped",
+          type: "gatewayHeartbeatStopped",
           data: {
             interval,
             previousSequenceNumber: shard.previousSequenceNumber,
@@ -277,7 +277,7 @@ async function heartbeat(
   );
   eventHandlers.debug?.(
     {
-      type: "heartbeat",
+      type: "gatewayHeartbeat",
       data: {
         interval,
         previousSequenceNumber: shard.previousSequenceNumber,
@@ -304,7 +304,7 @@ async function resumeConnection(
 
   if (!shard.needToResume) return;
 
-  eventHandlers.debug?.({ type: "resuming", data: { shardID: shard.id } });
+  eventHandlers.debug?.({ type: "gatewayResume", data: { shardID: shard.id } });
   // Run it once
   createShard(data, payload, true, shard.id);
   // Then retry every 15 seconds
