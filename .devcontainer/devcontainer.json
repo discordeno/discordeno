@@ -1,6 +1,6 @@
 {
     "name": "Deno",
-    "dockerFile": "Dockerfile",
+    "image": "hayd/debian-deno",
 
     // Set *default* container specific settings.json values on container create.
     "settings": { 
