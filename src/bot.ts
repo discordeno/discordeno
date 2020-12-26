@@ -4,7 +4,7 @@ import {
   DiscordBotGatewayData,
   EventHandlers,
 } from "./types/types.ts";
-import { baseEndpoints, endpoints } from "./util/constants.ts";
+import { baseEndpoints, endpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 
 export let authorization = "";
@@ -13,7 +13,7 @@ export let botID = "";
 export let eventHandlers: EventHandlers = {};
 
 export let botGatewayData: DiscordBotGatewayData;
-export let proxyWSURL = "wss://gateway.discord.gg?v=8&encoding=json";
+export let proxyWSURL = `wss://gateway.discord.gg`;
 
 export const identifyPayload: IdentifyPayload = {
   token: "",
@@ -47,6 +47,9 @@ export async function startBot(config: BotConfig) {
   botGatewayData = await RequestManager.get(
     endpoints.GATEWAY_BOT,
   ) as DiscordBotGatewayData;
+
+  // Explicitly append gateway version and encoding
+  botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
 
   proxyWSURL = botGatewayData.url;
   identifyPayload.token = config.token;

@@ -4,6 +4,9 @@ export const BASE_URL = "https://discord.com/api";
 /** https://discord.com/developers/docs/reference#api-versioning-api-versions */
 export const API_VERSION = 8;
 
+/** https://discord.com/developers/docs/topics/gateway#gateways-gateway-versions */
+export const GATEWAY_VERSION = 8;
+
 /** https://discord.com/developers/docs/reference#user-agent */
 export const USER_AGENT = "DiscordBot (https://github.com/discordeno/discordeno, v10)";
 
