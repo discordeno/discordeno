@@ -1,8 +1,32 @@
 import { botID } from "../../bot.ts";
-import { BannedUser, ChannelCreatePayload, CreateGuildPayload, Emoji, GetAuditLogsOptions, GuildEditOptions, GuildFeatures, GuildMember, ImageFormats, ImageSize, MemberCreatePayload, Presence, VoiceState } from "../../types/types.ts";
+import {
+  BannedUser,
+  ChannelCreatePayload,
+  CreateGuildPayload,
+  Emoji,
+  GetAuditLogsOptions,
+  GuildEditOptions,
+  GuildFeatures,
+  GuildMember,
+  ImageFormats,
+  ImageSize,
+  MemberCreatePayload,
+  Presence,
+  VoiceState,
+} from "../../types/types.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
-import { deleteServer, editGuild, getAuditLogs, getBan, getBans, getInvites, guildBannerURL, guildIconURL, leaveGuild } from "../handlers/guild.ts";
+import {
+  deleteServer,
+  editGuild,
+  getAuditLogs,
+  getBan,
+  getBans,
+  getInvites,
+  guildBannerURL,
+  guildIconURL,
+  leaveGuild,
+} from "../handlers/guild.ts";
 import { Member } from "./member.ts";
 import { Role, structures } from "./mod.ts";
 import { Channel } from "./structures.ts";
@@ -11,10 +35,10 @@ export const initialMemberLoadQueue = new Map<string, MemberCreatePayload[]>();
 
 const baseGuild: Partial<Guild> = {
   get members() {
-    return cache.members.filter(member => member.guilds.has(this.id!));
+    return cache.members.filter((member) => member.guilds.has(this.id!));
   },
   get channels() {
-    return cache.channels.filter(channel => channel.guildID === this.id);
+    return cache.channels.filter((channel) => channel.guildID === this.id);
   },
   get afkChannel() {
     return cache.channels.get(this.afkChannelID!);
@@ -44,7 +68,7 @@ const baseGuild: Partial<Guild> = {
     return Boolean(this.features?.includes("PARTNERED"));
   },
   get verified() {
-    return Boolean(this.features?.includes("VERIFIED"))
+    return Boolean(this.features?.includes("VERIFIED"));
   },
   bannerURL(size, format) {
     return guildBannerURL(this as Guild, size, format);
@@ -72,7 +96,7 @@ const baseGuild: Partial<Guild> = {
   },
   leave() {
     return leaveGuild(this.id!);
-  }
+  },
 };
 
 export async function createGuild(data: CreateGuildPayload, shardID: number) {
@@ -85,7 +109,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     public_updates_channel_id: publicUpdatesChannelID,
     max_video_channel_users: maxVideoChannelUsers,
     approximate_member_count: approximateMemberCount,
-approximate_presence_count: approximatePresenceCount,
+    approximate_presence_count: approximatePresenceCount,
     owner_id: ownerID,
     afk_channel_id: afkChannelID,
     afk_timeout: afkTimeout,
@@ -125,7 +149,7 @@ approximate_presence_count: approximatePresenceCount,
     publicUpdatesChannelID,
     maxVideoChannelUsers,
     approximateMemberCount,
-approximatePresenceCount,
+    approximatePresenceCount,
     shardID,
     ownerID,
     afkChannelID,
@@ -204,7 +228,7 @@ export interface Guild {
   /** Whether this guild is unavailable */
   unavailable: boolean;
   /** The shard id that this guild is on */
-  shardID: number,
+  shardID: number;
   /** The owner id of the guild. */
   ownerID: string;
   /** The afk channel id for this guild. */
@@ -238,11 +262,11 @@ export interface Guild {
   /** When this guild was joined at. */
   joinedAt: number;
   /** The presences of all the users in the guild. */
-  presences: Collection<string, Presence>,
+  presences: Collection<string, Presence>;
   /** The total number of members in this guild. This value is updated as members leave and join the server. However, if you do not have the intent enabled to be able to listen to these events, then this will not be accurate. */
   memberCount: number;
   /** The Voice State data for each user in a voice channel in this server. */
-  voiceStates: Collection<string, CleanVoiceState>,
+  voiceStates: Collection<string, CleanVoiceState>;
 
   // GETTERS
   /** Members in this guild. */

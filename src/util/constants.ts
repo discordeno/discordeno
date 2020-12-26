@@ -5,7 +5,8 @@ export const BASE_URL = "https://discord.com/api";
 export const API_VERSION = 8;
 
 /** https://discord.com/developers/docs/reference#user-agent */
-export const USER_AGENT = "DiscordBot (https://github.com/discordeno/discordeno, v10)";
+export const USER_AGENT =
+  "DiscordBot (https://github.com/discordeno/discordeno, v10)";
 
 /** https://discord.com/developers/docs/reference#image-formatting-image-base-url */
 export const IMAGE_BASE_URL = "https://cdn.discordapp.com/";
