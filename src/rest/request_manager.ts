@@ -1,6 +1,6 @@
 import { authorization, eventHandlers } from "../bot.ts";
 import { Errors, HttpResponseCode, RequestMethods } from "../types/types.ts";
-import { baseEndpoints, discordAPIURLS } from "../util/constants.ts";
+import { API_VERSION, baseEndpoints, BASE_URL, IMAGE_BASE_URL, USER_AGENT } from "../util/constants.ts";
 import { delay } from "../util/utils.ts";
 
 const pathQueues: { [key: string]: QueuedRequest[] } = {};
@@ -137,8 +137,7 @@ export const RequestManager = {
 function createRequestBody(body: any, method: RequestMethods) {
   const headers: { [key: string]: string } = {
     Authorization: authorization,
-    "User-Agent":
-      `DiscordBot (https://github.com/skillz4killz/discordeno, v10)`,
+    "User-Agent": USER_AGENT,
   };
 
   if (method === "get") body = undefined;
@@ -199,8 +198,8 @@ async function runMethod(
 
   // For proxies we don't need to do any of the legwork so we just forward the request
   if (
-    !url.startsWith(discordAPIURLS.BASE_URL) &&
-    !url.startsWith(discordAPIURLS.CDN_URL)
+    !url.startsWith(`${BASE_URL}/v${API_VERSION}`) &&
+    !url.startsWith(IMAGE_BASE_URL)
   ) {
     return fetch(url, { method, body: body ? JSON.stringify(body) : undefined })
       .then((res) => res.json())
