@@ -1,6 +1,12 @@
 import { authorization, eventHandlers } from "../bot.ts";
 import { Errors, HttpResponseCode, RequestMethods } from "../types/types.ts";
-import { API_VERSION, baseEndpoints, BASE_URL, IMAGE_BASE_URL, USER_AGENT } from "../util/constants.ts";
+import {
+  API_VERSION,
+  BASE_URL,
+  baseEndpoints,
+  IMAGE_BASE_URL,
+  USER_AGENT,
+} from "../util/constants.ts";
 import { delay } from "../util/utils.ts";
 
 const pathQueues: { [key: string]: QueuedRequest[] } = {};

@@ -38,6 +38,11 @@ export async function urlToBase64(url: string) {
   return `data:image/${type};base64,${imageStr}`;
 }
 
+/** Allows easy way to add a prop to a base object when needing to use complicated getters solution. */
+export function createNewProp(value: any): Partial<PropertyDescriptor> {
+  return { configurable: true, enumerable: true, writable: true, value };
+}
+
 export function delay(ms: number): Promise<void> {
   return new Promise((res): number =>
     setTimeout((): void => {
