@@ -11,14 +11,20 @@
             "source.organizeImports": true,
             "source.fixAll": true
         },
+        "editor.fontSize": 16,
+        "workbench.colorTheme": "equinusocio.vsc-material-theme",
         "workbench.iconTheme": "pkief.material-icon-theme",
-        "editor.fontSize": 16
+        "breadcrumbs.enabled": true,
+        "editor.renderWhitespace": "all",
+        "editor.suggestSelection": "first"
     },
     "extensions": [
         "denoland.vscode-deno",
         "pkief.material-icon-theme",
         "eamodio.gitlens",
-        "coenraads.bracket-pair-colorizer"
+        "coenraads.bracket-pair-colorizer",
+        "equinusocio.vsc-material-theme",
+        "tabnine.tabnine-vscode"
     ],
     "postCreateCommand": "deno cache mod.ts"
 }
