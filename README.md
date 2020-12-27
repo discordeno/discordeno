@@ -28,11 +28,7 @@ If you do not wish to use a boilerplate, you may continue reading.
 Here's a minimal example to get started with:
 
 ```typescript
-import {
-  Intents,
-  sendMessage,
-  startBot,
-} from "https://deno.land/x/discordeno@10.0.0/mod.ts";
+import { Intents, startBot } from "https://deno.land/x/discordeno@10.0.0/mod.ts";
 
 startBot({
   token: "BOT TOKEN",
@@ -42,9 +38,8 @@ startBot({
       console.log("Successfully connected to gateway");
     },
     messageCreate(message) {
-      if (message.content === "ping") {
-        
-        sendMessage(message.channelID, "Pong using Discordeno!");
+      if (message.content === "!ping") {
+        message.reply("Pong using Discordeno!");
       }
     },
   },
