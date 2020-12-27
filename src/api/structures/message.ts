@@ -30,6 +30,9 @@ import { Member } from "./member.ts";
 import { Role } from "./role.ts";
 
 const baseMessage: Partial<Message> = {
+  get channel() {
+    return cache.channels.get(this.channelID!);
+  },
   get guild() {
     if (!this.guildID) return;
     return cache.guilds.get(this.guildID);
@@ -207,6 +210,8 @@ export interface Message {
 
   // GETTERS
 
+  /** The channel where this message was sent. Can be undefined if uncached. */
+  channel?: Channel;
   /** The guild of this message. Can be undefined if not in cache or in DM */
   guild?: Guild;
   /** The member for the user who sent the message. Can be undefined if not in cache or in dm. */
