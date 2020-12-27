@@ -1,14 +1,17 @@
-import { assert, assertEquals, delay } from "../deps.ts";
 import {
   botID,
   cache,
+  channelOverwriteHasPermission,
   createGuildChannel,
   createGuildRole,
   createServer,
+  delay,
   deleteChannel,
   deleteRole,
   deleteServer,
+  editChannel,
   editRole,
+  getChannel,
   getMessage,
   Guild,
   Intents,
@@ -17,11 +20,7 @@ import {
   sendMessage,
   startBot,
 } from "../mod.ts";
-import {
-  channelOverwriteHasPermission,
-  editChannel,
-} from "../src/handlers/channel.ts";
-import { getChannel } from "../src/handlers/guild.ts";
+import { assert, assertEquals } from "./deps.ts";
 
 const token = Deno.env.get("DISCORD_TOKEN");
 if (!token) throw "Token is not provided";

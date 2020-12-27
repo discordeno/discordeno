@@ -24,7 +24,7 @@ const baseChannel: Partial<Channel> = {
   },
   send(content) {
     return sendMessage(this.id!, content);
-  }
+  },
 };
 
 export async function createChannel(
