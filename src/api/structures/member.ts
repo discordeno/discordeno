@@ -30,7 +30,7 @@ const baseMember: Partial<Member> = {
     return `<@!${this.id!}>`;
   },
   get tag() {
-    return `${this.username!}#${this.discriminator1}`;
+    return `${this.username!}#${this.discriminator!}`;
   },
 
   // METHODS
@@ -169,7 +169,7 @@ export interface Member {
   // METHODS
 
   /** Returns the avatar url for this member and can be dynamically modified with a size or format */
-  makeAvatarURL(size: ImageSize, format: ImageFormat): string;
+  makeAvatarURL(size: ImageSize, format: ImageFormats): string;
   /** Returns the guild for this guildID */
   guild(guildID: string): Guild | undefined;
   /** Get the nickname or the username if no nickname */
