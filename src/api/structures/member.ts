@@ -2,7 +2,7 @@ import {
   BanOptions,
   EditMemberOptions,
   GuildMember,
-  ImageFormat,
+  ImageFormats,
   ImageSize,
   MemberCreatePayload,
   MessageContent,
@@ -33,7 +33,7 @@ const baseMember: Partial<Member> = {
   // METHODS
   makeAvatarURL(size, format) {
     return rawAvatarURL(
-      this.id,
+      this.id!,
       this.discriminator!,
       this.avatar!,
       size,
