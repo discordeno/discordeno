@@ -67,7 +67,7 @@ export interface MessagePayload {
   /** the author of this message (not guaranteed to be a valid user) */
   author: UserPayload;
   /** member properties for this message's author */
-  member?: PartialGuildMemberPayload;
+  member?: Partial<GuildMemberPayload>;
   /** contents of the message */
   content: string;
   /** when this message was sent */
@@ -79,7 +79,7 @@ export interface MessagePayload {
   /** whether this message mentions everyone */
   mention_everyone: boolean;
   /** users specifically mentioned in the message */
-  mentions: UserPayload & PartialGuildMemberPayload;
+  mentions: (UserPayload & Partial<GuildMemberPayload>)[];
   /** roles specifically mentioned in this message */
   mention_roles: string[];
   /** channels specifically mentioned in this message */
@@ -161,6 +161,8 @@ export interface MessageReferencePayload {
   message_id?: string;
   /** id of the originating message's channel */
   channel_id?: string;
+  /** id of the originating message's guild */
+  guild_id?: string;
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
@@ -168,7 +170,7 @@ export enum MessageActivityTypes {
   JOIN = 1,
   SPECTATE,
   LISTEN,
-  JOIN_REQUEST,
+  JOIN_REQUEST = 5,
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-flags */
@@ -227,7 +229,7 @@ export interface ReactionPayload {
   /** whether the current user reacted using this emoji */
   me: boolean;
   /** emoji information */
-  emoji: PartialEmojiPayload;
+  emoji: Partial<EmojiPayload>;
 }
 
 export interface OverwritePayload {
@@ -265,6 +267,8 @@ export interface EmbedPayload {
   video?: EmbedVideoPayload;
   /** provider information */
   provider?: EmbedProviderPayload;
+  /** author information */
+  author?: EmbedAuthorPayload;
   /** fields information */
   fields?: EmbedFieldPayload[];
 }
@@ -506,9 +510,9 @@ export interface CreateChannelInviteParams {
   /** max number of uses or 0 for unlimited */
   max_uses?: number;
   /** whether this invite only grants temporary membership */
-  temporary: boolean;
+  temporary?: boolean;
   /** if true, don't try to reuse a similar invite (useful for creating many unique one time use invites) */
-  unique: boolean;
+  unique?: boolean;
   /** the target user id for this invite */
   target_user?: string;
   /** the type of target user for this invite */
