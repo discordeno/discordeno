@@ -14,13 +14,13 @@
 
 ### Beginner Developers
 
-Don't worry a lot of developers start out coding their first projects as a Discord bot (I did 😉) and it is not so easy to do so. Discordeno is built considering all the issues with pre-existing libraries and issues that I had when I first started out coding bots. 
+Don't worry a lot of developers start out coding their first projects as a Discord bot (I did 😉) and it is not so easy to do so. Discordeno is built considering all the issues with pre-existing libraries and issues that I had when I first started out coding bots.
 If you are a beginner developer, you may check out these awesome official and unofficial boilerplates:
 
 - Official Discordeno Boilerplate
   - [GitHub](https://github.com/Skillz4Killz/Discordeno-bot-template)
   - [Features](https://github.com/Skillz4Killz/Discordeno-bot-template#features)
-  
+
 If you do not wish to use a boilerplate, you may continue reading.
 
 ### Advanced Developers
@@ -43,6 +43,7 @@ startBot({
     },
     messageCreate(message) {
       if (message.content === "ping") {
+        
         sendMessage(message.channelID, "Pong using Discordeno!");
       }
     },

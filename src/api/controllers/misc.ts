@@ -97,12 +97,12 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
   guild.voiceStates.set(payload.user_id, {
     ...payload,
     guildID: payload.guild_id,
-    channelID: payload.channel_id,
+    channelID: payload.channel_id || "",
     userID: payload.user_id,
     sessionID: payload.session_id,
     selfDeaf: payload.self_deaf,
     selfMute: payload.self_mute,
-    selfStream: payload.self_stream,
+    selfStream: payload.self_stream || false,
   });
 
   if (cachedState?.channelID !== payload.channel_id) {
