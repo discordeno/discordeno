@@ -12,9 +12,9 @@ jobs:
           node-version: '14.x'
       - name: Install dependencies
         run: cd docs && yarn install
-      - name: Build the documentation
+      - name: Build documentation
         run: cd docs && yarn docs:build
-      - name: Deploy the documentation
+      - name: Deploy documentation
         if: success()
         uses: peaceiris/actions-gh-pages@v3
         with:
