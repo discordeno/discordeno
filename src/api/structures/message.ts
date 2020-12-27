@@ -165,7 +165,7 @@ export interface Message {
   /** The contents of the message */
   content: string;
   /** When this message was sent */
-  timestamp: string;
+  timestamp: number;
   /** When this message was edited (if it was not edited, null) */
   editedTimestamp?: number;
   /** Whether this was a TextToSpeech message. */
