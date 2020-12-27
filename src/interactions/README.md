@@ -1,9 +1,8 @@
 # Discordeno Interactions
 
-This subpackage serves as a standalone interactions package that supports the webhooks(https server) side of Discords new Interactions API!
+`interactions` is a standalone submodule that supports the webhooks through HTTP server side of Discord's new Interactions API.
+This is a barebones interface that will create and handle requests from Discord API.
 
 - Complete and extremely fast security and verification checks
-- First Class TypeScript Experience!
-- Minimalistic!
-
-This is a barebones interface that will create and handle requests.
+- First-class TypeScript Support
+- Minimalistic
