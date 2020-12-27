@@ -14,14 +14,30 @@ import {
   addRole,
   editMember,
   kick,
+  rawAvatarURL,
   removeRole,
   sendDirectMessage,
 } from "../handlers/member.ts";
 import { Guild } from "./guild.ts";
 
 const baseMember: Partial<Member> = {
-  // METHODS
+  get avatarURL() {
+    return rawAvatarURL(this.id!, this.discriminator!, this.avatar!);
+  },
+  get mention() {
+    return `<@!${this.id!}>`;
+  },
 
+  // METHODS
+  makeAvatarURL(size, format) {
+    return rawAvatarURL(
+      this.id,
+      this.discriminator!,
+      this.avatar!,
+      size,
+      format,
+    );
+  },
   guild(guildID) {
     return cache.guilds.get(guildID);
   },
@@ -137,8 +153,16 @@ export interface Member {
   /** The guild related data mapped by guild id */
   guilds: Collection<string, GuildMember>;
 
+  // GETTERS
+  /** The avatar url using the default format and size. */
+  avatarURL: string;
+  /** The mention string for this member */
+  mention: string;
+
   // METHODS
 
+  /** Returns the avatar url for this member and can be dynamically modified with a size or format */
+  makeAvatarURL(size: ImageSize, format: ImageFormat): string;
   /** Returns the guild for this guildID */
   guild(guildID: string): Guild | undefined;
   /** Get the nickname or the username if no nickname */

@@ -66,8 +66,8 @@ export async function startBot(config: BotConfig) {
 export function updateEventHandlers(newEventHandlers: EventHandlers) {
   eventHandlers = {
     ...eventHandlers,
-    ...newEventHandlers
-  }
+    ...newEventHandlers,
+  };
 }
 
 /** INTERNAL LIB function used to set the bot ID once the READY event is sent by Discord. */
