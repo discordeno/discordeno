@@ -17,6 +17,7 @@ import {
 } from "../structures/structures.ts";
 import { cacheHandlers } from "./cache.ts";
 
+/** This function is the internal handler for the ready event. Users can override this with controllers if desired. */
 export async function handleInternalReady(
   data: DiscordPayload,
   shardID: number,
@@ -47,6 +48,7 @@ export async function handleInternalReady(
   allowNextShard();
 }
 
+/** This function is the internal handler for the presence update event. Users can override this with controllers if desired. */
 export async function handleInternalPresenceUpdate(data: DiscordPayload) {
   if (data.t !== "PRESENCE_UPDATE") return;
 
@@ -57,11 +59,13 @@ export async function handleInternalPresenceUpdate(data: DiscordPayload) {
   return eventHandlers.presenceUpdate?.(payload, oldPresence);
 }
 
+/** This function is the internal handler for the typings event. Users can override this with controllers if desired. */
 export function handleInternalTypingStart(data: DiscordPayload) {
   if (data.t !== "TYPING_START") return;
   eventHandlers.typingStart?.(data.d as TypingStartPayload);
 }
 
+/** This function is the internal handler for the user update event. Users can override this with controllers if desired. */
 export async function handleInternalUserUpdate(data: DiscordPayload) {
   if (data.t !== "USER_UPDATE") return;
 
@@ -77,6 +81,7 @@ export async function handleInternalUserUpdate(data: DiscordPayload) {
   return eventHandlers.botUpdate?.(userData);
 }
 
+/** This function is the internal handler for the voice state update event. Users can override this with controllers if desired. */
 export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
   if (data.t !== "VOICE_STATE_UPDATE") return;
 
@@ -127,6 +132,7 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
   eventHandlers.voiceStateUpdate?.(member, payload);
 }
 
+/** This function is the internal handler for the webhooks update event. Users can override this with controllers if desired. */
 export function handleInternalWebhooksUpdate(data: DiscordPayload) {
   if (data.t !== "WEBHOOKS_UPDATE") return;
 

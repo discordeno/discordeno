@@ -93,9 +93,8 @@ export async function requestAllMembers(
   resolve: Function,
   options?: FetchMembersOptions,
 ) {
-  const nonce = `${guild.id}-${Math.random().toString()}`;
+  const nonce = `${guild.id}-${Date.now()}`;
   cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
-
   return requestGuildMembers(guild.id, guild.shardID, nonce, options);
 }
 

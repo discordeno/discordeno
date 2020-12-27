@@ -62,10 +62,15 @@ export async function startBot(config: BotConfig) {
   spawnShards(botGatewayData, identifyPayload, 0, botGatewayData.shards);
 }
 
+/** Allows you to dynamically update the event handlers by passing in new eventHandlers */
 export function updateEventHandlers(newEventHandlers: EventHandlers) {
-  eventHandlers = newEventHandlers;
+  eventHandlers = {
+    ...eventHandlers,
+    ...newEventHandlers
+  }
 }
 
+/** INTERNAL LIB function used to set the bot ID once the READY event is sent by Discord. */
 export function setBotID(id: string) {
   if (botID !== id) botID = id;
 }

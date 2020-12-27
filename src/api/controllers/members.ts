@@ -7,6 +7,7 @@ import {
   GuildMemberUpdatePayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
+import { Collection } from "../../util/collection.ts";
 import { structures } from "../structures/structures.ts";
 import { cacheHandlers } from "./cache.ts";
 
@@ -94,11 +95,11 @@ export async function handleInternalGuildMembersChunk(data: DiscordPayload) {
   if (data.t !== "GUILD_MEMBERS_CHUNK") return;
 
   const payload = data.d as GuildMemberChunkPayload;
-  const guild = await cacheHandlers.get("guilds", payload.guild_id);
-  if (!guild) return;
 
-  await Promise.all(
-    payload.members.map((member) => structures.createMember(member, guild.id)),
+  const members = await Promise.all(
+    payload.members.map((member) =>
+      structures.createMember(member, payload.guild_id)
+    ),
   );
 
   // Check if its necessary to resolve the fetchmembers promise for this chunk or if more chunks will be coming
@@ -110,8 +111,16 @@ export async function handleInternalGuildMembersChunk(data: DiscordPayload) {
 
     if (payload.chunk_index + 1 === payload.chunk_count) {
       cache.fetchAllMembersProcessingRequests.delete(payload.nonce);
-      resolve(
-        await cacheHandlers.filter("members", (m) => m.guilds.has(guild.id)),
+      // Only 1 chunk most likely is all members or users only request a small amount of users
+      if (payload.chunk_count === 1) {
+        return resolve(new Collection(members.map((m) => [m.id, m])));
+      }
+
+      return resolve(
+        await cacheHandlers.filter(
+          "members",
+          (m) => m.guilds.has(payload.guild_id),
+        ),
       );
     }
   }
