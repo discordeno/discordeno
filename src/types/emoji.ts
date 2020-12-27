@@ -35,4 +35,3 @@ export interface EmojiPayload {
     /** roles to which this emoji will be whitelisted */
     roles?: string[] | null;
   }
-  
