@@ -29,6 +29,9 @@ const baseMember: Partial<Member> = {
   get mention() {
     return `<@!${this.id!}>`;
   },
+  get tag() {
+    return `${this.username!}#${this.discriminator1}`;
+  },
 
   // METHODS
   makeAvatarURL(size, format) {
@@ -160,6 +163,8 @@ export interface Member {
   avatarURL: string;
   /** The mention string for this member */
   mention: string;
+  /** The username#discriminator tag for this member */
+  tag: string;
 
   // METHODS
 
