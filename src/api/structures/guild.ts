@@ -59,7 +59,7 @@ const baseGuild: Partial<Guild> = {
     return this.bot?.guilds.get(this.id!);
   },
   get botVoice() {
-    return this.voiceStates.get(botID);
+    return this.voiceStates?.get(botID);
   },
   get owner() {
     return cache.members.get(this.ownerID!);

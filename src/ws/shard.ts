@@ -110,7 +110,10 @@ export async function createShard(
           break;
         case GatewayOpcode.InvalidSession:
           eventHandlers.debug?.(
-            { type: "gatewayInvalidSession", data: { shardID: basicShard.id, data } },
+            {
+              type: "gatewayInvalidSession",
+              data: { shardID: basicShard.id, data },
+            },
           );
           // When d is false we need to reidentify
           if (!data.d) {
