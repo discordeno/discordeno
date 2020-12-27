@@ -1,7 +1,6 @@
 import { botID } from "../../bot.ts";
 import {
   BannedUser,
-  ChannelCreatePayload,
   CreateGuildPayload,
   Emoji,
   GetAuditLogsOptions,
@@ -16,6 +15,7 @@ import {
 } from "../../types/types.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
+import { createNewProp } from "../../util/utils.ts";
 import {
   deleteServer,
   editGuild,
@@ -140,46 +140,55 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     channels.map((c) => structures.createChannel(c, data.id)),
   );
 
-  const guild = {
-    ...rest,
-    discoverySplash,
-    defaultMessageNotifications,
-    explicitContentFilter,
-    rulesChannelID,
-    publicUpdatesChannelID,
-    maxVideoChannelUsers,
-    approximateMemberCount,
-    approximatePresenceCount,
-    shardID,
-    ownerID,
-    afkChannelID,
-    afkTimeout,
-    widgetEnabled,
-    widgetChannelID,
-    verificationLevel,
-    mfaLevel,
-    systemChannelID,
-    maxPresences,
-    maxMembers,
-    vanityURLCode,
-    premiumTier,
-    premiumSubscriptionCount,
-    preferredLocale,
-    roles: new Collection(roles.map((r) => [r.id, r])),
-    joinedAt: Date.parse(joinedAt),
-    presences: new Collection(data.presences.map((p) => [p.user.id, p])),
-    memberCount: memberCount || 0,
-    voiceStates: new Collection(voiceStates.map((vs) => [vs.user_id, {
-      ...vs,
-      guildID: vs.guild_id,
-      channelID: vs.channel_id,
-      userID: vs.user_id,
-      sessionID: vs.session_id,
-      selfDeaf: vs.self_deaf,
-      selfMute: vs.self_mute,
-      selfStream: vs.self_stream,
-    }])),
-  };
+  const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
+  for (const key of Object.keys(rest)) {
+    restProps[key] = createNewProp((rest as any)[key]);
+  }
+
+  const guild = Object.create(baseGuild, {
+    ...restProps,
+    discoverySplash: createNewProp(discoverySplash),
+    defaultMessageNotifications: createNewProp(defaultMessageNotifications),
+    explicitContentFilter: createNewProp(explicitContentFilter),
+    rulesChannelID: createNewProp(rulesChannelID),
+    publicUpdatesChannelID: createNewProp(publicUpdatesChannelID),
+    maxVideoChannelUsers: createNewProp(maxVideoChannelUsers),
+    approximateMemberCount: createNewProp(approximateMemberCount),
+    approximatePresenceCount: createNewProp(approximatePresenceCount),
+    shardID: createNewProp(shardID),
+    ownerID: createNewProp(ownerID),
+    afkChannelID: createNewProp(afkChannelID),
+    afkTimeout: createNewProp(afkTimeout),
+    widgetEnabled: createNewProp(widgetEnabled),
+    widgetChannelID: createNewProp(widgetChannelID),
+    verificationLevel: createNewProp(verificationLevel),
+    mfaLevel: createNewProp(mfaLevel),
+    systemChannelID: createNewProp(systemChannelID),
+    maxPresences: createNewProp(maxPresences),
+    maxMembers: createNewProp(maxMembers),
+    vanityURLCode: createNewProp(vanityURLCode),
+    premiumTier: createNewProp(premiumTier),
+    premiumSubscriptionCount: createNewProp(premiumSubscriptionCount),
+    preferredLocale: createNewProp(preferredLocale),
+    roles: createNewProp(new Collection(roles.map((r) => [r.id, r]))),
+    joinedAt: createNewProp(Date.parse(joinedAt)),
+    presences: createNewProp(
+      new Collection(data.presences.map((p) => [p.user.id, p])),
+    ),
+    memberCount: createNewProp(memberCount || 0),
+    voiceStates: createNewProp(
+      new Collection(voiceStates.map((vs) => [vs.user_id, {
+        ...vs,
+        guildID: vs.guild_id,
+        channelID: vs.channel_id,
+        userID: vs.user_id,
+        sessionID: vs.session_id,
+        selfDeaf: vs.self_deaf,
+        selfMute: vs.self_mute,
+        selfStream: vs.self_stream,
+      }])),
+    ),
+  });
 
   initialMemberLoadQueue.set(guild.id, members);
 
@@ -317,11 +326,18 @@ export interface Guild {
 }
 
 interface CleanVoiceState extends VoiceState {
+  /** The guild id where this voice state is from */
   guildID: string;
+  /** The channel id where this voice state is from */
   channelID: string;
+  /** The user id */
   userID: string;
+  /** The unique random session id for this voice session */
   sessionID: string;
+  /** Whether the user has deafened themself */
   selfDeaf: boolean;
+  /** Whether the user has muted themself */
   selfMute: boolean;
+  /** Whether the user is streaming on go live */
   selfStream: boolean;
 }
