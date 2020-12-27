@@ -1,8 +1,0 @@
-{
-    "deno.enable": true,
-    "editor.defaultFormatter": "denoland.vscode-deno",
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": true
-    }
-}
