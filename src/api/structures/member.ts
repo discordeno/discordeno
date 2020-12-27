@@ -2,6 +2,8 @@ import {
   BanOptions,
   EditMemberOptions,
   GuildMember,
+  ImageFormat,
+  ImageSize,
   MemberCreatePayload,
   MessageContent,
 } from "../../types/mod.ts";

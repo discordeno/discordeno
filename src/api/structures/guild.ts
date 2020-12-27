@@ -143,10 +143,9 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     ...rest
   } = data;
 
-  const roles =
-    (await Promise.all(
-      data.roles.map((r: RoleData) => structures.createRole(r)),
-    )) as Role[];
+  const roles = (await Promise.all(
+    data.roles.map((r: RoleData) => structures.createRole(r)),
+  )) as Role[];
 
   await Promise.all(
     channels.map((c: ChannelCreatePayload) =>
