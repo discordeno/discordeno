@@ -15,7 +15,7 @@ import {
   Permissions,
   RawOverwrite,
   WebhookPayload,
-} from "../../types/types.ts";
+} from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasChannelPermissions,

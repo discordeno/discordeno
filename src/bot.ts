@@ -3,7 +3,7 @@ import {
   BotConfig,
   DiscordBotGatewayData,
   EventHandlers,
-} from "./types/types.ts";
+} from "./types/mod.ts";
 import { baseEndpoints, endpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 

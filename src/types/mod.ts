@@ -8,7 +8,6 @@ export * from "./guild.ts";
 export * from "./interactions.ts";
 export * from "./member.ts";
 export * from "./message.ts";
-export * from "./misc.ts";
 export * from "./options.ts";
 export * from "./permission.ts";
 export * from "./presence.ts";

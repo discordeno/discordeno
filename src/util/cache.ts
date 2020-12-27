@@ -4,7 +4,7 @@ import {
   Member,
   Message,
 } from "../api/structures/structures.ts";
-import { PresenceUpdatePayload } from "../types/types.ts";
+import { PresenceUpdatePayload } from "../types/mod.ts";
 import { Collection } from "./collection.ts";
 
 export interface CacheData {

@@ -7,7 +7,7 @@ import {
   UserPayload,
   VoiceStateUpdatePayload,
   WebhookUpdatePayload,
-} from "../../types/types.ts";
+} from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { delay } from "../../util/utils.ts";
 import { allowNextShard } from "../../ws/shard_manager.ts";

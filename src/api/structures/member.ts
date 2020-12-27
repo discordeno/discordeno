@@ -4,7 +4,7 @@ import {
   GuildMember,
   MemberCreatePayload,
   MessageContent,
-} from "../../types/types.ts";
+} from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";

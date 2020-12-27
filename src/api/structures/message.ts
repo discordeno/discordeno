@@ -10,7 +10,7 @@ import {
   Reaction,
   Reference,
   UserPayload,
-} from "../../types/types.ts";
+} from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { createNewProp } from "../../util/utils.ts";
 import { sendMessage } from "../handlers/channel.ts";

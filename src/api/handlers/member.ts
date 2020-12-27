@@ -7,7 +7,7 @@ import {
   ImageFormats,
   ImageSize,
   MessageContent,
-} from "../../types/types.ts";
+} from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasPermission,

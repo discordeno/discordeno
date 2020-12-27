@@ -10,7 +10,7 @@ import {
   FetchMembersOptions,
   GatewayOpcode,
   ReadyPayload,
-} from "../types/types.ts";
+} from "../types/mod.ts";
 import { BotStatusRequest, delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
 import { handleDiscordPayload } from "./shard_manager.ts";

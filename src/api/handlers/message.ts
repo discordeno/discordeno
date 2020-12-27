@@ -5,7 +5,7 @@ import {
   MessageContent,
   MessageCreateOptions,
   UserPayload,
-} from "../../types/types.ts";
+} from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { delay } from "../../util/utils.ts";

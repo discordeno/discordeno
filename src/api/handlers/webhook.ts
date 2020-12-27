@@ -12,7 +12,7 @@ import {
   UpsertSlashCommandOptions,
   WebhookCreateOptions,
   WebhookPayload,
-} from "../../types/types.ts";
+} from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
@@ -186,7 +186,7 @@ export function deleteWebhookMessage(
  * - Your app **cannot** have two guild commands within the same name **on the same guild**
  * - Your app **can** have a global and guild command with the same name
  * - Multiple apps **can** have commands with the same names
- * 
+ *
  * Global commands are cached for **1 hour**. That means that new global commands will fan out slowly across all guilds, and will be guaranteed to be updated in an hour.
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
@@ -257,7 +257,7 @@ export function deleteSlashCommand(id: string, guildID?: string) {
 /**
  * Send a response to a users slash command. The command data will have the id and token necessary to respond.
  * Interaction `tokens` are valid for **15 minutes** and can be used to send followup messages.
- * 
+ *
  * NOTE: By default we will suppress mentions. To enable mentions, just pass any mentions object.
  */
 export function executeSlashCommand(

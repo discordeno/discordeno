@@ -4,7 +4,7 @@ import {
   ImageFormats,
   ImageSize,
   StatusType,
-} from "../types/types.ts";
+} from "../types/mod.ts";
 import { sendGatewayCommand } from "../ws/shard_manager.ts";
 
 export const sleep = (timeout: number) => {

@@ -31,7 +31,7 @@ import {
   RoleData,
   UpdateGuildPayload,
   UserPayload,
-} from "../../types/types.ts";
+} from "../../types/mod.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasPermission, calculateBits } from "../../util/permissions.ts";
@@ -416,9 +416,9 @@ export async function pruneMembers(guildID: string, options: PruneOptions) {
   );
 }
 
-/** 
+/**
  * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM cache.members.get()
- * 
+ *
  * ADVANCED:
  * Highly recommended to use this function to fetch members instead of getMember from REST.
  * REST: 50/s global(across all shards) rate limit with ALL requests this included

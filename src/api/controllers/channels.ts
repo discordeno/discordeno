@@ -3,7 +3,7 @@ import {
   ChannelCreatePayload,
   ChannelTypes,
   DiscordPayload,
-} from "../../types/types.ts";
+} from "../../types/mod.ts";
 import { structures } from "../structures/structures.ts";
 import { cacheHandlers } from "./cache.ts";
 

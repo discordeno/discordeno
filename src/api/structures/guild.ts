@@ -1,6 +1,7 @@
 import { botID } from "../../bot.ts";
 import {
   BannedUser,
+  ChannelCreatePayload,
   CreateGuildPayload,
   Emoji,
   GetAuditLogsOptions,
@@ -11,8 +12,9 @@ import {
   ImageSize,
   MemberCreatePayload,
   Presence,
+  RoleData,
   VoiceState,
-} from "../../types/types.ts";
+} from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
@@ -133,11 +135,13 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
   } = data;
 
   const roles = await Promise.all(
-    data.roles.map((r) => structures.createRole(r)),
-  );
+    data.roles.map((r: RoleData) => structures.createRole(r)),
+  ) as Role[];
 
   await Promise.all(
-    channels.map((c) => structures.createChannel(c, data.id)),
+    channels.map((c: ChannelCreatePayload) =>
+      structures.createChannel(c, data.id)
+    ),
   );
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
@@ -170,14 +174,14 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     premiumTier: createNewProp(premiumTier),
     premiumSubscriptionCount: createNewProp(premiumSubscriptionCount),
     preferredLocale: createNewProp(preferredLocale),
-    roles: createNewProp(new Collection(roles.map((r) => [r.id, r]))),
+    roles: createNewProp(new Collection(roles.map((r: Role) => [r.id, r]))),
     joinedAt: createNewProp(Date.parse(joinedAt)),
     presences: createNewProp(
-      new Collection(data.presences.map((p) => [p.user.id, p])),
+      new Collection(data.presences.map((p: Presence) => [p.user.id, p])),
     ),
     memberCount: createNewProp(memberCount || 0),
     voiceStates: createNewProp(
-      new Collection(voiceStates.map((vs) => [vs.user_id, {
+      new Collection(voiceStates.map((vs: VoiceState) => [vs.user_id, {
         ...vs,
         guildID: vs.guild_id,
         channelID: vs.channel_id,

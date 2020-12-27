@@ -6,7 +6,7 @@ import {
   DiscordPayload,
   FetchMembersOptions,
   GatewayOpcode,
-} from "../types/types.ts";
+} from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
 import { BotStatusRequest, delay } from "../util/utils.ts";
 import {

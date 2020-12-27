@@ -5,7 +5,7 @@ import {
   GuildMemberAddPayload,
   GuildMemberChunkPayload,
   GuildMemberUpdatePayload,
-} from "../../types/types.ts";
+} from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { structures } from "../structures/structures.ts";
 import { cacheHandlers } from "./cache.ts";

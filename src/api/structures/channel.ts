@@ -2,7 +2,7 @@ import {
   ChannelCreatePayload,
   ChannelType,
   RawOverwrite,
-} from "../../types/types.ts";
+} from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
@@ -93,15 +93,15 @@ export interface Channel {
 
   // GETTERS
 
-  /** 
+  /**
    * Gets the guild object for this channel.
-   * 
+   *
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
   guild?: Guild;
-  /** 
+  /**
    * Gets the messages from cache that were sent in this channel
-   * 
+   *
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
   messages: Collection<string, Message>;
