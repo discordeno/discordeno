@@ -11,8 +11,7 @@ An event in Discordeno is a function that can be called when a specific event oc
 Go ahead and open up the `src/events/ready.ts` file. When you open this file, you will see the code that is triggered on the `ready` event. Whenever the bot completely starts up, Discordeno emits the `ready` event. This is when this code will be run allowing you to log these messages.
 
 ```ts
-import { botCache } from "../../mod.ts";
-import { cache } from "https://deno.land/x/discordeno@9.4.0/src/utils/cache.ts";
+import { botCache, cache } from "../../deps.ts";
 
 botCache.eventHandlers.ready = function () {
   console.log(`Loaded ${botCache.arguments.size} Argument(s)`);
@@ -71,10 +70,8 @@ botCache.eventHandlers.discordLog = function (error) {
     ].join("\n"))
     .setTimestamp();
 
-  // Get the channel we need to send this error to
-  const errorChannel = configs.channelIDs.errorChannelID;
   // If the channel is not found cancel out
-  if (!errorChannel) return;
+  if (!configs.channelIDs.errorChannelID) return;
 
   // Send the message
   return sendEmbed(errorChannel, embed);

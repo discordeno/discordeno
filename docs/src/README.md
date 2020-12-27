@@ -18,7 +18,7 @@ A Third Party Deno library for interacting with the Discord API.
 
 ### Best TypeScript Support!
 
-First class support for Typescript! Never compile your code again in order to run it. Automated typings so they are never inaccurate or out of date.
+First class support for Typescript! Never compile your code again in order to run it.
 
 ### Stable Library
 
@@ -30,7 +30,7 @@ Several bot boilerplates are available to get up and running very quickly. The O
 
 ### Security
 
-Checks all missing permissions necessary before sending a request to the API so that your bot's token do not get globally banned by Discord. Discordeno does not support self-bot functionality like other libraries either.
+Checks all missing permissions necessary before sending a request to the API so that your bot's token do not get globally banned by Discord. Discordeno does not support self-bot functionality like other libraries either. Even goes so far as to prevent self-bot farms!
 
 ### Documentation
 

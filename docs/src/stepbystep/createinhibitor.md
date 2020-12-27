@@ -43,18 +43,18 @@ if (!command.vipOnly) return false;
 // The bot's support server
 const guild = cache.guilds.get(configs.supportServerID);
 // If the command author is not in the server they won't have the vip role
-const member = guild.members.get(message.author.id) || await getMember(guild.id, message.author.id);
+const member = message.member || await getMember(guild.id, message.author.id).catch(console.error);
 // Member doesn't exist so cancel the command
 if (!member) {
-	sendResponse(message, `sorry, but you can not use this command until you become VIP. **Close the IRIS!!!**`)
+	message.sendResponse(`Sorry, but you can not use this command until you become VIP. **Close the IRIS!!!**`)
 	return true;
 }
 
 // If the user has the vip role on the support server given by patreon allow the command
-if (member.roles.includes(configs.roleIDs.patreonVIPRoleID)) return false;
+if (member.guilds.get(message.guildID)?.roles.includes(configs.roleIDs.patreonVIPRoleID)) return false;
 
 // Alert the user they don't have vip and can't use the command
-sendResponse(message, `sorry, but you can not use this command until you become a VIP. I'm sorry, Teal'c. We'll go to Disneyland next year. I promise.`)
+message.sendResponse(`Sorry, but you can not use this command until you become a VIP. I'm sorry, Teal'c. We'll go to Disneyland next year. I promise.`)
 // Cancel the command since the user does not have vip
 return true;
 ```

@@ -93,9 +93,9 @@ const baseMessage: Partial<Message> = {
     return sendMessage(this.channelID!, content);
   },
   alert(content, timeout = 10, reason = "") {
-    return sendMessage(this.channelID!, content).then((response) =>
-      response.delete(reason, timeout * 1000).catch(console.error)
-    );
+    return sendMessage(this.channelID!, content).then((response) => {
+      response.delete(reason, timeout * 1000).catch(console.error);
+    });
   },
   alertResponse(content, timeout = 10, reason = "") {
     return this.sendResponse!(content).then((response) =>
@@ -150,7 +150,7 @@ export async function createMessage(data: MessageCreateOptions) {
     ),
   });
 
-  return message;
+  return message as Message;
 }
 
 export interface Message {

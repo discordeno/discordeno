@@ -7,24 +7,21 @@ Really great job. Now, lets dive into trying to use some of the commands and try
 Let's first start by taking an existing command and slightly modifying it to your needs. Let's use the `Invite` command as our example. When you open the command, you will see something like this:
 
 ```ts
-import { botCache } from "../../mod.ts";
-import { sendMessage } from "https://deno.land/x/discordeno@9.4.0/src/handlers/channel.ts";
-import { botID } from "https://deno.land/x/discordeno@9.4.0/src/module/client.ts";
+import { botCache } from "../../deps.ts";
 import { createCommand } from "../utils/helpers.ts"
 
 createCommand({
   name: "invite",
   execute: function (message) {
     // Replace the permission number at the end to request the permissions you wish to request. By default, this will request Admin perms.
-    sendMessage(
-      message.channelID,
+    message.reply(
       `https://discordapp.com/oauth2/authorize?client_id=${botID}&scope=bot&permissions=8`,
     );
   },
 });
 ```
 
-Let's break this down. The first four lines are importing the necessary things from their files so we can use them in this command. Don't worry if this doesn't make sense, most of the time, this will all be done automatically for you if you use a good code editor like Visual Studio Code. We create a command by doing:
+Let's break this down. The first two lines are importing the necessary things from their files so we can use them in this command. Don't worry if this doesn't make sense, most of the time, this will all be done automatically for you if you use a good code editor like Visual Studio Code. We create a command by doing:
 
 ```ts
 createCommand({
@@ -61,7 +58,7 @@ description: "Like the bot? Use this link to add it to your server!",
 🎉 It's that simple. So let's restart the bot and see how it changed. Use **CTRL + C** to shut down the bot. Then run the command from earlier.
 
 ```shell
-deno run --allow-net --allow-read --no-check --config tsconfig.json mod.ts
+deno run -A --no-check mod.ts
 ```
 
 To access this easily, most likely all you need to do is press the **UP ARROW** key. Feel free to copy paste this if it doesn't work.
@@ -79,8 +76,6 @@ name: "invite",
 aliases: ["inv", "join"],
 description: "Like the bot? Use this link to add it to your server!",
 ```
-
-> **Note:** If you only want to add 1 alias, you can pass in a simple string instead of an array as well as the second argument.
 
 Notice, I added 2 aliases here. You can add as many aliases as you like. If you see a lot of users typing it wrong by accident you can add those typos as aliases as well.
 
@@ -113,10 +108,9 @@ If you get stuck, don't worry. When you are ready, let's continue to the next st
 Let's make a command that will allow guild admins to give or take roles from a member. Since, we are creating a `Moderation` command to give or take roles, let's go ahead and create a category folder called `Moderation` and then create a file called `role.ts`. Once the file is made, you can paste this following base snippet to make our first command.
 
 ```ts
-import { botCache } from "../../mod.ts";
-import { sendMessage } from "https://deno.land/x/discordeno@9.4.0/src/handlers/channel.ts";
+import { botCache } from "../../deps.ts";
 import { PermissionLevels } from "../types/commands.ts";
-import { createCommandAliases } from "../utils/helpers";
+import { createCommand } from "../utils/helpers.ts";
 
 createCommand({
   name: "commandname",
@@ -139,8 +133,6 @@ createCommand({
   // The code for your command goes here
   }
 });
-
-// createCommandAliases("commandname", ["alias"])
 ```
 
 ## Understanding Command Options
@@ -150,8 +142,6 @@ Woah! We just added a massive file but most of that stuff is new to us. Don't wo
 > **Note:** Any options that are not changed from the snippet above can actually be deleted as Discordeno will use the default option if you do not provide anything for that option. This can help keep your files cleaner.
 
 Before we start, quickly update the command name and description.
-
-> **Note:** Once you highlight the `commandname`, press **CTRL + SHIFT + L** to select ALL the `commandname` on the file and you can easily replace them at once. Another useful shortcut you may use when coding your bot is **CTRL + D** after highlighting. This shortcut selects the next place where the same text exists as  thing in the file that has the same thing as you highlighted.
 
 ## dmOnly & guildOnly Options
 
@@ -169,7 +159,9 @@ For the purpose of this guide, we want our `role` comamnd to only be run in a se
 
 NSFW stands for **Not Safe For Work**. One of Discord's rules is that you enforce that NSFW content is sent only in NSFW channels. Discordeno has this built in. You simply tell Discordeno, that you want a command to be considered `nsfw` or not.
 
-If this option is enabled, this command will only be able to be used in a `nsfw` channel on a server. Discord does not consider Direct Messages as nsfw safe!
+If this option is enabled, this command will only be able to be used in a `nsfw` channel on a server.
+
+> Discord does not consider Direct Messages as nsfw safe!
 
 ## Permission Level Option
 
@@ -250,14 +242,14 @@ arguments: [
     name: "member",
     type: "member",
     missing: (message) => {
-      sendResponse(message, `you did not provide a member to give the role to. You can provide a @member mention, a member ID, or try using their nickname/username. The nickname/username will only work if they have been active in your server recently.`)
+      message.sendResponse(`You did not provide a member to give the role to. You can provide a @member mention, a member ID, or try using their nickname/username. The nickname/username will only work if they have been active in your server recently.`)
     }
   },
   {
     name: "role",
     type: "role",
     missing: (message) => {
-      sendResponse(message, `you did not provide a role to give. You can provide a @role mention, a role ID, or it's name. If the role name did not work, try to use the **roleinfo** command to get the role ID.`)
+      message.sendResponse(`You did not provide a role to give. You can provide a @role mention, a role ID, or it's name. If the role name did not work, try to use the **roleinfo** command to get the role ID.`)
     }
   }
 ]
@@ -320,7 +312,7 @@ To do this, we are going to want something like this:
 
 ```ts
 if (args.role.id === message.guildID) {
-  return sendResponse(message, "The everyone role can not be given to anyone because everyone has the everyone role already. *Keep calm and let Carter figure it out*!");
+  return message.sendResponse("The everyone role can not be given to anyone because everyone has the everyone role already. *Keep calm and let Carter figure it out*!");
 }
 ```
 
@@ -334,7 +326,7 @@ import { Role, Member } from "../../deps.ts";
 execute: function (message, args: RoleArgs, guild) {
   // If this was the everyone role alert with a silly error
   if (args.role.id === message.guildID) {
-    return sendResponse(message, "Are you trying to make this person a super hero? Everyone has the everyone role. I can't give the everyone role to another user.");
+    return message.sendResponse("Are you trying to make this person a super hero? Everyone has the everyone role. I can't give the everyone role to another user.");
   }
 
   // Lots of comments here hidden so you can see the changes easily.
@@ -355,55 +347,54 @@ Awesome! Let's keep going.
 execute: async function (message, args: RoleArgs, guild) {
   // If this was the everyone role alert with a silly error
   if (args.role.id === message.guildID) {
-    return sendResponse(message, "I don't know if you noticed or not but I'm an extremely arrogant bot who tends to think all of his plans will work. But I can't give the everyone role to someone.");
+    return message.sendResponse("I don't know if you noticed or not but I'm an extremely arrogant bot who tends to think all of his plans will work. But I can't give the everyone role to someone.");
   }
 
   // If this is a managed role(some bots role) we can't give/remove alert with silly error
   if (args.role.managed) {
-    return sendResponse(message, "Dammit man, just 'cause I'm Scottish doesn't mean I can give your people managed roles.")
+    return message.sendResponse("Dammit man, just 'cause I'm Scottish doesn't mean I can give your people managed roles.")
   }
 
   // Get the bots highest role
-  const botsHighestRole = highestRole(message.guildID, botID);
+  const botsHighestRole = await highestRole(message.guildID, botID);
 
   // Check if the bot has a role higher than the role that it will try to give.
-  const botIsHigher = higherRolePosition(message.guildID, botsHighestRole.id, args.role.id)
+  const botIsHigher = await higherRolePosition(message.guildID, botsHighestRole.id, args.role.id)
 
   // If the role is too high alert the user.
   if (!botIsHigher) {
-    return sendResponse(message, "Okay look, asking me give a role that is higher than my highest role is ridiculous! I am the first bot to admit I don't know who these people are nor do I care to. Look, if you'd like I could take you down the hall and just point at the people who annoy me more than the rest. But that's about as useful as I get.")
+    return message.sendResponse("Okay look, asking me give a role that is higher than my highest role is ridiculous! I am the first bot to admit I don't know who these people are nor do I care to. Look, if you'd like I could take you down the hall and just point at the people who annoy me more than the rest. But that's about as useful as I get.")
   }
 
   // Check the command author's highest role
-  const membersHighestRole = highestRole(message.guildID, message.author.id);
+  const membersHighestRole = await highestRole(message.guildID, message.author.id);
 
   // If the author does not have a role high enough to give this role alert
-  if (!higherRolePosition(message.guildID, membersHighestRole.id, args.role.id)) {
-    return sendResponse(message, "In my culture, whenever someone tries to give a role that is higher than their highest role, I would be well within my rights to dismember you.")
+  if (!(await higherRolePosition(message.guildID, membersHighestRole.id, args.role.id))) {
+    return message.sendResponse("In my culture, whenever someone tries to give a role that is higher than their highest role, I would be well within my rights to dismember you.")
   }
 
   // If the user has this role already we should remove it
-  if (message.member().roles.includes(args.role.id)) {
-    removeRole(message.guildID, args.member.user.id, args.role.id, `${message.author.tag} used the role command to remove this role.`)
+  if (message.member?.guilds.get(message.guildID)?.roles.includes(args.role.id)) {
+    message.member.removeRole(message.guildID, args.role.id, `${message.author.tag} used the role command to remove this role.`)
     // Alert the user that used the command that the user has lost the role.
-    return sendResponse(message, `The role **${args.role.name}** has been removed from **${args.member.tag}**.`)
+    return message.sendResponse(`The role **${args.role.name}** has been removed from **${args.member.tag}**.`)
   }
 
   // Add the role to the user.
-  addRole(guildID, memberID, roleID)
+  message.member?.addRole(guildID, roleID)
 
   // Alert the user that used the command that the user has been give the role.
-  return sendResponse(message, `The role **${args.role.name}** has been added to **${args.member.tag}**.`)
+  return message.sendResponse(`The role **${args.role.name}** has been added to **${args.member.tag}**.`)
 }
 ```
-> **Note:** Asynchronous functions are an advanced topic, and you do not need to worry about them now. Basically, we need to do that because checking the highest Role requires the use of await.
 
 The final version of the command should look something like this:
 
 ```ts
-import { botCache, highestRole, higherRolePosition, botID, removeRole, addRole, Role, Member } from "../../deps.ts";
+import { botCache, highestRole, higherRolePosition, botID, Role, Member } from "../../deps.ts";
 import { PermissionLevels } from "../types/commands.ts";
-import { createCommand, sendResponse } from "../utils/helpers.ts";
+import { createCommand } from "../utils/helpers.ts";
 
 createCommand({
   name: "role",
@@ -419,30 +410,28 @@ createCommand({
 			name: "member",
 			type: "member",
 			missing: (message) => {
-				sendResponse(message, `you did not provide a member to give the role to. You can provide a @member mention, a member ID, or try using their nickname/username. The nickname/username will only work if they have been active in your server recently.`)
+				message.sendResponse(`You did not provide a member to give the role to. You can provide a @member mention, a member ID, or try using their nickname/username. The nickname/username will only work if they have been active in your server recently.`)
 			}
 		},
 		{
 			name: "role",
 			type: "role",
 			missing: (message) => {
-				sendResponse(message, `you did not provide a role to give. You can provide a @role mention, a role ID, or it's name. If the role name did not work, try to use the **roleinfo** command to get the role ID.`)
+				message.sendResponse(`You did not provide a role to give. You can provide a @role mention, a role ID, or it's name. If the role name did not work, try to use the **roleinfo** command to get the role ID.`)
 			}
 		}
 	],
   execute: async function (message, args: RoleArgs) {
     // If this was the everyone role alert with a silly error
     if (args.role.id === message.guildID) {
-      return sendResponse(
-        message,
+      return message.sendResponse(
         "I don't know if you noticed or not but I'm an extremely arrogant bot who tends to think all of his plans will work. But I can't give the everyone role to someone.",
       );
     }
 
     // If this is a managed role(some bots role) we can't give/remove alert with silly error
     if (args.role.managed) {
-      return sendResponse(
-        message,
+      return message.sendResponse(
         "Dammit man, just 'cause I'm Scottish doesn't mean I can give your people managed roles.",
       );
     }
@@ -451,13 +440,12 @@ createCommand({
     const botsHighestRole = await highestRole(message.guildID, botID);
 
     // Check if the bot has a role higher than the role that it will try to give. If the role is too high alert the user.
-    if (!botsHighestRole || !higherRolePosition(
+    if (!botsHighestRole || !(await higherRolePosition(
       message.guildID,
       botsHighestRole.id,
       args.role.id,
-    )) {
-      return sendResponse(
-        message,
+    ))) {
+      return message.sendResponse(
         "Okay look, asking me give a role that is higher than my highest role is ridiculous! I am the first bot to admit I don't know who these people are nor do I care to. Look, if you'd like I could take you down the hall and just point at the people who annoy me more than the rest. But that's about as useful as I get.",
       );
     }
@@ -467,35 +455,31 @@ createCommand({
 
     // If the author does not have a role high enough to give this role alert
     if (!membersHighestRole ||
-      !higherRolePosition(message.guildID, membersHighestRole.id, args.role.id)
+      !(await higherRolePosition(message.guildID, membersHighestRole.id, args.role.id))
     ) {
-      return sendResponse(
-        message,
+      return message.sendResponse(
         "In my culture, whenever someone tries to give a role that is higher than their highest role, I would be well within my rights to dismember you.",
       );
     }
 
     // If the user has this role already we should remove it
-    if (message.member?.roles.includes(args.role.id)) {
-      removeRole(
+    if (message.member?.guilds.get(message.guildID)?.roles.includes(args.role.id)) {
+      message.member.removeRole(
         message.guildID,
-        args.member.user.id,
         args.role.id,
         `${message.author.username} used the role command to remove this role.`,
       );
       // Alert the user that used the command that the user has lost the role.
-      return sendResponse(
-        message,
+      return message.sendResponse(
         `The role **${args.role.name}** has been removed from **${args.member.tag}**.`,
       );
     }
 
     // Add the role to the user.
-    addRole(message.guildID, args.member.user.id, args.role.id, `${message.author.username} used the role command to give this role.`);
+    message.member?.addRole(message.guildID, args.role.id, `${message.author.username} used the role command to give this role.`);
 
     // Alert the user that used the command that the user has been give the role.
-    return sendResponse(
-      message,
+    return message.sendResponse(
       `The role **${args.role.name}** has been added to **${args.member.tag}**.`,
     );
   },
@@ -548,6 +532,7 @@ const funCommandData = [
 funCommandData.forEach((data) => {
   botCache.commands.set({
     name: data.name,
+    aliases: data.aliases,
     botChannelPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
     cooldown: {
       seconds: 2,
@@ -585,10 +570,6 @@ funCommandData.forEach((data) => {
       return sendEmbed(message.channelID, embed);
     },
   });
-
-  if (data.aliases?.length) {
-    createCommandAliases(data.name, data.aliases);
-  }
 });
 
 interface FunArgs {
@@ -596,9 +577,7 @@ interface FunArgs {
 }
 ```
 
-> **Note:** The imports in this are a bit different. I did this to show you that you can also import everything grouped like this through the `deps.ts` which will make everything available to you at ease.
-
-> **Note:** This is only an example of dynamic command creation and won't work if you try using this code. Since this is an advanced topic we're not going to cover this in more detail here, because we will have an entire in depth guide for dynamic command creation. If you want to pause and learn it now, feel free: [Dynamic Command Creation Advanced Guide](https://discordeno.mod.land/advanced/dynamiccommands.html)
+> **Note:** This is only an example of dynamic command creation and won't work if you try using this code since you won't have the configs necessary. Since this is an advanced topic we're not going to cover this in more detail here, because we will have an entire in depth guide for dynamic command creation. If you want to pause and learn it now, feel free: [Dynamic Command Creation Advanced Guide](https://discordeno.mod.land/advanced/dynamiccommands.html)
 
 Take a minute to realize what just happened. This has made 18 different unique commands dynamically. In 1 file, using the same piece of code, we created so many commands. You can easily add more commands to this. For example, if you wanted to add weeb (animated) versions of these commands. Then you are at 36 commands with 1 simple command file.
 

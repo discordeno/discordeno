@@ -12,7 +12,7 @@ For the purposes of this guide, I will be using the current [latest commit](http
 
 ## Preparations
 
-- First, create a Discordeno Bot using the [Generator Boilerplate](https://github.com/Skillz4Killz/Discordeno-bot-template) I will name it Zodiac.
+- First, create a Discordeno Bot using the [Generator Boilerplate](https://github.com/discordeno/discordeno-bot-template) I will name it Zodiac.
 
 - Then `git clone https://github.com/Skillz4Killz/Zodiac.git`
 
@@ -100,54 +100,49 @@ client.login(config.env.TOKEN)
 Discordeno Version:
 
 ```ts
-import Client, {
-  updateEventHandlers,
-} from "https://deno.land/x/discordeno@9.4.0/src/module/client.ts";
+import { botCache, Intents } from "./deps.ts";
 import { configs } from "./configs.ts";
-import { Intents } from "https://deno.land/x/discordeno@9.4.0/src/types/options.ts";
-import { eventHandlers } from "./src/events/eventHandlers.ts";
-import { Message } from "https://deno.land/x/discordeno@9.4.0/src/structures/message.ts";
-import { Command } from "./src/types/commands.ts";
-import { Guild } from "https://deno.land/x/discordeno@9.4.0/src/structures/guild.ts";
+import { importDirectory } from "./src/utils/helpers.ts";
+import { loadLanguages } from "./src/utils/i18next.ts";
 
-export const botCache = {
-  commands: new Map<string, Command>(),
-  commandAliases: new Map<string, string>(),
-  guildPrefixes: new Map<string, string>(),
-  inhibitors: new Map<
-    string,
-    (message: Message, command: Command, guild?: Guild) => boolean
-	>(),
-	eventHandlers: {} as EventHandlers
-};
+console.info(
+  "Beginning Bot Startup Process. This can take a little bit depending on your system. Loading now...",
+);
 
-const importDirectory = async (path: string) => {
-  const files = Deno.readDirSync(Deno.realPathSync(path));
-
-  for (const file of files) {
-    if (!file.name) continue;
-
-    const currentPath = `${path}/${file.name}`;
-    if (file.isFile) {
-      await import(currentPath);
-      continue;
-    }
-
-    importDirectory(currentPath);
-  }
-};
+// Always require these files be processed before anything else
+await Promise.all([
+  "./src/customizations/structures",
+].map(
+  (path) => importDirectory(Deno.realPathSync(path)),
+));
 
 // Forces deno to read all the files which will fill the commands/inhibitors cache etc.
 await Promise.all(
-  ["./src/commands", "./src/inhibitors", "./src/events"].map((path) => importDirectory(path)),
+  [
+    "./src/commands",
+    "./src/inhibitors",
+    "./src/events",
+    "./src/arguments",
+    "./src/monitors",
+    "./src/tasks",
+    "./src/permissionLevels",
+    "./src/events",
+  ].map(
+    (path) => importDirectory(Deno.realPathSync(path)),
+  ),
 );
 
+// Loads languages
+await loadLanguages();
+await import("./src/database/database.ts");
 
-Client({
+startBot({
   token: configs.token,
   // Pick the intents you wish to have for your bot.
-	intents: [Intents.GUILDS, Intents.GUILD_MESSAGES],
-	eventHandlers: botCache.eventHandlers
+  // For instance, to work with guild message reactions, you will have to pass the Intents.GUILD_MESSAGE_REACTIONS intent to the array.
+  intents: [Intents.GUILDS, Intents.GUILD_MESSAGES],
+  // These are all your event handler functions. Imported from the events folder
+  eventHandlers: botCache.eventHandlers,
 });
 ```
 
@@ -156,15 +151,35 @@ Something we haven't converted yet from the `main.js` files is the event listene
 In our `ready.ts` file we can add the `ready` event listener.
 
 ```ts
-import { botCache } from "../../mod.ts";
-import { configs } from "../../configs.ts";
-import { cache } from "https://deno.land/x/discordeno@9.4.0/src/utils/cache.ts";
-import { editBotsStatus, chooseRandom } from "https://deno.land/x/discordeno@9.4.0/src/utils/utils.ts";
-import { StatusType } from "https://deno.land/x/discordeno@9.4.0/src/types/discord.ts";
-import { ActivityType } from "https://deno.land/x/discordeno@9.4.0/src/types/activity.ts";
+import {
+  botCache,
+  cache,
+  editBotsStatus,
+  StatusTypes,
+  ActivityType,
+  chooseRandom
+} from "../../deps.ts";
+import { registerTasks } from "./../utils/taskHelper.ts";
 
 botCache.eventHandlers.ready = function () {
-  console.log(`[READY] Bot is online and ready in ${cache.guilds.size} guild(s)!`);
+  editBotsStatus(
+    StatusTypes.DoNotDisturb,
+    "Discordeno Best Lib",
+    ActivityType.Game
+  );
+
+  console.log(`Loaded ${botCache.arguments.size} Argument(s)`);
+  console.log(`Loaded ${botCache.commands.size} Command(s)`);
+  console.log(`Loaded ${Object.keys(botCache.eventHandlers).length} Event(s)`);
+  console.log(`Loaded ${botCache.inhibitors.size} Inhibitor(s)`);
+  console.log(`Loaded ${botCache.monitors.size} Monitor(s)`);
+  console.log(`Loaded ${botCache.tasks.size} Task(s)`);
+
+  registerTasks();
+
+  console.log(
+    `[READY] Bot is online and ready in ${cache.guilds.size} guild(s)!`
+  );
 
   // list of activities that the bot goes through
   const activityArray = [`${configs.prefix}help | `];
@@ -236,34 +251,32 @@ module.exports = class addRoleCommand extends Command {
 
 This is how to do it with Discordeno:
 ```ts
-import { botCache } from "../../mod.ts";
-import { addRole } from "https://deno.land/x/discordeno@9.4.0/src/handlers/member.ts";
-import { sendAlertResponse, sendResponse } from "../utils/helpers.ts";
+import { createCommand } from "./../../utils/helpers.ts";
 
-botCache.commands.set(`addrole`, {
+createCommand({
+  name: "role",
+  // Oher ways to call the command
+  aliases: ["addrole"],
   // Is the description used for 'help' command
   description: "Adds mentioned role to mentioned user.",
   // Prevents it from being used in dms
   guildOnly: true,
   botServerPermissions: ["ADMINISTRATOR", "MANAGE_ROLES"],
   userServerPermissions: ["MANAGE_ROLES"],
-  execute: (message, _args, guild) => {
-    const [member] = message.mentions();
-    const [roleIDToAdd] = message.mentionRoles;
-		const role = guild?.roles.get(roleIDToAdd)
-
+  arguments: [
+    { name: "member", type: "member" },
+    { name: "role", type: "role" }
+  ],
+  execute: (message, args) => {
     // checking to see if the user has the role or not
-    if (!member.roles.includes(roleIDToAdd)) {
-			addRole(guild!, member.user.id, roleIDToAdd)
-			sendAlertResponse(message, `has been given the role: ${role!.name}`, 5);
+    if (!args.member.roles.includes(args.role.id)) {
+			args.member.addRole(message.guildID, args.role.id)
+			message.sendResponse(`${args.member.mention} has been given the role: ${args.role.name}`, 5);
     } else {
-			sendResponse(message, `already has the role: ${role!.name}`)
+			message.sendResponse(`${args.member.mention} already has the role: ${args.role.name}`)
     }
   }
 });
-
-// other ways to call the command
-createCommandAliases("role", "addrole");
 ```
 
 Awesome, that is a full command converted from Discord.JS to Discordeno. See how easy it is! Let's convert one more command to see how to really take full advantage of Discordeno boilerplate and have something amazing.
@@ -304,7 +317,6 @@ module.exports = class kickCommand extends Command {
       userPermissions: ['KICK_MEMBERS'],
       // Prevents anyone other than owner to use the command
       ownerOnly: false
-
     })
   }
 
@@ -341,17 +353,11 @@ module.exports = class kickCommand extends Command {
 
 Discordeno Version
 ```ts
-import { sendMessage } from "https://deno.land/x/discordeno@9.4.0/src/handlers/channel.ts";
-import { Member } from "https://deno.land/x/discordeno@9.4.0/src/structures/member.ts";
-import { kick } from "https://deno.land/x/discordeno@9.4.0/src/handlers/member.ts";
-import { deleteMessage } from "https://deno.land/x/discordeno@9.4.0/src/handlers/message.ts";
-import { botCache } from "../../mod.ts";
-import { createCommandAliases, sendResponse } from "../utils/helpers.ts";
-import { Embed } from "../utils/Embed.ts";
-import { Args } from "../types/commands.ts";
+import { createCommand } from "./../../utils/helpers.ts";
 
-botCache.commands.set(`kick`, {
+createCommand({
   name: `kick`,
+  aliases: ["boot", "tempban"],
   description: "Kick command.",
   // adds cooldowns to the command
   cooldown: {
@@ -369,7 +375,7 @@ botCache.commands.set(`kick`, {
       name: "member",
       type: "member",
       missing: function (message) {
-        sendResponse(message, `User cannot be found.`);
+        message.sendResponse(`User cannot be found.`);
       },
       // By default this is true but for the purpose of the guide so you can see this exists.
       required: true,
@@ -383,32 +389,28 @@ botCache.commands.set(`kick`, {
       lowercase: true,
     },
   ],
-  execute: function (message, args: KickArgs, guild) {
-    if (!guild) return;
+  execute: function (message, args: KickArgs) {
     // setting up the embed for report/log
     const embed = new Embed()
       .setDescription(`Report: ${args.member.mention} Kick`)
       .addField("Reason >", args.reason)
       .addField("Time", message.timestamp.toString());
 
-    const reportchannel = guild.channels.find((channel) =>
+    const reportchannel = message.guild?.channels.find((channel) =>
       channel.name === "report"
     );
     if (!reportchannel) {
-      return sendResponse(message, "*`Report channel cannot be found!`*");
+      return message.sendResponse("*`Report channel cannot be found!`*");
     }
 
     // Delete the message command
-    deleteMessage(message, "Remove kick command trigger.");
+    message.delete("Remove kick command trigger.");
     // Kick the user with reason
-    kick(guild, args.member.user.id, args.reason);
+    args.member.kick(message.guildID, args.reason);
     // sends the kick report into log/report
-    sendMessage(reportchannel, embed);
+    reporchannel.send({ embed });
   },
 });
-
-// other ways to call the command, must be in lowercase
-createCommandAliases("kick", ["boot", "tempban"]);
 
 interface KickArgs {
   member: Member;
@@ -416,7 +418,7 @@ interface KickArgs {
 }
 ```
 
-Let's take a minute and explain the differences here. The first thing you will probably notice is different is the `arguments` property. Discordeno provides the `arguments` property because it provides argument handling/parsing/validating internally. You don't need to be splitting the message content or going through and validating it yourself. All you do is tell Discordeno that you want a member and a reason. It will do the magic and hard work to get you that data before you even run the command. You just do `args.member` and you have access to the full member object. You can also see that aliases are created slightly different but it's not that huge a impact. The end functionality is the same. There are a lot more powerful aspects to Discordeno like arguments. Keep diving in and you will find all the wonderful tools available to give you the best developer experience possible.
+Let's take a minute and explain the differences here. The first thing you will probably notice is different is the `arguments` property. Discordeno provides the `arguments` property because it provides argument handling/parsing/validating internally. You don't need to be splitting the message content or going through and validating it yourself. All you do is tell Discordeno that you want a member and a reason. It will do the magic and hard work to get you that data before you even run the command. You just do `args.member` and you have access to the full member object. There are a lot more powerful aspects to Discordeno like arguments. Keep diving in and you will find all the wonderful tools available to give you the best developer experience possible.
 
 ### Need More Examples/Help
 

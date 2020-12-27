@@ -1,25 +1,30 @@
 import {
   ChannelCreatePayload,
   ChannelType,
+  MessageContent,
   RawOverwrite,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
+import { sendMessage } from "../handlers/channel.ts";
 import { Guild } from "./guild.ts";
 import { Message } from "./message.ts";
 
-const baseChannel: any = {
+const baseChannel: Partial<Channel> = {
   get guild() {
-    return cache.guilds.get(this.guildID);
+    return cache.guilds.get(this.guildID!);
   },
   get messages() {
-    return cache.messages.filter((m) => m.channelID === this.id);
+    return cache.messages.filter((m) => m.channelID === this.id!);
   },
   get mention() {
-    return `<#${this.id}>`;
+    return `<#${this.id!}>`;
   },
+  send(content) {
+    return sendMessage(this.id!, content);
+  }
 };
 
 export async function createChannel(
@@ -107,4 +112,9 @@ export interface Channel {
   messages: Collection<string, Message>;
   /** The mention of the channel */
   mention: string;
+
+  // METHODS
+
+  /** Send a message to the channel. Requires SEND_MESSAGES permission. */
+  send(content: string | MessageContent): Promise<Message>;
 }
