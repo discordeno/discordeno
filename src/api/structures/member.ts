@@ -12,14 +12,7 @@ import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { ban } from "../handlers/guild.ts";
-import {
-  addRole,
-  editMember,
-  kick,
-  rawAvatarURL,
-  removeRole,
-  sendDirectMessage,
-} from "../handlers/member.ts";
+import { addRole, editMember, kick, rawAvatarURL, removeRole, sendDirectMessage } from "../handlers/member.ts";
 import { Guild } from "./guild.ts";
 
 const baseMember: Partial<Member> = {
@@ -34,14 +27,8 @@ const baseMember: Partial<Member> = {
   },
 
   // METHODS
-  makeAvatarURL(size, format) {
-    return rawAvatarURL(
-      this.id!,
-      this.discriminator!,
-      this.avatar!,
-      size,
-      format,
-    );
+  makeAvatarURL(options) {
+    return rawAvatarURL(this.id!, this.discriminator!, this.avatar!, options.size, options.format);
   },
   guild(guildID) {
     return cache.guilds.get(guildID);
@@ -73,22 +60,9 @@ const baseMember: Partial<Member> = {
 };
 
 export async function createMember(data: MemberCreatePayload, guildID: string) {
-  const {
-    joined_at: joinedAt,
-    premium_since: premiumSince,
-    user: userData,
-    roles,
-    deaf,
-    mute,
-    nick,
-    ...rest
-  } = data;
+  const { joined_at: joinedAt, premium_since: premiumSince, user: userData, roles, deaf, mute, nick, ...rest } = data;
 
-  const {
-    mfa_enabled: mfaEnabled,
-    premium_type: premiumType,
-    ...user
-  } = data.user || {};
+  const { mfa_enabled: mfaEnabled, premium_type: premiumType, ...user } = data.user || {};
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
@@ -169,7 +143,7 @@ export interface Member {
   // METHODS
 
   /** Returns the avatar url for this member and can be dynamically modified with a size or format */
-  makeAvatarURL(size: ImageSize, format: ImageFormats): string;
+  makeAvatarURL(options: { size?: ImageSize; format?: ImageFormats }): string;
   /** Returns the guild for this guildID */
   guild(guildID: string): Guild | undefined;
   /** Get the nickname or the username if no nickname */
