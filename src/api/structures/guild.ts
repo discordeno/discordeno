@@ -1,6 +1,7 @@
 import { botID } from "../../bot.ts";
 import {
   BannedUser,
+  BanOptions,
   ChannelCreatePayload,
   CreateGuildPayload,
   Emoji,
@@ -28,6 +29,7 @@ import {
   guildBannerURL,
   guildIconURL,
   leaveGuild,
+  unban,
 } from "../handlers/guild.ts";
 import { Member } from "./member.ts";
 import { Role, structures } from "./mod.ts";
@@ -90,6 +92,9 @@ const baseGuild: Partial<Guild> = {
   bans() {
     return getBans(this.id!);
   },
+  unban(memberID) {
+    return unban(this.id!, memberID);
+  },
   invites() {
     return getInvites(this.id!);
   },
@@ -134,15 +139,9 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     ...rest
   } = data;
 
-  const roles = await Promise.all(
-    data.roles.map((r: RoleData) => structures.createRole(r)),
-  ) as Role[];
+  const roles = (await Promise.all(data.roles.map((r: RoleData) => structures.createRole(r)))) as Role[];
 
-  await Promise.all(
-    channels.map((c: ChannelCreatePayload) =>
-      structures.createChannel(c, data.id)
-    ),
-  );
+  await Promise.all(channels.map((c: ChannelCreatePayload) => structures.createChannel(c, data.id)));
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
@@ -176,21 +175,24 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     preferredLocale: createNewProp(preferredLocale),
     roles: createNewProp(new Collection(roles.map((r: Role) => [r.id, r]))),
     joinedAt: createNewProp(Date.parse(joinedAt)),
-    presences: createNewProp(
-      new Collection(data.presences.map((p: Presence) => [p.user.id, p])),
-    ),
+    presences: createNewProp(new Collection(data.presences.map((p: Presence) => [p.user.id, p]))),
     memberCount: createNewProp(memberCount || 0),
     voiceStates: createNewProp(
-      new Collection(voiceStates.map((vs: VoiceState) => [vs.user_id, {
-        ...vs,
-        guildID: vs.guild_id,
-        channelID: vs.channel_id,
-        userID: vs.user_id,
-        sessionID: vs.session_id,
-        selfDeaf: vs.self_deaf,
-        selfMute: vs.self_mute,
-        selfStream: vs.self_stream,
-      }])),
+      new Collection(
+        voiceStates.map((vs: VoiceState) => [
+          vs.user_id,
+          {
+            ...vs,
+            guildID: vs.guild_id,
+            channelID: vs.channel_id,
+            userID: vs.user_id,
+            sessionID: vs.session_id,
+            selfDeaf: vs.self_deaf,
+            selfMute: vs.self_mute,
+            selfStream: vs.self_stream,
+          },
+        ])
+      )
     ),
   });
 
@@ -325,6 +327,10 @@ export interface Guild {
   getBan(memberID: string): Promise<BannedUser>;
   /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
   bans(): Promise<Collection<string, BannedUser>>;
+  /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
+  ban(memberID: string, options: BanOptions): Promise<any>;
+  /** Remove the ban for a user. Requires BAN_MEMBERS permission */
+  unban(memberID: string): Promise<any>;
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   invites(): Promise<any>;
 }
