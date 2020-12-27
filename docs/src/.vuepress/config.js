@@ -1,7 +1,8 @@
-const { name, description, repository } = require("../../package");
+const { name, description, repository: repo } = require("../../package");
+const nav = require("./navbar");
+const sidebar = require("./sidebar");
 
 const title = name[0].toUpperCase() + name.slice(1);
-const discordLink = "https://discord.com/invite/5vBgXk3UcZ";
 
 module.exports = {
   base: `/`,
@@ -29,65 +30,16 @@ module.exports = {
   ],
   theme: "yuu",
   themeConfig: {
-    repo: repository,
+    repo,
     docsDir: "docs/src",
     editLinks: true,
     lastUpdated: true,
     sidebarDepth: 0,
-    nav: [
-      {
-        text: "Home",
-        link: "/",
-      },
-      {
-        text: "Docs",
-        link: "https://doc.deno.land/https/deno.land/x/discordeno/mod.ts",
-      },
-      {
-        text: "Discord",
-        link: discordLink,
-        target: "_blank",
-      },
-    ],
-    sidebar: {
-      "/": [
-        {
-          title: "Home",
-          children: [
-            "/",
-            "faq",
-            "gettingstarted",
-            "djs",
-          ],
-        },
-        {
-          title: "Step By Step Guide",
-          children: [
-            "/stepbystep/",
-            "/stepbystep/createbot",
-            "/stepbystep/createcommand",
-            "/stepbystep/createevent",
-            "/stepbystep/createlanguage",
-            "/stepbystep/createmonitor",
-            "/stepbystep/createinhibitor",
-            "/stepbystep/createtask",
-            "/stepbystep/hostingbot",
-          ],
-        },
-        {
-          title: "Advanced Guide",
-          children: [
-            "/advanced/",
-            "/advanced/arguments",
-            "/advanced/customizations",
-            "/advanced/dockerhosting",
-            "/advanced/dynamiccommands",
-            "/advanced/permlevels",
-            "/advanced/subcommands",
-          ],
-        },
-      ],
-    },
+    nav,
+    sidebar,
+    yuu: {
+      defaultDarkTheme: true
+    }
   },
   plugins: [
     "@vuepress/plugin-back-to-top",
