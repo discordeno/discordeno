@@ -31,8 +31,8 @@ export interface EmojiPayload {
   /** https://discord.com/developers/docs/resources/emoji#modify-guild-emoji */
   export interface ModifyGuildEmojiParams {
     /** name of the emoji */
-    name: string;
+    name?: string;
     /** roles to which this emoji will be whitelisted */
-    roles: string[] | null;
+    roles?: string[] | null;
   }
   
