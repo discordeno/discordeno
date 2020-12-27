@@ -2,7 +2,6 @@ import { assert, assertEquals, delay } from "../deps.ts";
 import {
   botID,
   cache,
-  createClient,
   createGuildChannel,
   createGuildRole,
   createServer,
@@ -16,18 +15,18 @@ import {
   OverwriteType,
   Role,
   sendMessage,
+  startBot,
 } from "../mod.ts";
 import {
   channelOverwriteHasPermission,
   editChannel,
 } from "../src/handlers/channel.ts";
 import { getChannel } from "../src/handlers/guild.ts";
-import { Permissions } from "../src/types/permission.ts";
 
 const token = Deno.env.get("DISCORD_TOKEN");
 if (!token) throw "Token is not provided";
 
-createClient({
+startBot({
   token,
   intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
 });
@@ -41,8 +40,8 @@ const testOptions = {
 Deno.test({
   name: "connect to the gateway",
   fn: async () => {
-    // Delay the execution by 15 seconds (15000 ms)
-    await delay(15000);
+    // Delay the execution by 10 seconds (15000 ms)
+    await delay(10000);
 
     // Check whether botID is nil or not
     assert(botID);
@@ -84,8 +83,6 @@ Deno.test({
     const createdRole = await createGuildRole(data.guildID, {
       name: "Role 1",
     });
-
-    console.log(createdRole);
 
     // Check whether the created role is nil or not
     assert(createdRole);
@@ -173,19 +170,19 @@ Deno.test({
     const channel = cache.channels.get(data.channelID);
     if (!channel) throw "Channel not found";
 
-    if (!channel.permission_overwrites) throw "Channel overwrites not found.";
+    if (!channel.permissionOverwrites) throw "Channel overwrites not found.";
 
     const hasPerm = channelOverwriteHasPermission(
       data.guildID,
       data.roleID,
-      channel.permission_overwrites,
-      [Permissions.VIEW_CHANNEL, Permissions.SEND_MESSAGES],
+      channel.permissionOverwrites,
+      ["VIEW_CHANNEL", "SEND_MESSAGES"],
     );
     const missingPerm = channelOverwriteHasPermission(
       data.guildID,
       data.roleID,
-      channel.permission_overwrites,
-      [Permissions.USE_EXTERNAL_EMOJIS],
+      channel.permissionOverwrites,
+      ["USE_EXTERNAL_EMOJIS"],
     );
 
     assertEquals(hasPerm, true);

@@ -7,11 +7,10 @@
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
 
 - First-class TypeScript & JavaScript support
-- Security & stable
+- Secure & stable
 - Builtin Documentation
 - Minimalistic
-- Functional API
-- Actively maintained
+- Function-based API
 
 ### Beginner Developers
 
@@ -29,35 +28,35 @@ If you do not wish to use a boilerplate, you may continue reading.
 Here's a minimal example to get started with:
 
 ```typescript
-import startBot, { sendMessage, Intents } from "https://deno.land/x/discordeno@9.4.0/mod.ts";
+import {
+  Intents,
+  sendMessage,
+  startBot,
+} from "https://deno.land/x/discordeno@10.0.0/mod.ts";
 
 startBot({
   token: "BOT TOKEN",
-  intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
+  intents: [Intents.GUILDS, Intents.GUILD_MESSAGES],
   eventHandlers: {
-    ready: () => console.log('Successfully connected to gateway'),
-    messageCreate: (message) => {
-      if (message.content === "hello") {
-        sendMessage(message.channelID, "Hi there!");
+    ready() {
+      console.log("Successfully connected to gateway");
+    },
+    messageCreate(message) {
+      if (message.content === "ping") {
+        sendMessage(message.channelID, "Pong using Discordeno!");
       }
     },
   },
 });
 ```
 
-## Documentation
+## Useful Links
 
 - [Website](https://discordeno.mod.land)
+- [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
 - [Support server](https://discord.com/invite/5vBgXk3UcZ)
-- [Contributing Guide](https://github.com/discordeno/discordeno/blob/master/.github/CONTRIBUTING.md)
 
 ## Contributing
-
-## Code of Conduct
-
-Discordeno expects participants to adhere to our [Code of Conduct](https://github.com/discordeno/discordeno/blob/master/.github/CODE_OF_CONDUCT.md).
-
-## Contributing Guide
 
 We appreciate your help!
 

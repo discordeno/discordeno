@@ -12,7 +12,7 @@ export interface DiscordPayload {
   s?: number;
   /** The event name for this payload. ONLY for OPCode 0 */
   t?:
-    | "READY"
+    | "APPLICATION_COMMAND_CREATE"
     | "CHANNEL_CREATE"
     | "CHANNEL_DELETE"
     | "CHANNEL_UPDATE"
@@ -29,6 +29,7 @@ export interface DiscordPayload {
     | "GUILD_ROLE_CREATE"
     | "GUILD_ROLE_DELETE"
     | "GUILD_ROLE_UPDATE"
+    | "INTERACTION_CREATE"
     | "MESSAGE_CREATE"
     | "MESSAGE_DELETE"
     | "MESSAGE_DELETE_BULK"
@@ -38,6 +39,7 @@ export interface DiscordPayload {
     | "MESSAGE_REACTION_REMOVE_ALL"
     | "MESSAGE_REACTION_REMOVE_EMOJI"
     | "PRESENCE_UPDATE"
+    | "READY"
     | "TYPING_START"
     | "USER_UPDATE"
     | "VOICE_STATE_UPDATE"
@@ -57,6 +59,11 @@ export interface DiscordBotGatewayData {
     remaining: number;
     /** Milliseconds left until limit is reset. */
     reset_after: number;
+    /** The number of identify requests allowed per 5 seconds.
+     * So, if you had a max concurrency of 16, and 16 shards for example, you could start them all up at the same time.
+     * Whereas if you had 32 shards, if you tried to start up shard 0 and 16 at the same time for example, it would not work. You can start shards 0-15 concurrently, then 16-31...
+     * */
+    max_concurrency: number;
   };
 }
 

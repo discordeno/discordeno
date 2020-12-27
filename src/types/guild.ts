@@ -1,4 +1,4 @@
-import { Guild } from "../structures/guild.ts";
+import { Guild } from "../api/structures/mod.ts";
 import { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
 import { Emoji, StatusType } from "./discord.ts";
 import { MemberCreatePayload } from "./member.ts";
@@ -469,9 +469,15 @@ export interface RawOverwrite {
   /** Whether this is a role or a member */
   type: OverwriteType;
   /** The permissions that this id is allowed to do. (This will mark it as a green check.) */
-  allow: number;
+  allow: string;
   /** The permissions that this id is NOT allowed to do. (This will mark it as a red x.) */
-  deny: number;
+  deny: string;
+}
+
+export interface PermissionOverwrite
+  extends Omit<RawOverwrite, "allow" | "deny"> {
+  allow: Permission[];
+  deny: Permission[];
 }
 
 export interface ChannelCreateOptions {
@@ -488,7 +494,7 @@ export interface ChannelCreateOptions {
   /** The sorting position of the channel */
   position?: number;
   /** The channel's permission overwrites */
-  permission_overwrites?: Overwrite[];
+  permissionOverwrites?: Overwrite[];
   /** The id of the parent category for the channel */
   parent_id?: string;
   /** Whether the channel is nsfw */

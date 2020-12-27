@@ -9,10 +9,8 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "vuepress": "^1.5.3",
-    "vuepress-theme-yuu": "^2.3.0"
-  },
-  "dependencies": {
+    "vuepress": "^1.7.1",
+    "vuepress-theme-yuu": "^2.3.0",
     "@vuepress/plugin-back-to-top": "^1.7.1",
     "@vuepress/plugin-medium-zoom": "^1.7.1"
   }
