@@ -78,7 +78,7 @@ const baseMessage: Partial<Message> = {
   addReactions(reactions, ordered) {
     return addReactions(this.channelID!, this.id!, reactions, ordered);
   },
-  sendResponse(content) {
+  reply(content) {
     const contentWithMention = typeof content === "string"
       ? { content, mentions: { repliedUser: true }, replyMessageID: this.id }
       : {
@@ -89,7 +89,7 @@ const baseMessage: Partial<Message> = {
 
     return sendMessage(this.channelID!, contentWithMention);
   },
-  reply(content) {
+  send(content) {
     return sendMessage(this.channelID!, content);
   },
   alert(content, timeout = 10, reason = "") {
@@ -97,8 +97,8 @@ const baseMessage: Partial<Message> = {
       response.delete(reason, timeout * 1000).catch(console.error);
     });
   },
-  alertResponse(content, timeout = 10, reason = "") {
-    return this.sendResponse!(content).then((response) =>
+  alertReply(content, timeout = 10, reason = "") {
+    return this.reply!(content).then((response) =>
       response.delete(reason, timeout * 1000).catch(console.error)
     );
   },
@@ -235,9 +235,9 @@ export interface Message {
   /** Add multiple reactions to the message without or without order. */
   addReactions(reactions: string[], ordered?: boolean): Promise<void>;
   /** Send a inline reply to this message */
-  sendResponse(content: string | MessageContent): Promise<Message>;
-  /** Send a message to this channel where this message is */
   reply(content: string | MessageContent): Promise<Message>;
+  /** Send a message to this channel where this message is */
+  send(content: string | MessageContent): Promise<Message>;
   /** Send a message to this channel and then delete it after a bit. By default it will delete after 10 seconds with no reason provided. */
   alert(
     content: string | MessageContent,
@@ -245,7 +245,7 @@ export interface Message {
     reason?: string,
   ): Promise<void>;
   /** Send a inline reply to this message but then delete it after a bit. By default it will delete after 10 seconds with no reason provided.  */
-  alertResponse(
+  alertReply(
     content: string | MessageContent,
     timeout?: number,
     reason?: string,
