@@ -99,7 +99,7 @@ export interface MessagePayload {
   /** type of message */
   type: MessageTypes;
   /** sent with Rich Presence-related chat embeds */
-  activity?: MessageActivitypayload;
+  activity?: MessageActivityPayload;
   /** sent with Rich Presence-related chat embeds */
   application?: MessageApplicationPayload;
   /** reference data sent with crossposted messages and replies */
