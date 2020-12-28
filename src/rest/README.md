@@ -7,7 +7,9 @@ This is a serverless rest package that allows you to have an entire REST handler
 -	Freedom from global rate limit errors
 	- As your bot grows, you want to handle global rate limits better. Shards don't communicate fast enough to truly handle it properly so this allows 1 rest handler across the entire bot.
 	- In fact, you can host multiple instances of your bot and all connect to the same rest server.
-- Separate rest means if your bot for whatever reason crashes, your requests that are queued will still keep going and will not be lost.
+- REST does not rest!
+  - Separate rest means if your bot for whatever reason crashes, your requests that are queued will still keep going and will not be lost.
+  - Seamless updates! When you want to update and reboot the bot, you could potentially lose tons of messages or responses that are in queue. Using this you could restart your bot without ever worrying about losing any responses.
 - Scalability! Scalability! Scalability!
 
 ## Notes
