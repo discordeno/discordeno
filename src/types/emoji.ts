@@ -1,3 +1,5 @@
+import { UserPayload } from "./user.ts";
+
 /** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
 export interface EmojiPayload {
   /** emoji id */
