@@ -1,3 +1,7 @@
+import { EmojiPayload } from "./emoji.ts";
+import { GuildMemberPayload } from "./guild.ts";
+import { UserPayload } from "./user.ts";
+
 /** https://discord.com/developers/docs/resources/channel#channel-object-channel-structure */
 export interface ChannelPayload {
   /** the id of this channel */
