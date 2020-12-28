@@ -1,0 +1,161 @@
+import { cache } from "./cache.ts";
+import { ServerRequest } from "./deps.ts";
+import { startQueue } from "./queue.ts";
+import {
+	QueuedRequest,
+	RestServerOptions,
+	RunMethodOptions
+} from "./types/mod.ts";
+
+/** Processes a request and assigns it to a queue or creates a queue if none exists for it. */
+export async function processRequest(
+  request: ServerRequest,
+  payload: RunMethodOptions,
+  options: RestServerOptions,
+) {
+  const route = payload.url.substring(payload.url.indexOf("api/"));
+  const parts = route.split("/");
+  // REMOVE THE API
+  parts.shift();
+  // REMOVES THE VERSION NUMBER
+  if (parts[0]?.startsWith("v")) parts.shift();
+  // REMOVE THE MAJOR PARAM
+  parts.shift();
+
+  const [id] = parts;
+
+  const queue = cache.pathQueues.get(id);
+  // IF THE QUEUE EXISTS JUST ADD THIS TO THE QUEUE
+  if (queue) {
+    queue.push({ request, payload, options });
+  } else {
+    // CREATES A NEW QUEUE
+    cache.pathQueues.set(id, [{ request, payload, options }]);
+  }
+
+  startQueue();
+}
+
+/** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
+export function createRequestBody(queuedRequest: QueuedRequest) {
+  const headers: { [key: string]: string } = {
+    Authorization: queuedRequest.options.token,
+    "User-Agent": "DiscordBot (https://github.com/discordeno/discordeno, v10)",
+  };
+
+  // GET METHODS SHOULD NOT HAVE A BODY
+  if (queuedRequest.payload.method === "get") {
+    queuedRequest.payload.body = undefined;
+  }
+
+  // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
+  if (queuedRequest.payload.body?.reason) {
+    headers["X-Audit-Log-Reason"] = encodeURIComponent(
+      queuedRequest.payload.body.reason,
+    );
+  }
+
+  // IF A FILE/ATTACHMENT IS PRESENT WE NEED SPECIAL HANDLING
+  if (queuedRequest.payload.body?.file) {
+    const form = new FormData();
+    form.append(
+      "file",
+      queuedRequest.payload.body.file.blob,
+      queuedRequest.payload.body.file.name,
+    );
+    form.append(
+      "payload_json",
+      JSON.stringify({ ...queuedRequest.payload.body, file: undefined }),
+    );
+    queuedRequest.payload.body.file = form;
+  } else if (
+    queuedRequest.payload.body &&
+    !["get", "delete"].includes(queuedRequest.payload.method)
+  ) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  return {
+    headers,
+    body: queuedRequest.payload.body?.file ||
+      JSON.stringify(queuedRequest.payload.body),
+    method: queuedRequest.payload.method.toUpperCase(),
+  };
+}
+
+/** Processes the rate limit headers and determines if it needs to be ratelimited and returns the bucket id if available */
+export function processRequestHeaders(url: string, headers: Headers) {
+  let ratelimited = false;
+
+  // GET ALL NECESSARY HEADERS
+  const remaining = headers.get("x-ratelimit-remaining");
+  const resetTimestamp = headers.get("x-ratelimit-reset");
+  const retryAfter = headers.get("retry-after");
+  const global = headers.get("x-ratelimit-global");
+  const bucketID = headers.get("x-ratelimit-bucket");
+
+  // IF THERE IS NO REMAINING RATE LIMIT, MARK IT AS RATE LIMITED
+  if (remaining && remaining === "0") {
+    ratelimited = true;
+
+    // SAVE THE URL AS LIMITED, IMPORTANT FOR NEW REQUESTS BY USER WITHOUT BUCKET
+    cache.ratelimitedPaths.set(url, {
+      url,
+      resetTimestamp: Number(resetTimestamp) * 1000,
+      bucketID,
+    });
+
+    // SAVE THE BUCKET AS LIMITED SINCE DIFFERENT URLS MAY SHARE A BUCKET
+    if (bucketID) {
+      cache.ratelimitedPaths.set(bucketID, {
+        url,
+        resetTimestamp: Number(resetTimestamp) * 1000,
+        bucketID,
+      });
+    }
+  }
+
+  // IF THERE IS NO REMAINING GLOBAL LIMIT, MARK IT RATE LIMITED GLOBALLY
+  if (global) {
+    const reset = Date.now() + (Number(retryAfter) * 1000);
+    cache.eventHandlers.globallyRateLimited(url, reset);
+    cache.globallyRateLimited = true;
+    ratelimited = true;
+
+    cache.ratelimitedPaths.set("global", {
+      url: "global",
+      resetTimestamp: reset,
+      bucketID,
+    });
+
+    if (bucketID) {
+      cache.ratelimitedPaths.set(bucketID, {
+        url: "global",
+        resetTimestamp: reset,
+        bucketID,
+      });
+    }
+  }
+
+  return ratelimited ? bucketID : undefined;
+}
+
+/** This wll create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
+async function processRateLimitedPaths() {
+  const now = Date.now();
+
+  cache.ratelimitedPaths.forEach((value, key) => {
+    // IF THE TIME HAS NOT REACHED CANCEL
+    if (value.resetTimestamp > now) return;
+    // RATE LIMIT IS OVER, DELETE THE RATE LIMITER
+    cache.ratelimitedPaths.delete(key);
+    // IF IT WAS GLOBAL ALSO MARK THE GLOBAL VALUE AS FALSE
+    if (key === "global") cache.globallyRateLimited = false;
+  });
+
+  // RECHECK IN 1 SECOND
+  setTimeout(() => processRateLimitedPaths(), 1000);
+}
+
+/** Starts the loop */
+processRateLimitedPaths();
