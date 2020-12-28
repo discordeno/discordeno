@@ -1,3 +1,7 @@
+import { ChannelPayload } from "./channel.ts";
+import { GuildPayload } from "./guild.ts";
+import { UserPayload } from "./user.ts";
+
 /** https://discord.com/developers/docs/resources/invite#invite-object */
 export interface InvitePayload {
   /** the invite code (unique ID) */
