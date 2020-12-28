@@ -2,9 +2,9 @@ import { cache } from "./cache.ts";
 import { ServerRequest } from "./deps.ts";
 import { startQueue } from "./queue.ts";
 import {
-	QueuedRequest,
-	RestServerOptions,
-	RunMethodOptions
+  QueuedRequest,
+  RestServerOptions,
+  RunMethodOptions,
 } from "./types/mod.ts";
 
 /** Processes a request and assigns it to a queue or creates a queue if none exists for it. */

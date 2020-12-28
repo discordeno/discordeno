@@ -5,8 +5,6 @@ export interface RestServerOptions {
   port: number;
   /** The authorization secret key that all requests must provide in its headers. This prevents anyone from making your server do something. */
   authorization: string;
-  /** Custom event handlers */
-  eventHandlers: Partial<RestEventHandlers>;
   /** The bot token that will be used for authorization. */
   token: string;
   /** When a request is rate limited, how many times should it keep retrying the request. Recommended: 10 */
