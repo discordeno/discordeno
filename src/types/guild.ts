@@ -1,3 +1,10 @@
+import { ChannelPayload, ChannelTypes, OverwritePayload } from "./channel.ts";
+import { EmojiPayload } from "./emoji.ts";
+import { PresenceUpdatePayload } from "./gateway.ts";
+import { RolePayload } from "./permission.ts";
+import { UserPayload } from "./user.ts";
+import { VoiceStatePayload } from "./voice.ts";
+
 /** https://discord.com/developers/docs/resources/guild#guild-object */
 export interface GuildPayload {
   /** guild id */
@@ -227,7 +234,7 @@ export interface IntegrationPayload {
   /** user for this integration */
   user?: UserPayload;
   /** integration account information */
-  account: AccountObject;
+  account: IntegrationAccountPayload;
   /** when this integration was last synced */
   synced_at?: string;
   /** how many subscribers this integration has */
@@ -235,11 +242,11 @@ export interface IntegrationPayload {
   /** has this integration been revoked */
   revoked?: boolean;
   /** the bot/OAuth2 application for discord integrations */
-  application?: ApplicationPayload;
+  application?: IntegrationApplicationPayload;
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
-export enum IntegratonExpireBehaviors {
+export enum IntegrationExpireBehavior {
   REMOVE_ROLE,
   KICK,
 }
