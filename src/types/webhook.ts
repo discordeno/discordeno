@@ -1,3 +1,6 @@
+import { AllowedMentionsPayload, EmbedPayload } from "./channel.ts";
+import { UserPayload } from "./user.ts";
+
 /** https://discord.com/developers/docs/resources/webhook#webhook-resource */
 export interface WebhookPayload {
   /** the id of the webhook */
