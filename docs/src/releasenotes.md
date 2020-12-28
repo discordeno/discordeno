@@ -28,7 +28,7 @@ await sendMessage("Channel ID", "Content");
 - v10 or newer
 
 ```ts
-messageObj.send("Content");
+message.send("Content");
 ```
 
 ## Permission enums to Permission strings
@@ -55,11 +55,11 @@ import { hasChannelPermissions } from "discordeno";
 await hasChannelPermissions("Channel ID", "User ID", ["MANAGE_MESSAGES"]);
 ```
 
-## Removed Guild.channels and Guild.members
+## Guild.channels and Guild.members as Getters
 
-These changes were made to noticeably optimize memory. To properly explain these changes, let's take an example of a user in X number of guilds, previously, in v9 or before, the member object was cached X times. However, with the release of v10, it stores the member object only once, hence saving memory.
+These changes were made to optimize memory. To properly explain these changes, let's take an example of a user in X number of guilds, previously, in v9 or before, the member object was cached X times. However, with the release of v10, it stores the member object only once, hence saving memory.
 
-Similarly, `Guild.channels` is removed in v10 or newer. This is removed because it was storing duplicated values from `cache.channels`, and hence taking additional memory.
+Similarly, `Guild.channels` is converted into a getter in v10 or newer. This is removed because it was storing duplicated values from `cache.channels`, and hence taking additional memory.
 
 ## Improved WebSocket Close Errors
 
