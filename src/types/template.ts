@@ -1,3 +1,6 @@
+import { GuildPayload } from "./guild.ts";
+import { UserPayload } from "./user.ts";
+
 /** https://discord.com/developers/docs/resources/template#template-resource */
 export interface TemplatePayload {
   /** the template code (unique ID) */
