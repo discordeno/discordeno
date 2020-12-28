@@ -20,11 +20,12 @@ async function handlePayload(
   request: ServerRequest,
   options: RestServerOptions,
 ) {
-  const buffer = await Deno.readAll(request.body);
-
   // INSTANTLY IGNORE ANY REQUESTS THAT DON'T HAVE THE SECRET AUTHORIZATION KEY
   const authorization = request.headers.get("authorization");
   if (authorization !== options.authorization) return;
+
+  // READ BUFFER AFTER AUTH CHECK
+  const buffer = await Deno.readAll(request.body);
 
   try {
     // CONVERT THE BODY TO JSON
