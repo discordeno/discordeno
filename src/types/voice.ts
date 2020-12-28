@@ -1,3 +1,5 @@
+import { GuildMemberPayload } from "./guild.ts";
+
 /** https://discord.com/developers/docs/resources/voice#voice-resource */
 export interface VoiceStatePayload {
   /** the guild id this voice state is for */
@@ -7,7 +9,7 @@ export interface VoiceStatePayload {
   /** the user id this voice state is for */
   user_id: string;
   /** the guild member this voice state is for */
-  member?: GuildMemberAddPayload;
+  member?: GuildMemberPayload;
   /** the session id for this voice state */
   session_id: string;
   /** whether this user is deafened by the server */
