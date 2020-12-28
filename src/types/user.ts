@@ -1,3 +1,5 @@
+import { IntegrationPayload } from "./guild.ts";
+
 /** https://discord.com/developers/docs/resources/user#users-resource */
 export interface UserPayload {
   /**the user's id */
