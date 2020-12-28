@@ -1,8 +1,5 @@
 name: Test
-on: 
-  push:
-    branches:
-      - master
+on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -12,6 +9,7 @@ jobs:
       - name: Cache dependencies
         run: deno cache mod.ts
       - name: Run test script
+        if: github.ref == 'refs/heads/master'
         run: deno test -A
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
