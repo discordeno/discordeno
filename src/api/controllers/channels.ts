@@ -1,7 +1,11 @@
-import {eventHandlers} from "../../bot.ts";
-import {ChannelCreatePayload, ChannelTypes, DiscordPayload,} from "../../types/mod.ts";
-import {structures} from "../structures/mod.ts";
-import {cacheHandlers} from "./cache.ts";
+import { eventHandlers } from "../../bot.ts";
+import {
+  ChannelCreatePayload,
+  ChannelTypes,
+  DiscordPayload,
+} from "../../types/mod.ts";
+import { structures } from "../structures/structures.ts";
+import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalChannelCreate(data: DiscordPayload) {
   if (data.t !== "CHANNEL_CREATE") return;
@@ -25,7 +29,7 @@ export async function handleInternalChannelDelete(data: DiscordPayload) {
     const guild = await cacheHandlers.get("guilds", payload.guild_id);
 
     if (guild) {
-      return Promise.all(guild.voiceStates.map(async (vs, key) => {
+      guild.voiceStates.forEach(async (vs, key) => {
         if (vs.channelID !== payload.id) return;
 
         // Since this channel was deleted all voice states for this channel should be deleted
@@ -35,11 +39,11 @@ export async function handleInternalChannelDelete(data: DiscordPayload) {
         if (!member) return;
 
         eventHandlers.voiceChannelLeave?.(member, vs.channelID);
-      }))
+      });
     }
   }
 
-  await cacheHandlers.delete("channels", payload.id);
+  cacheHandlers.delete("channels", payload.id);
   cacheHandlers.forEach("messages", (message) => {
     if (message.channelID === payload.id) {
       cacheHandlers.delete("messages", message.id);
@@ -54,7 +58,7 @@ export async function handleInternalChannelUpdate(data: DiscordPayload) {
   const payload = data.d as ChannelCreatePayload;
   const cachedChannel = await cacheHandlers.get("channels", payload.id);
   const channel = await structures.createChannel(payload);
-  await cacheHandlers.set("channels", channel.id, channel);
+  cacheHandlers.set("channels", channel.id, channel);
 
   if (!cachedChannel) return;
 

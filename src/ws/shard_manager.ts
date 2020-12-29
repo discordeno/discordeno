@@ -1,10 +1,19 @@
-import {controllers} from "../api/controllers/mod.ts";
-import {Guild} from "../api/structures/guild.ts";
-import {eventHandlers, IdentifyPayload} from "../bot.ts";
-import {DiscordBotGatewayData, DiscordPayload, FetchMembersOptions, GatewayOpcode,} from "../types/mod.ts";
-import {cache} from "../util/cache.ts";
-import {BotStatusRequest, delay} from "../util/utils.ts";
-import {botGatewayStatusRequest, createShard, requestGuildMembers,} from "./mod.ts";
+import { controllers } from "../api/controllers/mod.ts";
+import { Guild } from "../api/structures/structures.ts";
+import { eventHandlers, IdentifyPayload } from "../bot.ts";
+import {
+  DiscordBotGatewayData,
+  DiscordPayload,
+  FetchMembersOptions,
+  GatewayOpcode,
+} from "../types/mod.ts";
+import { cache } from "../util/cache.ts";
+import { BotStatusRequest, delay } from "../util/utils.ts";
+import {
+  botGatewayStatusRequest,
+  createShard,
+  requestGuildMembers,
+} from "./mod.ts";
 
 let createNextShard = true;
 
@@ -29,9 +38,9 @@ export async function spawnShards(
       data.shards > lastShardID ? data.shards : lastShardID,
     ];
     // Start The shard
-    await createShard(data, payload, false, shardID);
+    createShard(data, payload, false, shardID);
     // Spawn next shard
-    await spawnShards(
+    spawnShards(
       data,
       payload,
       shardID + 1,
@@ -45,7 +54,7 @@ export async function spawnShards(
   if (createNextShard) {
     createNextShard = false;
     // Start the next few shards based on max concurrency
-    await spawnShards(
+    spawnShards(
       data,
       payload,
       shardID,
@@ -56,7 +65,7 @@ export async function spawnShards(
   }
 
   await delay(1000);
-  await spawnShards(data, payload, shardID, lastShardID, skipChecks);
+  spawnShards(data, payload, shardID, lastShardID, skipChecks);
 }
 
 export async function handleDiscordPayload(
@@ -68,7 +77,7 @@ export async function handleDiscordPayload(
 
   switch (data.op) {
     case GatewayOpcode.HeartbeatACK:
-      // In case the user wants to listen to heartbeat responses
+      // Incase the user wants to listen to heartbeat responses
       return eventHandlers.heartbeat?.();
     case GatewayOpcode.Dispatch:
       if (!data.t) return;

@@ -1,4 +1,4 @@
-import {RequestManager} from "../../rest/mod.ts";
+import { RequestManager } from "../../rest/mod.ts";
 import {
   ChannelEditOptions,
   ChannelTypes,
@@ -16,10 +16,13 @@ import {
   RawOverwrite,
   WebhookPayload,
 } from "../../types/mod.ts";
-import {endpoints} from "../../util/constants.ts";
-import {botHasChannelPermissions, calculateBits,} from "../../util/permissions.ts";
-import {cacheHandlers} from "../controllers/cache.ts";
-import {structures} from "../structures/mod.ts";
+import { endpoints } from "../../util/constants.ts";
+import {
+  botHasChannelPermissions,
+  calculateBits,
+} from "../../util/permissions.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
+import { structures } from "../structures/structures.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(
@@ -300,7 +303,7 @@ export async function getChannelWebhooks(channelID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
-  return await RequestManager.get(endpoints.CHANNEL_WEBHOOKS(channelID)) as Promise<
+  return RequestManager.get(endpoints.CHANNEL_WEBHOOKS(channelID)) as Promise<
     WebhookPayload[]
   >;
 }
@@ -458,6 +461,12 @@ export async function isChannelSynced(channelID: string) {
       ow.id === overwrite.id
     );
     if (!permission) return false;
-    return !(overwrite.allow !== permission.allow || overwrite.deny !== permission.deny);
+    if (
+      overwrite.allow !== permission.allow || overwrite.deny !== permission.deny
+    ) {
+      return false;
+    }
+
+    return true;
   });
 }

@@ -1,7 +1,7 @@
-import {GuildTemplate, UserPayload} from "../../types/mod.ts";
-import {cache} from "../../util/cache.ts";
-import {createNewProp} from "../../util/utils.ts";
-import {Guild} from "./guild.ts";
+import { GuildTemplate, UserPayload } from "../../types/mod.ts";
+import { cache } from "../../util/cache.ts";
+import { createNewProp } from "../../util/utils.ts";
+import { Guild } from "./guild.ts";
 
 const baseTemplate: any = {
   get sourceGuild() {
@@ -28,7 +28,7 @@ export function createTemplate(
     restProps[key] = createNewProp((rest as any)[key]);
   }
 
-  return Object.create(baseTemplate, {
+  const template = Object.create(baseTemplate, {
     ...restProps,
     usageCount: createNewProp(sourceGuildID),
     creatorID: createNewProp(creatorID),
@@ -38,6 +38,8 @@ export function createTemplate(
     serializedSourceGuild: createNewProp(serializedSourceGuild),
     isDirty: createNewProp(isDirty),
   });
+
+  return template;
 }
 
 export interface Template {

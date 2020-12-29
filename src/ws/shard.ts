@@ -1,4 +1,9 @@
-import {botGatewayData, eventHandlers, IdentifyPayload, proxyWSURL,} from "../bot.ts";
+import {
+  botGatewayData,
+  eventHandlers,
+  IdentifyPayload,
+  proxyWSURL,
+} from "../bot.ts";
 import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
@@ -6,9 +11,9 @@ import {
   GatewayOpcode,
   ReadyPayload,
 } from "../types/mod.ts";
-import {BotStatusRequest, delay} from "../util/utils.ts";
-import {decompressWith} from "./deps.ts";
-import {handleDiscordPayload} from "./shard_manager.ts";
+import { BotStatusRequest, delay } from "../util/utils.ts";
+import { decompressWith } from "./deps.ts";
+import { handleDiscordPayload } from "./shard_manager.ts";
 
 const basicShards = new Map<number, BasicShard>();
 const heartbeating = new Map<number, boolean>();
@@ -242,7 +247,7 @@ async function heartbeat(
   // We lost socket connection between heartbeats, resume connection
   if (shard.ws.readyState === WebSocket.CLOSED) {
     shard.needToResume = true;
-    await resumeConnection(data, payload, shard.id);
+    resumeConnection(data, payload, shard.id);
     heartbeating.delete(shard.id);
     return;
   }
@@ -284,7 +289,7 @@ async function heartbeat(
     },
   );
   await delay(interval);
-  return heartbeat(shard, interval, payload, data);
+  heartbeat(shard, interval, payload, data);
 }
 
 async function resumeConnection(
@@ -304,7 +309,7 @@ async function resumeConnection(
 
   eventHandlers.debug?.({ type: "gatewayResume", data: { shardID: shard.id } });
   // Run it once
-  await createShard(data, payload, true, shard.id);
+  createShard(data, payload, true, shard.id);
   // Then retry every 15 seconds
   await delay(1000 * 15);
   if (shard.needToResume) resumeConnection(data, payload, shardID);
@@ -330,7 +335,7 @@ export function requestGuildMembers(
 
     if (!processQueue) {
       processQueue = true;
-      return processGatewayQueue();
+      processGatewayQueue();
     }
     return;
   }
@@ -414,7 +419,7 @@ async function processGatewayQueue() {
 
   await delay(1500);
 
-  await processGatewayQueue();
+  processGatewayQueue();
 }
 
 export function botGatewayStatusRequest(payload: BotStatusRequest) {
