@@ -4,41 +4,13 @@
 
 Discordeno provides first class support for TypeScript! Since Deno provides support for TypeScript, that also comes into Discordeno. This means you don't need to compile TypeScript before you use it. However, this isn't really why Discordeno is the best library for TypeScript developers. When I developed this library, I was experimenting with a lot of different things and one of them was automated typings.
 
-Whenever I used other libraries, I was always seeing typings being inaccurate or problematic. This is because in any Discord API library, the majority is not used by the library itself so TypeScript doesn't warn the library developers. This makes it extremely likely that those typings become inaccurate or out of date because of simple mistakes like forgetting to update typings. Sometimes libraries will add a property and forget to add that on their typings. This makes it usable for JavaScript developers but not for TypeScript devs. For TypeScript developers, typings are everything! So I asked myself how could I solve this in my own library because I didn't want to have to suffer these problems again. The best solution was to not have any typings for the module at all.
-
-In Discordeno, there are no typings created/maintained manually. It is all done **automatically** by TypeScript because of the design decisions of the code itself. **When the code is changed, the typings are automatically updated.** Never again will you suffer the problems of other libraries forgetting to keep their typings up to date properly.
-
-## If Discordeno Doesn't Have Typings, What Is The Types Folder?
-
-The types folder is typings built for Discord API Payload not for this lib. Discordeno provides these typings to provide the best developer experience possible when you code.
+Whenever I used other libraries, I was always seeing typings being inaccurate or problematic. This is because in any Discord API library, the majority is not used by the library itself so TypeScript doesn't warn the library developers. This makes it extremely likely that those typings become inaccurate or out of date because of simple mistakes like forgetting to update typings. Sometimes libraries will add a property and forget to add that on their typings. This makes it usable for JavaScript developers but not for TypeScript devs. For TypeScript developers, typings are everything! Discordeno treats typings as part of it's code! A breaking change in typings is a breaking change for the library!
 
 ## How Stable Is Discordeno?
 
 One of the biggest issues with almost every library(I have used) is stability. None of the libraries gave much love and attention to TypeScript developers the way it deserves. Sometimes TypeScript projects would break because breaking changes to typings did not make a MAJOR bump so TypeScript bots in production would break. Sometimes I was personally maintaing the typings because no one else was for that lib. Some libs were pre 1.0 and didn't even have a stable branch/version where I would not have to worry about breaking changes.
 
-This is why I made it one of my foundational goals of this library to have the best stability for TypeScript developers. No matter how small, a breaking change is a breaking change when it affects the public API. I could care less if we end up at version 500. Being afraid to bump a MAJOR because it's a small change or a typing change is a terrible decision as a library maintainer and destroys the experience for end users. Discordeno provides 2 separate versioning systems to provide you as much flexibility and stability as you like.
-
-## What Do You Mean By 2 Separate Versioning Systems?
-
-Discordeno will have releases that comply with SemVer. To use this system you will simply use the `v2.0.0` system in your version.
-
-::: tip
-This means for every tiny bug fix/change you need to manually update the code every time. So if a new feature is added, you would need to bump the version in your code.
-:::
-
-Each version is also available through a specific branch. For example v2 branch holds all the version 2 code. This branch is always updated whenever a MINOR or PATCH update is made that will NOT break your bots.
-
-::: tip
-This means you never have to update your code EXCEPT when you are ready to bump to next MAJOR version. So if a new feature is added, it will be added automatically. If a small bug is fixed it will be automatic.
-:::
-
-SemVer means more manual work for you to update code but a more secure module. Automated means almost no manual work for you to update code but a less secure module.
-
-To understand that, SemVer makes it so you are using specific Release versions. In your code, you would do this by targeting the `..../discordeno/discordeno/v4.0.0/...` in order to use it. Whenever I make a small bug fix or new feature that does not break your code it would be released in a new release such as today's release of v4.0.1. This means you have to manually update your code to get these latest improvements. Until you do, you may have bugs or possibly missing features. The good part about SemVer is that if I make a mistake that could potentially make the code worse, it's a lot easier to move back to a proper version with SemVer.
-
-The automated version would just simply be installed as soon as you reloaded cache for deno because it uses the branch itself as its url `.../discordeno/discordeno/v4/...` For example, when i start bots I use a script that reloads cache and restarts the bot making it so i am always using the latest code. Deno makes this possible because it can pull the latest code from any URL even github. So using Github branches to it's peak I create a branch for each version. These versions simply update automatically and you dont have to worry about updating. The only time you need to update is when you bump a MAJOR version like from v4 to v5. Because these may need you to make changes in your code. Note, even the good part about SemVer can be slightly removed by just locking a certain commit as well using this method.
-
-At the end of the day, I think both systems can work and I am curious how everyone feels about them. I will be trying my best to maintain both systems.
+This is why I made it one of my foundational goals of this library to have the best stability for TypeScript developers. No matter how small, a breaking change is a breaking change when it affects the public API. I could care less if we end up at version 500. Being afraid to bump a MAJOR because it's a small change or a typing change is a terrible decision as a library maintainer and destroys the experience for end users.
 
 ## Why Doesn't Discordeno Use Classes or EventEmitter?
 
@@ -55,7 +27,7 @@ EventEmitter.emit('guildCreate', guild);
 // Discordeno Example
 eventHandlers.guildCreate?.(guild);
 ```
-There isn't really any difference especially for users when they use it. One bad thing about EventEmitter is that if misused it can cause memory leaks. It is very easy to open yourself up to these memory leak issues. It has happened to me when I started coding as well. This is why I wanted Discordeno's implementation to help devs avoid the issues I had. It prevents anyone from having this as a potential issue. Another issue with EventEmitter is trying to update the code in those functions without having to deal with headaches left and right of removing and adding listeners.
+There isn't really any difference especially for users when they use it. One bad thing about EventEmitter is that if misused it can easily cause memory leaks. It is very easy to open yourself up to these memory leak issues. It has happened to me when I started coding as well. This is why I wanted Discordeno's implementation to help devs avoid the issues I had. It prevents anyone from having this as a potential issue. Another issue with EventEmitter is trying to update the code in those functions without having to deal with headaches left and right of removing and adding listeners. You don't need to worry about binding or not binding events. They are just pure functions
 
 In Discordeno, this is extremely simple, you just simply give it the new event handlers.
 
@@ -80,8 +52,7 @@ Discordeno is the only library(that I have used), that has built in permission h
 Discordeno provides you specific keywords that you can use to send a clean response to the end user of your choosing. I have even seen some bots have hundreds of thousands of Missing Permission or Missing Access errors because libraries don't handle it. IMO, this is a crucial part of any good library as much as it is to handle rate limiting.
 
 ```typescript
-import { Errors } from "https://raw.githubusercontent.com/discordeno/discordeno/v4/types/errors.ts";
-import { Message } from "https://raw.githubusercontent.com/discordeno/discordeno/v4/structures/message.ts";
+import { Errors, Message } from "https://deno.land/x/discordeno@10.0.0/mod.ts";
 
 export function handleCommandError(message: Message, type: Errors) {
 	switch (type) {

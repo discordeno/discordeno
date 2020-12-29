@@ -11,8 +11,7 @@ An event in Discordeno is a function that can be called when a specific event oc
 Go ahead and open up the `src/events/ready.ts` file. When you open this file, you will see the code that is triggered on the `ready` event. Whenever the bot completely starts up, Discordeno emits the `ready` event. This is when this code will be run allowing you to log these messages.
 
 ```ts
-import { botCache } from "../../mod.ts";
-import { cache } from "https://deno.land/x/discordeno@9.4.0/src/utils/cache.ts";
+import { botCache, cache } from "../../deps.ts";
 
 botCache.eventHandlers.ready = function () {
   console.log(`Loaded ${botCache.arguments.size} Argument(s)`);
@@ -71,10 +70,8 @@ botCache.eventHandlers.discordLog = function (error) {
     ].join("\n"))
     .setTimestamp();
 
-  // Get the channel we need to send this error to
-  const errorChannel = configs.channelIDs.errorChannelID;
   // If the channel is not found cancel out
-  if (!errorChannel) return;
+  if (!configs.channelIDs.errorChannelID) return;
 
   // Send the message
   return sendEmbed(errorChannel, embed);
@@ -90,8 +87,8 @@ Now that we have fully covered events, it would be a good time to get some pract
   channelDelete?: (channel: Channel) => unknown;
   debug?: (args: DebugArg) => unknown;
   dispatchRequirements?: (data: DiscordPayload, shardID: number) => unknown;
-  guildBanAdd?: (guild: Guild, user: Member | UserPayload) => unknown;
-  guildBanRemove?: (guild: Guild, user: Member | UserPayload) => unknown;
+  guildBanAdd?: (guild: Guild, user: UserPayload, member?: Member) => unknown;
+  guildBanRemove?: (guild: Guild, user: UserPayload, member?: Member) => unknown;
   guildCreate?: (guild: Guild) => unknown;
   guildLoaded?: (guild: Guild) => unknown;
   guildUpdate?: (guild: Guild, changes: GuildUpdateChange[]) => unknown;
@@ -102,7 +99,7 @@ Now that we have fully covered events, it would be a good time to get some pract
     cachedEmojis: Emoji[],
   ) => unknown;
   guildMemberAdd?: (guild: Guild, member: Member) => unknown;
-  guildMemberRemove?: (guild: Guild, member: Member | UserPayload) => unknown;
+  guildMemberRemove?: (guild: Guild, user: UserPayload, member?: Member) => unknown;
   guildMemberUpdate?: (
     guild: Guild,
     member: Member,
@@ -110,7 +107,7 @@ Now that we have fully covered events, it would be a good time to get some pract
   ) => unknown;
   heartbeat?: () => unknown;
   messageCreate?: (message: Message) => unknown;
-  messageDelete?: (message: Message | PartialMessage) => unknown;
+  messageDelete?: (partial: PartialMessage, message?: Message) => unknown;
   messageUpdate?: (message: Message, cachedMessage: OldMessage) => unknown;
   nicknameUpdate?: (
     guild: Guild,
@@ -126,14 +123,16 @@ Now that we have fully covered events, it would be a good time to get some pract
   rawGateway?: (data: unknown) => unknown;
   ready?: () => unknown;
   reactionAdd?: (
-    message: Message | MessageReactionPayload,
+    payload: MessageReactionPayload
     emoji: ReactionPayload,
     userID: string,
+    message?: Message,
   ) => unknown;
   reactionRemove?: (
-    message: Message | MessageReactionPayload,
+    payload: MessageReactionPayload,
     emoji: ReactionPayload,
     userID: string,
+    message?: Message,
   ) => unknown;
   reactionRemoveAll?: (data: BaseMessageReactionPayload) => unknown;
   reactionRemoveEmoji?: (data: MessageReactionRemoveEmojiPayload) => unknown;

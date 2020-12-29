@@ -7,22 +7,19 @@
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
 
 - First-class TypeScript & JavaScript support
-- Security & stable
+- Secure & stable
 - Builtin Documentation
 - Minimalistic
-- Functional API
-- Actively maintained
+- Function-based API
 
 ### Beginner Developers
 
-Don't worry a lot of developers start out coding their first projects as a Discord bot (I did 😉) and it is not so easy to do so. Discordeno is built considering all the issues with pre-existing libraries and issues that I had when I first started out coding bots. 
+Don't worry a lot of developers start out coding their first projects as a Discord bot (I did 😉) and it is not so easy to do so. Discordeno is built considering all the issues with pre-existing libraries and issues that I had when I first started out coding bots.
 If you are a beginner developer, you may check out these awesome official and unofficial boilerplates:
 
 - Official Discordeno Boilerplate
   - [GitHub](https://github.com/Skillz4Killz/Discordeno-bot-template)
   - [Features](https://github.com/Skillz4Killz/Discordeno-bot-template#features)
-- Dencord Starter
-  - [GitHub](https://github.com/ayntee/dencord-starter)
 
 If you do not wish to use a boilerplate, you may continue reading.
 
@@ -31,35 +28,31 @@ If you do not wish to use a boilerplate, you may continue reading.
 Here's a minimal example to get started with:
 
 ```typescript
-import startBot, { sendMessage, Intents } from "https://deno.land/x/discordeno@9.4.0/mod.ts";
+import { Intents, startBot } from "https://deno.land/x/discordeno@10.0.0/mod.ts";
 
 startBot({
   token: "BOT TOKEN",
-  intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
+  intents: [Intents.GUILDS, Intents.GUILD_MESSAGES],
   eventHandlers: {
-    ready: () => console.log('Successfully connected to gateway'),
-    messageCreate: (message) => {
-      if (message.content === "hello") {
-        sendMessage(message.channelID, "Hi there!");
+    ready() {
+      console.log("Successfully connected to gateway");
+    },
+    messageCreate(message) {
+      if (message.content === "!ping") {
+        message.reply("Pong using Discordeno!");
       }
     },
   },
 });
 ```
 
-## Documentation
+## Useful Links
 
 - [Website](https://discordeno.mod.land)
+- [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
 - [Support server](https://discord.com/invite/5vBgXk3UcZ)
-- [Contributing Guide](https://github.com/discordeno/discordeno/blob/master/.github/CONTRIBUTING.md)
 
 ## Contributing
-
-## Code of Conduct
-
-Discordeno expects participants to adhere to our [Code of Conduct](https://github.com/discordeno/discordeno/blob/master/.github/CODE_OF_CONDUCT.md).
-
-## Contributing Guide
 
 We appreciate your help!
 

@@ -44,8 +44,8 @@ The monitor options are very similar in functionality with the command options.
 Similar to the command name, we will specify a unique name for the monitors. In this case let's call it inviteFilter
 
 ```ts
-botCache.monitors.set("monitorname", {
-	name: "monitorname",
+botCache.monitors.set("inviteFilter", {
+	name: "inviteFilter",
 ```
 
 ### Ignore Options
@@ -72,7 +72,6 @@ botChannelPermissions: ["MANAGE_MESSAGES"]
 ```ts
 import { botCache, deleteMessage } from "../../deps.ts";
 import { translate } from "../utils/i18next.ts";
-import { sendAlertResponse } from "../utils/helpers.ts";
 
 botCache.monitors.set("inviteFilter", {
   name: "inviteFilter",
@@ -89,12 +88,11 @@ botCache.monitors.set("inviteFilter", {
     // This message has an invite link, so delete the message.
     try {
       // Delete the invite link
-      deleteMessage(
-        message,
+      message.delete(
         translate(message.guildID, `monitors/invitefilter:DELETE_REASON`),
       );
 			// Send a message to the user so they know why the message was deleted. Then delete the response after 5 seconds to prevent spam.
-			sendAlertResponse(message, translate(message.guildID, "monitors/invitefilter:DELETE_ALERT_MESSAGE"), 5)
+			message.alertResponse(translate(message.guildID, "monitors/invitefilter:DELETE_ALERT_MESSAGE"), 5)
     } catch (error) {
       return botCache.eventHandlers.discordLog(error)
     }

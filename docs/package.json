@@ -1,5 +1,6 @@
 {
   "name": "discordeno",
+  "private": true,
   "version": "0.0.1",
   "description": "Docs for Discordeno",
   "repository": "https://github.com/discordeno/discordeno",
@@ -7,12 +8,9 @@
     "docs:dev": "vuepress dev src --host localhost",
     "docs:build": "vuepress build src"
   },
-  "license": "MIT",
   "devDependencies": {
-    "vuepress": "^1.5.3",
-    "vuepress-theme-yuu": "^2.3.0"
-  },
-  "dependencies": {
+    "vuepress": "^1.7.1",
+    "vuepress-theme-yuu": "^2.3.0",
     "@vuepress/plugin-back-to-top": "^1.7.1",
     "@vuepress/plugin-medium-zoom": "^1.7.1"
   }
