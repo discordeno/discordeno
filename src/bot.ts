@@ -1,7 +1,17 @@
-import {RequestManager} from "./rest/mod.ts";
-import {BotConfig, DiscordBotGatewayData, EventHandlers,} from "./types/mod.ts";
-import {baseEndpoints, endpoints, GATEWAY_VERSION} from "./util/constants.ts";
-import {spawnShards} from "./ws/shard_manager.ts";
+import {
+  RequestManager
+} from "./rest/mod.ts";
+import {
+  BotConfig,
+  DiscordBotGatewayData,
+  EventHandlers,
+} from "./types/mod.ts";
+import {
+  baseEndpoints,
+  endpoints,
+  GATEWAY_VERSION
+} from "./util/constants.ts";
+import { spawnShards } from "./ws/shard_manager.ts";
 
 export let authorization = "";
 export let botID = "";

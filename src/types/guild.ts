@@ -1,11 +1,11 @@
-import {Guild} from "../api/structures/mod.ts";
-import {ChannelCreatePayload, ChannelTypes} from "./channel.ts";
-import {Emoji, StatusType} from "./discord.ts";
-import {MemberCreatePayload} from "./member.ts";
-import {Activity} from "./message.ts";
-import {Permission} from "./permission.ts";
-import {ClientStatusPayload} from "./presence.ts";
-import {RoleData} from "./role.ts";
+import { Guild } from "../api/structures/mod.ts";
+import { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
+import { Emoji, StatusType } from "./discord.ts";
+import { MemberCreatePayload } from "./member.ts";
+import { Activity } from "./message.ts";
+import { Permission } from "./permission.ts";
+import { ClientStatusPayload } from "./presence.ts";
+import { RoleData } from "./role.ts";
 
 export interface GuildRolePayload {
   /** The id of the guild */

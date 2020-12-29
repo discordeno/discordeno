@@ -1,6 +1,6 @@
-import {Embed} from "./embed.ts";
-import {MemberCreatePayload} from "./member.ts";
-import {AllowedMentions} from "./misc.ts";
+import { Embed } from "./embed.ts";
+import { MemberCreatePayload } from "./member.ts";
+import { AllowedMentions } from "./misc.ts";
 
 export interface Interaction {
   /** The id of the interaction */

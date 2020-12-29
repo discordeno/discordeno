@@ -1,4 +1,4 @@
-import {eventHandlers} from "../../bot.ts";
+import { eventHandlers } from "../../bot.ts";
 import {
   CreateGuildPayload,
   DiscordPayload,
@@ -7,9 +7,9 @@ import {
   GuildUpdateChange,
   UpdateGuildPayload,
 } from "../../types/mod.ts";
-import {cache} from "../../util/cache.ts";
-import {structures} from "../structures/mod.ts";
-import {cacheHandlers} from "./cache.ts";
+import { cache } from "../../util/cache.ts";
+import { structures } from "../structures/mod.ts";
+import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildCreate(
   data: DiscordPayload,

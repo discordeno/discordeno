@@ -1,4 +1,4 @@
-import {RequestManager} from "../../rest/mod.ts";
+import { RequestManager } from "../../rest/mod.ts";
 import {
   ChannelEditOptions,
   ChannelTypes,
@@ -16,10 +16,10 @@ import {
   RawOverwrite,
   WebhookPayload,
 } from "../../types/mod.ts";
-import {endpoints} from "../../util/constants.ts";
-import {botHasChannelPermissions, calculateBits,} from "../../util/permissions.ts";
-import {cacheHandlers} from "../controllers/cache.ts";
-import {structures} from "../structures/mod.ts";
+import { endpoints } from "../../util/constants.ts";
+import { botHasChannelPermissions,  calculateBits, } from "../../util/permissions.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
+import { structures } from "../structures/mod.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(

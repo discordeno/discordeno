@@ -1,4 +1,4 @@
-import {MemberCreatePayload} from "./member.ts";
+import { MemberCreatePayload } from "./member.ts";
 
 export interface InteractionCommandPayload {
   /** id of the interaction */

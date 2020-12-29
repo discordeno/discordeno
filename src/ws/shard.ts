@@ -1,4 +1,9 @@
-import {botGatewayData, eventHandlers, IdentifyPayload, proxyWSURL,} from "../bot.ts";
+import {
+  botGatewayData,
+  eventHandlers,
+  IdentifyPayload,
+  proxyWSURL,
+} from "../bot.ts";
 import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
@@ -6,9 +11,9 @@ import {
   GatewayOpcode,
   ReadyPayload,
 } from "../types/mod.ts";
-import {BotStatusRequest, delay} from "../util/utils.ts";
-import {decompressWith} from "./deps.ts";
-import {handleDiscordPayload} from "./shard_manager.ts";
+import { BotStatusRequest, delay } from "../util/utils.ts";
+import { decompressWith } from "./deps.ts";
+import  {handleDiscordPayload } from "./shard_manager.ts";
 
 const basicShards = new Map<number, BasicShard>();
 const heartbeating = new Map<number, boolean>();

@@ -1,7 +1,7 @@
-import {GuildTemplate, UserPayload} from "../../types/mod.ts";
-import {cache} from "../../util/cache.ts";
-import {createNewProp} from "../../util/utils.ts";
-import {Guild} from "./guild.ts";
+import { GuildTemplate, UserPayload } from "../../types/mod.ts";
+import { cache } from "../../util/cache.ts";
+import { createNewProp } from "../../util/utils.ts";
+import { Guild } from "./guild.ts";
 
 const baseTemplate: any = {
   get sourceGuild() {

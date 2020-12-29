@@ -1,10 +1,19 @@
-import {controllers} from "../api/controllers/mod.ts";
-import {Guild} from "../api/structures/guild.ts";
-import {eventHandlers, IdentifyPayload} from "../bot.ts";
-import {DiscordBotGatewayData, DiscordPayload, FetchMembersOptions, GatewayOpcode,} from "../types/mod.ts";
-import {cache} from "../util/cache.ts";
-import {BotStatusRequest, delay} from "../util/utils.ts";
-import {botGatewayStatusRequest, createShard, requestGuildMembers,} from "./mod.ts";
+import { controllers } from "../api/controllers/mod.ts";
+import { Guild } from "../api/structures/guild.ts";
+import { eventHandlers, IdentifyPayload } from "../bot.ts";
+import {
+  DiscordBotGatewayData,
+  DiscordPayload,
+  FetchMembersOptions,
+  GatewayOpcode,
+} from "../types/mod.ts";
+import { cache } from "../util/cache.ts";
+import { BotStatusRequest, delay } from "../util/utils.ts";
+import {
+  botGatewayStatusRequest,
+  createShard,
+  requestGuildMembers,
+} from "./mod.ts";
 
 let createNextShard = true;
 

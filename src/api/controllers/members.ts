@@ -1,4 +1,4 @@
-import {eventHandlers} from "../../bot.ts";
+import { eventHandlers } from "../../bot.ts";
 import {
   DiscordPayload,
   GuildBanPayload,
@@ -6,10 +6,10 @@ import {
   GuildMemberChunkPayload,
   GuildMemberUpdatePayload,
 } from "../../types/mod.ts";
-import {cache} from "../../util/cache.ts";
-import {Collection} from "../../util/collection.ts";
-import {structures} from "../structures/mod.ts";
-import {cacheHandlers} from "./cache.ts";
+import { cache } from "../../util/cache.ts";
+import { Collection } from "../../util/collection.ts";
+import { structures } from "../structures/mod.ts";
+import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
   if (data.t !== "GUILD_MEMBER_ADD") return;

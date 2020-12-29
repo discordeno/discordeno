@@ -1,5 +1,5 @@
-import {identifyPayload} from "../../bot.ts";
-import {RequestManager} from "../../rest/mod.ts";
+import { identifyPayload } from "../../bot.ts";
+import { RequestManager } from "../../rest/mod.ts";
 import {
   AuditLogs,
   BannedUser,
@@ -32,13 +32,18 @@ import {
   UpdateGuildPayload,
   UserPayload,
 } from "../../types/mod.ts";
-import {Collection} from "../../util/collection.ts";
-import {endpoints} from "../../util/constants.ts";
-import {botHasPermission, calculateBits} from "../../util/permissions.ts";
-import {formatImageURL, urlToBase64} from "../../util/utils.ts";
-import {requestAllMembers} from "../../ws/shard_manager.ts";
-import {cacheHandlers} from "../controllers/cache.ts";
-import {Guild, Member, structures, Template,} from "../structures/structures.ts";
+import { Collection } from "../../util/collection.ts";
+import { endpoints } from "../../util/constants.ts";
+import { botHasPermission, calculateBits } from "../../util/permissions.ts";
+import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
+import { requestAllMembers } from "../../ws/shard_manager.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
+import {
+  Guild,
+  Member,
+  structures,
+  Template,
+} from "../structures/mod.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createServer(options: CreateServerOptions) {

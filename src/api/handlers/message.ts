@@ -1,11 +1,16 @@
-import {botID} from "../../bot.ts";
-import {RequestManager} from "../../rest/mod.ts";
-import {Errors, MessageContent, MessageCreateOptions, UserPayload,} from "../../types/mod.ts";
-import {endpoints} from "../../util/constants.ts";
-import {botHasChannelPermissions} from "../../util/permissions.ts";
-import {delay} from "../../util/utils.ts";
-import {cacheHandlers} from "../controllers/cache.ts";
-import {Message, structures} from "../structures/structures.ts";
+import { botID } from "../../bot.ts";
+import { RequestManager } from "../../rest/mod.ts";
+import {
+  Errors,
+  MessageContent,
+  MessageCreateOptions,
+  UserPayload,
+} from "../../types/mod.ts";
+import { endpoints } from "../../util/constants.ts";
+import { botHasChannelPermissions } from "../../util/permissions.ts";
+import { delay } from "../../util/utils.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
+import { Message, structures } from "../structures/mod.ts";
 
 /** Delete a message with the channel id and message id only. */
 export async function deleteMessageByID(

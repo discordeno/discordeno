@@ -1,11 +1,16 @@
-import {ChannelCreatePayload, ChannelType, MessageContent, RawOverwrite,} from "../../types/mod.ts";
-import {cache} from "../../util/cache.ts";
-import {Collection} from "../../util/collection.ts";
-import {createNewProp} from "../../util/utils.ts";
-import {cacheHandlers} from "../controllers/cache.ts";
-import {sendMessage} from "../handlers/channel.ts";
-import {Guild} from "./guild.ts";
-import {Message} from "./message.ts";
+import {
+  ChannelCreatePayload,
+  ChannelType,
+  MessageContent,
+  RawOverwrite,
+} from "../../types/mod.ts";
+import { cache } from "../../util/cache.ts";
+import { Collection } from "../../util/collection.ts";
+import { createNewProp } from "../../util/utils.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
+import { sendMessage } from "../handlers/channel.ts";
+import { Guild } from "./guild.ts";
+import { Message } from "./message.ts";
 
 const baseChannel: Partial<Channel> = {
   get guild() {
