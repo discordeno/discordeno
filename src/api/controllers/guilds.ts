@@ -1,4 +1,4 @@
-import { eventHandlers } from "../../bot.ts";
+import {eventHandlers} from "../../bot.ts";
 import {
   CreateGuildPayload,
   DiscordPayload,
@@ -7,9 +7,9 @@ import {
   GuildUpdateChange,
   UpdateGuildPayload,
 } from "../../types/mod.ts";
-import { cache } from "../../util/cache.ts";
-import { structures } from "../structures/structures.ts";
-import { cacheHandlers } from "./cache.ts";
+import {cache} from "../../util/cache.ts";
+import {structures} from "../structures/mod.ts";
+import {cacheHandlers} from "./cache.ts";
 
 export async function handleInternalGuildCreate(
   data: DiscordPayload,
@@ -26,10 +26,10 @@ export async function handleInternalGuildCreate(
     shardID,
   );
 
-  cacheHandlers.set("guilds", guild.id, guild);
+  await cacheHandlers.set("guilds", guild.id, guild);
 
-  if (cacheHandlers.has("unavailableGuilds", payload.id)) {
-    cacheHandlers.delete("unavailableGuilds", payload.id);
+  if (await cacheHandlers.has("unavailableGuilds", payload.id)) {
+    await cacheHandlers.delete("unavailableGuilds", payload.id);
   }
 
   if (!cache.isReady) return eventHandlers.guildLoaded?.(guild);
@@ -52,7 +52,7 @@ export async function handleInternalGuildDelete(data: DiscordPayload) {
     }
   });
 
-  cacheHandlers.delete("guilds", payload.id);
+  await cacheHandlers.delete("guilds", payload.id);
 
   if (payload.unavailable) {
     return cacheHandlers.set("unavailableGuilds", payload.id, Date.now());
@@ -101,7 +101,6 @@ export async function handleInternalGuildUpdate(data: DiscordPayload) {
         cachedGuild[key] = value;
         return { key, oldValue: cachedValue, value };
       }
-      return;
     }).filter((change) => change) as GuildUpdateChange[];
 
   return eventHandlers.guildUpdate?.(cachedGuild, changes);

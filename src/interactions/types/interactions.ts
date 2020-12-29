@@ -1,6 +1,6 @@
-import { Embed } from "./embed.ts";
-import { MemberCreatePayload } from "./member.ts";
-import { AllowedMentions } from "./misc.ts";
+import {Embed} from "./embed.ts";
+import {MemberCreatePayload} from "./member.ts";
+import {AllowedMentions} from "./misc.ts";
 
 export interface Interaction {
   /** The id of the interaction */
@@ -29,7 +29,7 @@ export interface SlashCommandInteractionData {
 }
 
 export interface SlashCommandInteractionDataOption {
-  /** The name of the parammeter */
+  /** The name of the parameter */
   name: string;
   /** The value of the pair */
   value?: any;

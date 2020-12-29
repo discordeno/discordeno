@@ -1,16 +1,11 @@
-import { botID } from "../../bot.ts";
-import { RequestManager } from "../../rest/mod.ts";
-import {
-  Errors,
-  MessageContent,
-  MessageCreateOptions,
-  UserPayload,
-} from "../../types/mod.ts";
-import { endpoints } from "../../util/constants.ts";
-import { botHasChannelPermissions } from "../../util/permissions.ts";
-import { delay } from "../../util/utils.ts";
-import { cacheHandlers } from "../controllers/cache.ts";
-import { Message, structures } from "../structures/structures.ts";
+import {botID} from "../../bot.ts";
+import {RequestManager} from "../../rest/mod.ts";
+import {Errors, MessageContent, MessageCreateOptions, UserPayload,} from "../../types/mod.ts";
+import {endpoints} from "../../util/constants.ts";
+import {botHasChannelPermissions} from "../../util/permissions.ts";
+import {delay} from "../../util/utils.ts";
+import {cacheHandlers} from "../controllers/cache.ts";
+import {Message, structures} from "../structures/structures.ts";
 
 /** Delete a message with the channel id and message id only. */
 export async function deleteMessageByID(
@@ -68,7 +63,7 @@ export async function pin(channelID: string, messageID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
-  RequestManager.put(endpoints.CHANNEL_MESSAGE(channelID, messageID));
+  return RequestManager.put(endpoints.CHANNEL_MESSAGE(channelID, messageID));
 }
 
 /** Unpin a message in a channel. Requires MANAGE_MESSAGES. */
@@ -82,7 +77,7 @@ export async function unpin(channelID: string, messageID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
-  RequestManager.delete(
+  return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE(channelID, messageID),
   );
 }
@@ -134,9 +129,7 @@ export async function addReactions(
   ordered = false,
 ) {
   if (!ordered) {
-    reactions.forEach((reaction) =>
-      addReaction(channelID, messageID, reaction)
-    );
+    await Promise.all(reactions.map(reaction => addReaction(channelID, messageID, reaction)))
   } else {
     for (const reaction of reactions) {
       await addReaction(channelID, messageID, reaction);

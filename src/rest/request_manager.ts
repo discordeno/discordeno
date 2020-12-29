@@ -1,13 +1,7 @@
-import { authorization, eventHandlers } from "../bot.ts";
-import { Errors, HttpResponseCode, RequestMethods } from "../types/mod.ts";
-import {
-  API_VERSION,
-  BASE_URL,
-  baseEndpoints,
-  IMAGE_BASE_URL,
-  USER_AGENT,
-} from "../util/constants.ts";
-import { delay } from "../util/utils.ts";
+import {authorization, eventHandlers} from "../bot.ts";
+import {Errors, HttpResponseCode, RequestMethods} from "../types/mod.ts";
+import {API_VERSION, BASE_URL, baseEndpoints, IMAGE_BASE_URL, USER_AGENT,} from "../util/constants.ts";
+import {delay} from "../util/utils.ts";
 
 const pathQueues: { [key: string]: QueuedRequest[] } = {};
 const ratelimitedPaths = new Map<string, RateLimitedPath>();
@@ -41,7 +35,7 @@ async function processRateLimitedPaths() {
   });
 
   await delay(1000);
-  processRateLimitedPaths();
+  return processRateLimitedPaths();
 }
 
 function addToQueue(request: QueuedRequest) {
@@ -115,7 +109,7 @@ async function processQueue() {
     }
 
     if (Object.keys(pathQueues).length) {
-      cleanupQueues();
+      await cleanupQueues();
     } else queueInProcess = false;
   }
 }
@@ -215,7 +209,7 @@ async function runMethod(
       });
   }
 
-  // No proxy so we need to handl all rate limiting and such
+  // No proxy so we need to handle all rate limiting and such
   return new Promise((resolve, reject) => {
     const callback = async () => {
       try {

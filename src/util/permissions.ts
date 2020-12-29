@@ -1,7 +1,7 @@
-import { cacheHandlers } from "../api/controllers/cache.ts";
-import { Guild, Role } from "../api/structures/structures.ts";
-import { botID } from "../bot.ts";
-import { Permission, Permissions, RawOverwrite } from "../types/mod.ts";
+import {cacheHandlers} from "../api/controllers/cache.ts";
+import {Guild, Role} from "../api/structures/structures.ts";
+import {botID} from "../bot.ts";
+import {Permission, Permissions, RawOverwrite} from "../types/mod.ts";
 
 /** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
 export async function memberIDHasPermission(
@@ -191,8 +191,7 @@ export async function hasChannelPermissions(
   if (permissions.every((perm) => allowedPermissions.has(perm))) return true;
 
   // Some permission was not explicitly allowed so we default to checking role perms directly
-  const hasPerms = await memberIDHasPermission(memberID, guild.id, permissions);
-  return hasPerms;
+  return await memberIDHasPermission(memberID, guild.id, permissions);
 }
 
 /** This function converts a bitwise string to permission strings */
