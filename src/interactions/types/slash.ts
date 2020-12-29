@@ -1,13 +1,10 @@
-import {
-  InteractionResponseType,
-  SlashCommandCallbackData,
-} from "./interactions.ts";
+import {InteractionResponseType, SlashCommandCallbackData,} from "./interactions.ts";
 
 export interface CreateSlashCommandOptions {
   /** The name of the slash command.  */
   name: string;
   /** The description of the slash command. */
-  description: String;
+  description: string;
   /** If a guildID is provided, this will be a GUILD command. If none is provided it will be a GLOBAL command. */
   guildID?: string;
   /** The options for this command */
