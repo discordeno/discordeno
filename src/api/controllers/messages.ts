@@ -1,12 +1,12 @@
-import {eventHandlers} from "../../bot.ts";
+import { eventHandlers } from "../../bot.ts";
 import {
   DiscordPayload,
   MessageCreateOptions,
   MessageDeleteBulkPayload,
   MessageDeletePayload,
 } from "../../types/mod.ts";
-import {structures} from "../structures/mod.ts";
-import {cacheHandlers} from "./cache.ts";
+import { structures } from "../structures/structures.ts";
+import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalMessageCreate(data: DiscordPayload) {
   if (data.t !== "MESSAGE_CREATE") return;
@@ -39,7 +39,7 @@ export async function handleInternalMessageCreate(data: DiscordPayload) {
 
   const message = await structures.createMessage(payload);
   // Cache the message
-  await cacheHandlers.set("messages", payload.id, message);
+  cacheHandlers.set("messages", payload.id, message);
 
   eventHandlers.messageCreate?.(message);
 }
@@ -56,7 +56,7 @@ export async function handleInternalMessageDelete(data: DiscordPayload) {
     await cacheHandlers.get("messages", payload.id),
   );
 
-  await cacheHandlers.delete("messages", payload.id);
+  cacheHandlers.delete("messages", payload.id);
 }
 
 export async function handleInternalMessageDeleteBulk(data: DiscordPayload) {
@@ -66,13 +66,13 @@ export async function handleInternalMessageDeleteBulk(data: DiscordPayload) {
   const channel = await cacheHandlers.get("channels", payload.channel_id);
   if (!channel) return;
 
-  return Promise.all(payload.ids.map(async (id) => {
+  payload.ids.forEach(async (id) => {
     eventHandlers.messageDelete?.(
-        { id, channel },
-        await cacheHandlers.get("messages", id),
+      { id, channel },
+      await cacheHandlers.get("messages", id),
     );
-    await cacheHandlers.delete("messages", id);
-  }))
+    cacheHandlers.delete("messages", id);
+  });
 }
 
 export async function handleInternalMessageUpdate(data: DiscordPayload) {

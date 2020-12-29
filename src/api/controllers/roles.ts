@@ -1,7 +1,11 @@
-import {eventHandlers} from "../../bot.ts";
-import {DiscordPayload, GuildRoleDeletePayload, GuildRolePayload,} from "../../types/mod.ts";
-import {structures} from "../structures/mod.ts";
-import {cacheHandlers} from "./cache.ts";
+import { eventHandlers } from "../../bot.ts";
+import {
+  DiscordPayload,
+  GuildRoleDeletePayload,
+  GuildRolePayload,
+} from "../../types/mod.ts";
+import { structures } from "../structures/structures.ts";
+import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildRoleCreate(data: DiscordPayload) {
   if (data.t !== "GUILD_ROLE_CREATE") return;
@@ -11,7 +15,8 @@ export async function handleInternalGuildRoleCreate(data: DiscordPayload) {
   if (!guild) return;
 
   const role = await structures.createRole(payload.role);
-  guild.roles = guild.roles.set(payload.role.id, role);
+  const roles = guild.roles.set(payload.role.id, role);
+  guild.roles = roles;
   return eventHandlers.roleCreate?.(guild, role);
 }
 

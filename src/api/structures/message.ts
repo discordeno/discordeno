@@ -11,9 +11,9 @@ import {
   Reference,
   UserPayload,
 } from "../../types/mod.ts";
-import {cache} from "../../util/cache.ts";
-import {createNewProp} from "../../util/utils.ts";
-import {sendMessage} from "../handlers/channel.ts";
+import { cache } from "../../util/cache.ts";
+import { createNewProp } from "../../util/utils.ts";
+import { sendMessage } from "../handlers/channel.ts";
 import {
   addReaction,
   addReactions,
@@ -24,10 +24,10 @@ import {
   removeReaction,
   removeReactionEmoji,
 } from "../handlers/message.ts";
-import {Channel} from "./channel.ts";
-import {Guild} from "./guild.ts";
-import {Member} from "./member.ts";
-import {Role} from "./role.ts";
+import { Channel } from "./channel.ts";
+import { Guild } from "./guild.ts";
+import { Member } from "./member.ts";
+import { Role } from "./role.ts";
 
 const baseMessage: Partial<Message> = {
   get channel() {
@@ -127,7 +127,6 @@ export async function createMessage(data: MessageCreateOptions) {
     message_reference: messageReference,
     edited_timestamp: editedTimestamp,
     referenced_message: referencedMessageID,
-    member,
     ...rest
   } = data;
 

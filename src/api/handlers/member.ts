@@ -1,5 +1,5 @@
-import {botID} from "../../bot.ts";
-import {RequestManager} from "../../rest/mod.ts";
+import { botID } from "../../bot.ts";
+import { RequestManager } from "../../rest/mod.ts";
 import {
   DMChannelCreatePayload,
   EditMemberOptions,
@@ -8,12 +8,16 @@ import {
   ImageSize,
   MessageContent,
 } from "../../types/mod.ts";
-import {endpoints} from "../../util/constants.ts";
-import {botHasPermission, higherRolePosition, highestRole,} from "../../util/permissions.ts";
-import {formatImageURL, urlToBase64} from "../../util/utils.ts";
-import {cacheHandlers} from "../controllers/cache.ts";
-import {Member, structures} from "../structures/structures.ts";
-import {sendMessage} from "./channel.ts";
+import { endpoints } from "../../util/constants.ts";
+import {
+  botHasPermission,
+  higherRolePosition,
+  highestRole,
+} from "../../util/permissions.ts";
+import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
+import { Member, structures } from "../structures/structures.ts";
+import { sendMessage } from "./channel.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
 export function rawAvatarURL(
@@ -123,10 +127,10 @@ export async function sendDirectMessage(
       { recipient_id: memberID },
     ) as DMChannelCreatePayload;
     // Channel create event will have added this channel to the cache
-    await cacheHandlers.delete("channels", dmChannelData.id);
+    cacheHandlers.delete("channels", dmChannelData.id);
     const channel = await structures.createChannel(dmChannelData);
     // Recreate the channel and add it undert he users id
-    await cacheHandlers.set("channels", memberID, channel);
+    cacheHandlers.set("channels", memberID, channel);
     dmChannel = channel;
   }
 
@@ -256,7 +260,7 @@ export async function editBotProfile(username?: string, avatarURL?: string) {
   }
 
   const avatar = avatarURL ? await urlToBase64(avatarURL) : undefined;
-  return RequestManager.patch(
+  RequestManager.patch(
     endpoints.USER_BOT,
     {
       username: username?.trim(),

@@ -1,4 +1,4 @@
-import {MemberCreatePayload} from "./member.ts";
+import { MemberCreatePayload } from "./member.ts";
 
 export interface InteractionCommandPayload {
   /** id of the interaction */
@@ -13,7 +13,7 @@ export interface InteractionCommandPayload {
   channel_id: string;
   /** guild member data for the invoking user */
   member: MemberCreatePayload;
-  /** a continuation token for responding to the interaction */
+  /** a contintuation token for responding to the interaction */
   token: string;
 }
 

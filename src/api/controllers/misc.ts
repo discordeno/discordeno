@@ -1,4 +1,4 @@
-import {eventHandlers, setBotID} from "../../bot.ts";
+import { eventHandlers, setBotID } from "../../bot.ts";
 import {
   DiscordPayload,
   PresenceUpdatePayload,
@@ -8,11 +8,14 @@ import {
   VoiceStateUpdatePayload,
   WebhookUpdatePayload,
 } from "../../types/mod.ts";
-import {cache} from "../../util/cache.ts";
-import {delay} from "../../util/utils.ts";
-import {allowNextShard} from "../../ws/shard_manager.ts";
-import {initialMemberLoadQueue, structures,} from "../structures/structures.ts";
-import {cacheHandlers} from "./cache.ts";
+import { cache } from "../../util/cache.ts";
+import { delay } from "../../util/utils.ts";
+import { allowNextShard } from "../../ws/shard_manager.ts";
+import {
+  initialMemberLoadQueue,
+  structures,
+} from "../structures/structures.ts";
+import { cacheHandlers } from "./cache.ts";
 
 /** This function is the internal handler for the ready event. Users can override this with controllers if desired. */
 export async function handleInternalReady(
@@ -51,7 +54,7 @@ export async function handleInternalPresenceUpdate(data: DiscordPayload) {
 
   const payload = data.d as PresenceUpdatePayload;
   const oldPresence = await cacheHandlers.get("presences", payload.user.id);
-  await cacheHandlers.set("presences", payload.user.id, payload);
+  cacheHandlers.set("presences", payload.user.id, payload);
 
   return eventHandlers.presenceUpdate?.(payload, oldPresence);
 }
