@@ -289,7 +289,7 @@ async function heartbeat(
     },
   );
   await delay(interval);
-  return heartbeat(shard, interval, payload, data);
+  await heartbeat(shard, interval, payload, data);
 }
 
 async function resumeConnection(

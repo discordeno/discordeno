@@ -41,7 +41,7 @@ async function processRateLimitedPaths() {
   });
 
   await delay(1000);
-  return processRateLimitedPaths();
+  await processRateLimitedPaths();
 }
 
 function addToQueue(request: QueuedRequest) {
