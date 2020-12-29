@@ -47,11 +47,11 @@ export async function createWebhook(
   }
 
   return await RequestManager.post(
-      endpoints.CHANNEL_WEBHOOKS(channelID),
-      {
-        ...options,
-        avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
-      },
+    endpoints.CHANNEL_WEBHOOKS(channelID),
+    {
+      ...options,
+      avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
+    },
   ) as Promise<WebhookPayload>;
 }
 

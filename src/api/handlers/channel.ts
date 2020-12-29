@@ -17,7 +17,10 @@ import {
   WebhookPayload,
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
-import { botHasChannelPermissions,  calculateBits, } from "../../util/permissions.ts";
+import {
+  botHasChannelPermissions,
+  calculateBits,
+} from "../../util/permissions.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { structures } from "../structures/mod.ts";
 
@@ -300,7 +303,9 @@ export async function getChannelWebhooks(channelID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
-  return await RequestManager.get(endpoints.CHANNEL_WEBHOOKS(channelID)) as Promise<
+  return await RequestManager.get(
+      endpoints.CHANNEL_WEBHOOKS(channelID)
+  ) as Promise<
     WebhookPayload[]
   >;
 }
@@ -458,6 +463,7 @@ export async function isChannelSynced(channelID: string) {
       ow.id === overwrite.id
     );
     if (!permission) return false;
-    return !(overwrite.allow !== permission.allow || overwrite.deny !== permission.deny);
+    return !(overwrite.allow !== permission.allow ||
+        overwrite.deny !== permission.deny);
   });
 }

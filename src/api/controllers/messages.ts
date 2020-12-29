@@ -68,11 +68,11 @@ export async function handleInternalMessageDeleteBulk(data: DiscordPayload) {
 
   return Promise.all(payload.ids.map(async (id) => {
     eventHandlers.messageDelete?.(
-        { id, channel },
-        await cacheHandlers.get("messages", id),
+      { id, channel },
+      await cacheHandlers.get("messages", id),
     );
     await cacheHandlers.delete("messages", id);
-  }))
+  }));
 }
 
 export async function handleInternalMessageUpdate(data: DiscordPayload) {
