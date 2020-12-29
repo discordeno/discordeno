@@ -39,7 +39,7 @@ export async function handleInternalChannelDelete(data: DiscordPayload) {
         if (!member) return;
 
         eventHandlers.voiceChannelLeave?.(member, vs.channelID);
-      }))
+      }));
     }
   }
 

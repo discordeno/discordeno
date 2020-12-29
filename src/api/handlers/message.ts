@@ -135,7 +135,7 @@ export async function addReactions(
 ) {
   if (!ordered) {
     await Promise.all(
-        reactions.map(reaction => addReaction(channelID, messageID, reaction))
+      reactions.map((reaction) => addReaction(channelID, messageID, reaction)),
     );
   } else {
     for (const reaction of reactions) {

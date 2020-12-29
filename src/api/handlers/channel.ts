@@ -304,7 +304,7 @@ export async function getChannelWebhooks(channelID: string) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
   return await RequestManager.get(
-      endpoints.CHANNEL_WEBHOOKS(channelID)
+    endpoints.CHANNEL_WEBHOOKS(channelID)
   ) as Promise<
     WebhookPayload[]
   >;
@@ -464,6 +464,6 @@ export async function isChannelSynced(channelID: string) {
     );
     if (!permission) return false;
     return !(overwrite.allow !== permission.allow ||
-        overwrite.deny !== permission.deny);
+      overwrite.deny !== permission.deny);
   });
 }
