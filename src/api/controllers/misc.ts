@@ -113,15 +113,15 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
   if (cachedState?.channelID !== payload.channel_id) {
     // Either joined or moved channels
     if (payload.channel_id) {
-      cachedState?.channelID
-        ? // Was in a channel before
-          eventHandlers.voiceChannelSwitch?.(
+      if (cachedState?.channelID) { // Was in a channel before
+        eventHandlers.voiceChannelSwitch?.(
             member,
             payload.channel_id,
             cachedState.channelID,
-          )
-        : // Was not in a channel before so user just joined
-          eventHandlers.voiceChannelJoin?.(member, payload.channel_id);
+        );
+      } else { // Was not in a channel before so user just joined
+        eventHandlers.voiceChannelJoin?.(member, payload.channel_id);
+      }
     } // Left the channel
     else if (cachedState?.channelID) {
       guild.voiceStates.delete(payload.user_id);

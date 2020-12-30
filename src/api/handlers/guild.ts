@@ -419,7 +419,7 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
   // You can request 1 member without the intent
   if (
     (!options?.limit || options.limit > 1) &&
-    !(identifyPayload.intents & Intents.GUILD_MEMBERS)
+    !(identifyPayload.intents && Intents.GUILD_MEMBERS)
   ) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }

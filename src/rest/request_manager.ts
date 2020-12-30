@@ -59,7 +59,7 @@ function addToQueue(request: QueuedRequest) {
 }
 
 async function cleanupQueues() {
-  Object.entries(pathQueues).map(([key, value]) => {
+  Object.entries(pathQueues).forEach(([key, value]) => {
     if (!value.length) {
       // Remove it entirely
       delete pathQueues[key];
