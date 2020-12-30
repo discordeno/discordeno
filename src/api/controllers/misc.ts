@@ -115,9 +115,9 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
     if (payload.channel_id) {
       if (cachedState?.channelID) { // Was in a channel before
         eventHandlers.voiceChannelSwitch?.(
-            member,
-            payload.channel_id,
-            cachedState.channelID,
+          member,
+          payload.channel_id,
+          cachedState.channelID,
         );
       } else { // Was not in a channel before so user just joined
         eventHandlers.voiceChannelJoin?.(member, payload.channel_id);
