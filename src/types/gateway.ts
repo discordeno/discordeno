@@ -16,90 +16,96 @@ export interface GatewayPayload {
   /** opcode for the payload */
   op: GatewayOpcodes;
   /** event data */
-  d:
-    | HelloPayload
-    | ReadyEventFields
-    | ResumePayload
-    | InvalidSession
-    | ChannelPayload
-    | ChannelPinsUpdateEventPayload
-    | GuildPayload
-    | UnavailableGuildPayload
-    | GuildBanAddEventPayload
-    | GuildBanRemoveEventPayload
-    | GuildEmojisUpdateEventPayload
-    | GuildIntegrationsUpdateEventPayload
-    | GuildMemberPayload
-    | GuildMemberPayload & GuildMemberAddExtraPayload
-    | GuildMemberRemoveEventPayload
-    | GuildMemberUpdateEventPayload
-    | GuildMembersChunkEventPayload
-    | GuildRoleCreateEventPayload
-    | GuildRoleUpdateEventPayload
-    | GuildRoleDeleteEventPayload
-    | InviteCreateEventPayload
-    | InviteDeleteEventPayload
-    | MessagePayload
-    | MessageDeleteEventPayload
-    | MessageDeleteBulkEventPayload
-    | MessageReactionAddEventPayload
-    | MessageReactionRemoveEventPayload
-    | MessageReactionRemoveAllEventPayload
-    | MessageReactionRemoveEmojiPayload
-    | PresenceUpdateEventPayload
-    | TypingStartEventPayload
-    | UserPayload
-    | VoiceStatePayload
-    | VoiceServerUpdateEventPayload
-    | WebhookUpdateEventPayload
-    /**| InteractionCreate*/
-    | null;
+  d: GatewayPayloadDTypes;
   /** sequence number, used for resuming sessions and heartbeats */
   s: number | null;
   /** the event name for this payload */
-  t:
-    | "HELLO"
-    | "READY"
-    | "RESUMED"
-    | "RECONNECT"
-    | "INVALID_SESSION"
-    | "CHANNEL_CREATE"
-    | "CHANNEL_UPDATE"
-    | "CHANNEL_DELETE"
-    | "CHANNEL_PINS_UPDATE"
-    | "GUILD_CREATE"
-    | "GUILD_UPDATE"
-    | "GUILD_DELETE"
-    | "GUILD_BAN_ADD"
-    | "GUILD_BAN_REMOVE"
-    | "GUILD_EMOJIS_UPDATE"
-    | "GUILD_INTEGRATIONS_UPDATE"
-    | "GUILD_MEMBER_ADD"
-    | "GUILD_MEMBER_REMOVE"
-    | "GUILD_MEMBER_UPDATE"
-    | "GUILD_MEMBERS_CHUNK"
-    | "GUILD_ROLE_CREATE"
-    | "GUILD_ROLE_UPDATE"
-    | "GUILD_ROLE_DELETE"
-    | "INVITE_CREATE"
-    | "INVITE_DELETE"
-    | "MESSAGE_CREATE"
-    | "MESSAGE_UPDATE"
-    | "MESSAGE_DELETE"
-    | "MESSAGE_DELETE_BULK"
-    | "MESSAGE_REACTION_ADD"
-    | "MESSAGE_REACTION_REMOVE"
-    | "MESSAGE_REACTION_REMOVE_ALL"
-    | "MESSAGE_REACTION_REMOVE_EMOJI"
-    | "PRESENCE_UPDATE"
-    | "TYPING_START"
-    | "USER_UPDATE"
-    | "VOICE_STATE_UPDATE"
-    | "VOICE_SERVER_UPDATE"
-    | "WEBHOOKS_UPDATE"
-    | "INTERACTION_CREATE"
-    | null;
+  t: GatewayPayloadTTypes;
 }
+
+/** GatewayPayload event data type list */
+export type GatewayPayloadDTypes =
+  | HelloPayload
+  | ReadyEventFields
+  | ResumePayload
+  | InvalidSession
+  | ChannelPayload
+  | ChannelPinsUpdateEventPayload
+  | GuildPayload
+  | UnavailableGuildPayload
+  | GuildBanAddEventPayload
+  | GuildBanRemoveEventPayload
+  | GuildEmojisUpdateEventPayload
+  | GuildIntegrationsUpdateEventPayload
+  | GuildMemberPayload
+  | GuildMemberPayload & GuildMemberAddExtraPayload
+  | GuildMemberRemoveEventPayload
+  | GuildMemberUpdateEventPayload
+  | GuildMembersChunkEventPayload
+  | GuildRoleCreateEventPayload
+  | GuildRoleUpdateEventPayload
+  | GuildRoleDeleteEventPayload
+  | InviteCreateEventPayload
+  | InviteDeleteEventPayload
+  | MessagePayload
+  | MessageDeleteEventPayload
+  | MessageDeleteBulkEventPayload
+  | MessageReactionAddEventPayload
+  | MessageReactionRemoveEventPayload
+  | MessageReactionRemoveAllEventPayload
+  | MessageReactionRemoveEmojiPayload
+  | PresenceUpdateEventPayload
+  | TypingStartEventPayload
+  | UserPayload
+  | VoiceStatePayload
+  | VoiceServerUpdateEventPayload
+  | WebhookUpdateEventPayload
+  /**| InteractionCreate*/
+  | null;
+
+/** GatewayPayload event name list */
+export type GatewayPayloadTTypes =
+  | "HELLO"
+  | "READY"
+  | "RESUMED"
+  | "RECONNECT"
+  | "INVALID_SESSION"
+  | "CHANNEL_CREATE"
+  | "CHANNEL_UPDATE"
+  | "CHANNEL_DELETE"
+  | "CHANNEL_PINS_UPDATE"
+  | "GUILD_CREATE"
+  | "GUILD_UPDATE"
+  | "GUILD_DELETE"
+  | "GUILD_BAN_ADD"
+  | "GUILD_BAN_REMOVE"
+  | "GUILD_EMOJIS_UPDATE"
+  | "GUILD_INTEGRATIONS_UPDATE"
+  | "GUILD_MEMBER_ADD"
+  | "GUILD_MEMBER_REMOVE"
+  | "GUILD_MEMBER_UPDATE"
+  | "GUILD_MEMBERS_CHUNK"
+  | "GUILD_ROLE_CREATE"
+  | "GUILD_ROLE_UPDATE"
+  | "GUILD_ROLE_DELETE"
+  | "INVITE_CREATE"
+  | "INVITE_DELETE"
+  | "MESSAGE_CREATE"
+  | "MESSAGE_UPDATE"
+  | "MESSAGE_DELETE"
+  | "MESSAGE_DELETE_BULK"
+  | "MESSAGE_REACTION_ADD"
+  | "MESSAGE_REACTION_REMOVE"
+  | "MESSAGE_REACTION_REMOVE_ALL"
+  | "MESSAGE_REACTION_REMOVE_EMOJI"
+  | "PRESENCE_UPDATE"
+  | "TYPING_START"
+  | "USER_UPDATE"
+  | "VOICE_STATE_UPDATE"
+  | "VOICE_SERVER_UPDATE"
+  | "WEBHOOKS_UPDATE"
+  | "INTERACTION_CREATE"
+  | null;
 
 /** https://discord.com/developers/docs/topics/gateway#connecting-to-the-gateway */
 export interface GatewayURLParams {
