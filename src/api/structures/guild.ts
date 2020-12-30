@@ -147,11 +147,13 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     data.roles.map((r: RoleData) => structures.createRole(r)),
   )) as Role[];
 
-  await Promise.all(
-    channels.map((c: ChannelCreatePayload) =>
-      structures.createChannel(c, data.id)
-    ),
-  );
+  if (data.channels) {
+    await Promise.all(
+      channels.map((c: ChannelCreatePayload) =>
+        structures.createChannel(c, data.id)
+      ),
+    );
+  }
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
@@ -186,25 +188,29 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     roles: createNewProp(new Collection(roles.map((r: Role) => [r.id, r]))),
     joinedAt: createNewProp(Date.parse(joinedAt)),
     presences: createNewProp(
-      new Collection(data.presences.map((p: Presence) => [p.user.id, p])),
+      Array.isArray(data.presences)
+        ? new Collection(data.presences.map((p: Presence) => [p.user.id, p]))
+        : undefined,
     ),
     memberCount: createNewProp(memberCount || 0),
     voiceStates: createNewProp(
-      new Collection(
-        voiceStates.map((vs: VoiceState) => [
-          vs.user_id,
-          {
-            ...vs,
-            guildID: vs.guild_id,
-            channelID: vs.channel_id,
-            userID: vs.user_id,
-            sessionID: vs.session_id,
-            selfDeaf: vs.self_deaf,
-            selfMute: vs.self_mute,
-            selfStream: vs.self_stream,
-          },
-        ]),
-      ),
+      Array.isArray(voiceStates)
+        ? new Collection(
+          voiceStates.map((vs: VoiceState) => [
+            vs.user_id,
+            {
+              ...vs,
+              guildID: vs.guild_id,
+              channelID: vs.channel_id,
+              userID: vs.user_id,
+              sessionID: vs.session_id,
+              selfDeaf: vs.self_deaf,
+              selfMute: vs.self_mute,
+              selfStream: vs.self_stream,
+            },
+          ]),
+        )
+        : undefined,
     ),
   });
 
@@ -289,11 +295,11 @@ export interface Guild {
   /** When this guild was joined at. */
   joinedAt: number;
   /** The presences of all the users in the guild. */
-  presences: Collection<string, Presence>;
+  presences?: Collection<string, Presence>;
   /** The total number of members in this guild. This value is updated as members leave and join the server. However, if you do not have the intent enabled to be able to listen to these events, then this will not be accurate. */
   memberCount: number;
   /** The Voice State data for each user in a voice channel in this server. */
-  voiceStates: Collection<string, CleanVoiceState>;
+  voiceStates?: Collection<string, CleanVoiceState>;
 
   // GETTERS
   /** Members in this guild. */
