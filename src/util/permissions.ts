@@ -82,11 +82,11 @@ export async function botHasPermission(
 }
 
 /** Checks if the bot has the permissions in a channel */
-export async function botHasChannelPermissions(
+export function botHasChannelPermissions(
   channelID: string,
   permissions: Permission[],
 ) {
-  return await hasChannelPermissions(channelID, botID, permissions);
+  return hasChannelPermissions(channelID, botID, permissions);
 }
 
 /** Checks if a user has permissions in a channel. */
