@@ -38,8 +38,8 @@ export function channelOverwriteHasPermission(
     if (overwrite) {
       const allowBits = overwrite.allow;
       const denyBits = overwrite.deny;
-      if (BigInt(denyBits) && BigInt(Permissions[perm])) return false;
-      if (BigInt(allowBits) && BigInt(Permissions[perm])) return true;
+      if (BigInt(denyBits) & BigInt(Permissions[perm])) return false;
+      if (BigInt(allowBits) & BigInt(Permissions[perm])) return true;
     }
     return false;
   });
