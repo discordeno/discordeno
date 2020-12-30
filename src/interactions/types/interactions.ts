@@ -29,7 +29,7 @@ export interface SlashCommandInteractionData {
 }
 
 export interface SlashCommandInteractionDataOption {
-  /** The name of the parammeter */
+  /** The name of the parameter */
   name: string;
   /** The value of the pair */
   value?: any;

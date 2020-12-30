@@ -28,7 +28,7 @@ export function createTemplate(
     restProps[key] = createNewProp((rest as any)[key]);
   }
 
-  const template = Object.create(baseTemplate, {
+  return Object.create(baseTemplate, {
     ...restProps,
     usageCount: createNewProp(sourceGuildID),
     creatorID: createNewProp(creatorID),
@@ -38,8 +38,6 @@ export function createTemplate(
     serializedSourceGuild: createNewProp(serializedSourceGuild),
     isDirty: createNewProp(isDirty),
   });
-
-  return template;
 }
 
 export interface Template {

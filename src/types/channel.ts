@@ -87,7 +87,7 @@ export enum ChannelTypes {
   GROUP_DM,
   /** An organizational category that contains channels */
   GUILD_CATEGORY,
-  /** A channel that users can follow and crosspost into their own server. */
+  /** A channel that users can follow and cross post into their own server. */
   GUILD_NEWS,
   /** A channel in which game developers can sell their game on Discord. */
   GUILD_STORE,

@@ -106,7 +106,7 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   ) as DiscordBotGatewayData;
 
   if (!data.wsURL) proxyWSURL = botGatewayData.url;
-  spawnShards(
+  await spawnShards(
     botGatewayData,
     identifyPayload,
     data.firstShardID,

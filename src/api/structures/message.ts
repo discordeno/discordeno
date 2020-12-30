@@ -127,6 +127,7 @@ export async function createMessage(data: MessageCreateOptions) {
     message_reference: messageReference,
     edited_timestamp: editedTimestamp,
     referenced_message: referencedMessageID,
+    member,
     ...rest
   } = data;
 
