@@ -60,7 +60,7 @@ export type GatewayPayloadDTypes =
   | VoiceStatePayload
   | VoiceServerUpdateEventPayload
   | WebhookUpdateEventPayload
-  /**| InteractionCreate*/
+  | Interaction
   | null;
 
 /** GatewayPayload event name list */
