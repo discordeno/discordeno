@@ -154,6 +154,8 @@ export enum GuildFeatures {
   ANIMATED_ICON,
   BANNER,
   WELCOME_SCREEN_ENABLED,
+  MEMBER_VERIFICATION_GATE_ENABLED,
+  PREVIEW_ENABLED,
 }
 
 /** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */
@@ -281,6 +283,31 @@ export interface BanPayload {
   reason: string | null;
   /** the banned user */
   user: UserPayload;
+}
+
+export interface MembershipScreeningPayload {
+  /** when the fields were last updated */
+  version: string;
+  /** the steps in the screening form */
+  form_fields: MembershipScreeningFieldPayload[];
+  /** the server description shown in the screening form */
+  description: string | null;
+}
+
+export interface MembershipScreeningFieldPayload {
+  /** the type of field (currently "TERMS" is the only type) */
+  field_type: MembershipScreeningFieldType;
+  /** the title of the field */
+  label: string;
+  /** the list of rules */
+  values?: string[];
+  /** whether the user has to fill out this field */
+  required: boolean;
+}
+
+export enum MembershipScreeningFieldType {
+  /** Server Rules */
+  TERMS = "TERMS",
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild */
@@ -521,4 +548,13 @@ export enum GetGuildWidgetImageStyleOptions {
   BANNER_3 = "banner3",
   /** large Discord logo at the top of the widget. Guild icon, name and online count in the middle portion of the widget and a "JOIN MY SERVER" button at the bottom */
   BANNER_4 = "banner4",
+}
+
+export interface ModifyGuildMembershipScreeningForm {
+  /** whether Membership Screening is enabled */
+  enabled: boolean;
+  /** arrray of field objects serialized in a string */
+  form_fields: string;
+  /** the server description to show in the screening form */
+  description: string;
 }
