@@ -27,7 +27,7 @@ export async function handleInternalGuildRoleDelete(data: DiscordPayload) {
   if (!guild) return;
 
   const cachedRole = guild.roles.get(payload.role_id)!;
-  eventHandlers.roleDelete?.(guild, cachedRole);
+  if (cachedRole) eventHandlers.roleDelete?.(guild, cachedRole);
 
   guild.roles.delete(payload.role_id);
 
