@@ -1,19 +1,19 @@
 import { UserPayload } from "./user.ts";
 
-/** https://discord.com/developers/docs/topics/teams#data-models */
+/** https://discord.com/developers/docs/topics/teams#data-models-team-object */
 export interface TeamPayload {
   /** a hash of the image of the team's icon */
   icon: string | null;
   /** the unique id of the team */
   id: string;
   /** the members of the team */
-  members: TeamMemberPayload[];
+  members: TeamMembersPayload[];
   /** the user id of the current team owner */
   owner_user_id: string;
 }
 
-/** https://discord.com/developers/docs/topics/teams#data-models */
-export interface TeamMemberPayload {
+/** https://discord.com/developers/docs/topics/teams#data-models-team-members-object */
+export interface TeamMembersPayload {
   /** the user's membership state on the team */
   membership_state: MembershipState;
   /** will always be ["*"] */
@@ -24,7 +24,7 @@ export interface TeamMemberPayload {
   user: Partial<UserPayload>;
 }
 
-/** https://discord.com/developers/docs/topics/teams#data-models */
+/** https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum */
 export enum MembershipState {
   INVITED = 1,
   ACCEPTED,
