@@ -5,9 +5,10 @@ import {
   GuildPayload,
   UnavailableGuildPayload,
 } from "./guild.ts";
+import { Interaction } from "./interaction.ts";
 import { ApplicationPayload } from "./oauth2.ts";
 import { GatewayOpcodes } from "./opcodes_status_codes.ts";
-import { RolePayload } from "./permission.ts";
+import { RolePayload } from "./permissions.ts";
 import { UserPayload } from "./user.ts";
 import { VoiceStatePayload } from "./voice.ts";
 

@@ -1,4 +1,5 @@
-import { UserPayload } from "../user.ts";
+import { TeamPayload } from "./teams.ts";
+import { UserPayload } from "./user.ts";
 
 /** https://discord.com/developers/docs/topics/oauth2#get-current-application-information */
 export interface ApplicationPayload {
