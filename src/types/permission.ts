@@ -1,36 +1,5 @@
-export type Permission =
-  | "CREATE_INSTANT_INVITE"
-  | "KICK_MEMBERS"
-  | "BAN_MEMBERS"
-  | "ADMINISTRATOR"
-  | "MANAGE_CHANNELS"
-  | "MANAGE_GUILD"
-  | "ADD_REACTIONS"
-  | "VIEW_AUDIT_LOG"
-  | "VIEW_CHANNEL"
-  | "SEND_MESSAGES"
-  | "SEND_TTS_MESSAGES"
-  | "MANAGE_MESSAGES"
-  | "EMBED_LINKS"
-  | "ATTACH_FILES"
-  | "READ_MESSAGE_HISTORY"
-  | "MENTION_EVERYONE"
-  | "USE_EXTERNAL_EMOJIS"
-  | "CONNECT"
-  | "SPEAK"
-  | "MUTE_MEMBERS"
-  | "DEAFEN_MEMBERS"
-  | "MOVE_MEMBERS"
-  | "USE_VAD"
-  | "PRIORITY_SPEAKER"
-  | "STREAM"
-  | "CHANGE_NICKNAME"
-  | "MANAGE_NICKNAMES"
-  | "MANAGE_ROLES"
-  | "MANAGE_WEBHOOKS"
-  | "MANAGE_EMOJIS";
-
-export enum Permissions {
+/** https://discord.com/developers/docs/topics/permissions#permissions */
+export enum BitwisePermissionFlags {
   CREATE_INSTANT_INVITE = 0x00000001,
   KICK_MEMBERS = 0x00000002,
   BAN_MEMBERS = 0x00000004,
@@ -61,4 +30,36 @@ export enum Permissions {
   MANAGE_ROLES = 0x10000000,
   MANAGE_WEBHOOKS = 0x20000000,
   MANAGE_EMOJIS = 0x40000000,
+}
+
+/** https://discord.com/developers/docs/topics/permissions#permission-syncing */
+export interface RolePayload {
+  /** role id */
+  id: string;
+  /** role name */
+  name: string;
+  /** number representation of hexadecimal color code */
+  color: number;
+  /** if this role is pinned in the user listing */
+  hoist: boolean;
+  /** position of this role */
+  position: number;
+  /** permission bit set */
+  permissions: string;
+  /** whether this role is managed by an integration */
+  managed: boolean;
+  /** whether this role is mentionable */
+  mentionable: boolean;
+  /** the tags this role has */
+  tags?: RoleTagsPayload;
+}
+
+/** https://discord.com/developers/docs/topics/permissions#permission-syncing */
+export interface RoleTagsPayload {
+  /** the id of the bot this role belongs to */
+  bot_id?: string;
+  /** the id of the integration this role belongs to */
+  integration_id?: string;
+  /** whether this is the guild's premium subscriber role */
+  premium_subscriber?: null;
 }
