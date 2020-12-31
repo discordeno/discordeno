@@ -97,9 +97,9 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
   if (!member) return;
 
   // No cached state before so lets make one for em
-  const cachedState = guild.voiceStates?.get(payload.user_id);
+  const cachedState = guild.voiceStates.get(payload.user_id);
 
-  guild.voiceStates?.set(payload.user_id, {
+  guild.voiceStates.set(payload.user_id, {
     ...payload,
     guildID: payload.guild_id,
     channelID: payload.channel_id || "",
@@ -124,7 +124,7 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
       }
     } // Left the channel
     else if (cachedState?.channelID) {
-      guild.voiceStates?.delete(payload.user_id);
+      guild.voiceStates.delete(payload.user_id);
       eventHandlers.voiceChannelLeave?.(member, cachedState.channelID);
     }
   }

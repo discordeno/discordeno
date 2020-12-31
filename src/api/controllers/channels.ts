@@ -28,12 +28,12 @@ export async function handleInternalChannelDelete(data: DiscordPayload) {
   if (cachedChannel.type === ChannelTypes.GUILD_VOICE && payload.guild_id) {
     const guild = await cacheHandlers.get("guilds", payload.guild_id);
 
-    if (guild && guild.voiceStates) {
+    if (guild) {
       return Promise.all(guild.voiceStates.map(async (vs, key) => {
         if (vs.channelID !== payload.id) return;
 
         // Since this channel was deleted all voice states for this channel should be deleted
-        guild.voiceStates?.delete(key);
+        guild.voiceStates.delete(key);
 
         const member = await cacheHandlers.get("members", vs.userID);
         if (!member) return;
