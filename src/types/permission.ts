@@ -32,7 +32,7 @@ export enum BitwisePermissionFlags {
   MANAGE_EMOJIS = 0x40000000,
 }
 
-/** https://discord.com/developers/docs/topics/permissions#permission-syncing */
+/** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
 export interface RolePayload {
   /** role id */
   id: string;
