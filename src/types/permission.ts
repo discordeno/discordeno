@@ -1,4 +1,4 @@
-/** https://discord.com/developers/docs/topics/permissions#permissions */
+/** https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags */
 export enum BitwisePermissionFlags {
   CREATE_INSTANT_INVITE = 0x00000001,
   KICK_MEMBERS = 0x00000002,
