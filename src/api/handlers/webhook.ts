@@ -11,7 +11,7 @@ import {
   MessageCreateOptions,
   UpsertSlashCommandOptions,
   WebhookCreateOptions,
-  WebhookPayload,
+  WebhookPayload
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -55,6 +55,7 @@ export async function createWebhook(
   ) as Promise<WebhookPayload>;
 }
 
+/** Execute a webhook with webhook ID and webhook token */
 export async function executeWebhook(
   webhookID: string,
   webhookToken: string,
@@ -113,6 +114,7 @@ export async function executeWebhook(
   return structures.createMessage(result as MessageCreateOptions);
 }
 
+/** Returns the new webhook object for the given id. */
 export function getWebhook(webhookID: string) {
   return RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
 }
