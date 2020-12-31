@@ -94,7 +94,7 @@ export interface OptionalAuditEntryInfo {
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
-export interface AuditLogChangeStructure {
+export interface AuditLogChangePayload {
   /** new value of the key */
   new_value?: AuditLogChangeKey;
   /** old value of the key */
