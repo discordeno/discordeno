@@ -14,12 +14,12 @@ import {
   Permission,
   Permissions,
   RawOverwrite,
-  WebhookPayload
+  WebhookPayload,
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasChannelPermissions,
-  calculateBits
+  calculateBits,
 } from "../../util/permissions.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { structures } from "../structures/mod.ts";

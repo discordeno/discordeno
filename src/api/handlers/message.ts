@@ -4,7 +4,7 @@ import {
   Errors,
   MessageContent,
   MessageCreateOptions,
-  UserPayload
+  UserPayload,
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";

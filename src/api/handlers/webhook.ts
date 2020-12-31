@@ -11,7 +11,7 @@ import {
   MessageCreateOptions,
   UpsertSlashCommandOptions,
   WebhookCreateOptions,
-  WebhookPayload
+  WebhookPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { endpoints } from "../../util/constants.ts";
