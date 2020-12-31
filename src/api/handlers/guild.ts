@@ -88,6 +88,7 @@ export function guildSplashURL(
     )
     : undefined;
 }
+
 /** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
 export function guildBannerURL(
   guild: Guild,
