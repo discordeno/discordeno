@@ -1,7 +1,7 @@
 import { ChannelPayload, ChannelTypes, OverwritePayload } from "./channel.ts";
 import { EmojiPayload } from "./emoji.ts";
-import { PresenceUpdatePayload } from "./gateway.ts";
-import { RolePayload } from "./permission.ts";
+import { PresenceUpdateEventPayload } from "./gateway.ts";
+import { RolePayload } from "./permissions.ts";
 import { UserPayload } from "./user.ts";
 import { VoiceStatePayload } from "./voice.ts";
 
@@ -70,7 +70,7 @@ export interface GuildPayload {
   /** channels in the guild */
   channels?: ChannelPayload[];
   /** presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
-  presences?: Partial<PresenceUpdatePayload>[];
+  presences?: Partial<PresenceUpdateEventPayload>[];
   /** the maximum number of presences for the guild (the default value, currently 25000, is in effect when null is returned) */
   max_presences?: number | null;
   /** the maximum number of members for the guild */

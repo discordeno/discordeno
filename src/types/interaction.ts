@@ -104,7 +104,7 @@ export interface ApplicationCommandInteractionDataOption {
   /** the name of the parameter */
   name: string;
   /** the value of the pair */
-  value?: OptionType;
+  value?: ApplicationCommandOptionType;
   /** present if this option is a group or subcommand */
   options?: ApplicationCommandInteractionDataOption[];
 }
