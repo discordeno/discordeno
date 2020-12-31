@@ -206,7 +206,7 @@ The cooldown options go hand in hand together.
 - `seconds` is how long to make the user wait in seconds before they can use the command again. By default, there is no wait time aka 0 seconds.
 - `allowedUses` is how many times a user is allowed to use a command before they are placed on cooldown.
 
-Let's use our command as an example. We don't want someone to start spamming the role command so we can add a cooldown of 60 seconds. However, this would mean every time you give a role to someone, you would need to wait a whole minute to give a role to someone else. This is where `allowedUses` shines! Let's set it to to 5 so that a user can use this command 5 times in a row before being asked to wait for 60 seconds.
+Let's use our command as an example. We don't want someone to start spamming the role command so we can add a cooldown of 60 seconds. However, this would mean every time you give a role to someone, you would need to wait a whole minute to give a role to someone else. This is where `allowedUses` shines! Let's set it to 5 so that a user can use this command 5 times in a row before being asked to wait for 60 seconds.
 
 ```ts
 cooldown: {
