@@ -16,7 +16,7 @@ import {
 } from "../../util/permissions.ts";
 import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
-import { Member, structures } from "../structures/structures.ts";
+import { Member, structures } from "../structures/mod.ts";
 import { sendMessage } from "./channel.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
@@ -127,10 +127,10 @@ export async function sendDirectMessage(
       { recipient_id: memberID },
     ) as DMChannelCreatePayload;
     // Channel create event will have added this channel to the cache
-    cacheHandlers.delete("channels", dmChannelData.id);
+    await cacheHandlers.delete("channels", dmChannelData.id);
     const channel = await structures.createChannel(dmChannelData);
     // Recreate the channel and add it undert he users id
-    cacheHandlers.set("channels", memberID, channel);
+    await cacheHandlers.set("channels", memberID, channel);
     dmChannel = channel;
   }
 
@@ -240,9 +240,9 @@ export function moveMember(
 /** Modifies the bot's username or avatar.
  * NOTE: username: if changed may cause the bot's discriminator to be randomized.
  */
-export async function editBotProfile(username?: string, avatarURL?: string) {
+export async function editBotProfile(username?: string, botAvatarURL?: string) {
   // Nothing was edited
-  if (!username && !avatarURL) return;
+  if (!username && !botAvatarURL) return;
   // Check username requirements if username was provided
   if (username) {
     if (username.length > 32) {
@@ -259,8 +259,8 @@ export async function editBotProfile(username?: string, avatarURL?: string) {
     }
   }
 
-  const avatar = avatarURL ? await urlToBase64(avatarURL) : undefined;
-  RequestManager.patch(
+  const avatar = botAvatarURL ? await urlToBase64(botAvatarURL) : undefined;
+  return RequestManager.patch(
     endpoints.USER_BOT,
     {
       username: username?.trim(),

@@ -62,7 +62,7 @@ export async function createChannel(
     nsfw: createNewProp(data.nsfw || false),
   });
 
-  cacheHandlers.set("channels", data.id, channel);
+  await cacheHandlers.set("channels", data.id, channel);
   return channel as Channel;
 }
 

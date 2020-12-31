@@ -36,8 +36,8 @@ export function memberHasPermission(
   )
     // Removes any edge case undefined
     .filter((id) => id)
-    .reduce((bits, permissions) => {
-      bits |= BigInt(permissions);
+    .reduce((bits, perms) => {
+      bits |= BigInt(perms);
       return bits;
     }, BigInt(0));
 
@@ -191,8 +191,7 @@ export async function hasChannelPermissions(
   if (permissions.every((perm) => allowedPermissions.has(perm))) return true;
 
   // Some permission was not explicitly allowed so we default to checking role perms directly
-  const hasPerms = await memberIDHasPermission(memberID, guild.id, permissions);
-  return hasPerms;
+  return await memberIDHasPermission(memberID, guild.id, permissions);
 }
 
 /** This function converts a bitwise string to permission strings */

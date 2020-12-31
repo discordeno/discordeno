@@ -69,6 +69,7 @@ export interface ExecuteWebhookParams {
   file?: unknown;
   /** embedded rich content */
   embeds?: EmbedPayload[];
+  /** JSON-serialized payload */
   payload_json: string;
   /** allowed mentions for the message */
   allowed_mentions: AllowedMentionsPayload;

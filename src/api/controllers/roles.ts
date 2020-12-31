@@ -4,7 +4,7 @@ import {
   GuildRoleDeletePayload,
   GuildRolePayload,
 } from "../../types/mod.ts";
-import { structures } from "../structures/structures.ts";
+import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildRoleCreate(data: DiscordPayload) {
@@ -15,8 +15,7 @@ export async function handleInternalGuildRoleCreate(data: DiscordPayload) {
   if (!guild) return;
 
   const role = await structures.createRole(payload.role);
-  const roles = guild.roles.set(payload.role.id, role);
-  guild.roles = roles;
+  guild.roles = guild.roles.set(payload.role.id, role);
   return eventHandlers.roleCreate?.(guild, role);
 }
 
@@ -28,8 +27,9 @@ export async function handleInternalGuildRoleDelete(data: DiscordPayload) {
   if (!guild) return;
 
   const cachedRole = guild.roles.get(payload.role_id)!;
+  if (cachedRole) eventHandlers.roleDelete?.(guild, cachedRole);
+
   guild.roles.delete(payload.role_id);
-  eventHandlers.roleDelete?.(guild, cachedRole);
 
   // For bots without GUILD_MEMBERS member.roles is never updated breaking permissions checking.
   cacheHandlers.forEach("members", (member) => {

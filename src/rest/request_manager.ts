@@ -41,7 +41,7 @@ async function processRateLimitedPaths() {
   });
 
   await delay(1000);
-  processRateLimitedPaths();
+  await processRateLimitedPaths();
 }
 
 function addToQueue(request: QueuedRequest) {
@@ -59,7 +59,7 @@ function addToQueue(request: QueuedRequest) {
 }
 
 async function cleanupQueues() {
-  Object.entries(pathQueues).map(([key, value]) => {
+  Object.entries(pathQueues).forEach(([key, value]) => {
     if (!value.length) {
       // Remove it entirely
       delete pathQueues[key];
@@ -115,7 +115,7 @@ async function processQueue() {
     }
 
     if (Object.keys(pathQueues).length) {
-      cleanupQueues();
+      await cleanupQueues();
     } else queueInProcess = false;
   }
 }
@@ -215,7 +215,7 @@ async function runMethod(
       });
   }
 
-  // No proxy so we need to handl all rate limiting and such
+  // No proxy so we need to handle all rate limiting and such
   return new Promise((resolve, reject) => {
     const callback = async () => {
       try {

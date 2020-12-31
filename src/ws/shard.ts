@@ -61,9 +61,9 @@ export async function createShard(
   ws.onopen = async () => {
     if (!resuming) {
       // Initial identify with the gateway
-      await identify(basicShard, identifyPayload);
+      identify(basicShard, identifyPayload);
     } else {
-      await resume(basicShard, identifyPayload);
+      resume(basicShard, identifyPayload);
     }
   };
 
@@ -85,14 +85,14 @@ export async function createShard(
     }
 
     if (typeof message === "string") {
-      const data = JSON.parse(message);
-      if (!data.t) eventHandlers.rawGateway?.(data);
-      switch (data.op) {
+      const messageData = JSON.parse(message);
+      if (!messageData.t) eventHandlers.rawGateway?.(messageData);
+      switch (messageData.op) {
         case GatewayOpcode.Hello:
           if (!heartbeating.has(basicShard.id)) {
             heartbeat(
               basicShard,
-              (data.d as DiscordHeartbeatPayload).heartbeat_interval,
+              (messageData.d as DiscordHeartbeatPayload).heartbeat_interval,
               identifyPayload,
               data,
             );
@@ -116,7 +116,7 @@ export async function createShard(
             },
           );
           // When d is false we need to reidentify
-          if (!data.d) {
+          if (!messageData.d) {
             createShard(data, identifyPayload, false, shardID);
             break;
           }
@@ -124,7 +124,7 @@ export async function createShard(
           resumeConnection(data, identifyPayload, basicShard.id);
           break;
         default:
-          if (data.t === "RESUMED") {
+          if (messageData.t === "RESUMED") {
             eventHandlers.debug?.(
               { type: "gatewayResumed", data: { shardID: basicShard.id } },
             );
@@ -133,14 +133,14 @@ export async function createShard(
             break;
           }
           // Important for RESUME
-          if (data.t === "READY") {
-            basicShard.sessionID = (data.d as ReadyPayload).session_id;
+          if (messageData.t === "READY") {
+            basicShard.sessionID = (messageData.d as ReadyPayload).session_id;
           }
 
           // Update the sequence number if it is present
-          if (data.s) basicShard.previousSequenceNumber = data.s;
+          if (messageData.s) basicShard.previousSequenceNumber = messageData.s;
 
-          handleDiscordPayload(data, basicShard.id);
+          handleDiscordPayload(messageData, basicShard.id);
           break;
       }
     }
@@ -247,7 +247,7 @@ async function heartbeat(
   // We lost socket connection between heartbeats, resume connection
   if (shard.ws.readyState === WebSocket.CLOSED) {
     shard.needToResume = true;
-    resumeConnection(data, payload, shard.id);
+    await resumeConnection(data, payload, shard.id);
     heartbeating.delete(shard.id);
     return;
   }
@@ -289,7 +289,7 @@ async function heartbeat(
     },
   );
   await delay(interval);
-  heartbeat(shard, interval, payload, data);
+  await heartbeat(shard, interval, payload, data);
 }
 
 async function resumeConnection(
@@ -309,10 +309,10 @@ async function resumeConnection(
 
   eventHandlers.debug?.({ type: "gatewayResume", data: { shardID: shard.id } });
   // Run it once
-  createShard(data, payload, true, shard.id);
+  await createShard(data, payload, true, shard.id);
   // Then retry every 15 seconds
   await delay(1000 * 15);
-  if (shard.needToResume) resumeConnection(data, payload, shardID);
+  if (shard.needToResume) await resumeConnection(data, payload, shardID);
 }
 
 export function requestGuildMembers(
@@ -335,7 +335,7 @@ export function requestGuildMembers(
 
     if (!processQueue) {
       processQueue = true;
-      processGatewayQueue();
+      return processGatewayQueue();
     }
     return;
   }
@@ -419,7 +419,7 @@ async function processGatewayQueue() {
 
   await delay(1500);
 
-  processGatewayQueue();
+  await processGatewayQueue();
 }
 
 export function botGatewayStatusRequest(payload: BotStatusRequest) {

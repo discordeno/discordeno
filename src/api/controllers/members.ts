@@ -8,7 +8,7 @@ import {
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
-import { structures } from "../structures/structures.ts";
+import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
@@ -39,7 +39,9 @@ export async function handleInternalGuildMemberRemove(data: DiscordPayload) {
   eventHandlers.guildMemberRemove?.(guild, payload.user, member);
 
   member?.guilds.delete(guild.id);
-  if (member && !member.guilds.size) cacheHandlers.delete("members", member.id);
+  if (member && !member.guilds.size) {
+    await cacheHandlers.delete("members", member.id);
+  }
 }
 
 export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
