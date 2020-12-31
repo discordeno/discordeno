@@ -137,9 +137,10 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     preferred_locale: preferredLocale,
     joined_at: joinedAt,
     member_count: memberCount,
-    voice_states: voiceStates,
-    channels,
+    voice_states: voiceStates = [],
+    channels = [],
     members,
+    presences = [],
     ...rest
   } = data;
 
@@ -186,7 +187,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     roles: createNewProp(new Collection(roles.map((r: Role) => [r.id, r]))),
     joinedAt: createNewProp(Date.parse(joinedAt)),
     presences: createNewProp(
-      new Collection(data.presences.map((p: Presence) => [p.user.id, p])),
+      new Collection(presences.map((p: Presence) => [p.user.id, p])),
     ),
     memberCount: createNewProp(memberCount || 0),
     voiceStates: createNewProp(
