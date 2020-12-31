@@ -54,7 +54,7 @@ export interface RolePayload {
   tags?: RoleTagsPayload;
 }
 
-/** https://discord.com/developers/docs/topics/permissions#permission-syncing */
+/** https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure */
 export interface RoleTagsPayload {
   /** the id of the bot this role belongs to */
   bot_id?: string;
