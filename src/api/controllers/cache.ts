@@ -1,4 +1,4 @@
-import { PresenceUpdatePayload } from "../../types/mod.ts";
+import { PresenceUpdateEventPayload } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { Channel, Guild, Member, Message } from "../structures/mod.ts";
@@ -34,8 +34,8 @@ function set(
 function set(
   table: "presences",
   key: string,
-  value: PresenceUpdatePayload,
-): Promise<Collection<string, PresenceUpdatePayload>>;
+  value: PresenceUpdateEventPayload,
+): Promise<Collection<string, PresenceUpdateEventPayload>>;
 function set(
   table: "unavailableGuilds",
   key: string,
@@ -52,7 +52,7 @@ function get(table: "members", key: string): Promise<Member | undefined>;
 function get(
   table: "presences",
   key: string,
-): Promise<PresenceUpdatePayload | undefined>;
+): Promise<PresenceUpdateEventPayload | undefined>;
 function get(
   table: "unavailableGuilds",
   key: string,
