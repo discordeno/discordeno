@@ -451,7 +451,7 @@ export interface ModifyCurrentUserNickParams {
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-ban */
-export interface CreateGuidBan {
+export interface CreateGuildBan {
   /** number of days to delete messages for (0-7) */
   delete_message_days?: number;
   /** reason for the ban */
