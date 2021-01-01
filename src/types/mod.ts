@@ -8,7 +8,7 @@ export * from "./invite.ts";
 export * from "./oauth2.ts";
 export * from "./opcodes_status_codes.ts";
 export * from "./permissions.ts";
-export * from "./rate_limit.ts";
+export * from "./rate_limits.ts";
 export * from "./teams.ts";
 export * from "./template.ts";
 export * from "./user.ts";
