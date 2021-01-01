@@ -1,11 +1,8 @@
 import {
-  BanOptions,
-  EditMemberOptions,
-  GuildMember,
-  ImageFormats,
-  ImageSize,
-  MemberCreatePayload,
-  MessageContent,
+  CreateGuildBan,
+  CreateMessageParams,
+  GuildMemberPayload,
+  ModifyGuildMemberParams,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
@@ -20,6 +17,7 @@ import {
   removeRole,
   sendDirectMessage,
 } from "../handlers/member.ts";
+import { GuildMember, ImageFormats, ImageSize } from "../types/mod.ts";
 import { Guild } from "./guild.ts";
 
 const baseMember: Partial<Member> = {
@@ -72,11 +70,10 @@ const baseMember: Partial<Member> = {
   },
 };
 
-export async function createMember(data: MemberCreatePayload, guildID: string) {
+export async function createMember(data: GuildMemberPayload, guildID: string) {
   const {
     joined_at: joinedAt,
     premium_since: premiumSince,
-    user: userData,
     roles,
     deaf,
     mute,
@@ -85,7 +82,7 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
   } = data;
 
   const { mfa_enabled: mfaEnabled, premium_type: premiumType, ...user } =
-    data.user || {};
+    rest.user || {};
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
@@ -105,10 +102,12 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
     guilds: createNewProp(new Collection<string, GuildMember>()),
   });
 
-  const cached = await cacheHandlers.get("members", user.id);
-  if (cached) {
-    for (const [id, guild] of cached.guilds.entries()) {
-      member.guilds.set(id, guild);
+  if (rest.user?.id) {
+    const cached = await cacheHandlers.get("members", rest.user?.id);
+    if (cached) {
+      for (const [id, guild] of cached.guilds.entries()) {
+        member.guilds.set(id, guild);
+      }
     }
   }
 
@@ -164,7 +163,6 @@ export interface Member {
   tag: string;
 
   // METHODS
-
   /** Returns the avatar url for this member and can be dynamically modified with a size or format */
   makeAvatarURL(options: { size?: ImageSize; format?: ImageFormats }): string;
   /** Returns the guild for this guildID */
@@ -174,13 +172,13 @@ export interface Member {
   /** Get the nickname */
   guildMember(guildID: string): GuildMember | undefined;
   /** Send a direct message to the user is possible */
-  sendDM(content: string | MessageContent): Promise<any>;
+  sendDM(content: string | CreateMessageParams): Promise<any>;
   /** Kick the member from a guild */
   kick(guildID: string, reason?: string): Promise<any>;
   /** Edit the member in a guild */
-  edit(guildID: string, options: EditMemberOptions): Promise<any>;
+  edit(guildID: string, options: ModifyGuildMemberParams): Promise<any>;
   /** Ban a member in a guild */
-  ban(guildID: string, options: BanOptions): Promise<any>;
+  ban(guildID: string, options: CreateGuildBan): Promise<any>;
   /** Add a role to the member */
   addRole(guildID: string, roleID: string, reason?: string): Promise<any>;
   /** Remove a role from the member */
