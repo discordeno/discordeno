@@ -1,12 +1,15 @@
 import { eventHandlers } from "../../bot.ts";
-import { DiscordPayload, InteractionCommandPayload } from "../../types/mod.ts";
+import {
+  Application,
+  DiscordPayload,
+  InteractionCommandPayload,
+} from "../../types/mod.ts";
 import { structures } from "../structures/mod.ts";
 
-export async function handleInternalInteractionsCreate(data: DiscordPayload) {
+export async function handleInternalInteractionCreate(data: DiscordPayload) {
   if (data.t !== "INTERACTION_CREATE") return;
 
   const payload = data.d as InteractionCommandPayload;
-
   eventHandlers.interactionCreate?.(
     {
       ...payload,
@@ -15,11 +18,11 @@ export async function handleInternalInteractionsCreate(data: DiscordPayload) {
   );
 }
 
-export async function handleInternalInteractionsCommandCreate(
+export async function handleInternalInteractionCommandCreate(
   data: DiscordPayload,
 ) {
   if (data.t !== "APPLICATION_COMMAND_CREATE") return;
 
-  console.log(data);
-  eventHandlers.interactionCreate?.(data);
+  const payload = data.d as Application;
+  eventHandlers.applicationCommandCreate?.(payload);
 }

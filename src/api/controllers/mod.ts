@@ -14,8 +14,8 @@ import {
   handleInternalGuildUpdate,
 } from "./guilds.ts";
 import {
-  handleInternalInteractionsCommandCreate,
-  handleInternalInteractionsCreate,
+  handleInternalInteractionCommandCreate,
+  handleInternalInteractionCreate,
 } from "./interactions.ts";
 import {
   handleInternalGuildMemberAdd,
@@ -67,8 +67,8 @@ export let controllers = {
   GUILD_ROLE_CREATE: handleInternalGuildRoleCreate,
   GUILD_ROLE_DELETE: handleInternalGuildRoleDelete,
   GUILD_ROLE_UPDATE: handleInternalGuildRoleUpdate,
-  INTERACTION_CREATE: handleInternalInteractionsCreate,
-  APPLICATION_COMMAND_CREATE: handleInternalInteractionsCommandCreate,
+  INTERACTION_CREATE: handleInternalInteractionCreate,
+  APPLICATION_COMMAND_CREATE: handleInternalInteractionCommandCreate,
   MESSAGE_CREATE: handleInternalMessageCreate,
   MESSAGE_DELETE: handleInternalMessageDelete,
   MESSAGE_DELETE_BULK: handleInternalMessageDeleteBulk,
