@@ -2,14 +2,14 @@ import {
   botGatewayData,
   eventHandlers,
   IdentifyPayload,
-  proxyWSURL,
+  proxyWSURL
 } from "../bot.ts";
 import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
   FetchMembersOptions,
-  GatewayOpcode,
-  ReadyPayload,
+  GatewayOpcodes,
+  ReadyPayload
 } from "../types/mod.ts";
 import { BotStatusRequest, delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
@@ -88,7 +88,7 @@ export async function createShard(
       const messageData = JSON.parse(message);
       if (!messageData.t) eventHandlers.rawGateway?.(messageData);
       switch (messageData.op) {
-        case GatewayOpcode.Hello:
+        case GatewayOpcodes.Hello:
           if (!heartbeating.has(basicShard.id)) {
             heartbeat(
               basicShard,
@@ -98,17 +98,17 @@ export async function createShard(
             );
           }
           break;
-        case GatewayOpcode.HeartbeatACK:
+        case GatewayOpcodes.HeartbeatACK:
           heartbeating.set(shardID, true);
           break;
-        case GatewayOpcode.Reconnect:
+        case GatewayOpcodes.Reconnect:
           eventHandlers.debug?.(
             { type: "gatewayReconnect", data: { shardID: basicShard.id } },
           );
           basicShard.needToResume = true;
           resumeConnection(data, identifyPayload, basicShard.id);
           break;
-        case GatewayOpcode.InvalidSession:
+        case GatewayOpcodes.InvalidSession:
           eventHandlers.debug?.(
             {
               type: "gatewayInvalidSession",
@@ -220,7 +220,7 @@ function identify(shard: BasicShard, payload: IdentifyPayload) {
   return shard.ws.send(
     JSON.stringify(
       {
-        op: GatewayOpcode.Identify,
+        op: GatewayOpcodes.Identify,
         d: { ...payload, shard: [shard.id, payload.shard[1]] },
       },
     ),
@@ -229,7 +229,7 @@ function identify(shard: BasicShard, payload: IdentifyPayload) {
 
 function resume(shard: BasicShard, payload: IdentifyPayload) {
   return shard.ws.send(JSON.stringify({
-    op: GatewayOpcode.Resume,
+    op: GatewayOpcodes.Resume,
     d: {
       token: payload.token,
       session_id: shard.sessionID,
@@ -275,7 +275,7 @@ async function heartbeat(
 
   shard.ws.send(
     JSON.stringify(
-      { op: GatewayOpcode.Heartbeat, d: shard.previousSequenceNumber },
+      { op: GatewayOpcodes.Heartbeat, d: shard.previousSequenceNumber },
     ),
   );
   eventHandlers.debug?.(
@@ -347,7 +347,7 @@ export function requestGuildMembers(
   }
 
   shard?.ws.send(JSON.stringify({
-    op: GatewayOpcode.RequestGuildMembers,
+    op: GatewayOpcodes.RequestGuildMembers,
     d: {
       guild_id: guildID,
       // If a query is provided use it, OR if a limit is NOT provided use ""
@@ -425,7 +425,7 @@ async function processGatewayQueue() {
 export function botGatewayStatusRequest(payload: BotStatusRequest) {
   basicShards.forEach((shard) => {
     shard.ws.send(JSON.stringify({
-      op: GatewayOpcode.StatusUpdate,
+      op: GatewayOpcodes.PresenceUpdate,
       d: {
         since: null,
         game: payload.game.name
