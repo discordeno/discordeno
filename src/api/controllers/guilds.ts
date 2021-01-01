@@ -1,28 +1,27 @@
 import { eventHandlers } from "../../bot.ts";
 import {
-  CreateGuildPayload,
-  DiscordPayload,
-  GuildDeletePayload,
-  GuildEmojisUpdatePayload,
-  GuildUpdateChange,
-  UpdateGuildPayload,
+  GatewayPayload,
+  GuildEmojisUpdateEventPayload,
+  GuildPayload,
+  UnavailableGuildPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { structures } from "../structures/mod.ts";
+import { GuildUpdateChange } from "../types/options.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildCreate(
-  data: DiscordPayload,
+  data: GatewayPayload,
   shardID: number,
 ) {
   if (data.t !== "GUILD_CREATE") return;
 
-  const payload = data.d as CreateGuildPayload;
+  const payload = data.d as GuildPayload;
   // When shards resume they emit GUILD_CREATE again.
   if (await cacheHandlers.has("guilds", payload.id)) return;
 
   const guild = await structures.createGuild(
-    data.d as CreateGuildPayload,
+    data.d as GuildPayload,
     shardID,
   );
 
@@ -36,10 +35,10 @@ export async function handleInternalGuildCreate(
   return eventHandlers.guildCreate?.(guild);
 }
 
-export async function handleInternalGuildDelete(data: DiscordPayload) {
+export async function handleInternalGuildDelete(data: GatewayPayload) {
   if (data.t !== "GUILD_DELETE") return;
 
-  const payload = data.d as GuildDeletePayload;
+  const payload = data.d as UnavailableGuildPayload;
   cacheHandlers.forEach("messages", (message) => {
     if (message.guildID === payload.id) {
       cacheHandlers.delete("messages", message.id);
@@ -51,6 +50,8 @@ export async function handleInternalGuildDelete(data: DiscordPayload) {
       cacheHandlers.delete("channels", channel.id);
     }
   });
+
+  if (!payload.id) return;
 
   await cacheHandlers.delete("guilds", payload.id);
 
@@ -64,10 +65,10 @@ export async function handleInternalGuildDelete(data: DiscordPayload) {
   return eventHandlers.guildDelete?.(guild);
 }
 
-export async function handleInternalGuildUpdate(data: DiscordPayload) {
+export async function handleInternalGuildUpdate(data: GatewayPayload) {
   if (data.t !== "GUILD_CREATE") return;
 
-  const payload = data.d as UpdateGuildPayload;
+  const payload = data.d as GuildPayload;
   const cachedGuild = await cacheHandlers.get("guilds", payload.id);
   if (!cachedGuild) return;
 
@@ -106,10 +107,10 @@ export async function handleInternalGuildUpdate(data: DiscordPayload) {
   return eventHandlers.guildUpdate?.(cachedGuild, changes);
 }
 
-export async function handleInternalGuildEmojisUpdate(data: DiscordPayload) {
+export async function handleInternalGuildEmojisUpdate(data: GatewayPayload) {
   if (data.t !== "GUILD_EMOJIS_UPDATE") return;
 
-  const payload = data.d as GuildEmojisUpdatePayload;
+  const payload = data.d as GuildEmojisUpdateEventPayload;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
