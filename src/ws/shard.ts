@@ -19,7 +19,11 @@ const basicShards = new Map<number, BasicShard>();
 const heartbeating = new Map<number, boolean>();
 const utf8decoder = new TextDecoder();
 const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
+
 let processQueue = false;
+let lastPingTimestamp = 0;
+
+export let ping: number;
 
 export interface BasicShard {
   id: number;
@@ -99,6 +103,7 @@ export async function createShard(
           }
           break;
         case GatewayOpcode.HeartbeatACK:
+          PING = Date.now() - lastPingTimestamp;
           heartbeating.set(shardID, true);
           break;
         case GatewayOpcode.Reconnect:
@@ -278,6 +283,9 @@ async function heartbeat(
       { op: GatewayOpcode.Heartbeat, d: shard.previousSequenceNumber },
     ),
   );
+
+  lastPingTimestamp = Date.now();
+
   eventHandlers.debug?.(
     {
       type: "gatewayHeartbeat",
@@ -285,6 +293,7 @@ async function heartbeat(
         interval,
         previousSequenceNumber: shard.previousSequenceNumber,
         shardID: shard.id,
+        ping,
       },
     },
   );
