@@ -36,10 +36,10 @@ export async function createChannel(
     last_message_id: lastMessageID,
     user_limit: userLimit,
     rate_limit_per_user: rateLimitPerUser,
-    parent_id: parentID = undefined,
+    parent_id: parentID,
     last_pin_timestamp: lastPinTimestamp,
-    permission_overwrites: permissionOverwrites = [],
-    nsfw = false,
+    permission_overwrites: permissionOverwrites,
+    nsfw,
     ...rest
   } = data;
 
@@ -55,12 +55,12 @@ export async function createChannel(
     lastMessageID: createNewProp(lastMessageID),
     userLimit: createNewProp(userLimit),
     rateLimitPerUser: createNewProp(rateLimitPerUser),
-    parentID: createNewProp(parentID),
+    parentID: createNewProp(parentID || undefined),
     lastPinTimestamp: createNewProp(
       lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined,
     ),
-    permissionOverwrites: createNewProp(permissionOverwrites),
-    nsfw: createNewProp(nsfw),
+    permissionOverwrites: createNewProp(permissionOverwrites || []),
+    nsfw: createNewProp(data.nsfw || false),
   });
 
   await cacheHandlers.set("channels", data.id, channel);
