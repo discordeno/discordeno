@@ -65,7 +65,7 @@ export async function handleInternalGuildDelete(data: DiscordPayload) {
 }
 
 export async function handleInternalGuildUpdate(data: DiscordPayload) {
-  if (data.t !== "GUILD_CREATE") return;
+  if (data.t !== "GUILD_UPDATE") return;
 
   const payload = data.d as UpdateGuildPayload;
   const cachedGuild = await cacheHandlers.get("guilds", payload.id);
