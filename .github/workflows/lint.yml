@@ -17,4 +17,4 @@ jobs:
       - uses: actions/checkout@v2
       - uses: denolib/setup-deno@v2
       - name: Run lint script
-        run: deno lint src/**
+        run: deno lint src/** --unstable
