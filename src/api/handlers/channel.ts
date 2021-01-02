@@ -356,6 +356,7 @@ function processEditChannelQueue() {
   }
 }
 
+/** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(
   channelID: string,
   options: ChannelEditOptions,

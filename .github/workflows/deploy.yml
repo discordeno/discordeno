@@ -1,7 +1,10 @@
 name: Deployment
 on:
   push:
-    branches: master
+    branches:
+      - master
+    paths:
+      - 'docs/**'
 jobs:
   publish:
     runs-on: ubuntu-latest
