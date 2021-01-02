@@ -122,7 +122,7 @@ const baseMessage: Partial<Message> = {
 // deno-lint-ignore require-await
 export async function createMessage(data: MessageCreateOptions) {
   const {
-    guild_id: guildID,
+    guild_id: guildID = "",
     channel_id: channelID,
     mentions_everyone: mentionsEveryone,
     mention_channels: mentionChannelIDs,
@@ -146,7 +146,7 @@ export async function createMessage(data: MessageCreateOptions) {
     /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
     referencedMessageID: createNewProp(referencedMessageID),
     channelID: createNewProp(channelID),
-    guildID: createNewProp(guildID || ""),
+    guildID: createNewProp(guildID),
     mentions: createNewProp(data.mentions.map((m) => m.id)),
     mentionsEveryone: createNewProp(mentionsEveryone),
     mentionRoleIDs: createNewProp(mentionRoleIDs),
