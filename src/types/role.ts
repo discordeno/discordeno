@@ -16,7 +16,7 @@ export interface RoleData {
   /** whether this role is mentionable */
   mentionable: boolean;
   /** Certain roles may have tags that allow you to determine if this role is related to a bot, an integration, or the booster role. */
-  tags: RoleTags | null;
+  tags?: RoleTags;
 }
 
 export interface RoleTags {
