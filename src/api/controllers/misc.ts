@@ -27,17 +27,34 @@ export async function handleInternalReady(
   const payload = data.d as ReadyPayload;
   setBotID(payload.user.id);
 
-  // Triggered on each shard
+  //switch if payload returns every guild rather than shards
+  //cache.guildsPartial = payload.guilds.length
+  cache.guildsPartial += payload.guilds.length;
   eventHandlers.shardReady?.(shardID);
-  if (payload.shard && shardID === payload.shard[1] - 1) {
-    let wait = 5000;
-    if (shardID === 0) wait = Date.now() - cache.lastGuild!;
 
-    await delay(wait);
+  //Ability to fine tune
+  const chunk = 1000;
+  const buffer = 100;
+  const request = 5;
+
+  //Remaining guilds to load via handleInternalGuildCreate
+  function checkRemaining(left: any) {
+    //If higher than chunk, delete chunk value, otherwise set to 0
+    cache.guildsPartial >= chunk
+      ? cache.guildsPartial - chunk
+      : cache.guildsPartial = 0;
+
+    if (left <= chunk) return left;
+    return false;
+  }
+
+  //Delay - Max 5s
+  await delay(checkRemaining(cache.guildsPartial) ?? chunk * request + buffer);
+
+  if (payload.shard && shardID === payload.shard[1] - 1) {
     cache.isReady = true;
     eventHandlers.ready?.();
 
-    // All the members that came in on guild creates should now be processed 1 by 1
     for (const [guildID, members] of initialMemberLoadQueue.entries()) {
       await Promise.all(
         members.map((member) => structures.createMember(member, guildID)),
