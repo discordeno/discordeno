@@ -30,7 +30,7 @@ export async function handleInternalReady(
   cache.shardedGuilds += payload.guilds.length;
   eventHandlers.shardReady?.(shardID);
 
-  const values: number[] = [1000, 9, 500];
+  const values: [number, number, number] = [1000, 9, 500];
   function checkRemaining(left: number) {
     cache.shardedGuilds >= values[0]
       ? cache.shardedGuilds - values[0]
