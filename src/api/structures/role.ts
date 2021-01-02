@@ -1,4 +1,4 @@
-import { CreateRoleOptions, RoleData } from "../../types/mod.ts";
+import { CreateGuildRoleParams, RolePayload } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
@@ -35,7 +35,7 @@ const baseRole: any = {
 
     return deleteRole(guildID, this.id!).catch(console.error);
   },
-  edit(options: CreateRoleOptions, guildID?: string) {
+  edit(options: CreateGuildRoleParams, guildID?: string) {
     // If not guild id was provided try and find one
     if (!guildID) guildID = guildID || this.guild?.id;
     // If a guild id is still not available error out
@@ -66,7 +66,7 @@ const baseRole: any = {
   },
 };
 
-export async function createRole(data: RoleData) {
+export async function createRole(data: RolePayload) {
   const { tags, ...rest } = data;
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
@@ -124,7 +124,7 @@ export interface Role {
   /** Delete the role */
   delete(guildID?: string): Promise<unknown>;
   /** Edits the role */
-  edit(options: CreateRoleOptions): Promise<unknown>;
+  edit(options: CreateGuildRoleParams): Promise<unknown>;
   /** Checks if this role is higher than another role. */
   higherThanRoleID(roleID: string, position?: number): boolean;
 }
