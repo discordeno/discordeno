@@ -415,25 +415,25 @@ export interface AllowedMentionsPayload {
 /** https://discord.com/developers/docs/resources/channel#modify-channel-json-params */
 export interface ModifyChannelParams {
   /** 2-100 character channel name */
-  name: string;
+  name?: string;
   /** the type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
-  type: ChannelTypes;
+  type?: ChannelTypes;
   /** the position of the channel in the left-hand listing */
-  position: number | null;
+  position?: number | null;
   /** 0-1024 character channel topic */
-  topic: string | null;
+  topic?: string | null;
   /** whether the channel is nsfw */
-  nsfw: boolean | null;
+  nsfw?: boolean | null;
   /** amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `MANAGE_MESSAGES` or `MANAGE_CHANNELS`, are unaffected */
-  rate_limit_per_user: number | null;
+  rate_limit_per_user?: number | null;
   /** the bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers) */
-  bitrate: number | null;
+  bitrate?: number | null;
   /** the user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit */
-  user_limit: number | null;
+  user_limit?: number | null;
   /** channel or category-specific permissions */
-  permission_overwrites: OverwritePayload[] | null;
+  permission_overwrites?: OverwritePayload[] | null;
   /** id of the new parent category for a channel */
-  parent_id: string | null;
+  parent_id?: string | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
