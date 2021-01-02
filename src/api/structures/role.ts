@@ -6,16 +6,16 @@ import { deleteRole, editRole } from "../handlers/guild.ts";
 import { Guild } from "./guild.ts";
 import { Member } from "./member.ts";
 
-const baseRole: any = {
+const baseRole: Partial<Role> = {
   get guild() {
-    return cache.guilds.find((g) => g.roles.has(this.id));
+    return cache.guilds.find((g) => g.roles.has(this.id!));
   },
   get hexColor() {
     return this.color!.toString(16);
   },
   get members() {
     return cache.members.filter((m) =>
-      m.guilds.some((g) => g.roles.includes(this.id))
+      m.guilds.some((g) => g.roles.includes(this.id!))
     );
   },
   get mention() {
@@ -66,11 +66,11 @@ const baseRole: any = {
   },
 };
 
-export async function createRole(data: RoleData) {
-  const { tags, ...rest } = data;
-
+// deno-lint-ignore require-await
+export async function createRole({ tags, ...rest }: RoleData) {
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
+    // deno-lint-ignore no-explicit-any
     restProps[key] = createNewProp((rest as any)[key]);
   }
 

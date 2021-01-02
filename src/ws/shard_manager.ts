@@ -88,8 +88,10 @@ export async function handleDiscordPayload(
   }
 }
 
-export async function requestAllMembers(
+export function requestAllMembers(
   guild: Guild,
+  // TODO: The parameter "resolve" should have a "stronger" type.
+  // deno-lint-ignore ban-types
   resolve: Function,
   options?: FetchMembersOptions,
 ) {
@@ -98,7 +100,11 @@ export async function requestAllMembers(
   return requestGuildMembers(guild.id, guild.shardID, nonce, options);
 }
 
-export function sendGatewayCommand(type: "EDIT_BOTS_STATUS", payload: object) {
+export function sendGatewayCommand(
+  type: "EDIT_BOTS_STATUS",
+  // deno-lint-ignore no-explicit-any
+  payload: Record<string, any>,
+) {
   if (type === "EDIT_BOTS_STATUS") {
     botGatewayStatusRequest(payload as BotStatusRequest);
   }

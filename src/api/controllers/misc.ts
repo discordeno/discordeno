@@ -75,6 +75,7 @@ export async function handleInternalUserUpdate(data: DiscordPayload) {
   if (!member) return;
 
   Object.entries(userData).forEach(([key, value]) => {
+    // deno-lint-ignore ban-ts-comment
     // @ts-ignore
     if (member[key] !== value) return member[key] = value;
   });

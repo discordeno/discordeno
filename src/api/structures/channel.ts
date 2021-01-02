@@ -36,15 +36,16 @@ export async function createChannel(
     last_message_id: lastMessageID,
     user_limit: userLimit,
     rate_limit_per_user: rateLimitPerUser,
-    parent_id: parentID,
+    parent_id: parentID = undefined,
     last_pin_timestamp: lastPinTimestamp,
-    permission_overwrites,
-    nsfw,
+    permission_overwrites: permissionOverwrites = [],
+    nsfw = false,
     ...rest
   } = data;
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
+    // deno-lint-ignore no-explicit-any
     restProps[key] = createNewProp((rest as any)[key]);
   }
 
@@ -54,12 +55,12 @@ export async function createChannel(
     lastMessageID: createNewProp(lastMessageID),
     userLimit: createNewProp(userLimit),
     rateLimitPerUser: createNewProp(rateLimitPerUser),
-    parentID: createNewProp(parentID || undefined),
+    parentID: createNewProp(parentID),
     lastPinTimestamp: createNewProp(
       lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined,
     ),
-    permissionOverwrites: createNewProp(permission_overwrites || []),
-    nsfw: createNewProp(data.nsfw || false),
+    permissionOverwrites: createNewProp(permissionOverwrites),
+    nsfw: createNewProp(nsfw),
   });
 
   await cacheHandlers.set("channels", data.id, channel);

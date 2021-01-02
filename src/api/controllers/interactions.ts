@@ -18,6 +18,7 @@ export async function handleInternalInteractionCreate(data: DiscordPayload) {
   );
 }
 
+// deno-lint-ignore require-await
 export async function handleInternalApplicationCommandCreate(
   data: DiscordPayload,
 ) {

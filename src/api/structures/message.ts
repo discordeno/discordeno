@@ -34,14 +34,17 @@ const baseMessage: Partial<Message> = {
     return cache.channels.get(this.channelID!);
   },
   get guild() {
+    // deno-lint-ignore getter-return
     if (!this.guildID) return;
     return cache.guilds.get(this.guildID);
   },
   get member() {
+    // deno-lint-ignore getter-return
     if (!this.author?.id) return;
     return cache.members.get(this.author?.id);
   },
   get guildMember() {
+    // deno-lint-ignore getter-return
     if (!this.guildID) return;
     return this.member?.guilds.get(this.guildID);
   },
@@ -116,6 +119,7 @@ const baseMessage: Partial<Message> = {
   },
 };
 
+// deno-lint-ignore require-await
 export async function createMessage(data: MessageCreateOptions) {
   const {
     guild_id: guildID,
@@ -133,6 +137,7 @@ export async function createMessage(data: MessageCreateOptions) {
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
+    // deno-lint-ignore no-explicit-any
     restProps[key] = createNewProp((rest as any)[key]);
   }
 
@@ -259,7 +264,9 @@ export interface Message {
   /** Remove all reactions */
   removeAllReactions(): Promise<unknown>;
   /** Remove all reactions */
+  // deno-lint-ignore no-explicit-any
   removeReactionEmoji(reaction: string): Promise<any>;
   /** Remove all reactions */
+  // deno-lint-ignore no-explicit-any
   removeReaction(reaction: string): Promise<any>;
 }

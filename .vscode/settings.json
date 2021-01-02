@@ -1,11 +1,7 @@
 {
     "deno.enable": true,
-    "editor.formatOnSave": true,
-    "deno.import_intellisense_origins": {
-      "https://deno.land": true
-    },
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true
-    },
-    "editor.defaultFormatter": "denoland.vscode-deno"
+    "deno.lint": true,
+    "deno.unstable": true,
+    "editor.defaultFormatter": "denoland.vscode-deno-canary",
+    "editor.formatOnSave": true
 }

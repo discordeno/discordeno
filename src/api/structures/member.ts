@@ -88,13 +88,15 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
     data.user || {};
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
+
   for (const key of Object.keys(rest)) {
+    // deno-lint-ignore no-explicit-any
     restProps[key] = createNewProp((rest as any)[key]);
   }
 
   for (const key of Object.keys(user)) {
-    // @ts-ignore
-    restProps[key] = createNewProp(user[key]);
+    // deno-lint-ignore no-explicit-any
+    restProps[key] = createNewProp((user as any)[key]);
   }
 
   const member = Object.create(baseMember, {
@@ -174,15 +176,21 @@ export interface Member {
   /** Get the nickname */
   guildMember(guildID: string): GuildMember | undefined;
   /** Send a direct message to the user is possible */
+  // deno-lint-ignore no-explicit-any
   sendDM(content: string | MessageContent): Promise<any>;
   /** Kick the member from a guild */
+  // deno-lint-ignore no-explicit-any
   kick(guildID: string, reason?: string): Promise<any>;
   /** Edit the member in a guild */
+  // deno-lint-ignore no-explicit-any
   edit(guildID: string, options: EditMemberOptions): Promise<any>;
   /** Ban a member in a guild */
+  // deno-lint-ignore no-explicit-any
   ban(guildID: string, options: BanOptions): Promise<any>;
   /** Add a role to the member */
+  // deno-lint-ignore no-explicit-any
   addRole(guildID: string, roleID: string, reason?: string): Promise<any>;
   /** Remove a role from the member */
+  // deno-lint-ignore no-explicit-any
   removeRole(guildID: string, roleID: string, reason?: string): Promise<any>;
 }
