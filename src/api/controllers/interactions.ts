@@ -23,6 +23,5 @@ export async function handleInternalInteractionCommandCreate(
 ) {
   if (data.t !== "APPLICATION_COMMAND_CREATE") return;
 
-  const payload = data.d as Application;
-  eventHandlers.applicationCommandCreate?.(payload);
+  eventHandlers.applicationCommandCreate?.(data.d as Application);
 }
