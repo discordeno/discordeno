@@ -448,25 +448,24 @@ export interface GetChannelMessagesParams {
   limit?: number;
 }
 
-// TODO: add/update appropriate undefined and null fields
 /** https://discord.com/developers/docs/resources/channel#create-message-params */
 export interface CreateMessageParams {
   /** the message contents (up to 2000 characters) */
-  content: string;
+  content?: string;
   /** a nonce that can be used for optimistic message sending */
-  nonce: number | string;
+  nonce?: number | string;
   /** `true` if this is a TTS message */
   tts: boolean;
   /** the contents of the file being sent */
-  file: unknown;
+  file?: string;
   /** embedded rich content */
-  embed: EmbedPayload;
+  embed?: EmbedPayload;
   /** JSON encoded body of any additional request fields. */
-  payload_json: string;
+  payload_json?: string;
   /** allowed mentions for a message */
-  allowed_mentions: AllowedMentionsPayload;
+  allowed_mentions?: AllowedMentionsPayload;
   /** include to make your message a reply */
-  message_reference: MessageReferencePayload;
+  message_reference?: MessageReferencePayload;
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-reactions-query-string-params */
