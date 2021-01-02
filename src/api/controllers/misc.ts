@@ -33,7 +33,7 @@ export async function handleInternalReady(
   //Ability to fine tune
   const chunk = 1500;
   const buffer = 400;
-  const request = 7;
+  const request = 5;
 
   //Remaining guilds to load via handleInternalGuildCreate
   function checkRemaining(left: any) {
