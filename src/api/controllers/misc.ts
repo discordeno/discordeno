@@ -30,6 +30,10 @@ export async function handleInternalReady(
   // Triggered on each shard
   eventHandlers.shardReady?.(shardID);
   if (payload.shard && shardID === payload.shard[1] - 1) {
+    let wait = 5000;
+    if (shardID === 0) wait = Date.now() - cache.lastGuild!;
+
+    await delay(wait);
     cache.isReady = true;
     eventHandlers.ready?.();
 

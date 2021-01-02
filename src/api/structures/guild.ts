@@ -210,6 +210,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
   });
 
   initialMemberLoadQueue.set(guild.id, members);
+  if (!cache.isReady) cache.lastGuild = Date.now();
 
   return guild;
 }
