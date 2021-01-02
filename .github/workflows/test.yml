@@ -9,7 +9,7 @@ jobs:
       - name: Cache dependencies
         run: deno cache mod.ts
       - name: Run test script
-        if: contains(github.event.comment.html_url, '/pull/') && startsWith( github.event.comment.body, '/test' && github.actor == github.event.repository.owner.login )
+        if: contains(github.event.comment.html_url, '/pull/') && startsWith( github.event.comment.body, '/test' )
         run: deno test --allow-net --allow-env
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
