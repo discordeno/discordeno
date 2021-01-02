@@ -277,6 +277,7 @@ export async function editMessage(
   return structures.createMessage(result as MessageCreateOptions);
 }
 
+/** Crosspost a message in a News Channel to following channels. */
 export async function publishMessage(channelID: string, messageID: string) {
   const data = await RequestManager.post(
     endpoints.CHANNEL_MESSAGE_CROSSPOST(channelID, messageID),
