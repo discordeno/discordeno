@@ -429,7 +429,6 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
     options.limit = options.userIDs.length;
   }
 
-  // TODO: redundant async function
   // deno-lint-ignore no-async-promise-executor
   return new Promise(async (resolve) => {
     await requestAllMembers(guild, resolve, options);
