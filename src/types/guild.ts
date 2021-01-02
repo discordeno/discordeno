@@ -33,6 +33,8 @@ export interface GuildPayload {
   afk_timeout: number;
   /** true if the server widget is enabled */
   widget_enabled?: boolean;
+  /** the channel id that the widget will generate an invite to, or null if set to no invite */
+  widget_channel_id?: string | null;
   /** verification level required for the guild */
   verification_level: VerificationLevel;
   /** default message notifications level */
