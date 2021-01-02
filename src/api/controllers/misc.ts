@@ -30,8 +30,6 @@ export async function handleInternalReady(
   // Triggered on each shard
   eventHandlers.shardReady?.(shardID);
   if (payload.shard && shardID === payload.shard[1] - 1) {
-    // Wait for 3 seconds to allow all guild create events to be processed
-    await delay(3000);
     cache.isReady = true;
     eventHandlers.ready?.();
 
