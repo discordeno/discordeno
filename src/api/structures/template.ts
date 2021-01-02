@@ -1,4 +1,4 @@
-import { GuildTemplate, UserPayload } from "../../types/mod.ts";
+import { TemplatePayload, UserPayload } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { createNewProp } from "../../util/utils.ts";
 import { Guild } from "./guild.ts";
@@ -10,7 +10,7 @@ const baseTemplate: any = {
 };
 
 export function createTemplate(
-  data: GuildTemplate,
+  data: TemplatePayload,
 ) {
   const {
     usage_count: usageCount,
