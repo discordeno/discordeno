@@ -85,6 +85,8 @@ export async function handleInternalMessageUpdate(data: DiscordPayload) {
   const cachedMessage = await cacheHandlers.get("messages", payload.id);
   if (!cachedMessage) return;
 
+  cachedMessage.content = payload.content;
+
   const oldMessage = {
     attachments: cachedMessage.attachments,
     content: cachedMessage.content,
