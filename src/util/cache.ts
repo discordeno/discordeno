@@ -9,7 +9,6 @@ import { Collection } from "./collection.ts";
 
 export interface CacheData {
   isReady: boolean;
-  guildsPartial: number;
   guilds: Collection<string, Guild>;
   channels: Collection<string, Channel>;
   messages: Collection<string, Message>;
@@ -22,7 +21,6 @@ export interface CacheData {
 
 export const cache: CacheData = {
   isReady: false,
-  guildsPartial: 0,
   guilds: new Collection(),
   channels: new Collection(),
   messages: new Collection(),

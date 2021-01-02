@@ -286,5 +286,4 @@ export interface ReadyPayload {
   /** (shard_id, num_shards)	the shard information associated with this session, if sent when identifying */
   shard?: [number, number];
   user: UserPayload;
-  guilds: [];
 }

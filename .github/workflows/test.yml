@@ -3,13 +3,9 @@ on:
   push:
     paths:
       - 'src/**'
-      - 'mod.ts'
-      - 'tests/**'
   pull_request:
     paths:
       - 'src/**'
-      - 'mod.ts'
-      - 'tests/**'
 jobs:
   test:
     runs-on: ubuntu-latest

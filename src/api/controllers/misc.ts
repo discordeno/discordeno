@@ -27,31 +27,11 @@ export async function handleInternalReady(
   const payload = data.d as ReadyPayload;
   setBotID(payload.user.id);
 
-  cache.guildsPartial += payload.guilds.length;
+  // Triggered on each shard
   eventHandlers.shardReady?.(shardID);
-
-  //Ability to fine tune
-  const chunk = 1500;
-  const buffer = 400;
-  const request = 5;
-
-  //Remaining guilds to load via handleInternalGuildCreate
-  function checkRemaining(left: any) {
-    //If higher than chunk, delete chunk value, otherwise set to 0
-    cache.guildsPartial >= chunk
-      ? cache.guildsPartial - chunk
-      : cache.guildsPartial = 0;
-
-    if (left <= chunk) return left;
-    return false;
-  }
-
-  await delay(
-    (checkRemaining(cache.guildsPartial) ?? chunk) * request + buffer,
-  );
-
-  //Final shard
   if (payload.shard && shardID === payload.shard[1] - 1) {
+    // Wait for 5 seconds to allow all guild create events to be processed
+    await delay(5000);
     cache.isReady = true;
     eventHandlers.ready?.();
 
@@ -63,6 +43,8 @@ export async function handleInternalReady(
     }
   }
 
+  // Wait 5 seconds to spawn next shard
+  await delay(5000);
   allowNextShard();
 }
 
