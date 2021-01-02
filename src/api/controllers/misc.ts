@@ -30,24 +30,18 @@ export async function handleInternalReady(
   cache.shardedGuilds += payload.guilds.length;
   eventHandlers.shardReady?.(shardID);
 
-  //Ability to fine tune
-  const chunk = 1200;
-  const buffer = 400;
-  const request = 7;
-
-  //Remaining guilds to load via handleInternalGuildCreate
-  function checkRemaining(left: any) {
-    //If higher than chunk, delete chunk value, otherwise set to 0
-    cache.shardedGuilds >= chunk
-      ? cache.shardedGuilds - chunk
+  const values: number[] = [1000, 9, 500];
+  function checkRemaining(left: number) {
+    cache.shardedGuilds >= values[0]
+      ? cache.shardedGuilds - values[0]
       : cache.shardedGuilds = 0;
 
-    if (left <= chunk) return left;
-    return false;
+    if (left > values[0]) return 0;
+    return left;
   }
 
   await delay(
-    (checkRemaining(cache.shardedGuilds) ?? chunk) * request + buffer,
+    (checkRemaining(cache.shardedGuilds) ?? values[0]) * values[1] + values[2],
   );
 
   //Final shard
