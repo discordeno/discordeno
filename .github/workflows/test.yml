@@ -1,6 +1,7 @@
 name: Test
 jobs:
   test:
+    if: github.event.label.name == 'runtest'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -8,7 +9,6 @@ jobs:
       - name: Cache dependencies
         run: deno cache mod.ts
       - name: Run test script
-        if: github.event.label.name == '/runtest'
         run: deno test --allow-net --allow-env
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
