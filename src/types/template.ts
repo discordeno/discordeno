@@ -18,6 +18,8 @@ export interface TemplatePayload {
   /** when this template was created*/
   created_at: string;
   /** when this template was last synced to the source guild */
+  updated_at: string;
+  /** the ID of the guild this template is based on */
   source_guild_id: string;
   /** the guild snapshot this template contains */
   serialized_source_guild: Partial<GuildPayload>;
