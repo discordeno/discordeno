@@ -1,10 +1,8 @@
 import { eventHandlers } from "../../bot.ts";
-import { GatewayPayload, Interaction } from "../../types/mod.ts";
-import { structures } from "../structures/mod.ts";
 import {
-  Application,
-  DiscordPayload,
-  InteractionCommandPayload,
+  GatewayPayload,
+  Interaction,
+  MessageApplicationPayload,
 } from "../../types/mod.ts";
 import { structures } from "../structures/mod.ts";
 
@@ -23,7 +21,7 @@ export async function handleInternalInteractionCreate(data: GatewayPayload) {
 export async function handleInternalApplicationCommandCreate(
   data: GatewayPayload,
 ) {
-  if (data.t !== "INTERACTION_CREATE") return;
+  if (data.t !== "APPLICATION_COMMAND_CREATE") return;
 
-  eventHandlers.applicationCommandCreate?.(data.d as Application);
+  eventHandlers.applicationCommandCreate?.(data.d as MessageApplicationPayload);
 }

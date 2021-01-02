@@ -106,6 +106,8 @@ export type GatewayPayloadTTypes =
   | "VOICE_SERVER_UPDATE"
   | "WEBHOOKS_UPDATE"
   | "INTERACTION_CREATE"
+  // Not in DC documentation
+  | "APPLICATION_COMMAND_CREATE"
   | null;
 
 /** https://discord.com/developers/docs/topics/gateway#connecting-to-the-gateway */
