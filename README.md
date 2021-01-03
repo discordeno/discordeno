@@ -30,7 +30,7 @@ If you do not wish to use a boilerplate, you may continue reading.
 Here's a minimal example to get started with:
 
 ```typescript
-import { Intents, startBot } from "https://deno.land/x/discordeno@10.0.0/mod.ts";
+import { Intents, startBot } from "https://deno.land/x/discordeno@10.0.1/mod.ts";
 
 startBot({
   token: "BOT TOKEN",
