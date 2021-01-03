@@ -3,7 +3,7 @@
 A standalone and server-less REST module with functionality of REST, independently.
 
 - Easily host on any serverless infrastructure.
-  - Easy to use and setup with Cloudflare Workers(FREE FOR 100K requests per day!)
+  - Easy to use and setup with Cloudflare Workers (FREE for 100K requests per day!)
 -	Freedom from global rate limit errors
 	- As your bot grows, you want to handle global rate limits better. Shards don't communicate fast enough to truly handle it properly so this allows 1 rest handler across the entire bot.
 	- In fact, you can host multiple instances of your bot and all connect to the same rest server.
