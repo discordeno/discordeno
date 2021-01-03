@@ -118,7 +118,7 @@ export async function processQueue() {
                   body: JSON.stringify(
                     {
                       error:
-                        "The reqest was rate limited and it maxed out the retries limit.",
+                        "The request was rate limited and it maxed out the retries limit.",
                     },
                   ),
                 },
