@@ -27,8 +27,7 @@ export function createTemplate(
 
   const restProps: Record<string, Partial<PropertyDescriptor>> = {};
   for (const key of Object.keys(rest)) {
-    // deno-lint-ignore no-explicit-any
-    restProps[key] = createNewProp((rest as any)[key]);
+    restProps[key] = createNewProp(rest[key]);
   }
 
   return Object.create(baseTemplate, {

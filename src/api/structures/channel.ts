@@ -32,7 +32,7 @@ export async function createChannel(
   guildID?: string,
 ) {
   const {
-    guild_id: rawGuildID,
+    guild_id: rawGuildID = "",
     last_message_id: lastMessageID,
     user_limit: userLimit,
     rate_limit_per_user: rateLimitPerUser,
@@ -45,13 +45,12 @@ export async function createChannel(
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    // deno-lint-ignore no-explicit-any
-    restProps[key] = createNewProp((rest as any)[key]);
+    restProps[key] = createNewProp(rest[key]);
   }
 
   const channel = Object.create(baseChannel, {
     ...restProps,
-    guildID: createNewProp(guildID || rawGuildID || ""),
+    guildID: createNewProp(guildID || rawGuildID),
     lastMessageID: createNewProp(lastMessageID),
     userLimit: createNewProp(userLimit),
     rateLimitPerUser: createNewProp(rateLimitPerUser),

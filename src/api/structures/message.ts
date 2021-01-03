@@ -125,7 +125,7 @@ export async function createMessage(data: MessageCreateOptions) {
     guild_id: guildID = "",
     channel_id: channelID,
     mentions_everyone: mentionsEveryone,
-    mention_channels: mentionChannelIDs,
+    mention_channels: mentionChannelIDs = [],
     mention_roles: mentionRoleIDs,
     webhook_id: webhookID,
     message_reference: messageReference,
@@ -137,8 +137,7 @@ export async function createMessage(data: MessageCreateOptions) {
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    // deno-lint-ignore no-explicit-any
-    restProps[key] = createNewProp((rest as any)[key]);
+    restProps[key] = createNewProp(rest[key]);
   }
 
   const message = Object.create(baseMessage, {
@@ -150,7 +149,7 @@ export async function createMessage(data: MessageCreateOptions) {
     mentions: createNewProp(data.mentions.map((m) => m.id)),
     mentionsEveryone: createNewProp(mentionsEveryone),
     mentionRoleIDs: createNewProp(mentionRoleIDs),
-    mentionChannelIDs: createNewProp(mentionChannelIDs?.map((m) => m.id) || []),
+    mentionChannelIDs: createNewProp(mentionChannelIDs.map((m) => m.id)),
     webhookID: createNewProp(webhookID),
     messageReference: createNewProp(messageReference),
     timestamp: createNewProp(Date.parse(data.timestamp)),

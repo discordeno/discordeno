@@ -90,13 +90,11 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
 
   for (const key of Object.keys(rest)) {
-    // deno-lint-ignore no-explicit-any
-    restProps[key] = createNewProp((rest as any)[key]);
+    restProps[key] = createNewProp(rest[key]);
   }
 
   for (const key of Object.keys(user)) {
-    // deno-lint-ignore no-explicit-any
-    restProps[key] = createNewProp((user as any)[key]);
+    restProps[key] = createNewProp(user[key]);
   }
 
   const member = Object.create(baseMember, {

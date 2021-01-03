@@ -3,6 +3,7 @@ import { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
 import { Emoji, StatusType } from "./discord.ts";
 import { MemberCreatePayload } from "./member.ts";
 import { Activity } from "./message.ts";
+import { ValueOf } from "./mod.ts";
 import { Permission } from "./permission.ts";
 import { ClientStatusPayload } from "./presence.ts";
 import { RoleData } from "./role.ts";
@@ -158,6 +159,7 @@ export interface CreateGuildPayload extends UpdateGuildPayload {
   /** Channels in the guild */
   channels: ChannelCreatePayload[];
   presences: Presence[];
+  [key: string]: ValueOf<CreateGuildPayload>;
 }
 
 export type GuildFeatures =
@@ -303,6 +305,7 @@ export interface UserPayload {
   flags?: number;
   /** The type of Nitro subscription on a user's account. */
   premium_type?: number;
+  [key: string]: ValueOf<UserPayload>;
 }
 
 export interface PartialUser {
@@ -638,6 +641,7 @@ export interface GuildTemplate {
   serialized_source_guild: Guild;
   /** whether the template has unsynced changes */
   is_dirty: boolean | null;
+  [key: string]: ValueOf<GuildTemplate>;
 }
 
 export interface CreateGuildFromTemplate {

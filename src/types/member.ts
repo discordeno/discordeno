@@ -1,4 +1,5 @@
 import { UserPayload } from "./guild.ts";
+import { ValueOf } from "./mod.ts";
 
 export interface EditMemberOptions {
   /** Value to set users nickname to. Requires MANAGE_NICKNAMES permission. */
@@ -30,6 +31,7 @@ export interface MemberCreatePayload {
   mute: boolean;
   /** Whether the user has passed the guild's Membership Screening requirements */
   pending?: boolean;
+  [key: string]: ValueOf<MemberCreatePayload>;
 }
 
 export interface GuildMember {

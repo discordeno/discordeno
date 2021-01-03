@@ -67,18 +67,17 @@ const baseRole: Partial<Role> = {
 };
 
 // deno-lint-ignore require-await
-export async function createRole({ tags, ...rest }: RoleData) {
+export async function createRole({ tags = {}, ...rest }: RoleData) {
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    // deno-lint-ignore no-explicit-any
-    restProps[key] = createNewProp((rest as any)[key]);
+    restProps[key] = createNewProp(rest[key]);
   }
 
   const role = Object.create(baseRole, {
     ...restProps,
-    botID: createNewProp(tags?.bot_id),
-    isNitroBoostRole: createNewProp("premium_subscriber" in (tags ?? {})),
-    integrationID: createNewProp(tags?.integration_id),
+    botID: createNewProp(tags.bot_id),
+    isNitroBoostRole: createNewProp("premium_subscriber" in tags),
+    integrationID: createNewProp(tags.integration_id),
   });
 
   return role as Role;

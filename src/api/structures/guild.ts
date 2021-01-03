@@ -33,8 +33,7 @@ import {
   unban,
 } from "../handlers/guild.ts";
 import { Member } from "./member.ts";
-import { Role, structures } from "./mod.ts";
-import { Channel } from "./structures.ts";
+import { Channel, Role, structures } from "./mod.ts";
 
 export const initialMemberLoadQueue = new Map<string, MemberCreatePayload[]>();
 
@@ -156,8 +155,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    // deno-lint-ignore no-explicit-any
-    restProps[key] = createNewProp((rest as any)[key]);
+    restProps[key] = createNewProp(rest[key]);
   }
 
   const guild = Object.create(baseGuild, {
