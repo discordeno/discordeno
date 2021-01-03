@@ -23,6 +23,7 @@ export const baseEndpoints = {
 const GUILDS_BASE = (id: string) => `${baseEndpoints.BASE_URL}/guilds/${id}`;
 
 export const endpoints = {
+  GUILDS_BASE,
   GATEWAY_BOT: `${baseEndpoints.BASE_URL}/gateway/bot`,
 
   // Channel Endpoints
@@ -86,8 +87,6 @@ export const endpoints = {
   GUILD_INTEGRATIONS: (id: string) =>
     `${GUILDS_BASE(id)}/integrations?include_applications=true`,
   GUILD_INVITES: (id: string) => `${GUILDS_BASE(id)}/invites`,
-  GUILD_LEAVE: (id: string) =>
-    `${baseEndpoints.BASE_URL}/users/@me/guilds/${id}`,
   GUILD_MEMBER: (id: string, memberID: string) =>
     `${GUILDS_BASE(id)}/members/${memberID}`,
   GUILD_MEMBER_ROLE: (id: string, memberID: string, roleID: string) =>

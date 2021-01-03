@@ -616,9 +616,9 @@ export async function getInvites(guildID: string) {
   return RequestManager.get(endpoints.GUILD_INVITES(guildID));
 }
 
-/** Leave a guild */
-export function leaveGuild(guildID: string) {
-  return RequestManager.delete(endpoints.GUILD_LEAVE(guildID));
+/** Delete/leave a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event. */
+export function leaveGuild(guildID: string): Promise<void> {
+  return RequestManager.delete(endpoints.GUILDS_BASE(guildID));
 }
 
 /** Returns a list of voice region objects for the guild. Unlike the similar /voice route, this returns VIP servers when the guild is VIP-enabled. */
