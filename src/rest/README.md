@@ -1,6 +1,6 @@
 # Discordeno Rest
 
-This is a serverless rest package that allows you to have an entire REST handler done separately.
+A standalone and server-less REST module with functionality of REST, independently.
 
 - Easily host on any serverless infrastructure.
   - Easy to use and setup with Cloudflare Workers(FREE FOR 100K requests per day!)
