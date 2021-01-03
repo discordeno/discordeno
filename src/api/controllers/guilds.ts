@@ -83,8 +83,6 @@ export async function handleInternalGuildUpdate(data: DiscordPayload) {
     .map(([key, value]) => {
       if (keysToSkip.includes(key)) return;
 
-      // deno-lint-ignore ban-ts-comment
-      // @ts-ignore
       const cachedValue = cachedGuild[key];
       if (cachedValue !== value) {
         // Guild create sends undefined and update sends false.
