@@ -6,6 +6,7 @@ import {
   ImageSize,
   MemberCreatePayload,
   MessageContent,
+  ValueOf,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
@@ -88,12 +89,12 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
     data.user || {};
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
+
   for (const key of Object.keys(rest)) {
-    restProps[key] = createNewProp((rest as any)[key]);
+    restProps[key] = createNewProp(rest[key]);
   }
 
   for (const key of Object.keys(user)) {
-    // @ts-ignore
     restProps[key] = createNewProp(user[key]);
   }
 
@@ -198,4 +199,7 @@ export interface Member {
     roleID: string,
     reason?: string,
   ): ReturnType<typeof removeRole>;
+
+  // Index signature
+  [key: string]: ValueOf<Member>;
 }

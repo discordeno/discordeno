@@ -1,5 +1,5 @@
 import { cacheHandlers } from "../api/controllers/cache.ts";
-import { Guild, Role } from "../api/structures/structures.ts";
+import { Guild, Role } from "../api/structures/mod.ts";
 import { botID } from "../bot.ts";
 import { Permission, Permissions, RawOverwrite } from "../types/mod.ts";
 
@@ -115,7 +115,7 @@ export async function hasChannelPermissions(
 
   let memberOverwrite: RawOverwrite | undefined;
   let everyoneOverwrite: RawOverwrite | undefined;
-  let rolesOverwrites: RawOverwrite[] = [];
+  const rolesOverwrites: RawOverwrite[] = [];
 
   for (const overwrite of channel.permissionOverwrites || []) {
     // If the overwrite on this channel is specific to this member

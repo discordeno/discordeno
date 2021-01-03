@@ -18,7 +18,7 @@ export async function handleInternalInteractionCreate(data: DiscordPayload) {
   );
 }
 
-export async function handleInternalApplicationCommandCreate(
+export function handleInternalApplicationCommandCreate(
   data: DiscordPayload,
 ) {
   if (data.t !== "APPLICATION_COMMAND_CREATE") return;
