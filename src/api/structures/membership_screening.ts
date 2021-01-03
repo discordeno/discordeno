@@ -12,12 +12,12 @@ const baseMembershipScreening = {
   },
 };
 
-export async function createMembershipScreening(
+export function createMembershipScreening(
   { form_fields: formFields, ...rest }: MembershipScreeningPayload,
 ) {
   const restProps: Record<string, Partial<PropertyDescriptor>> = {};
   for (const key of Object.keys(rest)) {
-    restProps[key] = createNewProp((rest as any)[key]);
+    restProps[key] = createNewProp(rest[key]);
   }
 
   return Object.create(baseMembershipScreening, {

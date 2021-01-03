@@ -681,6 +681,7 @@ export interface MembershipScreeningPayload {
   form_fields: MembershipScreeningFieldPayload[];
   /** the server description shown in the screening form */
   description: string | null;
+  [key: string]: ValueOf<MembershipScreeningPayload>;
 }
 
 /** */
