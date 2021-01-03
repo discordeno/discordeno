@@ -31,6 +31,8 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/channels/${id}/messages/${messageID}`,
   CHANNEL_MESSAGES: (id: string) =>
     `${baseEndpoints.BASE_URL}/channels/${id}/messages`,
+  CHANNEL_PIN: (channelID: string, messageID: string) =>
+    `${baseEndpoints.BASE_URL}/channels/${channelID}/pins/${messageID}`,
   CHANNEL_PINS: (id: string) => `${baseEndpoints.BASE_URL}/channels/${id}/pins`,
   CHANNEL_BULK_DELETE: (id: string) =>
     `${baseEndpoints.BASE_URL}/channels/${id}/messages/bulk-delete`,
