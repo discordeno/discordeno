@@ -12,6 +12,8 @@
 - Minimalistic
 - Function-based API
 
+## Usage
+
 ### Beginner Developers
 
 Don't worry a lot of developers start out coding their first projects as a Discord bot (I did 😉) and it is not so easy to do so. Discordeno is built considering all the issues with pre-existing libraries and issues that I had when I first started out coding bots.
@@ -50,7 +52,7 @@ startBot({
 
 - [Website](https://discordeno.mod.land)
 - [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
-- [Support server](https://discord.com/invite/5vBgXk3UcZ)
+- [Discord](https://discord.com/invite/5vBgXk3UcZ)
 
 ## Contributing
 
