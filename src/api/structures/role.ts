@@ -122,9 +122,9 @@ export interface Role {
   // METHODS
 
   /** Delete the role */
-  delete(guildID?: string): Promise<unknown>;
+  delete(guildID?: string): ReturnType<typeof deleteRole>;
   /** Edits the role */
-  edit(options: CreateRoleOptions): Promise<unknown>;
+  edit(options: CreateRoleOptions): ReturnType<typeof editRole>;
   /** Checks if this role is higher than another role. */
   higherThanRoleID(roleID: string, position?: number): boolean;
 }

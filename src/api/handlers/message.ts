@@ -10,7 +10,7 @@ import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { delay } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
-import { Message, structures } from "../structures/structures.ts";
+import { Message, structures } from "../structures/mod.ts";
 
 /** Delete a message with the channel id and message id only. */
 export async function deleteMessageByID(
@@ -68,7 +68,8 @@ export async function pin(channelID: string, messageID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
-  RequestManager.put(endpoints.CHANNEL_MESSAGE(channelID, messageID));
+
+  return RequestManager.put(endpoints.CHANNEL_PIN(channelID, messageID));
 }
 
 /** Unpin a message in a channel. Requires MANAGE_MESSAGES. */
@@ -82,8 +83,9 @@ export async function unpin(channelID: string, messageID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
-  RequestManager.delete(
-    endpoints.CHANNEL_MESSAGE(channelID, messageID),
+
+  return RequestManager.delete(
+    endpoints.CHANNEL_PIN(channelID, messageID),
   );
 }
 
@@ -134,8 +136,8 @@ export async function addReactions(
   ordered = false,
 ) {
   if (!ordered) {
-    reactions.forEach((reaction) =>
-      addReaction(channelID, messageID, reaction)
+    await Promise.all(
+      reactions.map((reaction) => addReaction(channelID, messageID, reaction)),
     );
   } else {
     for (const reaction of reactions) {
@@ -277,6 +279,7 @@ export async function editMessage(
   return structures.createMessage(result as MessageCreateOptions);
 }
 
+/** Crosspost a message in a News Channel to following channels. */
 export async function publishMessage(channelID: string, messageID: string) {
   const data = await RequestManager.post(
     endpoints.CHANNEL_MESSAGE_CROSSPOST(channelID, messageID),

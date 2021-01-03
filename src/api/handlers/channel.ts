@@ -22,7 +22,7 @@ import {
   calculateBits,
 } from "../../util/permissions.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
-import { structures } from "../structures/structures.ts";
+import { structures } from "../structures/mod.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(
@@ -303,7 +303,9 @@ export async function getChannelWebhooks(channelID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
-  return RequestManager.get(endpoints.CHANNEL_WEBHOOKS(channelID)) as Promise<
+  return await RequestManager.get(
+    endpoints.CHANNEL_WEBHOOKS(channelID),
+  ) as Promise<
     WebhookPayload[]
   >;
 }
@@ -354,6 +356,7 @@ function processEditChannelQueue() {
   }
 }
 
+/** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(
   channelID: string,
   options: ChannelEditOptions,
@@ -461,12 +464,7 @@ export async function isChannelSynced(channelID: string) {
       ow.id === overwrite.id
     );
     if (!permission) return false;
-    if (
-      overwrite.allow !== permission.allow || overwrite.deny !== permission.deny
-    ) {
-      return false;
-    }
-
-    return true;
+    return !(overwrite.allow !== permission.allow ||
+      overwrite.deny !== permission.deny);
   });
 }

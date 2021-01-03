@@ -5,7 +5,7 @@ import {
   MessageReactionPayload,
   MessageReactionRemoveEmojiPayload,
 } from "../../types/mod.ts";
-import { structures } from "../structures/structures.ts";
+import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
@@ -34,7 +34,7 @@ export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
         : [newReaction];
     }
 
-    cacheHandlers.set("messages", payload.message_id, message);
+    await cacheHandlers.set("messages", payload.message_id, message);
   }
 
   if (payload.member && payload.guild_id) {
@@ -87,7 +87,7 @@ export async function handleInternalMessageReactionRemove(
         : [newReaction];
     }
 
-    cacheHandlers.set("messages", payload.message_id, message);
+    await cacheHandlers.set("messages", payload.message_id, message);
   }
 
   if (payload.member && payload.guild_id) {

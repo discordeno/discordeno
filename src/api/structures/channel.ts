@@ -62,7 +62,7 @@ export async function createChannel(
     nsfw: createNewProp(data.nsfw || false),
   });
 
-  cacheHandlers.set("channels", data.id, channel);
+  await cacheHandlers.set("channels", data.id, channel);
   return channel as Channel;
 }
 
@@ -116,5 +116,5 @@ export interface Channel {
   // METHODS
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
-  send(content: string | MessageContent): Promise<Message>;
+  send(content: string | MessageContent): ReturnType<typeof sendMessage>;
 }

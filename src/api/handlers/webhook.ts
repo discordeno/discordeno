@@ -17,7 +17,7 @@ import { cache } from "../../util/cache.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
-import { structures } from "../structures/structures.ts";
+import { structures } from "../structures/mod.ts";
 
 /** Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
 *
@@ -46,7 +46,7 @@ export async function createWebhook(
     throw new Error(Errors.INVALID_WEBHOOK_NAME);
   }
 
-  return RequestManager.post(
+  return await RequestManager.post(
     endpoints.CHANNEL_WEBHOOKS(channelID),
     {
       ...options,
@@ -55,6 +55,7 @@ export async function createWebhook(
   ) as Promise<WebhookPayload>;
 }
 
+/** Execute a webhook with webhook ID and webhook token */
 export async function executeWebhook(
   webhookID: string,
   webhookToken: string,
@@ -113,6 +114,7 @@ export async function executeWebhook(
   return structures.createMessage(result as MessageCreateOptions);
 }
 
+/** Returns the new webhook object for the given id. */
 export function getWebhook(webhookID: string) {
   return RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
 }

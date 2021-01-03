@@ -1,17 +1,25 @@
 name: Test
-on: 
+on:
   push:
-    branches:
-      - master
+    paths:
+      - 'src/**'
+      - 'mod.ts'
+      - 'tests/**'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'mod.ts'
+      - 'tests/**'
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: denolib/setup-deno@master
+      - uses: denolib/setup-deno@v2
       - name: Cache dependencies
         run: deno cache mod.ts
       - name: Run test script
-        run: deno test -A
+        if: github.ref == 'refs/heads/master'
+        run: deno test --allow-net --allow-env
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}

@@ -38,12 +38,7 @@ import { botHasPermission, calculateBits } from "../../util/permissions.ts";
 import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
 import { requestAllMembers } from "../../ws/shard_manager.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
-import {
-  Guild,
-  Member,
-  structures,
-  Template,
-} from "../structures/structures.ts";
+import { Guild, Member, structures, Template } from "../structures/mod.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createServer(options: CreateServerOptions) {
@@ -93,6 +88,7 @@ export function guildSplashURL(
     )
     : undefined;
 }
+
 /** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
 export function guildBannerURL(
   guild: Guild,
@@ -135,8 +131,7 @@ export async function createGuildChannel(
       type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
 
-  const channel = await structures.createChannel(result);
-  return channel;
+  return await structures.createChannel(result);
 }
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
@@ -167,7 +162,7 @@ export async function getChannels(guildID: string, addToCache = true) {
   return Promise.all(result.map(async (res) => {
     const channel = await structures.createChannel(res, guildID);
     if (addToCache) {
-      cacheHandlers.set("channels", channel.id, channel);
+      await cacheHandlers.set("channels", channel.id, channel);
     }
     return channel;
   }));
@@ -182,7 +177,7 @@ export async function getChannel(channelID: string, addToCache = true) {
     endpoints.GUILD_CHANNEL(channelID),
   ) as ChannelCreatePayload;
   const channel = await structures.createChannel(result, result.guild_id);
-  if (addToCache) cacheHandlers.set("channels", channel.id, channel);
+  if (addToCache) await cacheHandlers.set("channels", channel.id, channel);
   return channel;
 }
 
@@ -192,7 +187,7 @@ export function swapChannels(
   channelPositions: PositionSwap[],
 ) {
   if (channelPositions.length < 2) {
-    throw "You must provide atleast two channels to be swapped.";
+    throw "You must provide at least two channels to be swapped.";
   }
   return RequestManager.patch(
     endpoints.GUILD_CHANNELS(guildID),
@@ -216,8 +211,7 @@ export async function getMember(
     endpoints.GUILD_MEMBER(guildID, id),
   ) as MemberCreatePayload;
 
-  const member = await structures.createMember(data, guildID);
-  return member;
+  return await structures.createMember(data, guildID);
 }
 
 /** Returns guild member objects for the specified user by their nickname/username.
@@ -309,8 +303,6 @@ export async function createGuildRole(
   if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
-
-  const bits = calculateBits(options.permissions || []);
 
   const result = await RequestManager.post(
     endpoints.GUILD_ROLES(guildID),
@@ -410,7 +402,7 @@ export async function pruneMembers(guildID: string, options: PruneOptions) {
     throw new Error(Errors.MISSING_KICK_MEMBERS);
   }
 
-  RequestManager.post(
+  return RequestManager.post(
     endpoints.GUILD_PRUNE(guildID),
     { ...options, include_roles: options.roles.join(",") },
   );
@@ -428,7 +420,7 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
   // You can request 1 member without the intent
   if (
     (!options?.limit || options.limit > 1) &&
-    !(identifyPayload.intents & Intents.GUILD_MEMBERS)
+    !(identifyPayload.intents && Intents.GUILD_MEMBERS)
   ) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
@@ -437,8 +429,8 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
     options.limit = options.userIDs.length;
   }
 
-  return new Promise((resolve) => {
-    requestAllMembers(guild, resolve, options);
+  return new Promise(async (resolve) => {
+    await requestAllMembers(guild, resolve, options);
   }) as Promise<Collection<string, Member>>;
 }
 
@@ -565,7 +557,7 @@ export async function getBan(guildID: string, memberID: string) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
 
-  return RequestManager.get(
+  return await RequestManager.get(
     endpoints.GUILD_BAN(guildID, memberID),
   ) as Promise<BannedUser>;
 }
@@ -694,11 +686,10 @@ export async function createGuildFromTemplate(
     data.icon = await urlToBase64(data.icon);
   }
 
-  const guild = await RequestManager.post(
+  return await RequestManager.post(
     endpoints.GUILD_TEMPLATE(templateCode),
     data,
   ) as Promise<CreateGuildPayload>;
-  return guild;
 }
 
 /**

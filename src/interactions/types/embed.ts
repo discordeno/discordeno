@@ -7,7 +7,7 @@ export interface Embed {
   description?: string;
   /** The url of embed */
   url?: string;
-  /** The timestap of the embed content */
+  /** The timestamp of the embed content */
   timestamp?: string;
   /** The color code of the embed */
   color?: number;

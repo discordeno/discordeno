@@ -357,7 +357,7 @@ export interface VanityInvite {
 }
 
 export interface GuildEmbed {
-  /** Whether the embed is enbaled. */
+  /** Whether the embed is enabled. */
   enabled: boolean;
 }
 

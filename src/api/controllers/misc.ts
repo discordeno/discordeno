@@ -54,7 +54,7 @@ export async function handleInternalPresenceUpdate(data: DiscordPayload) {
 
   const payload = data.d as PresenceUpdatePayload;
   const oldPresence = await cacheHandlers.get("presences", payload.user.id);
-  cacheHandlers.set("presences", payload.user.id, payload);
+  await cacheHandlers.set("presences", payload.user.id, payload);
 
   return eventHandlers.presenceUpdate?.(payload, oldPresence);
 }
@@ -113,15 +113,15 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
   if (cachedState?.channelID !== payload.channel_id) {
     // Either joined or moved channels
     if (payload.channel_id) {
-      cachedState?.channelID
-        ? // Was in a channel before
-          eventHandlers.voiceChannelSwitch?.(
-            member,
-            payload.channel_id,
-            cachedState.channelID,
-          )
-        : // Was not in a channel before so user just joined
-          eventHandlers.voiceChannelJoin?.(member, payload.channel_id);
+      if (cachedState?.channelID) { // Was in a channel before
+        eventHandlers.voiceChannelSwitch?.(
+          member,
+          payload.channel_id,
+          cachedState.channelID,
+        );
+      } else { // Was not in a channel before so user just joined
+        eventHandlers.voiceChannelJoin?.(member, payload.channel_id);
+      }
     } // Left the channel
     else if (cachedState?.channelID) {
       guild.voiceStates.delete(payload.user_id);
