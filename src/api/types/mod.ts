@@ -2,6 +2,7 @@ export * from "./audit_log.ts";
 export * from "./channel.ts";
 export * from "./emoji.ts";
 export * from "./guild.ts";
+export * from "./image.ts";
 export * from "./interaction.ts";
 export * from "./invite.ts";
 export * from "./oauth2.ts";
