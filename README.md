@@ -8,9 +8,9 @@
 
 - First-class TypeScript & JavaScript support
 - Secure & stable
-- Builtin Documentation
-- Minimalistic
+- Efficient & inimalistic
 - Function-based API
+- Builtin Documentation
 
 ## Usage
 
