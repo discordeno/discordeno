@@ -11,7 +11,3 @@ A standalone and server-less REST module with functionality of REST, independent
   - Separate rest means if your bot for whatever reason crashes, your requests that are queued will still keep going and will not be lost.
   - Seamless updates! When you want to update and reboot the bot, you could potentially lose tons of messages or responses that are in queue. Using this you could restart your bot without ever worrying about losing any responses.
 - Scalability! Scalability! Scalability!
-
-## Notes
-
-This does not follow all the same principles of Discordeno main API guidelines. In Discordeno, one of the goals was to limit as many options as possible to make ease of use/entry as simple as possible. This on the other hands is meant only for extremely large bot developers and it is at a point where all these options are not just good to have but an essential requirement.
