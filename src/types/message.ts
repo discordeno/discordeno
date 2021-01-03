@@ -5,6 +5,7 @@ import { MemberCreatePayload } from "./member.ts";
 import { ValueOf } from "./mod.ts";
 
 export interface MentionedUser extends UserPayload {
+  // @ts-ignore no idea how to fix this
   member: MemberCreatePayload;
 }
 

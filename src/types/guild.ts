@@ -305,6 +305,8 @@ export interface UserPayload {
   flags?: number;
   /** The type of Nitro subscription on a user's account. */
   premium_type?: number;
+
+  // Index signature
   [key: string]: ValueOf<UserPayload>;
 }
 

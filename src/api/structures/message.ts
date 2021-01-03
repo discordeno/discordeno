@@ -236,7 +236,7 @@ export interface Message {
   /** Edit the message */
   edit(content: string | MessageContent): Promise<Message>;
   /** Pins the message in the channel */
-  pin(): Promise<void>;
+  pin(): Promise<ReturnType<typeof pin>>;
   /** Add a reaction to the message */
   addReaction(reaction: string): Promise<unknown>;
   /** Add multiple reactions to the message without or without order. */
