@@ -25,6 +25,7 @@ import {
   ImageSize,
   Intents,
   MemberCreatePayload,
+  ModifyGuildMembershipScreeningFormParams,
   PositionSwap,
   PruneOptions,
   PrunePayload,
@@ -796,4 +797,27 @@ export async function editGuildTemplate(
     data,
   ) as GuildTemplate;
   return structures.createTemplate(template);
+}
+
+/** Get the membership screening form of a guild. */
+export async function getGuildMembershipScreeningForm(guildID: string) {
+  const membershipScreeningPayload = await RequestManager.get(
+    endpoints.GUILD_MEMBER_VERIFICATION(guildID),
+  );
+
+  return structures.createMembershipScreening(membershipScreeningPayload);
+}
+
+export async function editGuildMembershipScreeningForm(
+  guildID: string,
+  options?: ModifyGuildMembershipScreeningFormParams,
+) {
+  const membershipScreeningFormPayload = await RequestManager.patch(
+    endpoints.GUILD_MEMBER_VERIFICATION(guildID),
+    options,
+  );
+
+  return structures.createMembershipScreening(
+    membershipScreeningFormPayload,
+  );
 }
