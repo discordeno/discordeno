@@ -11,10 +11,8 @@ import {
 import { cache } from "../../util/cache.ts";
 import { delay } from "../../util/utils.ts";
 import { allowNextShard } from "../../ws/shard_manager.ts";
-import {
-  initialMemberLoadQueue,
-  structures,
-} from "../structures/structures.ts";
+import { initialMemberLoadQueue } from "../structures/guild.ts";
+import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
 /** This function is the internal handler for the ready event. Users can override this with controllers if desired. */
@@ -75,7 +73,6 @@ export async function handleInternalUserUpdate(data: DiscordPayload) {
   if (!member) return;
 
   Object.entries(userData).forEach(([key, value]) => {
-    // @ts-ignore
     if (member[key] !== value) return member[key] = value;
   });
   return eventHandlers.botUpdate?.(userData);

@@ -246,3 +246,5 @@ export enum Intents {
    */
   DIRECT_MESSAGE_TYPING = 1 << 14,
 }
+
+export type ValueOf<T> = T[keyof T];
