@@ -66,7 +66,7 @@ export async function handleInternalGuildDelete(data: GatewayPayload) {
 }
 
 export async function handleInternalGuildUpdate(data: GatewayPayload) {
-  if (data.t !== "GUILD_CREATE") return;
+  if (data.t !== "GUILD_UPDATE") return;
 
   const payload = data.d as GuildPayload;
   const cachedGuild = await cacheHandlers.get("guilds", payload.id);
