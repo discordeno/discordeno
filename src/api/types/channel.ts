@@ -108,7 +108,7 @@ export interface Message {
   /** sent with Rich Presence-related chat embeds */
   application?: MessageApplication;
   /** reference data sent with crossposted messages and replies */
-  messageReference?: MessageReference;
+  messageReference?: MessageReply;
   /** message flags combined as a bitfield */
   flags?: MessageFlags;
   /** the stickers sent with the message (bots currently can only receive messages with stickers, not send) */
@@ -139,8 +139,9 @@ export interface MessageApplication {
   name: string;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#message-object-message-reference-structure */
-export interface MessageReference {
+export interface MessageReply {
   /** id of the originating message */
   messageID?: string;
   /** id of the originating message's channel */
@@ -198,6 +199,7 @@ export interface Overwrite {
   deny: string;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-structure */
 export interface Embed {
   /** title of embed */
@@ -228,6 +230,7 @@ export interface Embed {
   fields?: EmbedField[];
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-thumbnail-structure */
 export interface EmbedThumbnail {
   /** source url of thumbnail (only supports http(s) and attachments) */
@@ -240,6 +243,7 @@ export interface EmbedThumbnail {
   width?: number;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-video-structure */
 export interface EmbedVideo {
   /** source url of video */
@@ -250,6 +254,7 @@ export interface EmbedVideo {
   width?: number;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-image-structure */
 export interface EmbedImage {
   /** source url of image (only supports http(s) and attachments) */
@@ -262,6 +267,7 @@ export interface EmbedImage {
   width?: number;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-provider-structure */
 export interface EmbedProvider {
   /** name of provider */
@@ -270,6 +276,7 @@ export interface EmbedProvider {
   url?: string;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-author-structure */
 export interface EmbedAuthor {
   /** name of author */
@@ -282,6 +289,7 @@ export interface EmbedAuthor {
   proxyIconUrl?: string;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure */
 export interface EmbedFooter {
   /** footer text */
@@ -292,6 +300,7 @@ export interface EmbedFooter {
   proxyIconUrl?: string;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure */
 export interface EmbedField {
   /** name of the field */
@@ -332,16 +341,17 @@ export interface ChannelMention {
   name: string;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mentions-structure */
-export interface AllowedMentions {
+export interface Mentions {
   /** An array of allowed mention types to parse from the content. */
-  parse: AllowedMentionTypes[];
+  parse?: AllowedMentionTypes[];
   /** Array of roleIds to mention (Max size of 100) */
-  roles: string[];
+  roles?: string[];
   /** Array of userIds to mention (Max size of 100) */
-  users: string[];
+  users?: string[];
   /** For replies, whether to mention the author of the message being replied to (default false) */
-  repliedUser: boolean;
+  repliedUser?: boolean;
 }
 
 /** https://discord.com/developers/docs/resources/channel#modify-channel-json-params */
@@ -368,36 +378,48 @@ export interface ModifyChannelOptions {
   parentID?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
-export interface GetChannelMessagesOptions {
-  /** get messages around this message ID */
-  around?: string;
-  /** get messages before this message ID */
-  before?: string;
-  /** get messages after this message ID */
-  after?: string;
-  /** max number of messages to return (1-100) */
+// used
+export interface GetMessages {
+  /** Max number of messages to return(1-100). Defaults to 50. */
   limit?: number;
 }
 
-/** https://discord.com/developers/docs/resources/channel#create-message-params */
-export interface CreateMessageOptions {
+// used
+export interface GetMessagesAfter extends GetMessages {
+  /** Get messages after this message id */
+  after: string;
+}
+
+// used
+export interface GetMessagesBefore extends GetMessages {
+  /** Get messages before this message id */
+  before: string;
+}
+
+// used
+export interface GetMessagesAround extends GetMessages {
+  /** Get messages around this message id. */
+  around: string;
+}
+
+// used
+export interface MessageContent {
   /** the message contents (up to 2000 characters) */
   content?: string;
   /** a nonce that can be used for optimistic message sending */
   nonce?: number | string;
   /** `true` if this is a TTS message */
-  tts: boolean;
+  tts?: boolean;
   /** the contents of the file being sent */
-  file?: string;
+  file?: { blob: unknown; name: string };
   /** embedded rich content */
   embed?: Embed;
-  /** JSON encoded body of any additional request fields. */
-  Json?: string;
+  /** jSON encoded body of any additional request fields. */
+  jsonPayload?: string;
   /** allowed mentions for a message */
-  allowedMentions?: AllowedMentions;
-  /** include to make your message a reply */
-  messageReference?: MessageReference;
+  mentions?: Mentions;
+  /** include to make your message a reply. Use MessageReply if you want to check the guild and channel. */
+  reply?: string | MessageReply;
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-reactions-query-string-params */
@@ -419,7 +441,7 @@ export interface EditMessageOptions {
   /** edit the flags of a message (only SUPPRESSEMBEDS can currently be set/unset) */
   flags?: MessageFlags | null;
   /** allowed mentions for the message */
-  allowedMentions?: AllowedMentions | null;
+  allowedMentions?: Mentions | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#bulk-delete-messages-json-params */
