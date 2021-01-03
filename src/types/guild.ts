@@ -174,7 +174,11 @@ export type GuildFeatures =
   | "DISCOVERABLE"
   | "FEATURABLE"
   | "ANIMATED_ICON"
-  | "BANNER";
+  | "BANNER"
+  /** guild has enabled Membership Screening */
+  | "MEMBER_VERIFICATION_GATE_ENABLED"
+  /** guild can be previewed before joining via Membership Screening or the directory */
+  | "PREVIEW_ENABLED";
 
 export interface VoiceRegion {
   /** unique ID for the region */
