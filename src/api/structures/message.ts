@@ -232,19 +232,25 @@ export interface Message {
   // METHODS
 
   /** Delete the message */
-  delete(reason?: string, delayMilliseconds?: number): Promise<unknown>;
+  delete(
+    reason?: string,
+    delayMilliseconds?: number,
+  ): ReturnType<typeof deleteMessageByID>;
   /** Edit the message */
-  edit(content: string | MessageContent): Promise<Message>;
+  edit(content: string | MessageContent): ReturnType<typeof editMessage>;
   /** Pins the message in the channel */
   pin(): ReturnType<typeof pin>;
   /** Add a reaction to the message */
-  addReaction(reaction: string): Promise<unknown>;
+  addReaction(reaction: string): ReturnType<typeof addReaction>;
   /** Add multiple reactions to the message without or without order. */
-  addReactions(reactions: string[], ordered?: boolean): Promise<void>;
+  addReactions(
+    reactions: string[],
+    ordered?: boolean,
+  ): ReturnType<typeof addReactions>;
   /** Send a inline reply to this message */
-  reply(content: string | MessageContent): Promise<Message>;
+  reply(content: string | MessageContent): ReturnType<typeof sendMessage>;
   /** Send a message to this channel where this message is */
-  send(content: string | MessageContent): Promise<Message>;
+  send(content: string | MessageContent): ReturnType<typeof sendMessage>;
   /** Send a message to this channel and then delete it after a bit. By default it will delete after 10 seconds with no reason provided. */
   alert(
     content: string | MessageContent,
@@ -258,11 +264,9 @@ export interface Message {
     reason?: string,
   ): Promise<unknown>;
   /** Remove all reactions */
-  removeAllReactions(): Promise<unknown>;
+  removeAllReactions(): ReturnType<typeof removeAllReactions>;
   /** Remove all reactions */
-  // deno-lint-ignore no-explicit-any
-  removeReactionEmoji(reaction: string): Promise<any>;
+  removeReactionEmoji(reaction: string): ReturnType<typeof removeReactionEmoji>;
   /** Remove all reactions */
-  // deno-lint-ignore no-explicit-any
-  removeReaction(reaction: string): Promise<any>;
+  removeReaction(reaction: string): ReturnType<typeof removeReaction>;
 }
