@@ -34,18 +34,15 @@ const baseMessage: Partial<Message> = {
     return cache.channels.get(this.channelID!);
   },
   get guild() {
-    // deno-lint-ignore getter-return
-    if (!this.guildID) return;
+    if (!this.guildID) return undefined;
     return cache.guilds.get(this.guildID);
   },
   get member() {
-    // deno-lint-ignore getter-return
-    if (!this.author?.id) return;
+    if (!this.author?.id) return undefined;
     return cache.members.get(this.author?.id);
   },
   get guildMember() {
-    // deno-lint-ignore getter-return
-    if (!this.guildID) return;
+    if (!this.guildID) return undefined;
     return this.member?.guilds.get(this.guildID);
   },
   get link() {

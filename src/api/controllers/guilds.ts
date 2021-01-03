@@ -92,14 +92,12 @@ export async function handleInternalGuildUpdate(data: DiscordPayload) {
 
         if (Array.isArray(cachedValue) && Array.isArray(value)) {
           const different = (cachedValue.length !== value.length) ||
+            // @ts-ignore no idea how to fix this
             cachedValue.find((val) => !value.includes(val)) ||
             value.find((val) => !cachedValue.includes(val));
           if (!different) return;
         }
 
-        // This will update the cached guild with the new values
-        // deno-lint-ignore ban-ts-comment
-        // @ts-ignore
         cachedGuild[key] = value;
         return { key, oldValue: cachedValue, value };
       }

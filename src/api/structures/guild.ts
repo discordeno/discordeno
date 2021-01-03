@@ -14,6 +14,7 @@ import {
   MemberCreatePayload,
   Presence,
   RoleData,
+  ValueOf,
   VoiceState,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
@@ -352,6 +353,9 @@ export interface Guild {
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   // deno-lint-ignore no-explicit-any
   invites(): Promise<any>;
+
+  // Index signature
+  [key: string]: ValueOf<Guild>;
 }
 
 interface CleanVoiceState extends VoiceState {

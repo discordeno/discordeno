@@ -6,6 +6,7 @@ import {
   ImageSize,
   MemberCreatePayload,
   MessageContent,
+  ValueOf,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
@@ -191,4 +192,7 @@ export interface Member {
   /** Remove a role from the member */
   // deno-lint-ignore no-explicit-any
   removeRole(guildID: string, roleID: string, reason?: string): Promise<any>;
+
+  // Index signature
+  [key: string]: ValueOf<Member>;
 }
