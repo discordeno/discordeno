@@ -13,7 +13,9 @@ import {
   VoiceStateUpdatePayload,
 } from "./discord.ts";
 import { UserPayload } from "./guild.ts";
+import { InteractionCommandPayload } from "./interactions.ts";
 import {
+  Application,
   Attachment,
   BaseMessageReactionPayload,
   Embed,
@@ -71,6 +73,7 @@ export interface DebugArg {
 }
 
 export interface EventHandlers {
+  applicationCommandCreate?: (data: Application) => unknown;
   botUpdate?: (user: UserPayload) => unknown;
   channelCreate?: (channel: Channel) => unknown;
   channelUpdate?: (channel: Channel, cachedChannel: Channel) => unknown;
@@ -104,8 +107,7 @@ export interface EventHandlers {
     cachedMember?: Member,
   ) => unknown;
   heartbeat?: () => unknown;
-  // TODO: FIX THIS
-  interactionCreate?: (data: unknown) => unknown;
+  interactionCreate?: (data: InteractionCommandPayload) => unknown;
   messageCreate?: (message: Message) => unknown;
   messageDelete?: (partial: PartialMessage, message?: Message) => unknown;
   messageUpdate?: (message: Message, cachedMessage: OldMessage) => unknown;

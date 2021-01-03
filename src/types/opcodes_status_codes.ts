@@ -1,16 +1,16 @@
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#opcodes-and-status-codes */
 export enum GatewayOpcodes {
-  DISPATCH,
-  HEARTBEAT,
-  IDENTIFY,
-  PRESENCE_UPDATE,
-  VOICE_STATE_UPDATE,
-  RESUME = 6,
-  RECONNECT,
-  REQUEST_GUILD_MEMBERS,
-  INVALID_SESSION,
-  HELLO,
-  HEARTBEAT_ACK,
+  Dispatch,
+  Heartbeat,
+  Identify,
+  PresenceUpdate,
+  VoiceStateUpdate,
+  Resume = 6,
+  Reconnect,
+  RequestGuildMembers,
+  InvalidSession,
+  Hello,
+  HeartbeatACK,
 }
 
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#opcodes-and-status-codes */

@@ -2,11 +2,10 @@ import { eventHandlers } from "../../bot.ts";
 import { GatewayPayload, Interaction } from "../../types/mod.ts";
 import { structures } from "../structures/mod.ts";
 
-export async function handleInternalInteractionsCreate(data: GatewayPayload) {
+export async function handleInternalInteractionCreate(data: GatewayPayload) {
   if (data.t !== "INTERACTION_CREATE") return;
 
   const payload = data.d as Interaction;
-
   eventHandlers.interactionCreate?.(
     {
       ...payload,
@@ -15,11 +14,10 @@ export async function handleInternalInteractionsCreate(data: GatewayPayload) {
   );
 }
 
-export async function handleInternalInteractionsCommandCreate(
+export async function handleInternalApplicationCommandCreate(
   data: GatewayPayload,
 ) {
-  if (data.t !== "INTERACTION_CREATE") return;
+  if (data.t !== "APPLICATION_COMMAND_CREATE") return;
 
-  console.log(data);
-  eventHandlers.interactionCreate?.(data);
+  eventHandlers.applicationCommandCreate?.(data.d as Application);
 }
