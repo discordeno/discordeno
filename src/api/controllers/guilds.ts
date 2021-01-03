@@ -83,7 +83,6 @@ export async function handleInternalGuildUpdate(data: DiscordPayload) {
     .map(([key, value]) => {
       if (keysToSkip.includes(key)) return;
 
-      // @ts-ignore
       const cachedValue = cachedGuild[key];
       if (cachedValue !== value) {
         // Guild create sends undefined and update sends false.
@@ -91,13 +90,12 @@ export async function handleInternalGuildUpdate(data: DiscordPayload) {
 
         if (Array.isArray(cachedValue) && Array.isArray(value)) {
           const different = (cachedValue.length !== value.length) ||
+            // @ts-ignore no idea how to fix this
             cachedValue.find((val) => !value.includes(val)) ||
             value.find((val) => !cachedValue.includes(val));
           if (!different) return;
         }
 
-        // This will update the cached guild with the new values
-        // @ts-ignore
         cachedGuild[key] = value;
         return { key, oldValue: cachedValue, value };
       }

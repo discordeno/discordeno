@@ -34,15 +34,15 @@ const baseMessage: Partial<Message> = {
     return cache.channels.get(this.channelID!);
   },
   get guild() {
-    if (!this.guildID) return;
+    if (!this.guildID) return undefined;
     return cache.guilds.get(this.guildID);
   },
   get member() {
-    if (!this.author?.id) return;
+    if (!this.author?.id) return undefined;
     return cache.members.get(this.author?.id);
   },
   get guildMember() {
-    if (!this.guildID) return;
+    if (!this.guildID) return undefined;
     return this.member?.guilds.get(this.guildID);
   },
   get link() {
@@ -116,12 +116,13 @@ const baseMessage: Partial<Message> = {
   },
 };
 
+// deno-lint-ignore require-await
 export async function createMessage(data: MessageCreateOptions) {
   const {
-    guild_id: guildID,
+    guild_id: guildID = "",
     channel_id: channelID,
     mentions_everyone: mentionsEveryone,
-    mention_channels: mentionChannelIDs,
+    mention_channels: mentionChannelIDs = [],
     mention_roles: mentionRoleIDs,
     webhook_id: webhookID,
     message_reference: messageReference,
@@ -133,7 +134,7 @@ export async function createMessage(data: MessageCreateOptions) {
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    restProps[key] = createNewProp((rest as any)[key]);
+    restProps[key] = createNewProp(rest[key]);
   }
 
   const message = Object.create(baseMessage, {
@@ -141,11 +142,11 @@ export async function createMessage(data: MessageCreateOptions) {
     /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
     referencedMessageID: createNewProp(referencedMessageID),
     channelID: createNewProp(channelID),
-    guildID: createNewProp(guildID || ""),
+    guildID: createNewProp(guildID),
     mentions: createNewProp(data.mentions.map((m) => m.id)),
     mentionsEveryone: createNewProp(mentionsEveryone),
     mentionRoleIDs: createNewProp(mentionRoleIDs),
-    mentionChannelIDs: createNewProp(mentionChannelIDs?.map((m) => m.id) || []),
+    mentionChannelIDs: createNewProp(mentionChannelIDs.map((m) => m.id)),
     webhookID: createNewProp(webhookID),
     messageReference: createNewProp(messageReference),
     timestamp: createNewProp(Date.parse(data.timestamp)),

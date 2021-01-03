@@ -13,6 +13,7 @@ import {
   MemberCreatePayload,
   Presence,
   RoleData,
+  ValueOf,
   VoiceState,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
@@ -32,8 +33,7 @@ import {
   unban,
 } from "../handlers/guild.ts";
 import { Member } from "./member.ts";
-import { Role, structures } from "./mod.ts";
-import { Channel } from "./structures.ts";
+import { Channel, Role, structures } from "./mod.ts";
 
 export const initialMemberLoadQueue = new Map<string, MemberCreatePayload[]>();
 
@@ -135,7 +135,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     premium_subscription_count: premiumSubscriptionCount,
     preferred_locale: preferredLocale,
     joined_at: joinedAt,
-    member_count: memberCount,
+    member_count: memberCount = 0,
     voice_states: voiceStates = [],
     channels = [],
     members,
@@ -155,7 +155,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    restProps[key] = createNewProp((rest as any)[key]);
+    restProps[key] = createNewProp(rest[key]);
   }
 
   const guild = Object.create(baseGuild, {
@@ -188,7 +188,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     presences: createNewProp(
       new Collection(presences.map((p: Presence) => [p.user.id, p])),
     ),
-    memberCount: createNewProp(memberCount || 0),
+    memberCount: createNewProp(memberCount),
     voiceStates: createNewProp(
       new Collection(
         voiceStates.map((vs: VoiceState) => [
@@ -345,6 +345,9 @@ export interface Guild {
   unban(memberID: string): ReturnType<typeof unban>;
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   invites(): ReturnType<typeof getInvites>;
+
+  // Index signature
+  [key: string]: ValueOf<Guild>;
 }
 
 interface CleanVoiceState extends VoiceState {
