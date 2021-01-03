@@ -49,6 +49,8 @@ export interface GuildMemberUpdatePayload {
   nick: string;
   /** When the user used their nitro boost on the guild. */
   premium_since: string | null;
+  /** whether the user has not yet passed the guild's Membership Screening requirements */
+  pending?: boolean;
 }
 
 export interface GuildMemberAddPayload extends MemberCreatePayload {
