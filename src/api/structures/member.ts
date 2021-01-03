@@ -6,6 +6,7 @@ import {
   ImageSize,
   MemberCreatePayload,
   MessageContent,
+  ValueOf,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
@@ -198,4 +199,7 @@ export interface Member {
     roleID: string,
     reason?: string,
   ): ReturnType<typeof removeRole>;
+
+  // Index signature
+  [key: string]: ValueOf<Member>;
 }

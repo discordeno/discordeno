@@ -13,6 +13,7 @@ import {
   MemberCreatePayload,
   Presence,
   RoleData,
+  ValueOf,
   VoiceState,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
@@ -344,6 +345,9 @@ export interface Guild {
   unban(memberID: string): ReturnType<typeof unban>;
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   invites(): ReturnType<typeof getInvites>;
+
+  // Index signature
+  [key: string]: ValueOf<Guild>;
 }
 
 interface CleanVoiceState extends VoiceState {
