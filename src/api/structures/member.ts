@@ -174,15 +174,28 @@ export interface Member {
   /** Get the nickname */
   guildMember(guildID: string): GuildMember | undefined;
   /** Send a direct message to the user is possible */
-  sendDM(content: string | MessageContent): Promise<any>;
+  sendDM(
+    content: string | MessageContent,
+  ): ReturnType<typeof sendDirectMessage>;
   /** Kick the member from a guild */
-  kick(guildID: string, reason?: string): Promise<any>;
+  kick(guildID: string, reason?: string): ReturnType<typeof kick>;
   /** Edit the member in a guild */
-  edit(guildID: string, options: EditMemberOptions): Promise<any>;
+  edit(
+    guildID: string,
+    options: EditMemberOptions,
+  ): ReturnType<typeof editMember>;
   /** Ban a member in a guild */
-  ban(guildID: string, options: BanOptions): Promise<any>;
+  ban(guildID: string, options: BanOptions): ReturnType<typeof ban>;
   /** Add a role to the member */
-  addRole(guildID: string, roleID: string, reason?: string): Promise<any>;
+  addRole(
+    guildID: string,
+    roleID: string,
+    reason?: string,
+  ): ReturnType<typeof addRole>;
   /** Remove a role from the member */
-  removeRole(guildID: string, roleID: string, reason?: string): Promise<any>;
+  removeRole(
+    guildID: string,
+    roleID: string,
+    reason?: string,
+  ): ReturnType<typeof removeRole>;
 }

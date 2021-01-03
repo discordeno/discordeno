@@ -116,5 +116,5 @@ export interface Channel {
   // METHODS
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
-  send(content: string | MessageContent): Promise<Message>;
+  send(content: string | MessageContent): ReturnType<typeof sendMessage>;
 }
