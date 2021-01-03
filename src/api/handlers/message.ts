@@ -68,7 +68,8 @@ export async function pin(channelID: string, messageID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
-  return RequestManager.put(endpoints.CHANNEL_MESSAGE(channelID, messageID));
+
+  return RequestManager.put(endpoints.CHANNEL_PIN(channelID, messageID));
 }
 
 /** Unpin a message in a channel. Requires MANAGE_MESSAGES. */
@@ -82,8 +83,9 @@ export async function unpin(channelID: string, messageID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
+
   return RequestManager.delete(
-    endpoints.CHANNEL_MESSAGE(channelID, messageID),
+    endpoints.CHANNEL_PIN(channelID, messageID),
   );
 }
 
