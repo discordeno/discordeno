@@ -5,7 +5,7 @@ import { UserPayload } from "./user.ts";
 import { WebhookPayload } from "./webhook.ts";
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-object */
-export interface AuditLogStructure {
+export interface AuditLogPayload {
   /** list of webhooks found in the audit log */
   webhooks: WebhookPayload[];
   /** list of users found in the audit log */
