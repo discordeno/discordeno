@@ -25,6 +25,7 @@ import {
   ImageSize,
   Intents,
   MemberCreatePayload,
+  MembershipScreeningFieldPayload,
   ModifyGuildMembershipScreeningFormParams,
   PositionSwap,
   PruneOptions,
@@ -810,14 +811,29 @@ export async function getGuildMembershipScreeningForm(guildID: string) {
 
 export async function editGuildMembershipScreeningForm(
   guildID: string,
-  options?: ModifyGuildMembershipScreeningFormParams,
+  data?: EditGuildMembershipScreeningForm,
 ) {
+  const payload: ModifyGuildMembershipScreeningFormParams = {
+    description: data?.description,
+    enabled: data?.enabled,
+  };
+  if (data?.formFields) payload.form_fields = JSON.stringify(data.formFields);
+
   const membershipScreeningFormPayload = await RequestManager.patch(
     endpoints.GUILD_MEMBER_VERIFICATION(guildID),
-    options,
+    payload,
   );
 
   return structures.createMembershipScreening(
     membershipScreeningFormPayload,
   );
+}
+
+export interface EditGuildMembershipScreeningForm {
+  /** whether Membership Screening is enabled */
+  enabled?: boolean;
+  /** array of field objects */
+  formFields?: MembershipScreeningFieldPayload;
+  /** the steps in the screening form */
+  description?: string;
 }
