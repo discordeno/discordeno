@@ -342,10 +342,13 @@ export interface ChannelMention {
 }
 
 // used
+export type AllowedMentions = "roles" | "users" | "everyone";
+
+// used
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mentions-structure */
 export interface Mentions {
   /** An array of allowed mention types to parse from the content. */
-  parse?: AllowedMentionTypes[];
+  parse?: AllowedMentions[];
   /** Array of roleIds to mention (Max size of 100) */
   roles?: string[];
   /** Array of userIds to mention (Max size of 100) */
@@ -361,21 +364,21 @@ export interface ModifyChannelOptions {
   /** the type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
   type?: ChannelTypes;
   /** the position of the channel in the left-hand listing */
-  position?: number | null;
+  position?: number;
   /** 0-1024 character channel topic */
-  topic?: string | null;
+  topic?: string;
   /** whether the channel is nsfw */
-  nsfw?: boolean | null;
+  nsfw?: boolean;
   /** amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `MANAGEMESSAGES` or `MANAGECHANNELS`, are unaffected */
-  rateLimitPerUser?: number | null;
+  slowmode?: number;
   /** the bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers) */
-  bitrate?: number | null;
+  bitrate?: number;
   /** the user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit */
-  userLimit?: number | null;
+  userLimit?: number;
   /** channel or category-specific permissions */
-  permissionOverwrites?: Overwrite[] | null;
+  overwrites?: Overwrite[];
   /** id of the new parent category for a channel */
-  parentID?: string | null;
+  parentID?: string;
 }
 
 // used
