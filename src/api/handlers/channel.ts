@@ -1,19 +1,8 @@
 import { RequestManager } from "../../rest/mod.ts";
 import {
-  ChannelEditOptions,
   ChannelTypes,
-  CreateInviteOptions,
-  Errors,
   FollowedChannelPayload,
-  GetMessages,
-  GetMessagesAfter,
-  GetMessagesAround,
-  GetMessagesBefore,
-  MessageContent,
-  MessageCreateOptions,
-  Permission,
-  Permissions,
-  RawOverwrite,
+  MessagePayload,
   WebhookPayload,
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -23,12 +12,25 @@ import {
 } from "../../util/permissions.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { structures } from "../structures/mod.ts";
+import {
+  CreateChannelInviteOptions,
+  Errors,
+  GetMessages,
+  GetMessagesAfter,
+  GetMessagesAround,
+  GetMessagesBefore,
+  MessageContent,
+  ModifyChannelOptions,
+  Overwrite,
+  Permission,
+  Permissions,
+} from "../types/mod.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(
   guildID: string,
   id: string,
-  overwrites: RawOverwrite[],
+  overwrites: Overwrite[],
   permissions: Permission[],
 ) {
   const overwrite = overwrites.find((perm) => perm.id === id) ||
@@ -72,7 +74,7 @@ export async function getMessage(
 
   const result = await RequestManager.get(
     endpoints.CHANNEL_MESSAGE(channelID, id),
-  ) as MessageCreateOptions;
+  ) as MessagePayload;
   return structures.createMessage(result);
 }
 
@@ -110,7 +112,7 @@ export async function getMessages(
   const result = (await RequestManager.get(
     endpoints.CHANNEL_MESSAGES(channelID),
     options,
-  )) as MessageCreateOptions[];
+  )) as MessagePayload[];
   return Promise.all(result.map((res) => structures.createMessage(res)));
 }
 
@@ -118,7 +120,7 @@ export async function getMessages(
 export async function getPins(channelID: string) {
   const result = (await RequestManager.get(
     endpoints.CHANNEL_PINS(channelID),
-  )) as MessageCreateOptions[];
+  )) as MessagePayload[];
   return Promise.all(result.map((res) => structures.createMessage(res)));
 }
 
@@ -215,19 +217,24 @@ export async function sendMessage(
     endpoints.CHANNEL_MESSAGES(channelID),
     {
       ...content,
+      json_payload: content.jsonPayload,
       allowed_mentions: content.mentions
         ? {
           ...content.mentions,
           replied_user: content.mentions.repliedUser,
         }
         : undefined,
-      message_reference: {
-        message_id: content.replyMessageID,
-      },
+      message_reference: typeof content.reply === "string"
+        ? { message_id: content.reply }
+        : {
+          message_id: content.reply?.messageID,
+          channel_id: content.reply?.channelID,
+          guild_id: content.reply?.guildID,
+        },
     },
   );
 
-  return structures.createMessage(result as MessageCreateOptions);
+  return structures.createMessage(result as MessagePayload);
 }
 
 /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */
@@ -278,7 +285,7 @@ export async function getChannelInvites(channelID: string) {
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
 export async function createInvite(
   channelID: string,
-  options: CreateInviteOptions,
+  options: CreateChannelInviteOptions,
 ) {
   const hasCreateInstantInvitePerm = await botHasChannelPermissions(
     channelID,
@@ -289,7 +296,15 @@ export async function createInvite(
   ) {
     throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE);
   }
-  return RequestManager.post(endpoints.CHANNEL_INVITES(channelID), options);
+  const payload = {
+    ...options,
+    max_age: options.maxAge,
+    max_uses: options.maxUses,
+    target_user: options.targetUser,
+    target_user_type: options.targetUserType,
+  };
+
+  return RequestManager.post(endpoints.CHANNEL_INVITES(channelID), payload);
 }
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
@@ -316,7 +331,7 @@ interface EditChannelRequest {
   channelID: string;
   items: {
     channelID: string;
-    options: ChannelEditOptions;
+    options: ModifyChannelOptions;
   }[];
 }
 
@@ -359,7 +374,7 @@ function processEditChannelQueue() {
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(
   channelID: string,
-  options: ChannelEditOptions,
+  options: ModifyChannelOptions,
   reason?: string,
 ) {
   const hasManageChannelsPerm = await botHasChannelPermissions(
