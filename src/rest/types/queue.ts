@@ -1,5 +1,5 @@
-import { ServerRequest } from "./deps.ts";
-import { RestServerOptions, RunMethodOptions } from "./types/mod.ts";
+import { ServerRequest } from "../deps.ts";
+import { RestServerOptions, RunMethodOptions } from "./mod.ts";
 
 export interface RateLimitedPath {
   /** The url for this request */
