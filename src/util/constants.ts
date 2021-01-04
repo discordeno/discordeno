@@ -104,6 +104,8 @@ export const endpoints = {
   GUILD_TEMPLATE: (code: string) =>
     `${baseEndpoints.BASE_URL}/guilds/templates/${code}`,
   GUILD_TEMPLATES: (id: string) => `${GUILDS_BASE(id)}/templates`,
+  GUILD_WELCOME_SCREEN: (guildID: string) =>
+    `${GUILDS_BASE(guildID)}/welcome-screen`,
 
   WEBHOOK: (id: string, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${id}/${token}`,

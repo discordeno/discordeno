@@ -31,6 +31,7 @@ import {
   RoleData,
   UpdateGuildPayload,
   UserPayload,
+  WelcomeScreenPayload,
 } from "../../types/mod.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -39,6 +40,7 @@ import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
 import { requestAllMembers } from "../../ws/shard_manager.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { Guild, Member, structures, Template } from "../structures/mod.ts";
+import { WelcomeScreenChannel } from "../structures/welcome_screen.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createServer(options: CreateServerOptions) {
@@ -796,4 +798,47 @@ export async function editGuildTemplate(
     data,
   ) as GuildTemplate;
   return structures.createTemplate(template);
+}
+
+/** Returns the Welcome Screen structure for a guild. */
+export async function getGuildWelcomeScreen(guildID: string) {
+  const guildWelcomeScreenPayload = await RequestManager.get(
+    endpoints.GUILD_WELCOME_SCREEN(guildID),
+  ) as WelcomeScreenPayload;
+  return structures.createWelcomeScreen(guildWelcomeScreenPayload);
+}
+
+/**
+ * Edit a guild's Welcome Screen.
+ * Requires the `MANAGE_GUILD` permission.
+ */
+export async function editGuildWelcomeScreen(
+  guildID: string,
+  options?: EditGuildWelcomeScreen,
+): Promise<WelcomeScreenChannel> {
+  const guildWelcomeScreenPayload = await RequestManager.patch(
+    endpoints.GUILD_WELCOME_SCREEN(guildID),
+    {
+      ...options,
+      welcome_channels: options?.welcomeChannels?.map((
+        { emojiID, emojiName, channelID, ...props },
+      ) => ({
+        ...props,
+        channel_id: channelID,
+        emoji_id: emojiID,
+        emoji_name: emojiName,
+      })),
+    },
+  );
+
+  return structures.createWelcomeScreen(guildWelcomeScreenPayload);
+}
+
+export interface EditGuildWelcomeScreen {
+  /** whether the welcome screen is enabled */
+  enabled?: boolean;
+  /** channels linked in the welcome screen and their display options */
+  welcomeChannels?: WelcomeScreenChannel[];
+  /** the server description to show in the welcome screen */
+  description?: string;
 }
