@@ -23,6 +23,9 @@ export interface ActivityPayload {
   state?: string;
   /** the emoji used for a custom status */
   emoji?: ActivityEmoji;
+  /** the id of the game or Spotify session */
+  session_id?: string;
+  /** information for the current party of the player */
   /** information for the current party of the player */
   party?: ActivityParty;
   /** images for the presence and their hover texts */
