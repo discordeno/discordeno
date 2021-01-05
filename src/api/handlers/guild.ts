@@ -25,8 +25,7 @@ import {
   ImageSize,
   Intents,
   MemberCreatePayload,
-  MembershipScreeningFieldPayload,
-  ModifyGuildMembershipScreeningFormParams,
+  MembershipScreeningFieldTypes,
   PositionSwap,
   PruneOptions,
   PrunePayload,
@@ -809,19 +808,23 @@ export async function getGuildMembershipScreeningForm(guildID: string) {
   return structures.createMembershipScreening(membershipScreeningPayload);
 }
 
+/** Edit the guild's Membership Screening form. Requires the `MANAGE_GUILD` permission. */
 export async function editGuildMembershipScreeningForm(
   guildID: string,
-  data?: EditGuildMembershipScreeningForm,
+  options?: EditGuildMembershipScreeningForm,
 ) {
-  const payload: ModifyGuildMembershipScreeningFormParams = {
-    description: data?.description,
-    enabled: data?.enabled,
-  };
-  if (data?.formFields) payload.form_fields = JSON.stringify(data.formFields);
-
   const membershipScreeningFormPayload = await RequestManager.patch(
     endpoints.GUILD_MEMBER_VERIFICATION(guildID),
-    payload,
+    {
+      description: options?.description,
+      enabled: options?.enabled,
+      form_fields: JSON.stringify(
+        options?.formFields?.map(({ fieldType, ...props }) => ({
+          ...props,
+          field_type: fieldType,
+        })),
+      ),
+    },
   );
 
   return structures.createMembershipScreening(
@@ -833,7 +836,18 @@ export interface EditGuildMembershipScreeningForm {
   /** whether Membership Screening is enabled */
   enabled?: boolean;
   /** array of field objects */
-  formFields?: MembershipScreeningFieldPayload;
+  formFields?: MembershipScreeningField[];
   /** the steps in the screening form */
   description?: string;
+}
+
+export interface MembershipScreeningField {
+  /** the type of field */
+  fieldType: MembershipScreeningFieldTypes;
+  /** the title of the field */
+  label: string;
+  /** the list of rules */
+  values?: string[];
+  /** whether the user has to fill out this field */
+  required: boolean;
 }

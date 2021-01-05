@@ -673,7 +673,6 @@ export interface EditGuildTemplate {
   description?: string | null;
 }
 
-/** */
 export interface MembershipScreeningPayload {
   /** when the fields were last updated */
   version: string;
@@ -684,7 +683,6 @@ export interface MembershipScreeningPayload {
   [key: string]: ValueOf<MembershipScreeningPayload>;
 }
 
-/** */
 export interface MembershipScreeningFieldPayload {
   /** the type of field */
   field_type: MembershipScreeningFieldTypes;
@@ -696,17 +694,6 @@ export interface MembershipScreeningFieldPayload {
   required: boolean;
 }
 
-/** */
 export type MembershipScreeningFieldTypes =
   /** Server Rules */
   "TERMS";
-
-/**  */
-export interface ModifyGuildMembershipScreeningFormParams {
-  /** whether Membership Screening is enabled */
-  enabled?: boolean;
-  /** array of field objects serialized in a string */
-  form_fields?: string;
-  /** the steps in the screening form */
-  description?: string;
-}
