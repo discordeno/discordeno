@@ -1,7 +1,6 @@
 import { createChannel } from "./channel.ts";
 import { createGuild } from "./guild.ts";
 import { createMember } from "./member.ts";
-import { createMembershipScreening } from "./membership_screening.ts";
 import { createMessage } from "./message.ts";
 import { createRole } from "./role.ts";
 import { createTemplate } from "./template.ts";
@@ -14,7 +13,6 @@ export let structures = {
   createMessage,
   createRole,
   createTemplate,
-  createMembershipScreening,
 };
 
 export type Structures = typeof structures;
@@ -34,7 +32,6 @@ export function updateStructures(newStructures: Structures) {
 export type { Channel } from "./channel.ts";
 export type { Guild } from "./guild.ts";
 export type { Member } from "./member.ts";
-export type { MembershipScreening } from "./membership_screening.ts";
 export type { Message } from "./message.ts";
 export type { Role } from "./role.ts";
 export type { Template } from "./template.ts";

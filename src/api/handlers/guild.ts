@@ -26,6 +26,7 @@ import {
   Intents,
   MemberCreatePayload,
   MembershipScreeningFieldTypes,
+  MembershipScreeningPayload,
   PositionSwap,
   PruneOptions,
   PrunePayload,
@@ -799,13 +800,27 @@ export async function editGuildTemplate(
   return structures.createTemplate(template);
 }
 
+function createMembershipObj(
+  { form_fields: formFields, ...props }: MembershipScreeningPayload,
+) {
+  return {
+    ...props,
+    formFields: formFields.map(({ field_type, ...rest }) => ({
+      ...rest,
+      fieldType: field_type,
+    })),
+  };
+}
+
+export type MembershipScreening = ReturnType<typeof createMembershipObj>;
+
 /** Get the membership screening form of a guild. */
 export async function getGuildMembershipScreeningForm(guildID: string) {
   const membershipScreeningPayload = await RequestManager.get(
     endpoints.GUILD_MEMBER_VERIFICATION(guildID),
   );
 
-  return structures.createMembershipScreening(membershipScreeningPayload);
+  return createMembershipObj(membershipScreeningPayload);
 }
 
 /** Edit the guild's Membership Screening form. Requires the `MANAGE_GUILD` permission. */
@@ -816,8 +831,7 @@ export async function editGuildMembershipScreeningForm(
   const membershipScreeningFormPayload = await RequestManager.patch(
     endpoints.GUILD_MEMBER_VERIFICATION(guildID),
     {
-      description: options?.description,
-      enabled: options?.enabled,
+      ...options,
       form_fields: JSON.stringify(
         options?.formFields?.map(({ fieldType, ...props }) => ({
           ...props,
@@ -827,7 +841,7 @@ export async function editGuildMembershipScreeningForm(
     },
   );
 
-  return structures.createMembershipScreening(
+  return createMembershipObj(
     membershipScreeningFormPayload,
   );
 }
