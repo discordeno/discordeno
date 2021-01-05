@@ -13,7 +13,7 @@ export interface AuditLogPayload {
   /** list of audit log entries */
   audit_log_entries: AuditLogEntryPayload[];
   /** list of partial integration objects */
-  integrations: Partial<IntegrationPayload>;
+  integrations: Partial<IntegrationPayload>[];
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
