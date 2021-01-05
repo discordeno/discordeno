@@ -9,6 +9,7 @@ import {
 } from "../../types/mod.ts";
 import { Emoji } from "./emoji.ts";
 import { GuildMember } from "./guild.ts";
+import { Permission } from "./mod.ts";
 import { User } from "./user.ts";
 
 export type {
@@ -194,9 +195,9 @@ export interface Overwrite {
   /** either 0 (role) or 1 (member) */
   type: number;
   /** permission bit set */
-  allow: string;
+  allow: Permission[];
   /** permission bit set */
-  deny: string;
+  deny: Permission[];
 }
 
 // used
