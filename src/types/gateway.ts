@@ -504,6 +504,8 @@ export interface ClientStatusPayload {
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object */
 export interface ActivityPayload {
+  /** the activity's id */
+  id?: string;
   /** the activity's name */
   name: string;
   /** activity type */
@@ -514,6 +516,10 @@ export interface ActivityPayload {
   created_at: number;
   /** unix timestamps for start and/or end of the game */
   timestamps?: ActivityTimestampsPayload;
+  /** the id of the song on Spotify */
+  sync_id?: string;
+  /** the platform the game is being played on ("desktop", "samsung", or "xbox") */
+  platform?: string;
   /** application id for the game */
   application_id?: string;
   /** what the player is currently doing */
@@ -522,6 +528,8 @@ export interface ActivityPayload {
   state?: string | null;
   /** the emoji used for a custom status */
   emoji?: ActivityEmojiPayload | null;
+  /** the id of the game or Spotify session */
+  session_id?: string;
   /** information for the current party of the player */
   party?: ActivityPartyPayload;
   /** images for the presence and their hover texts */
@@ -532,6 +540,15 @@ export interface ActivityPayload {
   instance?: boolean;
   /** activity flags OR d together, describes what the payload includes */
   flags?: ActivityFlags;
+  /** the custom buttons shown in the Rich Presence (max 2) */
+  buttons?: ActivityButton[];
+}
+
+export interface ActivityButton {
+  /** the text shown on the button (1-32 characters) */
+  label: string;
+  /** the url opened when clicking the button (1-512 characters) */
+  url: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-types */
