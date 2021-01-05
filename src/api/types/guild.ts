@@ -40,11 +40,11 @@ export interface Guild {
   /** icon hash */
   icon: string | null;
   /** icon hash, returned when in the template object */
-  iconhash?: string | null;
+  iconHash?: string | null;
   /** splash hash */
-  splash: string | null;
+  splashHash: string | null;
   /** discovery splash hash; only present for guilds with the "DISCOVERABLE" feature */
-  discoverysplash: string | null;
+  discoveryAplash: string | null;
   /** true if the user is the owner of the guild */
   owner?: boolean;
   /** id of the owner */
@@ -54,19 +54,19 @@ export interface Guild {
   /** voice region id for the guild */
   region: string;
   /** id of afk channel */
-  afkchannelid: string | null;
+  afkChannelID: string | null;
   /** afk timeout in seconds */
-  afktimeout: number;
+  afkTimeout: number;
   /** true if the server widget is enabled */
-  widgetenabled?: boolean;
+  widgetEnabled?: boolean;
   /** the channel id that the widget will generate an invite to, or null if set to no invite */
-  widgetchannelid?: string | null;
+  widgetChannelID?: string | null;
   /** verification level required for the guild */
-  verificationlevel: VerificationLevel;
+  verificationLevel: VerificationLevel;
   /** default message notifications level */
-  defaultmessagenotifications: DefaultMessageNotificationLevel;
+  defaultMessageNotifications: DefaultMessageNotificationLevel;
   /** explicit content filter level */
-  explicitcontentfilter: ExplicitContentFilterLevel;
+  explicitContentFilter: ExplicitContentFilterLevel;
   /** roles in the guild */
   roles: Role[];
   /** custom guild emojis */
@@ -74,25 +74,25 @@ export interface Guild {
   /** enabled guild features */
   features: GuildFeatures[];
   /** required MFA level for the guild */
-  mfalevel: MFALevel;
+  mfaLevel: MFALevel;
   /** application id of the guild creator if it is bot-created */
-  applicationid: string | null;
+  applicationID: string | null;
   /** the id of the channel where guild notices such as welcome messages and boost events are posted */
-  systemchannelid: string | null;
+  systemChannelID: string | null;
   /** system channel flags */
-  systemchannelflags: SystemChannelFlags;
+  systemChannelFlags: SystemChannelFlags;
   /** the id of the channel where community guilds can display rules and/or guidelines */
-  ruleschannelid: string | null;
+  rulesChannelID: string | null;
   /** when this guild was joined at */
-  joinedat?: string;
+  joinedAt?: string;
   /** true if this is considered a large guild */
   large?: boolean;
   /** true if this guild is unavailable due to an outage */
   unavailable?: boolean;
   /** total number of members in this guild */
-  membercount?: number;
+  memberCount?: number;
   /** states of members currently in voice channels; lacks the guildid key */
-  voicestates?: Partial<VoiceState>[];
+  voiceStates?: Partial<VoiceState>[];
   /** users in the guild */
   members?: GuildMember[];
   /** channels in the guild */
@@ -100,29 +100,29 @@ export interface Guild {
   /** presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
   presences?: Partial<PresenceUpdateEvent>[];
   /** the maximum number of presences for the guild (the default value, currently 25000, is in effect when null is returned) */
-  maxpresences?: number | null;
+  maxPresences?: number | null;
   /** the maximum number of members for the guild */
-  maxmembers?: number;
+  maxMembers?: number;
   /** the vaniy url code for the guild */
-  vanityurlcode: string | null;
+  vanityUrlCode: string | null;
   /** the description for the guild, if the guild is discoverable */
   description: string | null;
   /** banner hash */
   banner: string | null;
   /** premium tier (Server Boost level) */
-  premiumtier: PremiumTier;
+  premiumTier: PremiumTier;
   /** the number of boosts this guild currently has */
-  premiumsubscriptioncount?: number;
+  premiumSubscriptionCount?: number;
   /** the preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
-  preferredlocale: string;
+  preferredLocale: string;
   /** the id of the channel where admins and moderators of Community guilds receive notices from Discord */
-  publicupdateschannelid: string | null;
+  publicUpdatesChannelID: string | null;
   /** the maximum amount of users in a video channel */
-  maxvideochannelusers?: number;
+  maxVideoChannelUsers?: number;
   /** approximate number of members in this guild, returned from the GET /guilds/<id> endpoint when withcounts is true */
-  approximatemembercount?: number;
+  approximateMemberCount?: number;
   /**	approximate number of non-offline members in this guild, returned from the GET /guilds/<id> endpoint when withcounts is true */
-  approximatepresencecount?: number;
+  approximatePresenceCount?: number;
 }
 
 /** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */
@@ -139,15 +139,15 @@ export interface GuildPreview {
   /** splash hash */
   splash: string | null;
   /** discovery splash hash */
-  discoverysplash: string | null;
+  discoverySplash: string | null;
   /** custom guild emojis */
   emojis: Emoji[];
   /** enabled guild features */
   features: GuildFeatures[];
   /** approximate number of members in this guild */
-  approximatemembercount: number;
+  approximateMemberCount: number;
   /** approximate number of online members in this guild */
-  approximatepresencecount: number;
+  approximatePresenceCount: number;
   /** the description for the guild */
   description: string | null;
 }
@@ -157,7 +157,7 @@ export interface GuildWidget {
   /** whether the widget is enabled */
   enabled: boolean;
   /** the widget channel id */
-  channelid: string | null;
+  channelID: string | null;
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-structure */
@@ -169,9 +169,9 @@ export interface GuildMember {
   /** array of role payload ids */
   roles: string[];
   /** when the user joined the guild */
-  joinedat: string;
+  joinedAt: string;
   /** when the user started boosting the guild */
-  premiumsince?: string | null;
+  premiumSince?: string | null;
   /** whether the user is deafened in voice channels */
   deaf: boolean;
   /** whether the user is muted in voice channels */
@@ -193,21 +193,21 @@ export interface Integration {
   /** is this integration syncing */
   syncing?: boolean;
   /** id that this integration uses for "subscribers" */
-  roleid?: string;
+  roleID?: string;
   /** whether emoticons should be synced for this integration (twitch only currently) */
-  enableemoticons?: boolean;
+  enableEmoticons?: boolean;
   /** the behavior of expiring subscribers */
-  expirebehavior?: IntegrationExpireBehavior;
+  expireBehavior?: IntegrationExpireBehavior;
   /** the grace period (in days) before expiring subscribers */
-  expiregraceperiod?: number;
+  expireGracePeriod?: number;
   /** user for this integration */
   user?: User;
   /** integration account information */
   account: IntegrationAccount;
   /** when this integration was last synced */
-  syncedat?: string;
+  syncedAt?: string;
   /** how many subscribers this integration has */
-  subscribercount: number;
+  subscriberCount: number;
   /** has this integration been revoked */
   revoked?: boolean;
   /** the bot/OAuth2 application for discord integrations */
@@ -250,14 +250,14 @@ export interface MembershipScreening {
   /** when the fields were last updated */
   version: string;
   /** the steps in the screening form */
-  formfields: MembershipScreeningField[];
+  formFields: MembershipScreeningField[];
   /** the server description shown in the screening form */
   description: string | null;
 }
 
 export interface MembershipScreeningField {
   /** the type of field (currently "TERMS" is the only type) */
-  fieldtype: MembershipScreeningFieldType;
+  fieldType: MembershipScreeningFieldType;
   /** the title of the field */
   label: string;
   /** the list of rules */
@@ -275,27 +275,27 @@ export interface CreateGuildOptions {
   /** base64 128x128 image for the guild icon */
   icon?: string;
   /** verification level */
-  verificationlevel?: VerificationLevel;
+  verificationLevel?: VerificationLevel;
   /** default message notification level */
-  defaultmessagenotifications?: DefaultMessageNotificationLevel;
+  defaultMessageNotifications?: DefaultMessageNotificationLevel;
   /** explicit content filter level */
-  explicitcontentfilter?: ExplicitContentFilterLevel;
+  explicitContentFilter?: ExplicitContentFilterLevel;
   /** new guild roles (first role is the everyone role) */
   roles?: Role[];
   /** new guild's channels */
   channels?: Partial<Channel>[];
   /** id for afk channel */
-  afkchannelid?: string;
+  afkChannelID?: string;
   /** afk timeout in seconds */
-  afktimeout?: number;
+  afkTimeout?: number;
   /** the id of the channel where guild notices such as welcome messages and boost events are posted */
-  systemchannelid?: string;
+  systemChannelID?: string;
 }
 
 /** https://discord.com/developers/docs/resources/guild#get-guild */
 export interface GetGuildOptions {
   /** when true, will return approximate member and presence counts for the guild */
-  withcounts?: boolean;
+  withCounts?: boolean;
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild */
@@ -305,31 +305,31 @@ export interface ModifyGuildOptions {
   /** guild voice region id */
   region?: string | null;
   /** verification level */
-  verificationlevel?: VerificationLevel | null;
+  verificationLevel?: VerificationLevel | null;
   /** default message notification filter level */
-  defaultmessagenotifications?: DefaultMessageNotificationLevel | null;
+  defaultMessageNotifications?: DefaultMessageNotificationLevel | null;
   /** explicit content filter level */
-  explicitcontentfilter?: ExplicitContentFilterLevel | null;
+  explicitContentFilter?: ExplicitContentFilterLevel | null;
   /** id for afk channel */
-  afkchannelid?: string | null;
+  afkChannelID?: string | null;
   /** afk timeout in seconds */
-  afktimeout?: number;
+  afkTimeout?: number;
   /** base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has ANIMATEDICON feature) */
   icon?: string | null;
   /** user id to transfer guild ownershop to (must be owner) */
-  ownerid?: string;
+  ownerID?: string;
   /** base64 16:9 png/jpeg image for the guild splash (when the server has INVITESPLASH feature) */
   splash?: string | null;
   /** base64 16:9 png/jpeg image for the guild banner (when the server has BANNER feature) */
   banner?: string | null;
   /** the id of the channel where guild notices such as welcome messages and boost events are posted */
-  systemchannelid?: string | null;
+  systemChannelID?: string | null;
   /** the id of the channel where Community guilds display rules and/or guidelines */
-  ruleschannelid?: string | null;
+  rulesChannelID?: string | null;
   /** the id of the channel where admins and moderators of Community guilds receive notices from Discord */
-  publicupdateschannelid?: string | null;
+  publicUpdatesChannelID?: string | null;
   /** the preferred locale of a Community guild used in server discovery and notices from Discord; defaults to "en-US" */
-  preferredlocale?: string | null;
+  preferredLocale?: string | null;
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-channel */
@@ -343,15 +343,15 @@ export interface CreateGuildChannelOptions {
   /** the bitrate (in bits) of the voice channel (voice only) */
   bitrate?: number;
   /** the user limit of the voice channel (voice only) */
-  userlimit?: number;
+  userLimit?: number;
   /** amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission managemessages or managechannel, are unaffected */
-  ratelimitperuser?: number;
+  rateLimitPerUser?: number;
   /** sorting position of the channel */
   position?: number;
   /** the channel's permission overwrites */
-  permissionoverwrites?: Overwrite[];
+  permissionOverwrites?: Overwrite[];
   /** id of the parent category for a channel */
-  parentid?: string;
+  parentID?: string;
   /** whether the channel is nsfw */
   nsfw?: boolean;
 }
@@ -375,7 +375,7 @@ export interface ListGuildMembersOptions {
 /** https://discord.com/developers/docs/resources/guild#add-guild-member */
 export interface AddGuildMemberOptions {
   /** an oauth2 access token granted with the guilds.join to the bot's application for the user you want to add to the guild */
-  accesstoken: string;
+  accessToken: string;
   /** value to set users nickname to. Requires the MANAGENICKNAMES permission */
   nick?: string;
   /** array of role ids the member is assigned. Requires the MANAGEROLES permission */
@@ -397,7 +397,7 @@ export interface ModifyGuildMemberOptions {
   /** whether the user is deafened in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the MOVEMEMBERS permission */
   deaf?: boolean | null;
   /** id of channel to move user to (if they are connected to voice). Requires the MOVEMEMBERS permission */
-  channelid: string | null;
+  channelID: string | null;
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-current-user-nick */
@@ -407,9 +407,9 @@ export interface ModifyCurrentUserNickOptions {
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-ban */
-export interface CreateGuildBan {
+export interface BanOptions {
   /** number of days to delete messages for (0-7) */
-  deletemessagedays?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  deleteDays?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
   /** reason for the ban */
   reason?: string;
 }
@@ -455,7 +455,7 @@ export interface GetGuildPruneCountParaams {
   /** number of days to count prune for (1 or more), default: 7 */
   days?: number;
   /** role(s) to include, default: none */
-  includeroles: string | string[];
+  includeRoles: string | string[];
 }
 
 /** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
@@ -463,9 +463,9 @@ export interface BeginGuildPruneOptions {
   /** number of days to prune (1 or more), default: 7 */
   days?: number;
   /** whether 'pruned' is returned, discouraged for large guilds, default: true */
-  computeprunecount?: boolean;
+  computePruneCount?: boolean;
   /** role(s) ro include, default: none */
-  includeroles?: string[];
+  includeRoles?: string[];
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-integration */
@@ -479,11 +479,11 @@ export interface CreateGuildIntegrationOptions {
 /** https://discord.com/developers/docs/resources/guild#modify-guild-integration */
 export interface ModifyGuildIntegration {
   /** the behavior when an integration subscription lapses (see the integration expire behaviors documentation) */
-  expirebehavior?: number | null;
+  expireBehavior?: number | null;
   /** perios (in days) where the integration will ignore lapsed subscriptions */
-  expiregraceperiod?: number | null;
+  expireGracePeriod?: number | null;
   /** whether emoticons should be synced for this integration (twitch only currently) */
-  enableemoticons?: boolean | null;
+  enableEmoticons?: boolean | null;
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-integration */
@@ -496,7 +496,7 @@ export interface ModifyGuildMembershipScreeningForm {
   /** whether Membership Screening is enabled */
   enabled: boolean;
   /** arrray of field objects serialized in a string */
-  formfields: string;
+  formFields: string;
   /** the server description to show in the screening form */
   description: string;
 }
