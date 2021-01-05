@@ -5,7 +5,7 @@ import { Role } from "./permissions.ts";
 import { User } from "./user.ts";
 import { Webhook } from "./webhook.ts";
 
-export type { AuditLogEvent };
+export { AuditLogEvent };
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-object */
 export interface AuditLog {
@@ -14,9 +14,9 @@ export interface AuditLog {
   /** list of users found in the audit log */
   users: User[];
   /** list of audit log entries */
-  auditLogEntries: AuditLogEntry[];
+  entries: AuditLogEntry[];
   /** list of partial integration objects */
-  integrations: Partial<Integration>;
+  integrations: Partial<Integration>[];
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
@@ -40,7 +40,7 @@ export interface AuditLogEntry {
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
 export interface OptionalAuditEntryInfo {
   /** number of days after which inactive members were kicked, type: MEMBERPRUNE */
-  deleteMemberDays: string;
+  deleteMessageDays: string;
   /** number of members removed by the prune, type: MEMBERPRUNE */
   membersRemoved: string;
   /** channel in which the entities were targeted, types: MEMBERMOVE & MESSAGEPIN & MESSAGEUNPIN & MESSAGEDELETE */
@@ -52,7 +52,7 @@ export interface OptionalAuditEntryInfo {
   /** id of the overwritten entity, types CHANNELOVERWRITECREATE & CHANNELOVERWRITEUPDATE & CHANNELOVERWRITEDELETE */
   id: string;
   /** type of overwritten entity - "0", for "role", or "1" for "member", types: CHANNELOVERWRITECREATE & CHANNELOVERWRITEUPDATE & CHANNELOVERWRITEDELETE */
-  type: string;
+  type: "0" | "1";
   /** name of the role if type is "0" (not present if type is "1"), types: CHANNELOVERWRITECREATE & CHANNELOVERWRITEUPDATE & CHANNELOVERWRITEDELETE */
   roleName: string;
 }
@@ -112,13 +112,13 @@ export interface AuditLogChangeKey {
   /** object: channel; voice channel bitrate changed */
   bitrate: number;
   /** object: channel; permissions on a channel changed */
-  permissionOverwrites: Overwrite[];
+  overwrites: Overwrite[];
   /** object: channel; channel nsfw restriction changed */
   nsfw: boolean;
   /** object: channel; application id of the added or removed webhook or bot */
   applicationID: string;
   /** object: channel; amount of seconds a user has to wait before sending another message changed */
-  rateLimitPerUser: number;
+  slowmode: number;
   /** object: role; permissions for a role changed */
   permissions: string;
   /** object: role; role color changed */
@@ -170,9 +170,46 @@ export interface GetGuildAuditLog {
   /** filter the log for actions made by a user */
   userID: string;
   /** the type of audit log event */
-  actionType: AuditLogEvent;
+  actionType: AuditLogEventType;
   /** filter the log before a certain entry id */
   before: string;
   /** how many entries are returned (default 50, minimum 1, maximum 100) */
   limit: number;
 }
+
+export type AuditLogEventType =
+  | "GUILD_UPDATE"
+  | "CHANNEL_CREATE"
+  | "CHANNEL_UPDATE"
+  | "CHANNEL_DELETE"
+  | "CHANNEL_OVERWRITE_CREATE"
+  | "CHANNEL_OVERWRITE_UPDATE"
+  | "CHANNEL_OVERWRITE_DELETE"
+  | "MEMBER_KICK"
+  | "MEMBER_PRUNE"
+  | "MEMBER_BAN_ADD"
+  | "MEMBER_BAN_REMOVE"
+  | "MEMBER_UPDATE"
+  | "MEMBER_ROLE_UPDATE"
+  | "MEMBER_MOVE"
+  | "MEMBER_DISCONNECT"
+  | "BOT_ADD"
+  | "ROLE_CREATE"
+  | "ROLE_UPDATE"
+  | "ROLE_DELETE"
+  | "INVITE_CREATE"
+  | "INVITE_UPDATE"
+  | "INVITE_DELETE"
+  | "WEBHOOK_CREATE"
+  | "WEBHOOK_UPDATE"
+  | "WEBHOOK_DELETE"
+  | "EMOJI_CREATE"
+  | "EMOJI_UPDATE"
+  | "EMOJI_DELETE"
+  | "MESSAGE_DELETE"
+  | "MESSAGE_BULK_DELETE"
+  | "MESSAGE_PIN"
+  | "MESSAGE_UNPIN"
+  | "INTEGRATION_CREATE"
+  | "INTEGRATION_UPDATE"
+  | "INTEGRATION_DELETE";
