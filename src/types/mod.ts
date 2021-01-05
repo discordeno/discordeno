@@ -2,7 +2,7 @@ export * from "./audit_log.ts";
 export * from "./channel.ts";
 export * from "./emoji.ts";
 export * from "./gateway.ts";
-export type { GatewayIntents as Intents } from "./gateway.ts";
+export { GatewayIntents as Intents } from "./gateway.ts";
 export * from "./guild.ts";
 export * from "./interaction.ts";
 export * from "./invite.ts";
@@ -15,4 +15,3 @@ export * from "./template.ts";
 export * from "./user.ts";
 export * from "./voice.ts";
 export * from "./webhook.ts";
-
