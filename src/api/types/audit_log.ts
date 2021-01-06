@@ -165,8 +165,8 @@ export interface AuditLogChangeKey {
   expireGracePeriod: number;
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
-export interface GetGuildAuditLog {
+// used
+export interface GetGuildAuditLogOptions {
   /** filter the log for actions made by a user */
   userID: string;
   /** the type of audit log event */
@@ -177,6 +177,7 @@ export interface GetGuildAuditLog {
   limit: number;
 }
 
+// used
 export type AuditLogEventType =
   | "GUILD_UPDATE"
   | "CHANNEL_CREATE"
