@@ -40,7 +40,6 @@ import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
 import { requestAllMembers } from "../../ws/shard_manager.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { Guild, Member, structures, Template } from "../structures/mod.ts";
-import { WelcomeScreenChannel } from "../structures/welcome_screen.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createServer(options: CreateServerOptions) {
@@ -800,12 +799,30 @@ export async function editGuildTemplate(
   return structures.createTemplate(template);
 }
 
+function createWelcomeScreenStruct(
+  { welcome_channels: welcomeChannels, ...rest }: WelcomeScreenPayload,
+) {
+  return {
+    ...rest,
+    welcomeChannels: welcomeChannels.map((
+      { emoji_id, emoji_name, channel_id, ...props },
+    ) => ({
+      ...props,
+      channelID: channel_id,
+      emojiID: emoji_id,
+      emojiName: emoji_name,
+    })),
+  };
+}
+
+export type WelcomeScreen = ReturnType<typeof createWelcomeScreenStruct>;
+
 /** Returns the Welcome Screen structure for a guild. */
 export async function getGuildWelcomeScreen(guildID: string) {
   const guildWelcomeScreenPayload = await RequestManager.get(
     endpoints.GUILD_WELCOME_SCREEN(guildID),
   ) as WelcomeScreenPayload;
-  return structures.createWelcomeScreen(guildWelcomeScreenPayload);
+  return createWelcomeScreenStruct(guildWelcomeScreenPayload);
 }
 
 /**
@@ -815,7 +832,7 @@ export async function getGuildWelcomeScreen(guildID: string) {
 export async function editGuildWelcomeScreen(
   guildID: string,
   options?: EditGuildWelcomeScreen,
-): Promise<WelcomeScreenChannel> {
+) {
   const guildWelcomeScreenPayload = await RequestManager.patch(
     endpoints.GUILD_WELCOME_SCREEN(guildID),
     {
@@ -829,9 +846,8 @@ export async function editGuildWelcomeScreen(
         emoji_name: emojiName,
       })),
     },
-  );
-
-  return structures.createWelcomeScreen(guildWelcomeScreenPayload);
+  ) as WelcomeScreenPayload;
+  return createWelcomeScreenStruct(guildWelcomeScreenPayload);
 }
 
 export interface EditGuildWelcomeScreen {
@@ -841,4 +857,15 @@ export interface EditGuildWelcomeScreen {
   welcomeChannels?: WelcomeScreenChannel[];
   /** the server description to show in the welcome screen */
   description?: string;
+}
+
+export interface WelcomeScreenChannel {
+  /** the server description shown in the welcome screen */
+  channelID: string;
+  /** the description shown for the channel */
+  description: string;
+  /** the emoji id, if the emoji is custom */
+  emojiID: string | null;
+  /** the emoji name if custom, the unicode character if standard, or `null` if no emoji is set */
+  emojiName: string | null;
 }

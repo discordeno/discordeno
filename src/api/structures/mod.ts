@@ -4,7 +4,6 @@ import { createMember, Member } from "./member.ts";
 import { createMessage, Message } from "./message.ts";
 import { createRole, Role } from "./role.ts";
 import { createTemplate, Template } from "./template.ts";
-import { createWelcomeScreen, WelcomeScreen } from "./welcome_screen.ts";
 
 /** This is the placeholder where the structure creation functions are kept. */
 export let structures = {
@@ -14,7 +13,6 @@ export let structures = {
   createMessage,
   createRole,
   createTemplate,
-  createWelcomeScreen,
 };
 
 export type Structures = typeof structures;
@@ -31,4 +29,4 @@ export function updateStructures(newStructures: Structures) {
   };
 }
 
-export type { Channel, Guild, Member, Message, Role, Template, WelcomeScreen };
+export type { Channel, Guild, Member, Message, Role, Template };
