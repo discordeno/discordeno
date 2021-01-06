@@ -87,8 +87,21 @@ export function keysToSnake(o: any) {
       });
     return n;
   } else if (Array.isArray(o)) {
-    console.log("hi");
     o = o.map((i) => keysToSnake(i));
+  }
+  return o;
+}
+
+export function keysToCamel(o: any) {
+  if (isObject(o)) {
+    const n: any = {};
+    Object.keys(o)
+      .forEach((k) => {
+        n[snakeToCamelCase(k)] = keysToCamel(o[k]);
+      });
+    return n;
+  } else if (Array.isArray(o)) {
+    o = o.map((i) => keysToCamel(i));
   }
   return o;
 }
