@@ -67,6 +67,13 @@ export function camelToSnakeCase(str: string) {
   });
 }
 
+export function snakeToCamelCase(s: string) {
+  return s.replace(/_id|([-_][a-z])/ig, ($1) => {
+    if ($1 === "_id") return "ID";
+    return $1.toUpperCase().replace("_", "");
+  });
+}
+
 export function isObject(o: any) {
   return o === Object(o) && !Array.isArray(o) && typeof o !== "function";
 }
