@@ -59,3 +59,29 @@ export const formatImageURL = (
   return `${url}.${format ||
     (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
 };
+
+export function camelToSnakeCase(str: string) {
+  return str.replace(/ID|[A-Z]/g, (s) => {
+    if (s === "ID") return "_id";
+    return `_${s.toLowerCase()}`;
+  });
+}
+
+export function isObject(o: any) {
+  return o === Object(o) && !Array.isArray(o) && typeof o !== "function";
+}
+
+export function keysToSnake(o: any) {
+  if (isObject(o)) {
+    const n: any = {};
+    Object.keys(o)
+      .forEach((k) => {
+        n[camelToSnakeCase(k)] = keysToSnake(o[k]);
+      });
+    return n;
+  } else if (Array.isArray(o)) {
+    console.log("hi");
+    o = o.map((i) => keysToSnake(i));
+  }
+  return o;
+}
