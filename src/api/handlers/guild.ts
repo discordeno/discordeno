@@ -800,7 +800,7 @@ export async function editGuildTemplate(
   return structures.createTemplate(template);
 }
 
-function createMembershipObj(
+function createMembershipStruct(
   { form_fields: formFields, ...props }: MembershipScreeningPayload,
 ) {
   return {
@@ -812,15 +812,15 @@ function createMembershipObj(
   };
 }
 
-export type MembershipScreening = ReturnType<typeof createMembershipObj>;
+export type MembershipScreening = ReturnType<typeof createMembershipStruct>;
 
 /** Get the membership screening form of a guild. */
 export async function getGuildMembershipScreeningForm(guildID: string) {
   const membershipScreeningPayload = await RequestManager.get(
     endpoints.GUILD_MEMBER_VERIFICATION(guildID),
-  );
+  ) as MembershipScreeningPayload;
 
-  return createMembershipObj(membershipScreeningPayload);
+  return createMembershipStruct(membershipScreeningPayload);
 }
 
 /** Edit the guild's Membership Screening form. Requires the `MANAGE_GUILD` permission. */
@@ -839,9 +839,9 @@ export async function editGuildMembershipScreeningForm(
         })),
       ),
     },
-  );
+  ) as MembershipScreeningPayload;
 
-  return createMembershipObj(
+  return createMembershipStruct(
     membershipScreeningFormPayload,
   );
 }
