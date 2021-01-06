@@ -332,11 +332,11 @@ export interface ModifyGuildOptions {
   preferredLocale?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#create-guild-channel */
-export interface CreateGuildChannelOptions {
+// used
+export interface CreateChannelOptions {
   /** channel name (2-100 characters) */
   name: string;
-  /** the type of channel */
+  /** the type of channel, default: Guild Text Channel */
   type?: ChannelTypes;
   /** channel topic (0-1024 characters) */
   topic?: string;
@@ -406,7 +406,7 @@ export interface ModifyCurrentUserNickOptions {
   nick?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#create-guild-ban */
+// used
 export interface BanOptions {
   /** number of days to delete messages for (0-7) */
   deleteDays?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;

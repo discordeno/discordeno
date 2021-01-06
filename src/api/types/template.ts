@@ -27,7 +27,7 @@ export interface Template {
   isDirty: boolean | null;
 }
 
-/** https://discord.com/developers/docs/resources/template#create-guild-from-template */
+// used
 export interface CreateGuildFromTemplateOptions {
   /** name of the guild (2-100 characters) */
   name: string;
