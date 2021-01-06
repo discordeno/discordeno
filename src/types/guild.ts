@@ -471,7 +471,7 @@ export interface CreateGuildRoleParams {
   /** whether the role should be displayed separately in the sidebar, default: false */
   hoist?: boolean;
   /** whether the role should be mentionable, default: false */
-  mentionable: boolean;
+  mentionable?: boolean;
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-role-positions */
