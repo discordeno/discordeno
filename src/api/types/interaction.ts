@@ -3,7 +3,7 @@ import {
   InteractionResponseType,
   InteractionType,
 } from "../../types/mod.ts";
-import { AllowedMentions, Embed } from "./channel.ts";
+import { AllowedMentionType, Embed } from "./channel.ts";
 import { GuildMember } from "./guild.ts";
 
 export type {
@@ -118,5 +118,5 @@ export interface InteractionApplicationCommandCallbackData {
   /** supports up to 10 embeds */
   embeds?: Embed[];
   /** allowed mentions object */
-  allowedMenntions?: AllowedMentions;
+  allowedMenntions?: AllowedMentionType;
 }
