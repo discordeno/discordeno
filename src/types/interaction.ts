@@ -28,7 +28,7 @@ export interface ApplicationCommand {
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption */
 export interface ApplicationCommandOption {
   /** value of ApplicationCommandOptionType */
-  type: ApplicationCommandOptionType;
+  type: ApplicationCommandOptionTypes;
   /** 1-32 character name matching ^[\w-]{1,32}$ */
   name: string;
   /** 1-100 character description */
@@ -44,7 +44,7 @@ export interface ApplicationCommandOption {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype */
-export enum ApplicationCommandOptionType {
+export enum ApplicationCommandOptionTypes {
   SUB_COMMAND = 1,
   SUB_COMMAND_GROUP,
   STRING,
@@ -104,7 +104,7 @@ export interface ApplicationCommandInteractionDataOption {
   /** the name of the parameter */
   name: string;
   /** the value of the pair */
-  value?: ApplicationCommandOptionType;
+  value?: ApplicationCommandOptionTypes;
   /** present if this option is a group or subcommand */
   options?: ApplicationCommandInteractionDataOption[];
 }
@@ -112,13 +112,13 @@ export interface ApplicationCommandInteractionDataOption {
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
 export interface InteractionResponse {
   /** the type of response */
-  type: InteractionResponseType;
+  type: InteractionResponseTypes;
   /** an optional response message */
   data?: InteractionApplicationCommandCallbackData;
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
-export enum InteractionResponseType {
+export enum InteractionResponseTypes {
   PONG = 1,
   ACKNOWLEDGE,
   CHANNEL_MESSAGE,
