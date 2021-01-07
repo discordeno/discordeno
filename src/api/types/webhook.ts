@@ -1,7 +1,5 @@
-import { WebhookType } from "../../types/mod.ts";
-import { AllowedMentions, Embed } from "./channel.ts";
+import { AllowedMentionType, Embed } from "./channel.ts";
 import { User } from "./user.ts";
-export type { WebhookType };
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-resource */
 export interface Webhook {
@@ -24,6 +22,11 @@ export interface Webhook {
   /** the bot/OAuth2 application that created this webhook */
   applicationID: string | null;
 }
+
+/** https://discord.com/developers/docs/resources/webhook#webhook-resource */
+export type WebhookType =
+  | "INCOMING"
+  | "CHANNEL_FOLLOWER";
 
 /** https://discord.com/developers/docs/resources/webhook#create-webhook */
 export interface CreateWebhookOptions {
@@ -66,7 +69,7 @@ export interface ExecuteWebhookOptions {
   /** JSON-serialized  */
   payloadJson: string;
   /** allowed mentions for the message */
-  allowedMentions: AllowedMentions;
+  allowedMentions: AllowedMentionType;
 }
 
 /** https://discord.com/developers/docs/resources/webhook#execute-slackcompatible-webhook */
@@ -88,5 +91,5 @@ export interface EditWebhookMessageOptions {
   /** embedded rich content */
   embeds: Embed[];
   /** allowed mentions for the message */
-  allowedMentions: AllowedMentions;
+  allowedMentions: AllowedMentionType;
 }
