@@ -1,6 +1,4 @@
-import { MembershipState } from "../../types/mod.ts";
 import { User } from "./user.ts";
-export type { MembershipState };
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
 export interface Team {
@@ -17,7 +15,7 @@ export interface Team {
 /** https://discord.com/developers/docs/topics/teams#data-models-team-members-object */
 export interface TeamMembers {
   /** the user's membership state on the team */
-  membership_state: MembershipState;
+  membership_state: MembershipStateType;
   /** will always be ["*"] */
   permissions: string[];
   /** the id of the parent team of which they are a member */
@@ -25,3 +23,8 @@ export interface TeamMembers {
   /** the avatar, discriminator, id, and username of the user */
   user: Partial<User>;
 }
+
+/** https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum */
+export type MembershipStateType =
+  | "INVITED"
+  | "ACCEPTED";
