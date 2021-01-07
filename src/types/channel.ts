@@ -133,6 +133,8 @@ export enum MessageTypes {
   CHANNEL_FOLLOW_ADD,
   GUILD_DISCOVERY_DISQUALIFIED = 14,
   GUILD_DISCOVERY_REQUALIFIED,
+  GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING,
+  GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING,
   REPLY = 19,
   APPLICATION_COMMAND,
 }
@@ -277,7 +279,10 @@ export interface EmbedPayload {
   fields?: EmbedFieldPayload[];
 }
 
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-types */
+/** 
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-types
+ * @deprecated
+ */
 export type EmbedTypes =
   | "rich"
   | "image"
@@ -373,9 +378,9 @@ export interface AttachmentPayload {
   /** a proxied url of file */
   proxy_url: string;
   /** height of file (if image) */
-  height: number | null;
+  height?: number | null;
   /** width of file (if image) */
-  width: number | null;
+  width?: number | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-mention-object-channel-mention-structure */
