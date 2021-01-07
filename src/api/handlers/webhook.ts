@@ -241,11 +241,14 @@ export function upsertSlashCommand(
 }
 
 /** Edit an existing slash command. */
-export function editSlashCommand(options: EditSlashCommandOptions) {
+export function editSlashCommand(
+  commandID: string,
+  options: CreateSlashCommandOptions,
+) {
   return RequestManager.patch(
     options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(botID, options.id, options.guildID)
-      : endpoints.COMMANDS_ID(botID, options.id),
+      ? endpoints.COMMANDS_GUILD_ID(botID, commandID, options.guildID)
+      : endpoints.COMMANDS_ID(botID, commandID),
     {
       ...options,
     },
