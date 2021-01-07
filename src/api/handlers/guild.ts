@@ -1,6 +1,7 @@
 import { identifyPayload } from "../../bot.ts";
 import { RequestManager } from "../../rest/mod.ts";
 import {
+  AuditLogEvent,
   AuditLogPayload,
   BanPayload,
   ChannelPayload,
@@ -28,7 +29,6 @@ import { cacheHandlers } from "../controllers/cache.ts";
 import { Guild, Member, structures, Template } from "../structures/mod.ts";
 import {
   AuditLog,
-  AuditLogEvent,
   Ban,
   BanOptions,
   Channel,
