@@ -7,6 +7,7 @@ export * from "./image.ts";
 export * from "./interaction.ts";
 export * from "./invite.ts";
 export * from "./oauth2.ts";
+export * from "./options.ts";
 export * from "./permissions.ts";
 export * from "./rate_limits.ts";
 export * from "./teams.ts";

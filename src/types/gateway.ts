@@ -299,7 +299,7 @@ export interface GuildIntegrationsUpdateEventPayload {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-member-add-guild-member-add-extra-fields */
-export interface GuildMemberAddExtraPayload {
+export interface GuildMemberAddExtraPayload extends GuildMemberPayload {
   /** id of the guild */
   guild_id: string;
 }
