@@ -1,16 +1,12 @@
 import { botID } from "../../bot.ts";
 import { RequestManager } from "../../rest/mod.ts";
-import {
-  Errors,
-  MessageContent,
-  MessageCreateOptions,
-  UserPayload,
-} from "../../types/mod.ts";
+import { MessagePayload, UserPayload } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { delay } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { Message, structures } from "../structures/mod.ts";
+import { Errors, MessageContent } from "../types/mod.ts";
 
 /** Delete a message with the channel id and message id only. */
 export async function deleteMessageByID(
@@ -275,15 +271,15 @@ export async function editMessage(
   const result = await RequestManager.patch(
     endpoints.CHANNEL_MESSAGE(message.channelID, message.id),
     content,
-  );
-  return structures.createMessage(result as MessageCreateOptions);
+  ) as MessagePayload;
+  return structures.createMessage(result);
 }
 
 /** Crosspost a message in a News Channel to following channels. */
 export async function publishMessage(channelID: string, messageID: string) {
   const data = await RequestManager.post(
     endpoints.CHANNEL_MESSAGE_CROSSPOST(channelID, messageID),
-  ) as MessageCreateOptions;
+  ) as MessagePayload;
 
   return structures.createMessage(data);
 }
