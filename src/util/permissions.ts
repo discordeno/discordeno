@@ -1,7 +1,8 @@
 import { cacheHandlers } from "../api/controllers/cache.ts";
 import { Guild, Role } from "../api/structures/structures.ts";
+import { Permission, Permissions } from "../api/types/mod.ts";
 import { botID } from "../bot.ts";
-import { Permission, Permissions, RawOverwrite } from "../types/mod.ts";
+import { OverwritePayload } from "../types/mod.ts";
 
 /** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
 export async function memberIDHasPermission(
@@ -113,9 +114,9 @@ export async function hasChannelPermissions(
   );
   if (!member) return false;
 
-  let memberOverwrite: RawOverwrite | undefined;
-  let everyoneOverwrite: RawOverwrite | undefined;
-  let rolesOverwrites: RawOverwrite[] = [];
+  let memberOverwrite: OverwritePayload | undefined;
+  let everyoneOverwrite: OverwritePayload | undefined;
+  let rolesOverwrites: OverwritePayload[] = [];
 
   for (const overwrite of channel.permissionOverwrites || []) {
     // If the overwrite on this channel is specific to this member

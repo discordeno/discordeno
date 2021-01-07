@@ -1,10 +1,6 @@
 import { encode } from "../../deps.ts";
-import {
-  ActivityType,
-  ImageFormats,
-  ImageSize,
-  StatusType,
-} from "../types/mod.ts";
+import { ActivityType, StatusType } from "../api/types/gateway.ts";
+import { ImageFormats, ImageSize } from "../api/types/mod.ts";
 import { sendGatewayCommand } from "../ws/shard_manager.ts";
 
 export const sleep = (timeout: number) => {
@@ -22,7 +18,7 @@ export interface BotStatusRequest {
 export function editBotsStatus(
   status: StatusType,
   name?: string,
-  type = ActivityType.Game,
+  type: ActivityType = "GAME",
 ) {
   sendGatewayCommand("EDIT_BOTS_STATUS", { status, game: { name, type } });
 }
