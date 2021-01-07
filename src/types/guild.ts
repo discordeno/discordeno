@@ -497,7 +497,7 @@ export interface ModifyGuildRoleParams {
 }
 
 /** https://discord.com/developers/docs/resources/guild#get-guild-prune-count */
-export interface GetGuildPruneCountParaams {
+export interface GetGuildPruneCountParams {
   /** number of days to count prune for (1 or more), default: 7 */
   days?: number;
   /** role(s) to include, default: none */
