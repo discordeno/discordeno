@@ -1,18 +1,8 @@
-import {
-  ApplicationCommandOptionType,
-  InteractionResponseType,
-  InteractionType,
-} from "../../types/mod.ts";
 import { AllowedMentionType, Embed } from "./channel.ts";
 import { GuildMember } from "./guild.ts";
 
-export type {
-  ApplicationCommandOptionType,
-  InteractionResponseType,
-  InteractionType,
-};
 /** https://discord.com/developers/docs/interactions/slash-commands#create-global-application-command */
-export interface ApplicationCommandParams {
+export interface CreateApplicationCommandOptions {
   /** 3-32 character command name */
   name: string;
   /** 1-100 character description */
@@ -53,6 +43,17 @@ export interface ApplicationCommandOption {
   options?: ApplicationCommandOption[];
 }
 
+/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype */
+export type ApplicationCommandOptionType =
+  | "SUB_COMMAND"
+  | "SUB_COMMAND_GROUP"
+  | "STRING"
+  | "INTEGER"
+  | "BOOLEAN"
+  | "USER"
+  | "CHANNEL"
+  | "ROLE";
+
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptionchoice */
 export interface ApplicationCommandOptionChoice {
   /** 1-100 character choice name */
@@ -81,6 +82,11 @@ export interface Interaction {
   version: number;
 }
 
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */
+export type InteractionType =
+  | "PING"
+  | "APPLICATION_COMMAND";
+
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-applicationcommandinteractiondata */
 export interface ApplicationCommandInteractionData {
   /** the ID of the invoked command */
@@ -108,6 +114,14 @@ export interface InteractionResponse {
   /** an optional response message */
   data?: InteractionApplicationCommandCallbackData;
 }
+
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
+export type InteractionResponseType =
+  | "PONG"
+  | "ACKNOWLEDGE"
+  | "CHANNEL_MESSAGE"
+  | "CHANNEL_MESSAGE_WITH_SOURCE"
+  | "ACKNOWLEDGE_WITH_SOURCE";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
 export interface InteractionApplicationCommandCallbackData {
