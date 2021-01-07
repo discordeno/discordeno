@@ -1,11 +1,8 @@
-import { AuditLogEvent } from "../../types/mod.ts";
-import { ChannelTypes, Overwrite } from "./channel.ts";
+import { ChannelType, Overwrite } from "./channel.ts";
 import { Integration } from "./guild.ts";
 import { Role } from "./permissions.ts";
 import { User } from "./user.ts";
 import { Webhook } from "./webhook.ts";
-
-export { AuditLogEvent };
 
 // used
 export interface AuditLog {
@@ -30,12 +27,50 @@ export interface AuditLogEntry {
   /** id of the entry */
   id: string;
   /** type of action that occured */
-  actionType: AuditLogEvent;
+  actionType: AuditLogEventType;
   /** additional info for certain action types */
   options?: OptionalAuditEntryInfo;
   /** the reason for the change (0-512 characters) */
   reason?: string;
 }
+
+// used
+export type AuditLogEventType =
+  | "GUILD_UPDATE"
+  | "CHANNEL_CREATE"
+  | "CHANNEL_UPDATE"
+  | "CHANNEL_DELETE"
+  | "CHANNEL_OVERWRITE_CREATE"
+  | "CHANNEL_OVERWRITE_UPDATE"
+  | "CHANNEL_OVERWRITE_DELETE"
+  | "MEMBER_KICK"
+  | "MEMBER_PRUNE"
+  | "MEMBER_BAN_ADD"
+  | "MEMBER_BAN_REMOVE"
+  | "MEMBER_UPDATE"
+  | "MEMBER_ROLE_UPDATE"
+  | "MEMBER_MOVE"
+  | "MEMBER_DISCONNECT"
+  | "BOT_ADD"
+  | "ROLE_CREATE"
+  | "ROLE_UPDATE"
+  | "ROLE_DELETE"
+  | "INVITE_CREATE"
+  | "INVITE_UPDATE"
+  | "INVITE_DELETE"
+  | "WEBHOOK_CREATE"
+  | "WEBHOOK_UPDATE"
+  | "WEBHOOK_DELETE"
+  | "EMOJI_CREATE"
+  | "EMOJI_UPDATE"
+  | "EMOJI_DELETE"
+  | "MESSAGE_DELETE"
+  | "MESSAGE_BULK_DELETE"
+  | "MESSAGE_PIN"
+  | "MESSAGE_UNPIN"
+  | "INTEGRATION_CREATE"
+  | "INTEGRATION_UPDATE"
+  | "INTEGRATION_DELETE";
 
 // used
 export interface OptionalAuditEntryInfo {
@@ -156,7 +191,7 @@ export interface AuditLogChangeKey {
   /** object: any; the id of the changed entity - sometimes used in conjunction with other keys */
   id: string;
   /** object: any; type of entity created */
-  type: ChannelTypes | string;
+  type: ChannelType | string;
   /** object: integration; integration emoticons enabled/disabled */
   enableEmoticons: boolean;
   /** object: integration; integration expiring subscriber behavior changed */
@@ -176,41 +211,3 @@ export interface GetGuildAuditLogOptions {
   /** how many entries are returned (default 50, minimum 1, maximum 100) */
   limit: number;
 }
-
-// used
-export type AuditLogEventType =
-  | "GUILD_UPDATE"
-  | "CHANNEL_CREATE"
-  | "CHANNEL_UPDATE"
-  | "CHANNEL_DELETE"
-  | "CHANNEL_OVERWRITE_CREATE"
-  | "CHANNEL_OVERWRITE_UPDATE"
-  | "CHANNEL_OVERWRITE_DELETE"
-  | "MEMBER_KICK"
-  | "MEMBER_PRUNE"
-  | "MEMBER_BAN_ADD"
-  | "MEMBER_BAN_REMOVE"
-  | "MEMBER_UPDATE"
-  | "MEMBER_ROLE_UPDATE"
-  | "MEMBER_MOVE"
-  | "MEMBER_DISCONNECT"
-  | "BOT_ADD"
-  | "ROLE_CREATE"
-  | "ROLE_UPDATE"
-  | "ROLE_DELETE"
-  | "INVITE_CREATE"
-  | "INVITE_UPDATE"
-  | "INVITE_DELETE"
-  | "WEBHOOK_CREATE"
-  | "WEBHOOK_UPDATE"
-  | "WEBHOOK_DELETE"
-  | "EMOJI_CREATE"
-  | "EMOJI_UPDATE"
-  | "EMOJI_DELETE"
-  | "MESSAGE_DELETE"
-  | "MESSAGE_BULK_DELETE"
-  | "MESSAGE_PIN"
-  | "MESSAGE_UNPIN"
-  | "INTEGRATION_CREATE"
-  | "INTEGRATION_UPDATE"
-  | "INTEGRATION_DELETE";
