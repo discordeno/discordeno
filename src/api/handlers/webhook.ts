@@ -9,7 +9,6 @@ import {
   ExecuteSlashCommandOptions,
   ExecuteWebhookOptions,
   MessageCreateOptions,
-  UpsertSlashCommandOptions,
   WebhookCreateOptions,
   WebhookPayload,
 } from "../../types/mod.ts";
@@ -227,11 +226,14 @@ export function getSlashCommands(guildID?: string) {
 /**
  * Edit an existing slash command. If this command did not exist, it will create it.
  */
-export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
+export function upsertSlashCommand(
+  commandID: string,
+  options: CreateSlashCommandOptions,
+) {
   return RequestManager.post(
     options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(botID, options.id, options.guildID)
-      : endpoints.COMMANDS_ID(botID, options.id),
+      ? endpoints.COMMANDS_GUILD_ID(botID, commandID, options.guildID)
+      : endpoints.COMMANDS_ID(botID, commandID),
     {
       ...options,
     },
