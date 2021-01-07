@@ -386,9 +386,9 @@ export interface AddGuildMemberOptions {
   deaf?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/guild#modify-guild-member */
-export interface ModifyGuildMemberOptions {
-  /** value to set users nicckname to. Requires the MANAGENICKNAMES permission */
+// used
+export interface EditGuildMemberOptions {
+  /** value to set users nickname to. Requires the MANAGENICKNAMES permission */
   nick?: string | null;
   /** array of role ids the member is assigned. Requires the MANAGEROLES permission */
   roles?: string[] | null;

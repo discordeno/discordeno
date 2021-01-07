@@ -1,13 +1,6 @@
 import { botID } from "../../bot.ts";
 import { RequestManager } from "../../rest/mod.ts";
-import {
-  DMChannelCreatePayload,
-  EditMemberOptions,
-  Errors,
-  ImageFormats,
-  ImageSize,
-  MessageContent,
-} from "../../types/mod.ts";
+import { ChannelPayload } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasPermission,
@@ -17,6 +10,13 @@ import {
 import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { Member, structures } from "../structures/mod.ts";
+import {
+  EditGuildMemberOptions,
+  Errors,
+  ImageFormats,
+  ImageSize,
+  MessageContent,
+} from "../types/mod.ts";
 import { sendMessage } from "./channel.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
@@ -116,21 +116,21 @@ export async function removeRole(
 
 /** Send a message to a users DM. Note: this takes 2 API calls. 1 is to fetch the users dm channel. 2 is to send a message to that channel. */
 export async function sendDirectMessage(
-  memberID: string,
+  recipientID: string,
   content: string | MessageContent,
 ) {
-  let dmChannel = await cacheHandlers.get("channels", memberID);
+  let dmChannel = await cacheHandlers.get("channels", recipientID);
   if (!dmChannel) {
     // If not available in cache create a new one.
     const dmChannelData = await RequestManager.post(
       endpoints.USER_CREATE_DM,
-      { recipient_id: memberID },
-    ) as DMChannelCreatePayload;
+      { recipient_id: recipientID },
+    ) as ChannelPayload;
     // Channel create event will have added this channel to the cache
     await cacheHandlers.delete("channels", dmChannelData.id);
     const channel = await structures.createChannel(dmChannelData);
     // Recreate the channel and add it undert he users id
-    await cacheHandlers.set("channels", memberID, channel);
+    await cacheHandlers.set("channels", recipientID, channel);
     dmChannel = channel;
   }
 
@@ -164,7 +164,7 @@ export async function kick(guildID: string, memberID: string, reason?: string) {
 export async function editMember(
   guildID: string,
   memberID: string,
-  options: EditMemberOptions,
+  options: EditGuildMemberOptions,
 ) {
   if (options.nick) {
     if (options.nick.length > 32) {
@@ -234,7 +234,7 @@ export function moveMember(
   memberID: string,
   channelID: string,
 ) {
-  return editMember(guildID, memberID, { channel_id: channelID });
+  return editMember(guildID, memberID, { channelID });
 }
 
 /** Modifies the bot's username or avatar.
