@@ -1,4 +1,4 @@
-import { AllowedMentionType, Embed } from "./channel.ts";
+import { AllowedMentions, Embed } from "./channel.ts";
 import { GuildMember } from "./guild.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#create-global-application-command */
@@ -132,5 +132,5 @@ export interface InteractionApplicationCommandCallbackData {
   /** supports up to 10 embeds */
   embeds?: Embed[];
   /** allowed mentions object */
-  allowedMenntions?: AllowedMentionType;
+  allowedMentions?: AllowedMentions;
 }

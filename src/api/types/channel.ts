@@ -391,7 +391,7 @@ export type AllowedMentionType = "roles" | "users" | "everyone";
 
 // used
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mentions-structure */
-export interface Mentions {
+export interface AllowedMentions {
   /** An array of allowed mention types to parse from the content. */
   parse?: AllowedMentionType[];
   /** Array of roleIds to mention (Max size of 100) */
@@ -465,7 +465,7 @@ export interface MessageContent {
   /** jSON encoded body of any additional request fields. */
   jsonPayload?: string;
   /** allowed mentions for a message */
-  mentions?: Mentions;
+  mentions?: AllowedMentions;
   /** include to make your message a reply. Use MessageReply if you want to check the guild and channel. */
   reply?: string | MessageReference;
 }
@@ -489,7 +489,7 @@ export interface EditMessageOptions {
   /** edit the flags of a message (only SUPPRESSEMBEDS can currently be set/unset) */
   flags?: MessageFlag | null;
   /** allowed mentions for the message */
-  allowedMentions?: Mentions | null;
+  allowedMentions?: AllowedMentions | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#bulk-delete-messages-json-params */

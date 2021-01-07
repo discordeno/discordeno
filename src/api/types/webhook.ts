@@ -1,4 +1,4 @@
-import { AllowedMentionType, Embed } from "./channel.ts";
+import { AllowedMentions, Embed } from "./channel.ts";
 import { User } from "./user.ts";
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-resource */
@@ -47,13 +47,9 @@ export interface ModifyWebhookOptions {
 }
 
 /** https://discord.com/developers/docs/resources/webhook#execute-webhook */
-export interface ExecuteWebhookQueryOptions {
+export interface ExecuteWebhookOptions {
   /** waits for server confirmation of message send before response, and returns the created message body (defaults to false; when false a message that is not saved does not return an error) */
   wait?: boolean;
-}
-
-/** https://discord.com/developers/docs/resources/webhook#execute-webhook */
-export interface ExecuteWebhookOptions {
   /** the message contents (up to 2000 characters) */
   content?: string;
   /** override the default username of the webhook */
@@ -69,7 +65,7 @@ export interface ExecuteWebhookOptions {
   /** JSON-serialized  */
   payloadJson: string;
   /** allowed mentions for the message */
-  allowedMentions: AllowedMentionType;
+  allowedMentions: AllowedMentions;
 }
 
 /** https://discord.com/developers/docs/resources/webhook#execute-slackcompatible-webhook */
@@ -89,7 +85,7 @@ export interface EditWebhookMessageOptions {
   /** the messages contents (up to 2000 characters) */
   content?: string | null;
   /** embedded rich content */
-  embeds: Embed[];
+  embeds?: Embed[] | null;
   /** allowed mentions for the message */
-  allowedMentions: AllowedMentionType;
+  allowedMentions?: AllowedMentions | null;
 }
