@@ -4,7 +4,6 @@ import {
   ChannelPayload,
   CreateGuildBan,
   EmojiPayload,
-  GetGuildAuditLogParams,
   GuildFeatures,
   GuildMemberPayload,
   GuildPayload,
@@ -29,7 +28,12 @@ import {
   leaveGuild,
   unban,
 } from "../handlers/guild.ts";
-import { GuildMember, ImageFormats, ImageSize } from "../types/mod.ts";
+import {
+  GetGuildAuditLogOptions,
+  GuildMember,
+  ImageFormats,
+  ImageSize,
+} from "../types/mod.ts";
 import { Member } from "./member.ts";
 import { Role, structures } from "./mod.ts";
 import { Channel } from "./structures.ts";
@@ -207,7 +211,7 @@ export async function createGuild(data: GuildPayload, shardID: number) {
 
   if (members) initialMemberLoadQueue.set(guild.id, members);
 
-  return guild;
+  return guild as Guild;
 }
 
 export interface Guild {
@@ -331,7 +335,7 @@ export interface Guild {
   /** Edit the server. Requires the MANAGE_GUILD permission. */
   edit(options: ModifyGuildParams): Promise<any>;
   /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
-  auditLogs(options: GetGuildAuditLogParams): Promise<any>;
+  auditLogs(options: GetGuildAuditLogOptions): Promise<any>;
   /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
   getBan(memberID: string): Promise<BanPayload>;
   /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */

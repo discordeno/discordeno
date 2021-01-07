@@ -123,7 +123,7 @@ export async function createMember(data: GuildMemberPayload, guildID: string) {
 
   await cacheHandlers.set("members", member.id, member);
 
-  return member;
+  return member as Member;
 }
 
 export interface Member {
