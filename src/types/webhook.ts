@@ -92,7 +92,7 @@ export interface EditWebhookMessageParams {
   /** the messages contents (up to 2000 characters) */
   content?: string | null;
   /** embedded rich content */
-  embeds: EmbedPayload[];
+  embeds?: EmbedPayload[] | null;
   /** allowed mentions for the message */
-  allowed_mentions: AllowedMentionsPayload;
+  allowed_mentions?: AllowedMentionsPayload | null;
 }

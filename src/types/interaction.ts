@@ -135,5 +135,5 @@ export interface InteractionApplicationCommandCallbackData {
   /** supports up to 10 embeds */
   embeds?: EmbedPayload[];
   /** allowed mentions object */
-  allowed_menntions?: AllowedMentionsPayload;
+  allowed_mentions?: AllowedMentionsPayload;
 }
