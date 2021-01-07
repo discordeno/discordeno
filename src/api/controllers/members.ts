@@ -62,6 +62,7 @@ export async function handleInternalGuildMemberUpdate(data: GatewayPayload) {
     deaf: guildMember?.deaf || false,
     mute: guildMember?.mute || false,
     roles: payload.roles,
+    nick: payload.nick === undefined ? null : payload.nick,
   };
   const member = await structures.createMember(
     newMemberData,

@@ -1,17 +1,17 @@
 import { botID, eventHandlers } from "../../bot.ts";
 import {
-  BaseMessageReactionPayload,
-  DiscordPayload,
-  MessageReactionPayload,
+  GatewayPayload,
+  MessageReactionAddEventPayload,
+  MessageReactionRemoveAllEventPayload,
   MessageReactionRemoveEmojiPayload,
 } from "../../types/mod.ts";
 import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
-export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
+export async function handleInternalMessageReactionAdd(data: GatewayPayload) {
   if (data.t !== "MESSAGE_REACTION_ADD") return;
 
-  const payload = data.d as MessageReactionPayload;
+  const payload = data.d as MessageReactionAddEventPayload;
   const message = await cacheHandlers.get("messages", payload.message_id);
 
   if (message) {
@@ -60,11 +60,11 @@ export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
 }
 
 export async function handleInternalMessageReactionRemove(
-  data: DiscordPayload,
+  data: GatewayPayload,
 ) {
   if (data.t !== "MESSAGE_REACTION_REMOVE") return;
 
-  const payload = data.d as MessageReactionPayload;
+  const payload = data.d as MessageReactionAddEventPayload;
   const message = await cacheHandlers.get("messages", payload.message_id);
 
   if (message) {
@@ -115,13 +115,15 @@ export async function handleInternalMessageReactionRemove(
   );
 }
 
-export function handleInternalMessageReactionRemoveAll(data: DiscordPayload) {
+export function handleInternalMessageReactionRemoveAll(data: GatewayPayload) {
   if (data.t !== "MESSAGE_REACTION_REMOVE_ALL") return;
 
-  eventHandlers.reactionRemoveAll?.(data.d as BaseMessageReactionPayload);
+  eventHandlers.reactionRemoveAll?.(
+    data.d as MessageReactionRemoveAllEventPayload,
+  );
 }
 
-export function handleInternalMessageReactionRemoveEmoji(data: DiscordPayload) {
+export function handleInternalMessageReactionRemoveEmoji(data: GatewayPayload) {
   if (data.t !== "MESSAGE_REACTION_REMOVE_EMOJI") return;
 
   eventHandlers.reactionRemoveEmoji?.(
