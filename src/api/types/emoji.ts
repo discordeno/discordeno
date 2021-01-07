@@ -1,6 +1,6 @@
 import { User } from "./user.ts";
 
-/** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
+// used
 export interface Emoji {
   /** emoji id */
   id: string | null;
@@ -20,8 +20,8 @@ export interface Emoji {
   available?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
-export interface CreateGuildEmojiOptions {
+// used
+export interface CreateEmojiOptions {
   /** name of the emoji */
   name: string;
   /** the 128x128 emoji image (Data URI scheme) */
@@ -30,8 +30,8 @@ export interface CreateGuildEmojiOptions {
   roles: string[];
 }
 
-/** https://discord.com/developers/docs/resources/emoji#modify-guild-emoji */
-export interface ModifyGuildEmojiOptions {
+// used
+export interface EditGuildEmojiOptions {
   /** name of the emoji */
   name?: string;
   /** roles to which this emoji will be whitelisted */

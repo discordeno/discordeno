@@ -13,7 +13,7 @@ import {
 } from "../../types/mod.ts";
 import { Channel, ChannelTypes, Overwrite } from "./channel.ts";
 import { Emoji } from "./emoji.ts";
-import { Role } from "./permissions.ts";
+import { Permissions, Role } from "./permissions.ts";
 import { User } from "./user.ts";
 import { VoiceState } from "./voice.ts";
 
@@ -31,7 +31,7 @@ export type {
   VerificationLevel,
 };
 
-/** https://discord.com/developers/docs/resources/guild#guild-object */
+// used
 export interface Guild {
   /** guild id */
   id: string;
@@ -42,7 +42,7 @@ export interface Guild {
   /** icon hash, returned when in the template object */
   iconHash?: string | null;
   /** splash hash */
-  splashHash: string | null;
+  splash: string | null;
   /** discovery splash hash; only present for guilds with the "DISCOVERABLE" feature */
   discoveryAplash: string | null;
   /** true if the user is the owner of the guild */
@@ -298,8 +298,8 @@ export interface GetGuildOptions {
   withCounts?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/guild#modify-guild */
-export interface ModifyGuildOptions {
+//used
+export interface EditGuildOptions {
   /** guild name */
   name?: string;
   /** guild voice region id */
@@ -356,8 +356,8 @@ export interface CreateChannelOptions {
   nsfw?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions */
-export interface ModifyGuildChannelPositionsOptions {
+// used
+export interface EditGuildChannelPositionOptions {
   /** channel id */
   id: string;
   /** sorting position of the channel */
@@ -414,22 +414,22 @@ export interface BanOptions {
   reason?: string;
 }
 
-/** https://discord.com/developers/docs/resources/guild#create-guild-role */
+// used
 export interface CreateGuildRoleOptions {
   /** name of the role, default: "new role" */
   name?: string;
-  /** bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
-  permissions?: string;
+  /** Array of permission names for the enabled permissions, default: everyone permissions in guild */
+  permissions?: Permissions[];
   /** RGB color value, default: 0 */
   color?: number;
   /** whether the role should be displayed separately in the sidebar, default: false */
   hoist?: boolean;
   /** whether the role should be mentionable, default: false */
-  mentionable: boolean;
+  mentionable?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/guild#modify-guild-role-positions */
-export interface ModifyGuildRolePositionsOptions {
+// used
+export interface EditGuildRolePositionOptions {
   /** role id */
   id: string;
   /** sorting position of the role */
@@ -450,16 +450,16 @@ export interface ModifyGuildRoleOptions {
   mentionable?: boolean | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#get-guild-prune-count */
-export interface GetGuildPruneCountParaams {
+// used
+export interface GetGuildPruneOptions {
   /** number of days to count prune for (1 or more), default: 7 */
   days?: number;
   /** role(s) to include, default: none */
-  includeRoles: string | string[];
+  includeRoles?: string | string[];
 }
 
-/** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
-export interface BeginGuildPruneOptions {
+// used
+export interface StartGuildPruneOptions {
   /** number of days to prune (1 or more), default: 7 */
   days?: number;
   /** whether 'pruned' is returned, discouraged for large guilds, default: true */
@@ -476,8 +476,8 @@ export interface CreateGuildIntegrationOptions {
   id: string;
 }
 
-/** https://discord.com/developers/docs/resources/guild#modify-guild-integration */
-export interface ModifyGuildIntegration {
+// used
+export interface EditGuildIntegrationOptions {
   /** the behavior when an integration subscription lapses (see the integration expire behaviors documentation) */
   expireBehavior?: number | null;
   /** perios (in days) where the integration will ignore lapsed subscriptions */
@@ -499,4 +499,16 @@ export interface ModifyGuildMembershipScreeningForm {
   formFields: string;
   /** the server description to show in the screening form */
   description: string;
+}
+
+// used
+export interface FetchMembersOptions {
+  /** used to specify if you want the presences of the matched members. Default = false. */
+  presences?: boolean;
+  /** only returns members whose username or nickname starts with this string. DO NOT INCLUDE discriminators. If a string is provided, the max amount of members that can be fetched is 100. Default = return all members. */
+  query?: string;
+  /** used to specify which users to fetch specifically. */
+  userIDs?: string[];
+  /** maximum number of members to return that match the query. Default = 0 which will return all members. */
+  limit?: number;
 }

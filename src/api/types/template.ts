@@ -1,8 +1,8 @@
 import { Guild } from "./guild.ts";
 import { User } from "./user.ts";
 
-/** https://discord.com/developers/docs/resources/template#template-resource */
-export interface Template {
+// used
+export interface GuildTemplate {
   /** the template code (unique ID) */
   code: string;
   /** template name */
@@ -35,7 +35,7 @@ export interface CreateGuildFromTemplateOptions {
   icon?: string;
 }
 
-/** https://discord.com/developers/docs/resources/template#create-guild-template */
+// used
 export interface CreateGuildTemplateOptions {
   /** name of the template (1-100 characters) */
   name: string;
@@ -43,8 +43,8 @@ export interface CreateGuildTemplateOptions {
   description?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/template#modify-guild-template */
-export interface ModifyGuildTemplateOptions {
+// used
+export interface EditGuildTemplateOptions {
   /** name of the template (1-100 characters) */
   name?: string;
   /** description for the template (0-120 characters) */

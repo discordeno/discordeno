@@ -1,7 +1,7 @@
 import { BitwisePermissionFlags } from "../../types/mod.ts";
 export { BitwisePermissionFlags as Permissions };
 
-/** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
+// used
 export interface Role {
   /** role id */
   id: string;

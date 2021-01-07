@@ -1,51 +1,60 @@
 import { identifyPayload } from "../../bot.ts";
 import { RequestManager } from "../../rest/mod.ts";
 import {
-  AuditLogs,
-  BannedUser,
-  BanOptions,
-  ChannelCreateOptions,
-  ChannelCreatePayload,
+  BanPayload,
+  ChannelPayload,
   ChannelTypes,
-  CreateEmojisOptions,
-  CreateGuildFromTemplate,
-  CreateGuildPayload,
-  CreateGuildTemplate,
-  CreateRoleOptions,
-  CreateServerOptions,
-  EditEmojisOptions,
-  EditGuildTemplate,
-  EditIntegrationOptions,
-  Errors,
-  FetchMembersOptions,
-  GetAuditLogsOptions,
-  GuildEditOptions,
-  GuildTemplate,
-  ImageFormats,
-  ImageSize,
+  GuildMemberPayload,
+  GuildPayload,
   Intents,
-  MemberCreatePayload,
-  PositionSwap,
-  PruneOptions,
-  PrunePayload,
-  RoleData,
-  UpdateGuildPayload,
+  RolePayload,
+  TemplatePayload,
   UserPayload,
 } from "../../types/mod.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
+import { toPermissionOverwritesPayload } from "../../util/converters.ts";
 import { botHasPermission, calculateBits } from "../../util/permissions.ts";
-import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
+import {
+  formatImageURL,
+  keysToCamel,
+  keysToSnake,
+  urlToBase64,
+} from "../../util/utils.ts";
 import { requestAllMembers } from "../../ws/shard_manager.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { Guild, Member, structures, Template } from "../structures/mod.ts";
+import {
+  AuditLogEvent,
+  BanOptions,
+  CreateChannelOptions,
+  CreateEmojiOptions,
+  CreateGuildFromTemplateOptions,
+  CreateGuildOptions,
+  CreateGuildRoleOptions,
+  CreateGuildTemplateOptions,
+  EditGuildChannelPositionOptions,
+  EditGuildEmojiOptions,
+  EditGuildIntegrationOptions,
+  EditGuildOptions,
+  EditGuildRolePositionOptions,
+  EditGuildTemplateOptions,
+  Emoji,
+  Errors,
+  FetchMembersOptions,
+  GetGuildAuditLogOptions,
+  GetGuildPruneOptions,
+  ImageFormats,
+  ImageSize,
+  StartGuildPruneOptions,
+} from "../types/mod.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
-export async function createServer(options: CreateServerOptions) {
+export async function createServer(options: CreateGuildOptions) {
   const guild = await RequestManager.post(
     endpoints.GUILDS,
     options,
-  ) as CreateGuildPayload;
+  ) as GuildPayload;
   return structures.createGuild(guild, 0);
 }
 
@@ -108,7 +117,7 @@ export function guildBannerURL(
 export async function createGuildChannel(
   guild: Guild,
   name: string,
-  options?: ChannelCreateOptions,
+  options?: CreateChannelOptions,
 ) {
   const hasPerm = await botHasPermission(
     guild.id,
@@ -120,16 +129,12 @@ export async function createGuildChannel(
 
   const result =
     (await RequestManager.post(endpoints.GUILD_CHANNELS(guild.id), {
-      ...options,
-      name,
-      permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
-        ...perm,
-
-        allow: calculateBits(perm.allow),
-        deny: calculateBits(perm.deny),
-      })),
+      ...keysToSnake(options),
       type: options?.type || ChannelTypes.GUILD_TEXT,
-    })) as ChannelCreatePayload;
+      permission_overwrites: toPermissionOverwritesPayload(
+        options?.permissionOverwrites,
+      ),
+    })) as ChannelPayload;
 
   return await structures.createChannel(result);
 }
@@ -158,7 +163,7 @@ export async function deleteChannel(
 export async function getChannels(guildID: string, addToCache = true) {
   const result = await RequestManager.get(
     endpoints.GUILD_CHANNELS(guildID),
-  ) as ChannelCreatePayload[];
+  ) as ChannelPayload[];
   return Promise.all(result.map(async (res) => {
     const channel = await structures.createChannel(res, guildID);
     if (addToCache) {
@@ -175,7 +180,7 @@ export async function getChannels(guildID: string, addToCache = true) {
 export async function getChannel(channelID: string, addToCache = true) {
   const result = await RequestManager.get(
     endpoints.GUILD_CHANNEL(channelID),
-  ) as ChannelCreatePayload;
+  ) as ChannelPayload;
   const channel = await structures.createChannel(result, result.guild_id);
   if (addToCache) await cacheHandlers.set("channels", channel.id, channel);
   return channel;
@@ -184,7 +189,7 @@ export async function getChannel(channelID: string, addToCache = true) {
 /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
 export function swapChannels(
   guildID: string,
-  channelPositions: PositionSwap[],
+  channelPositions: EditGuildChannelPositionOptions[],
 ) {
   if (channelPositions.length < 2) {
     throw "You must provide at least two channels to be swapped.";
@@ -209,7 +214,7 @@ export async function getMember(
 
   const data = await RequestManager.get(
     endpoints.GUILD_MEMBER(guildID, id),
-  ) as MemberCreatePayload;
+  ) as GuildMemberPayload;
 
   return await structures.createMember(data, guildID);
 }
@@ -236,7 +241,7 @@ export async function createEmoji(
   guildID: string,
   name: string,
   image: string,
-  options: CreateEmojisOptions,
+  options: CreateEmojiOptions,
 ) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_EMOJIS"]);
   if (!hasPerm) {
@@ -258,17 +263,16 @@ export async function createEmoji(
 export async function editEmoji(
   guildID: string,
   id: string,
-  options: EditEmojisOptions,
+  options: EditGuildEmojiOptions,
 ) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_EMOJIS"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_EMOJIS);
   }
 
-  return RequestManager.patch(endpoints.GUILD_EMOJI(guildID, id), {
-    name: options.name,
-    roles: options.roles,
-  });
+  return keysToCamel(
+    await RequestManager.patch(endpoints.GUILD_EMOJI(guildID, id), options),
+  ) as Emoji;
 }
 
 /** Delete the given emoji. Requires the MANAGE_EMOJIS permission. Returns 204 No Content on success. */
@@ -296,7 +300,7 @@ export function emojiURL(id: string, animated = false) {
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
 export async function createGuildRole(
   guildID: string,
-  options: CreateRoleOptions,
+  options: CreateGuildRoleOptions,
   reason?: string,
 ) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
@@ -311,10 +315,9 @@ export async function createGuildRole(
       permissions: calculateBits(options?.permissions || []),
       reason,
     },
-  );
+  ) as RolePayload;
 
-  const roleData = result as RoleData;
-  const role = await structures.createRole(roleData);
+  const role = await structures.createRole(result);
   const guild = await cacheHandlers.get("guilds", guildID);
   guild?.roles.set(role.id, role);
   return role;
@@ -324,7 +327,7 @@ export async function createGuildRole(
 export async function editRole(
   guildID: string,
   id: string,
-  options: CreateRoleOptions,
+  options: CreateGuildRoleOptions,
 ) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
   if (!hasPerm) {
@@ -363,18 +366,29 @@ export async function getRoles(guildID: string) {
 }
 
 /** Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. */
-export async function swapRoles(guildID: string, rolePositons: PositionSwap) {
+export async function swapRoles(
+  guildID: string,
+  rolePositons: EditGuildRolePositionOptions,
+) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-  return RequestManager.patch(endpoints.GUILD_ROLES(guildID), rolePositons);
+  const roles = await RequestManager.patch(
+    endpoints.GUILD_ROLES(guildID),
+    rolePositons,
+  ) as RolePayload[];
+
+  return roles.map((role) => structures.createRole(role));
 }
 
 /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
-export async function getPruneCount(guildID: string, options: PruneOptions) {
-  if (options.days < 1) {
+export async function getPruneCount(
+  guildID: string,
+  options: GetGuildPruneOptions,
+) {
+  if (options.days && options.days < 1) {
     throw new Error(Errors.PRUNE_MIN_DAYS);
   }
 
@@ -385,15 +399,23 @@ export async function getPruneCount(guildID: string, options: PruneOptions) {
 
   const result = await RequestManager.get(
     endpoints.GUILD_PRUNE(guildID),
-    { ...options, include_roles: options.roles.join(",") },
-  ) as PrunePayload;
+    {
+      ...options,
+      include_roles: Array.isArray(options.includeRoles)
+        ? options.includeRoles.join(",")
+        : options.includeRoles,
+    },
+  ) as { pruned: number };
 
   return result.pruned;
 }
 
 /** Begin pruning all members in the given time period */
-export async function pruneMembers(guildID: string, options: PruneOptions) {
-  if (options.days < 1) {
+export async function pruneMembers(
+  guildID: string,
+  options: StartGuildPruneOptions,
+) {
+  if (options.days && options.days < 1) {
     throw new Error(Errors.PRUNE_MIN_DAYS);
   }
 
@@ -402,10 +424,17 @@ export async function pruneMembers(guildID: string, options: PruneOptions) {
     throw new Error(Errors.MISSING_KICK_MEMBERS);
   }
 
-  return RequestManager.post(
+  const result = await RequestManager.post(
     endpoints.GUILD_PRUNE(guildID),
-    { ...options, include_roles: options.roles.join(",") },
-  );
+    {
+      ...keysToSnake(options),
+      include_roles: Array.isArray(options.includeRoles)
+        ? options.includeRoles.join(",")
+        : options.includeRoles,
+    },
+  ) as { pruned: number };
+
+  return result.pruned;
 }
 
 /**
@@ -437,7 +466,7 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
 export async function getAuditLogs(
   guildID: string,
-  options: GetAuditLogsOptions,
+  options: GetGuildAuditLogOptions,
 ) {
   const hasPerm = await botHasPermission(guildID, ["VIEW_AUDIT_LOG"]);
   if (!hasPerm) {
@@ -446,8 +475,8 @@ export async function getAuditLogs(
 
   return RequestManager.get(endpoints.GUILD_AUDIT_LOGS(guildID), {
     ...options,
-    action_type: options.action_type
-      ? AuditLogs[options.action_type]
+    action_type: options.actionType
+      ? AuditLogEvent[options.actionType]
       : undefined,
     limit: options.limit && options.limit >= 1 && options.limit <= 100
       ? options.limit
@@ -501,7 +530,7 @@ export async function getIntegrations(guildID: string) {
 export async function editIntegration(
   guildID: string,
   id: string,
-  options: EditIntegrationOptions,
+  options: EditGuildIntegrationOptions,
 ) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
   if (!hasPerm) {
@@ -510,7 +539,7 @@ export async function editIntegration(
 
   return RequestManager.patch(
     endpoints.GUILD_INTEGRATION(guildID, id),
-    options,
+    keysToSnake(options),
   );
 }
 
@@ -543,9 +572,9 @@ export async function getBans(guildID: string) {
 
   const results = await RequestManager.get(
     endpoints.GUILD_BANS(guildID),
-  ) as BannedUser[];
+  ) as BanPayload[];
 
-  return new Collection<string, BannedUser>(
+  return new Collection<string, BanPayload>(
     results.map((res) => [res.user.id, res]),
   );
 }
@@ -559,7 +588,7 @@ export async function getBan(guildID: string, memberID: string) {
 
   return await RequestManager.get(
     endpoints.GUILD_BAN(guildID, memberID),
-  ) as Promise<BannedUser>;
+  ) as Promise<BanPayload>;
 }
 
 /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
@@ -571,7 +600,7 @@ export async function ban(guildID: string, id: string, options: BanOptions) {
 
   return RequestManager.put(
     endpoints.GUILD_BAN(guildID, id),
-    { ...options, delete_message_days: options.days },
+    { ...options, delete_message_days: options.deleteDays },
   );
 }
 
@@ -585,7 +614,7 @@ export async function unban(guildID: string, id: string) {
 }
 
 /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
-export async function editGuild(guildID: string, options: GuildEditOptions) {
+export async function editGuild(guildID: string, options: EditGuildOptions) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
@@ -603,7 +632,9 @@ export async function editGuild(guildID: string, options: GuildEditOptions) {
     options.splash = await urlToBase64(options.splash);
   }
 
-  return RequestManager.patch(endpoints.GUILD(guildID), options);
+  return keysToCamel(
+    RequestManager.patch(endpoints.GUILD(guildID), keysToSnake(options)),
+  ) as Guild;
 }
 
 /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
@@ -651,11 +682,13 @@ export function getUser(userID: string) {
  * This function fetches a guild's data. This is not the same data as a GUILD_CREATE.
  * So it does not cache the guild, you must do it manually.
  * */
-export function getGuild(guildID: string, counts = true) {
-  return RequestManager.get(
-    endpoints.GUILD(guildID),
-    { with_counts: counts },
-  ) as Promise<UpdateGuildPayload>;
+export async function getGuild(guildID: string, withCounts = true) {
+  return keysToCamel(
+    await RequestManager.get(
+      endpoints.GUILD(guildID),
+      { with_counts: withCounts },
+    ),
+  ) as Guild;
 }
 
 /** Returns the guild template if it exists */
@@ -674,7 +707,7 @@ export function getGuildTemplate(
  */
 export async function createGuildFromTemplate(
   templateCode: string,
-  data: CreateGuildFromTemplate,
+  options: CreateGuildFromTemplateOptions,
 ) {
   if (await cacheHandlers.size("guilds") >= 10) {
     throw new Error(
@@ -682,14 +715,14 @@ export async function createGuildFromTemplate(
     );
   }
 
-  if (data.icon) {
-    data.icon = await urlToBase64(data.icon);
+  if (options.icon) {
+    options.icon = await urlToBase64(options.icon);
   }
 
   return await RequestManager.post(
     endpoints.GUILD_TEMPLATE(templateCode),
-    data,
-  ) as Promise<CreateGuildPayload>;
+    options,
+  ) as Promise<GuildPayload>;
 }
 
 /**
@@ -702,7 +735,7 @@ export async function getGuildTemplates(guildID: string) {
 
   const templates = await RequestManager.get(
     endpoints.GUILD_TEMPLATES(guildID),
-  ) as GuildTemplate[];
+  ) as TemplatePayload[];
   return templates.map((template) => structures.createTemplate(template));
 }
 
@@ -719,7 +752,7 @@ export async function deleteGuildTemplate(
 
   const deletedTemplate = await RequestManager.delete(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
-  ) as GuildTemplate;
+  ) as TemplatePayload;
   return structures.createTemplate(deletedTemplate);
 }
 
@@ -731,7 +764,7 @@ export async function deleteGuildTemplate(
  */
 export async function createGuildTemplate(
   guildID: string,
-  data: CreateGuildTemplate,
+  data: CreateGuildTemplateOptions,
 ) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
   if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
@@ -750,7 +783,7 @@ export async function createGuildTemplate(
   const template = await RequestManager.post(
     endpoints.GUILD_TEMPLATES(guildID),
     data,
-  ) as GuildTemplate;
+  ) as TemplatePayload;
   return structures.createTemplate(template);
 }
 
@@ -764,7 +797,7 @@ export async function syncGuildTemplate(guildID: string, templateCode: string) {
 
   const template = await RequestManager.put(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
-  ) as GuildTemplate;
+  ) as TemplatePayload;
   return structures.createTemplate(template);
 }
 
@@ -775,7 +808,7 @@ export async function syncGuildTemplate(guildID: string, templateCode: string) {
 export async function editGuildTemplate(
   guildID: string,
   templateCode: string,
-  data: EditGuildTemplate,
+  data: EditGuildTemplateOptions,
 ) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
   if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
@@ -794,6 +827,6 @@ export async function editGuildTemplate(
   const template = await RequestManager.patch(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
     data,
-  ) as GuildTemplate;
+  ) as TemplatePayload;
   return structures.createTemplate(template);
 }
