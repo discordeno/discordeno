@@ -1,6 +1,5 @@
 import { botID } from "../../bot.ts";
 import {
-  BanPayload,
   ChannelPayload,
   CreateGuildBan,
   EmojiPayload,
@@ -29,6 +28,7 @@ import {
   unban,
 } from "../handlers/guild.ts";
 import {
+  Ban,
   GetGuildAuditLogOptions,
   GuildMember,
   ImageFormats,
@@ -337,9 +337,9 @@ export interface Guild {
   /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
   auditLogs(options: GetGuildAuditLogOptions): Promise<any>;
   /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
-  getBan(memberID: string): Promise<BanPayload>;
+  getBan(memberID: string): Promise<Ban>;
   /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
-  bans(): Promise<Collection<string, BanPayload>>;
+  bans(): Promise<Collection<string, Ban>>;
   /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
   ban(memberID: string, options: CreateGuildBan): Promise<any>;
   /** Remove the ban for a user. Requires BAN_MEMBERS permission */

@@ -2,7 +2,6 @@ import {
   CreateGuildBan,
   CreateMessageParams,
   GuildMemberPayload,
-  ModifyGuildMemberParams,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
@@ -17,7 +16,12 @@ import {
   removeRole,
   sendDirectMessage,
 } from "../handlers/member.ts";
-import { GuildMember, ImageFormats, ImageSize } from "../types/mod.ts";
+import {
+  EditGuildMemberOptions,
+  GuildMember,
+  ImageFormats,
+  ImageSize,
+} from "../types/mod.ts";
 import { Guild } from "./guild.ts";
 
 const baseMember: Partial<Member> = {
@@ -176,7 +180,7 @@ export interface Member {
   /** Kick the member from a guild */
   kick(guildID: string, reason?: string): Promise<any>;
   /** Edit the member in a guild */
-  edit(guildID: string, options: ModifyGuildMemberParams): Promise<any>;
+  edit(guildID: string, options: EditGuildMemberOptions): Promise<any>;
   /** Ban a member in a guild */
   ban(guildID: string, options: CreateGuildBan): Promise<any>;
   /** Add a role to the member */
