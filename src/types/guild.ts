@@ -434,7 +434,7 @@ export interface AddGuildMemberParams {
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-member */
 export interface ModifyGuildMemberParams {
-  /** value to set users nicckname to. Requires the MANAGE_NICKNAMES permission */
+  /** value to set users nickname to. Requires the MANAGE_NICKNAMES permission */
   nick?: string | null;
   /** array of role ids the member is assigned. Requires the MANAGE_ROLES permission */
   roles?: string[] | null;
