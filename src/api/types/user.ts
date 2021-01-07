@@ -1,6 +1,6 @@
 import { Integration } from "./guild.ts";
 
-/** https://discord.com/developers/docs/resources/user#users-resource */
+// used
 export interface User {
   /**the user's id */
   id: string;
