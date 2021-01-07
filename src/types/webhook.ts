@@ -213,8 +213,3 @@ export interface EditSlashResponseOptions extends SlashCommandCallbackData {
   /** If this is not provided, it will default to editing the original response. */
   messageID?: string;
 }
-
-export interface UpsertSlashCommandOptions {
-  id: string;
-  guildID?: string;
-}
