@@ -7,19 +7,19 @@ import { Webhook } from "./webhook.ts";
 
 export { AuditLogEvent };
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-object */
+// used
 export interface AuditLog {
   /** list of webhooks found in the audit log */
   webhooks: Webhook[];
   /** list of users found in the audit log */
   users: User[];
   /** list of audit log entries */
-  entries: AuditLogEntry[];
+  auditLogEntries: AuditLogEntry[];
   /** list of partial integration objects */
   integrations: Partial<Integration>[];
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
+// used
 export interface AuditLogEntry {
   /** id of the affected entity (webhook, user, role, etc.) */
   targetID: string | null;
@@ -37,7 +37,7 @@ export interface AuditLogEntry {
   reason?: string;
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
+// used
 export interface OptionalAuditEntryInfo {
   /** number of days after which inactive members were kicked, type: MEMBERPRUNE */
   deleteMessageDays: string;
@@ -57,7 +57,7 @@ export interface OptionalAuditEntryInfo {
   roleName: string;
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
+// used
 export interface AuditLogChange {
   /** new value of the key */
   newValue?: AuditLogChangeKey;
@@ -67,7 +67,7 @@ export interface AuditLogChange {
   key: string;
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-key */
+// used
 export interface AuditLogChangeKey {
   /** object: guild; name changed */
   name: string;

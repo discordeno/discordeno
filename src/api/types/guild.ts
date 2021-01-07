@@ -152,7 +152,7 @@ export interface GuildPreview {
   description: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-widget-object-guild-widget-structure */
+// used
 export interface GuildWidget {
   /** whether the widget is enabled */
   enabled: boolean;
@@ -409,7 +409,7 @@ export interface ModifyCurrentUserNickOptions {
 // used
 export interface BanOptions {
   /** number of days to delete messages for (0-7) */
-  deleteDays?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  deleteMessageDays?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
   /** reason for the ban */
   reason?: string;
 }

@@ -74,6 +74,7 @@ export const endpoints = {
   GUILD_CHANNELS: (id: string) => `${GUILDS_BASE(id)}/channels`,
   GUILD_CHANNEL: (id: string) => `${baseEndpoints.BASE_URL}/channels/${id}`,
   GUILD_EMBED: (id: string) => `${GUILDS_BASE(id)}/widget`,
+  GUILD_GET_EMBED: (id: string) => `${GUILDS_BASE(id)}/widget.json`,
   GUILD_EMOJI: (id: string, emoji_id: string) =>
     `${GUILDS_BASE(id)}/emojis/${emoji_id}`,
   GUILD_EMOJIS: (id: string) => `${GUILDS_BASE(id)}/emojis`,

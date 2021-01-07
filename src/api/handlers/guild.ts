@@ -1,11 +1,13 @@
 import { identifyPayload } from "../../bot.ts";
 import { RequestManager } from "../../rest/mod.ts";
 import {
+  AuditLogPayload,
   BanPayload,
   ChannelPayload,
   ChannelTypes,
   GuildMemberPayload,
   GuildPayload,
+  GuildWidgetPayload,
   Intents,
   RolePayload,
   TemplatePayload,
@@ -25,8 +27,11 @@ import { requestAllMembers } from "../../ws/shard_manager.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { Guild, Member, structures, Template } from "../structures/mod.ts";
 import {
+  AuditLog,
   AuditLogEvent,
+  Ban,
   BanOptions,
+  Channel,
   CreateChannelOptions,
   CreateEmojiOptions,
   CreateGuildFromTemplateOptions,
@@ -44,9 +49,15 @@ import {
   FetchMembersOptions,
   GetGuildAuditLogOptions,
   GetGuildPruneOptions,
+  GuildWidget,
   ImageFormats,
   ImageSize,
+  Integration,
+  Invite,
+  Role,
   StartGuildPruneOptions,
+  VoiceRegion,
+  Webhook,
 } from "../types/mod.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
@@ -143,7 +154,6 @@ export async function createGuildChannel(
 export async function deleteChannel(
   guildID: string,
   channelID: string,
-  reason?: string,
 ) {
   const hasPerm = await botHasPermission(
     guildID,
@@ -153,7 +163,9 @@ export async function deleteChannel(
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
 
-  return RequestManager.delete(endpoints.CHANNEL(channelID), { reason });
+  return keysToCamel(
+    await RequestManager.delete(endpoints.CHANNEL(channelID)),
+  ) as Channel;
 }
 
 /** Returns a list of guild channel objects.
@@ -252,11 +264,13 @@ export async function createEmoji(
     image = await urlToBase64(image);
   }
 
-  return RequestManager.post(endpoints.GUILD_EMOJIS(guildID), {
+  const result = await RequestManager.post(endpoints.GUILD_EMOJIS(guildID), {
     ...options,
     name,
     image,
   });
+
+  return keysToCamel(result) as Emoji;
 }
 
 /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */
@@ -334,12 +348,14 @@ export async function editRole(
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-  return RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), {
+  const result = await RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), {
     ...options,
     permissions: options.permissions
       ? calculateBits(options.permissions)
       : undefined,
-  });
+  }) as RolePayload;
+
+  return structures.createRole(result);
 }
 
 /** Delete a guild role. Requires the MANAGE_ROLES permission. */
@@ -355,6 +371,7 @@ export async function deleteRole(guildID: string, id: string) {
 /** Returns a list of role objects for the guild.
 *
 * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your roles will be cached in your guild.**
+* This function does not cache the roles.
 */
 export async function getRoles(guildID: string) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
@@ -362,7 +379,11 @@ export async function getRoles(guildID: string) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-  return RequestManager.get(endpoints.GUILD_ROLES(guildID));
+  return keysToCamel(
+    await RequestManager.get(
+      endpoints.GUILD_ROLES(guildID),
+    ),
+  ) as Role[];
 }
 
 /** Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. */
@@ -473,17 +494,20 @@ export async function getAuditLogs(
     throw new Error(Errors.MISSING_VIEW_AUDIT_LOG);
   }
 
-  return RequestManager.get(endpoints.GUILD_AUDIT_LOGS(guildID), {
-    ...options,
+  const result = await RequestManager.get(endpoints.GUILD_AUDIT_LOGS(guildID), {
+    ...keysToSnake(options),
     action_type: options.actionType
       ? AuditLogEvent[options.actionType]
       : undefined,
     limit: options.limit && options.limit >= 1 && options.limit <= 100
       ? options.limit
       : 50,
-  });
+  }) as AuditLogPayload;
+
+  return keysToCamel(result) as AuditLog;
 }
 
+// TODO(itohatweb): better return type (https://discord.com/developers/docs/resources/guild#get-guild-widget)
 /** Returns the guild embed object. Requires the MANAGE_GUILD permission. */
 export async function getEmbed(guildID: string) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
@@ -491,7 +515,7 @@ export async function getEmbed(guildID: string) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
 
-  return RequestManager.get(endpoints.GUILD_EMBED(guildID));
+  return RequestManager.get(endpoints.GUILD_GET_EMBED(guildID));
 }
 
 /** Modify a guild embed object for the guild. Requires the MANAGE_GUILD permission. */
@@ -505,15 +529,19 @@ export async function editEmbed(
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
 
-  return RequestManager.patch(
+  const result = await RequestManager.patch(
     endpoints.GUILD_EMBED(guildID),
     { enabled, channel_id: channelID },
-  );
+  ) as GuildWidgetPayload;
+
+  return keysToCamel(result) as GuildWidget;
 }
 
 /** Returns the code and uses of the vanity url for this server if it is enabled. Requires the MANAGE_GUILD permission. */
-export function getVanityURL(guildID: string) {
-  return RequestManager.get(endpoints.GUILD_VANITY_URL(guildID));
+export async function getVanityURL(guildID: string) {
+  return keysToCamel(
+    await RequestManager.get(endpoints.GUILD_VANITY_URL(guildID)),
+  ) as Partial<Invite>;
 }
 
 /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
@@ -523,7 +551,9 @@ export async function getIntegrations(guildID: string) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
 
-  return RequestManager.get(endpoints.GUILD_INTEGRATIONS(guildID));
+  return keysToCamel(
+    await RequestManager.get(endpoints.GUILD_INTEGRATIONS(guildID)),
+  ) as Integration;
 }
 
 /** Modify the behavior and settings of an integration object for the guild. Requires the MANAGE_GUILD permission. */
@@ -574,8 +604,8 @@ export async function getBans(guildID: string) {
     endpoints.GUILD_BANS(guildID),
   ) as BanPayload[];
 
-  return new Collection<string, BanPayload>(
-    results.map((res) => [res.user.id, res]),
+  return new Collection<string, Ban>(
+    results.map((res) => [res.user.id, keysToCamel(res)]),
   );
 }
 
@@ -586,9 +616,11 @@ export async function getBan(guildID: string, memberID: string) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
 
-  return await RequestManager.get(
-    endpoints.GUILD_BAN(guildID, memberID),
-  ) as Promise<BanPayload>;
+  return keysToCamel(
+    await RequestManager.get(
+      endpoints.GUILD_BAN(guildID, memberID),
+    ),
+  ) as Ban;
 }
 
 /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
@@ -600,7 +632,7 @@ export async function ban(guildID: string, id: string, options: BanOptions) {
 
   return RequestManager.put(
     endpoints.GUILD_BAN(guildID, id),
-    { ...options, delete_message_days: options.deleteDays },
+    { ...keysToCamel(options) },
   );
 }
 
@@ -644,17 +676,22 @@ export async function getInvites(guildID: string) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
 
-  return RequestManager.get(endpoints.GUILD_INVITES(guildID));
+  return keysToCamel(
+    await RequestManager.get(endpoints.GUILD_INVITES(guildID)),
+  ) as Invite[];
 }
 
+// TODO(itohatweb): rename to leaveServer
 /** Leave a guild */
 export function leaveGuild(guildID: string) {
   return RequestManager.delete(endpoints.GUILD_LEAVE(guildID));
 }
 
 /** Returns a list of voice region objects for the guild. Unlike the similar /voice route, this returns VIP servers when the guild is VIP-enabled. */
-export function getVoiceRegions(guildID: string) {
-  return RequestManager.get(endpoints.GUILD_REGIONS(guildID));
+export async function getVoiceRegions(guildID: string) {
+  return (await RequestManager.get(
+    endpoints.GUILD_REGIONS(guildID),
+  )) as VoiceRegion[];
 }
 
 /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
@@ -667,7 +704,9 @@ export async function getWebhooks(guildID: string) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
 
-  return RequestManager.get(endpoints.GUILD_WEBHOOKS(guildID));
+  return keysToCamel(
+    await RequestManager.get(endpoints.GUILD_WEBHOOKS(guildID)),
+  ) as Webhook[];
 }
 
 /** This function will return the raw user payload in the rare cases you need to fetch a user directly from the API. */
@@ -719,10 +758,12 @@ export async function createGuildFromTemplate(
     options.icon = await urlToBase64(options.icon);
   }
 
-  return await RequestManager.post(
-    endpoints.GUILD_TEMPLATE(templateCode),
-    options,
-  ) as Promise<GuildPayload>;
+  return keysToCamel(
+    await RequestManager.post(
+      endpoints.GUILD_TEMPLATE(templateCode),
+      options,
+    ),
+  ) as Guild;
 }
 
 /**

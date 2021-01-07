@@ -28,7 +28,7 @@ export interface VoiceState {
   suppress: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/voice#voice-resource */
+// used
 export interface VoiceRegion {
   /** unique ID for the region */
   id: string;
