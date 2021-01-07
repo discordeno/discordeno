@@ -298,7 +298,7 @@ export interface MembershipScreeningPayload {
 
 export interface MembershipScreeningFieldPayload {
   /** the type of field (currently "TERMS" is the only type) */
-  field_type: MembershipScreeningFieldType;
+  field_type: MembershipScreeningFieldTypes;
   /** the title of the field */
   label: string;
   /** the list of rules */
@@ -307,7 +307,7 @@ export interface MembershipScreeningFieldPayload {
   required: boolean;
 }
 
-export enum MembershipScreeningFieldType {
+export enum MembershipScreeningFieldTypes {
   /** Server Rules */
   TERMS = "TERMS",
 }

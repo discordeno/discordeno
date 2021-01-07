@@ -6,7 +6,7 @@ export interface WebhookPayload {
   /** the id of the webhook */
   id: string;
   /** the type of the webhook */
-  type: WebhookType;
+  type: WebhookTypes;
   /** the guild id this webhook is for */
   guild_id?: string;
   /** the channel id this webhook is for */
@@ -24,7 +24,7 @@ export interface WebhookPayload {
 }
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-resource */
-export enum WebhookType {
+export enum WebhookTypes {
   /** Incoming Webhook can post messages to channels with a generated token */
   INCOMING = 1,
   /** Channel Follower Webhooks are internal webhooks used with Channel Following to post new messages into channels */
