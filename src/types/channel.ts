@@ -381,9 +381,6 @@ export interface AttachmentPayload {
   height?: number | null;
   /** width of file (if image) */
   width?: number | null;
-  height: number | null;
-  /** width of file (if image) */
-  width: number | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-mention-object-channel-mention-structure */
