@@ -31,6 +31,10 @@ export interface MemberCreatePayload {
   mute: boolean;
   /** Whether the user has passed the guild's Membership Screening requirements */
   pending?: boolean;
+  /** total permissions of the member in the channel, including overrides, returned when in the interaction object */
+  permissions?: string;
+
+  // Index signature
   [key: string]: ValueOf<MemberCreatePayload>;
 }
 

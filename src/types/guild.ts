@@ -680,6 +680,8 @@ export interface MembershipScreeningPayload {
   form_fields: MembershipScreeningFieldPayload[];
   /** the server description shown in the screening form */
   description: string | null;
+
+  // Index signature
   [key: string]: ValueOf<MembershipScreeningPayload>;
 }
 
