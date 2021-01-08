@@ -1,3 +1,4 @@
+import { keysToSnake } from "../../../mod.ts";
 import { RequestManager } from "../../rest/mod.ts";
 import {
   ChannelTypes,
@@ -22,6 +23,7 @@ import {
   MessageContent,
   ModifyChannelOptions,
   Overwrite,
+  OverwriteTypes,
   Permission,
   Permissions,
 } from "../types/mod.ts";
@@ -167,32 +169,38 @@ export async function sendMessage(
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
   }
 
-  if (content.mentions) {
-    if (content.mentions.users?.length) {
-      if (content.mentions.parse?.includes("users")) {
-        content.mentions.parse = content.mentions.parse.filter((p) =>
-          p !== "users"
-        );
+  if (content.allowedMentions) {
+    if (content.allowedMentions.users?.length) {
+      if (content.allowedMentions.parse?.includes("users")) {
+        content.allowedMentions.parse = content.allowedMentions.parse.filter((
+          p,
+        ) => p !== "users");
       }
 
-      if (content.mentions.users.length > 100) {
-        content.mentions.users = content.mentions.users.slice(0, 100);
+      if (content.allowedMentions.users.length > 100) {
+        content.allowedMentions.users = content.allowedMentions.users.slice(
+          0,
+          100,
+        );
       }
     }
 
-    if (content.mentions.roles?.length) {
-      if (content.mentions.parse?.includes("roles")) {
-        content.mentions.parse = content.mentions.parse.filter((p) =>
-          p !== "roles"
-        );
+    if (content.allowedMentions.roles?.length) {
+      if (content.allowedMentions.parse?.includes("roles")) {
+        content.allowedMentions.parse = content.allowedMentions.parse.filter((
+          p,
+        ) => p !== "roles");
       }
 
-      if (content.mentions.roles.length > 100) {
-        content.mentions.roles = content.mentions.roles.slice(0, 100);
+      if (content.allowedMentions.roles.length > 100) {
+        content.allowedMentions.roles = content.allowedMentions.roles.slice(
+          0,
+          100,
+        );
       }
     }
 
-    if (content.mentions.repliedUser) {
+    if (content.allowedMentions.repliedUser) {
       if (
         !(await botHasChannelPermissions(
           channelID,
@@ -216,14 +224,10 @@ export async function sendMessage(
   const result = await RequestManager.post(
     endpoints.CHANNEL_MESSAGES(channelID),
     {
-      ...content,
-      json_payload: content.jsonPayload,
-      allowed_mentions: content.mentions
-        ? {
-          ...content.mentions,
-          replied_user: content.mentions.repliedUser,
-        }
-        : undefined,
+      ...keysToSnake(content),
+      allowed_mentions: {
+        ...content.allowedMentions,
+      },
       message_reference: typeof content.reply === "string"
         ? { message_id: content.reply }
         : {
@@ -241,7 +245,6 @@ export async function sendMessage(
 export async function deleteMessages(
   channelID: string,
   ids: string[],
-  reason?: string,
 ) {
   const hasManageMessages = await botHasChannelPermissions(
     channelID,
@@ -264,7 +267,6 @@ export async function deleteMessages(
 
   return RequestManager.post(endpoints.CHANNEL_BULK_DELETE(channelID), {
     messages: ids.splice(0, 100),
-    reason,
   });
 }
 
@@ -375,7 +377,6 @@ function processEditChannelQueue() {
 export async function editChannel(
   channelID: string,
   options: ModifyChannelOptions,
-  reason?: string,
 ) {
   const hasManageChannelsPerm = await botHasChannelPermissions(
     channelID,
@@ -413,14 +414,12 @@ export async function editChannel(
   }
 
   const payload = {
-    ...options,
-    rate_limit_per_user: options.slowmode,
-    parent_id: options.parentID,
-    user_limit: options.userLimit,
-    permission_overwrites: options.overwrites?.map(
+    ...keysToSnake(options),
+    permission_overwrites: options.permissionOverwrites?.map(
       (overwrite) => {
         return {
           ...overwrite,
+          type: OverwriteTypes[overwrite.type],
           allow: calculateBits(overwrite.allow),
           deny: calculateBits(overwrite.deny),
         };
@@ -428,13 +427,7 @@ export async function editChannel(
     ),
   };
 
-  return RequestManager.patch(
-    endpoints.GUILD_CHANNEL(channelID),
-    {
-      ...payload,
-      reason,
-    },
-  );
+  return RequestManager.patch(endpoints.GUILD_CHANNEL(channelID), ...payload);
 }
 
 /** Follow a News Channel to send messages to a target channel. Requires the `MANAGE_WEBHOOKS` permission in the target channel. Returns the webhook id. */
