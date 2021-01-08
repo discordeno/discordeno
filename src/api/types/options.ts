@@ -1,9 +1,12 @@
 import {
+  ActivityEmojiPayload,
   AttachmentPayload,
+  EmbedPayload,
   EmojiPayload,
   GatewayPayload,
   Intents,
   Interaction,
+  MessageApplicationPayload,
   MessageReactionRemoveAllEventPayload,
   MessageReactionRemoveEmojiPayload,
   PresenceUpdateEventPayload,
@@ -12,10 +15,6 @@ import {
   VoiceStatePayload,
 } from "../../types/mod.ts";
 import { Channel, Guild, Member, Message, Role } from "../structures/mod.ts";
-import { Embed } from "./channel.ts";
-import { Emoji } from "./emoji.ts";
-import { ActivityEmoji } from "./gateway.ts";
-import { Application } from "./oauth2.ts";
 
 export interface GuildUpdateChange {
   key: string;
@@ -42,7 +41,7 @@ export interface BotConfig {
 }
 
 export interface EventHandlers {
-  applicationCommandCreate?: (data: Application) => unknown;
+  applicationCommandCreate?: (data: MessageApplicationPayload) => unknown;
   botUpdate?: (user: UserPayload) => unknown;
   channelCreate?: (channel: Channel) => unknown;
   channelUpdate?: (channel: Channel, cachedChannel: Channel) => unknown;
@@ -61,8 +60,8 @@ export interface EventHandlers {
   guildDelete?: (guild: Guild) => unknown;
   guildEmojisUpdate?: (
     guild: Guild,
-    emojis: Emoji[],
-    cachedEmojis: Emoji[],
+    emojis: EmojiPayload[],
+    cachedEmojis: EmojiPayload[],
   ) => unknown;
   guildMemberAdd?: (guild: Guild, member: Member) => unknown;
   guildMemberRemove?: (
@@ -95,7 +94,7 @@ export interface EventHandlers {
   ready?: () => unknown;
   reactionAdd?: (
     payload: MessageReactionUncachedPayload,
-    emoji: ActivityEmoji,
+    emoji: ActivityEmojiPayload,
     userID: string,
     message?: Message,
   ) => unknown;
@@ -156,7 +155,7 @@ export interface DebugArg {
 export interface OldMessage {
   attachments: AttachmentPayload[];
   content: string;
-  embeds: Embed[];
+  embeds: EmbedPayload[];
   editedTimestamp?: number;
   tts: boolean;
   pinned: boolean;

@@ -1,10 +1,10 @@
-import { serve, verify } from "./deps.ts";
 import {
   Interaction,
   InteractionResponse,
-  InteractionResponseType,
+  InteractionResponseTypes,
   InteractionType,
-} from "./types/mod.ts";
+} from "../types/mod.ts";
+import { serve, verify } from "./deps.ts";
 
 /** This variable is a holder for the public key and other configuration */
 const serverOptions = {
@@ -72,7 +72,7 @@ export async function startServer(
 async function handlePayload(payload: Interaction) {
   switch (payload.type) {
     case InteractionType.PING:
-      return { status: 200, body: { type: InteractionResponseType.PONG } };
+      return { status: 200, body: { type: InteractionResponseTypes.PONG } };
     default: // APPLICATION_COMMAND
       return controllers.handleApplicationCommand(payload);
   }
@@ -87,7 +87,7 @@ async function handleApplicationCommand(
     return {
       status: 200,
       body: {
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE,
         data: { content: "Pong from Discordeno!" },
       },
     };
@@ -96,7 +96,7 @@ async function handleApplicationCommand(
   return {
     status: 200,
     body: {
-      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+      type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE,
       data: {
         content:
           "Whoopsies! Seems the handling for this command is missing. Please contact my developers!",

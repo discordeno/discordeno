@@ -1,5 +1,6 @@
+import { Errors } from "../api/types/mod.ts";
 import { authorization, eventHandlers } from "../bot.ts";
-import { Errors, HttpResponseCode, RequestMethods } from "../types/mod.ts";
+import { HTTPResponseCodes } from "../types/mod.ts";
 import {
   API_VERSION,
   BASE_URL,
@@ -325,7 +326,7 @@ function handleStatusCode(response: Response, errorStack?: unknown) {
 
   if (
     (status >= 200 && status < 400) ||
-    status === HttpResponseCode.TooManyRequests
+    status === HTTPResponseCodes.TooManyRequests
   ) {
     return true;
   }
@@ -333,28 +334,28 @@ function handleStatusCode(response: Response, errorStack?: unknown) {
   logErrors(response, errorStack);
 
   switch (status) {
-    case HttpResponseCode.BadRequest:
+    case HTTPResponseCodes.BadRequest:
       console.error(
         "The request was improperly formatted, or the server couldn't understand it.",
       );
       throw errorStack;
-    case HttpResponseCode.Unauthorized:
+    case HTTPResponseCodes.Unauthorized:
       console.error("The Authorization header was missing or invalid.");
       throw errorStack;
-    case HttpResponseCode.Forbidden:
+    case HTTPResponseCodes.Forbidden:
       console.error(
         "The Authorization token you passed did not have permission to the resource.",
       );
       throw errorStack;
-    case HttpResponseCode.NotFound:
+    case HTTPResponseCodes.NotFound:
       console.error("The resource at the location specified doesn't exist.");
       throw errorStack;
-    case HttpResponseCode.MethodNotAllowed:
+    case HTTPResponseCodes.MethodNotAllowed:
       console.error(
         "The HTTP method used is not valid for the location specified.",
       );
       throw errorStack;
-    case HttpResponseCode.GatewayUnavailable:
+    case HTTPResponseCodes.GatewayUnavailable:
       console.error(
         "There was not a gateway available to process your request. Wait a bit and retry.",
       );
@@ -421,3 +422,11 @@ function processHeaders(url: string, headers: Headers) {
 
   return ratelimited ? bucketID : undefined;
 }
+
+export type RequestMethods =
+  | "get"
+  | "post"
+  | "put"
+  | "patch"
+  | "head"
+  | "delete";
