@@ -169,7 +169,7 @@ export interface Resume {
   /** session token */
   token: string;
   /** session id */
-  sessionId: string;
+  sessionID: string;
   /** last sequence number received */
   seq: number;
 }
@@ -180,7 +180,7 @@ export type Heartbeat = number;
 /** https://discord.com/developers/docs/topics/gateway#request-guild-members */
 export interface RequestGuildMembers {
   /** id of the guild to get members for */
-  guildId: string;
+  guildID: string;
   /** string that username starts with, or an empty string to return all members */
   query?: string;
   /** maximum number of members to send matching the query; a limit of 0 can be used with an empty string query to return all members */
@@ -188,7 +188,7 @@ export interface RequestGuildMembers {
   /** used to specify if we want the presence of the matched members */
   presences?: boolean;
   /** used to specify which users you wish to fetch */
-  userIds?: string | string[];
+  userIDs?: string | string[];
   /** nonce to identify the Guild Members Chunk response */
   nonce?: string;
 }
@@ -196,9 +196,9 @@ export interface RequestGuildMembers {
 /** https://discord.com/developers/docs/topics/gateway#update-voice-state */
 export interface UpdateVoiceState {
   /** id of the guild */
-  guildId: string;
+  guildID: string;
   /** id of the voice channel client wants to join (null if disconnecting) */
-  channelId: string | null;
+  channelID: string | null;
   /** is the client muted */
   selfMute: boolean;
   /** is the client deafened */
@@ -242,7 +242,7 @@ export interface ReadyEventFields {
   /** the guilds the user is in */
   guilds: UnavailableGuild;
   /** used for resuming connections */
-  sessionId: string;
+  sessionID: string;
   /** the shard information associated with this session, if sent when identifying */
   shard?: [number, number];
   /** contains id and flags */
@@ -255,9 +255,9 @@ export type InvalidSession = boolean;
 /** https://discord.com/developers/docs/topics/gateway#channel-pins-update-channel-pins-update-event-fields */
 export interface ChannelPinsUpdateEvent {
   /** the id of the guild */
-  guildId?: string;
+  guildID?: string;
   /** the id of the channel */
-  channelId: string;
+  channelID: string;
   /** the time at which the most recent pinned message was pinned */
   lastPinTimestamp?: string | null;
 }
@@ -265,7 +265,7 @@ export interface ChannelPinsUpdateEvent {
 /** https://discord.com/developers/docs/topics/gateway#guild-ban-add-guild-ban-add-event-fields */
 export interface GuildBanAddEvent {
   /** id of the guild */
-  guildId: string;
+  guildID: string;
   /** the banned user */
   user: User;
 }
@@ -273,7 +273,7 @@ export interface GuildBanAddEvent {
 /** https://discord.com/developers/docs/topics/gateway#guild-ban-remove-guild-ban-remove-event-fields */
 export interface GuildBanRemoveEvent {
   /** id of the guild */
-  guildId: string;
+  guildID: string;
   /** the unbanned user */
   user: User;
 }
@@ -281,7 +281,7 @@ export interface GuildBanRemoveEvent {
 /** https://discord.com/developers/docs/topics/gateway#guild-emojis-update-guild-emojis-update-event-fields */
 export interface GuildEmojisUpdateEvent {
   /** id of the guild */
-  guildId: string;
+  guildID: string;
   /** array of emojis */
   emojis: Emoji[];
 }
@@ -289,19 +289,19 @@ export interface GuildEmojisUpdateEvent {
 /** https://discord.com/developers/docs/topics/gateway#guild-integrations-update-guild-integrations-update-event-fields */
 export interface GuildIntegrationsUpdateEvent {
   /** id of the guild whose integrations were updated */
-  guildId: string;
+  guildID: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-member-add-guild-member-add-extra-fields */
 export interface GuildMemberAddExtra {
   /** id of the guild */
-  guildId: string;
+  guildID: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-member-remove-guild-member-remove-event-fields */
 export interface GuildMemberRemoveEvent {
   /** the id of the guild */
-  guildId: string;
+  guildID: string;
   /** the user who was removed */
   user: User;
 }
@@ -309,7 +309,7 @@ export interface GuildMemberRemoveEvent {
 /** https://discord.com/developers/docs/topics/gateway#guild-member-update-guild-member-update-event-fields */
 export interface GuildMemberUpdateEvent {
   /** the id of the guild */
-  guildId: string;
+  guildID: string;
   /** user role ids */
   roles: string[];
   /** the user */
@@ -325,7 +325,7 @@ export interface GuildMemberUpdateEvent {
 /** https://discord.com/developers/docs/topics/gateway#guild-members-chunk-guild-members-chunk-event-fields */
 export interface GuildMembersChunkEvent {
   /** the id of the guild */
-  guildId: string;
+  guildID: string;
   /** set of guild members */
   members: GuildMember[];
   /** the chunk index in the expected chunks for this response (0 <= chunkIndex < chunkCount) */
@@ -343,7 +343,7 @@ export interface GuildMembersChunkEvent {
 /** https://discord.com/developers/docs/topics/gateway#guild-role-create-guild-role-create-event-fields */
 export interface GuildRoleCreateEvent {
   /** the id of the guild */
-  guildId: string;
+  guildID: string;
   /** the role created */
   role: Role;
 }
@@ -351,7 +351,7 @@ export interface GuildRoleCreateEvent {
 /** https://discord.com/developers/docs/topics/gateway#guild-role-update-guild-role-update-event-fields */
 export interface GuildRoleUpdateEvent {
   /** the id of the guild */
-  guildId: string;
+  guildID: string;
   /** the role updated */
   role: Role;
 }
@@ -359,21 +359,21 @@ export interface GuildRoleUpdateEvent {
 /** https://discord.com/developers/docs/topics/gateway#guild-role-delete-guild-role-delete-event-fields */
 export interface GuildRoleDeleteEvent {
   /** id of the guild */
-  guildId: string;
+  guildID: string;
   /** id of the role */
-  roleId: string;
+  roleID: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#invite-create-invite-create-event-fields */
 export interface InviteCreateEvent {
   /** the channel the invite is for */
-  channelId: string;
+  channelID: string;
   /** the unique invite code */
   code: string;
   /** the time at which the invite was created */
   createdAt: string;
   /** the guild of the invite */
-  guildId?: string;
+  guildID?: string;
   /** the user that created the invite */
   inviter?: User;
   /** how long the invite is valid for (in seconds) */
@@ -393,9 +393,9 @@ export interface InviteCreateEvent {
 /** https://discord.com/developers/docs/topics/gateway#invite-delete-invite-delete-event-fields */
 export interface InviteDeleteEvent {
   /** the channel of the invite */
-  channelId: string;
+  channelID: string;
   /** the guild of the invite */
-  guildId?: string;
+  guildID?: string;
   /** the unique invite code */
   code: string;
 }
@@ -405,9 +405,9 @@ export interface MessageDeleteEvent {
   /** the id of the message */
   id: string;
   /** the id of the channel */
-  channelId: string;
+  channelID: string;
   /** the id of the guild */
-  guildId?: string;
+  guildID?: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-delete-bulk-message-delete-bulk-event-fields */
@@ -415,21 +415,21 @@ export interface MessageDeleteBulkEvent {
   /** the ids of the messages */
   ids: string[];
   /** the id of the channel */
-  channelId: string;
+  channelID: string;
   /** the id of the guild */
-  guildId?: string;
+  guildID?: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-add-message-reaction-add-event-fields */
 export interface MessageReactionAddEvent {
   /** the id of the user */
-  userId: string;
+  userID: string;
   /** the id of the channel */
-  channelId: string;
+  channelID: string;
   /** the id of the message */
-  messageId: string;
+  messageID: string;
   /** the id of the guild */
-  guildId?: string;
+  guildID?: string;
   /** the member who reacted if this happened in a guild */
   member?: GuildMember;
   /** the emoji used to react */
@@ -439,13 +439,13 @@ export interface MessageReactionAddEvent {
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-message-reaction-remove-event-fields */
 export interface MessageReactionRemoveEvent {
   /** the id of the user */
-  userId: string;
+  userID: string;
   /** the id of the channel */
-  channelId: string;
+  channelID: string;
   /** the id of the message */
-  messageId: string;
+  messageID: string;
   /** the id of the guild */
-  guildId?: string;
+  guildID?: string;
   /** the emoji used to react */
   emoji: Partial<Emoji>;
 }
@@ -453,21 +453,21 @@ export interface MessageReactionRemoveEvent {
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all-message-reaction-remove-all-event-fields */
 export interface MessageReactionRemoveAllEvent {
   /** the id of the channel */
-  channelId: string;
+  channelID: string;
   /** the id of the message */
-  messageId: string;
+  messageID: string;
   /** the id of the guild */
-  guildId?: string;
+  guildID?: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-emoji-message-reaction-remove-emoji */
 export interface MessageReactionRemoveEmoji {
   /** the id of the channel */
-  channelId: string;
+  channelID: string;
   /** the id of the guild */
-  guildId?: string;
+  guildID?: string;
   /** the id of the message */
-  messageId: string;
+  messageID: string;
   /** the emoji that was removed */
   emoji: Partial<Emoji>;
 }
@@ -477,7 +477,7 @@ export interface PresenceUpdateEvent {
   /** the user presence is being updated for */
   user: User;
   /** id of the guild */
-  guildId: string;
+  guildID: string;
   /** either "idle", "dnd", "online", or "offline" */
   status: StatusType;
   /** user's current activities */
@@ -511,11 +511,11 @@ export interface Activity {
   /** unix timestamps for start and/or end of the game */
   timestamps?: ActivityTimestamps;
   /** the id of the song on Spotify */
-  syncId?: string;
+  syncID?: string;
   /** the platform the game is being played on ("desktop", "samsung", or "xbox") */
   platform?: string;
   /** application id for the game */
-  applicationId?: string;
+  applicationID?: string;
   /** what the player is currently doing */
   details?: string | null;
   /** the user's current party status */
@@ -523,7 +523,7 @@ export interface Activity {
   /** the emoji used for a custom status */
   emoji?: ActivityEmoji | null;
   /** the id of the game or Spotify session */
-  sessionId?: string;
+  sessionID?: string;
   /** information for the current party of the player */
   party?: ActivityParty;
   /** images for the presence and their hover texts */
@@ -613,11 +613,11 @@ export type ActivityFlags =
 /** https://discord.com/developers/docs/topics/gateway#typing-start-typing-start-event-fields */
 export interface TypingStartEvent {
   /** id of the channel */
-  channelId: string;
+  channelID: string;
   /** id of the guild */
-  guildId?: string;
+  guildID?: string;
   /** id of the user */
-  userId: string;
+  userID: string;
   /** unix time (in seconds) of when the user started typing */
   timestamp: number;
   /** the member who started typing if this happened in a guild */
@@ -629,7 +629,7 @@ export interface VoiceServerUpdateEvent {
   /** voice connection token */
   token: string;
   /** the guildd this voice server update is for */
-  guildId: string;
+  guildID: string;
   /** the voice server host */
   endpoint: string;
 }
@@ -637,9 +637,9 @@ export interface VoiceServerUpdateEvent {
 /** https://discord.com/developers/docs/topics/gateway#webhooks-update-webhook-update-event-fields */
 export interface WebhookUpdateEvent {
   /** id of the guild */
-  guildId: string;
+  guildID: string;
   /** id of the channel */
-  channelId: string;
+  channelID: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#get-gateway-bot-json-response */
