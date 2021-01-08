@@ -1,19 +1,27 @@
 import { eventHandlers } from "../../bot.ts";
 import {
   GatewayPayload,
+  GuildMemberPayload,
   Interaction,
   MessageApplicationPayload,
 } from "../../types/mod.ts";
+import { keysToSnake } from "../../util/utils.ts";
 import { structures } from "../structures/mod.ts";
 
 export async function handleInternalInteractionCreate(data: GatewayPayload) {
   if (data.t !== "INTERACTION_CREATE") return;
 
   const payload = data.d as Interaction;
+  const member: GuildMemberPayload | undefined = keysToSnake(
+    (await structures.createMember(payload.member, payload.guild_id))
+      .guildMember(payload.guild_id),
+  );
+  if (!member) return;
+
   eventHandlers.interactionCreate?.(
     {
       ...payload,
-      member: await structures.createMember(payload.member, payload.guild_id),
+      member: member,
     },
   );
 }

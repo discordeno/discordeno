@@ -69,7 +69,7 @@ export async function handleInternalGuildMemberUpdate(data: GatewayPayload) {
     payload.guild_id,
   );
 
-  if (guildMember?.nick !== payload.nick) {
+  if (guildMember?.nick && payload.nick && guildMember.nick !== payload.nick) {
     eventHandlers.nicknameUpdate?.(
       guild,
       member,

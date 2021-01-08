@@ -51,12 +51,14 @@ export async function handleInternalMessageReactionAdd(data: GatewayPayload) {
     guildID: payload.guild_id || "",
   };
 
-  eventHandlers.reactionAdd?.(
-    uncachedOptions,
-    payload.emoji,
-    payload.user_id,
-    message,
-  );
+  if (typeof payload.emoji === "string") {
+    eventHandlers.reactionAdd?.(
+      uncachedOptions,
+      payload.emoji,
+      payload.user_id,
+      message,
+    );
+  }
 }
 
 export async function handleInternalMessageReactionRemove(
