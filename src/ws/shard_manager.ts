@@ -1,11 +1,12 @@
 import { controllers } from "../api/controllers/mod.ts";
 import { Guild } from "../api/structures/guild.ts";
 import { FetchMembersOptions } from "../api/types/mod.ts";
-import { eventHandlers, IdentifyPayload } from "../bot.ts";
+import { eventHandlers } from "../bot.ts";
 import {
   GatewayOpcodes,
   GatewayPayload,
   GetGatewayBotPayload,
+  IdentifyPayload,
 } from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
 import { BotStatusRequest, delay } from "../util/utils.ts";

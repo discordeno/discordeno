@@ -1,14 +1,10 @@
 import { FetchMembersOptions } from "../api/types/mod.ts";
-import {
-  botGatewayData,
-  eventHandlers,
-  IdentifyPayload,
-  proxyWSURL,
-} from "../bot.ts";
+import { botGatewayData, eventHandlers, proxyWSURL } from "../bot.ts";
 import {
   GatewayOpcodes,
   GetGatewayBotPayload,
   HelloPayload,
+  IdentifyPayload,
   ReadyEventFields,
 } from "../types/mod.ts";
 import { BotStatusRequest, delay } from "../util/utils.ts";

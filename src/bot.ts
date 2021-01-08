@@ -1,6 +1,6 @@
 import { BotConfig, EventHandlers } from "./api/types/mod.ts";
 import { RequestManager } from "./rest/mod.ts";
-import { GetGatewayBotPayload } from "./types/mod.ts";
+import { GetGatewayBotPayload, IdentifyPayload } from "./types/mod.ts";
 import { baseEndpoints, endpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 
@@ -24,17 +24,17 @@ export const identifyPayload: IdentifyPayload = {
   shard: [0, 0],
 };
 
-export interface IdentifyPayload {
-  token: string;
-  compress: boolean;
-  properties: {
-    $os: string;
-    $browser: string;
-    $device: string;
-  };
-  intents: number;
-  shard: [number, number];
-}
+// export interface IdentifyPayload {
+//   token: string;
+//   compress: boolean;
+//   properties: {
+//     $os: string;
+//     $browser: string;
+//     $device: string;
+//   };
+//   intents: number;
+//   shard: [number, number];
+// }
 
 export async function startBot(config: BotConfig) {
   if (config.eventHandlers) eventHandlers = config.eventHandlers;

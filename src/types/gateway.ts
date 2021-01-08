@@ -150,7 +150,7 @@ export interface IdentifyPayload {
   /** value between 50 and 250, total number of members where the gateway will stop sending offline members in the guild member list, default: 50 */
   large_threshold?: number;
   /** used for Guild Sharding */
-  shard?: [number, number];
+  shard: [number, number];
   /** presence structure for initial presence information */
   presence?: UpdateStatusPayload;
   /** enables dispatching of guild subscription events (presence and typing events), default: true */
