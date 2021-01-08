@@ -15,6 +15,7 @@ import {
   VoiceStatePayload,
 } from "../../types/mod.ts";
 import { Channel, Guild, Member, Message, Role } from "../structures/mod.ts";
+import { ImageFormats, ImageSize } from "./mod.ts";
 
 export interface GuildUpdateChange {
   key: string;
@@ -166,4 +167,15 @@ export interface MessageReactionUncachedPayload
   id: string;
   channelID: string;
   guildID?: string;
+}
+
+export interface rawAvatarUrlOptions {
+  avatar?: string | null;
+  size?: ImageSize;
+  format?: ImageFormats;
+}
+
+export interface AvatarUrlOptions {
+  size: ImageSize;
+  format?: ImageFormats;
 }

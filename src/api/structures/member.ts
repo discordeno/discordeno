@@ -26,7 +26,11 @@ import { Guild } from "./guild.ts";
 
 const baseMember: Partial<Member> = {
   get avatarURL() {
-    return rawAvatarURL(this.id!, this.discriminator!, this.avatar!);
+    return rawAvatarURL(
+      this.id!,
+      this.discriminator!,
+      { avatar: this.avatar! },
+    );
   },
   get mention() {
     return `<@!${this.id!}>`;
@@ -40,9 +44,11 @@ const baseMember: Partial<Member> = {
     return rawAvatarURL(
       this.id!,
       this.discriminator!,
-      this.avatar!,
-      options.size,
-      options.format,
+      {
+        avatar: this.avatar,
+        size: options.size,
+        format: options.format,
+      },
     );
   },
   guild(guildID) {
@@ -57,8 +63,8 @@ const baseMember: Partial<Member> = {
   sendDM(content) {
     return sendDirectMessage(this.id!, content);
   },
-  kick(guildID, reason) {
-    return kick(guildID, this.id!, reason);
+  kick(guildID) {
+    return kick(guildID, this.id!);
   },
   edit(guildID, options) {
     return editMember(guildID, this.id!, options);
@@ -66,11 +72,11 @@ const baseMember: Partial<Member> = {
   ban(guildID, options) {
     return ban(guildID, this.id!, options);
   },
-  addRole(guildID, roleID, reason) {
-    return addRole(guildID, this.id!, roleID, reason);
+  addRole(guildID, roleID) {
+    return addRole(guildID, this.id!, roleID);
   },
-  removeRole(guildID, roleID, reason) {
-    return removeRole(guildID, this.id!, roleID, reason);
+  removeRole(guildID, roleID) {
+    return removeRole(guildID, this.id!, roleID);
   },
 };
 
@@ -178,13 +184,13 @@ export interface Member {
   /** Send a direct message to the user is possible */
   sendDM(content: string | CreateMessageParams): Promise<any>;
   /** Kick the member from a guild */
-  kick(guildID: string, reason?: string): Promise<any>;
+  kick(guildID: string): Promise<any>;
   /** Edit the member in a guild */
   edit(guildID: string, options: EditGuildMemberOptions): Promise<any>;
   /** Ban a member in a guild */
   ban(guildID: string, options: CreateGuildBan): Promise<any>;
   /** Add a role to the member */
-  addRole(guildID: string, roleID: string, reason?: string): Promise<any>;
+  addRole(guildID: string, roleID: string): Promise<any>;
   /** Remove a role from the member */
-  removeRole(guildID: string, roleID: string, reason?: string): Promise<any>;
+  removeRole(guildID: string, roleID: string): Promise<any>;
 }

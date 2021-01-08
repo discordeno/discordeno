@@ -6,13 +6,18 @@ import {
   BanPayload,
   ChannelPayload,
   ChannelTypes,
+  DefaultMessageNotificationLevel,
+  ExplicitContentFilterLevel,
   GuildMemberPayload,
   GuildPayload,
   GuildWidgetPayload,
   Intents,
+  PremiumTypes,
   RolePayload,
   TemplatePayload,
+  UserFlags,
   UserPayload,
+  VerificationLevel,
 } from "../../types/mod.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -62,9 +67,43 @@ import {
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createServer(options: CreateGuildOptions) {
+  const payload = {
+    ...options,
+    verification_level: options.verificationLevel
+      ? VerificationLevel[options.verificationLevel]
+      : undefined,
+    default_message_notifications: options.defaultMessageNotifications
+      ? DefaultMessageNotificationLevel[options.defaultMessageNotifications]
+      : undefined,
+    explicit_content_filter: options.explicitContentFilter
+      ? ExplicitContentFilterLevel[options.explicitContentFilter]
+      : undefined,
+    channels: options.channels?.map((channel) => {
+      return {
+        ...channel,
+        type: channel.type ? ChannelTypes[channel.type] : undefined,
+        permission_overwrites: toPermissionOverwritesPayload(
+          channel.permissionOverwrites,
+        ),
+        recipients: channel.recipients?.map((recipient) => {
+          return {
+            ...recipient,
+            flags: recipient.flags ? UserFlags[recipient.flags] : undefined,
+            premiumType: recipient.premiumType
+              ? PremiumTypes[recipient.premiumType]
+              : undefined,
+            publicFlags: recipient.publicFlags
+              ? UserFlags[recipient.publicFlags]
+              : undefined,
+          };
+        }),
+      };
+    }),
+  };
+
   const guild = await RequestManager.post(
     endpoints.GUILDS,
-    options,
+    payload,
   ) as GuildPayload;
   return structures.createGuild(guild, 0);
 }
@@ -75,10 +114,10 @@ export function deleteServer(guildID: string) {
 }
 
 /** Gets an array of all the channels ids that are the children of this category. */
-export function categoryChildrenIDs(guildID: string, id: string) {
+export function categoryChildrenIDs(guildID: string, categoryID: string) {
   return cacheHandlers.filter(
     "channels",
-    (channel) => channel.parentID === id && channel.guildID === guildID,
+    (channel) => channel.parentID === categoryID && channel.guildID === guildID,
   );
 }
 
@@ -139,7 +178,9 @@ export async function createGuildChannel(
   const result =
     (await RequestManager.post(endpoints.GUILD_CHANNELS(guild.id), {
       ...keysToSnake(options),
-      type: options?.type || ChannelTypes.GUILD_TEXT,
+      type: options?.type
+        ? ChannelTypes[options.type]
+        : ChannelTypes.GUILD_TEXT,
       permission_overwrites: toPermissionOverwritesPayload(
         options?.permissionOverwrites,
       ),
@@ -210,25 +251,28 @@ export function swapChannels(
   );
 }
 
+//TODO: add addToCache argument?
+//TODO(itohatweb): remove options argument
 /** Returns a guild member object for the specified user.
 *
 * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
 */
 export async function getMember(
   guildID: string,
-  id: string,
+  memberID: string,
   options?: { force?: boolean },
 ) {
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild && !options?.force) return;
 
   const data = await RequestManager.get(
-    endpoints.GUILD_MEMBER(guildID, id),
+    endpoints.GUILD_MEMBER(guildID, memberID),
   ) as GuildMemberPayload;
 
   return await structures.createMember(data, guildID);
 }
 
+// TODO(itohatweb): throw error if guild not found
 /** Returns guild member objects for the specified user by their nickname/username.
 *
 * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
@@ -274,7 +318,7 @@ export async function createEmoji(
 /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */
 export async function editEmoji(
   guildID: string,
-  id: string,
+  emojiID: string,
   options: EditGuildEmojiOptions,
 ) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_EMOJIS"]);
@@ -283,25 +327,24 @@ export async function editEmoji(
   }
 
   return keysToCamel(
-    await RequestManager.patch(endpoints.GUILD_EMOJI(guildID, id), options),
+    await RequestManager.patch(
+      endpoints.GUILD_EMOJI(guildID, emojiID),
+      options,
+    ),
   ) as Emoji;
 }
 
 /** Delete the given emoji. Requires the MANAGE_EMOJIS permission. Returns 204 No Content on success. */
 export async function deleteEmoji(
   guildID: string,
-  id: string,
-  reason?: string,
+  emojiID: string,
 ) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_EMOJIS"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_EMOJIS);
   }
 
-  return RequestManager.delete(
-    endpoints.GUILD_EMOJI(guildID, id),
-    { reason },
-  );
+  return RequestManager.delete(endpoints.GUILD_EMOJI(guildID, emojiID));
 }
 
 /** Creates a url to the emoji from the Discord CDN. */
@@ -313,7 +356,6 @@ export function emojiURL(id: string, animated = false) {
 export async function createGuildRole(
   guildID: string,
   options: CreateGuildRoleOptions,
-  reason?: string,
 ) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
   if (!hasPerm) {
@@ -325,7 +367,6 @@ export async function createGuildRole(
     {
       ...options,
       permissions: calculateBits(options?.permissions || []),
-      reason,
     },
   ) as RolePayload;
 
@@ -357,13 +398,13 @@ export async function editRole(
 }
 
 /** Delete a guild role. Requires the MANAGE_ROLES permission. */
-export async function deleteRole(guildID: string, id: string) {
+export async function deleteRole(guildID: string, roleID: string) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-  return RequestManager.delete(endpoints.GUILD_ROLE(guildID, id));
+  return RequestManager.delete(endpoints.GUILD_ROLE(guildID, roleID));
 }
 
 /** Returns a list of role objects for the guild.
@@ -387,7 +428,7 @@ export async function getRoles(guildID: string) {
 /** Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. */
 export async function swapRoles(
   guildID: string,
-  rolePositons: EditGuildRolePositionOptions,
+  rolePositons: EditGuildRolePositionOptions[],
 ) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
   if (!hasPerm) {
@@ -506,6 +547,7 @@ export async function getAuditLogs(
 }
 
 // TODO(itohatweb): better return type (https://discord.com/developers/docs/resources/guild#get-guild-widget)
+// TODO(itohatweb): rename to editWidget
 /** Returns the guild embed object. Requires the MANAGE_GUILD permission. */
 export async function getEmbed(guildID: string) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
@@ -516,6 +558,7 @@ export async function getEmbed(guildID: string) {
   return RequestManager.get(endpoints.GUILD_GET_EMBED(guildID));
 }
 
+// TODO(itohatweb): rename to editWidget
 /** Modify a guild embed object for the guild. Requires the MANAGE_GUILD permission. */
 export async function editEmbed(
   guildID: string,
@@ -572,13 +615,18 @@ export async function editIntegration(
 }
 
 /** Delete the attached integration object for the guild with this id. Requires MANAGE_GUILD permission. */
-export async function deleteIntegration(guildID: string, id: string) {
+export async function deleteIntegration(
+  guildID: string,
+  integrationID: string,
+) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
 
-  return RequestManager.delete(endpoints.GUILD_INTEGRATION(guildID, id));
+  return RequestManager.delete(
+    endpoints.GUILD_INTEGRATION(guildID, integrationID),
+  );
 }
 
 /** Sync an integration. Requires the MANAGE_GUILD permission. */
@@ -662,8 +710,21 @@ export async function editGuild(guildID: string, options: EditGuildOptions) {
     options.splash = await urlToBase64(options.splash);
   }
 
+  const payload = {
+    ...keysToSnake(options),
+    verification_level: options.verificationLevel
+      ? VerificationLevel[options.verificationLevel]
+      : undefined,
+    default_message_notifications: options.defaultMessageNotifications
+      ? DefaultMessageNotificationLevel[options.defaultMessageNotifications]
+      : undefined,
+    explicit_content_filter: options.explicitContentFilter
+      ? ExplicitContentFilterLevel[options.explicitContentFilter]
+      : undefined,
+  };
+
   return keysToCamel(
-    RequestManager.patch(endpoints.GUILD(guildID), keysToSnake(options)),
+    RequestManager.patch(endpoints.GUILD(guildID), payload),
   ) as Guild;
 }
 

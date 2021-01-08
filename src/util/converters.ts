@@ -1,13 +1,14 @@
-import { Overwrite } from "../api/types/mod.ts";
+import { Overwrite, OverwriteTypes } from "../api/types/mod.ts";
 import { calculateBits } from "./permissions.ts";
 
 export function toPermissionOverwritesPayload(
   overwrites: Overwrite[] | undefined,
 ) {
   if (!overwrites) return undefined;
-  return overwrites.map((perm) => ({
-    ...perm,
-    allow: calculateBits(perm.allow),
-    deny: calculateBits(perm.deny),
+  return overwrites.map((overwrite) => ({
+    ...overwrite,
+    type: OverwriteTypes[overwrite.type],
+    allow: calculateBits(overwrite.allow),
+    deny: calculateBits(overwrite.deny),
   }));
 }

@@ -225,16 +225,9 @@ export async function sendMessage(
     endpoints.CHANNEL_MESSAGES(channelID),
     {
       ...keysToSnake(content),
-      allowed_mentions: {
-        ...content.allowedMentions,
-      },
       message_reference: typeof content.reply === "string"
         ? { message_id: content.reply }
-        : {
-          message_id: content.reply?.messageID,
-          channel_id: content.reply?.channelID,
-          guild_id: content.reply?.guildID,
-        },
+        : keysToSnake(content.reply),
     },
   );
 
@@ -427,7 +420,7 @@ export async function editChannel(
     ),
   };
 
-  return RequestManager.patch(endpoints.GUILD_CHANNEL(channelID), ...payload);
+  return RequestManager.patch(endpoints.GUILD_CHANNEL(channelID), payload);
 }
 
 /** Follow a News Channel to send messages to a target channel. Requires the `MANAGE_WEBHOOKS` permission in the target channel. Returns the webhook id. */

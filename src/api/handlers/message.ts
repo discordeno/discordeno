@@ -1,35 +1,32 @@
 import { botID } from "../../bot.ts";
 import { RequestManager } from "../../rest/mod.ts";
-import { MessagePayload, UserPayload } from "../../types/mod.ts";
+import { MessageFlags, MessagePayload, UserPayload } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
-import { delay } from "../../util/utils.ts";
+import { delay, keysToSnake } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { Message, structures } from "../structures/mod.ts";
-import { Errors, MessageContent } from "../types/mod.ts";
+import { EditMessageOptions, Errors } from "../types/mod.ts";
 
 /** Delete a message with the channel id and message id only. */
 export async function deleteMessageByID(
   channelID: string,
   messageID: string,
-  reason?: string,
   delayMilliseconds = 0,
 ) {
   const message = await cacheHandlers.get("messages", messageID);
-  if (message) return deleteMessage(message, reason, delayMilliseconds);
+  if (message) return deleteMessage(message, delayMilliseconds);
 
   if (delayMilliseconds) await delay(delayMilliseconds);
 
   return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE(channelID, messageID),
-    { reason },
   );
 }
 
 /** Delete a message */
 export async function deleteMessage(
   message: Message,
-  reason?: string,
   delayMilliseconds = 0,
 ) {
   if (message.author.id !== botID) {
@@ -49,7 +46,6 @@ export async function deleteMessage(
 
   return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE(message.channelID, message.id),
-    { reason },
   );
 }
 
@@ -233,7 +229,7 @@ export async function getReactions(message: Message, reaction: string) {
 /** Edit the message. */
 export async function editMessage(
   message: Message,
-  content: string | MessageContent,
+  content: string | EditMessageOptions,
 ) {
   if (
     message.author.id !== botID
@@ -243,35 +239,18 @@ export async function editMessage(
 
   if (typeof content === "string") content = { content };
 
-  const hasSendMessagesPerm = await botHasChannelPermissions(
-    message.channelID,
-    ["SEND_MESSAGES"],
-  );
-  if (
-    !hasSendMessagesPerm
-  ) {
-    throw new Error(Errors.MISSING_SEND_MESSAGES);
-  }
-
-  const hasSendTtsMessagesPerm = await botHasChannelPermissions(
-    message.channelID,
-    ["SEND_TTS_MESSAGES"],
-  );
-  if (
-    content.tts &&
-    !hasSendTtsMessagesPerm
-  ) {
-    throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
-  }
-
   if (content.content && content.content.length > 2000) {
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
   }
 
   const result = await RequestManager.patch(
     endpoints.CHANNEL_MESSAGE(message.channelID, message.id),
-    content,
+    {
+      ...keysToSnake(content),
+      flags: content.flags ? MessageFlags[content.flags] : undefined,
+    },
   ) as MessagePayload;
+
   return structures.createMessage(result);
 }
 

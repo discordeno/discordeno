@@ -1,6 +1,11 @@
 import { botID } from "../../bot.ts";
 import { RequestManager } from "../../rest/mod.ts";
-import { MessagePayload, WebhookPayload } from "../../types/mod.ts";
+import {
+  ApplicationCommandOptionTypes,
+  InteractionResponseTypes,
+  MessagePayload,
+  WebhookPayload,
+} from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
@@ -208,14 +213,19 @@ export async function createSlashCommand(
     throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
   }
 
+  const payload = {
+    ...keysToSnake(options),
+    options: options.options?.map((option) => {
+      return { ...option, type: ApplicationCommandOptionTypes[option.type] };
+    }),
+  };
+
   return keysToCamel(
     await RequestManager.post(
       guildID
         ? endpoints.COMMANDS_GUILD(botID, guildID)
         : endpoints.COMMANDS(botID),
-      {
-        ...keysToSnake(options),
-      },
+      payload,
     ),
   ) as ApplicationCommand;
 }
@@ -238,14 +248,19 @@ export async function upsertSlashCommand(
   options: CreateApplicationCommandOptions,
   guildID?: string,
 ) {
+  const payload = {
+    ...keysToSnake(options),
+    options: options.options?.map((option) => {
+      return { ...option, type: ApplicationCommandOptionTypes[option.type] };
+    }),
+  };
+
   return keysToCamel(
     await RequestManager.post(
       guildID
         ? endpoints.COMMANDS_GUILD_ID(botID, commandID, guildID)
         : endpoints.COMMANDS_ID(botID, commandID),
-      {
-        ...keysToSnake(options),
-      },
+      payload,
     ),
   ) as ApplicationCommand;
 }
@@ -256,14 +271,19 @@ export async function editSlashCommand(
   options: CreateApplicationCommandOptions,
   guildID?: string,
 ) {
+  const payload = {
+    ...keysToSnake(options),
+    options: options.options?.map((option) => {
+      return { ...option, type: ApplicationCommandOptionTypes[option.type] };
+    }),
+  };
+
   return keysToCamel(
     await RequestManager.post(
       guildID
         ? endpoints.COMMANDS_GUILD_ID(botID, commandID, guildID)
         : endpoints.COMMANDS_ID(botID, commandID),
-      {
-        ...keysToSnake(options),
-      },
+      payload,
     ),
   ) as ApplicationCommand;
 }
@@ -291,9 +311,11 @@ export function executeSlashCommand(
 ) {
   // If its already been executed, we need to send a followup response
   if (cache.executedSlashCommands.has(token)) {
-    return RequestManager.post(endpoints.WEBHOOK(botID, token), {
+    const payload = {
       ...keysToSnake(options),
-    });
+      type: InteractionResponseTypes[options.type],
+    };
+    return RequestManager.post(endpoints.WEBHOOK(botID, token), payload);
   }
 
   // Expire in 15 minutes

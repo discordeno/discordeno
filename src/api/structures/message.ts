@@ -61,11 +61,10 @@ const baseMessage: Partial<Message> = {
   },
 
   // METHODS
-  delete(reason, delayMilliseconds) {
+  delete(delayMilliseconds) {
     return deleteMessageByID(
       this.channelID!,
       this.id!,
-      reason,
       delayMilliseconds,
     );
   },
@@ -95,14 +94,14 @@ const baseMessage: Partial<Message> = {
   send(content) {
     return sendMessage(this.channelID!, content);
   },
-  alert(content, timeout = 10, reason = "") {
+  alert(content, timeout = 10) {
     return sendMessage(this.channelID!, content).then((response) => {
-      response.delete(reason, timeout * 1000).catch(console.error);
+      response.delete(timeout * 1000).catch(console.error);
     });
   },
-  alertReply(content, timeout = 10, reason = "") {
+  alertReply(content, timeout = 10) {
     return this.reply!(content).then((response) =>
-      response.delete(reason, timeout * 1000).catch(console.error)
+      response.delete(timeout * 1000).catch(console.error)
     );
   },
   removeAllReactions() {
@@ -231,7 +230,7 @@ export interface Message {
   // METHODS
 
   /** Delete the message */
-  delete(reason?: string, delayMilliseconds?: number): Promise<unknown>;
+  delete(delayMilliseconds?: number): Promise<unknown>;
   /** Edit the message */
   edit(content: string | CreateMessageParams): Promise<Message>;
   /** Pins the message in the channel */
