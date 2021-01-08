@@ -1,7 +1,7 @@
 import { Channel, ChannelType, Overwrite } from "./channel.ts";
 import { Emoji } from "./emoji.ts";
 import { PresenceUpdateEvent } from "./gateway.ts";
-import { Permissions, Role } from "./permissions.ts";
+import { Permission, Role } from "./permissions.ts";
 import { User } from "./user.ts";
 import { VoiceState } from "./voice.ts";
 
@@ -454,7 +454,7 @@ export interface CreateGuildRoleOptions {
   /** name of the role, default: "new role" */
   name?: string;
   /** Array of permission names for the enabled permissions, default: everyone permissions in guild */
-  permissions?: Permissions[];
+  permissions?: Permission[];
   /** RGB color value, default: 0 */
   color?: number;
   /** whether the role should be displayed separately in the sidebar, default: false */
@@ -542,16 +542,4 @@ export interface ModifyGuildMembershipScreeningForm {
   formFields: string;
   /** the server description to show in the screening form */
   description: string;
-}
-
-// used
-export interface FetchMembersOptions {
-  /** used to specify if you want the presences of the matched members. Default = false. */
-  presences?: boolean;
-  /** only returns members whose username or nickname starts with this string. DO NOT INCLUDE discriminators. If a string is provided, the max amount of members that can be fetched is 100. Default = return all members. */
-  query?: string;
-  /** used to specify which users to fetch specifically. */
-  userIDs?: string[];
-  /** maximum number of members to return that match the query. Default = 0 which will return all members. */
-  limit?: number;
 }
