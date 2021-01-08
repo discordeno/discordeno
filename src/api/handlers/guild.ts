@@ -126,7 +126,6 @@ export function guildBannerURL(
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createGuildChannel(
   guild: Guild,
-  name: string,
   options?: CreateChannelOptions,
 ) {
   const hasPerm = await botHasPermission(
