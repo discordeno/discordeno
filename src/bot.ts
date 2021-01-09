@@ -1,9 +1,6 @@
+import { BotConfig, EventHandlers } from "./api/types/mod.ts";
 import { RequestManager } from "./rest/mod.ts";
-import {
-  BotConfig,
-  DiscordBotGatewayData,
-  EventHandlers,
-} from "./types/mod.ts";
+import { GetGatewayBotPayload, IdentifyPayload } from "./types/mod.ts";
 import { baseEndpoints, endpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 
@@ -12,7 +9,7 @@ export let botID = "";
 
 export let eventHandlers: EventHandlers = {};
 
-export let botGatewayData: DiscordBotGatewayData;
+export let botGatewayData: GetGatewayBotPayload;
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
 export const identifyPayload: IdentifyPayload = {
@@ -27,17 +24,17 @@ export const identifyPayload: IdentifyPayload = {
   shard: [0, 0],
 };
 
-export interface IdentifyPayload {
-  token: string;
-  compress: boolean;
-  properties: {
-    $os: string;
-    $browser: string;
-    $device: string;
-  };
-  intents: number;
-  shard: [number, number];
-}
+// export interface IdentifyPayload {
+//   token: string;
+//   compress: boolean;
+//   properties: {
+//     $os: string;
+//     $browser: string;
+//     $device: string;
+//   };
+//   intents: number;
+//   shard: [number, number];
+// }
 
 export async function startBot(config: BotConfig) {
   if (config.eventHandlers) eventHandlers = config.eventHandlers;
@@ -46,7 +43,7 @@ export async function startBot(config: BotConfig) {
   // Initial API connection to get info about bots connection
   botGatewayData = await RequestManager.get(
     endpoints.GATEWAY_BOT,
-  ) as DiscordBotGatewayData;
+  ) as GetGatewayBotPayload;
 
   // Explicitly append gateway version and encoding
   botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
@@ -103,7 +100,7 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   // Initial API connection to get info about bots connection
   botGatewayData = await RequestManager.get(
     endpoints.GATEWAY_BOT,
-  ) as DiscordBotGatewayData;
+  ) as GetGatewayBotPayload;
 
   if (!data.wsURL) proxyWSURL = botGatewayData.url;
   await spawnShards(

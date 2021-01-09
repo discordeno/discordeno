@@ -20,9 +20,10 @@ import {
   sendMessage,
   startBot,
 } from "../mod.ts";
+import { snakeKeysToCamelCase } from "../src/util/utils.ts";
 import { assert, assertEquals } from "./deps.ts";
 
-const token = Deno.env.get("DISCORD_TOKEN");
+const token = "Nzg1MTM3Mjg5MDcyMDgyOTY1.X8zeFA.MU-TLDAyQyHvvPYFmzNYHkNxgos";
 if (!token) throw "Token is not provided";
 
 startBot({
@@ -174,13 +175,13 @@ Deno.test({
     const hasPerm = channelOverwriteHasPermission(
       data.guildID,
       data.roleID,
-      channel.permissionOverwrites,
+      snakeKeysToCamelCase(channel.permissionOverwrites),
       ["VIEW_CHANNEL", "SEND_MESSAGES"],
     );
     const missingPerm = channelOverwriteHasPermission(
       data.guildID,
       data.roleID,
-      channel.permissionOverwrites,
+      snakeKeysToCamelCase(channel.permissionOverwrites),
       ["USE_EXTERNAL_EMOJIS"],
     );
 

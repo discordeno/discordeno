@@ -33,17 +33,17 @@ export enum GatewayCloseEventCodes {
 
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice */
 export enum VoiceOpcodes {
-  IDENTIFY,
-  SELECT_PROTOCOL,
-  READY,
-  HEARTBEAT,
-  SESSION_DESCRIPTION,
-  SPEAKING,
-  HEARTBEAT_ACK,
-  RESUME,
-  HELLO,
-  RESUMED,
-  CLIENT_DISCONNECT = 13,
+  Identify,
+  SelectProtocol,
+  Ready,
+  Heartbeat,
+  SessionDescription,
+  Speaking,
+  HeartbeatACK,
+  Resume,
+  Hello,
+  Resumed,
+  ClientDisconnect = 13,
 }
 
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice */

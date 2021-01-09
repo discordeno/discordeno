@@ -1,15 +1,11 @@
+import { FetchMembersOptions } from "../api/types/mod.ts";
+import { botGatewayData, eventHandlers, proxyWSURL } from "../bot.ts";
 import {
-  botGatewayData,
-  eventHandlers,
-  IdentifyPayload,
-  proxyWSURL
-} from "../bot.ts";
-import {
-  DiscordBotGatewayData,
-  DiscordHeartbeatPayload,
-  FetchMembersOptions,
   GatewayOpcodes,
-  ReadyPayload
+  GetGatewayBotPayload,
+  HelloPayload,
+  IdentifyPayload,
+  ReadyEventFields,
 } from "../types/mod.ts";
 import { BotStatusRequest, delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
@@ -38,7 +34,7 @@ interface RequestMemberQueuedRequest {
 }
 
 export async function createShard(
-  data: DiscordBotGatewayData,
+  data: GetGatewayBotPayload,
   identifyPayload: IdentifyPayload,
   resuming = false,
   shardID = 0,
@@ -92,7 +88,7 @@ export async function createShard(
           if (!heartbeating.has(basicShard.id)) {
             heartbeat(
               basicShard,
-              (messageData.d as DiscordHeartbeatPayload).heartbeat_interval,
+              (messageData.d as HelloPayload).heartbeat_interval,
               identifyPayload,
               data,
             );
@@ -134,7 +130,8 @@ export async function createShard(
           }
           // Important for RESUME
           if (messageData.t === "READY") {
-            basicShard.sessionID = (messageData.d as ReadyPayload).session_id;
+            basicShard.sessionID =
+              (messageData.d as ReadyEventFields).session_id;
           }
 
           // Update the sequence number if it is present
@@ -242,7 +239,7 @@ async function heartbeat(
   shard: BasicShard,
   interval: number,
   payload: IdentifyPayload,
-  data: DiscordBotGatewayData,
+  data: GetGatewayBotPayload,
 ) {
   // We lost socket connection between heartbeats, resume connection
   if (shard.ws.readyState === WebSocket.CLOSED) {
@@ -293,7 +290,7 @@ async function heartbeat(
 }
 
 async function resumeConnection(
-  data: DiscordBotGatewayData,
+  data: GetGatewayBotPayload,
   payload: IdentifyPayload,
   shardID: number,
 ) {

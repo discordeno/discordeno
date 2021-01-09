@@ -3,7 +3,7 @@ import { EmojiPayload } from "./emoji.ts";
 import { PresenceUpdateEventPayload } from "./gateway.ts";
 import { RolePayload } from "./permissions.ts";
 import { UserPayload } from "./user.ts";
-import { VoiceStatePayload } from "./voice.ts";
+import { VoiceStateUpdateEventPayload } from "./voice.ts";
 
 /** https://discord.com/developers/docs/resources/guild#guild-object */
 export interface GuildPayload {
@@ -64,7 +64,7 @@ export interface GuildPayload {
   /** total number of members in this guild */
   member_count?: number;
   /** states of members currently in voice channels; lacks the guild_id key */
-  voice_states?: Partial<VoiceStatePayload>[];
+  voice_states?: Partial<VoiceStateUpdateEventPayload>[];
   /** users in the guild */
   members?: GuildMemberPayload[];
   /** channels in the guild */

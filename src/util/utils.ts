@@ -59,3 +59,49 @@ export const formatImageURL = (
   return `${url}.${format ||
     (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
 };
+
+export function camelToSnakeCase(str: string) {
+  return str.replace(/ID|[A-Z]/g, (s) => {
+    if (s === "ID") return "_id";
+    return `_${s.toLowerCase()}`;
+  });
+}
+
+export function snakeToCamelCase(s: string) {
+  return s.replace(/_id|([-_][a-z])/ig, ($1) => {
+    if ($1 === "_id") return "ID";
+    return $1.toUpperCase().replace("_", "");
+  });
+}
+
+export function isObject(o: any) {
+  return o === Object(o) && !Array.isArray(o) && typeof o !== "function";
+}
+
+export function camelKeysToSnakeCase(o: any) {
+  if (isObject(o)) {
+    const n: Record<string, any> = {};
+    Object.keys(o)
+      .forEach((k) => {
+        n[camelToSnakeCase(k)] = camelKeysToSnakeCase(o[k]);
+      });
+    return n;
+  } else if (Array.isArray(o)) {
+    o = o.map((i) => camelKeysToSnakeCase(i));
+  }
+  return o;
+}
+
+export function snakeKeysToCamelCase(o: any) {
+  if (isObject(o)) {
+    const n: Record<string, any> = {};
+    Object.keys(o)
+      .forEach((k) => {
+        n[snakeToCamelCase(k)] = snakeKeysToCamelCase(o[k]);
+      });
+    return n;
+  } else if (Array.isArray(o)) {
+    o = o.map((i) => snakeKeysToCamelCase(i));
+  }
+  return o;
+}
