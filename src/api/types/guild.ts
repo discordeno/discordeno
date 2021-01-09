@@ -153,9 +153,6 @@ export type GuildFeature =
   | "MEMBER_VERIFICATION_GATE_ENABLED"
   | "PREVIEW_ENABLED";
 
-/** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */
-export interface UnavailableGuild extends Partial<Guild> {}
-
 /** https://discord.com/developers/docs/resources/guild#guild-preview-object */
 export interface GuildPreview {
   /** guild id */

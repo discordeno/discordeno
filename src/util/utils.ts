@@ -74,9 +74,10 @@ export function snakeToCamelCase(s: string) {
 export function isObject(o: unknown) {
   return o === Object(o) && !Array.isArray(o) && typeof o !== "function";
 }
-
+// deno-lint-ignore no-explicit-any
 export function camelKeysToSnakeCase(o: any) {
   if (isObject(o)) {
+    // deno-lint-ignore no-explicit-any
     const n: Record<string, any> = {};
     Object.keys(o)
       .forEach((k) => {
@@ -89,8 +90,10 @@ export function camelKeysToSnakeCase(o: any) {
   return o;
 }
 
+// deno-lint-ignore no-explicit-any
 export function snakeKeysToCamelCase(o: any) {
   if (isObject(o)) {
+    // deno-lint-ignore no-explicit-any
     const n: Record<string, any> = {};
     Object.keys(o)
       .forEach((k) => {

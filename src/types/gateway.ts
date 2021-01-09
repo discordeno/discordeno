@@ -246,7 +246,7 @@ export interface ReadyEventPayload {
   /** empty array */
   private_channels: [];
   /** the guilds the user is in */
-  guilds: UnavailableGuildPayload;
+  guilds: UnavailableGuildPayload[];
   /** used for resuming connections */
   session_id: string;
   /** the shard information associated with this session, if sent when identifying */
