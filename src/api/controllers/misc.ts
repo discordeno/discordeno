@@ -30,15 +30,26 @@ export async function handleInternalReady(
   if (payload.shard && shardID === payload.shard[1] - 1) {
     // Wait for 5 seconds to allow all guild create events to be processed
     await delay(5000);
-    cache.isReady = true;
-    eventHandlers.ready?.();
 
-    // All the members that came in on guild creates should now be processed 1 by 1
-    for (const [guildID, members] of initialMemberLoadQueue.entries()) {
-      await Promise.all(
-        members.map((member) => structures.createMember(member, guildID)),
-      );
-    }
+    const loadedAllGuilds = async () => {
+      if (payload.unavailable_guilds.some((g) => !cache.guilds.has(g.id))) {
+        setTimeout(() => loadedAllGuilds, 2000);
+      } else {
+        // The bot has already started, the last shard is resumed, however.
+        if (cache.isReady) return;
+        cache.isReady = true;
+        eventHandlers.ready?.();
+
+        // All the members that came in on guild creates should now be processed 1 by 1
+        for (const [guildID, members] of initialMemberLoadQueue.entries()) {
+          await Promise.all(
+            members.map((member) => structures.createMember(member, guildID)),
+          );
+        }
+      }
+    };
+
+    setTimeout(() => loadedAllGuilds(), 2000);
   }
 
   // Wait 5 seconds to spawn next shard

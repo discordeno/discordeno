@@ -1,6 +1,6 @@
-import { PartialUser, UserPayload } from "./guild.ts";
+import { CreateGuildPayload, PartialUser, UserPayload } from "./guild.ts";
 import { MemberCreatePayload } from "./member.ts";
-import { Activity } from "./message.ts";
+import { Activity, Application } from "./message.ts";
 import { ClientStatusPayload } from "./presence.ts";
 
 export interface DiscordPayload {
@@ -281,9 +281,18 @@ export interface VoiceStateUpdatePayload {
 }
 
 export interface ReadyPayload {
+  /** gateway version */
+  v: number;
+  /** information about the user including email */
+  user: UserPayload;
+  /** empty array */
+  private_channels: [];
+  /** the guilds the user is in */
+  unavailable_guilds: Pick<CreateGuildPayload, "id" | "unavailable">[];
   /** used for resuming connections */
   session_id: string;
-  /** (shard_id, num_shards)	the shard information associated with this session, if sent when identifying */
+  /** (shard_id, num_shards) the shard information associated with this session, if sent when identifying */
   shard?: [number, number];
-  user: UserPayload;
+  /** contains id and flags */
+  application: Pick<Application, "id">;
 }
