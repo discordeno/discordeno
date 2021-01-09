@@ -32,9 +32,9 @@ export interface Attachment {
   /** A proxied url of file */
   proxy_url: string;
   /** The height of file if an image */
-  height: number | null;
+  height?: number | null;
   /** The width of the file if an image */
-  width: number | null;
+  width?: number | null;
 }
 
 export interface Embed {
@@ -158,6 +158,8 @@ export enum MessageTypes {
   CHANNEL_FOLLOW_ADD,
   GUILD_DISCOVERY_DISQUALIFIED = 14,
   GUILD_DISCOVERY_REQUALIFIED,
+  GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING,
+  GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING,
   REPLY = 19,
   APPLICATION_COMMAND,
 }

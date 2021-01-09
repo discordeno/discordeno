@@ -160,8 +160,32 @@ export interface CreateGuildPayload extends UpdateGuildPayload {
   members: MemberCreatePayload[];
   /** Channels in the guild */
   channels: ChannelCreatePayload[];
+  /** presences of the members in the guild, will only include non-offline members if the size is greater than `large threshold` */
   presences: Presence[];
+  /** the welcome screen of a Community guild, shown to new members, returned when in the invite object */
+  welcome_screen?: WelcomeScreenPayload;
+  // Index signature
   [key: string]: ValueOf<CreateGuildPayload>;
+}
+
+export interface WelcomeScreenPayload {
+  /** the server description shown in the welcome screen */
+  description: string | null;
+  /** the channels shown in the welcome screen, up to 5 */
+  welcome_channels: WelcomeScreenChannelPayload[];
+  // Index signature
+  [key: string]: ValueOf<WelcomeScreenPayload>;
+}
+
+export interface WelcomeScreenChannelPayload {
+  /** the server description shown in the welcome screen */
+  channel_id: string;
+  /** the description shown for the channel */
+  description: string;
+  /** the emoji id, if the emoji is custom */
+  emoji_id: string | null;
+  /** the emoji name if custom, the unicode character if standard, or `null` if no emoji is set */
+  emoji_name: string | null;
 }
 
 export type GuildFeatures =

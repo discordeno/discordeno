@@ -1,18 +1,50 @@
 export interface ActivityPayload {
+  /** the activity's id */
+  id?: string;
+  /** the activity's name */
   name: string;
+  /** activity type */
   type: number;
+  /** stream url, is validated when type is 1 */
   url?: string;
+  /** unix timestamp of when the activity was added to the user's session */
   created_at: number;
+  /** unix timestamp of when the activity was added to the user's session */
   timestamps?: ActivityTimestamps;
+  /** the id of the song on Spotify */
+  sync_id?: string;
+  /** the platform the game is being played on ("desktop", "samsung", or "xbox") */
+  platform?: string;
+  /** application id for the game */
   application_id?: string;
+  /** what the player is currently doing */
   details?: string;
+  /** the user's current party status */
   state?: string;
+  /** the emoji used for a custom status */
   emoji?: ActivityEmoji;
+  /** the id of the game or Spotify session */
+  session_id?: string;
+  /** information for the current party of the player */
+  /** information for the current party of the player */
   party?: ActivityParty;
+  /** images for the presence and their hover texts */
   assets?: ActivityAssets;
+  /** secrets for Rich Presence joining and spectating */
   secrets?: ActivitySecrets;
+  /** whether or not the activity is an instanced game session */
   instance?: boolean;
+  /**  activity flags `OR`d together, describes what the payload includes */
   flags?: number;
+  /** the custom buttons shown in the Rich Presence (max 2) */
+  buttons?: ActivityButton[];
+}
+
+export interface ActivityButton {
+  /** the text shown on the button (1-32 characters) */
+  label: string;
+  /** the url opened when clicking the button (1-512 characters) */
+  url: string;
 }
 
 export enum ActivityType {
