@@ -22,7 +22,7 @@ import {
 import { snakeKeysToCamelCase } from "../src/util/utils.ts";
 import { assert, assertEquals } from "./deps.ts";
 
-const token = "Nzg1MTM3Mjg5MDcyMDgyOTY1.X8zeFA.MU-TLDAyQyHvvPYFmzNYHkNxgos";
+const token = Deno.env.get("DISCORD_TOKEN");
 if (!token) throw "Token is not provided";
 
 startBot({
