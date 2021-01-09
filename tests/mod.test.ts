@@ -15,7 +15,6 @@ import {
   getMessage,
   Guild,
   Intents,
-  OverwriteType,
   Role,
   sendMessage,
   startBot,
@@ -122,7 +121,7 @@ Deno.test({
   async fn() {
     const guild = cache.guilds.get(data.guildID);
     if (!guild) throw "Guild not found";
-    const createdChannel = await createGuildChannel(guild, "test");
+    const createdChannel = await createGuildChannel(guild, { name: "test" });
 
     // Check whether the created channel is nil or not
     assert(createdChannel);
@@ -147,10 +146,10 @@ Deno.test({
   async fn() {
     await editChannel(data.channelID, {
       name: "edited-channel",
-      overwrites: [
+      permissionOverwrites: [
         {
           id: data.roleID,
-          type: OverwriteType.ROLE,
+          type: "ROLE",
           allow: ["VIEW_CHANNEL", "SEND_MESSAGES"],
           deny: ["USE_EXTERNAL_EMOJIS"],
         },

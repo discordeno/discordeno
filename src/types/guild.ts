@@ -33,6 +33,8 @@ export interface GuildPayload {
   afk_timeout: number;
   /** true if the server widget is enabled */
   widget_enabled?: boolean;
+  /** the channel id that the widget will generate an invite to, or null if set to no invite */
+  widget_channel_id?: string | null;
   /** verification level required for the guild */
   verification_level: VerificationLevel;
   /** default message notifications level */
@@ -296,7 +298,7 @@ export interface MembershipScreeningPayload {
 
 export interface MembershipScreeningFieldPayload {
   /** the type of field (currently "TERMS" is the only type) */
-  field_type: MembershipScreeningFieldType;
+  field_type: MembershipScreeningFieldTypes;
   /** the title of the field */
   label: string;
   /** the list of rules */
@@ -305,7 +307,7 @@ export interface MembershipScreeningFieldPayload {
   required: boolean;
 }
 
-export enum MembershipScreeningFieldType {
+export enum MembershipScreeningFieldTypes {
   /** Server Rules */
   TERMS = "TERMS",
 }
@@ -432,7 +434,7 @@ export interface AddGuildMemberParams {
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-member */
 export interface ModifyGuildMemberParams {
-  /** value to set users nicckname to. Requires the MANAGE_NICKNAMES permission */
+  /** value to set users nickname to. Requires the MANAGE_NICKNAMES permission */
   nick?: string | null;
   /** array of role ids the member is assigned. Requires the MANAGE_ROLES permission */
   roles?: string[] | null;
@@ -453,7 +455,7 @@ export interface ModifyCurrentUserNickParams {
 /** https://discord.com/developers/docs/resources/guild#create-guild-ban */
 export interface CreateGuildBan {
   /** number of days to delete messages for (0-7) */
-  delete_message_days?: number;
+  delete_message_days?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
   /** reason for the ban */
   reason?: string;
 }
@@ -469,7 +471,7 @@ export interface CreateGuildRoleParams {
   /** whether the role should be displayed separately in the sidebar, default: false */
   hoist?: boolean;
   /** whether the role should be mentionable, default: false */
-  mentionable: boolean;
+  mentionable?: boolean;
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-role-positions */
@@ -495,7 +497,7 @@ export interface ModifyGuildRoleParams {
 }
 
 /** https://discord.com/developers/docs/resources/guild#get-guild-prune-count */
-export interface GetGuildPruneCountParaams {
+export interface GetGuildPruneCountParams {
   /** number of days to count prune for (1 or more), default: 7 */
   days?: number;
   /** role(s) to include, default: none */

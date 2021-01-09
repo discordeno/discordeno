@@ -1,14 +1,13 @@
 import {
-  Activity,
-  Application,
-  Attachment,
-  Embed,
-  GuildMember,
-  MessageContent,
-  MessageCreateOptions,
-  MessageSticker,
-  Reaction,
-  Reference,
+  AttachmentPayload,
+  CreateMessageParams,
+  EmbedPayload,
+  MessageActivityPayload,
+  MessageApplicationPayload,
+  MessagePayload,
+  MessageReferencePayload,
+  MessageStickerPayload,
+  ReactionPayload,
   UserPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
@@ -24,6 +23,7 @@ import {
   removeReaction,
   removeReactionEmoji,
 } from "../handlers/message.ts";
+import { GuildMember } from "../types/mod.ts";
 import { Channel } from "./channel.ts";
 import { Guild } from "./guild.ts";
 import { Member } from "./member.ts";
@@ -86,7 +86,7 @@ const baseMessage: Partial<Message> = {
       ? { content, mentions: { repliedUser: true }, replyMessageID: this.id }
       : {
         ...content,
-        mentions: { ...(content.mentions || {}), repliedUser: true },
+        mentions: { ...(content.allowed_mentions || {}), repliedUser: true },
         replyMessageID: this.id,
       };
 
@@ -95,14 +95,14 @@ const baseMessage: Partial<Message> = {
   send(content) {
     return sendMessage(this.channelID!, content);
   },
-  alert(content, timeout = 10, reason = "") {
+  alert(content, timeout = 10) {
     return sendMessage(this.channelID!, content).then((response) => {
       response.delete(timeout * 1000, reason).catch(console.error);
     });
   },
-  alertReply(content, timeout = 10, reason = "") {
+  alertReply(content, timeout = 10) {
     return this.reply!(content).then((response) =>
-      response.delete(reason, timeout * 1000).catch(console.error)
+      response.delete(timeout * 1000).catch(console.error)
     );
   },
   removeAllReactions() {
@@ -116,11 +116,11 @@ const baseMessage: Partial<Message> = {
   },
 };
 
-export async function createMessage(data: MessageCreateOptions) {
+export async function createMessage(data: MessagePayload) {
   const {
     guild_id: guildID,
     channel_id: channelID,
-    mentions_everyone: mentionsEveryone,
+    mention_everyone: mentionEveryone,
     mention_channels: mentionChannelIDs,
     mention_roles: mentionRoleIDs,
     webhook_id: webhookID,
@@ -142,13 +142,13 @@ export async function createMessage(data: MessageCreateOptions) {
     referencedMessageID: createNewProp(referencedMessageID),
     channelID: createNewProp(channelID),
     guildID: createNewProp(guildID || ""),
-    mentions: createNewProp(data.mentions.map((m) => m.id)),
-    mentionsEveryone: createNewProp(mentionsEveryone),
+    mentions: createNewProp(rest.mentions.map((m) => m.id)),
+    mentionsEveryone: createNewProp(mentionEveryone),
     mentionRoleIDs: createNewProp(mentionRoleIDs),
     mentionChannelIDs: createNewProp(mentionChannelIDs?.map((m) => m.id) || []),
     webhookID: createNewProp(webhookID),
     messageReference: createNewProp(messageReference),
-    timestamp: createNewProp(Date.parse(data.timestamp)),
+    timestamp: createNewProp(Date.parse(rest.timestamp)),
     editedTimestamp: createNewProp(
       editedTimestamp ? Date.parse(editedTimestamp) : undefined,
     ),
@@ -183,11 +183,11 @@ export interface Message {
   /** Channels specifically mentioned in this message */
   mentionChannelIDs: string[];
   /** Any attached files */
-  attachments: Attachment[];
+  attachments: AttachmentPayload[];
   /** Any embedded content */
-  embeds: Embed[];
+  embeds: EmbedPayload[];
   /** Reactions to the message */
-  reactions?: Reaction[];
+  reactions?: ReactionPayload[];
   /** Used for validating a message was sent */
   nonce?: number | string;
   /** Whether this message is pinned */
@@ -197,17 +197,17 @@ export interface Message {
   /** The type of message */
   type: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
   /** The activities sent with Rich Presence-related chat embeds. */
-  activity?: Activity;
+  activity?: MessageActivityPayload;
   /** Applications that sent with Rich Presence related chat embeds. */
-  applications?: Application;
+  applications?: MessageApplicationPayload;
   /** The reference data sent with crossposted messages */
-  messageReference?: Reference;
+  messageReference?: MessageReferencePayload;
   /** The message flags combined like permission bits describe extra features of the message */
   flags?: 1 | 2 | 4 | 8 | 16;
   /** the stickers sent with the message (bots currently can only receive messages with stickers, not send) */
-  stickers?: MessageSticker[];
+  stickers?: MessageStickerPayload[];
   /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
-  referencedMessageID?: MessageCreateOptions | null;
+  referencedMessageID?: MessagePayload | null;
 
   // GETTERS
 
@@ -233,7 +233,7 @@ export interface Message {
   /** Delete the message */
   delete(delayMilliseconds?: number, reason?: string): Promise<unknown>;
   /** Edit the message */
-  edit(content: string | MessageContent): Promise<Message>;
+  edit(content: string | CreateMessageParams): Promise<Message>;
   /** Pins the message in the channel */
   pin(): Promise<void>;
   /** Add a reaction to the message */
@@ -241,18 +241,18 @@ export interface Message {
   /** Add multiple reactions to the message without or without order. */
   addReactions(reactions: string[], ordered?: boolean): Promise<void>;
   /** Send a inline reply to this message */
-  reply(content: string | MessageContent): Promise<Message>;
+  reply(content: string | CreateMessageParams): Promise<Message>;
   /** Send a message to this channel where this message is */
-  send(content: string | MessageContent): Promise<Message>;
+  send(content: string | CreateMessageParams): Promise<Message>;
   /** Send a message to this channel and then delete it after a bit. By default it will delete after 10 seconds with no reason provided. */
   alert(
-    content: string | MessageContent,
+    content: string | CreateMessageParams,
     timeout?: number,
     reason?: string,
   ): Promise<void>;
   /** Send a inline reply to this message but then delete it after a bit. By default it will delete after 10 seconds with no reason provided.  */
   alertReply(
-    content: string | MessageContent,
+    content: string | CreateMessageParams,
     timeout?: number,
     reason?: string,
   ): Promise<unknown>;

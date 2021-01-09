@@ -31,6 +31,8 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/channels/${id}/messages/${messageID}`,
   CHANNEL_MESSAGES: (id: string) =>
     `${baseEndpoints.BASE_URL}/channels/${id}/messages`,
+  CHANNEL_PIN: (channelID: string, messageID: string) =>
+    `${baseEndpoints.BASE_URL}/channels/${channelID}/pins/${messageID}`,
   CHANNEL_PINS: (id: string) => `${baseEndpoints.BASE_URL}/channels/${id}/pins`,
   CHANNEL_BULK_DELETE: (id: string) =>
     `${baseEndpoints.BASE_URL}/channels/${id}/messages/bulk-delete`,
@@ -72,6 +74,7 @@ export const endpoints = {
   GUILD_CHANNELS: (id: string) => `${GUILDS_BASE(id)}/channels`,
   GUILD_CHANNEL: (id: string) => `${baseEndpoints.BASE_URL}/channels/${id}`,
   GUILD_EMBED: (id: string) => `${GUILDS_BASE(id)}/widget`,
+  GUILD_GET_EMBED: (id: string) => `${GUILDS_BASE(id)}/widget.json`,
   GUILD_EMOJI: (id: string, emoji_id: string) =>
     `${GUILDS_BASE(id)}/emojis/${emoji_id}`,
   GUILD_EMOJIS: (id: string) => `${GUILDS_BASE(id)}/emojis`,

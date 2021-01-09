@@ -1,17 +1,17 @@
 import { eventHandlers } from "../../bot.ts";
 import {
-  DiscordPayload,
-  MessageCreateOptions,
-  MessageDeleteBulkPayload,
-  MessageDeletePayload,
+  GatewayPayload,
+  MessageDeleteBulkEventPayload,
+  MessageDeleteEventPayload,
+  MessagePayload,
 } from "../../types/mod.ts";
 import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
-export async function handleInternalMessageCreate(data: DiscordPayload) {
+export async function handleInternalMessageCreate(data: GatewayPayload) {
   if (data.t !== "MESSAGE_CREATE") return;
 
-  const payload = data.d as MessageCreateOptions;
+  const payload = data.d as MessagePayload;
   const channel = await cacheHandlers.get("channels", payload.channel_id);
   if (channel) channel.lastMessageID = payload.id;
 
@@ -22,16 +22,31 @@ export async function handleInternalMessageCreate(data: DiscordPayload) {
   if (payload.member && guild) {
     // If in a guild cache the author as a member
     await structures.createMember(
-      { ...payload.member, user: payload.author },
+      {
+        ...payload.member,
+        nick: payload.member.nick === undefined ? null : payload.member.nick,
+        roles: payload.member.roles || [],
+        joined_at: payload.member.joined_at || "",
+        deaf: payload.member.deaf || false,
+        mute: payload.member.mute || false,
+        user: payload.author,
+      },
       guild.id,
     );
   }
 
   payload.mentions.forEach((mention) => {
     // Cache the member if its a valid member
-    if (mention.member && guild) {
+    if (mention && guild) {
       structures.createMember(
-        { ...mention.member, user: mention },
+        {
+          nick: mention.nick === undefined ? null : mention.nick,
+          roles: mention.roles || [],
+          joined_at: mention.joined_at || "",
+          deaf: mention.deaf || false,
+          mute: mention.mute || false,
+          user: mention,
+        },
         guild.id,
       );
     }
@@ -44,10 +59,10 @@ export async function handleInternalMessageCreate(data: DiscordPayload) {
   eventHandlers.messageCreate?.(message);
 }
 
-export async function handleInternalMessageDelete(data: DiscordPayload) {
+export async function handleInternalMessageDelete(data: GatewayPayload) {
   if (data.t !== "MESSAGE_DELETE") return;
 
-  const payload = data.d as MessageDeletePayload;
+  const payload = data.d as MessageDeleteEventPayload;
   const channel = await cacheHandlers.get("channels", payload.channel_id);
   if (!channel) return;
 
@@ -59,10 +74,10 @@ export async function handleInternalMessageDelete(data: DiscordPayload) {
   await cacheHandlers.delete("messages", payload.id);
 }
 
-export async function handleInternalMessageDeleteBulk(data: DiscordPayload) {
+export async function handleInternalMessageDeleteBulk(data: GatewayPayload) {
   if (data.t !== "MESSAGE_DELETE_BULK") return;
 
-  const payload = data.d as MessageDeleteBulkPayload;
+  const payload = data.d as MessageDeleteBulkEventPayload;
   const channel = await cacheHandlers.get("channels", payload.channel_id);
   if (!channel) return;
 
@@ -75,10 +90,10 @@ export async function handleInternalMessageDeleteBulk(data: DiscordPayload) {
   }));
 }
 
-export async function handleInternalMessageUpdate(data: DiscordPayload) {
+export async function handleInternalMessageUpdate(data: GatewayPayload) {
   if (data.t !== "MESSAGE_UPDATE") return;
 
-  const payload = data.d as MessageCreateOptions;
+  const payload = data.d as MessagePayload;
   const channel = await cacheHandlers.get("channels", payload.channel_id);
   if (!channel) return;
 

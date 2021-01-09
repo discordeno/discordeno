@@ -1,18 +1,18 @@
-import { AllowedMentionsPayload, EmbedPayload } from "./channel.ts";
-import { UserPayload } from "./user.ts";
+import { AllowedMentions, Embed } from "./channel.ts";
+import { User } from "./user.ts";
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-resource */
-export interface WebhookPayload {
+export interface Webhook {
   /** the id of the webhook */
   id: string;
   /** the type of the webhook */
-  type: WebhookTypes;
+  type: WebhookType;
   /** the guild id this webhook is for */
-  guild_id?: string;
+  guildID?: string;
   /** the channel id this webhook is for */
-  channel_id: string;
+  channelID: string;
   /** the user this webhook was created by (not returned when getting a webhook with its token) */
-  user?: UserPayload;
+  user?: User;
   /** the default name of the webhook */
   name: string | null;
   /** the default avatar of the webhook */
@@ -20,19 +20,16 @@ export interface WebhookPayload {
   /** the secure token of the webhook (returned for Incoming Webhooks) */
   token?: string;
   /** the bot/OAuth2 application that created this webhook */
-  application_id: string | null;
+  applicationID: string | null;
 }
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-resource */
-export enum WebhookTypes {
-  /** Incoming Webhook can post messages to channels with a generated token */
-  INCOMING = 1,
-  /** Channel Follower Webhooks are internal webhooks used with Channel Following to post new messages into channels */
-  CHANNEL_FOLLOWER,
-}
+export type WebhookType =
+  | "INCOMING"
+  | "CHANNEL_FOLLOWER";
 
 /** https://discord.com/developers/docs/resources/webhook#create-webhook */
-export interface CreateWebhookParams {
+export interface CreateWebhookOptions {
   /** name of the webhook (1-80 characters), cannot be clyde */
   name: string;
   /** image for the default webhook avatar */
@@ -40,39 +37,35 @@ export interface CreateWebhookParams {
 }
 
 /** https://discord.com/developers/docs/resources/webhook#modify-webhook */
-export interface ModifyWebhookParams {
+export interface ModifyWebhookOptions {
   /** the default name of the webhook */
   name?: string;
   /** image for the default webhook avatar */
   avatar?: string | null;
   /** the new channel id this webhook should be moved to */
-  channel_id?: string;
+  channelID?: string;
 }
 
 /** https://discord.com/developers/docs/resources/webhook#execute-webhook */
-export interface ExecuteWebhookQueryParams {
+export interface ExecuteWebhookOptions {
   /** waits for server confirmation of message send before response, and returns the created message body (defaults to false; when false a message that is not saved does not return an error) */
   wait?: boolean;
-}
-
-/** https://discord.com/developers/docs/resources/webhook#execute-webhook */
-export interface ExecuteWebhookParams {
   /** the message contents (up to 2000 characters) */
   content?: string;
   /** override the default username of the webhook */
   username?: string;
   /** override the default avatar of the webhook */
-  avatar_url?: string;
+  avatarUrl?: string;
   /** true if this is a TTS message */
   tts?: boolean;
   /** the content of the file being sent */
   file?: unknown;
   /** embedded rich content */
-  embeds?: EmbedPayload[];
-  /** JSON-serialized payload */
-  payload_json: string;
+  embeds?: Embed[];
+  /** JSON-serialized  */
+  payloadJson: string;
   /** allowed mentions for the message */
-  allowed_mentions: AllowedMentionsPayload;
+  allowedMentions: AllowedMentions;
 }
 
 /** https://discord.com/developers/docs/resources/webhook#execute-slackcompatible-webhook */
@@ -88,11 +81,11 @@ export interface ExecuteGitHubCompatibleWebhook {
 }
 
 /** 	waits for server confirmation of message send before response (defaults to true; when false a message that is not saved does not return an error) */
-export interface EditWebhookMessageParams {
+export interface EditWebhookMessageOptions {
   /** the messages contents (up to 2000 characters) */
   content?: string | null;
   /** embedded rich content */
-  embeds?: EmbedPayload[] | null;
+  embeds?: Embed[] | null;
   /** allowed mentions for the message */
-  allowed_mentions?: AllowedMentionsPayload | null;
+  allowedMentions?: AllowedMentions | null;
 }
