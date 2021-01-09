@@ -2,12 +2,12 @@ import { botID } from "../../bot.ts";
 import {
   ChannelPayload,
   EmojiPayload,
+  GuildFeatures,
   GuildMemberPayload,
   GuildPayload,
   PresenceUpdateEventPayload,
   RolePayload,
   VoiceStateUpdateEventPayload,
-  GuildFeatures,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
@@ -25,11 +25,7 @@ import {
   leaveGuild,
   unban,
 } from "../handlers/guild.ts";
-import {
-  GuildMember,
-  ImageFormats,
-  ImageSize,
-} from "../types/mod.ts";
+import { GuildMember, ImageFormats, ImageSize } from "../types/mod.ts";
 import { Member } from "./member.ts";
 import { Channel, Role, structures } from "./mod.ts";
 

@@ -1,10 +1,10 @@
 import {
+  BanOptions,
   CreateGuildBan,
   CreateMessageParams,
-  GuildMemberPayload,
-  BanOptions,
   EditMemberOptions,
   GuildMember,
+  GuildMemberPayload,
   ImageFormats,
   ImageSize,
   MemberCreatePayload,
