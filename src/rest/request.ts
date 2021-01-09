@@ -1,3 +1,4 @@
+import { USER_AGENT } from "../util/constants.ts";
 import { restCache } from "./cache.ts";
 import { ServerRequest } from "./deps.ts";
 import { startQueue } from "./queue.ts";
@@ -40,7 +41,7 @@ export function processRequest(
 export function createRequestBody(queuedRequest: QueuedRequest) {
   const headers: { [key: string]: string } = {
     Authorization: queuedRequest.options.token,
-    "User-Agent": "DiscordBot (https://github.com/discordeno/discordeno, v10)",
+    "User-Agent": USER_AGENT,
   };
 
   // GET METHODS SHOULD NOT HAVE A BODY
