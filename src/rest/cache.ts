@@ -11,7 +11,7 @@ export const restCache: RestCache = {
       console.error(error);
     },
     // PLACEHOLDERS TO ALLOW USERS TO CUSTOMIZE
-    fetching: function () {},
+    fetching() {},
     fetched: function () {},
     fetchSuccess: function () {},
     fetchFailed: function () {},
