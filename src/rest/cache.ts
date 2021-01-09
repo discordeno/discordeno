@@ -12,10 +12,10 @@ export const restCache: RestCache = {
     },
     // PLACEHOLDERS TO ALLOW USERS TO CUSTOMIZE
     fetching() {},
-    fetched: function () {},
-    fetchSuccess: function () {},
-    fetchFailed: function () {},
-    globallyRateLimited: function () {},
-    retriesMaxed: function () {},
+    fetched() {},
+    fetchSuccess() {},
+    fetchFailed() {},
+    globallyRateLimited() {},
+    retriesMaxed() {},
   },
 };
