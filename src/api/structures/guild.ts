@@ -32,6 +32,7 @@ import {
   GuildMember,
   ImageFormats,
   ImageSize,
+  ValueOf,
 } from "../types/mod.ts";
 import { Member } from "./member.ts";
 import { Channel, Role, structures } from "./mod.ts";
