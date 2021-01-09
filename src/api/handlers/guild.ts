@@ -131,7 +131,7 @@ export async function createGuildChannel(
       type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
 
-  return await structures.createChannel(result);
+  return structures.createChannel(result);
 }
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */

@@ -303,11 +303,10 @@ export async function getChannelWebhooks(channelID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
-  return await RequestManager.get(
+
+  return RequestManager.get(
     endpoints.CHANNEL_WEBHOOKS(channelID),
-  ) as Promise<
-    WebhookPayload[]
-  >;
+  ) as Promise<WebhookPayload[]>;
 }
 
 interface EditChannelRequest {
