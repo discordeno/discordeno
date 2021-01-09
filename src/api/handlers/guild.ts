@@ -31,6 +31,7 @@ import {
   RoleData,
   UpdateGuildPayload,
   UserPayload,
+  WelcomeScreenPayload,
 } from "../../types/mod.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -796,4 +797,75 @@ export async function editGuildTemplate(
     data,
   ) as GuildTemplate;
   return structures.createTemplate(template);
+}
+
+function createWelcomeScreenStruct(
+  { welcome_channels: welcomeChannels, ...rest }: WelcomeScreenPayload,
+) {
+  return {
+    ...rest,
+    welcomeChannels: welcomeChannels.map((
+      { emoji_id, emoji_name, channel_id, ...props },
+    ) => ({
+      ...props,
+      channelID: channel_id,
+      emojiID: emoji_id,
+      emojiName: emoji_name,
+    })),
+  };
+}
+
+export type WelcomeScreen = ReturnType<typeof createWelcomeScreenStruct>;
+
+/** Returns the Welcome Screen structure for a guild. */
+export async function getGuildWelcomeScreen(guildID: string) {
+  const guildWelcomeScreenPayload = await RequestManager.get(
+    endpoints.GUILD_WELCOME_SCREEN(guildID),
+  ) as WelcomeScreenPayload;
+  return createWelcomeScreenStruct(guildWelcomeScreenPayload);
+}
+
+/**
+ * Edit a guild's Welcome Screen.
+ * Requires the `MANAGE_GUILD` permission.
+ */
+export async function editGuildWelcomeScreen(
+  guildID: string,
+  options?: EditGuildWelcomeScreen,
+) {
+  const guildWelcomeScreenPayload = await RequestManager.patch(
+    endpoints.GUILD_WELCOME_SCREEN(guildID),
+    {
+      ...options,
+      welcome_channels: options?.welcomeChannels?.map((
+        { emojiID, emojiName, channelID, ...props },
+      ) => ({
+        ...props,
+        channel_id: channelID,
+        emoji_id: emojiID,
+        emoji_name: emojiName,
+      })),
+    },
+  ) as WelcomeScreenPayload;
+  return createWelcomeScreenStruct(guildWelcomeScreenPayload);
+}
+
+export interface EditGuildWelcomeScreen {
+  /** whether the welcome screen is enabled */
+  enabled?: boolean;
+  /** channels linked in the welcome screen and their display options */
+  welcomeChannels?: WelcomeScreenChannel[];
+  /** the server description to show in the welcome screen */
+  description?: string;
+}
+
+export interface WelcomeScreenChannel {
+  /** the server description shown in the welcome screen */
+  channelID: string;
+  /** the description shown for the channel */
+  description: string;
+  /** the emoji id, if the emoji is custom */
+  emojiID: string | null;
+  /** the emoji name if custom, the unicode character if standard, or `null` if no emoji is set */
+  emojiName: string | null;
 }
