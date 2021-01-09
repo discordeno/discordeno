@@ -1,5 +1,5 @@
 import { identifyPayload } from "../../bot.ts";
-import { RequestManager } from "../../rest/mod.ts";
+import { RequestManager } from "../../rest/request_manager.ts";
 import {
   AuditLogs,
   BannedUser,

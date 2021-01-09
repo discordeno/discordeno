@@ -1,5 +1,5 @@
 // SERVERLESS REST CLIENT THAT CAN WORK ACROSS SHARDS/WORKERS TO COMMUNICATE GLOBAL RATE LIMITS EASILY
-import { cache } from "./cache.ts";
+import { restCache } from "./cache.ts";
 import { serve, ServerRequest } from "./deps.ts";
 import { processRequest } from "./request.ts";
 import { RestServerOptions } from "./types/mod.ts";
@@ -10,7 +10,7 @@ export async function startRESTServer(options: RestServerOptions) {
 
   for await (const request of server) {
     handlePayload(request, options).catch((error) => {
-      cache.eventHandlers.error("processRequest", error);
+      restCache.eventHandlers.error("processRequest", error);
     });
   }
 }
@@ -54,6 +54,6 @@ async function handlePayload(
       options,
     );
   } catch (error) {
-    cache.eventHandlers.error("serverRequest", error);
+    restCache.eventHandlers.error("serverRequest", error);
   }
 }

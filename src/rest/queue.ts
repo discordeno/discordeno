@@ -1,25 +1,25 @@
-import { cache } from "./cache.ts";
+import { restCache } from "./cache.ts";
 import { createRequestBody, processRequestHeaders } from "./request.ts";
 import { HttpResponseCode } from "./types/mod.ts";
 
 /** If the queue is not already processing, this will start processing the queue. */
 export function startQueue() {
   // IF ALREADY PROCESSING CANCEL
-  if (cache.processingQueue) return;
+  if (restCache.processingQueue) return;
   // MARK AS PROCESSING
-  cache.processingQueue = true;
+  restCache.processingQueue = true;
   processQueue();
 }
 
 /** Processes the queue by looping over each path separately until the queues are empty. */
-export async function processQueue() {
-  while (cache.processingQueue) {
+export function processQueue() {
+  while (restCache.processingQueue) {
     // FOR EVERY PATH WE WILL START ITS OWN LOOP.
-    cache.pathQueues.forEach(async (queue) => {
+    restCache.pathQueues.forEach(async (queue) => {
       // EACH PATH IS UNIQUE LIMITER
       while (queue.length) {
         // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
-        if (!cache.globallyRateLimited) continue;
+        if (!restCache.globallyRateLimited) continue;
         // SELECT THE FIRST ITEM FROM THIS QUEUE
         const [queuedRequest] = queue;
         // IF THIS DOESNT HAVE ANY ITEMS JUST CANCEL, THE CLEANER WILL REMOVE IT.
@@ -42,7 +42,7 @@ export async function processQueue() {
         const query =
           queuedRequest.payload.method === "get" && queuedRequest.payload.body
             ? Object.entries(queuedRequest.payload.body).map(([key, value]) =>
-              `${encodeURIComponent(key)}=${encodeURIComponent(value as any)}`
+              `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`
             )
               .join("&")
             : "";
@@ -51,21 +51,21 @@ export async function processQueue() {
           : queuedRequest.payload.url;
 
         // CUSTOM HANDLER FOR USER TO LOG OR WHATEVER WHENEVER A FETCH IS MADE
-        cache.eventHandlers.fetching(queuedRequest.payload);
+        restCache.eventHandlers.fetching(queuedRequest.payload);
 
         try {
           const response = await fetch(
             urlToUse,
             createRequestBody(queuedRequest),
           );
-          cache.eventHandlers.fetched(queuedRequest.payload);
+          restCache.eventHandlers.fetched(queuedRequest.payload);
           const bucketIDFromHeaders = processRequestHeaders(
             queuedRequest.payload.url,
             response.headers,
           );
 
           if (response.status < 200 && response.status >= 400) {
-            cache.eventHandlers.error(
+            restCache.eventHandlers.error(
               "httpError",
               queuedRequest.payload,
               response,
@@ -94,7 +94,7 @@ export async function processQueue() {
 
           // SOMETIMES DISCORD RETURNS AN EMPTY 204 RESPONSE THAT CAN'T BE MADE TO JSON
           if (response.status === 204) {
-            cache.eventHandlers.fetchSuccess(queuedRequest.payload);
+            restCache.eventHandlers.fetchSuccess(queuedRequest.payload);
             return queuedRequest.request.respond({ status: 204 });
           }
 
@@ -111,7 +111,7 @@ export async function processQueue() {
               queuedRequest.payload.retryCount >=
                 queuedRequest.options.maxRetryCount
             ) {
-              cache.eventHandlers.retriesMaxed(queuedRequest.payload);
+              restCache.eventHandlers.retriesMaxed(queuedRequest.payload);
               queuedRequest.request.respond(
                 {
                   status: 200,
@@ -136,7 +136,7 @@ export async function processQueue() {
             continue;
           }
 
-          cache.eventHandlers.fetchSuccess(queuedRequest.payload);
+          restCache.eventHandlers.fetchSuccess(queuedRequest.payload);
           // REMOVE FROM QUEUE
           queue.shift();
           queuedRequest.request.respond(
@@ -144,7 +144,7 @@ export async function processQueue() {
           );
         } catch (error) {
           // SOMETHING WENT WRONG, LOG AND RESPOND WITH ERROR
-          cache.eventHandlers.fetchFailed(queuedRequest.payload, error);
+          restCache.eventHandlers.fetchFailed(queuedRequest.payload, error);
           queuedRequest.request.respond(
             { status: 404, body: JSON.stringify({ error }) },
           );
@@ -161,17 +161,17 @@ export async function processQueue() {
 
 /** Cleans up the queues by checking if there is nothing left and removing it. */
 export function cleanupQueues() {
-  cache.pathQueues.forEach((queue, key) => {
+  restCache.pathQueues.forEach((queue, key) => {
     if (queue.length) return;
     // REMOVE IT FROM CACHE
-    cache.pathQueues.delete(key);
+    restCache.pathQueues.delete(key);
   });
 }
 
 /** Check the rate limits for a url or a bucket. */
 export function checkRateLimits(url: string) {
-  const ratelimited = cache.ratelimitedPaths.get(url);
-  const global = cache.ratelimitedPaths.get("global");
+  const ratelimited = restCache.ratelimitedPaths.get(url);
+  const global = restCache.ratelimitedPaths.get("global");
   const now = Date.now();
 
   if (ratelimited && now < ratelimited.resetTimestamp) {

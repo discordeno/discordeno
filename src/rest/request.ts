@@ -1,4 +1,4 @@
-import { cache } from "./cache.ts";
+import { restCache } from "./cache.ts";
 import { ServerRequest } from "./deps.ts";
 import { startQueue } from "./queue.ts";
 import {
@@ -8,7 +8,7 @@ import {
 } from "./types/mod.ts";
 
 /** Processes a request and assigns it to a queue or creates a queue if none exists for it. */
-export async function processRequest(
+export function processRequest(
   request: ServerRequest,
   payload: RunMethodOptions,
   options: RestServerOptions,
@@ -24,13 +24,13 @@ export async function processRequest(
 
   const [id] = parts;
 
-  const queue = cache.pathQueues.get(id);
+  const queue = restCache.pathQueues.get(id);
   // IF THE QUEUE EXISTS JUST ADD THIS TO THE QUEUE
   if (queue) {
     queue.push({ request, payload, options });
   } else {
     // CREATES A NEW QUEUE
-    cache.pathQueues.set(id, [{ request, payload, options }]);
+    restCache.pathQueues.set(id, [{ request, payload, options }]);
   }
 
   startQueue();
@@ -99,7 +99,7 @@ export function processRequestHeaders(url: string, headers: Headers) {
     ratelimited = true;
 
     // SAVE THE URL AS LIMITED, IMPORTANT FOR NEW REQUESTS BY USER WITHOUT BUCKET
-    cache.ratelimitedPaths.set(url, {
+    restCache.ratelimitedPaths.set(url, {
       url,
       resetTimestamp: Number(resetTimestamp) * 1000,
       bucketID,
@@ -107,7 +107,7 @@ export function processRequestHeaders(url: string, headers: Headers) {
 
     // SAVE THE BUCKET AS LIMITED SINCE DIFFERENT URLS MAY SHARE A BUCKET
     if (bucketID) {
-      cache.ratelimitedPaths.set(bucketID, {
+      restCache.ratelimitedPaths.set(bucketID, {
         url,
         resetTimestamp: Number(resetTimestamp) * 1000,
         bucketID,
@@ -118,18 +118,18 @@ export function processRequestHeaders(url: string, headers: Headers) {
   // IF THERE IS NO REMAINING GLOBAL LIMIT, MARK IT RATE LIMITED GLOBALLY
   if (global) {
     const reset = Date.now() + (Number(retryAfter) * 1000);
-    cache.eventHandlers.globallyRateLimited(url, reset);
-    cache.globallyRateLimited = true;
+    restCache.eventHandlers.globallyRateLimited(url, reset);
+    restCache.globallyRateLimited = true;
     ratelimited = true;
 
-    cache.ratelimitedPaths.set("global", {
+    restCache.ratelimitedPaths.set("global", {
       url: "global",
       resetTimestamp: reset,
       bucketID,
     });
 
     if (bucketID) {
-      cache.ratelimitedPaths.set(bucketID, {
+      restCache.ratelimitedPaths.set(bucketID, {
         url: "global",
         resetTimestamp: reset,
         bucketID,
@@ -141,16 +141,16 @@ export function processRequestHeaders(url: string, headers: Headers) {
 }
 
 /** This wll create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
-async function processRateLimitedPaths() {
+function processRateLimitedPaths() {
   const now = Date.now();
 
-  cache.ratelimitedPaths.forEach((value, key) => {
+  restCache.ratelimitedPaths.forEach((value, key) => {
     // IF THE TIME HAS NOT REACHED CANCEL
     if (value.resetTimestamp > now) return;
     // RATE LIMIT IS OVER, DELETE THE RATE LIMITER
-    cache.ratelimitedPaths.delete(key);
+    restCache.ratelimitedPaths.delete(key);
     // IF IT WAS GLOBAL ALSO MARK THE GLOBAL VALUE AS FALSE
-    if (key === "global") cache.globallyRateLimited = false;
+    if (key === "global") restCache.globallyRateLimited = false;
   });
 
   // RECHECK IN 1 SECOND
