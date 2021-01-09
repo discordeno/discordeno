@@ -1,5 +1,4 @@
 import { camelKeysToSnakeCase } from "../../../mod.ts";
-import { RequestManager } from "../../rest/mod.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import {
   ChannelTypes,
@@ -170,38 +169,38 @@ export async function sendMessage(
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
   }
 
-  if (content.allowedMentions) {
-    if (content.allowedMentions.users?.length) {
-      if (content.allowedMentions.parse?.includes("users")) {
-        content.allowedMentions.parse = content.allowedMentions.parse.filter((
+  if (content.mentions) {
+    if (content.mentions.users?.length) {
+      if (content.mentions.parse?.includes("users")) {
+        content.mentions.parse = content.mentions.parse.filter((
           p,
         ) => p !== "users");
       }
 
-      if (content.allowedMentions.users.length > 100) {
-        content.allowedMentions.users = content.allowedMentions.users.slice(
+      if (content.mentions.users.length > 100) {
+        content.mentions.users = content.mentions.users.slice(
           0,
           100,
         );
       }
     }
 
-    if (content.allowedMentions.roles?.length) {
-      if (content.allowedMentions.parse?.includes("roles")) {
-        content.allowedMentions.parse = content.allowedMentions.parse.filter((
+    if (content.mentions.roles?.length) {
+      if (content.mentions.parse?.includes("roles")) {
+        content.mentions.parse = content.mentions.parse.filter((
           p,
         ) => p !== "roles");
       }
 
-      if (content.allowedMentions.roles.length > 100) {
-        content.allowedMentions.roles = content.allowedMentions.roles.slice(
+      if (content.mentions.roles.length > 100) {
+        content.mentions.roles = content.mentions.roles.slice(
           0,
           100,
         );
       }
     }
 
-    if (content.allowedMentions.repliedUser) {
+    if (content.mentions.repliedUser) {
       if (
         !(await botHasChannelPermissions(
           channelID,

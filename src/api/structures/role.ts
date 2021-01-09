@@ -68,9 +68,11 @@ const baseRole: Partial<Role> = {
 };
 
 // deno-lint-ignore require-await
-export async function createRole({ tags = {}, ...rest }: RoleData) {
+export async function createRole({ tags = {}, ...rest }: RolePayload) {
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
+    // deno-lint-ignore ban-ts-comment
+    // @ts-ignore
     restProps[key] = createNewProp(rest[key]);
   }
 
@@ -124,7 +126,7 @@ export interface Role {
   /** Delete the role */
   delete(guildID?: string): ReturnType<typeof deleteRole>;
   /** Edits the role */
-  edit(options: CreateRoleOptions): ReturnType<typeof editRole>;
+  edit(options: CreateGuildRoleOptions): ReturnType<typeof editRole>;
   /** Checks if this role is higher than another role. */
   higherThanRoleID(roleID: string, position?: number): boolean;
 }

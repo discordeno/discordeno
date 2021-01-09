@@ -86,7 +86,7 @@ const baseMessage: Partial<Message> = {
       ? { content, mentions: { repliedUser: true }, replyMessageID: this.id }
       : {
         ...content,
-        mentions: { ...(content.allowed_mentions || {}), repliedUser: true },
+        mentions: { ...(content.mentions || {}), repliedUser: true },
         replyMessageID: this.id,
       };
 
@@ -117,7 +117,7 @@ const baseMessage: Partial<Message> = {
 };
 
 // deno-lint-ignore require-await
-export async function createMessage(data: MessageCreateOptions) {
+export async function createMessage(data: MessagePayload) {
   const {
     guild_id: guildID = "",
     channel_id: channelID,
@@ -134,6 +134,8 @@ export async function createMessage(data: MessageCreateOptions) {
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
+    // deno-lint-ignore ban-ts-comment
+    // @ts-ignore
     restProps[key] = createNewProp(rest[key]);
   }
 
@@ -233,8 +235,8 @@ export interface Message {
 
   /** Delete the message */
   delete(
-    reason?: string,
     delayMilliseconds?: number,
+    reason?: string,
   ): ReturnType<typeof deleteMessageByID>;
   /** Edit the message */
   edit(content: string | MessageContent): ReturnType<typeof editMessage>;

@@ -1,16 +1,4 @@
-import {
-  BanOptions,
-  CreateGuildBan,
-  CreateMessageParams,
-  EditMemberOptions,
-  GuildMember,
-  GuildMemberPayload,
-  ImageFormats,
-  ImageSize,
-  MemberCreatePayload,
-  MessageContent,
-  ValueOf,
-} from "../../types/mod.ts";
+import { GuildMemberPayload } from "../../../mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
@@ -25,10 +13,12 @@ import {
   sendDirectMessage,
 } from "../handlers/member.ts";
 import {
+  BanOptions,
   EditGuildMemberOptions,
   GuildMember,
   ImageFormats,
   ImageSize,
+  MessageContent,
 } from "../types/mod.ts";
 import { Guild } from "./guild.ts";
 
@@ -105,10 +95,14 @@ export async function createMember(data: GuildMemberPayload, guildID: string) {
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
 
   for (const key of Object.keys(rest)) {
+    // deno-lint-ignore ban-ts-comment
+    // @ts-ignore
     restProps[key] = createNewProp(rest[key]);
   }
 
   for (const key of Object.keys(user)) {
+    // deno-lint-ignore ban-ts-comment
+    // @ts-ignore
     restProps[key] = createNewProp(user[key]);
   }
 
@@ -198,7 +192,7 @@ export interface Member {
   /** Edit the member in a guild */
   edit(
     guildID: string,
-    options: EditMemberOptions,
+    options: EditGuildMemberOptions,
   ): ReturnType<typeof editMember>;
   /** Ban a member in a guild */
   ban(guildID: string, options: BanOptions): ReturnType<typeof ban>;

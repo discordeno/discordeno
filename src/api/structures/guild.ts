@@ -25,7 +25,14 @@ import {
   leaveGuild,
   unban,
 } from "../handlers/guild.ts";
-import { GuildMember, ImageFormats, ImageSize } from "../types/mod.ts";
+import {
+  BanOptions,
+  EditGuildOptions,
+  GetGuildAuditLogOptions,
+  GuildMember,
+  ImageFormats,
+  ImageSize,
+} from "../types/mod.ts";
 import { Member } from "./member.ts";
 import { Channel, Role, structures } from "./mod.ts";
 
@@ -147,6 +154,8 @@ export async function createGuild(data: GuildPayload, shardID: number) {
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
+    // deno-lint-ignore ban-ts-comment
+    // @ts-ignore
     restProps[key] = createNewProp(rest[key]);
   }
 
@@ -324,9 +333,9 @@ export interface Guild {
   /** Leave a guild */
   leave(): ReturnType<typeof leaveGuild>;
   /** Edit the server. Requires the MANAGE_GUILD permission. */
-  edit(options: GuildEditOptions): ReturnType<typeof editGuild>;
+  edit(options: EditGuildOptions): ReturnType<typeof editGuild>;
   /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
-  auditLogs(options: GetAuditLogsOptions): ReturnType<typeof getAuditLogs>;
+  auditLogs(options: GetGuildAuditLogOptions): ReturnType<typeof getAuditLogs>;
   /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
   getBan(memberID: string): ReturnType<typeof getBan>;
   /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */

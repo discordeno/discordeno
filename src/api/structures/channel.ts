@@ -45,6 +45,8 @@ export async function createChannel(
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
+    // deno-lint-ignore ban-ts-comment
+    // @ts-ignore
     restProps[key] = createNewProp(rest[key]);
   }
 

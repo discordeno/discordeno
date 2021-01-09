@@ -161,7 +161,7 @@ export enum GuildFeatures {
 }
 
 /** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */
-export type UnavailableGuildPayload = Pick<CreateGuildPayload, "id" | "unavailable">;
+export type UnavailableGuildPayload = Pick<GuildPayload, "id" | "unavailable">;
 
 /** https://discord.com/developers/docs/resources/guild#guild-preview-object */
 export interface GuildPreviewPayload {

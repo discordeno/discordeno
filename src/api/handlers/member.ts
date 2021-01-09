@@ -1,16 +1,6 @@
 import { botID } from "../../bot.ts";
-import { RequestManager } from "../../rest/mod.ts";
 import { ChannelPayload } from "../../types/mod.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
-import {
-  ChannelCreatePayload,
-  DMChannelCreatePayload,
-  EditMemberOptions,
-  Errors,
-  ImageFormats,
-  ImageSize,
-  MessageContent,
-} from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasPermission,
@@ -143,7 +133,7 @@ export async function sendDirectMessage(
     // Channel create event will have added this channel to the cache
     await cacheHandlers.delete("channels", dmChannelData.id);
     const channel = await structures.createChannel(
-      dmChannelData as unknown as ChannelCreatePayload,
+      dmChannelData,
     );
     // Recreate the channel and add it undert he users id
     await cacheHandlers.set("channels", recipientID, channel);

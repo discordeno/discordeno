@@ -1,7 +1,7 @@
-import { GatewayOpcodes } from "../../types/mod.ts";
+import { GatewayOpcodes, UnavailableGuildPayload } from "../../types/mod.ts";
 import { Channel, Message } from "./channel.ts";
 import { Emoji } from "./emoji.ts";
-import { Guild, GuildMember, UnavailableGuild } from "./guild.ts";
+import { Guild, GuildMember } from "./guild.ts";
 import { Interaction } from "./interaction.ts";
 import { Application } from "./oauth2.ts";
 import { Role } from "./permissions.ts";
@@ -29,7 +29,7 @@ export type GatewayDTypes =
   | Channel
   | ChannelPinsUpdateEvent
   | Guild
-  | UnavailableGuild
+  | UnavailableGuildPayload
   | GuildBanAddEvent
   | GuildBanRemoveEvent
   | GuildEmojisUpdateEvent
@@ -240,7 +240,7 @@ export interface ReadyEventFields {
   /** empty array */
   privateChannels: [];
   /** the guilds the user is in */
-  guilds: UnavailableGuild;
+  guilds: UnavailableGuildPayload[];
   /** used for resuming connections */
   sessionID: string;
   /** the shard information associated with this session, if sent when identifying */

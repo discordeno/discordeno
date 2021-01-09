@@ -1,8 +1,6 @@
 import { EmojiPayload } from "./emoji.ts";
 import { GuildMemberPayload } from "./guild.ts";
 import { UserPayload } from "./user.ts";
-import { Overwrite, RawOverwrite } from "./guild.ts";
-import { ValueOf } from "./mod.ts";
 
 /** https://discord.com/developers/docs/resources/channel#channel-object-channel-structure */
 export interface ChannelPayload {
