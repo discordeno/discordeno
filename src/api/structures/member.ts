@@ -19,6 +19,7 @@ import {
   ImageFormats,
   ImageSize,
   MessageContent,
+  ValueOf,
 } from "../types/mod.ts";
 import { Guild } from "./guild.ts";
 

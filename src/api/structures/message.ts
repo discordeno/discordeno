@@ -121,7 +121,7 @@ export async function createMessage(data: MessagePayload) {
   const {
     guild_id: guildID = "",
     channel_id: channelID,
-    mentions_everyone: mentionsEveryone,
+    mention_everyone: mentionEveryone,
     mention_channels: mentionChannelIDs = [],
     mention_roles: mentionRoleIDs,
     webhook_id: webhookID,
@@ -146,7 +146,7 @@ export async function createMessage(data: MessagePayload) {
     channelID: createNewProp(channelID),
     guildID: createNewProp(guildID),
     mentions: createNewProp(data.mentions.map((m) => m.id)),
-    mentionsEveryone: createNewProp(mentionsEveryone),
+    mentionsEveryone: createNewProp(mentionEveryone),
     mentionRoleIDs: createNewProp(mentionRoleIDs),
     mentionChannelIDs: createNewProp(mentionChannelIDs.map((m) => m.id)),
     webhookID: createNewProp(webhookID),

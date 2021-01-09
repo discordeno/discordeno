@@ -179,3 +179,5 @@ export interface AvatarUrlOptions {
   size: ImageSize;
   format?: ImageFormats;
 }
+
+export type ValueOf<T> = T[keyof T];
