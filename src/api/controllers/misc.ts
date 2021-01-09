@@ -28,15 +28,13 @@ export async function handleInternalReady(
   // Triggered on each shard
   eventHandlers.shardReady?.(shardID);
   if (payload.shard && shardID === payload.shard[1] - 1) {
-    // Wait for 5 seconds to allow all guild create events to be processed
-    await delay(5000);
-
     const loadedAllGuilds = async () => {
       if (payload.guilds.some((g) => !cache.guilds.has(g.id))) {
         setTimeout(() => loadedAllGuilds, 2000);
       } else {
         // The bot has already started, the last shard is resumed, however.
         if (cache.isReady) return;
+
         cache.isReady = true;
         eventHandlers.ready?.();
 

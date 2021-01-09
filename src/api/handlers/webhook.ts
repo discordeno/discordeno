@@ -46,7 +46,7 @@ export async function createWebhook(
     throw new Error(Errors.INVALID_WEBHOOK_NAME);
   }
 
-  return await RequestManager.post(
+  return RequestManager.post(
     endpoints.CHANNEL_WEBHOOKS(channelID),
     {
       ...options,
