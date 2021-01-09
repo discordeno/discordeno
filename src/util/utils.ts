@@ -71,7 +71,7 @@ export function snakeToCamelCase(s: string) {
   });
 }
 
-export function isObject(o: any) {
+export function isObject(o: unknown) {
   return o === Object(o) && !Array.isArray(o) && typeof o !== "function";
 }
 

@@ -291,15 +291,14 @@ export async function createInvite(
   ) {
     throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE);
   }
-  const payload = {
+
+  return RequestManager.post(endpoints.CHANNEL_INVITES(channelID), {
     ...options,
     max_age: options.maxAge,
     max_uses: options.maxUses,
     target_user: options.targetUser,
     target_user_type: options.targetUserType,
-  };
-
-  return RequestManager.post(endpoints.CHANNEL_INVITES(channelID), payload);
+  });
 }
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */

@@ -1,9 +1,9 @@
+import { Collection, Member } from "../../mod.ts";
 import { controllers } from "../api/controllers/mod.ts";
 import { Guild } from "../api/structures/guild.ts";
 import { FetchMembersOptions } from "../api/types/mod.ts";
 import { eventHandlers } from "../bot.ts";
 import {
-  GatewayOpcodes,
   GatewayPayload,
   GetGatewayBotPayload,
   IdentifyPayload,
@@ -76,26 +76,18 @@ export async function handleDiscordPayload(
   eventHandlers.raw?.(data);
   await eventHandlers.dispatchRequirements?.(data, shardID);
 
-  switch (data.op) {
-    case GatewayOpcodes.HeartbeatACK:
-      // In case the user wants to listen to heartbeat responses
-      return eventHandlers.heartbeat?.();
-    case GatewayOpcodes.Dispatch:
-      if (!data.t) return;
-      // Run the appropriate controller for this event.
-      // TODO(itohatweb): remove ts-ignore
-      // @ts-ignore
-      return controllers[data.t]?.(data, shardID);
-    default:
-      return;
-  }
+  // deno-lint-ignore ban-ts-comment
+  // @ts-ignore
+  return controllers[data.t]?.(data, shardID);
 }
 
 export function requestAllMembers(
   guild: Guild,
-  // TODO: The parameter "resolve" should have a "stronger" type.
-  // deno-lint-ignore ban-types
-  resolve: Function,
+  resolve: (
+    value:
+      | Collection<string, Member>
+      | PromiseLike<Collection<string, Member>>,
+  ) => void,
   options?: FetchMembersOptions,
 ) {
   const nonce = `${guild.id}-${Date.now()}`;

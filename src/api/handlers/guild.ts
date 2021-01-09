@@ -67,43 +67,41 @@ import {
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createServer(options: CreateGuildOptions) {
-  const payload = {
-    ...options,
-    verification_level: options.verificationLevel
-      ? VerificationLevel[options.verificationLevel]
-      : undefined,
-    default_message_notifications: options.defaultMessageNotifications
-      ? DefaultMessageNotificationLevel[options.defaultMessageNotifications]
-      : undefined,
-    explicit_content_filter: options.explicitContentFilter
-      ? ExplicitContentFilterLevel[options.explicitContentFilter]
-      : undefined,
-    channels: options.channels?.map((channel) => {
-      return {
-        ...channel,
-        type: channel.type ? ChannelTypes[channel.type] : undefined,
-        permission_overwrites: toPermissionOverwritesPayload(
-          channel.permissionOverwrites,
-        ),
-        recipients: channel.recipients?.map((recipient) => {
-          return {
-            ...recipient,
-            flags: recipient.flags ? UserFlags[recipient.flags] : undefined,
-            premiumType: recipient.premiumType
-              ? PremiumTypes[recipient.premiumType]
-              : undefined,
-            publicFlags: recipient.publicFlags
-              ? UserFlags[recipient.publicFlags]
-              : undefined,
-          };
-        }),
-      };
-    }),
-  };
-
   const guild = await RequestManager.post(
     endpoints.GUILDS,
-    payload,
+    {
+      ...options,
+      verification_level: options.verificationLevel
+        ? VerificationLevel[options.verificationLevel]
+        : undefined,
+      default_message_notifications: options.defaultMessageNotifications
+        ? DefaultMessageNotificationLevel[options.defaultMessageNotifications]
+        : undefined,
+      explicit_content_filter: options.explicitContentFilter
+        ? ExplicitContentFilterLevel[options.explicitContentFilter]
+        : undefined,
+      channels: options.channels?.map((channel) => {
+        return {
+          ...channel,
+          type: channel.type ? ChannelTypes[channel.type] : undefined,
+          permission_overwrites: toPermissionOverwritesPayload(
+            channel.permissionOverwrites,
+          ),
+          recipients: channel.recipients?.map((recipient) => {
+            return {
+              ...recipient,
+              flags: recipient.flags ? UserFlags[recipient.flags] : undefined,
+              premiumType: recipient.premiumType
+                ? PremiumTypes[recipient.premiumType]
+                : undefined,
+              publicFlags: recipient.publicFlags
+                ? UserFlags[recipient.publicFlags]
+                : undefined,
+            };
+          }),
+        };
+      }),
+    },
   ) as GuildPayload;
   return structures.createGuild(guild, 0);
 }
@@ -710,21 +708,19 @@ export async function editGuild(guildID: string, options: EditGuildOptions) {
     options.splash = await urlToBase64(options.splash);
   }
 
-  const payload = {
-    ...camelKeysToSnakeCase(options),
-    verification_level: options.verificationLevel
-      ? VerificationLevel[options.verificationLevel]
-      : undefined,
-    default_message_notifications: options.defaultMessageNotifications
-      ? DefaultMessageNotificationLevel[options.defaultMessageNotifications]
-      : undefined,
-    explicit_content_filter: options.explicitContentFilter
-      ? ExplicitContentFilterLevel[options.explicitContentFilter]
-      : undefined,
-  };
-
   return snakeKeysToCamelCase(
-    RequestManager.patch(endpoints.GUILD(guildID), payload),
+    RequestManager.patch(endpoints.GUILD(guildID), {
+      ...camelKeysToSnakeCase(options),
+      verification_level: options.verificationLevel
+        ? VerificationLevel[options.verificationLevel]
+        : undefined,
+      default_message_notifications: options.defaultMessageNotifications
+        ? DefaultMessageNotificationLevel[options.defaultMessageNotifications]
+        : undefined,
+      explicit_content_filter: options.explicitContentFilter
+        ? ExplicitContentFilterLevel[options.explicitContentFilter]
+        : undefined,
+    }),
   ) as Guild;
 }
 

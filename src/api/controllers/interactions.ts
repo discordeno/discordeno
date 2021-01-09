@@ -26,7 +26,7 @@ export async function handleInternalInteractionCreate(data: GatewayPayload) {
   );
 }
 
-export async function handleInternalApplicationCommandCreate(
+export function handleInternalApplicationCommandCreate(
   data: GatewayPayload,
 ) {
   if (data.t !== "APPLICATION_COMMAND_CREATE") return;

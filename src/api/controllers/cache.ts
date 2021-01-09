@@ -41,6 +41,7 @@ function set(
   key: string,
   value: number,
 ): Promise<Collection<string, number>>;
+// deno-lint-ignore require-await no-explicit-any
 async function set(table: TableName, key: string, value: any) {
   return cache[table].set(key, value);
 }
@@ -57,6 +58,7 @@ function get(
   table: "unavailableGuilds",
   key: string,
 ): Promise<Guild | undefined>;
+// deno-lint-ignore require-await
 async function get(table: TableName, key: string) {
   return cache[table].get(key);
 }
@@ -83,6 +85,7 @@ function forEach(
 ): void;
 function forEach(
   table: TableName,
+  // deno-lint-ignore no-explicit-any
   callback: (value: any, key: string, map: Map<string, any>) => unknown,
 ) {
   return cache[table].forEach(callback);
@@ -108,28 +111,34 @@ function filter(
   table: "members",
   callback: (value: Member, key: string) => boolean,
 ): Promise<Collection<string, Member>>;
+// deno-lint-ignore require-await
 async function filter(
   table: TableName,
+  // deno-lint-ignore no-explicit-any
   callback: (value: any, key: string) => boolean,
 ) {
   return cache[table].filter(callback);
 }
 
-export let cacheHandlers = {
+export const cacheHandlers = {
   /** Deletes all items from the cache */
+  // deno-lint-ignore require-await
   clear: async function (table: TableName) {
     return cache[table].clear();
   },
   /** Deletes 1 item from cache using the key */
+  // deno-lint-ignore require-await
   delete: async function (table: TableName, key: string) {
     return cache[table].delete(key);
   },
   /** Check if something exists in cache with a key */
+  // deno-lint-ignore require-await
   has: async function (table: TableName, key: string) {
     return cache[table].has(key);
   },
 
   /** Get the number of key-value pairs */
+  // deno-lint-ignore require-await
   size: async (table: TableName) => {
     return cache[table].size;
   },
