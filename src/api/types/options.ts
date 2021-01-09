@@ -12,7 +12,7 @@ import {
   PresenceUpdateEventPayload,
   TypingStartEventPayload,
   UserPayload,
-  VoiceStatePayload,
+  VoiceStateUpdateEventPayload,
 } from "../../types/mod.ts";
 import { Channel, Guild, Member, Message, Role } from "../structures/mod.ts";
 import { ImageFormats, ImageSize } from "./mod.ts";
@@ -123,7 +123,7 @@ export interface EventHandlers {
   ) => unknown;
   voiceStateUpdate?: (
     member: Member,
-    voiceState: VoiceStatePayload,
+    voiceState: VoiceStateUpdateEventPayload,
   ) => unknown;
   webhooksUpdate?: (channelID: string, guildID: string) => unknown;
 }

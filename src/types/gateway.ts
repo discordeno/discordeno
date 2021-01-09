@@ -10,7 +10,7 @@ import { ApplicationPayload } from "./oauth2.ts";
 import { GatewayOpcodes } from "./opcodes_status_codes.ts";
 import { RolePayload } from "./permissions.ts";
 import { UserPayload } from "./user.ts";
-import { VoiceStatePayload } from "./voice.ts";
+import { VoiceStateUpdateEventPayload } from "./voice.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#payloads */
 export interface GatewayPayload {
@@ -26,8 +26,8 @@ export interface GatewayPayload {
 
 /** GatewayPayload event data type list */
 export type GatewayPayloadDTypes =
-  | HelloPayload
-  | ReadyEventFields
+  | HelloEventPayload
+  | ReadyEventPayload
   | ResumePayload
   | InvalidSession
   | ChannelPayload
@@ -58,9 +58,9 @@ export type GatewayPayloadDTypes =
   | PresenceUpdateEventPayload
   | TypingStartEventPayload
   | UserPayload
-  | VoiceStatePayload
+  | VoiceStateUpdateEventPayload
   | VoiceServerUpdateEventPayload
-  | WebhookUpdateEventPayload
+  | WebhooksUpdateEventPayload
   | Interaction
   | null;
 
@@ -232,13 +232,13 @@ export enum StatusTypes {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#hello */
-export interface HelloPayload {
+export interface HelloEventPayload {
   /** the interval (in milliseconds) the client should heartbeat with */
   heartbeat_interval: number;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#ready */
-export interface ReadyEventFields {
+export interface ReadyEventPayload {
   /** gateway version */
   v: number;
   /** information about the user including email */
@@ -648,7 +648,7 @@ export interface VoiceServerUpdateEventPayload {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#webhooks-update-webhook-update-event-fields */
-export interface WebhookUpdateEventPayload {
+export interface WebhooksUpdateEventPayload {
   /** id of the guild */
   guild_id: string;
   /** id of the channel */

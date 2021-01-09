@@ -74,30 +74,30 @@ export function isObject(o: any) {
   return o === Object(o) && !Array.isArray(o) && typeof o !== "function";
 }
 
-export function keysToSnake(o: any) {
+export function camelKeysToSnakeCase(o: any) {
   if (isObject(o)) {
-    const n: any = {};
+    const n: Record<string, any> = {};
     Object.keys(o)
       .forEach((k) => {
-        n[camelToSnakeCase(k)] = keysToSnake(o[k]);
+        n[camelToSnakeCase(k)] = camelKeysToSnakeCase(o[k]);
       });
     return n;
   } else if (Array.isArray(o)) {
-    o = o.map((i) => keysToSnake(i));
+    o = o.map((i) => camelKeysToSnakeCase(i));
   }
   return o;
 }
 
-export function keysToCamel(o: any) {
+export function snakeKeysToCamelCase(o: any) {
   if (isObject(o)) {
-    const n: any = {};
+    const n: Record<string, any> = {};
     Object.keys(o)
       .forEach((k) => {
-        n[snakeToCamelCase(k)] = keysToCamel(o[k]);
+        n[snakeToCamelCase(k)] = snakeKeysToCamelCase(o[k]);
       });
     return n;
   } else if (Array.isArray(o)) {
-    o = o.map((i) => keysToCamel(i));
+    o = o.map((i) => snakeKeysToCamelCase(i));
   }
   return o;
 }

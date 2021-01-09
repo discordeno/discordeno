@@ -39,7 +39,7 @@ export enum VoiceOpcodes {
   Heartbeat,
   SessionDescription,
   Speaking,
-  HEARTBEAT_ACK,
+  HeartbeatACK,
   Resume,
   Hello,
   Resumed,

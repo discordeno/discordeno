@@ -9,7 +9,11 @@ import {
 import { cache } from "../../util/cache.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
-import { keysToCamel, keysToSnake, urlToBase64 } from "../../util/utils.ts";
+import {
+  camelKeysToSnakeCase,
+  snakeKeysToCamelCase,
+  urlToBase64,
+} from "../../util/utils.ts";
 import { structures } from "../structures/mod.ts";
 import {
   ApplicationCommand,
@@ -112,7 +116,7 @@ export async function executeWebhook(
       options.wait ? "?wait=true" : ""
     }`,
     {
-      ...keysToSnake(options),
+      ...camelKeysToSnakeCase(options),
     },
   );
   if (!options.wait) return;
@@ -214,13 +218,13 @@ export async function createSlashCommand(
   }
 
   const payload = {
-    ...keysToSnake(options),
+    ...camelKeysToSnakeCase(options),
     options: options.options?.map((option) => {
       return { ...option, type: ApplicationCommandOptionTypes[option.type] };
     }),
   };
 
-  return keysToCamel(
+  return snakeKeysToCamelCase(
     await RequestManager.post(
       guildID
         ? endpoints.COMMANDS_GUILD(botID, guildID)
@@ -249,13 +253,13 @@ export async function upsertSlashCommand(
   guildID?: string,
 ) {
   const payload = {
-    ...keysToSnake(options),
+    ...camelKeysToSnakeCase(options),
     options: options.options?.map((option) => {
       return { ...option, type: ApplicationCommandOptionTypes[option.type] };
     }),
   };
 
-  return keysToCamel(
+  return snakeKeysToCamelCase(
     await RequestManager.post(
       guildID
         ? endpoints.COMMANDS_GUILD_ID(botID, commandID, guildID)
@@ -272,13 +276,13 @@ export async function editSlashCommand(
   guildID?: string,
 ) {
   const payload = {
-    ...keysToSnake(options),
+    ...camelKeysToSnakeCase(options),
     options: options.options?.map((option) => {
       return { ...option, type: ApplicationCommandOptionTypes[option.type] };
     }),
   };
 
-  return keysToCamel(
+  return snakeKeysToCamelCase(
     await RequestManager.post(
       guildID
         ? endpoints.COMMANDS_GUILD_ID(botID, commandID, guildID)
@@ -312,7 +316,7 @@ export function executeSlashCommand(
   // If its already been executed, we need to send a followup response
   if (cache.executedSlashCommands.has(token)) {
     const payload = {
-      ...keysToSnake(options),
+      ...camelKeysToSnakeCase(options),
       type: InteractionResponseTypes[options.type],
     };
     return RequestManager.post(endpoints.WEBHOOK(botID, token), payload);
@@ -331,7 +335,7 @@ export function executeSlashCommand(
   }
 
   return RequestManager.post(endpoints.INTERACTION_ID_TOKEN(id, token), {
-    ...keysToSnake(options),
+    ...camelKeysToSnakeCase(options),
   });
 }
 
@@ -357,6 +361,6 @@ export function editSlashResponse(
 ) {
   return RequestManager.patch(
     endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
-    { ...keysToSnake(options) },
+    { ...camelKeysToSnakeCase(options) },
   );
 }

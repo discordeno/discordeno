@@ -1,4 +1,4 @@
-import { keysToSnake } from "../../../mod.ts";
+import { camelKeysToSnakeCase } from "../../../mod.ts";
 import { RequestManager } from "../../rest/mod.ts";
 import {
   ChannelTypes,
@@ -224,10 +224,10 @@ export async function sendMessage(
   const result = await RequestManager.post(
     endpoints.CHANNEL_MESSAGES(channelID),
     {
-      ...keysToSnake(content),
+      ...camelKeysToSnakeCase(content),
       message_reference: typeof content.reply === "string"
         ? { message_id: content.reply }
-        : keysToSnake(content.reply),
+        : camelKeysToSnakeCase(content.reply),
     },
   );
 
@@ -407,7 +407,7 @@ export async function editChannel(
   }
 
   const payload = {
-    ...keysToSnake(options),
+    ...camelKeysToSnakeCase(options),
     permission_overwrites: options.permissionOverwrites?.map(
       (overwrite) => {
         return {
