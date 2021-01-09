@@ -32,9 +32,9 @@ export interface Attachment {
   /** A proxied url of file */
   proxy_url: string;
   /** The height of file if an image */
-  height: number | null;
+  height?: number | null;
   /** The width of the file if an image */
-  width: number | null;
+  width?: number | null;
 }
 
 export interface Embed {
