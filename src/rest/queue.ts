@@ -42,7 +42,9 @@ export function processQueue() {
         const query =
           queuedRequest.payload.method === "get" && queuedRequest.payload.body
             ? Object.entries(queuedRequest.payload.body).map(([key, value]) =>
-              `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`
+              `${encodeURIComponent(key)}=${
+                encodeURIComponent(value as string)
+              }`
             )
               .join("&")
             : "";
