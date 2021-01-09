@@ -7,7 +7,11 @@ import {
   higherRolePosition,
   highestRole,
 } from "../../util/permissions.ts";
-import { formatImageURL, keysToCamel, urlToBase64 } from "../../util/utils.ts";
+import {
+  formatImageURL,
+  snakeKeysToCamelCase,
+  urlToBase64,
+} from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { Member, structures } from "../structures/mod.ts";
 import {
@@ -259,7 +263,7 @@ export async function editBotProfile(username?: string, botAvatarURL?: string) {
   }
 
   const avatar = botAvatarURL ? await urlToBase64(botAvatarURL) : undefined;
-  return keysToCamel(
+  return snakeKeysToCamelCase(
     await RequestManager.patch(
       endpoints.USER_BOT,
       {

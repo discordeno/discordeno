@@ -3,7 +3,7 @@ import { RequestManager } from "../../rest/mod.ts";
 import { MessageFlags, MessagePayload, UserPayload } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
-import { delay, keysToSnake } from "../../util/utils.ts";
+import { camelKeysToSnakeCase, delay } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { Message, structures } from "../structures/mod.ts";
 import { EditMessageOptions, Errors } from "../types/mod.ts";
@@ -13,6 +13,7 @@ export async function deleteMessageByID(
   channelID: string,
   messageID: string,
   delayMilliseconds = 0,
+  reason?: string,
 ) {
   const message = await cacheHandlers.get("messages", messageID);
   if (message) return deleteMessage(message, delayMilliseconds);
@@ -21,6 +22,7 @@ export async function deleteMessageByID(
 
   return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE(channelID, messageID),
+    { reason },
   );
 }
 
@@ -246,7 +248,7 @@ export async function editMessage(
   const result = await RequestManager.patch(
     endpoints.CHANNEL_MESSAGE(message.channelID, message.id),
     {
-      ...keysToSnake(content),
+      ...camelKeysToSnakeCase(content),
       flags: content.flags ? MessageFlags[content.flags] : undefined,
     },
   ) as MessagePayload;

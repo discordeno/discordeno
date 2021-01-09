@@ -95,7 +95,7 @@ const baseMessage: Partial<Message> = {
   send(content) {
     return sendMessage(this.channelID!, content);
   },
-  alert(content, timeout = 10) {
+  alert(content, timeout = 10, reason) {
     return sendMessage(this.channelID!, content).then((response) => {
       response.delete(timeout * 1000, reason).catch(console.error);
     });

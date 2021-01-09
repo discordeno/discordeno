@@ -2,11 +2,11 @@ import { eventHandlers, setBotID } from "../../bot.ts";
 import {
   GatewayPayload,
   PresenceUpdateEventPayload,
-  ReadyEventFields,
+  ReadyEventPayload,
   TypingStartEventPayload,
   UserPayload,
-  VoiceStatePayload,
-  WebhookUpdateEventPayload,
+  VoiceStateUpdateEventPayload,
+  WebhooksUpdateEventPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { delay } from "../../util/utils.ts";
@@ -24,7 +24,7 @@ export async function handleInternalReady(
 ) {
   if (data.t !== "READY") return;
 
-  const payload = data.d as ReadyEventFields;
+  const payload = data.d as ReadyEventPayload;
   setBotID(payload.user.id);
 
   // Triggered on each shard
@@ -85,7 +85,7 @@ export async function handleInternalUserUpdate(data: GatewayPayload) {
 export async function handleInternalVoiceStateUpdate(data: GatewayPayload) {
   if (data.t !== "VOICE_STATE_UPDATE") return;
 
-  const payload = data.d as VoiceStatePayload;
+  const payload = data.d as VoiceStateUpdateEventPayload;
   if (!payload.guild_id) return;
 
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
@@ -136,7 +136,7 @@ export async function handleInternalVoiceStateUpdate(data: GatewayPayload) {
 export function handleInternalWebhooksUpdate(data: GatewayPayload) {
   if (data.t !== "WEBHOOKS_UPDATE") return;
 
-  const options = data.d as WebhookUpdateEventPayload;
+  const options = data.d as WebhooksUpdateEventPayload;
   return eventHandlers.webhooksUpdate?.(
     options.channel_id,
     options.guild_id,

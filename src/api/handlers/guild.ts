@@ -24,9 +24,9 @@ import { endpoints } from "../../util/constants.ts";
 import { toPermissionOverwritesPayload } from "../../util/converters.ts";
 import { botHasPermission, calculateBits } from "../../util/permissions.ts";
 import {
+  camelKeysToSnakeCase,
   formatImageURL,
-  keysToCamel,
-  keysToSnake,
+  snakeKeysToCamelCase,
   urlToBase64,
 } from "../../util/utils.ts";
 import { requestAllMembers } from "../../ws/shard_manager.ts";
@@ -177,7 +177,7 @@ export async function createGuildChannel(
 
   const result =
     (await RequestManager.post(endpoints.GUILD_CHANNELS(guild.id), {
-      ...keysToSnake(options),
+      ...camelKeysToSnakeCase(options),
       type: options?.type
         ? ChannelTypes[options.type]
         : ChannelTypes.GUILD_TEXT,
@@ -202,7 +202,7 @@ export async function deleteChannel(
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
 
-  return keysToCamel(
+  return snakeKeysToCamelCase(
     await RequestManager.delete(endpoints.CHANNEL(channelID)),
   ) as Channel;
 }
@@ -312,7 +312,7 @@ export async function createEmoji(
     image,
   });
 
-  return keysToCamel(result) as Emoji;
+  return snakeKeysToCamelCase(result) as Emoji;
 }
 
 /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */
@@ -326,7 +326,7 @@ export async function editEmoji(
     throw new Error(Errors.MISSING_MANAGE_EMOJIS);
   }
 
-  return keysToCamel(
+  return snakeKeysToCamelCase(
     await RequestManager.patch(
       endpoints.GUILD_EMOJI(guildID, emojiID),
       options,
@@ -418,7 +418,7 @@ export async function getRoles(guildID: string) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-  return keysToCamel(
+  return snakeKeysToCamelCase(
     await RequestManager.get(
       endpoints.GUILD_ROLES(guildID),
     ),
@@ -487,7 +487,7 @@ export async function pruneMembers(
   const result = await RequestManager.post(
     endpoints.GUILD_PRUNE(guildID),
     {
-      ...keysToSnake(options),
+      ...camelKeysToSnakeCase(options),
       include_roles: Array.isArray(options.includeRoles)
         ? options.includeRoles.join(",")
         : options.includeRoles,
@@ -534,7 +534,7 @@ export async function getAuditLogs(
   }
 
   const result = await RequestManager.get(endpoints.GUILD_AUDIT_LOGS(guildID), {
-    ...keysToSnake(options),
+    ...camelKeysToSnakeCase(options),
     action_type: options.actionType
       ? AuditLogEvent[options.actionType]
       : undefined,
@@ -543,7 +543,7 @@ export async function getAuditLogs(
       : 50,
   }) as AuditLogPayload;
 
-  return keysToCamel(result) as AuditLog;
+  return snakeKeysToCamelCase(result) as AuditLog;
 }
 
 // TODO(itohatweb): better return type (https://discord.com/developers/docs/resources/guild#get-guild-widget)
@@ -575,12 +575,12 @@ export async function editEmbed(
     { enabled, channel_id: channelID },
   ) as GuildWidgetPayload;
 
-  return keysToCamel(result) as GuildWidget;
+  return snakeKeysToCamelCase(result) as GuildWidget;
 }
 
 /** Returns the code and uses of the vanity url for this server if it is enabled. Requires the MANAGE_GUILD permission. */
 export async function getVanityURL(guildID: string) {
-  return keysToCamel(
+  return snakeKeysToCamelCase(
     await RequestManager.get(endpoints.GUILD_VANITY_URL(guildID)),
   ) as Partial<Invite>;
 }
@@ -592,7 +592,7 @@ export async function getIntegrations(guildID: string) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
 
-  return keysToCamel(
+  return snakeKeysToCamelCase(
     await RequestManager.get(endpoints.GUILD_INTEGRATIONS(guildID)),
   ) as Integration;
 }
@@ -610,7 +610,7 @@ export async function editIntegration(
 
   return RequestManager.patch(
     endpoints.GUILD_INTEGRATION(guildID, id),
-    keysToSnake(options),
+    camelKeysToSnakeCase(options),
   );
 }
 
@@ -651,7 +651,7 @@ export async function getBans(guildID: string) {
   ) as BanPayload[];
 
   return new Collection<string, Ban>(
-    results.map((res) => [res.user.id, keysToCamel(res)]),
+    results.map((res) => [res.user.id, snakeKeysToCamelCase(res)]),
   );
 }
 
@@ -662,7 +662,7 @@ export async function getBan(guildID: string, memberID: string) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
 
-  return keysToCamel(
+  return snakeKeysToCamelCase(
     await RequestManager.get(
       endpoints.GUILD_BAN(guildID, memberID),
     ),
@@ -678,7 +678,7 @@ export async function ban(guildID: string, id: string, options: BanOptions) {
 
   return RequestManager.put(
     endpoints.GUILD_BAN(guildID, id),
-    { ...keysToCamel(options) },
+    { ...snakeKeysToCamelCase(options) },
   );
 }
 
@@ -711,7 +711,7 @@ export async function editGuild(guildID: string, options: EditGuildOptions) {
   }
 
   const payload = {
-    ...keysToSnake(options),
+    ...camelKeysToSnakeCase(options),
     verification_level: options.verificationLevel
       ? VerificationLevel[options.verificationLevel]
       : undefined,
@@ -723,7 +723,7 @@ export async function editGuild(guildID: string, options: EditGuildOptions) {
       : undefined,
   };
 
-  return keysToCamel(
+  return snakeKeysToCamelCase(
     RequestManager.patch(endpoints.GUILD(guildID), payload),
   ) as Guild;
 }
@@ -735,7 +735,7 @@ export async function getInvites(guildID: string) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
 
-  return keysToCamel(
+  return snakeKeysToCamelCase(
     await RequestManager.get(endpoints.GUILD_INVITES(guildID)),
   ) as Invite[];
 }
@@ -763,7 +763,7 @@ export async function getWebhooks(guildID: string) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
 
-  return keysToCamel(
+  return snakeKeysToCamelCase(
     await RequestManager.get(endpoints.GUILD_WEBHOOKS(guildID)),
   ) as Webhook[];
 }
@@ -781,7 +781,7 @@ export function getUser(userID: string) {
  * So it does not cache the guild, you must do it manually.
  * */
 export async function getGuild(guildID: string, withCounts = true) {
-  return keysToCamel(
+  return snakeKeysToCamelCase(
     await RequestManager.get(
       endpoints.GUILD(guildID),
       { with_counts: withCounts },
@@ -817,7 +817,7 @@ export async function createGuildFromTemplate(
     options.icon = await urlToBase64(options.icon);
   }
 
-  return keysToCamel(
+  return snakeKeysToCamelCase(
     await RequestManager.post(
       endpoints.GUILD_TEMPLATE(templateCode),
       options,

@@ -3,9 +3,9 @@ import { botGatewayData, eventHandlers, proxyWSURL } from "../bot.ts";
 import {
   GatewayOpcodes,
   GetGatewayBotPayload,
-  HelloPayload,
+  HelloEventPayload,
   IdentifyPayload,
-  ReadyEventFields,
+  ReadyEventPayload,
 } from "../types/mod.ts";
 import { BotStatusRequest, delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
@@ -88,7 +88,7 @@ export async function createShard(
           if (!heartbeating.has(basicShard.id)) {
             heartbeat(
               basicShard,
-              (messageData.d as HelloPayload).heartbeat_interval,
+              (messageData.d as HelloEventPayload).heartbeat_interval,
               identifyPayload,
               data,
             );
@@ -131,7 +131,7 @@ export async function createShard(
           // Important for RESUME
           if (messageData.t === "READY") {
             basicShard.sessionID =
-              (messageData.d as ReadyEventFields).session_id;
+              (messageData.d as ReadyEventPayload).session_id;
           }
 
           // Update the sequence number if it is present

@@ -9,7 +9,7 @@ import {
   ModifyGuildParams,
   PresenceUpdateEventPayload,
   RolePayload,
-  VoiceStatePayload,
+  VoiceStateUpdateEventPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
@@ -348,7 +348,7 @@ export interface Guild {
   invites(): Promise<any>;
 }
 
-interface CleanVoiceState extends VoiceStatePayload {
+interface CleanVoiceState extends VoiceStateUpdateEventPayload {
   /** The guild id where this voice state is from */
   guildID: string;
   /** The channel id where this voice state is from */
