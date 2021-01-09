@@ -1,5 +1,6 @@
 import { camelKeysToSnakeCase } from "../../../mod.ts";
 import { RequestManager } from "../../rest/mod.ts";
+import { RequestManager } from "../../rest/request_manager.ts";
 import {
   ChannelTypes,
   FollowedChannelPayload,

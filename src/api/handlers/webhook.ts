@@ -1,5 +1,4 @@
 import { botID } from "../../bot.ts";
-import { RequestManager } from "../../rest/mod.ts";
 import {
   ApplicationCommandOptionTypes,
   InteractionResponseTypes,
@@ -24,6 +23,7 @@ import {
   ExecuteWebhookOptions,
   InteractionResponse,
 } from "../types/mod.ts";
+import { RequestManager } from "../../rest/request_manager.ts";
 
 /** Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
 *
