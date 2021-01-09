@@ -47,7 +47,7 @@ export async function handleInternalReady(
       }
     };
 
-    setTimeout(() => loadedAllGuilds(), 2000);
+    setTimeout(loadedAllGuilds, 2000);
   }
 
   // Wait 5 seconds to spawn next shard
