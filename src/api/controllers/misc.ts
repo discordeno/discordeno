@@ -32,7 +32,7 @@ export async function handleInternalReady(
     await delay(5000);
 
     const loadedAllGuilds = async () => {
-      if (payload.unavailable_guilds.some((g) => !cache.guilds.has(g.id))) {
+      if (payload.guilds.some((g) => !cache.guilds.has(g.id))) {
         setTimeout(() => loadedAllGuilds, 2000);
       } else {
         // The bot has already started, the last shard is resumed, however.
