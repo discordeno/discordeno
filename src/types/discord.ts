@@ -288,7 +288,7 @@ export interface ReadyPayload {
   /** empty array */
   private_channels: [];
   /** the guilds the user is in */
-  unavailable_guilds: Pick<CreateGuildPayload, "id" | "unavailable">[];
+  guilds: Pick<CreateGuildPayload, "id" | "unavailable">[];
   /** used for resuming connections */
   session_id: string;
   /** (shard_id, num_shards) the shard information associated with this session, if sent when identifying */
