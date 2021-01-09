@@ -5,6 +5,8 @@ import {
   Message,
 } from "../api/structures/structures.ts";
 import { PresenceUpdateEventPayload } from "../types/mod.ts";
+import { Channel, Guild, Member, Message } from "../api/structures/mod.ts";
+import { PresenceUpdatePayload } from "../types/mod.ts";
 import { Collection } from "./collection.ts";
 
 export interface CacheData {
@@ -14,7 +16,9 @@ export interface CacheData {
   messages: Collection<string, Message>;
   members: Collection<string, Member>;
   unavailableGuilds: Collection<string, number>;
-  presences: Collection<string, PresenceUpdateEventPayload>;
+  presences: Collection<string, PresenceUpdatePayload>;
+  // TODO: The type Collection's second provided generic [function] should have a definite shape.
+  // deno-lint-ignore ban-types
   fetchAllMembersProcessingRequests: Collection<string, Function>;
   executedSlashCommands: Collection<string, string>;
 }

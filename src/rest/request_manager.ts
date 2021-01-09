@@ -18,6 +18,7 @@ let queueInProcess = false;
 export interface QueuedRequest {
   callback: () => Promise<
     void | {
+      // deno-lint-ignore no-explicit-any
       rateLimited: any;
       beforeFetch: boolean;
       bucketID?: string | null;
@@ -59,7 +60,7 @@ function addToQueue(request: QueuedRequest) {
   }
 }
 
-async function cleanupQueues() {
+function cleanupQueues() {
   Object.entries(pathQueues).forEach(([key, value]) => {
     if (!value.length) {
       // Remove it entirely
@@ -124,7 +125,7 @@ async function processQueue() {
 processRateLimitedPaths();
 
 export const RequestManager = {
-  get: async (url: string, body?: unknown) => {
+  get: (url: string, body?: unknown) => {
     return runMethod("get", url, body);
   },
   post: (url: string, body?: unknown) => {
@@ -141,6 +142,7 @@ export const RequestManager = {
   },
 };
 
+// deno-lint-ignore no-explicit-any
 function createRequestBody(body: any, method: RequestMethods) {
   const headers: { [key: string]: string } = {
     Authorization: authorization,
@@ -171,7 +173,7 @@ function createRequestBody(body: any, method: RequestMethods) {
   };
 }
 
-async function checkRatelimits(url: string) {
+function checkRatelimits(url: string) {
   const ratelimited = ratelimitedPaths.get(url);
   const global = ratelimitedPaths.get("global");
   const now = Date.now();
@@ -186,7 +188,7 @@ async function checkRatelimits(url: string) {
   return false;
 }
 
-async function runMethod(
+function runMethod(
   method: RequestMethods,
   url: string,
   body?: unknown,
@@ -226,10 +228,12 @@ async function runMethod(
         }
 
         const query = method === "get" && body
-          ? Object.entries(body as any).map(([key, value]) =>
-            `${encodeURIComponent(key)}=${encodeURIComponent(value as any)}`
-          )
-            .join("&")
+          ? // deno-lint-ignore no-explicit-any
+            Object.entries(body as any).map(([key, value]) =>
+              // deno-lint-ignore no-explicit-any
+              `${encodeURIComponent(key)}=${encodeURIComponent(value as any)}`
+            )
+              .join("&")
           : "";
         const urlToUse = method === "get" && query ? `${url}?${query}` : url;
 

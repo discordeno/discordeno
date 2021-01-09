@@ -165,7 +165,7 @@ Deno.test({
 
 Deno.test({
   name: "channel overwrite has permission",
-  async fn() {
+  fn() {
     const channel = cache.channels.get(data.channelID);
     if (!channel) throw "Channel not found";
 
@@ -247,7 +247,7 @@ Deno.test({
 // This is meant to be the final test that forcefully crashes the bot
 Deno.test({
   name: "exit the process forcefully after all the tests are done",
-  async fn() {
+  fn() {
     Deno.exit();
   },
   ...testOptions,

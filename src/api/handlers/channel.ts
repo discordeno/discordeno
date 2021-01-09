@@ -313,11 +313,10 @@ export async function getChannelWebhooks(channelID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
-  return await RequestManager.get(
+
+  return RequestManager.get(
     endpoints.CHANNEL_WEBHOOKS(channelID),
-  ) as Promise<
-    WebhookPayload[]
-  >;
+  ) as Promise<WebhookPayload[]>;
 }
 
 interface EditChannelRequest {
@@ -407,8 +406,15 @@ export async function editChannel(
   }
 
   const payload = {
-    ...camelKeysToSnakeCase(options),
-    permission_overwrites: options.permissionOverwrites?.map(
+    ...options,
+    // deno-lint-ignore camelcase
+    rate_limit_per_user: options.slowmode,
+    // deno-lint-ignore camelcase
+    parent_id: options.parentID,
+    // deno-lint-ignore camelcase
+    user_limit: options.userLimit,
+    // deno-lint-ignore camelcase
+    permission_overwrites: options.overwrites?.map(
       (overwrite) => {
         return {
           ...overwrite,

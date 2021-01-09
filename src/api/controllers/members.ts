@@ -56,7 +56,9 @@ export async function handleInternalGuildMemberUpdate(data: GatewayPayload) {
 
   const newMemberData = {
     ...payload,
+    // deno-lint-ignore camelcase
     premium_since: payload.premium_since || undefined,
+    // deno-lint-ignore camelcase
     joined_at: new Date(guildMember?.joinedAt || Date.now())
       .toISOString(),
     deaf: guildMember?.deaf || false,

@@ -1,7 +1,6 @@
 import {
   ChannelPayload,
   ChannelTypes,
-  CreateMessageParams,
   OverwritePayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
@@ -9,6 +8,7 @@ import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { sendMessage } from "../handlers/channel.ts";
+import { MessageContent } from "../types/mod.ts";
 import { Guild } from "./guild.ts";
 import { Message } from "./message.ts";
 
@@ -32,34 +32,34 @@ export async function createChannel(
   guildID?: string,
 ) {
   const {
-    guild_id: rawGuildID,
+    guild_id: rawGuildID = "",
     last_message_id: lastMessageID,
     user_limit: userLimit,
     rate_limit_per_user: rateLimitPerUser,
-    parent_id: parentID,
+    parent_id: parentID = undefined,
     last_pin_timestamp: lastPinTimestamp,
-    permission_overwrites,
-    nsfw,
+    permission_overwrites: permissionOverwrites = [],
+    nsfw = false,
     ...rest
   } = data;
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    restProps[key] = createNewProp((rest as any)[key]);
+    restProps[key] = createNewProp(rest[key]);
   }
 
   const channel = Object.create(baseChannel, {
     ...restProps,
-    guildID: createNewProp(guildID || rawGuildID || ""),
+    guildID: createNewProp(guildID || rawGuildID),
     lastMessageID: createNewProp(lastMessageID),
     userLimit: createNewProp(userLimit),
     rateLimitPerUser: createNewProp(rateLimitPerUser),
-    parentID: createNewProp(parentID || undefined),
+    parentID: createNewProp(parentID),
     lastPinTimestamp: createNewProp(
       lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined,
     ),
-    permissionOverwrites: createNewProp(permission_overwrites || []),
-    nsfw: createNewProp(data.nsfw || false),
+    permissionOverwrites: createNewProp(permissionOverwrites),
+    nsfw: createNewProp(nsfw),
   });
 
   await cacheHandlers.set("channels", data.id, channel);
@@ -116,5 +116,5 @@ export interface Channel {
   // METHODS
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
-  send(content: string | CreateMessageParams): Promise<Message>;
+  send(content: string | MessageContent): ReturnType<typeof sendMessage>;
 }

@@ -1,6 +1,7 @@
 import { cacheHandlers } from "../api/controllers/cache.ts";
 import { Guild, Role } from "../api/structures/structures.ts";
 import { Permission, Permissions } from "../api/types/mod.ts";
+import { Guild, Role } from "../api/structures/mod.ts";
 import { botID } from "../bot.ts";
 import { OverwritePayload } from "../types/mod.ts";
 
@@ -192,7 +193,7 @@ export async function hasChannelPermissions(
   if (permissions.every((perm) => allowedPermissions.has(perm))) return true;
 
   // Some permission was not explicitly allowed so we default to checking role perms directly
-  return await memberIDHasPermission(memberID, guild.id, permissions);
+  return memberIDHasPermission(memberID, guild.id, permissions);
 }
 
 /** This function converts a bitwise string to permission strings */

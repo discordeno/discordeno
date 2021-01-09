@@ -1,15 +1,13 @@
 import { botID } from "../../bot.ts";
 import {
   ChannelPayload,
-  CreateGuildBan,
   EmojiPayload,
-  GuildFeatures,
   GuildMemberPayload,
   GuildPayload,
-  ModifyGuildParams,
   PresenceUpdateEventPayload,
   RolePayload,
   VoiceStateUpdateEventPayload,
+  GuildFeatures,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
@@ -28,15 +26,12 @@ import {
   unban,
 } from "../handlers/guild.ts";
 import {
-  Ban,
-  GetGuildAuditLogOptions,
   GuildMember,
   ImageFormats,
   ImageSize,
 } from "../types/mod.ts";
 import { Member } from "./member.ts";
-import { Role, structures } from "./mod.ts";
-import { Channel } from "./structures.ts";
+import { Channel, Role, structures } from "./mod.ts";
 
 export const initialMemberLoadQueue = new Map<string, GuildMemberPayload[]>();
 
@@ -138,7 +133,7 @@ export async function createGuild(data: GuildPayload, shardID: number) {
     premium_subscription_count: premiumSubscriptionCount,
     preferred_locale: preferredLocale,
     joined_at: joinedAt,
-    member_count: memberCount,
+    member_count: memberCount = 0,
     voice_states: voiceStates = [],
     channels = [],
     members,
@@ -156,7 +151,7 @@ export async function createGuild(data: GuildPayload, shardID: number) {
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    restProps[key] = createNewProp((rest as any)[key]);
+    restProps[key] = createNewProp(rest[key]);
   }
 
   const guild = Object.create(baseGuild, {
@@ -189,7 +184,7 @@ export async function createGuild(data: GuildPayload, shardID: number) {
     presences: createNewProp(
       new Collection(presences.map((p) => [p.user!.id, p])),
     ),
-    memberCount: createNewProp(memberCount || 0),
+    memberCount: createNewProp(memberCount),
     voiceStates: createNewProp(
       new Collection(
         voiceStates.map((vs) => [
@@ -329,23 +324,26 @@ export interface Guild {
   /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
   iconURL(size?: ImageSize, format?: ImageFormats): string | undefined;
   /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event. */
-  delete(): Promise<any>;
+  delete(): ReturnType<typeof deleteServer>;
   /** Leave a guild */
-  leave(): Promise<any>;
+  leave(): ReturnType<typeof leaveGuild>;
   /** Edit the server. Requires the MANAGE_GUILD permission. */
-  edit(options: ModifyGuildParams): Promise<any>;
+  edit(options: GuildEditOptions): ReturnType<typeof editGuild>;
   /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
-  auditLogs(options: GetGuildAuditLogOptions): Promise<any>;
+  auditLogs(options: GetAuditLogsOptions): ReturnType<typeof getAuditLogs>;
   /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
-  getBan(memberID: string): Promise<Ban>;
+  getBan(memberID: string): ReturnType<typeof getBan>;
   /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
-  bans(): Promise<Collection<string, Ban>>;
+  bans(): ReturnType<typeof getBans>;
   /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
-  ban(memberID: string, options: CreateGuildBan): Promise<any>;
+  ban(memberID: string, options: BanOptions): ReturnType<typeof ban>;
   /** Remove the ban for a user. Requires BAN_MEMBERS permission */
-  unban(memberID: string): Promise<any>;
+  unban(memberID: string): ReturnType<typeof unban>;
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
-  invites(): Promise<any>;
+  invites(): ReturnType<typeof getInvites>;
+
+  // Index signature
+  [key: string]: ValueOf<Guild>;
 }
 
 interface CleanVoiceState extends VoiceStateUpdateEventPayload {

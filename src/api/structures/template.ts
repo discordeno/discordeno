@@ -3,8 +3,10 @@ import { cache } from "../../util/cache.ts";
 import { createNewProp } from "../../util/utils.ts";
 import { Guild } from "./guild.ts";
 
-const baseTemplate: any = {
+const baseTemplate: Partial<Template> = {
   get sourceGuild() {
+    // deno-lint-ignore getter-return
+    if (!this.sourceGuildID) return;
     return cache.guilds.get(this.sourceGuildID);
   },
 };
@@ -25,7 +27,7 @@ export function createTemplate(
 
   const restProps: Record<string, Partial<PropertyDescriptor>> = {};
   for (const key of Object.keys(rest)) {
-    restProps[key] = createNewProp((rest as any)[key]);
+    restProps[key] = createNewProp(rest[key]);
   }
 
   return Object.create(baseTemplate, {

@@ -186,7 +186,7 @@ export async function createGuildChannel(
       ),
     })) as ChannelPayload;
 
-  return await structures.createChannel(result);
+  return structures.createChannel(result);
 }
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
@@ -518,8 +518,8 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
     options.limit = options.userIDs.length;
   }
 
-  return new Promise(async (resolve) => {
-    await requestAllMembers(guild, resolve, options);
+  return new Promise((resolve) => {
+    requestAllMembers(guild, resolve, options);
   }) as Promise<Collection<string, Member>>;
 }
 
