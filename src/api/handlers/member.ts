@@ -1,49 +1,53 @@
 import { botID } from "../../bot.ts";
 import { RequestManager } from "../../rest/mod.ts";
-import {
-  DMChannelCreatePayload,
-  EditMemberOptions,
-  Errors,
-  ImageFormats,
-  ImageSize,
-  MessageContent,
-} from "../../types/mod.ts";
+import { ChannelPayload } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasPermission,
   higherRolePosition,
   highestRole,
 } from "../../util/permissions.ts";
-import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
+import { formatImageURL, keysToCamel, urlToBase64 } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { Member, structures } from "../structures/mod.ts";
+import {
+  AvatarUrlOptions,
+  EditGuildMemberOptions,
+  Errors,
+  MessageContent,
+  rawAvatarUrlOptions,
+  User,
+} from "../types/mod.ts";
 import { sendMessage } from "./channel.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
 export function rawAvatarURL(
   userID: string,
   discriminator: string,
-  avatar?: string | null,
-  size: ImageSize = 128,
-  format?: ImageFormats,
+  options: rawAvatarUrlOptions,
 ) {
-  return avatar
-    ? formatImageURL(endpoints.USER_AVATAR(userID, avatar), size, format)
+  return options.avatar
+    ? formatImageURL(
+      endpoints.USER_AVATAR(userID, options.avatar),
+      options.size,
+      options.format,
+    )
     : endpoints.USER_DEFAULT_AVATAR(Number(discriminator) % 5);
 }
 
 /** The users custom avatar or the default avatar */
 export function avatarURL(
   member: Member,
-  size: ImageSize = 128,
-  format?: ImageFormats,
+  options: AvatarUrlOptions,
 ) {
   return rawAvatarURL(
     member.id,
     member.discriminator,
-    member.avatar,
-    size,
-    format,
+    {
+      avatar: member.avatar,
+      size: options.size,
+      format: options.format,
+    },
   );
 }
 
@@ -52,7 +56,6 @@ export async function addRole(
   guildID: string,
   memberID: string,
   roleID: string,
-  reason?: string,
 ) {
   const botsHighestRole = await highestRole(guildID, botID);
   if (botsHighestRole) {
@@ -76,7 +79,6 @@ export async function addRole(
 
   return RequestManager.put(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
-    { reason },
   );
 }
 
@@ -85,7 +87,6 @@ export async function removeRole(
   guildID: string,
   memberID: string,
   roleID: string,
-  reason?: string,
 ) {
   const botsHighestRole = await highestRole(guildID, botID);
 
@@ -110,27 +111,26 @@ export async function removeRole(
 
   return RequestManager.delete(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
-    { reason },
   );
 }
 
 /** Send a message to a users DM. Note: this takes 2 API calls. 1 is to fetch the users dm channel. 2 is to send a message to that channel. */
 export async function sendDirectMessage(
-  memberID: string,
+  recipientID: string,
   content: string | MessageContent,
 ) {
-  let dmChannel = await cacheHandlers.get("channels", memberID);
+  let dmChannel = await cacheHandlers.get("channels", recipientID);
   if (!dmChannel) {
     // If not available in cache create a new one.
     const dmChannelData = await RequestManager.post(
       endpoints.USER_CREATE_DM,
-      { recipient_id: memberID },
-    ) as DMChannelCreatePayload;
+      { recipient_id: recipientID },
+    ) as ChannelPayload;
     // Channel create event will have added this channel to the cache
     await cacheHandlers.delete("channels", dmChannelData.id);
     const channel = await structures.createChannel(dmChannelData);
     // Recreate the channel and add it undert he users id
-    await cacheHandlers.set("channels", memberID, channel);
+    await cacheHandlers.set("channels", recipientID, channel);
     dmChannel = channel;
   }
 
@@ -139,7 +139,7 @@ export async function sendDirectMessage(
 }
 
 /** Kick a member from the server */
-export async function kick(guildID: string, memberID: string, reason?: string) {
+export async function kick(guildID: string, memberID: string) {
   const botsHighestRole = await highestRole(guildID, botID);
   const membersHighestRole = await highestRole(guildID, memberID);
   if (
@@ -156,7 +156,6 @@ export async function kick(guildID: string, memberID: string, reason?: string) {
 
   return RequestManager.delete(
     endpoints.GUILD_MEMBER(guildID, memberID),
-    { reason },
   );
 }
 
@@ -164,7 +163,7 @@ export async function kick(guildID: string, memberID: string, reason?: string) {
 export async function editMember(
   guildID: string,
   memberID: string,
-  options: EditMemberOptions,
+  options: EditGuildMemberOptions,
 ) {
   if (options.nick) {
     if (options.nick.length > 32) {
@@ -234,7 +233,7 @@ export function moveMember(
   memberID: string,
   channelID: string,
 ) {
-  return editMember(guildID, memberID, { channel_id: channelID });
+  return editMember(guildID, memberID, { channelID });
 }
 
 /** Modifies the bot's username or avatar.
@@ -260,11 +259,13 @@ export async function editBotProfile(username?: string, botAvatarURL?: string) {
   }
 
   const avatar = botAvatarURL ? await urlToBase64(botAvatarURL) : undefined;
-  return RequestManager.patch(
-    endpoints.USER_BOT,
-    {
-      username: username?.trim(),
-      avatar,
-    },
-  );
+  return keysToCamel(
+    await RequestManager.patch(
+      endpoints.USER_BOT,
+      {
+        username: username?.trim(),
+        avatar,
+      },
+    ),
+  ) as User;
 }

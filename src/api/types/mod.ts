@@ -1,13 +1,13 @@
 export * from "./audit_log.ts";
 export * from "./channel.ts";
 export * from "./emoji.ts";
-export * from "./gateway.ts";
-export { GatewayIntents as Intents } from "./gateway.ts";
+export * from "./errors.ts";
 export * from "./guild.ts";
+export * from "./image.ts";
 export * from "./interaction.ts";
 export * from "./invite.ts";
 export * from "./oauth2.ts";
-export * from "./opcodes_status_codes.ts";
+export * from "./options.ts";
 export * from "./permissions.ts";
 export * from "./rate_limits.ts";
 export * from "./teams.ts";

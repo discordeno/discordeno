@@ -1,146 +1,145 @@
-import { ChannelTypes, OverwritePayload } from "./channel.ts";
-import { IntegrationPayload } from "./guild.ts";
-import { RolePayload } from "./permissions.ts";
-import { UserPayload } from "./user.ts";
-import { WebhookPayload } from "./webhook.ts";
+import { ChannelType, Overwrite } from "./channel.ts";
+import { Integration } from "./guild.ts";
+import { Role } from "./permissions.ts";
+import { User } from "./user.ts";
+import { Webhook } from "./webhook.ts";
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-object */
-export interface AuditLogPayload {
+// used
+export interface AuditLog {
   /** list of webhooks found in the audit log */
-  webhooks: WebhookPayload[];
+  webhooks: Webhook[];
   /** list of users found in the audit log */
-  users: UserPayload[];
+  users: User[];
   /** list of audit log entries */
-  audit_log_entries: AuditLogEntryPayload[];
+  auditLogEntries: AuditLogEntry[];
   /** list of partial integration objects */
-  integrations: Partial<IntegrationPayload>[];
+  integrations: Partial<Integration>[];
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
-export interface AuditLogEntryPayload {
+// used
+export interface AuditLogEntry {
   /** id of the affected entity (webhook, user, role, etc.) */
-  target_id: string | null;
-  /** changes made to the target_id */
-  changes?: AuditLogChangePayload[];
+  targetID: string | null;
+  /** changes made to the targetId */
+  changes?: AuditLogChange[];
   /** the user who made the changes */
-  user_id: string;
+  userID: string;
   /** id of the entry */
   id: string;
   /** type of action that occured */
-  action_type: AuditLogEvent;
+  actionType: AuditLogEventType;
   /** additional info for certain action types */
   options?: OptionalAuditEntryInfo;
   /** the reason for the change (0-512 characters) */
   reason?: string;
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events */
-export enum AuditLogEvent {
-  GUILD_UPDATE = 1,
-  CHANNEL_CREATE = 10,
-  CHANNEL_UPDATE,
-  CHANNEL_DELETE,
-  CHANNEL_OVERWRITE_CREATE,
-  CHANNEL_OVERWRITE_UPDATE,
-  CHANNEL_OVERWRITE_DELETE,
-  MEMBER_KICK = 20,
-  MEMBER_PRUNE,
-  MEMBER_BAN_ADD,
-  MEMBER_BAN_REMOVE,
-  MEMBER_UPDATE,
-  MEMBER_ROLE_UPDATE,
-  MEMBER_MOVE,
-  MEMBER_DISCONNECT,
-  BOT_ADD,
-  ROLE_CREATE = 30,
-  ROLE_UPDATE,
-  ROLE_DELETE,
-  INVITE_CREATE = 40,
-  INVITE_UPDATE,
-  INVITE_DELETE,
-  WEBHOOK_CREATE = 50,
-  WEBHOOK_UPDATE,
-  WEBHOOK_DELETE,
-  EMOJI_CREATE = 60,
-  EMOJI_UPDATE,
-  EMOJI_DELETE,
-  MESSAGE_DELETE = 72,
-  MESSAGE_BULK_DELETE,
-  MESSAGE_PIN,
-  MESSAGE_UNPIN,
-  INTEGRATION_CREATE = 80,
-  INTEGRATION_UPDATE,
-  INTEGRATION_DELETE,
-}
+// used
+export type AuditLogEventType =
+  | "GUILD_UPDATE"
+  | "CHANNEL_CREATE"
+  | "CHANNEL_UPDATE"
+  | "CHANNEL_DELETE"
+  | "CHANNEL_OVERWRITE_CREATE"
+  | "CHANNEL_OVERWRITE_UPDATE"
+  | "CHANNEL_OVERWRITE_DELETE"
+  | "MEMBER_KICK"
+  | "MEMBER_PRUNE"
+  | "MEMBER_BAN_ADD"
+  | "MEMBER_BAN_REMOVE"
+  | "MEMBER_UPDATE"
+  | "MEMBER_ROLE_UPDATE"
+  | "MEMBER_MOVE"
+  | "MEMBER_DISCONNECT"
+  | "BOT_ADD"
+  | "ROLE_CREATE"
+  | "ROLE_UPDATE"
+  | "ROLE_DELETE"
+  | "INVITE_CREATE"
+  | "INVITE_UPDATE"
+  | "INVITE_DELETE"
+  | "WEBHOOK_CREATE"
+  | "WEBHOOK_UPDATE"
+  | "WEBHOOK_DELETE"
+  | "EMOJI_CREATE"
+  | "EMOJI_UPDATE"
+  | "EMOJI_DELETE"
+  | "MESSAGE_DELETE"
+  | "MESSAGE_BULK_DELETE"
+  | "MESSAGE_PIN"
+  | "MESSAGE_UNPIN"
+  | "INTEGRATION_CREATE"
+  | "INTEGRATION_UPDATE"
+  | "INTEGRATION_DELETE";
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
+// used
 export interface OptionalAuditEntryInfo {
-  /** number of days after which inactive members were kicked, type: MEMBER_PRUNE */
-  delete_member_days: string;
-  /** number of members removed by the prune, type: MEMBER_PRUNE */
-  members_removed: string;
-  /** channel in which the entities were targeted, types: MEMBER_MOVE & MESSAGE_PIN & MESSAGE_UNPIN & MESSAGE_DELETE */
-  channel_id: string;
-  /** id of the message that was targeted, types: MESSAGE_PIN & MESSAGE_UNPIN */
-  message_id: string;
-  /** number of entities that were targeted, types: MESSAGE_DELETE & MESSAGE_BULK_DELETE & MEMBER_DISCONNECT & MEMBER_MOVE */
+  /** number of days after which inactive members were kicked, type: MEMBERPRUNE */
+  deleteMessageDays: string;
+  /** number of members removed by the prune, type: MEMBERPRUNE */
+  membersRemoved: string;
+  /** channel in which the entities were targeted, types: MEMBERMOVE & MESSAGEPIN & MESSAGEUNPIN & MESSAGEDELETE */
+  channelID: string;
+  /** id of the message that was targeted, types: MESSAGEPIN & MESSAGEUNPIN */
+  messageID: string;
+  /** number of entities that were targeted, types: MESSAGEDELETE & MESSAGEBULKDELETE & MEMBERDISCONNECT & MEMBERMOVE */
   count: string;
-  /** id of the overwritten entity, types CHANNEL_OVERWRITE_CREATE & CHANNEL_OVERWRITE_UPDATE & CHANNEL_OVERWRITE_DELETE */
+  /** id of the overwritten entity, types CHANNELOVERWRITECREATE & CHANNELOVERWRITEUPDATE & CHANNELOVERWRITEDELETE */
   id: string;
-  /** type of overwritten entity - "0", for "role", or "1" for "member", types: CHANNEL_OVERWRITE_CREATE & CHANNEL_OVERWRITE_UPDATE & CHANNEL_OVERWRITE_DELETE */
-  type: string;
-  /** name of the role if type is "0" (not present if type is "1"), types: CHANNEL_OVERWRITE_CREATE & CHANNEL_OVERWRITE_UPDATE & CHANNEL_OVERWRITE_DELETE */
-  role_name: string;
+  /** type of overwritten entity - "0", for "role", or "1" for "member", types: CHANNELOVERWRITECREATE & CHANNELOVERWRITEUPDATE & CHANNELOVERWRITEDELETE */
+  type: "0" | "1";
+  /** name of the role if type is "0" (not present if type is "1"), types: CHANNELOVERWRITECREATE & CHANNELOVERWRITEUPDATE & CHANNELOVERWRITEDELETE */
+  roleName: string;
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
-export interface AuditLogChangePayload {
+// used
+export interface AuditLogChange {
   /** new value of the key */
-  new_value?: AuditLogChangeKey;
+  newValue?: AuditLogChangeKey;
   /** old value of the key */
-  old_value?: AuditLogChangeKey;
+  oldValue?: AuditLogChangeKey;
   /** name of audit log change key */
   key: string;
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-key */
+// used
 export interface AuditLogChangeKey {
   /** object: guild; name changed */
   name: string;
   /** object: guild; icon changed */
-  icon_hash: string;
+  iconHash: string;
   /** object: guild; invite splash page artwork changed */
-  splash_hash: string;
+  splashHash: string;
   /** object: guild; owner changed */
-  owner_id: string;
+  ownerID: string;
   /** object: guild; region changed */
   region: string;
   /** object: guild; afk channel changed */
-  afk_channel_id: string;
+  afkChannelID: string;
   /** object: guild; afk timeout duration changed */
-  afk_timeout: number;
+  afkTimeout: number;
   /** object: guild; two-factor auth requirement changed */
-  mfa_level: number;
+  mfaLevel: number;
   /** object: guild; required verification level changed */
-  verification_level: number;
+  verificationLevel: number;
   /** object: guild; change in whose messages are scanned and deleted for explicit content in the server */
-  explicit_content_filter: number;
+  explicitContentFilter: number;
   /** object: guild; default message notification level changed */
-  default_message_notifications: number;
+  defaultMessageNotifications: number;
   /** object: guild; guild invite vanity url changed */
-  vanity_url_code: string;
+  vanityUrlCode: string;
   /** object: guild; new role added */
-  $add: Partial<RolePayload>[];
+  $add: Partial<Role>[];
   /** object: guild; role removed */
-  $remove: Partial<RolePayload>[];
+  $remove: Partial<Role>[];
   /** object: guild;  change in number of days after which inactive and role-unassigned members are kicked */
-  prune_delete_days: number;
+  pruneDeleteDays: number;
   /** object: guild; server widget enabled/disable */
-  widget_enabled: boolean;
+  widgetEnabled: boolean;
   /** object: guild; channel id of the servere widget changed */
-  widget_channel_id: string;
+  widgetChannelID: string;
   /** object: guild; id of the system channel changed */
-  system_channel_id: string;
+  systemChannelID: string;
   /** object: channel; text or voice channel position changed */
   position: number;
   /** object: channel; text channel topic changed */
@@ -148,13 +147,13 @@ export interface AuditLogChangeKey {
   /** object: channel; voice channel bitrate changed */
   bitrate: number;
   /** object: channel; permissions on a channel changed */
-  permission_overwrites: OverwritePayload[];
+  overwrites: Overwrite[];
   /** object: channel; channel nsfw restriction changed */
   nsfw: boolean;
   /** object: channel; application id of the added or removed webhook or bot */
-  application_id: string;
+  applicationID: string;
   /** object: channel; amount of seconds a user has to wait before sending another message changed */
-  rate_limit_per_user: number;
+  slowmode: number;
   /** object: role; permissions for a role changed */
   permissions: string;
   /** object: role; role color changed */
@@ -170,15 +169,15 @@ export interface AuditLogChangeKey {
   /** object: invite; invite code changed */
   code: string;
   /** object: invite; channel for invite code changed */
-  channel_id: string;
+  channelID: string;
   /** object: invite; person who created invite code changed */
-  invite_id: string;
+  inviteID: string;
   /** object: invite; change to max number of times invite code can be used */
-  max_uses: number;
+  maxUses: number;
   /** object: invite; number of times invite code used changed */
   uses: number;
   /** object: invite; how long invite code lasts changed */
-  max_age: number;
+  maxAge: number;
   /** object: invite; invite code is temporary/never expires */
   temporary: boolean;
   /** object: user; user server deafened/undeafened */
@@ -188,25 +187,25 @@ export interface AuditLogChangeKey {
   /** object: user; user nickanem changed */
   nick: string;
   /** object: user; user avatar changed */
-  avatar_hash: string;
+  avatarHash: string;
   /** object: any; the id of the changed entity - sometimes used in conjunction with other keys */
   id: string;
   /** object: any; type of entity created */
-  type: ChannelTypes | string;
+  type: ChannelType | string;
   /** object: integration; integration emoticons enabled/disabled */
-  enable_emoticons: boolean;
+  enableEmoticons: boolean;
   /** object: integration; integration expiring subscriber behavior changed */
-  expire_behavior: number;
+  expireBehavior: number;
   /** object: integration; integration expire grace period changed */
-  expire_grace_period: number;
+  expireGracePeriod: number;
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
-export interface GetGuildAuditLogParams {
+// used
+export interface GetGuildAuditLogOptions {
   /** filter the log for actions made by a user */
-  user_id: string;
+  userID: string;
   /** the type of audit log event */
-  action_type: AuditLogEvent;
+  actionType: AuditLogEventType;
   /** filter the log before a certain entry id */
   before: string;
   /** how many entries are returned (default 50, minimum 1, maximum 100) */

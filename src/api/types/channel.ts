@@ -1,19 +1,20 @@
-import { EmojiPayload } from "./emoji.ts";
-import { GuildMemberPayload } from "./guild.ts";
-import { UserPayload } from "./user.ts";
+import { Emoji } from "./emoji.ts";
+import { GuildMember } from "./guild.ts";
+import { Permission } from "./mod.ts";
+import { User } from "./user.ts";
 
 /** https://discord.com/developers/docs/resources/channel#channel-object-channel-structure */
-export interface ChannelPayload {
+export interface Channel {
   /** the id of this channel */
   id: string;
   /** the type of channel */
-  type: ChannelTypes;
+  type: ChannelType;
   /** the id of the guild */
-  guild_id?: string;
+  guildID?: string;
   /** sorting position of the channel */
   position?: number;
   /** explicit permission overwrites for members and roles */
-  permission_overwrites?: OverwritePayload[];
+  permissionOverwrites?: Overwrite[];
   /** the name of the channel (2-100 characters) */
   name?: string;
   /** the channel topic (0-1024 characters) */
@@ -21,138 +22,136 @@ export interface ChannelPayload {
   /** whether the channel is nsfw */
   nsfw?: boolean;
   /** the id of the last message sent in this channel (may not point to an existing or valid message) */
-  last_message_id?: string | null;
+  lastMessageID?: string | null;
   /** the bitrate (in bits) of the voice channel */
   bitrate?: number;
   /** the user limit of the voice channel */
-  user_limit?: number;
-  /** amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission manage_messages or manage_channel, are unaffected */
-  rate_limit_per_user?: number;
+  userLimit?: number;
+  /** amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission manageMessages or manageChannel, are unaffected */
+  rateLimitPerUser?: number;
   /** the recipients of the DM */
-  recipients?: UserPayload[];
+  recipients?: User[];
   /** icon hash */
   icon?: string | null;
   /** id of the DM creator */
-  owner_id?: string;
+  ownerID?: string;
   /** application id of the group DM creator if it is bot-created */
-  application_id?: string;
+  applicationID?: string;
   /** id of the parent category for a channel (each parent category can contain up to 50 channels) */
-  parent_id?: string | null;
-  /** when the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
-  last_pin_timestamp?: string | null;
+  parentID?: string | null;
+  /** when the last pinned message was pinned. This may be null in events such as GUILDCREATE when a message is not pinned. */
+  lastPinTimestamp?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/channel#channel-object-channel-types */
-export enum ChannelTypes {
-  /** a text channel within a server */
-  GUILD_TEXT,
-  /** a direct message between users */
-  DM,
-  /** a voice channel within a server */
-  GUILD_VOICE,
-  /** a direct message between multiple users */
-  GROUP_DM,
-  /** an organizational category that contains up to 50 channels */
-  GUILD_CATEGORY,
-  /** a channel that users can follow and crosspost into their own server */
-  GUILD_NEWS,
-  /** a channel in which game developers can sell their game on Discord */
-  GUILD_STORE,
-}
+// used
+export type ChannelType =
+  | "GUILD_TEXT"
+  | "DM"
+  | "GUILD_VOICE"
+  | "GROUP_DM"
+  | "GUILD_CATEGORY"
+  | "GUILD_NEWS"
+  | "GUILD_STORE";
 
-/** https://discord.com/developers/docs/resources/channel#message-object-message-structure */
-export interface MessagePayload {
+// used
+export interface Message {
   /** id of the message */
   id: string;
   /** id of the channel the message was sent in */
-  channel_id: string;
+  channelID: string;
   /** id of the guild the message was sent in */
-  guild_id?: string;
+  guildID?: string;
   /** the author of this message (not guaranteed to be a valid user) */
-  author: UserPayload;
+  author: User;
   /** member properties for this message's author */
-  member?: Partial<GuildMemberPayload>;
+  member?: Partial<GuildMember>;
   /** contents of the message */
   content: string;
   /** when this message was sent */
   timestamp: string;
   /** when this message was edited (or null if never) */
-  edited_timestamp: string | null;
+  editedTimestamp: string | null;
   /** whether this was a TTS message */
   tts: boolean;
   /** whether this message mentions everyone */
-  mention_everyone: boolean;
+  mentionEveryone: boolean;
   /** users specifically mentioned in the message */
-  mentions: (UserPayload & Partial<GuildMemberPayload>)[];
+  mentions: (User & Partial<GuildMember>)[];
   /** roles specifically mentioned in this message */
-  mention_roles: string[];
+  mentionRoles: string[];
   /** channels specifically mentioned in this message */
-  mention_channels?: ChannelMentionPayload[];
+  mentionChannels?: ChannelMention[];
   /** any attached files */
-  attachments: AttachmentPayload[];
+  attachments: Attachment[];
   /** any embedded content */
-  embeds: EmbedPayload[];
+  embeds: Embed[];
   /** reactions to the message */
-  reactions?: ReactionPayload[];
+  reactions?: Reaction[];
   /** used for validating a message was sent */
   nonce?: number | string;
   /** whether this message is pinned */
   pinned: boolean;
   /** if the message is generated by a webhook, this is the webhook's id */
-  webhook_id?: string;
+  webhookID?: string;
   /** type of message */
-  type: MessageTypes;
+  type: MessageType;
   /** sent with Rich Presence-related chat embeds */
-  activity?: MessageActivityPayload;
+  activity?: MessageActivity;
   /** sent with Rich Presence-related chat embeds */
-  application?: MessageApplicationPayload;
+  application?: MessageApplication;
   /** reference data sent with crossposted messages and replies */
-  message_reference?: MessageReferencePayload;
+  messageReference?: MessageReference;
   /** message flags combined as a bitfield */
-  flags?: MessageFlags;
+  flags?: MessageFlag;
   /** the stickers sent with the message (bots currently can only receive messages with stickers, not send) */
-  stickers?: MessageStickerPayload[];
-  /** the message associated with the `message_reference` */
-  referenced_message?: MessagePayload | null;
+  stickers?: MessageSticker[];
+  /** the message associated with the `messageReference` */
+  referencedMessage?: Message | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-types */
-export enum MessageTypes {
-  DEFAULT,
-  RECIPIENT_ADD,
-  RECIPIENT_REMOVE,
-  CALL,
-  CHANNEL_NAME_CHANGE,
-  CHANNEL_ICON_CHANGE,
-  CHANNEL_PINNED_MESSAGE,
-  GUILD_MEMBER_JOIN,
-  USER_PREMIUM_GUILD_SUBSCRIPTION,
-  USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1,
-  USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2,
-  USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3,
-  CHANNEL_FOLLOW_ADD,
-  GUILD_DISCOVERY_DISQUALIFIED = 14,
-  GUILD_DISCOVERY_REQUALIFIED,
-  GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING,
-  GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING,
-  REPLY = 19,
-  APPLICATION_COMMAND,
+export type MessageType =
+  | "DEFAULT"
+  | "RECIPIENT_ADD"
+  | "RECIPIENT_REMOVE"
+  | "CALL"
+  | "CHANNEL_NAME_CHANGE"
+  | "CHANNEL_ICON_CHANGE"
+  | "CHANNEL_PINNED_MESSAGE"
+  | "GUILD_MEMBER_JOIN"
+  | "USER_PREMIUM_GUILD_SUBSCRIPTION"
+  | "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1"
+  | "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2"
+  | "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3"
+  | "CHANNEL_FOLLOW_ADD"
+  | "GUILD_DISCOVERY_DISQUALIFIED"
+  | "GUILD_DISCOVERY_REQUALIFIED"
+  | "GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING"
+  | "GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING"
+  | "REPLY"
+  | "APPLICATION_COMMAND";
+
+// used
+export interface MessageActivity {
+  /** type of message activity */
+  type: MessageActivityType;
+  /** partyId from a Rich Presence event */
+  partyID?: string;
 }
 
-/** https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure */
-export interface MessageActivityPayload {
-  /** type of message activity */
-  type: MessageActivityTypes;
-  /** party_id from a Rich Presence event */
-  party_id?: string;
-}
+// used
+export type MessageActivityType =
+  | "JOIN"
+  | "SPECTATE"
+  | "LISTEN"
+  | "JOIN_REQUEST";
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-application-structure */
-export interface MessageApplicationPayload {
+export interface MessageApplication {
   /** id of the application */
   id: string;
   /** id of the embed's image asset */
-  cover_image?: string;
+  coverImage?: string;
   /** application's description */
   description: string;
   /** id of the application's icon */
@@ -161,44 +160,31 @@ export interface MessageApplicationPayload {
   name: string;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#message-object-message-reference-structure */
-export interface MessageReferencePayload {
+export interface MessageReference {
   /** id of the originating message */
-  message_id?: string;
+  messageID?: string;
   /** id of the originating message's channel */
-  channel_id?: string;
+  channelID?: string;
   /** id of the originating message's guild */
-  guild_id?: string;
+  guildID?: string;
 }
 
-/** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
-export enum MessageActivityTypes {
-  JOIN = 1,
-  SPECTATE,
-  LISTEN,
-  JOIN_REQUEST = 5,
-}
+// used
+export type MessageFlag =
+  | "CROSSPOSTED"
+  | "IS_CROSSPOST"
+  | "SUPPRESS_EMBEDS"
+  | "SOURCE_MESSAGE_DELETED"
+  | "URGENT";
 
-/** https://discord.com/developers/docs/resources/channel#message-object-message-flags */
-export enum MessageFlags {
-  /** this message has been published to subscribed channels (via Channel Following) */
-  CROSSPOSTED = 1 << 0,
-  /** this message originated from a message in another channel (via Channel Following) */
-  IS_CROSSPOST = 1 << 1,
-  /** do not include any embeds when serializing this message */
-  SUPPRESS_EMBEDS = 1 << 2,
-  /** the source message for this crosspost has been deleted (via Channel Following) */
-  SOURCE_MESSAGE_DELETED = 1 << 3,
-  /** this message came from the urgent message system */
-  URGENT = 1 << 4,
-}
-
-/** https://discord.com/developers/docs/resources/channel#message-object-message-sticker-structure */
-export interface MessageStickerPayload {
+// used
+export interface MessageSticker {
   /** id of the sticker */
   id: string;
   /** id of the pack the sticker is from */
-  pack_id: string;
+  packID: string;
   /** name of the sticker */
   name: string;
   /** description of the sticker */
@@ -208,49 +194,59 @@ export interface MessageStickerPayload {
   /** sticker asset hash */
   asset: string;
   /** sticker preview asset hash */
-  preview_asset: string | null;
+  previewAsset: string | null;
   /** type of sticker format */
-  format_type: number;
+  formatType: number;
 }
 
-/** https://discord.com/developers/docs/resources/channel#message-object-message-sticker-format-types */
-export enum MessageStickerFormatTypes {
-  PNG = 1,
-  APNG,
-  LOTTIE,
-}
+// useed
+export type MessageStickerFormatType =
+  | "PNG"
+  | "APNG"
+  | "LOTTIE";
 
 /** https://discord.com/developers/docs/resources/channel#followed-channel-object-followed-channel-structure */
-export interface FollowedChannelPayload {
+export interface FollowedChannel {
   /** source channel id */
-  channel_id: string;
+  channelID: string;
   /** created target webhook id */
-  webhook_id: string;
+  webhookID: string;
 }
 
 /** https://discord.com/developers/docs/resources/channel#reaction-object-reaction-structure */
-export interface ReactionPayload {
+export interface Reaction {
   /** times this emoji has been used to react */
   count: number;
   /** whether the current user reacted using this emoji */
   me: boolean;
   /** emoji information */
-  emoji: Partial<EmojiPayload>;
+  emoji: Partial<Emoji>;
 }
 
-export interface OverwritePayload {
+// used
+export interface Overwrite {
   /** role or user id */
   id: string;
-  /** either 0 (role) or 1 (member) */
-  type: number;
+  /** either role or member */
+  type: OverwriteType;
   /** permission bit set */
-  allow: string;
+  allow: Permission[];
   /** permission bit set */
-  deny: string;
+  deny: Permission[];
 }
 
+// used
+export type OverwriteType = "ROLE" | "MEMBER";
+
+// used
+export enum OverwriteTypes {
+  ROLE,
+  MEMBER,
+}
+
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-structure */
-export interface EmbedPayload {
+export interface Embed {
   /** title of embed */
   title?: string;
   /** type of embed (always "rich" for webhook embeds) */
@@ -264,47 +260,37 @@ export interface EmbedPayload {
   /** color code of the embed */
   color?: number;
   /** footer information */
-  footer?: EmbedFooterPayload;
+  footer?: EmbedFooter;
   /** image information */
-  image?: EmbedImagePayload;
+  image?: EmbedImage;
   /** thumbnail information */
-  thumbnail?: EmbedThumbnailPayload;
+  thumbnail?: EmbedThumbnail;
   /** video information */
-  video?: EmbedVideoPayload;
+  video?: EmbedVideo;
   /** provider information */
-  provider?: EmbedProviderPayload;
+  provider?: EmbedProvider;
   /** author information */
-  author?: EmbedAuthorPayload;
+  author?: EmbedAuthor;
   /** fields information */
-  fields?: EmbedFieldPayload[];
+  fields?: EmbedField[];
 }
 
-/** 
- * https://discord.com/developers/docs/resources/channel#embed-object-embed-types
- * @deprecated
- */
-export type EmbedTypes =
-  | "rich"
-  | "image"
-  | "video"
-  | "gifv"
-  | "article"
-  | "link";
-
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-thumbnail-structure */
-export interface EmbedThumbnailPayload {
+export interface EmbedThumbnail {
   /** source url of thumbnail (only supports http(s) and attachments) */
   url?: string;
   /** a proxied url of the thumbnail */
-  proxy_url?: string;
+  proxyUrl?: string;
   /** height of thumbnail */
   height?: number;
   /** width of thumbnail */
   width?: number;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-video-structure */
-export interface EmbedVideoPayload {
+export interface EmbedVideo {
   /** source url of video */
   url?: string;
   /** height of video */
@@ -313,50 +299,55 @@ export interface EmbedVideoPayload {
   width?: number;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-image-structure */
-export interface EmbedImagePayload {
+export interface EmbedImage {
   /** source url of image (only supports http(s) and attachments) */
   url?: string;
   /** a proxied url of the image */
-  proxy_url?: string;
+  proxyUrl?: string;
   /** height of image */
   height?: number;
   /** width of image */
   width?: number;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-provider-structure */
-export interface EmbedProviderPayload {
+export interface EmbedProvider {
   /** name of provider */
   name?: string;
   /** url of provider */
   url?: string;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-author-structure */
-export interface EmbedAuthorPayload {
+export interface EmbedAuthor {
   /** name of author */
   name?: string;
   /** url of author */
   url?: string;
   /** url of author icon (only supports http(s) and attachments) */
-  icon_url?: string;
+  iconUrl?: string;
   /** a proxied url of author icon */
-  proxy_icon_url?: string;
+  proxyIconUrl?: string;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure */
-export interface EmbedFooterPayload {
+export interface EmbedFooter {
   /** footer text */
   text: string;
   /** url of footer icon (only supports http(s) and attachments) */
-  icon_url?: string;
+  iconUrl?: string;
   /** a proxied url of footer icon */
-  proxy_icon_url?: string;
+  proxyIconUrl?: string;
 }
 
+// used
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure */
-export interface EmbedFieldPayload {
+export interface EmbedField {
   /** name of the field */
   name: string;
   /** value of the field */
@@ -366,7 +357,7 @@ export interface EmbedFieldPayload {
 }
 
 /** https://discord.com/developers/docs/resources/channel#attachment-object-attachment-structure */
-export interface AttachmentPayload {
+export interface Attachment {
   /** attachment id */
   id: string;
   /** name of file attached */
@@ -376,7 +367,7 @@ export interface AttachmentPayload {
   /** source url of file */
   url: string;
   /** a proxied url of file */
-  proxy_url: string;
+  proxyUrl: string;
   /** height of file (if image) */
   height?: number | null;
   /** width of file (if image) */
@@ -384,97 +375,103 @@ export interface AttachmentPayload {
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-mention-object-channel-mention-structure */
-export interface ChannelMentionPayload {
+export interface ChannelMention {
   /** id of the channel */
   id: string;
   /** id of the guild containing the channel */
-  guild_id: string;
+  guildID: string;
   /** the type of channel */
-  type: ChannelTypes;
+  type: ChannelType;
   /** the name of the channel */
   name: string;
 }
 
-/** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types */
-export enum AllowedMentionTypes {
-  /** Controls role mentions */
-  RoleMentions = "roles",
-  /** Controls user mentions */
-  UserMentions = "users",
-  /** Controls `@everyone` and `@here` mentions */
-  EveryoneMentions = "everyone",
-}
+// used
+export type AllowedMentionType = "roles" | "users" | "everyone";
 
+// used
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mentions-structure */
-export interface AllowedMentionsPayload {
+export interface AllowedMentions {
   /** An array of allowed mention types to parse from the content. */
-  parse: AllowedMentionTypes[];
-  /** Array of role_ids to mention (Max size of 100) */
-  roles: string[];
-  /** Array of user_ids to mention (Max size of 100) */
-  users: string[];
+  parse?: AllowedMentionType[];
+  /** Array of roleIds to mention (Max size of 100) */
+  roles?: string[];
+  /** Array of userIds to mention (Max size of 100) */
+  users?: string[];
   /** For replies, whether to mention the author of the message being replied to (default false) */
-  replied_user: boolean;
+  repliedUser?: boolean;
 }
 
 /** https://discord.com/developers/docs/resources/channel#modify-channel-json-params */
-export interface ModifyChannelParams {
+export interface ModifyChannelOptions {
   /** 2-100 character channel name */
   name?: string;
   /** the type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
-  type?: ChannelTypes;
+  type?: ChannelType;
   /** the position of the channel in the left-hand listing */
-  position?: number | null;
+  position?: number;
   /** 0-1024 character channel topic */
-  topic?: string | null;
+  topic?: string;
   /** whether the channel is nsfw */
-  nsfw?: boolean | null;
-  /** amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `MANAGE_MESSAGES` or `MANAGE_CHANNELS`, are unaffected */
-  rate_limit_per_user?: number | null;
+  nsfw?: boolean;
+  /** amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `MANAGEMESSAGES` or `MANAGECHANNELS`, are unaffected */
+  rateLimitPerUser?: number;
   /** the bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers) */
-  bitrate?: number | null;
+  bitrate?: number;
   /** the user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit */
-  user_limit?: number | null;
+  userLimit?: number;
   /** channel or category-specific permissions */
-  permission_overwrites?: OverwritePayload[] | null;
+  permissionOverwrites?: Overwrite[];
   /** id of the new parent category for a channel */
-  parent_id?: string | null;
+  parentID?: string;
 }
 
-/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
-export interface GetChannelMessagesParams {
-  /** get messages around this message ID */
-  around?: string;
-  /** get messages before this message ID */
-  before?: string;
-  /** get messages after this message ID */
-  after?: string;
-  /** max number of messages to return (1-100) */
+// used
+export interface GetMessages {
+  /** Max number of messages to return(1-100). Defaults to 50. */
   limit?: number;
 }
 
-/** https://discord.com/developers/docs/resources/channel#create-message-params */
-export interface CreateMessageParams {
+// used
+export interface GetMessagesAfter extends GetMessages {
+  /** Get messages after this message id */
+  after: string;
+}
+
+// used
+export interface GetMessagesBefore extends GetMessages {
+  /** Get messages before this message id */
+  before: string;
+}
+
+// used
+export interface GetMessagesAround extends GetMessages {
+  /** Get messages around this message id. */
+  around: string;
+}
+
+// used
+export interface MessageContent {
   /** the message contents (up to 2000 characters) */
   content?: string;
   /** a nonce that can be used for optimistic message sending */
   nonce?: number | string;
   /** `true` if this is a TTS message */
-  tts: boolean;
+  tts?: boolean;
   /** the contents of the file being sent */
   file?: { blob: unknown; name: string };
   /** embedded rich content */
-  embed?: EmbedPayload;
-  /** JSON encoded body of any additional request fields. */
-  payload_json?: string;
+  embed?: Embed;
+  /** jSON encoded body of any additional request fields. */
+  jsonPayload?: string;
   /** allowed mentions for a message */
-  allowed_mentions?: AllowedMentionsPayload;
-  /** include to make your message a reply */
-  message_reference?: MessageReferencePayload;
+  allowedMentions?: AllowedMentions;
+  /** include to make your message a reply. Use MessageReply if you want to check the guild and channel. */
+  reply?: string | MessageReference;
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-reactions-query-string-params */
-export interface GetReactionsParams {
+export interface GetReactionsOptions {
   /** get users before this user ID */
   before?: string;
   /** get users after this user ID */
@@ -484,19 +481,19 @@ export interface GetReactionsParams {
 }
 
 /** https://discord.com/developers/docs/resources/channel#edit-message-json-params */
-export interface EditMessageParams {
+export interface EditMessageOptions {
   /** the new message contents (up to 2000 characters) */
   content?: string | null;
   /** embedded rich content */
-  embed?: EmbedPayload | null;
-  /** edit the flags of a message (only SUPPRESS_EMBEDS can currently be set/unset) */
-  flags?: MessageFlags | null;
+  embed?: Embed | null;
+  /** edit the flags of a message (only SUPPRESSEMBEDS can currently be set/unset) */
+  flags?: MessageFlag | null;
   /** allowed mentions for the message */
-  allowed_mentions?: AllowedMentionsPayload | null;
+  allowedMentions?: AllowedMentions | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#bulk-delete-messages-json-params */
-export interface BulkDeleteMessagesParams {
+export interface BulkDeleteMessagesOptions {
   /** an array of message ids to delete (2-100) */
   messages: string[];
 }
@@ -512,31 +509,31 @@ export interface EditChannelPermissions {
 }
 
 /** https://discord.com/developers/docs/resources/channel#create-channel-invite-json-params */
-export interface CreateChannelInviteParams {
+export interface CreateChannelInviteOptions {
   /** duration of invite in seconds before expiry, or 0 for never */
-  max_age?: number;
+  maxAge?: number;
   /** max number of uses or 0 for unlimited */
-  max_uses?: number;
+  maxUses?: number;
   /** whether this invite only grants temporary membership */
   temporary?: boolean;
   /** if true, don't try to reuse a similar invite (useful for creating many unique one time use invites) */
   unique?: boolean;
   /** the target user id for this invite */
-  target_user?: string;
+  targetUser?: string;
   /** the type of target user for this invite */
-  target_user_type?: number;
+  targetUserType?: number;
 }
 
 /** https://discord.com/developers/docs/resources/channel#follow-news-channel-json-params */
-export interface FollowNewsChannelParams {
+export interface FollowNewsChannelOptions {
   /** id of target channel */
-  webhook_channel_id: string;
+  webhookChannelID: string;
 }
 
 /** https://discord.com/developers/docs/resources/channel#group-dm-add-recipient-json-params */
-export interface GroupDMAddRecipientParams {
+export interface GroupDMAddRecipientOptions {
   /** access token of a user that has granted your app the gdm.join scope */
-  access_token: string;
+  accessToken: string;
   /** nickname of the user being added */
   nick: string;
 }

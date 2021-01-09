@@ -1,10 +1,6 @@
 import { encode } from "../../deps.ts";
-import {
-  ActivityType,
-  ImageFormats,
-  ImageSize,
-  StatusType,
-} from "../types/mod.ts";
+import { ActivityType, StatusType } from "../api/types/gateway.ts";
+import { ImageFormats, ImageSize } from "../api/types/mod.ts";
 import { sendGatewayCommand } from "../ws/shard_manager.ts";
 
 export const sleep = (timeout: number) => {
@@ -22,7 +18,7 @@ export interface BotStatusRequest {
 export function editBotsStatus(
   status: StatusType,
   name?: string,
-  type = ActivityType.Game,
+  type: ActivityType = "GAME",
 ) {
   sendGatewayCommand("EDIT_BOTS_STATUS", { status, game: { name, type } });
 }
@@ -59,3 +55,49 @@ export const formatImageURL = (
   return `${url}.${format ||
     (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
 };
+
+export function camelToSnakeCase(str: string) {
+  return str.replace(/ID|[A-Z]/g, (s) => {
+    if (s === "ID") return "_id";
+    return `_${s.toLowerCase()}`;
+  });
+}
+
+export function snakeToCamelCase(s: string) {
+  return s.replace(/_id|([-_][a-z])/ig, ($1) => {
+    if ($1 === "_id") return "ID";
+    return $1.toUpperCase().replace("_", "");
+  });
+}
+
+export function isObject(o: any) {
+  return o === Object(o) && !Array.isArray(o) && typeof o !== "function";
+}
+
+export function keysToSnake(o: any) {
+  if (isObject(o)) {
+    const n: any = {};
+    Object.keys(o)
+      .forEach((k) => {
+        n[camelToSnakeCase(k)] = keysToSnake(o[k]);
+      });
+    return n;
+  } else if (Array.isArray(o)) {
+    o = o.map((i) => keysToSnake(i));
+  }
+  return o;
+}
+
+export function keysToCamel(o: any) {
+  if (isObject(o)) {
+    const n: any = {};
+    Object.keys(o)
+      .forEach((k) => {
+        n[snakeToCamelCase(k)] = keysToCamel(o[k]);
+      });
+    return n;
+  } else if (Array.isArray(o)) {
+    o = o.map((i) => keysToCamel(i));
+  }
+  return o;
+}

@@ -15,11 +15,11 @@ import {
   getMessage,
   Guild,
   Intents,
-  OverwriteType,
   Role,
   sendMessage,
   startBot,
 } from "../mod.ts";
+import { keysToCamel } from "../src/util/utils.ts";
 import { assert, assertEquals } from "./deps.ts";
 
 const token = Deno.env.get("DISCORD_TOKEN");
@@ -121,7 +121,7 @@ Deno.test({
   async fn() {
     const guild = cache.guilds.get(data.guildID);
     if (!guild) throw "Guild not found";
-    const createdChannel = await createGuildChannel(guild, "test");
+    const createdChannel = await createGuildChannel(guild, { name: "test" });
 
     // Check whether the created channel is nil or not
     assert(createdChannel);
@@ -146,10 +146,10 @@ Deno.test({
   async fn() {
     await editChannel(data.channelID, {
       name: "edited-channel",
-      overwrites: [
+      permissionOverwrites: [
         {
           id: data.roleID,
-          type: OverwriteType.ROLE,
+          type: "ROLE",
           allow: ["VIEW_CHANNEL", "SEND_MESSAGES"],
           deny: ["USE_EXTERNAL_EMOJIS"],
         },
@@ -174,13 +174,13 @@ Deno.test({
     const hasPerm = channelOverwriteHasPermission(
       data.guildID,
       data.roleID,
-      channel.permissionOverwrites,
+      keysToCamel(channel.permissionOverwrites),
       ["VIEW_CHANNEL", "SEND_MESSAGES"],
     );
     const missingPerm = channelOverwriteHasPermission(
       data.guildID,
       data.roleID,
-      channel.permissionOverwrites,
+      keysToCamel(channel.permissionOverwrites),
       ["USE_EXTERNAL_EMOJIS"],
     );
 

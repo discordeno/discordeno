@@ -1,8 +1,8 @@
-import { AllowedMentionsPayload, EmbedPayload } from "./channel.ts";
-import { GuildMemberPayload } from "./guild.ts";
+import { AllowedMentions, Embed } from "./channel.ts";
+import { GuildMember } from "./guild.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#create-global-application-command */
-export interface ApplicationCommandParams {
+export interface CreateApplicationCommandOptions {
   /** 3-32 character command name */
   name: string;
   /** 1-100 character description */
@@ -16,7 +16,7 @@ export interface ApplicationCommand {
   /** unique id of the command */
   id: string;
   /** unique id of the parent application */
-  application_id: string;
+  applicationID: string;
   /** 3-32 character name matching ^[\w-]{3,32}$ */
   name: string;
   /** 1-100 character description */
@@ -28,7 +28,7 @@ export interface ApplicationCommand {
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption */
 export interface ApplicationCommandOption {
   /** value of ApplicationCommandOptionType */
-  type: ApplicationCommandOptionTypes;
+  type: ApplicationCommandOptionType;
   /** 1-32 character name matching ^[\w-]{1,32}$ */
   name: string;
   /** 1-100 character description */
@@ -44,16 +44,15 @@ export interface ApplicationCommandOption {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype */
-export enum ApplicationCommandOptionTypes {
-  SUB_COMMAND = 1,
-  SUB_COMMAND_GROUP,
-  STRING,
-  INTEGER,
-  BOOLEAN,
-  USER,
-  CHANNEL,
-  ROLE,
-}
+export type ApplicationCommandOptionType =
+  | "SUB_COMMAND"
+  | "SUB_COMMAND_GROUP"
+  | "STRING"
+  | "INTEGER"
+  | "BOOLEAN"
+  | "USER"
+  | "CHANNEL"
+  | "ROLE";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptionchoice */
 export interface ApplicationCommandOptionChoice {
@@ -72,11 +71,11 @@ export interface Interaction {
   /** the command data payload */
   data?: ApplicationCommandInteractionData;
   /** the guild it was sent from */
-  guild_id: string;
+  guildID: string;
   /** the channel it was sent from */
-  channel_id: string;
+  channelID: string;
   /** guild member data for the invoking user */
-  member: GuildMemberPayload;
+  member: GuildMember;
   /** a continuation token for responding to the interaction */
   token: string;
   /** read-only property, always 1 */
@@ -84,10 +83,9 @@ export interface Interaction {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */
-export enum InteractionType {
-  PING = 1,
-  APPLICATION_COMMAND,
-}
+export type InteractionType =
+  | "PING"
+  | "APPLICATION_COMMAND";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-applicationcommandinteractiondata */
 export interface ApplicationCommandInteractionData {
@@ -104,7 +102,7 @@ export interface ApplicationCommandInteractionDataOption {
   /** the name of the parameter */
   name: string;
   /** the value of the pair */
-  value?: ApplicationCommandOptionTypes;
+  value?: ApplicationCommandOptionType;
   /** present if this option is a group or subcommand */
   options?: ApplicationCommandInteractionDataOption[];
 }
@@ -112,19 +110,18 @@ export interface ApplicationCommandInteractionDataOption {
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
 export interface InteractionResponse {
   /** the type of response */
-  type: InteractionResponseTypes;
+  type: InteractionResponseType;
   /** an optional response message */
   data?: InteractionApplicationCommandCallbackData;
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
-export enum InteractionResponseTypes {
-  PONG = 1,
-  ACKNOWLEDGE,
-  CHANNEL_MESSAGE,
-  CHANNEL_MESSAGE_WITH_SOURCE,
-  ACKNOWLEDGE_WITH_SOURCE,
-}
+export type InteractionResponseType =
+  | "PONG"
+  | "ACKNOWLEDGE"
+  | "CHANNEL_MESSAGE"
+  | "CHANNEL_MESSAGE_WITH_SOURCE"
+  | "ACKNOWLEDGE_WITH_SOURCE";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
 export interface InteractionApplicationCommandCallbackData {
@@ -133,7 +130,7 @@ export interface InteractionApplicationCommandCallbackData {
   /** message content */
   content: string;
   /** supports up to 10 embeds */
-  embeds?: EmbedPayload[];
+  embeds?: Embed[];
   /** allowed mentions object */
-  allowed_mentions?: AllowedMentionsPayload;
+  allowedMentions?: AllowedMentions;
 }

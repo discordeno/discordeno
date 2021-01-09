@@ -4,7 +4,7 @@ import {
   Member,
   Message,
 } from "../api/structures/structures.ts";
-import { PresenceUpdatePayload } from "../types/mod.ts";
+import { PresenceUpdateEventPayload } from "../types/mod.ts";
 import { Collection } from "./collection.ts";
 
 export interface CacheData {
@@ -14,7 +14,7 @@ export interface CacheData {
   messages: Collection<string, Message>;
   members: Collection<string, Member>;
   unavailableGuilds: Collection<string, number>;
-  presences: Collection<string, PresenceUpdatePayload>;
+  presences: Collection<string, PresenceUpdateEventPayload>;
   fetchAllMembersProcessingRequests: Collection<string, Function>;
   executedSlashCommands: Collection<string, string>;
 }

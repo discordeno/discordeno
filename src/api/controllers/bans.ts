@@ -1,11 +1,11 @@
 import { eventHandlers } from "../../bot.ts";
-import { DiscordPayload, GuildBanPayload } from "../../types/mod.ts";
+import { GatewayPayload, GuildBanAddEventPayload } from "../../types/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
-export async function handleInternalGuildBanAdd(data: DiscordPayload) {
+export async function handleInternalGuildBanAdd(data: GatewayPayload) {
   if (data.t !== "GUILD_BAN_ADD") return;
 
-  const payload = data.d as GuildBanPayload;
+  const payload = data.d as GuildBanAddEventPayload;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
@@ -13,10 +13,10 @@ export async function handleInternalGuildBanAdd(data: DiscordPayload) {
   eventHandlers.guildBanAdd?.(guild, payload.user, member);
 }
 
-export async function handleInternalGuildBanRemove(data: DiscordPayload) {
+export async function handleInternalGuildBanRemove(data: GatewayPayload) {
   if (data.t !== "GUILD_BAN_REMOVE") return;
 
-  const payload = data.d as GuildBanPayload;
+  const payload = data.d as GuildBanAddEventPayload;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 

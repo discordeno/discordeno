@@ -1,11 +1,7 @@
 import {
-  BanOptions,
-  EditMemberOptions,
-  GuildMember,
-  ImageFormats,
-  ImageSize,
-  MemberCreatePayload,
-  MessageContent,
+  CreateGuildBan,
+  CreateMessageParams,
+  GuildMemberPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
@@ -20,11 +16,21 @@ import {
   removeRole,
   sendDirectMessage,
 } from "../handlers/member.ts";
+import {
+  EditGuildMemberOptions,
+  GuildMember,
+  ImageFormats,
+  ImageSize,
+} from "../types/mod.ts";
 import { Guild } from "./guild.ts";
 
 const baseMember: Partial<Member> = {
   get avatarURL() {
-    return rawAvatarURL(this.id!, this.discriminator!, this.avatar!);
+    return rawAvatarURL(
+      this.id!,
+      this.discriminator!,
+      { avatar: this.avatar! },
+    );
   },
   get mention() {
     return `<@!${this.id!}>`;
@@ -38,9 +44,11 @@ const baseMember: Partial<Member> = {
     return rawAvatarURL(
       this.id!,
       this.discriminator!,
-      this.avatar!,
-      options.size,
-      options.format,
+      {
+        avatar: this.avatar,
+        size: options.size,
+        format: options.format,
+      },
     );
   },
   guild(guildID) {
@@ -55,8 +63,8 @@ const baseMember: Partial<Member> = {
   sendDM(content) {
     return sendDirectMessage(this.id!, content);
   },
-  kick(guildID, reason) {
-    return kick(guildID, this.id!, reason);
+  kick(guildID) {
+    return kick(guildID, this.id!);
   },
   edit(guildID, options) {
     return editMember(guildID, this.id!, options);
@@ -64,19 +72,18 @@ const baseMember: Partial<Member> = {
   ban(guildID, options) {
     return ban(guildID, this.id!, options);
   },
-  addRole(guildID, roleID, reason) {
-    return addRole(guildID, this.id!, roleID, reason);
+  addRole(guildID, roleID) {
+    return addRole(guildID, this.id!, roleID);
   },
-  removeRole(guildID, roleID, reason) {
-    return removeRole(guildID, this.id!, roleID, reason);
+  removeRole(guildID, roleID) {
+    return removeRole(guildID, this.id!, roleID);
   },
 };
 
-export async function createMember(data: MemberCreatePayload, guildID: string) {
+export async function createMember(data: GuildMemberPayload, guildID: string) {
   const {
     joined_at: joinedAt,
     premium_since: premiumSince,
-    user: userData,
     roles,
     deaf,
     mute,
@@ -85,7 +92,7 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
   } = data;
 
   const { mfa_enabled: mfaEnabled, premium_type: premiumType, ...user } =
-    data.user || {};
+    rest.user || {};
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
@@ -105,10 +112,12 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
     guilds: createNewProp(new Collection<string, GuildMember>()),
   });
 
-  const cached = await cacheHandlers.get("members", user.id);
-  if (cached) {
-    for (const [id, guild] of cached.guilds.entries()) {
-      member.guilds.set(id, guild);
+  if (rest.user?.id) {
+    const cached = await cacheHandlers.get("members", rest.user?.id);
+    if (cached) {
+      for (const [id, guild] of cached.guilds.entries()) {
+        member.guilds.set(id, guild);
+      }
     }
   }
 
@@ -124,7 +133,7 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
 
   await cacheHandlers.set("members", member.id, member);
 
-  return member;
+  return member as Member;
 }
 
 export interface Member {
@@ -164,7 +173,6 @@ export interface Member {
   tag: string;
 
   // METHODS
-
   /** Returns the avatar url for this member and can be dynamically modified with a size or format */
   makeAvatarURL(options: { size?: ImageSize; format?: ImageFormats }): string;
   /** Returns the guild for this guildID */
@@ -174,15 +182,15 @@ export interface Member {
   /** Get the nickname */
   guildMember(guildID: string): GuildMember | undefined;
   /** Send a direct message to the user is possible */
-  sendDM(content: string | MessageContent): Promise<any>;
+  sendDM(content: string | CreateMessageParams): Promise<any>;
   /** Kick the member from a guild */
-  kick(guildID: string, reason?: string): Promise<any>;
+  kick(guildID: string): Promise<any>;
   /** Edit the member in a guild */
-  edit(guildID: string, options: EditMemberOptions): Promise<any>;
+  edit(guildID: string, options: EditGuildMemberOptions): Promise<any>;
   /** Ban a member in a guild */
-  ban(guildID: string, options: BanOptions): Promise<any>;
+  ban(guildID: string, options: CreateGuildBan): Promise<any>;
   /** Add a role to the member */
-  addRole(guildID: string, roleID: string, reason?: string): Promise<any>;
+  addRole(guildID: string, roleID: string): Promise<any>;
   /** Remove a role from the member */
-  removeRole(guildID: string, roleID: string, reason?: string): Promise<any>;
+  removeRole(guildID: string, roleID: string): Promise<any>;
 }

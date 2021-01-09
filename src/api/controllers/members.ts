@@ -1,20 +1,20 @@
 import { eventHandlers } from "../../bot.ts";
 import {
-  DiscordPayload,
-  GuildBanPayload,
-  GuildMemberAddPayload,
-  GuildMemberChunkPayload,
-  GuildMemberUpdatePayload,
+  GatewayPayload,
+  GuildBanAddEventPayload,
+  GuildMemberAddExtraPayload,
+  GuildMembersChunkEventPayload,
+  GuildMemberUpdateEventPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
-export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
+export async function handleInternalGuildMemberAdd(data: GatewayPayload) {
   if (data.t !== "GUILD_MEMBER_ADD") return;
 
-  const payload = data.d as GuildMemberAddPayload;
+  const payload = data.d as GuildMemberAddExtraPayload;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
@@ -27,10 +27,10 @@ export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
   eventHandlers.guildMemberAdd?.(guild, member);
 }
 
-export async function handleInternalGuildMemberRemove(data: DiscordPayload) {
+export async function handleInternalGuildMemberRemove(data: GatewayPayload) {
   if (data.t !== "GUILD_MEMBER_REMOVE") return;
 
-  const payload = data.d as GuildBanPayload;
+  const payload = data.d as GuildBanAddEventPayload;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
@@ -44,10 +44,10 @@ export async function handleInternalGuildMemberRemove(data: DiscordPayload) {
   }
 }
 
-export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
+export async function handleInternalGuildMemberUpdate(data: GatewayPayload) {
   if (data.t !== "GUILD_MEMBER_UPDATE") return;
 
-  const payload = data.d as GuildMemberUpdatePayload;
+  const payload = data.d as GuildMemberUpdateEventPayload;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
@@ -62,13 +62,14 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
     deaf: guildMember?.deaf || false,
     mute: guildMember?.mute || false,
     roles: payload.roles,
+    nick: payload.nick === undefined ? null : payload.nick,
   };
   const member = await structures.createMember(
     newMemberData,
     payload.guild_id,
   );
 
-  if (guildMember?.nick !== payload.nick) {
+  if (guildMember?.nick && payload.nick && guildMember.nick !== payload.nick) {
     eventHandlers.nicknameUpdate?.(
       guild,
       member,
@@ -93,10 +94,10 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
   eventHandlers.guildMemberUpdate?.(guild, member, cachedMember);
 }
 
-export async function handleInternalGuildMembersChunk(data: DiscordPayload) {
+export async function handleInternalGuildMembersChunk(data: GatewayPayload) {
   if (data.t !== "GUILD_MEMBERS_CHUNK") return;
 
-  const payload = data.d as GuildMemberChunkPayload;
+  const payload = data.d as GuildMembersChunkEventPayload;
 
   const members = await Promise.all(
     payload.members.map((member) =>

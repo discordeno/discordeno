@@ -1,20 +1,15 @@
 import { botID } from "../../bot.ts";
 import {
-  BannedUser,
-  BanOptions,
-  ChannelCreatePayload,
-  CreateGuildPayload,
-  Emoji,
-  GetAuditLogsOptions,
-  GuildEditOptions,
+  ChannelPayload,
+  CreateGuildBan,
+  EmojiPayload,
   GuildFeatures,
-  GuildMember,
-  ImageFormats,
-  ImageSize,
-  MemberCreatePayload,
-  Presence,
-  RoleData,
-  VoiceState,
+  GuildMemberPayload,
+  GuildPayload,
+  ModifyGuildParams,
+  PresenceUpdateEventPayload,
+  RolePayload,
+  VoiceStatePayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
@@ -32,11 +27,18 @@ import {
   leaveGuild,
   unban,
 } from "../handlers/guild.ts";
+import {
+  Ban,
+  GetGuildAuditLogOptions,
+  GuildMember,
+  ImageFormats,
+  ImageSize,
+} from "../types/mod.ts";
 import { Member } from "./member.ts";
 import { Role, structures } from "./mod.ts";
 import { Channel } from "./structures.ts";
 
-export const initialMemberLoadQueue = new Map<string, MemberCreatePayload[]>();
+export const initialMemberLoadQueue = new Map<string, GuildMemberPayload[]>();
 
 const baseGuild: Partial<Guild> = {
   get members() {
@@ -70,10 +72,10 @@ const baseGuild: Partial<Guild> = {
     return cache.members.get(this.ownerID!);
   },
   get partnered() {
-    return Boolean(this.features?.includes("PARTNERED"));
+    return Boolean(this.features?.includes(GuildFeatures.PARTNERED));
   },
   get verified() {
-    return Boolean(this.features?.includes("VERIFIED"));
+    return Boolean(this.features?.includes(GuildFeatures.VERIFIED));
   },
   bannerURL(size, format) {
     return guildBannerURL(this as Guild, size, format);
@@ -110,9 +112,9 @@ const baseGuild: Partial<Guild> = {
   },
 };
 
-export async function createGuild(data: CreateGuildPayload, shardID: number) {
+export async function createGuild(data: GuildPayload, shardID: number) {
   const {
-    disovery_splash: discoverySplash,
+    discovery_splash: discoverySplash,
     default_message_notifications: defaultMessageNotifications,
     explicit_content_filter: explicitContentFilter,
     system_channel_flags: systemChannelFlags,
@@ -145,13 +147,11 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
   } = data;
 
   const roles = (await Promise.all(
-    data.roles.map((r: RoleData) => structures.createRole(r)),
+    data.roles.map((r: RolePayload) => structures.createRole(r)),
   )) as Role[];
 
   await Promise.all(
-    channels.map((c: ChannelCreatePayload) =>
-      structures.createChannel(c, data.id)
-    ),
+    channels.map((c: ChannelPayload) => structures.createChannel(c, data.id)),
   );
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
@@ -185,14 +185,14 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     premiumSubscriptionCount: createNewProp(premiumSubscriptionCount),
     preferredLocale: createNewProp(preferredLocale),
     roles: createNewProp(new Collection(roles.map((r: Role) => [r.id, r]))),
-    joinedAt: createNewProp(Date.parse(joinedAt)),
+    joinedAt: createNewProp(Date.parse(joinedAt || Date.now().toString())),
     presences: createNewProp(
-      new Collection(presences.map((p: Presence) => [p.user.id, p])),
+      new Collection(presences.map((p) => [p.user!.id, p])),
     ),
     memberCount: createNewProp(memberCount || 0),
     voiceStates: createNewProp(
       new Collection(
-        voiceStates.map((vs: VoiceState) => [
+        voiceStates.map((vs) => [
           vs.user_id,
           {
             ...vs,
@@ -209,9 +209,9 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     ),
   });
 
-  initialMemberLoadQueue.set(guild.id, members);
+  if (members) initialMemberLoadQueue.set(guild.id, members);
 
-  return guild;
+  return guild as Guild;
 }
 
 export interface Guild {
@@ -232,7 +232,7 @@ export interface Guild {
   /** Explicit content filter level */
   explicitContentFilter: number;
   /** The custom guild emojis */
-  emojis: Emoji[];
+  emojis: EmojiPayload[];
   /** Enabled guild features */
   features: GuildFeatures[];
   /** System channel flags */
@@ -290,7 +290,7 @@ export interface Guild {
   /** When this guild was joined at. */
   joinedAt: number;
   /** The presences of all the users in the guild. */
-  presences: Collection<string, Presence>;
+  presences: Collection<string, PresenceUpdateEventPayload>;
   /** The total number of members in this guild. This value is updated as members leave and join the server. However, if you do not have the intent enabled to be able to listen to these events, then this will not be accurate. */
   memberCount: number;
   /** The Voice State data for each user in a voice channel in this server. */
@@ -333,22 +333,22 @@ export interface Guild {
   /** Leave a guild */
   leave(): Promise<any>;
   /** Edit the server. Requires the MANAGE_GUILD permission. */
-  edit(options: GuildEditOptions): Promise<any>;
+  edit(options: ModifyGuildParams): Promise<any>;
   /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
-  auditLogs(options: GetAuditLogsOptions): Promise<any>;
+  auditLogs(options: GetGuildAuditLogOptions): Promise<any>;
   /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
-  getBan(memberID: string): Promise<BannedUser>;
+  getBan(memberID: string): Promise<Ban>;
   /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
-  bans(): Promise<Collection<string, BannedUser>>;
+  bans(): Promise<Collection<string, Ban>>;
   /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
-  ban(memberID: string, options: BanOptions): Promise<any>;
+  ban(memberID: string, options: CreateGuildBan): Promise<any>;
   /** Remove the ban for a user. Requires BAN_MEMBERS permission */
   unban(memberID: string): Promise<any>;
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   invites(): Promise<any>;
 }
 
-interface CleanVoiceState extends VoiceState {
+interface CleanVoiceState extends VoiceStatePayload {
   /** The guild id where this voice state is from */
   guildID: string;
   /** The channel id where this voice state is from */

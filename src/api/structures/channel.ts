@@ -1,8 +1,8 @@
 import {
-  ChannelCreatePayload,
-  ChannelType,
-  MessageContent,
-  RawOverwrite,
+  ChannelPayload,
+  ChannelTypes,
+  CreateMessageParams,
+  OverwritePayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
@@ -28,7 +28,7 @@ const baseChannel: Partial<Channel> = {
 };
 
 export async function createChannel(
-  data: ChannelCreatePayload,
+  data: ChannelPayload,
   guildID?: string,
 ) {
   const {
@@ -78,7 +78,7 @@ export interface Channel {
   /** The bitrate (in bits) of the voice channel */
   bitrate?: number;
   /** The type of the channel */
-  type: ChannelType;
+  type: ChannelTypes;
   /** The guild id of the channel if it is a guild channel. */
   guildID: string;
   /** The id of the last message sent in this channel */
@@ -92,7 +92,7 @@ export interface Channel {
   /** The last time when a message was pinned in this channel */
   lastPinTimestamp?: number;
   /** The permission overwrites for this channel */
-  permissionOverwrites: RawOverwrite[];
+  permissionOverwrites: OverwritePayload[];
   /** Whether this channel is nsfw or not */
   nsfw: boolean;
 
@@ -116,5 +116,5 @@ export interface Channel {
   // METHODS
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
-  send(content: string | MessageContent): Promise<Message>;
+  send(content: string | CreateMessageParams): Promise<Message>;
 }

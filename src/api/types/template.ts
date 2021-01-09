@@ -1,8 +1,8 @@
-import { GuildPayload } from "./guild.ts";
-import { UserPayload } from "./user.ts";
+import { Guild } from "./guild.ts";
+import { User } from "./user.ts";
 
-/** https://discord.com/developers/docs/resources/template#template-resource */
-export interface TemplatePayload {
+// used
+export interface GuildTemplate {
   /** the template code (unique ID) */
   code: string;
   /** template name */
@@ -10,41 +10,41 @@ export interface TemplatePayload {
   /** the description for the template */
   description: string | null;
   /** number of times this template has been used */
-  usage_count: number;
+  usageCount: number;
   /** the ID of teh user who created the template */
-  creator_id: string;
+  creatorID: string;
   /** the user who created the template */
-  creator: UserPayload;
+  creator: User;
   /** when this template was created*/
-  created_at: string;
+  createdAt: string;
   /** when this template was last synced to the source guild */
-  updated_at: string;
+  updatedAt: string;
   /** the ID of the guild this template is based on */
-  source_guild_id: string;
+  sourceGuildID: string;
   /** the guild snapshot this template contains */
-  serialized_source_guild: Partial<GuildPayload>;
+  serializedSourceGuild: Partial<Guild>;
   /** whether the template has unsynced changes */
-  is_dirty: boolean | null;
+  isDirty: boolean | null;
 }
 
-/** https://discord.com/developers/docs/resources/template#create-guild-from-template */
-export interface CreateGuildFromTemplateParams {
+// used
+export interface CreateGuildFromTemplateOptions {
   /** name of the guild (2-100 characters) */
   name: string;
   /** base64 128x128 image for the guild icon */
   icon?: string;
 }
 
-/** https://discord.com/developers/docs/resources/template#create-guild-template */
-export interface CreateGuildTemplateParams {
+// used
+export interface CreateGuildTemplateOptions {
   /** name of the template (1-100 characters) */
   name: string;
   /** description for the template (0-120 characters) */
   description?: string | null;
 }
 
-/** https://discord.com/developers/docs/resources/template#modify-guild-template */
-export interface ModifyGuildTemplateParams {
+// used
+export interface EditGuildTemplateOptions {
   /** name of the template (1-100 characters) */
   name?: string;
   /** description for the template (0-120 characters) */

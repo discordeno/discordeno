@@ -1,12 +1,12 @@
 import { eventHandlers, setBotID } from "../../bot.ts";
 import {
-  DiscordPayload,
-  PresenceUpdatePayload,
-  ReadyPayload,
-  TypingStartPayload,
+  GatewayPayload,
+  PresenceUpdateEventPayload,
+  ReadyEventFields,
+  TypingStartEventPayload,
   UserPayload,
-  VoiceStateUpdatePayload,
-  WebhookUpdatePayload,
+  VoiceStatePayload,
+  WebhookUpdateEventPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { delay } from "../../util/utils.ts";
@@ -19,12 +19,12 @@ import { cacheHandlers } from "./cache.ts";
 
 /** This function is the internal handler for the ready event. Users can override this with controllers if desired. */
 export async function handleInternalReady(
-  data: DiscordPayload,
+  data: GatewayPayload,
   shardID: number,
 ) {
   if (data.t !== "READY") return;
 
-  const payload = data.d as ReadyPayload;
+  const payload = data.d as ReadyEventFields;
   setBotID(payload.user.id);
 
   // Triggered on each shard
@@ -49,10 +49,10 @@ export async function handleInternalReady(
 }
 
 /** This function is the internal handler for the presence update event. Users can override this with controllers if desired. */
-export async function handleInternalPresenceUpdate(data: DiscordPayload) {
+export async function handleInternalPresenceUpdate(data: GatewayPayload) {
   if (data.t !== "PRESENCE_UPDATE") return;
 
-  const payload = data.d as PresenceUpdatePayload;
+  const payload = data.d as PresenceUpdateEventPayload;
   const oldPresence = await cacheHandlers.get("presences", payload.user.id);
   await cacheHandlers.set("presences", payload.user.id, payload);
 
@@ -60,13 +60,13 @@ export async function handleInternalPresenceUpdate(data: DiscordPayload) {
 }
 
 /** This function is the internal handler for the typings event. Users can override this with controllers if desired. */
-export function handleInternalTypingStart(data: DiscordPayload) {
+export function handleInternalTypingStart(data: GatewayPayload) {
   if (data.t !== "TYPING_START") return;
-  eventHandlers.typingStart?.(data.d as TypingStartPayload);
+  eventHandlers.typingStart?.(data.d as TypingStartEventPayload);
 }
 
 /** This function is the internal handler for the user update event. Users can override this with controllers if desired. */
-export async function handleInternalUserUpdate(data: DiscordPayload) {
+export async function handleInternalUserUpdate(data: GatewayPayload) {
   if (data.t !== "USER_UPDATE") return;
 
   const userData = data.d as UserPayload;
@@ -82,10 +82,10 @@ export async function handleInternalUserUpdate(data: DiscordPayload) {
 }
 
 /** This function is the internal handler for the voice state update event. Users can override this with controllers if desired. */
-export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
+export async function handleInternalVoiceStateUpdate(data: GatewayPayload) {
   if (data.t !== "VOICE_STATE_UPDATE") return;
 
-  const payload = data.d as VoiceStateUpdatePayload;
+  const payload = data.d as VoiceStatePayload;
   if (!payload.guild_id) return;
 
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
@@ -133,10 +133,10 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
 }
 
 /** This function is the internal handler for the webhooks update event. Users can override this with controllers if desired. */
-export function handleInternalWebhooksUpdate(data: DiscordPayload) {
+export function handleInternalWebhooksUpdate(data: GatewayPayload) {
   if (data.t !== "WEBHOOKS_UPDATE") return;
 
-  const options = data.d as WebhookUpdatePayload;
+  const options = data.d as WebhookUpdateEventPayload;
   return eventHandlers.webhooksUpdate?.(
     options.channel_id,
     options.guild_id,

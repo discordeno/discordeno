@@ -1,11 +1,12 @@
 import { controllers } from "../api/controllers/mod.ts";
 import { Guild } from "../api/structures/guild.ts";
-import { eventHandlers, IdentifyPayload } from "../bot.ts";
+import { FetchMembersOptions } from "../api/types/mod.ts";
+import { eventHandlers } from "../bot.ts";
 import {
-  DiscordBotGatewayData,
-  DiscordPayload,
-  FetchMembersOptions,
-  GatewayOpcode,
+  GatewayOpcodes,
+  GatewayPayload,
+  GetGatewayBotPayload,
+  IdentifyPayload,
 } from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
 import { BotStatusRequest, delay } from "../util/utils.ts";
@@ -23,7 +24,7 @@ export function allowNextShard(enabled = true) {
 }
 
 export async function spawnShards(
-  data: DiscordBotGatewayData,
+  data: GetGatewayBotPayload,
   payload: IdentifyPayload,
   shardID: number,
   lastShardID: number,
@@ -69,19 +70,21 @@ export async function spawnShards(
 }
 
 export async function handleDiscordPayload(
-  data: DiscordPayload,
+  data: GatewayPayload,
   shardID: number,
 ) {
   eventHandlers.raw?.(data);
   await eventHandlers.dispatchRequirements?.(data, shardID);
 
   switch (data.op) {
-    case GatewayOpcode.HeartbeatACK:
+    case GatewayOpcodes.HeartbeatACK:
       // In case the user wants to listen to heartbeat responses
       return eventHandlers.heartbeat?.();
-    case GatewayOpcode.Dispatch:
+    case GatewayOpcodes.Dispatch:
       if (!data.t) return;
       // Run the appropriate controller for this event.
+      // TODO(itohatweb): remove ts-ignore
+      // @ts-ignore
       return controllers[data.t]?.(data, shardID);
     default:
       return;
