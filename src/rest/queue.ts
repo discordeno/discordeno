@@ -4,9 +4,9 @@ import { HttpResponseCode } from "./types/mod.ts";
 
 /** If the queue is not already processing, this will start processing the queue. */
 export function startQueue() {
-  // if already processing cancel
+  // If already processing cancel
   if (restCache.processingQueue) return;
-  // mark as processing
+  // Mark as processing
   restCache.processingQueue = true;
   processQueue();
 }
@@ -14,31 +14,31 @@ export function startQueue() {
 /** Processes the queue by looping over each path separately until the queues are empty. */
 export function processQueue() {
   while (restCache.processingQueue) {
-    // for every path we will start its own loop.
+    // For every path we will start its own loop.
     restCache.pathQueues.forEach(async (queue) => {
       // each path is unique limiter
       while (queue.length) {
-        // if the bot is globally ratelimited try again
+        // If the bot is globally ratelimited try again
         if (!restCache.globallyRateLimited) continue;
-        // select the first item from this queue
+        // Select the first item from this queue
         const [queuedRequest] = queue;
-        // if this doesnt have any items just cancel, the cleaner will remove it.
+        // If this doesnt have any items just cancel, the cleaner will remove it.
         if (!queuedRequest) return;
 
-        // if this url is still rate limited, try again
+        // If this url is still rate limited, try again
         const urlResetIn = checkRateLimits(queuedRequest.payload.url);
         if (urlResetIn) continue;
 
-        // if a bucket exists, check the bucket's rate limits
+        // If a bucket exists, check the bucket's rate limits
         const bucketResetIn = queuedRequest.payload.bucketID
           ? checkRateLimits(queuedRequest.payload.bucketID)
           : false;
-        // this bucket is still ratelimited, re-add to queue
+        // This bucket is still ratelimited, re-add to queue
         if (bucketResetIn) continue;
 
-        // execute the request
+        // Execute the request
 
-        // if this is a get request, change the body to query parameters
+        // If this is a get request, change the body to query parameters
         const query =
           queuedRequest.payload.method === "get" && queuedRequest.payload.body
             ? Object.entries(queuedRequest.payload.body).map(([key, value]) =>
@@ -52,7 +52,7 @@ export function processQueue() {
           ? `${queuedRequest.payload.url}?${query}`
           : queuedRequest.payload.url;
 
-        // custom handler for user to log or whatever whenever a fetch is made
+        // Custom handler for user to log or whatever whenever a fetch is made
         restCache.eventHandlers.fetching(queuedRequest.payload);
 
         try {
@@ -94,21 +94,21 @@ export function processQueue() {
             continue;
           }
 
-          // sometimes discord returns an empty 204 response that can't be made to json
+          // Sometimes discord returns an empty 204 response that can't be made to json
           if (response.status === 204) {
             restCache.eventHandlers.fetchSuccess(queuedRequest.payload);
             return queuedRequest.request.respond({ status: 204 });
           }
 
-          // convert the response to json
+          // Convert the response to json
           const json = await response.json();
 
-          // if the response was rate limited, handle accordingly
+          // If the response was rate limited, handle accordingly
           if (
             json.retry_after ||
             json.message === "You are being rate limited."
           ) {
-            // if it has maxed retries something seriously wrong. cancel out.
+            // If it has maxed retries something seriously wrong. Cancel out.
             if (
               queuedRequest.payload.retryCount >=
                 queuedRequest.options.maxRetryCount
@@ -125,37 +125,37 @@ export function processQueue() {
                   ),
                 },
               );
-              // remove item from queue to prevent retry
+              // Remove item from queue to prevent retry
               queue.shift();
               continue;
             }
 
-            // set the bucket id if it was present
+            // Set the bucket id if it was present
             if (bucketIDFromHeaders) {
               queuedRequest.payload.bucketID = bucketIDFromHeaders;
             }
-            // since it was ratelimite, retry again
+            // Since it was ratelimite, retry again
             continue;
           }
 
           restCache.eventHandlers.fetchSuccess(queuedRequest.payload);
-          // remove from queue
+          // Remove from queue
           queue.shift();
           queuedRequest.request.respond(
             { status: 200, body: JSON.stringify(json) },
           );
         } catch (error) {
-          // something went wrong, log and respond with error
+          // Something went wrong, log and respond with error
           restCache.eventHandlers.fetchFailed(queuedRequest.payload, error);
           queuedRequest.request.respond(
             { status: 404, body: JSON.stringify({ error }) },
           );
-          // remove from queue
+          // Remove from queue
           queue.shift();
         }
       }
 
-      // once queue is done, we can try cleaning up
+      // Once queue is done, we can try cleaning up
       cleanupQueues();
     });
   }
@@ -165,7 +165,7 @@ export function processQueue() {
 export function cleanupQueues() {
   restCache.pathQueues.forEach((queue, key) => {
     if (queue.length) return;
-    // remove it from cache
+    // Remove it from cache
     restCache.pathQueues.delete(key);
   });
 }

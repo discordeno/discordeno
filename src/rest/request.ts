@@ -16,9 +16,9 @@ export function processRequest(
 ) {
   const route = payload.url.substring(payload.url.indexOf("api/"));
   const parts = route.split("/");
-  // remove the api
+  // Remove the api
   parts.shift();
-  // removes the version number
+  // Removes the version number
   if (parts[0]?.startsWith("v")) parts.shift();
   // remove the major param
   parts.shift();
@@ -26,11 +26,11 @@ export function processRequest(
   const [id] = parts;
 
   const queue = restCache.pathQueues.get(id);
-  // if the queue exists just add this to the queue
+  // If the queue exists just add this to the queue
   if (queue) {
     queue.push({ request, payload, options });
   } else {
-    // creates a new queue
+    // Creates a new queue
     restCache.pathQueues.set(id, [{ request, payload, options }]);
   }
 
@@ -44,19 +44,19 @@ export function createRequestBody(queuedRequest: QueuedRequest) {
     "User-Agent": USER_AGENT,
   };
 
-  // get methods should not have a body
+  // Get methods should not have a body
   if (queuedRequest.payload.method === "get") {
     queuedRequest.payload.body = undefined;
   }
 
-  // if a reason is provided encode it in headers
+  // If a reason is provided encode it in headers
   if (queuedRequest.payload.body?.reason) {
     headers["X-Audit-Log-Reason"] = encodeURIComponent(
       queuedRequest.payload.body.reason,
     );
   }
 
-  // if a file/attachment is present we need special handling
+  // If a file/attachment is present we need special handling
   if (queuedRequest.payload.body?.file) {
     const form = new FormData();
     form.append(
@@ -88,25 +88,25 @@ export function createRequestBody(queuedRequest: QueuedRequest) {
 export function processRequestHeaders(url: string, headers: Headers) {
   let ratelimited = false;
 
-  // get all necessary headers
+  // Get all necessary headers
   const remaining = headers.get("x-ratelimit-remaining");
   const resetTimestamp = headers.get("x-ratelimit-reset");
   const retryAfter = headers.get("retry-after");
   const global = headers.get("x-ratelimit-global");
   const bucketID = headers.get("x-ratelimit-bucket");
 
-  // if there is no remaining rate limit, mark it as rate limited
+  // If there is no remaining rate limit, mark it as rate limited
   if (remaining && remaining === "0") {
     ratelimited = true;
 
-    // save the url as limited, important for new requests by user without bucket
+    // Save the url as limited, important for new requests by user without bucket
     restCache.ratelimitedPaths.set(url, {
       url,
       resetTimestamp: Number(resetTimestamp) * 1000,
       bucketID,
     });
 
-    // save the bucket as limited since different urls may share a bucket
+    // Save the bucket as limited since different urls may share a bucket
     if (bucketID) {
       restCache.ratelimitedPaths.set(bucketID, {
         url,
@@ -116,7 +116,7 @@ export function processRequestHeaders(url: string, headers: Headers) {
     }
   }
 
-  // if there is no remaining global limit, mark it rate limited globally
+  // If there is no remaining global limit, mark it rate limited globally
   if (global) {
     const reset = Date.now() + (Number(retryAfter) * 1000);
     restCache.eventHandlers.globallyRateLimited(url, reset);
@@ -146,15 +146,15 @@ function processRateLimitedPaths() {
   const now = Date.now();
 
   restCache.ratelimitedPaths.forEach((value, key) => {
-    // if the time has not reached cancel
+    // If the time has not reached cancel
     if (value.resetTimestamp > now) return;
-    // rate limit is over, delete the rate limiter
+    // Rate limit is over, delete the rate limiter
     restCache.ratelimitedPaths.delete(key);
-    // if it was global also mark the global value as false
+    // If it was global also mark the global value as false
     if (key === "global") restCache.globallyRateLimited = false;
   });
 
-  // recheck in 1 second
+  // Recheck in 1 second
   setTimeout(() => processRateLimitedPaths(), 1000);
 }
 
