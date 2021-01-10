@@ -120,7 +120,8 @@ async function filter(
   return cache[table].filter(callback);
 }
 
-export const cacheHandlers = {
+// deno-lint-ignore prefer-const
+export let cacheHandlers = {
   /** Deletes all items from the cache */
   // deno-lint-ignore require-await
   clear: async function (table: TableName) {
