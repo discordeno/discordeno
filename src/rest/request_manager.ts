@@ -49,7 +49,7 @@ async function processRateLimitedPaths() {
 function addToQueue(request: QueuedRequest) {
   const route = request.url.substring(baseEndpoints.BASE_URL.length + 1);
   const parts = route.split("/");
-  // Remove the major param
+  // remove the major param
   parts.shift();
   const [id] = parts;
 
@@ -63,7 +63,7 @@ function addToQueue(request: QueuedRequest) {
 function cleanupQueues() {
   Object.entries(pathQueues).forEach(([key, value]) => {
     if (!value.length) {
-      // Remove it entirely
+      // remove it entirely
       delete pathQueues[key];
     }
   });
@@ -84,13 +84,13 @@ async function processQueue() {
           if (request.bucketID) {
             const rateLimitResetIn = await checkRatelimits(request.bucketID);
             if (rateLimitResetIn) {
-              // This request is still rate limited readd to queue
+              // this request is still rate limited readd to queue
               addToQueue(request);
             } else if (rateLimitedURLResetIn) {
-              // This URL is rate limited readd to queue
+              // this url is rate limited readd to queue
               addToQueue(request);
             } else {
-              // This request is not rate limited so it should be run
+              // this request is not rate limited so it should be run
               const result = await request.callback();
               if (result && result.rateLimited) {
                 addToQueue(
@@ -100,10 +100,10 @@ async function processQueue() {
             }
           } else {
             if (rateLimitedURLResetIn) {
-              // This URL is rate limited readd to queue
+              // this url is rate limited readd to queue
               addToQueue(request);
             } else {
-              // This request has no bucket id so it should be processed
+              // this request has no bucket id so it should be processed
               const result = await request.callback();
               if (request && result && result.rateLimited) {
                 addToQueue(
@@ -205,7 +205,7 @@ function runMethod(
   const errorStack = new Error("Location:");
   Error.captureStackTrace(errorStack);
 
-  // For proxies we don't need to do any of the legwork so we just forward the request
+  // for proxies we don't need to do any of the legwork so we just forward the request
   if (
     !url.startsWith(`${BASE_URL}/v${API_VERSION}`) &&
     !url.startsWith(IMAGE_BASE_URL)
@@ -218,7 +218,7 @@ function runMethod(
       });
   }
 
-  // No proxy so we need to handle all rate limiting and such
+  // no proxy so we need to handle all rate limiting and such
   return new Promise((resolve, reject) => {
     const callback = async () => {
       try {
@@ -253,7 +253,7 @@ function runMethod(
         const bucketIDFromHeaders = processHeaders(url, response.headers);
         handleStatusCode(response, errorStack);
 
-        // Sometimes Discord returns an empty 204 response that can't be made to JSON.
+        // sometimes discord returns an empty 204 response that can't be made to json.
         if (response.status === 204) return resolve(undefined);
 
         const json = await response.json();
@@ -374,14 +374,14 @@ function handleStatusCode(response: Response, errorStack?: unknown) {
 function processHeaders(url: string, headers: Headers) {
   let ratelimited = false;
 
-  // Get all useful headers
+  // get all useful headers
   const remaining = headers.get("x-ratelimit-remaining");
   const resetTimestamp = headers.get("x-ratelimit-reset");
   const retryAfter = headers.get("retry-after");
   const global = headers.get("x-ratelimit-global");
   const bucketID = headers.get("x-ratelimit-bucket");
 
-  // If there is no remaining rate limit for this endpoint, we save it in cache
+  // if there is no remaining rate limit for this endpoint, we save it in cache
   if (remaining && remaining === "0") {
     ratelimited = true;
 
@@ -400,7 +400,7 @@ function processHeaders(url: string, headers: Headers) {
     }
   }
 
-  // If there is no remaining global limit, we save it in cache
+  // if there is no remaining global limit, we save it in cache
   if (global) {
     const reset = Date.now() + (Number(retryAfter) * 1000);
     eventHandlers.debug?.(
