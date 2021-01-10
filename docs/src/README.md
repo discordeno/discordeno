@@ -1,56 +1,20 @@
-# Introduction
+# Discordeno
 
-![Banner](https://i.imgur.com/Cq7nNd0.png)
+> Discord API library for Deno
 
-A Third Party Deno library for interacting with the Discord API.
+[![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
+![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
+![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
 
-## Features
+- **Secure & stable**: Discordeno is comparatively more stable than the other libraries. One of the greatest issues with almost every library is stability; types are outdated, less (or minimal) parity with the API, core maintainers have quit or no longer actively maintain the library, and whatnot. Discordeno, on the other hand, is actively maintained to ensure great performance and convenience. Discordeno internally checks all missing permissions before forwarding a request to the API so that the client does not get globally-banned by Discord.
+- **Efficient & lightweight**: Discordeno is simplistic and easy-to-use. Always prefer defaults that Discord recommends or the best configuration for the majority―if necessary, it is remarkably customizable, versatile, and efficient.
+- **Functional API**: This will produce a cleaner and more performant code while removing the difficulties of extending built-in classes and inheritance. Avoid potential memory leaks or crashes because of too many listeners or other silly issues.
 
-- Best TypeScript Support
-- Stable Library
-- Easy to use Boilerplates
-- Security
-- Built in Documentation
-- Minimalistic
-- Functional API
-- Latest and Greatest JavaScript
-- Actively Maintained!
+## Useful Links
 
-### Best TypeScript Support!
-
-First class support for Typescript! Never compile your code again in order to run it.
-
-### Stable Library
-
-Discordeno is one of the most stable libraries ever. One of the biggest issues with almost every library(I have used) is stability. None of the libraries gave much love and attention to Typescript developers the way it deserves which caused TypeScript bots to break.
-
-### Easy To Use Boilerplates
-
-Several bot boilerplates are available to get up and running very quickly. The Official boilerplate provides the most necessary features for almost any bot to make coding bots extremely easy. You focus on building features and not on building the base for a bot.
-
-### Security
-
-Checks all missing permissions necessary before sending a request to the API so that your bot's token do not get globally banned by Discord. Discordeno does not support self-bot functionality like other libraries either. Even goes so far as to prevent self-bot farms!
-
-### Documentation
-
-All of Discord API Documentation available inside your VSC while you code. The entire libraries documentation is automatically available to you through intellisense.
-
-### Minimalistic
-
-Discordeno will always prefer defaults that Discord recommends or in the cases where Discord does not care we choose the best option for the majority of developers.
-
-### Functional API
-
-This will overall make a cleaner and more performant API, while removing the headaches of extending built-in classes, and inheritance. Avoid potential of memory leaks or bot crashes because of too many listeners or other silly issues.
-
-### Latest & Greatest JavaScript
-
-Discordeno uses the latest and greatest JavaScript/TypeScript available. A lot of libraries still use JavaScript standards from 4-6 years ago because of backwards compatibility. Backwards compatibility is the death of code. It causes clutter and uglyness to pile up and makes developers lazier.
-
-### Actively Maintained
-
-Discordeno is actively being maintained. Some of the other libraries original developers have quit or no longer actively maintain it and leave it to the community to maintain the library.
+- [Website](https://discordeno.mod.land)
+- [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
+- [Discord](https://discord.com/invite/5vBgXk3UcZ)
 
 ## Read me first...
 
