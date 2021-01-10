@@ -6,7 +6,7 @@ import { Interaction } from "./interaction.ts";
 import { Application } from "./oauth2.ts";
 import { Role } from "./permissions.ts";
 import { User } from "./user.ts";
-import { VoiceState } from "./voice.ts";
+import { VoiceStateUpdateEvent } from "./voice.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#payloads */
 export interface Gateway {
@@ -54,7 +54,7 @@ export type GatewayDTypes =
   | PresenceUpdateEvent
   | TypingStartEvent
   | User
-  | VoiceState
+  | VoiceStateUpdateEvent
   | VoiceServerUpdateEvent
   | WebhookUpdateEvent
   | Interaction
