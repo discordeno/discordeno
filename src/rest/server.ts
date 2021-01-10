@@ -1,4 +1,4 @@
-// Server-less REST client that can work across shards/workers to communicate global rate limits easily
+// SERVERLESS REST CLIENT THAT CAN WORK ACROSS SHARDS/WORKERS TO COMMUNICATE GLOBAL RATE LIMITS EASILY
 import { restCache } from "./cache.ts";
 import { serve, ServerRequest } from "./deps.ts";
 import { processRequest } from "./request.ts";
@@ -20,15 +20,15 @@ async function handlePayload(
   request: ServerRequest,
   options: RestServerOptions,
 ) {
-  // Instantly ignore any requests that don't have the secret authorization key
+  // INSTANTLY IGNORE ANY REQUESTS THAT DON'T HAVE THE SECRET AUTHORIZATION KEY
   const authorization = request.headers.get("authorization");
   if (authorization !== options.authorization) return;
 
-  // Read buffer after authorization check
+  // READ BUFFER AFTER AUTH CHECK
   const buffer = await Deno.readAll(request.body);
 
   try {
-    // Convert the body to json
+    // CONVERT THE BODY TO JSON
     const data = JSON.parse(new TextDecoder().decode(buffer));
     if (!data.url) {
       return request.respond(
@@ -47,7 +47,7 @@ async function handlePayload(
       );
     }
 
-    // Process the request
+    // PROCESS THE REQUEST
     await processRequest(
       request,
       { method: data.method, url: data.url, body: data.body, retryCount: 0 },

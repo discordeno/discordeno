@@ -6,11 +6,11 @@ export const restCache: RestCache = {
   globallyRateLimited: false,
   ratelimitedPaths: new Map(),
   eventHandlers: {
-    // By default we will log all errors to console. User can choose to override
+    // BY DEFAULT WE WILL LOG ALL ERRORS TO CONSOLE. USER CAN CHOOSE TO OVERRIDE
     error: function (_type, error) {
       console.error(error);
     },
-    // Placeholders to allow users to customize
+    // PLACEHOLDERS TO ALLOW USERS TO CUSTOMIZE
     fetching() {},
     fetched() {},
     fetchSuccess() {},
