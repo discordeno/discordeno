@@ -27,6 +27,10 @@ export const identifyPayload: IdentifyPayload = {
   shard: [0, 0],
 };
 
+export function printHelloWorld() {
+  return "Hello world!";
+}
+
 export interface IdentifyPayload {
   token: string;
   compress: boolean;
