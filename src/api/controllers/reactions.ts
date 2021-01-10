@@ -2,10 +2,13 @@ import { botID, eventHandlers } from "../../bot.ts";
 import {
   GatewayPayload,
   MessageReactionAddEventPayload,
-  MessageReactionRemoveAllEventPayload,
-  MessageReactionRemoveEmojiPayload,
 } from "../../types/mod.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 import { structures } from "../structures/mod.ts";
+import {
+  MessageReactionRemoveAllEvent,
+  MessageReactionRemoveEmoji,
+} from "../types/gateway.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalMessageReactionAdd(data: GatewayPayload) {
@@ -47,6 +50,7 @@ export async function handleInternalMessageReactionAdd(data: GatewayPayload) {
   const uncachedOptions = {
     ...payload,
     id: payload.message_id,
+    messageID: payload.message_id,
     channelID: payload.channel_id,
     guildID: payload.guild_id || "",
   };
@@ -105,13 +109,14 @@ export async function handleInternalMessageReactionRemove(
   const uncachedOptions = {
     ...payload,
     id: payload.message_id,
+    messageID: payload.message_id,
     channelID: payload.channel_id,
     guildID: payload.guild_id,
   };
 
   eventHandlers.reactionRemove?.(
     uncachedOptions,
-    payload.emoji,
+    snakeKeysToCamelCase(payload.emoji),
     payload.user_id,
     message,
   );
@@ -121,7 +126,7 @@ export function handleInternalMessageReactionRemoveAll(data: GatewayPayload) {
   if (data.t !== "MESSAGE_REACTION_REMOVE_ALL") return;
 
   eventHandlers.reactionRemoveAll?.(
-    data.d as MessageReactionRemoveAllEventPayload,
+    snakeKeysToCamelCase(data.d) as MessageReactionRemoveAllEvent,
   );
 }
 
@@ -129,6 +134,6 @@ export function handleInternalMessageReactionRemoveEmoji(data: GatewayPayload) {
   if (data.t !== "MESSAGE_REACTION_REMOVE_EMOJI") return;
 
   eventHandlers.reactionRemoveEmoji?.(
-    data.d as MessageReactionRemoveEmojiPayload,
+    snakeKeysToCamelCase(data.d) as MessageReactionRemoveEmoji,
   );
 }

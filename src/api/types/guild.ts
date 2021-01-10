@@ -3,7 +3,7 @@ import { Emoji } from "./emoji.ts";
 import { PresenceUpdateEvent } from "./gateway.ts";
 import { Permission, Role } from "./permissions.ts";
 import { User } from "./user.ts";
-import { VoiceState } from "./voice.ts";
+import { VoiceStateUpdateEvent } from "./voice.ts";
 
 // used
 export interface Guild {
@@ -66,7 +66,7 @@ export interface Guild {
   /** total number of members in this guild */
   memberCount?: number;
   /** states of members currently in voice channels; lacks the guildid key */
-  voiceStates?: Partial<VoiceState>[];
+  voiceStates?: Partial<VoiceStateUpdateEvent>[];
   /** users in the guild */
   members?: GuildMember[];
   /** channels in the guild */

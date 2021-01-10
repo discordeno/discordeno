@@ -1,3 +1,4 @@
+import { snakeKeysToCamelCase } from "../../../mod.ts";
 import { eventHandlers } from "../../bot.ts";
 import {
   GatewayPayload,
@@ -36,7 +37,11 @@ export async function handleInternalGuildMemberRemove(data: GatewayPayload) {
 
   guild.memberCount--;
   const member = await cacheHandlers.get("members", payload.user.id);
-  eventHandlers.guildMemberRemove?.(guild, payload.user, member);
+  eventHandlers.guildMemberRemove?.(
+    guild,
+    snakeKeysToCamelCase(payload.user),
+    member,
+  );
 
   member?.guilds.delete(guild.id);
   if (member && !member.guilds.size) {

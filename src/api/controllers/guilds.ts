@@ -6,6 +6,7 @@ import {
   UnavailableGuildPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 import { structures } from "../structures/mod.ts";
 import { GuildUpdateChange } from "../types/mod.ts";
 import { cacheHandlers } from "./cache.ts";
@@ -117,7 +118,7 @@ export async function handleInternalGuildEmojisUpdate(data: GatewayPayload) {
 
   return eventHandlers.guildEmojisUpdate?.(
     guild,
-    payload.emojis,
-    cachedEmojis,
+    snakeKeysToCamelCase(payload.emojis),
+    snakeKeysToCamelCase(cachedEmojis),
   );
 }

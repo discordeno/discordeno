@@ -1,7 +1,7 @@
 import { GuildMember } from "./guild.ts";
 
 /** https://discord.com/developers/docs/resources/voice#voice-resource */
-export interface VoiceState {
+export interface VoiceStateUpdateEvent {
   /** the guild id this voice state is for */
   guildID?: string;
   /** the channel id this user is connected to */

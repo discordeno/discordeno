@@ -3,13 +3,12 @@ import {
   GatewayPayload,
   PresenceUpdateEventPayload,
   ReadyEventPayload,
-  TypingStartEventPayload,
   UserPayload,
   VoiceStateUpdateEventPayload,
   WebhooksUpdateEventPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
-import { delay } from "../../util/utils.ts";
+import { delay, snakeKeysToCamelCase } from "../../util/utils.ts";
 import { allowNextShard } from "../../ws/shard_manager.ts";
 import { initialMemberLoadQueue } from "../structures/guild.ts";
 import { structures } from "../structures/mod.ts";
@@ -60,16 +59,21 @@ export async function handleInternalPresenceUpdate(data: GatewayPayload) {
   if (data.t !== "PRESENCE_UPDATE") return;
 
   const payload = data.d as PresenceUpdateEventPayload;
-  const oldPresence = await cacheHandlers.get("presences", payload.user.id);
+  const oldPresence = snakeKeysToCamelCase(
+    await cacheHandlers.get("presences", payload.user.id),
+  );
   await cacheHandlers.set("presences", payload.user.id, payload);
 
-  return eventHandlers.presenceUpdate?.(payload, oldPresence);
+  return eventHandlers.presenceUpdate?.(
+    snakeKeysToCamelCase(payload),
+    oldPresence,
+  );
 }
 
 /** This function is the internal handler for the typings event. Users can override this with controllers if desired. */
 export function handleInternalTypingStart(data: GatewayPayload) {
   if (data.t !== "TYPING_START") return;
-  eventHandlers.typingStart?.(data.d as TypingStartEventPayload);
+  eventHandlers.typingStart?.(snakeKeysToCamelCase(data.d));
 }
 
 /** This function is the internal handler for the user update event. Users can override this with controllers if desired. */
@@ -84,7 +88,7 @@ export async function handleInternalUserUpdate(data: GatewayPayload) {
   Object.entries(userData).forEach(([key, value]) => {
     if (member[key] !== value) return member[key] = value;
   });
-  return eventHandlers.botUpdate?.(userData);
+  return eventHandlers.botUpdate?.(snakeKeysToCamelCase(userData));
 }
 
 /** This function is the internal handler for the voice state update event. Users can override this with controllers if desired. */
@@ -135,7 +139,7 @@ export async function handleInternalVoiceStateUpdate(data: GatewayPayload) {
     }
   }
 
-  eventHandlers.voiceStateUpdate?.(member, payload);
+  eventHandlers.voiceStateUpdate?.(member, snakeKeysToCamelCase(payload));
 }
 
 /** This function is the internal handler for the webhooks update event. Users can override this with controllers if desired. */
