@@ -1,5 +1,5 @@
 import { identifyPayload } from "../../bot.ts";
-import { RequestManager } from "../../rest/mod.ts";
+import { RequestManager } from "../../rest/request_manager.ts";
 import {
   AuditLogs,
   BannedUser,
@@ -131,7 +131,7 @@ export async function createGuildChannel(
       type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
 
-  return await structures.createChannel(result);
+  return structures.createChannel(result);
 }
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
@@ -429,8 +429,8 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
     options.limit = options.userIDs.length;
   }
 
-  return new Promise(async (resolve) => {
-    await requestAllMembers(guild, resolve, options);
+  return new Promise((resolve) => {
+    requestAllMembers(guild, resolve, options);
   }) as Promise<Collection<string, Member>>;
 }
 

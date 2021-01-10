@@ -160,6 +160,7 @@ export interface SlashCommandInteractionDataOption {
   /** The name of the parammeter */
   name: string;
   /** The value of the pair */
+  // deno-lint-ignore no-explicit-any
   value?: any;
   /** Present if this option is a group or subcommand */
   options?: SlashCommandInteractionDataOption[];

@@ -11,10 +11,8 @@ import {
 import { cache } from "../../util/cache.ts";
 import { delay } from "../../util/utils.ts";
 import { allowNextShard } from "../../ws/shard_manager.ts";
-import {
-  initialMemberLoadQueue,
-  structures,
-} from "../structures/structures.ts";
+import { initialMemberLoadQueue } from "../structures/guild.ts";
+import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
 /** This function is the internal handler for the ready event. Users can override this with controllers if desired. */
@@ -30,17 +28,26 @@ export async function handleInternalReady(
   // Triggered on each shard
   eventHandlers.shardReady?.(shardID);
   if (payload.shard && shardID === payload.shard[1] - 1) {
-    // Wait for 5 seconds to allow all guild create events to be processed
-    await delay(5000);
-    cache.isReady = true;
-    eventHandlers.ready?.();
+    const loadedAllGuilds = async () => {
+      if (payload.guilds.some((g) => !cache.guilds.has(g.id))) {
+        setTimeout(loadedAllGuilds, 2000);
+      } else {
+        // The bot has already started, the last shard is resumed, however.
+        if (cache.isReady) return;
 
-    // All the members that came in on guild creates should now be processed 1 by 1
-    for (const [guildID, members] of initialMemberLoadQueue.entries()) {
-      await Promise.all(
-        members.map((member) => structures.createMember(member, guildID)),
-      );
-    }
+        cache.isReady = true;
+        eventHandlers.ready?.();
+
+        // All the members that came in on guild creates should now be processed 1 by 1
+        for (const [guildID, members] of initialMemberLoadQueue.entries()) {
+          await Promise.all(
+            members.map((member) => structures.createMember(member, guildID)),
+          );
+        }
+      }
+    };
+
+    setTimeout(loadedAllGuilds, 2000);
   }
 
   // Wait 5 seconds to spawn next shard
@@ -75,7 +82,6 @@ export async function handleInternalUserUpdate(data: DiscordPayload) {
   if (!member) return;
 
   Object.entries(userData).forEach(([key, value]) => {
-    // @ts-ignore
     if (member[key] !== value) return member[key] = value;
   });
   return eventHandlers.botUpdate?.(userData);

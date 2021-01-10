@@ -1,6 +1,7 @@
 import { botID } from "../../bot.ts";
-import { RequestManager } from "../../rest/mod.ts";
+import { RequestManager } from "../../rest/request_manager.ts";
 import {
+  ChannelCreatePayload,
   DMChannelCreatePayload,
   EditMemberOptions,
   Errors,
@@ -128,7 +129,9 @@ export async function sendDirectMessage(
     ) as DMChannelCreatePayload;
     // Channel create event will have added this channel to the cache
     await cacheHandlers.delete("channels", dmChannelData.id);
-    const channel = await structures.createChannel(dmChannelData);
+    const channel = await structures.createChannel(
+      dmChannelData as unknown as ChannelCreatePayload,
+    );
     // Recreate the channel and add it undert he users id
     await cacheHandlers.set("channels", memberID, channel);
     dmChannel = channel;

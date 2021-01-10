@@ -1,5 +1,6 @@
 import { Overwrite, RawOverwrite } from "./guild.ts";
 import { Embed } from "./message.ts";
+import { ValueOf } from "./mod.ts";
 
 export interface ChannelEditOptions {
   /** 2-100 character channel name. All */
@@ -72,6 +73,7 @@ export interface ChannelCreatePayload extends BaseChannelCreate {
   type: ChannelType;
   /** Explicit permission overwrites for members and roles */
   permission_overwrites?: RawOverwrite[];
+  [key: string]: ValueOf<ChannelCreatePayload>;
 }
 
 export type ChannelType = 0 | 1 | 2 | 4 | 5 | 6;

@@ -1,5 +1,5 @@
 import { botID } from "../../bot.ts";
-import { RequestManager } from "../../rest/mod.ts";
+import { RequestManager } from "../../rest/request_manager.ts";
 import {
   Errors,
   MessageContent,

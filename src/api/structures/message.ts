@@ -34,15 +34,15 @@ const baseMessage: Partial<Message> = {
     return cache.channels.get(this.channelID!);
   },
   get guild() {
-    if (!this.guildID) return;
+    if (!this.guildID) return undefined;
     return cache.guilds.get(this.guildID);
   },
   get member() {
-    if (!this.author?.id) return;
+    if (!this.author?.id) return undefined;
     return cache.members.get(this.author?.id);
   },
   get guildMember() {
-    if (!this.guildID) return;
+    if (!this.guildID) return undefined;
     return this.member?.guilds.get(this.guildID);
   },
   get link() {
@@ -116,12 +116,13 @@ const baseMessage: Partial<Message> = {
   },
 };
 
+// deno-lint-ignore require-await
 export async function createMessage(data: MessageCreateOptions) {
   const {
-    guild_id: guildID,
+    guild_id: guildID = "",
     channel_id: channelID,
     mentions_everyone: mentionsEveryone,
-    mention_channels: mentionChannelIDs,
+    mention_channels: mentionChannelIDs = [],
     mention_roles: mentionRoleIDs,
     webhook_id: webhookID,
     message_reference: messageReference,
@@ -133,7 +134,7 @@ export async function createMessage(data: MessageCreateOptions) {
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    restProps[key] = createNewProp((rest as any)[key]);
+    restProps[key] = createNewProp(rest[key]);
   }
 
   const message = Object.create(baseMessage, {
@@ -141,11 +142,11 @@ export async function createMessage(data: MessageCreateOptions) {
     /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
     referencedMessageID: createNewProp(referencedMessageID),
     channelID: createNewProp(channelID),
-    guildID: createNewProp(guildID || ""),
+    guildID: createNewProp(guildID),
     mentions: createNewProp(data.mentions.map((m) => m.id)),
     mentionsEveryone: createNewProp(mentionsEveryone),
     mentionRoleIDs: createNewProp(mentionRoleIDs),
-    mentionChannelIDs: createNewProp(mentionChannelIDs?.map((m) => m.id) || []),
+    mentionChannelIDs: createNewProp(mentionChannelIDs.map((m) => m.id)),
     webhookID: createNewProp(webhookID),
     messageReference: createNewProp(messageReference),
     timestamp: createNewProp(Date.parse(data.timestamp)),
@@ -231,19 +232,25 @@ export interface Message {
   // METHODS
 
   /** Delete the message */
-  delete(reason?: string, delayMilliseconds?: number): Promise<unknown>;
+  delete(
+    reason?: string,
+    delayMilliseconds?: number,
+  ): ReturnType<typeof deleteMessageByID>;
   /** Edit the message */
-  edit(content: string | MessageContent): Promise<Message>;
+  edit(content: string | MessageContent): ReturnType<typeof editMessage>;
   /** Pins the message in the channel */
-  pin(): Promise<void>;
+  pin(): ReturnType<typeof pin>;
   /** Add a reaction to the message */
-  addReaction(reaction: string): Promise<unknown>;
+  addReaction(reaction: string): ReturnType<typeof addReaction>;
   /** Add multiple reactions to the message without or without order. */
-  addReactions(reactions: string[], ordered?: boolean): Promise<void>;
+  addReactions(
+    reactions: string[],
+    ordered?: boolean,
+  ): ReturnType<typeof addReactions>;
   /** Send a inline reply to this message */
-  reply(content: string | MessageContent): Promise<Message>;
+  reply(content: string | MessageContent): ReturnType<typeof sendMessage>;
   /** Send a message to this channel where this message is */
-  send(content: string | MessageContent): Promise<Message>;
+  send(content: string | MessageContent): ReturnType<typeof sendMessage>;
   /** Send a message to this channel and then delete it after a bit. By default it will delete after 10 seconds with no reason provided. */
   alert(
     content: string | MessageContent,
@@ -257,9 +264,9 @@ export interface Message {
     reason?: string,
   ): Promise<unknown>;
   /** Remove all reactions */
-  removeAllReactions(): Promise<unknown>;
+  removeAllReactions(): ReturnType<typeof removeAllReactions>;
   /** Remove all reactions */
-  removeReactionEmoji(reaction: string): Promise<any>;
+  removeReactionEmoji(reaction: string): ReturnType<typeof removeReactionEmoji>;
   /** Remove all reactions */
-  removeReaction(reaction: string): Promise<any>;
+  removeReaction(reaction: string): ReturnType<typeof removeReaction>;
 }

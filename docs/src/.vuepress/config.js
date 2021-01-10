@@ -38,8 +38,8 @@ module.exports = {
     nav,
     sidebar,
     yuu: {
-      defaultDarkTheme: true
-    }
+      defaultDarkTheme: true,
+    },
   },
   plugins: [
     "@vuepress/plugin-back-to-top",

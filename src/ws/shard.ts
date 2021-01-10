@@ -37,7 +37,7 @@ interface RequestMemberQueuedRequest {
   options?: FetchMembersOptions;
 }
 
-export async function createShard(
+export function createShard(
   data: DiscordBotGatewayData,
   identifyPayload: IdentifyPayload,
   resuming = false,
@@ -58,7 +58,7 @@ export async function createShard(
 
   basicShards.set(basicShard.id, basicShard);
 
-  ws.onopen = async () => {
+  ws.onopen = () => {
     if (!resuming) {
       // Initial identify with the gateway
       identify(basicShard, identifyPayload);

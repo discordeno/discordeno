@@ -16,5 +16,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: denolib/setup-deno@v2
-      - name: Run format script with --check
-        run: deno fmt --ignore=./docs --check
+      - name: Run lint script
+        run: deno lint src/** --unstable
