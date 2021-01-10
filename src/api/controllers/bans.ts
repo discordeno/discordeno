@@ -1,3 +1,4 @@
+import { snakeKeysToCamelCase } from "../../../mod.ts";
 import { eventHandlers } from "../../bot.ts";
 import { GatewayPayload, GuildBanAddEventPayload } from "../../types/mod.ts";
 import { cacheHandlers } from "./cache.ts";
@@ -10,7 +11,11 @@ export async function handleInternalGuildBanAdd(data: GatewayPayload) {
   if (!guild) return;
 
   const member = await cacheHandlers.get("members", payload.user.id);
-  eventHandlers.guildBanAdd?.(guild, payload.user, member);
+  eventHandlers.guildBanAdd?.(
+    guild,
+    snakeKeysToCamelCase(payload.user),
+    member,
+  );
 }
 
 export async function handleInternalGuildBanRemove(data: GatewayPayload) {
@@ -21,5 +26,9 @@ export async function handleInternalGuildBanRemove(data: GatewayPayload) {
   if (!guild) return;
 
   const member = await cacheHandlers.get("members", payload.user.id);
-  eventHandlers.guildBanRemove?.(guild, payload.user, member);
+  eventHandlers.guildBanRemove?.(
+    guild,
+    snakeKeysToCamelCase(payload.user),
+    member,
+  );
 }

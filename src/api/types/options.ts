@@ -1,21 +1,23 @@
-import {
-  ActivityEmojiPayload,
-  AttachmentPayload,
-  EmbedPayload,
-  EmojiPayload,
-  GatewayPayload,
-  Intents,
-  Interaction,
-  MessageApplicationPayload,
-  MessageReactionRemoveAllEventPayload,
-  MessageReactionRemoveEmojiPayload,
-  PresenceUpdateEventPayload,
-  TypingStartEventPayload,
-  UserPayload,
-  VoiceStateUpdateEventPayload,
-} from "../../types/mod.ts";
+import { GatewayPayload, Intents } from "../../types/mod.ts";
 import { Channel, Guild, Member, Message, Role } from "../structures/mod.ts";
-import { ImageFormats, ImageSize } from "./mod.ts";
+import {
+  ActivityEmoji,
+  MessageReactionRemoveAllEvent,
+  MessageReactionRemoveEmoji,
+  PresenceUpdateEvent,
+  TypingStartEvent,
+} from "./gateway.ts";
+import {
+  Attachment,
+  Embed,
+  Emoji,
+  ImageFormats,
+  ImageSize,
+  Interaction,
+  MessageApplication,
+  User,
+  VoiceStateUpdateEvent,
+} from "./mod.ts";
 
 export interface GuildUpdateChange {
   key: string;
@@ -42,17 +44,17 @@ export interface BotConfig {
 }
 
 export interface EventHandlers {
-  applicationCommandCreate?: (data: MessageApplicationPayload) => unknown;
-  botUpdate?: (user: UserPayload) => unknown;
+  applicationCommandCreate?: (data: MessageApplication) => unknown;
+  botUpdate?: (user: User) => unknown;
   channelCreate?: (channel: Channel) => unknown;
   channelUpdate?: (channel: Channel, cachedChannel: Channel) => unknown;
   channelDelete?: (channel: Channel) => unknown;
   debug?: (args: DebugArg) => unknown;
   dispatchRequirements?: (data: GatewayPayload, shardID: number) => unknown;
-  guildBanAdd?: (guild: Guild, user: UserPayload, member?: Member) => unknown;
+  guildBanAdd?: (guild: Guild, user: User, member?: Member) => unknown;
   guildBanRemove?: (
     guild: Guild,
-    user: UserPayload,
+    user: User,
     member?: Member,
   ) => unknown;
   guildCreate?: (guild: Guild) => unknown;
@@ -61,13 +63,13 @@ export interface EventHandlers {
   guildDelete?: (guild: Guild) => unknown;
   guildEmojisUpdate?: (
     guild: Guild,
-    emojis: EmojiPayload[],
-    cachedEmojis: EmojiPayload[],
+    emojis: Emoji[],
+    cachedEmojis: Emoji[],
   ) => unknown;
   guildMemberAdd?: (guild: Guild, member: Member) => unknown;
   guildMemberRemove?: (
     guild: Guild,
-    user: UserPayload,
+    user: User,
     member?: Member,
   ) => unknown;
   guildMemberUpdate?: (
@@ -87,33 +89,33 @@ export interface EventHandlers {
     oldNickname?: string,
   ) => unknown;
   presenceUpdate?: (
-    presence: PresenceUpdateEventPayload,
-    oldPresence?: PresenceUpdateEventPayload,
+    presence: PresenceUpdateEvent,
+    oldPresence?: PresenceUpdateEvent,
   ) => unknown;
   raw?: (data: GatewayPayload) => unknown;
   rawGateway?: (data: unknown) => unknown;
   ready?: () => unknown;
   reactionAdd?: (
     payload: MessageReactionUncachedPayload,
-    emoji: ActivityEmojiPayload,
+    emoji: ActivityEmoji,
     userID: string,
     message?: Message,
   ) => unknown;
   reactionRemove?: (
     payload: MessageReactionUncachedPayload,
-    emoji: Partial<EmojiPayload>,
+    emoji: Partial<Emoji>,
     userID: string,
     message?: Message,
   ) => unknown;
-  reactionRemoveAll?: (data: MessageReactionRemoveAllEventPayload) => unknown;
-  reactionRemoveEmoji?: (data: MessageReactionRemoveEmojiPayload) => unknown;
+  reactionRemoveAll?: (data: MessageReactionRemoveAllEvent) => unknown;
+  reactionRemoveEmoji?: (data: MessageReactionRemoveEmoji) => unknown;
   roleCreate?: (guild: Guild, role: Role) => unknown;
   roleDelete?: (guild: Guild, role: Role) => unknown;
   roleUpdate?: (guild: Guild, role: Role, cachedRole: Role) => unknown;
   roleGained?: (guild: Guild, member: Member, roleID: string) => unknown;
   roleLost?: (guild: Guild, member: Member, roleID: string) => unknown;
   shardReady?: (shardID: number) => unknown;
-  typingStart?: (data: TypingStartEventPayload) => unknown;
+  typingStart?: (data: TypingStartEvent) => unknown;
   voiceChannelJoin?: (member: Member, channelID: string) => unknown;
   voiceChannelLeave?: (member: Member, channelID: string) => unknown;
   voiceChannelSwitch?: (
@@ -123,7 +125,7 @@ export interface EventHandlers {
   ) => unknown;
   voiceStateUpdate?: (
     member: Member,
-    voiceState: VoiceStateUpdateEventPayload,
+    voiceState: VoiceStateUpdateEvent,
   ) => unknown;
   webhooksUpdate?: (channelID: string, guildID: string) => unknown;
 }
@@ -154,16 +156,16 @@ export interface DebugArg {
 }
 
 export interface OldMessage {
-  attachments: AttachmentPayload[];
+  attachments: Attachment[];
   content: string;
-  embeds: EmbedPayload[];
+  embeds: Embed[];
   editedTimestamp?: number;
   tts: boolean;
   pinned: boolean;
 }
 
 export interface MessageReactionUncachedPayload
-  extends MessageReactionRemoveAllEventPayload {
+  extends MessageReactionRemoveAllEvent {
   id: string;
   channelID: string;
   guildID?: string;

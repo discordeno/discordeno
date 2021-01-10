@@ -1,3 +1,4 @@
+import { snakeKeysToCamelCase } from "../../../mod.ts";
 import { eventHandlers } from "../../bot.ts";
 import {
   GatewayPayload,
@@ -101,9 +102,9 @@ export async function handleInternalMessageUpdate(data: GatewayPayload) {
   if (!cachedMessage) return;
 
   const oldMessage = {
-    attachments: cachedMessage.attachments,
+    attachments: snakeKeysToCamelCase(cachedMessage.attachments),
     content: cachedMessage.content,
-    embeds: cachedMessage.embeds,
+    embeds: snakeKeysToCamelCase(cachedMessage.embeds),
     editedTimestamp: cachedMessage.editedTimestamp,
     tts: cachedMessage.tts,
     pinned: cachedMessage.pinned,
