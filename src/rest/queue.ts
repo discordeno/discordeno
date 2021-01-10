@@ -18,7 +18,7 @@ export function processQueue() {
     restCache.pathQueues.forEach(async (queue) => {
       // each path is unique limiter
       while (queue.length) {
-        // If the bot is globally ratelimited try again
+        // If the bot is globally rate-limited try again
         if (!restCache.globallyRateLimited) continue;
         // Select the first item from this queue
         const [queuedRequest] = queue;
@@ -94,16 +94,16 @@ export function processQueue() {
             continue;
           }
 
-          // Sometimes discord returns an empty 204 response that can't be made to json
+          // Sometimes, Discord returns an empty 204 response that cannot be converted to JSON
           if (response.status === 204) {
             restCache.eventHandlers.fetchSuccess(queuedRequest.payload);
             return queuedRequest.request.respond({ status: 204 });
           }
 
-          // Convert the response to json
+          // Convert the response to JSON
           const json = await response.json();
 
-          // If the response was rate limited, handle accordingly
+          // If the response was rate-limited, handle accordingly
           if (
             json.retry_after ||
             json.message === "You are being rate limited."
@@ -134,12 +134,12 @@ export function processQueue() {
             if (bucketIDFromHeaders) {
               queuedRequest.payload.bucketID = bucketIDFromHeaders;
             }
-            // Since it was ratelimite, retry again
+            // Since the client is rate-limited, retry again
             continue;
           }
 
           restCache.eventHandlers.fetchSuccess(queuedRequest.payload);
-          // Remove from queue
+          //  Remove the item from the queue
           queue.shift();
           queuedRequest.request.respond(
             { status: 200, body: JSON.stringify(json) },
@@ -150,12 +150,12 @@ export function processQueue() {
           queuedRequest.request.respond(
             { status: 404, body: JSON.stringify({ error }) },
           );
-          // Remove from queue
+          //  Remove the item from the queue
           queue.shift();
         }
       }
 
-      // Once queue is done, we can try cleaning up
+      // Once queue is empty, we will try to clean up
       cleanupQueues();
     });
   }
@@ -165,7 +165,7 @@ export function processQueue() {
 export function cleanupQueues() {
   restCache.pathQueues.forEach((queue, key) => {
     if (queue.length) return;
-    // Remove it from cache
+    // Remove the path from the cache
     restCache.pathQueues.delete(key);
   });
 }

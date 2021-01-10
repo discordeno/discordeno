@@ -1,4 +1,4 @@
-// serverless rest client that can work across shards/workers to communicate global rate limits easily
+// Server-less REST client that can work across shards/workers to communicate global rate limits easily
 import { restCache } from "./cache.ts";
 import { serve, ServerRequest } from "./deps.ts";
 import { processRequest } from "./request.ts";
@@ -24,7 +24,7 @@ async function handlePayload(
   const authorization = request.headers.get("authorization");
   if (authorization !== options.authorization) return;
 
-  // Read buffer after auth check
+  // Read buffer after authorization check
   const buffer = await Deno.readAll(request.body);
 
   try {

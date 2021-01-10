@@ -49,7 +49,7 @@ async function processRateLimitedPaths() {
 function addToQueue(request: QueuedRequest) {
   const route = request.url.substring(baseEndpoints.BASE_URL.length + 1);
   const parts = route.split("/");
-  // Remove the major param
+  // Remove the major parameter
   parts.shift();
   const [id] = parts;
 
@@ -84,13 +84,13 @@ async function processQueue() {
           if (request.bucketID) {
             const rateLimitResetIn = await checkRatelimits(request.bucketID);
             if (rateLimitResetIn) {
-              // This request is still rate limited readd to queue
+              // This request is still rate-limited, re-add to the queue
               addToQueue(request);
             } else if (rateLimitedURLResetIn) {
-              // This url is rate limited readd to queue
+              // This URL is rate-limited readd to the queue
               addToQueue(request);
             } else {
-              // This request is not rate limited so it should be run
+              // This request is not rate-limited, so it should be executed
               const result = await request.callback();
               if (result && result.rateLimited) {
                 addToQueue(
@@ -100,7 +100,7 @@ async function processQueue() {
             }
           } else {
             if (rateLimitedURLResetIn) {
-              // This url is rate limited readd to queue
+              // This URL is rate-limited, re-add to queue
               addToQueue(request);
             } else {
               // This request has no bucket id so it should be processed
@@ -205,7 +205,7 @@ function runMethod(
   const errorStack = new Error("Location:");
   Error.captureStackTrace(errorStack);
 
-  // For proxies we don't need to do any of the legwork so we just forward the request
+  // For proxies, we don't need to do any of the legwork so we just forward the request
   if (
     !url.startsWith(`${BASE_URL}/v${API_VERSION}`) &&
     !url.startsWith(IMAGE_BASE_URL)
@@ -218,7 +218,7 @@ function runMethod(
       });
   }
 
-  // No proxy so we need to handle all rate limiting and such
+  // Proxy is not provided, so we need to handle all rate-limits, etc.
   return new Promise((resolve, reject) => {
     const callback = async () => {
       try {
@@ -253,7 +253,7 @@ function runMethod(
         const bucketIDFromHeaders = processHeaders(url, response.headers);
         handleStatusCode(response, errorStack);
 
-        // Sometimes discord returns an empty 204 response that can't be made to json
+        // Sometimes, Discord returns an empty 204 response that cannot be converted to JSON
         if (response.status === 204) return resolve(undefined);
 
         const json = await response.json();
@@ -374,7 +374,7 @@ function handleStatusCode(response: Response, errorStack?: unknown) {
 function processHeaders(url: string, headers: Headers) {
   let ratelimited = false;
 
-  // Get all useful headers
+  // Retrieve all necessary headers for the request
   const remaining = headers.get("x-ratelimit-remaining");
   const resetTimestamp = headers.get("x-ratelimit-reset");
   const retryAfter = headers.get("retry-after");
