@@ -20,7 +20,7 @@ export function processRequest(
   parts.shift();
   // Removes the version number
   if (parts[0]?.startsWith("v")) parts.shift();
-  // remove the major param
+  // Remove the major param
   parts.shift();
 
   const [id] = parts;
