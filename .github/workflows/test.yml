@@ -19,7 +19,7 @@ jobs:
       - name: Cache dependencies
         run: deno cache mod.ts
       - name: Run test script
-        if: github.ref == 'refs/heads/master'
+        if: github.event.label.name == 'run-tests'
         run: deno test --allow-net --allow-env
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
