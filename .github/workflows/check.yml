@@ -1,4 +1,4 @@
-name: Run & type-check
+name: Type-check
 on: [push, pull_request]
 jobs:
   check:
