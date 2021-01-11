@@ -1,0 +1,10 @@
+name: Run using Deno
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denolib/setup-deno@v2
+      - name: Run "run" script
+        run: deno run mod.ts
