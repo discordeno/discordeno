@@ -4,7 +4,9 @@ import {
   assertEquals,
   assertExists,
   cache,
+  channelOverwriteHasPermission,
   createGuildChannel,
+  delay,
   editChannel,
   getChannel,
   OverwriteType,
@@ -14,7 +16,7 @@ Deno.test({
   name: "[channel] create a channel in a guild",
   async fn() {
     const guild = cache.guilds.get(tempData.guildID);
-    if (!guild) throw new Error("guildID not present in temporary data");
+    if (!guild) throw new Error("Guild not found");
 
     const channel = await createGuildChannel(guild, "test");
 
@@ -41,10 +43,6 @@ Deno.test({
 Deno.test({
   name: "[channel] edit a channel in a guild",
   async fn() {
-    if (!tempData.channelID || !tempData.roleID) {
-      throw new Error("channelID or roleID not present in temp");
-    }
-
     const channel = await editChannel(tempData.channelID, {
       name: "discordeno-test-edited",
       overwrites: [
@@ -57,8 +55,39 @@ Deno.test({
       ],
     }) as Channel;
 
+    // Wait 5s for CHANNEL_UPDATE to fire
+    await delay(5000);
+
     // Assertions
     assertExists(channel);
     assertEquals(channel.name, "discordeno-test-edited");
   },
+});
+
+Deno.test({
+  name: "[channel] channel overwrite has permission",
+  fn() {
+    const channel = cache.channels.get(tempData.channelID);
+    if (!channel) throw new Error("Channel not found");
+    if (!channel.permissionOverwrites) {
+      throw new Error("permissionOverwrites not found");
+    }
+
+    const hasPerm = channelOverwriteHasPermission(
+      tempData.guildID,
+      tempData.roleID,
+      channel.permissionOverwrites,
+      ["VIEW_CHANNEL", "SEND_MESSAGES"],
+    );
+    const missingPerm = channelOverwriteHasPermission(
+      tempData.guildID,
+      tempData.roleID,
+      channel.permissionOverwrites,
+      ["USE_EXTERNAL_EMOJIS"],
+    );
+
+    assertEquals(hasPerm, true);
+    assertEquals(missingPerm, false);
+  },
+  ...defaultTestOptions,
 });

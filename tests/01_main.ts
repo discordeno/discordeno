@@ -1,7 +1,6 @@
 import { assertExists, botID, delay, Intents, startBot } from "./deps.ts";
 
-const token = "Nzk0MTcxNzY0ODQxNzc1MTI1.X-28Fw.4jgO9WZjD-_EBg0p1QlcQeppYTo";
-// const token = Deno.env.get("DISCORD_TOKEN");
+const token = Deno.env.get("DISCORD_TOKEN");
 if (!token) throw new Error("Token is not provided");
 
 startBot({

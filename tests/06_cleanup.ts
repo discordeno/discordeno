@@ -10,10 +10,6 @@ import {
 Deno.test({
   name: "[message] delete a message by channel ID",
   fn() {
-    if (!tempData.channelID || !tempData.messageID) {
-      throw new Error("channelID or messageID not present in temporary data");
-    }
-
     deleteMessageByID(tempData.channelID, tempData.messageID);
   },
   ...defaultTestOptions,
@@ -22,10 +18,6 @@ Deno.test({
 Deno.test({
   name: "[channel] delete a channel in a guild",
   fn() {
-    if (!tempData.guildID || !tempData.channelID) {
-      throw new Error("guildID or channelID not present in temporary data");
-    }
-
     deleteChannel(tempData.guildID, tempData.channelID);
   },
   ...defaultTestOptions,
@@ -34,10 +26,6 @@ Deno.test({
 Deno.test({
   name: "[role] delete a role in a guild",
   fn() {
-    if (!tempData.guildID || !tempData.roleID) {
-      throw new Error("guildID or roleID not present in temporary data");
-    }
-
     deleteRole(tempData.guildID, tempData.roleID);
   },
 });
@@ -45,10 +33,6 @@ Deno.test({
 Deno.test({
   name: "[guild] delete a guild",
   fn() {
-    if (!tempData.guildID) {
-      throw new Error("guildID not present in temporary data");
-    }
-
     deleteServer(tempData.guildID);
 
     // TODO(ayntee): remove this weird shit lol

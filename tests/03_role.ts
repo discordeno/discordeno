@@ -31,10 +31,6 @@ Deno.test({
 Deno.test({
   name: "[role] edit a role in a guild",
   async fn() {
-    if (!tempData.guildID || !tempData.roleID) {
-      throw new Error("guildID or roleID not present in temporary data");
-    }
-
     const name = "Discordeno Test Edited";
     const color = 4320244;
     const role = await editRole(tempData.guildID, tempData.roleID, {
