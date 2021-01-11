@@ -9,8 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: denolib/setup-deno@v2
-      - name: Cache dependencies
-        run: deno cache mod.ts
       - name: Run test script
         run: deno test --allow-net --allow-env
     env:
