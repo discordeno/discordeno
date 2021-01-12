@@ -5,7 +5,11 @@ if (!token) throw new Error("Token is not provided");
 
 startBot({
   token,
-  intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
+  intents: [
+    Intents.GUILD_MESSAGES,
+    Intents.GUILDS,
+    Intents.GUILD_MESSAGE_REACTIONS,
+  ],
 });
 
 // Default options for tests
