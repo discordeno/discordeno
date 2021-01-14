@@ -119,7 +119,7 @@ export async function handleInternalGuildEmojisUpdate(data: DiscordPayload) {
 
   return eventHandlers.guildEmojisUpdate?.(
     guild,
-    payload.emojis,
+    guild.emojis,
     cachedEmojis,
   );
 }

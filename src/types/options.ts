@@ -93,7 +93,7 @@ export interface EventHandlers {
   guildDelete?: (guild: Guild) => unknown;
   guildEmojisUpdate?: (
     guild: Guild,
-    emojis: Emoji[],
+    emojis: Collection<string, Emoji>,
     cachedEmojis: Collection<string, Emoji>,
   ) => unknown;
   guildMemberAdd?: (guild: Guild, member: Member) => unknown;
