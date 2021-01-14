@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../api/controllers/cache.ts";
 import { Role } from "../api/structures/mod.ts";
-import { Errors, Permission, Permissions } from "../api/types/mod.ts";
 import { botID } from "../bot.ts";
+import { Errors, Permission, Permissions } from "../types/mod.ts";
 
 /** Computes the permissions this member has in the given guild */
 export async function computeBasePermissions(
