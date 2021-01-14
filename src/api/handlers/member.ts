@@ -178,6 +178,7 @@ export async function editMember(
   }
 
   if (options.deaf) {
+    // TODO: This should check if the member is in a voice channel
     await botThrowOnMissingGuildPermission(guildID, ["DEAFEN_MEMBERS"]);
   }
 
