@@ -1,5 +1,5 @@
-import { Channel } from "./channel.ts";
-import { Guild } from "./guild.ts";
+import { ChannelObject } from "./channel.ts";
+import { GuildObject } from "./guild.ts";
 import { User } from "./user.ts";
 
 /** https://discord.com/developers/docs/resources/invite#invite-object */
@@ -7,9 +7,9 @@ export interface Invite {
   /** the invite code (unique ID) */
   code: string;
   /** the guild this invite is for */
-  guild?: Partial<Guild>;
+  guild?: Partial<GuildObject>;
   /** the channel this invite is for */
-  channel: Partial<Channel>;
+  channel: Partial<ChannelObject>;
   /** the user who created the invite */
   inviter?: User;
   /** the target user for this invite */

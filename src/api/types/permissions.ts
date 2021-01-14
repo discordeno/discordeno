@@ -2,7 +2,7 @@ import { BitwisePermissionFlags } from "../../types/mod.ts";
 export { BitwisePermissionFlags as Permissions };
 
 // used
-export interface Role {
+export interface RoleObject {
   /** role id */
   id: string;
   /** role name */

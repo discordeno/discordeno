@@ -552,7 +552,7 @@ export enum GetGuildWidgetImageStyleOptions {
   BANNER_4 = "banner4",
 }
 
-export interface ModifyGuildMembershipScreeningForm {
+export interface ModifyGuildMembershipScreeningFormParams {
   /** whether Membership Screening is enabled */
   enabled: boolean;
   /** arrray of field objects serialized in a string */

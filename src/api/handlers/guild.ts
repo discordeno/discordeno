@@ -36,7 +36,7 @@ import {
   AuditLog,
   Ban,
   BanOptions,
-  Channel,
+  ChannelObject,
   CreateChannelOptions,
   CreateEmojiOptions,
   CreateGuildFromTemplateOptions,
@@ -59,7 +59,7 @@ import {
   ImageSize,
   Integration,
   Invite,
-  Role,
+  RoleObject,
   StartGuildPruneOptions,
   VoiceRegion,
   Webhook,
@@ -202,7 +202,7 @@ export async function deleteChannel(
 
   return snakeKeysToCamelCase(
     await RequestManager.delete(endpoints.CHANNEL(channelID)),
-  ) as Channel;
+  ) as ChannelObject;
 }
 
 /** Returns a list of guild channel objects.
@@ -420,7 +420,7 @@ export async function getRoles(guildID: string) {
     await RequestManager.get(
       endpoints.GUILD_ROLES(guildID),
     ),
-  ) as Role[];
+  ) as RoleObject[];
 }
 
 /** Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. */

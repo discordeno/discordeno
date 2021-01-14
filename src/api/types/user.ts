@@ -1,3 +1,4 @@
+import { PremiumTypes, UserFlags, VisibilityTypes } from "../../types/mod.ts";
 import { Integration } from "./guild.ts";
 
 // used
@@ -31,31 +32,6 @@ export interface User {
 }
 
 /** https://discord.com/developers/docs/resources/user#users-resource */
-export enum UserFlags {
-  NONE = 0,
-  DISCORDEMPLOYEE = 1 << 0,
-  PARTNEREDSERVEROWNER = 1 << 1,
-  HYPESQUADEVENTS = 1 << 2,
-  BUGHUNTERLEVEL_1 = 1 << 3,
-  HOUSEBRAVERY = 1 << 6,
-  HOUSEBRILLIANCE = 1 << 7,
-  HOUSEBALANCE = 1 << 8,
-  EARLYSUPPORTER = 1 << 9,
-  TEAMUSER = 1 << 10,
-  SYSTEM = 1 << 12,
-  BUGHUNTERLEVEL_2 = 1 << 14,
-  VERIFIEDBOT = 1 << 16,
-  EARLYVERIFIEDBOTDEVELOPER = 1 << 17,
-}
-
-/** https://discord.com/developers/docs/resources/user#users-resource */
-export enum PremiumTypes {
-  NONE = 0,
-  NITROCLASSIC = 1,
-  NITRO = 2,
-}
-
-/** https://discord.com/developers/docs/resources/user#users-resource */
 export interface Connection {
   /** id of the connection account */
   id: string;
@@ -75,14 +51,6 @@ export interface Connection {
   showActivity: boolean;
   /** visibility of this connection */
   visibility: VisibilityTypes;
-}
-
-/** https://discord.com/developers/docs/resources/user#users-resource */
-export enum VisibilityTypes {
-  /** invisible to everyone except the user themselves */
-  NONE = 0,
-  /** visible to everyone */
-  EVERYONE = 1,
 }
 
 /** https://discord.com/developers/docs/resources/user#modify-current-user */

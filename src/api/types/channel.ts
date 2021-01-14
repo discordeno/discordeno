@@ -4,7 +4,7 @@ import { Permission } from "./mod.ts";
 import { User } from "./user.ts";
 
 /** https://discord.com/developers/docs/resources/channel#channel-object-channel-structure */
-export interface Channel {
+export interface ChannelObject {
   /** the id of this channel */
   id: string;
   /** the type of channel */
@@ -54,7 +54,7 @@ export type ChannelType =
   | "GUILD_STORE";
 
 // used
-export interface Message {
+export interface MessageObject {
   /** id of the message */
   id: string;
   /** id of the channel the message was sent in */
@@ -106,7 +106,7 @@ export interface Message {
   /** the stickers sent with the message (bots currently can only receive messages with stickers, not send) */
   stickers?: MessageSticker[];
   /** the message associated with the `messageReference` */
-  referencedMessage?: Message | null;
+  referencedMessage?: MessageObject | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-types */
@@ -414,7 +414,7 @@ export interface ModifyChannelOptions {
   topic?: string;
   /** whether the channel is nsfw */
   nsfw?: boolean;
-/** amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `MANAGEMESSAGES` or `MANAGECHANNELS`, are unaffected */
+  /** amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `MANAGEMESSAGES` or `MANAGECHANNELS`, are unaffected */
   // TODO: v11 change to rateLimitPerUser
   // rateLimitPerUser?: number;
   slowmode?: number;
@@ -468,7 +468,7 @@ export interface MessageContent {
   embed?: Embed;
   /** jSON encoded body of any additional request fields. */
   jsonPayload?: string;
-/** allowed mentions for a message */
+  /** allowed mentions for a message */
   // TODO: v11 change to allowedMentions
   // allowedMentions?: AllowedMentions;
   mentions?: AllowedMentions;
@@ -505,14 +505,7 @@ export interface BulkDeleteMessagesOptions {
 }
 
 /** https://discord.com/developers/docs/resources/channel#edit-channel-permissions-json-params */
-export interface EditChannelPermissions {
-  /** the bitwise value of all allowed permissions */
-  allow: string;
-  /** the bitwise value of all disallowed permissions */
-  deny: string;
-  /** 0 for a role or 1 for a member */
-  type: number;
-}
+export type { EditChannelPermissions } from "../../types/channel.ts";
 
 /** https://discord.com/developers/docs/resources/channel#create-channel-invite-json-params */
 export interface CreateChannelInviteOptions {

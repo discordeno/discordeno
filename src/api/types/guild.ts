@@ -1,12 +1,12 @@
-import { Channel, ChannelType, Overwrite } from "./channel.ts";
+import { ChannelObject, ChannelType, Overwrite } from "./channel.ts";
 import { Emoji } from "./emoji.ts";
 import { PresenceUpdateEvent } from "./gateway.ts";
-import { Permission, Role } from "./permissions.ts";
+import { Permission, RoleObject } from "./permissions.ts";
 import { User } from "./user.ts";
 import { VoiceStateUpdateEvent } from "./voice.ts";
 
 // used
-export interface Guild {
+export interface GuildObject {
   /** guild id */
   id: string;
   /** guild name (2-100 characaters, excluding trailing and leading whitespace) */
@@ -42,7 +42,7 @@ export interface Guild {
   /** explicit content filter level */
   explicitContentFilter: ExplicitContentFilter;
   /** roles in the guild */
-  roles: Role[];
+  roles: RoleObject[];
   /** custom guild emojis */
   emojis: Emoji[];
   /** enabled guild features */
@@ -70,7 +70,7 @@ export interface Guild {
   /** users in the guild */
   members?: GuildMember[];
   /** channels in the guild */
-  channels?: Channel[];
+  channels?: ChannelObject[];
   /** presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
   presences?: Partial<PresenceUpdateEvent>[];
   /** the maximum number of presences for the guild (the default value, currently 25000, is in effect when null is returned) */
@@ -313,9 +313,9 @@ export interface CreateGuildOptions {
   /** explicit content filter level */
   explicitContentFilter?: ExplicitContentFilter;
   /** new guild roles (first role is the everyone role) */
-  roles?: Role[];
+  roles?: RoleObject[];
   /** new guild's channels */
-  channels?: Partial<Channel>[];
+  channels?: Partial<ChannelObject>[];
   /** id for afk channel */
   afkChannelID?: string;
   /** afk timeout in seconds */

@@ -19,6 +19,7 @@ export * from "./src/api/structures/member.ts";
 export * from "./src/api/structures/message.ts";
 export * from "./src/api/structures/mod.ts";
 export * from "./src/api/structures/role.ts";
+export * from "./src/api/types/mod.ts";
 export * from "./src/bot.ts";
 export * from "./src/rest/mod.ts";
 export * from "./src/types/mod.ts";

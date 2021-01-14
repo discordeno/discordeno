@@ -1,6 +1,6 @@
 import { ChannelType, Overwrite } from "./channel.ts";
 import { Integration } from "./guild.ts";
-import { Role } from "./permissions.ts";
+import { RoleObject } from "./permissions.ts";
 import { User } from "./user.ts";
 import { Webhook } from "./webhook.ts";
 
@@ -129,9 +129,9 @@ export interface AuditLogChangeKey {
   /** object: guild; guild invite vanity url changed */
   vanityUrlCode: string;
   /** object: guild; new role added */
-  $add: Partial<Role>[];
+  $add: Partial<RoleObject>[];
   /** object: guild; role removed */
-  $remove: Partial<Role>[];
+  $remove: Partial<RoleObject>[];
   /** object: guild;  change in number of days after which inactive and role-unassigned members are kicked */
   pruneDeleteDays: number;
   /** object: guild; server widget enabled/disable */

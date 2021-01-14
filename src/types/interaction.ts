@@ -8,11 +8,11 @@ export interface ApplicationCommandParams {
   /** 1-100 character description */
   description: string;
   /** the parameters for the command */
-  options?: ApplicationCommandOption[];
+  options?: ApplicationCommandParam[];
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommand */
-export interface ApplicationCommand {
+export interface ApplicationCommandPayload {
   /** unique id of the command */
   id: string;
   /** unique id of the parent application */
@@ -22,11 +22,11 @@ export interface ApplicationCommand {
   /** 1-100 character description */
   description: string;
   /** the parameters for the command */
-  options?: ApplicationCommandOption[];
+  options?: ApplicationCommandParam[];
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption */
-export interface ApplicationCommandOption {
+export interface ApplicationCommandParam {
   /** value of ApplicationCommandOptionType */
   type: ApplicationCommandOptionTypes;
   /** 1-32 character name matching ^[\w-]{1,32}$ */
@@ -38,9 +38,9 @@ export interface ApplicationCommandOption {
   /** if the parameter is required or optional--default false */
   required?: boolean;
   /** choices for string and number types for the user to pick from */
-  choices?: ApplicationCommandOptionChoice[];
+  choices?: ApplicationCommandOptionChoicePayload[];
   /** if the option is a subcommand or subcommand group type, this nested options will be the parameters */
-  options?: ApplicationCommandOption[];
+  options?: ApplicationCommandParam[];
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype */
@@ -56,7 +56,7 @@ export enum ApplicationCommandOptionTypes {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptionchoice */
-export interface ApplicationCommandOptionChoice {
+export interface ApplicationCommandOptionChoicePayload {
   /** 1-100 character choice name */
   name: string;
   /** value of the choice */
@@ -64,13 +64,13 @@ export interface ApplicationCommandOptionChoice {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction */
-export interface Interaction {
+export interface InteractionPayload {
   /** id of the interaction */
   id: string;
   /** the type of interaction */
-  type: InteractionType;
+  type: InteractionTypes;
   /** the command data payload */
-  data?: ApplicationCommandInteractionData;
+  data?: ApplicationCommandInteractionDataPayload;
   /** the guild it was sent from */
   guild_id: string;
   /** the channel it was sent from */
@@ -84,37 +84,37 @@ export interface Interaction {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */
-export enum InteractionType {
+export enum InteractionTypes {
   PING = 1,
   APPLICATION_COMMAND,
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-applicationcommandinteractiondata */
-export interface ApplicationCommandInteractionData {
+export interface ApplicationCommandInteractionDataPayload {
   /** the ID of the invoked command */
   id: string;
   /** the name of the invoked command */
   name: string;
   /** the params + values from the user */
-  ooptions?: ApplicationCommandInteractionDataOption[];
+  ooptions?: ApplicationCommandInteractionDataParam[];
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-applicationcommandinteractiondataoption */
-export interface ApplicationCommandInteractionDataOption {
+export interface ApplicationCommandInteractionDataParam {
   /** the name of the parameter */
   name: string;
   /** the value of the pair */
   value?: ApplicationCommandOptionTypes;
   /** present if this option is a group or subcommand */
-  options?: ApplicationCommandInteractionDataOption[];
+  options?: ApplicationCommandInteractionDataParam[];
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
-export interface InteractionResponse {
+export interface InteractionResponsePayload {
   /** the type of response */
   type: InteractionResponseTypes;
   /** an optional response message */
-  data?: InteractionApplicationCommandCallbackData;
+  data?: InteractionApplicationCommandCallbackDataPayload;
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
@@ -127,7 +127,7 @@ export enum InteractionResponseTypes {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
-export interface InteractionApplicationCommandCallbackData {
+export interface InteractionApplicationCommandCallbackDataPayload {
   /** is the response TTS */
   tts?: boolean;
   /** message content */
