@@ -36,7 +36,7 @@ export async function computeBasePermissions(
 }
 
 /** Computes the members Channel Overwrites */
-export async function computeChannelOverites(
+export async function computeChannelOverwrites(
   memberID: string,
   channelID: string,
 ) {
@@ -173,7 +173,7 @@ export async function throwOnMissingChannelPermission(
   permissions: Permission[],
 ) {
   // First we need the channel overwrite bits this member has
-  const permissionBits = await computeChannelOverites(memberID, channelID);
+  const permissionBits = await computeChannelOverwrites(memberID, channelID);
   // Second check if the member is missing any permissions
   const missing = missingPermissions(permissionBits, permissions);
   if (missing.length) {
