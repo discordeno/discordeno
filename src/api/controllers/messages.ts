@@ -2,6 +2,7 @@ import { snakeKeysToCamelCase } from "../../../mod.ts";
 import { eventHandlers } from "../../bot.ts";
 import {
   GatewayPayload,
+  GuildMemberPayload,
   MessageDeleteBulkEventPayload,
   MessageDeleteEventPayload,
   MessagePayload,
@@ -24,13 +25,7 @@ export async function handleInternalMessageCreate(data: GatewayPayload) {
     // If in a guild cache the author as a member
     await structures.createMember(
       {
-        ...payload.member,
-        nick: payload.member.nick === undefined ? null : payload.member.nick,
-        roles: payload.member.roles || [],
-        joined_at: payload.member.joined_at || "",
-        deaf: payload.member.deaf || false,
-        mute: payload.member.mute || false,
-        user: payload.author,
+        ...payload.member as GuildMemberPayload,
       },
       guild.id,
     );
@@ -39,17 +34,7 @@ export async function handleInternalMessageCreate(data: GatewayPayload) {
   payload.mentions.forEach((mention) => {
     // Cache the member if its a valid member
     if (mention && guild) {
-      structures.createMember(
-        {
-          nick: mention.nick === undefined ? null : mention.nick,
-          roles: mention.roles || [],
-          joined_at: mention.joined_at || "",
-          deaf: mention.deaf || false,
-          mute: mention.mute || false,
-          user: mention,
-        },
-        guild.id,
-      );
+      structures.createMember(mention as GuildMemberPayload, guild.id);
     }
   });
 
