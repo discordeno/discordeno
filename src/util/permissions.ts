@@ -89,7 +89,6 @@ export async function computeChannelOverites(
     permissions |= BigInt(overwriteMember.allow);
   }
 
-  return permissions;
 }
 
 /** Checks if the given permissionBits are matching the given Permission[] */
@@ -163,6 +162,22 @@ export function botThrowOnMissingGuildPermission(
 ) {
   // Since Bot is a normal member we can use the throwOnMissingGuildPermission() function
   return throwOnMissingGuildPermission(botID, guildID, permissions);
+}
+
+/** Throws an error if this member has not all of the given permissions */
+export async function throwOnMissingChannelPermission(
+  memberID: string,
+  channelID: string,
+  permissions: Permission[],
+) {
+  // First we need the channel overwrite bits this member has
+  const permissionBits = await computeChannelOverites(memberID, channelID);
+  // Second check if the member is missing any permissions
+  const missing = missingPermissions(permissionBits, permissions);
+  if (missing.length) {
+    // If the member is missing a permission throw an Error
+    throw new Error(Errors[`MISSING_${missing[0]}` as Errors]);
+  }
 }
 
 /** This function converts a bitwise string to permission strings */
