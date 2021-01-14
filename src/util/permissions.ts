@@ -104,7 +104,7 @@ export function validatePermissions(
 }
 
 /** Checks if the given member has these permissions in the given guild */
-export async function hasGuildPermissions(
+export async function hasRolePermissions(
   memberID: string,
   guildID: string,
   permissions: Permission[],
@@ -117,12 +117,12 @@ export async function hasGuildPermissions(
 
 /** Checks if the bot has these permissions in the given guild */
 // deno-lint-ignore require-await
-export async function botHasGuildPermissions(
+export async function botHasRolePermissions(
   guildID: string,
   permissions: Permission[],
 ) {
-  // Since Bot is a normal member we can use the hasGuildPermissions() function
-  return hasGuildPermissions(guildID, botID, permissions);
+  // Since Bot is a normal member we can use the hasRolePermissions() function
+  return hasRolePermissions(guildID, botID, permissions);
 }
 
 /** Returns the permissions that are not in the given permissionBits */
