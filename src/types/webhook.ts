@@ -77,13 +77,13 @@ export interface ExecuteWebhookParams {
 
 /** https://discord.com/developers/docs/resources/webhook#execute-slackcompatible-webhook */
 export interface ExecuteSlackCompatibleWebhook {
-  /** 	waits for server confirmation of message send before response (defaults to true; when false a message that is not saved does not return an error) */
+  /** waits for server confirmation of message send before response (defaults to true; when false a message that is not saved does not return an error) */
   wait?: boolean;
 }
 
 /** https://discord.com/developers/docs/resources/webhook#execute-githubcompatible-webhook */
 export interface ExecuteGitHubCompatibleWebhook {
-  /** 	waits for server confirmation of message send before response (defaults to true; when false a message that is not saved does not return an error) */
+  /** waits for server confirmation of message send before response (defaults to true; when false a message that is not saved does not return an error) */
   wait?: boolean;
 }
 

@@ -1,4 +1,4 @@
-import { Guild } from "./guild.ts";
+import { GuildObject } from "./guild.ts";
 import { User } from "./user.ts";
 
 // used
@@ -22,7 +22,7 @@ export interface GuildTemplate {
   /** the ID of the guild this template is based on */
   sourceGuildID: string;
   /** the guild snapshot this template contains */
-  serializedSourceGuild: Partial<Guild>;
+  serializedSourceGuild: Partial<GuildObject>;
   /** whether the template has unsynced changes */
   isDirty: boolean | null;
 }

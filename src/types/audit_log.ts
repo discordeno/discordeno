@@ -29,7 +29,7 @@ export interface AuditLogEntryPayload {
   /** type of action that occured */
   action_type: AuditLogEvent;
   /** additional info for certain action types */
-  options?: OptionalAuditEntryInfo;
+  options?: OptionalAuditEntryInfoParam;
   /** the reason for the change (0-512 characters) */
   reason?: string;
 }
@@ -74,7 +74,7 @@ export enum AuditLogEvent {
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
-export interface OptionalAuditEntryInfo {
+export interface OptionalAuditEntryInfoParam {
   /** number of days after which inactive members were kicked, type: MEMBER_PRUNE */
   delete_member_days: string;
   /** number of members removed by the prune, type: MEMBER_PRUNE */
@@ -96,15 +96,15 @@ export interface OptionalAuditEntryInfo {
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
 export interface AuditLogChangePayload {
   /** new value of the key */
-  new_value?: AuditLogChangeKey;
+  new_value?: AuditLogChangeKeyPayload;
   /** old value of the key */
-  old_value?: AuditLogChangeKey;
+  old_value?: AuditLogChangeKeyPayload;
   /** name of audit log change key */
   key: string;
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-key */
-export interface AuditLogChangeKey {
+export interface AuditLogChangeKeyPayload {
   /** object: guild; name changed */
   name: string;
   /** object: guild; icon changed */

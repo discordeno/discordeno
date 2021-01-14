@@ -1,10 +1,10 @@
 import { GatewayOpcodes, UnavailableGuildPayload } from "../../types/mod.ts";
-import { Channel, Message } from "./channel.ts";
+import { ChannelObject, MessageObject } from "./channel.ts";
 import { Emoji } from "./emoji.ts";
-import { Guild, GuildMember } from "./guild.ts";
+import { GuildMember, GuildObject } from "./guild.ts";
 import { Interaction } from "./interaction.ts";
 import { Application } from "./oauth2.ts";
-import { Role } from "./permissions.ts";
+import { RoleObject } from "./permissions.ts";
 import { User } from "./user.ts";
 import { VoiceStateUpdateEvent } from "./voice.ts";
 
@@ -26,9 +26,9 @@ export type GatewayDTypes =
   | ReadyEventFields
   | Resume
   | InvalidSession
-  | Channel
+  | ChannelObject
   | ChannelPinsUpdateEvent
-  | Guild
+  | GuildObject
   | UnavailableGuildPayload
   | GuildBanAddEvent
   | GuildBanRemoveEvent
@@ -44,7 +44,7 @@ export type GatewayDTypes =
   | GuildRoleDeleteEvent
   | InviteCreateEvent
   | InviteDeleteEvent
-  | Message
+  | MessageObject
   | MessageDeleteEvent
   | MessageDeleteBulkEvent
   | MessageReactionAddEvent
@@ -345,7 +345,7 @@ export interface GuildRoleCreateEvent {
   /** the id of the guild */
   guildID: string;
   /** the role created */
-  role: Role;
+  role: RoleObject;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-role-update-guild-role-update-event-fields */
@@ -353,7 +353,7 @@ export interface GuildRoleUpdateEvent {
   /** the id of the guild */
   guildID: string;
   /** the role updated */
-  role: Role;
+  role: RoleObject;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-role-delete-guild-role-delete-event-fields */
