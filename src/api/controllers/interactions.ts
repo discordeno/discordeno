@@ -2,14 +2,14 @@ import { snakeKeysToCamelCase, structures } from "../../../mod.ts";
 import { eventHandlers } from "../../bot.ts";
 import {
   GatewayPayload,
-  Interaction,
+  InteractionPayload,
   MessageApplicationPayload,
 } from "../../types/mod.ts";
 
 export async function handleInternalInteractionCreate(data: GatewayPayload) {
   if (data.t !== "INTERACTION_CREATE") return;
 
-  const payload = data.d as Interaction;
+  const payload = data.d as InteractionPayload;
   await structures.createMember(payload.member, payload.guild_id);
 
   eventHandlers.interactionCreate?.(snakeKeysToCamelCase(payload));

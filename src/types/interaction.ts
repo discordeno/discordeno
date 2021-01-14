@@ -64,7 +64,7 @@ export interface ApplicationCommandOptionChoice {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction */
-export interface Interaction {
+export interface InteractionPayload {
   /** id of the interaction */
   id: string;
   /** the type of interaction */

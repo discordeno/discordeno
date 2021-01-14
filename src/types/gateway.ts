@@ -5,7 +5,7 @@ import {
   GuildPayload,
   UnavailableGuildPayload,
 } from "./guild.ts";
-import { Interaction } from "./interaction.ts";
+import { InteractionPayload } from "./interaction.ts";
 import { ApplicationPayload } from "./oauth2.ts";
 import { GatewayOpcodes } from "./opcodes_status_codes.ts";
 import { RolePayload } from "./permissions.ts";
@@ -61,7 +61,7 @@ export type GatewayPayloadDTypes =
   | VoiceStateUpdateEventPayload
   | VoiceServerUpdateEventPayload
   | WebhooksUpdateEventPayload
-  | Interaction
+  | InteractionPayload
   | null;
 
 /** GatewayPayload event name list */
