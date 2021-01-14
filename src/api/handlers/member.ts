@@ -11,6 +11,7 @@ import {
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
+  botThrowOnMissingChannelPermission,
   botThrowOnMissingGuildPermission,
   higherRolePosition,
   highestRole,
@@ -180,7 +181,12 @@ export async function editMember(
     await botThrowOnMissingGuildPermission(guildID, ["DEAFEN_MEMBERS"]);
   }
 
-  // TODO: if channel id is provided check if the bot has CONNECT and MOVE in channel and current channel
+  if (options.channel_id) {
+    await botThrowOnMissingChannelPermission(
+      options.channel_id,
+      ["CONNECT", "MOVE_MEMBERS"],
+    );
+  }
 
   return RequestManager.patch(
     endpoints.GUILD_MEMBER(guildID, memberID),
