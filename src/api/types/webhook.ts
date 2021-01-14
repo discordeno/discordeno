@@ -68,11 +68,6 @@ export interface ExecuteWebhookOptions {
   allowedMentions: AllowedMentions;
 }
 
-export type {
-  ExecuteGitHubCompatibleWebhook,
-  ExecuteSlackCompatibleWebhook,
-} from "../../types/mod.ts";
-
 /** 	waits for server confirmation of message send before response (defaults to true; when false a message that is not saved does not return an error) */
 export interface EditWebhookMessageOptions {
   /** the messages contents (up to 2000 characters) */

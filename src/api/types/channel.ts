@@ -504,9 +504,6 @@ export interface BulkDeleteMessagesOptions {
   messages: string[];
 }
 
-/** https://discord.com/developers/docs/resources/channel#edit-channel-permissions-json-params */
-export type { EditChannelPermissions } from "../../types/channel.ts";
-
 /** https://discord.com/developers/docs/resources/channel#create-channel-invite-json-params */
 export interface CreateChannelInviteOptions {
   /** duration of invite in seconds before expiry, or 0 for never */
