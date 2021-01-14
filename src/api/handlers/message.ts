@@ -7,7 +7,7 @@ import {
   UserPayload,
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
-import { botHasChannelPermissions } from "../../util/permissions.ts";
+import { botThrowOnMissingChannelPermission } from "../../util/permissions.ts";
 import { delay } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { Message, structures } from "../structures/mod.ts";
@@ -38,15 +38,10 @@ export async function deleteMessage(
 ) {
   if (message.author.id !== botID) {
     // This needs to check the channels permission not the guild permission
-    const hasManageMessages = await botHasChannelPermissions(
+    await botThrowOnMissingChannelPermission(
       message.channelID,
       ["MANAGE_MESSAGES"],
     );
-    if (
-      !hasManageMessages
-    ) {
-      throw new Error(Errors.MISSING_MANAGE_MESSAGES);
-    }
   }
 
   if (delayMilliseconds) await delay(delayMilliseconds);
@@ -59,30 +54,14 @@ export async function deleteMessage(
 
 /** Pin a message in a channel. Requires MANAGE_MESSAGES. Max pins allowed in a channel = 50. */
 export async function pin(channelID: string, messageID: string) {
-  const hasManageMessagesPerm = await botHasChannelPermissions(
-    channelID,
-    ["MANAGE_MESSAGES"],
-  );
-  if (
-    !hasManageMessagesPerm
-  ) {
-    throw new Error(Errors.MISSING_MANAGE_MESSAGES);
-  }
+  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_MESSAGES"]);
 
   return RequestManager.put(endpoints.CHANNEL_PIN(channelID, messageID));
 }
 
 /** Unpin a message in a channel. Requires MANAGE_MESSAGES. */
 export async function unpin(channelID: string, messageID: string) {
-  const hasManageMessagesPerm = await botHasChannelPermissions(
-    channelID,
-    ["MANAGE_MESSAGES"],
-  );
-  if (
-    !hasManageMessagesPerm
-  ) {
-    throw new Error(Errors.MISSING_MANAGE_MESSAGES);
-  }
+  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_MESSAGES"]);
 
   return RequestManager.delete(
     endpoints.CHANNEL_PIN(channelID, messageID),
@@ -95,23 +74,10 @@ export async function addReaction(
   messageID: string,
   reaction: string,
 ) {
-  const hasAddReactionsPerm = await botHasChannelPermissions(
+  await botThrowOnMissingChannelPermission(
     channelID,
-    ["ADD_REACTIONS"],
+    ["ADD_REACTIONS", "READ_MESSAGE_HISTORY"],
   );
-  if (!hasAddReactionsPerm) {
-    throw new Error(Errors.MISSING_ADD_REACTIONS);
-  }
-
-  const hasReadMessageHistoryPerm = await botHasChannelPermissions(
-    channelID,
-    ["READ_MESSAGE_HISTORY"],
-  );
-  if (
-    !hasReadMessageHistoryPerm
-  ) {
-    throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
-  }
 
   if (reaction.startsWith("<:")) {
     reaction = reaction.substring(2, reaction.length - 1);
@@ -168,13 +134,7 @@ export async function removeUserReaction(
   reaction: string,
   userID: string,
 ) {
-  const hasManageMessagesPerm = await botHasChannelPermissions(
-    channelID,
-    ["MANAGE_MESSAGES"],
-  );
-  if (!hasManageMessagesPerm) {
-    throw new Error(Errors.MISSING_MANAGE_MESSAGES);
-  }
+  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_MESSAGES"]);
 
   return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTION_USER(
@@ -188,15 +148,8 @@ export async function removeUserReaction(
 
 /** Removes all reactions for all emojis on this message. */
 export async function removeAllReactions(channelID: string, messageID: string) {
-  const hasManageMessagesPerm = await botHasChannelPermissions(
-    channelID,
-    ["MANAGE_MESSAGES"],
-  );
-  if (
-    !hasManageMessagesPerm
-  ) {
-    throw new Error(Errors.MISSING_MANAGE_MESSAGES);
-  }
+  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_MESSAGES"]);
+
   return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTIONS(channelID, messageID),
   );
@@ -208,15 +161,8 @@ export async function removeReactionEmoji(
   messageID: string,
   reaction: string,
 ) {
-  const hasManageMessagesPerm = await botHasChannelPermissions(
-    channelID,
-    ["MANAGE_MESSAGES"],
-  );
-  if (
-    !hasManageMessagesPerm
-  ) {
-    throw new Error(Errors.MISSING_MANAGE_MESSAGES);
-  }
+  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_MESSAGES"]);
+
   return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTION(channelID, messageID, reaction),
   );
@@ -247,25 +193,16 @@ export async function editMessage(
 
   if (typeof content === "string") content = { content };
 
-  const hasSendMessagesPerm = await botHasChannelPermissions(
+  await botThrowOnMissingChannelPermission(
     message.channelID,
     ["SEND_MESSAGES"],
   );
-  if (
-    !hasSendMessagesPerm
-  ) {
-    throw new Error(Errors.MISSING_SEND_MESSAGES);
-  }
 
-  const hasSendTtsMessagesPerm = await botHasChannelPermissions(
-    message.channelID,
-    ["SEND_TTS_MESSAGES"],
-  );
-  if (
-    content.tts &&
-    !hasSendTtsMessagesPerm
-  ) {
-    throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
+  if (content.tts) {
+    await botThrowOnMissingChannelPermission(
+      message.channelID,
+      ["SEND_TTS_MESSAGES"],
+    );
   }
 
   if (content.content && content.content.length > 2000) {
