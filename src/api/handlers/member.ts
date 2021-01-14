@@ -164,11 +164,12 @@ export async function editMember(
     if (options.nick.length > 32) {
       throw new Error(Errors.NICKNAMES_MAX_LENGTH);
     }
-
     await botThrowOnMissingGuildPermission(guildID, ["MANAGE_NICKNAMES"]);
   }
 
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_ROLES"]);
+  if (options.roles) {
+    await botThrowOnMissingGuildPermission(guildID, ["MANAGE_ROLES"]);
+  }
 
   if (options.mute) {
     // TODO: This should check if the member is in a voice channel
