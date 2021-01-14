@@ -13,6 +13,7 @@ import {
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { createNewProp } from "../../util/utils.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
 import { sendMessage } from "../handlers/channel.ts";
 import {
   addReaction,
@@ -116,7 +117,6 @@ const baseMessage: Partial<Message> = {
   },
 };
 
-// deno-lint-ignore require-await
 export async function createMessage(data: MessageCreateOptions) {
   const {
     guild_id: guildID = "",
@@ -137,12 +137,15 @@ export async function createMessage(data: MessageCreateOptions) {
     restProps[key] = createNewProp(rest[key]);
   }
 
+  // Discord doesnt give guild id for getMessage() so this will fill it in
+  const guildIDFinal = guildID || (await cacheHandlers.get("channels", channelID))?.guildID || "";
+
   const message = Object.create(baseMessage, {
     ...restProps,
     /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
     referencedMessageID: createNewProp(referencedMessageID),
     channelID: createNewProp(channelID),
-    guildID: createNewProp(guildID),
+    guildID: createNewProp(guildID || guildIDFinal),
     mentions: createNewProp(data.mentions.map((m) => m.id)),
     mentionsEveryone: createNewProp(mentionsEveryone),
     mentionRoleIDs: createNewProp(mentionRoleIDs),
