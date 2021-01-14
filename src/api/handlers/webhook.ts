@@ -1,4 +1,5 @@
 import { botID } from "../../bot.ts";
+import { RequestManager } from "../../rest/request_manager.ts";
 import {
   CreateSlashCommandOptions,
   EditSlashCommandOptions,
@@ -14,10 +15,9 @@ import {
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { endpoints } from "../../util/constants.ts";
-import { botHasChannelPermissions } from "../../util/permissions.ts";
+import { botThrowOnMissingChannelPermission } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
 import { structures } from "../structures/mod.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
 
 /** Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
 *
@@ -27,15 +27,7 @@ export async function createWebhook(
   channelID: string,
   options: WebhookCreateOptions,
 ) {
-  const hasManageWebhooksPerm = await botHasChannelPermissions(
-    channelID,
-    ["MANAGE_WEBHOOKS"],
-  );
-  if (
-    !hasManageWebhooksPerm
-  ) {
-    throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
-  }
+  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_WEBHOOKS"]);
 
   if (
     // Specific usernames that discord does not allow
