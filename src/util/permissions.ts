@@ -1,4 +1,4 @@
-import { cacheHandlers } from "../../mod.ts";
+import { cacheHandlers } from "../api/controllers/cache.ts";
 import { Role } from "../api/structures/mod.ts";
 import { Errors, Permission, Permissions } from "../api/types/mod.ts";
 import { botID } from "../bot.ts";
@@ -9,7 +9,6 @@ export async function computeBasePermissions(
 ) {
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
-
   // If the memberID is equal to the guild ownerID we don't need to calculate anything so we return ADMINISTRATOR permission
   if (guild.ownerID === memberID) return "8";
 
@@ -17,7 +16,6 @@ export async function computeBasePermissions(
   if (!member) throw Error(Errors.MEMBER_NOT_FOUND);
 
   let permissions = BigInt(0);
-
   // Calculate the role permissions bits, @everyone role is not in memberRoleIDs so we need to pass guildID manualy
   permissions |= [
     ...member.guilds.get(guildID)?.roles || [],
@@ -30,10 +28,8 @@ export async function computeBasePermissions(
       bits |= BigInt(perms);
       return bits;
     }, BigInt(0));
-
   // If one role has ADMINISTRATOR permissions we don't need to return the specifiv permissions so we return ADMINISTRATOR permission
   if (permissions & BigInt(Permissions.ADMINISTRATOR)) return "8";
-
   // Return the members permission bits as a string
   return permissions.toString();
 }
@@ -44,14 +40,20 @@ export async function computeChannelOverites(
 ) {
   const channel = await cacheHandlers.get("channels", channelID);
   if (!channel) throw Error(Errors.CHANNEL_NOT_FOUND);
+  // This is a DM channel so return ADMINISTRATOR permission
   if (!channel.guildID) return "8";
-
-  let permissions = BigInt(computeBasePermissions(memberID, channel.guildID));
-  if (permissions & BigInt(Permissions.ADMINISTRATOR)) return "8";
+  // Member already has ADMINISTRATOR permission so we return that
+  if (
+    await computeBasePermissions(memberID, channel.guildID) === "8"
+  ) {
+    return "8";
+  }
 
   const member = await cacheHandlers.get("members", memberID);
   if (!member) throw Error(Errors.MEMBER_NOT_FOUND);
 
+  let permissions = BigInt(0);
+  // First compute @everyone overwrites since these have the lowest priority
   const overwriteEveryone = channel?.permissionOverwrites.find((overwrite) =>
     overwrite.id === channel.guildID
   );
@@ -64,20 +66,19 @@ export async function computeChannelOverites(
 
   let allow = BigInt(0);
   let deny = BigInt(0);
-  let roleID: string;
   let overwriteRole;
-
-  for (roleID in member.guilds.get(channel.guildID)?.roles) {
+  // Second compute members role overwrites since these have middle priority
+  for (const roleID in member.guilds.get(channel.guildID)?.roles) {
     overwriteRole = overwrites.find((overwrite) => overwrite.id === roleID);
     if (overwriteRole) {
-      allow |= BigInt(overwriteRole.allow);
       deny &= ~BigInt(overwriteRole.deny);
+      allow |= BigInt(overwriteRole.allow);
     }
   }
-
+  // After role overwrite compute save allowed permissions ferst we remove denied permissions since "denied < allowed"
   permissions &= ~deny;
   permissions |= allow;
-
+  // Third compute member specific overwrites since these have the highest priority
   const overwriteMember = overwrites.find((overwrite) =>
     overwrite.id === memberID
   );
@@ -94,6 +95,7 @@ export function validatePermissions(
   permissions: Permission[],
 ) {
   return permissions.every((permission) =>
+    // Check if permission is in permissionBits
     BigInt(permissionBits) & BigInt(Permissions[permission])
   );
 }
@@ -103,8 +105,9 @@ export async function hasGuildPermissions(
   guildID: string,
   permissions: Permission[],
 ) {
+  // First we need the role permission bits this member has
   const basePermissions = await computeBasePermissions(memberID, guildID);
-
+  // Second use the validatePermissions function to check if the member has every permission
   return validatePermissions(basePermissions, permissions);
 }
 
@@ -112,6 +115,7 @@ export function botHasGuildPermissions(
   guildID: string,
   permissions: Permission[],
 ) {
+  // Since Bot is a normal member we can use the hasGuildPermissions() function
   return hasGuildPermissions(guildID, botID, permissions);
 }
 
@@ -121,6 +125,7 @@ export function missingPermissions(
 ) {
   const missing: Permission[] = [];
   permissions.forEach((permission) => {
+    // Check if permission is NOT in permissionBits
     if (!(BigInt(permissionBits) & BigInt(Permissions[permission]))) {
       missing.push(permission);
     }
@@ -134,10 +139,12 @@ export async function throwOnMissingGuildPermission(
   guildID: string,
   permissions: Permission[],
 ) {
+  // First we need the role permissions bits this member has
   const permissionBits = await computeBasePermissions(memberID, guildID);
-
+  // Second check if the member is missing any permissions
   const missing = missingPermissions(permissionBits, permissions);
   if (missing.length) {
+    // If the member is missing a permission throw an Error
     throw new Error(Errors[`MISSING_${missing[0]}` as Errors]);
   }
 }
@@ -146,20 +153,24 @@ export function botThrowOnMissingGuildPermission(
   guildID: string,
   permissions: Permission[],
 ) {
+  // Since Bot is a normal member we can use the throwOnMissingGuildPermission() function
   return throwOnMissingGuildPermission(botID, guildID, permissions);
 }
 
 /** This function converts a bitwise string to permission strings */
 export function calculatePermissions(permissionBits: bigint) {
-  return Object.keys(Permissions).filter((perm) => {
-    if (Number(perm)) return false;
-    return permissionBits & BigInt(Permissions[perm as Permission]);
+  return Object.keys(Permissions).filter((permission) => {
+    // Since Object.keys() not only returns the permission names but also the bit values we need to return false if it is a Number
+    if (Number(permission)) return false;
+    // Check if permissionBits has this permission
+    return permissionBits & BigInt(Permissions[permission as Permission]);
   }) as Permission[];
 }
 
 /** This function converts an array of permissions into the bitwise string. */
 export function calculateBits(permissions: Permission[]) {
   return permissions.reduce(
+    // Get the bit value for this permission and assign it to bits
     (bits, perm) => bits |= BigInt(Permissions[perm]),
     BigInt(0),
   ).toString();
@@ -168,19 +179,23 @@ export function calculateBits(permissions: Permission[]) {
 /** Gets the highest role from the member in this guild */
 export async function highestRole(guildID: string, memberID: string) {
   const guild = await cacheHandlers.get("guilds", guildID);
-  if (!guild) return;
-
-  const member = (await cacheHandlers.get("members", memberID))?.guilds.get(
-    guildID,
-  );
-  if (!member) return;
+  if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
+  // Get the roles from the member
+  const memberRoles = (await cacheHandlers.get("members", memberID))?.guilds
+    .get(
+      guildID,
+    )?.roles;
+  // This member has no roles so the highest one is the @everyone role
+  if (!memberRoles) return guild.roles.get(guildID) as Role;
 
   let memberHighestRole: Role | undefined;
 
-  for (const roleID of member.roles) {
+  for (const roleID of memberRoles) {
     const role = guild.roles.get(roleID);
+    // Rare edge case handling if undefined
     if (!role) continue;
-
+    // If memberHighestRole is still undefined we want to assign the role,
+    // else we want to check if the current role position is higher than the current memberHighestRole
     if (
       !memberHighestRole || memberHighestRole.position < role.position
     ) {
@@ -188,7 +203,8 @@ export async function highestRole(guildID: string, memberID: string) {
     }
   }
 
-  return memberHighestRole || (guild.roles.get(guild.id) as Role);
+  // The member has at least one role so memberHighestRole must exist
+  return memberHighestRole!;
 }
 
 /** Checks if the first role is higher than the second role */
@@ -198,12 +214,11 @@ export async function higherRolePosition(
   otherRoleID: string,
 ) {
   const guild = await cacheHandlers.get("guilds", guildID);
-  if (!guild) return;
+  if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
 
   const role = guild.roles.get(roleID);
   const otherRole = guild.roles.get(otherRoleID);
-  if (!role || !otherRole) return;
-
+  if (!role || !otherRole) throw Error(Errors.ROLE_NOT_FOUND);
   // Rare edge case handling
   if (role.position === otherRole.position) {
     return role.id < otherRole.id;
@@ -219,14 +234,13 @@ export async function isHigherPosition(
   compareRoleID: string,
 ) {
   const guild = await cacheHandlers.get("guilds", guildID);
-  if (!guild) return;
+  if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
 
   if (guild.ownerID === memberID) return true;
 
   const memberHighestRole = await highestRole(guildID, memberID);
   const compareRole = guild.roles.get(compareRoleID);
-  if (!memberHighestRole || !compareRole) return;
-
+  if (!memberHighestRole || !compareRole) throw Error(Errors.ROLE_NOT_FOUND);
   // Rare edge case handling
   if (memberHighestRole.position === compareRole.position) {
     return memberHighestRole.id < compareRole.id;
