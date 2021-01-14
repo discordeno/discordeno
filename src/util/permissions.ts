@@ -3,6 +3,7 @@ import { Role } from "../api/structures/mod.ts";
 import { Errors, Permission, Permissions } from "../api/types/mod.ts";
 import { botID } from "../bot.ts";
 
+/** Computes the permissions this member has in the given guild */
 export async function computeBasePermissions(
   memberID: string,
   guildID: string,
@@ -34,6 +35,7 @@ export async function computeBasePermissions(
   return permissions.toString();
 }
 
+/** Computes the members Channel Overwrites */
 export async function computeChannelOverites(
   memberID: string,
   channelID: string,
@@ -90,6 +92,7 @@ export async function computeChannelOverites(
   return permissions;
 }
 
+/** Checks if the given permissionBits are matching the given Permission[] */
 export function validatePermissions(
   permissionBits: string,
   permissions: Permission[],
@@ -100,6 +103,7 @@ export function validatePermissions(
   );
 }
 
+/** Checks if the given member has these permissions in the given guild */
 export async function hasGuildPermissions(
   memberID: string,
   guildID: string,
@@ -111,6 +115,7 @@ export async function hasGuildPermissions(
   return validatePermissions(basePermissions, permissions);
 }
 
+/** Checks if the bot has these permissions in the given guild */
 export function botHasGuildPermissions(
   guildID: string,
   permissions: Permission[],
@@ -119,6 +124,7 @@ export function botHasGuildPermissions(
   return hasGuildPermissions(guildID, botID, permissions);
 }
 
+/** Returns the permissions that are not in the given permissionBits */
 export function missingPermissions(
   permissionBits: string,
   permissions: Permission[],
@@ -134,6 +140,7 @@ export function missingPermissions(
   return missing;
 }
 
+/** Throws an error if this member has not all of the given permissions */
 export async function throwOnMissingGuildPermission(
   memberID: string,
   guildID: string,
@@ -149,6 +156,7 @@ export async function throwOnMissingGuildPermission(
   }
 }
 
+/** Throws an error if the bot has not all of the given permissions */
 export function botThrowOnMissingGuildPermission(
   guildID: string,
   permissions: Permission[],
