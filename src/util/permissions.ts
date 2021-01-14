@@ -89,6 +89,7 @@ export async function computeChannelOverites(
     permissions |= BigInt(overwriteMember.allow);
   }
 
+  return permissions.toString();
 }
 
 /** Checks if the given permissionBits are matching the given Permission[] */
@@ -115,7 +116,8 @@ export async function hasGuildPermissions(
 }
 
 /** Checks if the bot has these permissions in the given guild */
-export function botHasGuildPermissions(
+// deno-lint-ignore require-await
+export async function botHasGuildPermissions(
   guildID: string,
   permissions: Permission[],
 ) {
@@ -178,6 +180,16 @@ export async function throwOnMissingChannelPermission(
     // If the member is missing a permission throw an Error
     throw new Error(Errors[`MISSING_${missing[0]}` as Errors]);
   }
+}
+
+/** Throws an error if the bot has not all of the given channel permissions */
+// deno-lint-ignore require-await
+export async function botThrowOnMissingChannelPermission(
+  channelID: string,
+  permissions: Permission[],
+) {
+  // Since Bot is a normal member we can use the throwOnMissingChannelPermission() function
+  return throwOnMissingChannelPermission(botID, channelID, permissions);
 }
 
 /** This function converts a bitwise string to permission strings */
