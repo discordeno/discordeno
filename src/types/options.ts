@@ -5,6 +5,7 @@ import {
   Message,
   Role,
 } from "../api/structures/mod.ts";
+import { Collection } from "../util/collection.ts";
 import {
   DiscordPayload,
   Emoji,
@@ -93,7 +94,7 @@ export interface EventHandlers {
   guildEmojisUpdate?: (
     guild: Guild,
     emojis: Emoji[],
-    cachedEmojis: Emoji[],
+    cachedEmojis: Collection<string, Emoji>,
   ) => unknown;
   guildMemberAdd?: (guild: Guild, member: Member) => unknown;
   guildMemberRemove?: (
