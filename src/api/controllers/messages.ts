@@ -25,7 +25,7 @@ export async function handleInternalMessageCreate(data: GatewayPayload) {
     // If in a guild cache the author as a member
     await structures.createMember(
       {
-        ...payload.member as unknown as GuildMemberPayload,
+        ...payload.member as GuildMemberPayload,
       },
       guild.id,
     );
@@ -34,17 +34,7 @@ export async function handleInternalMessageCreate(data: GatewayPayload) {
   payload.mentions.forEach((mention) => {
     // Cache the member if its a valid member
     if (mention && guild) {
-      structures.createMember(
-        {
-          nick: mention.nick === undefined ? null : mention.nick,
-          roles: mention.roles || [],
-          joined_at: mention.joined_at || "",
-          deaf: mention.deaf || false,
-          mute: mention.mute || false,
-          user: mention,
-        },
-        guild.id,
-      );
+      structures.createMember(mention as GuildMemberPayload, guild.id);
     }
   });
 
