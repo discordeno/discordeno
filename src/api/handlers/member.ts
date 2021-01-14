@@ -11,7 +11,7 @@ import {
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
-  botHasPermission,
+  botThrowOnMissingGuildPermission,
   higherRolePosition,
   highestRole,
 } from "../../util/permissions.ts";
@@ -70,10 +70,7 @@ export async function addRole(
     }
   }
 
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_ROLES);
-  }
+  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_ROLES"]);
 
   return RequestManager.put(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
@@ -104,10 +101,7 @@ export async function removeRole(
     }
   }
 
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_ROLES);
-  }
+  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_ROLES"]);
 
   return RequestManager.delete(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
@@ -152,10 +146,7 @@ export async function kick(guildID: string, memberID: string, reason?: string) {
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
-  const hasPerm = await botHasPermission(guildID, ["KICK_MEMBERS"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_KICK_MEMBERS);
-  }
+  await botThrowOnMissingGuildPermission(guildID, ["KICK_MEMBERS"]);
 
   return RequestManager.delete(
     endpoints.GUILD_MEMBER(guildID, memberID),
@@ -174,48 +165,18 @@ export async function editMember(
       throw new Error(Errors.NICKNAMES_MAX_LENGTH);
     }
 
-    const hasManageNickPerm = await botHasPermission(
-      guildID,
-      ["MANAGE_NICKNAMES"],
-    );
-    if (!hasManageNickPerm) {
-      throw new Error(Errors.MISSING_MANAGE_NICKNAMES);
-    }
+    await botThrowOnMissingGuildPermission(guildID, ["MANAGE_NICKNAMES"]);
   }
 
-  const hasManageRolesPerm = await botHasPermission(
-    guildID,
-    ["MANAGE_ROLES"],
-  );
-  if (
-    options.roles &&
-    !hasManageRolesPerm
-  ) {
-    throw new Error(Errors.MISSING_MANAGE_ROLES);
-  }
+  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_ROLES"]);
 
   if (options.mute) {
-    const hasMuteMembersPerm = await botHasPermission(
-      guildID,
-      ["MUTE_MEMBERS"],
-    );
     // TODO: This should check if the member is in a voice channel
-    if (
-      !hasMuteMembersPerm
-    ) {
-      throw new Error(Errors.MISSING_MUTE_MEMBERS);
-    }
+    await botThrowOnMissingGuildPermission(guildID, ["MUTE_MEMBERS"]);
   }
 
-  const hasDeafenMembersPerm = await botHasPermission(
-    guildID,
-    ["DEAFEN_MEMBERS"],
-  );
-  if (
-    options.deaf &&
-    !hasDeafenMembersPerm
-  ) {
-    throw new Error(Errors.MISSING_DEAFEN_MEMBERS);
+  if (options.deaf) {
+    await botThrowOnMissingGuildPermission(guildID, ["DEAFEN_MEMBERS"]);
   }
 
   // TODO: if channel id is provided check if the bot has CONNECT and MOVE in channel and current channel
