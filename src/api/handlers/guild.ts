@@ -466,7 +466,7 @@ export async function getEmbed(guildID: string) {
 }
 
 /** Modify a guild embed object for the guild. Requires the MANAGE_GUILD permission. */
-export async function GUILD_WIDGET(
+export async function editEmbed(
   guildID: string,
   enabled: boolean,
   channelID?: string | null,
@@ -477,7 +477,7 @@ export async function GUILD_WIDGET(
   }
 
   return RequestManager.patch(
-    endpoints.GUILD_EMBED(guildID),
+    endpoints.GUILD_WIDGET(guildID),
     { enabled, channel_id: channelID },
   );
 }
