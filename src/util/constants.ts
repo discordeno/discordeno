@@ -67,8 +67,6 @@ export const endpoints = {
   CHANNEL_FOLLOW: (channelID: string) => `${CHANNEL_BASE(channelID)}/followers`,
   CHANNEL_MESSAGE_CROSSPOST: (channelID: string, messageID: string) =>
     `${CHANNEL_BASE(channelID)}/messages/${messageID}/crosspost`,
-  CHANNEL_GET: (channelID: string) => CHANNEL_BASE(channelID),
-  CHANNEL_DELETE: (channelID: string) => CHANNEL_BASE(channelID),
   CHANNEL_EDIT_OVERWRITE: (channelID: string, overwriteID: string) =>
     `${CHANNEL_BASE(channelID)}/permissions/${overwriteID}`,
   CHANNEL_DELETE_OVERWRITE: (channelID: string, overwriteID: string) =>
