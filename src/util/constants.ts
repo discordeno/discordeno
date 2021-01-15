@@ -67,9 +67,7 @@ export const endpoints = {
   CHANNEL_FOLLOW: (channelID: string) => `${CHANNEL_BASE(channelID)}/followers`,
   CHANNEL_MESSAGE_CROSSPOST: (channelID: string, messageID: string) =>
     `${CHANNEL_BASE(channelID)}/messages/${messageID}/crosspost`,
-  CHANNEL_EDIT_OVERWRITE: (channelID: string, overwriteID: string) =>
-    `${CHANNEL_BASE(channelID)}/permissions/${overwriteID}`,
-  CHANNEL_DELETE_OVERWRITE: (channelID: string, overwriteID: string) =>
+  CHANNEL_OVERWRITE: (channelID: string, overwriteID: string) =>
     `${CHANNEL_BASE(channelID)}/permissions/${overwriteID}`,
   // Bots SHALL NOT use this endpoint but they can
   CHANNEL_TYPING: (channelID: string) => `${CHANNEL_BASE(channelID)}/typing`,
