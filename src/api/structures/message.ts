@@ -117,7 +117,7 @@ const baseMessage: Partial<Message> = {
   },
 };
 
-export async function createMessage(data: MessageCreateOptions) {
+export async function createMessageStructure(data: MessageCreateOptions) {
   const {
     guild_id: guildID = "",
     channel_id: channelID,
@@ -138,7 +138,8 @@ export async function createMessage(data: MessageCreateOptions) {
   }
 
   // Discord doesnt give guild id for getMessage() so this will fill it in
-  const guildIDFinal = guildID || (await cacheHandlers.get("channels", channelID))?.guildID || "";
+  const guildIDFinal = guildID ||
+    (await cacheHandlers.get("channels", channelID))?.guildID || "";
 
   const message = Object.create(baseMessage, {
     ...restProps,

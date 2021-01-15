@@ -1,18 +1,18 @@
-import { createChannel } from "./channel.ts";
-import { createGuild } from "./guild.ts";
-import { createMember } from "./member.ts";
-import { createMessage } from "./message.ts";
-import { createRole } from "./role.ts";
-import { createTemplate } from "./template.ts";
+import { createChannelStructure } from "./channel.ts";
+import { createGuildStructure } from "./guild.ts";
+import { createMemberStructure } from "./member.ts";
+import { createMessageStructure } from "./message.ts";
+import { createRoleStructure } from "./role.ts";
+import { createTemplateStructure } from "./template.ts";
 
 /** This is the placeholder where the structure creation functions are kept. */
 export let structures = {
-  createChannel,
-  createGuild,
-  createMember,
-  createMessage,
-  createRole,
-  createTemplate,
+  createChannelStructure,
+  createGuildStructure,
+  createMemberStructure,
+  createMessageStructure,
+  createRoleStructure,
+  createTemplateStructure,
 };
 
 export type Structures = typeof structures;

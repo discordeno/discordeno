@@ -109,7 +109,10 @@ const baseGuild: Partial<Guild> = {
   },
 };
 
-export async function createGuild(data: CreateGuildPayload, shardID: number) {
+export async function createGuildStructure(
+  data: CreateGuildPayload,
+  shardID: number,
+) {
   const {
     disovery_splash: discoverySplash,
     default_message_notifications: defaultMessageNotifications,

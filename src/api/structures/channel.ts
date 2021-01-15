@@ -27,7 +27,7 @@ const baseChannel: Partial<Channel> = {
   },
 };
 
-export async function createChannel(
+export async function createChannelStructure(
   data: ChannelCreatePayload,
   guildID?: string,
 ) {
