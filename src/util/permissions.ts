@@ -131,6 +131,7 @@ export function missingPermissions(
   permissions: Permission[],
 ) {
   const missing: Permission[] = [];
+  if (permissionBits === "8") return missing;
   permissions.forEach((permission) => {
     // Check if permission is NOT in permissionBits
     if (!(BigInt(permissionBits) & BigInt(Permissions[permission]))) {
