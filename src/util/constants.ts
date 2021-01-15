@@ -86,7 +86,7 @@ export const endpoints = {
   GUILD_BANNER: (guildID: string, icon: string) =>
     `${baseEndpoints.CDN_URL}/banners/${guildID}/${icon}`,
   GUILD_CHANNELS: (guildID: string) => `${GUILDS_BASE(guildID)}/channels`,
-  GUILD_CHANNEL: (channelID: string) => `${CHANNEL_BASE}/${channelID}`,
+  GUILD_CHANNEL: (channelID: string) => `${CHANNEL_BASE(channelID)}`,
   // TODO: rename to GUILD_WIDGET
   GUILD_EMBED: (guildID: string) => `${GUILDS_BASE(guildID)}/widget`,
   GUILD_WIDGET_GET: (guildID: string) => `${GUILDS_BASE(guildID)}/widget.json`,
