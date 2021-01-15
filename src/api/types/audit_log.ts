@@ -1,5 +1,6 @@
 import { AuditLogEvent } from "../../../mod.ts";
-import { ChannelType, Overwrite } from "./channel.ts";
+import { ChannelTypes } from "../../types/mod.ts";
+import { Overwrite } from "./channel.ts";
 import { Integration } from "./guild.ts";
 import { RoleObject } from "./permissions.ts";
 import { User } from "./user.ts";
@@ -154,7 +155,7 @@ export interface AuditLogChangeKey {
   /** object: any; the id of the changed entity - sometimes used in conjunction with other keys */
   id: string;
   /** object: any; type of entity created */
-  type: ChannelType | string;
+  type: (keyof typeof ChannelTypes) | string;
   /** object: integration; integration emoticons enabled/disabled */
   enableEmoticons: boolean;
   /** object: integration; integration expiring subscriber behavior changed */
