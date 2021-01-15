@@ -41,7 +41,7 @@ import { cacheHandlers } from "../controllers/cache.ts";
 import { Guild, Member, structures, Template } from "../structures/mod.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
-export async function createServer(options: CreateServerOptions) {
+export async function createGuild(options: CreateServerOptions) {
   const guild = await RequestManager.post(
     endpoints.GUILDS,
     options,

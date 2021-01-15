@@ -19,7 +19,7 @@ export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
   if (!guild) return;
 
   guild.memberCount++;
-  const member = await structures.createMember(
+  const member = await structures.createMemberStructure(
     payload,
     payload.guild_id,
   );
@@ -65,7 +65,7 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
     mute: guildMember?.mute || false,
     roles: payload.roles,
   };
-  const member = await structures.createMember(
+  const member = await structures.createMemberStructure(
     newMemberData,
     payload.guild_id,
   );
@@ -102,7 +102,7 @@ export async function handleInternalGuildMembersChunk(data: DiscordPayload) {
 
   const members = await Promise.all(
     payload.members.map((member) =>
-      structures.createMember(member, payload.guild_id)
+      structures.createMemberStructure(member, payload.guild_id)
     ),
   );
 

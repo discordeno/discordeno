@@ -21,7 +21,7 @@ export async function handleInternalGuildCreate(
   // When shards resume they emit GUILD_CREATE again.
   if (await cacheHandlers.has("guilds", payload.id)) return;
 
-  const guild = await structures.createGuild(
+  const guild = await structures.createGuildStructure(
     data.d as CreateGuildPayload,
     shardID,
   );

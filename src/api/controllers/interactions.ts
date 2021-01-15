@@ -13,7 +13,10 @@ export async function handleInternalInteractionCreate(data: DiscordPayload) {
   eventHandlers.interactionCreate?.(
     {
       ...payload,
-      member: await structures.createMember(payload.member, payload.guild_id),
+      member: await structures.createMemberStructure(
+        payload.member,
+        payload.guild_id,
+      ),
     },
   );
 }
