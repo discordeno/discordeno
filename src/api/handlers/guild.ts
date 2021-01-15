@@ -52,7 +52,7 @@ export async function createServer(options: CreateServerOptions) {
 /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event.
  */
 export function deleteServer(guildID: string) {
-  return RequestManager.delete(endpoints.GUILD(guildID));
+  return RequestManager.delete(endpoints.GUILDS_BASE(guildID));
 }
 
 /** Gets an array of all the channels ids that are the children of this category. */
@@ -148,7 +148,7 @@ export async function deleteChannel(
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
 
-  return RequestManager.delete(endpoints.CHANNEL(channelID), { reason });
+  return RequestManager.delete(endpoints.CHANNEL_BASE(channelID), { reason });
 }
 
 /** Returns a list of guild channel objects.
@@ -603,7 +603,7 @@ export async function editGuild(guildID: string, options: GuildEditOptions) {
     options.splash = await urlToBase64(options.splash);
   }
 
-  return RequestManager.patch(endpoints.GUILD(guildID), options);
+  return RequestManager.patch(endpoints.GUILDS_BASE(guildID), options);
 }
 
 /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
@@ -653,7 +653,7 @@ export function getUser(userID: string) {
  * */
 export function getGuild(guildID: string, counts = true) {
   return RequestManager.get(
-    endpoints.GUILD(guildID),
+    endpoints.GUILDS_BASE(guildID),
     { with_counts: counts },
   ) as Promise<UpdateGuildPayload>;
 }
