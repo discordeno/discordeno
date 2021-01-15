@@ -73,7 +73,6 @@ export const endpoints = {
 
   // Guild Endpoints
   GUILDS: `${baseEndpoints.BASE_URL}/guilds`,
-  GUILD: (guildID: string) => `${GUILDS_BASE(guildID)}`,
   GUILD_AUDIT_LOGS: (guildID: string) => `${GUILDS_BASE(guildID)}/audit-logs`,
   GUILD_BAN: (guildID: string, userID: string) =>
     `${GUILDS_BASE(guildID)}/bans/${userID}`,
