@@ -141,6 +141,6 @@ export const endpoints = {
   USER_AVATAR: (id: string, icon: string) =>
     `${baseEndpoints.CDN_URL}/avatars/${id}/${icon}`,
   USER_DEFAULT_AVATAR: (icon: number) =>
-    `${baseEndpoints.CDN_URL}/embed/avatars${icon}.png`,
+    `${baseEndpoints.CDN_URL}/embed/avatars/${icon}.png`,
   USER_CREATE_DM: `${baseEndpoints.BASE_URL}/users/@me/channels`,
 };
