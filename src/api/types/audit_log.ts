@@ -1,3 +1,4 @@
+import { AuditLogEvent } from "../../../mod.ts";
 import { ChannelType, Overwrite } from "./channel.ts";
 import { Integration } from "./guild.ts";
 import { RoleObject } from "./permissions.ts";
@@ -27,50 +28,12 @@ export interface AuditLogEntry {
   /** id of the entry */
   id: string;
   /** type of action that occured */
-  actionType: AuditLogEventType;
+  actionType: keyof typeof AuditLogEvent;
   /** additional info for certain action types */
   options?: OptionalAuditEntryInfo;
   /** the reason for the change (0-512 characters) */
   reason?: string;
 }
-
-// used
-export type AuditLogEventType =
-  | "GUILD_UPDATE"
-  | "CHANNEL_CREATE"
-  | "CHANNEL_UPDATE"
-  | "CHANNEL_DELETE"
-  | "CHANNEL_OVERWRITE_CREATE"
-  | "CHANNEL_OVERWRITE_UPDATE"
-  | "CHANNEL_OVERWRITE_DELETE"
-  | "MEMBER_KICK"
-  | "MEMBER_PRUNE"
-  | "MEMBER_BAN_ADD"
-  | "MEMBER_BAN_REMOVE"
-  | "MEMBER_UPDATE"
-  | "MEMBER_ROLE_UPDATE"
-  | "MEMBER_MOVE"
-  | "MEMBER_DISCONNECT"
-  | "BOT_ADD"
-  | "ROLE_CREATE"
-  | "ROLE_UPDATE"
-  | "ROLE_DELETE"
-  | "INVITE_CREATE"
-  | "INVITE_UPDATE"
-  | "INVITE_DELETE"
-  | "WEBHOOK_CREATE"
-  | "WEBHOOK_UPDATE"
-  | "WEBHOOK_DELETE"
-  | "EMOJI_CREATE"
-  | "EMOJI_UPDATE"
-  | "EMOJI_DELETE"
-  | "MESSAGE_DELETE"
-  | "MESSAGE_BULK_DELETE"
-  | "MESSAGE_PIN"
-  | "MESSAGE_UNPIN"
-  | "INTEGRATION_CREATE"
-  | "INTEGRATION_UPDATE"
-  | "INTEGRATION_DELETE";
 
 // used
 export interface OptionalAuditEntryInfo {
@@ -205,7 +168,7 @@ export interface GetGuildAuditLogOptions {
   /** filter the log for actions made by a user */
   userID: string;
   /** the type of audit log event */
-  actionType: AuditLogEventType;
+  actionType: keyof typeof AuditLogEvent;
   /** filter the log before a certain entry id */
   before: string;
   /** how many entries are returned (default 50, minimum 1, maximum 100) */
