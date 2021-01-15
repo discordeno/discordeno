@@ -147,12 +147,12 @@ export async function createGuildStructure(
   } = data;
 
   const roles = (await Promise.all(
-    data.roles.map((r: RoleData) => structures.createRole(r)),
+    data.roles.map((r: RoleData) => structures.createRoleStructure(r)),
   )) as Role[];
 
   await Promise.all(
     channels.map((c: ChannelCreatePayload) =>
-      structures.createChannel(c, data.id)
+      structures.createChannelStructure(c, data.id)
     ),
   );
 
