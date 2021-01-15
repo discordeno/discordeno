@@ -170,8 +170,7 @@ export const endpoints = {
     `${baseEndpoints.CDN_URL}/avatars/${userID}/${icon}`,
   USER_DEFAULT_AVATAR: (icon: number) =>
     `${baseEndpoints.CDN_URL}/embed/avatars/${icon}.png`,
-  USER_CREATE_DM: `${baseEndpoints.BASE_URL}/users/@me/channels`,
-  USER_GET_DMS: `${baseEndpoints.BASE_URL}/users/@me/channels`,
+  USER_DM: `${baseEndpoints.BASE_URL}/users/@me/channels`,
   USER_CONNECTIONS: `${baseEndpoints.BASE_URL}/users/@me/connections`,
   USER_NICK: (guildID: string) => `${GUILDS_BASE(guildID)}/members/@me/nick`,
 
