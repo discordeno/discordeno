@@ -140,6 +140,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     channels = [],
     members,
     presences = [],
+    emojis,
     ...rest
   } = data;
 
@@ -189,6 +190,9 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
       new Collection(presences.map((p: Presence) => [p.user.id, p])),
     ),
     memberCount: createNewProp(memberCount),
+    emojis: createNewProp(
+      new Collection(emojis.map((emoji) => [emoji.id ?? emoji.name, emoji])),
+    ),
     voiceStates: createNewProp(
       new Collection(
         voiceStates.map((vs: VoiceState) => [
@@ -231,7 +235,7 @@ export interface Guild {
   /** Explicit content filter level */
   explicitContentFilter: number;
   /** The custom guild emojis */
-  emojis: Emoji[];
+  emojis: Collection<string, Emoji>;
   /** Enabled guild features */
   features: GuildFeatures[];
   /** System channel flags */
