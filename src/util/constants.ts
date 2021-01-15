@@ -127,9 +127,7 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/webhooks/${webhookID}/${token}`,
   WEBHOOK_ID: (webhookID: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${webhookID}`,
-  WEBHOOK_EDIT: (webhookID: string, token: string, messageID: string) =>
-    `${baseEndpoints.BASE_URL}/webhooks/${webhookID}/${token}/messages/${messageID}`,
-  WEBHOOK_DELETE: (webhookID: string, token: string, messageID: string) =>
+  WEBHOOK_MESSAGE: (webhookID: string, token: string, messageID: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${webhookID}/${token}/messages/${messageID}`,
   WEBHOOK_SLACK: (webhookID: string, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${webhookID}/${token}/slack`,
