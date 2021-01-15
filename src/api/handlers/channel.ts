@@ -73,7 +73,7 @@ export async function getMessage(
   const result = await RequestManager.get(
     endpoints.CHANNEL_MESSAGE(channelID, id),
   ) as MessageCreateOptions;
-  return structures.createMessage(result);
+  return structures.createMessageStructure(result);
 }
 
 /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
@@ -111,7 +111,9 @@ export async function getMessages(
     endpoints.CHANNEL_MESSAGES(channelID),
     options,
   )) as MessageCreateOptions[];
-  return Promise.all(result.map((res) => structures.createMessage(res)));
+  return Promise.all(
+    result.map((res) => structures.createMessageStructure(res)),
+  );
 }
 
 /** Get pinned messages in this channel. */
@@ -119,7 +121,9 @@ export async function getPins(channelID: string) {
   const result = (await RequestManager.get(
     endpoints.CHANNEL_PINS(channelID),
   )) as MessageCreateOptions[];
-  return Promise.all(result.map((res) => structures.createMessage(res)));
+  return Promise.all(
+    result.map((res) => structures.createMessageStructure(res)),
+  );
 }
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
@@ -227,7 +231,7 @@ export async function sendMessage(
     },
   );
 
-  return structures.createMessage(result as MessageCreateOptions);
+  return structures.createMessageStructure(result as MessageCreateOptions);
 }
 
 /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */

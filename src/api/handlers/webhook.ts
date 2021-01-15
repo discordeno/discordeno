@@ -1,4 +1,5 @@
 import { botID } from "../../bot.ts";
+import { RequestManager } from "../../rest/request_manager.ts";
 import {
   CreateSlashCommandOptions,
   EditSlashCommandOptions,
@@ -17,7 +18,6 @@ import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
 import { structures } from "../structures/mod.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
 
 /** Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
 *
@@ -111,7 +111,7 @@ export async function executeWebhook(
   );
   if (!options.wait) return;
 
-  return structures.createMessage(result as MessageCreateOptions);
+  return structures.createMessageStructure(result as MessageCreateOptions);
 }
 
 /** Returns the new webhook object for the given id. */

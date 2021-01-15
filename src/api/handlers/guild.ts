@@ -46,7 +46,7 @@ export async function createServer(options: CreateServerOptions) {
     endpoints.GUILDS,
     options,
   ) as CreateGuildPayload;
-  return structures.createGuild(guild, 0);
+  return structures.createGuildStructure(guild, 0);
 }
 
 /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event.
@@ -131,7 +131,7 @@ export async function createGuildChannel(
       type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
 
-  return structures.createChannel(result);
+  return structures.createChannelStructure(result);
 }
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
@@ -160,7 +160,7 @@ export async function getChannels(guildID: string, addToCache = true) {
     endpoints.GUILD_CHANNELS(guildID),
   ) as ChannelCreatePayload[];
   return Promise.all(result.map(async (res) => {
-    const channel = await structures.createChannel(res, guildID);
+    const channel = await structures.createChannelStructure(res, guildID);
     if (addToCache) {
       await cacheHandlers.set("channels", channel.id, channel);
     }
@@ -176,7 +176,10 @@ export async function getChannel(channelID: string, addToCache = true) {
   const result = await RequestManager.get(
     endpoints.GUILD_CHANNEL(channelID),
   ) as ChannelCreatePayload;
-  const channel = await structures.createChannel(result, result.guild_id);
+  const channel = await structures.createChannelStructure(
+    result,
+    result.guild_id,
+  );
   if (addToCache) await cacheHandlers.set("channels", channel.id, channel);
   return channel;
 }
@@ -211,7 +214,7 @@ export async function getMember(
     endpoints.GUILD_MEMBER(guildID, id),
   ) as MemberCreatePayload;
 
-  return await structures.createMember(data, guildID);
+  return await structures.createMemberStructure(data, guildID);
 }
 
 /** Returns guild member objects for the specified user by their nickname/username.
@@ -314,7 +317,7 @@ export async function createGuildRole(
   );
 
   const roleData = result as RoleData;
-  const role = await structures.createRole(roleData);
+  const role = await structures.createRoleStructure(roleData);
   const guild = await cacheHandlers.get("guilds", guildID);
   guild?.roles.set(role.id, role);
   return role;
@@ -703,7 +706,9 @@ export async function getGuildTemplates(guildID: string) {
   const templates = await RequestManager.get(
     endpoints.GUILD_TEMPLATES(guildID),
   ) as GuildTemplate[];
-  return templates.map((template) => structures.createTemplate(template));
+  return templates.map((template) =>
+    structures.createTemplateStructure(template)
+  );
 }
 
 /**
@@ -720,7 +725,7 @@ export async function deleteGuildTemplate(
   const deletedTemplate = await RequestManager.delete(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
   ) as GuildTemplate;
-  return structures.createTemplate(deletedTemplate);
+  return structures.createTemplateStructure(deletedTemplate);
 }
 
 /**
@@ -751,7 +756,7 @@ export async function createGuildTemplate(
     endpoints.GUILD_TEMPLATES(guildID),
     data,
   ) as GuildTemplate;
-  return structures.createTemplate(template);
+  return structures.createTemplateStructure(template);
 }
 
 /**
@@ -765,7 +770,7 @@ export async function syncGuildTemplate(guildID: string, templateCode: string) {
   const template = await RequestManager.put(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
   ) as GuildTemplate;
-  return structures.createTemplate(template);
+  return structures.createTemplateStructure(template);
 }
 
 /**
@@ -795,5 +800,5 @@ export async function editGuildTemplate(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
     data,
   ) as GuildTemplate;
-  return structures.createTemplate(template);
+  return structures.createTemplateStructure(template);
 }
