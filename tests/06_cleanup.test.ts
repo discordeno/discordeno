@@ -1,8 +1,8 @@
-import { deleteMessageByID } from "../src/api/handlers/message.ts";
-import { defaultTestOptions, tempData } from "./01_main.ts";
+import { defaultTestOptions, tempData } from "./01_main.test.ts";
 import {
   assertEquals,
   deleteChannel,
+  deleteMessageByID,
   deleteRole,
   deleteServer,
 } from "./deps.ts";
