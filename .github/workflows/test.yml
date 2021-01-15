@@ -4,12 +4,12 @@ on:
     types: labeled
 jobs:
   test:
-    if: github.event.label.name == 'run-tests'
     runs-on: ubuntu-latest
+    if: github.event.label.name == 'run-tests'
     steps:
       - uses: actions/checkout@v2
       - uses: denolib/setup-deno@v2
       - name: Run test script
-        run: deno test --allow-net --allow-env
-    env:
-      DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        run: deno test --allow-net --allow-env ./test
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
