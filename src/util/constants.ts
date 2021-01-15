@@ -86,8 +86,6 @@ export const endpoints = {
   GUILD_CHANNEL: (channelID: string) => `${CHANNEL_BASE(channelID)}`,
   // TODO: rename to GUILD_WIDGET
   GUILD_EMBED: (guildID: string) => `${GUILDS_BASE(guildID)}/widget`,
-  GUILD_WIDGET_GET: (guildID: string) => `${GUILDS_BASE(guildID)}/widget.json`,
-  GUILD_WIDGET_IMAGE: (guildID: string) => `${GUILDS_BASE(guildID)}/widget.png`,
   GUILD_EMOJI: (guildID: string, emoji_id: string) =>
     `${GUILDS_BASE(guildID)}/emojis/${emoji_id}`,
   GUILD_EMOJIS: (guildID: string) => `${GUILDS_BASE(guildID)}/emojis`,
