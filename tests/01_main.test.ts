@@ -6,6 +6,11 @@ if (!token) throw new Error("Token is not provided");
 startBot({
   token,
   intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
+  eventHandlers: {
+    debug(data) {
+      console.log(Deno.inspect(data, { depth: 1 }));
+    },
+  },
 });
 
 // Default options for tests
