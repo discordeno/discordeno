@@ -22,14 +22,14 @@ import { createNewProp } from "../../util/utils.ts";
 import {
   ban,
   deleteServer,
-  editGuild,
+  editServer,
   getAuditLogs,
   getBan,
   getBans,
   getInvites,
   guildBannerURL,
   guildIconURL,
-  leaveGuild,
+  leaveServer,
   unban,
 } from "../handlers/guild.ts";
 import { Member } from "./member.ts";
@@ -81,7 +81,7 @@ const baseGuild: Partial<Guild> = {
     return deleteServer(this.id!);
   },
   edit(options) {
-    return editGuild(this.id!, options);
+    return editServer(this.id!, options);
   },
   auditLogs(options) {
     return getAuditLogs(this.id!, options);
@@ -105,7 +105,7 @@ const baseGuild: Partial<Guild> = {
     return guildIconURL(this as Guild, size, format);
   },
   leave() {
-    return leaveGuild(this.id!);
+    return leaveServer(this.id!);
   },
 };
 
@@ -330,9 +330,9 @@ export interface Guild {
   /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event. */
   delete(): ReturnType<typeof deleteServer>;
   /** Leave a guild */
-  leave(): ReturnType<typeof leaveGuild>;
+  leave(): ReturnType<typeof leaveServer>;
   /** Edit the server. Requires the MANAGE_GUILD permission. */
-  edit(options: GuildEditOptions): ReturnType<typeof editGuild>;
+  edit(options: GuildEditOptions): ReturnType<typeof editServer>;
   /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
   auditLogs(options: GetAuditLogsOptions): ReturnType<typeof getAuditLogs>;
   /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */

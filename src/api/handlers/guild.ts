@@ -585,7 +585,7 @@ export async function unban(guildID: string, id: string) {
 }
 
 /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
-export async function editGuild(guildID: string, options: GuildEditOptions) {
+export async function editServer(guildID: string, options: GuildEditOptions) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
@@ -617,7 +617,7 @@ export async function getInvites(guildID: string) {
 }
 
 /** Leave a guild */
-export function leaveGuild(guildID: string) {
+export function leaveServer(guildID: string) {
   return RequestManager.delete(endpoints.GUILD_LEAVE(guildID));
 }
 
@@ -651,7 +651,7 @@ export function getUser(userID: string) {
  * This function fetches a guild's data. This is not the same data as a GUILD_CREATE.
  * So it does not cache the guild, you must do it manually.
  * */
-export function getGuild(guildID: string, counts = true) {
+export function getServer(guildID: string, counts = true) {
   return RequestManager.get(
     endpoints.GUILD(guildID),
     { with_counts: counts },
