@@ -311,7 +311,7 @@ function runMethod(
 async function logErrors(response: Response, errorStack?: unknown) {
   try {
     const error = await response.json();
-    console.error(error);
+    console.error(Deno.inspect(error, { depth: 10 }));
 
     eventHandlers.debug?.({ type: "error", data: { errorStack, error } });
   } catch {
