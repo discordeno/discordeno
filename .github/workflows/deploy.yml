@@ -1,23 +1,19 @@
-name: Deployment
+name: Deploy
 on:
   push:
-    branches:
-      - master
-    paths:
-      - 'docs/**'
+    branches: master
 jobs:
-  publish:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
-        with:
-          node-version: '14.x'
-      - name: Install dependencies
-        run: cd docs && yarn install
-      - name: Build the documentation
-        run: cd docs && yarn docs:build
-      - name: Deploy the documentation
+      - name: Build documentation
+        run: |
+          cd docs
+          yarn install
+          yarn docs:build
+      - name: Deploy documentation
         if: success()
         uses: peaceiris/actions-gh-pages@v3
         with:

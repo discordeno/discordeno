@@ -1,17 +1,7 @@
 name: Lint
-on: 
-  push:
-    paths:
-      - 'src/**'
-      - 'mod.ts'
-      - 'tests/**'
-  pull_request:
-    paths:
-      - 'src/**'
-      - 'mod.ts'
-      - 'tests/**'
+on: [push, pull_request]
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

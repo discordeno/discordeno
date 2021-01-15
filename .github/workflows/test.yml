@@ -1,15 +1,15 @@
 name: Test
-on:
-  pull_request:
-    types: labeled
+on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
-    if: github.event.label.name == 'run-tests'
     steps:
       - uses: actions/checkout@v2
       - uses: denolib/setup-deno@v2
+      - name: Cache dependencies
+        run: deno cache mod.ts
       - name: Run test script
-        run: deno test --allow-net --allow-env ./test
-        env:
-          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        if: github.ref == 'refs/heads/master'
+        run: deno test --allow-net --allow-env
+    env:
+      DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
