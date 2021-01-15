@@ -29,7 +29,6 @@ export const endpoints = {
   GATEWAY_BOT: `${baseEndpoints.BASE_URL}/gateway/bot`,
 
   // Channel Endpoints
-  CHANNEL: (channelID: string) => `${CHANNEL_BASE(channelID)}`,
   CHANNEL_MESSAGE: (channelID: string, messageID: string) =>
     `${CHANNEL_BASE(channelID)}/messages/${messageID}`,
   CHANNEL_MESSAGES: (channelID: string) =>

@@ -124,7 +124,7 @@ export async function sendDirectMessage(
   if (!dmChannel) {
     // If not available in cache create a new one.
     const dmChannelData = await RequestManager.post(
-      endpoints.USER_CREATE_DM,
+      endpoints.USER_DM,
       { recipient_id: memberID },
     ) as DMChannelCreatePayload;
     // Channel create event will have added this channel to the cache
