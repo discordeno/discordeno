@@ -72,6 +72,8 @@ Deno.test({
 Deno.test({
   name: "[message] add a reaction to a message",
   fn() {
+    // TODO: add tests for a guild emoji ― <:name:id>
+
     addReaction(tempData.channelID, tempData.messageID, "👍");
   },
   ...defaultTestOptions,
