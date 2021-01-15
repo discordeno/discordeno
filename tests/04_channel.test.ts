@@ -1,9 +1,9 @@
-import { Channel } from "../src/api/structures/mod.ts";
-import { defaultTestOptions, tempData } from "./01_main.ts";
+import { defaultTestOptions, tempData } from "./01_main.test.ts";
 import {
   assertEquals,
   assertExists,
   cache,
+  Channel,
   channelOverwriteHasPermission,
   createGuildChannel,
   delay,

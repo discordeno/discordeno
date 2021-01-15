@@ -1,4 +1,4 @@
-import { defaultTestOptions, tempData } from "./01_main.ts";
+import { defaultTestOptions, tempData } from "./01_main.test.ts";
 import { assertExists, createServer, delay, Guild } from "./deps.ts";
 
 Deno.test({

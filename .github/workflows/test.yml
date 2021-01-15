@@ -10,6 +10,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: denolib/setup-deno@v2
       - name: Run test script
-        run: deno test --allow-net --allow-env
+        run: deno test --allow-net --allow-env tests/
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
