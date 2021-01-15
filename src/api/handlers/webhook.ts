@@ -1,4 +1,5 @@
 import { botID } from "../../bot.ts";
+import { RequestManager } from "../../rest/request_manager.ts";
 import {
   ApplicationCommandOptionTypes,
   InteractionResponseTypes,
@@ -23,7 +24,6 @@ import {
   ExecuteWebhookOptions,
   InteractionResponse,
 } from "../types/mod.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
 
 /** Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
 *
@@ -81,10 +81,10 @@ export async function executeWebhook(
 
   if (options.allowedMentions) {
     if (options.allowedMentions.users?.length) {
-      if (options.allowedMentions.parse?.includes("users")) {
+      if (options.allowedMentions.parse?.includes("USERS")) {
         options.allowedMentions.parse = options.allowedMentions.parse.filter((
           p,
-        ) => p !== "users");
+        ) => p !== "USERS");
       }
 
       if (options.allowedMentions.users.length > 100) {
@@ -96,10 +96,10 @@ export async function executeWebhook(
     }
 
     if (options.allowedMentions.roles?.length) {
-      if (options.allowedMentions.parse?.includes("roles")) {
+      if (options.allowedMentions.parse?.includes("ROLES")) {
         options.allowedMentions.parse = options.allowedMentions.parse.filter((
           p,
-        ) => p !== "roles");
+        ) => p !== "ROLES");
       }
 
       if (options.allowedMentions.roles.length > 100) {
@@ -145,10 +145,10 @@ export function editWebhookMessage(
 
   if (options.allowedMentions) {
     if (options.allowedMentions.users?.length) {
-      if (options.allowedMentions.parse?.includes("users")) {
+      if (options.allowedMentions.parse?.includes("USERS")) {
         options.allowedMentions.parse = options.allowedMentions.parse.filter((
           p,
-        ) => p !== "users");
+        ) => p !== "USERS");
       }
 
       if (options.allowedMentions.users.length > 100) {
@@ -160,10 +160,10 @@ export function editWebhookMessage(
     }
 
     if (options.allowedMentions.roles?.length) {
-      if (options.allowedMentions.parse?.includes("roles")) {
+      if (options.allowedMentions.parse?.includes("ROLES")) {
         options.allowedMentions.parse = options.allowedMentions.parse.filter((
           p,
-        ) => p !== "roles");
+        ) => p !== "ROLES");
       }
 
       if (options.allowedMentions.roles.length > 100) {

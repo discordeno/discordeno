@@ -398,11 +398,11 @@ export interface ChannelMentionPayload {
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types */
 export enum AllowedMentionTypes {
   /** Controls role mentions */
-  RoleMentions = "roles",
+  ROLES = "roles",
   /** Controls user mentions */
-  UserMentions = "users",
+  USERS = "users",
   /** Controls `@everyone` and `@here` mentions */
-  EveryoneMentions = "everyone",
+  EVERYONE = "everyone",
 }
 
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mentions-structure */

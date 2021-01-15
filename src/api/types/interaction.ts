@@ -1,3 +1,8 @@
+import {
+  ApplicationCommandOptionTypes,
+  InteractionResponseTypes,
+  InteractionTypes,
+} from "../../../mod.ts";
 import { AllowedMentions, Embed } from "./channel.ts";
 import { GuildMember } from "./guild.ts";
 
@@ -28,7 +33,7 @@ export interface ApplicationCommand {
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption */
 export interface ApplicationCommandOption {
   /** value of ApplicationCommandOptionType */
-  type: ApplicationCommandOptionType;
+  type: keyof typeof ApplicationCommandOptionTypes;
   /** 1-32 character name matching ^[\w-]{1,32}$ */
   name: string;
   /** 1-100 character description */
@@ -43,17 +48,6 @@ export interface ApplicationCommandOption {
   options?: ApplicationCommandOption[];
 }
 
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype */
-export type ApplicationCommandOptionType =
-  | "SUB_COMMAND"
-  | "SUB_COMMAND_GROUP"
-  | "STRING"
-  | "INTEGER"
-  | "BOOLEAN"
-  | "USER"
-  | "CHANNEL"
-  | "ROLE";
-
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptionchoice */
 export interface ApplicationCommandOptionChoice {
   /** 1-100 character choice name */
@@ -67,7 +61,7 @@ export interface Interaction {
   /** id of the interaction */
   id: string;
   /** the type of interaction */
-  type: InteractionType;
+  type: keyof typeof InteractionTypes;
   /** the command data payload */
   data?: ApplicationCommandInteractionData;
   /** the guild it was sent from */
@@ -81,11 +75,6 @@ export interface Interaction {
   /** read-only property, always 1 */
   version: number;
 }
-
-/** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */
-export type InteractionType =
-  | "PING"
-  | "APPLICATION_COMMAND";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-applicationcommandinteractiondata */
 export interface ApplicationCommandInteractionData {
@@ -102,7 +91,7 @@ export interface ApplicationCommandInteractionDataOption {
   /** the name of the parameter */
   name: string;
   /** the value of the pair */
-  value?: ApplicationCommandOptionType;
+  value?: keyof typeof ApplicationCommandOptionTypes;
   /** present if this option is a group or subcommand */
   options?: ApplicationCommandInteractionDataOption[];
 }
@@ -110,18 +99,10 @@ export interface ApplicationCommandInteractionDataOption {
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
 export interface InteractionResponse {
   /** the type of response */
-  type: InteractionResponseType;
+  type: keyof typeof InteractionResponseTypes;
   /** an optional response message */
   data?: InteractionApplicationCommandCallbackData;
 }
-
-/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
-export type InteractionResponseType =
-  | "PONG"
-  | "ACKNOWLEDGE"
-  | "CHANNEL_MESSAGE"
-  | "CHANNEL_MESSAGE_WITH_SOURCE"
-  | "ACKNOWLEDGE_WITH_SOURCE";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
 export interface InteractionApplicationCommandCallbackData {

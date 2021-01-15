@@ -1,4 +1,15 @@
-import { ChannelObject, ChannelType, Overwrite } from "./channel.ts";
+import {
+  ChannelTypes,
+  DefaultMessageNotificationLevel,
+  ExplicitContentFilterLevel,
+  GetGuildWidgetImageStyleOptions,
+  GuildFeatures,
+  MFALevel,
+  PremiumTier,
+  SystemChannelFlags,
+  VerificationLevel,
+} from "../../../mod.ts";
+import { ChannelObject, Overwrite } from "./channel.ts";
 import { Emoji } from "./emoji.ts";
 import { PresenceUpdateEvent } from "./gateway.ts";
 import { Permission, RoleObject } from "./permissions.ts";
@@ -36,25 +47,25 @@ export interface GuildObject {
   /** the channel id that the widget will generate an invite to, or null if set to no invite */
   widgetChannelID?: string | null;
   /** verification level required for the guild */
-  verificationLevel: VerificationLevelType;
+  verificationLevel: keyof typeof VerificationLevel;
   /** default message notifications level */
-  defaultMessageNotifications: DefaultMessageNotification;
+  defaultMessageNotifications: keyof typeof DefaultMessageNotificationLevel;
   /** explicit content filter level */
-  explicitContentFilter: ExplicitContentFilter;
+  explicitContentFilter: keyof typeof ExplicitContentFilterLevel;
   /** roles in the guild */
   roles: RoleObject[];
   /** custom guild emojis */
   emojis: Emoji[];
   /** enabled guild features */
-  features: GuildFeature[];
+  features: (keyof typeof GuildFeatures)[];
   /** required MFA level for the guild */
-  mfaLevel: MFALevelType;
+  mfaLevel: keyof typeof MFALevel;
   /** application id of the guild creator if it is bot-created */
   applicationID: string | null;
   /** the id of the channel where guild notices such as welcome messages and boost events are posted */
   systemChannelID: string | null;
   /** system channel flags */
-  systemChannelFlags: SystemChannelFlag;
+  systemChannelFlags: keyof typeof SystemChannelFlags;
   /** the id of the channel where community guilds can display rules and/or guidelines */
   rulesChannelID: string | null;
   /** when this guild was joined at */
@@ -84,7 +95,7 @@ export interface GuildObject {
   /** banner hash */
   banner: string | null;
   /** premium tier (Server Boost level) */
-  premiumTier: PremiumTierType;
+  premiumTier: keyof typeof PremiumTier;
   /** the number of boosts this guild currently has */
   premiumSubscriptionCount?: number;
   /** the preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
@@ -98,60 +109,6 @@ export interface GuildObject {
   /**	approximate number of non-offline members in this guild, returned from the GET /guilds/<id> endpoint when withcounts is true */
   approximatePresenceCount?: number;
 }
-
-// used
-export type DefaultMessageNotification =
-  | "ALL_MESSAGES"
-  | "ONLY_MENTIONS";
-
-// used
-export type ExplicitContentFilter =
-  | "DISABLED"
-  | "MEMBERS_WITHOUT_ROLES"
-  | "ALL_MEMBERS";
-
-// used
-export type MFALevelType =
-  | "NONE"
-  | "ELEVATED";
-
-// used
-export type VerificationLevelType =
-  | "NONE"
-  | "LOW"
-  | "MEDIUM"
-  | "HIGH"
-  | "VERY_HIGH";
-
-// used
-export type PremiumTierType =
-  | "NONE"
-  | "TIER_1"
-  | "TIER_2"
-  | "TIER_3";
-
-// used
-export type SystemChannelFlag =
-  | "SUPPRESS_JOIN_NOTIFICATIONS"
-  | "SUPPRESS_PREMIUM_SUBSCRIPTIONS";
-
-// used
-export type GuildFeature =
-  | "INVITE_SPLASH"
-  | "VIP_REGIONS"
-  | "VANITY_URL"
-  | "VERIFIED"
-  | "PARTNERED"
-  | "COMMUNITY"
-  | "COMMERCE"
-  | "NEWS"
-  | "DISCOVERABLE"
-  | "FEATURABLE"
-  | "ANIMATED_ICON"
-  | "BANNER"
-  | "WELCOME_SCREEN_ENABLED"
-  | "MEMBER_VERIFICATION_GATE_ENABLED"
-  | "PREVIEW_ENABLED";
 
 /** https://discord.com/developers/docs/resources/guild#guild-preview-object */
 export interface GuildPreview {
@@ -168,7 +125,7 @@ export interface GuildPreview {
   /** custom guild emojis */
   emojis: Emoji[];
   /** enabled guild features */
-  features: GuildFeature[];
+  features: (keyof typeof GuildFeatures)[];
   /** approximate number of members in this guild */
   approximateMemberCount: number;
   /** approximate number of online members in this guild */
@@ -307,11 +264,11 @@ export interface CreateGuildOptions {
   /** base64 128x128 image for the guild icon */
   icon?: string;
   /** verification level */
-  verificationLevel?: VerificationLevelType;
+  verificationLevel?: keyof typeof VerificationLevel;
   /** default message notification level */
-  defaultMessageNotifications?: DefaultMessageNotification;
+  defaultMessageNotifications?: keyof typeof DefaultMessageNotificationLevel;
   /** explicit content filter level */
-  explicitContentFilter?: ExplicitContentFilter;
+  explicitContentFilter?: keyof typeof ExplicitContentFilterLevel;
   /** new guild roles (first role is the everyone role) */
   roles?: RoleObject[];
   /** new guild's channels */
@@ -337,11 +294,13 @@ export interface EditGuildOptions {
   /** guild voice region id */
   region?: string | null;
   /** verification level */
-  verificationLevel?: VerificationLevelType | null;
+  verificationLevel?: (keyof typeof VerificationLevel) | null;
   /** default message notification filter level */
-  defaultMessageNotifications?: DefaultMessageNotification | null;
+  defaultMessageNotifications?:
+    | (keyof typeof DefaultMessageNotificationLevel)
+    | null;
   /** explicit content filter level */
-  explicitContentFilter?: ExplicitContentFilter | null;
+  explicitContentFilter?: (keyof typeof ExplicitContentFilterLevel) | null;
   /** id for afk channel */
   afkChannelID?: string | null;
   /** afk timeout in seconds */
@@ -369,7 +328,7 @@ export interface CreateChannelOptions {
   /** channel name (2-100 characters) */
   name: string;
   /** the type of channel, default: Guild Text Channel */
-  type?: ChannelType;
+  type?: keyof typeof ChannelTypes;
   /** channel topic (0-1024 characters) */
   topic?: string;
   /** the bitrate (in bits) of the voice channel (voice only) */
@@ -521,16 +480,8 @@ export interface EditGuildIntegrationOptions {
 /** https://discord.com/developers/docs/resources/guild#modify-guild-integration */
 export interface GetGuildWidgetImageOptions {
   /** style of the widget returned, default: shield */
-  style?: GetGuildWidgetImageStyleOption;
+  style?: keyof typeof GetGuildWidgetImageStyleOptions;
 }
-
-/** https://discord.com/developers/docs/resources/guild#modify-guild-integration */
-export type GetGuildWidgetImageStyleOption =
-  | "SHIELD"
-  | "BANNER_1"
-  | "BANNER_2"
-  | "BANNER_3"
-  | "BANNER_4";
 
 export interface ModifyGuildMembershipScreeningForm {
   /** whether Membership Screening is enabled */

@@ -1,5 +1,5 @@
 import { encode } from "../../deps.ts";
-import { ActivityType, StatusType } from "../api/types/gateway.ts";
+import { ActivityTypes, StatusTypes } from "../../mod.ts";
 import { ImageFormats, ImageSize } from "../api/types/mod.ts";
 import { sendGatewayCommand } from "../ws/shard_manager.ts";
 
@@ -8,17 +8,17 @@ export const sleep = (timeout: number) => {
 };
 
 export interface BotStatusRequest {
-  status: StatusType;
+  status: keyof typeof StatusTypes;
   game: {
     name?: string;
-    type: ActivityType;
+    type: keyof typeof ActivityTypes;
   };
 }
 
 export function editBotsStatus(
-  status: StatusType,
-  name?: string,
-  type: ActivityType = "GAME",
+  status: keyof typeof StatusTypes,
+  name?: keyof typeof ActivityTypes,
+  type: keyof typeof ActivityTypes = "GAME",
 ) {
   sendGatewayCommand("EDIT_BOTS_STATUS", { status, game: { name, type } });
 }

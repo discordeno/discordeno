@@ -1,4 +1,10 @@
-import { GatewayOpcodes, UnavailableGuildPayload } from "../../types/mod.ts";
+import {
+  ActivityFlags,
+  ActivityTypes,
+  GatewayOpcodes,
+  StatusTypes,
+  UnavailableGuildPayload,
+} from "../../types/mod.ts";
 import { ChannelObject, MessageObject } from "./channel.ts";
 import { Emoji } from "./emoji.ts";
 import { GuildMember, GuildObject } from "./guild.ts";
@@ -212,18 +218,10 @@ export interface UpdateStatus {
   /** null, or the user's activities */
   activities: Activity[];
   /** the user's new status */
-  status: StatusType;
+  status: keyof typeof StatusTypes;
   /** whether or not the client is afk */
   afk: boolean;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#update-status-status-types */
-export type StatusType =
-  | "ONLINE"
-  | "DND"
-  | "IDLE"
-  | "INVISIBLE"
-  | "OFFLINE";
 
 /** https://discord.com/developers/docs/topics/gateway#hello */
 export interface Hello {
@@ -479,7 +477,7 @@ export interface PresenceUpdateEvent {
   /** id of the guild */
   guildID: string;
   /** either "idle", "dnd", "online", or "offline" */
-  status: StatusType;
+  status: keyof typeof StatusTypes;
   /** user's current activities */
   activities: Activity[];
   /** user's platform-dependent status */
@@ -503,7 +501,7 @@ export interface Activity {
   /** the activity's name */
   name: string;
   /** activity type */
-  type: ActivityType;
+  type: keyof typeof ActivityTypes;
   /** stream url, is validated when type is 1 */
   url?: string | null;
   /** unix timestamp of when the activity was added to the user's session */
@@ -533,7 +531,7 @@ export interface Activity {
   /** whether or not the activity is an instanced game session */
   instance?: boolean;
   /** activity flags OR d together, describes what the payload includes */
-  flags?: ActivityFlags;
+  flags?: keyof typeof ActivityFlags;
   /** the custom buttons shown in the Rich Presence (max 2) */
   buttons?: ActivityButton[];
 }
@@ -544,14 +542,6 @@ export interface ActivityButton {
   /** the url opened when clicking the button (1-512 characters) */
   url: string;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-types */
-export type ActivityType =
-  | "GAME"
-  | "STREAMING"
-  | "LISTENING"
-  | "CUSTOM"
-  | "COMPETING";
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-timestamps */
 export interface ActivityTimestamps {
@@ -600,15 +590,6 @@ export interface ActivitySecrets {
   /** the secret for a specific instanced match */
   match?: string;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags */
-export type ActivityFlags =
-  | "INSTANCE"
-  | "JOIN"
-  | "SPECTATE"
-  | "JOINREQUEST"
-  | "SYNC"
-  | "PLAY";
 
 /** https://discord.com/developers/docs/topics/gateway#typing-start-typing-start-event-fields */
 export interface TypingStartEvent {
