@@ -1,6 +1,6 @@
 import { botID } from "../../bot.ts";
-import { MessageFlags, MessagePayload, UserPayload } from "../../types/mod.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
+import { MessageFlags, MessagePayload, UserPayload } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { camelKeysToSnakeCase, delay } from "../../util/utils.ts";
@@ -16,7 +16,7 @@ export async function deleteMessageByID(
   reason?: string,
 ) {
   const message = await cacheHandlers.get("messages", messageID);
-  if (message) return deleteMessage(message, delayMilliseconds);
+  if (message) return deleteMessage(message, delayMilliseconds, reason);
 
   if (delayMilliseconds) await delay(delayMilliseconds);
 
@@ -30,6 +30,7 @@ export async function deleteMessageByID(
 export async function deleteMessage(
   message: Message,
   delayMilliseconds = 0,
+  reason?: string,
 ) {
   if (message.author.id !== botID) {
     // This needs to check the channels permission not the guild permission
@@ -48,6 +49,7 @@ export async function deleteMessage(
 
   return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE(message.channelID, message.id),
+    { reason },
   );
 }
 
