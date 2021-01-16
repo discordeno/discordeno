@@ -4,6 +4,7 @@ import {
   deleteServer,
   getChannel,
 } from "../src/api/handlers/guild.ts";
+import { toPermissionOverwrites } from "../src/util/converters.ts";
 import {
   addReaction,
   assertEquals,
@@ -23,7 +24,6 @@ import {
   getPins,
   Guild,
   Intents,
-  OverwriteType,
   pin,
   removeReaction,
   Role,
@@ -142,7 +142,7 @@ Deno.test({
     const guild = cache.guilds.get(tempData.guildID);
     if (!guild) throw new Error("Guild not found");
 
-    const channel = await createGuildChannel(guild, "test");
+    const channel = await createGuildChannel(guild, { name: "test" });
 
     // Assertions
     assertExists(channel);
@@ -172,7 +172,7 @@ Deno.test({
       overwrites: [
         {
           id: tempData.roleID,
-          type: OverwriteType.ROLE,
+          type: "ROLE",
           allow: ["VIEW_CHANNEL", "SEND_MESSAGES"],
           deny: ["USE_EXTERNAL_EMOJIS"],
         },
@@ -200,13 +200,13 @@ Deno.test({
     const hasPerm = channelOverwriteHasPermission(
       tempData.guildID,
       tempData.roleID,
-      channel.permissionOverwrites,
+      toPermissionOverwrites(channel.permissionOverwrites)!,
       ["VIEW_CHANNEL", "SEND_MESSAGES"],
     );
     const missingPerm = channelOverwriteHasPermission(
       tempData.guildID,
       tempData.roleID,
-      channel.permissionOverwrites,
+      toPermissionOverwrites(channel.permissionOverwrites)!,
       ["USE_EXTERNAL_EMOJIS"],
     );
 
