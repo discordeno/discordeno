@@ -1,6 +1,6 @@
 import { botID } from "../../bot.ts";
-import { ChannelPayload } from "../../types/mod.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
+import { ChannelPayload } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasPermission,
@@ -60,6 +60,7 @@ export async function addRole(
   guildID: string,
   memberID: string,
   roleID: string,
+  reason?: string,
 ) {
   const botsHighestRole = await highestRole(guildID, botID);
   if (botsHighestRole) {
@@ -83,6 +84,7 @@ export async function addRole(
 
   return RequestManager.put(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
+    { reason },
   );
 }
 
@@ -91,6 +93,7 @@ export async function removeRole(
   guildID: string,
   memberID: string,
   roleID: string,
+  reason?: string,
 ) {
   const botsHighestRole = await highestRole(guildID, botID);
 
@@ -115,6 +118,7 @@ export async function removeRole(
 
   return RequestManager.delete(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
+    { reason },
   );
 }
 
@@ -145,7 +149,7 @@ export async function sendDirectMessage(
 }
 
 /** Kick a member from the server */
-export async function kick(guildID: string, memberID: string) {
+export async function kick(guildID: string, memberID: string, reason?: string) {
   const botsHighestRole = await highestRole(guildID, botID);
   const membersHighestRole = await highestRole(guildID, memberID);
   if (
@@ -162,6 +166,7 @@ export async function kick(guildID: string, memberID: string) {
 
   return RequestManager.delete(
     endpoints.GUILD_MEMBER(guildID, memberID),
+    { reason },
   );
 }
 

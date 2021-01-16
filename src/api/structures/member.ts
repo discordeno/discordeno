@@ -62,8 +62,8 @@ const baseMember: Partial<Member> = {
   sendDM(content) {
     return sendDirectMessage(this.id!, content);
   },
-  kick(guildID) {
-    return kick(guildID, this.id!);
+  kick(guildID, reason) {
+    return kick(guildID, this.id!, reason);
   },
   edit(guildID, options) {
     return editMember(guildID, this.id!, options);
