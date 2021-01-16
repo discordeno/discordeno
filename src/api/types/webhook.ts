@@ -1,3 +1,4 @@
+import { WebhookTypes } from "../../../mod.ts";
 import { AllowedMentions, Embed } from "./channel.ts";
 import { User } from "./user.ts";
 
@@ -6,7 +7,7 @@ export interface Webhook {
   /** the id of the webhook */
   id: string;
   /** the type of the webhook */
-  type: WebhookType;
+  type: keyof typeof WebhookTypes;
   /** the guild id this webhook is for */
   guildID?: string;
   /** the channel id this webhook is for */
@@ -22,11 +23,6 @@ export interface Webhook {
   /** the bot/OAuth2 application that created this webhook */
   applicationID: string | null;
 }
-
-/** https://discord.com/developers/docs/resources/webhook#webhook-resource */
-export type WebhookType =
-  | "INCOMING"
-  | "CHANNEL_FOLLOWER";
 
 /** https://discord.com/developers/docs/resources/webhook#create-webhook */
 export interface CreateWebhookOptions {

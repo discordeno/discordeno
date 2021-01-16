@@ -171,10 +171,10 @@ export async function sendMessage(
 
   if (content.mentions) {
     if (content.mentions.users?.length) {
-      if (content.mentions.parse?.includes("users")) {
+      if (content.mentions.parse?.includes("USERS")) {
         content.mentions.parse = content.mentions.parse.filter((
           p,
-        ) => p !== "users");
+        ) => p !== "USERS");
       }
 
       if (content.mentions.users.length > 100) {
@@ -186,10 +186,10 @@ export async function sendMessage(
     }
 
     if (content.mentions.roles?.length) {
-      if (content.mentions.parse?.includes("roles")) {
+      if (content.mentions.parse?.includes("ROLES")) {
         content.mentions.parse = content.mentions.parse.filter((
           p,
-        ) => p !== "roles");
+        ) => p !== "ROLES");
       }
 
       if (content.mentions.roles.length > 100) {

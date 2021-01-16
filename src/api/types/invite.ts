@@ -1,3 +1,4 @@
+import { InviteTargetUserTypes } from "../../../mod.ts";
 import { ChannelObject } from "./channel.ts";
 import { GuildObject } from "./guild.ts";
 import { User } from "./user.ts";
@@ -15,15 +16,12 @@ export interface Invite {
   /** the target user for this invite */
   targetUser?: Partial<User>;
   /** the type of user target for this invite */
-  targetUserType?: InviteTargetUserType;
+  targetUserType?: keyof typeof InviteTargetUserTypes;
   /** approximate count of online members (only present when targetUser is set) */
   approximatePresenceCount?: number;
   /** approximate count of total members */
   approximateMemberCount: number;
 }
-
-/** https://discord.com/developers/docs/resources/invite#invite-resource */
-export type InviteTargetUserType = "STREAM";
 
 /** https://discord.com/developers/docs/resources/invite#invite-resource */
 export interface InviteMetadata extends Invite {
