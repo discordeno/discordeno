@@ -250,7 +250,6 @@ export function swapChannels(
 }
 
 //TODO: add addToCache argument?
-//TODO(itohatweb): remove options argument
 /** Returns a guild member object for the specified user.
 *
 * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
