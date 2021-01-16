@@ -336,13 +336,17 @@ export async function editEmoji(
 export async function deleteEmoji(
   guildID: string,
   emojiID: string,
+  reason?: string,
 ) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_EMOJIS"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_EMOJIS);
   }
 
-  return RequestManager.delete(endpoints.GUILD_EMOJI(guildID, emojiID));
+  return RequestManager.delete(
+    endpoints.GUILD_EMOJI(guildID, emojiID),
+    { reason },
+  );
 }
 
 /** Creates a url to the emoji from the Discord CDN. */
@@ -354,6 +358,7 @@ export function emojiURL(id: string, animated = false) {
 export async function createGuildRole(
   guildID: string,
   options: CreateGuildRoleOptions,
+  reason?: string,
 ) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
   if (!hasPerm) {
@@ -365,6 +370,7 @@ export async function createGuildRole(
     {
       ...options,
       permissions: calculateBits(options?.permissions || []),
+      reason,
     },
   ) as RolePayload;
 
@@ -676,7 +682,7 @@ export async function ban(guildID: string, id: string, options: BanOptions) {
 
   return RequestManager.put(
     endpoints.GUILD_BAN(guildID, id),
-    { ...snakeKeysToCamelCase(options) },
+    snakeKeysToCamelCase(options),
   );
 }
 

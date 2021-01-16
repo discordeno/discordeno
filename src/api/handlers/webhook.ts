@@ -361,6 +361,6 @@ export function editSlashResponse(
 ) {
   return RequestManager.patch(
     endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
-    { ...camelKeysToSnakeCase(options) },
+    camelKeysToSnakeCase(options),
   );
 }
