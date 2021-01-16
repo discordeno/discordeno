@@ -6,11 +6,10 @@
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
 
-- First-class TypeScript & JavaScript support
-- Secure & stable
-- Efficient & inimalistic
-- Function-based API
-- Builtin Documentation
+- **First-class TypeScript & JavaScript**
+- **Secure & stable**: Discordeno is comparatively more stable than the other libraries. One of the greatest issues with almost every library is stability; types are outdated, less (or minimal) parity with the API, core maintainers have quit or no longer actively maintain the library, and whatnot. Discordeno, on the other hand, is actively maintained to ensure great performance and convenience. Discordeno internally checks all missing permissions before forwarding a request to the API so that the client does not get globally-banned by Discord.
+- **Efficient & lightweight**: Discordeno is simplistic and easy-to-use. Always prefer defaults that Discord recommends or the best configuration for the majority―if necessary, it is remarkably customizable, versatile, and efficient.
+- **Functional API**: This will produce a cleaner and more performant code while removing the difficulties of extending built-in classes and inheritance. Avoid potential memory leaks or crashes because of too many listeners or other silly issues.
 
 ## Usage
 
