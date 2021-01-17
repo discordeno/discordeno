@@ -8,6 +8,7 @@ import {
   ImageFormats,
   ImageSize,
   MessageContent,
+  Permission,
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
@@ -161,33 +162,53 @@ export async function editMember(
   memberID: string,
   options: EditMemberOptions,
 ) {
+  const requiredPerms: Permission[] = [];
+
   if (options.nick) {
     if (options.nick.length > 32) {
       throw new Error(Errors.NICKNAMES_MAX_LENGTH);
     }
-    await requireBotGuildPermissions(guildID, ["MANAGE_NICKNAMES"]);
+    requiredPerms.push("MANAGE_NICKNAMES");
   }
 
-  if (options.roles) {
-    await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
+  if (options.roles) requiredPerms.push("MANAGE_ROLES");
+
+  if (
+    typeof options.mute !== "undefined" ||
+    typeof options.deaf !== "undefined" ||
+    (typeof options.channel_id !== "undefined" || "null")
+  ) {
+    const memberVoiceState = (await cacheHandlers.get("guilds", guildID))
+      ?.voiceStates.get(memberID);
+
+    if (!memberVoiceState?.channelID) {
+      throw Error(Errors.MEMBER_NOT_IN_VOICE_CHANNEL);
+    }
+
+    if (typeof options.mute !== "undefined") {
+      requiredPerms.push("MUTE_MEMBERS");
+    }
+
+    if (typeof options.deaf !== "undefined") {
+      requiredPerms.push("DEAFEN_MEMBERS");
+    }
+
+    if (options.channel_id) {
+      const requiredVoicePerms: Permission[] = ["CONNECT", "MOVE_MEMBERS"];
+      if (memberVoiceState) {
+        await requireBotChannelPermissions(
+          memberVoiceState?.channelID,
+          requiredVoicePerms,
+        );
+      }
+      await requireBotChannelPermissions(
+        options.channel_id,
+        requiredVoicePerms,
+      );
+    }
   }
 
-  if (options.mute) {
-    // TODO: This should check if the member is in a voice channel
-    await requireBotGuildPermissions(guildID, ["MUTE_MEMBERS"]);
-  }
-
-  if (options.deaf) {
-    // TODO: This should check if the member is in a voice channel
-    await requireBotGuildPermissions(guildID, ["DEAFEN_MEMBERS"]);
-  }
-
-  if (options.channel_id) {
-    await requireBotChannelPermissions(
-      options.channel_id,
-      ["CONNECT", "MOVE_MEMBERS"],
-    );
-  }
+  await requireBotGuildPermissions(guildID, requiredPerms);
 
   return RequestManager.patch(
     endpoints.GUILD_MEMBER(guildID, memberID),

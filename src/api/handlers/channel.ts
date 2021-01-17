@@ -99,15 +99,12 @@ export async function sendMessage(
 ) {
   if (typeof content === "string") content = { content };
 
-  await requireBotChannelPermissions(channelID, ["SEND_MESSAGES"]);
+  const requiredPerms: Permission[] = ["SEND_MESSAGES", "VIEW_CHANNEL"];
 
-  if (content.tts) {
-    await requireBotChannelPermissions(channelID, ["SEND_TTS_MESSAGES"]);
-  }
+  if (content.tts) requiredPerms.push("SEND_TTS_MESSAGES");
+  if (content.embed) requiredPerms.push("EMBED_LINKS");
 
-  if (content.embed) {
-    await requireBotChannelPermissions(channelID, ["EMBED_LINKS"]);
-  }
+  await requireBotChannelPermissions(channelID, requiredPerms);
 
   // Use ... for content length due to unicode characters and js .length handling
   if (content.content && [...content.content].length > 2000) {

@@ -4,6 +4,7 @@ import {
   Errors,
   MessageContent,
   MessageCreateOptions,
+  Permission,
   UserPayload,
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -193,17 +194,11 @@ export async function editMessage(
 
   if (typeof content === "string") content = { content };
 
-  await requireBotChannelPermissions(
-    message.channelID,
-    ["SEND_MESSAGES"],
-  );
+  const requiredPerms: Permission[] = ["SEND_MESSAGES"];
 
-  if (content.tts) {
-    await requireBotChannelPermissions(
-      message.channelID,
-      ["SEND_TTS_MESSAGES"],
-    );
-  }
+  if (content.tts) requiredPerms.push("SEND_TTS_MESSAGES");
+
+  await requireBotChannelPermissions(message.channelID, requiredPerms);
 
   if (content.content && content.content.length > 2000) {
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
