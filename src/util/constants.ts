@@ -26,8 +26,8 @@ const CHANNEL_BASE = (channelID: string) =>
   `${baseEndpoints.BASE_URL}/channels/${channelID}`;
 
 export const endpoints = {
-  GUILDS_BASE: GUILDS_BASE,
-  CHANNEL_BASE: CHANNEL_BASE,
+  GUILDS_BASE,
+  CHANNEL_BASE,
 
   GATEWAY_BOT: `${baseEndpoints.BASE_URL}/gateway/bot`,
 
