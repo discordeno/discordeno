@@ -44,17 +44,14 @@ export async function computeChannelOverwrites(
   if (!channel) throw Error(Errors.CHANNEL_NOT_FOUND);
   // This is a DM channel so return ADMINISTRATOR permission
   if (!channel.guildID) return "8";
+  // Get all the role permissions this member already has
+  let permissions = BigInt(computeBasePermissions(memberID, channel.guildID));
   // Member already has ADMINISTRATOR permission so we return that
-  if (
-    await computeBasePermissions(memberID, channel.guildID) === "8"
-  ) {
-    return "8";
-  }
+  if (permissions & BigInt(Permissions.ADMINISTRATOR)) return "8";
 
   const member = await cacheHandlers.get("members", memberID);
   if (!member) throw Error(Errors.MEMBER_NOT_FOUND);
 
-  let permissions = BigInt(0);
   // First compute @everyone overwrites since these have the lowest priority
   const overwriteEveryone = channel?.permissionOverwrites.find((overwrite) =>
     overwrite.id === channel.guildID
