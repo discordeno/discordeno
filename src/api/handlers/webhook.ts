@@ -3,7 +3,6 @@ import { RequestManager } from "../../rest/request_manager.ts";
 import {
   CreateSlashCommandOptions,
   EditSlashCommandOptions,
-  EditSlashResponseOptions,
   EditWebhookMessageOptions,
   Errors,
   ExecuteSlashCommandOptions,
@@ -309,10 +308,53 @@ export function deleteSlashResponse(
 /** To edit your response to a slash command. If a messageID is not provided it will default to editing the original response. */
 export function editSlashResponse(
   token: string,
-  options: EditSlashResponseOptions,
+  options: EditWebhookMessageOptions,
+  messageID?: string,
 ) {
+  if (options.content && options.content.length > 2000) {
+    throw Error(Errors.MESSAGE_MAX_LENGTH);
+  }
+
+  if (options.embeds && options.embeds.length > 10) {
+    options.embeds.splice(10);
+  }
+
+  if (options.allowed_mentions) {
+    if (options.allowed_mentions.users?.length) {
+      if (options.allowed_mentions.parse.includes("users")) {
+        options.allowed_mentions.parse = options.allowed_mentions.parse.filter((
+          p,
+        ) => p !== "users");
+      }
+
+      if (options.allowed_mentions.users.length > 100) {
+        options.allowed_mentions.users = options.allowed_mentions.users.slice(
+          0,
+          100,
+        );
+      }
+    }
+
+    if (options.allowed_mentions.roles?.length) {
+      if (options.allowed_mentions.parse.includes("roles")) {
+        options.allowed_mentions.parse = options.allowed_mentions.parse.filter((
+          p,
+        ) => p !== "roles");
+      }
+
+      if (options.allowed_mentions.roles.length > 100) {
+        options.allowed_mentions.roles = options.allowed_mentions.roles.slice(
+          0,
+          100,
+        );
+      }
+    }
+  }
+
   return RequestManager.patch(
-    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
+    messageID
+      ? endpoints.WEBHOOK_MESSAGE(botID, token, messageID)
+      : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
     options,
   );
 }
