@@ -18,8 +18,8 @@ import {
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
-  botThrowOnMissingChannelPermission,
   calculateBits,
+  requireBotChannelPermissions,
 } from "../../util/permissions.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { structures } from "../structures/mod.ts";
@@ -50,7 +50,7 @@ export async function getMessage(
   channelID: string,
   id: string,
 ) {
-  await botThrowOnMissingChannelPermission(
+  await requireBotChannelPermissions(
     channelID,
     ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY"],
   );
@@ -70,7 +70,7 @@ export async function getMessages(
     | GetMessagesAround
     | GetMessages,
 ) {
-  await botThrowOnMissingChannelPermission(
+  await requireBotChannelPermissions(
     channelID,
     ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY"],
   );
@@ -99,14 +99,14 @@ export async function sendMessage(
 ) {
   if (typeof content === "string") content = { content };
 
-  await botThrowOnMissingChannelPermission(channelID, ["SEND_MESSAGES"]);
+  await requireBotChannelPermissions(channelID, ["SEND_MESSAGES"]);
 
   if (content.tts) {
-    await botThrowOnMissingChannelPermission(channelID, ["SEND_TTS_MESSAGES"]);
+    await requireBotChannelPermissions(channelID, ["SEND_TTS_MESSAGES"]);
   }
 
   if (content.embed) {
-    await botThrowOnMissingChannelPermission(channelID, ["EMBED_LINKS"]);
+    await requireBotChannelPermissions(channelID, ["EMBED_LINKS"]);
   }
 
   // Use ... for content length due to unicode characters and js .length handling
@@ -140,7 +140,7 @@ export async function sendMessage(
     }
 
     if (content.mentions.repliedUser) {
-      await botThrowOnMissingChannelPermission(
+      await requireBotChannelPermissions(
         channelID,
         ["READ_MESSAGE_HISTORY"],
       );
@@ -181,7 +181,7 @@ export async function deleteMessages(
   ids: string[],
   reason?: string,
 ) {
-  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_MESSAGES"]);
+  await requireBotChannelPermissions(channelID, ["MANAGE_MESSAGES"]);
 
   if (ids.length < 2) {
     throw new Error(Errors.DELETE_MESSAGES_MIN);
@@ -201,7 +201,7 @@ export async function deleteMessages(
 
 /** Gets the invites for this channel. Requires MANAGE_CHANNEL */
 export async function getChannelInvites(channelID: string) {
-  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_CHANNELS"]);
+  await requireBotChannelPermissions(channelID, ["MANAGE_CHANNELS"]);
 
   return RequestManager.get(endpoints.CHANNEL_INVITES(channelID));
 }
@@ -211,7 +211,7 @@ export async function createInvite(
   channelID: string,
   options: CreateInviteOptions,
 ) {
-  await botThrowOnMissingChannelPermission(
+  await requireBotChannelPermissions(
     channelID,
     ["CREATE_INSTANT_INVITE"],
   );
@@ -221,7 +221,7 @@ export async function createInvite(
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
 export async function getChannelWebhooks(channelID: string) {
-  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_WEBHOOKS"]);
+  await requireBotChannelPermissions(channelID, ["MANAGE_WEBHOOKS"]);
 
   return RequestManager.get(
     endpoints.CHANNEL_WEBHOOKS(channelID),
@@ -280,7 +280,7 @@ export async function editChannel(
   options: ChannelEditOptions,
   reason?: string,
 ) {
-  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_CHANNELS"]);
+  await requireBotChannelPermissions(channelID, ["MANAGE_CHANNELS"]);
 
   if (options.name || options.topic) {
     const request = editChannelNameTopicQueue.get(channelID);
@@ -341,7 +341,7 @@ export async function followChannel(
   sourceChannelID: string,
   targetChannelID: string,
 ) {
-  await botThrowOnMissingChannelPermission(
+  await requireBotChannelPermissions(
     targetChannelID,
     ["MANAGE_WEBHOOKS"],
   );

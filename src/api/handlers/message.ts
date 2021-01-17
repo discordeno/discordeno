@@ -7,7 +7,7 @@ import {
   UserPayload,
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
-import { botThrowOnMissingChannelPermission } from "../../util/permissions.ts";
+import { requireBotChannelPermissions } from "../../util/permissions.ts";
 import { delay } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { Message, structures } from "../structures/mod.ts";
@@ -38,7 +38,7 @@ export async function deleteMessage(
 ) {
   if (message.author.id !== botID) {
     // This needs to check the channels permission not the guild permission
-    await botThrowOnMissingChannelPermission(
+    await requireBotChannelPermissions(
       message.channelID,
       ["MANAGE_MESSAGES"],
     );
@@ -54,14 +54,14 @@ export async function deleteMessage(
 
 /** Pin a message in a channel. Requires MANAGE_MESSAGES. Max pins allowed in a channel = 50. */
 export async function pin(channelID: string, messageID: string) {
-  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_MESSAGES"]);
+  await requireBotChannelPermissions(channelID, ["MANAGE_MESSAGES"]);
 
   return RequestManager.put(endpoints.CHANNEL_PIN(channelID, messageID));
 }
 
 /** Unpin a message in a channel. Requires MANAGE_MESSAGES. */
 export async function unpin(channelID: string, messageID: string) {
-  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_MESSAGES"]);
+  await requireBotChannelPermissions(channelID, ["MANAGE_MESSAGES"]);
 
   return RequestManager.delete(
     endpoints.CHANNEL_PIN(channelID, messageID),
@@ -74,7 +74,7 @@ export async function addReaction(
   messageID: string,
   reaction: string,
 ) {
-  await botThrowOnMissingChannelPermission(
+  await requireBotChannelPermissions(
     channelID,
     ["ADD_REACTIONS", "READ_MESSAGE_HISTORY"],
   );
@@ -134,7 +134,7 @@ export async function removeUserReaction(
   reaction: string,
   userID: string,
 ) {
-  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_MESSAGES"]);
+  await requireBotChannelPermissions(channelID, ["MANAGE_MESSAGES"]);
 
   return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTION_USER(
@@ -148,7 +148,7 @@ export async function removeUserReaction(
 
 /** Removes all reactions for all emojis on this message. */
 export async function removeAllReactions(channelID: string, messageID: string) {
-  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_MESSAGES"]);
+  await requireBotChannelPermissions(channelID, ["MANAGE_MESSAGES"]);
 
   return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTIONS(channelID, messageID),
@@ -161,7 +161,7 @@ export async function removeReactionEmoji(
   messageID: string,
   reaction: string,
 ) {
-  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_MESSAGES"]);
+  await requireBotChannelPermissions(channelID, ["MANAGE_MESSAGES"]);
 
   return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTION(channelID, messageID, reaction),
@@ -193,13 +193,13 @@ export async function editMessage(
 
   if (typeof content === "string") content = { content };
 
-  await botThrowOnMissingChannelPermission(
+  await requireBotChannelPermissions(
     message.channelID,
     ["SEND_MESSAGES"],
   );
 
   if (content.tts) {
-    await botThrowOnMissingChannelPermission(
+    await requireBotChannelPermissions(
       message.channelID,
       ["SEND_TTS_MESSAGES"],
     );

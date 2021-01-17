@@ -143,7 +143,7 @@ export function missingPermissions(
 }
 
 /** Throws an error if this member has not all of the given permissions */
-export async function throwOnMissingGuildPermission(
+export async function requireGuildPermissions(
   memberID: string,
   guildID: string,
   permissions: Permission[],
@@ -159,16 +159,16 @@ export async function throwOnMissingGuildPermission(
 }
 
 /** Throws an error if the bot has not all of the given permissions */
-export function botThrowOnMissingGuildPermission(
+export function requireBotGuildPermissions(
   guildID: string,
   permissions: Permission[],
 ) {
   // Since Bot is a normal member we can use the throwOnMissingGuildPermission() function
-  return throwOnMissingGuildPermission(botID, guildID, permissions);
+  return requireGuildPermissions(botID, guildID, permissions);
 }
 
 /** Throws an error if this member has not all of the given permissions */
-export async function throwOnMissingChannelPermission(
+export async function requireChannelPermissions(
   memberID: string,
   channelID: string,
   permissions: Permission[],
@@ -184,13 +184,12 @@ export async function throwOnMissingChannelPermission(
 }
 
 /** Throws an error if the bot has not all of the given channel permissions */
-// deno-lint-ignore require-await
-export async function botThrowOnMissingChannelPermission(
+export function requireBotChannelPermissions(
   channelID: string,
   permissions: Permission[],
 ) {
   // Since Bot is a normal member we can use the throwOnMissingChannelPermission() function
-  return throwOnMissingChannelPermission(botID, channelID, permissions);
+  return requireChannelPermissions(botID, channelID, permissions);
 }
 
 /** This function converts a bitwise string to permission strings */

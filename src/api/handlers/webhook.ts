@@ -15,7 +15,7 @@ import {
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { endpoints } from "../../util/constants.ts";
-import { botThrowOnMissingChannelPermission } from "../../util/permissions.ts";
+import { requireBotChannelPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
 import { structures } from "../structures/mod.ts";
 
@@ -27,7 +27,7 @@ export async function createWebhook(
   channelID: string,
   options: WebhookCreateOptions,
 ) {
-  await botThrowOnMissingChannelPermission(channelID, ["MANAGE_WEBHOOKS"]);
+  await requireBotChannelPermissions(channelID, ["MANAGE_WEBHOOKS"]);
 
   if (
     // Specific usernames that discord does not allow

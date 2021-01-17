@@ -35,8 +35,8 @@ import {
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
-  botThrowOnMissingGuildPermission,
   calculateBits,
+  requireBotGuildPermissions,
 } from "../../util/permissions.ts";
 import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
 import { requestAllMembers } from "../../ws/shard_manager.ts";
@@ -113,7 +113,7 @@ export async function createGuildChannel(
   name: string,
   options?: ChannelCreateOptions,
 ) {
-  await botThrowOnMissingGuildPermission(guild.id, ["MANAGE_CHANNELS"]);
+  await requireBotGuildPermissions(guild.id, ["MANAGE_CHANNELS"]);
 
   const result =
     (await RequestManager.post(endpoints.GUILD_CHANNELS(guild.id), {
@@ -137,7 +137,7 @@ export async function deleteChannel(
   channelID: string,
   reason?: string,
 ) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_CHANNELS"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_CHANNELS"]);
 
   return RequestManager.delete(endpoints.CHANNEL(channelID), { reason });
 }
@@ -229,7 +229,7 @@ export async function createEmoji(
   image: string,
   options: CreateEmojisOptions,
 ) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_EMOJIS"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_EMOJIS"]);
 
   if (image && !image.startsWith("data:image/")) {
     image = await urlToBase64(image);
@@ -248,7 +248,7 @@ export async function editEmoji(
   id: string,
   options: EditEmojisOptions,
 ) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_EMOJIS"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_EMOJIS"]);
 
   return RequestManager.patch(endpoints.GUILD_EMOJI(guildID, id), {
     name: options.name,
@@ -262,7 +262,7 @@ export async function deleteEmoji(
   id: string,
   reason?: string,
 ) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_EMOJIS"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_EMOJIS"]);
 
   return RequestManager.delete(
     endpoints.GUILD_EMOJI(guildID, id),
@@ -281,7 +281,7 @@ export async function createGuildRole(
   options: CreateRoleOptions,
   reason?: string,
 ) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_ROLES"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   const result = await RequestManager.post(
     endpoints.GUILD_ROLES(guildID),
@@ -305,7 +305,7 @@ export async function editRole(
   id: string,
   options: CreateRoleOptions,
 ) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_ROLES"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   return RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), {
     ...options,
@@ -317,7 +317,7 @@ export async function editRole(
 
 /** Delete a guild role. Requires the MANAGE_ROLES permission. */
 export async function deleteRole(guildID: string, id: string) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_ROLES"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   return RequestManager.delete(endpoints.GUILD_ROLE(guildID, id));
 }
@@ -327,14 +327,14 @@ export async function deleteRole(guildID: string, id: string) {
 * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your roles will be cached in your guild.**
 */
 export async function getRoles(guildID: string) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_ROLES"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   return RequestManager.get(endpoints.GUILD_ROLES(guildID));
 }
 
 /** Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. */
 export async function swapRoles(guildID: string, rolePositons: PositionSwap) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_ROLES"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   return RequestManager.patch(endpoints.GUILD_ROLES(guildID), rolePositons);
 }
@@ -345,7 +345,7 @@ export async function getPruneCount(guildID: string, options: PruneOptions) {
     throw new Error(Errors.PRUNE_MIN_DAYS);
   }
 
-  await botThrowOnMissingGuildPermission(guildID, ["KICK_MEMBERS"]);
+  await requireBotGuildPermissions(guildID, ["KICK_MEMBERS"]);
 
   const result = await RequestManager.get(
     endpoints.GUILD_PRUNE(guildID),
@@ -361,7 +361,7 @@ export async function pruneMembers(guildID: string, options: PruneOptions) {
     throw new Error(Errors.PRUNE_MIN_DAYS);
   }
 
-  await botThrowOnMissingGuildPermission(guildID, ["KICK_MEMBERS"]);
+  await requireBotGuildPermissions(guildID, ["KICK_MEMBERS"]);
 
   return RequestManager.post(
     endpoints.GUILD_PRUNE(guildID),
@@ -400,7 +400,7 @@ export async function getAuditLogs(
   guildID: string,
   options: GetAuditLogsOptions,
 ) {
-  await botThrowOnMissingGuildPermission(guildID, ["VIEW_AUDIT_LOG"]);
+  await requireBotGuildPermissions(guildID, ["VIEW_AUDIT_LOG"]);
 
   return RequestManager.get(endpoints.GUILD_AUDIT_LOGS(guildID), {
     ...options,
@@ -415,7 +415,7 @@ export async function getAuditLogs(
 
 /** Returns the guild embed object. Requires the MANAGE_GUILD permission. */
 export async function getEmbed(guildID: string) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   return RequestManager.get(endpoints.GUILD_EMBED(guildID));
 }
@@ -426,7 +426,7 @@ export async function editEmbed(
   enabled: boolean,
   channelID?: string | null,
 ) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   return RequestManager.patch(
     endpoints.GUILD_EMBED(guildID),
@@ -441,7 +441,7 @@ export function getVanityURL(guildID: string) {
 
 /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
 export async function getIntegrations(guildID: string) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   return RequestManager.get(endpoints.GUILD_INTEGRATIONS(guildID));
 }
@@ -452,7 +452,7 @@ export async function editIntegration(
   id: string,
   options: EditIntegrationOptions,
 ) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   return RequestManager.patch(
     endpoints.GUILD_INTEGRATION(guildID, id),
@@ -462,21 +462,21 @@ export async function editIntegration(
 
 /** Delete the attached integration object for the guild with this id. Requires MANAGE_GUILD permission. */
 export async function deleteIntegration(guildID: string, id: string) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   return RequestManager.delete(endpoints.GUILD_INTEGRATION(guildID, id));
 }
 
 /** Sync an integration. Requires the MANAGE_GUILD permission. */
 export async function syncIntegration(guildID: string, id: string) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   return RequestManager.post(endpoints.GUILD_INTEGRATION_SYNC(guildID, id));
 }
 
 /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
 export async function getBans(guildID: string) {
-  await botThrowOnMissingGuildPermission(guildID, ["BAN_MEMBERS"]);
+  await requireBotGuildPermissions(guildID, ["BAN_MEMBERS"]);
 
   const results = await RequestManager.get(
     endpoints.GUILD_BANS(guildID),
@@ -489,7 +489,7 @@ export async function getBans(guildID: string) {
 
 /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
 export async function getBan(guildID: string, memberID: string) {
-  await botThrowOnMissingGuildPermission(guildID, ["BAN_MEMBERS"]);
+  await requireBotGuildPermissions(guildID, ["BAN_MEMBERS"]);
 
   return await RequestManager.get(
     endpoints.GUILD_BAN(guildID, memberID),
@@ -498,7 +498,7 @@ export async function getBan(guildID: string, memberID: string) {
 
 /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
 export async function ban(guildID: string, id: string, options: BanOptions) {
-  await botThrowOnMissingGuildPermission(guildID, ["BAN_MEMBERS"]);
+  await requireBotGuildPermissions(guildID, ["BAN_MEMBERS"]);
 
   return RequestManager.put(
     endpoints.GUILD_BAN(guildID, id),
@@ -508,14 +508,14 @@ export async function ban(guildID: string, id: string, options: BanOptions) {
 
 /** Remove the ban for a user. Requires BAN_MEMBERS permission */
 export async function unban(guildID: string, id: string) {
-  await botThrowOnMissingGuildPermission(guildID, ["BAN_MEMBERS"]);
+  await requireBotGuildPermissions(guildID, ["BAN_MEMBERS"]);
 
   return RequestManager.delete(endpoints.GUILD_BAN(guildID, id));
 }
 
 /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
 export async function editGuild(guildID: string, options: GuildEditOptions) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   if (options.icon && !options.icon.startsWith("data:image/")) {
     options.icon = await urlToBase64(options.icon);
@@ -534,7 +534,7 @@ export async function editGuild(guildID: string, options: GuildEditOptions) {
 
 /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
 export async function getInvites(guildID: string) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   return RequestManager.get(endpoints.GUILD_INVITES(guildID));
 }
@@ -551,7 +551,7 @@ export function getVoiceRegions(guildID: string) {
 
 /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
 export async function getWebhooks(guildID: string) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_WEBHOOKS"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_WEBHOOKS"]);
 
   return RequestManager.get(endpoints.GUILD_WEBHOOKS(guildID));
 }
@@ -614,7 +614,7 @@ export async function createGuildFromTemplate(
  * Requires the `MANAGE_GUILD` permission.
  */
 export async function getGuildTemplates(guildID: string) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const templates = await RequestManager.get(
     endpoints.GUILD_TEMPLATES(guildID),
@@ -630,7 +630,7 @@ export async function deleteGuildTemplate(
   guildID: string,
   templateCode: string,
 ) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const deletedTemplate = await RequestManager.delete(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
@@ -648,7 +648,7 @@ export async function createGuildTemplate(
   guildID: string,
   data: CreateGuildTemplate,
 ) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   if (data.name.length < 1 || data.name.length > 100) {
     throw new Error("The name can only be in between 1-100 characters.");
@@ -673,7 +673,7 @@ export async function createGuildTemplate(
  * Requires the `MANAGE_GUILD` permission.
  */
 export async function syncGuildTemplate(guildID: string, templateCode: string) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const template = await RequestManager.put(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
@@ -690,7 +690,7 @@ export async function editGuildTemplate(
   templateCode: string,
   data: EditGuildTemplate,
 ) {
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   if (data.name?.length && (data.name.length < 1 || data.name.length > 100)) {
     throw new Error("The name can only be in between 1-100 characters.");

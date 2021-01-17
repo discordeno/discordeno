@@ -11,10 +11,10 @@ import {
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
-  botThrowOnMissingChannelPermission,
-  botThrowOnMissingGuildPermission,
   higherRolePosition,
   highestRole,
+  requireBotChannelPermissions,
+  requireBotGuildPermissions,
 } from "../../util/permissions.ts";
 import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
@@ -71,7 +71,7 @@ export async function addRole(
     }
   }
 
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_ROLES"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   return RequestManager.put(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
@@ -102,7 +102,7 @@ export async function removeRole(
     }
   }
 
-  await botThrowOnMissingGuildPermission(guildID, ["MANAGE_ROLES"]);
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   return RequestManager.delete(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
@@ -147,7 +147,7 @@ export async function kick(guildID: string, memberID: string, reason?: string) {
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
-  await botThrowOnMissingGuildPermission(guildID, ["KICK_MEMBERS"]);
+  await requireBotGuildPermissions(guildID, ["KICK_MEMBERS"]);
 
   return RequestManager.delete(
     endpoints.GUILD_MEMBER(guildID, memberID),
@@ -165,25 +165,25 @@ export async function editMember(
     if (options.nick.length > 32) {
       throw new Error(Errors.NICKNAMES_MAX_LENGTH);
     }
-    await botThrowOnMissingGuildPermission(guildID, ["MANAGE_NICKNAMES"]);
+    await requireBotGuildPermissions(guildID, ["MANAGE_NICKNAMES"]);
   }
 
   if (options.roles) {
-    await botThrowOnMissingGuildPermission(guildID, ["MANAGE_ROLES"]);
+    await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
   }
 
   if (options.mute) {
     // TODO: This should check if the member is in a voice channel
-    await botThrowOnMissingGuildPermission(guildID, ["MUTE_MEMBERS"]);
+    await requireBotGuildPermissions(guildID, ["MUTE_MEMBERS"]);
   }
 
   if (options.deaf) {
     // TODO: This should check if the member is in a voice channel
-    await botThrowOnMissingGuildPermission(guildID, ["DEAFEN_MEMBERS"]);
+    await requireBotGuildPermissions(guildID, ["DEAFEN_MEMBERS"]);
   }
 
   if (options.channel_id) {
-    await botThrowOnMissingChannelPermission(
+    await requireBotChannelPermissions(
       options.channel_id,
       ["CONNECT", "MOVE_MEMBERS"],
     );
