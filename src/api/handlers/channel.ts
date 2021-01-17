@@ -417,7 +417,7 @@ export async function editChannel(
   };
 
   return RequestManager.patch(
-    endpoints.GUILD_CHANNEL(channelID),
+    endpoints.CHANNEL_BASE(channelID),
     {
       ...payload,
       reason,
