@@ -23,13 +23,13 @@ export async function computeBasePermissions(
     guildID,
   ]
     .map((id) => guild.roles.get(id)?.permissions)
-    .filter((id) => id)
     // Removes any edge case undefined
+    .filter((id) => id)
     .reduce((bits, perms) => {
       bits |= BigInt(perms);
       return bits;
     }, BigInt(0));
-  // If one role has ADMINISTRATOR permissions we don't need to return the specifiv permissions so we return ADMINISTRATOR permission
+  // If one role has ADMINISTRATOR permissions we don't need to return the specific permissions so we return ADMINISTRATOR permission
   if (permissions & BigInt(Permissions.ADMINISTRATOR)) return "8";
   // Return the members permission bits as a string
   return permissions.toString();
@@ -46,7 +46,7 @@ export async function computeChannelOverwrites(
   if (!channel.guildID) return "8";
   // Get all the role permissions this member already has
   let permissions = BigInt(computeBasePermissions(memberID, channel.guildID));
-  // Member already has ADMINISTRATOR permission so we return that
+  // Member already has ADMINISTRATOR permission and so overwrites are ignored so we return that
   if (permissions & BigInt(Permissions.ADMINISTRATOR)) return "8";
 
   const member = await cacheHandlers.get("members", memberID);
@@ -57,12 +57,14 @@ export async function computeChannelOverwrites(
     overwrite.id === channel.guildID
   );
   if (overwriteEveryone) {
+    // First remove denied permissions since denied < allowed
     permissions &= ~BigInt(overwriteEveryone.deny);
     permissions |= BigInt(overwriteEveryone.allow);
   }
 
   const overwrites = channel?.permissionOverwrites;
 
+  // In order to compute the role permissions correctly we need to temporarily save the allowed and denied permissions
   let allow = BigInt(0);
   let deny = BigInt(0);
   let overwriteRole;
@@ -74,7 +76,7 @@ export async function computeChannelOverwrites(
       allow |= BigInt(overwriteRole.allow);
     }
   }
-  // After role overwrite compute save allowed permissions ferst we remove denied permissions since "denied < allowed"
+  // After role overwrite compute save allowed permissions first we remove denied permissions since "denied < allowed"
   permissions &= ~deny;
   permissions |= allow;
   // Third compute member specific overwrites since these have the highest priority
@@ -89,11 +91,12 @@ export async function computeChannelOverwrites(
   return permissions.toString();
 }
 
-/** Checks if the given permissionBits are matching the given Permission[] */
+/** Checks if the given permissionBits are matching the given Permission[]. ADMINISTRATOR always returns true */
 export function validatePermissions(
   permissionBits: string,
   permissions: Permission[],
 ) {
+  if (permissionBits === "8") return true;
   return permissions.every((permission) =>
     // Check if permission is in permissionBits
     BigInt(permissionBits) & BigInt(Permissions[permission])
