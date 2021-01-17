@@ -83,10 +83,9 @@ export const endpoints = {
   GUILD_BANNER: (guildID: string, icon: string) =>
     `${baseEndpoints.CDN_URL}/banners/${guildID}/${icon}`,
   GUILD_CHANNELS: (guildID: string) => `${GUILDS_BASE(guildID)}/channels`,
-  // TODO: rename to GUILD_WIDGET
   GUILD_WIDGET: (guildID: string) => `${GUILDS_BASE(guildID)}/widget`,
-  GUILD_EMOJI: (guildID: string, emoji_id: string) =>
-    `${GUILDS_BASE(guildID)}/emojis/${emoji_id}`,
+  GUILD_EMOJI: (guildID: string, emojiID: string) =>
+    `${GUILDS_BASE(guildID)}/emojis/${emojiID}`,
   GUILD_EMOJIS: (guildID: string) => `${GUILDS_BASE(guildID)}/emojis`,
   GUILD_ICON: (guildID: string, icon: string) =>
     `${baseEndpoints.CDN_URL}/icons/${guildID}/${icon}`,
