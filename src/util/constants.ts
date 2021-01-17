@@ -166,10 +166,4 @@ export const endpoints = {
   USER_DM: `${baseEndpoints.BASE_URL}/users/@me/channels`,
   USER_CONNECTIONS: `${baseEndpoints.BASE_URL}/users/@me/connections`,
   USER_NICK: (guildID: string) => `${GUILDS_BASE(guildID)}/members/@me/nick`,
-
-  // Voice endpoints
-  VOICE_REGIONS: `${baseEndpoints.BASE_URL}/voice/regions`,
-
-  // Oauth2 endpoints
-  OAUTH2_APPLICATION: `${baseEndpoints.BASE_URL}/oauth2/applications/@me`,
 };
