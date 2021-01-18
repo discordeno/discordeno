@@ -35,7 +35,7 @@ export async function calculateBasePermissions(
   return permissions.toString();
 }
 
-/** calculates the permissions this member has for the given Channel */
+/** Calculates the permissions this member has for the given Channel */
 export async function calculateChannelOverwrites(
   memberID: string,
   channelID: string,
