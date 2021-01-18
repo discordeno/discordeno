@@ -106,7 +106,7 @@ export function validatePermissions(
 }
 
 /** Checks if the given member has these permissions in the given guild */
-export async function hasRolePermissions(
+export async function hasGuildPermissions(
   memberID: string,
   guildID: string,
   permissions: Permission[],
@@ -118,12 +118,12 @@ export async function hasRolePermissions(
 }
 
 /** Checks if the bot has these permissions in the given guild */
-export function botHasRolePermissions(
+export function botHasGuildPermissions(
   guildID: string,
   permissions: Permission[],
 ) {
   // Since Bot is a normal member we can use the hasRolePermissions() function
-  return hasRolePermissions(guildID, botID, permissions);
+  return hasGuildPermissions(guildID, botID, permissions);
 }
 
 /** Checks if the given member has these permissions for the given channel */
