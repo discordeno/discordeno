@@ -212,7 +212,7 @@ export function calculateBits(permissions: Permission[]) {
 /** Gets the highest role from the member in this guild */
 export async function highestRole(guildID: string, memberID: string) {
   const guild = await cacheHandlers.get("guilds", guildID);
-  if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
+  if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
   // Get the roles from the member
   const memberRoles = (await cacheHandlers.get("members", memberID))?.guilds
