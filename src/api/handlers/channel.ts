@@ -99,12 +99,10 @@ export async function sendMessage(
 ) {
   if (typeof content === "string") content = { content };
 
-  const requiredPerms: Set<Permission> = new Set(
-    ["SEND_MESSAGES", "VIEW_CHANNEL"],
-  );
+  const requiredPerms: Permission[] = ["SEND_MESSAGES", "VIEW_CHANNEL"];
 
-  if (content.tts) requiredPerms.add("SEND_TTS_MESSAGES");
-  if (content.embed) requiredPerms.add("EMBED_LINKS");
+  if (content.tts) requiredPerms.push("SEND_TTS_MESSAGES");
+  if (content.embed) requiredPerms.push("EMBED_LINKS");
 
   // Use ... for content length due to unicode characters and js .length handling
   if (content.content && [...content.content].length > 2000) {
@@ -135,13 +133,11 @@ export async function sendMessage(
         content.mentions.roles = content.mentions.roles.slice(0, 100);
       }
     }
-
-    if (content.mentions.repliedUser) {
-      requiredPerms.add("READ_MESSAGE_HISTORY");
-    }
   }
 
-  if (content.replyMessageID) requiredPerms.add("READ_MESSAGE_HISTORY");
+  if (content.replyMessageID || content.mentions?.repliedUser) {
+    requiredPerms.push("READ_MESSAGE_HISTORY");
+  }
 
   await requireBotChannelPermissions(channelID, [...requiredPerms]);
 
