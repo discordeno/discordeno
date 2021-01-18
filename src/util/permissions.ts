@@ -94,7 +94,7 @@ export async function calculateChannelOverwrites(
   return permissions.toString();
 }
 
-/** Checks if the given permissionBits are matching the given Permission[]. ADMINISTRATOR always returns true */
+/** Checks if the given permission bits are matching the given permissions. `ADMINISTRATOR` always returns `true` */
 export function validatePermissions(
   permissionBits: string,
   permissions: Permission[],
