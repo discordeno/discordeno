@@ -47,7 +47,7 @@ export async function calculateChannelOverwrites(
   if (!channel.guildID) return "8";
 
   // Get all the role permissions this member already has
-  let permissions = BigInt(calculateBasePermissions(memberID, channel.guildID));
+  let permissions = BigInt(await calculateBasePermissions(memberID, channel.guildID));
 
   // Member already has ADMINISTRATOR permission and so overwrites are ignored so we return that
   if (permissions & 8n) return "8";
