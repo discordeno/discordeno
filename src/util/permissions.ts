@@ -134,7 +134,7 @@ export function missingPermissions(
   if (BigInt(permissionBits) & 8n) return [];
 
   return permissions.filter((permission) =>
-    !(BigInt(permissionBits) & BigInt(permission))
+    !(BigInt(permissionBits) & BigInt(Permissions[permission]))
   );
 }
 
