@@ -182,7 +182,7 @@ export async function editMember(
       ?.voiceStates.get(memberID);
 
     if (!memberVoiceState?.channelID) {
-      throw Error(Errors.MEMBER_NOT_IN_VOICE_CHANNEL);
+      throw new Error(Errors.MEMBER_NOT_IN_VOICE_CHANNEL);
     }
 
     if (typeof options.mute !== "undefined") {

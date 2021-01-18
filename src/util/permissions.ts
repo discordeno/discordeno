@@ -41,7 +41,7 @@ export async function calculateChannelOverwrites(
   channelID: string,
 ) {
   const channel = await cacheHandlers.get("channels", channelID);
-  if (!channel) throw Error(Errors.CHANNEL_NOT_FOUND);
+  if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);
 
   // This is a DM channel so return ADMINISTRATOR permission
   if (!channel.guildID) return "8";
@@ -250,11 +250,11 @@ export async function higherRolePosition(
   otherRoleID: string,
 ) {
   const guild = await cacheHandlers.get("guilds", guildID);
-  if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
+  if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
   const role = guild.roles.get(roleID);
   const otherRole = guild.roles.get(otherRoleID);
-  if (!role || !otherRole) throw Error(Errors.ROLE_NOT_FOUND);
+  if (!role || !otherRole) throw new Error(Errors.ROLE_NOT_FOUND);
 
   // Rare edge case handling
   if (role.position === otherRole.position) {
@@ -271,7 +271,7 @@ export async function isHigherPosition(
   compareRoleID: string,
 ) {
   const guild = await cacheHandlers.get("guilds", guildID);
-  if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
+  if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
   if (guild.ownerID === memberID) return true;
 
