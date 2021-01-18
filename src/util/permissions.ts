@@ -9,7 +9,7 @@ export async function calculateBasePermissions(
   guildID: string,
 ) {
   const guild = await cacheHandlers.get("guilds", guildID);
-  if (!guild) throw Error(Errors.GUILD_NOT_FOUND);
+  if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
   // If the memberID is equal to the guild ownerID we don't need to calculate anything so we return ADMINISTRATOR permission
   if (guild.ownerID === memberID) return "8";
