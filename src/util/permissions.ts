@@ -123,7 +123,7 @@ export function botHasGuildPermissions(
   permissions: Permission[],
 ) {
   // Since Bot is a normal member we can use the hasRolePermissions() function
-  return hasGuildPermissions(guildID, botID, permissions);
+  return hasGuildPermissions(botID, guildID, permissions);
 }
 
 /** Checks if the given member has these permissions for the given channel */
