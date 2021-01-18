@@ -3,7 +3,7 @@ import { Role } from "../api/structures/mod.ts";
 import { botID } from "../bot.ts";
 import { Errors, Permission, Permissions } from "../types/mod.ts";
 
-/** calculates the permissions this member has in the given guild */
+/** Calculates the permissions this member has in the given guild */
 export async function calculateBasePermissions(
   memberID: string,
   guildID: string,
