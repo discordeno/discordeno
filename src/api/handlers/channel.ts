@@ -104,8 +104,6 @@ export async function sendMessage(
   if (content.tts) requiredPerms.push("SEND_TTS_MESSAGES");
   if (content.embed) requiredPerms.push("EMBED_LINKS");
 
-  await requireBotChannelPermissions(channelID, requiredPerms);
-
   // Use ... for content length due to unicode characters and js .length handling
   if (content.content && [...content.content].length > 2000) {
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
@@ -137,11 +135,9 @@ export async function sendMessage(
     }
 
     if (content.mentions.repliedUser) {
-      await requireBotChannelPermissions(
-        channelID,
-        ["READ_MESSAGE_HISTORY"],
-      );
+      requiredPerms.push("READ_MESSAGE_HISTORY");
     }
+    await requireBotChannelPermissions(channelID, requiredPerms);
   }
 
   const channel = await cacheHandlers.get("channels", channelID);
