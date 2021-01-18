@@ -53,7 +53,7 @@ export async function calculateChannelOverwrites(
   if (permissions & BigInt(Permissions.ADMINISTRATOR)) return "8";
 
   const member = await cacheHandlers.get("members", memberID);
-  if (!member) throw Error(Errors.MEMBER_NOT_FOUND);
+  if (!member) throw new Error(Errors.MEMBER_NOT_FOUND);
 
   // First calculate @everyone overwrites since these have the lowest priority
   const overwriteEveryone = channel?.permissionOverwrites.find((overwrite) =>
