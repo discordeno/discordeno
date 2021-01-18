@@ -17,7 +17,7 @@ export async function calculateBasePermissions(
   const member = await cacheHandlers.get("members", memberID);
   if (!member) throw new Error(Errors.MEMBER_NOT_FOUND);
 
-  let permissions = BigInt(0);
+  let permissions = 0n;
   // Calculate the role permissions bits, @everyone role is not in memberRoleIDs so we need to pass guildID manualy
   permissions |= [
     ...member.guilds.get(guildID)?.roles || [],
@@ -29,7 +29,7 @@ export async function calculateBasePermissions(
     .reduce((bits, perms) => {
       bits |= BigInt(perms);
       return bits;
-    }, BigInt(0));
+    }, 0n);
 
   // Return the members permission bits as a string
   return permissions.toString();
@@ -50,7 +50,7 @@ export async function calculateChannelOverwrites(
   let permissions = BigInt(calculateBasePermissions(memberID, channel.guildID));
 
   // Member already has ADMINISTRATOR permission and so overwrites are ignored so we return that
-  if (permissions & BigInt(Permissions.ADMINISTRATOR)) return "8";
+  if (permissions & 8n) return "8";
 
   const member = await cacheHandlers.get("members", memberID);
   if (!member) throw new Error(Errors.MEMBER_NOT_FOUND);
@@ -68,8 +68,8 @@ export async function calculateChannelOverwrites(
   const overwrites = channel?.permissionOverwrites;
 
   // In order to calculate the role permissions correctly we need to temporarily save the allowed and denied permissions
-  let allow = BigInt(0);
-  let deny = BigInt(0);
+  let allow = 0n;
+  let deny = 0n;
   const memberRoles = member.guilds.get(channel.guildID)?.roles || [];
   // Second calculate members role overwrites since these have middle priority
   for (const overwrite of overwrites) {
@@ -99,7 +99,7 @@ export function validatePermissions(
   permissionBits: string,
   permissions: Permission[],
 ) {
-  if (BigInt(permissionBits) & BigInt(8)) return true;
+  if (BigInt(permissionBits) & 8n) return true;
 
   return permissions.every((permission) =>
     // Check if permission is in permissionBits
@@ -133,7 +133,7 @@ export function missingPermissions(
   permissionBits: string,
   permissions: Permission[],
 ) {
-  if (BigInt(permissionBits) & BigInt(8)) return [];
+  if (BigInt(permissionBits) & 8n) return [];
 
   return permissions.filter((permission) =>
     !(BigInt(permissionBits) & BigInt(permission))
@@ -205,7 +205,7 @@ export function calculateBits(permissions: Permission[]) {
   return permissions.reduce(
     // Get the bit value for this permission and assign it to bits
     (bits, perm) => bits |= BigInt(Permissions[perm]),
-    BigInt(0),
+    0n,
   ).toString();
 }
 
