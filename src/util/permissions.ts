@@ -15,7 +15,7 @@ export async function calculateBasePermissions(
   if (guild.ownerID === memberID) return "8";
 
   const member = await cacheHandlers.get("members", memberID);
-  if (!member) throw Error(Errors.MEMBER_NOT_FOUND);
+  if (!member) throw new Error(Errors.MEMBER_NOT_FOUND);
 
   let permissions = BigInt(0);
   // Calculate the role permissions bits, @everyone role is not in memberRoleIDs so we need to pass guildID manualy
