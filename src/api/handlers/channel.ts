@@ -473,7 +473,7 @@ export async function isChannelSynced(channelID: string) {
 }
 
 /** Adds a recipient to a Group DM using the app granted access token from the `gdm.join` scope */
-export function groupDmAddRecipient(
+export function addGroupDmRecipient(
   channelID: string,
   userID: string,
   token: string,
@@ -486,7 +486,7 @@ export function groupDmAddRecipient(
 }
 
 /** Removes a recipient from a Group DM */
-export function groupDmRemoveRecipient(channelID: string, userID: string) {
+export function removeGroupDmRecipient(channelID: string, userID: string) {
   return RequestManager.delete(
     endpoints.GROUP_DM_RECIPIENTS(channelID, userID),
   );
