@@ -28,7 +28,7 @@ import {
 export interface BotConfig {
   token: string;
   compress?: boolean;
-  intents: (keyof typeof Intents)[];
+  intents: (Intents | keyof typeof Intents)[];
   eventHandlers?: EventHandlers;
 }
 

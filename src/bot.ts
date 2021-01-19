@@ -55,7 +55,7 @@ export async function startBot(config: BotConfig) {
   proxyWSURL = botGatewayData.url;
   identifyPayload.token = config.token;
   identifyPayload.intents = config.intents.reduce(
-    (bits, next) => (bits |= Intents[next]),
+    (bits, next) => (bits |= typeof next === "string" ? Intents[next] : next),
     0,
   );
   identifyPayload.shard = [0, botGatewayData.shards];
@@ -97,7 +97,7 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   }
 
   identifyPayload.intents = data.intents.reduce(
-    (bits, next) => (bits |= Intents[next]),
+    (bits, next) => (bits |= typeof next === "string" ? Intents[next] : next),
     0,
   );
 
