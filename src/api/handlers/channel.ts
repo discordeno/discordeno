@@ -476,7 +476,7 @@ export async function isChannelSynced(channelID: string) {
 export function addGroupDmRecipient(
   channelID: string,
   userID: string,
-  token: string,
+  accessToken: string,
   nickname: string,
 ) {
   return RequestManager.put(
