@@ -136,8 +136,8 @@ export async function createGuildChannel(
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function deleteChannel(
-  channelID: string,
   guildID: string,
+  channelID: string,
   reason?: string,
 ) {
   const hasPerm = await botHasPermission(
