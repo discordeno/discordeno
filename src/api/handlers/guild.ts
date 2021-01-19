@@ -307,10 +307,19 @@ export function emojiURL(id: string, animated = false) {
 /**
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  * 
- * Returns a list of emoji objects for the given guild.
+ * Returns a list of emojis for the given guild.
  */
 export function getEmojis(guildID: string) {
   return RequestManager.get(endpoints.GUILD_EMOJIS(guildID));
+}
+
+/**
+ * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
+ * 
+ * Returns an emoji for the given guild and emoji ID.
+ */
+export function getEmoji(guildID: string, emojiID: string) {
+  return RequestManager.get(endpoints.GUILD_EMOJI(guildID, emojiID));
 }
 
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
