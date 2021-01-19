@@ -276,7 +276,7 @@ export async function editMessage(
     endpoints.CHANNEL_MESSAGE(message.channelID, message.id),
     content,
   );
-  return structures.createMessageStructure(result as MessageCreateOptions);
+  return structures.createMessageStruct(result as MessageCreateOptions);
 }
 
 /** Crosspost a message in a News Channel to following channels. */
@@ -285,5 +285,5 @@ export async function publishMessage(channelID: string, messageID: string) {
     endpoints.CHANNEL_MESSAGE_CROSSPOST(channelID, messageID),
   ) as MessageCreateOptions;
 
-  return structures.createMessageStructure(data);
+  return structures.createMessageStruct(data);
 }

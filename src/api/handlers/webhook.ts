@@ -111,7 +111,7 @@ export async function executeWebhook(
   );
   if (!options.wait) return;
 
-  return structures.createMessageStructure(result as MessageCreateOptions);
+  return structures.createMessageStruct(result as MessageCreateOptions);
 }
 
 /** Returns the new webhook object for the given id. */

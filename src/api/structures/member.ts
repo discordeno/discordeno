@@ -73,7 +73,7 @@ const baseMember: Partial<Member> = {
   },
 };
 
-export async function createMemberStructure(
+export async function createMemberStruct(
   data: MemberCreatePayload,
   guildID: string,
 ) {
