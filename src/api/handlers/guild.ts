@@ -150,6 +150,7 @@ export async function deleteChannel(
     }
 
     const guild = await cacheHandlers.get("guilds", guildID);
+    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
     if (guild?.rulesChannelID === channelID) {
       throw new Error(Errors.RULES_CHANNEL_CANNOT_BE_DELETED);
