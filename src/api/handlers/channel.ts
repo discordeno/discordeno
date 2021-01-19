@@ -472,7 +472,10 @@ export async function isChannelSynced(channelID: string) {
   });
 }
 
-/** Adds a recipient to a Group DM using the app granted access token from the `gdm.join` scope */
+/**
+ * Adds a recipient to a Group DM using their access token.
+ * @param accessToken access token of a user that has granted your app the `gdm.join` scope.
+ */
 export function addGroupDmRecipient(
   channelID: string,
   userID: string,
