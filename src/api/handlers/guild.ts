@@ -148,6 +148,17 @@ export async function deleteChannel(
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
 
+  const guild = await cacheHandlers.get("guilds", guildID);
+  if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+
+  if (guild?.rulesChannelID === channelID) {
+    throw new Error(Errors.RULES_CHANNEL_CANNOT_BE_DELETED);
+  }
+
+  if (guild?.publicUpdatesChannelID === channelID) {
+    throw new Error(Errors.UPDATES_CHANNEL_CANNOT_BE_DELETED);
+  }
+
   return RequestManager.delete(endpoints.CHANNEL_BASE(channelID), { reason });
 }
 
