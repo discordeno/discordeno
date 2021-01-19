@@ -19,6 +19,7 @@ import {
   Errors,
   FetchMembersOptions,
   GetAuditLogsOptions,
+  GetMemberOptions,
   GuildEditOptions,
   GuildTemplate,
   ImageFormats,
@@ -443,6 +444,28 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
   return new Promise((resolve) => {
     requestAllMembers(guild, resolve, options);
   }) as Promise<Collection<string, Member>>;
+}
+
+/**
+ * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM cache.members.get()
+ *
+ * ADVANCED:
+ * Highly recommended to **NOT** use this function to get members instead use fetchMembers().
+ * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
+ * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
+*/
+export function getMembers(
+  guildID: string,
+  options?: GetMemberOptions,
+) {
+  if (!(identifyPayload.intents && Intents.GUILD_MEMBERS)) {
+    throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
+  }
+
+  return RequestManager.get(
+    endpoints.GUILD_MEMBERS(guildID),
+    options,
+  ) as Promise<MemberCreatePayload[]>;
 }
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
