@@ -211,7 +211,8 @@ export function swapChannels(
 export async function editChannelOverwrite(
   guildID: string,
   channelID: string,
-  options: Overwrite,
+  overwriteID: string,
+  options: Pick<Overwrite, "allow" | "deny" | "type">,
 ) {
   const hasPerm = await botHasPermission(
     guildID,
@@ -222,7 +223,7 @@ export async function editChannelOverwrite(
   }
 
   return RequestManager.put(
-    endpoints.CHANNEL_OVERWRITE(channelID, options.id),
+    endpoints.CHANNEL_OVERWRITE(channelID, overwriteID),
     {
       allow: calculateBits(options.allow),
       deny: calculateBits(options.deny),
