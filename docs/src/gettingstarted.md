@@ -1,15 +1,7 @@
 # Getting Started
 
 Discordeno aims for a simple, easy and stress-free interaction with the Discord API. Always supporting the latest version to ensure stability, consistency and the best developer experience.
-
-This website serves as the purpose for introducing Discordeno to developers. The full documentation for all the functions and methods can be visited by clicking the link below:
-
-[View Documentation on Deno](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
-
-## Useful Links
-- [GitHub Repository](https://github.com/discordeno/discordeno)
-- [Deno Page](https://deno.land/x/discordeno)
-- [Website](https://discordeno.mod.land)
+This guide serves as the purpose for introducing Discordeno to developers.
 
 ## Requirements
 
@@ -40,22 +32,21 @@ import { startBot } from "https://deno.land/x/discordeno@10.0.0/mod.ts";
 Starting with Discordeno is very simple, you can start from scratch without any boilerplates/frameworks: Add this snippet of code into a new TypeScript file:
 
 ```ts
-import { startBot, Intents } from "https://deno.land/x/discordeno@10.0.0/mod.ts";
-import config from "./config.ts";
+import { startBot } from "https://deno.land/x/discordeno/mod.ts";
 
 startBot({
-    token: config.token,
-    intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
-    eventHandlers: {
-        ready: () => {
-            console.log(`Logged!`);
-        },
-        messageCreate: (message) => {
-            if (message.content === "!ping") {
-                message.reply("Pong");
-            }
-        }
-    }
+  token: "BOT TOKEN",
+  intents: ["GUILDS", "GUILD_MESSAGES"],
+  eventHandlers: {
+    ready() {
+      console.log("Successfully connected to gateway");
+    },
+    messageCreate(message) {
+      if (message.content === "!ping") {
+        message.reply("Pong using Discordeno!");
+      }
+    },
+  },
 });
 ```
 
