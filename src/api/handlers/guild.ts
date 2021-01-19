@@ -25,6 +25,7 @@ import {
   ImageSize,
   Intents,
   MemberCreatePayload,
+  Overwrite,
   PositionSwap,
   PruneOptions,
   PrunePayload,
@@ -203,6 +204,32 @@ export function swapChannels(
   return RequestManager.patch(
     endpoints.GUILD_CHANNELS(guildID),
     channelPositions,
+  );
+}
+
+/** Edit the channel permission overwrites for a user or role in this channel. Requires MANAGE_ROLES permission. */
+export async function editChannelOverwrite(
+  guildID: string,
+  channelID: string,
+  options: Overwrite,
+) {
+  const hasPerm = await botHasPermission(
+    guildID,
+    ["MANAGE_ROLES"],
+  );
+  if (!hasPerm) {
+    throw new Error(Errors.MISSING_MANAGE_ROLES);
+  }
+
+  const body = {
+    allow: calculateBits(options.allow),
+    deny: calculateBits(options.deny),
+    type: options.type,
+  };
+
+  return RequestManager.put(
+    endpoints.CHANNEL_OVERWRITE(channelID, options.id),
+    body,
   );
 }
 
