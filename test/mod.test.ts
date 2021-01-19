@@ -22,7 +22,6 @@ import {
   getMessage,
   getPins,
   Guild,
-  Intents,
   OverwriteType,
   pin,
   removeReaction,
@@ -37,7 +36,7 @@ if (!token) throw new Error("Token is not provided");
 
 startBot({
   token,
-  intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
+  intents: ["GUILD_MESSAGES", "GUILDS"],
 });
 
 // Default options for tests
