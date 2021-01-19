@@ -481,7 +481,7 @@ export function addGroupDmRecipient(
 ) {
   return RequestManager.put(
     endpoints.GROUP_DM_RECIPIENTS(channelID, userID),
-    { access_token: token, nick: nickname },
+    { access_token: accessToken, nick: nickname },
   );
 }
 
