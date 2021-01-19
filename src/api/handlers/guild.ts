@@ -207,7 +207,7 @@ export function swapChannels(
   );
 }
 
-/** Edit the channel permission overwrites for a user or role in this channel. Requires MANAGE_ROLES permission. */
+/** Edit the channel permission overwrites for a user or role in this channel. Requires `MANAGE_ROLES` permission. */
 export async function editChannelOverwrite(
   guildID: string,
   channelID: string,
@@ -232,7 +232,7 @@ export async function editChannelOverwrite(
   );
 }
 
-/** Delete the channel permission overwrites for a user or role in this channel. Requires MANAGE_ROLES permission. */
+/** Delete the channel permission overwrites for a user or role in this channel. Requires `MANAGE_ROLES` permission. */
 export async function deleteChannelOverwrite(
   guildID: string,
   channelID: string,
