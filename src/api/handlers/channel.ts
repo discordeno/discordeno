@@ -488,7 +488,7 @@ export function addGroupDmRecipient(
   );
 }
 
-/** Removes a recipient from a Group DM */
+/** Removes a recipient from a Group DM. */
 export function removeGroupDmRecipient(channelID: string, userID: string) {
   return RequestManager.delete(
     endpoints.GROUP_DM_RECIPIENTS(channelID, userID),
