@@ -134,7 +134,7 @@ export async function createGuildChannel(
   return structures.createChannel(result);
 }
 
-/** Delete a channel. The Bot needs MANAGE_CHANNEL permissions in the server. */
+/** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function deleteChannel(
   channelID: string,
   guildID: string,
