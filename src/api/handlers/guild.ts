@@ -16,6 +16,7 @@ import {
   EditEmojisOptions,
   EditGuildTemplate,
   EditIntegrationOptions,
+  Emoji,
   Errors,
   FetchMembersOptions,
   GetAuditLogsOptions,
@@ -309,8 +310,18 @@ export function emojiURL(id: string, animated = false) {
  * 
  * Returns a list of emojis for the given guild.
  */
-export function getEmojis(guildID: string) {
-  return RequestManager.get(endpoints.GUILD_EMOJIS(guildID));
+export async function getEmojis(guildID: string, addToCache = false) {
+  const result = await RequestManager.get(
+    endpoints.GUILD_EMOJIS(guildID),
+  ) as Emoji[];
+
+  if (addToCache) {
+    const guild = await cacheHandlers.get("guilds", guildID);
+    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+    cacheHandlers.set("guilds", guildID, { ...guild, emojis: result });
+  }
+
+  return result;
 }
 
 /**
@@ -318,8 +329,26 @@ export function getEmojis(guildID: string) {
  * 
  * Returns an emoji for the given guild and emoji ID.
  */
-export function getEmoji(guildID: string, emojiID: string) {
-  return RequestManager.get(endpoints.GUILD_EMOJI(guildID, emojiID));
+export async function getEmoji(
+  guildID: string,
+  emojiID: string,
+  addToCache = false,
+) {
+  const result = await RequestManager.get(
+    endpoints.GUILD_EMOJI(guildID, emojiID),
+  ) as Emoji;
+
+  if (addToCache) {
+    const guild = await cacheHandlers.get("guilds", guildID);
+    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+    cacheHandlers.set(
+      "guilds",
+      guildID,
+      { ...guild, emojis: [...guild.emojis, result] },
+    );
+  }
+
+  return result;
 }
 
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
