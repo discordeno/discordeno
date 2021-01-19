@@ -221,14 +221,13 @@ export async function editChannelOverwrite(
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-
   return RequestManager.put(
     endpoints.CHANNEL_OVERWRITE(channelID, options.id),
-  {
-    allow: calculateBits(options.allow),
-    deny: calculateBits(options.deny),
-    type: options.type,
-  },
+    {
+      allow: calculateBits(options.allow),
+      deny: calculateBits(options.deny),
+      type: options.type,
+    },
   );
 }
 
