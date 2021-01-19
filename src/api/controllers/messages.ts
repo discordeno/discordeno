@@ -21,7 +21,7 @@ export async function handleInternalMessageCreate(data: DiscordPayload) {
 
   if (payload.member && guild) {
     // If in a guild cache the author as a member
-    await structures.createMemberStructure(
+    await structures.createMemberStruct(
       { ...payload.member, user: payload.author },
       guild.id,
     );
@@ -30,14 +30,14 @@ export async function handleInternalMessageCreate(data: DiscordPayload) {
   payload.mentions.forEach((mention) => {
     // Cache the member if its a valid member
     if (mention.member && guild) {
-      structures.createMemberStructure(
+      structures.createMemberStruct(
         { ...mention.member, user: mention },
         guild.id,
       );
     }
   });
 
-  const message = await structures.createMessageStructure(payload);
+  const message = await structures.createMessageStruct(payload);
   // Cache the message
   await cacheHandlers.set("messages", payload.id, message);
 

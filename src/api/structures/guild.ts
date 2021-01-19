@@ -109,7 +109,7 @@ const baseGuild: Partial<Guild> = {
   },
 };
 
-export async function createGuildStructure(
+export async function createGuildStruct(
   data: CreateGuildPayload,
   shardID: number,
 ) {
@@ -147,12 +147,12 @@ export async function createGuildStructure(
   } = data;
 
   const roles = (await Promise.all(
-    data.roles.map((r: RoleData) => structures.createRoleStructure(r)),
+    data.roles.map((r: RoleData) => structures.createRoleStruct(r)),
   )) as Role[];
 
   await Promise.all(
     channels.map((c: ChannelCreatePayload) =>
-      structures.createChannelStructure(c, data.id)
+      structures.createChannelStruct(c, data.id)
     ),
   );
 

@@ -42,7 +42,7 @@ export async function handleInternalReady(
         for (const [guildID, members] of initialMemberLoadQueue.entries()) {
           await Promise.all(
             members.map((member) =>
-              structures.createMemberStructure(member, guildID)
+              structures.createMemberStruct(member, guildID)
             ),
           );
         }
@@ -100,7 +100,7 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
   if (!guild) return;
 
   const member = payload.member
-    ? await structures.createMemberStructure(payload.member, guild.id)
+    ? await structures.createMemberStruct(payload.member, guild.id)
     : await cacheHandlers.get("members", payload.user_id);
   if (!member) return;
 
