@@ -471,3 +471,23 @@ export async function isChannelSynced(channelID: string) {
       overwrite.deny !== permission.deny);
   });
 }
+
+/** Adds a recipient to a Group DM using the app granted access token from the `gdm.join` scope */
+export function groupDmAddRecipient(
+  channelID: string,
+  userID: string,
+  token: string,
+  nickname: string,
+) {
+  return RequestManager.put(
+    endpoints.GROUP_DM_RECIPIENTS(channelID, userID),
+    { access_token: token, nick: nickname },
+  );
+}
+
+/** Removes a recipient from a Group DM */
+export function groupDmRemoveRecipient(channelID: string, userID: string) {
+  return RequestManager.delete(
+    endpoints.GROUP_DM_RECIPIENTS(channelID, userID),
+  );
+}

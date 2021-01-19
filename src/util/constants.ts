@@ -164,6 +164,8 @@ export const endpoints = {
   USER_DEFAULT_AVATAR: (icon: number) =>
     `${baseEndpoints.CDN_URL}/embed/avatars/${icon}.png`,
   USER_DM: `${baseEndpoints.BASE_URL}/users/@me/channels`,
+  GROUP_DM_RECIPIENTS: (channelID: string, userID: string) =>
+    `${CHANNEL_BASE(channelID)}/recipients/${userID}`,
   USER_CONNECTIONS: `${baseEndpoints.BASE_URL}/users/@me/connections`,
   USER_NICK: (guildID: string) => `${GUILDS_BASE(guildID)}/members/@me/nick`,
 };
