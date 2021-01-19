@@ -212,7 +212,7 @@ export async function editChannelOverwrite(
   guildID: string,
   channelID: string,
   overwriteID: string,
-  options: Pick<Overwrite, "allow" | "deny" | "type">,
+  options: Omit<Overwrite, "id">,
 ) {
   const hasPerm = await botHasPermission(
     guildID,
