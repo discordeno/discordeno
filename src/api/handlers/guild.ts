@@ -134,31 +134,29 @@ export async function createGuildChannel(
   return structures.createChannel(result);
 }
 
-/** Delete a channel or close a DM. If it is a guild channel the Bot needs MANAGE_CHANNEL permissions in the server. */
+/** Delete a channel. The Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function deleteChannel(
   channelID: string,
-  guildID?: string,
+  guildID: string,
   reason?: string,
 ) {
-  if (guildID) {
-    const hasPerm = await botHasPermission(
-      guildID,
-      ["MANAGE_CHANNELS"],
-    );
-    if (!hasPerm) {
-      throw new Error(Errors.MISSING_MANAGE_CHANNELS);
-    }
+  const hasPerm = await botHasPermission(
+    guildID,
+    ["MANAGE_CHANNELS"],
+  );
+  if (!hasPerm) {
+    throw new Error(Errors.MISSING_MANAGE_CHANNELS);
+  }
 
-    const guild = await cacheHandlers.get("guilds", guildID);
-    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+  const guild = await cacheHandlers.get("guilds", guildID);
+  if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
-    if (guild?.rulesChannelID === channelID) {
-      throw new Error(Errors.RULES_CHANNEL_CANNOT_BE_DELETED);
-    }
+  if (guild?.rulesChannelID === channelID) {
+    throw new Error(Errors.RULES_CHANNEL_CANNOT_BE_DELETED);
+  }
 
-    if (guild?.publicUpdatesChannelID === channelID) {
-      throw new Error(Errors.UPDATES_CHANNEL_CANNOT_BE_DELETED);
-    }
+  if (guild?.publicUpdatesChannelID === channelID) {
+    throw new Error(Errors.UPDATES_CHANNEL_CANNOT_BE_DELETED);
   }
 
   return RequestManager.delete(endpoints.CHANNEL_BASE(channelID), { reason });
