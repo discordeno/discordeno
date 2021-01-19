@@ -232,6 +232,25 @@ export async function editChannelOverwrite(
   );
 }
 
+/** Delete the channel permission overwrites for a user or role in this channel. Requires MANAGE_ROLES permission. */
+export async function deleteChannelOverwrite(
+  guildID: string,
+  channelID: string,
+  overwriteID: string,
+) {
+  const hasPerm = await botHasPermission(
+    guildID,
+    ["MANAGE_ROLES"],
+  );
+  if (!hasPerm) {
+    throw new Error(Errors.MISSING_MANAGE_ROLES);
+  }
+
+  return RequestManager.delete(
+    endpoints.CHANNEL_OVERWRITE(channelID, overwriteID),
+  );
+}
+
 /** Returns a guild member object for the specified user.
 *
 * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
