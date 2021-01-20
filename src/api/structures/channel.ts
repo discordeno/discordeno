@@ -9,8 +9,10 @@ import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { sendMessage } from "../handlers/channel.ts";
-import { Guild } from "./guild.ts";
+import { kickFromVoiceChannel } from "../handlers/member.ts";
+import { CleanVoiceState, Guild } from "./guild.ts";
 import { Message } from "./message.ts";
+import { Member } from "./mod.ts";
 
 const baseChannel: Partial<Channel> = {
   get guild() {
@@ -21,6 +23,36 @@ const baseChannel: Partial<Channel> = {
   },
   get mention() {
     return `<#${this.id!}>`;
+  },
+  get voiceStates() {
+    const channel = cache.channels.get(this.id!);
+    const voiceStates = channel!.guild?.voiceStates.filter(
+      (vs) => vs.channelID === channel?.id
+    );
+    return voiceStates;
+  },
+  get connectedMembers() {
+    const channel = cache.channels.get(this.id!);
+    const members = channel!.guild?.voiceStates
+      .filter((voiceState) => {
+        return (
+          voiceState.channelID === channel!.id &&
+          voiceState.member !== undefined
+        );
+      })
+      .map((vs) => {
+        return cache.members.get(vs.member!.user.id);
+      });
+    const memberCollection: Collection<
+      string,
+      Member | undefined
+    > = new Collection(members!.map((m) => [m!.id, m!]));
+    return memberCollection;
+  },
+  disconnectMember(memberID) {
+    const channel = cache.channels.get(this.id!);
+    const guildID = channel!.guild!.id;
+    kickFromVoiceChannel(guildID, memberID);
   },
   send(content) {
     return sendMessage(this.id!, content);
@@ -112,8 +144,15 @@ export interface Channel {
   messages: Collection<string, Message>;
   /** The mention of the channel */
   mention: string;
+  /** The connected voice members */
+  connectedMembers: Collection<string, Member | undefined>;
+  /** The connected voice members */
+  voiceStates: Collection<string, CleanVoiceState> | undefined;
 
   // METHODS
+
+  /** Disconnect a member from a voice channel. Requires MOVE_MEMBERS permission. */
+  disconnectMember(memberID: string): void;
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
   send(content: string | MessageContent): ReturnType<typeof sendMessage>;
