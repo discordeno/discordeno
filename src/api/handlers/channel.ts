@@ -19,6 +19,7 @@ import {
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasChannelPermissions,
+  botHasPermission,
   calculateBits,
 } from "../../util/permissions.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
