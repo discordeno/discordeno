@@ -775,18 +775,6 @@ export function getTemplate(templateCode: string) {
   >;
 }
 
-// TODO: remove this function in v11
-/** 
- * Returns the guild template if it exists 
- * @deprecated Will be removed in v11. Use `getTemplate()`
- */
-export function getGuildTemplate(
-  guildID: string,
-  templateCode: string,
-) {
-  return getTemplate(templateCode);
-}
-
 /**
  * Create a new guild based on a template
  * NOTE: This endpoint can be used only by bots in less than 10 guilds.
