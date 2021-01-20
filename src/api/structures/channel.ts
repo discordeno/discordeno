@@ -36,7 +36,7 @@ const baseChannel: Partial<Channel> = {
       ) || [],
     );
   },
-  disconnectMember(memberID) {
+  kickFromVoice(memberID) {
     kickFromVoiceChannel(this.guildID!, memberID);
   },
   send(content) {
@@ -137,7 +137,7 @@ export interface Channel {
   // METHODS
 
   /** Disconnect a member from a voice channel. Requires MOVE_MEMBERS permission. */
-  disconnectMember(memberID: string): void;
+  kickFromVoice(memberID: string): void;
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
   send(content: string | MessageContent): ReturnType<typeof sendMessage>;
