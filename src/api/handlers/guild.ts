@@ -768,6 +768,12 @@ export function getGuild(guildID: string, counts = true) {
   ) as Promise<UpdateGuildPayload>;
 }
 
+export function getTemplate(templateCode: string) {
+  return RequestManager.get(endpoints.GUILD_TEMPLATE(templateCode)) as Promise<
+    GuildTemplate
+  >;
+}
+
 /** Returns the guild template if it exists */
 export function getGuildTemplate(
   guildID: string,
