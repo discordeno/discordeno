@@ -306,9 +306,9 @@ export function emojiURL(id: string, animated = false) {
 }
 
 /**
- * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
- * 
  * Returns a list of emojis for the given guild.
+ * 
+ * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  */
 export async function getEmojis(guildID: string, addToCache = true) {
   const result = await RequestManager.get(
@@ -325,9 +325,9 @@ export async function getEmojis(guildID: string, addToCache = true) {
 }
 
 /**
- * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
- * 
  * Returns an emoji for the given guild and emoji ID.
+ * 
+ * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  */
 export async function getEmoji(
   guildID: string,
