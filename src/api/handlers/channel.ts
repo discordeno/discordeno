@@ -19,6 +19,7 @@ import {
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasChannelPermissions,
+  botHasPermission,
   calculateBits,
 } from "../../util/permissions.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
@@ -287,7 +288,7 @@ export async function getChannelInvites(channelID: string) {
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
 export async function createInvite(
   channelID: string,
-  options: CreateInviteOptions,
+  options?: CreateInviteOptions,
 ) {
   const hasCreateInstantInvitePerm = await botHasChannelPermissions(
     channelID,
@@ -298,7 +299,10 @@ export async function createInvite(
   ) {
     throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE);
   }
-  return RequestManager.post(endpoints.CHANNEL_INVITES(channelID), options);
+  return RequestManager.post(
+    endpoints.CHANNEL_INVITES(channelID),
+    options || {},
+  );
 }
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
@@ -483,5 +487,31 @@ export async function isChannelSynced(channelID: string) {
 
 /** Returns an invite for the given code. */
 export function getInvite(inviteCode: string) {
+  //TODO(itohatweb): types: Better return type
   return RequestManager.get(endpoints.INVITE(inviteCode));
+}
+
+export async function deleteInvite(
+  channelID: string,
+  inviteCode: string,
+) {
+  const hasPerm = await botHasChannelPermissions(channelID, [
+    "MANAGE_CHANNELS",
+  ]);
+
+  if (!hasPerm) {
+    const channel = await cacheHandlers.get("channels", channelID);
+    if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);
+
+    const hasManageGuildPerm = await botHasPermission(channel.guildID, [
+      "MANAGE_GUILD",
+    ]);
+
+    if (!hasManageGuildPerm) {
+      throw new Error("MISSING_MANAGE_CHANNELS OR MANAGE_GUILD");
+    }
+  }
+
+  //TODO(itohatweb): types: Better return type
+  return RequestManager.delete(endpoints.INVITE(inviteCode));
 }
