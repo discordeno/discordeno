@@ -594,6 +594,13 @@ export interface FetchMembersOptions {
   limit?: number;
 }
 
+export interface GetMemberOptions {
+  /** max number of members to return (1-1000), defaults to 1 */
+  limit?: number;
+  /** the highest user id in the previous page */
+  after?: string;
+}
+
 export interface CreateServerOptions {
   /** name of the guild (2-100 characters) */
   name: string;
