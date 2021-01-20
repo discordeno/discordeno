@@ -17,6 +17,7 @@ import {
   addRole,
   editMember,
   kick,
+  kickFromVoiceChannel,
   rawAvatarURL,
   removeRole,
   sendDirectMessage,
@@ -55,6 +56,9 @@ const baseMember: Partial<Member> = {
   },
   sendDM(content) {
     return sendDirectMessage(this.id!, content);
+  },
+  kickFromVoice(guildID) {
+    return kickFromVoiceChannel(guildID, this.id!);
   },
   kick(guildID, reason) {
     return kick(guildID, this.id!, reason);
@@ -178,6 +182,8 @@ export interface Member {
   sendDM(
     content: string | MessageContent,
   ): ReturnType<typeof sendDirectMessage>;
+  /** Kick the member from a voice channel */
+  kickFromVoice(guildID: string): void;
   /** Kick the member from a guild */
   kick(guildID: string, reason?: string): ReturnType<typeof kick>;
   /** Edit the member in a guild */

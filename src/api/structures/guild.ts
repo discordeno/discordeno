@@ -32,6 +32,7 @@ import {
   leaveGuild,
   unban,
 } from "../handlers/guild.ts";
+import { kickFromVoiceChannel } from "../handlers/member.ts";
 import { Member } from "./member.ts";
 import { Channel, Role, structures } from "./mod.ts";
 
@@ -106,6 +107,9 @@ const baseGuild: Partial<Guild> = {
   },
   leave() {
     return leaveGuild(this.id!);
+  },
+  kickFromVoice(memberID) {
+    return kickFromVoiceChannel(this.id!, memberID);
   },
 };
 
@@ -345,6 +349,8 @@ export interface Guild {
   unban(memberID: string): ReturnType<typeof unban>;
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   invites(): ReturnType<typeof getInvites>;
+  /** Kicks the user from a voice channel. Requires MOVE_MEMBERS permission*/
+  kickFromVoice(memberID: string): void;
 
   // Index signature
   [key: string]: ValueOf<Guild>;
