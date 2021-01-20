@@ -275,6 +275,8 @@ export interface IntegrationApplicationPayload {
   description: string;
   /** the summary of the app */
   summary: string;
+  /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
+  cover_image?: string;
   /** the bot associated with this application */
   bot?: UserPayload;
 }
