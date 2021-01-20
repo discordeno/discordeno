@@ -16,6 +16,7 @@ import {
   EditEmojisOptions,
   EditGuildTemplate,
   EditIntegrationOptions,
+  Emoji,
   Errors,
   FetchMembersOptions,
   GetAuditLogsOptions,
@@ -347,6 +348,54 @@ export async function deleteEmoji(
 /** Creates a url to the emoji from the Discord CDN. */
 export function emojiURL(id: string, animated = false) {
   return `https://cdn.discordapp.com/emojis/${id}.${animated ? "gif" : "png"}`;
+}
+
+/**
+ * Returns a list of emojis for the given guild.
+ * 
+ * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
+ */
+export async function getEmojis(guildID: string, addToCache = true) {
+  const result = await RequestManager.get(
+    endpoints.GUILD_EMOJIS(guildID),
+  ) as Emoji[];
+
+  if (addToCache) {
+    const guild = await cacheHandlers.get("guilds", guildID);
+    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+    guild.emojis = result;
+    cacheHandlers.set("guilds", guildID, guild);
+  }
+
+  return result;
+}
+
+/**
+ * Returns an emoji for the given guild and emoji ID.
+ * 
+ * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
+ */
+export async function getEmoji(
+  guildID: string,
+  emojiID: string,
+  addToCache = true,
+) {
+  const result = await RequestManager.get(
+    endpoints.GUILD_EMOJI(guildID, emojiID),
+  ) as Emoji;
+
+  if (addToCache) {
+    const guild = await cacheHandlers.get("guilds", guildID);
+    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+    guild.emojis.push(result);
+    cacheHandlers.set(
+      "guilds",
+      guildID,
+      guild,
+    );
+  }
+
+  return result;
 }
 
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
