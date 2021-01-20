@@ -9,11 +9,13 @@ import {
   ExecuteSlashCommandOptions,
   ExecuteWebhookOptions,
   MessageCreateOptions,
+  SlashCommand,
   UpsertSlashCommandOptions,
   WebhookCreateOptions,
   WebhookPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
+import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
@@ -215,13 +217,14 @@ export function createSlashCommand(options: CreateSlashCommandOptions) {
 }
 
 /** Fetch all of the global commands for your application. */
-export function getSlashCommands(guildID?: string) {
-  // TODO: Should this be a returned as a collection?
-  return RequestManager.get(
+export async function getSlashCommands(guildID?: string) {
+  const result = (await RequestManager.get(
     guildID
       ? endpoints.COMMANDS_GUILD(botID, guildID)
       : endpoints.COMMANDS(botID),
-  );
+  )) as SlashCommand[];
+
+  return new Collection(result.map((command) => [command.name, command]));
 }
 
 /**
