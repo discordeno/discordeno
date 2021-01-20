@@ -122,6 +122,15 @@ export async function getPins(channelID: string) {
   return Promise.all(result.map((res) => structures.createMessage(res)));
 }
 
+/** 
+ * Trigger a typing indicator for the specified channel. Generally bots should **NOT** implement this route. 
+ * However, if a bot is responding to a command and expects the computation to take a few seconds, 
+ * this endpoint may be called to let the user know that the bot is processing their message.
+ */
+export function startTyping(channelID: string) {
+  return RequestManager.post(endpoints.CHANNEL_TYPING(channelID));
+}
+
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(
   channelID: string,
