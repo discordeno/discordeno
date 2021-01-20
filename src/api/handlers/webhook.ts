@@ -119,6 +119,14 @@ export function getWebhook(webhookID: string) {
   return RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
 }
 
+/** Returns the new webhook object for the given id, this call does not require authentication and returns no user in the webhook object. */
+export function getWebhookWithToken(webhookID: string, token: string) {
+  // TODO(itohatweb): better return type
+  return RequestManager.get(
+    endpoints.WEBHOOK_WITH_TOKEN(webhookID, token),
+  ) as Promise<WebhookPayload>;
+}
+
 export function editWebhookMessage(
   webhookID: string,
   webhookToken: string,
