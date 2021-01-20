@@ -288,7 +288,7 @@ export async function getChannelInvites(channelID: string) {
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
 export async function createInvite(
   channelID: string,
-  options?: CreateInviteOptions,
+  options: CreateInviteOptions,
 ) {
   const hasCreateInstantInvitePerm = await botHasChannelPermissions(
     channelID,
@@ -299,10 +299,7 @@ export async function createInvite(
   ) {
     throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE);
   }
-  return RequestManager.post(
-    endpoints.CHANNEL_INVITES(channelID),
-    options || {},
-  );
+  return RequestManager.post(endpoints.CHANNEL_INVITES(channelID), options);
 }
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
