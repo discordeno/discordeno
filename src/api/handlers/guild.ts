@@ -16,6 +16,7 @@ import {
   EditEmojisOptions,
   EditGuildTemplate,
   EditIntegrationOptions,
+  Emoji,
   Errors,
   FetchMembersOptions,
   GetAuditLogsOptions,
@@ -25,6 +26,7 @@ import {
   ImageSize,
   Intents,
   MemberCreatePayload,
+  Overwrite,
   PositionSwap,
   PruneOptions,
   PrunePayload,
@@ -206,6 +208,50 @@ export function swapChannels(
   );
 }
 
+/** Edit the channel permission overwrites for a user or role in this channel. Requires `MANAGE_ROLES` permission. */
+export async function editChannelOverwrite(
+  guildID: string,
+  channelID: string,
+  overwriteID: string,
+  options: Omit<Overwrite, "id">,
+) {
+  const hasPerm = await botHasPermission(
+    guildID,
+    ["MANAGE_ROLES"],
+  );
+  if (!hasPerm) {
+    throw new Error(Errors.MISSING_MANAGE_ROLES);
+  }
+
+  return RequestManager.put(
+    endpoints.CHANNEL_OVERWRITE(channelID, overwriteID),
+    {
+      allow: calculateBits(options.allow),
+      deny: calculateBits(options.deny),
+      type: options.type,
+    },
+  );
+}
+
+/** Delete the channel permission overwrites for a user or role in this channel. Requires `MANAGE_ROLES` permission. */
+export async function deleteChannelOverwrite(
+  guildID: string,
+  channelID: string,
+  overwriteID: string,
+) {
+  const hasPerm = await botHasPermission(
+    guildID,
+    ["MANAGE_ROLES"],
+  );
+  if (!hasPerm) {
+    throw new Error(Errors.MISSING_MANAGE_ROLES);
+  }
+
+  return RequestManager.delete(
+    endpoints.CHANNEL_OVERWRITE(channelID, overwriteID),
+  );
+}
+
 /** Returns a guild member object for the specified user.
 *
 * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
@@ -302,6 +348,54 @@ export async function deleteEmoji(
 /** Creates a url to the emoji from the Discord CDN. */
 export function emojiURL(id: string, animated = false) {
   return `https://cdn.discordapp.com/emojis/${id}.${animated ? "gif" : "png"}`;
+}
+
+/**
+ * Returns a list of emojis for the given guild.
+ * 
+ * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
+ */
+export async function getEmojis(guildID: string, addToCache = true) {
+  const result = await RequestManager.get(
+    endpoints.GUILD_EMOJIS(guildID),
+  ) as Emoji[];
+
+  if (addToCache) {
+    const guild = await cacheHandlers.get("guilds", guildID);
+    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+    guild.emojis = result;
+    cacheHandlers.set("guilds", guildID, guild);
+  }
+
+  return result;
+}
+
+/**
+ * Returns an emoji for the given guild and emoji ID.
+ * 
+ * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
+ */
+export async function getEmoji(
+  guildID: string,
+  emojiID: string,
+  addToCache = true,
+) {
+  const result = await RequestManager.get(
+    endpoints.GUILD_EMOJI(guildID, emojiID),
+  ) as Emoji;
+
+  if (addToCache) {
+    const guild = await cacheHandlers.get("guilds", guildID);
+    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+    guild.emojis.push(result);
+    cacheHandlers.set(
+      "guilds",
+      guildID,
+      guild,
+    );
+  }
+
+  return result;
 }
 
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
@@ -593,6 +687,11 @@ export async function unban(guildID: string, id: string) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
   return RequestManager.delete(endpoints.GUILD_BAN(guildID, id));
+}
+
+/** Returns the guild preview object for the given id. If the bot is not in the guild, then the guild must be Discoverable. */
+export function getGuildPreview(guildID: string) {
+  return RequestManager.get(endpoints.GUILD_PREVIEW(guildID));
 }
 
 /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */

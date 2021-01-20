@@ -240,6 +240,11 @@ export function moveMember(
   return editMember(guildID, memberID, { channel_id: channelID });
 }
 
+/** Kicks a member from a voice channel */
+export function kickFromVoiceChannel(guildID: string, memberID: string) {
+  return editMember(guildID, memberID, { channel_id: null });
+}
+
 /** Modifies the bot's username or avatar.
  * NOTE: username: if changed may cause the bot's discriminator to be randomized.
  */
