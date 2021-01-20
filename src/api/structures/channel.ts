@@ -30,22 +30,12 @@ const baseChannel: Partial<Channel> = {
     return guild.voiceStates.filter(voiceState => voiceState.channelID === this.id);
   },
   get connectedMembers() {
-    const channel = cache.channels.get(this.id!);
-    const members = channel!.guild?.voiceStates
-      .filter((voiceState) => {
-        return (
-          voiceState.channelID === channel!.id &&
-          voiceState.member !== undefined
-        );
-      })
-      .map((vs) => {
-        return cache.members.get(vs.member!.user.id);
-      });
-    const memberCollection: Collection<
-      string,
-      Member | undefined
-    > = new Collection(members!.map((m) => [m!.id, m!]));
-    return memberCollection;
+    return new Collection(
+      this.voiceStates?.map(
+        (vs) => [vs.member?.user.id!, cache.members.get(vs.member?.user.id!)]
+      ) || [],
+    );
+  },
   },
   disconnectMember(memberID) {
     kickFromVoiceChannel(this.guildID, memberID);
