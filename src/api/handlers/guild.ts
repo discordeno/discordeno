@@ -19,6 +19,7 @@ import {
   Errors,
   FetchMembersOptions,
   GetAuditLogsOptions,
+  GetMemberOptions,
   GuildEditOptions,
   GuildTemplate,
   ImageFormats,
