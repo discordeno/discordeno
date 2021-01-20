@@ -97,7 +97,7 @@ export async function handleInternalMessageUpdate(data: DiscordPayload) {
   // Messages with embeds can trigger update but they wont have edited_timestamp
   if (
     !payload.edited_timestamp ||
-    (cachedMessage.content !== payload.content)
+    (cachedMessage.content === payload.content)
   ) {
     return;
   }
