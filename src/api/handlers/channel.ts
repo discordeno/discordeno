@@ -488,6 +488,7 @@ export function getInvite(inviteCode: string) {
   return RequestManager.get(endpoints.INVITE(inviteCode));
 }
 
+/** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
 export async function deleteInvite(
   channelID: string,
   inviteCode: string,
