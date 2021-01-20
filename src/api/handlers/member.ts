@@ -276,3 +276,19 @@ export async function editBotProfile(username?: string, botAvatarURL?: string) {
     },
   );
 }
+
+/** Edit the nickname of the bot in this guild */
+export async function editBotNickname(
+  guildID: string,
+  nickname: string | null,
+) {
+  const hasPerm = await botHasPermission(guildID, ["CHANGE_NICKNAME"]);
+  if (!hasPerm) throw new Error(Errors.MISSING_CHANGE_NICKNAME);
+
+  const response = await RequestManager.patch(
+    endpoints.USER_NICK(guildID),
+    { nick: nickname },
+  ) as { nick: string };
+
+  return response.nick;
+}
