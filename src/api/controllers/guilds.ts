@@ -114,8 +114,6 @@ export async function handleInternalGuildEmojisUpdate(data: DiscordPayload) {
   const cachedEmojis = guild.emojis;
   guild.emojis = payload.emojis;
 
-  cacheHandlers.set("guilds", payload.guild_id, guild);
-
   return eventHandlers.guildEmojisUpdate?.(
     guild,
     payload.emojis,
