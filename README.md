@@ -6,16 +6,32 @@
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
 
-- **Secure & stable**: Discordeno is comparatively more stable than the other libraries. One of the greatest issues with almost every library is stability; types are outdated, less (or minimal) parity with the API, core maintainers have quit or no longer actively maintain the library, and whatnot. Discordeno, on the other hand, is actively maintained to ensure great performance and convenience. Discordeno internally checks all missing permissions before forwarding a request to the API so that the client does not get globally-banned by Discord.
-- **Efficient & lightweight**: Discordeno is simplistic and easy-to-use. Always prefer defaults that Discord recommends or the best configuration for the majority―if necessary, it is remarkably customizable, versatile, and efficient.
-- **Functional API**: This will produce a cleaner and more performant code while removing the difficulties of extending built-in classes and inheritance. Avoid potential memory leaks or crashes because of too many listeners or other silly issues.
+- **Secure & stable**: Discordeno is comparatively more stable than the other
+  libraries. One of the greatest issues with almost every library is stability;
+  types are outdated, less (or minimal) parity with the API, core maintainers
+  have quit or no longer actively maintain the library, and whatnot. Discordeno,
+  on the other hand, is actively maintained to ensure great performance and
+  convenience. Discordeno internally checks all missing permissions before
+  forwarding a request to the API so that the client does not get
+  globally-banned by Discord.
+- **Efficient & lightweight**: Discordeno is simplistic and easy-to-use. Always
+  prefer defaults that Discord recommends or the best configuration for the
+  majority―if necessary, it is remarkably customizable, versatile, and
+  efficient.
+- **Functional API**: This will produce a cleaner and more performant code while
+  removing the difficulties of extending built-in classes and inheritance. Avoid
+  potential memory leaks or crashes because of too many listeners or other silly
+  issues.
 
 ## Usage
 
 ### Beginner Developers
 
-Don't worry a lot of developers start out coding their first projects as a Discord bot (I did 😉) and it is not so easy to do so. Discordeno is built considering all the issues with pre-existing libraries and issues that I had when I first started out coding bots.
-If you are a beginner developer, you may check out these awesome official and unofficial boilerplates:
+Don't worry a lot of developers start out coding their first projects as a
+Discord bot (I did 😉) and it is not so easy to do so. Discordeno is built
+considering all the issues with pre-existing libraries and issues that I had
+when I first started out coding bots. If you are a beginner developer, you may
+check out these awesome official and unofficial boilerplates:
 
 - Official Discordeno Boilerplate
   - [GitHub](https://github.com/Skillz4Killz/Discordeno-bot-template)
@@ -56,7 +72,8 @@ startBot({
 
 We appreciate your help!
 
-Before contributing, please read the [Contributing Guide](https://github.com/discordeno/discordeno/blob/master/.github/CONTRIBUTING.md).
+Before contributing, please read the
+[Contributing Guide](https://github.com/discordeno/discordeno/blob/master/.github/CONTRIBUTING.md).
 
 ### License
 
