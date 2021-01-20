@@ -480,3 +480,8 @@ export async function isChannelSynced(channelID: string) {
       overwrite.deny !== permission.deny);
   });
 }
+
+/** Returns an invite for the given code. */
+export function getInvite(inviteCode: string) {
+  return RequestManager.get(endpoints.INVITE(inviteCode));
+}
