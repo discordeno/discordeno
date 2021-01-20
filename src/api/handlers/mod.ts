@@ -50,7 +50,6 @@ import {
   getMembersByQuery,
   getPruneCount,
   getRoles,
-  getUser,
   getVanityURL,
   getVoiceRegions,
   getWebhooks,
@@ -91,6 +90,12 @@ import {
   removeUserReaction,
   unpin,
 } from "./message.ts";
+import {
+  getCurrentUser,
+  getCurrentUserConnections,
+  getCurrentUserGuilds,
+  getUser,
+} from "./user.ts";
 import { createWebhook, executeWebhook, getWebhook } from "./webhook.ts";
 
 export let handlers = {
@@ -146,7 +151,6 @@ export let handlers = {
   getMembersByQuery,
   getPruneCount,
   getRoles,
-  getUser,
   getVanityURL,
   getVoiceRegions,
   getWebhooks,
@@ -191,6 +195,12 @@ export let handlers = {
   createWebhook,
   executeWebhook,
   getWebhook,
+
+  // User handler
+  getCurrentUser,
+  getCurrentUserGuilds,
+  getCurrentUserConnections,
+  getUser,
 };
 
 export type Handlers = typeof handlers;
