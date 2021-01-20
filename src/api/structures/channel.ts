@@ -28,8 +28,6 @@ const baseChannel: Partial<Channel> = {
     const guild = cache.guilds.get(this.guildID);
     if (!guild) return;
     return guild.voiceStates.filter(voiceState => voiceState.channelID === this.id);
-
-    return voiceStates;
   },
   get connectedMembers() {
     const channel = cache.channels.get(this.id!);
