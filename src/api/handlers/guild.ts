@@ -587,6 +587,35 @@ export async function editEmbed(
   );
 }
 
+/** Returns the widget for the guild. */
+export async function getWidget(guildID: string, options?: { force: boolean }) {
+  const guild = await cacheHandlers.get("guilds", guildID);
+  if (!options?.force) {
+    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+    if (!guild?.widgetEnabled) throw new Error(Errors.GUILD_WIDGET_NOT_ENABLED);
+  }
+
+  return RequestManager.get(`${endpoints.GUILD_WIDGET(guildID)}.json`);
+}
+
+export async function getWidgetImageUrl(
+  guildID: string,
+  options?: {
+    style?: "shield" | "banner1" | "banner2" | "banner3" | "banner4";
+    force?: boolean;
+  },
+) {
+  const guild = await cacheHandlers.get("guilds", guildID);
+  if (!options?.force) {
+    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+    if (!guild?.widgetEnabled) throw new Error(Errors.GUILD_WIDGET_NOT_ENABLED);
+  }
+
+  return `${endpoints.GUILD_WIDGET(guildID)}.png?style=${
+    options?.style ? options.style : "shield"
+  }`;
+}
+
 /** Returns the code and uses of the vanity url for this server if it is enabled. Requires the MANAGE_GUILD permission. */
 export function getVanityURL(guildID: string) {
   return RequestManager.get(endpoints.GUILD_VANITY_URL(guildID));
