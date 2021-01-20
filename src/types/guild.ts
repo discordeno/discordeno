@@ -535,7 +535,7 @@ export interface PrunePayload {
 }
 
 export interface PruneOptions {
-  /** number of days to count prune for (1 or more). Defaults to 7 days. */
+  /** number of days to count prune for (1 - 30). Defaults to 7 days. */
   days: number;
   /** Include members with these role ids */
   roles: string[];
