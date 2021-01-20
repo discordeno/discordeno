@@ -318,7 +318,8 @@ export async function getEmojis(guildID: string, addToCache = true) {
   if (addToCache) {
     const guild = await cacheHandlers.get("guilds", guildID);
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
-    cacheHandlers.set("guilds", guildID, { ...guild, emojis: result });
+    guild.emojis = result;
+    cacheHandlers.set("guilds", guildID, guild);
   }
 
   return result;
