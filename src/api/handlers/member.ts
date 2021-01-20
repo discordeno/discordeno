@@ -288,7 +288,7 @@ export async function editBotNickname(
   const response = await RequestManager.patch(
     endpoints.USER_NICK(guildID),
     { nick: nickname },
-  );
+  ) as any;
 
   return response.nick as string;
 }
