@@ -596,8 +596,18 @@ export async function unban(guildID: string, id: string) {
 }
 
 /** Returns the guild preview object for the given id. If the bot is not in the guild, then the guild must be Discoverable. */
-export function getGuildPreview(guildID: string) {
-  // TODO: add check if guild is Discoverable?
+export async function getGuildPreview(guildID: string) {
+  const guild = await cacheHandlers.get("guilds", guildID);
+  if (!guild) {
+    const unjoinedGuild = await getGuild(guildID);
+
+    if (!unjoinedGuild) throw new Error(Errors.GUILD_NOT_FOUND);
+
+    if (!unjoinedGuild.features.includes("DISCOVERABLE")) {
+      throw new Error(Errors.GUILD_NOT_DISCOVERABLE);
+    }
+  }
+
   return RequestManager.get(endpoints.GUILD_PREVIEW(guildID));
 }
 
