@@ -602,7 +602,7 @@ export async function getIntegrations(guildID: string) {
   return RequestManager.get(endpoints.GUILD_INTEGRATIONS(guildID));
 }
 
-/** Attach an integration form the current user to the guild */
+/** Attach an integration form the current user to the guild. Requires the MANAGE_GUILD permission.*/
 export async function createIntegration(
   guildID: string,
   integrationID: string,
