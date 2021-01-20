@@ -769,10 +769,9 @@ export function getGuild(guildID: string, counts = true) {
 }
 
 /** Returns the guild template if it exists */
-export function getTemplate(templateCode: string) {
-  return RequestManager.get(endpoints.GUILD_TEMPLATE(templateCode)) as Promise<
-    GuildTemplate
-  >;
+export async function getTemplate(templateCode: string) {
+  const template = await RequestManager.get(endpoints.GUILD_TEMPLATE(templateCode)) as GuildTemplate;
+  return structures.createTemplate(template);
 }
 
 /**
