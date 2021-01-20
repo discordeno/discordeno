@@ -310,7 +310,7 @@ export function emojiURL(id: string, animated = false) {
  * 
  * Returns a list of emojis for the given guild.
  */
-export async function getEmojis(guildID: string, addToCache = false) {
+export async function getEmojis(guildID: string, addToCache = true) {
   const result = await RequestManager.get(
     endpoints.GUILD_EMOJIS(guildID),
   ) as Emoji[];
@@ -332,7 +332,7 @@ export async function getEmojis(guildID: string, addToCache = false) {
 export async function getEmoji(
   guildID: string,
   emojiID: string,
-  addToCache = false,
+  addToCache = true,
 ) {
   const result = await RequestManager.get(
     endpoints.GUILD_EMOJI(guildID, emojiID),
