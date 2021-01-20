@@ -19,7 +19,6 @@ import {
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasChannelPermissions,
-  botHasPermission,
   calculateBits,
 } from "../../util/permissions.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
@@ -302,6 +301,38 @@ export async function createInvite(
   return RequestManager.post(endpoints.CHANNEL_INVITES(channelID), options);
 }
 
+/** Returns an invite for the given code. */
+export function getInvite(inviteCode: string) {
+  //TODO(itohatweb): types: Better return type
+  return RequestManager.get(endpoints.INVITE(inviteCode));
+}
+
+/** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
+export async function deleteInvite(
+  channelID: string,
+  inviteCode: string,
+) {
+  const hasPerm = await botHasChannelPermissions(channelID, [
+    "MANAGE_CHANNELS",
+  ]);
+
+  if (!hasPerm) {
+    const channel = await cacheHandlers.get("channels", channelID);
+    if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);
+
+    const hasManageGuildPerm = await botHasPermission(channel.guildID, [
+      "MANAGE_GUILD",
+    ]);
+
+    if (!hasManageGuildPerm) {
+      throw new Error("MISSING_MANAGE_CHANNELS OR MANAGE_GUILD");
+    }
+  }
+
+  //TODO(itohatweb): types: Better return type
+  return RequestManager.delete(endpoints.INVITE(inviteCode));
+}
+
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
 export async function getChannelWebhooks(channelID: string) {
   const hasManageWebhooksPerm = await botHasChannelPermissions(
@@ -480,36 +511,4 @@ export async function isChannelSynced(channelID: string) {
     return !(overwrite.allow !== permission.allow ||
       overwrite.deny !== permission.deny);
   });
-}
-
-/** Returns an invite for the given code. */
-export function getInvite(inviteCode: string) {
-  //TODO(itohatweb): types: Better return type
-  return RequestManager.get(endpoints.INVITE(inviteCode));
-}
-
-/** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
-export async function deleteInvite(
-  channelID: string,
-  inviteCode: string,
-) {
-  const hasPerm = await botHasChannelPermissions(channelID, [
-    "MANAGE_CHANNELS",
-  ]);
-
-  if (!hasPerm) {
-    const channel = await cacheHandlers.get("channels", channelID);
-    if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);
-
-    const hasManageGuildPerm = await botHasPermission(channel.guildID, [
-      "MANAGE_GUILD",
-    ]);
-
-    if (!hasManageGuildPerm) {
-      throw new Error("MISSING_MANAGE_CHANNELS OR MANAGE_GUILD");
-    }
-  }
-
-  //TODO(itohatweb): types: Better return type
-  return RequestManager.delete(endpoints.INVITE(inviteCode));
 }
