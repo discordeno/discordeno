@@ -32,7 +32,6 @@ import {
   PrunePayload,
   RoleData,
   UpdateGuildPayload,
-  UserPayload,
 } from "../../types/mod.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -747,11 +746,6 @@ export async function getWebhooks(guildID: string) {
   }
 
   return RequestManager.get(endpoints.GUILD_WEBHOOKS(guildID));
-}
-
-/** This function will return the raw user payload in the rare cases you need to fetch a user directly from the API. */
-export function getUser(userID: string) {
-  return RequestManager.get(endpoints.USER(userID)) as Promise<UserPayload>;
 }
 
 /**
