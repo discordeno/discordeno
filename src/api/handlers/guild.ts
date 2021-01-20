@@ -768,13 +768,17 @@ export function getGuild(guildID: string, counts = true) {
   ) as Promise<UpdateGuildPayload>;
 }
 
+/** Returns the guild template if it exists */
 export function getTemplate(templateCode: string) {
   return RequestManager.get(endpoints.GUILD_TEMPLATE(templateCode)) as Promise<
     GuildTemplate
   >;
 }
 
-/** Returns the guild template if it exists */
+/** 
+ * Returns the guild template if it exists 
+ * @deprecated This function no longer works
+ */
 export function getGuildTemplate(
   guildID: string,
   templateCode: string,
