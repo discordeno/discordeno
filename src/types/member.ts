@@ -50,3 +50,14 @@ export interface GuildMember {
   /** Whether the user has passed the guild's Membership Screening requirements */
   pending?: boolean;
 }
+
+export interface joinUserGuildOptions {
+  /** value to set users nickname to, requires MANAGE_NICKNAMES permission */
+  nick?: string;
+  /** array of role ids the member is assigned, requires MANAGE_ROLES permission */
+  roles?: string[];
+  /** whether the user is muted in voice channels, requires MUTE_MEMBERS permission */
+  mute?: boolean;
+  /** whether the user is deafened in voice channels, requires MUTE_MEMBERS permission */
+  deaf?: boolean;
+}

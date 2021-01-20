@@ -7,6 +7,7 @@ import {
   Errors,
   ImageFormats,
   ImageSize,
+  joinUserGuildOptions,
   MessageContent,
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -141,6 +142,70 @@ export async function sendDirectMessage(
   return sendMessage(dmChannel.id, content);
 }
 
+export async function joinUserToGuild(
+  guildID: string,
+  userID: string,
+  accessToken: string,
+  options: joinUserGuildOptions,
+) {
+  if (options.nick) {
+    const hasNickPermission = await botHasPermission(
+      guildID,
+      ["MANAGE_NICKNAMES"],
+    );
+    if (!hasNickPermission) {
+      throw new Error(Errors.MISSING_MANAGE_NICKNAMES);
+    }
+  }
+
+  if (options.roles) {
+    const hasRolePermission = await botHasPermission(
+      guildID,
+      ["MANAGE_ROLES"],
+    );
+    if (!hasRolePermission) {
+      throw new Error(Errors.MISSING_MANAGE_ROLES);
+    }
+
+    const guild = await cacheHandlers.get("guilds", guildID);
+    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+
+    const botsHighestRoleID = (await highestRole(guildID, botID))?.id;
+    if (!botsHighestRoleID) throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
+
+    const botRoleTooLow = options.roles.find(async (role) =>
+      !(await higherRolePosition(guildID, botsHighestRoleID, role))
+    );
+    if (botRoleTooLow) {
+      throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
+    }
+  }
+
+  if (options.mute) {
+    const hasMutePermission = await botHasPermission(
+      guildID,
+      ["MUTE_MEMBERS"],
+    );
+    if (!hasMutePermission) {
+      throw new Error(Errors.MISSING_MUTE_MEMBERS);
+    }
+  }
+
+  if (options.deaf) {
+    const hasDeafenPermission = await botHasPermission(
+      guildID,
+      ["DEAFEN_MEMBERS"],
+    );
+    if (!hasDeafenPermission) {
+      throw new Error(Errors.MISSING_DEAFEN_MEMBERS);
+    }
+  }
+
+  return RequestManager.put(
+    endpoints.GUILD_MEMBER(guildID, userID),
+    { ...options, access_token: accessToken },
+  );
+}
 /** Kick a member from the server */
 export async function kick(guildID: string, memberID: string, reason?: string) {
   const botsHighestRole = await highestRole(guildID, botID);
