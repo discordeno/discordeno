@@ -50,9 +50,7 @@ const baseChannel: Partial<Channel> = {
     return memberCollection;
   },
   disconnectMember(memberID) {
-    const channel = cache.channels.get(this.id!);
-    const guildID = channel!.guild!.id;
-    kickFromVoiceChannel(guildID, memberID);
+    kickFromVoiceChannel(this.guildID, memberID);
   },
   send(content) {
     return sendMessage(this.id!, content);
