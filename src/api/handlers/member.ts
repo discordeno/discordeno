@@ -18,6 +18,7 @@ import {
   AvatarUrlOptions,
   EditGuildMemberOptions,
   Errors,
+  GuildMember,
   MessageContent,
   rawAvatarUrlOptions,
   User,
@@ -227,10 +228,12 @@ export async function editMember(
 
   // TODO: if channel id is provided check if the bot has CONNECT and MOVE in channel and current channel
 
-  return RequestManager.patch(
+  const response = await RequestManager.patch(
     endpoints.GUILD_MEMBER(guildID, memberID),
     options,
   );
+
+  return snakeKeysToCamelCase(response) as GuildMember;
 }
 
 /**
