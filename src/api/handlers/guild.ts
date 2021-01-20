@@ -602,6 +602,21 @@ export async function getIntegrations(guildID: string) {
   return RequestManager.get(endpoints.GUILD_INTEGRATIONS(guildID));
 }
 
+/** Attach an integration form the current user to the guild */
+export async function createIntegration(
+  guildID: string,
+  integrationID: string,
+  integrationType: "twitch" | "youtube" | "discord",
+) {
+  const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
+  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+
+  return RequestManager.post(endpoints.GUILD_INTEGRATION_CREATE(guildID), {
+    type: integrationType,
+    id: integrationID,
+  });
+}
+
 /** Modify the behavior and settings of an integration object for the guild. Requires the MANAGE_GUILD permission. */
 export async function editIntegration(
   guildID: string,
