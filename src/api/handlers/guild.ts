@@ -598,6 +598,7 @@ export async function getWidget(guildID: string, options?: { force: boolean }) {
   return RequestManager.get(`${endpoints.GUILD_WIDGET(guildID)}.json`);
 }
 
+/** Returns the widget image URL for the guild. */
 export async function getWidgetImageUrl(
   guildID: string,
   options?: {
