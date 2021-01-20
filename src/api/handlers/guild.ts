@@ -456,7 +456,7 @@ export async function getAuditLogs(
 }
 
 /** Returns the guild widget object. Requires the MANAGE_GUILD permission. */
-export async function getWidget(guildID: string) {
+export async function getWidgetSettings(guildID: string) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
