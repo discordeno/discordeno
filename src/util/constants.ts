@@ -119,6 +119,9 @@ export const endpoints = {
   GUILD_TEMPLATES: (guildID: string) => `${GUILDS_BASE(guildID)}/templates`,
   GUILD_PREVIEW: (guildID: string) => `${GUILDS_BASE(guildID)}/preview`,
 
+  // Voice
+  VOICE_REGIONS: `${baseEndpoints.BASE_URL}/voice/regions`,
+
   INVITE: (inviteCode: string) =>
     `${baseEndpoints.BASE_URL}/invites/${inviteCode}`,
 
