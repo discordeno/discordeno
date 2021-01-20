@@ -689,6 +689,11 @@ export async function unban(guildID: string, id: string) {
   return RequestManager.delete(endpoints.GUILD_BAN(guildID, id));
 }
 
+/** Returns the guild preview object for the given id. If the bot is not in the guild, then the guild must be Discoverable. */
+export function getGuildPreview(guildID: string) {
+  return RequestManager.get(endpoints.GUILD_PREVIEW(guildID));
+}
+
 /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
 export async function editGuild(guildID: string, options: GuildEditOptions) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
