@@ -91,7 +91,6 @@ export async function handleInternalGuildUpdate(data: DiscordPayload) {
 
         if (Array.isArray(cachedValue) && Array.isArray(value)) {
           const different = (cachedValue.length !== value.length) ||
-            // @ts-ignore no idea how to fix this
             cachedValue.find((val) => !value.includes(val)) ||
             value.find((val) => !cachedValue.includes(val));
           if (!different) return;
@@ -102,6 +101,8 @@ export async function handleInternalGuildUpdate(data: DiscordPayload) {
         return { key, oldValue: cachedValue, value };
       }
     }).filter((change) => change) as GuildUpdateChange[];
+
+  await cacheHandlers.set("guilds", payload.id, { ...cachedGuild, ...changes });
 
   return eventHandlers.guildUpdate?.(cachedGuild, changes);
 }
