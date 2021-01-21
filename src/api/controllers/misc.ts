@@ -85,6 +85,9 @@ export async function handleInternalUserUpdate(data: DiscordPayload) {
     // @ts-ignore index signatures
     if (member[key] !== value) return member[key] = value;
   });
+
+  await cacheHandlers.set("members", userData.id, member);
+
   return eventHandlers.botUpdate?.(userData);
 }
 
