@@ -9,6 +9,7 @@ export function getGatewayBot() {
   ) as Promise<DiscordBotGatewayData>;
 }
 
+/** Returns the bot's OAuth2 application object without `flags`. */
 export function getApplicationInformation() {
   // TODO(itohatweb): types: better return type
   return RequestManager.get(endpoints.OAUTH2_APPLICATION) as Promise<
