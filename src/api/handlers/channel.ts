@@ -328,7 +328,7 @@ export async function deleteInvite(
     ]);
 
     if (!hasManageGuildPerm) {
-      throw new Error("MISSING_MANAGE_CHANNELS OR MANAGE_GUILD");
+      throw new Error(Errors.MISSING_MANAGE_CHANNELS);
     }
   }
 
