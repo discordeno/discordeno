@@ -16,6 +16,8 @@
 
 ### Minimal Example
 
+Here is a minimal example to get started with:
+
 ```typescript
 import { startBot } from "https://deno.land/x/discordeno/mod.ts";
 
