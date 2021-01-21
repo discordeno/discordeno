@@ -454,7 +454,7 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
  * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
 */
-export function getMembers(
+export async function getMembers(
   guildID: string,
   options?: GetMemberOptions,
 ) {
@@ -462,10 +462,28 @@ export function getMembers(
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
-  return RequestManager.get(
+  const result = (await RequestManager.get(
     endpoints.GUILD_MEMBERS(guildID),
     options,
-  ) as Promise<MemberCreatePayload[]>;
+  )) as MemberCreatePayload[];
+
+  const memberStructures = (await Promise.all(
+    result.map(async (member) =>
+      await structures.createMember(member, guildID)
+    ),
+  )) as Member[];
+
+  const members = new Collection(
+    memberStructures.map((member) => [member.id, member]),
+  );
+
+  Promise.all(
+    members.map(async (member) =>
+      await cacheHandlers.set("members", member.id, member)
+    ),
+  );
+
+  return members;
 }
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
