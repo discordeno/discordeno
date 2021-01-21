@@ -1,11 +1,11 @@
-import { RequestManager } from "./rest/request_manager.ts";
+import { getGatewayBot } from "./api/handlers/misc.ts";
 import {
   BotConfig,
   DiscordBotGatewayData,
   EventHandlers,
   Intents,
 } from "./types/mod.ts";
-import { baseEndpoints, endpoints, GATEWAY_VERSION } from "./util/constants.ts";
+import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 
 export let authorization = "";
@@ -45,9 +45,7 @@ export async function startBot(config: BotConfig) {
   authorization = `Bot ${config.token}`;
 
   // Initial API connection to get info about bots connection
-  botGatewayData = await RequestManager.get(
-    endpoints.GATEWAY_BOT,
-  ) as DiscordBotGatewayData;
+  botGatewayData = await getGatewayBot();
 
   // Explicitly append gateway version and encoding
   botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
@@ -102,9 +100,7 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   );
 
   // Initial API connection to get info about bots connection
-  botGatewayData = await RequestManager.get(
-    endpoints.GATEWAY_BOT,
-  ) as DiscordBotGatewayData;
+  botGatewayData = await getGatewayBot();
 
   if (!data.wsURL) proxyWSURL = botGatewayData.url;
   await spawnShards(
