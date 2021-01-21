@@ -95,8 +95,6 @@ export const endpoints = {
     `${GUILDS_BASE(guildID)}/integrations/${integrationID}/sync`,
   GUILD_INTEGRATIONS: (guildID: string) =>
     `${GUILDS_BASE(guildID)}/integrations?include_applications=true`,
-  GUILD_INTEGRATION_CREATE: (guildID: string) =>
-    `${GUILDS_BASE(guildID)}/integrations`,
   GUILD_INVITES: (guildID: string) => `${GUILDS_BASE(guildID)}/invites`,
   GUILD_LEAVE: (guildID: string) =>
     `${baseEndpoints.BASE_URL}/users/@me/guilds/${guildID}`,
