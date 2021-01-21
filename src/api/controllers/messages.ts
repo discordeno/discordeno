@@ -102,5 +102,7 @@ export async function handleInternalMessageUpdate(data: DiscordPayload) {
     return;
   }
 
+  await structures.createMessage(payload);
+
   eventHandlers.messageUpdate?.(cachedMessage, oldMessage);
 }
