@@ -6,6 +6,7 @@ export * from "./errors.ts";
 export * from "./fetch.ts";
 export * from "./guild.ts";
 export * from "./interactions.ts";
+export * from "./invite.ts";
 export * from "./member.ts";
 export * from "./message.ts";
 export * from "./options.ts";

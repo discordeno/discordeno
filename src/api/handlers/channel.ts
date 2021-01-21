@@ -9,6 +9,7 @@ import {
   GetMessagesAfter,
   GetMessagesAround,
   GetMessagesBefore,
+  InvitePayload,
   MessageContent,
   MessageCreateOptions,
   Permission,
@@ -304,8 +305,9 @@ export async function createInvite(
 
 /** Returns an invite for the given code. */
 export function getInvite(inviteCode: string) {
-  //TODO(itohatweb): types: Better return type
-  return RequestManager.get(endpoints.INVITE(inviteCode));
+  return RequestManager.get(endpoints.INVITE(inviteCode)) as Promise<
+    InvitePayload
+  >;
 }
 
 /** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
@@ -330,8 +332,9 @@ export async function deleteInvite(
     }
   }
 
-  //TODO(itohatweb): types: Better return type
-  return RequestManager.delete(endpoints.INVITE(inviteCode));
+  return RequestManager.delete(endpoints.INVITE(inviteCode)) as Promise<
+    InvitePayload
+  >;
 }
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
