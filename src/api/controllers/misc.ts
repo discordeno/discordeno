@@ -120,6 +120,8 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
     selfStream: payload.self_stream || false,
   });
 
+  await cacheHandlers.set("guilds", payload.guild_id, guild);
+
   if (cachedState?.channelID !== payload.channel_id) {
     // Either joined or moved channels
     if (payload.channel_id) {
