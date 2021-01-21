@@ -3,7 +3,6 @@ import { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
 import { Emoji, StatusType } from "./discord.ts";
 import { MemberCreatePayload } from "./member.ts";
 import { Activity } from "./message.ts";
-import { ValueOf } from "./mod.ts";
 import { Permission } from "./permission.ts";
 import { ClientStatusPayload } from "./presence.ts";
 import { RoleData } from "./role.ts";
@@ -159,7 +158,6 @@ export interface CreateGuildPayload extends UpdateGuildPayload {
   /** Channels in the guild */
   channels: ChannelCreatePayload[];
   presences: Presence[];
-  [key: string]: ValueOf<CreateGuildPayload>;
 }
 
 export type GuildFeatures =
@@ -640,7 +638,6 @@ export interface GuildTemplate {
   serialized_source_guild: Guild;
   /** whether the template has unsynced changes */
   is_dirty: boolean | null;
-  [key: string]: ValueOf<GuildTemplate>;
 }
 
 export interface CreateGuildFromTemplate {
