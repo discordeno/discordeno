@@ -40,7 +40,7 @@ import { botHasPermission, calculateBits } from "../../util/permissions.ts";
 import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
 import { requestAllMembers } from "../../ws/shard_manager.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
-import { Guild, Member, structures } from "../structures/mod.ts";
+import { Guild, Member, structures, Template } from "../structures/mod.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createServer(options: CreateServerOptions) {
@@ -770,10 +770,11 @@ export function getGuild(guildID: string, counts = true) {
 
 /** Returns the guild template if it exists */
 export async function getTemplate(templateCode: string) {
-  const template = await RequestManager.get(
+  const result = await RequestManager.get(
     endpoints.GUILD_TEMPLATE(templateCode),
   ) as GuildTemplate;
-  return structures.createTemplate(template);
+  const template = await structures.createTemplate(result) as Promise<Template>;
+  return template;
 }
 
 //TODO: v11 remove this function
