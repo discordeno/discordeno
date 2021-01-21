@@ -82,6 +82,7 @@ export async function handleInternalUserUpdate(data: DiscordPayload) {
   if (!member) return;
 
   Object.entries(userData).forEach(([key, value]) => {
+    // @ts-ignore index signatures
     if (member[key] !== value) return member[key] = value;
   });
   return eventHandlers.botUpdate?.(userData);
