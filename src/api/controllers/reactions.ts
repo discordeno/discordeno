@@ -15,8 +15,7 @@ export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
   const message = await cacheHandlers.get("messages", payload.message_id);
 
   if (message) {
-    const previousReactions = message.reactions;
-    const reactionExisted = previousReactions?.find(
+    const reactionExisted = message.reactions?.find(
       (reaction) =>
         reaction.emoji.id === payload.emoji.id &&
         reaction.emoji.name === payload.emoji.name,
