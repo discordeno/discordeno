@@ -33,7 +33,7 @@ export async function handleInternalGuildCreate(
   }
 
   if (!cache.isReady) return eventHandlers.guildLoaded?.(guild);
-  return eventHandlers.guildCreate?.(guild);
+  eventHandlers.guildCreate?.(guild);
 }
 
 export async function handleInternalGuildDelete(data: DiscordPayload) {
@@ -61,7 +61,7 @@ export async function handleInternalGuildDelete(data: DiscordPayload) {
   const guild = await cacheHandlers.get("guilds", payload.id);
   if (!guild) return;
 
-  return eventHandlers.guildDelete?.(guild);
+  eventHandlers.guildDelete?.(guild);
 }
 
 export async function handleInternalGuildUpdate(data: DiscordPayload) {
@@ -104,7 +104,7 @@ export async function handleInternalGuildUpdate(data: DiscordPayload) {
 
   await cacheHandlers.set("guilds", payload.id, { ...cachedGuild, ...changes });
 
-  return eventHandlers.guildUpdate?.(cachedGuild, changes);
+  eventHandlers.guildUpdate?.(cachedGuild, changes);
 }
 
 export async function handleInternalGuildEmojisUpdate(data: DiscordPayload) {
@@ -119,7 +119,7 @@ export async function handleInternalGuildEmojisUpdate(data: DiscordPayload) {
 
   cacheHandlers.set("guilds", payload.guild_id, guild);
 
-  return eventHandlers.guildEmojisUpdate?.(
+  eventHandlers.guildEmojisUpdate?.(
     guild,
     payload.emojis,
     cachedEmojis,

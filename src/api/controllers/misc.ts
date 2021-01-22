@@ -63,7 +63,7 @@ export async function handleInternalPresenceUpdate(data: DiscordPayload) {
   const oldPresence = await cacheHandlers.get("presences", payload.user.id);
   await cacheHandlers.set("presences", payload.user.id, payload);
 
-  return eventHandlers.presenceUpdate?.(payload, oldPresence);
+  eventHandlers.presenceUpdate?.(payload, oldPresence);
 }
 
 /** This function is the internal handler for the typings event. Users can override this with controllers if desired. */
@@ -88,7 +88,7 @@ export async function handleInternalUserUpdate(data: DiscordPayload) {
 
   await cacheHandlers.set("members", userData.id, member);
 
-  return eventHandlers.botUpdate?.(userData);
+  eventHandlers.botUpdate?.(userData);
 }
 
 /** This function is the internal handler for the voice state update event. Users can override this with controllers if desired. */
@@ -149,7 +149,7 @@ export function handleInternalWebhooksUpdate(data: DiscordPayload) {
   if (data.t !== "WEBHOOKS_UPDATE") return;
 
   const options = data.d as WebhookUpdatePayload;
-  return eventHandlers.webhooksUpdate?.(
+  eventHandlers.webhooksUpdate?.(
     options.channel_id,
     options.guild_id,
   );
