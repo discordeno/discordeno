@@ -43,8 +43,11 @@ export async function handleInternalGuildRoleDelete(data: DiscordPayload) {
       if (!g.roles.includes(payload.role_id)) return;
       // Remove this role from the members cache
       g.roles = g.roles.filter((id) => id !== payload.role_id);
+      cacheHandlers.set("members", member.id, member);
     });
   });
+
+  return eventHandlers.roleDelete?.(guild, cachedRole);
 }
 
 export async function handleInternalGuildRoleUpdate(data: DiscordPayload) {
