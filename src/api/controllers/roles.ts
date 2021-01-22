@@ -62,5 +62,7 @@ export async function handleInternalGuildRoleUpdate(data: DiscordPayload) {
 
   const role = await structures.createRole(payload.role);
   guild.roles.set(payload.role.id, role);
+  await cacheHandlers.set("guilds", guild.id, guild);
+
   eventHandlers.roleUpdate?.(guild, role, cachedRole);
 }
