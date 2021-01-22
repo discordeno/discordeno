@@ -67,10 +67,10 @@ export function createShard(
     }
   };
 
-  ws.onerror = (data) => {
+  ws.onerror = (errorEvent) => {
     eventHandlers.debug?.({
       type: "wsError",
-      data: { shardID: basicShard.id, data },
+      data: { shardID: basicShard.id, ...errorEvent },
     });
   };
 
