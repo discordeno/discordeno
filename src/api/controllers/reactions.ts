@@ -113,8 +113,19 @@ export async function handleInternalMessageReactionRemove(
   );
 }
 
-export function handleInternalMessageReactionRemoveAll(data: DiscordPayload) {
+export async function handleInternalMessageReactionRemoveAll(
+  data: DiscordPayload,
+) {
   if (data.t !== "MESSAGE_REACTION_REMOVE_ALL") return;
+
+  const payload = data.d as BaseMessageReactionPayload;
+  const message = await cacheHandlers.get("messages", payload.message_id);
+
+  if (message?.reactions) {
+    message.reactions = undefined;
+
+    await cacheHandlers.set("messages", payload.message_id, message);
+  }
 
   eventHandlers.reactionRemoveAll?.(data.d as BaseMessageReactionPayload);
 }
