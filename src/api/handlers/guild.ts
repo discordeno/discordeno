@@ -777,7 +777,6 @@ export async function getTemplate(templateCode: string) {
   return template;
 }
 
-//TODO: v11 remove this function
 /** 
  * Returns the guild template if it exists 
  * @deprecated will get removed in v11 use `getTemplate` instead
