@@ -18,7 +18,7 @@ export async function handleInternalGuildRoleCreate(data: DiscordPayload) {
   guild.roles = guild.roles.set(payload.role.id, role);
   await cacheHandlers.set("guilds", payload.guild_id, guild);
 
-  return eventHandlers.roleCreate?.(guild, role);
+  eventHandlers.roleCreate?.(guild, role);
 }
 
 export async function handleInternalGuildRoleDelete(data: DiscordPayload) {
@@ -47,7 +47,7 @@ export async function handleInternalGuildRoleDelete(data: DiscordPayload) {
     });
   });
 
-  return eventHandlers.roleDelete?.(guild, cachedRole);
+  eventHandlers.roleDelete?.(guild, cachedRole);
 }
 
 export async function handleInternalGuildRoleUpdate(data: DiscordPayload) {
