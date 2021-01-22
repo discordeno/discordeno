@@ -773,7 +773,7 @@ export async function getTemplate(templateCode: string) {
   const result = await RequestManager.get(
     endpoints.GUILD_TEMPLATE(templateCode),
   ) as GuildTemplate;
-  const template = await structures.createTemplate(result) as Template;
+  const template = await structures.createTemplate(result);
   return template;
 }
 
