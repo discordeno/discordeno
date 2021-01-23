@@ -1,7 +1,7 @@
 import { UserPayload } from "./guild.ts";
 import { TeamPayload } from "./teams.ts";
 
-export interface oauthApplication {
+export interface OAuthApplication {
   /** id of the app */
   id: string;
   /** the name of the app */
