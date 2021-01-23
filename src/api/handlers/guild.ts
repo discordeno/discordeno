@@ -116,12 +116,10 @@ export async function createGuildChannel(
 ) {
   const requiredPerms: Set<Permission> = new Set(["MANAGE_CHANNELS"]);
 
-  if (options?.permissionOverwrites) {
-    options.permissionOverwrites.forEach((overwrite) => {
-      overwrite.allow.forEach(requiredPerms.add, requiredPerms);
-      overwrite.deny.forEach(requiredPerms.add, requiredPerms);
-    });
-  }
+  options?.permissionOverwrites?.forEach((overwrite) => {
+    overwrite.allow.forEach(requiredPerms.add, requiredPerms);
+    overwrite.deny.forEach(requiredPerms.add, requiredPerms);
+  });
 
   await requireBotGuildPermissions(guild.id, [...requiredPerms]);
 
