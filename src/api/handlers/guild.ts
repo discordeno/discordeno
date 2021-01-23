@@ -772,13 +772,23 @@ export function getGuild(guildID: string, counts = true) {
 }
 
 /** Returns the guild template if it exists */
+export async function getTemplate(templateCode: string) {
+  const result = await RequestManager.get(
+    endpoints.GUILD_TEMPLATE(templateCode),
+  ) as GuildTemplate;
+  const template = await structures.createTemplate(result);
+  return template;
+}
+
+/** 
+ * Returns the guild template if it exists 
+ * @deprecated will get removed in v11 use `getTemplate` instead
+ */
 export function getGuildTemplate(
   guildID: string,
   templateCode: string,
 ) {
-  return RequestManager.get(
-    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
-  ) as Promise<Template>;
+  return getTemplate(templateCode);
 }
 
 /**
