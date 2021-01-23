@@ -202,6 +202,10 @@ export enum InteractionResponseType {
 // TODO: remove this interface for v11
 /** @deprecated Use `UpsertSlashCommandOptions` instead */
 export interface EditSlashCommandOptions {
+  /** The ID of the command to upsert */
+  commandID: string;
+  /** The ID of the guild where the command is located */
+  guildID?: string;
   /** 3-32 character command name */
   name: string;
   /** 1-100 character description */
@@ -221,6 +225,10 @@ export interface EditSlashResponseOptions extends SlashCommandCallbackData {
 }
 
 export interface UpsertSlashCommandOptions {
+  /** The ID of the command to upsert */
+  commandID: string;
+  /** The ID of the guild where the command is located */
+  guildID?: string;
   /** 3-32 character command name */
   name: string;
   /** 1-100 character description */
