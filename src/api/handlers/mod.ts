@@ -1,4 +1,5 @@
 import {
+  addGroupDmRecipient,
   channelOverwriteHasPermission,
   createInvite,
   deleteMessages,
@@ -10,6 +11,7 @@ import {
   getMessages,
   getPins,
   isChannelSynced,
+  removeGroupDmRecipient,
   sendMessage,
 } from "./channel.ts";
 import {
@@ -107,6 +109,8 @@ export let handlers = {
   getPins,
   isChannelSynced,
   sendMessage,
+  addGroupDmRecipient,
+  removeGroupDmRecipient,
 
   // Guild handler
   ban,
