@@ -1,6 +1,5 @@
 import { RequestManager } from "../../rest/request_manager.ts";
 import { CreateGuildPayload, UserPayload } from "../../types/mod.ts";
-import { Connection } from "../../types/user.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /**
@@ -27,9 +26,4 @@ export function getCurrentUserGuilds() {
   return RequestManager.get(endpoints.USER_GUILDS) as Promise<
     Partial<CreateGuildPayload>
   >;
-}
-
-/** Returns a list of connection objects. Requires the `connections` OAuth2 scope. */
-export function getCurrentUserConnections() {
-  return RequestManager.get(endpoints.USER_CONNECTIONS) as Promise<Connection>;
 }
