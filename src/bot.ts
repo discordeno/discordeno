@@ -10,6 +10,7 @@ import { spawnShards } from "./ws/shard_manager.ts";
 
 export let authorization = "";
 export let botID = "";
+export let applicationID = "";
 
 export let eventHandlers: EventHandlers = {};
 
@@ -72,6 +73,11 @@ export function updateEventHandlers(newEventHandlers: EventHandlers) {
 /** INTERNAL LIB function used to set the bot ID once the READY event is sent by Discord. */
 export function setBotID(id: string) {
   if (botID !== id) botID = id;
+}
+
+/** INTERNAL LIB function used to set the application ID once the READY event is sent by Discord. */
+export function setApplicationID(id: string) {
+  if (applicationID !== id) applicationID = id;
 }
 
 // BIG BRAIN BOT STUFF ONLY BELOW THIS

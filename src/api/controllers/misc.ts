@@ -1,4 +1,4 @@
-import { eventHandlers, setBotID } from "../../bot.ts";
+import { eventHandlers, setApplicationID, setBotID } from "../../bot.ts";
 import {
   DiscordPayload,
   PresenceUpdatePayload,
@@ -24,6 +24,7 @@ export async function handleInternalReady(
 
   const payload = data.d as ReadyPayload;
   setBotID(payload.user.id);
+  setApplicationID(payload.application.id);
 
   // Triggered on each shard
   eventHandlers.shardReady?.(shardID);
