@@ -132,14 +132,18 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/webhooks/${webhookID}/${token}/github`,
 
   // Application Endpoints
-  COMMANDS: (botID: string) =>
-    `${baseEndpoints.BASE_URL}/applications/${botID}/commands`,
-  COMMANDS_GUILD: (botID: string, guildID: string) =>
-    `${baseEndpoints.BASE_URL}/applications/${botID}/guilds/${guildID}/commands`,
-  COMMANDS_ID: (botID: string, commandID: string) =>
-    `${baseEndpoints.BASE_URL}/applications/${botID}/commands/${commandID}`,
-  COMMANDS_GUILD_ID: (botID: string, commandID: string, guildID: string) =>
-    `${baseEndpoints.BASE_URL}/applications/${botID}/guilds/${guildID}/commands/${commandID}`,
+  COMMANDS: (applicationID: string) =>
+    `${baseEndpoints.BASE_URL}/applications/${applicationID}/commands`,
+  COMMANDS_GUILD: (applicationID: string, guildID: string) =>
+    `${baseEndpoints.BASE_URL}/applications/${applicationID}/guilds/${guildID}/commands`,
+  COMMANDS_ID: (applicationID: string, commandID: string) =>
+    `${baseEndpoints.BASE_URL}/applications/${applicationID}/commands/${commandID}`,
+  COMMANDS_GUILD_ID: (
+    applicationID: string,
+    commandID: string,
+    guildID: string,
+  ) =>
+    `${baseEndpoints.BASE_URL}/applications/${applicationID}/guilds/${guildID}/commands/${commandID}`,
 
   // Interaction Endpoints
   INTERACTION_ID_TOKEN: (interactionID: string, token: string) =>
