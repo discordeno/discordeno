@@ -350,7 +350,7 @@ export interface Guild {
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   invites(): ReturnType<typeof getInvites>;
   /** Kicks the user from a voice channel. Requires MOVE_MEMBERS permission*/
-  kickFromVoice(memberID: string): void;
+  kickFromVoice(memberID: string): ReturnType<typeof kickFromVoiceChannel>;
 
   // Index signature
   [key: string]: ValueOf<Guild>;
