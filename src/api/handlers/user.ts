@@ -33,8 +33,3 @@ export function getCurrentUserGuilds() {
 export function getCurrentUserConnections() {
   return RequestManager.get(endpoints.USER_CONNECTIONS) as Promise<Connection>;
 }
-
-/** This function will return the raw user payload in the rare cases you need to fetch a user directly from the API. */
-export function getUser(userID: string) {
-  return RequestManager.get(endpoints.USER(userID)) as Promise<UserPayload>;
-}
