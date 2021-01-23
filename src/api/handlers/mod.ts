@@ -1,11 +1,13 @@
 import {
   channelOverwriteHasPermission,
   createInvite,
+  deleteInvite,
   deleteMessages,
   editChannel,
   followChannel,
   getChannelInvites,
   getChannelWebhooks,
+  getInvite,
   getMessage,
   getMessages,
   getPins,
@@ -107,6 +109,8 @@ export let handlers = {
   getPins,
   isChannelSynced,
   sendMessage,
+  getInvite,
+  deleteInvite,
 
   // Guild handler
   ban,
