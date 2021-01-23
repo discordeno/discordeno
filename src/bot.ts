@@ -1,4 +1,4 @@
-import { getGatewayBot } from "./api/handlers/misc.ts";
+import { getGatewayBot } from "./api/handlers/gateway.ts";
 import {
   BotConfig,
   DiscordBotGatewayData,
