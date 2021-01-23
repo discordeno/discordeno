@@ -473,11 +473,9 @@ export async function getMembers(
     ),
   )) as Member[];
 
-  const members = new Collection(
+  return new Collection(
     memberStructures.map((member) => [member.id, member]),
   );
-
-  return members;
 }
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
