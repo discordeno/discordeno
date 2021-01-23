@@ -218,3 +218,15 @@ export interface UpsertSlashCommandOptions {
   id: string;
   guildID?: string;
 }
+
+export interface UpsertSlashCommandsOptions {
+  commandID: string;
+  /** 3-32 character command name */
+  name: string;
+  /** 1-100 character description */
+  description: string;
+  /** The parameters for the command */
+  options?: SlashCommandOption[];
+  /** @ignore this Parameter is used internally to make the request so you can safely ignore that. */
+  id?: string;
+}
