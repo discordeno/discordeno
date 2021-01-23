@@ -238,7 +238,10 @@ export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
   );
 }
 
-/** Edit an existing slash command. */
+/** 
+ * Edit an existing slash command. 
+ * @deprecated This function will be removed in v11. Use `upsertSlashCommand()` instead
+ */
 export function editSlashCommand(
   commandID: string,
   options: EditSlashCommandOptions,
