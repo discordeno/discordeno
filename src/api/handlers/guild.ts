@@ -732,12 +732,12 @@ export function leaveGuild(guildID: string) {
 }
 
 /** Returns an array of voice regions that can be used when creating servers. */
-export function getVoiceRegions() {
+export function getAvailableVoiceRegions() {
   return RequestManager.get(endpoints.VOICE_REGIONS);
 }
 
 /** Returns a list of voice region objects for the guild. Unlike the similar /voice route, this returns VIP servers when the guild is VIP-enabled. */
-export function getGuildVoiceRegions(guildID: string) {
+export function getVoiceRegions(guildID: string) {
   return RequestManager.get(endpoints.GUILD_REGIONS(guildID));
 }
 
