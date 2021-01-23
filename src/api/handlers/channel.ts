@@ -322,7 +322,7 @@ export async function deleteInvite(
   if (!hasPerm) {
     const channel = await cacheHandlers.get("channels", channelID);
 
-    const hasManageGuildPerm = await botHasPermission(channel.guildID, [
+    const hasManageGuildPerm = await botHasPermission(channel!.guildID, [
       "MANAGE_GUILD",
     ]);
 
