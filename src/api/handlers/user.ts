@@ -1,5 +1,6 @@
 import { RequestManager } from "../../rest/request_manager.ts";
 import { CreateGuildPayload, UserPayload } from "../../types/mod.ts";
+import { Connection } from "../../types/user.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /**
@@ -30,8 +31,7 @@ export function getCurrentUserGuilds() {
 
 /** Returns a list of connection objects. Requires the `connections` OAuth2 scope. */
 export function getCurrentUserConnections() {
-  // TODO(itohatweb): types: better return type
-  return RequestManager.get(endpoints.USER_CONNECTIONS);
+  return RequestManager.get(endpoints.USER_CONNECTIONS) as Promise<Connection>;
 }
 
 /** This function will return the raw user payload in the rare cases you need to fetch a user directly from the API. */
