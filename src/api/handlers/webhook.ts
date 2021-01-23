@@ -228,7 +228,9 @@ export function getSlashCommands(guildID?: string) {
  * Edit an existing slash command. If this command did not exist, it will create it.
  */
 export function upsertSlashCommand(
+  commandID: string,
   options: UpsertSlashCommandOptions,
+  guildID?: string,
 ) {
   // Use ... for content length due to unicode characters and js .length handling
   if ([...options.name].length < 2 || [...options.name].length > 32) {
@@ -242,13 +244,13 @@ export function upsertSlashCommand(
   }
 
   const result = RequestManager.patch(
-    options.guildID
+    guildID
       ? endpoints.COMMANDS_GUILD_ID(
         applicationID,
-        options.guildID,
-        options.commandID,
+        guildID,
+        commandID,
       )
-      : endpoints.COMMANDS_ID(applicationID, options.commandID),
+      : endpoints.COMMANDS_ID(applicationID, commandID),
     options,
   );
 
@@ -261,7 +263,9 @@ export function upsertSlashCommand(
  * @deprecated This function will be removed in v11. Use `upsertSlashCommand()` instead
  */
 export function editSlashCommand(
+  commandID: string,
   options: EditSlashCommandOptions,
+  guildID?: string,
 ) {
   // Use ... for content length due to unicode characters and js .length handling
   if ([...options.name].length < 2 || [...options.name].length > 32) {
@@ -275,13 +279,13 @@ export function editSlashCommand(
   }
 
   const result = RequestManager.patch(
-    options.guildID
+    guildID
       ? endpoints.COMMANDS_GUILD_ID(
         applicationID,
-        options.guildID,
-        options.commandID,
+        guildID,
+        commandID,
       )
-      : endpoints.COMMANDS_ID(applicationID, options.commandID),
+      : endpoints.COMMANDS_ID(applicationID, commandID),
     options,
   );
 
