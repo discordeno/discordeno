@@ -242,7 +242,7 @@ export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
 export function editSlashCommand(
   commandID: string,
   options: EditSlashCommandOptions,
-  guildID: string,
+  guildID?: string,
 ) {
   // Use ... for content length due to unicode characters and js .length handling
   if ([...options.name].length < 2 || [...options.name].length > 32) {
@@ -261,6 +261,7 @@ export function editSlashCommand(
       : endpoints.COMMANDS_ID(applicationID, commandID),
     options,
   );
+
   return result;
 }
 
