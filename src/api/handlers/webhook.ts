@@ -229,7 +229,7 @@ export function getSlashCommands(guildID?: string) {
 export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
   return RequestManager.post(
     options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(applicationID, options.id, options.guildID)
+      ? endpoints.COMMANDS_GUILD_ID(applicationID, options.guildID, options.id)
       : endpoints.COMMANDS_ID(applicationID, options.id),
     {
       ...options,
@@ -241,7 +241,7 @@ export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
 export function editSlashCommand(options: EditSlashCommandOptions) {
   return RequestManager.patch(
     options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(applicationID, options.id, options.guildID)
+      ? endpoints.COMMANDS_GUILD_ID(applicationID, options.guildID, options.id)
       : endpoints.COMMANDS_ID(applicationID, options.id),
     {
       ...options,
@@ -255,7 +255,7 @@ export function deleteSlashCommand(id: string, guildID?: string) {
     return RequestManager.delete(endpoints.COMMANDS_ID(applicationID, id));
   }
   return RequestManager.delete(
-    endpoints.COMMANDS_GUILD_ID(applicationID, id, guildID),
+    endpoints.COMMANDS_GUILD_ID(applicationID, guildID, id),
   );
 }
 
