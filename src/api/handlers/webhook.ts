@@ -123,6 +123,28 @@ export async function deleteWebhookWithToken(
   return result;
 }
 
+/** Returns the new webhook object for the given id. */
+export function getWebhook(webhookID: string) {
+  return RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
+}
+
+/** Get the webhooks for this channel */
+export async function getChannelWebhooks(channelID: string) {
+  const response = await RequestManager.get(
+    endpoints.CHANNEL_WEBHOOKS(channelID),
+  );
+
+  return response;
+}
+
+/** Returns the new webhook object for the given id, this call does not require authentication and returns no user in the webhook object. */
+export function getWebhookWithToken(webhookID: string, token: string) {
+  // TODO(itohatweb): better return type
+  return RequestManager.get(
+    endpoints.WEBHOOK(webhookID, token),
+  ) as Promise<WebhookPayload>;
+}
+
 /** Execute a webhook with webhook ID and webhook token */
 export async function executeWebhook(
   webhookID: string,
@@ -180,28 +202,6 @@ export async function executeWebhook(
   if (!options.wait) return;
 
   return structures.createMessage(result as MessageCreateOptions);
-}
-
-/** Returns the new webhook object for the given id. */
-export function getWebhook(webhookID: string) {
-  return RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
-}
-
-/** Get the webhooks for this channel */
-export async function getChannelWebhooks(channelID: string) {
-  const response = await RequestManager.get(
-    endpoints.CHANNEL_WEBHOOKS(channelID),
-  );
-
-  return response;
-}
-
-/** Returns the new webhook object for the given id, this call does not require authentication and returns no user in the webhook object. */
-export function getWebhookWithToken(webhookID: string, token: string) {
-  // TODO(itohatweb): better return type
-  return RequestManager.get(
-    endpoints.WEBHOOK(webhookID, token),
-  ) as Promise<WebhookPayload>;
 }
 
 export function editWebhookMessage(
@@ -309,9 +309,7 @@ export function getSlashCommands(guildID?: string) {
   );
 }
 
-/**
- * Edit an existing slash command. If this command did not exist, it will create it.
- */
+/** Edit an existing slash command. If this command did not exist, it will create it. */
 export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
   return RequestManager.post(
     options.guildID
