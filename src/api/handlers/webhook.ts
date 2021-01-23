@@ -1,4 +1,4 @@
-import { botID } from "../../bot.ts";
+import { applicationID } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import {
   CreateSlashCommandOptions,
@@ -206,8 +206,8 @@ export function createSlashCommand(options: CreateSlashCommandOptions) {
 
   return RequestManager.post(
     options.guildID
-      ? endpoints.COMMANDS_GUILD(botID, options.guildID)
-      : endpoints.COMMANDS(botID),
+      ? endpoints.COMMANDS_GUILD(applicationID, options.guildID)
+      : endpoints.COMMANDS(applicationID),
     {
       ...options,
     },
@@ -219,8 +219,8 @@ export function getSlashCommands(guildID?: string) {
   // TODO: Should this be a returned as a collection?
   return RequestManager.get(
     guildID
-      ? endpoints.COMMANDS_GUILD(botID, guildID)
-      : endpoints.COMMANDS(botID),
+      ? endpoints.COMMANDS_GUILD(applicationID, guildID)
+      : endpoints.COMMANDS(applicationID),
   );
 }
 
@@ -230,8 +230,8 @@ export function getSlashCommands(guildID?: string) {
 export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
   return RequestManager.post(
     options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(botID, options.id, options.guildID)
-      : endpoints.COMMANDS_ID(botID, options.id),
+      ? endpoints.COMMANDS_GUILD_ID(applicationID, options.id, options.guildID)
+      : endpoints.COMMANDS_ID(applicationID, options.id),
     {
       ...options,
     },
@@ -242,8 +242,8 @@ export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
 export function editSlashCommand(options: EditSlashCommandOptions) {
   return RequestManager.patch(
     options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(botID, options.id, options.guildID)
-      : endpoints.COMMANDS_ID(botID, options.id),
+      ? endpoints.COMMANDS_GUILD_ID(applicationID, options.id, options.guildID)
+      : endpoints.COMMANDS_ID(applicationID, options.id),
     {
       ...options,
     },
@@ -252,8 +252,12 @@ export function editSlashCommand(options: EditSlashCommandOptions) {
 
 /** Deletes a slash command. */
 export function deleteSlashCommand(id: string, guildID?: string) {
-  if (!guildID) return RequestManager.delete(endpoints.COMMANDS_ID(botID, id));
-  return RequestManager.delete(endpoints.COMMANDS_GUILD_ID(botID, id, guildID));
+  if (!guildID) {
+    return RequestManager.delete(endpoints.COMMANDS_ID(applicationID, id));
+  }
+  return RequestManager.delete(
+    endpoints.COMMANDS_GUILD_ID(applicationID, id, guildID),
+  );
 }
 
 /**
@@ -269,7 +273,7 @@ export function executeSlashCommand(
 ) {
   // If its already been executed, we need to send a followup response
   if (cache.executedSlashCommands.has(token)) {
-    return RequestManager.post(endpoints.WEBHOOK(botID, token), {
+    return RequestManager.post(endpoints.WEBHOOK(applicationID, token), {
       ...options,
     });
   }
@@ -298,11 +302,11 @@ export function deleteSlashResponse(
 ) {
   if (!messageID) {
     return RequestManager.delete(
-      endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
+      endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token),
     );
   }
   return RequestManager.delete(
-    endpoints.INTERACTION_ID_TOKEN_MESSAGEID(botID, token, messageID),
+    endpoints.INTERACTION_ID_TOKEN_MESSAGEID(applicationID, token, messageID),
   );
 }
 
@@ -312,7 +316,7 @@ export function editSlashResponse(
   options: EditSlashResponseOptions,
 ) {
   return RequestManager.patch(
-    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
+    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token),
     options,
   );
 }
