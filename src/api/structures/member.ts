@@ -183,7 +183,7 @@ export interface Member {
     content: string | MessageContent,
   ): ReturnType<typeof sendDirectMessage>;
   /** Kick the member from a voice channel */
-  kickFromVoice(guildID: string): void;
+  kickFromVoice(guildID: string): ReturnType<typeof kickFromVoiceChannel>;
   /** Kick the member from a guild */
   kick(guildID: string, reason?: string): ReturnType<typeof kick>;
   /** Edit the member in a guild */
