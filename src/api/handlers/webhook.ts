@@ -227,15 +227,30 @@ export function getSlashCommands(guildID?: string) {
 /**
  * Edit an existing slash command. If this command did not exist, it will create it.
  */
-export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
-  return RequestManager.post(
-    options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(applicationID, options.id, options.guildID)
-      : endpoints.COMMANDS_ID(applicationID, options.id),
-    {
-      ...options,
-    },
+export function upsertSlashCommand(
+  commandID: string,
+  options: UpsertSlashCommandOptions,
+  guildID?: string,
+) {
+  // Use ... for content length due to unicode characters and js .length handling
+  if ([...options.name].length < 2 || [...options.name].length > 32) {
+    throw new Error(Errors.INVALID_SLASH_NAME);
+  }
+
+  if (
+    [...options.description].length < 1 || [...options.description].length > 100
+  ) {
+    throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+  }
+
+  const result = RequestManager.patch(
+    guildID
+      ? endpoints.COMMANDS_GUILD_ID(applicationID, guildID, commandID)
+      : endpoints.COMMANDS_ID(applicationID, commandID),
+    options,
   );
+
+  return result;
 }
 
 /** 

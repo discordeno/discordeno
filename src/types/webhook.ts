@@ -219,6 +219,10 @@ export interface EditSlashResponseOptions extends SlashCommandCallbackData {
 }
 
 export interface UpsertSlashCommandOptions {
-  id: string;
-  guildID?: string;
+  /** 3-32 character command name */
+  name: string;
+  /** 1-100 character description */
+  description: string;
+  /** The parameters for the command */
+  options?: SlashCommandOption[];
 }
