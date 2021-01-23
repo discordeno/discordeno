@@ -199,6 +199,8 @@ export enum InteractionResponseType {
   ACK_WITH_SOURCE = 5,
 }
 
+// TODO: remove this interface for v11
+/** @deprecated Use `UpsertSlashCommandOptions` instead */
 export interface EditSlashCommandOptions {
   /** 3-32 character command name */
   name: string;

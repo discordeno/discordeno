@@ -253,6 +253,7 @@ export function upsertSlashCommand(
   return result;
 }
 
+// TODO: remove this function for v11
 /** 
  * Edit an existing slash command. 
  * @deprecated This function will be removed in v11. Use `upsertSlashCommand()` instead
