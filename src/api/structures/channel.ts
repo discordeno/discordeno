@@ -137,7 +137,7 @@ export interface Channel {
   // METHODS
 
   /** Disconnect a member from a voice channel. Requires MOVE_MEMBERS permission. */
-  kickFromVoice(memberID: string): void;
+  kickFromVoice(memberID: string): ReturnType<typeof kickFromVoiceChannel >;
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
   send(content: string | MessageContent): ReturnType<typeof sendMessage>;
