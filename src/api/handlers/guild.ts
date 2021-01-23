@@ -479,9 +479,8 @@ export async function swapRoles(guildID: string, rolePositons: PositionSwap) {
 
 /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
 export async function getPruneCount(guildID: string, options: PruneOptions) {
-  if (options.days < 1) {
-    throw new Error(Errors.PRUNE_MIN_DAYS);
-  }
+  if (options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
+  if (options.days > 30) throw new Error(Errors.PRUNE_MAX_DAYS);
 
   const hasPerm = await botHasPermission(guildID, ["KICK_MEMBERS"]);
   if (!hasPerm) {
@@ -498,9 +497,8 @@ export async function getPruneCount(guildID: string, options: PruneOptions) {
 
 /** Begin pruning all members in the given time period */
 export async function pruneMembers(guildID: string, options: PruneOptions) {
-  if (options.days < 1) {
-    throw new Error(Errors.PRUNE_MIN_DAYS);
-  }
+  if (options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
+  if (options.days > 30) throw new Error(Errors.PRUNE_MAX_DAYS);
 
   const hasPerm = await botHasPermission(guildID, ["KICK_MEMBERS"]);
   if (!hasPerm) {
@@ -731,6 +729,11 @@ export function leaveGuild(guildID: string) {
   return RequestManager.delete(endpoints.GUILD_LEAVE(guildID));
 }
 
+/** Returns an array of voice regions that can be used when creating servers. */
+export function getAvailableVoiceRegions() {
+  return RequestManager.get(endpoints.VOICE_REGIONS);
+}
+
 /** Returns a list of voice region objects for the guild. Unlike the similar /voice route, this returns VIP servers when the guild is VIP-enabled. */
 export function getVoiceRegions(guildID: string) {
   return RequestManager.get(endpoints.GUILD_REGIONS(guildID));
@@ -769,13 +772,23 @@ export function getGuild(guildID: string, counts = true) {
 }
 
 /** Returns the guild template if it exists */
+export async function getTemplate(templateCode: string) {
+  const result = await RequestManager.get(
+    endpoints.GUILD_TEMPLATE(templateCode),
+  ) as GuildTemplate;
+  const template = await structures.createTemplate(result);
+  return template;
+}
+
+/** 
+ * Returns the guild template if it exists 
+ * @deprecated will get removed in v11 use `getTemplate` instead
+ */
 export function getGuildTemplate(
   guildID: string,
   templateCode: string,
 ) {
-  return RequestManager.get(
-    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
-  ) as Promise<Template>;
+  return getTemplate(templateCode);
 }
 
 /**

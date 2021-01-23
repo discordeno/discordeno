@@ -95,8 +95,6 @@ export const endpoints = {
     `${GUILDS_BASE(guildID)}/integrations/${integrationID}/sync`,
   GUILD_INTEGRATIONS: (guildID: string) =>
     `${GUILDS_BASE(guildID)}/integrations?include_applications=true`,
-  GUILD_INTEGRATION_CREATE: (guildID: string) =>
-    `${GUILDS_BASE(guildID)}/integrations`,
   GUILD_INVITES: (guildID: string) => `${GUILDS_BASE(guildID)}/invites`,
   GUILD_LEAVE: (guildID: string) =>
     `${baseEndpoints.BASE_URL}/users/@me/guilds/${guildID}`,
@@ -119,6 +117,9 @@ export const endpoints = {
   GUILD_TEMPLATES: (guildID: string) => `${GUILDS_BASE(guildID)}/templates`,
   GUILD_PREVIEW: (guildID: string) => `${GUILDS_BASE(guildID)}/preview`,
 
+  // Voice
+  VOICE_REGIONS: `${baseEndpoints.BASE_URL}/voice/regions`,
+
   INVITE: (inviteCode: string) =>
     `${baseEndpoints.BASE_URL}/invites/${inviteCode}`,
 
@@ -134,14 +135,18 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/webhooks/${webhookID}/${token}/github`,
 
   // Application Endpoints
-  COMMANDS: (botID: string) =>
-    `${baseEndpoints.BASE_URL}/applications/${botID}/commands`,
-  COMMANDS_GUILD: (botID: string, guildID: string) =>
-    `${baseEndpoints.BASE_URL}/applications/${botID}/guilds/${guildID}/commands`,
-  COMMANDS_ID: (botID: string, commandID: string) =>
-    `${baseEndpoints.BASE_URL}/applications/${botID}/commands/${commandID}`,
-  COMMANDS_GUILD_ID: (botID: string, commandID: string, guildID: string) =>
-    `${baseEndpoints.BASE_URL}/applications/${botID}/guilds/${guildID}/commands/${commandID}`,
+  COMMANDS: (applicationID: string) =>
+    `${baseEndpoints.BASE_URL}/applications/${applicationID}/commands`,
+  COMMANDS_GUILD: (applicationID: string, guildID: string) =>
+    `${baseEndpoints.BASE_URL}/applications/${applicationID}/guilds/${guildID}/commands`,
+  COMMANDS_ID: (applicationID: string, commandID: string) =>
+    `${baseEndpoints.BASE_URL}/applications/${applicationID}/commands/${commandID}`,
+  COMMANDS_GUILD_ID: (
+    applicationID: string,
+    commandID: string,
+    guildID: string,
+  ) =>
+    `${baseEndpoints.BASE_URL}/applications/${applicationID}/guilds/${guildID}/commands/${commandID}`,
 
   // Interaction Endpoints
   INTERACTION_ID_TOKEN: (interactionID: string, token: string) =>
@@ -166,4 +171,7 @@ export const endpoints = {
   USER_DM: `${baseEndpoints.BASE_URL}/users/@me/channels`,
   USER_CONNECTIONS: `${baseEndpoints.BASE_URL}/users/@me/connections`,
   USER_NICK: (guildID: string) => `${GUILDS_BASE(guildID)}/members/@me/nick`,
+
+  // oAuth2
+  OAUTH2_APPLICATION: `${baseEndpoints.BASE_URL}/oauth2/applications/@me`,
 };

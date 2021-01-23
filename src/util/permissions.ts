@@ -52,19 +52,22 @@ export async function botHasPermission(
   guildID: string,
   permissions: Permission[],
 ) {
-  const guild = await cacheHandlers.get("guilds", guildID);
-  if (!guild) return false;
-
-  // Check if the bot is the owner of the guild, if it is, returns true
-  if (guild.ownerID === botID) return true;
-
-  const member = (await cacheHandlers.get("members", botID))?.guilds.get(
-    guildID,
-  );
+  const member = await cacheHandlers.get("members", botID);
   if (!member) return false;
 
+  const guild = member.guild(guildID);
+  if (!guild) return false;
+
+  // The owner of a guild has all permissions, therefore, if the bot is the owner of the guild, permissions do not need to be inspected.
+  if (guild.ownerID === botID) return true;
+
+  const guildMember = member.guilds.get(
+    guildID,
+  );
+  if (!guildMember) return false;
+
   // The everyone role is not in member.roles
-  const permissionBits = [...member.roles, guild.id]
+  const permissionBits = [...guildMember.roles, guild.id]
     .map((id) => guild.roles.get(id)!)
     // Remove any edge case undefined
     .filter((r) => r)
