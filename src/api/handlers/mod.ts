@@ -70,6 +70,7 @@ import {
   avatarURL,
   editBotProfile,
   editMember,
+  joinUserToGuild,
   kick,
   moveMember,
   rawAvatarURL,
@@ -171,6 +172,7 @@ export let handlers = {
   rawAvatarURL,
   removeRole,
   sendDirectMessage,
+  joinUserToGuild,
 
   // Message handler
   addReaction,
