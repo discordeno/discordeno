@@ -468,20 +468,13 @@ export async function getMembers(
   )) as MemberCreatePayload[];
 
   const memberStructures = (await Promise.all(
-    result.map(async (member) => {
-      const member = await structures.createMember(member, guildID);
-      await cacheHandlers.set("members", member.id, member)
-    }),
+    result.map(async (member) =>
+      await structures.createMember(member, guildID)
+    ),
   )) as Member[];
 
   const members = new Collection(
     memberStructures.map((member) => [member.id, member]),
-  );
-
-  Promise.all(
-    members.map(async (member) =>
-      await cacheHandlers.set("members", member.id, member)
-    ),
   );
 
   return members;
