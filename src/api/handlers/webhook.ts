@@ -239,15 +239,18 @@ export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
 }
 
 /** Edit an existing slash command. */
-export function editSlashCommand(options: EditSlashCommandOptions) {
-  return RequestManager.patch(
-    options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(applicationID, options.id, options.guildID)
-      : endpoints.COMMANDS_ID(applicationID, options.id),
-    {
-      ...options,
-    },
+export function editSlashCommand(
+  commandID: string,
+  options: EditSlashCommandOptions,
+  guildID: string,
+) {
+  const result = RequestManager.patch(
+    guildID
+      ? endpoints.COMMANDS_GUILD_ID(applicationID, guildID, commandID)
+      : endpoints.COMMANDS_ID(applicationID, commandID),
+    options,
   );
+  return result;
 }
 
 /** Deletes a slash command. */

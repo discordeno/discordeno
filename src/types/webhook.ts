@@ -200,8 +200,12 @@ export enum InteractionResponseType {
 }
 
 export interface EditSlashCommandOptions {
-  id: string;
-  guildID?: string;
+  /** 3-32 character command name */
+  name: string;
+  /** 1-100 character description */
+  description: string;
+  /** The parameters for the command */
+  options?: SlashCommandOption[];
 }
 
 export interface ExecuteSlashCommandOptions {
