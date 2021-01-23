@@ -37,7 +37,7 @@ const baseChannel: Partial<Channel> = {
     );
   },
   kickFromVoice(memberID) {
-    kickFromVoiceChannel(this.guildID!, memberID);
+    return kickFromVoiceChannel(this.guildID!, memberID);
   },
   send(content) {
     return sendMessage(this.id!, content);
