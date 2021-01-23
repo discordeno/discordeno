@@ -128,15 +128,6 @@ export function getWebhook(webhookID: string) {
   return RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
 }
 
-/** Get the webhooks for this channel */
-export async function getChannelWebhooks(channelID: string) {
-  const response = await RequestManager.get(
-    endpoints.CHANNEL_WEBHOOKS(channelID),
-  );
-
-  return response;
-}
-
 /** Returns the new webhook object for the given id, this call does not require authentication and returns no user in the webhook object. */
 export function getWebhookWithToken(webhookID: string, token: string) {
   // TODO(itohatweb): better return type
