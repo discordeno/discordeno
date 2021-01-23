@@ -24,7 +24,7 @@ export async function handleInternalReady(
 
   const payload = data.d as ReadyPayload;
   setBotID(payload.user.id);
-  setApplicationID(payload.application.id);
+  setApplicationID(payload.application.id || payload.user.id);
 
   // Triggered on each shard
   eventHandlers.shardReady?.(shardID);
