@@ -25,6 +25,7 @@ import {
   ImageSize,
   Intents,
   MemberCreatePayload,
+  Permission,
   PositionSwap,
   PruneOptions,
   PrunePayload,
@@ -113,7 +114,16 @@ export async function createGuildChannel(
   name: string,
   options?: ChannelCreateOptions,
 ) {
-  await requireBotGuildPermissions(guild.id, ["MANAGE_CHANNELS"]);
+  const requiredPerms: Set<Permission> = new Set(["MANAGE_CHANNELS"]);
+
+  if (options?.permissionOverwrites) {
+    options.permissionOverwrites.forEach((overwrite) => {
+      overwrite.allow.forEach(requiredPerms.add, requiredPerms);
+      overwrite.deny.forEach(requiredPerms.add, requiredPerms);
+    });
+  }
+
+  await requireBotGuildPermissions(guild.id, [...requiredPerms]);
 
   const result =
     (await RequestManager.post(endpoints.GUILD_CHANNELS(guild.id), {
