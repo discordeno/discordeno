@@ -36,6 +36,15 @@ export interface WebhookCreateOptions {
   avatar?: string;
 }
 
+export interface WebhookEditOptions {
+  /** Name of the webhook (1-80 characters) */
+  name?: string;
+  /** Image url for avatar image for the default webhook avatar */
+  avatar?: string | null;
+  /** The new channel id this webhook should be moved to */
+  channelID?: string;
+}
+
 export interface ExecuteWebhookOptions {
   /** waits for server confirmation of message send before response, and returns the created message body (defaults to false; when false a message that is not saved does not return an error) */
   wait?: boolean;

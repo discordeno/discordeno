@@ -13,6 +13,7 @@ import {
   UpsertSlashCommandOptions,
   UpsertSlashCommandsOptions,
   WebhookCreateOptions,
+  WebhookEditOptions,
   WebhookPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
@@ -56,6 +57,87 @@ export async function createWebhook(
       avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
     },
   ) as Promise<WebhookPayload>;
+}
+
+/** Edit a webhook. Requires the `MANAGE_WEBHOOKS` permission. Returns the updated webhook object on success. */
+export async function editWebhook(
+  channelID: string,
+  webhookID: string,
+  options: WebhookEditOptions,
+) {
+  const hasManageWebhooksPerm = await botHasChannelPermissions(
+    channelID,
+    ["MANAGE_WEBHOOKS"],
+  );
+  if (
+    !hasManageWebhooksPerm
+  ) {
+    throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
+  }
+
+  const result = await RequestManager.patch(endpoints.WEBHOOK_ID(webhookID), {
+    ...options,
+    channel_id: options.channelID,
+  });
+
+  return result as WebhookPayload;
+}
+
+/** Edit a webhook. Returns the updated webhook object on success. */
+export async function editWebhookWithToken(
+  webhookID: string,
+  webhookToken: string,
+  options: Omit<WebhookEditOptions, "channelID">,
+) {
+  const result = await RequestManager.patch(
+    endpoints.WEBHOOK(webhookID, webhookToken),
+    options,
+  );
+
+  return result as WebhookPayload;
+}
+
+/** Delete a webhook permanently. Requires the `MANAGE_WEBHOOKS` permission. Returns a undefined on success */
+export async function deleteWebhook(channelID: string, webhookID: string) {
+  const hasManageWebhooksPerm = await botHasChannelPermissions(
+    channelID,
+    ["MANAGE_WEBHOOKS"],
+  );
+  if (
+    !hasManageWebhooksPerm
+  ) {
+    throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
+  }
+
+  const result = await RequestManager.delete(endpoints.WEBHOOK_ID(webhookID));
+
+  return result;
+}
+
+/** Delete a webhook permanently. Returns a undefined on success */
+export async function deleteWebhookWithToken(
+  webhookID: string,
+  webhookToken: string,
+) {
+  const result = await RequestManager.delete(
+    endpoints.WEBHOOK(webhookID, webhookToken),
+  );
+
+  return result;
+}
+
+/** Returns the new webhook object for the given id. */
+export async function getWebhook(webhookID: string) {
+  const result = await RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
+  return result as WebhookPayload;
+}
+
+/** Returns the new webhook object for the given id, this call does not require authentication and returns no user in the webhook object. */
+export async function getWebhookWithToken(webhookID: string, token: string) {
+  const result = await RequestManager.get(
+    endpoints.WEBHOOK(webhookID, token),
+  );
+  return result as WebhookPayload;
 }
 
 /** Execute a webhook with webhook ID and webhook token */
@@ -115,11 +197,6 @@ export async function executeWebhook(
   if (!options.wait) return;
 
   return structures.createMessage(result as MessageCreateOptions);
-}
-
-/** Returns the new webhook object for the given id. */
-export function getWebhook(webhookID: string) {
-  return RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
 }
 
 export function editWebhookMessage(
