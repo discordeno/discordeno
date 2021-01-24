@@ -49,6 +49,8 @@ export interface GuildMemberUpdatePayload {
   nick: string;
   /** When the user used their nitro boost on the guild. */
   premium_since: string | null;
+  /** whether the user has not yet passed the guild's Membership Screening requirements */
+  pending?: boolean;
 }
 
 export interface GuildMemberAddPayload extends MemberCreatePayload {
@@ -172,7 +174,11 @@ export type GuildFeatures =
   | "DISCOVERABLE"
   | "FEATURABLE"
   | "ANIMATED_ICON"
-  | "BANNER";
+  | "BANNER"
+  /** guild has enabled Membership Screening */
+  | "MEMBER_VERIFICATION_GATE_ENABLED"
+  /** guild can be previewed before joining via Membership Screening or the directory */
+  | "PREVIEW_ENABLED";
 
 export interface VoiceRegion {
   /** unique ID for the region */
@@ -660,3 +666,27 @@ export interface EditGuildTemplate {
   /** description for the template (0-120 characters) */
   description?: string | null;
 }
+
+export interface MembershipScreeningPayload {
+  /** when the fields were last updated */
+  version: string;
+  /** the steps in the screening form */
+  form_fields: MembershipScreeningFieldPayload[];
+  /** the server description shown in the screening form */
+  description: string | null;
+}
+
+export interface MembershipScreeningFieldPayload {
+  /** the type of field */
+  field_type: MembershipScreeningFieldTypes;
+  /** the title of the field */
+  label: string;
+  /** the list of rules */
+  values?: string[];
+  /** whether the user has to fill out this field */
+  required: boolean;
+}
+
+export type MembershipScreeningFieldTypes =
+  /** Server Rules */
+  "TERMS";

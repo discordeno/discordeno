@@ -26,6 +26,8 @@ import {
   ImageSize,
   Intents,
   MemberCreatePayload,
+  MembershipScreeningFieldTypes,
+  MembershipScreeningPayload,
   Overwrite,
   PositionSwap,
   PruneOptions,
@@ -40,7 +42,7 @@ import { botHasPermission, calculateBits } from "../../util/permissions.ts";
 import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
 import { requestAllMembers } from "../../ws/shard_manager.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
-import { Guild, Member, structures, Template } from "../structures/mod.ts";
+import { Guild, Member, structures } from "../structures/mod.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createServer(options: CreateServerOptions) {
@@ -919,4 +921,70 @@ export async function editGuildTemplate(
     data,
   ) as GuildTemplate;
   return structures.createTemplate(template);
+}
+
+function createMembershipStruct(
+  { form_fields: formFields, ...props }: MembershipScreeningPayload,
+) {
+  return {
+    ...props,
+    formFields: formFields.map(({ field_type, ...rest }) => ({
+      ...rest,
+      fieldType: field_type,
+    })),
+  };
+}
+
+export type MembershipScreening = ReturnType<typeof createMembershipStruct>;
+
+/** Get the membership screening form of a guild. */
+export async function getGuildMembershipScreeningForm(guildID: string) {
+  const membershipScreeningPayload = await RequestManager.get(
+    endpoints.GUILD_MEMBER_VERIFICATION(guildID),
+  ) as MembershipScreeningPayload;
+
+  return createMembershipStruct(membershipScreeningPayload);
+}
+
+/** Edit the guild's Membership Screening form. Requires the `MANAGE_GUILD` permission. */
+export async function editGuildMembershipScreeningForm(
+  guildID: string,
+  options?: EditGuildMembershipScreeningForm,
+) {
+  const membershipScreeningFormPayload = await RequestManager.patch(
+    endpoints.GUILD_MEMBER_VERIFICATION(guildID),
+    {
+      ...options,
+      form_fields: JSON.stringify(
+        options?.formFields?.map(({ fieldType, ...props }) => ({
+          ...props,
+          field_type: fieldType,
+        })),
+      ),
+    },
+  ) as MembershipScreeningPayload;
+
+  return createMembershipStruct(
+    membershipScreeningFormPayload,
+  );
+}
+
+export interface EditGuildMembershipScreeningForm {
+  /** whether Membership Screening is enabled */
+  enabled?: boolean;
+  /** array of field objects */
+  formFields?: MembershipScreeningField[];
+  /** the steps in the screening form */
+  description?: string;
+}
+
+export interface MembershipScreeningField {
+  /** the type of field */
+  fieldType: MembershipScreeningFieldTypes;
+  /** the title of the field */
+  label: string;
+  /** the list of rules */
+  values?: string[];
+  /** whether the user has to fill out this field */
+  required: boolean;
 }
