@@ -143,8 +143,8 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/applications/${applicationID}/commands/${commandID}`,
   COMMANDS_GUILD_ID: (
     applicationID: string,
-    commandID: string,
     guildID: string,
+    commandID: string,
   ) =>
     `${baseEndpoints.BASE_URL}/applications/${applicationID}/guilds/${guildID}/commands/${commandID}`,
 
