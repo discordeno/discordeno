@@ -271,6 +271,11 @@ export function upsertSlashCommand(
   return result;
 }
 
+/**
+ * Bulk edit existing slash commands. If a command does not exist, it will create it.
+ * 
+ * **NOTE:** Any slash commands that are not specified in this function will be **deleted**
+ */
 export async function upsertSlashCommands(
   options: UpsertSlashCommandsOptions[],
   guildID?: string,
