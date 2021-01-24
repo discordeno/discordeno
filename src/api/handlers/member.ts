@@ -132,7 +132,7 @@ export async function sendDirectMessage(
   if (!dmChannel) {
     // If not available in cache create a new one.
     const dmChannelData = await RequestManager.post(
-      endpoints.USER_CREATE_DM,
+      endpoints.USER_DM,
       { recipient_id: recipientID },
     ) as ChannelPayload;
     // Channel create event will have added this channel to the cache
@@ -250,6 +250,11 @@ export function moveMember(
   return editMember(guildID, memberID, { channelID });
 }
 
+/** Kicks a member from a voice channel */
+export function kickFromVoiceChannel(guildID: string, memberID: string) {
+  return editMember(guildID, memberID, { channelID: null });
+}
+
 /** Modifies the bot's username or avatar.
  * NOTE: username: if changed may cause the bot's discriminator to be randomized.
  */
@@ -282,4 +287,20 @@ export async function editBotProfile(username?: string, botAvatarURL?: string) {
       },
     ),
   ) as User;
+}
+
+/** Edit the nickname of the bot in this guild */
+export async function editBotNickname(
+  guildID: string,
+  nickname: string | null,
+) {
+  const hasPerm = await botHasPermission(guildID, ["CHANGE_NICKNAME"]);
+  if (!hasPerm) throw new Error(Errors.MISSING_CHANGE_NICKNAME);
+
+  const response = await RequestManager.patch(
+    endpoints.USER_NICK(guildID),
+    { nick: nickname },
+  ) as { nick: string };
+
+  return response.nick;
 }

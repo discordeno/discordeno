@@ -32,7 +32,6 @@ import {
   GuildMember,
   ImageFormats,
   ImageSize,
-  ValueOf,
 } from "../types/mod.ts";
 import { Member } from "./member.ts";
 import { Channel, Role, structures } from "./mod.ts";
@@ -155,8 +154,7 @@ export async function createGuild(data: GuildPayload, shardID: number) {
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    // deno-lint-ignore ban-ts-comment
-    // @ts-ignore
+    // @ts-ignore index signature
     restProps[key] = createNewProp(rest[key]);
   }
 
@@ -347,9 +345,6 @@ export interface Guild {
   unban(memberID: string): ReturnType<typeof unban>;
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   invites(): ReturnType<typeof getInvites>;
-
-  // Index signature
-  [key: string]: ValueOf<Guild>;
 }
 
 interface CleanVoiceState extends VoiceStateUpdateEventPayload {

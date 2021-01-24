@@ -1,4 +1,4 @@
-import { botID } from "../../bot.ts";
+import { applicationID } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import {
   ApplicationCommandOptionTypes,
@@ -25,10 +25,11 @@ import {
   InteractionResponse,
 } from "../types/mod.ts";
 
-/** Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
-*
-* Webhook names cannot be: 'clyde'
-*/
+/** 
+ * Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
+ *
+ * Webhook names cannot be: 'clyde'
+ */
 export async function createWebhook(
   channelID: string,
   options: CreateWebhookOptions,
@@ -176,7 +177,7 @@ export function editWebhookMessage(
   }
 
   return RequestManager.patch(
-    endpoints.WEBHOOK_EDIT(webhookID, webhookToken, messageID),
+    endpoints.WEBHOOK_MESSAGE(webhookID, webhookToken, messageID),
     { ...options, allowed_mentions: options.allowedMentions },
   );
 }
@@ -187,7 +188,7 @@ export function deleteWebhookMessage(
   messageID: string,
 ) {
   return RequestManager.delete(
-    endpoints.WEBHOOK_DELETE(webhookID, webhookToken, messageID),
+    endpoints.WEBHOOK_MESSAGE(webhookID, webhookToken, messageID),
   );
 }
 
@@ -227,11 +228,22 @@ export async function createSlashCommand(
   return snakeKeysToCamelCase(
     await RequestManager.post(
       guildID
-        ? endpoints.COMMANDS_GUILD(botID, guildID)
-        : endpoints.COMMANDS(botID),
+        ? endpoints.COMMANDS_GUILD(applicationID, guildID)
+        : endpoints.COMMANDS(applicationID),
       payload,
     ),
   ) as ApplicationCommand;
+}
+
+/** Fetchs the global command for the given ID. If a guildID is provided, the guild command will be fetched. */
+export async function getSlashCommand(commandID: string, guildID?: string) {
+  const result = await RequestManager.get(
+    guildID
+      ? endpoints.COMMANDS_GUILD_ID(applicationID, guildID, commandID)
+      : endpoints.COMMANDS_ID(applicationID, commandID),
+  );
+
+  return result as ApplicationCommand;
 }
 
 /** Fetch all of the global commands for your application. */
@@ -239,8 +251,8 @@ export function getSlashCommands(guildID?: string) {
   // TODO: Should this be a returned as a collection?
   return RequestManager.get(
     guildID
-      ? endpoints.COMMANDS_GUILD(botID, guildID)
-      : endpoints.COMMANDS(botID),
+      ? endpoints.COMMANDS_GUILD(applicationID, guildID)
+      : endpoints.COMMANDS(applicationID),
   );
 }
 
@@ -252,6 +264,17 @@ export async function upsertSlashCommand(
   options: CreateApplicationCommandOptions,
   guildID?: string,
 ) {
+  // Use ... for content length due to unicode characters and js .length handling
+  if ([...options.name].length < 2 || [...options.name].length > 32) {
+    throw new Error(Errors.INVALID_SLASH_NAME);
+  }
+
+  if (
+    [...options.description].length < 1 || [...options.description].length > 100
+  ) {
+    throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+  }
+
   const payload = {
     ...camelKeysToSnakeCase(options),
     options: options.options?.map((option) => {
@@ -262,19 +285,34 @@ export async function upsertSlashCommand(
   return snakeKeysToCamelCase(
     await RequestManager.post(
       guildID
-        ? endpoints.COMMANDS_GUILD_ID(botID, commandID, guildID)
-        : endpoints.COMMANDS_ID(botID, commandID),
+        ? endpoints.COMMANDS_GUILD_ID(applicationID, commandID, guildID)
+        : endpoints.COMMANDS_ID(applicationID, commandID),
       payload,
     ),
   ) as ApplicationCommand;
 }
 
-/** Edit an existing slash command. */
+// TODO: remove this function for v11
+/** 
+ * Edit an existing slash command. 
+ * @deprecated This function will be removed in v11. Use `upsertSlashCommand()` instead
+ */
 export async function editSlashCommand(
   commandID: string,
   options: CreateApplicationCommandOptions,
   guildID?: string,
 ) {
+  // Use ... for content length due to unicode characters and js .length handling
+  if ([...options.name].length < 2 || [...options.name].length > 32) {
+    throw new Error(Errors.INVALID_SLASH_NAME);
+  }
+
+  if (
+    [...options.description].length < 1 || [...options.description].length > 100
+  ) {
+    throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+  }
+
   const payload = {
     ...camelKeysToSnakeCase(options),
     options: options.options?.map((option) => {
@@ -285,8 +323,8 @@ export async function editSlashCommand(
   return snakeKeysToCamelCase(
     await RequestManager.post(
       guildID
-        ? endpoints.COMMANDS_GUILD_ID(botID, commandID, guildID)
-        : endpoints.COMMANDS_ID(botID, commandID),
+        ? endpoints.COMMANDS_GUILD_ID(applicationID, commandID, guildID)
+        : endpoints.COMMANDS_ID(applicationID, commandID),
       payload,
     ),
   ) as ApplicationCommand;
@@ -295,10 +333,12 @@ export async function editSlashCommand(
 /** Deletes a slash command. */
 export function deleteSlashCommand(commandID: string, guildID?: string) {
   if (!guildID) {
-    return RequestManager.delete(endpoints.COMMANDS_ID(botID, commandID));
+    return RequestManager.delete(
+      endpoints.COMMANDS_ID(applicationID, commandID),
+    );
   }
   return RequestManager.delete(
-    endpoints.COMMANDS_GUILD_ID(botID, commandID, guildID),
+    endpoints.COMMANDS_GUILD_ID(applicationID, commandID, guildID),
   );
 }
 
@@ -319,7 +359,10 @@ export function executeSlashCommand(
       ...camelKeysToSnakeCase(options),
       type: InteractionResponseTypes[options.type],
     };
-    return RequestManager.post(endpoints.WEBHOOK(botID, token), payload);
+    return RequestManager.post(
+      endpoints.WEBHOOK(applicationID, token),
+      payload,
+    );
   }
 
   // Expire in 15 minutes
@@ -346,11 +389,11 @@ export function deleteSlashResponse(
 ) {
   if (!messageID) {
     return RequestManager.delete(
-      endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
+      endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token),
     );
   }
   return RequestManager.delete(
-    endpoints.INTERACTION_ID_TOKEN_MESSAGEID(botID, token, messageID),
+    endpoints.INTERACTION_ID_TOKEN_MESSAGEID(applicationID, token, messageID),
   );
 }
 
@@ -360,7 +403,7 @@ export function editSlashResponse(
   options: EditWebhookMessageOptions,
 ) {
   return RequestManager.patch(
-    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
+    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token),
     camelKeysToSnakeCase(options),
   );
 }

@@ -19,7 +19,6 @@ import {
   ImageFormats,
   ImageSize,
   MessageContent,
-  ValueOf,
 } from "../types/mod.ts";
 import { Guild } from "./guild.ts";
 
@@ -96,14 +95,12 @@ export async function createMember(data: GuildMemberPayload, guildID: string) {
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
 
   for (const key of Object.keys(rest)) {
-    // deno-lint-ignore ban-ts-comment
-    // @ts-ignore
+    // @ts-ignore index signature
     restProps[key] = createNewProp(rest[key]);
   }
 
   for (const key of Object.keys(user)) {
-    // deno-lint-ignore ban-ts-comment
-    // @ts-ignore
+    // @ts-ignore index signature
     restProps[key] = createNewProp(user[key]);
   }
 
@@ -209,7 +206,4 @@ export interface Member {
     roleID: string,
     reason?: string,
   ): ReturnType<typeof removeRole>;
-
-  // Index signature
-  [key: string]: ValueOf<Member>;
 }

@@ -3,12 +3,14 @@ import { RequestManager } from "../../rest/request_manager.ts";
 import {
   ChannelTypes,
   FollowedChannelPayload,
+  InvitePayload,
   MessagePayload,
   WebhookPayload,
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasChannelPermissions,
+  botHasPermission,
   calculateBits,
 } from "../../util/permissions.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
@@ -124,6 +126,15 @@ export async function getPins(channelID: string) {
     endpoints.CHANNEL_PINS(channelID),
   )) as MessagePayload[];
   return Promise.all(result.map((res) => structures.createMessage(res)));
+}
+
+/** 
+ * Trigger a typing indicator for the specified channel. Generally bots should **NOT** implement this route. 
+ * However, if a bot is responding to a command and expects the computation to take a few seconds, 
+ * this endpoint may be called to let the user know that the bot is processing their message.
+ */
+export function startTyping(channelID: string) {
+  return RequestManager.post(endpoints.CHANNEL_TYPING(channelID));
 }
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
@@ -298,6 +309,39 @@ export async function createInvite(
   );
 }
 
+/** Returns an invite for the given code. */
+export function getInvite(inviteCode: string) {
+  return RequestManager.get(endpoints.INVITE(inviteCode)) as Promise<
+    InvitePayload
+  >;
+}
+
+/** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
+export async function deleteInvite(
+  channelID: string,
+  inviteCode: string,
+) {
+  const hasPerm = await botHasChannelPermissions(channelID, [
+    "MANAGE_CHANNELS",
+  ]);
+
+  if (!hasPerm) {
+    const channel = await cacheHandlers.get("channels", channelID);
+
+    const hasManageGuildPerm = await botHasPermission(channel!.guildID, [
+      "MANAGE_GUILD",
+    ]);
+
+    if (!hasManageGuildPerm) {
+      throw new Error(Errors.MISSING_MANAGE_CHANNELS);
+    }
+  }
+
+  return RequestManager.delete(endpoints.INVITE(inviteCode)) as Promise<
+    InvitePayload
+  >;
+}
+
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
 export async function getChannelWebhooks(channelID: string) {
   const hasManageWebhooksPerm = await botHasChannelPermissions(
@@ -365,6 +409,7 @@ function processEditChannelQueue() {
 export async function editChannel(
   channelID: string,
   options: ModifyChannelOptions,
+  reason?: string,
 ) {
   const hasManageChannelsPerm = await botHasChannelPermissions(
     channelID,
@@ -422,7 +467,13 @@ export async function editChannel(
     ),
   };
 
-  return RequestManager.patch(endpoints.GUILD_CHANNEL(channelID), payload);
+  return RequestManager.patch(
+    endpoints.CHANNEL_BASE(channelID),
+    {
+      ...payload,
+      reason,
+    },
+  );
 }
 
 /** Follow a News Channel to send messages to a target channel. Requires the `MANAGE_WEBHOOKS` permission in the target channel. Returns the webhook id. */

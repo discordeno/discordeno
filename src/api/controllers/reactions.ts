@@ -2,6 +2,8 @@ import { botID, eventHandlers } from "../../bot.ts";
 import {
   GatewayPayload,
   MessageReactionAddEventPayload,
+  MessageReactionRemoveAllEventPayload,
+  MessageReactionRemoveEmojiPayload,
 } from "../../types/mod.ts";
 import { snakeKeysToCamelCase } from "../../util/utils.ts";
 import { structures } from "../structures/mod.ts";
@@ -18,8 +20,7 @@ export async function handleInternalMessageReactionAdd(data: GatewayPayload) {
   const message = await cacheHandlers.get("messages", payload.message_id);
 
   if (message) {
-    const previousReactions = message.reactions;
-    const reactionExisted = previousReactions?.find(
+    const reactionExisted = message.reactions?.find(
       (reaction) =>
         reaction.emoji.id === payload.emoji.id &&
         reaction.emoji.name === payload.emoji.name,
@@ -74,8 +75,7 @@ export async function handleInternalMessageReactionRemove(
   const message = await cacheHandlers.get("messages", payload.message_id);
 
   if (message) {
-    const previousReactions = message.reactions;
-    const reactionExisted = previousReactions?.find(
+    const reactionExisted = message.reactions?.find(
       (reaction) =>
         reaction.emoji.id === payload.emoji.id &&
         reaction.emoji.name === payload.emoji.name,
@@ -122,16 +122,44 @@ export async function handleInternalMessageReactionRemove(
   );
 }
 
-export function handleInternalMessageReactionRemoveAll(data: GatewayPayload) {
+export async function handleInternalMessageReactionRemoveAll(
+  data: GatewayPayload,
+) {
   if (data.t !== "MESSAGE_REACTION_REMOVE_ALL") return;
+
+  const payload = data.d as MessageReactionRemoveAllEventPayload;
+  const message = await cacheHandlers.get("messages", payload.message_id);
+
+  if (message?.reactions) {
+    message.reactions = undefined;
+
+    await cacheHandlers.set("messages", payload.message_id, message);
+  }
 
   eventHandlers.reactionRemoveAll?.(
     snakeKeysToCamelCase(data.d) as MessageReactionRemoveAllEvent,
   );
 }
 
-export function handleInternalMessageReactionRemoveEmoji(data: GatewayPayload) {
+export async function handleInternalMessageReactionRemoveEmoji(
+  data: GatewayPayload,
+) {
   if (data.t !== "MESSAGE_REACTION_REMOVE_EMOJI") return;
+
+  const payload = data.d as MessageReactionRemoveEmojiPayload;
+  const message = await cacheHandlers.get("messages", payload.message_id);
+
+  if (message?.reactions) {
+    message.reactions = message.reactions?.filter(
+      (reaction) =>
+        !(
+          reaction.emoji.id === payload.emoji.id &&
+          reaction.emoji.name === payload.emoji.name
+        ),
+    );
+
+    await cacheHandlers.set("messages", payload.message_id, message);
+  }
 
   eventHandlers.reactionRemoveEmoji?.(
     snakeKeysToCamelCase(data.d) as MessageReactionRemoveEmoji,

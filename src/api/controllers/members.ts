@@ -76,6 +76,8 @@ export async function handleInternalGuildMemberUpdate(data: GatewayPayload) {
     payload.guild_id,
   );
 
+  await cacheHandlers.set("members", member.id, member);
+
   if (guildMember?.nick && payload.nick && guildMember.nick !== payload.nick) {
     eventHandlers.nicknameUpdate?.(
       guild,

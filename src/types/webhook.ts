@@ -87,7 +87,7 @@ export interface ExecuteGitHubCompatibleWebhook {
   wait?: boolean;
 }
 
-/** 	waits for server confirmation of message send before response (defaults to true; when false a message that is not saved does not return an error) */
+/** waits for server confirmation of message send before response (defaults to true; when false a message that is not saved does not return an error) */
 export interface EditWebhookMessageParams {
   /** the messages contents (up to 2000 characters) */
   content?: string | null;

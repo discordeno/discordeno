@@ -1,21 +1,32 @@
 # Dynamic Command Creation!
 
-Discordeno has one of the coolest ways to create commands for advanced level developers. I call it Dynamic command creation. This allows you to basically create a bunch of commands that are similar instantly.
+Discordeno has one of the coolest ways to create commands for advanced level
+developers. I call it Dynamic command creation. This allows you to basically
+create a bunch of commands that are similar instantly.
 
-This is some advanced level super magical command creation skills. Discordeno gives you the power to dynamically create commands. What that means is you can write the code for one command but dynamically create like 50 commands using that same code.
+This is some advanced level super magical command creation skills. Discordeno
+gives you the power to dynamically create commands. What that means is you can
+write the code for one command but dynamically create like 50 commands using
+that same code.
 
 ## Nekos.Life API Commands
 
-A lot of bot's have entertainment commands. Usually they have to create like 100 different files and each file is it's own code. Some might just take the functionality and move it to a separate file and reuse that function in all those files.
+A lot of bot's have entertainment commands. Usually they have to create like 100
+different files and each file is it's own code. Some might just take the
+functionality and move it to a separate file and reuse that function in all
+those files.
 
-In Discordeno, there is a better way. Dynamically create the commands based on the command name.
+In Discordeno, there is a better way. Dynamically create the commands based on
+the command name.
 
-Let's create all the commands for the entire Nekos.Life API in a very short time.
+Let's create all the commands for the entire Nekos.Life API in a very short
+time.
 
-- Create a file in the commands folder called `nekos.ts` which will create all our fun commands.
+- Create a file in the commands folder called `nekos.ts` which will create all
+  our fun commands.
 
 ```ts
-import { botCache,sendMessage } from "../../deps.ts";
+import { botCache, sendMessage } from "../../deps.ts";
 
 const nekosEndpoints = [
   { name: "tickle", path: "/img/tickle", nsfw: false },
@@ -65,9 +76,12 @@ nekosEndpoints.forEach((endpoint) => {
 });
 ```
 
-> **Note:** We have removed the endpoints that were leading to NSFW content. With them, we would just have created 68 different commands.
+> **Note:** We have removed the endpoints that were leading to NSFW content.
+> With them, we would just have created 68 different commands.
 
-Take a minute to realize what just happened. This has made 29 different unique commands dynamically. In 1 file, using the same piece of code, we created so many commands. You can easily add more commands to this.
+Take a minute to realize what just happened. This has made 29 different unique
+commands dynamically. In 1 file, using the same piece of code, we created so
+many commands. You can easily add more commands to this.
 
 **That ladies and gentleman is the power and magic of Discordeno!**
 
@@ -79,30 +93,38 @@ If your still a little confused, don't worry. Let's break it down.
 const nekosEndpoints = [
   { name: "tickle", path: "/img/tickle", nsfw: false },
   // ...
-]
+];
 ```
 
-This is just an array of all the endpoints on the API giving a name, a path, and a boolean to say if it is NSFW or not.
+This is just an array of all the endpoints on the API giving a name, a path, and
+a boolean to say if it is NSFW or not.
 
 ```ts
 botCache.commands.set(endpoint.name, {
-	name: endpoint.name,
-	nsfw: endpoint.nsfw,
-	botChannelPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
-	execute: async function (message) {
-		const url = `https://nekos.life/api/v2${endpoint.path}`;
-		const result = await fetch(url).then((res) => res.json());
-		sendMessage(message.channelID, result?.url || result[endpoint.name]);
-	},
+  name: endpoint.name,
+  nsfw: endpoint.nsfw,
+  botChannelPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
+  execute: async function (message) {
+    const url = `https://nekos.life/api/v2${endpoint.path}`;
+    const result = await fetch(url).then((res) => res.json());
+    sendMessage(message.channelID, result?.url || result[endpoint.name]);
+  },
 });
 ```
 
-This is the part where we are doing the magical stuff. So let's take a look at this a bit. 
+This is the part where we are doing the magical stuff. So let's take a look at
+this a bit.
 
-We ran a loop `nekosEndpoints.forEach()` on that array and for each item in that array, we created a command.
+We ran a loop `nekosEndpoints.forEach()` on that array and for each item in that
+array, we created a command.
 
-For the command name, we used the `endpoint.name` property. For the `nsfw` property we used the `endpoint.nsfw` property. Since all of these commands, send a message that is a URL we simply required those permissions in all 29 of these commands.
+For the command name, we used the `endpoint.name` property. For the `nsfw`
+property we used the `endpoint.nsfw` property. Since all of these commands, send
+a message that is a URL we simply required those permissions in all 29 of these
+commands.
 
-Then we simply write the code for the commands and it all just works. If you were to reload/restart your bot now with this. You will see that you have access to 68 new commands.
+Then we simply write the code for the commands and it all just works. If you
+were to reload/restart your bot now with this. You will see that you have access
+to 68 new commands.
 
 Take a minute and try out some of the commands and how they function.
