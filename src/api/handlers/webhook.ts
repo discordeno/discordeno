@@ -274,7 +274,7 @@ export function upsertSlashCommand(
 /**
  * Bulk edit existing slash commands. If a command does not exist, it will create it.
  * 
- * **NOTE:** Any slash commands that are not specified in this function will be **deleted**
+ * **NOTE:** Any slash commands that are not specified in this function will be **deleted**. If you don't provide the commandID, your commands will get a new one.
  */
 export async function upsertSlashCommands(
   options: UpsertSlashCommandsOptions[],
