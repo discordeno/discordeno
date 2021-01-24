@@ -17,13 +17,13 @@
   forwarding a request to the API so that the client does not get
   globally-banned by Discord.
 - **Efficient & lightweight**: Discordeno is simplistic, easy-to-use, versatile,
-  and efficient. Always prefer defaults that Discord recommends or the best
-  configuration for the majority of the users ― if necessary, it is remarkably
-  customizable.
-- **Functional API**: This will produce a cleaner and more performant code while
-  removing the difficulties of extending built-in classes and inheritance. Avoid
-  potential memory leaks or crashes because of too many listeners or other silly
-  issues.
+  and efficient. Uses
+  [Convention Over Configuration](https://en.wikipedia.org/wiki/Convention_over_configuration)
+  design paradigm ― prefers defaults that Discord recommends or the best
+  configuration for the majority of the users.
+- [**Functional API**](https://en.wikipedia.org/wiki/Functional_programming):
+  This will produce an overall concise and more performant code while removing
+  the difficulties of extending built-in classes and inheritance.
 
 ## Useful Links
 
