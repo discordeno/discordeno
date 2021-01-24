@@ -142,7 +142,9 @@ export interface EventHandlers {
   ) => unknown;
   heartbeat?: () => unknown;
   /** Sent when a user in a guild uses a Slash Command. */
-  interactionCreate?: (data: InteractionCommandPayload) => unknown;
+  interactionCreate?: (
+    data: Omit<InteractionCommandPayload, "member"> & { member: Member },
+  ) => unknown;
   /** Sent when a message is created. */
   messageCreate?: (message: Message) => unknown;
   /** Sent when a message is deleted. */
