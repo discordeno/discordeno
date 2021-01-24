@@ -1,17 +1,21 @@
 import {
   channelOverwriteHasPermission,
   createInvite,
+  deleteInvite,
   deleteMessages,
   editChannel,
   followChannel,
   getChannelInvites,
   getChannelWebhooks,
+  getInvite,
   getMessage,
   getMessages,
   getPins,
   isChannelSynced,
   sendMessage,
+  startTyping,
 } from "./channel.ts";
+import { getGatewayBot } from "./gateway.ts";
 import {
   ban,
   categoryChildrenIDs,
@@ -22,11 +26,13 @@ import {
   createGuildTemplate,
   createServer,
   deleteChannel,
+  deleteChannelOverwrite,
   deleteEmoji,
   deleteGuildTemplate,
   deleteIntegration,
   deleteRole,
   deleteServer,
+  editChannelOverwrite,
   editEmbed,
   editEmoji,
   editGuild,
@@ -36,12 +42,16 @@ import {
   emojiURL,
   fetchMembers,
   getAuditLogs,
+  getAvailableVoiceRegions,
   getBan,
   getBans,
   getChannel,
   getChannels,
   getEmbed,
+  getEmoji,
+  getEmojis,
   getGuild,
+  getGuildPreview,
   getGuildTemplate,
   getGuildTemplates,
   getIntegrations,
@@ -51,6 +61,7 @@ import {
   getMembersByQuery,
   getPruneCount,
   getRoles,
+  getTemplate,
   getUser,
   getVanityURL,
   getVoiceRegions,
@@ -69,9 +80,11 @@ import {
 import {
   addRole,
   avatarURL,
+  editBotNickname,
   editBotProfile,
   editMember,
   kick,
+  kickFromVoiceChannel,
   moveMember,
   rawAvatarURL,
   removeRole,
@@ -92,7 +105,23 @@ import {
   removeUserReaction,
   unpin,
 } from "./message.ts";
-import { createWebhook, executeWebhook, getWebhook } from "./webhook.ts";
+import { getApplicationInformation } from "./oauth.ts";
+import {
+  createSlashCommand,
+  createWebhook,
+  deleteSlashCommand,
+  deleteSlashResponse,
+  deleteWebhookMessage,
+  editSlashCommand,
+  editSlashResponse,
+  editWebhookMessage,
+  executeSlashCommand,
+  executeWebhook,
+  getSlashCommand,
+  getSlashCommands,
+  getWebhook,
+  upsertSlashCommand,
+} from "./webhook.ts";
 
 export let handlers = {
   // Channel handler
@@ -108,6 +137,12 @@ export let handlers = {
   getPins,
   isChannelSynced,
   sendMessage,
+  getInvite,
+  deleteInvite,
+  startTyping,
+
+  // Gateway handler
+  getGatewayBot,
 
   // Guild handler
   ban,
@@ -138,13 +173,18 @@ export let handlers = {
   getChannel,
   getChannels,
   getEmbed,
+  getEmoji,
+  getEmojis,
   getGuild,
+  getGuildPreview,
   getGuildTemplate,
   getGuildTemplates,
+  getAvailableVoiceRegions,
   getIntegrations,
   getInvites,
   getMember,
   getMembers,
+  getTemplate,
   getMembersByQuery,
   getPruneCount,
   getRoles,
@@ -158,6 +198,8 @@ export let handlers = {
   leaveGuild,
   pruneMembers,
   swapChannels,
+  editChannelOverwrite,
+  deleteChannelOverwrite,
   swapRoles,
   syncGuildTemplate,
   syncIntegration,
@@ -167,12 +209,14 @@ export let handlers = {
   addRole,
   avatarURL,
   editBotProfile,
+  editBotNickname,
   editMember,
   kick,
   moveMember,
   rawAvatarURL,
   removeRole,
   sendDirectMessage,
+  kickFromVoiceChannel,
 
   // Message handler
   addReaction,
@@ -193,6 +237,20 @@ export let handlers = {
   createWebhook,
   executeWebhook,
   getWebhook,
+  editWebhookMessage,
+  deleteWebhookMessage,
+  createSlashCommand,
+  getSlashCommand,
+  getSlashCommands,
+  upsertSlashCommand,
+  editSlashCommand,
+  deleteSlashCommand,
+  executeSlashCommand,
+  deleteSlashResponse,
+  editSlashResponse,
+
+  // OAuth handler
+  getApplicationInformation,
 };
 
 export type Handlers = typeof handlers;

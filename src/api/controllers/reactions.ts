@@ -15,8 +15,7 @@ export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
   const message = await cacheHandlers.get("messages", payload.message_id);
 
   if (message) {
-    const previousReactions = message.reactions;
-    const reactionExisted = previousReactions?.find(
+    const reactionExisted = message.reactions?.find(
       (reaction) =>
         reaction.emoji.id === payload.emoji.id &&
         reaction.emoji.name === payload.emoji.name,
@@ -68,8 +67,7 @@ export async function handleInternalMessageReactionRemove(
   const message = await cacheHandlers.get("messages", payload.message_id);
 
   if (message) {
-    const previousReactions = message.reactions;
-    const reactionExisted = previousReactions?.find(
+    const reactionExisted = message.reactions?.find(
       (reaction) =>
         reaction.emoji.id === payload.emoji.id &&
         reaction.emoji.name === payload.emoji.name,
@@ -115,14 +113,42 @@ export async function handleInternalMessageReactionRemove(
   );
 }
 
-export function handleInternalMessageReactionRemoveAll(data: DiscordPayload) {
+export async function handleInternalMessageReactionRemoveAll(
+  data: DiscordPayload,
+) {
   if (data.t !== "MESSAGE_REACTION_REMOVE_ALL") return;
+
+  const payload = data.d as BaseMessageReactionPayload;
+  const message = await cacheHandlers.get("messages", payload.message_id);
+
+  if (message?.reactions) {
+    message.reactions = undefined;
+
+    await cacheHandlers.set("messages", payload.message_id, message);
+  }
 
   eventHandlers.reactionRemoveAll?.(data.d as BaseMessageReactionPayload);
 }
 
-export function handleInternalMessageReactionRemoveEmoji(data: DiscordPayload) {
+export async function handleInternalMessageReactionRemoveEmoji(
+  data: DiscordPayload,
+) {
   if (data.t !== "MESSAGE_REACTION_REMOVE_EMOJI") return;
+
+  const payload = data.d as MessageReactionRemoveEmojiPayload;
+  const message = await cacheHandlers.get("messages", payload.message_id);
+
+  if (message?.reactions) {
+    message.reactions = message.reactions?.filter(
+      (reaction) =>
+        !(
+          reaction.emoji.id === payload.emoji.id &&
+          reaction.emoji.name === payload.emoji.name
+        ),
+    );
+
+    await cacheHandlers.set("messages", payload.message_id, message);
+  }
 
   eventHandlers.reactionRemoveEmoji?.(
     data.d as MessageReactionRemoveEmojiPayload,
