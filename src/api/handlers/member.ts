@@ -240,6 +240,11 @@ export function moveMember(
   return editMember(guildID, memberID, { channel_id: channelID });
 }
 
+/** Kicks a member from a voice channel */
+export function kickFromVoiceChannel(guildID: string, memberID: string) {
+  return editMember(guildID, memberID, { channel_id: null });
+}
+
 /** Modifies the bot's username or avatar.
  * NOTE: username: if changed may cause the bot's discriminator to be randomized.
  */
@@ -270,4 +275,20 @@ export async function editBotProfile(username?: string, botAvatarURL?: string) {
       avatar,
     },
   );
+}
+
+/** Edit the nickname of the bot in this guild */
+export async function editBotNickname(
+  guildID: string,
+  nickname: string | null,
+) {
+  const hasPerm = await botHasPermission(guildID, ["CHANGE_NICKNAME"]);
+  if (!hasPerm) throw new Error(Errors.MISSING_CHANGE_NICKNAME);
+
+  const response = await RequestManager.patch(
+    endpoints.USER_NICK(guildID),
+    { nick: nickname },
+  ) as { nick: string };
+
+  return response.nick;
 }

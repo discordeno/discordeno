@@ -53,7 +53,14 @@ If you are a beginner, you can check out these awesome official and unofficial b
 
 ## Contributing
 
+<<<<<<< HEAD
 We appreciate your help! Before contributing, please read the [Contributing Guide](https://github.com/discordeno/discordeno/blob/master/.github/CONTRIBUTING.md).
+=======
+We appreciate your help!
+
+Before contributing, please read the
+[Contributing Guide](https://github.com/discordeno/discordeno/blob/master/.github/CONTRIBUTING.md).
+>>>>>>> 51387c570578bec15b35fbb72bf5b8ce98c39e67
 
 ### License
 

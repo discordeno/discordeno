@@ -70,6 +70,8 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
     payload.guild_id,
   );
 
+  await cacheHandlers.set("messages", member.id, member);
+
   if (guildMember?.nick !== payload.nick) {
     eventHandlers.nicknameUpdate?.(
       guild,

@@ -9,6 +9,7 @@ import {
   GetMessagesAfter,
   GetMessagesAround,
   GetMessagesBefore,
+  InvitePayload,
   MessageContent,
   MessageCreateOptions,
   Permission,
@@ -19,6 +20,7 @@ import {
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasChannelPermissions,
+  botHasPermission,
   calculateBits,
 } from "../../util/permissions.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
@@ -120,6 +122,15 @@ export async function getPins(channelID: string) {
     endpoints.CHANNEL_PINS(channelID),
   )) as MessageCreateOptions[];
   return Promise.all(result.map((res) => structures.createMessage(res)));
+}
+
+/** 
+ * Trigger a typing indicator for the specified channel. Generally bots should **NOT** implement this route. 
+ * However, if a bot is responding to a command and expects the computation to take a few seconds, 
+ * this endpoint may be called to let the user know that the bot is processing their message.
+ */
+export function startTyping(channelID: string) {
+  return RequestManager.post(endpoints.CHANNEL_TYPING(channelID));
 }
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
@@ -290,6 +301,39 @@ export async function createInvite(
     throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE);
   }
   return RequestManager.post(endpoints.CHANNEL_INVITES(channelID), options);
+}
+
+/** Returns an invite for the given code. */
+export function getInvite(inviteCode: string) {
+  return RequestManager.get(endpoints.INVITE(inviteCode)) as Promise<
+    InvitePayload
+  >;
+}
+
+/** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
+export async function deleteInvite(
+  channelID: string,
+  inviteCode: string,
+) {
+  const hasPerm = await botHasChannelPermissions(channelID, [
+    "MANAGE_CHANNELS",
+  ]);
+
+  if (!hasPerm) {
+    const channel = await cacheHandlers.get("channels", channelID);
+
+    const hasManageGuildPerm = await botHasPermission(channel!.guildID, [
+      "MANAGE_GUILD",
+    ]);
+
+    if (!hasManageGuildPerm) {
+      throw new Error(Errors.MISSING_MANAGE_CHANNELS);
+    }
+  }
+
+  return RequestManager.delete(endpoints.INVITE(inviteCode)) as Promise<
+    InvitePayload
+  >;
 }
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */

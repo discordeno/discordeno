@@ -10,9 +10,14 @@ export interface CacheData {
   members: Collection<string, Member>;
   unavailableGuilds: Collection<string, number>;
   presences: Collection<string, PresenceUpdatePayload>;
-  // TODO: The type Collection's second provided generic [function] should have a definite shape.
-  // deno-lint-ignore ban-types
-  fetchAllMembersProcessingRequests: Collection<string, Function>;
+  fetchAllMembersProcessingRequests: Collection<
+    string,
+    (
+      value:
+        | Collection<string, Member>
+        | PromiseLike<Collection<string, Member>>,
+    ) => void
+  >;
   executedSlashCommands: Collection<string, string>;
 }
 
