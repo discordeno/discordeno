@@ -110,7 +110,7 @@ export async function deleteWebhook(channelID: string, webhookID: string) {
 
   const result = await RequestManager.delete(endpoints.WEBHOOK_ID(webhookID));
 
-  return result as undefined;
+  return result;
 }
 
 /** Delete a webhook permanently. Returns a undefined on success */
@@ -122,7 +122,7 @@ export async function deleteWebhookWithToken(
     endpoints.WEBHOOK(webhookID, webhookToken),
   );
 
-  return result as undefined;
+  return result;
 }
 
 /** Returns the new webhook object for the given id. */
