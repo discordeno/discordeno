@@ -230,7 +230,7 @@ export interface UpsertSlashCommandOptions {
 }
 
 export interface UpsertSlashCommandsOptions {
-  commandID: string;
+  commandID?: string;
   /** 3-32 character command name */
   name: string;
   /** 1-100 character description */
