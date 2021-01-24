@@ -39,7 +39,7 @@ export interface FetchMembersOptions {
 export interface BotConfig {
   token: string;
   compress?: boolean;
-  intents: Intents[];
+  intents: (Intents | keyof typeof Intents)[];
   eventHandlers?: EventHandlers;
 }
 

@@ -1,8 +1,8 @@
+import { GetGatewayBot } from "../api/types/gateway.ts";
 import { FetchMembersOptions } from "../api/types/mod.ts";
 import { botGatewayData, eventHandlers, proxyWSURL } from "../bot.ts";
 import {
   GatewayOpcodes,
-  GetGatewayBotPayload,
   HelloEventPayload,
   IdentifyPayload,
   ReadyEventPayload,
@@ -34,7 +34,7 @@ interface RequestMemberQueuedRequest {
 }
 
 export function createShard(
-  data: GetGatewayBotPayload,
+  data: GetGatewayBot,
   identifyPayload: IdentifyPayload,
   resuming = false,
   shardID = 0,
@@ -242,7 +242,7 @@ async function heartbeat(
   shard: BasicShard,
   interval: number,
   payload: IdentifyPayload,
-  data: GetGatewayBotPayload,
+  data: GetGatewayBot,
 ) {
   // We lost socket connection between heartbeats, resume connection
   if (shard.ws.readyState === WebSocket.CLOSED) {
@@ -293,7 +293,7 @@ async function heartbeat(
 }
 
 async function resumeConnection(
-  data: GetGatewayBotPayload,
+  data: GetGatewayBot,
   payload: IdentifyPayload,
   shardID: number,
 ) {
