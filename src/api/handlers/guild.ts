@@ -462,20 +462,40 @@ export async function getMembers(
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
-  const result = (await RequestManager.get(
-    endpoints.GUILD_MEMBERS(guildID),
-    options,
-  )) as MemberCreatePayload[];
+  const members = new Collection<string, Member>();
+  let loops = 1;
+  while (options?.limit ?? 1 > members.size) {
+    console.log(
+      `Paginating get members from REST. #${loops} / ${
+        Math.ceil((options?.limit ?? 1) / 1000)
+      }`,
+    );
 
-  const memberStructures = (await Promise.all(
-    result.map(async (member) =>
-      await structures.createMember(member, guildID)
-    ),
-  )) as Member[];
+    const result = (await RequestManager.get(
+      `${endpoints.GUILD_MEMBERS(guildID)}?limit=${
+        options?.limit ?? 1 > 1000 ? 1000 : options?.limit
+      }${options?.after ? `&after=${options.after}` : ""}`,
+    )) as MemberCreatePayload[];
 
-  return new Collection(
-    memberStructures.map((member) => [member.id, member]),
-  );
+    const memberStructures = (await Promise.all(
+      result.map(async (member) =>
+        await structures.createMember(member, guildID)
+      ),
+    ) as Member[]);
+
+    if (!memberStructures.length) break;
+
+    memberStructures.forEach((member) => members.set(member.id, member));
+
+    options = {
+      limit: options?.limit ?? 1 - 1000,
+      after: memberStructures[memberStructures.length - 1].id,
+    };
+
+    loops++;
+  }
+
+  return members;
 }
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
