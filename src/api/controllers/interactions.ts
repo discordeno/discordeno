@@ -4,13 +4,17 @@ import {
   DiscordPayload,
   InteractionCommandPayload,
 } from "../../types/mod.ts";
+import { structures } from "../structures/mod.ts";
 
-export function handleInternalInteractionCreate(data: DiscordPayload) {
+export async function handleInternalInteractionCreate(data: DiscordPayload) {
   if (data.t !== "INTERACTION_CREATE") return;
 
   const payload = data.d as InteractionCommandPayload;
   eventHandlers.interactionCreate?.(
-    payload,
+    {
+      ...payload,
+      member: await structures.createMember(payload.member, payload.guild_id),
+    },
   );
 }
 
