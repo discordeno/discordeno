@@ -9,7 +9,6 @@ import {
   ExecuteSlashCommandOptions,
   ExecuteWebhookOptions,
   MessageCreateOptions,
-  SlashCommand,
   UpsertSlashCommandOptions,
   WebhookCreateOptions,
   WebhookPayload,
@@ -214,17 +213,6 @@ export function createSlashCommand(options: CreateSlashCommandOptions) {
       ...options,
     },
   );
-}
-
-/** Fetchs the global command for the given ID. If a guildID is provided, the guild command will be fetched. */
-export async function getSlashCommand(commandID: string, guildID?: string) {
-  const result = await RequestManager.get(
-    guildID
-      ? endpoints.COMMANDS_GUILD_ID(applicationID, guildID, commandID)
-      : endpoints.COMMANDS_ID(applicationID, commandID),
-  );
-
-  return result as SlashCommand;
 }
 
 /** Fetch all global commands for your application. If a guildID is provided, the guild commands will be fetched */
