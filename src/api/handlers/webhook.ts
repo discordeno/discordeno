@@ -20,10 +20,11 @@ import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
 import { structures } from "../structures/mod.ts";
 
-/** Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
-*
-* Webhook names cannot be: 'clyde'
-*/
+/** 
+ * Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
+ *
+ * Webhook names cannot be: 'clyde'
+ */
 export async function createWebhook(
   channelID: string,
   options: WebhookCreateOptions,
@@ -310,7 +311,7 @@ export function deleteSlashCommand(id: string, guildID?: string) {
     return RequestManager.delete(endpoints.COMMANDS_ID(applicationID, id));
   }
   return RequestManager.delete(
-    endpoints.COMMANDS_GUILD_ID(applicationID, id, guildID),
+    endpoints.COMMANDS_GUILD_ID(applicationID, guildID, id),
   );
 }
 
@@ -339,7 +340,7 @@ export function executeSlashCommand(
     Date.now() + 900000,
   );
 
-  // IF NO MENTIONS ARE PROVIDED, FORCE DISABLE MENTIONS
+  // If no mentions are provided, force disable mentions
   if (!(options.data.allowed_mentions)) {
     options.data.allowed_mentions = { parse: [] };
   }
