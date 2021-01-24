@@ -126,7 +126,7 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
 
   await cacheHandlers.set("members", member.id, member);
 
-  return member as Member;
+  return member;
 }
 
 export interface Member {
