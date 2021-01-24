@@ -28,7 +28,7 @@ import {
 export interface BotConfig {
   token: string;
   compress?: boolean;
-  intents: Intents[];
+  intents: (Intents | keyof typeof Intents)[];
   eventHandlers?: EventHandlers;
 }
 
@@ -72,7 +72,23 @@ export interface DebugArg {
   data: unknown;
 }
 
+interface RateLimitData {
+  /** The number of remaining requests that can be made */
+  remaining: string | null;
+  /** Epoch time (seconds since 00:00:00 UTC on January 1, 1970) at which the rate limit resets */
+  resetTimestamp: string | null;
+  /** Total time (in seconds) of when the current rate limit bucket will reset. Can have decimals to match previous millisecond ratelimit precision */
+  retryAfter: string | null;
+  /** Returned only on a HTTP 429 response if the rate limit headers returned are of the global rate limit (not per-route) */
+  global: string | null;
+  /** A unique string denoting the rate limit being encountered (non-inclusive of major parameters in the route path) */
+  bucketID: string | null;
+  /** The URL the HTTP request is made to */
+  url: string;
+}
+
 export interface EventHandlers {
+  rateLimit?: (data: RateLimitData) => unknown;
   applicationCommandCreate?: (data: Application) => unknown;
   /** Sent when properties about the user change. */
   botUpdate?: (user: UserPayload) => unknown;
@@ -126,7 +142,9 @@ export interface EventHandlers {
   ) => unknown;
   heartbeat?: () => unknown;
   /** Sent when a user in a guild uses a Slash Command. */
-  interactionCreate?: (data: InteractionCommandPayload) => unknown;
+  interactionCreate?: (
+    data: Omit<InteractionCommandPayload, "member"> & { member: Member },
+  ) => unknown;
   /** Sent when a message is created. */
   messageCreate?: (message: Message) => unknown;
   /** Sent when a message is deleted. */

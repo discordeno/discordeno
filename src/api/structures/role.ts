@@ -70,6 +70,7 @@ const baseRole: Partial<Role> = {
 export async function createRole({ tags = {}, ...rest }: RoleData) {
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
+    // @ts-ignore index signature
     restProps[key] = createNewProp(rest[key]);
   }
 
