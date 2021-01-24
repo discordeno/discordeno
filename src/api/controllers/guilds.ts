@@ -33,7 +33,7 @@ export async function handleInternalGuildCreate(
   }
 
   if (!cache.isReady) return eventHandlers.guildLoaded?.(guild);
-  return eventHandlers.guildCreate?.(guild);
+  eventHandlers.guildCreate?.(guild);
 }
 
 export async function handleInternalGuildDelete(data: GatewayPayload) {
@@ -63,7 +63,7 @@ export async function handleInternalGuildDelete(data: GatewayPayload) {
   const guild = await cacheHandlers.get("guilds", payload.id);
   if (!guild) return;
 
-  return eventHandlers.guildDelete?.(guild);
+  eventHandlers.guildDelete?.(guild);
 }
 
 export async function handleInternalGuildUpdate(data: GatewayPayload) {
@@ -85,6 +85,7 @@ export async function handleInternalGuildUpdate(data: GatewayPayload) {
     .map(([key, value]) => {
       if (keysToSkip.includes(key)) return;
 
+      // @ts-ignore index signature
       const cachedValue = cachedGuild[key];
       if (cachedValue !== value) {
         // Guild create sends undefined and update sends false.
@@ -92,18 +93,20 @@ export async function handleInternalGuildUpdate(data: GatewayPayload) {
 
         if (Array.isArray(cachedValue) && Array.isArray(value)) {
           const different = (cachedValue.length !== value.length) ||
-            // @ts-ignore no idea how to fix this
             cachedValue.find((val) => !value.includes(val)) ||
             value.find((val) => !cachedValue.includes(val));
           if (!different) return;
         }
 
+        // @ts-ignore index signature
         cachedGuild[key] = value;
         return { key, oldValue: cachedValue, value };
       }
     }).filter((change) => change) as GuildUpdateChange[];
 
-  return eventHandlers.guildUpdate?.(cachedGuild, changes);
+  await cacheHandlers.set("guilds", payload.id, { ...cachedGuild, ...changes });
+
+  eventHandlers.guildUpdate?.(cachedGuild, changes);
 }
 
 export async function handleInternalGuildEmojisUpdate(data: GatewayPayload) {
@@ -116,7 +119,9 @@ export async function handleInternalGuildEmojisUpdate(data: GatewayPayload) {
   const cachedEmojis = guild.emojis;
   guild.emojis = payload.emojis;
 
-  return eventHandlers.guildEmojisUpdate?.(
+  cacheHandlers.set("guilds", payload.guild_id, guild);
+
+  eventHandlers.guildEmojisUpdate?.(
     guild,
     snakeKeysToCamelCase(payload.emojis),
     snakeKeysToCamelCase(cachedEmojis),

@@ -148,6 +148,12 @@ export function removeReaction(
   messageID: string,
   reaction: string,
 ) {
+  if (reaction.startsWith("<:")) {
+    reaction = reaction.substring(2, reaction.length - 1);
+  } else if (reaction.startsWith("<a:")) {
+    reaction = reaction.substring(3, reaction.length - 1);
+  }
+
   return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTION_ME(
       channelID,
@@ -170,6 +176,12 @@ export async function removeUserReaction(
   );
   if (!hasManageMessagesPerm) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
+  }
+
+  if (reaction.startsWith("<:")) {
+    reaction = reaction.substring(2, reaction.length - 1);
+  } else if (reaction.startsWith("<a:")) {
+    reaction = reaction.substring(3, reaction.length - 1);
   }
 
   return RequestManager.delete(
@@ -213,6 +225,13 @@ export async function removeReactionEmoji(
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
+
+  if (reaction.startsWith("<:")) {
+    reaction = reaction.substring(2, reaction.length - 1);
+  } else if (reaction.startsWith("<a:")) {
+    reaction = reaction.substring(3, reaction.length - 1);
+  }
+
   return RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTION(channelID, messageID, reaction),
   );

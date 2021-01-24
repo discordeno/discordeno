@@ -1,14 +1,12 @@
-import { Collection, Member } from "../../mod.ts";
 import { controllers } from "../api/controllers/mod.ts";
 import { Guild } from "../api/structures/guild.ts";
+import { Member } from "../api/structures/member.ts";
+import { GetGatewayBot } from "../api/types/gateway.ts";
 import { FetchMembersOptions } from "../api/types/mod.ts";
 import { eventHandlers } from "../bot.ts";
-import {
-  GatewayPayload,
-  GetGatewayBotPayload,
-  IdentifyPayload,
-} from "../types/mod.ts";
+import { GatewayPayload, IdentifyPayload } from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
+import { Collection } from "../util/collection.ts";
 import { BotStatusRequest, delay } from "../util/utils.ts";
 import {
   botGatewayStatusRequest,
@@ -24,7 +22,7 @@ export function allowNextShard(enabled = true) {
 }
 
 export async function spawnShards(
-  data: GetGatewayBotPayload,
+  data: GetGatewayBot,
   payload: IdentifyPayload,
   shardID: number,
   lastShardID: number,
@@ -60,7 +58,7 @@ export async function spawnShards(
       payload,
       shardID,
       lastShardID,
-      data.session_start_limit.max_concurrency,
+      data.sessionStartLimit.maxConcurrency,
     );
     return;
   }

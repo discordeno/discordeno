@@ -98,10 +98,14 @@ export async function handleInternalMessageUpdate(data: GatewayPayload) {
   // Messages with embeds can trigger update but they wont have edited_timestamp
   if (
     !payload.edited_timestamp ||
-    (cachedMessage.content !== payload.content)
+    (cachedMessage.content === payload.content)
   ) {
     return;
   }
+
+  const message = await structures.createMessage(payload);
+
+  await cacheHandlers.set("messages", payload.id, message);
 
   eventHandlers.messageUpdate?.(cachedMessage, oldMessage);
 }

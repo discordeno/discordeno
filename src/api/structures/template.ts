@@ -27,8 +27,7 @@ export function createTemplate(
 
   const restProps: Record<string, Partial<PropertyDescriptor>> = {};
   for (const key of Object.keys(rest)) {
-    // deno-lint-ignore ban-ts-comment
-    // @ts-ignore
+    // @ts-ignore index signature
     restProps[key] = createNewProp(rest[key]);
   }
 
