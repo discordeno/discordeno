@@ -292,9 +292,6 @@ export async function upsertSlashCommands(
       throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
     }
 
-    // @ts-ignore commandID is just better typing for DD
-    option["id"] = option.commandID;
-
     return option;
   });
 
