@@ -237,6 +237,4 @@ export interface UpsertSlashCommandsOptions {
   description: string;
   /** The parameters for the command */
   options?: SlashCommandOption[];
-  /** @ignore this Parameter is used internally to make the request so you can safely ignore that. */
-  id?: string;
 }
