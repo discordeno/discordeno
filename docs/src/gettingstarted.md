@@ -45,7 +45,6 @@ Starting with Discordeno is very simple, you can start from scratch without any
 boilerplates/frameworks: Add this snippet of code into a new TypeScript file:
 
 ```ts
-<<<<<<< HEAD
 import { startBot } from "https://deno.land/x/discordeno/mod.ts";
 
 startBot({
@@ -58,24 +57,6 @@ startBot({
     messageCreate(message) {
       if (message.content === "!ping") {
         message.reply("Pong using Discordeno!");
-=======
-import {
-  Intents,
-  startBot,
-} from "https://deno.land/x/discordeno@10.0.0/mod.ts";
-import config from "./config.ts";
-
-startBot({
-  token: config.token,
-  intents: [Intents.GUILD_MESSAGES, Intents.GUILDS],
-  eventHandlers: {
-    ready: () => {
-      console.log(`Logged!`);
-    },
-    messageCreate: (message) => {
-      if (message.content === "!ping") {
-        message.reply("Pong");
->>>>>>> 51387c570578bec15b35fbb72bf5b8ce98c39e67
       }
     },
   },
