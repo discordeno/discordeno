@@ -423,13 +423,16 @@ function processHeaders(url: string, headers: Headers) {
     }
   }
 
-  eventHandlers.rateLimit?.({
-    remaining,
-    bucketID,
-    global,
-    resetTimestamp,
-    retryAfter,
-    url,
-  });
+  if (ratelimited) {
+    eventHandlers.rateLimit?.({
+      remaining,
+      bucketID,
+      global,
+      resetTimestamp,
+      retryAfter,
+      url,
+    });
+  }
+
   return ratelimited ? bucketID : undefined;
 }
