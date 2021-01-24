@@ -8,9 +8,22 @@
 
 ## Features
 
-- **Secure & stable**: Discordeno is comparatively more stable than the other libraries. One of the greatest issues with almost every library is stability; types are outdated, less (or minimal) parity with the API, core maintainers have quit or no longer actively maintain the library, and whatnot. Discordeno, on the other hand, is actively maintained to ensure great performance and convenience. Discordeno internally checks all missing permissions before forwarding a request to the API so that the client does not get globally-banned by Discord.
-- **Efficient & lightweight**: Discordeno is simplistic, easy-to-use, versatile, and efficient. Always prefer defaults that Discord recommends or the best configuration for the majority of the users ― if necessary, it is remarkably customizable.
-- **Functional API**: This will produce a cleaner and more performant code while removing the difficulties of extending built-in classes and inheritance. Avoid potential memory leaks or crashes because of too many listeners or other silly issues.
+- **Secure & stable**: Discordeno is comparatively more stable than the other
+  libraries. One of the greatest issues with almost every library is stability;
+  types are outdated, less (or minimal) parity with the API, core maintainers
+  have quit or no longer actively maintain the library, and whatnot. Discordeno,
+  on the other hand, is actively maintained to ensure great performance and
+  convenience. Discordeno internally checks all missing permissions before
+  forwarding a request to the API so that the client does not get
+  globally-banned by Discord.
+- **Efficient & lightweight**: Discordeno is simplistic, easy-to-use, versatile,
+  and efficient. Always prefer defaults that Discord recommends or the best
+  configuration for the majority of the users ― if necessary, it is remarkably
+  customizable.
+- **Functional API**: This will produce a cleaner and more performant code while
+  removing the difficulties of extending built-in classes and inheritance. Avoid
+  potential memory leaks or crashes because of too many listeners or other silly
+  issues.
 
 ## Useful Links
 

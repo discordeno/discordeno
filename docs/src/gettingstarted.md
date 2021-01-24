@@ -1,7 +1,9 @@
 # Getting Started
 
-Discordeno aims for a simple, easy and stress-free interaction with the Discord API. Always supporting the latest version to ensure stability, consistency and the best developer experience.
-This guide serves as the purpose for introducing Discordeno to developers.
+Discordeno aims for a simple, easy and stress-free interaction with the Discord
+API. Always supporting the latest version to ensure stability, consistency and
+the best developer experience. This guide serves as the purpose for introducing
+Discordeno to developers.
 
 ## Requirements
 
