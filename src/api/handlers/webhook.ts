@@ -1,4 +1,4 @@
-import { botID } from "../../bot.ts";
+import { applicationID } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import {
   CreateSlashCommandOptions,
@@ -9,6 +9,7 @@ import {
   ExecuteSlashCommandOptions,
   ExecuteWebhookOptions,
   MessageCreateOptions,
+  SlashCommand,
   UpsertSlashCommandOptions,
   WebhookCreateOptions,
   WebhookEditOptions,
@@ -20,10 +21,11 @@ import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
 import { structures } from "../structures/mod.ts";
 
-/** Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
-*
-* Webhook names cannot be: 'clyde'
-*/
+/** 
+ * Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
+ *
+ * Webhook names cannot be: 'clyde'
+ */
 export async function createWebhook(
   channelID: string,
   options: WebhookCreateOptions,
@@ -282,12 +284,23 @@ export function createSlashCommand(options: CreateSlashCommandOptions) {
 
   return RequestManager.post(
     options.guildID
-      ? endpoints.COMMANDS_GUILD(botID, options.guildID)
-      : endpoints.COMMANDS(botID),
+      ? endpoints.COMMANDS_GUILD(applicationID, options.guildID)
+      : endpoints.COMMANDS(applicationID),
     {
       ...options,
     },
   );
+}
+
+/** Fetchs the global command for the given ID. If a guildID is provided, the guild command will be fetched. */
+export async function getSlashCommand(commandID: string, guildID?: string) {
+  const result = await RequestManager.get(
+    guildID
+      ? endpoints.COMMANDS_GUILD_ID(applicationID, guildID, commandID)
+      : endpoints.COMMANDS_ID(applicationID, commandID),
+  );
+
+  return result as SlashCommand;
 }
 
 /** Fetch all of the global commands for your application. */
@@ -295,39 +308,87 @@ export function getSlashCommands(guildID?: string) {
   // TODO: Should this be a returned as a collection?
   return RequestManager.get(
     guildID
-      ? endpoints.COMMANDS_GUILD(botID, guildID)
-      : endpoints.COMMANDS(botID),
+      ? endpoints.COMMANDS_GUILD(applicationID, guildID)
+      : endpoints.COMMANDS(applicationID),
   );
 }
 
-/** Edit an existing slash command. If this command did not exist, it will create it. */
-export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
-  return RequestManager.post(
-    options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(botID, options.id, options.guildID)
-      : endpoints.COMMANDS_ID(botID, options.id),
-    {
-      ...options,
-    },
+/**
+ * Edit an existing slash command. If this command did not exist, it will create it.
+ */
+export function upsertSlashCommand(
+  commandID: string,
+  options: UpsertSlashCommandOptions,
+  guildID?: string,
+) {
+  // Use ... for content length due to unicode characters and js .length handling
+  if ([...options.name].length < 2 || [...options.name].length > 32) {
+    throw new Error(Errors.INVALID_SLASH_NAME);
+  }
+
+  if (
+    [...options.description].length < 1 || [...options.description].length > 100
+  ) {
+    throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+  }
+
+  const result = RequestManager.patch(
+    guildID
+      ? endpoints.COMMANDS_GUILD_ID(
+        applicationID,
+        guildID,
+        commandID,
+      )
+      : endpoints.COMMANDS_ID(applicationID, commandID),
+    options,
   );
+
+  return result;
 }
 
-/** Edit an existing slash command. */
-export function editSlashCommand(options: EditSlashCommandOptions) {
-  return RequestManager.patch(
-    options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(botID, options.id, options.guildID)
-      : endpoints.COMMANDS_ID(botID, options.id),
-    {
-      ...options,
-    },
+// TODO: remove this function for v11
+/** 
+ * Edit an existing slash command. 
+ * @deprecated This function will be removed in v11. Use `upsertSlashCommand()` instead
+ */
+export function editSlashCommand(
+  commandID: string,
+  options: EditSlashCommandOptions,
+  guildID?: string,
+) {
+  // Use ... for content length due to unicode characters and js .length handling
+  if ([...options.name].length < 2 || [...options.name].length > 32) {
+    throw new Error(Errors.INVALID_SLASH_NAME);
+  }
+
+  if (
+    [...options.description].length < 1 || [...options.description].length > 100
+  ) {
+    throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+  }
+
+  const result = RequestManager.patch(
+    guildID
+      ? endpoints.COMMANDS_GUILD_ID(
+        applicationID,
+        guildID,
+        commandID,
+      )
+      : endpoints.COMMANDS_ID(applicationID, commandID),
+    options,
   );
+
+  return result;
 }
 
 /** Deletes a slash command. */
 export function deleteSlashCommand(id: string, guildID?: string) {
-  if (!guildID) return RequestManager.delete(endpoints.COMMANDS_ID(botID, id));
-  return RequestManager.delete(endpoints.COMMANDS_GUILD_ID(botID, id, guildID));
+  if (!guildID) {
+    return RequestManager.delete(endpoints.COMMANDS_ID(applicationID, id));
+  }
+  return RequestManager.delete(
+    endpoints.COMMANDS_GUILD_ID(applicationID, guildID, id),
+  );
 }
 
 /**
@@ -343,7 +404,7 @@ export function executeSlashCommand(
 ) {
   // If its already been executed, we need to send a followup response
   if (cache.executedSlashCommands.has(token)) {
-    return RequestManager.post(endpoints.WEBHOOK(botID, token), {
+    return RequestManager.post(endpoints.WEBHOOK(applicationID, token), {
       ...options,
     });
   }
@@ -355,7 +416,7 @@ export function executeSlashCommand(
     Date.now() + 900000,
   );
 
-  // IF NO MENTIONS ARE PROVIDED, FORCE DISABLE MENTIONS
+  // If no mentions are provided, force disable mentions
   if (!(options.data.allowed_mentions)) {
     options.data.allowed_mentions = { parse: [] };
   }
@@ -372,11 +433,11 @@ export function deleteSlashResponse(
 ) {
   if (!messageID) {
     return RequestManager.delete(
-      endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
+      endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token),
     );
   }
   return RequestManager.delete(
-    endpoints.INTERACTION_ID_TOKEN_MESSAGEID(botID, token, messageID),
+    endpoints.INTERACTION_ID_TOKEN_MESSAGEID(applicationID, token, messageID),
   );
 }
 
@@ -386,7 +447,7 @@ export function editSlashResponse(
   options: EditSlashResponseOptions,
 ) {
   return RequestManager.patch(
-    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
+    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token),
     options,
   );
 }

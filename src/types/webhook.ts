@@ -208,9 +208,15 @@ export enum InteractionResponseType {
   ACK_WITH_SOURCE = 5,
 }
 
+// TODO: remove this interface for v11
+/** @deprecated Use `UpsertSlashCommandOptions` instead */
 export interface EditSlashCommandOptions {
-  id: string;
-  guildID?: string;
+  /** 3-32 character command name */
+  name: string;
+  /** 1-100 character description */
+  description: string;
+  /** The parameters for the command */
+  options?: SlashCommandOption[];
 }
 
 export interface ExecuteSlashCommandOptions {
@@ -224,6 +230,10 @@ export interface EditSlashResponseOptions extends SlashCommandCallbackData {
 }
 
 export interface UpsertSlashCommandOptions {
-  id: string;
-  guildID?: string;
+  /** 3-32 character command name */
+  name: string;
+  /** 1-100 character description */
+  description: string;
+  /** The parameters for the command */
+  options?: SlashCommandOption[];
 }

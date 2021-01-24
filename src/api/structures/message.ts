@@ -134,6 +134,7 @@ export async function createMessage(data: MessageCreateOptions) {
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
+    // @ts-ignore index signature
     restProps[key] = createNewProp(rest[key]);
   }
 
