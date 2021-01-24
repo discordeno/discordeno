@@ -1,10 +1,9 @@
 # Migrating
 
-# From Discord.js to Discordeno
+# Migrating from Discord.js
 
 This migration guide is not intended to discredit Discord.js authors/maintainers
-or Discord.js itself. In fact, Discord.js is one of the most popular Node.js
-library which is why most users wanting to use Discordeno come from Discord.js.
+or Discord.js itself. In fact, Discord.js is the most popular Node.js library, admired and praised by a lot of JavaScript developers.
 
 ## Finding A Open Source Bot
 
