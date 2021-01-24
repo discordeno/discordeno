@@ -9,6 +9,7 @@ import {
   ExecuteSlashCommandOptions,
   ExecuteWebhookOptions,
   MessageCreateOptions,
+  SlashCommand,
   UpsertSlashCommandOptions,
   WebhookCreateOptions,
   WebhookPayload,
@@ -215,7 +216,18 @@ export function createSlashCommand(options: CreateSlashCommandOptions) {
   );
 }
 
-/** Fetch all global commands for your application. If a guildID is provided, the guild commands will be fetched */
+/** Fetchs the global command for the given ID. If a guildID is provided, the guild command will be fetched. */
+export async function getSlashCommand(commandID: string, guildID?: string) {
+  const result = await RequestManager.get(
+    guildID
+      ? endpoints.COMMANDS_GUILD_ID(applicationID, guildID, commandID)
+      : endpoints.COMMANDS_ID(applicationID, commandID),
+  );
+
+  return result as SlashCommand;
+}
+
+/** Fetch all of the global commands for your application. */
 export function getSlashCommands(guildID?: string) {
   // TODO: Should this be a returned as a collection?
   return RequestManager.get(
@@ -225,28 +237,72 @@ export function getSlashCommands(guildID?: string) {
   );
 }
 
-/** Edit an existing slash command. If this command did not exist, it will create it. */
-export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
-  return RequestManager.post(
-    options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(applicationID, options.guildID, options.id)
-      : endpoints.COMMANDS_ID(applicationID, options.id),
-    {
-      ...options,
-    },
+/**
+ * Edit an existing slash command. If this command did not exist, it will create it.
+ */
+export function upsertSlashCommand(
+  commandID: string,
+  options: UpsertSlashCommandOptions,
+  guildID?: string,
+) {
+  // Use ... for content length due to unicode characters and js .length handling
+  if ([...options.name].length < 2 || [...options.name].length > 32) {
+    throw new Error(Errors.INVALID_SLASH_NAME);
+  }
+
+  if (
+    [...options.description].length < 1 || [...options.description].length > 100
+  ) {
+    throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+  }
+
+  const result = RequestManager.patch(
+    guildID
+      ? endpoints.COMMANDS_GUILD_ID(
+        applicationID,
+        guildID,
+        commandID,
+      )
+      : endpoints.COMMANDS_ID(applicationID, commandID),
+    options,
   );
+
+  return result;
 }
 
-/** Edit an existing slash command. */
-export function editSlashCommand(options: EditSlashCommandOptions) {
-  return RequestManager.patch(
-    options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(applicationID, options.guildID, options.id)
-      : endpoints.COMMANDS_ID(applicationID, options.id),
-    {
-      ...options,
-    },
+// TODO: remove this function for v11
+/** 
+ * Edit an existing slash command. 
+ * @deprecated This function will be removed in v11. Use `upsertSlashCommand()` instead
+ */
+export function editSlashCommand(
+  commandID: string,
+  options: EditSlashCommandOptions,
+  guildID?: string,
+) {
+  // Use ... for content length due to unicode characters and js .length handling
+  if ([...options.name].length < 2 || [...options.name].length > 32) {
+    throw new Error(Errors.INVALID_SLASH_NAME);
+  }
+
+  if (
+    [...options.description].length < 1 || [...options.description].length > 100
+  ) {
+    throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+  }
+
+  const result = RequestManager.patch(
+    guildID
+      ? endpoints.COMMANDS_GUILD_ID(
+        applicationID,
+        guildID,
+        commandID,
+      )
+      : endpoints.COMMANDS_ID(applicationID, commandID),
+    options,
   );
+
+  return result;
 }
 
 /** Deletes a slash command. */
