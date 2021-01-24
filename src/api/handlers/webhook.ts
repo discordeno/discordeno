@@ -74,12 +74,12 @@ export async function editWebhook(
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
 
-  const result = RequestManager.patch(endpoints.WEBHOOK_ID(webhookID), {
+  const result = await RequestManager.patch(endpoints.WEBHOOK_ID(webhookID), {
     ...options,
     channel_id: options.channelID,
   });
 
-  return result;
+  return result as WebhookPayload;
 }
 
 /** Edit a webhook. Returns the updated webhook object on success. */
@@ -93,7 +93,7 @@ export async function editWebhookWithToken(
     options,
   );
 
-  return result;
+  return result as WebhookPayload;
 }
 
 /** Delete a webhook permanently. Requires the `MANAGE_WEBHOOKS` permission. Returns a undefined on success */
@@ -110,7 +110,7 @@ export async function deleteWebhook(channelID: string, webhookID: string) {
 
   const result = await RequestManager.delete(endpoints.WEBHOOK_ID(webhookID));
 
-  return result;
+  return result as undefined;
 }
 
 /** Delete a webhook permanently. Returns a undefined on success */
@@ -122,20 +122,21 @@ export async function deleteWebhookWithToken(
     endpoints.WEBHOOK(webhookID, webhookToken),
   );
 
-  return result;
+  return result as undefined;
 }
 
 /** Returns the new webhook object for the given id. */
-export function getWebhook(webhookID: string) {
-  return RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
+export async function getWebhook(webhookID: string) {
+  const result = await RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
+  return result as WebhookPayload;
 }
 
 /** Returns the new webhook object for the given id, this call does not require authentication and returns no user in the webhook object. */
-export function getWebhookWithToken(webhookID: string, token: string) {
-  // TODO(itohatweb): better return type
-  return RequestManager.get(
+export async function getWebhookWithToken(webhookID: string, token: string) {
+  const result = await RequestManager.get(
     endpoints.WEBHOOK(webhookID, token),
-  ) as Promise<WebhookPayload>;
+  );
+  return result as WebhookPayload;
 }
 
 /** Execute a webhook with webhook ID and webhook token */
