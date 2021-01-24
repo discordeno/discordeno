@@ -120,6 +120,7 @@ import {
   getSlashCommands,
   getWebhook,
   upsertSlashCommand,
+  upsertSlashCommands,
 } from "./webhook.ts";
 
 export let handlers = {
@@ -241,6 +242,7 @@ export let handlers = {
   getSlashCommand,
   getSlashCommands,
   upsertSlashCommand,
+  upsertSlashCommands,
   editSlashCommand,
   deleteSlashCommand,
   executeSlashCommand,

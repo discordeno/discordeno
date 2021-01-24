@@ -11,6 +11,7 @@ import {
   MessageCreateOptions,
   SlashCommand,
   UpsertSlashCommandOptions,
+  UpsertSlashCommandsOptions,
   WebhookCreateOptions,
   WebhookPayload,
 } from "../../types/mod.ts";
@@ -265,6 +266,40 @@ export function upsertSlashCommand(
       )
       : endpoints.COMMANDS_ID(applicationID, commandID),
     options,
+  );
+
+  return result;
+}
+
+/**
+ * Bulk edit existing slash commands. If a command does not exist, it will create it.
+ * 
+ * **NOTE:** Any slash commands that are not specified in this function will be **deleted**. If you don't provide the commandID and rename your command, the command gets a new ID.
+ */
+export async function upsertSlashCommands(
+  options: UpsertSlashCommandsOptions[],
+  guildID?: string,
+) {
+  const data = options.map((option) => {
+    // Use ... for content length due to unicode characters and js .length handling
+    if ([...option.name].length < 2 || [...option.name].length > 32) {
+      throw new Error(Errors.INVALID_SLASH_NAME);
+    }
+
+    if (
+      [...option.description].length < 1 || [...option.description].length > 100
+    ) {
+      throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+    }
+
+    return option;
+  });
+
+  const result = await RequestManager.put(
+    guildID
+      ? endpoints.COMMANDS_GUILD(applicationID, guildID)
+      : endpoints.COMMANDS(applicationID),
+    data,
   );
 
   return result;
