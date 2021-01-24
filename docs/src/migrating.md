@@ -1,6 +1,6 @@
 # Migrating
 
-# Migrating from Discord.js
+## Migrating from Discord.js
 
 This migration guide is not intended to discredit Discord.js authors/maintainers
 or Discord.js itself. In fact, Discord.js is the most popular Node.js library,

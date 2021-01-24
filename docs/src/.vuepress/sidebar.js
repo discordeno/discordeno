@@ -6,7 +6,7 @@ module.exports = {
         "/",
         "faq",
         "gettingstarted",
-        "djs",
+        "migrating",
       ],
     },
     {
