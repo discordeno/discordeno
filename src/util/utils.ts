@@ -79,7 +79,7 @@ function isObject(o: unknown) {
   return o === Object(o) && !Array.isArray(o) && typeof o !== "function";
 }
 // deno-lint-ignore no-explicit-any
-export function camelKeysToSnakeCase(o: any) {
+export function camelKeysToSnakeCase(o: Record<string, any>) {
   if (isObject(o)) {
     // deno-lint-ignore no-explicit-any
     const n: Record<string, any> = {};
