@@ -1,6 +1,8 @@
 import { eventHandlers, setApplicationID, setBotID } from "../../bot.ts";
 import {
   DiscordPayload,
+  Integration,
+  IntegrationDeleteEvent,
   PresenceUpdatePayload,
   ReadyPayload,
   TypingStartPayload,
@@ -155,3 +157,78 @@ export function handleInternalWebhooksUpdate(data: DiscordPayload) {
     options.guild_id,
   );
 }
+
+export function handleInternalIntegrationCreate(
+  data: DiscordPayload,
+) {
+  if (data.t !== "INTEGRATION_CREATE") return;
+
+  const {
+    guild_id: guildID,
+    enable_emoticons: enableEmoticons,
+    expire_behavior: expireBehavior,
+    expire_grace_period: expireGracePeriod,
+    subscriber_count: subscriberCount,
+    role_id: roleID,
+    synced_at: syncedAt,
+    ...rest
+  } = data.d as IntegrationCreateUpdateEvent;
+
+  eventHandlers.integrationCreate?.({
+    ...rest,
+    guildID,
+    enableEmoticons,
+    expireBehavior,
+    expireGracePeriod,
+    syncedAt,
+    subscriberCount,
+    roleID,
+  });
+}
+
+export function handleInternalIntegrationUpdate(data: DiscordPayload) {
+  if (data.t !== "INTEGRATION_UPDATE") return;
+
+  const {
+    enable_emoticons: enableEmoticons,
+    expire_behavior: expireBehavior,
+    expire_grace_period: expireGracePeriod,
+    role_id: roleID,
+    subscriber_count: subscriberCount,
+    synced_at: syncedAt,
+    guild_id: guildID,
+    ...rest
+  } = data.d as IntegrationCreateUpdateEvent;
+
+  eventHandlers.integrationUpdate?.({
+    ...rest,
+    guildID,
+    subscriberCount,
+    enableEmoticons,
+    expireGracePeriod,
+    roleID,
+    expireBehavior,
+    syncedAt,
+  });
+}
+
+export function handleInternalIntegrationDelete(data: DiscordPayload) {
+  if (data.t !== "INTEGRATION_DELETE") return;
+
+  const {
+    guild_id: guildID,
+    application_id: applicationID,
+    ...rest
+  } = data.d as IntegrationDeleteEvent;
+
+  eventHandlers.integrationDelete?.({
+    ...rest,
+    applicationID,
+    guildID,
+  });
+}
+
+export type IntegrationCreateUpdateEvent = Integration & {
+  /** id of the guild */
+  guild_id: string;
+};

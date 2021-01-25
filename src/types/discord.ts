@@ -43,7 +43,10 @@ export interface DiscordPayload {
     | "TYPING_START"
     | "USER_UPDATE"
     | "VOICE_STATE_UPDATE"
-    | "WEBHOOKS_UPDATE";
+    | "WEBHOOKS_UPDATE"
+    | "INTEGRATION_CREATE"
+    | "INTEGRATION_UPDATE"
+    | "INTEGRATION_DELETE";
 }
 
 export interface DiscordBotGatewayData {

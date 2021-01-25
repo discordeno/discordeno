@@ -1,3 +1,4 @@
+import { IntegrationCreateUpdateEvent } from "../api/controllers/misc.ts";
 import {
   Channel,
   Guild,
@@ -6,6 +7,7 @@ import {
   Role,
 } from "../api/structures/mod.ts";
 import {
+  Camelize,
   DiscordPayload,
   Emoji,
   PresenceUpdatePayload,
@@ -208,6 +210,21 @@ export interface EventHandlers {
   ) => unknown;
   /** Sent when a guild channel's webhook is created, updated, or deleted. */
   webhooksUpdate?: (channelID: string, guildID: string) => unknown;
+  /** Sent when an integration is created. */
+  integrationCreate?: (data: Camelize<IntegrationCreateUpdateEvent>) => unknown;
+  /** Sent when an integration is updated. */
+  integrationUpdate?: (data: Camelize<IntegrationCreateUpdateEvent>) => unknown;
+  /** Sent when an integration is deleted. */
+  integrationDelete?: (data: Camelize<IntegrationDeleteEvent>) => undefined;
+}
+
+export interface IntegrationDeleteEvent {
+  /** integration id */
+  id: string;
+  /** id of the guild */
+  guild_id: string;
+  /** id of the bot/OAuth2 application for this discord integration */
+  application_id?: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
@@ -241,6 +258,9 @@ export enum Intents {
   GUILD_EMOJIS = 1 << 3,
   /** Enables the following events:
    * - GUILD_INTEGRATIONS_UPDATE
+   * - INTEGRATION_CREATE
+   * - INTEGRATION_UPDATE
+   * - INTEGRATION_DELETE
    */
   GUILD_INTEGRATIONS = 1 << 4,
   /** Enables the following events:
@@ -297,5 +317,3 @@ export enum Intents {
    */
   DIRECT_MESSAGE_TYPING = 1 << 14,
 }
-
-export type ValueOf<T> = T[keyof T];
