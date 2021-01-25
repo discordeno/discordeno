@@ -40,3 +40,4 @@ Examples of good PR title:
 - Minimize dependencies; do not make circular imports.
 - Utilize functional API wherever possible and avoid usage of ES6 classes.
 - Follow [Convention Over Configuration](https://en.wikipedia.org/wiki/Convention_over_configuration) wherever possible.
+- Please follow the [guidelines for inclusive code](https://chromium.googlesource.com/chromium/src/+/master/styleguide/inclusive_code.md).
