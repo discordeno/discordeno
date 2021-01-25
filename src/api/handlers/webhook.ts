@@ -3,6 +3,7 @@ import { RequestManager } from "../../rest/request_manager.ts";
 import {
   CreateSlashCommandOptions,
   EditSlashCommandOptions,
+  EditSlashResponseOptions,
   EditWebhookMessageOptions,
   Errors,
   ExecuteSlashCommandOptions,
@@ -479,8 +480,7 @@ export function deleteSlashResponse(
 /** To edit your response to a slash command. If a messageID is not provided it will default to editing the original response. */
 export function editSlashResponse(
   token: string,
-  options: EditWebhookMessageOptions,
-  messageID?: string,
+  options: EditSlashResponseOptions,
 ) {
   if (options.content && options.content.length > 2000) {
     throw Error(Errors.MESSAGE_MAX_LENGTH);
@@ -523,8 +523,8 @@ export function editSlashResponse(
   }
 
   return RequestManager.patch(
-    messageID
-      ? endpoints.WEBHOOK_MESSAGE(applicationID, token, messageID)
+    options.messageID
+      ? endpoints.WEBHOOK_MESSAGE(applicationID, token, options.messageID)
       : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token),
     options,
   );
