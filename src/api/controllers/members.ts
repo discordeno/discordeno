@@ -81,7 +81,7 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
     );
   }
 
-  if (guildMember?.pending) {
+  if (guildMember?.pending === false) {
     eventHandlers.membershipScreeningPassed?.(guild, member);
   }
 
