@@ -557,11 +557,13 @@ export async function getMembers(
   const members = new Collection<string, Member>();
   let loops = 1;
   while (options?.limit ?? 1 > members.size) {
-    console.log(
-      `Paginating get members from REST. #${loops} / ${
-        Math.ceil((options?.limit ?? 1) / 1000)
-      }`,
-    );
+    if (options?.limit && options.limit > 1000) {
+      console.log(
+        `Paginating get members from REST. #${loops} / ${
+          Math.ceil((options?.limit ?? 1) / 1000)
+        }`,
+      );
+    }
 
     const result = await RequestManager.get(
       `${endpoints.GUILD_MEMBERS(guildID)}?limit=${
