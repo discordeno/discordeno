@@ -41,7 +41,7 @@ import { botHasPermission, calculateBits } from "../../util/permissions.ts";
 import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
 import { requestAllMembers } from "../../ws/shard_manager.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
-import { Guild, Member, structures, Template } from "../structures/mod.ts";
+import { Guild, Member, structures } from "../structures/mod.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createServer(options: CreateServerOptions) {
@@ -563,11 +563,11 @@ export async function getMembers(
       }`,
     );
 
-    const result = (await RequestManager.get(
+    const result = await RequestManager.get(
       `${endpoints.GUILD_MEMBERS(guildID)}?limit=${
         options?.limit ?? 1 > 1000 ? 1000 : options?.limit
       }${options?.after ? `&after=${options.after}` : ""}`,
-    )) as MemberCreatePayload[];
+    ) as MemberCreatePayload[];
 
     const memberStructures = (await Promise.all(
       result.map(async (member) =>
