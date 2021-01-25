@@ -3,6 +3,7 @@ import { EmojiPayload } from "./emoji.ts";
 import {
   GuildMemberPayload,
   GuildPayload,
+  IntegrationPayload,
   UnavailableGuildPayload,
 } from "./guild.ts";
 import { InteractionPayload } from "./interaction.ts";
@@ -46,6 +47,9 @@ export type GatewayPayloadDTypes =
   | GuildRoleCreateEventPayload
   | GuildRoleUpdateEventPayload
   | GuildRoleDeleteEventPayload
+  | IntegrationCreatePayload
+  | IntegrationUpdatePayload
+  | IntegrationDeletePayload
   | InviteCreateEventPayload
   | InviteDeleteEventPayload
   | MessagePayload
@@ -89,6 +93,9 @@ export type GatewayPayloadTTypes =
   | "GUILD_ROLE_CREATE"
   | "GUILD_ROLE_UPDATE"
   | "GUILD_ROLE_DELETE"
+  | "INTEGRATION_CREATE"
+  | "INTEGRATION_UPDATE"
+  | "INTEGRATION_DELETE"
   | "INVITE_CREATE"
   | "INVITE_DELETE"
   | "MESSAGE_CREATE"
@@ -151,6 +158,9 @@ export enum GatewayIntents {
   GUILD_EMOJIS = 1 << 3,
   /** Enables the following events:
    * - GUILD_INTEGRATIONS_UPDATE
+   * - INTEGRATION_CREATE
+   * - INTEGRATION_UPDATE
+   * - INTEGRATION_DELETE
    */
   GUILD_INTEGRATIONS = 1 << 4,
   /** Enables the following events:
@@ -437,6 +447,26 @@ export interface GuildRoleDeleteEventPayload {
   guild_id: string;
   /** id of the role */
   role_id: string;
+}
+
+// TODO: Add the documentation Link
+export interface IntegrationCreatePayload extends IntegrationPayload {
+  /** id of the guild */
+  guild_id: string;
+}
+
+export interface IntegrationUpdatePayload extends IntegrationPayload {
+  /** id of the guild */
+  guild_id: string;
+}
+
+export interface IntegrationDeletePayload {
+  /** integration id */
+  id: string;
+  /** id of the guild */
+  guild_id: string;
+  /** id of the bot/OAuth2 application for this discordd integration */
+  application_id?: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#invite-create-invite-create-event-fields */
