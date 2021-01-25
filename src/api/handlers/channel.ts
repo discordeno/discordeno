@@ -75,6 +75,7 @@ export async function getMessage(
   const result = await RequestManager.get(
     endpoints.CHANNEL_MESSAGE(channelID, id),
   ) as MessageCreateOptions;
+
   return structures.createMessage(result);
 }
 
@@ -113,6 +114,7 @@ export async function getMessages(
     endpoints.CHANNEL_MESSAGES(channelID),
     options,
   )) as MessageCreateOptions[];
+
   return Promise.all(result.map((res) => structures.createMessage(res)));
 }
 
@@ -121,6 +123,7 @@ export async function getPins(channelID: string) {
   const result = (await RequestManager.get(
     endpoints.CHANNEL_PINS(channelID),
   )) as MessageCreateOptions[];
+
   return Promise.all(result.map((res) => structures.createMessage(res)));
 }
 
@@ -129,8 +132,10 @@ export async function getPins(channelID: string) {
  * However, if a bot is responding to a command and expects the computation to take a few seconds, 
  * this endpoint may be called to let the user know that the bot is processing their message.
  */
-export function startTyping(channelID: string) {
-  return RequestManager.post(endpoints.CHANNEL_TYPING(channelID));
+export async function startTyping(channelID: string) {
+  const result = await RequestManager.post(endpoints.CHANNEL_TYPING(channelID));
+
+  return result;
 }
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
@@ -266,10 +271,15 @@ export async function deleteMessages(
     );
   }
 
-  return RequestManager.post(endpoints.CHANNEL_BULK_DELETE(channelID), {
-    messages: ids.splice(0, 100),
-    reason,
-  });
+  const result = await RequestManager.post(
+    endpoints.CHANNEL_BULK_DELETE(channelID),
+    {
+      messages: ids.splice(0, 100),
+      reason,
+    },
+  );
+
+  return result;
 }
 
 /** Gets the invites for this channel. Requires MANAGE_CHANNEL */
@@ -283,7 +293,10 @@ export async function getChannelInvites(channelID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
-  return RequestManager.get(endpoints.CHANNEL_INVITES(channelID));
+
+  const result = await RequestManager.get(endpoints.CHANNEL_INVITES(channelID));
+
+  return result;
 }
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
@@ -300,14 +313,24 @@ export async function createInvite(
   ) {
     throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE);
   }
-  return RequestManager.post(endpoints.CHANNEL_INVITES(channelID), options);
+
+  const result = await RequestManager.post(
+    endpoints.CHANNEL_INVITES(channelID),
+    options,
+  );
+
+  return result;
 }
 
 /** Returns an invite for the given code. */
-export function getInvite(inviteCode: string) {
-  return RequestManager.get(endpoints.INVITE(inviteCode)) as Promise<
+export async function getInvite(inviteCode: string) {
+  const result = await RequestManager.get(
+    endpoints.INVITE(inviteCode),
+  ) as Promise<
     InvitePayload
   >;
+
+  return result;
 }
 
 /** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
@@ -331,9 +354,13 @@ export async function deleteInvite(
     }
   }
 
-  return RequestManager.delete(endpoints.INVITE(inviteCode)) as Promise<
+  const result = await RequestManager.delete(
+    endpoints.INVITE(inviteCode),
+  ) as Promise<
     InvitePayload
   >;
+
+  return result;
 }
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
@@ -348,9 +375,11 @@ export async function getChannelWebhooks(channelID: string) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
 
-  return RequestManager.get(
+  const result = await RequestManager.get(
     endpoints.CHANNEL_WEBHOOKS(channelID),
   ) as Promise<WebhookPayload[]>;
+
+  return result;
 }
 
 interface EditChannelRequest {
@@ -460,13 +489,15 @@ export async function editChannel(
     ),
   };
 
-  return RequestManager.patch(
+  const result = await RequestManager.patch(
     endpoints.CHANNEL_BASE(channelID),
     {
       ...payload,
       reason,
     },
   );
+
+  return result;
 }
 
 /** Follow a News Channel to send messages to a target channel. Requires the `MANAGE_WEBHOOKS` permission in the target channel. Returns the webhook id. */
