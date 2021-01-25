@@ -61,21 +61,21 @@ export const formatImageURL = (
     (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
 };
 
-export function camelToSnakeCase(str: string) {
+function camelToSnakeCase(str: string) {
   return str.replace(/ID|[A-Z]/g, (s) => {
     if (s === "ID") return "_id";
     return `_${s.toLowerCase()}`;
   });
 }
 
-export function snakeToCamelCase(s: string) {
+function snakeToCamelCase(s: string) {
   return s.replace(/_id|([-_][a-z])/ig, ($1) => {
     if ($1 === "_id") return "ID";
     return $1.toUpperCase().replace("_", "");
   });
 }
 
-export function isObject(o: unknown) {
+function isObject(o: unknown) {
   return o === Object(o) && !Array.isArray(o) && typeof o !== "function";
 }
 // deno-lint-ignore no-explicit-any
