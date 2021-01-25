@@ -52,19 +52,17 @@ export async function botHasPermission(
   guildID: string,
   permissions: Permission[],
 ) {
+  const member = await cacheHandlers.get("members", botID);
+  if (!member) return false;
+
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return false;
 
   // Check if the bot is the owner of the guild, if it is, returns true
   if (guild.ownerID === botID) return true;
 
-  const member = (await cacheHandlers.get("members", botID))?.guilds.get(
-    guildID,
-  );
-  if (!member) return false;
-
   // The everyone role is not in member.roles
-  const permissionBits = [...member.roles, guild.id]
+  const permissionBits = [...member.guilds.get(guildID)?.roles || [], guild.id]
     .map((id) => guild.roles.get(id)!)
     // Remove any edge case undefined
     .filter((r) => r)
