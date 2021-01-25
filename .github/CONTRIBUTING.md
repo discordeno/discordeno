@@ -6,6 +6,7 @@
   you start working on the issue.
 - If you are going to work on a new feature, create an issue and discuss with
   other contributors before you start working on the feature.
+- Abide by and heed to [Discord Developer Terms of Service](https://discord.com/developers/docs/legal)
 
 ## Submitting a Pull Request
 
@@ -37,3 +38,5 @@ Examples of good PR title:
   types) comment block. Ideally, we prefer single line comment block.
 - Top-level functions should not use arrow syntax.
 - Minimize dependencies; do not make circular imports.
+- Utilize functional API wherever possible and avoid usage of ES6 classes.
+- Follow [Convention Over Configuration](https://en.wikipedia.org/wiki/Convention_over_configuration) wherever possible.

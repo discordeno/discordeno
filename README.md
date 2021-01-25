@@ -17,7 +17,7 @@
   forwarding a request to the API so that the client does not get
   globally-banned by Discord.
 - **Efficient & lightweight**: Discordeno is simplistic, easy-to-use, versatile,
-  and efficient. Uses
+  and efficient. Follows
   [Convention Over Configuration](https://en.wikipedia.org/wiki/Convention_over_configuration)
   design paradigm ― prefers defaults that Discord recommends or the best
   configuration for the majority of the users.
