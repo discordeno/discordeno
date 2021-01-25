@@ -571,11 +571,9 @@ export async function getMembers(
       }${options?.after ? `&after=${options.after}` : ""}`,
     ) as MemberCreatePayload[];
 
-    const memberStructures = (await Promise.all(
-      result.map(async (member) =>
-        await structures.createMember(member, guildID)
-      ),
-    ) as Member[]);
+    const memberStructures = await Promise.all(
+      result.map((member) => structures.createMember(member, guildID)),
+    ) as Member[];
 
     if (!memberStructures.length) break;
 
