@@ -7,7 +7,7 @@ import {
 } from "../../types/mod.ts";
 import { ChannelObject, MessageObject } from "./channel.ts";
 import { Emoji } from "./emoji.ts";
-import { GuildMember, GuildObject } from "./guild.ts";
+import { GuildMember, GuildObject, Integration } from "./guild.ts";
 import { Interaction } from "./interaction.ts";
 import { Application } from "./oauth2.ts";
 import { RoleObject } from "./permissions.ts";
@@ -48,6 +48,9 @@ export type GatewayDTypes =
   | GuildRoleCreateEvent
   | GuildRoleUpdateEvent
   | GuildRoleDeleteEvent
+  | IntegrationCreate
+  | IntegrationUpdate
+  | IntegrationDelete
   | InviteCreateEvent
   | InviteDeleteEvent
   | MessageObject
@@ -360,6 +363,26 @@ export interface GuildRoleDeleteEvent {
   guildID: string;
   /** id of the role */
   roleID: string;
+}
+
+// TODO: Add the documentation Link
+export interface IntegrationCreate extends Integration {
+  /** id of the guild */
+  guildID: string;
+}
+
+export interface IntegrationUpdate extends Integration {
+  /** id of the guild */
+  guildID: string;
+}
+
+export interface IntegrationDelete {
+  /** integration id */
+  id: string;
+  /** id of the guild */
+  guildID: string;
+  /** id of the bot/OAuth2 application for this discordd integration */
+  applicationID?: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#invite-create-invite-create-event-fields */
