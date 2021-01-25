@@ -843,9 +843,9 @@ export async function getWebhooks(guildID: string) {
 export async function getUser(userID: string) {
   const result = await RequestManager.get(
     endpoints.USER(userID),
-  ) as UserPayload;
+  );
 
-  return result;
+  return result as UserPayload;
 }
 
 /**
@@ -859,9 +859,9 @@ export async function getGuild(guildID: string, counts = true) {
   const result = await RequestManager.get(
     endpoints.GUILDS_BASE(guildID),
     { with_counts: counts },
-  ) as UpdateGuildPayload;
+  );
 
-  return result;
+  return result as UpdateGuildPayload;
 }
 
 /** Returns the guild template if it exists */
@@ -906,9 +906,9 @@ export async function createGuildFromTemplate(
   const result = await await RequestManager.post(
     endpoints.GUILD_TEMPLATE(templateCode),
     data,
-  ) as CreateGuildPayload;
+  );
 
-  return result;
+  return result as CreateGuildPayload;
 }
 
 /**

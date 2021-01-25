@@ -74,7 +74,7 @@ export async function getMessage(
 
   const result = await RequestManager.get(
     endpoints.CHANNEL_MESSAGE(channelID, id),
-  ) as MessageCreateOptions;
+  );
 
   return structures.createMessage(result);
 }
@@ -243,7 +243,7 @@ export async function sendMessage(
     },
   );
 
-  return structures.createMessage(result as MessageCreateOptions);
+  return structures.createMessage(result);
 }
 
 /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */
@@ -326,11 +326,9 @@ export async function createInvite(
 export async function getInvite(inviteCode: string) {
   const result = await RequestManager.get(
     endpoints.INVITE(inviteCode),
-  ) as Promise<
-    InvitePayload
-  >;
+  );
 
-  return result;
+  return result as InvitePayload;
 }
 
 /** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
@@ -356,11 +354,9 @@ export async function deleteInvite(
 
   const result = await RequestManager.delete(
     endpoints.INVITE(inviteCode),
-  ) as Promise<
-    InvitePayload
-  >;
+  );
 
-  return result;
+  return result as InvitePayload;
 }
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
@@ -377,9 +373,9 @@ export async function getChannelWebhooks(channelID: string) {
 
   const result = await RequestManager.get(
     endpoints.CHANNEL_WEBHOOKS(channelID),
-  ) as Promise<WebhookPayload[]>;
+  );
 
-  return result;
+  return result as WebhookPayload[];
 }
 
 interface EditChannelRequest {

@@ -6,9 +6,7 @@ import { endpoints } from "../../util/constants.ts";
 export async function getApplicationInformation() {
   const result = await RequestManager.get(
     endpoints.OAUTH2_APPLICATION,
-  ) as Promise<
-    OAuthApplication
-  >;
+  );
 
-  return result;
+  return result as OAuthApplication;
 }
