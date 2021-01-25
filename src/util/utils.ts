@@ -61,51 +61,56 @@ export const formatImageURL = (
     (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
 };
 
-function camelToSnakeCase(str: string) {
-  return str.replace(/ID|[A-Z]/g, (s) => {
-    if (s === "ID") return "_id";
-    return `_${s.toLowerCase()}`;
+function camelToSnakeCase(string: string) {
+  return string.replace(/ID|[A-Z]/g, ($1) => {
+    if ($1 === "ID") return "_id";
+    return `_${$1.toLowerCase()}`;
   });
 }
 
-function snakeToCamelCase(s: string) {
-  return s.replace(/_id|([-_][a-z])/ig, ($1) => {
+function snakeToCamelCase(string: string) {
+  return string.replace(/_id|([-_][a-z])/ig, ($1) => {
     if ($1 === "_id") return "ID";
     return $1.toUpperCase().replace("_", "");
   });
 }
 
-function isObject(o: unknown) {
-  return o === Object(o) && !Array.isArray(o) && typeof o !== "function";
+function isObject(object: unknown) {
+  return object === Object(object) && !Array.isArray(object) &&
+    typeof object !== "function";
 }
 // deno-lint-ignore no-explicit-any
-export function camelKeysToSnakeCase(o: any) {
-  if (isObject(o)) {
+export function camelKeysToSnakeCase(object: any) {
+  if (isObject(object)) {
     // deno-lint-ignore no-explicit-any
-    const n: Record<string, any> = {};
-    Object.keys(o)
-      .forEach((k) => {
-        n[camelToSnakeCase(k)] = camelKeysToSnakeCase(o[k]);
+    const convertedObject: Record<string, any> = {};
+    Object.keys(object)
+      .forEach((key) => {
+        convertedObject[camelToSnakeCase(key)] = camelKeysToSnakeCase(
+          object[key],
+        );
       });
-    return n;
-  } else if (Array.isArray(o)) {
-    o = o.map((i) => camelKeysToSnakeCase(i));
+    return convertedObject;
+  } else if (Array.isArray(object)) {
+    object = object.map((element) => camelKeysToSnakeCase(element));
   }
-  return o;
+  return object;
 }
 
 // deno-lint-ignore no-explicit-any
-export function snakeKeysToCamelCase(o: any) {
-  if (isObject(o)) {
+export function snakeKeysToCamelCase(object: any) {
+  if (isObject(object)) {
     // deno-lint-ignore no-explicit-any
-    const n: Record<string, any> = {};
-    Object.keys(o)
-      .forEach((k) => {
-        n[snakeToCamelCase(k)] = snakeKeysToCamelCase(o[k]);
+    const convertedObject: Record<string, any> = {};
+    Object.keys(object)
+      .forEach((key) => {
+        convertedObject[snakeToCamelCase(key)] = snakeKeysToCamelCase(
+          object[key],
+        );
       });
-    return n;
-  } else if (Array.isArray(o)) {
-    o = o.map((i) => snakeKeysToCamelCase(i));
+    return convertedObject;
+  } else if (Array.isArray(object)) {
+    object = object.map((element) => snakeKeysToCamelCase(element));
   }
-  return o;
+  return object;
 }
