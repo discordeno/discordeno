@@ -104,14 +104,8 @@ import {
   removeUserReaction,
   unpin,
 } from "./message.ts";
-import {
-  getCurrentUser,
-  getCurrentUserConnections,
-  getCurrentUserGuilds,
-  getUser,
-} from "./user.ts";
-import { createWebhook, executeWebhook, getWebhook } from "./webhook.ts";
 import { getApplicationInformation } from "./oauth.ts";
+import { getCurrentUser, getCurrentUserGuilds } from "./user.ts";
 import {
   createSlashCommand,
   createWebhook,
@@ -255,11 +249,9 @@ export let handlers = {
   deleteSlashResponse,
   editSlashResponse,
 
-
   // User handler
   getCurrentUser,
   getCurrentUserGuilds,
-  getCurrentUserConnections,
   getUser,
 
   // OAuth handler
