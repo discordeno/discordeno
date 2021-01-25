@@ -1,6 +1,5 @@
 import {
   camelKeysToSnakeCase,
-  isObject,
   snakeKeysToCamelCase,
 } from "../../src/util/utils.ts";
 import { assertEquals } from "../deps.ts";
@@ -54,22 +53,6 @@ const someOther = {
 const someElseOther = {
   hello_world: 1,
 };
-
-Deno.test({
-  name: "[utils] isObject",
-  fn() {
-    assertEquals(isObject({ moooo: "loud" }), true);
-    assertEquals(isObject([{ moooo: "loud" }, { moooo: "loud" }]), false);
-    assertEquals(isObject(["asd"]), false);
-    assertEquals(isObject([123]), false);
-    assertEquals(isObject([true]), false);
-    assertEquals(isObject([[[[[]]]]]), false);
-    assertEquals(isObject("string"), false);
-    assertEquals(isObject(1532), false);
-    assertEquals(isObject(true), false);
-    assertEquals(isObject(() => true), false);
-  },
-});
 
 Deno.test({
   name: "[utils] snakeKeysToCamelCase",
