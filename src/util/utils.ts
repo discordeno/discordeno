@@ -80,7 +80,7 @@ function isObject(object: unknown) {
     typeof object !== "function";
 }
 // deno-lint-ignore no-explicit-any
-export function camelKeysToSnakeCase(object: any) {
+export function camelKeysToSnakeCase(object: Record<string, any>) {
   if (isObject(object)) {
     // deno-lint-ignore no-explicit-any
     const convertedObject: Record<string, any> = {};
@@ -98,7 +98,7 @@ export function camelKeysToSnakeCase(object: any) {
 }
 
 // deno-lint-ignore no-explicit-any
-export function snakeKeysToCamelCase(object: any) {
+export function snakeKeysToCamelCase(object: Record<string, any>) {
   if (isObject(object)) {
     // deno-lint-ignore no-explicit-any
     const convertedObject: Record<string, any> = {};
