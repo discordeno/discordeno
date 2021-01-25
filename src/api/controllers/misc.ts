@@ -1,7 +1,7 @@
 import { eventHandlers, setApplicationID, setBotID } from "../../bot.ts";
 import {
   DiscordPayload,
-  Integration,
+  IntegrationCreateUpdateEvent,
   IntegrationDeleteEvent,
   PresenceUpdatePayload,
   ReadyPayload,
@@ -227,8 +227,3 @@ export function handleInternalIntegrationDelete(data: DiscordPayload) {
     guildID,
   });
 }
-
-export type IntegrationCreateUpdateEvent = Integration & {
-  /** id of the guild */
-  guild_id: string;
-};

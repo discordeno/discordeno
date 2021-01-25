@@ -1,4 +1,3 @@
-import { IntegrationCreateUpdateEvent } from "../api/controllers/misc.ts";
 import {
   Channel,
   Guild,
@@ -7,9 +6,10 @@ import {
   Role,
 } from "../api/structures/mod.ts";
 import {
-  Camelize,
   DiscordPayload,
   Emoji,
+  IntegrationCreateUpdateEvent,
+  IntegrationDeleteEvent,
   PresenceUpdatePayload,
   TypingStartPayload,
   VoiceStateUpdatePayload,
@@ -26,6 +26,7 @@ import {
   PartialMessage,
   ReactionPayload,
 } from "./message.ts";
+import { Camelize } from "./util.ts";
 
 export interface BotConfig {
   token: string;
@@ -216,15 +217,6 @@ export interface EventHandlers {
   integrationUpdate?: (data: Camelize<IntegrationCreateUpdateEvent>) => unknown;
   /** Sent when an integration is deleted. */
   integrationDelete?: (data: Camelize<IntegrationDeleteEvent>) => undefined;
-}
-
-export interface IntegrationDeleteEvent {
-  /** integration id */
-  id: string;
-  /** id of the guild */
-  guild_id: string;
-  /** id of the bot/OAuth2 application for this discord integration */
-  application_id?: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */

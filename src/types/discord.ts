@@ -1,4 +1,9 @@
-import { CreateGuildPayload, PartialUser, UserPayload } from "./guild.ts";
+import {
+  CreateGuildPayload,
+  Integration,
+  PartialUser,
+  UserPayload,
+} from "./guild.ts";
 import { MemberCreatePayload } from "./member.ts";
 import { Activity, Application } from "./message.ts";
 import { ClientStatusPayload } from "./presence.ts";
@@ -304,3 +309,17 @@ export type UnavailableGuildPayload = Pick<
   CreateGuildPayload,
   "id" | "unavailable"
 >;
+
+export type IntegrationCreateUpdateEvent = Integration & {
+  /** id of the guild */
+  guild_id: string;
+};
+
+export interface IntegrationDeleteEvent {
+  /** integration id */
+  id: string;
+  /** id of the guild */
+  guild_id: string;
+  /** id of the bot/OAuth2 application for this discord integration */
+  application_id?: string;
+}
