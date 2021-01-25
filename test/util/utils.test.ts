@@ -55,7 +55,7 @@ const someElseOther = {
 };
 
 Deno.test({
-  name: "[utils] snakeKeysToCamelCase",
+  name: "[utils] snakeKeysToCamelCase: assert convertion",
   fn() {
     const result = snakeKeysToCamelCase(testSnakeObject);
     assertEquals(result, testCamelObject);
@@ -65,7 +65,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "[utils] camelKeysToSnakeCase",
+  name: "[utils] camelKeysToSnakeCase: assert convertion",
   fn() {
     const result = camelKeysToSnakeCase(testCamelObject);
     assertEquals(result, testSnakeObject);

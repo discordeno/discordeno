@@ -61,56 +61,56 @@ export const formatImageURL = (
     (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
 };
 
-function camelToSnakeCase(string: string) {
-  return string.replace(/ID|[A-Z]/g, ($1) => {
+function camelToSnakeCase(text: string) {
+  return text.replace(/ID|[A-Z]/g, ($1) => {
     if ($1 === "ID") return "_id";
     return `_${$1.toLowerCase()}`;
   });
 }
 
-function snakeToCamelCase(string: string) {
-  return string.replace(/_id|([-_][a-z])/ig, ($1) => {
+function snakeToCamelCase(text: string) {
+  return text.replace(/_id|([-_][a-z])/ig, ($1) => {
     if ($1 === "_id") return "ID";
     return $1.toUpperCase().replace("_", "");
   });
 }
 
-function isObject(object: unknown) {
-  return object === Object(object) && !Array.isArray(object) &&
-    typeof object !== "function";
+function isObject(obj: unknown) {
+  return obj === Object(obj) && !Array.isArray(obj) &&
+    typeof obj !== "function";
 }
 // deno-lint-ignore no-explicit-any
-export function camelKeysToSnakeCase(object: Record<string, any>) {
-  if (isObject(object)) {
+export function camelKeysToSnakeCase(obj: Record<string, any>) {
+  if (isObject(obj)) {
     // deno-lint-ignore no-explicit-any
     const convertedObject: Record<string, any> = {};
-    Object.keys(object)
+    Object.keys(obj)
       .forEach((key) => {
         convertedObject[camelToSnakeCase(key)] = camelKeysToSnakeCase(
-          object[key],
+          obj[key],
         );
       });
     return convertedObject;
-  } else if (Array.isArray(object)) {
-    object = object.map((element) => camelKeysToSnakeCase(element));
+  } else if (Array.isArray(obj)) {
+    obj = obj.map((element) => camelKeysToSnakeCase(element));
   }
-  return object;
+  return obj;
 }
 
 // deno-lint-ignore no-explicit-any
-export function snakeKeysToCamelCase(object: Record<string, any>) {
-  if (isObject(object)) {
+export function snakeKeysToCamelCase(obj: Record<string, any>) {
+  if (isObject(obj)) {
     // deno-lint-ignore no-explicit-any
     const convertedObject: Record<string, any> = {};
-    Object.keys(object)
+    Object.keys(obj)
       .forEach((key) => {
         convertedObject[snakeToCamelCase(key)] = snakeKeysToCamelCase(
-          object[key],
+          obj[key],
         );
       });
     return convertedObject;
-  } else if (Array.isArray(object)) {
-    object = object.map((element) => snakeKeysToCamelCase(element));
+  } else if (Array.isArray(obj)) {
+    obj = obj.map((element) => snakeKeysToCamelCase(element));
   }
-  return object;
+  return obj;
 }
