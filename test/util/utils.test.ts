@@ -57,7 +57,7 @@ const someElseOther = {
 
 Deno.test({
   name: "[utils] isObject",
-  fn(): void {
+  fn() {
     assertEquals(isObject({ moooo: "loud" }), true);
     assertEquals(isObject([{ moooo: "loud" }, { moooo: "loud" }]), false);
     assertEquals(isObject(["asd"]), false);
@@ -73,7 +73,7 @@ Deno.test({
 
 Deno.test({
   name: "[utils] snakeKeysToCamelCase",
-  fn(): void {
+  fn() {
     const result = snakeKeysToCamelCase(testSnakeObject);
     assertEquals(result, testCamelObject);
     const resultTwo = snakeKeysToCamelCase(someOther);
@@ -83,7 +83,7 @@ Deno.test({
 
 Deno.test({
   name: "[utils] camelKeysToSnakeCase",
-  fn(): void {
+  fn() {
     const result = camelKeysToSnakeCase(testCamelObject);
     assertEquals(result, testSnakeObject);
     const resultTwo = camelKeysToSnakeCase(someElseOther);
