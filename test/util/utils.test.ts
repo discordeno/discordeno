@@ -47,6 +47,14 @@ const testCamelObject = {
   },
 };
 
+const someOther = {
+  helloWorld: 1,
+};
+
+const someElseOther = {
+  hello_world: 1,
+};
+
 Deno.test({
   name: "[utils] isObject",
   fn(): void {
@@ -68,6 +76,8 @@ Deno.test({
   fn(): void {
     const result = snakeKeysToCamelCase(testSnakeObject);
     assertEquals(result, testCamelObject);
+    const resultTwo = snakeKeysToCamelCase(someOther);
+    assertEquals(resultTwo, someOther);
   },
 });
 
@@ -76,5 +86,7 @@ Deno.test({
   fn(): void {
     const result = camelKeysToSnakeCase(testCamelObject);
     assertEquals(result, testSnakeObject);
+    const resultTwo = camelKeysToSnakeCase(someElseOther);
+    assertEquals(resultTwo, someElseOther);
   },
 });
