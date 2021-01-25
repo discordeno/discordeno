@@ -9,6 +9,7 @@ import {
   GetMessagesAfter,
   GetMessagesAround,
   GetMessagesBefore,
+  InvitePayload,
   MessageContent,
   MessageCreateOptions,
   Permission,
@@ -19,6 +20,7 @@ import {
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasChannelPermissions,
+  botHasPermission,
   calculateBits,
 } from "../../util/permissions.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
@@ -299,6 +301,39 @@ export async function createInvite(
     throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE);
   }
   return RequestManager.post(endpoints.CHANNEL_INVITES(channelID), options);
+}
+
+/** Returns an invite for the given code. */
+export function getInvite(inviteCode: string) {
+  return RequestManager.get(endpoints.INVITE(inviteCode)) as Promise<
+    InvitePayload
+  >;
+}
+
+/** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
+export async function deleteInvite(
+  channelID: string,
+  inviteCode: string,
+) {
+  const hasPerm = await botHasChannelPermissions(channelID, [
+    "MANAGE_CHANNELS",
+  ]);
+
+  if (!hasPerm) {
+    const channel = await cacheHandlers.get("channels", channelID);
+
+    const hasManageGuildPerm = await botHasPermission(channel!.guildID, [
+      "MANAGE_GUILD",
+    ]);
+
+    if (!hasManageGuildPerm) {
+      throw new Error(Errors.MISSING_MANAGE_CHANNELS);
+    }
+  }
+
+  return RequestManager.delete(endpoints.INVITE(inviteCode)) as Promise<
+    InvitePayload
+  >;
 }
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */

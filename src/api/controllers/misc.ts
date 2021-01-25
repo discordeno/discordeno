@@ -1,4 +1,4 @@
-import { eventHandlers, setBotID } from "../../bot.ts";
+import { eventHandlers, setApplicationID, setBotID } from "../../bot.ts";
 import {
   DiscordPayload,
   PresenceUpdatePayload,
@@ -24,6 +24,7 @@ export async function handleInternalReady(
 
   const payload = data.d as ReadyPayload;
   setBotID(payload.user.id);
+  setApplicationID(payload.application.id);
 
   // Triggered on each shard
   eventHandlers.shardReady?.(shardID);
@@ -63,7 +64,7 @@ export async function handleInternalPresenceUpdate(data: DiscordPayload) {
   const oldPresence = await cacheHandlers.get("presences", payload.user.id);
   await cacheHandlers.set("presences", payload.user.id, payload);
 
-  return eventHandlers.presenceUpdate?.(payload, oldPresence);
+  eventHandlers.presenceUpdate?.(payload, oldPresence);
 }
 
 /** This function is the internal handler for the typings event. Users can override this with controllers if desired. */
@@ -82,9 +83,13 @@ export async function handleInternalUserUpdate(data: DiscordPayload) {
   if (!member) return;
 
   Object.entries(userData).forEach(([key, value]) => {
+    // @ts-ignore index signatures
     if (member[key] !== value) return member[key] = value;
   });
-  return eventHandlers.botUpdate?.(userData);
+
+  await cacheHandlers.set("members", userData.id, member);
+
+  eventHandlers.botUpdate?.(userData);
 }
 
 /** This function is the internal handler for the voice state update event. Users can override this with controllers if desired. */
@@ -116,6 +121,8 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
     selfStream: payload.self_stream || false,
   });
 
+  await cacheHandlers.set("guilds", payload.guild_id, guild);
+
   if (cachedState?.channelID !== payload.channel_id) {
     // Either joined or moved channels
     if (payload.channel_id) {
@@ -143,7 +150,7 @@ export function handleInternalWebhooksUpdate(data: DiscordPayload) {
   if (data.t !== "WEBHOOKS_UPDATE") return;
 
   const options = data.d as WebhookUpdatePayload;
-  return eventHandlers.webhooksUpdate?.(
+  eventHandlers.webhooksUpdate?.(
     options.channel_id,
     options.guild_id,
   );

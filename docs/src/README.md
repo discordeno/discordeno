@@ -1,10 +1,12 @@
 # Discordeno
 
-> Discord API library for Deno
+> Discord API library for [Deno](https://deno.land)
 
 [![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
+
+## Features
 
 - **Secure & stable**: Discordeno is comparatively more stable than the other
   libraries. One of the greatest issues with almost every library is stability;
@@ -14,14 +16,14 @@
   convenience. Discordeno internally checks all missing permissions before
   forwarding a request to the API so that the client does not get
   globally-banned by Discord.
-- **Efficient & lightweight**: Discordeno is simplistic and easy-to-use. Always
-  prefer defaults that Discord recommends or the best configuration for the
-  majority―if necessary, it is remarkably customizable, versatile, and
-  efficient.
-- **Functional API**: This will produce a cleaner and more performant code while
-  removing the difficulties of extending built-in classes and inheritance. Avoid
-  potential memory leaks or crashes because of too many listeners or other silly
-  issues.
+- **Efficient & lightweight**: Discordeno is simplistic, easy-to-use, versatile,
+  and efficient. Uses
+  [Convention Over Configuration](https://en.wikipedia.org/wiki/Convention_over_configuration)
+  design paradigm ― prefers defaults that Discord recommends or the best
+  configuration for the majority of the users.
+- [**Functional API**](https://en.wikipedia.org/wiki/Functional_programming):
+  This will produce an overall concise and more performant code while removing
+  the difficulties of extending built-in classes and inheritance.
 
 ## Useful Links
 
