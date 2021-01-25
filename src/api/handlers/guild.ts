@@ -237,7 +237,7 @@ export async function editChannelOverwrite(
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-  const result = RequestManager.put(
+  const result = await RequestManager.put(
     endpoints.CHANNEL_OVERWRITE(channelID, overwriteID),
     {
       allow: calculateBits(options.allow),
@@ -263,7 +263,7 @@ export async function deleteChannelOverwrite(
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-  const result = RequestManager.delete(
+  const result = await RequestManager.delete(
     endpoints.CHANNEL_OVERWRITE(channelID, overwriteID),
   );
 
@@ -364,7 +364,7 @@ export async function deleteEmoji(
     throw new Error(Errors.MISSING_MANAGE_EMOJIS);
   }
 
-  const result = RequestManager.delete(
+  const result = await RequestManager.delete(
     endpoints.GUILD_EMOJI(guildID, id),
     { reason },
   );
@@ -725,9 +725,9 @@ export async function getBan(guildID: string, memberID: string) {
 
   const result = await RequestManager.get(
     endpoints.GUILD_BAN(guildID, memberID),
-  ) as BannedUser;
+  );
 
-  return result;
+  return result as BannedUser;
 }
 
 /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
