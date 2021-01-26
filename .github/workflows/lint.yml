@@ -9,6 +9,4 @@ jobs:
       - name: Run fmt check script
         run: deno fmt --check
       - name: Run lint script
-        run: |
-          deno --version
-          deno lint src/** --unstable
+        run: deno lint src/** --unstable
