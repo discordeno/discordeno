@@ -10,5 +10,5 @@ jobs:
         run: deno fmt --check
       - name: Run lint script
         run: |
-        deno --version
-        deno lint src/** --unstable
+          deno --version
+          deno lint src/** --unstable
