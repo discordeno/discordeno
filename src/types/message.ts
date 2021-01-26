@@ -188,6 +188,10 @@ export interface Application {
   icon: string | null;
   /** The name of the application */
   name: string;
+  /** the description of the app */
+  summary: string;
+  /** the bot associated with this application */
+  bot?: UserPayload;
 }
 
 export interface Reference {

@@ -8,6 +8,8 @@ import {
 import {
   DiscordPayload,
   Emoji,
+  IntegrationCreateUpdateEvent,
+  IntegrationDeleteEvent,
   PresenceUpdatePayload,
   TypingStartPayload,
   VoiceStateUpdatePayload,
@@ -24,6 +26,7 @@ import {
   PartialMessage,
   ReactionPayload,
 } from "./message.ts";
+import { Camelize } from "./util.ts";
 
 export interface BotConfig {
   token: string;
@@ -208,6 +211,12 @@ export interface EventHandlers {
   ) => unknown;
   /** Sent when a guild channel's webhook is created, updated, or deleted. */
   webhooksUpdate?: (channelID: string, guildID: string) => unknown;
+  /** Sent when an integration is created on a server such as twitch, youtube etc.. */
+  integrationCreate?: (data: Camelize<IntegrationCreateUpdateEvent>) => unknown;
+  /** Sent when an integration is updated. */
+  integrationUpdate?: (data: Camelize<IntegrationCreateUpdateEvent>) => unknown;
+  /** Sent when an integration is deleted. */
+  integrationDelete?: (data: Camelize<IntegrationDeleteEvent>) => undefined;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
@@ -241,6 +250,9 @@ export enum Intents {
   GUILD_EMOJIS = 1 << 3,
   /** Enables the following events:
    * - GUILD_INTEGRATIONS_UPDATE
+   * - INTEGRATION_CREATE
+   * - INTEGRATION_UPDATE
+   * - INTEGRATION_DELETE
    */
   GUILD_INTEGRATIONS = 1 << 4,
   /** Enables the following events:
@@ -297,5 +309,3 @@ export enum Intents {
    */
   DIRECT_MESSAGE_TYPING = 1 << 14,
 }
-
-export type ValueOf<T> = T[keyof T];

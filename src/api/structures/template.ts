@@ -40,7 +40,7 @@ export function createTemplate(
     sourceGuildID: createNewProp(sourceGuildID),
     serializedSourceGuild: createNewProp(serializedSourceGuild),
     isDirty: createNewProp(isDirty),
-  });
+  }) as Template;
 }
 
 export interface Template {

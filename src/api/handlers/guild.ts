@@ -40,7 +40,7 @@ import { botHasPermission, calculateBits } from "../../util/permissions.ts";
 import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
 import { requestAllMembers } from "../../ws/shard_manager.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
-import { Guild, Member, structures, Template } from "../structures/mod.ts";
+import { Guild, Member, structures } from "../structures/mod.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createServer(options: CreateServerOptions) {
@@ -48,13 +48,16 @@ export async function createServer(options: CreateServerOptions) {
     endpoints.GUILDS,
     options,
   ) as CreateGuildPayload;
+
   return structures.createGuild(guild, 0);
 }
 
 /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event.
  */
-export function deleteServer(guildID: string) {
-  return RequestManager.delete(endpoints.GUILDS_BASE(guildID));
+export async function deleteServer(guildID: string) {
+  const result = await RequestManager.delete(endpoints.GUILDS_BASE(guildID));
+
+  return result;
 }
 
 /** Gets an array of all the channels ids that are the children of this category. */
@@ -161,7 +164,12 @@ export async function deleteChannel(
     throw new Error(Errors.UPDATES_CHANNEL_CANNOT_BE_DELETED);
   }
 
-  return RequestManager.delete(endpoints.CHANNEL_BASE(channelID), { reason });
+  const result = await RequestManager.delete(
+    endpoints.CHANNEL_BASE(channelID),
+    { reason },
+  );
+
+  return result;
 }
 
 /** Returns a list of guild channel objects.
@@ -172,6 +180,7 @@ export async function getChannels(guildID: string, addToCache = true) {
   const result = await RequestManager.get(
     endpoints.GUILD_CHANNELS(guildID),
   ) as ChannelCreatePayload[];
+
   return Promise.all(result.map(async (res) => {
     const channel = await structures.createChannel(res, guildID);
     if (addToCache) {
@@ -189,23 +198,28 @@ export async function getChannel(channelID: string, addToCache = true) {
   const result = await RequestManager.get(
     endpoints.CHANNEL_BASE(channelID),
   ) as ChannelCreatePayload;
+
   const channel = await structures.createChannel(result, result.guild_id);
   if (addToCache) await cacheHandlers.set("channels", channel.id, channel);
+
   return channel;
 }
 
 /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
-export function swapChannels(
+export async function swapChannels(
   guildID: string,
   channelPositions: PositionSwap[],
 ) {
   if (channelPositions.length < 2) {
     throw "You must provide at least two channels to be swapped.";
   }
-  return RequestManager.patch(
+
+  const result = await RequestManager.patch(
     endpoints.GUILD_CHANNELS(guildID),
     channelPositions,
   );
+
+  return result;
 }
 
 /** Edit the channel permission overwrites for a user or role in this channel. Requires `MANAGE_ROLES` permission. */
@@ -223,7 +237,7 @@ export async function editChannelOverwrite(
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-  return RequestManager.put(
+  const result = await RequestManager.put(
     endpoints.CHANNEL_OVERWRITE(channelID, overwriteID),
     {
       allow: calculateBits(options.allow),
@@ -231,6 +245,8 @@ export async function editChannelOverwrite(
       type: options.type,
     },
   );
+
+  return result;
 }
 
 /** Delete the channel permission overwrites for a user or role in this channel. Requires `MANAGE_ROLES` permission. */
@@ -247,9 +263,11 @@ export async function deleteChannelOverwrite(
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-  return RequestManager.delete(
+  const result = await RequestManager.delete(
     endpoints.CHANNEL_OVERWRITE(channelID, overwriteID),
   );
+
+  return result;
 }
 
 /** Returns a guild member object for the specified user.
@@ -268,7 +286,7 @@ export async function getMember(
     endpoints.GUILD_MEMBER(guildID, id),
   ) as MemberCreatePayload;
 
-  return await structures.createMember(data, guildID);
+  return structures.createMember(data, guildID);
 }
 
 /** Returns guild member objects for the specified user by their nickname/username.
@@ -304,11 +322,13 @@ export async function createEmoji(
     image = await urlToBase64(image);
   }
 
-  return RequestManager.post(endpoints.GUILD_EMOJIS(guildID), {
+  const result = await RequestManager.post(endpoints.GUILD_EMOJIS(guildID), {
     ...options,
     name,
     image,
   });
+
+  return result;
 }
 
 /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */
@@ -322,10 +342,15 @@ export async function editEmoji(
     throw new Error(Errors.MISSING_MANAGE_EMOJIS);
   }
 
-  return RequestManager.patch(endpoints.GUILD_EMOJI(guildID, id), {
-    name: options.name,
-    roles: options.roles,
-  });
+  const result = await RequestManager.patch(
+    endpoints.GUILD_EMOJI(guildID, id),
+    {
+      name: options.name,
+      roles: options.roles,
+    },
+  );
+
+  return result;
 }
 
 /** Delete the given emoji. Requires the MANAGE_EMOJIS permission. Returns 204 No Content on success. */
@@ -339,10 +364,12 @@ export async function deleteEmoji(
     throw new Error(Errors.MISSING_MANAGE_EMOJIS);
   }
 
-  return RequestManager.delete(
+  const result = await RequestManager.delete(
     endpoints.GUILD_EMOJI(guildID, id),
     { reason },
   );
+
+  return result;
 }
 
 /** Creates a url to the emoji from the Discord CDN. */
@@ -422,6 +449,7 @@ export async function createGuildRole(
   const role = await structures.createRole(roleData);
   const guild = await cacheHandlers.get("guilds", guildID);
   guild?.roles.set(role.id, role);
+
   return role;
 }
 
@@ -436,12 +464,14 @@ export async function editRole(
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-  return RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), {
+  const result = await RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), {
     ...options,
     permissions: options.permissions
       ? calculateBits(options.permissions)
       : undefined,
   });
+
+  return result;
 }
 
 /** Delete a guild role. Requires the MANAGE_ROLES permission. */
@@ -451,7 +481,9 @@ export async function deleteRole(guildID: string, id: string) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-  return RequestManager.delete(endpoints.GUILD_ROLE(guildID, id));
+  const result = await RequestManager.delete(endpoints.GUILD_ROLE(guildID, id));
+
+  return result;
 }
 
 /** Returns a list of role objects for the guild.
@@ -464,7 +496,9 @@ export async function getRoles(guildID: string) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-  return RequestManager.get(endpoints.GUILD_ROLES(guildID));
+  const result = await RequestManager.get(endpoints.GUILD_ROLES(guildID));
+
+  return result;
 }
 
 /** Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. */
@@ -474,7 +508,12 @@ export async function swapRoles(guildID: string, rolePositons: PositionSwap) {
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-  return RequestManager.patch(endpoints.GUILD_ROLES(guildID), rolePositons);
+  const result = await RequestManager.patch(
+    endpoints.GUILD_ROLES(guildID),
+    rolePositons,
+  );
+
+  return result;
 }
 
 /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
@@ -505,10 +544,12 @@ export async function pruneMembers(guildID: string, options: PruneOptions) {
     throw new Error(Errors.MISSING_KICK_MEMBERS);
   }
 
-  return RequestManager.post(
+  const result = await RequestManager.post(
     endpoints.GUILD_PRUNE(guildID),
     { ...options, include_roles: options.roles.join(",") },
   );
+
+  return result;
 }
 
 /**
@@ -547,7 +588,7 @@ export async function getAuditLogs(
     throw new Error(Errors.MISSING_VIEW_AUDIT_LOG);
   }
 
-  return RequestManager.get(endpoints.GUILD_AUDIT_LOGS(guildID), {
+  const result = await RequestManager.get(endpoints.GUILD_AUDIT_LOGS(guildID), {
     ...options,
     action_type: options.action_type
       ? AuditLogs[options.action_type]
@@ -556,6 +597,8 @@ export async function getAuditLogs(
       ? options.limit
       : 50,
   });
+
+  return result;
 }
 
 /** Returns the guild embed object. Requires the MANAGE_GUILD permission. */
@@ -565,7 +608,9 @@ export async function getEmbed(guildID: string) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
 
-  return RequestManager.get(endpoints.GUILD_WIDGET(guildID));
+  const result = await RequestManager.get(endpoints.GUILD_WIDGET(guildID));
+
+  return result;
 }
 
 /** Modify a guild embed object for the guild. Requires the MANAGE_GUILD permission. */
@@ -579,15 +624,19 @@ export async function editEmbed(
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
 
-  return RequestManager.patch(
+  const result = await RequestManager.patch(
     endpoints.GUILD_WIDGET(guildID),
     { enabled, channel_id: channelID },
   );
+
+  return result;
 }
 
 /** Returns the code and uses of the vanity url for this server if it is enabled. Requires the MANAGE_GUILD permission. */
-export function getVanityURL(guildID: string) {
-  return RequestManager.get(endpoints.GUILD_VANITY_URL(guildID));
+export async function getVanityURL(guildID: string) {
+  const result = await RequestManager.get(endpoints.GUILD_VANITY_URL(guildID));
+
+  return result;
 }
 
 /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
@@ -597,7 +646,11 @@ export async function getIntegrations(guildID: string) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
 
-  return RequestManager.get(endpoints.GUILD_INTEGRATIONS(guildID));
+  const result = await RequestManager.get(
+    endpoints.GUILD_INTEGRATIONS(guildID),
+  );
+
+  return result;
 }
 
 /** Modify the behavior and settings of an integration object for the guild. Requires the MANAGE_GUILD permission. */
@@ -611,10 +664,12 @@ export async function editIntegration(
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
 
-  return RequestManager.patch(
+  const result = await RequestManager.patch(
     endpoints.GUILD_INTEGRATION(guildID, id),
     options,
   );
+
+  return result;
 }
 
 /** Delete the attached integration object for the guild with this id. Requires MANAGE_GUILD permission. */
@@ -624,7 +679,11 @@ export async function deleteIntegration(guildID: string, id: string) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
 
-  return RequestManager.delete(endpoints.GUILD_INTEGRATION(guildID, id));
+  const result = await RequestManager.delete(
+    endpoints.GUILD_INTEGRATION(guildID, id),
+  );
+
+  return result;
 }
 
 /** Sync an integration. Requires the MANAGE_GUILD permission. */
@@ -634,7 +693,11 @@ export async function syncIntegration(guildID: string, id: string) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
 
-  return RequestManager.post(endpoints.GUILD_INTEGRATION_SYNC(guildID, id));
+  const result = await RequestManager.post(
+    endpoints.GUILD_INTEGRATION_SYNC(guildID, id),
+  );
+
+  return result;
 }
 
 /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
@@ -660,9 +723,11 @@ export async function getBan(guildID: string, memberID: string) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
 
-  return await RequestManager.get(
+  const result = await RequestManager.get(
     endpoints.GUILD_BAN(guildID, memberID),
-  ) as Promise<BannedUser>;
+  );
+
+  return result as BannedUser;
 }
 
 /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
@@ -672,10 +737,12 @@ export async function ban(guildID: string, id: string, options: BanOptions) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
 
-  return RequestManager.put(
+  const result = await RequestManager.put(
     endpoints.GUILD_BAN(guildID, id),
     { ...options, delete_message_days: options.days },
   );
+
+  return result;
 }
 
 /** Remove the ban for a user. Requires BAN_MEMBERS permission */
@@ -684,12 +751,17 @@ export async function unban(guildID: string, id: string) {
   if (!hasPerm) {
     throw new Error(Errors.MISSING_BAN_MEMBERS);
   }
-  return RequestManager.delete(endpoints.GUILD_BAN(guildID, id));
+
+  const result = await RequestManager.delete(endpoints.GUILD_BAN(guildID, id));
+
+  return result;
 }
 
 /** Returns the guild preview object for the given id. If the bot is not in the guild, then the guild must be Discoverable. */
-export function getGuildPreview(guildID: string) {
-  return RequestManager.get(endpoints.GUILD_PREVIEW(guildID));
+export async function getGuildPreview(guildID: string) {
+  const result = await RequestManager.get(endpoints.GUILD_PREVIEW(guildID));
+
+  return result;
 }
 
 /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
@@ -711,7 +783,12 @@ export async function editGuild(guildID: string, options: GuildEditOptions) {
     options.splash = await urlToBase64(options.splash);
   }
 
-  return RequestManager.patch(endpoints.GUILDS_BASE(guildID), options);
+  const result = await RequestManager.patch(
+    endpoints.GUILDS_BASE(guildID),
+    options,
+  );
+
+  return result;
 }
 
 /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
@@ -721,22 +798,30 @@ export async function getInvites(guildID: string) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
   }
 
-  return RequestManager.get(endpoints.GUILD_INVITES(guildID));
+  const result = await RequestManager.get(endpoints.GUILD_INVITES(guildID));
+
+  return result;
 }
 
 /** Leave a guild */
-export function leaveGuild(guildID: string) {
-  return RequestManager.delete(endpoints.GUILD_LEAVE(guildID));
+export async function leaveGuild(guildID: string) {
+  const result = await RequestManager.delete(endpoints.GUILD_LEAVE(guildID));
+
+  return result;
 }
 
 /** Returns an array of voice regions that can be used when creating servers. */
-export function getAvailableVoiceRegions() {
-  return RequestManager.get(endpoints.VOICE_REGIONS);
+export async function getAvailableVoiceRegions() {
+  const result = await RequestManager.get(endpoints.VOICE_REGIONS);
+
+  return result;
 }
 
 /** Returns a list of voice region objects for the guild. Unlike the similar /voice route, this returns VIP servers when the guild is VIP-enabled. */
-export function getVoiceRegions(guildID: string) {
-  return RequestManager.get(endpoints.GUILD_REGIONS(guildID));
+export async function getVoiceRegions(guildID: string) {
+  const result = await RequestManager.get(endpoints.GUILD_REGIONS(guildID));
+
+  return result;
 }
 
 /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
@@ -749,7 +834,18 @@ export async function getWebhooks(guildID: string) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
 
-  return RequestManager.get(endpoints.GUILD_WEBHOOKS(guildID));
+  const result = await RequestManager.get(endpoints.GUILD_WEBHOOKS(guildID));
+
+  return result;
+}
+
+/** This function will return the raw user payload in the rare cases you need to fetch a user directly from the API. */
+export async function getUser(userID: string) {
+  const result = await RequestManager.get(
+    endpoints.USER(userID),
+  );
+
+  return result as UserPayload;
 }
 
 /**
@@ -759,11 +855,13 @@ export async function getWebhooks(guildID: string) {
  * This function fetches a guild's data. This is not the same data as a GUILD_CREATE.
  * So it does not cache the guild, you must do it manually.
  * */
-export function getGuild(guildID: string, counts = true) {
-  return RequestManager.get(
+export async function getGuild(guildID: string, counts = true) {
+  const result = await RequestManager.get(
     endpoints.GUILDS_BASE(guildID),
     { with_counts: counts },
-  ) as Promise<UpdateGuildPayload>;
+  );
+
+  return result as UpdateGuildPayload;
 }
 
 /** Returns the guild template if it exists */
@@ -772,6 +870,7 @@ export async function getTemplate(templateCode: string) {
     endpoints.GUILD_TEMPLATE(templateCode),
   ) as GuildTemplate;
   const template = await structures.createTemplate(result);
+
   return template;
 }
 
@@ -804,10 +903,12 @@ export async function createGuildFromTemplate(
     data.icon = await urlToBase64(data.icon);
   }
 
-  return await RequestManager.post(
+  const result = await await RequestManager.post(
     endpoints.GUILD_TEMPLATE(templateCode),
     data,
-  ) as Promise<CreateGuildPayload>;
+  );
+
+  return result as CreateGuildPayload;
 }
 
 /**
@@ -821,6 +922,7 @@ export async function getGuildTemplates(guildID: string) {
   const templates = await RequestManager.get(
     endpoints.GUILD_TEMPLATES(guildID),
   ) as GuildTemplate[];
+
   return templates.map((template) => structures.createTemplate(template));
 }
 
@@ -838,6 +940,7 @@ export async function deleteGuildTemplate(
   const deletedTemplate = await RequestManager.delete(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
   ) as GuildTemplate;
+
   return structures.createTemplate(deletedTemplate);
 }
 
@@ -869,6 +972,7 @@ export async function createGuildTemplate(
     endpoints.GUILD_TEMPLATES(guildID),
     data,
   ) as GuildTemplate;
+
   return structures.createTemplate(template);
 }
 
@@ -883,6 +987,7 @@ export async function syncGuildTemplate(guildID: string, templateCode: string) {
   const template = await RequestManager.put(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
   ) as GuildTemplate;
+
   return structures.createTemplate(template);
 }
 
@@ -913,6 +1018,7 @@ export async function editGuildTemplate(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
     data,
   ) as GuildTemplate;
+
   return structures.createTemplate(template);
 }
 

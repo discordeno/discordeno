@@ -2,7 +2,7 @@ import { Guild } from "../api/structures/mod.ts";
 import { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
 import { Emoji, StatusType } from "./discord.ts";
 import { MemberCreatePayload } from "./member.ts";
-import { Activity } from "./message.ts";
+import { Activity, Application } from "./message.ts";
 import { Permission } from "./permission.ts";
 import { ClientStatusPayload } from "./presence.ts";
 import { RoleData } from "./role.ts";
@@ -246,7 +246,7 @@ export interface EditIntegrationOptions {
   enable_emoticons: boolean;
 }
 
-export interface GuildIntegration {
+export interface Integration {
   /** The integrations unique id */
   id: string;
   /** the integrations name */
@@ -256,19 +256,32 @@ export interface GuildIntegration {
   /** Is this integration enabled */
   enabled: boolean;
   /** is this integration syncing */
-  syncing: boolean;
+  syncing?: boolean;
   /** id that this integration uses for "subscribers" */
-  role_id: string;
+  role_id?: string;
+  /** whether emoticons should be synced for this integration (twitch only currently) */
+  enable_emoticons?: boolean;
   /** The behavior of expiring subscribers */
-  expire_behavior: number;
+  expire_behavior?: IntegrationExpireBehaviors;
   /** The grace period before expiring subscribers */
-  expire_grace_period: number;
+  expire_grace_period?: number;
   /** The user for this integration */
-  user: UserPayload;
+  user?: UserPayload;
   /** The integration account information */
   account: Account;
   /** When this integration was last synced */
-  synced_at: string;
+  synced_at?: string;
+  /** how many subscribers this integration has */
+  subscriber_count?: number;
+  /** has this integration been revoked */
+  revoked?: boolean;
+  /** The bot/OAuth2 application for discord integrations */
+  application?: Application;
+}
+
+export enum IntegrationExpireBehaviors {
+  RemoveRole,
+  Kick,
 }
 
 export interface Account {
