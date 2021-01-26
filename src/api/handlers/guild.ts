@@ -612,9 +612,8 @@ export async function getWidgetImageUrl(
     if (!guild?.widgetEnabled) throw new Error(Errors.GUILD_WIDGET_NOT_ENABLED);
   }
 
-  return `${endpoints.GUILD_WIDGET(guildID)}.png?style=${
-    options?.style ? options.style : "shield"
-  }`;
+  return `${endpoints.GUILD_WIDGET(guildID)}.png?style=${options?.style ??
+    "shield"}`;
 }
 
 /** Returns the code and uses of the vanity url for this server if it is enabled. Requires the MANAGE_GUILD permission. */
