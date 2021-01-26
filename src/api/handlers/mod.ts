@@ -105,7 +105,7 @@ import {
   unpin,
 } from "./message.ts";
 import { getApplicationInformation } from "./oauth.ts";
-import { getCurrentUser, getCurrentUserGuilds } from "./user.ts";
+import { getCurrentUser } from "./user.ts";
 import {
   createSlashCommand,
   createWebhook,
@@ -251,7 +251,6 @@ export let handlers = {
 
   // User handler
   getCurrentUser,
-  getCurrentUserGuilds,
   getUser,
 
   // OAuth handler
