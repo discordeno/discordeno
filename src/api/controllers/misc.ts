@@ -32,7 +32,14 @@ export async function handleInternalReady(
   eventHandlers.shardReady?.(shardID);
   if (payload.shard && shardID === payload.shard[1] - 1) {
     const loadedAllGuilds = async () => {
-      if (payload.guilds.some((g) => !cache.guilds.has(g.id))) {
+      const guildsMissing = async () => {
+        for (const g of payload.guilds) {
+          if (!(await cacheHandlers.has("guilds", g.id))) return true;
+        }
+        return false;
+      };
+
+      if (await guildsMissing()) {
         setTimeout(loadedAllGuilds, 2000);
       } else {
         // The bot has already started, the last shard is resumed, however.
