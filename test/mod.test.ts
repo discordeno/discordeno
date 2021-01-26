@@ -248,8 +248,8 @@ Deno.test({
 
 Deno.test({
   name: "[message] pin a message in a channel",
-  fn() {
-    pin(tempData.channelID, tempData.messageID);
+  async fn() {
+    await pin(tempData.channelID, tempData.messageID);
   },
   ...defaultTestOptions,
 });
@@ -269,18 +269,18 @@ Deno.test({
 
 Deno.test({
   name: "[message] unpin a message",
-  fn() {
-    unpin(tempData.channelID, tempData.messageID);
+  async fn() {
+    await unpin(tempData.channelID, tempData.messageID);
   },
   ...defaultTestOptions,
 });
 
 Deno.test({
   name: "[message] add a reaction to a message",
-  fn() {
+  async fn() {
     // TODO: add tests for a guild emoji ― <:name:id>
 
-    addReaction(tempData.channelID, tempData.messageID, "👍");
+    await addReaction(tempData.channelID, tempData.messageID, "👍");
   },
   ...defaultTestOptions,
 });
@@ -289,8 +289,8 @@ Deno.test({
 
 Deno.test({
   name: "[message] remove a reaction to a message",
-  fn() {
-    removeReaction(tempData.channelID, tempData.messageID, "👍");
+  async fn() {
+    await removeReaction(tempData.channelID, tempData.messageID, "👍");
   },
   ...defaultTestOptions,
 });
@@ -299,31 +299,31 @@ Deno.test({
 
 Deno.test({
   name: "[message] delete a message by channel ID",
-  fn() {
-    deleteMessageByID(tempData.channelID, tempData.messageID);
+  async fn() {
+    await deleteMessageByID(tempData.channelID, tempData.messageID);
   },
   ...defaultTestOptions,
 });
 
 Deno.test({
   name: "[channel] delete a channel in a guild",
-  fn() {
-    deleteChannel(tempData.guildID, tempData.channelID);
+  async fn() {
+    await deleteChannel(tempData.guildID, tempData.channelID);
   },
   ...defaultTestOptions,
 });
 
 Deno.test({
   name: "[role] delete a role in a guild",
-  fn() {
-    deleteRole(tempData.guildID, tempData.roleID);
+  async fn() {
+    await deleteRole(tempData.guildID, tempData.roleID);
   },
 });
 
 Deno.test({
   name: "[guild] delete a guild",
-  fn() {
-    deleteServer(tempData.guildID);
+  async fn() {
+    await deleteServer(tempData.guildID);
 
     // TODO(ayntee): remove this weird shit lol
     // TODO(ayntee): check if the GUILD_DELETE event is fired
