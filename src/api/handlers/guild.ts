@@ -1021,9 +1021,3 @@ export async function editGuildTemplate(
 
   return structures.createTemplate(template);
 }
-
-// TODO: move this to user.ts
-/** This function will return the raw user payload in the rare cases you need to fetch a user directly from the API. */
-export function getUser(userID: string) {
-  return RequestManager.get(endpoints.USER(userID)) as Promise<UserPayload>;
-}
