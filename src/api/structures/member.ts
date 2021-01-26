@@ -156,8 +156,6 @@ export interface Member {
   premiumType?: number;
   /** The guild related data mapped by guild id */
   guilds: Collection<string, GuildMember>;
-  /** whether the user has not yet passed the guild's Membership Screening requirements */
-  pending?: boolean;
 
   // GETTERS
   /** The avatar url using the default format and size. */
