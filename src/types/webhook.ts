@@ -219,7 +219,7 @@ export interface EditSlashCommandOptions {
   options?: SlashCommandOption[];
 }
 
-export interface ExecuteSlashCommandOptions {
+export interface SendSlashResponseOptions {
   type: InteractionResponseType;
   data: SlashCommandCallbackData;
 }

@@ -6,9 +6,9 @@ import {
   EditSlashResponseOptions,
   EditWebhookMessageOptions,
   Errors,
-  ExecuteSlashCommandOptions,
   ExecuteWebhookOptions,
   MessageCreateOptions,
+  SendSlashResponseOptions,
   SlashCommand,
   UpsertSlashCommandOptions,
   UpsertSlashCommandsOptions,
@@ -445,16 +445,19 @@ export function deleteSlashCommand(id: string, guildID?: string) {
  *
  * NOTE: By default we will suppress mentions. To enable mentions, just pass any mentions object.
  */
-export async function executeSlashCommand(
+export async function sendSlashResponse(
   id: string,
   token: string,
-  options: ExecuteSlashCommandOptions,
+  options: SendSlashResponseOptions,
 ) {
   // If its already been executed, we need to send a followup response
   if (cache.executedSlashCommands.has(token)) {
-    return RequestManager.post(endpoints.WEBHOOK(applicationID, token), {
-      ...options,
-    });
+    const result = await RequestManager.post(
+      endpoints.WEBHOOK(applicationID, token),
+      options,
+    );
+
+    return result;
   }
 
   // Expire in 15 minutes
