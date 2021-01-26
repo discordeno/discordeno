@@ -589,8 +589,8 @@ export async function editEmbed(
 
 /** Returns the widget for the guild. */
 export async function getWidget(guildID: string, options?: { force: boolean }) {
-  const guild = await cacheHandlers.get("guilds", guildID);
   if (!options?.force) {
+    const guild = await cacheHandlers.get("guilds", guildID);
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
     if (!guild?.widgetEnabled) throw new Error(Errors.GUILD_WIDGET_NOT_ENABLED);
   }
