@@ -471,7 +471,7 @@ export async function executeSlashCommand(
 
   const result = await RequestManager.post(
     endpoints.INTERACTION_ID_TOKEN(id, token),
-    options
+    options,
   );
 
   return result;
