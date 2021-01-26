@@ -554,10 +554,16 @@ export async function getMembers(
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
+  const guild = await cacheHandlers.get("guilds", guildID);
+  if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+
   const members = new Collection<string, Member>();
-  const limit = options?.limit ?? 1;
+
+  let membersLeft = options?.limit ?? guild.memberCount;
   let loops = 1;
-  while (limit > members.size && (options?.limit ?? 1 > 0)) {
+  while (
+    (options?.limit ?? guild.memberCount) > members.size && membersLeft > 0
+  ) {
     if (options?.limit && options.limit > 1000) {
       console.log(
         `Paginating get members from REST. #${loops} / ${
@@ -568,7 +574,7 @@ export async function getMembers(
 
     const result = await RequestManager.get(
       `${endpoints.GUILD_MEMBERS(guildID)}?limit=${
-        options?.limit ?? 1 > 1000 ? 1000 : options?.limit
+        membersLeft > 1000 ? 1000 : membersLeft
       }${options?.after ? `&after=${options.after}` : ""}`,
     ) as MemberCreatePayload[];
 
@@ -581,9 +587,11 @@ export async function getMembers(
     memberStructures.forEach((member) => members.set(member.id, member));
 
     options = {
-      limit: options?.limit ?? 1 - 1000,
+      limit: options?.limit,
       after: memberStructures[memberStructures.length - 1].id,
     };
+
+    membersLeft -= 1000;
 
     loops++;
   }
