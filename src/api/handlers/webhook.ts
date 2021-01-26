@@ -50,13 +50,15 @@ export async function createWebhook(
     throw new Error(Errors.INVALID_WEBHOOK_NAME);
   }
 
-  return RequestManager.post(
+  const result = await RequestManager.post(
     endpoints.CHANNEL_WEBHOOKS(channelID),
     {
       ...options,
       avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
     },
-  ) as Promise<WebhookPayload>;
+  );
+
+  return result as WebhookPayload;
 }
 
 /** Edit a webhook. Requires the `MANAGE_WEBHOOKS` permission. Returns the updated webhook object on success. */
@@ -129,6 +131,7 @@ export async function deleteWebhookWithToken(
 /** Returns the new webhook object for the given id. */
 export async function getWebhook(webhookID: string) {
   const result = await RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
+
   return result as WebhookPayload;
 }
 
@@ -137,6 +140,7 @@ export async function getWebhookWithToken(webhookID: string, token: string) {
   const result = await RequestManager.get(
     endpoints.WEBHOOK(webhookID, token),
   );
+
   return result as WebhookPayload;
 }
 
@@ -199,7 +203,7 @@ export async function executeWebhook(
   return structures.createMessage(result as MessageCreateOptions);
 }
 
-export function editWebhookMessage(
+export async function editWebhookMessage(
   webhookID: string,
   webhookToken: string,
   messageID: string,
@@ -245,20 +249,24 @@ export function editWebhookMessage(
     }
   }
 
-  return RequestManager.patch(
+  const result = await RequestManager.patch(
     endpoints.WEBHOOK_MESSAGE(webhookID, webhookToken, messageID),
     { ...options, allowed_mentions: options.allowed_mentions },
   );
+
+  return result;
 }
 
-export function deleteWebhookMessage(
+export async function deleteWebhookMessage(
   webhookID: string,
   webhookToken: string,
   messageID: string,
 ) {
-  return RequestManager.delete(
+  const result = await RequestManager.delete(
     endpoints.WEBHOOK_MESSAGE(webhookID, webhookToken, messageID),
   );
+
+  return result;
 }
 
 /**
@@ -272,7 +280,7 @@ export function deleteWebhookMessage(
  * Global commands are cached for **1 hour**. That means that new global commands will fan out slowly across all guilds, and will be guaranteed to be updated in an hour.
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
-export function createSlashCommand(options: CreateSlashCommandOptions) {
+export async function createSlashCommand(options: CreateSlashCommandOptions) {
   // Use ... for content length due to unicode characters and js .length handling
   if ([...options.name].length < 2 || [...options.name].length > 32) {
     throw new Error(Errors.INVALID_SLASH_NAME);
@@ -284,7 +292,7 @@ export function createSlashCommand(options: CreateSlashCommandOptions) {
     throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
   }
 
-  return RequestManager.post(
+  const result = await RequestManager.post(
     options.guildID
       ? endpoints.COMMANDS_GUILD(applicationID, options.guildID)
       : endpoints.COMMANDS(applicationID),
@@ -292,6 +300,8 @@ export function createSlashCommand(options: CreateSlashCommandOptions) {
       ...options,
     },
   );
+
+  return result;
 }
 
 /** Fetchs the global command for the given ID. If a guildID is provided, the guild command will be fetched. */
@@ -306,19 +316,21 @@ export async function getSlashCommand(commandID: string, guildID?: string) {
 }
 
 /** Fetch all of the global commands for your application. */
-export function getSlashCommands(guildID?: string) {
+export async function getSlashCommands(guildID?: string) {
   // TODO: Should this be a returned as a collection?
-  return RequestManager.get(
+  const result = await RequestManager.get(
     guildID
       ? endpoints.COMMANDS_GUILD(applicationID, guildID)
       : endpoints.COMMANDS(applicationID),
   );
+
+  return result;
 }
 
 /**
  * Edit an existing slash command. If this command did not exist, it will create it.
  */
-export function upsertSlashCommand(
+export async function upsertSlashCommand(
   commandID: string,
   options: UpsertSlashCommandOptions,
   guildID?: string,
@@ -334,7 +346,7 @@ export function upsertSlashCommand(
     throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
   }
 
-  const result = RequestManager.patch(
+  const result = await RequestManager.patch(
     guildID
       ? endpoints.COMMANDS_GUILD_ID(
         applicationID,
@@ -387,7 +399,7 @@ export async function upsertSlashCommands(
  * Edit an existing slash command. 
  * @deprecated This function will be removed in v11. Use `upsertSlashCommand()` instead
  */
-export function editSlashCommand(
+export async function editSlashCommand(
   commandID: string,
   options: EditSlashCommandOptions,
   guildID?: string,
@@ -403,7 +415,7 @@ export function editSlashCommand(
     throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
   }
 
-  const result = RequestManager.patch(
+  const result = await RequestManager.patch(
     guildID
       ? endpoints.COMMANDS_GUILD_ID(
         applicationID,
@@ -433,7 +445,7 @@ export function deleteSlashCommand(id: string, guildID?: string) {
  *
  * NOTE: By default we will suppress mentions. To enable mentions, just pass any mentions object.
  */
-export function executeSlashCommand(
+export async function executeSlashCommand(
   id: string,
   token: string,
   options: ExecuteSlashCommandOptions,
@@ -457,28 +469,34 @@ export function executeSlashCommand(
     options.data.allowed_mentions = { parse: [] };
   }
 
-  return RequestManager.post(endpoints.INTERACTION_ID_TOKEN(id, token), {
-    ...options,
-  });
+  const result = await RequestManager.post(
+    endpoints.INTERACTION_ID_TOKEN(id, token),
+    options,
+  );
+
+  return result;
 }
 
 /** To delete your response to a slash command. If a message id is not provided, it will default to deleting the original response. */
-export function deleteSlashResponse(
+export async function deleteSlashResponse(
   token: string,
   messageID?: string,
 ) {
-  if (!messageID) {
-    return RequestManager.delete(
-      endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token),
-    );
-  }
-  return RequestManager.delete(
-    endpoints.INTERACTION_ID_TOKEN_MESSAGEID(applicationID, token, messageID),
+  const result = await RequestManager.delete(
+    messageID
+      ? endpoints.INTERACTION_ID_TOKEN_MESSAGEID(
+        applicationID,
+        token,
+        messageID,
+      )
+      : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token),
   );
+
+  return result;
 }
 
 /** To edit your response to a slash command. If a messageID is not provided it will default to editing the original response. */
-export function editSlashResponse(
+export async function editSlashResponse(
   token: string,
   options: EditSlashResponseOptions,
 ) {
@@ -522,10 +540,12 @@ export function editSlashResponse(
     }
   }
 
-  return RequestManager.patch(
+  const result = await RequestManager.patch(
     options.messageID
       ? endpoints.WEBHOOK_MESSAGE(applicationID, token, options.messageID)
       : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token),
     options,
   );
+
+  return result;
 }
