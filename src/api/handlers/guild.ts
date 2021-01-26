@@ -555,8 +555,9 @@ export async function getMembers(
   }
 
   const members = new Collection<string, Member>();
+  const limit = options?.limit ?? 1;
   let loops = 1;
-  while (options?.limit ?? 1 > members.size) {
+  while (limit > members.size && (options?.limit ?? 1 > 0)) {
     if (options?.limit && options.limit > 1000) {
       console.log(
         `Paginating get members from REST. #${loops} / ${
