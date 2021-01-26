@@ -30,6 +30,9 @@ import {
   handleInternalMessageUpdate,
 } from "./messages.ts";
 import {
+  handleInternalIntegrationCreate,
+  handleInternalIntegrationDelete,
+  handleInternalIntegrationUpdate,
   handleInternalPresenceUpdate,
   handleInternalReady,
   handleInternalTypingStart,
@@ -82,6 +85,9 @@ export let controllers = {
   USER_UPDATE: handleInternalUserUpdate,
   VOICE_STATE_UPDATE: handleInternalVoiceStateUpdate,
   WEBHOOKS_UPDATE: handleInternalWebhooksUpdate,
+  INTEGRATION_CREATE: handleInternalIntegrationCreate,
+  INTEGRATION_UPDATE: handleInternalIntegrationUpdate,
+  INTEGRATION_DELETE: handleInternalIntegrationDelete,
 };
 
 export type Controllers = typeof controllers;
