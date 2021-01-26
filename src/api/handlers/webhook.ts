@@ -461,6 +461,7 @@ export async function executeSlashCommand(
   cache.executedSlashCommands.set(token, id);
   setTimeout(
     () => cache.executedSlashCommands.delete(token),
+    // The current milliseconds + 15 seconds
     Date.now() + 900000,
   );
 
