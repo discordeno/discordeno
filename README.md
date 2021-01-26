@@ -60,7 +60,7 @@ unofficial boilerplates:
 
 - [Discordeno Bot Template (official)](https://github.com/discordeno/discordeno-bot-template)
 - [Serverless Slash Commands Template
-  (official)](https://github.com/discordeno-slash-bot)
+  (official)](https://github.com/slash-commands-bot)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
 ## Useful Links
