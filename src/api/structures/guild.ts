@@ -210,7 +210,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
 
   initialMemberLoadQueue.set(guild.id, members);
 
-  return guild;
+  return guild as Guild;
 }
 
 export interface Guild {
