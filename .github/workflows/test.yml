@@ -3,6 +3,9 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        deno: ["v1.x", "nightly"]
     steps:
       - uses: actions/checkout@v2
       - uses: denolib/setup-deno@v2
