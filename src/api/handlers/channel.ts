@@ -467,8 +467,9 @@ export async function editChannel(
 
   const payload = {
     ...options,
+    reason,
     // deno-lint-ignore camelcase
-    rate_limit_per_user: options.slowmode,
+    rate_limit_per_user: options.rateLimitPerUser,
     // deno-lint-ignore camelcase
     parent_id: options.parentID,
     // deno-lint-ignore camelcase
@@ -487,10 +488,7 @@ export async function editChannel(
 
   const result = await RequestManager.patch(
     endpoints.CHANNEL_BASE(channelID),
-    {
-      ...payload,
-      reason,
-    },
+    payload,
   );
 
   return result;
