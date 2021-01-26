@@ -241,7 +241,7 @@ export async function sendMessage(
         message_id: content.replyMessageID,
       },
     },
-  );
+  ) as MessageCreateOptions;
 
   return structures.createMessage(result);
 }
