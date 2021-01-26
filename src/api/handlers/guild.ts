@@ -923,7 +923,7 @@ export async function editGuildTemplate(
   return structures.createTemplate(template);
 }
 
-function createMembershipStruct(
+function createMembershipObj(
   { form_fields: formFields, ...props }: MembershipScreeningPayload,
 ) {
   return {
@@ -935,7 +935,7 @@ function createMembershipStruct(
   };
 }
 
-export type MembershipScreening = ReturnType<typeof createMembershipStruct>;
+export type MembershipScreening = ReturnType<typeof createMembershipObj>;
 
 /** Get the membership screening form of a guild. */
 export async function getGuildMembershipScreeningForm(guildID: string) {
@@ -943,7 +943,7 @@ export async function getGuildMembershipScreeningForm(guildID: string) {
     endpoints.GUILD_MEMBER_VERIFICATION(guildID),
   ) as MembershipScreeningPayload;
 
-  return createMembershipStruct(membershipScreeningPayload);
+  return createMembershipObj(membershipScreeningPayload);
 }
 
 /** Edit the guild's Membership Screening form. Requires the `MANAGE_GUILD` permission. */
@@ -964,7 +964,7 @@ export async function editGuildMembershipScreeningForm(
     },
   ) as MembershipScreeningPayload;
 
-  return createMembershipStruct(
+  return createMembershipObj(
     membershipScreeningFormPayload,
   );
 }
