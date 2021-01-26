@@ -74,7 +74,7 @@ export async function getMessage(
 
   const result = await RequestManager.get(
     endpoints.CHANNEL_MESSAGE(channelID, id),
-  );
+  ) as MessageCreateOptions;
 
   return structures.createMessage(result);
 }
