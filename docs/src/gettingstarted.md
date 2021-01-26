@@ -68,11 +68,8 @@ startBot({
 Below you will find youtube playlists that display channels using Discordeno for
 their tutorials.
 
-Web-Mystery Tutorials:
-
 - [Making a Discord bot with Deno and
   Discordeno](https://web-mystery.com/articles/making-discord-bot-deno-and-discordeno)
-- [Running a Discord bot written in Deno in
+- [Running a Discord bot written using Deno in
   Docker](https://web-mystery.com/articles/running-discord-bot-written-deno-docker)
-- YouTube Tutorials:
-  - [Discordeno Bot Tutorials YouTube series](https://youtu.be/rIph9-BGsuQ)
+- [Discordeno Bot Tutorials (YouTube)](https://youtu.be/rIph9-BGsuQ)

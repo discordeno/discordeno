@@ -1,12 +1,12 @@
 # Migrating
 
-# Migrating from Discord.js
+## Migrating from Discord.js
 
 This migration guide is not intended to discredit Discord.js authors/maintainers
 or Discord.js itself. In fact, Discord.js is the most popular Node.js library,
 admired and praised by a lot of JavaScript developers.
 
-## Finding A Open Source Bot
+## Finding an Open-Source Discord Bot
 
 For the purposes of this guide, I wanted to find a moderation bot that is
 totally open source to show an example of how to convert the bot to Discordeno.
