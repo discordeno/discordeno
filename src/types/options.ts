@@ -211,7 +211,7 @@ export interface EventHandlers {
   ) => unknown;
   /** Sent when a guild channel's webhook is created, updated, or deleted. */
   webhooksUpdate?: (channelID: string, guildID: string) => unknown;
-  /** Sent when an integration is created. */
+  /** Sent when an integration is created on a server such as twitch, youtube etc.. */
   integrationCreate?: (data: Camelize<IntegrationCreateUpdateEvent>) => unknown;
   /** Sent when an integration is updated. */
   integrationUpdate?: (data: Camelize<IntegrationCreateUpdateEvent>) => unknown;
