@@ -1,70 +1,58 @@
-# Introduction
+# Discordeno
 
-![Banner](https://i.imgur.com/Cq7nNd0.png)
+> Discord API library for [Deno](https://deno.land)
 
-A Third Party Deno library for interacting with the Discord API.
+[![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
+![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
+![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
 
 ## Features
 
-- Best TypeScript Support
-- Stable Library
-- Easy to use Boilerplates
-- Security
-- Built in Documentation
-- Minimalistic
-- Functional API
-- Latest and Greatest JavaScript
-- Actively Maintained!
+- **Secure & stable**: Discordeno is secure and stable. One of the greatest
+  issues with almost every library is stability; types are outdated, less (or
+  minimal) parity with the API, core maintainers have quit or no longer actively
+  maintain the library, and whatnot. Discordeno, on the other hand, is actively
+  maintained to ensure great performance and convenience. Moreover, it
+  internally checks all missing permissions before forwarding a request to the
+  Discord API so that the client does not get globally-banned by Discord.
+- **Simple, Efficient, & Lightweight**: Discordeno is simplistic, easy-to-use,
+  versatile while being efficient and lightweight. Follows
+  [Convention Over Configuration](https://en.wikipedia.org/wiki/Convention_over_configuration)
+  design paradigm ― prefers defaults options or values that are recommended by
+  Discord or the best configuration for the majority of the users.
+- [**Functional API**](https://en.wikipedia.org/wiki/Functional_programming):
+  Functional API ensures an overall concise yet performant code while removing
+  the difficulties of extending built-in classes and inheritance.
+  [Learn more about class-free JavaScript](https://dannyfritz.wordpress.com/2014/10/11/class-free-object-oriented-programming/)
 
-### Best TypeScript Support!
+## Useful Links
 
-First class support for Typescript! Never compile your code again in order to run it.
-
-### Stable Library
-
-Discordeno is one of the most stable libraries ever. One of the biggest issues with almost every library(I have used) is stability. None of the libraries gave much love and attention to Typescript developers the way it deserves which caused TypeScript bots to break.
-
-### Easy To Use Boilerplates
-
-Several bot boilerplates are available to get up and running very quickly. The Official boilerplate provides the most necessary features for almost any bot to make coding bots extremely easy. You focus on building features and not on building the base for a bot.
-
-### Security
-
-Checks all missing permissions necessary before sending a request to the API so that your bot's token do not get globally banned by Discord. Discordeno does not support self-bot functionality like other libraries either. Even goes so far as to prevent self-bot farms!
-
-### Documentation
-
-All of Discord API Documentation available inside your VSC while you code. The entire libraries documentation is automatically available to you through intellisense.
-
-### Minimalistic
-
-Discordeno will always prefer defaults that Discord recommends or in the cases where Discord does not care we choose the best option for the majority of developers.
-
-### Functional API
-
-This will overall make a cleaner and more performant API, while removing the headaches of extending built-in classes, and inheritance. Avoid potential of memory leaks or bot crashes because of too many listeners or other silly issues.
-
-### Latest & Greatest JavaScript
-
-Discordeno uses the latest and greatest JavaScript/TypeScript available. A lot of libraries still use JavaScript standards from 4-6 years ago because of backwards compatibility. Backwards compatibility is the death of code. It causes clutter and uglyness to pile up and makes developers lazier.
-
-### Actively Maintained
-
-Discordeno is actively being maintained. Some of the other libraries original developers have quit or no longer actively maintain it and leave it to the community to maintain the library.
+- [Website](https://discordeno.mod.land)
+- [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
+- [Discord](https://discord.com/invite/5vBgXk3UcZ)
 
 ## Read me first...
 
-Discordeno is cool right? You could make the next big bot! Who knows, but before we get right into developing our Bot. We want to get started with learning the basics...
+Discordeno is cool right? You could make the next big bot! Who knows, but before
+we get right into developing our Bot. We want to get started with learning the
+basics...
 
-You've seen how amazing Discord Bots are built and functioned! So beginning with Discordeno always starts with learning the TypeScript and/or JavaScript programming languages first. Making a Discord bot with very little knowledge is possible, it can be a challenge! You may end up dealing with Console errors or just syntax typographical errors...
+You've seen how amazing Discord Bots are built and functioned! So beginning with
+Discordeno always starts with learning the TypeScript and/or JavaScript
+programming languages first. Making a Discord bot with very little knowledge is
+possible, it can be a challenge! You may end up dealing with Console errors or
+just syntax typographical errors...
 
-If you are new to Discordeno, TypeScript or JavaScript, here are some great resources:
+If you are new to Discordeno, TypeScript or JavaScript, here are some great
+resources:
 
 - [Official TypeScript Documentation](https://www.typescriptlang.org/docs/home.html)
 - [JavaScript Documentation from Devdocs](https://devdocs.io/javascript/)
 - [Codecademy](https://www.codecademy.com/)
 - [TypeScript Deep Dive](https://basarat.gitbook.io/typescript/)
 - [Deno Crash Course by Traversy Media](https://www.youtube.com/watch?v=NHHhiqwcfRM)
-- [TypeScript Crash Course by Traversy Media](https://www.youtube.com/watch?v=rAy_3SIqT-E)
+- [TypeScript Crash Course by Traversy
+  Media](https://www.youtube.com/watch?v=rAy_3SIqT-E)
 
-There is always more resources... Take your time and don't fret! Come back when you are ready, we can't wait to see what your Discordeno created bot does!
+There is always more resources... Take your time and don't fret! Come back when
+you are ready, we can't wait to see what your Discordeno created bot does!

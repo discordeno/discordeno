@@ -2,8 +2,7 @@ import { Guild } from "../api/structures/mod.ts";
 import { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
 import { Emoji, StatusType } from "./discord.ts";
 import { MemberCreatePayload } from "./member.ts";
-import { Activity } from "./message.ts";
-import { ValueOf } from "./mod.ts";
+import { Activity, Application } from "./message.ts";
 import { Permission } from "./permission.ts";
 import { ClientStatusPayload } from "./presence.ts";
 import { RoleData } from "./role.ts";
@@ -50,6 +49,8 @@ export interface GuildMemberUpdatePayload {
   nick: string;
   /** When the user used their nitro boost on the guild. */
   premium_since: string | null;
+  /** whether the user has not yet passed the guild's Membership Screening requirements */
+  pending?: boolean;
 }
 
 export interface GuildMemberAddPayload extends MemberCreatePayload {
@@ -159,7 +160,6 @@ export interface CreateGuildPayload extends UpdateGuildPayload {
   /** Channels in the guild */
   channels: ChannelCreatePayload[];
   presences: Presence[];
-  [key: string]: ValueOf<CreateGuildPayload>;
 }
 
 export type GuildFeatures =
@@ -174,7 +174,11 @@ export type GuildFeatures =
   | "DISCOVERABLE"
   | "FEATURABLE"
   | "ANIMATED_ICON"
-  | "BANNER";
+  | "BANNER"
+  /** guild has enabled Membership Screening */
+  | "MEMBER_VERIFICATION_GATE_ENABLED"
+  /** guild can be previewed before joining via Membership Screening or the directory */
+  | "PREVIEW_ENABLED";
 
 export interface VoiceRegion {
   /** unique ID for the region */
@@ -248,7 +252,7 @@ export interface EditIntegrationOptions {
   enable_emoticons: boolean;
 }
 
-export interface GuildIntegration {
+export interface Integration {
   /** The integrations unique id */
   id: string;
   /** the integrations name */
@@ -258,19 +262,32 @@ export interface GuildIntegration {
   /** Is this integration enabled */
   enabled: boolean;
   /** is this integration syncing */
-  syncing: boolean;
+  syncing?: boolean;
   /** id that this integration uses for "subscribers" */
-  role_id: string;
+  role_id?: string;
+  /** whether emoticons should be synced for this integration (twitch only currently) */
+  enable_emoticons?: boolean;
   /** The behavior of expiring subscribers */
-  expire_behavior: number;
+  expire_behavior?: IntegrationExpireBehaviors;
   /** The grace period before expiring subscribers */
-  expire_grace_period: number;
+  expire_grace_period?: number;
   /** The user for this integration */
-  user: UserPayload;
+  user?: UserPayload;
   /** The integration account information */
   account: Account;
   /** When this integration was last synced */
-  synced_at: string;
+  synced_at?: string;
+  /** how many subscribers this integration has */
+  subscriber_count?: number;
+  /** has this integration been revoked */
+  revoked?: boolean;
+  /** The bot/OAuth2 application for discord integrations */
+  application?: Application;
+}
+
+export enum IntegrationExpireBehaviors {
+  RemoveRole,
+  Kick,
 }
 
 export interface Account {
@@ -305,9 +322,6 @@ export interface UserPayload {
   flags?: number;
   /** The type of Nitro subscription on a user's account. */
   premium_type?: number;
-
-  // Index signature
-  [key: string]: ValueOf<UserPayload>;
 }
 
 export interface PartialUser {
@@ -535,7 +549,7 @@ export interface PrunePayload {
 }
 
 export interface PruneOptions {
-  /** number of days to count prune for (1 or more). Defaults to 7 days. */
+  /** number of days to count prune for (1 - 30). Defaults to 7 days. */
   days: number;
   /** Include members with these role ids */
   roles: string[];
@@ -643,7 +657,6 @@ export interface GuildTemplate {
   serialized_source_guild: Guild;
   /** whether the template has unsynced changes */
   is_dirty: boolean | null;
-  [key: string]: ValueOf<GuildTemplate>;
 }
 
 export interface CreateGuildFromTemplate {
@@ -666,3 +679,27 @@ export interface EditGuildTemplate {
   /** description for the template (0-120 characters) */
   description?: string | null;
 }
+
+export interface MembershipScreeningPayload {
+  /** when the fields were last updated */
+  version: string;
+  /** the steps in the screening form */
+  form_fields: MembershipScreeningFieldPayload[];
+  /** the server description shown in the screening form */
+  description: string | null;
+}
+
+export interface MembershipScreeningFieldPayload {
+  /** the type of field */
+  field_type: MembershipScreeningFieldTypes;
+  /** the title of the field */
+  label: string;
+  /** the list of rules */
+  values?: string[];
+  /** whether the user has to fill out this field */
+  required: boolean;
+}
+
+export type MembershipScreeningFieldTypes =
+  /** Server Rules */
+  "TERMS";

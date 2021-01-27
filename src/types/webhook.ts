@@ -36,6 +36,15 @@ export interface WebhookCreateOptions {
   avatar?: string;
 }
 
+export interface WebhookEditOptions {
+  /** Name of the webhook (1-80 characters) */
+  name?: string;
+  /** Image url for avatar image for the default webhook avatar */
+  avatar?: string | null;
+  /** The new channel id this webhook should be moved to */
+  channelID?: string;
+}
+
 export interface ExecuteWebhookOptions {
   /** waits for server confirmation of message send before response, and returns the created message body (defaults to false; when false a message that is not saved does not return an error) */
   wait?: boolean;
@@ -199,9 +208,15 @@ export enum InteractionResponseType {
   ACK_WITH_SOURCE = 5,
 }
 
+// TODO: remove this interface for v11
+/** @deprecated Use `UpsertSlashCommandOptions` instead */
 export interface EditSlashCommandOptions {
-  id: string;
-  guildID?: string;
+  /** 3-32 character command name */
+  name: string;
+  /** 1-100 character description */
+  description: string;
+  /** The parameters for the command */
+  options?: SlashCommandOption[];
 }
 
 export interface ExecuteSlashCommandOptions {
@@ -215,6 +230,21 @@ export interface EditSlashResponseOptions extends SlashCommandCallbackData {
 }
 
 export interface UpsertSlashCommandOptions {
+  /** 3-32 character command name */
+  name: string;
+  /** 1-100 character description */
+  description: string;
+  /** The parameters for the command */
+  options?: SlashCommandOption[];
+}
+
+export interface UpsertSlashCommandsOptions {
+  /** The id of the command */
   id: string;
-  guildID?: string;
+  /** 3-32 character command name */
+  name: string;
+  /** 1-100 character description */
+  description: string;
+  /** The parameters for the command */
+  options?: SlashCommandOption[];
 }

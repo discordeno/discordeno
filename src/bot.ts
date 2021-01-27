@@ -1,14 +1,16 @@
-import { RequestManager } from "./rest/request_manager.ts";
+import { getGatewayBot } from "./api/handlers/gateway.ts";
 import {
   BotConfig,
   DiscordBotGatewayData,
   EventHandlers,
+  Intents,
 } from "./types/mod.ts";
-import { baseEndpoints, endpoints, GATEWAY_VERSION } from "./util/constants.ts";
+import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 
 export let authorization = "";
 export let botID = "";
+export let applicationID = "";
 
 export let eventHandlers: EventHandlers = {};
 
@@ -44,9 +46,7 @@ export async function startBot(config: BotConfig) {
   authorization = `Bot ${config.token}`;
 
   // Initial API connection to get info about bots connection
-  botGatewayData = await RequestManager.get(
-    endpoints.GATEWAY_BOT,
-  ) as DiscordBotGatewayData;
+  botGatewayData = await getGatewayBot();
 
   // Explicitly append gateway version and encoding
   botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
@@ -54,7 +54,7 @@ export async function startBot(config: BotConfig) {
   proxyWSURL = botGatewayData.url;
   identifyPayload.token = config.token;
   identifyPayload.intents = config.intents.reduce(
-    (bits, next) => (bits |= next),
+    (bits, next) => (bits |= typeof next === "string" ? Intents[next] : next),
     0,
   );
   identifyPayload.shard = [0, botGatewayData.shards];
@@ -73,6 +73,11 @@ export function updateEventHandlers(newEventHandlers: EventHandlers) {
 /** INTERNAL LIB function used to set the bot ID once the READY event is sent by Discord. */
 export function setBotID(id: string) {
   if (botID !== id) botID = id;
+}
+
+/** INTERNAL LIB function used to set the application ID once the READY event is sent by Discord. */
+export function setApplicationID(id: string) {
+  if (applicationID !== id) applicationID = id;
 }
 
 // BIG BRAIN BOT STUFF ONLY BELOW THIS
@@ -96,14 +101,12 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   }
 
   identifyPayload.intents = data.intents.reduce(
-    (bits, next) => (bits |= next),
+    (bits, next) => (bits |= typeof next === "string" ? Intents[next] : next),
     0,
   );
 
   // Initial API connection to get info about bots connection
-  botGatewayData = await RequestManager.get(
-    endpoints.GATEWAY_BOT,
-  ) as DiscordBotGatewayData;
+  botGatewayData = await getGatewayBot();
 
   if (!data.wsURL) proxyWSURL = botGatewayData.url;
   await spawnShards(

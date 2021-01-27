@@ -70,6 +70,8 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
     payload.guild_id,
   );
 
+  await cacheHandlers.set("members", member.id, member);
+
   if (guildMember?.nick !== payload.nick) {
     eventHandlers.nicknameUpdate?.(
       guild,
@@ -78,6 +80,11 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
       guildMember?.nick,
     );
   }
+
+  if (payload.pending === false && guildMember?.pending === true) {
+    eventHandlers.membershipScreeningPassed?.(guild, member);
+  }
+
   const roleIDs = guildMember?.roles || [];
 
   roleIDs.forEach((id) => {
