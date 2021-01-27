@@ -297,7 +297,7 @@ export function emojiURL(id: string, animated = false) {
 }
 
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
-export async function createGuildRole(
+export async function createRole(
   guildID: string,
   options: CreateRoleOptions,
   reason?: string,
