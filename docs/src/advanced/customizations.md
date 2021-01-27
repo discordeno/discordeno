@@ -116,8 +116,8 @@ async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
 ```
 
 Now we need to use this function and telling Discordeno to override the internal
-createMemberStruct function. To do this, we will modify the internal functions. This
-is where we reassign the value of the function.
+createMemberStruct function. To do this, we will modify the internal functions.
+This is where we reassign the value of the function.
 
 ```ts
 structures.createMemberStruct = createMemberStruct;
@@ -145,7 +145,7 @@ The code should look like this right now:
 
 ```ts
 async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
-	const {
+  const {
     joined_at: joinedAt,
     premium_since: premiumSince,
     ...rest
