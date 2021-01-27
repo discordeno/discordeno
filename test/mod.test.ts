@@ -186,6 +186,7 @@ Deno.test({
     assertExists(channel);
     assertEquals(channel.name, "discordeno-test-edited");
   },
+  ...defaultTestOptions,
 });
 
 Deno.test({
@@ -245,6 +246,7 @@ Deno.test({
     assertExists(message);
     assertEquals(message.embeds[0].title, "Discordeno Test");
   },
+  ...defaultTestOptions,
 });
 
 Deno.test({
@@ -319,6 +321,7 @@ Deno.test({
   async fn() {
     await deleteRole(tempData.guildID, tempData.roleID);
   },
+  ...defaultTestOptions,
 });
 
 Deno.test({
