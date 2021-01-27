@@ -61,7 +61,9 @@ Deno.test({
 
     eventHandlers.ready = () => {
       if (cache.guilds.size >= 10) {
-        cache.guilds.map((guild) => deleteServer(guild.id));
+        cache.guilds.map((guild) =>
+          guild.ownerID === botID && deleteServer(guild.id)
+        );
       }
     };
 
