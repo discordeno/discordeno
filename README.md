@@ -10,10 +10,10 @@ Discord API library for [Deno](https://deno.land)
 
 ## Features
 
-- **Secure & stable**: Discordeno, on the other hand, is actively
-  maintained to ensure great performance and convenience. Moreover, it
-  internally checks all missing permissions before forwarding a request to the
-  Discord API so that the client does not get globally-banned by Discord.
+- **Secure & stable**: Discordeno is actively maintained to ensure great
+  performance and convenience. Moreover, it internally checks all missing
+  permissions before forwarding a request to the Discord API so that the client
+  does not get globally-banned by Discord.
 - **Simple, Efficient, & Lightweight**: Discordeno is simplistic, easy-to-use,
   versatile while being efficient and lightweight. Follows
   [Convention Over Configuration](https://en.wikipedia.org/wiki/Convention_over_configuration)
