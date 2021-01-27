@@ -32,9 +32,6 @@ import {
   unpin,
 } from "./deps.ts";
 
-const token = Deno.env.get("DISCORD_TOKEN");
-if (!token) throw new Error("Token is not provided");
-
 // Default options for tests
 export const defaultTestOptions: Partial<Deno.TestDefinition> = {
   sanitizeOps: false,
@@ -54,6 +51,9 @@ export const tempData = {
 Deno.test({
   name: "[main] connect to gateway",
   async fn() {
+    const token = Deno.env.get("DISCORD_TOKEN");
+    if (!token) throw new Error("Token is not provided");
+
     await startBot({
       token,
       intents: ["GUILD_MESSAGES", "GUILDS"],
