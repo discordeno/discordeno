@@ -14,9 +14,9 @@ jobs:
       - name: Cache dependencies
         run: deno cache mod.ts
       - name: Run local tests
-        run: TEST_TYPE=local deno test
+        run: TEST_TYPE=local deno test --allow-env
       - name: Run API tests
         if: github.ref == 'refs/heads/master'
-        run: TEST_TYPE=api deno test --allow-net --allow-env
+        run: TEST_TYPE=api deno test --allow-net --allow-env --allow-env
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
