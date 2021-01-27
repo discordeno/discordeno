@@ -7,8 +7,7 @@ import { endpoints } from "../../util/constants.ts";
  * For OAuth2, this requires the `identify` scope, which will return the object without an email,
  * and optionally the email scope, which returns the object with an email.
  */
-export function getCurrentUser() {
-  return RequestManager.get(endpoints.USER_BOT) as Promise<
-    UserPayload
-  >;
+export async function getCurrentUser() {
+  const result = await RequestManager.get(endpoints.USER_BOT) as UserPayload;
+  return result;
 }
