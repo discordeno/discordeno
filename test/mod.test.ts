@@ -343,5 +343,4 @@ Deno.test({
   fn() {
     Deno.exit();
   },
-  ...defaultTestOptions,
 });
