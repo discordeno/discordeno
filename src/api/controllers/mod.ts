@@ -15,6 +15,8 @@ import {
 } from "./guilds.ts";
 import {
   handleInternalApplicationCommandCreate,
+  handleInternalApplicationCommandDelete,
+  handleInternalApplicationCommandUpdate,
   handleInternalInteractionCreate,
 } from "./interactions.ts";
 import {
@@ -72,6 +74,8 @@ export let controllers = {
   GUILD_ROLE_UPDATE: handleInternalGuildRoleUpdate,
   INTERACTION_CREATE: handleInternalInteractionCreate,
   APPLICATION_COMMAND_CREATE: handleInternalApplicationCommandCreate,
+  APPLICATION_COMMAND_DELETE: handleInternalApplicationCommandDelete,
+  APPLICATION_COMMAND_UPDATE: handleInternalApplicationCommandUpdate,
   MESSAGE_CREATE: handleInternalMessageCreate,
   MESSAGE_DELETE: handleInternalMessageDelete,
   MESSAGE_DELETE_BULK: handleInternalMessageDeleteBulk,
