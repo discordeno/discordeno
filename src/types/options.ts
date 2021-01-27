@@ -15,9 +15,11 @@ import {
   VoiceStateUpdatePayload,
 } from "./discord.ts";
 import { UserPayload } from "./guild.ts";
-import { InteractionCommandPayload } from "./interactions.ts";
 import {
-  Application,
+  ApplicationCommandEvent,
+  InteractionCommandPayload,
+} from "./interactions.ts";
+import {
   Attachment,
   BaseMessageReactionPayload,
   Embed,
@@ -92,7 +94,18 @@ interface RateLimitData {
 
 export interface EventHandlers {
   rateLimit?: (data: RateLimitData) => unknown;
-  applicationCommandCreate?: (data: Application) => unknown;
+  /** Sent when a new Slash Command is created, relevant to the current user. */
+  applicationCommandCreate?: (
+    data: Camelize<ApplicationCommandEvent>,
+  ) => unknown;
+  /** Sent when a Slash Command relevant to the current user is updated. */
+  applicationCommandUpdate?: (
+    data: Camelize<ApplicationCommandEvent>,
+  ) => unknown;
+  /** Sent when a Slash Command relevant to the current user is deleted. */
+  applicationCommandDelete?: (
+    data: Camelize<ApplicationCommandEvent>,
+  ) => unknown;
   /** Sent when properties about the user change. */
   botUpdate?: (user: UserPayload) => unknown;
   /** Sent when a new guild channel is created, relevant to the current user. */

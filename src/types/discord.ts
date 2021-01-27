@@ -18,6 +18,8 @@ export interface DiscordPayload {
   /** The event name for this payload. ONLY for OPCode 0 */
   t?:
     | "APPLICATION_COMMAND_CREATE"
+    | "APPLICATION_COMMAND_UPDATE"
+    | "APPLICATION_COMMAND_DELETE"
     | "CHANNEL_CREATE"
     | "CHANNEL_DELETE"
     | "CHANNEL_UPDATE"
