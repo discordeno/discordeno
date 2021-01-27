@@ -1,6 +1,8 @@
 # Discordeno
 
-> Discord API library for [Deno](https://deno.land)
+Discord API library for [Deno](https://deno.land)
+
+<img align="right" src=docs/src/.vuepress/public/logo.png height="150px">
 
 [![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
