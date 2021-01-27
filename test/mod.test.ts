@@ -4,6 +4,7 @@ import {
   deleteServer,
   getChannel,
 } from "../src/api/handlers/guild.ts";
+import { eventHandlers } from "../src/bot.ts";
 import {
   addReaction,
   assertEquals,
@@ -57,6 +58,12 @@ Deno.test({
       token,
       intents: ["GUILD_MESSAGES", "GUILDS"],
     });
+
+    eventHandlers.ready = () => {
+      if (cache.guilds.size >= 10) {
+        cache.guilds.map((guild) => deleteServer(guild.id));
+      }
+    };
 
     // Delay the execution by 5 seconds
     await delay(5000);
