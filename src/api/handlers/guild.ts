@@ -199,6 +199,7 @@ export async function getChannels(guildID: string, addToCache = true) {
 export async function getChannel(channelID: string, addToCache = true) {
   const result = await RequestManager.get(
     endpoints.CHANNEL_BASE(channelID),
+  );
 
   const channel = await structures.createChannelStruct(
     result,
