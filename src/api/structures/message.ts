@@ -134,11 +134,13 @@ export async function createMessage(data: MessageCreateOptions) {
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
+    // @ts-ignore index signature
     restProps[key] = createNewProp(rest[key]);
   }
 
   // Discord doesnt give guild id for getMessage() so this will fill it in
-  const guildIDFinal = guildID || (await cacheHandlers.get("channels", channelID))?.guildID || "";
+  const guildIDFinal = guildID ||
+    (await cacheHandlers.get("channels", channelID))?.guildID || "";
 
   const message = Object.create(baseMessage, {
     ...restProps,

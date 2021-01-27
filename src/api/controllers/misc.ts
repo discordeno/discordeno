@@ -1,6 +1,8 @@
-import { eventHandlers, setBotID } from "../../bot.ts";
+import { eventHandlers, setApplicationID, setBotID } from "../../bot.ts";
 import {
   DiscordPayload,
+  IntegrationCreateUpdateEvent,
+  IntegrationDeleteEvent,
   PresenceUpdatePayload,
   ReadyPayload,
   TypingStartPayload,
@@ -24,12 +26,20 @@ export async function handleInternalReady(
 
   const payload = data.d as ReadyPayload;
   setBotID(payload.user.id);
+  setApplicationID(payload.application.id);
 
   // Triggered on each shard
   eventHandlers.shardReady?.(shardID);
   if (payload.shard && shardID === payload.shard[1] - 1) {
     const loadedAllGuilds = async () => {
-      if (payload.guilds.some((g) => !cache.guilds.has(g.id))) {
+      const guildsMissing = async () => {
+        for (const g of payload.guilds) {
+          if (!(await cacheHandlers.has("guilds", g.id))) return true;
+        }
+        return false;
+      };
+
+      if (await guildsMissing()) {
         setTimeout(loadedAllGuilds, 2000);
       } else {
         // The bot has already started, the last shard is resumed, however.
@@ -63,7 +73,7 @@ export async function handleInternalPresenceUpdate(data: DiscordPayload) {
   const oldPresence = await cacheHandlers.get("presences", payload.user.id);
   await cacheHandlers.set("presences", payload.user.id, payload);
 
-  return eventHandlers.presenceUpdate?.(payload, oldPresence);
+  eventHandlers.presenceUpdate?.(payload, oldPresence);
 }
 
 /** This function is the internal handler for the typings event. Users can override this with controllers if desired. */
@@ -82,9 +92,13 @@ export async function handleInternalUserUpdate(data: DiscordPayload) {
   if (!member) return;
 
   Object.entries(userData).forEach(([key, value]) => {
+    // @ts-ignore index signatures
     if (member[key] !== value) return member[key] = value;
   });
-  return eventHandlers.botUpdate?.(userData);
+
+  await cacheHandlers.set("members", userData.id, member);
+
+  eventHandlers.botUpdate?.(userData);
 }
 
 /** This function is the internal handler for the voice state update event. Users can override this with controllers if desired. */
@@ -116,6 +130,8 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
     selfStream: payload.self_stream || false,
   });
 
+  await cacheHandlers.set("guilds", payload.guild_id, guild);
+
   if (cachedState?.channelID !== payload.channel_id) {
     // Either joined or moved channels
     if (payload.channel_id) {
@@ -143,8 +159,78 @@ export function handleInternalWebhooksUpdate(data: DiscordPayload) {
   if (data.t !== "WEBHOOKS_UPDATE") return;
 
   const options = data.d as WebhookUpdatePayload;
-  return eventHandlers.webhooksUpdate?.(
+  eventHandlers.webhooksUpdate?.(
     options.channel_id,
     options.guild_id,
   );
+}
+
+export function handleInternalIntegrationCreate(
+  data: DiscordPayload,
+) {
+  if (data.t !== "INTEGRATION_CREATE") return;
+
+  const {
+    guild_id: guildID,
+    enable_emoticons: enableEmoticons,
+    expire_behavior: expireBehavior,
+    expire_grace_period: expireGracePeriod,
+    subscriber_count: subscriberCount,
+    role_id: roleID,
+    synced_at: syncedAt,
+    ...rest
+  } = data.d as IntegrationCreateUpdateEvent;
+
+  eventHandlers.integrationCreate?.({
+    ...rest,
+    guildID,
+    enableEmoticons,
+    expireBehavior,
+    expireGracePeriod,
+    syncedAt,
+    subscriberCount,
+    roleID,
+  });
+}
+
+export function handleInternalIntegrationUpdate(data: DiscordPayload) {
+  if (data.t !== "INTEGRATION_UPDATE") return;
+
+  const {
+    enable_emoticons: enableEmoticons,
+    expire_behavior: expireBehavior,
+    expire_grace_period: expireGracePeriod,
+    role_id: roleID,
+    subscriber_count: subscriberCount,
+    synced_at: syncedAt,
+    guild_id: guildID,
+    ...rest
+  } = data.d as IntegrationCreateUpdateEvent;
+
+  eventHandlers.integrationUpdate?.({
+    ...rest,
+    guildID,
+    subscriberCount,
+    enableEmoticons,
+    expireGracePeriod,
+    roleID,
+    expireBehavior,
+    syncedAt,
+  });
+}
+
+export function handleInternalIntegrationDelete(data: DiscordPayload) {
+  if (data.t !== "INTEGRATION_DELETE") return;
+
+  const {
+    guild_id: guildID,
+    application_id: applicationID,
+    ...rest
+  } = data.d as IntegrationDeleteEvent;
+
+  eventHandlers.integrationDelete?.({
+    ...rest,
+    applicationID,
+    guildID,
+  });
 }

@@ -74,10 +74,12 @@ export async function addRole(
 
   await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
-  return RequestManager.put(
+  const result = await RequestManager.put(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
     { reason },
   );
+
+  return result;
 }
 
 /** Remove a role from the member */
@@ -105,10 +107,12 @@ export async function removeRole(
 
   await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
-  return RequestManager.delete(
+  const result = await RequestManager.delete(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
     { reason },
   );
+
+  return result;
 }
 
 /** Send a message to a users DM. Note: this takes 2 API calls. 1 is to fetch the users dm channel. 2 is to send a message to that channel. */
@@ -120,7 +124,7 @@ export async function sendDirectMessage(
   if (!dmChannel) {
     // If not available in cache create a new one.
     const dmChannelData = await RequestManager.post(
-      endpoints.USER_CREATE_DM,
+      endpoints.USER_DM,
       { recipient_id: memberID },
     ) as DMChannelCreatePayload;
     // Channel create event will have added this channel to the cache
@@ -150,10 +154,12 @@ export async function kick(guildID: string, memberID: string, reason?: string) {
 
   await requireBotGuildPermissions(guildID, ["KICK_MEMBERS"]);
 
-  return RequestManager.delete(
+  const result = await RequestManager.delete(
     endpoints.GUILD_MEMBER(guildID, memberID),
     { reason },
   );
+
+  return result;
 }
 
 /** Edit the member */
@@ -210,10 +216,12 @@ export async function editMember(
 
   await requireBotGuildPermissions(guildID, requiredPerms);
 
-  return RequestManager.patch(
+  const result = await RequestManager.patch(
     endpoints.GUILD_MEMBER(guildID, memberID),
     options,
   );
+
+  return result;
 }
 
 /**
@@ -228,6 +236,11 @@ export function moveMember(
   channelID: string,
 ) {
   return editMember(guildID, memberID, { channel_id: channelID });
+}
+
+/** Kicks a member from a voice channel */
+export function kickFromVoiceChannel(guildID: string, memberID: string) {
+  return editMember(guildID, memberID, { channel_id: null });
 }
 
 /** Modifies the bot's username or avatar.
@@ -253,11 +266,29 @@ export async function editBotProfile(username?: string, botAvatarURL?: string) {
   }
 
   const avatar = botAvatarURL ? await urlToBase64(botAvatarURL) : undefined;
-  return RequestManager.patch(
+  const result = await RequestManager.patch(
     endpoints.USER_BOT,
     {
       username: username?.trim(),
       avatar,
     },
   );
+
+  return result;
+}
+
+/** Edit the nickname of the bot in this guild */
+export async function editBotNickname(
+  guildID: string,
+  nickname: string | null,
+) {
+  const hasPerm = await botHasPermission(guildID, ["CHANGE_NICKNAME"]);
+  if (!hasPerm) throw new Error(Errors.MISSING_CHANGE_NICKNAME);
+
+  const response = await RequestManager.patch(
+    endpoints.USER_NICK(guildID),
+    { nick: nickname },
+  ) as { nick: string };
+
+  return response.nick;
 }

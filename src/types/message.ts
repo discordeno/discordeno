@@ -2,7 +2,6 @@ import { Channel } from "../api/structures/mod.ts";
 import { ChannelType } from "./channel.ts";
 import { UserPayload } from "./guild.ts";
 import { MemberCreatePayload } from "./member.ts";
-import { ValueOf } from "./mod.ts";
 
 export interface MentionedUser extends UserPayload {
   // @ts-ignore no idea how to fix this
@@ -32,9 +31,9 @@ export interface Attachment {
   /** A proxied url of file */
   proxy_url: string;
   /** The height of file if an image */
-  height: number | null;
+  height?: number | null;
   /** The width of the file if an image */
-  width: number | null;
+  width?: number | null;
 }
 
 export interface Embed {
@@ -158,6 +157,8 @@ export enum MessageTypes {
   CHANNEL_FOLLOW_ADD,
   GUILD_DISCOVERY_DISQUALIFIED = 14,
   GUILD_DISCOVERY_REQUALIFIED,
+  GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING,
+  GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING,
   REPLY = 19,
   APPLICATION_COMMAND,
 }
@@ -187,6 +188,10 @@ export interface Application {
   icon: string | null;
   /** The name of the application */
   name: string;
+  /** the description of the app */
+  summary: string;
+  /** the bot associated with this application */
+  bot?: UserPayload;
 }
 
 export interface Reference {
@@ -285,7 +290,6 @@ export interface MessageCreateOptions {
   stickers?: MessageSticker[];
   /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
   referenced_message?: MessageCreateOptions | null;
-  [key: string]: ValueOf<MessageCreateOptions>;
 }
 
 export interface BaseMessageDeletePayload {

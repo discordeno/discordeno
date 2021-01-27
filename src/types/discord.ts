@@ -1,4 +1,9 @@
-import { CreateGuildPayload, PartialUser, UserPayload } from "./guild.ts";
+import {
+  CreateGuildPayload,
+  Integration,
+  PartialUser,
+  UserPayload,
+} from "./guild.ts";
 import { MemberCreatePayload } from "./member.ts";
 import { Activity, Application } from "./message.ts";
 import { ClientStatusPayload } from "./presence.ts";
@@ -13,6 +18,8 @@ export interface DiscordPayload {
   /** The event name for this payload. ONLY for OPCode 0 */
   t?:
     | "APPLICATION_COMMAND_CREATE"
+    | "APPLICATION_COMMAND_UPDATE"
+    | "APPLICATION_COMMAND_DELETE"
     | "CHANNEL_CREATE"
     | "CHANNEL_DELETE"
     | "CHANNEL_UPDATE"
@@ -43,7 +50,10 @@ export interface DiscordPayload {
     | "TYPING_START"
     | "USER_UPDATE"
     | "VOICE_STATE_UPDATE"
-    | "WEBHOOKS_UPDATE";
+    | "WEBHOOKS_UPDATE"
+    | "INTEGRATION_CREATE"
+    | "INTEGRATION_UPDATE"
+    | "INTEGRATION_DELETE";
 }
 
 export interface DiscordBotGatewayData {
@@ -301,3 +311,17 @@ export type UnavailableGuildPayload = Pick<
   CreateGuildPayload,
   "id" | "unavailable"
 >;
+
+export type IntegrationCreateUpdateEvent = Integration & {
+  /** id of the guild */
+  guild_id: string;
+};
+
+export interface IntegrationDeleteEvent {
+  /** integration id */
+  id: string;
+  /** id of the guild */
+  guild_id: string;
+  /** id of the bot/OAuth2 application for this discord integration */
+  application_id?: string;
+}

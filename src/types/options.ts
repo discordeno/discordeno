@@ -8,14 +8,18 @@ import {
 import {
   DiscordPayload,
   Emoji,
+  IntegrationCreateUpdateEvent,
+  IntegrationDeleteEvent,
   PresenceUpdatePayload,
   TypingStartPayload,
   VoiceStateUpdatePayload,
 } from "./discord.ts";
 import { UserPayload } from "./guild.ts";
-import { InteractionCommandPayload } from "./interactions.ts";
 import {
-  Application,
+  ApplicationCommandEvent,
+  InteractionCommandPayload,
+} from "./interactions.ts";
+import {
   Attachment,
   BaseMessageReactionPayload,
   Embed,
@@ -24,11 +28,12 @@ import {
   PartialMessage,
   ReactionPayload,
 } from "./message.ts";
+import { Camelize } from "./util.ts";
 
 export interface BotConfig {
   token: string;
   compress?: boolean;
-  intents: Intents[];
+  intents: (Intents | keyof typeof Intents)[];
   eventHandlers?: EventHandlers;
 }
 
@@ -72,8 +77,35 @@ export interface DebugArg {
   data: unknown;
 }
 
+interface RateLimitData {
+  /** The number of remaining requests that can be made */
+  remaining: string | null;
+  /** Epoch time (seconds since 00:00:00 UTC on January 1, 1970) at which the rate limit resets */
+  resetTimestamp: string | null;
+  /** Total time (in seconds) of when the current rate limit bucket will reset. Can have decimals to match previous millisecond ratelimit precision */
+  retryAfter: string | null;
+  /** Returned only on a HTTP 429 response if the rate limit headers returned are of the global rate limit (not per-route) */
+  global: string | null;
+  /** A unique string denoting the rate limit being encountered (non-inclusive of major parameters in the route path) */
+  bucketID: string | null;
+  /** The URL the HTTP request is made to */
+  url: string;
+}
+
 export interface EventHandlers {
-  applicationCommandCreate?: (data: Application) => unknown;
+  rateLimit?: (data: RateLimitData) => unknown;
+  /** Sent when a new Slash Command is created, relevant to the current user. */
+  applicationCommandCreate?: (
+    data: Camelize<ApplicationCommandEvent>,
+  ) => unknown;
+  /** Sent when a Slash Command relevant to the current user is updated. */
+  applicationCommandUpdate?: (
+    data: Camelize<ApplicationCommandEvent>,
+  ) => unknown;
+  /** Sent when a Slash Command relevant to the current user is deleted. */
+  applicationCommandDelete?: (
+    data: Camelize<ApplicationCommandEvent>,
+  ) => unknown;
   /** Sent when properties about the user change. */
   botUpdate?: (user: UserPayload) => unknown;
   /** Sent when a new guild channel is created, relevant to the current user. */
@@ -126,7 +158,9 @@ export interface EventHandlers {
   ) => unknown;
   heartbeat?: () => unknown;
   /** Sent when a user in a guild uses a Slash Command. */
-  interactionCreate?: (data: InteractionCommandPayload) => unknown;
+  interactionCreate?: (
+    data: Omit<InteractionCommandPayload, "member"> & { member: Member },
+  ) => unknown;
   /** Sent when a message is created. */
   messageCreate?: (message: Message) => unknown;
   /** Sent when a message is deleted. */
@@ -190,6 +224,14 @@ export interface EventHandlers {
   ) => unknown;
   /** Sent when a guild channel's webhook is created, updated, or deleted. */
   webhooksUpdate?: (channelID: string, guildID: string) => unknown;
+  /** Sent when a member has passed the guild's Membership Screening requirements */
+  membershipScreeningPassed?: (guild: Guild, member: Member) => unknown;
+  /** Sent when an integration is created on a server such as twitch, youtube etc.. */
+  integrationCreate?: (data: Camelize<IntegrationCreateUpdateEvent>) => unknown;
+  /** Sent when an integration is updated. */
+  integrationUpdate?: (data: Camelize<IntegrationCreateUpdateEvent>) => unknown;
+  /** Sent when an integration is deleted. */
+  integrationDelete?: (data: Camelize<IntegrationDeleteEvent>) => undefined;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
@@ -223,6 +265,9 @@ export enum Intents {
   GUILD_EMOJIS = 1 << 3,
   /** Enables the following events:
    * - GUILD_INTEGRATIONS_UPDATE
+   * - INTEGRATION_CREATE
+   * - INTEGRATION_UPDATE
+   * - INTEGRATION_DELETE
    */
   GUILD_INTEGRATIONS = 1 << 4,
   /** Enables the following events:
@@ -279,5 +324,3 @@ export enum Intents {
    */
   DIRECT_MESSAGE_TYPING = 1 << 14,
 }
-
-export type ValueOf<T> = T[keyof T];

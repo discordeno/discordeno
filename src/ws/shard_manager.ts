@@ -1,5 +1,6 @@
 import { controllers } from "../api/controllers/mod.ts";
 import { Guild } from "../api/structures/guild.ts";
+import { Member } from "../api/structures/mod.ts";
 import { eventHandlers, IdentifyPayload } from "../bot.ts";
 import {
   DiscordBotGatewayData,
@@ -8,6 +9,7 @@ import {
   GatewayOpcode,
 } from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
+import { Collection } from "../util/collection.ts";
 import { BotStatusRequest, delay } from "../util/utils.ts";
 import {
   botGatewayStatusRequest,
@@ -90,9 +92,9 @@ export async function handleDiscordPayload(
 
 export function requestAllMembers(
   guild: Guild,
-  // TODO: The parameter "resolve" should have a "stronger" type.
-  // deno-lint-ignore ban-types
-  resolve: Function,
+  resolve: (
+    value: Collection<string, Member> | PromiseLike<Collection<string, Member>>,
+  ) => void,
   options?: FetchMembersOptions,
 ) {
   const nonce = `${guild.id}-${Date.now()}`;
