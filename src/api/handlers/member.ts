@@ -282,8 +282,7 @@ export async function editBotNickname(
   guildID: string,
   nickname: string | null,
 ) {
-  const hasPerm = await botHasPermission(guildID, ["CHANGE_NICKNAME"]);
-  if (!hasPerm) throw new Error(Errors.MISSING_CHANGE_NICKNAME);
+  await requireBotGuildPermissions(guildID, ["CHANGE_NICKNAME"]);
 
   const response = await RequestManager.patch(
     endpoints.USER_NICK(guildID),
