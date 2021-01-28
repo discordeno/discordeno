@@ -2,7 +2,7 @@ import { Guild } from "../api/structures/mod.ts";
 import { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
 import { Emoji, StatusType } from "./discord.ts";
 import { MemberCreatePayload } from "./member.ts";
-import { Activity } from "./message.ts";
+import { Activity, Application } from "./message.ts";
 import { Permission } from "./permission.ts";
 import { ClientStatusPayload } from "./presence.ts";
 import { RoleData } from "./role.ts";
@@ -49,6 +49,8 @@ export interface GuildMemberUpdatePayload {
   nick: string;
   /** When the user used their nitro boost on the guild. */
   premium_since: string | null;
+  /** whether the user has not yet passed the guild's Membership Screening requirements */
+  pending?: boolean;
 }
 
 export interface GuildMemberAddPayload extends MemberCreatePayload {
@@ -172,7 +174,11 @@ export type GuildFeatures =
   | "DISCOVERABLE"
   | "FEATURABLE"
   | "ANIMATED_ICON"
-  | "BANNER";
+  | "BANNER"
+  /** guild has enabled Membership Screening */
+  | "MEMBER_VERIFICATION_GATE_ENABLED"
+  /** guild can be previewed before joining via Membership Screening or the directory */
+  | "PREVIEW_ENABLED";
 
 export interface VoiceRegion {
   /** unique ID for the region */
@@ -246,7 +252,7 @@ export interface EditIntegrationOptions {
   enable_emoticons: boolean;
 }
 
-export interface GuildIntegration {
+export interface Integration {
   /** The integrations unique id */
   id: string;
   /** the integrations name */
@@ -256,19 +262,32 @@ export interface GuildIntegration {
   /** Is this integration enabled */
   enabled: boolean;
   /** is this integration syncing */
-  syncing: boolean;
+  syncing?: boolean;
   /** id that this integration uses for "subscribers" */
-  role_id: string;
+  role_id?: string;
+  /** whether emoticons should be synced for this integration (twitch only currently) */
+  enable_emoticons?: boolean;
   /** The behavior of expiring subscribers */
-  expire_behavior: number;
+  expire_behavior?: IntegrationExpireBehaviors;
   /** The grace period before expiring subscribers */
-  expire_grace_period: number;
+  expire_grace_period?: number;
   /** The user for this integration */
-  user: UserPayload;
+  user?: UserPayload;
   /** The integration account information */
   account: Account;
   /** When this integration was last synced */
-  synced_at: string;
+  synced_at?: string;
+  /** how many subscribers this integration has */
+  subscriber_count?: number;
+  /** has this integration been revoked */
+  revoked?: boolean;
+  /** The bot/OAuth2 application for discord integrations */
+  application?: Application;
+}
+
+export enum IntegrationExpireBehaviors {
+  RemoveRole,
+  Kick,
 }
 
 export interface Account {
@@ -589,6 +608,13 @@ export interface FetchMembersOptions {
   limit?: number;
 }
 
+export interface GetMemberOptions {
+  /** max number of members to return (1-1000), defaults to 1 */
+  limit?: number;
+  /** the highest user id in the previous page */
+  after?: string;
+}
+
 export interface CreateServerOptions {
   /** name of the guild (2-100 characters) */
   name: string;
@@ -660,3 +686,27 @@ export interface EditGuildTemplate {
   /** description for the template (0-120 characters) */
   description?: string | null;
 }
+
+export interface MembershipScreeningPayload {
+  /** when the fields were last updated */
+  version: string;
+  /** the steps in the screening form */
+  form_fields: MembershipScreeningFieldPayload[];
+  /** the server description shown in the screening form */
+  description: string | null;
+}
+
+export interface MembershipScreeningFieldPayload {
+  /** the type of field */
+  field_type: MembershipScreeningFieldTypes;
+  /** the title of the field */
+  label: string;
+  /** the list of rules */
+  values?: string[];
+  /** whether the user has to fill out this field */
+  required: boolean;
+}
+
+export type MembershipScreeningFieldTypes =
+  /** Server Rules */
+  "TERMS";

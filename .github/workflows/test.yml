@@ -13,8 +13,10 @@ jobs:
           deno-version: ${{ matrix.deno }}
       - name: Cache dependencies
         run: deno cache mod.ts
-      - name: Run test script
+      - name: Run local tests
+        run: TEST_TYPE=local deno test --allow-env
+      - name: Run API tests
         if: github.ref == 'refs/heads/master'
-        run: deno test --allow-net --allow-env
+        run: TEST_TYPE=api deno test --allow-net --allow-env
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}

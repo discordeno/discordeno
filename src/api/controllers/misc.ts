@@ -1,6 +1,8 @@
 import { eventHandlers, setApplicationID, setBotID } from "../../bot.ts";
 import {
   DiscordPayload,
+  IntegrationCreateUpdateEvent,
+  IntegrationDeleteEvent,
   PresenceUpdatePayload,
   ReadyPayload,
   TypingStartPayload,
@@ -30,7 +32,14 @@ export async function handleInternalReady(
   eventHandlers.shardReady?.(shardID);
   if (payload.shard && shardID === payload.shard[1] - 1) {
     const loadedAllGuilds = async () => {
-      if (payload.guilds.some((g) => !cache.guilds.has(g.id))) {
+      const guildsMissing = async () => {
+        for (const g of payload.guilds) {
+          if (!(await cacheHandlers.has("guilds", g.id))) return true;
+        }
+        return false;
+      };
+
+      if (await guildsMissing()) {
         setTimeout(loadedAllGuilds, 2000);
       } else {
         // The bot has already started, the last shard is resumed, however.
@@ -154,4 +163,74 @@ export function handleInternalWebhooksUpdate(data: DiscordPayload) {
     options.channel_id,
     options.guild_id,
   );
+}
+
+export function handleInternalIntegrationCreate(
+  data: DiscordPayload,
+) {
+  if (data.t !== "INTEGRATION_CREATE") return;
+
+  const {
+    guild_id: guildID,
+    enable_emoticons: enableEmoticons,
+    expire_behavior: expireBehavior,
+    expire_grace_period: expireGracePeriod,
+    subscriber_count: subscriberCount,
+    role_id: roleID,
+    synced_at: syncedAt,
+    ...rest
+  } = data.d as IntegrationCreateUpdateEvent;
+
+  eventHandlers.integrationCreate?.({
+    ...rest,
+    guildID,
+    enableEmoticons,
+    expireBehavior,
+    expireGracePeriod,
+    syncedAt,
+    subscriberCount,
+    roleID,
+  });
+}
+
+export function handleInternalIntegrationUpdate(data: DiscordPayload) {
+  if (data.t !== "INTEGRATION_UPDATE") return;
+
+  const {
+    enable_emoticons: enableEmoticons,
+    expire_behavior: expireBehavior,
+    expire_grace_period: expireGracePeriod,
+    role_id: roleID,
+    subscriber_count: subscriberCount,
+    synced_at: syncedAt,
+    guild_id: guildID,
+    ...rest
+  } = data.d as IntegrationCreateUpdateEvent;
+
+  eventHandlers.integrationUpdate?.({
+    ...rest,
+    guildID,
+    subscriberCount,
+    enableEmoticons,
+    expireGracePeriod,
+    roleID,
+    expireBehavior,
+    syncedAt,
+  });
+}
+
+export function handleInternalIntegrationDelete(data: DiscordPayload) {
+  if (data.t !== "INTEGRATION_DELETE") return;
+
+  const {
+    guild_id: guildID,
+    application_id: applicationID,
+    ...rest
+  } = data.d as IntegrationDeleteEvent;
+
+  eventHandlers.integrationDelete?.({
+    ...rest,
+    applicationID,
+    guildID,
+  });
 }

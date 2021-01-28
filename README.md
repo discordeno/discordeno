@@ -1,6 +1,8 @@
 # Discordeno
 
-> Discord API library for [Deno](https://deno.land)
+<img align="right" src=docs/src/.vuepress/public/logo.png height="150px">
+
+Discord API library for [Deno](https://deno.land)
 
 [![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
@@ -8,13 +10,10 @@
 
 ## Features
 
-- **Secure & stable**: Discordeno is secure and stable. One of the greatest
-  issues with almost every library is stability; types are outdated, less (or
-  minimal) parity with the API, core maintainers have quit or no longer actively
-  maintain the library, and whatnot. Discordeno, on the other hand, is actively
-  maintained to ensure great performance and convenience. Moreover, it
-  internally checks all missing permissions before forwarding a request to the
-  Discord API so that the client does not get globally-banned by Discord.
+- **Secure & stable**: Discordeno is actively maintained to ensure great
+  performance and convenience. Moreover, it internally checks all missing
+  permissions before forwarding a request to the Discord API so that the client
+  does not get globally-banned by Discord.
 - **Simple, Efficient, & Lightweight**: Discordeno is simplistic, easy-to-use,
   versatile while being efficient and lightweight. Follows
   [Convention Over Configuration](https://en.wikipedia.org/wiki/Convention_over_configuration)

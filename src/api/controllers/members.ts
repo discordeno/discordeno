@@ -80,6 +80,11 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
       guildMember?.nick,
     );
   }
+
+  if (payload.pending === false && guildMember?.pending === true) {
+    eventHandlers.membershipScreeningPassed?.(guild, member);
+  }
+
   const roleIDs = guildMember?.roles || [];
 
   roleIDs.forEach((id) => {
