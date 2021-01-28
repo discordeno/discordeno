@@ -165,7 +165,7 @@ function createRequestBody(body: any, method: RequestMethods) {
     const form = new FormData();
     // form.append("file", body.file.blob, body.file.name);
 
-    body.file.forEach((file: FileContent, index: number) =>
+    body.file.map((file: FileContent, index: number) =>
       // The key of the form data item must be unique; otherwise, Discordeno only considers the first item in the form data with the same names.
       form.append(`file${index + 1}`, file.blob, file.name)
     );
