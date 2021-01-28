@@ -106,5 +106,5 @@ export async function handleInternalMessageUpdate(data: DiscordPayload) {
 
   await cacheHandlers.set("messages", payload.id, message);
 
-  eventHandlers.messageUpdate?.(cachedMessage, oldMessage);
+  eventHandlers.messageUpdate?.(message, oldMessage);
 }
