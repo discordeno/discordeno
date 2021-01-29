@@ -406,13 +406,13 @@ export interface AuditLogEntryPayload {
   /** type of action that occured */
   action_type: AuditLogs;
   /** additional info for certain action types */
-  options?: OptionalAuditEntryInfoParam;
+  options?: OptionalAuditEntryInfoPayload;
   /** the reason for the change (0-512 characters) */
   reason?: string;
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
-export interface OptionalAuditEntryInfoParam {
+export interface OptionalAuditEntryInfoPayload {
   /** number of days after which inactive members were kicked, type: MEMBER_PRUNE */
   delete_member_days: string;
   /** number of members removed by the prune, type: MEMBER_PRUNE */
