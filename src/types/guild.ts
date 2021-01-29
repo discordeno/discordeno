@@ -434,9 +434,21 @@ export interface OptionalAuditEntryInfoParam {
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
 export interface AuditLogChangePayload {
   /** new value of the key */
-  new_value?: AuditLogChangeKeyPayload;
+  new_value?:
+    | string
+    | number
+    | Partial<RoleData>[]
+    | boolean
+    | RawOverwrite[]
+    | ChannelTypes;
   /** old value of the key */
-  old_value?: AuditLogChangeKeyPayload;
+  old_value?:
+    | string
+    | number
+    | Partial<RoleData>[]
+    | boolean
+    | RawOverwrite[]
+    | ChannelTypes;
   /** name of audit log change key */
   key: string;
 }
