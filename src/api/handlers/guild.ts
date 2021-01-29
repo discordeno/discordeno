@@ -1,6 +1,7 @@
 import { identifyPayload } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import {
+  AuditLogPayload,
   AuditLogs,
   BannedUser,
   BanOptions,
@@ -662,7 +663,7 @@ export async function getAuditLogs(
       : 50,
   });
 
-  return result;
+  return result as AuditLogPayload;
 }
 
 /** Returns the guild embed object. Requires the MANAGE_GUILD permission. */
