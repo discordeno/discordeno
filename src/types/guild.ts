@@ -453,18 +453,6 @@ export interface AuditLogChangePayload {
   key: string;
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
-export interface GetGuildAuditLogParams {
-  /** filter the log for actions made by a user */
-  user_id: string;
-  /** the type of audit log event */
-  action_type: AuditLogs;
-  /** filter the log before a certain entry id */
-  before: string;
-  /** how many entries are returned (default 50, minimum 1, maximum 100) */
-  limit: number;
-}
-
 export interface GetAuditLogsOptions {
   /** Filter the logs for actions made by this user. */
   user_id?: string;
