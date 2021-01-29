@@ -279,10 +279,6 @@ export async function handleDiscordPayload(
   data: DiscordPayload,
   shardID: number,
 ) {
-  // TODO: Log that this is happening
-  //   eventHandlers.raw?.(data);
-  //   await eventHandlers.dispatchRequirements?.(data, shardID);
-
   await fetch(ws.url, {
     method: "post",
     body: JSON.stringify({
