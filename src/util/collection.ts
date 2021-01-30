@@ -90,7 +90,7 @@ export class Collection<K, V> extends Map<K, V> {
   toJSON() {
     const _json: any = {};
 
-    for(const key of this.keys()) {
+    for (const key of this.keys()) {
       _json[key] = this.get(key);
     }
 
