@@ -86,4 +86,14 @@ export class Collection<K, V> extends Map<K, V> {
 
     return accumulator;
   }
+
+  toJSON() {
+    const _json: any = {};
+
+    for(const key of this.keys()) {
+      _json[key] = this.get(key);
+    }
+
+    return _json;
+  }
 }
