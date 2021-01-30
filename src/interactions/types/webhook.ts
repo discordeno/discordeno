@@ -8,7 +8,7 @@ export interface ExecuteWebhookOptions {
   /** override the default username of the webhook */
   username?: string;
   /** override the default avatar of the webhook*/
-  avatar_url?: string;
+  "avatar_url"?: string;
   /** true if this is a TTS message */
   tts?: boolean;
   /** file contents	the contents of the file being sent	one of content, file, embeds */
