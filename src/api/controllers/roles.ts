@@ -46,8 +46,6 @@ export async function handleInternalGuildRoleDelete(data: DiscordPayload) {
       cacheHandlers.set("members", member.id, member);
     });
   });
-
-  eventHandlers.roleDelete?.(guild, cachedRole);
 }
 
 export async function handleInternalGuildRoleUpdate(data: DiscordPayload) {
