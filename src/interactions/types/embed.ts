@@ -31,16 +31,16 @@ export interface EmbedFooter {
   /** The text of the footer */
   text: string;
   /** The url of the footer icon. Only supports http(s) and attachments */
-  "icon_url"?: string;
+  icon_url?: string;
   /** A proxied url of footer icon */
-  "proxy_icon_url"?: string;
+  proxy_icon_url?: string;
 }
 
 export interface EmbedImage {
   /** The source url of image (only supports http(s) and attachments) */
   url?: string;
   /** A proxied url of the image */
-  "proxy_url"?: string;
+  proxy_url?: string;
   /** The height of image */
   height?: number;
   /** The width of the image */
@@ -51,7 +51,7 @@ export interface EmbedThumbnail {
   /** The source url of image (only supports http(s) and attachments) */
   url?: string;
   /** A proxied url of the thumbnail */
-  "proxy_url"?: string;
+  proxy_url?: string;
   /** The height of the thumbnail */
   height?: number;
   /** The width of the thumbnail */
@@ -80,9 +80,9 @@ export interface EmbedAuthor {
   /** The url of the author */
   url?: string;
   /** The url of the author icon (supports http(s) and attachments) */
-  "icon_url"?: string;
+  icon_url?: string;
   /** A proxied url of author icon */
-  "proxy_icon_url"?: string;
+  proxy_icon_url?: string;
 }
 
 export interface EmbedField {

@@ -10,9 +10,9 @@ export interface Interaction {
   /** The command data payload */
   data?: SlashCommandInteractionData;
   /** The id of the guild it was sent from */
-  "guild_id": string;
+  guild_id: string;
   /** The id of the channel it was sent from */
-  "channel_id": string;
+  channel_id: string;
   /** The Payload of the member it was sent from */
   member: MemberCreatePayload;
   /** The token for this interaction */
@@ -53,7 +53,7 @@ export interface SlashCommandCallbackData {
   /** supports up to 10 embeds */
   embeds?: Embed[];
   /** allowed mentions for the message */
-  "allowed_mentions"?: AllowedMentions;
+  allowed_mentions?: AllowedMentions;
   /** acceptable values are message flags */
   flags?: number;
 }

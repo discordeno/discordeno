@@ -9,9 +9,9 @@ export interface WebhookPayload {
   /** The type of the webhook */
   type: WebhookType;
   /** The guild id this webhook is for */
-  "guild_id"?: string;
+  guild_id?: string;
   /** The channel id this webhook is for */
-  "channel_id": string;
+  channel_id: string;
   /** The user this webhook was created by(not returned when getting a webhook with its token) */
   user?: UserPayload;
   /** The default name of the webhook */
@@ -53,7 +53,7 @@ export interface ExecuteWebhookOptions {
   /** override the default username of the webhook */
   username?: string;
   /** override the default avatar of the webhook*/
-  "avatar_url"?: string;
+  avatar_url?: string;
   /** true if this is a TTS message */
   tts?: boolean;
   /** file contents	the contents of the file being sent	one of content, file, embeds */
@@ -74,7 +74,7 @@ export interface ExecuteWebhookOptions {
 export interface EditWebhookMessageOptions {
   content?: string;
   embeds?: Embed[];
-  "allowed_mentions"?: AllowedMentions;
+  allowed_mentions?: AllowedMentions;
 }
 
 export interface CreateSlashCommandOptions {
@@ -92,7 +92,7 @@ export interface SlashCommand {
   /** unique id of the command */
   id: string;
   /** unique id of the parent application */
-  "application_id": string;
+  application_id: string;
   /** 3-32 character name */
   name: string;
   /** 1-100 character description */
@@ -147,9 +147,9 @@ export interface Interaction {
   /** The command data payload */
   data?: SlashCommandInteractionData;
   /** The id of the guild it was sent from */
-  "guild_id": string;
+  guild_id: string;
   /** The id of the channel it was sent from */
-  "channel_id": string;
+  channel_id: string;
   /** The Payload of the member it was sent from */
   member: UserPayload;
   /** The token for this interaction */
@@ -190,7 +190,7 @@ export interface SlashCommandCallbackData {
   /** supports up to 10 embeds */
   embeds?: Embed[];
   /** allowed mentions for the message */
-  "allowed_mentions"?: AllowedMentions;
+  allowed_mentions?: AllowedMentions;
   /** acceptable values are message flags */
   flags?: number;
 }

@@ -8,9 +8,9 @@ export interface InteractionCommandPayload {
   /** the command data payload */
   data?: InteractionData;
   /** the guild it was sent from */
-  "guild_id": string;
+  guild_id: string;
   /** the channel it was sent from */
-  "channel_id": string;
+  channel_id: string;
   /** guild member data for the invoking user */
   member: MemberCreatePayload;
   /** a continuation token for responding to the interaction */
@@ -47,7 +47,7 @@ export interface ApplicationCommand {
   /** unique id of the command */
   id: string;
   /** unique id of the parent application */
-  "application_id": string;
+  application_id: string;
   /** 3-32 character name matching `^[\w-]{3,32}$` */
   name: string;
   /** 1-100 character description */
