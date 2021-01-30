@@ -62,23 +62,23 @@ export interface DiscordBotGatewayData {
   /** The recommended number of shards to use when connecting. */
   shards: number;
   /** Info on the current start limit. */
-  session_start_limit: {
+  "session_start_limit": {
     /** The total number of session starts the current user is allowed. */
     total: number;
     /** The remaining number of session starts the current user is allowed. */
     remaining: number;
     /** Milliseconds left until limit is reset. */
-    reset_after: number;
+    "reset_after": number;
     /** The number of identify requests allowed per 5 seconds.
      * So, if you had a max concurrency of 16, and 16 shards for example, you could start them all up at the same time.
      * Whereas if you had 32 shards, if you tried to start up shard 0 and 16 at the same time for example, it would not work. You can start shards 0-15 concurrently, then 16-31...
      * */
-    max_concurrency: number;
+    "max_concurrency": number;
   };
 }
 
 export interface DiscordHeartbeatPayload {
-  heartbeat_interval: number;
+  "heartbeat_interval": number;
 }
 
 export enum GatewayOpcode {
@@ -235,30 +235,30 @@ export interface Status {
 }
 
 export interface WebhookUpdatePayload {
-  channel_id: string;
-  guild_id: string;
+  "channel_id": string;
+  "guild_id": string;
 }
 
 export interface PresenceUpdatePayload {
   /** The user presence is being updated for. */
   user: PartialUser;
   /** The id of the guild */
-  guild_id: string;
+  "guild_id": string;
   /** Either idle, dnd, online, or offline */
   status: StatusType;
   /** All user's current activity */
   activities: Activity[];
   /** The user's platform dependent status */
-  client_status: ClientStatusPayload;
+  "client_status": ClientStatusPayload;
 }
 
 export interface TypingStartPayload {
   /** The id of the channel */
-  channel_id: string;
+  "channel_id": string;
   /** The id of the guild */
-  guild_id?: string;
+  "guild_id"?: string;
   /** The id of the user */
-  user_id: string;
+  "user_id": string;
   /** The unix time in seconds of when the user started typing */
   timestamp: number;
   /** The member who started typing if this happened in a guild */
@@ -267,25 +267,25 @@ export interface TypingStartPayload {
 
 export interface VoiceStateUpdatePayload {
   /** The guild id this voice state is for */
-  guild_id?: string;
+  "guild_id"?: string;
   /** The channel id this user is connected to */
-  channel_id: string | null;
+  "channel_id": string | null;
   /** The user id this voice state is for */
-  user_id: string;
+  "user_id": string;
   /** The guild member this voice state is for */
   member?: MemberCreatePayload;
   /** The session id for this voice state */
-  session_id: string;
+  "session_id": string;
   /** Whether this user is deafened by the server */
   deaf: boolean;
   /** Whether this user is muted by the server */
   mute: boolean;
   /** Whether this user is locally deafened */
-  self_deaf: boolean;
+  "self_deaf": boolean;
   /** Whether this user is locally muted */
-  self_mute: boolean;
+  "self_mute": boolean;
   /** Whether this user is streaming using Go Live */
-  self_stream?: boolean;
+  "self_stream"?: boolean;
   /** Whether this user is muted by the bot */
   suppress: boolean;
 }
@@ -296,11 +296,11 @@ export interface ReadyPayload {
   /** information about the user including email */
   user: UserPayload;
   /** empty array */
-  private_channels: [];
+  "private_channels": [];
   /** the guilds the user is in */
   guilds: UnavailableGuildPayload[];
   /** used for resuming connections */
-  session_id: string;
+  "session_id": string;
   /** (shard_id, num_shards) the shard information associated with this session, if sent when identifying */
   shard?: [number, number];
   /** contains id and flags */
@@ -321,7 +321,7 @@ export interface IntegrationDeleteEvent {
   /** integration id */
   id: string;
   /** id of the guild */
-  guild_id: string;
+  "guild_id": string;
   /** id of the bot/OAuth2 application for this discord integration */
-  application_id?: string;
+  "application_id"?: string;
 }
