@@ -27,8 +27,6 @@ import {
   ImageSize,
   Intents,
   MemberCreatePayload,
-  MembershipScreeningFieldTypes,
-  MembershipScreeningPayload,
   Overwrite,
   PositionSwap,
   PruneOptions,
@@ -1084,70 +1082,4 @@ export async function editGuildTemplate(
   ) as GuildTemplate;
 
   return structures.createTemplate(template);
-}
-
-function createMembershipObj(
-  { form_fields: formFields, ...props }: MembershipScreeningPayload,
-) {
-  return {
-    ...props,
-    formFields: formFields.map(({ field_type, ...rest }) => ({
-      ...rest,
-      fieldType: field_type,
-    })),
-  };
-}
-
-export type MembershipScreening = ReturnType<typeof createMembershipObj>;
-
-/** Get the membership screening form of a guild. */
-export async function getGuildMembershipScreeningForm(guildID: string) {
-  const membershipScreeningPayload = await RequestManager.get(
-    endpoints.GUILD_MEMBER_VERIFICATION(guildID),
-  ) as MembershipScreeningPayload;
-
-  return createMembershipObj(membershipScreeningPayload);
-}
-
-/** Edit the guild's Membership Screening form. Requires the `MANAGE_GUILD` permission. */
-export async function editGuildMembershipScreeningForm(
-  guildID: string,
-  options?: EditGuildMembershipScreeningForm,
-) {
-  const membershipScreeningFormPayload = await RequestManager.patch(
-    endpoints.GUILD_MEMBER_VERIFICATION(guildID),
-    {
-      ...options,
-      form_fields: JSON.stringify(
-        options?.formFields?.map(({ fieldType, ...props }) => ({
-          ...props,
-          field_type: fieldType,
-        })),
-      ),
-    },
-  ) as MembershipScreeningPayload;
-
-  return createMembershipObj(
-    membershipScreeningFormPayload,
-  );
-}
-
-export interface EditGuildMembershipScreeningForm {
-  /** whether Membership Screening is enabled */
-  enabled?: boolean;
-  /** array of field objects */
-  formFields?: MembershipScreeningField[];
-  /** the steps in the screening form */
-  description?: string;
-}
-
-export interface MembershipScreeningField {
-  /** the type of field */
-  fieldType: MembershipScreeningFieldTypes;
-  /** the title of the field */
-  label: string;
-  /** the list of rules */
-  values?: string[];
-  /** whether the user has to fill out this field */
-  required: boolean;
 }
