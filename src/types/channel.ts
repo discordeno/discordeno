@@ -111,13 +111,18 @@ export interface MessageContent {
   /** Whether this is a TextToSpeech message */
   tts?: boolean;
   /** The contents of the file being sent */
-  file?: { blob: unknown; name: string };
+  file?: FileContent | FileContent[];
   /** Embed object */
   embed?: Embed;
   /** JSON encoded body of any additional request fields. */
   "payload_json"?: string;
   /** If you want to send a reply message, provide the original message id here */
   replyMessageID?: string;
+}
+
+export interface FileContent {
+  blob: unknown;
+  name: string;
 }
 
 export interface AllowedMentions {
