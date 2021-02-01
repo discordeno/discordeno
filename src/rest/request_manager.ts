@@ -1,5 +1,10 @@
 import { authorization, eventHandlers } from "../bot.ts";
-import { Errors, HttpResponseCode, RequestMethods } from "../types/mod.ts";
+import {
+  Errors,
+  FileContent,
+  HttpResponseCode,
+  RequestMethods,
+} from "../types/mod.ts";
 import {
   API_VERSION,
   BASE_URL,
@@ -154,9 +159,16 @@ function createRequestBody(body: any, method: RequestMethods) {
     headers["X-Audit-Log-Reason"] = encodeURIComponent(body.reason);
   }
 
-  if (body?.file) {
+  if (body.file) {
+    if (!Array.isArray(body.file)) body.file = [body.file];
+
     const form = new FormData();
-    form.append("file", body.file.blob, body.file.name);
+
+    body.file.map((file: FileContent, index: number) =>
+      // The key of the form data item must be unique; otherwise, Discordeno only considers the first item in the form data with the same names
+      form.append(`file${index + 1}`, file.blob as Blob, file.name)
+    );
+
     form.append("payload_json", JSON.stringify({ ...body, file: undefined }));
     body.file = form;
   } else if (
