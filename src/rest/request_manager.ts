@@ -167,7 +167,7 @@ function createRequestBody(body: any, method: RequestMethods) {
 
     body.file.map((file: FileContent, index: number) =>
       // The key of the form data item must be unique; otherwise, Discordeno only considers the first item in the form data with the same names.
-      form.append(`file${index + 1}`, file.blob, file.name)
+      form.append(`file${index + 1}`, file.blob as Blob, file.name)
     );
 
     form.append("payload_json", JSON.stringify({ ...body, file: undefined }));
