@@ -6,6 +6,8 @@ import {
   handleInternalChannelCreate,
   handleInternalChannelDelete,
   handleInternalChannelUpdate,
+  handleInternalInviteCreate,
+  handleInternalInviteDelete,
 } from "./channels.ts";
 import {
   handleInternalGuildCreate,
@@ -72,7 +74,12 @@ export let controllers = {
   GUILD_ROLE_CREATE: handleInternalGuildRoleCreate,
   GUILD_ROLE_DELETE: handleInternalGuildRoleDelete,
   GUILD_ROLE_UPDATE: handleInternalGuildRoleUpdate,
+  INTEGRATION_CREATE: handleInternalIntegrationCreate,
+  INTEGRATION_UPDATE: handleInternalIntegrationUpdate,
+  INTEGRATION_DELETE: handleInternalIntegrationDelete,
   INTERACTION_CREATE: handleInternalInteractionCreate,
+  INVITE_CREATE: handleInternalInviteCreate,
+  INVITE_DELETE: handleInternalInviteDelete,
   APPLICATION_COMMAND_CREATE: handleInternalApplicationCommandCreate,
   APPLICATION_COMMAND_DELETE: handleInternalApplicationCommandDelete,
   APPLICATION_COMMAND_UPDATE: handleInternalApplicationCommandUpdate,
@@ -89,9 +96,6 @@ export let controllers = {
   USER_UPDATE: handleInternalUserUpdate,
   VOICE_STATE_UPDATE: handleInternalVoiceStateUpdate,
   WEBHOOKS_UPDATE: handleInternalWebhooksUpdate,
-  INTEGRATION_CREATE: handleInternalIntegrationCreate,
-  INTEGRATION_UPDATE: handleInternalIntegrationUpdate,
-  INTEGRATION_DELETE: handleInternalIntegrationDelete,
 };
 
 export type Controllers = typeof controllers;
