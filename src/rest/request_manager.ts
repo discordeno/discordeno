@@ -159,7 +159,7 @@ function createRequestBody(body: any, method: RequestMethods) {
     headers["X-Audit-Log-Reason"] = encodeURIComponent(body.reason);
   }
 
-  if (body.file) {
+  if (body?.file) {
     if (!Array.isArray(body.file)) body.file = [body.file];
 
     const form = new FormData();
