@@ -37,6 +37,8 @@ export interface DiscordPayload {
     | "GUILD_ROLE_DELETE"
     | "GUILD_ROLE_UPDATE"
     | "INTERACTION_CREATE"
+    | "INVITE_CREATE"
+    | "INVITE_DELETE"
     | "MESSAGE_CREATE"
     | "MESSAGE_DELETE"
     | "MESSAGE_DELETE_BULK"
@@ -324,4 +326,36 @@ export interface IntegrationDeleteEvent {
   "guild_id": string;
   /** id of the bot/OAuth2 application for this discord integration */
   "application_id"?: string;
+}
+
+export interface InviteCreateEvent {
+  /** the channel the invite is for */
+  "channnel_id": string;
+  /** the unique invite code */
+  code: string;
+  /** the time at which tehi invite was created */
+  "created_at": string;
+  /** the guild of the invite */
+  "guild_id": string;
+  /** the user that created the invite */
+  inviter?: UserPayload;
+  /** how long the invite is valid for (in seconds) */
+  "max_age": number;
+  /** the maximum number of times the invite can be used */
+  "max_uses": number;
+  /** the target user for this invite */
+  "target_user"?: PartialUser;
+  /** whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
+  temporary: boolean;
+  /** how many times the invite has been used (always will be 0) */
+  uses: number;
+}
+
+export interface InviteDeleteEvent {
+  /** the channel of the invite */
+  "channel_id": string;
+  /** the guild of the invite */
+  "guild_id"?: string;
+  /** the unique invite code */
+  code: string;
 }
