@@ -10,6 +10,8 @@ import {
   Emoji,
   IntegrationCreateUpdateEvent,
   IntegrationDeleteEvent,
+  InviteCreateEvent,
+  InviteDeleteEvent,
   PresenceUpdatePayload,
   TypingStartPayload,
   VoiceStateUpdatePayload,
@@ -161,6 +163,10 @@ export interface EventHandlers {
   interactionCreate?: (
     data: Omit<InteractionCommandPayload, "member"> & { member: Member },
   ) => unknown;
+  /** Sent when a user creates a new channel invite. */
+  inviteCreate?: (invite: InviteCreateEvent, channel: Channel) => unknown;
+  /** Sent when an invite is deleted. */
+  inviteDelete?: (invite: InviteDeleteEvent, channel: Channel) => unknown;
   /** Sent when a message is created. */
   messageCreate?: (message: Message) => unknown;
   /** Sent when a message is deleted. */
