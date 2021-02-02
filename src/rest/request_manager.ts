@@ -163,11 +163,10 @@ function createRequestBody(body: any, method: RequestMethods) {
     if (!Array.isArray(body.file)) body.file = [body.file];
 
     const form = new FormData();
-    // form.append("file", body.file.blob, body.file.name);
 
     body.file.map((file: FileContent, index: number) =>
-      // The key of the form data item must be unique; otherwise, Discordeno only considers the first item in the form data with the same names.
-      form.append(`file${index + 1}`, file.blob, file.name)
+      // The key of the form data item must be unique; otherwise, Discordeno only considers the first item in the form data with the same names
+      form.append(`file${index + 1}`, file.blob as Blob, file.name)
     );
 
     form.append("payload_json", JSON.stringify({ ...body, file: undefined }));
