@@ -4,6 +4,7 @@ import {
   ChannelTypes,
   DiscordPayload,
   InviteCreateEvent,
+  InviteDeleteEvent,
 } from "../../types/mod.ts";
 import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
@@ -74,4 +75,14 @@ export async function handleInternalInviteCreate(data: DiscordPayload) {
   if (!channel) return;
 
   eventHandlers.inviteCreate?.(payload, channel);
+}
+
+export async function handleInternalInviteDelete(data: DiscordPayload) {
+  if (data.t !== "INVITE_DELETE") return;
+
+  const payload = data.d as InviteDeleteEvent;
+  const channel = await cacheHandlers.get("channels", payload.channel_id);
+  if (!channel) return;
+
+  eventHandlers.inviteDelete?.(payload, channel);
 }
