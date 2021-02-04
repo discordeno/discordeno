@@ -649,7 +649,7 @@ export interface GuildTemplate {
   /** the ID of the user who created the template */
   "creator_id": string;
   /** the user who created the template */
-  user: UserPayload;
+  creator: UserPayload;
   /** when this template was created */
   "created_at": string;
   /** when this template was last synced to the source guild */
