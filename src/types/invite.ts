@@ -13,13 +13,13 @@ export interface InvitePayload {
   /** the user who created the invite */
   inviter?: UserPayload;
   /** the target user for this invite */
-  target_user?: Partial<UserPayload>;
+  "target_user"?: Partial<UserPayload>;
   /** the type of user target for this invite */
-  target_user_type?: InviteTargetUserTypes;
+  "target_user_type"?: InviteTargetUserTypes;
   /** approximate count of online members (only present when target_user is set) */
-  approximate_presence_count?: number;
+  "approximate_presence_count"?: number;
   /** approximate count of total members */
-  approximate_member_count: number;
+  "approximate_member_count": number;
 }
 
 /** https://discord.com/developers/docs/resources/invite#invite-resource */
