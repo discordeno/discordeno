@@ -432,26 +432,80 @@ export interface OptionalAuditEntryInfoPayload {
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
-export interface AuditLogChangePayload {
-  /** new value of the key */
-  new_value?:
-    | string
-    | number
-    | Partial<RoleData>[]
-    | boolean
-    | RawOverwrite[]
-    | ChannelTypes;
-  /** old value of the key */
-  old_value?:
-    | string
-    | number
-    | Partial<RoleData>[]
-    | boolean
-    | RawOverwrite[]
-    | ChannelTypes;
-  /** name of audit log change key */
-  key: string;
-}
+type AuditLogChangePayload =
+  | {
+    new_value: string;
+    old_value: string;
+    key:
+      | "name"
+      | "icon_hash"
+      | "splash_hash"
+      | "owner_id"
+      | "region"
+      | "afk_channel_id"
+      | "vanity_url_code"
+      | "widget_channel_id"
+      | "system_channel_id"
+      | "topic"
+      | "application_id"
+      | "permissions"
+      | "allow"
+      | "deny"
+      | "code"
+      | "channel_id"
+      | "inviter_id"
+      | "nick"
+      | "avatar_hash"
+      | "id";
+  }
+  | {
+    new_value: number;
+    old_value: number;
+    key:
+      | "afk_timeout"
+      | "mfa_level"
+      | "verification_level"
+      | "explicit_content_filter"
+      | "default_messagae_notifications"
+      | "prune_delete_days"
+      | "position"
+      | "bitrate"
+      | "rate_limit_per_user"
+      | "color"
+      | "max_uses"
+      | "uses"
+      | "max_age"
+      | "expire_behavior"
+      | "expire_grace_period";
+  }
+  | {
+    new_value: Partial<RoleData>;
+    old_value: Partial<RoleData>;
+    key: "$add" | "$remove";
+  }
+  | {
+    new_value: boolean;
+    old_value: boolean;
+    key:
+      | "widget_enabled"
+      | "nsfw"
+      | "hoist"
+      | "mentionable"
+      | "temporary"
+      | "deaf"
+      | "mute"
+      | "enable_emoticons";
+  }
+  | {
+    new_value: RawOverwrite[];
+    old_value: RawOverwrite[];
+    key: "permission_overwrites";
+  }
+  | {
+    new_value: string | number;
+    old_value: string | number;
+    key: "type";
+  };
 
 export interface GetAuditLogsOptions {
   /** Filter the logs for actions made by this user. */
