@@ -35,6 +35,8 @@ import {
   handleInternalIntegrationCreate,
   handleInternalIntegrationDelete,
   handleInternalIntegrationUpdate,
+  handleInternalInviteCreate,
+  handleInternalInviteDelete,
   handleInternalPresenceUpdate,
   handleInternalReady,
   handleInternalTypingStart,
@@ -92,6 +94,8 @@ export let controllers = {
   INTEGRATION_CREATE: handleInternalIntegrationCreate,
   INTEGRATION_UPDATE: handleInternalIntegrationUpdate,
   INTEGRATION_DELETE: handleInternalIntegrationDelete,
+  INVITE_CREATE: handleInternalInviteCreate,
+  INVITE_DELETE: handleInternalInviteDelete,
 };
 
 export type Controllers = typeof controllers;

@@ -9,29 +9,29 @@ import { RoleData } from "./role.ts";
 
 export interface GuildRolePayload {
   /** The id of the guild */
-  guild_id: string;
+  "guild_id": string;
   /** The role object of the role created, deleted, or updated */
   role: RoleData;
 }
 
 export interface GuildRoleDeletePayload {
   /** The id of the guild */
-  guild_id: string;
+  "guild_id": string;
   /** The id of the role */
-  role_id: string;
+  "role_id": string;
 }
 
 export interface GuildMemberChunkPayload {
   /** The id of the guild */
-  guild_id: string;
+  "guild_id": string;
   /** The set of guild members */
   members: MemberCreatePayload[];
   /** The chunk index in the expected chunks for this response */
-  chunk_index: number;
+  "chunk_index": number;
   /** The total number of expected chunks for this response */
-  chunk_count: number;
+  "chunk_count": number;
   /** if passing an invalid id, it will be found here */
-  not_found?: string[];
+  "not_found"?: string[];
   /** if passing true, presences of the members will be here */
   presences?: Presence[];
   /** The nonce to help identify */
@@ -40,7 +40,7 @@ export interface GuildMemberChunkPayload {
 
 export interface GuildMemberUpdatePayload {
   /** The id of the guild */
-  guild_id: string;
+  "guild_id": string;
   /** The user's role ids */
   roles: string[];
   /** The user */
@@ -48,23 +48,23 @@ export interface GuildMemberUpdatePayload {
   /** The nickname of the user in the guild */
   nick: string;
   /** When the user used their nitro boost on the guild. */
-  premium_since: string | null;
+  "premium_since": string | null;
   /** whether the user has not yet passed the guild's Membership Screening requirements */
   pending?: boolean;
 }
 
 export interface GuildMemberAddPayload extends MemberCreatePayload {
-  guild_id: string;
+  "guild_id": string;
 }
 
 export interface GuildEmojisUpdatePayload {
-  guild_id: string;
+  "guild_id": string;
   emojis: Emoji[];
 }
 
 export interface GuildBanPayload {
   /** The id of the guild */
-  guild_id: string;
+  "guild_id": string;
   /** The banned user. Not a member as you can ban users outside of your guild. */
   user: UserPayload;
 }
@@ -86,21 +86,21 @@ export interface UpdateGuildPayload {
   /** The guild splash image hash */
   splash: string | null;
   /** Discovery splash has; only present for guilds with the "DISCOVERABLE" feature */
-  disovery_splash: string | null;
+  "disovery_splash": string | null;
   /** The id of the owner */
-  owner_id: string;
+  "owner_id": string;
   /** The voice region id for the guild */
   region: string;
   /** The afk channel id */
-  afk_channel_id: string | null;
+  "afk_channel_id": string | null;
   /** AFK Timeout in seconds. */
-  afk_timeout: number;
+  "afk_timeout": number;
   /** The verification level required for the guild */
-  verification_level: number;
+  "verification_level": number;
   /** Default message notifications level */
-  default_message_notifications: number;
+  "default_message_notifications": number;
   /** Explicit content filter level */
-  explicit_content_filter: number;
+  "explicit_content_filter": number;
   /** The roles in the guild */
   roles: RoleData[];
   /** The custom guild emojis */
@@ -108,53 +108,53 @@ export interface UpdateGuildPayload {
   /** Enabled guild features */
   features: GuildFeatures[];
   /** Required MFA level for the guild */
-  mfa_level: number;
+  "mfa_level": number;
   /** True if the server widget is enabled */
-  widget_enabled?: boolean;
+  "widget_enabled"?: boolean;
   /** The channel id that the widget will generate an invite to, or null if set to no invite. */
-  widget_channel_id?: string | null;
+  "widget_channel_id"?: string | null;
   /** The id of the channel to which system mesages are sent */
-  system_channel_id: string | null;
+  "system_channel_id": string | null;
   /** System channel flags */
-  system_channel_flags: number;
+  "system_channel_flags": number;
   /** The id of the channel where guilds with the PUBLIC feature can display rules and or guidelines. */
-  rules_channel_id: string | null;
+  "rules_channel_id": string | null;
   /** The maximum amount of presences for the guild(the default value, currently 5000 is in effect when null is returned.) */
-  max_presences?: number | null;
+  "max_presences"?: number | null;
   /** The maximum amount of members for the guild */
-  max_members?: number;
+  "max_members"?: number;
   /** The vanity url code for the guild */
-  vanity_url_code: string | null;
+  "vanity_url_code": string | null;
   /** The description for the guild */
   description: string | null;
   /** The banner hash */
   banner: string | null;
   /** The premium tier */
-  premium_tier: number;
+  "premium_tier": number;
   /** The total number of users currently boosting this server. */
-  premium_subscription_count: number;
+  "premium_subscription_count": number;
   /** The preferred local of this guild only set if guild has the DISCOVERABLE feature, defaults to en-US */
-  preferred_locale: string;
+  "preferred_locale": string;
   /** The id of the channel where admins and moderators of guilds with the PUBLIC feature receive notices from Discord */
-  public_updates_channel_id: string | null;
+  "public_updates_channel_id": string | null;
   /** The maximum amount of users in a video channel. */
-  max_video_channel_users?: number;
+  "max_video_channel_users"?: number;
   /** The approximate number of members in this guild, returned from the GET /guild/id endpoint when with_counts is true */
-  approximate_member_count?: number;
+  "approximate_member_count"?: number;
   /** The approximate number of non-offline members in this guild, returned from the GET /guild/id endpoint when with_counts is true */
-  approximate_presence_count?: number;
+  "approximate_presence_count"?: number;
 }
 
 export interface CreateGuildPayload extends UpdateGuildPayload {
   /** When this guild was joined at */
-  joined_at: string;
+  "joined_at": string;
   /** Whether this is considered a large guild */
   large: boolean;
   /** Whether this guild is unavailable */
   unavailable: boolean;
   /** Total number of members in this guild */
-  member_count?: number;
-  voice_states: VoiceState[];
+  "member_count"?: number;
+  "voice_states": VoiceState[];
   /** Users in the guild */
   members: MemberCreatePayload[];
   /** Channels in the guild */
@@ -174,11 +174,7 @@ export type GuildFeatures =
   | "DISCOVERABLE"
   | "FEATURABLE"
   | "ANIMATED_ICON"
-  | "BANNER"
-  /** guild has enabled Membership Screening */
-  | "MEMBER_VERIFICATION_GATE_ENABLED"
-  /** guild can be previewed before joining via Membership Screening or the directory */
-  | "PREVIEW_ENABLED";
+  | "BANNER";
 
 export interface VoiceRegion {
   /** unique ID for the region */
@@ -222,34 +218,34 @@ export interface GuildEditOptions {
   /** The guild voice region id */
   region?: string;
   /** The verification level. 0 is UNRESTRICTED. 1 is Verified email. 2 is 5 minutes user. 3 is 10 minutes member in guild. 4 is verified phone number */
-  verification_level?: 0 | 1 | 2 | 3;
+  "verification_level"?: 0 | 1 | 2 | 3;
   /** The default message notification level. 0 is ALL_MESSAGES and 1 is ONLY_MENTINS */
-  default_message_notifications?: 0 | 1;
+  "default_message_notifications"?: 0 | 1;
   /** Explicit content filter level. 0 is DISABLED 1 is members without roles. 2 is all members */
-  explicit_content_filter?: 0 | 1 | 2;
+  "explicit_content_filter"?: 0 | 1 | 2;
   /** The id for the afk channel. */
-  afk_channel_id?: string;
+  "afk_channel_id"?: string;
   /** The afk timeout in seconds. */
-  afk_timeout?: number;
+  "afk_timeout"?: number;
   /** If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has ANIMATED_ICON feature) */
   icon?: string;
   /** user id to transfer guild ownership to (must be owner) */
-  owner_id?: string;
+  "owner_id"?: string;
   /** If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. base64 16:9 png/jpeg image for the guild splash (when the server has INVITE_SPLASH feature) */
   splash?: string;
   /** If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. base64 16:9 png/jpeg image for the guild banner (when the server has BANNER feature) */
   banner?: string;
   /** the id of the channel to which system messages are sent */
-  system_channel_id?: string;
+  "system_channel_id"?: string;
 }
 
 export interface EditIntegrationOptions {
   /** The behavior when an integration subscription lapses. */
-  expire_behavior: number;
+  "expire_behavior": number;
   /** The period in seconds where the integration will ignore lapsed subscriptions */
-  expire_grace_period: number;
+  "expire_grace_period": number;
   /** Whether emoticons should be synced for this integrations (twitch only currently) */
-  enable_emoticons: boolean;
+  "enable_emoticons": boolean;
 }
 
 export interface Integration {
@@ -264,21 +260,21 @@ export interface Integration {
   /** is this integration syncing */
   syncing?: boolean;
   /** id that this integration uses for "subscribers" */
-  role_id?: string;
+  "role_id"?: string;
   /** whether emoticons should be synced for this integration (twitch only currently) */
-  enable_emoticons?: boolean;
+  "enable_emoticons"?: boolean;
   /** The behavior of expiring subscribers */
-  expire_behavior?: IntegrationExpireBehaviors;
+  "expire_behavior"?: IntegrationExpireBehaviors;
   /** The grace period before expiring subscribers */
-  expire_grace_period?: number;
+  "expire_grace_period"?: number;
   /** The user for this integration */
   user?: UserPayload;
   /** The integration account information */
   account: Account;
   /** When this integration was last synced */
-  synced_at?: string;
+  "synced_at"?: string;
   /** how many subscribers this integration has */
-  subscriber_count?: number;
+  "subscriber_count"?: number;
   /** has this integration been revoked */
   revoked?: boolean;
   /** The bot/OAuth2 application for discord integrations */
@@ -311,7 +307,7 @@ export interface UserPayload {
   /** Whether the user is an official discord system user (part of the urgent message system.) */
   system?: boolean;
   /** Whether the user has two factor enabled on their account */
-  mfa_enabled?: boolean;
+  "mfa_enabled"?: boolean;
   /** the user's chosen language option */
   locale?: string;
   /** Whether the email on this account has been verified */
@@ -321,7 +317,7 @@ export interface UserPayload {
   /** The flags on a user's account. */
   flags?: number;
   /** The type of Nitro subscription on a user's account. */
-  premium_type?: number;
+  "premium_type"?: number;
 }
 
 export interface PartialUser {
@@ -338,7 +334,7 @@ export interface PartialUser {
   /** Whether the user is an official discord system user (part of the urgent message system.) */
   system?: boolean;
   /** Whether the user has two factor enabled on their account */
-  mfa_enabled?: boolean;
+  "mfa_enabled"?: boolean;
   /** the user's chosen language option */
   locale?: string;
   /** Whether the email on this account has been verified */
@@ -348,7 +344,7 @@ export interface PartialUser {
   /** The flags on a user's account. */
   flags?: number;
   /** The type of Nitro subscription on a user's account. */
-  premium_type?: number;
+  "premium_type"?: number;
 }
 
 export enum UserFlags {
@@ -382,9 +378,9 @@ export interface GuildEmbed {
 
 export interface GetAuditLogsOptions {
   /** Filter the logs for actions made by this user. */
-  user_id?: string;
+  "user_id"?: string;
   /** The type of audit log. */
-  action_type?: AuditLogType;
+  "action_type"?: AuditLogType;
   /** Filter the logs before a certain log entry. */
   before?: string;
   /** How many entries are returned. Between 1-100. Default 50. */
@@ -507,15 +503,15 @@ export interface ChannelCreateOptions {
   /** The bitrate(in bits) of the voice channel. */
   bitrate?: number;
   /** The user limit of the voice channel. */
-  user_limit?: number;
+  "user_limit"?: number;
   /** The amount of seconds a user has to wait before sending another message. (0-21600 seconds). Bots, as well as users with the permission `manage_messages or manage_channel` are unaffected. */
-  rate_limit_per_user?: number;
+  "rate_limit_per_user"?: number;
   /** The sorting position of the channel */
   position?: number;
   /** The channel's permission overwrites */
   permissionOverwrites?: Overwrite[];
   /** The id of the parent category for the channel */
-  parent_id?: string;
+  "parent_id"?: string;
   /** Whether the channel is nsfw */
   nsfw?: boolean;
   /** The reason to add in the Audit Logs. */
@@ -557,27 +553,27 @@ export interface PruneOptions {
 
 export interface VoiceState {
   /** the guild id this voice state is for */
-  guild_id?: string;
+  "guild_id"?: string;
   /** the channel id this user is connected to */
-  channel_id: string | null;
+  "channel_id": string | null;
   /** the user id this voice state is for */
-  user_id: string;
+  "user_id": string;
   /** the guild member this voice state is for */
   member?: MemberCreatePayload;
   /** the session id for this voice state */
-  session_id: string;
+  "session_id": string;
   /** whether this user is deafened by the server */
   deaf: boolean;
   /** whether this user is muted by the server */
   mute: boolean;
   /** whether this user is locally deafened */
-  self_deaf: boolean;
+  "self_deaf": boolean;
   /** whether this user is locally muted */
-  self_mute: boolean;
+  "self_mute": boolean;
   /** whether this user is streaming using "Go Live" */
-  self_stream?: boolean;
+  "self_stream"?: boolean;
   /** whether this user's camera is enabled */
-  self_video?: boolean;
+  "self_video"?: boolean;
   /** whether this user is muted by the current user */
   suppress: boolean;
 }
@@ -588,12 +584,12 @@ export interface Presence {
   /** The roles this user is in */
   roles: string[];
   /** The id of the guild */
-  guild_id: string;
+  "guild_id": string;
   /** Either idle */
   status: StatusType;
   activities: Activity[];
-  client_status: ClientStatusPayload;
-  premium_since?: string | null;
+  "client_status": ClientStatusPayload;
+  "premium_since"?: string | null;
   nick?: string | null;
 }
 
@@ -623,21 +619,21 @@ export interface CreateServerOptions {
   /** guild icon image url or base64 128x128 image for the guild icon */
   icon?: string;
   /** verification level */
-  verification_level?: number;
+  "verification_level"?: number;
   /** default message notification level */
-  default_message_notifications?: number;
+  "default_message_notifications"?: number;
   /** explicit content filter level */
-  explicit_content_filter?: number;
+  "explicit_content_filter"?: number;
   /** array of role objects	new guild roles */
   roles?: RoleData[];
   /** array of partial channel objects	new guild's channels */
   channels?: ChannelCreatePayload[];
   /** id for afk channel */
-  afk_channel_id?: string;
+  "afk_channel_id"?: string;
   /** afk timeout in seconds */
-  afk_timeout?: number;
+  "afk_timeout"?: number;
   /** the id of the channel where guild notices such as welcome messages and boost events are posted */
-  system_channel_id?: string;
+  "system_channel_id"?: string;
 }
 
 // https://discord.com/developers/docs/resources/template#template-object
@@ -649,21 +645,21 @@ export interface GuildTemplate {
   /** the description for the template */
   description: string | null;
   /** number of times this template has been used */
-  usage_count: number;
+  "usage_count": number;
   /** the ID of the user who created the template */
-  creator_id: string;
+  "creator_id": string;
   /** the user who created the template */
   user: UserPayload;
   /** when this template was created */
-  created_at: string;
+  "created_at": string;
   /** when this template was last synced to the source guild */
-  updated_at: string;
+  "updated_at": string;
   /** the ID of the guild this template is based on */
-  source_guild_id: string;
+  "source_guild_id": string;
   /** the guild snapshot this template contains */
-  serialized_source_guild: Guild;
+  "serialized_source_guild": Guild;
   /** whether the template has unsynced changes */
-  is_dirty: boolean | null;
+  "is_dirty": boolean | null;
 }
 
 export interface CreateGuildFromTemplate {
@@ -686,27 +682,3 @@ export interface EditGuildTemplate {
   /** description for the template (0-120 characters) */
   description?: string | null;
 }
-
-export interface MembershipScreeningPayload {
-  /** when the fields were last updated */
-  version: string;
-  /** the steps in the screening form */
-  form_fields: MembershipScreeningFieldPayload[];
-  /** the server description shown in the screening form */
-  description: string | null;
-}
-
-export interface MembershipScreeningFieldPayload {
-  /** the type of field */
-  field_type: MembershipScreeningFieldTypes;
-  /** the title of the field */
-  label: string;
-  /** the list of rules */
-  values?: string[];
-  /** whether the user has to fill out this field */
-  required: boolean;
-}
-
-export type MembershipScreeningFieldTypes =
-  /** Server Rules */
-  "TERMS";
