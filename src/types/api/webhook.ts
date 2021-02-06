@@ -1,4 +1,4 @@
-import { DicordUser } from "./member.ts";
+import { DiscordUser } from "./mod.ts";
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-resource */
 export interface DiscordWebhookPayload {
