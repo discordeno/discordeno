@@ -1,7 +1,7 @@
 import { DiscordUser } from "./mod.ts";
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
-export interface IntegrationPayload {
+export interface DiscordIntegrationPayload {
   /** integration id */
   id: string;
   /** integration name */
@@ -17,13 +17,13 @@ export interface IntegrationPayload {
   /** whether emoticons should be synced for this integration (twitch only currently) */
   enable_emoticons?: boolean;
   /** the behavior of expiring subscribers */
-  expire_behavior?: IntegrationExpireBehavior;
+  expire_behavior?: DiscordIntegrationExpireBehavior;
   /** the grace period (in days) before expiring subscribers */
   expire_grace_period?: number;
   /** user for this integration */
   user?: DiscordUser;
   /** integration account information */
-  account: IntegrationAccountPayload;
+  account: DiscordIntegrationAccountPayload;
   /** when this integration was last synced */
   synced_at?: string;
   /** how many subscribers this integration has */
@@ -31,17 +31,17 @@ export interface IntegrationPayload {
   /** has this integration been revoked */
   revoked?: boolean;
   /** the bot/OAuth2 application for discord integrations */
-  application?: IntegrationApplicationPayload;
+  application?: DiscordIntegrationApplicationPayload;
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
-export enum IntegrationExpireBehavior {
+export enum DiscordIntegrationExpireBehavior {
   REMOVE_ROLE,
   KICK,
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-account-object */
-export interface IntegrationAccountPayload {
+export interface DiscordIntegrationAccountPayload {
   /** id of the account */
   id: string;
   /** name of the account */
@@ -49,7 +49,7 @@ export interface IntegrationAccountPayload {
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-application-object */
-export interface IntegrationApplicationPayload {
+export interface DiscordIntegrationApplicationPayload {
   /** the id of the app */
   id: string;
   /** the name of the app */
