@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/resources/channel#channel-object-channel-types */
-export enum ChannelTypes {
+export enum DiscordChannelTypes {
   /** a text channel within a server */
   GUILD_TEXT,
   /** a direct message between users */
