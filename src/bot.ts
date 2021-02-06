@@ -113,9 +113,10 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
     botGatewayData,
     identifyPayload,
     data.firstShardID,
-    data.lastShardID || botGatewayData.shards >= 25
-      ? (data.firstShardID + 25)
-      : botGatewayData.shards,
+    data.lastShardID ||
+      (botGatewayData.shards >= 25
+        ? (data.firstShardID + 25)
+        : botGatewayData.shards),
   );
 }
 
