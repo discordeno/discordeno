@@ -51,7 +51,7 @@ import { Guild, Member, structures } from "../structures/mod.ts";
 export async function createServer(options: CreateServerOptions) {
   const guild = (await RequestManager.post(
     endpoints.GUILDS,
-    options
+    options,
   )) as CreateGuildPayload;
 
   return structures.createGuild(guild, 0);
@@ -69,7 +69,7 @@ export async function deleteServer(guildID: string) {
 export function categoryChildrenIDs(guildID: string, id: string) {
   return cacheHandlers.filter(
     "channels",
-    (channel) => channel.parentID === id && channel.guildID === guildID
+    (channel) => channel.parentID === id && channel.guildID === guildID,
   );
 }
 
@@ -77,7 +77,7 @@ export function categoryChildrenIDs(guildID: string, id: string) {
 export function guildIconURL(
   guild: Guild,
   size: ImageSize = 128,
-  format?: ImageFormats
+  format?: ImageFormats,
 ) {
   return guild.icon
     ? formatImageURL(endpoints.GUILD_ICON(guild.id, guild.icon), size, format)
@@ -88,14 +88,14 @@ export function guildIconURL(
 export function guildSplashURL(
   guild: Guild,
   size: ImageSize = 128,
-  format?: ImageFormats
+  format?: ImageFormats,
 ) {
   return guild.splash
     ? formatImageURL(
-        endpoints.GUILD_SPLASH(guild.id, guild.splash),
-        size,
-        format
-      )
+      endpoints.GUILD_SPLASH(guild.id, guild.splash),
+      size,
+      format,
+    )
     : undefined;
 }
 
@@ -103,14 +103,14 @@ export function guildSplashURL(
 export function guildBannerURL(
   guild: Guild,
   size: ImageSize = 128,
-  format?: ImageFormats
+  format?: ImageFormats,
 ) {
   return guild.banner
     ? formatImageURL(
-        endpoints.GUILD_BANNER(guild.id, guild.banner),
-        size,
-        format
-      )
+      endpoints.GUILD_BANNER(guild.id, guild.banner),
+      size,
+      format,
+    )
     : undefined;
 }
 
@@ -118,7 +118,7 @@ export function guildBannerURL(
 export async function createGuildChannel(
   guild: Guild,
   name: string,
-  options?: ChannelCreateOptions
+  options?: ChannelCreateOptions,
 ) {
   const requiredPerms: Set<Permission> = new Set(["MANAGE_CHANNELS"]);
 
@@ -141,7 +141,7 @@ export async function createGuildChannel(
         deny: calculateBits(perm.deny),
       })),
       type: options?.type || ChannelTypes.GUILD_TEXT,
-    }
+    },
   )) as ChannelCreatePayload;
 
   return structures.createChannel(result);
@@ -151,7 +151,7 @@ export async function createGuildChannel(
 export async function deleteChannel(
   guildID: string,
   channelID: string,
-  reason?: string
+  reason?: string,
 ) {
   await requireBotGuildPermissions(guildID, ["MANAGE_CHANNELS"]);
 
@@ -168,7 +168,7 @@ export async function deleteChannel(
 
   const result = await RequestManager.delete(
     endpoints.CHANNEL_BASE(channelID),
-    { reason }
+    { reason },
   );
 
   return result;
@@ -180,7 +180,7 @@ export async function deleteChannel(
  */
 export async function getChannels(guildID: string, addToCache = true) {
   const result = (await RequestManager.get(
-    endpoints.GUILD_CHANNELS(guildID)
+    endpoints.GUILD_CHANNELS(guildID),
   )) as ChannelCreatePayload[];
 
   return Promise.all(
@@ -190,7 +190,7 @@ export async function getChannels(guildID: string, addToCache = true) {
         await cacheHandlers.set("channels", channel.id, channel);
       }
       return channel;
-    })
+    }),
   );
 }
 
@@ -200,7 +200,7 @@ export async function getChannels(guildID: string, addToCache = true) {
  */
 export async function getChannel(channelID: string, addToCache = true) {
   const result = (await RequestManager.get(
-    endpoints.CHANNEL_BASE(channelID)
+    endpoints.CHANNEL_BASE(channelID),
   )) as ChannelCreatePayload;
 
   const channel = await structures.createChannel(result, result.guild_id);
@@ -212,7 +212,7 @@ export async function getChannel(channelID: string, addToCache = true) {
 /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
 export async function swapChannels(
   guildID: string,
-  channelPositions: PositionSwap[]
+  channelPositions: PositionSwap[],
 ) {
   if (channelPositions.length < 2) {
     throw "You must provide at least two channels to be swapped.";
@@ -220,7 +220,7 @@ export async function swapChannels(
 
   const result = await RequestManager.patch(
     endpoints.GUILD_CHANNELS(guildID),
-    channelPositions
+    channelPositions,
   );
 
   return result;
@@ -231,7 +231,7 @@ export async function editChannelOverwrite(
   guildID: string,
   channelID: string,
   overwriteID: string,
-  options: Omit<Overwrite, "id">
+  options: Omit<Overwrite, "id">,
 ) {
   await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
@@ -241,7 +241,7 @@ export async function editChannelOverwrite(
       allow: calculateBits(options.allow),
       deny: calculateBits(options.deny),
       type: options.type,
-    }
+    },
   );
 
   return result;
@@ -251,12 +251,12 @@ export async function editChannelOverwrite(
 export async function deleteChannelOverwrite(
   guildID: string,
   channelID: string,
-  overwriteID: string
+  overwriteID: string,
 ) {
   await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   const result = await RequestManager.delete(
-    endpoints.CHANNEL_OVERWRITE(channelID, overwriteID)
+    endpoints.CHANNEL_OVERWRITE(channelID, overwriteID),
   );
 
   return result;
@@ -269,13 +269,13 @@ export async function deleteChannelOverwrite(
 export async function getMember(
   guildID: string,
   id: string,
-  options?: { force?: boolean }
+  options?: { force?: boolean },
 ) {
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild && !options?.force) return;
 
   const data = (await RequestManager.get(
-    endpoints.GUILD_MEMBER(guildID, id)
+    endpoints.GUILD_MEMBER(guildID, id),
   )) as MemberCreatePayload;
 
   return structures.createMember(data, guildID);
@@ -288,7 +288,7 @@ export async function getMember(
 export async function getMembersByQuery(
   guildID: string,
   name: string,
-  limit = 1
+  limit = 1,
 ) {
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) return;
@@ -303,7 +303,7 @@ export async function createEmoji(
   guildID: string,
   name: string,
   image: string,
-  options: CreateEmojisOptions
+  options: CreateEmojisOptions,
 ) {
   await requireBotGuildPermissions(guildID, ["MANAGE_EMOJIS"]);
 
@@ -324,7 +324,7 @@ export async function createEmoji(
 export async function editEmoji(
   guildID: string,
   id: string,
-  options: EditEmojisOptions
+  options: EditEmojisOptions,
 ) {
   await requireBotGuildPermissions(guildID, ["MANAGE_EMOJIS"]);
 
@@ -333,7 +333,7 @@ export async function editEmoji(
     {
       name: options.name,
       roles: options.roles,
-    }
+    },
   );
 
   return result;
@@ -343,13 +343,13 @@ export async function editEmoji(
 export async function deleteEmoji(
   guildID: string,
   id: string,
-  reason?: string
+  reason?: string,
 ) {
   await requireBotGuildPermissions(guildID, ["MANAGE_EMOJIS"]);
 
   const result = await RequestManager.delete(
     endpoints.GUILD_EMOJI(guildID, id),
-    { reason }
+    { reason },
   );
 
   return result;
@@ -367,7 +367,7 @@ export function emojiURL(id: string, animated = false) {
  */
 export async function getEmojis(guildID: string, addToCache = true) {
   const result = (await RequestManager.get(
-    endpoints.GUILD_EMOJIS(guildID)
+    endpoints.GUILD_EMOJIS(guildID),
   )) as Emoji[];
 
   if (addToCache) {
@@ -388,10 +388,10 @@ export async function getEmojis(guildID: string, addToCache = true) {
 export async function getEmoji(
   guildID: string,
   emojiID: string,
-  addToCache = true
+  addToCache = true,
 ) {
   const result = (await RequestManager.get(
-    endpoints.GUILD_EMOJI(guildID, emojiID)
+    endpoints.GUILD_EMOJI(guildID, emojiID),
   )) as Emoji;
 
   if (addToCache) {
@@ -408,7 +408,7 @@ export async function getEmoji(
 export async function createGuildRole(
   guildID: string,
   options: CreateRoleOptions,
-  reason?: string
+  reason?: string,
 ) {
   await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
@@ -430,7 +430,7 @@ export async function createGuildRole(
 export async function editRole(
   guildID: string,
   id: string,
-  options: CreateRoleOptions
+  options: CreateRoleOptions,
 ) {
   await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
@@ -471,7 +471,7 @@ export async function swapRoles(guildID: string, rolePositons: PositionSwap) {
 
   const result = await RequestManager.patch(
     endpoints.GUILD_ROLES(guildID),
-    rolePositons
+    rolePositons,
   );
 
   return result;
@@ -559,20 +559,22 @@ export async function getMembers(guildID: string, options?: GetMemberOptions) {
   ) {
     if (options?.limit && options.limit > 1000) {
       console.log(
-        `Paginating get members from REST. #${loops} / ${Math.ceil(
-          (options?.limit ?? 1) / 1000
-        )}`
+        `Paginating get members from REST. #${loops} / ${
+          Math.ceil(
+            (options?.limit ?? 1) / 1000,
+          )
+        }`,
       );
     }
 
     const result = (await RequestManager.get(
       `${endpoints.GUILD_MEMBERS(guildID)}?limit=${
         membersLeft > 1000 ? 1000 : membersLeft
-      }${options?.after ? `&after=${options.after}` : ""}`
+      }${options?.after ? `&after=${options.after}` : ""}`,
     )) as MemberCreatePayload[];
 
     const memberStructures = (await Promise.all(
-      result.map((member) => structures.createMember(member, guildID))
+      result.map((member) => structures.createMember(member, guildID)),
     )) as Member[];
 
     if (!memberStructures.length) break;
@@ -595,7 +597,7 @@ export async function getMembers(guildID: string, options?: GetMemberOptions) {
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
 export async function getAuditLogs(
   guildID: string,
-  options: GetAuditLogsOptions
+  options: GetAuditLogsOptions,
 ) {
   await requireBotGuildPermissions(guildID, ["VIEW_AUDIT_LOG"]);
 
@@ -604,10 +606,9 @@ export async function getAuditLogs(
     action_type: options.action_type
       ? AuditLogs[options.action_type]
       : undefined,
-    limit:
-      options.limit && options.limit >= 1 && options.limit <= 100
-        ? options.limit
-        : 50,
+    limit: options.limit && options.limit >= 1 && options.limit <= 100
+      ? options.limit
+      : 50,
   });
 
   return result;
@@ -626,7 +627,7 @@ export async function getEmbed(guildID: string) {
 export async function editEmbed(
   guildID: string,
   enabled: boolean,
-  channelID?: string | null
+  channelID?: string | null,
 ) {
   await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
@@ -650,7 +651,7 @@ export async function getIntegrations(guildID: string) {
   await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const result = await RequestManager.get(
-    endpoints.GUILD_INTEGRATIONS(guildID)
+    endpoints.GUILD_INTEGRATIONS(guildID),
   );
 
   return result;
@@ -660,13 +661,13 @@ export async function getIntegrations(guildID: string) {
 export async function editIntegration(
   guildID: string,
   id: string,
-  options: EditIntegrationOptions
+  options: EditIntegrationOptions,
 ) {
   await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const result = await RequestManager.patch(
     endpoints.GUILD_INTEGRATION(guildID, id),
-    options
+    options,
   );
 
   return result;
@@ -677,7 +678,7 @@ export async function deleteIntegration(guildID: string, id: string) {
   await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const result = await RequestManager.delete(
-    endpoints.GUILD_INTEGRATION(guildID, id)
+    endpoints.GUILD_INTEGRATION(guildID, id),
   );
 
   return result;
@@ -688,7 +689,7 @@ export async function syncIntegration(guildID: string, id: string) {
   await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const result = await RequestManager.post(
-    endpoints.GUILD_INTEGRATION_SYNC(guildID, id)
+    endpoints.GUILD_INTEGRATION_SYNC(guildID, id),
   );
 
   return result;
@@ -699,11 +700,11 @@ export async function getBans(guildID: string) {
   await requireBotGuildPermissions(guildID, ["BAN_MEMBERS"]);
 
   const results = (await RequestManager.get(
-    endpoints.GUILD_BANS(guildID)
+    endpoints.GUILD_BANS(guildID),
   )) as BannedUser[];
 
   return new Collection<string, BannedUser>(
-    results.map((res) => [res.user.id, res])
+    results.map((res) => [res.user.id, res]),
   );
 }
 
@@ -712,7 +713,7 @@ export async function getBan(guildID: string, memberID: string) {
   await requireBotGuildPermissions(guildID, ["BAN_MEMBERS"]);
 
   const result = await RequestManager.get(
-    endpoints.GUILD_BAN(guildID, memberID)
+    endpoints.GUILD_BAN(guildID, memberID),
   );
 
   return result as BannedUser;
@@ -764,7 +765,7 @@ export async function editGuild(guildID: string, options: GuildEditOptions) {
 
   const result = await RequestManager.patch(
     endpoints.GUILDS_BASE(guildID),
-    options
+    options,
   );
 
   return result;
@@ -834,7 +835,7 @@ export async function getGuild(guildID: string, counts = true) {
 /** Returns the guild template if it exists */
 export async function getTemplate(templateCode: string) {
   const result = (await RequestManager.get(
-    endpoints.GUILD_TEMPLATE(templateCode)
+    endpoints.GUILD_TEMPLATE(templateCode),
   )) as GuildTemplate;
   const template = await structures.createTemplate(result);
 
@@ -855,11 +856,11 @@ export function getGuildTemplate(guildID: string, templateCode: string) {
  */
 export async function createGuildFromTemplate(
   templateCode: string,
-  data: CreateGuildFromTemplate
+  data: CreateGuildFromTemplate,
 ) {
   if ((await cacheHandlers.size("guilds")) >= 10) {
     throw new Error(
-      "This function can only be used by bots in less than 10 guilds."
+      "This function can only be used by bots in less than 10 guilds.",
     );
   }
 
@@ -869,7 +870,7 @@ export async function createGuildFromTemplate(
 
   const result = await await RequestManager.post(
     endpoints.GUILD_TEMPLATE(templateCode),
-    data
+    data,
   );
 
   return result as CreateGuildPayload;
@@ -883,7 +884,7 @@ export async function getGuildTemplates(guildID: string) {
   await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const templates = (await RequestManager.get(
-    endpoints.GUILD_TEMPLATES(guildID)
+    endpoints.GUILD_TEMPLATES(guildID),
   )) as GuildTemplate[];
 
   return templates.map((template) => structures.createTemplate(template));
@@ -895,12 +896,12 @@ export async function getGuildTemplates(guildID: string) {
  */
 export async function deleteGuildTemplate(
   guildID: string,
-  templateCode: string
+  templateCode: string,
 ) {
   await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const deletedTemplate = (await RequestManager.delete(
-    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`
+    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
   )) as GuildTemplate;
 
   return structures.createTemplate(deletedTemplate);
@@ -914,7 +915,7 @@ export async function deleteGuildTemplate(
  */
 export async function createGuildTemplate(
   guildID: string,
-  data: CreateGuildTemplate
+  data: CreateGuildTemplate,
 ) {
   await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
@@ -928,7 +929,7 @@ export async function createGuildTemplate(
 
   const template = (await RequestManager.post(
     endpoints.GUILD_TEMPLATES(guildID),
-    data
+    data,
   )) as GuildTemplate;
 
   return structures.createTemplate(template);
@@ -942,7 +943,7 @@ export async function syncGuildTemplate(guildID: string, templateCode: string) {
   await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const template = (await RequestManager.put(
-    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`
+    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
   )) as GuildTemplate;
 
   return structures.createTemplate(template);
@@ -955,7 +956,7 @@ export async function syncGuildTemplate(guildID: string, templateCode: string) {
 export async function editGuildTemplate(
   guildID: string,
   templateCode: string,
-  data: EditGuildTemplate
+  data: EditGuildTemplate,
 ) {
   await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
@@ -969,73 +970,8 @@ export async function editGuildTemplate(
 
   const template = (await RequestManager.patch(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
-    data
+    data,
   )) as GuildTemplate;
 
   return structures.createTemplate(template);
-}
-
-function createMembershipObj({
-  form_fields: formFields,
-  ...props
-}: MembershipScreeningPayload) {
-  return {
-    ...props,
-    formFields: formFields.map(({ field_type, ...rest }) => ({
-      ...rest,
-      fieldType: field_type,
-    })),
-  };
-}
-
-export type MembershipScreening = ReturnType<typeof createMembershipObj>;
-
-/** Get the membership screening form of a guild. */
-export async function getGuildMembershipScreeningForm(guildID: string) {
-  const membershipScreeningPayload = (await RequestManager.get(
-    endpoints.GUILD_MEMBER_VERIFICATION(guildID)
-  )) as MembershipScreeningPayload;
-
-  return createMembershipObj(membershipScreeningPayload);
-}
-
-/** Edit the guild's Membership Screening form. Requires the `MANAGE_GUILD` permission. */
-export async function editGuildMembershipScreeningForm(
-  guildID: string,
-  options?: EditGuildMembershipScreeningForm
-) {
-  const membershipScreeningFormPayload = (await RequestManager.patch(
-    endpoints.GUILD_MEMBER_VERIFICATION(guildID),
-    {
-      ...options,
-      form_fields: JSON.stringify(
-        options?.formFields?.map(({ fieldType, ...props }) => ({
-          ...props,
-          field_type: fieldType,
-        }))
-      ),
-    }
-  )) as MembershipScreeningPayload;
-
-  return createMembershipObj(membershipScreeningFormPayload);
-}
-
-export interface EditGuildMembershipScreeningForm {
-  /** whether Membership Screening is enabled */
-  enabled?: boolean;
-  /** array of field objects */
-  formFields?: MembershipScreeningField[];
-  /** the steps in the screening form */
-  description?: string;
-}
-
-export interface MembershipScreeningField {
-  /** the type of field */
-  fieldType: MembershipScreeningFieldTypes;
-  /** the title of the field */
-  label: string;
-  /** the list of rules */
-  values?: string[];
-  /** whether the user has to fill out this field */
-  required: boolean;
 }
