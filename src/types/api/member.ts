@@ -21,15 +21,15 @@ export interface DiscordUser {
   /** the user's email */
   email?: string | null;
   /** the flags on a user's account */
-  flags?: UserFlags;
+  flags?: DiscordUserFlags;
   /** the type of Nitro subscription on a user's account */
-  premium_type?: PremiumTypes;
+  premium_type?: DiscordPremiumTypes;
   /** the public flags on a user's account */
-  public_flags?: UserFlags;
+  public_flags?: DiscordUserFlags;
 }
 
 /** https://discord.com/developers/docs/resources/user#users-resource */
-export enum UserFlags {
+export enum DiscordUserFlags {
   NONE = 0,
   DISCORD_EMPLOYEE = 1 << 0,
   PARTNERED_SERVER_OWNER = 1 << 1,
@@ -47,7 +47,7 @@ export enum UserFlags {
 }
 
 /** https://discord.com/developers/docs/resources/user#users-resource */
-export enum PremiumTypes {
+export enum DiscordPremiumTypes {
   NONE = 0,
   NITRO_CLASSIC = 1,
   NITRO = 2,
