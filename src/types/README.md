@@ -90,3 +90,65 @@ Rules:
 - Snake case (Or whatever discord uses. Everything here should be letter to letter in accordance with discord's docs.)
 - Everything should have a comment explaining it
 - Kept in the src/types/api/outgoing folder
+
+## Minimalistic
+
+Since Discord uses `snake_case` but we use `camelCase` we will end up with redundant typings. In order to solve this, we have the `Camelize<T>` type which helps create a type using the snake case.
+
+If we have the base payload for Discord's `User` as follows:
+
+```ts
+export interface DiscordUserPayload {
+  /** The user's id */
+  id: string;
+  /** the user's username, not unique across the platform */
+  username: string;
+  /** The user's 4 digit discord tag */
+  discriminator: string;
+  /** The user's avatar hash */
+  avatar: string | null;
+  /** Whether the user is a bot */
+  bot?: boolean;
+  /** Whether the user is an official discord system user (part of the urgent message system.) */
+  system?: boolean;
+  /** Whether the user has two factor enabled on their account */
+  "mfa_enabled"?: boolean;
+  /** the user's chosen language option */
+  locale?: string;
+  /** Whether the email on this account has been verified */
+  verified?: boolean;
+  /** The user's email */
+  email?: string;
+  /** The flags on a user's account. */
+  flags?: number;
+  /** The type of Nitro subscription on a user's account. */
+  premium_type?: number;
+}
+```
+
+To create the Discordeno version for this it would be done as:
+
+```ts
+export interface UserPayload extends Camelize<DiscordUserPayload> {};
+```
+
+Now we have 2 unique interfaces, without having all the extra work or headaches of maintaing 2 different interfaces.
+
+Similarily, for any outgoing Discord types, we can also camelize them to have better user experience for users.
+
+Example:
+
+```ts
+export interface DiscordBanOptions {
+  /** number of days to delete messages for (0-7) */
+  delete_message_days?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  /** The reason for the ban. */
+  reason?: string;
+}
+```
+
+To create the Discordeno version for this it would be done as:
+
+```ts
+export interface BanOptions extends Camelize<DiscordBanOptions> {};
+```
