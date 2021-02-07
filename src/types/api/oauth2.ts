@@ -1,7 +1,7 @@
 import { DiscordTeam, DiscordUser } from "./mod.ts";
 
 /** https://discord.com/developers/docs/topics/oauth2#get-current-application-information */
-export interface ApplicationPayload {
+export interface DiscordApplication {
   /** id of the app */
   id: string;
   /** the name of the app */
