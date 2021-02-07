@@ -9,7 +9,7 @@ export * from "./guild.ts";
 export * from "./image.ts";
 export * from "./integration.ts";
 export * from "./interaction.ts";
-// export * from "./invite.ts";
+export * from "./invite.ts";
 export * from "./member.ts";
 export * from "./message.ts";
 export * from "./oauth2.ts";
