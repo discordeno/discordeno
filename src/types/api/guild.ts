@@ -1,4 +1,13 @@
-import { DiscordChannel, DiscordChannelTypes, DiscordEmoji, DiscordMember, DiscordOverwrite, DiscordPresenceUpdateEvent, DiscordRole, DiscordUser } from "./mod.ts";
+import {
+  DiscordChannel,
+  DiscordChannelTypes,
+  DiscordEmoji,
+  DiscordMember,
+  DiscordOverwrite,
+  DiscordPresenceUpdateEvent,
+  DiscordRole,
+  DiscordUser,
+} from "./mod.ts";
 
 /** https://discord.com/developers/docs/resources/guild#guild-object */
 export interface DiscordGuild {

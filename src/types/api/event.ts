@@ -1,4 +1,15 @@
-import { DiscordUser, DiscordMember, DiscordRole, DiscordEmoji, DiscordActivity, DiscordClientStatus, DiscordStatusTypes, DiscordUnavailableGuild, DiscordIntegration, DiscordApplication } from "./mod.ts";
+import {
+  DiscordActivity,
+  DiscordApplication,
+  DiscordClientStatus,
+  DiscordEmoji,
+  DiscordIntegration,
+  DiscordMember,
+  DiscordRole,
+  DiscordStatusTypes,
+  DiscordUnavailableGuild,
+  DiscordUser,
+} from "./mod.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#hello */
 export interface DiscordHelloEvent {

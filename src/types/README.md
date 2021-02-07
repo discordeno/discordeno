@@ -1,10 +1,12 @@
 # Discordeno Typings Guidelines / Explanations
 
-Discordeno has a certain standard guidelines for our typings. Please follow this as best as possible when contributing to the library.
+Discordeno has a certain standard guidelines for our typings. Please follow this
+as best as possible when contributing to the library.
 
 1. Discordeno Types
 
-These types will be specifically used by the end user for functions inside Discordeno.
+These types will be specifically used by the end user for functions inside
+Discordeno.
 
 Example:
 
@@ -28,14 +30,16 @@ Rules:
 - Camel Case
 - Do not allow `null`
 - Everything should have a comment explaining it
-- These typings should be kept in the file with the function. 
-  - Example: EditMemberOptions is at the bottom of the file where editMember() is declared.
+- These typings should be kept in the file with the function.
+  - Example: EditMemberOptions is at the bottom of the file where editMember()
+    is declared.
 
 2. Discord Types Incoming
 
-These types are meant for the payloads that we receive from Discord, whether through gateway or REST.
+These types are meant for the payloads that we receive from Discord, whether
+through gateway or REST.
 
-Example: 
+Example:
 
 ```ts
 export interface MemberCreatePayload {
@@ -60,15 +64,18 @@ export interface MemberCreatePayload {
 
 Rules:
 
-- Snake case (Or whatever discord uses. Everything here should be letter to letter in accordance with discord's docs.)
+- Snake case (Or whatever discord uses. Everything here should be letter to
+  letter in accordance with discord's docs.)
 - Everything should have a comment explaining it
 - Kept in the src/types/api/incoming folder
 
 3. Discord Types Outgoing
 
-These types are meant **US** as we develop Discordeno. These will help us prevent bugs when we are sending payloads to Discord whether through gateway or REST.
+These types are meant **US** as we develop Discordeno. These will help us
+prevent bugs when we are sending payloads to Discord whether through gateway or
+REST.
 
-Example: 
+Example:
 
 ```ts
 export interface EditMemberPayload {
@@ -87,13 +94,16 @@ export interface EditMemberPayload {
 
 Rules:
 
-- Snake case (Or whatever discord uses. Everything here should be letter to letter in accordance with discord's docs.)
+- Snake case (Or whatever discord uses. Everything here should be letter to
+  letter in accordance with discord's docs.)
 - Everything should have a comment explaining it
 - Kept in the src/types/api/outgoing folder
 
 ## Minimalistic
 
-Since Discord uses `snake_case` but we use `camelCase` we will end up with redundant typings. In order to solve this, we have the `Camelize<T>` type which helps create a type using the snake case.
+Since Discord uses `snake_case` but we use `camelCase` we will end up with
+redundant typings. In order to solve this, we have the `Camelize<T>` type which
+helps create a type using the snake case.
 
 If we have the base payload for Discord's `User` as follows:
 
@@ -129,12 +139,14 @@ export interface DiscordUserPayload {
 To create the Discordeno version for this it would be done as:
 
 ```ts
-export interface UserPayload extends Camelize<DiscordUserPayload> {};
+export interface UserPayload extends Camelize<DiscordUserPayload> {}
 ```
 
-Now we have 2 unique interfaces, without having all the extra work or headaches of maintaing 2 different interfaces.
+Now we have 2 unique interfaces, without having all the extra work or headaches
+of maintaing 2 different interfaces.
 
-Similarily, for any outgoing Discord types, we can also camelize them to have better user experience for users.
+Similarily, for any outgoing Discord types, we can also camelize them to have
+better user experience for users.
 
 Example:
 
@@ -150,5 +162,5 @@ export interface DiscordBanOptions {
 To create the Discordeno version for this it would be done as:
 
 ```ts
-export interface BanOptions extends Camelize<DiscordBanOptions> {};
+export interface BanOptions extends Camelize<DiscordBanOptions> {}
 ```

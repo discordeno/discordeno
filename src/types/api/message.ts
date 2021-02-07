@@ -1,5 +1,11 @@
 import { DiscordMember } from "./member.ts";
-import { DiscordBaseMember, DiscordChannelTypes, DiscordUser, DiscordEmoji, DiscordEmbed } from "./mod.ts";
+import {
+  DiscordBaseMember,
+  DiscordChannelTypes,
+  DiscordEmbed,
+  DiscordEmoji,
+  DiscordUser,
+} from "./mod.ts";
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-structure */
 export interface DiscordMessage {

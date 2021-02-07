@@ -1,4 +1,4 @@
-import { DiscordGuild, DiscordChannel, DiscordUser } from "./mod.ts";
+import { DiscordChannel, DiscordGuild, DiscordUser } from "./mod.ts";
 
 /** https://discord.com/developers/docs/resources/invite#invite-object */
 export interface DiscordInvite {

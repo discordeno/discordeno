@@ -1,4 +1,11 @@
-import { DiscordUser, DiscordWebhookPayload, DiscordIntegrationPayload, DiscordChannelTypes, DiscordRole, DiscordOverwrite } from "./mod.ts";
+import {
+  DiscordChannelTypes,
+  DiscordIntegrationPayload,
+  DiscordOverwrite,
+  DiscordRole,
+  DiscordUser,
+  DiscordWebhookPayload,
+} from "./mod.ts";
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-object */
 export interface DiscordAuditLogPayload {
