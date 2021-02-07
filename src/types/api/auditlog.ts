@@ -1,30 +1,29 @@
 import {
-  DiscordChannelTypes,
-  DiscordIntegrationPayload,
+  DiscordIntegration,
   DiscordOverwrite,
   DiscordRole,
   DiscordUser,
-  DiscordWebhookPayload,
+  DiscordWebhook,
 } from "./mod.ts";
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-object */
 export interface DiscordAuditLogPayload {
   /** list of webhooks found in the audit log */
-  webhooks: DiscordWebhookPayload[];
+  webhooks: DiscordWebhook[];
   /** list of users found in the audit log */
   users: DiscordUser[];
   /** list of audit log entries */
-  audit_log_entries: DiscordAuditLogEntryPayload[];
+  audit_log_entries: DiscordAuditLogEntry[];
   /** list of partial integration objects */
-  integrations: Partial<DiscordIntegrationPayload>[];
+  integrations: Partial<DiscordIntegration>[];
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
-export interface DiscordAuditLogEntryPayload {
+export interface DiscordAuditLogEntry {
   /** id of the affected entity (webhook, user, role, etc.) */
   target_id: string | null;
   /** changes made to the target_id */
-  changes?: DiscordAuditLogChangePayload[];
+  changes?: DiscordAuditLogChange[];
   /** the user who made the changes */
   user_id: string;
   /** id of the entry */
@@ -97,115 +96,93 @@ export interface DiscordOptionalAuditEntryInfoParam {
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
-export interface DiscordAuditLogChangePayload {
+export interface DiscordAuditLogChange {
   /** new value of the key */
-  new_value?: DiscordAuditLogChangeKeyPayload;
+  new_value?: DiscordAuditLogChangeValue;
   /** old value of the key */
-  old_value?: DiscordAuditLogChangeKeyPayload;
+  old_value?: DiscordAuditLogChangeValue;
   /** name of audit log change key */
   key: string;
 }
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-key */
-export interface DiscordAuditLogChangeKeyPayload {
-  /** object: guild; name changed */
-  name: string;
-  /** object: guild; icon changed */
-  icon_hash: string;
-  /** object: guild; invite splash page artwork changed */
-  splash_hash: string;
-  /** object: guild; owner changed */
-  owner_id: string;
-  /** object: guild; region changed */
-  region: string;
-  /** object: guild; afk channel changed */
-  afk_channel_id: string;
-  /** object: guild; afk timeout duration changed */
-  afk_timeout: number;
-  /** object: guild; two-factor auth requirement changed */
-  mfa_level: number;
-  /** object: guild; required verification level changed */
-  verification_level: number;
-  /** object: guild; change in whose messages are scanned and deleted for explicit content in the server */
-  explicit_content_filter: number;
-  /** object: guild; default message notification level changed */
-  default_message_notifications: number;
-  /** object: guild; guild invite vanity url changed */
-  vanity_url_code: string;
-  /** object: guild; new role added */
-  $add: Partial<DiscordRole>[];
-  /** object: guild; role removed */
-  $remove: Partial<DiscordRole>[];
-  /** object: guild;  change in number of days after which inactive and role-unassigned members are kicked */
-  prune_delete_days: number;
-  /** object: guild; server widget enabled/disable */
-  widget_enabled: boolean;
-  /** object: guild; channel id of the servere widget changed */
-  widget_channel_id: string;
-  /** object: guild; id of the system channel changed */
-  system_channel_id: string;
-  /** object: channel; text or voice channel position changed */
-  position: number;
-  /** object: channel; text channel topic changed */
-  topic: string;
-  /** object: channel; voice channel bitrate changed */
-  bitrate: number;
-  /** object: channel; permissions on a channel changed */
-  permission_overwrites: DiscordOverwrite[];
-  /** object: channel; channel nsfw restriction changed */
-  nsfw: boolean;
-  /** object: channel; application id of the added or removed webhook or bot */
-  application_id: string;
-  /** object: channel; amount of seconds a user has to wait before sending another message changed */
-  rate_limit_per_user: number;
-  /** object: role; permissions for a role changed */
-  permissions: string;
-  /** object: role; role color changed */
-  color: number;
-  /** object: role; role is now displayed/no longer displayed seperate from online users */
-  hoist: boolean;
-  /** object: role; rrole is now mentionable/unmentionable */
-  mentionable: boolean;
-  /** object: role; a permission on a text or voice channel was allowed for a role */
-  allow: string;
-  /** object: role; a permission on a text or voice channel was denied for a role */
-  deny: string;
-  /** object: invite; invite code changed */
-  code: string;
-  /** object: invite; channel for invite code changed */
-  channel_id: string;
-  /** object: invite; person who created invite code changed */
-  invite_id: string;
-  /** object: invite; change to max number of times invite code can be used */
-  max_uses: number;
-  /** object: invite; number of times invite code used changed */
-  uses: number;
-  /** object: invite; how long invite code lasts changed */
-  max_age: number;
-  /** object: invite; invite code is temporary/never expires */
-  temporary: boolean;
-  /** object: user; user server deafened/undeafened */
-  deaf: boolean;
-  /** object: user; user server muted/unmuted */
-  mute: boolean;
-  /** object: user; user nickanem changed */
-  nick: string;
-  /** object: user; user avatar changed */
-  avatar_hash: string;
-  /** object: any; the id of the changed entity - sometimes used in conjunction with other keys */
-  id: string;
-  /** object: any; type of entity created */
-  type: DiscordChannelTypes | string;
-  /** object: integration; integration emoticons enabled/disabled */
-  enable_emoticons: boolean;
-  /** object: integration; integration expiring subscriber behavior changed */
-  expire_behavior: number;
-  /** object: integration; integration expire grace period changed */
-  expire_grace_period: number;
-}
+/** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
+export type DiscordAuditLogChangeValue =
+  | {
+    new_value: string;
+    old_value: string;
+    key:
+      | "name"
+      | "icon_hash"
+      | "splash_hash"
+      | "owner_id"
+      | "region"
+      | "afk_channel_id"
+      | "vanity_url_code"
+      | "widget_channel_id"
+      | "system_channel_id"
+      | "topic"
+      | "application_id"
+      | "permissions"
+      | "allow"
+      | "deny"
+      | "code"
+      | "channel_id"
+      | "inviter_id"
+      | "nick"
+      | "avatar_hash"
+      | "id";
+  }
+  | {
+    new_value: number;
+    old_value: number;
+    key:
+      | "afk_timeout"
+      | "mfa_level"
+      | "verification_level"
+      | "explicit_content_filter"
+      | "default_messagae_notifications"
+      | "prune_delete_days"
+      | "position"
+      | "bitrate"
+      | "rate_limit_per_user"
+      | "color"
+      | "max_uses"
+      | "uses"
+      | "max_age"
+      | "expire_behavior"
+      | "expire_grace_period";
+  }
+  | {
+    new_value: Partial<DiscordRole>;
+    old_value: Partial<DiscordRole>;
+    key: "$add" | "$remove";
+  }
+  | {
+    new_value: boolean;
+    old_value: boolean;
+    key:
+      | "widget_enabled"
+      | "nsfw"
+      | "hoist"
+      | "mentionable"
+      | "temporary"
+      | "deaf"
+      | "mute"
+      | "enable_emoticons";
+  }
+  | {
+    new_value: DiscordOverwrite[];
+    old_value: DiscordOverwrite[];
+    key: "permission_overwrites";
+  }
+  | {
+    new_value: string | number;
+    old_value: string | number;
+    key: "type";
+  };
 
 /** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
-export interface GetGuildAuditLogParams {
+export interface DiscordGetGuildAuditLogParams {
   /** filter the log for actions made by a user */
   user_id: string;
   /** the type of audit log event */
@@ -214,4 +191,15 @@ export interface GetGuildAuditLogParams {
   before: string;
   /** how many entries are returned (default 50, minimum 1, maximum 100) */
   limit: number;
+}
+
+export interface DiscordGetAuditLogsOptions {
+  /** Filter the logs for actions made by this user. */
+  user_id?: string;
+  /** The type of audit log. */
+  action_type?: DiscordAuditLogEvent;
+  /** Filter the logs before a certain log entry. */
+  before?: string;
+  /** How many entries are returned. Between 1-100. Default 50. */
+  limit?: number;
 }
