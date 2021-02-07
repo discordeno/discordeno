@@ -96,7 +96,7 @@ export interface DiscordApplicationCommandOptionChoice {
   value: string | number;
 }
 
-export type ApplicationCommandEvent = DiscordApplicationCommand & {
+export type DiscordApplicationCommandEvent = DiscordApplicationCommand & {
   /** id of the guild the command is in */
   guild_id?: string;
 };

@@ -94,6 +94,8 @@ export interface ApplicationCommandOptionChoice {
   value: string | number;
 }
 
+// TODO: v11 Remove
+/** @deprecated Use DiscordApplicationCommandEvent */
 export type ApplicationCommandEvent = ApplicationCommand & {
   /** id of the guild the command is in */
   guild_id?: string;

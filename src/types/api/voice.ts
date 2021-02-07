@@ -1,4 +1,4 @@
-export interface VoiceRegion {
+export interface DiscordVoiceRegion {
   /** unique ID for the region */
   id: string;
   /** name of the region */
