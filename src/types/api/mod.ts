@@ -18,7 +18,7 @@ export * from "./permission.ts";
 // export * from "./rate_limits.ts";
 export * from "./role.ts";
 export * from "./teams.ts";
-// export * from "./template.ts";
+export * from "./template.ts";
 // export * from "./user.ts";
 export * from "./voice.ts";
 export * from "./webhook.ts";
