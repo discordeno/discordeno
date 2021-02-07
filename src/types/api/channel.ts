@@ -19,7 +19,7 @@ export enum DiscordChannelTypes {
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-object-channel-structure */
-export interface DiscordChannelPayload {
+export interface DiscordChannel {
   /** the id of this channel */
   id: string;
   /** the type of channel */
