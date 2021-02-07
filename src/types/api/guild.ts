@@ -7,6 +7,7 @@ import {
   DiscordPresenceUpdateEvent,
   DiscordRole,
   DiscordUser,
+  DiscordVoiceStateUpdateEvent,
 } from "./mod.ts";
 
 /** https://discord.com/developers/docs/resources/guild#guild-object */
