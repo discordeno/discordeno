@@ -1,8 +1,11 @@
 export * from "./auditlog.ts";
 export * from "./channel.ts";
+export * from "./code.ts";
 export * from "./embed.ts";
 export * from "./emoji.ts";
-// export * from "./guild.ts";
+export * from "./event.ts";
+export * from "./gateway.ts";
+export * from "./guild.ts";
 export * from "./image.ts";
 export * from "./integration.ts";
 // export * from "./interaction.ts";
