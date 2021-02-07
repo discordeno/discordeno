@@ -1,7 +1,7 @@
 import { DiscordUser } from "./mod.ts";
 
 /** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
-export interface EmojiPayload {
+export interface DiscordEmoji {
   /** emoji id */
   id: string | null;
   /** emoji name */
@@ -21,7 +21,7 @@ export interface EmojiPayload {
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
-export interface CreateGuildEmojiParams {
+export interface DiscordCreateGuildEmojiParams {
   /** name of the emoji */
   name: string;
   /** the 128x128 emoji image (Data URI scheme) */
@@ -31,7 +31,7 @@ export interface CreateGuildEmojiParams {
 }
 
 /** https://discord.com/developers/docs/resources/emoji#modify-guild-emoji */
-export interface ModifyGuildEmojiParams {
+export interface DiscordModifyGuildEmojiParams {
   /** name of the emoji */
   name?: string;
   /** roles to which this emoji will be whitelisted */
