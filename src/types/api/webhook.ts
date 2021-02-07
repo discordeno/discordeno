@@ -1,7 +1,7 @@
 import { DiscordUser } from "./mod.ts";
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-resource */
-export interface DiscordWebhookPayload {
+export interface DiscordWebhook {
   /** the id of the webhook */
   id: string;
   /** the type of the webhook */

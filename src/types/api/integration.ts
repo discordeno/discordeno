@@ -1,7 +1,7 @@
 import { DiscordUser } from "./mod.ts";
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
-export interface DiscordIntegrationPayload {
+export interface DiscordIntegration {
   /** integration id */
   id: string;
   /** integration name */
@@ -23,7 +23,7 @@ export interface DiscordIntegrationPayload {
   /** user for this integration */
   user?: DiscordUser;
   /** integration account information */
-  account: DiscordIntegrationAccountPayload;
+  account: DiscordIntegrationAccount;
   /** when this integration was last synced */
   synced_at?: string;
   /** how many subscribers this integration has */
@@ -31,7 +31,7 @@ export interface DiscordIntegrationPayload {
   /** has this integration been revoked */
   revoked?: boolean;
   /** the bot/OAuth2 application for discord integrations */
-  application?: DiscordIntegrationApplicationPayload;
+  application?: DiscordIntegrationApplication;
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
@@ -41,7 +41,7 @@ export enum DiscordIntegrationExpireBehavior {
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-account-object */
-export interface DiscordIntegrationAccountPayload {
+export interface DiscordIntegrationAccount {
   /** id of the account */
   id: string;
   /** name of the account */
@@ -49,7 +49,7 @@ export interface DiscordIntegrationAccountPayload {
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-application-object */
-export interface DiscordIntegrationApplicationPayload {
+export interface DiscordIntegrationApplication {
   /** the id of the app */
   id: string;
   /** the name of the app */
