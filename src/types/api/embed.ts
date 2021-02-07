@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-structure */
-export interface DiscordEmbedPayload {
+export interface DiscordEmbed {
   /** title of embed */
   title?: string;
   /** type of embed (always "rich" for webhook embeds) */
@@ -13,19 +13,19 @@ export interface DiscordEmbedPayload {
   /** color code of the embed */
   color?: number;
   /** footer information */
-  footer?: DiscordEmbedFooterPayload;
+  footer?: DiscordEmbedFooter;
   /** image information */
-  image?: DiscordEmbedImagePayload;
+  image?: DiscordEmbedImage;
   /** thumbnail information */
-  thumbnail?: DiscordEmbedThumbnailPayload;
+  thumbnail?: DiscordEmbedThumbnail;
   /** video information */
-  video?: DiscordEmbedVideoPayload;
+  video?: DiscordEmbedVideo;
   /** provider information */
-  provider?: DiscordEmbedProviderPayload;
+  provider?: DiscordEmbedProvider;
   /** author information */
-  author?: DiscordEmbedAuthorPayload;
+  author?: DiscordEmbedAuthor;
   /** fields information */
-  fields?: DiscordEmbedFieldPayload[];
+  fields?: DiscordEmbedField[];
 }
 
 /**
@@ -41,7 +41,7 @@ export type EmbedTypes =
   | "link";
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-thumbnail-structure */
-export interface DiscordEmbedThumbnailPayload {
+export interface DiscordEmbedThumbnail {
   /** source url of thumbnail (only supports http(s) and attachments) */
   url?: string;
   /** a proxied url of the thumbnail */
@@ -53,7 +53,7 @@ export interface DiscordEmbedThumbnailPayload {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-video-structure */
-export interface DiscordEmbedVideoPayload {
+export interface DiscordEmbedVideo {
   /** source url of video */
   url?: string;
   /** height of video */
@@ -63,7 +63,7 @@ export interface DiscordEmbedVideoPayload {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-image-structure */
-export interface DiscordEmbedImagePayload {
+export interface DiscordEmbedImage {
   /** source url of image (only supports http(s) and attachments) */
   url?: string;
   /** a proxied url of the image */
@@ -75,7 +75,7 @@ export interface DiscordEmbedImagePayload {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-provider-structure */
-export interface DiscordEmbedProviderPayload {
+export interface DiscordEmbedProvider {
   /** name of provider */
   name?: string;
   /** url of provider */
@@ -83,7 +83,7 @@ export interface DiscordEmbedProviderPayload {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-author-structure */
-export interface DiscordEmbedAuthorPayload {
+export interface DiscordEmbedAuthor {
   /** name of author */
   name?: string;
   /** url of author */
@@ -95,7 +95,7 @@ export interface DiscordEmbedAuthorPayload {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure */
-export interface DiscordEmbedFooterPayload {
+export interface DiscordEmbedFooter {
   /** footer text */
   text: string;
   /** url of footer icon (only supports http(s) and attachments) */
@@ -105,7 +105,7 @@ export interface DiscordEmbedFooterPayload {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure */
-export interface DiscordEmbedFieldPayload {
+export interface DiscordEmbedField {
   /** name of the field */
   name: string;
   /** value of the field */
