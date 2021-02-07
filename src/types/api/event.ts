@@ -324,15 +324,15 @@ export interface DiscordWebhooksUpdateEvent {
 /** https://discord.com/developers/docs/resources/voice#voice-resource */
 export interface DiscordVoiceStateUpdateEvent {
   /** the guild id this voice state is for */
-  guildID?: string;
+  guild_id?: string;
   /** the channel id this user is connected to */
-  channelID: string;
+  channel_id: string;
   /** the user id this voice state is for */
-  userID: string;
+  user_id: string;
   /** the guild member this voice state is for */
   member?: DiscordMember;
   /** the session id for this voice state */
-  sessionID: string;
+  session_id: string;
   /** whether this user is deafened by the server */
   deaf: boolean;
   /** whether this user is muted by the server */
@@ -340,11 +340,11 @@ export interface DiscordVoiceStateUpdateEvent {
   /** whether this user is locally deafened */
   self_deaf: boolean;
   /** whether this user is locally muted */
-  selfMute: boolean;
+  self_mute: boolean;
   /** whether this user is streaming using "Go Live" */
-  selfStream?: boolean;
+  self_stream?: boolean;
   /** whether this user's camera is enabled */
-  selfVideo: boolean;
+  self_video: boolean;
   /** whether this user is muted by the current user */
   suppress: boolean;
 }
