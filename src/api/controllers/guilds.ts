@@ -56,7 +56,7 @@ export async function handleInternalGuildDelete(data: DiscordPayload) {
   });
   console.log(4);
 
-  await cacheHandlers.delete("guilds", payload.id);
+  // await cacheHandlers.delete("guilds", payload.id);
   console.log(5);
   if (payload.unavailable) {
     console.log(6);
