@@ -111,7 +111,7 @@ export async function handleInternalGuildUpdate(data: DiscordPayload) {
       }
     }).filter((change) => change) as GuildUpdateChange[];
 
-  await cacheHandlers.set("guilds", payload.id, { ...cachedGuild, ...changes });
+  await cacheHandlers.set("guilds", payload.id, cachedGuild);
 
   eventHandlers.guildUpdate?.(cachedGuild, changes);
 }
