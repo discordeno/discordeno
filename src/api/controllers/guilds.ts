@@ -52,13 +52,14 @@ export async function handleInternalGuildDelete(data: DiscordPayload) {
     }
   });
 
-  // await cacheHandlers.delete("guilds", payload.id);
   if (payload.unavailable) {
     return cacheHandlers.set("unavailableGuilds", payload.id, Date.now());
   }
 
   const guild = await cacheHandlers.get("guilds", payload.id);
   if (!guild) return;
+
+  await cacheHandlers.delete("guilds", payload.id);
 
   eventHandlers.guildDelete?.(guild);
 }
