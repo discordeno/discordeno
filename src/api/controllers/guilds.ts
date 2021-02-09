@@ -38,28 +38,37 @@ export async function handleInternalGuildCreate(
 
 export async function handleInternalGuildDelete(data: DiscordPayload) {
   if (data.t !== "GUILD_DELETE") return;
+  console.log(1);
 
   const payload = data.d as GuildDeletePayload;
+  console.log(2);
   cacheHandlers.forEach("messages", (message) => {
     if (message.guildID === payload.id) {
       cacheHandlers.delete("messages", message.id);
     }
   });
+  console.log(3);
 
   cacheHandlers.forEach("channels", (channel) => {
     if (channel.guildID === payload.id) {
       cacheHandlers.delete("channels", channel.id);
     }
   });
+  console.log(4);
 
   await cacheHandlers.delete("guilds", payload.id);
-
+  console.log(5);
   if (payload.unavailable) {
+    console.log(6);
     return cacheHandlers.set("unavailableGuilds", payload.id, Date.now());
   }
+  console.log(7);
 
   const guild = await cacheHandlers.get("guilds", payload.id);
+  console.log(8);
   if (!guild) return;
+
+  console.log(9);
 
   eventHandlers.guildDelete?.(guild);
 }
