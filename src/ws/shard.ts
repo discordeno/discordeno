@@ -15,9 +15,8 @@ import {
 import { BotStatusRequest, delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
 import { handleDiscordPayload } from "./shard_manager.ts";
-import { Collection } from "../util/collection.ts";
 
-const basicShards = new Collection<number, BasicShard>();
+const basicShards = new Map<number, BasicShard>();
 const heartbeating = new Map<number, boolean>();
 const utf8decoder = new TextDecoder();
 const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
@@ -328,36 +327,12 @@ async function processGatewayQueue() {
     return;
   }
 
-  await Promise.all(basicShards.map(async (shard) => {
+  for (const shard of basicShards.values()) {
     const index = RequestMembersQueue.findIndex((q) => q.shardID === shard.id);
     // 2 events per second is the rate limit.
     const request = RequestMembersQueue[index];
     if (request) {
       eventHandlers.debug?.(
-        {
-          type: "requestMembersProcessing",
-          data: {
-            remaining: RequestMembersQueue.length,
-            request,
-          },
-        },
-      );
-      await requestGuildMembers(
-        request.guildID,
-        request.shardID,
-        request.nonce,
-        request.options,
-        true,
-      );
-      // Remove item from queue
-      RequestMembersQueue.splice(index, 1);
-
-      const secondIndex = RequestMembersQueue.findIndex((q) =>
-        q.shardID === shard.id
-      );
-      const secondRequest = RequestMembersQueue[secondIndex];
-      if (secondRequest) {
-        eventHandlers.debug?.(
           {
             type: "requestMembersProcessing",
             data: {
@@ -365,19 +340,43 @@ async function processGatewayQueue() {
               request,
             },
           },
+      );
+      await requestGuildMembers(
+          request.guildID,
+          request.shardID,
+          request.nonce,
+          request.options,
+          true,
+      );
+      // Remove item from queue
+      RequestMembersQueue.splice(index, 1);
+
+      const secondIndex = RequestMembersQueue.findIndex((q) =>
+          q.shardID === shard.id
+      );
+      const secondRequest = RequestMembersQueue[secondIndex];
+      if (secondRequest) {
+        eventHandlers.debug?.(
+            {
+              type: "requestMembersProcessing",
+              data: {
+                remaining: RequestMembersQueue.length,
+                request,
+              },
+            },
         );
         await requestGuildMembers(
-          secondRequest.guildID,
-          secondRequest.shardID,
-          secondRequest.nonce,
-          secondRequest.options,
-          true,
+            secondRequest.guildID,
+            secondRequest.shardID,
+            secondRequest.nonce,
+            secondRequest.options,
+            true,
         );
         // Remove item from queue
         RequestMembersQueue.splice(secondIndex, 1);
       }
     }
-  }));
+  }
 
   await delay(1500);
 
@@ -385,7 +384,7 @@ async function processGatewayQueue() {
 }
 
 export function botGatewayStatusRequest(payload: BotStatusRequest) {
-  basicShards.forEach((shard) => {
+  basicShards.forEach(() => {
     sendWS({
       op: GatewayOpcode.StatusUpdate,
       d: {
