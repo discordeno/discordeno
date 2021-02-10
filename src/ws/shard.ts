@@ -333,6 +333,30 @@ async function processGatewayQueue() {
     const request = RequestMembersQueue[index];
     if (request) {
       eventHandlers.debug?.(
+        {
+          type: "requestMembersProcessing",
+          data: {
+            remaining: RequestMembersQueue.length,
+            request,
+          },
+        },
+      );
+      await requestGuildMembers(
+        request.guildID,
+        request.shardID,
+        request.nonce,
+        request.options,
+        true,
+      );
+      // Remove item from queue
+      RequestMembersQueue.splice(index, 1);
+
+      const secondIndex = RequestMembersQueue.findIndex((q) =>
+        q.shardID === shard.id
+      );
+      const secondRequest = RequestMembersQueue[secondIndex];
+      if (secondRequest) {
+        eventHandlers.debug?.(
           {
             type: "requestMembersProcessing",
             data: {
@@ -340,37 +364,13 @@ async function processGatewayQueue() {
               request,
             },
           },
-      );
-      await requestGuildMembers(
-          request.guildID,
-          request.shardID,
-          request.nonce,
-          request.options,
-          true,
-      );
-      // Remove item from queue
-      RequestMembersQueue.splice(index, 1);
-
-      const secondIndex = RequestMembersQueue.findIndex((q) =>
-          q.shardID === shard.id
-      );
-      const secondRequest = RequestMembersQueue[secondIndex];
-      if (secondRequest) {
-        eventHandlers.debug?.(
-            {
-              type: "requestMembersProcessing",
-              data: {
-                remaining: RequestMembersQueue.length,
-                request,
-              },
-            },
         );
         await requestGuildMembers(
-            secondRequest.guildID,
-            secondRequest.shardID,
-            secondRequest.nonce,
-            secondRequest.options,
-            true,
+          secondRequest.guildID,
+          secondRequest.shardID,
+          secondRequest.nonce,
+          secondRequest.options,
+          true,
         );
         // Remove item from queue
         RequestMembersQueue.splice(secondIndex, 1);
