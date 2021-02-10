@@ -303,7 +303,7 @@ export async function getMembersByQuery(
   if (!guild) return;
 
   return new Promise((resolve) => {
-    requestAllMembers(guild, resolve, { query: name, limit });
+    return requestAllMembers(guild, resolve, { query: name, limit });
   }) as Promise<Collection<string, Member>>;
 }
 
