@@ -231,7 +231,7 @@ async function heartbeat(
           },
         },
     );
-    return shard.ws.close(4009);
+    return shard.ws.send(JSON.stringify({ op: 4009 }));
   }
 
   // Set it to false as we are issuing a new heartbeat
