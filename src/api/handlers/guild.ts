@@ -380,7 +380,7 @@ export function emojiURL(id: string, animated = false) {
 
 /**
  * Returns a list of emojis for the given guild.
- * 
+ *
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  */
 export async function getEmojis(guildID: string, addToCache = true) {
@@ -400,7 +400,7 @@ export async function getEmojis(guildID: string, addToCache = true) {
 
 /**
  * Returns an emoji for the given guild and emoji ID.
- * 
+ *
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  */
 export async function getEmoji(
@@ -575,7 +575,7 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
   }
 
   return new Promise((resolve) => {
-    requestAllMembers(guild, resolve, options);
+    return requestAllMembers(guild, resolve, options);
   }) as Promise<Collection<string, Member>>;
 }
 
@@ -936,8 +936,8 @@ export async function getTemplate(templateCode: string) {
   return template;
 }
 
-/** 
- * Returns the guild template if it exists 
+/**
+ * Returns the guild template if it exists
  * @deprecated will get removed in v11 use `getTemplate` instead
  */
 export function getGuildTemplate(
