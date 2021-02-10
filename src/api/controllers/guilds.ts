@@ -52,14 +52,14 @@ export async function handleInternalGuildDelete(data: DiscordPayload) {
     }
   });
 
-  await cacheHandlers.delete("guilds", payload.id);
-
   if (payload.unavailable) {
     return cacheHandlers.set("unavailableGuilds", payload.id, Date.now());
   }
 
   const guild = await cacheHandlers.get("guilds", payload.id);
   if (!guild) return;
+
+  await cacheHandlers.delete("guilds", payload.id);
 
   eventHandlers.guildDelete?.(guild);
 }
@@ -102,7 +102,7 @@ export async function handleInternalGuildUpdate(data: DiscordPayload) {
       }
     }).filter((change) => change) as GuildUpdateChange[];
 
-  await cacheHandlers.set("guilds", payload.id, { ...cachedGuild, ...changes });
+  await cacheHandlers.set("guilds", payload.id, cachedGuild);
 
   eventHandlers.guildUpdate?.(cachedGuild, changes);
 }
