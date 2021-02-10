@@ -40,7 +40,7 @@ export async function spawnShards(
       data.shards > lastShardID ? data.shards : lastShardID,
     ];
     // Start The shard
-    await createShard(data, payload, false, shardID);
+    createShard(data, payload, false, shardID);
     // Spawn next shard
     await spawnShards(
       data,
