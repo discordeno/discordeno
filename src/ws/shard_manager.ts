@@ -90,7 +90,7 @@ export async function handleDiscordPayload(
   }
 }
 
-export function requestAllMembers(
+export async function requestAllMembers(
   guild: Guild,
   resolve: (
     value: Collection<string, Member> | PromiseLike<Collection<string, Member>>,
