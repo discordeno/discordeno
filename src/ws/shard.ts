@@ -408,7 +408,7 @@ export function botGatewayStatusRequest(payload: BotStatusRequest) {
 }
 
 /** Enqueues the specified data to be transmitted to the server over the WebSocket connection, increasing the value of bufferedAmount by the number of bytes needed to contain the data.*/
-export function sendWS(shardID = 0, payload: DiscordPayload) {
+export function sendWS(payload: DiscordPayload, shardID = 0) {
   const shard = basicShards.get(shardID);
   if (!shard) return false;
 
