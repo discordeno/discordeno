@@ -1,5 +1,5 @@
 import { Collection } from "../../util/collection.ts";
-import { spawnShards, startGateway } from "./manager.ts";
+import { spawnShards, startGateway, tellClusterToIdentify } from "./manager.ts";
 import {
   createShard,
   handleDiscordPayload,
@@ -13,6 +13,10 @@ export const ws = {
   url: "",
   /** The maximum shard ID number. Useful for zero-downtime updates or resharding. */
   maxShards: 1,
+  /** The amount of shards to load per cluster */
+  shardsPerCluster: 25,
+  /** The maximum amount of clusters to use for your bot. */
+  maxClusters: 4,
   /** The first shard ID to start spawning. */
   firstShardID: 0,
   /** The last shard ID for this cluster. */
@@ -64,6 +68,7 @@ export const ws = {
   identify,
   heartbeat,
   handleDiscordPayload,
+  tellClusterToIdentify,
 };
 
 export interface DiscordenoShard {
