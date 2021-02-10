@@ -230,6 +230,7 @@ function runMethod(
   }
 
   // No proxy so we need to handle all rate limiting and such
+  // deno-lint-ignore no-async-promise-executor
   return new Promise(async (resolve, reject) => {
     const callback = async () => {
       try {
