@@ -7,6 +7,7 @@ import {
 import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
+  DiscordPayload,
   FetchMembersOptions,
   GatewayOpcode,
   ReadyPayload,
@@ -404,4 +405,14 @@ export function botGatewayStatusRequest(payload: BotStatusRequest) {
       },
     }));
   });
+}
+
+/** Enqueues the specified data to be transmitted to the server over the WebSocket connection, increasing the value of bufferedAmount by the number of bytes needed to contain the data.*/
+export function sendWS(shardID = 0, payload: DiscordPayload) {
+  const shard = basicShards.get(shardID);
+  if (!shard) return false;
+
+  const serialized = JSON.stringify(payload);
+  shard.ws.send(serialized);
+  return true;
 }
