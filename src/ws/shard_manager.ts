@@ -100,14 +100,12 @@ export async function requestAllMembers(
   const nonce = `${guild.id}-${Date.now()}`;
   cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
 
-  const result = await requestGuildMembers(
+  await requestGuildMembers(
     guild.id,
     guild.shardID,
     nonce,
     options,
   );
-
-  return result;
 }
 
 export function sendGatewayCommand(
