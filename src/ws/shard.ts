@@ -318,7 +318,7 @@ export function requestGuildMembers(
       user_ids: options?.userIDs,
       nonce,
     },
-  });
+  }, shard?.id);
 }
 
 async function processGatewayQueue() {
@@ -398,7 +398,7 @@ export function botGatewayStatusRequest(payload: BotStatusRequest) {
         status: payload.status,
         afk: false,
       },
-    });
+    }, shard.id);
   });
 }
 
