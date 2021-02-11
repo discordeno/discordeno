@@ -384,7 +384,7 @@ async function processGatewayQueue() {
 }
 
 export function botGatewayStatusRequest(payload: BotStatusRequest) {
-  basicShards.forEach(() => {
+  basicShards.forEach((shard) => {
     sendWS({
       op: GatewayOpcode.StatusUpdate,
       d: {
@@ -398,7 +398,7 @@ export function botGatewayStatusRequest(payload: BotStatusRequest) {
         status: payload.status,
         afk: false,
       },
-    });
+    }, shard.id);
   });
 }
 
