@@ -318,7 +318,7 @@ export async function requestGuildMembers(
       user_ids: options?.userIDs,
       nonce,
     },
-  }, shardID);
+  }, shard?.id);
 }
 
 async function processGatewayQueue() {
