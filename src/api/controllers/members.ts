@@ -23,6 +23,7 @@ export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
     payload,
     payload.guild_id,
   );
+  await cacheHandlers.set("members", member.id, member);
 
   eventHandlers.guildMemberAdd?.(guild, member);
 }
@@ -69,7 +70,6 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
     newMemberData,
     payload.guild_id,
   );
-
   await cacheHandlers.set("members", member.id, member);
 
   if (guildMember?.nick !== payload.nick) {
@@ -108,9 +108,13 @@ export async function handleInternalGuildMembersChunk(data: DiscordPayload) {
   const payload = data.d as GuildMemberChunkPayload;
 
   const members = await Promise.all(
-    payload.members.map((member) =>
-      structures.createMember(member, payload.guild_id)
-    ),
+    payload.members.map(async (memb) => {
+      const member = await structures.createMember(memb, payload.guild_id);
+
+      await cacheHandlers.set("members", member.id, member);
+
+      return member;
+    }),
   );
 
   // Check if its necessary to resolve the fetchmembers promise for this chunk or if more chunks will be coming

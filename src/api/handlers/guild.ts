@@ -137,7 +137,10 @@ export async function createGuildChannel(
       type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
 
-  return structures.createChannel(result);
+  const channel = await structures.createChannel(result);
+  await cacheHandlers.set("channels", channel.id, channel);
+
+  return channel;
 }
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
@@ -287,7 +290,11 @@ export async function getMember(
     endpoints.GUILD_MEMBER(guildID, id),
   ) as MemberCreatePayload;
 
-  return structures.createMember(data, guildID);
+  const member = await structures.createMember(data, guildID);
+
+  await cacheHandlers.set("members", member.id, member);
+
+  return member;
 }
 
 /** Returns guild member objects for the specified user by their nickname/username.
@@ -620,7 +627,13 @@ export async function getMembers(
     ) as MemberCreatePayload[];
 
     const memberStructures = await Promise.all(
-      result.map((member) => structures.createMember(member, guildID)),
+      result.map(async (memb) => {
+        const member = await structures.createMember(memb, guildID);
+
+        await cacheHandlers.set("members", member.id, member);
+
+        return member;
+      }),
     ) as Member[];
 
     if (!memberStructures.length) break;

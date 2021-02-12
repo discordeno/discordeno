@@ -1,7 +1,6 @@
 import { botID } from "../../bot.ts";
 import {
   BanOptions,
-  ChannelCreatePayload,
   CreateGuildPayload,
   Emoji,
   GetAuditLogsOptions,
@@ -12,12 +11,12 @@ import {
   ImageSize,
   MemberCreatePayload,
   Presence,
-  RoleData,
   VoiceState,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
 import {
   ban,
   deleteServer,
@@ -142,15 +141,14 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     ...rest
   } = data;
 
-  const roles = (await Promise.all(
-    data.roles.map((r: RoleData) => structures.createRole(r)),
-  )) as Role[];
-
-  await Promise.all(
-    channels.map((c: ChannelCreatePayload) =>
-      structures.createChannel(c, data.id)
-    ),
+  const roles = await Promise.all(
+    data.roles.map((role) => structures.createRole(role)),
   );
+
+  await Promise.all(channels.map(async (chnl) => {
+    const channel = await structures.createChannel(chnl);
+    return cacheHandlers.set("channels", channel.id, channel);
+  }));
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
