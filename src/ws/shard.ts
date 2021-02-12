@@ -229,7 +229,7 @@ async function heartbeat(
         },
       );
 
-      shard.ws.close(4009, "Session timed out");
+      return shard.ws.close(4009, "Session timed out");
     }
   }
 
