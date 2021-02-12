@@ -7,7 +7,6 @@ import {
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
-import { cacheHandlers } from "../controllers/cache.ts";
 import { sendMessage } from "../handlers/channel.ts";
 import { Guild } from "./guild.ts";
 import { Message } from "./message.ts";
@@ -27,6 +26,7 @@ const baseChannel: Partial<Channel> = {
   },
 };
 
+// deno-lint-ignore require-await
 export async function createChannel(
   data: ChannelCreatePayload,
   guildID?: string,
@@ -63,7 +63,6 @@ export async function createChannel(
     nsfw: createNewProp(nsfw),
   });
 
-  await cacheHandlers.set("channels", data.id, channel);
   return channel as Channel;
 }
 
