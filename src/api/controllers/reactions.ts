@@ -39,8 +39,11 @@ export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
   if (payload.member && payload.guild_id) {
     const guild = await cacheHandlers.get("guilds", payload.guild_id);
     if (guild) {
-      const member = await structures.createMember(payload.member, guild.id);
-      await cacheHandlers.set("members", member.id, member);
+      const memberStruct = await structures.createMember(
+        payload.member,
+        guild.id,
+      );
+      await cacheHandlers.set("members", memberStruct.id, memberStruct);
     }
   }
 
@@ -92,11 +95,11 @@ export async function handleInternalMessageReactionRemove(
   if (payload.member && payload.guild_id) {
     const guild = await cacheHandlers.get("guilds", payload.guild_id);
     if (guild) {
-      const member = await structures.createMember(
+      const memberStruct = await structures.createMember(
         payload.member,
         guild.id,
       );
-      await cacheHandlers.set("members", member.id, member);
+      await cacheHandlers.set("members", memberStruct.id, memberStruct);
     }
   }
 

@@ -290,11 +290,11 @@ export async function getMember(
     endpoints.GUILD_MEMBER(guildID, id),
   ) as MemberCreatePayload;
 
-  const member = await structures.createMember(data, guildID);
+  const memberStruct = await structures.createMember(data, guildID);
 
-  await cacheHandlers.set("members", member.id, member);
+  await cacheHandlers.set("members", memberStruct.id, memberStruct);
 
-  return member;
+  return memberStruct;
 }
 
 /** Returns guild member objects for the specified user by their nickname/username.
@@ -628,11 +628,11 @@ export async function getMembers(
 
     const memberStructures = await Promise.all(
       result.map(async (memb) => {
-        const member = await structures.createMember(memb, guildID);
+        const memberStruct = await structures.createMember(memb, guildID);
 
-        await cacheHandlers.set("members", member.id, member);
+        await cacheHandlers.set("members", memberStruct.id, memberStruct);
 
-        return member;
+        return memberStruct;
       }),
     ) as Member[];
 
