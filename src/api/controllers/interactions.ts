@@ -15,7 +15,7 @@ export async function handleInternalInteractionCreate(data: DiscordPayload) {
     payload.member,
     payload.guild_id,
   );
-  await cacheHandlers.set("members", member.id, member);
+  await cacheHandlers.set("members", memberStruct.id, memberStruct);
 
   eventHandlers.interactionCreate?.(
     {
