@@ -20,7 +20,7 @@ export async function handleInternalInteractionCreate(data: DiscordPayload) {
   eventHandlers.interactionCreate?.(
     {
       ...payload,
-      member,
+      memberStruct,
     },
   );
 }
