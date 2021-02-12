@@ -228,7 +228,8 @@ async function heartbeat(
           },
         },
       );
-      return shard.ws.send(JSON.stringify({ op: 4009 }));
+
+      shard.ws.close(4009, "Session timed out");
     }
   }
 
