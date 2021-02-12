@@ -137,10 +137,11 @@ export async function createGuildChannel(
       type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
 
-  const channel = await structures.createChannel(result);
-  await cacheHandlers.set("channels", channel.id, channel);
+  const channelStruct = await structures.createChannel(result);
 
-  return channel;
+  await cacheHandlers.set("channels", channelStruct.id, channelStruct);
+
+  return channelStruct;
 }
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
@@ -186,11 +187,12 @@ export async function getChannels(guildID: string, addToCache = true) {
   ) as ChannelCreatePayload[];
 
   return Promise.all(result.map(async (res) => {
-    const channel = await structures.createChannel(res, guildID);
+    const channelStruct = await structures.createChannel(res, guildID);
     if (addToCache) {
-      await cacheHandlers.set("channels", channel.id, channel);
+      await cacheHandlers.set("channels", channelStruct.id, channelStruct);
     }
-    return channel;
+
+    return channelStruct;
   }));
 }
 
@@ -203,10 +205,12 @@ export async function getChannel(channelID: string, addToCache = true) {
     endpoints.CHANNEL_BASE(channelID),
   ) as ChannelCreatePayload;
 
-  const channel = await structures.createChannel(result, result.guild_id);
-  if (addToCache) await cacheHandlers.set("channels", channel.id, channel);
+  const channelStruct = await structures.createChannel(result, result.guild_id);
+  if (addToCache) {
+    await cacheHandlers.set("channels", channelStruct.id, channelStruct);
+  }
 
-  return channel;
+  return channelStruct;
 }
 
 /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
