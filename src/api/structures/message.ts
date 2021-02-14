@@ -106,9 +106,9 @@ const baseMessage: Partial<Message> = {
       });
     }
 
-    return sendDirectMessage(this.author!.id, content).then((response) =>
-      response.delete(reason, timeout * 1000).catch(console.error)
-    );
+    return sendDirectMessage(this.author!.id, content).then((response) => {
+      response.delete(reason, timeout * 1000).catch(console.error);
+    });
   },
   alertReply(content, timeout = 10, reason = "") {
     return this.reply!(content).then((response) =>
