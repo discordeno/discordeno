@@ -33,7 +33,8 @@ import { Role } from "./role.ts";
 
 const baseMessage: Partial<Message> = {
   get channel() {
-    return cache.channels.get(this.channelID!) || cache.channels.get(this.author?.id!);
+    return cache.channels.get(this.channelID!) ||
+      cache.channels.get(this.author?.id!);
   },
   get guild() {
     if (!this.guildID) return undefined;
@@ -99,11 +100,15 @@ const baseMessage: Partial<Message> = {
     return sendDirectMessage(this.author!.id, content);
   },
   alert(content, timeout = 10, reason = "") {
-    if (this.guildID) return sendMessage(this.channelID!, content).then((response) => {
-      response.delete(reason, timeout * 1000).catch(console.error);
-    });
-    
-    return sendDirectMessage(this.author!.id, content).then(response => response.delete(reason, timeout * 1000).catch(console.error))
+    if (this.guildID) {
+      return sendMessage(this.channelID!, content).then((response) => {
+        response.delete(reason, timeout * 1000).catch(console.error);
+      });
+    }
+
+    return sendDirectMessage(this.author!.id, content).then((response) =>
+      response.delete(reason, timeout * 1000).catch(console.error)
+    );
   },
   alertReply(content, timeout = 10, reason = "") {
     return this.reply!(content).then((response) =>
