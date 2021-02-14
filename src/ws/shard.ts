@@ -7,6 +7,7 @@ import {
 import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
+  DiscordPayload,
   FetchMembersOptions,
   GatewayOpcode,
   ReadyPayload,
@@ -182,25 +183,21 @@ function identify(shard: BasicShard, payload: IdentifyPayload) {
     },
   );
 
-  return shard.ws.send(
-    JSON.stringify(
-      {
-        op: GatewayOpcode.Identify,
-        d: { ...payload, shard: [shard.id, payload.shard[1]] },
-      },
-    ),
-  );
+  sendWS({
+    op: GatewayOpcode.Identify,
+    d: { ...payload, shard: [shard.id, payload.shard[1]] },
+  }, shard.id);
 }
 
 function resume(shard: BasicShard, payload: IdentifyPayload) {
-  return shard.ws.send(JSON.stringify({
+  sendWS({
     op: GatewayOpcode.Resume,
     d: {
       token: payload.token,
       session_id: shard.sessionID,
       seq: shard.previousSequenceNumber,
     },
-  }));
+  }, shard.id);
 }
 
 async function heartbeat(
@@ -231,17 +228,17 @@ async function heartbeat(
           },
         },
       );
-      return shard.ws.send(JSON.stringify({ op: 4009 }));
+
+      return shard.ws.close(4009, "Session timed out");
     }
   }
 
   // Set it to false as we are issuing a new heartbeat
   heartbeating.set(shard.id, false);
 
-  shard.ws.send(
-    JSON.stringify(
-      { op: GatewayOpcode.Heartbeat, d: shard.previousSequenceNumber },
-    ),
+  sendWS(
+    { op: GatewayOpcode.Heartbeat, d: shard.previousSequenceNumber },
+    shard.id,
   );
   eventHandlers.debug?.(
     {
@@ -311,7 +308,7 @@ export function requestGuildMembers(
     return;
   }
 
-  shard?.ws.send(JSON.stringify({
+  sendWS({
     op: GatewayOpcode.RequestGuildMembers,
     d: {
       guild_id: guildID,
@@ -322,7 +319,7 @@ export function requestGuildMembers(
       user_ids: options?.userIDs,
       nonce,
     },
-  }));
+  }, shard?.id);
 }
 
 async function processGatewayQueue() {
@@ -389,7 +386,7 @@ async function processGatewayQueue() {
 
 export function botGatewayStatusRequest(payload: BotStatusRequest) {
   basicShards.forEach((shard) => {
-    shard.ws.send(JSON.stringify({
+    sendWS({
       op: GatewayOpcode.StatusUpdate,
       d: {
         since: null,
@@ -402,6 +399,16 @@ export function botGatewayStatusRequest(payload: BotStatusRequest) {
         status: payload.status,
         afk: false,
       },
-    }));
+    }, shard.id);
   });
+}
+
+/** Enqueues the specified data to be transmitted to the server over the WebSocket connection, */
+export function sendWS(payload: DiscordPayload, shardID = 0) {
+  const shard = basicShards.get(shardID);
+  if (!shard) return false;
+
+  const serialized = JSON.stringify(payload);
+  shard.ws.send(serialized);
+  return true;
 }

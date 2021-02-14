@@ -1,49 +1,51 @@
-import { MemberCreatePayload } from "./member.ts";
+import { DiscordMember } from "./mod.ts";
 
-export interface InteractionCommandPayload {
+export interface DiscordInteractionCommand {
   /** id of the interaction */
   id: string;
   /** the type of interaction */
-  type: InteractionType;
+  type: DiscordInteractionType;
   /** the command data payload */
-  data?: InteractionData;
+  data?: DiscordInteractionData;
   /** the guild it was sent from */
-  "guild_id": string;
+  guild_id: string;
   /** the channel it was sent from */
-  "channel_id": string;
+  channel_id: string;
   /** guild member data for the invoking user */
-  member: MemberCreatePayload;
+  member: DiscordMember;
   /** a continuation token for responding to the interaction */
   token: string;
+  /** read-only property, always 1 */
+  version: number;
 }
 
-export enum InteractionType {
+export enum DiscordInteractionType {
   /** This type is for ACK on webhook only setup. Discord may send these which require. In a sense its a heartbeat. */
   PING = 1,
   /** Slash commands */
   APPLICATION_COMMAND,
 }
 
-export interface InteractionData {
+export interface DiscordInteractionData {
   /** the ID of the invoked command */
   id: string;
   /** the name of the invoked command */
   name: string;
   /** the params + values from the user */
-  options: InteractionDataOption[];
+  options: DiscordInteractionDataOption[];
 }
 
-export interface InteractionDataOption {
+export interface DiscordInteractionDataOption {
   /** the name of the parameter */
   name: string;
   /** the value of the pair. present if there was no more options */
   value?: string | number;
   /** present if this option is a group or subcommand */
-  options?: InteractionDataOption[];
+  options?: DiscordInteractionDataOption[];
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommand */
-export interface ApplicationCommand {
+export interface DiscordApplicationCommand {
   /** unique id of the command */
   id: string;
   /** unique id of the parent application */
@@ -53,13 +55,13 @@ export interface ApplicationCommand {
   /** 1-100 character description */
   description: string;
   /** the parameters for the command */
-  options?: ApplicationCommandOption[];
+  options?: DiscordApplicationCommandOption[];
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption */
-export interface ApplicationCommandOption {
+export interface DiscordApplicationCommandOption {
   /** the type of the option */
-  type: ApplicationCommandOptionType;
+  type: DiscordApplicationCommandOptionType;
   /** 1-32 character name matching `^[\w-]{1,32}$` */
   name: string;
   /** 1-100 character description */
@@ -69,13 +71,13 @@ export interface ApplicationCommandOption {
   /** if the parameter is required or optional--default `false` */
   required?: boolean;
   /** choices for `string` and `int` types for the user to pick from */
-  choices?: ApplicationCommandOptionChoice[];
+  choices?: DiscordApplicationCommandOptionChoice[];
   /** if the option is a subcommand or subcommand group type, this nested options will be the parameters */
-  options?: ApplicationCommandOption[];
+  options?: DiscordApplicationCommandOption[];
 }
 
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype */
-export enum ApplicationCommandOptionType {
+/** https://discord.com/developers/docs/interactions/slash-commands#Discordapplicationcommandoptiontype */
+export enum DiscordApplicationCommandOptionType {
   SUB_COMMAND = 1,
   SUB_COMMAND_GROUP,
   STRING,
@@ -87,16 +89,14 @@ export enum ApplicationCommandOptionType {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptionchoice */
-export interface ApplicationCommandOptionChoice {
+export interface DiscordApplicationCommandOptionChoice {
   /** 1-100 character choice name */
   name: string;
   /** value of the choice */
   value: string | number;
 }
 
-// TODO: v11 Remove
-/** @deprecated Use DiscordApplicationCommandEvent */
-export type ApplicationCommandEvent = ApplicationCommand & {
+export type DiscordApplicationCommandEvent = DiscordApplicationCommand & {
   /** id of the guild the command is in */
   guild_id?: string;
 };

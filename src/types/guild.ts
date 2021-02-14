@@ -176,6 +176,8 @@ export type GuildFeatures =
   | "ANIMATED_ICON"
   | "BANNER";
 
+// TODO: v11 Remove
+/** @deprecated Use DiscordVoiceRegion */
 export interface VoiceRegion {
   /** unique ID for the region */
   id: string;
