@@ -15,6 +15,7 @@ import { cache } from "../../util/cache.ts";
 import { createNewProp } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { sendMessage } from "../handlers/channel.ts";
+import { sendDirectMessage } from "../handlers/member.ts";
 import {
   addReaction,
   addReactions,
@@ -32,7 +33,7 @@ import { Role } from "./role.ts";
 
 const baseMessage: Partial<Message> = {
   get channel() {
-    return cache.channels.get(this.channelID!);
+    return cache.channels.get(this.channelID!) || cache.channels.get(this.author?.id!);
   },
   get guild() {
     if (!this.guildID) return undefined;
@@ -51,7 +52,6 @@ const baseMessage: Partial<Message> = {
       "@me"}/${this.channelID}/${this.id}`;
   },
   get mentionedRoles() {
-    // TODO: add getters for Guild structure, that will fix this error
     return this.mentionRoleIDs?.map((id) => this.guild?.roles.get(id)) || [];
   },
   get mentionedChannels() {
@@ -91,15 +91,19 @@ const baseMessage: Partial<Message> = {
         replyMessageID: this.id,
       };
 
-    return sendMessage(this.channelID!, contentWithMention);
+    if (this.guildID) return sendMessage(this.channelID!, contentWithMention);
+    return sendDirectMessage(this.author!.id, contentWithMention);
   },
   send(content) {
-    return sendMessage(this.channelID!, content);
+    if (this.guildID) return sendMessage(this.channelID!, content);
+    return sendDirectMessage(this.author!.id, content);
   },
   alert(content, timeout = 10, reason = "") {
-    return sendMessage(this.channelID!, content).then((response) => {
+    if (this.guildID) return sendMessage(this.channelID!, content).then((response) => {
       response.delete(reason, timeout * 1000).catch(console.error);
     });
+    
+    return sendDirectMessage(this.author!.id, content).then(response => response.delete(reason, timeout * 1000).catch(console.error))
   },
   alertReply(content, timeout = 10, reason = "") {
     return this.reply!(content).then((response) =>
