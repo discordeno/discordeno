@@ -1,7 +1,6 @@
 import { getGatewayBot } from "../../api/handlers/gateway.ts";
 import { Intents } from "../../types/options.ts";
 import { Collection } from "../../util/collection.ts";
-import { Queue } from "./deps.ts";
 import { ws } from "./ws.ts";
 
 /** ADVANCED DEVS ONLY!!!!!!
@@ -48,8 +47,8 @@ export async function startGateway(options: StartGatewayOptions) {
  * TODO: Put in a queue system and support clustering
  */
 export function spawnShards(shardID: number) {
-  /** Stored as bucketID: [clusterID, Queue[ShardIDs]] */
-  const buckets = new Collection<number, [number, Queue][]>();
+  /** Stored as bucketID: [clusterID, [ShardIDs]] */
+  const buckets = new Collection<number, number[][]>();
   const maxShards = ws.maxShards || ws.botGatewayData.shards;
   let cluster = 0;
 
@@ -64,11 +63,8 @@ export function spawnShards(shardID: number) {
       const bucket = buckets.get(bucketID);
 
       if (!bucket) {
-        const queue = new Queue();
-        queue.push(i);
-
         // Create the bucket since it doesnt exist
-        buckets.set(bucketID, [[cluster, queue]]);
+        buckets.set(bucketID, [[cluster, i]]);
 
         if (cluster + 1 <= ws.maxClusters) cluster++;
         else {
@@ -76,17 +72,14 @@ export function spawnShards(shardID: number) {
         }
       } else {
         // FIND A QUEUE IN THIS BUCKET THAT HAS SPACE
-        const queue = bucket.find((q) => q[1].length < ws.shardsPerCluster + 1);
+        const queue = bucket.find((q) => q.length < ws.shardsPerCluster + 1);
         if (queue) {
           // IF THE QUEUE HAS SPACE JUST ADD IT TO THIS QUEUE
-          queue[1].push(i);
+          queue.push(i);
         } else {
-          const newQueue = new Queue();
-          newQueue.push(i);
-
           if (cluster + 1 <= ws.maxClusters) cluster++;
           // ADD A NEW QUEUE FOR THIS SHARD
-          bucket.push([cluster, newQueue]);
+          bucket.push([cluster, i]);
         }
       }
     }
@@ -94,7 +87,7 @@ export function spawnShards(shardID: number) {
 
   // SPREAD THIS OUT TO DIFFERENT CLUSTERS TO BEGIN STARTING UP
   buckets.forEach(async (bucket, bucketID) => {
-    for (const [clusterID, queue] of bucket) {
+    for (const [clusterID, ...queue] of bucket) {
       let shardID = queue.shift();
 
       while (shardID !== undefined) {
@@ -103,26 +96,6 @@ export function spawnShards(shardID: number) {
       }
     }
   });
-  // let skipChecks = 0;
-
-  // while (shardID <= ws.lastShardID) {
-  //   if (skipChecks) {
-  //     // Start The shard
-  //     ws.identify(shardID, ws.maxShards);
-
-  //     shardID++;
-  //     skipChecks--;
-  //     continue;
-  //   }
-
-  //   // Previous shards is still not fully ready.
-  //   if (!ws.createNextShard) continue;
-
-  //   // Allows next iteration to create shard
-  //   ws.createNextShard = false;
-  //   // Set the amount of shards to start up be the bots max concurrency limit
-  //   skipChecks = ws.botGatewayData.sessionStartLimit.maxConcurrency;
-  // }
 }
 
 /** Allows users to hook in and change to communicate to different clusters across different servers or anything they like. For example using redis pubsub to talk to other servers. */
@@ -131,6 +104,7 @@ export async function tellClusterToIdentify(
   shardID: number,
   bucketID: number,
 ) {
+  // TODO: resolve promise 5 sec after ready
   await ws.identify(shardID, ws.maxShards);
 }
 
