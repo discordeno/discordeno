@@ -104,7 +104,6 @@ export async function tellClusterToIdentify(
 ) {
   // When resharding
   const oldShard = ws.shards.get(shardID);
-  // TODO: resolve promise 5 sec after ready
   await ws.identify(shardID, ws.maxShards);
 
   if (oldShard) {

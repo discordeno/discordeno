@@ -60,9 +60,9 @@ export const ws = {
       /** Milliseconds left until limit is reset. */
       resetAfter: 0,
       /** The number of identify requests allowed per 5 seconds.
-             * So, if you had a max concurrency of 16, and 16 shards for example, you could start them all up at the same time.
-             * Whereas if you had 32 shards, if you tried to start up shard 0 and 16 at the same time for example, it would not work. You can start shards 0-15 concurrently, then 16-31...
-             * */
+       * So, if you had a max concurrency of 16, and 16 shards for example, you could start them all up at the same time.
+       * Whereas if you had 32 shards, if you tried to start up shard 0 and 16 at the same time for example, it would not work. You can start shards 0-15 concurrently, then 16-31...
+       */
       maxConcurrency: 1,
     },
   },
@@ -84,13 +84,21 @@ export const ws = {
   startGateway,
   /** The handler for spawning ALL the shards. */
   spawnShards,
+  /** Create the websocket and adds the proper handlers to the websocket. */
   createShard,
+  /** Begins identification of the shard to discord */
   identify,
+  /** Begins heartbeating of the shard to keep it alive */
   heartbeat,
+  /** Sends the discord payload to another server. */
   handleDiscordPayload,
+  /** Tell the cluster/worker to begin identifying this shard  */
   tellClusterToIdentify,
+  /** Handle the different logs. Used for debugging. */
   log,
+  /** Handles resharding the bot when necessary. */
   resharder,
+  /** Cleanups loading shards that were unable to load. */
   cleanupLoadingShards,
 };
 
@@ -99,6 +107,7 @@ export interface DiscordenoShard {
   id: number;
   /** The websocket for this shard */
   ws: WebSocket;
+  /** The amount of milliseconds to wait between heartbeats */
   resumeInterval: number;
   /** The session id important for resuming connections. */
   sessionID: string;
