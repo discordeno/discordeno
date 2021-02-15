@@ -5,15 +5,22 @@ import {
   InteractionCommandPayload,
 } from "../../types/mod.ts";
 import { structures } from "../structures/mod.ts";
+import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalInteractionCreate(data: DiscordPayload) {
   if (data.t !== "INTERACTION_CREATE") return;
 
   const payload = data.d as InteractionCommandPayload;
+  const memberStruct = await structures.createMember(
+    payload.member,
+    payload.guild_id,
+  );
+  await cacheHandlers.set("members", memberStruct.id, memberStruct);
+
   eventHandlers.interactionCreate?.(
     {
       ...payload,
-      member: await structures.createMember(payload.member, payload.guild_id),
+      member: memberStruct,
     },
   );
 }

@@ -11,10 +11,11 @@ export async function handleInternalChannelCreate(data: DiscordPayload) {
   if (data.t !== "CHANNEL_CREATE") return;
 
   const payload = data.d as ChannelCreatePayload;
-  const channel = await structures.createChannel(payload);
-  await cacheHandlers.set("channels", channel.id, channel);
+  const channelStruct = await structures.createChannel(payload);
 
-  eventHandlers.channelCreate?.(channel);
+  await cacheHandlers.set("channels", channelStruct.id, channelStruct);
+
+  eventHandlers.channelCreate?.(channelStruct);
 }
 
 export async function handleInternalChannelDelete(data: DiscordPayload) {
@@ -57,10 +58,11 @@ export async function handleInternalChannelUpdate(data: DiscordPayload) {
 
   const payload = data.d as ChannelCreatePayload;
   const cachedChannel = await cacheHandlers.get("channels", payload.id);
-  const channel = await structures.createChannel(payload);
-  await cacheHandlers.set("channels", channel.id, channel);
+  const channelStruct = await structures.createChannel(payload);
+
+  await cacheHandlers.set("channels", channelStruct.id, channelStruct);
 
   if (!cachedChannel) return;
 
-  eventHandlers.channelUpdate?.(channel, cachedChannel);
+  eventHandlers.channelUpdate?.(channelStruct, cachedChannel);
 }
