@@ -59,7 +59,7 @@ export async function startBot(config: BotConfig) {
   );
   identifyPayload.shard = [0, botGatewayData.shards];
 
-  spawnShards(botGatewayData, identifyPayload, 0, botGatewayData.shards);
+  await spawnShards(botGatewayData, identifyPayload, 0, botGatewayData.shards);
 }
 
 /** Allows you to dynamically update the event handlers by passing in new eventHandlers */

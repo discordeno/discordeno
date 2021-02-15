@@ -40,7 +40,7 @@ export async function spawnShards(
       data.shards > lastShardID ? data.shards : lastShardID,
     ];
     // Start The shard
-    await createShard(data, payload, false, shardID);
+    createShard(data, payload, false, shardID);
     // Spawn next shard
     await spawnShards(
       data,
@@ -90,7 +90,7 @@ export async function handleDiscordPayload(
   }
 }
 
-export function requestAllMembers(
+export async function requestAllMembers(
   guild: Guild,
   resolve: (
     value: Collection<string, Member> | PromiseLike<Collection<string, Member>>,
@@ -99,7 +99,13 @@ export function requestAllMembers(
 ) {
   const nonce = `${guild.id}-${Date.now()}`;
   cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
-  return requestGuildMembers(guild.id, guild.shardID, nonce, options);
+
+  await requestGuildMembers(
+    guild.id,
+    guild.shardID,
+    nonce,
+    options,
+  );
 }
 
 export function sendGatewayCommand(

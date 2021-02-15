@@ -121,7 +121,7 @@ async function processQueue() {
     }
 
     if (Object.keys(pathQueues).length) {
-      await cleanupQueues();
+      cleanupQueues();
     } else queueInProcess = false;
   }
 }
@@ -230,7 +230,8 @@ function runMethod(
   }
 
   // No proxy so we need to handle all rate limiting and such
-  return new Promise((resolve, reject) => {
+  // deno-lint-ignore no-async-promise-executor
+  return new Promise(async (resolve, reject) => {
     const callback = async () => {
       try {
         const rateLimitResetIn = await checkRatelimits(url);
@@ -262,7 +263,7 @@ function runMethod(
           },
         );
         const bucketIDFromHeaders = processHeaders(url, response.headers);
-        handleStatusCode(response, errorStack);
+        await handleStatusCode(response, errorStack);
 
         // Sometimes Discord returns an empty 204 response that can't be made to JSON.
         if (response.status === 204) return resolve(undefined);
@@ -314,7 +315,7 @@ function runMethod(
     });
     if (!queueInProcess) {
       queueInProcess = true;
-      processQueue();
+      await processQueue();
     }
   });
 }
@@ -336,7 +337,7 @@ async function logErrors(response: Response, errorStack?: unknown) {
   }
 }
 
-function handleStatusCode(response: Response, errorStack?: unknown) {
+async function handleStatusCode(response: Response, errorStack?: unknown) {
   const status = response.status;
 
   if (
@@ -346,7 +347,7 @@ function handleStatusCode(response: Response, errorStack?: unknown) {
     return true;
   }
 
-  logErrors(response, errorStack);
+  await logErrors(response, errorStack);
 
   switch (status) {
     case HttpResponseCode.BadRequest:
