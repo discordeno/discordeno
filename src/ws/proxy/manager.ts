@@ -17,6 +17,9 @@ export async function startGateway(options: StartGatewayOptions) {
   if (options.compress) {
     ws.identifyPayload.compress = options.compress;
   }
+  if (options.reshard) ws.reshard = options.reshard;
+  // Once an hour check if resharding is necessary
+  setInterval(ws.resharder, 1000 * 60 * 60);
 
   ws.identifyPayload.intents = options.intents.reduce(
     (bits, next) => (bits |= typeof next === "string" ? Intents[next] : next),
@@ -39,21 +42,19 @@ export async function startGateway(options: StartGatewayOptions) {
   ws.botGatewayData.shards = data.shards;
   ws.botGatewayData.url = data.url;
 
-  // TODO: LOG THIS IS HAPPENING
   ws.spawnShards(ws.firstShardID);
+  ws.cleanupLoadingShards();
 }
 
-/** Begin spawning shards.
- * TODO: Put in a queue system and support clustering
- */
-export function spawnShards(shardID: number) {
+/** Begin spawning shards. */
+export function spawnShards(firstShardID = 0) {
   /** Stored as bucketID: [clusterID, [ShardIDs]] */
   const buckets = new Collection<number, number[][]>();
   const maxShards = ws.maxShards || ws.botGatewayData.shards;
   let cluster = 0;
 
   for (
-    let index = 0;
+    let index = firstShardID;
     index < ws.botGatewayData.sessionStartLimit.maxConcurrency;
     index++
   ) {
@@ -67,9 +68,6 @@ export function spawnShards(shardID: number) {
         buckets.set(bucketID, [[cluster, i]]);
 
         if (cluster + 1 <= ws.maxClusters) cluster++;
-        else {
-          // TODO: LOG THIS HAS HAPPENED
-        }
       } else {
         // FIND A QUEUE IN THIS BUCKET THAT HAS SPACE
         const queue = bucket.find((q) => q.length < ws.shardsPerCluster + 1);
@@ -104,8 +102,29 @@ export async function tellClusterToIdentify(
   shardID: number,
   bucketID: number,
 ) {
+  // When resharding
+  const oldShard = ws.shards.get(shardID);
   // TODO: resolve promise 5 sec after ready
   await ws.identify(shardID, ws.maxShards);
+
+  if (oldShard) {
+    oldShard.ws.close(4009, "Resharded!");
+  }
+}
+
+/** The handler to clean up shards that identified but never received a READY. */
+export function cleanupLoadingShards() {
+  while (ws.loadingShards.size) {
+    const now = Date.now();
+    ws.loadingShards.forEach((loadingShard) => {
+      // Not a minute yet. Max should be few seconds but do a minute to be safe.
+      if (loadingShard.startedAt + 60000 < now) return;
+
+      loadingShard.reject(
+        `[Identify Failure] Shard ${loadingShard.shardID} has not received READY event in over a minute.`,
+      );
+    });
+  }
 }
 
 export interface StartGatewayOptions {
@@ -127,4 +146,6 @@ export interface StartGatewayOptions {
   shardsPerCluster?: number;
   /** The maximum amount of clusters available. By default this is 4. Another way to think of cluster is how many CPU cores does your server/machine have. */
   maxClusters?: number;
+  /** Whether or not you want to allow automated sharding. By default this is true. */
+  reshard?: boolean;
 }

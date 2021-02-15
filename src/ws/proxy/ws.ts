@@ -1,5 +1,10 @@
 import { Collection } from "../../util/collection.ts";
-import { spawnShards, startGateway, tellClusterToIdentify } from "./manager.ts";
+import {
+  cleanupLoadingShards,
+  spawnShards,
+  startGateway,
+  tellClusterToIdentify,
+} from "./manager.ts";
 import {
   createShard,
   handleDiscordPayload,
@@ -7,11 +12,16 @@ import {
   identify,
 } from "./shard.ts";
 import { log } from "./events.ts";
+import { resharder } from "./resharder.ts";
 
 // CONTROLLER LIKE INTERFACE FOR WS HANDLING
 export const ws = {
   /** The url that all discord payloads for the dispatch type should be sent to. */
   url: "",
+  /** Whether or not to automatically reshard. */
+  reshard: true,
+  /** The percentage at which resharding should occur. */
+  reshardPercentage: 80,
   /** The maximum shard ID number. Useful for zero-downtime updates or resharding. */
   maxShards: 1,
   /** The amount of shards to load per cluster */
@@ -57,6 +67,15 @@ export const ws = {
     },
   },
   shards: new Collection<number, DiscordenoShard>(),
+  loadingShards: new Collection<
+    number,
+    {
+      shardID: number;
+      resolve: (value: unknown) => void;
+      reject: (reason?: unknown) => void;
+      startedAt: number;
+    }
+  >(),
   utf8decoder: new TextDecoder(),
 
   // METHODS
@@ -70,7 +89,9 @@ export const ws = {
   heartbeat,
   handleDiscordPayload,
   tellClusterToIdentify,
-  log
+  log,
+  resharder,
+  cleanupLoadingShards,
 };
 
 export interface DiscordenoShard {

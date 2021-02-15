@@ -16,7 +16,7 @@ export async function resume(shardID: number) {
   // NOW WE HANDLE RESUMING THIS SHARD
   // Get the old data for this shard necessary for resuming
   const oldShard = ws.shards.get(shardID);
-  
+
   if (oldShard) {
     // HOW TO CLOSE OLD SHARD SOCKET!!!
     oldShard.ws.close(4009, "Resuming the shard, closing old shard.");
@@ -58,7 +58,7 @@ export async function resume(shardID: number) {
 }
 
 export async function identify(shardID: number, maxShards: number) {
-  ws.log("IDENTIFYING", { shardID, maxShards })
+  ws.log("IDENTIFYING", { shardID, maxShards });
 
   // CREATE A SHARD
   const socket = await ws.createShard(shardID);
@@ -89,6 +89,17 @@ export async function identify(shardID: number, maxShards: number) {
       },
     ),
   );
+
+  return new Promise((resolve, reject) => {
+    ws.loadingShards.set(shardID, {
+      shardID,
+      resolve,
+      reject,
+      startedAt: Date.now(),
+    });
+
+    ws.cleanupLoadingShards();
+  });
 }
 
 export function heartbeat(shardID: number, interval: number) {
@@ -181,7 +192,7 @@ export async function createShard(shardID: number) {
         break;
       case GatewayOpcode.InvalidSession:
         ws.log("INVALID_SESSION", { shardID, payload: messageData });
-        
+
         // When d is false we need to reidentify
         if (!messageData.d) {
           identify(shardID, ws.maxShards);
@@ -210,6 +221,9 @@ export async function createShard(shardID: number) {
           if (shard) {
             shard.sessionID = (messageData.d as ReadyPayload).session_id;
           }
+
+          ws.loadingShards.get(shardID)?.resolve(true);
+          ws.loadingShards.delete(shardID);
         }
 
         // Update the sequence number if it is present
