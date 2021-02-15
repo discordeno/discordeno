@@ -7,17 +7,23 @@ import {
 import { decompressWith } from "./deps.ts";
 import { ws } from "./ws.ts";
 
-export function resume(shardID: number) {
-  // TODO: Log that this is happening
+export async function resume(shardID: number) {
+  ws.log("RESUMING", { shardID });
 
   // CREATE A SHARD
-  const socket = ws.createShard(shardID);
+  const socket = await ws.createShard(shardID);
 
   // NOW WE HANDLE RESUMING THIS SHARD
   // Get the old data for this shard necessary for resuming
   const oldShard = ws.shards.get(shardID);
-  // TODO: HOW TO CLOSE OLD SHARD SOCKET!!!
-  // TODO: STOP OLD HEARTBEAT
+  
+  if (oldShard) {
+    // HOW TO CLOSE OLD SHARD SOCKET!!!
+    oldShard.ws.close(4009, "Resuming the shard, closing old shard.");
+    // STOP OLD HEARTBEAT
+    clearInterval(oldShard.heartbeat.intervalID);
+  }
+
   const sessionID = oldShard?.sessionID || "";
   const previousSequenceNumber = oldShard?.previousSequenceNumber || 0;
 
@@ -51,11 +57,11 @@ export function resume(shardID: number) {
   };
 }
 
-export function identify(shardID: number, maxShards: number) {
-  // TODO: Log that this is happening
+export async function identify(shardID: number, maxShards: number) {
+  ws.log("IDENTIFYING", { shardID, maxShards })
 
   // CREATE A SHARD
-  const socket = ws.createShard(shardID);
+  const socket = await ws.createShard(shardID);
 
   // Identify can just set/reset the settings for the shard
   ws.shards.set(shardID, {
@@ -86,10 +92,12 @@ export function identify(shardID: number, maxShards: number) {
 }
 
 export function heartbeat(shardID: number, interval: number) {
-  // TODO: Log that this is happening
+  ws.log("HEARTBEATING_STARTED", { shardID, interval });
 
   const shard = ws.shards.get(shardID);
   if (!shard) return;
+
+  ws.log("HEARTBEATING_DETAILS", { shardID, interval, shard });
 
   shard.heartbeat.keepAlive = true;
   shard.heartbeat.acknowledged = false;
@@ -97,16 +105,16 @@ export function heartbeat(shardID: number, interval: number) {
   shard.heartbeat.interval = interval;
 
   shard.heartbeat.intervalID = setInterval(() => {
-    // TODO: Log that this is happening
-
     const currentShard = ws.shards.get(shardID);
     if (!currentShard) return;
+
+    ws.log("HEARTBEATING", { shardID, shard: currentShard });
 
     if (
       currentShard.ws.readyState === WebSocket.CLOSED ||
       !currentShard.heartbeat.keepAlive
     ) {
-      // TODO: Log that this is happening
+      ws.log("HEARTBEATING_CLOSED", { shardID, shard: currentShard });
 
       // STOP THE HEARTBEAT
       return clearInterval(currentShard.heartbeat.intervalID);
@@ -123,17 +131,13 @@ export function heartbeat(shardID: number, interval: number) {
   }, interval);
 }
 
-export function createShard(shardID: number) {
+// deno-lint-ignore require-await
+export async function createShard(shardID: number) {
   const socket = new WebSocket(ws.botGatewayData.url);
   socket.binaryType = "arraybuffer";
 
   socket.onerror = (errorEvent) => {
-    // TODO: Log that this is happening
-
-    // eventHandlers.debug?.({
-    //   type: "wsError",
-    //   data: { shardID, ...errorEvent },
-    // });
+    ws.log("ERROR", { shardID, error: errorEvent });
   };
 
   socket.onmessage = ({ data: message }) => {
@@ -152,8 +156,8 @@ export function createShard(shardID: number) {
     if (typeof message !== "string") return;
 
     const messageData = JSON.parse(message);
-    // TODO: Log that this is happening
-    //   if (!messageData.t) eventHandlers.rawGateway?.(messageData);
+    ws.log("RAW", messageData);
+
     switch (messageData.op) {
       case GatewayOpcode.Hello:
         ws.heartbeat(
@@ -167,10 +171,8 @@ export function createShard(shardID: number) {
         }
         break;
       case GatewayOpcode.Reconnect:
-        // TODO: Log that this is happening
-        // eventHandlers.debug?.(
-        //   { type: "gatewayReconnect", data: { shardID } },
-        // );
+        ws.log("RECONNECT", { shardID });
+
         if (ws.shards.has(shardID)) {
           ws.shards.get(shardID)!.resuming = true;
         }
@@ -178,13 +180,8 @@ export function createShard(shardID: number) {
         resume(shardID);
         break;
       case GatewayOpcode.InvalidSession:
-        // TODO: Log that this is happening
-        // eventHandlers.debug?.(
-        //   {
-        //     type: "gatewayInvalidSession",
-        //     data: { shardID, data },
-        //   },
-        // );
+        ws.log("INVALID_SESSION", { shardID, payload: messageData });
+        
         // When d is false we need to reidentify
         if (!messageData.d) {
           identify(shardID, ws.maxShards);
@@ -199,10 +196,7 @@ export function createShard(shardID: number) {
         break;
       default:
         if (messageData.t === "RESUMED") {
-          // TODO: Log that this is happening
-          //   eventHandlers.debug?.(
-          //     { type: "gatewayResumed", data: { shardID } },
-          //   );
+          ws.log("RESUMED", { shardID });
 
           if (ws.shards.has(shardID)) {
             ws.shards.get(shardID)!.resuming = false;
@@ -231,17 +225,11 @@ export function createShard(shardID: number) {
     }
   };
 
-  socket.onclose = ({ reason, code, wasClean }) => {
-    // TODO: Log that this is happening
-    // eventHandlers.debug?.(
-    //   {
-    //     type: "wsClose",
-    //     data: { shardID, code, reason, wasClean },
-    //   },
-    // );
+  socket.onclose = (event) => {
+    ws.log("CLOSED", { shardID, payload: event });
 
     // TODO: ENUM FOR THESE CODES?
-    switch (code) {
+    switch (event.code) {
       case 4001:
       case 4002:
       case 4004:
@@ -252,18 +240,14 @@ export function createShard(shardID: number) {
       case 4013:
       case 4014:
         throw new Error(
-          reason || "Discord gave no reason! GG! You broke Discord!",
+          event.reason || "Discord gave no reason! GG! You broke Discord!",
         );
         // THESE ERRORS CAN NO BE RESUMED! THEY MUST RE-IDENTIFY!
       case 4003:
       case 4007:
       case 4008:
       case 4009:
-        // TODO: Log that this is happening
-        // eventHandlers.debug?.({
-        //   type: "wsReconnect",
-        //   data: { shardID, code, reason, wasClean },
-        // });
+        ws.log("CLOSED_RECONNECT", { shardID, payload: event });
         identify(shardID, ws.maxShards);
         break;
       default:
@@ -275,6 +259,7 @@ export function createShard(shardID: number) {
   return socket;
 }
 
+/** Handler for processing all dispatch payloads that should be sent/forwarded to another server/vps/process. */
 export async function handleDiscordPayload(
   data: DiscordPayload,
   shardID: number,

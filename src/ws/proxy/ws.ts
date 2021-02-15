@@ -6,6 +6,7 @@ import {
   heartbeat,
   identify,
 } from "./shard.ts";
+import { log } from "./events.ts";
 
 // CONTROLLER LIKE INTERFACE FOR WS HANDLING
 export const ws = {
@@ -69,6 +70,7 @@ export const ws = {
   heartbeat,
   handleDiscordPayload,
   tellClusterToIdentify,
+  log
 };
 
 export interface DiscordenoShard {
