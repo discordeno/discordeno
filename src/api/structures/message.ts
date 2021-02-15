@@ -33,8 +33,8 @@ import { Role } from "./role.ts";
 
 const baseMessage: Partial<Message> = {
   get channel() {
-    return cache.channels.get(this.channelID!) ||
-      cache.channels.get(this.author?.id!);
+    if (this.guildID) return cache.channels.get(this.channelID!);
+    return cache.channels.get(this.author?.id!);
   },
   get guild() {
     if (!this.guildID) return undefined;
