@@ -98,12 +98,14 @@ export function spawnShards(firstShardID = 0) {
 
 /** Allows users to hook in and change to communicate to different clusters across different servers or anything they like. For example using redis pubsub to talk to other servers. */
 export async function tellClusterToIdentify(
-  clusterID: number,
+  workerID: number,
   shardID: number,
   bucketID: number,
 ) {
-  // When resharding
+  // When resharding this may exist already
   const oldShard = ws.shards.get(shardID);
+
+  // TODO: Use workers
   await ws.identify(shardID, ws.maxShards);
 
   if (oldShard) {
