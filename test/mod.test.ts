@@ -149,7 +149,7 @@ Deno.test({
   name: "[channel] create a channel in a guild",
   async fn() {
 
-    const channel = await createGuildChannel(guild.id, "test");
+    const channel = await createGuildChannel(tempData.guildID, "test");
 
     // Assertions
     assertExists(channel);
