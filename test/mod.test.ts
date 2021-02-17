@@ -151,7 +151,7 @@ Deno.test({
     const guild = cache.guilds.get(tempData.guildID);
     if (!guild) throw new Error("Guild not found");
 
-    const channel = await createGuildChannel(guild, "test");
+    const channel = await createGuildChannel(guild.id, "test");
 
     // Assertions
     assertExists(channel);
