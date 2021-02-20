@@ -9,7 +9,7 @@ import {
 } from "./types/mod.ts";
 
 /** Processes a request and assigns it to a queue or creates a queue if none exists for it. */
-export function processRequest(
+export async function processRequest(
   request: ServerRequest,
   payload: RunMethodOptions,
   options: RestServerOptions,
@@ -34,7 +34,7 @@ export function processRequest(
     restCache.pathQueues.set(id, [{ request, payload, options }]);
   }
 
-  startQueue();
+  await startQueue();
 }
 
 /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
