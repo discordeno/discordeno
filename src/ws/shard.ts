@@ -15,9 +15,8 @@ import {
 import { BotStatusRequest, delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
 import { handleDiscordPayload } from "./shard_manager.ts";
-import { Collection } from "../util/collection.ts";
 
-const basicShards = new Collection<number, BasicShard>();
+const basicShards = new Map<number, BasicShard>();
 const heartbeating = new Map<number, boolean>();
 const utf8decoder = new TextDecoder();
 const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
@@ -329,7 +328,7 @@ async function processGatewayQueue() {
     return;
   }
 
-  await Promise.all(basicShards.map(async (shard) => {
+  await Promise.all(Object.values(basicShards).map(async (shard) => {
     const index = RequestMembersQueue.findIndex((q) => q.shardID === shard.id);
     // 2 events per second is the rate limit.
     const request = RequestMembersQueue[index];
