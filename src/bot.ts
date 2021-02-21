@@ -9,6 +9,7 @@ import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 
 export let authorization = "";
+export let restAuthorization = "";
 export let botID = "";
 export let applicationID = "";
 
@@ -92,6 +93,7 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   authorization = `Bot ${data.token}`;
   identifyPayload.token = `Bot ${data.token}`;
 
+  if (data.restAuthorization) restAuthorization = data.restAuthorization;
   if (data.restURL) baseEndpoints.BASE_URL = data.restURL;
   if (data.cdnURL) baseEndpoints.CDN_URL = data.cdnURL;
   if (data.wsURL) proxyWSURL = data.wsURL;
@@ -131,4 +133,6 @@ export interface BigBrainBotConfig extends BotConfig {
   restURL?: string;
   /** This can be used to forward the CDN handling to a proxy. */
   cdnURL?: string;
+  /** This is the authorization header that your rest proxy will validate */
+  restAuthorization?: string;
 }
