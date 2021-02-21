@@ -42,7 +42,7 @@ export function processRequest(
 /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
 export function createRequestBody(queuedRequest: QueuedRequest) {
   const headers: { [key: string]: string } = {
-    Authorization: queuedRequest.options.token,
+    Authorization: `Bot ${queuedRequest.options.token}`,
     "User-Agent": USER_AGENT,
   };
 
