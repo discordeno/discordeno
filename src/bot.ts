@@ -29,7 +29,18 @@ export const identifyPayload: DiscordIdentify = {
   intents: 0,
   shard: [0, 0],
 };
-
+/** deprecated Use "DiscordIdentify" instead */
+export interface IdentifyPayload {
+  token: string;
+  compress: boolean;
+  properties: {
+    $os: string;
+    $browser: string;
+    $device: string;
+  };
+  intents: number;
+  shard: [number, number];
+}
 export async function startBot(config: BotConfig) {
   if (config.eventHandlers) eventHandlers = config.eventHandlers;
   authorization = `Bot ${config.token}`;
