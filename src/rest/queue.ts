@@ -12,7 +12,7 @@ export function startQueue() {
 }
 
 /** Processes the queue by looping over each path separately until the queues are empty. */
-export function processQueue() {
+export async function processQueue() {
   while (restCache.processingQueue) {
     // FOR EVERY PATH WE WILL START ITS OWN LOOP.
     restCache.pathQueues.forEach(async (queue) => {
@@ -141,7 +141,7 @@ export function processQueue() {
           restCache.eventHandlers.fetchSuccess(queuedRequest.payload);
           // REMOVE FROM QUEUE
           queue.shift();
-          queuedRequest.request.respond(
+          await queuedRequest.request.respond(
             { status: 200, body: JSON.stringify(json) },
           );
         } catch (error) {
