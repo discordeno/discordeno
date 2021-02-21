@@ -29,6 +29,7 @@ export const identifyPayload: DiscordIdentify = {
   intents: 0,
   shard: [0, 0],
 };
+
 /** deprecated Use "DiscordIdentify" instead */
 export interface IdentifyPayload {
   token: string;
