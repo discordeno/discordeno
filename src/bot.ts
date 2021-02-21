@@ -30,7 +30,7 @@ export const identifyPayload: DiscordIdentify = {
   shard: [0, 0],
 };
 
-/** deprecated Use "DiscordIdentify" instead */
+/** @deprecated Use "DiscordIdentify" instead */
 export interface IdentifyPayload {
   token: string;
   compress: boolean;
