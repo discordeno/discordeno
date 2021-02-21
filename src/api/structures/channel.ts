@@ -8,6 +8,7 @@ import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
 import { sendMessage } from "../handlers/channel.ts";
+import { deleteChannel } from "../handlers/guild.ts";
 import { kickFromVoiceChannel } from "../handlers/member.ts";
 import { CleanVoiceState, Guild } from "./guild.ts";
 import { Member } from "./member.ts";
@@ -43,6 +44,11 @@ const baseChannel: Partial<Channel> = {
     if (!this.guild) return false;
 
     return kickFromVoiceChannel(this.guildID!, memberID);
+  },
+  delete() {
+    if (!this.guild) return false;
+
+    return deleteChannel(this.guildID!, this.id!);
   },
 };
 
@@ -149,8 +155,8 @@ export interface Channel {
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
   send(content: string | MessageContent): ReturnType<typeof sendMessage>;
-  /**
-   * Disconnect a member from a voice channel. Requires MOVE_MEMBERS permission.
-   */
+  /** Disconnect a member from a voice channel. Requires MOVE_MEMBERS permission. */
   disconnect(memberID: string): ReturnType<typeof kickFromVoiceChannel> | false;
+  /** Delete the channel */
+  delete(): ReturnType<typeof deleteChannel> | false;
 }
