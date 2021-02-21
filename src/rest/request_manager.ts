@@ -1,4 +1,4 @@
-import { authorization, eventHandlers } from "../bot.ts";
+import { authorization, eventHandlers, restAuthorization } from "../bot.ts";
 import {
   Errors,
   FileContent,
@@ -221,7 +221,13 @@ function runMethod(
     !url.startsWith(`${BASE_URL}/v${API_VERSION}`) &&
     !url.startsWith(IMAGE_BASE_URL)
   ) {
-    return fetch(url, { method, body: body ? JSON.stringify(body) : undefined })
+    return fetch(url, {
+      method,
+      body: JSON.stringify({
+        authorization: restAuthorization,
+        ...(body as Record<string, unknown> || {}),
+      }),
+    })
       .then((res) => res.json())
       .catch((error) => {
         console.error(error);
