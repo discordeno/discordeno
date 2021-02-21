@@ -20,7 +20,7 @@ export async function processQueue() {
         // EACH PATH IS UNIQUE LIMITER
         while (queue.length) {
           // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
-          if (!restCache.globallyRateLimited) continue;
+          if (restCache.globallyRateLimited) continue;
           // SELECT THE FIRST ITEM FROM THIS QUEUE
           const [queuedRequest] = queue;
           // IF THIS DOESNT HAVE ANY ITEMS JUST CANCEL, THE CLEANER WILL REMOVE IT.
