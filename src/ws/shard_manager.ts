@@ -1,9 +1,10 @@
 import { controllers } from "../api/controllers/mod.ts";
 import { Guild } from "../api/structures/guild.ts";
 import { Member } from "../api/structures/mod.ts";
-import { eventHandlers, IdentifyPayload } from "../bot.ts";
+import { eventHandlers } from "../bot.ts";
 import {
   DiscordBotGatewayData,
+  DiscordIdentify,
   DiscordPayload,
   FetchMembersOptions,
   GatewayOpcode,
@@ -26,7 +27,7 @@ export function allowNextShard(enabled = true) {
 
 export async function spawnShards(
   data: DiscordBotGatewayData,
-  payload: IdentifyPayload,
+  payload: DiscordIdentify,
   shardID: number,
   lastShardID: number,
   skipChecks?: number,

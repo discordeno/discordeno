@@ -222,7 +222,6 @@ function runMethod(
     !url.startsWith(IMAGE_BASE_URL)
   ) {
     return fetch(url, {
-      method,
       body: JSON.stringify({
         url,
         method,

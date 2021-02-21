@@ -2,6 +2,7 @@ import { getGatewayBot } from "./api/handlers/gateway.ts";
 import {
   BotConfig,
   DiscordBotGatewayData,
+  DiscordIdentify,
   EventHandlers,
   Intents,
 } from "./types/mod.ts";
@@ -18,7 +19,7 @@ export let eventHandlers: EventHandlers = {};
 export let botGatewayData: DiscordBotGatewayData;
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
-export const identifyPayload: IdentifyPayload = {
+export const identifyPayload: DiscordIdentify = {
   token: "",
   compress: true,
   properties: {
@@ -30,6 +31,7 @@ export const identifyPayload: IdentifyPayload = {
   shard: [0, 0],
 };
 
+/** @deprecated Use "DiscordIdentify" instead */
 export interface IdentifyPayload {
   token: string;
   compress: boolean;
