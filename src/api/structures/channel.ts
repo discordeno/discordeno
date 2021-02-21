@@ -9,6 +9,7 @@ import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
 import { sendMessage } from "../handlers/channel.ts";
 import { CleanVoiceState, Guild } from "./guild.ts";
+import { Member } from "./member.ts";
 import { Message } from "./message.ts";
 
 const baseChannel: Partial<Channel> = {
@@ -27,6 +28,14 @@ const baseChannel: Partial<Channel> = {
 
     return guild.voiceStates.filter((voiceState) =>
       voiceState.channelID === this.id
+    );
+  },
+  get connectedMembers() {
+    const voiceStates = this.voiceStates;
+    if (!voiceStates) return undefined;
+
+    return new Collection(
+      voiceStates.map((vs, key) => [key, cache.members.get(key)]),
     );
   },
   send(content) {
@@ -121,11 +130,17 @@ export interface Channel {
   /** The mention of the channel */
   mention: string;
   /**
-   * Gets the connected members for this channel
+   * Gets the voice states for this channel
    * 
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
   voiceStates?: Collection<string, CleanVoiceState>;
+  /**
+   * Gets the connected members for this channel undefined if member is not cached
+   * 
+   * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
+   */
+  connectedMembers?: Collection<string, Member | undefined>;
 
   // METHODS
 
