@@ -4,12 +4,17 @@ import {
   ChannelType,
   MessageContent,
   Overwrite,
+  Permission,
   RawOverwrite,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
-import { editChannel, sendMessage } from "../handlers/channel.ts";
+import {
+  channelOverwriteHasPermission,
+  editChannel,
+  sendMessage,
+} from "../handlers/channel.ts";
 import {
   deleteChannel,
   deleteChannelOverwrite,
@@ -57,6 +62,14 @@ const baseChannel: Partial<Channel> = {
   },
   deleteOverwrite(id) {
     return deleteChannelOverwrite(this.guildID!, this.id!, id);
+  },
+  hasPermission(overwrites, permissions) {
+    return channelOverwriteHasPermission(
+      this.guildID!,
+      this.id!,
+      overwrites,
+      permissions,
+    );
   },
   edit(options, reason) {
     return editChannel(this.id!, options, reason);
@@ -179,6 +192,11 @@ export interface Channel {
   deleteOverwrite(
     overwriteID: string,
   ): ReturnType<typeof deleteChannelOverwrite>;
+  /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
+  hasPermission(
+    overwrites: RawOverwrite[],
+    permissions: Permission[],
+  ): ReturnType<typeof channelOverwriteHasPermission>;
   /** Edit the channel */
   edit(
     options: ChannelEditOptions,
