@@ -9,7 +9,11 @@ import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
 import { sendMessage } from "../handlers/channel.ts";
-import { deleteChannel, editChannelOverwrite } from "../handlers/guild.ts";
+import {
+  deleteChannel,
+  deleteChannelOverwrite,
+  editChannelOverwrite,
+} from "../handlers/guild.ts";
 import { kickFromVoiceChannel } from "../handlers/member.ts";
 import { CleanVoiceState, Guild } from "./guild.ts";
 import { Member } from "./member.ts";
@@ -49,6 +53,9 @@ const baseChannel: Partial<Channel> = {
   },
   editOverwrite(id, options) {
     return editChannelOverwrite(this.guildID!, this.id!, id, options);
+  },
+  deleteOverwrite(id) {
+    return deleteChannelOverwrite(this.guildID!, this.id!, id);
   },
 };
 
@@ -164,4 +171,8 @@ export interface Channel {
     overwriteID: string,
     options: Omit<Overwrite, "id">,
   ): ReturnType<typeof editChannelOverwrite>;
+  /** Delete a channel Overwrite */
+  deleteOverwrite(
+    overwriteID: string,
+  ): ReturnType<typeof deleteChannelOverwrite>;
 }
