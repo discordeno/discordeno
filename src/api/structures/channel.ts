@@ -8,7 +8,7 @@ import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
 import { sendMessage } from "../handlers/channel.ts";
-import { Guild } from "./guild.ts";
+import { CleanVoiceState, Guild } from "./guild.ts";
 import { Message } from "./message.ts";
 
 const baseChannel: Partial<Channel> = {
@@ -20,6 +20,14 @@ const baseChannel: Partial<Channel> = {
   },
   get mention() {
     return `<#${this.id!}>`;
+  },
+  get voiceStates() {
+    const guild = this.guild;
+    if (!guild) return undefined;
+
+    return guild.voiceStates.filter((voiceState) =>
+      voiceState.channelID === this.id
+    );
   },
   send(content) {
     return sendMessage(this.id!, content);
@@ -112,6 +120,12 @@ export interface Channel {
   messages: Collection<string, Message>;
   /** The mention of the channel */
   mention: string;
+  /**
+   * Gets the connected members for this channel
+   * 
+   * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
+   */
+  voiceStates?: Collection<string, CleanVoiceState>;
 
   // METHODS
 
