@@ -131,8 +131,6 @@ export async function sendDirectMessage(
       endpoints.USER_DM,
       { recipient_id: memberID },
     ) as DMChannelCreatePayload;
-    // Channel create event will have added this channel to the cache
-    await cacheHandlers.delete("channels", dmChannelData.id);
     const channelStruct = await structures.createChannel(
       dmChannelData as unknown as ChannelCreatePayload,
     );
