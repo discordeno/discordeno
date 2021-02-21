@@ -223,10 +223,10 @@ function runMethod(
   ) {
     return fetch(url, {
       method,
-      body: JSON.stringify({
+      body: body ? JSON.stringify(body) : undefined,
+      headers: {
         authorization: restAuthorization,
-        ...(body as Record<string, unknown> || {}),
-      }),
+      },
     })
       .then((res) => res.json())
       .catch((error) => {
