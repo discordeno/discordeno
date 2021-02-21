@@ -2,6 +2,7 @@ import {
   ChannelCreatePayload,
   ChannelType,
   MessageContent,
+  Overwrite,
   RawOverwrite,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
@@ -45,6 +46,9 @@ const baseChannel: Partial<Channel> = {
   },
   delete() {
     return deleteChannel(this.guildID!, this.id!);
+  },
+  editOverwrite(id, options) {
+    return editChannelOverwrite(this.guildID!, this.id!, id, options);
   },
 };
 
@@ -155,4 +159,9 @@ export interface Channel {
   disconnect(memberID: string): ReturnType<typeof kickFromVoiceChannel>;
   /** Delete the channel */
   delete(): ReturnType<typeof deleteChannel>;
+  /** Edit a channel Overwrite */
+  editOverwrite(
+    overwriteID: string,
+    options: Omit<Overwrite, "id">,
+  ): ReturnType<typeof editChannelOverwrite>;
 }
