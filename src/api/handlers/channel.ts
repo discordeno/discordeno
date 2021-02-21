@@ -395,27 +395,29 @@ async function processEditChannelQueue() {
   if (!editChannelProcessing) return;
 
   const now = Date.now();
-  await Promise.all(Object.values(editChannelNameTopicQueue).map(async (request) => {
-    if (now > request.timestamp) return;
-    // 10 minutes have passed so we can reset this channel again
-    if (!request.items.length) {
-      return editChannelNameTopicQueue.delete(request.channelID);
-    }
-    request.amount = 0;
-    // There are items to process for this request
-    const details = request.items.shift();
+  await Promise.all(
+    Object.values(editChannelNameTopicQueue).map(async (request) => {
+      if (now > request.timestamp) return;
+      // 10 minutes have passed so we can reset this channel again
+      if (!request.items.length) {
+        return editChannelNameTopicQueue.delete(request.channelID);
+      }
+      request.amount = 0;
+      // There are items to process for this request
+      const details = request.items.shift();
 
-    if (!details) return;
+      if (!details) return;
 
-    await editChannel(details.channelID, details.options);
-    const secondDetails = request.items.shift();
-    if (!secondDetails) return;
+      await editChannel(details.channelID, details.options);
+      const secondDetails = request.items.shift();
+      if (!secondDetails) return;
 
-    return editChannel(
+      return editChannel(
         secondDetails.channelID,
         secondDetails.options,
-    );
-  }));
+      );
+    }),
+  );
 
   if (editChannelNameTopicQueue.size) {
     setTimeout(() => processEditChannelQueue(), 600000);
