@@ -1,14 +1,28 @@
 import {
   ChannelCreatePayload,
+  ChannelEditOptions,
   ChannelType,
   MessageContent,
+  Overwrite,
+  Permission,
   RawOverwrite,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
-import { sendMessage } from "../handlers/channel.ts";
-import { Guild } from "./guild.ts";
+import {
+  channelOverwriteHasPermission,
+  editChannel,
+  sendMessage,
+} from "../handlers/channel.ts";
+import {
+  deleteChannel,
+  deleteChannelOverwrite,
+  editChannelOverwrite,
+} from "../handlers/guild.ts";
+import { kickFromVoiceChannel } from "../handlers/member.ts";
+import { CleanVoiceState, Guild } from "./guild.ts";
+import { Member } from "./member.ts";
 import { Message } from "./message.ts";
 
 const baseChannel: Partial<Channel> = {
@@ -21,8 +35,44 @@ const baseChannel: Partial<Channel> = {
   get mention() {
     return `<#${this.id!}>`;
   },
+  get voiceStates() {
+    return this.guild?.voiceStates.filter((voiceState) =>
+      voiceState.channelID === this.id
+    );
+  },
+  get connectedMembers() {
+    const voiceStates = this.voiceStates;
+    if (!voiceStates) return undefined;
+
+    return new Collection(
+      voiceStates.map((vs, key) => [key, cache.members.get(key)]),
+    );
+  },
   send(content) {
     return sendMessage(this.id!, content);
+  },
+  disconnect(memberID) {
+    return kickFromVoiceChannel(this.guildID!, memberID);
+  },
+  delete() {
+    return deleteChannel(this.guildID!, this.id!);
+  },
+  editOverwrite(id, options) {
+    return editChannelOverwrite(this.guildID!, this.id!, id, options);
+  },
+  deleteOverwrite(id) {
+    return deleteChannelOverwrite(this.guildID!, this.id!, id);
+  },
+  hasPermission(overwrites, permissions) {
+    return channelOverwriteHasPermission(
+      this.guildID!,
+      this.id!,
+      overwrites,
+      permissions,
+    );
+  },
+  edit(options, reason) {
+    return editChannel(this.id!, options, reason);
   },
 };
 
@@ -112,9 +162,44 @@ export interface Channel {
   messages: Collection<string, Message>;
   /** The mention of the channel */
   mention: string;
+  /**
+   * Gets the voice states for this channel
+   * 
+   * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
+   */
+  voiceStates?: Collection<string, CleanVoiceState>;
+  /**
+   * Gets the connected members for this channel undefined if member is not cached
+   * 
+   * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
+   */
+  connectedMembers?: Collection<string, Member | undefined>;
 
   // METHODS
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
   send(content: string | MessageContent): ReturnType<typeof sendMessage>;
+  /** Disconnect a member from a voice channel. Requires MOVE_MEMBERS permission. */
+  disconnect(memberID: string): ReturnType<typeof kickFromVoiceChannel>;
+  /** Delete the channel */
+  delete(): ReturnType<typeof deleteChannel>;
+  /** Edit a channel Overwrite */
+  editOverwrite(
+    overwriteID: string,
+    options: Omit<Overwrite, "id">,
+  ): ReturnType<typeof editChannelOverwrite>;
+  /** Delete a channel Overwrite */
+  deleteOverwrite(
+    overwriteID: string,
+  ): ReturnType<typeof deleteChannelOverwrite>;
+  /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
+  hasPermission(
+    overwrites: RawOverwrite[],
+    permissions: Permission[],
+  ): ReturnType<typeof channelOverwriteHasPermission>;
+  /** Edit the channel */
+  edit(
+    options: ChannelEditOptions,
+    reason?: string,
+  ): ReturnType<typeof editChannel>;
 }
