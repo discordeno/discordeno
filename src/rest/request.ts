@@ -1,4 +1,4 @@
-import { USER_AGENT } from "../util/constants.ts";
+import { BASE_URL, USER_AGENT } from "../util/constants.ts";
 import { restCache } from "./cache.ts";
 import { ServerRequest } from "./deps.ts";
 import { startQueue } from "./queue.ts";
@@ -20,6 +20,8 @@ export function processRequest(
   parts.shift();
   // REMOVES THE VERSION NUMBER
   if (parts[0]?.startsWith("v")) parts.shift();
+  // Set the new request URL
+  payload.url = `${BASE_URL}/${options.apiVersion ?? "v8"}/${parts.join("/")}`;
   // REMOVE THE MAJOR PARAM
   parts.shift();
 
