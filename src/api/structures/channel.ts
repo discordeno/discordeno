@@ -1,5 +1,6 @@
 import {
   ChannelCreatePayload,
+  ChannelEditOptions,
   ChannelType,
   MessageContent,
   Overwrite,
@@ -8,7 +9,7 @@ import {
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
-import { sendMessage } from "../handlers/channel.ts";
+import { editChannel, sendMessage } from "../handlers/channel.ts";
 import {
   deleteChannel,
   deleteChannelOverwrite,
@@ -56,6 +57,9 @@ const baseChannel: Partial<Channel> = {
   },
   deleteOverwrite(id) {
     return deleteChannelOverwrite(this.guildID!, this.id!, id);
+  },
+  edit(options, reason) {
+    return editChannel(this.id!, options, reason);
   },
 };
 
@@ -175,4 +179,9 @@ export interface Channel {
   deleteOverwrite(
     overwriteID: string,
   ): ReturnType<typeof deleteChannelOverwrite>;
+  /** Edit the channel */
+  edit(
+    options: ChannelEditOptions,
+    reason?: string,
+  ): ReturnType<typeof editChannel>;
 }
