@@ -1,12 +1,8 @@
-import {
-  botGatewayData,
-  eventHandlers,
-  IdentifyPayload,
-  proxyWSURL,
-} from "../bot.ts";
+import { botGatewayData, eventHandlers, proxyWSURL } from "../bot.ts";
 import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
+  DiscordIdentify,
   DiscordPayload,
   FetchMembersOptions,
   GatewayOpcode,
@@ -40,7 +36,7 @@ interface RequestMemberQueuedRequest {
 
 export function createShard(
   data: DiscordBotGatewayData,
-  identifyPayload: IdentifyPayload,
+  identifyPayload: DiscordIdentify,
   resuming = false,
   shardID = 0,
 ) {
@@ -173,7 +169,7 @@ export function createShard(
   };
 }
 
-function identify(shard: BasicShard, payload: IdentifyPayload) {
+function identify(shard: BasicShard, payload: DiscordIdentify) {
   eventHandlers.debug?.(
     {
       type: "gatewayIdentify",
@@ -189,7 +185,7 @@ function identify(shard: BasicShard, payload: IdentifyPayload) {
   }, shard.id);
 }
 
-function resume(shard: BasicShard, payload: IdentifyPayload) {
+function resume(shard: BasicShard, payload: DiscordIdentify) {
   sendWS({
     op: GatewayOpcode.Resume,
     d: {
@@ -203,7 +199,7 @@ function resume(shard: BasicShard, payload: IdentifyPayload) {
 async function heartbeat(
   shard: BasicShard,
   interval: number,
-  payload: IdentifyPayload,
+  payload: DiscordIdentify,
   data: DiscordBotGatewayData,
 ) {
   // We lost socket connection between heartbeats, resume connection
@@ -256,7 +252,7 @@ async function heartbeat(
 
 async function resumeConnection(
   data: DiscordBotGatewayData,
-  payload: IdentifyPayload,
+  payload: DiscordIdentify,
   shardID: number,
 ) {
   const shard = basicShards.get(shardID);
