@@ -42,6 +42,7 @@ export interface IdentifyPayload {
   intents: number;
   shard: [number, number];
 }
+
 export async function startBot(config: BotConfig) {
   if (config.eventHandlers) eventHandlers = config.eventHandlers;
   authorization = `Bot ${config.token}`;
