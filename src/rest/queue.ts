@@ -157,7 +157,10 @@ export async function processQueue() {
 
       // ONCE QUEUE IS DONE, WE CAN TRY CLEANING UP
       cleanupQueues();
-    });
+      if (!restCache.pathQueues.size) {
+        restCache.processingQueue = false;
+      }
+    }
   }
 }
 
