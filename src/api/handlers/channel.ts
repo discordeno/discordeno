@@ -164,7 +164,7 @@ export async function sendMessage(
     ) {
       throw new Error(Errors.MISSING_SEND_MESSAGES);
     }
-  
+
     const hasSendTtsMessagesPerm = await botHasChannelPermissions(
       channelID,
       ["SEND_TTS_MESSAGES"],
@@ -198,7 +198,7 @@ export async function sendMessage(
       }
     }
   }
-  
+
   // Use ... for content length due to unicode characters and js .length handling
   if (content.content && [...content.content].length > 2000) {
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
