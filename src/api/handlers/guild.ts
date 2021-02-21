@@ -403,7 +403,7 @@ export async function getEmojis(guildID: string, addToCache = true) {
     const guild = await cacheHandlers.get("guilds", guildID);
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
     guild.emojis = result;
-    cacheHandlers.set("guilds", guildID, guild);
+    await cacheHandlers.set("guilds", guildID, guild);
   }
 
   return result;
@@ -427,7 +427,7 @@ export async function getEmoji(
     const guild = await cacheHandlers.get("guilds", guildID);
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
     guild.emojis.push(result);
-    cacheHandlers.set(
+    await cacheHandlers.set(
       "guilds",
       guildID,
       guild,
@@ -982,7 +982,7 @@ export async function createGuildFromTemplate(
     data.icon = await urlToBase64(data.icon);
   }
 
-  const result = await await RequestManager.post(
+  const result = await RequestManager.post(
     endpoints.GUILD_TEMPLATE(templateCode),
     data,
   );

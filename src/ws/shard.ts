@@ -328,7 +328,7 @@ async function processGatewayQueue() {
     return;
   }
 
-  await Promise.all(Object.values(basicShards).map(async (shard) => {
+  await Promise.allSettled(Object.values(basicShards).map(async (shard) => {
     const index = RequestMembersQueue.findIndex((q) => q.shardID === shard.id);
     // 2 events per second is the rate limit.
     const request = RequestMembersQueue[index];

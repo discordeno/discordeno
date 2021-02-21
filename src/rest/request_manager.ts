@@ -234,7 +234,7 @@ function runMethod(
   return new Promise(async (resolve, reject) => {
     const callback = async () => {
       try {
-        const rateLimitResetIn = await checkRatelimits(url);
+        const rateLimitResetIn = checkRatelimits(url);
         if (rateLimitResetIn) {
           return { rateLimited: rateLimitResetIn, beforeFetch: true, bucketID };
         }

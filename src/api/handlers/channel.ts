@@ -127,9 +127,9 @@ export async function getPins(channelID: string) {
   return Promise.all(result.map((res) => structures.createMessage(res)));
 }
 
-/** 
- * Trigger a typing indicator for the specified channel. Generally bots should **NOT** implement this route. 
- * However, if a bot is responding to a command and expects the computation to take a few seconds, 
+/**
+ * Trigger a typing indicator for the specified channel. Generally bots should **NOT** implement this route.
+ * However, if a bot is responding to a command and expects the computation to take a few seconds,
  * this endpoint may be called to let the user know that the bot is processing their message.
  */
 export async function startTyping(channelID: string) {
@@ -391,11 +391,11 @@ interface EditChannelRequest {
 const editChannelNameTopicQueue = new Map<string, EditChannelRequest>();
 let editChannelProcessing = false;
 
-function processEditChannelQueue() {
+async function processEditChannelQueue() {
   if (!editChannelProcessing) return;
 
   const now = Date.now();
-  editChannelNameTopicQueue.forEach((request) => {
+  await Promise.all(Object.values(editChannelNameTopicQueue).map(async (request) => {
     if (now > request.timestamp) return;
     // 10 minutes have passed so we can reset this channel again
     if (!request.items.length) {
@@ -407,15 +407,15 @@ function processEditChannelQueue() {
 
     if (!details) return;
 
-    editChannel(details.channelID, details.options);
+    await editChannel(details.channelID, details.options);
     const secondDetails = request.items.shift();
     if (!secondDetails) return;
 
     return editChannel(
-      secondDetails.channelID,
-      secondDetails.options,
+        secondDetails.channelID,
+        secondDetails.options,
     );
-  });
+  }));
 
   if (editChannelNameTopicQueue.size) {
     setTimeout(() => processEditChannelQueue(), 600000);
@@ -460,7 +460,7 @@ export async function editChannel(
       request.items.push({ channelID, options });
       if (editChannelProcessing) return;
       editChannelProcessing = true;
-      processEditChannelQueue();
+      await processEditChannelQueue();
       return;
     }
   }

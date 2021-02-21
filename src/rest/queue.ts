@@ -67,38 +67,7 @@ export async function processQueue() {
                   response.headers,
               );
 
-              if(response.status === HttpResponseCode.GatewayUnavailable) {
-                // IF IT HAS MAXED RETRIES SOMETHING SERIOUSLY WRONG. CANCEL OUT.
-                if (
-                    queuedRequest.payload.retryCount >=
-                    queuedRequest.options.maxRetryCount
-                ) {
-                  restCache.eventHandlers.retriesMaxed(queuedRequest.payload);
-                  queuedRequest.request.respond(
-                      {
-                        status: 200,
-                        body: JSON.stringify(
-                            {
-                              error:
-                                  "There was not a gateway available to process the request and it maxed out the retries limit.",
-                            },
-                        ),
-                      },
-                  );
-                  // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
-                  queue.shift();
-                  continue;
-                }
-
-                // SET THE BUCKET ID IF IT WAS PRESENT
-                if (bucketIDFromHeaders) {
-                  queuedRequest.payload.bucketID = bucketIDFromHeaders;
-                }
-                // SINCE IT WAS RATELIMITE, RETRY AGAIN
-                continue;
-              }
-
-              if (response.status < 200 && response.status >= 400 && response.status !== HttpResponseCode.GatewayUnavailable) {
+              if (response.status < 200 && response.status >= 400) {
                 restCache.eventHandlers.error(
                     "httpError",
                     queuedRequest.payload,
@@ -115,7 +84,9 @@ export async function processQueue() {
                                 ? "The resource at the location specified doesn't exist."
                                 : response.status === HttpResponseCode.MethodNotAllowed
                                     ? "The HTTP method used is not valid for the location specified."
-                                    : "REQUEST_UNKNOWN_ERROR";
+                                    : response.status === HttpResponseCode.GatewayUnavailable
+                                        ? "There was not a gateway available to process your request. Wait a bit and retry."
+                                        : "REQUEST_UNKNOWN_ERROR";
 
                 queuedRequest.request.respond(
                     { status: response.status, body: JSON.stringify({ error }) },
