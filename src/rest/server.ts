@@ -23,7 +23,6 @@ async function handlePayload(
   // INSTANTLY IGNORE ANY REQUESTS THAT DON'T HAVE THE SECRET AUTHORIZATION KEY
   const authorization = request.headers.get("authorization");
   if (authorization !== options.authorization) return;
-
   // READ BUFFER AFTER AUTH CHECK
   const buffer = await Deno.readAll(request.body);
 
@@ -48,7 +47,7 @@ async function handlePayload(
     }
 
     // PROCESS THE REQUEST
-    await processRequest(
+    processRequest(
       request,
       { method: data.method, url: data.url, body: data.body, retryCount: 0 },
       options,

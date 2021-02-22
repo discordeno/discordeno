@@ -1,4 +1,4 @@
-import { USER_AGENT } from "../util/constants.ts";
+import { BASE_URL, USER_AGENT } from "../util/constants.ts";
 import { restCache } from "./cache.ts";
 import { ServerRequest } from "./deps.ts";
 import { startQueue } from "./queue.ts";
@@ -20,6 +20,8 @@ export function processRequest(
   parts.shift();
   // REMOVES THE VERSION NUMBER
   if (parts[0]?.startsWith("v")) parts.shift();
+  // SET THE NEW REQUEST URL
+  payload.url = `${BASE_URL}/v${options.apiVersion || 8}/${parts.join("/")}`;
   // REMOVE THE MAJOR PARAM
   parts.shift();
 
@@ -28,19 +30,27 @@ export function processRequest(
   const queue = restCache.pathQueues.get(id);
   // IF THE QUEUE EXISTS JUST ADD THIS TO THE QUEUE
   if (queue) {
-    queue.push({ request, payload, options });
+    queue.requests.push({ request, payload, options });
   } else {
     // CREATES A NEW QUEUE
-    restCache.pathQueues.set(id, [{ request, payload, options }]);
+    restCache.pathQueues.set(id, {
+      processing: false,
+      requests: [{
+        request,
+        payload,
+        options,
+      }],
+    });
   }
 
+  console.log("starting queue");
   startQueue();
 }
 
 /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
 export function createRequestBody(queuedRequest: QueuedRequest) {
   const headers: { [key: string]: string } = {
-    Authorization: queuedRequest.options.token,
+    Authorization: `Bot ${queuedRequest.options.token}`,
     "User-Agent": USER_AGENT,
   };
 

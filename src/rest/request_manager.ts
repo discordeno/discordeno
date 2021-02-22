@@ -225,7 +225,7 @@ function runMethod(
       body: JSON.stringify({
         url,
         method,
-        ...(body as Record<string, unknown> || {}),
+        body: body || {},
       }),
       headers: {
         authorization: restAuthorization,

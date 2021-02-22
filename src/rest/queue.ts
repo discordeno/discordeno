@@ -1,6 +1,7 @@
 import { restCache } from "./cache.ts";
 import { createRequestBody, processRequestHeaders } from "./request.ts";
 import { HttpResponseCode } from "./types/mod.ts";
+import { delay } from "../util/utils.ts";
 
 /** If the queue is not already processing, this will start processing the queue. */
 export function startQueue() {
@@ -12,18 +13,23 @@ export function startQueue() {
 }
 
 /** Processes the queue by looping over each path separately until the queues are empty. */
-export function processQueue() {
+export async function processQueue() {
   while (restCache.processingQueue) {
     // FOR EVERY PATH WE WILL START ITS OWN LOOP.
     restCache.pathQueues.forEach(async (queue) => {
+      // MAKE SURE THIS QUEUE HAS NOT ALREADY STARTED
+      if (queue.processing) return;
       // EACH PATH IS UNIQUE LIMITER
-      while (queue.length) {
+      while (queue.requests.length) {
         // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
-        if (!restCache.globallyRateLimited) continue;
+        if (restCache.globallyRateLimited) continue;
         // SELECT THE FIRST ITEM FROM THIS QUEUE
-        const [queuedRequest] = queue;
+        const [queuedRequest] = queue.requests;
         // IF THIS DOESNT HAVE ANY ITEMS JUST CANCEL, THE CLEANER WILL REMOVE IT.
         if (!queuedRequest) return;
+
+        // MARK THIS QUEUE AS NOW BEING PROCESSED
+        queue.processing = true;
 
         // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
         const urlResetIn = checkRateLimits(queuedRequest.payload.url);
@@ -90,7 +96,7 @@ export function processQueue() {
             queuedRequest.request.respond(
               { status: response.status, body: JSON.stringify({ error }) },
             );
-            queue.shift();
+            queue.requests.shift();
             continue;
           }
 
@@ -102,7 +108,6 @@ export function processQueue() {
 
           // CONVERT THE RESPONSE TO JSON
           const json = await response.json();
-
           // IF THE RESPONSE WAS RATE LIMITED, HANDLE ACCORDINGLY
           if (
             json.retry_after ||
@@ -126,7 +131,7 @@ export function processQueue() {
                 },
               );
               // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
-              queue.shift();
+              queue.requests.shift();
               continue;
             }
 
@@ -140,7 +145,7 @@ export function processQueue() {
 
           restCache.eventHandlers.fetchSuccess(queuedRequest.payload);
           // REMOVE FROM QUEUE
-          queue.shift();
+          queue.requests.shift();
           queuedRequest.request.respond(
             { status: 200, body: JSON.stringify(json) },
           );
@@ -151,23 +156,30 @@ export function processQueue() {
             { status: 404, body: JSON.stringify({ error }) },
           );
           // REMOVE FROM QUEUE
-          queue.shift();
+          queue.requests.shift();
         }
       }
 
+      // MARK THE QUEUE AS NO LONGER PROCESSING
+      queue.processing = false;
       // ONCE QUEUE IS DONE, WE CAN TRY CLEANING UP
       cleanupQueues();
     });
+
+    await delay(1000);
   }
 }
 
 /** Cleans up the queues by checking if there is nothing left and removing it. */
 export function cleanupQueues() {
-  restCache.pathQueues.forEach((queue, key) => {
-    if (queue.length) return;
+  for (const [key, queue] of restCache.pathQueues) {
+    if (queue.requests.length) continue;
     // REMOVE IT FROM CACHE
     restCache.pathQueues.delete(key);
-  });
+  }
+
+  // NO QUEUE LEFT, DISABLE THE QUEUE
+  if (!restCache.pathQueues.size) restCache.processingQueue = false;
 }
 
 /** Check the rate limits for a url or a bucket. */
