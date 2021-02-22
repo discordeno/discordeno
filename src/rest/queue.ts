@@ -56,6 +56,7 @@ export async function processQueue() {
         restCache.eventHandlers.fetching(queuedRequest.payload);
 
         try {
+          queue.shift();
           const response = await fetch(
             urlToUse,
             createRequestBody(queuedRequest),
@@ -90,7 +91,6 @@ export async function processQueue() {
             queuedRequest.request.respond(
               { status: response.status, body: JSON.stringify({ error }) },
             );
-            queue.shift();
             continue;
           }
 
@@ -125,8 +125,6 @@ export async function processQueue() {
                   ),
                 },
               );
-              // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
-              queue.shift();
               continue;
             }
 
@@ -134,13 +132,12 @@ export async function processQueue() {
             if (bucketIDFromHeaders) {
               queuedRequest.payload.bucketID = bucketIDFromHeaders;
             }
+            queue.push(queuedRequest);
             // SINCE IT WAS RATELIMITE, RETRY AGAIN
             continue;
           }
 
           restCache.eventHandlers.fetchSuccess(queuedRequest.payload);
-          // REMOVE FROM QUEUE
-          queue.shift();
           await queuedRequest.request.respond(
             { status: 200, body: JSON.stringify(json) },
           );
@@ -150,8 +147,6 @@ export async function processQueue() {
           queuedRequest.request.respond(
             { status: 404, body: JSON.stringify({ error }) },
           );
-          // REMOVE FROM QUEUE
-          queue.shift();
         }
       }
 
