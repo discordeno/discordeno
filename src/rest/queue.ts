@@ -12,8 +12,8 @@ export function startQueue() {
 }
 
 /** Processes the queue by looping over each path separately until the queues are empty. */
-export async function processQueue() {
-  while (restCache.processingQueue) {
+export function processQueue() {
+  while (restCache.pathQueues.size) {
     // FOR EVERY PATH WE WILL START ITS OWN LOOP.
     restCache.pathQueues.forEach(async (queue) => {
       // EACH PATH IS UNIQUE LIMITER
@@ -152,11 +152,9 @@ export async function processQueue() {
 
       // ONCE QUEUE IS DONE, WE CAN TRY CLEANING UP
       cleanupQueues();
-      if (!restCache.pathQueues.size) {
-        restCache.processingQueue = false;
-      }
-    }
+    });
   }
+  restCache.processingQueue = false;
 }
 
 /** Cleans up the queues by checking if there is nothing left and removing it. */
