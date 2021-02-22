@@ -50,7 +50,7 @@ async function handlePayload(
     // PROCESS THE REQUEST
     processRequest(
       request,
-      { method: data.method, url: data.url, body: data, retryCount: 0 },
+      { method: data.method, url: data.url, body: data.body, retryCount: 0 },
       options,
     );
   } catch (error) {
