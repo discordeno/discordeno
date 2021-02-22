@@ -1,7 +1,7 @@
 import { BASE_URL, USER_AGENT } from "../util/constants.ts";
 import { restCache } from "./cache.ts";
 import { ServerRequest } from "./deps.ts";
-import { startQueue } from "./queue.ts";
+import { processQueue } from "./queue.ts";
 import {
   QueuedRequest,
   RestServerOptions,
@@ -30,20 +30,16 @@ export function processRequest(
   const queue = restCache.pathQueues.get(id);
   // IF THE QUEUE EXISTS JUST ADD THIS TO THE QUEUE
   if (queue) {
-    queue.requests.push({ request, payload, options });
+    queue.push({ request, payload, options });
   } else {
     // CREATES A NEW QUEUE
-    restCache.pathQueues.set(id, {
-      processing: false,
-      requests: [{
-        request,
-        payload,
-        options,
-      }],
-    });
+    restCache.pathQueues.set(id, [{
+      request,
+      payload,
+      options,
+    }]);
+    processQueue(id);
   }
-
-  startQueue();
 }
 
 /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
