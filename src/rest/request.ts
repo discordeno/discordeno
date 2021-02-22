@@ -21,7 +21,7 @@ export function processRequest(
   // REMOVES THE VERSION NUMBER
   if (parts[0]?.startsWith("v")) parts.shift();
   // Set the new request URL
-  payload.url = `${BASE_URL}/${options.apiVersion ?? "v8"}/${parts.join("/")}`;
+  payload.url = `${BASE_URL}/v${options.apiVersion ?? 8}/${parts.join("/")}`;
   // REMOVE THE MAJOR PARAM
   parts.shift();
 

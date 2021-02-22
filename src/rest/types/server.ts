@@ -10,7 +10,7 @@ export interface RestServerOptions {
   /** When a request is rate limited, how many times should it keep retrying the request. Recommended: 10 */
   maxRetryCount: number;
   /** The Version of the Discord API which the requests should be forwarded to. */
-  apiVersion?: "v6" | "v7" | "v8";
+  apiVersion?: number;
 }
 
 export interface RestEventHandlers {
