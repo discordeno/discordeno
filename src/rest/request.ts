@@ -43,7 +43,6 @@ export function processRequest(
     });
   }
 
-  console.log("starting queue");
   startQueue();
 }
 
