@@ -10,6 +10,8 @@ import {
   Emoji,
   IntegrationCreateUpdateEvent,
   IntegrationDeleteEvent,
+  InviteCreateEvent,
+  InviteDeleteEvent,
   PresenceUpdatePayload,
   TypingStartPayload,
   VoiceStateUpdatePayload,
@@ -232,6 +234,10 @@ export interface EventHandlers {
   integrationUpdate?: (data: Camelize<IntegrationCreateUpdateEvent>) => unknown;
   /** Sent when an integration is deleted. */
   integrationDelete?: (data: Camelize<IntegrationDeleteEvent>) => undefined;
+  /** Sent when a new invite to a channel is created. */
+  inviteCreate?: (data: Camelize<InviteCreateEvent>) => unknown;
+  /** Sent when an invite is deleted. */
+  inviteDelete?: (data: Camelize<InviteDeleteEvent>) => unknown;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */

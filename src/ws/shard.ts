@@ -1,12 +1,9 @@
-import {
-  botGatewayData,
-  eventHandlers,
-  IdentifyPayload,
-  proxyWSURL,
-} from "../bot.ts";
+import { botGatewayData, eventHandlers, proxyWSURL } from "../bot.ts";
 import {
   DiscordBotGatewayData,
   DiscordHeartbeatPayload,
+  DiscordIdentify,
+  DiscordPayload,
   FetchMembersOptions,
   GatewayOpcode,
   ReadyPayload,
@@ -14,8 +11,9 @@ import {
 import { BotStatusRequest, delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
 import { handleDiscordPayload } from "./shard_manager.ts";
+import { Collection } from "../util/collection.ts";
 
-const basicShards = new Map<number, BasicShard>();
+const basicShards = new Collection<number, BasicShard>();
 const heartbeating = new Map<number, boolean>();
 const utf8decoder = new TextDecoder();
 const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
@@ -39,7 +37,7 @@ interface RequestMemberQueuedRequest {
 
 export function createShard(
   data: DiscordBotGatewayData,
-  identifyPayload: IdentifyPayload,
+  identifyPayload: DiscordIdentify,
   resuming = false,
   shardID = 0,
 ) {
@@ -74,7 +72,7 @@ export function createShard(
     });
   };
 
-  ws.onmessage = ({ data: message }) => {
+  ws.onmessage = async ({ data: message }) => {
     if (message instanceof ArrayBuffer) {
       message = new Uint8Array(message);
     }
@@ -93,7 +91,7 @@ export function createShard(
       switch (messageData.op) {
         case GatewayOpcode.Hello:
           if (!heartbeating.has(basicShard.id)) {
-            heartbeat(
+            await heartbeat(
               basicShard,
               (messageData.d as DiscordHeartbeatPayload).heartbeat_interval,
               identifyPayload,
@@ -109,7 +107,7 @@ export function createShard(
             { type: "gatewayReconnect", data: { shardID: basicShard.id } },
           );
           basicShard.needToResume = true;
-          resumeConnection(data, identifyPayload, basicShard.id);
+          await resumeConnection(data, identifyPayload, basicShard.id);
           break;
         case GatewayOpcode.InvalidSession:
           eventHandlers.debug?.(
@@ -124,7 +122,7 @@ export function createShard(
             break;
           }
           basicShard.needToResume = true;
-          resumeConnection(data, identifyPayload, basicShard.id);
+          await resumeConnection(data, identifyPayload, basicShard.id);
           break;
         default:
           if (messageData.t === "RESUMED") {
@@ -143,13 +141,13 @@ export function createShard(
           // Update the sequence number if it is present
           if (messageData.s) basicShard.previousSequenceNumber = messageData.s;
 
-          handleDiscordPayload(messageData, basicShard.id);
+          await handleDiscordPayload(messageData, basicShard.id);
           break;
       }
     }
   };
 
-  ws.onclose = ({ reason, code, wasClean }) => {
+  ws.onclose = async ({ reason, code, wasClean }) => {
     eventHandlers.debug?.(
       {
         type: "wsClose",
@@ -157,60 +155,22 @@ export function createShard(
       },
     );
 
-    switch (code) {
-      case 4001:
-        throw new Error(
-          "[Unknown opcode] Sent an invalid Gateway opcode or an invalid payload for an opcode.",
-        );
-      case 4002:
-        throw new Error("[Decode error] Sent an invalid payload to API.");
-      case 4004:
-        throw new Error(
-          "[Authentication failed] The account token sent with your identify payload is incorrect.",
-        );
-      case 4005:
-        throw new Error(
-          "[Already authenticated] Sent more than one identify payload.",
-        );
-      case 4010:
-        throw new Error(
-          "[Invalid shard] Sent an invalid shard when identifying.",
-        );
-      case 4011:
-        throw new Error(
-          "[Sharding required] The session would have handled too many guilds - you are required to shard your connection in order to connect.",
-        );
-      case 4012:
-        throw new Error(
-          "[Invalid API version] Sent an invalid version for the gateway.",
-        );
-      case 4013:
-        throw new Error(
-          "[Invalid intent(s)] Sent an invalid intent for a Gateway Intent.",
-        );
-      case 4014:
-        throw new Error(
-          "[Disallowed intent(s)] Sent a disallowed intent for a Gateway Intent. You may have tried to specify an intent that you have not enabled or are not whitelisted for.",
-        );
-      case 4003:
-      case 4007:
-      case 4008:
-      case 4009:
-        eventHandlers.debug?.({
-          type: "wsReconnect",
-          data: { shardID: basicShard.id, code, reason, wasClean },
-        });
-        createShard(data, identifyPayload, false, shardID);
-        break;
-      default:
-        basicShard.needToResume = true;
-        resumeConnection(botGatewayData, identifyPayload, shardID);
-        break;
+    if ([4001, 4002, 4004, 4005, 4010, 4011, 4012, 4013, 4014].includes(code)) {
+      throw new Error(reason);
+    } else if ([4000, 4003, 4007, 4008, 4009].includes(code)) {
+      eventHandlers.debug?.({
+        type: "wsReconnect",
+        data: { shardID: basicShard.id, code, reason, wasClean },
+      });
+      createShard(data, identifyPayload, false, shardID);
+    } else {
+      basicShard.needToResume = true;
+      await resumeConnection(botGatewayData, identifyPayload, shardID);
     }
   };
 }
 
-function identify(shard: BasicShard, payload: IdentifyPayload) {
+function identify(shard: BasicShard, payload: DiscordIdentify) {
   eventHandlers.debug?.(
     {
       type: "gatewayIdentify",
@@ -220,31 +180,27 @@ function identify(shard: BasicShard, payload: IdentifyPayload) {
     },
   );
 
-  return shard.ws.send(
-    JSON.stringify(
-      {
-        op: GatewayOpcode.Identify,
-        d: { ...payload, shard: [shard.id, payload.shard[1]] },
-      },
-    ),
-  );
+  sendWS({
+    op: GatewayOpcode.Identify,
+    d: { ...payload, shard: [shard.id, payload.shard[1]] },
+  }, shard.id);
 }
 
-function resume(shard: BasicShard, payload: IdentifyPayload) {
-  return shard.ws.send(JSON.stringify({
+function resume(shard: BasicShard, payload: DiscordIdentify) {
+  sendWS({
     op: GatewayOpcode.Resume,
     d: {
       token: payload.token,
       session_id: shard.sessionID,
       seq: shard.previousSequenceNumber,
     },
-  }));
+  }, shard.id);
 }
 
 async function heartbeat(
   shard: BasicShard,
   interval: number,
-  payload: IdentifyPayload,
+  payload: DiscordIdentify,
   data: DiscordBotGatewayData,
 ) {
   // We lost socket connection between heartbeats, resume connection
@@ -269,17 +225,17 @@ async function heartbeat(
           },
         },
       );
-      return shard.ws.send(JSON.stringify({ op: 4009 }));
+
+      return shard.ws.close(4009, "Session timed out");
     }
   }
 
   // Set it to false as we are issuing a new heartbeat
   heartbeating.set(shard.id, false);
 
-  shard.ws.send(
-    JSON.stringify(
-      { op: GatewayOpcode.Heartbeat, d: shard.previousSequenceNumber },
-    ),
+  sendWS(
+    { op: GatewayOpcode.Heartbeat, d: shard.previousSequenceNumber },
+    shard.id,
   );
   eventHandlers.debug?.(
     {
@@ -297,7 +253,7 @@ async function heartbeat(
 
 async function resumeConnection(
   data: DiscordBotGatewayData,
-  payload: IdentifyPayload,
+  payload: DiscordIdentify,
   shardID: number,
 ) {
   const shard = basicShards.get(shardID);
@@ -312,13 +268,13 @@ async function resumeConnection(
 
   eventHandlers.debug?.({ type: "gatewayResume", data: { shardID: shard.id } });
   // Run it once
-  await createShard(data, payload, true, shard.id);
+  createShard(data, payload, true, shard.id);
   // Then retry every 15 seconds
   await delay(1000 * 15);
   if (shard.needToResume) await resumeConnection(data, payload, shardID);
 }
 
-export function requestGuildMembers(
+export async function requestGuildMembers(
   guildID: string,
   shardID: number,
   nonce: string,
@@ -345,11 +301,11 @@ export function requestGuildMembers(
 
   // If its closed add back to queue to redo on resume
   if (shard?.ws.readyState === WebSocket.CLOSED) {
-    requestGuildMembers(guildID, shardID, nonce, options);
+    await requestGuildMembers(guildID, shardID, nonce, options);
     return;
   }
 
-  shard?.ws.send(JSON.stringify({
+  sendWS({
     op: GatewayOpcode.RequestGuildMembers,
     d: {
       guild_id: guildID,
@@ -360,7 +316,7 @@ export function requestGuildMembers(
       user_ids: options?.userIDs,
       nonce,
     },
-  }));
+  }, shard?.id);
 }
 
 async function processGatewayQueue() {
@@ -369,7 +325,7 @@ async function processGatewayQueue() {
     return;
   }
 
-  basicShards.forEach((shard) => {
+  await Promise.all(basicShards.map(async (shard) => {
     const index = RequestMembersQueue.findIndex((q) => q.shardID === shard.id);
     // 2 events per second is the rate limit.
     const request = RequestMembersQueue[index];
@@ -383,7 +339,7 @@ async function processGatewayQueue() {
           },
         },
       );
-      requestGuildMembers(
+      await requestGuildMembers(
         request.guildID,
         request.shardID,
         request.nonce,
@@ -407,7 +363,7 @@ async function processGatewayQueue() {
             },
           },
         );
-        requestGuildMembers(
+        await requestGuildMembers(
           secondRequest.guildID,
           secondRequest.shardID,
           secondRequest.nonce,
@@ -418,7 +374,7 @@ async function processGatewayQueue() {
         RequestMembersQueue.splice(secondIndex, 1);
       }
     }
-  });
+  }));
 
   await delay(1500);
 
@@ -427,7 +383,7 @@ async function processGatewayQueue() {
 
 export function botGatewayStatusRequest(payload: BotStatusRequest) {
   basicShards.forEach((shard) => {
-    shard.ws.send(JSON.stringify({
+    sendWS({
       op: GatewayOpcode.StatusUpdate,
       d: {
         since: null,
@@ -440,6 +396,16 @@ export function botGatewayStatusRequest(payload: BotStatusRequest) {
         status: payload.status,
         afk: false,
       },
-    }));
+    }, shard.id);
   });
+}
+
+/** Enqueues the specified data to be transmitted to the server over the WebSocket connection, */
+export function sendWS(payload: DiscordPayload, shardID = 0) {
+  const shard = basicShards.get(shardID);
+  if (!shard) return false;
+
+  const serialized = JSON.stringify(payload);
+  shard.ws.send(serialized);
+  return true;
 }

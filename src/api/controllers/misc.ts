@@ -3,6 +3,8 @@ import {
   DiscordPayload,
   IntegrationCreateUpdateEvent,
   IntegrationDeleteEvent,
+  InviteCreateEvent,
+  InviteDeleteEvent,
   PresenceUpdatePayload,
   ReadyPayload,
   TypingStartPayload,
@@ -51,7 +53,18 @@ export async function handleInternalReady(
         // All the members that came in on guild creates should now be processed 1 by 1
         for (const [guildID, members] of initialMemberLoadQueue.entries()) {
           await Promise.all(
-            members.map((member) => structures.createMember(member, guildID)),
+            members.map(async (member) => {
+              const memberStruct = await structures.createMember(
+                member,
+                guildID,
+              );
+
+              return cacheHandlers.set(
+                "members",
+                memberStruct.id,
+                memberStruct,
+              );
+            }),
           );
         }
       }
@@ -231,6 +244,48 @@ export function handleInternalIntegrationDelete(data: DiscordPayload) {
   eventHandlers.integrationDelete?.({
     ...rest,
     applicationID,
+    guildID,
+  });
+}
+
+export function handleInternalInviteCreate(payload: DiscordPayload) {
+  if (payload.t !== "INVITE_CREATE") return;
+
+  const {
+    channel_id: channelID,
+    created_at: createdAt,
+    max_age: maxAge,
+    guild_id: guildID,
+    target_user: targetUser,
+    target_user_type: targetUserType,
+    max_uses: maxUses,
+    ...rest
+  } = payload.d as InviteCreateEvent;
+
+  eventHandlers.inviteCreate?.({
+    ...rest,
+    channelID,
+    guildID,
+    maxAge,
+    targetUser,
+    targetUserType,
+    maxUses,
+    createdAt,
+  });
+}
+
+export function handleInternalInviteDelete(payload: DiscordPayload) {
+  if (payload.t !== "INVITE_DELETE") return;
+
+  const {
+    channel_id: channelID,
+    guild_id: guildID,
+    ...rest
+  } = payload.d as InviteDeleteEvent;
+
+  eventHandlers.inviteDelete?.({
+    ...rest,
+    channelID,
     guildID,
   });
 }

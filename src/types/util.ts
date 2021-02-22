@@ -6,4 +6,5 @@ export type CamelizeString<T extends PropertyKey> = T extends string
   : T
   : T;
 
-export type Camelize<T> = { [K in keyof T]: T[K] };
+// deno-fmt-ignore
+export type Camelize<T> = { [K in keyof T as CamelizeString<K>]: T[K] };
