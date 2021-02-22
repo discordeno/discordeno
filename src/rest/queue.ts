@@ -15,7 +15,7 @@ export function startQueue() {
 export async function processQueue() {
   while (restCache.processingQueue) {
     // FOR EVERY PATH WE WILL START ITS OWN LOOP.
-    for (const queue of restCache.pathQueues.values()) {
+    restCache.pathQueues.forEach(async (queue) => {
       // EACH PATH IS UNIQUE LIMITER
       while (queue.length) {
         // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
