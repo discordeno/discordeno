@@ -53,7 +53,18 @@ export async function handleInternalReady(
         // All the members that came in on guild creates should now be processed 1 by 1
         for (const [guildID, members] of initialMemberLoadQueue.entries()) {
           await Promise.all(
-            members.map((member) => structures.createMember(member, guildID)),
+            members.map(async (member) => {
+              const memberStruct = await structures.createMember(
+                member,
+                guildID,
+              );
+
+              return cacheHandlers.set(
+                "members",
+                memberStruct.id,
+                memberStruct,
+              );
+            }),
           );
         }
       }

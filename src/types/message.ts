@@ -141,6 +141,8 @@ export interface Reaction {
   emoji: EmojiReaction;
 }
 
+// TODO: v11 Remove
+/** @deprecated Use DiscordMessageTypes */
 export enum MessageTypes {
   DEFAULT,
   RECIPIENT_ADD,

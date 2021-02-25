@@ -124,8 +124,6 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
     mute: mute,
   });
 
-  await cacheHandlers.set("members", member.id, member);
-
   return member as Member;
 }
 

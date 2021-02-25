@@ -4,6 +4,8 @@
 
 Discord API library for [Deno](https://deno.land)
 
+Discordeno follows [Semantic Versioning](https://semver.org/)
+
 [![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
@@ -57,7 +59,7 @@ developers had when I first started out coding Discord bots with existing
 libraries. If you are a beginner, you can check out these awesome official and
 unofficial boilerplates:
 
-- [Discordeno Boilerplate (official)](https://github.com/discordeno/discordeno-boilerplate)
+- [Discordeno Boilerplate (official)](https://github.com/discordeno/boilerplate)
 - [Serverless Slash Commands Template
   (official)](https://github.com/discordeno/slash-commands-boilerplate)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
@@ -75,4 +77,4 @@ We appreciate your help! Before contributing, please read the
 
 ### License
 
-[MIT © discordeno](https://github.com/discordeno/discordeno/blob/master/LICENSE)
+[License can be found here](https://github.com/discordeno/discordeno/blob/master/LICENSE)
