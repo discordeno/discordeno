@@ -10,7 +10,7 @@ import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 
 export let authorization = "";
-export let restAuthorization = "";
+export let secretKey = "";
 export let botID = "";
 export let applicationID = "";
 
@@ -95,10 +95,9 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   authorization = `Bot ${data.token}`;
   identifyPayload.token = `Bot ${data.token}`;
 
-  if (data.restAuthorization) restAuthorization = data.restAuthorization;
+  if (data.secretKey) secretKey = data.secretKey;
   if (data.restURL) baseEndpoints.BASE_URL = data.restURL;
   if (data.cdnURL) baseEndpoints.CDN_URL = data.cdnURL;
-  if (data.wsURL) proxyWSURL = data.wsURL;
   if (data.eventHandlers) eventHandlers = data.eventHandlers;
   if (data.compress) {
     identifyPayload.compress = data.compress;
@@ -109,19 +108,24 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
     0,
   );
 
-  // Initial API connection to get info about bots connection
-  botGatewayData = await getGatewayBot();
-
-  if (!data.wsURL) proxyWSURL = botGatewayData.url;
-  await spawnShards(
-    botGatewayData,
-    identifyPayload,
-    data.firstShardID,
-    data.lastShardID ||
-      (botGatewayData.shards >= 25
-        ? (data.firstShardID + 25)
-        : botGatewayData.shards),
-  );
+  // PROXY DOESNT NEED US SPAWNING SHARDS
+  if (data.wsPort) {
+    // Need HTTP Server to listen to proxy
+    console.log("TODO: make http");
+  } else {
+    // Initial API connection to get info about bots connection
+    botGatewayData = await getGatewayBot();
+    proxyWSURL = botGatewayData.url;
+    await spawnShards(
+      botGatewayData,
+      identifyPayload,
+      data.firstShardID,
+      data.lastShardID ||
+        (botGatewayData.shards >= 25
+          ? (data.firstShardID + 25)
+          : botGatewayData.shards),
+    );
+  }
 }
 
 export interface BigBrainBotConfig extends BotConfig {
@@ -129,12 +133,12 @@ export interface BigBrainBotConfig extends BotConfig {
   firstShardID: number;
   /** The last shard to start for this worker. By default it will be 25 + the firstShardID. */
   lastShardID?: number;
-  /** This can be used to forward the ws handling to a proxy. */
-  wsURL?: string;
+  /** This can be used to forward the ws handling to a proxy. It will disable the sharding done by the bot side. */
+  wsPort?: number;
   /** This can be used to forward the REST handling to a proxy. */
   restURL?: string;
   /** This can be used to forward the CDN handling to a proxy. */
   cdnURL?: string;
-  /** This is the authorization header that your rest proxy will validate */
-  restAuthorization?: string;
+  /** This is the authorization header that your servers will send. Helpful to prevent DDOS attacks and such. */
+  secretKey?: string;
 }
