@@ -222,16 +222,17 @@ function runMethod(
     !url.startsWith(IMAGE_BASE_URL)
   ) {
     return fetch(url, {
-      body: JSON.stringify({
-        url,
-        method,
-        ...(body as Record<string, unknown> || {}),
-      }),
+      body: JSON.stringify(body || {}),
       headers: {
         authorization: restAuthorization,
       },
+      method: method.toUpperCase(),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 204) return undefined;
+
+        return res.json();
+      })
       .catch((error) => {
         console.error(error);
         throw errorStack;
