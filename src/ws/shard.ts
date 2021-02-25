@@ -163,6 +163,8 @@ export function createShard(
         data: { shardID: basicShard.id, code, reason, wasClean },
       });
       createShard(data, identifyPayload, false, shardID);
+    } else if (code === 3069 && reason === "[discordeno] requested closure") {
+      return;
     } else {
       basicShard.needToResume = true;
       await resumeConnection(botGatewayData, identifyPayload, shardID);
@@ -407,5 +409,16 @@ export function sendWS(payload: DiscordPayload, shardID = 0) {
 
   const serialized = JSON.stringify(payload);
   shard.ws.send(serialized);
+
+  return true;
+}
+
+/** Closes the WebSocket connection or connection attempt */
+export function closeWS(shardID = 0) {
+  const shard = basicShards.get(shardID);
+  if (!shard) return false;
+
+  shard.ws.close(3069, "[discordeno] requested closure");
+
   return true;
 }
