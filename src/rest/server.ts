@@ -23,7 +23,7 @@ async function handlePayload(
   // INSTANTLY IGNORE ANY REQUESTS THAT DON'T HAVE THE SECRET AUTHORIZATION KEY
   const authorization = request.headers.get("authorization");
   if (authorization !== options.authorization) {
-    return request.respond (
+    return request.respond(
       {
         status: 401,
         body: JSON.stringify({ error: "401: Unauthorized" }),
