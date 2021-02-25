@@ -14,14 +14,14 @@ export function processRequest(
   payload: RunMethodOptions,
   options: RestServerOptions,
 ) {
-  const route = payload.url.substring(payload.url.indexOf("api/"));
+  const route = request.url.substring(request.url.indexOf("api/"));
   const parts = route.split("/");
   // REMOVE THE API
   parts.shift();
   // REMOVES THE VERSION NUMBER
   if (parts[0]?.startsWith("v")) parts.shift();
   // SET THE NEW REQUEST URL
-  payload.url = `${BASE_URL}/v${options.apiVersion || 8}/${parts.join("/")}`;
+  request.url = `${BASE_URL}/v${options.apiVersion || 8}/${parts.join("/")}`;
   // REMOVE THE MAJOR PARAM
   parts.shift();
 
@@ -50,7 +50,7 @@ export function createRequestBody(queuedRequest: QueuedRequest) {
   };
 
   // GET METHODS SHOULD NOT HAVE A BODY
-  if (queuedRequest.payload.method === "get") {
+  if (queuedRequest.request.method === "GET") {
     queuedRequest.payload.body = undefined;
   }
 
@@ -76,7 +76,7 @@ export function createRequestBody(queuedRequest: QueuedRequest) {
     queuedRequest.payload.body.file = form;
   } else if (
     queuedRequest.payload.body &&
-    !["get", "delete"].includes(queuedRequest.payload.method)
+    !["GET", "DELETE"].includes(queuedRequest.request.method)
   ) {
     headers["Content-Type"] = "application/json";
   }
@@ -85,7 +85,7 @@ export function createRequestBody(queuedRequest: QueuedRequest) {
     headers,
     body: queuedRequest.payload.body?.file ||
       JSON.stringify(queuedRequest.payload.body),
-    method: queuedRequest.payload.method.toUpperCase(),
+    method: queuedRequest.request.method,
   };
 }
 
