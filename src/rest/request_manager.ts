@@ -1,4 +1,4 @@
-import { authorization, eventHandlers, restAuthorization } from "../bot.ts";
+import { authorization, eventHandlers, secretKey } from "../bot.ts";
 import {
   Errors,
   FileContent,
@@ -224,7 +224,7 @@ function runMethod(
     return fetch(url, {
       body: JSON.stringify(body || {}),
       headers: {
-        authorization: restAuthorization,
+        authorization: secretKey,
       },
       method: method.toUpperCase(),
     })
