@@ -1,7 +1,7 @@
+import { delay } from "../util/utils.ts";
 import { restCache } from "./cache.ts";
 import { createRequestBody, processRequestHeaders } from "./request.ts";
 import { HttpResponseCode } from "./types/mod.ts";
-import { delay } from "../util/utils.ts";
 
 /** Processes the queue by looping over each path separately until the queues are empty. */
 export async function processQueue(id: string) {
@@ -10,14 +10,18 @@ export async function processQueue(id: string) {
 
   while (queue.length) {
     // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
-    if (restCache.globallyRateLimited) continue;
+    if (restCache.globallyRateLimited) {
+      setTimeout(() => processQueue(id), 1000);
+
+      break;
+    }
     // SELECT THE FIRST ITEM FROM THIS QUEUE
     const [queuedRequest] = queue;
     // IF THIS DOESNT HAVE ANY ITEMS JUST CANCEL, THE CLEANER WILL REMOVE IT.
     if (!queuedRequest) return;
 
     // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
-    const urlResetIn = checkRateLimits(queuedRequest.payload.url);
+    const urlResetIn = checkRateLimits(queuedRequest.request.url);
     if (urlResetIn) {
       // PAUSE FOR THIS SPECIFC REQUEST
       await delay(urlResetIn);
@@ -34,15 +38,15 @@ export async function processQueue(id: string) {
 
     // IF THIS IS A GET REQUEST, CHANGE THE BODY TO QUERY PARAMETERS
     const query =
-      queuedRequest.payload.method === "get" && queuedRequest.payload.body
+      queuedRequest.request.method === "GET" && queuedRequest.payload.body
         ? Object.entries(queuedRequest.payload.body).map(([key, value]) =>
           `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`
         )
           .join("&")
         : "";
-    const urlToUse = queuedRequest.payload.method === "get" && query
-      ? `${queuedRequest.payload.url}?${query}`
-      : queuedRequest.payload.url;
+    const urlToUse = queuedRequest.request.method === "GET" && query
+      ? `${queuedRequest.request.url}?${query}`
+      : queuedRequest.request.url;
 
     // CUSTOM HANDLER FOR USER TO LOG OR WHATEVER WHENEVER A FETCH IS MADE
     restCache.eventHandlers.fetching(queuedRequest.payload);
@@ -54,7 +58,7 @@ export async function processQueue(id: string) {
       );
       restCache.eventHandlers.fetched(queuedRequest.payload);
       const bucketIDFromHeaders = processRequestHeaders(
-        queuedRequest.payload.url,
+        queuedRequest.request.url,
         response.headers,
       );
 
@@ -89,52 +93,52 @@ export async function processQueue(id: string) {
       // SOMETIMES DISCORD RETURNS AN EMPTY 204 RESPONSE THAT CAN'T BE MADE TO JSON
       if (response.status === 204) {
         restCache.eventHandlers.fetchSuccess(queuedRequest.payload);
-        return queuedRequest.request.respond({ status: 204 });
-      }
-
-      // CONVERT THE RESPONSE TO JSON
-      const json = await response.json();
-      // IF THE RESPONSE WAS RATE LIMITED, HANDLE ACCORDINGLY
-      if (
-        json.retry_after ||
-        json.message === "You are being rate limited."
-      ) {
-        // IF IT HAS MAXED RETRIES SOMETHING SERIOUSLY WRONG. CANCEL OUT.
+        queuedRequest.request.respond({ status: 204 });
+      } else {
+        // CONVERT THE RESPONSE TO JSON
+        const json = await response.json();
+        // IF THE RESPONSE WAS RATE LIMITED, HANDLE ACCORDINGLY
         if (
-          queuedRequest.payload.retryCount >=
-            queuedRequest.options.maxRetryCount
+          json.retry_after ||
+          json.message === "You are being rate limited."
         ) {
-          restCache.eventHandlers.retriesMaxed(queuedRequest.payload);
-          queuedRequest.request.respond(
-            {
-              status: 200,
-              body: JSON.stringify(
-                {
-                  error:
-                    "The request was rate limited and it maxed out the retries limit.",
-                },
-              ),
-            },
-          );
-          // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
-          queue.shift();
+          // IF IT HAS MAXED RETRIES SOMETHING SERIOUSLY WRONG. CANCEL OUT.
+          if (
+            queuedRequest.payload.retryCount >=
+              queuedRequest.options.maxRetryCount
+          ) {
+            restCache.eventHandlers.retriesMaxed(queuedRequest.payload);
+            queuedRequest.request.respond(
+              {
+                status: 200,
+                body: JSON.stringify(
+                  {
+                    error:
+                      "The request was rate limited and it maxed out the retries limit.",
+                  },
+                ),
+              },
+            );
+            // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
+            queue.shift();
+            continue;
+          }
+
+          // SET THE BUCKET ID IF IT WAS PRESENT
+          if (bucketIDFromHeaders) {
+            queuedRequest.payload.bucketID = bucketIDFromHeaders;
+          }
+          // SINCE IT WAS RATELIMITE, RETRY AGAIN
           continue;
         }
 
-        // SET THE BUCKET ID IF IT WAS PRESENT
-        if (bucketIDFromHeaders) {
-          queuedRequest.payload.bucketID = bucketIDFromHeaders;
-        }
-        // SINCE IT WAS RATELIMITE, RETRY AGAIN
-        continue;
+        restCache.eventHandlers.fetchSuccess(queuedRequest.payload);
+        // REMOVE FROM QUEUE
+        queue.shift();
+        queuedRequest.request.respond(
+          { status: 200, body: JSON.stringify(json) },
+        );
       }
-
-      restCache.eventHandlers.fetchSuccess(queuedRequest.payload);
-      // REMOVE FROM QUEUE
-      queue.shift();
-      queuedRequest.request.respond(
-        { status: 200, body: JSON.stringify(json) },
-      );
     } catch (error) {
       // SOMETHING WENT WRONG, LOG AND RESPOND WITH ERROR
       restCache.eventHandlers.fetchFailed(queuedRequest.payload, error);

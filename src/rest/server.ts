@@ -25,33 +25,24 @@ async function handlePayload(
   if (authorization !== options.authorization) return;
   // READ BUFFER AFTER AUTH CHECK
   const buffer = await Deno.readAll(request.body);
-
   try {
     // CONVERT THE BODY TO JSON
     const data = JSON.parse(new TextDecoder().decode(buffer));
-    if (!data.url) {
+    if (
+      !["GET", "POST", "PUT", "PATCH", "HEAD", "DELETE"].includes(
+        request.method,
+      )
+    ) {
       return request.respond(
         {
           status: 400,
-          body: JSON.stringify({ error: "No URL was provided." }),
-        },
-      );
-    }
-    if (!data.method) {
-      return request.respond(
-        {
-          status: 400,
-          body: JSON.stringify({ error: "No METHOD was provided." }),
+          body: JSON.stringify({ error: "Invalid METHOD." }),
         },
       );
     }
 
     // PROCESS THE REQUEST
-    processRequest(
-      request,
-      { method: data.method, url: data.url, body: data.body, retryCount: 0 },
-      options,
-    );
+    processRequest(request, { body: data, retryCount: 0 }, options);
   } catch (error) {
     restCache.eventHandlers.error("serverRequest", error);
   }
