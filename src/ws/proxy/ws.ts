@@ -17,6 +17,8 @@ import { resharder } from "./resharder.ts";
 
 // CONTROLLER LIKE INTERFACE FOR WS HANDLING
 export const ws = {
+  /** The secret key authorization header the bot will expect when sending payloads */
+  secretKey: "",
   /** The url that all discord payloads for the dispatch type should be sent to. */
   url: "",
   /** Whether or not to automatically reshard. */
