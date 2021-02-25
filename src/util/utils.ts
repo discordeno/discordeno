@@ -27,10 +27,6 @@ export function editBotsStatus(
   sendGatewayCommand("EDIT_BOTS_STATUS", { status, game: { name, type } });
 }
 
-export function chooseRandom<T>(array: T[]) {
-  return array[Math.floor(Math.random() * array.length)];
-}
-
 export async function urlToBase64(url: string) {
   const buffer = await fetch(url).then((res) => res.arrayBuffer());
   const imageStr = encode(buffer);

@@ -27,4 +27,5 @@ export * from "./src/util/cache.ts";
 export * from "./src/util/collection.ts";
 export * from "./src/util/permissions.ts";
 export * from "./src/util/utils.ts";
+export * from "./src/util/random.ts";
 export * from "./src/ws/mod.ts";

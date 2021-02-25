@@ -1,4 +1,4 @@
-import { chooseRandom } from "./utils.ts";
+import { chooseRandom } from "./random.ts";
 
 export class Collection<K, V> extends Map<K, V> {
   maxSize?: number;
