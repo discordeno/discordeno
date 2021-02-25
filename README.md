@@ -77,4 +77,4 @@ We appreciate your help! Before contributing, please read the
 
 ### License
 
-[MIT © discordeno](https://github.com/discordeno/discordeno/blob/master/LICENSE)
+[License can be found here](https://github.com/discordeno/discordeno/blob/master/LICENSE)
