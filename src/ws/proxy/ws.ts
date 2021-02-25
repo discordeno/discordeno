@@ -8,6 +8,7 @@ import {
 import {
   createShard,
   handleDiscordPayload,
+  handleOnMessage,
   heartbeat,
   identify,
 } from "./shard.ts";
@@ -100,6 +101,8 @@ export const ws = {
   resharder,
   /** Cleanups loading shards that were unable to load. */
   cleanupLoadingShards,
+  /** Handles the message events from websocket */
+  handleOnMessage,
 };
 
 export interface DiscordenoShard {
