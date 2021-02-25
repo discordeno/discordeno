@@ -407,5 +407,16 @@ export function sendWS(payload: DiscordPayload, shardID = 0) {
 
   const serialized = JSON.stringify(payload);
   shard.ws.send(serialized);
+
+  return true;
+}
+
+/** Closes the WebSocket connection or connection attempt */
+export function closeWS(shardID = 0) {
+  const shard = basicShards.get(shardID);
+  if (!shard) return false;
+
+  shard.ws.close(3069, "Requested closure");
+
   return true;
 }
