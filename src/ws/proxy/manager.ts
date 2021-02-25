@@ -1,4 +1,4 @@
-import { getGatewayBot } from "../../api/handlers/gateway.ts";
+import { DiscordBotGatewayData } from "../../types/discord.ts";
 import { Intents } from "../../types/options.ts";
 import { Collection } from "../../util/collection.ts";
 import { ws } from "./ws.ts";
@@ -26,7 +26,11 @@ export async function startGateway(options: StartGatewayOptions) {
     0,
   );
 
-  const data = await getGatewayBot();
+  const data = await fetch(
+    `https://discord.com/api/gateway/bot`,
+    { headers: { Authorization: ws.identifyPayload.token } },
+  ).then((res) => res.json()) as DiscordBotGatewayData;
+
   ws.maxShards = options.maxShards || data.shards;
   ws.lastShardID = options.lastShardID || data.shards - 1;
 
