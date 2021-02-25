@@ -2,6 +2,7 @@ import { DiscordBotGatewayData } from "../../types/discord.ts";
 import { Intents } from "../../types/options.ts";
 import { Collection } from "../../util/collection.ts";
 import { ws } from "./ws.ts";
+import { delay } from "../../util/utils.ts";
 
 /** ADVANCED DEVS ONLY!!!!!!
  * Starts the standalone gateway.
@@ -9,6 +10,7 @@ import { ws } from "./ws.ts";
  */
 export async function startGateway(options: StartGatewayOptions) {
   ws.identifyPayload.token = `Bot ${options.token}`;
+  ws.secretKey = options.secretKey;
   ws.firstShardID = options.firstShardID;
   ws.url = options.url;
   if (options.shardsPerCluster) ws.shardsPerCluster = options.shardsPerCluster;
@@ -118,17 +120,24 @@ export async function tellClusterToIdentify(
 }
 
 /** The handler to clean up shards that identified but never received a READY. */
-export function cleanupLoadingShards() {
+export async function cleanupLoadingShards() {
   while (ws.loadingShards.size) {
     const now = Date.now();
     ws.loadingShards.forEach((loadingShard) => {
+      console.log(
+        now > loadingShard.startedAt + 60000,
+        now,
+        loadingShard.startedAt,
+      );
       // Not a minute yet. Max should be few seconds but do a minute to be safe.
-      if (loadingShard.startedAt + 60000 < now) return;
+      if (now < loadingShard.startedAt + 60000) return;
 
       loadingShard.reject(
         `[Identify Failure] Shard ${loadingShard.shardID} has not received READY event in over a minute.`,
       );
     });
+
+    await delay(1000);
   }
 }
 
@@ -153,4 +162,6 @@ export interface StartGatewayOptions {
   maxClusters?: number;
   /** Whether or not you want to allow automated sharding. By default this is true. */
   reshard?: boolean;
+  /** The authorization key that the bot http server will expect. */
+  secretKey: string;
 }
