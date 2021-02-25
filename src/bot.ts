@@ -109,10 +109,7 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   );
 
   // PROXY DOESNT NEED US SPAWNING SHARDS
-  if (data.wsPort) {
-    // Need HTTP Server to listen to proxy
-    console.log("TODO: make http");
-  } else {
+  if (!data.wsPort) {
     // Initial API connection to get info about bots connection
     botGatewayData = await getGatewayBot();
     proxyWSURL = botGatewayData.url;
