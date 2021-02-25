@@ -416,7 +416,7 @@ export function closeWS(shardID = 0) {
   const shard = basicShards.get(shardID);
   if (!shard) return false;
 
-  shard.ws.close(3069, "Requested closure");
+  shard.ws.close(3069, "[Discordeno] Requested closure");
 
   return true;
 }
