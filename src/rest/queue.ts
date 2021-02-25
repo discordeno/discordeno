@@ -93,6 +93,8 @@ export async function processQueue(id: string) {
       // SOMETIMES DISCORD RETURNS AN EMPTY 204 RESPONSE THAT CAN'T BE MADE TO JSON
       if (response.status === 204) {
         restCache.eventHandlers.fetchSuccess(queuedRequest.payload);
+        // REMOVE FROM QUEUE
+        queue.shift();
         queuedRequest.request.respond({ status: 204 });
       } else {
         // CONVERT THE RESPONSE TO JSON
