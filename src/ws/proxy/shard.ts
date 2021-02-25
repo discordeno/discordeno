@@ -285,6 +285,9 @@ export async function handleDiscordPayload(
   shardID: number,
 ) {
   await fetch(ws.url, {
+    headers: {
+      authorization: ws.secretKey,
+    },
     method: "post",
     body: JSON.stringify({
       shardID,
