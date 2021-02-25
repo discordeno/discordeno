@@ -9,6 +9,8 @@ export interface RestServerOptions {
   token: string;
   /** When a request is rate limited, how many times should it keep retrying the request. Recommended: 10 */
   maxRetryCount: number;
+  /** The api version you would like to use */
+  apiVersion?: number;
 }
 
 export interface RestEventHandlers {
