@@ -2,6 +2,7 @@ import { getGatewayBot } from "./api/handlers/gateway.ts";
 import {
   BotConfig,
   DiscordBotGatewayData,
+  DiscordIdentify,
   EventHandlers,
   Intents,
 } from "./types/mod.ts";
@@ -9,6 +10,7 @@ import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 
 export let authorization = "";
+export let restAuthorization = "";
 export let botID = "";
 export let applicationID = "";
 
@@ -17,7 +19,7 @@ export let eventHandlers: EventHandlers = {};
 export let botGatewayData: DiscordBotGatewayData;
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
-export const identifyPayload: IdentifyPayload = {
+export const identifyPayload: DiscordIdentify = {
   token: "",
   compress: true,
   properties: {
@@ -29,6 +31,7 @@ export const identifyPayload: IdentifyPayload = {
   shard: [0, 0],
 };
 
+/** @deprecated Use "DiscordIdentify" instead */
 export interface IdentifyPayload {
   token: string;
   compress: boolean;
@@ -59,7 +62,7 @@ export async function startBot(config: BotConfig) {
   );
   identifyPayload.shard = [0, botGatewayData.shards];
 
-  spawnShards(botGatewayData, identifyPayload, 0, botGatewayData.shards);
+  await spawnShards(botGatewayData, identifyPayload, 0, botGatewayData.shards);
 }
 
 /** Allows you to dynamically update the event handlers by passing in new eventHandlers */
@@ -92,6 +95,7 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   authorization = `Bot ${data.token}`;
   identifyPayload.token = `Bot ${data.token}`;
 
+  if (data.restAuthorization) restAuthorization = data.restAuthorization;
   if (data.restURL) baseEndpoints.BASE_URL = data.restURL;
   if (data.cdnURL) baseEndpoints.CDN_URL = data.cdnURL;
   if (data.wsURL) proxyWSURL = data.wsURL;
@@ -131,4 +135,6 @@ export interface BigBrainBotConfig extends BotConfig {
   restURL?: string;
   /** This can be used to forward the CDN handling to a proxy. */
   cdnURL?: string;
+  /** This is the authorization header that your rest proxy will validate */
+  restAuthorization?: string;
 }

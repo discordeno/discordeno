@@ -137,7 +137,11 @@ export async function createGuildChannel(
       type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
 
-  return structures.createChannel(result);
+  const channelStruct = await structures.createChannel(result);
+
+  await cacheHandlers.set("channels", channelStruct.id, channelStruct);
+
+  return channelStruct;
 }
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
@@ -183,11 +187,12 @@ export async function getChannels(guildID: string, addToCache = true) {
   ) as ChannelCreatePayload[];
 
   return Promise.all(result.map(async (res) => {
-    const channel = await structures.createChannel(res, guildID);
+    const channelStruct = await structures.createChannel(res, guildID);
     if (addToCache) {
-      await cacheHandlers.set("channels", channel.id, channel);
+      await cacheHandlers.set("channels", channelStruct.id, channelStruct);
     }
-    return channel;
+
+    return channelStruct;
   }));
 }
 
@@ -200,10 +205,12 @@ export async function getChannel(channelID: string, addToCache = true) {
     endpoints.CHANNEL_BASE(channelID),
   ) as ChannelCreatePayload;
 
-  const channel = await structures.createChannel(result, result.guild_id);
-  if (addToCache) await cacheHandlers.set("channels", channel.id, channel);
+  const channelStruct = await structures.createChannel(result, result.guild_id);
+  if (addToCache) {
+    await cacheHandlers.set("channels", channelStruct.id, channelStruct);
+  }
 
-  return channel;
+  return channelStruct;
 }
 
 /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
@@ -287,7 +294,11 @@ export async function getMember(
     endpoints.GUILD_MEMBER(guildID, id),
   ) as MemberCreatePayload;
 
-  return structures.createMember(data, guildID);
+  const memberStruct = await structures.createMember(data, guildID);
+
+  await cacheHandlers.set("members", memberStruct.id, memberStruct);
+
+  return memberStruct;
 }
 
 /** Returns guild member objects for the specified user by their nickname/username.
@@ -303,7 +314,7 @@ export async function getMembersByQuery(
   if (!guild) return;
 
   return new Promise((resolve) => {
-    requestAllMembers(guild, resolve, { query: name, limit });
+    return requestAllMembers(guild, resolve, { query: name, limit });
   }) as Promise<Collection<string, Member>>;
 }
 
@@ -380,7 +391,7 @@ export function emojiURL(id: string, animated = false) {
 
 /**
  * Returns a list of emojis for the given guild.
- * 
+ *
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  */
 export async function getEmojis(guildID: string, addToCache = true) {
@@ -400,7 +411,7 @@ export async function getEmojis(guildID: string, addToCache = true) {
 
 /**
  * Returns an emoji for the given guild and emoji ID.
- * 
+ *
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  */
 export async function getEmoji(
@@ -575,7 +586,7 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
   }
 
   return new Promise((resolve) => {
-    requestAllMembers(guild, resolve, options);
+    return requestAllMembers(guild, resolve, options);
   }) as Promise<Collection<string, Member>>;
 }
 
@@ -620,7 +631,13 @@ export async function getMembers(
     ) as MemberCreatePayload[];
 
     const memberStructures = await Promise.all(
-      result.map((member) => structures.createMember(member, guildID)),
+      result.map(async (member) => {
+        const memberStruct = await structures.createMember(member, guildID);
+
+        await cacheHandlers.set("members", memberStruct.id, memberStruct);
+
+        return memberStruct;
+      }),
     ) as Member[];
 
     if (!memberStructures.length) break;
@@ -936,8 +953,8 @@ export async function getTemplate(templateCode: string) {
   return template;
 }
 
-/** 
- * Returns the guild template if it exists 
+/**
+ * Returns the guild template if it exists
  * @deprecated will get removed in v11 use `getTemplate` instead
  */
 export function getGuildTemplate(
