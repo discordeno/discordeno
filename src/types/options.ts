@@ -10,14 +10,18 @@ import {
   Emoji,
   IntegrationCreateUpdateEvent,
   IntegrationDeleteEvent,
+  InviteCreateEvent,
+  InviteDeleteEvent,
   PresenceUpdatePayload,
   TypingStartPayload,
   VoiceStateUpdatePayload,
 } from "./discord.ts";
 import { UserPayload } from "./guild.ts";
-import { InteractionCommandPayload } from "./interactions.ts";
 import {
-  Application,
+  ApplicationCommandEvent,
+  InteractionCommandPayload,
+} from "./interactions.ts";
+import {
   Attachment,
   BaseMessageReactionPayload,
   Embed,
@@ -92,7 +96,18 @@ interface RateLimitData {
 
 export interface EventHandlers {
   rateLimit?: (data: RateLimitData) => unknown;
-  applicationCommandCreate?: (data: Application) => unknown;
+  /** Sent when a new Slash Command is created, relevant to the current user. */
+  applicationCommandCreate?: (
+    data: Camelize<ApplicationCommandEvent>,
+  ) => unknown;
+  /** Sent when a Slash Command relevant to the current user is updated. */
+  applicationCommandUpdate?: (
+    data: Camelize<ApplicationCommandEvent>,
+  ) => unknown;
+  /** Sent when a Slash Command relevant to the current user is deleted. */
+  applicationCommandDelete?: (
+    data: Camelize<ApplicationCommandEvent>,
+  ) => unknown;
   /** Sent when properties about the user change. */
   botUpdate?: (user: UserPayload) => unknown;
   /** Sent when a new guild channel is created, relevant to the current user. */
@@ -219,6 +234,10 @@ export interface EventHandlers {
   integrationUpdate?: (data: Camelize<IntegrationCreateUpdateEvent>) => unknown;
   /** Sent when an integration is deleted. */
   integrationDelete?: (data: Camelize<IntegrationDeleteEvent>) => undefined;
+  /** Sent when a new invite to a channel is created. */
+  inviteCreate?: (data: Camelize<InviteCreateEvent>) => unknown;
+  /** Sent when an invite is deleted. */
+  inviteDelete?: (data: Camelize<InviteDeleteEvent>) => unknown;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */

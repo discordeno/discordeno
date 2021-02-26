@@ -1,5 +1,10 @@
-import { authorization, eventHandlers } from "../bot.ts";
-import { Errors, HttpResponseCode, RequestMethods } from "../types/mod.ts";
+import { authorization, eventHandlers, restAuthorization } from "../bot.ts";
+import {
+  Errors,
+  FileContent,
+  HttpResponseCode,
+  RequestMethods,
+} from "../types/mod.ts";
 import {
   API_VERSION,
   BASE_URL,
@@ -116,7 +121,7 @@ async function processQueue() {
     }
 
     if (Object.keys(pathQueues).length) {
-      await cleanupQueues();
+      cleanupQueues();
     } else queueInProcess = false;
   }
 }
@@ -155,8 +160,15 @@ function createRequestBody(body: any, method: RequestMethods) {
   }
 
   if (body?.file) {
+    if (!Array.isArray(body.file)) body.file = [body.file];
+
     const form = new FormData();
-    form.append("file", body.file.blob, body.file.name);
+
+    body.file.map((file: FileContent, index: number) =>
+      // The key of the form data item must be unique; otherwise, Discordeno only considers the first item in the form data with the same names
+      form.append(`file${index + 1}`, file.blob as Blob, file.name)
+    );
+
     form.append("payload_json", JSON.stringify({ ...body, file: undefined }));
     body.file = form;
   } else if (
@@ -209,8 +221,18 @@ function runMethod(
     !url.startsWith(`${BASE_URL}/v${API_VERSION}`) &&
     !url.startsWith(IMAGE_BASE_URL)
   ) {
-    return fetch(url, { method, body: body ? JSON.stringify(body) : undefined })
-      .then((res) => res.json())
+    return fetch(url, {
+      body: JSON.stringify(body || {}),
+      headers: {
+        authorization: restAuthorization,
+      },
+      method: method.toUpperCase(),
+    })
+      .then((res) => {
+        if (res.status === 204) return undefined;
+
+        return res.json();
+      })
       .catch((error) => {
         console.error(error);
         throw errorStack;
@@ -218,7 +240,8 @@ function runMethod(
   }
 
   // No proxy so we need to handle all rate limiting and such
-  return new Promise((resolve, reject) => {
+  // deno-lint-ignore no-async-promise-executor
+  return new Promise(async (resolve, reject) => {
     const callback = async () => {
       try {
         const rateLimitResetIn = await checkRatelimits(url);
@@ -250,7 +273,7 @@ function runMethod(
           },
         );
         const bucketIDFromHeaders = processHeaders(url, response.headers);
-        handleStatusCode(response, errorStack);
+        await handleStatusCode(response, errorStack);
 
         // Sometimes Discord returns an empty 204 response that can't be made to JSON.
         if (response.status === 204) return resolve(undefined);
@@ -302,7 +325,7 @@ function runMethod(
     });
     if (!queueInProcess) {
       queueInProcess = true;
-      processQueue();
+      await processQueue();
     }
   });
 }
@@ -324,7 +347,7 @@ async function logErrors(response: Response, errorStack?: unknown) {
   }
 }
 
-function handleStatusCode(response: Response, errorStack?: unknown) {
+async function handleStatusCode(response: Response, errorStack?: unknown) {
   const status = response.status;
 
   if (
@@ -334,7 +357,7 @@ function handleStatusCode(response: Response, errorStack?: unknown) {
     return true;
   }
 
-  logErrors(response, errorStack);
+  await logErrors(response, errorStack);
 
   switch (status) {
     case HttpResponseCode.BadRequest:

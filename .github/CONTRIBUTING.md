@@ -15,9 +15,12 @@
 
 Examples of good PR title:
 
-- fix(controllers): cache member from INTERACTION_CREATE payload
+- fix(controllers/interactions): cache member from INTERACTION_CREATE payload
 - docs: improve wording
-- feat(handlers): add editGuild() function Examples of bad PR title:
+- feat(handlers/guild): add editGuild() function Examples of bad PR title:
+
+Examples of bad PR title:
+
 - fix #7123
 - update docs
 - fix bugs

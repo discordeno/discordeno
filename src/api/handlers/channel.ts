@@ -127,9 +127,9 @@ export async function getPins(channelID: string) {
   return Promise.all(result.map((res) => structures.createMessage(res)));
 }
 
-/** 
- * Trigger a typing indicator for the specified channel. Generally bots should **NOT** implement this route. 
- * However, if a bot is responding to a command and expects the computation to take a few seconds, 
+/**
+ * Trigger a typing indicator for the specified channel. Generally bots should **NOT** implement this route.
+ * However, if a bot is responding to a command and expects the computation to take a few seconds,
  * this endpoint may be called to let the user know that the bot is processing their message.
  */
 export async function startTyping(channelID: string) {
@@ -144,36 +144,59 @@ export async function sendMessage(
   content: string | MessageContent,
 ) {
   if (typeof content === "string") content = { content };
-  const hasSendMessagesPerm = await botHasChannelPermissions(
-    channelID,
-    ["SEND_MESSAGES"],
-  );
-  if (
-    !hasSendMessagesPerm
-  ) {
-    throw new Error(Errors.MISSING_SEND_MESSAGES);
-  }
 
-  const hasSendTtsMessagesPerm = await botHasChannelPermissions(
-    channelID,
-    ["SEND_TTS_MESSAGES"],
-  );
-  if (
-    content.tts &&
-    !hasSendTtsMessagesPerm
-  ) {
-    throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
-  }
+  const channel = await cacheHandlers.get("channels", channelID);
+  // If the channel is cached, we can do extra checks/safety
+  if (channel) {
+    if (
+      ![ChannelTypes.DM, ChannelTypes.GUILD_NEWS, ChannelTypes.GUILD_TEXT]
+        .includes(channel.type)
+    ) {
+      throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
+    }
 
-  const hasEmbedLinksPerm = await botHasChannelPermissions(
-    channelID,
-    ["EMBED_LINKS"],
-  );
-  if (
-    content.embed &&
-    !hasEmbedLinksPerm
-  ) {
-    throw new Error(Errors.MISSING_EMBED_LINKS);
+    const hasSendMessagesPerm = await botHasChannelPermissions(
+      channelID,
+      ["SEND_MESSAGES"],
+    );
+    if (
+      !hasSendMessagesPerm
+    ) {
+      throw new Error(Errors.MISSING_SEND_MESSAGES);
+    }
+
+    const hasSendTtsMessagesPerm = await botHasChannelPermissions(
+      channelID,
+      ["SEND_TTS_MESSAGES"],
+    );
+    if (
+      content.tts &&
+      !hasSendTtsMessagesPerm
+    ) {
+      throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
+    }
+
+    const hasEmbedLinksPerm = await botHasChannelPermissions(
+      channelID,
+      ["EMBED_LINKS"],
+    );
+    if (
+      content.embed &&
+      !hasEmbedLinksPerm
+    ) {
+      throw new Error(Errors.MISSING_EMBED_LINKS);
+    }
+
+    if (content.mentions?.repliedUser) {
+      if (
+        !(await botHasChannelPermissions(
+          channelID,
+          ["READ_MESSAGE_HISTORY"],
+        ))
+      ) {
+        throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
+      }
+    }
   }
 
   // Use ... for content length due to unicode characters and js .length handling
@@ -205,26 +228,6 @@ export async function sendMessage(
         content.mentions.roles = content.mentions.roles.slice(0, 100);
       }
     }
-
-    if (content.mentions.repliedUser) {
-      if (
-        !(await botHasChannelPermissions(
-          channelID,
-          ["READ_MESSAGE_HISTORY"],
-        ))
-      ) {
-        throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
-      }
-    }
-  }
-
-  const channel = await cacheHandlers.get("channels", channelID);
-  if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);
-  if (
-    ![ChannelTypes.DM, ChannelTypes.GUILD_NEWS, ChannelTypes.GUILD_TEXT]
-      .includes(channel.type)
-  ) {
-    throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
   }
 
   const result = await RequestManager.post(
@@ -237,9 +240,13 @@ export async function sendMessage(
           replied_user: content.mentions.repliedUser,
         }
         : undefined,
-      message_reference: {
-        message_id: content.replyMessageID,
-      },
+      ...(content.replyMessageID
+        ? {
+          message_reference: {
+            message_id: content.replyMessageID,
+          },
+        }
+        : {}),
     },
   ) as MessageCreateOptions;
 

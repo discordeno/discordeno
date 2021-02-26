@@ -31,7 +31,7 @@ export function memberHasPermission(
 ) {
   if (memberID === guild.ownerID) return true;
 
-  const permissionBits = memberRoleIDs.map((id) =>
+  const permissionBits = [guild.id, ...memberRoleIDs].map((id) =>
     guild.roles.get(id)?.permissions
   )
     // Removes any edge case undefined

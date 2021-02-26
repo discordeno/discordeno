@@ -1,6 +1,10 @@
 # Discordeno
 
-> Discord API library for [Deno](https://deno.land)
+<img align="right" src=docs/src/.vuepress/public/logo.png height="150px">
+
+Discord API library for [Deno](https://deno.land)
+
+Discordeno follows [Semantic Versioning](https://semver.org/)
 
 [![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
@@ -8,13 +12,10 @@
 
 ## Features
 
-- **Secure & stable**: Discordeno is secure and stable. One of the greatest
-  issues with almost every library is stability; types are outdated, less (or
-  minimal) parity with the API, core maintainers have quit or no longer actively
-  maintain the library, and whatnot. Discordeno, on the other hand, is actively
-  maintained to ensure great performance and convenience. Moreover, it
-  internally checks all missing permissions before forwarding a request to the
-  Discord API so that the client does not get globally-banned by Discord.
+- **Secure & stable**: Discordeno is actively maintained to ensure great
+  performance and convenience. Moreover, it internally checks all missing
+  permissions before forwarding a request to the Discord API so that the client
+  does not get globally-banned by Discord.
 - **Simple, Efficient, & Lightweight**: Discordeno is simplistic, easy-to-use,
   versatile while being efficient and lightweight. Follows
   [Convention Over Configuration](https://en.wikipedia.org/wiki/Convention_over_configuration)
@@ -58,9 +59,9 @@ developers had when I first started out coding Discord bots with existing
 libraries. If you are a beginner, you can check out these awesome official and
 unofficial boilerplates:
 
-- [Discordeno Bot Template (official)](https://github.com/discordeno/discordeno-bot-template)
+- [Discordeno Boilerplate (official)](https://github.com/discordeno/boilerplate)
 - [Serverless Slash Commands Template
-  (official)](https://github.com/discordeno/slash-commands-bot)
+  (official)](https://github.com/discordeno/slash-commands-boilerplate)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
 ## Useful Links
@@ -76,4 +77,4 @@ We appreciate your help! Before contributing, please read the
 
 ### License
 
-[MIT © discordeno](https://github.com/discordeno/discordeno/blob/master/LICENSE)
+[License can be found here](https://github.com/discordeno/discordeno/blob/master/LICENSE)

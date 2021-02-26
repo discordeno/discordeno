@@ -21,19 +21,19 @@ export async function handleInternalGuildCreate(
   // When shards resume they emit GUILD_CREATE again.
   if (await cacheHandlers.has("guilds", payload.id)) return;
 
-  const guild = await structures.createGuild(
+  const guildStruct = await structures.createGuild(
     data.d as CreateGuildPayload,
     shardID,
   );
 
-  await cacheHandlers.set("guilds", guild.id, guild);
+  await cacheHandlers.set("guilds", guildStruct.id, guildStruct);
 
   if (await cacheHandlers.has("unavailableGuilds", payload.id)) {
     await cacheHandlers.delete("unavailableGuilds", payload.id);
   }
 
-  if (!cache.isReady) return eventHandlers.guildLoaded?.(guild);
-  eventHandlers.guildCreate?.(guild);
+  if (!cache.isReady) return eventHandlers.guildLoaded?.(guildStruct);
+  eventHandlers.guildCreate?.(guildStruct);
 }
 
 export async function handleInternalGuildDelete(data: DiscordPayload) {
@@ -52,14 +52,14 @@ export async function handleInternalGuildDelete(data: DiscordPayload) {
     }
   });
 
-  await cacheHandlers.delete("guilds", payload.id);
-
   if (payload.unavailable) {
     return cacheHandlers.set("unavailableGuilds", payload.id, Date.now());
   }
 
   const guild = await cacheHandlers.get("guilds", payload.id);
   if (!guild) return;
+
+  await cacheHandlers.delete("guilds", payload.id);
 
   eventHandlers.guildDelete?.(guild);
 }
@@ -102,7 +102,7 @@ export async function handleInternalGuildUpdate(data: DiscordPayload) {
       }
     }).filter((change) => change) as GuildUpdateChange[];
 
-  await cacheHandlers.set("guilds", payload.id, { ...cachedGuild, ...changes });
+  await cacheHandlers.set("guilds", payload.id, cachedGuild);
 
   eventHandlers.guildUpdate?.(cachedGuild, changes);
 }

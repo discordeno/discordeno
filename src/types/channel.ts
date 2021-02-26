@@ -24,7 +24,7 @@ export interface ChannelEditOptions {
 
 export interface BaseChannelCreate {
   /** The id of the guild */
-  guild_id?: string;
+  "guild_id"?: string;
   /** Sorting position of the channel */
   position?: number;
   /** The name of the channel (2-100 characters) */
@@ -34,24 +34,24 @@ export interface BaseChannelCreate {
   /** Whether the channel is nsfw */
   nsfw?: boolean;
   /** The id of the last message sent in this channel (may not point to an existing or valid message) */
-  last_message_id?: string | null;
+  "last_message_id"?: string | null;
   /** The bitrate (in bits) of the voice channel */
   bitrate?: number;
   /** The user limit of the voice channel */
-  user_limit?: number;
+  "user_limit"?: number;
   /** Amount of seconds a user has to wait before sending another message (0-21600) Bots and users with the permission MANAGE_MESSAGES or MANAGE_CHANNEL are unaffected. */
-  rate_limit_per_user?: number;
+  "rate_limit_per_user"?: number;
   /** The parent category id */
-  parent_id?: string | null;
+  "parent_id"?: string | null;
   /** When the last pinned message was pinned */
-  last_pin_timestamp?: string;
+  "last_pin_timestamp"?: string;
 }
 
 export interface DMChannelCreatePayload {
   /** This is a unique channel id. It is NOT the users id. */
   id: string;
   /** The id of the last message sent in this dm channel */
-  last_message_id: string;
+  "last_message_id": string;
   /** The type of channel */
   type: 1;
   /** The user */
@@ -71,7 +71,7 @@ export interface ChannelCreatePayload extends BaseChannelCreate {
   /** The type of the channel */
   type: ChannelType;
   /** Explicit permission overwrites for members and roles */
-  permission_overwrites?: RawOverwrite[];
+  "permission_overwrites"?: RawOverwrite[];
 }
 
 export type ChannelType = 0 | 1 | 2 | 4 | 5 | 6;
@@ -111,13 +111,18 @@ export interface MessageContent {
   /** Whether this is a TextToSpeech message */
   tts?: boolean;
   /** The contents of the file being sent */
-  file?: { blob: unknown; name: string };
+  file?: FileContent | FileContent[];
   /** Embed object */
   embed?: Embed;
   /** JSON encoded body of any additional request fields. */
-  payload_json?: string;
+  "payload_json"?: string;
   /** If you want to send a reply message, provide the original message id here */
   replyMessageID?: string;
+}
+
+export interface FileContent {
+  blob: unknown;
+  name: string;
 }
 
 export interface AllowedMentions {
@@ -151,9 +156,9 @@ export interface GetMessagesAround extends GetMessages {
 
 export interface CreateInviteOptions {
   /** Duration of invite in seconds before expiry, or 0 for never. Defaults to 86400 (24 hours) */
-  max_age: number;
+  "max_age": number;
   /** Max number of uses or 0 for unlimited. Default 0 */
-  max_uses: number;
+  "max_uses": number;
   /** Whether this invite only grants temporary membership. */
   temporary: boolean;
   /** If true, don't try to reuse a similar invite (useful for creating many unique one time use invites.) */
@@ -162,7 +167,7 @@ export interface CreateInviteOptions {
 
 export interface FollowedChannelPayload {
   /** The source channel id */
-  channel_id: string;
+  "channel_id": string;
   /** The webhook id */
-  webhook_id: string;
+  "webhook_id": string;
 }
