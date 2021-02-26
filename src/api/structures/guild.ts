@@ -345,7 +345,7 @@ export interface Guild {
   invites(): ReturnType<typeof getInvites>;
 }
 
-interface CleanVoiceState extends VoiceState {
+export interface CleanVoiceState extends VoiceState {
   /** The guild id where this voice state is from */
   guildID: string;
   /** The channel id where this voice state is from */

@@ -4,6 +4,8 @@
 
 Discord API library for [Deno](https://deno.land)
 
+Discordeno follows [Semantic Versioning](https://semver.org/)
+
 [![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
@@ -75,4 +77,4 @@ We appreciate your help! Before contributing, please read the
 
 ### License
 
-[MIT © discordeno](https://github.com/discordeno/discordeno/blob/master/LICENSE)
+[License can be found here](https://github.com/discordeno/discordeno/blob/master/LICENSE)
