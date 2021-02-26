@@ -146,7 +146,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
   );
 
   await Promise.all(channels.map(async (channel) => {
-    const channelStruct = await structures.createChannel(channel);
+    const channelStruct = await structures.createChannel(channel, rest.id);
     return cacheHandlers.set("channels", channelStruct.id, channelStruct);
   }));
 
