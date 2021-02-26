@@ -50,7 +50,7 @@ export const tempData = {
 
 // Main
 Deno.test({
-  name: "[main] connect to gateway",
+  name: "[core] connect to gateway",
   async fn() {
     const token = Deno.env.get("DISCORD_TOKEN");
     if (!token) throw new Error("Token is not provided");
@@ -349,7 +349,7 @@ Deno.test({
 
 // Forcefully exit the Deno process once all tests are done.
 Deno.test({
-  name: "close the websocket connection",
+  name: "[core] close the websocket connection",
   fn() {
     closeWS();
   },
