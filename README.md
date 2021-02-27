@@ -15,7 +15,8 @@ Discordeno follows [Semantic Versioning](https://semver.org/)
 - **Secure & stable**: Discordeno is actively maintained to ensure great
   performance and convenience. Moreover, it internally checks all missing
   permissions before forwarding a request to the Discord API so that the client
-  does not get globally-banned by Discord.
+  does not get
+  [globally-banned by Discord](https://discord.com/developers/docs/topics/rate-limits#invalid-request-limit).
 - **Simple, Efficient, & Lightweight**: Discordeno is simplistic, easy-to-use,
   versatile while being efficient and lightweight. Follows
   [Convention Over Configuration](https://en.wikipedia.org/wiki/Convention_over_configuration)

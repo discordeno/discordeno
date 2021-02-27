@@ -37,7 +37,6 @@ import {
 export const defaultTestOptions: Partial<Deno.TestDefinition> = {
   sanitizeOps: false,
   sanitizeResources: false,
-  ignore: Deno.env.get("TEST_TYPE") !== "api",
 };
 
 // Temporary data
