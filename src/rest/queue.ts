@@ -62,7 +62,7 @@ export async function processQueue(id: string) {
         response.headers,
       );
 
-      if (response.status < 200 && response.status >= 400) {
+      if (response.status < 200 || response.status >= 400) {
         restCache.eventHandlers.error(
           "httpError",
           queuedRequest.payload,
