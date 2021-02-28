@@ -54,5 +54,5 @@ resources:
 - [TypeScript Crash Course by Traversy
   Media](https://www.youtube.com/watch?v=rAy_3SIqT-E)
 
-There is always more resources... Take your time and don't fret! Come back when
-you are ready, we can't wait to see what your Discordeno created bot does!
+There are always more resources... Take your time and don't fret! Come back when
+you're ready, we can't wait to see what your Discordeno created bot does!
