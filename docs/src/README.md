@@ -55,4 +55,4 @@ resources:
   Media](https://www.youtube.com/watch?v=rAy_3SIqT-E)
 
 There are always more resources... Take your time and don't fret! Come back when
-you're ready, we can't wait to see what your Discordeno created bot does!
+you are ready, we can't wait to see what your Discordeno created bot does!
