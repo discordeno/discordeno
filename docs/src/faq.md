@@ -21,13 +21,14 @@ of it's code! A breaking change in typings is a breaking change for the library!
 
 ## How Stable Is Discordeno?
 
-One of the biggest issues with almost every library (that I have used) is stability.
-None of the libraries gave much love and attention to TypeScript developers the
-way it deserves. Sometimes TypeScript projects would break because breaking
-changes to typings did not make a MAJOR bump so TypeScript bots in production
-would break. Sometimes I was personally maintaining the typings because no one
-else was for that lib. Some libs were pre 1.0 and didn't even have a stable
-branch/version where I would not have to worry about breaking changes.
+One of the biggest issues with almost every library (that I have used) is
+stability. None of the libraries gave much love and attention to TypeScript
+developers the way it deserves. Sometimes TypeScript projects would break
+because breaking changes to typings did not make a MAJOR bump so TypeScript bots
+in production would break. Sometimes I was personally maintaining the typings
+because no one else was for that lib. Some libs were pre 1.0 and didn't even
+have a stable branch/version where I would not have to worry about breaking
+changes.
 
 This is why I made it one of my foundational goals of this library to have the
 best stability for TypeScript developers. No matter how small, a breaking change
