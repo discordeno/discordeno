@@ -13,6 +13,7 @@ import {
   cache,
   Channel,
   channelOverwriteHasPermission,
+  closeWS,
   createGuildChannel,
   createGuildRole,
   createServer,
@@ -347,8 +348,9 @@ Deno.test({
 
 // Forcefully exit the Deno process once all tests are done.
 Deno.test({
-  name: "exit the process forcefully after all the tests are done\n",
+  name: "[main] close the websocket connection",
   fn() {
-    Deno.exit();
+    closeWS();
   },
+  ...defaultTestOptions,
 });
