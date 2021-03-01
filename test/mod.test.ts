@@ -13,6 +13,7 @@ import {
   cache,
   Channel,
   channelOverwriteHasPermission,
+  closeWS,
   createGuildChannel,
   createGuildRole,
   createServer,
@@ -36,7 +37,6 @@ import {
 export const defaultTestOptions: Partial<Deno.TestDefinition> = {
   sanitizeOps: false,
   sanitizeResources: false,
-  ignore: Deno.env.get("TEST_TYPE") !== "api",
 };
 
 // Temporary data
@@ -58,14 +58,6 @@ Deno.test({
       token,
       intents: ["GUILD_MESSAGES", "GUILDS"],
     });
-
-    eventHandlers.ready = () => {
-      if (cache.guilds.size >= 10) {
-        cache.guilds.map((guild) =>
-          guild.ownerID === botID && deleteServer(guild.id)
-        );
-      }
-    };
 
     // Delay the execution by 5 seconds
     await delay(5000);
@@ -348,8 +340,9 @@ Deno.test({
 
 // Forcefully exit the Deno process once all tests are done.
 Deno.test({
-  name: "exit the process forcefully after all the tests are done\n",
+  name: "[main] close the websocket connection",
   fn() {
-    Deno.exit();
+    closeWS();
   },
+  ...defaultTestOptions,
 });
