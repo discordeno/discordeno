@@ -1,7 +1,6 @@
 import { botID } from "../../bot.ts";
 import {
   BanOptions,
-  ChannelCreatePayload,
   CreateGuildPayload,
   Emoji,
   GetAuditLogsOptions,
@@ -12,13 +11,12 @@ import {
   ImageSize,
   MemberCreatePayload,
   Presence,
-  RoleData,
-  ValueOf,
   VoiceState,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
 import {
   ban,
   deleteServer,
@@ -144,18 +142,18 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     ...rest
   } = data;
 
-  const roles = (await Promise.all(
-    data.roles.map((r: RoleData) => structures.createRole(r)),
-  )) as Role[];
-
-  await Promise.all(
-    channels.map((c: ChannelCreatePayload) =>
-      structures.createChannel(c, data.id)
-    ),
+  const roles = await Promise.all(
+    data.roles.map((role) => structures.createRole(role)),
   );
+
+  await Promise.all(channels.map(async (channel) => {
+    const channelStruct = await structures.createChannel(channel, rest.id);
+    return cacheHandlers.set("channels", channelStruct.id, channelStruct);
+  }));
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
+    // @ts-ignore index signature
     restProps[key] = createNewProp(rest[key]);
   }
 
@@ -214,7 +212,7 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
 
   initialMemberLoadQueue.set(guild.id, members);
 
-  return guild;
+  return guild as Guild;
 }
 
 export interface Guild {
@@ -349,12 +347,9 @@ export interface Guild {
   unban(memberID: string): ReturnType<typeof unban>;
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   invites(): ReturnType<typeof getInvites>;
-
-  // Index signature
-  [key: string]: ValueOf<Guild>;
 }
 
-interface CleanVoiceState extends VoiceState {
+export interface CleanVoiceState extends VoiceState {
   /** The guild id where this voice state is from */
   guildID: string;
   /** The channel id where this voice state is from */

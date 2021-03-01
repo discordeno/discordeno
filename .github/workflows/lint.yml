@@ -1,20 +1,12 @@
 name: Lint
-on: 
-  push:
-    paths:
-      - 'src/**'
-      - 'mod.ts'
-      - 'tests/**'
-  pull_request:
-    paths:
-      - 'src/**'
-      - 'mod.ts'
-      - 'tests/**'
+on: [push, pull_request]
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: denolib/setup-deno@v2
+      - name: Run fmt check script
+        run: deno fmt --check
       - name: Run lint script
-        run: deno lint src/** --unstable
+        run: deno lint src/** test/** --unstable --ignore=./src/types/

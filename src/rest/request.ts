@@ -1,7 +1,7 @@
-import { USER_AGENT } from "../util/constants.ts";
+import { BASE_URL, USER_AGENT } from "../util/constants.ts";
 import { restCache } from "./cache.ts";
 import { ServerRequest } from "./deps.ts";
-import { startQueue } from "./queue.ts";
+import { processQueue } from "./queue.ts";
 import {
   QueuedRequest,
   RestServerOptions,
@@ -14,12 +14,14 @@ export function processRequest(
   payload: RunMethodOptions,
   options: RestServerOptions,
 ) {
-  const route = payload.url.substring(payload.url.indexOf("api/"));
+  const route = request.url.substring(request.url.indexOf("api/"));
   const parts = route.split("/");
   // REMOVE THE API
   parts.shift();
   // REMOVES THE VERSION NUMBER
   if (parts[0]?.startsWith("v")) parts.shift();
+  // SET THE NEW REQUEST URL
+  request.url = `${BASE_URL}/v${options.apiVersion || 8}/${parts.join("/")}`;
   // REMOVE THE MAJOR PARAM
   parts.shift();
 
@@ -31,21 +33,24 @@ export function processRequest(
     queue.push({ request, payload, options });
   } else {
     // CREATES A NEW QUEUE
-    restCache.pathQueues.set(id, [{ request, payload, options }]);
+    restCache.pathQueues.set(id, [{
+      request,
+      payload,
+      options,
+    }]);
+    processQueue(id);
   }
-
-  startQueue();
 }
 
 /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
 export function createRequestBody(queuedRequest: QueuedRequest) {
   const headers: { [key: string]: string } = {
-    Authorization: queuedRequest.options.token,
+    Authorization: `Bot ${queuedRequest.options.token}`,
     "User-Agent": USER_AGENT,
   };
 
   // GET METHODS SHOULD NOT HAVE A BODY
-  if (queuedRequest.payload.method === "get") {
+  if (queuedRequest.request.method === "GET") {
     queuedRequest.payload.body = undefined;
   }
 
@@ -71,7 +76,7 @@ export function createRequestBody(queuedRequest: QueuedRequest) {
     queuedRequest.payload.body.file = form;
   } else if (
     queuedRequest.payload.body &&
-    !["get", "delete"].includes(queuedRequest.payload.method)
+    !["GET", "DELETE"].includes(queuedRequest.request.method)
   ) {
     headers["Content-Type"] = "application/json";
   }
@@ -80,7 +85,7 @@ export function createRequestBody(queuedRequest: QueuedRequest) {
     headers,
     body: queuedRequest.payload.body?.file ||
       JSON.stringify(queuedRequest.payload.body),
-    method: queuedRequest.payload.method.toUpperCase(),
+    method: queuedRequest.request.method,
   };
 }
 
