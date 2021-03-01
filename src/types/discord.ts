@@ -6,6 +6,7 @@ import {
 } from "./guild.ts";
 import { MemberCreatePayload } from "./member.ts";
 import { Activity, Application } from "./message.ts";
+import { ActivityPayload } from "./mod";
 import { ClientStatusPayload } from "./presence.ts";
 
 export interface DiscordPayload {
@@ -369,7 +370,7 @@ export interface GatewayStatusUpdatePayload {
   /** unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
   since: number | null;
   /** null, or the user's activities */
-  activities: Pick<Activity, "name" | "type" | "url">[] | null;
+  activities: Pick<ActivityPayload, "name" | "type" | "url">[] | null;
   /** the user's new status */
   status: StatusType;
   /** whether or not the client is afk */
