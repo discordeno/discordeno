@@ -10,12 +10,22 @@ Discordeno follows [Semantic Versioning](https://semver.org/)
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
 
+## Table of contents
+
+- [Features](#features)
+- [Getting Started](#getting-started)
+  - [Minimal Example](#minimal-example)
+  - [Boilerplates](#boilerplates)
+- [Links](#links)
+- [Contributing](#contributing)
+
 ## Features
 
 - **Secure & stable**: Discordeno is actively maintained to ensure great
   performance and convenience. Moreover, it internally checks all missing
   permissions before forwarding a request to the Discord API so that the client
-  does not get globally-banned by Discord.
+  does not get
+  [globally-banned by Discord](https://discord.com/developers/docs/topics/rate-limits#invalid-request-limit).
 - **Simple, Efficient, & Lightweight**: Discordeno is simplistic, easy-to-use,
   versatile while being efficient and lightweight. Follows
   [Convention Over Configuration](https://en.wikipedia.org/wiki/Convention_over_configuration)
@@ -64,7 +74,7 @@ unofficial boilerplates:
   (official)](https://github.com/discordeno/slash-commands-boilerplate)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
-## Useful Links
+## Links
 
 - [Website](https://discordeno.mod.land)
 - [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
@@ -74,7 +84,3 @@ unofficial boilerplates:
 
 We appreciate your help! Before contributing, please read the
 [Contributing Guide](https://github.com/discordeno/discordeno/blob/master/.github/CONTRIBUTING.md).
-
-### License
-
-[License can be found here](https://github.com/discordeno/discordeno/blob/master/LICENSE)
