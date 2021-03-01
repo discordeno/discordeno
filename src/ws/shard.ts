@@ -383,20 +383,17 @@ async function processGatewayQueue() {
   await processGatewayQueue();
 }
 
-export function botGatewayStatusRequest(payload: BotStatusRequest) {
+export function botGatewayStatusRequest(
+  { since, activities, status, afk }: BotStatusRequest,
+) {
   basicShards.forEach((shard) => {
     sendWS({
       op: GatewayOpcode.StatusUpdate,
       d: {
-        since: null,
-        game: payload.game.name
-          ? {
-            name: payload.game.name,
-            type: payload.game.type,
-          }
-          : null,
-        status: payload.status,
-        afk: false,
+        since,
+        activities,
+        status,
+        afk,
       },
     }, shard.id);
   });
