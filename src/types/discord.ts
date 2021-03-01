@@ -6,7 +6,7 @@ import {
 } from "./guild.ts";
 import { MemberCreatePayload } from "./member.ts";
 import { Activity, Application } from "./message.ts";
-import { ActivityPayload } from "./mod";
+import { ActivityPayload } from "./mod.ts";
 import { ClientStatusPayload } from "./presence.ts";
 
 export interface DiscordPayload {
