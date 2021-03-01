@@ -369,7 +369,7 @@ export interface GatewayStatusUpdatePayload {
   /** unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
   since: number | null;
   /** null, or the user's activities */
-  activities: Activity[] | null;
+  activities: Pick<Activity, "name" | "type" | "url">[] | null;
   /** the user's new status */
   status: StatusType;
   /** whether or not the client is afk */
