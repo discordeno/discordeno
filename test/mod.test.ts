@@ -59,14 +59,6 @@ Deno.test({
       intents: ["GUILD_MESSAGES", "GUILDS"],
     });
 
-    eventHandlers.ready = () => {
-      if (cache.guilds.size >= 10) {
-        cache.guilds.map((guild) =>
-          guild.ownerID === botID && deleteServer(guild.id)
-        );
-      }
-    };
-
     // Delay the execution by 5 seconds
     await delay(5000);
 
