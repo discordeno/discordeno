@@ -6,9 +6,10 @@ import {
   DiscordPayload,
   FetchMembersOptions,
   GatewayOpcode,
+  GatewayStatusUpdatePayload,
   ReadyPayload,
 } from "../types/mod.ts";
-import { BotStatusRequest, delay } from "../util/utils.ts";
+import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
 import { handleDiscordPayload } from "./shard_manager.ts";
 import { Collection } from "../util/collection.ts";
@@ -384,7 +385,7 @@ async function processGatewayQueue() {
 }
 
 export function botGatewayStatusRequest(
-  { since, activities, status, afk }: BotStatusRequest,
+  { since, activities, status, afk }: GatewayStatusUpdatePayload,
 ) {
   basicShards.forEach((shard) => {
     sendWS({

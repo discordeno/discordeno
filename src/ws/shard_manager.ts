@@ -8,10 +8,11 @@ import {
   DiscordPayload,
   FetchMembersOptions,
   GatewayOpcode,
+  GatewayStatusUpdatePayload,
 } from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
-import { BotStatusRequest, delay } from "../util/utils.ts";
+import { delay } from "../util/utils.ts";
 import {
   botGatewayStatusRequest,
   createShard,
@@ -115,7 +116,7 @@ export function sendGatewayCommand(
   payload: Record<string, any>,
 ) {
   if (type === "EDIT_BOTS_STATUS") {
-    botGatewayStatusRequest(payload as BotStatusRequest);
+    botGatewayStatusRequest(payload as GatewayStatusUpdatePayload);
   }
 
   return;
