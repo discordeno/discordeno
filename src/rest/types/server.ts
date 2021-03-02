@@ -15,7 +15,7 @@ export interface RestServerOptions {
   tlsFiles?: {
     /** Path of the server certificate file */
     cert: string;
-    /** Path of the server public key file. */
+    /** Path of the server key file. */
     key: string;
   };
 }
