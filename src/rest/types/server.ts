@@ -16,7 +16,7 @@ export interface RestServerOptions {
     /** Path of the server certificate file (public key) */
     cert: string;
     /** Path of the server's private key file. */
-    privateKey: string;
+    key: string;
   };
 }
 
