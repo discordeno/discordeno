@@ -15,7 +15,7 @@ export interface RestServerOptions {
   keys?: {
     /** File path to your public key */
     public: string;
-    /** File path to your private key */
+    /** Path of the server public key file. */
     private: string;
   };
 }
