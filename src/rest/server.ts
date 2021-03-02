@@ -10,7 +10,7 @@ export async function startRESTServer(options: RestServerOptions) {
     ? serveTLS({
       port: options.port,
       certFile: options.keys.cert,
-      keyFile: options.keys.privateKey,
+      keyFile: options.keys.key,
     })
     : serve({ port: options.port });
 
