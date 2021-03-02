@@ -6,11 +6,11 @@ import { RestServerOptions } from "./types/mod.ts";
 
 /** Begins an http server that will handle incoming requests. */
 export async function startRESTServer(options: RestServerOptions) {
-  const server = options.tlsFiles
+  const server = options.keys
     ? serveTLS({
       port: options.port,
-      certFile: options.tlsFiles.cert,
-      keyFile: options.tlsFiles.key,
+      certFile: options.keys.cert,
+      keyFile: options.keys.privateKey,
     })
     : serve({ port: options.port });
 

@@ -12,11 +12,11 @@ export interface RestServerOptions {
   /** The api version you would like to use */
   apiVersion?: number;
   /** The TLS keys you would like to use */
-  tlsFiles?: {
-    /** Path of the server certificate file */
+  keys?: {
+    /** Path of the server certificate file (public key) */
     cert: string;
-    /** Path of the server key file. */
-    key: string;
+    /** Path of the server's private key file. */
+    privateKey: string;
   };
 }
 
