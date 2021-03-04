@@ -171,7 +171,7 @@ export interface Member {
   guild(guildID: string): Guild | undefined;
   /** Get the nickname or the username if no nickname */
   name(guildID: string): string;
-  /** Get the nickname */
+  /** Get the guild member object for the specified guild */
   guildMember(guildID: string): GuildMember | undefined;
   /** Send a direct message to the user is possible */
   sendDM(
