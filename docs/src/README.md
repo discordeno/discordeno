@@ -1,20 +1,31 @@
 # Discordeno
 
-> Discord API library for [Deno](https://deno.land)
+<img align="right" src=docs/src/.vuepress/public/logo.png height="150px">
+
+Discord API library for [Deno](https://deno.land)
+
+Discordeno follows [Semantic Versioning](https://semver.org/)
 
 [![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
 
+## Table of contents
+
+- [Features](#features)
+- [Getting Started](#getting-started)
+  - [Minimal Example](#minimal-example)
+  - [Boilerplates](#boilerplates)
+- [Links](#links)
+- [Contributing](#contributing)
+
 ## Features
 
-- **Secure & stable**: Discordeno is secure and stable. One of the greatest
-  issues with almost every library is stability; types are outdated, less (or
-  minimal) parity with the API, core maintainers have quit or no longer actively
-  maintain the library, and whatnot. Discordeno, on the other hand, is actively
-  maintained to ensure great performance and convenience. Moreover, it
-  internally checks all missing permissions before forwarding a request to the
-  Discord API so that the client does not get globally-banned by Discord.
+- **Secure & stable**: Discordeno is actively maintained to ensure great
+  performance and convenience. Moreover, it internally checks all missing
+  permissions before forwarding a request to the Discord API so that the client
+  does not get
+  [globally-banned by Discord](https://discord.com/developers/docs/topics/rate-limits#invalid-request-limit).
 - **Simple, Efficient, & Lightweight**: Discordeno is simplistic, easy-to-use,
   versatile while being efficient and lightweight. Follows
   [Convention Over Configuration](https://en.wikipedia.org/wiki/Convention_over_configuration)
@@ -23,36 +34,53 @@
 - [**Functional API**](https://en.wikipedia.org/wiki/Functional_programming):
   Functional API ensures an overall concise yet performant code while removing
   the difficulties of extending built-in classes and inheritance.
-  [Learn more about class-free JavaScript](https://dannyfritz.wordpress.com/2014/10/11/class-free-object-oriented-programming/)
 
-## Useful Links
+## Getting Started
+
+### Minimal Example
+
+Here is a minimal example to get started with:
+
+```typescript
+import { startBot } from "https://deno.land/x/discordeno/mod.ts";
+
+startBot({
+  token: "BOT TOKEN",
+  intents: ["GUILDS", "GUILD_MESSAGES"],
+  eventHandlers: {
+    ready() {
+      console.log("Successfully connected to gateway");
+    },
+    messageCreate(message) {
+      if (message.content === "!ping") {
+        message.reply("Pong using Discordeno!");
+      }
+    },
+  },
+});
+```
+
+### Boilerplates
+
+Note to developers: don't worry a lot of developers start out programming a
+Discord bot as their first project (I did 😉) and it is not so easy to do so.
+Discordeno is designed and built considering all the issues that I and a lot of
+developers had when I first started out coding Discord bots with existing
+libraries. If you are a beginner, you can check out these awesome official and
+unofficial boilerplates:
+
+- [Discordeno Boilerplate (official)](https://github.com/discordeno/boilerplate)
+- [Serverless Slash Commands Template
+  (official)](https://github.com/discordeno/slash-commands-boilerplate)
+- [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
+
+## Links
 
 - [Website](https://discordeno.mod.land)
 - [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
 - [Discord](https://discord.com/invite/5vBgXk3UcZ)
 
-## Read me first...
+## Contributing
 
-Discordeno is cool right? You could make the next big bot! Who knows, but before
-we get right into developing our Bot. We want to get started with learning the
-basics...
-
-You've seen how amazing Discord Bots are built and functioned! So beginning with
-Discordeno always starts with learning the TypeScript and/or JavaScript
-programming languages first. Making a Discord bot with very little knowledge is
-possible, it can be a challenge! You may end up dealing with Console errors or
-just syntax typographical errors...
-
-If you are new to Discordeno, TypeScript or JavaScript, here are some great
-resources:
-
-- [Official TypeScript Documentation](https://www.typescriptlang.org/docs/home.html)
-- [JavaScript Documentation from Devdocs](https://devdocs.io/javascript/)
-- [Codecademy](https://www.codecademy.com/)
-- [TypeScript Deep Dive](https://basarat.gitbook.io/typescript/)
-- [Deno Crash Course by Traversy Media](https://www.youtube.com/watch?v=NHHhiqwcfRM)
-- [TypeScript Crash Course by Traversy
-  Media](https://www.youtube.com/watch?v=rAy_3SIqT-E)
-
-There are always more resources... Take your time and don't fret! Come back when
-you are ready, we can't wait to see what your Discordeno created bot does!
+We appreciate your help! Before contributing, please read the
+[Contributing Guide](https://github.com/discordeno/discordeno/blob/master/.github/CONTRIBUTING.md).
