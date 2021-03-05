@@ -1,11 +1,4 @@
 import {
-  deleteChannel,
-  deleteRole,
-  deleteServer,
-  getChannel,
-} from "../src/api/handlers/guild.ts";
-import { eventHandlers } from "../src/bot.ts";
-import {
   addReaction,
   assertEquals,
   assertExists,
@@ -18,9 +11,13 @@ import {
   createGuildRole,
   createServer,
   delay,
+  deleteChannel,
   deleteMessageByID,
+  deleteRole,
+  deleteServer,
   editChannel,
   editRole,
+  getChannel,
   getMessage,
   getPins,
   Guild,
@@ -37,6 +34,7 @@ import {
 export const defaultTestOptions: Partial<Deno.TestDefinition> = {
   sanitizeOps: false,
   sanitizeResources: false,
+  sanitizeExit: false,
 };
 
 // Temporary data
@@ -340,9 +338,9 @@ Deno.test({
 
 // Forcefully exit the Deno process once all tests are done.
 Deno.test({
-  name: "[main] close the websocket connection",
+  name: "[main] exit the process forcefully",
   fn() {
-    closeWS();
+    Deno.exit();
   },
   ...defaultTestOptions,
 });
