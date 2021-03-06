@@ -1,12 +1,18 @@
 // SERVERLESS REST CLIENT THAT CAN WORK ACROSS SHARDS/WORKERS TO COMMUNICATE GLOBAL RATE LIMITS EASILY
 import { restCache } from "./cache.ts";
-import { serve, ServerRequest } from "./deps.ts";
+import { serve, ServerRequest, serveTLS } from "./deps.ts";
 import { processRequest } from "./request.ts";
 import { RestServerOptions } from "./types/mod.ts";
 
 /** Begins an http server that will handle incoming requests. */
 export async function startRESTServer(options: RestServerOptions) {
-  const server = serve({ port: options.port });
+  const server = options.keys
+    ? serveTLS({
+      port: options.port,
+      certFile: options.keys.cert,
+      keyFile: options.keys.key,
+    })
+    : serve({ port: options.port });
 
   for await (const request of server) {
     handlePayload(request, options).catch((error) => {

@@ -1,11 +1,4 @@
 import {
-  deleteChannel,
-  deleteRole,
-  deleteServer,
-  getChannel,
-} from "../src/api/handlers/guild.ts";
-import { eventHandlers } from "../src/bot.ts";
-import {
   addReaction,
   assertEquals,
   assertExists,
@@ -13,13 +6,18 @@ import {
   cache,
   Channel,
   channelOverwriteHasPermission,
+  closeWS,
   createGuildChannel,
   createGuildRole,
   createServer,
   delay,
+  deleteChannel,
   deleteMessageByID,
+  deleteRole,
+  deleteServer,
   editChannel,
   editRole,
+  getChannel,
   getMessage,
   getPins,
   Guild,
@@ -36,6 +34,7 @@ import {
 export const defaultTestOptions: Partial<Deno.TestDefinition> = {
   sanitizeOps: false,
   sanitizeResources: false,
+  sanitizeExit: false,
 };
 
 // Temporary data
@@ -57,14 +56,6 @@ Deno.test({
       token,
       intents: ["GUILD_MESSAGES", "GUILDS"],
     });
-
-    eventHandlers.ready = () => {
-      if (cache.guilds.size >= 10) {
-        cache.guilds.map((guild) =>
-          guild.ownerID === botID && deleteServer(guild.id)
-        );
-      }
-    };
 
     // Delay the execution by 5 seconds
     await delay(5000);
@@ -347,8 +338,9 @@ Deno.test({
 
 // Forcefully exit the Deno process once all tests are done.
 Deno.test({
-  name: "exit the process forcefully after all the tests are done\n",
+  name: "[main] exit the process forcefully",
   fn() {
     Deno.exit();
   },
+  ...defaultTestOptions,
 });

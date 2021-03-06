@@ -45,7 +45,7 @@ translations work properly now.
 
 ```json
 {
-	"DESCRIPTION": "Hug yourself or another user."
+  "DESCRIPTION": "Hug yourself or another user."
 }
 ```
 
@@ -58,9 +58,9 @@ add those in.
 
 ```json
 {
-	"DESCRIPTION": "Hug yourself or another user.",
-	"SELF": "If you had no one to hug you could have hugged me. Years from now, when you're thinking about me, you're gonna say: 'How did I ever get along without that wonderful, constant companion?' *Woof.*",
-	"OTHER": "{{user}} was hugged by {{mention}}"
+  "DESCRIPTION": "Hug yourself or another user.",
+  "SELF": "If you had no one to hug you could have hugged me. Years from now, when you're thinking about me, you're gonna say: 'How did I ever get along without that wonderful, constant companion?' *Woof.*",
+  "OTHER": "{{user}} was hugged by {{mention}}"
 }
 ```
 
@@ -127,9 +127,9 @@ example of different languages.
 
 ```json
 {
-	"DESCRIPTION": "Abrázate a ti mismo oa otro usuario",
-	"SELF": "Si no tuvieras a nadie a quien abrazar, podrías haberme abrazado. Años a partir de ahora, cuando estés pensando en mí, dirás: '¿Cómo me las arreglé sin esa maravillosa y constante compañera?' *Guau.*",
-	"OTHER": "{{user}} fue abrazado por {{mention}}"
+  "DESCRIPTION": "Abrázate a ti mismo oa otro usuario",
+  "SELF": "Si no tuvieras a nadie a quien abrazar, podrías haberme abrazado. Años a partir de ahora, cuando estés pensando en mí, dirás: '¿Cómo me las arreglé sin esa maravillosa y constante compañera?' *Guau.*",
+  "OTHER": "{{user}} fue abrazado por {{mention}}"
 }
 ```
 

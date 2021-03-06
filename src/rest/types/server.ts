@@ -11,6 +11,13 @@ export interface RestServerOptions {
   maxRetryCount: number;
   /** The api version you would like to use */
   apiVersion?: number;
+  /** The TLS keys you would like to use */
+  keys?: {
+    /** Path of the server certificate file (public key) */
+    cert: string;
+    /** Path of the server's private key file. */
+    key: string;
+  };
 }
 
 export interface RestEventHandlers {
