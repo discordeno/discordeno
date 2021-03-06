@@ -551,7 +551,7 @@ export async function getPruneCount(guildID: string, options: PruneOptions) {
  * 
  * By default, prune will not remove users with roles. You can optionally include specific roles in your prune by providing the roles (resolved to include_roles internally) parameter. Any inactive user that has a subset of the provided role(s) will be included in the prune and users with additional roles will not.
  */
-export async function pruneGuild(
+export async function pruneMembers(
   guildID: string,
   { roles, ...options }: PruneOptions,
 ) {
