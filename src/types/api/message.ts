@@ -263,8 +263,6 @@ export interface DiscordCreateMessageParams {
 
 /** https://discord.com/developers/docs/resources/channel#get-reactions-query-string-params */
 export interface DiscordGetReactionsParams {
-  /** get users before this user ID */
-  before?: string;
   /** get users after this user ID */
   after?: string;
   /** max number of users to return (1-100) */
