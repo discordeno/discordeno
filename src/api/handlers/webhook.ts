@@ -6,10 +6,10 @@ import {
   EditSlashResponseOptions,
   EditWebhookMessageOptions,
   Errors,
-  ExecuteSlashCommandOptions,
   ExecuteWebhookOptions,
   MessageCreateOptions,
   SlashCommand,
+  SlashCommandResponseOptions,
   UpsertSlashCommandOptions,
   UpsertSlashCommandsOptions,
   WebhookCreateOptions,
@@ -448,7 +448,7 @@ export function deleteSlashCommand(id: string, guildID?: string) {
 export async function executeSlashCommand(
   id: string,
   token: string,
-  options: ExecuteSlashCommandOptions,
+  options: SlashCommandResponseOptions,
 ) {
   // If its already been executed, we need to send a followup response
   if (cache.executedSlashCommands.has(token)) {
@@ -463,6 +463,11 @@ export async function executeSlashCommand(
     () => cache.executedSlashCommands.delete(token),
     Date.now() + 900000,
   );
+
+  // If the user wants this as a private message mark it ephemeral
+  if (options.private) {
+    options.data.flags = 64;
+  }
 
   // If no mentions are provided, force disable mentions
   if (!(options.data.allowed_mentions)) {
