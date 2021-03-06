@@ -9,4 +9,4 @@ jobs:
       - name: Run fmt check script
         run: deno fmt --check
       - name: Run lint script
-        run: deno lint src/** test/** --unstable --ignore=./src/types/
+        run: deno lint src/** test/** --unstable --ignore=./src/types,./src/interactions/types

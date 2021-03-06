@@ -52,7 +52,7 @@ startBot({
       console.log("Successfully connected to gateway");
     },
     messageCreate(message) {
-      if (message.content === "!ping") {
+      if (message.content === "ping") {
         message.reply("Pong using Discordeno!");
       }
     },
