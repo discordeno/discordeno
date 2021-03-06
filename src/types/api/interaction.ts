@@ -37,12 +37,12 @@ export interface DiscordInteractionData {
   /** the name of the invoked command */
   name: string;
   /** converted users + roles + channels */
-  resolved?: DiscordInteractionDataResolved;
+  resolved?: DiscordApplicationCommandInteractionDataResolved;
   /** the params + values from the user */
   options?: DiscordInteractionDataOption[];
 }
 
-export interface DiscordInteractionDataResolved {
+export interface DiscordApplicationCommandInteractionDataResolved {
   /** the IDs and User objects */
   users?: Record<string, DiscordUser>;
   /** the IDs and partial Member objects */
