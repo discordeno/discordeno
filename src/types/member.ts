@@ -21,15 +21,17 @@ export interface MemberCreatePayload {
   /** Array of role ids that the member has */
   roles: string[];
   /** When the user joined the guild. */
-  "joined_at": string;
+  joined_at: string;
   /** When the user used their nitro boost on the server. */
-  "premium_since"?: string;
+  premium_since?: string;
   /** Whether the user is deafened in voice channels */
   deaf: boolean;
   /** Whether the user is muted in voice channels */
   mute: boolean;
   /** Whether the user has passed the guild's Membership Screening requirements */
   pending?: boolean;
+  /** Total permissions of the member in the channel, including overrides, returned when in the interaction object */
+  permissions?: string;
 }
 
 export interface GuildMember {
