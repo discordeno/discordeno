@@ -321,6 +321,24 @@ export async function createInvite(
     throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE);
   }
 
+  if (options.max_age) {
+    console.log(
+      `The max age for invite created in ${channelID} was invalid. Using default values instead.`,
+    );
+    if (options.max_age > 604800 || options.max_age < 0) {
+      options.max_age = undefined;
+    }
+  }
+
+  if (options.max_uses) {
+    console.log(
+      `The max uses for invite created in ${channelID} was invalid. Using default values instead.`,
+    );
+    if (options.max_uses > 100 || options.max_uses < 0) {
+      options.max_uses = undefined;
+    }
+  }
+
   const result = await RequestManager.post(
     endpoints.CHANNEL_INVITES(channelID),
     options,
