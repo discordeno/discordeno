@@ -49,11 +49,11 @@ export interface SlashCommandCallbackData {
   /** is the response TTS  */
   tts?: boolean;
   /** message content */
-  content: string;
+  content?: string;
   /** supports up to 10 embeds */
   embeds?: Embed[];
   /** allowed mentions for the message */
-  "allowed_mentions"?: AllowedMentions;
+  allowed_mentions?: AllowedMentions;
   /** acceptable values are message flags */
   flags?: number;
 }

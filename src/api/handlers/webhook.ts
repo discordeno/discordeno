@@ -461,7 +461,7 @@ export async function executeSlashCommand(
   cache.executedSlashCommands.set(token, id);
   setTimeout(
     () => cache.executedSlashCommands.delete(token),
-    Date.now() + 900000,
+    900000,
   );
 
   // If the user wants this as a private message mark it ephemeral
