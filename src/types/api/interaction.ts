@@ -36,6 +36,8 @@ export interface DiscordInteractionData {
   id: string;
   /** the name of the invoked command */
   name: string;
+  /** converted users + roles + channels */
+  resolved?: DiscordInteractionDataResolved;
   /** the params + values from the user */
   options: DiscordInteractionDataOption[];
 }
