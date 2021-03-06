@@ -39,7 +39,7 @@ export interface DiscordInteractionData {
   /** converted users + roles + channels */
   resolved?: DiscordInteractionDataResolved;
   /** the params + values from the user */
-  options: DiscordInteractionDataOption[];
+  options?: DiscordInteractionDataOption[];
 }
 
 export interface DiscordInteractionDataResolved {
