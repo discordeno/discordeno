@@ -551,7 +551,7 @@ export interface PruneOptions {
   days: number;
   /** Whether 'pruned' is returned, discouraged for large guilds. Default: true */
   compute_prune_count: string[];
-  /** role(s) to include */
+  /** Role(s) to include */
   roles: string[];
 }
 
