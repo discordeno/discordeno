@@ -565,7 +565,7 @@ export async function pruneMembers(
 
   const result = await RequestManager.post(
     endpoints.GUILD_PRUNE(guildID),
-    { ...options, include_roles: roles },
+    { ...options, compute_prune_count: computePruneCount, include_roles: roles },
   );
 
   return result;
