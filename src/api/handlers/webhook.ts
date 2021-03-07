@@ -17,7 +17,7 @@ import {
   WebhookPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
-import { endpoints } from "../../util/constants.ts";
+import { endpoints, SLASH_COMMANDS_NAME_REGEX } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
 import { structures } from "../structures/mod.ts";
@@ -282,8 +282,7 @@ export async function deleteWebhookMessage(
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
 export async function createSlashCommand(options: CreateSlashCommandOptions) {
-  // Use ... for content length due to unicode characters and js .length handling
-  if ([...options.name].length < 2 || [...options.name].length > 32) {
+  if (!SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
     throw new Error(Errors.INVALID_SLASH_NAME);
   }
 
@@ -336,8 +335,7 @@ export async function upsertSlashCommand(
   options: UpsertSlashCommandOptions,
   guildID?: string,
 ) {
-  // Use ... for content length due to unicode characters and js .length handling
-  if ([...options.name].length < 2 || [...options.name].length > 32) {
+  if (!SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
     throw new Error(Errors.INVALID_SLASH_NAME);
   }
 
@@ -371,8 +369,7 @@ export async function upsertSlashCommands(
   guildID?: string,
 ) {
   const data = options.map((option) => {
-    // Use ... for content length due to unicode characters and js .length handling
-    if ([...option.name].length < 2 || [...option.name].length > 32) {
+    if (!SLASH_COMMANDS_NAME_REGEX.test(option.name)) {
       throw new Error(Errors.INVALID_SLASH_NAME);
     }
 
@@ -405,8 +402,7 @@ export async function editSlashCommand(
   options: EditSlashCommandOptions,
   guildID?: string,
 ) {
-  // Use ... for content length due to unicode characters and js .length handling
-  if ([...options.name].length < 2 || [...options.name].length > 32) {
+  if (!SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
     throw new Error(Errors.INVALID_SLASH_NAME);
   }
 
