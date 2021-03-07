@@ -240,7 +240,7 @@ export interface UpsertSlashCommandOptions {
   name?: string;
   /** 1-100 character description */
   description?: string;
-  /** the parameters for the command */
+  /** The parameters for the command */
   options?: SlashCommandOption[] | null;
 }
 
