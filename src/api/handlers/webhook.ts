@@ -335,12 +335,14 @@ export async function upsertSlashCommand(
   options: UpsertSlashCommandOptions,
   guildID?: string,
 ) {
-  if (!SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
+  if (options.name && !SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
     throw new Error(Errors.INVALID_SLASH_NAME);
   }
 
   if (
-    [...options.description].length < 1 || [...options.description].length > 100
+    options.description &&
+    ([...options.description].length < 1 ||
+      [...options.description].length > 100)
   ) {
     throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
   }
@@ -369,12 +371,14 @@ export async function upsertSlashCommands(
   guildID?: string,
 ) {
   const data = options.map((option) => {
-    if (!SLASH_COMMANDS_NAME_REGEX.test(option.name)) {
+    if (option.name && !SLASH_COMMANDS_NAME_REGEX.test(option.name)) {
       throw new Error(Errors.INVALID_SLASH_NAME);
     }
 
     if (
-      [...option.description].length < 1 || [...option.description].length > 100
+      option.description &&
+      ([...option.description].length < 1 ||
+        [...option.description].length > 100)
     ) {
       throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
     }
