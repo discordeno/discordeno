@@ -281,7 +281,7 @@ export async function deleteWebhookMessage(
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
 export async function createSlashCommand(options: CreateSlashCommandOptions) {
-  if (/^[\w-]{1,32}$/.test(options.name)) {
+  if (!/^[\w-]{1,32}$/.test(options.name)) {
     throw new Error(Errors.INVALID_SLASH_NAME);
   }
 
@@ -334,7 +334,7 @@ export async function upsertSlashCommand(
   options: UpsertSlashCommandOptions,
   guildID?: string,
 ) {
-  if (/^[\w-]{1,32}$/.test(options.name)) {
+  if (!/^[\w-]{1,32}$/.test(options.name)) {
     throw new Error(Errors.INVALID_SLASH_NAME);
   }
 
@@ -368,7 +368,7 @@ export async function upsertSlashCommands(
   guildID?: string,
 ) {
   const data = options.map((option) => {
-    if (/^[\w-]{1,32}$/.test(option.name)) {
+    if (!/^[\w-]{1,32}$/.test(option.name)) {
       throw new Error(Errors.INVALID_SLASH_NAME);
     }
 
@@ -401,7 +401,7 @@ export async function editSlashCommand(
   options: EditSlashCommandOptions,
   guildID?: string,
 ) {
-  if (/^[\w-]{1,32}$/.test(options.name)) {
+  if (!/^[\w-]{1,32}$/.test(options.name)) {
     throw new Error(Errors.INVALID_SLASH_NAME);
   }
 
