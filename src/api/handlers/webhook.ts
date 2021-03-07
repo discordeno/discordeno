@@ -281,7 +281,7 @@ export async function deleteWebhookMessage(
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
 export async function createSlashCommand(options: CreateSlashCommandOptions) {
-  if (!/^[\w-]{1,32}$/.test(options.name)) {
+  if (!SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
     throw new Error(Errors.INVALID_SLASH_NAME);
   }
 
