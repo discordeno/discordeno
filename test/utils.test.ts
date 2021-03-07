@@ -48,6 +48,7 @@ const someOther = {
 };
 
 const someElseOther = {
+  // deno-lint-ignore camelcase
   hello_world: 1,
 };
 
