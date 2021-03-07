@@ -198,7 +198,7 @@ export interface SlashCommandCallbackData {
 export enum InteractionResponseType {
   /** ACK a `Ping` */
   PONG = 1,
-  /** respond with a message, showing the user's input */
+  /** Respond with a message, showing the user's input */
   CHANNEL_MESSAGE_WITH_SOURCE = 4,
   /** ACK an interaction and edit to a response later, the user sees a loading state */
   DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
