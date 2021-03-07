@@ -17,7 +17,7 @@ import {
   WebhookPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
-import { endpoints } from "../../util/constants.ts";
+import { endpoints, SLASH_COMMANDS_NAME_REGEX } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
 import { structures } from "../structures/mod.ts";
@@ -368,7 +368,7 @@ export async function upsertSlashCommands(
   guildID?: string,
 ) {
   const data = options.map((option) => {
-    if (!/^[\w-]{1,32}$/.test(option.name)) {
+    if (!SLASH_COMMANDS_NAME_REGEX.test(option.name)) {
       throw new Error(Errors.INVALID_SLASH_NAME);
     }
 
@@ -401,7 +401,7 @@ export async function editSlashCommand(
   options: EditSlashCommandOptions,
   guildID?: string,
 ) {
-  if (!/^[\w-]{1,32}$/.test(options.name)) {
+  if (!SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
     throw new Error(Errors.INVALID_SLASH_NAME);
   }
 
