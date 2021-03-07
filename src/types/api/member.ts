@@ -83,7 +83,7 @@ export interface DiscordBaseMember {
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-structure */
-export interface DiscordMember {
+export interface DiscordMember extends DiscordBaseMember {
   /** the user this guild member represents */
   user?: DiscordUser;
 }

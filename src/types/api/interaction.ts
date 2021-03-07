@@ -1,4 +1,9 @@
-import { DiscordMember } from "./mod.ts";
+import {
+  DiscordChannel,
+  DiscordMember,
+  DiscordRole,
+  DiscordUser,
+} from "./mod.ts";
 
 export interface DiscordInteractionCommand {
   /** id of the interaction */
@@ -31,8 +36,24 @@ export interface DiscordInteractionData {
   id: string;
   /** the name of the invoked command */
   name: string;
+  /** converted users + roles + channels */
+  resolved?: DiscordApplicationCommandInteractionDataResolved;
   /** the params + values from the user */
-  options: DiscordInteractionDataOption[];
+  options?: DiscordInteractionDataOption[];
+}
+
+export interface DiscordApplicationCommandInteractionDataResolved {
+  /** the IDs and User objects */
+  users?: Record<string, DiscordUser>;
+  /** the IDs and partial Member objects */
+  members?: Record<string, Omit<DiscordMember, "user" | "deaf" | "mute">>;
+  /** the IDs and Role objects */
+  roles?: Record<string, DiscordRole>;
+  /** the IDs and partial Channel objects */
+  channels?: Record<
+    string,
+    Pick<DiscordChannel, "id" | "name" | "type" | "permission_overwrites">
+  >;
 }
 
 export interface DiscordInteractionDataOption {
