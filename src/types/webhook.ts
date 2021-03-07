@@ -191,21 +191,17 @@ export interface SlashCommandCallbackData {
   embeds?: Embed[];
   /** allowed mentions for the message */
   "allowed_mentions"?: AllowedMentions;
-  /** acceptable values are message flags */
+  /** acceptable values are message flags, set to 64 to make your response ephemeral */
   flags?: number;
 }
 
 export enum InteractionResponseType {
   /** ACK a `Ping` */
   PONG = 1,
-  /** ACK a command without sending a message, eating the user's input */
-  ACKNOWLEDGE = 2,
-  /** respond with a message, eating the user's input */
-  CHANNEL_MESSAGE = 3,
-  /** respond with a message, showing the user's input */
+  /** Respond with a message, showing the user's input */
   CHANNEL_MESSAGE_WITH_SOURCE = 4,
-  /** ACK a command without sending a message, showing the user's input */
-  ACK_WITH_SOURCE = 5,
+  /** ACK an interaction and edit to a response later, the user sees a loading state */
+  DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
 }
 
 // TODO: remove this interface for v11
@@ -224,27 +220,27 @@ export interface ExecuteSlashCommandOptions {
   data: SlashCommandCallbackData;
 }
 
+export interface SlashCommandResponseOptions
+  extends ExecuteSlashCommandOptions {
+  /** Whether to make this response visible ONLY to the user who used this command. It will also be deleted after some time. */
+  private?: boolean;
+}
+
 export interface EditSlashResponseOptions extends SlashCommandCallbackData {
   /** If this is not provided, it will default to editing the original response. */
   messageID?: string;
 }
 
 export interface UpsertSlashCommandOptions {
-  /** 3-32 character command name */
-  name: string;
+  /** 1-32 character name matching ^[\w-]{1,32}$ */
+  name?: string;
   /** 1-100 character description */
-  description: string;
+  description?: string;
   /** The parameters for the command */
-  options?: SlashCommandOption[];
+  options?: SlashCommandOption[] | null;
 }
 
-export interface UpsertSlashCommandsOptions {
+export interface UpsertSlashCommandsOptions extends UpsertSlashCommandOptions {
   /** The id of the command */
   id: string;
-  /** 3-32 character command name */
-  name: string;
-  /** 1-100 character description */
-  description: string;
-  /** The parameters for the command */
-  options?: SlashCommandOption[];
 }
