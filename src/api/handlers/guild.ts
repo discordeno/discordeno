@@ -553,7 +553,7 @@ export async function getPruneCount(guildID: string, options: PruneOptions) {
  */
 export async function pruneMembers(
   guildID: string,
-  { roles, ...options }: PruneOptions,
+  { roles, computePruneCount, ...options }: PruneOptions,
 ) {
   if (options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
   if (options.days > 30) throw new Error(Errors.PRUNE_MAX_DAYS);
