@@ -236,11 +236,11 @@ export interface EditSlashResponseOptions extends SlashCommandCallbackData {
 }
 
 export interface UpsertSlashCommandOptions {
-  /** 3-32 character command name */
+  /** 1-32 character name matching ^[\w-]{1,32}$ */
   name?: string;
   /** 1-100 character description */
   description?: string;
-  /** The parameters for the command */
+  /** the parameters for the command */
   options?: SlashCommandOption[] | null;
 }
 
