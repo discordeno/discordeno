@@ -529,9 +529,11 @@ export async function swapRoles(guildID: string, rolePositons: PositionSwap) {
 }
 
 /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
-export async function getPruneCount(guildID: string, options: PruneOptions) {
-  if (options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
-  if (options.days > 30) throw new Error(Errors.PRUNE_MAX_DAYS);
+export async function getPruneCount(guildID: string, options?: PruneOptions) {
+  if (options?.days && options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
+  if (options?.days && options.days > 30) {
+    throw new Error(Errors.PRUNE_MAX_DAYS);
+  }
 
   const hasPerm = await botHasPermission(guildID, ["KICK_MEMBERS"]);
   if (!hasPerm) {
@@ -540,7 +542,7 @@ export async function getPruneCount(guildID: string, options: PruneOptions) {
 
   const result = await RequestManager.get(
     endpoints.GUILD_PRUNE(guildID),
-    { ...options, include_roles: options.roles.join(",") },
+    { ...options, include_roles: options?.roles?.join(",") },
   ) as PrunePayload;
 
   return result.pruned;
