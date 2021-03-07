@@ -368,7 +368,7 @@ export async function upsertSlashCommands(
   guildID?: string,
 ) {
   const data = options.map((option) => {
-    if (/^[\w-]{1,32}$/.test(option.name)) {
+    if (!/^[\w-]{1,32}$/.test(option.name)) {
       throw new Error(Errors.INVALID_SLASH_NAME);
     }
 
