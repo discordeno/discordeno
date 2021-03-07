@@ -278,7 +278,7 @@ function validateSlashOptionChoices(
   optionType: SlashCommandOptionType,
 ) {
   for (const choice of choices) {
-    if (choice.name.length < 1 || choice.name.length > 100) {
+    if ([...choice.name].length < 1 || [...choice.name].length > 100) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
 
@@ -305,8 +305,9 @@ function validateSlashOptions(options: SlashCommandOption[]) {
     }
 
     if (
-      (option.name.length < 1 || option.name.length > 32) ||
-      (option.description.length < 1 || option.description.length > 100)
+      ([...option.name].length < 1 || [...option.name].length > 32) ||
+      ([...option.description].length < 1 ||
+        [...option.description].length > 100)
     ) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
