@@ -97,7 +97,7 @@ export interface DiscordOptionalAuditEntryInfoParam {
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
 export interface DiscordAuditLogChange {
-  /** new value of the key */
+  /** new value of the key. If not present, while old_value is, that means the property that was changed has been reset */
   new_value?: DiscordAuditLogChangeValue;
   /** old value of the key */
   old_value?: DiscordAuditLogChangeValue;
@@ -112,6 +112,12 @@ export type DiscordAuditLogChangeValue =
     old_value: string;
     key:
       | "name"
+      | "description"
+      | "discovery_splash_hash"
+      | "banner_hash"
+      | "preferred_locale"
+      | "rules_channel_id"
+      | "public_updates_channel_id"
       | "icon_hash"
       | "splash_hash"
       | "owner_id"
@@ -150,7 +156,8 @@ export type DiscordAuditLogChangeValue =
       | "uses"
       | "max_age"
       | "expire_behavior"
-      | "expire_grace_period";
+      | "expire_grace_period"
+      | "user_limit";
   }
   | {
     new_value: Partial<DiscordRole>;
