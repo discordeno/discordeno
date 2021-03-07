@@ -191,7 +191,7 @@ export interface SlashCommandCallbackData {
   embeds?: Embed[];
   /** allowed mentions for the message */
   "allowed_mentions"?: AllowedMentions;
-  /** acceptable values are message flags */
+  /** acceptable values are message flags, set to 64 to make your response ephemeral */
   flags?: number;
 }
 
@@ -222,6 +222,12 @@ export interface EditSlashCommandOptions {
 export interface ExecuteSlashCommandOptions {
   type: InteractionResponseType;
   data: SlashCommandCallbackData;
+}
+
+export interface SlashCommandResponseOptions
+  extends ExecuteSlashCommandOptions {
+  /** Whether to make this response visible ONLY to the user who used this command. It will also be deleted after some time. */
+  private?: boolean;
 }
 
 export interface EditSlashResponseOptions extends SlashCommandCallbackData {

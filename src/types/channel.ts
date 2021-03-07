@@ -154,11 +154,12 @@ export interface GetMessagesAround extends GetMessages {
   around: string;
 }
 
+// TODO: v11 change to camelcase
 export interface CreateInviteOptions {
-  /** Duration of invite in seconds before expiry, or 0 for never. Defaults to 86400 (24 hours) */
-  "max_age": number;
-  /** Max number of uses or 0 for unlimited. Default 0 */
-  "max_uses": number;
+  /** Duration of invite in seconds before expiry, or 0 for never. Between 0-604800 (7 days). Defaults to 86400 (24 hours). */
+  "max_age"?: number;
+  /** Max number of uses or 0 for unlimited. Between 0-100. Default 0 */
+  "max_uses"?: number;
   /** Whether this invite only grants temporary membership. */
   temporary: boolean;
   /** If true, don't try to reuse a similar invite (useful for creating many unique one time use invites.) */
