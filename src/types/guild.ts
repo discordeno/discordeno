@@ -548,7 +548,7 @@ export interface PrunePayload {
 
 export interface PruneOptions {
   /** Number of days to prune (1-30). Default: 7 */
-  days: number;
+  days?: number;
   /** Whether 'pruned' is returned, discouraged for large guilds. Default: true */
   computePruneCount: boolean;
   /** Role(s) to include */
