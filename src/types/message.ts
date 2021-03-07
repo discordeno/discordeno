@@ -214,6 +214,15 @@ export interface Reference {
   fail_if_not_exists?: boolean;
 }
 
+export interface DiscordReferencePayload extends Reference {
+  /**
+   * ID of the originating message's channel
+   * 
+   * NOTE: `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model
+   */
+  channel_id: string;
+}
+
 export enum MessageFlags {
   CROSSPOSTED = 1 << 0,
   IS_CROSSPOST = 1 << 1,
