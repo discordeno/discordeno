@@ -553,7 +553,7 @@ export async function editSlashResponse(
     options,
   );
 
-  // If the original message was edited, his will not return a message
+  // If the original message was edited, this will not return a message
   if (!options.messageID) return result;
 
   const message = await structures.createMessage(
