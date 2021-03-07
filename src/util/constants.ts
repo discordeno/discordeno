@@ -175,3 +175,5 @@ export const endpoints = {
   // oAuth2
   OAUTH2_APPLICATION: `${baseEndpoints.BASE_URL}/oauth2/applications/@me`,
 };
+
+export const SLASH_COMMANDS_NAME_REGEX = /^[\w-]{1,32}$/;
