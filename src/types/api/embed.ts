@@ -56,6 +56,8 @@ export interface DiscordEmbedThumbnail {
 export interface DiscordEmbedVideo {
   /** source url of video */
   url?: string;
+  /** a proxied url of the video */
+  proxy_url?: string;
   /** height of video */
   height?: number;
   /** width of video */
