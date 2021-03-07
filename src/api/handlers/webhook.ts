@@ -334,7 +334,7 @@ export async function upsertSlashCommand(
   options: UpsertSlashCommandOptions,
   guildID?: string,
 ) {
-  if (!/^[\w-]{1,32}$/.test(options.name)) {
+  if (!SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
     throw new Error(Errors.INVALID_SLASH_NAME);
   }
 
