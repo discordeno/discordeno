@@ -552,7 +552,7 @@ export interface PruneOptions {
   /** Whether 'pruned' is returned, discouraged for large guilds. Default: true */
   computePruneCount?: boolean;
   /** Role(s) to include */
-  roles: string[];
+  roles?: string[];
 }
 
 export interface VoiceState {
