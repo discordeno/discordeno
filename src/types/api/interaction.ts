@@ -59,6 +59,8 @@ export interface DiscordApplicationCommandInteractionDataResolved {
 export interface DiscordInteractionDataOption {
   /** the name of the parameter */
   name: string;
+  /** value of ApplicationCommandOptionType */
+  type: DiscordApplicationCommandOptionType;
   /** the value of the pair. present if there was no more options */
   value?: string | number;
   /** present if this option is a group or subcommand */
@@ -70,7 +72,7 @@ export interface DiscordApplicationCommand {
   /** unique id of the command */
   id: string;
   /** unique id of the parent application */
-  "application_id": string;
+  application_id: string;
   /** 3-32 character name matching `^[\w-]{3,32}$` */
   name: string;
   /** 1-100 character description */
