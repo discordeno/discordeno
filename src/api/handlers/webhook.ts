@@ -9,6 +9,9 @@ import {
   ExecuteWebhookOptions,
   MessageCreateOptions,
   SlashCommand,
+  SlashCommandOption,
+  SlashCommandOptionChoice,
+  SlashCommandOptionType,
   SlashCommandResponseOptions,
   UpsertSlashCommandOptions,
   UpsertSlashCommandsOptions,
@@ -270,6 +273,81 @@ export async function deleteWebhookMessage(
   return result;
 }
 
+function validateSlashOptionChoices(
+  choices: SlashCommandOptionChoice[],
+  optionType: SlashCommandOptionType,
+) {
+  for (const choice of choices) {
+    if (choice.name.length < 1 || choice.name.length > 100) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+
+    if (
+      (optionType === SlashCommandOptionType.STRING &&
+        (typeof choice.value !== "string" || choice.value.length < 1 ||
+          choice.value.length > 100)) ||
+      (optionType === SlashCommandOptionType.INTEGER &&
+        typeof choice.value !== "number")
+    ) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+  }
+}
+
+function validateSlashOptions(options: SlashCommandOption[]) {
+  for (const option of options) {
+    if (
+      (option.choices?.length && option.choices.length > 25) ||
+      option.type !== SlashCommandOptionType.STRING &&
+        option.type !== SlashCommandOptionType.INTEGER
+    ) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+
+    if (
+      (option.name.length < 1 || option.name.length > 32) ||
+      (option.description.length < 1 || option.description.length > 100)
+    ) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+
+    if (option.choices) {
+      validateSlashOptionChoices(option.choices, option.type);
+    }
+  }
+}
+
+function validateSlashCommands(
+  commands: UpsertSlashCommandOptions[],
+  create = false,
+) {
+  for (const command of commands) {
+    if (
+      (command.name && !SLASH_COMMANDS_NAME_REGEX.test(command.name)) ||
+      (create && !command.name)
+    ) {
+      throw new Error(Errors.INVALID_SLASH_NAME);
+    }
+
+    if (
+      (command.description &&
+        ([...command.description].length < 1 ||
+          [...command.description].length > 100)) ||
+      (create && !command.description)
+    ) {
+      throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+    }
+
+    if (command.options?.length) {
+      if (command.options.length > 25) {
+        throw new Error(Errors.INVALID_SLASH_OPTIONS);
+      }
+
+      validateSlashOptions(command.options);
+    }
+  }
+}
+
 /**
  * There are two kinds of Slash Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:
  *
@@ -282,15 +360,7 @@ export async function deleteWebhookMessage(
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
 export async function createSlashCommand(options: CreateSlashCommandOptions) {
-  if (!SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
-    throw new Error(Errors.INVALID_SLASH_NAME);
-  }
-
-  if (
-    [...options.description].length < 1 || [...options.description].length > 100
-  ) {
-    throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
-  }
+  validateSlashCommands([options], true);
 
   const result = await RequestManager.post(
     options.guildID
@@ -335,17 +405,7 @@ export async function upsertSlashCommand(
   options: UpsertSlashCommandOptions,
   guildID?: string,
 ) {
-  if (options.name && !SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
-    throw new Error(Errors.INVALID_SLASH_NAME);
-  }
-
-  if (
-    options.description &&
-    ([...options.description].length < 1 ||
-      [...options.description].length > 100)
-  ) {
-    throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
-  }
+  validateSlashCommands([options]);
 
   const result = await RequestManager.patch(
     guildID
@@ -370,27 +430,13 @@ export async function upsertSlashCommands(
   options: UpsertSlashCommandsOptions[],
   guildID?: string,
 ) {
-  const data = options.map((option) => {
-    if (option.name && !SLASH_COMMANDS_NAME_REGEX.test(option.name)) {
-      throw new Error(Errors.INVALID_SLASH_NAME);
-    }
-
-    if (
-      option.description &&
-      ([...option.description].length < 1 ||
-        [...option.description].length > 100)
-    ) {
-      throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
-    }
-
-    return option;
-  });
+  validateSlashCommands(options);
 
   const result = await RequestManager.put(
     guildID
       ? endpoints.COMMANDS_GUILD(applicationID, guildID)
       : endpoints.COMMANDS(applicationID),
-    data,
+    options,
   );
 
   return result;
