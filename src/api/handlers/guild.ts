@@ -555,7 +555,7 @@ export async function pruneMembers(
   guildID: string,
   { roles, computePruneCount, ...options }: PruneOptions,
 ) {
-  if (options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
+  if (options.days && options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
   if (options.days > 30) throw new Error(Errors.PRUNE_MAX_DAYS);
 
   const hasPerm = await botHasPermission(guildID, ["KICK_MEMBERS"]);
