@@ -401,7 +401,7 @@ export async function editSlashCommand(
   options: EditSlashCommandOptions,
   guildID?: string,
 ) {
-  if (/^[\w-]{1,32}$/.test(options.name)) {
+  if (!/^[\w-]{1,32}$/.test(options.name)) {
     throw new Error(Errors.INVALID_SLASH_NAME);
   }
 
