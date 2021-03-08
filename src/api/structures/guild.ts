@@ -1,18 +1,4 @@
 import { botID } from "../../bot.ts";
-import {
-  BanOptions,
-  CreateGuildPayload,
-  Emoji,
-  GetAuditLogsOptions,
-  GuildEditOptions,
-  GuildFeatures,
-  GuildMember,
-  ImageFormats,
-  ImageSize,
-  MemberCreatePayload,
-  Presence,
-  VoiceState,
-} from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
@@ -30,8 +16,7 @@ import {
   leaveGuild,
   unban,
 } from "../handlers/guild.ts";
-import { Member } from "./member.ts";
-import { Channel, Role, structures } from "./mod.ts";
+import { structures } from "./mod.ts";
 
 export const initialMemberLoadQueue = new Map<string, MemberCreatePayload[]>();
 

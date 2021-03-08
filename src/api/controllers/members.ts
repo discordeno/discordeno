@@ -1,11 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import {
-  DiscordPayload,
-  GuildBanPayload,
-  GuildMemberAddPayload,
-  GuildMemberChunkPayload,
-  GuildMemberUpdatePayload,
-} from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { structures } from "../structures/mod.ts";

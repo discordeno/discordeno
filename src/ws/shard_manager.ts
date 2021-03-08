@@ -1,17 +1,8 @@
 import { controllers } from "../api/controllers/mod.ts";
-import { Guild } from "../api/structures/guild.ts";
-import { Member } from "../api/structures/mod.ts";
 import { eventHandlers } from "../bot.ts";
-import {
-  DiscordBotGatewayData,
-  DiscordIdentify,
-  DiscordPayload,
-  FetchMembersOptions,
-  GatewayOpcode,
-} from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
-import { BotStatusRequest, delay } from "../util/utils.ts";
+import { delay } from "../util/utils.ts";
 import {
   botGatewayStatusRequest,
   createShard,

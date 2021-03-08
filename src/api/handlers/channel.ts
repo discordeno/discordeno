@@ -1,22 +1,4 @@
 import { RequestManager } from "../../rest/request_manager.ts";
-import {
-  ChannelEditOptions,
-  ChannelTypes,
-  CreateInviteOptions,
-  Errors,
-  FollowedChannelPayload,
-  GetMessages,
-  GetMessagesAfter,
-  GetMessagesAround,
-  GetMessagesBefore,
-  InvitePayload,
-  MessageContent,
-  MessageCreateOptions,
-  Permission,
-  Permissions,
-  RawOverwrite,
-  WebhookPayload,
-} from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasChannelPermissions,

@@ -1,47 +1,12 @@
 import { identifyPayload } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
-import {
-  AuditLogs,
-  BannedUser,
-  BanOptions,
-  ChannelCreateOptions,
-  ChannelCreatePayload,
-  ChannelTypes,
-  CreateEmojisOptions,
-  CreateGuildFromTemplate,
-  CreateGuildPayload,
-  CreateGuildTemplate,
-  CreateRoleOptions,
-  CreateServerOptions,
-  EditEmojisOptions,
-  EditGuildTemplate,
-  EditIntegrationOptions,
-  Emoji,
-  Errors,
-  FetchMembersOptions,
-  GetAuditLogsOptions,
-  GetMemberOptions,
-  GuildEditOptions,
-  GuildTemplate,
-  ImageFormats,
-  ImageSize,
-  Intents,
-  MemberCreatePayload,
-  Overwrite,
-  PositionSwap,
-  PruneOptions,
-  PrunePayload,
-  RoleData,
-  UpdateGuildPayload,
-  UserPayload,
-} from "../../types/mod.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasPermission, calculateBits } from "../../util/permissions.ts";
 import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
 import { requestAllMembers } from "../../ws/shard_manager.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
-import { Guild, Member, structures } from "../structures/mod.ts";
+import { structures } from "../structures/mod.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createServer(options: CreateServerOptions) {

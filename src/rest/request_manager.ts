@@ -1,11 +1,5 @@
 import { authorization, eventHandlers, restAuthorization } from "../bot.ts";
 import {
-  Errors,
-  FileContent,
-  HttpResponseCode,
-  RequestMethods,
-} from "../types/mod.ts";
-import {
   API_VERSION,
   BASE_URL,
   baseEndpoints,

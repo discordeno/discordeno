@@ -1,10 +1,4 @@
 import { botID, eventHandlers } from "../../bot.ts";
-import {
-  BaseMessageReactionPayload,
-  DiscordPayload,
-  MessageReactionPayload,
-  MessageReactionRemoveEmojiPayload,
-} from "../../types/mod.ts";
 import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 

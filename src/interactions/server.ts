@@ -1,10 +1,4 @@
 import { serve, verify } from "./deps.ts";
-import {
-  Interaction,
-  InteractionResponse,
-  InteractionResponseType,
-  InteractionType,
-} from "./types/mod.ts";
 
 /** This variable is a holder for the public key and other configuration */
 const serverOptions = {

@@ -1,10 +1,6 @@
 // deno-lint-ignore-file require-await no-explicit-any prefer-const
-
-import { PresenceUpdatePayload } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
-import { Channel, Guild, Member, Message } from "../structures/mod.ts";
-
 
 function set(
   table: "guilds",

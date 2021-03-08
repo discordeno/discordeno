@@ -1,7 +1,5 @@
 import { cacheHandlers } from "../api/controllers/cache.ts";
-import { Guild, Role } from "../api/structures/mod.ts";
 import { botID } from "../bot.ts";
-import { Permission, Permissions, RawOverwrite } from "../types/mod.ts";
 
 /** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */
 export async function memberIDHasPermission(

@@ -1,12 +1,3 @@
-import {
-  ChannelCreatePayload,
-  ChannelEditOptions,
-  ChannelType,
-  MessageContent,
-  Overwrite,
-  Permission,
-  RawOverwrite,
-} from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
@@ -21,9 +12,6 @@ import {
   editChannelOverwrite,
 } from "../handlers/guild.ts";
 import { kickFromVoiceChannel } from "../handlers/member.ts";
-import { CleanVoiceState, Guild } from "./guild.ts";
-import { Member } from "./member.ts";
-import { Message } from "./message.ts";
 
 const baseChannel: Partial<Channel> = {
   get guild() {

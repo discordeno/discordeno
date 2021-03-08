@@ -1,17 +1,4 @@
 import { eventHandlers, setApplicationID, setBotID } from "../../bot.ts";
-import {
-  DiscordPayload,
-  IntegrationCreateUpdateEvent,
-  IntegrationDeleteEvent,
-  InviteCreateEvent,
-  InviteDeleteEvent,
-  PresenceUpdatePayload,
-  ReadyPayload,
-  TypingStartPayload,
-  UserPayload,
-  VoiceStateUpdatePayload,
-  WebhookUpdatePayload,
-} from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { delay } from "../../util/utils.ts";
 import { allowNextShard } from "../../ws/shard_manager.ts";

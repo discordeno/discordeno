@@ -1,10 +1,4 @@
 import { encode } from "../../deps.ts";
-import {
-  ActivityType,
-  ImageFormats,
-  ImageSize,
-  StatusType,
-} from "../types/mod.ts";
 import { sendGatewayCommand } from "../ws/shard_manager.ts";
 
 export const sleep = (timeout: number) => {
