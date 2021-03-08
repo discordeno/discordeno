@@ -99,6 +99,8 @@ export interface EmbedThumbnail {
 export interface EmbedVideo {
   /** The source url of video */
   url?: string;
+  /** a proxied url of the video */
+  proxy_url?: string;
   /** The height of the video */
   height?: number;
   /** The width of the video */
