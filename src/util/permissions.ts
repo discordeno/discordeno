@@ -342,6 +342,6 @@ export async function isHigherPosition(
 
   if (guild.ownerID === memberID) return true;
 
-  const memberHighestRole = await highestRole(guild.id, memberID);
+  const memberHighestRole = await highestRole(guild, memberID);
   return higherRolePosition(guild.id, memberHighestRole.id, compareRoleID);
 }

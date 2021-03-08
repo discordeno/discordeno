@@ -58,16 +58,13 @@ export async function addRole(
   roleID: string,
   reason?: string,
 ) {
-  const botsHighestRole = await highestRole(guildID, botID);
-  if (botsHighestRole) {
-    const isHigherRolePosition = await isHigherPosition(
-      guildID,
-      botsHighestRole.id,
-      roleID,
-    );
-    if (!isHigherRolePosition) {
-      throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
-    }
+  const isHigherRolePosition = await isHigherPosition(
+    guildID,
+    botID,
+    roleID,
+  );
+  if (!isHigherRolePosition) {
+    throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
   await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
@@ -87,19 +84,15 @@ export async function removeRole(
   roleID: string,
   reason?: string,
 ) {
-  const botsHighestRole = await highestRole(guildID, botID);
-
-  if (botsHighestRole) {
-    const isHigherRolePosition = await isHigherPosition(
-      guildID,
-      botsHighestRole.id,
-      roleID,
-    );
-    if (
-      !isHigherRolePosition
-    ) {
-      throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
-    }
+  const isHigherRolePosition = await isHigherPosition(
+    guildID,
+    botID,
+    roleID,
+  );
+  if (
+    !isHigherRolePosition
+  ) {
+    throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
   await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
