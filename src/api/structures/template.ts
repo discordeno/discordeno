@@ -27,6 +27,7 @@ export function createTemplate(
 
   const restProps: Record<string, Partial<PropertyDescriptor>> = {};
   for (const key of Object.keys(rest)) {
+    // @ts-ignore index signature
     restProps[key] = createNewProp(rest[key]);
   }
 
@@ -39,7 +40,7 @@ export function createTemplate(
     sourceGuildID: createNewProp(sourceGuildID),
     serializedSourceGuild: createNewProp(serializedSourceGuild),
     isDirty: createNewProp(isDirty),
-  });
+  }) as Template;
 }
 
 export interface Template {

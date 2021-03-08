@@ -6,7 +6,6 @@ import {
   ImageSize,
   MemberCreatePayload,
   MessageContent,
-  ValueOf,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
@@ -91,10 +90,12 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
 
   for (const key of Object.keys(rest)) {
+    // @ts-ignore index signature
     restProps[key] = createNewProp(rest[key]);
   }
 
   for (const key of Object.keys(user)) {
+    // @ts-ignore index signature
     restProps[key] = createNewProp(user[key]);
   }
 
@@ -123,9 +124,7 @@ export async function createMember(data: MemberCreatePayload, guildID: string) {
     mute: mute,
   });
 
-  await cacheHandlers.set("members", member.id, member);
-
-  return member;
+  return member as Member;
 }
 
 export interface Member {
@@ -172,7 +171,7 @@ export interface Member {
   guild(guildID: string): Guild | undefined;
   /** Get the nickname or the username if no nickname */
   name(guildID: string): string;
-  /** Get the nickname */
+  /** Get the guild member object for the specified guild */
   guildMember(guildID: string): GuildMember | undefined;
   /** Send a direct message to the user is possible */
   sendDM(
@@ -199,7 +198,4 @@ export interface Member {
     roleID: string,
     reason?: string,
   ): ReturnType<typeof removeRole>;
-
-  // Index signature
-  [key: string]: ValueOf<Member>;
 }

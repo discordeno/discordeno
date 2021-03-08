@@ -1,19 +1,19 @@
 import { controllers } from "../api/controllers/mod.ts";
 import { Guild } from "../api/structures/guild.ts";
-import { eventHandlers, IdentifyPayload } from "../bot.ts";
+import { Member } from "../api/structures/mod.ts";
+import { eventHandlers } from "../bot.ts";
 import {
   DiscordBotGatewayData,
+  DiscordIdentify,
   DiscordPayload,
   FetchMembersOptions,
   GatewayOpcode,
+  GatewayStatusUpdatePayload,
 } from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
-import { BotStatusRequest, delay } from "../util/utils.ts";
-import {
-  botGatewayStatusRequest,
-  createShard,
-  requestGuildMembers,
-} from "./mod.ts";
+import { Collection } from "../util/collection.ts";
+import { delay } from "../util/utils.ts";
+import { createShard, requestGuildMembers } from "./mod.ts";
 
 let createNextShard = true;
 
@@ -24,7 +24,7 @@ export function allowNextShard(enabled = true) {
 
 export async function spawnShards(
   data: DiscordBotGatewayData,
-  payload: IdentifyPayload,
+  payload: DiscordIdentify,
   shardID: number,
   lastShardID: number,
   skipChecks?: number,
@@ -38,7 +38,7 @@ export async function spawnShards(
       data.shards > lastShardID ? data.shards : lastShardID,
     ];
     // Start The shard
-    await createShard(data, payload, false, shardID);
+    createShard(data, payload, false, shardID);
     // Spawn next shard
     await spawnShards(
       data,
@@ -88,26 +88,20 @@ export async function handleDiscordPayload(
   }
 }
 
-export function requestAllMembers(
+export async function requestAllMembers(
   guild: Guild,
-  // TODO: The parameter "resolve" should have a "stronger" type.
-  // deno-lint-ignore ban-types
-  resolve: Function,
+  resolve: (
+    value: Collection<string, Member> | PromiseLike<Collection<string, Member>>,
+  ) => void,
   options?: FetchMembersOptions,
 ) {
   const nonce = `${guild.id}-${Date.now()}`;
   cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
-  return requestGuildMembers(guild.id, guild.shardID, nonce, options);
-}
 
-export function sendGatewayCommand(
-  type: "EDIT_BOTS_STATUS",
-  // deno-lint-ignore no-explicit-any
-  payload: Record<string, any>,
-) {
-  if (type === "EDIT_BOTS_STATUS") {
-    botGatewayStatusRequest(payload as BotStatusRequest);
-  }
-
-  return;
+  await requestGuildMembers(
+    guild.id,
+    guild.shardID,
+    nonce,
+    options,
+  );
 }

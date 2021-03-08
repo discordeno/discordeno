@@ -7,6 +7,7 @@ import {
   Errors,
   ImageFormats,
   ImageSize,
+  MemberCreatePayload,
   MessageContent,
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -75,10 +76,12 @@ export async function addRole(
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-  return RequestManager.put(
+  const result = await RequestManager.put(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
     { reason },
   );
+
+  return result;
 }
 
 /** Remove a role from the member */
@@ -109,10 +112,12 @@ export async function removeRole(
     throw new Error(Errors.MISSING_MANAGE_ROLES);
   }
 
-  return RequestManager.delete(
+  const result = await RequestManager.delete(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
     { reason },
   );
+
+  return result;
 }
 
 /** Send a message to a users DM. Note: this takes 2 API calls. 1 is to fetch the users dm channel. 2 is to send a message to that channel. */
@@ -127,14 +132,12 @@ export async function sendDirectMessage(
       endpoints.USER_DM,
       { recipient_id: memberID },
     ) as DMChannelCreatePayload;
-    // Channel create event will have added this channel to the cache
-    await cacheHandlers.delete("channels", dmChannelData.id);
-    const channel = await structures.createChannel(
+    const channelStruct = await structures.createChannel(
       dmChannelData as unknown as ChannelCreatePayload,
     );
     // Recreate the channel and add it undert he users id
-    await cacheHandlers.set("channels", memberID, channel);
-    dmChannel = channel;
+    await cacheHandlers.set("channels", memberID, channelStruct);
+    dmChannel = channelStruct;
   }
 
   // If it does exist try sending a message to this user
@@ -157,10 +160,12 @@ export async function kick(guildID: string, memberID: string, reason?: string) {
     throw new Error(Errors.MISSING_KICK_MEMBERS);
   }
 
-  return RequestManager.delete(
+  const result = await RequestManager.delete(
     endpoints.GUILD_MEMBER(guildID, memberID),
     { reason },
   );
+
+  return result;
 }
 
 /** Edit the member */
@@ -220,10 +225,13 @@ export async function editMember(
 
   // TODO: if channel id is provided check if the bot has CONNECT and MOVE in channel and current channel
 
-  return RequestManager.patch(
+  const result = await RequestManager.patch(
     endpoints.GUILD_MEMBER(guildID, memberID),
     options,
-  );
+  ) as MemberCreatePayload;
+  const member = await structures.createMember(result, guildID);
+
+  return member;
 }
 
 /**
@@ -268,13 +276,15 @@ export async function editBotProfile(username?: string, botAvatarURL?: string) {
   }
 
   const avatar = botAvatarURL ? await urlToBase64(botAvatarURL) : undefined;
-  return RequestManager.patch(
+  const result = await RequestManager.patch(
     endpoints.USER_BOT,
     {
       username: username?.trim(),
       avatar,
     },
   );
+
+  return result;
 }
 
 /** Edit the nickname of the bot in this guild */
