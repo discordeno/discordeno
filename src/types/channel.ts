@@ -123,7 +123,7 @@ export interface MessageContent {
 }
 
 export interface FileContent {
-  blob: unknown;
+  blob: Blob;
   name: string;
 }
 
