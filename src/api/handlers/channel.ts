@@ -21,6 +21,7 @@ import { endpoints } from "../../util/constants.ts";
 import {
   botHasChannelPermissions,
   calculateBits,
+  getCached,
   requireBotChannelPermissions,
   requireBotGuildPermissions,
 } from "../../util/permissions.ts";
@@ -295,15 +296,13 @@ export async function getInvite(inviteCode: string) {
 
 /** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
 export async function deleteInvite(channelID: string, inviteCode: string) {
-  await requireBotChannelPermissions(channelID, ["MANAGE_CHANNELS"]);
+  const channel = await getCached("channel", channelID);
 
-  const hasPerm = await botHasChannelPermissions(channelID, [
+  const hasPerm = await botHasChannelPermissions(channel, [
     "MANAGE_CHANNELS",
   ]);
 
   if (!hasPerm) {
-    const channel = await cacheHandlers.get("channels", channelID);
-
     await requireBotGuildPermissions(channel!.guildID, ["MANAGE_GUILD"]);
   }
 
