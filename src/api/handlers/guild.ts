@@ -646,7 +646,10 @@ export async function getMembers(
 
     const memberStructures = await Promise.all(
       result.map(async (member) => {
-        const memberStruct = await structures.createMember(member, guildID);
+        const memberStruct = await structures.createMemberStruct(
+          member,
+          guildID,
+        );
 
         await cacheHandlers.set("members", memberStruct.id, memberStruct);
 
