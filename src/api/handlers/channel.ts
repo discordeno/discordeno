@@ -240,10 +240,11 @@ export async function sendMessage(
           replied_user: content.mentions.repliedUser,
         }
         : undefined,
-      ...(content.replyMessageID
+      ...(content.replyMessageID || content.failReplyIfNotExists
         ? {
           message_reference: {
             message_id: content.replyMessageID,
+            fail_if_not_exists: content.failReplyIfNotExists === true,
           },
         }
         : {}),

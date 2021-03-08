@@ -200,11 +200,23 @@ export interface Application {
 
 export interface Reference {
   /** The id of the originating message */
-  "message_id"?: string;
+  // deno-lint-ignore camelcase
+  message_id?: string;
   /** The id of the originating message's channel */
-  "channel_id": string;
+  // deno-lint-ignore camelcase
+  channel_id?: string;
   /** The id of the originating message's guild */
-  "guild_id"?: string;
+  // deno-lint-ignore camelcase
+  guild_id?: string;
+  /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default false */
+  // deno-lint-ignore camelcase
+  fail_if_not_exists?: boolean;
+}
+
+export interface DiscordReferencePayload extends Reference {
+  /** The id of the originating message's channel */
+  // deno-lint-ignore camelcase
+  channel_id: string;
 }
 
 export enum MessageFlags {
@@ -287,7 +299,7 @@ export interface MessageCreateOptions {
   /** Applications that sent with Rich Presence related chat embeds. */
   applications?: Application;
   /** The reference data sent with crossposted messages */
-  "message_reference"?: Reference;
+  "message_reference"?: DiscordReferencePayload;
   /** The message flags combined like permission bits describe extra features of the message */
   flags?: 1 | 2 | 4 | 8 | 16;
   /** the stickers sent with the message (bots currently can only receive messages with stickers, not send) */
