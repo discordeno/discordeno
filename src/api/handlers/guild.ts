@@ -694,8 +694,8 @@ export async function getAuditLogs(
   return result;
 }
 
-/** Returns the guild embed object. Requires the MANAGE_GUILD permission. */
-export async function getEmbed(guildID: string) {
+/** Returns the guild widget object. Requires the MANAGE_GUILD permission. */
+export async function getWidgetSettings(guildID: string) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
@@ -706,8 +706,8 @@ export async function getEmbed(guildID: string) {
   return result;
 }
 
-/** Modify a guild embed object for the guild. Requires the MANAGE_GUILD permission. */
-export async function editEmbed(
+/** Modify a guild widget object for the guild. Requires the MANAGE_GUILD permission. */
+export async function editWidget(
   guildID: string,
   enabled: boolean,
   channelID?: string | null,
