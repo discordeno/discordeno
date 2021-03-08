@@ -229,7 +229,7 @@ export async function editMember(
     endpoints.GUILD_MEMBER(guildID, memberID),
     options,
   ) as MemberCreatePayload;
-  const member = await structures.createMember(result, guildID);
+  const member = await structures.createMemberStruct(result, guildID);
 
   return member;
 }
