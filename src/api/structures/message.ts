@@ -1,3 +1,4 @@
+import { Message } from "../../types/lib/structures/message.ts";
 import { cache } from "../../util/cache.ts";
 import { createNewProp } from "../../util/utils.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
