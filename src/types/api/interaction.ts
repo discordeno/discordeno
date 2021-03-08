@@ -1,4 +1,9 @@
-import { DiscordMember } from "./mod.ts";
+import {
+  DiscordChannel,
+  DiscordMember,
+  DiscordRole,
+  DiscordUser,
+} from "./mod.ts";
 
 export interface DiscordInteractionCommand {
   /** id of the interaction */
@@ -31,13 +36,31 @@ export interface DiscordInteractionData {
   id: string;
   /** the name of the invoked command */
   name: string;
+  /** converted users + roles + channels */
+  resolved?: DiscordApplicationCommandInteractionDataResolved;
   /** the params + values from the user */
-  options: DiscordInteractionDataOption[];
+  options?: DiscordInteractionDataOption[];
+}
+
+export interface DiscordApplicationCommandInteractionDataResolved {
+  /** the IDs and User objects */
+  users?: Record<string, DiscordUser>;
+  /** the IDs and partial Member objects */
+  members?: Record<string, Omit<DiscordMember, "user" | "deaf" | "mute">>;
+  /** the IDs and Role objects */
+  roles?: Record<string, DiscordRole>;
+  /** the IDs and partial Channel objects */
+  channels?: Record<
+    string,
+    Pick<DiscordChannel, "id" | "name" | "type" | "permission_overwrites">
+  >;
 }
 
 export interface DiscordInteractionDataOption {
   /** the name of the parameter */
   name: string;
+  /** value of ApplicationCommandOptionType */
+  type: DiscordApplicationCommandOptionType;
   /** the value of the pair. present if there was no more options */
   value?: string | number;
   /** present if this option is a group or subcommand */
@@ -49,7 +72,7 @@ export interface DiscordApplicationCommand {
   /** unique id of the command */
   id: string;
   /** unique id of the parent application */
-  "application_id": string;
+  application_id: string;
   /** 3-32 character name matching `^[\w-]{3,32}$` */
   name: string;
   /** 1-100 character description */

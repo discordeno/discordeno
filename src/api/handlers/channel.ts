@@ -133,6 +133,30 @@ export async function getPins(channelID: string) {
  * this endpoint may be called to let the user know that the bot is processing their message.
  */
 export async function startTyping(channelID: string) {
+  const channel = await cacheHandlers.get("channels", channelID);
+  // If the channel is cached, we can do extra checks/safety
+  if (channel) {
+    if (
+      ![
+        ChannelTypes.DM,
+        ChannelTypes.GUILD_NEWS,
+        ChannelTypes.GUILD_TEXT,
+      ].includes(channel.type)
+    ) {
+      throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
+    }
+
+    const hasSendMessagesPerm = await botHasChannelPermissions(
+      channelID,
+      ["SEND_MESSAGES"],
+    );
+    if (
+      !hasSendMessagesPerm
+    ) {
+      throw new Error(Errors.MISSING_SEND_MESSAGES);
+    }
+  }
+
   const result = await RequestManager.post(endpoints.CHANNEL_TYPING(channelID));
 
   return result;
@@ -244,6 +268,7 @@ export async function sendMessage(
         ? {
           message_reference: {
             message_id: content.replyMessageID,
+            fail_if_not_exists: content.failReplyIfNotExists === true,
           },
         }
         : {}),
@@ -319,6 +344,20 @@ export async function createInvite(
     !hasCreateInstantInvitePerm
   ) {
     throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE);
+  }
+
+  if (options.max_age && (options.max_age > 604800 || options.max_age < 0)) {
+    console.log(
+      `The max age for invite created in ${channelID} was not between 0-604800. Using default values instead.`,
+    );
+    options.max_age = undefined;
+  }
+
+  if (options.max_uses && (options.max_uses > 100 || options.max_uses < 0)) {
+    console.log(
+      `The max uses for invite created in ${channelID} was not between 0-100. Using default values instead.`,
+    );
+    options.max_uses = undefined;
   }
 
   const result = await RequestManager.post(
@@ -475,7 +514,7 @@ export async function editChannel(
   const payload = {
     ...options,
     // deno-lint-ignore camelcase
-    rate_limit_per_user: options.slowmode,
+    rate_limit_per_user: options.rateLimitPerUser,
     // deno-lint-ignore camelcase
     parent_id: options.parentID,
     // deno-lint-ignore camelcase

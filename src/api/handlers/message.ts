@@ -1,6 +1,7 @@
 import { botID } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import {
+  DiscordGetReactionsParams,
   Errors,
   MessageContent,
   MessageCreateOptions,
@@ -264,9 +265,14 @@ export async function removeReactionEmoji(
 }
 
 /** Get a list of users that reacted with this emoji. */
-export async function getReactions(message: Message, reaction: string) {
+export async function getReactions(
+  message: Message,
+  reaction: string,
+  options?: DiscordGetReactionsParams,
+) {
   const result = (await RequestManager.get(
     endpoints.CHANNEL_MESSAGE_REACTION(message.channelID, message.id, reaction),
+    options,
   )) as UserPayload[];
 
   return Promise.all(result.map(async (res) => {

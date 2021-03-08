@@ -8,6 +8,7 @@ import {
   UpdateGuildPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
+import { Collection } from "../../util/collection.ts";
 import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
@@ -115,13 +116,15 @@ export async function handleInternalGuildEmojisUpdate(data: DiscordPayload) {
   if (!guild) return;
 
   const cachedEmojis = guild.emojis;
-  guild.emojis = payload.emojis;
+  guild.emojis = new Collection(
+    payload.emojis.map((emoji) => [emoji.id ?? emoji.name, emoji]),
+  );
 
   cacheHandlers.set("guilds", payload.guild_id, guild);
 
   eventHandlers.guildEmojisUpdate?.(
     guild,
-    payload.emojis,
+    guild.emojis,
     cachedEmojis,
   );
 }

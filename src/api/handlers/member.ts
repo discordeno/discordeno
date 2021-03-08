@@ -7,6 +7,7 @@ import {
   Errors,
   ImageFormats,
   ImageSize,
+  MemberCreatePayload,
   MessageContent,
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -227,9 +228,10 @@ export async function editMember(
   const result = await RequestManager.patch(
     endpoints.GUILD_MEMBER(guildID, memberID),
     options,
-  );
+  ) as MemberCreatePayload;
+  const member = await structures.createMember(result, guildID);
 
-  return result;
+  return member;
 }
 
 /**

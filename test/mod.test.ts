@@ -138,10 +138,7 @@ Deno.test({
 Deno.test({
   name: "[channel] create a channel in a guild",
   async fn() {
-    const guild = cache.guilds.get(tempData.guildID);
-    if (!guild) throw new Error("Guild not found");
-
-    const channel = await createGuildChannel(guild, "test");
+    const channel = await createGuildChannel(tempData.guildID, "test");
 
     // Assertions
     assertExists(channel);

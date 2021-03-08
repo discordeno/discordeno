@@ -547,10 +547,42 @@ export interface PrunePayload {
 }
 
 export interface PruneOptions {
-  /** number of days to count prune for (1 - 30). Defaults to 7 days. */
-  days: number;
-  /** Include members with these role ids */
-  roles: string[];
+  /** Number of days to prune (1-30). Default: 7 */
+  days?:
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 9
+    | 10
+    | 11
+    | 12
+    | 13
+    | 14
+    | 15
+    | 16
+    | 17
+    | 18
+    | 19
+    | 20
+    | 21
+    | 22
+    | 23
+    | 24
+    | 25
+    | 26
+    | 27
+    | 28
+    | 29
+    | 30;
+  /** Whether 'pruned' is returned, discouraged for large guilds. Default: true */
+  computePruneCount?: boolean;
+  /** Role(s) to include */
+  roles?: string[];
 }
 
 export interface VoiceState {
@@ -651,7 +683,7 @@ export interface GuildTemplate {
   /** the ID of the user who created the template */
   "creator_id": string;
   /** the user who created the template */
-  user: UserPayload;
+  creator: UserPayload;
   /** when this template was created */
   "created_at": string;
   /** when this template was last synced to the source guild */
