@@ -299,7 +299,8 @@ export interface MessageCreateOptions {
   /** Applications that sent with Rich Presence related chat embeds. */
   applications?: Application;
   /** The reference data sent with crossposted messages */
-  "message_reference"?: DiscordReferencePayload;
+  // deno-lint-ignore camelcase
+  message_reference?: DiscordReferencePayload;
   /** The message flags combined like permission bits describe extra features of the message */
   flags?: 1 | 2 | 4 | 8 | 16;
   /** the stickers sent with the message (bots currently can only receive messages with stickers, not send) */
