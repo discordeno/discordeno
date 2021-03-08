@@ -1,10 +1,3 @@
-import { Channel, createChannelStruct } from "./channel.ts";
-import { createGuildStruct, Guild } from "./guild.ts";
-import { createMemberStruct, Member } from "./member.ts";
-import { createMessageStruct, Message } from "./message.ts";
-import { createRoleStruct, Role } from "./role.ts";
-import { createTemplateStruct, Template } from "./template.ts";
-
 /** This is the placeholder where the structure creation functions are kept. */
 export let structures = {
   createChannelStruct,
