@@ -5,6 +5,7 @@ import {
   Message,
   Role,
 } from "../api/structures/mod.ts";
+import { Collection } from "../util/collection.ts";
 import {
   DiscordPayload,
   Emoji,
@@ -141,8 +142,8 @@ export interface EventHandlers {
   /** Sent when a guild's emojis have been updated. */
   guildEmojisUpdate?: (
     guild: Guild,
-    emojis: Emoji[],
-    cachedEmojis: Emoji[],
+    emojis: Collection<string, Emoji>,
+    cachedEmojis: Collection<string, Emoji>,
   ) => unknown;
   /** Sent when a new user joins a guild. */
   guildMemberAdd?: (guild: Guild, member: Member) => unknown;
