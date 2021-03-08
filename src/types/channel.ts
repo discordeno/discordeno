@@ -11,7 +11,7 @@ export interface ChannelEditOptions {
   /** whether the channel is nsfw	Text */
   nsfw?: boolean;
   /**	amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission manage_messages or manage_channel, are unaffected	Text  */
-  slowmode?: number;
+  rateLimitPerUser?: number;
   /**	the bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers)	Voice  */
   bitrate?: number;
   /**	the user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit	Voice  */

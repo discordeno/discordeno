@@ -514,7 +514,7 @@ export async function editChannel(
   const payload = {
     ...options,
     // deno-lint-ignore camelcase
-    rate_limit_per_user: options.slowmode,
+    rate_limit_per_user: options.rateLimitPerUser,
     // deno-lint-ignore camelcase
     parent_id: options.parentID,
     // deno-lint-ignore camelcase
