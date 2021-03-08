@@ -211,6 +211,10 @@ export interface EventHandlers {
   roleGained?: (guild: Guild, member: Member, roleID: string) => unknown;
   roleLost?: (guild: Guild, member: Member, roleID: string) => unknown;
   shardReady?: (shardID: number) => unknown;
+  shardFailedToLoad?: (
+    shardID: number,
+    guilds: UnavailableGuildPayload[],
+  ) => unknown;
   /** Sent when a user starts typing in a channel. */
   typingStart?: (data: TypingStartPayload) => unknown;
   voiceChannelJoin?: (member: Member, channelID: string) => unknown;
