@@ -3,16 +3,19 @@ import { Channel, Guild, Member, Role } from "../api/structures/mod.ts";
 import { botID } from "../bot.ts";
 import { Errors, Permission, Permissions } from "../types/mod.ts";
 
-async function getCached(table: "guild", key: string | Guild): Promise<Guild>;
-async function getCached(
+export async function getCached(
+  table: "guild",
+  key: string | Guild,
+): Promise<Guild>;
+export async function getCached(
   table: "channel",
   key: string | Channel,
 ): Promise<Channel>;
-async function getCached(
+export async function getCached(
   table: "member",
   key: string | Member,
 ): Promise<Member>;
-async function getCached(
+export async function getCached(
   table: "guild" | "channel" | "member",
   key: string | Guild | Channel | Member,
 ) {
@@ -128,35 +131,35 @@ export function validatePermissions(
 
 /** Checks if the given member has these permissions in the given guild */
 export async function hasGuildPermissions(
-  guildID: string,
-  memberID: string,
+  guild: string | Guild,
+  member: string | Member,
   permissions: Permission[],
 ) {
   // First we need the role permission bits this member has
-  const basePermissions = await calculateBasePermissions(guildID, memberID);
+  const basePermissions = await calculateBasePermissions(guild, member);
   // Second use the validatePermissions function to check if the member has every permission
   return validatePermissions(basePermissions, permissions);
 }
 
 /** Checks if the bot has these permissions in the given guild */
 export function botHasGuildPermissions(
-  guildID: string,
+  guild: string | Guild,
   permissions: Permission[],
 ) {
   // Since Bot is a normal member we can use the hasRolePermissions() function
-  return hasGuildPermissions(guildID, botID, permissions);
+  return hasGuildPermissions(guild, botID, permissions);
 }
 
 /** Checks if the given member has these permissions for the given channel */
 export async function hasChannelPermissions(
-  channelID: string,
-  memberID: string,
+  channel: string | Channel,
+  member: string | Member,
   permissions: Permission[],
 ) {
   // First we need the overwrite bits this member has
   const channelOverwrites = await calculateChannelOverwrites(
-    channelID,
-    memberID,
+    channel,
+    member,
   );
   // Second use the validatePermissions function to check if the member has every permission
   return validatePermissions(channelOverwrites, permissions);
@@ -164,11 +167,11 @@ export async function hasChannelPermissions(
 
 /** Checks if the bot has these permissions f0r the given channel */
 export function botHasChannelPermissions(
-  channelID: string,
+  channel: string | Channel,
   permissions: Permission[],
 ) {
   // Since Bot is a normal member we can use the hasRolePermissions() function
-  return hasChannelPermissions(channelID, botID, permissions);
+  return hasChannelPermissions(channel, botID, permissions);
 }
 
 /** Returns the permissions that are not in the given permissionBits */
@@ -185,12 +188,12 @@ export function missingPermissions(
 
 /** Throws an error if this member has not all of the given permissions */
 export async function requireGuildPermissions(
-  guildID: string,
-  memberID: string,
+  guild: string | Guild,
+  member: string | Member,
   permissions: Permission[],
 ) {
   // First we need the role permissions bits this member has
-  const permissionBits = await calculateBasePermissions(guildID, memberID);
+  const permissionBits = await calculateBasePermissions(guild, member);
   // Second check if the member is missing any permissions
   const missing = missingPermissions(permissionBits, permissions);
   if (missing.length) {
@@ -201,21 +204,21 @@ export async function requireGuildPermissions(
 
 /** Throws an error if the bot does not have all permissions */
 export function requireBotGuildPermissions(
-  guildID: string,
+  guild: string | Guild,
   permissions: Permission[],
 ) {
   // Since Bot is a normal member we can use the throwOnMissingGuildPermission() function
-  return requireGuildPermissions(guildID, botID, permissions);
+  return requireGuildPermissions(guild, botID, permissions);
 }
 
 /** Throws an error if this member has not all of the given permissions */
 export async function requireChannelPermissions(
-  channelID: string,
-  memberID: string,
+  channel: string | Channel,
+  member: string | Member,
   permissions: Permission[],
 ) {
   // First we need the channel overwrite bits this member has
-  const permissionBits = await calculateChannelOverwrites(channelID, memberID);
+  const permissionBits = await calculateChannelOverwrites(channel, member);
   // Second check if the member is missing any permissions
   const missing = missingPermissions(permissionBits, permissions);
   if (missing.length) {
@@ -226,11 +229,11 @@ export async function requireChannelPermissions(
 
 /** Throws an error if the bot has not all of the given channel permissions */
 export function requireBotChannelPermissions(
-  channelID: string,
+  channel: string | Channel,
   permissions: Permission[],
 ) {
   // Since Bot is a normal member we can use the throwOnMissingChannelPermission() function
-  return requireChannelPermissions(channelID, botID, permissions);
+  return requireChannelPermissions(channel, botID, permissions);
 }
 
 /** This function converts a bitwise string to permission strings */
