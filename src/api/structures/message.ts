@@ -115,7 +115,7 @@ const baseMessage: Partial<Message> = {
   },
 };
 
-export async function createMessage(data: MessageCreateOptions) {
+export async function createMessageStruct(data: MessageCreateOptions) {
   const {
     guild_id: guildID = "",
     channel_id: channelID,

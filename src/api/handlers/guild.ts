@@ -9,13 +9,13 @@ import { cacheHandlers } from "../controllers/cache.ts";
 import { structures } from "../structures/mod.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
-export async function createServer(options: CreateServerOptions) {
+export async function createGuild(options: CreateServerOptions) {
   const guild = await RequestManager.post(
     endpoints.GUILDS,
     options,
   ) as CreateGuildPayload;
 
-  return structures.createGuild(guild, 0);
+  return structures.createGuildStruct(guild, 0);
 }
 
 /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event.
@@ -101,8 +101,7 @@ export async function createGuildChannel(
     type: options?.type || ChannelTypes.GUILD_TEXT,
   })) as ChannelCreatePayload;
 
-  const channelStruct = await structures.createChannel(result);
-
+  const channelStruct = await structures.createChannelStruct(result);
   await cacheHandlers.set("channels", channelStruct.id, channelStruct);
 
   return channelStruct;
@@ -151,7 +150,7 @@ export async function getChannels(guildID: string, addToCache = true) {
   ) as ChannelCreatePayload[];
 
   return Promise.all(result.map(async (res) => {
-    const channelStruct = await structures.createChannel(res, guildID);
+    const channelStruct = await structures.createChannelStruct(res, guildID);
     if (addToCache) {
       await cacheHandlers.set("channels", channelStruct.id, channelStruct);
     }
@@ -169,7 +168,10 @@ export async function getChannel(channelID: string, addToCache = true) {
     endpoints.CHANNEL_BASE(channelID),
   ) as ChannelCreatePayload;
 
-  const channelStruct = await structures.createChannel(result, result.guild_id);
+  const channelStruct = await structures.createChannelStruct(
+    result,
+    result.guild_id,
+  );
   if (addToCache) {
     await cacheHandlers.set("channels", channelStruct.id, channelStruct);
   }
@@ -258,8 +260,7 @@ export async function getMember(
     endpoints.GUILD_MEMBER(guildID, id),
   ) as MemberCreatePayload;
 
-  const memberStruct = await structures.createMember(data, guildID);
-
+  const memberStruct = await structures.createMemberStruct(data, guildID);
   await cacheHandlers.set("members", memberStruct.id, memberStruct);
 
   return memberStruct;
@@ -404,7 +405,7 @@ export async function getEmoji(
 }
 
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
-export async function createGuildRole(
+export async function createRole(
   guildID: string,
   options: CreateRoleOptions,
   reason?: string,
@@ -424,7 +425,7 @@ export async function createGuildRole(
   );
 
   const roleData = result as RoleData;
-  const role = await structures.createRole(roleData);
+  const role = await structures.createRoleStruct(roleData);
   const guild = await cacheHandlers.get("guilds", guildID);
   guild?.roles.set(role.id, role);
 
@@ -611,7 +612,10 @@ export async function getMembers(
 
     const memberStructures = await Promise.all(
       result.map(async (member) => {
-        const memberStruct = await structures.createMember(member, guildID);
+        const memberStruct = await structures.createMemberStruct(
+          member,
+          guildID,
+        );
 
         await cacheHandlers.set("members", memberStruct.id, memberStruct);
 
@@ -688,6 +692,35 @@ export async function editWidget(
   );
 
   return result;
+}
+
+/** Returns the widget for the guild. */
+export async function getWidget(guildID: string, options?: { force: boolean }) {
+  if (!options?.force) {
+    const guild = await cacheHandlers.get("guilds", guildID);
+    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+    if (!guild?.widgetEnabled) throw new Error(Errors.GUILD_WIDGET_NOT_ENABLED);
+  }
+
+  return RequestManager.get(`${endpoints.GUILD_WIDGET(guildID)}.json`);
+}
+
+/** Returns the widget image URL for the guild. */
+export async function getWidgetImageUrl(
+  guildID: string,
+  options?: {
+    style?: "shield" | "banner1" | "banner2" | "banner3" | "banner4";
+    force?: boolean;
+  },
+) {
+  if (!options?.force) {
+    const guild = await cacheHandlers.get("guilds", guildID);
+    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+    if (!guild.widgetEnabled) throw new Error(Errors.GUILD_WIDGET_NOT_ENABLED);
+  }
+
+  return `${endpoints.GUILD_WIDGET(guildID)}.png?style=${options?.style ??
+    "shield"}`;
 }
 
 /** Returns the code and uses of the vanity url for this server if it is enabled. Requires the MANAGE_GUILD permission. */
@@ -927,7 +960,7 @@ export async function getTemplate(templateCode: string) {
   const result = await RequestManager.get(
     endpoints.GUILD_TEMPLATE(templateCode),
   ) as GuildTemplate;
-  const template = await structures.createTemplate(result);
+  const template = await structures.createTemplateStruct(result);
 
   return template;
 }
@@ -981,7 +1014,7 @@ export async function getGuildTemplates(guildID: string) {
     endpoints.GUILD_TEMPLATES(guildID),
   ) as GuildTemplate[];
 
-  return templates.map((template) => structures.createTemplate(template));
+  return templates.map((template) => structures.createTemplateStruct(template));
 }
 
 /**
@@ -999,7 +1032,7 @@ export async function deleteGuildTemplate(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
   ) as GuildTemplate;
 
-  return structures.createTemplate(deletedTemplate);
+  return structures.createTemplateStruct(deletedTemplate);
 }
 
 /**
@@ -1031,7 +1064,7 @@ export async function createGuildTemplate(
     data,
   ) as GuildTemplate;
 
-  return structures.createTemplate(template);
+  return structures.createTemplateStruct(template);
 }
 
 /**
@@ -1046,7 +1079,7 @@ export async function syncGuildTemplate(guildID: string, templateCode: string) {
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
   ) as GuildTemplate;
 
-  return structures.createTemplate(template);
+  return structures.createTemplateStruct(template);
 }
 
 /**
@@ -1077,5 +1110,5 @@ export async function editGuildTemplate(
     data,
   ) as GuildTemplate;
 
-  return structures.createTemplate(template);
+  return structures.createTemplateStruct(template);
 }

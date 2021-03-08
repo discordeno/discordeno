@@ -6,7 +6,7 @@ export async function handleInternalInteractionCreate(data: DiscordPayload) {
   if (data.t !== "INTERACTION_CREATE") return;
 
   const payload = data.d as InteractionCommandPayload;
-  const memberStruct = await structures.createMember(
+  const memberStruct = await structures.createMemberStruct(
     payload.member,
     payload.guild_id,
   );

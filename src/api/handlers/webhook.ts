@@ -1,6 +1,7 @@
 import { applicationID } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { cache } from "../../util/cache.ts";
+import { Collection } from "../../util/collection.ts";
 import { endpoints, SLASH_COMMANDS_NAME_REGEX } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
@@ -184,7 +185,7 @@ export async function executeWebhook(
   );
   if (!options.wait) return;
 
-  return structures.createMessage(result as MessageCreateOptions);
+  return structures.createMessageStruct(result as MessageCreateOptions);
 }
 
 export async function editWebhookMessage(
@@ -238,7 +239,7 @@ export async function editWebhookMessage(
     { ...options, allowed_mentions: options.allowed_mentions },
   ) as MessageCreateOptions;
 
-  const message = await structures.createMessage(result);
+  const message = await structures.createMessageStruct(result);
   return message;
 }
 
@@ -369,14 +370,13 @@ export async function getSlashCommand(commandID: string, guildID?: string) {
 
 /** Fetch all of the global commands for your application. */
 export async function getSlashCommands(guildID?: string) {
-  // TODO: Should this be a returned as a collection?
-  const result = await RequestManager.get(
+  const result = (await RequestManager.get(
     guildID
       ? endpoints.COMMANDS_GUILD(applicationID, guildID)
       : endpoints.COMMANDS(applicationID),
-  );
+  )) as SlashCommand[];
 
-  return result;
+  return new Collection(result.map((command) => [command.name, command]));
 }
 
 /**
@@ -584,7 +584,7 @@ export async function editSlashResponse(
   // If the original message was edited, this will not return a message
   if (!options.messageID) return result;
 
-  const message = await structures.createMessage(
+  const message = await structures.createMessageStruct(
     result as MessageCreateOptions,
   );
   return message;

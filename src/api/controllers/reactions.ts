@@ -33,7 +33,7 @@ export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
   if (payload.member && payload.guild_id) {
     const guild = await cacheHandlers.get("guilds", payload.guild_id);
     if (guild) {
-      const memberStruct = await structures.createMember(
+      const memberStruct = await structures.createMemberStruct(
         payload.member,
         guild.id,
       );
@@ -89,7 +89,7 @@ export async function handleInternalMessageReactionRemove(
   if (payload.member && payload.guild_id) {
     const guild = await cacheHandlers.get("guilds", payload.guild_id);
     if (guild) {
-      const memberStruct = await structures.createMember(
+      const memberStruct = await structures.createMemberStruct(
         payload.member,
         guild.id,
       );

@@ -34,17 +34,17 @@ To begin customizing, create a file in the structures folder called `member.ts`.
 The name of the file is not important at all.
 
 ```ts
-async function createMember() {
+async function createMemberStruct() {
 }
 ```
 
 We start by declaring a function that will be run to create the structure. Once
 again the name here is not important. The function must take the same arguments
-that the internal function takes. In this case the createMember function takes 2
-arguments. `data: MemberCreatePayload, guildID: string`
+that the internal function takes. In this case the createMemberStruct function
+takes 2 arguments. `data: MemberCreatePayload, guildID: string`
 
 ```ts
-async function createMember(data: MemberCreatePayload, guildID: string) {
+async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
 }
 ```
 
@@ -53,7 +53,7 @@ want. My recommendation is to start by copying the current code from the
 internal libraries structure.
 
 ```ts
-async function createMember(data: MemberCreatePayload, guildID: string) {
+async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
   const {
     joined_at: joinedAt,
     premium_since: premiumSince,
@@ -92,7 +92,7 @@ and `guild` properties to the member.
 ```ts
 import { rawAvatarURL } from "../../deps.ts";
 
-async function createMember(data: MemberCreatePayload, guildID: string) {
+async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
   // Hidden code here to make it easier to see the changes
 
   const member = {
@@ -116,11 +116,11 @@ async function createMember(data: MemberCreatePayload, guildID: string) {
 ```
 
 Now we need to use this function and telling Discordeno to override the internal
-createMember function. To do this, we will modify the internal functions. This
-is where we reassign the value of the function.
+createMemberStruct function. To do this, we will modify the internal functions.
+This is where we reassign the value of the function.
 
 ```ts
-structures.createMember = createMember;
+structures.createMemberStruct = createMemberStruct;
 ```
 
 Awesome. Now, we have one more step to complete which is to declare these new
@@ -144,7 +144,7 @@ declare module "../../deps.ts" {
 The code should look like this right now:
 
 ```ts
-async function createMember(data: MemberCreatePayload, guildID: string) {
+async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
   const {
     joined_at: joinedAt,
     premium_since: premiumSince,
@@ -184,7 +184,7 @@ async function createMember(data: MemberCreatePayload, guildID: string) {
   return member;
 }
 
-structures.createMember = createMember;
+structures.createMemberStruct = createMemberStruct;
 
 declare module "../../deps.ts" {
   interface Member {
@@ -268,7 +268,7 @@ import {
   rawAvatarURL,
 } from "../../deps.ts";
 
-async function createMember(data: MemberCreatePayload, guildID: string) {
+async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
   const {
     id,
     bot,
@@ -291,7 +291,7 @@ async function createMember(data: MemberCreatePayload, guildID: string) {
   };
 }
 
-structures.createMember = createMember;
+structures.createMemberStruct = createMemberStruct;
 
 declare module "../../deps.ts" {
   interface Member {
@@ -304,15 +304,15 @@ declare module "../../deps.ts" {
 }
 ```
 
-You might be seeing an error on `structures.createMember`. This is happening
-because our new member structures is modifying/removing existing properties that
-the lib internally said it would have. To solve this, simply just add a
-ts-ignore above it as you know better than TS that the typings are being
-overwritten.
+You might be seeing an error on `structures.createMemberStruct`. This is
+happening because our new member structures is modifying/removing existing
+properties that the lib internally said it would have. To solve this, simply
+just add a ts-ignore above it as you know better than TS that the typings are
+being overwritten.
 
 ```ts
 // @ts-ignore
-structures.createMember = createMember;
+structures.createMemberStruct = createMemberStruct;
 ```
 
 ## Custom Cache

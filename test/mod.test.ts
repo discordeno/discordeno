@@ -6,10 +6,9 @@ import {
   cache,
   Channel,
   channelOverwriteHasPermission,
-  closeWS,
+  createGuild,
   createGuildChannel,
-  createGuildRole,
-  createServer,
+  createRole,
   delay,
   deleteChannel,
   deleteMessageByID,
@@ -71,7 +70,7 @@ Deno.test({
 Deno.test({
   name: "[guild] create a new guild",
   async fn() {
-    const guild = await createServer({
+    const guild = await createGuild({
       name: "Discordeno Test",
     }) as Guild;
 
@@ -96,7 +95,7 @@ Deno.test({
     }
 
     const name = "Discordeno Test";
-    const role = await createGuildRole(tempData.guildID, {
+    const role = await createRole(tempData.guildID, {
       name,
     });
 

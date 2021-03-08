@@ -1,18 +1,18 @@
-import { createChannel } from "./channel.ts";
-import { createGuild } from "./guild.ts";
-import { createMember } from "./member.ts";
-import { createMessage } from "./message.ts";
-import { createRole } from "./role.ts";
-import { createTemplate } from "./template.ts";
+import { Channel, createChannelStruct } from "./channel.ts";
+import { createGuildStruct, Guild } from "./guild.ts";
+import { createMemberStruct, Member } from "./member.ts";
+import { createMessageStruct, Message } from "./message.ts";
+import { createRoleStruct, Role } from "./role.ts";
+import { createTemplateStruct, Template } from "./template.ts";
 
 /** This is the placeholder where the structure creation functions are kept. */
 export let structures = {
-  createChannel,
-  createGuild,
-  createMember,
-  createMessage,
-  createRole,
-  createTemplate,
+  createChannelStruct,
+  createGuildStruct,
+  createMemberStruct,
+  createMessageStruct,
+  createRoleStruct,
+  createTemplateStruct,
 };
 
 /** This function is used to update/reload/customize the internal structures of Discordeno.
