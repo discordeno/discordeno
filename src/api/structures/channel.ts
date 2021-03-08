@@ -135,7 +135,7 @@ export interface Channel {
   lastMessageID?: string;
   /** The amount of users allowed in this voice channel. */
   userLimit?: number;
-  /** The rate limit(slowmode) in this text channel that users can send messages. */
+  /** The rate limit (slowmode) in this text channel that users can send messages. */
   rateLimitPerUser?: number;
   /** The category id for this channel */
   parentID?: string;
