@@ -203,7 +203,7 @@ export async function executeWebhook(
   );
   if (!options.wait) return;
 
-  return structures.createMessage(result as MessageCreateOptions);
+  return structures.createMessageStruct(result as MessageCreateOptions);
 }
 
 export async function editWebhookMessage(
@@ -257,7 +257,7 @@ export async function editWebhookMessage(
     { ...options, allowed_mentions: options.allowed_mentions },
   ) as MessageCreateOptions;
 
-  const message = await structures.createMessage(result);
+  const message = await structures.createMessageStruct(result);
   return message;
 }
 
@@ -603,7 +603,7 @@ export async function editSlashResponse(
   // If the original message was edited, this will not return a message
   if (!options.messageID) return result;
 
-  const message = await structures.createMessage(
+  const message = await structures.createMessageStruct(
     result as MessageCreateOptions,
   );
   return message;

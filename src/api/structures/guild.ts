@@ -107,7 +107,10 @@ const baseGuild: Partial<Guild> = {
   },
 };
 
-export async function createGuild(data: CreateGuildPayload, shardID: number) {
+export async function createGuildStruct(
+  data: CreateGuildPayload,
+  shardID: number,
+) {
   const {
     disovery_splash: discoverySplash,
     default_message_notifications: defaultMessageNotifications,
@@ -143,11 +146,14 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
   } = data;
 
   const roles = await Promise.all(
-    data.roles.map((role) => structures.createRole(role)),
+    data.roles.map((role) => structures.createRoleStruct(role)),
   );
 
   await Promise.all(channels.map(async (channel) => {
-    const channelStruct = await structures.createChannel(channel, rest.id);
+    const channelStruct = await structures.createChannelStruct(
+      channel,
+      rest.id,
+    );
     return cacheHandlers.set("channels", channelStruct.id, channelStruct);
   }));
 

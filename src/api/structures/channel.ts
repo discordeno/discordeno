@@ -77,7 +77,7 @@ const baseChannel: Partial<Channel> = {
 };
 
 // deno-lint-ignore require-await
-export async function createChannel(
+export async function createChannelStruct(
   data: ChannelCreatePayload,
   guildID?: string,
 ) {

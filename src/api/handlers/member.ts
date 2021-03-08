@@ -132,7 +132,7 @@ export async function sendDirectMessage(
       endpoints.USER_DM,
       { recipient_id: memberID },
     ) as DMChannelCreatePayload;
-    const channelStruct = await structures.createChannel(
+    const channelStruct = await structures.createChannelStruct(
       dmChannelData as unknown as ChannelCreatePayload,
     );
     // Recreate the channel and add it undert he users id
@@ -229,7 +229,7 @@ export async function editMember(
     endpoints.GUILD_MEMBER(guildID, memberID),
     options,
   ) as MemberCreatePayload;
-  const member = await structures.createMember(result, guildID);
+  const member = await structures.createMemberStruct(result, guildID);
 
   return member;
 }

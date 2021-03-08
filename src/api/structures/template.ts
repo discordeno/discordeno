@@ -11,7 +11,7 @@ const baseTemplate: Partial<Template> = {
   },
 };
 
-export function createTemplate(
+export function createTemplateStruct(
   data: GuildTemplate,
 ) {
   const {
