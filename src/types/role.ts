@@ -1,5 +1,3 @@
-import { ValueOf } from "./mod.ts";
-
 export interface RoleData {
   /** role id */
   id: string;
@@ -19,14 +17,13 @@ export interface RoleData {
   mentionable: boolean;
   /** Certain roles may have tags that allow you to determine if this role is related to a bot, an integration, or the booster role. */
   tags?: RoleTags;
-  [key: string]: ValueOf<RoleData>;
 }
 
 export interface RoleTags {
   /** the id of the bot who has this role */
-  bot_id?: string;
+  "bot_id"?: string;
   /** whether this is the premium subscriber role for this guild */
-  premium_subscriber?: null;
+  "premium_subscriber"?: null;
   /** the id of the integration this role belongs to */
-  integration_id?: string;
+  "integration_id"?: string;
 }

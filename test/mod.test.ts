@@ -1,10 +1,4 @@
 import {
-  deleteChannel,
-  deleteRole,
-  deleteServer,
-  getChannel,
-} from "../src/api/handlers/guild.ts";
-import {
   addReaction,
   assertEquals,
   assertExists,
@@ -12,13 +6,18 @@ import {
   cache,
   Channel,
   channelOverwriteHasPermission,
+  closeWS,
   createGuildChannel,
   createGuildRole,
   createServer,
   delay,
+  deleteChannel,
   deleteMessageByID,
+  deleteRole,
+  deleteServer,
   editChannel,
   editRole,
+  getChannel,
   getMessage,
   getPins,
   Guild,
@@ -31,18 +30,11 @@ import {
   unpin,
 } from "./deps.ts";
 
-const token = Deno.env.get("DISCORD_TOKEN");
-if (!token) throw new Error("Token is not provided");
-
-startBot({
-  token,
-  intents: ["GUILD_MESSAGES", "GUILDS"],
-});
-
 // Default options for tests
-export const defaultTestOptions = {
+export const defaultTestOptions: Partial<Deno.TestDefinition> = {
   sanitizeOps: false,
   sanitizeResources: false,
+  sanitizeExit: false,
 };
 
 // Temporary data
@@ -56,7 +48,15 @@ export const tempData = {
 // Main
 Deno.test({
   name: "[main] connect to gateway",
-  fn: async () => {
+  async fn() {
+    const token = Deno.env.get("DISCORD_TOKEN");
+    if (!token) throw new Error("Token is not provided");
+
+    await startBot({
+      token,
+      intents: ["GUILD_MESSAGES", "GUILDS"],
+    });
+
     // Delay the execution by 5 seconds
     await delay(5000);
 
@@ -138,10 +138,7 @@ Deno.test({
 Deno.test({
   name: "[channel] create a channel in a guild",
   async fn() {
-    const guild = cache.guilds.get(tempData.guildID);
-    if (!guild) throw new Error("Guild not found");
-
-    const channel = await createGuildChannel(guild, "test");
+    const channel = await createGuildChannel(tempData.guildID, "test");
 
     // Assertions
     assertExists(channel);
@@ -185,6 +182,7 @@ Deno.test({
     assertExists(channel);
     assertEquals(channel.name, "discordeno-test-edited");
   },
+  ...defaultTestOptions,
 });
 
 Deno.test({
@@ -244,12 +242,13 @@ Deno.test({
     assertExists(message);
     assertEquals(message.embeds[0].title, "Discordeno Test");
   },
+  ...defaultTestOptions,
 });
 
 Deno.test({
   name: "[message] pin a message in a channel",
-  fn() {
-    pin(tempData.channelID, tempData.messageID);
+  async fn() {
+    await pin(tempData.channelID, tempData.messageID);
   },
   ...defaultTestOptions,
 });
@@ -269,18 +268,18 @@ Deno.test({
 
 Deno.test({
   name: "[message] unpin a message",
-  fn() {
-    unpin(tempData.channelID, tempData.messageID);
+  async fn() {
+    await unpin(tempData.channelID, tempData.messageID);
   },
   ...defaultTestOptions,
 });
 
 Deno.test({
   name: "[message] add a reaction to a message",
-  fn() {
+  async fn() {
     // TODO: add tests for a guild emoji ― <:name:id>
 
-    addReaction(tempData.channelID, tempData.messageID, "👍");
+    await addReaction(tempData.channelID, tempData.messageID, "👍");
   },
   ...defaultTestOptions,
 });
@@ -289,8 +288,8 @@ Deno.test({
 
 Deno.test({
   name: "[message] remove a reaction to a message",
-  fn() {
-    removeReaction(tempData.channelID, tempData.messageID, "👍");
+  async fn() {
+    await removeReaction(tempData.channelID, tempData.messageID, "👍");
   },
   ...defaultTestOptions,
 });
@@ -299,31 +298,32 @@ Deno.test({
 
 Deno.test({
   name: "[message] delete a message by channel ID",
-  fn() {
-    deleteMessageByID(tempData.channelID, tempData.messageID);
+  async fn() {
+    await deleteMessageByID(tempData.channelID, tempData.messageID);
   },
   ...defaultTestOptions,
 });
 
 Deno.test({
   name: "[channel] delete a channel in a guild",
-  fn() {
-    deleteChannel(tempData.guildID, tempData.channelID);
+  async fn() {
+    await deleteChannel(tempData.guildID, tempData.channelID);
   },
   ...defaultTestOptions,
 });
 
 Deno.test({
   name: "[role] delete a role in a guild",
-  fn() {
-    deleteRole(tempData.guildID, tempData.roleID);
+  async fn() {
+    await deleteRole(tempData.guildID, tempData.roleID);
   },
+  ...defaultTestOptions,
 });
 
 Deno.test({
   name: "[guild] delete a guild",
-  fn() {
-    deleteServer(tempData.guildID);
+  async fn() {
+    await deleteServer(tempData.guildID);
 
     // TODO(ayntee): remove this weird shit lol
     // TODO(ayntee): check if the GUILD_DELETE event is fired
@@ -335,7 +335,7 @@ Deno.test({
 
 // Forcefully exit the Deno process once all tests are done.
 Deno.test({
-  name: "exit the process forcefully after all the tests are done\n",
+  name: "[main] exit the process forcefully",
   fn() {
     Deno.exit();
   },

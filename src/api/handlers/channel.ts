@@ -9,6 +9,7 @@ import {
   GetMessagesAfter,
   GetMessagesAround,
   GetMessagesBefore,
+  InvitePayload,
   MessageContent,
   MessageCreateOptions,
   Permission,
@@ -19,6 +20,7 @@ import {
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasChannelPermissions,
+  botHasPermission,
   calculateBits,
 } from "../../util/permissions.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
@@ -73,6 +75,7 @@ export async function getMessage(
   const result = await RequestManager.get(
     endpoints.CHANNEL_MESSAGE(channelID, id),
   ) as MessageCreateOptions;
+
   return structures.createMessage(result);
 }
 
@@ -111,6 +114,7 @@ export async function getMessages(
     endpoints.CHANNEL_MESSAGES(channelID),
     options,
   )) as MessageCreateOptions[];
+
   return Promise.all(result.map((res) => structures.createMessage(res)));
 }
 
@@ -119,7 +123,43 @@ export async function getPins(channelID: string) {
   const result = (await RequestManager.get(
     endpoints.CHANNEL_PINS(channelID),
   )) as MessageCreateOptions[];
+
   return Promise.all(result.map((res) => structures.createMessage(res)));
+}
+
+/**
+ * Trigger a typing indicator for the specified channel. Generally bots should **NOT** implement this route.
+ * However, if a bot is responding to a command and expects the computation to take a few seconds,
+ * this endpoint may be called to let the user know that the bot is processing their message.
+ */
+export async function startTyping(channelID: string) {
+  const channel = await cacheHandlers.get("channels", channelID);
+  // If the channel is cached, we can do extra checks/safety
+  if (channel) {
+    if (
+      ![
+        ChannelTypes.DM,
+        ChannelTypes.GUILD_NEWS,
+        ChannelTypes.GUILD_TEXT,
+      ].includes(channel.type)
+    ) {
+      throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
+    }
+
+    const hasSendMessagesPerm = await botHasChannelPermissions(
+      channelID,
+      ["SEND_MESSAGES"],
+    );
+    if (
+      !hasSendMessagesPerm
+    ) {
+      throw new Error(Errors.MISSING_SEND_MESSAGES);
+    }
+  }
+
+  const result = await RequestManager.post(endpoints.CHANNEL_TYPING(channelID));
+
+  return result;
 }
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
@@ -128,36 +168,59 @@ export async function sendMessage(
   content: string | MessageContent,
 ) {
   if (typeof content === "string") content = { content };
-  const hasSendMessagesPerm = await botHasChannelPermissions(
-    channelID,
-    ["SEND_MESSAGES"],
-  );
-  if (
-    !hasSendMessagesPerm
-  ) {
-    throw new Error(Errors.MISSING_SEND_MESSAGES);
-  }
 
-  const hasSendTtsMessagesPerm = await botHasChannelPermissions(
-    channelID,
-    ["SEND_TTS_MESSAGES"],
-  );
-  if (
-    content.tts &&
-    !hasSendTtsMessagesPerm
-  ) {
-    throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
-  }
+  const channel = await cacheHandlers.get("channels", channelID);
+  // If the channel is cached, we can do extra checks/safety
+  if (channel) {
+    if (
+      ![ChannelTypes.DM, ChannelTypes.GUILD_NEWS, ChannelTypes.GUILD_TEXT]
+        .includes(channel.type)
+    ) {
+      throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
+    }
 
-  const hasEmbedLinksPerm = await botHasChannelPermissions(
-    channelID,
-    ["EMBED_LINKS"],
-  );
-  if (
-    content.embed &&
-    !hasEmbedLinksPerm
-  ) {
-    throw new Error(Errors.MISSING_EMBED_LINKS);
+    const hasSendMessagesPerm = await botHasChannelPermissions(
+      channelID,
+      ["SEND_MESSAGES"],
+    );
+    if (
+      !hasSendMessagesPerm
+    ) {
+      throw new Error(Errors.MISSING_SEND_MESSAGES);
+    }
+
+    const hasSendTtsMessagesPerm = await botHasChannelPermissions(
+      channelID,
+      ["SEND_TTS_MESSAGES"],
+    );
+    if (
+      content.tts &&
+      !hasSendTtsMessagesPerm
+    ) {
+      throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
+    }
+
+    const hasEmbedLinksPerm = await botHasChannelPermissions(
+      channelID,
+      ["EMBED_LINKS"],
+    );
+    if (
+      content.embed &&
+      !hasEmbedLinksPerm
+    ) {
+      throw new Error(Errors.MISSING_EMBED_LINKS);
+    }
+
+    if (content.mentions?.repliedUser) {
+      if (
+        !(await botHasChannelPermissions(
+          channelID,
+          ["READ_MESSAGE_HISTORY"],
+        ))
+      ) {
+        throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
+      }
+    }
   }
 
   // Use ... for content length due to unicode characters and js .length handling
@@ -189,26 +252,6 @@ export async function sendMessage(
         content.mentions.roles = content.mentions.roles.slice(0, 100);
       }
     }
-
-    if (content.mentions.repliedUser) {
-      if (
-        !(await botHasChannelPermissions(
-          channelID,
-          ["READ_MESSAGE_HISTORY"],
-        ))
-      ) {
-        throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
-      }
-    }
-  }
-
-  const channel = await cacheHandlers.get("channels", channelID);
-  if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);
-  if (
-    ![ChannelTypes.DM, ChannelTypes.GUILD_NEWS, ChannelTypes.GUILD_TEXT]
-      .includes(channel.type)
-  ) {
-    throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
   }
 
   const result = await RequestManager.post(
@@ -221,13 +264,18 @@ export async function sendMessage(
           replied_user: content.mentions.repliedUser,
         }
         : undefined,
-      message_reference: {
-        message_id: content.replyMessageID,
-      },
+      ...(content.replyMessageID
+        ? {
+          message_reference: {
+            message_id: content.replyMessageID,
+            fail_if_not_exists: content.failReplyIfNotExists === true,
+          },
+        }
+        : {}),
     },
-  );
+  ) as MessageCreateOptions;
 
-  return structures.createMessage(result as MessageCreateOptions);
+  return structures.createMessage(result);
 }
 
 /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */
@@ -255,10 +303,15 @@ export async function deleteMessages(
     );
   }
 
-  return RequestManager.post(endpoints.CHANNEL_BULK_DELETE(channelID), {
-    messages: ids.splice(0, 100),
-    reason,
-  });
+  const result = await RequestManager.post(
+    endpoints.CHANNEL_BULK_DELETE(channelID),
+    {
+      messages: ids.splice(0, 100),
+      reason,
+    },
+  );
+
+  return result;
 }
 
 /** Gets the invites for this channel. Requires MANAGE_CHANNEL */
@@ -272,7 +325,10 @@ export async function getChannelInvites(channelID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
-  return RequestManager.get(endpoints.CHANNEL_INVITES(channelID));
+
+  const result = await RequestManager.get(endpoints.CHANNEL_INVITES(channelID));
+
+  return result;
 }
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
@@ -289,7 +345,64 @@ export async function createInvite(
   ) {
     throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE);
   }
-  return RequestManager.post(endpoints.CHANNEL_INVITES(channelID), options);
+
+  if (options.max_age && (options.max_age > 604800 || options.max_age < 0)) {
+    console.log(
+      `The max age for invite created in ${channelID} was not between 0-604800. Using default values instead.`,
+    );
+    options.max_age = undefined;
+  }
+
+  if (options.max_uses && (options.max_uses > 100 || options.max_uses < 0)) {
+    console.log(
+      `The max uses for invite created in ${channelID} was not between 0-100. Using default values instead.`,
+    );
+    options.max_uses = undefined;
+  }
+
+  const result = await RequestManager.post(
+    endpoints.CHANNEL_INVITES(channelID),
+    options,
+  );
+
+  return result;
+}
+
+/** Returns an invite for the given code. */
+export async function getInvite(inviteCode: string) {
+  const result = await RequestManager.get(
+    endpoints.INVITE(inviteCode),
+  );
+
+  return result as InvitePayload;
+}
+
+/** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
+export async function deleteInvite(
+  channelID: string,
+  inviteCode: string,
+) {
+  const hasPerm = await botHasChannelPermissions(channelID, [
+    "MANAGE_CHANNELS",
+  ]);
+
+  if (!hasPerm) {
+    const channel = await cacheHandlers.get("channels", channelID);
+
+    const hasManageGuildPerm = await botHasPermission(channel!.guildID, [
+      "MANAGE_GUILD",
+    ]);
+
+    if (!hasManageGuildPerm) {
+      throw new Error(Errors.MISSING_MANAGE_CHANNELS);
+    }
+  }
+
+  const result = await RequestManager.delete(
+    endpoints.INVITE(inviteCode),
+  );
+
+  return result as InvitePayload;
 }
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
@@ -304,9 +417,11 @@ export async function getChannelWebhooks(channelID: string) {
     throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
   }
 
-  return RequestManager.get(
+  const result = await RequestManager.get(
     endpoints.CHANNEL_WEBHOOKS(channelID),
-  ) as Promise<WebhookPayload[]>;
+  );
+
+  return result as WebhookPayload[];
 }
 
 interface EditChannelRequest {
@@ -399,7 +514,7 @@ export async function editChannel(
   const payload = {
     ...options,
     // deno-lint-ignore camelcase
-    rate_limit_per_user: options.slowmode,
+    rate_limit_per_user: options.rateLimitPerUser,
     // deno-lint-ignore camelcase
     parent_id: options.parentID,
     // deno-lint-ignore camelcase
@@ -416,13 +531,15 @@ export async function editChannel(
     ),
   };
 
-  return RequestManager.patch(
+  const result = await RequestManager.patch(
     endpoints.CHANNEL_BASE(channelID),
     {
       ...payload,
       reason,
     },
   );
+
+  return result;
 }
 
 /** Follow a News Channel to send messages to a target channel. Requires the `MANAGE_WEBHOOKS` permission in the target channel. Returns the webhook id. */

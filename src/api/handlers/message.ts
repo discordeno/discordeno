@@ -1,6 +1,7 @@
 import { botID } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import {
+  DiscordGetReactionsParams,
   Errors,
   MessageContent,
   MessageCreateOptions,
@@ -24,10 +25,12 @@ export async function deleteMessageByID(
 
   if (delayMilliseconds) await delay(delayMilliseconds);
 
-  return RequestManager.delete(
+  const result = await RequestManager.delete(
     endpoints.CHANNEL_MESSAGE(channelID, messageID),
     { reason },
   );
+
+  return result;
 }
 
 /** Delete a message */
@@ -51,10 +54,12 @@ export async function deleteMessage(
 
   if (delayMilliseconds) await delay(delayMilliseconds);
 
-  return RequestManager.delete(
+  const result = await RequestManager.delete(
     endpoints.CHANNEL_MESSAGE(message.channelID, message.id),
     { reason },
   );
+
+  return result;
 }
 
 /** Pin a message in a channel. Requires MANAGE_MESSAGES. Max pins allowed in a channel = 50. */
@@ -69,7 +74,11 @@ export async function pin(channelID: string, messageID: string) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
 
-  return RequestManager.put(endpoints.CHANNEL_PIN(channelID, messageID));
+  const result = await RequestManager.put(
+    endpoints.CHANNEL_PIN(channelID, messageID),
+  );
+
+  return result;
 }
 
 /** Unpin a message in a channel. Requires MANAGE_MESSAGES. */
@@ -84,9 +93,11 @@ export async function unpin(channelID: string, messageID: string) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
 
-  return RequestManager.delete(
+  const result = await RequestManager.delete(
     endpoints.CHANNEL_PIN(channelID, messageID),
   );
+
+  return result;
 }
 
 /** Create a reaction for the message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS */
@@ -119,15 +130,18 @@ export async function addReaction(
     reaction = reaction.substring(3, reaction.length - 1);
   }
 
-  return RequestManager.put(
+  const result = await RequestManager.put(
     endpoints.CHANNEL_MESSAGE_REACTION_ME(
       channelID,
       messageID,
       reaction,
     ),
   );
+
+  return result;
 }
 
+// TODO: add a return?
 /** Adds multiple reactions to a message. If `ordered` is true(default is false), it will add the reactions one at a time in the order provided. Note: Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS */
 export async function addReactions(
   channelID: string,
@@ -147,7 +161,7 @@ export async function addReactions(
 }
 
 /** Removes a reaction from the bot on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
-export function removeReaction(
+export async function removeReaction(
   channelID: string,
   messageID: string,
   reaction: string,
@@ -158,13 +172,15 @@ export function removeReaction(
     reaction = reaction.substring(3, reaction.length - 1);
   }
 
-  return RequestManager.delete(
+  const result = await RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTION_ME(
       channelID,
       messageID,
       reaction,
     ),
   );
+
+  return result;
 }
 
 /** Removes a reaction from the specified user on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
@@ -188,7 +204,7 @@ export async function removeUserReaction(
     reaction = reaction.substring(3, reaction.length - 1);
   }
 
-  return RequestManager.delete(
+  const result = await RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTION_USER(
       channelID,
       messageID,
@@ -196,6 +212,8 @@ export async function removeUserReaction(
       userID,
     ),
   );
+
+  return result;
 }
 
 /** Removes all reactions for all emojis on this message. */
@@ -209,9 +227,12 @@ export async function removeAllReactions(channelID: string, messageID: string) {
   ) {
     throw new Error(Errors.MISSING_MANAGE_MESSAGES);
   }
-  return RequestManager.delete(
+
+  const result = await RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTIONS(channelID, messageID),
   );
+
+  return result;
 }
 
 /** Removes all reactions for a single emoji on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
@@ -236,15 +257,22 @@ export async function removeReactionEmoji(
     reaction = reaction.substring(3, reaction.length - 1);
   }
 
-  return RequestManager.delete(
+  const result = await RequestManager.delete(
     endpoints.CHANNEL_MESSAGE_REACTION(channelID, messageID, reaction),
   );
+
+  return result;
 }
 
 /** Get a list of users that reacted with this emoji. */
-export async function getReactions(message: Message, reaction: string) {
+export async function getReactions(
+  message: Message,
+  reaction: string,
+  options?: DiscordGetReactionsParams,
+) {
   const result = (await RequestManager.get(
     endpoints.CHANNEL_MESSAGE_REACTION(message.channelID, message.id, reaction),
+    options,
   )) as UserPayload[];
 
   return Promise.all(result.map(async (res) => {
@@ -295,6 +323,7 @@ export async function editMessage(
     endpoints.CHANNEL_MESSAGE(message.channelID, message.id),
     content,
   );
+
   return structures.createMessage(result as MessageCreateOptions);
 }
 

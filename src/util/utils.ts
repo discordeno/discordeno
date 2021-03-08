@@ -1,30 +1,32 @@
 import { encode } from "../../deps.ts";
 import {
+  Activity,
   ActivityType,
+  GatewayOpcode,
+  GatewayStatusUpdatePayload,
   ImageFormats,
   ImageSize,
   StatusType,
 } from "../types/mod.ts";
-import { sendGatewayCommand } from "../ws/shard_manager.ts";
+import { basicShards, sendWS } from "../ws/shard.ts";
 
 export const sleep = (timeout: number) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
 };
 
-export interface BotStatusRequest {
-  status: StatusType;
-  game: {
-    name?: string;
-    type: ActivityType;
-  };
-}
-
-export function editBotsStatus(
-  status: StatusType,
-  name?: string,
-  type = ActivityType.Game,
+export function editBotStatus(
+  data: Pick<GatewayStatusUpdatePayload, "activities" | "status">,
 ) {
-  sendGatewayCommand("EDIT_BOTS_STATUS", { status, game: { name, type } });
+  basicShards.forEach((shard) => {
+    sendWS({
+      op: GatewayOpcode.StatusUpdate,
+      d: {
+        since: null,
+        afk: false,
+        ...data,
+      },
+    }, shard.id);
+  });
 }
 
 export function chooseRandom<T>(array: T[]) {
@@ -60,3 +62,57 @@ export const formatImageURL = (
   return `${url}.${format ||
     (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
 };
+
+function camelToSnakeCase(text: string) {
+  return text.replace(/ID|[A-Z]/g, ($1) => {
+    if ($1 === "ID") return "_id";
+    return `_${$1.toLowerCase()}`;
+  });
+}
+
+function snakeToCamelCase(text: string) {
+  return text.replace(/_id|([-_][a-z])/ig, ($1) => {
+    if ($1 === "_id") return "ID";
+    return $1.toUpperCase().replace("_", "");
+  });
+}
+
+function isObject(obj: unknown) {
+  return obj === Object(obj) && !Array.isArray(obj) &&
+    typeof obj !== "function";
+}
+// deno-lint-ignore no-explicit-any
+export function camelKeysToSnakeCase(obj: Record<string, any>) {
+  if (isObject(obj)) {
+    // deno-lint-ignore no-explicit-any
+    const convertedObject: Record<string, any> = {};
+    Object.keys(obj)
+      .forEach((key) => {
+        convertedObject[camelToSnakeCase(key)] = camelKeysToSnakeCase(
+          obj[key],
+        );
+      });
+    return convertedObject;
+  } else if (Array.isArray(obj)) {
+    obj = obj.map((element) => camelKeysToSnakeCase(element));
+  }
+  return obj;
+}
+
+// deno-lint-ignore no-explicit-any
+export function snakeKeysToCamelCase(obj: Record<string, any>) {
+  if (isObject(obj)) {
+    // deno-lint-ignore no-explicit-any
+    const convertedObject: Record<string, any> = {};
+    Object.keys(obj)
+      .forEach((key) => {
+        convertedObject[snakeToCamelCase(key)] = snakeKeysToCamelCase(
+          obj[key],
+        );
+      });
+    return convertedObject;
+  } else if (Array.isArray(obj)) {
+    obj = obj.map((element) => snakeKeysToCamelCase(element));
+  }
+  return obj;
+}
