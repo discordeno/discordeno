@@ -118,6 +118,8 @@ export interface MessageContent {
   "payload_json"?: string;
   /** If you want to send a reply message, provide the original message id here */
   replyMessageID?: string;
+  /** When sending a reply to a message that was deleted, should Discord fail and throw an error. By default we make this false to prevent your bot from crashing. */
+  failReplyIfNotExists?: boolean;
 }
 
 export interface FileContent {

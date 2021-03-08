@@ -244,6 +244,7 @@ export async function sendMessage(
         ? {
           message_reference: {
             message_id: content.replyMessageID,
+            fail_if_not_exists: content.failReplyIfNotExists === true,
           },
         }
         : {}),
