@@ -35,12 +35,8 @@ export async function calculateBasePermissions(
   guild: string | Guild,
   member: string | Member,
 ) {
-  console.log(guild, await cacheHandlers.get("guilds", "800080308921696296"));
-  console.log(guild);
   guild = await getCached("guild", guild);
-  console.log(guild);
   member = await getCached("member", member);
-  console.log(member);
 
   let permissions = 0n;
   // Calculate the role permissions bits, @everyone role is not in memberRoleIDs so we need to pass guildID manualy
