@@ -246,7 +246,7 @@ export function moveMember(
   return editMember(guildID, memberID, { channel_id: channelID });
 }
 
-/** Kicks a member from a voice channel  */
+/** Kicks a member from a voice channel */
 export function kickFromVoiceChannel(guildID: string, memberID: string) {
   return editMember(guildID, memberID, { channel_id: null });
 }
