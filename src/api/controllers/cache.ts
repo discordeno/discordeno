@@ -5,13 +5,6 @@ import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { Channel, Guild, Member, Message } from "../structures/mod.ts";
 
-export type TableName =
-  | "guilds"
-  | "unavailableGuilds"
-  | "channels"
-  | "messages"
-  | "members"
-  | "presences";
 
 function set(
   table: "guilds",

@@ -258,8 +258,6 @@ export let handlers = {
   getApplicationInformation,
 };
 
-export type Handlers = typeof handlers;
-
 export function updateHandlers(newHandlers: Partial<Handlers>) {
   handlers = {
     ...handlers,

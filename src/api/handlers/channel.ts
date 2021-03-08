@@ -424,16 +424,6 @@ export async function getChannelWebhooks(channelID: string) {
   return result as WebhookPayload[];
 }
 
-interface EditChannelRequest {
-  amount: number;
-  timestamp: number;
-  channelID: string;
-  items: {
-    channelID: string;
-    options: ChannelEditOptions;
-  }[];
-}
-
 const editChannelNameTopicQueue = new Map<string, EditChannelRequest>();
 let editChannelProcessing = false;
 

@@ -18,17 +18,6 @@ export const controllers = {
   handleApplicationCommand,
 };
 
-export interface StartServerConfig {
-  /** The public key from your discord bot dashboard at discord.dev */
-  publicKey: string;
-  /** The port number you are wanting to listen to, if you are following the guide, you probably want 80 */
-  port: number;
-  /** The function you would like to provide to handle your commands. */
-  handleApplicationCommand?(
-    payload: Interaction,
-  ): Promise<{ status?: number; body: InteractionResponse }>;
-}
-
 /** Starts the slash command server */
 export async function startServer(
   { port, publicKey, handleApplicationCommand }: StartServerConfig,

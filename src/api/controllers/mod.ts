@@ -98,8 +98,6 @@ export let controllers = {
   INVITE_DELETE: handleInternalInviteDelete,
 };
 
-export type Controllers = typeof controllers;
-
 export function updateControllers(newControllers: Controllers) {
   controllers = {
     ...controllers,

@@ -19,22 +19,6 @@ const utf8decoder = new TextDecoder();
 const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
 let processQueue = false;
 
-export interface BasicShard {
-  id: number;
-  ws: WebSocket;
-  resumeInterval: number;
-  sessionID: string;
-  previousSequenceNumber: number | null;
-  needToResume: boolean;
-}
-
-interface RequestMemberQueuedRequest {
-  guildID: string;
-  shardID: number;
-  nonce: string;
-  options?: FetchMembersOptions;
-}
-
 export function createShard(
   data: DiscordBotGatewayData,
   identifyPayload: DiscordIdentify,

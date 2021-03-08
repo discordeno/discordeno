@@ -19,25 +19,6 @@ const ratelimitedPaths = new Map<string, RateLimitedPath>();
 let globallyRateLimited = false;
 let queueInProcess = false;
 
-export interface QueuedRequest {
-  callback: () => Promise<
-    void | {
-      // deno-lint-ignore no-explicit-any
-      rateLimited: any;
-      beforeFetch: boolean;
-      bucketID?: string | null;
-    }
-  >;
-  bucketID?: string | null;
-  url: string;
-}
-
-export interface RateLimitedPath {
-  url: string;
-  resetTimestamp: number;
-  bucketID: string | null;
-}
-
 async function processRateLimitedPaths() {
   const now = Date.now();
   ratelimitedPaths.forEach((value, key) => {
