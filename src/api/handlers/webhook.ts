@@ -1,4 +1,4 @@
-import { applicationID, botID } from "../../bot.ts";
+import { applicationID } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import {
   CreateSlashCommandOptions,
@@ -391,8 +391,8 @@ export async function getSlashCommand(commandID: string, guildID?: string) {
 export async function getSlashCommands(guildID?: string) {
   const result = (await RequestManager.get(
     guildID
-      ? endpoints.COMMANDS_GUILD(botID, guildID)
-      : endpoints.COMMANDS(botID),
+      ? endpoints.COMMANDS_GUILD(applicationID, guildID)
+      : endpoints.COMMANDS(applicationID),
   )) as SlashCommand[];
 
   return new Collection(result.map((command) => [command.name, command]));
