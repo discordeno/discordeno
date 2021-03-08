@@ -15,6 +15,8 @@ import {
 } from "./guilds.ts";
 import {
   handleInternalApplicationCommandCreate,
+  handleInternalApplicationCommandDelete,
+  handleInternalApplicationCommandUpdate,
   handleInternalInteractionCreate,
 } from "./interactions.ts";
 import {
@@ -33,6 +35,8 @@ import {
   handleInternalIntegrationCreate,
   handleInternalIntegrationDelete,
   handleInternalIntegrationUpdate,
+  handleInternalInviteCreate,
+  handleInternalInviteDelete,
   handleInternalPresenceUpdate,
   handleInternalReady,
   handleInternalTypingStart,
@@ -72,6 +76,8 @@ export let controllers = {
   GUILD_ROLE_UPDATE: handleInternalGuildRoleUpdate,
   INTERACTION_CREATE: handleInternalInteractionCreate,
   APPLICATION_COMMAND_CREATE: handleInternalApplicationCommandCreate,
+  APPLICATION_COMMAND_DELETE: handleInternalApplicationCommandDelete,
+  APPLICATION_COMMAND_UPDATE: handleInternalApplicationCommandUpdate,
   MESSAGE_CREATE: handleInternalMessageCreate,
   MESSAGE_DELETE: handleInternalMessageDelete,
   MESSAGE_DELETE_BULK: handleInternalMessageDeleteBulk,
@@ -88,6 +94,8 @@ export let controllers = {
   INTEGRATION_CREATE: handleInternalIntegrationCreate,
   INTEGRATION_UPDATE: handleInternalIntegrationUpdate,
   INTEGRATION_DELETE: handleInternalIntegrationDelete,
+  INVITE_CREATE: handleInternalInviteCreate,
+  INVITE_DELETE: handleInternalInviteDelete,
 };
 
 export type Controllers = typeof controllers;

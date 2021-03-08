@@ -116,8 +116,6 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/guilds/templates/${code}`,
   GUILD_TEMPLATES: (guildID: string) => `${GUILDS_BASE(guildID)}/templates`,
   GUILD_PREVIEW: (guildID: string) => `${GUILDS_BASE(guildID)}/preview`,
-  GUILD_MEMBER_VERIFICATION: (guildID: string) =>
-    `${GUILDS_BASE(guildID)}/member-verification`,
 
   // Voice
   VOICE_REGIONS: `${baseEndpoints.BASE_URL}/voice/regions`,
@@ -177,3 +175,5 @@ export const endpoints = {
   // oAuth2
   OAUTH2_APPLICATION: `${baseEndpoints.BASE_URL}/oauth2/applications/@me`,
 };
+
+export const SLASH_COMMANDS_NAME_REGEX = /^[\w-]{1,32}$/;

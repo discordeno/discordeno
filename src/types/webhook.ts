@@ -9,9 +9,9 @@ export interface WebhookPayload {
   /** The type of the webhook */
   type: WebhookType;
   /** The guild id this webhook is for */
-  guild_id?: string;
+  "guild_id"?: string;
   /** The channel id this webhook is for */
-  channel_id: string;
+  "channel_id": string;
   /** The user this webhook was created by(not returned when getting a webhook with its token) */
   user?: UserPayload;
   /** The default name of the webhook */
@@ -53,7 +53,7 @@ export interface ExecuteWebhookOptions {
   /** override the default username of the webhook */
   username?: string;
   /** override the default avatar of the webhook*/
-  avatar_url?: string;
+  "avatar_url"?: string;
   /** true if this is a TTS message */
   tts?: boolean;
   /** file contents	the contents of the file being sent	one of content, file, embeds */
@@ -74,7 +74,7 @@ export interface ExecuteWebhookOptions {
 export interface EditWebhookMessageOptions {
   content?: string;
   embeds?: Embed[];
-  allowed_mentions?: AllowedMentions;
+  "allowed_mentions"?: AllowedMentions;
 }
 
 export interface CreateSlashCommandOptions {
@@ -92,7 +92,7 @@ export interface SlashCommand {
   /** unique id of the command */
   id: string;
   /** unique id of the parent application */
-  application_id: string;
+  "application_id": string;
   /** 3-32 character name */
   name: string;
   /** 1-100 character description */
@@ -147,9 +147,9 @@ export interface Interaction {
   /** The command data payload */
   data?: SlashCommandInteractionData;
   /** The id of the guild it was sent from */
-  guild_id: string;
+  "guild_id": string;
   /** The id of the channel it was sent from */
-  channel_id: string;
+  "channel_id": string;
   /** The Payload of the member it was sent from */
   member: UserPayload;
   /** The token for this interaction */
@@ -190,22 +190,18 @@ export interface SlashCommandCallbackData {
   /** supports up to 10 embeds */
   embeds?: Embed[];
   /** allowed mentions for the message */
-  allowed_mentions?: AllowedMentions;
-  /** acceptable values are message flags */
+  "allowed_mentions"?: AllowedMentions;
+  /** acceptable values are message flags, set to 64 to make your response ephemeral */
   flags?: number;
 }
 
 export enum InteractionResponseType {
   /** ACK a `Ping` */
   PONG = 1,
-  /** ACK a command without sending a message, eating the user's input */
-  ACKNOWLEDGE = 2,
-  /** respond with a message, eating the user's input */
-  CHANNEL_MESSAGE = 3,
-  /** respond with a message, showing the user's input */
+  /** Respond with a message, showing the user's input */
   CHANNEL_MESSAGE_WITH_SOURCE = 4,
-  /** ACK a command without sending a message, showing the user's input */
-  ACK_WITH_SOURCE = 5,
+  /** ACK an interaction and edit to a response later, the user sees a loading state */
+  DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
 }
 
 // TODO: remove this interface for v11
@@ -224,27 +220,27 @@ export interface ExecuteSlashCommandOptions {
   data: SlashCommandCallbackData;
 }
 
+export interface SlashCommandResponseOptions
+  extends ExecuteSlashCommandOptions {
+  /** Whether to make this response visible ONLY to the user who used this command. It will also be deleted after some time. */
+  private?: boolean;
+}
+
 export interface EditSlashResponseOptions extends SlashCommandCallbackData {
   /** If this is not provided, it will default to editing the original response. */
   messageID?: string;
 }
 
 export interface UpsertSlashCommandOptions {
-  /** 3-32 character command name */
-  name: string;
+  /** 1-32 character name matching ^[\w-]{1,32}$ */
+  name?: string;
   /** 1-100 character description */
-  description: string;
+  description?: string;
   /** The parameters for the command */
-  options?: SlashCommandOption[];
+  options?: SlashCommandOption[] | null;
 }
 
-export interface UpsertSlashCommandsOptions {
+export interface UpsertSlashCommandsOptions extends UpsertSlashCommandOptions {
   /** The id of the command */
   id: string;
-  /** 3-32 character command name */
-  name: string;
-  /** 1-100 character description */
-  description: string;
-  /** The parameters for the command */
-  options?: SlashCommandOption[];
 }

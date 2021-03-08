@@ -12,6 +12,7 @@ export * from "./src/api/handlers/channel.ts";
 export * from "./src/api/handlers/guild.ts";
 export * from "./src/api/handlers/member.ts";
 export * from "./src/api/handlers/message.ts";
+export * from "./src/api/handlers/oauth.ts";
 export * from "./src/api/handlers/webhook.ts";
 export * from "./src/api/structures/channel.ts";
 export * from "./src/api/structures/guild.ts";

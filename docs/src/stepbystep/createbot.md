@@ -10,7 +10,7 @@ you go through this guide it will make a lot more sense.
 > If you don't have these yet please prepare them first before going forward.
 
 - First, create a Discordeno Bot using the
-  [Generator Boilerplate](https://github.com/discordeno/discordeno-bot-template/generate).
+  [Generator Boilerplate](https://github.com/discordeno/boilerplate/generate).
   Give it any name you like. For the purpose of this guide we will call it,
   Stargate.
 

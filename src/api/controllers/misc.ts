@@ -3,6 +3,8 @@ import {
   DiscordPayload,
   IntegrationCreateUpdateEvent,
   IntegrationDeleteEvent,
+  InviteCreateEvent,
+  InviteDeleteEvent,
   PresenceUpdatePayload,
   ReadyPayload,
   TypingStartPayload,
@@ -32,7 +34,14 @@ export async function handleInternalReady(
   eventHandlers.shardReady?.(shardID);
   if (payload.shard && shardID === payload.shard[1] - 1) {
     const loadedAllGuilds = async () => {
-      if (payload.guilds.some((g) => !cache.guilds.has(g.id))) {
+      const guildsMissing = async () => {
+        for (const g of payload.guilds) {
+          if (!(await cacheHandlers.has("guilds", g.id))) return true;
+        }
+        return false;
+      };
+
+      if (await guildsMissing()) {
         setTimeout(loadedAllGuilds, 2000);
       } else {
         // The bot has already started, the last shard is resumed, however.
@@ -44,9 +53,18 @@ export async function handleInternalReady(
         // All the members that came in on guild creates should now be processed 1 by 1
         for (const [guildID, members] of initialMemberLoadQueue.entries()) {
           await Promise.all(
-            members.map((member) =>
-              structures.createMemberStruct(member, guildID)
-            ),
+            members.map(async (member) => {
+              const memberStruct = await structures.createMemberStruct(
+                member,
+                guildID,
+              );
+
+              return cacheHandlers.set(
+                "members",
+                memberStruct.id,
+                memberStruct,
+              );
+            }),
           );
         }
       }
@@ -226,6 +244,48 @@ export function handleInternalIntegrationDelete(data: DiscordPayload) {
   eventHandlers.integrationDelete?.({
     ...rest,
     applicationID,
+    guildID,
+  });
+}
+
+export function handleInternalInviteCreate(payload: DiscordPayload) {
+  if (payload.t !== "INVITE_CREATE") return;
+
+  const {
+    channel_id: channelID,
+    created_at: createdAt,
+    max_age: maxAge,
+    guild_id: guildID,
+    target_user: targetUser,
+    target_user_type: targetUserType,
+    max_uses: maxUses,
+    ...rest
+  } = payload.d as InviteCreateEvent;
+
+  eventHandlers.inviteCreate?.({
+    ...rest,
+    channelID,
+    guildID,
+    maxAge,
+    targetUser,
+    targetUserType,
+    maxUses,
+    createdAt,
+  });
+}
+
+export function handleInternalInviteDelete(payload: DiscordPayload) {
+  if (payload.t !== "INVITE_DELETE") return;
+
+  const {
+    channel_id: channelID,
+    guild_id: guildID,
+    ...rest
+  } = payload.d as InviteDeleteEvent;
+
+  eventHandlers.inviteDelete?.({
+    ...rest,
+    channelID,
     guildID,
   });
 }

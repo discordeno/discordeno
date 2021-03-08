@@ -20,14 +20,13 @@ import {
   Errors,
   FetchMembersOptions,
   GetAuditLogsOptions,
+  GetMemberOptions,
   GuildEditOptions,
   GuildTemplate,
   ImageFormats,
   ImageSize,
   Intents,
   MemberCreatePayload,
-  MembershipScreeningFieldTypes,
-  MembershipScreeningPayload,
   Overwrite,
   PositionSwap,
   PruneOptions,
@@ -138,7 +137,10 @@ export async function createGuildChannel(
       type: options?.type || ChannelTypes.GUILD_TEXT,
     })) as ChannelCreatePayload;
 
-  return structures.createChannelStruct(result);
+  const channelStruct = await structures.createChannelStruct(result);
+  await cacheHandlers.set("channels", channelStruct.id, channelStruct);
+
+  return channelStruct;
 }
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
@@ -184,11 +186,12 @@ export async function getChannels(guildID: string, addToCache = true) {
   ) as ChannelCreatePayload[];
 
   return Promise.all(result.map(async (res) => {
-    const channel = await structures.createChannelStruct(res, guildID);
+    const channelStruct = await structures.createChannelStruct(res, guildID);
     if (addToCache) {
-      await cacheHandlers.set("channels", channel.id, channel);
+      await cacheHandlers.set("channels", channelStruct.id, channelStruct);
     }
-    return channel;
+
+    return channelStruct;
   }));
 }
 
@@ -201,14 +204,15 @@ export async function getChannel(channelID: string, addToCache = true) {
     endpoints.CHANNEL_BASE(channelID),
   ) as ChannelCreatePayload;
 
-  const channel = await structures.createChannelStruct(
+  const channelStruct = await structures.createChannelStruct(
     result,
     result.guild_id,
   );
+  if (addToCache) {
+    await cacheHandlers.set("channels", channelStruct.id, channelStruct);
+  }
 
-  if (addToCache) await cacheHandlers.set("channels", channel.id, channel);
-
-  return channel;
+  return channelStruct;
 }
 
 /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
@@ -292,7 +296,10 @@ export async function getMember(
     endpoints.GUILD_MEMBER(guildID, id),
   ) as MemberCreatePayload;
 
-  return await structures.createMemberStruct(data, guildID);
+  const memberStruct = await structures.createMemberStruct(data, guildID);
+  await cacheHandlers.set("members", memberStruct.id, memberStruct);
+
+  return memberStruct;
 }
 
 /** Returns guild member objects for the specified user by their nickname/username.
@@ -308,7 +315,7 @@ export async function getMembersByQuery(
   if (!guild) return;
 
   return new Promise((resolve) => {
-    requestAllMembers(guild, resolve, { query: name, limit });
+    return requestAllMembers(guild, resolve, { query: name, limit });
   }) as Promise<Collection<string, Member>>;
 }
 
@@ -385,7 +392,7 @@ export function emojiURL(id: string, animated = false) {
 
 /**
  * Returns a list of emojis for the given guild.
- * 
+ *
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  */
 export async function getEmojis(guildID: string, addToCache = true) {
@@ -405,7 +412,7 @@ export async function getEmojis(guildID: string, addToCache = true) {
 
 /**
  * Returns an emoji for the given guild and emoji ID.
- * 
+ *
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  */
 export async function getEmoji(
@@ -523,9 +530,11 @@ export async function swapRoles(guildID: string, rolePositons: PositionSwap) {
 }
 
 /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
-export async function getPruneCount(guildID: string, options: PruneOptions) {
-  if (options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
-  if (options.days > 30) throw new Error(Errors.PRUNE_MAX_DAYS);
+export async function getPruneCount(guildID: string, options?: PruneOptions) {
+  if (options?.days && options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
+  if (options?.days && options.days > 30) {
+    throw new Error(Errors.PRUNE_MAX_DAYS);
+  }
 
   const hasPerm = await botHasPermission(guildID, ["KICK_MEMBERS"]);
   if (!hasPerm) {
@@ -534,16 +543,23 @@ export async function getPruneCount(guildID: string, options: PruneOptions) {
 
   const result = await RequestManager.get(
     endpoints.GUILD_PRUNE(guildID),
-    { ...options, include_roles: options.roles.join(",") },
+    { ...options, include_roles: options?.roles?.join(",") },
   ) as PrunePayload;
 
   return result.pruned;
 }
 
-/** Begin pruning all members in the given time period */
-export async function pruneMembers(guildID: string, options: PruneOptions) {
-  if (options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
-  if (options.days > 30) throw new Error(Errors.PRUNE_MAX_DAYS);
+/**
+ * Begin a prune operation. Requires the KICK_MEMBERS permission. Returns an object with one 'pruned' key indicating the number of members that were removed in the prune operation. For large guilds it's recommended to set the computePruneCount option to false, forcing 'pruned' to null. Fires multiple Guild Member Remove Gateway events.
+ * 
+ * By default, prune will not remove users with roles. You can optionally include specific roles in your prune by providing the roles (resolved to include_roles internally) parameter. Any inactive user that has a subset of the provided role(s) will be included in the prune and users with additional roles will not.
+ */
+export async function pruneMembers(
+  guildID: string,
+  { roles, computePruneCount, ...options }: PruneOptions,
+) {
+  if (options.days && options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
+  if (options.days && options.days > 30) throw new Error(Errors.PRUNE_MAX_DAYS);
 
   const hasPerm = await botHasPermission(guildID, ["KICK_MEMBERS"]);
   if (!hasPerm) {
@@ -552,7 +568,11 @@ export async function pruneMembers(guildID: string, options: PruneOptions) {
 
   const result = await RequestManager.post(
     endpoints.GUILD_PRUNE(guildID),
-    { ...options, include_roles: options.roles.join(",") },
+    {
+      ...options,
+      compute_prune_count: computePruneCount,
+      include_roles: roles,
+    },
   );
 
   return result;
@@ -580,8 +600,75 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
   }
 
   return new Promise((resolve) => {
-    requestAllMembers(guild, resolve, options);
+    return requestAllMembers(guild, resolve, options);
   }) as Promise<Collection<string, Member>>;
+}
+
+/**
+ * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM cache.members.get()
+ *
+ * ADVANCED:
+ * Highly recommended to **NOT** use this function to get members instead use fetchMembers().
+ * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
+ * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
+*/
+export async function getMembers(
+  guildID: string,
+  options?: GetMemberOptions,
+) {
+  if (!(identifyPayload.intents && Intents.GUILD_MEMBERS)) {
+    throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
+  }
+
+  const guild = await cacheHandlers.get("guilds", guildID);
+  if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+
+  const members = new Collection<string, Member>();
+
+  let membersLeft = options?.limit ?? guild.memberCount;
+  let loops = 1;
+  while (
+    (options?.limit ?? guild.memberCount) > members.size && membersLeft > 0
+  ) {
+    if (options?.limit && options.limit > 1000) {
+      console.log(
+        `Paginating get members from REST. #${loops} / ${
+          Math.ceil((options?.limit ?? 1) / 1000)
+        }`,
+      );
+    }
+
+    const result = await RequestManager.get(
+      `${endpoints.GUILD_MEMBERS(guildID)}?limit=${
+        membersLeft > 1000 ? 1000 : membersLeft
+      }${options?.after ? `&after=${options.after}` : ""}`,
+    ) as MemberCreatePayload[];
+
+    const memberStructures = await Promise.all(
+      result.map(async (member) => {
+        const memberStruct = await structures.createMember(member, guildID);
+
+        await cacheHandlers.set("members", memberStruct.id, memberStruct);
+
+        return memberStruct;
+      }),
+    ) as Member[];
+
+    if (!memberStructures.length) break;
+
+    memberStructures.forEach((member) => members.set(member.id, member));
+
+    options = {
+      limit: options?.limit,
+      after: memberStructures[memberStructures.length - 1].id,
+    };
+
+    membersLeft -= 1000;
+
+    loops++;
+  }
+
+  return members;
 }
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
@@ -880,8 +967,8 @@ export async function getTemplate(templateCode: string) {
   return template;
 }
 
-/** 
- * Returns the guild template if it exists 
+/**
+ * Returns the guild template if it exists
  * @deprecated will get removed in v11 use `getTemplate` instead
  */
 export function getGuildTemplate(
@@ -1026,70 +1113,4 @@ export async function editGuildTemplate(
   ) as GuildTemplate;
 
   return structures.createTemplateStruct(template);
-}
-
-function createMembershipObj(
-  { form_fields: formFields, ...props }: MembershipScreeningPayload,
-) {
-  return {
-    ...props,
-    formFields: formFields.map(({ field_type, ...rest }) => ({
-      ...rest,
-      fieldType: field_type,
-    })),
-  };
-}
-
-export type MembershipScreening = ReturnType<typeof createMembershipObj>;
-
-/** Get the membership screening form of a guild. */
-export async function getGuildMembershipScreeningForm(guildID: string) {
-  const membershipScreeningPayload = await RequestManager.get(
-    endpoints.GUILD_MEMBER_VERIFICATION(guildID),
-  ) as MembershipScreeningPayload;
-
-  return createMembershipObj(membershipScreeningPayload);
-}
-
-/** Edit the guild's Membership Screening form. Requires the `MANAGE_GUILD` permission. */
-export async function editGuildMembershipScreeningForm(
-  guildID: string,
-  options?: EditGuildMembershipScreeningForm,
-) {
-  const membershipScreeningFormPayload = await RequestManager.patch(
-    endpoints.GUILD_MEMBER_VERIFICATION(guildID),
-    {
-      ...options,
-      form_fields: JSON.stringify(
-        options?.formFields?.map(({ fieldType, ...props }) => ({
-          ...props,
-          field_type: fieldType,
-        })),
-      ),
-    },
-  ) as MembershipScreeningPayload;
-
-  return createMembershipObj(
-    membershipScreeningFormPayload,
-  );
-}
-
-export interface EditGuildMembershipScreeningForm {
-  /** whether Membership Screening is enabled */
-  enabled?: boolean;
-  /** array of field objects */
-  formFields?: MembershipScreeningField[];
-  /** the steps in the screening form */
-  description?: string;
-}
-
-export interface MembershipScreeningField {
-  /** the type of field */
-  fieldType: MembershipScreeningFieldTypes;
-  /** the title of the field */
-  label: string;
-  /** the list of rules */
-  values?: string[];
-  /** whether the user has to fill out this field */
-  required: boolean;
 }

@@ -1,7 +1,6 @@
 import { botID } from "../../bot.ts";
 import {
   BanOptions,
-  ChannelCreatePayload,
   CreateGuildPayload,
   Emoji,
   GetAuditLogsOptions,
@@ -12,12 +11,12 @@ import {
   ImageSize,
   MemberCreatePayload,
   Presence,
-  RoleData,
   VoiceState,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
 import {
   ban,
   deleteServer,
@@ -145,15 +144,17 @@ export async function createGuildStruct(
     ...rest
   } = data;
 
-  const roles = (await Promise.all(
-    data.roles.map((r: RoleData) => structures.createRoleStruct(r)),
-  )) as Role[];
-
-  await Promise.all(
-    channels.map((c: ChannelCreatePayload) =>
-      structures.createChannelStruct(c, data.id)
-    ),
+  const roles = await Promise.all(
+    data.roles.map((role) => structures.createRoleStruct(role)),
   );
+
+  await Promise.all(channels.map(async (channel) => {
+    const channelStruct = await structures.createChannelStruct(
+      channel,
+      rest.id,
+    );
+    return cacheHandlers.set("channels", channelStruct.id, channelStruct);
+  }));
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
@@ -350,7 +351,7 @@ export interface Guild {
   invites(): ReturnType<typeof getInvites>;
 }
 
-interface CleanVoiceState extends VoiceState {
+export interface CleanVoiceState extends VoiceState {
   /** The guild id where this voice state is from */
   guildID: string;
   /** The channel id where this voice state is from */

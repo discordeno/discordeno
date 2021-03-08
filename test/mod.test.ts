@@ -1,11 +1,4 @@
 import {
-  deleteChannel,
-  deleteRole,
-  deleteServer,
-  getChannel,
-} from "../src/api/handlers/guild.ts";
-import { eventHandlers } from "../src/bot.ts";
-import {
   addReaction,
   assertEquals,
   assertExists,
@@ -17,9 +10,13 @@ import {
   createGuildChannel,
   createRole,
   delay,
+  deleteChannel,
   deleteMessageByID,
+  deleteRole,
+  deleteServer,
   editChannel,
   editRole,
+  getChannel,
   getMessage,
   getPins,
   Guild,
@@ -32,14 +29,11 @@ import {
   unpin,
 } from "./deps.ts";
 
-const token = Deno.env.get("DISCORD_TOKEN");
-if (!token) throw new Error("Token is not provided");
-
 // Default options for tests
 export const defaultTestOptions: Partial<Deno.TestDefinition> = {
   sanitizeOps: false,
   sanitizeResources: false,
-  ignore: Deno.env.get("TEST_TYPE") !== "api",
+  sanitizeExit: false,
 };
 
 // Temporary data
@@ -54,18 +48,13 @@ export const tempData = {
 Deno.test({
   name: "[main] connect to gateway",
   async fn() {
+    const token = Deno.env.get("DISCORD_TOKEN");
+    if (!token) throw new Error("Token is not provided");
+
     await startBot({
       token,
       intents: ["GUILD_MESSAGES", "GUILDS"],
     });
-
-    eventHandlers.ready = () => {
-      if (cache.guilds.size >= 10) {
-        cache.guilds.map((guild) =>
-          guild.ownerID === botID && deleteServer(guild.id)
-        );
-      }
-    };
 
     // Delay the execution by 5 seconds
     await delay(5000);
@@ -348,8 +337,9 @@ Deno.test({
 
 // Forcefully exit the Deno process once all tests are done.
 Deno.test({
-  name: "exit the process forcefully after all the tests are done\n",
+  name: "[main] exit the process forcefully",
   fn() {
     Deno.exit();
   },
+  ...defaultTestOptions,
 });
