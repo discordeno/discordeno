@@ -186,16 +186,37 @@ export function missingPermissions(
   );
 }
 
+/** Get the missing Guild permissions this member has */
+export async function getMissingGuildPermissions(
+  guild: string | Guild,
+  member: string | Member,
+  permissions: Permission[],
+) {
+  // First we need the role permissino bits this member has
+  const permissionBits = await calculateBasePermissions(guild, member);
+  // Second returnn the members missing permissions
+  return missingPermissions(permissionBits, permissions);
+}
+
+/** Get the missing Channel permissions this member has */
+export async function getMissingChannelPermissions(
+  channel: string | Channel,
+  member: string | Member,
+  permissions: Permission[],
+) {
+  // First we need the role permissino bits this member has
+  const permissionBits = await calculateChannelOverwrites(channel, member);
+  // Second returnn the members missing permissions
+  return missingPermissions(permissionBits, permissions);
+}
+
 /** Throws an error if this member has not all of the given permissions */
 export async function requireGuildPermissions(
   guild: string | Guild,
   member: string | Member,
   permissions: Permission[],
 ) {
-  // First we need the role permissions bits this member has
-  const permissionBits = await calculateBasePermissions(guild, member);
-  // Second check if the member is missing any permissions
-  const missing = missingPermissions(permissionBits, permissions);
+  const missing = await getMissingGuildPermissions(guild, member, permissions);
   if (missing.length) {
     // If the member is missing a permission throw an Error
     throw new Error(`Missing Permissions: ${missing.join(" & ")}`);
@@ -217,10 +238,11 @@ export async function requireChannelPermissions(
   member: string | Member,
   permissions: Permission[],
 ) {
-  // First we need the channel overwrite bits this member has
-  const permissionBits = await calculateChannelOverwrites(channel, member);
-  // Second check if the member is missing any permissions
-  const missing = missingPermissions(permissionBits, permissions);
+  const missing = await getMissingChannelPermissions(
+    channel,
+    member,
+    permissions,
+  );
   if (missing.length) {
     // If the member is missing a permission throw an Error
     throw new Error(`Missing Permissions: ${missing.join(" & ")}`);
