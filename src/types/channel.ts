@@ -11,7 +11,7 @@ export interface ChannelEditOptions {
   /** whether the channel is nsfw	Text */
   nsfw?: boolean;
   /**	amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission manage_messages or manage_channel, are unaffected	Text  */
-  slowmode?: number;
+  rateLimitPerUser?: number;
   /**	the bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers)	Voice  */
   bitrate?: number;
   /**	the user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit	Voice  */
@@ -118,10 +118,12 @@ export interface MessageContent {
   "payload_json"?: string;
   /** If you want to send a reply message, provide the original message id here */
   replyMessageID?: string;
+  /** When sending a reply to a message that was deleted, should Discord fail and throw an error. By default we make this false to prevent your bot from crashing. */
+  failReplyIfNotExists?: boolean;
 }
 
 export interface FileContent {
-  blob: unknown;
+  blob: Blob;
   name: string;
 }
 

@@ -12,7 +12,7 @@ export interface ExecuteWebhookOptions {
   /** true if this is a TTS message */
   tts?: boolean;
   /** file contents	the contents of the file being sent	one of content, file, embeds */
-  file?: { blob: unknown; name: string };
+  file?: { blob: Blob; name: string };
   /** array of up to 10 embed objects	embedded rich content. */
   embeds?: Embed[];
   /** allowed mentions for the message */

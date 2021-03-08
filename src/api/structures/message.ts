@@ -2,6 +2,7 @@ import {
   Activity,
   Application,
   Attachment,
+  DiscordReferencePayload,
   Embed,
   GuildMember,
   MessageContent,
@@ -85,11 +86,17 @@ const baseMessage: Partial<Message> = {
   },
   reply(content) {
     const contentWithMention = typeof content === "string"
-      ? { content, mentions: { repliedUser: true }, replyMessageID: this.id }
+      ? {
+        content,
+        mentions: { repliedUser: true },
+        replyMessageID: this.id,
+        failReplyIfNotExists: false,
+      }
       : {
         ...content,
         mentions: { ...(content.mentions || {}), repliedUser: true },
         replyMessageID: this.id,
+        failReplyIfNotExists: content.failReplyIfNotExists === true,
       };
 
     if (this.guildID) return sendMessage(this.channelID!, contentWithMention);
@@ -216,7 +223,7 @@ export interface Message {
   /** Applications that sent with Rich Presence related chat embeds. */
   applications?: Application;
   /** The reference data sent with crossposted messages */
-  messageReference?: Reference;
+  messageReference?: DiscordReferencePayload;
   /** The message flags combined like permission bits describe extra features of the message */
   flags?: 1 | 2 | 4 | 8 | 16;
   /** the stickers sent with the message (bots currently can only receive messages with stickers, not send) */

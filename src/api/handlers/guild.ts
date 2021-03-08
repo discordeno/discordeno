@@ -112,30 +112,29 @@ export function guildBannerURL(
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createGuildChannel(
-  guild: Guild,
+  guildID: string,
   name: string,
   options?: ChannelCreateOptions,
 ) {
   const hasPerm = await botHasPermission(
-    guild.id,
+    guildID,
     ["MANAGE_CHANNELS"],
   );
   if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_CHANNELS);
   }
 
-  const result =
-    (await RequestManager.post(endpoints.GUILD_CHANNELS(guild.id), {
-      ...options,
-      name,
-      permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
-        ...perm,
+  const result = (await RequestManager.post(endpoints.GUILD_CHANNELS(guildID), {
+    ...options,
+    name,
+    permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
+      ...perm,
 
-        allow: calculateBits(perm.allow),
-        deny: calculateBits(perm.deny),
-      })),
-      type: options?.type || ChannelTypes.GUILD_TEXT,
-    })) as ChannelCreatePayload;
+      allow: calculateBits(perm.allow),
+      deny: calculateBits(perm.deny),
+    })),
+    type: options?.type || ChannelTypes.GUILD_TEXT,
+  })) as ChannelCreatePayload;
 
   const channelStruct = await structures.createChannelStruct(result);
   await cacheHandlers.set("channels", channelStruct.id, channelStruct);
@@ -403,7 +402,9 @@ export async function getEmojis(guildID: string, addToCache = true) {
   if (addToCache) {
     const guild = await cacheHandlers.get("guilds", guildID);
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
-    guild.emojis = result;
+
+    result.forEach((emoji) => guild.emojis.set(emoji.id ?? emoji.name, emoji));
+
     cacheHandlers.set("guilds", guildID, guild);
   }
 
@@ -427,7 +428,7 @@ export async function getEmoji(
   if (addToCache) {
     const guild = await cacheHandlers.get("guilds", guildID);
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
-    guild.emojis.push(result);
+    guild.emojis.set(result.id ?? result.name, result);
     cacheHandlers.set(
       "guilds",
       guildID,
@@ -697,8 +698,8 @@ export async function getAuditLogs(
   return result;
 }
 
-/** Returns the guild embed object. Requires the MANAGE_GUILD permission. */
-export async function getEmbed(guildID: string) {
+/** Returns the guild widget object. Requires the MANAGE_GUILD permission. */
+export async function getWidgetSettings(guildID: string) {
   const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
   if (!hasPerm) {
     throw new Error(Errors.MISSING_MANAGE_GUILD);
@@ -709,8 +710,8 @@ export async function getEmbed(guildID: string) {
   return result;
 }
 
-/** Modify a guild embed object for the guild. Requires the MANAGE_GUILD permission. */
-export async function editEmbed(
+/** Modify a guild widget object for the guild. Requires the MANAGE_GUILD permission. */
+export async function editWidget(
   guildID: string,
   enabled: boolean,
   channelID?: string | null,
