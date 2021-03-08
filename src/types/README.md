@@ -1,0 +1,3 @@
+## Discordeno Typings Guidelines
+
+TODO

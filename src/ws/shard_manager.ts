@@ -3,10 +3,7 @@ import { eventHandlers } from "../bot.ts";
 import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
 import { delay } from "../util/utils.ts";
-import {
-  createShard,
-  requestGuildMembers,
-} from "./mod.ts";
+import { createShard, requestGuildMembers } from "./mod.ts";
 
 let createNextShard = true;
 

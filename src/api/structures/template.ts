@@ -40,4 +40,3 @@ export function createTemplateStruct(
     isDirty: createNewProp(isDirty),
   }) as Template;
 }
-

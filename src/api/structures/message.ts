@@ -160,4 +160,3 @@ export async function createMessageStruct(data: MessageCreateOptions) {
 
   return message as Message;
 }
-
