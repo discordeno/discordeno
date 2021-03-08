@@ -9,9 +9,9 @@ export interface WebhookPayload {
   /** The type of the webhook */
   type: WebhookType;
   /** The guild id this webhook is for */
-  guild_id?: string;
+  "guild_id"?: string;
   /** The channel id this webhook is for */
-  channel_id: string;
+  "channel_id": string;
   /** The user this webhook was created by(not returned when getting a webhook with its token) */
   user?: UserPayload;
   /** The default name of the webhook */
@@ -36,6 +36,15 @@ export interface WebhookCreateOptions {
   avatar?: string;
 }
 
+export interface WebhookEditOptions {
+  /** Name of the webhook (1-80 characters) */
+  name?: string;
+  /** Image url for avatar image for the default webhook avatar */
+  avatar?: string | null;
+  /** The new channel id this webhook should be moved to */
+  channelID?: string;
+}
+
 export interface ExecuteWebhookOptions {
   /** waits for server confirmation of message send before response, and returns the created message body (defaults to false; when false a message that is not saved does not return an error) */
   wait?: boolean;
@@ -44,11 +53,11 @@ export interface ExecuteWebhookOptions {
   /** override the default username of the webhook */
   username?: string;
   /** override the default avatar of the webhook*/
-  avatar_url?: string;
+  "avatar_url"?: string;
   /** true if this is a TTS message */
   tts?: boolean;
   /** file contents	the contents of the file being sent	one of content, file, embeds */
-  file?: { blob: unknown; name: string };
+  file?: { blob: Blob; name: string };
   /** array of up to 10 embed objects	embedded rich content. */
   embeds?: Embed[];
   /** allowed mentions for the message */
@@ -65,7 +74,7 @@ export interface ExecuteWebhookOptions {
 export interface EditWebhookMessageOptions {
   content?: string;
   embeds?: Embed[];
-  allowed_mentions?: AllowedMentions;
+  "allowed_mentions"?: AllowedMentions;
 }
 
 export interface CreateSlashCommandOptions {
@@ -83,7 +92,7 @@ export interface SlashCommand {
   /** unique id of the command */
   id: string;
   /** unique id of the parent application */
-  application_id: string;
+  "application_id": string;
   /** 3-32 character name */
   name: string;
   /** 1-100 character description */
@@ -138,9 +147,9 @@ export interface Interaction {
   /** The command data payload */
   data?: SlashCommandInteractionData;
   /** The id of the guild it was sent from */
-  guild_id: string;
+  "guild_id": string;
   /** The id of the channel it was sent from */
-  channel_id: string;
+  "channel_id": string;
   /** The Payload of the member it was sent from */
   member: UserPayload;
   /** The token for this interaction */
@@ -181,8 +190,8 @@ export interface SlashCommandCallbackData {
   /** supports up to 10 embeds */
   embeds?: Embed[];
   /** allowed mentions for the message */
-  allowed_mentions?: AllowedMentions;
-  /** acceptable values are message flags */
+  "allowed_mentions"?: AllowedMentions;
+  /** acceptable values are message flags, set to 64 to make your response ephemeral */
   flags?: number;
 }
 
@@ -199,14 +208,26 @@ export enum InteractionResponseType {
   ACK_WITH_SOURCE = 5,
 }
 
+// TODO: remove this interface for v11
+/** @deprecated Use `UpsertSlashCommandOptions` instead */
 export interface EditSlashCommandOptions {
-  id: string;
-  guildID?: string;
+  /** 3-32 character command name */
+  name: string;
+  /** 1-100 character description */
+  description: string;
+  /** The parameters for the command */
+  options?: SlashCommandOption[];
 }
 
 export interface ExecuteSlashCommandOptions {
   type: InteractionResponseType;
   data: SlashCommandCallbackData;
+}
+
+export interface SlashCommandResponseOptions
+  extends ExecuteSlashCommandOptions {
+  /** Whether to make this response visible ONLY to the user who used this command. It will also be deleted after some time. */
+  private?: boolean;
 }
 
 export interface EditSlashResponseOptions extends SlashCommandCallbackData {
@@ -215,6 +236,15 @@ export interface EditSlashResponseOptions extends SlashCommandCallbackData {
 }
 
 export interface UpsertSlashCommandOptions {
+  /** 1-32 character name matching ^[\w-]{1,32}$ */
+  name?: string;
+  /** 1-100 character description */
+  description?: string;
+  /** The parameters for the command */
+  options?: SlashCommandOption[] | null;
+}
+
+export interface UpsertSlashCommandsOptions extends UpsertSlashCommandOptions {
+  /** The id of the command */
   id: string;
-  guildID?: string;
 }

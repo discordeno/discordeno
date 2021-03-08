@@ -18,7 +18,7 @@ export interface SlashCommand {
   /** unique id of the command */
   id: string;
   /** unique id of the parent application */
-  application_id: string;
+  "application_id": string;
   /** 3-32 character name */
   name: string;
   /** 1-100 character description */

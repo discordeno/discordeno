@@ -1,28 +1,35 @@
-import { botID } from "../../bot.ts";
+import { applicationID } from "../../bot.ts";
+import { RequestManager } from "../../rest/request_manager.ts";
 import {
   CreateSlashCommandOptions,
   EditSlashCommandOptions,
   EditSlashResponseOptions,
   EditWebhookMessageOptions,
   Errors,
-  ExecuteSlashCommandOptions,
   ExecuteWebhookOptions,
   MessageCreateOptions,
+  SlashCommand,
+  SlashCommandOption,
+  SlashCommandOptionChoice,
+  SlashCommandOptionType,
+  SlashCommandResponseOptions,
   UpsertSlashCommandOptions,
+  UpsertSlashCommandsOptions,
   WebhookCreateOptions,
+  WebhookEditOptions,
   WebhookPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
-import { endpoints } from "../../util/constants.ts";
+import { endpoints, SLASH_COMMANDS_NAME_REGEX } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
 import { structures } from "../structures/mod.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
 
-/** Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
-*
-* Webhook names cannot be: 'clyde'
-*/
+/** 
+ * Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
+ *
+ * Webhook names cannot be: 'clyde'
+ */
 export async function createWebhook(
   channelID: string,
   options: WebhookCreateOptions,
@@ -46,13 +53,98 @@ export async function createWebhook(
     throw new Error(Errors.INVALID_WEBHOOK_NAME);
   }
 
-  return RequestManager.post(
+  const result = await RequestManager.post(
     endpoints.CHANNEL_WEBHOOKS(channelID),
     {
       ...options,
       avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
     },
-  ) as Promise<WebhookPayload>;
+  );
+
+  return result as WebhookPayload;
+}
+
+/** Edit a webhook. Requires the `MANAGE_WEBHOOKS` permission. Returns the updated webhook object on success. */
+export async function editWebhook(
+  channelID: string,
+  webhookID: string,
+  options: WebhookEditOptions,
+) {
+  const hasManageWebhooksPerm = await botHasChannelPermissions(
+    channelID,
+    ["MANAGE_WEBHOOKS"],
+  );
+  if (
+    !hasManageWebhooksPerm
+  ) {
+    throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
+  }
+
+  const result = await RequestManager.patch(endpoints.WEBHOOK_ID(webhookID), {
+    ...options,
+    channel_id: options.channelID,
+  });
+
+  return result as WebhookPayload;
+}
+
+/** Edit a webhook. Returns the updated webhook object on success. */
+export async function editWebhookWithToken(
+  webhookID: string,
+  webhookToken: string,
+  options: Omit<WebhookEditOptions, "channelID">,
+) {
+  const result = await RequestManager.patch(
+    endpoints.WEBHOOK(webhookID, webhookToken),
+    options,
+  );
+
+  return result as WebhookPayload;
+}
+
+/** Delete a webhook permanently. Requires the `MANAGE_WEBHOOKS` permission. Returns a undefined on success */
+export async function deleteWebhook(channelID: string, webhookID: string) {
+  const hasManageWebhooksPerm = await botHasChannelPermissions(
+    channelID,
+    ["MANAGE_WEBHOOKS"],
+  );
+  if (
+    !hasManageWebhooksPerm
+  ) {
+    throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
+  }
+
+  const result = await RequestManager.delete(endpoints.WEBHOOK_ID(webhookID));
+
+  return result;
+}
+
+/** Delete a webhook permanently. Returns a undefined on success */
+export async function deleteWebhookWithToken(
+  webhookID: string,
+  webhookToken: string,
+) {
+  const result = await RequestManager.delete(
+    endpoints.WEBHOOK(webhookID, webhookToken),
+  );
+
+  return result;
+}
+
+/** Returns the new webhook object for the given id. */
+export async function getWebhook(webhookID: string) {
+  const result = await RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
+
+  return result as WebhookPayload;
+}
+
+/** Returns the new webhook object for the given id, this call does not require authentication and returns no user in the webhook object. */
+export async function getWebhookWithToken(webhookID: string, token: string) {
+  const result = await RequestManager.get(
+    endpoints.WEBHOOK(webhookID, token),
+  );
+
+  return result as WebhookPayload;
 }
 
 /** Execute a webhook with webhook ID and webhook token */
@@ -114,12 +206,7 @@ export async function executeWebhook(
   return structures.createMessage(result as MessageCreateOptions);
 }
 
-/** Returns the new webhook object for the given id. */
-export function getWebhook(webhookID: string) {
-  return RequestManager.get(endpoints.WEBHOOK_ID(webhookID));
-}
-
-export function editWebhookMessage(
+export async function editWebhookMessage(
   webhookID: string,
   webhookToken: string,
   messageID: string,
@@ -165,20 +252,100 @@ export function editWebhookMessage(
     }
   }
 
-  return RequestManager.patch(
-    endpoints.WEBHOOK_EDIT(webhookID, webhookToken, messageID),
+  const result = await RequestManager.patch(
+    endpoints.WEBHOOK_MESSAGE(webhookID, webhookToken, messageID),
     { ...options, allowed_mentions: options.allowed_mentions },
   );
+
+  return result;
 }
 
-export function deleteWebhookMessage(
+export async function deleteWebhookMessage(
   webhookID: string,
   webhookToken: string,
   messageID: string,
 ) {
-  return RequestManager.delete(
-    endpoints.WEBHOOK_DELETE(webhookID, webhookToken, messageID),
+  const result = await RequestManager.delete(
+    endpoints.WEBHOOK_MESSAGE(webhookID, webhookToken, messageID),
   );
+
+  return result;
+}
+
+function validateSlashOptionChoices(
+  choices: SlashCommandOptionChoice[],
+  optionType: SlashCommandOptionType,
+) {
+  for (const choice of choices) {
+    if ([...choice.name].length < 1 || [...choice.name].length > 100) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+
+    if (
+      (optionType === SlashCommandOptionType.STRING &&
+        (typeof choice.value !== "string" || choice.value.length < 1 ||
+          choice.value.length > 100)) ||
+      (optionType === SlashCommandOptionType.INTEGER &&
+        typeof choice.value !== "number")
+    ) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+  }
+}
+
+function validateSlashOptions(options: SlashCommandOption[]) {
+  for (const option of options) {
+    if (
+      (option.choices?.length && option.choices.length > 25) ||
+      option.type !== SlashCommandOptionType.STRING &&
+        option.type !== SlashCommandOptionType.INTEGER
+    ) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+
+    if (
+      ([...option.name].length < 1 || [...option.name].length > 32) ||
+      ([...option.description].length < 1 ||
+        [...option.description].length > 100)
+    ) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+
+    if (option.choices) {
+      validateSlashOptionChoices(option.choices, option.type);
+    }
+  }
+}
+
+function validateSlashCommands(
+  commands: UpsertSlashCommandOptions[],
+  create = false,
+) {
+  for (const command of commands) {
+    if (
+      (command.name && !SLASH_COMMANDS_NAME_REGEX.test(command.name)) ||
+      (create && !command.name)
+    ) {
+      throw new Error(Errors.INVALID_SLASH_NAME);
+    }
+
+    if (
+      (command.description &&
+        ([...command.description].length < 1 ||
+          [...command.description].length > 100)) ||
+      (create && !command.description)
+    ) {
+      throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+    }
+
+    if (command.options?.length) {
+      if (command.options.length > 25) {
+        throw new Error(Errors.INVALID_SLASH_OPTIONS);
+      }
+
+      validateSlashOptions(command.options);
+    }
+  }
 }
 
 /**
@@ -192,9 +359,100 @@ export function deleteWebhookMessage(
  * Global commands are cached for **1 hour**. That means that new global commands will fan out slowly across all guilds, and will be guaranteed to be updated in an hour.
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
-export function createSlashCommand(options: CreateSlashCommandOptions) {
-  // Use ... for content length due to unicode characters and js .length handling
-  if ([...options.name].length < 2 || [...options.name].length > 32) {
+export async function createSlashCommand(options: CreateSlashCommandOptions) {
+  validateSlashCommands([options], true);
+
+  const result = await RequestManager.post(
+    options.guildID
+      ? endpoints.COMMANDS_GUILD(applicationID, options.guildID)
+      : endpoints.COMMANDS(applicationID),
+    {
+      ...options,
+    },
+  );
+
+  return result;
+}
+
+/** Fetchs the global command for the given ID. If a guildID is provided, the guild command will be fetched. */
+export async function getSlashCommand(commandID: string, guildID?: string) {
+  const result = await RequestManager.get(
+    guildID
+      ? endpoints.COMMANDS_GUILD_ID(applicationID, guildID, commandID)
+      : endpoints.COMMANDS_ID(applicationID, commandID),
+  );
+
+  return result as SlashCommand;
+}
+
+/** Fetch all of the global commands for your application. */
+export async function getSlashCommands(guildID?: string) {
+  // TODO: Should this be a returned as a collection?
+  const result = await RequestManager.get(
+    guildID
+      ? endpoints.COMMANDS_GUILD(applicationID, guildID)
+      : endpoints.COMMANDS(applicationID),
+  );
+
+  return result;
+}
+
+/**
+ * Edit an existing slash command. If this command did not exist, it will create it.
+ */
+export async function upsertSlashCommand(
+  commandID: string,
+  options: UpsertSlashCommandOptions,
+  guildID?: string,
+) {
+  validateSlashCommands([options]);
+
+  const result = await RequestManager.patch(
+    guildID
+      ? endpoints.COMMANDS_GUILD_ID(
+        applicationID,
+        guildID,
+        commandID,
+      )
+      : endpoints.COMMANDS_ID(applicationID, commandID),
+    options,
+  );
+
+  return result;
+}
+
+/**
+ * Bulk edit existing slash commands. If a command does not exist, it will create it.
+ * 
+ * **NOTE:** Any slash commands that are not specified in this function will be **deleted**. If you don't provide the commandID and rename your command, the command gets a new ID.
+ */
+export async function upsertSlashCommands(
+  options: UpsertSlashCommandsOptions[],
+  guildID?: string,
+) {
+  validateSlashCommands(options);
+
+  const result = await RequestManager.put(
+    guildID
+      ? endpoints.COMMANDS_GUILD(applicationID, guildID)
+      : endpoints.COMMANDS(applicationID),
+    options,
+  );
+
+  return result;
+}
+
+// TODO: remove this function for v11
+/** 
+ * Edit an existing slash command. 
+ * @deprecated This function will be removed in v11. Use `upsertSlashCommand()` instead
+ */
+export async function editSlashCommand(
+  commandID: string,
+  options: EditSlashCommandOptions,
+  guildID?: string,
+) {
+  if (!SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
     throw new Error(Errors.INVALID_SLASH_NAME);
   }
 
@@ -204,56 +462,28 @@ export function createSlashCommand(options: CreateSlashCommandOptions) {
     throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
   }
 
-  return RequestManager.post(
-    options.guildID
-      ? endpoints.COMMANDS_GUILD(botID, options.guildID)
-      : endpoints.COMMANDS(botID),
-    {
-      ...options,
-    },
-  );
-}
-
-/** Fetch all of the global commands for your application. */
-export function getSlashCommands(guildID?: string) {
-  // TODO: Should this be a returned as a collection?
-  return RequestManager.get(
+  const result = await RequestManager.patch(
     guildID
-      ? endpoints.COMMANDS_GUILD(botID, guildID)
-      : endpoints.COMMANDS(botID),
+      ? endpoints.COMMANDS_GUILD_ID(
+        applicationID,
+        guildID,
+        commandID,
+      )
+      : endpoints.COMMANDS_ID(applicationID, commandID),
+    options,
   );
-}
 
-/**
- * Edit an existing slash command. If this command did not exist, it will create it.
- */
-export function upsertSlashCommand(options: UpsertSlashCommandOptions) {
-  return RequestManager.post(
-    options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(botID, options.id, options.guildID)
-      : endpoints.COMMANDS_ID(botID, options.id),
-    {
-      ...options,
-    },
-  );
-}
-
-/** Edit an existing slash command. */
-export function editSlashCommand(options: EditSlashCommandOptions) {
-  return RequestManager.patch(
-    options.guildID
-      ? endpoints.COMMANDS_GUILD_ID(botID, options.id, options.guildID)
-      : endpoints.COMMANDS_ID(botID, options.id),
-    {
-      ...options,
-    },
-  );
+  return result;
 }
 
 /** Deletes a slash command. */
 export function deleteSlashCommand(id: string, guildID?: string) {
-  if (!guildID) return RequestManager.delete(endpoints.COMMANDS_ID(botID, id));
-  return RequestManager.delete(endpoints.COMMANDS_GUILD_ID(botID, id, guildID));
+  if (!guildID) {
+    return RequestManager.delete(endpoints.COMMANDS_ID(applicationID, id));
+  }
+  return RequestManager.delete(
+    endpoints.COMMANDS_GUILD_ID(applicationID, guildID, id),
+  );
 }
 
 /**
@@ -262,14 +492,14 @@ export function deleteSlashCommand(id: string, guildID?: string) {
  *
  * NOTE: By default we will suppress mentions. To enable mentions, just pass any mentions object.
  */
-export function executeSlashCommand(
+export async function executeSlashCommand(
   id: string,
   token: string,
-  options: ExecuteSlashCommandOptions,
+  options: SlashCommandResponseOptions,
 ) {
   // If its already been executed, we need to send a followup response
   if (cache.executedSlashCommands.has(token)) {
-    return RequestManager.post(endpoints.WEBHOOK(botID, token), {
+    return RequestManager.post(endpoints.WEBHOOK(applicationID, token), {
       ...options,
     });
   }
@@ -278,41 +508,96 @@ export function executeSlashCommand(
   cache.executedSlashCommands.set(token, id);
   setTimeout(
     () => cache.executedSlashCommands.delete(token),
-    Date.now() + 900000,
+    900000,
   );
 
-  // IF NO MENTIONS ARE PROVIDED, FORCE DISABLE MENTIONS
+  // If the user wants this as a private message mark it ephemeral
+  if (options.private) {
+    options.data.flags = 64;
+  }
+
+  // If no mentions are provided, force disable mentions
   if (!(options.data.allowed_mentions)) {
     options.data.allowed_mentions = { parse: [] };
   }
 
-  return RequestManager.post(endpoints.INTERACTION_ID_TOKEN(id, token), {
-    ...options,
-  });
+  const result = await RequestManager.post(
+    endpoints.INTERACTION_ID_TOKEN(id, token),
+    options,
+  );
+
+  return result;
 }
 
 /** To delete your response to a slash command. If a message id is not provided, it will default to deleting the original response. */
-export function deleteSlashResponse(
+export async function deleteSlashResponse(
   token: string,
   messageID?: string,
 ) {
-  if (!messageID) {
-    return RequestManager.delete(
-      endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
-    );
-  }
-  return RequestManager.delete(
-    endpoints.INTERACTION_ID_TOKEN_MESSAGEID(botID, token, messageID),
+  const result = await RequestManager.delete(
+    messageID
+      ? endpoints.INTERACTION_ID_TOKEN_MESSAGEID(
+        applicationID,
+        token,
+        messageID,
+      )
+      : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token),
   );
+
+  return result;
 }
 
 /** To edit your response to a slash command. If a messageID is not provided it will default to editing the original response. */
-export function editSlashResponse(
+export async function editSlashResponse(
   token: string,
   options: EditSlashResponseOptions,
 ) {
-  return RequestManager.patch(
-    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(botID, token),
+  if (options.content && options.content.length > 2000) {
+    throw Error(Errors.MESSAGE_MAX_LENGTH);
+  }
+
+  if (options.embeds && options.embeds.length > 10) {
+    options.embeds.splice(10);
+  }
+
+  if (options.allowed_mentions) {
+    if (options.allowed_mentions.users?.length) {
+      if (options.allowed_mentions.parse.includes("users")) {
+        options.allowed_mentions.parse = options.allowed_mentions.parse.filter((
+          p,
+        ) => p !== "users");
+      }
+
+      if (options.allowed_mentions.users.length > 100) {
+        options.allowed_mentions.users = options.allowed_mentions.users.slice(
+          0,
+          100,
+        );
+      }
+    }
+
+    if (options.allowed_mentions.roles?.length) {
+      if (options.allowed_mentions.parse.includes("roles")) {
+        options.allowed_mentions.parse = options.allowed_mentions.parse.filter((
+          p,
+        ) => p !== "roles");
+      }
+
+      if (options.allowed_mentions.roles.length > 100) {
+        options.allowed_mentions.roles = options.allowed_mentions.roles.slice(
+          0,
+          100,
+        );
+      }
+    }
+  }
+
+  const result = await RequestManager.patch(
+    options.messageID
+      ? endpoints.WEBHOOK_MESSAGE(applicationID, token, options.messageID)
+      : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token),
     options,
   );
+
+  return result;
 }

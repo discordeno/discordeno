@@ -1,21 +1,25 @@
-import { RequestManager } from "./rest/request_manager.ts";
+import { getGatewayBot } from "./api/handlers/gateway.ts";
 import {
   BotConfig,
   DiscordBotGatewayData,
+  DiscordIdentify,
   EventHandlers,
+  Intents,
 } from "./types/mod.ts";
-import { baseEndpoints, endpoints, GATEWAY_VERSION } from "./util/constants.ts";
+import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 
 export let authorization = "";
+export let restAuthorization = "";
 export let botID = "";
+export let applicationID = "";
 
 export let eventHandlers: EventHandlers = {};
 
 export let botGatewayData: DiscordBotGatewayData;
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
-export const identifyPayload: IdentifyPayload = {
+export const identifyPayload: DiscordIdentify = {
   token: "",
   compress: true,
   properties: {
@@ -27,6 +31,7 @@ export const identifyPayload: IdentifyPayload = {
   shard: [0, 0],
 };
 
+/** @deprecated Use "DiscordIdentify" instead */
 export interface IdentifyPayload {
   token: string;
   compress: boolean;
@@ -44,9 +49,7 @@ export async function startBot(config: BotConfig) {
   authorization = `Bot ${config.token}`;
 
   // Initial API connection to get info about bots connection
-  botGatewayData = await RequestManager.get(
-    endpoints.GATEWAY_BOT,
-  ) as DiscordBotGatewayData;
+  botGatewayData = await getGatewayBot();
 
   // Explicitly append gateway version and encoding
   botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
@@ -54,12 +57,12 @@ export async function startBot(config: BotConfig) {
   proxyWSURL = botGatewayData.url;
   identifyPayload.token = config.token;
   identifyPayload.intents = config.intents.reduce(
-    (bits, next) => (bits |= next),
+    (bits, next) => (bits |= typeof next === "string" ? Intents[next] : next),
     0,
   );
   identifyPayload.shard = [0, botGatewayData.shards];
 
-  spawnShards(botGatewayData, identifyPayload, 0, botGatewayData.shards);
+  await spawnShards(botGatewayData, identifyPayload, 0, botGatewayData.shards);
 }
 
 /** Allows you to dynamically update the event handlers by passing in new eventHandlers */
@@ -75,6 +78,11 @@ export function setBotID(id: string) {
   if (botID !== id) botID = id;
 }
 
+/** INTERNAL LIB function used to set the application ID once the READY event is sent by Discord. */
+export function setApplicationID(id: string) {
+  if (applicationID !== id) applicationID = id;
+}
+
 // BIG BRAIN BOT STUFF ONLY BELOW THIS
 
 /**
@@ -87,6 +95,7 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   authorization = `Bot ${data.token}`;
   identifyPayload.token = `Bot ${data.token}`;
 
+  if (data.restAuthorization) restAuthorization = data.restAuthorization;
   if (data.restURL) baseEndpoints.BASE_URL = data.restURL;
   if (data.cdnURL) baseEndpoints.CDN_URL = data.cdnURL;
   if (data.wsURL) proxyWSURL = data.wsURL;
@@ -96,23 +105,22 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   }
 
   identifyPayload.intents = data.intents.reduce(
-    (bits, next) => (bits |= next),
+    (bits, next) => (bits |= typeof next === "string" ? Intents[next] : next),
     0,
   );
 
   // Initial API connection to get info about bots connection
-  botGatewayData = await RequestManager.get(
-    endpoints.GATEWAY_BOT,
-  ) as DiscordBotGatewayData;
+  botGatewayData = await getGatewayBot();
 
   if (!data.wsURL) proxyWSURL = botGatewayData.url;
   await spawnShards(
     botGatewayData,
     identifyPayload,
     data.firstShardID,
-    data.lastShardID || botGatewayData.shards >= 25
-      ? (data.firstShardID + 25)
-      : botGatewayData.shards,
+    data.lastShardID ||
+      (botGatewayData.shards >= 25
+        ? (data.firstShardID + 25)
+        : botGatewayData.shards),
   );
 }
 
@@ -127,4 +135,6 @@ export interface BigBrainBotConfig extends BotConfig {
   restURL?: string;
   /** This can be used to forward the CDN handling to a proxy. */
   cdnURL?: string;
+  /** This is the authorization header that your rest proxy will validate */
+  restAuthorization?: string;
 }

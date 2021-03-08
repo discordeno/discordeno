@@ -1,37 +1,60 @@
 # Customizing Discordeno
 
-This guide is only for extremely advanced developers. This feature is extremely powerful but comes with huge risks. When I was building Discordeno, there was always one goal I had in my mind that I wanted because when I used other libraries I always felt this was missing. I hated forking a library just to customize it as then it made staying up to date a much larger hassle. Discordeno was designed with customizability in mind. A vast majority of the library can be overridden allowing you to make it work however you would like for your bot.
+This guide is only for extremely advanced developers. This feature is extremely
+powerful but comes with huge risks. When I was building Discordeno, there was
+always one goal I had in my mind that I wanted because when I used other
+libraries I always felt this was missing. I hated forking a library just to
+customize it as then it made staying up to date a much larger hassle. Discordeno
+was designed with customizability in mind. A vast majority of the library can be
+overridden allowing you to make it work however you would like for your bot.
 
 ## Customizing Structures
 
-Discordeno provides the ability to customize structures. You have the ability to override the function that creates the structures inside Discordeno. **THIS DOES NOT MODIFY THE PROTOTYPE!** I wanted to make sure that Discordeno handled this without encouraging bad practices such as prototype pollution which can make your bots inherintly unstable and unpredictable. Discordeno allows you to take control over the functions that create the structures.
+Discordeno provides the ability to customize structures. You have the ability to
+override the function that creates the structures inside Discordeno. **THIS DOES
+NOT MODIFY THE PROTOTYPE!** I wanted to make sure that Discordeno handled this
+without encouraging bad practices such as prototype pollution which can make
+your bots inherintly unstable and unpredictable. Discordeno allows you to take
+control over the functions that create the structures.
 
 ### Customizing Member Structure
 
-Let's take into consideration that you wanted to add some custom properties to the member structure. For instance, let's add a couple of properties that could help make working with the bot easier such as `member.tag`, `member.guild`, `member.avatarURL`. We are going to add these, simple as an example for the purpose of this guide. Please note, that these don't exist in the library itself because they take up quite a bit of RAM/memory since as your bot grows you can hit millions of members which adds up to GB of memory. Keeping this minimal can help allow your bots to grow larger without increasing the cost. However, if you are advanced enough and feel adding/customizing the structures is necessary then this feature allows you to do that.
+Let's take into consideration that you wanted to add some custom properties to
+the member structure. For instance, let's add a couple of properties that could
+help make working with the bot easier such as `member.tag`, `member.guild`,
+`member.avatarURL`. We are going to add these, simple as an example for the
+purpose of this guide. Please note, that these don't exist in the library itself
+because they take up quite a bit of RAM/memory since as your bot grows you can
+hit millions of members which adds up to GB of memory. Keeping this minimal can
+help allow your bots to grow larger without increasing the cost. However, if you
+are advanced enough and feel adding/customizing the structures is necessary then
+this feature allows you to do that.
 
-
-To begin customizing, create a file in the structures folder called `member.ts`. The name of the file is not important at all.
+To begin customizing, create a file in the structures folder called `member.ts`.
+The name of the file is not important at all.
 
 ```ts
 async function createMember() {
-
 }
 ```
 
-We start by declaring a function that will be run to create the structure. Once again the name here is not important. The function must take the same arguments that the internal function takes. In this case the createMember function takes 2 arguments. `data: MemberCreatePayload, guildID: string`
+We start by declaring a function that will be run to create the structure. Once
+again the name here is not important. The function must take the same arguments
+that the internal function takes. In this case the createMember function takes 2
+arguments. `data: MemberCreatePayload, guildID: string`
 
 ```ts
 async function createMember(data: MemberCreatePayload, guildID: string) {
-
 }
 ```
 
-The next step is to fill in this function. You can make this do whatever you want. My recommendation is to start by copying the current code from the internal libraries structure.
+The next step is to fill in this function. You can make this do whatever you
+want. My recommendation is to start by copying the current code from the
+internal libraries structure.
 
 ```ts
 async function createMember(data: MemberCreatePayload, guildID: string) {
-	const {
+  const {
     joined_at: joinedAt,
     premium_since: premiumSince,
     ...rest
@@ -63,7 +86,8 @@ async function createMember(data: MemberCreatePayload, guildID: string) {
 }
 ```
 
-Now we have a base to work with. We can now add a `tag`, `avatarURL`, `mention`, and `guild` properties to the member.
+Now we have a base to work with. We can now add a `tag`, `avatarURL`, `mention`,
+and `guild` properties to the member.
 
 ```ts
 import { rawAvatarURL } from "../../deps.ts";
@@ -84,20 +108,24 @@ async function createMember(data: MemberCreatePayload, guildID: string) {
     /** The guild object for where this member is located */
     guild: await cacheHandler.get("guilds", guildID),
     /** Easily mention the member */
-    mention: `<@${data.user.id}>`
+    mention: `<@${data.user.id}>`,
   };
 
   return member;
 }
 ```
 
-Now we need to use this function and telling Discordeno to override the internal createMember function. To do this, we will modify the internal functions. This is where we reassign the value of the function.
+Now we need to use this function and telling Discordeno to override the internal
+createMember function. To do this, we will modify the internal functions. This
+is where we reassign the value of the function.
 
 ```ts
 structures.createMember = createMember;
 ```
 
-Awesome. Now, we have one more step to complete which is to declare these new properties on our typings for the member structure. At the bottom, of the file we will write the following code.
+Awesome. Now, we have one more step to complete which is to declare these new
+properties on our typings for the member structure. At the bottom, of the file
+we will write the following code.
 
 ```ts
 declare module "../../deps.ts" {
@@ -110,14 +138,14 @@ declare module "../../deps.ts" {
 }
 ```
 
-> **Important:** when you modify structures, it is important to restart the bot so it takes effect on all members that have already be constructed.
-
+> **Important:** when you modify structures, it is important to restart the bot
+> so it takes effect on all members that have already be constructed.
 
 The code should look like this right now:
 
 ```ts
 async function createMember(data: MemberCreatePayload, guildID: string) {
-	const {
+  const {
     joined_at: joinedAt,
     premium_since: premiumSince,
     ...rest
@@ -150,7 +178,7 @@ async function createMember(data: MemberCreatePayload, guildID: string) {
     /** The guild object for where this member is located */
     guild: await cacheHandler.get("guilds", guildID),
     /** Easily mention the member */
-    mention: `<@${data.user.id}>`
+    mention: `<@${data.user.id}>`,
   };
 
   return member;
@@ -170,16 +198,26 @@ declare module "../../deps.ts" {
 
 #### Removing Properties
 
-Now, that we have added the properties we want, we can discuss how to remove properties we don't want. Remember every property that exists on member can become very expensive as your bot grows.
+Now, that we have added the properties we want, we can discuss how to remove
+properties we don't want. Remember every property that exists on member can
+become very expensive as your bot grows.
 
-To do a little easy math, let's suppose we had 1,000,000 member objects. Each one of them could possibly store an avatar string which can take up about 32 bytes. Now that comes to a total of around 32MB for every 1 million members.
+To do a little easy math, let's suppose we had 1,000,000 member objects. Each
+one of them could possibly store an avatar string which can take up about 32
+bytes. Now that comes to a total of around 32MB for every 1 million members.
 
-Now let's go ahead and delete the `avatar`, `username` and `discriminator` strings since we already used them and don't really want them to be duplicated as we will never need their raw counterparts in our bot(Note: You may in your bot and this is why this is an advanced feature. Decide carefully what you wish to add or remove). In fact, for the purposes of this guide let's go a little crazy and remove everything we don't specifically want to have.
+Now let's go ahead and delete the `avatar`, `username` and `discriminator`
+strings since we already used them and don't really want them to be duplicated
+as we will never need their raw counterparts in our bot(Note: You may in your
+bot and this is why this is an advanced feature. Decide carefully what you wish
+to add or remove). In fact, for the purposes of this guide let's go a little
+crazy and remove everything we don't specifically want to have.
 
-The following is the current base data available to us when we create the member.
+The following is the current base data available to us when we create the
+member.
 
 ```ts
-  user: {
+user: {
     /** The user's id */
     id: string;
     /** the user's username, not unique across the platform */
@@ -219,10 +257,16 @@ The following is the current base data available to us when we create the member
   mute: boolean;
 ```
 
-Let's just keep `nick`, `roles`, `joinedAt`, `bot` and `id` plus the new stuff we have added above.
+Let's just keep `nick`, `roles`, `joinedAt`, `bot` and `id` plus the new stuff
+we have added above.
 
 ```ts
-import { cacheHandlers, Guild, MemberCreatePayload, rawAvatarURL } from "../../deps.ts";
+import {
+  cacheHandlers,
+  Guild,
+  MemberCreatePayload,
+  rawAvatarURL,
+} from "../../deps.ts";
 
 async function createMember(data: MemberCreatePayload, guildID: string) {
   const {
@@ -260,7 +304,11 @@ declare module "../../deps.ts" {
 }
 ```
 
-You might be seeing an error on `structures.createMember`. This is happening because our new member structures is modifying/removing existing properties that the lib internally said it would have. To solve this, simply just add a ts-ignore above it as you know better than TS that the typings are being overwritten.
+You might be seeing an error on `structures.createMember`. This is happening
+because our new member structures is modifying/removing existing properties that
+the lib internally said it would have. To solve this, simply just add a
+ts-ignore above it as you know better than TS that the typings are being
+overwritten.
 
 ```ts
 // @ts-ignore
@@ -269,8 +317,11 @@ structures.createMember = createMember;
 
 ## Custom Cache
 
-One of the features that Discordeno has is the ability to customize the cache. In order to do this, we will simply override the cache handlers. For the purposes of this guide, we are going to use Redis for our custom cache solution. You can use anything you like, this guide purpose is just to teach the basics of how to customize. We will not be discussing how to use Redis.
-
+One of the features that Discordeno has is the ability to customize the cache.
+In order to do this, we will simply override the cache handlers. For the
+purposes of this guide, we are going to use Redis for our custom cache solution.
+You can use anything you like, this guide purpose is just to teach the basics of
+how to customize. We will not be discussing how to use Redis.
 
 ```ts
 import { cacheHandlers } from "../../../deps.ts";
@@ -280,9 +331,14 @@ cacheHandlers.has = async function (table, key) {
 };
 ```
 
-This code now overrides the `has` method which will check from Redis. The basic concept is that the function `has` takes a table name and a key. The `has` method returns whether or not a value exists. You can do anything you like inside this function, like connecting to a database or any other solution you would like to use.
+This code now overrides the `has` method which will check from Redis. The basic
+concept is that the function `has` takes a table name and a key. The `has`
+method returns whether or not a value exists. You can do anything you like
+inside this function, like connecting to a database or any other solution you
+would like to use.
 
-Similarily, since we want to use Redis we would want to customize all the methods on the cacheHandlers. The current list of methods available are:
+Similarily, since we want to use Redis we would want to customize all the
+methods on the cacheHandlers. The current list of methods available are:
 
 - has
 - get
@@ -293,9 +349,20 @@ Similarily, since we want to use Redis we would want to customize all the method
 
 ## Custom Gateway Payload Handling (Controllers)
 
-Controllers are one of the most powerful features of Discordeno. They allow you to take control of how Discordeno handles the Discord payloads from the gateway. When an event comes in, you can override and control how you want it to work. For example, if your bot does not use emojis at all, you could simply just take control over the GUILD_EMOJIS_UPDATE event and prevent anyone from caching any emojis at all. Another example, is if you are building a custom module/framework around Discordeno and you want to provide more custom events such as when someone boosts the server or some other custom event this is possible as well.
+Controllers are one of the most powerful features of Discordeno. They allow you
+to take control of how Discordeno handles the Discord payloads from the gateway.
+When an event comes in, you can override and control how you want it to work.
+For example, if your bot does not use emojis at all, you could simply just take
+control over the GUILD_EMOJIS_UPDATE event and prevent anyone from caching any
+emojis at all. Another example, is if you are building a custom module/framework
+around Discordeno and you want to provide more custom events such as when
+someone boosts the server or some other custom event this is possible as well.
 
-Someone once asked if it was possible to make Discordeno, show the number of users currently typing in the server. He had managed to build this himself in his bot, but he wanted to do it inside the library itself. In order to keep Discordeno minimalistic and memory efficient I avoided adding this. So let's see how we could achieve this same thing with Controllers.
+Someone once asked if it was possible to make Discordeno, show the number of
+users currently typing in the server. He had managed to build this himself in
+his bot, but he wanted to do it inside the library itself. In order to keep
+Discordeno minimalistic and memory efficient I avoided adding this. So let's see
+how we could achieve this same thing with Controllers.
 
 ```ts
 import {
@@ -326,8 +393,18 @@ controllers.TYPING_START = function (data) {
 };
 ```
 
-Controllers are amazing in so many ways. This is just a basic example but it's true potential is only limited by your imagination. I would love to see what you all can create with controllers.
+Controllers are amazing in so many ways. This is just a basic example but it's
+true potential is only limited by your imagination. I would love to see what you
+all can create with controllers.
 
-Something worth noting about why Discordeno controllers are so amazing is that it allows you to never depend on me. When Discord releases something new, you don't need to wait for me to update the library to access it. Without controllers, if you wanted access to a feature you would need to wait for the library to be updated or have to fork it, modify it and modify your code for it. Then when the library does get updated, you need to switch back to it and modify your code again possibly to how the lib designed it. With controllers, you never have to fork or anything. Just take control!
+Something worth noting about why Discordeno controllers are so amazing is that
+it allows you to never depend on me. When Discord releases something new, you
+don't need to wait for me to update the library to access it. Without
+controllers, if you wanted access to a feature you would need to wait for the
+library to be updated or have to fork it, modify it and modify your code for it.
+Then when the library does get updated, you need to switch back to it and modify
+your code again possibly to how the lib designed it. With controllers, you never
+have to fork or anything. Just take control!
 
-Controllers are extremely powerful. **Remember with great power comes great bugs!**
+Controllers are extremely powerful. **Remember with great power comes great
+bugs!**

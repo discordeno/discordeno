@@ -2,7 +2,6 @@ import { Channel } from "../api/structures/mod.ts";
 import { ChannelType } from "./channel.ts";
 import { UserPayload } from "./guild.ts";
 import { MemberCreatePayload } from "./member.ts";
-import { ValueOf } from "./mod.ts";
 
 export interface MentionedUser extends UserPayload {
   // @ts-ignore no idea how to fix this
@@ -13,7 +12,7 @@ export interface MentionedChannel {
   /** The id of the channel */
   id: string;
   /** The id of the guild containing the channel */
-  guild_id: string;
+  "guild_id": string;
   /** The type of the channel. */
   type: ChannelType;
   /** The name of the channel. */
@@ -30,11 +29,11 @@ export interface Attachment {
   /** Source url of file */
   url: string;
   /** A proxied url of file */
-  proxy_url: string;
+  "proxy_url": string;
   /** The height of file if an image */
-  height: number | null;
+  height?: number | null;
   /** The width of the file if an image */
-  width: number | null;
+  width?: number | null;
 }
 
 export interface Embed {
@@ -70,16 +69,16 @@ export interface EmbedFooter {
   /** The text of the footer */
   text: string;
   /** The url of the footer icon. Only supports http(s) and attachments */
-  icon_url?: string;
+  "icon_url"?: string;
   /** A proxied url of footer icon */
-  proxy_icon_url?: string;
+  "proxy_icon_url"?: string;
 }
 
 export interface EmbedImage {
   /** The source url of image (only supports http(s) and attachments) */
   url?: string;
   /** A proxied url of the image */
-  proxy_url?: string;
+  "proxy_url"?: string;
   /** The height of image */
   height?: number;
   /** The width of the image */
@@ -90,7 +89,7 @@ export interface EmbedThumbnail {
   /** The source url of image (only supports http(s) and attachments) */
   url?: string;
   /** A proxied url of the thumbnail */
-  proxy_url?: string;
+  "proxy_url"?: string;
   /** The height of the thumbnail */
   height?: number;
   /** The width of the thumbnail */
@@ -100,6 +99,8 @@ export interface EmbedThumbnail {
 export interface EmbedVideo {
   /** The source url of video */
   url?: string;
+  /** a proxied url of the video */
+  proxy_url?: string;
   /** The height of the video */
   height?: number;
   /** The width of the video */
@@ -119,9 +120,9 @@ export interface EmbedAuthor {
   /** The url of the author */
   url?: string;
   /** The url of the author icon (supports http(s) and attachments) */
-  icon_url?: string;
+  "icon_url"?: string;
   /** A proxied url of author icon */
-  proxy_icon_url?: string;
+  "proxy_icon_url"?: string;
 }
 
 export interface EmbedField {
@@ -142,6 +143,8 @@ export interface Reaction {
   emoji: EmojiReaction;
 }
 
+// TODO: v11 Remove
+/** @deprecated Use DiscordMessageTypes */
 export enum MessageTypes {
   DEFAULT,
   RECIPIENT_ADD,
@@ -158,6 +161,8 @@ export enum MessageTypes {
   CHANNEL_FOLLOW_ADD,
   GUILD_DISCOVERY_DISQUALIFIED = 14,
   GUILD_DISCOVERY_REQUALIFIED,
+  GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING,
+  GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING,
   REPLY = 19,
   APPLICATION_COMMAND,
 }
@@ -173,29 +178,45 @@ export interface Activity {
   /** The type of message activity */
   type: 1 | 2 | 3 | 5;
   /** The party id from a rich presence event */
-  party_id?: string;
+  "party_id"?: string;
 }
 
 export interface Application {
   /** The id of the application */
   id: string;
   /** The id of the embed's image asset */
-  cover_image?: string;
+  "cover_image"?: string;
   /** The application's description */
   description: string;
   /** The id of the application's icon */
   icon: string | null;
   /** The name of the application */
   name: string;
+  /** the description of the app */
+  summary: string;
+  /** the bot associated with this application */
+  bot?: UserPayload;
 }
 
 export interface Reference {
   /** The id of the originating message */
+  // deno-lint-ignore camelcase
   message_id?: string;
   /** The id of the originating message's channel */
-  channel_id: string;
+  // deno-lint-ignore camelcase
+  channel_id?: string;
   /** The id of the originating message's guild */
+  // deno-lint-ignore camelcase
   guild_id?: string;
+  /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default false */
+  // deno-lint-ignore camelcase
+  fail_if_not_exists?: boolean;
+}
+
+export interface DiscordReferencePayload extends Reference {
+  /** The id of the originating message's channel */
+  // deno-lint-ignore camelcase
+  channel_id: string;
 }
 
 export enum MessageFlags {
@@ -216,7 +237,7 @@ export interface EmojiReaction {
   /** The user that created this emoji */
   user?: UserPayload;
   /** Whether this emoji must be wrapped in colons */
-  require_colons?: boolean;
+  "require_colons"?: boolean;
   /** Whether this emoji is managed */
   managed?: boolean;
   /** Whether this emoji is animated */
@@ -236,9 +257,9 @@ export interface MessageCreateOptions {
   /** The id of the message */
   id: string;
   /** The id of the channel the message was sent in */
-  channel_id: string;
+  "channel_id": string;
   /** The id of the guild the message was sent in */
-  guild_id?: string;
+  "guild_id"?: string;
   /** The author of this message (not guaranteed to be a valid user such as a webhook.) */
   author: UserPayload;
   /** The member properties for this message's author. Can be partial. */
@@ -248,17 +269,17 @@ export interface MessageCreateOptions {
   /** When this message was sent */
   timestamp: string;
   /** When this message was edited (if it was not edited, null) */
-  edited_timestamp: string | null;
+  "edited_timestamp": string | null;
   /** Whether this was a TextToSpeech message. */
   tts: boolean;
   /** Whether this message mentions everyone */
-  mentions_everyone: boolean;
+  "mentions_everyone": boolean;
   /** Users specifically mentioned in the message. */
   mentions: MentionedUser[];
   /** Roles specifically mentioned in this message */
-  mention_roles: string[];
+  "mention_roles": string[];
   /** Channels specifically mentioned in this message */
-  mention_channels?: MentionedChannel[];
+  "mention_channels"?: MentionedChannel[];
   /** Any attached files */
   attachments: Attachment[];
   /** Any embedded content */
@@ -270,7 +291,7 @@ export interface MessageCreateOptions {
   /** Whether this message is pinned */
   pinned: boolean;
   /** If the message is generated by a webhook, this is the webhooks id */
-  webhook_id?: string;
+  "webhook_id"?: string;
   /** The type of message */
   type: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
   /** The activities sent with Rich Presence-related chat embeds. */
@@ -278,21 +299,21 @@ export interface MessageCreateOptions {
   /** Applications that sent with Rich Presence related chat embeds. */
   applications?: Application;
   /** The reference data sent with crossposted messages */
-  message_reference?: Reference;
+  // deno-lint-ignore camelcase
+  message_reference?: DiscordReferencePayload;
   /** The message flags combined like permission bits describe extra features of the message */
   flags?: 1 | 2 | 4 | 8 | 16;
   /** the stickers sent with the message (bots currently can only receive messages with stickers, not send) */
   stickers?: MessageSticker[];
   /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
-  referenced_message?: MessageCreateOptions | null;
-  [key: string]: ValueOf<MessageCreateOptions>;
+  "referenced_message"?: MessageCreateOptions | null;
 }
 
 export interface BaseMessageDeletePayload {
   /** The id of the channel */
-  channel_id: string;
+  "channel_id": string;
   /** The id of the guild */
-  guild_id?: string;
+  "guild_id"?: string;
 }
 
 export interface MessageDeletePayload extends BaseMessageDeletePayload {
@@ -309,21 +330,21 @@ export interface MessageUpdatePayload {
   /** The message id */
   id: string;
   /** The channel id */
-  channel_id: string;
+  "channel_id": string;
 }
 
 export interface BaseMessageReactionPayload {
   /** The id of the channel */
-  channel_id: string;
+  "channel_id": string;
   /** The id of the message */
-  message_id: string;
+  "message_id": string;
   /** The id of the guild */
-  guild_id?: string;
+  "guild_id"?: string;
 }
 
 export interface MessageReactionPayload extends BaseMessageReactionPayload {
   /** The id of the user */
-  user_id: string;
+  "user_id": string;
   /** The member who reacted if this happened in a guild. Not available for MESSAGE_REACTION_REMOVE */
   member?: MemberCreatePayload;
   /** The emoji used to react */
@@ -351,7 +372,7 @@ export interface MessageSticker {
   /** id of the sticker */
   id: string;
   /** id of the pack the sticker is from */
-  pack_id: string;
+  "pack_id": string;
   /** name of the sticker */
   name: string;
   /** description of the sticker */
@@ -361,9 +382,9 @@ export interface MessageSticker {
   /** sticker asset hash. The URL for fetching sticker assets is currently private. */
   asset: string;
   /** sticker preview asset hash. The URL for fetching sticker assets is currently private. */
-  preview_asset: string | null;
+  "preview_asset": string | null;
   /** type of sticker format */
-  format_type: MessageStickerFormat;
+  "format_type": MessageStickerFormat;
 }
 
 export enum MessageStickerFormat {

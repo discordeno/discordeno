@@ -2,9 +2,9 @@ export interface ActivityPayload {
   name: string;
   type: number;
   url?: string;
-  created_at: number;
+  "created_at": number;
   timestamps?: ActivityTimestamps;
-  application_id?: string;
+  "application_id"?: string;
   details?: string;
   state?: string;
   emoji?: ActivityEmoji;
@@ -45,10 +45,10 @@ export interface ActivityParty {
 }
 
 export interface ActivityAssets {
-  large_image?: string;
-  large_text?: string;
-  small_image?: string;
-  small_text?: string;
+  "large_image"?: string;
+  "large_text"?: string;
+  "small_image"?: string;
+  "small_text"?: string;
 }
 
 export interface ActivitySecrets {
