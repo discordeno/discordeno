@@ -15,7 +15,7 @@ export const sleep = (timeout: number) => {
 };
 
 export function editBotStatus(
-  data: GatewayStatusUpdatePayload,
+  data: Pick<GatewayStatusUpdatePayload, "activities" | "status">,
 ) {
   basicShards.forEach((shard) => {
     sendWS({
@@ -23,8 +23,7 @@ export function editBotStatus(
       d: {
         since: null,
         afk: false,
-        activities: data.activities,
-        status: data.status,
+        ...data,
       },
     }, shard.id);
   });
