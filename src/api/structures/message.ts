@@ -2,7 +2,7 @@ import {
   Activity,
   Application,
   Attachment,
-DiscordReferencePayload,
+  DiscordReferencePayload,
   Embed,
   GuildMember,
   MessageContent,
@@ -86,12 +86,17 @@ const baseMessage: Partial<Message> = {
   },
   reply(content) {
     const contentWithMention = typeof content === "string"
-      ? { content, mentions: { repliedUser: true }, replyMessageID: this.id, failReplyIfNotExists: false  }
+      ? {
+        content,
+        mentions: { repliedUser: true },
+        replyMessageID: this.id,
+        failReplyIfNotExists: false,
+      }
       : {
         ...content,
         mentions: { ...(content.mentions || {}), repliedUser: true },
         replyMessageID: this.id,
-        failReplyIfNotExists: content.failReplyIfNotExists === true
+        failReplyIfNotExists: content.failReplyIfNotExists === true,
       };
 
     if (this.guildID) return sendMessage(this.channelID!, contentWithMention);
