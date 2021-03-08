@@ -240,7 +240,7 @@ export async function sendMessage(
           replied_user: content.mentions.repliedUser,
         }
         : undefined,
-      ...(content.replyMessageID || content.failReplyIfNotExists
+      ...(content.replyMessageID
         ? {
           message_reference: {
             message_id: content.replyMessageID,
