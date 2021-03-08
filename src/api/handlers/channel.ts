@@ -137,7 +137,7 @@ export async function startTyping(channelID: string) {
   // If the channel is cached, we can do extra checks/safety
   if (channel) {
     if (
-      [
+      ![
         ChannelTypes.DM,
         ChannelTypes.GUILD_NEWS,
         ChannelTypes.GUILD_TEXT,
