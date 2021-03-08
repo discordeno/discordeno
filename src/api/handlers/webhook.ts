@@ -20,6 +20,7 @@ import {
   WebhookPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
+import { Collection } from "../../util/collection.ts";
 import { endpoints, SLASH_COMMANDS_NAME_REGEX } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
@@ -388,14 +389,13 @@ export async function getSlashCommand(commandID: string, guildID?: string) {
 
 /** Fetch all of the global commands for your application. */
 export async function getSlashCommands(guildID?: string) {
-  // TODO: Should this be a returned as a collection?
-  const result = await RequestManager.get(
+  const result = (await RequestManager.get(
     guildID
       ? endpoints.COMMANDS_GUILD(applicationID, guildID)
       : endpoints.COMMANDS(applicationID),
-  );
+  )) as SlashCommand[];
 
-  return result;
+  return new Collection(result.map((command) => [command.name, command]));
 }
 
 /**
