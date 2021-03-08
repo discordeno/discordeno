@@ -144,7 +144,7 @@ export function botHasGuildPermissions(
   permissions: Permission[],
 ) {
   // Since Bot is a normal member we can use the hasRolePermissions() function
-  return hasGuildPermissions(botID, guildID, permissions);
+  return hasGuildPermissions(guildID, botID, permissions);
 }
 
 /** Checks if the given member has these permissions for the given channel */
@@ -155,8 +155,8 @@ export async function hasChannelPermissions(
 ) {
   // First we need the overwrite bits this member has
   const channelOverwrites = await calculateChannelOverwrites(
-    memberID,
     channelID,
+    memberID,
   );
   // Second use the validatePermissions function to check if the member has every permission
   return validatePermissions(channelOverwrites, permissions);
@@ -168,7 +168,7 @@ export function botHasChannelPermissions(
   permissions: Permission[],
 ) {
   // Since Bot is a normal member we can use the hasRolePermissions() function
-  return hasChannelPermissions(botID, channelID, permissions);
+  return hasChannelPermissions(channelID, botID, permissions);
 }
 
 /** Returns the permissions that are not in the given permissionBits */
@@ -205,7 +205,7 @@ export function requireBotGuildPermissions(
   permissions: Permission[],
 ) {
   // Since Bot is a normal member we can use the throwOnMissingGuildPermission() function
-  return requireGuildPermissions(botID, guildID, permissions);
+  return requireGuildPermissions(guildID, botID, permissions);
 }
 
 /** Throws an error if this member has not all of the given permissions */
@@ -215,7 +215,7 @@ export async function requireChannelPermissions(
   permissions: Permission[],
 ) {
   // First we need the channel overwrite bits this member has
-  const permissionBits = await calculateChannelOverwrites(memberID, channelID);
+  const permissionBits = await calculateChannelOverwrites(channelID, memberID);
   // Second check if the member is missing any permissions
   const missing = missingPermissions(permissionBits, permissions);
   if (missing.length) {
@@ -230,7 +230,7 @@ export function requireBotChannelPermissions(
   permissions: Permission[],
 ) {
   // Since Bot is a normal member we can use the throwOnMissingChannelPermission() function
-  return requireChannelPermissions(botID, channelID, permissions);
+  return requireChannelPermissions(channelID, botID, permissions);
 }
 
 /** This function converts a bitwise string to permission strings */
