@@ -13,8 +13,8 @@ import {
 } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
-  higherRolePosition,
   highestRole,
+  isHigherPosition,
   requireBotChannelPermissions,
   requireBotGuildPermissions,
 } from "../../util/permissions.ts";
@@ -60,15 +60,12 @@ export async function addRole(
 ) {
   const botsHighestRole = await highestRole(guildID, botID);
   if (botsHighestRole) {
-    const hasHigherRolePosition = await higherRolePosition(
+    const isHigherRolePosition = await isHigherPosition(
       guildID,
       botsHighestRole.id,
       roleID,
     );
-    if (
-      !hasHigherRolePosition &&
-      (await cacheHandlers.get("guilds", guildID))?.ownerID !== botID
-    ) {
+    if (!isHigherRolePosition) {
       throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
     }
   }
@@ -93,14 +90,13 @@ export async function removeRole(
   const botsHighestRole = await highestRole(guildID, botID);
 
   if (botsHighestRole) {
-    const hasHigherRolePosition = await higherRolePosition(
+    const isHigherRolePosition = await isHigherPosition(
       guildID,
       botsHighestRole.id,
       roleID,
     );
     if (
-      !hasHigherRolePosition &&
-      (await cacheHandlers.get("guilds", guildID))?.ownerID !== botID
+      !isHigherRolePosition
     ) {
       throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
     }
