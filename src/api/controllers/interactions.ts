@@ -11,21 +11,16 @@ export async function handleInternalInteractionCreate(data: DiscordPayload) {
   if (data.t !== "INTERACTION_CREATE") return;
 
   const payload = data.d as InteractionCommandPayload;
-  let member = await cacheHandlers.get("members", payload.member.user.id);
-  if (!member) {
-    const memberStruct = await structures.createMemberStruct(
-      payload.member,
-      payload.guild_id,
-    );
-    await cacheHandlers.set("members", memberStruct.id, memberStruct);
-
-    member = memberStruct;
-  }
+  const memberStruct = await structures.createMemberStruct(
+    payload.member,
+    payload.guild_id,
+  );
+  await cacheHandlers.set("members", memberStruct.id, memberStruct);
 
   eventHandlers.interactionCreate?.(
     {
       ...payload,
-      member,
+      member: memberStruct,
     },
   );
 }
