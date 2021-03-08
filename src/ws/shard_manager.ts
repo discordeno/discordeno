@@ -8,15 +8,12 @@ import {
   DiscordPayload,
   FetchMembersOptions,
   GatewayOpcode,
+  GatewayStatusUpdatePayload,
 } from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
-import { BotStatusRequest, delay } from "../util/utils.ts";
-import {
-  botGatewayStatusRequest,
-  createShard,
-  requestGuildMembers,
-} from "./mod.ts";
+import { delay } from "../util/utils.ts";
+import { createShard, requestGuildMembers } from "./mod.ts";
 
 let createNextShard = true;
 
@@ -107,16 +104,4 @@ export async function requestAllMembers(
     nonce,
     options,
   );
-}
-
-export function sendGatewayCommand(
-  type: "EDIT_BOTS_STATUS",
-  // deno-lint-ignore no-explicit-any
-  payload: Record<string, any>,
-) {
-  if (type === "EDIT_BOTS_STATUS") {
-    botGatewayStatusRequest(payload as BotStatusRequest);
-  }
-
-  return;
 }
