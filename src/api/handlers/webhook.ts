@@ -255,10 +255,9 @@ export async function editWebhookMessage(
   const result = await RequestManager.patch(
     endpoints.WEBHOOK_MESSAGE(webhookID, webhookToken, messageID),
     { ...options, allowed_mentions: options.allowed_mentions },
-  ) as MessageCreateOptions;
+  );
 
-  const message = await structures.createMessage(result);
-  return message;
+  return result;
 }
 
 export async function deleteWebhookMessage(
@@ -600,11 +599,5 @@ export async function editSlashResponse(
     options,
   );
 
-  // If the original message was edited, this will not return a message
-  if (!options.messageID) return result;
-
-  const message = await structures.createMessage(
-    result as MessageCreateOptions,
-  );
-  return message;
+  return result;
 }
