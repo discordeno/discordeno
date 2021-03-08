@@ -2,21 +2,32 @@ import { encode } from "../../deps.ts";
 import {
   Activity,
   ActivityType,
+  GatewayOpcode,
   GatewayStatusUpdatePayload,
   ImageFormats,
   ImageSize,
   StatusType,
 } from "../types/mod.ts";
-import { sendGatewayCommand } from "../ws/shard_manager.ts";
+import { basicShards, sendWS } from "../ws/shard.ts";
 
 export const sleep = (timeout: number) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
 };
 
 export function editBotStatus(
-  data: Partial<GatewayStatusUpdatePayload>,
+  data: GatewayStatusUpdatePayload,
 ) {
-  sendGatewayCommand("EDIT_BOTS_STATUS", data);
+  basicShards.forEach((shard) => {
+    sendWS({
+      op: GatewayOpcode.StatusUpdate,
+      d: {
+        since: null,
+        afk: false,
+        activities: data.activities,
+        status: data.status,
+      },
+    }, shard.id);
+  });
 }
 
 export function chooseRandom<T>(array: T[]) {
