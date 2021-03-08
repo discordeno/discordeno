@@ -40,4 +40,6 @@ export interface MemberCreatePayload {
   deaf: boolean;
   /** Whether the user is muted in voice channels */
   mute: boolean;
+  /** total permissions of the member in the channel, including overrides */
+  permissions: string;
 }

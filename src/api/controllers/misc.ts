@@ -53,7 +53,18 @@ export async function handleInternalReady(
         // All the members that came in on guild creates should now be processed 1 by 1
         for (const [guildID, members] of initialMemberLoadQueue.entries()) {
           await Promise.all(
-            members.map((member) => structures.createMember(member, guildID)),
+            members.map(async (member) => {
+              const memberStruct = await structures.createMemberStruct(
+                member,
+                guildID,
+              );
+
+              return cacheHandlers.set(
+                "members",
+                memberStruct.id,
+                memberStruct,
+              );
+            }),
           );
         }
       }
@@ -114,7 +125,7 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
   if (!guild) return;
 
   const member = payload.member
-    ? await structures.createMember(payload.member, guild.id)
+    ? await structures.createMemberStruct(payload.member, guild.id)
     : await cacheHandlers.get("members", payload.user_id);
   if (!member) return;
 

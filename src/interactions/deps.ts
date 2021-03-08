@@ -1,2 +1,2 @@
-export { serve } from "https://deno.land/std@0.85.0/http/server.ts";
-export { verify } from "https://unpkg.com/@evan/wasm@0.0.25/target/ed25519/deno.js";
+export { serve } from "https://deno.land/std@0.88.0/http/server.ts";
+export { verify } from "https://esm.sh/@evan/wasm@0.0.49/target/ed25519/deno.js";

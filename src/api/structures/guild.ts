@@ -1,7 +1,6 @@
 import { botID } from "../../bot.ts";
 import {
   BanOptions,
-  ChannelCreatePayload,
   CreateGuildPayload,
   Emoji,
   GetAuditLogsOptions,
@@ -12,12 +11,12 @@ import {
   ImageSize,
   MemberCreatePayload,
   Presence,
-  RoleData,
   VoiceState,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
+import { cacheHandlers } from "../controllers/cache.ts";
 import {
   ban,
   deleteServer,
@@ -108,7 +107,10 @@ const baseGuild: Partial<Guild> = {
   },
 };
 
-export async function createGuild(data: CreateGuildPayload, shardID: number) {
+export async function createGuildStruct(
+  data: CreateGuildPayload,
+  shardID: number,
+) {
   const {
     disovery_splash: discoverySplash,
     default_message_notifications: defaultMessageNotifications,
@@ -139,18 +141,21 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
     channels = [],
     members,
     presences = [],
+    emojis,
     ...rest
   } = data;
 
-  const roles = (await Promise.all(
-    data.roles.map((r: RoleData) => structures.createRole(r)),
-  )) as Role[];
-
-  await Promise.all(
-    channels.map((c: ChannelCreatePayload) =>
-      structures.createChannel(c, data.id)
-    ),
+  const roles = await Promise.all(
+    data.roles.map((role) => structures.createRoleStruct(role)),
   );
+
+  await Promise.all(channels.map(async (channel) => {
+    const channelStruct = await structures.createChannelStruct(
+      channel,
+      rest.id,
+    );
+    return cacheHandlers.set("channels", channelStruct.id, channelStruct);
+  }));
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
@@ -189,6 +194,9 @@ export async function createGuild(data: CreateGuildPayload, shardID: number) {
       new Collection(presences.map((p: Presence) => [p.user.id, p])),
     ),
     memberCount: createNewProp(memberCount),
+    emojis: createNewProp(
+      new Collection(emojis.map((emoji) => [emoji.id ?? emoji.name, emoji])),
+    ),
     voiceStates: createNewProp(
       new Collection(
         voiceStates.map((vs: VoiceState) => [
@@ -231,7 +239,7 @@ export interface Guild {
   /** Explicit content filter level */
   explicitContentFilter: number;
   /** The custom guild emojis */
-  emojis: Emoji[];
+  emojis: Collection<string, Emoji>;
   /** Enabled guild features */
   features: GuildFeatures[];
   /** System channel flags */
@@ -347,7 +355,7 @@ export interface Guild {
   invites(): ReturnType<typeof getInvites>;
 }
 
-interface CleanVoiceState extends VoiceState {
+export interface CleanVoiceState extends VoiceState {
   /** The guild id where this voice state is from */
   guildID: string;
   /** The channel id where this voice state is from */

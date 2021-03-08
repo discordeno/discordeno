@@ -6,10 +6,13 @@ import {
   EditSlashResponseOptions,
   EditWebhookMessageOptions,
   Errors,
-  ExecuteSlashCommandOptions,
   ExecuteWebhookOptions,
   MessageCreateOptions,
   SlashCommand,
+  SlashCommandOption,
+  SlashCommandOptionChoice,
+  SlashCommandOptionType,
+  SlashCommandResponseOptions,
   UpsertSlashCommandOptions,
   UpsertSlashCommandsOptions,
   WebhookCreateOptions,
@@ -17,7 +20,8 @@ import {
   WebhookPayload,
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
-import { endpoints } from "../../util/constants.ts";
+import { Collection } from "../../util/collection.ts";
+import { endpoints, SLASH_COMMANDS_NAME_REGEX } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
 import { structures } from "../structures/mod.ts";
@@ -29,7 +33,7 @@ import { structures } from "../structures/mod.ts";
  */
 export async function createWebhook(
   channelID: string,
-  options: WebhookCreateOptions
+  options: WebhookCreateOptions,
 ) {
   await requireBotChannelPermissions(channelID, ["MANAGE_WEBHOOKS"]);
 
@@ -48,7 +52,7 @@ export async function createWebhook(
     {
       ...options,
       avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
-    }
+    },
   );
 
   return result as WebhookPayload;
@@ -58,7 +62,7 @@ export async function createWebhook(
 export async function editWebhook(
   channelID: string,
   webhookID: string,
-  options: WebhookEditOptions
+  options: WebhookEditOptions,
 ) {
   await requireBotChannelPermissions(channelID, ["MANAGE_WEBHOOKS"]);
 
@@ -74,11 +78,11 @@ export async function editWebhook(
 export async function editWebhookWithToken(
   webhookID: string,
   webhookToken: string,
-  options: Omit<WebhookEditOptions, "channelID">
+  options: Omit<WebhookEditOptions, "channelID">,
 ) {
   const result = await RequestManager.patch(
     endpoints.WEBHOOK(webhookID, webhookToken),
-    options
+    options,
   );
 
   return result as WebhookPayload;
@@ -96,10 +100,10 @@ export async function deleteWebhook(channelID: string, webhookID: string) {
 /** Delete a webhook permanently. Returns a undefined on success */
 export async function deleteWebhookWithToken(
   webhookID: string,
-  webhookToken: string
+  webhookToken: string,
 ) {
   const result = await RequestManager.delete(
-    endpoints.WEBHOOK(webhookID, webhookToken)
+    endpoints.WEBHOOK(webhookID, webhookToken),
   );
 
   return result;
@@ -123,7 +127,7 @@ export async function getWebhookWithToken(webhookID: string, token: string) {
 export async function executeWebhook(
   webhookID: string,
   webhookToken: string,
-  options: ExecuteWebhookOptions
+  options: ExecuteWebhookOptions,
 ) {
   if (!options.content && !options.file && !options.embeds) {
     throw new Error(Errors.INVALID_WEBHOOK_OPTIONS);
@@ -141,7 +145,7 @@ export async function executeWebhook(
     if (options.mentions.users?.length) {
       if (options.mentions.parse.includes("users")) {
         options.mentions.parse = options.mentions.parse.filter(
-          (p) => p !== "users"
+          (p) => p !== "users",
         );
       }
 
@@ -153,7 +157,7 @@ export async function executeWebhook(
     if (options.mentions.roles?.length) {
       if (options.mentions.parse.includes("roles")) {
         options.mentions.parse = options.mentions.parse.filter(
-          (p) => p !== "roles"
+          (p) => p !== "roles",
         );
       }
 
@@ -171,18 +175,18 @@ export async function executeWebhook(
       ...options,
       allowed_mentions: options.mentions,
       avatar_url: options.avatar_url,
-    }
+    },
   );
   if (!options.wait) return;
 
-  return structures.createMessage(result as MessageCreateOptions);
+  return structures.createMessageStruct(result as MessageCreateOptions);
 }
 
 export async function editWebhookMessage(
   webhookID: string,
   webhookToken: string,
   messageID: string,
-  options: EditWebhookMessageOptions
+  options: EditWebhookMessageOptions,
 ) {
   if (options.content && options.content.length > 2000) {
     throw Error(Errors.MESSAGE_MAX_LENGTH);
@@ -196,14 +200,14 @@ export async function editWebhookMessage(
     if (options.allowed_mentions.users?.length) {
       if (options.allowed_mentions.parse.includes("users")) {
         options.allowed_mentions.parse = options.allowed_mentions.parse.filter(
-          (p) => p !== "users"
+          (p) => p !== "users",
         );
       }
 
       if (options.allowed_mentions.users.length > 100) {
         options.allowed_mentions.users = options.allowed_mentions.users.slice(
           0,
-          100
+          100,
         );
       }
     }
@@ -211,14 +215,14 @@ export async function editWebhookMessage(
     if (options.allowed_mentions.roles?.length) {
       if (options.allowed_mentions.parse.includes("roles")) {
         options.allowed_mentions.parse = options.allowed_mentions.parse.filter(
-          (p) => p !== "roles"
+          (p) => p !== "roles",
         );
       }
 
       if (options.allowed_mentions.roles.length > 100) {
         options.allowed_mentions.roles = options.allowed_mentions.roles.slice(
           0,
-          100
+          100,
         );
       }
     }
@@ -226,22 +230,99 @@ export async function editWebhookMessage(
 
   const result = await RequestManager.patch(
     endpoints.WEBHOOK_MESSAGE(webhookID, webhookToken, messageID),
-    { ...options, allowed_mentions: options.allowed_mentions }
-  );
+    { ...options, allowed_mentions: options.allowed_mentions },
+  ) as MessageCreateOptions;
 
-  return result;
+  const message = await structures.createMessageStruct(result);
+  return message;
 }
 
 export async function deleteWebhookMessage(
   webhookID: string,
   webhookToken: string,
-  messageID: string
+  messageID: string,
 ) {
   const result = await RequestManager.delete(
-    endpoints.WEBHOOK_MESSAGE(webhookID, webhookToken, messageID)
+    endpoints.WEBHOOK_MESSAGE(webhookID, webhookToken, messageID),
   );
 
   return result;
+}
+
+function validateSlashOptionChoices(
+  choices: SlashCommandOptionChoice[],
+  optionType: SlashCommandOptionType,
+) {
+  for (const choice of choices) {
+    if ([...choice.name].length < 1 || [...choice.name].length > 100) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+
+    if (
+      (optionType === SlashCommandOptionType.STRING &&
+        (typeof choice.value !== "string" || choice.value.length < 1 ||
+          choice.value.length > 100)) ||
+      (optionType === SlashCommandOptionType.INTEGER &&
+        typeof choice.value !== "number")
+    ) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+  }
+}
+
+function validateSlashOptions(options: SlashCommandOption[]) {
+  for (const option of options) {
+    if (
+      (option.choices?.length && option.choices.length > 25) ||
+      option.type !== SlashCommandOptionType.STRING &&
+        option.type !== SlashCommandOptionType.INTEGER
+    ) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+
+    if (
+      ([...option.name].length < 1 || [...option.name].length > 32) ||
+      ([...option.description].length < 1 ||
+        [...option.description].length > 100)
+    ) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+
+    if (option.choices) {
+      validateSlashOptionChoices(option.choices, option.type);
+    }
+  }
+}
+
+function validateSlashCommands(
+  commands: UpsertSlashCommandOptions[],
+  create = false,
+) {
+  for (const command of commands) {
+    if (
+      (command.name && !SLASH_COMMANDS_NAME_REGEX.test(command.name)) ||
+      (create && !command.name)
+    ) {
+      throw new Error(Errors.INVALID_SLASH_NAME);
+    }
+
+    if (
+      (command.description &&
+        ([...command.description].length < 1 ||
+          [...command.description].length > 100)) ||
+      (create && !command.description)
+    ) {
+      throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+    }
+
+    if (command.options?.length) {
+      if (command.options.length > 25) {
+        throw new Error(Errors.INVALID_SLASH_OPTIONS);
+      }
+
+      validateSlashOptions(command.options);
+    }
+  }
 }
 
 /**
@@ -256,17 +337,7 @@ export async function deleteWebhookMessage(
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
 export async function createSlashCommand(options: CreateSlashCommandOptions) {
-  // Use ... for content length due to unicode characters and js .length handling
-  if ([...options.name].length < 2 || [...options.name].length > 32) {
-    throw new Error(Errors.INVALID_SLASH_NAME);
-  }
-
-  if (
-    [...options.description].length < 1 ||
-    [...options.description].length > 100
-  ) {
-    throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
-  }
+  validateSlashCommands([options], true);
 
   const result = await RequestManager.post(
     options.guildID
@@ -274,7 +345,7 @@ export async function createSlashCommand(options: CreateSlashCommandOptions) {
       : endpoints.COMMANDS(applicationID),
     {
       ...options,
-    }
+    },
   );
 
   return result;
@@ -285,7 +356,7 @@ export async function getSlashCommand(commandID: string, guildID?: string) {
   const result = await RequestManager.get(
     guildID
       ? endpoints.COMMANDS_GUILD_ID(applicationID, guildID, commandID)
-      : endpoints.COMMANDS_ID(applicationID, commandID)
+      : endpoints.COMMANDS_ID(applicationID, commandID),
   );
 
   return result as SlashCommand;
@@ -293,14 +364,13 @@ export async function getSlashCommand(commandID: string, guildID?: string) {
 
 /** Fetch all of the global commands for your application. */
 export async function getSlashCommands(guildID?: string) {
-  // TODO: Should this be a returned as a collection?
-  const result = await RequestManager.get(
+  const result = (await RequestManager.get(
     guildID
       ? endpoints.COMMANDS_GUILD(applicationID, guildID)
-      : endpoints.COMMANDS(applicationID)
-  );
+      : endpoints.COMMANDS(applicationID),
+  )) as SlashCommand[];
 
-  return result;
+  return new Collection(result.map((command) => [command.name, command]));
 }
 
 /**
@@ -309,25 +379,15 @@ export async function getSlashCommands(guildID?: string) {
 export async function upsertSlashCommand(
   commandID: string,
   options: UpsertSlashCommandOptions,
-  guildID?: string
+  guildID?: string,
 ) {
-  // Use ... for content length due to unicode characters and js .length handling
-  if ([...options.name].length < 2 || [...options.name].length > 32) {
-    throw new Error(Errors.INVALID_SLASH_NAME);
-  }
-
-  if (
-    [...options.description].length < 1 ||
-    [...options.description].length > 100
-  ) {
-    throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
-  }
+  validateSlashCommands([options]);
 
   const result = await RequestManager.patch(
     guildID
       ? endpoints.COMMANDS_GUILD_ID(applicationID, guildID, commandID)
       : endpoints.COMMANDS_ID(applicationID, commandID),
-    options
+    options,
   );
 
   return result;
@@ -340,29 +400,15 @@ export async function upsertSlashCommand(
  */
 export async function upsertSlashCommands(
   options: UpsertSlashCommandsOptions[],
-  guildID?: string
+  guildID?: string,
 ) {
-  const data = options.map((option) => {
-    // Use ... for content length due to unicode characters and js .length handling
-    if ([...option.name].length < 2 || [...option.name].length > 32) {
-      throw new Error(Errors.INVALID_SLASH_NAME);
-    }
-
-    if (
-      [...option.description].length < 1 ||
-      [...option.description].length > 100
-    ) {
-      throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
-    }
-
-    return option;
-  });
+  validateSlashCommands(options);
 
   const result = await RequestManager.put(
     guildID
       ? endpoints.COMMANDS_GUILD(applicationID, guildID)
       : endpoints.COMMANDS(applicationID),
-    data
+    options,
   );
 
   return result;
@@ -376,10 +422,9 @@ export async function upsertSlashCommands(
 export async function editSlashCommand(
   commandID: string,
   options: EditSlashCommandOptions,
-  guildID?: string
+  guildID?: string,
 ) {
-  // Use ... for content length due to unicode characters and js .length handling
-  if ([...options.name].length < 2 || [...options.name].length > 32) {
+  if (!SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
     throw new Error(Errors.INVALID_SLASH_NAME);
   }
 
@@ -394,7 +439,7 @@ export async function editSlashCommand(
     guildID
       ? endpoints.COMMANDS_GUILD_ID(applicationID, guildID, commandID)
       : endpoints.COMMANDS_ID(applicationID, commandID),
-    options
+    options,
   );
 
   return result;
@@ -406,7 +451,7 @@ export function deleteSlashCommand(id: string, guildID?: string) {
     return RequestManager.delete(endpoints.COMMANDS_ID(applicationID, id));
   }
   return RequestManager.delete(
-    endpoints.COMMANDS_GUILD_ID(applicationID, guildID, id)
+    endpoints.COMMANDS_GUILD_ID(applicationID, guildID, id),
   );
 }
 
@@ -419,7 +464,7 @@ export function deleteSlashCommand(id: string, guildID?: string) {
 export async function executeSlashCommand(
   id: string,
   token: string,
-  options: ExecuteSlashCommandOptions
+  options: SlashCommandResponseOptions,
 ) {
   // If its already been executed, we need to send a followup response
   if (cache.executedSlashCommands.has(token)) {
@@ -432,8 +477,13 @@ export async function executeSlashCommand(
   cache.executedSlashCommands.set(token, id);
   setTimeout(
     () => cache.executedSlashCommands.delete(token),
-    Date.now() + 900000
+    900000,
   );
+
+  // If the user wants this as a private message mark it ephemeral
+  if (options.private) {
+    options.data.flags = 64;
+  }
 
   // If no mentions are provided, force disable mentions
   if (!options.data.allowed_mentions) {
@@ -442,7 +492,7 @@ export async function executeSlashCommand(
 
   const result = await RequestManager.post(
     endpoints.INTERACTION_ID_TOKEN(id, token),
-    options
+    options,
   );
 
   return result;
@@ -453,11 +503,11 @@ export async function deleteSlashResponse(token: string, messageID?: string) {
   const result = await RequestManager.delete(
     messageID
       ? endpoints.INTERACTION_ID_TOKEN_MESSAGEID(
-          applicationID,
-          token,
-          messageID
-        )
-      : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token)
+        applicationID,
+        token,
+        messageID,
+      )
+      : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token),
   );
 
   return result;
@@ -466,7 +516,7 @@ export async function deleteSlashResponse(token: string, messageID?: string) {
 /** To edit your response to a slash command. If a messageID is not provided it will default to editing the original response. */
 export async function editSlashResponse(
   token: string,
-  options: EditSlashResponseOptions
+  options: EditSlashResponseOptions,
 ) {
   if (options.content && options.content.length > 2000) {
     throw Error(Errors.MESSAGE_MAX_LENGTH);
@@ -480,14 +530,14 @@ export async function editSlashResponse(
     if (options.allowed_mentions.users?.length) {
       if (options.allowed_mentions.parse.includes("users")) {
         options.allowed_mentions.parse = options.allowed_mentions.parse.filter(
-          (p) => p !== "users"
+          (p) => p !== "users",
         );
       }
 
       if (options.allowed_mentions.users.length > 100) {
         options.allowed_mentions.users = options.allowed_mentions.users.slice(
           0,
-          100
+          100,
         );
       }
     }
@@ -495,14 +545,14 @@ export async function editSlashResponse(
     if (options.allowed_mentions.roles?.length) {
       if (options.allowed_mentions.parse.includes("roles")) {
         options.allowed_mentions.parse = options.allowed_mentions.parse.filter(
-          (p) => p !== "roles"
+          (p) => p !== "roles",
         );
       }
 
       if (options.allowed_mentions.roles.length > 100) {
         options.allowed_mentions.roles = options.allowed_mentions.roles.slice(
           0,
-          100
+          100,
         );
       }
     }
@@ -512,8 +562,14 @@ export async function editSlashResponse(
     options.messageID
       ? endpoints.WEBHOOK_MESSAGE(applicationID, token, options.messageID)
       : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token),
-    options
+    options,
   );
 
-  return result;
+  // If the original message was edited, this will not return a message
+  if (!options.messageID) return result;
+
+  const message = await structures.createMessageStruct(
+    result as MessageCreateOptions,
+  );
+  return message;
 }

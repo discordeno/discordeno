@@ -1,6 +1,7 @@
 import { botID } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import {
+  DiscordGetReactionsParams,
   Errors,
   MessageContent,
   MessageCreateOptions,
@@ -18,7 +19,7 @@ export async function deleteMessageByID(
   channelID: string,
   messageID: string,
   reason?: string,
-  delayMilliseconds = 0
+  delayMilliseconds = 0,
 ) {
   const message = await cacheHandlers.get("messages", messageID);
   if (message) return deleteMessage(message, reason, delayMilliseconds);
@@ -27,7 +28,7 @@ export async function deleteMessageByID(
 
   const result = await RequestManager.delete(
     endpoints.CHANNEL_MESSAGE(channelID, messageID),
-    { reason }
+    { reason },
   );
 
   return result;
@@ -37,7 +38,7 @@ export async function deleteMessageByID(
 export async function deleteMessage(
   message: Message,
   reason?: string,
-  delayMilliseconds = 0
+  delayMilliseconds = 0,
 ) {
   if (message.author.id !== botID) {
     // This needs to check the channels permission not the guild permission
@@ -48,7 +49,7 @@ export async function deleteMessage(
 
   const result = await RequestManager.delete(
     endpoints.CHANNEL_MESSAGE(message.channelID, message.id),
-    { reason }
+    { reason },
   );
 
   return result;
@@ -59,7 +60,7 @@ export async function pin(channelID: string, messageID: string) {
   await requireBotChannelPermissions(channelID, ["MANAGE_MESSAGES"]);
 
   const result = await RequestManager.put(
-    endpoints.CHANNEL_PIN(channelID, messageID)
+    endpoints.CHANNEL_PIN(channelID, messageID),
   );
 
   return result;
@@ -70,7 +71,7 @@ export async function unpin(channelID: string, messageID: string) {
   await requireBotChannelPermissions(channelID, ["MANAGE_MESSAGES"]);
 
   const result = await RequestManager.delete(
-    endpoints.CHANNEL_PIN(channelID, messageID)
+    endpoints.CHANNEL_PIN(channelID, messageID),
   );
 
   return result;
@@ -80,7 +81,7 @@ export async function unpin(channelID: string, messageID: string) {
 export async function addReaction(
   channelID: string,
   messageID: string,
-  reaction: string
+  reaction: string,
 ) {
   await requireBotChannelPermissions(channelID, [
     "ADD_REACTIONS",
@@ -94,7 +95,7 @@ export async function addReaction(
   }
 
   const result = await RequestManager.put(
-    endpoints.CHANNEL_MESSAGE_REACTION_ME(channelID, messageID, reaction)
+    endpoints.CHANNEL_MESSAGE_REACTION_ME(channelID, messageID, reaction),
   );
 
   return result;
@@ -106,11 +107,11 @@ export async function addReactions(
   channelID: string,
   messageID: string,
   reactions: string[],
-  ordered = false
+  ordered = false,
 ) {
   if (!ordered) {
     await Promise.all(
-      reactions.map((reaction) => addReaction(channelID, messageID, reaction))
+      reactions.map((reaction) => addReaction(channelID, messageID, reaction)),
     );
   } else {
     for (const reaction of reactions) {
@@ -123,7 +124,7 @@ export async function addReactions(
 export async function removeReaction(
   channelID: string,
   messageID: string,
-  reaction: string
+  reaction: string,
 ) {
   if (reaction.startsWith("<:")) {
     reaction = reaction.substring(2, reaction.length - 1);
@@ -132,7 +133,7 @@ export async function removeReaction(
   }
 
   const result = await RequestManager.delete(
-    endpoints.CHANNEL_MESSAGE_REACTION_ME(channelID, messageID, reaction)
+    endpoints.CHANNEL_MESSAGE_REACTION_ME(channelID, messageID, reaction),
   );
 
   return result;
@@ -143,7 +144,7 @@ export async function removeUserReaction(
   channelID: string,
   messageID: string,
   reaction: string,
-  userID: string
+  userID: string,
 ) {
   await requireBotChannelPermissions(channelID, ["MANAGE_MESSAGES"]);
 
@@ -158,8 +159,8 @@ export async function removeUserReaction(
       channelID,
       messageID,
       reaction,
-      userID
-    )
+      userID,
+    ),
   );
 
   return result;
@@ -170,7 +171,7 @@ export async function removeAllReactions(channelID: string, messageID: string) {
   await requireBotChannelPermissions(channelID, ["MANAGE_MESSAGES"]);
 
   const result = await RequestManager.delete(
-    endpoints.CHANNEL_MESSAGE_REACTIONS(channelID, messageID)
+    endpoints.CHANNEL_MESSAGE_REACTIONS(channelID, messageID),
   );
 
   return result;
@@ -180,7 +181,7 @@ export async function removeAllReactions(channelID: string, messageID: string) {
 export async function removeReactionEmoji(
   channelID: string,
   messageID: string,
-  reaction: string
+  reaction: string,
 ) {
   await requireBotChannelPermissions(channelID, ["MANAGE_MESSAGES"]);
 
@@ -191,30 +192,35 @@ export async function removeReactionEmoji(
   }
 
   const result = await RequestManager.delete(
-    endpoints.CHANNEL_MESSAGE_REACTION(channelID, messageID, reaction)
+    endpoints.CHANNEL_MESSAGE_REACTION(channelID, messageID, reaction),
   );
 
   return result;
 }
 
 /** Get a list of users that reacted with this emoji. */
-export async function getReactions(message: Message, reaction: string) {
+export async function getReactions(
+  message: Message,
+  reaction: string,
+  options?: DiscordGetReactionsParams,
+) {
   const result = (await RequestManager.get(
-    endpoints.CHANNEL_MESSAGE_REACTION(message.channelID, message.id, reaction)
+    endpoints.CHANNEL_MESSAGE_REACTION(message.channelID, message.id, reaction),
+    options,
   )) as UserPayload[];
 
   return Promise.all(
     result.map(async (res) => {
       const member = await cacheHandlers.get("members", res.id);
       return member || res;
-    })
+    }),
   );
 }
 
 /** Edit the message. */
 export async function editMessage(
   message: Message,
-  content: string | MessageContent
+  content: string | MessageContent,
 ) {
   if (message.author.id !== botID) {
     throw "You can only edit a message that was sent by the bot.";
@@ -234,17 +240,17 @@ export async function editMessage(
 
   const result = await RequestManager.patch(
     endpoints.CHANNEL_MESSAGE(message.channelID, message.id),
-    content
+    content,
   );
 
-  return structures.createMessage(result as MessageCreateOptions);
+  return structures.createMessageStruct(result as MessageCreateOptions);
 }
 
 /** Crosspost a message in a News Channel to following channels. */
 export async function publishMessage(channelID: string, messageID: string) {
   const data = (await RequestManager.post(
-    endpoints.CHANNEL_MESSAGE_CROSSPOST(channelID, messageID)
+    endpoints.CHANNEL_MESSAGE_CROSSPOST(channelID, messageID),
   )) as MessageCreateOptions;
 
-  return structures.createMessage(data);
+  return structures.createMessageStruct(data);
 }

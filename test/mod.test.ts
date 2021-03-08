@@ -1,11 +1,4 @@
 import {
-  deleteChannel,
-  deleteRole,
-  deleteServer,
-  getChannel,
-} from "../src/api/handlers/guild.ts";
-import { eventHandlers } from "../src/bot.ts";
-import {
   addReaction,
   assertEquals,
   assertExists,
@@ -13,13 +6,17 @@ import {
   cache,
   Channel,
   channelOverwriteHasPermission,
+  createGuild,
   createGuildChannel,
-  createGuildRole,
-  createServer,
+  createRole,
   delay,
+  deleteChannel,
   deleteMessageByID,
+  deleteRole,
+  deleteServer,
   editChannel,
   editRole,
+  getChannel,
   getMessage,
   getPins,
   Guild,
@@ -36,7 +33,7 @@ import {
 export const defaultTestOptions: Partial<Deno.TestDefinition> = {
   sanitizeOps: false,
   sanitizeResources: false,
-  ignore: Deno.env.get("TEST_TYPE") !== "api",
+  sanitizeExit: false,
 };
 
 // Temporary data
@@ -59,14 +56,6 @@ Deno.test({
       intents: ["GUILD_MESSAGES", "GUILDS"],
     });
 
-    eventHandlers.ready = () => {
-      if (cache.guilds.size >= 10) {
-        cache.guilds.map((guild) =>
-          guild.ownerID === botID && deleteServer(guild.id)
-        );
-      }
-    };
-
     // Delay the execution by 5 seconds
     await delay(5000);
 
@@ -81,7 +70,7 @@ Deno.test({
 Deno.test({
   name: "[guild] create a new guild",
   async fn() {
-    const guild = await createServer({
+    const guild = await createGuild({
       name: "Discordeno Test",
     }) as Guild;
 
@@ -106,7 +95,7 @@ Deno.test({
     }
 
     const name = "Discordeno Test";
-    const role = await createGuildRole(tempData.guildID, {
+    const role = await createRole(tempData.guildID, {
       name,
     });
 
@@ -148,10 +137,7 @@ Deno.test({
 Deno.test({
   name: "[channel] create a channel in a guild",
   async fn() {
-    const guild = cache.guilds.get(tempData.guildID);
-    if (!guild) throw new Error("Guild not found");
-
-    const channel = await createGuildChannel(guild, "test");
+    const channel = await createGuildChannel(tempData.guildID, "test");
 
     // Assertions
     assertExists(channel);
@@ -348,8 +334,9 @@ Deno.test({
 
 // Forcefully exit the Deno process once all tests are done.
 Deno.test({
-  name: "exit the process forcefully after all the tests are done\n",
+  name: "[main] exit the process forcefully",
   fn() {
     Deno.exit();
   },
+  ...defaultTestOptions,
 });
