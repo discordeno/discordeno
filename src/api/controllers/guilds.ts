@@ -29,11 +29,12 @@ export async function handleInternalGuildCreate(
   );
   await cacheHandlers.set("guilds", guildStruct.id, guildStruct);
 
-  if (await cacheHandlers.has("unavailableGuilds", payload.id)) {
+  const shard = basicShards.get(shardID);
+
+  if (shard?.unavailableGuildIDs.has(payload.id)) {
     await cacheHandlers.delete("unavailableGuilds", payload.id);
 
-    const shard = basicShards.get(shardID);
-    if (shard) shard.unavailableGuildIDs.delete(payload.id);
+    shard.unavailableGuildIDs.delete(payload.id);
   }
 
   if (!cache.isReady) return eventHandlers.guildLoaded?.(guildStruct);
