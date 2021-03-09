@@ -38,7 +38,6 @@ import {
   handleInternalInviteCreate,
   handleInternalInviteDelete,
   handleInternalPresenceUpdate,
-  handleInternalReady,
   handleInternalTypingStart,
   handleInternalUserUpdate,
   handleInternalVoiceStateUpdate,
@@ -55,6 +54,7 @@ import {
   handleInternalGuildRoleDelete,
   handleInternalGuildRoleUpdate,
 } from "./roles.ts";
+import { handleInternalReady } from "./READY.ts";
 
 export let controllers = {
   READY: handleInternalReady,
