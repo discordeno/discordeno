@@ -52,6 +52,14 @@ export async function handleInternalGuildDelete(data: DiscordPayload) {
     }
   });
 
+  cacheHandlers.forEach("members", (member) => {
+    member
+      .guilds
+      .forEach((_guildMember, guildID) => {
+        if (payload.id === guildID) cacheHandlers.delete("members", member.id);
+      });
+  });
+
   if (payload.unavailable) {
     return cacheHandlers.set("unavailableGuilds", payload.id, Date.now());
   }
