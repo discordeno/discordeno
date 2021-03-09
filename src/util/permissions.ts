@@ -3,19 +3,19 @@ import { Channel, Guild, Member, Role } from "../api/structures/mod.ts";
 import { botID } from "../bot.ts";
 import { Errors, Permission, Permissions } from "../types/mod.ts";
 
-export async function getCached(
+async function getCached(
   table: "guild",
   key: string | Guild,
 ): Promise<Guild>;
-export async function getCached(
+async function getCached(
   table: "channel",
   key: string | Channel,
 ): Promise<Channel>;
-export async function getCached(
+async function getCached(
   table: "member",
   key: string | Member,
 ): Promise<Member>;
-export async function getCached(
+async function getCached(
   table: "guild" | "channel" | "member",
   key: string | Guild | Channel | Member,
 ) {
