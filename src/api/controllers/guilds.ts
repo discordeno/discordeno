@@ -53,7 +53,6 @@ export async function handleInternalGuildDelete(data: DiscordPayload) {
   });
 
   cacheHandlers.forEach("members", (member) => {
-    member.guilds.delete(payload.id);
     
     if (member.guilds.size > 1) return false;
 
