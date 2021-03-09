@@ -12,12 +12,59 @@ import { initialMemberLoadQueue } from "../structures/guild.ts";
 import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
-async function guildsMissing(guildIDs: Set<string>) {
-  for (const id of guildIDs) {
-    if (!await cacheHandlers.has("guilds", id)) return true;
-  }
+/** This function is the internal handler for the ready event. Users can override this with controllers if desired. */
+export async function handleInternalReady(
+  data: DiscordPayload,
+  shardID: number,
+) {
+  // The bot has already started, the last shard is resumed, however.
+  if (cache.isReady) return;
 
-  return false;
+  const payload = data.d as ReadyPayload;
+  setBotID(payload.user.id);
+  setApplicationID(payload.application.id);
+
+  // Triggered on each shard
+  eventHandlers.shardReady?.(shardID);
+  // Save when the READY event was received to prevent infinite load loops
+  const now = Date.now();
+
+  const shard = basicShards.get(shardID);
+  if (!shard) return;
+
+  // Set ready to false just to go sure
+  shard.ready = false;
+  // All guilds are unavailable at first
+  shard.unavailableGuildIDs = new Set(payload.guilds.map((g) => g.id));
+
+  // Start ready check in 2 seconds
+  setTimeout(() => checkReady(payload, shardID, now), 2000);
+
+  // Wait 5 seconds to spawn next shard
+  await delay(5000);
+  allowNextShard();
+}
+
+// Don't pass the shard itself because unavailableGuilds won't be updated by the GUILD_CREATE event
+/** This function checks if the shard is fully loaded */
+async function checkReady(payload: ReadyPayload, shardID: number, now: number) {
+  const shard = basicShards.get(shardID);
+  if (!shard) return;
+
+  // Check if all guilds were loaded
+  if (shard.unavailableGuildIDs.size) {
+    if (Date.now() - now > 10000) {
+      eventHandlers.shardFailedToLoad?.(shardID, shard.unavailableGuildIDs);
+      // Force execute the loaded function to prevent infinite loop
+      loaded(shardID);
+    } else {
+      // Not all guilds were loaded but 10 seconds haven't passed so check again
+      setTimeout(() => checkReady(payload, shardID, now), 2000);
+    }
+  } else {
+    // All guilds were loaded
+    loaded(shardID);
+  }
 }
 
 async function loaded(shardID: number) {
@@ -26,10 +73,9 @@ async function loaded(shardID: number) {
 
   shard.ready = true;
 
-  // The bot has already started, the last shard is resumed, however.
-  if (cache.isReady) return;
-
+  // If it is the last shard we can go full ready
   if (shardID === lastShardID - 1) {
+    // Still some shards are loading so wait another 2 seconds for them
     if (basicShards.some((shard) => !shard.ready)) {
       setTimeout(() => loaded(shardID), 2000);
     } else {
@@ -55,51 +101,4 @@ async function loaded(shardID: number) {
       }
     }
   }
-}
-
-async function checkReady(payload: ReadyPayload, shardID: number, now: number) {
-  const shard = basicShards.get(shardID);
-  if (!shard) return;
-
-  if (await guildsMissing(shard.unavailableGuildIDs)) {
-    if (Date.now() - now > 10000) {
-      shard.ready = true;
-      eventHandlers.shardFailedToLoad?.(shardID, [
-        ...shard.unavailableGuildIDs,
-      ]);
-      loaded(shardID);
-    } else {
-      setTimeout(() => checkReady(payload, shardID, now), 2000);
-    }
-  } else {
-    loaded(shardID);
-  }
-}
-
-/** This function is the internal handler for the ready event. Users can override this with controllers if desired. */
-export async function handleInternalReady(
-  data: DiscordPayload,
-  shardID: number,
-) {
-  if (data.t !== "READY") return;
-
-  const payload = data.d as ReadyPayload;
-  setBotID(payload.user.id);
-  setApplicationID(payload.application.id);
-
-  // Triggered on each shard
-  eventHandlers.shardReady?.(shardID);
-  const now = Date.now();
-
-  const shard = basicShards.get(shardID);
-  if (!shard) return;
-
-  shard.ready = false;
-  payload.guilds.forEach((g) => shard.unavailableGuildIDs.add(g.id));
-
-  setTimeout(() => checkReady(payload, shardID, now), 2000);
-
-  // Wait 5 seconds to spawn next shard
-  await delay(5000);
-  allowNextShard();
 }
