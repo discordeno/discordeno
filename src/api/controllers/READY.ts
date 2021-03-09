@@ -47,7 +47,7 @@ export async function handleInternalReady(
 
 // Don't pass the shard itself because unavailableGuilds won't be updated by the GUILD_CREATE event
 /** This function checks if the shard is fully loaded */
-async function checkReady(payload: ReadyPayload, shardID: number, now: number) {
+function checkReady(payload: ReadyPayload, shardID: number, now: number) {
   const shard = basicShards.get(shardID);
   if (!shard) return;
 
