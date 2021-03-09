@@ -53,8 +53,7 @@ export async function handleInternalGuildDelete(data: DiscordPayload) {
   });
 
   cacheHandlers.forEach("members", (member) => {
-    const uniqueGuildMembers = new Set(member.guilds.keys());
-    if (uniqueGuildMembers.size < member.guilds.size) return false;
+    if (member.guilds.size > 1) return false;
 
     cacheHandlers.delete("members", member.id);
   });
