@@ -213,7 +213,7 @@ export interface EventHandlers {
   shardReady?: (shardID: number) => unknown;
   shardFailedToLoad?: (
     shardID: number,
-    guilds: UnavailableGuildPayload[],
+    guildIDs: string[],
   ) => unknown;
   /** Sent when a user starts typing in a channel. */
   typingStart?: (data: TypingStartPayload) => unknown;

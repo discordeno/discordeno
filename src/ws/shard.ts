@@ -6,13 +6,12 @@ import {
   DiscordPayload,
   FetchMembersOptions,
   GatewayOpcode,
-  GatewayStatusUpdatePayload,
   ReadyPayload,
 } from "../types/mod.ts";
+import { Collection } from "../util/collection.ts";
 import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
 import { handleDiscordPayload } from "./shard_manager.ts";
-import { Collection } from "../util/collection.ts";
 
 export const basicShards = new Collection<number, BasicShard>();
 const heartbeating = new Map<number, boolean>();
@@ -27,6 +26,8 @@ export interface BasicShard {
   sessionID: string;
   previousSequenceNumber: number | null;
   needToResume: boolean;
+  ready: boolean;
+  unavailableGuildIDs: Set<string>;
 }
 
 interface RequestMemberQueuedRequest {
@@ -53,6 +54,8 @@ export function createShard(
     sessionID: oldShard?.sessionID || "",
     previousSequenceNumber: oldShard?.previousSequenceNumber || 0,
     needToResume: false,
+    ready: false,
+    unavailableGuildIDs: new Set<string>(),
   };
 
   basicShards.set(basicShard.id, basicShard);
