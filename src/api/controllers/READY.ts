@@ -95,7 +95,7 @@ export async function handleInternalReady(
   if (!shard) return;
 
   shard.ready = false;
-  payload.guilds.forEach(async (g) => shard.unavailableGuildIDs.add(g.id));
+  payload.guilds.forEach((g) => shard.unavailableGuildIDs.add(g.id));
 
   setTimeout(() => checkReady(payload, shardID, now), 2000);
 
