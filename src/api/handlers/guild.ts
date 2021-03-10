@@ -38,7 +38,11 @@ import {
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasPermission, calculateBits } from "../../util/permissions.ts";
-import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
+import {
+  camelKeysToSnakeCase,
+  formatImageURL,
+  urlToBase64,
+} from "../../util/utils.ts";
 import { requestAllMembers } from "../../ws/shard_manager.ts";
 import { cacheHandlers } from "../controllers/cache.ts";
 import { Guild, Member, structures } from "../structures/mod.ts";
@@ -544,7 +548,7 @@ export async function getPruneCount(guildID: string, options?: PruneOptions) {
 
   const result = await RequestManager.get(
     endpoints.GUILD_PRUNE(guildID),
-    { ...options, include_roles: options?.roles?.join(",") },
+    camelKeysToSnakeCase(options ?? {}),
   ) as PrunePayload;
 
   return result.pruned;
@@ -557,7 +561,7 @@ export async function getPruneCount(guildID: string, options?: PruneOptions) {
  */
 export async function pruneMembers(
   guildID: string,
-  { roles, computePruneCount, ...options }: PruneOptions,
+  options: PruneOptions,
 ) {
   if (options.days && options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
   if (options.days && options.days > 30) throw new Error(Errors.PRUNE_MAX_DAYS);
@@ -569,11 +573,7 @@ export async function pruneMembers(
 
   const result = await RequestManager.post(
     endpoints.GUILD_PRUNE(guildID),
-    {
-      ...options,
-      compute_prune_count: computePruneCount,
-      include_roles: roles,
-    },
+    camelKeysToSnakeCase(options),
   );
 
   return result;
