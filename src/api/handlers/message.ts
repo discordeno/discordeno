@@ -7,6 +7,7 @@ import {
   MessageCreateOptions,
   UserPayload,
 } from "../../types/mod.ts";
+import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 import { delay } from "../../util/utils.ts";
@@ -270,15 +271,12 @@ export async function getReactions(
   reaction: string,
   options?: DiscordGetReactionsParams,
 ) {
-  const result = (await RequestManager.get(
+  const users = (await RequestManager.get(
     endpoints.CHANNEL_MESSAGE_REACTION(message.channelID, message.id, reaction),
     options,
   )) as UserPayload[];
 
-  return Promise.all(result.map(async (res) => {
-    const member = await cacheHandlers.get("members", res.id);
-    return member || res;
-  }));
+  return new Collection(users.map((user) => [user.id, user]));
 }
 
 /** Edit the message. */
