@@ -12,7 +12,6 @@ export async function handleChannelPinsUpdate(data: DiscordPayload) {
   if (!channel) return;
 
   const guild = await cacheHandlers.get("guilds", payload.guild_id ?? "");
-  if (!guild) return;
 
   eventHandlers.channelPinsUpdate?.(channel, guild, payload.last_pin_timestamp);
 }
