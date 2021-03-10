@@ -380,8 +380,6 @@ function createTimeout(userID: String) {
 }
 
 controllers.TYPING_START = function (data) {
-  if (data.t !== "TYPING_START") return;
-
   const payload = data.d as TypingStartPayload;
   eventHandlers.typingStart?.(payload);
 

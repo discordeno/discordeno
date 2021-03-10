@@ -12,8 +12,6 @@ import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
-  if (data.t !== "GUILD_MEMBER_ADD") return;
-
   const payload = data.d as GuildMemberAddPayload;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
@@ -29,8 +27,6 @@ export async function handleInternalGuildMemberAdd(data: DiscordPayload) {
 }
 
 export async function handleInternalGuildMemberRemove(data: DiscordPayload) {
-  if (data.t !== "GUILD_MEMBER_REMOVE") return;
-
   const payload = data.d as GuildBanPayload;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
@@ -46,8 +42,6 @@ export async function handleInternalGuildMemberRemove(data: DiscordPayload) {
 }
 
 export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
-  if (data.t !== "GUILD_MEMBER_UPDATE") return;
-
   const payload = data.d as GuildMemberUpdatePayload;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
@@ -103,8 +97,6 @@ export async function handleInternalGuildMemberUpdate(data: DiscordPayload) {
 }
 
 export async function handleInternalGuildMembersChunk(data: DiscordPayload) {
-  if (data.t !== "GUILD_MEMBERS_CHUNK") return;
-
   const payload = data.d as GuildMemberChunkPayload;
 
   const members = await Promise.all(

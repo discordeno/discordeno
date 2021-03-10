@@ -9,8 +9,6 @@ import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalMessageCreate(data: DiscordPayload) {
-  if (data.t !== "MESSAGE_CREATE") return;
-
   const payload = data.d as MessageCreateOptions;
   const channel = await cacheHandlers.get("channels", payload.channel_id);
   if (channel) channel.lastMessageID = payload.id;
@@ -48,8 +46,6 @@ export async function handleInternalMessageCreate(data: DiscordPayload) {
 }
 
 export async function handleInternalMessageDelete(data: DiscordPayload) {
-  if (data.t !== "MESSAGE_DELETE") return;
-
   const payload = data.d as MessageDeletePayload;
   const channel = await cacheHandlers.get("channels", payload.channel_id);
   if (!channel) return;
@@ -63,8 +59,6 @@ export async function handleInternalMessageDelete(data: DiscordPayload) {
 }
 
 export async function handleInternalMessageDeleteBulk(data: DiscordPayload) {
-  if (data.t !== "MESSAGE_DELETE_BULK") return;
-
   const payload = data.d as MessageDeleteBulkPayload;
   const channel = await cacheHandlers.get("channels", payload.channel_id);
   if (!channel) return;
@@ -79,8 +73,6 @@ export async function handleInternalMessageDeleteBulk(data: DiscordPayload) {
 }
 
 export async function handleInternalMessageUpdate(data: DiscordPayload) {
-  if (data.t !== "MESSAGE_UPDATE") return;
-
   const payload = data.d as MessageCreateOptions;
   const channel = await cacheHandlers.get("channels", payload.channel_id);
   if (!channel) return;

@@ -16,8 +16,6 @@ export async function handleInternalGuildCreate(
   data: DiscordPayload,
   shardID: number,
 ) {
-  if (data.t !== "GUILD_CREATE") return;
-
   const payload = data.d as CreateGuildPayload;
   // When shards resume they emit GUILD_CREATE again.
   if (await cacheHandlers.has("guilds", payload.id)) return;
@@ -37,8 +35,6 @@ export async function handleInternalGuildCreate(
 }
 
 export async function handleInternalGuildDelete(data: DiscordPayload) {
-  if (data.t !== "GUILD_DELETE") return;
-
   const payload = data.d as GuildDeletePayload;
   cacheHandlers.forEach("messages", (message) => {
     if (message.guildID === payload.id) {
@@ -65,8 +61,6 @@ export async function handleInternalGuildDelete(data: DiscordPayload) {
 }
 
 export async function handleInternalGuildUpdate(data: DiscordPayload) {
-  if (data.t !== "GUILD_UPDATE") return;
-
   const payload = data.d as UpdateGuildPayload;
   const cachedGuild = await cacheHandlers.get("guilds", payload.id);
   if (!cachedGuild) return;
@@ -108,8 +102,6 @@ export async function handleInternalGuildUpdate(data: DiscordPayload) {
 }
 
 export async function handleInternalGuildEmojisUpdate(data: DiscordPayload) {
-  if (data.t !== "GUILD_EMOJIS_UPDATE") return;
-
   const payload = data.d as GuildEmojisUpdatePayload;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
