@@ -67,17 +67,3 @@ export async function handleInternalChannelUpdate(data: DiscordPayload) {
 
   eventHandlers.channelUpdate?.(channelStruct, cachedChannel);
 }
-
-export async function handleInternalChannelPinsUpdate(data: DiscordPayload) {
-  if (data.t !== "CHANNEL_PINS_UPDATE") return;
-
-  const payload = data.d as DiscordChannelPinsUpdateEvent;
-
-  const channel = await cacheHandlers.get("channels", payload.channel_id);
-  if (!channel) return;
-
-  const guild = await cacheHandlers.get("guilds", payload.guild_id ?? "");
-  if (!guild) return;
-
-  eventHandlers.channelPinsUpdate?.(channel, guild, payload.last_pin_timestamp);
-}
