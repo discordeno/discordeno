@@ -8,8 +8,6 @@ import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalInteractionCreate(data: DiscordPayload) {
-  if (data.t !== "INTERACTION_CREATE") return;
-
   const payload = data.d as InteractionCommandPayload;
   const memberStruct = await structures.createMemberStruct(
     payload.member,
@@ -28,8 +26,6 @@ export async function handleInternalInteractionCreate(data: DiscordPayload) {
 export function handleInternalApplicationCommandCreate(
   data: DiscordPayload,
 ) {
-  if (data.t !== "APPLICATION_COMMAND_CREATE") return;
-
   const {
     guild_id: guildID,
     application_id: applicationID,
@@ -44,8 +40,6 @@ export function handleInternalApplicationCommandCreate(
 }
 
 export function handleInternalApplicationCommandUpdate(data: DiscordPayload) {
-  if (data.t !== "APPLICATION_COMMAND_UPDATE") return;
-
   const {
     application_id: applicationID,
     guild_id: guildID,
@@ -60,8 +54,6 @@ export function handleInternalApplicationCommandUpdate(data: DiscordPayload) {
 }
 
 export function handleInternalApplicationCommandDelete(data: DiscordPayload) {
-  if (data.t !== "APPLICATION_COMMAND_DELETE") return;
-
   const {
     application_id: applicationID,
     guild_id: guildID,

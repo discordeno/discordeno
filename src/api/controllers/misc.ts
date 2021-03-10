@@ -24,8 +24,6 @@ export async function handleInternalReady(
   data: DiscordPayload,
   shardID: number,
 ) {
-  if (data.t !== "READY") return;
-
   const payload = data.d as ReadyPayload;
   setBotID(payload.user.id);
   setApplicationID(payload.application.id);
@@ -80,8 +78,6 @@ export async function handleInternalReady(
 
 /** This function is the internal handler for the presence update event. Users can override this with controllers if desired. */
 export async function handleInternalPresenceUpdate(data: DiscordPayload) {
-  if (data.t !== "PRESENCE_UPDATE") return;
-
   const payload = data.d as PresenceUpdatePayload;
   const oldPresence = await cacheHandlers.get("presences", payload.user.id);
   await cacheHandlers.set("presences", payload.user.id, payload);
@@ -91,14 +87,11 @@ export async function handleInternalPresenceUpdate(data: DiscordPayload) {
 
 /** This function is the internal handler for the typings event. Users can override this with controllers if desired. */
 export function handleInternalTypingStart(data: DiscordPayload) {
-  if (data.t !== "TYPING_START") return;
   eventHandlers.typingStart?.(data.d as TypingStartPayload);
 }
 
 /** This function is the internal handler for the user update event. Users can override this with controllers if desired. */
 export async function handleInternalUserUpdate(data: DiscordPayload) {
-  if (data.t !== "USER_UPDATE") return;
-
   const userData = data.d as UserPayload;
 
   const member = await cacheHandlers.get("members", userData.id);
@@ -116,8 +109,6 @@ export async function handleInternalUserUpdate(data: DiscordPayload) {
 
 /** This function is the internal handler for the voice state update event. Users can override this with controllers if desired. */
 export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
-  if (data.t !== "VOICE_STATE_UPDATE") return;
-
   const payload = data.d as VoiceStateUpdatePayload;
   if (!payload.guild_id) return;
 
@@ -169,8 +160,6 @@ export async function handleInternalVoiceStateUpdate(data: DiscordPayload) {
 
 /** This function is the internal handler for the webhooks update event. Users can override this with controllers if desired. */
 export function handleInternalWebhooksUpdate(data: DiscordPayload) {
-  if (data.t !== "WEBHOOKS_UPDATE") return;
-
   const options = data.d as WebhookUpdatePayload;
   eventHandlers.webhooksUpdate?.(
     options.channel_id,
@@ -181,8 +170,6 @@ export function handleInternalWebhooksUpdate(data: DiscordPayload) {
 export function handleInternalIntegrationCreate(
   data: DiscordPayload,
 ) {
-  if (data.t !== "INTEGRATION_CREATE") return;
-
   const {
     guild_id: guildID,
     enable_emoticons: enableEmoticons,
@@ -207,8 +194,6 @@ export function handleInternalIntegrationCreate(
 }
 
 export function handleInternalIntegrationUpdate(data: DiscordPayload) {
-  if (data.t !== "INTEGRATION_UPDATE") return;
-
   const {
     enable_emoticons: enableEmoticons,
     expire_behavior: expireBehavior,
@@ -233,8 +218,6 @@ export function handleInternalIntegrationUpdate(data: DiscordPayload) {
 }
 
 export function handleInternalIntegrationDelete(data: DiscordPayload) {
-  if (data.t !== "INTEGRATION_DELETE") return;
-
   const {
     guild_id: guildID,
     application_id: applicationID,

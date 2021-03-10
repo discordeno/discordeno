@@ -8,8 +8,6 @@ import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildRoleCreate(data: DiscordPayload) {
-  if (data.t !== "GUILD_ROLE_CREATE") return;
-
   const payload = data.d as GuildRolePayload;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
@@ -22,8 +20,6 @@ export async function handleInternalGuildRoleCreate(data: DiscordPayload) {
 }
 
 export async function handleInternalGuildRoleDelete(data: DiscordPayload) {
-  if (data.t !== "GUILD_ROLE_DELETE") return;
-
   const payload = data.d as GuildRoleDeletePayload;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
@@ -49,8 +45,6 @@ export async function handleInternalGuildRoleDelete(data: DiscordPayload) {
 }
 
 export async function handleInternalGuildRoleUpdate(data: DiscordPayload) {
-  if (data.t !== "GUILD_ROLE_UPDATE") return;
-
   const payload = data.d as GuildRolePayload;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
