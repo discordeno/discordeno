@@ -145,6 +145,8 @@ export interface EventHandlers {
     emojis: Collection<string, Emoji>,
     cachedEmojis: Collection<string, Emoji>,
   ) => unknown;
+  /** Sent when a guild integration is updated. */
+  guildIntegrationsUpdate?: (guildID: string) => unknown;
   /** Sent when a new user joins a guild. */
   guildMemberAdd?: (guild: Guild, member: Member) => unknown;
   /** Sent when a user is removed from a guild (leave/kick/ban). */

@@ -1,6 +1,8 @@
 import { eventHandlers } from "../../bot.ts";
 import {
   CreateGuildPayload,
+  DiscordGateway,
+  DiscordGuildIntegrationsUpdateEvent,
   DiscordPayload,
   GuildDeletePayload,
   GuildEmojisUpdatePayload,
@@ -126,4 +128,11 @@ export async function handleInternalGuildEmojisUpdate(data: DiscordPayload) {
     guild.emojis,
     cachedEmojis,
   );
+}
+
+export function handleGuildIntegrationsUpdate(data: DiscordPayload) {
+  if (data.t !== "GUILD_INTEGRATIONS_UPDATE") return;
+
+  const payload = data.d as DiscordGuildIntegrationsUpdateEvent;
+  eventHandlers.guildIntegrationsUpdate?.(payload.guild_id);
 }
