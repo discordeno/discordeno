@@ -130,7 +130,7 @@ export async function handleInternalGuildEmojisUpdate(data: DiscordPayload) {
   );
 }
 
-export function handleGuildIntegrationsUpdate(data: DiscordPayload) {
+export function handleInternalGuildIntegrationsUpdate(data: DiscordPayload) {
   if (data.t !== "GUILD_INTEGRATIONS_UPDATE") return;
 
   const payload = data.d as DiscordGuildIntegrationsUpdateEvent;

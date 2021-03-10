@@ -11,6 +11,7 @@ import {
   handleInternalGuildCreate,
   handleInternalGuildDelete,
   handleInternalGuildEmojisUpdate,
+  handleInternalGuildIntegrationsUpdate,
   handleInternalGuildUpdate,
 } from "./guilds.ts";
 import {
@@ -67,6 +68,7 @@ export let controllers = {
   GUILD_BAN_ADD: handleInternalGuildBanAdd,
   GUILD_BAN_REMOVE: handleInternalGuildBanRemove,
   GUILD_EMOJIS_UPDATE: handleInternalGuildEmojisUpdate,
+  GUILD_INTEGRATIONS_UPDATE: handleInternalGuildIntegrationsUpdate,
   GUILD_MEMBER_ADD: handleInternalGuildMemberAdd,
   GUILD_MEMBER_REMOVE: handleInternalGuildMemberRemove,
   GUILD_MEMBER_UPDATE: handleInternalGuildMemberUpdate,
