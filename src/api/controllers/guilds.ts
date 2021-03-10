@@ -1,8 +1,6 @@
 import { eventHandlers } from "../../bot.ts";
 import {
   CreateGuildPayload,
-  DiscordGateway,
-  DiscordGuildIntegrationsUpdateEvent,
   DiscordPayload,
   GuildDeletePayload,
   GuildEmojisUpdatePayload,
