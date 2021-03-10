@@ -14,6 +14,7 @@ import {
   handleInternalGuildEmojisUpdate,
   handleInternalGuildUpdate,
 } from "./guilds.ts";
+import { handleGuildIntegrationsUpdate } from "./GUILD_INTEGRATIONS_UPDATE.ts";
 import {
   handleInternalApplicationCommandCreate,
   handleInternalApplicationCommandDelete,
@@ -70,6 +71,7 @@ export let controllers = {
   GUILD_BAN_ADD: handleInternalGuildBanAdd,
   GUILD_BAN_REMOVE: handleInternalGuildBanRemove,
   GUILD_EMOJIS_UPDATE: handleInternalGuildEmojisUpdate,
+  GUILD_INTEGRATIONS_UPDATE: handleGuildIntegrationsUpdate,
   GUILD_MEMBER_ADD: handleInternalGuildMemberAdd,
   GUILD_MEMBER_REMOVE: handleInternalGuildMemberRemove,
   GUILD_MEMBER_UPDATE: handleInternalGuildMemberUpdate,

@@ -31,6 +31,7 @@ export interface DiscordPayload {
     | "GUILD_BAN_ADD"
     | "GUILD_BAN_REMOVE"
     | "GUILD_EMOJIS_UPDATE"
+    | "GUILD_INTEGRATIONS_UPDATE"
     | "GUILD_MEMBER_ADD"
     | "GUILD_MEMBER_REMOVE"
     | "GUILD_MEMBER_UPDATE"
