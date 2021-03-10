@@ -7,6 +7,7 @@ import {
   handleInternalChannelDelete,
   handleInternalChannelUpdate,
 } from "./channels.ts";
+import { handleChannelPinsUpdate } from "./CHANNEL_PINS_UPDATE.ts";
 import {
   handleInternalGuildCreate,
   handleInternalGuildDelete,
@@ -63,6 +64,7 @@ export let controllers = {
   CHANNEL_CREATE: handleInternalChannelCreate,
   CHANNEL_DELETE: handleInternalChannelDelete,
   CHANNEL_UPDATE: handleInternalChannelUpdate,
+  CHANNEL_PINS_UPDATE: handleChannelPinsUpdate,
   GUILD_CREATE: handleInternalGuildCreate,
   GUILD_DELETE: handleInternalGuildDelete,
   GUILD_UPDATE: handleInternalGuildUpdate,
