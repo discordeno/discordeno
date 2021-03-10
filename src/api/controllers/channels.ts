@@ -2,7 +2,6 @@ import { eventHandlers } from "../../bot.ts";
 import {
   ChannelCreatePayload,
   ChannelTypes,
-  DiscordChannelPinsUpdateEvent,
   DiscordPayload,
 } from "../../types/mod.ts";
 import { structures } from "../structures/mod.ts";
