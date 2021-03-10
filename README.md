@@ -70,7 +70,7 @@ libraries. If you are a beginner, you can check out these awesome official and
 unofficial boilerplates:
 
 - [Discordeno Boilerplate (official)](https://github.com/discordeno/boilerplate)
-- [Serverless Slash Commands Template
+- [Serverless Slash Commands Boilerplate
   (official)](https://github.com/discordeno/slash-commands-boilerplate)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
