@@ -225,6 +225,12 @@ export interface EventHandlers {
     member: Member,
     voiceState: VoiceStateUpdatePayload,
   ) => unknown;
+  /** Sent when a guild's voice server is updated. This is sent when initially connecting to voice, and when the current voice instance fails over to a new server. */
+  voiceServerUpdate?: (
+    token: string,
+    guild: Guild,
+    endpoint: string,
+  ) => unknown;
   /** Sent when a guild channel's webhook is created, updated, or deleted. */
   webhooksUpdate?: (channelID: string, guildID: string) => unknown;
   /** Sent when a member has passed the guild's Membership Screening requirements */

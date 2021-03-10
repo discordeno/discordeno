@@ -55,6 +55,7 @@ import {
   handleInternalGuildRoleDelete,
   handleInternalGuildRoleUpdate,
 } from "./roles.ts";
+import { handleVoiceServerUpdate } from "./VOICE_SERVER_UPDATE.ts";
 
 export let controllers = {
   READY: handleInternalReady,
@@ -90,6 +91,7 @@ export let controllers = {
   TYPING_START: handleInternalTypingStart,
   USER_UPDATE: handleInternalUserUpdate,
   VOICE_STATE_UPDATE: handleInternalVoiceStateUpdate,
+  VOICE_SERVER_UPDATE: handleVoiceServerUpdate,
   WEBHOOKS_UPDATE: handleInternalWebhooksUpdate,
   INTEGRATION_CREATE: handleInternalIntegrationCreate,
   INTEGRATION_UPDATE: handleInternalIntegrationUpdate,
