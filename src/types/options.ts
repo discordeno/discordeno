@@ -117,6 +117,12 @@ export interface EventHandlers {
   channelUpdate?: (channel: Channel, cachedChannel: Channel) => unknown;
   /** Sent when a channel relevant to the current user is deleted. */
   channelDelete?: (channel: Channel) => unknown;
+  /** Sent when a message is pinned or unpinned in a text channel. This is not sent when a pinned message is deleted. */
+  channelPinsUpdate?: (
+    channel: Channel,
+    guild?: Guild,
+    lastPinTimestamp?: string | null,
+  ) => unknown;
   debug?: (args: DebugArg) => unknown;
   dispatchRequirements?: (data: DiscordPayload, shardID: number) => unknown;
   /** Sent when a user is banned from a guild. */

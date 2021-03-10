@@ -24,6 +24,7 @@ export interface DiscordPayload {
     | "CHANNEL_CREATE"
     | "CHANNEL_DELETE"
     | "CHANNEL_UPDATE"
+    | "CHANNEL_PINS_UPDATE"
     | "GUILD_CREATE"
     | "GUILD_DELETE"
     | "GUILD_UPDATE"
