@@ -4,27 +4,29 @@ import { botID } from "../bot.ts";
 import { Errors, Permission, Permissions } from "../types/mod.ts";
 
 async function getCached(
-  table: "guild",
+  table: "guilds",
   key: string | Guild,
 ): Promise<Guild>;
 async function getCached(
-  table: "channel",
+  table: "channels",
   key: string | Channel,
 ): Promise<Channel>;
 async function getCached(
-  table: "member",
+  table: "members",
   key: string | Member,
 ): Promise<Member>;
 async function getCached(
-  table: "guild" | "channel" | "member",
+  table: "guilds" | "channels" | "members",
   key: string | Guild | Channel | Member,
 ) {
   const cached = typeof key === "string"
-    ? // @ts-ignore -
-      (await cacheHandlers.get(`${table}s`, key))
+    ? // @ts-ignore TS is wrong here
+      (await cacheHandlers.get(table, key))
     : key;
   if (!cached || typeof cached === "string") {
-    throw new Error(Errors[`${table.toUpperCase}_NOT_FOUND` as Errors]);
+    throw new Error(
+      Errors[`${table.slice(0, -1).toUpperCase()}_NOT_FOUND` as Errors],
+    );
   }
 
   return cached;
@@ -35,15 +37,15 @@ export async function calculateBasePermissions(
   guild: string | Guild,
   member: string | Member,
 ) {
-  guild = await getCached("guild", guild);
-  member = await getCached("member", member);
+  guild = await getCached("guilds", guild);
+  member = await getCached("members", member);
 
   let permissions = 0n;
   // Calculate the role permissions bits, @everyone role is not in memberRoleIDs so we need to pass guildID manualy
   permissions |= [...(member.guilds.get(guild.id)?.roles || []), guild.id]
     .map((id) => (guild as Guild).roles.get(id)?.permissions)
     // Removes any edge case undefined
-    .filter((id) => id)
+    .filter((perm) => perm)
     .reduce((bits, perms) => {
       bits |= BigInt(perms);
       return bits;
@@ -60,12 +62,12 @@ export async function calculateChannelOverwrites(
   channel: string | Channel,
   member: string | Member,
 ) {
-  channel = await getCached("channel", channel);
+  channel = await getCached("channels", channel);
 
   // This is a DM channel so return ADMINISTRATOR permission
   if (!channel.guildID) return "8";
 
-  member = await getCached("member", member);
+  member = await getCached("members", member);
 
   // Get all the role permissions this member already has
   let permissions = BigInt(
@@ -266,12 +268,22 @@ export function calculatePermissions(permissionBits: bigint) {
 
 /** This function converts an array of permissions into the bitwise string. */
 export function calculateBits(permissions: Permission[]) {
+  // return permissions
+  //   .reduce(
+  //     // Get the bit value for this permission and assign it to bits
+  //     (bits, perm) => {
+  //       bits |= BigInt(Permissions[perm]);
+  //         return bits
+  //       }),
+  //     0n,
+  //   )
+  //   .toString();
+
   return permissions
-    .reduce(
-      // Get the bit value for this permission and assign it to bits
-      (bits, perm) => (bits |= BigInt(Permissions[perm])),
-      0n,
-    )
+    .reduce((bits, perm) => {
+      bits |= BigInt(Permissions[perm]);
+      return bits;
+    }, 0n)
     .toString();
 }
 
@@ -281,11 +293,11 @@ export async function highestRole(
   guild: string | Guild,
   member: string | Member,
 ) {
-  guild = await getCached("guild", guild);
+  guild = await getCached("guilds", guild);
 
   // Get the roles from the member
   const memberRoles = (
-    await getCached("member", member)
+    await getCached("members", member)
   ).guilds.get(guild.id)?.roles;
   // This member has no roles so the highest one is the @everyone role
   if (!memberRoles) return guild.roles.get(guild.id) as Role;
@@ -318,7 +330,7 @@ export async function higherRolePosition(
   roleID: string,
   otherRoleID: string,
 ) {
-  guild = await getCached("guild", guild);
+  guild = await getCached("guilds", guild);
 
   const role = guild.roles.get(roleID);
   const otherRole = guild.roles.get(otherRoleID);
@@ -338,7 +350,7 @@ export async function isHigherPosition(
   memberID: string,
   compareRoleID: string,
 ) {
-  guild = await getCached("guild", guild);
+  guild = await getCached("guilds", guild);
 
   if (guild.ownerID === memberID) return true;
 
