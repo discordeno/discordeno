@@ -1,5 +1,6 @@
-import { deleteRole,editRole } from "../../../../api/handlers/guild.ts";
+import { deleteRole, editRole } from "../../../../helpers/guild.ts";
 import { Collection } from "../../../../util/collection.ts";
+import { CreateRoleOptions } from "./create.ts";
 
 export interface Role {
   /** role id */

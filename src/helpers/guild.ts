@@ -11,6 +11,7 @@ import {
 import { requestAllMembers } from "../ws/shard_manager.ts";
 import { cacheHandlers } from "../cache.ts";
 import { Guild, Member, structures } from "../structures/mod.ts";
+import { Errors } from "../types/errors.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createGuild(options: CreateServerOptions) {
@@ -404,55 +405,6 @@ export async function getEmoji(
       guild,
     );
   }
-
-  return result;
-}
-
-/** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
-export async function createRole(
-  guildID: string,
-  options: CreateRoleOptions,
-  reason?: string,
-) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_ROLES);
-  }
-
-  const result = await RequestManager.post(
-    endpoints.GUILD_ROLES(guildID),
-    {
-      ...options,
-      permissions: calculateBits(options?.permissions || []),
-      reason,
-    },
-  );
-
-  const roleData = result as RoleData;
-  const role = await structures.createRoleStruct(roleData);
-  const guild = await cacheHandlers.get("guilds", guildID);
-  guild?.roles.set(role.id, role);
-
-  return role;
-}
-
-/** Edit a guild role. Requires the MANAGE_ROLES permission. */
-export async function editRole(
-  guildID: string,
-  id: string,
-  options: CreateRoleOptions,
-) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_ROLES);
-  }
-
-  const result = await RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), {
-    ...options,
-    permissions: options.permissions
-      ? calculateBits(options.permissions)
-      : undefined,
-  });
 
   return result;
 }

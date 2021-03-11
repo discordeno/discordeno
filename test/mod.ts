@@ -1,11 +1,12 @@
-import { startBot,delay,botID } from "../mod.ts";
+import { botID, startBot } from "../src/bot.ts";
 import { assertExists } from "./deps.ts";
+import { delay, createGuild } from "../mod.ts";
 
 // Default options for tests
 export const defaultTestOptions: Partial<Deno.TestDefinition> = {
   sanitizeOps: false,
   sanitizeResources: false,
-  // sanitizeExit: false,
+  sanitizeExit: false,
 };
 
 // Temporary data
@@ -37,72 +38,25 @@ Deno.test({
   ...defaultTestOptions,
 });
 
-// // Guild
+Deno.test({
+  name: "[guild] create a new guild",
+  async fn() {
+    const guild = await createGuild({
+      name: "Discordeno Test",
+    }) as Guild;
 
-// Deno.test({
-//   name: "[guild] create a new guild",
-//   async fn() {
-//     const guild = await createGuild({
-//       name: "Discordeno Test",
-//     }) as Guild;
+    // Assertions
+    assertExists(guild);
 
-//     // Assertions
-//     assertExists(guild);
+    tempData.guildID = guild.id;
 
-//     tempData.guildID = guild.id;
-
-//     // Delay the execution by 5 seconds to allow GUILD_CREATE event to be processed
-//     await delay(5000);
-//   },
-//   ...defaultTestOptions,
-// });
+    // Delay the execution by 5 seconds to allow GUILD_CREATE event to be processed
+    await delay(5000);
+  },
+  ...defaultTestOptions,
+});
 
 // // Role
-
-// Deno.test({
-//   name: "[role] create a role in a guild",
-//   async fn() {
-//     if (!tempData.guildID) {
-//       throw new Error("guildID not present in temporary data");
-//     }
-
-//     const name = "Discordeno Test";
-//     const role = await createRole(tempData.guildID, {
-//       name,
-//     });
-
-//     // Assertions
-//     assertExists(role);
-//     assertEquals(role.name, name);
-
-//     tempData.roleID = role.id;
-//   },
-//   ...defaultTestOptions,
-// });
-
-// Deno.test({
-//   name: "[role] edit a role in a guild",
-//   async fn() {
-//     const name = "Discordeno Test Edited";
-//     const color = 4320244;
-//     const role = await editRole(tempData.guildID, tempData.roleID, {
-//       name,
-//       color,
-//       hoist: false,
-//       mentionable: false,
-//     }) as Role;
-
-//     // Assertions
-//     assertExists(role);
-//     assertEquals(role.name, name);
-//     assertEquals(role.color, color);
-//     assertEquals(role.hoist, false);
-//     assertEquals(role.mentionable, false);
-
-//     tempData.roleID = role.id;
-//   },
-//   ...defaultTestOptions,
-// });
 
 // // Channel
 
@@ -287,28 +241,6 @@ Deno.test({
 //   name: "[role] delete a role in a guild",
 //   async fn() {
 //     await deleteRole(tempData.guildID, tempData.roleID);
-//   },
-//   ...defaultTestOptions,
-// });
-
-// Deno.test({
-//   name: "[guild] delete a guild",
-//   async fn() {
-//     await deleteServer(tempData.guildID);
-
-//     // TODO(ayntee): remove this weird shit lol
-//     // TODO(ayntee): check if the GUILD_DELETE event is fired
-//     tempData.guildID = "";
-//     assertEquals(tempData.guildID, "");
-//   },
-//   ...defaultTestOptions,
-// });
-
-// // Forcefully exit the Deno process once all tests are done.
-// Deno.test({
-//   name: "[main] exit the process forcefully",
-//   fn() {
-//     Deno.exit();
 //   },
 //   ...defaultTestOptions,
 // });

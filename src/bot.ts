@@ -1,4 +1,5 @@
 import { getGatewayBot } from "./helpers/gateway.ts";
+import { DiscordGatewayIntents } from "./types/discord/intents.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 
@@ -38,7 +39,7 @@ export async function startBot(config: BotConfig) {
   proxyWSURL = botGatewayData.url;
   identifyPayload.token = config.token;
   identifyPayload.intents = config.intents.reduce(
-    (bits, next) => (bits |= typeof next === "string" ? Intents[next] : next),
+    (bits, next) => (bits |= typeof next === "string" ? DiscordGatewayIntents[next] : next),
     0,
   );
   lastShardID = botGatewayData.shards;

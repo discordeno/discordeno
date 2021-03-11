@@ -1,7 +1,10 @@
+import { deleteRole } from "../helpers/guild.ts";
+import { editRole } from "../helpers/guild/edit_role.ts";
+import { DiscordRole } from "../types/discord/role/role.ts";
+import { CreateRoleOptions } from "../types/lib/structures/role/create.ts";
+import { Role } from "../types/lib/structures/role/role.ts";
 import { cache } from "../util/cache.ts";
 import { createNewProp } from "../util/utils.ts";
-import { deleteRole, editRole } from "../helpers/guild.ts";
-
 
 const baseRole: Partial<Role> = {
   get guild() {
@@ -64,7 +67,7 @@ const baseRole: Partial<Role> = {
 };
 
 // deno-lint-ignore require-await
-export async function createRoleStruct({ tags = {}, ...rest }: RoleData) {
+export async function createRoleStruct({ tags = {}, ...rest }: DiscordRole) {
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
     // @ts-ignore index signature
