@@ -153,12 +153,15 @@ export async function sendMessage(
       throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
     }
 
-    const requiredPerms: Permission[] = ["SEND_MESSAGES", "VIEW_CHANNEL"];
+    const requiredPerms: Set<Permission> = new Set([
+      "SEND_MESSAGES",
+      "VIEW_CHANNEL",
+    ]);
 
-    if (content.tts) requiredPerms.push("SEND_TTS_MESSAGES");
-    if (content.embed) requiredPerms.push("EMBED_LINKS");
+    if (content.tts) requiredPerms.add("SEND_TTS_MESSAGES");
+    if (content.embed) requiredPerms.add("EMBED_LINKS");
     if (content.replyMessageID || content.mentions?.repliedUser) {
-      requiredPerms.push("READ_MESSAGE_HISTORY");
+      requiredPerms.add("READ_MESSAGE_HISTORY");
     }
 
     await requireBotChannelPermissions(channelID, [...requiredPerms]);
