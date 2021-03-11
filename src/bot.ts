@@ -18,6 +18,7 @@ export let eventHandlers: EventHandlers = {};
 
 export let botGatewayData: DiscordBotGatewayData;
 export let proxyWSURL = `wss://gateway.discord.gg`;
+export let lastShardID = 0;
 
 export const identifyPayload: DiscordIdentify = {
   token: "",
@@ -60,9 +61,10 @@ export async function startBot(config: BotConfig) {
     (bits, next) => (bits |= typeof next === "string" ? Intents[next] : next),
     0,
   );
-  identifyPayload.shard = [0, botGatewayData.shards];
+  lastShardID = botGatewayData.shards;
+  identifyPayload.shard = [0, lastShardID];
 
-  await spawnShards(botGatewayData, identifyPayload, 0, botGatewayData.shards);
+  await spawnShards(botGatewayData, identifyPayload, 0, lastShardID);
 }
 
 /** Allows you to dynamically update the event handlers by passing in new eventHandlers */
