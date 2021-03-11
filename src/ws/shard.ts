@@ -19,8 +19,6 @@ const utf8decoder = new TextDecoder();
 const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
 let processQueue = false;
 
-<<<<<<< HEAD
-=======
 export interface BasicShard {
   id: number;
   ws: WebSocket;
@@ -39,7 +37,6 @@ interface RequestMemberQueuedRequest {
   options?: FetchMembersOptions;
 }
 
->>>>>>> fb278c92ad4c21a537ca024aa4bf314cee8f482c
 export function createShard(
   data: DiscordBotGatewayData,
   identifyPayload: DiscordIdentify,
