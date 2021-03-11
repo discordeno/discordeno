@@ -1,10 +1,4 @@
-import {
-  Channel,
-  Guild,
-  Member,
-  Message,
-  Role,
-} from "../api/structures/mod.ts";
+import { Channel, Guild, Member, Message, Role } from "../structures/mod.ts";
 import { Collection } from "../util/collection.ts";
 import {
   DiscordPayload,
