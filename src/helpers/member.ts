@@ -1,14 +1,14 @@
 import { botID } from "../bot.ts";
+import { cacheHandlers } from "../cache.ts";
 import { RequestManager } from "../rest/request_manager.ts";
 import { endpoints } from "../util/constants.ts";
 import {
-  botHasPermission,
-  higherRolePosition,
   highestRole,
+  isHigherPosition,
+  requireBotChannelPermissions,
+  requireBotGuildPermissions,
 } from "../util/permissions.ts";
 import { formatImageURL, urlToBase64 } from "../util/utils.ts";
-import { cacheHandlers } from "../cache.ts";
-import { Member, structures } from "../structures/mod.ts";
 import { sendMessage } from "./channel.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
@@ -46,25 +46,16 @@ export async function addRole(
   roleID: string,
   reason?: string,
 ) {
-  const botsHighestRole = await highestRole(guildID, botID);
-  if (botsHighestRole) {
-    const hasHigherRolePosition = await higherRolePosition(
-      guildID,
-      botsHighestRole.id,
-      roleID,
-    );
-    if (
-      !hasHigherRolePosition &&
-      (await cacheHandlers.get("guilds", guildID))?.ownerID !== botID
-    ) {
-      throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
-    }
+  const isHigherRolePosition = await isHigherPosition(
+    guildID,
+    botID,
+    roleID,
+  );
+  if (!isHigherRolePosition) {
+    throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_ROLES);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   const result = await RequestManager.put(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
@@ -81,26 +72,18 @@ export async function removeRole(
   roleID: string,
   reason?: string,
 ) {
-  const botsHighestRole = await highestRole(guildID, botID);
-
-  if (botsHighestRole) {
-    const hasHigherRolePosition = await higherRolePosition(
-      guildID,
-      botsHighestRole.id,
-      roleID,
-    );
-    if (
-      !hasHigherRolePosition &&
-      (await cacheHandlers.get("guilds", guildID))?.ownerID !== botID
-    ) {
-      throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
-    }
+  const isHigherRolePosition = await isHigherPosition(
+    guildID,
+    botID,
+    roleID,
+  );
+  if (
+    !isHigherRolePosition
+  ) {
+    throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_ROLES);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   const result = await RequestManager.delete(
     endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
@@ -145,10 +128,7 @@ export async function kick(guildID: string, memberID: string, reason?: string) {
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
-  const hasPerm = await botHasPermission(guildID, ["KICK_MEMBERS"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_KICK_MEMBERS);
-  }
+  await requireBotGuildPermissions(guildID, ["KICK_MEMBERS"]);
 
   const result = await RequestManager.delete(
     endpoints.GUILD_MEMBER(guildID, memberID),
@@ -164,56 +144,56 @@ export async function editMember(
   memberID: string,
   options: EditMemberOptions,
 ) {
+  const requiredPerms: Set<Permission> = new Set();
+
   if (options.nick) {
     if (options.nick.length > 32) {
       throw new Error(Errors.NICKNAMES_MAX_LENGTH);
     }
+    requiredPerms.add("MANAGE_NICKNAMES");
+  }
 
-    const hasManageNickPerm = await botHasPermission(
-      guildID,
-      ["MANAGE_NICKNAMES"],
-    );
-    if (!hasManageNickPerm) {
-      throw new Error(Errors.MISSING_MANAGE_NICKNAMES);
+  if (options.roles) requiredPerms.add("MANAGE_ROLES");
+
+  if (
+    typeof options.mute !== "undefined" ||
+    typeof options.deaf !== "undefined" ||
+    (typeof options.channel_id !== "undefined" || "null")
+  ) {
+    const memberVoiceState = (await cacheHandlers.get("guilds", guildID))
+      ?.voiceStates.get(memberID);
+
+    if (!memberVoiceState?.channelID) {
+      throw new Error(Errors.MEMBER_NOT_IN_VOICE_CHANNEL);
+    }
+
+    if (typeof options.mute !== "undefined") {
+      requiredPerms.add("MUTE_MEMBERS");
+    }
+
+    if (typeof options.deaf !== "undefined") {
+      requiredPerms.add("DEAFEN_MEMBERS");
+    }
+
+    if (options.channel_id) {
+      const requiredVoicePerms: Set<Permission> = new Set([
+        "CONNECT",
+        "MOVE_MEMBERS",
+      ]);
+      if (memberVoiceState) {
+        await requireBotChannelPermissions(
+          memberVoiceState?.channelID,
+          [...requiredVoicePerms],
+        );
+      }
+      await requireBotChannelPermissions(
+        options.channel_id,
+        [...requiredVoicePerms],
+      );
     }
   }
 
-  const hasManageRolesPerm = await botHasPermission(
-    guildID,
-    ["MANAGE_ROLES"],
-  );
-  if (
-    options.roles &&
-    !hasManageRolesPerm
-  ) {
-    throw new Error(Errors.MISSING_MANAGE_ROLES);
-  }
-
-  if (options.mute) {
-    const hasMuteMembersPerm = await botHasPermission(
-      guildID,
-      ["MUTE_MEMBERS"],
-    );
-    // TODO: This should check if the member is in a voice channel
-    if (
-      !hasMuteMembersPerm
-    ) {
-      throw new Error(Errors.MISSING_MUTE_MEMBERS);
-    }
-  }
-
-  const hasDeafenMembersPerm = await botHasPermission(
-    guildID,
-    ["DEAFEN_MEMBERS"],
-  );
-  if (
-    options.deaf &&
-    !hasDeafenMembersPerm
-  ) {
-    throw new Error(Errors.MISSING_DEAFEN_MEMBERS);
-  }
-
-  // TODO: if channel id is provided check if the bot has CONNECT and MOVE in channel and current channel
+  await requireBotGuildPermissions(guildID, [...requiredPerms]);
 
   const result = await RequestManager.patch(
     endpoints.GUILD_MEMBER(guildID, memberID),
@@ -282,8 +262,7 @@ export async function editBotNickname(
   guildID: string,
   nickname: string | null,
 ) {
-  const hasPerm = await botHasPermission(guildID, ["CHANGE_NICKNAME"]);
-  if (!hasPerm) throw new Error(Errors.MISSING_CHANGE_NICKNAME);
+  await requireBotGuildPermissions(guildID, ["CHANGE_NICKNAME"]);
 
   const response = await RequestManager.patch(
     endpoints.USER_NICK(guildID),

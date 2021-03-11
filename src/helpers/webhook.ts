@@ -3,11 +3,10 @@ import { RequestManager } from "../rest/request_manager.ts";
 import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
 import { endpoints, SLASH_COMMANDS_NAME_REGEX } from "../util/constants.ts";
-import { botHasChannelPermissions } from "../util/permissions.ts";
+import { requireBotChannelPermissions } from "../util/permissions.ts";
 import { urlToBase64 } from "../util/utils.ts";
-import { structures } from "../structures/mod.ts";
 
-/** 
+/**
  * Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
  *
  * Webhook names cannot be: 'clyde'
@@ -16,21 +15,14 @@ export async function createWebhook(
   channelID: string,
   options: WebhookCreateOptions,
 ) {
-  const hasManageWebhooksPerm = await botHasChannelPermissions(
-    channelID,
-    ["MANAGE_WEBHOOKS"],
-  );
-  if (
-    !hasManageWebhooksPerm
-  ) {
-    throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
-  }
+  await requireBotChannelPermissions(channelID, ["MANAGE_WEBHOOKS"]);
 
   if (
     // Specific usernames that discord does not allow
     options.name === "clyde" ||
     // Character limit checks. [...] checks are because of js unicode length handling
-    [...options.name].length < 2 || [...options.name].length > 32
+    [...options.name].length < 2 ||
+    [...options.name].length > 32
   ) {
     throw new Error(Errors.INVALID_WEBHOOK_NAME);
   }
@@ -52,15 +44,7 @@ export async function editWebhook(
   webhookID: string,
   options: WebhookEditOptions,
 ) {
-  const hasManageWebhooksPerm = await botHasChannelPermissions(
-    channelID,
-    ["MANAGE_WEBHOOKS"],
-  );
-  if (
-    !hasManageWebhooksPerm
-  ) {
-    throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
-  }
+  await requireBotChannelPermissions(channelID, ["MANAGE_WEBHOOKS"]);
 
   const result = await RequestManager.patch(endpoints.WEBHOOK_ID(webhookID), {
     ...options,
@@ -86,15 +70,7 @@ export async function editWebhookWithToken(
 
 /** Delete a webhook permanently. Requires the `MANAGE_WEBHOOKS` permission. Returns a undefined on success */
 export async function deleteWebhook(channelID: string, webhookID: string) {
-  const hasManageWebhooksPerm = await botHasChannelPermissions(
-    channelID,
-    ["MANAGE_WEBHOOKS"],
-  );
-  if (
-    !hasManageWebhooksPerm
-  ) {
-    throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
-  }
+  await requireBotChannelPermissions(channelID, ["MANAGE_WEBHOOKS"]);
 
   const result = await RequestManager.delete(endpoints.WEBHOOK_ID(webhookID));
 
@@ -122,9 +98,7 @@ export async function getWebhook(webhookID: string) {
 
 /** Returns the new webhook object for the given id, this call does not require authentication and returns no user in the webhook object. */
 export async function getWebhookWithToken(webhookID: string, token: string) {
-  const result = await RequestManager.get(
-    endpoints.WEBHOOK(webhookID, token),
-  );
+  const result = await RequestManager.get(endpoints.WEBHOOK(webhookID, token));
 
   return result as WebhookPayload;
 }
@@ -150,8 +124,8 @@ export async function executeWebhook(
   if (options.mentions) {
     if (options.mentions.users?.length) {
       if (options.mentions.parse.includes("users")) {
-        options.mentions.parse = options.mentions.parse.filter((p) =>
-          p !== "users"
+        options.mentions.parse = options.mentions.parse.filter(
+          (p) => p !== "users",
         );
       }
 
@@ -162,8 +136,8 @@ export async function executeWebhook(
 
     if (options.mentions.roles?.length) {
       if (options.mentions.parse.includes("roles")) {
-        options.mentions.parse = options.mentions.parse.filter((p) =>
-          p !== "roles"
+        options.mentions.parse = options.mentions.parse.filter(
+          (p) => p !== "roles",
         );
       }
 
@@ -205,9 +179,9 @@ export async function editWebhookMessage(
   if (options.allowed_mentions) {
     if (options.allowed_mentions.users?.length) {
       if (options.allowed_mentions.parse.includes("users")) {
-        options.allowed_mentions.parse = options.allowed_mentions.parse.filter((
-          p,
-        ) => p !== "users");
+        options.allowed_mentions.parse = options.allowed_mentions.parse.filter(
+          (p) => p !== "users",
+        );
       }
 
       if (options.allowed_mentions.users.length > 100) {
@@ -220,9 +194,9 @@ export async function editWebhookMessage(
 
     if (options.allowed_mentions.roles?.length) {
       if (options.allowed_mentions.parse.includes("roles")) {
-        options.allowed_mentions.parse = options.allowed_mentions.parse.filter((
-          p,
-        ) => p !== "roles");
+        options.allowed_mentions.parse = options.allowed_mentions.parse.filter(
+          (p) => p !== "roles",
+        );
       }
 
       if (options.allowed_mentions.roles.length > 100) {
@@ -391,11 +365,7 @@ export async function upsertSlashCommand(
 
   const result = await RequestManager.patch(
     guildID
-      ? endpoints.COMMANDS_GUILD_ID(
-        applicationID,
-        guildID,
-        commandID,
-      )
+      ? endpoints.COMMANDS_GUILD_ID(applicationID, guildID, commandID)
       : endpoints.COMMANDS_ID(applicationID, commandID),
     options,
   );
@@ -405,7 +375,7 @@ export async function upsertSlashCommand(
 
 /**
  * Bulk edit existing slash commands. If a command does not exist, it will create it.
- * 
+ *
  * **NOTE:** Any slash commands that are not specified in this function will be **deleted**. If you don't provide the commandID and rename your command, the command gets a new ID.
  */
 export async function upsertSlashCommands(
@@ -425,8 +395,8 @@ export async function upsertSlashCommands(
 }
 
 // TODO: remove this function for v11
-/** 
- * Edit an existing slash command. 
+/**
+ * Edit an existing slash command.
  * @deprecated This function will be removed in v11. Use `upsertSlashCommand()` instead
  */
 export async function editSlashCommand(
@@ -439,18 +409,15 @@ export async function editSlashCommand(
   }
 
   if (
-    [...options.description].length < 1 || [...options.description].length > 100
+    [...options.description].length < 1 ||
+    [...options.description].length > 100
   ) {
     throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
   }
 
   const result = await RequestManager.patch(
     guildID
-      ? endpoints.COMMANDS_GUILD_ID(
-        applicationID,
-        guildID,
-        commandID,
-      )
+      ? endpoints.COMMANDS_GUILD_ID(applicationID, guildID, commandID)
       : endpoints.COMMANDS_ID(applicationID, commandID),
     options,
   );
@@ -499,7 +466,7 @@ export async function executeSlashCommand(
   }
 
   // If no mentions are provided, force disable mentions
-  if (!(options.data.allowed_mentions)) {
+  if (!options.data.allowed_mentions) {
     options.data.allowed_mentions = { parse: [] };
   }
 
@@ -512,10 +479,7 @@ export async function executeSlashCommand(
 }
 
 /** To delete your response to a slash command. If a message id is not provided, it will default to deleting the original response. */
-export async function deleteSlashResponse(
-  token: string,
-  messageID?: string,
-) {
+export async function deleteSlashResponse(token: string, messageID?: string) {
   const result = await RequestManager.delete(
     messageID
       ? endpoints.INTERACTION_ID_TOKEN_MESSAGEID(
@@ -545,9 +509,9 @@ export async function editSlashResponse(
   if (options.allowed_mentions) {
     if (options.allowed_mentions.users?.length) {
       if (options.allowed_mentions.parse.includes("users")) {
-        options.allowed_mentions.parse = options.allowed_mentions.parse.filter((
-          p,
-        ) => p !== "users");
+        options.allowed_mentions.parse = options.allowed_mentions.parse.filter(
+          (p) => p !== "users",
+        );
       }
 
       if (options.allowed_mentions.users.length > 100) {
@@ -560,9 +524,9 @@ export async function editSlashResponse(
 
     if (options.allowed_mentions.roles?.length) {
       if (options.allowed_mentions.parse.includes("roles")) {
-        options.allowed_mentions.parse = options.allowed_mentions.parse.filter((
-          p,
-        ) => p !== "roles");
+        options.allowed_mentions.parse = options.allowed_mentions.parse.filter(
+          (p) => p !== "roles",
+        );
       }
 
       if (options.allowed_mentions.roles.length > 100) {

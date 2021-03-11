@@ -1,12 +1,12 @@
+import { cacheHandlers } from "../cache.ts";
 import { RequestManager } from "../rest/request_manager.ts";
 import { endpoints } from "../util/constants.ts";
 import {
   botHasChannelPermissions,
-  botHasPermission,
   calculateBits,
+  requireBotChannelPermissions,
+  requireBotGuildPermissions,
 } from "../util/permissions.ts";
-import { cacheHandlers } from "../cache.ts";
-import { structures } from "../structures/mod.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(
@@ -30,33 +30,15 @@ export function channelOverwriteHasPermission(
 }
 
 /** Fetch a single message from the server. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
-export async function getMessage(
-  channelID: string,
-  id: string,
-) {
-  const hasViewChannelPerm = await botHasChannelPermissions(
-    channelID,
-    ["VIEW_CHANNEL"],
-  );
-  if (
-    !hasViewChannelPerm
-  ) {
-    throw new Error(Errors.MISSING_VIEW_CHANNEL);
-  }
+export async function getMessage(channelID: string, id: string) {
+  await requireBotChannelPermissions(channelID, [
+    "VIEW_CHANNEL",
+    "READ_MESSAGE_HISTORY",
+  ]);
 
-  const hasReadMessageHistoryPerm = await botHasChannelPermissions(
-    channelID,
-    ["READ_MESSAGE_HISTORY"],
-  );
-  if (
-    !hasReadMessageHistoryPerm
-  ) {
-    throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
-  }
-
-  const result = await RequestManager.get(
+  const result = (await RequestManager.get(
     endpoints.CHANNEL_MESSAGE(channelID, id),
-  ) as MessageCreateOptions;
+  )) as MessageCreateOptions;
 
   return structures.createMessageStruct(result);
 }
@@ -70,25 +52,10 @@ export async function getMessages(
     | GetMessagesAround
     | GetMessages,
 ) {
-  const hasViewChannelPerm = await botHasChannelPermissions(
-    channelID,
-    ["VIEW_CHANNEL"],
-  );
-  if (
-    !hasViewChannelPerm
-  ) {
-    throw new Error(Errors.MISSING_VIEW_CHANNEL);
-  }
-
-  const hasReadMessageHistoryPerm = await botHasChannelPermissions(
-    channelID,
-    ["READ_MESSAGE_HISTORY"],
-  );
-  if (
-    !hasReadMessageHistoryPerm
-  ) {
-    throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
-  }
+  await requireBotChannelPermissions(channelID, [
+    "VIEW_CHANNEL",
+    "READ_MESSAGE_HISTORY",
+  ]);
 
   if (options?.limit && options.limit > 100) return;
 
@@ -156,57 +123,29 @@ export async function sendMessage(
   if (typeof content === "string") content = { content };
 
   const channel = await cacheHandlers.get("channels", channelID);
-  // If the channel is cached, we can do extra checks/safety
   if (channel) {
     if (
-      ![ChannelTypes.DM, ChannelTypes.GUILD_NEWS, ChannelTypes.GUILD_TEXT]
-        .includes(channel.type)
+      ![
+        ChannelTypes.DM,
+        ChannelTypes.GUILD_NEWS,
+        ChannelTypes.GUILD_TEXT,
+      ].includes(channel.type)
     ) {
       throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
     }
 
-    const hasSendMessagesPerm = await botHasChannelPermissions(
-      channelID,
-      ["SEND_MESSAGES"],
-    );
-    if (
-      !hasSendMessagesPerm
-    ) {
-      throw new Error(Errors.MISSING_SEND_MESSAGES);
+    const requiredPerms: Set<Permission> = new Set([
+      "SEND_MESSAGES",
+      "VIEW_CHANNEL",
+    ]);
+
+    if (content.tts) requiredPerms.add("SEND_TTS_MESSAGES");
+    if (content.embed) requiredPerms.add("EMBED_LINKS");
+    if (content.replyMessageID || content.mentions?.repliedUser) {
+      requiredPerms.add("READ_MESSAGE_HISTORY");
     }
 
-    const hasSendTtsMessagesPerm = await botHasChannelPermissions(
-      channelID,
-      ["SEND_TTS_MESSAGES"],
-    );
-    if (
-      content.tts &&
-      !hasSendTtsMessagesPerm
-    ) {
-      throw new Error(Errors.MISSING_SEND_TTS_MESSAGE);
-    }
-
-    const hasEmbedLinksPerm = await botHasChannelPermissions(
-      channelID,
-      ["EMBED_LINKS"],
-    );
-    if (
-      content.embed &&
-      !hasEmbedLinksPerm
-    ) {
-      throw new Error(Errors.MISSING_EMBED_LINKS);
-    }
-
-    if (content.mentions?.repliedUser) {
-      if (
-        !(await botHasChannelPermissions(
-          channelID,
-          ["READ_MESSAGE_HISTORY"],
-        ))
-      ) {
-        throw new Error(Errors.MISSING_READ_MESSAGE_HISTORY);
-      }
-    }
+    await requireBotChannelPermissions(channelID, [...requiredPerms]);
   }
 
   // Use ... for content length due to unicode characters and js .length handling
@@ -217,8 +156,8 @@ export async function sendMessage(
   if (content.mentions) {
     if (content.mentions.users?.length) {
       if (content.mentions.parse?.includes("users")) {
-        content.mentions.parse = content.mentions.parse.filter((p) =>
-          p !== "users"
+        content.mentions.parse = content.mentions.parse.filter(
+          (p) => p !== "users",
         );
       }
 
@@ -229,8 +168,8 @@ export async function sendMessage(
 
     if (content.mentions.roles?.length) {
       if (content.mentions.parse?.includes("roles")) {
-        content.mentions.parse = content.mentions.parse.filter((p) =>
-          p !== "roles"
+        content.mentions.parse = content.mentions.parse.filter(
+          (p) => p !== "roles",
         );
       }
 
@@ -240,7 +179,7 @@ export async function sendMessage(
     }
   }
 
-  const result = await RequestManager.post(
+  const result = (await RequestManager.post(
     endpoints.CHANNEL_MESSAGES(channelID),
     {
       ...content,
@@ -259,9 +198,9 @@ export async function sendMessage(
         }
         : {}),
     },
-  ) as MessageCreateOptions;
+  )) as MessageCreateOptions;
 
-  return structures.createMessageStruct(result as MessageCreateOptions);
+  return structures.createMessageStruct(result);
 }
 
 /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */
@@ -270,15 +209,8 @@ export async function deleteMessages(
   ids: string[],
   reason?: string,
 ) {
-  const hasManageMessages = await botHasChannelPermissions(
-    channelID,
-    ["MANAGE_MESSAGES"],
-  );
-  if (
-    !hasManageMessages
-  ) {
-    throw new Error(Errors.MISSING_MANAGE_MESSAGES);
-  }
+  await requireBotChannelPermissions(channelID, ["MANAGE_MESSAGES"]);
+
   if (ids.length < 2) {
     throw new Error(Errors.DELETE_MESSAGES_MIN);
   }
@@ -302,15 +234,7 @@ export async function deleteMessages(
 
 /** Gets the invites for this channel. Requires MANAGE_CHANNEL */
 export async function getChannelInvites(channelID: string) {
-  const hasManagaChannels = await botHasChannelPermissions(
-    channelID,
-    ["MANAGE_CHANNELS"],
-  );
-  if (
-    !hasManagaChannels
-  ) {
-    throw new Error(Errors.MISSING_MANAGE_CHANNELS);
-  }
+  await requireBotChannelPermissions(channelID, ["MANAGE_CHANNELS"]);
 
   const result = await RequestManager.get(endpoints.CHANNEL_INVITES(channelID));
 
@@ -322,15 +246,7 @@ export async function createInvite(
   channelID: string,
   options: CreateInviteOptions,
 ) {
-  const hasCreateInstantInvitePerm = await botHasChannelPermissions(
-    channelID,
-    ["CREATE_INSTANT_INVITE"],
-  );
-  if (
-    !hasCreateInstantInvitePerm
-  ) {
-    throw new Error(Errors.MISSING_CREATE_INSTANT_INVITE);
-  }
+  await requireBotChannelPermissions(channelID, ["CREATE_INSTANT_INVITE"]);
 
   if (options.max_age && (options.max_age > 604800 || options.max_age < 0)) {
     console.log(
@@ -356,52 +272,33 @@ export async function createInvite(
 
 /** Returns an invite for the given code. */
 export async function getInvite(inviteCode: string) {
-  const result = await RequestManager.get(
-    endpoints.INVITE(inviteCode),
-  );
+  const result = await RequestManager.get(endpoints.INVITE(inviteCode));
 
   return result as InvitePayload;
 }
 
 /** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
-export async function deleteInvite(
-  channelID: string,
-  inviteCode: string,
-) {
-  const hasPerm = await botHasChannelPermissions(channelID, [
+export async function deleteInvite(channelID: string, inviteCode: string) {
+  const channel = await cacheHandlers.get("channels", channelID);
+
+  if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);
+
+  const hasPerm = await botHasChannelPermissions(channel, [
     "MANAGE_CHANNELS",
   ]);
 
   if (!hasPerm) {
-    const channel = await cacheHandlers.get("channels", channelID);
-
-    const hasManageGuildPerm = await botHasPermission(channel!.guildID, [
-      "MANAGE_GUILD",
-    ]);
-
-    if (!hasManageGuildPerm) {
-      throw new Error(Errors.MISSING_MANAGE_CHANNELS);
-    }
+    await requireBotGuildPermissions(channel!.guildID, ["MANAGE_GUILD"]);
   }
 
-  const result = await RequestManager.delete(
-    endpoints.INVITE(inviteCode),
-  );
+  const result = await RequestManager.delete(endpoints.INVITE(inviteCode));
 
   return result as InvitePayload;
 }
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
 export async function getChannelWebhooks(channelID: string) {
-  const hasManageWebhooksPerm = await botHasChannelPermissions(
-    channelID,
-    ["MANAGE_WEBHOOKS"],
-  );
-  if (
-    !hasManageWebhooksPerm
-  ) {
-    throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
-  }
+  await requireBotChannelPermissions(channelID, ["MANAGE_WEBHOOKS"]);
 
   const result = await RequestManager.get(
     endpoints.CHANNEL_WEBHOOKS(channelID),
@@ -433,10 +330,7 @@ function processEditChannelQueue() {
     const secondDetails = request.items.shift();
     if (!secondDetails) return;
 
-    return editChannel(
-      secondDetails.channelID,
-      secondDetails.options,
-    );
+    return editChannel(secondDetails.channelID, secondDetails.options);
   });
 
   if (editChannelNameTopicQueue.size) {
@@ -452,15 +346,7 @@ export async function editChannel(
   options: ChannelEditOptions,
   reason?: string,
 ) {
-  const hasManageChannelsPerm = await botHasChannelPermissions(
-    channelID,
-    ["MANAGE_CHANNELS"],
-  );
-  if (
-    !hasManageChannelsPerm
-  ) {
-    throw new Error(Errors.MISSING_MANAGE_CHANNELS);
-  }
+  await requireBotChannelPermissions(channelID, ["MANAGE_CHANNELS"]);
 
   if (options.name || options.topic) {
     const request = editChannelNameTopicQueue.get(channelID);
@@ -496,24 +382,19 @@ export async function editChannel(
     // deno-lint-ignore camelcase
     user_limit: options.userLimit,
     // deno-lint-ignore camelcase
-    permission_overwrites: options.overwrites?.map(
-      (overwrite) => {
-        return {
-          ...overwrite,
-          allow: calculateBits(overwrite.allow),
-          deny: calculateBits(overwrite.deny),
-        };
-      },
-    ),
+    permission_overwrites: options.overwrites?.map((overwrite) => {
+      return {
+        ...overwrite,
+        allow: calculateBits(overwrite.allow),
+        deny: calculateBits(overwrite.deny),
+      };
+    }),
   };
 
-  const result = await RequestManager.patch(
-    endpoints.CHANNEL_BASE(channelID),
-    {
-      ...payload,
-      reason,
-    },
-  );
+  const result = await RequestManager.patch(endpoints.CHANNEL_BASE(channelID), {
+    ...payload,
+    reason,
+  });
 
   return result;
 }
@@ -523,22 +404,14 @@ export async function followChannel(
   sourceChannelID: string,
   targetChannelID: string,
 ) {
-  const hasManageWebhooksPerm = await botHasChannelPermissions(
-    targetChannelID,
-    ["MANAGE_WEBHOOKS"],
-  );
-  if (
-    !hasManageWebhooksPerm
-  ) {
-    throw new Error(Errors.MISSING_MANAGE_CHANNELS);
-  }
+  await requireBotChannelPermissions(targetChannelID, ["MANAGE_WEBHOOKS"]);
 
-  const data = await RequestManager.post(
+  const data = (await RequestManager.post(
     endpoints.CHANNEL_FOLLOW(sourceChannelID),
     {
       webhook_channel_id: targetChannelID,
     },
-  ) as FollowedChannelPayload;
+  )) as FollowedChannelPayload;
 
   return data.webhook_id;
 }
@@ -556,11 +429,12 @@ export async function isChannelSynced(channelID: string) {
   if (!parentChannel) return false;
 
   return channel.permissionOverwrites?.every((overwrite) => {
-    const permission = parentChannel.permissionOverwrites?.find((ow) =>
-      ow.id === overwrite.id
+    const permission = parentChannel.permissionOverwrites?.find(
+      (ow) => ow.id === overwrite.id,
     );
     if (!permission) return false;
-    return !(overwrite.allow !== permission.allow ||
-      overwrite.deny !== permission.deny);
+    return !(
+      overwrite.allow !== permission.allow || overwrite.deny !== permission.deny
+    );
   });
 }
