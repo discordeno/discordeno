@@ -268,17 +268,6 @@ export function calculatePermissions(permissionBits: bigint) {
 
 /** This function converts an array of permissions into the bitwise string. */
 export function calculateBits(permissions: Permission[]) {
-  // return permissions
-  //   .reduce(
-  //     // Get the bit value for this permission and assign it to bits
-  //     (bits, perm) => {
-  //       bits |= BigInt(Permissions[perm]);
-  //         return bits
-  //       }),
-  //     0n,
-  //   )
-  //   .toString();
-
   return permissions
     .reduce((bits, perm) => {
       bits |= BigInt(Permissions[perm]);
@@ -287,7 +276,6 @@ export function calculateBits(permissions: Permission[]) {
     .toString();
 }
 
-// TODO: move memberID to first position
 /** Gets the highest role from the member in this guild */
 export async function highestRole(
   guild: string | Guild,

@@ -156,16 +156,16 @@ export async function editMember(
   memberID: string,
   options: EditMemberOptions,
 ) {
-  const requiredPerms: Permission[] = [];
+  const requiredPerms: Set<Permission> = new Set();
 
   if (options.nick) {
     if (options.nick.length > 32) {
       throw new Error(Errors.NICKNAMES_MAX_LENGTH);
     }
-    requiredPerms.push("MANAGE_NICKNAMES");
+    requiredPerms.add("MANAGE_NICKNAMES");
   }
 
-  if (options.roles) requiredPerms.push("MANAGE_ROLES");
+  if (options.roles) requiredPerms.add("MANAGE_ROLES");
 
   if (
     typeof options.mute !== "undefined" ||
@@ -180,29 +180,32 @@ export async function editMember(
     }
 
     if (typeof options.mute !== "undefined") {
-      requiredPerms.push("MUTE_MEMBERS");
+      requiredPerms.add("MUTE_MEMBERS");
     }
 
     if (typeof options.deaf !== "undefined") {
-      requiredPerms.push("DEAFEN_MEMBERS");
+      requiredPerms.add("DEAFEN_MEMBERS");
     }
 
     if (options.channel_id) {
-      const requiredVoicePerms: Permission[] = ["CONNECT", "MOVE_MEMBERS"];
+      const requiredVoicePerms: Set<Permission> = new Set([
+        "CONNECT",
+        "MOVE_MEMBERS",
+      ]);
       if (memberVoiceState) {
         await requireBotChannelPermissions(
           memberVoiceState?.channelID,
-          requiredVoicePerms,
+          [...requiredVoicePerms],
         );
       }
       await requireBotChannelPermissions(
         options.channel_id,
-        requiredVoicePerms,
+        [...requiredVoicePerms],
       );
     }
   }
 
-  await requireBotGuildPermissions(guildID, requiredPerms);
+  await requireBotGuildPermissions(guildID, [...requiredPerms]);
 
   const result = await RequestManager.patch(
     endpoints.GUILD_MEMBER(guildID, memberID),
