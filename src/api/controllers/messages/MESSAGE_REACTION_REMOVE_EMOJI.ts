@@ -3,7 +3,7 @@ import {
   DiscordPayload,
   MessageReactionRemoveEmojiPayload,
 } from "../../../types/mod.ts";
-import { cacheHandlers } from "../cache.ts";
+import { cacheHandlers } from "../../../cache.ts";
 
 export async function handleMessageReactionRemoveEmoji(
   data: DiscordPayload,

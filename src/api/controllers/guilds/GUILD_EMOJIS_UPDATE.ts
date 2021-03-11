@@ -4,7 +4,7 @@ import {
   GuildEmojisUpdatePayload,
 } from "../../../types/mod.ts";
 import { Collection } from "../../../util/collection.ts";
-import { cacheHandlers } from "../cache.ts";
+import { cacheHandlers } from "../../../cache.ts";
 
 export async function handleGuildEmojisUpdate(data: DiscordPayload) {
   const payload = data.d as GuildEmojisUpdatePayload;

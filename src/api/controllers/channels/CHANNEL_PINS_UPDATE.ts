@@ -3,7 +3,7 @@ import {
   DiscordChannelPinsUpdateEvent,
   DiscordPayload,
 } from "../../../types/mod.ts";
-import { cacheHandlers } from "../cache.ts";
+import { cacheHandlers } from "../../../cache.ts";
 
 export async function handleChannelPinsUpdate(data: DiscordPayload) {
   const payload = data.d as DiscordChannelPinsUpdateEvent;

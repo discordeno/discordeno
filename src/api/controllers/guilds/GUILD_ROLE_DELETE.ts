@@ -1,6 +1,6 @@
 import { eventHandlers } from "../../../bot.ts";
 import { DiscordPayload, GuildRoleDeletePayload } from "../../../types/mod.ts";
-import { cacheHandlers } from "../cache.ts";
+import { cacheHandlers } from "../../../cache.ts";
 
 export async function handleGuildRoleDelete(data: DiscordPayload) {
   const payload = data.d as GuildRoleDeletePayload;

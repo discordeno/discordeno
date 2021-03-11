@@ -1,6 +1,6 @@
 import { eventHandlers } from "../../../bot.ts";
 import { DiscordPayload, GuildBanPayload } from "../../../types/mod.ts";
-import { cacheHandlers } from "../cache.ts";
+import { cacheHandlers } from "../../../cache.ts";
 
 export async function handleGuildMemberRemove(data: DiscordPayload) {
   const payload = data.d as GuildBanPayload;

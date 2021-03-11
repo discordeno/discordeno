@@ -3,7 +3,7 @@
 import { PresenceUpdatePayload } from "./types/mod.ts";
 import { cache } from "./util/cache.ts";
 import { Collection } from "./util/collection.ts";
-import type { Channel, Guild, Member, Message } from "./structures/mod.ts";
+import { Channel, Guild, Member, Message } from "./api/structures/mod.ts";
 
 export type TableName =
   | "guilds"

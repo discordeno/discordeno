@@ -3,7 +3,7 @@ import {
   DiscordPayload,
   MessageDeleteBulkPayload,
 } from "../../../types/mod.ts";
-import { cacheHandlers } from "../cache.ts";
+import { cacheHandlers } from "../../../cache.ts";
 
 export async function handleMessageDeleteBulk(data: DiscordPayload) {
   const payload = data.d as MessageDeleteBulkPayload;

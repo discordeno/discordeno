@@ -4,7 +4,7 @@ import {
   ChannelTypes,
   DiscordPayload,
 } from "../../../types/mod.ts";
-import { cacheHandlers } from "../cache.ts";
+import { cacheHandlers } from "../../../cache.ts";
 
 export async function handleChannelDelete(data: DiscordPayload) {
   const payload = data.d as ChannelCreatePayload;
