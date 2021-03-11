@@ -17,7 +17,7 @@ import {
   highestRole,
 } from "../../util/permissions.ts";
 import { formatImageURL, urlToBase64 } from "../../util/utils.ts";
-import { cacheHandlers } from "../controllers/cache.ts";
+import { cacheHandlers } from "../../cache.ts";
 import { Member, structures } from "../structures/mod.ts";
 import { sendMessage } from "./channel.ts";
 

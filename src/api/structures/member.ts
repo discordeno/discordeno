@@ -10,7 +10,7 @@ import {
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
 import { createNewProp } from "../../util/utils.ts";
-import { cacheHandlers } from "../controllers/cache.ts";
+import { cacheHandlers } from "../../cache.ts";
 import { ban } from "../handlers/guild.ts";
 import {
   addRole,

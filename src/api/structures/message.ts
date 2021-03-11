@@ -14,7 +14,7 @@ import {
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { createNewProp } from "../../util/utils.ts";
-import { cacheHandlers } from "../controllers/cache.ts";
+import { cacheHandlers } from "../../cache.ts";
 import { sendMessage } from "../handlers/channel.ts";
 import { sendDirectMessage } from "../handlers/member.ts";
 import {

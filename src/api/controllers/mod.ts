@@ -1,107 +1,142 @@
-import {
-  handleInternalGuildBanAdd,
-  handleInternalGuildBanRemove,
-} from "./bans.ts";
-import {
-  handleInternalChannelCreate,
-  handleInternalChannelDelete,
-  handleInternalChannelUpdate,
-} from "./channels.ts";
-import { handleChannelPinsUpdate } from "./CHANNEL_PINS_UPDATE.ts";
-import {
-  handleInternalGuildCreate,
-  handleInternalGuildDelete,
-  handleInternalGuildEmojisUpdate,
-  handleInternalGuildUpdate,
-} from "./guilds.ts";
-import { handleGuildIntegrationsUpdate } from "./GUILD_INTEGRATIONS_UPDATE.ts";
-import {
-  handleInternalApplicationCommandCreate,
-  handleInternalApplicationCommandDelete,
-  handleInternalApplicationCommandUpdate,
-  handleInternalInteractionCreate,
-} from "./interactions.ts";
-import {
-  handleInternalGuildMemberAdd,
-  handleInternalGuildMemberRemove,
-  handleInternalGuildMembersChunk,
-  handleInternalGuildMemberUpdate,
-} from "./members.ts";
-import {
-  handleInternalMessageCreate,
-  handleInternalMessageDelete,
-  handleInternalMessageDeleteBulk,
-  handleInternalMessageUpdate,
-} from "./messages.ts";
-import {
-  handleInternalIntegrationCreate,
-  handleInternalIntegrationDelete,
-  handleInternalIntegrationUpdate,
-  handleInternalInviteCreate,
-  handleInternalInviteDelete,
-  handleInternalPresenceUpdate,
-  handleInternalTypingStart,
-  handleInternalUserUpdate,
-  handleInternalVoiceStateUpdate,
-  handleInternalWebhooksUpdate,
-} from "./misc.ts";
-import {
-  handleInternalMessageReactionAdd,
-  handleInternalMessageReactionRemove,
-  handleInternalMessageReactionRemoveAll,
-  handleInternalMessageReactionRemoveEmoji,
-} from "./reactions.ts";
-import { handleInternalReady } from "./READY.ts";
-import {
-  handleInternalGuildRoleCreate,
-  handleInternalGuildRoleDelete,
-  handleInternalGuildRoleUpdate,
-} from "./roles.ts";
-import { handleVoiceServerUpdate } from "./VOICE_SERVER_UPDATE.ts";
+import { handleChannelCreate } from "./channels/CHANNEL_CREATE.ts";
+import { handleChannelDelete } from "./channels/CHANNEL_DELETE.ts";
+import { handleChannelPinsUpdate } from "./channels/CHANNEL_PINS_UPDATE.ts";
+import { handleChannelUpdate } from "./channels/CHANNEL_UPDATE.ts";
+import { handleApplicationCommandCreate } from "./commands/APPLICATION_COMMAND_CREATE.ts";
+import { handleApplicationCommandDelete } from "./commands/APPLICATION_COMMAND_DELETE.ts";
+import { handleApplicationCommandUpdate } from "./commands/APPLICATION_COMMAND_UPDATE.ts";
+import { handleGuildBanAdd } from "./guilds/GUILD_BAN_ADD.ts";
+import { handleGuildBanRemove } from "./guilds/GUILD_BAN_REMOVE.ts";
+import { handleGuildCreate } from "./guilds/GUILD_CREATE.ts";
+import { handleGuildDelete } from "./guilds/GUILD_DELETE.ts";
+import { handleGuildEmojisUpdate } from "./guilds/GUILD_EMOJIS_UPDATE.ts";
+import { handleGuildIntegrationsUpdate } from "./guilds/GUILD_INTEGRATIONS_UPDATE.ts";
+import { handleGuildMembersChunk } from "./guilds/GUILD_MEMBERS_CHUNK.ts";
+import { handleGuildMemberAdd } from "./guilds/GUILD_MEMBER_ADD.ts";
+import { handleGuildMemberRemove } from "./guilds/GUILD_MEMBER_REMOVE.ts";
+import { handleGuildMemberUpdate } from "./guilds/GUILD_MEMBER_UPDATE.ts";
+import { handleGuildRoleCreate } from "./guilds/GUILD_ROLE_CREATE.ts";
+import { handleGuildRoleDelete } from "./guilds/GUILD_ROLE_DELETE.ts";
+import { handleGuildRoleUpdate } from "./guilds/GUILD_ROLE_UPDATE.ts";
+import { handleGuildUpdate } from "./guilds/GUILD_UPDATE.ts";
+import { handleIntegrationCreate } from "./integrations/INTEGRATION_CREATE.ts";
+import { handleIntegrationDelete } from "./integrations/INTEGRATION_DELETE.ts";
+import { handleIntegrationUpdate } from "./integrations/INTEGRATION_UPDATE.ts";
+import { handleInteractionCreate } from "./interactions/INTERACTION_CREATE.ts";
+import { handleInviteCreate } from "./invites/INVITE_CREATE.ts";
+import { handleMessageCreate } from "./messages/MESSAGE_CREATE.ts";
+import { handleMessageDelete } from "./messages/MESSAGE_DELETE.ts";
+import { handleMessageDeleteBulk } from "./messages/MESSAGE_DELETE_BULK.ts";
+import { handleMessageReactionAdd } from "./messages/MESSAGE_REACTION_ADD.ts";
+import { handleMessageReactionRemove } from "./messages/MESSAGE_REACTION_REMOVE.ts";
+import { handleMessageReactionRemoveAll } from "./messages/MESSAGE_REACTION_REMOVE_ALL.ts";
+import { handleMessageReactionRemoveEmoji } from "./messages/MESSAGE_REACTION_REMOVE_EMOJI.ts";
+import { handleMessageUpdate } from "./messages/MESSAGE_UPDATE.ts";
+import { handlePresenceUpdate } from "./presence/PRESENCE_UPDATE.ts";
+import { handleTypingStart } from "./presence/TYPING_START.ts";
+import { handleUserUpdate } from "./presence/USER_UPDATE.ts";
+import { handleReady } from "./READY.ts";
+import { handleVoiceServerUpdate } from "./voice/VOICE_SERVER_UPDATE.ts";
+import { handleVoiceStateUpdate } from "./voice/VOICE_STATE_UPDATE.ts";
+import { handleWebhooksUpdate } from "./webhooks/WEBHOOKS_UPDATE.ts";
+
+export {
+  handleApplicationCommandCreate,
+  handleApplicationCommandDelete,
+  handleApplicationCommandUpdate,
+  handleChannelCreate,
+  handleChannelDelete,
+  handleChannelPinsUpdate,
+  handleChannelUpdate,
+  handleGuildBanAdd,
+  handleGuildBanRemove,
+  handleGuildCreate,
+  handleGuildDelete,
+  handleGuildEmojisUpdate,
+  handleGuildIntegrationsUpdate,
+  handleGuildMemberAdd,
+  handleGuildMemberRemove,
+  handleGuildMembersChunk,
+  handleGuildMemberUpdate,
+  handleGuildRoleCreate,
+  handleGuildRoleDelete,
+  handleGuildRoleUpdate,
+  handleGuildUpdate,
+  handleIntegrationCreate,
+  handleIntegrationDelete,
+  handleIntegrationUpdate,
+  handleInteractionCreate,
+  handleInviteCreate,
+  handleMessageCreate,
+  handleMessageDelete,
+  handleMessageDeleteBulk,
+  handleMessageReactionAdd,
+  handleMessageReactionRemove,
+  handleMessageReactionRemoveAll,
+  handleMessageReactionRemoveEmoji,
+  handleMessageUpdate,
+  handlePresenceUpdate,
+  handleReady,
+  handleTypingStart,
+  handleUserUpdate,
+  handleVoiceServerUpdate,
+  handleVoiceStateUpdate,
+  handleWebhooksUpdate,
+};
 
 export let controllers = {
-  READY: handleInternalReady,
-  CHANNEL_CREATE: handleInternalChannelCreate,
-  CHANNEL_DELETE: handleInternalChannelDelete,
-  CHANNEL_UPDATE: handleInternalChannelUpdate,
+  READY: handleReady,
+  // channels
+  CHANNEL_CREATE: handleChannelCreate,
+  CHANNEL_DELETE: handleChannelDelete,
   CHANNEL_PINS_UPDATE: handleChannelPinsUpdate,
-  GUILD_CREATE: handleInternalGuildCreate,
-  GUILD_DELETE: handleInternalGuildDelete,
-  GUILD_UPDATE: handleInternalGuildUpdate,
-  GUILD_BAN_ADD: handleInternalGuildBanAdd,
-  GUILD_BAN_REMOVE: handleInternalGuildBanRemove,
-  GUILD_EMOJIS_UPDATE: handleInternalGuildEmojisUpdate,
+  CHANNEL_UPDATE: handleChannelUpdate,
+  // commands
+  APPLICATION_COMMAND_CREATE: handleApplicationCommandCreate,
+  APPLICATION_COMMAND_DELETE: handleApplicationCommandDelete,
+  APPLICATION_COMMAND_UPDATE: handleApplicationCommandUpdate,
+  // guilds
+  GUILD_BAN_ADD: handleGuildBanAdd,
+  GUILD_BAN_REMOVE: handleGuildBanRemove,
+  GUILD_CREATE: handleGuildCreate,
+  GUILD_DELETE: handleGuildDelete,
+  GUILD_EMOJIS_UPDATE: handleGuildEmojisUpdate,
   GUILD_INTEGRATIONS_UPDATE: handleGuildIntegrationsUpdate,
-  GUILD_MEMBER_ADD: handleInternalGuildMemberAdd,
-  GUILD_MEMBER_REMOVE: handleInternalGuildMemberRemove,
-  GUILD_MEMBER_UPDATE: handleInternalGuildMemberUpdate,
-  GUILD_MEMBERS_CHUNK: handleInternalGuildMembersChunk,
-  GUILD_ROLE_CREATE: handleInternalGuildRoleCreate,
-  GUILD_ROLE_DELETE: handleInternalGuildRoleDelete,
-  GUILD_ROLE_UPDATE: handleInternalGuildRoleUpdate,
-  INTERACTION_CREATE: handleInternalInteractionCreate,
-  APPLICATION_COMMAND_CREATE: handleInternalApplicationCommandCreate,
-  APPLICATION_COMMAND_DELETE: handleInternalApplicationCommandDelete,
-  APPLICATION_COMMAND_UPDATE: handleInternalApplicationCommandUpdate,
-  MESSAGE_CREATE: handleInternalMessageCreate,
-  MESSAGE_DELETE: handleInternalMessageDelete,
-  MESSAGE_DELETE_BULK: handleInternalMessageDeleteBulk,
-  MESSAGE_UPDATE: handleInternalMessageUpdate,
-  MESSAGE_REACTION_ADD: handleInternalMessageReactionAdd,
-  MESSAGE_REACTION_REMOVE: handleInternalMessageReactionRemove,
-  MESSAGE_REACTION_REMOVE_ALL: handleInternalMessageReactionRemoveAll,
-  MESSAGE_REACTION_REMOVE_EMOJI: handleInternalMessageReactionRemoveEmoji,
-  PRESENCE_UPDATE: handleInternalPresenceUpdate,
-  TYPING_START: handleInternalTypingStart,
-  USER_UPDATE: handleInternalUserUpdate,
-  VOICE_STATE_UPDATE: handleInternalVoiceStateUpdate,
+  GUILD_MEMBER_ADD: handleGuildMemberAdd,
+  GUILD_MEMBER_REMOVE: handleGuildMemberRemove,
+  GUILD_MEMBER_UPDATE: handleGuildMemberUpdate,
+  GUILD_MEMBERS_CHUNK: handleGuildMembersChunk,
+  GUILD_ROLE_CREATE: handleGuildRoleCreate,
+  GUILD_ROLE_DELETE: handleGuildRoleDelete,
+  GUILD_ROLE_UPDATE: handleGuildRoleUpdate,
+  GUILD_UPDATE: handleGuildUpdate,
+  // interactions
+  INTERACTION_CREATE: handleInteractionCreate,
+  // invites
+  INVITE_CREATE: handleInviteCreate,
+  INVITE_DELETE: handleInviteCreate,
+  // messages
+  MESSAGE_CREATE: handleMessageCreate,
+  MESSAGE_DELETE_BULK: handleMessageDeleteBulk,
+  MESSAGE_DELETE: handleMessageDelete,
+  MESSAGE_REACTION_ADD: handleMessageReactionAdd,
+  MESSAGE_REACTION_REMOVE_ALL: handleMessageReactionRemoveAll,
+  MESSAGE_REACTION_REMOVE_EMOJI: handleMessageReactionRemoveEmoji,
+  MESSAGE_REACTION_REMOVE: handleMessageReactionRemove,
+  MESSAGE_UPDATE: handleMessageUpdate,
+  // presence
+  PRESENCE_UPDATE: handlePresenceUpdate,
+  TYPING_START: handleTypingStart,
+  USER_UPDATE: handleUserUpdate,
+  // voice
   VOICE_SERVER_UPDATE: handleVoiceServerUpdate,
-  WEBHOOKS_UPDATE: handleInternalWebhooksUpdate,
-  INTEGRATION_CREATE: handleInternalIntegrationCreate,
-  INTEGRATION_UPDATE: handleInternalIntegrationUpdate,
-  INTEGRATION_DELETE: handleInternalIntegrationDelete,
-  INVITE_CREATE: handleInternalInviteCreate,
-  INVITE_DELETE: handleInternalInviteDelete,
+  VOICE_STATE_UPDATE: handleVoiceStateUpdate,
+  // webhooks
+  WEBHOOKS_UPDATE: handleWebhooksUpdate,
+  // integrations
+  INTEGRATION_CREATE: handleIntegrationCreate,
+  INTEGRATION_UPDATE: handleIntegrationUpdate,
+  INTEGRATION_DELETE: handleIntegrationDelete,
 };
 
 export type Controllers = typeof controllers;
