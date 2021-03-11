@@ -1,6 +1,6 @@
-import { controllers } from "../api/controllers/mod.ts";
-import { Guild } from "../api/structures/guild.ts";
-import { Member } from "../api/structures/mod.ts";
+import { handlers } from "../handlers/mod.ts";
+import { Guild } from "../structures/guild.ts";
+import { Member } from "../structures/mod.ts";
 import { eventHandlers } from "../bot.ts";
 import {
   DiscordBotGatewayData,
@@ -80,8 +80,8 @@ export async function handleDiscordPayload(
       return eventHandlers.heartbeat?.();
     case GatewayOpcode.Dispatch:
       if (!data.t) return;
-      // Run the appropriate controller for this event.
-      return controllers[data.t]?.(data, shardID);
+      // Run the appropriate handler for this event.
+      return handlers[data.t]?.(data, shardID);
     default:
       return;
   }

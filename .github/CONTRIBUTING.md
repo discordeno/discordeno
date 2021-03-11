@@ -15,9 +15,11 @@
 
 Examples of good PR title:
 
-- fix(controllers/interactions): cache member from INTERACTION_CREATE payload
+- fix(handlers/INTERACTION_CREATE): cache member object
 - docs: improve wording
-- feat(handlers/guild): add editGuild() function Examples of bad PR title:
+- feat: add cache manager module
+- feat(helpers): add editGuild()
+- refactor(ws/shard): remove redundant checks
 
 Examples of bad PR title:
 

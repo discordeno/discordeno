@@ -347,9 +347,9 @@ methods on the cacheHandlers. The current list of methods available are:
 - set
 - forEach
 
-## Custom Gateway Payload Handling (Controllers)
+## Custom Gateway Payload Handling (Handlers)
 
-Controllers are one of the most powerful features of Discordeno. They allow you
+Handlers are one of the most powerful features of Discordeno. They allow you
 to take control of how Discordeno handles the Discord payloads from the gateway.
 When an event comes in, you can override and control how you want it to work.
 For example, if your bot does not use emojis at all, you could simply just take
@@ -362,11 +362,11 @@ Someone once asked if it was possible to make Discordeno, show the number of
 users currently typing in the server. He had managed to build this himself in
 his bot, but he wanted to do it inside the library itself. In order to keep
 Discordeno minimalistic and memory efficient I avoided adding this. So let's see
-how we could achieve this same thing with Controllers.
+how we could achieve this same thing:
 
 ```ts
 import {
-  controllers,
+  handlers,
   eventHandlers,
   TypingStartPayload,
 } from "../../../deps.ts";
@@ -379,7 +379,7 @@ function createTimeout(userID: String) {
   }, 10000);
 }
 
-controllers.TYPING_START = function (data) {
+handlers.TYPING_START = function (data) {
   const payload = data.d as TypingStartPayload;
   eventHandlers.typingStart?.(payload);
 
@@ -391,18 +391,16 @@ controllers.TYPING_START = function (data) {
 };
 ```
 
-Controllers are amazing in so many ways. This is just a basic example but it's
-true potential is only limited by your imagination. I would love to see what you
-all can create with controllers.
+This is just a basic example but it's true potential is only limited by your imagination. I would love to see what you
+all can create.
 
-Something worth noting about why Discordeno controllers are so amazing is that
+Something worth noting about why Discordeno handlers are so amazing is that
 it allows you to never depend on me. When Discord releases something new, you
 don't need to wait for me to update the library to access it. Without
-controllers, if you wanted access to a feature you would need to wait for the
+handlers, if you wanted access to a feature you would need to wait for the
 library to be updated or have to fork it, modify it and modify your code for it.
 Then when the library does get updated, you need to switch back to it and modify
-your code again possibly to how the lib designed it. With controllers, you never
+your code again possibly to how the lib designed it. With handlers, you never
 have to fork or anything. Just take control!
 
-Controllers are extremely powerful. **Remember with great power comes great
-bugs!**
+Remember with great power comes great bugs!

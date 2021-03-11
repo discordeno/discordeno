@@ -1,4 +1,4 @@
-import { Channel } from "../api/structures/mod.ts";
+import { Channel } from "../structures/mod.ts";
 import { ChannelType } from "./channel.ts";
 import { UserPayload } from "./guild.ts";
 import { MemberCreatePayload } from "./member.ts";

@@ -1,5 +1,5 @@
 import { cacheHandlers } from "../cache.ts";
-import { Guild, Role } from "../api/structures/mod.ts";
+import { Guild, Role } from "../structures/mod.ts";
 import { botID } from "../bot.ts";
 import { Permission, Permissions, RawOverwrite } from "../types/mod.ts";
 
