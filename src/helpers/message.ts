@@ -201,12 +201,13 @@ export async function removeReactionEmoji(
 
 /** Get a list of users that reacted with this emoji. */
 export async function getReactions(
-  message: Message,
+  channelID: string,
+  messageID: string,
   reaction: string,
   options?: DiscordGetReactionsParams,
 ) {
   const users = (await RequestManager.get(
-    endpoints.CHANNEL_MESSAGE_REACTION(message.channelID, message.id, reaction),
+    endpoints.CHANNEL_MESSAGE_REACTION(channelID, messageID, reaction),
     options,
   )) as UserPayload[];
 
