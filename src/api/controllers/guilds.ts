@@ -9,7 +9,7 @@ import {
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
-import { structures } from "../structures/mod.ts";
+import { Member, structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildCreate(
@@ -46,6 +46,19 @@ export async function handleInternalGuildDelete(data: DiscordPayload) {
     if (channel.guildID === payload.id) {
       cacheHandlers.delete("channels", channel.id);
     }
+  });
+
+  cacheHandlers.forEach("members", async (member) => {
+    if (!member.guilds.has(payload.id)) return;
+
+    member.guilds.delete(payload.id);
+
+    if (!member.guilds.size) {
+      await cacheHandlers.delete("members", member.id);
+      return;
+    }
+
+    await cacheHandlers.set("members", member.id, member);
   });
 
   if (payload.unavailable) {
