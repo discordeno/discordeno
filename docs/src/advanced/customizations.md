@@ -349,8 +349,8 @@ methods on the cacheHandlers. The current list of methods available are:
 
 ## Custom Gateway Payload Handling (Handlers)
 
-Handlers are one of the most powerful features of Discordeno. They allow you
-to take control of how Discordeno handles the Discord payloads from the gateway.
+Handlers are one of the most powerful features of Discordeno. They allow you to
+take control of how Discordeno handles the Discord payloads from the gateway.
 When an event comes in, you can override and control how you want it to work.
 For example, if your bot does not use emojis at all, you could simply just take
 control over the GUILD_EMOJIS_UPDATE event and prevent anyone from caching any
@@ -365,11 +365,7 @@ Discordeno minimalistic and memory efficient I avoided adding this. So let's see
 how we could achieve this same thing:
 
 ```ts
-import {
-  handlers,
-  eventHandlers,
-  TypingStartPayload,
-} from "../../../deps.ts";
+import { eventHandlers, handlers, TypingStartPayload } from "../../../deps.ts";
 
 const typingUsers = new Map<String, number>();
 
@@ -391,16 +387,16 @@ handlers.TYPING_START = function (data) {
 };
 ```
 
-This is just a basic example but it's true potential is only limited by your imagination. I would love to see what you
-all can create.
+This is just a basic example but it's true potential is only limited by your
+imagination. I would love to see what you all can create.
 
-Something worth noting about why Discordeno handlers are so amazing is that
-it allows you to never depend on me. When Discord releases something new, you
-don't need to wait for me to update the library to access it. Without
-handlers, if you wanted access to a feature you would need to wait for the
-library to be updated or have to fork it, modify it and modify your code for it.
-Then when the library does get updated, you need to switch back to it and modify
-your code again possibly to how the lib designed it. With handlers, you never
-have to fork or anything. Just take control!
+Something worth noting about why Discordeno handlers are so amazing is that it
+allows you to never depend on me. When Discord releases something new, you don't
+need to wait for me to update the library to access it. Without handlers, if you
+wanted access to a feature you would need to wait for the library to be updated
+or have to fork it, modify it and modify your code for it. Then when the library
+does get updated, you need to switch back to it and modify your code again
+possibly to how the lib designed it. With handlers, you never have to fork or
+anything. Just take control!
 
 Remember with great power comes great bugs!
