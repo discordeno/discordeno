@@ -117,6 +117,12 @@ export interface EventHandlers {
   channelUpdate?: (channel: Channel, cachedChannel: Channel) => unknown;
   /** Sent when a channel relevant to the current user is deleted. */
   channelDelete?: (channel: Channel) => unknown;
+  /** Sent when a message is pinned or unpinned in a text channel. This is not sent when a pinned message is deleted. */
+  channelPinsUpdate?: (
+    channel: Channel,
+    guild?: Guild,
+    lastPinTimestamp?: string | null,
+  ) => unknown;
   debug?: (args: DebugArg) => unknown;
   dispatchRequirements?: (data: DiscordPayload, shardID: number) => unknown;
   /** Sent when a user is banned from a guild. */
@@ -145,6 +151,8 @@ export interface EventHandlers {
     emojis: Collection<string, Emoji>,
     cachedEmojis: Collection<string, Emoji>,
   ) => unknown;
+  /** Sent when a guild integration is updated. */
+  guildIntegrationsUpdate?: (guild: Guild) => unknown;
   /** Sent when a new user joins a guild. */
   guildMemberAdd?: (guild: Guild, member: Member) => unknown;
   /** Sent when a user is removed from a guild (leave/kick/ban). */
@@ -228,6 +236,12 @@ export interface EventHandlers {
   voiceStateUpdate?: (
     member: Member,
     voiceState: VoiceStateUpdatePayload,
+  ) => unknown;
+  /** Sent when a guild's voice server is updated. This is sent when initially connecting to voice, and when the current voice instance fails over to a new server. */
+  voiceServerUpdate?: (
+    token: string,
+    guild: Guild,
+    endpoint: string,
   ) => unknown;
   /** Sent when a guild channel's webhook is created, updated, or deleted. */
   webhooksUpdate?: (channelID: string, guildID: string) => unknown;

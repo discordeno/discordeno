@@ -7,12 +7,14 @@ import {
   handleInternalChannelDelete,
   handleInternalChannelUpdate,
 } from "./channels.ts";
+import { handleChannelPinsUpdate } from "./CHANNEL_PINS_UPDATE.ts";
 import {
   handleInternalGuildCreate,
   handleInternalGuildDelete,
   handleInternalGuildEmojisUpdate,
   handleInternalGuildUpdate,
 } from "./guilds.ts";
+import { handleGuildIntegrationsUpdate } from "./GUILD_INTEGRATIONS_UPDATE.ts";
 import {
   handleInternalApplicationCommandCreate,
   handleInternalApplicationCommandDelete,
@@ -49,24 +51,27 @@ import {
   handleInternalMessageReactionRemoveAll,
   handleInternalMessageReactionRemoveEmoji,
 } from "./reactions.ts";
+import { handleInternalReady } from "./READY.ts";
 import {
   handleInternalGuildRoleCreate,
   handleInternalGuildRoleDelete,
   handleInternalGuildRoleUpdate,
 } from "./roles.ts";
-import { handleInternalReady } from "./READY.ts";
+import { handleVoiceServerUpdate } from "./VOICE_SERVER_UPDATE.ts";
 
 export let controllers = {
   READY: handleInternalReady,
   CHANNEL_CREATE: handleInternalChannelCreate,
   CHANNEL_DELETE: handleInternalChannelDelete,
   CHANNEL_UPDATE: handleInternalChannelUpdate,
+  CHANNEL_PINS_UPDATE: handleChannelPinsUpdate,
   GUILD_CREATE: handleInternalGuildCreate,
   GUILD_DELETE: handleInternalGuildDelete,
   GUILD_UPDATE: handleInternalGuildUpdate,
   GUILD_BAN_ADD: handleInternalGuildBanAdd,
   GUILD_BAN_REMOVE: handleInternalGuildBanRemove,
   GUILD_EMOJIS_UPDATE: handleInternalGuildEmojisUpdate,
+  GUILD_INTEGRATIONS_UPDATE: handleGuildIntegrationsUpdate,
   GUILD_MEMBER_ADD: handleInternalGuildMemberAdd,
   GUILD_MEMBER_REMOVE: handleInternalGuildMemberRemove,
   GUILD_MEMBER_UPDATE: handleInternalGuildMemberUpdate,
@@ -90,6 +95,7 @@ export let controllers = {
   TYPING_START: handleInternalTypingStart,
   USER_UPDATE: handleInternalUserUpdate,
   VOICE_STATE_UPDATE: handleInternalVoiceStateUpdate,
+  VOICE_SERVER_UPDATE: handleVoiceServerUpdate,
   WEBHOOKS_UPDATE: handleInternalWebhooksUpdate,
   INTEGRATION_CREATE: handleInternalIntegrationCreate,
   INTEGRATION_UPDATE: handleInternalIntegrationUpdate,
