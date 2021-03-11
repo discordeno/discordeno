@@ -6,7 +6,7 @@ import {
 } from "../../types/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
-export async function handleInternalGuildUpdate(data: DiscordPayload) {
+export async function handleGuildUpdate(data: DiscordPayload) {
   const payload = data.d as UpdateGuildPayload;
   const cachedGuild = await cacheHandlers.get("guilds", payload.id);
   if (!cachedGuild) return;

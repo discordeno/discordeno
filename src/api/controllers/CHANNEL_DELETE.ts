@@ -6,7 +6,7 @@ import {
 } from "../../types/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
-export async function handleInternalChannelDelete(data: DiscordPayload) {
+export async function handleChannelDelete(data: DiscordPayload) {
   const payload = data.d as ChannelCreatePayload;
 
   const cachedChannel = await cacheHandlers.get("channels", payload.id);

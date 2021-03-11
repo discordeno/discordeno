@@ -2,7 +2,7 @@ import { eventHandlers } from "../../bot.ts";
 import { DiscordPayload, GuildDeletePayload } from "../../types/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
-export async function handleInternalGuildDelete(data: DiscordPayload) {
+export async function handleGuildDelete(data: DiscordPayload) {
   const payload = data.d as GuildDeletePayload;
   cacheHandlers.forEach("messages", (message) => {
     if (message.guildID === payload.id) {

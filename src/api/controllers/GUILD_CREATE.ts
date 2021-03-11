@@ -4,7 +4,7 @@ import { cache } from "../../util/cache.ts";
 import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
-export async function handleInternalGuildCreate(
+export async function handleGuildCreate(
   data: DiscordPayload,
   shardID: number,
 ) {

@@ -3,7 +3,7 @@ import { ChannelCreatePayload, DiscordPayload } from "../../types/mod.ts";
 import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
-export async function handleInternalChannelUpdate(data: DiscordPayload) {
+export async function handleChannelUpdate(data: DiscordPayload) {
   const payload = data.d as ChannelCreatePayload;
   const cachedChannel = await cacheHandlers.get("channels", payload.id);
 
