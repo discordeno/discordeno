@@ -10,10 +10,9 @@ import { delay } from "../../util/utils.ts";
 import { allowNextShard, basicShards } from "../../ws/mod.ts";
 import { initialMemberLoadQueue } from "../structures/guild.ts";
 import { structures } from "../structures/mod.ts";
-import { cacheHandlers } from "./cache.ts";
+import { cacheHandlers } from "../../cache.ts";
 
-/** This function is the internal handler for the ready event. Users can override this with controllers if desired. */
-export async function handleInternalReady(
+export async function handleReady(
   data: DiscordPayload,
   shardID: number,
 ) {
