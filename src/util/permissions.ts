@@ -1,5 +1,6 @@
 import { botID } from "../bot.ts";
 import { cacheHandlers } from "../cache.ts";
+import { Errors } from "../types/errors.ts";
 
 async function getCached(
   table: "guilds",
