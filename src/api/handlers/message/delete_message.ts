@@ -1,9 +1,8 @@
-import { botID } from "../../../../bot.ts";
-import { RequestManager } from "../../../../rest/request_manager.ts";
-import { Message } from "../../../../types/lib/structures/message.ts";
-import { endpoints } from "../../../../util/constants.ts";
-import { botHasChannelPermissions } from "../../../../util/permissions.ts";
-import { delay } from "../../../../util/utils.ts";
+import { botID } from "../../../bot.ts";
+import { RequestManager } from "../../../rest/request_manager.ts";
+import { endpoints } from "../../../util/constants.ts";
+import { botHasChannelPermissions } from "../../../util/permissions.ts";
+import { delay } from "../../../util/utils.ts";
 
 /** Delete a message */
 export async function deleteMessage(

@@ -68,7 +68,7 @@ export interface Message {
   /** the stickers sent with the message (bots currently can only receive messages with stickers, not send) */
   stickers?: DiscordMessageSticker[];
   /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
-  referencedMessageID?: MessageCreateOptions | null;
+  referencedMessage?: Message;
 
   // GETTERS
 

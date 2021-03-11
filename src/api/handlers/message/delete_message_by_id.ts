@@ -1,8 +1,8 @@
-import { RequestManager } from "../../../../rest/request_manager.ts";
-import { endpoints } from "../../../../util/constants.ts";
-import { delay } from "../../../../util/utils.ts";
-import { cacheHandlers } from "../../../controllers/cache.ts";
-import { deleteMessage } from "./cached.ts";
+import { RequestManager } from "../../../rest/request_manager.ts";
+import { endpoints } from "../../../util/constants.ts";
+import { delay } from "../../../util/utils.ts";
+import { cacheHandlers } from "../../controllers/cache.ts";
+import { deleteMessage } from "./delete_message.ts";
 
 /** Delete a message with the channel id and message id only. */
 export async function deleteMessageByID(
@@ -22,4 +22,4 @@ export async function deleteMessageByID(
   );
 
   return result;
-}2
+}
