@@ -23,7 +23,7 @@ import {
   botHasPermission,
   calculateBits,
 } from "../../util/permissions.ts";
-import { cacheHandlers } from "../controllers/cache.ts";
+import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../structures/mod.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */

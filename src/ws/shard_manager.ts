@@ -8,7 +8,6 @@ import {
   DiscordPayload,
   FetchMembersOptions,
   GatewayOpcode,
-  GatewayStatusUpdatePayload,
 } from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
