@@ -1,4 +1,4 @@
-import { Guild } from "../api/structures/mod.ts";
+import { Guild } from "../structures/mod.ts";
 import { ChannelCreatePayload, ChannelTypes } from "./channel.ts";
 import { Emoji, StatusType } from "./discord.ts";
 import { MemberCreatePayload } from "./member.ts";
@@ -582,7 +582,7 @@ export interface PruneOptions {
   /** Whether 'pruned' is returned, discouraged for large guilds. Default: true */
   computePruneCount?: boolean;
   /** Role(s) to include */
-  roles?: string[];
+  includeRoles?: string[];
 }
 
 export interface VoiceState {

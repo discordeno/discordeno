@@ -1,6 +1,6 @@
-import { cacheHandlers } from "../api/controllers/cache.ts";
-import { Channel, Guild, Member, Role } from "../api/structures/mod.ts";
 import { botID } from "../bot.ts";
+import { cacheHandlers } from "../cache.ts";
+import { Channel, Guild, Member, Role } from "../structures/mod.ts";
 import { Errors, Permission, Permissions } from "../types/mod.ts";
 
 async function getCached(
