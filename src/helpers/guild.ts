@@ -1,5 +1,7 @@
 import { identifyPayload } from "../bot.ts";
+import { cacheHandlers } from "../cache.ts";
 import { RequestManager } from "../rest/request_manager.ts";
+import { Guild, Member, structures } from "../structures/mod.ts";
 import {
   AuditLogs,
   BannedUser,
@@ -28,6 +30,7 @@ import {
   Intents,
   MemberCreatePayload,
   Overwrite,
+  Permission,
   PositionSwap,
   PruneOptions,
   PrunePayload,
@@ -37,22 +40,23 @@ import {
 } from "../types/mod.ts";
 import { Collection } from "../util/collection.ts";
 import { endpoints } from "../util/constants.ts";
-import { botHasPermission, calculateBits } from "../util/permissions.ts";
+import {
+  calculateBits,
+  requireBotGuildPermissions,
+} from "../util/permissions.ts";
 import {
   camelKeysToSnakeCase,
   formatImageURL,
   urlToBase64,
 } from "../util/utils.ts";
 import { requestAllMembers } from "../ws/shard_manager.ts";
-import { cacheHandlers } from "../cache.ts";
-import { Guild, Member, structures } from "../structures/mod.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createGuild(options: CreateServerOptions) {
-  const guild = await RequestManager.post(
+  const guild = (await RequestManager.post(
     endpoints.GUILDS,
     options,
-  ) as CreateGuildPayload;
+  )) as CreateGuildPayload;
 
   return structures.createGuildStruct(guild, 0);
 }
@@ -120,25 +124,29 @@ export async function createGuildChannel(
   name: string,
   options?: ChannelCreateOptions,
 ) {
-  const hasPerm = await botHasPermission(
-    guildID,
-    ["MANAGE_CHANNELS"],
-  );
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_CHANNELS);
-  }
+  const requiredPerms: Set<Permission> = new Set(["MANAGE_CHANNELS"]);
 
-  const result = (await RequestManager.post(endpoints.GUILD_CHANNELS(guildID), {
-    ...options,
-    name,
-    permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
-      ...perm,
+  options?.permissionOverwrites?.forEach((overwrite) => {
+    overwrite.allow.forEach(requiredPerms.add, requiredPerms);
+    overwrite.deny.forEach(requiredPerms.add, requiredPerms);
+  });
 
-      allow: calculateBits(perm.allow),
-      deny: calculateBits(perm.deny),
-    })),
-    type: options?.type || ChannelTypes.GUILD_TEXT,
-  })) as ChannelCreatePayload;
+  await requireBotGuildPermissions(guildID, [...requiredPerms]);
+
+  const result = (await RequestManager.post(
+    endpoints.GUILD_CHANNELS(guildID),
+    {
+      ...options,
+      name,
+      permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
+        ...perm,
+
+        allow: calculateBits(perm.allow),
+        deny: calculateBits(perm.deny),
+      })),
+      type: options?.type || ChannelTypes.GUILD_TEXT,
+    },
+  )) as ChannelCreatePayload;
 
   const channelStruct = await structures.createChannelStruct(result);
   await cacheHandlers.set("channels", channelStruct.id, channelStruct);
@@ -152,13 +160,7 @@ export async function deleteChannel(
   channelID: string,
   reason?: string,
 ) {
-  const hasPerm = await botHasPermission(
-    guildID,
-    ["MANAGE_CHANNELS"],
-  );
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_CHANNELS);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_CHANNELS"]);
 
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
@@ -180,13 +182,13 @@ export async function deleteChannel(
 }
 
 /** Returns a list of guild channel objects.
-*
-* ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
-*/
+ *
+ * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
+ */
 export async function getChannels(guildID: string, addToCache = true) {
-  const result = await RequestManager.get(
+  const result = (await RequestManager.get(
     endpoints.GUILD_CHANNELS(guildID),
-  ) as ChannelCreatePayload[];
+  ) as ChannelCreatePayload[]);
 
   return Promise.all(result.map(async (res) => {
     const channelStruct = await structures.createChannelStruct(res, guildID);
@@ -199,13 +201,13 @@ export async function getChannels(guildID: string, addToCache = true) {
 }
 
 /** Fetches a single channel object from the api.
-*
-* ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
-*/
+ *
+ * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
+ */
 export async function getChannel(channelID: string, addToCache = true) {
-  const result = await RequestManager.get(
+  const result = (await RequestManager.get(
     endpoints.CHANNEL_BASE(channelID),
-  ) as ChannelCreatePayload;
+  )) as ChannelCreatePayload;
 
   const channelStruct = await structures.createChannelStruct(
     result,
@@ -242,13 +244,7 @@ export async function editChannelOverwrite(
   overwriteID: string,
   options: Omit<Overwrite, "id">,
 ) {
-  const hasPerm = await botHasPermission(
-    guildID,
-    ["MANAGE_ROLES"],
-  );
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_ROLES);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   const result = await RequestManager.put(
     endpoints.CHANNEL_OVERWRITE(channelID, overwriteID),
@@ -268,13 +264,7 @@ export async function deleteChannelOverwrite(
   channelID: string,
   overwriteID: string,
 ) {
-  const hasPerm = await botHasPermission(
-    guildID,
-    ["MANAGE_ROLES"],
-  );
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_ROLES);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   const result = await RequestManager.delete(
     endpoints.CHANNEL_OVERWRITE(channelID, overwriteID),
@@ -284,9 +274,9 @@ export async function deleteChannelOverwrite(
 }
 
 /** Returns a guild member object for the specified user.
-*
-* ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
-*/
+ *
+ * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
+ */
 export async function getMember(
   guildID: string,
   id: string,
@@ -295,9 +285,9 @@ export async function getMember(
   const guild = await cacheHandlers.get("guilds", guildID);
   if (!guild && !options?.force) return;
 
-  const data = await RequestManager.get(
+  const data = (await RequestManager.get(
     endpoints.GUILD_MEMBER(guildID, id),
-  ) as MemberCreatePayload;
+  )) as MemberCreatePayload;
 
   const memberStruct = await structures.createMemberStruct(data, guildID);
   await cacheHandlers.set("members", memberStruct.id, memberStruct);
@@ -306,9 +296,9 @@ export async function getMember(
 }
 
 /** Returns guild member objects for the specified user by their nickname/username.
-*
-* ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
-*/
+ *
+ * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
+ */
 export async function getMembersByQuery(
   guildID: string,
   name: string,
@@ -329,10 +319,7 @@ export async function createEmoji(
   image: string,
   options: CreateEmojisOptions,
 ) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_EMOJIS"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_EMOJIS);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_EMOJIS"]);
 
   if (image && !image.startsWith("data:image/")) {
     image = await urlToBase64(image);
@@ -353,10 +340,7 @@ export async function editEmoji(
   id: string,
   options: EditEmojisOptions,
 ) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_EMOJIS"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_EMOJIS);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_EMOJIS"]);
 
   const result = await RequestManager.patch(
     endpoints.GUILD_EMOJI(guildID, id),
@@ -375,10 +359,7 @@ export async function deleteEmoji(
   id: string,
   reason?: string,
 ) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_EMOJIS"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_EMOJIS);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_EMOJIS"]);
 
   const result = await RequestManager.delete(
     endpoints.GUILD_EMOJI(guildID, id),
@@ -399,9 +380,9 @@ export function emojiURL(id: string, animated = false) {
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  */
 export async function getEmojis(guildID: string, addToCache = true) {
-  const result = await RequestManager.get(
+  const result = (await RequestManager.get(
     endpoints.GUILD_EMOJIS(guildID),
-  ) as Emoji[];
+  )) as Emoji[];
 
   if (addToCache) {
     const guild = await cacheHandlers.get("guilds", guildID);
@@ -425,9 +406,9 @@ export async function getEmoji(
   emojiID: string,
   addToCache = true,
 ) {
-  const result = await RequestManager.get(
+  const result = (await RequestManager.get(
     endpoints.GUILD_EMOJI(guildID, emojiID),
-  ) as Emoji;
+  )) as Emoji;
 
   if (addToCache) {
     const guild = await cacheHandlers.get("guilds", guildID);
@@ -449,19 +430,13 @@ export async function createRole(
   options: CreateRoleOptions,
   reason?: string,
 ) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_ROLES);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
-  const result = await RequestManager.post(
-    endpoints.GUILD_ROLES(guildID),
-    {
-      ...options,
-      permissions: calculateBits(options?.permissions || []),
-      reason,
-    },
-  );
+  const result = await RequestManager.post(endpoints.GUILD_ROLES(guildID), {
+    ...options,
+    permissions: calculateBits(options?.permissions || []),
+    reason,
+  });
 
   const roleData = result as RoleData;
   const role = await structures.createRoleStruct(roleData);
@@ -477,10 +452,7 @@ export async function editRole(
   id: string,
   options: CreateRoleOptions,
 ) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_ROLES);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   const result = await RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), {
     ...options,
@@ -494,10 +466,7 @@ export async function editRole(
 
 /** Delete a guild role. Requires the MANAGE_ROLES permission. */
 export async function deleteRole(guildID: string, id: string) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_ROLES);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   const result = await RequestManager.delete(endpoints.GUILD_ROLE(guildID, id));
 
@@ -505,14 +474,11 @@ export async function deleteRole(guildID: string, id: string) {
 }
 
 /** Returns a list of role objects for the guild.
-*
-* ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your roles will be cached in your guild.**
-*/
+ *
+ * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your roles will be cached in your guild.**
+ */
 export async function getRoles(guildID: string) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_ROLES);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   const result = await RequestManager.get(endpoints.GUILD_ROLES(guildID));
 
@@ -521,10 +487,7 @@ export async function getRoles(guildID: string) {
 
 /** Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. */
 export async function swapRoles(guildID: string, rolePositons: PositionSwap) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_ROLES"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_ROLES);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
 
   const result = await RequestManager.patch(
     endpoints.GUILD_ROLES(guildID),
@@ -541,10 +504,7 @@ export async function getPruneCount(guildID: string, options?: PruneOptions) {
     throw new Error(Errors.PRUNE_MAX_DAYS);
   }
 
-  const hasPerm = await botHasPermission(guildID, ["KICK_MEMBERS"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_KICK_MEMBERS);
-  }
+  await requireBotGuildPermissions(guildID, ["KICK_MEMBERS"]);
 
   const result = await RequestManager.get(
     endpoints.GUILD_PRUNE(guildID),
@@ -566,10 +526,7 @@ export async function pruneMembers(
   if (options.days && options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
   if (options.days && options.days > 30) throw new Error(Errors.PRUNE_MAX_DAYS);
 
-  const hasPerm = await botHasPermission(guildID, ["KICK_MEMBERS"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_KICK_MEMBERS);
-  }
+  await requireBotGuildPermissions(guildID, ["KICK_MEMBERS"]);
 
   const result = await RequestManager.post(
     endpoints.GUILD_PRUNE(guildID),
@@ -586,7 +543,7 @@ export async function pruneMembers(
  * Highly recommended to use this function to fetch members instead of getMember from REST.
  * REST: 50/s global(across all shards) rate limit with ALL requests this included
  * GW(this function): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is now 960/m.
-*/
+ */
 export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
   // You can request 1 member without the intent
   if (
@@ -612,11 +569,8 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
  * Highly recommended to **NOT** use this function to get members instead use fetchMembers().
  * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
-*/
-export async function getMembers(
-  guildID: string,
-  options?: GetMemberOptions,
-) {
+ */
+export async function getMembers(guildID: string, options?: GetMemberOptions) {
   if (!(identifyPayload.intents && Intents.GUILD_MEMBERS)) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
@@ -629,21 +583,24 @@ export async function getMembers(
   let membersLeft = options?.limit ?? guild.memberCount;
   let loops = 1;
   while (
-    (options?.limit ?? guild.memberCount) > members.size && membersLeft > 0
+    (options?.limit ?? guild.memberCount) > members.size &&
+    membersLeft > 0
   ) {
     if (options?.limit && options.limit > 1000) {
       console.log(
         `Paginating get members from REST. #${loops} / ${
-          Math.ceil((options?.limit ?? 1) / 1000)
+          Math.ceil(
+            (options?.limit ?? 1) / 1000,
+          )
         }`,
       );
     }
 
-    const result = await RequestManager.get(
+    const result = (await RequestManager.get(
       `${endpoints.GUILD_MEMBERS(guildID)}?limit=${
         membersLeft > 1000 ? 1000 : membersLeft
       }${options?.after ? `&after=${options.after}` : ""}`,
-    ) as MemberCreatePayload[];
+    )) as MemberCreatePayload[];
 
     const memberStructures = await Promise.all(
       result.map(async (member) => {
@@ -680,10 +637,7 @@ export async function getAuditLogs(
   guildID: string,
   options: GetAuditLogsOptions,
 ) {
-  const hasPerm = await botHasPermission(guildID, ["VIEW_AUDIT_LOG"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_VIEW_AUDIT_LOG);
-  }
+  await requireBotGuildPermissions(guildID, ["VIEW_AUDIT_LOG"]);
 
   const result = await RequestManager.get(endpoints.GUILD_AUDIT_LOGS(guildID), {
     ...options,
@@ -700,10 +654,7 @@ export async function getAuditLogs(
 
 /** Returns the guild widget object. Requires the MANAGE_GUILD permission. */
 export async function getWidgetSettings(guildID: string) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_GUILD);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const result = await RequestManager.get(endpoints.GUILD_WIDGET(guildID));
 
@@ -716,15 +667,12 @@ export async function editWidget(
   enabled: boolean,
   channelID?: string | null,
 ) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_GUILD);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
-  const result = await RequestManager.patch(
-    endpoints.GUILD_WIDGET(guildID),
-    { enabled, channel_id: channelID },
-  );
+  const result = await RequestManager.patch(endpoints.GUILD_WIDGET(guildID), {
+    enabled,
+    channel_id: channelID,
+  });
 
   return result;
 }
@@ -767,10 +715,7 @@ export async function getVanityURL(guildID: string) {
 
 /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
 export async function getIntegrations(guildID: string) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_GUILD);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const result = await RequestManager.get(
     endpoints.GUILD_INTEGRATIONS(guildID),
@@ -785,10 +730,7 @@ export async function editIntegration(
   id: string,
   options: EditIntegrationOptions,
 ) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_GUILD);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const result = await RequestManager.patch(
     endpoints.GUILD_INTEGRATION(guildID, id),
@@ -800,10 +742,7 @@ export async function editIntegration(
 
 /** Delete the attached integration object for the guild with this id. Requires MANAGE_GUILD permission. */
 export async function deleteIntegration(guildID: string, id: string) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_GUILD);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const result = await RequestManager.delete(
     endpoints.GUILD_INTEGRATION(guildID, id),
@@ -814,10 +753,7 @@ export async function deleteIntegration(guildID: string, id: string) {
 
 /** Sync an integration. Requires the MANAGE_GUILD permission. */
 export async function syncIntegration(guildID: string, id: string) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_GUILD);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const result = await RequestManager.post(
     endpoints.GUILD_INTEGRATION_SYNC(guildID, id),
@@ -828,14 +764,11 @@ export async function syncIntegration(guildID: string, id: string) {
 
 /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
 export async function getBans(guildID: string) {
-  const hasPerm = await botHasPermission(guildID, ["BAN_MEMBERS"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_BAN_MEMBERS);
-  }
+  await requireBotGuildPermissions(guildID, ["BAN_MEMBERS"]);
 
-  const results = await RequestManager.get(
+  const results = (await RequestManager.get(
     endpoints.GUILD_BANS(guildID),
-  ) as BannedUser[];
+  )) as BannedUser[];
 
   return new Collection<string, BannedUser>(
     results.map((res) => [res.user.id, res]),
@@ -844,10 +777,7 @@ export async function getBans(guildID: string) {
 
 /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
 export async function getBan(guildID: string, memberID: string) {
-  const hasPerm = await botHasPermission(guildID, ["BAN_MEMBERS"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_BAN_MEMBERS);
-  }
+  await requireBotGuildPermissions(guildID, ["BAN_MEMBERS"]);
 
   const result = await RequestManager.get(
     endpoints.GUILD_BAN(guildID, memberID),
@@ -858,25 +788,19 @@ export async function getBan(guildID: string, memberID: string) {
 
 /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
 export async function ban(guildID: string, id: string, options: BanOptions) {
-  const hasPerm = await botHasPermission(guildID, ["BAN_MEMBERS"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_BAN_MEMBERS);
-  }
+  await requireBotGuildPermissions(guildID, ["BAN_MEMBERS"]);
 
-  const result = await RequestManager.put(
-    endpoints.GUILD_BAN(guildID, id),
-    { ...options, delete_message_days: options.days },
-  );
+  const result = await RequestManager.put(endpoints.GUILD_BAN(guildID, id), {
+    ...options,
+    delete_message_days: options.days,
+  });
 
   return result;
 }
 
 /** Remove the ban for a user. Requires BAN_MEMBERS permission */
 export async function unban(guildID: string, id: string) {
-  const hasPerm = await botHasPermission(guildID, ["BAN_MEMBERS"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_BAN_MEMBERS);
-  }
+  await requireBotGuildPermissions(guildID, ["BAN_MEMBERS"]);
 
   const result = await RequestManager.delete(endpoints.GUILD_BAN(guildID, id));
 
@@ -892,10 +816,7 @@ export async function getGuildPreview(guildID: string) {
 
 /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
 export async function editGuild(guildID: string, options: GuildEditOptions) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_GUILD);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   if (options.icon && !options.icon.startsWith("data:image/")) {
     options.icon = await urlToBase64(options.icon);
@@ -919,10 +840,7 @@ export async function editGuild(guildID: string, options: GuildEditOptions) {
 
 /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
 export async function getInvites(guildID: string) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_GUILD);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   const result = await RequestManager.get(endpoints.GUILD_INVITES(guildID));
 
@@ -952,13 +870,7 @@ export async function getVoiceRegions(guildID: string) {
 
 /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
 export async function getWebhooks(guildID: string) {
-  const hasPerm = await botHasPermission(
-    guildID,
-    ["MANAGE_WEBHOOKS"],
-  );
-  if (!hasPerm) {
-    throw new Error(Errors.MISSING_MANAGE_WEBHOOKS);
-  }
+  await requireBotGuildPermissions(guildID, ["MANAGE_WEBHOOKS"]);
 
   const result = await RequestManager.get(endpoints.GUILD_WEBHOOKS(guildID));
 
@@ -967,9 +879,7 @@ export async function getWebhooks(guildID: string) {
 
 /** This function will return the raw user payload in the rare cases you need to fetch a user directly from the API. */
 export async function getUser(userID: string) {
-  const result = await RequestManager.get(
-    endpoints.USER(userID),
-  );
+  const result = await RequestManager.get(endpoints.USER(userID));
 
   return result as UserPayload;
 }
@@ -982,19 +892,18 @@ export async function getUser(userID: string) {
  * So it does not cache the guild, you must do it manually.
  * */
 export async function getGuild(guildID: string, counts = true) {
-  const result = await RequestManager.get(
-    endpoints.GUILDS_BASE(guildID),
-    { with_counts: counts },
-  );
+  const result = await RequestManager.get(endpoints.GUILDS_BASE(guildID), {
+    with_counts: counts,
+  });
 
   return result as UpdateGuildPayload;
 }
 
 /** Returns the guild template if it exists */
 export async function getTemplate(templateCode: string) {
-  const result = await RequestManager.get(
+  const result = (await RequestManager.get(
     endpoints.GUILD_TEMPLATE(templateCode),
-  ) as GuildTemplate;
+  ) as GuildTemplate);
   const template = await structures.createTemplateStruct(result);
 
   return template;
@@ -1004,10 +913,7 @@ export async function getTemplate(templateCode: string) {
  * Returns the guild template if it exists
  * @deprecated will get removed in v11 use `getTemplate` instead
  */
-export function getGuildTemplate(
-  guildID: string,
-  templateCode: string,
-) {
+export function getGuildTemplate(guildID: string, templateCode: string) {
   return getTemplate(templateCode);
 }
 
@@ -1019,7 +925,7 @@ export async function createGuildFromTemplate(
   templateCode: string,
   data: CreateGuildFromTemplate,
 ) {
-  if (await cacheHandlers.size("guilds") >= 10) {
+  if ((await cacheHandlers.size("guilds")) >= 10) {
     throw new Error(
       "This function can only be used by bots in less than 10 guilds.",
     );
@@ -1042,12 +948,11 @@ export async function createGuildFromTemplate(
  * Requires the `MANAGE_GUILD` permission.
  */
 export async function getGuildTemplates(guildID: string) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
-  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
-  const templates = await RequestManager.get(
+  const templates = (await RequestManager.get(
     endpoints.GUILD_TEMPLATES(guildID),
-  ) as GuildTemplate[];
+  )) as GuildTemplate[];
 
   return templates.map((template) => structures.createTemplateStruct(template));
 }
@@ -1060,12 +965,11 @@ export async function deleteGuildTemplate(
   guildID: string,
   templateCode: string,
 ) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
-  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
-  const deletedTemplate = await RequestManager.delete(
+  const deletedTemplate = (await RequestManager.delete(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
-  ) as GuildTemplate;
+  )) as GuildTemplate;
 
   return structures.createTemplateStruct(deletedTemplate);
 }
@@ -1080,24 +984,20 @@ export async function createGuildTemplate(
   guildID: string,
   data: CreateGuildTemplate,
 ) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
-  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   if (data.name.length < 1 || data.name.length > 100) {
     throw new Error("The name can only be in between 1-100 characters.");
   }
 
-  if (
-    data.description?.length &&
-    data.description.length > 120
-  ) {
+  if (data.description?.length && data.description.length > 120) {
     throw new Error("The description can only be in between 0-120 characters.");
   }
 
-  const template = await RequestManager.post(
+  const template = (await RequestManager.post(
     endpoints.GUILD_TEMPLATES(guildID),
     data,
-  ) as GuildTemplate;
+  )) as GuildTemplate;
 
   return structures.createTemplateStruct(template);
 }
@@ -1107,12 +1007,11 @@ export async function createGuildTemplate(
  * Requires the `MANAGE_GUILD` permission.
  */
 export async function syncGuildTemplate(guildID: string, templateCode: string) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
-  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
-  const template = await RequestManager.put(
+  const template = (await RequestManager.put(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
-  ) as GuildTemplate;
+  )) as GuildTemplate;
 
   return structures.createTemplateStruct(template);
 }
@@ -1126,24 +1025,20 @@ export async function editGuildTemplate(
   templateCode: string,
   data: EditGuildTemplate,
 ) {
-  const hasPerm = await botHasPermission(guildID, ["MANAGE_GUILD"]);
-  if (!hasPerm) throw new Error(Errors.MISSING_MANAGE_GUILD);
+  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
 
   if (data.name?.length && (data.name.length < 1 || data.name.length > 100)) {
     throw new Error("The name can only be in between 1-100 characters.");
   }
 
-  if (
-    data.description?.length &&
-    data.description.length > 120
-  ) {
+  if (data.description?.length && data.description.length > 120) {
     throw new Error("The description can only be in between 0-120 characters.");
   }
 
-  const template = await RequestManager.patch(
+  const template = (await RequestManager.patch(
     `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
     data,
-  ) as GuildTemplate;
+  )) as GuildTemplate;
 
   return structures.createTemplateStruct(template);
 }
