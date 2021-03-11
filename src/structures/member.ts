@@ -1,12 +1,3 @@
-import {
-  BanOptions,
-  EditMemberOptions,
-  GuildMember,
-  ImageFormats,
-  ImageSize,
-  MemberCreatePayload,
-  MessageContent,
-} from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
@@ -20,7 +11,6 @@ import {
   removeRole,
   sendDirectMessage,
 } from "../helpers/member.ts";
-import { Guild } from "./guild.ts";
 
 const baseMember: Partial<Member> = {
   get avatarURL() {

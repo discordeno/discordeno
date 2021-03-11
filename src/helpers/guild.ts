@@ -1,40 +1,5 @@
 import { identifyPayload } from "../bot.ts";
 import { RequestManager } from "../rest/request_manager.ts";
-import {
-  AuditLogs,
-  BannedUser,
-  BanOptions,
-  ChannelCreateOptions,
-  ChannelCreatePayload,
-  ChannelTypes,
-  CreateEmojisOptions,
-  CreateGuildFromTemplate,
-  CreateGuildPayload,
-  CreateGuildTemplate,
-  CreateRoleOptions,
-  CreateServerOptions,
-  EditEmojisOptions,
-  EditGuildTemplate,
-  EditIntegrationOptions,
-  Emoji,
-  Errors,
-  FetchMembersOptions,
-  GetAuditLogsOptions,
-  GetMemberOptions,
-  GuildEditOptions,
-  GuildTemplate,
-  ImageFormats,
-  ImageSize,
-  Intents,
-  MemberCreatePayload,
-  Overwrite,
-  PositionSwap,
-  PruneOptions,
-  PrunePayload,
-  RoleData,
-  UpdateGuildPayload,
-  UserPayload,
-} from "../types/mod.ts";
 import { Collection } from "../util/collection.ts";
 import { endpoints } from "../util/constants.ts";
 import { botHasPermission, calculateBits } from "../util/permissions.ts";

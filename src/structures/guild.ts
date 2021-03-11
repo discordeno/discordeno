@@ -1,18 +1,4 @@
 import { botID } from "../bot.ts";
-import {
-  BanOptions,
-  CreateGuildPayload,
-  Emoji,
-  GetAuditLogsOptions,
-  GuildEditOptions,
-  GuildFeatures,
-  GuildMember,
-  ImageFormats,
-  ImageSize,
-  MemberCreatePayload,
-  Presence,
-  VoiceState,
-} from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";

@@ -1,11 +1,4 @@
 import { getGatewayBot } from "./helpers/gateway.ts";
-import {
-  BotConfig,
-  DiscordBotGatewayData,
-  DiscordIdentify,
-  EventHandlers,
-  Intents,
-} from "./types/mod.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 

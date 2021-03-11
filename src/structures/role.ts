@@ -1,10 +1,7 @@
-import { CreateRoleOptions, RoleData } from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
-import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
 import { deleteRole, editRole } from "../helpers/guild.ts";
-import { Guild } from "./guild.ts";
-import { Member } from "./member.ts";
+
 
 const baseRole: Partial<Role> = {
   get guild() {

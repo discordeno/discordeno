@@ -1,24 +1,5 @@
 import { applicationID } from "../bot.ts";
 import { RequestManager } from "../rest/request_manager.ts";
-import {
-  CreateSlashCommandOptions,
-  EditSlashCommandOptions,
-  EditSlashResponseOptions,
-  EditWebhookMessageOptions,
-  Errors,
-  ExecuteWebhookOptions,
-  MessageCreateOptions,
-  SlashCommand,
-  SlashCommandOption,
-  SlashCommandOptionChoice,
-  SlashCommandOptionType,
-  SlashCommandResponseOptions,
-  UpsertSlashCommandOptions,
-  UpsertSlashCommandsOptions,
-  WebhookCreateOptions,
-  WebhookEditOptions,
-  WebhookPayload,
-} from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
 import { endpoints, SLASH_COMMANDS_NAME_REGEX } from "../util/constants.ts";

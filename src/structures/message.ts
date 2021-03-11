@@ -1,17 +1,3 @@
-import {
-  Activity,
-  Application,
-  Attachment,
-  DiscordReferencePayload,
-  Embed,
-  GuildMember,
-  MessageContent,
-  MessageCreateOptions,
-  MessageSticker,
-  Reaction,
-  Reference,
-  UserPayload,
-} from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
 import { createNewProp } from "../util/utils.ts";
 import { cacheHandlers } from "../cache.ts";
@@ -27,10 +13,6 @@ import {
   removeReaction,
   removeReactionEmoji,
 } from "../helpers/message.ts";
-import { Channel } from "./channel.ts";
-import { Guild } from "./guild.ts";
-import { Member } from "./member.ts";
-import { Role } from "./role.ts";
 
 const baseMessage: Partial<Message> = {
   get channel() {

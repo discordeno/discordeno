@@ -1,14 +1,5 @@
 import { handlers } from "../handlers/mod.ts";
-import { Guild } from "../structures/guild.ts";
-import { Member } from "../structures/mod.ts";
 import { eventHandlers } from "../bot.ts";
-import {
-  DiscordBotGatewayData,
-  DiscordIdentify,
-  DiscordPayload,
-  FetchMembersOptions,
-  GatewayOpcode,
-} from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
 import { delay } from "../util/utils.ts";

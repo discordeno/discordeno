@@ -1,15 +1,5 @@
 import { botID } from "../bot.ts";
 import { RequestManager } from "../rest/request_manager.ts";
-import {
-  ChannelCreatePayload,
-  DMChannelCreatePayload,
-  EditMemberOptions,
-  Errors,
-  ImageFormats,
-  ImageSize,
-  MemberCreatePayload,
-  MessageContent,
-} from "../types/mod.ts";
 import { endpoints } from "../util/constants.ts";
 import {
   botHasPermission,

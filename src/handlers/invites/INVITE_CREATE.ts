@@ -1,5 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import { DiscordPayload, InviteCreateEvent } from "../../types/mod.ts";
 
 export function handleInviteCreate(payload: DiscordPayload) {
   if (payload.t !== "INVITE_CREATE") return;

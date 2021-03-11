@@ -4,7 +4,6 @@ import {
   setApplicationID,
   setBotID,
 } from "../bot.ts";
-import { DiscordPayload, ReadyPayload } from "../types/discord.ts";
 import { cache } from "../util/cache.ts";
 import { delay } from "../util/utils.ts";
 import { allowNextShard, basicShards } from "../ws/mod.ts";

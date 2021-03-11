@@ -1,13 +1,4 @@
 import { botGatewayData, eventHandlers, proxyWSURL } from "../bot.ts";
-import {
-  DiscordBotGatewayData,
-  DiscordHeartbeatPayload,
-  DiscordIdentify,
-  DiscordPayload,
-  FetchMembersOptions,
-  GatewayOpcode,
-  ReadyPayload,
-} from "../types/mod.ts";
 import { Collection } from "../util/collection.ts";
 import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";

@@ -1,5 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import { CreateGuildPayload, DiscordPayload } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { basicShards } from "../../ws/shard.ts";
 import { structures } from "../../structures/mod.ts";
