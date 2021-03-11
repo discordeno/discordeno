@@ -1,9 +1,9 @@
-import { eventHandlers } from "../../bot.ts";
+import { botID, eventHandlers } from "../../bot.ts";
+import { cacheHandlers } from "../../cache.ts";
+import { structures } from "../../structures/mod.ts";
 import { CreateGuildPayload, DiscordPayload } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { basicShards } from "../../ws/shard.ts";
-import { structures } from "../../structures/mod.ts";
-import { cacheHandlers } from "../../cache.ts";
 
 export async function handleGuildCreate(
   data: DiscordPayload,
@@ -26,6 +26,13 @@ export async function handleGuildCreate(
 
     shard.unavailableGuildIDs.delete(payload.id);
   }
+
+  // Save at least the bot
+  const botMember = await structures.createMemberStruct(
+    payload.members.find((m) => m.user.id === botID)!,
+    payload.id,
+  );
+  await cacheHandlers.set("members", botMember.id, botMember);
 
   if (!cache.isReady) return eventHandlers.guildLoaded?.(guildStruct);
   eventHandlers.guildCreate?.(guildStruct);
