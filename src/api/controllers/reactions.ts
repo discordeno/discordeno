@@ -9,8 +9,6 @@ import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
-  if (data.t !== "MESSAGE_REACTION_ADD") return;
-
   const payload = data.d as MessageReactionPayload;
   const message = await cacheHandlers.get("messages", payload.message_id);
 
@@ -65,8 +63,6 @@ export async function handleInternalMessageReactionAdd(data: DiscordPayload) {
 export async function handleInternalMessageReactionRemove(
   data: DiscordPayload,
 ) {
-  if (data.t !== "MESSAGE_REACTION_REMOVE") return;
-
   const payload = data.d as MessageReactionPayload;
   const message = await cacheHandlers.get("messages", payload.message_id);
 
@@ -121,8 +117,6 @@ export async function handleInternalMessageReactionRemove(
 export async function handleInternalMessageReactionRemoveAll(
   data: DiscordPayload,
 ) {
-  if (data.t !== "MESSAGE_REACTION_REMOVE_ALL") return;
-
   const payload = data.d as BaseMessageReactionPayload;
   const message = await cacheHandlers.get("messages", payload.message_id);
 
@@ -138,8 +132,6 @@ export async function handleInternalMessageReactionRemoveAll(
 export async function handleInternalMessageReactionRemoveEmoji(
   data: DiscordPayload,
 ) {
-  if (data.t !== "MESSAGE_REACTION_REMOVE_EMOJI") return;
-
   const payload = data.d as MessageReactionRemoveEmojiPayload;
   const message = await cacheHandlers.get("messages", payload.message_id);
 

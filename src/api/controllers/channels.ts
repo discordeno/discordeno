@@ -8,8 +8,6 @@ import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalChannelCreate(data: DiscordPayload) {
-  if (data.t !== "CHANNEL_CREATE") return;
-
   const payload = data.d as ChannelCreatePayload;
 
   const channelStruct = await structures.createChannelStruct(payload);
@@ -19,8 +17,6 @@ export async function handleInternalChannelCreate(data: DiscordPayload) {
 }
 
 export async function handleInternalChannelDelete(data: DiscordPayload) {
-  if (data.t !== "CHANNEL_DELETE") return;
-
   const payload = data.d as ChannelCreatePayload;
 
   const cachedChannel = await cacheHandlers.get("channels", payload.id);
@@ -54,8 +50,6 @@ export async function handleInternalChannelDelete(data: DiscordPayload) {
 }
 
 export async function handleInternalChannelUpdate(data: DiscordPayload) {
-  if (data.t !== "CHANNEL_UPDATE") return;
-
   const payload = data.d as ChannelCreatePayload;
   const cachedChannel = await cacheHandlers.get("channels", payload.id);
 
