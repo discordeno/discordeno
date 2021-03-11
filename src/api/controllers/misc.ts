@@ -1,4 +1,4 @@
-import { eventHandlers, setApplicationID, setBotID } from "../../bot.ts";
+import { eventHandlers } from "../../bot.ts";
 import {
   DiscordPayload,
   IntegrationCreateUpdateEvent,
@@ -6,75 +6,13 @@ import {
   InviteCreateEvent,
   InviteDeleteEvent,
   PresenceUpdatePayload,
-  ReadyPayload,
   TypingStartPayload,
   UserPayload,
   VoiceStateUpdatePayload,
   WebhookUpdatePayload,
 } from "../../types/mod.ts";
-import { cache } from "../../util/cache.ts";
-import { delay } from "../../util/utils.ts";
-import { allowNextShard } from "../../ws/shard_manager.ts";
-import { initialMemberLoadQueue } from "../structures/guild.ts";
 import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
-
-/** This function is the internal handler for the ready event. Users can override this with controllers if desired. */
-export async function handleInternalReady(
-  data: DiscordPayload,
-  shardID: number,
-) {
-  const payload = data.d as ReadyPayload;
-  setBotID(payload.user.id);
-  setApplicationID(payload.application.id);
-
-  // Triggered on each shard
-  eventHandlers.shardReady?.(shardID);
-  if (payload.shard && shardID === payload.shard[1] - 1) {
-    const loadedAllGuilds = async () => {
-      const guildsMissing = async () => {
-        for (const g of payload.guilds) {
-          if (!(await cacheHandlers.has("guilds", g.id))) return true;
-        }
-        return false;
-      };
-
-      if (await guildsMissing()) {
-        setTimeout(loadedAllGuilds, 2000);
-      } else {
-        // The bot has already started, the last shard is resumed, however.
-        if (cache.isReady) return;
-
-        cache.isReady = true;
-        eventHandlers.ready?.();
-
-        // All the members that came in on guild creates should now be processed 1 by 1
-        for (const [guildID, members] of initialMemberLoadQueue.entries()) {
-          await Promise.all(
-            members.map(async (member) => {
-              const memberStruct = await structures.createMemberStruct(
-                member,
-                guildID,
-              );
-
-              return cacheHandlers.set(
-                "members",
-                memberStruct.id,
-                memberStruct,
-              );
-            }),
-          );
-        }
-      }
-    };
-
-    setTimeout(loadedAllGuilds, 2000);
-  }
-
-  // Wait 5 seconds to spawn next shard
-  await delay(5000);
-  allowNextShard();
-}
 
 /** This function is the internal handler for the presence update event. Users can override this with controllers if desired. */
 export async function handleInternalPresenceUpdate(data: DiscordPayload) {
@@ -233,7 +171,7 @@ export function handleInternalIntegrationDelete(data: DiscordPayload) {
 
 export function handleInternalInviteCreate(payload: DiscordPayload) {
   if (payload.t !== "INVITE_CREATE") return;
-
+  //TODO: replace with tocamelcase
   const {
     channel_id: channelID,
     created_at: createdAt,

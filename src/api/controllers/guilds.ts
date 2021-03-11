@@ -9,7 +9,8 @@ import {
 } from "../../types/mod.ts";
 import { cache } from "../../util/cache.ts";
 import { Collection } from "../../util/collection.ts";
-import { Member, structures } from "../structures/mod.ts";
+import { basicShards } from "../../ws/mod.ts";
+import { structures } from "../structures/mod.ts";
 import { cacheHandlers } from "./cache.ts";
 
 export async function handleInternalGuildCreate(
@@ -26,15 +27,22 @@ export async function handleInternalGuildCreate(
   );
   await cacheHandlers.set("guilds", guildStruct.id, guildStruct);
 
-  if (await cacheHandlers.has("unavailableGuilds", payload.id)) {
+  const shard = basicShards.get(shardID);
+
+  if (shard?.unavailableGuildIDs.has(payload.id)) {
     await cacheHandlers.delete("unavailableGuilds", payload.id);
+
+    shard.unavailableGuildIDs.delete(payload.id);
   }
 
   if (!cache.isReady) return eventHandlers.guildLoaded?.(guildStruct);
   eventHandlers.guildCreate?.(guildStruct);
 }
 
-export async function handleInternalGuildDelete(data: DiscordPayload) {
+export async function handleInternalGuildDelete(
+  data: DiscordPayload,
+  shardID: number,
+) {
   const payload = data.d as GuildDeletePayload;
   cacheHandlers.forEach("messages", (message) => {
     if (message.guildID === payload.id) {
@@ -62,6 +70,9 @@ export async function handleInternalGuildDelete(data: DiscordPayload) {
   });
 
   if (payload.unavailable) {
+    const shard = basicShards.get(shardID);
+    if (shard) shard.unavailableGuildIDs.add(payload.id);
+
     return cacheHandlers.set("unavailableGuilds", payload.id, Date.now());
   }
 

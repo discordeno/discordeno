@@ -40,7 +40,6 @@ import {
   handleInternalInviteCreate,
   handleInternalInviteDelete,
   handleInternalPresenceUpdate,
-  handleInternalReady,
   handleInternalTypingStart,
   handleInternalUserUpdate,
   handleInternalVoiceStateUpdate,
@@ -52,6 +51,7 @@ import {
   handleInternalMessageReactionRemoveAll,
   handleInternalMessageReactionRemoveEmoji,
 } from "./reactions.ts";
+import { handleInternalReady } from "./READY.ts";
 import {
   handleInternalGuildRoleCreate,
   handleInternalGuildRoleDelete,
