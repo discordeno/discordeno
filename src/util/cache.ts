@@ -1,3 +1,5 @@
+import { Channel, Guild, Member, Message } from "../structures/mod.ts";
+import { PresenceUpdatePayload } from "../types/mod.ts";
 import { Collection } from "./collection.ts";
 
 export const cache: CacheData = {

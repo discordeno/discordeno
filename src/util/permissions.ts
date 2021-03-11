@@ -1,4 +1,5 @@
-import { cacheHandlers } from "../api/controllers/cache.ts";
+import { cacheHandlers } from "../cache.ts";
+import { Guild, Role } from "../structures/mod.ts";
 import { botID } from "../bot.ts";
 
 /** Checks if the member has this permission. If the member is an owner or has admin perms it will always be true. */

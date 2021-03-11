@@ -6,8 +6,8 @@ const serverOptions = {
   port: 80,
 };
 
-/** Theses are the controllers that you can plug into and customize to your needs. */
-export const controllers = {
+/** Theses are the handlers that you can plug into and customize to your needs. */
+export const handlers = {
   handlePayload,
   handleApplicationCommand,
 };
@@ -19,7 +19,7 @@ export async function startServer(
   serverOptions.publicKey = publicKey;
   serverOptions.port = port;
   if (handleApplicationCommand) {
-    controllers.handleApplicationCommand = handleApplicationCommand;
+    handlers.handleApplicationCommand = handleApplicationCommand;
   }
 
   const server = serve({ port: serverOptions.port });
@@ -42,7 +42,7 @@ export async function startServer(
 
     try {
       const data = JSON.parse(new TextDecoder().decode(buffer));
-      const response = await controllers.handlePayload(data);
+      const response = await handlers.handlePayload(data);
       req.respond(
         { status: response.status || 200, body: JSON.stringify(response.body) },
       );
@@ -57,7 +57,7 @@ function handlePayload(payload: Interaction) {
     case InteractionType.PING:
       return { status: 200, body: { type: InteractionResponseType.PONG } };
     default: // APPLICATION_COMMAND
-      return controllers.handleApplicationCommand(payload);
+      return handlers.handleApplicationCommand(payload);
   }
 }
 
