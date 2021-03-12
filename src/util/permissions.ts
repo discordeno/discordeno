@@ -94,7 +94,7 @@ export async function calculateChannelOverwrites(
   for (const overwrite of overwrites) {
     if (!memberRoles.includes(overwrite.id)) continue;
 
-    deny &= ~BigInt(overwrite.deny);
+    deny |= BigInt(overwrite.deny);
     allow |= BigInt(overwrite.allow);
   }
   // After role overwrite calculate save allowed permissions first we remove denied permissions since "denied < allowed"
