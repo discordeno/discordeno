@@ -64,8 +64,6 @@ export interface ApplicationCommandOption {
   name: string;
   /** 1-100 character description */
   description: string;
-  /** the first `required` option for the user to complete--only one option can be `default` */
-  default?: boolean;
   /** if the parameter is required or optional--default `false` */
   required?: boolean;
   /** choices for `string` and `int` types for the user to pick from */

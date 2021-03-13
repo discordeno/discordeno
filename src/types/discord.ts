@@ -6,6 +6,7 @@ import {
 } from "./guild.ts";
 import { MemberCreatePayload } from "./member.ts";
 import { Activity, Application } from "./message.ts";
+import { ActivityPayload } from "./mod.ts";
 import { ClientStatusPayload } from "./presence.ts";
 
 export interface DiscordPayload {
@@ -23,12 +24,14 @@ export interface DiscordPayload {
     | "CHANNEL_CREATE"
     | "CHANNEL_DELETE"
     | "CHANNEL_UPDATE"
+    | "CHANNEL_PINS_UPDATE"
     | "GUILD_CREATE"
     | "GUILD_DELETE"
     | "GUILD_UPDATE"
     | "GUILD_BAN_ADD"
     | "GUILD_BAN_REMOVE"
     | "GUILD_EMOJIS_UPDATE"
+    | "GUILD_INTEGRATIONS_UPDATE"
     | "GUILD_MEMBER_ADD"
     | "GUILD_MEMBER_REMOVE"
     | "GUILD_MEMBER_UPDATE"
@@ -362,4 +365,16 @@ export interface InviteDeleteEvent {
   "guild_id"?: string;
   /** the unique invite code */
   code: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#update-status-gateway-status-update-structure */
+export interface GatewayStatusUpdatePayload {
+  /** unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
+  since: number | null;
+  /** null, or the user's activities */
+  activities: Pick<ActivityPayload, "name" | "type" | "url">[] | null;
+  /** the user's new status */
+  status: StatusType;
+  /** whether or not the client is afk */
+  afk: boolean;
 }

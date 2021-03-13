@@ -1,4 +1,4 @@
-import { Guild } from "../api/structures/mod.ts";
+import { Guild } from "../structures/mod.ts";
 import { ChannelCreatePayload } from "./channel.ts";
 import { UserPayload } from "./guild.ts";
 

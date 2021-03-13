@@ -34,17 +34,17 @@ To begin customizing, create a file in the structures folder called `member.ts`.
 The name of the file is not important at all.
 
 ```ts
-async function createMember() {
+async function createMemberStruct() {
 }
 ```
 
 We start by declaring a function that will be run to create the structure. Once
 again the name here is not important. The function must take the same arguments
-that the internal function takes. In this case the createMember function takes 2
-arguments. `data: MemberCreatePayload, guildID: string`
+that the internal function takes. In this case the createMemberStruct function
+takes 2 arguments. `data: MemberCreatePayload, guildID: string`
 
 ```ts
-async function createMember(data: MemberCreatePayload, guildID: string) {
+async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
 }
 ```
 
@@ -53,7 +53,7 @@ want. My recommendation is to start by copying the current code from the
 internal libraries structure.
 
 ```ts
-async function createMember(data: MemberCreatePayload, guildID: string) {
+async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
   const {
     joined_at: joinedAt,
     premium_since: premiumSince,
@@ -92,7 +92,7 @@ and `guild` properties to the member.
 ```ts
 import { rawAvatarURL } from "../../deps.ts";
 
-async function createMember(data: MemberCreatePayload, guildID: string) {
+async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
   // Hidden code here to make it easier to see the changes
 
   const member = {
@@ -116,11 +116,11 @@ async function createMember(data: MemberCreatePayload, guildID: string) {
 ```
 
 Now we need to use this function and telling Discordeno to override the internal
-createMember function. To do this, we will modify the internal functions. This
-is where we reassign the value of the function.
+createMemberStruct function. To do this, we will modify the internal functions.
+This is where we reassign the value of the function.
 
 ```ts
-structures.createMember = createMember;
+structures.createMemberStruct = createMemberStruct;
 ```
 
 Awesome. Now, we have one more step to complete which is to declare these new
@@ -144,7 +144,7 @@ declare module "../../deps.ts" {
 The code should look like this right now:
 
 ```ts
-async function createMember(data: MemberCreatePayload, guildID: string) {
+async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
   const {
     joined_at: joinedAt,
     premium_since: premiumSince,
@@ -184,7 +184,7 @@ async function createMember(data: MemberCreatePayload, guildID: string) {
   return member;
 }
 
-structures.createMember = createMember;
+structures.createMemberStruct = createMemberStruct;
 
 declare module "../../deps.ts" {
   interface Member {
@@ -268,7 +268,7 @@ import {
   rawAvatarURL,
 } from "../../deps.ts";
 
-async function createMember(data: MemberCreatePayload, guildID: string) {
+async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
   const {
     id,
     bot,
@@ -291,7 +291,7 @@ async function createMember(data: MemberCreatePayload, guildID: string) {
   };
 }
 
-structures.createMember = createMember;
+structures.createMemberStruct = createMemberStruct;
 
 declare module "../../deps.ts" {
   interface Member {
@@ -304,15 +304,15 @@ declare module "../../deps.ts" {
 }
 ```
 
-You might be seeing an error on `structures.createMember`. This is happening
-because our new member structures is modifying/removing existing properties that
-the lib internally said it would have. To solve this, simply just add a
-ts-ignore above it as you know better than TS that the typings are being
-overwritten.
+You might be seeing an error on `structures.createMemberStruct`. This is
+happening because our new member structures is modifying/removing existing
+properties that the lib internally said it would have. To solve this, simply
+just add a ts-ignore above it as you know better than TS that the typings are
+being overwritten.
 
 ```ts
 // @ts-ignore
-structures.createMember = createMember;
+structures.createMemberStruct = createMemberStruct;
 ```
 
 ## Custom Cache
@@ -347,10 +347,10 @@ methods on the cacheHandlers. The current list of methods available are:
 - set
 - forEach
 
-## Custom Gateway Payload Handling (Controllers)
+## Custom Gateway Payload Handling (Handlers)
 
-Controllers are one of the most powerful features of Discordeno. They allow you
-to take control of how Discordeno handles the Discord payloads from the gateway.
+Handlers are one of the most powerful features of Discordeno. They allow you to
+take control of how Discordeno handles the Discord payloads from the gateway.
 When an event comes in, you can override and control how you want it to work.
 For example, if your bot does not use emojis at all, you could simply just take
 control over the GUILD_EMOJIS_UPDATE event and prevent anyone from caching any
@@ -362,14 +362,10 @@ Someone once asked if it was possible to make Discordeno, show the number of
 users currently typing in the server. He had managed to build this himself in
 his bot, but he wanted to do it inside the library itself. In order to keep
 Discordeno minimalistic and memory efficient I avoided adding this. So let's see
-how we could achieve this same thing with Controllers.
+how we could achieve this same thing:
 
 ```ts
-import {
-  controllers,
-  eventHandlers,
-  TypingStartPayload,
-} from "../../../deps.ts";
+import { eventHandlers, handlers, TypingStartPayload } from "../../../deps.ts";
 
 const typingUsers = new Map<String, number>();
 
@@ -379,9 +375,7 @@ function createTimeout(userID: String) {
   }, 10000);
 }
 
-controllers.TYPING_START = function (data) {
-  if (data.t !== "TYPING_START") return;
-
+handlers.TYPING_START = function (data) {
   const payload = data.d as TypingStartPayload;
   eventHandlers.typingStart?.(payload);
 
@@ -393,18 +387,16 @@ controllers.TYPING_START = function (data) {
 };
 ```
 
-Controllers are amazing in so many ways. This is just a basic example but it's
-true potential is only limited by your imagination. I would love to see what you
-all can create with controllers.
+This is just a basic example but it's true potential is only limited by your
+imagination. I would love to see what you all can create.
 
-Something worth noting about why Discordeno controllers are so amazing is that
-it allows you to never depend on me. When Discord releases something new, you
-don't need to wait for me to update the library to access it. Without
-controllers, if you wanted access to a feature you would need to wait for the
-library to be updated or have to fork it, modify it and modify your code for it.
-Then when the library does get updated, you need to switch back to it and modify
-your code again possibly to how the lib designed it. With controllers, you never
-have to fork or anything. Just take control!
+Something worth noting about why Discordeno handlers are so amazing is that it
+allows you to never depend on me. When Discord releases something new, you don't
+need to wait for me to update the library to access it. Without handlers, if you
+wanted access to a feature you would need to wait for the library to be updated
+or have to fork it, modify it and modify your code for it. Then when the library
+does get updated, you need to switch back to it and modify your code again
+possibly to how the lib designed it. With handlers, you never have to fork or
+anything. Just take control!
 
-Controllers are extremely powerful. **Remember with great power comes great
-bugs!**
+Remember with great power comes great bugs!

@@ -250,7 +250,7 @@ export interface DiscordCreateMessageParams {
   /** `true` if this is a TTS message */
   tts: boolean;
   /** the contents of the file being sent */
-  file?: { blob: unknown; name: string };
+  file?: { blob: Blob; name: string };
   /** embedded rich content */
   embed?: DiscordEmbed;
   /** JSON encoded body of any additional request fields. */
