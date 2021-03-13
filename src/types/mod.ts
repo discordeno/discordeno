@@ -1,4 +1,4 @@
-export * from "./auditlog.ts";
+export * from "./audit_log.ts";
 export * from "./channel.ts";
 export * from "./code.ts";
 export * from "./embed.ts";
