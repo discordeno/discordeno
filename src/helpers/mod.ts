@@ -77,7 +77,6 @@ import { addReaction } from "./messages/add_reaction.ts";
 import { addReactions } from "./messages/add_reactions.ts";
 import { deleteMessage } from "./messages/delete_message.ts";
 import { deleteMessages } from "./messages/delete_messages.ts";
-import { deleteMessageByID } from "./messages/delete_message_by_id.ts";
 import { editMessage } from "./messages/edit_message.ts";
 import { getMessage } from "./messages/get_message.ts";
 import { getMessages } from "./messages/get_messages.ts";
@@ -142,7 +141,6 @@ export {
   deleteIntegration,
   deleteInvite,
   deleteMessage,
-  deleteMessageByID,
   deleteMessages,
   deleteRole,
   deleteServer,
@@ -326,7 +324,6 @@ export let helpers = {
   // messages
   addReaction,
   addReactions,
-  deleteMessageByID,
   deleteMessage,
   deleteMessages,
   editMessage,
