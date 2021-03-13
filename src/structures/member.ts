@@ -1,3 +1,11 @@
+import { cacheHandlers } from "../cache.ts";
+import { banMember } from "../helpers/members/ban_member.ts";
+import { editMember } from "../helpers/members/edit_member.ts";
+import { kickMember } from "../helpers/members/kick_member.ts";
+import { rawAvatarURL } from "../helpers/members/raw_avatar_url.ts";
+import { sendDirectMessage } from "../helpers/members/send_direct_message.ts";
+import { addRole } from "../helpers/roles/add_role.ts";
+import { removeRole } from "../helpers/roles/remove_role.ts";
 import {
   BanOptions,
   EditMemberOptions,
@@ -10,16 +18,6 @@ import {
 import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
-import { cacheHandlers } from "../cache.ts";
-import { ban } from "../helpers/guild.ts";
-import {
-  addRole,
-  editMember,
-  kick,
-  rawAvatarURL,
-  removeRole,
-  sendDirectMessage,
-} from "../helpers/member.ts";
 import { Guild } from "./guild.ts";
 
 const baseMember: Partial<Member> = {
@@ -56,13 +54,13 @@ const baseMember: Partial<Member> = {
     return sendDirectMessage(this.id!, content);
   },
   kick(guildID, reason) {
-    return kick(guildID, this.id!, reason);
+    return kickMember(guildID, this.id!, reason);
   },
   edit(guildID, options) {
     return editMember(guildID, this.id!, options);
   },
   ban(guildID, options) {
-    return ban(guildID, this.id!, options);
+    return banMember(guildID, this.id!, options);
   },
   addRole(guildID, roleID, reason) {
     return addRole(guildID, this.id!, roleID, reason);
@@ -181,14 +179,14 @@ export interface Member {
     content: string | MessageContent,
   ): ReturnType<typeof sendDirectMessage>;
   /** Kick the member from a guild */
-  kick(guildID: string, reason?: string): ReturnType<typeof kick>;
+  kick(guildID: string, reason?: string): ReturnType<typeof kickMember>;
   /** Edit the member in a guild */
   edit(
     guildID: string,
     options: EditMemberOptions,
   ): ReturnType<typeof editMember>;
   /** Ban a member in a guild */
-  ban(guildID: string, options: BanOptions): ReturnType<typeof ban>;
+  ban(guildID: string, options: BanOptions): ReturnType<typeof banMember>;
   /** Add a role to the member */
   addRole(
     guildID: string,

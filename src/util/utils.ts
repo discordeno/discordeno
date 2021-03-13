@@ -2,13 +2,19 @@ import { encode } from "../../deps.ts";
 import {
   Activity,
   ActivityType,
+  Errors,
   GatewayOpcode,
   GatewayStatusUpdatePayload,
   ImageFormats,
   ImageSize,
+  SlashCommandOption,
+  SlashCommandOptionChoice,
+  SlashCommandOptionType,
   StatusType,
+  UpsertSlashCommandOptions,
 } from "../types/mod.ts";
 import { basicShards, sendWS } from "../ws/shard.ts";
+import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 
 export const sleep = (timeout: number) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -115,4 +121,83 @@ export function snakeKeysToCamelCase(obj: Record<string, any>) {
     obj = obj.map((element) => snakeKeysToCamelCase(element));
   }
   return obj;
+}
+
+/** @private */
+function validateSlashOptionChoices(
+  choices: SlashCommandOptionChoice[],
+  optionType: SlashCommandOptionType,
+) {
+  for (const choice of choices) {
+    if ([...choice.name].length < 1 || [...choice.name].length > 100) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+
+    if (
+      (optionType === SlashCommandOptionType.STRING &&
+        (typeof choice.value !== "string" || choice.value.length < 1 ||
+          choice.value.length > 100)) ||
+      (optionType === SlashCommandOptionType.INTEGER &&
+        typeof choice.value !== "number")
+    ) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+  }
+}
+
+/** @private */
+function validateSlashOptions(options: SlashCommandOption[]) {
+  for (const option of options) {
+    if (
+      (option.choices?.length && option.choices.length > 25) ||
+      option.type !== SlashCommandOptionType.STRING &&
+        option.type !== SlashCommandOptionType.INTEGER
+    ) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+
+    if (
+      ([...option.name].length < 1 || [...option.name].length > 32) ||
+      ([...option.description].length < 1 ||
+        [...option.description].length > 100)
+    ) {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    }
+
+    if (option.choices) {
+      validateSlashOptionChoices(option.choices, option.type);
+    }
+  }
+}
+
+/** @private */
+export function validateSlashCommands(
+  commands: UpsertSlashCommandOptions[],
+  create = false,
+) {
+  for (const command of commands) {
+    if (
+      (command.name && !SLASH_COMMANDS_NAME_REGEX.test(command.name)) ||
+      (create && !command.name)
+    ) {
+      throw new Error(Errors.INVALID_SLASH_NAME);
+    }
+
+    if (
+      (command.description &&
+        ([...command.description].length < 1 ||
+          [...command.description].length > 100)) ||
+      (create && !command.description)
+    ) {
+      throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+    }
+
+    if (command.options?.length) {
+      if (command.options.length > 25) {
+        throw new Error(Errors.INVALID_SLASH_OPTIONS);
+      }
+
+      validateSlashOptions(command.options);
+    }
+  }
 }

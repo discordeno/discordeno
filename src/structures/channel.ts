@@ -1,3 +1,10 @@
+import { channelOverwriteHasPermission } from "../helpers/channels/channel_overwrite_has_permission.ts";
+import { deleteChannel } from "../helpers/channels/delete_channel.ts";
+import { deleteChannelOverwrite } from "../helpers/channels/delete_channel_overwrite.ts";
+import { editChannel } from "../helpers/channels/edit_channel.ts";
+import { editChannelOverwrite } from "../helpers/channels/edit_channel_overwrite.ts";
+import { kickFromVoiceChannel } from "../helpers/members/disconnect_member.ts";
+import { sendMessage } from "../helpers/messages/send_message.ts";
 import {
   ChannelCreatePayload,
   ChannelEditOptions,
@@ -10,17 +17,6 @@ import {
 import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
-import {
-  channelOverwriteHasPermission,
-  editChannel,
-  sendMessage,
-} from "../helpers/channel.ts";
-import {
-  deleteChannel,
-  deleteChannelOverwrite,
-  editChannelOverwrite,
-} from "../helpers/guild.ts";
-import { kickFromVoiceChannel } from "../helpers/member.ts";
 import { CleanVoiceState, Guild } from "./guild.ts";
 import { Member } from "./member.ts";
 import { Message } from "./message.ts";

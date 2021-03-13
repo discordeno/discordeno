@@ -1,4 +1,16 @@
 import { botID } from "../bot.ts";
+import { cacheHandlers } from "../cache.ts";
+import { deleteServer } from "../helpers/guilds/delete_server.ts";
+import { editGuild } from "../helpers/guilds/edit_guild.ts";
+import { getAuditLogs } from "../helpers/guilds/get_audit_logs.ts";
+import { getBan } from "../helpers/guilds/get_ban.ts";
+import { getBans } from "../helpers/guilds/get_bans.ts";
+import { guildBannerURL } from "../helpers/guilds/guild_banner_url.ts";
+import { guildIconURL } from "../helpers/guilds/guild_icon_url.ts";
+import { leaveGuild } from "../helpers/guilds/leave_guild.ts";
+import { getInvites } from "../helpers/invites/get_invites.ts";
+import { banMember } from "../helpers/members/ban_member.ts";
+import { unbanMember } from "../helpers/members/unban_member.ts";
 import {
   BanOptions,
   CreateGuildPayload,
@@ -16,20 +28,6 @@ import {
 import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
-import { cacheHandlers } from "../cache.ts";
-import {
-  ban,
-  deleteServer,
-  editGuild,
-  getAuditLogs,
-  getBan,
-  getBans,
-  getInvites,
-  guildBannerURL,
-  guildIconURL,
-  leaveGuild,
-  unban,
-} from "../helpers/guild.ts";
 import { Member } from "./member.ts";
 import { Channel, Role, structures } from "./mod.ts";
 
@@ -91,10 +89,10 @@ const baseGuild: Partial<Guild> = {
     return getBans(this.id!);
   },
   ban(memberID, options) {
-    return ban(this.id!, memberID, options);
+    return banMember(this.id!, memberID, options);
   },
   unban(memberID) {
-    return unban(this.id!, memberID);
+    return unbanMember(this.id!, memberID);
   },
   invites() {
     return getInvites(this.id!);
@@ -348,9 +346,9 @@ export interface Guild {
   /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
   bans(): ReturnType<typeof getBans>;
   /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
-  ban(memberID: string, options: BanOptions): ReturnType<typeof ban>;
+  ban(memberID: string, options: BanOptions): ReturnType<typeof banMember>;
   /** Remove the ban for a user. Requires BAN_MEMBERS permission */
-  unban(memberID: string): ReturnType<typeof unban>;
+  unban(memberID: string): ReturnType<typeof unbanMember>;
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   invites(): ReturnType<typeof getInvites>;
 }

@@ -1,3 +1,14 @@
+import { cacheHandlers } from "../cache.ts";
+import { sendDirectMessage } from "../helpers/members/send_direct_message.ts";
+import { addReaction } from "../helpers/messages/add_reaction.ts";
+import { addReactions } from "../helpers/messages/add_reactions.ts";
+import { deleteMessageByID } from "../helpers/messages/delete_message_by_id.ts";
+import { editMessage } from "../helpers/messages/edit_message.ts";
+import { pinMessage } from "../helpers/messages/pin_message.ts";
+import { removeAllReactions } from "../helpers/messages/remove_all_reactions.ts";
+import { removeReaction } from "../helpers/messages/remove_reaction.ts";
+import { removeReactionEmoji } from "../helpers/messages/remove_reaction_emoji.ts";
+import { sendMessage } from "../helpers/messages/send_message.ts";
 import {
   Activity,
   Application,
@@ -9,24 +20,10 @@ import {
   MessageCreateOptions,
   MessageSticker,
   Reaction,
-  Reference,
   UserPayload,
 } from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
 import { createNewProp } from "../util/utils.ts";
-import { cacheHandlers } from "../cache.ts";
-import { sendMessage } from "../helpers/channel.ts";
-import { sendDirectMessage } from "../helpers/member.ts";
-import {
-  addReaction,
-  addReactions,
-  deleteMessageByID,
-  editMessage,
-  pin,
-  removeAllReactions,
-  removeReaction,
-  removeReactionEmoji,
-} from "../helpers/message.ts";
 import { Channel } from "./channel.ts";
 import { Guild } from "./guild.ts";
 import { Member } from "./member.ts";
@@ -76,7 +73,7 @@ const baseMessage: Partial<Message> = {
     return editMessage(this as Message, content);
   },
   pin() {
-    return pin(this.channelID!, this.id!);
+    return pinMessage(this.channelID!, this.id!);
   },
   addReaction(reaction) {
     return addReaction(this.channelID!, this.id!, reaction);
@@ -260,7 +257,7 @@ export interface Message {
   /** Edit the message */
   edit(content: string | MessageContent): ReturnType<typeof editMessage>;
   /** Pins the message in the channel */
-  pin(): ReturnType<typeof pin>;
+  pin(): ReturnType<typeof pinMessage>;
   /** Add a reaction to the message */
   addReaction(reaction: string): ReturnType<typeof addReaction>;
   /** Add multiple reactions to the message without or without order. */
