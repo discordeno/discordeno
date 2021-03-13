@@ -253,7 +253,7 @@ export interface Message {
   delete(
     reason?: string,
     delayMilliseconds?: number,
-  ): ReturnType<typeof deleteMessageByID>;
+  ): ReturnType<typeof deleteMessage>;
   /** Edit the message */
   edit(content: string | MessageContent): ReturnType<typeof editMessage>;
   /** Pins the message in the channel */
