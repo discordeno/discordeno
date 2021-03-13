@@ -1,3 +1,4 @@
+import { categoryChildrenIDs } from "./channels/category_children_ids.ts";
 import { channelOverwriteHasPermission } from "./channels/channel_overwrite_has_permission.ts";
 import { createGuildChannel } from "./channels/create_guild_channel.ts";
 import { deleteChannel } from "./channels/delete_channel.ts";
@@ -24,14 +25,13 @@ import { upsertSlashCommands } from "./commands/upsert_slash_commands.ts";
 import { createEmoji } from "./emojis/create_emoji.ts";
 import { deleteEmoji } from "./emojis/delete_emoji.ts";
 import { editEmoji } from "./emojis/edit_emoji.ts";
+import { emojiURL } from "./emojis/emoji_url.ts";
 import { getEmoji } from "./emojis/get_emoji.ts";
 import { getEmojis } from "./emojis/get_emojis.ts";
-import { categoryChildrenIDs } from "./guilds/category_children_ids.ts";
 import { createGuild } from "./guilds/create_guild.ts";
 import { deleteServer } from "./guilds/delete_server.ts";
 import { editGuild } from "./guilds/edit_guild.ts";
 import { editWidget } from "./guilds/edit_widget.ts";
-import { emojiURL } from "./guilds/emoji_url.ts";
 import { getAuditLogs } from "./guilds/get_audit_logs.ts";
 import { getAvailableVoiceRegions } from "./guilds/get_available_voice_regions.ts";
 import { getBan } from "./guilds/get_ban.ts";
@@ -117,6 +117,128 @@ import { executeWebhook } from "./webhooks/execute_webhook.ts";
 import { getWebhook } from "./webhooks/get_webhook.ts";
 import { getWebhooks } from "./webhooks/get_webhooks.ts";
 import { getWebhookWithToken } from "./webhooks/get_webhook_with_token.ts";
+
+export {
+  addReaction,
+  addReactions,
+  addRole,
+  avatarURL,
+  banMember,
+  categoryChildrenIDs,
+  channelOverwriteHasPermission,
+  createEmoji,
+  createGuild,
+  createGuildChannel,
+  createGuildFromTemplate,
+  createGuildTemplate,
+  createInvite,
+  createRole,
+  createSlashCommand,
+  createWebhook,
+  deleteChannel,
+  deleteChannelOverwrite,
+  deleteEmoji,
+  deleteGuildTemplate,
+  deleteIntegration,
+  deleteInvite,
+  deleteMessage,
+  deleteMessageByID,
+  deleteMessages,
+  deleteRole,
+  deleteServer,
+  deleteSlashCommand,
+  deleteSlashResponse,
+  deleteWebhook,
+  deleteWebhookMessage,
+  deleteWebhookWithToken,
+  disconnectMember,
+  editBotNickname,
+  editBotProfile,
+  editChannel,
+  editChannelOverwrite,
+  editEmoji,
+  editGuild,
+  editGuildTemplate,
+  editIntegration,
+  editMember,
+  editMessage,
+  editRole,
+  editSlashResponse,
+  editWebhook,
+  editWebhookMessage,
+  editWebhookWithToken,
+  editWidget,
+  emojiURL,
+  executeSlashCommand,
+  executeWebhook,
+  fetchMembers,
+  followChannel,
+  getAuditLogs,
+  getAvailableVoiceRegions,
+  getBan,
+  getBans,
+  getChannel,
+  getChannelInvites,
+  getChannels,
+  getChannelWebhooks,
+  getEmoji,
+  getEmojis,
+  getGatewayBot,
+  getGuild,
+  getGuildPreview,
+  getGuildTemplates,
+  getIntegrations,
+  getInvite,
+  getInvites,
+  getMember,
+  getMembers,
+  getMembersByQuery,
+  getMessage,
+  getMessages,
+  getPins,
+  getPruneCount,
+  getReactions,
+  getRoles,
+  getSlashCommand,
+  getSlashCommands,
+  getTemplate,
+  getUser,
+  getVanityURL,
+  getVoiceRegions,
+  getWebhook,
+  getWebhooks,
+  getWebhookWithToken,
+  getWidget,
+  getWidgetImageURL,
+  getWidgetSettings,
+  guildBannerURL,
+  guildIconURL,
+  guildSplashURL,
+  isChannelSynced,
+  kickMember,
+  leaveGuild,
+  moveMember,
+  pinMessage,
+  pruneMembers,
+  publishMessage,
+  rawAvatarURL,
+  removeAllReactions,
+  removeReaction,
+  removeReactionEmoji,
+  removeRole,
+  removeUserReaction,
+  sendDirectMessage,
+  sendMessage,
+  startTyping,
+  swapChannels,
+  swapRoles,
+  syncGuildTemplate,
+  syncIntegration,
+  unbanMember,
+  unpinMessage,
+  upsertSlashCommand,
+  upsertSlashCommands,
+};
 
 export let helpers = {
   // channels
