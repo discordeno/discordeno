@@ -1,8 +1,9 @@
+import { deleteRole } from "../helpers/roles/delete_role.ts";
+import { editRole } from "../helpers/roles/edit_role.ts";
 import { CreateRoleOptions, RoleData } from "../types/mod.ts";
 import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
-import { deleteRole, editRole } from "../helpers/guild.ts";
 import { Guild } from "./guild.ts";
 import { Member } from "./member.ts";
 
