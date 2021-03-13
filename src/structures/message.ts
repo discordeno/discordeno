@@ -2,7 +2,7 @@ import { cacheHandlers } from "../cache.ts";
 import { sendDirectMessage } from "../helpers/members/send_direct_message.ts";
 import { addReaction } from "../helpers/messages/add_reaction.ts";
 import { addReactions } from "../helpers/messages/add_reactions.ts";
-import { deleteMessageByID } from "../helpers/messages/delete_message_by_id.ts";
+import { deleteMessage } from "../helpers/messages/delete_message.ts";
 import { editMessage } from "../helpers/messages/edit_message.ts";
 import { pinMessage } from "../helpers/messages/pin_message.ts";
 import { removeAllReactions } from "../helpers/messages/remove_all_reactions.ts";
@@ -62,7 +62,7 @@ const baseMessage: Partial<Message> = {
 
   // METHODS
   delete(reason, delayMilliseconds) {
-    return deleteMessageByID(
+    return deleteMessage(
       this.channelID!,
       this.id!,
       reason,
