@@ -12,9 +12,9 @@ jobs:
         with:
           deno-version: ${{ matrix.deno }}
       - name: Cache dependencies
-        run: deno cache test/deps.ts
+        run: deno cache mod.ts
       - name: Run test script
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         run: deno test --allow-net --allow-env
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
