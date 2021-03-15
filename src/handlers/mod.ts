@@ -29,10 +29,10 @@ import { handleMessageReactionRemove } from "./messages/MESSAGE_REACTION_REMOVE.
 import { handleMessageReactionRemoveAll } from "./messages/MESSAGE_REACTION_REMOVE_ALL.ts";
 import { handleMessageReactionRemoveEmoji } from "./messages/MESSAGE_REACTION_REMOVE_EMOJI.ts";
 import { handleMessageUpdate } from "./messages/MESSAGE_UPDATE.ts";
+import { handleReady } from "./misc/READY.ts";
 import { handlePresenceUpdate } from "./presence/PRESENCE_UPDATE.ts";
 import { handleTypingStart } from "./presence/TYPING_START.ts";
 import { handleUserUpdate } from "./presence/USER_UPDATE.ts";
-import { handleReady } from "./READY.ts";
 import { handleGuildRoleCreate } from "./roles/GUILD_ROLE_CREATE.ts";
 import { handleGuildRoleDelete } from "./roles/GUILD_ROLE_DELETE.ts";
 import { handleGuildRoleUpdate } from "./roles/GUILD_ROLE_UPDATE.ts";
@@ -85,6 +85,7 @@ export {
 };
 
 export let handlers = {
+  // misc
   READY: handleReady,
   // channels
   CHANNEL_CREATE: handleChannelCreate,
