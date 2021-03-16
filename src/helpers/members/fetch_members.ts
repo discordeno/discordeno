@@ -1,5 +1,5 @@
 import { identifyPayload } from "../../bot.ts";
-import { Guild, Member } from "../../structures/mod.ts";
+import { Member } from "../../structures/mod.ts";
 import { Errors, FetchMembersOptions, Intents } from "../../types/mod.ts";
 import { Collection } from "../../util/collection.ts";
 import { requestAllMembers } from "../../ws/shard_manager.ts";
@@ -12,7 +12,11 @@ import { requestAllMembers } from "../../ws/shard_manager.ts";
  * REST: 50/s global(across all shards) rate limit with ALL requests this included
  * GW(this function): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is now 960/m.
  */
-export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
+export function fetchMembers(
+  guildID: string,
+  shardID: number,
+  options?: FetchMembersOptions,
+) {
   // You can request 1 member without the intent
   if (
     (!options?.limit || options.limit > 1) &&
@@ -26,6 +30,6 @@ export function fetchMembers(guild: Guild, options?: FetchMembersOptions) {
   }
 
   return new Promise((resolve) => {
-    return requestAllMembers(guild, resolve, options);
+    return requestAllMembers(guildID, shardID, resolve, options);
   }) as Promise<Collection<string, Member>>;
 }
