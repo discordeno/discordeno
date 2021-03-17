@@ -70,7 +70,7 @@ export interface EditSlashCommandOptions {
   guildID?: string;
 }
 
-export interface ExecuteSlashCommandOptions {
+export interface SendInteractionResponseOptions {
   type: InteractionResponseType;
   data: SlashCommandCallbackData;
 }
