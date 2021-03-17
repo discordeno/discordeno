@@ -17,9 +17,9 @@ import { createSlashCommand } from "./commands/create_slash_command.ts";
 import { deleteSlashCommand } from "./commands/delete_slash_command.ts";
 import { deleteSlashResponse } from "./commands/delete_slash_response.ts";
 import { editSlashResponse } from "./commands/edit_slash_response.ts";
-import { executeSlashCommand } from "./commands/execute_slash_command.ts";
 import { getSlashCommand } from "./commands/get_slash_command.ts";
 import { getSlashCommands } from "./commands/get_slash_commands.ts";
+import { sendInteractionResponse } from "./commands/send_interaction_response.ts";
 import { upsertSlashCommand } from "./commands/upsert_slash_command.ts";
 import { upsertSlashCommands } from "./commands/upsert_slash_commands.ts";
 import { createEmoji } from "./emojis/create_emoji.ts";
@@ -168,7 +168,6 @@ export {
   editWebhookWithToken,
   editWidget,
   emojiURL,
-  executeSlashCommand,
   executeWebhook,
   fetchMembers,
   followChannel,
@@ -229,6 +228,7 @@ export {
   removeRole,
   removeUserReaction,
   sendDirectMessage,
+  sendInteractionResponse,
   sendMessage,
   startTyping,
   swapChannels,
@@ -264,7 +264,7 @@ export let helpers = {
   deleteSlashCommand,
   deleteSlashResponse,
   editSlashResponse,
-  executeSlashCommand,
+  sendInteractionResponse,
   getSlashCommand,
   getSlashCommands,
   upsertSlashCommand,

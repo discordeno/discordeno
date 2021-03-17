@@ -10,7 +10,7 @@ import { endpoints } from "../../util/constants.ts";
  *
  * NOTE: By default we will suppress mentions. To enable mentions, just pass any mentions object.
  */
-export async function executeSlashCommand(
+export async function sendInteractionResponse(
   id: string,
   token: string,
   options: SlashCommandResponseOptions,
