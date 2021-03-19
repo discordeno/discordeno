@@ -6,8 +6,8 @@ import {
   cache,
   Channel,
   channelOverwriteHasPermission,
+  createChannel,
   createGuild,
-  createGuildChannel,
   createRole,
   delay,
   deleteChannel,
@@ -137,7 +137,7 @@ Deno.test({
 Deno.test({
   name: "[channel] create a channel in a guild",
   async fn() {
-    const channel = await createGuildChannel(tempData.guildID, "test");
+    const channel = await createChannel(tempData.guildID, "test");
 
     // Assertions
     assertExists(channel);
