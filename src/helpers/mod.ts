@@ -126,7 +126,7 @@ export {
   banMember,
   categoryChildrenIDs,
   channelOverwriteHasPermission,
-  createChannel as createGuildChannel,
+  createChannel,
   createEmoji,
   createGuild,
   createGuildFromTemplate,
@@ -246,7 +246,7 @@ export {
 export let helpers = {
   // channels
   channelOverwriteHasPermission,
-  createGuildChannel: createChannel,
+  createChannel,
   deleteChannelOverwrite,
   deleteChannel,
   editChannelOverwrite,
