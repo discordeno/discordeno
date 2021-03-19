@@ -14,7 +14,7 @@ import {
 } from "../../util/permissions.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-export async function createGuildChannel(
+export async function createChannel(
   guildID: string,
   name: string,
   options?: ChannelCreateOptions,
