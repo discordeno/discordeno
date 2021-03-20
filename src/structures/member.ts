@@ -1,4 +1,4 @@
-import { cacheHandlers } from "../cache.ts";
+import { cache, cacheHandlers } from "../cache.ts";
 import { banMember } from "../helpers/members/ban_member.ts";
 import { editMember } from "../helpers/members/edit_member.ts";
 import { kickMember } from "../helpers/members/kick_member.ts";
@@ -13,9 +13,8 @@ import {
   ImageFormats,
   ImageSize,
   MemberCreatePayload,
-  MessageContent,
+  MessageContent
 } from "../types/mod.ts";
-import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
 import { Guild } from "./guild.ts";

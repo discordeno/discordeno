@@ -2,13 +2,12 @@ import {
   eventHandlers,
   lastShardID,
   setApplicationID,
-  setBotID,
+  setBotID
 } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
+import { cache, cacheHandlers } from "../../cache.ts";
 import { initialMemberLoadQueue } from "../../structures/guild.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordPayload, ReadyPayload } from "../../types/discord.ts";
-import { cache } from "../../util/cache.ts";
 import { delay } from "../../util/utils.ts";
 import { allowNextShard, basicShards } from "../../ws/mod.ts";
 

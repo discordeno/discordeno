@@ -1,3 +1,4 @@
+import { cache } from "../cache.ts";
 import { channelOverwriteHasPermission } from "../helpers/channels/channel_overwrite_has_permission.ts";
 import { deleteChannel } from "../helpers/channels/delete_channel.ts";
 import { deleteChannelOverwrite } from "../helpers/channels/delete_channel_overwrite.ts";
@@ -12,9 +13,8 @@ import {
   MessageContent,
   Overwrite,
   Permission,
-  RawOverwrite,
+  RawOverwrite
 } from "../types/mod.ts";
-import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
 import { CleanVoiceState, Guild } from "./guild.ts";

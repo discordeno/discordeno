@@ -1,9 +1,56 @@
 // deno-lint-ignore-file require-await no-explicit-any prefer-const
 
-import { PresenceUpdatePayload } from "./types/mod.ts";
-import { cache } from "./util/cache.ts";
-import { Collection } from "./util/collection.ts";
 import { Channel, Guild, Member, Message } from "./structures/mod.ts";
+import { PresenceUpdatePayload } from "./types/mod.ts";
+import { Collection } from "./util/collection.ts";
+
+export const cache: CacheData = {
+  isReady: false,
+  /** All of the guild objects the bot has access to, mapped by their IDs */
+  guilds: new Collection(),
+  /** All of the channel objects the bot has access to, mapped by their IDs */
+  channels: new Collection(),
+  /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their IDs */
+  messages: new Collection(),
+  /** All of the member objects that have been cached since the bot acquired `READY` state, mapped by their IDs */
+  members: new Collection(),
+  /** All of the unavailable guilds, mapped by their IDs (id, shardID) */
+  unavailableGuilds: new Collection(),
+  /** All of the presence update objects received in PRESENCE_UPDATE gateway event, mapped by their user ID */
+  presences: new Collection(),
+  fetchAllMembersProcessingRequests: new Collection(),
+  executedSlashCommands: new Collection(),
+};
+
+export let cacheHandlers = {
+  /** Deletes all items from the cache */
+  async clear(table: TableName) {
+    return cache[table].clear();
+  },
+  /** Deletes 1 item from cache using the key */
+  async delete(table: TableName, key: string) {
+    return cache[table].delete(key);
+  },
+  /** Check if something exists in cache with a key */
+  async has(table: TableName, key: string) {
+    return cache[table].has(key);
+  },
+
+  /** Get the number of key-value pairs */
+  async size(table: TableName) {
+    return cache[table].size;
+  },
+
+  // Done differently to have overloads
+  /** Add a key value pair to the cache */
+  set,
+  /** Get the value from the cache using its key */
+  get,
+  /** Run a function on all items in this cache */
+  forEach,
+  /** Allows you to filter our all items in this cache. */
+  filter,
+};
 
 export type TableName =
   | "guilds"
@@ -117,32 +164,21 @@ async function filter(
   return cache[table].filter(callback);
 }
 
-export let cacheHandlers = {
-  /** Deletes all items from the cache */
-  clear: async function (table: TableName) {
-    return cache[table].clear();
-  },
-  /** Deletes 1 item from cache using the key */
-  delete: async function (table: TableName, key: string) {
-    return cache[table].delete(key);
-  },
-  /** Check if something exists in cache with a key */
-  has: async function (table: TableName, key: string) {
-    return cache[table].has(key);
-  },
-
-  /** Get the number of key-value pairs */
-  size: async (table: TableName) => {
-    return cache[table].size;
-  },
-
-  // Done differently to have overloads
-  /** Add a key value pair to the cache */
-  set,
-  /** Get the value from the cache using its key */
-  get,
-  /** Run a function on all items in this cache */
-  forEach,
-  /** Allows you to filter our all items in this cache. */
-  filter,
-};
+export interface CacheData {
+  isReady: boolean;
+  guilds: Collection<string, Guild>;
+  channels: Collection<string, Channel>;
+  messages: Collection<string, Message>;
+  members: Collection<string, Member>;
+  unavailableGuilds: Collection<string, number>;
+  presences: Collection<string, PresenceUpdatePayload>;
+  fetchAllMembersProcessingRequests: Collection<
+    string,
+    (
+      value:
+        | Collection<string, Member>
+        | PromiseLike<Collection<string, Member>>,
+    ) => void
+  >;
+  executedSlashCommands: Collection<string, string>;
+}
