@@ -23,7 +23,7 @@ import {
   ImageSize,
   MemberCreatePayload,
   Presence,
-  VoiceState
+  VoiceState,
 } from "../types/mod.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";

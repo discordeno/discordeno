@@ -13,7 +13,7 @@ import {
   MessageContent,
   Overwrite,
   Permission,
-  RawOverwrite
+  RawOverwrite,
 } from "../types/mod.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";

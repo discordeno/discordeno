@@ -20,7 +20,7 @@ import {
   MessageCreateOptions,
   MessageSticker,
   Reaction,
-  UserPayload
+  UserPayload,
 } from "../types/mod.ts";
 import { createNewProp } from "../util/utils.ts";
 import { Channel } from "./channel.ts";

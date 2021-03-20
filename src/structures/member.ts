@@ -13,7 +13,7 @@ import {
   ImageFormats,
   ImageSize,
   MemberCreatePayload,
-  MessageContent
+  MessageContent,
 } from "../types/mod.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";

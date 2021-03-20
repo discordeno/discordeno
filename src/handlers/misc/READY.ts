@@ -2,7 +2,7 @@ import {
   eventHandlers,
   lastShardID,
   setApplicationID,
-  setBotID
+  setBotID,
 } from "../../bot.ts";
 import { cache, cacheHandlers } from "../../cache.ts";
 import { initialMemberLoadQueue } from "../../structures/guild.ts";

@@ -7,7 +7,7 @@ import {
   DiscordIdentify,
   DiscordPayload,
   FetchMembersOptions,
-  GatewayOpcode
+  GatewayOpcode,
 } from "../types/mod.ts";
 import { Collection } from "../util/collection.ts";
 import { delay } from "../util/utils.ts";
