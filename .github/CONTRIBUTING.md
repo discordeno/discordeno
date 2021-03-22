@@ -57,9 +57,11 @@ Examples of bad PR title:
 
 - Must use camel case
 - Do not allow `null`
-- Each field or property must be accompanied with a reasonable JSDoc comment just above it.
+- Each field or property must be accompanied with a reasonable JSDoc comment
+  just above it.
 - These typings should be kept in the file with the function.
-- "Discordeno types" should be accompanied at the end of the file in which the type is used.
+- "Discordeno types" should be accompanied at the end of the file in which the
+  type is used.
 
 Example:
 
@@ -84,8 +86,10 @@ export interface EditMemberOptions {
 
 2. Discord Types
 
-- Must use snake case (or whatever discord uses. Everything here should be in accordance with Discord API documentation)
-- Each field or property must be accompanied with a reasonable JSDoc comment just above it.
+- Must use snake case (or whatever discord uses. Everything here should be in
+  accordance with Discord API documentation)
+- Each field or property must be accompanied with a reasonable JSDoc comment
+  just above it.
 - "Discord types" must be inside of the `types` module (src/types).
 - The name of the type must be prefixed with `Discord`.
 
