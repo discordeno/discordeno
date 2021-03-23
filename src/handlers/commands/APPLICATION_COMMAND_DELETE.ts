@@ -2,14 +2,14 @@ import { eventHandlers } from "../../bot.ts";
 
 export function handleApplicationCommandDelete(data: DiscordPayload) {
   const {
-    application_id: applicationID,
-    guild_id: guildID,
+    application_id: applicationId,
+    guild_id: guildId,
     ...rest
   } = data.d as ApplicationCommandEvent;
 
   eventHandlers.applicationCommandDelete?.({
     ...rest,
-    guildID,
-    applicationID,
+    guildId,
+    applicationId,
   });
 }
