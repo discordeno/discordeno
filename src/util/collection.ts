@@ -16,7 +16,8 @@ export class Collection<K, V> extends Map<K, V> {
     return [...this.values()];
   }
 
-  first(): V {
+  /** Retrieve the value of the first element in this collection */
+  first(): V | undefined {
     return this.values().next().value;
   }
 
