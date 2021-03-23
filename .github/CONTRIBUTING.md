@@ -66,9 +66,9 @@ Examples of bad PR title:
 Example:
 
 ```ts
-// Discordeno has utility type Camelize<T>, where T is an interface with keys in snake case.
+// Discordeno has utility type CamelCaseProps<T>, where T is an interface with keys in snake case.
 // It can be used to "generate" corresponding "Discordeno type" from "Discord type".
-// Example: export type BanOptions = Camelize<DiscordBanOptions>
+// Example: export type BanOptions = CamelCaseProps<DiscordBanOptions>
 
 export interface EditMemberOptions {
   /** Value to set users nickname to. Requires MANAGE_NICKNAMES permission. */
