@@ -25,7 +25,7 @@ import {
   PartialMessage,
   ReactionPayload,
 } from "./message.ts";
-import { Camelize } from "./util.ts";
+import { CamelCaseProps } from "./util.ts";
 
 export interface BotConfig {
   token: string;
@@ -93,15 +93,15 @@ export interface EventHandlers {
   rateLimit?: (data: RateLimitData) => unknown;
   /** Sent when a new Slash Command is created, relevant to the current user. */
   applicationCommandCreate?: (
-    data: Camelize<ApplicationCommandEvent>,
+    data: CamelCaseProps<ApplicationCommandEvent>,
   ) => unknown;
   /** Sent when a Slash Command relevant to the current user is updated. */
   applicationCommandUpdate?: (
-    data: Camelize<ApplicationCommandEvent>,
+    data: CamelCaseProps<ApplicationCommandEvent>,
   ) => unknown;
   /** Sent when a Slash Command relevant to the current user is deleted. */
   applicationCommandDelete?: (
-    data: Camelize<ApplicationCommandEvent>,
+    data: CamelCaseProps<ApplicationCommandEvent>,
   ) => unknown;
   /** Sent when properties about the user change. */
   botUpdate?: (user: UserPayload) => unknown;
@@ -242,15 +242,21 @@ export interface EventHandlers {
   /** Sent when a member has passed the guild's Membership Screening requirements */
   membershipScreeningPassed?: (guild: Guild, member: Member) => unknown;
   /** Sent when an integration is created on a server such as twitch, youtube etc.. */
-  integrationCreate?: (data: Camelize<IntegrationCreateUpdateEvent>) => unknown;
+  integrationCreate?: (
+    data: CamelCaseProps<IntegrationCreateUpdateEvent>,
+  ) => unknown;
   /** Sent when an integration is updated. */
-  integrationUpdate?: (data: Camelize<IntegrationCreateUpdateEvent>) => unknown;
+  integrationUpdate?: (
+    data: CamelCaseProps<IntegrationCreateUpdateEvent>,
+  ) => unknown;
   /** Sent when an integration is deleted. */
-  integrationDelete?: (data: Camelize<IntegrationDeleteEvent>) => undefined;
+  integrationDelete?: (
+    data: CamelCaseProps<IntegrationDeleteEvent>,
+  ) => undefined;
   /** Sent when a new invite to a channel is created. */
-  inviteCreate?: (data: Camelize<InviteCreateEvent>) => unknown;
+  inviteCreate?: (data: CamelCaseProps<InviteCreateEvent>) => unknown;
   /** Sent when an invite is deleted. */
-  inviteDelete?: (data: Camelize<InviteDeleteEvent>) => unknown;
+  inviteDelete?: (data: CamelCaseProps<InviteDeleteEvent>) => unknown;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */

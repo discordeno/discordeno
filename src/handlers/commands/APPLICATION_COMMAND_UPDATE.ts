@@ -3,14 +3,14 @@ import { ApplicationCommandEvent, DiscordPayload } from "../../types/mod.ts";
 
 export function handleApplicationCommandUpdate(data: DiscordPayload) {
   const {
-    application_id: applicationID,
-    guild_id: guildID,
+    application_id: applicationId,
+    guild_id: guildId,
     ...rest
   } = data.d as ApplicationCommandEvent;
 
   eventHandlers.applicationCommandUpdate?.({
     ...rest,
-    guildID,
-    applicationID,
+    guildId,
+    applicationId,
   });
 }
