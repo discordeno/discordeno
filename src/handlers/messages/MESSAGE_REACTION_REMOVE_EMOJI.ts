@@ -1,8 +1,4 @@
 import { botID, eventHandlers } from "../../bot.ts";
-import {
-  DiscordPayload,
-  MessageReactionRemoveEmojiPayload,
-} from "../../types/mod.ts";
 import { cacheHandlers } from "../../cache.ts";
 
 export async function handleMessageReactionRemoveEmoji(

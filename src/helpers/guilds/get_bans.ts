@@ -1,5 +1,4 @@
 import { RequestManager } from "../../rest/request_manager.ts";
-import { BannedUser } from "../../types/mod.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";

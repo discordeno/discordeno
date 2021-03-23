@@ -1,4 +1,3 @@
-import { ImageFormats, ImageSize } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { formatImageURL } from "../../util/utils.ts";
 

@@ -1,5 +1,4 @@
 import { Member } from "../../structures/mod.ts";
-import { ImageFormats, ImageSize } from "../../types/mod.ts";
 import { rawAvatarURL } from "./raw_avatar_url.ts";
 
 /** The users custom avatar or the default avatar */

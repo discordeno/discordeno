@@ -1,28 +1,24 @@
 import { eventHandlers } from "../../bot.ts";
-import {
-  DiscordPayload,
-  IntegrationCreateUpdateEvent,
-} from "../../types/mod.ts";
 
 export function handleIntegrationUpdate(data: DiscordPayload) {
   const {
     enable_emoticons: enableEmoticons,
     expire_behavior: expireBehavior,
     expire_grace_period: expireGracePeriod,
-    role_id: roleID,
+    role_id: roleId,
     subscriber_count: subscriberCount,
     synced_at: syncedAt,
-    guild_id: guildID,
+    guild_id: guildId,
     ...rest
   } = data.d as IntegrationCreateUpdateEvent;
 
   eventHandlers.integrationUpdate?.({
     ...rest,
-    guildID,
+    guildId,
     subscriberCount,
     enableEmoticons,
     expireGracePeriod,
-    roleID,
+    roleId,
     expireBehavior,
     syncedAt,
   });

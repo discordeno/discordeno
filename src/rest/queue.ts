@@ -1,7 +1,6 @@
 import { delay } from "../util/utils.ts";
 import { restCache } from "./cache.ts";
 import { createRequestBody, processRequestHeaders } from "./request.ts";
-import { HttpResponseCode } from "./types/mod.ts";
 
 /** Processes the queue by looping over each path separately until the queues are empty. */
 export async function processQueue(id: string) {

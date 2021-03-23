@@ -1,6 +1,5 @@
 import { identifyPayload } from "../../bot.ts";
 import { Member } from "../../structures/mod.ts";
-import { Errors, FetchMembersOptions, Intents } from "../../types/mod.ts";
 import { Collection } from "../../util/collection.ts";
 import { requestAllMembers } from "../../ws/shard_manager.ts";
 

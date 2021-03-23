@@ -1,5 +1,4 @@
 import { RequestManager } from "../../rest/request_manager.ts";
-import { PositionSwap } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */

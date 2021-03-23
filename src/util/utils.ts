@@ -1,15 +1,4 @@
 import { encode } from "../../deps.ts";
-import {
-  Errors,
-  GatewayOpcode,
-  GatewayStatusUpdatePayload,
-  ImageFormats,
-  ImageSize,
-  SlashCommandOption,
-  SlashCommandOptionChoice,
-  SlashCommandOptionType,
-  UpsertSlashCommandOptions,
-} from "../types/mod.ts";
 import { basicShards, sendWS } from "../ws/shard.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 

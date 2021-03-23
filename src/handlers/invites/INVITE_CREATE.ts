@@ -1,14 +1,13 @@
 import { eventHandlers } from "../../bot.ts";
-import { DiscordPayload, InviteCreateEvent } from "../../types/mod.ts";
 
 export function handleInviteCreate(payload: DiscordPayload) {
   if (payload.t !== "INVITE_CREATE") return;
   //TODO: replace with tocamelcase
   const {
-    channel_id: channelID,
+    channel_id: channelId,
     created_at: createdAt,
     max_age: maxAge,
-    guild_id: guildID,
+    guild_id: guildId,
     target_user: targetUser,
     target_user_type: targetUserType,
     max_uses: maxUses,
@@ -17,8 +16,8 @@ export function handleInviteCreate(payload: DiscordPayload) {
 
   eventHandlers.inviteCreate?.({
     ...rest,
-    channelID,
-    guildID,
+    channelId,
+    guildId,
     maxAge,
     targetUser,
     targetUserType,

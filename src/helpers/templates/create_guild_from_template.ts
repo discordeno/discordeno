@@ -1,9 +1,5 @@
 import { cacheHandlers } from "../../cache.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
-import {
-  CreateGuildFromTemplate,
-  CreateGuildPayload,
-} from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { urlToBase64 } from "../../util/utils.ts";
 

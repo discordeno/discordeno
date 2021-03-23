@@ -1,6 +1,5 @@
 import { applicationID } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
-import { SlashCommand } from "../../types/mod.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 
