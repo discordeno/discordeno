@@ -1,7 +1,7 @@
 import { applicationID } from "../../bot.ts";
+import { cache } from "../../cache.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { SlashCommandResponseOptions } from "../../types/mod.ts";
-import { cache } from "../../util/cache.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /**
@@ -10,7 +10,7 @@ import { endpoints } from "../../util/constants.ts";
  *
  * NOTE: By default we will suppress mentions. To enable mentions, just pass any mentions object.
  */
-export async function executeSlashCommand(
+export async function sendInteractionResponse(
   id: string,
   token: string,
   options: SlashCommandResponseOptions,

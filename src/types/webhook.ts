@@ -215,13 +215,13 @@ export interface EditSlashCommandOptions {
   options?: SlashCommandOption[];
 }
 
-export interface ExecuteSlashCommandOptions {
+export interface SendInteractionResponseOptions {
   type: InteractionResponseType;
   data: SlashCommandCallbackData;
 }
 
 export interface SlashCommandResponseOptions
-  extends ExecuteSlashCommandOptions {
+  extends SendInteractionResponseOptions {
   /** Whether to make this response visible ONLY to the user who used this command. It will also be deleted after some time. */
   private?: boolean;
 }

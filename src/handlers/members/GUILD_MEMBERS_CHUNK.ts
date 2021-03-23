@@ -1,8 +1,7 @@
-import { DiscordPayload, GuildMemberChunkPayload } from "../../types/mod.ts";
-import { cache } from "../../util/cache.ts";
-import { Collection } from "../../util/collection.ts";
+import { cache, cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
-import { cacheHandlers } from "../../cache.ts";
+import { DiscordPayload, GuildMemberChunkPayload } from "../../types/mod.ts";
+import { Collection } from "../../util/collection.ts";
 
 export async function handleGuildMembersChunk(data: DiscordPayload) {
   const payload = data.d as GuildMemberChunkPayload;

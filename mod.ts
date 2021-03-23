@@ -10,7 +10,6 @@ export * from "./src/structures/message.ts";
 export * from "./src/structures/mod.ts";
 export * from "./src/structures/role.ts";
 export * from "./src/types/mod.ts";
-export * from "./src/util/cache.ts";
 export * from "./src/util/collection.ts";
 export * from "./src/util/permissions.ts";
 export * from "./src/util/utils.ts";

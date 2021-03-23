@@ -1,8 +1,7 @@
 import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
+import { cache, cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import { CreateGuildPayload, DiscordPayload } from "../../types/mod.ts";
-import { cache } from "../../util/cache.ts";
 import { basicShards } from "../../ws/shard.ts";
 
 export async function handleGuildCreate(

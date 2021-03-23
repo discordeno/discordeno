@@ -1,5 +1,5 @@
+import { cache } from "../cache.ts";
 import { GuildTemplate, UserPayload } from "../types/mod.ts";
-import { cache } from "../util/cache.ts";
 import { createNewProp } from "../util/utils.ts";
 import { Guild } from "./guild.ts";
 

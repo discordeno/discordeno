@@ -1,6 +1,6 @@
 import { categoryChildrenIDs } from "./channels/category_children_ids.ts";
 import { channelOverwriteHasPermission } from "./channels/channel_overwrite_has_permission.ts";
-import { createGuildChannel } from "./channels/create_guild_channel.ts";
+import { createChannel } from "./channels/create_channel.ts";
 import { deleteChannel } from "./channels/delete_channel.ts";
 import { deleteChannelOverwrite } from "./channels/delete_channel_overwrite.ts";
 import { editChannel } from "./channels/edit_channel.ts";
@@ -17,9 +17,9 @@ import { createSlashCommand } from "./commands/create_slash_command.ts";
 import { deleteSlashCommand } from "./commands/delete_slash_command.ts";
 import { deleteSlashResponse } from "./commands/delete_slash_response.ts";
 import { editSlashResponse } from "./commands/edit_slash_response.ts";
-import { executeSlashCommand } from "./commands/execute_slash_command.ts";
 import { getSlashCommand } from "./commands/get_slash_command.ts";
 import { getSlashCommands } from "./commands/get_slash_commands.ts";
+import { sendInteractionResponse } from "./commands/send_interaction_response.ts";
 import { upsertSlashCommand } from "./commands/upsert_slash_command.ts";
 import { upsertSlashCommands } from "./commands/upsert_slash_commands.ts";
 import { createEmoji } from "./emojis/create_emoji.ts";
@@ -58,7 +58,7 @@ import { getChannelInvites } from "./invites/get_channel_invites.ts";
 import { getInvite } from "./invites/get_invite.ts";
 import { getInvites } from "./invites/get_invites.ts";
 import { avatarURL } from "./members/avatar_url.ts";
-import { banMember } from "./members/ban_member.ts";
+import { ban, banMember } from "./members/ban_member.ts";
 import { disconnectMember } from "./members/disconnect_member.ts";
 import { editBotNickname } from "./members/edit_bot_nickname.ts";
 import { editBotProfile } from "./members/edit_bot_profile.ts";
@@ -67,12 +67,12 @@ import { fetchMembers } from "./members/fetch_members.ts";
 import { getMember } from "./members/get_member.ts";
 import { getMembers } from "./members/get_members.ts";
 import { getMembersByQuery } from "./members/get_members_by_query.ts";
-import { kickMember } from "./members/kick_member.ts";
+import { kick, kickMember } from "./members/kick_member.ts";
 import { moveMember } from "./members/move_member.ts";
 import { pruneMembers } from "./members/prune_members.ts";
 import { rawAvatarURL } from "./members/raw_avatar_url.ts";
 import { sendDirectMessage } from "./members/send_direct_message.ts";
-import { unbanMember } from "./members/unban_member.ts";
+import { unban, unbanMember } from "./members/unban_member.ts";
 import { addReaction } from "./messages/add_reaction.ts";
 import { addReactions } from "./messages/add_reactions.ts";
 import { deleteMessage } from "./messages/delete_message.ts";
@@ -81,14 +81,14 @@ import { editMessage } from "./messages/edit_message.ts";
 import { getMessage } from "./messages/get_message.ts";
 import { getMessages } from "./messages/get_messages.ts";
 import { getReactions } from "./messages/get_reactions.ts";
-import { pinMessage } from "./messages/pin_message.ts";
+import { pin, pinMessage } from "./messages/pin_message.ts";
 import { publishMessage } from "./messages/publish_message.ts";
 import { removeAllReactions } from "./messages/remove_all_reactions.ts";
 import { removeReaction } from "./messages/remove_reaction.ts";
 import { removeReactionEmoji } from "./messages/remove_reaction_emoji.ts";
 import { removeUserReaction } from "./messages/remove_user_reaction.ts";
 import { sendMessage } from "./messages/send_message.ts";
-import { unpinMessage } from "./messages/unpin_message.ts";
+import { unpin, unpinMessage } from "./messages/unpin_message.ts";
 import { getGatewayBot } from "./misc/get_gateway_bot.ts";
 import { getUser } from "./misc/get_user.ts";
 import { addRole } from "./roles/add_role.ts";
@@ -122,12 +122,13 @@ export {
   addReactions,
   addRole,
   avatarURL,
+  ban,
   banMember,
   categoryChildrenIDs,
   channelOverwriteHasPermission,
+  createChannel,
   createEmoji,
   createGuild,
-  createGuildChannel,
   createGuildFromTemplate,
   createGuildTemplate,
   createInvite,
@@ -167,7 +168,6 @@ export {
   editWebhookWithToken,
   editWidget,
   emojiURL,
-  executeSlashCommand,
   executeWebhook,
   fetchMembers,
   followChannel,
@@ -213,9 +213,11 @@ export {
   guildIconURL,
   guildSplashURL,
   isChannelSynced,
+  kick,
   kickMember,
   leaveGuild,
   moveMember,
+  pin,
   pinMessage,
   pruneMembers,
   publishMessage,
@@ -226,13 +228,16 @@ export {
   removeRole,
   removeUserReaction,
   sendDirectMessage,
+  sendInteractionResponse,
   sendMessage,
   startTyping,
   swapChannels,
   swapRoles,
   syncGuildTemplate,
   syncIntegration,
+  unban,
   unbanMember,
+  unpin,
   unpinMessage,
   upsertSlashCommand,
   upsertSlashCommands,
@@ -241,7 +246,7 @@ export {
 export let helpers = {
   // channels
   channelOverwriteHasPermission,
-  createGuildChannel,
+  createChannel,
   deleteChannelOverwrite,
   deleteChannel,
   editChannelOverwrite,
@@ -259,7 +264,7 @@ export let helpers = {
   deleteSlashCommand,
   deleteSlashResponse,
   editSlashResponse,
-  executeSlashCommand,
+  sendInteractionResponse,
   getSlashCommand,
   getSlashCommands,
   upsertSlashCommand,

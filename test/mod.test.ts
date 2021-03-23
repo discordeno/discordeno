@@ -6,12 +6,12 @@ import {
   cache,
   Channel,
   channelOverwriteHasPermission,
+  createChannel,
   createGuild,
-  createGuildChannel,
   createRole,
   delay,
   deleteChannel,
-  deleteMessageByID,
+  deleteMessage,
   deleteRole,
   deleteServer,
   editChannel,
@@ -21,12 +21,12 @@ import {
   getPins,
   Guild,
   OverwriteType,
-  pin,
+  pinMessage,
   removeReaction,
   Role,
   sendMessage,
   startBot,
-  unpin,
+  unpinMessage,
 } from "./deps.ts";
 
 // Default options for tests
@@ -137,7 +137,7 @@ Deno.test({
 Deno.test({
   name: "[channel] create a channel in a guild",
   async fn() {
-    const channel = await createGuildChannel(tempData.guildID, "test");
+    const channel = await createChannel(tempData.guildID, "test");
 
     // Assertions
     assertExists(channel);
@@ -247,7 +247,7 @@ Deno.test({
 Deno.test({
   name: "[message] pin a message in a channel",
   async fn() {
-    await pin(tempData.channelID, tempData.messageID);
+    await pinMessage(tempData.channelID, tempData.messageID);
   },
   ...defaultTestOptions,
 });
@@ -268,7 +268,7 @@ Deno.test({
 Deno.test({
   name: "[message] unpin a message",
   async fn() {
-    await unpin(tempData.channelID, tempData.messageID);
+    await unpinMessage(tempData.channelID, tempData.messageID);
   },
   ...defaultTestOptions,
 });
@@ -298,7 +298,7 @@ Deno.test({
 Deno.test({
   name: "[message] delete a message by channel ID",
   async fn() {
-    await deleteMessageByID(tempData.channelID, tempData.messageID);
+    await deleteMessage(tempData.channelID, tempData.messageID);
   },
   ...defaultTestOptions,
 });

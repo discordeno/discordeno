@@ -1,5 +1,5 @@
 import { botID } from "../bot.ts";
-import { cacheHandlers } from "../cache.ts";
+import { cache, cacheHandlers } from "../cache.ts";
 import { deleteServer } from "../helpers/guilds/delete_server.ts";
 import { editGuild } from "../helpers/guilds/edit_guild.ts";
 import { getAuditLogs } from "../helpers/guilds/get_audit_logs.ts";
@@ -25,7 +25,6 @@ import {
   Presence,
   VoiceState,
 } from "../types/mod.ts";
-import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
 import { Member } from "./member.ts";

@@ -1,4 +1,4 @@
-import { cacheHandlers } from "../cache.ts";
+import { cache, cacheHandlers } from "../cache.ts";
 import { sendDirectMessage } from "../helpers/members/send_direct_message.ts";
 import { addReaction } from "../helpers/messages/add_reaction.ts";
 import { addReactions } from "../helpers/messages/add_reactions.ts";
@@ -22,7 +22,6 @@ import {
   Reaction,
   UserPayload,
 } from "../types/mod.ts";
-import { cache } from "../util/cache.ts";
 import { createNewProp } from "../util/utils.ts";
 import { Channel } from "./channel.ts";
 import { Guild } from "./guild.ts";
