@@ -1,5 +1,5 @@
-import { camelKeysToSnakeCase, snakeKeysToCamelCase } from "../mod.ts";
-import { assertEquals } from "./deps.ts";
+import { camelKeysToSnakeCase, snakeKeysToCamelCase } from "../../mod.ts";
+import { assertEquals } from "../deps.ts";
 
 const testSnakeObject = {
   // deno-lint-ignore camelcase
@@ -53,7 +53,7 @@ const someElseOther = {
 };
 
 Deno.test({
-  name: "[utils] snakeKeysToCamelCase: assert convertion",
+  name: "[utils] convert snake case keys to camel case",
   fn() {
     const result = snakeKeysToCamelCase(testSnakeObject);
     assertEquals(result, testCamelObject);
@@ -63,7 +63,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "[utils] camelKeysToSnakeCase: assert convertion",
+  name: "[utils] convert camel case keys to snake case",
   fn() {
     const result = camelKeysToSnakeCase(testCamelObject);
     assertEquals(result, testSnakeObject);

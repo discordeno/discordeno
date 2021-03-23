@@ -1,10 +1,11 @@
+import { cache } from "../cache.ts";
 import { channelOverwriteHasPermission } from "../helpers/channels/channel_overwrite_has_permission.ts";
 import { deleteChannel } from "../helpers/channels/delete_channel.ts";
 import { deleteChannelOverwrite } from "../helpers/channels/delete_channel_overwrite.ts";
 import { editChannel } from "../helpers/channels/edit_channel.ts";
 import { editChannelOverwrite } from "../helpers/channels/edit_channel_overwrite.ts";
-import { kickFromVoiceChannel } from "../helpers/members/disconnect_member.ts";
 import { sendMessage } from "../helpers/messages/send_message.ts";
+import { disconnectMember } from "../helpers/mod.ts";
 import {
   ChannelCreatePayload,
   ChannelEditOptions,
@@ -14,7 +15,6 @@ import {
   Permission,
   RawOverwrite,
 } from "../types/mod.ts";
-import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
 import { CleanVoiceState, Guild } from "./guild.ts";
@@ -48,7 +48,7 @@ const baseChannel: Partial<Channel> = {
     return sendMessage(this.id!, content);
   },
   disconnect(memberID) {
-    return kickFromVoiceChannel(this.guildID!, memberID);
+    return disconnectMember(this.guildID!, memberID);
   },
   delete() {
     return deleteChannel(this.guildID!, this.id!);
@@ -176,7 +176,7 @@ export interface Channel {
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
   send(content: string | MessageContent): ReturnType<typeof sendMessage>;
   /** Disconnect a member from a voice channel. Requires MOVE_MEMBERS permission. */
-  disconnect(memberID: string): ReturnType<typeof kickFromVoiceChannel>;
+  disconnect(memberID: string): ReturnType<typeof disconnectMember>;
   /** Delete the channel */
   delete(): ReturnType<typeof deleteChannel>;
   /** Edit a channel Overwrite */

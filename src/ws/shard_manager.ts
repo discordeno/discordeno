@@ -1,7 +1,7 @@
-import { handlers } from "../handlers/mod.ts";
-import { Guild } from "../structures/guild.ts";
-import { Member } from "../structures/mod.ts";
 import { eventHandlers } from "../bot.ts";
+import { cache } from "../cache.ts";
+import { handlers } from "../handlers/mod.ts";
+import { Member } from "../structures/mod.ts";
 import {
   DiscordBotGatewayData,
   DiscordIdentify,
@@ -9,7 +9,6 @@ import {
   FetchMembersOptions,
   GatewayOpcode,
 } from "../types/mod.ts";
-import { cache } from "../util/cache.ts";
 import { Collection } from "../util/collection.ts";
 import { delay } from "../util/utils.ts";
 import { createShard, requestGuildMembers } from "./mod.ts";
@@ -88,18 +87,19 @@ export async function handleDiscordPayload(
 }
 
 export async function requestAllMembers(
-  guild: Guild,
+  guildID: string,
+  shardID: number,
   resolve: (
     value: Collection<string, Member> | PromiseLike<Collection<string, Member>>,
   ) => void,
   options?: FetchMembersOptions,
 ) {
-  const nonce = `${guild.id}-${Date.now()}`;
+  const nonce = `${guildID}-${Date.now()}`;
   cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
 
   await requestGuildMembers(
-    guild.id,
-    guild.shardID,
+    guildID,
+    shardID,
     nonce,
     options,
   );

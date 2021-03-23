@@ -1,5 +1,3 @@
-import { chooseRandom } from "./utils.ts";
-
 export class Collection<K, V> extends Map<K, V> {
   maxSize?: number;
 
@@ -16,16 +14,18 @@ export class Collection<K, V> extends Map<K, V> {
     return [...this.values()];
   }
 
-  first(): V {
+  /** Retrieve the value of the first element in this collection */
+  first(): V | undefined {
     return this.values().next().value;
   }
 
-  last(): V {
+  last(): V | undefined {
     return [...this.values()][this.size - 1];
   }
 
-  random() {
-    return chooseRandom([...this.values()]);
+  random(): V | undefined {
+    const array = [...this.values()];
+    return array[Math.floor(Math.random() * array.length)];
   }
 
   find(callback: (value: V, key: K) => boolean) {
