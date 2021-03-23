@@ -1,33 +1,14 @@
 // SERVERLESS REST CLIENT THAT CAN WORK ACROSS SHARDS/WORKERS TO COMMUNICATE GLOBAL RATE LIMITS EASILY
-import { restCache } from "./cache.ts";
-import { serve, ServerRequest, serveTLS } from "./deps.ts";
 import { processRequest } from "./request.ts";
-
-/** Begins an http server that will handle incoming requests. */
-export async function startRESTServer(options: RestServerOptions) {
-  const server = options.keys
-    ? serveTLS({
-      port: options.port,
-      certFile: options.keys.cert,
-      keyFile: options.keys.key,
-    })
-    : serve({ port: options.port });
-
-  for await (const request of server) {
-    handlePayload(request, options).catch((error) => {
-      restCache.eventHandlers.error("processRequest", error);
-    });
-  }
-}
+import { rest } from "./rest.ts";
 
 /** Handler function for every request. Converts to json, verified authorization & requirements and begins processing the request */
-async function handlePayload(
-  request: ServerRequest,
-  options: RestServerOptions,
+export async function handlePayload(
+  request: Request,
 ) {
   // INSTANTLY IGNORE ANY REQUESTS THAT DON'T HAVE THE SECRET AUTHORIZATION KEY
   const authorization = request.headers.get("authorization");
-  if (authorization !== options.authorization) return;
+  if (authorization !== rest.authorization) return;
   // READ BUFFER AFTER AUTH CHECK
   const buffer = await Deno.readAll(request.body);
   try {
@@ -47,8 +28,8 @@ async function handlePayload(
     }
 
     // PROCESS THE REQUEST
-    processRequest(request, { body: data, retryCount: 0 }, options);
+    rest.processRequest(request, { body: data, retryCount: 0 });
   } catch (error) {
-    restCache.eventHandlers.error("serverRequest", error);
+    rest.eventHandlers.error("serverRequest", error);
   }
 }
