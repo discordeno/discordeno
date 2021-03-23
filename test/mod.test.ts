@@ -1,7 +1,5 @@
 import {
   addReaction,
-  assertEquals,
-  assertExists,
   botID,
   cache,
   Channel,
@@ -27,7 +25,8 @@ import {
   sendMessage,
   startBot,
   unpinMessage,
-} from "./deps.ts";
+} from "../mod.ts";
+import { assertEquals, assertExists } from "./deps.ts";
 
 // Default options for tests
 export const defaultTestOptions: Partial<Deno.TestDefinition> = {

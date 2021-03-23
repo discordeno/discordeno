@@ -1,5 +1,5 @@
-import { camelKeysToSnakeCase, snakeKeysToCamelCase } from "../mod.ts";
-import { assertEquals } from "./deps.ts";
+import { camelKeysToSnakeCase, snakeKeysToCamelCase } from "../../mod.ts";
+import { assertEquals } from "../deps.ts";
 
 const testSnakeObject = {
   // deno-lint-ignore camelcase
