@@ -1,6 +1,5 @@
 import { RequestManager } from "../../rest/request_manager.ts";
 import { structures } from "../../structures/mod.ts";
-import { MessageCreateOptions } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Get pinned messages in this channel. */

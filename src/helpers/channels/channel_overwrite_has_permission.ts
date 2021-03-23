@@ -1,5 +1,3 @@
-import { Permission, Permissions, RawOverwrite } from "../../types/mod.ts";
-
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(
   guildID: string,

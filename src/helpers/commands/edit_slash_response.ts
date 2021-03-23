@@ -1,11 +1,6 @@
 import { applicationID } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { structures } from "../../structures/mod.ts";
-import {
-  EditSlashResponseOptions,
-  Errors,
-  MessageCreateOptions,
-} from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** To edit your response to a slash command. If a messageID is not provided it will default to editing the original response. */

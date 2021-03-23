@@ -1,7 +1,6 @@
 // deno-lint-ignore-file require-await no-explicit-any prefer-const
 
 import { Channel, Guild, Member, Message } from "./structures/mod.ts";
-import { PresenceUpdatePayload } from "./types/mod.ts";
 import { Collection } from "./util/collection.ts";
 
 export const cache: CacheData = {
@@ -162,23 +161,4 @@ async function filter(
   callback: (value: any, key: string) => boolean,
 ) {
   return cache[table].filter(callback);
-}
-
-export interface CacheData {
-  isReady: boolean;
-  guilds: Collection<string, Guild>;
-  channels: Collection<string, Channel>;
-  messages: Collection<string, Message>;
-  members: Collection<string, Member>;
-  unavailableGuilds: Collection<string, number>;
-  presences: Collection<string, PresenceUpdatePayload>;
-  fetchAllMembersProcessingRequests: Collection<
-    string,
-    (
-      value:
-        | Collection<string, Member>
-        | PromiseLike<Collection<string, Member>>,
-    ) => void
-  >;
-  executedSlashCommands: Collection<string, string>;
 }

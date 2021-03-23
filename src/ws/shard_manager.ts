@@ -2,13 +2,6 @@ import { eventHandlers } from "../bot.ts";
 import { cache } from "../cache.ts";
 import { handlers } from "../handlers/mod.ts";
 import { Member } from "../structures/mod.ts";
-import {
-  DiscordBotGatewayData,
-  DiscordIdentify,
-  DiscordPayload,
-  FetchMembersOptions,
-  GatewayOpcode,
-} from "../types/mod.ts";
 import { Collection } from "../util/collection.ts";
 import { delay } from "../util/utils.ts";
 import { createShard, requestGuildMembers } from "./mod.ts";

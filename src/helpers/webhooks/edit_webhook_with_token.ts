@@ -1,5 +1,4 @@
 import { RequestManager } from "../../rest/request_manager.ts";
-import { WebhookEditOptions, WebhookPayload } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Edit a webhook. Returns the updated webhook object on success. */

@@ -1,5 +1,4 @@
 import { RequestManager } from "../../rest/request_manager.ts";
-import { WebhookPayload } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Returns the new webhook object for the given id. */

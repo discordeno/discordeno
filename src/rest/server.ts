@@ -2,7 +2,6 @@
 import { restCache } from "./cache.ts";
 import { serve, ServerRequest, serveTLS } from "./deps.ts";
 import { processRequest } from "./request.ts";
-import { RestServerOptions } from "./types/mod.ts";
 
 /** Begins an http server that will handle incoming requests. */
 export async function startRESTServer(options: RestServerOptions) {

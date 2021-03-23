@@ -1,13 +1,6 @@
 import { cacheHandlers } from "../../cache.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { structures } from "../../structures/mod.ts";
-import {
-  ChannelTypes,
-  Errors,
-  MessageContent,
-  MessageCreateOptions,
-  Permission,
-} from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 

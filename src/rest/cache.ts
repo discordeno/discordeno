@@ -1,5 +1,3 @@
-import { RestCache } from "./types/mod.ts";
-
 export const restCache: RestCache = {
   pathQueues: new Map(),
   processingQueue: false,

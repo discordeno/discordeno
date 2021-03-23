@@ -1,9 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import {
-  ChannelCreatePayload,
-  ChannelTypes,
-  DiscordPayload,
-} from "../../types/mod.ts";
 import { cacheHandlers } from "../../cache.ts";
 
 export async function handleChannelDelete(data: DiscordPayload) {

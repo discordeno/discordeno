@@ -1,5 +1,4 @@
 import { RequestManager } from "../../rest/request_manager.ts";
-import { UpdateGuildPayload } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /**
