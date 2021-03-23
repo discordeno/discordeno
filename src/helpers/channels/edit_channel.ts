@@ -1,5 +1,4 @@
 import { RequestManager } from "../../rest/request_manager.ts";
-import { ChannelEditOptions } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,
@@ -63,16 +62,6 @@ export async function editChannel(
   });
 
   return result;
-}
-
-interface EditChannelRequest {
-  amount: number;
-  timestamp: number;
-  channelID: string;
-  items: {
-    channelID: string;
-    options: ChannelEditOptions;
-  }[];
 }
 
 const editChannelNameTopicQueue = new Map<string, EditChannelRequest>();

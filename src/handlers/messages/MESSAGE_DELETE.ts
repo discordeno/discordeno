@@ -1,5 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import { DiscordPayload, MessageDeletePayload } from "../../types/mod.ts";
 import { cacheHandlers } from "../../cache.ts";
 
 export async function handleMessageDelete(data: DiscordPayload) {

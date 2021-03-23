@@ -1,5 +1,4 @@
 import { RequestManager } from "../../rest/request_manager.ts";
-import { Errors, PruneOptions } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 import { camelKeysToSnakeCase } from "../../util/utils.ts";

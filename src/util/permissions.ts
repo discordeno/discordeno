@@ -1,7 +1,6 @@
 import { botID } from "../bot.ts";
 import { cacheHandlers } from "../cache.ts";
 import { Channel, Guild, Member, Role } from "../structures/mod.ts";
-import { Errors, Permission, Permissions } from "../types/mod.ts";
 
 async function getCached(
   table: "guilds",

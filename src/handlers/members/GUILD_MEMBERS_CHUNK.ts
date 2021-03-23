@@ -1,6 +1,5 @@
 import { cache, cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordPayload, GuildMemberChunkPayload } from "../../types/mod.ts";
 import { Collection } from "../../util/collection.ts";
 
 export async function handleGuildMembersChunk(data: DiscordPayload) {

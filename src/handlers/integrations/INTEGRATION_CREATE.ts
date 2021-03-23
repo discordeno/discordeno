@@ -1,8 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import {
-  DiscordPayload,
-  IntegrationCreateUpdateEvent,
-} from "../../types/mod.ts";
 
 export function handleIntegrationCreate(
   data: DiscordPayload,

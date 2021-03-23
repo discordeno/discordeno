@@ -1,6 +1,5 @@
 import { botID } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
-import { Errors } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   isHigherPosition,

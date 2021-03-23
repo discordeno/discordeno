@@ -1,6 +1,5 @@
 import { cacheHandlers } from "../../cache.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
-import { Errors } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Returns the widget for the guild. */

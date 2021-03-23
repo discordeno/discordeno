@@ -2,11 +2,6 @@ import { BASE_URL, USER_AGENT } from "../util/constants.ts";
 import { restCache } from "./cache.ts";
 import { ServerRequest } from "./deps.ts";
 import { processQueue } from "./queue.ts";
-import {
-  QueuedRequest,
-  RestServerOptions,
-  RunMethodOptions,
-} from "./types/mod.ts";
 
 /** Processes a request and assigns it to a queue or creates a queue if none exists for it. */
 export function processRequest(

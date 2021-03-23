@@ -1,6 +1,5 @@
 import { RequestManager } from "../../rest/request_manager.ts";
 import { structures } from "../../structures/mod.ts";
-import { GuildTemplate } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 

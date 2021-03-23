@@ -1,6 +1,5 @@
 import { applicationID } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
-import { CreateSlashCommandOptions } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { validateSlashCommands } from "../../util/utils.ts";
 

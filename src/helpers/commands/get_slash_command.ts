@@ -1,6 +1,5 @@
 import { applicationID } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
-import { SlashCommand } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Fetchs the global command for the given ID. If a guildID is provided, the guild command will be fetched. */

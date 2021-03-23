@@ -1,6 +1,5 @@
 import { RequestManager } from "../../rest/request_manager.ts";
 import { structures } from "../../structures/mod.ts";
-import { GuildTemplate } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Returns the guild template if it exists */
