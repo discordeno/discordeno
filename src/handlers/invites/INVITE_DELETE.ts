@@ -1,5 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import { DiscordPayload, InviteDeleteEvent } from "../../types/mod.ts";
 
 export function handleInviteDelete(payload: DiscordPayload) {
   if (payload.t !== "INVITE_DELETE") return;

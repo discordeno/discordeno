@@ -1,11 +1,4 @@
 import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
-import {
-  BotConfig,
-  DiscordBotGatewayData,
-  DiscordIdentify,
-  EventHandlers,
-  Intents,
-} from "./types/mod.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 
@@ -31,19 +24,6 @@ export const identifyPayload: DiscordIdentify = {
   intents: 0,
   shard: [0, 0],
 };
-
-/** @deprecated Use "DiscordIdentify" instead */
-export interface IdentifyPayload {
-  token: string;
-  compress: boolean;
-  properties: {
-    $os: string;
-    $browser: string;
-    $device: string;
-  };
-  intents: number;
-  shard: [number, number];
-}
 
 export async function startBot(config: BotConfig) {
   if (config.eventHandlers) eventHandlers = config.eventHandlers;
@@ -124,19 +104,4 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
         ? (data.firstShardID + 25)
         : botGatewayData.shards),
   );
-}
-
-export interface BigBrainBotConfig extends BotConfig {
-  /** The first shard to start at for this worker. Use this to control which shards to run in each worker. */
-  firstShardID: number;
-  /** The last shard to start for this worker. By default it will be 25 + the firstShardID. */
-  lastShardID?: number;
-  /** This can be used to forward the ws handling to a proxy. */
-  wsURL?: string;
-  /** This can be used to forward the REST handling to a proxy. */
-  restURL?: string;
-  /** This can be used to forward the CDN handling to a proxy. */
-  cdnURL?: string;
-  /** This is the authorization header that your rest proxy will validate */
-  restAuthorization?: string;
 }

@@ -1,11 +1,5 @@
 import { authorization, eventHandlers, restAuthorization } from "../bot.ts";
 import {
-  Errors,
-  FileContent,
-  HttpResponseCode,
-  RequestMethods,
-} from "../types/mod.ts";
-import {
   API_VERSION,
   BASE_URL,
   baseEndpoints,
@@ -18,25 +12,6 @@ const pathQueues: { [key: string]: QueuedRequest[] } = {};
 const ratelimitedPaths = new Map<string, RateLimitedPath>();
 let globallyRateLimited = false;
 let queueInProcess = false;
-
-export interface QueuedRequest {
-  callback: () => Promise<
-    void | {
-      // deno-lint-ignore no-explicit-any
-      rateLimited: any;
-      beforeFetch: boolean;
-      bucketID?: string | null;
-    }
-  >;
-  bucketID?: string | null;
-  url: string;
-}
-
-export interface RateLimitedPath {
-  url: string;
-  resetTimestamp: number;
-  bucketID: string | null;
-}
 
 async function processRateLimitedPaths() {
   const now = Date.now();

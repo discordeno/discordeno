@@ -1,13 +1,4 @@
 import { botGatewayData, eventHandlers, proxyWSURL } from "../bot.ts";
-import {
-  DiscordBotGatewayData,
-  DiscordHeartbeatPayload,
-  DiscordIdentify,
-  DiscordPayload,
-  FetchMembersOptions,
-  GatewayOpcode,
-  ReadyPayload,
-} from "../types/mod.ts";
 import { Collection } from "../util/collection.ts";
 import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
@@ -18,24 +9,6 @@ const heartbeating = new Map<number, boolean>();
 const utf8decoder = new TextDecoder();
 const RequestMembersQueue: RequestMemberQueuedRequest[] = [];
 let processQueue = false;
-
-export interface BasicShard {
-  id: number;
-  ws: WebSocket;
-  resumeInterval: number;
-  sessionID: string;
-  previousSequenceNumber: number | null;
-  needToResume: boolean;
-  ready: boolean;
-  unavailableGuildIDs: Set<string>;
-}
-
-interface RequestMemberQueuedRequest {
-  guildID: string;
-  shardID: number;
-  nonce: string;
-  options?: FetchMembersOptions;
-}
 
 export function createShard(
   data: DiscordBotGatewayData,

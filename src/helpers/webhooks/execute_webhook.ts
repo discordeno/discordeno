@@ -1,10 +1,5 @@
 import { RequestManager } from "../../rest/request_manager.ts";
 import { structures } from "../../structures/mod.ts";
-import {
-  Errors,
-  ExecuteWebhookOptions,
-  MessageCreateOptions,
-} from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Execute a webhook with webhook ID and webhook token */

@@ -1,5 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import { DiscordPayload, IntegrationDeleteEvent } from "../../types/mod.ts";
 
 export function handleIntegrationDelete(data: DiscordPayload) {
   const {

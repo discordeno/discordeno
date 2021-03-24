@@ -1,5 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import { ApplicationCommandEvent, DiscordPayload } from "../../types/mod.ts";
 
 export function handleApplicationCommandCreate(
   data: DiscordPayload,

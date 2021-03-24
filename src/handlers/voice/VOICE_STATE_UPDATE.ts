@@ -1,5 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import { DiscordPayload, VoiceStateUpdatePayload } from "../../types/mod.ts";
 import { structures } from "../../structures/mod.ts";
 import { cacheHandlers } from "../../cache.ts";
 
