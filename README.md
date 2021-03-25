@@ -15,7 +15,7 @@ Discordeno follows [Semantic Versioning](https://semver.org/)
 - [Features](#features)
 - [Getting Started](#getting-started)
   - [Minimal Example](#minimal-example)
-  - [Boilerplates](#boilerplates)
+  - [Templates](#templates)
 - [Links](#links)
 - [Contributing](#contributing)
 
@@ -60,18 +60,18 @@ startBot({
 });
 ```
 
-### Boilerplates
+### Templates
 
 Note to developers: don't worry a lot of developers start out programming a
 Discord bot as their first project (I did 😉) and it is not so easy to do so.
 Discordeno is designed and built considering all the issues that I and a lot of
 developers had when I first started out coding Discord bots with existing
 libraries. If you are a beginner, you can check out these awesome official and
-unofficial boilerplates:
+unofficial templates:
 
-- [Discordeno Boilerplate (official)](https://github.com/discordeno/boilerplate)
-- [Serverless Slash Commands Boilerplate
-  (official)](https://github.com/discordeno/slash-commands-boilerplate)
+- [Discordeno Template (official)](https://github.com/discordeno/template)
+- [Serverless Slash Commands Template
+  (official)](https://github.com/discordeno/slash-commands-template)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
 ## Links
