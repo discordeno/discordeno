@@ -14,17 +14,17 @@ import { Message } from "./message.ts";
 
 const baseChannel: Partial<Channel> = {
   get guild() {
-    return cache.guilds.get(this.guildID!);
+    return cache.guilds.get(this.guildId!);
   },
   get messages() {
-    return cache.messages.filter((m) => m.channelID === this.id!);
+    return cache.messages.filter((m) => m.channelId === this.id!);
   },
   get mention() {
     return `<#${this.id!}>`;
   },
   get voiceStates() {
     return this.guild?.voiceStates.filter((voiceState) =>
-      voiceState.channelID === this.id
+      voiceState.channelId === this.id
     );
   },
   get connectedMembers() {
@@ -38,21 +38,21 @@ const baseChannel: Partial<Channel> = {
   send(content) {
     return sendMessage(this.id!, content);
   },
-  disconnect(memberID) {
-    return disconnectMember(this.guildID!, memberID);
+  disconnect(memberId) {
+    return disconnectMember(this.guildId!, memberId);
   },
   delete() {
-    return deleteChannel(this.guildID!, this.id!);
+    return deleteChannel(this.guildId!, this.id!);
   },
   editOverwrite(id, options) {
-    return editChannelOverwrite(this.guildID!, this.id!, id, options);
+    return editChannelOverwrite(this.guildId!, this.id!, id, options);
   },
   deleteOverwrite(id) {
-    return deleteChannelOverwrite(this.guildID!, this.id!, id);
+    return deleteChannelOverwrite(this.guildId!, this.id!, id);
   },
   hasPermission(overwrites, permissions) {
     return channelOverwriteHasPermission(
-      this.guildID!,
+      this.guildId!,
       this.id!,
       overwrites,
       permissions,
@@ -66,14 +66,14 @@ const baseChannel: Partial<Channel> = {
 // deno-lint-ignore require-await
 export async function createChannelStruct(
   data: ChannelCreatePayload,
-  guildID?: string,
+  guildId?: string,
 ) {
   const {
-    guild_id: rawGuildID = "",
-    last_message_id: lastMessageID,
+    guild_id: rawGuildId = "",
+    last_message_id: lastMessageId,
     user_limit: userLimit,
     rate_limit_per_user: rateLimitPerUser,
-    parent_id: parentID = undefined,
+    parent_id: parentId = undefined,
     last_pin_timestamp: lastPinTimestamp,
     permission_overwrites: permissionOverwrites = [],
     nsfw = false,
@@ -88,11 +88,11 @@ export async function createChannelStruct(
 
   const channel = Object.create(baseChannel, {
     ...restProps,
-    guildID: createNewProp(guildID || rawGuildID),
-    lastMessageID: createNewProp(lastMessageID),
+    guildId: createNewProp(guildId || rawGuildId),
+    lastMessageId: createNewProp(lastMessageId),
     userLimit: createNewProp(userLimit),
     rateLimitPerUser: createNewProp(rateLimitPerUser),
-    parentID: createNewProp(parentID),
+    parentId: createNewProp(parentId),
     lastPinTimestamp: createNewProp(
       lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined,
     ),

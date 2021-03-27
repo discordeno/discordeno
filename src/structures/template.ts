@@ -5,8 +5,8 @@ import { Guild } from "./guild.ts";
 const baseTemplate: Partial<Template> = {
   get sourceGuild() {
     // deno-lint-ignore getter-return
-    if (!this.sourceGuildID) return;
-    return cache.guilds.get(this.sourceGuildID);
+    if (!this.sourceGuildId) return;
+    return cache.guilds.get(this.sourceGuildId);
   },
 };
 
@@ -15,10 +15,10 @@ export function createTemplateStruct(
 ) {
   const {
     usage_count: usageCount,
-    creator_id: creatorID,
+    creator_id: creatorId,
     created_at: createdAt,
     updated_at: updatedAt,
-    source_guild_id: sourceGuildID,
+    source_guild_id: sourceGuildId,
     serialized_source_guild: serializedSourceGuild,
     is_dirty: isDirty,
     ...rest
@@ -32,11 +32,11 @@ export function createTemplateStruct(
 
   return Object.create(baseTemplate, {
     ...restProps,
-    usageCount: createNewProp(sourceGuildID),
-    creatorID: createNewProp(creatorID),
+    usageCount: createNewProp(sourceGuildId),
+    creatorId: createNewProp(creatorId),
     createdAt: createNewProp(createdAt),
     updatedAt: createNewProp(updatedAt),
-    sourceGuildID: createNewProp(sourceGuildID),
+    sourceGuildId: createNewProp(sourceGuildId),
     serializedSourceGuild: createNewProp(serializedSourceGuild),
     isDirty: createNewProp(isDirty),
   }) as Template;

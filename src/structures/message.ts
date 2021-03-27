@@ -17,30 +17,30 @@ import { Role } from "./role.ts";
 
 const baseMessage: Partial<Message> = {
   get channel() {
-    if (this.guildID) return cache.channels.get(this.channelID!);
+    if (this.guildId) return cache.channels.get(this.channelId!);
     return cache.channels.get(this.author?.id!);
   },
   get guild() {
-    if (!this.guildID) return undefined;
-    return cache.guilds.get(this.guildID);
+    if (!this.guildId) return undefined;
+    return cache.guilds.get(this.guildId);
   },
   get member() {
     if (!this.author?.id) return undefined;
     return cache.members.get(this.author?.id);
   },
   get guildMember() {
-    if (!this.guildID) return undefined;
-    return this.member?.guilds.get(this.guildID);
+    if (!this.guildId) return undefined;
+    return this.member?.guilds.get(this.guildId);
   },
   get link() {
-    return `https://discord.com/channels/${this.guildID ||
-      "@me"}/${this.channelID}/${this.id}`;
+    return `https://discord.com/channels/${this.guildId ||
+      "@me"}/${this.channelId}/${this.id}`;
   },
   get mentionedRoles() {
-    return this.mentionRoleIDs?.map((id) => this.guild?.roles.get(id)) || [];
+    return this.mentionRoleIds?.map((id) => this.guild?.roles.get(id)) || [];
   },
   get mentionedChannels() {
-    return this.mentionChannelIDs?.map((id) => cache.channels.get(id)) || [];
+    return this.mentionChannelIds?.map((id) => cache.channels.get(id)) || [];
   },
   get mentionedMembers() {
     return this.mentions?.map((id) => cache.members.get(id)) || [];
@@ -49,7 +49,7 @@ const baseMessage: Partial<Message> = {
   // METHODS
   delete(reason, delayMilliseconds) {
     return deleteMessage(
-      this.channelID!,
+      this.channelId!,
       this.id!,
       reason,
       delayMilliseconds,
@@ -59,39 +59,39 @@ const baseMessage: Partial<Message> = {
     return editMessage(this as Message, content);
   },
   pin() {
-    return pinMessage(this.channelID!, this.id!);
+    return pinMessage(this.channelId!, this.id!);
   },
   addReaction(reaction) {
-    return addReaction(this.channelID!, this.id!, reaction);
+    return addReaction(this.channelId!, this.id!, reaction);
   },
   addReactions(reactions, ordered) {
-    return addReactions(this.channelID!, this.id!, reactions, ordered);
+    return addReactions(this.channelId!, this.id!, reactions, ordered);
   },
   reply(content) {
     const contentWithMention = typeof content === "string"
       ? {
         content,
         mentions: { repliedUser: true },
-        replyMessageID: this.id,
+        replyMessageId: this.id,
         failReplyIfNotExists: false,
       }
       : {
         ...content,
         mentions: { ...(content.mentions || {}), repliedUser: true },
-        replyMessageID: this.id,
+        replyMessageId: this.id,
         failReplyIfNotExists: content.failReplyIfNotExists === true,
       };
 
-    if (this.guildID) return sendMessage(this.channelID!, contentWithMention);
+    if (this.guildId) return sendMessage(this.channelId!, contentWithMention);
     return sendDirectMessage(this.author!.id, contentWithMention);
   },
   send(content) {
-    if (this.guildID) return sendMessage(this.channelID!, content);
+    if (this.guildId) return sendMessage(this.channelId!, content);
     return sendDirectMessage(this.author!.id, content);
   },
   alert(content, timeout = 10, reason = "") {
-    if (this.guildID) {
-      return sendMessage(this.channelID!, content).then((response) => {
+    if (this.guildId) {
+      return sendMessage(this.channelId!, content).then((response) => {
         response.delete(reason, timeout * 1000).catch(console.error);
       });
     }
@@ -106,27 +106,27 @@ const baseMessage: Partial<Message> = {
     );
   },
   removeAllReactions() {
-    return removeAllReactions(this.channelID!, this.id!);
+    return removeAllReactions(this.channelId!, this.id!);
   },
   removeReactionEmoji(reaction) {
-    return removeReactionEmoji(this.channelID!, this.id!, reaction);
+    return removeReactionEmoji(this.channelId!, this.id!, reaction);
   },
   removeReaction(reaction) {
-    return removeReaction(this.channelID!, this.id!, reaction);
+    return removeReaction(this.channelId!, this.id!, reaction);
   },
 };
 
 export async function createMessageStruct(data: MessageCreateOptions) {
   const {
-    guild_id: guildID = "",
-    channel_id: channelID,
+    guild_id: guildId = "",
+    channel_id: channelId,
     mentions_everyone: mentionsEveryone,
-    mention_channels: mentionChannelIDs = [],
-    mention_roles: mentionRoleIDs,
-    webhook_id: webhookID,
+    mention_channels: mentionChannelIds = [],
+    mention_roles: mentionRoleIds,
+    webhook_id: webhookId,
     message_reference: messageReference,
     edited_timestamp: editedTimestamp,
-    referenced_message: referencedMessageID,
+    referenced_message: referencedMessageId,
     member,
     ...rest
   } = data;
@@ -138,20 +138,20 @@ export async function createMessageStruct(data: MessageCreateOptions) {
   }
 
   // Discord doesnt give guild id for getMessage() so this will fill it in
-  const guildIDFinal = guildID ||
-    (await cacheHandlers.get("channels", channelID))?.guildID || "";
+  const guildIdFinal = guildId ||
+    (await cacheHandlers.get("channels", channelId))?.guildId || "";
 
   const message = Object.create(baseMessage, {
     ...restProps,
     /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
-    referencedMessageID: createNewProp(referencedMessageID),
-    channelID: createNewProp(channelID),
-    guildID: createNewProp(guildID || guildIDFinal),
+    referencedMessageId: createNewProp(referencedMessageId),
+    channelId: createNewProp(channelId),
+    guildId: createNewProp(guildId || guildIdFinal),
     mentions: createNewProp(data.mentions.map((m) => m.id)),
     mentionsEveryone: createNewProp(mentionsEveryone),
-    mentionRoleIDs: createNewProp(mentionRoleIDs),
-    mentionChannelIDs: createNewProp(mentionChannelIDs.map((m) => m.id)),
-    webhookID: createNewProp(webhookID),
+    mentionRoleIds: createNewProp(mentionRoleIds),
+    mentionChannelIds: createNewProp(mentionChannelIds.map((m) => m.id)),
+    webhookId: createNewProp(webhookId),
     messageReference: createNewProp(messageReference),
     timestamp: createNewProp(Date.parse(data.timestamp)),
     editedTimestamp: createNewProp(

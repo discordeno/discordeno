@@ -31,38 +31,38 @@ const baseMember: Partial<Member> = {
       options.format,
     );
   },
-  guild(guildID) {
-    return cache.guilds.get(guildID);
+  guild(guildId) {
+    return cache.guilds.get(guildId);
   },
-  name(guildID) {
-    return this.guildMember!(guildID)?.nick || this.username!;
+  name(guildId) {
+    return this.guildMember!(guildId)?.nick || this.username!;
   },
-  guildMember(guildID) {
-    return this.guilds?.get(guildID);
+  guildMember(guildId) {
+    return this.guilds?.get(guildId);
   },
   sendDM(content) {
     return sendDirectMessage(this.id!, content);
   },
-  kick(guildID, reason) {
-    return kickMember(guildID, this.id!, reason);
+  kick(guildId, reason) {
+    return kickMember(guildId, this.id!, reason);
   },
-  edit(guildID, options) {
-    return editMember(guildID, this.id!, options);
+  edit(guildId, options) {
+    return editMember(guildId, this.id!, options);
   },
-  ban(guildID, options) {
-    return banMember(guildID, this.id!, options);
+  ban(guildId, options) {
+    return banMember(guildId, this.id!, options);
   },
-  addRole(guildID, roleID, reason) {
-    return addRole(guildID, this.id!, roleID, reason);
+  addRole(guildId, roleId, reason) {
+    return addRole(guildId, this.id!, roleId, reason);
   },
-  removeRole(guildID, roleID, reason) {
-    return removeRole(guildID, this.id!, roleID, reason);
+  removeRole(guildId, roleId, reason) {
+    return removeRole(guildId, this.id!, roleId, reason);
   },
 };
 
 export async function createMemberStruct(
   data: MemberCreatePayload,
-  guildID: string,
+  guildId: string,
 ) {
   const {
     joined_at: joinedAt,
@@ -106,7 +106,7 @@ export async function createMemberStruct(
   }
 
   // User was never cached before
-  member.guilds.set(guildID, {
+  member.guilds.set(guildId, {
     nick: nick,
     roles: roles,
     joinedAt: Date.parse(joinedAt),
