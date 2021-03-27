@@ -1,13 +1,17 @@
 import { eventHandlers } from "../../bot.ts";
+import {
+  DiscordApplicationCommandCreateUpdateDelete,
+  DiscordGatewayPayload,
+} from "../../types/gateway.ts";
 
 export function handleApplicationCommandCreate(
-  data: DiscordPayload,
+  data: DiscordGatewayPayload,
 ) {
   const {
     guild_id: guildId,
     application_id: applicationId,
     ...rest
-  } = data.d as ApplicationCommandEvent;
+  } = data.d as DiscordApplicationCommandCreateUpdateDelete;
 
   eventHandlers.applicationCommandCreate?.({
     ...rest,

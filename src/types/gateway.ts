@@ -397,6 +397,169 @@ export type DiscordMessageReactionRemoveEmoji = Pick<
   "channel_id" | "guild_id" | "message_id" | "emoji"
 >;
 
+/** https://discord.com/developers/docs/topics/gateway#presence-update */
+export interface DiscordPresenceUpdate {
+  /** The user presence is being updated for */
+  user: DiscordUser;
+  /** id of the guild */
+  guild_id: string;
+  /** Either "idle", "dnd", "online", or "offline" */
+  status: "idle" | "dnd" | "online" | "offline";
+  /** User's current activities */
+  activities: DiscordActivity[];
+  /** User's platform-dependent status */
+  client_status: DiscordClientStatus;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#client-status-object */
+export interface DiscordClientStatus {
+  /** The user's status set for an active desktop (Windows, Linux, Mac) application session */
+  desktop?: string;
+  /** The user's status set for an active mobile (iOS, Android) application session */
+  mobile?: string;
+  /** The user's status set for an active web (browser, bot account) application session */
+  web?: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#activity-object */
+export interface DiscordActivity {
+  /** The activity's name */
+  name: string;
+  /** Activity type */
+  type: DiscordActivityTypes;
+  /** Stream url, is validated when type is 1 */
+  url?: string | null;
+  /** Unix timestamp of when the activity was added to the user's session */
+  created_at: number;
+  /** Unix timestamps for start and/or end of the game */
+  timestamps?: DiscordActivityTimestamps;
+  /** Application id for the game */
+  application_id?: string;
+  /** What the player is currently doing */
+  details?: string | null;
+  /** The user's current party status */
+  state?: string | null;
+  /** The emoji used for a custom status */
+  emoji?: DiscordActivityEmoji | null;
+  /** Information for the current party of the player */
+  party?: DiscordActivityParty;
+  /** Images for the presence and their hover texts */
+  assets?: DiscordActivityAssets;
+  /** Secrets for Rich Presence joining and spectating */
+  secrets?: DiscordActivitySecrets;
+  /** Whether or not the activity is an instanced game session */
+  instance?: boolean;
+  /** Activity flags `OR`d together, describes what the payload includes */
+  flags?: number;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-types */
+export enum DiscordActivityTypes {
+  Game,
+  Streaming,
+  Listening,
+  Custom = 4,
+  Competing,
+}
+
+/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-timestamps */
+export interface DiscordActivityTimestamps {
+  /** Unix time (in milliseconds) of when the activity started */
+  start?: number;
+  /** Unix time (in milliseconds) of when the activity ends */
+  end?: number;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-emoji */
+export interface DiscordActivityEmoji {
+  /** The name of the emoji */
+  name: string;
+  /** The id of the emoji */
+  id?: string;
+  /** Whether this emoji is animated */
+  animated?: boolean;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-party */
+export interface DiscordActivityParty {
+  /** The id of the party */
+  id?: string;
+  /** Used to show the party's current and maximum size */
+  size?: [current_size: number, max_size: number];
+}
+
+/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-assets */
+export interface DiscordActivityAssets {
+  /** The id for a large asset of the activity, usually a snowflake */
+  large_image?: string;
+  /** Text displayed when hovering over the large image of the activity */
+  large_text?: string;
+  /** The id for a small asset of the activity, usually a snowflake */
+  small_image?: string;
+  /** Text displayed when hovering over the small image of the activity */
+  small_text?: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-secrets */
+export interface DiscordActivitySecrets {
+  /** The secret for joining a party */
+  join?: string;
+  /** The secret for spectating a game */
+  spectate?: string;
+  /** The secret for a specific instanced match */
+  match?: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags */
+export enum ActivityFlags {
+  INSTANCE = 1 << 0,
+  JOIN = 1 << 1,
+  SPECTATE = 1 << 2,
+  JOIN_REQUEST = 1 << 3,
+  SYNC = 1 << 4,
+  PLAY = 1 << 5,
+}
+
+/** https://discord.com/developers/docs/topics/gateway#typing-start */
+export interface DiscordTypingStart {
+  /** id of the channel */
+  channel_id: string;
+  /** id of the guild */
+  guild_id?: string;
+  /** id of the user */
+  user_id: string;
+  /** Unix time (in seconds) of when the user started typing */
+  timestamp: number;
+  /** The member who started typing if this happened in a guild */
+  member?: DiscordMember;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#voice-server-update */
+export interface DiscordVoiceServerUpdate {
+  /** Voice connection token */
+  token: string;
+  /** The guild this voice server update is for */
+  guild_id: string;
+  /** The voice server host */
+  endpoint: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#webhooks-update */
+export interface DiscordWebhooksUpdate {
+  /** id of the guild */
+  guild_id: string;
+  /** id of the channel */
+  channel_id: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#commands */
+export type DiscordApplicationCommandCreateUpdateDelete =
+  & DiscordApplicationCommand
+  & {
+    /** id of the guild the command is in */
+    guild_id: string;
+  };
+
 /** https://discord.com/developers/docs/topics/gateway#get-gateway-bot */
 export interface DiscordGetGatewayBot {
   /** The WSS URL that can be used for connecting to the gateway */

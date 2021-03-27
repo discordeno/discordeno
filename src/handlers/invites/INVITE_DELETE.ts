@@ -1,13 +1,15 @@
 import { eventHandlers } from "../../bot.ts";
+import {
+  DiscordGatewayPayload,
+  DiscordInviteDelete,
+} from "../../types/gateway.ts";
 
-export function handleInviteDelete(payload: DiscordPayload) {
-  if (payload.t !== "INVITE_DELETE") return;
-
+export function handleInviteDelete(payload: DiscordGatewayPayload) {
   const {
     channel_id: channelID,
     guild_id: guildID,
     ...rest
-  } = payload.d as InviteDeleteEvent;
+  } = payload.d as DiscordInviteDelete;
 
   eventHandlers.inviteDelete?.({
     ...rest,

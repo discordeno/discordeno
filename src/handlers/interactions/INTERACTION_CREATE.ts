@@ -1,8 +1,9 @@
 import { eventHandlers } from "../../bot.ts";
-import { structures } from "../../structures/mod.ts";
 import { cacheHandlers } from "../../cache.ts";
+import { structures } from "../../structures/mod.ts";
+import { DiscordGatewayPayload } from "../../types/gateway.ts";
 
-export async function handleInteractionCreate(data: DiscordPayload) {
+export async function handleInteractionCreate(data: DiscordGatewayPayload) {
   const payload = data.d as InteractionCommandPayload;
   const memberStruct = await structures.createMemberStruct(
     payload.member,
