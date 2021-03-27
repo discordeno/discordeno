@@ -22,7 +22,6 @@ export let lastShardID = 0;
 export const identifyPayload: DiscordIdentify = {
   token: "",
   compress: true,
-  large_threshold: 50,
   properties: {
     $os: "linux",
     $browser: "Discordeno",

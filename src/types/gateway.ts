@@ -104,7 +104,7 @@ export interface DiscordIdentify {
   /** Whether this connection supports compression of packets */
   compress?: boolean;
   /** Value between 50 and 250, total number of members where the gateway will stop sending offline members in the guild member list */
-  large_threshold: number;
+  large_threshold?: number;
   /** Used for Guild Sharding */
   shard?: [number, number];
   /** Presence structure for initial presence information */
