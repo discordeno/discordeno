@@ -16,26 +16,26 @@ export function allowNextShard(enabled = true) {
 export async function spawnShards(
   data: DiscordBotGatewayData,
   payload: DiscordIdentify,
-  shardID: number,
-  lastShardID: number,
+  shardId: number,
+  lastShardId: number,
   skipChecks?: number,
 ) {
   // All shards on this worker have started! Cancel out.
-  if (shardID >= lastShardID) return;
+  if (shardId >= lastShardId) return;
 
   if (skipChecks) {
     payload.shard = [
-      shardID,
-      data.shards > lastShardID ? data.shards : lastShardID,
+      shardId,
+      data.shards > lastShardId ? data.shards : lastShardId,
     ];
     // Start The shard
-    createShard(data, payload, false, shardID);
+    createShard(data, payload, false, shardId);
     // Spawn next shard
     await spawnShards(
       data,
       payload,
-      shardID + 1,
-      lastShardID,
+      shardId + 1,
+      lastShardId,
       skipChecks - 1,
     );
     return;
@@ -48,23 +48,23 @@ export async function spawnShards(
     await spawnShards(
       data,
       payload,
-      shardID,
-      lastShardID,
+      shardId,
+      lastShardId,
       data.session_start_limit.max_concurrency,
     );
     return;
   }
 
   await delay(1000);
-  await spawnShards(data, payload, shardID, lastShardID, skipChecks);
+  await spawnShards(data, payload, shardId, lastShardId, skipChecks);
 }
 
 export async function handleDiscordPayload(
   data: DiscordPayload,
-  shardID: number,
+  shardId: number,
 ) {
   eventHandlers.raw?.(data);
-  await eventHandlers.dispatchRequirements?.(data, shardID);
+  await eventHandlers.dispatchRequirements?.(data, shardId);
 
   switch (data.op) {
     case GatewayOpcode.HeartbeatACK:
@@ -73,26 +73,26 @@ export async function handleDiscordPayload(
     case GatewayOpcode.Dispatch:
       if (!data.t) return;
       // Run the appropriate handler for this event.
-      return handlers[data.t]?.(data, shardID);
+      return handlers[data.t]?.(data, shardId);
     default:
       return;
   }
 }
 
 export async function requestAllMembers(
-  guildID: string,
-  shardID: number,
+  guildId: string,
+  shardId: number,
   resolve: (
     value: Collection<string, Member> | PromiseLike<Collection<string, Member>>,
   ) => void,
   options?: FetchMembersOptions,
 ) {
-  const nonce = `${guildID}-${Date.now()}`;
+  const nonce = `${guildId}-${Date.now()}`;
   cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
 
   await requestGuildMembers(
-    guildID,
-    shardID,
+    guildId,
+    shardId,
     nonce,
     options,
   );
