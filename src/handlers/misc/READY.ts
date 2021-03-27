@@ -1,42 +1,41 @@
 import {
   eventHandlers,
-  lastShardID,
-  setApplicationID,
-  setBotID,
+  lastShardId,
+  setApplicationId,
+  setBotId,
 } from "../../bot.ts";
 import { cache, cacheHandlers } from "../../cache.ts";
 import { initialMemberLoadQueue } from "../../structures/guild.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordGatewayPayload, DiscordReady } from "../../types/gateway.ts";
 import { delay } from "../../util/utils.ts";
 import { allowNextShard, basicShards } from "../../ws/mod.ts";
 
 export async function handleReady(
-  data: DiscordGatewayPayload,
-  shardID: number,
+  data: DiscordPayload,
+  shardId: number,
 ) {
   // The bot has already started, the last shard is resumed, however.
   if (cache.isReady) return;
 
-  const payload = data.d as DiscordReady;
-  setBotID(payload.user.id);
-  setApplicationID(payload.application.id);
+  const payload = data.d as ReadyPayload;
+  setBotId(payload.user.id);
+  setApplicationId(payload.application.id);
 
   // Triggered on each shard
-  eventHandlers.shardReady?.(shardID);
+  eventHandlers.shardReady?.(shardId);
   // Save when the READY event was received to prevent infinite load loops
   const now = Date.now();
 
-  const shard = basicShards.get(shardID);
+  const shard = basicShards.get(shardId);
   if (!shard) return;
 
   // Set ready to false just to go sure
   shard.ready = false;
   // All guilds are unavailable at first
-  shard.unavailableGuildIDs = new Set(payload.guilds.map((g) => g.id));
+  shard.unavailableGuildIds = new Set(payload.guilds.map((g) => g.id));
 
   // Start ready check in 2 seconds
-  setTimeout(() => checkReady(payload, shardID, now), 2000);
+  setTimeout(() => checkReady(payload, shardId, now), 2000);
 
   // Wait 5 seconds to spawn next shard
   await delay(5000);
@@ -45,48 +44,48 @@ export async function handleReady(
 
 // Don't pass the shard itself because unavailableGuilds won't be updated by the GUILD_CREATE event
 /** This function checks if the shard is fully loaded */
-function checkReady(payload: DiscordReady, shardID: number, now: number) {
-  const shard = basicShards.get(shardID);
+function checkReady(payload: ReadyPayload, shardId: number, now: number) {
+  const shard = basicShards.get(shardId);
   if (!shard) return;
 
   // Check if all guilds were loaded
-  if (shard.unavailableGuildIDs.size) {
+  if (shard.unavailableGuildIds.size) {
     if (Date.now() - now > 10000) {
-      eventHandlers.shardFailedToLoad?.(shardID, shard.unavailableGuildIDs);
+      eventHandlers.shardFailedToLoad?.(shardId, shard.unavailableGuildIds);
       // Force execute the loaded function to prevent infinite loop
-      loaded(shardID);
+      loaded(shardId);
     } else {
       // Not all guilds were loaded but 10 seconds haven't passed so check again
-      setTimeout(() => checkReady(payload, shardID, now), 2000);
+      setTimeout(() => checkReady(payload, shardId, now), 2000);
     }
   } else {
     // All guilds were loaded
-    loaded(shardID);
+    loaded(shardId);
   }
 }
 
-async function loaded(shardID: number) {
-  const shard = basicShards.get(shardID);
+async function loaded(shardId: number) {
+  const shard = basicShards.get(shardId);
   if (!shard) return;
 
   shard.ready = true;
 
   // If it is the last shard we can go full ready
-  if (shardID === lastShardID - 1) {
+  if (shardId === lastShardId - 1) {
     // Still some shards are loading so wait another 2 seconds for them
     if (basicShards.some((shard) => !shard.ready)) {
-      setTimeout(() => loaded(shardID), 2000);
+      setTimeout(() => loaded(shardId), 2000);
     } else {
       cache.isReady = true;
       eventHandlers.ready?.();
 
       // All the members that came in on guild creates should now be processed 1 by 1
-      for (const [guildID, members] of initialMemberLoadQueue.entries()) {
+      for (const [guildId, members] of initialMemberLoadQueue.entries()) {
         await Promise.allSettled(
           members.map(async (member) => {
             const memberStruct = await structures.createMemberStruct(
               member,
-              guildID,
+              guildId,
             );
 
             return cacheHandlers.set(
