@@ -10,15 +10,6 @@ Discordeno follows [Semantic Versioning](https://semver.org/)
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
 
-## Table of contents
-
-- [Features](#features)
-- [Getting Started](#getting-started)
-  - [Minimal Example](#minimal-example)
-  - [Templates](#templates)
-- [Links](#links)
-- [Contributing](#contributing)
-
 ## Features
 
 - **Secure & stable**: Discordeno is actively maintained to ensure great
