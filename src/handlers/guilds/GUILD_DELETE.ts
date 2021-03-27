@@ -1,5 +1,6 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
+import { DiscordGatewayPayload } from "../../types/gateway.ts";
 import { basicShards } from "../../ws/shard.ts";
 
 export async function handleGuildDelete(
