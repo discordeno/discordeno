@@ -3,7 +3,7 @@ import { cacheHandlers } from "../../cache.ts";
 import { basicShards } from "../../ws/shard.ts";
 
 export async function handleGuildDelete(
-  data: DiscordPayload,
+  data: DiscordGatewayPayload,
   shardId: number,
 ) {
   const payload = data.d as DiscordUnavailableGuild;

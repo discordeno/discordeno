@@ -1,5 +1,6 @@
 import { botGatewayData, eventHandlers, proxyWSURL } from "../bot.ts";
 import {
+  DiscordGatewayPayload,
   DiscordGetGatewayBot,
   DiscordHello,
   DiscordIdentify,
@@ -366,7 +367,7 @@ async function processGatewayQueue() {
 }
 
 /** Enqueues the specified data to be transmitted to the server over the WebSocket connection, */
-export function sendWS(payload: DiscordPayload, shardId = 0) {
+export function sendWS(payload: DiscordGatewayPayload, shardId = 0) {
   const shard = basicShards.get(shardId);
   if (!shard) return false;
 

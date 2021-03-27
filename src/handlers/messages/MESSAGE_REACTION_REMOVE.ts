@@ -1,6 +1,10 @@
 import { botId, eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
+import {
+  DiscordGatewayPayload,
+  DiscordMessageReactionRemove,
+} from "../../types/gateway.ts";
 
 export async function handleMessageReactionRemove(
   data: DiscordGatewayPayload,

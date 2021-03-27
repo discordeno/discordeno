@@ -1,6 +1,7 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
+import { DiscordGatewayPayload } from "../../types/gateway.ts";
 
 export async function handleMessageCreate(data: DiscordGatewayPayload) {
   const payload = data.d as DiscordMessage;

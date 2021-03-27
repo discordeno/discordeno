@@ -12,7 +12,7 @@ export async function getWidgetImageURL(
   if (!options?.force) {
     const guild = await cacheHandlers.get("guilds", guildId);
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
-    if (!guild.widgetEnabled) throw new Error(Errors.GUILD_WIdGET_NOT_ENABLED);
+    if (!guild.widgetEnabled) throw new Error(Errors.GUILD_WIDGET_NOT_ENABLED);
   }
 
   return `${endpoints.GUILD_WIDGET(guildId)}.png?style=${options?.style ??
