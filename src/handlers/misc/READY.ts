@@ -7,17 +7,18 @@ import {
 import { cache, cacheHandlers } from "../../cache.ts";
 import { initialMemberLoadQueue } from "../../structures/guild.ts";
 import { structures } from "../../structures/mod.ts";
+import { DiscordGatewayPayload, DiscordReady } from "../../types/gateway.ts";
 import { delay } from "../../util/utils.ts";
 import { allowNextShard, basicShards } from "../../ws/mod.ts";
 
 export async function handleReady(
-  data: DiscordPayload,
+  data: DiscordGatewayPayload,
   shardID: number,
 ) {
   // The bot has already started, the last shard is resumed, however.
   if (cache.isReady) return;
 
-  const payload = data.d as ReadyPayload;
+  const payload = data.d as DiscordReady;
   setBotID(payload.user.id);
   setApplicationID(payload.application.id);
 
@@ -44,7 +45,7 @@ export async function handleReady(
 
 // Don't pass the shard itself because unavailableGuilds won't be updated by the GUILD_CREATE event
 /** This function checks if the shard is fully loaded */
-function checkReady(payload: ReadyPayload, shardID: number, now: number) {
+function checkReady(payload: DiscordReady, shardID: number, now: number) {
   const shard = basicShards.get(shardID);
   if (!shard) return;
 

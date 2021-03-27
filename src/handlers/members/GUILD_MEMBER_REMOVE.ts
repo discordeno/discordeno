@@ -1,8 +1,12 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
+import {
+  DiscordGatewayPayload,
+  DiscordGuildMemberRemove,
+} from "../../types/gateway.ts";
 
-export async function handleGuildMemberRemove(data: DiscordPayload) {
-  const payload = data.d as GuildBanPayload;
+export async function handleGuildMemberRemove(data: DiscordGatewayPayload) {
+  const payload = data.d as DiscordGuildMemberRemove;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 

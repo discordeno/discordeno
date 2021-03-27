@@ -228,7 +228,7 @@ export interface DiscordGuildBanAddRemove {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-emojis-update */
-export interface GuildEmojisUpdate {
+export interface DiscordGuildEmojisUpdate {
   /** id of the guild */
   guild_id: string;
   /** Array of emojis */
@@ -236,7 +236,7 @@ export interface GuildEmojisUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-integrations-update */
-export interface DiscordIntegrationsUpdate {
+export interface DiscordGuildIntegrationsUpdate {
   /** id of the guild whose integrations were updated */
   guild_id: string;
 }
@@ -246,6 +246,156 @@ export interface DiscordGuildMemberAdd extends DiscordMember {
   /** id of the guild */
   guild_id: string;
 }
+
+/** https://discord.com/developers/docs/topics/gateway#guild-member-remove */
+export interface DiscordGuildMemberRemove {
+  /** The id of the guild */
+  guild_id: string;
+  /** The user who was removed */
+  user: DiscordUser;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#guild-member-update */
+export interface DiscordGuildMemberUpdate {
+  /** The id of the guild */
+  guild_id: string;
+  /** User role ids */
+  roles: string[];
+  /** The user */
+  user: DiscordUser;
+  /** Nickname of the user in the guild */
+  nick?: string | null;
+  /** When the user joined the guild */
+  joined_at: string;
+  /** When the user starting boosting the guild */
+  premium_since?: string | null;
+  /** Whether the user has not yet passed the guild's Membership Screening requirements */
+  pending?: boolean;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#guild-members-chunk */
+export interface DiscordGuildMembersChunk {
+  /** The id of the guild */
+  guild_id: string;
+  /** Set of guild members */
+  members: DiscordMember[];
+  /** The chunk index in the expected chunks for this response (0 <= chunk_index < chunk_count) */
+  chunk_index: number;
+  /** The total number of expected chunks for this response */
+  chunk_count: number;
+  /** If passing an invalid id to `REQUEST_GUILD_MEMBERS`, it will be returned here */
+  not_found?: string[];
+  /** If passing true to `REQUEST_GUILD_MEMBERS`, presences of the returned members will be here */
+  presences?: DiscordPresence[];
+  /** The nonce used in the Guild Members Request */
+  nonce?: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#guild-role-create */
+export interface DiscordGuildRoleCreateUpdate {
+  /** The id of the guild */
+  guild_id: string;
+  /** The role created/updated */
+  role: DiscordRole;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#guild-role-delete */
+export interface DiscordGuildRoleDelete {
+  /** id of the guild */
+  guild_id: string;
+  /** id of the role */
+  role_id: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#invite-create */
+export interface DiscordInviteCreate {
+  /** The channel the invite is for */
+  channel_id: string;
+  /** The unique invite code */
+  code: string;
+  /** The time at which the invite was created */
+  created_at: string;
+  /** The guild of the invite */
+  guild_id?: string;
+  /** The user that created the invite */
+  inviter?: DiscordUser;
+  /** How long the invite is valid for (in seconds) */
+  max_age: number;
+  /** The maximum number of times the invite can be used */
+  max_uses: number;
+  /** The target user for this invite */
+  target_user?: Partial<DiscordUser>;
+  /** The type of user target for this invite */
+  target_user_type?: number;
+  /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
+  temporary: boolean;
+  /** How many times the invite has been used (always will be 0) */
+  uses: number;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#invite-delete */
+export interface DiscordInviteDelete {
+  /** The channel of the invite */
+  channel_id: string;
+  /** The guild of the invite */
+  guild_id?: string;
+  /** The unique invite code */
+  code: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#message-delete */
+export interface DiscordMessageDelete {
+  /** The id of the message */
+  id: string;
+  /** The id of the channel */
+  channel_id: string;
+  /** The id of the guild */
+  guild_id?: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#message-delete-bulk */
+export interface DiscordMessageDeleteBulk {
+  /** The ids of the messages */
+  ids: string[];
+  /** The id of the channel */
+  channel_id: string;
+  /** The id of the guild */
+  guild_id?: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#message-reaction-add */
+export interface DiscordMessageReactionAdd {
+  /** The id of the user */
+  user_id: string;
+  /** The id of the channel */
+  channel_id: string;
+  /** The id of the message */
+  message_id: string;
+  /** The id of the guild */
+  guild_id?: string;
+  /** The member who reacted if this happened in a guild */
+  member?: DiscordMember;
+  /** The emoji used to react */
+  emoji: Partial<DiscordEmoji>;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#message-reaction-remove */
+export type DiscordMessageReactionRemove = Omit<
+  DiscordMessageReactionAdd,
+  "member"
+>;
+
+/** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all */
+export type DiscordMessageReactionRemoveAll = Pick<
+  DiscordMessageReactionAdd,
+  "channel_id" | "message_id" | "guild_id"
+>;
+
+/** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-emoji */
+export type DiscordMessageReactionRemoveEmoji = Pick<
+  DiscordMessageReactionAdd,
+  "channel_id" | "guild_id" | "message_id" | "emoji"
+>;
 
 /** https://discord.com/developers/docs/topics/gateway#get-gateway-bot */
 export interface DiscordGetGatewayBot {
