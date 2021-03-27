@@ -166,7 +166,7 @@ export interface DiscordUpdateVoiceState {
 /** https://discord.com/developers/docs/topics/gateway#update-status */
 export interface DiscordUpdateStatus {
   /** Unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
-  since?: number;
+  since: number | null;
   /** null, or the user's activities */
   activities: DiscordActivity[] | null;
   /** The user's new status */
