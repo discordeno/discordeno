@@ -3,12 +3,12 @@ import { endpoints } from "../../util/constants.ts";
 
 /** Edit a webhook. Returns the updated webhook object on success. */
 export async function editWebhookWithToken(
-  webhookID: string,
+  webhookId: string,
   webhookToken: string,
-  options: Omit<WebhookEditOptions, "channelID">,
+  options: Omit<WebhookEditOptions, "channelId">,
 ) {
   const result = await RequestManager.patch(
-    endpoints.WEBHOOK(webhookID, webhookToken),
+    endpoints.WEBHOOK(webhookId, webhookToken),
     options,
   );
 

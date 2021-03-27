@@ -2,14 +2,14 @@ import { RequestManager } from "../../rest/request_manager.ts";
 import { structures } from "../../structures/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
-/** Execute a webhook with webhook ID and webhook token */
+/** Execute a webhook with webhook Id and webhook token */
 export async function executeWebhook(
-  webhookID: string,
+  webhookId: string,
   webhookToken: string,
   options: ExecuteWebhookOptions,
 ) {
   if (!options.content && !options.file && !options.embeds) {
-    throw new Error(Errors.INVALID_WEBHOOK_OPTIONS);
+    throw new Error(Errors.INVALId_WEBHOOK_OPTIONS);
   }
 
   if (options.content && options.content.length > 2000) {
@@ -47,7 +47,7 @@ export async function executeWebhook(
   }
 
   const result = await RequestManager.post(
-    `${endpoints.WEBHOOK(webhookID, webhookToken)}${
+    `${endpoints.WEBHOOK(webhookId, webhookToken)}${
       options.wait ? "?wait=true" : ""
     }`,
     {

@@ -4,11 +4,11 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
 /** Create a reaction for the message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS */
 export async function addReaction(
-  channelID: string,
-  messageID: string,
+  channelId: string,
+  messageId: string,
   reaction: string,
 ) {
-  await requireBotChannelPermissions(channelID, [
+  await requireBotChannelPermissions(channelId, [
     "ADD_REACTIONS",
     "READ_MESSAGE_HISTORY",
   ]);
@@ -20,7 +20,7 @@ export async function addReaction(
   }
 
   const result = await RequestManager.put(
-    endpoints.CHANNEL_MESSAGE_REACTION_ME(channelID, messageID, reaction),
+    endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction),
   );
 
   return result;

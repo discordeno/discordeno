@@ -12,8 +12,8 @@ import { requestAllMembers } from "../../ws/shard_manager.ts";
  * GW(this function): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is now 960/m.
  */
 export function fetchMembers(
-  guildID: string,
-  shardID: number,
+  guildId: string,
+  shardId: number,
   options?: FetchMembersOptions,
 ) {
   // You can request 1 member without the intent
@@ -24,11 +24,11 @@ export function fetchMembers(
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
-  if (options?.userIDs?.length) {
-    options.limit = options.userIDs.length;
+  if (options?.userIds?.length) {
+    options.limit = options.userIds.length;
   }
 
   return new Promise((resolve) => {
-    return requestAllMembers(guildID, shardID, resolve, options);
+    return requestAllMembers(guildId, shardId, resolve, options);
   }) as Promise<Collection<string, Member>>;
 }
