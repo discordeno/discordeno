@@ -1,10 +1,11 @@
 import { SnakeCaseProps } from "../util.ts";
+import { DiscordWebhookTypes } from "./discord_webhook_types.ts";
 
 export interface Webhook {
   /** The id of the webhook */
   id: string;
   /** The type of the webhook */
-  type: WebhookTypes;
+  type: DiscordWebhookTypes;
   /** The guild id this webhook is for */
   guildId?: string;
   /** The channel id this webhook is for */
