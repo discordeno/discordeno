@@ -4,3 +4,5 @@ export interface CreateWebhook {
   /** Image for the default webhook avatar */
   avatar: string | null;
 }
+
+export type DiscordCreateWebhook = CreateWebhook;
