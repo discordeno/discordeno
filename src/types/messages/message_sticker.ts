@@ -1,7 +1,7 @@
+import { SnakeCaseProps } from "../util.ts";
 import { DiscordMessageStickerFormatTypes } from "./message_sticker_format_types.ts";
 
-/** https://discord.com/developers/docs/resources/channel#message-object-message-sticker-structure */
-export interface DiscordMessageSticker {
+export interface MessageSticker {
   /** id of the sticker */
   id: string;
   /** id of the pack the sticker is from */
@@ -21,7 +21,10 @@ export interface DiscordMessageSticker {
      * Sticker preview asset hash
      * Note: The URL for fetching sticker assets is currently private.
      */
-  preview_asset?: string | null;
+  previewAsset?: string | null;
   /** Type of sticker format */
-  format_type: DiscordMessageStickerFormatTypes;
+  formatType: DiscordMessageStickerFormatTypes;
 }
+
+/** https://discord.com/developers/docs/resources/channel#message-object-message-sticker-structure */
+export type DiscordMessageSticker = SnakeCaseProps<MessageSticker>;
