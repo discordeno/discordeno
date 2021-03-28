@@ -140,9 +140,10 @@ function validateSlashOptionChoices(
 function validateSlashOptions(options: SlashCommandOption[]) {
   for (const option of options) {
     if (
-      (option.choices?.length && option.choices.length > 25) ||
-      option.type !== SlashCommandOptionType.STRING &&
-        option.type !== SlashCommandOptionType.INTEGER
+      option.choices?.length &&
+      (option.choices.length > 25 ||
+        (option.type !== SlashCommandOptionType.STRING &&
+          option.type !== SlashCommandOptionType.INTEGER))
     ) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
