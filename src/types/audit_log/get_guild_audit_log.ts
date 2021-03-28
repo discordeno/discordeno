@@ -1,13 +1,16 @@
-import { AuditLogEvent } from "./audit_log_event.ts";
+import { SnakeCaseProps } from "../util.ts";
+import { AuditLogEvents } from "./audit_log_events.ts";
 
-/** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
 export interface GetGuildAuditLog {
-  /** filter the log for actions made by a user */
+  /** Filter the log for actions made by a user */
   userId: string;
-  /** the type of audit log event */
-  actionType: AuditLogEvent;
-  /** filter the log before a certain entry id */
+  /** The type of audit log event */
+  actionType: AuditLogEvents;
+  /** Filter the log before a certain entry id */
   before: string;
-  /** how many entries are returned (default 50, minimum 1, maximum 100) */
+  /** How many entries are returned (default 50, minimum 1, maximum 100) */
   limit: number;
 }
+
+/** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
+export type DiscordGetGuildAuditLog = SnakeCaseProps<GetGuildAuditLog>;
