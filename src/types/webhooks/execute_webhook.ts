@@ -22,4 +22,4 @@ export interface ExecuteWebhook {
 }
 
 /** https://discord.com/developers/docs/resources/webhook#execute-webhook */
-export type DiscordExecuteWebhook = SnakeCaseProps<ExecuteWebhook>;
+export type DiscordExecuteWebhook = SnakeCaseProps<Omit<ExecuteWebhook, "wait">>;
