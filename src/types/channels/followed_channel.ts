@@ -1,7 +1,11 @@
-/** https://discord.com/developers/docs/resources/channel#followed-channel-object */
-export interface DiscordFollowedChannel {
+import { SnakeCaseProps } from "../util.ts";
+
+export interface FollowedChannel {
   /** Source message id */
-  channel_id: string;
+  channelId: string;
   /** Created target webhook id */
-  webhook_id: string;
+  webhookId: string;
 }
+
+/** https://discord.com/developers/docs/resources/channel#followed-channel-object */
+export type DiscordFollowedChannel = SnakeCaseProps<FollowedChannel>;

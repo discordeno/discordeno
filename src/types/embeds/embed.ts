@@ -1,14 +1,14 @@
-import { DiscordEmbedAuthor } from "./embed_author.ts";
-import { DiscordEmbedField } from "./embed_field.ts";
-import { DiscordEmbedFooter } from "./embed_footer.ts";
-import { DiscordEmbedImage } from "./embed_image.ts";
-import { DiscordEmbedProvider } from "./embed_provider.ts";
-import { DiscordEmbedThumbnail } from "./embed_thumbnail.ts";
+import { SnakeCaseProps } from "../util.ts";
+import { EmbedAuthor } from "./embed_author.ts";
+import { EmbedField } from "./embed_field.ts";
+import { EmbedFooter } from "./embed_footer.ts";
+import { EmbedImage } from "./embed_image.ts";
+import { EmbedProvider } from "./embed_provider.ts";
+import { EmbedThumbnail } from "./embed_thumbnail.ts";
 import { DiscordEmbedTypes } from "./embed_types.ts";
-import { DiscordEmbedVideo } from "./embed_video.ts";
+import { EmbedVideo } from "./embed_video.ts";
 
-/** https://discord.com/developers/docs/resources/channel#embed-object */
-export interface DiscordEmbed {
+export interface Embed {
   /** Title of embed */
   title?: string;
   /** Type of embed (always "rich" for webhook embeds) */
@@ -22,17 +22,20 @@ export interface DiscordEmbed {
   /** Color code of the embed */
   color?: string;
   /** Footer information */
-  footer?: DiscordEmbedFooter;
+  footer?: EmbedFooter;
   /** Image information */
-  image?: DiscordEmbedImage;
+  image?: EmbedImage;
   /** Thumbnail information */
-  thumbnail?: DiscordEmbedThumbnail;
+  thumbnail?: EmbedThumbnail;
   /** Video information */
-  video?: DiscordEmbedVideo;
+  video?: EmbedVideo;
   /** Provider information */
-  provider?: DiscordEmbedProvider;
+  provider?: EmbedProvider;
   /** Author information */
-  author?: DiscordEmbedAuthor;
+  author?: EmbedAuthor;
   /** Fields information */
-  fields?: DiscordEmbedField[];
+  fields?: EmbedField[];
 }
+
+/** https://discord.com/developers/docs/resources/channel#embed-object */
+export type DiscordEmbed = SnakeCaseProps<Embed>;

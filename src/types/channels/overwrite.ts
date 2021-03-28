@@ -1,7 +1,7 @@
+import { SnakeCaseProps } from "../util.ts";
 import { DiscordOverwriteTypes } from "./overwrite_types.ts";
 
-/** https://discord.com/developers/docs/resources/channel#overwrite-object */
-export interface DiscordOverwrite {
+export interface Overwrite {
   /** Role or user id */
   id: string;
   /** Either 0 (role) or 1 (member) */
@@ -11,3 +11,6 @@ export interface DiscordOverwrite {
   /** Permission bit set */
   deny: string;
 }
+
+/** https://discord.com/developers/docs/resources/channel#overwrite-object */
+export type DiscordOverwrite = SnakeCaseProps<Overwrite>;
