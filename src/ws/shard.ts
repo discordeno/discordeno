@@ -1,4 +1,10 @@
 import { botGatewayData, eventHandlers, proxyWSURL } from "../bot.ts";
+import {
+  DiscordGatewayPayload,
+  DiscordGetGatewayBot,
+  DiscordHello,
+  DiscordIdentify,
+} from "../types/gateway.ts";
 import { Collection } from "../util/collection.ts";
 import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
@@ -70,7 +76,7 @@ export function createShard(
           if (!heartbeating.has(basicShard.id)) {
             await heartbeat(
               basicShard,
-              (messageData.d as DiscordHeartbeatPayload).heartbeat_interval,
+              (messageData.d as DiscordHello).heartbeat_interval,
               identifyPayload,
               data,
             );
@@ -180,7 +186,7 @@ async function heartbeat(
   shard: BasicShard,
   interval: number,
   payload: DiscordIdentify,
-  data: DiscordBotGatewayData,
+  data: DiscordGetGatewayBot,
 ) {
   // We lost socket connection between heartbeats, resume connection
   if (shard.ws.readyState === WebSocket.CLOSED) {
@@ -231,7 +237,7 @@ async function heartbeat(
 }
 
 async function resumeConnection(
-  data: DiscordBotGatewayData,
+  data: DiscordGetGatewayBot,
   payload: DiscordIdentify,
   shardID: number,
 ) {
@@ -361,7 +367,7 @@ async function processGatewayQueue() {
 }
 
 /** Enqueues the specified data to be transmitted to the server over the WebSocket connection, */
-export function sendWS(payload: DiscordPayload, shardID = 0) {
+export function sendWS(payload: DiscordGatewayPayload, shardID = 0) {
   const shard = basicShards.get(shardID);
   if (!shard) return false;
 

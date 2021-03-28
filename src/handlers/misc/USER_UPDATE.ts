@@ -1,8 +1,9 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
+import { DiscordGatewayPayload } from "../../types/gateway.ts";
 
-export async function handleUserUpdate(data: DiscordPayload) {
-  const userData = data.d as UserPayload;
+export async function handleUserUpdate(data: DiscordGatewayPayload) {
+  const userData = data.d as DiscordUser;
 
   const member = await cacheHandlers.get("members", userData.id);
   if (!member) return;

@@ -1,9 +1,13 @@
 import { botID, eventHandlers } from "../../bot.ts";
-import { structures } from "../../structures/mod.ts";
 import { cacheHandlers } from "../../cache.ts";
+import { structures } from "../../structures/mod.ts";
+import {
+  DiscordGatewayPayload,
+  DiscordMessageReactionAdd,
+} from "../../types/gateway.ts";
 
-export async function handleMessageReactionAdd(data: DiscordPayload) {
-  const payload = data.d as MessageReactionPayload;
+export async function handleMessageReactionAdd(data: DiscordGatewayPayload) {
+  const payload = data.d as DiscordMessageReactionAdd;
   const message = await cacheHandlers.get("messages", payload.message_id);
 
   if (message) {

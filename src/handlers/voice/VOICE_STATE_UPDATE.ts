@@ -1,9 +1,10 @@
 import { eventHandlers } from "../../bot.ts";
-import { structures } from "../../structures/mod.ts";
 import { cacheHandlers } from "../../cache.ts";
+import { structures } from "../../structures/mod.ts";
+import { DiscordGatewayPayload } from "../../types/gateway.ts";
 
-export async function handleVoiceStateUpdate(data: DiscordPayload) {
-  const payload = data.d as VoiceStateUpdatePayload;
+export async function handleVoiceStateUpdate(data: DiscordGatewayPayload) {
+  const payload = data.d as DiscordVoiceState;
   if (!payload.guild_id) return;
 
   const guild = await cacheHandlers.get("guilds", payload.guild_id);

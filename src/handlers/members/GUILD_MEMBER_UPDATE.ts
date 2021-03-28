@@ -1,9 +1,13 @@
 import { eventHandlers } from "../../bot.ts";
-import { structures } from "../../structures/mod.ts";
 import { cacheHandlers } from "../../cache.ts";
+import { structures } from "../../structures/mod.ts";
+import {
+  DiscordGatewayPayload,
+  DiscordGuildMemberUpdate,
+} from "../../types/gateway.ts";
 
-export async function handleGuildMemberUpdate(data: DiscordPayload) {
-  const payload = data.d as GuildMemberUpdatePayload;
+export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
+  const payload = data.d as DiscordGuildMemberUpdate;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
@@ -31,7 +35,7 @@ export async function handleGuildMemberUpdate(data: DiscordPayload) {
     eventHandlers.nicknameUpdate?.(
       guild,
       memberStruct,
-      payload.nick,
+      payload.nick!,
       guildMember?.nick,
     );
   }

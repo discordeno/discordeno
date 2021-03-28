@@ -109,9 +109,9 @@ export type CamelCase<K> = K extends string
   : K;
 
 export type CamelCaseProps<T> = {
-  [K in keyof T as CamelCase<K>]: T[K];
+  [K in keyof T as CamelCase<K>]: CamelCaseProps<T[K]>;
 };
 
 export type SnakeCaseProps<T> = {
-  [K in keyof T as SnakeCase<K>]: T[K];
+  [K in keyof T as SnakeCase<K>]: SnakeCaseProps<T[K]>;
 };

@@ -1,4 +1,9 @@
 import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
+import {
+  DiscordGatewayIntents,
+  DiscordGetGatewayBot,
+  DiscordIdentify,
+} from "./types/gateway.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 
@@ -9,7 +14,7 @@ export let applicationID = "";
 
 export let eventHandlers: EventHandlers = {};
 
-export let botGatewayData: DiscordBotGatewayData;
+export let botGatewayData: DiscordGetGatewayBot;
 export let proxyWSURL = `wss://gateway.discord.gg`;
 export let lastShardID = 0;
 
@@ -38,7 +43,12 @@ export async function startBot(config: BotConfig) {
   proxyWSURL = botGatewayData.url;
   identifyPayload.token = config.token;
   identifyPayload.intents = config.intents.reduce(
-    (bits, next) => (bits |= typeof next === "string" ? Intents[next] : next),
+    (
+      bits,
+      next,
+    ) => (bits |= typeof next === "string"
+      ? DiscordGatewayIntents[next]
+      : next),
     0,
   );
   lastShardID = botGatewayData.shards;
@@ -87,7 +97,12 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   }
 
   identifyPayload.intents = data.intents.reduce(
-    (bits, next) => (bits |= typeof next === "string" ? Intents[next] : next),
+    (
+      bits,
+      next,
+    ) => (bits |= typeof next === "string"
+      ? DiscordGatewayIntents[next]
+      : next),
     0,
   );
 
@@ -104,4 +119,26 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
         ? (data.firstShardID + 25)
         : botGatewayData.shards),
   );
+}
+
+export interface BotConfig {
+  token: string;
+  compress?: boolean;
+  intents: (DiscordGatewayIntents | keyof typeof DiscordGatewayIntents)[];
+  eventHandlers?: EventHandlers;
+}
+
+export interface BigBrainBotConfig extends BotConfig {
+  /** The first shard to start at for this worker. Use this to control which shards to run in each worker. */
+  firstShardID: number;
+  /** The last shard to start for this worker. By default it will be 25 + the firstShardID. */
+  lastShardID?: number;
+  /** This can be used to forward the ws handling to a proxy. */
+  wsURL?: string;
+  /** This can be used to forward the REST handling to a proxy. */
+  restURL?: string;
+  /** This can be used to forward the CDN handling to a proxy. */
+  cdnURL?: string;
+  /** This is the authorization header that your rest proxy will validate */
+  restAuthorization?: string;
 }
