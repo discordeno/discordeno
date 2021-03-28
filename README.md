@@ -74,4 +74,4 @@ unofficial templates:
 ## Contributing
 
 We appreciate your help! Before contributing, please read the
-[Contributing Guide](https://github.com/discordeno/discordeno/blob/master/.github/CONTRIBUTING.md).
+[Contributing Guide](https://github.com/discordeno/discordeno/blob/main/.github/CONTRIBUTING.md).
