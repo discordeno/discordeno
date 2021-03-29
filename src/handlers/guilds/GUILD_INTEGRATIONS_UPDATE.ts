@@ -1,9 +1,5 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import {
-  DiscordGatewayPayload,
-  DiscordGuildIntegrationsUpdate,
-} from "../../types/gateway.ts";
 
 export async function handleGuildIntegrationsUpdate(
   data: DiscordGatewayPayload,

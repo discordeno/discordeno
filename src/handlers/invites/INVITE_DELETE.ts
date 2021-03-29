@@ -1,8 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import {
-  DiscordGatewayPayload,
-  DiscordInviteDelete,
-} from "../../types/gateway.ts";
 
 export function handleInviteDelete(payload: DiscordGatewayPayload) {
   const {

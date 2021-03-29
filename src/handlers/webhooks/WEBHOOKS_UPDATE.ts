@@ -1,8 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import {
-  DiscordGatewayPayload,
-  DiscordWebhooksUpdate,
-} from "../../types/gateway.ts";
 
 export function handleWebhooksUpdate(data: DiscordGatewayPayload) {
   const options = data.d as DiscordWebhooksUpdate;

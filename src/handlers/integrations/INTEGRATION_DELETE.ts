@@ -1,5 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import { DiscordGatewayPayload } from "../../types/gateway.ts";
 
 export function handleIntegrationDelete(data: DiscordGatewayPayload) {
   const {

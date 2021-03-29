@@ -1,6 +1,8 @@
 import { cacheHandlers } from "../../cache.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { structures } from "../../structures/mod.ts";
+import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import { PermissionStrings } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -15,15 +17,15 @@ export async function sendMessage(
   if (channel) {
     if (
       ![
-        ChannelTypes.DM,
-        ChannelTypes.GUILD_NEWS,
-        ChannelTypes.GUILD_TEXT,
+        DiscordChannelTypes.DM,
+        DiscordChannelTypes.GUILD_NEWS,
+        DiscordChannelTypes.GUILD_TEXT,
       ].includes(channel.type)
     ) {
       throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
     }
 
-    const requiredPerms: Set<Permission> = new Set([
+    const requiredPerms: Set<PermissionStrings> = new Set([
       "SEND_MESSAGES",
       "VIEW_CHANNEL",
     ]);
