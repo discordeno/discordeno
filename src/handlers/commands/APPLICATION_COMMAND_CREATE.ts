@@ -1,8 +1,4 @@
 import { eventHandlers } from "../../bot.ts";
-import {
-  DiscordApplicationCommandCreateUpdateDelete,
-  DiscordGatewayPayload,
-} from "../../types/gateway.ts";
 
 export function handleApplicationCommandCreate(
   data: DiscordGatewayPayload,

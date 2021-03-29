@@ -1,10 +1,6 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
-import {
-  DiscordGatewayPayload,
-  DiscordGuildRoleCreateUpdate,
-} from "../../types/gateway.ts";
 
 export async function handleGuildRoleUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as DiscordGuildRoleCreateUpdate;
