@@ -5,7 +5,7 @@ export interface VoiceRegion {
   name: string;
   /** true if this is a vip-only server */
   vip: boolean;
-  /** True for a single server that is closest to the current user's client */
+  /** true for a single server that is closest to the current user's client */
   optimal: boolean;
   /** Whether this is a deprecated voice region (avoid swithing to these) */
   deprecated: boolean;
