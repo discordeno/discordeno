@@ -49,7 +49,7 @@ export function createRequestBody(queuedRequest: QueuedRequest) {
     queuedRequest.payload.body = undefined;
   }
 
-  // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
+  // IF A REASON IS PROVIdED ENCODE IT IN HEADERS
   if (queuedRequest.payload.body?.reason) {
     headers["X-Audit-Log-Reason"] = encodeURIComponent(
       queuedRequest.payload.body.reason,
@@ -93,7 +93,7 @@ export function processRequestHeaders(url: string, headers: Headers) {
   const resetTimestamp = headers.get("x-ratelimit-reset");
   const retryAfter = headers.get("retry-after");
   const global = headers.get("x-ratelimit-global");
-  const bucketID = headers.get("x-ratelimit-bucket");
+  const bucketId = headers.get("x-ratelimit-bucket");
 
   // IF THERE IS NO REMAINING RATE LIMIT, MARK IT AS RATE LIMITED
   if (remaining && remaining === "0") {
@@ -103,15 +103,15 @@ export function processRequestHeaders(url: string, headers: Headers) {
     restCache.ratelimitedPaths.set(url, {
       url,
       resetTimestamp: Number(resetTimestamp) * 1000,
-      bucketID,
+      bucketId,
     });
 
     // SAVE THE BUCKET AS LIMITED SINCE DIFFERENT URLS MAY SHARE A BUCKET
-    if (bucketID) {
-      restCache.ratelimitedPaths.set(bucketID, {
+    if (bucketId) {
+      restCache.ratelimitedPaths.set(bucketId, {
         url,
         resetTimestamp: Number(resetTimestamp) * 1000,
-        bucketID,
+        bucketId,
       });
     }
   }
@@ -126,19 +126,19 @@ export function processRequestHeaders(url: string, headers: Headers) {
     restCache.ratelimitedPaths.set("global", {
       url: "global",
       resetTimestamp: reset,
-      bucketID,
+      bucketId,
     });
 
-    if (bucketID) {
-      restCache.ratelimitedPaths.set(bucketID, {
+    if (bucketId) {
+      restCache.ratelimitedPaths.set(bucketId, {
         url: "global",
         resetTimestamp: reset,
-        bucketID,
+        bucketId,
       });
     }
   }
 
-  return ratelimited ? bucketID : undefined;
+  return ratelimited ? bucketId : undefined;
 }
 
 /** This wll create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */

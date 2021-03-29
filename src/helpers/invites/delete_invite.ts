@@ -7,8 +7,8 @@ import {
 } from "../../util/permissions.ts";
 
 /** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
-export async function deleteInvite(channelID: string, inviteCode: string) {
-  const channel = await cacheHandlers.get("channels", channelID);
+export async function deleteInvite(channelId: string, inviteCode: string) {
+  const channel = await cacheHandlers.get("channels", channelId);
 
   if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);
 
@@ -17,7 +17,7 @@ export async function deleteInvite(channelID: string, inviteCode: string) {
   ]);
 
   if (!hasPerm) {
-    await requireBotGuildPermissions(channel!.guildID, ["MANAGE_GUILD"]);
+    await requireBotGuildPermissions(channel!.guildId, ["MANAGE_GUILD"]);
   }
 
   const result = await RequestManager.delete(endpoints.INVITE(inviteCode));

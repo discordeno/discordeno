@@ -7,15 +7,15 @@ import {
 
 /** Edit the channel permission overwrites for a user or role in this channel. Requires `MANAGE_ROLES` permission. */
 export async function editChannelOverwrite(
-  guildID: string,
-  channelID: string,
-  overwriteID: string,
+  guildId: string,
+  channelId: string,
+  overwriteId: string,
   options: Omit<Overwrite, "id">,
 ) {
-  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
+  await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
   const result = await RequestManager.put(
-    endpoints.CHANNEL_OVERWRITE(channelID, overwriteID),
+    endpoints.CHANNEL_OVERWRITE(channelId, overwriteId),
     {
       allow: calculateBits(options.allow),
       deny: calculateBits(options.deny),

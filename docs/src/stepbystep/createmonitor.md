@@ -122,12 +122,12 @@ botCache.monitors.set("inviteFilter", {
     try {
       // Delete the invite link
       message.delete(
-        translate(message.guildID, `monitors/invitefilter:DELETE_REASON`),
+        translate(message.guildId, `monitors/invitefilter:DELETE_REASON`),
       );
       // Send a message to the user so they know why the message was deleted. Then delete the response after 5 seconds to prevent spam.
       message.alertResponse(
         translate(
-          message.guildID,
+          message.guildId,
           "monitors/invitefilter:DELETE_ALERT_MESSAGE",
         ),
         5,

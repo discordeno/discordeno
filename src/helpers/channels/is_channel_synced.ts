@@ -1,11 +1,11 @@
 import { cacheHandlers } from "../../cache.ts";
 
 /** Checks whether a channel is synchronized with its parent/category channel or not. */
-export async function isChannelSynced(channelID: string) {
-  const channel = await cacheHandlers.get("channels", channelID);
-  if (!channel?.parentID) return false;
+export async function isChannelSynced(channelId: string) {
+  const channel = await cacheHandlers.get("channels", channelId);
+  if (!channel?.parentId) return false;
 
-  const parentChannel = await cacheHandlers.get("channels", channel.parentID);
+  const parentChannel = await cacheHandlers.get("channels", channel.parentId);
   if (!parentChannel) return false;
 
   return channel.permissionOverwrites?.every((overwrite) => {

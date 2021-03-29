@@ -41,10 +41,10 @@ async function createMemberStruct() {
 We start by declaring a function that will be run to create the structure. Once
 again the name here is not important. The function must take the same arguments
 that the internal function takes. In this case the createMemberStruct function
-takes 2 arguments. `data: MemberCreatePayload, guildID: string`
+takes 2 arguments. `data: MemberCreatePayload, guildId: string`
 
 ```ts
-async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
+async function createMemberStruct(data: MemberCreatePayload, guildId: string) {
 }
 ```
 
@@ -53,7 +53,7 @@ want. My recommendation is to start by copying the current code from the
 internal libraries structure.
 
 ```ts
-async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
+async function createMemberStruct(data: MemberCreatePayload, guildId: string) {
   const {
     joined_at: joinedAt,
     premium_since: premiumSince,
@@ -75,7 +75,7 @@ async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
     /** When the user used their nitro boost on the server. */
     premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
     /** The guild id where this member exists */
-    guildID,
+    guildId,
     /** Whether or not this user has 2FA enabled. */
     mfaEnabled,
     /** The premium type for this user */
@@ -92,7 +92,7 @@ and `guild` properties to the member.
 ```ts
 import { rawAvatarURL } from "../../deps.ts";
 
-async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
+async function createMemberStruct(data: MemberCreatePayload, guildId: string) {
   // Hidden code here to make it easier to see the changes
 
   const member = {
@@ -106,7 +106,7 @@ async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
     /** The avatarURL made easily accessible */
     avatarURL: rawAvatarURL(data.id, user.discriminator, user.avatar),
     /** The guild object for where this member is located */
-    guild: await cacheHandler.get("guilds", guildID),
+    guild: await cacheHandler.get("guilds", guildId),
     /** Easily mention the member */
     mention: `<@${data.user.id}>`,
   };
@@ -144,7 +144,7 @@ declare module "../../deps.ts" {
 The code should look like this right now:
 
 ```ts
-async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
+async function createMemberStruct(data: MemberCreatePayload, guildId: string) {
   const {
     joined_at: joinedAt,
     premium_since: premiumSince,
@@ -166,7 +166,7 @@ async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
     /** When the user used their nitro boost on the server. */
     premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
     /** The guild id where this member exists */
-    guildID,
+    guildId,
     /** Whether or not this user has 2FA enabled. */
     mfaEnabled,
     /** The premium type for this user */
@@ -176,7 +176,7 @@ async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
     /** The avatarURL made easily accessible */
     avatarURL: rawAvatarURL(data.id, user.discriminator, user.avatar),
     /** The guild object for where this member is located */
-    guild: await cacheHandler.get("guilds", guildID),
+    guild: await cacheHandler.get("guilds", guildId),
     /** Easily mention the member */
     mention: `<@${data.user.id}>`,
   };
@@ -268,7 +268,7 @@ import {
   rawAvatarURL,
 } from "../../deps.ts";
 
-async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
+async function createMemberStruct(data: MemberCreatePayload, guildId: string) {
   const {
     id,
     bot,
@@ -286,7 +286,7 @@ async function createMemberStruct(data: MemberCreatePayload, guildID: string) {
     joinedAt: Date.parse(data.joined_at),
     tag: `${username}#${discriminator}`,
     avatarURL: rawAvatarURL(id, discriminator, avatar),
-    guild: await cacheHandlers.get("guilds", guildID),
+    guild: await cacheHandlers.get("guilds", guildId),
     mention: `<@${id}>`,
   };
 }
@@ -369,9 +369,9 @@ import { eventHandlers, handlers, TypingStartPayload } from "../../../deps.ts";
 
 const typingUsers = new Map<String, number>();
 
-function createTimeout(userID: String) {
+function createTimeout(userId: String) {
   return setTimeout(() => {
-    typingUsers.delete(userID);
+    typingUsers.delete(userId);
   }, 10000);
 }
 

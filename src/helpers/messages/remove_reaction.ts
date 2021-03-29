@@ -3,8 +3,8 @@ import { endpoints } from "../../util/constants.ts";
 
 /** Removes a reaction from the bot on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
 export async function removeReaction(
-  channelID: string,
-  messageID: string,
+  channelId: string,
+  messageId: string,
   reaction: string,
 ) {
   if (reaction.startsWith("<:")) {
@@ -14,7 +14,7 @@ export async function removeReaction(
   }
 
   const result = await RequestManager.delete(
-    endpoints.CHANNEL_MESSAGE_REACTION_ME(channelID, messageID, reaction),
+    endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction),
   );
 
   return result;

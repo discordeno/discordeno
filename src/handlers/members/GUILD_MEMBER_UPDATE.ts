@@ -44,16 +44,16 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
     eventHandlers.membershipScreeningPassed?.(guild, memberStruct);
   }
 
-  const roleIDs = guildMember?.roles || [];
+  const roleIds = guildMember?.roles || [];
 
-  roleIDs.forEach((id) => {
+  roleIds.forEach((id) => {
     if (!payload.roles.includes(id)) {
       eventHandlers.roleLost?.(guild, memberStruct, id);
     }
   });
 
   payload.roles.forEach((id) => {
-    if (!roleIDs.includes(id)) {
+    if (!roleIds.includes(id)) {
       eventHandlers.roleGained?.(guild, memberStruct, id);
     }
   });

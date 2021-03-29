@@ -52,8 +52,8 @@ export const formatImageURL = (
 };
 
 function camelToSnakeCase(text: string) {
-  return text.replace(/ID|[A-Z]/g, ($1) => {
-    if ($1 === "ID") return "_id";
+  return text.replace(/Id|[A-Z]/g, ($1) => {
+    if ($1 === "Id") return "_id";
 
     return `_${$1.toLowerCase()}`;
   });
@@ -61,7 +61,7 @@ function camelToSnakeCase(text: string) {
 
 function snakeToCamelCase(text: string) {
   return text.replace(/_id|([-_][a-z])/ig, ($1) => {
-    if ($1 === "_id") return "ID";
+    if ($1 === "_id") return "Id";
 
     return $1.toUpperCase().replace("_", "");
   });
@@ -121,7 +121,7 @@ function validateSlashOptionChoices(
 ) {
   for (const choice of choices) {
     if ([...choice.name].length < 1 || [...choice.name].length > 100) {
-      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+      throw new Error(Errors.INVALId_SLASH_OPTIONS_CHOICES);
     }
 
     if (
@@ -131,7 +131,7 @@ function validateSlashOptionChoices(
       (optionType === SlashCommandOptionType.INTEGER &&
         typeof choice.value !== "number")
     ) {
-      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+      throw new Error(Errors.INVALId_SLASH_OPTIONS_CHOICES);
     }
   }
 }
@@ -145,7 +145,7 @@ function validateSlashOptions(options: SlashCommandOption[]) {
         (option.type !== SlashCommandOptionType.STRING &&
           option.type !== SlashCommandOptionType.INTEGER))
     ) {
-      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+      throw new Error(Errors.INVALId_SLASH_OPTIONS_CHOICES);
     }
 
     if (
@@ -153,7 +153,7 @@ function validateSlashOptions(options: SlashCommandOption[]) {
       ([...option.description].length < 1 ||
         [...option.description].length > 100)
     ) {
-      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+      throw new Error(Errors.INVALId_SLASH_OPTIONS_CHOICES);
     }
 
     if (option.choices) {
@@ -172,7 +172,7 @@ export function validateSlashCommands(
       (command.name && !SLASH_COMMANDS_NAME_REGEX.test(command.name)) ||
       (create && !command.name)
     ) {
-      throw new Error(Errors.INVALID_SLASH_NAME);
+      throw new Error(Errors.INVALId_SLASH_NAME);
     }
 
     if (
@@ -181,12 +181,12 @@ export function validateSlashCommands(
           [...command.description].length > 100)) ||
       (create && !command.description)
     ) {
-      throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+      throw new Error(Errors.INVALId_SLASH_DESCRIPTION);
     }
 
     if (command.options?.length) {
       if (command.options.length > 25) {
-        throw new Error(Errors.INVALID_SLASH_OPTIONS);
+        throw new Error(Errors.INVALId_SLASH_OPTIONS);
       }
 
       validateSlashOptions(command.options);

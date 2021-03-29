@@ -1,4 +1,4 @@
-import { applicationID } from "../../bot.ts";
+import { applicationId } from "../../bot.ts";
 import { cache } from "../../cache.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -16,7 +16,7 @@ export async function sendInteractionResponse(
 ) {
   // If its already been executed, we need to send a followup response
   if (cache.executedSlashCommands.has(token)) {
-    return RequestManager.post(endpoints.WEBHOOK(applicationID, token), {
+    return RequestManager.post(endpoints.WEBHOOK(applicationId, token), {
       ...options,
     });
   }
@@ -39,7 +39,7 @@ export async function sendInteractionResponse(
   }
 
   const result = await RequestManager.post(
-    endpoints.INTERACTION_ID_TOKEN(id, token),
+    endpoints.INTERACTION_Id_TOKEN(id, token),
     options,
   );
 

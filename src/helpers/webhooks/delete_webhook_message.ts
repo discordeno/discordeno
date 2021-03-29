@@ -2,12 +2,12 @@ import { RequestManager } from "../../rest/request_manager.ts";
 import { endpoints } from "../../util/constants.ts";
 
 export async function deleteWebhookMessage(
-  webhookID: string,
+  webhookId: string,
   webhookToken: string,
-  messageID: string,
+  messageId: string,
 ) {
   const result = await RequestManager.delete(
-    endpoints.WEBHOOK_MESSAGE(webhookID, webhookToken, messageID),
+    endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId),
   );
 
   return result;

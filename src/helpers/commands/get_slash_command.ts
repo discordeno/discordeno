@@ -1,13 +1,13 @@
-import { applicationID } from "../../bot.ts";
+import { applicationId } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { endpoints } from "../../util/constants.ts";
 
-/** Fetchs the global command for the given ID. If a guildID is provided, the guild command will be fetched. */
-export async function getSlashCommand(commandID: string, guildID?: string) {
+/** Fetchs the global command for the given Id. If a guildId is provided, the guild command will be fetched. */
+export async function getSlashCommand(commandId: string, guildId?: string) {
   const result = await RequestManager.get(
-    guildID
-      ? endpoints.COMMANDS_GUILD_ID(applicationID, guildID, commandID)
-      : endpoints.COMMANDS_ID(applicationID, commandID),
+    guildId
+      ? endpoints.COMMANDS_GUILD_Id(applicationId, guildId, commandId)
+      : endpoints.COMMANDS_Id(applicationId, commandId),
   );
 
   return result as SlashCommand;

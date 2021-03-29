@@ -1,5 +1,5 @@
 export interface VoiceRegion {
-  /** Unique ID for the region */
+  /** Unique Id for the region */
   id: string;
   /** Name of the region */
   name: string;

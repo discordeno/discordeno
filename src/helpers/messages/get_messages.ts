@@ -5,14 +5,14 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
 /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
 export async function getMessages(
-  channelID: string,
+  channelId: string,
   options?:
     | GetMessagesAfter
     | GetMessagesBefore
     | GetMessagesAround
     | GetMessages,
 ) {
-  await requireBotChannelPermissions(channelID, [
+  await requireBotChannelPermissions(channelId, [
     "VIEW_CHANNEL",
     "READ_MESSAGE_HISTORY",
   ]);
@@ -20,7 +20,7 @@ export async function getMessages(
   if (options?.limit && options.limit > 100) return;
 
   const result = (await RequestManager.get(
-    endpoints.CHANNEL_MESSAGES(channelID),
+    endpoints.CHANNEL_MESSAGES(channelId),
     options,
   )) as MessageCreateOptions[];
 

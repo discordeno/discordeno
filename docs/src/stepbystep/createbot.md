@@ -49,21 +49,21 @@ export const configs = {
     DISCORD_BOTS_GROUP: "",
   },
   // This is the server id for your bot's main server where users can get help/support
-  supportServerID: "",
+  supportServerId: "",
   // These are channel ids that will enable some functionality
-  channelIDs: {
+  channelIds: {
     // When a translation is missing this is the channel you will be alerted in.
     missingTranslation: "",
     // When an error occurs, we will try and log it to this channel
-    errorChannelID: "",
+    errorChannelId: "",
   },
   // These are the role ids that will enable some functionality.
-  roleIDs: {
+  roleIds: {
     // If you have a patreon set up you can add the patreon vip role id here.
-    patreonVIPRoleID: "",
+    patreonVIPRoleId: "",
   },
   // These are the user ids that will enable some functionality.
-  userIDs: {
+  userIds: {
     // The user ids for the support team
     botSupporters: [],
     // The user ids for the other devs on your team
@@ -104,26 +104,26 @@ guide.
 For now just remember, that Discordeno provides you a built in way to update
 most discord bot lists.
 
-#### Channel IDs
+#### Channel Ids
 
-The channelIDs section holds the channel IDs that are useful for specific
+The channelIds section holds the channel Ids that are useful for specific
 features to help give you alerts/notifications. For example, the
 `missingTranslation` channel will be where messages are sent alerting you that
 somewhere in your code you are trying to use a translation key that you never
 created.
 
 When you get to around 25,000 Discord servers on your bot, you may want to
-convert these channel IDs to webhooks.
+convert these channel Ids to webhooks.
 
-#### Role IDs
+#### Role Ids
 
-The roleIDs section holds the role IDs that are useful for specific features.
-For example, the `patreonVIPRoleID` role can be used easily to enable vip
+The roleIds section holds the role Ids that are useful for specific features.
+For example, the `patreonVIPRoleId` role can be used easily to enable vip
 features later in this guide.
 
-#### User IDs
+#### User Ids
 
-The userIDs section holds the user IDs that are useful for specific features.
+The userIds section holds the user Ids that are useful for specific features.
 For example, the `botDevs` and such are useful for permission levels as you will
 see in the Permission Level part of the guide.
 

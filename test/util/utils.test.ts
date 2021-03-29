@@ -39,7 +39,7 @@ const testCamelObject = {
       },
     },
     arrays: ["one_two", { mooCow: { boo: true } }],
-    testTheID: "123123123123",
+    testTheId: "123123123123",
   },
 };
 

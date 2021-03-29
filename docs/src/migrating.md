@@ -313,7 +313,7 @@ createCommand({
   execute: (message, args) => {
     // checking to see if the user has the role or not
     if (!args.member.roles.includes(args.role.id)) {
-      args.member.addRole(message.guildID, args.role.id);
+      args.member.addRole(message.guildId, args.role.id);
       message.sendResponse(
         `${args.member.mention} has been given the role: ${args.role.name}`,
         5,
@@ -462,7 +462,7 @@ createCommand({
     // Delete the message command
     message.delete("Remove kick command trigger.");
     // Kick the user with reason
-    args.member.kick(message.guildID, args.reason);
+    args.member.kick(message.guildId, args.reason);
     // sends the kick report into log/report
     reporchannel.send({ embed });
   },

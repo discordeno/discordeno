@@ -29,10 +29,10 @@ The command arguments can be found in the `src/arguments` folder.
 - `number` When you want a number.
 - `role` When you want a role object. The user can provide the role id, mention
   or role name.
-- `snowflake` When you just want a snowflake. A snowflake is an ID generation
-  format from Twitter that Discord uses to make their IDs unique. These IDs do
+- `snowflake` When you just want a snowflake. A snowflake is an Id generation
+  format from Twitter that Discord uses to make their Ids unique. These Ids do
   never change and are used to identify users, guilds, emojis, and more.
-- `...snowflakes` When you want to check if the mentioned ID is a valid
+- `...snowflakes` When you want to check if the mentioned Id is a valid
   snowflake. Note that this is similar to ...string, it will take all coming
   arguments and check them. This should always be your FINAL argument.
 - `subcommand` When your command has subcommands.
