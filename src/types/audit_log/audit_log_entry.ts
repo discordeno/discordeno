@@ -1,6 +1,6 @@
 import { SnakeCaseProps } from "../util.ts";
 import { AuditLogChange } from "./audit_log_change.ts";
-import { AuditLogEvents } from "./audit_log_events.ts";
+import { DiscordAuditLogEvents } from "./audit_log_events.ts";
 import { OptionalAuditEntryInfo } from "./optional_audit_entry_info.ts";
 
 export interface AuditLogEntry {
@@ -13,7 +13,7 @@ export interface AuditLogEntry {
   /** id of the entry */
   id: string;
   /** Type of action that occured */
-  actionType: AuditLogEvents;
+  actionType: DiscordAuditLogEvents;
   /** Additional info for certain action types */
   options?: OptionalAuditEntryInfo;
   /** The reason for the change (0-512 characters) */

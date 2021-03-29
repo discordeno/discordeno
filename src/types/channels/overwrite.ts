@@ -1,4 +1,3 @@
-import { SnakeCaseProps } from "../util.ts";
 import { DiscordOverwriteTypes } from "./overwrite_types.ts";
 
 export interface Overwrite {
@@ -13,4 +12,4 @@ export interface Overwrite {
 }
 
 /** https://discord.com/developers/docs/resources/channel#overwrite-object */
-export type DiscordOverwrite = SnakeCaseProps<Overwrite>;
+export type DiscordOverwrite = Overwrite;
