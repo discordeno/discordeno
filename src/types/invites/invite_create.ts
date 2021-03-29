@@ -1,0 +1,30 @@
+import { User } from "../users/user.ts";
+import { SnakeCaseProps } from "../util.ts";
+
+export interface InviteCreate {
+  /** The channel the invite is for */
+  channelId: string;
+  /** The unique invite code */
+  code: string;
+  /** The time at which the invite was created */
+  createdAt: string;
+  /** The guild of the invite */
+  guildId?: string;
+  /** The user that created the invite */
+  inviter?: User;
+  /** How long the invite is valid for (in seconds) */
+  maxAge: number;
+  /** The maximum number of times the invite can be used */
+  maxUses: number;
+  /** The target user for this invite */
+  targetUser?: Partial<User>;
+  /** The type of user target for this invite */
+  targetUserType?: number;
+  /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
+  temporary: boolean;
+  /** How many times the invite has been used (always will be 0) */
+  uses: number;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#invite-create */
+export type DiscordInviteCreate = SnakeCaseProps<InviteCreate>;
