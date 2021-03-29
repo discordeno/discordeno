@@ -4,13 +4,13 @@ import { endpoints } from "../../util/constants.ts";
 
 /** Get a list of users that reacted with this emoji. */
 export async function getReactions(
-  channelID: string,
-  messageID: string,
+  channelId: string,
+  messageId: string,
   reaction: string,
   options?: DiscordGetReactionsParams,
 ) {
   const users = (await RequestManager.get(
-    endpoints.CHANNEL_MESSAGE_REACTION(channelID, messageID, reaction),
+    endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction),
     options,
   )) as UserPayload[];
 

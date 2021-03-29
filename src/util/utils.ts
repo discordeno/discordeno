@@ -53,8 +53,8 @@ export const formatImageURL = (
 };
 
 function camelToSnakeCase(text: string) {
-  return text.replace(/ID|[A-Z]/g, ($1) => {
-    if ($1 === "ID") return "_id";
+  return text.replace(/Id|[A-Z]/g, ($1) => {
+    if ($1 === "Id") return "_id";
 
     return `_${$1.toLowerCase()}`;
   });
@@ -62,7 +62,7 @@ function camelToSnakeCase(text: string) {
 
 function snakeToCamelCase(text: string) {
   return text.replace(/_id|([-_][a-z])/ig, ($1) => {
-    if ($1 === "_id") return "ID";
+    if ($1 === "_id") return "Id";
 
     return $1.toUpperCase().replace("_", "");
   });

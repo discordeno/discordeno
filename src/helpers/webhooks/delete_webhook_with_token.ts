@@ -3,11 +3,11 @@ import { endpoints } from "../../util/constants.ts";
 
 /** Delete a webhook permanently. Returns a undefined on success */
 export async function deleteWebhookWithToken(
-  webhookID: string,
+  webhookId: string,
   webhookToken: string,
 ) {
   const result = await RequestManager.delete(
-    endpoints.WEBHOOK(webhookID, webhookToken),
+    endpoints.WEBHOOK(webhookId, webhookToken),
   );
 
   return result;

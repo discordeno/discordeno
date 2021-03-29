@@ -4,11 +4,11 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
 /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */
 export async function deleteMessages(
-  channelID: string,
+  channelId: string,
   ids: string[],
   reason?: string,
 ) {
-  await requireBotChannelPermissions(channelID, ["MANAGE_MESSAGES"]);
+  await requireBotChannelPermissions(channelId, ["MANAGE_MESSAGES"]);
 
   if (ids.length < 2) {
     throw new Error(Errors.DELETE_MESSAGES_MIN);
@@ -21,7 +21,7 @@ export async function deleteMessages(
   }
 
   const result = await RequestManager.post(
-    endpoints.CHANNEL_BULK_DELETE(channelID),
+    endpoints.CHANNEL_BULK_DELETE(channelId),
     {
       messages: ids.splice(0, 100),
       reason,

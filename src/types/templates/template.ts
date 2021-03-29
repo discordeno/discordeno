@@ -1,8 +1,8 @@
-import { SnakeCaseProps } from "../util.ts";
 import { User } from "../users/user.ts";
+import { SnakeCaseProps } from "../util.ts";
 
 export interface Template {
-  /** The template code (unique ID) */
+  /** The template code (unique Id) */
   code: string;
   /** Template name */
   name: string;
@@ -10,7 +10,7 @@ export interface Template {
   description: string | null;
   /** Number of times this template has been used */
   usageCount: number;
-  /** The ID of the user who created the template */
+  /** The Id of the user who created the template */
   creatorId: string;
   /** The user who created the template */
   creator: User;
@@ -18,7 +18,7 @@ export interface Template {
   createdAt: string;
   /** When this template was last synced to the source guild */
   updatedAt: string;
-  /** The ID of the guild this template is based on */
+  /** The Id of the guild this template is based on */
   sourceGuildId: string;
   /** The guild snapshot this template contains */
   serializedSourceGuild: Partial<Guild>;

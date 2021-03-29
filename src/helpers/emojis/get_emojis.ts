@@ -7,18 +7,18 @@ import { endpoints } from "../../util/constants.ts";
  *
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  */
-export async function getEmojis(guildID: string, addToCache = true) {
+export async function getEmojis(guildId: string, addToCache = true) {
   const result = (await RequestManager.get(
-    endpoints.GUILD_EMOJIS(guildID),
+    endpoints.GUILD_EMOJIS(guildId),
   )) as Emoji[];
 
   if (addToCache) {
-    const guild = await cacheHandlers.get("guilds", guildID);
+    const guild = await cacheHandlers.get("guilds", guildId);
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
     result.forEach((emoji) => guild.emojis.set(emoji.id ?? emoji.name, emoji));
 
-    cacheHandlers.set("guilds", guildID, guild);
+    cacheHandlers.set("guilds", guildId, guild);
   }
 
   return result;

@@ -3,7 +3,7 @@ import { endpoints } from "../../util/constants.ts";
 
 /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
 export async function swapChannels(
-  guildID: string,
+  guildId: string,
   channelPositions: PositionSwap[],
 ) {
   if (channelPositions.length < 2) {
@@ -11,7 +11,7 @@ export async function swapChannels(
   }
 
   const result = await RequestManager.patch(
-    endpoints.GUILD_CHANNELS(guildID),
+    endpoints.GUILD_CHANNELS(guildId),
     channelPositions,
   );
 

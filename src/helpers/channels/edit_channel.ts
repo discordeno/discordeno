@@ -7,18 +7,18 @@ import {
 
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(
-  channelID: string,
+  channelId: string,
   options: ChannelEditOptions,
   reason?: string,
 ) {
-  await requireBotChannelPermissions(channelID, ["MANAGE_CHANNELS"]);
+  await requireBotChannelPermissions(channelId, ["MANAGE_CHANNELS"]);
 
   if (options.name || options.topic) {
-    const request = editChannelNameTopicQueue.get(channelID);
+    const request = editChannelNameTopicQueue.get(channelId);
     if (!request) {
       // If this hasnt been done before simply add 1 for it
-      editChannelNameTopicQueue.set(channelID, {
-        channelID: channelID,
+      editChannelNameTopicQueue.set(channelId, {
+        channelId: channelId,
         amount: 1,
         // 10 minutes from now
         timestamp: Date.now() + 600000,
@@ -30,7 +30,7 @@ export async function editChannel(
       request.timestamp = Date.now() + 600000;
     } else {
       // 2 have already been used add to queue
-      request.items.push({ channelID, options });
+      request.items.push({ channelId, options });
       if (editChannelProcessing) return;
       editChannelProcessing = true;
       processEditChannelQueue();
@@ -43,7 +43,7 @@ export async function editChannel(
     // deno-lint-ignore camelcase
     rate_limit_per_user: options.rateLimitPerUser,
     // deno-lint-ignore camelcase
-    parent_id: options.parentID,
+    parent_id: options.parentId,
     // deno-lint-ignore camelcase
     user_limit: options.userLimit,
     // deno-lint-ignore camelcase
@@ -56,7 +56,7 @@ export async function editChannel(
     }),
   };
 
-  const result = await RequestManager.patch(endpoints.CHANNEL_BASE(channelID), {
+  const result = await RequestManager.patch(endpoints.CHANNEL_BASE(channelId), {
     ...payload,
     reason,
   });
@@ -75,7 +75,7 @@ function processEditChannelQueue() {
     if (now > request.timestamp) return;
     // 10 minutes have passed so we can reset this channel again
     if (!request.items.length) {
-      return editChannelNameTopicQueue.delete(request.channelID);
+      return editChannelNameTopicQueue.delete(request.channelId);
     }
     request.amount = 0;
     // There are items to process for this request
@@ -83,11 +83,11 @@ function processEditChannelQueue() {
 
     if (!details) return;
 
-    editChannel(details.channelID, details.options);
+    editChannel(details.channelId, details.options);
     const secondDetails = request.items.shift();
     if (!secondDetails) return;
 
-    return editChannel(secondDetails.channelID, secondDetails.options);
+    return editChannel(secondDetails.channelId, secondDetails.options);
   });
 
   if (editChannelNameTopicQueue.size) {
