@@ -14,6 +14,7 @@ export const rest: RestCache = {
   authorization: "discordeno_best_lib_ever",
   pathQueues: new Map(),
   processingQueue: false,
+  processingRateLimitedPaths: false,
   globallyRateLimited: false,
   ratelimitedPaths: new Map(),
   eventHandlers: {
