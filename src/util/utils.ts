@@ -145,7 +145,7 @@ function validateSlashOptions(options: SlashCommandOption[]) {
         (option.type !== SlashCommandOptionType.STRING &&
           option.type !== SlashCommandOptionType.INTEGER))
     ) {
-      throw new Error(Errors.INVALId_SLASH_OPTIONS_CHOICES);
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
 
     if (
