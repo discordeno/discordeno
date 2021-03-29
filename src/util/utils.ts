@@ -172,7 +172,7 @@ export function validateSlashCommands(
       (command.name && !SLASH_COMMANDS_NAME_REGEX.test(command.name)) ||
       (create && !command.name)
     ) {
-      throw new Error(Errors.INVALId_SLASH_NAME);
+      throw new Error(Errors.INVALID_SLASH_NAME);
     }
 
     if (
