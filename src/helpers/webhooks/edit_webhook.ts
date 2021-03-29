@@ -4,15 +4,15 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
 /** Edit a webhook. Requires the `MANAGE_WEBHOOKS` permission. Returns the updated webhook object on success. */
 export async function editWebhook(
-  channelID: string,
-  webhookID: string,
+  channelId: string,
+  webhookId: string,
   options: WebhookEditOptions,
 ) {
-  await requireBotChannelPermissions(channelID, ["MANAGE_WEBHOOKS"]);
+  await requireBotChannelPermissions(channelId, ["MANAGE_WEBHOOKS"]);
 
-  const result = await RequestManager.patch(endpoints.WEBHOOK_ID(webhookID), {
+  const result = await RequestManager.patch(endpoints.WEBHOOK_ID(webhookId), {
     ...options,
-    channel_id: options.channelID,
+    channel_id: options.channelId,
   });
 
   return result as WebhookPayload;

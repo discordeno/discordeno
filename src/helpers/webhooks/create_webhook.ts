@@ -9,10 +9,10 @@ import { urlToBase64 } from "../../util/utils.ts";
  * Webhook names cannot be: 'clyde'
  */
 export async function createWebhook(
-  channelID: string,
+  channelId: string,
   options: WebhookCreateOptions,
 ) {
-  await requireBotChannelPermissions(channelID, ["MANAGE_WEBHOOKS"]);
+  await requireBotChannelPermissions(channelId, ["MANAGE_WEBHOOKS"]);
 
   if (
     // Specific usernames that discord does not allow
@@ -25,7 +25,7 @@ export async function createWebhook(
   }
 
   const result = await RequestManager.post(
-    endpoints.CHANNEL_WEBHOOKS(channelID),
+    endpoints.CHANNEL_WEBHOOKS(channelId),
     {
       ...options,
       avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,

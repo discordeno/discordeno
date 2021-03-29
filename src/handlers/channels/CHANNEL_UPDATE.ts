@@ -1,9 +1,10 @@
 import { eventHandlers } from "../../bot.ts";
-import { structures } from "../../structures/mod.ts";
 import { cacheHandlers } from "../../cache.ts";
+import { structures } from "../../structures/mod.ts";
+import { DiscordGatewayPayload } from "../../types/gateway.ts";
 
-export async function handleChannelUpdate(data: DiscordPayload) {
-  const payload = data.d as ChannelCreatePayload;
+export async function handleChannelUpdate(data: DiscordGatewayPayload) {
+  const payload = data.d as DiscordChannel;
   const cachedChannel = await cacheHandlers.get("channels", payload.id);
 
   const channelStruct = await structures.createChannelStruct(payload);

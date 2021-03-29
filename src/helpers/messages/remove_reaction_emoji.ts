@@ -4,11 +4,11 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
 /** Removes all reactions for a single emoji on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
 export async function removeReactionEmoji(
-  channelID: string,
-  messageID: string,
+  channelId: string,
+  messageId: string,
   reaction: string,
 ) {
-  await requireBotChannelPermissions(channelID, ["MANAGE_MESSAGES"]);
+  await requireBotChannelPermissions(channelId, ["MANAGE_MESSAGES"]);
 
   if (reaction.startsWith("<:")) {
     reaction = reaction.substring(2, reaction.length - 1);
@@ -17,7 +17,7 @@ export async function removeReactionEmoji(
   }
 
   const result = await RequestManager.delete(
-    endpoints.CHANNEL_MESSAGE_REACTION(channelID, messageID, reaction),
+    endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction),
   );
 
   return result;

@@ -1,7 +1,8 @@
 import { eventHandlers } from "../../bot.ts";
+import { DiscordGatewayPayload } from "../../types/gateway.ts";
 
 export function handleIntegrationCreate(
-  data: DiscordPayload,
+  data: DiscordGatewayPayload,
 ) {
   const {
     guild_id: guildId,

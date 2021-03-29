@@ -1,4 +1,4 @@
-import { botID } from "../bot.ts";
+import { botId } from "../bot.ts";
 import { cache, cacheHandlers } from "../cache.ts";
 import { deleteServer } from "../helpers/guilds/delete_server.ts";
 import { editGuild } from "../helpers/guilds/edit_guild.ts";
@@ -13,8 +13,7 @@ import { banMember } from "../helpers/members/ban_member.ts";
 import { unbanMember } from "../helpers/members/unban_member.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
-import { Member } from "./member.ts";
-import { Channel, Role, structures } from "./mod.ts";
+import { Role, structures } from "./mod.ts";
 
 export const initialMemberLoadQueue = new Map<string, MemberCreatePayload[]>();
 
@@ -23,31 +22,31 @@ const baseGuild: Partial<Guild> = {
     return cache.members.filter((member) => member.guilds.has(this.id!));
   },
   get channels() {
-    return cache.channels.filter((channel) => channel.guildID === this.id);
+    return cache.channels.filter((channel) => channel.guildId === this.id);
   },
   get afkChannel() {
-    return cache.channels.get(this.afkChannelID!);
+    return cache.channels.get(this.afkChannelId!);
   },
   get publicUpdatesChannel() {
-    return cache.channels.get(this.publicUpdatesChannelID!);
+    return cache.channels.get(this.publicUpdatesChannelId!);
   },
   get rulesChannel() {
-    return cache.channels.get(this.rulesChannelID!);
+    return cache.channels.get(this.rulesChannelId!);
   },
   get systemChannel() {
-    return cache.channels.get(this.systemChannelID!);
+    return cache.channels.get(this.systemChannelId!);
   },
   get bot() {
-    return cache.members.get(botID);
+    return cache.members.get(botId);
   },
   get botMember() {
     return this.bot?.guilds.get(this.id!);
   },
   get botVoice() {
-    return this.voiceStates?.get(botID);
+    return this.voiceStates?.get(botId);
   },
   get owner() {
-    return cache.members.get(this.ownerID!);
+    return cache.members.get(this.ownerId!);
   },
   get partnered() {
     return Boolean(this.features?.includes("PARTNERED"));
@@ -67,17 +66,17 @@ const baseGuild: Partial<Guild> = {
   auditLogs(options) {
     return getAuditLogs(this.id!, options);
   },
-  getBan(memberID) {
-    return getBan(this.id!, memberID);
+  getBan(memberId) {
+    return getBan(this.id!, memberId);
   },
   bans() {
     return getBans(this.id!);
   },
-  ban(memberID, options) {
-    return banMember(this.id!, memberID, options);
+  ban(memberId, options) {
+    return banMember(this.id!, memberId, options);
   },
-  unban(memberID) {
-    return unbanMember(this.id!, memberID);
+  unban(memberId) {
+    return unbanMember(this.id!, memberId);
   },
   invites() {
     return getInvites(this.id!);
@@ -92,26 +91,26 @@ const baseGuild: Partial<Guild> = {
 
 export async function createGuildStruct(
   data: CreateGuildPayload,
-  shardID: number,
+  shardId: number,
 ) {
   const {
     disovery_splash: discoverySplash,
     default_message_notifications: defaultMessageNotifications,
     explicit_content_filter: explicitContentFilter,
     system_channel_flags: systemChannelFlags,
-    rules_channel_id: rulesChannelID,
-    public_updates_channel_id: publicUpdatesChannelID,
+    rules_channel_id: rulesChannelId,
+    public_updates_channel_id: publicUpdatesChannelId,
     max_video_channel_users: maxVideoChannelUsers,
     approximate_member_count: approximateMemberCount,
     approximate_presence_count: approximatePresenceCount,
-    owner_id: ownerID,
-    afk_channel_id: afkChannelID,
+    owner_id: ownerId,
+    afk_channel_id: afkChannelId,
     afk_timeout: afkTimeout,
     widget_enabled: widgetEnabled,
-    widget_channel_id: widgetChannelID,
+    widget_channel_id: widgetChannelId,
     verification_level: verificationLevel,
     mfa_level: mfaLevel,
-    system_channel_id: systemChannelID,
+    system_channel_id: systemChannelId,
     max_presences: maxPresences,
     max_members: maxMembers,
     vanity_url_code: vanityURLCode,
@@ -151,20 +150,20 @@ export async function createGuildStruct(
     discoverySplash: createNewProp(discoverySplash),
     defaultMessageNotifications: createNewProp(defaultMessageNotifications),
     explicitContentFilter: createNewProp(explicitContentFilter),
-    rulesChannelID: createNewProp(rulesChannelID),
-    publicUpdatesChannelID: createNewProp(publicUpdatesChannelID),
+    rulesChannelId: createNewProp(rulesChannelId),
+    publicUpdatesChannelId: createNewProp(publicUpdatesChannelId),
     maxVideoChannelUsers: createNewProp(maxVideoChannelUsers),
     approximateMemberCount: createNewProp(approximateMemberCount),
     approximatePresenceCount: createNewProp(approximatePresenceCount),
-    shardID: createNewProp(shardID),
-    ownerID: createNewProp(ownerID),
-    afkChannelID: createNewProp(afkChannelID),
+    shardId: createNewProp(shardId),
+    ownerId: createNewProp(ownerId),
+    afkChannelId: createNewProp(afkChannelId),
     afkTimeout: createNewProp(afkTimeout),
     widgetEnabled: createNewProp(widgetEnabled),
-    widgetChannelID: createNewProp(widgetChannelID),
+    widgetChannelId: createNewProp(widgetChannelId),
     verificationLevel: createNewProp(verificationLevel),
     mfaLevel: createNewProp(mfaLevel),
-    systemChannelID: createNewProp(systemChannelID),
+    systemChannelId: createNewProp(systemChannelId),
     maxPresences: createNewProp(maxPresences),
     maxMembers: createNewProp(maxMembers),
     vanityURLCode: createNewProp(vanityURLCode),
@@ -186,10 +185,10 @@ export async function createGuildStruct(
           vs.user_id,
           {
             ...vs,
-            guildID: vs.guild_id,
-            channelID: vs.channel_id,
-            userID: vs.user_id,
-            sessionID: vs.session_id,
+            guildId: vs.guild_id,
+            channelId: vs.channel_id,
+            userId: vs.user_id,
+            sessionId: vs.session_id,
             selfDeaf: vs.self_deaf,
             selfMute: vs.self_mute,
             selfStream: vs.self_stream,

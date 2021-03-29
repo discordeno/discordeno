@@ -1,4 +1,4 @@
-import { applicationID } from "../../bot.ts";
+import { applicationId } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { endpoints } from "../../util/constants.ts";
 import { validateSlashCommands } from "../../util/utils.ts";
@@ -18,9 +18,9 @@ export async function createSlashCommand(options: CreateSlashCommandOptions) {
   validateSlashCommands([options], true);
 
   const result = await RequestManager.post(
-    options.guildID
-      ? endpoints.COMMANDS_GUILD(applicationID, options.guildID)
-      : endpoints.COMMANDS(applicationID),
+    options.guildId
+      ? endpoints.COMMANDS_GUILD(applicationId, options.guildId)
+      : endpoints.COMMANDS(applicationId),
     {
       ...options,
     },

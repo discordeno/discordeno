@@ -1,10 +1,7 @@
 import { cache } from "../cache.ts";
 import { deleteRole } from "../helpers/roles/delete_role.ts";
 import { editRole } from "../helpers/roles/edit_role.ts";
-import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
-import { Guild } from "./guild.ts";
-import { Member } from "./member.ts";
 
 const baseRole: Partial<Role> = {
   get guild() {
@@ -23,43 +20,43 @@ const baseRole: Partial<Role> = {
   },
 
   // METHODS
-  delete(guildID?: string) {
+  delete(guildId?: string) {
     // If not guild id was provided try and find one
-    if (!guildID) guildID = guildID || this.guild?.id;
+    if (!guildId) guildId = guildId || this.guild?.id;
     // If a guild id is still not available error out
-    if (!guildID) {
+    if (!guildId) {
       throw new Error(
-        "role.delete() did not find a valid guild in cache. Please provide the guildID like role.delete(guildID)",
+        "role.delete() did not find a valid guild in cache. Please provide the guildId like role.delete(guildId)",
       );
     }
 
-    return deleteRole(guildID, this.id!).catch(console.error);
+    return deleteRole(guildId, this.id!).catch(console.error);
   },
-  edit(options: CreateRoleOptions, guildID?: string) {
+  edit(options: CreateRoleOptions, guildId?: string) {
     // If not guild id was provided try and find one
-    if (!guildID) guildID = guildID || this.guild?.id;
+    if (!guildId) guildId = guildId || this.guild?.id;
     // If a guild id is still not available error out
-    if (!guildID) {
+    if (!guildId) {
       throw new Error(
-        "role.edit() did not find a valid guild in cache. Please provide the guildID like role.edit({}, guildID)",
+        "role.edit() did not find a valid guild in cache. Please provide the guildId like role.edit({}, guildId)",
       );
     }
 
-    return editRole(guildID, this.id!, options);
+    return editRole(guildId, this.id!, options);
   },
-  higherThanRoleID(roleID: string, position?: number) {
+  higherThanRoleId(roleId: string, position?: number) {
     // If no position try and find one from cache
-    if (!position) position = this.guild?.roles.get(roleID)?.position;
+    if (!position) position = this.guild?.roles.get(roleId)?.position;
     // If still none error out.
     if (!position) {
       throw new Error(
-        "role.higherThanRoleID() did not have a position provided and the role or guild was not found in cache. Please provide a position like role.higherThanRoleID(roleID, position)",
+        "role.higherThanRoleId() did not have a position provided and the role or guild was not found in cache. Please provide a position like role.higherThanRoleId(roleId, position)",
       );
     }
 
     // Rare edge case handling
     if (this.position === position) {
-      return this.id! < roleID;
+      return this.id! < roleId;
     }
 
     return this.position! > position;
@@ -76,9 +73,9 @@ export async function createRoleStruct({ tags = {}, ...rest }: RoleData) {
 
   const role = Object.create(baseRole, {
     ...restProps,
-    botID: createNewProp(tags.bot_id),
+    botId: createNewProp(tags.bot_id),
     isNitroBoostRole: createNewProp("premium_subscriber" in tags),
-    integrationID: createNewProp(tags.integration_id),
+    integrationId: createNewProp(tags.integration_id),
   });
 
   return role as Role;

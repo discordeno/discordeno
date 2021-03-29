@@ -1,9 +1,10 @@
 import { eventHandlers } from "../../bot.ts";
-import { structures } from "../../structures/mod.ts";
 import { cacheHandlers } from "../../cache.ts";
+import { structures } from "../../structures/mod.ts";
+import { DiscordGatewayPayload } from "../../types/gateway.ts";
 
-export async function handleVoiceStateUpdate(data: DiscordPayload) {
-  const payload = data.d as VoiceStateUpdatePayload;
+export async function handleVoiceStateUpdate(data: DiscordGatewayPayload) {
+  const payload = data.d as DiscordVoiceState;
   if (!payload.guild_id) return;
 
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
@@ -19,10 +20,10 @@ export async function handleVoiceStateUpdate(data: DiscordPayload) {
 
   guild.voiceStates.set(payload.user_id, {
     ...payload,
-    guildID: payload.guild_id,
-    channelID: payload.channel_id || "",
-    userID: payload.user_id,
-    sessionID: payload.session_id,
+    guildId: payload.guild_id,
+    channelId: payload.channel_id || "",
+    userId: payload.user_id,
+    sessionId: payload.session_id,
     selfDeaf: payload.self_deaf,
     selfMute: payload.self_mute,
     selfStream: payload.self_stream || false,
@@ -30,22 +31,22 @@ export async function handleVoiceStateUpdate(data: DiscordPayload) {
 
   await cacheHandlers.set("guilds", payload.guild_id, guild);
 
-  if (cachedState?.channelID !== payload.channel_id) {
+  if (cachedState?.channelId !== payload.channel_id) {
     // Either joined or moved channels
     if (payload.channel_id) {
-      if (cachedState?.channelID) { // Was in a channel before
+      if (cachedState?.channelId) { // Was in a channel before
         eventHandlers.voiceChannelSwitch?.(
           member,
           payload.channel_id,
-          cachedState.channelID,
+          cachedState.channelId,
         );
       } else { // Was not in a channel before so user just joined
         eventHandlers.voiceChannelJoin?.(member, payload.channel_id);
       }
     } // Left the channel
-    else if (cachedState?.channelID) {
+    else if (cachedState?.channelId) {
       guild.voiceStates.delete(payload.user_id);
-      eventHandlers.voiceChannelLeave?.(member, cachedState.channelID);
+      eventHandlers.voiceChannelLeave?.(member, cachedState.channelId);
     }
   }
 

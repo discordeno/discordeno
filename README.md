@@ -10,15 +10,6 @@ Discordeno follows [Semantic Versioning](https://semver.org/)
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
 
-## Table of contents
-
-- [Features](#features)
-- [Getting Started](#getting-started)
-  - [Minimal Example](#minimal-example)
-  - [Boilerplates](#boilerplates)
-- [Links](#links)
-- [Contributing](#contributing)
-
 ## Features
 
 - **Secure & stable**: Discordeno is actively maintained to ensure great
@@ -60,18 +51,18 @@ startBot({
 });
 ```
 
-### Boilerplates
+### Templates
 
 Note to developers: don't worry a lot of developers start out programming a
 Discord bot as their first project (I did 😉) and it is not so easy to do so.
 Discordeno is designed and built considering all the issues that I and a lot of
 developers had when I first started out coding Discord bots with existing
 libraries. If you are a beginner, you can check out these awesome official and
-unofficial boilerplates:
+unofficial templates:
 
-- [Discordeno Boilerplate (official)](https://github.com/discordeno/boilerplate)
-- [Serverless Slash Commands Boilerplate
-  (official)](https://github.com/discordeno/slash-commands-boilerplate)
+- [Discordeno Template (official)](https://github.com/discordeno/template)
+- [Serverless Slash Commands Template
+  (official)](https://github.com/discordeno/slash-commands-template)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
 ## Links
@@ -83,4 +74,4 @@ unofficial boilerplates:
 ## Contributing
 
 We appreciate your help! Before contributing, please read the
-[Contributing Guide](https://github.com/discordeno/discordeno/blob/master/.github/CONTRIBUTING.md).
+[Contributing Guide](https://github.com/discordeno/discordeno/blob/main/.github/CONTRIBUTING.md).

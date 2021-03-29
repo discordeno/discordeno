@@ -3,11 +3,11 @@ import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
 /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
-export async function getBan(guildID: string, memberID: string) {
-  await requireBotGuildPermissions(guildID, ["BAN_MEMBERS"]);
+export async function getBan(guildId: string, memberId: string) {
+  await requireBotGuildPermissions(guildId, ["BAN_MEMBERS"]);
 
   const result = await RequestManager.get(
-    endpoints.GUILD_BAN(guildID, memberID),
+    endpoints.GUILD_BAN(guildId, memberId),
   );
 
   return result as BannedUser;

@@ -40,7 +40,7 @@ experience for end users.
 ## Why Doesn't Discordeno Use Classes or EventEmitter?
 
 This is a design decision for the lib itself. You can still use class if you
-want on your bot. In fact, I hope someone makes a framework/boilerplate for this
+want on your bot. In fact, I hope someone makes a framework/templates for this
 lib one day using classes so that devs have a choice on which style they prefer.
 Without trying to write an entire thesis statement on the reasons why I avoided
 Classes in this lib, I will just link to the best resources I believe help

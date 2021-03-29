@@ -90,7 +90,7 @@ async function handleApplicationCommand(
 }
 
 /** Internal function to verify security. Discord will send bad and good data and this function is important to verify it. If it is not verified properly, Discord will kill your bot. */
-function verifySecurity(buffer: Uint8Array, signature: string, time: string) {
+export function verifySecurity(buffer: Uint8Array, signature: string, time: string) {
   const sig = new Uint8Array(64);
   const timestamp = new TextEncoder().encode(time);
 

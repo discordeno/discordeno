@@ -9,7 +9,7 @@ import {
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(
-  guildID: string,
+  guildId: string,
   name: string,
   options?: ChannelCreateOptions,
 ) {
@@ -20,10 +20,10 @@ export async function createChannel(
     overwrite.deny.forEach(requiredPerms.add, requiredPerms);
   });
 
-  await requireBotGuildPermissions(guildID, [...requiredPerms]);
+  await requireBotGuildPermissions(guildId, [...requiredPerms]);
 
   const result = (await RequestManager.post(
-    endpoints.GUILD_CHANNELS(guildID),
+    endpoints.GUILD_CHANNELS(guildId),
     {
       ...options,
       name,

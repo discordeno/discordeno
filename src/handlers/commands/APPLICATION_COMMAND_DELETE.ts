@@ -1,11 +1,15 @@
 import { eventHandlers } from "../../bot.ts";
+import {
+  DiscordApplicationCommandCreateUpdateDelete,
+  DiscordGatewayPayload,
+} from "../../types/gateway.ts";
 
-export function handleApplicationCommandDelete(data: DiscordPayload) {
+export function handleApplicationCommandDelete(data: DiscordGatewayPayload) {
   const {
     application_id: applicationId,
     guild_id: guildId,
     ...rest
-  } = data.d as ApplicationCommandEvent;
+  } = data.d as DiscordApplicationCommandCreateUpdateDelete;
 
   eventHandlers.applicationCommandDelete?.({
     ...rest,

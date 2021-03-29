@@ -1,11 +1,15 @@
-import { botID, eventHandlers } from "../../bot.ts";
-import { structures } from "../../structures/mod.ts";
+import { botId, eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
+import { structures } from "../../structures/mod.ts";
+import {
+  DiscordGatewayPayload,
+  DiscordMessageReactionRemove,
+} from "../../types/gateway.ts";
 
 export async function handleMessageReactionRemove(
-  data: DiscordPayload,
+  data: DiscordGatewayPayload,
 ) {
-  const payload = data.d as MessageReactionPayload;
+  const payload = data.d as DiscordMessageReactionRemove;
   const message = await cacheHandlers.get("messages", payload.message_id);
 
   if (message) {
@@ -19,7 +23,7 @@ export async function handleMessageReactionRemove(
     else {
       const newReaction = {
         count: 1,
-        me: payload.user_id === botID,
+        me: payload.user_id === botId,
         emoji: { ...payload.emoji, id: payload.emoji.id || undefined },
       };
       message.reactions = message.reactions
@@ -44,8 +48,8 @@ export async function handleMessageReactionRemove(
   const uncachedOptions = {
     ...payload,
     id: payload.message_id,
-    channelID: payload.channel_id,
-    guildID: payload.guild_id,
+    channelId: payload.channel_id,
+    guildId: payload.guild_id,
   };
 
   eventHandlers.reactionRemove?.(

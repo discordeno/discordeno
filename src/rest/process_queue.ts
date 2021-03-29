@@ -25,8 +25,8 @@ export async function processQueue(id: string) {
       continue;
     } // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
 
-    const bucketResetIn = queuedRequest.payload.bucketID
-      ? rest.checkRateLimits(queuedRequest.payload.bucketID)
+    const bucketResetIn = queuedRequest.payload.bucketId
+      ? rest.checkRateLimits(queuedRequest.payload.bucketId)
       : false;
     // THIS BUCKET IS STILL RATELIMITED, RE-ADD TO QUEUE
     if (bucketResetIn) continue;
@@ -53,8 +53,9 @@ export async function processQueue(id: string) {
         urlToUse,
         rest.createRequestBody(queuedRequest),
       );
+
       rest.eventHandlers.fetched(queuedRequest.payload);
-      const bucketIDFromHeaders = rest.processRequestHeaders(
+      const bucketIdFromHeaders = rest.processRequestHeaders(
         queuedRequest.request.url,
         response.headers,
       );
@@ -123,9 +124,9 @@ export async function processQueue(id: string) {
             continue;
           }
 
-          // SET THE BUCKET ID IF IT WAS PRESENT
-          if (bucketIDFromHeaders) {
-            queuedRequest.payload.bucketID = bucketIDFromHeaders;
+          // SET THE BUCKET Id IF IT WAS PRESENT
+          if (bucketIdFromHeaders) {
+            queuedRequest.payload.bucketId = bucketIdFromHeaders;
           }
           // SINCE IT WAS RATELIMITE, RETRY AGAIN
           continue;

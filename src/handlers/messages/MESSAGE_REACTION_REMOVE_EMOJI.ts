@@ -1,10 +1,14 @@
-import { botID, eventHandlers } from "../../bot.ts";
+import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
+import {
+  DiscordGatewayPayload,
+  DiscordMessageReactionRemoveEmoji,
+} from "../../types/gateway.ts";
 
 export async function handleMessageReactionRemoveEmoji(
-  data: DiscordPayload,
+  data: DiscordGatewayPayload,
 ) {
-  const payload = data.d as MessageReactionRemoveEmojiPayload;
+  const payload = data.d as DiscordMessageReactionRemoveEmoji;
   const message = await cacheHandlers.get("messages", payload.message_id);
 
   if (message?.reactions) {
@@ -20,6 +24,6 @@ export async function handleMessageReactionRemoveEmoji(
   }
 
   eventHandlers.reactionRemoveEmoji?.(
-    data.d as MessageReactionRemoveEmojiPayload,
+    data.d,
   );
 }
