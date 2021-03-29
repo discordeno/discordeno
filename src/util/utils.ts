@@ -153,7 +153,7 @@ function validateSlashOptions(options: SlashCommandOption[]) {
       ([...option.description].length < 1 ||
         [...option.description].length > 100)
     ) {
-      throw new Error(Errors.INVALId_SLASH_OPTIONS_CHOICES);
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
 
     if (option.choices) {
