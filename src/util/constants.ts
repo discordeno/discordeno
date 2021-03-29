@@ -149,7 +149,7 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/applications/${applicationId}/guilds/${guildId}/commands/${commandId}`,
 
   // Interaction Endpoints
-  INTERACTION_Id_TOKEN: (interactionId: string, token: string) =>
+  INTERACTION_ID_TOKEN: (interactionId: string, token: string) =>
     `${baseEndpoints.BASE_URL}/interactions/${interactionId}/${token}/callback`,
   INTERACTION_ORIGINAL_Id_TOKEN: (interactionId: string, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${interactionId}/${token}/messages/@original`,
