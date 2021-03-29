@@ -7,4 +7,5 @@ export interface CreateGuildEmoji {
   roles: string[];
 }
 
+/** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
 export type DiscordCreateGuildEmojis = CreateGuildEmoji;
