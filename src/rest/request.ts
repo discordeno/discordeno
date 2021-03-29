@@ -49,7 +49,7 @@ export function createRequestBody(queuedRequest: QueuedRequest) {
     queuedRequest.payload.body = undefined;
   }
 
-  // IF A REASON IS PROVIdED ENCODE IT IN HEADERS
+  // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
   if (queuedRequest.payload.body?.reason) {
     headers["X-Audit-Log-Reason"] = encodeURIComponent(
       queuedRequest.payload.body.reason,
