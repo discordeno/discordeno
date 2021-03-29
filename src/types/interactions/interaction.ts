@@ -4,7 +4,7 @@ import { ApplicationCommandCallbackData } from "./application_command_callback_d
 import { InteractionTypes } from "./interaction_types.ts";
 
 export interface Interaction {
-  /** Id of the interaction */
+  /** id of the interaction */
   id: string;
   /** The type of interaction */
   type: InteractionTypes;
