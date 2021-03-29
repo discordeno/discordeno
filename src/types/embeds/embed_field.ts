@@ -1,5 +1,3 @@
-import { SnakeCaseProps } from "../util.ts";
-
 export interface EmbedField {
   /** Name of the field */
   name: string;
@@ -10,4 +8,4 @@ export interface EmbedField {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure */
-export type DiscordEmbedField = SnakeCaseProps<EmbedField>;
+export type DiscordEmbedField = EmbedField;
