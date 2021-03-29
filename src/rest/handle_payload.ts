@@ -1,5 +1,4 @@
 // SERVERLESS REST CLIENT THAT CAN WORK ACROSS SHARDS/WORKERS TO COMMUNICATE GLOBAL RATE LIMITS EASILY
-import { processRequest } from "./request.ts";
 import { rest } from "./rest.ts";
 
 /** Handler function for every request. Converts to json, verified authorization & requirements and begins processing the request */
