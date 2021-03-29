@@ -1,4 +1,5 @@
 import { SnakeCaseProps } from "../util.ts";
+import { User } from "../users/user.ts";
 
 export interface Template {
   /** The template code (unique ID) */
