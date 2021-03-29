@@ -5,7 +5,7 @@ import { SnakeCaseProps } from "../../util.ts";
 export interface ApplicationCommandCallbackData {
   /** Is the response TTS */
   tts?: boolean;
-  /** Message Content */
+  /** Message content */
   content?: string;
   /** Supports up to 10 embeds */
   embeds?: Embed[];
