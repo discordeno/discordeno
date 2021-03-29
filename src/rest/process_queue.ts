@@ -123,9 +123,9 @@ export async function processQueue(id: string) {
             continue;
           }
 
-          // SET THE BUCKET ID IF IT WAS PRESENT
-          if (bucketIDFromHeaders) {
-            queuedRequest.payload.bucketID = bucketIDFromHeaders;
+          // SET THE BUCKET Id IF IT WAS PRESENT
+          if (bucketIdFromHeaders) {
+            queuedRequest.payload.bucketId = bucketIdFromHeaders;
           }
           // SINCE IT WAS RATELIMITE, RETRY AGAIN
           continue;

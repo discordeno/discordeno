@@ -6,10 +6,10 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
  *
  * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your roles will be cached in your guild.**
  */
-export async function getRoles(guildID: string) {
-  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
+export async function getRoles(guildId: string) {
+  await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
-  const result = await RequestManager.get(endpoints.GUILD_ROLES(guildID));
+  const result = await RequestManager.get(endpoints.GUILD_ROLES(guildId));
 
   return result;
 }

@@ -4,11 +4,11 @@ import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
 /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
-export async function getBans(guildID: string) {
-  await requireBotGuildPermissions(guildID, ["BAN_MEMBERS"]);
+export async function getBans(guildId: string) {
+  await requireBotGuildPermissions(guildId, ["BAN_MEMBERS"]);
 
   const results = (await RequestManager.get(
-    endpoints.GUILD_BANS(guildID),
+    endpoints.GUILD_BANS(guildId),
   )) as BannedUser[];
 
   return new Collection<string, BannedUser>(

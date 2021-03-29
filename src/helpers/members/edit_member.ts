@@ -9,8 +9,8 @@ import {
 
 /** Edit the member */
 export async function editMember(
-  guildID: string,
-  memberID: string,
+  guildId: string,
+  memberId: string,
   options: EditMemberOptions,
 ) {
   const requiredPerms: Set<Permission> = new Set();
@@ -29,10 +29,10 @@ export async function editMember(
     typeof options.deaf !== "undefined" ||
     (typeof options.channel_id !== "undefined" || "null")
   ) {
-    const memberVoiceState = (await cacheHandlers.get("guilds", guildID))
-      ?.voiceStates.get(memberID);
+    const memberVoiceState = (await cacheHandlers.get("guilds", guildId))
+      ?.voiceStates.get(memberId);
 
-    if (!memberVoiceState?.channelID) {
+    if (!memberVoiceState?.channelId) {
       throw new Error(Errors.MEMBER_NOT_IN_VOICE_CHANNEL);
     }
 
@@ -51,7 +51,7 @@ export async function editMember(
       ]);
       if (memberVoiceState) {
         await requireBotChannelPermissions(
-          memberVoiceState?.channelID,
+          memberVoiceState?.channelId,
           [...requiredVoicePerms],
         );
       }
@@ -62,13 +62,13 @@ export async function editMember(
     }
   }
 
-  await requireBotGuildPermissions(guildID, [...requiredPerms]);
+  await requireBotGuildPermissions(guildId, [...requiredPerms]);
 
   const result = await RequestManager.patch(
-    endpoints.GUILD_MEMBER(guildID, memberID),
+    endpoints.GUILD_MEMBER(guildId, memberId),
     options,
   ) as MemberCreatePayload;
-  const member = await structures.createMemberStruct(result, guildID);
+  const member = await structures.createMemberStruct(result, guildId);
 
   return member;
 }

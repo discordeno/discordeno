@@ -1,9 +1,9 @@
-import { applicationID } from "../../bot.ts";
+import { applicationId } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { structures } from "../../structures/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
-/** To edit your response to a slash command. If a messageID is not provided it will default to editing the original response. */
+/** To edit your response to a slash command. If a messageId is not provided it will default to editing the original response. */
 export async function editSlashResponse(
   token: string,
   options: EditSlashResponseOptions,
@@ -49,14 +49,14 @@ export async function editSlashResponse(
   }
 
   const result = await RequestManager.patch(
-    options.messageID
-      ? endpoints.WEBHOOK_MESSAGE(applicationID, token, options.messageID)
-      : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationID, token),
+    options.messageId
+      ? endpoints.WEBHOOK_MESSAGE(applicationId, token, options.messageId)
+      : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationId, token),
     options,
   );
 
   // If the original message was edited, this will not return a message
-  if (!options.messageID) return result;
+  if (!options.messageId) return result;
 
   const message = await structures.createMessageStruct(
     result as MessageCreateOptions,

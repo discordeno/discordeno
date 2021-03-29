@@ -1,9 +1,13 @@
 import { eventHandlers } from "../../bot.ts";
-import { Collection } from "../../util/collection.ts";
 import { cacheHandlers } from "../../cache.ts";
+import {
+  DiscordGatewayPayload,
+  DiscordGuildEmojisUpdate,
+} from "../../types/gateway.ts";
+import { Collection } from "../../util/collection.ts";
 
-export async function handleGuildEmojisUpdate(data: DiscordPayload) {
-  const payload = data.d as GuildEmojisUpdatePayload;
+export async function handleGuildEmojisUpdate(data: DiscordGatewayPayload) {
+  const payload = data.d as DiscordGuildEmojisUpdate;
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
