@@ -2,6 +2,7 @@ import { eventHandlers } from "../bot.ts";
 import { cache } from "../cache.ts";
 import { handlers } from "../handlers/mod.ts";
 import { Member } from "../structures/mod.ts";
+import { DiscordGatewayOpcodes } from "../types/mod.ts";
 import { Collection } from "../util/collection.ts";
 import { delay } from "../util/utils.ts";
 import { createShard, requestGuildMembers } from "./mod.ts";
@@ -67,10 +68,10 @@ export async function handleDiscordPayload(
   await eventHandlers.dispatchRequirements?.(data, shardId);
 
   switch (data.op) {
-    case GatewayOpcode.HeartbeatACK:
+    case DiscordGatewayOpcodes.HeartbeatACK:
       // In case the user wants to listen to heartbeat responses
       return eventHandlers.heartbeat?.();
-    case GatewayOpcode.Dispatch:
+    case DiscordGatewayOpcodes.Dispatch:
       if (!data.t) return;
       // Run the appropriate handler for this event.
       return handlers[data.t]?.(data, shardId);
