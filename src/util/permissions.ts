@@ -1,6 +1,10 @@
 import { botId } from "../bot.ts";
 import { cacheHandlers } from "../cache.ts";
 import { Channel, Guild, Member, Role } from "../structures/mod.ts";
+import {
+  DiscordBitwisePermissionFlags,
+  PermissionStrings,
+} from "../types/mod.ts";
 
 async function getCached(
   table: "guilds",
@@ -174,12 +178,14 @@ export function botHasChannelPermissions(
 /** Returns the permissions that are not in the given permissionBits */
 export function missingPermissions(
   permissionBits: string,
-  permissions: Permission[],
+  permissions: PermissionStrings[],
 ) {
   if (BigInt(permissionBits) & 8n) return [];
 
   return permissions.filter(
-    (permission) => !(BigInt(permissionBits) & BigInt(Permissions[permission])),
+    (permission) =>
+      !(BigInt(permissionBits) &
+        BigInt(DiscordBitwisePermissionFlags[permission])),
   );
 }
 
