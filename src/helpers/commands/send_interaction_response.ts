@@ -39,7 +39,7 @@ export async function sendInteractionResponse(
   }
 
   const result = await RequestManager.post(
-    endpoints.INTERACTION_Id_TOKEN(id, token),
+    endpoints.INTERACTION_ID_TOKEN(id, token),
     options,
   );
 
