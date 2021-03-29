@@ -9,7 +9,7 @@ export function processRequestHeaders(url: string, headers: Headers) {
   const resetTimestamp = headers.get("x-ratelimit-reset");
   const retryAfter = headers.get("retry-after");
   const global = headers.get("x-ratelimit-global");
-  const bucketID = headers.get("x-ratelimit-bucket");
+  const bucketId = headers.get("x-ratelimit-bucket");
 
   // IF THERE IS NO REMAINING RATE LIMIT, MARK IT AS RATE LIMITED
   if (remaining && remaining === "0") {
@@ -19,15 +19,15 @@ export function processRequestHeaders(url: string, headers: Headers) {
     rest.ratelimitedPaths.set(url, {
       url,
       resetTimestamp: Number(resetTimestamp) * 1000,
-      bucketID,
+      bucketId,
     });
 
     // SAVE THE BUCKET AS LIMITED SINCE DIFFERENT URLS MAY SHARE A BUCKET
-    if (bucketID) {
-      rest.ratelimitedPaths.set(bucketID, {
+    if (bucketId) {
+      rest.ratelimitedPaths.set(bucketId, {
         url,
         resetTimestamp: Number(resetTimestamp) * 1000,
-        bucketID,
+        bucketId,
       });
     }
   }
@@ -42,18 +42,18 @@ export function processRequestHeaders(url: string, headers: Headers) {
     rest.ratelimitedPaths.set("global", {
       url: "global",
       resetTimestamp: reset,
-      bucketID,
+      bucketId,
     });
 
-    if (bucketID) {
-      rest.ratelimitedPaths.set(bucketID, {
+    if (bucketId) {
+      rest.ratelimitedPaths.set(bucketId, {
         url: "global",
         resetTimestamp: reset,
-        bucketID,
+        bucketId,
       });
     }
   }
 
   if (!rest.processingRateLimitedPaths) rest.processRateLimitedPaths();
-  return ratelimited ? bucketID : undefined;
+  return ratelimited ? bucketId : undefined;
 }
