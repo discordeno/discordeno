@@ -15,7 +15,7 @@ dist/
 public/
 .cache/
 
-# IntelliJ IdEA
+# IntelliJ IDEA
 .idea/
 
 # Windows
