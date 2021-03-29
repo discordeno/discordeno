@@ -1,0 +1,15 @@
+import { SnakeCaseProps } from "../../util.ts";
+
+export interface ApplicationCommandInteractionData {
+  /** The ID of the invoked command */
+  id: string;
+  /** The name of the invoked command */
+  name: string;
+  /** The params + values from the user */
+  options?: ApplicationCommandInteractionDataOption[];
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction-applicationcommandinteractiondata */
+export type DiscordApplicationCommandInteractionData = SnakeCaseProps<
+  ApplicationCommandInteractionData
+>;
