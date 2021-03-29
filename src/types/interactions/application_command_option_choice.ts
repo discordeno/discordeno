@@ -1,4 +1,4 @@
-export interface CommandOptionChoice {
+export interface ApplicationCommandOptionChoice {
   /** 1-100 character choice name */
   name: string;
   /** Value of the choice, up to 100 characters if string */
@@ -6,4 +6,5 @@ export interface CommandOptionChoice {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptionchoice */
-export type DiscordCommandOptionChoice = CommandOptionChoice;
+export type DiscordApplicationCommandOptionChoice =
+  CommandApplicationOptionChoice;

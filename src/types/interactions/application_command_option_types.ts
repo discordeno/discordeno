@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype */
-export enum CommandOptionTypes {
+export enum ApplicationCommandOptionTypes {
   SUB_COMMAND = 1,
   SUB_COMMAND_GROUP,
   STRING,

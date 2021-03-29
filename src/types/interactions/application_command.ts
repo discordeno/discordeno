@@ -1,7 +1,7 @@
 import { SnakeCaseProps } from "../../util.ts";
-import { CommandOption } from "./command_option.ts";
+import { ApplicationCommandOption } from "./command_option.ts";
 
-export interface Command {
+export interface ApplicationCommand {
   /** Unique id of the command */
   id: string;
   /** Unique id of the parent application */
@@ -11,8 +11,8 @@ export interface Command {
   /** 1-100 character description */
   description: string;
   /** The parameters for the command */
-  options?: CommandOption[];
+  options?: ApplicationCommandOption[];
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommand */
-export type DiscordCommand = SnakeCaseProps<Command>;
+export type DiscordApplicationCommand = SnakeCaseProps<ApplicationCommand>;
