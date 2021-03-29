@@ -15,6 +15,6 @@ export async function getWidgetImageURL(
     if (!guild.widgetEnabled) throw new Error(Errors.GUILD_WIDGET_NOT_ENABLED);
   }
 
-  return `${endpoints.GUILD_WIdGET(guildId)}.png?style=${options?.style ??
+  return `${endpoints.GUILD_WIDGET(guildId)}.png?style=${options?.style ??
     "shield"}`;
 }
