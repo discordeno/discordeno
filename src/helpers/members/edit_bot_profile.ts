@@ -20,7 +20,7 @@ export async function editBotProfile(username?: string, botAvatarURL?: string) {
       throw new Error(Errors.USERNAME_INVALID_CHARACTER);
     }
     if (["discordtag", "everyone", "here"].includes(username)) {
-      throw new Error(Errors.USERNAME_INVALId_USERNAME);
+      throw new Error(Errors.USERNAME_INVALID_USERNAME);
     }
   }
 
