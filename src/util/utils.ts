@@ -181,7 +181,7 @@ export function validateSlashCommands(
           [...command.description].length > 100)) ||
       (create && !command.description)
     ) {
-      throw new Error(Errors.INVALId_SLASH_DESCRIPTION);
+      throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
     }
 
     if (command.options?.length) {
