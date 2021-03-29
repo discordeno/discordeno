@@ -10,7 +10,7 @@ export async function editWebhook(
 ) {
   await requireBotChannelPermissions(channelId, ["MANAGE_WEBHOOKS"]);
 
-  const result = await RequestManager.patch(endpoints.WEBHOOK_Id(webhookId), {
+  const result = await RequestManager.patch(endpoints.WEBHOOK_ID(webhookId), {
     ...options,
     channel_id: options.channelId,
   });
