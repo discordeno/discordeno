@@ -12,7 +12,7 @@ export interface Template {
   /** The ID of the user who created the template */
   creatorId: string;
   /** The user who created the template */
-  creator: URLSearchParams;
+  creator: User;
   /** When this template was created */
   createdAt: string;
   /** When this template was last synced to the source guild */
