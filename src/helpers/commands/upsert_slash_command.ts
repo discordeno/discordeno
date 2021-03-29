@@ -15,8 +15,8 @@ export async function upsertSlashCommand(
 
   const result = await RequestManager.patch(
     guildId
-      ? endpoints.COMMANDS_GUILD_Id(applicationId, guildId, commandId)
-      : endpoints.COMMANDS_Id(applicationId, commandId),
+      ? endpoints.COMMANDS_GUILD_ID(applicationId, guildId, commandId)
+      : endpoints.COMMANDS_ID(applicationId, commandId),
     options,
   );
 

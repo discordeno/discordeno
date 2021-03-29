@@ -21,7 +21,7 @@ export async function createWebhook(
     [...options.name].length < 2 ||
     [...options.name].length > 32
   ) {
-    throw new Error(Errors.INVALId_WEBHOOK_NAME);
+    throw new Error(Errors.INVALID_WEBHOOK_NAME);
   }
 
   const result = await RequestManager.post(

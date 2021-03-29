@@ -9,7 +9,7 @@ export async function executeWebhook(
   options: ExecuteWebhookOptions,
 ) {
   if (!options.content && !options.file && !options.embeds) {
-    throw new Error(Errors.INVALId_WEBHOOK_OPTIONS);
+    throw new Error(Errors.INVALID_WEBHOOK_OPTIONS);
   }
 
   if (options.content && options.content.length > 2000) {

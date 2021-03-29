@@ -4,7 +4,7 @@ export const restCache: RestCache = {
   globallyRateLimited: false,
   ratelimitedPaths: new Map(),
   eventHandlers: {
-    // BY DEFAULT WE WILL LOG ALL ERRORS TO CONSOLE. USER CAN CHOOSE TO OVERRIdE
+    // BY DEFAULT WE WILL LOG ALL ERRORS TO CONSOLE. USER CAN CHOOSE TO OVERRIDE
     error: function (_type, error) {
       console.error(error);
     },

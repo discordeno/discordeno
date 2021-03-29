@@ -6,7 +6,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function getWidgetSettings(guildId: string) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  const result = await RequestManager.get(endpoints.GUILD_WIdGET(guildId));
+  const result = await RequestManager.get(endpoints.GUILD_WIDGET(guildId));
 
   return result;
 }

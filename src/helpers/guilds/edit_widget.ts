@@ -10,7 +10,7 @@ export async function editWidget(
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  const result = await RequestManager.patch(endpoints.GUILD_WIdGET(guildId), {
+  const result = await RequestManager.patch(endpoints.GUILD_WIDGET(guildId), {
     enabled,
     channel_id: channelId,
   });

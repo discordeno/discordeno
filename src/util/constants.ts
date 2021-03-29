@@ -83,7 +83,7 @@ export const endpoints = {
   GUILD_BANNER: (guildId: string, icon: string) =>
     `${baseEndpoints.CDN_URL}/banners/${guildId}/${icon}`,
   GUILD_CHANNELS: (guildId: string) => `${GUILDS_BASE(guildId)}/channels`,
-  GUILD_WIdGET: (guildId: string) => `${GUILDS_BASE(guildId)}/widget`,
+  GUILD_WIDGET: (guildId: string) => `${GUILDS_BASE(guildId)}/widget`,
   GUILD_EMOJI: (guildId: string, emojiId: string) =>
     `${GUILDS_BASE(guildId)}/emojis/${emojiId}`,
   GUILD_EMOJIS: (guildId: string) => `${GUILDS_BASE(guildId)}/emojis`,
@@ -125,7 +125,7 @@ export const endpoints = {
 
   WEBHOOK: (webhookId: string, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${webhookId}/${token}`,
-  WEBHOOK_Id: (webhookId: string) =>
+  WEBHOOK_ID: (webhookId: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${webhookId}`,
   WEBHOOK_MESSAGE: (webhookId: string, token: string, messageId: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${webhookId}/${token}/messages/${messageId}`,
@@ -139,9 +139,9 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/applications/${applicationId}/commands`,
   COMMANDS_GUILD: (applicationId: string, guildId: string) =>
     `${baseEndpoints.BASE_URL}/applications/${applicationId}/guilds/${guildId}/commands`,
-  COMMANDS_Id: (applicationId: string, commandId: string) =>
+  COMMANDS_ID: (applicationId: string, commandId: string) =>
     `${baseEndpoints.BASE_URL}/applications/${applicationId}/commands/${commandId}`,
-  COMMANDS_GUILD_Id: (
+  COMMANDS_GUILD_ID: (
     applicationId: string,
     guildId: string,
     commandId: string,
@@ -149,9 +149,9 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/applications/${applicationId}/guilds/${guildId}/commands/${commandId}`,
 
   // Interaction Endpoints
-  INTERACTION_Id_TOKEN: (interactionId: string, token: string) =>
+  INTERACTION_ID_TOKEN: (interactionId: string, token: string) =>
     `${baseEndpoints.BASE_URL}/interactions/${interactionId}/${token}/callback`,
-  INTERACTION_ORIGINAL_Id_TOKEN: (interactionId: string, token: string) =>
+  INTERACTION_ORIGINAL_ID_TOKEN: (interactionId: string, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${interactionId}/${token}/messages/@original`,
   INTERACTION_Id_TOKEN_MESSAGEId: (
     applicationId: string,

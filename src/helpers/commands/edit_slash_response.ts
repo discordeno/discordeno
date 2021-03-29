@@ -51,7 +51,7 @@ export async function editSlashResponse(
   const result = await RequestManager.patch(
     options.messageId
       ? endpoints.WEBHOOK_MESSAGE(applicationId, token, options.messageId)
-      : endpoints.INTERACTION_ORIGINAL_Id_TOKEN(applicationId, token),
+      : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationId, token),
     options,
   );
 
