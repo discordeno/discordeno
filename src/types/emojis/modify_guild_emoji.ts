@@ -5,4 +5,5 @@ export interface ModifyGuildEmoji {
   roles?: string[] | null;
 }
 
+/** https://discord.com/developers/docs/resources/emoji#modify-guild-emoji */
 export type DiscordModifyGuildEmoji = ModifyGuildEmoji;

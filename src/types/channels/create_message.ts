@@ -1,5 +1,6 @@
 import { Embed } from "../embeds/embed.ts";
 import { AllowedMentions } from "../messages/allowed_mentions.ts";
+import { MessageReference } from "../messages/message_reference.ts";
 import { SnakeCaseProps } from "../util.ts";
 
 export interface CreateMessage {

@@ -1,3 +1,4 @@
+import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
 
 export interface Emoji {
