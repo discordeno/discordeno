@@ -6,8 +6,8 @@ import { endpoints } from "../../util/constants.ts";
 export async function getSlashCommand(commandId: string, guildId?: string) {
   const result = await RequestManager.get(
     guildId
-      ? endpoints.COMMANDS_GUILD_Id(applicationId, guildId, commandId)
-      : endpoints.COMMANDS_Id(applicationId, commandId),
+      ? endpoints.COMMANDS_GUILD_ID(applicationId, guildId, commandId)
+      : endpoints.COMMANDS_ID(applicationId, commandId),
   );
 
   return result as SlashCommand;
