@@ -63,5 +63,3 @@ export enum DiscordBitwisePermissionFlags {
   /** Allows management and editing of emojis */
   MANAGE_EMOJIS = 0x40000000,
 }
-
-export type PermissionStrings = keyof typeof DiscordBitwisePermissionFlags;
