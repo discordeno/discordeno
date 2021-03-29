@@ -1,6 +1,6 @@
 import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
-import { ApplicationCommandCallbackData } from "./application_command_callback_data.ts";
+import { InteractionApplicationCommandCallbackData } from "./application_command_callback_data.ts";
 import { DiscordInteractionTypes } from "./interaction_types.ts";
 
 export interface Interaction {
@@ -9,7 +9,7 @@ export interface Interaction {
   /** The type of interaction */
   type: DiscordInteractionTypes;
   /** The command data payload */
-  data?: ApplicationCommandCallbackData;
+  data?: InteractionApplicationCommandCallbackData;
   /** The guild it was sent from */
   guildId?: string;
   /** The channel it was sent from */

@@ -1,9 +1,10 @@
-import { SnakeCaseProps } from "../../util.ts";
-import { ApplicationCommandOptionChoice } from "./command_option_choice.ts";
+import { SnakeCaseProps } from "../util.ts";
+import { ApplicationCommandOptionChoice } from "./application_command_option_choice.ts";
+import { DiscordApplicationCommandOptionTypes } from "./application_command_option_types.ts";
 
 export interface ApplicationCommandOption {
   /** Value of Application Command Option Type */
-  type: number;
+  type: DiscordApplicationCommandOptionTypes;
   /** 1-32 character name matching `^[\w-]{1,32}$` */
   name: string;
   /** 1-100 character description */

@@ -1,8 +1,8 @@
-import { Embed } from "../../embeds/embed.ts";
-import { AllowedMentions } from "../../messages/allowed_mentions.ts";
-import { SnakeCaseProps } from "../../util.ts";
+import { Embed } from "../embeds/embed.ts";
+import { AllowedMentions } from "../messages/allowed_mentions.ts";
+import { SnakeCaseProps } from "../util.ts";
 
-export interface ApplicationCommandCallbackData {
+export interface InteractionApplicationCommandCallbackData {
   /** Is the response TTS */
   tts?: boolean;
   /** Message content */
@@ -16,6 +16,6 @@ export interface ApplicationCommandCallbackData {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
-export type DiscordApplicationCommandCallbackData = SnakeCaseProps<
-  ApplicationCommandCallbackData
+export type DiscordInteractionApplicationCommandCallbackData = SnakeCaseProps<
+  InteractionApplicationCommandCallbackData
 >;

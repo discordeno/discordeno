@@ -1,5 +1,5 @@
-import { SnakeCaseProps } from "../../util.ts";
-import { ApplicationCommandOption } from "./command_option.ts";
+import { SnakeCaseProps } from "../util.ts";
+import { ApplicationCommandOption } from "./application_command_option.ts";
 
 export interface CreateGlobalApplicationCommand {
   /** 1-31 character name matching `^[\w-]{1,32}$` */

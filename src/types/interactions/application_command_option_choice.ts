@@ -7,4 +7,4 @@ export interface ApplicationCommandOptionChoice {
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptionchoice */
 export type DiscordApplicationCommandOptionChoice =
-  CommandApplicationOptionChoice;
+  ApplicationCommandOptionChoice;
