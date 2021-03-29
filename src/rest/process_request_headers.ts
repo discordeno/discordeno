@@ -54,6 +54,8 @@ export function processRequestHeaders(url: string, headers: Headers) {
     }
   }
 
-  if (!rest.processingRateLimitedPaths) rest.processRateLimitedPaths();
+  if (ratelimited && !rest.processingRateLimitedPaths) {
+    rest.processRateLimitedPaths();
+  }
   return ratelimited ? bucketId : undefined;
 }
