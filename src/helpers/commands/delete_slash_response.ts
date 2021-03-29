@@ -11,7 +11,7 @@ export async function deleteSlashResponse(token: string, messageId?: string) {
         token,
         messageId,
       )
-      : endpoints.INTERACTION_ORIGINAL_Id_TOKEN(applicationId, token),
+      : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationId, token),
   );
 
   return result;
