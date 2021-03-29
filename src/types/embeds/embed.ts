@@ -1,4 +1,3 @@
-import { SnakeCaseProps } from "../util.ts";
 import { EmbedAuthor } from "./embed_author.ts";
 import { EmbedField } from "./embed_field.ts";
 import { EmbedFooter } from "./embed_footer.ts";
@@ -20,7 +19,7 @@ export interface Embed {
   /** Timestamp of embed content */
   timestamp?: string;
   /** Color code of the embed */
-  color?: string;
+  color?: number;
   /** Footer information */
   footer?: EmbedFooter;
   /** Image information */
@@ -38,4 +37,4 @@ export interface Embed {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object */
-export type DiscordEmbed = SnakeCaseProps<Embed>;
+export type DiscordEmbed = Embed;

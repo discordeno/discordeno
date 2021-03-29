@@ -1,6 +1,5 @@
 import { SnakeCaseProps } from "../util.ts";
 
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
 export interface OptionalAuditEntryInfo {
   /** Number of days after which inactive members were kicked */
   deleteMemberDays: string;
@@ -20,6 +19,7 @@ export interface OptionalAuditEntryInfo {
   roleName: string;
 }
 
+/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
 export type DiscordOptionalAuditEntryInfo = SnakeCaseProps<
   OptionalAuditEntryInfo
 >;

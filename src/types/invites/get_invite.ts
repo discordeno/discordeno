@@ -2,7 +2,7 @@ import { SnakeCaseProps } from "../util.ts";
 
 export interface GetInvite {
   /** Whether the invite should contain approximate member counts */
-  with_counts?: boolean;
+  withCounts?: boolean;
 }
 
 /** https://discord.com/developers/docs/resources/invite#get-invite */
