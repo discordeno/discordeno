@@ -1,3 +1,4 @@
+import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
 import { InteractionTypes } from "./interaction_types.ts";
 

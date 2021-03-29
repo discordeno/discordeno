@@ -1,6 +1,6 @@
 import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
-import { ApplicationCommandInteractionData } from "./application_commands/application_command_callback_data.ts";
+import { CommandCallbackData } from "./commands/command_callback_data.ts";
 import { InteractionTypes } from "./interaction_types.ts";
 
 export interface Interaction {
@@ -9,7 +9,7 @@ export interface Interaction {
   /** The type of interaction */
   type: InteractionTypes;
   /** The command data payload */
-  data?: ApplicationCommandInteractionData;
+  data?: CommandCallbackData;
   /** The guild it was sent from */
   guildId?: string;
   /** The channel it was sent from */
