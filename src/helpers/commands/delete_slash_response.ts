@@ -6,7 +6,7 @@ import { endpoints } from "../../util/constants.ts";
 export async function deleteSlashResponse(token: string, messageId?: string) {
   const result = await RequestManager.delete(
     messageId
-      ? endpoints.INTERACTION_Id_TOKEN_MESSAGEId(
+      ? endpoints.INTERACTION_ID_TOKEN_MESSAGE_ID(
         applicationId,
         token,
         messageId,
