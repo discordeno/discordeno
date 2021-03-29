@@ -48,11 +48,11 @@ createCommand({
       .setTitle("Prefix Information")
       .setDescription(`
             **Guild**: \`${message.guild?.name}\`
-            **Current Prefix**: \`${parsePrefix(message.guildId)}\`
+            **Current Prefix**: \`${parsePrefix(message.guildID)}\`
       `)
       .setTimestamp();
 
-    sendEmbed(message.channelId, embed);
+    sendEmbed(message.channelID, embed);
   },
 });
 
@@ -75,8 +75,8 @@ createSubcommand("prefix", {
       return sendResponse(message, "Prefix input too long");
     }
 
-    const oldPrefix = parsePrefix(message.guildId);
-    botCache.guildPrefixes.set(message.guildId, args.prefix);
+    const oldPrefix = parsePrefix(message.guildID);
+    botCache.guildPrefixes.set(message.guildID, args.prefix);
 
     const embed = new Embed()
       .setTitle("Success, prefix was changed")
@@ -86,7 +86,7 @@ createSubcommand("prefix", {
       `)
       .setTimestamp();
 
-    sendEmbed(message.channelId, embed);
+    sendEmbed(message.channelID, embed);
   },
 });
 ```
@@ -112,11 +112,11 @@ createCommand({
       .setTitle("Prefix Information")
       .setDescription(`
             **Guild**: \`${message.guild?.name}\`
-            **Current Prefix**: \`${parsePrefix(message.guildId)}\`
+            **Current Prefix**: \`${parsePrefix(message.guildID)}\`
       `)
       .setTimestamp();
 
-    sendEmbed(message.channelId, embed);
+    sendEmbed(message.channelID, embed);
   },
 });
 ```
@@ -143,8 +143,8 @@ createSubcommand("prefix", {
       return sendResponse(message, "Prefix input too long");
     }
 
-    const oldPrefix = parsePrefix(message.guildId);
-    botCache.guildPrefixes.set(message.guildId, args.prefix);
+    const oldPrefix = parsePrefix(message.guildID);
+    botCache.guildPrefixes.set(message.guildID, args.prefix);
 
     const embed = new Embed()
       .setTitle("Success, prefix was changed")
@@ -154,7 +154,7 @@ createSubcommand("prefix", {
       `)
       .setTimestamp();
 
-    sendEmbed(message.channelId, embed);
+    sendEmbed(message.channelID, embed);
   },
 });
 ```

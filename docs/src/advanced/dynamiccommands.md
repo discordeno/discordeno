@@ -70,7 +70,7 @@ nekosEndpoints.forEach((endpoint) => {
     execute: async function (message) {
       const url = `https://nekos.life/api/v2${endpoint.path}`;
       const result = await fetch(url).then((res) => res.json());
-      sendMessage(message.channelId, result?.url || result[endpoint.name]);
+      sendMessage(message.channelID, result?.url || result[endpoint.name]);
     },
   });
 });
@@ -107,7 +107,7 @@ botCache.commands.set(endpoint.name, {
   execute: async function (message) {
     const url = `https://nekos.life/api/v2${endpoint.path}`;
     const result = await fetch(url).then((res) => res.json());
-    sendMessage(message.channelId, result?.url || result[endpoint.name]);
+    sendMessage(message.channelID, result?.url || result[endpoint.name]);
   },
 });
 ```

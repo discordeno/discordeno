@@ -57,7 +57,7 @@ To block a command you have to return a truthy value.
 if (!command.vipOnly) return false;
 
 // The bot's support server
-const guild = cache.guilds.get(configs.supportServerId);
+const guild = cache.guilds.get(configs.supportServerID);
 // If the command author is not in the server they won't have the vip role
 const member = message.member ||
   await getMember(guild.id, message.author.id).catch(console.error);
@@ -71,8 +71,8 @@ if (!member) {
 
 // If the user has the vip role on the support server given by patreon allow the command
 if (
-  member.guilds.get(message.guildId)?.roles.includes(
-    configs.roleIds.patreonVIPRoleId,
+  member.guilds.get(message.guildID)?.roles.includes(
+    configs.roleIDs.patreonVIPRoleID,
   )
 ) {
   return false;

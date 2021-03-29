@@ -87,7 +87,7 @@ botCache.eventHandlers.discordLog = function (error) {
     .setTimestamp();
 
   // If the channel is not found cancel out
-  if (!configs.channelIds.errorChannelId) return;
+  if (!configs.channelIDs.errorChannelID) return;
 
   // Send the message
   return sendEmbed(errorChannel, embed);
@@ -107,7 +107,7 @@ botUpdate?: (user: UserPayload) => unknown;
   channelUpdate?: (channel: Channel, cachedChannel: Channel) => unknown;
   channelDelete?: (channel: Channel) => unknown;
   debug?: (args: DebugArg) => unknown;
-  dispatchRequirements?: (data: DiscordPayload, shardId: number) => unknown;
+  dispatchRequirements?: (data: DiscordPayload, shardID: number) => unknown;
   guildBanAdd?: (guild: Guild, user: UserPayload, member?: Member) => unknown;
   guildBanRemove?: (guild: Guild, user: UserPayload, member?: Member) => unknown;
   guildCreate?: (guild: Guild) => unknown;
@@ -146,13 +146,13 @@ botUpdate?: (user: UserPayload) => unknown;
   reactionAdd?: (
     payload: MessageReactionPayload
     emoji: ReactionPayload,
-    userId: string,
+    userID: string,
     message?: Message,
   ) => unknown;
   reactionRemove?: (
     payload: MessageReactionPayload,
     emoji: ReactionPayload,
-    userId: string,
+    userID: string,
     message?: Message,
   ) => unknown;
   reactionRemoveAll?: (data: BaseMessageReactionPayload) => unknown;
@@ -160,22 +160,22 @@ botUpdate?: (user: UserPayload) => unknown;
   roleCreate?: (guild: Guild, role: Role) => unknown;
   roleDelete?: (guild: Guild, role: Role) => unknown;
   roleUpdate?: (guild: Guild, role: Role, cachedRole: Role) => unknown;
-  roleGained?: (guild: Guild, member: Member, roleId: string) => unknown;
-  roleLost?: (guild: Guild, member: Member, roleId: string) => unknown;
-  shardReady?: (shardId: number) => unknown;
+  roleGained?: (guild: Guild, member: Member, roleID: string) => unknown;
+  roleLost?: (guild: Guild, member: Member, roleID: string) => unknown;
+  shardReady?: (shardID: number) => unknown;
   typingStart?: (data: TypingStartPayload) => unknown;
-  voiceChannelJoin?: (member: Member, channelId: string) => unknown;
-  voiceChannelLeave?: (member: Member, channelId: string) => unknown;
+  voiceChannelJoin?: (member: Member, channelID: string) => unknown;
+  voiceChannelLeave?: (member: Member, channelID: string) => unknown;
   voiceChannelSwitch?: (
     member: Member,
-    channelId: string,
-    oldChannelId: string,
+    channelID: string,
+    oldChannelID: string,
   ) => unknown;
   voiceStateUpdate?: (
     member: Member,
     voiceState: VoiceStateUpdatePayload,
   ) => unknown;
-  webhooksUpdate?: (channelId: string, guildId: string) => unknown;
+  webhooksUpdate?: (channelID: string, guildID: string) => unknown;
 ```
 
 Once, you are ready, let's jump into creating some command inhibitors.

@@ -15,10 +15,10 @@ The default permission levels can be found in the `src/permissionLevels` folder.
   command
 - `ADMIN` User needs **ADMINISTRATOR** permission in order to use this command.
 - `SERVER_OWNER` Only a **SERVER OWNER** can use this command in their server.
-- `BOT_SUPPORT` Requires the user Id be present in
-  **configs.userIds.botSupporters**
-- `BOT_DEVS` Requires the user Id be present in **configs.userIds.botDevs**
-- `BOT_OWNERS` Requires the user Id be present in **configs.userIds.botOwners**
+- `BOT_SUPPORT` Requires the user ID be present in
+  **configs.userIDs.botSupporters**
+- `BOT_DEVS` Requires the user ID be present in **configs.userIDs.botDevs**
+- `BOT_OWNERS` Requires the user ID be present in **configs.userIDs.botOwners**
 
 Any of these can be easily modified, in their files. Let's go ahead and try and
 modify one of the permission levels as an example.
@@ -38,7 +38,7 @@ import { configs } from "../../configs.ts";
 // The member using the command must be one of the bots support team
 botCache.permissionLevels.set(
   PermissionLevels.BOT_SUPPORT,
-  async (message) => configs.userIds.botSupporters.includes(message.author.id),
+  async (message) => configs.userIDs.botSupporters.includes(message.author.id),
 );
 ```
 
@@ -49,7 +49,7 @@ botCache.permissionLevels.set(
   PermissionLevels.BOT_SUPPORT,
   async (message) => {
     // If the user id exists in the configs allow the command
-    if (configs.userIds.botSupporters.includes(message.author.id)) return true;
+    if (configs.userIDs.botSupporters.includes(message.author.id)) return true;
 
     // The users id was not in the configs, check if they have the role in bot server
 
@@ -69,12 +69,12 @@ botCache.permissionLevels.set(
   PermissionLevels.BOT_SUPPORT,
   async (message) => {
     // If the user id exists in the configs allow the command
-    if (configs.userIds.botSupporters.includes(message.author.id)) return true;
+    if (configs.userIDs.botSupporters.includes(message.author.id)) return true;
 
     // The users id was not in the configs, check if they have the role in bot server
 
     // Get the bots support server
-    const guild = cache.guilds.get(configs.supportServerId);
+    const guild = cache.guilds.get(configs.supportServerID);
     if (!guild) return false;
 
     // If the user is not a member of the support server they can't be one of the support staff.
@@ -82,7 +82,7 @@ botCache.permissionLevels.set(
     if (!member) return false;
 
     // If they have the role allow the command otherwise it will be false and block the command.
-    return member.roles.includes("BOT_SUPPORT_ROLE_Id_HERE");
+    return member.roles.includes("BOT_SUPPORT_ROLE_ID_HERE");
   },
 );
 ```

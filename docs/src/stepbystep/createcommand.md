@@ -18,7 +18,7 @@ createCommand({
   execute: function (message) {
     // Replace the permission number at the end to request the permissions you wish to request. By default, this will request Admin perms.
     message.reply(
-      `https://discordapp.com/oauth2/authorize?client_id=${botId}&scope=bot&permissions=8`,
+      `https://discordapp.com/oauth2/authorize?client_id=${botID}&scope=bot&permissions=8`,
     );
   },
 });
@@ -52,7 +52,7 @@ number and replace it here. For example, if we want `68640` as our permissions.
 We can modify our command to be:
 
 ```ts
-`https://discordapp.com/oauth2/authorize?client_id=${botId}&scope=bot&permissions=68640`,
+`https://discordapp.com/oauth2/authorize?client_id=${botID}&scope=bot&permissions=68640`,
 ```
 
 Lastly, let's get rid of the comment there as now it is customized to our needs.
@@ -353,7 +353,7 @@ arguments:
     type: "member",
     missing: (message) => {
       message.sendResponse(
-        `You did not provide a member to give the role to. You can provide a @member mention, a member Id, or try using their nickname/username. The nickname/username will only work if they have been active in your server recently.`,
+        `You did not provide a member to give the role to. You can provide a @member mention, a member ID, or try using their nickname/username. The nickname/username will only work if they have been active in your server recently.`,
       );
     },
   },
@@ -362,7 +362,7 @@ arguments:
     type: "role",
     missing: (message) => {
       message.sendResponse(
-        `You did not provide a role to give. You can provide a @role mention, a role Id, or it's name. If the role name did not work, try to use the **roleinfo** command to get the role Id.`,
+        `You did not provide a role to give. You can provide a @role mention, a role ID, or it's name. If the role name did not work, try to use the **roleinfo** command to get the role ID.`,
       );
     },
   },
@@ -426,12 +426,12 @@ Nice! The plan for the code is complete. Now, let's add in the code.
 The first thing we are going to try is to check if the role the user provided is
 the same as the everyone role.
 
-> **Note:** The everyone role Id is the same as the server guild Id.
+> **Note:** The everyone role ID is the same as the server guild ID.
 
 To do this, we are going to want something like this:
 
 ```ts
-if (args.role.id === message.guildId) {
+if (args.role.id === message.guildID) {
   return message.sendResponse(
     "The everyone role can not be given to anyone because everyone has the everyone role already. *Keep calm and let Carter figure it out*!",
   );
@@ -450,7 +450,7 @@ import { Role, Member } from "../../deps.ts";
 
 execute: function (message, args: RoleArgs, guild) {
   // If this was the everyone role alert with a silly error
-  if (args.role.id === message.guildId) {
+  if (args.role.id === message.guildID) {
     return message.sendResponse("Are you trying to make this person a super hero? Everyone has the everyone role. I can't give the everyone role to another user.");
   }
 
@@ -470,7 +470,7 @@ Awesome! Let's keep going.
 // Make the function asynchronous
 execute: async function (message, args: RoleArgs, guild) {
   // If this was the everyone role alert with a silly error
-  if (args.role.id === message.guildId) {
+  if (args.role.id === message.guildID) {
     return message.sendResponse("I don't know if you noticed or not but I'm an extremely arrogant bot who tends to think all of his plans will work. But I can't give the everyone role to someone.");
   }
 
@@ -480,10 +480,10 @@ execute: async function (message, args: RoleArgs, guild) {
   }
 
   // Get the bots highest role
-  const botsHighestRole = await highestRole(message.guildId, botId);
+  const botsHighestRole = await highestRole(message.guildID, botID);
 
   // Check if the bot has a role higher than the role that it will try to give.
-  const botIsHigher = await higherRolePosition(message.guildId, botsHighestRole.id, args.role.id)
+  const botIsHigher = await higherRolePosition(message.guildID, botsHighestRole.id, args.role.id)
 
   // If the role is too high alert the user.
   if (!botIsHigher) {
@@ -491,22 +491,22 @@ execute: async function (message, args: RoleArgs, guild) {
   }
 
   // Check the command author's highest role
-  const membersHighestRole = await highestRole(message.guildId, message.author.id);
+  const membersHighestRole = await highestRole(message.guildID, message.author.id);
 
   // If the author does not have a role high enough to give this role alert
-  if (!(await higherRolePosition(message.guildId, membersHighestRole.id, args.role.id))) {
+  if (!(await higherRolePosition(message.guildID, membersHighestRole.id, args.role.id))) {
     return message.sendResponse("In my culture, whenever someone tries to give a role that is higher than their highest role, I would be well within my rights to dismember you.")
   }
 
   // If the user has this role already we should remove it
-  if (message.member?.guilds.get(message.guildId)?.roles.includes(args.role.id)) {
-    message.member.removeRole(message.guildId, args.role.id, `${message.author.tag} used the role command to remove this role.`)
+  if (message.member?.guilds.get(message.guildID)?.roles.includes(args.role.id)) {
+    message.member.removeRole(message.guildID, args.role.id, `${message.author.tag} used the role command to remove this role.`)
     // Alert the user that used the command that the user has lost the role.
     return message.sendResponse(`The role **${args.role.name}** has been removed from **${args.member.tag}**.`)
   }
 
   // Add the role to the user.
-  message.member?.addRole(guildId, roleId)
+  message.member?.addRole(guildID, roleID)
 
   // Alert the user that used the command that the user has been give the role.
   return message.sendResponse(`The role **${args.role.name}** has been added to **${args.member.tag}**.`)
@@ -518,7 +518,7 @@ The final version of the command should look something like this:
 ```ts
 import {
   botCache,
-  botId,
+  botID,
   higherRolePosition,
   highestRole,
   Member,
@@ -542,7 +542,7 @@ createCommand({
       type: "member",
       missing: (message) => {
         message.sendResponse(
-          `You did not provide a member to give the role to. You can provide a @member mention, a member Id, or try using their nickname/username. The nickname/username will only work if they have been active in your server recently.`,
+          `You did not provide a member to give the role to. You can provide a @member mention, a member ID, or try using their nickname/username. The nickname/username will only work if they have been active in your server recently.`,
         );
       },
     },
@@ -551,14 +551,14 @@ createCommand({
       type: "role",
       missing: (message) => {
         message.sendResponse(
-          `You did not provide a role to give. You can provide a @role mention, a role Id, or it's name. If the role name did not work, try to use the **roleinfo** command to get the role Id.`,
+          `You did not provide a role to give. You can provide a @role mention, a role ID, or it's name. If the role name did not work, try to use the **roleinfo** command to get the role ID.`,
         );
       },
     },
   ],
   execute: async function (message, args: RoleArgs) {
     // If this was the everyone role alert with a silly error
-    if (args.role.id === message.guildId) {
+    if (args.role.id === message.guildID) {
       return message.sendResponse(
         "I don't know if you noticed or not but I'm an extremely arrogant bot who tends to think all of his plans will work. But I can't give the everyone role to someone.",
       );
@@ -572,12 +572,12 @@ createCommand({
     }
 
     // Get the bots highest role
-    const botsHighestRole = await highestRole(message.guildId, botId);
+    const botsHighestRole = await highestRole(message.guildID, botID);
 
     // Check if the bot has a role higher than the role that it will try to give. If the role is too high alert the user.
     if (
       !botsHighestRole || !(await higherRolePosition(
-        message.guildId,
+        message.guildID,
         botsHighestRole.id,
         args.role.id,
       ))
@@ -589,7 +589,7 @@ createCommand({
 
     // Check the command author's highest role
     const membersHighestRole = await highestRole(
-      message.guildId,
+      message.guildID,
       message.author.id,
     );
 
@@ -597,7 +597,7 @@ createCommand({
     if (
       !membersHighestRole ||
       !(await higherRolePosition(
-        message.guildId,
+        message.guildID,
         membersHighestRole.id,
         args.role.id,
       ))
@@ -609,10 +609,10 @@ createCommand({
 
     // If the user has this role already we should remove it
     if (
-      message.member?.guilds.get(message.guildId)?.roles.includes(args.role.id)
+      message.member?.guilds.get(message.guildID)?.roles.includes(args.role.id)
     ) {
       message.member.removeRole(
-        message.guildId,
+        message.guildID,
         args.role.id,
         `${message.author.username} used the role command to remove this role.`,
       );
@@ -624,7 +624,7 @@ createCommand({
 
     // Add the role to the user.
     message.member?.addRole(
-      message.guildId,
+      message.guildID,
       args.role.id,
       `${message.author.username} used the role command to give this role.`,
     );
@@ -729,14 +729,14 @@ funCommandData.forEach((data) => {
         .setAuthor(member.tag, avatarURL(member))
         .setDescription(
           translate(
-            message.guildId,
+            message.guildID,
             `commands/fun/${data.name}:${type}`,
             { mention: message.member!.mention, user: member.mention },
           ),
         )
         .setImage(chooseRandom(data.gifs));
 
-      return sendEmbed(message.channelId, embed);
+      return sendEmbed(message.channelID, embed);
     },
   });
 });

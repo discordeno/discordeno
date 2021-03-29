@@ -15,7 +15,7 @@ Plenty of guides are available on how to create a Discord Bot Application.
 
 1. [Creating an Application](https://discord.com/developers/applications) on the
    Developer Portal, name something cool and pick a sweet icon!
-2. After creating an application. Save the **Client Id.** Thats the unique
+2. After creating an application. Save the **Client ID.** Thats the unique
    identifier for a Discord Bot.
 3. Now, go and create a bot by clicking the **Bot** tab. You will see a
    **Token** section and thats the Discord Bot's token. **Make sure you don't
