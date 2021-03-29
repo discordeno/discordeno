@@ -1,13 +1,13 @@
 import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
 import { ApplicationCommandCallbackData } from "./application_command_callback_data.ts";
-import { InteractionTypes } from "./interaction_types.ts";
+import { DiscordInteractionTypes } from "./interaction_types.ts";
 
 export interface Interaction {
   /** id of the interaction */
   id: string;
   /** The type of interaction */
-  type: InteractionTypes;
+  type: DiscordInteractionTypes;
   /** The command data payload */
   data?: ApplicationCommandCallbackData;
   /** The guild it was sent from */

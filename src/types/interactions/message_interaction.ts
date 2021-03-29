@@ -1,12 +1,12 @@
 import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
-import { InteractionTypes } from "./interaction_types.ts";
+import { DiscordInteractionTypes } from "./interaction_types.ts";
 
 export interface MessageInteraction {
   /** Id of the interaction */
   id: string;
   /** The type of interaction */
-  type: InteractionTypes;
+  type: DiscordInteractionTypes;
   /** The name of the ApplicationCommand */
   name: string;
   /** The user who invoked the interaction */
