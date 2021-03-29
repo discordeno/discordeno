@@ -8,6 +8,6 @@ export function deleteSlashCommand(id: string, guildId?: string) {
     return RequestManager.delete(endpoints.COMMANDS_ID(applicationId, id));
   }
   return RequestManager.delete(
-    endpoints.COMMANDS_GUILD_Id(applicationId, guildId, id),
+    endpoints.COMMANDS_GUILD_ID(applicationId, guildId, id),
   );
 }
