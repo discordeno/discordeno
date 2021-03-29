@@ -53,19 +53,14 @@ export const formatImageURL = (
 };
 
 function camelToSnakeCase(text: string) {
-  return text.replace(/Id|[A-Z]/g, ($1) => {
-    if ($1 === "Id") return "_id";
-
-    return `_${$1.toLowerCase()}`;
-  });
+  return text.replace(/Id|[A-Z]/g, ($1) => `_${$1.toLowerCase()}`);
 }
 
 function snakeToCamelCase(text: string) {
-  return text.replace(/_id|([-_][a-z])/ig, ($1) => {
-    if ($1 === "_id") return "Id";
-
-    return $1.toUpperCase().replace("_", "");
-  });
+  return text.replace(
+    /_id|([-_][a-z])/ig,
+    ($1) => $1.toUpperCase().replace("_", ""),
+  );
 }
 
 function isObject(obj: unknown) {
