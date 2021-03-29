@@ -5,12 +5,12 @@ export function runMethod(
   url: string,
   body?: unknown,
   retryCount = 0,
-  bucketID?: string | null,
+  bucketId?: string | null,
 ) {
   rest.eventHandlers.debug?.(
     {
       type: "requestCreate",
-      data: { method, url, body, retryCount, bucketID },
+      data: { method, url, body, retryCount, bucketId },
     },
   );
 
@@ -47,7 +47,7 @@ export function runMethod(
       try {
         const rateLimitResetIn = await rest.checkRatelimits(url);
         if (rateLimitResetIn) {
-          return { rateLimited: rateLimitResetIn, beforeFetch: true, bucketID };
+          return { rateLimited: rateLimitResetIn, beforeFetch: true, bucketId };
         }
 
         const query = method === "get" && body
@@ -63,7 +63,7 @@ export function runMethod(
         rest.eventHandlers.debug?.(
           {
             type: "requestFetch",
-            data: { method, url, body, retryCount, bucketID },
+            data: { method, url, body, retryCount, bucketId },
           },
         );
         const response = await fetch(
@@ -73,10 +73,10 @@ export function runMethod(
         rest.eventHandlers.debug?.(
           {
             type: "requestFetched",
-            data: { method, url, body, retryCount, bucketID, response },
+            data: { method, url, body, retryCount, bucketId, response },
           },
         );
-        const bucketIDFromHeaders = rest.processHeaders(url, response.headers);
+        const bucketIdFromHeaders = rest.processHeaders(url, response.headers);
         await rest.handleStatusCode(response, errorStack);
 
         // Sometimes Discord returns an empty 204 response that can't be made to JSON.
@@ -91,7 +91,7 @@ export function runMethod(
             rest.eventHandlers.debug?.(
               {
                 type: "error",
-                data: { method, url, body, retryCount, bucketID, errorStack },
+                data: { method, url, body, retryCount, bucketId, errorStack },
               },
             );
             throw new Error(Errors.RATE_LIMIT_RETRY_MAXED);
@@ -100,14 +100,14 @@ export function runMethod(
           return {
             rateLimited: json.retry_after,
             beforeFetch: false,
-            bucketID: bucketIDFromHeaders,
+            bucketId: bucketIdFromHeaders,
           };
         }
 
         rest.eventHandlers.debug?.(
           {
             type: "requestSuccess",
-            data: { method, url, body, retryCount, bucketID },
+            data: { method, url, body, retryCount, bucketId },
           },
         );
         return resolve(json);
@@ -115,7 +115,7 @@ export function runMethod(
         rest.eventHandlers.debug?.(
           {
             type: "error",
-            data: { method, url, body, retryCount, bucketID, errorStack },
+            data: { method, url, body, retryCount, bucketId, errorStack },
           },
         );
         return reject(error);
@@ -124,7 +124,7 @@ export function runMethod(
 
     rest.addToQueue({
       callback,
-      bucketID,
+      bucketId,
       url,
     });
     if (!rest.queueInProcess) {

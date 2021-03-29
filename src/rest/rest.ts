@@ -1,5 +1,5 @@
 import { checkRateLimits } from "./check_rate_limits.ts";
-import { cleanupQueues } from "./cleanup_queue.ts";
+import { cleanupQueues } from "./cleanup_queues.ts";
 import { createRequestBody } from "./create_request_body.ts";
 import { handlePayload } from "./handle_payload.ts";
 import { processQueue } from "./process_queue.ts";
