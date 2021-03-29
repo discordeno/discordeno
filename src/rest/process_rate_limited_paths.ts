@@ -1,11 +1,7 @@
 import { rest } from "./rest.ts";
 
 /** This will create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
-export function processRateLimitedPaths(bypassCheck = true) {
-  if (!bypassCheck && rest.processingRateLimitedPaths) return;
-
-  rest.processingRateLimitedPaths = true;
-
+export function processRateLimitedPaths() {
   const now = Date.now();
 
   rest.ratelimitedPaths.forEach((value, key) => {
@@ -18,7 +14,12 @@ export function processRateLimitedPaths(bypassCheck = true) {
   });
 
   // ALL PATHS ARE CLEARED CAN CANCEL OUT!
-  if (!rest.ratelimitedPaths.size) return;
-  // RECHECK IN 1 SECOND
-  else setTimeout(() => processRateLimitedPaths(), 1000);
+  if (!rest.ratelimitedPaths.size) {
+    rest.processingRateLimitedPaths = false;
+    return;
+  } else {
+    rest.processingRateLimitedPaths = true;
+    // RECHECK IN 1 SECOND
+    setTimeout(() => processRateLimitedPaths(), 1000);
+  }
 }
