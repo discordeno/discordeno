@@ -1,3 +1,4 @@
+import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
 import { DiscordWebhookTypes } from "./discord_webhook_types.ts";
 

@@ -1,4 +1,6 @@
+import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
+import { Webhook } from "../webhooks/webhook.ts";
 import { AuditLogEntry } from "./audit_log_entry.ts";
 
 export interface AuditLog {

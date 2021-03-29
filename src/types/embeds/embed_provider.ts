@@ -1,5 +1,3 @@
-import { SnakeCaseProps } from "../util.ts";
-
 export interface EmbedProvider {
   /** Name of provider */
   name?: string;
@@ -8,4 +6,4 @@ export interface EmbedProvider {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-provider-structure */
-export type DiscordEmbedProvider = SnakeCaseProps<EmbedProvider>;
+export type DiscordEmbedProvider = EmbedProvider;
