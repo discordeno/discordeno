@@ -1,5 +1,5 @@
 import { encode } from "../../deps.ts";
-import { DiscordGatewayOpcode } from "../types/mod.ts";
+import { DiscordGatewayOpcodes } from "../types/mod.ts";
 import { basicShards, sendWS } from "../ws/shard.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 
@@ -12,7 +12,7 @@ export function editBotStatus(
 ) {
   basicShards.forEach((shard) => {
     sendWS({
-      op: DiscordGatewayOpcode.StatusUpdate,
+      op: DiscordGatewayOpcodes.StatusUpdate,
       d: {
         since: null,
         afk: false,

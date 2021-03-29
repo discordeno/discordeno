@@ -1,4 +1,4 @@
-export enum DiscordGatewayOpcode {
+export enum DiscordGatewayOpcodes {
   Dispatch,
   Heartbeat,
   Identify,
