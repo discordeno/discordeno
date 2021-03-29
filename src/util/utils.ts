@@ -121,7 +121,7 @@ function validateSlashOptionChoices(
 ) {
   for (const choice of choices) {
     if ([...choice.name].length < 1 || [...choice.name].length > 100) {
-      throw new Error(Errors.INVALId_SLASH_OPTIONS_CHOICES);
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
 
     if (
