@@ -49,6 +49,7 @@ export * from "./src/types/messages/message_sticker.ts";
 export * from "./src/types/messages/message_sticker_format_types.ts";
 export * from "./src/types/messages/message_types.ts";
 export * from "./src/types/messages/reaction.ts";
+export * from "./src/types/misc/bitwise_permission_flags.ts";
 export * from "./src/types/users/connection.ts";
 export * from "./src/types/users/create_dm.ts";
 export * from "./src/types/users/create_group_dm.ts";
