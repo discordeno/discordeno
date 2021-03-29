@@ -19,7 +19,7 @@ export interface Embed {
   /** Timestamp of embed content */
   timestamp?: string;
   /** Color code of the embed */
-  color?: string;
+  color?: number;
   /** Footer information */
   footer?: EmbedFooter;
   /** Image information */
