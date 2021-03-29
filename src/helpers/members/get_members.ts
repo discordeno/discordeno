@@ -13,12 +13,12 @@ import { endpoints } from "../../util/constants.ts";
  * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
  */
-export async function getMembers(guildID: string, options?: GetMemberOptions) {
+export async function getMembers(guildId: string, options?: GetMemberOptions) {
   if (!(identifyPayload.intents && Intents.GUILD_MEMBERS)) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
-  const guild = await cacheHandlers.get("guilds", guildID);
+  const guild = await cacheHandlers.get("guilds", guildId);
   if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
   const members = new Collection<string, Member>();
@@ -40,7 +40,7 @@ export async function getMembers(guildID: string, options?: GetMemberOptions) {
     }
 
     const result = (await RequestManager.get(
-      `${endpoints.GUILD_MEMBERS(guildID)}?limit=${
+      `${endpoints.GUILD_MEMBERS(guildId)}?limit=${
         membersLeft > 1000 ? 1000 : membersLeft
       }${options?.after ? `&after=${options.after}` : ""}`,
     )) as MemberCreatePayload[];
@@ -49,7 +49,7 @@ export async function getMembers(guildID: string, options?: GetMemberOptions) {
       result.map(async (member) => {
         const memberStruct = await structures.createMemberStruct(
           member,
-          guildID,
+          guildId,
         );
 
         await cacheHandlers.set("members", memberStruct.id, memberStruct);

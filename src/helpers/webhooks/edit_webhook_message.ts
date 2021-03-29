@@ -3,9 +3,9 @@ import { structures } from "../../structures/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
 export async function editWebhookMessage(
-  webhookID: string,
+  webhookId: string,
   webhookToken: string,
-  messageID: string,
+  messageId: string,
   options: EditWebhookMessageOptions,
 ) {
   if (options.content && options.content.length > 2000) {
@@ -49,7 +49,7 @@ export async function editWebhookMessage(
   }
 
   const result = await RequestManager.patch(
-    endpoints.WEBHOOK_MESSAGE(webhookID, webhookToken, messageID),
+    endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId),
     { ...options, allowed_mentions: options.allowed_mentions },
   ) as MessageCreateOptions;
 

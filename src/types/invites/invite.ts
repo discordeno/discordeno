@@ -4,7 +4,7 @@ import { SnakeCaseProps } from "../util.ts";
 import { DiscordTargetUserTypes } from "./target_user_types.ts";
 
 export interface Invite {
-  /** The invite code (unique ID) */
+  /** The invite code (unique Id) */
   code: string;
   /** The guild this invite is for */
   guild?: Partial<Guild>;

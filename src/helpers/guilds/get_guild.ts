@@ -8,8 +8,8 @@ import { endpoints } from "../../util/constants.ts";
  * This function fetches a guild's data. This is not the same data as a GUILD_CREATE.
  * So it does not cache the guild, you must do it manually.
  * */
-export async function getGuild(guildID: string, counts = true) {
-  const result = await RequestManager.get(endpoints.GUILDS_BASE(guildID), {
+export async function getGuild(guildId: string, counts = true) {
+  const result = await RequestManager.get(endpoints.GUILDS_BASE(guildId), {
     with_counts: counts,
   });
 

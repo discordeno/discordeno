@@ -1,4 +1,4 @@
-import { botID, eventHandlers } from "../../bot.ts";
+import { botId, eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import {
@@ -23,7 +23,7 @@ export async function handleMessageReactionRemove(
     else {
       const newReaction = {
         count: 1,
-        me: payload.user_id === botID,
+        me: payload.user_id === botId,
         emoji: { ...payload.emoji, id: payload.emoji.id || undefined },
       };
       message.reactions = message.reactions
@@ -48,8 +48,8 @@ export async function handleMessageReactionRemove(
   const uncachedOptions = {
     ...payload,
     id: payload.message_id,
-    channelID: payload.channel_id,
-    guildID: payload.guild_id,
+    channelId: payload.channel_id,
+    guildId: payload.guild_id,
   };
 
   eventHandlers.reactionRemove?.(

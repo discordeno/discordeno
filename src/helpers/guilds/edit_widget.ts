@@ -4,15 +4,15 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
 /** Modify a guild widget object for the guild. Requires the MANAGE_GUILD permission. */
 export async function editWidget(
-  guildID: string,
+  guildId: string,
   enabled: boolean,
-  channelID?: string | null,
+  channelId?: string | null,
 ) {
-  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  const result = await RequestManager.patch(endpoints.GUILD_WIDGET(guildID), {
+  const result = await RequestManager.patch(endpoints.GUILD_WIDGET(guildId), {
     enabled,
-    channel_id: channelID,
+    channel_id: channelId,
   });
 
   return result;

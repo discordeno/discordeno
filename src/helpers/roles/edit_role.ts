@@ -7,13 +7,13 @@ import {
 
 /** Edit a guild role. Requires the MANAGE_ROLES permission. */
 export async function editRole(
-  guildID: string,
+  guildId: string,
   id: string,
   options: CreateRoleOptions,
 ) {
-  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
+  await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
-  const result = await RequestManager.patch(endpoints.GUILD_ROLE(guildID, id), {
+  const result = await RequestManager.patch(endpoints.GUILD_ROLE(guildId, id), {
     ...options,
     permissions: options.permissions
       ? calculateBits(options.permissions)

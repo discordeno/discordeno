@@ -60,8 +60,8 @@ async function processQueue() {
 
           const rateLimitedURLResetIn = await checkRatelimits(request.url);
 
-          if (request.bucketID) {
-            const rateLimitResetIn = await checkRatelimits(request.bucketID);
+          if (request.bucketId) {
+            const rateLimitResetIn = await checkRatelimits(request.bucketId);
             if (rateLimitResetIn) {
               // This request is still rate limited readd to queue
               addToQueue(request);
@@ -73,7 +73,7 @@ async function processQueue() {
               const result = await request.callback();
               if (result && result.rateLimited) {
                 addToQueue(
-                  { ...request, bucketID: result.bucketID || request.bucketID },
+                  { ...request, bucketId: result.bucketId || request.bucketId },
                 );
               }
             }
@@ -86,7 +86,7 @@ async function processQueue() {
               const result = await request.callback();
               if (request && result && result.rateLimited) {
                 addToQueue(
-                  { ...request, bucketID: result.bucketID || request.bucketID },
+                  { ...request, bucketId: result.bucketId || request.bucketId },
                 );
               }
             }
@@ -179,12 +179,12 @@ function runMethod(
   url: string,
   body?: unknown,
   retryCount = 0,
-  bucketID?: string | null,
+  bucketId?: string | null,
 ) {
   eventHandlers.debug?.(
     {
       type: "requestCreate",
-      data: { method, url, body, retryCount, bucketID },
+      data: { method, url, body, retryCount, bucketId },
     },
   );
 
@@ -221,7 +221,7 @@ function runMethod(
       try {
         const rateLimitResetIn = await checkRatelimits(url);
         if (rateLimitResetIn) {
-          return { rateLimited: rateLimitResetIn, beforeFetch: true, bucketID };
+          return { rateLimited: rateLimitResetIn, beforeFetch: true, bucketId };
         }
 
         const query = method === "get" && body
@@ -237,17 +237,17 @@ function runMethod(
         eventHandlers.debug?.(
           {
             type: "requestFetch",
-            data: { method, url, body, retryCount, bucketID },
+            data: { method, url, body, retryCount, bucketId },
           },
         );
         const response = await fetch(urlToUse, createRequestBody(body, method));
         eventHandlers.debug?.(
           {
             type: "requestFetched",
-            data: { method, url, body, retryCount, bucketID, response },
+            data: { method, url, body, retryCount, bucketId, response },
           },
         );
-        const bucketIDFromHeaders = processHeaders(url, response.headers);
+        const bucketIdFromHeaders = processHeaders(url, response.headers);
         await handleStatusCode(response, errorStack);
 
         // Sometimes Discord returns an empty 204 response that can't be made to JSON.
@@ -262,7 +262,7 @@ function runMethod(
             eventHandlers.debug?.(
               {
                 type: "error",
-                data: { method, url, body, retryCount, bucketID, errorStack },
+                data: { method, url, body, retryCount, bucketId, errorStack },
               },
             );
             throw new Error(Errors.RATE_LIMIT_RETRY_MAXED);
@@ -271,14 +271,14 @@ function runMethod(
           return {
             rateLimited: json.retry_after,
             beforeFetch: false,
-            bucketID: bucketIDFromHeaders,
+            bucketId: bucketIdFromHeaders,
           };
         }
 
         eventHandlers.debug?.(
           {
             type: "requestSuccess",
-            data: { method, url, body, retryCount, bucketID },
+            data: { method, url, body, retryCount, bucketId },
           },
         );
         return resolve(json);
@@ -286,7 +286,7 @@ function runMethod(
         eventHandlers.debug?.(
           {
             type: "error",
-            data: { method, url, body, retryCount, bucketID, errorStack },
+            data: { method, url, body, retryCount, bucketId, errorStack },
           },
         );
         return reject(error);
@@ -295,7 +295,7 @@ function runMethod(
 
     addToQueue({
       callback,
-      bucketID,
+      bucketId,
       url,
     });
     if (!queueInProcess) {
@@ -376,7 +376,7 @@ function processHeaders(url: string, headers: Headers) {
   const resetTimestamp = headers.get("x-ratelimit-reset");
   const retryAfter = headers.get("retry-after");
   const global = headers.get("x-ratelimit-global");
-  const bucketID = headers.get("x-ratelimit-bucket");
+  const bucketId = headers.get("x-ratelimit-bucket");
 
   // If there is no remaining rate limit for this endpoint, we save it in cache
   if (remaining && remaining === "0") {
@@ -385,14 +385,14 @@ function processHeaders(url: string, headers: Headers) {
     ratelimitedPaths.set(url, {
       url,
       resetTimestamp: Number(resetTimestamp) * 1000,
-      bucketID,
+      bucketId,
     });
 
-    if (bucketID) {
-      ratelimitedPaths.set(bucketID, {
+    if (bucketId) {
+      ratelimitedPaths.set(bucketId, {
         url,
         resetTimestamp: Number(resetTimestamp) * 1000,
-        bucketID,
+        bucketId,
       });
     }
   }
@@ -409,14 +409,14 @@ function processHeaders(url: string, headers: Headers) {
     ratelimitedPaths.set("global", {
       url: "global",
       resetTimestamp: reset,
-      bucketID,
+      bucketId,
     });
 
-    if (bucketID) {
-      ratelimitedPaths.set(bucketID, {
+    if (bucketId) {
+      ratelimitedPaths.set(bucketId, {
         url: "global",
         resetTimestamp: reset,
-        bucketID,
+        bucketId,
       });
     }
   }
@@ -424,7 +424,7 @@ function processHeaders(url: string, headers: Headers) {
   if (ratelimited) {
     eventHandlers.rateLimit?.({
       remaining,
-      bucketID,
+      bucketId,
       global,
       resetTimestamp,
       retryAfter,
@@ -432,5 +432,5 @@ function processHeaders(url: string, headers: Headers) {
     });
   }
 
-  return ratelimited ? bucketID : undefined;
+  return ratelimited ? bucketId : undefined;
 }

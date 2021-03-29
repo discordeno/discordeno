@@ -1,4 +1,5 @@
 import { encode } from "../../deps.ts";
+import { DiscordGatewayOpcodes } from "../types/mod.ts";
 import { basicShards, sendWS } from "../ws/shard.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 
@@ -11,7 +12,7 @@ export function editBotStatus(
 ) {
   basicShards.forEach((shard) => {
     sendWS({
-      op: GatewayOpcode.StatusUpdate,
+      op: DiscordGatewayOpcodes.StatusUpdate,
       d: {
         since: null,
         afk: false,
@@ -52,19 +53,14 @@ export const formatImageURL = (
 };
 
 function camelToSnakeCase(text: string) {
-  return text.replace(/ID|[A-Z]/g, ($1) => {
-    if ($1 === "ID") return "_id";
-
-    return `_${$1.toLowerCase()}`;
-  });
+  return text.replace(/Id|[A-Z]/g, ($1) => `_${$1.toLowerCase()}`);
 }
 
 function snakeToCamelCase(text: string) {
-  return text.replace(/_id|([-_][a-z])/ig, ($1) => {
-    if ($1 === "_id") return "ID";
-
-    return $1.toUpperCase().replace("_", "");
-  });
+  return text.replace(
+    /_id|([-_][a-z])/ig,
+    ($1) => $1.toUpperCase().replace("_", ""),
+  );
 }
 
 function isObject(obj: unknown) {
