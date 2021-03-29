@@ -186,7 +186,7 @@ export function validateSlashCommands(
 
     if (command.options?.length) {
       if (command.options.length > 25) {
-        throw new Error(Errors.INVALId_SLASH_OPTIONS);
+        throw new Error(Errors.INVALID_SLASH_OPTIONS);
       }
 
       validateSlashOptions(command.options);
