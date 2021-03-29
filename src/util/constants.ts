@@ -125,7 +125,7 @@ export const endpoints = {
 
   WEBHOOK: (webhookId: string, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${webhookId}/${token}`,
-  WEBHOOK_Id: (webhookId: string) =>
+  WEBHOOK_ID: (webhookId: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${webhookId}`,
   WEBHOOK_MESSAGE: (webhookId: string, token: string, messageId: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${webhookId}/${token}/messages/${messageId}`,
