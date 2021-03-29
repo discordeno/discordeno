@@ -26,6 +26,7 @@ export * from "./emojis/create_guild_emoji.ts";
 export * from "./emojis/emoji.ts";
 export * from "./emojis/modify_guild_emoji.ts";
 export * from "./gateway.ts";
+export * from "./gateway/opcodes.ts";
 export * from "./invites/get_invite.ts";
 export * from "./invites/invite.ts";
 export * from "./invites/invite_metadata.ts";

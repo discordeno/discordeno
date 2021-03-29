@@ -5,6 +5,7 @@ import {
   DiscordHello,
   DiscordIdentify,
 } from "../types/gateway.ts";
+import { DiscordGatewayOpcode } from "../types/mod.ts";
 import { Collection } from "../util/collection.ts";
 import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
@@ -72,7 +73,7 @@ export function createShard(
       const messageData = JSON.parse(message);
       if (!messageData.t) eventHandlers.rawGateway?.(messageData);
       switch (messageData.op) {
-        case GatewayOpcode.Hello:
+        case DiscordGatewayOpcode.Hello:
           if (!heartbeating.has(basicShard.id)) {
             await heartbeat(
               basicShard,
@@ -82,17 +83,17 @@ export function createShard(
             );
           }
           break;
-        case GatewayOpcode.HeartbeatACK:
+        case DiscordGatewayOpcode.HeartbeatACK:
           heartbeating.set(shardID, true);
           break;
-        case GatewayOpcode.Reconnect:
+        case DiscordGatewayOpcode.Reconnect:
           eventHandlers.debug?.(
             { type: "gatewayReconnect", data: { shardID: basicShard.id } },
           );
           basicShard.needToResume = true;
           await resumeConnection(data, identifyPayload, basicShard.id);
           break;
-        case GatewayOpcode.InvalidSession:
+        case DiscordGatewayOpcode.InvalidSession:
           eventHandlers.debug?.(
             {
               type: "gatewayInvalidSession",
@@ -166,14 +167,14 @@ function identify(shard: BasicShard, payload: DiscordIdentify) {
   );
 
   sendWS({
-    op: GatewayOpcode.Identify,
+    op: DiscordGatewayOpcode.Identify,
     d: { ...payload, shard: [shard.id, payload.shard[1]] },
   }, shard.id);
 }
 
 function resume(shard: BasicShard, payload: DiscordIdentify) {
   sendWS({
-    op: GatewayOpcode.Resume,
+    op: DiscordGatewayOpcode.Resume,
     d: {
       token: payload.token,
       session_id: shard.sessionID,
@@ -219,7 +220,7 @@ async function heartbeat(
   heartbeating.set(shard.id, false);
 
   sendWS(
-    { op: GatewayOpcode.Heartbeat, d: shard.previousSequenceNumber },
+    { op: DiscordGatewayOpcode.Heartbeat, d: shard.previousSequenceNumber },
     shard.id,
   );
   eventHandlers.debug?.(
@@ -291,7 +292,7 @@ export async function requestGuildMembers(
   }
 
   sendWS({
-    op: GatewayOpcode.RequestGuildMembers,
+    op: DiscordGatewayOpcode.RequestGuildMembers,
     d: {
       guild_id: guildID,
       // If a query is provided use it, OR if a limit is NOT provided use ""
