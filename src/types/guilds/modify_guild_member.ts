@@ -1,7 +1,6 @@
 import { SnakeCaseProps } from "../util.ts";
-import { ModifyGuildParams } from "./modify_guild_params.ts";
 
-export interface ModifyGuildMemberParams {
+export interface ModifyGuildMember {
   /** Value to set users nickname to. Requires the MANAGENICKNAMES permission */
   nick?: string | null;
   /** Array of role ids the member is assigned. Requires the MANAGEROLES permission */
@@ -15,4 +14,4 @@ export interface ModifyGuildMemberParams {
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-member */
-export type DiscordModifyGuildMemberParams = SnakeCaseProps<ModifyGuildParams>;
+export type DiscordModifyGuildMember = SnakeCaseProps<ModifyGuildMember>;

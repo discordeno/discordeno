@@ -1,10 +1,12 @@
+import { DiscordChannelTypes } from "../channels/channel_types.ts";
+import { Overwrite } from "../channels/overwrite.ts";
 import { SnakeCaseProps } from "../util.ts";
 
-export interface CreateGuildChannelParams {
+export interface CreateGuildChannel {
   /** Channel name (2-100 characters) */
   name: string;
   /** The type of channel */
-  type?: ChannelTypes;
+  type?: DiscordChannelTypes;
   /** Channel topic (0-1024 characters) */
   topic?: string;
   /** The bitrate (in bits) of the voice channel (voice only) */
@@ -24,8 +26,7 @@ export interface CreateGuildChannelParams {
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-channel */
-export interface DiscordCreateGuildChannelParams
-  extends
-    SnakeCaseProps<Omit<CreateGuildChannelParams, "permissionOverwrites">> {
+export interface DiscordCreateGuildChannel
+  extends SnakeCaseProps<Omit<CreateGuildChannel, "permissionOverwrites">> {
   permission_overwrites: DiscordOverwrite[];
 }

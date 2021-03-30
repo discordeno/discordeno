@@ -1,4 +1,5 @@
 import { User } from "../users/user.ts";
+import { SnakeCaseProps } from "../util.ts";
 
 export interface GuildMember {
   /** The user this guild member represents */
@@ -21,3 +22,6 @@ export interface GuildMember {
   /** Total permissions of the member in the channel, including overrides, returned when in the interaction object */
   permissions?: string;
 }
+
+/** https://discord.com/developers/docs/resources/guild#guild-member-object */
+export type DiscordGuildMember = SnakeCaseProps<GuildMember>;

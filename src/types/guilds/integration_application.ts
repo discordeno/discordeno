@@ -7,7 +7,7 @@ export interface IntegrationApplication {
   /** The name of the app */
   name: string;
   /** the icon hash of the app */
-  icon: string;
+  icon: string | null;
   /** The description of the app */
   description: string;
   /** The summary of the app */

@@ -1,6 +1,6 @@
 import { SnakeCaseProps } from "../util.ts";
 
-export interface ModifyGuildRolePositionsParams {
+export interface ModifyGuildRolePositions {
   /** Role id */
   id: string;
   /** Sorting position of the role */
@@ -8,6 +8,6 @@ export interface ModifyGuildRolePositionsParams {
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-role-positions */
-export type DiscordModifyGuildRolePositionsParams = SnakeCaseProps<
-  ModifyGuildRolePositionsParams
+export type DiscordModifyGuildRolePositions = SnakeCaseProps<
+  ModifyGuildRolePositions
 >;

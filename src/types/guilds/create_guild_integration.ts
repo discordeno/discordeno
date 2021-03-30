@@ -1,4 +1,4 @@
-export interface CreateGuildIntegrationParams {
+export interface CreateGuildIntegration {
   /** The integration type */
   type: string;
   /** The integration id */
@@ -6,4 +6,4 @@ export interface CreateGuildIntegrationParams {
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-integration-json-params */
-export type DiscordCreateGuildIntegrationParams = CreateGuildIntegrationParams;
+export type DiscordCreateGuildIntegration = CreateGuildIntegration;

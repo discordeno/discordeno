@@ -1,6 +1,6 @@
 import { SnakeCaseProps } from "../util.ts";
 
-export interface CreateGuildRoleParams {
+export interface CreateGuildRole {
   /** Name of the role, default: "new role" */
   name?: string;
   // TODO: Permission[]
@@ -15,6 +15,6 @@ export interface CreateGuildRoleParams {
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-role */
-export type DiscordCreateGuildRoleParams = SnakeCaseProps<
-  CreateGuildRoleParams
+export type DiscordCreateGuildRole = SnakeCaseProps<
+  CreateGuildRole
 >;

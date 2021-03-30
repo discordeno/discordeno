@@ -1,4 +1,5 @@
 import { SnakeCaseProps } from "../util.ts";
+import { Guild } from "./guild.ts";
 
 export type UnavailableGuild = Pick<Guild, "id" | "unavailable">;
 

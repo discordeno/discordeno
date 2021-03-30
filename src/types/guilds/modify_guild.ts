@@ -1,19 +1,19 @@
 import { SnakeCaseProps } from "../util.ts";
-import { DefaultMessageNotificationLevel } from "./default_message_notification_level.ts";
-import { ExplicitContentFilterLevel } from "./explicit_content_filter_level.ts";
-import { VerificationLevel } from "./verification_level.ts";
+import { DiscordDefaultMessageNotificationLevels } from "./default_message_notification_levels.ts";
+import { DiscordExplicitContentFilterLevels } from "./explicit_content_filter_levels.ts";
+import { DiscordVerificationLevels } from "./verification_levels.ts";
 
-export interface ModifyGuildParams {
+export interface ModifyGuild {
   /** Guild name */
   name?: string;
   /** Guild voice region id */
   region?: string | null;
   /** Verification level */
-  verificationLevel?: VerificationLevel | null;
+  verificationLevel?: DiscordVerificationLevels | null;
   /** Default message notification filter level */
-  defaultMessageNotifications?: DefaultMessageNotificationLevel | null;
+  defaultMessageNotifications?: DiscordDefaultMessageNotificationLevels | null;
   /** Explicit content filter level */
-  explicitContentFilter?: ExplicitContentFilterLevel | null;
+  explicitContentFilter?: DiscordExplicitContentFilterLevels | null;
   /** Id for afk channel */
   afkChannelId?: string | null;
   /** Afk timeout in seconds */
@@ -37,4 +37,4 @@ export interface ModifyGuildParams {
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild */
-export type DiscordModifyGuildParams = SnakeCaseProps<ModifyGuildParams>;
+export type DiscordModifyGuild = SnakeCaseProps<ModifyGuild>;

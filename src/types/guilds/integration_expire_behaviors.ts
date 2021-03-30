@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
-export enum IntegrationExpireBehaviors {
+export enum DiscordIntegrationExpireBehaviors {
   RemoveRole,
   Kick,
 }

@@ -2,7 +2,7 @@ import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
 import { IntegrationAccount } from "./integration_account.ts";
 import { IntegrationApplication } from "./integration_application.ts";
-import { IntegrationExpireBehaviors } from "./integration_expire_behaviors.ts";
+import { DiscordIntegrationExpireBehaviors } from "./integration_expire_behaviors.ts";
 
 export interface Integration {
   /** Integration Id */
@@ -20,7 +20,7 @@ export interface Integration {
   /** Whether emoticons should be synced for this integration (twitch only currently) */
   enableEmoticons?: boolean;
   /** The behavior of expiring subscribers */
-  expireBehavior?: IntegrationExpireBehaviors;
+  expireBehavior?: DiscordIntegrationExpireBehaviors;
   /** The grace period (in days) before expiring subscribers */
   expireGracePeriod?: number;
   /** User for this integration */

@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags */
-export enum SystemChannelFlags {
+export enum DiscordSystemChannelFlags {
   /** Suppress member join notifications */
   SUPPRESS_JOIN_NOTIFICATIONS = 1 << 0,
   /** Suppress server boost notifications */

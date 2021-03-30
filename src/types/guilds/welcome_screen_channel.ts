@@ -12,4 +12,4 @@ export interface WelcomeScreenChannel {
 }
 
 /** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure */
-export type DiscordWelcomeScreen = SnakeCaseProps<WelcomeScreen>;
+export type DiscordWelcomeScreenChannel = SnakeCaseProps<WelcomeScreenChannel>;

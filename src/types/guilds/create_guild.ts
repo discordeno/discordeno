@@ -1,10 +1,10 @@
 import { Channel } from "../channels/channel.ts";
 import { SnakeCaseProps } from "../util.ts";
-import { DefaultMessageNotificationLevel } from "./default_message_notification_level.ts";
-import { ExplicitContentFilterLevel } from "./explicit_content_filter_level.ts";
-import { VerificationLevel } from "./verification_level.ts";
+import { DiscordDefaultMessageNotificationLevels } from "./default_message_notification_levels.ts";
+import { DiscordExplicitContentFilterLevels } from "./explicit_content_filter_levels.ts";
+import { DiscordVerificationLevels } from "./verification_levels.ts";
 
-export interface CreateGuildParams {
+export interface CreateGuild {
   /** Name of the guild (2-100 characters) */
   name: string;
   /** Voice region id */
@@ -12,11 +12,11 @@ export interface CreateGuildParams {
   /** Base64 128x128 image for the guild icon */
   icon?: string;
   /** Verification level */
-  verificationLevel?: VerificationLevel;
+  verificationLevel?: DiscordVerificationLevels;
   /** Default message notification level */
-  defaultMessageNotifications?: DefaultMessageNotificationLevel;
+  defaultMessageNotifications?: DiscordDefaultMessageNotificationLevels;
   /** Explicit content filter level */
-  explicitContentFilter?: ExplicitContentFilterLevel;
+  explicitContentFilter?: DiscordExplicitContentFilterLevels;
   /** New guild roles (first role is the everyone role) */
   roles?: Role[];
   /** New guild's channels */
@@ -30,4 +30,4 @@ export interface CreateGuildParams {
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild */
-export type DiscordCreateGuildParams = SnakeCaseProps<CreateGuildParams>;
+export type DiscordCreateGuild = SnakeCaseProps<CreateGuild>;

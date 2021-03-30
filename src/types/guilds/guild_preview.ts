@@ -1,6 +1,6 @@
 import { Emoji } from "../emojis/emoji.ts";
 import { SnakeCaseProps } from "../util.ts";
-import { GuildFeatures } from "./guild_features.ts";
+import { DiscordGuildFeatures } from "./guild_features.ts";
 
 export interface GuildPreview {
   /** Guild id */
@@ -16,7 +16,7 @@ export interface GuildPreview {
   /** Custom guild emojis */
   emojis: Emoji[];
   /** Enabled guild features */
-  features: GuildFeatures[];
+  features: DiscordGuildFeatures[];
   /** Approximate number of members in this guild */
   approximateMemberCount: number;
   /** Approximate number of online members in this guild */

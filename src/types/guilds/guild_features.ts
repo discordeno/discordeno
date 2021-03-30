@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/resources/guild#guild-object-guild-features */
-export enum GuildFeatures {
+export enum DiscordGuildFeatures {
   /** Guild has access to set an invite splash background */
   INVITE_SPLASH = "INVITE_SPLASH",
   /** Guild has access to set 384kbps bitrate in voice (previously VIP voice servers) */

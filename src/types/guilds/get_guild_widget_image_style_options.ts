@@ -1,5 +1,5 @@
-/** https://discord.com/developers/docs/resources/guild#modify-guild-integration */
-export enum GetGuildWidgetImageStyleOptions {
+/** https://discord.com/developers/docs/resources/guild#get-guild-widget-image-widget-style-options */
+export enum DiscordGetGuildWidgetImageStyleOptions {
   /** Shield style widget with Discord icon and guild members online count */
   SHIELD = "shield",
   /** Large image with guild icon, name and online count. "POWERED BY DISCORD" as the footer of the widget */

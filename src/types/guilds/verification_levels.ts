@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/resources/guild#guild-object-verification-level */
-export enum VerificationLevel {
+export enum DiscordVerificationLevels {
   /** Unrestricted */
   NONE,
   /** Must have verified email on account */
