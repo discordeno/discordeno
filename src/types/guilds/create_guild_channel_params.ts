@@ -26,6 +26,6 @@ export interface CreateGuildChannelParams {
 /** https://discord.com/developers/docs/resources/guild#create-guild-channel */
 export interface DiscordCreateGuildChannelParams
   extends
-    Omit<SnakeCaseProps<CreateGuildChannelParams>, "permission_overwrites"> {
+    SnakeCaseProps<Omit<CreateGuildChannelParams, "permissionOverwrites">> {
   permission_overwrites: DiscordOverwrite[];
 }
