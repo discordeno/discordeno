@@ -6,4 +6,4 @@ export interface GetGuildQuery {
 }
 
 /** https://discord.com/developers/docs/resources/guild#get-guild */
-export type DiscordGetGuild = SnakeCaseProps<GetGuild>;
+export type DiscordGetGuildQuery = SnakeCaseProps<GetGuildQuery>;
