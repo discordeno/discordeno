@@ -13,7 +13,7 @@ export interface CreateGuildChannel {
   bitrate?: number;
   /** The user limit of the voice channel (voice only) */
   userLimit?: number;
-  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission manageMessages or manageChannel, are unaffected */
+  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
   rateLimitPerUser?: number;
   /** Sorting position of the channel */
   position?: number;
