@@ -1,5 +1,4 @@
 import { SnakeCaseProps } from "../util.ts";
-import { WelcomeScreen } from "./welcome_screen.ts";
 
 export interface WelcomeScreenChannel {
   /** The channel's id */
