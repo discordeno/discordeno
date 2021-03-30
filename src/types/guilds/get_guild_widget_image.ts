@@ -6,7 +6,7 @@ export interface GetGuildWidgetImage {
   style?: DiscordGetGuildWidgetImageStyleOptions;
 }
 
-/** https://discord.com/developers/docs/resources/guild#modify-guild-integration */
+/** https://discord.com/developers/docs/resources/guild#get-guild-widget-image-query-string-params */
 export type DiscordGetGuildWidgetImage = SnakeCaseProps<
   GetGuildWidgetImage
 >;
