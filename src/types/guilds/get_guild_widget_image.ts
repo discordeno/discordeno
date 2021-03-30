@@ -1,7 +1,7 @@
 import { SnakeCaseProps } from "../util.ts";
 import { DiscordGetGuildWidgetImageStyleOptions } from "./get_guild_widget_image_style_options.ts";
 
-export interface GetGuildWidgetImage {
+export interface GetGuildWidgetImageQuery {
   /** Style of the widget returned, default: shield */
   style?: DiscordGetGuildWidgetImageStyleOptions;
 }
