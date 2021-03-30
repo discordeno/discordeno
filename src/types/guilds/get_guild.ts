@@ -1,6 +1,6 @@
 import { SnakeCaseProps } from "../util.ts";
 
-export interface GetGuild {
+export interface GetGuildQuery {
   /** When true, will return approximate member and presence counts for the guild */
   withCounts?: boolean;
 }
