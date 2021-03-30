@@ -8,6 +8,6 @@ export interface GetGuildPruneCountQuery {
 }
 
 /** https://discord.com/developers/docs/resources/guild#get-guild-prune-count */
-export type DiscordGetGuildPruneCount = SnakeCaseProps<
-  GetGuildPruneCount
+export type DiscordGetGuildPruneCountQuery = SnakeCaseProps<
+  GetGuildPruneCountQuery
 >;
