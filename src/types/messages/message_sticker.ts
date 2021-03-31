@@ -13,14 +13,14 @@ export interface MessageSticker {
   /** A comma-separated list of tags for the sticker */
   tags?: string;
   /**
-     * Sticker asset hash
-     * Note: The URL for fetching sticker assets is currently private.
-     */
+   * Sticker asset hash
+   * Note: The URL for fetching sticker assets is currently private.
+   */
   asset: string;
   /**
-     * Sticker preview asset hash
-     * Note: The URL for fetching sticker assets is currently private.
-     */
+   * Sticker preview asset hash
+   * Note: The URL for fetching sticker assets is currently private.
+   */
   previewAsset?: string | null;
   /** Type of sticker format */
   formatType: DiscordMessageStickerFormatTypes;

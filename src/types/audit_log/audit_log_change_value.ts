@@ -1,4 +1,5 @@
 import { Overwrite } from "../channels/overwrite.ts";
+import { Role } from "../permissions/role.ts";
 import { SnakeCaseProps } from "../util.ts";
 
 export type AuditLogChangeValue =

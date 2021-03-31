@@ -1,3 +1,4 @@
+import { Integration } from "../guilds/integration.ts";
 import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
 import { Webhook } from "../webhooks/webhook.ts";
