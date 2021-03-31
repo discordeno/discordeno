@@ -1,9 +1,11 @@
+import { PermissionStrings } from "../permissions/permission_strings.ts";
+import { SnakeCaseProps } from "../util.ts";
+
 export interface ModifyGuildRole {
   /** Name of the role */
   name?: string | null;
-  // TODO: Permission[]
   /** Bitwise value of the enabled/disabled permissions */
-  permissions?: string | null;
+  permissions?: PermissionStrings[] | null;
   /** RGB color value */
   color?: number | null;
   /** Whether the role should be displayed seperately in the sidebar */
@@ -13,4 +15,7 @@ export interface ModifyGuildRole {
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-role */
-export type DiscordModifyGuildRole = ModifyGuildRole;
+export interface DiscordModifyGuildRole
+  extends SnakeCaseProps<Omit<ModifyGuildRole, "permissions">> {
+  permissions?: string;
+}

@@ -1,4 +1,5 @@
 import { Channel } from "../channels/channel.ts";
+import { Guild } from "../guilds/guild.ts";
 import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
 import { DiscordTargetUserTypes } from "./target_user_types.ts";

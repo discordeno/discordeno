@@ -1,3 +1,4 @@
+import { Guild } from "../guilds/guild.ts";
 import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
 

@@ -1,11 +1,11 @@
+import { PermissionStrings } from "../permissions/permission_strings.ts";
 import { SnakeCaseProps } from "../util.ts";
 
 export interface CreateGuildRole {
   /** Name of the role, default: "new role" */
   name?: string;
-  // TODO: Permission[]
   /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
-  permissions?: string;
+  permissions?: PermissionStrings[];
   /** RGB color value, default: 0 */
   color?: number;
   /** Whether the role should be displayed separately in the sidebar, default: false */
@@ -14,7 +14,7 @@ export interface CreateGuildRole {
   mentionable?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/guild#create-guild-role */
-export type DiscordCreateGuildRole = SnakeCaseProps<
-  CreateGuildRole
->;
+export interface DiscordCreateGuildRole
+  extends SnakeCaseProps<Omit<CreateGuildRole, "permissions">> {
+  permissions?: string;
+}
