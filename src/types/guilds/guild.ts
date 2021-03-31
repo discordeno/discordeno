@@ -99,7 +99,7 @@ export interface Guild {
   /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
   publicUpdatesChannelId: string | null;
   /** The maximum amount of users in a video channel */
-  maxCideoChannelUsers?: number;
+  maxVideoChannelUsers?: number;
   /** Approximate number of members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
   approximateMemberCount?: number;
   /**	Approximate number of non-offline members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
