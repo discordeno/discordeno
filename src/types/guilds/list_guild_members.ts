@@ -8,6 +8,4 @@ export interface ListGuildMembers {
 }
 
 /** https://discord.com/developers/docs/resources/guild#list-guild-members */
-export type DiscordListGuildMembers = SnakeCaseProps<
-  ListGuildMembers
->;
+export type DiscordListGuildMembers = ListGuildMembers;
