@@ -1,5 +1,10 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
+import {
+  DiscordChannel,
+  DiscordChannelTypes,
+  DiscordGatewayPayload,
+} from "../../types/mod.ts";
 
 export async function handleChannelDelete(data: DiscordGatewayPayload) {
   const payload = data.d as DiscordChannel;
@@ -7,7 +12,9 @@ export async function handleChannelDelete(data: DiscordGatewayPayload) {
   const cachedChannel = await cacheHandlers.get("channels", payload.id);
   if (!cachedChannel) return;
 
-  if (cachedChannel.type === ChannelTypes.GUILD_VOICE && payload.guild_id) {
+  if (
+    cachedChannel.type === DiscordChannelTypes.GUILD_VOICE && payload.guild_id
+  ) {
     const guild = await cacheHandlers.get("guilds", payload.guild_id);
 
     if (guild) {

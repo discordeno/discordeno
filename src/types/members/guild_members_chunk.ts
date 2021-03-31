@@ -1,3 +1,5 @@
+import { GuildMember } from "../guilds/guild_member.ts";
+import { PresenceUpdate } from "../misc/presence_update.ts";
 import { SnakeCaseProps } from "../util.ts";
 
 export interface GuildMembersChunk {
@@ -12,7 +14,7 @@ export interface GuildMembersChunk {
   /** If passing an invalid id to `REQUEST_GUILD_MEMBERS`, it will be returned here */
   notFound?: string[];
   /** If passing true to `REQUEST_GUILD_MEMBERS`, presences of the returned members will be here */
-  presences?: Presence[];
+  presences?: PresenceUpdate[];
   /** The nonce used in the Guild Members Request */
   nonce?: string;
 }

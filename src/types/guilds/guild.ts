@@ -1,6 +1,7 @@
 import { Channel } from "../channels/channel.ts";
 import { Emoji } from "../emojis/emoji.ts";
 import { PresenceUpdate } from "../misc/presence_update.ts";
+import { Role } from "../permissions/role.ts";
 import { SnakeCaseProps } from "../util.ts";
 import { VoiceState } from "../voice/voice_state.ts";
 import { DiscordDefaultMessageNotificationLevels } from "./default_message_notification_levels.ts";
