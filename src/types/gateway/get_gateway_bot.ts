@@ -1,4 +1,5 @@
 import { SnakeCaseProps } from "../util.ts";
+import { SessionStartLimit } from "./session_start_limit.ts";
 
 export interface GetGatewayBot {
   /** The WSS URL that can be used for connecting to the gateway */

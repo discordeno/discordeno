@@ -1,4 +1,5 @@
 import { Channel } from "../channels/channel.ts";
+import { Role } from "../permissions/role.ts";
 import { SnakeCaseProps } from "../util.ts";
 import { DiscordDefaultMessageNotificationLevels } from "./default_message_notification_levels.ts";
 import { DiscordExplicitContentFilterLevels } from "./explicit_content_filter_levels.ts";

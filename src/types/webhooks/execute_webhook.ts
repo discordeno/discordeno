@@ -1,5 +1,6 @@
 import { Embed } from "../embeds/embed.ts";
 import { AllowedMentions } from "../messages/allowed_mentions.ts";
+import { FileContent } from "../misc/file_content.ts";
 import { SnakeCaseProps } from "../util.ts";
 
 export interface ExecuteWebhook {
@@ -22,4 +23,6 @@ export interface ExecuteWebhook {
 }
 
 /** https://discord.com/developers/docs/resources/webhook#execute-webhook */
-export type DiscordExecuteWebhook = SnakeCaseProps<Omit<ExecuteWebhook, "wait">>;
+export type DiscordExecuteWebhook = SnakeCaseProps<
+  Omit<ExecuteWebhook, "wait">
+>;
