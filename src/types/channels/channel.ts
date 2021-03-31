@@ -1,7 +1,7 @@
 import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
 import { DiscordChannelTypes } from "./channel_types.ts";
-import { Overwrite } from "./overwrite.ts";
+import { DiscordOverwrite, Overwrite } from "./overwrite.ts";
 
 export interface Channel {
   /** The id of the channel */
