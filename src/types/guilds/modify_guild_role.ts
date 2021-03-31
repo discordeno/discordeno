@@ -1,5 +1,4 @@
 import { PermissionStrings } from "../permissions/permission_strings.ts";
-import { SnakeCaseProps } from "../util.ts";
 
 export interface ModifyGuildRole {
   /** Name of the role */
@@ -16,6 +15,6 @@ export interface ModifyGuildRole {
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-role */
 export interface DiscordModifyGuildRole
-  extends SnakeCaseProps<Omit<ModifyGuildRole, "permissions">> {
+  extends Omit<ModifyGuildRole, "permissions"> {
   permissions?: string;
 }

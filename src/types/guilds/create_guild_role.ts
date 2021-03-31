@@ -1,4 +1,5 @@
 import { PermissionStrings } from "../permissions/permission_strings.ts";
+import { SnakeCaseProps } from "../util.ts";
 
 export interface CreateGuildRole {
   /** Name of the role, default: "new role" */
@@ -13,7 +14,8 @@ export interface CreateGuildRole {
   mentionable?: boolean;
 }
 
+/** https://discord.com/developers/docs/resources/guild#create-guild-role */
 export interface DiscordCreateGuildRole
-  extends Omit<CreateGuildRole, "permissions"> {
+  extends SnakeCaseProps<Omit<CreateGuildRole, "permissions">> {
   permissions?: string;
 }
