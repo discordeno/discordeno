@@ -45,5 +45,5 @@ export interface Channel {
 /** https://discord.com/developers/docs/resources/channel#channel-object */
 export interface DiscordChannel
   extends SnakeCaseProps<Omit<Channel, "permissionOverwrites">> {
-  permissionOverwrites?: DiscordOverwrite[];
+  permission_overwrites?: DiscordOverwrite[];
 }
