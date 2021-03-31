@@ -1,5 +1,9 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
+import {
+  DiscordChannelPinsUpdate,
+  DiscordGatewayPayload,
+} from "../../types/mod.ts";
 
 export async function handleChannelPinsUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as DiscordChannelPinsUpdate;
