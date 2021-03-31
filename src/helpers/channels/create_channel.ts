@@ -1,6 +1,12 @@
 import { cacheHandlers } from "../../cache.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { structures } from "../../structures/mod.ts";
+import {
+  CreateGuildChannel,
+  DiscordChannel,
+  DiscordChannelTypes,
+  PermissionStrings,
+} from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,
@@ -11,9 +17,9 @@ import {
 export async function createChannel(
   guildId: string,
   name: string,
-  options?: ChannelCreateOptions,
+  options?: CreateGuildChannel,
 ) {
-  const requiredPerms: Set<Permission> = new Set(["MANAGE_CHANNELS"]);
+  const requiredPerms: Set<PermissionStrings> = new Set(["MANAGE_CHANNELS"]);
 
   options?.permissionOverwrites?.forEach((overwrite) => {
     overwrite.allow.forEach(requiredPerms.add, requiredPerms);
@@ -33,9 +39,9 @@ export async function createChannel(
         allow: calculateBits(perm.allow),
         deny: calculateBits(perm.deny),
       })),
-      type: options?.type || ChannelTypes.GUILD_TEXT,
+      type: options?.type || DiscordChannelTypes.GUILD_TEXT,
     },
-  )) as ChannelCreatePayload;
+  )) as DiscordChannel;
 
   const channelStruct = await structures.createChannelStruct(result);
   await cacheHandlers.set("channels", channelStruct.id, channelStruct);

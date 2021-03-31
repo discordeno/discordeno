@@ -1,6 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { structures } from "../../structures/mod.ts";
+import { DiscordChannel } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Returns a list of guild channel objects.
@@ -10,7 +11,7 @@ import { endpoints } from "../../util/constants.ts";
 export async function getChannels(guildId: string, addToCache = true) {
   const result = (await RequestManager.get(
     endpoints.GUILD_CHANNELS(guildId),
-  ) as ChannelCreatePayload[]);
+  ) as DiscordChannel[]);
 
   return Promise.all(result.map(async (res) => {
     const channelStruct = await structures.createChannelStruct(res, guildId);
