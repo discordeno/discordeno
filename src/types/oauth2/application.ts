@@ -1,3 +1,4 @@
+import { Team } from "../teams/team.ts";
 import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
 

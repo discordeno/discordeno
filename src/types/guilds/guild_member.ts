@@ -18,9 +18,6 @@ export interface GuildMember {
   mute: boolean;
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
   pending?: boolean;
-  // TODO: maybe an InteractionMember interface?
-  /** Total permissions of the member in the channel, including overrides, returned when in the interaction object */
-  permissions?: string;
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */

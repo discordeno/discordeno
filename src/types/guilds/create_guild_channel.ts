@@ -1,5 +1,5 @@
 import { DiscordChannelTypes } from "../channels/channel_types.ts";
-import { Overwrite } from "../channels/overwrite.ts";
+import { DiscordOverwrite, Overwrite } from "../channels/overwrite.ts";
 import { SnakeCaseProps } from "../util.ts";
 
 export interface CreateGuildChannel {

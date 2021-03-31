@@ -1,3 +1,4 @@
+import { PermissionStrings } from "../permissions/permission_strings.ts";
 import { DiscordOverwriteTypes } from "./overwrite_types.ts";
 
 export interface Overwrite {
@@ -6,10 +7,13 @@ export interface Overwrite {
   /** Either 0 (role) or 1 (member) */
   type: DiscordOverwriteTypes;
   /** Permission bit set */
-  allow: string;
+  allow: PermissionStrings[];
   /** Permission bit set */
-  deny: string;
+  deny: PermissionStrings[];
 }
 
 /** https://discord.com/developers/docs/resources/channel#overwrite-object */
-export type DiscordOverwrite = Overwrite;
+export interface DiscordOverwrite extends Omit<Overwrite, "allow" | "deny"> {
+  allow: string;
+  deny: string;
+}
