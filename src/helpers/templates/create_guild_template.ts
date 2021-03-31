@@ -10,10 +10,10 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
  * @param description description for the template (0-120 characters
  */
 export async function createGuildTemplate(
-  guildID: string,
+  guildId: string,
   data: CreateGuildTemplate,
 ) {
-  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
   if (data.name.length < 1 || data.name.length > 100) {
     throw new Error("The name can only be in between 1-100 characters.");
@@ -24,7 +24,7 @@ export async function createGuildTemplate(
   }
 
   const template = (await RequestManager.post(
-    endpoints.GUILD_TEMPLATES(guildID),
+    endpoints.GUILD_TEMPLATES(guildId),
     data,
   )) as GuildTemplate;
 

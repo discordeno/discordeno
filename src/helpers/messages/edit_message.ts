@@ -1,4 +1,4 @@
-import { botID } from "../../bot.ts";
+import { botId } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { Message, structures } from "../../structures/mod.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -9,7 +9,7 @@ export async function editMessage(
   message: Message,
   content: string | MessageContent,
 ) {
-  if (message.author.id !== botID) {
+  if (message.author.id !== botId) {
     throw "You can only edit a message that was sent by the bot.";
   }
 
@@ -19,14 +19,14 @@ export async function editMessage(
 
   if (content.tts) requiredPerms.push("SEND_TTS_MESSAGES");
 
-  await requireBotChannelPermissions(message.channelID, requiredPerms);
+  await requireBotChannelPermissions(message.channelId, requiredPerms);
 
   if (content.content && content.content.length > 2000) {
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
   }
 
   const result = await RequestManager.patch(
-    endpoints.CHANNEL_MESSAGE(message.channelID, message.id),
+    endpoints.CHANNEL_MESSAGE(message.channelId, message.id),
     content,
   );
 

@@ -1,40 +1,42 @@
 import { cacheHandlers } from "../../cache.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { structures } from "../../structures/mod.ts";
+import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import { PermissionStrings } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(
-  channelID: string,
+  channelId: string,
   content: string | MessageContent,
 ) {
   if (typeof content === "string") content = { content };
 
-  const channel = await cacheHandlers.get("channels", channelID);
+  const channel = await cacheHandlers.get("channels", channelId);
   if (channel) {
     if (
       ![
-        ChannelTypes.DM,
-        ChannelTypes.GUILD_NEWS,
-        ChannelTypes.GUILD_TEXT,
+        DiscordChannelTypes.DM,
+        DiscordChannelTypes.GUILD_NEWS,
+        DiscordChannelTypes.GUILD_TEXT,
       ].includes(channel.type)
     ) {
       throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
     }
 
-    const requiredPerms: Set<Permission> = new Set([
+    const requiredPerms: Set<PermissionStrings> = new Set([
       "SEND_MESSAGES",
       "VIEW_CHANNEL",
     ]);
 
     if (content.tts) requiredPerms.add("SEND_TTS_MESSAGES");
     if (content.embed) requiredPerms.add("EMBED_LINKS");
-    if (content.replyMessageID || content.mentions?.repliedUser) {
+    if (content.replyMessageId || content.mentions?.repliedUser) {
       requiredPerms.add("READ_MESSAGE_HISTORY");
     }
 
-    await requireBotChannelPermissions(channelID, [...requiredPerms]);
+    await requireBotChannelPermissions(channelId, [...requiredPerms]);
   }
 
   // Use ... for content length due to unicode characters and js .length handling
@@ -69,7 +71,7 @@ export async function sendMessage(
   }
 
   const result = (await RequestManager.post(
-    endpoints.CHANNEL_MESSAGES(channelID),
+    endpoints.CHANNEL_MESSAGES(channelId),
     {
       ...content,
       allowed_mentions: content.mentions
@@ -78,10 +80,10 @@ export async function sendMessage(
           replied_user: content.mentions.repliedUser,
         }
         : undefined,
-      ...(content.replyMessageID
+      ...(content.replyMessageId
         ? {
           message_reference: {
-            message_id: content.replyMessageID,
+            message_id: content.replyMessageId,
             fail_if_not_exists: content.failReplyIfNotExists === true,
           },
         }

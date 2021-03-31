@@ -1,4 +1,4 @@
-import { botID } from "../../bot.ts";
+import { botId } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -7,21 +7,21 @@ import { delay } from "../../util/utils.ts";
 
 /** Delete a message with the channel id and message id only. */
 export async function deleteMessage(
-  channelID: string,
-  messageID: string,
+  channelId: string,
+  messageId: string,
   reason?: string,
   delayMilliseconds = 0,
 ) {
-  const message = await cacheHandlers.get("messages", messageID);
+  const message = await cacheHandlers.get("messages", messageId);
 
-  if (message && message.author.id !== botID) {
-    await requireBotChannelPermissions(message.channelID, ["MANAGE_MESSAGES"]);
+  if (message && message.author.id !== botId) {
+    await requireBotChannelPermissions(message.channelId, ["MANAGE_MESSAGES"]);
   }
 
   if (delayMilliseconds) await delay(delayMilliseconds);
 
   const result = await RequestManager.delete(
-    endpoints.CHANNEL_MESSAGE(channelID, messageID),
+    endpoints.CHANNEL_MESSAGE(channelId, messageId),
     { reason },
   );
 

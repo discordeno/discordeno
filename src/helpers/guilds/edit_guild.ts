@@ -4,8 +4,8 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
 
 /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
-export async function editGuild(guildID: string, options: GuildEditOptions) {
-  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
+export async function editGuild(guildId: string, options: GuildEditOptions) {
+  await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
   if (options.icon && !options.icon.startsWith("data:image/")) {
     options.icon = await urlToBase64(options.icon);
@@ -20,7 +20,7 @@ export async function editGuild(guildID: string, options: GuildEditOptions) {
   }
 
   const result = await RequestManager.patch(
-    endpoints.GUILDS_BASE(guildID),
+    endpoints.GUILDS_BASE(guildId),
     options,
   );
 

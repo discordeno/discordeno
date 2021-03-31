@@ -1,6 +1,5 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { DiscordGatewayPayload } from "../../types/gateway.ts";
 
 export async function handleUserUpdate(data: DiscordGatewayPayload) {
   const userData = data.d as DiscordUser;

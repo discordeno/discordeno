@@ -7,13 +7,13 @@ import { endpoints } from "../../util/constants.ts";
  *
  * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
  */
-export async function getChannels(guildID: string, addToCache = true) {
+export async function getChannels(guildId: string, addToCache = true) {
   const result = (await RequestManager.get(
-    endpoints.GUILD_CHANNELS(guildID),
+    endpoints.GUILD_CHANNELS(guildId),
   ) as ChannelCreatePayload[]);
 
   return Promise.all(result.map(async (res) => {
-    const channelStruct = await structures.createChannelStruct(res, guildID);
+    const channelStruct = await structures.createChannelStruct(res, guildId);
     if (addToCache) {
       await cacheHandlers.set("channels", channelStruct.id, channelStruct);
     }

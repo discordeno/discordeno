@@ -1,4 +1,4 @@
-import { botID } from "../../bot.ts";
+import { botId } from "../../bot.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
@@ -8,15 +8,15 @@ import {
 
 /** Remove a role from the member */
 export async function removeRole(
-  guildID: string,
-  memberID: string,
-  roleID: string,
+  guildId: string,
+  memberId: string,
+  roleId: string,
   reason?: string,
 ) {
   const isHigherRolePosition = await isHigherPosition(
-    guildID,
-    botID,
-    roleID,
+    guildId,
+    botId,
+    roleId,
   );
   if (
     !isHigherRolePosition
@@ -24,10 +24,10 @@ export async function removeRole(
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
-  await requireBotGuildPermissions(guildID, ["MANAGE_ROLES"]);
+  await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
   const result = await RequestManager.delete(
-    endpoints.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
+    endpoints.GUILD_MEMBER_ROLE(guildId, memberId, roleId),
     { reason },
   );
 

@@ -5,17 +5,17 @@ import { Collection } from "./util/collection.ts";
 
 export const cache: CacheData = {
   isReady: false,
-  /** All of the guild objects the bot has access to, mapped by their IDs */
+  /** All of the guild objects the bot has access to, mapped by their Ids */
   guilds: new Collection(),
-  /** All of the channel objects the bot has access to, mapped by their IDs */
+  /** All of the channel objects the bot has access to, mapped by their Ids */
   channels: new Collection(),
-  /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their IDs */
+  /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their Ids */
   messages: new Collection(),
-  /** All of the member objects that have been cached since the bot acquired `READY` state, mapped by their IDs */
+  /** All of the member objects that have been cached since the bot acquired `READY` state, mapped by their Ids */
   members: new Collection(),
-  /** All of the unavailable guilds, mapped by their IDs (id, shardID) */
+  /** All of the unavailable guilds, mapped by their Ids (id, shardId) */
   unavailableGuilds: new Collection(),
-  /** All of the presence update objects received in PRESENCE_UPDATE gateway event, mapped by their user ID */
+  /** All of the presence update objects received in PRESENCE_UPDATE gateway event, mapped by their user Id */
   presences: new Collection(),
   fetchAllMembersProcessingRequests: new Collection(),
   executedSlashCommands: new Collection(),

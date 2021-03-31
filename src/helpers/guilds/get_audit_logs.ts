@@ -4,12 +4,12 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
 export async function getAuditLogs(
-  guildID: string,
+  guildId: string,
   options: GetAuditLogsOptions,
 ) {
-  await requireBotGuildPermissions(guildID, ["VIEW_AUDIT_LOG"]);
+  await requireBotGuildPermissions(guildId, ["VIEW_AUDIT_LOG"]);
 
-  const result = await RequestManager.get(endpoints.GUILD_AUDIT_LOGS(guildID), {
+  const result = await RequestManager.get(endpoints.GUILD_AUDIT_LOGS(guildId), {
     ...options,
     action_type: options.action_type
       ? AuditLogs[options.action_type]

@@ -1,9 +1,5 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import {
-  DiscordGatewayPayload,
-  DiscordMessageDeleteBulk,
-} from "../../types/gateway.ts";
 
 export async function handleMessageDeleteBulk(data: DiscordGatewayPayload) {
   const payload = data.d as DiscordMessageDeleteBulk;

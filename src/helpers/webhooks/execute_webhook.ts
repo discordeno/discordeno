@@ -2,9 +2,9 @@ import { RequestManager } from "../../rest/request_manager.ts";
 import { structures } from "../../structures/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
-/** Execute a webhook with webhook ID and webhook token */
+/** Execute a webhook with webhook Id and webhook token */
 export async function executeWebhook(
-  webhookID: string,
+  webhookId: string,
   webhookToken: string,
   options: ExecuteWebhookOptions,
 ) {
@@ -47,7 +47,7 @@ export async function executeWebhook(
   }
 
   const result = await RequestManager.post(
-    `${endpoints.WEBHOOK(webhookID, webhookToken)}${
+    `${endpoints.WEBHOOK(webhookId, webhookToken)}${
       options.wait ? "?wait=true" : ""
     }`,
     {

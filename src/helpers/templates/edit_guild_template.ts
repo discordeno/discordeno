@@ -8,11 +8,11 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
  * Requires the `MANAGE_GUILD` permission.
  */
 export async function editGuildTemplate(
-  guildID: string,
+  guildId: string,
   templateCode: string,
   data: EditGuildTemplate,
 ) {
-  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
   if (data.name?.length && (data.name.length < 1 || data.name.length > 100)) {
     throw new Error("The name can only be in between 1-100 characters.");
@@ -23,7 +23,7 @@ export async function editGuildTemplate(
   }
 
   const template = (await RequestManager.patch(
-    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
+    `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
     data,
   )) as GuildTemplate;
 

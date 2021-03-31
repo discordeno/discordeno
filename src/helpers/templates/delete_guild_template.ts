@@ -8,13 +8,13 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
  * Requires the `MANAGE_GUILD` permission.
  */
 export async function deleteGuildTemplate(
-  guildID: string,
+  guildId: string,
   templateCode: string,
 ) {
-  await requireBotGuildPermissions(guildID, ["MANAGE_GUILD"]);
+  await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
   const deletedTemplate = (await RequestManager.delete(
-    `${endpoints.GUILD_TEMPLATES(guildID)}/${templateCode}`,
+    `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
   )) as GuildTemplate;
 
   return structures.createTemplateStruct(deletedTemplate);
