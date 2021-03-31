@@ -1,0 +1,23 @@
+/** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
+export type DiscordOAuth2Scopes =
+  | "bot"
+  | "connections"
+  | "email"
+  | "identify"
+  | "guilds"
+  | "guilds.join"
+  | "gdm.join"
+  | "messages.read"
+  | "rpc"
+  | "rpc.api"
+  | "rpc.notifications"
+  | "webhook.incomming"
+  | "applications.builds.upload"
+  | "applications.builds.read"
+  | "applications.store.update"
+  | "applications.entitlements"
+  | "relationships.read"
+  | "activities.read"
+  | "activities.write"
+  | "applications.commands"
+  | "applications.commands.update";
