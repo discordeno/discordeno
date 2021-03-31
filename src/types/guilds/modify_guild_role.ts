@@ -16,5 +16,5 @@ export interface ModifyGuildRole {
 /** https://discord.com/developers/docs/resources/guild#modify-guild-role */
 export interface DiscordModifyGuildRole
   extends Omit<ModifyGuildRole, "permissions"> {
-  permissions?: string;
+  permissions?: string | null;
 }
