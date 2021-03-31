@@ -1,5 +1,3 @@
-import { SnakeCaseProps } from "../util.ts";
-
 export interface ModifyGuildRole {
   /** Name of the role */
   name?: string | null;
@@ -15,6 +13,4 @@ export interface ModifyGuildRole {
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-role */
-export type DiscordModifyGuildRole = SnakeCaseProps<
-  ModifyGuildRole
->;
+export type DiscordModifyGuildRole = ModifyGuildRole;

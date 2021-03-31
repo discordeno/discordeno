@@ -1,6 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
-
-export interface ModifyGuildChannelPositionsParam {
+export interface ModifyGuildChannelPositions {
   /** Channel id */
   id: string;
   /** Sorting position of the channel */
@@ -8,6 +6,4 @@ export interface ModifyGuildChannelPositionsParam {
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions */
-export type DiscordModifyGuildChannelPositionsParam = SnakeCaseProps<
-  ModifyGuildChannelPositionsParam
->;
+export type DiscordModifyGuildChannelPositions = ModifyGuildChannelPositions;

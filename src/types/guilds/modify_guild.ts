@@ -18,11 +18,11 @@ export interface ModifyGuild {
   afkChannelId?: string | null;
   /** Afk timeout in seconds */
   afkTimeout?: number;
-  /** Base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has ANIMATEDICON feature) */
+  /** Base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has `ANIMATED_ICON` feature) */
   icon?: string | null;
-  /** User id to transfer guild ownershop to (must be owner) */
+  /** User id to transfer guild ownership to (must be owner) */
   ownerId?: string;
-  /** Base64 16:9 png/jpeg image for the guild splash (when the server has INVITESPLASH feature) */
+  /** Base64 16:9 png/jpeg image for the guild splash (when the server has `INVITE_SPLASH` feature) */
   splash?: string | null;
   /** Base64 16:9 png/jpeg image for the guild banner (when the server has BANNER feature) */
   banner?: string | null;
