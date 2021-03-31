@@ -8,5 +8,5 @@ export interface GetGuildWidgetImageQuery {
 
 /** https://discord.com/developers/docs/resources/guild#get-guild-widget-image-query-string-params */
 export type DiscordGetGuildWidgetImage = SnakeCaseProps<
-  GetGuildWidgetImage
+  GetGuildWidgetImageQuery
 >;
