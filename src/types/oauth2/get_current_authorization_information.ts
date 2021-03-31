@@ -3,7 +3,7 @@ import { SnakeCaseProps } from "../util.ts";
 import { Application } from "./application.ts";
 import { DiscordOAuth2Scopes } from "./scopes.ts";
 
-export interface GetCurrentAuthoriationInformation {
+export interface GetCurrentAuthorizationInformation {
   /** The current application */
   application: Partial<Application>;
   /** The scopes the user has authorized the application for */
@@ -16,5 +16,5 @@ export interface GetCurrentAuthoriationInformation {
 
 /** https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information-response-structure */
 export type DiscordGetCurrentAuthoriationInformation = SnakeCaseProps<
-  GetCurrentAuthoriationInformation
+  GetCurrentAuthorizationInformation
 >;
