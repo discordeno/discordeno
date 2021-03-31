@@ -1,4 +1,4 @@
-import { PartialUser } from "../users/partial_user.ts";
+import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
 import { DiscordTeamMembershipStates } from "./team_membership_states.ts";
 
@@ -10,7 +10,9 @@ export interface TeamMember {
   /** The id of the parent team of which they are a member */
   teamId: string;
   /** The avatar, discriminator, id, and username of the user */
-  user: PartialUser;
+  user:
+    & Partial<User>
+    & Pick<User, "avatar" | "discriminator" | "id" | "username">;
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-members-object */
