@@ -1,3 +1,4 @@
+import { GuildMember } from "../guilds/guild_member.ts";
 import { SnakeCaseProps } from "../util.ts";
 
 export interface GuildMemberAdd extends GuildMember {
