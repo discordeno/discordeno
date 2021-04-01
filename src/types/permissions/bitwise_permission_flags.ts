@@ -62,4 +62,6 @@ export enum DiscordBitwisePermissionFlags {
   MANAGE_WEBHOOKS = 0x20000000,
   /** Allows management and editing of emojis */
   MANAGE_EMOJIS = 0x40000000,
+  /** Allows for requesting to speak in stage channels. */
+  REQUEST_TO_SPEAK = 0x100000000,
 }
