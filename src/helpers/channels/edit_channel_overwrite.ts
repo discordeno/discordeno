@@ -1,4 +1,5 @@
 import { RequestManager } from "../../rest/request_manager.ts";
+import { Overwrite } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,

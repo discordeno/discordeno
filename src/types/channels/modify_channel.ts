@@ -1,6 +1,6 @@
 import { SnakeCaseProps } from "../util.ts";
 import { DiscordChannelTypes } from "./channel_types.ts";
-import { Overwrite } from "./overwrite.ts";
+import { DiscordOverwrite, Overwrite } from "./overwrite.ts";
 
 export interface ModifyChannel {
   /** 2-100 character channel name */
@@ -26,4 +26,7 @@ export interface ModifyChannel {
 }
 
 /** https://discord.com/developers/docs/resources/channel#modify-channel */
-export type DiscordModifyChannel = SnakeCaseProps<ModifyChannel>;
+export interface DiscordModifyChannel
+  extends SnakeCaseProps<Omit<ModifyChannel, "permissionOverwrites">> {
+  permission_overwrites?: DiscordOverwrite[];
+}

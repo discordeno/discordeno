@@ -1,6 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
 import { structures } from "../../structures/mod.ts";
+import { DiscordChannel } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Fetches a single channel object from the api.
@@ -10,7 +11,7 @@ import { endpoints } from "../../util/constants.ts";
 export async function getChannel(channelId: string, addToCache = true) {
   const result = (await RequestManager.get(
     endpoints.CHANNEL_BASE(channelId),
-  )) as ChannelCreatePayload;
+  )) as DiscordChannel;
 
   const channelStruct = await structures.createChannelStruct(
     result,
