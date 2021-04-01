@@ -5,7 +5,7 @@ import {
   calculateBits,
   requireBotChannelPermissions,
 } from "../../util/permissions.ts";
-import { snakeKeysToCamelCase } from "../../util/utils.ts";
+import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(
@@ -16,7 +16,7 @@ export async function editChannel(
   await requireBotChannelPermissions(channelId, ["MANAGE_CHANNELS"]);
 
   const payload = {
-    ...snakeKeysToCamelCase(options),
+    ...camelKeysToSnakeCase(options),
     permission_overwrites: options.permissionOverwrites?.map((overwrite) => {
       return {
         ...overwrite,
