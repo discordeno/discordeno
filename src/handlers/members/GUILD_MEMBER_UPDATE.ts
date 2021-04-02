@@ -27,7 +27,7 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
   );
   await cacheHandlers.set("members", memberStruct.id, memberStruct);
   if (guildMember) {
-    if (guildMember?.nick !== payload.nick) {
+    if (guildMember.nick !== payload.nick) {
       eventHandlers.nicknameUpdate?.(
         guild,
         memberStruct,
