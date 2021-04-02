@@ -26,33 +26,34 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
     payload.guild_id,
   );
   await cacheHandlers.set("members", memberStruct.id, memberStruct);
-
-  if (guildMember?.nick !== payload.nick) {
-    eventHandlers.nicknameUpdate?.(
-      guild,
-      memberStruct,
-      payload.nick!,
-      guildMember?.nick,
-    );
-  }
-
-  if (payload.pending === false && guildMember?.pending === true) {
-    eventHandlers.membershipScreeningPassed?.(guild, memberStruct);
-  }
-
-  const roleIds = guildMember?.roles || [];
-
-  roleIds.forEach((id) => {
-    if (!payload.roles.includes(id)) {
-      eventHandlers.roleLost?.(guild, memberStruct, id);
+  if (guildMember) {
+    if (guildMember?.nick !== payload.nick) {
+      eventHandlers.nicknameUpdate?.(
+        guild,
+        memberStruct,
+        payload.nick!,
+        guildMember?.nick,
+      );
     }
-  });
 
-  payload.roles.forEach((id) => {
-    if (!roleIds.includes(id)) {
-      eventHandlers.roleGained?.(guild, memberStruct, id);
+    if (payload.pending === false && guildMember?.pending === true) {
+      eventHandlers.membershipScreeningPassed?.(guild, memberStruct);
     }
-  });
+
+    const roleIds = guildMember?.roles || [];
+
+    roleIds.forEach((id) => {
+      if (!payload.roles.includes(id)) {
+        eventHandlers.roleLost?.(guild, memberStruct, id);
+      }
+    });
+
+    payload.roles.forEach((id) => {
+      if (!roleIds.includes(id)) {
+        eventHandlers.roleGained?.(guild, memberStruct, id);
+      }
+    });
+  }
 
   eventHandlers.guildMemberUpdate?.(guild, memberStruct, cachedMember);
 }
