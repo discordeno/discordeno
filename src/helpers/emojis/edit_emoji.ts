@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -10,7 +10,8 @@ export async function editEmoji(
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_EMOJIS"]);
 
-  const result = await RequestManager.patch(
+  const result = await rest.runMethod(
+    "patch",
     endpoints.GUILD_EMOJI(guildId, id),
     {
       name: options.name,

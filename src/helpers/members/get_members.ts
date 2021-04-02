@@ -1,6 +1,6 @@
 import { identifyPayload } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { Member, structures } from "../../structures/mod.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -39,11 +39,19 @@ export async function getMembers(guildId: string, options?: GetMemberOptions) {
       );
     }
 
-    const result = (await RequestManager.get(
-      `${endpoints.GUILD_MEMBERS(guildId)}?limit=${
-        membersLeft > 1000 ? 1000 : membersLeft
-      }${options?.after ? `&after=${options.after}` : ""}`,
-    )) as MemberCreatePayload[];
+    const result =
+      (await rest.runMethod(
+        "get",
+        `${endpoints.GUILD_MEMBERS(guildId)}?limit=${
+          membersLeft > 1000
+            ? 1000
+            : membersLeft
+        }${
+          options?.after
+            ? `&after=${options.after}`
+            : ""
+        }`,
+      )) as MemberCreatePayload[];
 
     const memberStructures = await Promise.all(
       result.map(async (member) => {

@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -6,7 +6,8 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 export async function pin(channelId: string, messageId: string) {
   await requireBotChannelPermissions(channelId, ["MANAGE_MESSAGES"]);
 
-  const result = await RequestManager.put(
+  const result = await rest.runMethod(
+    "put",
     endpoints.CHANNEL_PIN(channelId, messageId),
   );
 

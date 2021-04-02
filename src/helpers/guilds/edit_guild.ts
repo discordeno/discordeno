@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
@@ -19,7 +19,8 @@ export async function editGuild(guildId: string, options: GuildEditOptions) {
     options.splash = await urlToBase64(options.splash);
   }
 
-  const result = await RequestManager.patch(
+  const result = await rest.runMethod(
+    "patch",
     endpoints.GUILDS_BASE(guildId),
     options,
   );

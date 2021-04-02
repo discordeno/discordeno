@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -6,7 +6,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function ban(guildId: string, id: string, options: BanOptions) {
   await requireBotGuildPermissions(guildId, ["BAN_MEMBERS"]);
 
-  const result = await RequestManager.put(endpoints.GUILD_BAN(guildId, id), {
+  const result = await rest.runMethod("put", endpoints.GUILD_BAN(guildId, id), {
     ...options,
     delete_message_days: options.days,
   });

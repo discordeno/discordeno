@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -9,7 +9,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function getRoles(guildId: string) {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
-  const result = await RequestManager.get(endpoints.GUILD_ROLES(guildId));
+  const result = await rest.runMethod("get", endpoints.GUILD_ROLES(guildId));
 
   return result;
 }

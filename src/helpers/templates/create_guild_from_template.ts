@@ -1,5 +1,5 @@
 import { cacheHandlers } from "../../cache.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { urlToBase64 } from "../../util/utils.ts";
 
@@ -21,7 +21,8 @@ export async function createGuildFromTemplate(
     data.icon = await urlToBase64(data.icon);
   }
 
-  const result = await await RequestManager.post(
+  const result = await rest.runMethod(
+    "post",
     endpoints.GUILD_TEMPLATE(templateCode),
     data,
   );

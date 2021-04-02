@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -10,10 +10,14 @@ export async function editWebhook(
 ) {
   await requireBotChannelPermissions(channelId, ["MANAGE_WEBHOOKS"]);
 
-  const result = await RequestManager.patch(endpoints.WEBHOOK_ID(webhookId), {
-    ...options,
-    channel_id: options.channelId,
-  });
+  const result = await rest.runMethod(
+    "patch",
+    endpoints.WEBHOOK_ID(webhookId),
+    {
+      ...options,
+      channel_id: options.channelId,
+    },
+  );
 
   return result as WebhookPayload;
 }

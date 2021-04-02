@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -6,7 +6,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function getInvites(guildId: string) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  const result = await RequestManager.get(endpoints.GUILD_INVITES(guildId));
+  const result = await rest.runMethod("get", endpoints.GUILD_INVITES(guildId));
 
   return result;
 }

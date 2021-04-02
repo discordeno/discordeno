@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
@@ -24,7 +24,8 @@ export async function createWebhook(
     throw new Error(Errors.INVALID_WEBHOOK_NAME);
   }
 
-  const result = await RequestManager.post(
+  const result = await rest.runMethod(
+    "post",
     endpoints.CHANNEL_WEBHOOKS(channelId),
     {
       ...options,

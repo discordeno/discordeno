@@ -1,5 +1,6 @@
 import { cacheHandlers } from "../../cache.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
+import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /**
@@ -12,7 +13,8 @@ export async function getEmoji(
   emojiId: string,
   addToCache = true,
 ) {
-  const result = (await RequestManager.get(
+  const result = (await rest.runMethod(
+    "get",
     endpoints.GUILD_EMOJI(guildId, emojiId),
   )) as Emoji;
 

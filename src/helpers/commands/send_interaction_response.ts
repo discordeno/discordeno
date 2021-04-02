@@ -1,6 +1,6 @@
 import { applicationId } from "../../bot.ts";
 import { cache } from "../../cache.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /**
@@ -16,7 +16,7 @@ export async function sendInteractionResponse(
 ) {
   // If its already been executed, we need to send a followup response
   if (cache.executedSlashCommands.has(token)) {
-    return RequestManager.post(endpoints.WEBHOOK(applicationId, token), {
+    return rest.runMethod("post", endpoints.WEBHOOK(applicationId, token), {
       ...options,
     });
   }
@@ -38,7 +38,8 @@ export async function sendInteractionResponse(
     options.data.allowed_mentions = { parse: [] };
   }
 
-  const result = await RequestManager.post(
+  const result = await rest.runMethod(
+    "post",
     endpoints.INTERACTION_ID_TOKEN(id, token),
     options,
   );

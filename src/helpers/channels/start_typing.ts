@@ -1,5 +1,5 @@
 import { cacheHandlers } from "../../cache.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { DiscordChannelTypes, Errors } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
@@ -34,7 +34,10 @@ export async function startTyping(channelId: string) {
     }
   }
 
-  const result = await RequestManager.post(endpoints.CHANNEL_TYPING(channelId));
+  const result = await rest.runMethod(
+    "post",
+    endpoints.CHANNEL_TYPING(channelId),
+  );
 
   return result;
 }

@@ -1,5 +1,6 @@
 import { cacheHandlers } from "../../cache.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
+import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /**
@@ -8,9 +9,8 @@ import { endpoints } from "../../util/constants.ts";
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  */
 export async function getEmojis(guildId: string, addToCache = true) {
-  const result = (await RequestManager.get(
-    endpoints.GUILD_EMOJIS(guildId),
-  )) as Emoji[];
+  const result =
+    (await rest.runMethod("get", endpoints.GUILD_EMOJIS(guildId))) as Emoji[];
 
   if (addToCache) {
     const guild = await cacheHandlers.get("guilds", guildId);

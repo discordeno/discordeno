@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -10,7 +10,8 @@ export async function editIntegration(
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  const result = await RequestManager.patch(
+  const result = await rest.runMethod(
+    "patch",
     endpoints.GUILD_INTEGRATION(guildId, id),
     options,
   );
