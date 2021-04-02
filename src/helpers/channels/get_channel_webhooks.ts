@@ -1,4 +1,5 @@
 import { RequestManager } from "../../rest/request_manager.ts";
+import { DiscordWebhook } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -10,5 +11,5 @@ export async function getChannelWebhooks(channelId: string) {
     endpoints.CHANNEL_WEBHOOKS(channelId),
   );
 
-  return result as WebhookPayload[];
+  return result as DiscordWebhook[];
 }

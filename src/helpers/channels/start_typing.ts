@@ -1,5 +1,6 @@
 import { cacheHandlers } from "../../cache.ts";
 import { RequestManager } from "../../rest/request_manager.ts";
+import { DiscordChannelTypes, Errors } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 
@@ -14,9 +15,9 @@ export async function startTyping(channelId: string) {
   if (channel) {
     if (
       ![
-        ChannelTypes.DM,
-        ChannelTypes.GUILD_NEWS,
-        ChannelTypes.GUILD_TEXT,
+        DiscordChannelTypes.DM,
+        DiscordChannelTypes.GUILD_NEWS,
+        DiscordChannelTypes.GUILD_TEXT,
       ].includes(channel.type)
     ) {
       throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
