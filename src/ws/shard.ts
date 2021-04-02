@@ -1,5 +1,5 @@
 import { botGatewayData, eventHandlers, proxyWSURL } from "../bot.ts";
-import { DiscordGatewayOpcodes } from "../types/gateway/gateway_opcodes.ts";
+import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { Collection } from "../util/collection.ts";
 import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
