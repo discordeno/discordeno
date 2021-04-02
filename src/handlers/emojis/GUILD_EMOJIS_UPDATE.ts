@@ -1,5 +1,9 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
+import {
+  DiscordGatewayPayload,
+  DiscordGuildEmojisUpdate,
+} from "../../types/mod.ts";
 import { Collection } from "../../util/collection.ts";
 
 export async function handleGuildEmojisUpdate(data: DiscordGatewayPayload) {
