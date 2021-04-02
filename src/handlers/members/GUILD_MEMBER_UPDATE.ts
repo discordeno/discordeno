@@ -41,7 +41,7 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
       eventHandlers.membershipScreeningPassed?.(guild, memberStruct);
     }
 
-    const roleIds = guildMember?.roles || [];
+    const roleIds = guildMember.roles || [];
 
     roleIds.forEach((id) => {
       if (!payload.roles.includes(id)) {
