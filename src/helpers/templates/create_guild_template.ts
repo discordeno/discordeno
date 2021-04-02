@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
@@ -23,10 +23,12 @@ export async function createGuildTemplate(
     throw new Error("The description can only be in between 0-120 characters.");
   }
 
-  const template = (await RequestManager.post(
-    endpoints.GUILD_TEMPLATES(guildId),
-    data,
-  )) as GuildTemplate;
+  const template =
+    (await rest.runMethod(
+      "post",
+      endpoints.GUILD_TEMPLATES(guildId),
+      data,
+    )) as GuildTemplate;
 
   return structures.createTemplateStruct(template);
 }

@@ -1,5 +1,5 @@
 import { applicationId } from "../../bot.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { validateSlashCommands } from "../../util/utils.ts";
 
@@ -13,7 +13,8 @@ export async function upsertSlashCommand(
 ) {
   validateSlashCommands([options]);
 
-  const result = await RequestManager.patch(
+  const result = await rest.runMethod(
+    "patch",
     guildId
       ? endpoints.COMMANDS_GUILD_ID(applicationId, guildId, commandId)
       : endpoints.COMMANDS_ID(applicationId, commandId),

@@ -1,5 +1,5 @@
 import { cacheHandlers } from "../../cache.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { sendMessage } from "../messages/send_message.ts";
@@ -12,10 +12,9 @@ export async function sendDirectMessage(
   let dmChannel = await cacheHandlers.get("channels", memberId);
   if (!dmChannel) {
     // If not available in cache create a new one.
-    const dmChannelData = await RequestManager.post(
-      endpoints.USER_DM,
-      { recipient_id: memberId },
-    ) as DMChannelCreatePayload;
+    const dmChannelData = await rest.runMethod("post", endpoints.USER_DM, {
+      recipient_id: memberId,
+    }) as DMChannelCreatePayload;
     const channelStruct = await structures.createChannelStruct(
       dmChannelData as unknown as ChannelCreatePayload,
     );

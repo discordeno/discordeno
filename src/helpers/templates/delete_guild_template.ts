@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
@@ -13,9 +13,11 @@ export async function deleteGuildTemplate(
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  const deletedTemplate = (await RequestManager.delete(
-    `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
-  )) as GuildTemplate;
+  const deletedTemplate =
+    (await rest.runMethod(
+      "delete",
+      `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
+    )) as GuildTemplate;
 
   return structures.createTemplateStruct(deletedTemplate);
 }

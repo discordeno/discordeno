@@ -1,5 +1,5 @@
 import { cacheHandlers } from "../../cache.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasChannelPermissions,
@@ -20,7 +20,7 @@ export async function deleteInvite(channelId: string, inviteCode: string) {
     await requireBotGuildPermissions(channel!.guildId, ["MANAGE_GUILD"]);
   }
 
-  const result = await RequestManager.delete(endpoints.INVITE(inviteCode));
+  const result = await rest.runMethod("delete", endpoints.INVITE(inviteCode));
 
   return result as InvitePayload;
 }

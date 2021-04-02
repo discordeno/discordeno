@@ -1,5 +1,5 @@
 import { cacheHandlers } from "../../cache.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import {
   CreateGuildChannel,
@@ -28,9 +28,8 @@ export async function createChannel(
 
   await requireBotGuildPermissions(guildId, [...requiredPerms]);
 
-  const result = (await RequestManager.post(
-    endpoints.GUILD_CHANNELS(guildId),
-    {
+  const result =
+    (await rest.runMethod("post", endpoints.GUILD_CHANNELS(guildId), {
       ...options,
       name,
       permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
@@ -40,8 +39,7 @@ export async function createChannel(
         deny: calculateBits(perm.deny),
       })),
       type: options?.type || DiscordChannelTypes.GUILD_TEXT,
-    },
-  )) as DiscordChannel;
+    })) as DiscordChannel;
 
   const channelStruct = await structures.createChannelStruct(result);
   await cacheHandlers.set("channels", channelStruct.id, channelStruct);

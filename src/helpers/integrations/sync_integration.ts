@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -6,7 +6,8 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function syncIntegration(guildId: string, id: string) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  const result = await RequestManager.post(
+  const result = await rest.runMethod(
+    "post",
     endpoints.GUILD_INTEGRATION_SYNC(guildId, id),
   );
 

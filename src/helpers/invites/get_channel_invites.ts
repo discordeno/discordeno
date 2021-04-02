@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -6,7 +6,10 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 export async function getChannelInvites(channelId: string) {
   await requireBotChannelPermissions(channelId, ["MANAGE_CHANNELS"]);
 
-  const result = await RequestManager.get(endpoints.CHANNEL_INVITES(channelId));
+  const result = await rest.runMethod(
+    "get",
+    endpoints.CHANNEL_INVITES(channelId),
+  );
 
   return result;
 }

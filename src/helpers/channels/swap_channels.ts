@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { ModifyGuildChannelPositions } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
@@ -11,7 +11,8 @@ export async function swapChannels(
     throw "You must provide at least two channels to be swapped.";
   }
 
-  const result = await RequestManager.patch(
+  const result = await rest.runMethod(
+    "patch",
     endpoints.GUILD_CHANNELS(guildId),
     channelPositions,
   );

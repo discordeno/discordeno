@@ -1,5 +1,5 @@
 import { botId } from "../../bot.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { Message, structures } from "../../structures/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
@@ -25,7 +25,8 @@ export async function editMessage(
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
   }
 
-  const result = await RequestManager.patch(
+  const result = await rest.runMethod(
+    "patch",
     endpoints.CHANNEL_MESSAGE(message.channelId, message.id),
     content,
   );

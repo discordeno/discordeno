@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -16,7 +16,8 @@ export async function removeReactionEmoji(
     reaction = reaction.substring(3, reaction.length - 1);
   }
 
-  const result = await RequestManager.delete(
+  const result = await rest.runMethod(
+    "delete",
     endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction),
   );
 

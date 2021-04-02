@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
@@ -46,7 +46,8 @@ export async function executeWebhook(
     }
   }
 
-  const result = await RequestManager.post(
+  const result = await rest.runMethod(
+    "post",
     `${endpoints.WEBHOOK(webhookId, webhookToken)}${
       options.wait ? "?wait=true" : ""
     }`,

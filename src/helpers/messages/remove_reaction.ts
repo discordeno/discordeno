@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Removes a reaction from the bot on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
@@ -13,7 +13,8 @@ export async function removeReaction(
     reaction = reaction.substring(3, reaction.length - 1);
   }
 
-  const result = await RequestManager.delete(
+  const result = await rest.runMethod(
+    "delete",
     endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction),
   );
 
