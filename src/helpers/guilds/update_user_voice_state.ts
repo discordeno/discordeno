@@ -15,7 +15,7 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
  *  - When unsuppressed, non-bot users will have their `request_to_speak_timestamp` set to the current time. Bot users will not.
  *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
  */
-export function updateUserVoiceState(
+export function updateVoiceState(
   guildId: string,
   userId: string,
   data: UpdateOthersVoiceState,
