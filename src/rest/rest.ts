@@ -6,10 +6,9 @@ import { processQueue } from "./process_queue.ts";
 import { processRateLimitedPaths } from "./process_rate_limited_paths.ts";
 import { processRequest } from "./process_request.ts";
 import { processRequestHeaders } from "./process_request_headers.ts";
-import { RequestManager } from "./request_manager.ts";
 import { runMethod } from "./run_method.ts";
 
-export const rest: RestCache = {
+export const rest = {
   /** The secret authorization key to confirm that this was a request made by you and not a DDOS attack. */
   authorization: "discordeno_best_lib_ever",
   pathQueues: new Map(),
@@ -30,10 +29,6 @@ export const rest: RestCache = {
     globallyRateLimited() {},
     retriesMaxed() {},
   },
-
-  // TODO: add propeer docs dcomments
-  manager: RequestManager,
-
   /** Handler function for every request. Converts to json, verified authorization & requirements and begins processing the request */
   handlePayload,
   checkRateLimits,

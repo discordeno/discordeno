@@ -1,13 +1,14 @@
 import { applicationId } from "../../bot.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Deletes a slash command. */
 export function deleteSlashCommand(id: string, guildId?: string) {
   if (!guildId) {
-    return RequestManager.delete(endpoints.COMMANDS_ID(applicationId, id));
+    return rest.runMethod("delete", endpoints.COMMANDS_ID(applicationId, id));
   }
-  return RequestManager.delete(
+  return rest.runMethod(
+    "delete",
     endpoints.COMMANDS_GUILD_ID(applicationId, guildId, id),
   );
 }

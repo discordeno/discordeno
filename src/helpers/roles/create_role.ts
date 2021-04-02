@@ -1,5 +1,5 @@
 import { cacheHandlers } from "../../cache.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
@@ -15,7 +15,7 @@ export async function createRole(
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
-  const result = await RequestManager.post(endpoints.GUILD_ROLES(guildId), {
+  const result = await rest.runMethod("post", endpoints.GUILD_ROLES(guildId), {
     ...options,
     permissions: calculateBits(options?.permissions || []),
     reason,

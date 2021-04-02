@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
@@ -16,7 +16,7 @@ export async function createEmoji(
     image = await urlToBase64(image);
   }
 
-  const result = await RequestManager.post(endpoints.GUILD_EMOJIS(guildId), {
+  const result = await rest.runMethod("post", endpoints.GUILD_EMOJIS(guildId), {
     ...options,
     name,
     image,

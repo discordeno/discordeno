@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /**
@@ -9,7 +9,7 @@ import { endpoints } from "../../util/constants.ts";
  * So it does not cache the guild, you must do it manually.
  * */
 export async function getGuild(guildId: string, counts = true) {
-  const result = await RequestManager.get(endpoints.GUILDS_BASE(guildId), {
+  const result = await rest.runMethod("get", endpoints.GUILDS_BASE(guildId), {
     with_counts: counts,
   });
 

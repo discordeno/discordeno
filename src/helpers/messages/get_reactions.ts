@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 
@@ -9,10 +9,12 @@ export async function getReactions(
   reaction: string,
   options?: DiscordGetReactionsParams,
 ) {
-  const users = (await RequestManager.get(
-    endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction),
-    options,
-  )) as UserPayload[];
+  const users =
+    (await rest.runMethod(
+      "get",
+      endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction),
+      options,
+    )) as UserPayload[];
 
   return new Collection(users.map((user) => [user.id, user]));
 }

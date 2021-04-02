@@ -1,5 +1,5 @@
 import { botId } from "../../bot.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   highestRole,
@@ -19,7 +19,8 @@ export async function kick(guildId: string, memberId: string, reason?: string) {
 
   await requireBotGuildPermissions(guildId, ["KICK_MEMBERS"]);
 
-  const result = await RequestManager.delete(
+  const result = await rest.runMethod(
+    "delete",
     endpoints.GUILD_MEMBER(guildId, memberId),
     { reason },
   );

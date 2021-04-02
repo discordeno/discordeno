@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -19,7 +19,8 @@ export async function addReaction(
     reaction = reaction.substring(3, reaction.length - 1);
   }
 
-  const result = await RequestManager.put(
+  const result = await rest.runMethod(
+    "put",
     endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction),
   );
 

@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 import { camelKeysToSnakeCase } from "../../util/utils.ts";
@@ -17,7 +17,8 @@ export async function pruneMembers(
 
   await requireBotGuildPermissions(guildId, ["KICK_MEMBERS"]);
 
-  const result = await RequestManager.post(
+  const result = await rest.runMethod(
+    "post",
     endpoints.GUILD_PRUNE(guildId),
     camelKeysToSnakeCase(options),
   );

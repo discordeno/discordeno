@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,
@@ -13,12 +13,16 @@ export async function editRole(
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
-  const result = await RequestManager.patch(endpoints.GUILD_ROLE(guildId, id), {
-    ...options,
-    permissions: options.permissions
-      ? calculateBits(options.permissions)
-      : undefined,
-  });
+  const result = await rest.runMethod(
+    "patch",
+    endpoints.GUILD_ROLE(guildId, id),
+    {
+      ...options,
+      permissions: options.permissions
+        ? calculateBits(options.permissions)
+        : undefined,
+    },
+  );
 
   return result;
 }

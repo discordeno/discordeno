@@ -1,5 +1,5 @@
 import { applicationId } from "../../bot.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 
@@ -48,7 +48,8 @@ export async function editSlashResponse(
     }
   }
 
-  const result = await RequestManager.patch(
+  const result = await rest.runMethod(
+    "patch",
     options.messageId
       ? endpoints.WEBHOOK_MESSAGE(applicationId, token, options.messageId)
       : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationId, token),

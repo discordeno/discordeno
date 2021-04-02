@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { urlToBase64 } from "../../util/utils.ts";
 
@@ -25,13 +25,10 @@ export async function editBotProfile(username?: string, botAvatarURL?: string) {
   }
 
   const avatar = botAvatarURL ? await urlToBase64(botAvatarURL) : undefined;
-  const result = await RequestManager.patch(
-    endpoints.USER_BOT,
-    {
-      username: username?.trim(),
-      avatar,
-    },
-  );
+  const result = await rest.runMethod("patch", endpoints.USER_BOT, {
+    username: username?.trim(),
+    avatar,
+  });
 
   return result;
 }

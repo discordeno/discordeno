@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { Overwrite } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
@@ -15,7 +15,8 @@ export async function editChannelOverwrite(
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
-  const result = await RequestManager.put(
+  const result = await rest.runMethod(
+    "put",
     endpoints.CHANNEL_OVERWRITE(channelId, overwriteId),
     {
       allow: calculateBits(options.allow),

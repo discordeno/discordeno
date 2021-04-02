@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
@@ -19,10 +19,12 @@ export async function getMessages(
 
   if (options?.limit && options.limit > 100) return;
 
-  const result = (await RequestManager.get(
-    endpoints.CHANNEL_MESSAGES(channelId),
-    options,
-  )) as MessageCreateOptions[];
+  const result =
+    (await rest.runMethod(
+      "get",
+      endpoints.CHANNEL_MESSAGES(channelId),
+      options,
+    )) as MessageCreateOptions[];
 
   return Promise.all(
     result.map((res) => structures.createMessageStruct(res)),

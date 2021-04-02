@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -20,7 +20,8 @@ export async function deleteMessages(
     );
   }
 
-  const result = await RequestManager.post(
+  const result = await rest.runMethod(
+    "post",
     endpoints.CHANNEL_BULK_DELETE(channelId),
     {
       messages: ids.splice(0, 100),
