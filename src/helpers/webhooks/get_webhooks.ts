@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -6,7 +6,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function getWebhooks(guildId: string) {
   await requireBotGuildPermissions(guildId, ["MANAGE_WEBHOOKS"]);
 
-  const result = await RequestManager.get(endpoints.GUILD_WEBHOOKS(guildId));
+  const result = await rest.runMethod("get", endpoints.GUILD_WEBHOOKS(guildId));
 
   return result;
 }

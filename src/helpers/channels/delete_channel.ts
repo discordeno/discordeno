@@ -1,5 +1,6 @@
 import { cacheHandlers } from "../../cache.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
+import { Errors } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -22,7 +23,8 @@ export async function deleteChannel(
     throw new Error(Errors.UPDATES_CHANNEL_CANNOT_BE_DELETED);
   }
 
-  const result = await RequestManager.delete(
+  const result = await rest.runMethod(
+    "delete",
     endpoints.CHANNEL_BASE(channelId),
     { reason },
   );

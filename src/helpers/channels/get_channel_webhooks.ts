@@ -1,4 +1,5 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
+import { DiscordWebhook } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -6,9 +7,10 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 export async function getChannelWebhooks(channelId: string) {
   await requireBotChannelPermissions(channelId, ["MANAGE_WEBHOOKS"]);
 
-  const result = await RequestManager.get(
+  const result = await rest.runMethod(
+    "get",
     endpoints.CHANNEL_WEBHOOKS(channelId),
   );
 
-  return result as WebhookPayload[];
+  return result as DiscordWebhook[];
 }

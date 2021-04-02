@@ -6,8 +6,9 @@ import { editChannel } from "../helpers/channels/edit_channel.ts";
 import { editChannelOverwrite } from "../helpers/channels/edit_channel_overwrite.ts";
 import { sendMessage } from "../helpers/messages/send_message.ts";
 import { disconnectMember } from "../helpers/mod.ts";
+import { Channel, DiscordChannel } from "../types/channels/channel.ts";
 import { Collection } from "../util/collection.ts";
-import { createNewProp } from "../util/utils.ts";
+import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
 
 const baseChannel: Partial<Channel> = {
   get guild() {
@@ -61,41 +62,32 @@ const baseChannel: Partial<Channel> = {
 };
 
 // deno-lint-ignore require-await
+/** Create a structure object  */
 export async function createChannelStruct(
-  data: ChannelCreatePayload,
+  data: DiscordChannel,
   guildId?: string,
 ) {
   const {
-    guild_id: rawGuildId = "",
-    last_message_id: lastMessageId,
-    user_limit: userLimit,
-    rate_limit_per_user: rateLimitPerUser,
-    parent_id: parentId = undefined,
-    last_pin_timestamp: lastPinTimestamp,
-    permission_overwrites: permissionOverwrites = [],
-    nsfw = false,
+    guildId: rawGuildId = "",
+    lastPinTimestamp,
     ...rest
-  } = data;
+  } = snakeKeysToCamelCase(data) as Channel;
 
-  const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
-  for (const key of Object.keys(rest)) {
+  const props: Record<string, PropertyDescriptor> = {};
+  Object.keys(rest).forEach((key) => {
     // @ts-ignore index signature
-    restProps[key] = createNewProp(rest[key]);
-  }
+    props[key] = createNewProp(rest[key]);
+  });
 
-  const channel = Object.create(baseChannel, {
-    ...restProps,
+  const channel: ChannelStruct = Object.create(baseChannel, {
+    ...props,
     guildId: createNewProp(guildId || rawGuildId),
-    lastMessageId: createNewProp(lastMessageId),
-    userLimit: createNewProp(userLimit),
-    rateLimitPerUser: createNewProp(rateLimitPerUser),
-    parentId: createNewProp(parentId),
     lastPinTimestamp: createNewProp(
       lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined,
     ),
-    permissionOverwrites: createNewProp(permissionOverwrites),
-    nsfw: createNewProp(nsfw),
   });
 
-  return channel as Channel;
+  return channel;
 }
+
+export type ChannelStruct = Channel & typeof baseChannel;

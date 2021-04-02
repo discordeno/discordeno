@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -6,7 +6,10 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 export async function deleteWebhook(channelId: string, webhookId: string) {
   await requireBotChannelPermissions(channelId, ["MANAGE_WEBHOOKS"]);
 
-  const result = await RequestManager.delete(endpoints.WEBHOOK_ID(webhookId));
+  const result = await rest.runMethod(
+    "delete",
+    endpoints.WEBHOOK_ID(webhookId),
+  );
 
   return result;
 }

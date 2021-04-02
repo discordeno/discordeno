@@ -1,5 +1,5 @@
 import { cacheHandlers } from "../../cache.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import { PermissionStrings } from "../../types/mod.ts";
@@ -70,9 +70,8 @@ export async function sendMessage(
     }
   }
 
-  const result = (await RequestManager.post(
-    endpoints.CHANNEL_MESSAGES(channelId),
-    {
+  const result =
+    (await rest.runMethod("post", endpoints.CHANNEL_MESSAGES(channelId), {
       ...content,
       allowed_mentions: content.mentions
         ? {
@@ -88,8 +87,7 @@ export async function sendMessage(
           },
         }
         : {}),
-    },
-  )) as MessageCreateOptions;
+    })) as MessageCreateOptions;
 
   return structures.createMessageStruct(result);
 }

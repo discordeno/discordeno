@@ -31,7 +31,7 @@ export async function urlToBase64(url: string) {
 
 /** Allows easy way to add a prop to a base object when needing to use complicated getters solution. */
 // deno-lint-ignore no-explicit-any
-export function createNewProp(value: any): Partial<PropertyDescriptor> {
+export function createNewProp(value: any): PropertyDescriptor {
   return { configurable: true, enumerable: true, writable: true, value };
 }
 

@@ -1,4 +1,4 @@
-import { RequestManager } from "../../rest/request_manager.ts";
+import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -6,7 +6,8 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function getBan(guildId: string, memberId: string) {
   await requireBotGuildPermissions(guildId, ["BAN_MEMBERS"]);
 
-  const result = await RequestManager.get(
+  const result = await rest.runMethod(
+    "get",
     endpoints.GUILD_BAN(guildId, memberId),
   );
 
