@@ -3,7 +3,7 @@ export interface Resume {
   /** Session token */
   token: string;
   /** Session id */
-  session_id: string;
+  sessionId: string;
   /** Last sequence number received */
   seq: number;
 }

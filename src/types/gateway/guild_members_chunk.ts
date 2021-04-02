@@ -1,5 +1,5 @@
 import { GuildMember } from "../guilds/guild_member.ts";
-import { PresenceUpdate } from "../misc/presence_update.ts";
+import { PresenceUpdate } from "./presence_update.ts";
 import { SnakeCaseProps } from "../util.ts";
 
 export interface GuildMembersChunk {

@@ -1,6 +1,5 @@
 import { SnakeCaseProps } from "../util.ts";
 
-/** https://discord.com/developers/docs/topics/gateway#invite-delete */
 export interface InviteDelete {
   /** The channel of the invite */
   channelId: string;
@@ -10,4 +9,5 @@ export interface InviteDelete {
   code: string;
 }
 
+/** https://discord.com/developers/docs/topics/gateway#invite-delete */
 export type DiscordInviteDelete = SnakeCaseProps<InviteDelete>;

@@ -1,7 +1,7 @@
 import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
 
-export interface GuildBanAdd {
+export interface GuildBanAddRemove {
   /** id of the guild */
   guildId: string;
   /** The banned user */
@@ -9,4 +9,4 @@ export interface GuildBanAdd {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-ban-add */
-export type DiscordGuildBanAdd = SnakeCaseProps<GuildBanAdd>;
+export type DiscordGGuildBanAddRemove = SnakeCaseProps<GuildBanAddRemove>;
