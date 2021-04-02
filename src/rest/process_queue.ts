@@ -1,3 +1,4 @@
+import { DiscordHTTPResponseCodes } from "../types/codes/http_response_codes.ts";
 import { rest } from "./rest.ts";
 
 /** Processes the queue by looping over each path separately until the queues are empty. */
@@ -67,19 +68,25 @@ export async function processQueue(id: string) {
           response,
         );
 
-        const error = response.status === HttpResponseCode.BadRequest
-          ? "The request was improperly formatted, or the server couldn't understand it."
-          : response.status === HttpResponseCode.Unauthorized
-          ? "The Authorization header was missing or invalid."
-          : response.status === HttpResponseCode.Forbidden
-          ? "The Authorization token you passed did not have permission to the resource."
-          : response.status === HttpResponseCode.NotFound
-          ? "The resource at the location specified doesn't exist."
-          : response.status === HttpResponseCode.MethodNotAllowed
-          ? "The HTTP method used is not valid for the location specified."
-          : response.status === HttpResponseCode.GatewayUnavailable
-          ? "There was not a gateway available to process your request. Wait a bit and retry."
-          : "REQUEST_UNKNOWN_ERROR";
+        let error = "REQUEST_UNKNOWN_ERROR";
+        switch (response.status) {
+          case DiscordHTTPResponseCodes.BadRequest:
+            error =
+              "The request was improperly formatted, or the server couldn't understand it.";
+          case DiscordHTTPResponseCodes.Unauthorized:
+            error = "The Authorization header was missing or invalid.";
+          case DiscordHTTPResponseCodes.Forbidden:
+            error =
+              "The Authorization token you passed did not have permission to the resource.";
+          case DiscordHTTPResponseCodes.NotFound:
+            error = "The resource at the location specified doesn't exist.";
+          case DiscordHTTPResponseCodes.MethodNotAllowed:
+            error =
+              "The HTTP method used is not valid for the location specified.";
+          case DiscordHTTPResponseCodes.GatewayUnavailable:
+            error =
+              "There was not a gateway available to process your request. Wait a bit and retry.";
+        }
 
         queuedRequest.request.respond(
           { status: response.status, body: JSON.stringify({ error }) },
