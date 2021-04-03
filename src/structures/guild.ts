@@ -155,7 +155,7 @@ export async function createGuildStruct(
 
   initialMemberLoadQueue.set(guild.id, members);
 
-  return guild as Guild;
+  return guild as GuildStruct;
 }
 
 export interface GuildStruct extends
