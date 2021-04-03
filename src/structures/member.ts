@@ -6,10 +6,18 @@ import { rawAvatarURL } from "../helpers/members/raw_avatar_url.ts";
 import { sendDirectMessage } from "../helpers/members/send_direct_message.ts";
 import { addRole } from "../helpers/roles/add_role.ts";
 import { removeRole } from "../helpers/roles/remove_role.ts";
+import {
+  CreateGuildBan,
+  CreateMessage,
+  DiscordGuildMember,
+  GuildMember,
+  ModifyGuildMember,
+  User,
+} from "../types/mod.ts";
 import { Collection } from "../util/collection.ts";
-import { createNewProp } from "../util/utils.ts";
+import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
 
-const baseMember: Partial<Member> = {
+const baseMember: Partial<MemberStruct> = {
   get avatarURL() {
     return rawAvatarURL(this.id!, this.discriminator!, this.avatar!);
   },
@@ -60,44 +68,35 @@ const baseMember: Partial<Member> = {
 };
 
 export async function createMemberStruct(
-  data: MemberCreatePayload,
+  data: DiscordGuildMember,
   guildId: string,
 ) {
   const {
-    joined_at: joinedAt,
-    premium_since: premiumSince,
-    user: userData,
-    roles,
-    deaf,
-    mute,
-    nick,
+    user,
+    joinedAt,
+    premiumSince,
     ...rest
-  } = data;
+  } = snakeKeysToCamelCase(data) as GuildMember;
 
-  const { mfa_enabled: mfaEnabled, premium_type: premiumType, ...user } =
-    data.user || {};
-
-  const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
+  const props: Record<string, ReturnType<typeof createNewProp>> = {};
 
   for (const key of Object.keys(rest)) {
     // @ts-ignore index signature
-    restProps[key] = createNewProp(rest[key]);
+    props[key] = createNewProp(rest[key]);
   }
 
-  for (const key of Object.keys(user)) {
+  for (const key of Object.keys(user!)) {
     // @ts-ignore index signature
-    restProps[key] = createNewProp(user[key]);
+    props[key] = createNewProp(user[key]);
   }
 
   const member = Object.create(baseMember, {
-    ...restProps,
-    mfaEnabled: createNewProp(mfaEnabled),
-    premiumType: createNewProp(premiumType),
+    ...props,
     /** The guild related data mapped by guild id */
     guilds: createNewProp(new Collection<string, GuildMember>()),
   });
 
-  const cached = await cacheHandlers.get("members", user.id);
+  const cached = await cacheHandlers.get("members", user!.id);
   if (cached) {
     for (const [id, guild] of cached.guilds.entries()) {
       member.guilds.set(id, guild);
@@ -106,13 +105,64 @@ export async function createMemberStruct(
 
   // User was never cached before
   member.guilds.set(guildId, {
-    nick: nick,
-    roles: roles,
+    nick: props.nick,
+    roles: props.roles,
     joinedAt: Date.parse(joinedAt),
     premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
-    deaf: deaf,
-    mute: mute,
+    deaf: props.deaf,
+    mute: props.mute,
   });
 
-  return member as Member;
+  return member as MemberStruct;
+}
+
+export interface MemberStruct extends GuildMember, User {
+  /** The guild related data mapped by guild id */
+  guilds: Collection<string, GuildMember>;
+
+  // GETTERS
+  /** The avatar url using the default format and size. */
+  avatarURL: string;
+  /** The mention string for this member */
+  mention: string;
+  /** The username#discriminator tag for this member */
+  tag: string;
+
+  // METHODS
+
+  /** Returns the avatar url for this member and can be dynamically modified with a size or format */
+  makeAvatarURL(
+    options: { size?: DiscordImageSize; format?: DiscordImageFormat },
+  ): string;
+  /** Returns the guild for this guildID */
+  guild(guildID: string): GuildStruct | undefined;
+  /** Get the nickname or the username if no nickname */
+  name(guildID: string): string;
+  /** Get the guild member object for the specified guild */
+  guildMember(guildID: string): GuildMember | undefined;
+  /** Send a direct message to the user is possible */
+  sendDM(
+    content: string | CreateMessage,
+  ): ReturnType<typeof sendDirectMessage>;
+  /** Kick the member from a guild */
+  kick(guildID: string, reason?: string): ReturnType<typeof kickMember>;
+  /** Edit the member in a guild */
+  edit(
+    guildID: string,
+    options: ModifyGuildMember,
+  ): ReturnType<typeof editMember>;
+  /** Ban a member in a guild */
+  ban(guildID: string, options: CreateGuildBan): ReturnType<typeof banMember>;
+  /** Add a role to the member */
+  addRole(
+    guildID: string,
+    roleID: string,
+    reason?: string,
+  ): ReturnType<typeof addRole>;
+  /** Remove a role from the member */
+  removeRole(
+    guildID: string,
+    roleID: string,
+    reason?: string,
+  ): ReturnType<typeof removeRole>;
 }
