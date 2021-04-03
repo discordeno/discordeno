@@ -23,6 +23,8 @@ export async function handleGuildCreate(
     await cacheHandlers.delete("unavailableGuilds", payload.id);
 
     shard.unavailableGuildIds.delete(payload.id);
+
+    return eventHandlers.guildAvailable?.(guildStruct);
   }
 
   if (!cache.isReady) return eventHandlers.guildLoaded?.(guildStruct);

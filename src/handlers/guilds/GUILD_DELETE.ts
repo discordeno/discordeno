@@ -18,9 +18,11 @@ export async function handleGuildDelete(
     if (shard) shard.unavailableGuildIds.add(payload.id);
 
     await cacheHandlers.set("unavailableGuilds", payload.id, Date.now());
-  }
 
-  eventHandlers.guildDelete?.(guild);
+    eventHandlers.guildUnavailable?.(guild);
+  } else {
+    eventHandlers.guildDelete?.(guild);
+  }
 
   cacheHandlers.forEach("messages", (message) => {
     if (message.guildId === payload.id) {
