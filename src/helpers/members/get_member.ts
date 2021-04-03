@@ -1,5 +1,4 @@
 import { cacheHandlers } from "../../cache.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { endpoints } from "../../util/constants.ts";

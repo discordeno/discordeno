@@ -1,3 +1,7 @@
+import { Errors } from "../types/misc/errors.ts";
+import { IMAGE_BASE_URL } from "../util/constants.ts";
+import { API_VERSION } from "../util/constants.ts";
+import { BASE_URL } from "../util/constants.ts";
 import { rest } from "./rest.ts";
 
 export function runMethod(

@@ -1,6 +1,7 @@
 import { botId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
 import { Message, structures } from "../../structures/mod.ts";
+import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
