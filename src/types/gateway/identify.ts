@@ -12,11 +12,11 @@ export interface Identify {
   /** Value between 50 and 250, total number of members where the gateway will stop sending offline members in the guild member list */
   largeThreshold?: number;
   /** Used for Guild Sharding */
-  shard?: [number, number];
+  shard?: [shardId: number, numberOfShards: number];
   /** Presence structure for initial presence information */
   presence?: UpdateStatus;
   /** Enables dispatching of guild subscription events (presence and typing events) */
-  guild_subscriptions?: boolean;
+  guildSubscriptions?: boolean;
   /** The Gateway Intents you wish to receive */
   intents: number;
 }

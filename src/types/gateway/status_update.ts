@@ -2,7 +2,7 @@ import { Activity } from "../misc/activity.ts";
 import { SnakeCaseProps } from "../util.ts";
 import { DiscordStatusTypes } from "./status_types.ts";
 
-export interface UpdateStatus {
+export interface StatusUpdate {
   /** Unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
   since: number | null;
   /** null, or the user's activities */
@@ -14,4 +14,4 @@ export interface UpdateStatus {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#update-status */
-export type DiscordUpdateStatus = SnakeCaseProps<UpdateStatus>;
+export type DiscordStatusUpdate = SnakeCaseProps<StatusUpdate>;
