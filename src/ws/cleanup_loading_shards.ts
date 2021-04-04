@@ -9,13 +9,13 @@ export async function cleanupLoadingShards() {
       console.log(
         now > loadingShard.startedAt + 60000,
         now,
-        loadingShard.startedAt
+        loadingShard.startedAt,
       );
       // Not a minute yet. Max should be few seconds but do a minute to be safe.
       if (now < loadingShard.startedAt + 60000) return;
 
       loadingShard.reject(
-        `[Identify Failure] Shard ${loadingShard.shardID} has not received READY event in over a minute.`
+        `[Identify Failure] Shard ${loadingShard.shardID} has not received READY event in over a minute.`,
       );
     });
 

@@ -48,7 +48,7 @@ export async function resume(shardID: number) {
           session_id: sessionID,
           seq: previousSequenceNumber,
         },
-      })
+      }),
     );
   };
 }

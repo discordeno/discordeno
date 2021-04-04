@@ -22,9 +22,13 @@ export async function startGateway(options: StartGatewayOptions) {
   setInterval(ws.resharder, 1000 * 60 * 60);
 
   ws.identifyPayload.intents = options.intents.reduce(
-    (bits, next) =>
-      (bits |= typeof next === "string" ? DiscordGatewayIntents[next] : next),
-    0
+    (
+      bits,
+      next,
+    ) => (bits |= typeof next === "string"
+      ? DiscordGatewayIntents[next]
+      : next),
+    0,
   );
 
   const data = (await fetch(`https://discord.com/api/gateway/bot`, {

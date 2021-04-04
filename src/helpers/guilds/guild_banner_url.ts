@@ -8,7 +8,7 @@ export function guildBannerURL(
   id: string,
   banner: string,
   size: DiscordImageSize = 128,
-  format?: DiscordImageFormat
+  format?: DiscordImageFormat,
 ) {
   return banner
     ? formatImageURL(endpoints.GUILD_BANNER(id, banner), size, format)

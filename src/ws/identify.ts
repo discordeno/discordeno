@@ -30,7 +30,7 @@ export async function identify(shardID: number, maxShards: number) {
       JSON.stringify({
         op: DiscordGatewayOpcodes.Identify,
         d: { ...ws.identifyPayload, shard: [shardID, maxShards] },
-      })
+      }),
     );
   };
 

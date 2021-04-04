@@ -34,7 +34,7 @@ export function heartbeat(shardID: number, interval: number) {
       JSON.stringify({
         op: DiscordGatewayOpcodes.Heartbeat,
         d: currentShard.previousSequenceNumber,
-      })
+      }),
     );
   }, interval);
 }

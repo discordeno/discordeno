@@ -13,8 +13,10 @@ export function handleOnMessage(message: any, shardID: number) {
   }
 
   if (message instanceof Uint8Array) {
-    message = decompressWith(message, 0, (slice: Uint8Array) =>
-      ws.utf8decoder.decode(slice)
+    message = decompressWith(
+      message,
+      0,
+      (slice: Uint8Array) => ws.utf8decoder.decode(slice),
     );
   }
 
@@ -27,7 +29,7 @@ export function handleOnMessage(message: any, shardID: number) {
     case DiscordGatewayOpcodes.Hello:
       ws.heartbeat(
         shardID,
-        (messageData.d as DiscordHeartbeat).heartbeat_interval
+        (messageData.d as DiscordHeartbeat).heartbeat_interval,
       );
       break;
     case DiscordGatewayOpcodes.HeartbeatACK:

@@ -4,7 +4,7 @@ import { ws } from "./ws.ts";
 export async function tellClusterToIdentify(
   workerID: number,
   shardID: number,
-  bucketID: number
+  bucketID: number,
 ) {
   // When resharding this may exist already
   const oldShard = ws.shards.get(shardID);

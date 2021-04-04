@@ -1,19 +1,15 @@
-import { Collection } from "../../util/collection.ts";
-import {
-  cleanupLoadingShards,
-  spawnShards,
-  startGateway,
-  tellClusterToIdentify,
-} from "./manager.ts";
-import {
-  createShard,
-  handleDiscordPayload,
-  handleOnMessage,
-  heartbeat,
-  identify,
-} from "./shard.ts";
+import { Collection } from "../util/collection.ts";
 import { log } from "./events.ts";
 import { resharder } from "./resharder.ts";
+import { startGateway } from "./start_gateway.ts";
+import { spawnShards } from "./spawn_shards.ts";
+import { createShard } from "./create_shard.ts";
+import { identify } from "./identify.ts";
+import { heartbeat } from "./heartbeat.ts";
+import { handleDiscordPayload } from "./handle_discord_payload.ts";
+import { tellClusterToIdentify } from "./tell_cluster_to_identify.ts";
+import { cleanupLoadingShards } from "./cleanup_loading_shards.ts";
+import { handleOnMessage } from "./handle_on_message.ts";
 
 // CONTROLLER LIKE INTERFACE FOR WS HANDLING
 export const ws = {

@@ -1,6 +1,5 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { basicShards } from "../../ws/shard.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { DiscordUnavailableGuild } from "../../types/guilds/unavailable_guild.ts";
 

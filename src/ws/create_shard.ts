@@ -1,5 +1,4 @@
 import { identify } from "./identify.ts";
-import { handleOnMessage } from "./proxy/shard.ts";
 import { resume } from "./resume.ts";
 import { ws } from "./ws.ts";
 
@@ -29,7 +28,7 @@ export async function createShard(shardID: number) {
       case 4013:
       case 4014:
         throw new Error(
-          event.reason || "Discord gave no reason! GG! You broke Discord!"
+          event.reason || "Discord gave no reason! GG! You broke Discord!",
         );
       // THESE ERRORS CAN NO BE RESUMED! THEY MUST RE-IDENTIFY!
       case 4003:
