@@ -15,9 +15,11 @@
 
 Examples of good PR title:
 
-- fix(controllers/interactions): cache member from INTERACTION_CREATE payload
+- fix(handlers/INTERACTION_CREATE): cache member object
 - docs: improve wording
-- feat(handlers/guild): add editGuild() function Examples of bad PR title:
+- feat: add cache manager module
+- feat(helpers): add editGuild()
+- refactor(ws/shard): remove redundant checks
 
 Examples of bad PR title:
 
@@ -48,3 +50,32 @@ Examples of bad PR title:
   wherever possible.
 - Please follow the
   [guidelines for inclusive code](https://chromium.googlesource.com/chromium/src/+/master/styleguide/inclusive_code.md).
+
+## Types Guide
+
+- Must use snake case (according to Discord API).
+- Each field or property must be accompanied with a reasonable JSDoc comment
+  right above its type definition.
+- The name of the type must be prefixed with `Discord`.
+- Must be placed inside of the types module (in `src/types` directory).
+
+Example:
+
+```ts
+export interface User {
+  id: string;
+  username: string;
+  discriminator: string;
+  avatar: string | null;
+  bot?: boolean;
+  system?: boolean;
+  mfaEnabled?: boolean;
+  locale?: string;
+  verified?: boolean;
+  email?: string;
+  flags?: number;
+  premiumType?: number;
+}
+
+export type DiscordUser = SnakeCaseProps<DiscordUserInternal>;
+```

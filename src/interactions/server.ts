@@ -1,10 +1,4 @@
 import { serve, verify } from "./deps.ts";
-import {
-  Interaction,
-  InteractionResponse,
-  InteractionResponseType,
-  InteractionType,
-} from "./types/mod.ts";
 
 /** This variable is a holder for the public key and other configuration */
 const serverOptions = {
@@ -12,22 +6,11 @@ const serverOptions = {
   port: 80,
 };
 
-/** Theses are the controllers that you can plug into and customize to your needs. */
-export const controllers = {
+/** Theses are the handlers that you can plug into and customize to your needs. */
+export const handlers = {
   handlePayload,
   handleApplicationCommand,
 };
-
-export interface StartServerConfig {
-  /** The public key from your discord bot dashboard at discord.dev */
-  publicKey: string;
-  /** The port number you are wanting to listen to, if you are following the guide, you probably want 80 */
-  port: number;
-  /** The function you would like to provide to handle your commands. */
-  handleApplicationCommand?(
-    payload: Interaction,
-  ): Promise<{ status?: number; body: InteractionResponse }>;
-}
 
 /** Starts the slash command server */
 export async function startServer(
@@ -36,7 +19,7 @@ export async function startServer(
   serverOptions.publicKey = publicKey;
   serverOptions.port = port;
   if (handleApplicationCommand) {
-    controllers.handleApplicationCommand = handleApplicationCommand;
+    handlers.handleApplicationCommand = handleApplicationCommand;
   }
 
   const server = serve({ port: serverOptions.port });
@@ -59,7 +42,7 @@ export async function startServer(
 
     try {
       const data = JSON.parse(new TextDecoder().decode(buffer));
-      const response = await controllers.handlePayload(data);
+      const response = await handlers.handlePayload(data);
       req.respond(
         { status: response.status || 200, body: JSON.stringify(response.body) },
       );
@@ -74,7 +57,7 @@ function handlePayload(payload: Interaction) {
     case InteractionType.PING:
       return { status: 200, body: { type: InteractionResponseType.PONG } };
     default: // APPLICATION_COMMAND
-      return controllers.handleApplicationCommand(payload);
+      return handlers.handleApplicationCommand(payload);
   }
 }
 
@@ -107,7 +90,11 @@ async function handleApplicationCommand(
 }
 
 /** Internal function to verify security. Discord will send bad and good data and this function is important to verify it. If it is not verified properly, Discord will kill your bot. */
-function verifySecurity(buffer: Uint8Array, signature: string, time: string) {
+export function verifySecurity(
+  buffer: Uint8Array,
+  signature: string,
+  time: string,
+) {
   const sig = new Uint8Array(64);
   const timestamp = new TextEncoder().encode(time);
 

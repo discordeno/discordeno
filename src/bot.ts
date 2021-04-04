@@ -1,11 +1,6 @@
-import { getGatewayBot } from "./api/handlers/gateway.ts";
-import {
-  BotConfig,
-  DiscordBotGatewayData,
-  DiscordIdentify,
-  EventHandlers,
-  Intents,
-} from "./types/mod.ts";
+import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
+import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
+import { DiscordGetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 
@@ -16,10 +11,11 @@ export let applicationID = "";
 
 export let eventHandlers: EventHandlers = {};
 
-export let botGatewayData: DiscordBotGatewayData;
+export let botGatewayData: DiscordGetGatewayBot;
 export let proxyWSURL = `wss://gateway.discord.gg`;
+export let lastShardId = 0;
 
-export const identifyPayload: DiscordIdentify = {
+export const identifyPayload = {
   token: "",
   compress: true,
   properties: {
@@ -30,19 +26,6 @@ export const identifyPayload: DiscordIdentify = {
   intents: 0,
   shard: [0, 0],
 };
-
-/** @deprecated Use "DiscordIdentify" instead */
-export interface IdentifyPayload {
-  token: string;
-  compress: boolean;
-  properties: {
-    $os: string;
-    $browser: string;
-    $device: string;
-  };
-  intents: number;
-  shard: [number, number];
-}
 
 export async function startBot(config: BotConfig) {
   if (config.eventHandlers) eventHandlers = config.eventHandlers;
@@ -57,12 +40,18 @@ export async function startBot(config: BotConfig) {
   proxyWSURL = botGatewayData.url;
   identifyPayload.token = config.token;
   identifyPayload.intents = config.intents.reduce(
-    (bits, next) => (bits |= typeof next === "string" ? Intents[next] : next),
+    (
+      bits,
+      next,
+    ) => (bits |= typeof next === "string"
+      ? DiscordGatewayIntents[next]
+      : next),
     0,
   );
-  identifyPayload.shard = [0, botGatewayData.shards];
+  lastShardId = botGatewayData.shards;
+  identifyPayload.shard = [0, lastShardId];
 
-  await spawnShards(botGatewayData, identifyPayload, 0, botGatewayData.shards);
+  await spawnShards(botGatewayData, identifyPayload, 0, lastShardId);
 }
 
 /** Allows you to dynamically update the event handlers by passing in new eventHandlers */
@@ -73,14 +62,14 @@ export function updateEventHandlers(newEventHandlers: EventHandlers) {
   };
 }
 
-/** INTERNAL LIB function used to set the bot ID once the READY event is sent by Discord. */
-export function setBotID(id: string) {
-  if (botID !== id) botID = id;
+/** INTERNAL LIB function used to set the bot Id once the READY event is sent by Discord. */
+export function setBotId(id: string) {
+  if (botId !== id) botId = id;
 }
 
-/** INTERNAL LIB function used to set the application ID once the READY event is sent by Discord. */
-export function setApplicationID(id: string) {
-  if (applicationID !== id) applicationID = id;
+/** INTERNAL LIB function used to set the application Id once the READY event is sent by Discord. */
+export function setApplicationId(id: string) {
+  if (applicationId !== id) applicationId = id;
 }
 
 // BIG BRAIN BOT STUFF ONLY BELOW THIS
@@ -104,7 +93,12 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   }
 
   identifyPayload.intents = data.intents.reduce(
-    (bits, next) => (bits |= typeof next === "string" ? Intents[next] : next),
+    (
+      bits,
+      next,
+    ) => (bits |= typeof next === "string"
+      ? DiscordGatewayIntents[next]
+      : next),
     0,
   );
 
@@ -123,6 +117,13 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
           : botGatewayData.shards),
     );
   }
+}
+
+export interface BotConfig {
+  token: string;
+  compress?: boolean;
+  intents: (DiscordGatewayIntents | keyof typeof DiscordGatewayIntents)[];
+  eventHandlers?: EventHandlers;
 }
 
 export interface BigBrainBotConfig extends BotConfig {

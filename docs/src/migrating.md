@@ -22,7 +22,7 @@ For the purposes of this guide, I will be using the current
 ## Preparations
 
 - First, create a Discordeno Bot using the
-  [Generator Boilerplate](https://github.com/discordeno/boilerplate) I will name
+  [Generator Template](https://github.com/discordeno/template) I will name
   it Zodiac.
 
 - Then `git clone https://github.com/Skillz4Killz/Zodiac.git`
@@ -329,7 +329,7 @@ createCommand({
 
 Awesome, that is a full command converted from Discord.JS to Discordeno. See how
 easy it is! Let's convert one more command to see how to really take full
-advantage of Discordeno boilerplate and have something amazing.
+advantage of Discordeno template and have something amazing.
 
 Discord.JS Kick Command Version
 

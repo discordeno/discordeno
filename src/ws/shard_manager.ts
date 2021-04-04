@@ -1,22 +1,11 @@
-import { controllers } from "../api/controllers/mod.ts";
-import { Guild } from "../api/structures/guild.ts";
-import { Member } from "../api/structures/mod.ts";
 import { eventHandlers } from "../bot.ts";
-import {
-  DiscordBotGatewayData,
-  DiscordIdentify,
-  DiscordPayload,
-  FetchMembersOptions,
-  GatewayOpcode,
-} from "../types/mod.ts";
-import { cache } from "../util/cache.ts";
+import { cache } from "../cache.ts";
+import { handlers } from "../handlers/mod.ts";
+import { Member } from "../structures/mod.ts";
+import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { Collection } from "../util/collection.ts";
-import { BotStatusRequest, delay } from "../util/utils.ts";
-import {
-  botGatewayStatusRequest,
-  createShard,
-  requestGuildMembers,
-} from "./mod.ts";
+import { delay } from "../util/utils.ts";
+import { createShard, requestGuildMembers } from "./mod.ts";
 
 let createNextShard = true;
 
@@ -28,26 +17,26 @@ export function allowNextShard(enabled = true) {
 export async function spawnShards(
   data: DiscordBotGatewayData,
   payload: DiscordIdentify,
-  shardID: number,
-  lastShardID: number,
+  shardId: number,
+  lastShardId: number,
   skipChecks?: number,
 ) {
   // All shards on this worker have started! Cancel out.
-  if (shardID >= lastShardID) return;
+  if (shardId >= lastShardId) return;
 
   if (skipChecks) {
     payload.shard = [
-      shardID,
-      data.shards > lastShardID ? data.shards : lastShardID,
+      shardId,
+      data.shards > lastShardId ? data.shards : lastShardId,
     ];
     // Start The shard
-    createShard(data, payload, false, shardID);
+    createShard(data, payload, false, shardId);
     // Spawn next shard
     await spawnShards(
       data,
       payload,
-      shardID + 1,
-      lastShardID,
+      shardId + 1,
+      lastShardId,
       skipChecks - 1,
     );
     return;
@@ -60,63 +49,52 @@ export async function spawnShards(
     await spawnShards(
       data,
       payload,
-      shardID,
-      lastShardID,
+      shardId,
+      lastShardId,
       data.session_start_limit.max_concurrency,
     );
     return;
   }
 
   await delay(1000);
-  await spawnShards(data, payload, shardID, lastShardID, skipChecks);
+  await spawnShards(data, payload, shardId, lastShardId, skipChecks);
 }
 
 export async function handleDiscordPayload(
   data: DiscordPayload,
-  shardID: number,
+  shardId: number,
 ) {
   eventHandlers.raw?.(data);
-  await eventHandlers.dispatchRequirements?.(data, shardID);
+  await eventHandlers.dispatchRequirements?.(data, shardId);
 
   switch (data.op) {
-    case GatewayOpcode.HeartbeatACK:
+    case DiscordGatewayOpcodes.HeartbeatACK:
       // In case the user wants to listen to heartbeat responses
       return eventHandlers.heartbeat?.();
-    case GatewayOpcode.Dispatch:
+    case DiscordGatewayOpcodes.Dispatch:
       if (!data.t) return;
-      // Run the appropriate controller for this event.
-      return controllers[data.t]?.(data, shardID);
+      // Run the appropriate handler for this event.
+      return handlers[data.t]?.(data, shardId);
     default:
       return;
   }
 }
 
 export async function requestAllMembers(
-  guild: Guild,
+  guildId: string,
+  shardId: number,
   resolve: (
     value: Collection<string, Member> | PromiseLike<Collection<string, Member>>,
   ) => void,
   options?: FetchMembersOptions,
 ) {
-  const nonce = `${guild.id}-${Date.now()}`;
+  const nonce = `${guildId}-${Date.now()}`;
   cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
 
   await requestGuildMembers(
-    guild.id,
-    guild.shardID,
+    guildId,
+    shardId,
     nonce,
     options,
   );
-}
-
-export function sendGatewayCommand(
-  type: "EDIT_BOTS_STATUS",
-  // deno-lint-ignore no-explicit-any
-  payload: Record<string, any>,
-) {
-  if (type === "EDIT_BOTS_STATUS") {
-    botGatewayStatusRequest(payload as BotStatusRequest);
-  }
-
-  return;
 }

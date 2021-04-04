@@ -42,7 +42,7 @@ import { startBot } from "https://deno.land/x/discordeno@10.0.0/mod.ts";
 ## Example Usage
 
 Starting with Discordeno is very simple, you can start from scratch without any
-boilerplates/frameworks: Add this snippet of code into a new TypeScript file:
+templates/frameworks: Add this snippet of code into a new TypeScript file:
 
 ```ts
 import { startBot } from "https://deno.land/x/discordeno/mod.ts";
