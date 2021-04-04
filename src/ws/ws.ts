@@ -1,15 +1,15 @@
 import { Collection } from "../util/collection.ts";
-import { log } from "./events.ts";
-import { resharder } from "./resharder.ts";
-import { startGateway } from "./start_gateway.ts";
-import { spawnShards } from "./spawn_shards.ts";
-import { createShard } from "./create_shard.ts";
-import { identify } from "./identify.ts";
-import { heartbeat } from "./heartbeat.ts";
-import { handleDiscordPayload } from "./handle_discord_payload.ts";
-import { tellClusterToIdentify } from "./tell_cluster_to_identify.ts";
 import { cleanupLoadingShards } from "./cleanup_loading_shards.ts";
+import { createShard } from "./create_shard.ts";
+import { log } from "./events.ts";
+import { handleDiscordPayload } from "./handle_discord_payload.ts";
 import { handleOnMessage } from "./handle_on_message.ts";
+import { heartbeat } from "./heartbeat.ts";
+import { identify } from "./identify.ts";
+import { resharder } from "./resharder.ts";
+import { spawnShards } from "./spawn_shards.ts";
+import { startGateway } from "./start_gateway.ts";
+import { tellClusterToIdentify } from "./tell_cluster_to_identify.ts";
 
 // CONTROLLER LIKE INTERFACE FOR WS HANDLING
 export const ws = {
@@ -21,16 +21,16 @@ export const ws = {
   reshard: true,
   /** The percentage at which resharding should occur. */
   reshardPercentage: 80,
-  /** The maximum shard ID number. Useful for zero-downtime updates or resharding. */
+  /** The maximum shard Id number. Useful for zero-downtime updates or resharding. */
   maxShards: 1,
   /** The amount of shards to load per cluster */
   shardsPerCluster: 25,
   /** The maximum amount of clusters to use for your bot. */
   maxClusters: 4,
-  /** The first shard ID to start spawning. */
-  firstShardID: 0,
-  /** The last shard ID for this cluster. */
-  lastShardID: 1,
+  /** The first shard Id to start spawning. */
+  firstShardId: 0,
+  /** The last shard Id for this cluster. */
+  lastShardId: 1,
   /** This prop decides whether Discord allows our next shard to be started. When 1 starts, this is set to false until it is ready for the next one. */
   createNextShard: true,
   /** The identify payload holds the necessary data to connect and stay connected with Discords WSS. */
@@ -69,7 +69,7 @@ export const ws = {
   loadingShards: new Collection<
     number,
     {
-      shardID: number;
+      shardId: number;
       resolve: (value: unknown) => void;
       reject: (reason?: unknown) => void;
       startedAt: number;
@@ -111,7 +111,7 @@ export interface DiscordenoShard {
   /** The amount of milliseconds to wait between heartbeats */
   resumeInterval: number;
   /** The session id important for resuming connections. */
-  sessionID: string;
+  sessionId: string;
   /** The previous sequence number, important for resuming connections. */
   previousSequenceNumber: number | null;
   /** Whether the shard is currently resuming. */
@@ -128,6 +128,6 @@ export interface DiscordenoShard {
     /** The interval between heartbeats requested by discord. */
     interval: number;
     /** The id of the interval, useful for stopping the interval if ws closed. */
-    intervalID: number;
+    intervalId: number;
   };
 }

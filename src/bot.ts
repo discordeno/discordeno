@@ -5,8 +5,8 @@ import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 
 export let authorization = "";
 export let secretKey = "";
-export let botID = "";
-export let applicationID = "";
+export let botId = "";
+export let applicationId = "";
 
 export let eventHandlers: EventHandlers = {};
 
@@ -109,10 +109,10 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
     await spawnShards(
       botGatewayData,
       identifyPayload,
-      data.firstShardID,
-      data.lastShardID ||
+      data.firstShardId,
+      data.lastShardId ||
         (botGatewayData.shards >= 25
-          ? (data.firstShardID + 25)
+          ? (data.firstShardId + 25)
           : botGatewayData.shards),
     );
   }
@@ -127,9 +127,9 @@ export interface BotConfig {
 
 export interface BigBrainBotConfig extends BotConfig {
   /** The first shard to start at for this worker. Use this to control which shards to run in each worker. */
-  firstShardID: number;
-  /** The last shard to start for this worker. By default it will be 25 + the firstShardID. */
-  lastShardID?: number;
+  firstShardId: number;
+  /** The last shard to start for this worker. By default it will be 25 + the firstShardId. */
+  lastShardId?: number;
   /** This can be used to forward the ws handling to a proxy. It will disable the sharding done by the bot side. */
   wsPort?: number;
   /** This can be used to forward the REST handling to a proxy. */

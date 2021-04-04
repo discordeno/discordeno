@@ -15,7 +15,7 @@ export async function cleanupLoadingShards() {
       if (now < loadingShard.startedAt + 60000) return;
 
       loadingShard.reject(
-        `[Identify Failure] Shard ${loadingShard.shardID} has not received READY event in over a minute.`,
+        `[Identify Failure] Shard ${loadingShard.shardId} has not received READY event in over a minute.`,
       );
     });
 

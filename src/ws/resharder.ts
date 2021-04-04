@@ -1,5 +1,5 @@
-import { ws } from "./ws.ts";
 import { getGatewayBot } from "../helpers/misc/get_gateway_bot.ts";
+import { ws } from "./ws.ts";
 
 /** The handler to automatically reshard when necessary. */
 export async function resharder() {
@@ -26,5 +26,5 @@ export async function resharder() {
   ws.botGatewayData.shards = data.shards;
   ws.botGatewayData.url = data.url;
 
-  ws.spawnShards(ws.firstShardID);
+  ws.spawnShards(ws.firstShardId);
 }

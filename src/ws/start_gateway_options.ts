@@ -9,10 +9,10 @@ export interface StartGatewayOptions {
   intents: (DiscordGatewayIntents | keyof typeof DiscordGatewayIntents)[];
   /** The max amount of shards used for identifying. This can be useful for zero-downtime updates or resharding. */
   maxShards?: number;
-  /** The first shard ID for this group of shards. */
-  firstShardID: number;
-  /** The last shard ID for this group. If none is provided, it will default to loading all shards. */
-  lastShardID?: number;
+  /** The first shard Id for this group of shards. */
+  firstShardId: number;
+  /** The last shard Id for this group. If none is provided, it will default to loading all shards. */
+  lastShardId?: number;
   /** The url to forward all payloads to. */
   url: string;
   /** The amount of shards per cluster. By default this is 25. Use this to spread the load from shards to different CPU cores. */
