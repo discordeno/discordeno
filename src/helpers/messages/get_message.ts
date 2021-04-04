@@ -10,11 +10,10 @@ export async function getMessage(channelId: string, id: string) {
     "READ_MESSAGE_HISTORY",
   ]);
 
-  const result =
-    (await rest.runMethod(
-      "get",
-      endpoints.CHANNEL_MESSAGE(channelId, id),
-    )) as MessageCreateOptions;
+  const result = (await rest.runMethod(
+    "get",
+    endpoints.CHANNEL_MESSAGE(channelId, id),
+  )) as MessageCreateOptions;
 
   return structures.createMessageStruct(result);
 }

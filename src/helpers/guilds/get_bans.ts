@@ -7,11 +7,10 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function getBans(guildId: string) {
   await requireBotGuildPermissions(guildId, ["BAN_MEMBERS"]);
 
-  const results =
-    (await rest.runMethod(
-      "get",
-      endpoints.GUILD_BANS(guildId),
-    )) as BannedUser[];
+  const results = (await rest.runMethod(
+    "get",
+    endpoints.GUILD_BANS(guildId),
+  )) as BannedUser[];
 
   return new Collection<string, BannedUser>(
     results.map((res) => [res.user.id, res]),
