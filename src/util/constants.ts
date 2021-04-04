@@ -177,3 +177,4 @@ export const endpoints = {
 };
 
 export const SLASH_COMMANDS_NAME_REGEX = /^[\w-]{1,32}$/;
+export const CHANNEL_MENTION_REGEX = /<#[0-9]+>/g;

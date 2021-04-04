@@ -13,11 +13,10 @@ export async function deleteGuildTemplate(
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  const deletedTemplate =
-    (await rest.runMethod(
-      "delete",
-      `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
-    )) as GuildTemplate;
+  const deletedTemplate = (await rest.runMethod(
+    "delete",
+    `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
+  )) as GuildTemplate;
 
   return structures.createTemplateStruct(deletedTemplate);
 }

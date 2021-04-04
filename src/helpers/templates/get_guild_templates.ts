@@ -10,11 +10,10 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function getGuildTemplates(guildId: string) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  const templates =
-    (await rest.runMethod(
-      "get",
-      endpoints.GUILD_TEMPLATES(guildId),
-    )) as GuildTemplate[];
+  const templates = (await rest.runMethod(
+    "get",
+    endpoints.GUILD_TEMPLATES(guildId),
+  )) as GuildTemplate[];
 
   return templates.map((template) => structures.createTemplateStruct(template));
 }

@@ -1,18 +1,23 @@
+import { Errors } from "../types/misc/errors.ts";
+import { IMAGE_BASE_URL } from "../util/constants.ts";
+import { API_VERSION } from "../util/constants.ts";
+import { BASE_URL } from "../util/constants.ts";
 import { rest } from "./rest.ts";
 
 export function runMethod(
-  method: RequestMethods,
+  method: "get" | "post" | "put" | "delete" | "patch",
   url: string,
   body?: unknown,
   retryCount = 0,
   bucketId?: string | null,
 ) {
-  rest.eventHandlers.debug?.(
-    {
-      type: "requestCreate",
-      data: { method, url, body, retryCount, bucketId },
-    },
-  );
+  rest.eventHandlers.debug?.("requestCreate", {
+    method,
+    url,
+    body,
+    retryCount,
+    bucketId,
+  });
 
   const errorStack = new Error("Location:");
   Error.captureStackTrace(errorStack);
@@ -45,38 +50,49 @@ export function runMethod(
   return new Promise(async (resolve, reject) => {
     const callback = async () => {
       try {
-        const rateLimitResetIn = await rest.checkRatelimits(url);
+        const rateLimitResetIn = rest.checkRateLimits(url);
         if (rateLimitResetIn) {
           return { rateLimited: rateLimitResetIn, beforeFetch: true, bucketId };
         }
 
         const query = method === "get" && body
           ? // deno-lint-ignore no-explicit-any
-            Object.entries(body as any).map(([key, value]) =>
-              // deno-lint-ignore no-explicit-any
-              `${encodeURIComponent(key)}=${encodeURIComponent(value as any)}`
-            )
+            Object.entries(body as any)
+              .map(
+                ([key, value]) =>
+                  `${encodeURIComponent(key)}=${
+                    encodeURIComponent(
+                      value as string | number | boolean,
+                    )
+                  }`,
+              )
               .join("&")
           : "";
         const urlToUse = method === "get" && query ? `${url}?${query}` : url;
 
-        rest.eventHandlers.debug?.(
-          {
-            type: "requestFetch",
-            data: { method, url, body, retryCount, bucketId },
-          },
-        );
+        rest.eventHandlers.debug?.("requestFetch", {
+          method,
+          url,
+          body,
+          retryCount,
+          bucketId,
+        });
         const response = await fetch(
           urlToUse,
           rest.createRequestBody(body, method),
         );
-        rest.eventHandlers.debug?.(
-          {
-            type: "requestFetched",
-            data: { method, url, body, retryCount, bucketId, response },
-          },
+        rest.eventHandlers.debug?.("requestFetched", {
+          method,
+          url,
+          body,
+          retryCount,
+          bucketId,
+          response,
+        });
+        const bucketIdFromHeaders = rest.processRequestHeaders(
+          url,
+          response.headers,
         );
-        const bucketIdFromHeaders = rest.processHeaders(url, response.headers);
         await rest.handleStatusCode(response, errorStack);
 
         // Sometimes Discord returns an empty 204 response that can't be made to JSON.
@@ -88,12 +104,14 @@ export function runMethod(
           json.message === "You are being rate limited."
         ) {
           if (retryCount > 10) {
-            rest.eventHandlers.debug?.(
-              {
-                type: "error",
-                data: { method, url, body, retryCount, bucketId, errorStack },
-              },
-            );
+            rest.eventHandlers.error?.("globalRateLimit", {
+              method,
+              url,
+              body,
+              retryCount,
+              bucketId,
+              errorStack,
+            });
             throw new Error(Errors.RATE_LIMIT_RETRY_MAXED);
           }
 
@@ -104,20 +122,23 @@ export function runMethod(
           };
         }
 
-        rest.eventHandlers.debug?.(
-          {
-            type: "requestSuccess",
-            data: { method, url, body, retryCount, bucketId },
-          },
-        );
+        rest.eventHandlers.debug?.("requestSuccess", {
+          method,
+          url,
+          body,
+          retryCount,
+          bucketId,
+        });
         return resolve(json);
       } catch (error) {
-        rest.eventHandlers.debug?.(
-          {
-            type: "error",
-            data: { method, url, body, retryCount, bucketId, errorStack },
-          },
-        );
+        rest.eventHandlers.error?.("unknown", {
+          method,
+          url,
+          body,
+          retryCount,
+          bucketId,
+          errorStack,
+        });
         return reject(error);
       }
     };

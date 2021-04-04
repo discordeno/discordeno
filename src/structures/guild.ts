@@ -114,7 +114,7 @@ export async function createGuildStruct(
   } = snakeKeysToCamelCase(data) as Guild;
 
   const roles = await Promise.all(
-    data.roles.map((role) => structures.createRoleStruct(role)),
+    data.roles.map((role) => structures.createRoleStruct(role))
   );
 
   await Promise.all(channels.map(async (channel) => {
@@ -144,7 +144,7 @@ export async function createGuildStruct(
     ),
     memberCount: createNewProp(memberCount),
     emojis: createNewProp(
-      new Collection(emojis.map((emoji) => [emoji.id ?? emoji.name, emoji])),
+      new Collection(emojis.map((emoji) => [emoji.id ?? emoji.name, emoji]))
     ),
     voiceStates: createNewProp(
       new Collection(
@@ -153,7 +153,21 @@ export async function createGuildStruct(
     ),
   });
 
-  initialMemberLoadQueue.set(guild.id, members);
+  // ONLY ADD TO QUEUE WHEN BOT IS NOT FULLY ONLINE
+  if (!cache.isReady) initialMemberLoadQueue.set(guild.id, members);
+  // BOT IS ONLINE, JUST DIRECTLY ADD MEMBERS
+  else {
+    await Promise.allSettled(
+      members.map(async (member) => {
+        const memberStruct = await structures.createMemberStruct(
+          member,
+          guild.id
+        );
+
+        return cacheHandlers.set("members", memberStruct.id, memberStruct);
+      })
+    );
+  }
 
   return guild as GuildStruct;
 }
