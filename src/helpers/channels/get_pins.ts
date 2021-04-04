@@ -1,6 +1,6 @@
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordMessage } from "../../types/mod.ts";
+import { DiscordMessage } from "../../types/messages/message.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Get pinned messages in this channel. */

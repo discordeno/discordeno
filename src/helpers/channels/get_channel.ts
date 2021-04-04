@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordChannel } from "../../types/mod.ts";
+import { DiscordChannel } from "../../types/channels/channel.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Fetches a single channel object from the api.
