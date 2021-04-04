@@ -1,4 +1,3 @@
-import { DiscordPayload } from "../../types/discord.ts";
 import { DiscordenoShard } from "./ws.ts";
 
 /** The handler for logging different actions happening inside the ws. User can override and put custom handling per event. */

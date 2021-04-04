@@ -1,5 +1,5 @@
-import { getGatewayBot } from "../../api/handlers/gateway.ts";
 import { ws } from "./ws.ts";
+import { getGatewayBot } from "../helpers/misc/get_gateway_bot.ts";
 
 /** The handler to automatically reshard when necessary. */
 export async function resharder() {
