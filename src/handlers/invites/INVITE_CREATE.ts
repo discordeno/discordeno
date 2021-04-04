@@ -1,4 +1,6 @@
 import { eventHandlers } from "../../bot.ts";
+import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import { DiscordInviteCreate } from "../../types/invites/invite_create.ts";
 
 export function handleInviteCreate(payload: DiscordGatewayPayload) {
   // TODO: replace with tocamelcase

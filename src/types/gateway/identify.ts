@@ -16,7 +16,7 @@ export interface Identify {
   /** Presence structure for initial presence information */
   presence?: UpdateStatus;
   /** Enables dispatching of guild subscription events (presence and typing events) */
-  guild_subscriptions?: boolean;
+  guildSubscriptions?: boolean;
   /** The Gateway Intents you wish to receive */
   intents: number;
 }
