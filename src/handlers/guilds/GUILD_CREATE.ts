@@ -2,6 +2,8 @@ import { eventHandlers } from "../../bot.ts";
 import { cache, cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import { basicShards } from "../../ws/shard.ts";
+import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import { DiscordGuild } from "../../types/guilds/guild.ts";
 
 export async function handleGuildCreate(
   data: DiscordGatewayPayload,
@@ -23,6 +25,8 @@ export async function handleGuildCreate(
     await cacheHandlers.delete("unavailableGuilds", payload.id);
 
     shard.unavailableGuildIds.delete(payload.id);
+
+    return eventHandlers.guildAvailable?.(guildStruct);
   }
 
   if (!cache.isReady) return eventHandlers.guildLoaded?.(guildStruct);
