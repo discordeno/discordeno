@@ -118,7 +118,7 @@ export async function createGuildStruct(
   } = snakeKeysToCamelCase(data) as Guild;
 
   const roles = await Promise.all(
-    data.roles.map((role) => structures.createRoleStruct(role))
+    data.roles.map((role) => structures.createRoleStruct(role)),
   );
 
   await Promise.all(channels.map(async (channel) => {
@@ -148,7 +148,7 @@ export async function createGuildStruct(
     ),
     memberCount: createNewProp(memberCount),
     emojis: createNewProp(
-      new Collection(emojis.map((emoji) => [emoji.id ?? emoji.name, emoji]))
+      new Collection(emojis.map((emoji) => [emoji.id ?? emoji.name, emoji])),
     ),
     voiceStates: createNewProp(
       new Collection(
@@ -165,11 +165,11 @@ export async function createGuildStruct(
       members.map(async (member) => {
         const memberStruct = await structures.createMemberStruct(
           member,
-          guild.id
+          guild.id,
         );
 
         return cacheHandlers.set("members", memberStruct.id, memberStruct);
-      })
+      }),
     );
   }
 
@@ -221,8 +221,8 @@ export interface GuildStruct extends
     size?: DiscordImageSize,
     format?: DiscordImageFormat,
   ): string | undefined;
-   /** The splash url for this server */
-   splashURL(
+  /** The splash url for this server */
+  splashURL(
     size?: DiscordImageSize,
     format?: DiscordImageFormat,
   ): string | undefined;

@@ -3,7 +3,6 @@ import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { Errors } from "../types/misc/errors.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
-import { basicShards, sendWS } from "../ws/shard.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 
 export const sleep = (timeout: number) => {

@@ -30,9 +30,8 @@ const baseMessage: Partial<Message> = {
     return this.member?.guilds.get(this.guildId);
   },
   get link() {
-    return `https://discord.com/channels/${this.guildId || "@me"}/${
-      this.channelId
-    }/${this.id}`;
+    return `https://discord.com/channels/${this.guildId ||
+      "@me"}/${this.channelId}/${this.id}`;
   },
   get mentionedRoles() {
     return this.mentionRoleIds?.map((id) => this.guild?.roles.get(id)) || [];
@@ -61,20 +60,19 @@ const baseMessage: Partial<Message> = {
     return addReactions(this.channelId!, this.id!, reactions, ordered);
   },
   reply(content) {
-    const contentWithMention =
-      typeof content === "string"
-        ? {
-            content,
-            mentions: { repliedUser: true },
-            replyMessageId: this.id,
-            failReplyIfNotExists: false,
-          }
-        : {
-            ...content,
-            mentions: { ...(content.mentions || {}), repliedUser: true },
-            replyMessageId: this.id,
-            failReplyIfNotExists: content.failReplyIfNotExists === true,
-          };
+    const contentWithMention = typeof content === "string"
+      ? {
+        content,
+        mentions: { repliedUser: true },
+        replyMessageId: this.id,
+        failReplyIfNotExists: false,
+      }
+      : {
+        ...content,
+        mentions: { ...(content.mentions || {}), repliedUser: true },
+        replyMessageId: this.id,
+        failReplyIfNotExists: content.failReplyIfNotExists === true,
+      };
 
     if (this.guildId) return sendMessage(this.channelId!, contentWithMention);
     return sendDirectMessage(this.author!.id, contentWithMention);
@@ -132,8 +130,8 @@ export async function createMessageStruct(data: MessageCreateOptions) {
   }
 
   // Discord doesnt give guild id for getMessage() so this will fill it in
-  const guildIdFinal =
-    guildId || (await cacheHandlers.get("channels", channelId))?.guildId || "";
+  const guildIdFinal = guildId ||
+    (await cacheHandlers.get("channels", channelId))?.guildId || "";
 
   const message = Object.create(baseMessage, {
     ...restProps,
@@ -150,16 +148,16 @@ export async function createMessageStruct(data: MessageCreateOptions) {
         ...mentionChannelIds,
         // Add any other ids that can be validated in a channel mention format
         ...(rest.content.match(CHANNEL_MENTION_REGEX) || []).map((text) =>
-        // converts the <#123> into 123
+          // converts the <#123> into 123
           text.substring(2, text.length - 1)
         ),
-      ].map((m) => m.id)
+      ].map((m) => m.id),
     ),
     webhookId: createNewProp(webhookId),
     messageReference: createNewProp(messageReference),
     timestamp: createNewProp(Date.parse(data.timestamp)),
     editedTimestamp: createNewProp(
-      editedTimestamp ? Date.parse(editedTimestamp) : undefined
+      editedTimestamp ? Date.parse(editedTimestamp) : undefined,
     ),
   });
 
