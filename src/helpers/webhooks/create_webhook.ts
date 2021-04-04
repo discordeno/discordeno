@@ -1,4 +1,5 @@
 import { rest } from "../../rest/rest.ts";
+import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";

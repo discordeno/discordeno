@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { ModifyGuildChannelPositions } from "../../types/mod.ts";
+import { ModifyGuildChannelPositions } from "../../types/guilds/modify_guild_channel_position.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */

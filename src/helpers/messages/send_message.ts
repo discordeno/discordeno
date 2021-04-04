@@ -2,7 +2,8 @@ import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
-import { PermissionStrings } from "../../types/mod.ts";
+import { Errors } from "../../types/misc/errors.ts";
+import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
