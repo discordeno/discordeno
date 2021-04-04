@@ -22,7 +22,7 @@ export const rest = {
       console.error(error);
     },
     // PLACEHOLDERS TO ALLOW USERS TO CUSTOMIZE
-    debug: function(_type, error) {},
+    debug: function (_type, error) {},
     fetching() {},
     fetched() {},
     fetchSuccess() {},

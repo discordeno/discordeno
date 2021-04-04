@@ -42,19 +42,12 @@ export async function getMembers(guildId: string, options?: GetMemberOptions) {
       );
     }
 
-    const result =
-      (await rest.runMethod(
-        "get",
-        `${endpoints.GUILD_MEMBERS(guildId)}?limit=${
-          membersLeft > 1000
-            ? 1000
-            : membersLeft
-        }${
-          options?.after
-            ? `&after=${options.after}`
-            : ""
-        }`,
-      )) as DiscordGuildMember[];
+    const result = (await rest.runMethod(
+      "get",
+      `${endpoints.GUILD_MEMBERS(guildId)}?limit=${
+        membersLeft > 1000 ? 1000 : membersLeft
+      }${options?.after ? `&after=${options.after}` : ""}`,
+    )) as DiscordGuildMember[];
 
     const memberStructures = await Promise.all(
       result.map(async (member) => {

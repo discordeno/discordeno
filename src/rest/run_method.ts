@@ -9,7 +9,7 @@ export function runMethod(
   url: string,
   body?: unknown,
   retryCount = 0,
-  bucketId?: string | null
+  bucketId?: string | null,
 ) {
   rest.eventHandlers.debug?.("requestCreate", {
     method,
@@ -55,18 +55,19 @@ export function runMethod(
           return { rateLimited: rateLimitResetIn, beforeFetch: true, bucketId };
         }
 
-        const query =
-          method === "get" && body
-            ? // deno-lint-ignore no-explicit-any
-              Object.entries(body as any)
-                .map(
-                  ([key, value]) =>
-                    `${encodeURIComponent(key)}=${encodeURIComponent(
-                      value as string | number | boolean
-                    )}`
-                )
-                .join("&")
-            : "";
+        const query = method === "get" && body
+          ? // deno-lint-ignore no-explicit-any
+            Object.entries(body as any)
+              .map(
+                ([key, value]) =>
+                  `${encodeURIComponent(key)}=${
+                    encodeURIComponent(
+                      value as string | number | boolean,
+                    )
+                  }`,
+              )
+              .join("&")
+          : "";
         const urlToUse = method === "get" && query ? `${url}?${query}` : url;
 
         rest.eventHandlers.debug?.("requestFetch", {
@@ -78,7 +79,7 @@ export function runMethod(
         });
         const response = await fetch(
           urlToUse,
-          rest.createRequestBody(body, method)
+          rest.createRequestBody(body, method),
         );
         rest.eventHandlers.debug?.("requestFetched", {
           method,
@@ -90,7 +91,7 @@ export function runMethod(
         });
         const bucketIdFromHeaders = rest.processRequestHeaders(
           url,
-          response.headers
+          response.headers,
         );
         await rest.handleStatusCode(response, errorStack);
 

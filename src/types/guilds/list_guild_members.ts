@@ -1,4 +1,3 @@
-
 export interface ListGuildMembers {
   /** Max number of members to return (1-1000). Default: 1 */
   limit?: number;
