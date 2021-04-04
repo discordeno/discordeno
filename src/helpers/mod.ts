@@ -70,7 +70,6 @@ import { getMembersByQuery } from "./members/get_members_by_query.ts";
 import { kick, kickMember } from "./members/kick_member.ts";
 import { moveMember } from "./members/move_member.ts";
 import { pruneMembers } from "./members/prune_members.ts";
-import { rawAvatarURL } from "./members/raw_avatar_url.ts";
 import { sendDirectMessage } from "./members/send_direct_message.ts";
 import { unban, unbanMember } from "./members/unban_member.ts";
 import { addReaction } from "./messages/add_reaction.ts";

@@ -1,5 +1,6 @@
 import { encode } from "../../deps.ts";
-import { DiscordGatewayOpcodes } from "../types/mod.ts";
+import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
+import { Errors } from "../types/misc/errors.ts";
 import { basicShards, sendWS } from "../ws/shard.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 

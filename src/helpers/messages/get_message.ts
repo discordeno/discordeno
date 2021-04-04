@@ -13,11 +13,10 @@ export async function getMessage(channelId: string, id: string) {
     ]);
   }
 
-  const result =
-    (await rest.runMethod(
-      "get",
-      endpoints.CHANNEL_MESSAGE(channelId, id),
-    )) as MessageCreateOptions;
+  const result = (await rest.runMethod(
+    "get",
+    endpoints.CHANNEL_MESSAGE(channelId, id),
+  )) as MessageCreateOptions;
 
   return structures.createMessageStruct(result);
 }
