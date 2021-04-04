@@ -7,6 +7,7 @@ import { getBan } from "../helpers/guilds/get_ban.ts";
 import { getBans } from "../helpers/guilds/get_bans.ts";
 import { guildBannerURL } from "../helpers/guilds/guild_banner_url.ts";
 import { guildIconURL } from "../helpers/guilds/guild_icon_url.ts";
+import { guildSplashURL } from "../helpers/guilds/guild_splash_url.ts";
 import { leaveGuild } from "../helpers/guilds/leave_guild.ts";
 import { getInvites } from "../helpers/invites/get_invites.ts";
 import { banMember } from "../helpers/members/ban_member.ts";
@@ -64,7 +65,10 @@ const baseGuild: Partial<GuildStruct> = {
     return Boolean(this.features?.includes(DiscordGuildFeatures.VERIFIED));
   },
   bannerURL(size, format) {
-    return guildBannerURL(this as unknown as Guild, size, format);
+    return guildBannerURL(this.id!, this.banner!, size, format);
+  },
+  splashURL(size, format) {
+    return guildSplashURL(this.id!, this.splash!, size, format);
   },
   delete() {
     return deleteServer(this.id!);
@@ -91,7 +95,7 @@ const baseGuild: Partial<GuildStruct> = {
     return getInvites(this.id!);
   },
   iconURL(size, format) {
-    return guildIconURL(this as unknown as Guild, size, format);
+    return guildIconURL(this.id!, this.icon!, size, format);
   },
   leave() {
     return leaveGuild(this.id!);
@@ -114,7 +118,7 @@ export async function createGuildStruct(
   } = snakeKeysToCamelCase(data) as Guild;
 
   const roles = await Promise.all(
-    data.roles.map((role) => structures.createRoleStruct(role))
+    data.roles.map((role) => structures.createRoleStruct(role)),
   );
 
   await Promise.all(channels.map(async (channel) => {
@@ -144,7 +148,7 @@ export async function createGuildStruct(
     ),
     memberCount: createNewProp(memberCount),
     emojis: createNewProp(
-      new Collection(emojis.map((emoji) => [emoji.id ?? emoji.name, emoji]))
+      new Collection(emojis.map((emoji) => [emoji.id ?? emoji.name, emoji])),
     ),
     voiceStates: createNewProp(
       new Collection(
@@ -161,11 +165,11 @@ export async function createGuildStruct(
       members.map(async (member) => {
         const memberStruct = await structures.createMemberStruct(
           member,
-          guild.id
+          guild.id,
         );
 
         return cacheHandlers.set("members", memberStruct.id, memberStruct);
-      })
+      }),
     );
   }
 
@@ -214,6 +218,11 @@ export interface GuildStruct extends
 
   /** The banner url for this server */
   bannerURL(
+    size?: DiscordImageSize,
+    format?: DiscordImageFormat,
+  ): string | undefined;
+  /** The splash url for this server */
+  splashURL(
     size?: DiscordImageSize,
     format?: DiscordImageFormat,
   ): string | undefined;

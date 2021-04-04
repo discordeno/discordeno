@@ -15,11 +15,10 @@ export async function getMember(
   const guild = await cacheHandlers.get("guilds", guildId);
   if (!guild && !options?.force) return;
 
-  const data =
-    (await rest.runMethod(
-      "get",
-      endpoints.GUILD_MEMBER(guildId, id),
-    )) as MemberCreatePayload;
+  const data = (await rest.runMethod(
+    "get",
+    endpoints.GUILD_MEMBER(guildId, id),
+  )) as MemberCreatePayload;
 
   const memberStruct = await structures.createMemberStruct(data, guildId);
   await cacheHandlers.set("members", memberStruct.id, memberStruct);

@@ -15,7 +15,7 @@ import {
 export async function createChannel(
   guildId: string,
   name: string,
-  options?: CreateGuildChannel
+  options?: CreateGuildChannel,
 ) {
   const requiredPerms: Set<PermissionStrings> = new Set(["MANAGE_CHANNELS"]);
 
@@ -39,7 +39,7 @@ export async function createChannel(
         deny: calculateBits(perm.deny),
       })),
       type: options?.type || DiscordChannelTypes.GUILD_TEXT,
-    }
+    },
   )) as DiscordChannel;
 
   const channelStruct = await structures.createChannelStruct(result);
