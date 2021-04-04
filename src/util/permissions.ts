@@ -69,7 +69,7 @@ export async function calculateChannelOverwrites(
   channel = await getCached("channels", channel);
 
   // This is a DM channel so return ADMINISTRATOR permission
-  if (!channel || !channel.guildId) return "8";
+  if (!channel?.guildId) return "8";
 
   member = await getCached("members", member);
 
