@@ -220,7 +220,6 @@ export {
   pinMessage,
   pruneMembers,
   publishMessage,
-  rawAvatarURL,
   removeAllReactions,
   removeReaction,
   removeReactionEmoji,
@@ -322,7 +321,6 @@ export let helpers = {
   kickMember,
   moveMember,
   pruneMembers,
-  rawAvatarURL,
   sendDirectMessage,
   unbanMember,
   // messages
