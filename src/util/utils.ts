@@ -1,6 +1,8 @@
 import { encode } from "../../deps.ts";
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { Errors } from "../types/misc/errors.ts";
+import { DiscordImageFormat } from "../types/misc/image_format.ts";
+import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { basicShards, sendWS } from "../ws/shard.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 
@@ -46,8 +48,8 @@ export function delay(ms: number): Promise<void> {
 
 export const formatImageURL = (
   url: string,
-  size: ImageSize = 128,
-  format?: ImageFormats,
+  size: DiscordImageSize = 128,
+  format?: DiscordImageFormat,
 ) => {
   return `${url}.${format ||
     (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;

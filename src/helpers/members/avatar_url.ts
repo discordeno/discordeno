@@ -1,3 +1,5 @@
+import { DiscordImageFormat } from "../../types/misc/image_format.ts";
+import { DiscordImageSize } from "../../types/misc/image_size.ts";
 import { endpoints } from "../../util/constants.ts";
 import { formatImageURL } from "../../util/utils.ts";
 
@@ -6,8 +8,8 @@ export function avatarURL(
   userId: string,
   discriminator: string,
   avatar?: string | null,
-  size: ImageSize = 128,
-  format?: ImageFormats,
+  size: DiscordImageSize = 128,
+  format?: DiscordImageFormat,
 ) {
   return avatar
     ? formatImageURL(endpoints.USER_AVATAR(userId, avatar), size, format)
