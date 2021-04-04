@@ -91,7 +91,7 @@ const baseGuild: Partial<Guild> = {
 
 export async function createGuildStruct(
   data: CreateGuildPayload,
-  shardId: number,
+  shardId: number
 ) {
   const {
     disovery_splash: discoverySplash,
@@ -128,16 +128,18 @@ export async function createGuildStruct(
   } = data;
 
   const roles = await Promise.all(
-    data.roles.map((role) => structures.createRoleStruct(role)),
+    data.roles.map((role) => structures.createRoleStruct(role))
   );
 
-  await Promise.all(channels.map(async (channel) => {
-    const channelStruct = await structures.createChannelStruct(
-      channel,
-      rest.id,
-    );
-    return cacheHandlers.set("channels", channelStruct.id, channelStruct);
-  }));
+  await Promise.all(
+    channels.map(async (channel) => {
+      const channelStruct = await structures.createChannelStruct(
+        channel,
+        rest.id
+      );
+      return cacheHandlers.set("channels", channelStruct.id, channelStruct);
+    })
+  );
 
   const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
@@ -173,11 +175,11 @@ export async function createGuildStruct(
     roles: createNewProp(new Collection(roles.map((r: Role) => [r.id, r]))),
     joinedAt: createNewProp(Date.parse(joinedAt)),
     presences: createNewProp(
-      new Collection(presences.map((p: Presence) => [p.user.id, p])),
+      new Collection(presences.map((p: Presence) => [p.user.id, p]))
     ),
     memberCount: createNewProp(memberCount),
     emojis: createNewProp(
-      new Collection(emojis.map((emoji) => [emoji.id ?? emoji.name, emoji])),
+      new Collection(emojis.map((emoji) => [emoji.id ?? emoji.name, emoji]))
     ),
     voiceStates: createNewProp(
       new Collection(
@@ -193,12 +195,26 @@ export async function createGuildStruct(
             selfMute: vs.self_mute,
             selfStream: vs.self_stream,
           },
-        ]),
-      ),
+        ])
+      )
     ),
   });
 
-  initialMemberLoadQueue.set(guild.id, members);
+  // ONLY ADD TO QUEUE WHEN BOT IS NOT FULLY ONLINE
+  if (!cache.isReady) initialMemberLoadQueue.set(guild.id, members);
+  // BOT IS ONLINE, JUST DIRECTLY ADD MEMBERS
+  else {
+    await Promise.allSettled(
+      members.map(async (member) => {
+        const memberStruct = await structures.createMemberStruct(
+          member,
+          guild.id
+        );
+
+        return cacheHandlers.set("members", memberStruct.id, memberStruct);
+      })
+    );
+  }
 
   return guild as Guild;
 }
