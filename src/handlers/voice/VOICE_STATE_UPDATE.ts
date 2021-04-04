@@ -1,6 +1,8 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
+import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import { DiscordVoiceState } from "../../types/voice/voice_state.ts";
 
 export async function handleVoiceStateUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as DiscordVoiceState;

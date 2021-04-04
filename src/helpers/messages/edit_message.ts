@@ -1,6 +1,8 @@
 import { botId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
 import { Message, structures } from "../../structures/mod.ts";
+import { Errors } from "../../types/misc/errors.ts";
+import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -15,7 +17,7 @@ export async function editMessage(
 
   if (typeof content === "string") content = { content };
 
-  const requiredPerms: Permission[] = ["SEND_MESSAGES"];
+  const requiredPerms: PermissionStrings[] = ["SEND_MESSAGES"];
 
   if (content.tts) requiredPerms.push("SEND_TTS_MESSAGES");
 

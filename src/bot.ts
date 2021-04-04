@@ -1,5 +1,6 @@
 import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
 import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
+import { DiscordGetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { spawnShards } from "./ws/shard_manager.ts";
 
@@ -14,7 +15,7 @@ export let botGatewayData: DiscordGetGatewayBot;
 export let proxyWSURL = `wss://gateway.discord.gg`;
 export let lastShardId = 0;
 
-export const identifyPayload: DiscordIdentify = {
+export const identifyPayload = {
   token: "",
   compress: true,
   properties: {

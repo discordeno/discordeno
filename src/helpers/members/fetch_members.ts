@@ -1,5 +1,7 @@
 import { identifyPayload } from "../../bot.ts";
 import { Member } from "../../structures/mod.ts";
+import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
+import { Errors } from "../../types/misc/errors.ts";
 import { Collection } from "../../util/collection.ts";
 import { requestAllMembers } from "../../ws/shard_manager.ts";
 
@@ -19,7 +21,7 @@ export function fetchMembers(
   // You can request 1 member without the intent
   if (
     (!options?.limit || options.limit > 1) &&
-    !(identifyPayload.intents && Intents.GUILD_MEMBERS)
+    !(identifyPayload.intents && DiscordGatewayIntents.GUILD_MEMBERS)
   ) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
