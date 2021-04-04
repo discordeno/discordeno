@@ -5,7 +5,7 @@ import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 
 export let authorization = "";
 export let secretKey = "";
-export let botID = "";
+export let botId = "";
 export let applicationID = "";
 
 export let eventHandlers: EventHandlers = {};
