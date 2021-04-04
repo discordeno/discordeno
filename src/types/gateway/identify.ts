@@ -1,6 +1,6 @@
 import { SnakeCaseProps } from "../util.ts";
 import { IdentifyConnectionProperties } from "./identify_connection_properties.ts";
-import { UpdateStatus } from "./update_status.ts";
+import { StatusUpdate } from "./status_update.ts";
 
 export interface Identify {
   /** Authentication token */
@@ -14,7 +14,7 @@ export interface Identify {
   /** Used for Guild Sharding */
   shard?: [shardId: number, numberOfShards: number];
   /** Presence structure for initial presence information */
-  presence?: UpdateStatus;
+  presence?: StatusUpdate;
   /** Enables dispatching of guild subscription events (presence and typing events) */
   guildSubscriptions?: boolean;
   /** The Gateway Intents you wish to receive */

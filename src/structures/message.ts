@@ -9,7 +9,7 @@ import { removeAllReactions } from "../helpers/messages/remove_all_reactions.ts"
 import { removeReaction } from "../helpers/messages/remove_reaction.ts";
 import { removeReactionEmoji } from "../helpers/messages/remove_reaction_emoji.ts";
 import { sendMessage } from "../helpers/messages/send_message.ts";
-import { CHANNEL_MENTION_REGEX } from "../util/constants";
+import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
 import { createNewProp } from "../util/utils.ts";
 
 const baseMessage: Partial<Message> = {
