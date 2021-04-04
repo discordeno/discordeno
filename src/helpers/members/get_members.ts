@@ -2,6 +2,9 @@ import { identifyPayload } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { Member, structures } from "../../structures/mod.ts";
+import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
+import { DiscordGuildMember } from "../../types/guilds/guild_member.ts";
+import { Errors } from "../../types/misc/errors.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 
@@ -14,7 +17,7 @@ import { endpoints } from "../../util/constants.ts";
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
  */
 export async function getMembers(guildId: string, options?: GetMemberOptions) {
-  if (!(identifyPayload.intents && Intents.GUILD_MEMBERS)) {
+  if (!(identifyPayload.intents && DiscordGatewayIntents.GUILD_MEMBERS)) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
@@ -39,19 +42,12 @@ export async function getMembers(guildId: string, options?: GetMemberOptions) {
       );
     }
 
-    const result =
-      (await rest.runMethod(
-        "get",
-        `${endpoints.GUILD_MEMBERS(guildId)}?limit=${
-          membersLeft > 1000
-            ? 1000
-            : membersLeft
-        }${
-          options?.after
-            ? `&after=${options.after}`
-            : ""
-        }`,
-      )) as MemberCreatePayload[];
+    const result = (await rest.runMethod(
+      "get",
+      `${endpoints.GUILD_MEMBERS(guildId)}?limit=${
+        membersLeft > 1000 ? 1000 : membersLeft
+      }${options?.after ? `&after=${options.after}` : ""}`,
+    )) as DiscordGuildMember[];
 
     const memberStructures = await Promise.all(
       result.map(async (member) => {

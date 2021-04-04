@@ -18,7 +18,8 @@ export async function getAuditLogs(
         ? AuditLogs[options.action_type]
         : undefined,
       limit: options.limit && options.limit >= 1 && options.limit <= 100
-        ? options.limit : 50,
+        ? options.limit
+        : 50,
     },
   );
 

@@ -22,12 +22,11 @@ export async function editGuildTemplate(
     throw new Error("The description can only be in between 0-120 characters.");
   }
 
-  const template =
-    (await rest.runMethod(
-      "patch",
-      `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
-      data,
-    )) as GuildTemplate;
+  const template = (await rest.runMethod(
+    "patch",
+    `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
+    data,
+  )) as GuildTemplate;
 
   return structures.createTemplateStruct(template);
 }
