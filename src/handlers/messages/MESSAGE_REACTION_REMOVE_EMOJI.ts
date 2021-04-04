@@ -1,5 +1,7 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
+import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import { DiscordMessageReactionRemoveEmoji } from "../../types/messages/message_reaction_remove_emoji.ts";
 
 export async function handleMessageReactionRemoveEmoji(
   data: DiscordGatewayPayload,
