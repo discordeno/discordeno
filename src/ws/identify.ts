@@ -1,18 +1,18 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { ws } from "./ws.ts";
 
-export async function identify(shardID: number, maxShards: number) {
-  ws.log("IDENTIFYING", { shardID, maxShards });
+export async function identify(shardId: number, maxShards: number) {
+  ws.log("IDENTIFYING", { shardId, maxShards });
 
   // CREATE A SHARD
-  const socket = await ws.createShard(shardID);
+  const socket = await ws.createShard(shardId);
 
   // Identify can just set/reset the settings for the shard
-  ws.shards.set(shardID, {
-    id: shardID,
+  ws.shards.set(shardId, {
+    id: shardId,
     ws: socket,
     resumeInterval: 0,
-    sessionID: "",
+    sessionId: "",
     previousSequenceNumber: 0,
     resuming: false,
     heartbeat: {
@@ -21,7 +21,7 @@ export async function identify(shardID: number, maxShards: number) {
       acknowledged: false,
       keepAlive: false,
       interval: 0,
-      intervalID: 0,
+      intervalId: 0,
     },
   });
 
@@ -29,14 +29,14 @@ export async function identify(shardID: number, maxShards: number) {
     socket.send(
       JSON.stringify({
         op: DiscordGatewayOpcodes.Identify,
-        d: { ...ws.identifyPayload, shard: [shardID, maxShards] },
+        d: { ...ws.identifyPayload, shard: [shardId, maxShards] },
       }),
     );
   };
 
   return new Promise((resolve, reject) => {
-    ws.loadingShards.set(shardID, {
-      shardID,
+    ws.loadingShards.set(shardId, {
+      shardId,
       resolve,
       reject,
       startedAt: Date.now(),

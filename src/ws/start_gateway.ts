@@ -1,5 +1,5 @@
-import { StartGatewayOptions } from "./start_gateway_options.ts";
 import { DiscordGatewayIntents } from "../types/gateway/gateway_intents.ts";
+import { StartGatewayOptions } from "./start_gateway_options.ts";
 import { ws } from "./ws.ts";
 
 /** ADVANCED DEVS ONLY!!!!!!
@@ -9,7 +9,7 @@ import { ws } from "./ws.ts";
 export async function startGateway(options: StartGatewayOptions) {
   ws.identifyPayload.token = `Bot ${options.token}`;
   ws.secretKey = options.secretKey;
-  ws.firstShardID = options.firstShardID;
+  ws.firstShardId = options.firstShardId;
   ws.url = options.url;
   if (options.shardsPerCluster) ws.shardsPerCluster = options.shardsPerCluster;
   if (options.maxClusters) ws.maxClusters = options.maxClusters;
@@ -36,7 +36,7 @@ export async function startGateway(options: StartGatewayOptions) {
   }).then((res) => res.json())) as DiscordBotGatewayData;
 
   ws.maxShards = options.maxShards || data.shards;
-  ws.lastShardID = options.lastShardID || data.shards - 1;
+  ws.lastShardId = options.lastShardId || data.shards - 1;
 
   // TODO: ALL THE FOLLOWING CAN BE REPLACED BY THIS 1 LINE
   // ws.botGatewayData = snakeToCamel(await getGatewayBot())
@@ -50,6 +50,6 @@ export async function startGateway(options: StartGatewayOptions) {
   ws.botGatewayData.shards = data.shards;
   ws.botGatewayData.url = data.url;
 
-  ws.spawnShards(ws.firstShardID);
+  ws.spawnShards(ws.firstShardId);
   ws.cleanupLoadingShards();
 }

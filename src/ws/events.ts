@@ -3,44 +3,44 @@ import { DiscordenoShard } from "./ws.ts";
 /** The handler for logging different actions happening inside the ws. User can override and put custom handling per event. */
 export function log(
   type: "CLOSED",
-  data: { shardID: number; payload: CloseEvent },
+  data: { shardId: number; payload: CloseEvent },
 ): unknown;
 export function log(
   type: "CLOSED_RECONNECT",
-  data: { shardID: number; payload: CloseEvent },
+  data: { shardId: number; payload: CloseEvent },
 ): unknown;
 export function log(
   type: "ERROR",
-  data: Record<string, unknown> & { shardID: number },
+  data: Record<string, unknown> & { shardId: number },
 ): unknown;
 export function log(
   type: "HEARTBEATING",
-  data: { shardID: number; shard: DiscordenoShard },
+  data: { shardId: number; shard: DiscordenoShard },
 ): unknown;
 export function log(
   type: "HEARTBEATING_CLOSED",
-  data: { shardID: number; shard: DiscordenoShard },
+  data: { shardId: number; shard: DiscordenoShard },
 ): unknown;
 export function log(
   type: "HEARTBEATING_DETAILS",
-  data: { shardID: number; interval: number; shard: DiscordenoShard },
+  data: { shardId: number; interval: number; shard: DiscordenoShard },
 ): unknown;
 export function log(
   type: "HEARTBEATING_STARTED",
-  data: { shardID: number; interval: number },
+  data: { shardId: number; interval: number },
 ): unknown;
 export function log(
   type: "IDENTIFYING",
-  data: { shardID: number; maxShards: number },
+  data: { shardId: number; maxShards: number },
 ): unknown;
 export function log(
   type: "INVALID_SESSION",
-  data: { shardID: number; payload: DiscordPayload },
+  data: { shardId: number; payload: DiscordPayload },
 ): unknown;
 export function log(type: "RAW", data: Record<string, unknown>): unknown;
-export function log(type: "RECONNECT", data: { shardID: number }): unknown;
-export function log(type: "RESUMED", data: { shardID: number }): unknown;
-export function log(type: "RESUMING", data: { shardID: number }): unknown;
+export function log(type: "RECONNECT", data: { shardId: number }): unknown;
+export function log(type: "RESUMED", data: { shardId: number }): unknown;
+export function log(type: "RESUMING", data: { shardId: number }): unknown;
 export function log(
   type:
     | "CLOSED"

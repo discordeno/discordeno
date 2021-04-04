@@ -3,18 +3,18 @@ import { resume } from "./resume.ts";
 import { ws } from "./ws.ts";
 
 // deno-lint-ignore require-await
-export async function createShard(shardID: number) {
+export async function createShard(shardId: number) {
   const socket = new WebSocket(ws.botGatewayData.url);
   socket.binaryType = "arraybuffer";
 
   socket.onerror = (errorEvent) => {
-    ws.log("ERROR", { shardID, error: errorEvent });
+    ws.log("ERROR", { shardId, error: errorEvent });
   };
 
-  socket.onmessage = ({ data: message }) => handleOnMessage(message, shardID);
+  socket.onmessage = ({ data: message }) => handleOnMessage(message, shardId);
 
   socket.onclose = (event) => {
-    ws.log("CLOSED", { shardID, payload: event });
+    ws.log("CLOSED", { shardId, payload: event });
 
     // TODO: ENUM FOR THESE CODES?
     switch (event.code) {
@@ -35,11 +35,11 @@ export async function createShard(shardID: number) {
       case 4007:
       case 4008:
       case 4009:
-        ws.log("CLOSED_RECONNECT", { shardID, payload: event });
-        identify(shardID, ws.maxShards);
+        ws.log("CLOSED_RECONNECT", { shardId, payload: event });
+        identify(shardId, ws.maxShards);
         break;
       default:
-        resume(shardID);
+        resume(shardId);
         break;
     }
   };

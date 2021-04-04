@@ -1,13 +1,13 @@
+import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
+import { DiscordReady } from "../types/gateway/ready.ts";
+import { decompressWith } from "./deps.ts";
 import { identify } from "./identify.ts";
 import { resume } from "./resume.ts";
 import { ws } from "./ws.ts";
-import { decompressWith } from "./deps.ts";
-import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
-import { DiscordReady } from "../types/gateway/ready.ts";
 
 /** Handler for handling every message event from websocket. */
 // deno-lint-ignore no-explicit-any
-export function handleOnMessage(message: any, shardID: number) {
+export function handleOnMessage(message: any, shardId: number) {
   if (message instanceof ArrayBuffer) {
     message = new Uint8Array(message);
   }
@@ -28,69 +28,69 @@ export function handleOnMessage(message: any, shardID: number) {
   switch (messageData.op) {
     case DiscordGatewayOpcodes.Hello:
       ws.heartbeat(
-        shardID,
+        shardId,
         (messageData.d as DiscordHeartbeat).heartbeat_interval,
       );
       break;
     case DiscordGatewayOpcodes.HeartbeatACK:
-      if (ws.shards.has(shardID)) {
-        ws.shards.get(shardID)!.heartbeat.acknowledged = true;
+      if (ws.shards.has(shardId)) {
+        ws.shards.get(shardId)!.heartbeat.acknowledged = true;
       }
       break;
     case DiscordGatewayOpcodes.Reconnect:
-      ws.log("RECONNECT", { shardID });
+      ws.log("RECONNECT", { shardId });
 
-      if (ws.shards.has(shardID)) {
-        ws.shards.get(shardID)!.resuming = true;
+      if (ws.shards.has(shardId)) {
+        ws.shards.get(shardId)!.resuming = true;
       }
 
-      resume(shardID);
+      resume(shardId);
       break;
     case DiscordGatewayOpcodes.InvalidSession:
-      ws.log("INVALID_SESSION", { shardID, payload: messageData });
+      ws.log("INVALID_SESSION", { shardId, payload: messageData });
 
       // When d is false we need to reidentify
       if (!messageData.d) {
-        identify(shardID, ws.maxShards);
+        identify(shardId, ws.maxShards);
         break;
       }
 
-      if (ws.shards.has(shardID)) {
-        ws.shards.get(shardID)!.resuming = true;
+      if (ws.shards.has(shardId)) {
+        ws.shards.get(shardId)!.resuming = true;
       }
 
-      resume(shardID);
+      resume(shardId);
       break;
     default:
       if (messageData.t === "RESUMED") {
-        ws.log("RESUMED", { shardID });
+        ws.log("RESUMED", { shardId });
 
-        if (ws.shards.has(shardID)) {
-          ws.shards.get(shardID)!.resuming = false;
+        if (ws.shards.has(shardId)) {
+          ws.shards.get(shardId)!.resuming = false;
         }
         break;
       }
 
       // Important for RESUME
       if (messageData.t === "READY") {
-        const shard = ws.shards.get(shardID);
+        const shard = ws.shards.get(shardId);
         if (shard) {
-          shard.sessionID = (messageData.d as DiscordReady).session_id;
+          shard.sessionId = (messageData.d as DiscordReady).session_id;
         }
 
-        ws.loadingShards.get(shardID)?.resolve(true);
-        ws.loadingShards.delete(shardID);
+        ws.loadingShards.get(shardId)?.resolve(true);
+        ws.loadingShards.delete(shardId);
       }
 
       // Update the sequence number if it is present
       if (messageData.s) {
-        const shard = ws.shards.get(shardID);
+        const shard = ws.shards.get(shardId);
         if (shard) {
           shard.previousSequenceNumber = messageData.s;
         }
       }
 
-      ws.handleDiscordPayload(messageData, shardID);
+      ws.handleDiscordPayload(messageData, shardId);
       break;
   }
 }

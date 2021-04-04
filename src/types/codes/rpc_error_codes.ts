@@ -7,7 +7,7 @@ export enum DiscordRpcErrorCodes {
   InvalidEvent,
   InvalidChannel,
   InvalidPermissions,
-  InvalidClientID,
+  InvalidClientId,
   InvalidOrigin,
   InvalidToken,
   InvalidUser,

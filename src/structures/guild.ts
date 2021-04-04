@@ -240,13 +240,13 @@ export interface GuildStruct extends
   /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
   auditLogs(options: GetGuildAuditLog): ReturnType<typeof getAuditLogs>;
   /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
-  getBan(memberID: string): ReturnType<typeof getBan>;
+  getBan(memberId: string): ReturnType<typeof getBan>;
   /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
   bans(): ReturnType<typeof getBans>;
   /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
-  ban(memberID: string, options: CreateGuildBan): ReturnType<typeof banMember>;
+  ban(memberId: string, options: CreateGuildBan): ReturnType<typeof banMember>;
   /** Remove the ban for a user. Requires BAN_MEMBERS permission */
-  unban(memberID: string): ReturnType<typeof unbanMember>;
+  unban(memberId: string): ReturnType<typeof unbanMember>;
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   invites(): ReturnType<typeof getInvites>;
 }

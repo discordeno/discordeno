@@ -67,10 +67,10 @@ startGateway({
   intents: ["GUILDS", "GUILD_MESSAGES"],
   /** The max amount of shards used for identifying. This can be useful for zero-downtime updates or resharding. */
   maxShards: 885,
-  /** The first shard ID for this group of shards. */
-  firstShardID: 100,
-  /** The last shard ID for this group. If none is provided, it will default to loading all shards. */
-  lastShardID: 124,
+  /** The first shard Id for this group of shards. */
+  firstShardId: 100,
+  /** The last shard Id for this group. If none is provided, it will default to loading all shards. */
+  lastShardId: 124,
   /** The url to forward all payloads to. */
   url: "http://urlToYourServerHere",
   /** The amount of shards per cluster. By default this is 25. Use this to spread the load from shards to different CPU cores. */
@@ -93,16 +93,16 @@ export const ws = {
   reshard: true,
   /** The percentage at which resharding should occur. */
   reshardPercentage: 80,
-  /** The maximum shard ID number. Useful for zero-downtime updates or resharding. */
+  /** The maximum shard Id number. Useful for zero-downtime updates or resharding. */
   maxShards: 1,
   /** The amount of shards to load per cluster */
   shardsPerCluster: 25,
   /** The maximum amount of clusters to use for your bot. */
   maxClusters: 4,
-  /** The first shard ID to start spawning. */
-  firstShardID: 0,
-  /** The last shard ID for this cluster. */
-  lastShardID: 1,
+  /** The first shard Id to start spawning. */
+  firstShardId: 0,
+  /** The last shard Id for this cluster. */
+  lastShardId: 1,
   /** This prop decides whether Discord allows our next shard to be started. When 1 starts, this is set to false until it is ready for the next one. */
   createNextShard: true,
   /** The identify payload holds the necessary data to connect and stay connected with Discords WSS. */
@@ -141,7 +141,7 @@ export const ws = {
   loadingShards: new Collection<
     number,
     {
-      shardID: number;
+      shardId: number;
       resolve: (value: unknown) => void;
       reject: (reason?: unknown) => void;
       startedAt: number;
@@ -181,7 +181,7 @@ export interface DiscordenoShard {
   /** The amount of milliseconds to wait between heartbeats */
   resumeInterval: number;
   /** The session id important for resuming connections. */
-  sessionID: string;
+  sessionId: string;
   /** The previous sequence number, important for resuming connections. */
   previousSequenceNumber: number | null;
   /** Whether the shard is currently resuming. */
@@ -198,7 +198,7 @@ export interface DiscordenoShard {
     /** The interval between heartbeats requested by discord. */
     interval: number;
     /** The id of the interval, useful for stopping the interval if ws closed. */
-    intervalID: number;
+    intervalId: number;
   };
 }
 ```
