@@ -95,7 +95,7 @@ export async function createMemberStruct(
     props[key] = createNewProp(user[key]);
   }
 
-  const member = Object.create(baseMember, {
+  const member: MemberStruct = Object.create(baseMember, {
     ...props,
     /** The guild related data mapped by guild id */
     guilds: createNewProp(new Collection<string, GuildMember>()),
@@ -110,15 +110,15 @@ export async function createMemberStruct(
 
   // User was never cached before
   member.guilds.set(guildId, {
-    nick: props.nick,
-    roles: props.roles,
-    joinedAt: Date.parse(joinedAt),
-    premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
-    deaf: props.deaf,
-    mute: props.mute,
+    nick: rest.nick,
+    roles: rest.roles,
+    joinedAt: joinedAt,
+    premiumSince: premiumSince || undefined,
+    deaf: rest.deaf,
+    mute: rest.mute,
   });
 
-  return member as MemberStruct;
+  return member;
 }
 
 export interface MemberStruct extends GuildMember, User {
