@@ -15,7 +15,7 @@ import {
 import { ModifyGuildMember } from "../types/guilds/modify_guild_member.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
-import { User } from "../types/users/user.ts";
+import { DiscordUser, User } from "../types/users/user.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
 import { GuildStruct } from "./guild.ts";
@@ -71,7 +71,7 @@ const baseMember: Partial<MemberStruct> = {
 };
 
 export async function createMemberStruct(
-  data: DiscordGuildMember,
+  data: Omit<DiscordGuildMember, "user"> & { user: DiscordUser },
   guildId: string,
 ) {
   const {
@@ -79,7 +79,9 @@ export async function createMemberStruct(
     joinedAt,
     premiumSince,
     ...rest
-  } = snakeKeysToCamelCase(data) as GuildMember;
+  } = snakeKeysToCamelCase(data) as Omit<GuildMember, "user"> & {
+    user: DiscordUser;
+  };
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
 
@@ -88,7 +90,7 @@ export async function createMemberStruct(
     props[key] = createNewProp(rest[key]);
   }
 
-  for (const key of Object.keys(user!)) {
+  for (const key of Object.keys(user)) {
     // @ts-ignore index signature
     props[key] = createNewProp(user[key]);
   }
@@ -99,7 +101,7 @@ export async function createMemberStruct(
     guilds: createNewProp(new Collection<string, GuildMember>()),
   });
 
-  const cached = await cacheHandlers.get("members", user!.id);
+  const cached = await cacheHandlers.get("members", user.id);
   if (cached) {
     for (const [id, guild] of cached.guilds.entries()) {
       member.guilds.set(id, guild);
