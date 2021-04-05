@@ -13,9 +13,12 @@ import {
   GuildMember,
 } from "../types/guilds/guild_member.ts";
 import { ModifyGuildMember } from "../types/guilds/modify_guild_member.ts";
+import { DiscordImageFormat } from "../types/misc/image_format.ts";
+import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { User } from "../types/users/user.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
+import { GuildStruct } from "./guild.ts";
 
 const baseMember: Partial<MemberStruct> = {
   get avatarURL() {
@@ -30,7 +33,7 @@ const baseMember: Partial<MemberStruct> = {
 
   // METHODS
   makeAvatarURL(options) {
-    return rawAvatarURL(
+    return avatarURL(
       this.id!,
       this.discriminator!,
       this.avatar!,
