@@ -7,17 +7,27 @@ import { getBan } from "../helpers/guilds/get_ban.ts";
 import { getBans } from "../helpers/guilds/get_bans.ts";
 import { guildBannerURL } from "../helpers/guilds/guild_banner_url.ts";
 import { guildIconURL } from "../helpers/guilds/guild_icon_url.ts";
+import { guildSplashURL } from "../helpers/guilds/guild_splash_url.ts";
 import { leaveGuild } from "../helpers/guilds/leave_guild.ts";
 import { getInvites } from "../helpers/invites/get_invites.ts";
 import { banMember } from "../helpers/members/ban_member.ts";
 import { unbanMember } from "../helpers/members/unban_member.ts";
+import { GetGuildAuditLog } from "../types/audit_log/get_guild_audit_log.ts";
+import { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
+import { DiscordGuild, Guild } from "../types/guilds/guild.ts";
+import { DiscordGuildFeatures } from "../types/guilds/guild_features.ts";
+import { GuildMember } from "../types/guilds/guild_member.ts";
+import { ModifyGuild } from "../types/guilds/modify_guild.ts";
+import { DiscordImageFormat } from "../types/misc/image_format.ts";
+import { DiscordImageSize } from "../types/misc/image_size.ts";
+import { PresenceUpdate } from "../types/misc/presence_update.ts";
 import { Collection } from "../util/collection.ts";
-import { createNewProp } from "../util/utils.ts";
-import { Role, structures } from "./mod.ts";
+import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
+import { RoleStruct, structures } from "./mod.ts";
 
-export const initialMemberLoadQueue = new Map<string, MemberCreatePayload[]>();
+export const initialMemberLoadQueue = new Map<string, GuildMember[]>();
 
-const baseGuild: Partial<Guild> = {
+const baseGuild: Partial<GuildStruct> = {
   get members() {
     return cache.members.filter((member) => member.guilds.has(this.id!));
   },
@@ -49,13 +59,16 @@ const baseGuild: Partial<Guild> = {
     return cache.members.get(this.ownerId!);
   },
   get partnered() {
-    return Boolean(this.features?.includes("PARTNERED"));
+    return Boolean(this.features?.includes(DiscordGuildFeatures.PARTNERED));
   },
   get verified() {
-    return Boolean(this.features?.includes("VERIFIED"));
+    return Boolean(this.features?.includes(DiscordGuildFeatures.VERIFIED));
   },
   bannerURL(size, format) {
-    return guildBannerURL(this as Guild, size, format);
+    return guildBannerURL(this.id!, this.banner!, size, format);
+  },
+  splashURL(size, format) {
+    return guildSplashURL(this.id!, this.splash!, size, format);
   },
   delete() {
     return deleteServer(this.id!);
@@ -82,7 +95,7 @@ const baseGuild: Partial<Guild> = {
     return getInvites(this.id!);
   },
   iconURL(size, format) {
-    return guildIconURL(this as Guild, size, format);
+    return guildIconURL(this.id!, this.icon!, size, format);
   },
   leave() {
     return leaveGuild(this.id!);
@@ -90,42 +103,19 @@ const baseGuild: Partial<Guild> = {
 };
 
 export async function createGuildStruct(
-  data: CreateGuildPayload,
+  data: DiscordGuild,
   shardId: number,
 ) {
   const {
-    disovery_splash: discoverySplash,
-    default_message_notifications: defaultMessageNotifications,
-    explicit_content_filter: explicitContentFilter,
-    system_channel_flags: systemChannelFlags,
-    rules_channel_id: rulesChannelId,
-    public_updates_channel_id: publicUpdatesChannelId,
-    max_video_channel_users: maxVideoChannelUsers,
-    approximate_member_count: approximateMemberCount,
-    approximate_presence_count: approximatePresenceCount,
-    owner_id: ownerId,
-    afk_channel_id: afkChannelId,
-    afk_timeout: afkTimeout,
-    widget_enabled: widgetEnabled,
-    widget_channel_id: widgetChannelId,
-    verification_level: verificationLevel,
-    mfa_level: mfaLevel,
-    system_channel_id: systemChannelId,
-    max_presences: maxPresences,
-    max_members: maxMembers,
-    vanity_url_code: vanityURLCode,
-    premium_tier: premiumTier,
-    premium_subscription_count: premiumSubscriptionCount,
-    preferred_locale: preferredLocale,
-    joined_at: joinedAt,
-    member_count: memberCount = 0,
-    voice_states: voiceStates = [],
+    memberCount = 0,
+    voiceStates = [],
     channels = [],
-    members,
     presences = [],
+    joinedAt = "",
     emojis,
+    members = [],
     ...rest
-  } = data;
+  } = snakeKeysToCamelCase(data) as Guild;
 
   const roles = await Promise.all(
     data.roles.map((role) => structures.createRoleStruct(role)),
@@ -136,44 +126,25 @@ export async function createGuildStruct(
       channel,
       rest.id,
     );
+
     return cacheHandlers.set("channels", channelStruct.id, channelStruct);
   }));
 
-  const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
+  const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
     // @ts-ignore index signature
-    restProps[key] = createNewProp(rest[key]);
+    props[key] = createNewProp(rest[key]);
   }
 
   const guild = Object.create(baseGuild, {
-    ...restProps,
-    discoverySplash: createNewProp(discoverySplash),
-    defaultMessageNotifications: createNewProp(defaultMessageNotifications),
-    explicitContentFilter: createNewProp(explicitContentFilter),
-    rulesChannelId: createNewProp(rulesChannelId),
-    publicUpdatesChannelId: createNewProp(publicUpdatesChannelId),
-    maxVideoChannelUsers: createNewProp(maxVideoChannelUsers),
-    approximateMemberCount: createNewProp(approximateMemberCount),
-    approximatePresenceCount: createNewProp(approximatePresenceCount),
+    ...props,
     shardId: createNewProp(shardId),
-    ownerId: createNewProp(ownerId),
-    afkChannelId: createNewProp(afkChannelId),
-    afkTimeout: createNewProp(afkTimeout),
-    widgetEnabled: createNewProp(widgetEnabled),
-    widgetChannelId: createNewProp(widgetChannelId),
-    verificationLevel: createNewProp(verificationLevel),
-    mfaLevel: createNewProp(mfaLevel),
-    systemChannelId: createNewProp(systemChannelId),
-    maxPresences: createNewProp(maxPresences),
-    maxMembers: createNewProp(maxMembers),
-    vanityURLCode: createNewProp(vanityURLCode),
-    premiumTier: createNewProp(premiumTier),
-    premiumSubscriptionCount: createNewProp(premiumSubscriptionCount),
-    preferredLocale: createNewProp(preferredLocale),
-    roles: createNewProp(new Collection(roles.map((r: Role) => [r.id, r]))),
+    roles: createNewProp(
+      new Collection(roles.map((r: RoleStruct) => [r.id, r])),
+    ),
     joinedAt: createNewProp(Date.parse(joinedAt)),
     presences: createNewProp(
-      new Collection(presences.map((p: Presence) => [p.user.id, p])),
+      new Collection(presences.map((p) => [p.user?.id, p])),
     ),
     memberCount: createNewProp(memberCount),
     emojis: createNewProp(
@@ -181,24 +152,101 @@ export async function createGuildStruct(
     ),
     voiceStates: createNewProp(
       new Collection(
-        voiceStates.map((vs: VoiceState) => [
-          vs.user_id,
-          {
-            ...vs,
-            guildId: vs.guild_id,
-            channelId: vs.channel_id,
-            userId: vs.user_id,
-            sessionId: vs.session_id,
-            selfDeaf: vs.self_deaf,
-            selfMute: vs.self_mute,
-            selfStream: vs.self_stream,
-          },
-        ]),
+        voiceStates.map((vs) => [vs.userId, vs]),
       ),
     ),
   });
 
-  initialMemberLoadQueue.set(guild.id, members);
+  // ONLY ADD TO QUEUE WHEN BOT IS NOT FULLY ONLINE
+  if (!cache.isReady) initialMemberLoadQueue.set(guild.id, members);
+  // BOT IS ONLINE, JUST DIRECTLY ADD MEMBERS
+  else {
+    await Promise.allSettled(
+      members.map(async (member) => {
+        const memberStruct = await structures.createMemberStruct(
+          member,
+          guild.id,
+        );
 
-  return guild as Guild;
+        return cacheHandlers.set("members", memberStruct.id, memberStruct);
+      }),
+    );
+  }
+
+  return guild as GuildStruct;
+}
+
+export interface GuildStruct extends
+  Omit<
+    Guild,
+    "roles" | "presences" | "voiceStates" | "members" | "channels"
+  > {
+  /** The roles in the guild */
+  roles: Collection<string, RoleStruct>;
+  /** The presences of all the users in the guild. */
+  presences: Collection<string, PresenceUpdate>;
+  /** The Voice State data for each user in a voice channel in this server. */
+  voiceStates: Collection<string, CleanVoiceState>;
+
+  // GETTERS
+  /** Members in this guild. */
+  members: Collection<string, MemberStruct>;
+  /** Channels in this guild. */
+  channels: Collection<string, ChannelStruct>;
+  /** The afk channel if one is set */
+  afkChannel?: ChannelStruct;
+  /** The public update channel if one is set */
+  publicUpdatesChannel?: ChannelStruct;
+  /** The rules channel in this guild if one is set */
+  rulesChannel?: ChannelStruct;
+  /** The system channel in this guild if one is set */
+  systemChannel?: ChannelStruct;
+  /** The bot member in this guild if cached */
+  bot?: MemberStruct;
+  /** The bot guild member in this guild if cached */
+  botMember?: GuildMember;
+  /** The bots voice state if there is one in this guild */
+  botVoice?: CleanVoiceState;
+  /** The owner member of this guild */
+  owner?: MemberStruct;
+  /** Whether or not this guild is partnered */
+  partnered: boolean;
+  /** Whether or not this guild is verified */
+  verified: boolean;
+
+  // METHODS
+
+  /** The banner url for this server */
+  bannerURL(
+    size?: DiscordImageSize,
+    format?: DiscordImageFormat,
+  ): string | undefined;
+  /** The splash url for this server */
+  splashURL(
+    size?: DiscordImageSize,
+    format?: DiscordImageFormat,
+  ): string | undefined;
+  /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
+  iconURL(
+    size?: DiscordImageSize,
+    format?: DiscordImageFormat,
+  ): string | undefined;
+  /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event. */
+  delete(): ReturnType<typeof deleteServer>;
+  /** Leave a guild */
+  leave(): ReturnType<typeof leaveGuild>;
+  /** Edit the server. Requires the MANAGE_GUILD permission. */
+  edit(options: ModifyGuild): ReturnType<typeof editGuild>;
+  /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
+  auditLogs(options: GetGuildAuditLog): ReturnType<typeof getAuditLogs>;
+  /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
+  getBan(memberId: string): ReturnType<typeof getBan>;
+  /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
+  bans(): ReturnType<typeof getBans>;
+  /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
+  ban(memberId: string, options: CreateGuildBan): ReturnType<typeof banMember>;
+  /** Remove the ban for a user. Requires BAN_MEMBERS permission */
+  unban(memberId: string): ReturnType<typeof unbanMember>;
+  /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
+  invites(): ReturnType<typeof getInvites>;
 }

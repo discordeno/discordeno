@@ -46,7 +46,7 @@ export * from "./gateway/ready.ts";
 export * from "./gateway/resume.ts";
 export * from "./gateway/session_start_limit.ts";
 export * from "./gateway/status_types.ts";
-export * from "./gateway/update_status.ts";
+export * from "./gateway/status_update.ts";
 export * from "./guilds/ban.ts";
 export * from "./guilds/begin_guild_prune.ts";
 export * from "./guilds/create_guild.ts";

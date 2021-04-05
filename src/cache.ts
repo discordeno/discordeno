@@ -1,24 +1,40 @@
 // deno-lint-ignore-file require-await no-explicit-any prefer-const
 
 import { Channel, Guild, Member, Message } from "./structures/mod.ts";
+import { Emoji } from "./types/emojis/emoji.ts";
 import { Collection } from "./util/collection.ts";
 
-export const cache: CacheData = {
+export const cache = {
   isReady: false,
   /** All of the guild objects the bot has access to, mapped by their Ids */
-  guilds: new Collection(),
+  guilds: new Collection<string, Guild>(),
   /** All of the channel objects the bot has access to, mapped by their Ids */
-  channels: new Collection(),
+  channels: new Collection<string, Channel>(),
   /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their Ids */
-  messages: new Collection(),
+  messages: new Collection<string, Message>(),
   /** All of the member objects that have been cached since the bot acquired `READY` state, mapped by their Ids */
-  members: new Collection(),
-  /** All of the unavailable guilds, mapped by their Ids (id, shardId) */
-  unavailableGuilds: new Collection(),
+  members: new Collection<string, Member>(),
+  /** All of the unavailable guilds, mapped by their Ids (id, timestamp) */
+  unavailableGuilds: new Collection<string, number>(),
   /** All of the presence update objects received in PRESENCE_UPDATE gateway event, mapped by their user Id */
-  presences: new Collection(),
-  fetchAllMembersProcessingRequests: new Collection(),
-  executedSlashCommands: new Collection(),
+  presences: new Collection<string, Presence>(),
+  fetchAllMembersProcessingRequests: new Collection<
+    string,
+    (
+      value:
+        | Collection<string, Member>
+        | PromiseLike<Collection<string, Member>>,
+    ) => void
+  >(),
+  executedSlashCommands: new Collection<string, string>(),
+  get emojis() {
+    return new Collection<string, Emoji>(
+      this.guilds.reduce(
+        (a, b) => [...a, ...b.emojis.map((e) => [e.id, e])],
+        [] as any[],
+      ),
+    );
+  },
 };
 
 export let cacheHandlers = {

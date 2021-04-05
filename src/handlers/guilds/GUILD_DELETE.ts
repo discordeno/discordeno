@@ -1,6 +1,8 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { basicShards } from "../../ws/shard.ts";
+import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import { DiscordUnavailableGuild } from "../../types/guilds/unavailable_guild.ts";
+import { ws } from "../../ws/ws.ts";
 
 export async function handleGuildDelete(
   data: DiscordGatewayPayload,
@@ -14,13 +16,15 @@ export async function handleGuildDelete(
   await cacheHandlers.delete("guilds", payload.id);
 
   if (payload.unavailable) {
-    const shard = basicShards.get(shardId);
+    const shard = ws.shards.get(shardId);
     if (shard) shard.unavailableGuildIds.add(payload.id);
 
     await cacheHandlers.set("unavailableGuilds", payload.id, Date.now());
-  }
 
-  eventHandlers.guildDelete?.(guild);
+    eventHandlers.guildUnavailable?.(guild);
+  } else {
+    eventHandlers.guildDelete?.(guild);
+  }
 
   cacheHandlers.forEach("messages", (message) => {
     if (message.guildId === payload.id) {

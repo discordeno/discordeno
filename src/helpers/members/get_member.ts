@@ -1,5 +1,4 @@
 import { cacheHandlers } from "../../cache.ts";
-import { RequestManager } from "../../rest/request_manager.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -16,7 +15,8 @@ export async function getMember(
   const guild = await cacheHandlers.get("guilds", guildId);
   if (!guild && !options?.force) return;
 
-  const data = (await rest.runMethod("get",
+  const data = (await rest.runMethod(
+    "get",
     endpoints.GUILD_MEMBER(guildId, id),
   )) as MemberCreatePayload;
 

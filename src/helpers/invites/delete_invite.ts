@@ -1,5 +1,6 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
+import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasChannelPermissions,

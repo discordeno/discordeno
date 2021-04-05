@@ -1,12 +1,10 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import {
-  CreateGuildChannel,
-  DiscordChannel,
-  DiscordChannelTypes,
-  PermissionStrings,
-} from "../../types/mod.ts";
+import { DiscordChannel } from "../../types/channels/channel.ts";
+import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import { CreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
+import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,
@@ -28,8 +26,10 @@ export async function createChannel(
 
   await requireBotGuildPermissions(guildId, [...requiredPerms]);
 
-  const result =
-    (await rest.runMethod("post", endpoints.GUILD_CHANNELS(guildId), {
+  const result = (await rest.runMethod(
+    "post",
+    endpoints.GUILD_CHANNELS(guildId),
+    {
       ...options,
       name,
       permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
@@ -39,7 +39,8 @@ export async function createChannel(
         deny: calculateBits(perm.deny),
       })),
       type: options?.type || DiscordChannelTypes.GUILD_TEXT,
-    })) as DiscordChannel;
+    },
+  )) as DiscordChannel;
 
   const channelStruct = await structures.createChannelStruct(result);
   await cacheHandlers.set("channels", channelStruct.id, channelStruct);

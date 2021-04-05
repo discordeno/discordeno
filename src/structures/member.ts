@@ -1,8 +1,8 @@
 import { cache, cacheHandlers } from "../cache.ts";
+import { avatarURL } from "../helpers/members/avatar_url.ts";
 import { banMember } from "../helpers/members/ban_member.ts";
 import { editMember } from "../helpers/members/edit_member.ts";
 import { kickMember } from "../helpers/members/kick_member.ts";
-import { rawAvatarURL } from "../helpers/members/raw_avatar_url.ts";
 import { sendDirectMessage } from "../helpers/members/send_direct_message.ts";
 import { addRole } from "../helpers/roles/add_role.ts";
 import { removeRole } from "../helpers/roles/remove_role.ts";
@@ -19,7 +19,7 @@ import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
 
 const baseMember: Partial<MemberStruct> = {
   get avatarURL() {
-    return rawAvatarURL(this.id!, this.discriminator!, this.avatar!);
+    return avatarURL(this.id!, this.discriminator!, this.avatar!);
   },
   get mention() {
     return `<@!${this.id!}>`;

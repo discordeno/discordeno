@@ -9,6 +9,7 @@ import { removeAllReactions } from "../helpers/messages/remove_all_reactions.ts"
 import { removeReaction } from "../helpers/messages/remove_reaction.ts";
 import { removeReactionEmoji } from "../helpers/messages/remove_reaction_emoji.ts";
 import { sendMessage } from "../helpers/messages/send_message.ts";
+import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
 import { createNewProp } from "../util/utils.ts";
 
 const baseMessage: Partial<Message> = {
@@ -44,12 +45,7 @@ const baseMessage: Partial<Message> = {
 
   // METHODS
   delete(reason, delayMilliseconds) {
-    return deleteMessage(
-      this.channelId!,
-      this.id!,
-      reason,
-      delayMilliseconds,
-    );
+    return deleteMessage(this.channelId!, this.id!, reason, delayMilliseconds);
   },
   edit(content) {
     return editMessage(this as Message, content);
@@ -146,7 +142,17 @@ export async function createMessageStruct(data: MessageCreateOptions) {
     mentions: createNewProp(data.mentions.map((m) => m.id)),
     mentionsEveryone: createNewProp(mentionsEveryone),
     mentionRoleIds: createNewProp(mentionRoleIds),
-    mentionChannelIds: createNewProp(mentionChannelIds.map((m) => m.id)),
+    mentionChannelIds: createNewProp(
+      [
+        // Keep any ids that discord sends
+        ...mentionChannelIds,
+        // Add any other ids that can be validated in a channel mention format
+        ...(rest.content.match(CHANNEL_MENTION_REGEX) || []).map((text) =>
+          // converts the <#123> into 123
+          text.substring(2, text.length - 1)
+        ),
+      ].map((m) => m.id),
+    ),
     webhookId: createNewProp(webhookId),
     messageReference: createNewProp(messageReference),
     timestamp: createNewProp(Date.parse(data.timestamp)),

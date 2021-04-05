@@ -1,10 +1,10 @@
 import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
 import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
+import { DiscordGetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
-import { spawnShards } from "./ws/shard_manager.ts";
 
 export let authorization = "";
-export let restAuthorization = "";
+export let secretKey = "";
 export let botId = "";
 export let applicationId = "";
 
@@ -14,7 +14,7 @@ export let botGatewayData: DiscordGetGatewayBot;
 export let proxyWSURL = `wss://gateway.discord.gg`;
 export let lastShardId = 0;
 
-export const identifyPayload: DiscordIdentify = {
+export const identifyPayload = {
   token: "",
   compress: true,
   properties: {
@@ -83,10 +83,9 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   authorization = `Bot ${data.token}`;
   identifyPayload.token = `Bot ${data.token}`;
 
-  if (data.restAuthorization) restAuthorization = data.restAuthorization;
+  if (data.secretKey) secretKey = data.secretKey;
   if (data.restURL) baseEndpoints.BASE_URL = data.restURL;
   if (data.cdnURL) baseEndpoints.CDN_URL = data.cdnURL;
-  if (data.wsURL) proxyWSURL = data.wsURL;
   if (data.eventHandlers) eventHandlers = data.eventHandlers;
   if (data.compress) {
     identifyPayload.compress = data.compress;
@@ -102,19 +101,21 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
     0,
   );
 
-  // Initial API connection to get info about bots connection
-  botGatewayData = await getGatewayBot();
-
-  if (!data.wsURL) proxyWSURL = botGatewayData.url;
-  await spawnShards(
-    botGatewayData,
-    identifyPayload,
-    data.firstShardId,
-    data.lastShardId ||
-      (botGatewayData.shards >= 25
-        ? (data.firstShardId + 25)
-        : botGatewayData.shards),
-  );
+  // PROXY DOESNT NEED US SPAWNING SHARDS
+  if (!data.wsPort) {
+    // Initial API connection to get info about bots connection
+    botGatewayData = await getGatewayBot();
+    proxyWSURL = botGatewayData.url;
+    await spawnShards(
+      botGatewayData,
+      identifyPayload,
+      data.firstShardId,
+      data.lastShardId ||
+        (botGatewayData.shards >= 25
+          ? (data.firstShardId + 25)
+          : botGatewayData.shards),
+    );
+  }
 }
 
 export interface BotConfig {
@@ -129,12 +130,12 @@ export interface BigBrainBotConfig extends BotConfig {
   firstShardId: number;
   /** The last shard to start for this worker. By default it will be 25 + the firstShardId. */
   lastShardId?: number;
-  /** This can be used to forward the ws handling to a proxy. */
-  wsURL?: string;
+  /** This can be used to forward the ws handling to a proxy. It will disable the sharding done by the bot side. */
+  wsPort?: number;
   /** This can be used to forward the REST handling to a proxy. */
   restURL?: string;
   /** This can be used to forward the CDN handling to a proxy. */
   cdnURL?: string;
-  /** This is the authorization header that your rest proxy will validate */
-  restAuthorization?: string;
+  /** This is the authorization header that your servers will send. Helpful to prevent DDOS attacks and such. */
+  secretKey?: string;
 }

@@ -9,12 +9,11 @@ export async function getReactions(
   reaction: string,
   options?: DiscordGetReactionsParams,
 ) {
-  const users =
-    (await rest.runMethod(
-      "get",
-      endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction),
-      options,
-    )) as UserPayload[];
+  const users = (await rest.runMethod(
+    "get",
+    endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction),
+    options,
+  )) as UserPayload[];
 
   return new Collection(users.map((user) => [user.id, user]));
 }

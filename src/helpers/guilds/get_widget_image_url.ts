@@ -1,4 +1,5 @@
 import { cacheHandlers } from "../../cache.ts";
+import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Returns the widget image URL for the guild. */
