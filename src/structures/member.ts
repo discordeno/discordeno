@@ -112,8 +112,8 @@ export async function createMemberStruct(
   member.guilds.set(guildId, {
     nick: rest.nick,
     roles: rest.roles,
-    joinedAt: joinedAt,
-    premiumSince: premiumSince || undefined,
+    joinedAt: Date.parse(joinedAt),
+    premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
     deaf: rest.deaf,
     mute: rest.mute,
   });
@@ -123,7 +123,13 @@ export async function createMemberStruct(
 
 export interface MemberStruct extends GuildMember, User {
   /** The guild related data mapped by guild id */
-  guilds: Collection<string, GuildMember>;
+  guilds: Collection<
+    string,
+    Omit<GuildMember, "joinedAt" | "premiumSince"> & {
+      joinedAt: number;
+      premiumSince?: number;
+    }
+  >;
 
   // GETTERS
   /** The avatar url using the default format and size. */
