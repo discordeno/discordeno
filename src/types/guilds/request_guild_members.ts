@@ -2,7 +2,7 @@ import { SnakeCaseProps } from "../util.ts";
 
 export interface RequestGuildMembers {
   /** id of the guild to get members for */
-  guild_id: string;
+  guildId: string;
   /** String that username starts with, or an empty string to return all members */
   query?: string;
   /** Maximum number of members to send matching the query; a limit of 0 can be used with an empty string query to return all members */

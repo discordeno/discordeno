@@ -7,6 +7,7 @@ import { getBan } from "../helpers/guilds/get_ban.ts";
 import { getBans } from "../helpers/guilds/get_bans.ts";
 import { guildBannerURL } from "../helpers/guilds/guild_banner_url.ts";
 import { guildIconURL } from "../helpers/guilds/guild_icon_url.ts";
+import { guildSplashURL } from "../helpers/guilds/guild_splash_url.ts";
 import { leaveGuild } from "../helpers/guilds/leave_guild.ts";
 import { getInvites } from "../helpers/invites/get_invites.ts";
 import { banMember } from "../helpers/members/ban_member.ts";
@@ -64,7 +65,10 @@ const baseGuild: Partial<GuildStruct> = {
     return Boolean(this.features?.includes(DiscordGuildFeatures.VERIFIED));
   },
   bannerURL(size, format) {
-    return guildBannerURL(this as unknown as Guild, size, format);
+    return guildBannerURL(this.id!, this.banner!, size, format);
+  },
+  splashURL(size, format) {
+    return guildSplashURL(this.id!, this.splash!, size, format);
   },
   delete() {
     return deleteServer(this.id!);
@@ -91,7 +95,7 @@ const baseGuild: Partial<GuildStruct> = {
     return getInvites(this.id!);
   },
   iconURL(size, format) {
-    return guildIconURL(this as unknown as Guild, size, format);
+    return guildIconURL(this.id!, this.icon!, size, format);
   },
   leave() {
     return leaveGuild(this.id!);
@@ -114,7 +118,7 @@ export async function createGuildStruct(
   } = snakeKeysToCamelCase(data) as Guild;
 
   const roles = await Promise.all(
-    data.roles.map((role) => structures.createRoleStruct(role))
+    data.roles.map((role) => structures.createRoleStruct(role)),
   );
 
   await Promise.all(channels.map(async (channel) => {
@@ -144,7 +148,7 @@ export async function createGuildStruct(
     ),
     memberCount: createNewProp(memberCount),
     emojis: createNewProp(
-      new Collection(emojis.map((emoji) => [emoji.id ?? emoji.name, emoji]))
+      new Collection(emojis.map((emoji) => [emoji.id ?? emoji.name, emoji])),
     ),
     voiceStates: createNewProp(
       new Collection(
@@ -161,11 +165,11 @@ export async function createGuildStruct(
       members.map(async (member) => {
         const memberStruct = await structures.createMemberStruct(
           member,
-          guild.id
+          guild.id,
         );
 
         return cacheHandlers.set("members", memberStruct.id, memberStruct);
-      })
+      }),
     );
   }
 
@@ -217,6 +221,11 @@ export interface GuildStruct extends
     size?: DiscordImageSize,
     format?: DiscordImageFormat,
   ): string | undefined;
+  /** The splash url for this server */
+  splashURL(
+    size?: DiscordImageSize,
+    format?: DiscordImageFormat,
+  ): string | undefined;
   /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
   iconURL(
     size?: DiscordImageSize,
@@ -231,13 +240,13 @@ export interface GuildStruct extends
   /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
   auditLogs(options: GetGuildAuditLog): ReturnType<typeof getAuditLogs>;
   /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
-  getBan(memberID: string): ReturnType<typeof getBan>;
+  getBan(memberId: string): ReturnType<typeof getBan>;
   /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
   bans(): ReturnType<typeof getBans>;
   /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
-  ban(memberID: string, options: CreateGuildBan): ReturnType<typeof banMember>;
+  ban(memberId: string, options: CreateGuildBan): ReturnType<typeof banMember>;
   /** Remove the ban for a user. Requires BAN_MEMBERS permission */
-  unban(memberID: string): ReturnType<typeof unbanMember>;
+  unban(memberId: string): ReturnType<typeof unbanMember>;
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   invites(): ReturnType<typeof getInvites>;
 }

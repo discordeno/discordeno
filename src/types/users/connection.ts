@@ -1,6 +1,6 @@
 import { SnakeCaseProps } from "../util.ts";
 import { DiscordVisibilityTypes } from "./visibility_types.ts";
-import { Integration } from "../guilds/integration.ts"
+import { Integration } from "../guilds/integration.ts";
 
 export interface Connection {
   /** id of the connection account */

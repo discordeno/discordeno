@@ -1,7 +1,6 @@
 import { cacheHandlers } from "../../cache.ts";
 import { Member } from "../../structures/mod.ts";
 import { Collection } from "../../util/collection.ts";
-import { requestAllMembers } from "../../ws/shard_manager.ts";
 
 /** Returns guild member objects for the specified user by their nickname/username.
  *

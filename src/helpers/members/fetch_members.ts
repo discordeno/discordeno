@@ -3,9 +3,6 @@ import { Member } from "../../structures/mod.ts";
 import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { Collection } from "../../util/collection.ts";
-import { requestAllMembers } from "../../ws/shard_manager.ts";
-import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
-import { Errors } from "../../types/misc/errors.ts";
 
 /**
  * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM cache.members.get()

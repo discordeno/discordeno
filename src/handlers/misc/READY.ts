@@ -8,9 +8,9 @@ import { cache, cacheHandlers } from "../../cache.ts";
 import { initialMemberLoadQueue } from "../../structures/guild.ts";
 import { structures } from "../../structures/mod.ts";
 import { delay } from "../../util/utils.ts";
-import { allowNextShard, basicShards } from "../../ws/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { DiscordReady } from "../../types/gateway/ready.ts";
+import { ws } from "../../ws/ws.ts";
 
 export async function handleReady(
   data: DiscordGatewayPayload,
@@ -28,7 +28,7 @@ export async function handleReady(
   // Save when the READY event was received to prevent infinite load loops
   const now = Date.now();
 
-  const shard = basicShards.get(shardId);
+  const shard = ws.shards.get(shardId);
   if (!shard) return;
 
   // Set ready to false just to go sure
@@ -41,13 +41,13 @@ export async function handleReady(
 
   // Wait 5 seconds to spawn next shard
   await delay(5000);
-  allowNextShard();
+  ws.createNextShard = true;
 }
 
 // Don't pass the shard itself because unavailableGuilds won't be updated by the GUILD_CREATE event
 /** This function checks if the shard is fully loaded */
 function checkReady(payload: DiscordReady, shardId: number, now: number) {
-  const shard = basicShards.get(shardId);
+  const shard = ws.shards.get(shardId);
   if (!shard) return;
 
   // Check if all guilds were loaded
@@ -67,7 +67,7 @@ function checkReady(payload: DiscordReady, shardId: number, now: number) {
 }
 
 async function loaded(shardId: number) {
-  const shard = basicShards.get(shardId);
+  const shard = ws.shards.get(shardId);
   if (!shard) return;
 
   shard.ready = true;
@@ -75,7 +75,7 @@ async function loaded(shardId: number) {
   // If it is the last shard we can go full ready
   if (shardId === lastShardId - 1) {
     // Still some shards are loading so wait another 2 seconds for them
-    if (basicShards.some((shard) => !shard.ready)) {
+    if (ws.shards.some((shard) => !shard.ready)) {
       setTimeout(() => loaded(shardId), 2000);
     } else {
       cache.isReady = true;

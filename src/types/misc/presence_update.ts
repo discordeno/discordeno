@@ -7,7 +7,7 @@ export interface PresenceUpdate {
   /** The user presence is being updated for */
   user: User;
   /** id of the guild */
-  guild_id: string;
+  guildId: string;
   /** Either "idle", "dnd", "online", or "offline" */
   status: "idle" | "dnd" | "online" | "offline";
   /** User's current activities */

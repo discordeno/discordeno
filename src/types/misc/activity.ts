@@ -14,11 +14,11 @@ export interface Activity {
   /** Stream url, is validated when type is 1 */
   url?: string | null;
   /** Unix timestamp of when the activity was added to the user's session */
-  created_at: number;
+  createdAt: number;
   /** Unix timestamps for start and/or end of the game */
   timestamps?: ActivityTimestamps;
   /** Application id for the game */
-  application_id?: string;
+  applicationId?: string;
   /** What the player is currently doing */
   details?: string | null;
   /** The user's current party status */
