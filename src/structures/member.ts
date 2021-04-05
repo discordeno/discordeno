@@ -71,6 +71,7 @@ const baseMember: Partial<MemberStruct> = {
 };
 
 export async function createMemberStruct(
+  // The `user` param in `DiscordGuildMember` is optional since discord does not send it in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events. But this data in there is required to build this structure so it is required in this case
   data: Omit<DiscordGuildMember, "user"> & { user: DiscordUser },
   guildId: string,
 ) {
