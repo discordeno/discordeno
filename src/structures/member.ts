@@ -6,14 +6,14 @@ import { rawAvatarURL } from "../helpers/members/raw_avatar_url.ts";
 import { sendDirectMessage } from "../helpers/members/send_direct_message.ts";
 import { addRole } from "../helpers/roles/add_role.ts";
 import { removeRole } from "../helpers/roles/remove_role.ts";
+import { CreateMessage } from "../types/channels/create_message.ts";
+import { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
 import {
-  CreateGuildBan,
-  CreateMessage,
   DiscordGuildMember,
   GuildMember,
-  ModifyGuildMember,
-  User,
-} from "../types/mod.ts";
+} from "../types/guilds/guild_member.ts";
+import { ModifyGuildMember } from "../types/guilds/modify_guild_member.ts";
+import { User } from "../types/users/user.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
 
