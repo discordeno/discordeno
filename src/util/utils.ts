@@ -3,6 +3,7 @@ import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { Errors } from "../types/misc/errors.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
+import { ws } from "../ws/ws.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 
 export const sleep = (timeout: number) => {
@@ -12,7 +13,7 @@ export const sleep = (timeout: number) => {
 export function editBotStatus(
   data: Pick<GatewayStatusUpdatePayload, "activities" | "status">,
 ) {
-  basicShards.forEach((shard) => {
+  ws.shards.forEach((shard) => {
     sendWS({
       op: DiscordGatewayOpcodes.StatusUpdate,
       d: {
