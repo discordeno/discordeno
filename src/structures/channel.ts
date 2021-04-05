@@ -7,16 +7,14 @@ import { editChannelOverwrite } from "../helpers/channels/edit_channel_overwrite
 import { sendMessage } from "../helpers/messages/send_message.ts";
 import { disconnectMember } from "../helpers/mod.ts";
 import { Channel, DiscordChannel } from "../types/channels/channel.ts";
-import {
-  CreateMessage,
-  DiscordOverwrite,
-  ModifyChannel,
-  Overwrite,
-  PermissionStrings,
-  VoiceState,
-} from "../types/mod.ts";
+import { ModifyChannel } from "../types/channels/modify_channel.ts";
+import { DiscordOverwrite, Overwrite } from "../types/channels/overwrite.ts";
+import { CreateMessage } from "../types/messages/create_message.ts";
+import { PermissionStrings } from "../types/permissions/permission_strings.ts";
+import { VoiceState } from "../types/voice/voice_state.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
+import { MessageStruct } from "./message.ts";
 
 const baseChannel: Partial<ChannelStruct> = {
   get guild() {
