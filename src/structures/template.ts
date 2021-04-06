@@ -1,42 +1,34 @@
 import { cache } from "../cache.ts";
-import { createNewProp } from "../util/utils.ts";
+import { DiscordTemplate, Template } from "../types/templates/template.ts";
+import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
+import { GuildStruct } from "./guild.ts";
 
-const baseTemplate: Partial<Template> = {
+const baseTemplate: Partial<TemplateStruct> = {
   get sourceGuild() {
-    // deno-lint-ignore getter-return
-    if (!this.sourceGuildId) return;
-    return cache.guilds.get(this.sourceGuildId);
+    return cache.guilds.get(this.sourceGuildId!);
   },
 };
 
-export function createTemplateStruct(
-  data: GuildTemplate,
+/** Create a structure object  */
+// deno-lint-ignore require-await
+export async function createTemplateStruct(
+  data: DiscordTemplate,
 ) {
-  const {
-    usage_count: usageCount,
-    creator_id: creatorId,
-    created_at: createdAt,
-    updated_at: updatedAt,
-    source_guild_id: sourceGuildId,
-    serialized_source_guild: serializedSourceGuild,
-    is_dirty: isDirty,
-    ...rest
-  } = data;
+  const rest = snakeKeysToCamelCase(data) as Template;
 
-  const restProps: Record<string, Partial<PropertyDescriptor>> = {};
+  const props: Record<string, Partial<PropertyDescriptor>> = {};
   for (const key of Object.keys(rest)) {
     // @ts-ignore index signature
-    restProps[key] = createNewProp(rest[key]);
+    props[key] = createNewProp(rest[key]);
   }
 
-  return Object.create(baseTemplate, {
-    ...restProps,
-    usageCount: createNewProp(sourceGuildId),
-    creatorId: createNewProp(creatorId),
-    createdAt: createNewProp(createdAt),
-    updatedAt: createNewProp(updatedAt),
-    sourceGuildId: createNewProp(sourceGuildId),
-    serializedSourceGuild: createNewProp(serializedSourceGuild),
-    isDirty: createNewProp(isDirty),
-  }) as Template;
+  const template: TemplateStruct = Object.create(baseTemplate, props);
+
+  return template;
+}
+
+export interface TemplateStruct extends Template {
+  // GETTERS
+
+  sourceGuild: GuildStruct | undefined;
 }
