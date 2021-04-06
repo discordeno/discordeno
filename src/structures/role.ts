@@ -1,12 +1,10 @@
 import { cache } from "../cache.ts";
 import { deleteRole } from "../helpers/roles/delete_role.ts";
 import { editRole } from "../helpers/roles/edit_role.ts";
-import {
-  CreateGuildRole,
-  DiscordGuildRoleCreate,
-  Errors,
-  Role,
-} from "../types/mod.ts";
+import { CreateGuildRole } from "../types/guilds/create_guild_role.ts";
+import { DiscordGuildRoleCreate } from "../types/guilds/guild_role_create.ts";
+import { Errors } from "../types/misc/errors.ts";
+import { Role } from "../types/permissions/role.ts";
 import { Collection } from "../util/collection.ts";
 import { highestRole } from "../util/permissions.ts";
 import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
