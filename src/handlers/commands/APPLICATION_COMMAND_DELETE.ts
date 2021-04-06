@@ -1,5 +1,6 @@
 import { eventHandlers } from "../../bot.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import { DiscordApplicationCommandCreateUpdateDelete } from "../../types/interactions/application_command_create_update_delete.ts";
 
 export function handleApplicationCommandDelete(data: DiscordGatewayPayload) {
   const {
