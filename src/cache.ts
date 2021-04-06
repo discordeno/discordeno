@@ -1,29 +1,32 @@
 // deno-lint-ignore-file require-await no-explicit-any prefer-const
-
-import { Channel, Guild, Member, Message } from "./structures/mod.ts";
+import { ChannelStruct } from "./structures/channel.ts";
+import { GuildStruct } from "./structures/guild.ts";
+import { MemberStruct } from "./structures/member.ts";
+import { MessageStruct } from "./structures/message.ts";
 import { Emoji } from "./types/emojis/emoji.ts";
+import { PresenceUpdate } from "./types/misc/presence_update.ts";
 import { Collection } from "./util/collection.ts";
 
 export const cache = {
   isReady: false,
   /** All of the guild objects the bot has access to, mapped by their Ids */
-  guilds: new Collection<string, Guild>(),
+  guilds: new Collection<string, GuildStruct>(),
   /** All of the channel objects the bot has access to, mapped by their Ids */
-  channels: new Collection<string, Channel>(),
+  channels: new Collection<string, ChannelStruct>(),
   /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their Ids */
-  messages: new Collection<string, Message>(),
+  messages: new Collection<string, MessageStruct>(),
   /** All of the member objects that have been cached since the bot acquired `READY` state, mapped by their Ids */
-  members: new Collection<string, Member>(),
+  members: new Collection<string, MemberStruct>(),
   /** All of the unavailable guilds, mapped by their Ids (id, timestamp) */
   unavailableGuilds: new Collection<string, number>(),
   /** All of the presence update objects received in PRESENCE_UPDATE gateway event, mapped by their user Id */
-  presences: new Collection<string, Presence>(),
+  presences: new Collection<string, PresenceUpdate>(),
   fetchAllMembersProcessingRequests: new Collection<
     string,
     (
       value:
-        | Collection<string, Member>
-        | PromiseLike<Collection<string, Member>>,
+        | Collection<string, MemberStruct>
+        | PromiseLike<Collection<string, MemberStruct>>,
     ) => void
   >(),
   executedSlashCommands: new Collection<string, string>(),
@@ -78,28 +81,28 @@ export type TableName =
 function set(
   table: "guilds",
   key: string,
-  value: Guild,
-): Promise<Collection<string, Guild>>;
+  value: GuildStruct,
+): Promise<Collection<string, GuildStruct>>;
 function set(
   table: "channels",
   key: string,
-  value: Channel,
-): Promise<Collection<string, Channel>>;
+  value: ChannelStruct,
+): Promise<Collection<string, ChannelStruct>>;
 function set(
   table: "messages",
   key: string,
-  value: Message,
-): Promise<Collection<string, Message>>;
+  value: MessageStruct,
+): Promise<Collection<string, MessageStruct>>;
 function set(
   table: "members",
   key: string,
-  value: Member,
-): Promise<Collection<string, Member>>;
+  value: MemberStruct,
+): Promise<Collection<string, MemberStruct>>;
 function set(
   table: "presences",
   key: string,
-  value: PresenceUpdatePayload,
-): Promise<Collection<string, PresenceUpdatePayload>>;
+  value: PresenceUpdate,
+): Promise<Collection<string, PresenceUpdate>>;
 function set(
   table: "unavailableGuilds",
   key: string,
@@ -109,41 +112,60 @@ async function set(table: TableName, key: string, value: any) {
   return cache[table].set(key, value);
 }
 
-function get(table: "guilds", key: string): Promise<Guild | undefined>;
-function get(table: "channels", key: string): Promise<Channel | undefined>;
-function get(table: "messages", key: string): Promise<Message | undefined>;
-function get(table: "members", key: string): Promise<Member | undefined>;
+function get(table: "guilds", key: string): Promise<GuildStruct | undefined>;
+function get(
+  table: "channels",
+  key: string,
+): Promise<ChannelStruct | undefined>;
+function get(table: "messages", key: string): Promise<MemberStruct | undefined>;
+function get(table: "members", key: string): Promise<MemberStruct | undefined>;
 function get(
   table: "presences",
   key: string,
-): Promise<PresenceUpdatePayload | undefined>;
+): Promise<PresenceUpdate | undefined>;
 function get(
   table: "unavailableGuilds",
   key: string,
-): Promise<Guild | undefined>;
+): Promise<number | undefined>;
 async function get(table: TableName, key: string) {
   return cache[table].get(key);
 }
 
 function forEach(
   table: "guilds",
-  callback: (value: Guild, key: string, map: Map<string, Guild>) => unknown,
+  callback: (
+    value: GuildStruct,
+    key: string,
+    map: Map<string, GuildStruct>,
+  ) => unknown,
 ): void;
 function forEach(
   table: "unavailableGuilds",
-  callback: (value: Guild, key: string, map: Map<string, Guild>) => unknown,
+  callback: (value: number, key: string, map: Map<string, number>) => unknown,
 ): void;
 function forEach(
   table: "channels",
-  callback: (value: Channel, key: string, map: Map<string, Channel>) => unknown,
+  callback: (
+    value: ChannelStruct,
+    key: string,
+    map: Map<string, ChannelStruct>,
+  ) => unknown,
 ): void;
 function forEach(
   table: "messages",
-  callback: (value: Message, key: string, map: Map<string, Message>) => unknown,
+  callback: (
+    value: MemberStruct,
+    key: string,
+    map: Map<string, MemberStruct>,
+  ) => unknown,
 ): void;
 function forEach(
   table: "members",
-  callback: (value: Member, key: string, map: Map<string, Member>) => unknown,
+  callback: (
+    value: MemberStruct,
+    key: string,
+    map: Map<string, MemberStruct>,
+  ) => unknown,
 ): void;
 function forEach(
   table: TableName,
@@ -154,24 +176,24 @@ function forEach(
 
 function filter(
   table: "guilds",
-  callback: (value: Guild, key: string) => boolean,
-): Promise<Collection<string, Guild>>;
+  callback: (value: GuildStruct, key: string) => boolean,
+): Promise<Collection<string, GuildStruct>>;
 function filter(
   table: "unavailableGuilds",
-  callback: (value: Guild, key: string) => boolean,
-): Promise<Collection<string, Guild>>;
+  callback: (value: number, key: string) => boolean,
+): Promise<Collection<string, number>>;
 function filter(
   table: "channels",
-  callback: (value: Channel, key: string) => boolean,
-): Promise<Collection<string, Channel>>;
+  callback: (value: ChannelStruct, key: string) => boolean,
+): Promise<Collection<string, ChannelStruct>>;
 function filter(
   table: "messages",
-  callback: (value: Message, key: string) => boolean,
-): Promise<Collection<string, Message>>;
+  callback: (value: MessageStruct, key: string) => boolean,
+): Promise<Collection<string, MessageStruct>>;
 function filter(
   table: "members",
-  callback: (value: Member, key: string) => boolean,
-): Promise<Collection<string, Member>>;
+  callback: (value: MemberStruct, key: string) => boolean,
+): Promise<Collection<string, MemberStruct>>;
 async function filter(
   table: TableName,
   callback: (value: any, key: string) => boolean,
