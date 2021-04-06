@@ -1,17 +1,13 @@
 import { eventHandlers } from "../../bot.ts";
-import { DiscordInviteDelete } from "../../types/invites/invite_delete.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import {
+  DiscordInviteDelete,
+  InviteDelete,
+} from "../../types/invites/invite_delete.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
-export function handleInviteDelete(payload: DiscordGatewayPayload) {
-  const {
-    channel_id: channelId,
-    guild_id: guildId,
-    ...rest
-  } = payload.d as DiscordInviteDelete;
+export function handleInviteDelete(data: DiscordGatewayPayload) {
+  const payload = data.d as DiscordInviteDelete;
 
-  eventHandlers.inviteDelete?.({
-    ...rest,
-    channelId,
-    guildId,
-  });
+  eventHandlers.inviteDelete?.(snakeKeysToCamelCase(payload) as InviteDelete);
 }
