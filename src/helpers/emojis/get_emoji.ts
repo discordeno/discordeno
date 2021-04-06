@@ -1,5 +1,6 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
+import { Emoji } from "../../types/emojis/emoji.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 
@@ -21,7 +22,7 @@ export async function getEmoji(
   if (addToCache) {
     const guild = await cacheHandlers.get("guilds", guildId);
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
-    guild.emojis.set(result.id ?? result.name, result);
+    guild.emojis.set(emojiId, result);
     cacheHandlers.set(
       "guilds",
       guildId,

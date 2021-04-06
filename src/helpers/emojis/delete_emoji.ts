@@ -7,7 +7,7 @@ export async function deleteEmoji(
   guildId: string,
   id: string,
   reason?: string,
-) {
+): Promise<undefined> {
   await requireBotGuildPermissions(guildId, ["MANAGE_EMOJIS"]);
 
   const result = await rest.runMethod(
