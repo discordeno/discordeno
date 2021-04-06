@@ -1,11 +1,19 @@
 import { cache } from "../cache.ts";
 import { deleteRole } from "../helpers/roles/delete_role.ts";
 import { editRole } from "../helpers/roles/edit_role.ts";
-import { createNewProp } from "../util/utils.ts";
+import {
+  CreateGuildRole,
+  DiscordGuildRoleCreate,
+  Errors,
+  Role,
+} from "../types/mod.ts";
+import { Collection } from "../util/collection.ts";
+import { highestRole } from "../util/permissions.ts";
+import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
 
-const baseRole: Partial<Role> = {
+const baseRole: Partial<RoleStruct> = {
   get guild() {
-    return cache.guilds.find((g) => g.roles.has(this.id!));
+    return cache.guilds.get(this.guildId!);
   },
   get hexColor() {
     return this.color!.toString(16);
@@ -20,31 +28,13 @@ const baseRole: Partial<Role> = {
   },
 
   // METHODS
-  delete(guildId?: string) {
-    // If not guild id was provided try and find one
-    if (!guildId) guildId = guildId || this.guild?.id;
-    // If a guild id is still not available error out
-    if (!guildId) {
-      throw new Error(
-        "role.delete() did not find a valid guild in cache. Please provide the guildId like role.delete(guildId)",
-      );
-    }
-
-    return deleteRole(guildId, this.id!).catch(console.error);
+  delete() {
+    return deleteRole(this.guildId!, this.id!).catch(console.error);
   },
-  edit(options: CreateRoleOptions, guildId?: string) {
-    // If not guild id was provided try and find one
-    if (!guildId) guildId = guildId || this.guild?.id;
-    // If a guild id is still not available error out
-    if (!guildId) {
-      throw new Error(
-        "role.edit() did not find a valid guild in cache. Please provide the guildId like role.edit({}, guildId)",
-      );
-    }
-
-    return editRole(guildId, this.id!, options);
+  edit(options) {
+    return editRole(this.guildId!, this.id!, options);
   },
-  higherThanRoleId(roleId: string, position?: number) {
+  higherThanRole(roleId: string, position?: number) {
     // If no position try and find one from cache
     if (!position) position = this.guild?.roles.get(roleId)?.position;
     // If still none error out.
@@ -61,22 +51,74 @@ const baseRole: Partial<Role> = {
 
     return this.position! > position;
   },
+  async higherThanMember(memberId: string) {
+    const guild = this.guild;
+    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+
+    if (this.guild.ownerId === memberId) return false;
+
+    const memberHighestRole = await highestRole(guild, memberId);
+    return this.higherThanRole!(
+      memberHighestRole.id,
+      memberHighestRole.position,
+    );
+  },
 };
 
 // deno-lint-ignore require-await
-export async function createRoleStruct({ tags = {}, ...rest }: RoleData) {
-  const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
+export async function createRoleStruct(data: DiscordGuildRoleCreate) {
+  const {
+    tags = {},
+    ...rest
+  } = snakeKeysToCamelCase({ guildId: data.guild_id, ...data.role }) as Role & {
+    guildId: string;
+  };
+
+  const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
     // @ts-ignore index signature
-    restProps[key] = createNewProp(rest[key]);
+    props[key] = createNewProp(rest[key]);
   }
 
-  const role = Object.create(baseRole, {
-    ...restProps,
-    botId: createNewProp(tags.bot_id),
-    isNitroBoostRole: createNewProp("premium_subscriber" in tags),
-    integrationId: createNewProp(tags.integration_id),
+  const role: RoleStruct = Object.create(baseRole, {
+    ...props,
+    botId: createNewProp(tags.botId),
+    isNitroBoostRole: createNewProp("premiumSubscriber" in tags),
+    integrationId: createNewProp(tags.integrationId),
   });
 
-  return role as Role;
+  return role;
+}
+
+export interface RoleStruct extends Omit<Role, "tags"> {
+  /** The bot id that is associated with this role. */
+  botId?: string;
+  /** If this role is the nitro boost role. */
+  isNitroBoostRole: boolean;
+  /** The integration id that is associated with this role */
+  integrationId: string;
+  /** The roles guildId */
+  guildId: string;
+
+  // GETTERS
+
+  /** The guild where this role is. If undefined, the guild is not cached */
+  guild?: GuildStruct;
+  /** The hex color for this role. */
+  hexColor: string;
+  /** The cached members that have this role */
+  members: Collection<string, MemberStruct>;
+  /** The @ mention of the role in a string. */
+  mention: string;
+
+  // METHODS
+
+  /** Delete the role */
+  delete(): ReturnType<typeof deleteRole>;
+  /** Edits the role */
+  edit(options: CreateGuildRole): ReturnType<typeof editRole>;
+  /** Checks if this role is higher than another role. */
+  higherThanRole(roleId: string, position?: number): boolean;
+  /** Checks if the role has a higher position than the given member */
+  higherThanMember(memberId: string): Promise<boolean>;
 }
