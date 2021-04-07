@@ -1,16 +1,14 @@
 import { Errors } from "../types/misc/errors.ts";
-import { IMAGE_BASE_URL } from "../util/constants.ts";
-import { API_VERSION } from "../util/constants.ts";
-import { BASE_URL } from "../util/constants.ts";
+import { API_VERSION, BASE_URL, IMAGE_BASE_URL } from "../util/constants.ts";
 import { rest } from "./rest.ts";
 
-export function runMethod(
+export function runMethod<T = any>(
   method: "get" | "post" | "put" | "delete" | "patch",
   url: string,
   body?: unknown,
   retryCount = 0,
   bucketId?: string | null,
-) {
+): Promise<T> {
   rest.eventHandlers.debug?.("requestCreate", {
     method,
     url,
@@ -35,9 +33,9 @@ export function runMethod(
       method: method.toUpperCase(),
     })
       .then((res) => {
-        if (res.status === 204) return undefined;
+        if (res.status === 204) return undefined as unknown as T;
 
-        return res.json();
+        return res.json() as unknown as T;
       })
       .catch((error) => {
         console.error(error);
@@ -96,7 +94,7 @@ export function runMethod(
         await rest.handleStatusCode(response, errorStack);
 
         // Sometimes Discord returns an empty 204 response that can't be made to JSON.
-        if (response.status === 204) return resolve(undefined);
+        if (response.status === 204) return resolve(undefined as unknown as T);
 
         const json = await response.json();
         if (
