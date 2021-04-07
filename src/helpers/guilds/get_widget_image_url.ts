@@ -1,14 +1,12 @@
 import { cacheHandlers } from "../../cache.ts";
+import { GetGuildWidgetImageQuery } from "../../types/guilds/get_guild_widget_image.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Returns the widget image URL for the guild. */
 export async function getWidgetImageURL(
   guildId: string,
-  options?: {
-    style?: "shield" | "banner1" | "banner2" | "banner3" | "banner4";
-    force?: boolean;
-  },
+  options?: GetGuildWidgetImageQuery & { force?: boolean },
 ) {
   if (!options?.force) {
     const guild = await cacheHandlers.get("guilds", guildId);
