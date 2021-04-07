@@ -1,4 +1,5 @@
 import { rest } from "../../rest/rest.ts";
+import { GuildWidget } from "../../types/guilds/guild_widget.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -8,5 +9,5 @@ export async function getWidgetSettings(guildId: string) {
 
   const result = await rest.runMethod("get", endpoints.GUILD_WIDGET(guildId));
 
-  return result;
+  return result as GuildWidget;
 }
