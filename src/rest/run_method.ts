@@ -8,7 +8,7 @@ export function runMethod<T = any>(
   body?: unknown,
   retryCount = 0,
   bucketId?: string | null,
-): Promise<T> | undefined {
+): Promise<T | undefined> {
   rest.eventHandlers.debug?.("requestCreate", {
     method,
     url,
@@ -35,7 +35,7 @@ export function runMethod<T = any>(
       .then((res) => {
         if (res.status === 204) return undefined;
 
-        return res.json() as T;
+        return res.json() as unknown as T;
       })
       .catch((error) => {
         console.error(error);
