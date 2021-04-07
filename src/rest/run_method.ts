@@ -94,7 +94,7 @@ export function runMethod<T = any>(
         await rest.handleStatusCode(response, errorStack);
 
         // Sometimes Discord returns an empty 204 response that can't be made to JSON.
-        if (response.status === 204) return resolve(undefined as unknown as T);
+        if (response.status === 204) return resolve(undefined);
 
         const json = await response.json();
         if (
