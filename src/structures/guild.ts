@@ -13,17 +13,30 @@ import { getInvites } from "../helpers/invites/get_invites.ts";
 import { banMember } from "../helpers/members/ban_member.ts";
 import { unbanMember } from "../helpers/members/unban_member.ts";
 import { GetGuildAuditLog } from "../types/audit_log/get_guild_audit_log.ts";
+import { Emoji } from "../types/emojis/emoji.ts";
 import { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
 import { DiscordGuild, Guild } from "../types/guilds/guild.ts";
 import { DiscordGuildFeatures } from "../types/guilds/guild_features.ts";
-import { GuildMember } from "../types/guilds/guild_member.ts";
+import {
+  DiscordGuildMember,
+  GuildMember,
+} from "../types/guilds/guild_member.ts";
 import { ModifyGuild } from "../types/guilds/modify_guild.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { PresenceUpdate } from "../types/misc/presence_update.ts";
+import { DiscordUser } from "../types/users/user.ts";
+import { VoiceState } from "../types/voice/voice_state.ts";
 import { Collection } from "../util/collection.ts";
-import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
-import { RoleStruct, structures } from "./mod.ts";
+import {
+  camelKeysToSnakeCase,
+  createNewProp,
+  snakeKeysToCamelCase,
+} from "../util/utils.ts";
+import { ChannelStruct } from "./channel.ts";
+import { MemberStruct } from "./member.ts";
+import { structures } from "./mod.ts";
+import { RoleStruct } from "./role.ts";
 
 export const initialMemberLoadQueue = new Map<string, GuildMember[]>();
 
@@ -118,7 +131,9 @@ export async function createGuildStruct(
   } = snakeKeysToCamelCase(data) as Guild;
 
   const roles = await Promise.all(
-    data.roles.map((role) => structures.createRoleStruct(role)),
+    data.roles.map((role) =>
+      structures.createRoleStruct({ role, guild_id: rest.id })
+    ),
   );
 
   await Promise.all(channels.map(async (channel) => {
@@ -164,7 +179,9 @@ export async function createGuildStruct(
     await Promise.allSettled(
       members.map(async (member) => {
         const memberStruct = await structures.createMemberStruct(
-          member,
+          camelKeysToSnakeCase(member) as Omit<DiscordGuildMember, "user"> & {
+            user: DiscordUser;
+          },
           guild.id,
         );
 
@@ -179,14 +196,25 @@ export async function createGuildStruct(
 export interface GuildStruct extends
   Omit<
     Guild,
-    "roles" | "presences" | "voiceStates" | "members" | "channels"
+    | "roles"
+    | "presences"
+    | "voiceStates"
+    | "members"
+    | "channels"
+    | "memberCount"
+    | "owner"
+    | "emojis"
   > {
+  /** Total number of members in this guild */
+  memberCount?: number;
   /** The roles in the guild */
   roles: Collection<string, RoleStruct>;
   /** The presences of all the users in the guild. */
   presences: Collection<string, PresenceUpdate>;
   /** The Voice State data for each user in a voice channel in this server. */
-  voiceStates: Collection<string, CleanVoiceState>;
+  voiceStates: Collection<string, VoiceState>;
+  /** Custom guild emojis */
+  emojis: Collection<string, Emoji>;
 
   // GETTERS
   /** Members in this guild. */
@@ -204,9 +232,12 @@ export interface GuildStruct extends
   /** The bot member in this guild if cached */
   bot?: MemberStruct;
   /** The bot guild member in this guild if cached */
-  botMember?: GuildMember;
+  botMember?: Omit<GuildMember, "joinedAt" | "premiumSince"> & {
+    joinedAt: number;
+    premiumSince?: number;
+  };
   /** The bots voice state if there is one in this guild */
-  botVoice?: CleanVoiceState;
+  botVoice?: VoiceState;
   /** The owner member of this guild */
   owner?: MemberStruct;
   /** Whether or not this guild is partnered */
