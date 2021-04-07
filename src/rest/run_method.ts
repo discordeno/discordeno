@@ -8,7 +8,7 @@ export function runMethod<T = any>(
   body?: unknown,
   retryCount = 0,
   bucketId?: string | null,
-): Promise<T> {
+): Promise<T> | undefined {
   rest.eventHandlers.debug?.("requestCreate", {
     method,
     url,
