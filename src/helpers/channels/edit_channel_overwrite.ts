@@ -12,7 +12,7 @@ export async function editChannelOverwrite(
   channelId: string,
   overwriteId: string,
   options: Omit<Overwrite, "id">,
-) {
+): Promise<undefined> {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
   const result = await rest.runMethod(

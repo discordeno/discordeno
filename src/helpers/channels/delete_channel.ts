@@ -9,7 +9,7 @@ export async function deleteChannel(
   guildId: string,
   channelId: string,
   reason?: string,
-) {
+): Promise<undefined> {
   await requireBotGuildPermissions(guildId, ["MANAGE_CHANNELS"]);
 
   const guild = await cacheHandlers.get("guilds", guildId);
