@@ -35,7 +35,7 @@ export function runMethod<T = any>(
       .then((res) => {
         if (res.status === 204) return undefined;
 
-        return res.json() as unknown as T;
+        return res.json() as T;
       })
       .catch((error) => {
         console.error(error);
