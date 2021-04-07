@@ -33,7 +33,7 @@ export function runMethod<T = any>(
       method: method.toUpperCase(),
     })
       .then((res) => {
-        if (res.status === 204) return undefined as unknown as T;
+        if (res.status === 204) return undefined;
 
         return res.json() as unknown as T;
       })
