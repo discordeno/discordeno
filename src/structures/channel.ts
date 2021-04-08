@@ -7,10 +7,16 @@ import { editChannelOverwrite } from "../helpers/channels/edit_channel_overwrite
 import { sendMessage } from "../helpers/messages/send_message.ts";
 import { disconnectMember } from "../helpers/mod.ts";
 import { Channel, DiscordChannel } from "../types/channels/channel.ts";
+import { ModifyChannel } from "../types/channels/modify_channel.ts";
+import { DiscordOverwrite, Overwrite } from "../types/channels/overwrite.ts";
+import { CreateMessage } from "../types/messages/create_message.ts";
+import { PermissionStrings } from "../types/permissions/permission_strings.ts";
+import { VoiceState } from "../types/voice/voice_state.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
+import { MessageStruct } from "./message.ts";
 
-const baseChannel: Partial<Channel> = {
+const baseChannel: Partial<ChannelStruct> = {
   get guild() {
     return cache.guilds.get(this.guildId!);
   },
@@ -61,8 +67,8 @@ const baseChannel: Partial<Channel> = {
   },
 };
 
-// deno-lint-ignore require-await
 /** Create a structure object  */
+// deno-lint-ignore require-await
 export async function createChannelStruct(
   data: DiscordChannel,
   guildId?: string,
@@ -90,4 +96,61 @@ export async function createChannelStruct(
   return channel;
 }
 
-export type ChannelStruct = Channel & typeof baseChannel;
+export interface ChannelStruct extends Channel {
+  // GETTERS
+
+  /**
+   * Gets the guild object for this channel.
+   *
+   * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
+   */
+  guild?: GuildStruct;
+  /**
+   * Gets the messages from cache that were sent in this channel
+   *
+   * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
+   */
+  messages: Collection<string, MessageStruct>;
+  /** The mention of the channel */
+  mention: string;
+  /**
+   * Gets the voice states for this channel
+   * 
+   * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
+   */
+  voiceStates?: Collection<string, VoiceState>;
+  /**
+   * Gets the connected members for this channel undefined if member is not cached
+   * 
+   * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
+   */
+  connectedMembers?: Collection<string, MemberStruct | undefined>;
+
+  // METHODS
+
+  /** Send a message to the channel. Requires SEND_MESSAGES permission. */
+  send(content: string | CreateMessage): ReturnType<typeof sendMessage>;
+  /** Disconnect a member from a voice channel. Requires MOVE_MEMBERS permission. */
+  disconnect(memberID: string): ReturnType<typeof disconnectMember>;
+  /** Delete the channel */
+  delete(): ReturnType<typeof deleteChannel>;
+  /** Edit a channel Overwrite */
+  editOverwrite(
+    overwriteID: string,
+    options: Omit<Overwrite, "id">,
+  ): ReturnType<typeof editChannelOverwrite>;
+  /** Delete a channel Overwrite */
+  deleteOverwrite(
+    overwriteID: string,
+  ): ReturnType<typeof deleteChannelOverwrite>;
+  /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
+  hasPermission(
+    overwrites: DiscordOverwrite[],
+    permissions: PermissionStrings[],
+  ): ReturnType<typeof channelOverwriteHasPermission>;
+  /** Edit the channel */
+  edit(
+    options: ModifyChannel,
+    reason?: string,
+  ): ReturnType<typeof editChannel>;
+}

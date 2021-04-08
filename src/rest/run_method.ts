@@ -1,16 +1,14 @@
 import { Errors } from "../types/misc/errors.ts";
-import { IMAGE_BASE_URL } from "../util/constants.ts";
-import { API_VERSION } from "../util/constants.ts";
-import { BASE_URL } from "../util/constants.ts";
+import { API_VERSION, BASE_URL, IMAGE_BASE_URL } from "../util/constants.ts";
 import { rest } from "./rest.ts";
 
-export function runMethod(
+export function runMethod<T = any>(
   method: "get" | "post" | "put" | "delete" | "patch",
   url: string,
   body?: unknown,
   retryCount = 0,
   bucketId?: string | null,
-) {
+): Promise<T | undefined> {
   rest.eventHandlers.debug?.("requestCreate", {
     method,
     url,
@@ -37,7 +35,7 @@ export function runMethod(
       .then((res) => {
         if (res.status === 204) return undefined;
 
-        return res.json();
+        return res.json() as unknown as T;
       })
       .catch((error) => {
         console.error(error);

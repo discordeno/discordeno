@@ -1,5 +1,6 @@
 import { applicationId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
+import { EditGlobalApplicationCommand } from "../../types/interactions/edit_global_application_command.ts";
 import { endpoints } from "../../util/constants.ts";
 import { validateSlashCommands } from "../../util/utils.ts";
 
@@ -9,7 +10,7 @@ import { validateSlashCommands } from "../../util/utils.ts";
  * **NOTE:** Any slash commands that are not specified in this function will be **deleted**. If you don't provide the commandId and rename your command, the command gets a new Id.
  */
 export async function upsertSlashCommands(
-  options: UpsertSlashCommandsOptions[],
+  options: EditGlobalApplicationCommand[],
   guildId?: string,
 ) {
   validateSlashCommands(options);

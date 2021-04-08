@@ -3,6 +3,7 @@ import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { Errors } from "../types/misc/errors.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
+import { ws } from "../ws/ws.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 
 export const sleep = (timeout: number) => {
@@ -12,7 +13,7 @@ export const sleep = (timeout: number) => {
 export function editBotStatus(
   data: Pick<GatewayStatusUpdatePayload, "activities" | "status">,
 ) {
-  basicShards.forEach((shard) => {
+  ws.shards.forEach((shard) => {
     sendWS({
       op: DiscordGatewayOpcodes.StatusUpdate,
       d: {
@@ -71,7 +72,9 @@ function isObject(obj: unknown) {
 }
 
 // deno-lint-ignore no-explicit-any
-export function camelKeysToSnakeCase(obj: Record<string, any>) {
+export function camelKeysToSnakeCase<T>(
+  obj: Record<string, any> | Record<string, any>[],
+): T {
   if (isObject(obj)) {
     // deno-lint-ignore no-explicit-any
     const convertedObject: Record<string, any> = {};
@@ -79,20 +82,22 @@ export function camelKeysToSnakeCase(obj: Record<string, any>) {
     Object.keys(obj)
       .forEach((key) => {
         convertedObject[camelToSnakeCase(key)] = camelKeysToSnakeCase(
-          obj[key],
+          (obj as Record<string, any>)[key],
         );
       });
 
-    return convertedObject;
+    return convertedObject as T;
   } else if (Array.isArray(obj)) {
     obj = obj.map((element) => camelKeysToSnakeCase(element));
   }
 
-  return obj;
+  return obj as T;
 }
 
 // deno-lint-ignore no-explicit-any
-export function snakeKeysToCamelCase(obj: Record<string, any>) {
+export function snakeKeysToCamelCase<T>(
+  obj: Record<string, any> | Record<string, any>[],
+): T {
   if (isObject(obj)) {
     // deno-lint-ignore no-explicit-any
     const convertedObject: Record<string, any> = {};
@@ -100,16 +105,16 @@ export function snakeKeysToCamelCase(obj: Record<string, any>) {
     Object.keys(obj)
       .forEach((key) => {
         convertedObject[snakeToCamelCase(key)] = snakeKeysToCamelCase(
-          obj[key],
+          (obj as Record<string, any>)[key],
         );
       });
 
-    return convertedObject;
+    return convertedObject as T;
   } else if (Array.isArray(obj)) {
     obj = obj.map((element) => snakeKeysToCamelCase(element));
   }
 
-  return obj;
+  return obj as T;
 }
 
 /** @private */

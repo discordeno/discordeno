@@ -1,5 +1,6 @@
 import { applicationId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
+import { ApplicationCommand } from "../../types/interactions/application_command.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 
@@ -10,7 +11,7 @@ export async function getSlashCommands(guildId?: string) {
     guildId
       ? endpoints.COMMANDS_GUILD(applicationId, guildId)
       : endpoints.COMMANDS(applicationId),
-  )) as SlashCommand[];
+  )) as ApplicationCommand[];
 
   return new Collection(result.map((command) => [command.name, command]));
 }

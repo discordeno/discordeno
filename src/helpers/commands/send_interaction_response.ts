@@ -1,6 +1,7 @@
 import { applicationId } from "../../bot.ts";
 import { cache } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
+import { DiscordenoInteractionResponse } from "../../types/discordeno/interaction_response.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /**
@@ -12,7 +13,7 @@ import { endpoints } from "../../util/constants.ts";
 export async function sendInteractionResponse(
   id: string,
   token: string,
-  options: SlashCommandResponseOptions,
+  options: DiscordenoInteractionResponse,
 ) {
   // If its already been executed, we need to send a followup response
   if (cache.executedSlashCommands.has(token)) {
@@ -30,12 +31,12 @@ export async function sendInteractionResponse(
 
   // If the user wants this as a private message mark it ephemeral
   if (options.private) {
-    options.data.flags = 64;
+    options.data = { ...options.data, flags: 64 };
   }
 
   // If no mentions are provided, force disable mentions
-  if (!options.data.allowed_mentions) {
-    options.data.allowed_mentions = { parse: [] };
+  if (!options.data?.allowedMentions) {
+    options.data = { ...options.data, allowedMentions: { parse: [] } };
   }
 
   const result = await rest.runMethod(

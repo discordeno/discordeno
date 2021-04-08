@@ -3,6 +3,7 @@ import { cache, cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { DiscordGuild } from "../../types/guilds/guild.ts";
+import { ws } from "../../ws/ws.ts";
 
 export async function handleGuildCreate(
   data: DiscordGatewayPayload,
@@ -13,12 +14,12 @@ export async function handleGuildCreate(
   if (await cacheHandlers.has("guilds", payload.id)) return;
 
   const guildStruct = await structures.createGuildStruct(
-    data.d,
+    payload,
     shardId,
   );
   await cacheHandlers.set("guilds", guildStruct.id, guildStruct);
 
-  const shard = basicShards.get(shardId);
+  const shard = ws.shards.get(shardId);
 
   if (shard?.unavailableGuildIds.has(payload.id)) {
     await cacheHandlers.delete("unavailableGuilds", payload.id);

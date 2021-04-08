@@ -1,6 +1,7 @@
 import { Embed } from "../embeds/embed.ts";
 import { AllowedMentions } from "../messages/allowed_mentions.ts";
 import { MessageReference } from "../messages/message_reference.ts";
+import { FileContent } from "../misc/file_content.ts";
 import { SnakeCaseProps } from "../util.ts";
 
 export interface CreateMessage {
@@ -16,7 +17,9 @@ export interface CreateMessage {
   allowedMentions?: AllowedMentions;
   /** Include to make your message a reply */
   messageReference?: MessageReference;
+  /** The contents of the file being sent */
+  file?: FileContent | FileContent[];
 }
 
 /** https://discord.com/developers/docs/resources/channel#create-message */
-export type DiscordCreateMessage = SnakeCaseProps<CreateMessage>;
+export type DiscordCreateMessage = SnakeCaseProps<Omit<CreateMessage, "file">>;

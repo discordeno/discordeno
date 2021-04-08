@@ -6,7 +6,7 @@ import { formatImageURL } from "../../util/utils.ts";
 /** The full URL of the splash from Discords CDN. Undefined if no splash is set. */
 export function guildSplashURL(
   id: string,
-  splash: string,
+  splash?: string,
   size: DiscordImageSize = 128,
   format?: DiscordImageFormat,
 ) {

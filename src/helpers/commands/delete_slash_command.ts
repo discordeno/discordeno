@@ -3,12 +3,16 @@ import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Deletes a slash command. */
-export function deleteSlashCommand(id: string, guildId?: string) {
-  if (!guildId) {
-    return rest.runMethod("delete", endpoints.COMMANDS_ID(applicationId, id));
-  }
-  return rest.runMethod(
+export async function deleteSlashCommand(
+  id: string,
+  guildId?: string,
+): Promise<undefined> {
+  const result = await rest.runMethod(
     "delete",
-    endpoints.COMMANDS_GUILD_ID(applicationId, guildId, id),
+    guildId
+      ? endpoints.COMMANDS_GUILD_ID(applicationId, guildId, id)
+      : endpoints.COMMANDS_ID(applicationId, id),
   );
+
+  return result;
 }

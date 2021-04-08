@@ -1,16 +1,15 @@
 import { eventHandlers } from "../../bot.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import {
+  DiscordIntegrationDelete,
+  IntegrationDelete,
+} from "../../types/integration/integration_delete.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 export function handleIntegrationDelete(data: DiscordGatewayPayload) {
-  const {
-    guild_id: guildId,
-    application_id: applicationId,
-    ...rest
-  } = data.d as IntegrationDeleteEvent;
+  const payload = data.d as DiscordIntegrationDelete;
 
-  eventHandlers.integrationDelete?.({
-    ...rest,
-    applicationId,
-    guildId,
-  });
+  eventHandlers.integrationDelete?.(
+    snakeKeysToCamelCase(payload) as IntegrationDelete,
+  );
 }

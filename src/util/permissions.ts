@@ -5,15 +5,18 @@ import { Errors } from "../types/misc/errors.ts";
 import { DiscordBitwisePermissionFlags } from "../types/permissions/bitwise_permission_flags.ts";
 import { PermissionStrings } from "../types/permissions/permission_strings.ts";
 
-async function getCached(table: "guilds", key: string | Guild): Promise<Guild>;
+async function getCached(
+  table: "guilds",
+  key: string | Guild,
+): Promise<Guild | undefined>;
 async function getCached(
   table: "channels",
   key: string | Channel,
-): Promise<Channel>;
+): Promise<Channel | undefined>;
 async function getCached(
   table: "members",
   key: string | Member,
-): Promise<Member>;
+): Promise<Member | undefined>;
 async function getCached(
   table: "guilds" | "channels" | "members",
   key: string | Guild | Channel | Member,
@@ -28,7 +31,7 @@ async function getCached(
     );
   }
 
-  return cached;
+  return typeof cached === "string" ? undefined : cached;
 }
 
 /** Calculates the permissions this member has in the given guild */
@@ -38,6 +41,8 @@ export async function calculateBasePermissions(
 ) {
   guild = await getCached("guilds", guild);
   member = await getCached("members", member);
+
+  if (!guild || !member) return "8";
 
   let permissions = 0n;
   // Calculate the role permissions bits, @everyone role is not in memberRoleIds so we need to pass guildId manualy
@@ -64,9 +69,11 @@ export async function calculateChannelOverwrites(
   channel = await getCached("channels", channel);
 
   // This is a DM channel so return ADMINISTRATOR permission
-  if (!channel.guildId) return "8";
+  if (!channel?.guildId) return "8";
 
   member = await getCached("members", member);
+
+  if (!member) return "8";
 
   // Get all the role permissions this member already has
   let permissions = BigInt(
@@ -285,8 +292,10 @@ export async function highestRole(
 ) {
   guild = await getCached("guilds", guild);
 
+  if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+
   // Get the roles from the member
-  const memberRoles = (await getCached("members", member)).guilds.get(guild.id)
+  const memberRoles = (await getCached("members", member))?.guilds.get(guild.id)
     ?.roles;
   // This member has no roles so the highest one is the @everyone role
   if (!memberRoles) return guild.roles.get(guild.id) as Role;
@@ -321,6 +330,8 @@ export async function higherRolePosition(
 ) {
   guild = await getCached("guilds", guild);
 
+  if (!guild) return true;
+
   const role = guild.roles.get(roleId);
   const otherRole = guild.roles.get(otherRoleId);
   if (!role || !otherRole) throw new Error(Errors.ROLE_NOT_FOUND);
@@ -341,7 +352,7 @@ export async function isHigherPosition(
 ) {
   guild = await getCached("guilds", guild);
 
-  if (guild.ownerId === memberId) return true;
+  if (!guild || guild.ownerId === memberId) return true;
 
   const memberHighestRole = await highestRole(guild, memberId);
   return higherRolePosition(guild.id, memberHighestRole.id, compareRoleId);

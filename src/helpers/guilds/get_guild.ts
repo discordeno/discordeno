@@ -1,5 +1,7 @@
 import { rest } from "../../rest/rest.ts";
+import { Guild } from "../../types/guilds/guild.ts";
 import { endpoints } from "../../util/constants.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 /**
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()
@@ -13,5 +15,5 @@ export async function getGuild(guildId: string, counts = true) {
     with_counts: counts,
   });
 
-  return result as UpdateGuildPayload;
+  return snakeKeysToCamelCase(result) as Guild;
 }
