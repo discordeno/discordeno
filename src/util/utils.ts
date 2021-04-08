@@ -72,7 +72,9 @@ function isObject(obj: unknown) {
 }
 
 // deno-lint-ignore no-explicit-any
-export function camelKeysToSnakeCase(obj: Record<string, any>) {
+export function camelKeysToSnakeCase<T>(
+  obj: Record<string, any> | Record<string, any>[],
+): T {
   if (isObject(obj)) {
     // deno-lint-ignore no-explicit-any
     const convertedObject: Record<string, any> = {};
@@ -80,20 +82,22 @@ export function camelKeysToSnakeCase(obj: Record<string, any>) {
     Object.keys(obj)
       .forEach((key) => {
         convertedObject[camelToSnakeCase(key)] = camelKeysToSnakeCase(
-          obj[key],
+          (obj as Record<string, any>)[key],
         );
       });
 
-    return convertedObject;
+    return convertedObject as T;
   } else if (Array.isArray(obj)) {
     obj = obj.map((element) => camelKeysToSnakeCase(element));
   }
 
-  return obj;
+  return obj as T;
 }
 
 // deno-lint-ignore no-explicit-any
-export function snakeKeysToCamelCase(obj: Record<string, any>) {
+export function snakeKeysToCamelCase<T>(
+  obj: Record<string, any> | Record<string, any>[],
+): T {
   if (isObject(obj)) {
     // deno-lint-ignore no-explicit-any
     const convertedObject: Record<string, any> = {};
@@ -101,16 +105,16 @@ export function snakeKeysToCamelCase(obj: Record<string, any>) {
     Object.keys(obj)
       .forEach((key) => {
         convertedObject[snakeToCamelCase(key)] = snakeKeysToCamelCase(
-          obj[key],
+          (obj as Record<string, any>)[key],
         );
       });
 
-    return convertedObject;
+    return convertedObject as T;
   } else if (Array.isArray(obj)) {
     obj = obj.map((element) => snakeKeysToCamelCase(element));
   }
 
-  return obj;
+  return obj as T;
 }
 
 /** @private */

@@ -1,6 +1,8 @@
 import { rest } from "../../rest/rest.ts";
+import { GuildWidget } from "../../types/guilds/guild_widget.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 /** Modify a guild widget object for the guild. Requires the MANAGE_GUILD permission. */
 export async function editWidget(
@@ -19,5 +21,5 @@ export async function editWidget(
     },
   );
 
-  return result;
+  return snakeKeysToCamelCase(result) as GuildWidget;
 }

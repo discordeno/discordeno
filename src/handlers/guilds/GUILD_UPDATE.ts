@@ -1,18 +1,19 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
+import { GuildUpdateChange } from "../../types/discordeno/guild_update_change.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { DiscordGuild } from "../../types/guilds/guild.ts";
 
 export async function handleGuildUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as DiscordGuild;
-  const cachedGuild = await cacheHandlers.get("guilds", payload.id);
-  if (!cachedGuild) return;
+  const newGuild = await cacheHandlers.get("guilds", payload.id);
+  if (!newGuild) return;
 
   const keysToSkip = [
     "roles",
-    "guild_hashes",
-    "guild_id",
-    "max_members",
+    "guildHashes",
+    "guildId",
+    "maxMembers",
     "emojis",
   ];
 
@@ -21,7 +22,7 @@ export async function handleGuildUpdate(data: DiscordGatewayPayload) {
       if (keysToSkip.includes(key)) return;
 
       // @ts-ignore index signature
-      const cachedValue = cachedGuild[key];
+      const cachedValue = newGuild[key];
       if (cachedValue !== value) {
         // Guild create sends undefined and update sends false.
         if (!cachedValue && !value) return;
@@ -34,12 +35,12 @@ export async function handleGuildUpdate(data: DiscordGatewayPayload) {
         }
 
         // @ts-ignore index signature
-        cachedGuild[key] = value;
+        newGuild[key] = value;
         return { key, oldValue: cachedValue, value };
       }
     }).filter((change) => change) as GuildUpdateChange[];
 
-  await cacheHandlers.set("guilds", payload.id, cachedGuild);
+  await cacheHandlers.set("guilds", payload.id, newGuild);
 
-  eventHandlers.guildUpdate?.(cachedGuild, changes);
+  eventHandlers.guildUpdate?.(newGuild, changes);
 }

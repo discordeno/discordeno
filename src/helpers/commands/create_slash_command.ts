@@ -1,7 +1,11 @@
 import { applicationId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
+import { CreateGlobalApplicationCommand } from "../../types/interactions/create_global_application_command.ts";
 import { endpoints } from "../../util/constants.ts";
-import { validateSlashCommands } from "../../util/utils.ts";
+import {
+  camelKeysToSnakeCase,
+  validateSlashCommands,
+} from "../../util/utils.ts";
 
 /**
  * There are two kinds of Slash Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:
@@ -14,17 +18,18 @@ import { validateSlashCommands } from "../../util/utils.ts";
  * Global commands are cached for **1 hour**. That means that new global commands will fan out slowly across all guilds, and will be guaranteed to be updated in an hour.
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
-export async function createSlashCommand(options: CreateSlashCommandOptions) {
+export async function createSlashCommand(
+  options: CreateGlobalApplicationCommand,
+  guildId: string,
+) {
   validateSlashCommands([options], true);
 
   const result = await rest.runMethod(
     "post",
-    options.guildId
-      ? endpoints.COMMANDS_GUILD(applicationId, options.guildId)
+    guildId
+      ? endpoints.COMMANDS_GUILD(applicationId, guildId)
       : endpoints.COMMANDS(applicationId),
-    {
-      ...options,
-    },
+    camelKeysToSnakeCase(options),
   );
 
   return result;

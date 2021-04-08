@@ -1,6 +1,7 @@
 import { SnakeCaseProps } from "../util.ts";
+import { Invite } from "./invite.ts";
 
-export interface InviteMetadata {
+export interface InviteMetadata extends Invite {
   /** Number of times this invite has been used */
   uses: number;
   /** Max number of times this invite can be used */

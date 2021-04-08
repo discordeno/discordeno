@@ -2,15 +2,19 @@ import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import { DiscordenoCreateMessage } from "../../types/discordeno/create_message.ts";
+import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
+import { DiscordMessage } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
+import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(
   channelId: string,
-  content: string | MessageContent,
+  content: string | DiscordenoCreateMessage,
 ) {
   if (typeof content === "string") content = { content };
 
@@ -33,7 +37,10 @@ export async function sendMessage(
 
     if (content.tts) requiredPerms.add("SEND_TTS_MESSAGES");
     if (content.embed) requiredPerms.add("EMBED_LINKS");
-    if (content.replyMessageId || content.mentions?.repliedUser) {
+    if (
+      content.messageReference?.messageId ||
+      content.allowedMentions?.repliedUser
+    ) {
       requiredPerms.add("READ_MESSAGE_HISTORY");
     }
 
@@ -45,50 +52,63 @@ export async function sendMessage(
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
   }
 
-  if (content.mentions) {
-    if (content.mentions.users?.length) {
-      if (content.mentions.parse?.includes("users")) {
-        content.mentions.parse = content.mentions.parse.filter(
+  if (content.allowedMentions) {
+    if (content.allowedMentions.users?.length) {
+      if (
+        content.allowedMentions.parse?.includes(
+          DiscordAllowedMentionsTypes.UserMentions,
+        )
+      ) {
+        content.allowedMentions.parse = content.allowedMentions.parse.filter(
           (p) => p !== "users",
         );
       }
 
-      if (content.mentions.users.length > 100) {
-        content.mentions.users = content.mentions.users.slice(0, 100);
+      if (content.allowedMentions.users.length > 100) {
+        content.allowedMentions.users = content.allowedMentions.users.slice(
+          0,
+          100,
+        );
       }
     }
 
-    if (content.mentions.roles?.length) {
-      if (content.mentions.parse?.includes("roles")) {
-        content.mentions.parse = content.mentions.parse.filter(
+    if (content.allowedMentions.roles?.length) {
+      if (
+        content.allowedMentions.parse?.includes(
+          DiscordAllowedMentionsTypes.RoleMentions,
+        )
+      ) {
+        content.allowedMentions.parse = content.allowedMentions.parse.filter(
           (p) => p !== "roles",
         );
       }
 
-      if (content.mentions.roles.length > 100) {
-        content.mentions.roles = content.mentions.roles.slice(0, 100);
+      if (content.allowedMentions.roles.length > 100) {
+        content.allowedMentions.roles = content.allowedMentions.roles.slice(
+          0,
+          100,
+        );
       }
     }
   }
 
   const result =
-    (await rest.runMethod("post", endpoints.CHANNEL_MESSAGES(channelId), {
-      ...content,
-      allowed_mentions: content.mentions
-        ? {
-          ...content.mentions,
-          replied_user: content.mentions.repliedUser,
-        }
-        : undefined,
-      ...(content.replyMessageId
-        ? {
-          message_reference: {
-            message_id: content.replyMessageId,
-            fail_if_not_exists: content.failReplyIfNotExists === true,
-          },
-        }
-        : {}),
-    })) as MessageCreateOptions;
+    (await rest.runMethod(
+      "post",
+      endpoints.CHANNEL_MESSAGES(channelId),
+      camelKeysToSnakeCase({
+        ...content,
+        ...(content.messageReference?.messageId
+          ? {
+            messageReference: {
+              ...content.messageReference,
+              failIfNotExists:
+                content.messageReference.failIfNotExists === true,
+            },
+          }
+          : {}),
+      }),
+    )) as DiscordMessage;
 
   return structures.createMessageStruct(result);
 }

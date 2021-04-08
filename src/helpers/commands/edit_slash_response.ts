@@ -1,13 +1,16 @@
 import { applicationId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
+import { DiscordenoEditWebhookMessage } from "../../types/discordeno/edit_webhook_message.ts";
+import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
+import { DiscordMessage } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** To edit your response to a slash command. If a messageId is not provided it will default to editing the original response. */
 export async function editSlashResponse(
   token: string,
-  options: EditSlashResponseOptions,
+  options: DiscordenoEditWebhookMessage,
 ) {
   if (options.content && options.content.length > 2000) {
     throw Error(Errors.MESSAGE_MAX_LENGTH);
@@ -17,31 +20,39 @@ export async function editSlashResponse(
     options.embeds.splice(10);
   }
 
-  if (options.allowed_mentions) {
-    if (options.allowed_mentions.users?.length) {
-      if (options.allowed_mentions.parse.includes("users")) {
-        options.allowed_mentions.parse = options.allowed_mentions.parse.filter(
+  if (options.allowedMentions) {
+    if (options.allowedMentions.users?.length) {
+      if (
+        options.allowedMentions.parse.includes(
+          DiscordAllowedMentionsTypes.UserMentions,
+        )
+      ) {
+        options.allowedMentions.parse = options.allowedMentions.parse.filter(
           (p) => p !== "users",
         );
       }
 
-      if (options.allowed_mentions.users.length > 100) {
-        options.allowed_mentions.users = options.allowed_mentions.users.slice(
+      if (options.allowedMentions.users.length > 100) {
+        options.allowedMentions.users = options.allowedMentions.users.slice(
           0,
           100,
         );
       }
     }
 
-    if (options.allowed_mentions.roles?.length) {
-      if (options.allowed_mentions.parse.includes("roles")) {
-        options.allowed_mentions.parse = options.allowed_mentions.parse.filter(
+    if (options.allowedMentions.roles?.length) {
+      if (
+        options.allowedMentions.parse.includes(
+          DiscordAllowedMentionsTypes.RoleMentions,
+        )
+      ) {
+        options.allowedMentions.parse = options.allowedMentions.parse.filter(
           (p) => p !== "roles",
         );
       }
 
-      if (options.allowed_mentions.roles.length > 100) {
-        options.allowed_mentions.roles = options.allowed_mentions.roles.slice(
+      if (options.allowedMentions.roles.length > 100) {
+        options.allowedMentions.roles = options.allowedMentions.roles.slice(
           0,
           100,
         );
@@ -61,7 +72,7 @@ export async function editSlashResponse(
   if (!options.messageId) return result;
 
   const message = await structures.createMessageStruct(
-    result as MessageCreateOptions,
+    result as DiscordMessage,
   );
   return message;
 }

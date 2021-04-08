@@ -1,3 +1,4 @@
+import { GuildMember } from "../guilds/guild_member.ts";
 import { User } from "../users/user.ts";
 import { SnakeCaseProps } from "../util.ts";
 import { InteractionApplicationCommandCallbackData } from "./application_command_callback_data.ts";
