@@ -30,6 +30,7 @@ export const identifyPayload = {
 export async function startBot(config: BotConfig) {
   if (config.eventHandlers) eventHandlers = config.eventHandlers;
   authorization = `Bot ${config.token}`;
+  ws.identifyPayload.token = `Bot ${config.token}`;
 
   // Initial API connection to get info about bots connection
   botGatewayData = await getGatewayBot();
