@@ -15,6 +15,6 @@ jobs:
         run: deno cache --no-check mod.ts
       - name: Run test script
         if: github.ref == 'refs/heads/main'
-        run: deno test --allow-net --allow-env --no-check
+        run: deno test -A --no-check
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
