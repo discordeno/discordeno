@@ -41,9 +41,13 @@ export async function startBot(config: BotConfig) {
   proxyWSURL = botGatewayData.url;
   identifyPayload.token = config.token;
   identifyPayload.intents = config.intents.reduce(
-    (bits, next) =>
-      (bits |= typeof next === "string" ? DiscordGatewayIntents[next] : next),
-    0
+    (
+      bits,
+      next,
+    ) => (bits |= typeof next === "string"
+      ? DiscordGatewayIntents[next]
+      : next),
+    0,
   );
   lastShardId = botGatewayData.shards;
   identifyPayload.shard = [0, lastShardId];
@@ -90,9 +94,13 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   }
 
   identifyPayload.intents = data.intents.reduce(
-    (bits, next) =>
-      (bits |= typeof next === "string" ? DiscordGatewayIntents[next] : next),
-    0
+    (
+      bits,
+      next,
+    ) => (bits |= typeof next === "string"
+      ? DiscordGatewayIntents[next]
+      : next),
+    0,
   );
 
   // PROXY DOESNT NEED US SPAWNING SHARDS

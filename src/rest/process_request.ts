@@ -4,7 +4,7 @@ import { rest } from "./rest.ts";
 /** Processes a request and assigns it to a queue or creates a queue if none exists for it. */
 export function processRequest(
   request: ServerRequest,
-  payload: RunMethodOptions
+  payload: RunMethodOptions,
 ) {
   const route = request.url.substring(request.url.indexOf("api/"));
   const parts = route.split("/");

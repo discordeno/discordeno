@@ -92,23 +92,21 @@ export async function sendMessage(
     }
   }
 
-  const result =
-    (await rest.runMethod(
-      "post",
-      endpoints.CHANNEL_MESSAGES(channelId),
-      camelKeysToSnakeCase({
-        ...content,
-        ...(content.messageReference?.messageId
-          ? {
-            messageReference: {
-              ...content.messageReference,
-              failIfNotExists:
-                content.messageReference.failIfNotExists === true,
-            },
-          }
-          : {}),
-      }),
-    )) as DiscordMessage;
+  const result = (await rest.runMethod(
+    "post",
+    endpoints.CHANNEL_MESSAGES(channelId),
+    camelKeysToSnakeCase({
+      ...content,
+      ...(content.messageReference?.messageId
+        ? {
+          messageReference: {
+            ...content.messageReference,
+            failIfNotExists: content.messageReference.failIfNotExists === true,
+          },
+        }
+        : {}),
+    }),
+  )) as DiscordMessage;
 
   return structures.createMessageStruct(result);
 }

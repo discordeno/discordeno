@@ -140,7 +140,12 @@ export function runMethod<T = any>(
       }
     };
 
-    rest.processRequest({ url, method, respond: (data: { status: number, body?: string; }) => resolve(JSON.parse(data.body || "{}")) }, {
+    rest.processRequest({
+      url,
+      method,
+      respond: (data: { status: number; body?: string }) =>
+        resolve(JSON.parse(data.body || "{}")),
+    }, {
       callback,
       bucketId,
       url,
