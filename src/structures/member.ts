@@ -6,13 +6,13 @@ import { kickMember } from "../helpers/members/kick_member.ts";
 import { sendDirectMessage } from "../helpers/members/send_direct_message.ts";
 import { addRole } from "../helpers/roles/add_role.ts";
 import { removeRole } from "../helpers/roles/remove_role.ts";
-import { CreateMessage } from "../types/channels/create_message.ts";
 import { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
 import {
   DiscordGuildMember,
   GuildMember,
 } from "../types/guilds/guild_member.ts";
 import { ModifyGuildMember } from "../types/guilds/modify_guild_member.ts";
+import { CreateMessage } from "../types/messages/create_message.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { DiscordUser, User } from "../types/users/user.ts";
@@ -151,7 +151,14 @@ export interface MemberStruct extends GuildMember, User {
   /** Get the nickname or the username if no nickname */
   name(guildID: string): string;
   /** Get the guild member object for the specified guild */
-  guildMember(guildID: string): GuildMember | undefined;
+  guildMember(
+    guildID: string,
+  ):
+    | Omit<GuildMember, "joinedAt" | "premiumSince"> & {
+      joinedAt: number;
+      premiumSince?: number;
+    }
+    | undefined;
   /** Send a direct message to the user is possible */
   sendDM(
     content: string | CreateMessage,

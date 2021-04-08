@@ -9,10 +9,18 @@ import { removeAllReactions } from "../helpers/messages/remove_all_reactions.ts"
 import { removeReaction } from "../helpers/messages/remove_reaction.ts";
 import { removeReactionEmoji } from "../helpers/messages/remove_reaction_emoji.ts";
 import { sendMessage } from "../helpers/messages/send_message.ts";
+import { DiscordenoCreateMessage } from "../types/discordeno/create_message.ts";
+import { GuildMember } from "../types/guilds/guild_member.ts";
+import { EditMessage } from "../types/messages/edit_message.ts";
+import { DiscordMessage, Message } from "../types/messages/message.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
-import { createNewProp } from "../util/utils.ts";
+import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
+import { ChannelStruct } from "./channel.ts";
+import { GuildStruct } from "./guild.ts";
+import { MemberStruct } from "./member.ts";
+import { RoleStruct } from "./role.ts";
 
-const baseMessage: Partial<Message> = {
+const baseMessage: Partial<MessageStruct> = {
   get channel() {
     if (this.guildId) return cache.channels.get(this.channelId!);
     return cache.channels.get(this.author?.id!);
@@ -34,13 +42,13 @@ const baseMessage: Partial<Message> = {
       "@me"}/${this.channelId}/${this.id}`;
   },
   get mentionedRoles() {
-    return this.mentionRoleIds?.map((id) => this.guild?.roles.get(id)) || [];
+    return this.mentionedRoleIds?.map((id) => this.guild?.roles.get(id)) || [];
   },
   get mentionedChannels() {
-    return this.mentionChannelIds?.map((id) => cache.channels.get(id)) || [];
+    return this.mentionedChannelIds?.map((id) => cache.channels.get(id)) || [];
   },
   get mentionedMembers() {
-    return this.mentions?.map((id) => cache.members.get(id)) || [];
+    return this.mentionedUserIds?.map((id) => cache.members.get(id)) || [];
   },
 
   // METHODS
@@ -69,9 +77,10 @@ const baseMessage: Partial<Message> = {
       }
       : {
         ...content,
-        mentions: { ...(content.mentions || {}), repliedUser: true },
+        mentions: { ...(content.allowedMentions || {}), repliedUser: true },
         replyMessageId: this.id,
-        failReplyIfNotExists: content.failReplyIfNotExists === true,
+        failReplyIfNotExists:
+          content.messageReference?.failIfNotExists === true,
       };
 
     if (this.guildId) return sendMessage(this.channelId!, contentWithMention);
@@ -108,58 +117,126 @@ const baseMessage: Partial<Message> = {
   },
 };
 
-export async function createMessageStruct(data: MessageCreateOptions) {
+export async function createMessageStruct(data: DiscordMessage) {
   const {
-    guild_id: guildId = "",
-    channel_id: channelId,
-    mentions_everyone: mentionsEveryone,
-    mention_channels: mentionChannelIds = [],
-    mention_roles: mentionRoleIds,
-    webhook_id: webhookId,
-    message_reference: messageReference,
+    guildId = "",
+    channelId,
+    mentionChannels = [],
+    mentions,
+    mentionRoles,
     edited_timestamp: editedTimestamp,
-    referenced_message: referencedMessageId,
-    member,
     ...rest
-  } = data;
+  } = snakeKeysToCamelCase(data) as Message;
 
-  const restProps: Record<string, ReturnType<typeof createNewProp>> = {};
+  const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
     // @ts-ignore index signature
-    restProps[key] = createNewProp(rest[key]);
+    props[key] = createNewProp(rest[key]);
   }
 
   // Discord doesnt give guild id for getMessage() so this will fill it in
   const guildIdFinal = guildId ||
     (await cacheHandlers.get("channels", channelId))?.guildId || "";
 
-  const message = Object.create(baseMessage, {
-    ...restProps,
+  const message: MessageStruct = Object.create(baseMessage, {
+    ...props,
     /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
-    referencedMessageId: createNewProp(referencedMessageId),
     channelId: createNewProp(channelId),
-    guildId: createNewProp(guildId || guildIdFinal),
-    mentions: createNewProp(data.mentions.map((m) => m.id)),
-    mentionsEveryone: createNewProp(mentionsEveryone),
-    mentionRoleIds: createNewProp(mentionRoleIds),
-    mentionChannelIds: createNewProp(
+    guildId: createNewProp(guildIdFinal),
+    mentionedUserIds: createNewProp(mentions.map((m) => m.id)),
+    mentionedRoleIds: createNewProp(mentionRoles),
+    mentionedChannelIds: createNewProp(
       [
         // Keep any ids that discord sends
-        ...mentionChannelIds,
+        ...mentionChannels.map((m) => m.id),
         // Add any other ids that can be validated in a channel mention format
         ...(rest.content.match(CHANNEL_MENTION_REGEX) || []).map((text) =>
           // converts the <#123> into 123
           text.substring(2, text.length - 1)
         ),
-      ].map((m) => m.id),
+      ],
     ),
-    webhookId: createNewProp(webhookId),
-    messageReference: createNewProp(messageReference),
     timestamp: createNewProp(Date.parse(data.timestamp)),
     editedTimestamp: createNewProp(
       editedTimestamp ? Date.parse(editedTimestamp) : undefined,
     ),
   });
 
-  return message as Message;
+  return message;
+}
+
+export interface MessageStruct extends Message {
+  // For better user experience
+  /** Ids of users specifically mentioned in the message */
+  mentionedUserIds: string[];
+  /** Ids of roles specifically mentioned in this message */
+  mentionedRoleIds: string[];
+  /** Channels specifically mentioned in this message */
+  mentionedChannelIds?: string[];
+  // GETTERS
+
+  /** The channel where this message was sent. Can be undefined if uncached. */
+  channel?: ChannelStruct;
+  /** The guild of this message. Can be undefined if not in cache or in DM */
+  guild?: GuildStruct;
+  /** The member for the user who sent the message. Can be undefined if not in cache or in dm. */
+  member?: MemberStruct;
+  /** The guild member details for this guild and member. Can be undefined if not in cache or in dm. */
+  guildMember?: Omit<GuildMember, "joinedAt" | "premiumSince"> & {
+    joinedAt: number;
+    premiumSince?: number;
+  };
+  /** The url link to this message */
+  link: string;
+  /** The role objects for all the roles that were mentioned in this message */
+  mentionedRoles: (RoleStruct | undefined)[];
+  /** The channel objects for all the channels that were mentioned in this message. */
+  mentionedChannels: (ChannelStruct | undefined)[];
+  /** The member objects for all the members that were mentioned in this message. */
+  mentionedMembers: (MemberStruct | undefined)[];
+
+  // METHODS
+
+  /** Delete the message */
+  delete(
+    reason?: string,
+    delayMilliseconds?: number,
+  ): ReturnType<typeof deleteMessage>;
+  /** Edit the message */
+  edit(content: string | EditMessage): ReturnType<typeof editMessage>;
+  /** Pins the message in the channel */
+  pin(): ReturnType<typeof pinMessage>;
+  /** Add a reaction to the message */
+  addReaction(reaction: string): ReturnType<typeof addReaction>;
+  /** Add multiple reactions to the message without or without order. */
+  addReactions(
+    reactions: string[],
+    ordered?: boolean,
+  ): ReturnType<typeof addReactions>;
+  /** Send a inline reply to this message */
+  reply(
+    content: string | DiscordenoCreateMessage,
+  ): ReturnType<typeof sendMessage>;
+  /** Send a message to this channel where this message is */
+  send(
+    content: string | DiscordenoCreateMessage,
+  ): ReturnType<typeof sendMessage>;
+  /** Send a message to this channel and then delete it after a bit. By default it will delete after 10 seconds with no reason provided. */
+  alert(
+    content: string | DiscordenoCreateMessage,
+    timeout?: number,
+    reason?: string,
+  ): Promise<void>;
+  /** Send a inline reply to this message but then delete it after a bit. By default it will delete after 10 seconds with no reason provided.  */
+  alertReply(
+    content: string | DiscordenoCreateMessage,
+    timeout?: number,
+    reason?: string,
+  ): Promise<unknown>;
+  /** Remove all reactions */
+  removeAllReactions(): ReturnType<typeof removeAllReactions>;
+  /** Remove all reactions */
+  removeReactionEmoji(reaction: string): ReturnType<typeof removeReactionEmoji>;
+  /** Remove all reactions */
+  removeReaction(reaction: string): ReturnType<typeof removeReaction>;
 }
