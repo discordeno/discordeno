@@ -44,7 +44,6 @@ export function spawnShards(firstShardId = 0) {
       let shardId = queue.shift();
 
       while (shardId !== undefined) {
-        console.log("spawn shards");
         await ws.tellClusterToIdentify(clusterId as number, shardId, bucketId);
         shardId = queue.shift();
       }

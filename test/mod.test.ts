@@ -3,16 +3,16 @@ import { assertExists } from "./deps.ts";
 
 // Set necessary settings
 // Disables the logger which logs everything
-ws.log = function (x: string, d: any) {
-  if (["RAW", "GUILD_CREATE", "HEARTBEATING_DETAILS"].includes(x)) return console.log(x);
-  console.log(x, d);
+ws.log = function (_x: string, _d: unknown) {
+  // if (["RAW", "GUILD_CREATE", "HEARTBEATING_DETAILS"].includes(_x))
+  //   return console.log(_x);
+  // console.log(_x, _d);
 };
 
 // Default options for tests
 export const defaultTestOptions: Partial<Deno.TestDefinition> = {
   sanitizeOps: false,
   sanitizeResources: false,
-  sanitizeExit: false,
 };
 
 // Temporary data
@@ -311,14 +311,16 @@ Deno.test({
 //   ...defaultTestOptions,
 // });
 
-// Forcefully exit the Deno process once all tests are done.
+// Exit the Deno process once all tests are done.
 Deno.test({
-  name: "[main] exit the process forcefully",
-  fn() {
+  name: "[main] Close all shards manually.",
+  async fn() {
     ws.shards.forEach((shard) => {
       clearInterval(shard.heartbeat.intervalId);
-      shard.ws.close();
+      shard.ws.close(3064, "Discordeno Testing Finished! Do Not RESUME!");
     });
+
+    await delay(3000);
   },
   ...defaultTestOptions,
 });

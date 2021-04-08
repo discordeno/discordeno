@@ -4,11 +4,10 @@ import { ws } from "./ws.ts";
 export async function tellClusterToIdentify(
   workerId: number,
   shardId: number,
-  bucketId: number,
+  bucketId: number
 ) {
   // When resharding this may exist already
   const oldShard = ws.shards.get(shardId);
-
   // TODO: Use workers
   await ws.identify(shardId, ws.maxShards);
 

@@ -37,7 +37,6 @@ export async function identify(shardId: number, maxShards: number) {
   };
 
   return new Promise((resolve, reject) => {
-    console.log("setting the shard loader");
     ws.loadingShards.set(shardId, {
       shardId,
       resolve,

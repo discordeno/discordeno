@@ -8,7 +8,6 @@ export async function processQueue(id: string) {
   if (!queue) return;
 
   while (queue.length) {
-    console.log("process queue");
     // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
     if (rest.globallyRateLimited) {
       setTimeout(() => processQueue(id), 1000);
