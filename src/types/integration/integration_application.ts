@@ -1,5 +1,5 @@
 import { User } from "../users/user.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface IntegrationApplication {
   /** The id of the app */
@@ -17,6 +17,4 @@ export interface IntegrationApplication {
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-application-object-integration-application-structure */
-export type DiscordIntegrationApplication = SnakeCaseProps<
-  IntegrationApplication
->;
+export type DiscordIntegrationApplication = SnakeCasedPropertiesDeep<IntegrationApplication>;

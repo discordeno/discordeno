@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface UpdateVoiceState {
   /** id of the guild */
@@ -12,4 +12,4 @@ export interface UpdateVoiceState {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#update-voice-state */
-export type DiscordUpdateVoiceState = SnakeCaseProps<UpdateVoiceState>;
+export type DiscordUpdateVoiceState = SnakeCasedPropertiesDeep<UpdateVoiceState>;

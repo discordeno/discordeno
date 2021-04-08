@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordMessageActivityTypes } from "./message_activity_types.ts";
 
 export interface MessageActivity {
@@ -9,4 +9,4 @@ export interface MessageActivity {
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure */
-export type DiscordMessageActivity = SnakeCaseProps<MessageActivity>;
+export type DiscordMessageActivity = SnakeCasedPropertiesDeep<MessageActivity>;

@@ -1,15 +1,10 @@
-import {
-  eventHandlers,
-  lastShardId,
-  setApplicationId,
-  setBotId,
-} from "../../bot.ts";
+import { eventHandlers, setApplicationId, setBotId } from "../../bot.ts";
 import { cache, cacheHandlers } from "../../cache.ts";
 import { initialMemberLoadQueue } from "../../structures/guild.ts";
 import { structures } from "../../structures/mod.ts";
-import { delay } from "../../util/utils.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { DiscordReady } from "../../types/gateway/ready.ts";
+import { delay, snakeKeysToCamelCase } from "../../util/utils.ts";
 import { ws } from "../../ws/ws.ts";
 
 export async function handleReady(
@@ -73,7 +68,7 @@ async function loaded(shardId: number) {
   shard.ready = true;
 
   // If it is the last shard we can go full ready
-  if (shardId === lastShardId - 1) {
+  if (shardId === ws.lastShardId - 1) {
     // Still some shards are loading so wait another 2 seconds for them
     if (ws.shards.some((shard) => !shard.ready)) {
       setTimeout(() => loaded(shardId), 2000);
@@ -86,7 +81,7 @@ async function loaded(shardId: number) {
         await Promise.allSettled(
           members.map(async (member) => {
             const memberStruct = await structures.createMemberStruct(
-              member,
+              snakeKeysToCamelCase(member),
               guildId,
             );
 

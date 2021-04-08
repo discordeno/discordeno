@@ -1,6 +1,6 @@
 import { DiscordChannelTypes } from "../channels/channel_types.ts";
 import { DiscordOverwrite, Overwrite } from "../channels/overwrite.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface CreateGuildChannel {
   /** Channel name (2-100 characters) */
@@ -27,6 +27,8 @@ export interface CreateGuildChannel {
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-channel */
 export interface DiscordCreateGuildChannel
-  extends SnakeCaseProps<Omit<CreateGuildChannel, "permissionOverwrites">> {
+  extends SnakeCasedPropertiesDeep<
+    Omit<CreateGuildChannel, "permissionOverwrites">
+  > {
   permission_overwrites: DiscordOverwrite[];
 }

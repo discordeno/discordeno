@@ -1,5 +1,5 @@
 import { User } from "../users/user.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { IntegrationAccount } from "./integration_account.ts";
 import { IntegrationApplication } from "./integration_application.ts";
 import { DiscordIntegrationExpireBehaviors } from "./integration_expire_behaviors.ts";
@@ -38,4 +38,4 @@ export interface Integration {
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
-export type DiscordIntegration = SnakeCaseProps<Integration>;
+export type DiscordIntegration = SnakeCasedPropertiesDeep<Integration>;

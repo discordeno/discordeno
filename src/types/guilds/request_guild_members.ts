@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface RequestGuildMembers {
   /** id of the guild to get members for */
@@ -16,4 +16,4 @@ export interface RequestGuildMembers {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#request-guild-members */
-export type DiscordRequestGuildMembers = SnakeCaseProps<RequestGuildMembers>;
+export type DiscordRequestGuildMembers = SnakeCasedPropertiesDeep<RequestGuildMembers>;

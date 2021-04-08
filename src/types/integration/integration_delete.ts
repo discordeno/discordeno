@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface IntegrationDelete {
   /** Integration id */
@@ -10,4 +10,4 @@ export interface IntegrationDelete {
 }
 
 /** https://github.com/discord/discord-api-docs/blob/master/docs/topics/Gateway.md#integration-delete-event-fields */
-export type DiscordIntegrationDelete = SnakeCaseProps<IntegrationDelete>;
+export type DiscordIntegrationDelete = SnakeCasedPropertiesDeep<IntegrationDelete>;

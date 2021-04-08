@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface CreateDM {
   /** The recipient to open a DM channel with */
@@ -6,4 +6,4 @@ export interface CreateDM {
 }
 
 /** https://discord.com/developers/docs/resources/user#create-dm */
-export type DiscordCreateDM = SnakeCaseProps<CreateDM>;
+export type DiscordCreateDM = SnakeCasedPropertiesDeep<CreateDM>;

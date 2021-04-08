@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface MessageDelete {
   /** The id of the message */
@@ -10,4 +10,4 @@ export interface MessageDelete {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-delete */
-export type DiscordMessageDelete = SnakeCaseProps<MessageDelete>;
+export type DiscordMessageDelete = SnakeCasedPropertiesDeep<MessageDelete>;

@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { ActivityAssets } from "./activity_assets.ts";
 import { ActivityEmoji } from "./activity_emoji.ts";
 import { ActivityParty } from "./activity_party.ts";
@@ -38,4 +38,4 @@ export interface Activity {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object */
-export type DiscordActivity = SnakeCaseProps<Activity>;
+export type DiscordActivity = SnakeCasedPropertiesDeep<Activity>;

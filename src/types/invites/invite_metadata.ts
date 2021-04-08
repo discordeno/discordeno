@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { Invite } from "./invite.ts";
 
 export interface InviteMetadata extends Invite {
@@ -15,4 +15,4 @@ export interface InviteMetadata extends Invite {
 }
 
 /** https://discord.com/developers/docs/resources/invite#invite-metadata-object */
-export type DiscordInviteMetadata = SnakeCaseProps<InviteMetadata>;
+export type DiscordInviteMetadata = SnakeCasedPropertiesDeep<InviteMetadata>;

@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface EmbedFooter {
   /** Footer text */
@@ -10,4 +10,4 @@ export interface EmbedFooter {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure */
-export type DiscordEmbedFooter = SnakeCaseProps<EmbedFooter>;
+export type DiscordEmbedFooter = SnakeCasedPropertiesDeep<EmbedFooter>;

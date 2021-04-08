@@ -13,7 +13,6 @@ export let eventHandlers: EventHandlers = {};
 
 export let botGatewayData: DiscordGetGatewayBot;
 export let proxyWSURL = `wss://gateway.discord.gg`;
-export let lastShardId = 0;
 
 export const identifyPayload = {
   token: "",
@@ -58,8 +57,7 @@ export async function startBot(config: BotConfig) {
       : next),
     0,
   );
-  lastShardId = botGatewayData.shards;
-  identifyPayload.shard = [0, lastShardId];
+  identifyPayload.shard = [0, botGatewayData.shards];
 
   ws.spawnShards();
 }

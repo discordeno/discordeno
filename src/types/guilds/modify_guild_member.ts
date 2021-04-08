@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface ModifyGuildMember {
   /** Value to set users nickname to. Requires the `MANAGE_NICKNAMES` permission */
@@ -14,4 +14,4 @@ export interface ModifyGuildMember {
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-member */
-export type DiscordModifyGuildMember = SnakeCaseProps<ModifyGuildMember>;
+export type DiscordModifyGuildMember = SnakeCasedPropertiesDeep<ModifyGuildMember>;

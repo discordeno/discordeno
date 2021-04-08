@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface GuildIntegrationsUpdate {
   /** id of the guild whose integrations were updated */
@@ -6,6 +6,4 @@ export interface GuildIntegrationsUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-integrations-update */
-export type DiscordGuildIntegrationsUpdate = SnakeCaseProps<
-  GuildIntegrationsUpdate
->;
+export type DiscordGuildIntegrationsUpdate = SnakeCasedPropertiesDeep<GuildIntegrationsUpdate>;

@@ -2,7 +2,6 @@ import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
-import { DiscordenoCreateMessage } from "../../types/discordeno/create_message.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
 import { DiscordMessage } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";

@@ -1,6 +1,6 @@
 import { GuildMember } from "../guilds/guild_member.ts";
 import { User } from "../users/user.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { InteractionApplicationCommandCallbackData } from "./application_command_callback_data.ts";
 import { DiscordInteractionTypes } from "./interaction_types.ts";
 
@@ -26,4 +26,4 @@ export interface Interaction {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction */
-export type DiscordInteraction = SnakeCaseProps<Interaction>;
+export type DiscordInteraction = SnakeCasedPropertiesDeep<Interaction>;

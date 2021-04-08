@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { WelcomeScreenChannel } from "./welcome_screen_channel.ts";
 
 export interface WelcomeScreen {
@@ -9,4 +9,4 @@ export interface WelcomeScreen {
 }
 
 /** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure */
-export type DiscordWelcomeScreen = SnakeCaseProps<WelcomeScreen>;
+export type DiscordWelcomeScreen = SnakeCasedPropertiesDeep<WelcomeScreen>;

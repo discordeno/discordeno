@@ -1,5 +1,5 @@
 import { User } from "../users/user.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordChannelTypes } from "./channel_types.ts";
 import { DiscordOverwrite, Overwrite } from "./overwrite.ts";
 
@@ -44,6 +44,6 @@ export interface Channel {
 
 /** https://discord.com/developers/docs/resources/channel#channel-object */
 export interface DiscordChannel
-  extends SnakeCaseProps<Omit<Channel, "permissionOverwrites">> {
+  extends SnakeCasedPropertiesDeep<Omit<Channel, "permissionOverwrites">> {
   permission_overwrites?: DiscordOverwrite[];
 }

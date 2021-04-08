@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { ApplicationCommandOption } from "./application_command_option.ts";
 
 export interface CreateGuildApplicationCommand {
@@ -11,6 +11,4 @@ export interface CreateGuildApplicationCommand {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#create-guild-application-command-json-params */
-export type DiscordCreateGuildApplicationCommand = SnakeCaseProps<
-  CreateGuildApplicationCommand
->;
+export type DiscordCreateGuildApplicationCommand = SnakeCasedPropertiesDeep<CreateGuildApplicationCommand>;

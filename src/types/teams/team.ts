@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { TeamMember } from "./team_member.ts";
 
 export interface Team {
@@ -13,4 +13,4 @@ export interface Team {
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
-export type DiscordTeam = SnakeCaseProps<Team>;
+export type DiscordTeam = SnakeCasedPropertiesDeep<Team>;

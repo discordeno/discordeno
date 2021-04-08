@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface Attachment {
   /** Attachment id */
@@ -18,4 +18,4 @@ export interface Attachment {
 }
 
 /** https://discord.com/developers/docs/resources/channel#attachment-object */
-export type DiscordAttachment = SnakeCaseProps<Attachment>;
+export type DiscordAttachment = SnakeCasedPropertiesDeep<Attachment>;

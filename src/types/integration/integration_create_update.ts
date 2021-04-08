@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { Integration } from "./integration.ts";
 
 export interface IntegrationCreateUpdate extends Integration {
@@ -7,6 +7,4 @@ export interface IntegrationCreateUpdate extends Integration {
 }
 
 /** https://github.com/discord/discord-api-docs/blob/master/docs/topics/Gateway.md#integration-create-event-additional-fields */
-export type DiscordIntegrationCreateUpdate = SnakeCaseProps<
-  IntegrationCreateUpdate
->;
+export type DiscordIntegrationCreateUpdate = SnakeCasedPropertiesDeep<IntegrationCreateUpdate>;

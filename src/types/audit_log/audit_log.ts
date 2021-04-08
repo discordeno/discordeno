@@ -1,6 +1,6 @@
-import { Integration } from "../guilds/integration.ts";
+import { Integration } from "../integration/integration.ts";
 import { User } from "../users/user.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { Webhook } from "../webhooks/webhook.ts";
 import { AuditLogEntry } from "./audit_log_entry.ts";
 
@@ -16,4 +16,4 @@ export interface AuditLog {
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-object */
-export type DiscordAuditLog = SnakeCaseProps<AuditLog>;
+export type DiscordAuditLog = SnakeCasedPropertiesDeep<AuditLog>;

@@ -11,17 +11,19 @@ export const sleep = (timeout: number) => {
 };
 
 export function editBotStatus(
-  data: Pick<GatewayStatusUpdatePayload, "activities" | "status">,
+  data: Pick<GatewayStatusUpdatePayload, "activities" | "status">
 ) {
   ws.shards.forEach((shard) => {
-    sendWS({
-      op: DiscordGatewayOpcodes.StatusUpdate,
-      d: {
-        since: null,
-        afk: false,
-        ...data,
-      },
-    }, shard.id);
+    shard.ws.send(
+      JSON.stringify({
+        op: DiscordGatewayOpcodes.StatusUpdate,
+        d: {
+          since: null,
+          afk: false,
+          ...data,
+        },
+      })
+    );
   });
 }
 
@@ -49,10 +51,11 @@ export function delay(ms: number): Promise<void> {
 export const formatImageURL = (
   url: string,
   size: DiscordImageSize = 128,
-  format?: DiscordImageFormat,
+  format?: DiscordImageFormat
 ) => {
-  return `${url}.${format ||
-    (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
+  return `${url}.${
+    format || (url.includes("/a_") ? "gif" : "jpg")
+  }?size=${size}`;
 };
 
 function camelToSnakeCase(text: string) {
@@ -60,31 +63,30 @@ function camelToSnakeCase(text: string) {
 }
 
 function snakeToCamelCase(text: string) {
-  return text.replace(
-    /_id|([-_][a-z])/ig,
-    ($1) => $1.toUpperCase().replace("_", ""),
+  return text.replace(/_id|([-_][a-z])/gi, ($1) =>
+    $1.toUpperCase().replace("_", "")
   );
 }
 
 function isObject(obj: unknown) {
-  return obj === Object(obj) && !Array.isArray(obj) &&
-    typeof obj !== "function";
+  return (
+    obj === Object(obj) && !Array.isArray(obj) && typeof obj !== "function"
+  );
 }
 
 // deno-lint-ignore no-explicit-any
 export function camelKeysToSnakeCase<T>(
-  obj: Record<string, any> | Record<string, any>[],
+  obj: Record<string, any> | Record<string, any>[]
 ): T {
   if (isObject(obj)) {
     // deno-lint-ignore no-explicit-any
     const convertedObject: Record<string, any> = {};
 
-    Object.keys(obj)
-      .forEach((key) => {
-        convertedObject[camelToSnakeCase(key)] = camelKeysToSnakeCase(
-          (obj as Record<string, any>)[key],
-        );
-      });
+    Object.keys(obj).forEach((key) => {
+      convertedObject[camelToSnakeCase(key)] = camelKeysToSnakeCase(
+        (obj as Record<string, any>)[key]
+      );
+    });
 
     return convertedObject as T;
   } else if (Array.isArray(obj)) {
@@ -96,18 +98,17 @@ export function camelKeysToSnakeCase<T>(
 
 // deno-lint-ignore no-explicit-any
 export function snakeKeysToCamelCase<T>(
-  obj: Record<string, any> | Record<string, any>[],
+  obj: Record<string, any> | Record<string, any>[]
 ): T {
   if (isObject(obj)) {
     // deno-lint-ignore no-explicit-any
     const convertedObject: Record<string, any> = {};
 
-    Object.keys(obj)
-      .forEach((key) => {
-        convertedObject[snakeToCamelCase(key)] = snakeKeysToCamelCase(
-          (obj as Record<string, any>)[key],
-        );
-      });
+    Object.keys(obj).forEach((key) => {
+      convertedObject[snakeToCamelCase(key)] = snakeKeysToCamelCase(
+        (obj as Record<string, any>)[key]
+      );
+    });
 
     return convertedObject as T;
   } else if (Array.isArray(obj)) {
@@ -120,7 +121,7 @@ export function snakeKeysToCamelCase<T>(
 /** @private */
 function validateSlashOptionChoices(
   choices: SlashCommandOptionChoice[],
-  optionType: SlashCommandOptionType,
+  optionType: SlashCommandOptionType
 ) {
   for (const choice of choices) {
     if ([...choice.name].length < 1 || [...choice.name].length > 100) {
@@ -129,7 +130,8 @@ function validateSlashOptionChoices(
 
     if (
       (optionType === SlashCommandOptionType.STRING &&
-        (typeof choice.value !== "string" || choice.value.length < 1 ||
+        (typeof choice.value !== "string" ||
+          choice.value.length < 1 ||
           choice.value.length > 100)) ||
       (optionType === SlashCommandOptionType.INTEGER &&
         typeof choice.value !== "number")
@@ -152,9 +154,10 @@ function validateSlashOptions(options: SlashCommandOption[]) {
     }
 
     if (
-      ([...option.name].length < 1 || [...option.name].length > 32) ||
-      ([...option.description].length < 1 ||
-        [...option.description].length > 100)
+      [...option.name].length < 1 ||
+      [...option.name].length > 32 ||
+      [...option.description].length < 1 ||
+      [...option.description].length > 100
     ) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
@@ -168,7 +171,7 @@ function validateSlashOptions(options: SlashCommandOption[]) {
 /** @private */
 export function validateSlashCommands(
   commands: UpsertSlashCommandOptions[],
-  create = false,
+  create = false
 ) {
   for (const command of commands) {
     if (

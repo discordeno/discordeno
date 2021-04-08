@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface EmbedThumbnail {
   /** Source url of thumbnail (only supports http(s) and attachments) */
@@ -12,4 +12,4 @@ export interface EmbedThumbnail {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-thumbnail-structure */
-export type DiscordEmbedThumbnail = SnakeCaseProps<EmbedThumbnail>;
+export type DiscordEmbedThumbnail = SnakeCasedPropertiesDeep<EmbedThumbnail>;

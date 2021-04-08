@@ -1,5 +1,5 @@
 import { User } from "../users/user.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface InviteCreate {
   /** The channel the invite is for */
@@ -27,4 +27,4 @@ export interface InviteCreate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#invite-create */
-export type DiscordInviteCreate = SnakeCaseProps<InviteCreate>;
+export type DiscordInviteCreate = SnakeCasedPropertiesDeep<InviteCreate>;

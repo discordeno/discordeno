@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordOAuth2Scopes } from "./scopes.ts";
 
 export interface BotAuthenticationFlowQuery {
@@ -15,6 +15,4 @@ export interface BotAuthenticationFlowQuery {
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#bot-authorization-flow-bot-auth-parameters */
-export type DiscordBotAuthenticationFlowQuery = SnakeCaseProps<
-  BotAuthenticationFlowQuery
->;
+export type DiscordBotAuthenticationFlowQuery = SnakeCasedPropertiesDeep<BotAuthenticationFlowQuery>;

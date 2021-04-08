@@ -1,5 +1,5 @@
 import { Emoji } from "../emojis/emoji.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordGuildFeatures } from "./guild_features.ts";
 
 export interface GuildPreview {
@@ -26,4 +26,4 @@ export interface GuildPreview {
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-preview-object */
-export type DiscordGuildPreview = SnakeCaseProps<GuildPreview>;
+export type DiscordGuildPreview = SnakeCasedPropertiesDeep<GuildPreview>;

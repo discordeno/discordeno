@@ -1,5 +1,5 @@
 import { GuildMember } from "../guilds/guild_member.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface TypingStart {
   /** id of the channel */
@@ -15,4 +15,4 @@ export interface TypingStart {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#typing-start */
-export type DiscordTypingStart = SnakeCaseProps<TypingStart>;
+export type DiscordTypingStart = SnakeCasedPropertiesDeep<TypingStart>;
