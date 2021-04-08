@@ -1,5 +1,5 @@
 import { User } from "../users/user.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface GuildMemberRemove {
   /** The id of the guild */
@@ -9,4 +9,4 @@ export interface GuildMemberRemove {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-member-remove */
-export type DiscordGuildMemberRemove = SnakeCaseProps<GuildMemberRemove>;
+export type DiscordGuildMemberRemove = SnakeCasedPropertiesDeep<GuildMemberRemove>;

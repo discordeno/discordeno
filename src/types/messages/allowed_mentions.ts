@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordAllowedMentionsTypes } from "./allowed_mentions_types.ts";
 
 export interface AllowedMentions {
@@ -13,4 +13,4 @@ export interface AllowedMentions {
 }
 
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
-export type DiscordAllowedMentions = SnakeCaseProps<AllowedMentions>;
+export type DiscordAllowedMentions = SnakeCasedPropertiesDeep<AllowedMentions>;

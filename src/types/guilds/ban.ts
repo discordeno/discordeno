@@ -1,5 +1,5 @@
 import { User } from "../users/user.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface Ban {
   /** The reason for the ban */
@@ -9,4 +9,4 @@ export interface Ban {
 }
 
 /** https://discord.com/developers/docs/resources/guild#ban-object */
-export type DiscordBan = SnakeCaseProps<Ban>;
+export type DiscordBan = SnakeCasedPropertiesDeep<Ban>;

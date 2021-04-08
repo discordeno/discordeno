@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface EmbedAuthor {
   /** Name of author */
@@ -12,4 +12,4 @@ export interface EmbedAuthor {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-author-structure */
-export type DiscordEmbedAuthor = SnakeCaseProps<EmbedAuthor>;
+export type DiscordEmbedAuthor = SnakeCasedPropertiesDeep<EmbedAuthor>;

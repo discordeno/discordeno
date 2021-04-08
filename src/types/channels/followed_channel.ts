@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface FollowedChannel {
   /** Source message id */
@@ -8,4 +8,4 @@ export interface FollowedChannel {
 }
 
 /** https://discord.com/developers/docs/resources/channel#followed-channel-object */
-export type DiscordFollowedChannel = SnakeCaseProps<FollowedChannel>;
+export type DiscordFollowedChannel = SnakeCasedPropertiesDeep<FollowedChannel>;

@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface GetGuildPruneCountQuery {
   /** Number of days to count prune for (1 or more), default: 7 */
@@ -8,6 +8,4 @@ export interface GetGuildPruneCountQuery {
 }
 
 /** https://discord.com/developers/docs/resources/guild#get-guild-prune-count */
-export type DiscordGetGuildPruneCountQuery = SnakeCaseProps<
-  GetGuildPruneCountQuery
->;
+export type DiscordGetGuildPruneCountQuery = SnakeCasedPropertiesDeep<GetGuildPruneCountQuery>;

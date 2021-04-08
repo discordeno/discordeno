@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { ApplicationCommand } from "./application_command.ts";
 
 export interface ApplicationCommandCreateUpdateDelete
@@ -8,6 +8,4 @@ export interface ApplicationCommandCreateUpdateDelete
 }
 
 /** https://discord.com/developers/docs/topics/gateway#application-command-delete-application-command-extra-fields */
-export type DiscordApplicationCommandCreateUpdateDelete = SnakeCaseProps<
-  ApplicationCommandCreateUpdateDelete
->;
+export type DiscordApplicationCommandCreateUpdateDelete = SnakeCasedPropertiesDeep<ApplicationCommandCreateUpdateDelete>;

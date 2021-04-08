@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { RoleTags } from "./role_tags.ts";
 
 export interface Role {
@@ -23,4 +23,4 @@ export interface Role {
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
-export type DiscordRole = SnakeCaseProps<Role>;
+export type DiscordRole = SnakeCasedPropertiesDeep<Role>;

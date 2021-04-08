@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface CreateGuildBan {
   /** Number of days to delete messages for (0-7) */
@@ -8,4 +8,4 @@ export interface CreateGuildBan {
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-ban */
-export type DiscordCreateGuildBan = SnakeCaseProps<CreateGuildBan>;
+export type DiscordCreateGuildBan = SnakeCasedPropertiesDeep<CreateGuildBan>;

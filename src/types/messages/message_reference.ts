@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface MessageReference {
   /** id of the originating message */
@@ -15,4 +15,4 @@ export interface MessageReference {
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-reference-structure */
-export type DiscordMessageReference = SnakeCaseProps<MessageReference>;
+export type DiscordMessageReference = SnakeCasedPropertiesDeep<MessageReference>;

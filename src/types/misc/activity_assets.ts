@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface ActivityAssets {
   /** The id for a large asset of the activity, usually a snowflake */
@@ -12,4 +12,4 @@ export interface ActivityAssets {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-assets */
-export type DiscordActivityAssets = SnakeCaseProps<ActivityAssets>;
+export type DiscordActivityAssets = SnakeCasedPropertiesDeep<ActivityAssets>;

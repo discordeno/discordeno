@@ -1,5 +1,5 @@
 import { Role } from "../permissions/role.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface GuildRoleUpdate {
   /** The id of the guild */
@@ -9,4 +9,4 @@ export interface GuildRoleUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-role-update */
-export type DiscordGuildRoleUpdate = SnakeCaseProps<GuildRoleUpdate>;
+export type DiscordGuildRoleUpdate = SnakeCasedPropertiesDeep<GuildRoleUpdate>;

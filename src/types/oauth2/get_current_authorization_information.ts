@@ -1,5 +1,5 @@
 import { User } from "../users/user.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { Application } from "./application.ts";
 import { DiscordOAuth2Scopes } from "./scopes.ts";
 
@@ -15,6 +15,4 @@ export interface GetCurrentAuthorizationInformation {
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information-response-structure */
-export type DiscordGetCurrentAuthoriationInformation = SnakeCaseProps<
-  GetCurrentAuthorizationInformation
->;
+export type DiscordGetCurrentAuthoriationInformation = SnakeCasedPropertiesDeep<GetCurrentAuthorizationInformation>;

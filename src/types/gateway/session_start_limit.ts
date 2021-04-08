@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface SessionStartLimit {
   /** The total number of session starts the current user is allowed */
@@ -12,4 +12,4 @@ export interface SessionStartLimit {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#session-start-limit-object */
-export type DiscordSessionStartLimit = SnakeCaseProps<SessionStartLimit>;
+export type DiscordSessionStartLimit = SnakeCasedPropertiesDeep<SessionStartLimit>;

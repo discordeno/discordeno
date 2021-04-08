@@ -1,6 +1,6 @@
 import { Emoji } from "../emojis/emoji.ts";
 import { GuildMember } from "../guilds/guild_member.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface MessageReactionAdd {
   /** The id of the user */
@@ -18,4 +18,4 @@ export interface MessageReactionAdd {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-add */
-export type DiscordMessageReactionAdd = SnakeCaseProps<MessageReactionAdd>;
+export type DiscordMessageReactionAdd = SnakeCasedPropertiesDeep<MessageReactionAdd>;

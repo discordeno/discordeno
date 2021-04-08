@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#invite-delete */
 export interface InviteDelete {
@@ -10,4 +10,4 @@ export interface InviteDelete {
   code: string;
 }
 
-export type DiscordInviteDelete = SnakeCaseProps<InviteDelete>;
+export type DiscordInviteDelete = SnakeCasedPropertiesDeep<InviteDelete>;

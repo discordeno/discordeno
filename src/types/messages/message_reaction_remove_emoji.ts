@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { MessageReactionAdd } from "./message_reaction_add.ts";
 
 export type MessageReactionRemoveEmoji = Pick<
@@ -7,6 +7,4 @@ export type MessageReactionRemoveEmoji = Pick<
 >;
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-emoji */
-export type DiscordMessageReactionRemoveEmoji = SnakeCaseProps<
-  MessageReactionRemoveEmoji
->;
+export type DiscordMessageReactionRemoveEmoji = SnakeCasedPropertiesDeep<MessageReactionRemoveEmoji>;

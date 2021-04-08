@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { IdentifyConnectionProperties } from "./identify_connection_properties.ts";
 import { StatusUpdate } from "./status_update.ts";
 
@@ -22,4 +22,4 @@ export interface Identify {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#identify */
-export type DiscordIdentify = SnakeCaseProps<Identify>;
+export type DiscordIdentify = SnakeCasedPropertiesDeep<Identify>;

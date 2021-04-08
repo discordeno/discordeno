@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordDefaultMessageNotificationLevels } from "./default_message_notification_levels.ts";
 import { DiscordExplicitContentFilterLevels } from "./explicit_content_filter_levels.ts";
 import { DiscordVerificationLevels } from "./verification_levels.ts";
@@ -37,4 +37,4 @@ export interface ModifyGuild {
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild */
-export type DiscordModifyGuild = SnakeCaseProps<ModifyGuild>;
+export type DiscordModifyGuild = SnakeCasedPropertiesDeep<ModifyGuild>;

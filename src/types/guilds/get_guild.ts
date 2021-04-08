@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface GetGuildQuery {
   /** When true, will return approximate member and presence counts for the guild */
@@ -6,4 +6,4 @@ export interface GetGuildQuery {
 }
 
 /** https://discord.com/developers/docs/resources/guild#get-guild */
-export type DiscordGetGuildQuery = SnakeCaseProps<GetGuildQuery>;
+export type DiscordGetGuildQuery = SnakeCasedPropertiesDeep<GetGuildQuery>;

@@ -1,6 +1,6 @@
 import { Channel } from "../channels/channel.ts";
 import { Role } from "../permissions/role.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordDefaultMessageNotificationLevels } from "./default_message_notification_levels.ts";
 import { DiscordExplicitContentFilterLevels } from "./explicit_content_filter_levels.ts";
 import { DiscordVerificationLevels } from "./verification_levels.ts";
@@ -31,4 +31,4 @@ export interface CreateGuild {
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild */
-export type DiscordCreateGuild = SnakeCaseProps<CreateGuild>;
+export type DiscordCreateGuild = SnakeCasedPropertiesDeep<CreateGuild>;
