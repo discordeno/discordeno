@@ -44,8 +44,7 @@ export function runMethod<T = any>(
   }
 
   // No proxy so we need to handle all rate limiting and such
-  // deno-lint-ignore no-async-promise-executor
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const callback = async () => {
       try {
         const rateLimitResetIn = rest.checkRateLimits(url);
@@ -141,14 +140,15 @@ export function runMethod<T = any>(
       }
     };
 
-    rest.addToQueue({
+    rest.processRequest({
+      url,
+      method,
+      respond: (data: { status: number; body?: string }) =>
+        resolve(JSON.parse(data.body || "{}")),
+    }, {
       callback,
       bucketId,
       url,
     });
-    if (!rest.queueInProcess) {
-      rest.queueInProcess = true;
-      await rest.processQueue();
-    }
   });
 }

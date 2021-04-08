@@ -1,3 +1,5 @@
+import { eventHandlers } from "../bot.ts";
+import { handlers } from "../handlers/mod.ts";
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { DiscordReady } from "../types/gateway/ready.ts";
 import { decompressWith } from "./deps.ts";
@@ -7,7 +9,7 @@ import { ws } from "./ws.ts";
 
 /** Handler for handling every message event from websocket. */
 // deno-lint-ignore no-explicit-any
-export function handleOnMessage(message: any, shardId: number) {
+export async function handleOnMessage(message: any, shardId: number) {
   if (message instanceof ArrayBuffer) {
     message = new Uint8Array(message);
   }
@@ -90,7 +92,16 @@ export function handleOnMessage(message: any, shardId: number) {
         }
       }
 
-      ws.handleDiscordPayload(messageData, shardId);
+      if (ws.url) ws.handleDiscordPayload(messageData, shardId);
+      else {
+        eventHandlers.raw?.(messageData);
+        await eventHandlers.dispatchRequirements?.(messageData, shardId);
+
+        if (messageData.op !== DiscordGatewayOpcodes.Dispatch) return;
+
+        return handlers[messageData.t]?.(messageData, shardId);
+      }
+
       break;
   }
 }
