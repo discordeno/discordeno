@@ -15,6 +15,7 @@ export async function identify(shardId: number, maxShards: number) {
     sessionId: "",
     previousSequenceNumber: 0,
     resuming: false,
+    unavailableGuildIds: new Set(),
     heartbeat: {
       lastSentAt: 0,
       lastReceivedAt: 0,

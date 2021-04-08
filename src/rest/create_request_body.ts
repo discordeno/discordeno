@@ -1,3 +1,5 @@
+import { USER_AGENT } from "../util/constants.ts";
+
 /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
 export function createRequestBody(queuedRequest: QueuedRequest) {
   const headers: { [key: string]: string } = {
@@ -6,7 +8,7 @@ export function createRequestBody(queuedRequest: QueuedRequest) {
   };
 
   // GET METHODS SHOULD NOT HAVE A BODY
-  if (queuedRequest.request.method === "GET") {
+  if (queuedRequest.request.method.toUpperCase() === "GET") {
     queuedRequest.payload.body = undefined;
   }
 

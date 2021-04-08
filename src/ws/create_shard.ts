@@ -11,7 +11,8 @@ export async function createShard(shardId: number) {
     ws.log("ERROR", { shardId, error: errorEvent });
   };
 
-  socket.onmessage = ({ data: message }) => handleOnMessage(message, shardId);
+  socket.onmessage = ({ data: message }) =>
+    ws.handleOnMessage(message, shardId);
 
   socket.onclose = (event) => {
     ws.log("CLOSED", { shardId, payload: event });

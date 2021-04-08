@@ -116,6 +116,8 @@ export interface DiscordenoShard {
   previousSequenceNumber: number | null;
   /** Whether the shard is currently resuming. */
   resuming: boolean;
+  /** The list of guild ids that are currently unavailable due to an outage. */
+  unavailableGuildIds: Set<string>;
   heartbeat: {
     /** The exact timestamp the last heartbeat was sent */
     lastSentAt: number;
