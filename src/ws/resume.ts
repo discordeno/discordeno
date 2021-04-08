@@ -28,6 +28,7 @@ export async function resume(shardId: number) {
     sessionId,
     previousSequenceNumber,
     resuming: false,
+    ready: false,
     unavailableGuildIds: new Set(),
     heartbeat: {
       lastSentAt: 0,
