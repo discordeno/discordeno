@@ -10,4 +10,6 @@ export interface ModifyGuildIntegration {
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-integration-json-params */
-export type DiscordModifyGuildIntegration = SnakeCasedPropertiesDeep<ModifyGuildIntegration>;
+export type DiscordModifyGuildIntegration = SnakeCasedPropertiesDeep<
+  ModifyGuildIntegration
+>;

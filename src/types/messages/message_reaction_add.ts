@@ -18,4 +18,6 @@ export interface MessageReactionAdd {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-add */
-export type DiscordMessageReactionAdd = SnakeCasedPropertiesDeep<MessageReactionAdd>;
+export type DiscordMessageReactionAdd = SnakeCasedPropertiesDeep<
+  MessageReactionAdd
+>;

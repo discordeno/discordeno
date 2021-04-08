@@ -15,4 +15,6 @@ export interface BotAuthenticationFlowQuery {
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#bot-authorization-flow-bot-auth-parameters */
-export type DiscordBotAuthenticationFlowQuery = SnakeCasedPropertiesDeep<BotAuthenticationFlowQuery>;
+export type DiscordBotAuthenticationFlowQuery = SnakeCasedPropertiesDeep<
+  BotAuthenticationFlowQuery
+>;

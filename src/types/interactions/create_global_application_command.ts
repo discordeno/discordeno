@@ -11,4 +11,6 @@ export interface CreateGlobalApplicationCommand {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#create-global-application-command-json-params */
-export type DiscordCreateGlobalApplicationCommand = SnakeCasedPropertiesDeep<CreateGlobalApplicationCommand>;
+export type DiscordCreateGlobalApplicationCommand = SnakeCasedPropertiesDeep<
+  CreateGlobalApplicationCommand
+>;

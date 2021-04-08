@@ -15,4 +15,6 @@ export interface GetCurrentAuthorizationInformation {
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information-response-structure */
-export type DiscordGetCurrentAuthoriationInformation = SnakeCasedPropertiesDeep<GetCurrentAuthorizationInformation>;
+export type DiscordGetCurrentAuthoriationInformation = SnakeCasedPropertiesDeep<
+  GetCurrentAuthorizationInformation
+>;

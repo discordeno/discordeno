@@ -19,7 +19,7 @@ export async function createShard(shardId: number) {
     if (
       event.code === 4009 &&
       ["Resharded!", "Resuming the shard, closing old shard."].includes(
-        event.reason
+        event.reason,
       )
     ) {
       return ws.log("CLOSED_RECONNECT", { shardId, payload: event });
@@ -43,7 +43,7 @@ export async function createShard(shardId: number) {
       case 4013:
       case 4014:
         throw new Error(
-          event.reason || "Discord gave no reason! GG! You broke Discord!"
+          event.reason || "Discord gave no reason! GG! You broke Discord!",
         );
       // THESE ERRORS CAN NO BE RESUMED! THEY MUST RE-IDENTIFY!
       case 4003:

@@ -14,4 +14,6 @@ export interface MessageInteraction {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#messageinteraction */
-export type DiscordMessageInteraction = SnakeCasedPropertiesDeep<MessageInteraction>;
+export type DiscordMessageInteraction = SnakeCasedPropertiesDeep<
+  MessageInteraction
+>;

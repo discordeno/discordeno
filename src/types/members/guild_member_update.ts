@@ -19,4 +19,6 @@ export interface GuildMemberUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-member-update */
-export type DiscordGuildMemberUpdate = SnakeCasedPropertiesDeep<GuildMemberUpdate>;
+export type DiscordGuildMemberUpdate = SnakeCasedPropertiesDeep<
+  GuildMemberUpdate
+>;

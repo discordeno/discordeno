@@ -18,4 +18,6 @@ export interface ApplicationCommandOption {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption */
-export type DiscordApplicationCommandOption = SnakeCasedPropertiesDeep<ApplicationCommandOption>;
+export type DiscordApplicationCommandOption = SnakeCasedPropertiesDeep<
+  ApplicationCommandOption
+>;

@@ -4,4 +4,6 @@ import { MessageReactionAdd } from "./message_reaction_add.ts";
 export type MessageReactionRemove = Omit<MessageReactionAdd, "member">;
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove */
-export type DiscordMessageReactionRemove = SnakeCasedPropertiesDeep<MessageReactionRemove>;
+export type DiscordMessageReactionRemove = SnakeCasedPropertiesDeep<
+  MessageReactionRemove
+>;

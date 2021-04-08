@@ -11,7 +11,7 @@ export const sleep = (timeout: number) => {
 };
 
 export function editBotStatus(
-  data: Pick<GatewayStatusUpdatePayload, "activities" | "status">
+  data: Pick<GatewayStatusUpdatePayload, "activities" | "status">,
 ) {
   ws.shards.forEach((shard) => {
     shard.ws.send(
@@ -22,7 +22,7 @@ export function editBotStatus(
           afk: false,
           ...data,
         },
-      })
+      }),
     );
   });
 }
@@ -51,11 +51,10 @@ export function delay(ms: number): Promise<void> {
 export const formatImageURL = (
   url: string,
   size: DiscordImageSize = 128,
-  format?: DiscordImageFormat
+  format?: DiscordImageFormat,
 ) => {
-  return `${url}.${
-    format || (url.includes("/a_") ? "gif" : "jpg")
-  }?size=${size}`;
+  return `${url}.${format ||
+    (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
 };
 
 function camelToSnakeCase(text: string) {
@@ -63,8 +62,9 @@ function camelToSnakeCase(text: string) {
 }
 
 function snakeToCamelCase(text: string) {
-  return text.replace(/([-_][a-z])/gi, ($1) =>
-    $1.toUpperCase().replace("_", "")
+  return text.replace(
+    /([-_][a-z])/gi,
+    ($1) => $1.toUpperCase().replace("_", ""),
   );
 }
 
@@ -76,7 +76,7 @@ function isObject(obj: unknown) {
 
 // deno-lint-ignore no-explicit-any
 export function camelKeysToSnakeCase<T>(
-  obj: Record<string, any> | Record<string, any>[]
+  obj: Record<string, any> | Record<string, any>[],
 ): T {
   if (isObject(obj)) {
     // deno-lint-ignore no-explicit-any
@@ -84,7 +84,7 @@ export function camelKeysToSnakeCase<T>(
 
     Object.keys(obj).forEach((key) => {
       convertedObject[camelToSnakeCase(key)] = camelKeysToSnakeCase(
-        (obj as Record<string, any>)[key]
+        (obj as Record<string, any>)[key],
       );
     });
 
@@ -98,7 +98,7 @@ export function camelKeysToSnakeCase<T>(
 
 // deno-lint-ignore no-explicit-any
 export function snakeKeysToCamelCase<T>(
-  obj: Record<string, any> | Record<string, any>[]
+  obj: Record<string, any> | Record<string, any>[],
 ): T {
   if (isObject(obj)) {
     // deno-lint-ignore no-explicit-any
@@ -106,7 +106,7 @@ export function snakeKeysToCamelCase<T>(
 
     Object.keys(obj).forEach((key) => {
       convertedObject[snakeToCamelCase(key)] = snakeKeysToCamelCase(
-        (obj as Record<string, any>)[key]
+        (obj as Record<string, any>)[key],
       );
     });
 
@@ -121,7 +121,7 @@ export function snakeKeysToCamelCase<T>(
 /** @private */
 function validateSlashOptionChoices(
   choices: SlashCommandOptionChoice[],
-  optionType: SlashCommandOptionType
+  optionType: SlashCommandOptionType,
 ) {
   for (const choice of choices) {
     if ([...choice.name].length < 1 || [...choice.name].length > 100) {
@@ -171,7 +171,7 @@ function validateSlashOptions(options: SlashCommandOption[]) {
 /** @private */
 export function validateSlashCommands(
   commands: UpsertSlashCommandOptions[],
-  create = false
+  create = false,
 ) {
   for (const command of commands) {
     if (

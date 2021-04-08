@@ -10,8 +10,9 @@ export interface TeamMember {
   /** The id of the parent team of which they are a member */
   teamId: string;
   /** The avatar, discriminator, id, and username of the user */
-  user: Partial<User> &
-    Pick<User, "avatar" | "discriminator" | "id" | "username">;
+  user:
+    & Partial<User>
+    & Pick<User, "avatar" | "discriminator" | "id" | "username">;
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-members-object */

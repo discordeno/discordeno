@@ -7,4 +7,6 @@ export type MessageReactionRemoveEmoji = Pick<
 >;
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-emoji */
-export type DiscordMessageReactionRemoveEmoji = SnakeCasedPropertiesDeep<MessageReactionRemoveEmoji>;
+export type DiscordMessageReactionRemoveEmoji = SnakeCasedPropertiesDeep<
+  MessageReactionRemoveEmoji
+>;

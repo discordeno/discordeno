@@ -6,4 +6,6 @@ export interface GuildIntegrationsUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-integrations-update */
-export type DiscordGuildIntegrationsUpdate = SnakeCasedPropertiesDeep<GuildIntegrationsUpdate>;
+export type DiscordGuildIntegrationsUpdate = SnakeCasedPropertiesDeep<
+  GuildIntegrationsUpdate
+>;

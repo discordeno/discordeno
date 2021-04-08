@@ -12,4 +12,6 @@ export interface UpdateVoiceState {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#update-voice-state */
-export type DiscordUpdateVoiceState = SnakeCasedPropertiesDeep<UpdateVoiceState>;
+export type DiscordUpdateVoiceState = SnakeCasedPropertiesDeep<
+  UpdateVoiceState
+>;

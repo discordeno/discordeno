@@ -26,8 +26,8 @@ export interface CreateGuildChannel {
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-channel */
-export interface DiscordCreateGuildChannel
-  extends SnakeCasedPropertiesDeep<
+export interface DiscordCreateGuildChannel extends
+  SnakeCasedPropertiesDeep<
     Omit<CreateGuildChannel, "permissionOverwrites">
   > {
   permission_overwrites: DiscordOverwrite[];
