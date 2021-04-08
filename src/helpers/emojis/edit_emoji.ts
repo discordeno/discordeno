@@ -1,4 +1,5 @@
 import { rest } from "../../rest/rest.ts";
+import { ModifyGuildEmoji } from "../../types/emojis/modify_guild_emoji.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -6,7 +7,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function editEmoji(
   guildId: string,
   id: string,
-  options: EditEmojisOptions,
+  options: ModifyGuildEmoji,
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_EMOJIS"]);
 

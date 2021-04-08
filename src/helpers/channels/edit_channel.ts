@@ -1,4 +1,5 @@
 import { rest } from "../../rest/rest.ts";
+import { ModifyChannel } from "../../types/channels/modify_channel.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,
@@ -8,7 +9,7 @@ import {
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(
   channelId: string,
-  options: ChannelEditOptions,
+  options: ModifyChannel,
   reason?: string,
 ) {
   await requireBotChannelPermissions(channelId, ["MANAGE_CHANNELS"]);
@@ -47,7 +48,7 @@ export async function editChannel(
     // deno-lint-ignore camelcase
     user_limit: options.userLimit,
     // deno-lint-ignore camelcase
-    permission_overwrites: options.overwrites?.map((overwrite) => {
+    permission_overwrites: options.permissionOverwrites?.map((overwrite) => {
       return {
         ...overwrite,
         allow: calculateBits(overwrite.allow),

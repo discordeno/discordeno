@@ -1,5 +1,6 @@
 import { applicationId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
+import { EditGlobalApplicationCommand } from "../../types/interactions/edit_global_application_command.ts";
 import { endpoints } from "../../util/constants.ts";
 import { validateSlashCommands } from "../../util/utils.ts";
 
@@ -8,7 +9,7 @@ import { validateSlashCommands } from "../../util/utils.ts";
  */
 export async function upsertSlashCommand(
   commandId: string,
-  options: UpsertSlashCommandOptions,
+  options: EditGlobalApplicationCommand,
   guildId?: string,
 ) {
   validateSlashCommands([options]);
