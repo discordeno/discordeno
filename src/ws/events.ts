@@ -1,3 +1,4 @@
+import { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
 import { DiscordenoShard } from "./ws.ts";
 
 /** The handler for logging different actions happening inside the ws. User can override and put custom handling per event. */
@@ -35,7 +36,7 @@ export function log(
 ): unknown;
 export function log(
   type: "INVALID_SESSION",
-  data: { shardId: number; payload: DiscordPayload },
+  data: { shardId: number; payload: DiscordGatewayPayload },
 ): unknown;
 export function log(type: "RAW", data: Record<string, unknown>): unknown;
 export function log(type: "RECONNECT", data: { shardId: number }): unknown;
