@@ -1,5 +1,5 @@
 import { Emoji } from "../emojis/emoji.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface GuildEmojisUpdate {
   /** id of the guild */
@@ -9,4 +9,4 @@ export interface GuildEmojisUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-emojis-update */
-export type DiscordGuildEmojisUpdate = SnakeCaseProps<GuildEmojisUpdate>;
+export type DiscordGuildEmojisUpdate = SnakeCasedPropertiesDeep<GuildEmojisUpdate>;

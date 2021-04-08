@@ -1,6 +1,6 @@
 import { Guild } from "../guilds/guild.ts";
 import { User } from "../users/user.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface Template {
   /** The template code (unique Id) */
@@ -28,4 +28,4 @@ export interface Template {
 }
 
 /** https://discord.com/developers/docs/resources/template#template-object-template-structure */
-export type DiscordTemplate = SnakeCaseProps<Template>;
+export type DiscordTemplate = SnakeCasedPropertiesDeep<Template>;

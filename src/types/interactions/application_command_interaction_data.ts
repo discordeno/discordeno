@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { ApplicationCommandInteractionDataOption } from "./application_command_interaction_data_option.ts";
 
 export interface ApplicationCommandInteractionData {
@@ -11,6 +11,4 @@ export interface ApplicationCommandInteractionData {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-applicationcommandinteractiondata */
-export type DiscordApplicationCommandInteractionData = SnakeCaseProps<
-  ApplicationCommandInteractionData
->;
+export type DiscordApplicationCommandInteractionData = SnakeCasedPropertiesDeep<ApplicationCommandInteractionData>;

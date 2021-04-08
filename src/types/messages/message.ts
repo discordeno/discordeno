@@ -3,7 +3,7 @@ import { Embed } from "../embeds/embed.ts";
 import { GuildMember } from "../guilds/guild_member.ts";
 import { MessageInteraction } from "../interactions/message_interaction.ts";
 import { User } from "../users/user.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { Attachment } from "./attachment.ts";
 import { MessageActivity } from "./message_activity.ts";
 import { MessageApplication } from "./message_application.ts";
@@ -85,4 +85,4 @@ export interface Message {
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object */
-export type DiscordMessage = SnakeCaseProps<Message>;
+export type DiscordMessage = SnakeCasedPropertiesDeep<Message>;

@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface CreateGroupDM {
   /** Access tokens of users that have granted your app the `gdm.join` scope */
@@ -8,4 +8,4 @@ export interface CreateGroupDM {
 }
 
 /** https://discord.com/developers/docs/resources/user#create-group-dm */
-export type DiscordCreateGroupDM = SnakeCaseProps<CreateGroupDM>;
+export type DiscordCreateGroupDM = SnakeCasedPropertiesDeep<CreateGroupDM>;

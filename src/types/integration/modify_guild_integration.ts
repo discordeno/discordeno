@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface ModifyGuildIntegration {
   /** The behavior when an integration subscription lapses (see the [integration expire behaviors](https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors) documentation) */
@@ -10,6 +10,4 @@ export interface ModifyGuildIntegration {
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-integration-json-params */
-export type DiscordModifyGuildIntegration = SnakeCaseProps<
-  ModifyGuildIntegration
->;
+export type DiscordModifyGuildIntegration = SnakeCasedPropertiesDeep<ModifyGuildIntegration>;

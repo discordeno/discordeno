@@ -1,5 +1,5 @@
 import { Embed } from "../embeds/embed.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { AllowedMentions } from "./allowed_mentions.ts";
 
 export interface EditMessage {
@@ -14,4 +14,4 @@ export interface EditMessage {
 }
 
 /** https://discord.com/developers/docs/resources/channel#edit-message-json-params */
-export type DiscordEditMessage = SnakeCaseProps<EditMessage>;
+export type DiscordEditMessage = SnakeCasedPropertiesDeep<EditMessage>;

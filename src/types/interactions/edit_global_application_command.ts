@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { ApplicationCommandOption } from "./application_command_option.ts";
 
 export interface EditGlobalApplicationCommand {
@@ -11,6 +11,4 @@ export interface EditGlobalApplicationCommand {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#edit-global-application-command-json-params */
-export type DiscordEditGlobalApplicationCommand = SnakeCaseProps<
-  EditGlobalApplicationCommand
->;
+export type DiscordEditGlobalApplicationCommand = SnakeCasedPropertiesDeep<EditGlobalApplicationCommand>;

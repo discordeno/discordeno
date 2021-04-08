@@ -1,5 +1,5 @@
 import { Activity } from "../misc/activity.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordStatusTypes } from "./status_types.ts";
 
 export interface StatusUpdate {
@@ -14,4 +14,4 @@ export interface StatusUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#update-status */
-export type DiscordStatusUpdate = SnakeCaseProps<StatusUpdate>;
+export type DiscordStatusUpdate = SnakeCasedPropertiesDeep<StatusUpdate>;

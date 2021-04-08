@@ -1,5 +1,5 @@
 import { User } from "../users/user.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { Activity } from "./activity.ts";
 import { ClientStatus } from "./client_status.ts";
 
@@ -17,4 +17,4 @@ export interface PresenceUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#presence-update */
-export type DiscordPresenceUpdate = SnakeCaseProps<PresenceUpdate>;
+export type DiscordPresenceUpdate = SnakeCasedPropertiesDeep<PresenceUpdate>;

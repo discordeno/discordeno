@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { AuditLogChangeValue } from "./audit_log_change_value.ts";
 
 export interface AuditLogChange {
@@ -11,4 +11,4 @@ export interface AuditLogChange {
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
-export type DiscordAuditLogChange = SnakeCaseProps<AuditLogChange>;
+export type DiscordAuditLogChange = SnakeCasedPropertiesDeep<AuditLogChange>;

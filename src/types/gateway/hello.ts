@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface Hello {
   /** The interval (in milliseconds) the client should heartbeat with */
@@ -6,4 +6,4 @@ export interface Hello {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#hello */
-export type DiscordHello = SnakeCaseProps<Hello>;
+export type DiscordHello = SnakeCasedPropertiesDeep<Hello>;

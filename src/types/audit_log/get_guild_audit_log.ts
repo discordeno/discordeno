@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordAuditLogEvents } from "./audit_log_events.ts";
 
 export interface GetGuildAuditLog {
@@ -13,4 +13,4 @@ export interface GetGuildAuditLog {
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
-export type DiscordGetGuildAuditLog = SnakeCaseProps<GetGuildAuditLog>;
+export type DiscordGetGuildAuditLog = SnakeCasedPropertiesDeep<GetGuildAuditLog>;

@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface MessageDeleteBulk {
   /** The ids of the messages */
@@ -10,4 +10,4 @@ export interface MessageDeleteBulk {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-delete-bulk */
-export type DiscordMessageDeleteBulk = SnakeCaseProps<MessageDeleteBulk>;
+export type DiscordMessageDeleteBulk = SnakeCasedPropertiesDeep<MessageDeleteBulk>;

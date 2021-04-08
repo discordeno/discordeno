@@ -1,5 +1,5 @@
 import { User } from "../users/user.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordWebhookTypes } from "./discord_webhook_types.ts";
 
 export interface Webhook {
@@ -24,4 +24,4 @@ export interface Webhook {
 }
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
-export type DiscordWebhook = SnakeCaseProps<Webhook>;
+export type DiscordWebhook = SnakeCasedPropertiesDeep<Webhook>;

@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface BeginGuildPrune {
   /** Number of days to prune (1 or more), default: 7 */
@@ -10,6 +10,4 @@ export interface BeginGuildPrune {
 }
 
 /** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
-export type DiscordBeginGuildPrune = SnakeCaseProps<
-  BeginGuildPrune
->;
+export type DiscordBeginGuildPrune = SnakeCasedPropertiesDeep<BeginGuildPrune>;

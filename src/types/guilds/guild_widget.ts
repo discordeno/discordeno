@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface GuildWidget {
   /** Whether the widget is enabled */
@@ -8,4 +8,4 @@ export interface GuildWidget {
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-widget-object-guild-widget-structure */
-export type DiscordGuildWidget = SnakeCaseProps<GuildWidget>;
+export type DiscordGuildWidget = SnakeCasedPropertiesDeep<GuildWidget>;

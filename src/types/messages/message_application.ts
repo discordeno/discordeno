@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface MessageApplication {
   /** id of the application */
@@ -13,4 +13,4 @@ export interface MessageApplication {
   name: string;
 }
 
-export type DiscordMessageApplication = SnakeCaseProps<MessageApplication>;
+export type DiscordMessageApplication = SnakeCasedPropertiesDeep<MessageApplication>;

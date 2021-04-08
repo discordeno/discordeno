@@ -2,7 +2,7 @@ import { Embed } from "../embeds/embed.ts";
 import { AllowedMentions } from "../messages/allowed_mentions.ts";
 import { MessageReference } from "../messages/message_reference.ts";
 import { FileContent } from "../misc/file_content.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface CreateMessage {
   /** The message contents (up to 2000 characters) */
@@ -22,4 +22,6 @@ export interface CreateMessage {
 }
 
 /** https://discord.com/developers/docs/resources/channel#create-message */
-export type DiscordCreateMessage = SnakeCaseProps<Omit<CreateMessage, "file">>;
+export type DiscordCreateMessage = SnakeCasedPropertiesDeep<
+  Omit<CreateMessage, "file">
+>;

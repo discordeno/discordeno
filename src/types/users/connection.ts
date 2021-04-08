@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordVisibilityTypes } from "./visibility_types.ts";
 import { Integration } from "../guilds/integration.ts";
 
@@ -24,4 +24,4 @@ export interface Connection {
 }
 
 /** https://discord.com/developers/docs/resources/user#connection-objecthttps://discord.com/developers/docs/resources/user#user-object-premium-types */
-export type DiscordConnection = SnakeCaseProps<Connection>;
+export type DiscordConnection = SnakeCasedPropertiesDeep<Connection>;

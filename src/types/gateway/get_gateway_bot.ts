@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { SessionStartLimit } from "./session_start_limit.ts";
 
 export interface GetGatewayBot {
@@ -11,4 +11,4 @@ export interface GetGatewayBot {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#get-gateway-bot */
-export type DiscordGetGatewayBot = SnakeCaseProps<GetGatewayBot>;
+export type DiscordGetGatewayBot = SnakeCasedPropertiesDeep<GetGatewayBot>;

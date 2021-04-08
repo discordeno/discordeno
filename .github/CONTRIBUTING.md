@@ -77,5 +77,5 @@ export interface User {
   premiumType?: number;
 }
 
-export type DiscordUser = SnakeCaseProps<DiscordUserInternal>;
+export type DiscordUser = SnakeCasedPropertiesDeep<DiscordUserInternal>;
 ```

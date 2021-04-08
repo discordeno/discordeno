@@ -1,6 +1,6 @@
 import { Embed } from "../embeds/embed.ts";
 import { AllowedMentions } from "../messages/allowed_mentions.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface EditWebhookMessage {
   /** The message contents (up to 2000 characters) */
@@ -12,4 +12,4 @@ export interface EditWebhookMessage {
 }
 
 /** https://discord.com/developers/docs/resources/webhook#edit-webhook-message-jsonform-params */
-export type DiscordEditWebhookMessage = SnakeCaseProps<EditWebhookMessage>;
+export type DiscordEditWebhookMessage = SnakeCasedPropertiesDeep<EditWebhookMessage>;

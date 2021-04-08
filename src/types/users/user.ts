@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordPremiumTypes } from "./premium_types.ts";
 import { DiscordUserFlags } from "./user_flags.ts";
 
@@ -32,4 +32,4 @@ export interface User {
 }
 
 /** https://discord.com/developers/docs/resources/user#user-object */
-export type DiscordUser = SnakeCaseProps<User>;
+export type DiscordUser = SnakeCasedPropertiesDeep<User>;

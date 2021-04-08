@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface GuildRoleDelete {
   /** id of the guild */
@@ -8,4 +8,4 @@ export interface GuildRoleDelete {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-role-delete */
-export type DiscordGuildRoleDelete = SnakeCaseProps<GuildRoleDelete>;
+export type DiscordGuildRoleDelete = SnakeCasedPropertiesDeep<GuildRoleDelete>;

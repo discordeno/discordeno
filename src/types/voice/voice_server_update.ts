@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface VoiceServerUpdate {
   /** Voice connection token */
@@ -10,4 +10,4 @@ export interface VoiceServerUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#voice-server-update */
-export type DiscordVoiceServerUpdate = SnakeCaseProps<VoiceServerUpdate>;
+export type DiscordVoiceServerUpdate = SnakeCasedPropertiesDeep<VoiceServerUpdate>;

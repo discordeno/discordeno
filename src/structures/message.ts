@@ -9,7 +9,6 @@ import { removeAllReactions } from "../helpers/messages/remove_all_reactions.ts"
 import { removeReaction } from "../helpers/messages/remove_reaction.ts";
 import { removeReactionEmoji } from "../helpers/messages/remove_reaction_emoji.ts";
 import { sendMessage } from "../helpers/messages/send_message.ts";
-import { DiscordenoCreateMessage } from "../types/discordeno/create_message.ts";
 import { GuildMember } from "../types/guilds/guild_member.ts";
 import { EditMessage } from "../types/messages/edit_message.ts";
 import { DiscordMessage, Message } from "../types/messages/message.ts";

@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { ApplicationCommandOption } from "./application_command_option.ts";
 
 export interface ApplicationCommand {
@@ -15,4 +15,4 @@ export interface ApplicationCommand {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommand */
-export type DiscordApplicationCommand = SnakeCaseProps<ApplicationCommand>;
+export type DiscordApplicationCommand = SnakeCasedPropertiesDeep<ApplicationCommand>;

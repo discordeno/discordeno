@@ -1,6 +1,6 @@
 import { GuildMember } from "../guilds/guild_member.ts";
 import { PresenceUpdate } from "../misc/presence_update.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface GuildMembersChunk {
   /** The id of the guild */
@@ -20,4 +20,4 @@ export interface GuildMembersChunk {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-members-chunk */
-export type DiscordGuildMembersChunk = SnakeCaseProps<GuildMembersChunk>;
+export type DiscordGuildMembersChunk = SnakeCasedPropertiesDeep<GuildMembersChunk>;

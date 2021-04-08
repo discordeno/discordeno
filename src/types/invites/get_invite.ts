@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface GetInvite {
   /** Whether the invite should contain approximate member counts */
@@ -6,4 +6,4 @@ export interface GetInvite {
 }
 
 /** https://discord.com/developers/docs/resources/invite#get-invite */
-export type DiscordGetInvite = SnakeCaseProps<GetInvite>;
+export type DiscordGetInvite = SnakeCasedPropertiesDeep<GetInvite>;

@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface WebhookUpdate {
   /** id of the guild */
@@ -8,4 +8,4 @@ export interface WebhookUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#webhooks-update-webhook-update-event-fields */
-export type DiscordWebhookUpdate = SnakeCaseProps<WebhookUpdate>;
+export type DiscordWebhookUpdate = SnakeCasedPropertiesDeep<WebhookUpdate>;

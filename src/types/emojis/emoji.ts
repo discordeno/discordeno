@@ -1,5 +1,5 @@
 import { User } from "../users/user.ts";
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface Emoji {
   /** Emoji id */
@@ -21,4 +21,4 @@ export interface Emoji {
 }
 
 /** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
-export type DiscordEmoji = SnakeCaseProps<Emoji>;
+export type DiscordEmoji = SnakeCasedPropertiesDeep<Emoji>;

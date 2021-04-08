@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface ChannelPinsUpdate {
   /** The id of the guild */
@@ -10,4 +10,4 @@ export interface ChannelPinsUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#channel-pins-update */
-export type DiscordChannelPinsUpdate = SnakeCaseProps<ChannelPinsUpdate>;
+export type DiscordChannelPinsUpdate = SnakeCasedPropertiesDeep<ChannelPinsUpdate>;
