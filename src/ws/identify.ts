@@ -32,11 +32,12 @@ export async function identify(shardId: number, maxShards: number) {
       JSON.stringify({
         op: DiscordGatewayOpcodes.Identify,
         d: { ...ws.identifyPayload, shard: [shardId, maxShards] },
-      }),
+      })
     );
   };
 
   return new Promise((resolve, reject) => {
+    console.log("setting the shard loader");
     ws.loadingShards.set(shardId, {
       shardId,
       resolve,

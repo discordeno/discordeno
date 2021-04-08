@@ -59,11 +59,11 @@ export const formatImageURL = (
 };
 
 function camelToSnakeCase(text: string) {
-  return text.replace(/Id|[A-Z]/g, ($1) => `_${$1.toLowerCase()}`);
+  return text.replace(/[A-Z]/g, ($1) => `_${$1.toLowerCase()}`);
 }
 
 function snakeToCamelCase(text: string) {
-  return text.replace(/_id|([-_][a-z])/gi, ($1) =>
+  return text.replace(/([-_][a-z])/gi, ($1) =>
     $1.toUpperCase().replace("_", "")
   );
 }

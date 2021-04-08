@@ -15,10 +15,8 @@ export async function handleOnMessage(message: any, shardId: number) {
   }
 
   if (message instanceof Uint8Array) {
-    message = decompressWith(
-      message,
-      0,
-      (slice: Uint8Array) => ws.utf8decoder.decode(slice),
+    message = decompressWith(message, 0, (slice: Uint8Array) =>
+      ws.utf8decoder.decode(slice)
     );
   }
 
@@ -31,7 +29,7 @@ export async function handleOnMessage(message: any, shardId: number) {
     case DiscordGatewayOpcodes.Hello:
       ws.heartbeat(
         shardId,
-        (messageData.d as DiscordHeartbeat).heartbeat_interval,
+        (messageData.d as DiscordHeartbeat).heartbeat_interval
       );
       break;
     case DiscordGatewayOpcodes.HeartbeatACK:
@@ -80,8 +78,20 @@ export async function handleOnMessage(message: any, shardId: number) {
           shard.sessionId = (messageData.d as DiscordReady).session_id;
         }
 
+        console.log(
+          "shoulda deleted it",
+          shardId,
+          ws.loadingShards.has(shardId),
+          ws.loadingShards
+        );
         ws.loadingShards.get(shardId)?.resolve(true);
         ws.loadingShards.delete(shardId);
+        console.log(
+          "shoulda deleted it",
+          shardId,
+          ws.loadingShards.has(shardId),
+          ws.loadingShards
+        );
       }
 
       // Update the sequence number if it is present

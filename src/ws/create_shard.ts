@@ -16,6 +16,9 @@ export async function createShard(shardId: number) {
 
   socket.onclose = (event) => {
     ws.log("CLOSED", { shardId, payload: event });
+    if (event.code === 4009 && ["Resharded!", "Resuming the shard, closing old shard."].includes(event.reason)) {
+      return ws.log("CLOSED_RECONNECT", { shardId, payload: event });
+    }
 
     // TODO: ENUM FOR THESE CODES?
     switch (event.code) {
@@ -29,14 +32,13 @@ export async function createShard(shardId: number) {
       case 4013:
       case 4014:
         throw new Error(
-          event.reason || "Discord gave no reason! GG! You broke Discord!",
+          event.reason || "Discord gave no reason! GG! You broke Discord!"
         );
       // THESE ERRORS CAN NO BE RESUMED! THEY MUST RE-IDENTIFY!
       case 4003:
       case 4007:
       case 4008:
       case 4009:
-        ws.log("CLOSED_RECONNECT", { shardId, payload: event });
         identify(shardId, ws.maxShards);
         break;
       default:
