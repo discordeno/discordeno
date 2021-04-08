@@ -2,6 +2,7 @@ import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
 import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
 import { DiscordGetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
+import { ws } from "./ws/ws.ts";
 
 export let authorization = "";
 export let secretKey = "";
@@ -39,18 +40,14 @@ export async function startBot(config: BotConfig) {
   proxyWSURL = botGatewayData.url;
   identifyPayload.token = config.token;
   identifyPayload.intents = config.intents.reduce(
-    (
-      bits,
-      next,
-    ) => (bits |= typeof next === "string"
-      ? DiscordGatewayIntents[next]
-      : next),
-    0,
+    (bits, next) =>
+      (bits |= typeof next === "string" ? DiscordGatewayIntents[next] : next),
+    0
   );
   lastShardId = botGatewayData.shards;
   identifyPayload.shard = [0, lastShardId];
 
-  await spawnShards(botGatewayData, identifyPayload, 0, lastShardId);
+  ws.spawnShards();
 }
 
 /** Allows you to dynamically update the event handlers by passing in new eventHandlers */
@@ -78,7 +75,7 @@ export function setApplicationId(id: string) {
  * Please be aware if you are a beginner developer using this, things will not work as per the guides. This is for advanced developers only!
  *
  * Advanced Devs: This function will allow you to have an insane amount of customization potential as when you get to large bots you need to be able to optimize every tiny detail to make you bot work the way you need.
-*/
+ */
 export async function startBigBrainBot(data: BigBrainBotConfig) {
   authorization = `Bot ${data.token}`;
   identifyPayload.token = `Bot ${data.token}`;
@@ -92,13 +89,9 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   }
 
   identifyPayload.intents = data.intents.reduce(
-    (
-      bits,
-      next,
-    ) => (bits |= typeof next === "string"
-      ? DiscordGatewayIntents[next]
-      : next),
-    0,
+    (bits, next) =>
+      (bits |= typeof next === "string" ? DiscordGatewayIntents[next] : next),
+    0
   );
 
   // PROXY DOESNT NEED US SPAWNING SHARDS
@@ -106,15 +99,7 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
     // Initial API connection to get info about bots connection
     botGatewayData = await getGatewayBot();
     proxyWSURL = botGatewayData.url;
-    await spawnShards(
-      botGatewayData,
-      identifyPayload,
-      data.firstShardId,
-      data.lastShardId ||
-        (botGatewayData.shards >= 25
-          ? (data.firstShardId + 25)
-          : botGatewayData.shards),
-    );
+    ws.spawnShards(data.firstShardId);
   }
 }
 

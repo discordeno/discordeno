@@ -1,4 +1,5 @@
 import { DiscordHTTPResponseCodes } from "../types/codes/http_response_codes.ts";
+import { delay } from "../util/utils.ts";
 import { rest } from "./rest.ts";
 
 /** Processes the queue by looping over each path separately until the queues are empty. */
@@ -36,15 +37,21 @@ export async function processQueue(id: string) {
 
     // IF THIS IS A GET REQUEST, CHANGE THE BODY TO QUERY PARAMETERS
     const query =
-      queuedRequest.request.method === "GET" && queuedRequest.payload.body
-        ? Object.entries(queuedRequest.payload.body).map(([key, value]) =>
-          `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`
-        )
-          .join("&")
+      queuedRequest.request.method.toUpperCase() === "GET" &&
+      queuedRequest.payload.body
+        ? Object.entries(queuedRequest.payload.body)
+            .map(
+              ([key, value]) =>
+                `${encodeURIComponent(key)}=${encodeURIComponent(
+                  value as string
+                )}`
+            )
+            .join("&")
         : "";
-    const urlToUse = queuedRequest.request.method === "GET" && query
-      ? `${queuedRequest.request.url}?${query}`
-      : queuedRequest.request.url;
+    const urlToUse =
+      queuedRequest.request.method.toUpperCase() === "GET" && query
+        ? `${queuedRequest.request.url}?${query}`
+        : queuedRequest.request.url;
 
     // CUSTOM HANDLER FOR USER TO LOG OR WHATEVER WHENEVER A FETCH IS MADE
     rest.eventHandlers.fetching(queuedRequest.payload);
@@ -52,45 +59,49 @@ export async function processQueue(id: string) {
     try {
       const response = await fetch(
         urlToUse,
-        rest.createRequestBody(queuedRequest),
+        rest.createRequestBody(queuedRequest)
       );
 
       rest.eventHandlers.fetched(queuedRequest.payload);
       const bucketIdFromHeaders = rest.processRequestHeaders(
         queuedRequest.request.url,
-        response.headers,
+        response.headers
       );
 
       if (response.status < 200 || response.status >= 400) {
-        rest.eventHandlers.error(
-          "httpError",
-          queuedRequest.payload,
-          response,
-        );
+        rest.eventHandlers.error("httpError", queuedRequest.payload, response);
 
         let error = "REQUEST_UNKNOWN_ERROR";
         switch (response.status) {
           case DiscordHTTPResponseCodes.BadRequest:
             error =
               "The request was improperly formatted, or the server couldn't understand it.";
+            break;
           case DiscordHTTPResponseCodes.Unauthorized:
             error = "The Authorization header was missing or invalid.";
+            break;
           case DiscordHTTPResponseCodes.Forbidden:
             error =
               "The Authorization token you passed did not have permission to the resource.";
+            break;
           case DiscordHTTPResponseCodes.NotFound:
             error = "The resource at the location specified doesn't exist.";
+            break;
           case DiscordHTTPResponseCodes.MethodNotAllowed:
             error =
               "The HTTP method used is not valid for the location specified.";
+            break;
           case DiscordHTTPResponseCodes.GatewayUnavailable:
             error =
               "There was not a gateway available to process your request. Wait a bit and retry.";
+            break;
         }
 
-        queuedRequest.request.respond(
-          { status: response.status, body: JSON.stringify({ error }) },
-        );
+        queuedRequest.request.respond({
+          status: response.status,
+          body: JSON.stringify({ error }),
+        });
+
         queue.shift();
         continue;
       }
@@ -112,20 +123,16 @@ export async function processQueue(id: string) {
           // IF IT HAS MAXED RETRIES SOMETHING SERIOUSLY WRONG. CANCEL OUT.
           if (
             queuedRequest.payload.retryCount >=
-              queuedRequest.options.maxRetryCount
+            queuedRequest.options.maxRetryCount
           ) {
             rest.eventHandlers.retriesMaxed(queuedRequest.payload);
-            queuedRequest.request.respond(
-              {
-                status: 200,
-                body: JSON.stringify(
-                  {
-                    error:
-                      "The request was rate limited and it maxed out the retries limit.",
-                  },
-                ),
-              },
-            );
+            queuedRequest.request.respond({
+              status: 200,
+              body: JSON.stringify({
+                error:
+                  "The request was rate limited and it maxed out the retries limit.",
+              }),
+            });
             // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
             queue.shift();
             continue;
@@ -142,16 +149,18 @@ export async function processQueue(id: string) {
         rest.eventHandlers.fetchSuccess(queuedRequest.payload);
         // REMOVE FROM QUEUE
         queue.shift();
-        queuedRequest.request.respond(
-          { status: 200, body: JSON.stringify(json) },
-        );
+        queuedRequest.request.respond({
+          status: 200,
+          body: JSON.stringify(json),
+        });
       }
     } catch (error) {
       // SOMETHING WENT WRONG, LOG AND RESPOND WITH ERROR
       rest.eventHandlers.fetchFailed(queuedRequest.payload, error);
-      queuedRequest.request.respond(
-        { status: 404, body: JSON.stringify({ error }) },
-      );
+      queuedRequest.request.respond({
+        status: 404,
+        body: JSON.stringify({ error }),
+      });
       // REMOVE FROM QUEUE
       queue.shift();
     }
