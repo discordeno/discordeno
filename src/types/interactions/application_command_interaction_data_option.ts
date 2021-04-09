@@ -11,4 +11,5 @@ export interface ApplicationCommandInteractionDataOption {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-applicationcommandinteractiondataoption */
-export type DiscordApplicationCommandInteractionDataOption = SnakeCasedPropertiesDeep<ApplicationCommandInteractionDataOption>;
+export type DiscordApplicationCommandInteractionDataOption =
+  SnakeCasedPropertiesDeep<ApplicationCommandInteractionDataOption>;

@@ -18,8 +18,8 @@ export async function startGateway(options: StartGatewayOptions) {
     ws.identifyPayload.compress = options.compress;
   }
   if (options.reshard) ws.reshard = options.reshard;
-  // Once an hour check if resharding is necessary
-  setInterval(ws.resharder, 1000 * 60 * 60);
+  // TODO: Once an hour check if resharding is necessary
+  // setInterval(ws.resharder, 1000 * 60 * 60);
 
   ws.identifyPayload.intents = options.intents.reduce(
     (
@@ -51,5 +51,5 @@ export async function startGateway(options: StartGatewayOptions) {
   ws.botGatewayData.url = data.url;
 
   ws.spawnShards(ws.firstShardId);
-  ws.cleanupLoadingShards();
+  await ws.cleanupLoadingShards();
 }

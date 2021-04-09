@@ -7,4 +7,6 @@ export interface InteractionGuildMember extends GuildMember {
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */
-export type DiscordInteractionGuildMember = SnakeCasedPropertiesDeep<InteractionGuildMember>;
+export type DiscordInteractionGuildMember = SnakeCasedPropertiesDeep<
+  InteractionGuildMember
+>;

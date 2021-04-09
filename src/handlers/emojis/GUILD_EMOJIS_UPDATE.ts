@@ -14,7 +14,7 @@ export async function handleGuildEmojisUpdate(data: DiscordGatewayPayload) {
     payload.emojis.map((emoji) => [emoji.id ?? emoji.name, emoji]),
   );
 
-  cacheHandlers.set("guilds", payload.guild_id, guild);
+  await cacheHandlers.set("guilds", payload.guild_id, guild);
 
   eventHandlers.guildEmojisUpdate?.(
     guild,

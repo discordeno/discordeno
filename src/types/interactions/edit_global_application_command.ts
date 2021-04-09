@@ -11,4 +11,6 @@ export interface EditGlobalApplicationCommand {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#edit-global-application-command-json-params */
-export type DiscordEditGlobalApplicationCommand = SnakeCasedPropertiesDeep<EditGlobalApplicationCommand>;
+export type DiscordEditGlobalApplicationCommand = SnakeCasedPropertiesDeep<
+  EditGlobalApplicationCommand
+>;

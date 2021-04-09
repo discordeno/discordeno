@@ -20,4 +20,6 @@ export interface GuildMembersChunk {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-members-chunk */
-export type DiscordGuildMembersChunk = SnakeCasedPropertiesDeep<GuildMembersChunk>;
+export type DiscordGuildMembersChunk = SnakeCasedPropertiesDeep<
+  GuildMembersChunk
+>;

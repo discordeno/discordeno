@@ -7,4 +7,6 @@ export type MessageReactionRemoveAll = Pick<
 >;
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all */
-export type DiscordMessageReactionRemoveAll = SnakeCasedPropertiesDeep<MessageReactionRemoveAll>;
+export type DiscordMessageReactionRemoveAll = SnakeCasedPropertiesDeep<
+  MessageReactionRemoveAll
+>;

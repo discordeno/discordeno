@@ -10,4 +10,6 @@ export interface VoiceServerUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#voice-server-update */
-export type DiscordVoiceServerUpdate = SnakeCasedPropertiesDeep<VoiceServerUpdate>;
+export type DiscordVoiceServerUpdate = SnakeCasedPropertiesDeep<
+  VoiceServerUpdate
+>;

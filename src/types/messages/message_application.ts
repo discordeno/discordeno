@@ -13,4 +13,6 @@ export interface MessageApplication {
   name: string;
 }
 
-export type DiscordMessageApplication = SnakeCasedPropertiesDeep<MessageApplication>;
+export type DiscordMessageApplication = SnakeCasedPropertiesDeep<
+  MessageApplication
+>;

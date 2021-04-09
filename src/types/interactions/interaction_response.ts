@@ -10,4 +10,6 @@ export interface InteractionResponse {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
-export type DiscordInteractionResponse = SnakeCasedPropertiesDeep<InteractionResponse>;
+export type DiscordInteractionResponse = SnakeCasedPropertiesDeep<
+  InteractionResponse
+>;

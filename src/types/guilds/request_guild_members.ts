@@ -16,4 +16,6 @@ export interface RequestGuildMembers {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#request-guild-members */
-export type DiscordRequestGuildMembers = SnakeCasedPropertiesDeep<RequestGuildMembers>;
+export type DiscordRequestGuildMembers = SnakeCasedPropertiesDeep<
+  RequestGuildMembers
+>;

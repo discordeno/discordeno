@@ -8,4 +8,5 @@ export interface ApplicationCommandCreateUpdateDelete
 }
 
 /** https://discord.com/developers/docs/topics/gateway#application-command-delete-application-command-extra-fields */
-export type DiscordApplicationCommandCreateUpdateDelete = SnakeCasedPropertiesDeep<ApplicationCommandCreateUpdateDelete>;
+export type DiscordApplicationCommandCreateUpdateDelete =
+  SnakeCasedPropertiesDeep<ApplicationCommandCreateUpdateDelete>;

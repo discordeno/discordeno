@@ -9,4 +9,6 @@ export interface GuildEmojisUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-emojis-update */
-export type DiscordGuildEmojisUpdate = SnakeCasedPropertiesDeep<GuildEmojisUpdate>;
+export type DiscordGuildEmojisUpdate = SnakeCasedPropertiesDeep<
+  GuildEmojisUpdate
+>;

@@ -9,4 +9,6 @@ export interface GuildMemberRemove {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-member-remove */
-export type DiscordGuildMemberRemove = SnakeCasedPropertiesDeep<GuildMemberRemove>;
+export type DiscordGuildMemberRemove = SnakeCasedPropertiesDeep<
+  GuildMemberRemove
+>;

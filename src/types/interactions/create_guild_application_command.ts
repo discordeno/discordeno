@@ -11,4 +11,6 @@ export interface CreateGuildApplicationCommand {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#create-guild-application-command-json-params */
-export type DiscordCreateGuildApplicationCommand = SnakeCasedPropertiesDeep<CreateGuildApplicationCommand>;
+export type DiscordCreateGuildApplicationCommand = SnakeCasedPropertiesDeep<
+  CreateGuildApplicationCommand
+>;

@@ -13,4 +13,6 @@ export interface GetGuildAuditLog {
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
-export type DiscordGetGuildAuditLog = SnakeCasedPropertiesDeep<GetGuildAuditLog>;
+export type DiscordGetGuildAuditLog = SnakeCasedPropertiesDeep<
+  GetGuildAuditLog
+>;

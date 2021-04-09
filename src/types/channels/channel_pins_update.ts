@@ -10,4 +10,6 @@ export interface ChannelPinsUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#channel-pins-update */
-export type DiscordChannelPinsUpdate = SnakeCasedPropertiesDeep<ChannelPinsUpdate>;
+export type DiscordChannelPinsUpdate = SnakeCasedPropertiesDeep<
+  ChannelPinsUpdate
+>;

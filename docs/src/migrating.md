@@ -22,8 +22,8 @@ For the purposes of this guide, I will be using the current
 ## Preparations
 
 - First, create a Discordeno Bot using the
-  [Generator Template](https://github.com/discordeno/template) I will name
-  it Zodiac.
+  [Generator Template](https://github.com/discordeno/template) I will name it
+  Zodiac.
 
 - Then `git clone https://github.com/Skillz4Killz/Zodiac.git`
 
