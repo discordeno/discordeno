@@ -154,9 +154,9 @@ function forEach(
 function forEach(
   table: "messages",
   callback: (
-    value: MemberStruct,
+    value: MessageStruct,
     key: string,
-    map: Map<string, MemberStruct>,
+    map: Map<string, MessageStruct>,
   ) => unknown,
 ): void;
 function forEach(
