@@ -14,7 +14,7 @@ jobs:
       - name: Cache dependencies
         run: deno cache --no-check mod.ts
       - name: Run test script
-        if: ${{ (github.actor.login == "Skillz4Killz" || github.actor.login == "itohatweb" || github.actor.login == "ayntee") || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'run-tests') }}
+        if: ${{ (github.actor.login == 'Skillz4Killz' || github.actor.login == 'itohatweb' || github.actor.login == 'ayntee') || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'run-tests') }}
         run: deno test -A --no-check
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
