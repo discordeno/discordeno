@@ -23,7 +23,7 @@ export const rest = {
     // BY DEFAULT WE WILL LOG ALL ERRORS TO CONSOLE. USER CAN CHOOSE TO OVERRIDE
     error: console.error,
     // PLACEHOLDERS TO ALLOW USERS TO CUSTOMIZE
-    debug: function (_type, error) {},
+    debug: function (_type, error, ...args) {},
     fetching() {},
     fetched() {},
     fetchSuccess() {},
