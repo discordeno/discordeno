@@ -1,4 +1,4 @@
-import { cache, createGuild, delay } from "../../mod.ts";
+import { createGuild, delay } from "../../mod.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 
