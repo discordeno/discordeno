@@ -1,6 +1,6 @@
 import { cache, createChannel, delay } from "../../mod.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
-import { assertEquals, assertExists } from "../deps.ts";
+import { assertExists } from "../deps.ts";
 
 Deno.test({
   name: "[channel] create a new channel",
@@ -13,7 +13,6 @@ Deno.test({
     assertExists(channel);
 
     tempData.channelId = channel.id;
-    assertEquals(tempData.channelId, channel.id);
 
     // Delay the execution by 5 seconds to allow CHANNEL_CREATE event to be processed
     await delay(5000);
