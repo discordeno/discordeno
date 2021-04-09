@@ -1,56 +1,90 @@
 import {
-    addReaction,
-    cache,
-    delay,
-    DiscordReaction,
-    sendMessage,
+  addReaction,
+  cache,
+  createEmoji,
+  delay,
+  DiscordReaction,
+  sendMessage,
 } from "../../mod.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 
-async function ifItFailsBlameWolf(type: "getter" | "raw") {
-    const message = await sendMessage(tempData.channelId, "Hello World!");
+async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
+  const message = await sendMessage(tempData.channelId, "Hello World!");
 
-    // Assertions
-    assertExists(message);
+  // Assertions
+  assertExists(message);
 
-    // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-    await delay(5000);
+  // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
+  await delay(5000);
 
-    if (!cache.messages.has(message.id)) {
-        throw new Error(
-            "The message seemed to be sent but it was not cached.",
-        );
-    }
-
-    if (type === "raw") {
-        await addReaction(message.channelId, message.id, "❤");
-    } else {
-        await message.addReaction("❤");
-    }
-
-    await delay(5000);
-
-    assertEquals(
-        await cache.messages.get(message.id)?.reactions?.filter((
-            reaction: DiscordReaction,
-        ) => reaction.emoji?.name === "❤").length,
-        1,
+  if (!cache.messages.has(message.id)) {
+    throw new Error(
+      "The message seemed to be sent but it was not cached.",
     );
+  }
+
+  let emojiId = "❤";
+
+  if (custom) {
+    emojiId = `<:blamewolf:${
+      (await createEmoji(
+        tempData.guildId,
+        "blamewolf",
+        "https://cdn.discordapp.com/emojis/814955268123000832.png",
+        {
+          name: "blamewolf",
+          image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
+          roles: [],
+        },
+      )).id
+    }>`;
+  }
+
+  if (type === "raw") {
+    await addReaction(message.channelId, message.id, emojiId);
+  } else {
+    await message.addReaction(emojiId);
+  }
+
+  await delay(5000);
+
+  assertEquals(
+    await cache.messages.get(message.id)?.reactions?.filter((
+      reaction: DiscordReaction,
+    ) => reaction.emoji?.name === (custom ? "blamewolf" : "❤")).length,
+    1,
+  );
 }
 
 Deno.test({
-    name: "[message] add a reaction",
-    async fn() {
-        await ifItFailsBlameWolf("raw");
-    },
-    ...defaultTestOptions,
+  name: "[message] add a reaction",
+  async fn() {
+    await ifItFailsBlameWolf("raw");
+  },
+  ...defaultTestOptions,
 });
 
 Deno.test({
-    name: "[message] message.addReaction()",
-    async fn() {
-        await ifItFailsBlameWolf("getter");
-    },
-    ...defaultTestOptions,
+  name: "[message] message.addReaction()",
+  async fn() {
+    await ifItFailsBlameWolf("getter");
+  },
+  ...defaultTestOptions,
+});
+
+Deno.test({
+  name: "[message] add a custom reaction",
+  async fn() {
+    await ifItFailsBlameWolf("raw", true);
+  },
+  ...defaultTestOptions,
+});
+
+Deno.test({
+  name: "[message] message.addReaction() with a custom reaction",
+  async fn() {
+    await ifItFailsBlameWolf("getter", true);
+  },
+  ...defaultTestOptions,
 });
