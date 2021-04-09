@@ -19,7 +19,9 @@ Deno.test({
     await delay(5000);
 
     if (!cache.channels.has(channel.id)) {
-      throw new Error("The channel seemed to be created but it was not cached.");
+      throw new Error(
+        "The channel seemed to be created but it was not cached.",
+      );
     }
   },
   ...defaultTestOptions,
