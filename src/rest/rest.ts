@@ -9,6 +9,8 @@ import { processRequestHeaders } from "./process_request_headers.ts";
 import { runMethod } from "./run_method.ts";
 
 export const rest = {
+  /** The bot token for this rest client. */
+  token: "",
   apiVersion: "8",
   /** The secret authorization key to confirm that this was a request made by you and not a DDOS attack. */
   authorization: "discordeno_best_lib_ever",
