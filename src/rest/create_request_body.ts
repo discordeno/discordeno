@@ -45,6 +45,6 @@ export function createRequestBody(queuedRequest: QueuedRequest) {
     body:
       queuedRequest.payload.body?.file ||
       JSON.stringify(queuedRequest.payload.body),
-    method: queuedRequest.request.method,
+    method: queuedRequest.request.method.toUpperCase(),
   };
 }
