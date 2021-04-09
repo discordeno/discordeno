@@ -51,5 +51,5 @@ export async function startGateway(options: StartGatewayOptions) {
   ws.botGatewayData.url = data.url;
 
   ws.spawnShards(ws.firstShardId);
-  ws.cleanupLoadingShards();
+  await ws.cleanupLoadingShards();
 }

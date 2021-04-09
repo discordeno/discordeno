@@ -46,14 +46,14 @@ export async function handleOnMessage(message: any, shardId: number) {
         ws.shards.get(shardId)!.resuming = true;
       }
 
-      resume(shardId);
+      await resume(shardId);
       break;
     case DiscordGatewayOpcodes.InvalidSession:
       ws.log("INVALID_SESSION", { shardId, payload: messageData });
 
       // When d is false we need to reidentify
       if (!messageData.d) {
-        identify(shardId, ws.maxShards);
+        await identify(shardId, ws.maxShards);
         break;
       }
 
@@ -61,7 +61,7 @@ export async function handleOnMessage(message: any, shardId: number) {
         ws.shards.get(shardId)!.resuming = true;
       }
 
-      resume(shardId);
+      await resume(shardId);
       break;
     default:
       if (messageData.t === "RESUMED") {
