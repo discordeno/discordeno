@@ -42,6 +42,7 @@ export function log(type: "RAW", data: Record<string, unknown>): unknown;
 export function log(type: "RECONNECT", data: { shardId: number }): unknown;
 export function log(type: "RESUMED", data: { shardId: number }): unknown;
 export function log(type: "RESUMING", data: { shardId: number }): unknown;
+export function log(type: "DEBUG", data: unknown): unknown;
 export function log(
   type:
     | "CLOSED"
@@ -56,7 +57,8 @@ export function log(
     | "RAW"
     | "RECONNECT"
     | "RESUMED"
-    | "RESUMING",
+    | "RESUMING"
+    | "DEBUG",
   data: unknown,
 ) {
   console.log(type, data);

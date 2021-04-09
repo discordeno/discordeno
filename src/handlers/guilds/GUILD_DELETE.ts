@@ -27,18 +27,30 @@ export async function handleGuildDelete(
   }
 
   cacheHandlers.forEach("messages", (message) => {
+    eventHandlers.debug(
+      "loop",
+      `1. Running forEach messages loop in CHANNEL_DELTE file.`,
+    );
     if (message.guildId === payload.id) {
       cacheHandlers.delete("messages", message.id);
     }
   });
 
   cacheHandlers.forEach("channels", (channel) => {
+    eventHandlers.debug(
+      "loop",
+      `2. Running forEach channels loop in CHANNEL_DELTE file.`,
+    );
     if (channel.guildId === payload.id) {
       cacheHandlers.delete("channels", channel.id);
     }
   });
 
   cacheHandlers.forEach("members", (member) => {
+    eventHandlers.debug(
+      "loop",
+      `3. Running forEach members loop in CHANNEL_DELTE file.`,
+    );
     if (!member.guilds.has(payload.id)) return;
 
     member.guilds.delete(payload.id);

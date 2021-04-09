@@ -15,6 +15,10 @@ export function heartbeat(shardId: number, interval: number) {
   shard.heartbeat.interval = interval;
 
   shard.heartbeat.intervalId = setInterval(() => {
+    ws.log(
+      "DEBUG",
+      `Running setInterval in heartbeat file.`,
+    );
     const currentShard = ws.shards.get(shardId);
     if (!currentShard) return;
 

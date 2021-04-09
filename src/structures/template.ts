@@ -1,3 +1,4 @@
+import { eventHandlers } from "../bot.ts";
 import { cache } from "../cache.ts";
 import { createNewProp } from "../util/utils.ts";
 
@@ -25,6 +26,10 @@ export function createTemplateStruct(
 
   const restProps: Record<string, Partial<PropertyDescriptor>> = {};
   for (const key of Object.keys(rest)) {
+    eventHandlers.debug(
+      "loop",
+      `Running for of loop in createTemplateStruct function.`,
+    );
     // @ts-ignore index signature
     restProps[key] = createNewProp(rest[key]);
   }

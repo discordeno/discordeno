@@ -1,4 +1,4 @@
-import { identifyPayload } from "../../bot.ts";
+import { eventHandlers, identifyPayload } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { Member, structures } from "../../structures/mod.ts";
@@ -32,6 +32,8 @@ export async function getMembers(guildId: string, options?: GetMemberOptions) {
     (options?.limit ?? guild.memberCount) > members.size &&
     membersLeft > 0
   ) {
+    eventHandlers.debug("loop", "Running while loop in getMembers function.");
+
     if (options?.limit && options.limit > 1000) {
       console.log(
         `Paginating get members from REST. #${loops} / ${
@@ -64,7 +66,13 @@ export async function getMembers(guildId: string, options?: GetMemberOptions) {
 
     if (!memberStructures.length) break;
 
-    memberStructures.forEach((member) => members.set(member.id, member));
+    memberStructures.forEach((member) => {
+      eventHandlers.debug(
+        "loop",
+        `Running forEach loop in get_members file.`,
+      );
+      members.set(member.id, member);
+    });
 
     options = {
       limit: options?.limit,

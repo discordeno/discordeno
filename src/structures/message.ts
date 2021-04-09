@@ -1,3 +1,4 @@
+import { eventHandlers } from "../bot.ts";
 import { cache, cacheHandlers } from "../cache.ts";
 import { sendDirectMessage } from "../helpers/members/send_direct_message.ts";
 import { addReaction } from "../helpers/messages/add_reaction.ts";
@@ -129,6 +130,10 @@ export async function createMessageStruct(data: DiscordMessage) {
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
+    eventHandlers.debug(
+      "loop",
+      `Running for of loop in createMessageStruct function.`,
+    );
     // @ts-ignore index signature
     props[key] = createNewProp(rest[key]);
   }

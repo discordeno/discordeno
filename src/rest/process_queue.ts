@@ -1,3 +1,4 @@
+import { eventHandlers } from "../bot.ts";
 import { DiscordHTTPResponseCodes } from "../types/codes/http_response_codes.ts";
 import { delay } from "../util/utils.ts";
 import { rest } from "./rest.ts";
@@ -8,9 +9,19 @@ export async function processQueue(id: string) {
   if (!queue) return;
 
   while (queue.length) {
+    rest.eventHandlers.debug(
+      "loop",
+      "Running while loop in processQueue function.",
+    );
     // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
     if (rest.globallyRateLimited) {
-      setTimeout(() => processQueue(id), 1000);
+      setTimeout(() => {
+        eventHandlers.debug(
+          "loop",
+          `Running setTimeout in processQueue function.`,
+        );
+        processQueue(id);
+      }, 1000);
 
       break;
     }

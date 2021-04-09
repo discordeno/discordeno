@@ -46,12 +46,20 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
     const roleIds = guildMember.roles || [];
 
     roleIds.forEach((id) => {
+      eventHandlers.debug(
+        "loop",
+        `1. Running forEach loop in GUILD_MEMBER_UPDATE file.`,
+      );
       if (!payload.roles.includes(id)) {
         eventHandlers.roleLost?.(guild, memberStruct, id);
       }
     });
 
     payload.roles.forEach((id) => {
+      eventHandlers.debug(
+        "loop",
+        `2. Running forEach loop in GUILD_MEMBER_UPDATE file.`,
+      );
       if (!roleIds.includes(id)) {
         eventHandlers.roleGained?.(guild, memberStruct, id);
       }
