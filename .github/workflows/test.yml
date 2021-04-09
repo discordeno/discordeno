@@ -15,9 +15,9 @@ jobs:
         run: deno cache --no-check mod.ts
       - name: Run test script for Devs
         if: ${{ github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' || github.actor == 'ayntee' }}
-        run: deno test -A --no-check
+        run: deno test -A --no-check tests/mod.ts
       - name: Run test script for label
         if: ${{ github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'run-tests' }}
-        run: deno test -A --no-check
+        run: deno test -A --no-check tests/mod.ts
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
