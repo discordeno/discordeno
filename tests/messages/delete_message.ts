@@ -1,4 +1,4 @@
-import { cache, deleteMessage, sendMessage, delay } from "../../mod.ts";
+import { cache, delay, deleteMessage, sendMessage } from "../../mod.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertExists } from "../deps.ts";
 
@@ -14,7 +14,7 @@ Deno.test({
     // Make sure the message was created.
     if (!cache.messages.has(message.id)) {
       throw new Error(
-          "The message seemed to be sent but it was not cached.",
+        "The message seemed to be sent but it was not cached.",
       );
     }
 
@@ -25,7 +25,7 @@ Deno.test({
     // Make sure it is gone from cache
     if (cache.messages.has(message.id)) {
       throw new Error(
-          "The message should have been deleted but it is still in cache.",
+        "The message should have been deleted but it is still in cache.",
       );
     }
   },
@@ -44,7 +44,7 @@ Deno.test({
     // Make sure the message was created.
     if (!cache.messages.has(message.id)) {
       throw new Error(
-          "The message seemed to be sent but it was not cached.",
+        "The message seemed to be sent but it was not cached.",
       );
     }
 
@@ -55,7 +55,7 @@ Deno.test({
     // Make sure it is gone from cache
     if (cache.messages.has(message.id)) {
       throw new Error(
-          "The message should have been deleted but it is still in cache.",
+        "The message should have been deleted but it is still in cache.",
       );
     }
   },
@@ -74,7 +74,7 @@ Deno.test({
     // Make sure the message was created.
     if (!cache.messages.has(message.id)) {
       throw new Error(
-          "The message seemed to be sent but it was not cached.",
+        "The message seemed to be sent but it was not cached.",
       );
     }
 
@@ -85,7 +85,7 @@ Deno.test({
     // Make sure it is gone from cache
     if (cache.messages.has(message.id)) {
       throw new Error(
-          "The message should have been deleted but it is still in cache.",
+        "The message should have been deleted but it is still in cache.",
       );
     }
   },
@@ -104,7 +104,7 @@ Deno.test({
     // Make sure the message was created.
     if (!cache.messages.has(message.id)) {
       throw new Error(
-          "The message seemed to be sent but it was not cached.",
+        "The message seemed to be sent but it was not cached.",
       );
     }
 
@@ -115,7 +115,7 @@ Deno.test({
     // Make sure it is gone from cache
     if (cache.messages.has(message.id)) {
       throw new Error(
-          "The message should have been deleted but it is still in cache.",
+        "The message should have been deleted but it is still in cache.",
       );
     }
   },

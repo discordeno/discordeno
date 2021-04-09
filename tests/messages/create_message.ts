@@ -1,4 +1,4 @@
-import { cache, sendMessage, delay } from "../../mod.ts";
+import { cache, delay, sendMessage } from "../../mod.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertExists } from "../deps.ts";
 
@@ -15,7 +15,7 @@ Deno.test({
 
     if (!cache.messages.has(message.id)) {
       throw new Error(
-          "The message seemed to be sent but it was not cached.",
+        "The message seemed to be sent but it was not cached.",
       );
     }
   },
@@ -39,7 +39,7 @@ Deno.test({
 
     if (!cache.messages.has(message.id)) {
       throw new Error(
-          "The message seemed to be sent but it was not cached.",
+        "The message seemed to be sent but it was not cached.",
       );
     }
   },
