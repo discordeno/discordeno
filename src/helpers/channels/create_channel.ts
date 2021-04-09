@@ -1,3 +1,4 @@
+import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
@@ -19,6 +20,10 @@ export async function createChannel(
   const requiredPerms: Set<PermissionStrings> = new Set(["MANAGE_CHANNELS"]);
 
   options?.permissionOverwrites?.forEach((overwrite) => {
+    eventHandlers.debug(
+      "loop",
+      `Running forEach loop in create_channel file.`,
+    );
     overwrite.allow.forEach(requiredPerms.add, requiredPerms);
     overwrite.deny.forEach(requiredPerms.add, requiredPerms);
   });

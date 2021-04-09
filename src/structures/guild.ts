@@ -1,4 +1,4 @@
-import { botId } from "../bot.ts";
+import { botId, eventHandlers } from "../bot.ts";
 import { cache, cacheHandlers } from "../cache.ts";
 import { deleteServer } from "../helpers/guilds/delete_server.ts";
 import { editGuild } from "../helpers/guilds/edit_guild.ts";
@@ -147,6 +147,10 @@ export async function createGuildStruct(
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
+    eventHandlers.debug(
+      "loop",
+      `Running for of loop in createGuildStruct function.`,
+    );
     // @ts-ignore index signature
     props[key] = createNewProp(rest[key]);
   }
