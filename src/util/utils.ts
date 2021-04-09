@@ -6,10 +6,6 @@ import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { ws } from "../ws/ws.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 
-export const sleep = (timeout: number) => {
-  return new Promise((resolve) => setTimeout(resolve, timeout));
-};
-
 export function editBotStatus(
   data: Pick<GatewayStatusUpdatePayload, "activities" | "status">,
 ) {
