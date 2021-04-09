@@ -74,8 +74,8 @@ function isObject(obj: unknown) {
   );
 }
 
-// deno-lint-ignore no-explicit-any
 export function camelKeysToSnakeCase<T>(
+  // deno-lint-ignore no-explicit-any
   obj: Record<string, any> | Record<string, any>[],
 ): T {
   if (isObject(obj)) {
@@ -96,8 +96,8 @@ export function camelKeysToSnakeCase<T>(
   return obj as T;
 }
 
-// deno-lint-ignore no-explicit-any
 export function snakeKeysToCamelCase<T>(
+  // deno-lint-ignore no-explicit-any
   obj: Record<string, any> | Record<string, any>[],
 ): T {
   if (isObject(obj)) {

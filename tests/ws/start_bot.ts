@@ -1,5 +1,7 @@
-import { botId, delay, startBot, ws } from "../mod.ts";
-import { assertExists } from "./deps.ts";
+import { startBot, botId } from "../../src/bot.ts";
+import { delay } from "../../src/util/utils.ts";
+import { ws } from "../../src/ws/ws.ts";
+import { assertExists } from "../deps.ts";
 
 // Set necessary settings
 // Disables the logger which logs everything
@@ -23,9 +25,8 @@ export const tempData = {
   messageId: "",
 };
 
-// Main
 Deno.test({
-  name: "[main] connect to gateway",
+  name: "[ws] connect to gateway",
   async fn() {
     const token = Deno.env.get("DISCORD_TOKEN");
     if (!token) throw new Error("Token is not provided");
@@ -43,26 +44,6 @@ Deno.test({
   },
   ...defaultTestOptions,
 });
-
-// Guild
-
-// Deno.test({
-//   name: "[guild] create a new guild",
-//   async fn() {
-//     const guild = await createGuild({
-//       name: "Discordeno Test",
-//     }) as Guild;
-
-//     // Assertions
-//     assertExists(guild);
-
-//     tempData.guildId = guild.id;
-
-//     // Delay the execution by 5 seconds to allow GUILD_CREATE event to be processed
-//     await delay(5000);
-//   },
-//   ...defaultTestOptions,
-// });
 
 // // Role
 
@@ -297,30 +278,3 @@ Deno.test({
 //   },
 //   ...defaultTestOptions,
 // });
-
-// Deno.test({
-//   name: "[guild] delete a guild",
-//   async fn() {
-//     await deleteServer(tempData.guildId);
-
-//     // TODO(ayntee): remove this weird shit lol
-//     // TODO(ayntee): check if the GUILD_DELETE event is fired
-//     tempData.guildId = "";
-//     assertEquals(tempData.guildId, "");
-//   },
-//   ...defaultTestOptions,
-// });
-
-// Exit the Deno process once all tests are done.
-Deno.test({
-  name: "[main] Close all shards manually.",
-  async fn() {
-    ws.shards.forEach((shard) => {
-      clearInterval(shard.heartbeat.intervalId);
-      shard.ws.close(3064, "Discordeno Testing Finished! Do Not RESUME!");
-    });
-
-    await delay(3000);
-  },
-  ...defaultTestOptions,
-});
