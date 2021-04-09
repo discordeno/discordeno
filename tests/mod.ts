@@ -13,6 +13,7 @@ import "./guilds/create_guild.ts";
 
 // Channel tests
 import "./channels/create_channel.ts";
+import "./channels/category_children.ts";
 import "./channels/delete_channel.ts";
 
 // Messages tests

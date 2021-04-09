@@ -3,14 +3,13 @@ import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordChannel } from "../../types/channels/channel.ts";
-import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import { CreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
 import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
-  calculateBits,
   requireBotGuildPermissions,
 } from "../../util/permissions.ts";
+import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(
@@ -34,7 +33,7 @@ export async function createChannel(
     "post",
     endpoints.GUILD_CHANNELS(guildId),
     {
-      ...options,
+      ...camelKeysToSnakeCase(options),
       permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
         ...perm,
 
