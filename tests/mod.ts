@@ -16,6 +16,7 @@ import "./channels/create_channel.ts";
 import "./channels/delete_channel.ts";
 
 // Messages tests
+import "./messages/add_reaction.ts";
 import "./messages/create_message.ts";
 import "./messages/delete_message.ts";
 import "./messages/edit_message.ts";

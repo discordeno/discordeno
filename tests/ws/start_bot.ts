@@ -33,7 +33,12 @@ Deno.test({
 
     await startBot({
       token,
-      intents: ["GUILD_MESSAGES", "GUILDS"],
+      intents: [
+        "GUILD_MESSAGES",
+        "GUILDS",
+        "GUILD_EMOJIS",
+        "GUILD_MESSAGE_REACTIONS",
+      ],
     });
 
     // Delay the execution by 5 seconds
