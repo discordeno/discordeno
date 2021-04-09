@@ -9,7 +9,7 @@ Discordeno follows [Semantic Versioning](https://semver.org/)
 [![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
-[![Coverage](https://img.shields.io/github/workflow/status/discordeno/discordeno/Coverage)](https://github.com/discordeno/discordeno/actions)
+[![Coverage](https://img.shields.io/codecov/c/gh/discordeno/discordeno)](https://codecov.io/gh/discordeno/discordeno)
 ## Features
 
 - **Secure & stable**: Discordeno is actively maintained to ensure great
