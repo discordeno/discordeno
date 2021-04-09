@@ -14,7 +14,6 @@ import {
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(
   guildId: string,
-  name: string,
   options?: CreateGuildChannel,
 ) {
   const requiredPerms: Set<PermissionStrings> = new Set(["MANAGE_CHANNELS"]);
@@ -31,7 +30,6 @@ export async function createChannel(
     endpoints.GUILD_CHANNELS(guildId),
     {
       ...options,
-      name,
       permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
         ...perm,
 
