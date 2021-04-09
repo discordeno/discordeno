@@ -8,7 +8,6 @@ Deno.test({
     const guild = await createGuild({
       name: "Discordeno Test",
     });
-    console.log(guild);
 
     // Assertions
     assertExists(guild);
