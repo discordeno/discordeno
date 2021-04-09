@@ -1,3 +1,4 @@
+import { eventHandlers } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
 import { ModifyChannel } from "../../types/channels/modify_channel.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -77,6 +78,10 @@ function processEditChannelQueue() {
 
   const now = Date.now();
   editChannelNameTopicQueue.forEach((request) => {
+    eventHandlers.debug(
+      "loop",
+      `Running forEach loop in edit_channel file.`,
+    );
     if (now > request.timestamp) return;
     // 10 minutes have passed so we can reset this channel again
     if (!request.items.length) {
@@ -96,7 +101,13 @@ function processEditChannelQueue() {
   });
 
   if (editChannelNameTopicQueue.size) {
-    setTimeout(() => processEditChannelQueue(), 600000);
+    setTimeout(() => {
+      eventHandlers.debug(
+        "loop",
+        `Running setTimeout in EDIT_CHANNEL file.`,
+      );
+      processEditChannelQueue();
+    }, 600000);
   } else {
     editChannelProcessing = false;
   }

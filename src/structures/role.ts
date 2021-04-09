@@ -1,3 +1,4 @@
+import { eventHandlers } from "../bot.ts";
 import { cache } from "../cache.ts";
 import { deleteRole } from "../helpers/roles/delete_role.ts";
 import { editRole } from "../helpers/roles/edit_role.ts";
@@ -74,6 +75,10 @@ export async function createRoleStruct(data: DiscordGuildRoleCreate) {
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
+    eventHandlers.debug(
+      "loop",
+      `Running for of loop in createRoleStruct function.`,
+    );
     // @ts-ignore index signature
     props[key] = createNewProp(rest[key]);
   }

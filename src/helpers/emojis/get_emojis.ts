@@ -1,3 +1,4 @@
+import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { Emoji } from "../../types/emojis/emoji.ts";
@@ -17,7 +18,13 @@ export async function getEmojis(guildId: string, addToCache = true) {
     const guild = await cacheHandlers.get("guilds", guildId);
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
-    result.forEach((emoji) => guild.emojis.set(emoji.id!, emoji));
+    result.forEach((emoji) => {
+      eventHandlers.debug(
+        "loop",
+        `Running forEach loop in get_emojis file.`,
+      );
+      guild.emojis.set(emoji.id!, emoji);
+    });
 
     cacheHandlers.set("guilds", guildId, guild);
   }

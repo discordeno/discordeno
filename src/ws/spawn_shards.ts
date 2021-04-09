@@ -13,8 +13,16 @@ export function spawnShards(firstShardId = 0) {
     index < ws.botGatewayData.sessionStartLimit.maxConcurrency;
     index++
   ) {
+    ws.log(
+      "DEBUG",
+      `1. Running for loop in spawnShards function.`,
+    );
     // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
     for (let i = 0; i < maxShards; i++) {
+      ws.log(
+        "DEBUG",
+        `2. Running for loop in spawnShards function.`,
+      );
       const bucketId = i % ws.botGatewayData.sessionStartLimit.maxConcurrency;
       const bucket = buckets.get(bucketId);
 
@@ -40,10 +48,19 @@ export function spawnShards(firstShardId = 0) {
 
   // SPREAD THIS OUT TO DIFFERENT CLUSTERS TO BEGIN STARTING UP
   buckets.forEach(async (bucket, bucketId) => {
+    ws.log(
+      "DEBUG",
+      `3. Running forEach loop in spawnShards function.`,
+    );
     for (const [clusterId, ...queue] of bucket) {
+      ws.log(
+        "DEBUG",
+        `4. Running for of loop in spawnShards function.`,
+      );
       let shardId = queue.shift();
 
       while (shardId !== undefined) {
+        ws.log("DEBUG", "Running while loop in getMembers function.");
         await ws.tellClusterToIdentify(clusterId as number, shardId, bucketId);
         shardId = queue.shift();
       }

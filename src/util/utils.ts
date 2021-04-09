@@ -1,4 +1,5 @@
 import { encode } from "../../deps.ts";
+import { eventHandlers } from "../bot.ts";
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { Errors } from "../types/misc/errors.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
@@ -6,10 +7,15 @@ import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { ws } from "../ws/ws.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 
+// TODO: move this function to helpers
 export function editBotStatus(
   data: Pick<GatewayStatusUpdatePayload, "activities" | "status">,
 ) {
   ws.shards.forEach((shard) => {
+    eventHandlers.debug(
+      "loop",
+      `Running forEach loop in editBotStatus function.`,
+    );
     shard.ws.send(
       JSON.stringify({
         op: DiscordGatewayOpcodes.StatusUpdate,
@@ -79,6 +85,10 @@ export function camelKeysToSnakeCase<T>(
     const convertedObject: Record<string, any> = {};
 
     Object.keys(obj).forEach((key) => {
+      eventHandlers.debug(
+        "loop",
+        `Running forEach loop in camelKeysToSnakeCase function.`,
+      );
       convertedObject[camelToSnakeCase(key)] = camelKeysToSnakeCase(
         (obj as Record<string, any>)[key],
       );
@@ -101,6 +111,10 @@ export function snakeKeysToCamelCase<T>(
     const convertedObject: Record<string, any> = {};
 
     Object.keys(obj).forEach((key) => {
+      eventHandlers.debug(
+        "loop",
+        `Running forEach loop in snakeKeysToCamelCase function.`,
+      );
       convertedObject[snakeToCamelCase(key)] = snakeKeysToCamelCase(
         (obj as Record<string, any>)[key],
       );
@@ -120,6 +134,10 @@ function validateSlashOptionChoices(
   optionType: SlashCommandOptionType,
 ) {
   for (const choice of choices) {
+    eventHandlers.debug(
+      "loop",
+      `Running for of loop in validateSlashOptionChoices function.`,
+    );
     if ([...choice.name].length < 1 || [...choice.name].length > 100) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
@@ -140,6 +158,10 @@ function validateSlashOptionChoices(
 /** @private */
 function validateSlashOptions(options: SlashCommandOption[]) {
   for (const option of options) {
+    eventHandlers.debug(
+      "loop",
+      `Running for of loop in validateSlashOptions function.`,
+    );
     if (
       option.choices?.length &&
       (option.choices.length > 25 ||
@@ -170,6 +192,10 @@ export function validateSlashCommands(
   create = false,
 ) {
   for (const command of commands) {
+    eventHandlers.debug(
+      "loop",
+      `Running for of loop in validateSlashCommands function.`,
+    );
     if (
       (command.name && !SLASH_COMMANDS_NAME_REGEX.test(command.name)) ||
       (create && !command.name)

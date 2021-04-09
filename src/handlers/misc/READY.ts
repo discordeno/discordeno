@@ -32,7 +32,13 @@ export async function handleReady(
   shard.unavailableGuildIds = new Set(payload.guilds.map((g) => g.id));
 
   // Start ready check in 2 seconds
-  setTimeout(async () => await checkReady(payload, shardId, now), 2000);
+  setTimeout(async () => {
+    eventHandlers.debug(
+      "loop",
+      `1. Running setTimeout in READY file.`,
+    );
+    await checkReady(payload, shardId, now);
+  }, 2000);
 
   // Wait 5 seconds to spawn next shard
   await delay(5000);
@@ -53,7 +59,13 @@ async function checkReady(payload: DiscordReady, shardId: number, now: number) {
       await loaded(shardId);
     } else {
       // Not all guilds were loaded but 10 seconds haven't passed so check again
-      setTimeout(async () => await checkReady(payload, shardId, now), 2000);
+      setTimeout(async () => {
+        eventHandlers.debug(
+          "loop",
+          `2. Running setTimeout in READY file.`,
+        );
+        await checkReady(payload, shardId, now);
+      }, 2000);
     }
   } else {
     // All guilds were loaded
@@ -71,13 +83,23 @@ async function loaded(shardId: number) {
   if (shardId === ws.lastShardId - 1) {
     // Still some shards are loading so wait another 2 seconds for them
     if (ws.shards.some((shard) => !shard.ready)) {
-      setTimeout(async () => await loaded(shardId), 2000);
+      setTimeout(async () => {
+        eventHandlers.debug(
+          "loop",
+          `3. Running setTimeout in CHANNEL_DELTE file.`,
+        );
+        await loaded(shardId);
+      }, 2000);
     } else {
       cache.isReady = true;
       eventHandlers.ready?.();
 
       // All the members that came in on guild creates should now be processed 1 by 1
       for (const [guildId, members] of initialMemberLoadQueue.entries()) {
+        eventHandlers.debug(
+          "loop",
+          "Running for of loop in READY file for loading members.",
+        );
         await Promise.allSettled(
           members.map(async (member) => {
             const memberStruct = await structures.createMemberStruct(

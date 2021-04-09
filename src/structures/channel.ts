@@ -1,3 +1,4 @@
+import { eventHandlers } from "../bot.ts";
 import { cache } from "../cache.ts";
 import { channelOverwriteHasPermission } from "../helpers/channels/channel_overwrite_has_permission.ts";
 import { deleteChannel } from "../helpers/channels/delete_channel.ts";
@@ -81,6 +82,10 @@ export async function createChannelStruct(
 
   const props: Record<string, PropertyDescriptor> = {};
   Object.keys(rest).forEach((key) => {
+    eventHandlers.debug(
+      "loop",
+      `Running forEach loop in createChannelStruct function.`,
+    );
     // @ts-ignore index signature
     props[key] = createNewProp(rest[key]);
   });

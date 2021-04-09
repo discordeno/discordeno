@@ -1,3 +1,4 @@
+import { eventHandlers } from "../bot.ts";
 import { cache, cacheHandlers } from "../cache.ts";
 import { avatarURL } from "../helpers/members/avatar_url.ts";
 import { banMember } from "../helpers/members/ban_member.ts";
@@ -87,11 +88,19 @@ export async function createMemberStruct(
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
 
   for (const key of Object.keys(rest)) {
+    eventHandlers.debug(
+      "loop",
+      `Running for of loop for Object.keys(rest) in createMemberStruct function.`,
+    );
     // @ts-ignore index signature
     props[key] = createNewProp(rest[key]);
   }
 
   for (const key of Object.keys(user)) {
+    eventHandlers.debug(
+      "loop",
+      `Running for of for Object.keys(user) loop in createMemberStruct function.`,
+    );
     // @ts-ignore index signature
     props[key] = createNewProp(user[key]);
   }
@@ -105,6 +114,10 @@ export async function createMemberStruct(
   const cached = await cacheHandlers.get("members", user.id);
   if (cached) {
     for (const [id, guild] of cached.guilds.entries()) {
+      eventHandlers.debug(
+        "loop",
+        `Running for of for cached.guilds.entries() loop in createMemberStruct function.`,
+      );
       member.guilds.set(id, guild);
     }
   }

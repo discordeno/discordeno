@@ -1,4 +1,4 @@
-import { applicationId } from "../../bot.ts";
+import { applicationId, eventHandlers } from "../../bot.ts";
 import { cache } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { DiscordenoInteractionResponse } from "../../types/discordeno/interaction_response.ts";
@@ -25,7 +25,13 @@ export async function sendInteractionResponse(
   // Expire in 15 minutes
   cache.executedSlashCommands.set(token, id);
   setTimeout(
-    () => cache.executedSlashCommands.delete(token),
+    () => {
+      eventHandlers.debug(
+        "loop",
+        `Running setTimeout in send_interaction_response file.`,
+      );
+      cache.executedSlashCommands.delete(token);
+    },
     900000,
   );
 
