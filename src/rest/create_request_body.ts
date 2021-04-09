@@ -16,7 +16,7 @@ export function createRequestBody(queuedRequest: QueuedRequest) {
   // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
   if (queuedRequest.payload.body?.reason) {
     headers["X-Audit-Log-Reason"] = encodeURIComponent(
-      queuedRequest.payload.body.reason
+      queuedRequest.payload.body.reason,
     );
   }
 
@@ -26,11 +26,11 @@ export function createRequestBody(queuedRequest: QueuedRequest) {
     form.append(
       "file",
       queuedRequest.payload.body.file.blob,
-      queuedRequest.payload.body.file.name
+      queuedRequest.payload.body.file.name,
     );
     form.append(
       "payload_json",
-      JSON.stringify({ ...queuedRequest.payload.body, file: undefined })
+      JSON.stringify({ ...queuedRequest.payload.body, file: undefined }),
     );
     queuedRequest.payload.body.file = form;
   } else if (
@@ -42,8 +42,7 @@ export function createRequestBody(queuedRequest: QueuedRequest) {
 
   return {
     headers,
-    body:
-      queuedRequest.payload.body?.file ||
+    body: queuedRequest.payload.body?.file ||
       JSON.stringify(queuedRequest.payload.body),
     method: queuedRequest.request.method.toUpperCase(),
   };

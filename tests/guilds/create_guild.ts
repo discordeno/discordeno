@@ -1,6 +1,6 @@
 import { cache, createGuild, delay } from "../../mod.ts";
-import { tempData, defaultTestOptions } from "../ws/start_bot.ts";
-import { assertExists, assertEquals } from "../deps.ts";
+import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
+import { assertEquals, assertExists } from "../deps.ts";
 
 Deno.test({
   name: "[guild] create a new guild",

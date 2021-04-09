@@ -72,10 +72,9 @@ type InnerCamelCaseStringArray<Parts extends any[], PreviousPart> =
     : "";
 
 type CamelCaseStringArray<Parts extends string[]> = Parts extends
-  [`${infer FirstPart}`, ...infer RemainingParts]
-  ? Uncapitalize<
-    `${FirstPart}${InnerCamelCaseStringArray<RemainingParts, FirstPart>}`
-  >
+  [`${infer FirstPart}`, ...infer RemainingParts] ? Uncapitalize<
+  `${FirstPart}${InnerCamelCaseStringArray<RemainingParts, FirstPart>}`
+>
   : never;
 
 type StringPartToDelimiterCase<

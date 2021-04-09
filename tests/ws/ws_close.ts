@@ -1,4 +1,4 @@
-import { ws, delay } from "../../mod.ts";
+import { delay, ws } from "../../mod.ts";
 import { defaultTestOptions } from "./start_bot.ts";
 
 // Exit the Deno process once all tests are done.

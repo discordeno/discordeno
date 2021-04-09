@@ -1,7 +1,7 @@
 // THE ORDER OF THE IMPORTS IN THIS FILE MATTER!
 // DO NOT MOVE THEM UNLESS YOU KNOW WHAT YOUR DOING!
 
-// First complete non-api reliant testing. 
+// First complete non-api reliant testing.
 // Don't waste api rate limits if a early test fails.
 import "./util/utils.ts";
 

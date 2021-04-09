@@ -163,7 +163,9 @@ export async function createGuildStruct(
     ),
     memberCount: createNewProp(memberCount),
     emojis: createNewProp(
-      new Collection((emojis || []).map((emoji) => [emoji.id ?? emoji.name, emoji])),
+      new Collection(
+        (emojis || []).map((emoji) => [emoji.id ?? emoji.name, emoji]),
+      ),
     ),
     voiceStates: createNewProp(
       new Collection(

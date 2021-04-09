@@ -1,4 +1,4 @@
-import { startBot, botId } from "../../src/bot.ts";
+import { botId, startBot } from "../../src/bot.ts";
 import { delay } from "../../src/util/utils.ts";
 import { ws } from "../../src/ws/ws.ts";
 import { assertExists } from "../deps.ts";

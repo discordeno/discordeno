@@ -36,18 +36,19 @@ export async function processQueue(id: string) {
     // EXECUTE THE REQUEST
 
     // IF THIS IS A GET REQUEST, CHANGE THE BODY TO QUERY PARAMETERS
-    const query =
-      queuedRequest.request.method.toUpperCase() === "GET" &&
-      queuedRequest.payload.body
-        ? Object.entries(queuedRequest.payload.body)
-            .map(
-              ([key, value]) =>
-                `${encodeURIComponent(key)}=${encodeURIComponent(
-                  value as string
-                )}`
-            )
-            .join("&")
-        : "";
+    const query = queuedRequest.request.method.toUpperCase() === "GET" &&
+        queuedRequest.payload.body
+      ? Object.entries(queuedRequest.payload.body)
+        .map(
+          ([key, value]) =>
+            `${encodeURIComponent(key)}=${
+              encodeURIComponent(
+                value as string,
+              )
+            }`,
+        )
+        .join("&")
+      : "";
     const urlToUse =
       queuedRequest.request.method.toUpperCase() === "GET" && query
         ? `${queuedRequest.request.url}?${query}`
@@ -59,13 +60,13 @@ export async function processQueue(id: string) {
     try {
       const response = await fetch(
         urlToUse,
-        rest.createRequestBody(queuedRequest)
+        rest.createRequestBody(queuedRequest),
       );
 
       rest.eventHandlers.fetched(queuedRequest.payload);
       const bucketIdFromHeaders = rest.processRequestHeaders(
         queuedRequest.request.url,
-        response.headers
+        response.headers,
       );
 
       if (response.status < 200 || response.status >= 400) {
@@ -123,7 +124,7 @@ export async function processQueue(id: string) {
           // IF IT HAS MAXED RETRIES SOMETHING SERIOUSLY WRONG. CANCEL OUT.
           if (
             queuedRequest.payload.retryCount >=
-            queuedRequest.options.maxRetryCount
+              queuedRequest.options.maxRetryCount
           ) {
             rest.eventHandlers.retriesMaxed(queuedRequest.payload);
             queuedRequest.request.respond({
