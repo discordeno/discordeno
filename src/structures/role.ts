@@ -75,7 +75,7 @@ export async function createRoleStruct(data: DiscordGuildRoleCreate) {
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `Running for of loop in createRoleStruct function.`,
     );

@@ -33,7 +33,7 @@ export async function handleReady(
 
   // Start ready check in 2 seconds
   setTimeout(async () => {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `1. Running setTimeout in READY file.`,
     );
@@ -60,7 +60,7 @@ async function checkReady(payload: DiscordReady, shardId: number, now: number) {
     } else {
       // Not all guilds were loaded but 10 seconds haven't passed so check again
       setTimeout(async () => {
-        eventHandlers.debug(
+        eventHandlers.debug?.(
           "loop",
           `2. Running setTimeout in READY file.`,
         );
@@ -84,7 +84,7 @@ async function loaded(shardId: number) {
     // Still some shards are loading so wait another 2 seconds for them
     if (ws.shards.some((shard) => !shard.ready)) {
       setTimeout(async () => {
-        eventHandlers.debug(
+        eventHandlers.debug?.(
           "loop",
           `3. Running setTimeout in CHANNEL_DELTE file.`,
         );
@@ -96,7 +96,7 @@ async function loaded(shardId: number) {
 
       // All the members that came in on guild creates should now be processed 1 by 1
       for (const [guildId, members] of initialMemberLoadQueue.entries()) {
-        eventHandlers.debug(
+        eventHandlers.debug?.(
           "loop",
           "Running for of loop in READY file for loading members.",
         );

@@ -9,14 +9,14 @@ export async function processQueue(id: string) {
   if (!queue) return;
 
   while (queue.length) {
-    rest.eventHandlers.debug(
+    rest.eventHandlers.debug?.(
       "loop",
       "Running while loop in processQueue function.",
     );
     // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
     if (rest.globallyRateLimited) {
       setTimeout(() => {
-        eventHandlers.debug(
+        eventHandlers.debug?.(
           "loop",
           `Running setTimeout in processQueue function.`,
         );

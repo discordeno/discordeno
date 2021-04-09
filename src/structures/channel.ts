@@ -82,7 +82,7 @@ export async function createChannelStruct(
 
   const props: Record<string, PropertyDescriptor> = {};
   Object.keys(rest).forEach((key) => {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `Running forEach loop in createChannelStruct function.`,
     );

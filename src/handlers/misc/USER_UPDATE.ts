@@ -10,7 +10,7 @@ export async function handleUserUpdate(data: DiscordGatewayPayload) {
   if (!member) return;
 
   Object.entries(userData).forEach(([key, value]) => {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `Running forEach loop in USER_UPDATE file.`,
     );

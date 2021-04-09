@@ -12,7 +12,7 @@ export function editBotStatus(
   data: Pick<GatewayStatusUpdatePayload, "activities" | "status">,
 ) {
   ws.shards.forEach((shard) => {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `Running forEach loop in editBotStatus function.`,
     );
@@ -85,7 +85,7 @@ export function camelKeysToSnakeCase<T>(
     const convertedObject: Record<string, any> = {};
 
     Object.keys(obj).forEach((key) => {
-      eventHandlers.debug(
+      eventHandlers.debug?.(
         "loop",
         `Running forEach loop in camelKeysToSnakeCase function.`,
       );
@@ -111,7 +111,7 @@ export function snakeKeysToCamelCase<T>(
     const convertedObject: Record<string, any> = {};
 
     Object.keys(obj).forEach((key) => {
-      eventHandlers.debug(
+      eventHandlers.debug?.(
         "loop",
         `Running forEach loop in snakeKeysToCamelCase function.`,
       );
@@ -134,7 +134,7 @@ function validateSlashOptionChoices(
   optionType: SlashCommandOptionType,
 ) {
   for (const choice of choices) {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `Running for of loop in validateSlashOptionChoices function.`,
     );
@@ -158,7 +158,7 @@ function validateSlashOptionChoices(
 /** @private */
 function validateSlashOptions(options: SlashCommandOption[]) {
   for (const option of options) {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `Running for of loop in validateSlashOptions function.`,
     );
@@ -192,7 +192,7 @@ export function validateSlashCommands(
   create = false,
 ) {
   for (const command of commands) {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `Running for of loop in validateSlashCommands function.`,
     );
