@@ -42,6 +42,7 @@ Deno.test({
     // Assertions
     assertExists(botId);
   },
+  ...defaultTestOptions,
 });
 
 // // Role
