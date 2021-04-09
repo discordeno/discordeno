@@ -19,7 +19,7 @@ export async function getEmojis(guildId: string, addToCache = true) {
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
     result.forEach((emoji) => {
-      eventHandlers.debug(
+      eventHandlers.debug?.(
         "loop",
         `Running forEach loop in get_emojis file.`,
       );

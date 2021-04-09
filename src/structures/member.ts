@@ -88,7 +88,7 @@ export async function createMemberStruct(
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
 
   for (const key of Object.keys(rest)) {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `Running for of loop for Object.keys(rest) in createMemberStruct function.`,
     );
@@ -97,7 +97,7 @@ export async function createMemberStruct(
   }
 
   for (const key of Object.keys(user)) {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `Running for of for Object.keys(user) loop in createMemberStruct function.`,
     );
@@ -114,7 +114,7 @@ export async function createMemberStruct(
   const cached = await cacheHandlers.get("members", user.id);
   if (cached) {
     for (const [id, guild] of cached.guilds.entries()) {
-      eventHandlers.debug(
+      eventHandlers.debug?.(
         "loop",
         `Running for of for cached.guilds.entries() loop in createMemberStruct function.`,
       );

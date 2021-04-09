@@ -26,7 +26,7 @@ export function createTemplateStruct(
 
   const restProps: Record<string, Partial<PropertyDescriptor>> = {};
   for (const key of Object.keys(rest)) {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `Running for of loop in createTemplateStruct function.`,
     );

@@ -32,7 +32,7 @@ export async function handleChannelDelete(data: DiscordGatewayPayload) {
 
   await cacheHandlers.delete("channels", payload.id);
   cacheHandlers.forEach("messages", (message) => {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `Running forEach messages loop in CHANNEL_DELTE file.`,
     );

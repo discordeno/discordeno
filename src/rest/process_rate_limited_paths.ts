@@ -6,7 +6,7 @@ export function processRateLimitedPaths() {
   const now = Date.now();
 
   rest.ratelimitedPaths.forEach((value, key) => {
-    rest.eventHandlers.debug(
+    rest.eventHandlers.debug?.(
       "loop",
       `Running forEach loop in process_rate_limited_paths file.`,
     );
@@ -26,7 +26,7 @@ export function processRateLimitedPaths() {
     rest.processingRateLimitedPaths = true;
     // RECHECK IN 1 SECOND
     setTimeout(() => {
-      eventHandlers.debug(
+      eventHandlers.debug?.(
         "loop",
         `Running setTimeout in processRateLimitedPaths function.`,
       );

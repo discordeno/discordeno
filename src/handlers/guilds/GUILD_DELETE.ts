@@ -27,7 +27,7 @@ export async function handleGuildDelete(
   }
 
   cacheHandlers.forEach("messages", (message) => {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `1. Running forEach messages loop in CHANNEL_DELTE file.`,
     );
@@ -37,7 +37,7 @@ export async function handleGuildDelete(
   });
 
   cacheHandlers.forEach("channels", (channel) => {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `2. Running forEach channels loop in CHANNEL_DELTE file.`,
     );
@@ -47,7 +47,7 @@ export async function handleGuildDelete(
   });
 
   cacheHandlers.forEach("members", (member) => {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `3. Running forEach members loop in CHANNEL_DELTE file.`,
     );

@@ -147,7 +147,7 @@ export async function createGuildStruct(
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `Running for of loop in createGuildStruct function.`,
     );

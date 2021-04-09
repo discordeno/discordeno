@@ -14,7 +14,7 @@ export async function addReactions(
     );
   } else {
     for (const reaction of reactions) {
-      eventHandlers.debug(
+      eventHandlers.debug?.(
         "loop",
         "Running for of loop in addReactions function.",
       );

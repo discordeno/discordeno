@@ -46,7 +46,7 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
     const roleIds = guildMember.roles || [];
 
     roleIds.forEach((id) => {
-      eventHandlers.debug(
+      eventHandlers.debug?.(
         "loop",
         `1. Running forEach loop in GUILD_MEMBER_UPDATE file.`,
       );
@@ -56,7 +56,7 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
     });
 
     payload.roles.forEach((id) => {
-      eventHandlers.debug(
+      eventHandlers.debug?.(
         "loop",
         `2. Running forEach loop in GUILD_MEMBER_UPDATE file.`,
       );

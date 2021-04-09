@@ -26,7 +26,7 @@ export async function sendInteractionResponse(
   cache.executedSlashCommands.set(token, id);
   setTimeout(
     () => {
-      eventHandlers.debug(
+      eventHandlers.debug?.(
         "loop",
         `Running setTimeout in send_interaction_response file.`,
       );

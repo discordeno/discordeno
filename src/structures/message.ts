@@ -130,7 +130,7 @@ export async function createMessageStruct(data: DiscordMessage) {
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `Running for of loop in createMessageStruct function.`,
     );

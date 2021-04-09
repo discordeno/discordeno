@@ -20,7 +20,7 @@ export async function createChannel(
   const requiredPerms: Set<PermissionStrings> = new Set(["MANAGE_CHANNELS"]);
 
   options?.permissionOverwrites?.forEach((overwrite) => {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `Running forEach loop in create_channel file.`,
     );

@@ -78,7 +78,7 @@ function processEditChannelQueue() {
 
   const now = Date.now();
   editChannelNameTopicQueue.forEach((request) => {
-    eventHandlers.debug(
+    eventHandlers.debug?.(
       "loop",
       `Running forEach loop in edit_channel file.`,
     );
@@ -102,7 +102,7 @@ function processEditChannelQueue() {
 
   if (editChannelNameTopicQueue.size) {
     setTimeout(() => {
-      eventHandlers.debug(
+      eventHandlers.debug?.(
         "loop",
         `Running setTimeout in EDIT_CHANNEL file.`,
       );
