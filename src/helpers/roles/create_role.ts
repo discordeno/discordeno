@@ -22,7 +22,7 @@ export async function createRole(
   });
 
   const roleData = result as RoleData;
-  const role = await structures.createRoleStruct(roleData);
+  const role = await structures.createDiscordenoRole(roleData);
   const guild = await cacheHandlers.get("guilds", guildId);
   guild?.roles.set(role.id, role);
 

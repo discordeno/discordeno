@@ -11,6 +11,6 @@ export async function getPins(channelId: string) {
   )) as DiscordMessage[];
 
   return Promise.all(
-    result.map((res) => structures.createMessageStruct(res)),
+    result.map((res) => structures.createDiscordenoMessage(res)),
   );
 }

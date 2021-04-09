@@ -15,9 +15,11 @@ import { PermissionStrings } from "../types/permissions/permission_strings.ts";
 import { VoiceState } from "../types/voice/voice_state.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
-import { MessageStruct } from "./message.ts";
+import { DiscordenoGuild } from "./guild.ts";
+import { DiscordenoMember } from "./member.ts";
+import { DiscordenoMessage } from "./message.ts";
 
-const baseChannel: Partial<ChannelStruct> = {
+const baseChannel: Partial<DiscordenoChannel> = {
   get guild() {
     return cache.guilds.get(this.guildId!);
   },
@@ -70,7 +72,7 @@ const baseChannel: Partial<ChannelStruct> = {
 
 /** Create a structure object  */
 // deno-lint-ignore require-await
-export async function createChannelStruct(
+export async function createDiscordenoChannel(
   data: DiscordChannel,
   guildId?: string,
 ) {
@@ -84,13 +86,13 @@ export async function createChannelStruct(
   Object.keys(rest).forEach((key) => {
     eventHandlers.debug?.(
       "loop",
-      `Running forEach loop in createChannelStruct function.`,
+      `Running forEach loop in createDiscordenoChannel function.`,
     );
     // @ts-ignore index signature
     props[key] = createNewProp(rest[key]);
   });
 
-  const channel: ChannelStruct = Object.create(baseChannel, {
+  const channel: DiscordenoChannel = Object.create(baseChannel, {
     ...props,
     guildId: createNewProp(guildId || rawGuildId),
     lastPinTimestamp: createNewProp(
@@ -101,7 +103,7 @@ export async function createChannelStruct(
   return channel;
 }
 
-export interface ChannelStruct extends Channel {
+export interface DiscordenoChannel extends Channel {
   // GETTERS
 
   /**
@@ -109,13 +111,13 @@ export interface ChannelStruct extends Channel {
    *
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
-  guild?: GuildStruct;
+  guild?: DiscordenoGuild;
   /**
    * Gets the messages from cache that were sent in this channel
    *
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
-  messages: Collection<string, MessageStruct>;
+  messages: Collection<string, DiscordenoMessage>;
   /** The mention of the channel */
   mention: string;
   /**
@@ -129,7 +131,7 @@ export interface ChannelStruct extends Channel {
    * 
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
-  connectedMembers?: Collection<string, MemberStruct | undefined>;
+  connectedMembers?: Collection<string, DiscordenoMember | undefined>;
 
   // METHODS
 

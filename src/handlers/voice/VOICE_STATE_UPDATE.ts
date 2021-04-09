@@ -12,7 +12,7 @@ export async function handleVoiceStateUpdate(data: DiscordGatewayPayload) {
   if (!guild) return;
 
   const member = payload.member
-    ? await structures.createMemberStruct(payload.member, guild.id)
+    ? await structures.createDiscordenoMember(payload.member, guild.id)
     : await cacheHandlers.get("members", payload.user_id);
   if (!member) return;
 

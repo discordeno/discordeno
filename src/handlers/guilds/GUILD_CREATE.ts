@@ -13,11 +13,11 @@ export async function handleGuildCreate(
   // When shards resume they emit GUILD_CREATE again.
   if (await cacheHandlers.has("guilds", payload.id)) return;
 
-  const guildStruct = await structures.createGuildStruct(
+  const discordenoGuild = await structures.createDiscordenoGuild(
     payload,
     shardId,
   );
-  await cacheHandlers.set("guilds", guildStruct.id, guildStruct);
+  await cacheHandlers.set("guilds", discordenoGuild.id, discordenoGuild);
 
   const shard = ws.shards.get(shardId);
 
@@ -26,9 +26,9 @@ export async function handleGuildCreate(
 
     shard.unavailableGuildIds.delete(payload.id);
 
-    return eventHandlers.guildAvailable?.(guildStruct);
+    return eventHandlers.guildAvailable?.(discordenoGuild);
   }
 
-  if (!cache.isReady) return eventHandlers.guildLoaded?.(guildStruct);
-  eventHandlers.guildCreate?.(guildStruct);
+  if (!cache.isReady) return eventHandlers.guildLoaded?.(discordenoGuild);
+  eventHandlers.guildCreate?.(discordenoGuild);
 }

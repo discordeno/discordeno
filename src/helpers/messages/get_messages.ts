@@ -26,6 +26,6 @@ export async function getMessages(
   )) as MessageCreateOptions[];
 
   return Promise.all(
-    result.map((res) => structures.createMessageStruct(res)),
+    result.map((res) => structures.createDiscordenoMessage(res)),
   );
 }

@@ -28,5 +28,5 @@ export async function editGuild(guildId: string, options: ModifyGuild) {
     options,
   ) as DiscordGuild;
 
-  return structures.createGuildStruct(result, -1);
+  return structures.createDiscordenoGuild(result, -1);
 }

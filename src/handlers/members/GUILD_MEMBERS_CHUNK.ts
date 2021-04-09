@@ -9,13 +9,13 @@ export async function handleGuildMembersChunk(data: DiscordGatewayPayload) {
 
   const members = await Promise.all(
     payload.members.map(async (member) => {
-      const memberStruct = await structures.createMemberStruct(
+      const discordenoMember = await structures.createDiscordenoMember(
         member,
         payload.guild_id,
       );
-      await cacheHandlers.set("members", memberStruct.id, memberStruct);
+      await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 
-      return memberStruct;
+      return discordenoMember;
     }),
   );
 

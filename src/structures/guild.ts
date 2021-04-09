@@ -33,14 +33,14 @@ import {
   createNewProp,
   snakeKeysToCamelCase,
 } from "../util/utils.ts";
-import { ChannelStruct } from "./channel.ts";
-import { MemberStruct } from "./member.ts";
+import { DiscordenoChannel } from "./channel.ts";
+import { DiscordenoMember } from "./member.ts";
 import { structures } from "./mod.ts";
-import { RoleStruct } from "./role.ts";
+import { DiscordenoRole } from "./role.ts";
 
 export const initialMemberLoadQueue = new Map<string, GuildMember[]>();
 
-const baseGuild: Partial<GuildStruct> = {
+const baseGuild: Partial<DiscordenoGuild> = {
   get members() {
     return cache.members.filter((member) => member.guilds.has(this.id!));
   },
@@ -115,7 +115,7 @@ const baseGuild: Partial<GuildStruct> = {
   },
 };
 
-export async function createGuildStruct(
+export async function createDiscordenoGuild(
   data: DiscordGuild,
   shardId: number,
 ) {
@@ -132,34 +132,38 @@ export async function createGuildStruct(
 
   const roles = await Promise.all(
     (data.roles || []).map((role) =>
-      structures.createRoleStruct({ role, guild_id: rest.id })
+      structures.createDiscordenoRole({ role, guild_id: rest.id })
     ),
   );
 
   await Promise.all(channels.map(async (channel) => {
-    const channelStruct = await structures.createChannelStruct(
+    const discordenoChannel = await structures.createDiscordenoChannel(
       channel,
       rest.id,
     );
 
-    return cacheHandlers.set("channels", channelStruct.id, channelStruct);
+    return cacheHandlers.set(
+      "channels",
+      discordenoChannel.id,
+      discordenoChannel,
+    );
   }));
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of loop in createGuildStruct function.`,
+      `Running for of loop in createDiscordenoGuild function.`,
     );
     // @ts-ignore index signature
     props[key] = createNewProp(rest[key]);
   }
 
-  const guild = Object.create(baseGuild, {
+  const guild: DiscordenoGuild = Object.create(baseGuild, {
     ...props,
     shardId: createNewProp(shardId),
     roles: createNewProp(
-      new Collection(roles.map((r: RoleStruct) => [r.id, r])),
+      new Collection(roles.map((r: DiscordenoRole) => [r.id, r])),
     ),
     joinedAt: createNewProp(Date.parse(joinedAt)),
     presences: createNewProp(
@@ -184,22 +188,26 @@ export async function createGuildStruct(
   else {
     await Promise.allSettled(
       members.map(async (member) => {
-        const memberStruct = await structures.createMemberStruct(
+        const discordenoMember = await structures.createDiscordenoMember(
           camelKeysToSnakeCase(member) as Omit<DiscordGuildMember, "user"> & {
             user: DiscordUser;
           },
           guild.id,
         );
 
-        return cacheHandlers.set("members", memberStruct.id, memberStruct);
+        return cacheHandlers.set(
+          "members",
+          discordenoMember.id,
+          discordenoMember,
+        );
       }),
     );
   }
 
-  return guild as GuildStruct;
+  return guild;
 }
 
-export interface GuildStruct extends
+export interface DiscordenoGuild extends
   Omit<
     Guild,
     | "roles"
@@ -214,7 +222,7 @@ export interface GuildStruct extends
   /** Total number of members in this guild */
   memberCount?: number;
   /** The roles in the guild */
-  roles: Collection<string, RoleStruct>;
+  roles: Collection<string, DiscordenoRole>;
   /** The presences of all the users in the guild. */
   presences: Collection<string, PresenceUpdate>;
   /** The Voice State data for each user in a voice channel in this server. */
@@ -224,19 +232,19 @@ export interface GuildStruct extends
 
   // GETTERS
   /** Members in this guild. */
-  members: Collection<string, MemberStruct>;
+  members: Collection<string, DiscordenoMember>;
   /** Channels in this guild. */
-  channels: Collection<string, ChannelStruct>;
+  channels: Collection<string, DiscordenoChannel>;
   /** The afk channel if one is set */
-  afkChannel?: ChannelStruct;
+  afkChannel?: DiscordenoChannel;
   /** The public update channel if one is set */
-  publicUpdatesChannel?: ChannelStruct;
+  publicUpdatesChannel?: DiscordenoChannel;
   /** The rules channel in this guild if one is set */
-  rulesChannel?: ChannelStruct;
+  rulesChannel?: DiscordenoChannel;
   /** The system channel in this guild if one is set */
-  systemChannel?: ChannelStruct;
+  systemChannel?: DiscordenoChannel;
   /** The bot member in this guild if cached */
-  bot?: MemberStruct;
+  bot?: DiscordenoMember;
   /** The bot guild member in this guild if cached */
   botMember?: Omit<GuildMember, "joinedAt" | "premiumSince"> & {
     joinedAt: number;
@@ -245,7 +253,7 @@ export interface GuildStruct extends
   /** The bots voice state if there is one in this guild */
   botVoice?: VoiceState;
   /** The owner member of this guild */
-  owner?: MemberStruct;
+  owner?: DiscordenoMember;
   /** Whether or not this guild is partnered */
   partnered: boolean;
   /** Whether or not this guild is verified */

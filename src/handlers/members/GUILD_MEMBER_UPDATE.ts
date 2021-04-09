@@ -23,24 +23,24 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
     mute: guildMember?.mute || false,
     roles: payload.roles,
   };
-  const memberStruct = await structures.createMemberStruct(
+  const discordenoMember = await structures.createDiscordenoMember(
     newMemberData,
     payload.guild_id,
   );
-  await cacheHandlers.set("members", memberStruct.id, memberStruct);
+  await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 
   if (guildMember) {
     if (guildMember.nick !== payload.nick) {
       eventHandlers.nicknameUpdate?.(
         guild,
-        memberStruct,
+        discordenoMember,
         payload.nick!,
         guildMember.nick,
       );
     }
 
     if (payload.pending === false && guildMember.pending === true) {
-      eventHandlers.membershipScreeningPassed?.(guild, memberStruct);
+      eventHandlers.membershipScreeningPassed?.(guild, discordenoMember);
     }
 
     const roleIds = guildMember.roles || [];
@@ -51,7 +51,7 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
         `1. Running forEach loop in GUILD_MEMBER_UPDATE file.`,
       );
       if (!payload.roles.includes(id)) {
-        eventHandlers.roleLost?.(guild, memberStruct, id);
+        eventHandlers.roleLost?.(guild, discordenoMember, id);
       }
     });
 
@@ -61,10 +61,10 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
         `2. Running forEach loop in GUILD_MEMBER_UPDATE file.`,
       );
       if (!roleIds.includes(id)) {
-        eventHandlers.roleGained?.(guild, memberStruct, id);
+        eventHandlers.roleGained?.(guild, discordenoMember, id);
       }
     });
   }
 
-  eventHandlers.guildMemberUpdate?.(guild, memberStruct, cachedMember);
+  eventHandlers.guildMemberUpdate?.(guild, discordenoMember, cachedMember);
 }

@@ -33,11 +33,11 @@ export async function handleMessageReactionAdd(data: DiscordGatewayPayload) {
   if (payload.member && payload.guild_id) {
     const guild = await cacheHandlers.get("guilds", payload.guild_id);
     if (guild) {
-      const memberStruct = await structures.createMemberStruct(
+      const discordenoMember = await structures.createDiscordenoMember(
         payload.member,
         guild.id,
       );
-      await cacheHandlers.set("members", memberStruct.id, memberStruct);
+      await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
     }
   }
 

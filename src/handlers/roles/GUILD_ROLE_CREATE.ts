@@ -8,7 +8,7 @@ export async function handleGuildRoleCreate(data: DiscordGatewayPayload) {
   const guild = await cacheHandlers.get("guilds", payload.guild_id);
   if (!guild) return;
 
-  const role = await structures.createRoleStruct(payload.role);
+  const role = await structures.createDiscordenoRole(payload.role);
   guild.roles = guild.roles.set(payload.role.id, role);
   await cacheHandlers.set("guilds", payload.guild_id, guild);
 

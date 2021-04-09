@@ -18,5 +18,5 @@ export async function getMessage(channelId: string, id: string) {
     endpoints.CHANNEL_MESSAGE(channelId, id),
   )) as MessageCreateOptions;
 
-  return structures.createMessageStruct(result);
+  return structures.createDiscordenoMessage(result);
 }

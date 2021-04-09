@@ -7,8 +7,8 @@ import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 export async function handleChannelCreate(data: DiscordGatewayPayload) {
   const payload = data.d as DiscordChannel;
 
-  const channelStruct = await structures.createChannelStruct(payload);
-  await cacheHandlers.set("channels", channelStruct.id, channelStruct);
+  const discordenoChannel = await structures.createDiscordenoChannel(payload);
+  await cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);
 
-  eventHandlers.channelCreate?.(channelStruct);
+  eventHandlers.channelCreate?.(discordenoChannel);
 }

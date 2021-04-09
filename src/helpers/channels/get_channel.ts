@@ -14,13 +14,17 @@ export async function getChannel(channelId: string, addToCache = true) {
     endpoints.CHANNEL_BASE(channelId),
   )) as DiscordChannel;
 
-  const channelStruct = await structures.createChannelStruct(
+  const discordenoChannel = await structures.createDiscordenoChannel(
     result,
     result.guild_id,
   );
   if (addToCache) {
-    await cacheHandlers.set("channels", channelStruct.id, channelStruct);
+    await cacheHandlers.set(
+      "channels",
+      discordenoChannel.id,
+      discordenoChannel,
+    );
   }
 
-  return channelStruct;
+  return discordenoChannel;
 }

@@ -45,8 +45,8 @@ export async function createChannel(
     },
   )) as DiscordChannel;
 
-  const channelStruct = await structures.createChannelStruct(result);
-  await cacheHandlers.set("channels", channelStruct.id, channelStruct);
+  const discordenoChannel = await structures.createDiscordenoChannel(result);
+  await cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);
 
-  return channelStruct;
+  return discordenoChannel;
 }

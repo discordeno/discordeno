@@ -33,5 +33,5 @@ export async function editMessage(
     content,
   );
 
-  return structures.createMessageStruct(result as MessageCreateOptions);
+  return structures.createDiscordenoMessage(result as MessageCreateOptions);
 }

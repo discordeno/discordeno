@@ -9,5 +9,5 @@ export async function publishMessage(channelId: string, messageId: string) {
     endpoints.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId),
   )) as MessageCreateOptions;
 
-  return structures.createMessageStruct(data);
+  return structures.createDiscordenoMessage(data);
 }

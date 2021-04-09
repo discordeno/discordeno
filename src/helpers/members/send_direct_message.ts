@@ -15,12 +15,12 @@ export async function sendDirectMessage(
     const dmChannelData = await rest.runMethod("post", endpoints.USER_DM, {
       recipient_id: memberId,
     }) as DMChannelCreatePayload;
-    const channelStruct = await structures.createChannelStruct(
+    const discordenoChannel = await structures.createDiscordenoChannel(
       dmChannelData as unknown as ChannelCreatePayload,
     );
     // Recreate the channel and add it undert he users id
-    await cacheHandlers.set("channels", memberId, channelStruct);
-    dmChannel = channelStruct;
+    await cacheHandlers.set("channels", memberId, discordenoChannel);
+    dmChannel = discordenoChannel;
   }
 
   // If it does exist try sending a message to this user
