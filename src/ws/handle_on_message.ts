@@ -92,7 +92,7 @@ export async function handleOnMessage(message: any, shardId: number) {
         }
       }
 
-      if (ws.url) ws.handleDiscordPayload(messageData, shardId);
+      if (ws.url) await ws.handleDiscordPayload(messageData, shardId);
       else {
         eventHandlers.raw?.(messageData);
         await eventHandlers.dispatchRequirements?.(messageData, shardId);
