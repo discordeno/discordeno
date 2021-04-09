@@ -13,8 +13,12 @@ jobs:
           deno-version: ${{ matrix.deno }}
       - name: Cache dependencies
         run: deno cache --no-check mod.ts
-      - name: Run test script
-        if: ${{ (github.actor.login == 'Skillz4Killz' || github.actor.login == 'itohatweb' || github.actor.login == 'ayntee') || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'run-tests') }}
+      - name: Run test script for Devs
+        if: ${{ github.actor.login == 'Skillz4Killz' || github.actor.login == 'itohatweb' || github.actor.login == 'ayntee' }}
+        run: deno test -A --no-check
+      - name: Run test script for label
+      
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'run-tests' }}
         run: deno test -A --no-check
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
