@@ -17,7 +17,7 @@ jobs:
         with:
           deno-version: v1.8
       - name: Create coverage files
-        run: deno test --unstable --coverage=coverage # create coverage files
+        run: deno test --unstable --coverage=coverage --no-check -A ./tests/mod.ts # create coverage files
       - name: Create coverage report
         run: deno --unstable coverage ./coverage --lcov > coverage.lcov # create coverage report
       - name: Collect coverage
