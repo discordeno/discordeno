@@ -13,6 +13,8 @@ jobs:
           deno-version: ${{ matrix.deno }}
       - name: Cache dependencies
         run: deno cache --no-check mod.ts
+      - name: Test logs
+        run: echo github.actor.login && echo github.event_name && echo github.event.action
       - name: Run test script for Devs
         if: ${{ github.actor.login == 'Skillz4Killz' || github.actor.login == 'itohatweb' || github.actor.login == 'ayntee' }}
         run: deno test -A --no-check
