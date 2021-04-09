@@ -12,26 +12,26 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", reason?: string) {
   // Make sure the message was created.
   if (!cache.messages.has(message.id)) {
     throw new Error(
-        "The message seemed to be sent but it was not cached.",
+      "The message seemed to be sent but it was not cached.",
     );
   }
 
   // Delete the message now
-  if (type === "raw")
+  if (type === "raw") {
     await deleteMessage(tempData.channelId, message.id, reason);
-  else
+  } else {
     await message.delete(reason);
+  }
 
   // Wait 5 seconds to give it time for MESSAGE_DELETE event
   await delay(5000);
   // Make sure it is gone from cache
   if (cache.messages.has(message.id)) {
     throw new Error(
-        "The message should have been deleted but it is still in cache.",
+      "The message should have been deleted but it is still in cache.",
     );
   }
 }
-
 
 Deno.test({
   name: "[message] delete a message without a reason.",

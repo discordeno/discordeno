@@ -4,9 +4,9 @@ import { assertExists } from "../deps.ts";
 
 async function ifItFailsBlameWolf(type: "getter" | "raw") {
   let message;
-  if (type === "raw")
+  if (type === "raw") {
     message = await sendMessage(tempData.channelId, "Hello World!");
-  else {
+  } else {
     const channel = await cache.channels.get(tempData.channelId);
 
     assertExists(channel);
@@ -22,7 +22,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
 
   if (!cache.messages.has(message.id)) {
     throw new Error(
-        "The message seemed to be sent but it was not cached.",
+      "The message seemed to be sent but it was not cached.",
     );
   }
 }

@@ -12,15 +12,16 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   // Make sure the message was created.
   if (!cache.messages.has(message.id)) {
     throw new Error(
-        "The message seemed to be sent but it was not cached.",
+      "The message seemed to be sent but it was not cached.",
     );
   }
 
   // Edit the message now
-  if (type === "raw")
+  if (type === "raw") {
     await editMessage(message, "Goodbye World!");
-  else
+  } else {
     await message.edit("Goodbye World!");
+  }
   // Wait 5 seconds to give it time for MESSAGE_UPDATE event
   await delay(5000);
 
