@@ -1,4 +1,4 @@
-import {cache, sendMessage, sleep} from "../../mod.ts";
+import { cache, sendMessage, sleep } from "../../mod.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertExists } from "../deps.ts";
 
