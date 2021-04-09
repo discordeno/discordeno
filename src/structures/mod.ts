@@ -1,17 +1,17 @@
-import { createChannelStruct } from "./channel.ts";
-import { createGuildStruct } from "./guild.ts";
-import { createMemberStruct } from "./member.ts";
-import { createMessageStruct } from "./message.ts";
-import { createRoleStruct } from "./role.ts";
+import { createDiscordenoChannel } from "./channel.ts";
+import { createDiscordenoGuild } from "./guild.ts";
+import { createDiscordenoMember } from "./member.ts";
+import { createDiscordenoMessage } from "./message.ts";
+import { createDiscordenoRole } from "./role.ts";
 import { createTemplateStruct } from "./template.ts";
 
 /** This is the placeholder where the structure creation functions are kept. */
 export let structures = {
-  createChannelStruct,
-  createGuildStruct,
-  createMemberStruct,
-  createMessageStruct,
-  createRoleStruct,
+  createDiscordenoChannel,
+  createDiscordenoGuild,
+  createDiscordenoMember,
+  createDiscordenoMessage,
+  createDiscordenoRole,
   createTemplateStruct,
 };
 

@@ -8,10 +8,10 @@ export async function handleChannelUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as DiscordChannel;
   const cachedChannel = await cacheHandlers.get("channels", payload.id);
 
-  const channelStruct = await structures.createChannelStruct(payload);
-  await cacheHandlers.set("channels", channelStruct.id, channelStruct);
+  const discordenoChannel = await structures.createDiscordenoChannel(payload);
+  await cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);
 
   if (!cachedChannel) return;
 
-  eventHandlers.channelUpdate?.(channelStruct, cachedChannel);
+  eventHandlers.channelUpdate?.(discordenoChannel, cachedChannel);
 }

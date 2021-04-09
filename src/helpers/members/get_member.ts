@@ -20,8 +20,11 @@ export async function getMember(
     endpoints.GUILD_MEMBER(guildId, id),
   )) as MemberCreatePayload;
 
-  const memberStruct = await structures.createMemberStruct(data, guildId);
-  await cacheHandlers.set("members", memberStruct.id, memberStruct);
+  const discordenoMember = await structures.createDiscordenoMember(
+    data,
+    guildId,
+  );
+  await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 
-  return memberStruct;
+  return discordenoMember;
 }

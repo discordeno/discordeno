@@ -60,5 +60,5 @@ export async function executeWebhook(
   );
   if (!options.wait) return;
 
-  return structures.createMessageStruct(result as MessageCreateOptions);
+  return structures.createDiscordenoMessage(result as MessageCreateOptions);
 }

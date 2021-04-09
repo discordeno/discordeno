@@ -102,15 +102,15 @@ async function loaded(shardId: number) {
         );
         await Promise.allSettled(
           members.map(async (member) => {
-            const memberStruct = await structures.createMemberStruct(
+            const discordenoMember = await structures.createDiscordenoMember(
               snakeKeysToCamelCase(member),
               guildId,
             );
 
             return cacheHandlers.set(
               "members",
-              memberStruct.id,
-              memberStruct,
+              discordenoMember.id,
+              discordenoMember,
             );
           }),
         );

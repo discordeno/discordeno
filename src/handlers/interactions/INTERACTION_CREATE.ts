@@ -5,16 +5,16 @@ import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 
 export async function handleInteractionCreate(data: DiscordGatewayPayload) {
   const payload = data.d as InteractionCommandPayload;
-  const memberStruct = await structures.createMemberStruct(
+  const discordenoMember = await structures.createDiscordenoMember(
     payload.member,
     payload.guild_id,
   );
-  await cacheHandlers.set("members", memberStruct.id, memberStruct);
+  await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 
   eventHandlers.interactionCreate?.(
     {
       ...payload,
-      member: memberStruct,
+      member: discordenoMember,
     },
   );
 }

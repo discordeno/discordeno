@@ -70,7 +70,7 @@ export async function editMember(
     endpoints.GUILD_MEMBER(guildId, memberId),
     options,
   ) as MemberCreatePayload;
-  const member = await structures.createMemberStruct(result, guildId);
+  const member = await structures.createDiscordenoMember(result, guildId);
 
   return member;
 }

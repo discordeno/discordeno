@@ -19,9 +19,9 @@ import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { DiscordUser, User } from "../types/users/user.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
-import { GuildStruct } from "./guild.ts";
+import { DiscordenoGuild } from "./guild.ts";
 
-const baseMember: Partial<MemberStruct> = {
+const baseMember: Partial<DiscordenoMember> = {
   get avatarURL() {
     return avatarURL(this.id!, this.discriminator!, this.avatar!);
   },
@@ -71,7 +71,7 @@ const baseMember: Partial<MemberStruct> = {
   },
 };
 
-export async function createMemberStruct(
+export async function createDiscordenoMember(
   // The `user` param in `DiscordGuildMember` is optional since discord does not send it in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events. But this data in there is required to build this structure so it is required in this case
   data: Omit<DiscordGuildMember, "user"> & { user: DiscordUser },
   guildId: string,
@@ -90,7 +90,7 @@ export async function createMemberStruct(
   for (const key of Object.keys(rest)) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of loop for Object.keys(rest) in createMemberStruct function.`,
+      `Running for of loop for Object.keys(rest) in DiscordenoMember function.`,
     );
     // @ts-ignore index signature
     props[key] = createNewProp(rest[key]);
@@ -99,13 +99,13 @@ export async function createMemberStruct(
   for (const key of Object.keys(user)) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of for Object.keys(user) loop in createMemberStruct function.`,
+      `Running for of for Object.keys(user) loop in DiscordenoMember function.`,
     );
     // @ts-ignore index signature
     props[key] = createNewProp(user[key]);
   }
 
-  const member: MemberStruct = Object.create(baseMember, {
+  const member: DiscordenoMember = Object.create(baseMember, {
     ...props,
     /** The guild related data mapped by guild id */
     guilds: createNewProp(new Collection<string, GuildMember>()),
@@ -116,7 +116,7 @@ export async function createMemberStruct(
     for (const [id, guild] of cached.guilds.entries()) {
       eventHandlers.debug?.(
         "loop",
-        `Running for of for cached.guilds.entries() loop in createMemberStruct function.`,
+        `Running for of for cached.guilds.entries() loop in DiscordenoMember function.`,
       );
       member.guilds.set(id, guild);
     }
@@ -135,7 +135,7 @@ export async function createMemberStruct(
   return member;
 }
 
-export interface MemberStruct extends GuildMember, User {
+export interface DiscordenoMember extends GuildMember, User {
   /** The guild related data mapped by guild id */
   guilds: Collection<
     string,
@@ -160,7 +160,7 @@ export interface MemberStruct extends GuildMember, User {
     options: { size?: DiscordImageSize; format?: DiscordImageFormat },
   ): string;
   /** Returns the guild for this guildID */
-  guild(guildID: string): GuildStruct | undefined;
+  guild(guildID: string): DiscordenoGuild | undefined;
   /** Get the nickname or the username if no nickname */
   name(guildID: string): string;
   /** Get the guild member object for the specified guild */

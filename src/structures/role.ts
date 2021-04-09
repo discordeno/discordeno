@@ -9,8 +9,10 @@ import { Role } from "../types/permissions/role.ts";
 import { Collection } from "../util/collection.ts";
 import { highestRole } from "../util/permissions.ts";
 import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
+import { DiscordenoGuild } from "./guild.ts";
+import { DiscordenoMember } from "./member.ts";
 
-const baseRole: Partial<RoleStruct> = {
+const baseRole: Partial<DiscordenoRole> = {
   get guild() {
     return cache.guilds.get(this.guildId!);
   },
@@ -65,7 +67,7 @@ const baseRole: Partial<RoleStruct> = {
 };
 
 // deno-lint-ignore require-await
-export async function createRoleStruct(data: DiscordGuildRoleCreate) {
+export async function createDiscordenoRole(data: DiscordGuildRoleCreate) {
   const {
     tags = {},
     ...rest
@@ -77,13 +79,13 @@ export async function createRoleStruct(data: DiscordGuildRoleCreate) {
   for (const key of Object.keys(rest)) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of loop in createRoleStruct function.`,
+      `Running for of loop in createDiscordenoRole function.`,
     );
     // @ts-ignore index signature
     props[key] = createNewProp(rest[key]);
   }
 
-  const role: RoleStruct = Object.create(baseRole, {
+  const role: DiscordenoRole = Object.create(baseRole, {
     ...props,
     botId: createNewProp(tags.botId),
     isNitroBoostRole: createNewProp("premiumSubscriber" in tags),
@@ -93,7 +95,7 @@ export async function createRoleStruct(data: DiscordGuildRoleCreate) {
   return role;
 }
 
-export interface RoleStruct extends Omit<Role, "tags"> {
+export interface DiscordenoRole extends Omit<Role, "tags"> {
   /** The bot id that is associated with this role. */
   botId?: string;
   /** If this role is the nitro boost role. */
@@ -106,11 +108,11 @@ export interface RoleStruct extends Omit<Role, "tags"> {
   // GETTERS
 
   /** The guild where this role is. If undefined, the guild is not cached */
-  guild?: GuildStruct;
+  guild?: DiscordenoGuild;
   /** The hex color for this role. */
   hexColor: string;
   /** The cached members that have this role */
-  members: Collection<string, MemberStruct>;
+  members: Collection<string, DiscordenoMember>;
   /** The @ mention of the role in a string. */
   mention: string;
 

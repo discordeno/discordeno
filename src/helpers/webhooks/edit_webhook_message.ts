@@ -55,6 +55,6 @@ export async function editWebhookMessage(
     { ...options, allowed_mentions: options.allowed_mentions },
   ) as MessageCreateOptions;
 
-  const message = await structures.createMessageStruct(result);
+  const message = await structures.createDiscordenoMessage(result);
   return message;
 }

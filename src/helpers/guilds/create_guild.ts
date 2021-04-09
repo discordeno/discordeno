@@ -12,5 +12,5 @@ export async function createGuild(options: CreateGuild) {
     options,
   )) as DiscordGuild;
 
-  return structures.createGuildStruct(guild, 0);
+  return structures.createDiscordenoGuild(guild, 0);
 }

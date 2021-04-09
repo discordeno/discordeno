@@ -15,12 +15,12 @@ import { EditMessage } from "../types/messages/edit_message.ts";
 import { DiscordMessage, Message } from "../types/messages/message.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
 import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
-import { ChannelStruct } from "./channel.ts";
-import { GuildStruct } from "./guild.ts";
-import { MemberStruct } from "./member.ts";
-import { RoleStruct } from "./role.ts";
+import { DiscordenoChannel } from "./channel.ts";
+import { DiscordenoGuild } from "./guild.ts";
+import { DiscordenoMember } from "./member.ts";
+import { DiscordenoRole } from "./role.ts";
 
-const baseMessage: Partial<MessageStruct> = {
+const baseMessage: Partial<DiscordenoMessage> = {
   get channel() {
     if (this.guildId) return cache.channels.get(this.channelId!);
     return cache.channels.get(this.author?.id!);
@@ -117,7 +117,7 @@ const baseMessage: Partial<MessageStruct> = {
   },
 };
 
-export async function createMessageStruct(data: DiscordMessage) {
+export async function createDiscordenoMessage(data: DiscordMessage) {
   const {
     guildId = "",
     channelId,
@@ -132,7 +132,7 @@ export async function createMessageStruct(data: DiscordMessage) {
   for (const key of Object.keys(rest)) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of loop in createMessageStruct function.`,
+      `Running for of loop in createDiscordenoMessage function.`,
     );
     // @ts-ignore index signature
     props[key] = createNewProp(rest[key]);
@@ -142,7 +142,7 @@ export async function createMessageStruct(data: DiscordMessage) {
   const guildIdFinal = guildId ||
     (await cacheHandlers.get("channels", channelId))?.guildId || "";
 
-  const message: MessageStruct = Object.create(baseMessage, {
+  const message: DiscordenoMessage = Object.create(baseMessage, {
     ...props,
     /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
     channelId: createNewProp(channelId),
@@ -169,7 +169,7 @@ export async function createMessageStruct(data: DiscordMessage) {
   return message;
 }
 
-export interface MessageStruct extends Message {
+export interface DiscordenoMessage extends Message {
   // For better user experience
   /** Ids of users specifically mentioned in the message */
   mentionedUserIds: string[];
@@ -180,11 +180,11 @@ export interface MessageStruct extends Message {
   // GETTERS
 
   /** The channel where this message was sent. Can be undefined if uncached. */
-  channel?: ChannelStruct;
+  channel?: DiscordenoChannel;
   /** The guild of this message. Can be undefined if not in cache or in DM */
-  guild?: GuildStruct;
+  guild?: DiscordenoGuild;
   /** The member for the user who sent the message. Can be undefined if not in cache or in dm. */
-  member?: MemberStruct;
+  member?: DiscordenoMember;
   /** The guild member details for this guild and member. Can be undefined if not in cache or in dm. */
   guildMember?: Omit<GuildMember, "joinedAt" | "premiumSince"> & {
     joinedAt: number;
@@ -193,11 +193,11 @@ export interface MessageStruct extends Message {
   /** The url link to this message */
   link: string;
   /** The role objects for all the roles that were mentioned in this message */
-  mentionedRoles: (RoleStruct | undefined)[];
+  mentionedRoles: (DiscordenoRole | undefined)[];
   /** The channel objects for all the channels that were mentioned in this message. */
-  mentionedChannels: (ChannelStruct | undefined)[];
+  mentionedChannels: (DiscordenoChannel | undefined)[];
   /** The member objects for all the members that were mentioned in this message. */
-  mentionedMembers: (MemberStruct | undefined)[];
+  mentionedMembers: (DiscordenoMember | undefined)[];
 
   // METHODS
 

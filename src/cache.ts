@@ -1,8 +1,8 @@
 // deno-lint-ignore-file require-await no-explicit-any prefer-const
-import { ChannelStruct } from "./structures/channel.ts";
-import { GuildStruct } from "./structures/guild.ts";
-import { MemberStruct } from "./structures/member.ts";
-import { MessageStruct } from "./structures/message.ts";
+import { DiscordenoChannel } from "./structures/channel.ts";
+import { DiscordenoGuild } from "./structures/guild.ts";
+import { DiscordenoMember } from "./structures/member.ts";
+import { DiscordenoMessage } from "./structures/message.ts";
 import { Emoji } from "./types/emojis/emoji.ts";
 import { PresenceUpdate } from "./types/misc/presence_update.ts";
 import { Collection } from "./util/collection.ts";
@@ -10,13 +10,13 @@ import { Collection } from "./util/collection.ts";
 export const cache = {
   isReady: false,
   /** All of the guild objects the bot has access to, mapped by their Ids */
-  guilds: new Collection<string, GuildStruct>(),
+  guilds: new Collection<string, DiscordenoGuild>(),
   /** All of the channel objects the bot has access to, mapped by their Ids */
-  channels: new Collection<string, ChannelStruct>(),
+  channels: new Collection<string, DiscordenoChannel>(),
   /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their Ids */
-  messages: new Collection<string, MessageStruct>(),
+  messages: new Collection<string, DiscordenoMessage>(),
   /** All of the member objects that have been cached since the bot acquired `READY` state, mapped by their Ids */
-  members: new Collection<string, MemberStruct>(),
+  members: new Collection<string, DiscordenoMember>(),
   /** All of the unavailable guilds, mapped by their Ids (id, timestamp) */
   unavailableGuilds: new Collection<string, number>(),
   /** All of the presence update objects received in PRESENCE_UPDATE gateway event, mapped by their user Id */
@@ -25,8 +25,8 @@ export const cache = {
     string,
     (
       value:
-        | Collection<string, MemberStruct>
-        | PromiseLike<Collection<string, MemberStruct>>,
+        | Collection<string, DiscordenoMember>
+        | PromiseLike<Collection<string, DiscordenoMember>>,
     ) => void
   >(),
   executedSlashCommands: new Collection<string, string>(),
@@ -81,23 +81,23 @@ export type TableName =
 function set(
   table: "guilds",
   key: string,
-  value: GuildStruct,
-): Promise<Collection<string, GuildStruct>>;
+  value: DiscordenoGuild,
+): Promise<Collection<string, DiscordenoGuild>>;
 function set(
   table: "channels",
   key: string,
-  value: ChannelStruct,
-): Promise<Collection<string, ChannelStruct>>;
+  value: DiscordenoChannel,
+): Promise<Collection<string, DiscordenoChannel>>;
 function set(
   table: "messages",
   key: string,
-  value: MessageStruct,
-): Promise<Collection<string, MessageStruct>>;
+  value: DiscordenoMessage,
+): Promise<Collection<string, DiscordenoMessage>>;
 function set(
   table: "members",
   key: string,
-  value: MemberStruct,
-): Promise<Collection<string, MemberStruct>>;
+  value: DiscordenoMember,
+): Promise<Collection<string, DiscordenoMember>>;
 function set(
   table: "presences",
   key: string,
@@ -112,13 +112,22 @@ async function set(table: TableName, key: string, value: any) {
   return cache[table].set(key, value);
 }
 
-function get(table: "guilds", key: string): Promise<GuildStruct | undefined>;
+function get(
+  table: "guilds",
+  key: string,
+): Promise<DiscordenoGuild | undefined>;
 function get(
   table: "channels",
   key: string,
-): Promise<ChannelStruct | undefined>;
-function get(table: "messages", key: string): Promise<MemberStruct | undefined>;
-function get(table: "members", key: string): Promise<MemberStruct | undefined>;
+): Promise<DiscordenoChannel | undefined>;
+function get(
+  table: "messages",
+  key: string,
+): Promise<DiscordenoMember | undefined>;
+function get(
+  table: "members",
+  key: string,
+): Promise<DiscordenoMember | undefined>;
 function get(
   table: "presences",
   key: string,
@@ -134,9 +143,9 @@ async function get(table: TableName, key: string) {
 function forEach(
   table: "guilds",
   callback: (
-    value: GuildStruct,
+    value: DiscordenoGuild,
     key: string,
-    map: Map<string, GuildStruct>,
+    map: Map<string, DiscordenoGuild>,
   ) => unknown,
 ): void;
 function forEach(
@@ -146,25 +155,25 @@ function forEach(
 function forEach(
   table: "channels",
   callback: (
-    value: ChannelStruct,
+    value: DiscordenoChannel,
     key: string,
-    map: Map<string, ChannelStruct>,
+    map: Map<string, DiscordenoChannel>,
   ) => unknown,
 ): void;
 function forEach(
   table: "messages",
   callback: (
-    value: MessageStruct,
+    value: DiscordenoMessage,
     key: string,
-    map: Map<string, MessageStruct>,
+    map: Map<string, DiscordenoMessage>,
   ) => unknown,
 ): void;
 function forEach(
   table: "members",
   callback: (
-    value: MemberStruct,
+    value: DiscordenoMember,
     key: string,
-    map: Map<string, MemberStruct>,
+    map: Map<string, DiscordenoMember>,
   ) => unknown,
 ): void;
 function forEach(
@@ -176,24 +185,24 @@ function forEach(
 
 function filter(
   table: "guilds",
-  callback: (value: GuildStruct, key: string) => boolean,
-): Promise<Collection<string, GuildStruct>>;
+  callback: (value: DiscordenoGuild, key: string) => boolean,
+): Promise<Collection<string, DiscordenoGuild>>;
 function filter(
   table: "unavailableGuilds",
   callback: (value: number, key: string) => boolean,
 ): Promise<Collection<string, number>>;
 function filter(
   table: "channels",
-  callback: (value: ChannelStruct, key: string) => boolean,
-): Promise<Collection<string, ChannelStruct>>;
+  callback: (value: DiscordenoChannel, key: string) => boolean,
+): Promise<Collection<string, DiscordenoChannel>>;
 function filter(
   table: "messages",
-  callback: (value: MessageStruct, key: string) => boolean,
-): Promise<Collection<string, MessageStruct>>;
+  callback: (value: DiscordenoMessage, key: string) => boolean,
+): Promise<Collection<string, DiscordenoMessage>>;
 function filter(
   table: "members",
-  callback: (value: MemberStruct, key: string) => boolean,
-): Promise<Collection<string, MemberStruct>>;
+  callback: (value: DiscordenoMember, key: string) => boolean,
+): Promise<Collection<string, DiscordenoMember>>;
 async function filter(
   table: TableName,
   callback: (value: any, key: string) => boolean,

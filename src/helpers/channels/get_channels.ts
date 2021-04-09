@@ -15,11 +15,18 @@ export async function getChannels(guildId: string, addToCache = true) {
   ) as DiscordChannel[]);
 
   return Promise.all(result.map(async (res) => {
-    const channelStruct = await structures.createChannelStruct(res, guildId);
+    const discordenoChannel = await structures.createDiscordenoChannel(
+      res,
+      guildId,
+    );
     if (addToCache) {
-      await cacheHandlers.set("channels", channelStruct.id, channelStruct);
+      await cacheHandlers.set(
+        "channels",
+        discordenoChannel.id,
+        discordenoChannel,
+      );
     }
 
-    return channelStruct;
+    return discordenoChannel;
   }));
 }

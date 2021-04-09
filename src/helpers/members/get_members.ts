@@ -51,22 +51,26 @@ export async function getMembers(guildId: string, options?: GetMemberOptions) {
       }${options?.after ? `&after=${options.after}` : ""}`,
     )) as DiscordGuildMember[];
 
-    const memberStructures = await Promise.all(
+    const discordenoMembers = await Promise.all(
       result.map(async (member) => {
-        const memberStruct = await structures.createMemberStruct(
+        const discordenoMember = await structures.createDiscordenoMember(
           member,
           guildId,
         );
 
-        await cacheHandlers.set("members", memberStruct.id, memberStruct);
+        await cacheHandlers.set(
+          "members",
+          discordenoMember.id,
+          discordenoMember,
+        );
 
-        return memberStruct;
+        return discordenoMember;
       }),
     ) as Member[];
 
-    if (!memberStructures.length) break;
+    if (!discordenoMembers.length) break;
 
-    memberStructures.forEach((member) => {
+    discordenoMembers.forEach((member) => {
       eventHandlers.debug?.(
         "loop",
         `Running forEach loop in get_members file.`,
@@ -76,7 +80,7 @@ export async function getMembers(guildId: string, options?: GetMemberOptions) {
 
     options = {
       limit: options?.limit,
-      after: memberStructures[memberStructures.length - 1].id,
+      after: discordenoMembers[discordenoMembers.length - 1].id,
     };
 
     membersLeft -= 1000;

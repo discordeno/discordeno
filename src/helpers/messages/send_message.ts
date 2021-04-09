@@ -107,5 +107,5 @@ export async function sendMessage(
     }),
   )) as DiscordMessage;
 
-  return structures.createMessageStruct(result);
+  return structures.createDiscordenoMessage(result);
 }

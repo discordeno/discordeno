@@ -71,7 +71,7 @@ export async function editSlashResponse(
   // If the original message was edited, this will not return a message
   if (!options.messageId) return result;
 
-  const message = await structures.createMessageStruct(
+  const message = await structures.createDiscordenoMessage(
     result as DiscordMessage,
   );
   return message;

@@ -29,7 +29,7 @@ export async function handleMessageUpdate(data: DiscordGatewayPayload) {
     return;
   }
 
-  const message = await structures.createMessageStruct(payload);
+  const message = await structures.createDiscordenoMessage(payload);
 
   await cacheHandlers.set("messages", payload.id, message);
 
