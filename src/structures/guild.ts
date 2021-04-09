@@ -131,7 +131,7 @@ export async function createGuildStruct(
   } = snakeKeysToCamelCase(data) as Guild;
 
   const roles = await Promise.all(
-    data.roles.map((role) =>
+    (data.roles || []).map((role) =>
       structures.createRoleStruct({ role, guild_id: rest.id })
     ),
   );
@@ -163,7 +163,9 @@ export async function createGuildStruct(
     ),
     memberCount: createNewProp(memberCount),
     emojis: createNewProp(
-      new Collection(emojis.map((emoji) => [emoji.id ?? emoji.name, emoji])),
+      new Collection(
+        (emojis || []).map((emoji) => [emoji.id ?? emoji.name, emoji]),
+      ),
     ),
     voiceStates: createNewProp(
       new Collection(

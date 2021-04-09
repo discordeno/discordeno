@@ -10,9 +10,8 @@ you go through this guide it will make a lot more sense.
 > If you don't have these yet please prepare them first before going forward.
 
 - First, create a Discordeno Bot using the
-  [Generator Template](https://github.com/discordeno/template/generate).
-  Give it any name you like. For the purpose of this guide we will call it,
-  Stargate.
+  [Generator Template](https://github.com/discordeno/template/generate). Give it
+  any name you like. For the purpose of this guide we will call it, Stargate.
 
 - Then `git clone https://github.com/Skillz4Killz/Stargate.git` Replace
   **Stargate** with the name you chose.

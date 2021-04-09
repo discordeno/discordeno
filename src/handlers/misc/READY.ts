@@ -32,7 +32,7 @@ export async function handleReady(
   shard.unavailableGuildIds = new Set(payload.guilds.map((g) => g.id));
 
   // Start ready check in 2 seconds
-  setTimeout(() => checkReady(payload, shardId, now), 2000);
+  setTimeout(async () => await checkReady(payload, shardId, now), 2000);
 
   // Wait 5 seconds to spawn next shard
   await delay(5000);
@@ -41,7 +41,7 @@ export async function handleReady(
 
 // Don't pass the shard itself because unavailableGuilds won't be updated by the GUILD_CREATE event
 /** This function checks if the shard is fully loaded */
-function checkReady(payload: DiscordReady, shardId: number, now: number) {
+async function checkReady(payload: DiscordReady, shardId: number, now: number) {
   const shard = ws.shards.get(shardId);
   if (!shard) return;
 
@@ -50,14 +50,14 @@ function checkReady(payload: DiscordReady, shardId: number, now: number) {
     if (Date.now() - now > 10000) {
       eventHandlers.shardFailedToLoad?.(shardId, shard.unavailableGuildIds);
       // Force execute the loaded function to prevent infinite loop
-      loaded(shardId);
+      await loaded(shardId);
     } else {
       // Not all guilds were loaded but 10 seconds haven't passed so check again
-      setTimeout(() => checkReady(payload, shardId, now), 2000);
+      setTimeout(async () => await checkReady(payload, shardId, now), 2000);
     }
   } else {
     // All guilds were loaded
-    loaded(shardId);
+    await loaded(shardId);
   }
 }
 
@@ -71,7 +71,7 @@ async function loaded(shardId: number) {
   if (shardId === ws.lastShardId - 1) {
     // Still some shards are loading so wait another 2 seconds for them
     if (ws.shards.some((shard) => !shard.ready)) {
-      setTimeout(() => loaded(shardId), 2000);
+      setTimeout(async () => await loaded(shardId), 2000);
     } else {
       cache.isReady = true;
       eventHandlers.ready?.();

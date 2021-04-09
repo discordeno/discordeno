@@ -1,20 +1,26 @@
 name: Test
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+    types: [labeled]
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        deno: ["v1.x", "nightly"]
+        deno: ["v1.x"]
     steps:
       - uses: actions/checkout@v2
       - uses: denolib/setup-deno@v2
         with:
           deno-version: ${{ matrix.deno }}
       - name: Cache dependencies
-        run: deno cache mod.ts
-      - name: Run test script
-        if: github.ref == 'refs/heads/main'
-        run: deno test --allow-net --allow-env
+        run: deno cache --no-check mod.ts
+      - name: Run test script for Devs
+        if: ${{ github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' || github.actor == 'ayntee' }}
+        run: deno test -A --no-check tests/mod.ts
+      - name: Run test script for label
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'run-tests' }}
+        run: deno test -A --no-check tests/mod.ts
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}

@@ -1,4 +1,5 @@
 import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
+import { rest } from "./rest/rest.ts";
 import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
 import { DiscordGetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
@@ -30,6 +31,7 @@ export async function startBot(config: BotConfig) {
   if (config.eventHandlers) eventHandlers = config.eventHandlers;
   authorization = `Bot ${config.token}`;
   ws.identifyPayload.token = `Bot ${config.token}`;
+  rest.token = `Bot ${config.token}`;
   ws.identifyPayload.intents = config.intents.reduce(
     (
       bits,

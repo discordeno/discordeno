@@ -16,4 +16,5 @@ export interface InteractionApplicationCommandCallbackData {
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
-export type DiscordInteractionApplicationCommandCallbackData = SnakeCasedPropertiesDeep<InteractionApplicationCommandCallbackData>;
+export type DiscordInteractionApplicationCommandCallbackData =
+  SnakeCasedPropertiesDeep<InteractionApplicationCommandCallbackData>;

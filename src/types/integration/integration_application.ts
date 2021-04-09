@@ -17,4 +17,6 @@ export interface IntegrationApplication {
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-application-object-integration-application-structure */
-export type DiscordIntegrationApplication = SnakeCasedPropertiesDeep<IntegrationApplication>;
+export type DiscordIntegrationApplication = SnakeCasedPropertiesDeep<
+  IntegrationApplication
+>;

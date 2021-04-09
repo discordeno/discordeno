@@ -4,7 +4,7 @@ import { ws } from "./ws.ts";
 /** The handler to automatically reshard when necessary. */
 export async function resharder() {
   const data = await getGatewayBot();
-  const percentage = (data.shards - ws.maxShards) / ws.maxShards * 100;
+  const percentage = ((data.shards - ws.maxShards) / ws.maxShards) * 100;
   // Less than necessary% being used so do nothing
   if (percentage < ws.reshardPercentage) return;
 

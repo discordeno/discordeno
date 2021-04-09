@@ -14,4 +14,6 @@ export interface ModifyGuildMember {
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-member */
-export type DiscordModifyGuildMember = SnakeCasedPropertiesDeep<ModifyGuildMember>;
+export type DiscordModifyGuildMember = SnakeCasedPropertiesDeep<
+  ModifyGuildMember
+>;

@@ -15,4 +15,6 @@ export interface MessageReference {
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-reference-structure */
-export type DiscordMessageReference = SnakeCasedPropertiesDeep<MessageReference>;
+export type DiscordMessageReference = SnakeCasedPropertiesDeep<
+  MessageReference
+>;

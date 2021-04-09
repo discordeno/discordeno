@@ -10,4 +10,6 @@ export interface MessageDeleteBulk {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-delete-bulk */
-export type DiscordMessageDeleteBulk = SnakeCasedPropertiesDeep<MessageDeleteBulk>;
+export type DiscordMessageDeleteBulk = SnakeCasedPropertiesDeep<
+  MessageDeleteBulk
+>;

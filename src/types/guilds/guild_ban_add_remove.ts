@@ -9,4 +9,6 @@ export interface GuildBanAddRemove {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-ban-add */
-export type DiscordGuildBanAddRemove = SnakeCasedPropertiesDeep<GuildBanAddRemove>;
+export type DiscordGuildBanAddRemove = SnakeCasedPropertiesDeep<
+  GuildBanAddRemove
+>;

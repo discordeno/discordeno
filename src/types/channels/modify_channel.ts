@@ -26,8 +26,8 @@ export interface ModifyChannel {
 }
 
 /** https://discord.com/developers/docs/resources/channel#modify-channel */
-export interface DiscordModifyChannel
-  extends SnakeCasedPropertiesDeep<
+export interface DiscordModifyChannel extends
+  SnakeCasedPropertiesDeep<
     Omit<ModifyChannel, "permissionOverwrites">
   > {
   permission_overwrites?: DiscordOverwrite[];

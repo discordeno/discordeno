@@ -12,4 +12,6 @@ export interface SessionStartLimit {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#session-start-limit-object */
-export type DiscordSessionStartLimit = SnakeCasedPropertiesDeep<SessionStartLimit>;
+export type DiscordSessionStartLimit = SnakeCasedPropertiesDeep<
+  SessionStartLimit
+>;

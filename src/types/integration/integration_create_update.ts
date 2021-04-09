@@ -7,4 +7,6 @@ export interface IntegrationCreateUpdate extends Integration {
 }
 
 /** https://github.com/discord/discord-api-docs/blob/master/docs/topics/Gateway.md#integration-create-event-additional-fields */
-export type DiscordIntegrationCreateUpdate = SnakeCasedPropertiesDeep<IntegrationCreateUpdate>;
+export type DiscordIntegrationCreateUpdate = SnakeCasedPropertiesDeep<
+  IntegrationCreateUpdate
+>;

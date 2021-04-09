@@ -12,4 +12,6 @@ export interface EditWebhookMessage {
 }
 
 /** https://discord.com/developers/docs/resources/webhook#edit-webhook-message-jsonform-params */
-export type DiscordEditWebhookMessage = SnakeCasedPropertiesDeep<EditWebhookMessage>;
+export type DiscordEditWebhookMessage = SnakeCasedPropertiesDeep<
+  EditWebhookMessage
+>;
