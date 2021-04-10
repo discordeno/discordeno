@@ -16,7 +16,7 @@ Deno.test({
     // Assertions
     assertExists(category);
     // Delay the execution by 5 seconds to allow CHANNEL_CREATE event to be processed
-    delayUntil(3000, () => cache.channels.has(category.id));
+    delayUntil(10000, () => cache.channels.has(category.id));
 
     if (!cache.channels.has(category.id)) {
       throw new Error(
@@ -34,7 +34,7 @@ Deno.test({
       ),
     );
     // Delay the execution by 5 seconds to allow CHANNEL_CREATE event to be processed
-    delayUntil(3000, () => channels.every((c) => cache.channels.has(c.id)));
+    delayUntil(10000, () => channels.every((c) => cache.channels.has(c.id)));
 
     // If every channel is not present in the cache, error out
     if (!channels.every((c) => cache.channels.has(c.id))) {
