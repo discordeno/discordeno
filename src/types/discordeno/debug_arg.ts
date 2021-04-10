@@ -20,7 +20,6 @@ export interface DebugArg {
     | "wsError"
     | "wsReconnect"
     | "missingShard"
-    // TODO: remove this
     | "loop";
   data: unknown;
 }
