@@ -22,7 +22,7 @@ Deno.test({
     assertExists(thirdMessage);
     // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
     delayUntil(
-      3000,
+      10000,
       () =>
         cache.messages.has(message.id) &&
         cache.messages.has(secondMessage.id) &&

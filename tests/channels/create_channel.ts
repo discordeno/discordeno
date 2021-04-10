@@ -16,7 +16,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
   if (save) tempData.channelId = channel.id;
 
   // Delay the execution by 5 seconds to allow CHANNEL_CREATE event to be processed
-  delayUntil(3000, () => cache.channels.has(channel.id));
+  delayUntil(10000, () => cache.channels.has(channel.id));
 
   if (!cache.channels.has(channel.id)) {
     throw new Error("The channel seemed to be created but it was not cached.");
