@@ -1,4 +1,10 @@
-import {cache, delay, deleteMessage, deleteMessages, sendMessage} from "../../mod.ts";
+import {
+  cache,
+  delay,
+  deleteMessage,
+  deleteMessages,
+  sendMessage,
+} from "../../mod.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertExists } from "../deps.ts";
 
@@ -25,12 +31,16 @@ async function ifItFailsBlameWolf(reason?: string) {
   // Make sure the message was created.
   if (!cache.messages.has(secondMessage.id)) {
     throw new Error(
-        "The message seemed to be sent but it was not cached.",
+      "The message seemed to be sent but it was not cached.",
     );
   }
 
   // Delete the message now
-  await deleteMessages(tempData.channelId, [message.id,secondMessage.id], reason);
+  await deleteMessages(
+    tempData.channelId,
+    [message.id, secondMessage.id],
+    reason,
+  );
 
   // Wait 5 seconds to give it time for MESSAGE_DELETE event
   await delay(5000);
@@ -53,7 +63,7 @@ Deno.test({
 Deno.test({
   name: "[message] delete messages with a reason.",
   async fn() {
-    await ifItFailsBlameWolf( "with a reason");
+    await ifItFailsBlameWolf("with a reason");
   },
   ...defaultTestOptions,
 });

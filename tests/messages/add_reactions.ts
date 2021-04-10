@@ -9,7 +9,11 @@ import {
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 
-async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false, ordered = false) {
+async function ifItFailsBlameWolf(
+  type: "getter" | "raw",
+  custom = false,
+  ordered = false,
+) {
   const message = await sendMessage(tempData.channelId, "Hello World!");
 
   // Assertions
@@ -24,32 +28,35 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false, ordere
     );
   }
 
-  let emojiIds = ["❤","😃"];
+  let emojiIds = ["❤", "😃"];
 
   if (custom) {
-    emojiIds = [`<:blamewolf:${
-      (await createEmoji(
-        tempData.guildId,
-        "blamewolf",
-        "https://cdn.discordapp.com/emojis/814955268123000832.png",
-        {
-          name: "blamewolf",
-          image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
-          roles: [],
-        },
-      )).id
-    }>`,`<:blamewolf2:${
+    emojiIds = [
+      `<:blamewolf:${
         (await createEmoji(
-            tempData.guildId,
-            "blamewolf2",
-            "https://cdn.discordapp.com/emojis/814955268123000832.png",
-            {
-              name: "blamewolf2",
-              image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
-              roles: [],
-            },
+          tempData.guildId,
+          "blamewolf",
+          "https://cdn.discordapp.com/emojis/814955268123000832.png",
+          {
+            name: "blamewolf",
+            image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
+            roles: [],
+          },
         )).id
-    }>`];
+      }>`,
+      `<:blamewolf2:${
+        (await createEmoji(
+          tempData.guildId,
+          "blamewolf2",
+          "https://cdn.discordapp.com/emojis/814955268123000832.png",
+          {
+            name: "blamewolf2",
+            image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
+            roles: [],
+          },
+        )).id
+      }>`,
+    ];
   }
 
   if (type === "raw") {
