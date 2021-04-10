@@ -7,10 +7,13 @@ import { processRateLimitedPaths } from "./process_rate_limited_paths.ts";
 import { processRequest } from "./process_request.ts";
 import { processRequestHeaders } from "./process_request_headers.ts";
 import { runMethod } from "./run_method.ts";
+import { simplifyUrl } from "./simplify_url.ts";
 
 export const rest = {
   /** The bot token for this rest client. */
   token: "",
+  /** The maximum amount of retries allowed */
+  maxRetryCount: 10,
   apiVersion: "8",
   /** The secret authorization key to confirm that this was a request made by you and not a DDOS attack. */
   authorization: "discordeno_best_lib_ever",
@@ -41,4 +44,5 @@ export const rest = {
   processRequest,
   createRequestBody,
   runMethod,
+  simplifyUrl,
 };

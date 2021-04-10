@@ -11,16 +11,16 @@ export async function processQueue(id: string) {
   while (queue.length) {
     rest.eventHandlers.debug?.(
       "loop",
-      "Running while loop in processQueue function.",
+      "Running while loop in processQueue function."
     );
     // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
     if (rest.globallyRateLimited) {
-      setTimeout(() => {
+      setTimeout(async () => {
         eventHandlers.debug?.(
           "loop",
-          `Running setTimeout in processQueue function.`,
+          `Running setTimeout in processQueue function.`
         );
-        processQueue(id);
+        await processQueue(id);
       }, 1000);
 
       break;
@@ -30,8 +30,14 @@ export async function processQueue(id: string) {
     // IF THIS DOESNT HAVE ANY ITEMS JUST CANCEL, THE CLEANER WILL REMOVE IT.
     if (!queuedRequest) return;
 
+
+    const basicURL = rest.simplifyUrl(
+      queuedRequest.request.url,
+      queuedRequest.request.method.toUpperCase()
+    );
+
     // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
-    const urlResetIn = rest.checkRateLimits(queuedRequest.request.url);
+    const urlResetIn = rest.checkRateLimits(basicURL);
     if (urlResetIn) {
       // PAUSE FOR THIS SPECIFC REQUEST
       await delay(urlResetIn);
@@ -47,19 +53,18 @@ export async function processQueue(id: string) {
     // EXECUTE THE REQUEST
 
     // IF THIS IS A GET REQUEST, CHANGE THE BODY TO QUERY PARAMETERS
-    const query = queuedRequest.request.method.toUpperCase() === "GET" &&
-        queuedRequest.payload.body
-      ? Object.entries(queuedRequest.payload.body)
-        .map(
-          ([key, value]) =>
-            `${encodeURIComponent(key)}=${
-              encodeURIComponent(
-                value as string,
-              )
-            }`,
-        )
-        .join("&")
-      : "";
+    const query =
+      queuedRequest.request.method.toUpperCase() === "GET" &&
+      queuedRequest.payload.body
+        ? Object.entries(queuedRequest.payload.body)
+            .map(
+              ([key, value]) =>
+                `${encodeURIComponent(key)}=${encodeURIComponent(
+                  value as string
+                )}`
+            )
+            .join("&")
+        : "";
     const urlToUse =
       queuedRequest.request.method.toUpperCase() === "GET" && query
         ? `${queuedRequest.request.url}?${query}`
@@ -71,14 +76,18 @@ export async function processQueue(id: string) {
     try {
       const response = await fetch(
         urlToUse,
-        rest.createRequestBody(queuedRequest),
+        rest.createRequestBody(queuedRequest)
       );
 
       rest.eventHandlers.fetched(queuedRequest.payload);
       const bucketIdFromHeaders = rest.processRequestHeaders(
-        queuedRequest.request.url,
-        response.headers,
+        basicURL,
+        response.headers
       );
+      // SET THE BUCKET Id IF IT WAS PRESENT
+      if (bucketIdFromHeaders) {
+        queuedRequest.payload.bucketId = bucketIdFromHeaders;
+      }
 
       if (response.status < 200 || response.status >= 400) {
         rest.eventHandlers.error("httpError", queuedRequest.payload, response);
@@ -114,7 +123,8 @@ export async function processQueue(id: string) {
           body: JSON.stringify({ error }),
         });
 
-        queue.shift();
+        // If Rate limited should not remove from queue
+        if (response.status !== 429) queue.shift();
         continue;
       }
 
@@ -133,10 +143,7 @@ export async function processQueue(id: string) {
           json.message === "You are being rate limited."
         ) {
           // IF IT HAS MAXED RETRIES SOMETHING SERIOUSLY WRONG. CANCEL OUT.
-          if (
-            queuedRequest.payload.retryCount >=
-              queuedRequest.options.maxRetryCount
-          ) {
+          if (queuedRequest.payload.retryCount >= rest.maxRetryCount) {
             rest.eventHandlers.retriesMaxed(queuedRequest.payload);
             queuedRequest.request.respond({
               status: 200,
@@ -150,10 +157,6 @@ export async function processQueue(id: string) {
             continue;
           }
 
-          // SET THE BUCKET Id IF IT WAS PRESENT
-          if (bucketIdFromHeaders) {
-            queuedRequest.payload.bucketId = bucketIdFromHeaders;
-          }
           // SINCE IT WAS RATELIMITE, RETRY AGAIN
           continue;
         }
