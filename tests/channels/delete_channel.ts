@@ -12,22 +12,22 @@ Deno.test({
       name: "delete-channel",
     });
     // wait 5 seconds to give it time for CHANNEL_CREATE event
-    await delay(5000);
+    await delay(3000);
     // Make sure the channel was created.
     if (!cache.channels.has(channel.id)) {
       throw new Error(
-        "The channel should have been created but it is not in the cache.",
+        "The channel should have been created but it is not in the cache."
       );
     }
 
     // Delete the channel now without a reason
     await deleteChannel(tempData.guildId, channel.id);
     // wait 5 seconds to give it time for CHANNEL_DELETE event
-    await delay(5000);
+    await delay(3000);
     // Make sure it is gone from cache
     if (cache.channels.has(channel.id)) {
       throw new Error(
-        "The channel should have been deleted but it is still in cache.",
+        "The channel should have been deleted but it is still in cache."
       );
     }
   },
@@ -42,22 +42,22 @@ Deno.test({
       name: "delete-channel",
     });
     // wait 5 seconds to give it time for CHANNEL_CREATE event
-    await delay(5000);
+    await delay(3000);
     // Make sure the channel was created.
     if (!cache.channels.has(channel.id)) {
       throw new Error(
-        "The channel should have been created but it is not in the cache.",
+        "The channel should have been created but it is not in the cache."
       );
     }
 
     // Delete the channel now without a reason
     await deleteChannel(tempData.guildId, channel.id, "with a reason");
     // wait 5 seconds to give it time for CHANNEL_DELETE event
-    await delay(5000);
+    await delay(3000);
     // Make sure it is gone from cache
     if (cache.channels.has(channel.id)) {
       throw new Error(
-        "The channel should have been deleted but it is still in cache.",
+        "The channel should have been deleted but it is still in cache."
       );
     }
   },

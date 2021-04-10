@@ -16,12 +16,10 @@ Deno.test({
     // Assertions
     assertExists(message);
     // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-    await delay(5000);
+    await delay(3000);
     // Make sure the message was created.
     if (!cache.messages.has(message.id)) {
-      throw new Error(
-        "The message seemed to be sent but it was not cached.",
-      );
+      throw new Error("The message seemed to be sent but it was not cached.");
     }
 
     await addReaction(message.channelId, message.id, "❤");
@@ -30,7 +28,7 @@ Deno.test({
     const fetchedReactions = await getReactions(
       tempData.channelId,
       message.id,
-      "❤",
+      "❤"
     );
     // Check if getMessage has worked
     assertEquals(fetchedReactions.size, 1);

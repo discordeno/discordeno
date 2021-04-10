@@ -16,23 +16,21 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
   if (save) tempData.channelId = channel.id;
 
   // Delay the execution by 5 seconds to allow CHANNEL_CREATE event to be processed
-  await delay(5000);
+  await delay(3000);
 
   if (!cache.channels.has(channel.id)) {
-    throw new Error(
-      "The channel seemed to be created but it was not cached.",
-    );
+    throw new Error("The channel seemed to be created but it was not cached.");
   }
 
   if (options.topic && channel.topic !== options.topic) {
     throw new Error(
-      "The channel was supposed to have a topic but it does not appear to be the same topic.",
+      "The channel was supposed to have a topic but it does not appear to be the same topic."
     );
   }
 
   if (options.bitrate && channel.bitrate !== options.bitrate) {
     throw new Error(
-      "The channel was supposed to have a bitrate but it does not appear to be the same bitrate.",
+      "The channel was supposed to have a bitrate but it does not appear to be the same bitrate."
     );
   }
 }
@@ -48,10 +46,13 @@ Deno.test({
 Deno.test({
   name: "[channel] create a new category channel",
   async fn() {
-    await ifItFailsBlameWolf({
-      name: "Discordeno-test",
-      type: DiscordChannelTypes.GUILD_CATEGORY,
-    }, true);
+    await ifItFailsBlameWolf(
+      {
+        name: "Discordeno-test",
+        type: DiscordChannelTypes.GUILD_CATEGORY,
+      },
+      true
+    );
   },
   ...defaultTestOptions,
 });
@@ -75,10 +76,13 @@ Deno.test({
 Deno.test({
   name: "[channel] create a new voice channel",
   async fn() {
-    await ifItFailsBlameWolf({
-      name: "Discordeno-test",
-      type: DiscordChannelTypes.GUILD_VOICE,
-    }, true);
+    await ifItFailsBlameWolf(
+      {
+        name: "Discordeno-test",
+        type: DiscordChannelTypes.GUILD_VOICE,
+      },
+      true
+    );
   },
   ...defaultTestOptions,
 });
@@ -86,11 +90,14 @@ Deno.test({
 Deno.test({
   name: "[channel] create a new voice channel with a bitrate",
   async fn() {
-    await ifItFailsBlameWolf({
-      name: "discordeno-test",
-      type: DiscordChannelTypes.GUILD_VOICE,
-      bitrate: 32000,
-    }, true);
+    await ifItFailsBlameWolf(
+      {
+        name: "discordeno-test",
+        type: DiscordChannelTypes.GUILD_VOICE,
+        bitrate: 32000,
+      },
+      true
+    );
   },
   ...defaultTestOptions,
 });
@@ -98,11 +105,14 @@ Deno.test({
 Deno.test({
   name: "[channel] create a new voice channel with a user limit",
   async fn() {
-    await ifItFailsBlameWolf({
-      name: "Discordeno-test",
-      type: DiscordChannelTypes.GUILD_VOICE,
-      userLimit: 32,
-    }, true);
+    await ifItFailsBlameWolf(
+      {
+        name: "Discordeno-test",
+        type: DiscordChannelTypes.GUILD_VOICE,
+        userLimit: 32,
+      },
+      true
+    );
   },
   ...defaultTestOptions,
 });
@@ -110,10 +120,13 @@ Deno.test({
 Deno.test({
   name: "[channel] create a new text channel with a rate limit per user",
   async fn() {
-    await ifItFailsBlameWolf({
-      name: "Discordeno-test",
-      rateLimitPerUser: 2423,
-    }, true);
+    await ifItFailsBlameWolf(
+      {
+        name: "Discordeno-test",
+        rateLimitPerUser: 2423,
+      },
+      true
+    );
   },
   ...defaultTestOptions,
 });

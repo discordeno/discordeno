@@ -40,11 +40,12 @@ Deno.test({
         "GUILDS",
         "GUILD_EMOJIS",
         "GUILD_MESSAGE_REACTIONS",
+        "GUILD_EMOJIS",
       ],
     });
 
     // Delay the execution by 5 seconds
-    await delay(5000);
+    await delay(3000);
 
     // DELETE GUILDS IF LESS THAN 10 SERVERS AS SAFETY MEASURE
     if (cache.guilds.size <= 10) {
@@ -147,7 +148,7 @@ Deno.test({
 //     }) as Channel;
 
 //     // Wait 5s for CHANNEL_UPDATE to fire
-//     await delay(5000);
+//     await delay(3000);
 
 //     // Assertions
 //     assertExists(channel);

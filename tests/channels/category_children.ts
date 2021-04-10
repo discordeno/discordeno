@@ -16,11 +16,11 @@ Deno.test({
     // Assertions
     assertExists(category);
     // Delay the execution by 5 seconds to allow CHANNEL_CREATE event to be processed
-    await delay(5000);
+    await delay(3000);
 
     if (!cache.channels.has(category.id)) {
       throw new Error(
-        "The channel seemed to be created but it was not cached.",
+        "The channel seemed to be created but it was not cached."
       );
     }
 
@@ -31,15 +31,15 @@ Deno.test({
           name: `Discordeno-test-${num}`,
           parentId: category.id,
         })
-      ),
+      )
     );
     // Delay the execution by 5 seconds to allow CHANNEL_CREATE event to be processed
-    await delay(5000);
+    await delay(3000);
 
     // If every channel is not present in the cache, error out
     if (!channels.every((c) => cache.channels.has(c.id))) {
       throw new Error(
-        "The channels seemed to be created but it was not cached.",
+        "The channels seemed to be created but it was not cached."
       );
     }
 
@@ -49,7 +49,7 @@ Deno.test({
       !channels.every((c) => ids.has(c.id))
     ) {
       throw new Error(
-        "The category channel ids did not match with the category channels.",
+        "The category channel ids did not match with the category channels."
       );
     }
   },

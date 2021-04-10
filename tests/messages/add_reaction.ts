@@ -14,7 +14,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
   assertExists(message);
 
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  await delay(5000);
+  await delay(3000);
 
   if (!cache.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
@@ -33,7 +33,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
             name: "blamewolf",
             image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
             roles: [],
-          },
+          }
         )
       ).id
     }>`;
@@ -45,16 +45,16 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
     await message.addReaction(emojiId);
   }
 
-  await delay(5000);
+  await delay(3000);
 
   assertEquals(
     await cache.messages
       .get(message.id)
       ?.reactions?.filter(
         (reaction: DiscordReaction) =>
-          reaction.emoji?.name === (custom ? "blamewolf" : "❤"),
+          reaction.emoji?.name === (custom ? "blamewolf" : "❤")
       ).length,
-    1,
+    1
   );
 }
 

@@ -11,7 +11,7 @@ import { assertEquals, assertExists } from "../deps.ts";
 async function ifItFailsBlameWolf(
   type: "getter" | "raw",
   custom = false,
-  ordered = false,
+  ordered = false
 ) {
   const message = await sendMessage(tempData.channelId, "Hello World!");
 
@@ -19,12 +19,10 @@ async function ifItFailsBlameWolf(
   assertExists(message);
 
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  await delay(5000);
+  await delay(3000);
 
   if (!cache.messages.has(message.id)) {
-    throw new Error(
-      "The message seemed to be sent but it was not cached.",
-    );
+    throw new Error("The message seemed to be sent but it was not cached.");
   }
 
   let emojiIds = ["❤", "😃"];
@@ -32,28 +30,32 @@ async function ifItFailsBlameWolf(
   if (custom) {
     emojiIds = [
       `<:blamewolf:${
-        (await createEmoji(
-          tempData.guildId,
-          "blamewolf",
-          "https://cdn.discordapp.com/emojis/814955268123000832.png",
-          {
-            name: "blamewolf",
-            image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
-            roles: [],
-          },
-        )).id
+        (
+          await createEmoji(
+            tempData.guildId,
+            "blamewolf",
+            "https://cdn.discordapp.com/emojis/814955268123000832.png",
+            {
+              name: "blamewolf",
+              image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
+              roles: [],
+            }
+          )
+        ).id
       }>`,
       `<:blamewolf2:${
-        (await createEmoji(
-          tempData.guildId,
-          "blamewolf2",
-          "https://cdn.discordapp.com/emojis/814955268123000832.png",
-          {
-            name: "blamewolf2",
-            image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
-            roles: [],
-          },
-        )).id
+        (
+          await createEmoji(
+            tempData.guildId,
+            "blamewolf2",
+            "https://cdn.discordapp.com/emojis/814955268123000832.png",
+            {
+              name: "blamewolf2",
+              image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
+              roles: [],
+            }
+          )
+        ).id
       }>`,
     ];
   }
@@ -64,12 +66,9 @@ async function ifItFailsBlameWolf(
     await message.addReactions(emojiIds, ordered);
   }
 
-  await delay(5000);
+  await delay(3000);
 
-  assertEquals(
-    await cache.messages.get(message.id)?.reactions?.length,
-    2,
-  );
+  assertEquals(await cache.messages.get(message.id)?.reactions?.length, 2);
 }
 
 Deno.test({

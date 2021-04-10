@@ -11,12 +11,10 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", reason?: string) {
   // Assertions
   assertExists(message);
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  await delay(5000);
+  await delay(3000);
   // Make sure the message was created.
   if (!cache.messages.has(message.id)) {
-    throw new Error(
-      "The message seemed to be sent but it was not cached.",
-    );
+    throw new Error("The message seemed to be sent but it was not cached.");
   }
 
   // Delete the message now
@@ -27,11 +25,11 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", reason?: string) {
   }
 
   // Wait 5 seconds to give it time for MESSAGE_DELETE event
-  await delay(5000);
+  await delay(3000);
   // Make sure it is gone from cache
   if (cache.messages.has(message.id)) {
     throw new Error(
-      "The message should have been deleted but it is still in cache.",
+      "The message should have been deleted but it is still in cache."
     );
   }
 }
