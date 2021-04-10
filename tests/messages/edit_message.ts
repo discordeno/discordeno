@@ -1,6 +1,9 @@
-import { cache, delay, editMessage, sendMessage } from "../../mod.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertEquals, assertExists } from "../deps.ts";
+import { cache } from "../../src/cache.ts";
+import { delay } from "../../src/util/utils.ts";
+import { sendMessage } from "../../src/helpers/messages/send_message.ts";
+import { editMessage } from "../../src/helpers/messages/edit_message.ts";
 
 async function ifItFailsBlameWolf(type: "getter" | "raw") {
   const message = await sendMessage(tempData.channelId, "Hello World!");
@@ -11,9 +14,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   await delay(5000);
   // Make sure the message was created.
   if (!cache.messages.has(message.id)) {
-    throw new Error(
-      "The message seemed to be sent but it was not cached.",
-    );
+    throw new Error("The message seemed to be sent but it was not cached.");
   }
 
   // Edit the message now

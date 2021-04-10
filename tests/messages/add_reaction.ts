@@ -1,13 +1,11 @@
-import {
-  addReaction,
-  cache,
-  createEmoji,
-  delay,
-  DiscordReaction,
-  sendMessage,
-} from "../../mod.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertEquals, assertExists } from "../deps.ts";
+import { cache } from "../../src/cache.ts";
+import { DiscordReaction } from "../../src/types/messages/reaction.ts";
+import { delay } from "../../src/util/utils.ts";
+import { sendMessage } from "../../src/helpers/messages/send_message.ts";
+import { addReaction } from "../../src/helpers/messages/add_reaction.ts";
+import { createEmoji } from "../../src/helpers/emojis/create_emoji.ts"
 
 async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
   const message = await sendMessage(tempData.channelId, "Hello World!");
@@ -19,25 +17,25 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
   await delay(5000);
 
   if (!cache.messages.has(message.id)) {
-    throw new Error(
-      "The message seemed to be sent but it was not cached.",
-    );
+    throw new Error("The message seemed to be sent but it was not cached.");
   }
 
   let emojiId = "❤";
 
   if (custom) {
     emojiId = `<:blamewolf:${
-      (await createEmoji(
-        tempData.guildId,
-        "blamewolf",
-        "https://cdn.discordapp.com/emojis/814955268123000832.png",
-        {
-          name: "blamewolf",
-          image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
-          roles: [],
-        },
-      )).id
+      (
+        await createEmoji(
+          tempData.guildId,
+          "blamewolf",
+          "https://cdn.discordapp.com/emojis/814955268123000832.png",
+          {
+            name: "blamewolf",
+            image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
+            roles: [],
+          }
+        )
+      ).id
     }>`;
   }
 
@@ -50,10 +48,13 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
   await delay(5000);
 
   assertEquals(
-    await cache.messages.get(message.id)?.reactions?.filter((
-      reaction: DiscordReaction,
-    ) => reaction.emoji?.name === (custom ? "blamewolf" : "❤")).length,
-    1,
+    await cache.messages
+      .get(message.id)
+      ?.reactions?.filter(
+        (reaction: DiscordReaction) =>
+          reaction.emoji?.name === (custom ? "blamewolf" : "❤")
+      ).length,
+    1
   );
 }
 

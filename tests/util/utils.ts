@@ -1,4 +1,4 @@
-import { camelKeysToSnakeCase, snakeKeysToCamelCase } from "../../mod.ts";
+import { snakeKeysToCamelCase,camelKeysToSnakeCase } from "../../src/util/utils.ts";
 import { assertEquals } from "../deps.ts";
 
 const testSnakeObject = {

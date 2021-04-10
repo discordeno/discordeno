@@ -1,4 +1,7 @@
-import { cache, createChannel, delay, deleteChannel } from "../../mod.ts";
+import { cache } from "../../src/cache.ts";
+import { createChannel } from "../../src/helpers/channels/create_channel.ts";
+import { deleteChannel } from "../../src/helpers/channels/delete_channel.ts";
+import { delay } from "../../src/util/utils.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
 Deno.test({
