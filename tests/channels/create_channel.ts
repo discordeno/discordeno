@@ -40,7 +40,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
 Deno.test({
   name: "[channel] create a new text channel",
   async fn() {
-    await ifItFailsBlameWolf({ name: "Discordeno-test"}, true);
+    await ifItFailsBlameWolf({ name: "Discordeno-test" }, true);
   },
   ...defaultTestOptions,
 });
@@ -48,7 +48,10 @@ Deno.test({
 Deno.test({
   name: "[channel] create a new category channel",
   async fn() {
-    await ifItFailsBlameWolf({ name: "Discordeno-test", type: DiscordChannelTypes.GUILD_CATEGORY}, true);
+    await ifItFailsBlameWolf({
+      name: "Discordeno-test",
+      type: DiscordChannelTypes.GUILD_CATEGORY,
+    }, true);
   },
   ...defaultTestOptions,
 });
@@ -72,7 +75,10 @@ Deno.test({
 Deno.test({
   name: "[channel] create a new voice channel",
   async fn() {
-    await ifItFailsBlameWolf({ name: "Discordeno-test", type: DiscordChannelTypes.GUILD_VOICE}, true);
+    await ifItFailsBlameWolf({
+      name: "Discordeno-test",
+      type: DiscordChannelTypes.GUILD_VOICE,
+    }, true);
   },
   ...defaultTestOptions,
 });
@@ -80,7 +86,11 @@ Deno.test({
 Deno.test({
   name: "[channel] create a new voice channel with a bitrate",
   async fn() {
-    await ifItFailsBlameWolf({ name: "discordeno-test", type: DiscordChannelTypes.GUILD_VOICE, bitrate: 32000 }, true);
+    await ifItFailsBlameWolf({
+      name: "discordeno-test",
+      type: DiscordChannelTypes.GUILD_VOICE,
+      bitrate: 32000,
+    }, true);
   },
   ...defaultTestOptions,
 });
@@ -88,7 +98,11 @@ Deno.test({
 Deno.test({
   name: "[channel] create a new voice channel with a user limit",
   async fn() {
-    await ifItFailsBlameWolf({ name: "Discordeno-test", type: DiscordChannelTypes.GUILD_VOICE, userLimit: 32 }, true);
+    await ifItFailsBlameWolf({
+      name: "Discordeno-test",
+      type: DiscordChannelTypes.GUILD_VOICE,
+      userLimit: 32,
+    }, true);
   },
   ...defaultTestOptions,
 });
@@ -96,7 +110,10 @@ Deno.test({
 Deno.test({
   name: "[channel] create a new text channel with a rate limit per user",
   async fn() {
-    await ifItFailsBlameWolf({ name: "Discordeno-test", rateLimitPerUser: 2423 }, true);
+    await ifItFailsBlameWolf({
+      name: "Discordeno-test",
+      rateLimitPerUser: 2423,
+    }, true);
   },
   ...defaultTestOptions,
 });
@@ -108,7 +125,6 @@ Deno.test({
   },
   ...defaultTestOptions,
 });
-
 
 // TODO: Need to validate tests for these options
 // /** Sorting position of the channel */
