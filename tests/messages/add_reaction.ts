@@ -45,7 +45,10 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
     await message.addReaction(emojiId);
   }
 
-  delayUntil(10000, () => cache.messages.get(message.id)?.reactions?.length > 0);
+  delayUntil(
+    10000,
+    () => cache.messages.get(message.id)?.reactions?.length > 0,
+  );
 
   assertEquals(
     await cache.messages

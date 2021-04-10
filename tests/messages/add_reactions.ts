@@ -61,7 +61,10 @@ async function ifItFailsBlameWolf(
     await message.addReactions(emojiIds, ordered);
   }
 
-  delayUntil(10000, () => cache.messages.get(message.id)?.reactions?.length === 2);
+  delayUntil(
+    10000,
+    () => cache.messages.get(message.id)?.reactions?.length === 2,
+  );
 
   assertEquals(await cache.messages.get(message.id)?.reactions?.length, 2);
 }
