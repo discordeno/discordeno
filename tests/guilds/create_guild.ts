@@ -1,8 +1,8 @@
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertExists } from "../deps.ts";
 import { cache } from "../../src/cache.ts";
-import { delay } from "../../src/util/utils.ts";
 import { createGuild } from "../../src/helpers/guilds/create_guild.ts";
+import { delayUntil } from "../util/delay_until.ts";
 
 Deno.test({
   name: "[guild] create a new guild",
@@ -17,7 +17,7 @@ Deno.test({
     tempData.guildId = guild.id;
 
     // Delay the execution by 5 seconds to allow GUILD_CREATE event to be processed
-    await delay(3000);
+    delayUntil(3000, () => cache.guilds.has(guild.id));
 
     if (!cache.guilds.has(guild.id)) {
       throw new Error("The guild seemed to be created but it was not cached.");

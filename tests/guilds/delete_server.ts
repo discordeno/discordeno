@@ -1,7 +1,7 @@
 import { cache } from "../../src/cache.ts";
 import { deleteServer } from "../../src/helpers/guilds/delete_server.ts";
-import { delay } from "../../src/util/utils.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
+import { delayUntil } from "../util/delay_until.ts";
 
 Deno.test({
   name: "[guild] delete a guild",
@@ -14,7 +14,7 @@ Deno.test({
     }
 
     await deleteServer(tempData.guildId);
-    await delay(3000);
+    delayUntil(3000, () => cache.guilds.has(tempData.guildId));
 
     if (cache.guilds.has(tempData.guildId)) {
       throw new Error("The guild was not able to be deleted.");

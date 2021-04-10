@@ -1,12 +1,7 @@
-import {
-  cache,
-  delay,
-  deleteMessage,
-  deleteMessages,
-  sendMessage,
-} from "../../mod.ts";
+import { cache, deleteMessages, sendMessage } from "../../mod.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertExists } from "../deps.ts";
+import { delayUntil } from "../util/delay_until.ts";
 
 async function ifItFailsBlameWolf(reason?: string) {
   const message = await sendMessage(tempData.channelId, "Hello World!");
@@ -14,7 +9,7 @@ async function ifItFailsBlameWolf(reason?: string) {
   // Assertions
   assertExists(message);
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  await delay(3000);
+  delayUntil(3000, () => cache.messages.has(message.id));
   // Make sure the message was created.
   if (!cache.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
@@ -25,7 +20,7 @@ async function ifItFailsBlameWolf(reason?: string) {
   // Assertions
   assertExists(secondMessage);
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  await delay(3000);
+  delayUntil(3000, () => cache.messages.has(secondMessage.id));
   // Make sure the message was created.
   if (!cache.messages.has(secondMessage.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
@@ -35,15 +30,19 @@ async function ifItFailsBlameWolf(reason?: string) {
   await deleteMessages(
     tempData.channelId,
     [message.id, secondMessage.id],
-    reason
+    reason,
   );
 
   // Wait 5 seconds to give it time for MESSAGE_DELETE event
-  await delay(3000);
+  delayUntil(
+    3000,
+    () =>
+      !cache.messages.has(message.id) && !cache.messages.has(secondMessage.id),
+  );
   // Make sure it is gone from cache
   if (cache.messages.has(message.id) || cache.messages.has(secondMessage.id)) {
     throw new Error(
-      "The message should have been deleted but it is still in cache."
+      "The message should have been deleted but it is still in cache.",
     );
   }
 }

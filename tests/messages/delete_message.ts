@@ -1,9 +1,9 @@
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertExists } from "../deps.ts";
 import { cache } from "../../src/cache.ts";
-import { delay } from "../../src/util/utils.ts";
 import { sendMessage } from "../../src/helpers/messages/send_message.ts";
 import { deleteMessage } from "../../src/helpers/messages/delete_message.ts";
+import { delayUntil } from "../util/delay_until.ts";
 
 async function ifItFailsBlameWolf(type: "getter" | "raw", reason?: string) {
   const message = await sendMessage(tempData.channelId, "Hello World!");
@@ -11,7 +11,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", reason?: string) {
   // Assertions
   assertExists(message);
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  await delay(3000);
+  delayUntil(3000, () => cache.messages.has(message.id));
   // Make sure the message was created.
   if (!cache.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
@@ -25,11 +25,11 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", reason?: string) {
   }
 
   // Wait 5 seconds to give it time for MESSAGE_DELETE event
-  await delay(3000);
+  delayUntil(3000, () => cache.messages.has(message.id));
   // Make sure it is gone from cache
   if (cache.messages.has(message.id)) {
     throw new Error(
-      "The message should have been deleted but it is still in cache."
+      "The message should have been deleted but it is still in cache.",
     );
   }
 }
