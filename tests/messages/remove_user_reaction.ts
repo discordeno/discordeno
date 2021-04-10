@@ -15,44 +15,36 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   // Assertions
   assertExists(message);
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  await delay(5000);
+  await delay(3000);
   // Make sure the message was created.
   if (!cache.messages.has(message.id)) {
-    throw new Error(
-      "The message seemed to be sent but it was not cached.",
-    );
+    throw new Error("The message seemed to be sent but it was not cached.");
   }
 
   // Add reactions to the message
   await addReaction(message.channelId, message.id, "❤");
   // Delay the execution by 5 seconds to allow MESSAGE_REACTION_ALL event to be processed
-  await delay(5000);
+  await delay(3000);
 
   // Be sure that the message has the reactions
-  assertEquals(
-    await cache.messages.get(message.id)?.reactions?.length,
-    1,
-  );
+  assertEquals(await cache.messages.get(message.id)?.reactions?.length, 1);
 
   if (type === "raw") {
     await removeUserReaction(
       message.channelId,
       message.id,
       "❤",
-      message.author.id,
+      message.author.id
     );
   } else {
     //await message.removeUserReaction("❤", message.author.id);
   }
 
   // Delay the execution by 5 seconds to allow MESSAGE_REACTION_REMOVE_ALL event to be processed
-  await delay(5000);
+  await delay(3000);
 
   // Check if the reactions has been deleted
-  assertEquals(
-    await cache.messages.get(message.id)?.reactions,
-    undefined,
-  );
+  assertEquals(await cache.messages.get(message.id)?.reactions, undefined);
 }
 
 Deno.test({

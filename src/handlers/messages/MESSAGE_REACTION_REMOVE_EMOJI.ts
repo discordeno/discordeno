@@ -10,13 +10,16 @@ export async function handleMessageReactionRemoveEmoji(
   const message = await cacheHandlers.get("messages", payload.message_id);
 
   if (message?.reactions) {
-    message.reactions = message.reactions?.filter(
+    message.reactions = message.reactions.filter(
       (reaction) =>
         !(
-          reaction.emoji.id === payload.emoji.id &&
+          // MUST USE == because discord sends null and we use undefined
+          reaction.emoji.id == payload.emoji.id &&
           reaction.emoji.name === payload.emoji.name
         ),
     );
+    
+    if (!message.reactions.length) message.reactions = undefined
 
     await cacheHandlers.set("messages", payload.message_id, message);
   }

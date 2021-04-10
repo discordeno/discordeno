@@ -11,12 +11,16 @@ export async function handleMessageReactionRemove(
 
   if (message) {
     const reaction = message.reactions?.find((reaction) =>
-      reaction.emoji.id === payload.emoji.id &&
+      // MUST USE == because discord sends null and we use undefined
+      reaction.emoji.id == payload.emoji.id &&
       reaction.emoji.name === payload.emoji.name
     );
 
     if (reaction) {
       reaction.count--;
+      if (reaction.count === 0) message.reactions = message.reactions?.filter(r => r.count !== 0);
+      if (!message.reactions?.length) message.reactions = undefined;
+
       await cacheHandlers.set("messages", payload.message_id, message);
     }
   }

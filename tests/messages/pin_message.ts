@@ -10,12 +10,10 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   assertExists(message);
 
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  await delay(5000);
+  await delay(3000);
 
   if (!cache.messages.has(message.id)) {
-    throw new Error(
-      "The message seemed to be sent but it was not cached.",
-    );
+    throw new Error("The message seemed to be sent but it was not cached.");
   }
 
   if (type === "raw") {
@@ -27,7 +25,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   const pins = await getPins(tempData.channelId);
   assertEquals(
     pins.filter((msg: DiscordenoMessage) => msg.id === message.id).length,
-    1,
+    1
   );
 }
 

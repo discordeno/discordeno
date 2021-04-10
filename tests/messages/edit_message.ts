@@ -11,7 +11,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   // Assertions
   assertExists(message);
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  await delay(5000);
+  await delay(3000);
   // Make sure the message was created.
   if (!cache.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
@@ -24,7 +24,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
     await message.edit("Goodbye World!");
   }
   // Wait 5 seconds to give it time for MESSAGE_UPDATE event
-  await delay(5000);
+  await delay(3000);
 
   // Make sure it has been modified in cache
   assertEquals(cache.messages.get(message.id)?.content, "Goodbye World!");
