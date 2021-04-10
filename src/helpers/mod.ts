@@ -1,4 +1,4 @@
-import { categoryChildrenIds } from "./channels/category_children_ids.ts";
+import { categoryChildren } from "./channels/category_children.ts";
 import { channelOverwriteHasPermission } from "./channels/channel_overwrite_has_permission.ts";
 import { createChannel } from "./channels/create_channel.ts";
 import { deleteChannel } from "./channels/delete_channel.ts";
@@ -123,7 +123,7 @@ export {
   avatarURL,
   ban,
   banMember,
-  categoryChildrenIds,
+  categoryChildren,
   channelOverwriteHasPermission,
   createChannel,
   createEmoji,
@@ -274,7 +274,7 @@ export let helpers = {
   getEmoji,
   getEmojis,
   // guilds
-  categoryChildrenIds,
+  categoryChildren,
   createGuild,
   deleteServer,
   editGuild,
