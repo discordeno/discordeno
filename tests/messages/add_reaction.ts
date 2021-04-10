@@ -5,7 +5,7 @@ import { DiscordReaction } from "../../src/types/messages/reaction.ts";
 import { delay } from "../../src/util/utils.ts";
 import { sendMessage } from "../../src/helpers/messages/send_message.ts";
 import { addReaction } from "../../src/helpers/messages/add_reaction.ts";
-import { createEmoji } from "../../src/helpers/emojis/create_emoji.ts"
+import { createEmoji } from "../../src/helpers/emojis/create_emoji.ts";
 
 async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
   const message = await sendMessage(tempData.channelId, "Hello World!");
@@ -33,7 +33,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
             name: "blamewolf",
             image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
             roles: [],
-          }
+          },
         )
       ).id
     }>`;
@@ -52,9 +52,9 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
       .get(message.id)
       ?.reactions?.filter(
         (reaction: DiscordReaction) =>
-          reaction.emoji?.name === (custom ? "blamewolf" : "❤")
+          reaction.emoji?.name === (custom ? "blamewolf" : "❤"),
       ).length,
-    1
+    1,
   );
 }
 

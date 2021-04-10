@@ -14,10 +14,9 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   // Wait few seconds for the channel create event to arrive and cache it
   await delay(5000);
 
-  const message =
-    type === "raw"
-      ? await sendMessage(channel.id, "Hello World!")
-      : await channel.send("Hello World!");
+  const message = type === "raw"
+    ? await sendMessage(channel.id, "Hello World!")
+    : await channel.send("Hello World!");
 
   // Assertions
   assertExists(message);

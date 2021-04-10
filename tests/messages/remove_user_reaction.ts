@@ -50,8 +50,8 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
 
   // Check if the reactions has been deleted
   assertEquals(
-    await cache.messages.get(message.id)?.reactions?.length,
-    0,
+    await cache.messages.get(message.id)?.reactions,
+    undefined,
   );
 }
 

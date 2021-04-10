@@ -3,7 +3,6 @@ import {
   cache,
   createEmoji,
   delay,
-  DiscordReaction,
   sendMessage,
 } from "../../mod.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
@@ -68,9 +67,7 @@ async function ifItFailsBlameWolf(
   await delay(5000);
 
   assertEquals(
-    await cache.messages.get(message.id)?.reactions?.filter((
-      reaction: DiscordReaction,
-    ) => emojiIds.includes(reaction.emoji?.name)).length,
+    await cache.messages.get(message.id)?.reactions?.length,
     2,
   );
 }
