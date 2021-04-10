@@ -18,9 +18,15 @@ jobs:
         run: deno cache --no-check mod.ts
       - name: Run test script for Devs
         if: ${{ github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' || github.actor == 'ayntee' }}
-        run: deno test -A --no-check tests/mod.ts
+        run: deno test --unstable --coverage=coverage -A --no-check tests/mod.ts
       - name: Run test script for label
         if: ${{ github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'run-tests' }}
-        run: deno test -A --no-check tests/mod.ts
+        run: deno test --unstable --coverage=coverage -A --no-check tests/mod.ts
+      - name: Create coverage report
+        run: deno --unstable coverage ./coverage --lcov > coverage.lcov # create coverage report
+      - name: Collect coverage
+        uses: codecov/codecov-action@v1.0.10 # upload the report on Codecov
+        with:
+          file: ./coverage.lcov
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
