@@ -2,10 +2,10 @@ import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 import { cache } from "../../src/cache.ts";
 import { DiscordReaction } from "../../src/types/messages/reaction.ts";
-import { delay } from "../../src/util/utils.ts";
 import { sendMessage } from "../../src/helpers/messages/send_message.ts";
 import { addReaction } from "../../src/helpers/messages/add_reaction.ts";
 import { createEmoji } from "../../src/helpers/emojis/create_emoji.ts";
+import { delayUntil } from "../util/delay_until.ts";
 
 async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
   const message = await sendMessage(tempData.channelId, "Hello World!");
@@ -14,7 +14,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
   assertExists(message);
 
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  await delay(3000);
+  delayUntil(3000, () => cache.messages.has(message.id));
 
   if (!cache.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
@@ -33,7 +33,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
             name: "blamewolf",
             image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
             roles: [],
-          }
+          },
         )
       ).id
     }>`;
@@ -45,16 +45,16 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
     await message.addReaction(emojiId);
   }
 
-  await delay(3000);
+  delayUntil(3000, () => cache.messages.get(message.id)?.reactions?.length > 0);
 
   assertEquals(
     await cache.messages
       .get(message.id)
       ?.reactions?.filter(
         (reaction: DiscordReaction) =>
-          reaction.emoji?.name === (custom ? "blamewolf" : "❤")
+          reaction.emoji?.name === (custom ? "blamewolf" : "❤"),
       ).length,
-    1
+    1,
   );
 }
 

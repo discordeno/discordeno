@@ -3,8 +3,8 @@ import { assertEquals, assertExists } from "../deps.ts";
 import { cache } from "../../src/cache.ts";
 import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
 import { CreateGuildChannel } from "../../src/types/guilds/create_guild_channel.ts";
-import { delay } from "../../src/util/utils.ts";
 import { createChannel } from "../../src/helpers/channels/create_channel.ts";
+import { delayUntil } from "../util/delay_until.ts";
 
 async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
   const channel = await createChannel(tempData.guildId, options);
@@ -16,7 +16,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
   if (save) tempData.channelId = channel.id;
 
   // Delay the execution by 5 seconds to allow CHANNEL_CREATE event to be processed
-  await delay(3000);
+  delayUntil(3000, () => cache.channels.has(channel.id));
 
   if (!cache.channels.has(channel.id)) {
     throw new Error("The channel seemed to be created but it was not cached.");
@@ -24,13 +24,13 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
 
   if (options.topic && channel.topic !== options.topic) {
     throw new Error(
-      "The channel was supposed to have a topic but it does not appear to be the same topic."
+      "The channel was supposed to have a topic but it does not appear to be the same topic.",
     );
   }
 
   if (options.bitrate && channel.bitrate !== options.bitrate) {
     throw new Error(
-      "The channel was supposed to have a bitrate but it does not appear to be the same bitrate."
+      "The channel was supposed to have a bitrate but it does not appear to be the same bitrate.",
     );
   }
 }
@@ -51,7 +51,7 @@ Deno.test({
         name: "Discordeno-test",
         type: DiscordChannelTypes.GUILD_CATEGORY,
       },
-      true
+      true,
     );
   },
   ...defaultTestOptions,
@@ -81,7 +81,7 @@ Deno.test({
         name: "Discordeno-test",
         type: DiscordChannelTypes.GUILD_VOICE,
       },
-      true
+      true,
     );
   },
   ...defaultTestOptions,
@@ -96,7 +96,7 @@ Deno.test({
         type: DiscordChannelTypes.GUILD_VOICE,
         bitrate: 32000,
       },
-      true
+      true,
     );
   },
   ...defaultTestOptions,
@@ -111,7 +111,7 @@ Deno.test({
         type: DiscordChannelTypes.GUILD_VOICE,
         userLimit: 32,
       },
-      true
+      true,
     );
   },
   ...defaultTestOptions,
@@ -125,7 +125,7 @@ Deno.test({
         name: "Discordeno-test",
         rateLimitPerUser: 2423,
       },
-      true
+      true,
     );
   },
   ...defaultTestOptions,

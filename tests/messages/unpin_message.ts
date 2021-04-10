@@ -1,7 +1,8 @@
-import { cache, delay, getPins, pin, sendMessage, unpin } from "../../mod.ts";
+import { cache, getPins, pin, sendMessage, unpin } from "../../mod.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 import { DiscordenoMessage } from "../../src/structures/message.ts";
+import { delayUntil } from "../util/delay_until.ts";
 
 async function ifItFailsBlameWolf(type: "getter" | "raw") {
   const message = await sendMessage(tempData.channelId, "Hello World!");
@@ -10,7 +11,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   assertExists(message);
 
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  await delay(3000);
+  delayUntil(3000, () => cache.messages.has(message.id));
 
   if (!cache.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
@@ -22,7 +23,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   const pins = await getPins(tempData.channelId);
   assertEquals(
     pins.filter((msg: DiscordenoMessage) => msg.id === message.id).length,
-    1
+    1,
   );
 
   if (type === "raw") {
@@ -36,7 +37,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   assertEquals(
     removedPins.filter((msg: DiscordenoMessage) => msg.id === message.id)
       .length,
-    0
+    0,
   );
 }
 
