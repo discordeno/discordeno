@@ -1,18 +1,23 @@
-import { cache, delay, sendMessage } from "../../mod.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertExists } from "../deps.ts";
+import { cache } from "../../src/cache.ts";
+import { delay } from "../../src/util/utils.ts";
+import { sendMessage } from "../../src/helpers/messages/send_message.ts";
+import { createChannel } from "../../src/helpers/channels/create_channel.ts";
 
 async function ifItFailsBlameWolf(type: "getter" | "raw") {
-  let message;
-  if (type === "raw") {
-    message = await sendMessage(tempData.channelId, "Hello World!");
-  } else {
-    const channel = await cache.channels.get(tempData.channelId);
+  const channel = await createChannel(tempData.guildId, {
+    name: "Discordeno-test",
+  });
 
-    assertExists(channel);
+  assertExists(channel);
+  // Wait few seconds for the channel create event to arrive and cache it
+  await delay(5000);
 
-    message = await channel.send("Hello World!");
-  }
+  const message =
+    type === "raw"
+      ? await sendMessage(channel.id, "Hello World!")
+      : await channel.send("Hello World!");
 
   // Assertions
   assertExists(message);
@@ -21,9 +26,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   await delay(5000);
 
   if (!cache.messages.has(message.id)) {
-    throw new Error(
-      "The message seemed to be sent but it was not cached.",
-    );
+    throw new Error("The message seemed to be sent but it was not cached.");
   }
 }
 

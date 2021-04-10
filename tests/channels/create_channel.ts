@@ -1,27 +1,117 @@
-import { cache, createChannel, delay } from "../../mod.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
-import { assertExists } from "../deps.ts";
+import { assertEquals, assertExists } from "../deps.ts";
+import { cache } from "../../src/cache.ts";
+import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
+import { CreateGuildChannel } from "../../src/types/guilds/create_guild_channel.ts";
+import { delay } from "../../src/util/utils.ts";
+import { createChannel } from "../../src/helpers/channels/create_channel.ts";
+
+async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
+  const channel = await createChannel(tempData.guildId, options);
+
+  // Assertions
+  assertExists(channel);
+  assertEquals(channel.type, options.type || DiscordChannelTypes.GUILD_TEXT);
+
+  if (save) tempData.channelId = channel.id;
+
+  // Delay the execution by 5 seconds to allow CHANNEL_CREATE event to be processed
+  await delay(5000);
+
+  if (!cache.channels.has(channel.id)) {
+    throw new Error(
+      "The channel seemed to be created but it was not cached.",
+    );
+  }
+
+  if (options.topic && channel.topic !== options.topic) {
+    throw new Error(
+      "The channel was supposed to have a topic but it does not appear to be the same topic.",
+    );
+  }
+
+  if (options.bitrate && channel.bitrate !== options.bitrate) {
+    throw new Error(
+      "The channel was supposed to have a bitrate but it does not appear to be the same bitrate.",
+    );
+  }
+}
 
 Deno.test({
-  name: "[channel] create a new channel",
+  name: "[channel] create a new text channel",
   async fn() {
-    const channel = await createChannel(tempData.guildId, {
-      name: "Discordeno-test",
-    });
-
-    // Assertions
-    assertExists(channel);
-
-    tempData.channelId = channel.id;
-
-    // Delay the execution by 5 seconds to allow CHANNEL_CREATE event to be processed
-    await delay(5000);
-
-    if (!cache.channels.has(channel.id)) {
-      throw new Error(
-        "The channel seemed to be created but it was not cached.",
-      );
-    }
+    await ifItFailsBlameWolf({ name: "Discordeno-test"}, true);
   },
   ...defaultTestOptions,
 });
+
+Deno.test({
+  name: "[channel] create a new category channel",
+  async fn() {
+    await ifItFailsBlameWolf({ name: "Discordeno-test", type: DiscordChannelTypes.GUILD_CATEGORY}, true);
+  },
+  ...defaultTestOptions,
+});
+
+// Deno.test({
+//   name: "[channel] create a new news channel",
+//   async fn() {
+//     await ifItFailsBlameWolf({ name: "Discordeno-test", type: DiscordChannelTypes.GUILD_NEWS}, true);
+//   },
+//   ...defaultTestOptions,
+// });
+
+// Deno.test({
+//   name: "[channel] create a new store channel",
+//   async fn() {
+//     await ifItFailsBlameWolf({ name: "Discordeno-test", type: DiscordChannelTypes.GUILD_STORE}, true);
+//   },
+//   ...defaultTestOptions,
+// });
+
+Deno.test({
+  name: "[channel] create a new voice channel",
+  async fn() {
+    await ifItFailsBlameWolf({ name: "Discordeno-test", type: DiscordChannelTypes.GUILD_VOICE}, true);
+  },
+  ...defaultTestOptions,
+});
+
+Deno.test({
+  name: "[channel] create a new voice channel with a bitrate",
+  async fn() {
+    await ifItFailsBlameWolf({ name: "discordeno-test", type: DiscordChannelTypes.GUILD_VOICE, bitrate: 32000 }, true);
+  },
+  ...defaultTestOptions,
+});
+
+Deno.test({
+  name: "[channel] create a new voice channel with a user limit",
+  async fn() {
+    await ifItFailsBlameWolf({ name: "Discordeno-test", type: DiscordChannelTypes.GUILD_VOICE, userLimit: 32 }, true);
+  },
+  ...defaultTestOptions,
+});
+
+Deno.test({
+  name: "[channel] create a new text channel with a rate limit per user",
+  async fn() {
+    await ifItFailsBlameWolf({ name: "Discordeno-test", rateLimitPerUser: 2423 }, true);
+  },
+  ...defaultTestOptions,
+});
+
+Deno.test({
+  name: "[channel] create a new text channel with NSFW",
+  async fn() {
+    await ifItFailsBlameWolf({ name: "Discordeno-test", nsfw: true }, true);
+  },
+  ...defaultTestOptions,
+});
+
+
+// TODO: Need to validate tests for these options
+// /** Sorting position of the channel */
+// position?: number;
+// /** The channel's permission overwrites */
+// permissionOverwrites?: Overwrite[];

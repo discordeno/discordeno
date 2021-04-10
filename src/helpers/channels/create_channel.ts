@@ -15,20 +15,23 @@ import {
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(
   guildId: string,
-  options?: CreateGuildChannel,
+  options?: CreateGuildChannel
 ) {
   const requiredPerms: Set<PermissionStrings> = new Set(["MANAGE_CHANNELS"]);
 
   options?.permissionOverwrites?.forEach((overwrite) => {
     eventHandlers.debug?.(
       "loop",
-      `Running forEach loop in create_channel file.`,
+      `Running forEach loop in create_channel file.`
     );
     overwrite.allow.forEach(requiredPerms.add, requiredPerms);
     overwrite.deny.forEach(requiredPerms.add, requiredPerms);
   });
 
   await requireBotGuildPermissions(guildId, [...requiredPerms]);
+
+  // BITRATES ARE IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
+  if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
 
   const result = (await rest.runMethod(
     "post",
@@ -42,7 +45,7 @@ export async function createChannel(
         deny: calculateBits(perm.deny),
       })),
       type: options?.type || DiscordChannelTypes.GUILD_TEXT,
-    },
+    }
   )) as DiscordChannel;
 
   const discordenoChannel = await structures.createDiscordenoChannel(result);

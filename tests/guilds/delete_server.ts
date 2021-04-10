@@ -1,4 +1,6 @@
-import { cache, delay, deleteServer } from "../../mod.ts";
+import { cache } from "../../src/cache.ts";
+import { deleteServer } from "../../src/helpers/guilds/delete_server.ts";
+import { delay } from "../../src/util/utils.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
 Deno.test({
