@@ -10,6 +10,7 @@ import {
   requireBotGuildPermissions,
 } from "../../util/permissions.ts";
 import { camelKeysToSnakeCase } from "../../util/utils.ts";
+import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(
