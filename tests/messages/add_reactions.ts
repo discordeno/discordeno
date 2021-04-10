@@ -14,7 +14,7 @@ async function ifItFailsBlameWolf(
   assertExists(message);
 
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  delayUntil(3000, () => cache.messages.has(message.id));
+  delayUntil(10000, () => cache.messages.has(message.id));
 
   if (!cache.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
@@ -61,7 +61,7 @@ async function ifItFailsBlameWolf(
     await message.addReactions(emojiIds, ordered);
   }
 
-  delayUntil(3000, () => cache.messages.get(message.id)?.reactions?.length > 0);
+  delayUntil(10000, () => cache.messages.get(message.id)?.reactions?.length === 2);
 
   assertEquals(await cache.messages.get(message.id)?.reactions?.length, 2);
 }

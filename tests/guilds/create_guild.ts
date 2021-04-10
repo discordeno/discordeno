@@ -17,7 +17,7 @@ Deno.test({
     tempData.guildId = guild.id;
 
     // Delay the execution by 5 seconds to allow GUILD_CREATE event to be processed
-    delayUntil(3000, () => cache.guilds.has(guild.id));
+    delayUntil(10000, () => cache.guilds.has(guild.id));
 
     if (!cache.guilds.has(guild.id)) {
       throw new Error("The guild seemed to be created but it was not cached.");
