@@ -123,7 +123,7 @@ function get(
 function get(
   table: "messages",
   key: string,
-): Promise<DiscordenoMember | undefined>;
+): Promise<DiscordenoMessage | undefined>;
 function get(
   table: "members",
   key: string,

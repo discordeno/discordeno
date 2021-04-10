@@ -1,4 +1,6 @@
 import { botId, startBot } from "../../src/bot.ts";
+import { cache } from "../../src/cache.ts";
+import { deleteServer } from "../../src/helpers/guilds/delete_server.ts";
 import { delay } from "../../src/util/utils.ts";
 import { ws } from "../../src/ws/ws.ts";
 import { assertExists } from "../deps.ts";
@@ -43,6 +45,11 @@ Deno.test({
 
     // Delay the execution by 5 seconds
     await delay(5000);
+
+    // DELETE GUILDS IF LESS THAN 10 SERVERS AS SAFETY MEASURE
+    if (cache.guilds.size <= 10) {
+      for (const guild of cache.guilds.values()) await deleteServer(guild.id);
+    }
 
     // Assertions
     assertExists(botId);

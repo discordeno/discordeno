@@ -13,13 +13,25 @@ import "./guilds/create_guild.ts";
 
 // Channel tests
 import "./channels/create_channel.ts";
+import "./channels/category_children.ts";
 import "./channels/delete_channel.ts";
 
 // Messages tests
 import "./messages/add_reaction.ts";
+import "./messages/add_reactions.ts";
 import "./messages/create_message.ts";
 import "./messages/delete_message.ts";
+import "./messages/delete_messages.ts";
 import "./messages/edit_message.ts";
+import "./messages/get_message.ts";
+import "./messages/get_messages.ts";
+import "./messages/get_reactions.ts";
+import "./messages/pin_message.ts";
+import "./messages/remove_all_reactions.ts";
+import "./messages/remove_reaction.ts";
+import "./messages/remove_reaction_emoji.ts";
+import "./messages/remove_user_reaction.ts";
+import "./messages/unpin_message.ts";
 
 // Final cleanup
 import "./guilds/delete_server.ts";
