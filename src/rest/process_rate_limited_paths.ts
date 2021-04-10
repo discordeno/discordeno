@@ -5,18 +5,19 @@ import { rest } from "./rest.ts";
 export function processRateLimitedPaths() {
   const now = Date.now();
 
-  rest.ratelimitedPaths.forEach((value, key) => {
+  for (const [key, value] of rest.ratelimitedPaths.entries()) {
     rest.eventHandlers.debug?.(
       "loop",
-      `Running forEach loop in process_rate_limited_paths file.`,
+      `Running forEach loop in process_rate_limited_paths file.`
     );
     // IF THE TIME HAS NOT REACHED CANCEL
     if (value.resetTimestamp > now) return;
+
     // RATE LIMIT IS OVER, DELETE THE RATE LIMITER
     rest.ratelimitedPaths.delete(key);
     // IF IT WAS GLOBAL ALSO MARK THE GLOBAL VALUE AS FALSE
     if (key === "global") rest.globallyRateLimited = false;
-  });
+  }
 
   // ALL PATHS ARE CLEARED CAN CANCEL OUT!
   if (!rest.ratelimitedPaths.size) {
@@ -28,7 +29,7 @@ export function processRateLimitedPaths() {
     setTimeout(() => {
       eventHandlers.debug?.(
         "loop",
-        `Running setTimeout in processRateLimitedPaths function.`,
+        `Running setTimeout in processRateLimitedPaths function.`
       );
       processRateLimitedPaths();
     }, 1000);

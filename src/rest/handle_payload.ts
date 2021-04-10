@@ -27,7 +27,7 @@ export async function handlePayload(
     }
 
     // PROCESS THE REQUEST
-    rest.processRequest(request, { body: data, retryCount: 0 });
+    await rest.processRequest(request, { body: data, retryCount: 0 });
   } catch (error) {
     rest.eventHandlers.error("serverRequest", error);
   }
