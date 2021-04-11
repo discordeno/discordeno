@@ -2,17 +2,11 @@ import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import {assertEquals, assertExists} from "../deps.ts";
 import { cache } from "../../src/cache.ts";
 import { sendMessage } from "../../src/helpers/messages/send_message.ts";
-import { createChannel } from "../../src/helpers/channels/create_channel.ts";
 import { delayUntil } from "../util/delay_until.ts";
 
 async function ifItFailsBlameWolf(type: "getter" | "raw", content: "string" | "embed" | "reply" = "string") {
-  const channel = await createChannel(tempData.guildId, {
-    name: "Discordeno-test",
-  });
-
+  const channel = cache.channels.get(tempData.channelId);
   assertExists(channel);
-  // Wait few seconds for the channel create event to arrive and cache it
-  await delayUntil(10000, () => cache.channels.has(channel.id));
 
   let messageContent: any = "Hello World!";
   let secondMessageId = undefined;
@@ -28,7 +22,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", content: "string" | "e
     };
   } else if (content === "reply") {
     const message = await sendMessage(channel.id, "Test Message");
-    assertExists(channel);
+    assertExists(message);
     // Wait few seconds for the channel create event to arrive and cache it
     await delayUntil(10000, () => cache.messages.has(message.id));
 
@@ -115,6 +109,29 @@ Deno.test({
   name: "[message] channel.send() with a reply",
   async fn() {
     await ifItFailsBlameWolf("getter", "reply");
+  },
+  ...defaultTestOptions,
+});
+
+Deno.test({
+  name: "[message] message.reply()",
+  async fn() {
+    const channel = cache.channels.get(tempData.channelId);
+    assertExists(channel);
+
+    const message = await sendMessage(channel.id, "Test Message");
+    assertExists(message);
+    // Wait few seconds for the channel create event to arrive and cache it
+    await delayUntil(10000, () => cache.messages.has(message.id));
+
+    const reply = await message.reply('Welcome!');
+    await delayUntil(10000, () => cache.messages.has(reply.id));
+
+    if (!cache.messages.has(reply.id)) {
+      throw new Error("The message seemed to be sent but it was not cached.");
+    }
+
+    assertEquals(cache.messages.get(reply.id)?.messageReference.messageId, message.id)
   },
   ...defaultTestOptions,
 });
