@@ -11,7 +11,7 @@ jobs:
         deno: ["v1.x"]
     steps:
       - uses: actions/checkout@v2
-      - uses: denolib/setup-deno@v2
+      - uses: denoland/setup-deno@main
         with:
           deno-version: ${{ matrix.deno }}
       - name: Cache dependencies
