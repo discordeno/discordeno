@@ -12,7 +12,7 @@ Deno.test({
       name: "delete-channel",
     });
     // wait 5 seconds to give it time for CHANNEL_CREATE event
-    delayUntil(3000, () => cache.channels.has(channel.id));
+    await delayUntil(3000, () => cache.channels.has(channel.id));
     // Make sure the channel was created.
     if (!cache.channels.has(channel.id)) {
       throw new Error(
@@ -23,7 +23,7 @@ Deno.test({
     // Delete the channel now without a reason
     await deleteChannel(tempData.guildId, channel.id);
     // wait 5 seconds to give it time for CHANNEL_DELETE event
-    delayUntil(3000, () => !cache.channels.has(channel.id));
+    await delayUntil(3000, () => !cache.channels.has(channel.id));
     // Make sure it is gone from cache
     if (cache.channels.has(channel.id)) {
       throw new Error(

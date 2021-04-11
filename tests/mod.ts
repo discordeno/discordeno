@@ -7,7 +7,7 @@ import "./util/utils.ts";
 
 // API TESTING BELOW
 
-// First initate the connection
+// First initiate the connection
 import "./ws/start_bot.ts";
 import "./guilds/create_guild.ts";
 
@@ -15,6 +15,13 @@ import "./guilds/create_guild.ts";
 import "./channels/create_channel.ts";
 import "./channels/category_children.ts";
 import "./channels/delete_channel.ts";
+
+// Emojis tests
+import "./emojis/create_emoji.ts";
+import "./emojis/delete_emoji.ts";
+import "./emojis/edit_emoji.ts";
+import "./emojis/get_emoji.ts";
+import "./emojis/get_emojis.ts";
 
 // Messages tests
 import "./messages/add_reaction.ts";
