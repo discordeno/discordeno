@@ -1,7 +1,17 @@
-export function delayUntil(maxMs: number, isReady: () => boolean) {
-  const maxed = Date.now() + maxMs;
+export async function delayUntil(maxMs: number, isReady: () => boolean, timeoutTime= 100): Promise<void> {
+  const maxTime = Date.now() + maxMs;
 
-  while (Date.now() < maxed) {
-    if (isReady()) return;
+  function hackyFix(resolve: () => void) {
+    if (isReady() || Date.now() >= maxTime) {
+      resolve();
+    }
+    else {
+      setTimeout(async () => {
+        await hackyFix(resolve);
+        resolve();
+      }, timeoutTime);
+    }
   }
+
+  return new Promise(resolve => hackyFix(resolve));
 }
