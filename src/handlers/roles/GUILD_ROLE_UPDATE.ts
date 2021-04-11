@@ -11,7 +11,7 @@ export async function handleGuildRoleUpdate(data: DiscordGatewayPayload) {
   const cachedRole = guild.roles.get(payload.role.id);
   if (!cachedRole) return;
 
-  const role = await structures.createDiscordenoRole(payload.role);
+  const role = await structures.createDiscordenoRole(payload);
   guild.roles.set(payload.role.id, role);
   await cacheHandlers.set("guilds", guild.id, guild);
 
