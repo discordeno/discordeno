@@ -1,1 +1,4 @@
-export type DiscordOverwriteTypes = 0 | 1;
+export enum DiscordOverwriteTypes {
+    ROLE,
+    MEMBER
+}

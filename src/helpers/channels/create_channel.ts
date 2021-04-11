@@ -6,11 +6,10 @@ import { DiscordChannel } from "../../types/channels/channel.ts";
 import { CreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
 import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
-import {
-  requireBotGuildPermissions,
-} from "../../util/permissions.ts";
+import { requireBotGuildPermissions } from "../../util/permissions.ts";
 import { camelKeysToSnakeCase } from "../../util/utils.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import { calculateBits } from "../../util/permissions.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(
