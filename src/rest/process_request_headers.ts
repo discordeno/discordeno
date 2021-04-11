@@ -6,7 +6,7 @@ export function processRequestHeaders(url: string, headers: Headers) {
 
   // GET ALL NECESSARY HEADERS
   const remaining = headers.get("x-ratelimit-remaining");
-  const retryAfter = headers.get("retry-after");
+  const retryAfter = headers.get("x-ratelimit-reset-after");
   const reset = Date.now() + Number(retryAfter) * 1000;
   const global = headers.get("x-ratelimit-global");
   const bucketId = headers.get("x-ratelimit-bucket");
