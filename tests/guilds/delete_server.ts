@@ -14,7 +14,7 @@ Deno.test({
     }
 
     await deleteServer(tempData.guildId);
-    await delayUntil(10000, () => cache.guilds.has(tempData.guildId));
+    await delayUntil(10000, () => !cache.guilds.has(tempData.guildId));
 
     if (cache.guilds.has(tempData.guildId)) {
       throw new Error("The guild was not able to be deleted.");

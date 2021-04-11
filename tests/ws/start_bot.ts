@@ -46,7 +46,7 @@ Deno.test({
     });
 
     // Delay the execution by 5 seconds
-    await delayUntil(3000, () => cache.isReady);
+    await delay(3000);
 
     // DELETE GUILDS IF LESS THAN 10 SERVERS AS SAFETY MEASURE
     if (cache.guilds.size <= 10) {
