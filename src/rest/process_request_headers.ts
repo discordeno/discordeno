@@ -6,8 +6,8 @@ export function processRequestHeaders(url: string, headers: Headers) {
 
   // GET ALL NECESSARY HEADERS
   const remaining = headers.get("x-ratelimit-remaining");
-  const resetTimestamp = headers.get("x-ratelimit-reset");
   const retryAfter = headers.get("retry-after");
+  const reset = Date.now() + Number(retryAfter) * 1000;
   const global = headers.get("x-ratelimit-global");
   const bucketId = headers.get("x-ratelimit-bucket");
 
@@ -18,7 +18,7 @@ export function processRequestHeaders(url: string, headers: Headers) {
     // SAVE THE URL AS LIMITED, IMPORTANT FOR NEW REQUESTS BY USER WITHOUT BUCKET
     rest.ratelimitedPaths.set(url, {
       url,
-      resetTimestamp: Number(resetTimestamp) * 1000,
+      resetTimestamp: reset,
       bucketId,
     });
 
@@ -26,7 +26,7 @@ export function processRequestHeaders(url: string, headers: Headers) {
     if (bucketId) {
       rest.ratelimitedPaths.set(bucketId, {
         url,
-        resetTimestamp: Number(resetTimestamp) * 1000,
+        resetTimestamp: reset,
         bucketId,
       });
     }
@@ -34,7 +34,6 @@ export function processRequestHeaders(url: string, headers: Headers) {
 
   // IF THERE IS NO REMAINING GLOBAL LIMIT, MARK IT RATE LIMITED GLOBALLY
   if (global) {
-    const reset = Date.now() + Number(retryAfter) * 1000;
     rest.eventHandlers.globallyRateLimited(url, reset);
     rest.globallyRateLimited = true;
     ratelimited = true;
