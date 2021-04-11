@@ -4,6 +4,7 @@ import { deleteServer } from "../../src/helpers/guilds/delete_server.ts";
 import { delay } from "../../src/util/utils.ts";
 import { ws } from "../../src/ws/ws.ts";
 import { assertExists } from "../deps.ts";
+import {delayUntil} from "../util/delay_until.ts";
 
 // Set necessary settings
 // Disables the logger which logs everything
@@ -45,7 +46,7 @@ Deno.test({
     });
 
     // Delay the execution by 5 seconds
-    await delay(3000);
+    await delayUntil(3000, () => cache.isReady);
 
     // DELETE GUILDS IF LESS THAN 10 SERVERS AS SAFETY MEASURE
     if (cache.guilds.size <= 10) {

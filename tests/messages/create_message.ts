@@ -12,7 +12,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
 
   assertExists(channel);
   // Wait few seconds for the channel create event to arrive and cache it
-  delayUntil(10000, () => cache.channels.has(channel.id));
+  await delayUntil(10000, () => cache.channels.has(channel.id));
 
   const message = type === "raw"
     ? await sendMessage(channel.id, "Hello World!")
@@ -22,7 +22,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   assertExists(message);
 
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  delayUntil(10000, () => cache.messages.has(message.id));
+  await delayUntil(10000, () => cache.messages.has(message.id));
 
   if (!cache.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");

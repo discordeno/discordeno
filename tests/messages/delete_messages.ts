@@ -9,7 +9,7 @@ async function ifItFailsBlameWolf(reason?: string) {
   // Assertions
   assertExists(message);
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  delayUntil(10000, () => cache.messages.has(message.id));
+  await delayUntil(10000, () => cache.messages.has(message.id));
   // Make sure the message was created.
   if (!cache.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
@@ -20,7 +20,7 @@ async function ifItFailsBlameWolf(reason?: string) {
   // Assertions
   assertExists(secondMessage);
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  delayUntil(10000, () => cache.messages.has(secondMessage.id));
+  await delayUntil(10000, () => cache.messages.has(secondMessage.id));
   // Make sure the message was created.
   if (!cache.messages.has(secondMessage.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
@@ -34,7 +34,7 @@ async function ifItFailsBlameWolf(reason?: string) {
   );
 
   // Wait 5 seconds to give it time for MESSAGE_DELETE event
-  delayUntil(
+  await delayUntil(
     10000,
     () =>
       !cache.messages.has(message.id) && !cache.messages.has(secondMessage.id),
