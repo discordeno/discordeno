@@ -34,20 +34,22 @@ export function processRequestHeaders(url: string, headers: Headers) {
 
   // IF THERE IS NO REMAINING GLOBAL LIMIT, MARK IT RATE LIMITED GLOBALLY
   if (global) {
-    rest.eventHandlers.globallyRateLimited(url, reset);
+    const retryAfter = headers.get("retry-after");
+    const globalReset = Date.now() + Number(retryAfter) * 1000;
+    rest.eventHandlers.globallyRateLimited(url, globalReset);
     rest.globallyRateLimited = true;
     ratelimited = true;
 
     rest.ratelimitedPaths.set("global", {
       url: "global",
-      resetTimestamp: reset,
+      resetTimestamp: globalReset,
       bucketId,
     });
 
     if (bucketId) {
       rest.ratelimitedPaths.set(bucketId, {
         url: "global",
-        resetTimestamp: reset,
+        resetTimestamp: globalReset,
         bucketId,
       });
     }
