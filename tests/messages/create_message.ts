@@ -1,11 +1,11 @@
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
-import { assertExists } from "../deps.ts";
+import {assertEquals, assertExists} from "../deps.ts";
 import { cache } from "../../src/cache.ts";
 import { sendMessage } from "../../src/helpers/messages/send_message.ts";
 import { createChannel } from "../../src/helpers/channels/create_channel.ts";
 import { delayUntil } from "../util/delay_until.ts";
 
-async function ifItFailsBlameWolf(type: "getter" | "raw") {
+async function ifItFailsBlameWolf(type: "getter" | "raw", content: "string" | "embed" | "reply" = "string") {
   const channel = await createChannel(tempData.guildId, {
     name: "Discordeno-test",
   });
@@ -14,9 +14,43 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   // Wait few seconds for the channel create event to arrive and cache it
   await delayUntil(10000, () => cache.channels.has(channel.id));
 
+  let messageContent: any = "Hello World!";
+  let secondMessageId = undefined;
+  if (content === "embed") {
+    messageContent = {
+      content: "Hello World!",
+      embed: {
+        title: "Hello, Embed!",
+        description: "This is an embedded message.",
+        color: 0x41ebf4,
+        fields: []
+      }
+    };
+  } else if (content === "reply") {
+    const message = await sendMessage(channel.id, "Test Message");
+    assertExists(channel);
+    // Wait few seconds for the channel create event to arrive and cache it
+    await delayUntil(10000, () => cache.messages.has(message.id));
+
+    secondMessageId = message.id;
+
+    messageContent = {
+      content: "Hi",
+      allowedMentions: {
+        repliedUser: true
+      },
+      messageReference: {
+        messageId: message.id,
+        channelId: channel.id,
+        guildId: tempData.guildId,
+        failIfNotExists: true
+      }
+    }
+  }
+
   const message = type === "raw"
-    ? await sendMessage(channel.id, "Hello World!")
-    : await channel.send("Hello World!");
+      ? await sendMessage(channel.id, messageContent)
+      : await channel.send(messageContent);
 
   // Assertions
   assertExists(message);
@@ -26,6 +60,14 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
 
   if (!cache.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
+  }
+
+  if (content === "string") {
+    assertEquals(cache.messages.get(message.id)?.content, messageContent)
+  } else if (content === "embed") {
+    assertEquals(cache.messages.get(message.id)?.embeds?.length, 1);
+  } else {
+    assertEquals(cache.messages.get(message.id)?.messageReference.messageId, secondMessageId)
   }
 }
 
@@ -41,6 +83,38 @@ Deno.test({
   name: "[message] channel.send()",
   async fn() {
     await ifItFailsBlameWolf("getter");
+  },
+  ...defaultTestOptions,
+});
+
+Deno.test({
+  name: "[message] send a new message with an embed",
+  async fn() {
+    await ifItFailsBlameWolf("raw", "embed");
+  },
+  ...defaultTestOptions,
+});
+
+Deno.test({
+  name: "[message] channel.send() with an embed",
+  async fn() {
+    await ifItFailsBlameWolf("getter", "embed");
+  },
+  ...defaultTestOptions,
+});
+
+Deno.test({
+  name: "[message] send a message with a reply",
+  async fn() {
+    await ifItFailsBlameWolf("raw", "reply");
+  },
+  ...defaultTestOptions,
+});
+
+Deno.test({
+  name: "[message] channel.send() with a reply",
+  async fn() {
+    await ifItFailsBlameWolf("getter", "reply");
   },
   ...defaultTestOptions,
 });

@@ -72,13 +72,13 @@ const baseMessage: Partial<DiscordenoMessage> = {
       ? {
         content,
         mentions: { repliedUser: true },
-        replyMessageId: this.id,
+          messageReference: { messageId: this.id },
         failReplyIfNotExists: false,
       }
       : {
         ...content,
         mentions: { ...(content.allowedMentions || {}), repliedUser: true },
-        replyMessageId: this.id,
+          messageReference: { messageId: this.id },
         failReplyIfNotExists:
           content.messageReference?.failIfNotExists === true,
       };
