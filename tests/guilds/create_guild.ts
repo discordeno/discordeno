@@ -13,6 +13,7 @@ Deno.test({
 
     // Assertions
     assertExists(guild);
+    assertExists(guild.id);
 
     tempData.guildId = guild.id;
 
@@ -20,7 +21,7 @@ Deno.test({
     delayUntil(10000, () => cache.guilds.has(guild.id));
 
     if (!cache.guilds.has(guild.id)) {
-      throw new Error("The guild seemed to be created but it was not cached.");
+      throw new Error(`The guild seemed to be created but it was not cached. ${JSON.stringify(guild)}`);
     }
   },
   ...defaultTestOptions,
