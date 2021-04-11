@@ -40,6 +40,14 @@ import "./messages/get_reactions.ts";
 import "./messages/pin_message.ts";
 import "./messages/unpin_message.ts";
 
+// Roles tests
+import "./roles/add_role.ts";
+import "./roles/create_role.ts";
+import "./roles/delete_role.ts";
+import "./roles/edit_role.ts";
+import "./roles/remove_role.ts";
+import "./roles/swap_roles.ts";
+
 // Final cleanup
 import "./guilds/delete_server.ts";
 import "./ws/ws_close.ts";
