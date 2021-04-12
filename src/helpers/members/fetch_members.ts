@@ -1,6 +1,7 @@
 import { identifyPayload } from "../../bot.ts";
 import { DiscordenoMember } from "../../structures/member.ts";
 import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
+import { RequestGuildMembers } from "../../types/guilds/request_guild_members.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { Collection } from "../../util/collection.ts";
 
@@ -15,7 +16,7 @@ import { Collection } from "../../util/collection.ts";
 export function fetchMembers(
   guildId: string,
   shardId: number,
-  options?: FetchMembersOptions,
+  options?: RequestGuildMembers
 ) {
   // You can request 1 member without the intent
   if (
@@ -32,4 +33,17 @@ export function fetchMembers(
   return new Promise((resolve) => {
     return requestAllMembers(guildId, shardId, resolve, options);
   }) as Promise<Collection<string, DiscordenoMember>>;
+}
+
+function requestAllMembers(
+  guildId: string,
+  shardId: number,
+  resolve: (
+    value:
+      | Collection<string, DiscordenoMember>
+      | PromiseLike<Collection<string, DiscordenoMember>>
+  ) => void,
+  options: any
+): void {
+  throw new Error("Function not implemented.");
 }
