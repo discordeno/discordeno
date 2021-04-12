@@ -11,7 +11,7 @@ export async function getMessages(
     | GetMessagesAfter
     | GetMessagesBefore
     | GetMessagesAround
-    | GetMessages
+    | GetMessages,
 ) {
   await requireBotChannelPermissions(channelId, [
     "VIEW_CHANNEL",
@@ -23,10 +23,10 @@ export async function getMessages(
   const result = (await rest.runMethod(
     "get",
     endpoints.CHANNEL_MESSAGES(channelId),
-    options
+    options,
   )) as DiscordMessage[];
 
   return Promise.all(
-    result.map((res) => structures.createDiscordenoMessage(res))
+    result.map((res) => structures.createDiscordenoMessage(res)),
   );
 }
