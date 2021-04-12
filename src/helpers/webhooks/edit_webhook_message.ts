@@ -22,7 +22,7 @@ export async function editWebhookMessage(
 
   if (options.allowedMentions) {
     if (options.allowedMentions.users?.length) {
-      if (options.allowedMentions.parse.includes("users")) {
+      if (options.allowedMentions.parse.includes(DiscordAllowedMentionsTypes.UserMentions)) {
         options.allowedMentions.parse = options.allowedMentions.parse.filter(
           (p) => p !== "users"
         );

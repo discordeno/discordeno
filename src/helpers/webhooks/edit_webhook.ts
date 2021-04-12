@@ -1,12 +1,15 @@
 import { rest } from "../../rest/rest.ts";
+import { ModifyWebhook } from "../../types/webhooks/modify_webhook.ts";
+import { Webhook, DiscordWebhook } from "../../types/webhooks/webhook.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 /** Edit a webhook. Requires the `MANAGE_WEBHOOKS` permission. Returns the updated webhook object on success. */
 export async function editWebhook(
   channelId: string,
   webhookId: string,
-  options: WebhookEditOptions,
+  options: ModifyWebhook
 ) {
   await requireBotChannelPermissions(channelId, ["MANAGE_WEBHOOKS"]);
 
@@ -16,8 +19,8 @@ export async function editWebhook(
     {
       ...options,
       channel_id: options.channelId,
-    },
+    }
   );
 
-  return result as WebhookPayload;
+  return snakeKeysToCamelCase(result as DiscordWebhook) as Webhook;
 }
