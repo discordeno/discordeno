@@ -1,5 +1,5 @@
 import { identifyPayload } from "../../bot.ts";
-import { Member } from "../../structures/mod.ts";
+import { DiscordenoMember } from "../../structures/member.ts";
 import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { Collection } from "../../util/collection.ts";
@@ -31,5 +31,5 @@ export function fetchMembers(
 
   return new Promise((resolve) => {
     return requestAllMembers(guildId, shardId, resolve, options);
-  }) as Promise<Collection<string, Member>>;
+  }) as Promise<Collection<string, DiscordenoMember>>;
 }
