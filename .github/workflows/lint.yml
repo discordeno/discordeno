@@ -5,8 +5,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: denolib/setup-deno@v2
-      - name: Run fmt check script
-        run: deno fmt --check
+      - uses: denoland/setup-deno@main
+      - name: Run fmt script
+        run: deno fmt
+      - name: Commit formatted files
+        run: |
+          git config --global user.email ${{ secrets.GITHUB_ACTOR }}@users.noreply.github.com
+          git config --global user.name ${{ secrets.GITHUB_ACTOR }}
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ secrets.GITHUB_REPOSITORY }}
+          git commit --all --message "Format files"
+          git push
       - name: Run lint script
         run: deno lint src/** test/** --unstable --ignore=./src/types,./src/interactions/types
