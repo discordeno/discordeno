@@ -23,7 +23,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'run-tests' }}
         run: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} deno test --unstable --coverage=coverage -A --no-check tests/mod.ts
       - name: Create coverage report
-        run: deno --no-check --unstable coverage ./coverage --lcov > coverage.lcov # create coverage report
+        run: deno --unstable coverage ./coverage --lcov > coverage.lcov # create coverage report
       - name: Collect coverage
         uses: codecov/codecov-action@v1.0.10 # upload the report on Codecov
         with:
