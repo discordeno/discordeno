@@ -5,6 +5,7 @@ import { DiscordenoMember } from "../../structures/member.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
 import {
+  DiscordGuildMember,
   DiscordGuildMemberWithUser,
   GuildMember,
 } from "../../types/guilds/guild_member.ts";
@@ -49,7 +50,7 @@ export async function getMembers(guildId: string, options?: ListGuildMembers) {
       );
     }
 
-    const result: GuildMember[] = (await rest.runMethod(
+    const result: DiscordGuildMember[] = (await rest.runMethod(
       "get",
       `${endpoints.GUILD_MEMBERS(guildId)}?limit=${
         membersLeft > 1000 ? 1000 : membersLeft
