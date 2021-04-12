@@ -2,6 +2,7 @@ import { rest } from "../../rest/rest.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { CreateWebhook } from "../../types/webhooks/create_webhook.ts";
 import { Webhook } from "../../types/webhooks/webhook.ts";
+import { DiscordWebhook } from "../../types/webhooks/webhook.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 import { snakeKeysToCamelCase, urlToBase64 } from "../../util/utils.ts";
@@ -27,7 +28,7 @@ export async function createWebhook(
     throw new Error(Errors.INVALID_WEBHOOK_NAME);
   }
 
-  const result = await rest.runMethod(
+  const result: DiscordWebhook = await rest.runMethod(
     "post",
     endpoints.CHANNEL_WEBHOOKS(channelId),
     {
