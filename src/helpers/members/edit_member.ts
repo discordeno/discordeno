@@ -1,6 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
+import { DiscordGuildMember } from "../../types/guilds/guild_member.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
@@ -69,7 +70,7 @@ export async function editMember(
     "patch",
     endpoints.GUILD_MEMBER(guildId, memberId),
     options,
-  ) as MemberCreatePayload;
+  ) as DiscordGuildMember;
   const member = await structures.createDiscordenoMember(result, guildId);
 
   return member;

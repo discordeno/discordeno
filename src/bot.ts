@@ -1,7 +1,8 @@
 import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
 import { rest } from "./rest/rest.ts";
+import { EventHandlers } from "./types/discordeno/eventHandlers.ts";
 import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
-import { DiscordGetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
+import { GetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { ws } from "./ws/ws.ts";
 
@@ -12,7 +13,7 @@ export let applicationId = "";
 
 export let eventHandlers: EventHandlers = {};
 
-export let botGatewayData: DiscordGetGatewayBot;
+export let botGatewayData: GetGatewayBot;
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
 export const identifyPayload = {

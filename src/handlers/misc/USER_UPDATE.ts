@@ -1,10 +1,11 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { DiscordUser } from "../../types/users/user.ts";
+import { DiscordUser, User } from "../../types/users/user.ts";
+import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 export async function handleUserUpdate(data: DiscordGatewayPayload) {
-  const userData = data.d as DiscordUser;
+  const userData = camelKeysToSnakeCase(data.d as DiscordUser) as User;
 
   const member = await cacheHandlers.get("members", userData.id);
   if (!member) return;

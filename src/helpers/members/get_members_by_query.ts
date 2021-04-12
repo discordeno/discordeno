@@ -1,5 +1,5 @@
 import { cacheHandlers } from "../../cache.ts";
-import { Member } from "../../structures/mod.ts";
+import { DiscordenoMember } from "../../structures/member.ts";
 import { Collection } from "../../util/collection.ts";
 
 /** Returns guild member objects for the specified user by their nickname/username.
@@ -19,5 +19,5 @@ export async function getMembersByQuery(
       query: name,
       limit,
     });
-  }) as Promise<Collection<string, Member>>;
+  }) as Promise<Collection<string, DiscordenoMember>>;
 }

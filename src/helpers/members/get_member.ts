@@ -1,6 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
+import { DiscordGuildMember } from "../../types/guilds/guild_member.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Returns a guild member object for the specified user.
@@ -18,7 +19,7 @@ export async function getMember(
   const data = (await rest.runMethod(
     "get",
     endpoints.GUILD_MEMBER(guildId, id),
-  )) as MemberCreatePayload;
+  )) as DiscordGuildMember;
 
   const discordenoMember = await structures.createDiscordenoMember(
     data,

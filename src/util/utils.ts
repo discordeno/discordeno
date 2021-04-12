@@ -1,6 +1,8 @@
 import { encode } from "../../deps.ts";
 import { eventHandlers } from "../bot.ts";
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
+import { StatusUpdate } from "../types/gateway/status_update.ts";
+import { DiscordApplicationCommandOptionTypes } from "../types/interactions/application_command_option_types.ts";
 import { Errors } from "../types/misc/errors.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
@@ -9,7 +11,7 @@ import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 
 // TODO: move this function to helpers
 export function editBotStatus(
-  data: Pick<GatewayStatusUpdatePayload, "activities" | "status">,
+  data: Omit<StatusUpdate, "afk" | "since">,
 ) {
   ws.shards.forEach((shard) => {
     eventHandlers.debug?.(
@@ -131,7 +133,7 @@ export function snakeKeysToCamelCase<T>(
 /** @private */
 function validateSlashOptionChoices(
   choices: SlashCommandOptionChoice[],
-  optionType: SlashCommandOptionType,
+  optionType: DiscordApplicationCommandOptionTypes,
 ) {
   for (const choice of choices) {
     eventHandlers.debug?.(
@@ -143,11 +145,11 @@ function validateSlashOptionChoices(
     }
 
     if (
-      (optionType === SlashCommandOptionType.STRING &&
+      (optionType === DiscordApplicationCommandOptionTypes.STRING &&
         (typeof choice.value !== "string" ||
           choice.value.length < 1 ||
           choice.value.length > 100)) ||
-      (optionType === SlashCommandOptionType.INTEGER &&
+      (optionType === DiscordApplicationCommandOptionTypes.INTEGER &&
         typeof choice.value !== "number")
     ) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
@@ -165,8 +167,8 @@ function validateSlashOptions(options: SlashCommandOption[]) {
     if (
       option.choices?.length &&
       (option.choices.length > 25 ||
-        (option.type !== SlashCommandOptionType.STRING &&
-          option.type !== SlashCommandOptionType.INTEGER))
+        (option.type !== DiscordApplicationCommandOptionTypes.STRING &&
+          option.type !== DiscordApplicationCommandOptionTypes.INTEGER))
     ) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
@@ -186,7 +188,6 @@ function validateSlashOptions(options: SlashCommandOption[]) {
   }
 }
 
-/** @private */
 export function validateSlashCommands(
   commands: UpsertSlashCommandOptions[],
   create = false,
