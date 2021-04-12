@@ -2,7 +2,6 @@ import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
 import { rest } from "./rest/rest.ts";
 import { EventHandlers } from "./types/discordeno/eventHandlers.ts";
 import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
-import { GetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { ws } from "./ws/ws.ts";
 
@@ -40,7 +39,6 @@ export async function startBot(config: BotConfig) {
 
   // Initial API connection to get info about bots connection
   ws.botGatewayData = await getGatewayBot();
-  console.log(ws.botGatewayData)
   ws.maxShards = ws.maxShards || ws.botGatewayData.shards;
 
   // Explicitly append gateway version and encoding
