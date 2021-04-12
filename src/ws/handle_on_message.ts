@@ -27,7 +27,7 @@ export async function handleOnMessage(message: any, shardId: number) {
   if (typeof message !== "string") return;
 
   const messageData = JSON.parse(message) as DiscordGatewayPayload;
-  ws.log("RAW", { shardId, payload: messageData});
+  ws.log("RAW", { shardId, payload: messageData });
 
   switch (messageData.op) {
     case DiscordGatewayOpcodes.Hello:

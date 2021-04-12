@@ -1,5 +1,8 @@
 import { rest } from "../../rest/rest.ts";
-import { DiscordGetGatewayBot, GetGatewayBot } from "../../types/gateway/get_gateway_bot.ts";
+import {
+  DiscordGetGatewayBot,
+  GetGatewayBot,
+} from "../../types/gateway/get_gateway_bot.ts";
 import { endpoints } from "../../util/constants.ts";
 import { snakeKeysToCamelCase } from "../../util/utils.ts";
 

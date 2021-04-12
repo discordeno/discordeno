@@ -1,4 +1,5 @@
 import { rest } from "../../rest/rest.ts";
+import { ModifyGuildIntegration } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -6,7 +7,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function editIntegration(
   guildId: string,
   id: string,
-  options: EditIntegrationOptions,
+  options: ModifyGuildIntegration,
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 

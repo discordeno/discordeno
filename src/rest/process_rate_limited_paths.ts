@@ -8,7 +8,7 @@ export function processRateLimitedPaths() {
   for (const [key, value] of rest.ratelimitedPaths.entries()) {
     rest.eventHandlers.debug?.(
       "loop",
-      `Running forEach loop in process_rate_limited_paths file.`
+      `Running forEach loop in process_rate_limited_paths file.`,
     );
     // IF THE TIME HAS NOT REACHED CANCEL
     if (value.resetTimestamp > now) return;
@@ -29,7 +29,7 @@ export function processRateLimitedPaths() {
     setTimeout(() => {
       eventHandlers.debug?.(
         "loop",
-        `Running setTimeout in processRateLimitedPaths function.`
+        `Running setTimeout in processRateLimitedPaths function.`,
       );
       processRateLimitedPaths();
     }, 1000);

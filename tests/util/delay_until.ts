@@ -1,11 +1,14 @@
-export async function delayUntil(maxMs: number, isReady: () => boolean, timeoutTime= 100): Promise<void> {
+export async function delayUntil(
+  maxMs: number,
+  isReady: () => boolean,
+  timeoutTime = 100,
+): Promise<void> {
   const maxTime = Date.now() + maxMs;
 
   function hackyFix(resolve: () => void) {
     if (isReady() || Date.now() >= maxTime) {
       resolve();
-    }
-    else {
+    } else {
       setTimeout(async () => {
         await hackyFix(resolve);
         resolve();
@@ -13,5 +16,5 @@ export async function delayUntil(maxMs: number, isReady: () => boolean, timeoutT
     }
   }
 
-  return new Promise(resolve => hackyFix(resolve));
+  return new Promise((resolve) => hackyFix(resolve));
 }

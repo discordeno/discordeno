@@ -10,7 +10,7 @@ import { endpoints } from "../../util/constants.ts";
 export async function executeWebhook(
   webhookId: string,
   webhookToken: string,
-  options: ExecuteWebhook
+  options: ExecuteWebhook,
 ) {
   if (!options.content && !options.file && !options.embeds) {
     throw new Error(Errors.INVALID_WEBHOOK_OPTIONS);
@@ -28,18 +28,18 @@ export async function executeWebhook(
     if (options.allowedMentions.users?.length) {
       if (
         options.allowedMentions.parse.includes(
-          DiscordAllowedMentionsTypes.UserMentions
+          DiscordAllowedMentionsTypes.UserMentions,
         )
       ) {
         options.allowedMentions.parse = options.allowedMentions.parse.filter(
-          (p) => p !== "users"
+          (p) => p !== "users",
         );
       }
 
       if (options.allowedMentions.users.length > 100) {
         options.allowedMentions.users = options.allowedMentions.users.slice(
           0,
-          100
+          100,
         );
       }
     }
@@ -47,18 +47,18 @@ export async function executeWebhook(
     if (options.allowedMentions.roles?.length) {
       if (
         options.allowedMentions.parse.includes(
-          DiscordAllowedMentionsTypes.RoleMentions
+          DiscordAllowedMentionsTypes.RoleMentions,
         )
       ) {
         options.allowedMentions.parse = options.allowedMentions.parse.filter(
-          (p) => p !== "roles"
+          (p) => p !== "roles",
         );
       }
 
       if (options.allowedMentions.roles.length > 100) {
         options.allowedMentions.roles = options.allowedMentions.roles.slice(
           0,
-          100
+          100,
         );
       }
     }
@@ -73,7 +73,7 @@ export async function executeWebhook(
       ...options,
       allowed_mentions: options.allowedMentions,
       avatar_url: options.avatarUrl,
-    }
+    },
   );
   if (!options.wait) return;
 

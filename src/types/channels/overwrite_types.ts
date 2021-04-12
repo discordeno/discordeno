@@ -1,4 +1,4 @@
 export enum DiscordOverwriteTypes {
-    ROLE,
-    MEMBER
+  ROLE,
+  MEMBER,
 }

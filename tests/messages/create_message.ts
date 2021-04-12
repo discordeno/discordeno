@@ -1,10 +1,13 @@
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
-import {assertEquals, assertExists} from "../deps.ts";
+import { assertEquals, assertExists } from "../deps.ts";
 import { cache } from "../../src/cache.ts";
 import { sendMessage } from "../../src/helpers/messages/send_message.ts";
 import { delayUntil } from "../util/delay_until.ts";
 
-async function ifItFailsBlameWolf(type: "getter" | "raw", content: "string" | "embed" | "reply" = "string") {
+async function ifItFailsBlameWolf(
+  type: "getter" | "raw",
+  content: "string" | "embed" | "reply" = "string",
+) {
   const channel = cache.channels.get(tempData.channelId);
   assertExists(channel);
 
@@ -17,8 +20,8 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", content: "string" | "e
         title: "Hello, Embed!",
         description: "This is an embedded message.",
         color: 0x41ebf4,
-        fields: []
-      }
+        fields: [],
+      },
     };
   } else if (content === "reply") {
     const message = await sendMessage(channel.id, "Test Message");
@@ -31,20 +34,20 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", content: "string" | "e
     messageContent = {
       content: "Hi",
       allowedMentions: {
-        repliedUser: true
+        repliedUser: true,
       },
       messageReference: {
         messageId: message.id,
         channelId: channel.id,
         guildId: tempData.guildId,
-        failIfNotExists: true
-      }
-    }
+        failIfNotExists: true,
+      },
+    };
   }
 
   const message = type === "raw"
-      ? await sendMessage(channel.id, messageContent)
-      : await channel.send(messageContent);
+    ? await sendMessage(channel.id, messageContent)
+    : await channel.send(messageContent);
 
   // Assertions
   assertExists(message);
@@ -57,11 +60,14 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", content: "string" | "e
   }
 
   if (content === "string") {
-    assertEquals(cache.messages.get(message.id)?.content, messageContent)
+    assertEquals(cache.messages.get(message.id)?.content, messageContent);
   } else if (content === "embed") {
     assertEquals(cache.messages.get(message.id)?.embeds?.length, 1);
   } else {
-    assertEquals(cache.messages.get(message.id)?.messageReference.messageId, secondMessageId)
+    assertEquals(
+      cache.messages.get(message.id)?.messageReference.messageId,
+      secondMessageId,
+    );
   }
 }
 
@@ -124,14 +130,17 @@ Deno.test({
     // Wait few seconds for the channel create event to arrive and cache it
     await delayUntil(10000, () => cache.messages.has(message.id));
 
-    const reply = await message.reply('Welcome!');
+    const reply = await message.reply("Welcome!");
     await delayUntil(10000, () => cache.messages.has(reply.id));
 
     if (!cache.messages.has(reply.id)) {
       throw new Error("The message seemed to be sent but it was not cached.");
     }
 
-    assertEquals(cache.messages.get(reply.id)?.messageReference.messageId, message.id)
+    assertEquals(
+      cache.messages.get(reply.id)?.messageReference.messageId,
+      message.id,
+    );
   },
   ...defaultTestOptions,
 });

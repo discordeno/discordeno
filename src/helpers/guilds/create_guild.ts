@@ -12,14 +12,14 @@ export async function createGuild(options: CreateGuild) {
   const result = (await rest.runMethod(
     "post",
     endpoints.GUILDS,
-    options
+    options,
   )) as DiscordGuild;
 
   const guild = await structures.createDiscordenoGuild(result, 0);
   // MANUALLY CACHE THE GUILD
   await cacheHandlers.set("guilds", guild.id, guild);
   // MANUALLY CACHE THE BOT
-  await getMember(guild.id, botId)
+  await getMember(guild.id, botId);
 
   return guild;
 }

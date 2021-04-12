@@ -33,7 +33,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
             name: "blamewolf",
             image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
             roles: [],
-          }
+          },
         )
       ).id
     }>`;
@@ -47,7 +47,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
 
   await delayUntil(
     10000,
-    () => cache.messages.get(message.id)?.reactions?.length === 1
+    () => cache.messages.get(message.id)?.reactions?.length === 1,
   );
 
   assertEquals(
@@ -55,9 +55,9 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
       .get(message.id)
       ?.reactions?.filter(
         (reaction: DiscordReaction) =>
-          reaction.emoji?.name === (custom ? "blamewolf" : "❤")
+          reaction.emoji?.name === (custom ? "blamewolf" : "❤"),
       ).length,
-    1
+    1,
   );
 }
 

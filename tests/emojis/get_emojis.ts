@@ -5,15 +5,18 @@ import { delayUntil } from "../util/delay_until.ts";
 import { getEmojis } from "../../src/helpers/mod.ts";
 
 Deno.test({
-    name: "[emoji] get emojis",
-    async fn() {
-        cache.guilds.get(tempData.guildId)?.emojis?.clear();
+  name: "[emoji] get emojis",
+  async fn() {
+    cache.guilds.get(tempData.guildId)?.emojis?.clear();
 
-        await getEmojis(tempData.guildId);
+    await getEmojis(tempData.guildId);
 
-        await delayUntil(10000, () => cache.guilds.get(tempData.guildId)?.emojis?.size > 0);
+    await delayUntil(
+      10000,
+      () => cache.guilds.get(tempData.guildId)?.emojis?.size > 0,
+    );
 
-        assertEquals(cache.guilds.get(tempData.guildId)?.emojis?.size > 0, true);
-    },
-    ...defaultTestOptions,
+    assertEquals(cache.guilds.get(tempData.guildId)?.emojis?.size > 0, true);
+  },
+  ...defaultTestOptions,
 });

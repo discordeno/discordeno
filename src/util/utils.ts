@@ -7,6 +7,7 @@ import { CreateGlobalApplicationCommand } from "../types/interactions/create_glo
 import { Errors } from "../types/misc/errors.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
+import { EditGlobalApplicationCommand } from "../types/mod.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 
 export async function urlToBase64(url: string) {
@@ -167,7 +168,7 @@ function validateSlashOptions(options: ApplicationCommandOption[]) {
 }
 
 export function validateSlashCommands(
-  commands: CreateGlobalApplicationCommand[],
+  commands: (CreateGlobalApplicationCommand | EditGlobalApplicationCommand)[],
   create = false,
 ) {
   for (const command of commands) {

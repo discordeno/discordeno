@@ -13,20 +13,21 @@ export function simplifyUrl(url: string, method: string) {
     .replace(/\/reactions\/[^/]+/g, "/reactions/skillzPrefersID")
     .replace(
       /^\/webhooks\/(\d+)\/[A-Za-z0-9-_]{64,}/,
-      "/webhooks/$1/:itohIsAHoti"
+      "/webhooks/$1/:itohIsAHoti",
     );
 
   // GENERAL /reactions and /reactions/emoji/@me share the buckets
-  if (route.includes("/reactions"))
+  if (route.includes("/reactions")) {
     route = route.substring(
       0,
-      route.indexOf("/reactions") + "/reactions".length
+      route.indexOf("/reactions") + "/reactions".length,
     );
+  }
 
   // Delete Messsage endpoint has its own ratelimit
   if (method === "DELETE" && route.endsWith("/messages/skillzPrefersID")) {
     route = method + route;
   }
-  
+
   return route;
 }

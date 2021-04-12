@@ -11,14 +11,14 @@ export async function processQueue(id: string) {
   while (queue.length) {
     rest.eventHandlers.debug?.(
       "loop",
-      "Running while loop in processQueue function."
+      "Running while loop in processQueue function.",
     );
     // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
     if (rest.globallyRateLimited) {
       setTimeout(async () => {
         eventHandlers.debug?.(
           "loop",
-          `Running setTimeout in processQueue function.`
+          `Running setTimeout in processQueue function.`,
         );
         await processQueue(id);
       }, 1000);
@@ -32,7 +32,7 @@ export async function processQueue(id: string) {
 
     const basicURL = rest.simplifyUrl(
       queuedRequest.request.url,
-      queuedRequest.request.method.toUpperCase()
+      queuedRequest.request.method.toUpperCase(),
     );
 
     // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
@@ -53,18 +53,19 @@ export async function processQueue(id: string) {
     // EXECUTE THE REQUEST
 
     // IF THIS IS A GET REQUEST, CHANGE THE BODY TO QUERY PARAMETERS
-    const query =
-      queuedRequest.request.method.toUpperCase() === "GET" &&
-      queuedRequest.payload.body
-        ? Object.entries(queuedRequest.payload.body)
-            .map(
-              ([key, value]) =>
-                `${encodeURIComponent(key)}=${encodeURIComponent(
-                  value as string
-                )}`
-            )
-            .join("&")
-        : "";
+    const query = queuedRequest.request.method.toUpperCase() === "GET" &&
+        queuedRequest.payload.body
+      ? Object.entries(queuedRequest.payload.body)
+        .map(
+          ([key, value]) =>
+            `${encodeURIComponent(key)}=${
+              encodeURIComponent(
+                value as string,
+              )
+            }`,
+        )
+        .join("&")
+      : "";
     const urlToUse =
       queuedRequest.request.method.toUpperCase() === "GET" && query
         ? `${queuedRequest.request.url}?${query}`
@@ -76,13 +77,13 @@ export async function processQueue(id: string) {
     try {
       const response = await fetch(
         urlToUse,
-        rest.createRequestBody(queuedRequest)
+        rest.createRequestBody(queuedRequest),
       );
 
       rest.eventHandlers.fetched(queuedRequest.payload);
       const bucketIdFromHeaders = rest.processRequestHeaders(
         basicURL,
-        response.headers
+        response.headers,
       );
       // SET THE BUCKET Id IF IT WAS PRESENT
       if (bucketIdFromHeaders) {
