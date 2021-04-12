@@ -2,6 +2,7 @@ import { botId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
 import { Message, structures } from "../../structures/mod.ts";
 import { Errors } from "../../types/misc/errors.ts";
+import { DiscordMessage } from "../../types/mod.ts";
 import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
@@ -27,11 +28,11 @@ export async function editMessage(
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
   }
 
-  const result = await rest.runMethod(
+  const result: DiscordMessage = await rest.runMethod(
     "patch",
     endpoints.CHANNEL_MESSAGE(message.channelId, message.id),
     content,
   );
 
-  return structures.createDiscordenoMessage(result as DiscordMessage);
+  return structures.createDiscordenoMessage(result);
 }
