@@ -7,7 +7,7 @@ import { endpoints } from "../../util/constants.ts";
 export async function publishMessage(channelId: string, messageId: string) {
   const data = (await rest.runMethod(
     "post",
-    endpoints.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId)
+    endpoints.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId),
   )) as DiscordMessage;
 
   return structures.createDiscordenoMessage(data);

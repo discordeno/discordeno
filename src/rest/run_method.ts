@@ -6,7 +6,7 @@ export async function runMethod<T = any>(
   url: string,
   body?: unknown,
   retryCount = 0,
-  bucketId?: string
+  bucketId?: string,
 ): Promise<T> {
   rest.eventHandlers.debug?.("requestCreate", {
     method,
@@ -52,7 +52,7 @@ export async function runMethod<T = any>(
         bucketId,
         body: body as Record<string, unknown> | undefined,
         retryCount,
-      }
+      },
     );
   });
 }

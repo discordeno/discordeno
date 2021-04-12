@@ -11,8 +11,11 @@ export async function resharder() {
   if (percentage < ws.reshardPercentage) return;
 
   // Don't have enough identify rate limits to reshard
-  if (ws.botGatewayData.sessionStartLimit.remaining < ws.botGatewayData.shards)
+  if (
+    ws.botGatewayData.sessionStartLimit.remaining < ws.botGatewayData.shards
+  ) {
     return;
+  }
 
   // Begin resharding
   ws.maxShards = ws.botGatewayData.shards;

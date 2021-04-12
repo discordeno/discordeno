@@ -73,7 +73,10 @@ export async function editMember(
     endpoints.GUILD_MEMBER(guildId, memberId),
     options,
   ) as DiscordGuildMember;
-  const member = await structures.createDiscordenoMember(snakeKeysToCamelCase(result), guildId);
+  const member = await structures.createDiscordenoMember(
+    snakeKeysToCamelCase(result),
+    guildId,
+  );
 
   return member;
 }

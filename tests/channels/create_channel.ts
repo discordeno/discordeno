@@ -5,7 +5,7 @@ import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
 import { CreateGuildChannel } from "../../src/types/guilds/create_guild_channel.ts";
 import { createChannel } from "../../src/helpers/channels/create_channel.ts";
 import { delayUntil } from "../util/delay_until.ts";
-import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts"
+import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
 import { botId } from "../../src/bot.ts";
 
 async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
@@ -26,19 +26,22 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
 
   if (options.topic && channel.topic !== options.topic) {
     throw new Error(
-      "The channel was supposed to have a topic but it does not appear to be the same topic."
+      "The channel was supposed to have a topic but it does not appear to be the same topic.",
     );
   }
 
   if (options.bitrate && channel.bitrate !== options.bitrate) {
     throw new Error(
-      "The channel was supposed to have a bitrate but it does not appear to be the same bitrate."
+      "The channel was supposed to have a bitrate but it does not appear to be the same bitrate.",
     );
   }
 
-  if (options.permissionOverwrites && channel.permissionOverwrites.length !== options.permissionOverwrites.length) {
+  if (
+    options.permissionOverwrites &&
+    channel.permissionOverwrites.length !== options.permissionOverwrites.length
+  ) {
     throw new Error(
-      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites."
+      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites.",
     );
   }
 }
@@ -59,7 +62,7 @@ Deno.test({
         name: "Discordeno-test",
         type: DiscordChannelTypes.GUILD_CATEGORY,
       },
-      true
+      true,
     );
   },
   ...defaultTestOptions,
@@ -89,7 +92,7 @@ Deno.test({
         name: "Discordeno-test",
         type: DiscordChannelTypes.GUILD_VOICE,
       },
-      true
+      true,
     );
   },
   ...defaultTestOptions,
@@ -104,7 +107,7 @@ Deno.test({
         type: DiscordChannelTypes.GUILD_VOICE,
         bitrate: 32000,
       },
-      true
+      true,
     );
   },
   ...defaultTestOptions,
@@ -119,7 +122,7 @@ Deno.test({
         type: DiscordChannelTypes.GUILD_VOICE,
         userLimit: 32,
       },
-      true
+      true,
     );
   },
   ...defaultTestOptions,
@@ -133,7 +136,7 @@ Deno.test({
         name: "Discordeno-test",
         rateLimitPerUser: 2423,
       },
-      true
+      true,
     );
   },
   ...defaultTestOptions,
@@ -162,7 +165,7 @@ Deno.test({
           },
         ],
       },
-      true
+      true,
     );
   },
   ...defaultTestOptions,

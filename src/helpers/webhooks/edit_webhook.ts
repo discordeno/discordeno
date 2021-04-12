@@ -19,7 +19,7 @@ export async function editWebhook(
     {
       ...options,
       channel_id: options.channelId,
-    }
+    },
   );
 
   return snakeKeysToCamelCase<Webhook>(result);

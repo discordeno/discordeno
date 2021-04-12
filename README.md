@@ -10,6 +10,7 @@ Discordeno follows [Semantic Versioning](https://semver.org/)
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
 [![Coverage](https://img.shields.io/codecov/c/gh/discordeno/discordeno)](https://codecov.io/gh/discordeno/discordeno)
+
 ## Features
 
 - **Secure & stable**: Discordeno is actively maintained to ensure great

@@ -34,7 +34,10 @@ Deno.test({
       ),
     );
     // Delay the execution by 5 seconds to allow CHANNEL_CREATE event to be processed
-    await delayUntil(10000, () => channels.every((c) => cache.channels.has(c.id)));
+    await delayUntil(
+      10000,
+      () => channels.every((c) => cache.channels.has(c.id)),
+    );
 
     // If every channel is not present in the cache, error out
     if (!channels.every((c) => cache.channels.has(c.id))) {

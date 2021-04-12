@@ -14,7 +14,7 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(
   channelId: string,
-  content: string | CreateMessage
+  content: string | CreateMessage,
 ) {
   if (typeof content === "string") content = { content };
 
@@ -56,18 +56,18 @@ export async function sendMessage(
     if (content.allowedMentions.users?.length) {
       if (
         content.allowedMentions.parse?.includes(
-          DiscordAllowedMentionsTypes.UserMentions
+          DiscordAllowedMentionsTypes.UserMentions,
         )
       ) {
         content.allowedMentions.parse = content.allowedMentions.parse.filter(
-          (p) => p !== "users"
+          (p) => p !== "users",
         );
       }
 
       if (content.allowedMentions.users.length > 100) {
         content.allowedMentions.users = content.allowedMentions.users.slice(
           0,
-          100
+          100,
         );
       }
     }
@@ -75,18 +75,18 @@ export async function sendMessage(
     if (content.allowedMentions.roles?.length) {
       if (
         content.allowedMentions.parse?.includes(
-          DiscordAllowedMentionsTypes.RoleMentions
+          DiscordAllowedMentionsTypes.RoleMentions,
         )
       ) {
         content.allowedMentions.parse = content.allowedMentions.parse.filter(
-          (p) => p !== "roles"
+          (p) => p !== "roles",
         );
       }
 
       if (content.allowedMentions.roles.length > 100) {
         content.allowedMentions.roles = content.allowedMentions.roles.slice(
           0,
-          100
+          100,
         );
       }
     }
@@ -99,14 +99,13 @@ export async function sendMessage(
       ...content,
       ...(content.messageReference?.messageId
         ? {
-            messageReference: {
-              ...content.messageReference,
-              failIfNotExists:
-                content.messageReference.failIfNotExists === true,
-            },
-          }
+          messageReference: {
+            ...content.messageReference,
+            failIfNotExists: content.messageReference.failIfNotExists === true,
+          },
+        }
         : {}),
-    })
+    }),
   )) as DiscordMessage;
 
   return structures.createDiscordenoMessage(result);
