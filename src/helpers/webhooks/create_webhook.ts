@@ -1,8 +1,11 @@
 import { rest } from "../../rest/rest.ts";
 import { Errors } from "../../types/misc/errors.ts";
+import { CreateWebhook } from "../../types/webhooks/create_webhook.ts";
+import { Webhook } from "../../types/webhooks/webhook.ts";
+import { DiscordWebhook } from "../../types/webhooks/webhook.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
-import { urlToBase64 } from "../../util/utils.ts";
+import { snakeKeysToCamelCase, urlToBase64 } from "../../util/utils.ts";
 
 /**
  * Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
@@ -11,7 +14,7 @@ import { urlToBase64 } from "../../util/utils.ts";
  */
 export async function createWebhook(
   channelId: string,
-  options: WebhookCreateOptions,
+  options: CreateWebhook,
 ) {
   await requireBotChannelPermissions(channelId, ["MANAGE_WEBHOOKS"]);
 
@@ -25,7 +28,7 @@ export async function createWebhook(
     throw new Error(Errors.INVALID_WEBHOOK_NAME);
   }
 
-  const result = await rest.runMethod(
+  const result: DiscordWebhook = await rest.runMethod(
     "post",
     endpoints.CHANNEL_WEBHOOKS(channelId),
     {
@@ -34,5 +37,5 @@ export async function createWebhook(
     },
   );
 
-  return result as WebhookPayload;
+  return snakeKeysToCamelCase<Webhook>(result);
 }
