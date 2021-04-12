@@ -71,9 +71,11 @@ export async function createDiscordenoRole(data: DiscordGuildRoleCreate) {
   const {
     tags = {},
     ...rest
-  } = snakeKeysToCamelCase({ guildId: data.guild_id, ...data.role }) as Role & {
-    guildId: string;
-  };
+  } = snakeKeysToCamelCase<
+    Role & {
+      guildId: string;
+    }
+  >({ guildId: data.guild_id, ...data.role });
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {

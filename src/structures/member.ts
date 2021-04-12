@@ -9,14 +9,15 @@ import { addRole } from "../helpers/roles/add_role.ts";
 import { removeRole } from "../helpers/roles/remove_role.ts";
 import { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
 import {
-  DiscordGuildMember,
+  DiscordGuildMemberWithUser,
   GuildMember,
+  GuildMemberWithUser,
 } from "../types/guilds/guild_member.ts";
 import { ModifyGuildMember } from "../types/guilds/modify_guild_member.ts";
 import { CreateMessage } from "../types/messages/create_message.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
-import { DiscordUser, User } from "../types/users/user.ts";
+import { User } from "../types/users/user.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
@@ -73,7 +74,7 @@ const baseMember: Partial<DiscordenoMember> = {
 
 export async function createDiscordenoMember(
   // The `user` param in `DiscordGuildMember` is optional since discord does not send it in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events. But this data in there is required to build this structure so it is required in this case
-  data: Omit<DiscordGuildMember, "user"> & { user: DiscordUser },
+  data: DiscordGuildMemberWithUser,
   guildId: string,
 ) {
   const {
@@ -81,9 +82,7 @@ export async function createDiscordenoMember(
     joinedAt,
     premiumSince,
     ...rest
-  } = snakeKeysToCamelCase(data) as Omit<GuildMember, "user"> & {
-    user: DiscordUser;
-  };
+  } = snakeKeysToCamelCase<GuildMemberWithUser>(data);
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
 

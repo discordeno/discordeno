@@ -21,5 +21,5 @@ export async function editWidget(
     },
   );
 
-  return snakeKeysToCamelCase(result) as GuildWidget;
+  return snakeKeysToCamelCase<GuildWidget>(result);
 }

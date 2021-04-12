@@ -15,5 +15,5 @@ export async function getGuild(guildId: string, counts = true) {
     with_counts: counts,
   });
 
-  return snakeKeysToCamelCase(result) as Guild;
+  return snakeKeysToCamelCase<Guild>(result);
 }

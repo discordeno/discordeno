@@ -7,5 +7,5 @@ import { snakeKeysToCamelCase } from "../../util/utils.ts";
 export async function getGuildPreview(guildId: string) {
   const result = await rest.runMethod("get", endpoints.GUILD_PREVIEW(guildId));
 
-  return snakeKeysToCamelCase(result) as GuildPreview;
+  return snakeKeysToCamelCase<GuildPreview>(result);
 }

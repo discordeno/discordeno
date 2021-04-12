@@ -80,7 +80,7 @@ export async function createDiscordenoChannel(
     guildId: rawGuildId = "",
     lastPinTimestamp,
     ...rest
-  } = snakeKeysToCamelCase(data) as Channel;
+  } = snakeKeysToCamelCase<Channel>(data);
 
   const props: Record<string, PropertyDescriptor> = {};
   Object.keys(rest).forEach((key) => {

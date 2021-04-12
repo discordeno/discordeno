@@ -9,9 +9,9 @@ import { snakeKeysToCamelCase } from "../../util/utils.ts";
 export function handleIntegrationCreate(
   data: DiscordGatewayPayload,
 ) {
-  const payload = data.d as DiscordIntegrationCreateUpdate;
-
   eventHandlers.integrationCreate?.(
-    snakeKeysToCamelCase(payload) as IntegrationCreateUpdate,
+    snakeKeysToCamelCase<IntegrationCreateUpdate>(
+      data.d as DiscordIntegrationCreateUpdate,
+    ),
   );
 }

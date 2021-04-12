@@ -18,14 +18,13 @@ import { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
 import { DiscordGuild, Guild } from "../types/guilds/guild.ts";
 import { DiscordGuildFeatures } from "../types/guilds/guild_features.ts";
 import {
-  DiscordGuildMember,
+  DiscordGuildMemberWithUser,
   GuildMember,
 } from "../types/guilds/guild_member.ts";
 import { ModifyGuild } from "../types/guilds/modify_guild.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { PresenceUpdate } from "../types/misc/presence_update.ts";
-import { DiscordUser } from "../types/users/user.ts";
 import { VoiceState } from "../types/voice/voice_state.ts";
 import { Collection } from "../util/collection.ts";
 import {
@@ -128,7 +127,7 @@ export async function createDiscordenoGuild(
     emojis,
     members = [],
     ...rest
-  } = snakeKeysToCamelCase(data) as Guild;
+  } = snakeKeysToCamelCase<Guild>(data);
 
   const roles = await Promise.all(
     (data.roles || []).map((role) =>
@@ -189,9 +188,7 @@ export async function createDiscordenoGuild(
     await Promise.allSettled(
       members.map(async (member) => {
         const discordenoMember = await structures.createDiscordenoMember(
-          camelKeysToSnakeCase(member) as Omit<DiscordGuildMember, "user"> & {
-            user: DiscordUser;
-          },
+          camelKeysToSnakeCase(member) as DiscordGuildMemberWithUser,
           guild.id,
         );
 
@@ -220,7 +217,7 @@ export interface DiscordenoGuild extends
     | "emojis"
   > {
   /** Total number of members in this guild */
-  memberCount?: number;
+  memberCount: number;
   /** The roles in the guild */
   roles: Collection<string, DiscordenoRole>;
   /** The presences of all the users in the guild. */

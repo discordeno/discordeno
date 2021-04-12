@@ -10,7 +10,9 @@ export async function getVanityURL(guildId: string) {
     endpoints.GUILD_VANITY_URL(guildId),
   );
 
-  return snakeKeysToCamelCase(result) as
-    | (Partial<InviteMetadata> & Pick<InviteMetadata, "uses" | "code">)
-    | { code: null };
+  return snakeKeysToCamelCase<
+    (Partial<InviteMetadata> & Pick<InviteMetadata, "uses" | "code">) | {
+      code: null;
+    }
+  >(result);
 }

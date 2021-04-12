@@ -26,5 +26,5 @@ export async function getAuditLogs(
     }),
   );
 
-  return snakeKeysToCamelCase(result) as AuditLog;
+  return snakeKeysToCamelCase<AuditLog>(result);
 }

@@ -13,5 +13,5 @@ export async function getBan(guildId: string, memberId: string) {
     endpoints.GUILD_BAN(guildId, memberId),
   );
 
-  return snakeKeysToCamelCase(result) as Ban;
+  return snakeKeysToCamelCase<Ban>(result);
 }

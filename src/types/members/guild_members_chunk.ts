@@ -1,4 +1,4 @@
-import { GuildMember } from "../guilds/guild_member.ts";
+import { GuildMemberWithUser } from "../guilds/guild_member.ts";
 import { PresenceUpdate } from "../misc/presence_update.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 
@@ -6,7 +6,7 @@ export interface GuildMembersChunk {
   /** The id of the guild */
   guildId: string;
   /** Set of guild members */
-  members: GuildMember[];
+  members: GuildMemberWithUser[];
   /** The chunk index in the expected chunks for this response (0 <= chunk_index < chunk_count) */
   chunkIndex: number;
   /** The total number of expected chunks for this response */

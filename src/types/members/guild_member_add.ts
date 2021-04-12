@@ -1,7 +1,7 @@
-import { GuildMember } from "../guilds/guild_member.ts";
+import { GuildMemberWithUser } from "../guilds/guild_member.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 
-export interface GuildMemberAdd extends GuildMember {
+export interface GuildMemberAdd extends GuildMemberWithUser {
   /** id of the guild */
   guildId: string;
 }

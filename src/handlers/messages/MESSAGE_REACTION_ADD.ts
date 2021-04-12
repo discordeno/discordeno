@@ -2,7 +2,11 @@ import { botId, eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { DiscordMessageReactionAdd } from "../../types/messages/message_reaction_add.ts";
+import {
+  DiscordMessageReactionAdd,
+  MessageReactionAdd,
+} from "../../types/messages/message_reaction_add.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 export async function handleMessageReactionAdd(data: DiscordGatewayPayload) {
   const payload = data.d as DiscordMessageReactionAdd;
@@ -41,17 +45,8 @@ export async function handleMessageReactionAdd(data: DiscordGatewayPayload) {
     }
   }
 
-  const uncachedOptions = {
-    ...payload,
-    id: payload.message_id,
-    channelId: payload.channel_id,
-    guildId: payload.guild_id || "",
-  };
-
   eventHandlers.reactionAdd?.(
-    uncachedOptions,
-    payload.emoji,
-    payload.user_id,
+    snakeKeysToCamelCase<MessageReactionAdd>(payload),
     message,
   );
 }
