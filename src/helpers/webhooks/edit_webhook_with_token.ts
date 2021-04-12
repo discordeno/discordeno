@@ -1,5 +1,7 @@
 import { rest } from "../../rest/rest.ts";
+import { Webhook } from "../../types/webhooks/webhook.ts";
 import { endpoints } from "../../util/constants.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 /** Edit a webhook. Returns the updated webhook object on success. */
 export async function editWebhookWithToken(
@@ -13,5 +15,5 @@ export async function editWebhookWithToken(
     options,
   );
 
-  return result as WebhookPayload;
+  return snakeKeysToCamelCase(result) as Webhook;
 }
