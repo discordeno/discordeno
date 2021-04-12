@@ -4,7 +4,7 @@ import { DiscordTemplate, Template } from "../types/templates/template.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 
-const baseTemplate: Partial<DiscordTemplate> = {
+const baseTemplate: Partial<DiscordenoTemplate> = {
   get sourceGuild() {
     // deno-lint-ignore getter-return
     if (!this.sourceGuildId) return;
