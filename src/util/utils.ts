@@ -1,6 +1,9 @@
 import { encode } from "../../deps.ts";
 import { eventHandlers } from "../bot.ts";
+import { ApplicationCommandOption } from "../types/interactions/application_command_option.ts";
+import { ApplicationCommandOptionChoice } from "../types/interactions/application_command_option_choice.ts";
 import { DiscordApplicationCommandOptionTypes } from "../types/interactions/application_command_option_types.ts";
+import { CreateGlobalApplicationCommand } from "../types/interactions/create_global_application_command.ts";
 import { Errors } from "../types/misc/errors.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
@@ -107,7 +110,7 @@ export function snakeKeysToCamelCase<T>(
 
 /** @private */
 function validateSlashOptionChoices(
-  choices: SlashCommandOptionChoice[],
+  choices: ApplicationCommandOptionChoice[],
   optionType: DiscordApplicationCommandOptionTypes,
 ) {
   for (const choice of choices) {
@@ -133,7 +136,7 @@ function validateSlashOptionChoices(
 }
 
 /** @private */
-function validateSlashOptions(options: SlashCommandOption[]) {
+function validateSlashOptions(options: ApplicationCommandOption[]) {
   for (const option of options) {
     eventHandlers.debug?.(
       "loop",
@@ -164,7 +167,7 @@ function validateSlashOptions(options: SlashCommandOption[]) {
 }
 
 export function validateSlashCommands(
-  commands: UpsertSlashCommandOptions[],
+  commands: CreateGlobalApplicationCommand[],
   create = false,
 ) {
   for (const command of commands) {
