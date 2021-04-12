@@ -3,7 +3,7 @@ import { ws } from "./ws.ts";
 
 export async function identify(shardId: number, maxShards: number) {
   ws.log("IDENTIFYING", { shardId, maxShards });
-
+  console.log("IDENTIFYING", { shardId, maxShards });
   // CREATE A SHARD
   const socket = await ws.createShard(shardId);
 

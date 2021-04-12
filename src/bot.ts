@@ -2,7 +2,6 @@ import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
 import { rest } from "./rest/rest.ts";
 import { EventHandlers } from "./types/discordeno/eventHandlers.ts";
 import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
-import { GetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { ws } from "./ws/ws.ts";
 
@@ -13,7 +12,6 @@ export let applicationId = "";
 
 export let eventHandlers: EventHandlers = {};
 
-export let botGatewayData: GetGatewayBot;
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
 export const identifyPayload = {
@@ -34,33 +32,26 @@ export async function startBot(config: BotConfig) {
   ws.identifyPayload.token = `Bot ${config.token}`;
   rest.token = `Bot ${config.token}`;
   ws.identifyPayload.intents = config.intents.reduce(
-    (
-      bits,
-      next,
-    ) => (bits |= typeof next === "string"
-      ? DiscordGatewayIntents[next]
-      : next),
-    0,
+    (bits, next) =>
+      (bits |= typeof next === "string" ? DiscordGatewayIntents[next] : next),
+    0
   );
 
   // Initial API connection to get info about bots connection
-  botGatewayData = await getGatewayBot();
+  ws.botGatewayData = await getGatewayBot();
+  ws.maxShards = ws.maxShards || ws.botGatewayData.shards;
 
   // Explicitly append gateway version and encoding
-  botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
+  ws.botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
 
-  proxyWSURL = botGatewayData.url;
+  proxyWSURL = ws.botGatewayData.url;
   identifyPayload.token = config.token;
   identifyPayload.intents = config.intents.reduce(
-    (
-      bits,
-      next,
-    ) => (bits |= typeof next === "string"
-      ? DiscordGatewayIntents[next]
-      : next),
-    0,
+    (bits, next) =>
+      (bits |= typeof next === "string" ? DiscordGatewayIntents[next] : next),
+    0
   );
-  identifyPayload.shard = [0, botGatewayData.shards];
+  identifyPayload.shard = [0, ws.botGatewayData.shards];
 
   ws.spawnShards();
 }
@@ -104,20 +95,16 @@ export async function startBigBrainBot(data: BigBrainBotConfig) {
   }
 
   identifyPayload.intents = data.intents.reduce(
-    (
-      bits,
-      next,
-    ) => (bits |= typeof next === "string"
-      ? DiscordGatewayIntents[next]
-      : next),
-    0,
+    (bits, next) =>
+      (bits |= typeof next === "string" ? DiscordGatewayIntents[next] : next),
+    0
   );
 
   // PROXY DOESNT NEED US SPAWNING SHARDS
   if (!data.wsPort) {
     // Initial API connection to get info about bots connection
-    botGatewayData = await getGatewayBot();
-    proxyWSURL = botGatewayData.url;
+    ws.botGatewayData = await getGatewayBot();
+    proxyWSURL = ws.botGatewayData.url;
     ws.spawnShards(data.firstShardId);
   }
 }

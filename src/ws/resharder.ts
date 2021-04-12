@@ -1,10 +1,9 @@
 import { getGatewayBot } from "../helpers/misc/get_gateway_bot.ts";
-import { camelKeysToSnakeCase } from "../util/utils.ts";
 import { ws } from "./ws.ts";
 
 /** The handler to automatically reshard when necessary. */
 export async function resharder() {
-  ws.botGatewayData = camelKeysToSnakeCase(await getGatewayBot());
+  ws.botGatewayData = await getGatewayBot();
 
   const percentage =
     ((ws.botGatewayData.shards - ws.maxShards) / ws.maxShards) * 100;

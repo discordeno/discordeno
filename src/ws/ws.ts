@@ -22,7 +22,7 @@ export const ws = {
   /** The percentage at which resharding should occur. */
   reshardPercentage: 80,
   /** The maximum shard Id number. Useful for zero-downtime updates or resharding. */
-  maxShards: 1,
+  maxShards: 0,
   /** The amount of shards to load per cluster */
   shardsPerCluster: 25,
   /** The maximum amount of clusters to use for your bot. */
