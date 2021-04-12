@@ -12,10 +12,20 @@ import "./ws/start_bot.ts";
 import "./guilds/create_guild.ts";
 
 // Channel tests
-import "./channels/create_channel.ts";
 import "./channels/category_children.ts";
+import "./channels/channel_overwrite_has_permission.ts";
+import "./channels/create_channel.ts";
 import "./channels/delete_channel.ts";
 import "./channels/delete_channel_overwrite.ts";
+import "./channels/edit_channel.ts";
+import "./channels/edit_channel_overwrite.ts";
+import "./channels/get_channel.ts";
+import "./channels/get_channels.ts";
+import "./channels/get_pins.ts";
+import "./channels/is_channel_synced.ts";
+import "./channels/start_typing.ts";
+import "./channels/swap_channels.ts";
+
 
 // Emojis tests
 import "./emojis/create_emoji.ts";
