@@ -1,4 +1,5 @@
 import { rest } from "../../rest/rest.ts";
+import { CreateGuildRole } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,
@@ -9,7 +10,7 @@ import {
 export async function editRole(
   guildId: string,
   id: string,
-  options: CreateRoleOptions,
+  options: CreateGuildRole,
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
