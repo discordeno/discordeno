@@ -47,8 +47,8 @@ export function createRequestBody(queuedRequest: {
   return {
     headers,
     body:
-      queuedRequest.payload.body?.file ||
-      JSON.stringify(queuedRequest.payload.body),
+      (queuedRequest.payload.body?.file ||
+      JSON.stringify(queuedRequest.payload.body)) as FormData | string,
     method: queuedRequest.request.method.toUpperCase(),
   };
 }

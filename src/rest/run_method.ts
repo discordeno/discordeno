@@ -1,13 +1,13 @@
 import { API_VERSION, BASE_URL, IMAGE_BASE_URL } from "../util/constants.ts";
 import { rest } from "./rest.ts";
 
-export function runMethod<T = any>(
+export async function runMethod(
   method: "get" | "post" | "put" | "delete" | "patch",
   url: string,
   body?: unknown,
   retryCount = 0,
-  bucketId?: string | null,
-): Promise<T | undefined> {
+  bucketId?: string
+) {
   rest.eventHandlers.debug?.("requestCreate", {
     method,
     url,
@@ -24,22 +24,18 @@ export function runMethod<T = any>(
     !url.startsWith(`${BASE_URL}/v${API_VERSION}`) &&
     !url.startsWith(IMAGE_BASE_URL)
   ) {
-    return fetch(url, {
+    const result = await fetch(url, {
       body: JSON.stringify(body || {}),
       headers: {
         authorization: rest.authorization,
       },
       method: method.toUpperCase(),
-    })
-      .then((res) => {
-        if (res.status === 204) return undefined;
+    }).catch((error) => {
+      console.error(error);
+      throw errorStack;
+    });
 
-        return (res.json() as unknown) as T;
-      })
-      .catch((error) => {
-        console.error(error);
-        throw errorStack;
-      });
+    return result.status !== 204 ? await result.json() : undefined;
   }
 
   // No proxy so we need to handle all rate limiting and such
@@ -54,11 +50,9 @@ export function runMethod<T = any>(
       },
       {
         bucketId,
-        url,
-        method,
-        body,
+        body: body as Record<string, unknown> | undefined,
         retryCount,
-      },
+      }
     );
   });
 }

@@ -9,7 +9,8 @@ export function processRequestHeaders(url: string, headers: Headers) {
   const retryAfter = headers.get("x-ratelimit-reset-after");
   const reset = Date.now() + Number(retryAfter) * 1000;
   const global = headers.get("x-ratelimit-global");
-  const bucketId = headers.get("x-ratelimit-bucket");
+  // undefined override null needed for typings
+  const bucketId = headers.get("x-ratelimit-bucket") || undefined;
 
   // IF THERE IS NO REMAINING RATE LIMIT, MARK IT AS RATE LIMITED
   if (remaining === "0") {
@@ -55,7 +56,7 @@ export function processRequestHeaders(url: string, headers: Headers) {
     }
   }
 
-  if (ratelimited && !rest.processingRateLimitedPaths) {
+  if (ratelimited && rest.processingRateLimitedPaths) {
     rest.processRateLimitedPaths();
   }
   return ratelimited ? bucketId : undefined;

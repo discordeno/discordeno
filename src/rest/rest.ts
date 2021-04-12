@@ -32,12 +32,12 @@ export const rest = {
     error: function (...args: unknown[]) {},
     // PLACEHOLDERS TO ALLOW USERS TO CUSTOMIZE
     debug: function (type: string, error: string | Record<string, unknown>) {},
-    fetching(payload: Record<string, unknown>) {},
-    fetched(payload: Record<string, unknown>) {},
-    fetchSuccess(payload: Record<string, unknown>) {},
-    fetchFailed(payload: Record<string, unknown>, error: unknown) {},
+    fetching(payload: RestPayload) {},
+    fetched(payload: RestPayload) {},
+    fetchSuccess(payload: RestPayload) {},
+    fetchFailed(payload: RestPayload, error: unknown) {},
     globallyRateLimited(url: string, resetsAt: number) {},
-    retriesMaxed(payload: Record<string, unknown>) {},
+    retriesMaxed(payload: RestPayload) {},
   },
   /** Handler function for every request. Converts to json, verified authorization & requirements and begins processing the request */
   checkRateLimits,
@@ -67,5 +67,5 @@ export interface RestPayload {
 export interface RestRateLimitedPath {
   url: string;
   resetTimestamp: number;
-  bucketId: string;
+  bucketId?: string;
 }
