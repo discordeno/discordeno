@@ -2,7 +2,10 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
+import {
+  DiscordGuildMemberWithUser,
+  GuildMemberWithUser,
+} from "../../types/guilds/guild_member.ts";
 import { DiscordMessage, Message } from "../../types/messages/message.ts";
 import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
@@ -18,7 +21,7 @@ export async function handleMessageCreate(data: DiscordGatewayPayload) {
   if (payload.member && guild) {
     // If in a guild cache the author as a member
     const discordenoMember = await structures.createDiscordenoMember(
-      { ...payload.member, user: payload.author } as GuildMemberWithUser,
+      { ...payload.member, user: payload.author } as DiscordGuildMemberWithUser,
       guild.id,
     );
     await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
@@ -28,7 +31,7 @@ export async function handleMessageCreate(data: DiscordGatewayPayload) {
     // Cache the member if its a valid member
     if (mention.member && guild) {
       const discordenoMember = await structures.createDiscordenoMember(
-        { ...mention.member, user: mention },
+        { ...mention.member, user: mention } as DiscordGuildMemberWithUser,
         guild.id,
       );
 
@@ -40,7 +43,9 @@ export async function handleMessageCreate(data: DiscordGatewayPayload) {
     }
   }));
 
-  const message = await structures.createDiscordenoMessage(data.d as DiscordMessage);
+  const message = await structures.createDiscordenoMessage(
+    data.d as DiscordMessage,
+  );
   // Cache the message
   await cacheHandlers.set("messages", payload.id, message);
 
