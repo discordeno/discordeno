@@ -1,5 +1,6 @@
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
+import { DiscordMessage } from "../../types/messages/message.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -10,7 +11,7 @@ export async function getMessages(
     | GetMessagesAfter
     | GetMessagesBefore
     | GetMessagesAround
-    | GetMessages,
+    | GetMessages
 ) {
   await requireBotChannelPermissions(channelId, [
     "VIEW_CHANNEL",
@@ -22,10 +23,10 @@ export async function getMessages(
   const result = (await rest.runMethod(
     "get",
     endpoints.CHANNEL_MESSAGES(channelId),
-    options,
-  )) as MessageCreateOptions[];
+    options
+  )) as DiscordMessage[];
 
   return Promise.all(
-    result.map((res) => structures.createDiscordenoMessage(res)),
+    result.map((res) => structures.createDiscordenoMessage(res))
   );
 }

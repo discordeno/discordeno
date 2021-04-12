@@ -1,13 +1,16 @@
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
+import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
+import { DiscordMessage } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";
+import { ExecuteWebhook } from "../../types/webhooks/execute_webhook.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Execute a webhook with webhook Id and webhook token */
 export async function executeWebhook(
   webhookId: string,
   webhookToken: string,
-  options: ExecuteWebhookOptions,
+  options: ExecuteWebhook
 ) {
   if (!options.content && !options.file && !options.embeds) {
     throw new Error(Errors.INVALID_WEBHOOK_OPTIONS);
@@ -21,28 +24,42 @@ export async function executeWebhook(
     options.embeds.splice(10);
   }
 
-  if (options.mentions) {
-    if (options.mentions.users?.length) {
-      if (options.mentions.parse.includes("users")) {
-        options.mentions.parse = options.mentions.parse.filter(
-          (p) => p !== "users",
+  if (options.allowedMentions) {
+    if (options.allowedMentions.users?.length) {
+      if (
+        options.allowedMentions.parse.includes(
+          DiscordAllowedMentionsTypes.UserMentions
+        )
+      ) {
+        options.allowedMentions.parse = options.allowedMentions.parse.filter(
+          (p) => p !== "users"
         );
       }
 
-      if (options.mentions.users.length > 100) {
-        options.mentions.users = options.mentions.users.slice(0, 100);
+      if (options.allowedMentions.users.length > 100) {
+        options.allowedMentions.users = options.allowedMentions.users.slice(
+          0,
+          100
+        );
       }
     }
 
-    if (options.mentions.roles?.length) {
-      if (options.mentions.parse.includes("roles")) {
-        options.mentions.parse = options.mentions.parse.filter(
-          (p) => p !== "roles",
+    if (options.allowedMentions.roles?.length) {
+      if (
+        options.allowedMentions.parse.includes(
+          DiscordAllowedMentionsTypes.RoleMentions
+        )
+      ) {
+        options.allowedMentions.parse = options.allowedMentions.parse.filter(
+          (p) => p !== "roles"
         );
       }
 
-      if (options.mentions.roles.length > 100) {
-        options.mentions.roles = options.mentions.roles.slice(0, 100);
+      if (options.allowedMentions.roles.length > 100) {
+        options.allowedMentions.roles = options.allowedMentions.roles.slice(
+          0,
+          100
+        );
       }
     }
   }
@@ -54,11 +71,15 @@ export async function executeWebhook(
     }`,
     {
       ...options,
-      allowed_mentions: options.mentions,
-      avatar_url: options.avatar_url,
-    },
+      allowed_mentions: options.allowedMentions,
+      avatar_url: options.avatarUrl,
+    }
   );
   if (!options.wait) return;
 
-  return structures.createDiscordenoMessage(result as MessageCreateOptions);
+  return structures.createDiscordenoMessage(result as DiscordMessage);
+}
+
+function DiscordAllowedMentionTypes(DiscordAllowedMentionTypes: any) {
+  throw new Error("Function not implemented.");
 }

@@ -1,8 +1,10 @@
 import { eventHandlers } from "../bot.ts";
 import { cache } from "../cache.ts";
+import { DiscordTemplate, Template } from "../types/templates/template.ts";
 import { createNewProp } from "../util/utils.ts";
+import { DiscordenoGuild } from "./guild.ts";
 
-const baseTemplate: Partial<Template> = {
+const baseTemplate: Partial<DiscordTemplate> = {
   get sourceGuild() {
     // deno-lint-ignore getter-return
     if (!this.sourceGuildId) return;
@@ -11,7 +13,7 @@ const baseTemplate: Partial<Template> = {
 };
 
 export function createTemplateStruct(
-  data: GuildTemplate,
+  data: DiscordTemplate,
 ) {
   const {
     usage_count: usageCount,
@@ -43,5 +45,9 @@ export function createTemplateStruct(
     sourceGuildId: createNewProp(sourceGuildId),
     serializedSourceGuild: createNewProp(serializedSourceGuild),
     isDirty: createNewProp(isDirty),
-  }) as Template;
+  }) as DiscordenoTemplate;
+}
+
+export interface DiscordenoTemplate extends Template {
+  sourceGuild?: DiscordenoGuild;
 }

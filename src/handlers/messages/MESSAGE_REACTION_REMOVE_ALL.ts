@@ -15,5 +15,5 @@ export async function handleMessageReactionRemoveAll(
     await cacheHandlers.set("messages", payload.message_id, message);
   }
 
-  eventHandlers.reactionRemoveAll?.(data.d);
+  eventHandlers.reactionRemoveAll?.(payload);
 }

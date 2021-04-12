@@ -24,15 +24,15 @@ export const rest = {
   ratelimitedPaths: new Map(),
   eventHandlers: {
     // BY DEFAULT WE WILL LOG ALL ERRORS TO CONSOLE. USER CAN CHOOSE TO OVERRIDE
-    error: console.error,
+    error: function (...args: unknown[]) {},
     // PLACEHOLDERS TO ALLOW USERS TO CUSTOMIZE
-    debug: function (_type, error, ...args) {},
-    fetching() {},
-    fetched() {},
-    fetchSuccess() {},
-    fetchFailed() {},
-    globallyRateLimited() {},
-    retriesMaxed() {},
+    debug: function (type: string, error: string | Record<string, unknown>) {},
+    fetching(payload: Record<string, unknown>) {},
+    fetched(payload: Record<string, unknown>) {},
+    fetchSuccess(payload: Record<string, unknown>) {},
+    fetchFailed(payload: Record<string, unknown>, error: any) {},
+    globallyRateLimited(url: string, resetsAt: number) {},
+    retriesMaxed(payload: Record<string, unknown>) {},
   },
   /** Handler function for every request. Converts to json, verified authorization & requirements and begins processing the request */
   handlePayload,

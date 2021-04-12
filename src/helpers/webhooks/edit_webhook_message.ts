@@ -1,13 +1,16 @@
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
+import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
+import { DiscordMessage } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";
+import { EditWebhookMessage } from "../../types/webhooks/edit_webhook_message.ts";
 import { endpoints } from "../../util/constants.ts";
 
 export async function editWebhookMessage(
   webhookId: string,
   webhookToken: string,
   messageId: string,
-  options: EditWebhookMessageOptions,
+  options: EditWebhookMessage
 ) {
   if (options.content && options.content.length > 2000) {
     throw Error(Errors.MESSAGE_MAX_LENGTH);
@@ -17,43 +20,43 @@ export async function editWebhookMessage(
     options.embeds.splice(10);
   }
 
-  if (options.allowed_mentions) {
-    if (options.allowed_mentions.users?.length) {
-      if (options.allowed_mentions.parse.includes("users")) {
-        options.allowed_mentions.parse = options.allowed_mentions.parse.filter(
-          (p) => p !== "users",
+  if (options.allowedMentions) {
+    if (options.allowedMentions.users?.length) {
+      if (options.allowedMentions.parse.includes("users")) {
+        options.allowedMentions.parse = options.allowedMentions.parse.filter(
+          (p) => p !== "users"
         );
       }
 
-      if (options.allowed_mentions.users.length > 100) {
-        options.allowed_mentions.users = options.allowed_mentions.users.slice(
+      if (options.allowedMentions.users.length > 100) {
+        options.allowedMentions.users = options.allowedMentions.users.slice(
           0,
-          100,
+          100
         );
       }
     }
 
-    if (options.allowed_mentions.roles?.length) {
-      if (options.allowed_mentions.parse.includes("roles")) {
-        options.allowed_mentions.parse = options.allowed_mentions.parse.filter(
-          (p) => p !== "roles",
+    if (options.allowedMentions.roles?.length) {
+      if (options.allowedMentions.parse.includes(DiscordAllowedMentionsTypes.RoleMentions)) {
+        options.allowedMentions.parse = options.allowedMentions.parse.filter(
+          (p) => p !== "roles"
         );
       }
 
-      if (options.allowed_mentions.roles.length > 100) {
-        options.allowed_mentions.roles = options.allowed_mentions.roles.slice(
+      if (options.allowedMentions.roles.length > 100) {
+        options.allowedMentions.roles = options.allowedMentions.roles.slice(
           0,
-          100,
+          100
         );
       }
     }
   }
 
-  const result = await rest.runMethod(
+  const result = (await rest.runMethod(
     "patch",
     endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId),
-    { ...options, allowed_mentions: options.allowed_mentions },
-  ) as MessageCreateOptions;
+    { ...options, allowedMentions: options.allowedMentions }
+  )) as DiscordMessage;
 
   const message = await structures.createDiscordenoMessage(result);
   return message;

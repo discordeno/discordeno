@@ -34,7 +34,7 @@ export interface Message {
   /** When this message was sent */
   timestamp: string;
   /** When this message was edited (or null if never) */
-  edited_timestamp: string | null;
+  editedTimestamp: string | null;
   /** Whether this was a TTS message */
   tts: boolean;
   /** Whether this message mentions everyone */
