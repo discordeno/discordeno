@@ -1,6 +1,6 @@
 # Discordeno
 
-<img align="right" src=docs/src/.vuepress/public/logo.png height="150px">
+<img align="right" src="https://raw.githubusercontent.com/discordeno/guide/main/src/.vuepress/public/logo.png" height="150px">
 
 Discord API library for [Deno](https://deno.land)
 
