@@ -1,12 +1,14 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
+import { DiscordenoMember } from "../../structures/member.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import { GuildMemberWithUser } from "../../types/guilds/guild_member";
 import { DiscordMessage, Message } from "../../types/messages/message.ts";
 import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 export async function handleMessageCreate(data: DiscordGatewayPayload) {
-  const payload = snakeKeysToCamelCase(data.d as DiscordMessage) as Message;
+  const payload: Message = snakeKeysToCamelCase(data.d as DiscordMessage);
   const channel = await cacheHandlers.get("channels", payload.channelId);
   if (channel) channel.lastMessageId = payload.id;
 
@@ -17,7 +19,7 @@ export async function handleMessageCreate(data: DiscordGatewayPayload) {
   if (payload.member && guild) {
     // If in a guild cache the author as a member
     const discordenoMember = await structures.createDiscordenoMember(
-      { ...payload.member, user: payload.author },
+      { ...payload.member, user: payload.author } as GuildMemberWithUser,
       guild.id,
     );
     await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
