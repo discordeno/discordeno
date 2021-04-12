@@ -1,7 +1,6 @@
 import { checkRateLimits } from "./check_rate_limits.ts";
 import { cleanupQueues } from "./cleanup_queues.ts";
 import { createRequestBody } from "./create_request_body.ts";
-import { handlePayload } from "./handle_payload.ts";
 import { processQueue } from "./process_queue.ts";
 import { processRateLimitedPaths } from "./process_rate_limited_paths.ts";
 import { processRequest } from "./process_request.ts";
@@ -17,25 +16,30 @@ export const rest = {
   apiVersion: "8",
   /** The secret authorization key to confirm that this was a request made by you and not a DDOS attack. */
   authorization: "discordeno_best_lib_ever",
-  pathQueues: new Map(),
+  pathQueues: new Map<
+    string,
+    {
+      request: RestRequest;
+      payload: RestPayload;
+    }[]
+  >(),
   processingQueue: false,
   processingRateLimitedPaths: false,
   globallyRateLimited: false,
-  ratelimitedPaths: new Map(),
+  ratelimitedPaths: new Map<string, RestRateLimitedPath>(),
   eventHandlers: {
     // BY DEFAULT WE WILL LOG ALL ERRORS TO CONSOLE. USER CAN CHOOSE TO OVERRIDE
     error: function (...args: unknown[]) {},
     // PLACEHOLDERS TO ALLOW USERS TO CUSTOMIZE
     debug: function (type: string, error: string | Record<string, unknown>) {},
-    fetching(payload: Record<string, unknown>) {},
-    fetched(payload: Record<string, unknown>) {},
-    fetchSuccess(payload: Record<string, unknown>) {},
-    fetchFailed(payload: Record<string, unknown>, error: any) {},
+    fetching(payload: RestPayload) {},
+    fetched(payload: RestPayload) {},
+    fetchSuccess(payload: RestPayload) {},
+    fetchFailed(payload: RestPayload, error: unknown) {},
     globallyRateLimited(url: string, resetsAt: number) {},
-    retriesMaxed(payload: Record<string, unknown>) {},
+    retriesMaxed(payload: RestPayload) {},
   },
   /** Handler function for every request. Converts to json, verified authorization & requirements and begins processing the request */
-  handlePayload,
   checkRateLimits,
   cleanupQueues,
   processQueue,
@@ -46,3 +50,22 @@ export const rest = {
   runMethod,
   simplifyUrl,
 };
+
+export interface RestRequest {
+  url: string;
+  method: string;
+  respond: (payload: { status: number; body?: string }) => unknown;
+  reject?: (error: unknown) => unknown;
+}
+
+export interface RestPayload {
+  bucketId?: string;
+  body?: Record<string, unknown>;
+  retryCount: number;
+}
+
+export interface RestRateLimitedPath {
+  url: string;
+  resetTimestamp: number;
+  bucketId?: string;
+}
