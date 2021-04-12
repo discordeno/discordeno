@@ -7,12 +7,6 @@ import {
 import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 export function handleApplicationCommandUpdate(data: DiscordGatewayPayload) {
-  const {
-    application_id: applicationId,
-    guild_id: guildId,
-    ...rest
-  } = data.d as DiscordApplicationCommandCreateUpdateDelete;
-
   eventHandlers.applicationCommandUpdate?.(
     snakeKeysToCamelCase<ApplicationCommandCreateUpdateDelete>(
       data.d as DiscordApplicationCommandCreateUpdateDelete,
