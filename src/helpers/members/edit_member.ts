@@ -3,6 +3,7 @@ import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGuildMember } from "../../types/guilds/guild_member.ts";
 import { Errors } from "../../types/misc/errors.ts";
+import { ModifyGuildMember } from "../../types/mod.ts";
 import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
@@ -15,7 +16,7 @@ import { snakeKeysToCamelCase } from "../../util/utils.ts";
 export async function editMember(
   guildId: string,
   memberId: string,
-  options: EditMember,
+  options: ModifyGuildMember,
 ) {
   const requiredPerms: Set<PermissionStrings> = new Set();
 
