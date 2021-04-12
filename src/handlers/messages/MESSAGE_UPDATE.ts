@@ -9,22 +9,13 @@ export async function handleMessageUpdate(data: DiscordGatewayPayload) {
   const channel = await cacheHandlers.get("channels", payload.channel_id);
   if (!channel) return;
 
-  const cachedMessage = await cacheHandlers.get("messages", payload.id);
-  if (!cachedMessage) return;
-
-  const oldMessage = {
-    attachments: cachedMessage.attachments,
-    content: cachedMessage.content,
-    embeds: cachedMessage.embeds,
-    editedTimestamp: cachedMessage.editedTimestamp,
-    tts: cachedMessage.tts,
-    pinned: cachedMessage.pinned,
-  };
+  const oldMessage = await cacheHandlers.get("messages", payload.id);
+  if (!oldMessage) return;
 
   // Messages with embeds can trigger update but they wont have edited_timestamp
   if (
     !payload.edited_timestamp ||
-    (cachedMessage.content === payload.content)
+    (oldMessage.content === payload.content)
   ) {
     return;
   }

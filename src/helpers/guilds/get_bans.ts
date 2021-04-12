@@ -15,6 +15,6 @@ export async function getBans(guildId: string) {
   )) as DiscordBan[];
 
   return new Collection<string, Ban>(
-    results.map((res) => [res.user.id, snakeKeysToCamelCase(res) as Ban]),
+    results.map((res) => [res.user.id, snakeKeysToCamelCase<Ban>(res)]),
   );
 }

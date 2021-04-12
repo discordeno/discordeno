@@ -1,4 +1,4 @@
-import { GuildMember } from "../guilds/guild_member.ts";
+import { GuildMemberWithUser } from "../guilds/guild_member.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface VoiceState {
@@ -9,7 +9,7 @@ export interface VoiceState {
   /** The user id this voice state is for */
   userId: string;
   /** The guild member this voice state is for */
-  member?: GuildMember;
+  member?: GuildMemberWithUser;
   /** The session id for this voice state */
   sessionId: string;
   /** Whether this user is deafened by the server */

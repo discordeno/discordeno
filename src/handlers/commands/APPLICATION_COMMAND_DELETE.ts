@@ -1,17 +1,15 @@
 import { eventHandlers } from "../../bot.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { DiscordApplicationCommandCreateUpdateDelete } from "../../types/interactions/application_command_create_update_delete.ts";
+import {
+  ApplicationCommandCreateUpdateDelete,
+  DiscordApplicationCommandCreateUpdateDelete,
+} from "../../types/interactions/application_command_create_update_delete.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 export function handleApplicationCommandDelete(data: DiscordGatewayPayload) {
-  const {
-    application_id: applicationId,
-    guild_id: guildId,
-    ...rest
-  } = data.d as DiscordApplicationCommandCreateUpdateDelete;
-
-  eventHandlers.applicationCommandDelete?.({
-    ...rest,
-    guildId,
-    applicationId,
-  });
+  eventHandlers.applicationCommandDelete?.(
+    snakeKeysToCamelCase<ApplicationCommandCreateUpdateDelete>(
+      data.d as DiscordApplicationCommandCreateUpdateDelete,
+    ),
+  );
 }

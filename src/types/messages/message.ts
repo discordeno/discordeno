@@ -43,7 +43,7 @@ export interface Message {
    * Users specifically mentioned in the message
    * Note: The user objects in the mentions array will only have the partial member field present in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events from text-based guild channels.
    */
-  mentions: User[];
+  mentions: (User & { member?: Partial<GuildMember> })[];
   /** Roles specifically mentioned in this message */
   mentionRoles: string[];
   /**

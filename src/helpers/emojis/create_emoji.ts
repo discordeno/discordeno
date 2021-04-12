@@ -24,5 +24,5 @@ export async function createEmoji(
     image,
   });
 
-  return snakeKeysToCamelCase(result) as Emoji;
+  return snakeKeysToCamelCase<Emoji>(result);
 }

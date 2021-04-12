@@ -18,13 +18,16 @@ export async function handleMessageReactionRemoveEmoji(
           reaction.emoji.name === payload.emoji.name
         ),
     );
-    
-    if (!message.reactions.length) message.reactions = undefined
+
+    if (!message.reactions.length) message.reactions = undefined;
 
     await cacheHandlers.set("messages", payload.message_id, message);
   }
 
   eventHandlers.reactionRemoveEmoji?.(
-    data.d,
+    payload.emoji,
+    payload.message_id,
+    payload.channel_id,
+    payload.guild_id,
   );
 }

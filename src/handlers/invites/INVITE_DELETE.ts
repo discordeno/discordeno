@@ -7,7 +7,7 @@ import {
 import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 export function handleInviteDelete(data: DiscordGatewayPayload) {
-  const payload = data.d as DiscordInviteDelete;
-
-  eventHandlers.inviteDelete?.(snakeKeysToCamelCase(payload) as InviteDelete);
+  eventHandlers.inviteDelete?.(
+    snakeKeysToCamelCase<InviteDelete>(data.d as DiscordInviteDelete),
+  );
 }

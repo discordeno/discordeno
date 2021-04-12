@@ -4,7 +4,8 @@ import { initialMemberLoadQueue } from "../../structures/guild.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { DiscordReady } from "../../types/gateway/ready.ts";
-import { delay, snakeKeysToCamelCase } from "../../util/utils.ts";
+import { DiscordGuildMemberWithUser } from "../../types/mod.ts";
+import { camelKeysToSnakeCase, delay } from "../../util/utils.ts";
 import { ws } from "../../ws/ws.ts";
 
 export async function handleReady(
@@ -103,7 +104,7 @@ async function loaded(shardId: number) {
         await Promise.allSettled(
           members.map(async (member) => {
             const discordenoMember = await structures.createDiscordenoMember(
-              snakeKeysToCamelCase(member),
+              camelKeysToSnakeCase<DiscordGuildMemberWithUser>(member),
               guildId,
             );
 

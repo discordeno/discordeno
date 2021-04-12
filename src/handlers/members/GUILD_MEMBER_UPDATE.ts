@@ -35,7 +35,7 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
         guild,
         discordenoMember,
         payload.nick!,
-        guildMember.nick,
+        guildMember.nick ?? undefined,
       );
     }
 

@@ -39,9 +39,8 @@ const baseMessage: Partial<DiscordenoMessage> = {
     return this.member?.guilds.get(this.guildId);
   },
   get link() {
-    return `https://discord.com/channels/${this.guildId || "@me"}/${
-      this.channelId
-    }/${this.id}`;
+    return `https://discord.com/channels/${this.guildId ||
+      "@me"}/${this.channelId}/${this.id}`;
   },
   get mentionedRoles() {
     return this.mentionedRoleIds?.map((id) => this.guild?.roles.get(id)) || [];
@@ -70,25 +69,24 @@ const baseMessage: Partial<DiscordenoMessage> = {
     return addReactions(this.channelId!, this.id!, reactions, ordered);
   },
   reply(content) {
-    const contentWithMention =
-      typeof content === "string"
-        ? {
-            content,
-            mentions: { repliedUser: true },
-            messageReference: {
-              messageId: this.id,
-              failReplyIfNotExists: false,
-            },
-          }
-        : {
-            ...content,
-            mentions: { ...(content.allowedMentions || {}), repliedUser: true },
-            messageReference: {
-              messageId: this.id,
-              failReplyIfNotExists:
-                content.messageReference?.failIfNotExists === true,
-            },
-          };
+    const contentWithMention = typeof content === "string"
+      ? {
+        content,
+        mentions: { repliedUser: true },
+        messageReference: {
+          messageId: this.id,
+          failReplyIfNotExists: false,
+        },
+      }
+      : {
+        ...content,
+        mentions: { ...(content.allowedMentions || {}), repliedUser: true },
+        messageReference: {
+          messageId: this.id,
+          failReplyIfNotExists:
+            content.messageReference?.failIfNotExists === true,
+        },
+      };
 
     if (this.guildId) return sendMessage(this.channelId!, contentWithMention);
     return sendDirectMessage(this.author!.id, contentWithMention);
@@ -133,21 +131,21 @@ export async function createDiscordenoMessage(data: DiscordMessage) {
     mentionRoles,
     editedTimestamp,
     ...rest
-  } = snakeKeysToCamelCase(data) as Message;
+  } = snakeKeysToCamelCase<Message>(data);
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of loop in createDiscordenoMessage function.`
+      `Running for of loop in createDiscordenoMessage function.`,
     );
     // @ts-ignore index signature
     props[key] = createNewProp(rest[key]);
   }
 
   // Discord doesnt give guild id for getMessage() so this will fill it in
-  const guildIdFinal =
-    guildId || (await cacheHandlers.get("channels", channelId))?.guildId || "";
+  const guildIdFinal = guildId ||
+    (await cacheHandlers.get("channels", channelId))?.guildId || "";
 
   const message: DiscordenoMessage = Object.create(baseMessage, {
     ...props,
@@ -167,7 +165,7 @@ export async function createDiscordenoMessage(data: DiscordMessage) {
     ]),
     timestamp: createNewProp(Date.parse(data.timestamp)),
     editedTimestamp: createNewProp(
-      editedTimestamp ? Date.parse(editedTimestamp) : undefined
+      editedTimestamp ? Date.parse(editedTimestamp) : undefined,
     ),
   });
 
@@ -209,7 +207,7 @@ export interface DiscordenoMessage extends Message {
   /** Delete the message */
   delete(
     reason?: string,
-    delayMilliseconds?: number
+    delayMilliseconds?: number,
   ): ReturnType<typeof deleteMessage>;
   /** Edit the message */
   edit(content: string | EditMessage): ReturnType<typeof editMessage>;
@@ -220,7 +218,7 @@ export interface DiscordenoMessage extends Message {
   /** Add multiple reactions to the message without or without order. */
   addReactions(
     reactions: string[],
-    ordered?: boolean
+    ordered?: boolean,
   ): ReturnType<typeof addReactions>;
   /** Send a inline reply to this message */
   reply(content: string | CreateMessage): ReturnType<typeof sendMessage>;
@@ -230,13 +228,13 @@ export interface DiscordenoMessage extends Message {
   alert(
     content: string | CreateMessage,
     timeout?: number,
-    reason?: string
+    reason?: string,
   ): Promise<void>;
   /** Send a inline reply to this message but then delete it after a bit. By default it will delete after 10 seconds with no reason provided.  */
   alertReply(
     content: string | CreateMessage,
     timeout?: number,
-    reason?: string
+    reason?: string,
   ): Promise<unknown>;
   /** Remove all reactions */
   removeAllReactions(): ReturnType<typeof removeAllReactions>;
