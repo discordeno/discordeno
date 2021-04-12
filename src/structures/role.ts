@@ -56,7 +56,7 @@ const baseRole: Partial<DiscordenoRole> = {
     const guild = this.guild;
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
-    if (this.guild.ownerId === memberId) return false;
+    if (guild.ownerId === memberId) return false;
 
     const memberHighestRole = await highestRole(guild, memberId);
     return this.higherThanRole!(

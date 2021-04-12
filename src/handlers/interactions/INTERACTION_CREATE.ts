@@ -3,10 +3,10 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { Interaction } from "../../types/mod.ts";
+import { DiscordInteraction } from "../../types/mod.ts";
 
 export async function handleInteractionCreate(data: DiscordGatewayPayload) {
-  const payload = data.d as Interaction;
+  const payload = data.d as DiscordInteraction;
   const discordenoMember = await structures.createDiscordenoMember(
     payload.member,
     payload.guild_id,

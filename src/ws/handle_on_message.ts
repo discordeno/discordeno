@@ -1,6 +1,8 @@
 import { eventHandlers } from "../bot.ts";
 import { handlers } from "../handlers/mod.ts";
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
+import { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
+import { DiscordHello } from "../types/gateway/hello.ts";
 import { DiscordReady } from "../types/gateway/ready.ts";
 import { decompressWith } from "./deps.ts";
 import { identify } from "./identify.ts";
@@ -24,14 +26,14 @@ export async function handleOnMessage(message: any, shardId: number) {
 
   if (typeof message !== "string") return;
 
-  const messageData = JSON.parse(message);
-  ws.log("RAW", messageData);
+  const messageData = JSON.parse(message) as DiscordGatewayPayload;
+  ws.log("RAW", { shardId, payload: messageData});
 
   switch (messageData.op) {
     case DiscordGatewayOpcodes.Hello:
       ws.heartbeat(
         shardId,
-        (messageData.d as DiscordHeartbeat).heartbeat_interval,
+        (messageData.d as DiscordHello).heartbeat_interval,
       );
       break;
     case DiscordGatewayOpcodes.HeartbeatACK:
@@ -98,6 +100,8 @@ export async function handleOnMessage(message: any, shardId: number) {
         await eventHandlers.dispatchRequirements?.(messageData, shardId);
 
         if (messageData.op !== DiscordGatewayOpcodes.Dispatch) return;
+
+        if (!messageData.t) return;
 
         return handlers[messageData.t]?.(messageData, shardId);
       }

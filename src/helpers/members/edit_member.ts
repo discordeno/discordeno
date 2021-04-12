@@ -3,6 +3,7 @@ import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGuildMember } from "../../types/guilds/guild_member.ts";
 import { Errors } from "../../types/misc/errors.ts";
+import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   requireBotChannelPermissions,
@@ -13,9 +14,9 @@ import {
 export async function editMember(
   guildId: string,
   memberId: string,
-  options: EditMemberOptions,
+  options: EditMember,
 ) {
-  const requiredPerms: Set<Permission> = new Set();
+  const requiredPerms: Set<PermissionStrings> = new Set();
 
   if (options.nick) {
     if (options.nick.length > 32) {
@@ -47,7 +48,7 @@ export async function editMember(
     }
 
     if (options.channel_id) {
-      const requiredVoicePerms: Set<Permission> = new Set([
+      const requiredVoicePerms: Set<PermissionStrings> = new Set([
         "CONNECT",
         "MOVE_MEMBERS",
       ]);

@@ -1,9 +1,10 @@
 import { rest } from "../../rest/rest.ts";
+import { Ban } from "../../types/guilds/ban.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
 /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
-export async function ban(guildId: string, id: string, options: BanOptions) {
+export async function ban(guildId: string, id: string, options: Ban) {
   await requireBotGuildPermissions(guildId, ["BAN_MEMBERS"]);
 
   const result = await rest.runMethod("put", endpoints.GUILD_BAN(guildId, id), {

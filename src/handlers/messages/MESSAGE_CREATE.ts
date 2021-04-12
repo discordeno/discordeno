@@ -2,15 +2,16 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { DiscordMessage } from "../../types/messages/message.ts";
+import { DiscordMessage, Message } from "../../types/messages/message.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 export async function handleMessageCreate(data: DiscordGatewayPayload) {
-  const payload = data.d as DiscordMessage;
-  const channel = await cacheHandlers.get("channels", payload.channel_id);
+  const payload = snakeKeysToCamelCase(data.d as DiscordMessage) as Message;
+  const channel = await cacheHandlers.get("channels", payload.channelId);
   if (channel) channel.lastMessageId = payload.id;
 
-  const guild = payload.guild_id
-    ? await cacheHandlers.get("guilds", payload.guild_id)
+  const guild = payload.guildId
+    ? await cacheHandlers.get("guilds", payload.guildId)
     : undefined;
 
   if (payload.member && guild) {
