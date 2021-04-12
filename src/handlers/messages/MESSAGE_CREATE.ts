@@ -1,9 +1,8 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { DiscordenoMember } from "../../structures/member.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { GuildMemberWithUser } from "../../types/guilds/guild_member";
+import { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
 import { DiscordMessage, Message } from "../../types/messages/message.ts";
 import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
