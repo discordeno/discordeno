@@ -1,9 +1,14 @@
 import { eventHandlers, identifyPayload } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
-import { Member, structures } from "../../structures/mod.ts";
+import { DiscordenoMember } from "../../structures/member.ts";
+import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
-import { DiscordGuildMember } from "../../types/guilds/guild_member.ts";
+import {
+  DiscordGuildMemberWithUser,
+  GuildMember,
+} from "../../types/guilds/guild_member.ts";
+import { ListGuildMembers } from "../../types/guilds/list_guild_members.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -16,7 +21,7 @@ import { endpoints } from "../../util/constants.ts";
  * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
  */
-export async function getMembers(guildId: string, options?: GetMemberOptions) {
+export async function getMembers(guildId: string, options?: ListGuildMembers) {
   if (!(identifyPayload.intents && DiscordGatewayIntents.GUILD_MEMBERS)) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
@@ -24,7 +29,7 @@ export async function getMembers(guildId: string, options?: GetMemberOptions) {
   const guild = await cacheHandlers.get("guilds", guildId);
   if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
-  const members = new Collection<string, Member>();
+  const members = new Collection<string, DiscordenoMember>();
 
   let membersLeft = options?.limit ?? guild.memberCount;
   let loops = 1;
@@ -44,17 +49,17 @@ export async function getMembers(guildId: string, options?: GetMemberOptions) {
       );
     }
 
-    const result = (await rest.runMethod(
+    const result: GuildMember[] = (await rest.runMethod(
       "get",
       `${endpoints.GUILD_MEMBERS(guildId)}?limit=${
         membersLeft > 1000 ? 1000 : membersLeft
       }${options?.after ? `&after=${options.after}` : ""}`,
-    )) as DiscordGuildMember[];
+    ));
 
     const discordenoMembers = await Promise.all(
       result.map(async (member) => {
         const discordenoMember = await structures.createDiscordenoMember(
-          member,
+          member as DiscordGuildMemberWithUser,
           guildId,
         );
 
@@ -66,7 +71,7 @@ export async function getMembers(guildId: string, options?: GetMemberOptions) {
 
         return discordenoMember;
       }),
-    ) as Member[];
+    ) as DiscordenoMember[];
 
     if (!discordenoMembers.length) break;
 

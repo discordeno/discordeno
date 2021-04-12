@@ -1,4 +1,5 @@
 import { rest } from "../../rest/rest.ts";
+import { BeginGuildPrune } from "../../types/guilds/begin_guild_prune.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
@@ -11,7 +12,7 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
  */
 export async function pruneMembers(
   guildId: string,
-  options: PruneOptions,
+  options: BeginGuildPrune,
 ) {
   if (options.days && options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
   if (options.days && options.days > 30) throw new Error(Errors.PRUNE_MAX_DAYS);
