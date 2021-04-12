@@ -9,6 +9,7 @@ import {
   requireBotChannelPermissions,
   requireBotGuildPermissions,
 } from "../../util/permissions.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 /** Edit the member */
 export async function editMember(
@@ -72,7 +73,7 @@ export async function editMember(
     endpoints.GUILD_MEMBER(guildId, memberId),
     options,
   ) as DiscordGuildMember;
-  const member = await structures.createDiscordenoMember(result, guildId);
+  const member = await structures.createDiscordenoMember(snakeKeysToCamelCase(result), guildId);
 
   return member;
 }

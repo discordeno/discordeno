@@ -10,7 +10,7 @@ import { DiscordMessage, Message } from "../../types/messages/message.ts";
 import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 export async function handleMessageCreate(data: DiscordGatewayPayload) {
-  const payload: Message = snakeKeysToCamelCase(data.d as DiscordMessage);
+  const payload = snakeKeysToCamelCase(data.d as DiscordMessage) as Message;
   const channel = await cacheHandlers.get("channels", payload.channelId);
   if (channel) channel.lastMessageId = payload.id;
 
@@ -37,7 +37,7 @@ export async function handleMessageCreate(data: DiscordGatewayPayload) {
 
       return cacheHandlers.set(
         "members",
-        discordenoMember.id,
+        mention.id,
         discordenoMember,
       );
     }
