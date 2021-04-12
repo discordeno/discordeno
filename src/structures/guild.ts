@@ -216,6 +216,8 @@ export interface DiscordenoGuild extends
     | "owner"
     | "emojis"
   > {
+  /** The id of the shard this guild is bound to */
+  shardId: number;
   /** Total number of members in this guild */
   memberCount: number;
   /** The roles in the guild */
