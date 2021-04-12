@@ -16,7 +16,7 @@ export async function sendDirectMessage(
       recipient_id: memberId,
     }) as DMChannelCreatePayload;
     const discordenoChannel = await structures.createDiscordenoChannel(
-      dmChannelData as unknown as ChannelCreatePayload,
+      dmChannelData as unknown as DiscordChannel,
     );
     // Recreate the channel and add it undert he users id
     await cacheHandlers.set("channels", memberId, discordenoChannel);

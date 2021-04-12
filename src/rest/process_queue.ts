@@ -30,7 +30,6 @@ export async function processQueue(id: string) {
     // IF THIS DOESNT HAVE ANY ITEMS JUST CANCEL, THE CLEANER WILL REMOVE IT.
     if (!queuedRequest) return;
 
-
     const basicURL = rest.simplifyUrl(
       queuedRequest.request.url,
       queuedRequest.request.method.toUpperCase()
@@ -42,8 +41,9 @@ export async function processQueue(id: string) {
       // PAUSE FOR THIS SPECIFC REQUEST
       await delay(urlResetIn);
       continue;
-    } // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
+    }
 
+    // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
     const bucketResetIn = queuedRequest.payload.bucketId
       ? rest.checkRateLimits(queuedRequest.payload.bucketId)
       : false;
@@ -172,7 +172,7 @@ export async function processQueue(id: string) {
     } catch (error) {
       // SOMETHING WENT WRONG, LOG AND RESPOND WITH ERROR
       rest.eventHandlers.fetchFailed(queuedRequest.payload, error);
-      queuedRequest.request.reject(error);
+      queuedRequest.request.reject?.(error);
       queuedRequest.request.respond({
         status: 404,
         body: JSON.stringify({ error }),
