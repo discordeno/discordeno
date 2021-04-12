@@ -31,7 +31,7 @@ export async function handleGuildUpdate(data: DiscordGatewayPayload) {
           const different = (cachedValue.length !== value.length) ||
             cachedValue.find((val) => !value.includes(val)) ||
             // TODO: check if this really works hehe
-            // @ts-ignore this works ts is wrong
+            // @ts-ignore typescript thinks that this is not an array
             value.find((val) => !cachedValue.includes(val));
           if (!different) return;
         }
