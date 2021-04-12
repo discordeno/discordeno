@@ -1,6 +1,6 @@
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordTemplate } from "../../types/templates/template.ts";
+import { DiscordTemplate, Template } from "../../types/templates/template.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -12,7 +12,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
  */
 export async function createGuildTemplate(
   guildId: string,
-  data: CreateGuildTemplate,
+  data: Template,
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 

@@ -96,7 +96,6 @@ import { deleteRole } from "./roles/delete_role.ts";
 import { editRole } from "./roles/edit_role.ts";
 import { getRoles } from "./roles/get_roles.ts";
 import { removeRole } from "./roles/remove_role.ts";
-import { swapRoles } from "./roles/swap_roles.ts";
 import { createGuildFromTemplate } from "./templates/create_guild_from_template.ts";
 import { createGuildTemplate } from "./templates/create_guild_template.ts";
 import { deleteGuildTemplate } from "./templates/delete_guild_template.ts";
@@ -230,7 +229,6 @@ export {
   sendMessage,
   startTyping,
   swapChannels,
-  swapRoles,
   syncGuildTemplate,
   syncIntegration,
   unban,
@@ -350,7 +348,6 @@ export let helpers = {
   editRole,
   getRoles,
   removeRole,
-  swapRoles,
   // templates
   createGuildFromTemplate,
   createGuildTemplate,

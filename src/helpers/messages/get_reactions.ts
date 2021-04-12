@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { User } from "../../types/users/user.ts";
+import { DiscordUser } from "../../types/users/user.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 
@@ -14,7 +14,7 @@ export async function getReactions(
     "get",
     endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction),
     options,
-  )) as User[];
+  )) as DiscordUser[];
 
   return new Collection(users.map((user) => [user.id, user]));
 }

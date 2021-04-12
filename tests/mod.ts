@@ -47,7 +47,6 @@ import "./roles/create_role.ts";
 import "./roles/delete_role.ts";
 import "./roles/edit_role.ts";
 import "./roles/remove_role.ts";
-import "./roles/swap_roles.ts";
 
 // Final cleanup
 import "./guilds/delete_server.ts";
