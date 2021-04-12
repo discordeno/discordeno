@@ -104,6 +104,7 @@ export async function createDiscordenoChannel(
 }
 
 export interface DiscordenoChannel extends Channel {
+  guildId: string;
   // GETTERS
 
   /**
