@@ -57,7 +57,7 @@ const baseMessage: Partial<DiscordenoMessage> = {
     return deleteMessage(this.channelId!, this.id!, reason, delayMilliseconds);
   },
   edit(content) {
-    return editMessage(this as Message, content);
+    return editMessage(this as DiscordenoMessage, content);
   },
   pin() {
     return pinMessage(this.channelId!, this.id!);

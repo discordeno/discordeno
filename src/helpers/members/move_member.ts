@@ -11,5 +11,5 @@ export function moveMember(
   memberId: string,
   channelId: string,
 ) {
-  return editMember(guildId, memberId, { channel_id: channelId });
+  return editMember(guildId, memberId, { channelId });
 }

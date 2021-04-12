@@ -1,16 +1,19 @@
 import { botId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
-import { Message, structures } from "../../structures/mod.ts";
+import { DiscordenoMessage } from "../../structures/message.ts";
+import { structures } from "../../structures/mod.ts";
+import { CreateMessage } from "../../types/messages/create_message.ts";
+import { EditMessage } from "../../types/messages/edit_message.ts";
+import { DiscordMessage } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";
-import { DiscordMessage } from "../../types/mod.ts";
 import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
 /** Edit the message. */
 export async function editMessage(
-  message: Message,
-  content: string | MessageContent,
+  message: DiscordenoMessage,
+  content: string | EditMessage
 ) {
   if (message.author.id !== botId) {
     throw "You can only edit a message that was sent by the bot.";
@@ -19,8 +22,6 @@ export async function editMessage(
   if (typeof content === "string") content = { content };
 
   const requiredPerms: PermissionStrings[] = ["SEND_MESSAGES"];
-
-  if (content.tts) requiredPerms.push("SEND_TTS_MESSAGES");
 
   await requireBotChannelPermissions(message.channelId, requiredPerms);
 
@@ -31,7 +32,7 @@ export async function editMessage(
   const result: DiscordMessage = await rest.runMethod(
     "patch",
     endpoints.CHANNEL_MESSAGE(message.channelId, message.id),
-    content,
+    content
   );
 
   return structures.createDiscordenoMessage(result);
