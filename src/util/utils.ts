@@ -1,35 +1,10 @@
 import { encode } from "../../deps.ts";
 import { eventHandlers } from "../bot.ts";
-import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
-import { StatusUpdate } from "../types/gateway/status_update.ts";
 import { DiscordApplicationCommandOptionTypes } from "../types/interactions/application_command_option_types.ts";
 import { Errors } from "../types/misc/errors.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
-import { ws } from "../ws/ws.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
-
-// TODO: move this function to helpers
-export function editBotStatus(
-  data: Omit<StatusUpdate, "afk" | "since">,
-) {
-  ws.shards.forEach((shard) => {
-    eventHandlers.debug?.(
-      "loop",
-      `Running forEach loop in editBotStatus function.`,
-    );
-    shard.ws.send(
-      JSON.stringify({
-        op: DiscordGatewayOpcodes.StatusUpdate,
-        d: {
-          since: null,
-          afk: false,
-          ...data,
-        },
-      }),
-    );
-  });
-}
 
 export async function urlToBase64(url: string) {
   const buffer = await fetch(url).then((res) => res.arrayBuffer());
