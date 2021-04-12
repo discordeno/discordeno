@@ -1,7 +1,9 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
+import { Guild } from "../../types/guilds/guild.ts";
+import { CreateGuildFromTemplate } from "../../types/templates/create_guild_from_template.ts";
 import { endpoints } from "../../util/constants.ts";
-import { urlToBase64 } from "../../util/utils.ts";
+import { snakeKeysToCamelCase, urlToBase64 } from "../../util/utils.ts";
 
 /**
  * Create a new guild based on a template
@@ -27,5 +29,5 @@ export async function createGuildFromTemplate(
     data,
   );
 
-  return result as CreateGuildPayload;
+  return snakeKeysToCamelCase<Guild>(result);
 }
