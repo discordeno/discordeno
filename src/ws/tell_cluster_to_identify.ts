@@ -8,7 +8,6 @@ export async function tellClusterToIdentify(
 ) {
   // When resharding this may exist already
   const oldShard = ws.shards.get(shardId);
-  // TODO: Use workers
   await ws.identify(shardId, ws.maxShards);
 
   if (oldShard) {

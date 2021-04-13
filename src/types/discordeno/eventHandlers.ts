@@ -121,8 +121,6 @@ export interface EventHandlers {
     member: DiscordenoMember,
     oldMember?: DiscordenoMember,
   ) => unknown;
-  // TODO: remove this?
-  //heartbeat?: () => unknown;
   /** Sent when a user in a guild uses a Slash Command. */
   interactionCreate?: (
     data: Omit<Interaction, "member"> & { member: DiscordenoMember },
