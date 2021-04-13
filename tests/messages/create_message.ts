@@ -46,7 +46,7 @@ async function ifItFailsBlameWolf(
   }
 
   const message = type === "raw"
-    ? await sendMessage(channel?.id!, messageContent)
+    ? await sendMessage(channel!.id, messageContent)
     : await channel?.send(messageContent);
 
   // Assertions
