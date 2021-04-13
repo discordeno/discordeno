@@ -64,4 +64,6 @@ export enum DiscordBitwisePermissionFlags {
   MANAGE_EMOJIS = 0x40000000,
   /** Allows members to use slash commands in text channels */
   USE_SLASH_COMMANDS = 0x80000000,
+  /** Allows for requesting to speak in stage channels. (This permission is under active development and may be changed or removed.) */
+  REQUEST_TO_SPEAK = 0x100000000,
 }
