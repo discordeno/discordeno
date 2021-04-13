@@ -1,5 +1,7 @@
+import { Application } from "../oauth2/application.ts";
 import { User } from "../users/user.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
+import { DiscordTargetTypes } from "./target_types.ts";
 
 export interface InviteCreate {
   /** The channel the invite is for */
@@ -16,10 +18,12 @@ export interface InviteCreate {
   maxAge: number;
   /** The maximum number of times the invite can be used */
   maxUses: number;
+  /** The type of target for this voice channel invite */
+  targetType: DiscordTargetTypes;
   /** The target user for this invite */
   targetUser?: Partial<User>;
-  /** The type of user target for this invite */
-  targetUserType?: number;
+  /** The embedded application to open for this voice channel embedded application invite */
+  targetApplication?: Partial<Application>;
   /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
   temporary: boolean;
   /** How many times the invite has been used (always will be 0) */
