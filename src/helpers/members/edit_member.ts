@@ -10,7 +10,10 @@ import {
   requireBotChannelPermissions,
   requireBotGuildPermissions,
 } from "../../util/permissions.ts";
-import { camelKeysToSnakeCase, snakeKeysToCamelCase } from "../../util/utils.ts";
+import {
+  camelKeysToSnakeCase,
+  snakeKeysToCamelCase,
+} from "../../util/utils.ts";
 
 /** Edit the member */
 export async function editMember(

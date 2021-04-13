@@ -79,4 +79,3 @@ export async function executeWebhook(
 
   return structures.createDiscordenoMessage(result as DiscordMessage);
 }
-

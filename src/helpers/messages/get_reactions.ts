@@ -2,7 +2,7 @@ import { rest } from "../../rest/rest.ts";
 import { DiscordUser } from "../../types/users/user.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
-import {GetReactions} from "../../types/messages/message_get_reactions.ts";
+import { GetReactions } from "../../types/messages/message_get_reactions.ts";
 
 /** Get a list of users that reacted with this emoji. */
 export async function getReactions(
