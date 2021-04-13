@@ -15,8 +15,9 @@ export async function getWebhooks(guildId: string) {
   )) as DiscordWebhook[];
 
   return new Collection(
-    result
-      .map((webhook) => snakeKeysToCamelCase<Webhook>(webhook))
-      .map((webhook) => [webhook.id, webhook]),
+    result.map((webhook) => [
+      webhook.id,
+      snakeKeysToCamelCase<Webhook>(webhook),
+    ]),
   );
 }

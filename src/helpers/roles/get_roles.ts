@@ -18,8 +18,6 @@ export async function getRoles(guildId: string) {
   )) as DiscordRole[];
 
   return new Collection(
-    result
-      .map((role) => snakeKeysToCamelCase<Role>(role))
-      .map((role) => [role.id, role]),
+    result.map((role) => [role.id, snakeKeysToCamelCase<Role>(role)]),
   );
 }

@@ -15,8 +15,6 @@ export async function getChannelInvites(channelId: string) {
   )) as DiscordInvite[];
 
   return new Collection(
-    result
-      .map((invite) => snakeKeysToCamelCase<Invite>(invite))
-      .map((invite) => [invite.code, invite]),
+    result.map((invite) => [invite.code, snakeKeysToCamelCase<Invite>(invite)]),
   );
 }
