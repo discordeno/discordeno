@@ -16,6 +16,10 @@ export interface GuildMemberUpdate {
   premiumSince?: string | null;
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
   pending?: boolean;
+  /** whether the user is deafened in voice channels */
+  deaf?: boolean;
+  /** whether the user is muted in voice channels */
+  mute?: boolean;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-member-update */
