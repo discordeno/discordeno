@@ -1,10 +1,10 @@
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertEquals } from "../deps.ts";
-import {getInvites} from "../../src/helpers/invites/get_invites.ts";
-import {cache} from "../../src/cache.ts";
+import { getInvites } from "../../src/helpers/invites/get_invites.ts";
+import { cache } from "../../src/cache.ts";
 
 async function ifItFailsBlameWolf(type: "getter" | "raw") {
-  let invites
+  let invites;
 
   if (type === "raw") {
     invites = await getInvites(tempData.guildId);

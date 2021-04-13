@@ -8,16 +8,16 @@ import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
 import { botId } from "../../src/bot.ts";
 import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
 import { startTyping } from "../../src/helpers/channels/start_typing.ts";
-import {createInvite} from "../../src/helpers/invites/create_invite.ts";
-import {getInvite} from "../../src/helpers/invites/get_invite.ts";
-import {getChannelInvites} from "../../src/helpers/invites/get_channel_invites.ts";
-import {delay} from "../../src/util/utils.ts";
+import { createInvite } from "../../src/helpers/invites/create_invite.ts";
+import { getInvite } from "../../src/helpers/invites/get_invite.ts";
+import { getChannelInvites } from "../../src/helpers/invites/get_channel_invites.ts";
+import { delay } from "../../src/util/utils.ts";
 
 Deno.test({
   name: "[invite] get channel invites",
   async fn() {
     const channel = await createChannel(tempData.guildId, {
-      name: 'invite-channel'
+      name: "invite-channel",
     });
 
     // Assertions
@@ -36,7 +36,7 @@ Deno.test({
       maxAge: 86400,
       maxUses: 0,
       temporary: false, // @ts-ignore
-      unique: false
+      unique: false,
     });
 
     // Assertions
@@ -46,16 +46,16 @@ Deno.test({
       maxAge: 32400,
       maxUses: 5,
       temporary: true, // @ts-ignore
-      unique: true
+      unique: true,
     });
 
     // Assertions
     assertExists(secondInvite);
 
     assertEquals(
-        (await getChannelInvites(channel.id))?.size,
-        2,
-    )
+      (await getChannelInvites(channel.id))?.size,
+      2,
+    );
   },
   ...defaultTestOptions,
 });

@@ -35,11 +35,11 @@ import "./emojis/get_emoji.ts";
 import "./emojis/get_emojis.ts";
 
 // Invites tests
-import "./invites/create_invite.ts"
-import "./invites/delete_invite.ts"
-import "./invites/get_channel_invites.ts"
-import "./invites/get_invite.ts"
-import "./invites/get_invites.ts"
+import "./invites/create_invite.ts";
+import "./invites/delete_invite.ts";
+import "./invites/get_channel_invites.ts";
+import "./invites/get_invite.ts";
+import "./invites/get_invites.ts";
 
 // Messages tests
 import "./messages/add_reaction.ts";

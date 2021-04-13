@@ -8,16 +8,16 @@ import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
 import { botId } from "../../src/bot.ts";
 import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
 import { startTyping } from "../../src/helpers/channels/start_typing.ts";
-import {createInvite} from "../../src/helpers/invites/create_invite.ts";
-import {getInvite} from "../../src/helpers/invites/get_invite.ts";
-import {deleteInvite} from "../../src/helpers/invites/delete_invite.ts";
-import {getChannelInvites} from "../../src/helpers/invites/get_channel_invites.ts";
+import { createInvite } from "../../src/helpers/invites/create_invite.ts";
+import { getInvite } from "../../src/helpers/invites/get_invite.ts";
+import { deleteInvite } from "../../src/helpers/invites/delete_invite.ts";
+import { getChannelInvites } from "../../src/helpers/invites/get_channel_invites.ts";
 
 Deno.test({
   name: "[invite] delete invite",
   async fn() {
     const channel = await createChannel(tempData.guildId, {
-      name: 'invite-channel'
+      name: "invite-channel",
     });
 
     // Assertions
@@ -36,7 +36,7 @@ Deno.test({
       maxAge: 86400,
       maxUses: 0,
       temporary: false, // @ts-ignore
-      unique: false
+      unique: false,
     });
 
     // Assertions
@@ -45,9 +45,9 @@ Deno.test({
     await deleteInvite(channel.id, invite.code);
 
     assertEquals(
-        (await getChannelInvites(channel.id))?.size,
-        0,
-    )
+      (await getChannelInvites(channel.id))?.size,
+      0,
+    );
   },
   ...defaultTestOptions,
 });

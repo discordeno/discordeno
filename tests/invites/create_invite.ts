@@ -8,14 +8,14 @@ import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
 import { botId } from "../../src/bot.ts";
 import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
 import { startTyping } from "../../src/helpers/channels/start_typing.ts";
-import {createInvite} from "../../src/helpers/invites/create_invite.ts";
-import {getInvite} from "../../src/helpers/invites/get_invite.ts";
+import { createInvite } from "../../src/helpers/invites/create_invite.ts";
+import { getInvite } from "../../src/helpers/invites/get_invite.ts";
 
 Deno.test({
   name: "[invite] create invite",
   async fn() {
     const channel = await createChannel(tempData.guildId, {
-      name: 'invite-channel'
+      name: "invite-channel",
     });
 
     // Assertions
@@ -34,16 +34,16 @@ Deno.test({
       maxAge: 86400,
       maxUses: 0,
       temporary: false, // @ts-ignore
-      unique: false
+      unique: false,
     });
 
     // Assertions
     assertExists(invite);
 
     assertEquals(
-        await getInvite(invite.code) !== undefined,
-        true
-    )
+      await getInvite(invite.code) !== undefined,
+      true,
+    );
   },
   ...defaultTestOptions,
 });
