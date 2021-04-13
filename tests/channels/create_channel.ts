@@ -173,5 +173,3 @@ Deno.test({
 // TODO: Need to validate tests for these options
 // /** Sorting position of the channel */
 // position?: number;
-// /** The channel's permission overwrites */
-// permissionOverwrites?: Overwrite[];
