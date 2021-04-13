@@ -123,11 +123,13 @@ export interface EventHandlers {
   ) => unknown;
   /** Sent when a user uses a Slash Command. */
   interactionCreate?: (
-    data: Omit<Interaction, "member">, member?: DiscordenoMember,
+    data: Omit<Interaction, "member">,
+    member?: DiscordenoMember,
   ) => unknown;
   /** Sent when a user uses a Slash Command in a guild. */
   interactionGuildCreate?: (
-    data: Omit<Interaction, "member">, member: DiscordenoMember,
+    data: Omit<Interaction, "member">,
+    member: DiscordenoMember,
   ) => unknown;
   /** Sent when a user uses a Slash Command in a dm. */
   interactionDMCreate?: (
