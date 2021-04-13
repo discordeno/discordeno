@@ -16,7 +16,10 @@ Deno.test({
       () => (cache.guilds.get(tempData.guildId)?.emojis?.size || 0) > 0,
     );
 
-    assertEquals((cache.guilds.get(tempData.guildId)?.emojis?.size || 0) > 0, true);
+    assertEquals(
+      (cache.guilds.get(tempData.guildId)?.emojis?.size || 0) > 0,
+      true,
+    );
   },
   ...defaultTestOptions,
 });

@@ -15,14 +15,14 @@ export async function handleMessageCreate(data: DiscordGatewayPayload) {
   if (channel) channel.lastMessageId = payload.id;
 
   const guild = payload.guildId
-      ? await cacheHandlers.get("guilds", payload.guildId)
-      : undefined;
+    ? await cacheHandlers.get("guilds", payload.guildId)
+    : undefined;
 
   if (payload.member && guild) {
     // If in a guild cache the author as a member
     const discordenoMember = await structures.createDiscordenoMember(
-        {...payload.member, user: payload.author} as DiscordGuildMemberWithUser,
-        guild.id,
+      { ...payload.member, user: payload.author } as DiscordGuildMemberWithUser,
+      guild.id,
     );
     await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
   }
@@ -32,21 +32,21 @@ export async function handleMessageCreate(data: DiscordGatewayPayload) {
       // Cache the member if its a valid member
       if (mention.member && guild) {
         const discordenoMember = await structures.createDiscordenoMember(
-            {...mention.member, user: mention} as DiscordGuildMemberWithUser,
-            guild.id,
+          { ...mention.member, user: mention } as DiscordGuildMemberWithUser,
+          guild.id,
         );
 
         return cacheHandlers.set(
-            "members",
-            mention.id,
-            discordenoMember,
+          "members",
+          mention.id,
+          discordenoMember,
         );
       }
     }));
   }
 
   const message = await structures.createDiscordenoMessage(
-      data.d as DiscordMessage,
+    data.d as DiscordMessage,
   );
   // Cache the message
   await cacheHandlers.set("messages", payload.id, message);
