@@ -7,7 +7,6 @@ import { Collection } from "../../util/collection.ts";
 import { IntegrationCreateUpdate } from "../integration/integration_create_update.ts";
 import { ApplicationCommandCreateUpdateDelete } from "../interactions/application_command_create_update_delete.ts";
 import {
-  Channel,
   DiscordGatewayPayload,
   Emoji,
   GatewayPayload,
@@ -43,11 +42,14 @@ export interface EventHandlers {
   /** Sent when properties about the user change. */
   botUpdate?: (user: User) => unknown;
   /** Sent when a new guild channel is created, relevant to the current user. */
-  channelCreate?: (channel: Channel) => unknown;
+  channelCreate?: (channel: DiscordenoChannel) => unknown;
   /** Sent when a channel is updated. This is not sent when the field `last_message_id` is altered. To keep track of the `last_message_id` changes, you must listen for `MESSAGE_CREATE` events. */
-  channelUpdate?: (channel: Channel, oldChannel: Channel) => unknown;
+  channelUpdate?: (
+    channel: DiscordenoChannel,
+    oldChannel: DiscordenoChannel,
+  ) => unknown;
   /** Sent when a channel relevant to the current user is deleted. */
-  channelDelete?: (channel: Channel) => unknown;
+  channelDelete?: (channel: DiscordenoChannel) => unknown;
   /** Sent when a message pin is updated */
   channelPinsUpdate?: (
     channel: DiscordenoChannel,
