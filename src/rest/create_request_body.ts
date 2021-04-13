@@ -26,12 +26,24 @@ export function createRequestBody(queuedRequest: {
 
   // IF A FILE/ATTACHMENT IS PRESENT WE NEED SPECIAL HANDLING
   if (queuedRequest.payload.body?.file) {
+    if (!Array.isArray(queuedRequest.payload.body.file)) {
+      queuedRequest.payload.body.file = [queuedRequest.payload.body.file];
+    }
+
     const form = new FormData();
-    form.append(
-      "file",
-      (queuedRequest.payload.body.file as FileContent).blob,
-      (queuedRequest.payload.body.file as FileContent).name,
-    );
+
+    for (
+      let i = 0;
+      i < (queuedRequest.payload.body.file as FileContent[]).length;
+      i++
+    ) {
+      form.append(
+        `file${i}`,
+        (queuedRequest.payload.body.file as FileContent[])[i].blob,
+        (queuedRequest.payload.body.file as FileContent[])[i].name,
+      );
+    }
+
     form.append(
       "payload_json",
       JSON.stringify({ ...queuedRequest.payload.body, file: undefined }),
