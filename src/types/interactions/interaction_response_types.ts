@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
-export enum InteractionResponseTypes {
+export enum DiscordInteractionResponseTypes {
   /** ACK a `Ping` */
   Pong = 1,
   /** Respond to an interaction with a message */
