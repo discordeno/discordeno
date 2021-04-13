@@ -38,19 +38,21 @@ export async function resume(shardId: number) {
       interval: 0,
       intervalId: 0,
     },
+    queue: oldShard?.queue || [],
+    processingQueue: false,
   });
 
   // Resume on open
   socket.onopen = () => {
-    socket.send(
-      JSON.stringify({
-        op: DiscordGatewayOpcodes.Resume,
-        d: {
-          token: ws.identifyPayload.token,
-          session_id: sessionId,
-          seq: previousSequenceNumber,
-        },
-      }),
-    );
+    ws.shards.get(shardId)?.queue.unshift({
+      op: DiscordGatewayOpcodes.Resume,
+      d: {
+        token: ws.identifyPayload.token,
+        session_id: sessionId,
+        seq: previousSequenceNumber,
+      },
+    });
+
+    ws.processQueue(shardId);
   };
 }
