@@ -60,7 +60,7 @@ async function ifItFailsBlameWolf(
   }
 
   if (content === "string") {
-    assertEquals(cache.messages.get(message?.id!)?.content, messageContent);
+    assertEquals(cache.messages.get(message!.id)?.content, messageContent);
   } else if (content === "embed") {
     assertEquals(cache.messages.get(message?.id!)?.embeds?.length, 1);
   } else {
