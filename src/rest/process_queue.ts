@@ -119,7 +119,7 @@ export async function processQueue(id: string) {
             break;
         }
 
-        queuedRequest.request.respond({
+        queuedRequest.request.reject?.({
           status: response.status,
           body: JSON.stringify({ error }),
         });
