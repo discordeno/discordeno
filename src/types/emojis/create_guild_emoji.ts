@@ -3,7 +3,7 @@ export interface CreateGuildEmoji {
   name: string;
   /** The 128x128 emoji image */
   image: string;
-  /** Roles for which this emoji will be whitelisted */
+  /** Roles allowed to use this emoji */
   roles: string[];
 }
 
