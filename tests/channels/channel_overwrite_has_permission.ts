@@ -8,9 +8,9 @@ import { delayUntil } from "../util/delay_until.ts";
 import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
 import { botId } from "../../src/bot.ts";
 import { deleteChannelOverwrite } from "../../src/helpers/channels/delete_channel_overwrite.ts";
-import {editChannelOverwrite} from "../../src/helpers/channels/edit_channel_overwrite.ts";
-import {channelOverwriteHasPermission} from "../../src/helpers/channels/channel_overwrite_has_permission.ts";
-import {DiscordBitwisePermissionFlags} from "../../src/types/permissions/bitwise_permission_flags.ts";
+import { editChannelOverwrite } from "../../src/helpers/channels/edit_channel_overwrite.ts";
+import { channelOverwriteHasPermission } from "../../src/helpers/channels/channel_overwrite_has_permission.ts";
+import { DiscordBitwisePermissionFlags } from "../../src/types/permissions/bitwise_permission_flags.ts";
 
 async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
   const channel = await createChannel(tempData.guildId, options);
@@ -36,9 +36,14 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
   }
 
   assertEquals(
-      channelOverwriteHasPermission(channel.guildId, botId, cache.channels.get(channel.id)?.permissionOverwrites, options.permissionOverwrites ? options.permissionOverwrites[0].allow : []),
-      true
-  )
+    channelOverwriteHasPermission(
+      channel.guildId,
+      botId,
+      cache.channels.get(channel.id)?.permissionOverwrites,
+      options.permissionOverwrites ? options.permissionOverwrites[0].allow : [],
+    ),
+    true,
+  );
 }
 
 Deno.test({

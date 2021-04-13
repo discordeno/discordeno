@@ -26,7 +26,6 @@ import "./channels/is_channel_synced.ts";
 import "./channels/start_typing.ts";
 import "./channels/swap_channels.ts";
 
-
 // Emojis tests
 import "./emojis/create_emoji.ts";
 import "./emojis/delete_emoji.ts";

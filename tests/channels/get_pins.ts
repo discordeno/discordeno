@@ -2,17 +2,17 @@ import { cache } from "../../src/cache.ts";
 import { createChannel } from "../../src/helpers/channels/create_channel.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { delayUntil } from "../util/delay_until.ts";
-import {assertEquals, assertExists} from "../deps.ts";
-import {getChannels} from "../../src/helpers/channels/get_channels.ts";
-import {sendMessage} from "../../src/helpers/messages/send_message.ts";
-import {getPins} from "../../src/helpers/channels/get_pins.ts";
-import {DiscordenoMessage} from "../../src/structures/message.ts";
+import { assertEquals, assertExists } from "../deps.ts";
+import { getChannels } from "../../src/helpers/channels/get_channels.ts";
+import { sendMessage } from "../../src/helpers/messages/send_message.ts";
+import { getPins } from "../../src/helpers/channels/get_pins.ts";
+import { DiscordenoMessage } from "../../src/structures/message.ts";
 
 Deno.test({
   name: "[channel] get pins.",
   async fn() {
     const channel = await createChannel(tempData.guildId, {
-      name: 'pins-channel'
+      name: "pins-channel",
     });
 
     // Assertions
@@ -22,14 +22,23 @@ Deno.test({
     await delayUntil(10000, () => cache.channels.has(channel.id));
 
     if (!cache.channels.has(channel.id)) {
-      throw new Error("The channel seemed to be created but it was not cached.");
+      throw new Error(
+        "The channel seemed to be created but it was not cached.",
+      );
     }
 
     const message = await sendMessage(tempData.channelId, "Hello World!");
-    const secondMessage = await sendMessage(tempData.channelId, "Goodbye World!");
+    const secondMessage = await sendMessage(
+      tempData.channelId,
+      "Goodbye World!",
+    );
 
     // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-    await delayUntil(10000, () => cache.messages.has(message.id) && cache.messages.has(secondMessage.id));
+    await delayUntil(
+      10000,
+      () =>
+        cache.messages.has(message.id) && cache.messages.has(secondMessage.id),
+    );
 
     await message.pin();
     await secondMessage.pin();
@@ -37,8 +46,8 @@ Deno.test({
     const pins = await getPins(tempData.channelId);
 
     assertEquals(
-        pins.length,
-        2,
+      pins.length,
+      2,
     );
   },
   ...defaultTestOptions,
