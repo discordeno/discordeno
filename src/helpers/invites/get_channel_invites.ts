@@ -11,10 +11,10 @@ export async function getChannelInvites(channelId: string) {
 
   const result = (await rest.runMethod(
     "get",
-    endpoints.CHANNEL_INVITES(channelId)
+    endpoints.CHANNEL_INVITES(channelId),
   )) as DiscordInvite[];
 
   return new Collection(
-    result.map((invite) => [invite.code, snakeKeysToCamelCase<Invite>(invite)])
+    result.map((invite) => [invite.code, snakeKeysToCamelCase<Invite>(invite)]),
   );
 }

@@ -11,10 +11,10 @@ export async function getInvites(guildId: string) {
 
   const result = (await rest.runMethod(
     "get",
-    endpoints.GUILD_INVITES(guildId)
+    endpoints.GUILD_INVITES(guildId),
   )) as DiscordInvite[];
 
   return new Collection(
-    result.map((invite) => [invite.code, snakeKeysToCamelCase<Invite>(invite)])
+    result.map((invite) => [invite.code, snakeKeysToCamelCase<Invite>(invite)]),
   );
 }

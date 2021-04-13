@@ -14,10 +14,10 @@ export async function getRoles(guildId: string) {
 
   const result = (await rest.runMethod(
     "get",
-    endpoints.GUILD_ROLES(guildId)
+    endpoints.GUILD_ROLES(guildId),
   )) as DiscordRole[];
 
   return new Collection(
-    result.map((role) => [role.id, snakeKeysToCamelCase<Role>(role)])
+    result.map((role) => [role.id, snakeKeysToCamelCase<Role>(role)]),
   );
 }
