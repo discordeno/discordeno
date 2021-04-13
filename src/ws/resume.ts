@@ -53,6 +53,6 @@ export async function resume(shardId: number) {
       },
     });
     
-    if (oldShard?.queue.length) ws.processQueue(shardId);
+    ws.processQueue(shardId);
   };
 }

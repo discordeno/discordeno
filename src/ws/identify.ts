@@ -33,6 +33,7 @@ export async function identify(shardId: number, maxShards: number) {
       op: DiscordGatewayOpcodes.Identify,
       d: { ...ws.identifyPayload, shard: [shardId, maxShards] },
     });
+    ws.processQueue(shardId);
   };
 
   return new Promise((resolve, reject) => {

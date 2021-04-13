@@ -18,5 +18,6 @@ export function editBotStatus(data: Omit<StatusUpdate, "afk" | "since">) {
         ...data,
       },
     });
+    ws.processQueue(shard.id);
   });
 }
