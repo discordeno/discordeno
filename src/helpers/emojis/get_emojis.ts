@@ -3,6 +3,7 @@ import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { Emoji } from "../../types/emojis/emoji.ts";
 import { Errors } from "../../types/misc/errors.ts";
+import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /**
@@ -29,5 +30,5 @@ export async function getEmojis(guildId: string, addToCache = true) {
     cacheHandlers.set("guilds", guildId, guild);
   }
 
-  return result;
+  return new Collection(result.map(e => [e.id!, e]));
 }

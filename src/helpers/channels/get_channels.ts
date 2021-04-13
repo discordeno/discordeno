@@ -2,6 +2,7 @@ import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordChannel } from "../../types/channels/channel.ts";
+import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Returns a list of guild channel objects.
@@ -11,22 +12,28 @@ import { endpoints } from "../../util/constants.ts";
 export async function getChannels(guildId: string, addToCache = true) {
   const result = (await rest.runMethod(
     "get",
-    endpoints.GUILD_CHANNELS(guildId),
-  ) as DiscordChannel[]);
+    endpoints.GUILD_CHANNELS(guildId)
+  )) as DiscordChannel[];
 
-  return Promise.all(result.map(async (res) => {
-    const discordenoChannel = await structures.createDiscordenoChannel(
-      res,
-      guildId,
-    );
-    if (addToCache) {
-      await cacheHandlers.set(
-        "channels",
-        discordenoChannel.id,
-        discordenoChannel,
-      );
-    }
+  return new Collection(
+    (
+      await Promise.all(
+        result.map(async (res) => {
+          const discordenoChannel = await structures.createDiscordenoChannel(
+            res,
+            guildId
+          );
+          if (addToCache) {
+            await cacheHandlers.set(
+              "channels",
+              discordenoChannel.id,
+              discordenoChannel
+            );
+          }
 
-    return discordenoChannel;
-  }));
+          return discordenoChannel;
+        })
+      )
+    ).map((c) => [c.id, c])
+  );
 }
