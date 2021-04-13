@@ -47,7 +47,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
       channelOverwriteHasPermission(
         channel.guildId,
         botId,
-        cache.channels.get(channel.id)?.permissionOverwrites,
+        cache.channels.get(channel.id)?.permissionOverwrites || [],
         ["VIEW_CHANNEL", "ADD_REACTIONS"],
       ),
   );
@@ -56,7 +56,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
     channelOverwriteHasPermission(
       channel.guildId,
       botId,
-      cache.channels.get(channel.id)?.permissionOverwrites,
+      cache.channels.get(channel.id)?.permissionOverwrites || [],
       ["VIEW_CHANNEL", "ADD_REACTIONS"],
     ),
     true,

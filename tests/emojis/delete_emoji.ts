@@ -21,18 +21,18 @@ async function ifItFailsBlameWolf(reason?: string) {
 
   await delayUntil(
     10000,
-    () => cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id),
+    () => cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id!),
   );
 
   await deleteEmoji(tempData.guildId, emoji.id!, reason);
 
   await delayUntil(
     10000,
-    () => !cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id),
+    () => !cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id!),
   );
 
   assertEquals(
-    cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id),
+    cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id!),
     false,
   );
 }

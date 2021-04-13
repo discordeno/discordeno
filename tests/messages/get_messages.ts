@@ -43,7 +43,7 @@ Deno.test({
       limit: 2,
     });
     // Check if getMessages has worked
-    assertEquals(fetchedMessages.length, 2);
+    assertEquals(fetchedMessages?.length, 2);
   },
   ...defaultTestOptions,
 });
