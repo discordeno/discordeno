@@ -12,12 +12,11 @@ export async function processQueue(id: number) {
 
   while (shard.queue.length) {
     if (shard.ws.readyState !== WebSocket.OPEN) {
-      
     }
 
     // Send a request that is next in line
     const request = shard.queue.shift();
-      
+
     shard.ws.send(JSON.stringify(request));
 
     // Counter is useful for preventing 120/m requests.
