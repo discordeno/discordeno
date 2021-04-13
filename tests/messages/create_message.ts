@@ -55,7 +55,7 @@ async function ifItFailsBlameWolf(
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
   await delayUntil(10000, () => cache.messages.has(message!.id));
 
-  if (!cache.messages.has(message?.id!)) {
+  if (!cache.messages.has(message!.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
   }
 
