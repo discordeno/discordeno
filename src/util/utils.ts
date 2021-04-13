@@ -51,9 +51,10 @@ function snakeToCamelCase(text: string) {
   );
 }
 
-function isObject(obj: unknown) {
+function isConvertableObject(obj: unknown) {
   return (
-    obj === Object(obj) && !Array.isArray(obj) && typeof obj !== "function"
+    obj === Object(obj) && !Array.isArray(obj) && typeof obj !== "function" &&
+    !(obj instanceof Blob)
   );
 }
 
@@ -61,7 +62,7 @@ export function camelKeysToSnakeCase<T>(
   // deno-lint-ignore no-explicit-any
   obj: Record<string, any> | Record<string, any>[],
 ): T {
-  if (isObject(obj)) {
+  if (isConvertableObject(obj)) {
     // deno-lint-ignore no-explicit-any
     const convertedObject: Record<string, any> = {};
 
@@ -88,7 +89,7 @@ export function snakeKeysToCamelCase<T>(
   // deno-lint-ignore no-explicit-any
   obj: Record<string, any> | Record<string, any>[],
 ): T {
-  if (isObject(obj)) {
+  if (isConvertableObject(obj)) {
     // deno-lint-ignore no-explicit-any
     const convertedObject: Record<string, any> = {};
 
