@@ -4,6 +4,7 @@
 // First complete non-api reliant testing.
 // Don't waste api rate limits if a early test fails.
 import "./util/utils.ts";
+import "./util/validate_length.ts";
 
 // API TESTING BELOW
 

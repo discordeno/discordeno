@@ -9,6 +9,7 @@ import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { EditGlobalApplicationCommand } from "../types/mod.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
+import { validateLength } from "./validate_length.ts";
 
 export async function urlToBase64(url: string) {
   const buffer = await fetch(url).then((res) => res.arrayBuffer());
@@ -34,10 +35,11 @@ export function delay(ms: number): Promise<void> {
 export const formatImageURL = (
   url: string,
   size: DiscordImageSize = 128,
-  format?: DiscordImageFormat,
+  format?: DiscordImageFormat
 ) => {
-  return `${url}.${format ||
-    (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
+  return `${url}.${
+    format || (url.includes("/a_") ? "gif" : "jpg")
+  }?size=${size}`;
 };
 
 function camelToSnakeCase(text: string) {
@@ -45,22 +47,23 @@ function camelToSnakeCase(text: string) {
 }
 
 function snakeToCamelCase(text: string) {
-  return text.replace(
-    /([-_][a-z])/gi,
-    ($1) => $1.toUpperCase().replace("_", ""),
+  return text.replace(/([-_][a-z])/gi, ($1) =>
+    $1.toUpperCase().replace("_", "")
   );
 }
 
 function isConvertableObject(obj: unknown) {
   return (
-    obj === Object(obj) && !Array.isArray(obj) && typeof obj !== "function" &&
+    obj === Object(obj) &&
+    !Array.isArray(obj) &&
+    typeof obj !== "function" &&
     !(obj instanceof Blob)
   );
 }
 
 export function camelKeysToSnakeCase<T>(
   // deno-lint-ignore no-explicit-any
-  obj: Record<string, any> | Record<string, any>[],
+  obj: Record<string, any> | Record<string, any>[]
 ): T {
   if (isConvertableObject(obj)) {
     // deno-lint-ignore no-explicit-any
@@ -69,11 +72,11 @@ export function camelKeysToSnakeCase<T>(
     Object.keys(obj).forEach((key) => {
       eventHandlers.debug?.(
         "loop",
-        `Running forEach loop in camelKeysToSnakeCase function.`,
+        `Running forEach loop in camelKeysToSnakeCase function.`
       );
       convertedObject[camelToSnakeCase(key)] = camelKeysToSnakeCase(
         // deno-lint-ignore no-explicit-any
-        (obj as Record<string, any>)[key],
+        (obj as Record<string, any>)[key]
       );
     });
 
@@ -87,7 +90,7 @@ export function camelKeysToSnakeCase<T>(
 
 export function snakeKeysToCamelCase<T>(
   // deno-lint-ignore no-explicit-any
-  obj: Record<string, any> | Record<string, any>[],
+  obj: Record<string, any> | Record<string, any>[]
 ): T {
   if (isConvertableObject(obj)) {
     // deno-lint-ignore no-explicit-any
@@ -96,11 +99,11 @@ export function snakeKeysToCamelCase<T>(
     Object.keys(obj).forEach((key) => {
       eventHandlers.debug?.(
         "loop",
-        `Running forEach loop in snakeKeysToCamelCase function.`,
+        `Running forEach loop in snakeKeysToCamelCase function.`
       );
       convertedObject[snakeToCamelCase(key)] = snakeKeysToCamelCase(
         // deno-lint-ignore no-explicit-any
-        (obj as Record<string, any>)[key],
+        (obj as Record<string, any>)[key]
       );
     });
 
@@ -115,14 +118,14 @@ export function snakeKeysToCamelCase<T>(
 /** @private */
 function validateSlashOptionChoices(
   choices: ApplicationCommandOptionChoice[],
-  optionType: DiscordApplicationCommandOptionTypes,
+  optionType: DiscordApplicationCommandOptionTypes
 ) {
   for (const choice of choices) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of loop in validateSlashOptionChoices function.`,
+      `Running for of loop in validateSlashOptionChoices function.`
     );
-    if ([...choice.name].length < 1 || [...choice.name].length > 100) {
+    if (!validateLength(choice.name, { min: 1, max: 100 })) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
 
@@ -144,7 +147,7 @@ function validateSlashOptions(options: ApplicationCommandOption[]) {
   for (const option of options) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of loop in validateSlashOptions function.`,
+      `Running for of loop in validateSlashOptions function.`
     );
     if (
       option.choices?.length &&
@@ -156,10 +159,8 @@ function validateSlashOptions(options: ApplicationCommandOption[]) {
     }
 
     if (
-      [...option.name].length < 1 ||
-      [...option.name].length > 32 ||
-      [...option.description].length < 1 ||
-      [...option.description].length > 100
+      !validateLength(option.name, { min: 1, max: 32 }) ||
+      !validateLength(option.description, { min: 1, max: 100 })
     ) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
@@ -172,12 +173,12 @@ function validateSlashOptions(options: ApplicationCommandOption[]) {
 
 export function validateSlashCommands(
   commands: (CreateGlobalApplicationCommand | EditGlobalApplicationCommand)[],
-  create = false,
+  create = false
 ) {
   for (const command of commands) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of loop in validateSlashCommands function.`,
+      `Running for of loop in validateSlashCommands function.`
     );
     if (
       (command.name && !SLASH_COMMANDS_NAME_REGEX.test(command.name)) ||
@@ -188,8 +189,7 @@ export function validateSlashCommands(
 
     if (
       (command.description &&
-        ([...command.description].length < 1 ||
-          [...command.description].length > 100)) ||
+        !validateLength(command.description, { min: 1, max: 100 })) ||
       (create && !command.description)
     ) {
       throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
