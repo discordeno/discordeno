@@ -11,7 +11,7 @@ export function processRateLimitedPaths() {
       `Running forEach loop in process_rate_limited_paths file.`,
     );
     // IF THE TIME HAS NOT REACHED CANCEL
-    if (value.resetTimestamp > now) return;
+    if (value.resetTimestamp > now) continue;
 
     // RATE LIMIT IS OVER, DELETE THE RATE LIMITER
     rest.ratelimitedPaths.delete(key);
