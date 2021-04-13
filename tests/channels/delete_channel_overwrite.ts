@@ -25,7 +25,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
 
   if (
     options.permissionOverwrites &&
-    channel.permissionOverwrites.length !== options.permissionOverwrites.length
+    channel.permissionOverwrites?.length !== options.permissionOverwrites.length
   ) {
     throw new Error(
       "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites.",

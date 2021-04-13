@@ -26,20 +26,20 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", reason?: string) {
   if (type === "raw") {
     await addRole(tempData.guildId, botId, role.id, reason);
   } else {
-    await cache.members.get(botId).addRole(tempData.guildId, role.id, reason);
+    await cache.members.get(botId)!.addRole(tempData.guildId, role.id, reason);
   }
 
   // Delay the execution by 5 seconds to allow GUILD_MEMBER_UPDATE event to be processed
   await delayUntil(
     10000,
     () =>
-      cache.members.get(botId)?.guilds.get(tempData.guildId).roles.includes(
+      cache.members.get(botId)?.guilds.get(tempData.guildId)!.roles.includes(
         role.id,
       ),
   );
 
   assertEquals(
-    cache.members.get(botId)?.guilds.get(tempData.guildId).roles.includes(
+    cache.members.get(botId)?.guilds.get(tempData.guildId)!.roles.includes(
       role.id,
     ),
     true,

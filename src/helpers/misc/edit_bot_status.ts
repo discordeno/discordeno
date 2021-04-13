@@ -9,15 +9,15 @@ export function editBotStatus(data: Omit<StatusUpdate, "afk" | "since">) {
       "loop",
       `Running forEach loop in editBotStatus function.`,
     );
-    shard.ws.send(
-      JSON.stringify({
-        op: DiscordGatewayOpcodes.StatusUpdate,
-        d: {
-          since: null,
-          afk: false,
-          ...data,
-        },
-      }),
-    );
+
+    shard.queue.push({
+      op: DiscordGatewayOpcodes.StatusUpdate,
+      d: {
+        since: null,
+        afk: false,
+        ...data,
+      },
+    });
+    ws.processQueue(shard.id);
   });
 }

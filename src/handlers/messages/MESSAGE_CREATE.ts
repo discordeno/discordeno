@@ -27,21 +27,23 @@ export async function handleMessageCreate(data: DiscordGatewayPayload) {
     await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
   }
 
-  await Promise.all(payload.mentions.map(async (mention) => {
-    // Cache the member if its a valid member
-    if (mention.member && guild) {
-      const discordenoMember = await structures.createDiscordenoMember(
-        { ...mention.member, user: mention } as DiscordGuildMemberWithUser,
-        guild.id,
-      );
+  if (payload.mentions) {
+    await Promise.all(payload.mentions.map(async (mention) => {
+      // Cache the member if its a valid member
+      if (mention.member && guild) {
+        const discordenoMember = await structures.createDiscordenoMember(
+          { ...mention.member, user: mention } as DiscordGuildMemberWithUser,
+          guild.id,
+        );
 
-      return cacheHandlers.set(
-        "members",
-        mention.id,
-        discordenoMember,
-      );
-    }
-  }));
+        return cacheHandlers.set(
+          "members",
+          mention.id,
+          discordenoMember,
+        );
+      }
+    }));
+  }
 
   const message = await structures.createDiscordenoMessage(
     data.d as DiscordMessage,

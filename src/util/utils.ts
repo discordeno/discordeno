@@ -9,6 +9,7 @@ import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { EditGlobalApplicationCommand } from "../types/mod.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
+import { validateLength } from "./validate_length.ts";
 
 export async function urlToBase64(url: string) {
   const buffer = await fetch(url).then((res) => res.arrayBuffer());
@@ -53,7 +54,9 @@ function snakeToCamelCase(text: string) {
 
 function isConvertableObject(obj: unknown) {
   return (
-    obj === Object(obj) && !Array.isArray(obj) && typeof obj !== "function" &&
+    obj === Object(obj) &&
+    !Array.isArray(obj) &&
+    typeof obj !== "function" &&
     !(obj instanceof Blob)
   );
 }
@@ -122,7 +125,7 @@ function validateSlashOptionChoices(
       "loop",
       `Running for of loop in validateSlashOptionChoices function.`,
     );
-    if ([...choice.name].length < 1 || [...choice.name].length > 100) {
+    if (!validateLength(choice.name, { min: 1, max: 100 })) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
 
@@ -156,10 +159,8 @@ function validateSlashOptions(options: ApplicationCommandOption[]) {
     }
 
     if (
-      [...option.name].length < 1 ||
-      [...option.name].length > 32 ||
-      [...option.description].length < 1 ||
-      [...option.description].length > 100
+      !validateLength(option.name, { min: 1, max: 32 }) ||
+      !validateLength(option.description, { min: 1, max: 100 })
     ) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
@@ -188,8 +189,7 @@ export function validateSlashCommands(
 
     if (
       (command.description &&
-        ([...command.description].length < 1 ||
-          [...command.description].length > 100)) ||
+        !validateLength(command.description, { min: 1, max: 100 })) ||
       (create && !command.description)
     ) {
       throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
