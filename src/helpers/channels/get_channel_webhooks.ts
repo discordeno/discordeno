@@ -11,12 +11,13 @@ export async function getChannelWebhooks(channelId: string) {
 
   const result = (await rest.runMethod(
     "get",
-    endpoints.CHANNEL_WEBHOOKS(channelId),
+    endpoints.CHANNEL_WEBHOOKS(channelId)
   )) as DiscordWebhook[];
 
   return new Collection(
-    result
-      .map((webhook) => snakeKeysToCamelCase<Webhook>(webhook))
-      .map((webhook) => [webhook.id, webhook]),
+    result.map((webhook) => [
+      webhook.id,
+      snakeKeysToCamelCase<Webhook>(webhook),
+    ])
   );
 }
