@@ -69,7 +69,7 @@ export interface Message {
   activity?: MessageActivity;
   /** Sent with Rich Presence-related chat embeds */
   application?: MessageApplication;
-  /** Reference data sent with crossposted messages and replies */
+  /** Data showing the source of a crossposted channel follow add, pin or reply message */
   messageReference?: MessageReference;
   /** Message flags combined as a bitfield */
   flags?: number;
