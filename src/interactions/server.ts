@@ -1,3 +1,7 @@
+import {
+  DiscordInteractionResponseTypes,
+  DiscordInteractionTypes,
+} from "../types/mod.ts";
 import { serve, verify } from "./deps.ts";
 
 /** This variable is a holder for the public key and other configuration */
@@ -54,8 +58,11 @@ export async function startServer(
 
 function handlePayload(payload: Interaction) {
   switch (payload.type) {
-    case InteractionType.PING:
-      return { status: 200, body: { type: InteractionResponseType.PONG } };
+    case DiscordInteractionTypes.Ping:
+      return {
+        status: 200,
+        body: { type: DiscordInteractionResponseTypes.Pong },
+      };
     default: // APPLICATION_COMMAND
       return handlers.handleApplicationCommand(payload);
   }
@@ -71,7 +78,7 @@ async function handleApplicationCommand(
     return {
       status: 200,
       body: {
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        type: DiscordInteractionResponseTypes.ChannelMessageWithSource,
         data: { content: "Pong from Discordeno!" },
       },
     };
@@ -80,7 +87,7 @@ async function handleApplicationCommand(
   return {
     status: 200,
     body: {
-      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+      type: DiscordInteractionResponseTypes.ChannelMessageWithSource,
       data: {
         content:
           "Whoopsies! Seems the handling for this command is missing. Please contact my developers!",
