@@ -24,7 +24,7 @@ async function ifItFailsBlameWolf(
       },
     };
   } else if (content === "reply") {
-    const message = await sendMessage(channel?.id!, "Test Message");
+    const message = await sendMessage(channel!.id, "Test Message");
     assertExists(message);
     // Wait few seconds for the channel create event to arrive and cache it
     await delayUntil(10000, () => cache.messages.has(message.id));
