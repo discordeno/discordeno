@@ -18,6 +18,10 @@ export interface Application {
   botPublic: boolean;
   /** When true the app's bot will only join upon completion of the full oauth2 code grant flow */
   botRequireCodeGrant: boolean;
+  /** The url of the app's terms of service */
+  termsOfServiceUrl?: string;
+  /** The url of the app's privacy policy */
+  privacyPolicyUrl?: string;
   /** Partial user object containing info on the owner of the application */
   owner: Partial<User>;
   /** If this application is a game sold on Discord, this field will be the summary field for the store page of its primary sku */
