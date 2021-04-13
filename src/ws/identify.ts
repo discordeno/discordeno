@@ -3,7 +3,6 @@ import { ws } from "./ws.ts";
 
 export async function identify(shardId: number, maxShards: number) {
   ws.log("IDENTIFYING", { shardId, maxShards });
-  console.log("IDENTIFYING", { shardId, maxShards });
   // CREATE A SHARD
   const socket = await ws.createShard(shardId);
 
@@ -25,15 +24,15 @@ export async function identify(shardId: number, maxShards: number) {
       interval: 0,
       intervalId: 0,
     },
+    queue: [],
+    processingQueue: false,
   });
 
   socket.onopen = () => {
-    socket.send(
-      JSON.stringify({
-        op: DiscordGatewayOpcodes.Identify,
-        d: { ...ws.identifyPayload, shard: [shardId, maxShards] },
-      }),
-    );
+    ws.shards.get(shardId)?.queue.unshift({
+      op: DiscordGatewayOpcodes.Identify,
+      d: { ...ws.identifyPayload, shard: [shardId, maxShards] },
+    });
   };
 
   return new Promise((resolve, reject) => {

@@ -15,10 +15,7 @@ export function heartbeat(shardId: number, interval: number) {
   shard.heartbeat.interval = interval;
 
   shard.heartbeat.intervalId = setInterval(() => {
-    ws.log(
-      "DEBUG",
-      `Running setInterval in heartbeat file.`,
-    );
+    ws.log("DEBUG", `Running setInterval in heartbeat file.`);
     const currentShard = ws.shards.get(shardId);
     if (!currentShard) return;
 
@@ -34,11 +31,11 @@ export function heartbeat(shardId: number, interval: number) {
       return clearInterval(currentShard.heartbeat.intervalId);
     }
 
-    currentShard.ws.send(
-      JSON.stringify({
-        op: DiscordGatewayOpcodes.Heartbeat,
-        d: currentShard.previousSequenceNumber,
-      }),
-    );
+    currentShard.queue.unshift({
+      op: DiscordGatewayOpcodes.Heartbeat,
+      d: currentShard.previousSequenceNumber,
+    });
+
+    ws.processQueue(currentShard.id);
   }, interval);
 }

@@ -7,17 +7,16 @@ export function editBotStatus(data: Omit<StatusUpdate, "afk" | "since">) {
   ws.shards.forEach((shard) => {
     eventHandlers.debug?.(
       "loop",
-      `Running forEach loop in editBotStatus function.`,
+      `Running forEach loop in editBotStatus function.`
     );
-    shard.ws.send(
-      JSON.stringify({
-        op: DiscordGatewayOpcodes.StatusUpdate,
-        d: {
-          since: null,
-          afk: false,
-          ...data,
-        },
-      }),
-    );
+
+    shard.queue.push({
+      op: DiscordGatewayOpcodes.StatusUpdate,
+      d: {
+        since: null,
+        afk: false,
+        ...data,
+      },
+    });
   });
 }

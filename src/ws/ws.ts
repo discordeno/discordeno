@@ -1,3 +1,4 @@
+import { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
 import { Collection } from "../util/collection.ts";
 import { cleanupLoadingShards } from "./cleanup_loading_shards.ts";
 import { createShard } from "./create_shard.ts";
@@ -9,7 +10,9 @@ import { identify } from "./identify.ts";
 import { resharder } from "./resharder.ts";
 import { spawnShards } from "./spawn_shards.ts";
 import { startGateway } from "./start_gateway.ts";
+import { processQueue } from "./process_queue.ts";
 import { tellClusterToIdentify } from "./tell_cluster_to_identify.ts";
+import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 
 // CONTROLLER LIKE INTERFACE FOR WS HANDLING
 export const ws = {
@@ -103,6 +106,8 @@ export const ws = {
   cleanupLoadingShards,
   /** Handles the message events from websocket */
   handleOnMessage,
+  /** Handles processing queue of requests send to this shard */
+  processQueue,
 };
 
 export interface DiscordenoShard {
@@ -136,4 +141,17 @@ export interface DiscordenoShard {
     /** The id of the interval, useful for stopping the interval if ws closed. */
     intervalId: number;
   };
+  /** The items/requestst that are in queue to be sent to this shard websocket. */
+  queue: WebSocketRequest[];
+  /** Whether or not the queue for this shard is being processed. */
+  processingQueue: boolean;
+}
+
+export interface WebSocketRequest {
+  op: DiscordGatewayOpcodes;
+  d: unknown;
+  // guildId: string;
+  // shardId: number;
+  // nonce?: string;
+  // options?: Record<string, unknown>;
 }
