@@ -10,6 +10,7 @@ import { PermissionStrings } from "../../types/permissions/permission_strings.ts
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 import { camelKeysToSnakeCase } from "../../util/utils.ts";
+import { validateLength } from "../../util/validate_length.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(
@@ -48,7 +49,7 @@ export async function sendMessage(
   }
 
   // Use ... for content length due to unicode characters and js .length handling
-  if (content.content && [...content.content].length > 2000) {
+  if (content.content && !validateLength(content.content, { max: 2000 })) {
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
   }
 
