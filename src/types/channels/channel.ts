@@ -40,6 +40,8 @@ export interface Channel {
   parentId?: string | null;
   /** When the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
   lastPinTimestamp?: string | null;
+  /** Voice region id for the voice channel, automatic when set to null */
+  rtcRegion?: string | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-object */

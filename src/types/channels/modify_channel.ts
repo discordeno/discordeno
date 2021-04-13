@@ -23,6 +23,8 @@ export interface ModifyChannel {
   permissionOverwrites?: Overwrite[] | null;
   /** id of the new parent category for a channel */
   parentId?: string | null;
+  /** Voice region id for the voice channel, automatic when set to null */
+  rtcRegion?: string | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#modify-channel */
