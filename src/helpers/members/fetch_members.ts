@@ -35,6 +35,7 @@ export function fetchMembers(
   }) as Promise<Collection<string, DiscordenoMember>>;
 }
 
+// TODO: finish implementing this
 function requestAllMembers(
   guildId: string,
   shardId: number,
@@ -43,6 +44,7 @@ function requestAllMembers(
       | Collection<string, DiscordenoMember>
       | PromiseLike<Collection<string, DiscordenoMember>>,
   ) => void,
+  // deno-lint-ignore no-explicit-any
   options: any,
 ): void {
   throw new Error("Function not implemented.");
