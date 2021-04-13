@@ -13,7 +13,7 @@ jobs:
           git config --global user.email ${{ github.actor }}@users.noreply.github.com
           git config --global user.name ${{ github.actor }}
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git commit --all --message "Format files"
+          git commit --all --allow-empty-message --message ""
           git push
       - name: Run lint script
         run: deno lint src/** test/** --unstable --ignore=./src/types,./src/interactions/types
