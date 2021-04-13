@@ -1,5 +1,6 @@
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { ActivityAssets } from "./activity_assets.ts";
+import { ActivityButton } from "./activity_button.ts";
 import { ActivityEmoji } from "./activity_emoji.ts";
 import { ActivityParty } from "./activity_party.ts";
 import { ActivitySecrets } from "./activity_secrets.ts";
@@ -35,6 +36,8 @@ export interface Activity {
   instance?: boolean;
   /** Activity flags `OR`d together, describes what the payload includes */
   flags?: number;
+  /** The custom buttons shown in the Rich Presence (max 2) */
+  buttons?: ActivityButton[];
 }
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object */
