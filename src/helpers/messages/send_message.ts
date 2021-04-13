@@ -95,7 +95,7 @@ export async function sendMessage(
   const result = (await rest.runMethod(
     "post",
     endpoints.CHANNEL_MESSAGES(channelId),
-    camelKeysToSnakeCase({
+    camelKeysToSnakeCase<DiscordMessage>({
       ...content,
       ...(content.messageReference?.messageId
         ? {
