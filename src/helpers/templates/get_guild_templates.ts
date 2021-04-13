@@ -14,13 +14,13 @@ export async function getGuildTemplates(guildId: string) {
 
   const templates = (await rest.runMethod(
     "get",
-    endpoints.GUILD_TEMPLATES(guildId)
+    endpoints.GUILD_TEMPLATES(guildId),
   )) as DiscordTemplate[];
 
   return new Collection(
     templates.map((template) => [
       template.code,
       structures.createTemplateStruct(template),
-    ])
+    ]),
   );
 }

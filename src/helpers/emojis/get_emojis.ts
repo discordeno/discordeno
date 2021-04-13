@@ -30,5 +30,5 @@ export async function getEmojis(guildId: string, addToCache = true) {
     cacheHandlers.set("guilds", guildId, guild);
   }
 
-  return new Collection(result.map(e => [e.id!, e]));
+  return new Collection(result.map((e) => [e.id!, e]));
 }
