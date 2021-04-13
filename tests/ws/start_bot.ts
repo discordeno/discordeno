@@ -11,7 +11,7 @@ import { delayUntil } from "../util/delay_until.ts";
 ws.log = function (_x: string, _d: unknown) {
   // if (["RAW", "GUILD_CREATE", "HEARTBEATING_DETAILS"].includes(_x))
   //   return console.log(_x);
-  console.log(_x, _d);
+  // console.log(_x, _d);
 };
 
 // Default options for tests
