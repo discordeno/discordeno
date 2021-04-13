@@ -12,6 +12,8 @@ export async function processQueue(id: number) {
 
   while (shard.queue.length) {
     if (shard.ws.readyState !== WebSocket.OPEN) {
+      shard.processingQueue = false;
+      return;
     }
 
     // Send a request that is next in line
