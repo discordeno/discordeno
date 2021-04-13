@@ -12,9 +12,9 @@ export interface Attachment {
   /** A proxied url of file */
   proxyUrl: string;
   /** Height of file (if image) */
-  height: number | null;
+  height?: number | null;
   /** Width of file (if image) */
-  width: number | null;
+  width?: number | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#attachment-object */
