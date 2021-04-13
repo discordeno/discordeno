@@ -65,7 +65,7 @@ async function ifItFailsBlameWolf(
     assertEquals(cache.messages.get(message!.id)?.embeds?.length, 1);
   } else {
     assertEquals(
-      cache.messages.get(message?.id!)?.messageReference?.messageId,
+      cache.messages.get(message!.id)?.messageReference?.messageId,
       secondMessageId,
     );
   }
