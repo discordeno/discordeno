@@ -10,13 +10,10 @@ jobs:
         run: deno fmt
       - name: Commit formatted files
         run: |
-          git config --global user.email $ACTOR@users.noreply.github.com
-          git config --global user.name $ACTOR
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$REPO
+          git config --global user.email ${{ github.actor }@users.noreply.github.com
+          git config --global user.name ${{ github.actor }}
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git commit --all --message "Format files"
           git push
-        env:
-          ACTOR: ${{ secrets.GITHUB_ACTOR }}
-          REPO: ${{ secrets.GITHUB_REPOSITORY }}
       - name: Run lint script
         run: deno lint src/** test/** --unstable --ignore=./src/types,./src/interactions/types
