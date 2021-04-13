@@ -1,5 +1,11 @@
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
+import {
+  GetMessagesAfter,
+  GetMessagesAround,
+  GetMessagesBefore,
+  GetMessagesLimit,
+} from "../../types/messages/get_messages.ts";
 import { DiscordMessage } from "../../types/messages/message.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
@@ -11,7 +17,7 @@ export async function getMessages(
     | GetMessagesAfter
     | GetMessagesBefore
     | GetMessagesAround
-    | GetMessages,
+    | GetMessagesLimit,
 ) {
   await requireBotChannelPermissions(channelId, [
     "VIEW_CHANNEL",

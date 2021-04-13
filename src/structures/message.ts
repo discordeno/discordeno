@@ -57,7 +57,7 @@ const baseMessage: Partial<DiscordenoMessage> = {
     return deleteMessage(this.channelId!, this.id!, reason, delayMilliseconds);
   },
   edit(content) {
-    return editMessage(this as Message, content);
+    return editMessage(this as DiscordenoMessage, content);
   },
   pin() {
     return pinMessage(this.channelId!, this.id!);
@@ -69,21 +69,23 @@ const baseMessage: Partial<DiscordenoMessage> = {
     return addReactions(this.channelId!, this.id!, reactions, ordered);
   },
   reply(content) {
-    const contentWithMention = typeof content === "string"
+    const contentWithMention: CreateMessage = typeof content === "string"
       ? {
         content,
-        mentions: { repliedUser: true },
+        allowedMentions: {
+          repliedUser: true
+        },
         messageReference: {
           messageId: this.id,
-          failReplyIfNotExists: false,
+          failIfNotExists: false,
         },
       }
       : {
         ...content,
-        mentions: { ...(content.allowedMentions || {}), repliedUser: true },
+        allowedMentions: { ...(content.allowedMentions || {}), repliedUser: true },
         messageReference: {
           messageId: this.id,
-          failReplyIfNotExists:
+          failIfNotExists:
             content.messageReference?.failIfNotExists === true,
         },
       };

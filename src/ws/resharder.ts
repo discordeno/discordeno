@@ -19,6 +19,14 @@ export async function resharder() {
 
   // Begin resharding
   ws.maxShards = ws.botGatewayData.shards;
+  // If more than 100K servers, begin switching to 16x sharding
+  if (ws.maxShards && ws.useOptimalLargeBotSharding)
+    ws.maxShards = Math.ceil(
+      ws.maxShards /
+        (ws.botGatewayData.sessionStartLimit.maxConcurrency === 1
+          ? 16
+          : ws.botGatewayData.sessionStartLimit.maxConcurrency)
+    );
 
   ws.spawnShards(ws.firstShardId);
 }

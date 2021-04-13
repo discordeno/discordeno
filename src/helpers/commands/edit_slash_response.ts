@@ -23,7 +23,7 @@ export async function editSlashResponse(
   if (options.allowedMentions) {
     if (options.allowedMentions.users?.length) {
       if (
-        options.allowedMentions.parse.includes(
+        options.allowedMentions.parse?.includes(
           DiscordAllowedMentionsTypes.UserMentions,
         )
       ) {
@@ -42,7 +42,7 @@ export async function editSlashResponse(
 
     if (options.allowedMentions.roles?.length) {
       if (
-        options.allowedMentions.parse.includes(
+        options.allowedMentions.parse?.includes(
           DiscordAllowedMentionsTypes.RoleMentions,
         )
       ) {

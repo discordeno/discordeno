@@ -70,6 +70,16 @@ export async function editChannel(
   return result;
 }
 
+interface EditChannelRequest {
+  amount: number;
+  timestamp: number;
+  channelId: string;
+  items: {
+    channelId: string;
+    options: ModifyChannel;
+  }[];
+}
+
 const editChannelNameTopicQueue = new Map<string, EditChannelRequest>();
 let editChannelProcessing = false;
 

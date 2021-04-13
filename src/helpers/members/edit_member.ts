@@ -10,7 +10,7 @@ import {
   requireBotChannelPermissions,
   requireBotGuildPermissions,
 } from "../../util/permissions.ts";
-import { snakeKeysToCamelCase } from "../../util/utils.ts";
+import { camelKeysToSnakeCase, snakeKeysToCamelCase } from "../../util/utils.ts";
 
 /** Edit the member */
 export async function editMember(
@@ -32,7 +32,7 @@ export async function editMember(
   if (
     typeof options.mute !== "undefined" ||
     typeof options.deaf !== "undefined" ||
-    (typeof options.channel_id !== "undefined" || "null")
+    (typeof options.channelId !== "undefined" || "null")
   ) {
     const memberVoiceState = (await cacheHandlers.get("guilds", guildId))
       ?.voiceStates.get(memberId);
@@ -49,7 +49,7 @@ export async function editMember(
       requiredPerms.add("DEAFEN_MEMBERS");
     }
 
-    if (options.channel_id) {
+    if (options.channelId) {
       const requiredVoicePerms: Set<PermissionStrings> = new Set([
         "CONNECT",
         "MOVE_MEMBERS",
@@ -61,7 +61,7 @@ export async function editMember(
         );
       }
       await requireBotChannelPermissions(
-        options.channel_id,
+        options.channelId,
         [...requiredVoicePerms],
       );
     }
@@ -72,7 +72,7 @@ export async function editMember(
   const result = await rest.runMethod(
     "patch",
     endpoints.GUILD_MEMBER(guildId, memberId),
-    options,
+    camelKeysToSnakeCase(options),
   ) as DiscordGuildMember;
   const member = await structures.createDiscordenoMember(
     snakeKeysToCamelCase(result),
