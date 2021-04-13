@@ -133,7 +133,7 @@ Deno.test({
     const reply = await message.reply("Welcome!");
     await delayUntil(10000, () => cache.messages.has(reply!.id));
 
-    if (!cache.messages.has(reply?.id!)) {
+    if (!cache.messages.has(reply!.id)) {
       throw new Error("The message seemed to be sent but it was not cached.");
     }
 
