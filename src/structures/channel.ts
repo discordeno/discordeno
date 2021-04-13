@@ -103,7 +103,9 @@ export async function createDiscordenoChannel(
   return channel;
 }
 
-export interface DiscordenoChannel extends Channel {
+export interface DiscordenoChannel
+  extends Omit<Channel, "permissionOverwrites"> {
+  permissionOverwrites: DiscordOverwrite[];
   guildId: string;
   // GETTERS
 
