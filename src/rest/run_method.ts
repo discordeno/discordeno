@@ -1,6 +1,7 @@
 import { API_VERSION, BASE_URL, IMAGE_BASE_URL } from "../util/constants.ts";
 import { rest } from "./rest.ts";
 
+// deno-lint-ignore no-explicit-any
 export async function runMethod<T = any>(
   method: "get" | "post" | "put" | "delete" | "patch",
   url: string,

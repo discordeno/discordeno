@@ -71,6 +71,7 @@ export function camelKeysToSnakeCase<T>(
         `Running forEach loop in camelKeysToSnakeCase function.`,
       );
       convertedObject[camelToSnakeCase(key)] = camelKeysToSnakeCase(
+        // deno-lint-ignore no-explicit-any
         (obj as Record<string, any>)[key],
       );
     });
@@ -97,6 +98,7 @@ export function snakeKeysToCamelCase<T>(
         `Running forEach loop in snakeKeysToCamelCase function.`,
       );
       convertedObject[snakeToCamelCase(key)] = snakeKeysToCamelCase(
+        // deno-lint-ignore no-explicit-any
         (obj as Record<string, any>)[key],
       );
     });
