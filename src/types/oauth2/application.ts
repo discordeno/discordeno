@@ -1,6 +1,7 @@
 import { Team } from "../teams/team.ts";
 import { User } from "../users/user.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
+import { DiscordApplicationFlags } from "./application_flags.ts";
 
 export interface Application {
   /** The id of the app */
@@ -34,7 +35,7 @@ export interface Application {
   /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
   coverImage?: string;
   /** The application's public flags */
-  flags: number;
+  flags: DiscordApplicationFlags;
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#application-object */
