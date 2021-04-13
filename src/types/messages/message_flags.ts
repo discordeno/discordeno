@@ -10,4 +10,8 @@ export enum DiscordMessageFlags {
   SOURCE_MESSAGE_DELETED = 1 << 3,
   /** This message came from the urgent message system */
   URGENT = 1 << 4,
+  /** This message is only visible to the user who invoked the Interaction */
+  EMPHERAL = 1 << 6,
+  /** This message is an Interaction Response and the bot is "thinking" */
+  LOADING = 1 << 7,
 }
