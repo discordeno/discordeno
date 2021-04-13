@@ -128,7 +128,7 @@ Deno.test({
     const message = await sendMessage(channel!.id, "Test Message");
     assertExists(message);
     // Wait few seconds for the channel create event to arrive and cache it
-    await delayUntil(10000, () => cache.messages.has(message?.id!));
+    await delayUntil(10000, () => cache.messages.has(message!.id));
 
     const reply = await message.reply("Welcome!");
     await delayUntil(10000, () => cache.messages.has(reply?.id!));
