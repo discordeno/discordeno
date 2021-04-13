@@ -131,8 +131,8 @@ export async function createDiscordenoMessage(data: DiscordMessage) {
     guildId = "",
     channelId,
     mentionChannels = [],
-    mentions,
-    mentionRoles,
+    mentions = [],
+    mentionRoles = [],
     editedTimestamp,
     ...rest
   } = snakeKeysToCamelCase<Message>(data);
@@ -162,7 +162,7 @@ export async function createDiscordenoMessage(data: DiscordMessage) {
       // Keep any ids that discord sends
       ...mentionChannels.map((m) => m.id),
       // Add any other ids that can be validated in a channel mention format
-      ...(rest.content.match(CHANNEL_MENTION_REGEX) || []).map((text) =>
+      ...(rest.content?.match(CHANNEL_MENTION_REGEX) || []).map((text) =>
         // converts the <#123> into 123
         text.substring(2, text.length - 1)
       ),
