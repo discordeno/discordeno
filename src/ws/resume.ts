@@ -52,7 +52,7 @@ export async function resume(shardId: number) {
         seq: previousSequenceNumber,
       },
     });
-    
+
     if (oldShard?.queue.length) ws.processQueue(shardId);
   };
 }
