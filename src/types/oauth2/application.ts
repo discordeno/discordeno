@@ -22,7 +22,7 @@ export interface Application {
   owner: Partial<User>;
   /** If this application is a game sold on Discord, this field will be the summary field for the store page of its primary sku */
   summary: string;
-  /** The base64 encoded key for the GameSDK's GetTicket */
+  /** The hex encoded key for verification in interactions and the GameSDK's GetTicket */
   verifyKey: string;
   /** If the application belongs to a team, this will be a list of the members of that team */
   team: Team | null;
