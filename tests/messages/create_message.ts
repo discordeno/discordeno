@@ -24,7 +24,7 @@ async function ifItFailsBlameWolf(
       },
     };
   } else if (content === "reply") {
-    const message = await sendMessage(channel.id, "Test Message");
+    const message = await sendMessage(channel?.id!, "Test Message");
     assertExists(message);
     // Wait few seconds for the channel create event to arrive and cache it
     await delayUntil(10000, () => cache.messages.has(message.id));
@@ -38,7 +38,7 @@ async function ifItFailsBlameWolf(
       },
       messageReference: {
         messageId: message.id,
-        channelId: channel.id,
+        channelId: channel?.id,
         guildId: tempData.guildId,
         failIfNotExists: true,
       },
@@ -46,26 +46,26 @@ async function ifItFailsBlameWolf(
   }
 
   const message = type === "raw"
-    ? await sendMessage(channel.id, messageContent)
-    : await channel.send(messageContent);
+    ? await sendMessage(channel?.id!, messageContent)
+    : await channel?.send(messageContent);
 
   // Assertions
   assertExists(message);
 
   // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-  await delayUntil(10000, () => cache.messages.has(message.id));
+  await delayUntil(10000, () => cache.messages.has(message?.id!));
 
-  if (!cache.messages.has(message.id)) {
+  if (!cache.messages.has(message?.id!)) {
     throw new Error("The message seemed to be sent but it was not cached.");
   }
 
   if (content === "string") {
-    assertEquals(cache.messages.get(message.id)?.content, messageContent);
+    assertEquals(cache.messages.get(message?.id!)?.content, messageContent);
   } else if (content === "embed") {
-    assertEquals(cache.messages.get(message.id)?.embeds?.length, 1);
+    assertEquals(cache.messages.get(message?.id!)?.embeds?.length, 1);
   } else {
     assertEquals(
-      cache.messages.get(message.id)?.messageReference.messageId,
+      cache.messages.get(message?.id!)?.messageReference?.messageId,
       secondMessageId,
     );
   }
@@ -125,20 +125,20 @@ Deno.test({
     const channel = cache.channels.get(tempData.channelId);
     assertExists(channel);
 
-    const message = await sendMessage(channel.id, "Test Message");
+    const message = await sendMessage(channel?.id!, "Test Message");
     assertExists(message);
     // Wait few seconds for the channel create event to arrive and cache it
-    await delayUntil(10000, () => cache.messages.has(message.id));
+    await delayUntil(10000, () => cache.messages.has(message?.id!));
 
     const reply = await message.reply("Welcome!");
-    await delayUntil(10000, () => cache.messages.has(reply.id));
+    await delayUntil(10000, () => cache.messages.has(reply?.id!));
 
-    if (!cache.messages.has(reply.id)) {
+    if (!cache.messages.has(reply?.id!)) {
       throw new Error("The message seemed to be sent but it was not cached.");
     }
 
     assertEquals(
-      cache.messages.get(reply.id)?.messageReference.messageId,
+      cache.messages.get(reply.id)?.messageReference?.messageId,
       message.id,
     );
   },

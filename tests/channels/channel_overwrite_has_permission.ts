@@ -39,7 +39,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
     channelOverwriteHasPermission(
       channel.guildId,
       botId,
-      cache.channels.get(channel.id)?.permissionOverwrites,
+      cache.channels.get(channel.id)!.permissionOverwrites || [],
       options.permissionOverwrites ? options.permissionOverwrites[0].allow : [],
     ),
     true,
