@@ -16,7 +16,7 @@ import { Collection } from "../../util/collection.ts";
 export function fetchMembers(
   guildId: string,
   shardId: number,
-  options?: RequestGuildMembers
+  options?: RequestGuildMembers,
 ) {
   // You can request 1 member without the intent
   if (
@@ -41,9 +41,9 @@ function requestAllMembers(
   resolve: (
     value:
       | Collection<string, DiscordenoMember>
-      | PromiseLike<Collection<string, DiscordenoMember>>
+      | PromiseLike<Collection<string, DiscordenoMember>>,
   ) => void,
-  options: any
+  options: any,
 ): void {
   throw new Error("Function not implemented.");
 }

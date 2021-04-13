@@ -13,7 +13,7 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 /** Edit the message. */
 export async function editMessage(
   message: DiscordenoMessage,
-  content: string | EditMessage
+  content: string | EditMessage,
 ) {
   if (message.author.id !== botId) {
     throw "You can only edit a message that was sent by the bot.";
@@ -32,7 +32,7 @@ export async function editMessage(
   const result: DiscordMessage = await rest.runMethod(
     "patch",
     endpoints.CHANNEL_MESSAGE(message.channelId, message.id),
-    content
+    content,
   );
 
   return structures.createDiscordenoMessage(result);

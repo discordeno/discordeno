@@ -8,14 +8,14 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
 export async function ban(
   guildId: string,
   id: string,
-  options: CreateGuildBan
+  options: CreateGuildBan,
 ) {
   await requireBotGuildPermissions(guildId, ["BAN_MEMBERS"]);
 
   const result = await rest.runMethod(
     "put",
     endpoints.GUILD_BAN(guildId, id),
-    camelKeysToSnakeCase(options)
+    camelKeysToSnakeCase(options),
   );
 
   return result;

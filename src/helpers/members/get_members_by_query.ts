@@ -9,7 +9,7 @@ import { Collection } from "../../util/collection.ts";
 export async function getMembersByQuery(
   guildId: string,
   name: string,
-  limit = 1
+  limit = 1,
 ) {
   const guild = await cacheHandlers.get("guilds", guildId);
   if (!guild) return;
@@ -28,9 +28,9 @@ function requestAllMembers(
   resolve: (
     value:
       | Collection<string, DiscordenoMember>
-      | PromiseLike<Collection<string, DiscordenoMember>>
+      | PromiseLike<Collection<string, DiscordenoMember>>,
   ) => void,
-  arg3: { query: string; limit: number }
+  arg3: { query: string; limit: number },
 ): void {
   throw new Error("Function not implemented.");
 }
