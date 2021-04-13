@@ -3,6 +3,7 @@ export enum DiscordActivityTypes {
   Game,
   Streaming,
   Listening,
+  Watching,
   Custom = 4,
   Competing,
 }
