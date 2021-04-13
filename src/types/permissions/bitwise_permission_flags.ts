@@ -62,4 +62,6 @@ export enum DiscordBitwisePermissionFlags {
   MANAGE_WEBHOOKS = 0x20000000,
   /** Allows management and editing of emojis */
   MANAGE_EMOJIS = 0x40000000,
+  /** Allows members to use slash commands in text channels */
+  USE_SLASH_COMMANDS = 0x80000000,
 }
