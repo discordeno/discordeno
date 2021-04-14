@@ -25,13 +25,13 @@ Deno.test({
 
     if (originalChannel.topic && cloned.topic !== originalChannel.topic) {
       throw new Error(
-        "The clone was supposed to have a topic but it does not appear to be the same topic."
+        "The clone was supposed to have a topic but it does not appear to be the same topic.",
       );
     }
 
     if (originalChannel.bitrate && cloned.bitrate !== originalChannel.bitrate) {
       throw new Error(
-        "The clone was supposed to have a bitrate but it does not appear to be the same bitrate."
+        "The clone was supposed to have a bitrate but it does not appear to be the same bitrate.",
       );
     }
 
@@ -41,7 +41,7 @@ Deno.test({
         originalChannel.permissionOverwrites.length
     ) {
       throw new Error(
-        "The clone was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites."
+        "The clone was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites.",
       );
     }
   },

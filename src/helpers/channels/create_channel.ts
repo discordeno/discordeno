@@ -17,7 +17,7 @@ import { calculateBits } from "../../util/permissions.ts";
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(
   guildId: string,
-  options?: CreateGuildChannel
+  options?: CreateGuildChannel,
 ) {
   const requiredPerms: Set<PermissionStrings> = new Set(["MANAGE_CHANNELS"]);
 
@@ -32,7 +32,7 @@ export async function createChannel(
     }
     eventHandlers.debug?.(
       "loop",
-      `Running forEach loop in create_channel file.`
+      `Running forEach loop in create_channel file.`,
     );
     overwrite.allow.forEach(requiredPerms.add, requiredPerms);
     overwrite.deny.forEach(requiredPerms.add, requiredPerms);
@@ -51,13 +51,13 @@ export async function createChannel(
       permission_overwrites: useDefaultOverwrites
         ? options?.permissionOverwrites
         : options?.permissionOverwrites?.map((perm) => ({
-            ...perm,
+          ...perm,
 
-            allow: calculateBits(perm.allow),
-            deny: calculateBits(perm.deny),
-          })),
+          allow: calculateBits(perm.allow),
+          deny: calculateBits(perm.deny),
+        })),
       type: options?.type || DiscordChannelTypes.GUILD_TEXT,
-    }
+    },
   )) as DiscordChannel;
 
   const discordenoChannel = await structures.createDiscordenoChannel(result);
