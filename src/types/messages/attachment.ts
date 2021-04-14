@@ -5,6 +5,8 @@ export interface Attachment {
   id: string;
   /** Name of file attached */
   filename: string;
+  /** The attachment's [media type](https://en.wikipedia.org/wiki/Media_type) */
+  contentType?: string;
   /** Size of file in bytes */
   size: number;
   /** Source url of file */
