@@ -31,11 +31,11 @@ export function heartbeat(shardId: number, interval: number) {
       return clearInterval(currentShard.heartbeat.intervalId);
     }
 
-    currentShard.queue.unshift({
+    if (currentShard.ws.readyState !== WebSocket.OPEN) return;
+
+    currentShard.ws.send(JSON.stringify({
       op: DiscordGatewayOpcodes.Heartbeat,
       d: currentShard.previousSequenceNumber,
-    });
-
-    ws.processQueue(currentShard.id);
+    }));
   }, interval);
 }
