@@ -1,8 +1,9 @@
 import { Channel } from "../channels/channel.ts";
 import { Guild } from "../guilds/guild.ts";
+import { Application } from "../oauth2/application.ts";
 import { User } from "../users/user.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
-import { DiscordTargetUserTypes } from "./target_user_types.ts";
+import { DiscordTargetTypes } from "./target_types.ts";
 
 export interface Invite {
   /** The invite code (unique Id) */
@@ -13,10 +14,12 @@ export interface Invite {
   channel: Partial<Channel>;
   /** The user who created the invite */
   inviter?: User;
+  /** The type of target for this voice channel invite */
+  targetType?: DiscordTargetTypes;
   /** The target user for this invite */
   targetUser?: User;
-  /** The type of user target for this invite */
-  targetUserType?: DiscordTargetUserTypes;
+  /** The embedded application to open for this voice channel embedded application invite */
+  targetApplication?: Partial<Application>;
   /** Approximate count of online members (only present when target_user is set) */
   approximatePresenceCount?: number;
   /** Approximate count of total members */

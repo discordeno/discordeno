@@ -2,6 +2,7 @@ import { User } from "../users/user.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordChannelTypes } from "./channel_types.ts";
 import { DiscordOverwrite, Overwrite } from "./overwrite.ts";
+import { DiscordVideoQualityModes } from "./video_quality_modes.ts";
 
 export interface Channel {
   /** The id of the channel */
@@ -36,10 +37,14 @@ export interface Channel {
   ownerId?: string;
   /** Application id of the group DM creator if it is bot-created */
   applicationId?: string;
-  /** id of the parent category for a channel (each parent category can contain up to 50 channels) */
+  /** Id of the parent category for a channel (each parent category can contain up to 50 channels) */
   parentId?: string | null;
   /** When the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
   lastPinTimestamp?: string | null;
+  /** Voice region id for the voice channel, automatic when set to null */
+  rtcRegion?: string | null;
+  /** The camera video quality mode of the voice channel, 1 when not present */
+  videoQualityMode?: DiscordVideoQualityModes;
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-object */

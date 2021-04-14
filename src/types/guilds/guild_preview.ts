@@ -21,7 +21,7 @@ export interface GuildPreview {
   approximateMemberCount: number;
   /** Approximate number of online members in this guild */
   approximatePresenceCount: number;
-  /** The description for the guild */
+  /** The description for the guild, if the guild is discoverable */
   description: string | null;
 }
 

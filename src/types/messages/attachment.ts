@@ -5,6 +5,8 @@ export interface Attachment {
   id: string;
   /** Name of file attached */
   filename: string;
+  /** The attachment's [media type](https://en.wikipedia.org/wiki/Media_type) */
+  contentType?: string;
   /** Size of file in bytes */
   size: number;
   /** Source url of file */
@@ -12,9 +14,9 @@ export interface Attachment {
   /** A proxied url of file */
   proxyUrl: string;
   /** Height of file (if image) */
-  height: number | null;
+  height?: number | null;
   /** Width of file (if image) */
-  width: number | null;
+  width?: number | null;
 }
 
 /** https://discord.com/developers/docs/resources/channel#attachment-object */

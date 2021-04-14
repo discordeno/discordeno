@@ -15,8 +15,6 @@ export interface Identify {
   shard?: [shardId: number, numberOfShards: number];
   /** Presence structure for initial presence information */
   presence?: StatusUpdate;
-  /** Enables dispatching of guild subscription events (presence and typing events) */
-  guildSubscriptions?: boolean;
   /** The Gateway Intents you wish to receive */
   intents: number;
 }

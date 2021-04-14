@@ -1,7 +1,7 @@
 export interface ModifyGuildEmoji {
   /** Name of the emoji */
   name?: string;
-  /** Roles to which this emoji will be whitelisted */
+  /** Roles allowed to use this emoji */
   roles?: string[] | null;
 }
 

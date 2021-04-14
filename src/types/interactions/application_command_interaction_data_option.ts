@@ -4,6 +4,8 @@ import { DiscordApplicationCommandOptionTypes } from "./application_command_opti
 export interface ApplicationCommandInteractionDataOption {
   /** The name of the parameter */
   name: string;
+  /** value of DiscordApplicationCommandOptionTypes */
+  type: DiscordApplicationCommandOptionTypes;
   /** The value of the pair */
   value?: DiscordApplicationCommandOptionTypes;
   /** Present if this option is a group or subcommand */

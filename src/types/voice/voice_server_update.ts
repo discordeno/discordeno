@@ -6,7 +6,7 @@ export interface VoiceServerUpdate {
   /** The guild this voice server update is for */
   guildId: string;
   /** The voice server host */
-  endpoint: string;
+  endpoint: string | null;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#voice-server-update */

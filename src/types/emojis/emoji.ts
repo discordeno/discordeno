@@ -6,7 +6,7 @@ export interface Emoji {
   id: string | null;
   /** Emoji name (can only be null in reaction emoji objects) */
   name: string | null;
-  /** Roles this emoji is whitelisted to */
+  /** Roles allowed to use this emoji */
   roles?: string[];
   /** User that created this emoji */
   user?: User;

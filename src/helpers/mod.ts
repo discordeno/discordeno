@@ -49,9 +49,7 @@ import { guildIconURL } from "./guilds/guild_icon_url.ts";
 import { guildSplashURL } from "./guilds/guild_splash_url.ts";
 import { leaveGuild } from "./guilds/leave_guild.ts";
 import { deleteIntegration } from "./integrations/delete_integration.ts";
-import { editIntegration } from "./integrations/edit_integration.ts";
 import { getIntegrations } from "./integrations/get_integrations.ts";
-import { syncIntegration } from "./integrations/sync_integration.ts";
 import { createInvite } from "./invites/create_invite.ts";
 import { deleteInvite } from "./invites/delete_invite.ts";
 import { getChannelInvites } from "./invites/get_channel_invites.ts";
@@ -88,9 +86,9 @@ import { removeReactionEmoji } from "./messages/remove_reaction_emoji.ts";
 import { removeUserReaction } from "./messages/remove_user_reaction.ts";
 import { sendMessage } from "./messages/send_message.ts";
 import { unpin, unpinMessage } from "./messages/unpin_message.ts";
+import { editBotStatus } from "./misc/edit_bot_status.ts";
 import { getGatewayBot } from "./misc/get_gateway_bot.ts";
 import { getUser } from "./misc/get_user.ts";
-import { editBotStatus } from "./misc/edit_bot_status.ts";
 import { addRole } from "./roles/add_role.ts";
 import { createRole } from "./roles/create_role.ts";
 import { deleteRole } from "./roles/delete_role.ts";
@@ -158,7 +156,6 @@ export {
   editEmoji,
   editGuild,
   editGuildTemplate,
-  editIntegration,
   editMember,
   editMessage,
   editRole,
@@ -232,7 +229,6 @@ export {
   startTyping,
   swapChannels,
   syncGuildTemplate,
-  syncIntegration,
   unban,
   unbanMember,
   unpin,
@@ -298,9 +294,7 @@ export let helpers = {
   leaveGuild,
   // integrations
   deleteIntegration,
-  editIntegration,
   getIntegrations,
-  syncIntegration,
   // invites
   createInvite,
   deleteInvite,

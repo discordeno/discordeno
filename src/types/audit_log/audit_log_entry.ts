@@ -9,7 +9,7 @@ export interface AuditLogEntry {
   /** Changes made to the `target_id` */
   changes?: AuditLogChange[];
   /** The user who made the changes */
-  userId: string;
+  userId: string | null;
   /** id of the entry */
   id: string;
   /** Type of action that occured */

@@ -1,6 +1,7 @@
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordChannelTypes } from "./channel_types.ts";
 import { DiscordOverwrite, Overwrite } from "./overwrite.ts";
+import { DiscordVideoQualityModes } from "./video_quality_modes.ts";
 
 export interface ModifyChannel {
   /** 2-100 character channel name */
@@ -21,8 +22,12 @@ export interface ModifyChannel {
   userLimit?: number | null;
   /** Channel or category-specific permissions */
   permissionOverwrites?: Overwrite[] | null;
-  /** id of the new parent category for a channel */
+  /** Id of the new parent category for a channel */
   parentId?: string | null;
+  /** Voice region id for the voice channel, automatic when set to null */
+  rtcRegion?: string | null;
+  /** The camera video quality mode of the voice channel */
+  videoQualityMode?: DiscordVideoQualityModes;
 }
 
 /** https://discord.com/developers/docs/resources/channel#modify-channel */

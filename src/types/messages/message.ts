@@ -2,11 +2,11 @@ import { ChannelMention } from "../channels/channel_mention.ts";
 import { Embed } from "../embeds/embed.ts";
 import { GuildMember } from "../guilds/guild_member.ts";
 import { MessageInteraction } from "../interactions/message_interaction.ts";
+import { Application } from "../oauth2/application.ts";
 import { User } from "../users/user.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { Attachment } from "./attachment.ts";
 import { MessageActivity } from "./message_activity.ts";
-import { MessageApplication } from "./message_application.ts";
 import { MessageReference } from "./message_reference.ts";
 import { MessageSticker } from "./message_sticker.ts";
 import { DiscordMessageTypes } from "./message_types.ts";
@@ -68,8 +68,8 @@ export interface Message {
   /** Sent with Rich Presence-related chat embeds */
   activity?: MessageActivity;
   /** Sent with Rich Presence-related chat embeds */
-  application?: MessageApplication;
-  /** Reference data sent with crossposted messages and replies */
+  application?: Partial<Application>;
+  /** Data showing the source of a crossposted channel follow add, pin or reply message */
   messageReference?: MessageReference;
   /** Message flags combined as a bitfield */
   flags?: number;

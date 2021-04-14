@@ -3,6 +3,7 @@ import { Role } from "../permissions/role.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordDefaultMessageNotificationLevels } from "./default_message_notification_levels.ts";
 import { DiscordExplicitContentFilterLevels } from "./explicit_content_filter_levels.ts";
+import { DiscordSystemChannelFlags } from "./system_channel_flags.ts";
 import { DiscordVerificationLevels } from "./verification_levels.ts";
 
 export interface CreateGuild {
@@ -28,6 +29,8 @@ export interface CreateGuild {
   afkTimeout?: number;
   /** The id of the channel where guild notices such as welcome messages and boost events are posted */
   systemChannelId?: string;
+  /** System channel flags */
+  systemChannelFlags?: DiscordSystemChannelFlags;
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild */
