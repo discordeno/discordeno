@@ -4,7 +4,6 @@ import { cache } from "../../src/cache.ts";
 import { cloneChannel } from "../../src/helpers/channels/clone_channel.ts";
 import { createChannel } from "../../src/helpers/channels/create_channel.ts";
 import { CreateGuildChannel } from "../../src/types/guilds/create_guild_channel.ts";
-
 import { delayUntil } from "../util/delay_until.ts";
 import { botId } from "../../src/bot.ts";
 import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
