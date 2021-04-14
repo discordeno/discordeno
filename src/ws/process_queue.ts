@@ -17,8 +17,8 @@ export async function processQueue(id: number) {
     }
 
     const now = Date.now();
-    if (now - shard.queueMinuteTimestamp >= 60000) {
-      shard.queueMinuteTimestamp = now;
+    if (now - shard.queueStartedAt >= 60000) {
+      shard.queueStartedAt = now;
       counter = 0;
     }
 

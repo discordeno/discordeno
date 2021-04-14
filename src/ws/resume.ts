@@ -43,7 +43,7 @@ export async function resume(shardId: number) {
     },
     queue: oldShard?.queue || [],
     processingQueue: false,
-    queueMinuteTimestamp: Date.now(),
+    queueStartedAt: Date.now(),
   });
 
   // Resume on open
