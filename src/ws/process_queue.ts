@@ -7,7 +7,6 @@ export async function processQueue(id: number) {
   if (!shard?.queue.length || shard.processingQueue) return;
 
   shard.processingQueue = true;
-  shard.queueMinuteTimestamp = Date.now();
 
   let counter = 0;
 
