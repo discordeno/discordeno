@@ -10,7 +10,7 @@ export enum DiscordGuildFeatures {
   VERIFIED = "VERIFIED",
   /** Guild is partnered */
   PARTNERED = "PARTNERED",
-  /** Guild can enable welcome screen, Membership Screening, and discovery, and recives community updates */
+  /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and recives community updates */
   COMMUNITY = "COMMUNITY",
   /** Guild has access to use commerce features (i.e. create store channels) */
   COMMERCE = "COMMERCE",
