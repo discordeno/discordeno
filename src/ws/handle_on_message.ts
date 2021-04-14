@@ -26,10 +26,22 @@ export async function handleOnMessage(message: any, shardId: number) {
 
   if (typeof message !== "string") return;
 
+  const shard = ws.shards.get(shardId);
+
   const messageData = JSON.parse(message) as DiscordGatewayPayload;
   ws.log("RAW", { shardId, payload: messageData });
 
   switch (messageData.op) {
+    case DiscordGatewayOpcodes.Heartbeat:
+      if (shard?.ws.readyState !== WebSocket.OPEN) return;
+
+      shard.heartbeat.lastSentAt = Date.now();
+      // Discord randomly sends this requiring an immediate heartbeat back
+      shard?.queue.push({
+        op: DiscordGatewayOpcodes.Heartbeat,
+        d: shard?.previousSequenceNumber,
+      })
+      break;
     case DiscordGatewayOpcodes.Hello:
       ws.heartbeat(
         shardId,
