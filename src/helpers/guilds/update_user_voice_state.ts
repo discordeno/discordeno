@@ -20,7 +20,7 @@ export function updateVoiceState(
   userId: string,
   data: UpdateOthersVoiceState,
 ) {
-  const payload = camelKeysToSnakeCase(data) as DiscordUpdateOthersVoiceState;
+  const payload = camelKeysToSnakeCase<DiscordUpdateOthersVoiceState>(data);
 
   return RequestManager.patch(
     endpoints.UPDATE_VOICE_STATE(guildId, userId),
