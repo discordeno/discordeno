@@ -5,7 +5,7 @@ import { DiscordenoChannel } from "../../structures/channel.ts";
 
 /** Create a copy of a channel */
 export async function cloneChannel(channelId: string, reason?: string) {
-  const channelToClone: DiscordenoChannel | undefined = await cacheHandlers.get(
+  const channelToClone = await cacheHandlers.get(
     "channels",
     channelId
   );
