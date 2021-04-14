@@ -5,6 +5,8 @@ import { deleteChannel } from "../helpers/channels/delete_channel.ts";
 import { deleteChannelOverwrite } from "../helpers/channels/delete_channel_overwrite.ts";
 import { editChannel } from "../helpers/channels/edit_channel.ts";
 import { editChannelOverwrite } from "../helpers/channels/edit_channel_overwrite.ts";
+import { createChannel } from "../helpers/channels/create_channel.ts";
+import { cloneChannel } from "../helpers/channels/clone_channel.ts";
 import { sendMessage } from "../helpers/messages/send_message.ts";
 import { disconnectMember } from "../helpers/mod.ts";
 import { Channel, DiscordChannel } from "../types/channels/channel.ts";
@@ -30,8 +32,8 @@ const baseChannel: Partial<DiscordenoChannel> = {
     return `<#${this.id!}>`;
   },
   get voiceStates() {
-    return this.guild?.voiceStates.filter((voiceState) =>
-      voiceState.channelId === this.id
+    return this.guild?.voiceStates.filter(
+      (voiceState) => voiceState.channelId === this.id
     );
   },
   get connectedMembers() {
@@ -39,7 +41,7 @@ const baseChannel: Partial<DiscordenoChannel> = {
     if (!voiceStates) return undefined;
 
     return new Collection(
-      voiceStates.map((vs, key) => [key, cache.members.get(key)]),
+      voiceStates.map((vs, key) => [key, cache.members.get(key)])
     );
   },
   send(content) {
@@ -62,11 +64,15 @@ const baseChannel: Partial<DiscordenoChannel> = {
       this.guildId!,
       this.id!,
       overwrites,
-      permissions,
+      permissions
     );
   },
   edit(options, reason) {
     return editChannel(this.id!, options, reason);
+  },
+
+  clone(reason) {
+    return cloneChannel(this.id!, reason);
   },
 };
 
@@ -74,7 +80,7 @@ const baseChannel: Partial<DiscordenoChannel> = {
 // deno-lint-ignore require-await
 export async function createDiscordenoChannel(
   data: DiscordChannel,
-  guildId?: string,
+  guildId?: string
 ) {
   const {
     guildId: rawGuildId = "",
@@ -86,7 +92,7 @@ export async function createDiscordenoChannel(
   Object.keys(rest).forEach((key) => {
     eventHandlers.debug?.(
       "loop",
-      `Running forEach loop in createDiscordenoChannel function.`,
+      `Running forEach loop in createDiscordenoChannel function.`
     );
     // @ts-ignore index signature
     props[key] = createNewProp(rest[key]);
@@ -96,7 +102,7 @@ export async function createDiscordenoChannel(
     ...props,
     guildId: createNewProp(guildId || rawGuildId),
     lastPinTimestamp: createNewProp(
-      lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined,
+      lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined
     ),
   });
 
@@ -125,13 +131,13 @@ export interface DiscordenoChannel
   mention: string;
   /**
    * Gets the voice states for this channel
-   * 
+   *
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
   voiceStates?: Collection<string, VoiceState>;
   /**
    * Gets the connected members for this channel undefined if member is not cached
-   * 
+   *
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
   connectedMembers?: Collection<string, DiscordenoMember | undefined>;
@@ -147,20 +153,19 @@ export interface DiscordenoChannel
   /** Edit a channel Overwrite */
   editOverwrite(
     overwriteID: string,
-    options: Omit<Overwrite, "id">,
+    options: Omit<Overwrite, "id">
   ): ReturnType<typeof editChannelOverwrite>;
   /** Delete a channel Overwrite */
   deleteOverwrite(
-    overwriteID: string,
+    overwriteID: string
   ): ReturnType<typeof deleteChannelOverwrite>;
   /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
   hasPermission(
     overwrites: DiscordOverwrite[],
-    permissions: PermissionStrings[],
+    permissions: PermissionStrings[]
   ): ReturnType<typeof channelOverwriteHasPermission>;
   /** Edit the channel */
-  edit(
-    options: ModifyChannel,
-    reason?: string,
-  ): ReturnType<typeof editChannel>;
+  edit(options: ModifyChannel, reason?: string): ReturnType<typeof editChannel>;
+  /** Create a new channel with the same properties */
+  clone(reason?: string): ReturnType<typeof createChannel>;
 }

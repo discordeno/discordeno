@@ -16,6 +16,7 @@ import "./guilds/create_guild.ts";
 import "./channels/category_children.ts";
 import "./channels/channel_overwrite_has_permission.ts";
 import "./channels/create_channel.ts";
+import "./channels/clone_channel.ts";
 import "./channels/delete_channel.ts";
 import "./channels/delete_channel_overwrite.ts";
 import "./channels/edit_channel.ts";
