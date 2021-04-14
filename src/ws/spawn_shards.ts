@@ -1,4 +1,5 @@
 import { Collection } from "../util/collection.ts";
+import { delay } from "../util/utils.ts";
 import { ws } from "./ws.ts";
 
 /** Begin spawning shards. */
@@ -46,6 +47,7 @@ export function spawnShards(firstShardId = 0) {
     }
   }
 
+  console.log("BUCKETS", buckets);
   // SPREAD THIS OUT TO DIFFERENT CLUSTERS TO BEGIN STARTING UP
   buckets.forEach(async (bucket, bucketId) => {
     ws.log(
@@ -61,6 +63,12 @@ export function spawnShards(firstShardId = 0) {
 
       while (shardId !== undefined) {
         ws.log("DEBUG", "Running while loop in getMembers function.");
+        if (!ws.createNextShard) {
+          await delay(100);
+          continue;
+        }
+
+        ws.createNextShard = false;
         await ws.tellClusterToIdentify(clusterId as number, shardId, bucketId);
         shardId = queue.shift();
       }
