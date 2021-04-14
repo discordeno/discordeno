@@ -12,8 +12,11 @@ export async function resume(shardId: number) {
   const oldShard = ws.shards.get(shardId);
 
   if (oldShard) {
-    // HOW TO CLOSE OLD SHARD SOCKET!!!
-    oldShard.ws.close(3065, "Resuming the shard, closing old shard.");
+    // ONLY CLOSE IF SHARD SOCKET IS STILL CONNECTED
+    if (oldShard.ws.readyState === WebSocket.OPEN) {
+      // HOW TO CLOSE OLD SHARD SOCKET!!!
+      oldShard.ws.close(3065, "Resuming the shard, closing old shard.");
+    }
     // STOP OLD HEARTBEAT
     clearInterval(oldShard.heartbeat.intervalId);
   }
@@ -40,6 +43,7 @@ export async function resume(shardId: number) {
     },
     queue: oldShard?.queue || [],
     processingQueue: false,
+    queueStartedAt: Date.now(),
   });
 
   // Resume on open

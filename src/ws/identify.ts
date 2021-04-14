@@ -33,6 +33,7 @@ export async function identify(shardId: number, maxShards: number) {
     },
     queue: [],
     processingQueue: false,
+    queueStartedAt: Date.now(),
   });
 
   socket.onopen = () => {

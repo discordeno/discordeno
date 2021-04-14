@@ -16,6 +16,12 @@ export async function processQueue(id: number) {
       return;
     }
 
+    const now = Date.now();
+    if (now - shard.queueStartedAt >= 60000) {
+      shard.queueStartedAt = now;
+      counter = 0;
+    }
+
     // Send a request that is next in line
     const request = shard.queue.shift();
 
