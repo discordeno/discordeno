@@ -31,6 +31,7 @@ import { getEmojis } from "./emojis/get_emojis.ts";
 import { createGuild } from "./guilds/create_guild.ts";
 import { deleteServer } from "./guilds/delete_server.ts";
 import { editGuild } from "./guilds/edit_guild.ts";
+import { editWelcomeScreen } from "./guilds/edit_welcome_screen.ts";
 import { editWidget } from "./guilds/edit_widget.ts";
 import { getAuditLogs } from "./guilds/get_audit_logs.ts";
 import { getAvailableVoiceRegions } from "./guilds/get_available_voice_regions.ts";
@@ -164,6 +165,7 @@ export {
   editWebhook,
   editWebhookMessage,
   editWebhookWithToken,
+  editWelcomeScreen,
   editWidget,
   emojiURL,
   executeWebhook,
@@ -277,6 +279,7 @@ export let helpers = {
   deleteServer,
   editGuild,
   editWidget,
+  editWelcomeScreen,
   emojiURL,
   getAuditLogs,
   getAvailableVoiceRegions,
