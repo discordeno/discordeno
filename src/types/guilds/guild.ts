@@ -107,6 +107,8 @@ export interface Guild {
   approximatePresenceCount?: number;
   /** The welcome screen of a Community guild, shown to new members, returned when in the invite object */
   welcomeScreen?: WelcomeScreen;
+  /** `true` if this guild is designated as NSFW */
+  nsfw: boolean;
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object */
