@@ -16,19 +16,21 @@ export async function createShard(shardId: number) {
 
   socket.onclose = (event) => {
     ws.log("CLOSED", { shardId, payload: event });
-    if (
-      event.code === 4009 &&
-      ["Resharded!", "Resuming the shard, closing old shard."].includes(
-        event.reason,
-      )
-    ) {
-      return ws.log("CLOSED_RECONNECT", { shardId, payload: event });
-    }
+
     if (
       event.code === 3064 ||
       event.reason === "Discordeno Testing Finished! Do Not RESUME!"
     ) {
       return;
+    }
+
+    if (
+      event.code === 3065 ||
+      ["Resharded!", "Resuming the shard, closing old shard."].includes(
+        event.reason,
+      )
+    ) {
+      return ws.log("CLOSED_RECONNECT", { shardId, payload: event });
     }
 
     // TODO: ENUM FOR THESE CODES?

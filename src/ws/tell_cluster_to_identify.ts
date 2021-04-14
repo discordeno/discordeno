@@ -11,6 +11,6 @@ export async function tellClusterToIdentify(
   await ws.identify(shardId, ws.maxShards);
 
   if (oldShard) {
-    oldShard.ws.close(4009, "Resharded!");
+    oldShard.ws.close(3065, "Resharded!");
   }
 }
