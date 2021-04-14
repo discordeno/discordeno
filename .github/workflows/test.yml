@@ -16,16 +16,16 @@ jobs:
           deno-version: ${{ matrix.deno }}
       - name: Cache dependencies
         run: deno cache --no-check mod.ts
-      - name: Run test script for Devs
-        if: ${{ github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' }}
-        run: deno test --unstable --coverage=coverage -A --no-check tests/mod.ts
-      - name: Run test script for label
+      - name: Run test script for maintainers
+        if: ${{ github.actor === "ayntee" || github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' }}
+        run: deno test --unstable --coverage=./coverage -A --no-check tests/mod.ts
+      - name: Run test script if label added
         if: ${{ github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'run-tests' }}
-        run: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} deno test --unstable --coverage=coverage -A --no-check tests/mod.ts
+        run: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} deno test --unstable --coverage=./coverage --allow-net --no-check tests/mod.ts
       - name: Create coverage report
-        run: deno --unstable coverage ./coverage --lcov > coverage.lcov # create coverage report
-      - name: Collect coverage
-        uses: codecov/codecov-action@v1.0.10 # upload the report on Codecov
+        run: deno --unstable coverage ./coverage --lcov > coverage.lcov
+      - name: Collect and upload the coverage report
+        uses: codecov/codecov-action@v1.0.10
         with:
           file: ./coverage.lcov
     env:
