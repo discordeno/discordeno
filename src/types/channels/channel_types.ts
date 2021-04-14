@@ -15,5 +15,5 @@ export enum DiscordChannelTypes {
   /** A channel in which game developers can sell their game on Discord */
   GUILD_STORE,
   /** A voice channel for hosting events with an audience */
-  GUILD_STAGE_VOICE,
+  GUILD_STAGE_VOICE = 13,
 }
