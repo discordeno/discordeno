@@ -4,6 +4,7 @@ import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
 import { DiscordHello } from "../types/gateway/hello.ts";
 import { DiscordReady } from "../types/gateway/ready.ts";
+import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
 import { identify } from "./identify.ts";
 import { resume } from "./resume.ts";
@@ -96,6 +97,10 @@ export async function handleOnMessage(message: any, shardId: number) {
 
         ws.loadingShards.get(shardId)?.resolve(true);
         ws.loadingShards.delete(shardId);
+        // Wait 5 seconds to spawn next shard
+        setTimeout(() => {
+          ws.createNextShard = true;
+        }, 5000);
       }
 
       // Update the sequence number if it is present

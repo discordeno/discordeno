@@ -5,10 +5,10 @@ import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { DiscordReady } from "../../types/gateway/ready.ts";
 import { DiscordGuildMemberWithUser } from "../../types/mod.ts";
-import { camelKeysToSnakeCase, delay } from "../../util/utils.ts";
+import { camelKeysToSnakeCase } from "../../util/utils.ts";
 import { ws } from "../../ws/ws.ts";
 
-export async function handleReady(
+export function handleReady(
   data: DiscordGatewayPayload,
   shardId: number,
 ) {
@@ -40,10 +40,6 @@ export async function handleReady(
     );
     await checkReady(payload, shardId, now);
   }, 2000);
-
-  // Wait 5 seconds to spawn next shard
-  await delay(5000);
-  ws.createNextShard = true;
 }
 
 // Don't pass the shard itself because unavailableGuilds won't be updated by the GUILD_CREATE event
