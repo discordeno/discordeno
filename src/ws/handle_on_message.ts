@@ -40,7 +40,7 @@ export async function handleOnMessage(message: any, shardId: number) {
       shard?.queue.push({
         op: DiscordGatewayOpcodes.Heartbeat,
         d: shard?.previousSequenceNumber,
-      })
+      });
       break;
     case DiscordGatewayOpcodes.Hello:
       ws.heartbeat(
