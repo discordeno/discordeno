@@ -21,15 +21,7 @@ export async function createChannel(
 ) {
   const requiredPerms: Set<PermissionStrings> = new Set(["MANAGE_CHANNELS"]);
 
-  //Integration with permissions for channel cloning
-  let useDefaultOverwrites = false;
-
   options?.permissionOverwrites?.forEach((overwrite) => {
-    if (overwrite.id && parseInt(overwrite.allow)) {
-      useDefaultOverwrites = true;
-
-      return;
-    }
     eventHandlers.debug?.(
       "loop",
       `Running forEach loop in create_channel file.`,
@@ -48,14 +40,12 @@ export async function createChannel(
     endpoints.GUILD_CHANNELS(guildId),
     {
       ...camelKeysToSnakeCase<DiscordCreateGuildChannel>(options ?? {}),
-      permission_overwrites: useDefaultOverwrites
-        ? options?.permissionOverwrites
-        : options?.permissionOverwrites?.map((perm) => ({
-          ...perm,
+      permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
+        ...perm,
 
-          allow: calculateBits(perm.allow),
-          deny: calculateBits(perm.deny),
-        })),
+        allow: calculateBits(perm.allow),
+        deny: calculateBits(perm.deny),
+      })),
       type: options?.type || DiscordChannelTypes.GUILD_TEXT,
     },
   )) as DiscordChannel;
