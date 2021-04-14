@@ -70,7 +70,6 @@ const baseChannel: Partial<DiscordenoChannel> = {
   edit(options, reason) {
     return editChannel(this.id!, options, reason);
   },
-
   clone(reason) {
     return cloneChannel(this.id!, reason);
   },
