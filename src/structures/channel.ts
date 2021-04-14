@@ -5,7 +5,6 @@ import { deleteChannel } from "../helpers/channels/delete_channel.ts";
 import { deleteChannelOverwrite } from "../helpers/channels/delete_channel_overwrite.ts";
 import { editChannel } from "../helpers/channels/edit_channel.ts";
 import { editChannelOverwrite } from "../helpers/channels/edit_channel_overwrite.ts";
-import { createChannel } from "../helpers/channels/create_channel.ts";
 import { cloneChannel } from "../helpers/channels/clone_channel.ts";
 import { sendMessage } from "../helpers/messages/send_message.ts";
 import { disconnectMember } from "../helpers/mod.ts";
@@ -166,5 +165,5 @@ export interface DiscordenoChannel
   /** Edit the channel */
   edit(options: ModifyChannel, reason?: string): ReturnType<typeof editChannel>;
   /** Create a new channel with the same properties */
-  clone(reason?: string): ReturnType<typeof createChannel>;
+  clone(reason?: string): ReturnType<typeof cloneChannel>;
 }
