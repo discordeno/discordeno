@@ -41,6 +41,7 @@ import { getGuildPreview } from "./guilds/get_guild_preview.ts";
 import { getPruneCount } from "./guilds/get_prune_count.ts";
 import { getVanityURL } from "./guilds/get_vainty_url.ts";
 import { getVoiceRegions } from "./guilds/get_voice_regions.ts";
+import { getWelcomeScreen } from "./guilds/get_welcome_screen.ts";
 import { getWidget } from "./guilds/get_widget.ts";
 import { getWidgetImageURL } from "./guilds/get_widget_image_url.ts";
 import { getWidgetSettings } from "./guilds/get_widget_settings.ts";
@@ -203,6 +204,7 @@ export {
   getWebhook,
   getWebhooks,
   getWebhookWithToken,
+  getWelcomeScreen,
   getWidget,
   getWidgetImageURL,
   getWidgetSettings,
@@ -282,6 +284,7 @@ export let helpers = {
   getBans,
   getGuildPreview,
   getGuild,
+  getWelcomeScreen,
   getPruneCount,
   getVanityURL,
   getVoiceRegions,
