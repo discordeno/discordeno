@@ -61,7 +61,7 @@ export function spawnShards(firstShardId = 0) {
 
       while (shardId !== undefined) {
         ws.log("DEBUG", "Running while loop in getMembers function.");
-        await ws.tellClusterToIdentify(clusterId as number, shardId, bucketId);
+        await ws.tellClusterToIdentify(clusterId, shardId, bucketId);
         shardId = queue.shift();
       }
     }

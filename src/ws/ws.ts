@@ -145,6 +145,8 @@ export interface DiscordenoShard {
   queue: WebSocketRequest[];
   /** Whether or not the queue for this shard is being processed. */
   processingQueue: boolean;
+  /** When the first request for this minute has been sent. */
+  queueMinuteTimestamp: number;
 }
 
 export interface WebSocketRequest {

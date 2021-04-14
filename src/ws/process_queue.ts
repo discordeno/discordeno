@@ -7,6 +7,7 @@ export async function processQueue(id: number) {
   if (!shard?.queue.length || shard.processingQueue) return;
 
   shard.processingQueue = true;
+  shard.queueMinuteTimestamp = Date.now();
 
   let counter = 0;
 
@@ -14,6 +15,12 @@ export async function processQueue(id: number) {
     if (shard.ws.readyState !== WebSocket.OPEN) {
       shard.processingQueue = false;
       return;
+    }
+
+    const now = Date.now();
+    if (now - shard.queueMinuteTimestamp > 60000) {
+      shard.queueMinuteTimestamp = now;
+      counter = 0;
     }
 
     // Send a request that is next in line
