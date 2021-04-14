@@ -13,7 +13,7 @@ export async function resume(shardId: number) {
 
   if (oldShard) {
     // HOW TO CLOSE OLD SHARD SOCKET!!!
-    oldShard.ws.close(4009, "Resuming the shard, closing old shard.");
+    oldShard.ws.close(3065, "Resuming the shard, closing old shard.");
     // STOP OLD HEARTBEAT
     clearInterval(oldShard.heartbeat.intervalId);
   }
