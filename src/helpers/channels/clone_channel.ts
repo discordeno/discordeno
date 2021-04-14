@@ -12,7 +12,7 @@ export async function cloneChannel(channelId: string, reason?: string) {
   //Return undefined if channel is not cached (unsure about error handling)
   if (!channelToClone) return;
 
-  //If "name" is null or undefined as specified by types
+  //If "name" is undefined as specified by types
   channelToClone.name ??= "new-channel";
 
   //Merge channel data with reason for createChannel options
