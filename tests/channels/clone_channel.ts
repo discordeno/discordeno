@@ -1,4 +1,4 @@
-import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
+import { tempData } from "../ws/start_bot.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 import { cache } from "../../src/cache.ts";
 import { cloneChannel } from "../../src/helpers/channels/clone_channel.ts";
