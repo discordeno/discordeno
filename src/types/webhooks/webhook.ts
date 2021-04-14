@@ -17,7 +17,7 @@ export interface Webhook {
   user?: User;
   /** The default name of the webhook */
   name: string | null;
-  /** The default avatar of the webhook */
+  /** The default user avatar hash of the webhook */
   avatar: string | null;
   /** The secure token of the webhook (returned for Incomming Webhooks) */
   token?: string;
