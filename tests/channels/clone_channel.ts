@@ -138,7 +138,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "[channel] create a new text channel with permission overwrites",
+  name: "[channel] clone a new text channel with permission overwrites",
   async fn() {
     await ifItFailsBlameWolf(
       {
