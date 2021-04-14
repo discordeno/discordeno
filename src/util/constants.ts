@@ -121,6 +121,8 @@ export const endpoints = {
   GUILD_PREVIEW: (guildId: string) => `${GUILDS_BASE(guildId)}/preview`,
   UPDATE_VOICE_STATE: (guildId: string, userId?: string) =>
     `${GUILDS_BASE(guildId)}/voice-states/${userId ?? "@me"}`,
+  GUILD_WELCOME_SCREEN: (guildId: string) =>
+    `${GUILDS_BASE(guildId)}/welcome-screen`,
 
   // Voice
   VOICE_REGIONS: `${baseEndpoints.BASE_URL}/voice/regions`,
