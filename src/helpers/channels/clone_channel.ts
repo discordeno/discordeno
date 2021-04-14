@@ -15,14 +15,10 @@ export async function cloneChannel(channelId: string, reason?: string) {
   //If "name" is undefined as specified by types
   channelToClone.name ??= "new-channel";
 
-  //Merge channel data with reason for createChannel options
-  const creationData = {
-    reason,
-    ...channelToClone,
-  };
   //Create the channel (also handles permissions)
   return createChannel(
     channelToClone.guildId!,
-    creationData as CreateGuildChannel
+    channelToClone,
+    reason,
   );
 }
