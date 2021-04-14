@@ -25,6 +25,7 @@ export enum DiscordJsonErrorCodes {
   UnknownBranch,
   UnknownRedistributable = 10036,
   UnknownGuildTemplate = 10057,
+  UnknownInteraction = 10062,
   UnknownApplicationCommand = 10063,
   BotsCannotUseThisEndpoint = 20001,
   OnlyBotsCanUseThisEndpoint,
