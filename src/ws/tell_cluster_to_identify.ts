@@ -10,7 +10,7 @@ export async function tellClusterToIdentify(
   const oldShard = ws.shards.get(shardId);
   await ws.identify(shardId, ws.maxShards);
 
-  if (oldShard) {
+  if (oldShard?.ws.readyState === WebSocket.OPEN) {
     oldShard.ws.close(3065, "Resharded!");
   }
 }
