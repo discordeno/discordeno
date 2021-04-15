@@ -14,7 +14,7 @@ export function heartbeat(shardId: number, interval: number) {
   shard.heartbeat.lastSentAt = Date.now();
   shard.heartbeat.interval = interval;
 
-  // First heartbeat should be sent bevore
+  // The first heartbeat should not wait for the entire interval to pass
   shard.heartbeat.timeoutId = setTimeout(
     () => sendHeartbeat(shardId),
     Math.floor(shard.heartbeat.interval * Math.random()),
