@@ -8,7 +8,7 @@ export async function resume(shardId: number) {
   // NOW WE HANDLE RESUMING THIS SHARD
   // Get the old data for this shard necessary for resuming
   const oldShard = ws.shards.get(shardId);
-  if (!oldShard) return identify(shardId, ws.maxShards);
+  if (!oldShard?.sessionId) return identify(shardId, ws.maxShards);
 
   // CREATE A SHARD
   const socket = await ws.createShard(shardId);
@@ -19,7 +19,7 @@ export async function resume(shardId: number) {
     oldShard.ws.close(3065, "Resuming the shard, closing old shard.");
   }
   // STOP OLD HEARTBEAT
-  clearInterval(oldShard.heartbeat.intervalId);
+  clearTimeout(oldShard.heartbeat.timeoutId);
 
   ws.shards.set(shardId, {
     id: shardId,
@@ -36,7 +36,7 @@ export async function resume(shardId: number) {
       acknowledged: false,
       keepAlive: false,
       interval: 0,
-      intervalId: 0,
+      timeoutId: 0,
     },
     queue: oldShard.queue || [],
     processingQueue: false,
