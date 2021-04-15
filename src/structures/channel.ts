@@ -5,6 +5,7 @@ import { deleteChannel } from "../helpers/channels/delete_channel.ts";
 import { deleteChannelOverwrite } from "../helpers/channels/delete_channel_overwrite.ts";
 import { editChannel } from "../helpers/channels/edit_channel.ts";
 import { editChannelOverwrite } from "../helpers/channels/edit_channel_overwrite.ts";
+import { cloneChannel } from "../helpers/channels/clone_channel.ts";
 import { sendMessage } from "../helpers/messages/send_message.ts";
 import { disconnectMember } from "../helpers/mod.ts";
 import { Channel, DiscordChannel } from "../types/channels/channel.ts";
@@ -30,8 +31,8 @@ const baseChannel: Partial<DiscordenoChannel> = {
     return `<#${this.id!}>`;
   },
   get voiceStates() {
-    return this.guild?.voiceStates.filter((voiceState) =>
-      voiceState.channelId === this.id
+    return this.guild?.voiceStates.filter(
+      (voiceState) => voiceState.channelId === this.id,
     );
   },
   get connectedMembers() {
@@ -67,6 +68,9 @@ const baseChannel: Partial<DiscordenoChannel> = {
   },
   edit(options, reason) {
     return editChannel(this.id!, options, reason);
+  },
+  clone(reason) {
+    return cloneChannel(this.id!, reason);
   },
 };
 
@@ -125,13 +129,13 @@ export interface DiscordenoChannel
   mention: string;
   /**
    * Gets the voice states for this channel
-   * 
+   *
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
   voiceStates?: Collection<string, VoiceState>;
   /**
    * Gets the connected members for this channel undefined if member is not cached
-   * 
+   *
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
   connectedMembers?: Collection<string, DiscordenoMember | undefined>;
@@ -159,8 +163,7 @@ export interface DiscordenoChannel
     permissions: PermissionStrings[],
   ): ReturnType<typeof channelOverwriteHasPermission>;
   /** Edit the channel */
-  edit(
-    options: ModifyChannel,
-    reason?: string,
-  ): ReturnType<typeof editChannel>;
+  edit(options: ModifyChannel, reason?: string): ReturnType<typeof editChannel>;
+  /** Create a new channel with the same properties */
+  clone(reason?: string): ReturnType<typeof cloneChannel>;
 }
