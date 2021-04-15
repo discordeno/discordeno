@@ -37,15 +37,15 @@ export function fetchMembers(
 
 // TODO: finish implementing this
 function requestAllMembers(
-  guildId: string,
-  shardId: number,
-  resolve: (
+  _guildId: string,
+  _shardId: number,
+  _resolve: (
     value:
       | Collection<string, DiscordenoMember>
       | PromiseLike<Collection<string, DiscordenoMember>>,
   ) => void,
   // deno-lint-ignore no-explicit-any
-  options: any,
+  _options: any,
 ): void {
   throw new Error("Function not implemented.");
 }

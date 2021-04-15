@@ -22,15 +22,16 @@ export async function getMembersByQuery(
   }) as Promise<Collection<string, DiscordenoMember>>;
 }
 
+// TODO: implement this
 function requestAllMembers(
-  id: string,
-  shardId: number,
-  resolve: (
+  _id: string,
+  _shardId: number,
+  _resolve: (
     value:
       | Collection<string, DiscordenoMember>
       | PromiseLike<Collection<string, DiscordenoMember>>,
   ) => void,
-  arg3: { query: string; limit: number },
+  _arg3: { query: string; limit: number },
 ): void {
   throw new Error("Function not implemented.");
 }

@@ -1,12 +1,10 @@
 import { cache } from "../../src/cache.ts";
 import { createChannel } from "../../src/helpers/channels/create_channel.ts";
-import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
-import { delayUntil } from "../util/delay_until.ts";
-import { assertEquals, assertExists } from "../deps.ts";
-import { getChannels } from "../../src/helpers/channels/get_channels.ts";
-import { sendMessage } from "../../src/helpers/messages/send_message.ts";
 import { getPins } from "../../src/helpers/channels/get_pins.ts";
-import { DiscordenoMessage } from "../../src/structures/message.ts";
+import { sendMessage } from "../../src/helpers/messages/send_message.ts";
+import { assertEquals, assertExists } from "../deps.ts";
+import { delayUntil } from "../util/delay_until.ts";
+import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
 Deno.test({
   name: "[channel] get pins.",

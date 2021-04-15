@@ -1,11 +1,11 @@
 import { eventHandlers } from "../bot.ts";
 import { cache } from "../cache.ts";
 import { channelOverwriteHasPermission } from "../helpers/channels/channel_overwrite_has_permission.ts";
+import { cloneChannel } from "../helpers/channels/clone_channel.ts";
 import { deleteChannel } from "../helpers/channels/delete_channel.ts";
 import { deleteChannelOverwrite } from "../helpers/channels/delete_channel_overwrite.ts";
 import { editChannel } from "../helpers/channels/edit_channel.ts";
 import { editChannelOverwrite } from "../helpers/channels/edit_channel_overwrite.ts";
-import { cloneChannel } from "../helpers/channels/clone_channel.ts";
 import { sendMessage } from "../helpers/messages/send_message.ts";
 import { disconnectMember } from "../helpers/mod.ts";
 import { Channel, DiscordChannel } from "../types/channels/channel.ts";
@@ -40,7 +40,7 @@ const baseChannel: Partial<DiscordenoChannel> = {
     if (!voiceStates) return undefined;
 
     return new Collection(
-      voiceStates.map((vs, key) => [key, cache.members.get(key)]),
+      voiceStates.map((vs) => [vs.userId, cache.members.get(vs.userId)]),
     );
   },
   send(content) {

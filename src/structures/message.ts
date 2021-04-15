@@ -176,7 +176,8 @@ export async function createDiscordenoMessage(data: DiscordMessage) {
   return message;
 }
 
-export interface DiscordenoMessage extends Message {
+export interface DiscordenoMessage
+  extends Omit<Message, "timestamp" | "editedTimestamp"> {
   // For better user experience
   /** Ids of users specifically mentioned in the message */
   mentionedUserIds: string[];
@@ -184,6 +185,10 @@ export interface DiscordenoMessage extends Message {
   mentionedRoleIds: string[];
   /** Channels specifically mentioned in this message */
   mentionedChannelIds?: string[];
+  /** When this message was sent */
+  timestamp: number;
+  /** When this message was edited (or undefined if never) */
+  editedTimestamp?: number;
   // GETTERS
 
   /** The channel where this message was sent. Can be undefined if uncached. */

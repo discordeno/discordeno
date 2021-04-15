@@ -8,7 +8,6 @@ export * from "./src/structures/guild.ts";
 export * from "./src/structures/member.ts";
 export * from "./src/structures/mod.ts";
 export * from "./src/structures/role.ts";
-export * from "./src/structures/template.ts";
 export * from "./src/types/mod.ts";
 export * from "./src/util/collection.ts";
 export * from "./src/util/constants.ts";

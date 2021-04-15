@@ -1,3 +1,4 @@
+// deno-lint-ignore require-await
 export async function delayUntil(
   maxMs: number,
   isReady: () => boolean | undefined,

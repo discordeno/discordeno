@@ -1,9 +1,9 @@
 import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
+import { DiscordTemplate, Template } from "../../types/templates/template.ts";
+import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
-import { DiscordTemplate } from "../../types/templates/template.ts";
-import { Collection } from "../../util/collection.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 /**
  * Returns an array of templates.
@@ -20,7 +20,7 @@ export async function getGuildTemplates(guildId: string) {
   return new Collection(
     templates.map((template) => [
       template.code,
-      structures.createTemplateStruct(template),
+      snakeKeysToCamelCase<Template>(template),
     ]),
   );
 }

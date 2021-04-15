@@ -2,7 +2,6 @@ import { botId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
 import { DiscordenoMessage } from "../../structures/message.ts";
 import { structures } from "../../structures/mod.ts";
-import { CreateMessage } from "../../types/messages/create_message.ts";
 import { EditMessage } from "../../types/messages/edit_message.ts";
 import { DiscordMessage } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";

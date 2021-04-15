@@ -1,8 +1,8 @@
 import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
-import { DiscordTemplate } from "../../types/templates/template.ts";
+import { DiscordTemplate, Template } from "../../types/templates/template.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 /**
  * Deletes a template from a guild.
@@ -14,10 +14,10 @@ export async function deleteGuildTemplate(
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  const deletedTemplate = (await rest.runMethod(
+  const deletedTemplate = await rest.runMethod<DiscordTemplate>(
     "delete",
     `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
-  )) as DiscordTemplate;
+  );
 
-  return structures.createTemplateStruct(deletedTemplate);
+  return snakeKeysToCamelCase<Template>(deletedTemplate);
 }

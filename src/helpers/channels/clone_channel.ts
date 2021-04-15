@@ -1,9 +1,9 @@
 import { cacheHandlers } from "../../cache.ts";
-import { createChannel } from "./create_channel.ts";
-import { Errors } from "../../types/misc/errors.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import { CreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
+import { Errors } from "../../types/misc/errors.ts";
 import { calculatePermissions } from "../../util/permissions.ts";
-import { Overwrite } from "../../types/channels/overwrite.ts";
+import { createChannel } from "./create_channel.ts";
 
 /** Create a copy of a channel */
 export async function cloneChannel(channelId: string, reason?: string) {
@@ -19,20 +19,21 @@ export async function cloneChannel(channelId: string, reason?: string) {
     throw new Error(Errors.CHANNEL_NOT_IN_GUILD);
   }
 
-  //Convert channel permission
-  const newOverwrites: Overwrite[] = [];
-
-  channelToClone.permissionOverwrites.forEach((overwrite) => {
-    newOverwrites.push({
+  const createChannelOptions: CreateGuildChannel = {
+    ...channelToClone,
+    name: channelToClone.name!,
+    topic: channelToClone.topic || undefined,
+    parentId: channelToClone.parentId || undefined,
+    permissionOverwrites: channelToClone.permissionOverwrites.map((
+      overwrite,
+    ) => ({
       id: overwrite.id,
       type: overwrite.type,
       allow: calculatePermissions(BigInt(overwrite.allow)),
       deny: calculatePermissions(BigInt(overwrite.deny)),
-    });
-  });
-
-  channelToClone.permissionOverwrites = newOverwrites;
+    })),
+  };
 
   //Create the channel (also handles permissions)
-  return createChannel(channelToClone.guildId!, channelToClone, reason);
+  return createChannel(channelToClone.guildId!, createChannelOptions, reason);
 }

@@ -29,6 +29,8 @@ export async function startServer(
   const server = serve({ port: serverOptions.port });
 
   for await (const req of server) {
+    // TODO: this is going to be removed
+    // deno-lint-ignore no-deprecated-deno-api
     const buffer = await Deno.readAll(req.body);
     const signature = req.headers.get("X-Signature-Ed25519");
     const timestamp = req.headers.get("X-Signature-Timestamp");
