@@ -40,7 +40,7 @@ function sendHeartbeat(shardId: number) {
   }
 
   if (!currentShard.heartbeat.acknowledged) {
-    currentShard.ws.close(1001, "Did not receive an ACK in time.");
+    currentShard.ws.close(3065, "Did not receive an ACK in time.");
     return identify(shardId, ws.maxShards);
   }
 
