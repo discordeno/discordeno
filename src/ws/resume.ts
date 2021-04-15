@@ -1,4 +1,5 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
+import { closeWS } from "./close_ws.ts";
 import { ws } from "./ws.ts";
 
 export async function resume(shardId: number) {
@@ -12,11 +13,8 @@ export async function resume(shardId: number) {
   const oldShard = ws.shards.get(shardId);
 
   if (oldShard) {
-    // ONLY CLOSE IF SHARD SOCKET IS STILL CONNECTED
-    if (oldShard.ws.readyState === WebSocket.OPEN) {
-      // HOW TO CLOSE OLD SHARD SOCKET!!!
-      oldShard.ws.close(3065, "Resuming the shard, closing old shard.");
-    }
+    // HOW TO CLOSE OLD SHARD SOCKET!!!
+    closeWS(oldShard.ws, 3064, "Resuming the shard, closing old shard.");
     // STOP OLD HEARTBEAT
     clearInterval(oldShard.heartbeat.intervalId);
   }
@@ -28,8 +26,8 @@ export async function resume(shardId: number) {
     id: shardId,
     ws: socket,
     resumeInterval: 0,
-    sessionId,
-    previousSequenceNumber,
+    sessionId: sessionId,
+    previousSequenceNumber: previousSequenceNumber,
     resuming: false,
     ready: false,
     unavailableGuildIds: new Set(),

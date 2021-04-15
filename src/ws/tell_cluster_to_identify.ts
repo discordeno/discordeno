@@ -1,3 +1,4 @@
+import { closeWS } from "./close_ws.ts";
 import { ws } from "./ws.ts";
 
 /** Allows users to hook in and change to communicate to different clusters across different servers or anything they like. For example using redis pubsub to talk to other servers. */
@@ -11,6 +12,6 @@ export async function tellClusterToIdentify(
   await ws.identify(shardId, ws.maxShards);
 
   if (oldShard) {
-    oldShard.ws.close(3065, "Resharded!");
+    closeWS(oldShard.ws, 3063, "Resharded!");
   }
 }
