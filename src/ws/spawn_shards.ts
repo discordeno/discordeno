@@ -65,7 +65,7 @@ export function spawnShards(firstShardId = 0) {
       let shardId = queue.shift();
 
       while (shardId !== undefined) {
-        // ws.log("DEBUG", "5. Running while loop in spawnShards function.");
+        ws.log("DEBUG", "5. Running while loop in spawnShards function.");
         if (!bucket.createNextShard) {
           await delay(100);
           continue;
