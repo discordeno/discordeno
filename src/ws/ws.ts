@@ -143,7 +143,7 @@ export interface DiscordenoShard {
     /** The interval between heartbeats requested by discord. */
     interval: number;
     /** The id of the interval, useful for stopping the interval if ws closed. */
-    timeoutId: number;
+    intervalId: number;
   };
   /** The items/requestst that are in queue to be sent to this shard websocket. */
   queue: WebSocketRequest[];

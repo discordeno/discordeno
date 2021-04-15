@@ -19,7 +19,7 @@ export async function resume(shardId: number) {
     oldShard.ws.close(3065, "Resuming the shard, closing old shard.");
   }
   // STOP OLD HEARTBEAT
-  clearTimeout(oldShard.heartbeat.timeoutId);
+  clearInterval(oldShard.heartbeat.intervalId);
 
   ws.shards.set(shardId, {
     id: shardId,
@@ -36,7 +36,7 @@ export async function resume(shardId: number) {
       acknowledged: false,
       keepAlive: false,
       interval: 0,
-      timeoutId: 0,
+      intervalId: 0,
     },
     queue: oldShard.queue || [],
     processingQueue: false,
