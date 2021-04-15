@@ -90,34 +90,43 @@ export function setApplicationId(id: string) {
  *
  * Advanced Devs: This function will allow you to have an insane amount of customization potential as when you get to large bots you need to be able to optimize every tiny detail to make you bot work the way you need.
  */
-export async function startBigBrainBot(data: BigBrainBotConfig) {
-  authorization = `Bot ${data.token}`;
-  identifyPayload.token = `Bot ${data.token}`;
+export async function startBigBrainBot(config: BigBrainBotConfig) {
+  authorization = `Bot ${config.token}`;
+  rest.token = `Bot ${config.token}`;
 
-  if (data.secretKey) secretKey = data.secretKey;
-  if (data.restURL) baseEndpoints.BASE_URL = data.restURL;
-  if (data.cdnURL) baseEndpoints.CDN_URL = data.cdnURL;
-  if (data.eventHandlers) eventHandlers = data.eventHandlers;
-  if (data.compress) {
-    identifyPayload.compress = data.compress;
-  }
-
-  identifyPayload.intents = data.intents.reduce(
-    (
-      bits,
-      next,
-    ) => (bits |= typeof next === "string"
-      ? DiscordGatewayIntents[next]
-      : next),
-    0,
-  );
+  if (config.secretKey) secretKey = config.secretKey;
+  if (config.restURL) baseEndpoints.BASE_URL = config.restURL;
+  if (config.cdnURL) baseEndpoints.CDN_URL = config.cdnURL;
+  if (config.eventHandlers) eventHandlers = config.eventHandlers;
 
   // PROXY DOESNT NEED US SPAWNING SHARDS
-  if (!data.wsPort) {
+  if (!config.wsPort) {
+    ws.identifyPayload.token = `Bot ${config.token}`;
+
+    if (config.compress) {
+      ws.identifyPayload.compress = config.compress;
+    }
+
+    ws.identifyPayload.intents = config.intents.reduce(
+      (
+        bits,
+        next,
+      ) => (bits |= typeof next === "string"
+        ? DiscordGatewayIntents[next]
+        : next),
+      0,
+    );
+
     // Initial API connection to get info about bots connection
     ws.botGatewayData = await getGatewayBot();
+    console.log(ws.botGatewayData);
+    ws.maxShards = ws.maxShards || config.lastShardId ||
+      ws.botGatewayData.shards;
+    // Explicitly append gateway version and encoding
+    ws.botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
     proxyWSURL = ws.botGatewayData.url;
-    ws.spawnShards(data.firstShardId);
+
+    ws.spawnShards(config.firstShardId);
   }
 }
 
