@@ -1,4 +1,5 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
+import { identify } from "./identify.ts";
 import { ws } from "./ws.ts";
 
 export function heartbeat(shardId: number, interval: number) {
@@ -10,7 +11,7 @@ export function heartbeat(shardId: number, interval: number) {
   ws.log("HEARTBEATING_DETAILS", { shardId, interval, shard });
 
   shard.heartbeat.keepAlive = true;
-  shard.heartbeat.acknowledged = false;
+  shard.heartbeat.acknowledged = true;
   shard.heartbeat.lastSentAt = Date.now();
   shard.heartbeat.interval = interval;
 
@@ -38,6 +39,11 @@ function sendHeartbeat(shardId: number) {
     return;
   }
 
+  if (!currentShard.heartbeat.acknowledged) {
+    currentShard.ws.close(1001, "Did not receive an ACK in time.");
+    return identify(shardId, ws.maxShards);
+  }
+
   if (currentShard.ws.readyState !== WebSocket.OPEN) {
     currentShard.heartbeat.timeoutId = setTimeout(
       () => sendHeartbeat(shardId),
@@ -50,6 +56,8 @@ function sendHeartbeat(shardId: number) {
     op: DiscordGatewayOpcodes.Heartbeat,
     d: currentShard.previousSequenceNumber,
   }));
+
+  currentShard.heartbeat.acknowledged = false;
 
   currentShard.heartbeat.timeoutId = setTimeout(
     () => sendHeartbeat(shardId),
