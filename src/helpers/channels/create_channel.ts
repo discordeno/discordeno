@@ -3,21 +3,24 @@ import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordChannel } from "../../types/channels/channel.ts";
+import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import {
   CreateGuildChannel,
   DiscordCreateGuildChannel,
 } from "../../types/guilds/create_guild_channel.ts";
 import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
-import { requireBotGuildPermissions } from "../../util/permissions.ts";
+import {
+  calculateBits,
+  requireBotGuildPermissions,
+} from "../../util/permissions.ts";
 import { camelKeysToSnakeCase } from "../../util/utils.ts";
-import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
-import { calculateBits } from "../../util/permissions.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(
   guildId: string,
   options?: CreateGuildChannel,
+  reason?: string,
 ) {
   const requiredPerms: Set<PermissionStrings> = new Set(["MANAGE_CHANNELS"]);
 
@@ -42,11 +45,11 @@ export async function createChannel(
       ...camelKeysToSnakeCase<DiscordCreateGuildChannel>(options ?? {}),
       permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
         ...perm,
-
         allow: calculateBits(perm.allow),
         deny: calculateBits(perm.deny),
       })),
       type: options?.type || DiscordChannelTypes.GUILD_TEXT,
+      reason,
     },
   )) as DiscordChannel;
 
