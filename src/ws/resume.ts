@@ -1,35 +1,32 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
+import { identify } from "./identify.ts";
 import { ws } from "./ws.ts";
 
 export async function resume(shardId: number) {
   ws.log("RESUMING", { shardId });
 
-  // CREATE A SHARD
-  const socket = await ws.createShard(shardId);
-
   // NOW WE HANDLE RESUMING THIS SHARD
   // Get the old data for this shard necessary for resuming
   const oldShard = ws.shards.get(shardId);
+  if (!oldShard) return identify(shardId, ws.maxShards);
 
-  if (oldShard) {
-    // ONLY CLOSE IF SHARD SOCKET IS STILL CONNECTED
-    if (oldShard.ws.readyState === WebSocket.OPEN) {
-      // HOW TO CLOSE OLD SHARD SOCKET!!!
-      oldShard.ws.close(3065, "Resuming the shard, closing old shard.");
-    }
-    // STOP OLD HEARTBEAT
-    clearInterval(oldShard.heartbeat.intervalId);
+  // CREATE A SHARD
+  const socket = await ws.createShard(shardId);
+
+  // ONLY CLOSE IF SHARD SOCKET IS STILL CONNECTED
+  if (oldShard.ws.readyState === WebSocket.OPEN) {
+    // HOW TO CLOSE OLD SHARD SOCKET!!!
+    oldShard.ws.close(3065, "Resuming the shard, closing old shard.");
   }
-
-  const sessionId = oldShard?.sessionId || "";
-  const previousSequenceNumber = oldShard?.previousSequenceNumber || 0;
+  // STOP OLD HEARTBEAT
+  clearInterval(oldShard.heartbeat.intervalId);
 
   ws.shards.set(shardId, {
     id: shardId,
     ws: socket,
     resumeInterval: 0,
-    sessionId,
-    previousSequenceNumber,
+    sessionId: oldShard.sessionId,
+    previousSequenceNumber: oldShard.previousSequenceNumber,
     resuming: false,
     ready: false,
     unavailableGuildIds: new Set(),
@@ -41,7 +38,7 @@ export async function resume(shardId: number) {
       interval: 0,
       intervalId: 0,
     },
-    queue: oldShard?.queue || [],
+    queue: oldShard.queue || [],
     processingQueue: false,
     queueStartedAt: Date.now(),
     queueCounter: 0,
@@ -53,8 +50,8 @@ export async function resume(shardId: number) {
       op: DiscordGatewayOpcodes.Resume,
       d: {
         token: ws.identifyPayload.token,
-        session_id: sessionId,
-        seq: previousSequenceNumber,
+        session_id: oldShard.sessionId,
+        seq: oldShard.previousSequenceNumber,
       },
     });
 
