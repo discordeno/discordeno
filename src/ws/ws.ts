@@ -35,8 +35,8 @@ export const ws = {
   firstShardId: 0,
   /** The last shard Id for this cluster. */
   lastShardId: 1,
-  /** This prop decides whether Discord allows our next shard to be started. When 1 starts, this is set to false until it is ready for the next one. */
-  createNextShard: true,
+  // /** This prop decides whether Discord allows our next shard to be started. When 1 starts, this is set to false until it is ready for the next one. */
+  // createNextShard: true,
   /** The identify payload holds the necessary data to connect and stay connected with Discords WSS. */
   identifyPayload: {
     token: "",
@@ -78,6 +78,11 @@ export const ws = {
       reject: (reason?: unknown) => void;
       startedAt: number;
     }
+  >(),
+  /** Stored as bucketId: { clusters: [clusterId, [ShardIds]], createNextShard: boolean } */
+  buckets: new Collection<
+    number,
+    { clusters: number[][]; createNextShard: boolean }
   >(),
   utf8decoder: new TextDecoder(),
 

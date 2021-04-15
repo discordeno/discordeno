@@ -103,7 +103,10 @@ export async function handleOnMessage(message: any, shardId: number) {
         ws.loadingShards.delete(shardId);
         // Wait 5 seconds to spawn next shard
         setTimeout(() => {
-          ws.createNextShard = true;
+          const bucket = ws.buckets.get(
+            shardId % ws.botGatewayData.sessionStartLimit.maxConcurrency,
+          );
+          if (bucket) bucket.createNextShard = true;
         }, 5000);
       }
 
