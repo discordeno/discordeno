@@ -34,6 +34,7 @@ export async function identify(shardId: number, maxShards: number) {
     queue: [],
     processingQueue: false,
     queueStartedAt: Date.now(),
+    queueCounter: 0,
   });
 
   socket.onopen = () => {

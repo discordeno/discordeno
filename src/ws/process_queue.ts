@@ -8,8 +8,6 @@ export async function processQueue(id: number) {
 
   shard.processingQueue = true;
 
-  let counter = 0;
-
   while (shard.queue.length) {
     if (shard.ws.readyState !== WebSocket.OPEN) {
       shard.processingQueue = false;
@@ -19,7 +17,7 @@ export async function processQueue(id: number) {
     const now = Date.now();
     if (now - shard.queueStartedAt >= 60000) {
       shard.queueStartedAt = now;
-      counter = 0;
+      shard.queueCounter = 0;
     }
 
     // Send a request that is next in line
@@ -28,12 +26,12 @@ export async function processQueue(id: number) {
     shard.ws.send(JSON.stringify(request));
 
     // Counter is useful for preventing 120/m requests.
-    counter++;
+    shard.queueCounter++;
 
     // Handle if the requests have been maxed
-    if (counter >= 118) {
+    if (shard.queueCounter >= 118) {
       await delay(60000);
-      counter = 0;
+      shard.queueCounter = 0;
       continue;
     }
   }

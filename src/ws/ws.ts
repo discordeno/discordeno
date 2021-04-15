@@ -1,4 +1,4 @@
-import { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
+import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { Collection } from "../util/collection.ts";
 import { cleanupLoadingShards } from "./cleanup_loading_shards.ts";
 import { createShard } from "./create_shard.ts";
@@ -7,12 +7,11 @@ import { handleDiscordPayload } from "./handle_discord_payload.ts";
 import { handleOnMessage } from "./handle_on_message.ts";
 import { heartbeat } from "./heartbeat.ts";
 import { identify } from "./identify.ts";
+import { processQueue } from "./process_queue.ts";
 import { resharder } from "./resharder.ts";
 import { spawnShards } from "./spawn_shards.ts";
 import { startGateway } from "./start_gateway.ts";
-import { processQueue } from "./process_queue.ts";
 import { tellClusterToIdentify } from "./tell_cluster_to_identify.ts";
-import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 
 // CONTROLLER LIKE INTERFACE FOR WS HANDLING
 export const ws = {
@@ -147,6 +146,8 @@ export interface DiscordenoShard {
   processingQueue: boolean;
   /** When the first request for this minute has been sent. */
   queueStartedAt: number;
+  /** The request counter of the queue */
+  queueCounter: number;
 }
 
 export interface WebSocketRequest {
