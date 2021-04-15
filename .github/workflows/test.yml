@@ -17,7 +17,7 @@ jobs:
       - name: Cache dependencies
         run: deno cache --no-check mod.ts
       - name: Run test script for maintainers
-        if: ${{ github.actor === "ayntee" || github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' }}
+        if: ${{ github.actor == "ayntee" || github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' }}
         run: deno test --unstable --coverage=./coverage -A --no-check tests/mod.ts
       - name: Run test script if label added
         if: ${{ github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'run-tests' }}
