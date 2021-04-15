@@ -1,8 +1,8 @@
 import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
 import { DiscordTemplate, Template } from "../../types/templates/template.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 /**
  * Creates a template for the guild.
@@ -24,11 +24,11 @@ export async function createGuildTemplate(
     throw new Error("The description can only be in between 0-120 characters.");
   }
 
-  const template = (await rest.runMethod(
+  const template = await rest.runMethod<DiscordTemplate>(
     "post",
     endpoints.GUILD_TEMPLATES(guildId),
     data,
-  )) as DiscordTemplate;
+  );
 
-  return structures.createTemplateStruct(template);
+  return snakeKeysToCamelCase<Template>(template);
 }

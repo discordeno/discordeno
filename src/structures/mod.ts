@@ -3,7 +3,6 @@ import { createDiscordenoGuild } from "./guild.ts";
 import { createDiscordenoMember } from "./member.ts";
 import { createDiscordenoMessage } from "./message.ts";
 import { createDiscordenoRole } from "./role.ts";
-import { createTemplateStruct } from "./template.ts";
 
 /** This is the placeholder where the structure creation functions are kept. */
 export let structures = {
@@ -12,7 +11,6 @@ export let structures = {
   createDiscordenoMember,
   createDiscordenoMessage,
   createDiscordenoRole,
-  createTemplateStruct,
 };
 
 // export type { Channel, Guild, Member, Message, Role, Template };
