@@ -1,15 +1,15 @@
-import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
-import { assertEquals, assertExists } from "../deps.ts";
-import { cache } from "../../src/cache.ts";
-import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
-import { CreateGuildChannel } from "../../src/types/guilds/create_guild_channel.ts";
-import { createChannel } from "../../src/helpers/channels/create_channel.ts";
-import { delayUntil } from "../util/delay_until.ts";
-import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
 import { botId } from "../../src/bot.ts";
+import { cache } from "../../src/cache.ts";
+import { createChannel } from "../../src/helpers/channels/create_channel.ts";
 import { deleteChannelOverwrite } from "../../src/helpers/channels/delete_channel_overwrite.ts";
+import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
+import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
+import { CreateGuildChannel } from "../../src/types/guilds/create_guild_channel.ts";
+import { assertEquals, assertExists } from "../deps.ts";
+import { delayUntil } from "../util/delay_until.ts";
+import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
-async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
+async function ifItFailsBlameWolf(options: CreateGuildChannel, _save = false) {
   const channel = await createChannel(tempData.guildId, options);
 
   // Assertions

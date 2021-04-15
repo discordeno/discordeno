@@ -7,7 +7,6 @@ import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
 import {
   DiscordGuildMember,
   DiscordGuildMemberWithUser,
-  GuildMember,
 } from "../../types/guilds/guild_member.ts";
 import { ListGuildMembers } from "../../types/guilds/list_guild_members.ts";
 import { Errors } from "../../types/misc/errors.ts";

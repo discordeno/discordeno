@@ -4,7 +4,6 @@ import { deleteServer } from "../../src/helpers/guilds/delete_server.ts";
 import { delay } from "../../src/util/utils.ts";
 import { ws } from "../../src/ws/ws.ts";
 import { assertExists } from "../deps.ts";
-import { delayUntil } from "../util/delay_until.ts";
 
 // Set necessary settings
 // Disables the logger which logs everything

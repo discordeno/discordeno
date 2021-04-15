@@ -1,17 +1,10 @@
 import { cache } from "../../src/cache.ts";
 import { createChannel } from "../../src/helpers/channels/create_channel.ts";
-import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
-import { delayUntil } from "../util/delay_until.ts";
-import { assertEquals, assertExists } from "../deps.ts";
-import { isChannelSynced } from "../../src/helpers/channels/is_channel_synced.ts";
-import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
-import { botId } from "../../src/bot.ts";
-import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
-import { startTyping } from "../../src/helpers/channels/start_typing.ts";
 import { createInvite } from "../../src/helpers/invites/create_invite.ts";
-import { getInvite } from "../../src/helpers/invites/get_invite.ts";
 import { getChannelInvites } from "../../src/helpers/invites/get_channel_invites.ts";
-import { delay } from "../../src/util/utils.ts";
+import { assertEquals, assertExists } from "../deps.ts";
+import { delayUntil } from "../util/delay_until.ts";
+import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
 Deno.test({
   name: "[invite] get channel invites",
@@ -35,7 +28,7 @@ Deno.test({
     const invite = await createInvite(channel.id, {
       maxAge: 86400,
       maxUses: 0,
-      temporary: false, // @ts-ignore
+      temporary: false,
       unique: false,
     });
 
@@ -45,7 +38,7 @@ Deno.test({
     const secondInvite = await createInvite(channel.id, {
       maxAge: 32400,
       maxUses: 5,
-      temporary: true, // @ts-ignore
+      temporary: true,
       unique: true,
     });
 

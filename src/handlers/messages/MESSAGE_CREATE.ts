@@ -2,10 +2,7 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import {
-  DiscordGuildMemberWithUser,
-  GuildMemberWithUser,
-} from "../../types/guilds/guild_member.ts";
+import { DiscordGuildMemberWithUser } from "../../types/guilds/guild_member.ts";
 import { DiscordMessage, Message } from "../../types/messages/message.ts";
 import { snakeKeysToCamelCase } from "../../util/utils.ts";
 

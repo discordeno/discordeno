@@ -1,8 +1,8 @@
-import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
-import { assertEquals, assertExists } from "../deps.ts";
 import { cache } from "../../src/cache.ts";
 import { sendMessage } from "../../src/helpers/messages/send_message.ts";
+import { assertEquals, assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
+import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
 async function ifItFailsBlameWolf(
   type: "getter" | "raw",
@@ -11,6 +11,7 @@ async function ifItFailsBlameWolf(
   const channel = cache.channels.get(tempData.channelId);
   assertExists(channel);
 
+  // deno-lint-ignore no-explicit-any
   let messageContent: any = "Hello World!";
   let secondMessageId = undefined;
   if (content === "embed") {

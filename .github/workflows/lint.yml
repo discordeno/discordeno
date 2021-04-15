@@ -11,4 +11,4 @@ jobs:
       - name: Commit formatted files
         uses: EndBug/add-and-commit@v7
       - name: Run lint script
-        run: deno lint src/** test/** --unstable --ignore=./src/types,./src/interactions/types
+        run: deno lint src/** test/** --unstable --ignore=./src/types
