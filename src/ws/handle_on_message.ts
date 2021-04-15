@@ -4,7 +4,6 @@ import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
 import { DiscordHello } from "../types/gateway/hello.ts";
 import { DiscordReady } from "../types/gateway/ready.ts";
-import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
 import { identify } from "./identify.ts";
 import { resume } from "./resume.ts";
@@ -38,10 +37,11 @@ export async function handleOnMessage(message: any, shardId: number) {
 
       shard.heartbeat.lastSentAt = Date.now();
       // Discord randomly sends this requiring an immediate heartbeat back
-      shard?.queue.push({
+      shard.queue.unshift({
         op: DiscordGatewayOpcodes.Heartbeat,
         d: shard?.previousSequenceNumber,
       });
+      ws.processQueue(shard.id);
       break;
     case DiscordGatewayOpcodes.Hello:
       ws.heartbeat(
