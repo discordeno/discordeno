@@ -72,7 +72,7 @@ export function spawnShards(firstShardId = 0) {
         }
 
         bucket.createNextShard = false;
-        await ws.tellClusterToIdentify(clusterId as number, shardId, bucketId);
+        await ws.tellClusterToIdentify(clusterId, shardId, bucketId);
         shardId = queue.shift();
       }
     }
