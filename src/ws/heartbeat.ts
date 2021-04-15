@@ -15,7 +15,7 @@ export function heartbeat(shardId: number, interval: number) {
   shard.heartbeat.lastSentAt = Date.now();
   shard.heartbeat.interval = interval;
 
-  // The first heartbeat should not wait for the entire interval to pass
+  // The first heartbeat should not wait for the entire interval to pass: https://discord.com/developers/docs/topics/gateway#heartbeating
   shard.heartbeat.timeoutId = setTimeout(
     () => sendHeartbeat(shardId),
     Math.floor(shard.heartbeat.interval * Math.random()),
