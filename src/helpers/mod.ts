@@ -31,6 +31,7 @@ import { getEmojis } from "./emojis/get_emojis.ts";
 import { createGuild } from "./guilds/create_guild.ts";
 import { deleteServer } from "./guilds/delete_server.ts";
 import { editGuild } from "./guilds/edit_guild.ts";
+import { editWelcomeScreen } from "./guilds/edit_welcome_screen.ts";
 import { editWidget } from "./guilds/edit_widget.ts";
 import { getAuditLogs } from "./guilds/get_audit_logs.ts";
 import { getAvailableVoiceRegions } from "./guilds/get_available_voice_regions.ts";
@@ -41,6 +42,7 @@ import { getGuildPreview } from "./guilds/get_guild_preview.ts";
 import { getPruneCount } from "./guilds/get_prune_count.ts";
 import { getVanityURL } from "./guilds/get_vainty_url.ts";
 import { getVoiceRegions } from "./guilds/get_voice_regions.ts";
+import { getWelcomeScreen } from "./guilds/get_welcome_screen.ts";
 import { getWidget } from "./guilds/get_widget.ts";
 import { getWidgetImageURL } from "./guilds/get_widget_image_url.ts";
 import { getWidgetSettings } from "./guilds/get_widget_settings.ts";
@@ -163,6 +165,7 @@ export {
   editWebhook,
   editWebhookMessage,
   editWebhookWithToken,
+  editWelcomeScreen,
   editWidget,
   emojiURL,
   executeWebhook,
@@ -203,6 +206,7 @@ export {
   getWebhook,
   getWebhooks,
   getWebhookWithToken,
+  getWelcomeScreen,
   getWidget,
   getWidgetImageURL,
   getWidgetSettings,
@@ -275,6 +279,7 @@ export let helpers = {
   deleteServer,
   editGuild,
   editWidget,
+  editWelcomeScreen,
   emojiURL,
   getAuditLogs,
   getAvailableVoiceRegions,
@@ -282,6 +287,7 @@ export let helpers = {
   getBans,
   getGuildPreview,
   getGuild,
+  getWelcomeScreen,
   getPruneCount,
   getVanityURL,
   getVoiceRegions,

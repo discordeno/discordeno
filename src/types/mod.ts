@@ -84,6 +84,7 @@ export * from "./guilds/modify_guild_channel_position.ts";
 export * from "./guilds/modify_guild_member.ts";
 export * from "./guilds/modify_guild_role.ts";
 export * from "./guilds/modify_guild_role_positions.ts";
+export * from "./guilds/modify_guild_welcome_screen.ts";
 export * from "./guilds/premium_tiers.ts";
 export * from "./guilds/request_guild_members.ts";
 export * from "./guilds/system_channel_flags.ts";
