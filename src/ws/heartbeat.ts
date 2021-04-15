@@ -43,6 +43,7 @@ function sendHeartbeat(shardId: number) {
       () => sendHeartbeat(shardId),
       currentShard.heartbeat.interval,
     );
+    return;
   }
 
   currentShard.ws.send(JSON.stringify({
