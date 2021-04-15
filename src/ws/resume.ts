@@ -1,4 +1,5 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
+import { closeWS } from "./close_ws.ts";
 import { identify } from "./identify.ts";
 import { ws } from "./ws.ts";
 
@@ -13,11 +14,8 @@ export async function resume(shardId: number) {
   // CREATE A SHARD
   const socket = await ws.createShard(shardId);
 
-  // ONLY CLOSE IF SHARD SOCKET IS STILL CONNECTED
-  if (oldShard.ws.readyState === WebSocket.OPEN) {
-    // HOW TO CLOSE OLD SHARD SOCKET!!!
-    oldShard.ws.close(3065, "Resuming the shard, closing old shard.");
-  }
+  // HOW TO CLOSE OLD SHARD SOCKET!!!
+  closeWS(oldShard.ws, 3064, "Resuming the shard, closing old shard.");
   // STOP OLD HEARTBEAT
   clearInterval(oldShard.heartbeat.intervalId);
 
