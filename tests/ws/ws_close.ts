@@ -7,7 +7,7 @@ Deno.test({
   name: "[ws] Close all shards manually.",
   async fn() {
     ws.shards.forEach((shard) => {
-      clearInterval(shard.heartbeat.intervalId);
+      clearTimeout(shard.heartbeat.timeoutId);
       shard.ws.close(3064, "Discordeno Testing Finished! Do Not RESUME!");
     });
 

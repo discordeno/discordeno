@@ -7,7 +7,7 @@ export async function identify(shardId: number, maxShards: number) {
   // Need to clear the old heartbeat interval
   const oldShard = ws.shards.get(shardId);
   if (oldShard) {
-    clearInterval(oldShard.heartbeat.intervalId);
+    clearTimeout(oldShard.heartbeat.timeoutId);
   }
 
   // CREATE A SHARD
@@ -29,7 +29,7 @@ export async function identify(shardId: number, maxShards: number) {
       acknowledged: false,
       keepAlive: false,
       interval: 0,
-      intervalId: 0,
+      timeoutId: 0,
     },
     queue: [],
     processingQueue: false,
