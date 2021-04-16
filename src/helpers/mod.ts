@@ -66,7 +66,6 @@ import { editMember } from "./members/edit_member.ts";
 import { fetchMembers } from "./members/fetch_members.ts";
 import { getMember } from "./members/get_member.ts";
 import { getMembers } from "./members/get_members.ts";
-import { getMembersByQuery } from "./members/get_members_by_query.ts";
 import { kick, kickMember } from "./members/kick_member.ts";
 import { moveMember } from "./members/move_member.ts";
 import { pruneMembers } from "./members/prune_members.ts";
@@ -190,7 +189,6 @@ export {
   getInvites,
   getMember,
   getMembers,
-  getMembersByQuery,
   getMessage,
   getMessages,
   getPins,
@@ -316,7 +314,6 @@ export let helpers = {
   editMember,
   fetchMembers,
   getMember,
-  getMembersByQuery,
   getMembers,
   kickMember,
   moveMember,

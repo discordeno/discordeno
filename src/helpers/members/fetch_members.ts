@@ -24,7 +24,7 @@ export function fetchMembers(
   // You can request 1 member without the intent
   if (
     (!options?.limit || options.limit > 1) &&
-    !(ws.identifyPayload.intents && DiscordGatewayIntents.GUILD_MEMBERS)
+    !(ws.identifyPayload.intents & DiscordGatewayIntents.GUILD_MEMBERS)
   ) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
