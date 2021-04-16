@@ -14,18 +14,6 @@ export let eventHandlers: EventHandlers = {};
 
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
-export const identifyPayload = {
-  token: "",
-  compress: true,
-  properties: {
-    $os: "linux",
-    $browser: "Discordeno",
-    $device: "Discordeno",
-  },
-  intents: 0,
-  shard: [0, 0],
-};
-
 export async function startBot(config: BotConfig) {
   if (config.eventHandlers) eventHandlers = config.eventHandlers;
   authorization = `Bot ${config.token}`;
@@ -49,17 +37,8 @@ export async function startBot(config: BotConfig) {
   ws.botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
 
   proxyWSURL = ws.botGatewayData.url;
-  identifyPayload.token = config.token;
-  identifyPayload.intents = config.intents.reduce(
-    (
-      bits,
-      next,
-    ) => (bits |= typeof next === "string"
-      ? DiscordGatewayIntents[next]
-      : next),
-    0,
-  );
-  identifyPayload.shard = [0, ws.botGatewayData.shards];
+
+  // ws.lastShardId = ws.maxShards;
 
   ws.spawnShards();
 }
@@ -122,6 +101,7 @@ export async function startBigBrainBot(config: BigBrainBotConfig) {
     console.log(ws.botGatewayData);
     ws.maxShards = ws.maxShards || config.lastShardId ||
       ws.botGatewayData.shards;
+    ws.lastShardId = config.lastShardId || ws.botGatewayData.shards;
     // Explicitly append gateway version and encoding
     ws.botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
     proxyWSURL = ws.botGatewayData.url;

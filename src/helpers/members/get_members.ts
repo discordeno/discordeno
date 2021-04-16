@@ -1,4 +1,4 @@
-import { eventHandlers, identifyPayload } from "../../bot.ts";
+import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { DiscordenoMember } from "../../structures/member.ts";
@@ -12,6 +12,7 @@ import { ListGuildMembers } from "../../types/guilds/list_guild_members.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
+import { ws } from "../../ws/ws.ts";
 
 /**
  * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM cache.members.get()
@@ -22,7 +23,7 @@ import { endpoints } from "../../util/constants.ts";
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
  */
 export async function getMembers(guildId: string, options?: ListGuildMembers) {
-  if (!(identifyPayload.intents && DiscordGatewayIntents.GUILD_MEMBERS)) {
+  if (!(ws.identifyPayload.intents && DiscordGatewayIntents.GUILD_MEMBERS)) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 

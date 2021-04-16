@@ -1,9 +1,9 @@
-import { identifyPayload } from "../../bot.ts";
 import { DiscordenoMember } from "../../structures/member.ts";
 import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
 import { RequestGuildMembers } from "../../types/guilds/request_guild_members.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { Collection } from "../../util/collection.ts";
+import { ws } from "../../ws/ws.ts";
 
 /**
  * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM cache.members.get()
@@ -21,7 +21,7 @@ export function fetchMembers(
   // You can request 1 member without the intent
   if (
     (!options?.limit || options.limit > 1) &&
-    !(identifyPayload.intents && DiscordGatewayIntents.GUILD_MEMBERS)
+    !(ws.identifyPayload.intents && DiscordGatewayIntents.GUILD_MEMBERS)
   ) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
