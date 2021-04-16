@@ -1,8 +1,8 @@
 import { cache, cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
-import { Collection } from "../../util/collection.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { DiscordGuildMembersChunk } from "../../types/members/guild_members_chunk.ts";
+import { Collection } from "../../util/collection.ts";
 
 export async function handleGuildMembersChunk(data: DiscordGatewayPayload) {
   const payload = data.d as DiscordGuildMembersChunk;
