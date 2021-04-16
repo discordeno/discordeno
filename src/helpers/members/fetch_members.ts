@@ -19,7 +19,7 @@ import { ws } from "../../ws/ws.ts";
 export function fetchMembers(
   guildId: string,
   shardId: number,
-  options?: RequestGuildMembers,
+  options?: Omit<RequestGuildMembers, "guildId">,
 ) {
   // You can request 1 member without the intent
   if (
