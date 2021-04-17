@@ -106,6 +106,8 @@ export const endpoints = {
   GUILD_MEMBERS: (guildId: string) => `${GUILDS_BASE(guildId)}/members`,
   GUILD_MEMBER_ROLE: (guildId: string, memberId: string, roleId: string) =>
     `${GUILDS_BASE(guildId)}/members/${memberId}/roles/${roleId}`,
+  GUILD_MEMBERS_SEARCH: (guildId: string) =>
+    `${GUILDS_BASE(guildId)}/members/search`,
   GUILD_PRUNE: (guildId: string) => `${GUILDS_BASE(guildId)}/prune`,
   GUILD_REGIONS: (guildId: string) => `${GUILDS_BASE(guildId)}/regions`,
   GUILD_ROLE: (guildId: string, roleId: string) =>

@@ -130,6 +130,7 @@ export * from "./members/guild_members_chunk.ts";
 export * from "./members/guild_member_add.ts";
 export * from "./members/guild_member_remove.ts";
 export * from "./members/guild_member_update.ts";
+export * from "./members/search_guild_members.ts";
 export * from "./messages/allowed_mentions.ts";
 export * from "./messages/allowed_mentions_types.ts";
 export * from "./messages/attachment.ts";
