@@ -19,7 +19,7 @@ export async function getDiscoveryCategories() {
       (category) => [
         category.id,
         snakeKeysToCamelCase<DiscoveryCategory>(category),
-      ]
+      ],
     ),
   );
 }
