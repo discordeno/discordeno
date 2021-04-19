@@ -12,6 +12,8 @@ export interface ApplicationCommand {
   description: string;
   /** The parameters for the command */
   options?: ApplicationCommandOption[];
+  /** Whether the command is enbaled by default when the app is added to a guild */
+  defaultPermission?: boolean;
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommand */
