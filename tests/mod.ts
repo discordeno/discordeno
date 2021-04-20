@@ -71,6 +71,7 @@ import "./members/search_members.ts";
 
 // Discoveries tests
 import "./discoveries/get_discovery_categories.ts";
+import "./discoveries/valid_discovery_term.ts";
 
 // Final cleanup
 import "./guilds/delete_server.ts";
