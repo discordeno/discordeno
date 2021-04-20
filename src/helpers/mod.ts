@@ -115,8 +115,14 @@ import { executeWebhook } from "./webhooks/execute_webhook.ts";
 import { getWebhook } from "./webhooks/get_webhook.ts";
 import { getWebhooks } from "./webhooks/get_webhooks.ts";
 import { getWebhookWithToken } from "./webhooks/get_webhook_with_token.ts";
+import { addDiscoverySubcategory } from "./discovery/add_discovery_subcategory.ts";
+import { editDiscovery } from "./discovery/edit_discovery.ts";
+import { getDiscoveryCategories } from "./discovery/get_discovery_categories.ts";
+import { removeDiscoverySubcategory } from "./discovery/remove_discovery_subcategory.ts";
+import { validDiscoveryTerm } from "./discovery/valid_discovery_term.ts";
 
 export {
+  addDiscoverySubcategory,
   addReaction,
   addReactions,
   addRole,
@@ -155,6 +161,7 @@ export {
   editBotStatus,
   editChannel,
   editChannelOverwrite,
+  editDiscovery,
   editEmoji,
   editGuild,
   editGuildTemplate,
@@ -179,6 +186,7 @@ export {
   getChannelInvites,
   getChannels,
   getChannelWebhooks,
+  getDiscoveryCategories,
   getEmoji,
   getEmojis,
   getGatewayBot,
@@ -223,6 +231,7 @@ export {
   pruneMembers,
   publishMessage,
   removeAllReactions,
+  removeDiscoverySubcategory,
   removeReaction,
   removeReactionEmoji,
   removeRole,
@@ -239,6 +248,7 @@ export {
   unpinMessage,
   upsertSlashCommand,
   upsertSlashCommands,
+  validDiscoveryTerm,
 };
 
 export let helpers = {
@@ -298,6 +308,12 @@ export let helpers = {
   guildIconURL,
   guildSplashURL,
   leaveGuild,
+  // discovery
+  addDiscoverySubcategory,
+  editDiscovery,
+  getDiscoveryCategories,
+  removeDiscoverySubcategory,
+  validDiscoveryTerm,
   // integrations
   deleteIntegration,
   getIntegrations,

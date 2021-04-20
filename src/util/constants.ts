@@ -181,7 +181,15 @@ export const endpoints = {
   USER_CONNECTIONS: `${baseEndpoints.BASE_URL}/users/@me/connections`,
   USER_NICK: (guildId: string) => `${GUILDS_BASE(guildId)}/members/@me/nick`,
 
-  // oAuth2
+  // Discovery Endpoints
+  DISCOVERY_CATEGORIES: `${baseEndpoints.BASE_URL}/discovery/categories`,
+  DISCOVERY_VALID_TERM: `${baseEndpoints.BASE_URL}/discovery/valid-term`,
+  DISCOVERY_MODIFY: (guildId: string) =>
+    `${GUILDS_BASE(guildId)}/discovery-metadata`,
+  DISCOVERY_SUBCATEGORY: (guildId: string, categoryId: number) =>
+    `${GUILDS_BASE(guildId)}/discovery-categories/${categoryId}`,
+
+  // OAuth2
   OAUTH2_APPLICATION: `${baseEndpoints.BASE_URL}/oauth2/applications/@me`,
 };
 
