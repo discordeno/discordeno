@@ -69,6 +69,9 @@ import "./roles/remove_role.ts";
 // Members tests
 import "./members/search_members.ts";
 
+// Discoveries tests
+import "./discoveries/get_discovery_categories.ts";
+
 // Final cleanup
 import "./guilds/delete_server.ts";
 import "./ws/ws_close.ts";
