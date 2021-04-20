@@ -17,7 +17,8 @@ export enum DiscordGuildFeatures {
   /** Guild has access to create news channels */
   NEWS = "NEWS",
   /** Guild is able to be discovered in the directory */
-  DISCOVERABLE = "DISCOVERABLE",
+  DISCOVERABLE = "DISCOVERABLE", /** guild cannot be discoverable */
+  DISCOVERABLE_DISABLED = "DISCOVERABLE_DISABLED",
   /** Guild is able to be featured in the directory */
   FEATURABLE = "FEATURABLE",
   /** Guild has access to set an animated guild icon */
