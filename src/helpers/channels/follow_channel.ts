@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { DiscordFollowedChannel } from "../../types/channels/followed_channel.ts";
+import { FollowedChannel } from "../../types/channels/followed_channel.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -10,10 +10,13 @@ export async function followChannel(
 ) {
   await requireBotChannelPermissions(targetChannelId, ["MANAGE_WEBHOOKS"]);
 
-  const data =
-    (await rest.runMethod("post", endpoints.CHANNEL_FOLLOW(sourceChannelId), {
+  const data = await rest.runMethod<FollowedChannel>(
+    "post",
+    endpoints.CHANNEL_FOLLOW(sourceChannelId),
+    {
       webhook_channel_id: targetChannelId,
-    })) as DiscordFollowedChannel;
+    },
+  );
 
-  return data.webhook_id;
+  return data.webhookId;
 }
