@@ -1,6 +1,7 @@
 import { applicationId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
 import { EditGlobalApplicationCommand } from "../../types/interactions/edit_global_application_command.ts";
+import { ApplicationCommand } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { validateSlashCommands } from "../../util/utils.ts";
 
@@ -15,13 +16,11 @@ export async function upsertSlashCommands(
 ) {
   validateSlashCommands(options);
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<ApplicationCommand[]>(
     "put",
     guildId
       ? endpoints.COMMANDS_GUILD(applicationId, guildId)
       : endpoints.COMMANDS(applicationId),
     options,
   );
-
-  return result;
 }
