@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordChannel } from "../../types/channels/channel.ts";
+import { Channel } from "../../types/channels/channel.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Fetches a single channel object from the api.
@@ -9,14 +9,14 @@ import { endpoints } from "../../util/constants.ts";
  * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
  */
 export async function getChannel(channelId: string, addToCache = true) {
-  const result = (await rest.runMethod(
+  const result = await rest.runMethod<Channel>(
     "get",
     endpoints.CHANNEL_BASE(channelId),
-  )) as DiscordChannel;
+  );
 
   const discordenoChannel = await structures.createDiscordenoChannel(
     result,
-    result.guild_id,
+    result.guildId,
   );
   if (addToCache) {
     await cacheHandlers.set(
