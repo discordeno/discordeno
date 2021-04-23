@@ -23,11 +23,9 @@ export async function deleteChannel(
     throw new Error(Errors.UPDATES_CHANNEL_CANNOT_BE_DELETED);
   }
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<undefined>(
     "delete",
     endpoints.CHANNEL_BASE(channelId),
     { reason },
   );
-
-  return result;
 }
