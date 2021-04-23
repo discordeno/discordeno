@@ -15,7 +15,7 @@ export async function editChannelOverwrite(
 ): Promise<undefined> {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<undefined>(
     "put",
     endpoints.CHANNEL_OVERWRITE(channelId, overwriteId),
     {
@@ -24,6 +24,4 @@ export async function editChannelOverwrite(
       type: options.type,
     },
   );
-
-  return result;
 }
