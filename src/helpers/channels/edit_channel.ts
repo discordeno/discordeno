@@ -1,6 +1,7 @@
 import { eventHandlers } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
 import { ModifyChannel } from "../../types/channels/modify_channel.ts";
+import { Channel } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,
@@ -58,7 +59,7 @@ export async function editChannel(
     }),
   };
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<Channel>(
     "patch",
     endpoints.CHANNEL_BASE(channelId),
     {
@@ -66,8 +67,6 @@ export async function editChannel(
       reason,
     },
   );
-
-  return result;
 }
 
 interface EditChannelRequest {
