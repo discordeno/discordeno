@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordGuildMemberWithUser } from "../../types/guilds/guild_member.ts";
+import { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Returns a guild member object for the specified user.
@@ -16,7 +16,7 @@ export async function getMember(
   const guild = await cacheHandlers.get("guilds", guildId);
   if (!guild && !options?.force) return;
 
-  const data: DiscordGuildMemberWithUser = (await rest.runMethod(
+  const data = (await rest.runMethod<GuildMemberWithUser>(
     "get",
     endpoints.GUILD_MEMBER(guildId, id),
   ));

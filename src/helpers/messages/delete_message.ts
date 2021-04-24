@@ -20,11 +20,9 @@ export async function deleteMessage(
 
   if (delayMilliseconds) await delay(delayMilliseconds);
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<undefined>(
     "delete",
     endpoints.CHANNEL_MESSAGE(channelId, messageId),
     { reason },
   );
-
-  return result;
 }

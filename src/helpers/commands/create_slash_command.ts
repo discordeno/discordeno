@@ -1,6 +1,7 @@
 import { applicationId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
 import { CreateGlobalApplicationCommand } from "../../types/interactions/create_global_application_command.ts";
+import { ApplicationCommand } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   camelKeysToSnakeCase,
@@ -24,13 +25,11 @@ export async function createSlashCommand(
 ) {
   validateSlashCommands([options], true);
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<ApplicationCommand>(
     "post",
     guildId
       ? endpoints.COMMANDS_GUILD(applicationId, guildId)
       : endpoints.COMMANDS(applicationId),
     camelKeysToSnakeCase(options),
   );
-
-  return result;
 }

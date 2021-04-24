@@ -2,10 +2,9 @@ import { rest } from "../../rest/rest.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { CreateWebhook } from "../../types/webhooks/create_webhook.ts";
 import { Webhook } from "../../types/webhooks/webhook.ts";
-import { DiscordWebhook } from "../../types/webhooks/webhook.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
-import { snakeKeysToCamelCase, urlToBase64 } from "../../util/utils.ts";
+import { urlToBase64 } from "../../util/utils.ts";
 import { validateLength } from "../../util/validate_length.ts";
 
 /**
@@ -27,7 +26,7 @@ export async function createWebhook(
     throw new Error(Errors.INVALID_WEBHOOK_NAME);
   }
 
-  const result: DiscordWebhook = await rest.runMethod(
+  return await rest.runMethod<Webhook>(
     "post",
     endpoints.CHANNEL_WEBHOOKS(channelId),
     {
@@ -35,6 +34,4 @@ export async function createWebhook(
       avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
     },
   );
-
-  return snakeKeysToCamelCase<Webhook>(result);
 }

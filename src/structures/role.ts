@@ -3,12 +3,11 @@ import { cache } from "../cache.ts";
 import { deleteRole } from "../helpers/roles/delete_role.ts";
 import { editRole } from "../helpers/roles/edit_role.ts";
 import { CreateGuildRole } from "../types/guilds/create_guild_role.ts";
-import { DiscordGuildRoleCreate } from "../types/guilds/guild_role_create.ts";
 import { Errors } from "../types/misc/errors.ts";
 import { Role } from "../types/permissions/role.ts";
 import { Collection } from "../util/collection.ts";
 import { highestRole } from "../util/permissions.ts";
-import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
+import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 import { DiscordenoMember } from "./member.ts";
 
@@ -30,7 +29,7 @@ const baseRole: Partial<DiscordenoRole> = {
 
   // METHODS
   delete() {
-    return deleteRole(this.guildId!, this.id!).catch(console.error);
+    return deleteRole(this.guildId!, this.id!);
   },
   edit(options) {
     return editRole(this.guildId!, this.id!, options);
@@ -67,15 +66,15 @@ const baseRole: Partial<DiscordenoRole> = {
 };
 
 // deno-lint-ignore require-await
-export async function createDiscordenoRole(data: DiscordGuildRoleCreate) {
+export async function createDiscordenoRole(
+  data: { role: Role } & {
+    guildId: string;
+  },
+) {
   const {
     tags = {},
     ...rest
-  } = snakeKeysToCamelCase<
-    Role & {
-      guildId: string;
-    }
-  >({ guildId: data.guild_id, ...data.role });
+  } = ({ guildId: data.guildId, ...data.role });
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {

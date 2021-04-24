@@ -1,7 +1,7 @@
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
-import { DiscordMessage } from "../../types/messages/message.ts";
+import { Message } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { EditWebhookMessage } from "../../types/webhooks/edit_webhook_message.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -60,12 +60,11 @@ export async function editWebhookMessage(
     }
   }
 
-  const result = (await rest.runMethod(
+  const result = await rest.runMethod<Message>(
     "patch",
     endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId),
     { ...options, allowedMentions: options.allowedMentions },
-  )) as DiscordMessage;
+  );
 
-  const message = await structures.createDiscordenoMessage(result);
-  return message;
+  return await structures.createDiscordenoMessage(result);
 }

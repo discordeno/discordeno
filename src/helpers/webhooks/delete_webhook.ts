@@ -6,10 +6,8 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 export async function deleteWebhook(channelId: string, webhookId: string) {
   await requireBotChannelPermissions(channelId, ["MANAGE_WEBHOOKS"]);
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<undefined>(
     "delete",
     endpoints.WEBHOOK_ID(webhookId),
   );
-
-  return result;
 }

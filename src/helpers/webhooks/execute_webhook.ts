@@ -1,7 +1,7 @@
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
-import { DiscordMessage } from "../../types/messages/message.ts";
+import { Message } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { ExecuteWebhook } from "../../types/webhooks/execute_webhook.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -64,7 +64,7 @@ export async function executeWebhook(
     }
   }
 
-  const result = await rest.runMethod(
+  const result = await rest.runMethod<Message>(
     "post",
     `${endpoints.WEBHOOK(webhookId, webhookToken)}${
       options.wait ? "?wait=true" : ""
@@ -75,7 +75,8 @@ export async function executeWebhook(
       avatar_url: options.avatarUrl,
     },
   );
+  // TODO: not sure
   if (!options.wait) return;
 
-  return structures.createDiscordenoMessage(result as DiscordMessage);
+  return structures.createDiscordenoMessage(result);
 }

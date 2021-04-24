@@ -1,6 +1,6 @@
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordGuild } from "../../types/guilds/guild.ts";
+import { Guild } from "../../types/guilds/guild.ts";
 import { ModifyGuild } from "../../types/guilds/modify_guild.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
@@ -22,11 +22,12 @@ export async function editGuild(guildId: string, options: ModifyGuild) {
     options.splash = await urlToBase64(options.splash);
   }
 
-  const result = await rest.runMethod(
+  const result = await rest.runMethod<Guild>(
     "patch",
     endpoints.GUILDS_BASE(guildId),
     options,
-  ) as DiscordGuild;
+  );
 
+  // TODO: use ws.botGatewayData to calculate the shard ID
   return structures.createDiscordenoGuild(result, -1);
 }

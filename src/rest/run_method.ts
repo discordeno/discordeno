@@ -1,4 +1,5 @@
 import { API_VERSION, BASE_URL, IMAGE_BASE_URL } from "../util/constants.ts";
+import { snakeKeysToCamelCase } from "../util/utils.ts";
 import { rest } from "./rest.ts";
 
 // deno-lint-ignore no-explicit-any
@@ -47,7 +48,7 @@ export async function runMethod<T = any>(
         method,
         reject,
         respond: (data: { status: number; body?: string }) =>
-          resolve(JSON.parse(data.body || "{}")),
+          resolve(snakeKeysToCamelCase<T>(JSON.parse(data.body || "{}"))),
       },
       {
         bucketId,

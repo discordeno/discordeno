@@ -9,7 +9,6 @@ import { addRole } from "../helpers/roles/add_role.ts";
 import { removeRole } from "../helpers/roles/remove_role.ts";
 import { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
 import {
-  DiscordGuildMemberWithUser,
   GuildMember,
   GuildMemberWithUser,
 } from "../types/guilds/guild_member.ts";
@@ -19,7 +18,7 @@ import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { User } from "../types/users/user.ts";
 import { Collection } from "../util/collection.ts";
-import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
+import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 
 const baseMember: Partial<DiscordenoMember> = {
@@ -74,7 +73,7 @@ const baseMember: Partial<DiscordenoMember> = {
 
 export async function createDiscordenoMember(
   // The `user` param in `DiscordGuildMember` is optional since discord does not send it in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events. But this data in there is required to build this structure so it is required in this case
-  data: DiscordGuildMemberWithUser,
+  data: GuildMemberWithUser,
   guildId: string,
 ) {
   const {
@@ -82,7 +81,7 @@ export async function createDiscordenoMember(
     joinedAt,
     premiumSince,
     ...rest
-  } = snakeKeysToCamelCase<GuildMemberWithUser>(data);
+  } = data;
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
 

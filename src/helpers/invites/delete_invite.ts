@@ -1,13 +1,12 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
-import { DiscordInvite, Invite } from "../../types/invites/invite.ts";
+import { Invite } from "../../types/invites/invite.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasChannelPermissions,
   requireBotGuildPermissions,
 } from "../../util/permissions.ts";
-import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 /** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
 export async function deleteInvite(channelId: string, inviteCode: string) {
@@ -23,10 +22,8 @@ export async function deleteInvite(channelId: string, inviteCode: string) {
     await requireBotGuildPermissions(channel!.guildId, ["MANAGE_GUILD"]);
   }
 
-  const result: DiscordInvite = await rest.runMethod(
+  return await rest.runMethod<Invite>(
     "delete",
     endpoints.INVITE(inviteCode),
   );
-
-  return snakeKeysToCamelCase<Invite>(result);
 }

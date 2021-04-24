@@ -1,15 +1,15 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { DiscordGuildRoleDelete } from "../../types/guilds/guild_role_delete.ts";
+import { GuildRoleDelete } from "../../types/guilds/guild_role_delete.ts";
 
 export async function handleGuildRoleDelete(data: DiscordGatewayPayload) {
-  const payload = data.d as DiscordGuildRoleDelete;
-  const guild = await cacheHandlers.get("guilds", payload.guild_id);
+  const payload = data.d as GuildRoleDelete;
+  const guild = await cacheHandlers.get("guilds", payload.guildId);
   if (!guild) return;
 
-  const cachedRole = guild.roles.get(payload.role_id)!;
-  guild.roles.delete(payload.role_id);
+  const cachedRole = guild.roles.get(payload.roleId)!;
+  guild.roles.delete(payload.roleId);
 
   if (cachedRole) eventHandlers.roleDelete?.(guild, cachedRole);
 
@@ -28,9 +28,9 @@ export async function handleGuildRoleDelete(data: DiscordGatewayPayload) {
         `2. Running forEach loop in CHANNEL_DELTE file.`,
       );
       // Member does not have this role
-      if (!g.roles.includes(payload.role_id)) return;
+      if (!g.roles.includes(payload.roleId)) return;
       // Remove this role from the members cache
-      g.roles = g.roles.filter((id) => id !== payload.role_id);
+      g.roles = g.roles.filter((id) => id !== payload.roleId);
       cacheHandlers.set("members", member.id, member);
     });
   });

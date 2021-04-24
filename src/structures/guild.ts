@@ -15,11 +15,11 @@ import { unbanMember } from "../helpers/members/unban_member.ts";
 import { GetGuildAuditLog } from "../types/audit_log/get_guild_audit_log.ts";
 import { Emoji } from "../types/emojis/emoji.ts";
 import { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
-import { DiscordGuild, Guild } from "../types/guilds/guild.ts";
+import { Guild } from "../types/guilds/guild.ts";
 import { DiscordGuildFeatures } from "../types/guilds/guild_features.ts";
 import {
-  DiscordGuildMemberWithUser,
   GuildMember,
+  GuildMemberWithUser,
 } from "../types/guilds/guild_member.ts";
 import { ModifyGuild } from "../types/guilds/modify_guild.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
@@ -27,11 +27,7 @@ import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { PresenceUpdate } from "../types/misc/presence_update.ts";
 import { VoiceState } from "../types/voice/voice_state.ts";
 import { Collection } from "../util/collection.ts";
-import {
-  camelKeysToSnakeCase,
-  createNewProp,
-  snakeKeysToCamelCase,
-} from "../util/utils.ts";
+import { createNewProp } from "../util/utils.ts";
 import { DiscordenoChannel } from "./channel.ts";
 import { DiscordenoMember } from "./member.ts";
 import { structures } from "./mod.ts";
@@ -115,7 +111,7 @@ const baseGuild: Partial<DiscordenoGuild> = {
 };
 
 export async function createDiscordenoGuild(
-  data: DiscordGuild,
+  data: Guild,
   shardId: number,
 ) {
   const {
@@ -127,11 +123,11 @@ export async function createDiscordenoGuild(
     emojis,
     members = [],
     ...rest
-  } = snakeKeysToCamelCase<Guild>(data);
+  } = data;
 
   const roles = await Promise.all(
     (data.roles || []).map((role) =>
-      structures.createDiscordenoRole({ role, guild_id: rest.id })
+      structures.createDiscordenoRole({ role, guildId: rest.id })
     ),
   );
 
@@ -188,7 +184,7 @@ export async function createDiscordenoGuild(
     await Promise.allSettled(
       members.map(async (member) => {
         const discordenoMember = await structures.createDiscordenoMember(
-          camelKeysToSnakeCase(member) as DiscordGuildMemberWithUser,
+          member as GuildMemberWithUser,
           guild.id,
         );
 
