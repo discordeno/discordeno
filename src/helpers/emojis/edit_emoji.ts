@@ -1,5 +1,6 @@
 import { rest } from "../../rest/rest.ts";
 import { ModifyGuildEmoji } from "../../types/emojis/modify_guild_emoji.ts";
+import { Emoji } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -11,7 +12,7 @@ export async function editEmoji(
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_EMOJIS"]);
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<Emoji>(
     "patch",
     endpoints.GUILD_EMOJI(guildId, id),
     {
@@ -19,6 +20,4 @@ export async function editEmoji(
       roles: options.roles,
     },
   );
-
-  return result;
 }
