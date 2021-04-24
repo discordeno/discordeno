@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { GuildMember } from "../../types/guilds/guild_member.ts";
+import { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { ModifyGuildMember } from "../../types/mod.ts";
 import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
@@ -69,7 +69,7 @@ export async function editMember(
 
   await requireBotGuildPermissions(guildId, [...requiredPerms]);
 
-  const result = await rest.runMethod<GuildMember>(
+  const result = await rest.runMethod<GuildMemberWithUser>(
     "patch",
     endpoints.GUILD_MEMBER(guildId, memberId),
     camelKeysToSnakeCase(options),

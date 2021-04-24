@@ -13,9 +13,9 @@ import { sendMessage } from "../helpers/messages/send_message.ts";
 import { GuildMember } from "../types/guilds/guild_member.ts";
 import { CreateMessage } from "../types/messages/create_message.ts";
 import { EditMessage } from "../types/messages/edit_message.ts";
-import { DiscordMessage, Message } from "../types/messages/message.ts";
+import { Message } from "../types/messages/message.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
-import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
+import { createNewProp } from "../util/utils.ts";
 import { DiscordenoChannel } from "./channel.ts";
 import { DiscordenoGuild } from "./guild.ts";
 import { DiscordenoMember } from "./member.ts";
@@ -126,7 +126,7 @@ const baseMessage: Partial<DiscordenoMessage> = {
   },
 };
 
-export async function createDiscordenoMessage(data: DiscordMessage) {
+export async function createDiscordenoMessage(data: Message) {
   const {
     guildId = "",
     channelId,
@@ -135,7 +135,7 @@ export async function createDiscordenoMessage(data: DiscordMessage) {
     mentionRoles = [],
     editedTimestamp,
     ...rest
-  } = snakeKeysToCamelCase<Message>(data);
+  } = data;
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {

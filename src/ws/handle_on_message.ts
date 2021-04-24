@@ -4,7 +4,7 @@ import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
 import { DiscordHello } from "../types/gateway/hello.ts";
 import { DiscordReady } from "../types/gateway/ready.ts";
-import { delay } from "../util/utils.ts";
+import { delay, snakeKeysToCamelCase } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
 import { identify } from "./identify.ts";
 import { resume } from "./resume.ts";
@@ -127,7 +127,10 @@ export async function handleOnMessage(message: any, shardId: number) {
 
         if (!messageData.t) return;
 
-        return handlers[messageData.t]?.(messageData, shardId);
+        return handlers[messageData.t]?.(
+          snakeKeysToCamelCase(messageData),
+          shardId,
+        );
       }
 
       break;

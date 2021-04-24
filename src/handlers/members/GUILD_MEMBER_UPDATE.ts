@@ -2,22 +2,20 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { DiscordGuildMemberUpdate } from "../../types/members/guild_member_update.ts";
+import { GuildMemberUpdate } from "../../types/members/guild_member_update.ts";
 
 export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
-  const payload = data.d as DiscordGuildMemberUpdate;
-  const guild = await cacheHandlers.get("guilds", payload.guild_id);
+  const payload = data.d as GuildMemberUpdate;
+  const guild = await cacheHandlers.get("guilds", payload.guildId);
   if (!guild) return;
 
   const cachedMember = await cacheHandlers.get("members", payload.user.id);
-  const guildMember = cachedMember?.guilds.get(payload.guild_id);
+  const guildMember = cachedMember?.guilds.get(payload.guildId);
 
   const newMemberData = {
     ...payload,
-    // deno-lint-ignore camelcase
-    premium_since: payload.premium_since || undefined,
-    // deno-lint-ignore camelcase
-    joined_at: new Date(guildMember?.joinedAt || Date.now())
+    premiumSince: payload.premiumSince || undefined,
+    joinedAt: new Date(guildMember?.joinedAt || Date.now())
       .toISOString(),
     deaf: guildMember?.deaf || false,
     mute: guildMember?.mute || false,
@@ -25,7 +23,7 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
   };
   const discordenoMember = await structures.createDiscordenoMember(
     newMemberData,
-    payload.guild_id,
+    payload.guildId,
   );
   await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 

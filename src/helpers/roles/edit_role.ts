@@ -26,5 +26,5 @@ export async function editRole(
     },
   );
 
-  return await structures.createDiscordenoRole(result);
+  return await structures.createDiscordenoRole({ role: result, guildId });
 }

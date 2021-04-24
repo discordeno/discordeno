@@ -2,15 +2,15 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { DiscordGuildMemberWithUser } from "../../types/guilds/guild_member.ts";
-import { DiscordInteraction } from "../../types/interactions/interaction.ts";
+import { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
+import { Interaction } from "../../types/interactions/interaction.ts";
 
 export async function handleInteractionCreate(data: DiscordGatewayPayload) {
-  const payload = data.d as DiscordInteraction;
-  const discordenoMember = payload.guild_id
+  const payload = data.d as Interaction;
+  const discordenoMember = payload.guildId
     ? await structures.createDiscordenoMember(
-      payload.member as DiscordGuildMemberWithUser,
-      payload.guild_id,
+      payload.member as GuildMemberWithUser,
+      payload.guildId,
     )
     : undefined;
   if (discordenoMember) {

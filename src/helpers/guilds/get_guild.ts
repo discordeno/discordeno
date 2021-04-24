@@ -29,7 +29,7 @@ export async function getGuild(
 
   const structure = await structures.createDiscordenoGuild(
     result,
-    (BigInt(guildId) >> 22n) % BigInt(ws.botGatewayData.shards),
+    Number((BigInt(guildId) >> 22n) % BigInt(ws.botGatewayData.shards)),
   );
 
   if (options.addToCache) {
