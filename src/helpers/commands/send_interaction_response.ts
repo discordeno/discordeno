@@ -17,9 +17,13 @@ export async function sendInteractionResponse(
 ) {
   // If its already been executed, we need to send a followup response
   if (cache.executedSlashCommands.has(token)) {
-    return rest.runMethod("post", endpoints.WEBHOOK(applicationId, token), {
-      ...options,
-    });
+    return await rest.runMethod(
+      "post",
+      endpoints.WEBHOOK(applicationId, token),
+      {
+        ...options,
+      },
+    );
   }
 
   // Expire in 15 minutes
@@ -45,11 +49,9 @@ export async function sendInteractionResponse(
     options.data = { ...options.data, allowedMentions: { parse: [] } };
   }
 
-  const result = await rest.runMethod(
+  return await rest.runMethod(
     "post",
     endpoints.INTERACTION_ID_TOKEN(id, token),
     options,
   );
-
-  return result;
 }
