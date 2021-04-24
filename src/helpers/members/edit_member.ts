@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordGuildMember } from "../../types/guilds/guild_member.ts";
+import { GuildMember } from "../../types/guilds/guild_member.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { ModifyGuildMember } from "../../types/mod.ts";
 import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
@@ -10,10 +10,7 @@ import {
   requireBotChannelPermissions,
   requireBotGuildPermissions,
 } from "../../util/permissions.ts";
-import {
-  camelKeysToSnakeCase,
-  snakeKeysToCamelCase,
-} from "../../util/utils.ts";
+import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 /** Edit the member */
 export async function editMember(
@@ -72,13 +69,14 @@ export async function editMember(
 
   await requireBotGuildPermissions(guildId, [...requiredPerms]);
 
-  const result = await rest.runMethod(
+  const result = await rest.runMethod<GuildMember>(
     "patch",
     endpoints.GUILD_MEMBER(guildId, memberId),
     camelKeysToSnakeCase(options),
-  ) as DiscordGuildMember;
+  );
+
   const member = await structures.createDiscordenoMember(
-    snakeKeysToCamelCase(result),
+    result,
     guildId,
   );
 

@@ -19,11 +19,11 @@ export async function pruneMembers(
 
   await requireBotGuildPermissions(guildId, ["KICK_MEMBERS"]);
 
-  const result = await rest.runMethod(
+  const result = await rest.runMethod<{ pruned: number }>(
     "post",
     endpoints.GUILD_PRUNE(guildId),
     camelKeysToSnakeCase(options),
   );
 
-  return result;
+  return result.pruned;
 }
