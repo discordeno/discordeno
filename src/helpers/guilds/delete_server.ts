@@ -3,8 +3,9 @@ import { endpoints } from "../../util/constants.ts";
 
 /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event.
  */
-export async function deleteServer(guildId: string): Promise<undefined> {
-  const result = await rest.runMethod("delete", endpoints.GUILDS_BASE(guildId));
-
-  return result;
+export async function deleteServer(guildId: string) {
+  return await rest.runMethod<undefined>(
+    "delete",
+    endpoints.GUILDS_BASE(guildId),
+  );
 }
