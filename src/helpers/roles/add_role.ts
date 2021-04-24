@@ -25,11 +25,9 @@ export async function addRole(
 
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<undefined>(
     "put",
     endpoints.GUILD_MEMBER_ROLE(guildId, memberId, roleId),
     { reason },
   );
-
-  return result;
 }

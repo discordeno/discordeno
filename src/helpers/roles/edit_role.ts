@@ -1,5 +1,6 @@
 import { rest } from "../../rest/rest.ts";
-import { CreateGuildRole } from "../../types/mod.ts";
+import { structures } from "../../structures/mod.ts";
+import { CreateGuildRole, Role } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,
@@ -14,7 +15,7 @@ export async function editRole(
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
-  const result = await rest.runMethod(
+  const result = await rest.runMethod<Role>(
     "patch",
     endpoints.GUILD_ROLE(guildId, id),
     {
@@ -25,5 +26,5 @@ export async function editRole(
     },
   );
 
-  return result;
+  return await structures.createDiscordenoRole(result);
 }

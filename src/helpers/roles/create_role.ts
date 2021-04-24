@@ -2,7 +2,7 @@ import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { CreateGuildRole } from "../../types/guilds/create_guild_role.ts";
-import { DiscordRole } from "../../types/permissions/role.ts";
+import { Role } from "../../types/permissions/role.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,
@@ -17,7 +17,7 @@ export async function createRole(
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
-  const result: DiscordRole = await rest.runMethod(
+  const result = await rest.runMethod<Role>(
     "post",
     endpoints.GUILD_ROLES(guildId),
     {
@@ -34,5 +34,6 @@ export async function createRole(
   const guild = await cacheHandlers.get("guilds", guildId);
   guild?.roles.set(role.id, role);
 
+  // TODO: ADD TO CACHE?
   return role;
 }
