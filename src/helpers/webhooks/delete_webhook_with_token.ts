@@ -6,10 +6,8 @@ export async function deleteWebhookWithToken(
   webhookId: string,
   webhookToken: string,
 ) {
-  const result = await rest.runMethod(
+  return await rest.runMethod<undefined>(
     "delete",
     endpoints.WEBHOOK(webhookId, webhookToken),
   );
-
-  return result;
 }
