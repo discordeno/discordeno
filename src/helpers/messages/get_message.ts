@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordMessage } from "../../types/messages/message.ts";
+import { Message } from "../../types/messages/message.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -14,10 +14,10 @@ export async function getMessage(channelId: string, id: string) {
     ]);
   }
 
-  const result = (await rest.runMethod(
+  const result = await rest.runMethod<Message>(
     "get",
     endpoints.CHANNEL_MESSAGE(channelId, id),
-  )) as DiscordMessage;
+  );
 
-  return structures.createDiscordenoMessage(result);
+  return await structures.createDiscordenoMessage(result);
 }
