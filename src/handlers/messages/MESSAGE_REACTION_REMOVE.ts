@@ -2,16 +2,14 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import {
-  DiscordMessageReactionRemove,
   MessageReactionRemove,
 } from "../../types/messages/message_reaction_remove.ts";
-import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 export async function handleMessageReactionRemove(
   data: DiscordGatewayPayload,
 ) {
-  const payload = data.d as DiscordMessageReactionRemove;
-  const message = await cacheHandlers.get("messages", payload.message_id);
+  const payload = data.d as MessageReactionRemove;
+  const message = await cacheHandlers.get("messages", payload.messageId);
 
   if (message) {
     const reaction = message.reactions?.find((reaction) =>
@@ -27,12 +25,12 @@ export async function handleMessageReactionRemove(
       }
       if (!message.reactions?.length) message.reactions = undefined;
 
-      await cacheHandlers.set("messages", payload.message_id, message);
+      await cacheHandlers.set("messages", payload.messageId, message);
     }
   }
 
   eventHandlers.reactionRemove?.(
-    snakeKeysToCamelCase<MessageReactionRemove>(payload),
+    payload,
     message,
   );
 }

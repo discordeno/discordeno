@@ -12,8 +12,10 @@ import { endpoints } from "../../util/constants.ts";
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  */
 export async function getEmojis(guildId: string, addToCache = true) {
-  const result =
-    (await rest.runMethod("get", endpoints.GUILD_EMOJIS(guildId))) as Emoji[];
+  const result = await rest.runMethod<Emoji[]>(
+    "get",
+    endpoints.GUILD_EMOJIS(guildId),
+  );
 
   if (addToCache) {
     const guild = await cacheHandlers.get("guilds", guildId);
@@ -27,7 +29,7 @@ export async function getEmojis(guildId: string, addToCache = true) {
       guild.emojis.set(emoji.id!, emoji);
     });
 
-    cacheHandlers.set("guilds", guildId, guild);
+    await cacheHandlers.set("guilds", guildId, guild);
   }
 
   return new Collection(result.map((e) => [e.id!, e]));

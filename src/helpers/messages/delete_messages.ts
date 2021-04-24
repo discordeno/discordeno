@@ -21,7 +21,7 @@ export async function deleteMessages(
     );
   }
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<undefined>(
     "post",
     endpoints.CHANNEL_BULK_DELETE(channelId),
     {
@@ -29,6 +29,4 @@ export async function deleteMessages(
       reason,
     },
   );
-
-  return result;
 }

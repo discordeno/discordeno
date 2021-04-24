@@ -1,5 +1,6 @@
 import { rest } from "../../rest/rest.ts";
 import { Errors } from "../../types/misc/errors.ts";
+import { User } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { urlToBase64 } from "../../util/utils.ts";
 
@@ -26,10 +27,9 @@ export async function editBotProfile(username?: string, botAvatarURL?: string) {
   }
 
   const avatar = botAvatarURL ? await urlToBase64(botAvatarURL) : undefined;
-  const result = await rest.runMethod("patch", endpoints.USER_BOT, {
+
+  return await rest.runMethod<User>("patch", endpoints.USER_BOT, {
     username: username?.trim(),
     avatar,
   });
-
-  return result;
 }

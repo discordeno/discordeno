@@ -13,10 +13,8 @@ export async function removeReaction(
     reaction = reaction.substring(3, reaction.length - 1);
   }
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<undefined>(
     "delete",
     endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction),
   );
-
-  return result;
 }

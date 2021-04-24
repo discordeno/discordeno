@@ -3,7 +3,6 @@ import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordenoEditWebhookMessage } from "../../types/discordeno/edit_webhook_message.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
-import { DiscordMessage } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 
@@ -69,10 +68,10 @@ export async function editSlashResponse(
   );
 
   // If the original message was edited, this will not return a message
-  if (!options.messageId) return result;
+  if (!options.messageId) return result as undefined;
 
   const message = await structures.createDiscordenoMessage(
-    result as DiscordMessage,
+    result,
   );
   return message;
 }

@@ -1,5 +1,6 @@
 import { rest } from "../../rest/rest.ts";
 import { CreateChannelInvite } from "../../types/invites/create_channel_invite.ts";
+import { Invite } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -12,11 +13,9 @@ export async function createInvite(
 
   // TODO: add proper options validation
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<Invite>(
     "post",
     endpoints.CHANNEL_INVITES(channelId),
     options,
   );
-
-  return result;
 }

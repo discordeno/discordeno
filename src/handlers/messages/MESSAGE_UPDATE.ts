@@ -2,11 +2,11 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { DiscordMessage } from "../../types/messages/message.ts";
+import { Message } from "../../types/messages/message.ts";
 
 export async function handleMessageUpdate(data: DiscordGatewayPayload) {
-  const payload = data.d as DiscordMessage;
-  const channel = await cacheHandlers.get("channels", payload.channel_id);
+  const payload = data.d as Message;
+  const channel = await cacheHandlers.get("channels", payload.channelId);
   if (!channel) return;
 
   const oldMessage = await cacheHandlers.get("messages", payload.id);
@@ -14,7 +14,7 @@ export async function handleMessageUpdate(data: DiscordGatewayPayload) {
 
   // Messages with embeds can trigger update but they wont have edited_timestamp
   if (
-    !payload.edited_timestamp ||
+    !payload.editedTimestamp ||
     (oldMessage.content === payload.content)
   ) {
     return;

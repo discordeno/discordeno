@@ -2,7 +2,6 @@ import { rest } from "../../rest/rest.ts";
 import { GuildWidget } from "../../types/guilds/guild_widget.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
-import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 /** Modify a guild widget object for the guild. Requires the MANAGE_GUILD permission. */
 export async function editWidget(
@@ -12,7 +11,7 @@ export async function editWidget(
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<GuildWidget>(
     "patch",
     endpoints.GUILD_WIDGET(guildId),
     {
@@ -20,6 +19,4 @@ export async function editWidget(
       channel_id: channelId,
     },
   );
-
-  return snakeKeysToCamelCase<GuildWidget>(result);
 }

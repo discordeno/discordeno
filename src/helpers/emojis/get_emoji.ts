@@ -14,16 +14,16 @@ export async function getEmoji(
   emojiId: string,
   addToCache = true,
 ) {
-  const result = (await rest.runMethod(
+  const result = await rest.runMethod<Emoji>(
     "get",
     endpoints.GUILD_EMOJI(guildId, emojiId),
-  )) as Emoji;
+  );
 
   if (addToCache) {
     const guild = await cacheHandlers.get("guilds", guildId);
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
     guild.emojis.set(emojiId, result);
-    cacheHandlers.set(
+    await cacheHandlers.set(
       "guilds",
       guildId,
       guild,

@@ -1,9 +1,8 @@
 import { rest } from "../../rest/rest.ts";
 import { ModifyGuildTemplate } from "../../types/templates/modify_guild_template.ts";
-import { DiscordTemplate, Template } from "../../types/templates/template.ts";
+import { Template } from "../../types/templates/template.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
-import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 /**
  * Edit a template's metadata.
@@ -24,11 +23,9 @@ export async function editGuildTemplate(
     throw new Error("The description can only be in between 0-120 characters.");
   }
 
-  const template = await rest.runMethod<DiscordTemplate>(
+  return await rest.runMethod<Template>(
     "patch",
     `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
     data,
   );
-
-  return snakeKeysToCamelCase<Template>(template);
 }

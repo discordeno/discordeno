@@ -6,8 +6,8 @@ import { endpoints } from "../../util/constants.ts";
 export async function deleteSlashResponse(
   token: string,
   messageId?: string,
-): Promise<undefined> {
-  const result = await rest.runMethod(
+) {
+  return await rest.runMethod<undefined>(
     "delete",
     messageId
       ? endpoints.INTERACTION_ID_TOKEN_MESSAGE_ID(
@@ -17,6 +17,4 @@ export async function deleteSlashResponse(
       )
       : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationId, token),
   );
-
-  return result;
 }

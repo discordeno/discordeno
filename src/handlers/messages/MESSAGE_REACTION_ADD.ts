@@ -3,14 +3,13 @@ import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import {
-  DiscordMessageReactionAdd,
   MessageReactionAdd,
 } from "../../types/messages/message_reaction_add.ts";
 import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 export async function handleMessageReactionAdd(data: DiscordGatewayPayload) {
-  const payload = data.d as DiscordMessageReactionAdd;
-  const message = await cacheHandlers.get("messages", payload.message_id);
+  const payload = data.d as MessageReactionAdd;
+  const message = await cacheHandlers.get("messages", payload.messageId);
 
   if (message) {
     const reactionExisted = message.reactions?.find(
@@ -23,7 +22,7 @@ export async function handleMessageReactionAdd(data: DiscordGatewayPayload) {
     else {
       const newReaction = {
         count: 1,
-        me: payload.user_id === botId,
+        me: payload.userId === botId,
         emoji: { ...payload.emoji, id: payload.emoji.id || undefined },
       };
       message.reactions = message.reactions
@@ -31,11 +30,11 @@ export async function handleMessageReactionAdd(data: DiscordGatewayPayload) {
         : [newReaction];
     }
 
-    await cacheHandlers.set("messages", payload.message_id, message);
+    await cacheHandlers.set("messages", payload.messageId, message);
   }
 
-  if (payload.member && payload.guild_id) {
-    const guild = await cacheHandlers.get("guilds", payload.guild_id);
+  if (payload.member && payload.guildId) {
+    const guild = await cacheHandlers.get("guilds", payload.guildId);
     if (guild) {
       const discordenoMember = await structures.createDiscordenoMember(
         payload.member,

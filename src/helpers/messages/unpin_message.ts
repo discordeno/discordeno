@@ -9,12 +9,10 @@ export async function unpin(
 ): Promise<undefined> {
   await requireBotChannelPermissions(channelId, ["MANAGE_MESSAGES"]);
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<undefined>(
     "delete",
     endpoints.CHANNEL_PIN(channelId, messageId),
   );
-
-  return result;
 }
 
 // aliases

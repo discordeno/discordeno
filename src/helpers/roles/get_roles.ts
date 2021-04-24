@@ -1,9 +1,8 @@
 import { rest } from "../../rest/rest.ts";
-import { DiscordRole, Role } from "../../types/permissions/role.ts";
+import { Role } from "../../types/permissions/role.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
-import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 /** Returns a list of role objects for the guild.
  *
@@ -12,12 +11,14 @@ import { snakeKeysToCamelCase } from "../../util/utils.ts";
 export async function getRoles(guildId: string) {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
-  const result = (await rest.runMethod(
+  const result = await rest.runMethod<Role[]>(
     "get",
     endpoints.GUILD_ROLES(guildId),
-  )) as DiscordRole[];
+  );
+
+  // TODO: addToCache
 
   return new Collection(
-    result.map((role) => [role.id, snakeKeysToCamelCase<Role>(role)]),
+    result.map((role) => [role.id, role]),
   );
 }

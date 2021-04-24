@@ -1,13 +1,13 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { DiscordMessageReactionRemoveEmoji } from "../../types/messages/message_reaction_remove_emoji.ts";
+import { MessageReactionRemoveEmoji } from "../../types/messages/message_reaction_remove_emoji.ts";
 
 export async function handleMessageReactionRemoveEmoji(
   data: DiscordGatewayPayload,
 ) {
-  const payload = data.d as DiscordMessageReactionRemoveEmoji;
-  const message = await cacheHandlers.get("messages", payload.message_id);
+  const payload = data.d as MessageReactionRemoveEmoji;
+  const message = await cacheHandlers.get("messages", payload.messageId);
 
   if (message?.reactions) {
     message.reactions = message.reactions.filter(
@@ -21,13 +21,13 @@ export async function handleMessageReactionRemoveEmoji(
 
     if (!message.reactions.length) message.reactions = undefined;
 
-    await cacheHandlers.set("messages", payload.message_id, message);
+    await cacheHandlers.set("messages", payload.messageId, message);
   }
 
   eventHandlers.reactionRemoveEmoji?.(
     payload.emoji,
-    payload.message_id,
-    payload.channel_id,
-    payload.guild_id,
+    payload.messageId,
+    payload.channelId,
+    payload.guildId,
   );
 }

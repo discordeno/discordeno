@@ -7,7 +7,8 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function getWidgetSettings(guildId: string) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  const result = await rest.runMethod("get", endpoints.GUILD_WIDGET(guildId));
-
-  return result as GuildWidget;
+  return await rest.runMethod<GuildWidget>(
+    "get",
+    endpoints.GUILD_WIDGET(guildId),
+  );
 }

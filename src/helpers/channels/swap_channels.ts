@@ -6,16 +6,14 @@ import { endpoints } from "../../util/constants.ts";
 export async function swapChannels(
   guildId: string,
   channelPositions: ModifyGuildChannelPositions[],
-): Promise<undefined> {
+) {
   if (channelPositions.length < 2) {
     throw "You must provide at least two channels to be swapped.";
   }
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<undefined>(
     "patch",
     endpoints.GUILD_CHANNELS(guildId),
     channelPositions,
   );
-
-  return result;
 }
