@@ -3,10 +3,7 @@ import { AuditLog } from "../../types/audit_log/audit_log.ts";
 import { GetGuildAuditLog } from "../../types/audit_log/get_guild_audit_log.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
-import {
-  camelKeysToSnakeCase,
-  snakeKeysToCamelCase,
-} from "../../util/utils.ts";
+import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
 export async function getAuditLogs(
@@ -15,7 +12,7 @@ export async function getAuditLogs(
 ) {
   await requireBotGuildPermissions(guildId, ["VIEW_AUDIT_LOG"]);
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<AuditLog>(
     "get",
     endpoints.GUILD_AUDIT_LOGS(guildId),
     camelKeysToSnakeCase({
@@ -25,6 +22,4 @@ export async function getAuditLogs(
         : 50,
     }),
   );
-
-  return snakeKeysToCamelCase<AuditLog>(result);
 }
