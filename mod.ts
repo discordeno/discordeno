@@ -6,6 +6,7 @@ export * from "./src/rest/mod.ts";
 export * from "./src/structures/channel.ts";
 export * from "./src/structures/guild.ts";
 export * from "./src/structures/member.ts";
+export * from "./src/structures/message.ts";
 export * from "./src/structures/mod.ts";
 export * from "./src/structures/role.ts";
 export * from "./src/types/mod.ts";
