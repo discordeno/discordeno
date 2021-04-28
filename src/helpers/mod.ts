@@ -120,6 +120,8 @@ import { editDiscovery } from "./discovery/edit_discovery.ts";
 import { getDiscoveryCategories } from "./discovery/get_discovery_categories.ts";
 import { removeDiscoverySubcategory } from "./discovery/remove_discovery_subcategory.ts";
 import { validDiscoveryTerm } from "./discovery/valid_discovery_term.ts";
+import { getSlashCommandPermission } from "./commands/get_slash_command_permission.ts";
+import { getSlashCommandPermissions } from "./commands/get_slash_command_permissions.ts";
 
 export {
   addDiscoverySubcategory,
@@ -206,6 +208,8 @@ export {
   getReactions,
   getRoles,
   getSlashCommand,
+  getSlashCommandPermission,
+  getSlashCommandPermissions,
   getSlashCommands,
   getTemplate,
   getUser,
@@ -272,6 +276,8 @@ export let helpers = {
   deleteSlashCommand,
   deleteSlashResponse,
   editSlashResponse,
+  getSlashCommandPermission,
+  getSlashCommandPermissions,
   sendInteractionResponse,
   getSlashCommand,
   getSlashCommands,
