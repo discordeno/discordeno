@@ -16,12 +16,20 @@ import { swapChannels } from "./channels/swap_channels.ts";
 import { createSlashCommand } from "./commands/create_slash_command.ts";
 import { deleteSlashCommand } from "./commands/delete_slash_command.ts";
 import { deleteSlashResponse } from "./commands/delete_slash_response.ts";
+import { editSlashCommandPermissions } from "./commands/edit_slash_command_permissions.ts";
 import { editSlashResponse } from "./commands/edit_slash_response.ts";
 import { getSlashCommand } from "./commands/get_slash_command.ts";
 import { getSlashCommands } from "./commands/get_slash_commands.ts";
+import { getSlashCommandPermission } from "./commands/get_slash_command_permission.ts";
+import { getSlashCommandPermissions } from "./commands/get_slash_command_permissions.ts";
 import { sendInteractionResponse } from "./commands/send_interaction_response.ts";
 import { upsertSlashCommand } from "./commands/upsert_slash_command.ts";
 import { upsertSlashCommands } from "./commands/upsert_slash_commands.ts";
+import { addDiscoverySubcategory } from "./discovery/add_discovery_subcategory.ts";
+import { editDiscovery } from "./discovery/edit_discovery.ts";
+import { getDiscoveryCategories } from "./discovery/get_discovery_categories.ts";
+import { removeDiscoverySubcategory } from "./discovery/remove_discovery_subcategory.ts";
+import { validDiscoveryTerm } from "./discovery/valid_discovery_term.ts";
 import { createEmoji } from "./emojis/create_emoji.ts";
 import { deleteEmoji } from "./emojis/delete_emoji.ts";
 import { editEmoji } from "./emojis/edit_emoji.ts";
@@ -115,13 +123,6 @@ import { executeWebhook } from "./webhooks/execute_webhook.ts";
 import { getWebhook } from "./webhooks/get_webhook.ts";
 import { getWebhooks } from "./webhooks/get_webhooks.ts";
 import { getWebhookWithToken } from "./webhooks/get_webhook_with_token.ts";
-import { addDiscoverySubcategory } from "./discovery/add_discovery_subcategory.ts";
-import { editDiscovery } from "./discovery/edit_discovery.ts";
-import { getDiscoveryCategories } from "./discovery/get_discovery_categories.ts";
-import { removeDiscoverySubcategory } from "./discovery/remove_discovery_subcategory.ts";
-import { validDiscoveryTerm } from "./discovery/valid_discovery_term.ts";
-import { getSlashCommandPermission } from "./commands/get_slash_command_permission.ts";
-import { getSlashCommandPermissions } from "./commands/get_slash_command_permissions.ts";
 
 export {
   addDiscoverySubcategory,
@@ -278,6 +279,9 @@ export let helpers = {
   editSlashResponse,
   getSlashCommandPermission,
   getSlashCommandPermissions,
+  batchEditSlashCommandPermissions,
+  editSlashCommandPermissions,
+  editSlashCommandPermission,
   sendInteractionResponse,
   getSlashCommand,
   getSlashCommands,
