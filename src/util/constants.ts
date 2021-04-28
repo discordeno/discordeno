@@ -150,6 +150,14 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/applications/${applicationId}/guilds/${guildId}/commands`,
   COMMANDS_PERMISSIONS: (applicationId: string, guildId: string) =>
     `${endpoints.COMMANDS_GUILD(applicationId, guildId)}/permissions`,
+  COMMANDS_PERMISSION: (
+    applicationId: string,
+    guildId: string,
+    commandId: string,
+  ) =>
+    `${
+      endpoints.COMMANDS_GUILD(applicationId, guildId)
+    }/${commandId}/permissions`,
   COMMANDS_ID: (applicationId: string, commandId: string) =>
     `${baseEndpoints.BASE_URL}/applications/${applicationId}/commands/${commandId}`,
   COMMANDS_GUILD_ID: (
