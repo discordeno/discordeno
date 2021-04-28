@@ -155,6 +155,7 @@ export async function createDiscordenoMessage(data: Message) {
     ...props,
     /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
     channelId: createNewProp(channelId),
+    content: createNewProp(data.content || ""),
     guildId: createNewProp(guildIdFinal),
     mentionedUserIds: createNewProp(mentions.map((m) => m.id)),
     mentionedRoleIds: createNewProp(mentionRoles),
@@ -181,6 +182,8 @@ export interface DiscordenoMessage
   // For better user experience
   /** Id of the guild which the massage has been send in. Empty string if it a DM */
   guildId: string;
+  /** The message content for this message. Empty string if no content was sent like an attachment only. */
+  content: string;
   /** Ids of users specifically mentioned in the message */
   mentionedUserIds: string[];
   /** Ids of roles specifically mentioned in this message */
