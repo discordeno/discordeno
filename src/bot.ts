@@ -69,24 +69,24 @@ export function setApplicationId(id: string) {
  *
  * Advanced Devs: This function will allow you to have an insane amount of customization potential as when you get to large bots you need to be able to optimize every tiny detail to make you bot work the way you need.
  */
-export async function startBigBrainBot(config: BigBrainBotConfig) {
-  authorization = `Bot ${config.token}`;
-  rest.token = `Bot ${config.token}`;
+export async function startBigBrainBot(options: BigBrainBotConfig) {
+  authorization = `Bot ${options.token}`;
+  rest.token = `Bot ${options.token}`;
 
-  if (config.secretKey) secretKey = config.secretKey;
-  if (config.restURL) baseEndpoints.BASE_URL = config.restURL;
-  if (config.cdnURL) baseEndpoints.CDN_URL = config.cdnURL;
-  if (config.eventHandlers) eventHandlers = config.eventHandlers;
+  if (options.secretKey) secretKey = options.secretKey;
+  if (options.restURL) baseEndpoints.BASE_URL = options.restURL;
+  if (options.cdnURL) baseEndpoints.CDN_URL = options.cdnURL;
+  if (options.eventHandlers) eventHandlers = options.eventHandlers;
 
   // PROXY DOESNT NEED US SPAWNING SHARDS
-  if (!config.wsPort) {
-    ws.identifyPayload.token = `Bot ${config.token}`;
+  if (!options.wsPort) {
+    ws.identifyPayload.token = `Bot ${options.token}`;
 
-    if (config.compress) {
-      ws.identifyPayload.compress = config.compress;
+    if (options.compress) {
+      ws.identifyPayload.compress = options.compress;
     }
 
-    ws.identifyPayload.intents = config.intents.reduce(
+    ws.identifyPayload.intents = options.intents.reduce(
       (
         bits,
         next,
@@ -98,15 +98,14 @@ export async function startBigBrainBot(config: BigBrainBotConfig) {
 
     // Initial API connection to get info about bots connection
     ws.botGatewayData = await getGatewayBot();
-    console.log(ws.botGatewayData);
-    ws.maxShards = ws.maxShards || config.lastShardId ||
+    ws.maxShards = ws.maxShards ||
       ws.botGatewayData.shards;
-    ws.lastShardId = config.lastShardId || ws.botGatewayData.shards;
+    ws.lastShardId = options.lastShardId || ws.botGatewayData.shards;
     // Explicitly append gateway version and encoding
     ws.botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
     proxyWSURL = ws.botGatewayData.url;
 
-    ws.spawnShards(config.firstShardId);
+    ws.spawnShards(options.firstShardId);
   }
 }
 
@@ -122,6 +121,8 @@ export interface BigBrainBotConfig extends BotConfig {
   firstShardId: number;
   /** The last shard to start for this worker. By default it will be 25 + the firstShardId. */
   lastShardId?: number;
+  /** The maximum shard Id number. Useful for zero-downtime updates or resharding. */
+  maxShards?: number;
   /** This can be used to forward the ws handling to a proxy. It will disable the sharding done by the bot side. */
   wsPort?: number;
   /** This can be used to forward the REST handling to a proxy. */
