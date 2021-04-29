@@ -20,13 +20,11 @@ export async function kick(guildId: string, memberId: string, reason?: string) {
 
   await requireBotGuildPermissions(guildId, ["KICK_MEMBERS"]);
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<undefined>(
     "delete",
     endpoints.GUILD_MEMBER(guildId, memberId),
     { reason },
   );
-
-  return result;
 }
 
 // aliases

@@ -106,6 +106,8 @@ export const endpoints = {
   GUILD_MEMBERS: (guildId: string) => `${GUILDS_BASE(guildId)}/members`,
   GUILD_MEMBER_ROLE: (guildId: string, memberId: string, roleId: string) =>
     `${GUILDS_BASE(guildId)}/members/${memberId}/roles/${roleId}`,
+  GUILD_MEMBERS_SEARCH: (guildId: string) =>
+    `${GUILDS_BASE(guildId)}/members/search`,
   GUILD_PRUNE: (guildId: string) => `${GUILDS_BASE(guildId)}/prune`,
   GUILD_REGIONS: (guildId: string) => `${GUILDS_BASE(guildId)}/regions`,
   GUILD_ROLE: (guildId: string, roleId: string) =>
@@ -146,6 +148,16 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/applications/${applicationId}/commands`,
   COMMANDS_GUILD: (applicationId: string, guildId: string) =>
     `${baseEndpoints.BASE_URL}/applications/${applicationId}/guilds/${guildId}/commands`,
+  COMMANDS_PERMISSIONS: (applicationId: string, guildId: string) =>
+    `${endpoints.COMMANDS_GUILD(applicationId, guildId)}/permissions`,
+  COMMANDS_PERMISSION: (
+    applicationId: string,
+    guildId: string,
+    commandId: string,
+  ) =>
+    `${
+      endpoints.COMMANDS_GUILD(applicationId, guildId)
+    }/${commandId}/permissions`,
   COMMANDS_ID: (applicationId: string, commandId: string) =>
     `${baseEndpoints.BASE_URL}/applications/${applicationId}/commands/${commandId}`,
   COMMANDS_GUILD_ID: (
@@ -179,7 +191,15 @@ export const endpoints = {
   USER_CONNECTIONS: `${baseEndpoints.BASE_URL}/users/@me/connections`,
   USER_NICK: (guildId: string) => `${GUILDS_BASE(guildId)}/members/@me/nick`,
 
-  // oAuth2
+  // Discovery Endpoints
+  DISCOVERY_CATEGORIES: `${baseEndpoints.BASE_URL}/discovery/categories`,
+  DISCOVERY_VALID_TERM: `${baseEndpoints.BASE_URL}/discovery/valid-term`,
+  DISCOVERY_MODIFY: (guildId: string) =>
+    `${GUILDS_BASE(guildId)}/discovery-metadata`,
+  DISCOVERY_SUBCATEGORY: (guildId: string, categoryId: number) =>
+    `${GUILDS_BASE(guildId)}/discovery-categories/${categoryId}`,
+
+  // OAuth2
   OAUTH2_APPLICATION: `${baseEndpoints.BASE_URL}/oauth2/applications/@me`,
 };
 

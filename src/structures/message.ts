@@ -13,9 +13,9 @@ import { sendMessage } from "../helpers/messages/send_message.ts";
 import { GuildMember } from "../types/guilds/guild_member.ts";
 import { CreateMessage } from "../types/messages/create_message.ts";
 import { EditMessage } from "../types/messages/edit_message.ts";
-import { DiscordMessage, Message } from "../types/messages/message.ts";
+import { Message } from "../types/messages/message.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
-import { createNewProp, snakeKeysToCamelCase } from "../util/utils.ts";
+import { createNewProp } from "../util/utils.ts";
 import { DiscordenoChannel } from "./channel.ts";
 import { DiscordenoGuild } from "./guild.ts";
 import { DiscordenoMember } from "./member.ts";
@@ -126,7 +126,7 @@ const baseMessage: Partial<DiscordenoMessage> = {
   },
 };
 
-export async function createDiscordenoMessage(data: DiscordMessage) {
+export async function createDiscordenoMessage(data: Message) {
   const {
     guildId = "",
     channelId,
@@ -135,7 +135,7 @@ export async function createDiscordenoMessage(data: DiscordMessage) {
     mentionRoles = [],
     editedTimestamp,
     ...rest
-  } = snakeKeysToCamelCase<Message>(data);
+  } = data;
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const key of Object.keys(rest)) {
@@ -155,6 +155,7 @@ export async function createDiscordenoMessage(data: DiscordMessage) {
     ...props,
     /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
     channelId: createNewProp(channelId),
+    content: createNewProp(data.content || ""),
     guildId: createNewProp(guildIdFinal),
     mentionedUserIds: createNewProp(mentions.map((m) => m.id)),
     mentionedRoleIds: createNewProp(mentionRoles),
@@ -177,8 +178,12 @@ export async function createDiscordenoMessage(data: DiscordMessage) {
 }
 
 export interface DiscordenoMessage
-  extends Omit<Message, "timestamp" | "editedTimestamp"> {
+  extends Omit<Message, "timestamp" | "editedTimestamp" | "guildId"> {
   // For better user experience
+  /** Id of the guild which the massage has been send in. Empty string if it a DM */
+  guildId: string;
+  /** The message content for this message. Empty string if no content was sent like an attachment only. */
+  content: string;
   /** Ids of users specifically mentioned in the message */
   mentionedUserIds: string[];
   /** Ids of roles specifically mentioned in this message */

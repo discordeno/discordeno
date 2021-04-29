@@ -13,15 +13,24 @@ import { getPins } from "./channels/get_pins.ts";
 import { isChannelSynced } from "./channels/is_channel_synced.ts";
 import { startTyping } from "./channels/start_typing.ts";
 import { swapChannels } from "./channels/swap_channels.ts";
+import { batchEditSlashCommandPermissions } from "./commands/batch_edit_slash_command_permissions.ts";
 import { createSlashCommand } from "./commands/create_slash_command.ts";
 import { deleteSlashCommand } from "./commands/delete_slash_command.ts";
 import { deleteSlashResponse } from "./commands/delete_slash_response.ts";
+import { editSlashCommandPermissions } from "./commands/edit_slash_command_permissions.ts";
 import { editSlashResponse } from "./commands/edit_slash_response.ts";
 import { getSlashCommand } from "./commands/get_slash_command.ts";
 import { getSlashCommands } from "./commands/get_slash_commands.ts";
+import { getSlashCommandPermission } from "./commands/get_slash_command_permission.ts";
+import { getSlashCommandPermissions } from "./commands/get_slash_command_permissions.ts";
 import { sendInteractionResponse } from "./commands/send_interaction_response.ts";
 import { upsertSlashCommand } from "./commands/upsert_slash_command.ts";
 import { upsertSlashCommands } from "./commands/upsert_slash_commands.ts";
+import { addDiscoverySubcategory } from "./discovery/add_discovery_subcategory.ts";
+import { editDiscovery } from "./discovery/edit_discovery.ts";
+import { getDiscoveryCategories } from "./discovery/get_discovery_categories.ts";
+import { removeDiscoverySubcategory } from "./discovery/remove_discovery_subcategory.ts";
+import { validDiscoveryTerm } from "./discovery/valid_discovery_term.ts";
 import { createEmoji } from "./emojis/create_emoji.ts";
 import { deleteEmoji } from "./emojis/delete_emoji.ts";
 import { editEmoji } from "./emojis/edit_emoji.ts";
@@ -116,12 +125,14 @@ import { getWebhooks } from "./webhooks/get_webhooks.ts";
 import { getWebhookWithToken } from "./webhooks/get_webhook_with_token.ts";
 
 export {
+  addDiscoverySubcategory,
   addReaction,
   addReactions,
   addRole,
   avatarURL,
   ban,
   banMember,
+  batchEditSlashCommandPermissions,
   categoryChildren,
   channelOverwriteHasPermission,
   createChannel,
@@ -154,6 +165,7 @@ export {
   editBotStatus,
   editChannel,
   editChannelOverwrite,
+  editDiscovery,
   editEmoji,
   editGuild,
   editGuildTemplate,
@@ -178,6 +190,7 @@ export {
   getChannelInvites,
   getChannels,
   getChannelWebhooks,
+  getDiscoveryCategories,
   getEmoji,
   getEmojis,
   getGatewayBot,
@@ -196,6 +209,8 @@ export {
   getReactions,
   getRoles,
   getSlashCommand,
+  getSlashCommandPermission,
+  getSlashCommandPermissions,
   getSlashCommands,
   getTemplate,
   getUser,
@@ -221,6 +236,7 @@ export {
   pruneMembers,
   publishMessage,
   removeAllReactions,
+  removeDiscoverySubcategory,
   removeReaction,
   removeReactionEmoji,
   removeRole,
@@ -237,6 +253,7 @@ export {
   unpinMessage,
   upsertSlashCommand,
   upsertSlashCommands,
+  validDiscoveryTerm,
 };
 
 export let helpers = {
@@ -260,6 +277,10 @@ export let helpers = {
   deleteSlashCommand,
   deleteSlashResponse,
   editSlashResponse,
+  getSlashCommandPermission,
+  getSlashCommandPermissions,
+  batchEditSlashCommandPermissions,
+  editSlashCommandPermissions,
   sendInteractionResponse,
   getSlashCommand,
   getSlashCommands,
@@ -296,6 +317,12 @@ export let helpers = {
   guildIconURL,
   guildSplashURL,
   leaveGuild,
+  // discovery
+  addDiscoverySubcategory,
+  editDiscovery,
+  getDiscoveryCategories,
+  removeDiscoverySubcategory,
+  validDiscoveryTerm,
   // integrations
   deleteIntegration,
   getIntegrations,

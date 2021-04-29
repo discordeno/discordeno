@@ -6,10 +6,8 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function deleteRole(guildId: string, id: string) {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<undefined>(
     "delete",
     endpoints.GUILD_ROLE(guildId, id),
   );
-
-  return result;
 }

@@ -1,5 +1,5 @@
-import { CreateGuildBan } from "../../types/guilds/create_guild_ban.ts";
 import { rest } from "../../rest/rest.ts";
+import { CreateGuildBan } from "../../types/guilds/create_guild_ban.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 import { camelKeysToSnakeCase } from "../../util/utils.ts";
@@ -12,13 +12,11 @@ export async function ban(
 ) {
   await requireBotGuildPermissions(guildId, ["BAN_MEMBERS"]);
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<undefined>(
     "put",
     endpoints.GUILD_BAN(guildId, id),
     camelKeysToSnakeCase(options),
   );
-
-  return result;
 }
 
 // aliases

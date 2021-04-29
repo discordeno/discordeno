@@ -3,9 +3,8 @@ import { cache, cacheHandlers } from "../../cache.ts";
 import { initialMemberLoadQueue } from "../../structures/guild.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { DiscordReady } from "../../types/gateway/ready.ts";
-import { DiscordGuildMemberWithUser } from "../../types/mod.ts";
-import { camelKeysToSnakeCase } from "../../util/utils.ts";
+import { Ready } from "../../types/gateway/ready.ts";
+import { GuildMemberWithUser } from "../../types/mod.ts";
 import { ws } from "../../ws/ws.ts";
 
 export function handleReady(
@@ -15,7 +14,7 @@ export function handleReady(
   // The bot has already started, the last shard is resumed, however.
   if (cache.isReady) return;
 
-  const payload = data.d as DiscordReady;
+  const payload = data.d as Ready;
   setBotId(payload.user.id);
   setApplicationId(payload.application.id);
 
@@ -44,7 +43,7 @@ export function handleReady(
 
 // Don't pass the shard itself because unavailableGuilds won't be updated by the GUILD_CREATE event
 /** This function checks if the shard is fully loaded */
-async function checkReady(payload: DiscordReady, shardId: number, now: number) {
+async function checkReady(payload: Ready, shardId: number, now: number) {
   const shard = ws.shards.get(shardId);
   if (!shard) return;
 
@@ -100,7 +99,7 @@ async function loaded(shardId: number) {
         await Promise.allSettled(
           members.map(async (member) => {
             const discordenoMember = await structures.createDiscordenoMember(
-              camelKeysToSnakeCase<DiscordGuildMemberWithUser>(member),
+              member as GuildMemberWithUser,
               guildId,
             );
 

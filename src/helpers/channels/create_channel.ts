@@ -2,7 +2,7 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordChannel } from "../../types/channels/channel.ts";
+import { Channel } from "../../types/channels/channel.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import {
   CreateGuildChannel,
@@ -38,7 +38,7 @@ export async function createChannel(
   // BITRATES ARE IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
 
-  const result = (await rest.runMethod(
+  const result = await rest.runMethod<Channel>(
     "post",
     endpoints.GUILD_CHANNELS(guildId),
     {
@@ -51,7 +51,7 @@ export async function createChannel(
       type: options?.type || DiscordChannelTypes.GUILD_TEXT,
       reason,
     },
-  )) as DiscordChannel;
+  );
 
   const discordenoChannel = await structures.createDiscordenoChannel(result);
   await cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);

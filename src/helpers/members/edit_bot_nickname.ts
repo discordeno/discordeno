@@ -9,9 +9,13 @@ export async function editBotNickname(
 ) {
   await requireBotGuildPermissions(guildId, ["CHANGE_NICKNAME"]);
 
-  const response = await rest.runMethod("patch", endpoints.USER_NICK(guildId), {
-    nick: nickname,
-  }) as { nick: string };
+  const response = await rest.runMethod<{ nick: string }>(
+    "patch",
+    endpoints.USER_NICK(guildId),
+    {
+      nick: nickname,
+    },
+  );
 
   return response.nick;
 }

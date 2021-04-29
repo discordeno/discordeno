@@ -6,7 +6,7 @@ import {
   GetMessagesBefore,
   GetMessagesLimit,
 } from "../../types/messages/get_messages.ts";
-import { DiscordMessage } from "../../types/messages/message.ts";
+import { Message } from "../../types/messages/message.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -26,13 +26,13 @@ export async function getMessages(
 
   if (options?.limit && options.limit > 100) return;
 
-  const result = (await rest.runMethod(
+  const result = await rest.runMethod<Message[]>(
     "get",
     endpoints.CHANNEL_MESSAGES(channelId),
     options,
-  )) as DiscordMessage[];
+  );
 
-  return Promise.all(
+  return await Promise.all(
     result.map((res) => structures.createDiscordenoMessage(res)),
   );
 }

@@ -1,4 +1,5 @@
 import { rest } from "../../rest/rest.ts";
+import { Integration } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -6,10 +7,8 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function getIntegrations(guildId: string) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  const result = await rest.runMethod(
+  return await rest.runMethod<Integration>(
     "get",
     endpoints.GUILD_INTEGRATIONS(guildId),
   );
-
-  return result;
 }

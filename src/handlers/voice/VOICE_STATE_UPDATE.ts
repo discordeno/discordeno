@@ -2,15 +2,11 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { DiscordGuildMemberWithUser } from "../../types/mod.ts";
 import {
   DiscordVoiceState,
   VoiceState,
 } from "../../types/voice/voice_state.ts";
-import {
-  camelKeysToSnakeCase,
-  snakeKeysToCamelCase,
-} from "../../util/utils.ts";
+import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 export async function handleVoiceStateUpdate(data: DiscordGatewayPayload) {
   const payload = snakeKeysToCamelCase<VoiceState>(
@@ -23,7 +19,7 @@ export async function handleVoiceStateUpdate(data: DiscordGatewayPayload) {
 
   const member = payload.member
     ? await structures.createDiscordenoMember(
-      camelKeysToSnakeCase<DiscordGuildMemberWithUser>(payload),
+      payload.member,
       guild.id,
     )
     : await cacheHandlers.get("members", payload.userId);

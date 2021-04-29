@@ -3,7 +3,7 @@ import { rest } from "../../rest/rest.ts";
 import { Guild } from "../../types/guilds/guild.ts";
 import { CreateGuildFromTemplate } from "../../types/templates/create_guild_from_template.ts";
 import { endpoints } from "../../util/constants.ts";
-import { snakeKeysToCamelCase, urlToBase64 } from "../../util/utils.ts";
+import { urlToBase64 } from "../../util/utils.ts";
 
 /**
  * Create a new guild based on a template
@@ -23,11 +23,11 @@ export async function createGuildFromTemplate(
     data.icon = await urlToBase64(data.icon);
   }
 
-  const result = await rest.runMethod(
+  // TODO: discordeno guild?
+
+  return await rest.runMethod<Guild>(
     "post",
     endpoints.GUILD_TEMPLATE(templateCode),
     data,
   );
-
-  return snakeKeysToCamelCase<Guild>(result);
 }
