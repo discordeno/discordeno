@@ -9,7 +9,7 @@ import { MessageActivity } from "./message_activity.ts";
 import { MessageReference } from "./message_reference.ts";
 import { MessageSticker } from "./message_sticker.ts";
 import { DiscordMessageTypes } from "./message_types.ts";
-import { DiscordReaction } from "./reaction.ts";
+import { Reaction } from "./reaction.ts";
 
 /** https://discord.com/developers/docs/resources/channel#message-object */
 export interface Message {
@@ -56,7 +56,7 @@ export interface Message {
   /** Any embedded content */
   embeds: Embed[];
   /** Reactions to the message */
-  reactions?: DiscordReaction[];
+  reactions?: Reaction[];
   /** Used for validating a message was sent */
   nonce?: number | string;
   /** Whether this message is pinned */
