@@ -201,9 +201,9 @@ export async function getMissingGuildPermissions(
   member: string | DiscordenoMember,
   permissions: PermissionStrings[],
 ) {
-  // First we need the role permissino bits this member has
+  // First we need the role permission bits this member has
   const permissionBits = await calculateBasePermissions(guild, member);
-  // Second returnn the members missing permissions
+  // Second return the members missing permissions
   return missingPermissions(permissionBits, permissions);
 }
 
