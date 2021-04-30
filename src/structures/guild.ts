@@ -1,4 +1,4 @@
-import { botId, eventHandlers } from "../bot.ts";
+import { botId, eventHandlers, startOptions } from "../bot.ts";
 import { cache, cacheHandlers } from "../cache.ts";
 import { deleteGuild } from "../helpers/guilds/delete_guild.ts";
 import { editGuild } from "../helpers/guilds/edit_guild.ts";
@@ -178,8 +178,9 @@ export async function createDiscordenoGuild(
   });
 
   // ONLY ADD TO QUEUE WHEN BOT IS NOT FULLY ONLINE
-  if (!cache.isReady) initialMemberLoadQueue.set(guild.id, members);
-  // BOT IS ONLINE, JUST DIRECTLY ADD MEMBERS
+  if (!cache.isReady && startOptions.cacheMembersOnStart) {
+    initialMemberLoadQueue.set(guild.id, members);
+  } // BOT IS ONLINE, JUST DIRECTLY ADD MEMBERS
   else {
     await Promise.allSettled(
       members.map(async (member) => {

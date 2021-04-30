@@ -11,11 +11,18 @@ export let botId = "";
 export let applicationId = "";
 
 export let eventHandlers: EventHandlers = {};
+export let startOptions: { cacheMembersOnStart: boolean } = {
+  cacheMembersOnStart: true,
+};
 
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
 export async function startBot(config: BotConfig) {
   if (config.eventHandlers) eventHandlers = config.eventHandlers;
+  if (config.cacheMembersOnStart === false) {
+    startOptions.cacheMembersOnStart = false;
+  }
+
   authorization = `Bot ${config.token}`;
   ws.identifyPayload.token = `Bot ${config.token}`;
   rest.token = `Bot ${config.token}`;
@@ -114,6 +121,8 @@ export interface BotConfig {
   compress?: boolean;
   intents: (DiscordGatewayIntents | keyof typeof DiscordGatewayIntents)[];
   eventHandlers?: EventHandlers;
+  /** Whether discordeno should cachge all members on start */
+  cacheMembersOnStart?: boolean;
 }
 
 export interface BigBrainBotConfig extends BotConfig {

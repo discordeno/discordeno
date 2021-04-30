@@ -1,4 +1,9 @@
-import { eventHandlers, setApplicationId, setBotId } from "../../bot.ts";
+import {
+  eventHandlers,
+  setApplicationId,
+  setBotId,
+  startOptions,
+} from "../../bot.ts";
 import { cache, cacheHandlers } from "../../cache.ts";
 import { initialMemberLoadQueue } from "../../structures/guild.ts";
 import { structures } from "../../structures/mod.ts";
@@ -90,26 +95,28 @@ async function loaded(shardId: number) {
       cache.isReady = true;
       eventHandlers.ready?.();
 
-      // All the members that came in on guild creates should now be processed 1 by 1
-      for (const [guildId, members] of initialMemberLoadQueue.entries()) {
-        eventHandlers.debug?.(
-          "loop",
-          "Running for of loop in READY file for loading members.",
-        );
-        await Promise.allSettled(
-          members.map(async (member) => {
-            const discordenoMember = await structures.createDiscordenoMember(
-              member as GuildMemberWithUser,
-              guildId,
-            );
+      if (startOptions.cacheMembersOnStart) {
+        // All the members that came in on guild creates should now be processed 1 by 1
+        for (const [guildId, members] of initialMemberLoadQueue.entries()) {
+          eventHandlers.debug?.(
+            "loop",
+            "Running for of loop in READY file for loading members.",
+          );
+          await Promise.allSettled(
+            members.map(async (member) => {
+              const discordenoMember = await structures.createDiscordenoMember(
+                member as GuildMemberWithUser,
+                guildId,
+              );
 
-            return cacheHandlers.set(
-              "members",
-              discordenoMember.id,
-              discordenoMember,
-            );
-          }),
-        );
+              return cacheHandlers.set(
+                "members",
+                discordenoMember.id,
+                discordenoMember,
+              );
+            }),
+          );
+        }
       }
     }
   }
