@@ -1,6 +1,6 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { RoleTags } from "./role_tags.ts";
 
+/** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
 export interface Role {
   /** Role id */
   id: string;
@@ -21,6 +21,3 @@ export interface Role {
   /** The tags this role has */
   tags?: RoleTags;
 }
-
-/** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
-export type DiscordRole = SnakeCasedPropertiesDeep<Role>;
