@@ -1,7 +1,7 @@
 import { Guild } from "../guilds/guild.ts";
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 
+/** https://discord.com/developers/docs/resources/template#template-object-template-structure */
 export interface Template {
   /** The template code (unique Id) */
   code: string;
@@ -26,6 +26,3 @@ export interface Template {
   /** Whether the template has unsynced changes */
   isDirty: boolean | null;
 }
-
-/** https://discord.com/developers/docs/resources/template#template-object-template-structure */
-export type DiscordTemplate = SnakeCasedPropertiesDeep<Template>;

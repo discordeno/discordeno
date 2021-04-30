@@ -1,6 +1,6 @@
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 
+/** https://discord.com/developers/docs/resources/guild#guild-member-object */
 export interface GuildMember {
   /** The user this guild member represents */
   user?: User;
@@ -20,13 +20,7 @@ export interface GuildMember {
   pending?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-member-object */
-export type DiscordGuildMember = SnakeCasedPropertiesDeep<GuildMember>;
-
 // We use these types much since user always exists unless its a `CREATE_MESSAGE` or `MESSAGE_UPDATE` event
 
-export type GuildMemberWithUser = Omit<GuildMember, "user"> & { user: User };
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */
-export type DiscordGuildMemberWithUser = SnakeCasedPropertiesDeep<
-  GuildMemberWithUser
->;
+export type GuildMemberWithUser = Omit<GuildMember, "user"> & { user: User };

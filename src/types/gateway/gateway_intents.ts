@@ -88,3 +88,6 @@ export enum DiscordGatewayIntents {
    */
   DIRECT_MESSAGE_TYPING = 1 << 14,
 }
+
+export type Intents = DiscordGatewayIntents;
+export const Intents = DiscordGatewayIntents;

@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+// TODO: add docs link
 export interface DiscoveryMetadata {
   /** The guild Id */
   guildId: string;
@@ -16,8 +15,3 @@ export interface DiscoveryMetadata {
   /** Ids of up to 5 discovery subcategories set for this guild */
   categoryIds: number[];
 }
-
-// TODO: add docs link
-export type DiscordDiscoveryMetadata = SnakeCasedPropertiesDeep<
-  DiscoveryMetadata
->;

@@ -1,7 +1,7 @@
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordInteractionTypes } from "./interaction_types.ts";
 
+/** https://discord.com/developers/docs/interactions/slash-commands#messageinteraction */
 export interface MessageInteraction {
   /** Id of the interaction */
   id: string;
@@ -12,8 +12,3 @@ export interface MessageInteraction {
   /** The user who invoked the interaction */
   user: User;
 }
-
-/** https://discord.com/developers/docs/interactions/slash-commands#messageinteraction */
-export type DiscordMessageInteraction = SnakeCasedPropertiesDeep<
-  MessageInteraction
->;

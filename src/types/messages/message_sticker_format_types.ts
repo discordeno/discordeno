@@ -4,3 +4,6 @@ export enum DiscordMessageStickerFormatTypes {
   APNG,
   LOTTIE,
 }
+
+export type MessageStickerFormatTypes = DiscordMessageStickerFormatTypes;
+export const MessageStickerFormatTypes = DiscordMessageStickerFormatTypes;

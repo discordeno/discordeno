@@ -4,3 +4,6 @@ export enum DiscordVideoQualityModes {
   /** 720p */
   Full,
 }
+
+export type VideoQualityModes = DiscordVideoQualityModes;
+export const VideoQualityModes = DiscordVideoQualityModes;

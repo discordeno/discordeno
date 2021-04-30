@@ -11,3 +11,8 @@ export enum DiscordGetGuildWidgetImageStyleOptions {
   /** Large Discord logo at the top of the widget. Guild icon, name and online count in the middle portion of the widget and a "JOIN MY SERVER" button at the bottom */
   BANNER_4 = "banner4",
 }
+
+export type GetGuildWidgetImageStyleOptions =
+  DiscordGetGuildWidgetImageStyleOptions;
+export const GetGuildWidgetImageStyleOptions =
+  DiscordGetGuildWidgetImageStyleOptions;

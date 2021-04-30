@@ -7,3 +7,6 @@ export enum DiscordActivityFlags {
   SYNC = 1 << 4,
   PLAY = 1 << 5,
 }
+
+export type ActivityFlags = DiscordActivityFlags;
+export const ActivityFlags = DiscordActivityFlags;

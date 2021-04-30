@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/topics/gateway#channel-pins-update */
 export interface ChannelPinsUpdate {
   /** The id of the guild */
   guildId?: string;
@@ -8,8 +7,3 @@ export interface ChannelPinsUpdate {
   /** The time at which the most recent pinned message was pinned */
   lastPinTimestamp?: string | null;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#channel-pins-update */
-export type DiscordChannelPinsUpdate = SnakeCasedPropertiesDeep<
-  ChannelPinsUpdate
->;

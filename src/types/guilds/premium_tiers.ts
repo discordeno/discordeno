@@ -9,3 +9,6 @@ export enum DiscordPremiumTiers {
   /** Guild has unlocked Server Boost level 3 perks */
   TIER_3,
 }
+
+export type PremiumTiers = DiscordPremiumTiers;
+export const PremiumTiers = DiscordPremiumTiers;

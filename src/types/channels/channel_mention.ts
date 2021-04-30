@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/resources/channel#channel-mention-object */
 export interface ChannelMention {
   /** id of the channel */
   id: string;
@@ -10,6 +9,3 @@ export interface ChannelMention {
   /** The name of the channel */
   name: string;
 }
-
-/** https://discord.com/developers/docs/resources/channel#channel-mention-object */
-export type DiscordChannelMention = SnakeCasedPropertiesDeep<ChannelMention>;

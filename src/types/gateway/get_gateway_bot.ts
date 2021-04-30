@@ -1,6 +1,6 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { SessionStartLimit } from "./session_start_limit.ts";
 
+/** https://discord.com/developers/docs/topics/gateway#get-gateway-bot */
 export interface GetGatewayBot {
   /** The WSS URL that can be used for connecting to the gateway */
   url: string;
@@ -9,6 +9,3 @@ export interface GetGatewayBot {
   /** Information on the current session start limit */
   sessionStartLimit: SessionStartLimit;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#get-gateway-bot */
-export type DiscordGetGatewayBot = SnakeCasedPropertiesDeep<GetGatewayBot>;

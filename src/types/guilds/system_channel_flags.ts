@@ -7,3 +7,6 @@ export enum DiscordSystemChannelFlags {
   /** Suppress server setup tips */
   SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2,
 }
+
+export type SystemChannelFlags = DiscordSystemChannelFlags;
+export const SystemChannelFlags = DiscordSystemChannelFlags;

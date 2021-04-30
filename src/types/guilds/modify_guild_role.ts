@@ -18,3 +18,5 @@ export interface DiscordModifyGuildRole
   extends Omit<ModifyGuildRole, "permissions"> {
   permissions?: string | null;
 }
+
+// TODO: check this

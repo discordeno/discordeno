@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/resources/channel#message-object-message-reference-structure */
 export interface MessageReference {
   /** id of the originating message */
   messageId?: string;
@@ -13,8 +12,3 @@ export interface MessageReference {
   /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
   failIfNotExists: boolean;
 }
-
-/** https://discord.com/developers/docs/resources/channel#message-object-message-reference-structure */
-export type DiscordMessageReference = SnakeCasedPropertiesDeep<
-  MessageReference
->;

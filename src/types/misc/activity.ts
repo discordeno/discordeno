@@ -1,4 +1,3 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { ActivityAssets } from "./activity_assets.ts";
 import { ActivityButton } from "./activity_button.ts";
 import { ActivityEmoji } from "./activity_emoji.ts";
@@ -7,6 +6,7 @@ import { ActivitySecrets } from "./activity_secrets.ts";
 import { ActivityTimestamps } from "./activity_timestamps.ts";
 import { DiscordActivityTypes } from "./activity_types.ts";
 
+/** https://discord.com/developers/docs/topics/gateway#activity-object */
 export interface Activity {
   /** The activity's name */
   name: string;
@@ -39,6 +39,3 @@ export interface Activity {
   /** The custom buttons shown in the Rich Presence (max 2) */
   buttons?: ActivityButton[];
 }
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object */
-export type DiscordActivity = SnakeCasedPropertiesDeep<Activity>;

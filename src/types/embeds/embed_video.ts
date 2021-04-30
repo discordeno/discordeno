@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/resources/channel#embed-object-embed-video-structure */
 export interface EmbedVideo {
   /** Source url of video */
   url?: string;
@@ -10,6 +9,3 @@ export interface EmbedVideo {
   /** Width of video */
   width?: number;
 }
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-video-structure */
-export type DiscordEmbedVideo = SnakeCasedPropertiesDeep<EmbedVideo>;

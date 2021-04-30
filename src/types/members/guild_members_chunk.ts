@@ -1,7 +1,7 @@
 import { GuildMemberWithUser } from "../guilds/guild_member.ts";
 import { PresenceUpdate } from "../misc/presence_update.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 
+/** https://discord.com/developers/docs/topics/gateway#guild-members-chunk */
 export interface GuildMembersChunk {
   /** The id of the guild */
   guildId: string;
@@ -18,8 +18,3 @@ export interface GuildMembersChunk {
   /** The nonce used in the Guild Members Request */
   nonce?: string;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#guild-members-chunk */
-export type DiscordGuildMembersChunk = SnakeCasedPropertiesDeep<
-  GuildMembersChunk
->;

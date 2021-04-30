@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/topics/gateway#message-delete */
 export interface MessageDelete {
   /** The id of the message */
   id: string;
@@ -8,6 +7,3 @@ export interface MessageDelete {
   /** The id of the guild */
   guildId?: string;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#message-delete */
-export type DiscordMessageDelete = SnakeCasedPropertiesDeep<MessageDelete>;

@@ -1,6 +1,6 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordAuditLogEvents } from "./audit_log_events.ts";
 
+/** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
 export interface GetGuildAuditLog {
   /** Filter the log for actions made by a user */
   userId: string;
@@ -11,8 +11,3 @@ export interface GetGuildAuditLog {
   /** How many entries are returned (default 50, minimum 1, maximum 100) */
   limit: number;
 }
-
-/** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
-export type DiscordGetGuildAuditLog = SnakeCasedPropertiesDeep<
-  GetGuildAuditLog
->;

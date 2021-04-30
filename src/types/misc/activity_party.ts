@@ -5,5 +5,3 @@ export interface ActivityParty {
   /** Used to show the party's current and maximum size */
   size?: [currentSize: number, maxSize: number];
 }
-
-export type DiscordActivityParty = ActivityParty;
