@@ -38,7 +38,7 @@ import { emojiURL } from "./emojis/emoji_url.ts";
 import { getEmoji } from "./emojis/get_emoji.ts";
 import { getEmojis } from "./emojis/get_emojis.ts";
 import { createGuild } from "./guilds/create_guild.ts";
-import { deleteServer } from "./guilds/delete_server.ts";
+import { deleteGuild } from "./guilds/delete_guild.ts";
 import { editGuild } from "./guilds/edit_guild.ts";
 import { editWelcomeScreen } from "./guilds/edit_welcome_screen.ts";
 import { editWidget } from "./guilds/edit_widget.ts";
@@ -93,7 +93,6 @@ import { publishMessage } from "./messages/publish_message.ts";
 import { removeAllReactions } from "./messages/remove_all_reactions.ts";
 import { removeReaction } from "./messages/remove_reaction.ts";
 import { removeReactionEmoji } from "./messages/remove_reaction_emoji.ts";
-import { removeUserReaction } from "./messages/remove_user_reaction.ts";
 import { sendMessage } from "./messages/send_message.ts";
 import { unpin, unpinMessage } from "./messages/unpin_message.ts";
 import { editBotStatus } from "./misc/edit_bot_status.ts";
@@ -147,13 +146,13 @@ export {
   deleteChannel,
   deleteChannelOverwrite,
   deleteEmoji,
+  deleteGuild,
   deleteGuildTemplate,
   deleteIntegration,
   deleteInvite,
   deleteMessage,
   deleteMessages,
   deleteRole,
-  deleteServer,
   deleteSlashCommand,
   deleteSlashResponse,
   deleteWebhook,
@@ -240,7 +239,6 @@ export {
   removeReaction,
   removeReactionEmoji,
   removeRole,
-  removeUserReaction,
   sendDirectMessage,
   sendInteractionResponse,
   sendMessage,
@@ -295,7 +293,7 @@ export let helpers = {
   // guilds
   categoryChildren,
   createGuild,
-  deleteServer,
+  deleteGuild,
   editGuild,
   editWidget,
   editWelcomeScreen,
@@ -361,7 +359,6 @@ export let helpers = {
   removeAllReactions,
   removeReactionEmoji,
   removeReaction,
-  removeUserReaction,
   sendMessage,
   unpinMessage,
   // misc

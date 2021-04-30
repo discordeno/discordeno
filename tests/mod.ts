@@ -48,7 +48,6 @@ import "./messages/add_reactions.ts";
 import "./messages/remove_all_reactions.ts";
 import "./messages/remove_reaction.ts";
 import "./messages/remove_reaction_emoji.ts";
-import "./messages/remove_user_reaction.ts";
 import "./messages/create_message.ts";
 import "./messages/delete_message.ts";
 import "./messages/delete_messages.ts";

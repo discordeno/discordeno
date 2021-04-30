@@ -201,9 +201,9 @@ export async function getMissingGuildPermissions(
   member: string | DiscordenoMember,
   permissions: PermissionStrings[],
 ) {
-  // First we need the role permissino bits this member has
+  // First we need the role permission bits this member has
   const permissionBits = await calculateBasePermissions(guild, member);
-  // Second returnn the members missing permissions
+  // Second return the members missing permissions
   return missingPermissions(permissionBits, permissions);
 }
 
@@ -268,13 +268,13 @@ export function requireBotChannelPermissions(
 }
 
 /** This function converts a bitwise string to permission strings */
-export function calculatePermissions(permissionBits: bigint) {
+export function calculatePermissions(permissionBits: string) {
   return Object.keys(DiscordBitwisePermissionFlags).filter((permission) => {
     // Since Object.keys() not only returns the permission names but also the bit values we need to return false if it is a Number
     if (Number(permission)) return false;
     // Check if permissionBits has this permission
     return (
-      permissionBits &
+      BigInt(permissionBits) &
       BigInt(DiscordBitwisePermissionFlags[permission as PermissionStrings])
     );
   }) as PermissionStrings[];

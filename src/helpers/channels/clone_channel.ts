@@ -29,8 +29,8 @@ export async function cloneChannel(channelId: string, reason?: string) {
     ) => ({
       id: overwrite.id,
       type: overwrite.type,
-      allow: calculatePermissions(BigInt(overwrite.allow)),
-      deny: calculatePermissions(BigInt(overwrite.deny)),
+      allow: calculatePermissions(overwrite.allow),
+      deny: calculatePermissions(overwrite.deny),
     })),
   };
 

@@ -121,8 +121,8 @@ const baseMessage: Partial<DiscordenoMessage> = {
   removeReactionEmoji(reaction) {
     return removeReactionEmoji(this.channelId!, this.id!, reaction);
   },
-  removeReaction(reaction) {
-    return removeReaction(this.channelId!, this.id!, reaction);
+  removeReaction(reaction, userId) {
+    return removeReaction(this.channelId!, this.id!, reaction, { userId });
   },
 };
 
@@ -250,10 +250,13 @@ export interface DiscordenoMessage
     timeout?: number,
     reason?: string,
   ): Promise<unknown>;
-  /** Remove all reactions */
+  /** Removes all reactions for all emojis on this message */
   removeAllReactions(): ReturnType<typeof removeAllReactions>;
-  /** Remove all reactions */
+  /** Removes all reactions for a single emoji on this message */
   removeReactionEmoji(reaction: string): ReturnType<typeof removeReactionEmoji>;
-  /** Remove all reactions */
-  removeReaction(reaction: string): ReturnType<typeof removeReaction>;
+  /** Removes a reaction from the given user on this message, defaults to bot */
+  removeReaction(
+    reaction: string,
+    userId?: string,
+  ): ReturnType<typeof removeReaction>;
 }
