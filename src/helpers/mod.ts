@@ -93,7 +93,6 @@ import { publishMessage } from "./messages/publish_message.ts";
 import { removeAllReactions } from "./messages/remove_all_reactions.ts";
 import { removeReaction } from "./messages/remove_reaction.ts";
 import { removeReactionEmoji } from "./messages/remove_reaction_emoji.ts";
-import { removeUserReaction } from "./messages/remove_user_reaction.ts";
 import { sendMessage } from "./messages/send_message.ts";
 import { unpin, unpinMessage } from "./messages/unpin_message.ts";
 import { editBotStatus } from "./misc/edit_bot_status.ts";
@@ -240,7 +239,6 @@ export {
   removeReaction,
   removeReactionEmoji,
   removeRole,
-  removeUserReaction,
   sendDirectMessage,
   sendInteractionResponse,
   sendMessage,
@@ -361,7 +359,6 @@ export let helpers = {
   removeAllReactions,
   removeReactionEmoji,
   removeReaction,
-  removeUserReaction,
   sendMessage,
   unpinMessage,
   // misc

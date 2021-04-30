@@ -121,8 +121,8 @@ const baseMessage: Partial<DiscordenoMessage> = {
   removeReactionEmoji(reaction) {
     return removeReactionEmoji(this.channelId!, this.id!, reaction);
   },
-  removeReaction(reaction) {
-    return removeReaction(this.channelId!, this.id!, reaction);
+  removeReaction(reaction, userId) {
+    return removeReaction(this.channelId!, this.id!, reaction, userId);
   },
 };
 
@@ -255,5 +255,8 @@ export interface DiscordenoMessage
   /** Remove all reactions */
   removeReactionEmoji(reaction: string): ReturnType<typeof removeReactionEmoji>;
   /** Remove all reactions */
-  removeReaction(reaction: string): ReturnType<typeof removeReaction>;
+  removeReaction(
+    reaction: string,
+    userId?: string,
+  ): ReturnType<typeof removeReaction>;
 }

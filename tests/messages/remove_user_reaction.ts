@@ -1,12 +1,7 @@
-import {
-  addReaction,
-  cache,
-  removeUserReaction,
-  sendMessage,
-} from "../../mod.ts";
-import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
+import { addReaction, cache, removeReaction, sendMessage } from "../../mod.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
+import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
 async function ifItFailsBlameWolf(type: "getter" | "raw") {
   const message = await sendMessage(tempData.channelId, "Hello World!");
@@ -32,7 +27,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   assertEquals(await cache.messages.get(message.id)?.reactions?.length, 1);
 
   if (type === "raw") {
-    await removeUserReaction(
+    await removeReaction(
       message.channelId,
       message.id,
       "❤",
