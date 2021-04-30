@@ -4,7 +4,6 @@ import { GuildMember } from "../guilds/guild_member.ts";
 import { MessageInteraction } from "../interactions/message_interaction.ts";
 import { Application } from "../oauth2/application.ts";
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { Attachment } from "./attachment.ts";
 import { MessageActivity } from "./message_activity.ts";
 import { MessageReference } from "./message_reference.ts";
@@ -12,6 +11,7 @@ import { MessageSticker } from "./message_sticker.ts";
 import { DiscordMessageTypes } from "./message_types.ts";
 import { DiscordReaction } from "./reaction.ts";
 
+/** https://discord.com/developers/docs/resources/channel#message-object */
 export interface Message {
   /** id of the message */
   id: string;
@@ -83,6 +83,3 @@ export interface Message {
   /** Sent if the message is a response to an Interaction */
   interaction?: MessageInteraction;
 }
-
-/** https://discord.com/developers/docs/resources/channel#message-object */
-export type DiscordMessage = SnakeCasedPropertiesDeep<Message>;
