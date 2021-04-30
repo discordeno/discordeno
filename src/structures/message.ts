@@ -250,11 +250,11 @@ export interface DiscordenoMessage
     timeout?: number,
     reason?: string,
   ): Promise<unknown>;
-  /** Remove all reactions */
+  /** Removes all reactions for all emojis on this message */
   removeAllReactions(): ReturnType<typeof removeAllReactions>;
-  /** Remove all reactions */
+  /** Removes all reactions for a single emoji on this message */
   removeReactionEmoji(reaction: string): ReturnType<typeof removeReactionEmoji>;
-  /** Remove all reactions */
+  /** Removes a reaction from the given user on this message, defaults to bot */
   removeReaction(
     reaction: string,
     userId?: string,
