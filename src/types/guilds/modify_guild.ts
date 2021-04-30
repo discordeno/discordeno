@@ -1,10 +1,10 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordDefaultMessageNotificationLevels } from "./default_message_notification_levels.ts";
 import { DiscordExplicitContentFilterLevels } from "./explicit_content_filter_levels.ts";
 import { DiscordGuildFeatures } from "./guild_features.ts";
 import { DiscordSystemChannelFlags } from "./system_channel_flags.ts";
 import { DiscordVerificationLevels } from "./verification_levels.ts";
 
+/** https://discord.com/developers/docs/resources/guild#modify-guild */
 export interface ModifyGuild {
   /** Guild name */
   name?: string;
@@ -43,6 +43,3 @@ export interface ModifyGuild {
   /** Enabled guild features */
   features?: DiscordGuildFeatures[];
 }
-
-/** https://discord.com/developers/docs/resources/guild#modify-guild */
-export type DiscordModifyGuild = SnakeCasedPropertiesDeep<ModifyGuild>;
