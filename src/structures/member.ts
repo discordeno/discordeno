@@ -85,15 +85,6 @@ export async function createDiscordenoMember(
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
 
-  for (const key of Object.keys(rest)) {
-    eventHandlers.debug?.(
-      "loop",
-      `Running for of loop for Object.keys(rest) in DiscordenoMember function.`,
-    );
-    // @ts-ignore index signature
-    props[key] = createNewProp(rest[key]);
-  }
-
   for (const key of Object.keys(user)) {
     eventHandlers.debug?.(
       "loop",
@@ -122,18 +113,15 @@ export async function createDiscordenoMember(
 
   // User was never cached before
   member.guilds.set(guildId, {
-    nick: rest.nick,
-    roles: rest.roles,
+    ...rest,
     joinedAt: Date.parse(joinedAt),
     premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
-    deaf: rest.deaf,
-    mute: rest.mute,
   });
 
   return member;
 }
 
-export interface DiscordenoMember extends GuildMember, User {
+export interface DiscordenoMember extends User {
   /** The guild related data mapped by guild id */
   guilds: Collection<
     string,

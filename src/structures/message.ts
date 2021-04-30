@@ -178,7 +178,8 @@ export async function createDiscordenoMessage(data: Message) {
 }
 
 export interface DiscordenoMessage
-  extends Omit<Message, "timestamp" | "editedTimestamp" | "guildId"> {
+  extends
+    Omit<Message, "timestamp" | "editedTimestamp" | "guildId" | "member"> {
   // For better user experience
   /** Id of the guild which the massage has been send in. Empty string if it a DM */
   guildId: string;
