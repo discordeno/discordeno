@@ -8,3 +8,6 @@ export enum DiscordApplicationFlags {
   VerificationPendingGuildLimit = 1 << 16,
   Embedded = 1 << 17,
 }
+
+export type ApplicationFlags = DiscordApplicationFlags;
+export const ApplicationFlags = DiscordApplicationFlags;

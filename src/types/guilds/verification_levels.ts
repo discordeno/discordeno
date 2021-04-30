@@ -11,3 +11,6 @@ export enum DiscordVerificationLevels {
   /** Must have a verified phone number */
   VERY_HIGH,
 }
+
+export type VerificationLevels = DiscordVerificationLevels;
+export const VerificationLevels = DiscordVerificationLevels;

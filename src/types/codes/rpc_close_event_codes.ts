@@ -7,3 +7,6 @@ export enum DiscordRpcCloseEventCodes {
   InvalidVersion,
   InvalidEncoding,
 }
+
+export type RpcCloseEventCodes = DiscordRpcCloseEventCodes;
+export const RpcCloseEventCodes = DiscordRpcCloseEventCodes;

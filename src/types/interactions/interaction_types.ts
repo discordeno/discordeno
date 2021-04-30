@@ -3,3 +3,6 @@ export enum DiscordInteractionTypes {
   Ping = 1,
   ApplicationCommand,
 }
+
+export type InteractionTypes = DiscordInteractionTypes;
+export const InteractionTypes = DiscordInteractionTypes;

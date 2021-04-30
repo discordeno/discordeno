@@ -5,3 +5,6 @@ export enum DiscordMessageActivityTypes {
   LISTEN,
   JOIN_REQUEST,
 }
+
+export type MessageActivityTypes = DiscordMessageActivityTypes;
+export const MessageActivityTypes = DiscordMessageActivityTypes;

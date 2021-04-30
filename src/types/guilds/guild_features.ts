@@ -33,3 +33,6 @@ export enum DiscordGuildFeatures {
   /** Guild can be previewed before joining via Membership Screening or the directory */
   PREVIEW_ENABLED = "PREVIEW_ENABLED",
 }
+
+export type GuildFeatures = DiscordGuildFeatures;
+export const GuildFeatures = DiscordGuildFeatures;

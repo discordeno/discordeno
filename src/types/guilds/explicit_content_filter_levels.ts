@@ -7,3 +7,6 @@ export enum DiscordExplicitContentFilterLevels {
   /** Media content sent by all members will be scanned */
   ALL_MEMBERS,
 }
+
+export type ExplicitContentFilterLevels = DiscordExplicitContentFilterLevels;
+export const ExplicitContentFilterLevels = DiscordExplicitContentFilterLevels;

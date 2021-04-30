@@ -5,3 +5,6 @@ export enum DiscordWebhookTypes {
   /** Channel Follower Webhooks are internal webhooks used with Channel Following to post new messages into channels */
   ChannelFollower,
 }
+
+export type WebhookTypes = DiscordWebhookTypes;
+export const WebhookTypes = DiscordWebhookTypes;
