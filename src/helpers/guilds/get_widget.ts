@@ -12,7 +12,7 @@ export async function getWidget(guildId: string, options?: { force: boolean }) {
     if (!guild?.widgetEnabled) throw new Error(Errors.GUILD_WIDGET_NOT_ENABLED);
   }
 
-  return await rest.runMethod<DiscordGuildWidget>(
+  return await rest.runMethod(
     "get",
     `${endpoints.GUILD_WIDGET(guildId)}.json`,
   );
