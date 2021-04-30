@@ -12,19 +12,20 @@ export async function heartbeat(shardId: number, interval: number) {
 
   ws.log("HEARTBEATING_DETAILS", { shardId, interval, shard });
 
+  // The first heartbeat is special so we send it without setInterval: https://discord.com/developers/docs/topics/gateway#heartbeating
+  await delay(Math.floor(shard.heartbeat.interval * Math.random()));
+
+  if (shard.ws.readyState !== WebSocket.OPEN) return;
+
+  shard.ws.send(JSON.stringify({
+    op: DiscordGatewayOpcodes.Heartbeat,
+    d: shard.previousSequenceNumber,
+  }));
+
   shard.heartbeat.keepAlive = true;
   shard.heartbeat.acknowledged = false;
   shard.heartbeat.lastSentAt = Date.now();
   shard.heartbeat.interval = interval;
-
-  // The first heartbeat is special so we send it without setInterval: https://discord.com/developers/docs/topics/gateway#heartbeating
-  await delay(Math.floor(shard.heartbeat.interval * Math.random()));
-
-  shard.queue.unshift({
-    op: DiscordGatewayOpcodes.Heartbeat,
-    d: shard.previousSequenceNumber,
-  });
-  ws.processQueue(shard.id);
 
   shard.heartbeat.intervalId = setInterval(() => {
     ws.log("DEBUG", `Running setInterval in heartbeat file.`);
@@ -50,11 +51,11 @@ export async function heartbeat(shardId: number, interval: number) {
 
     if (currentShard.ws.readyState !== WebSocket.OPEN) return;
 
+    currentShard.heartbeat.acknowledged = false;
+
     currentShard.ws.send(JSON.stringify({
       op: DiscordGatewayOpcodes.Heartbeat,
       d: currentShard.previousSequenceNumber,
     }));
-
-    currentShard.heartbeat.acknowledged = false;
   }, shard.heartbeat.interval);
 }

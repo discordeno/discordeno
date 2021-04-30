@@ -1,5 +1,6 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { closeWS } from "./close_ws.ts";
+import { sendShardMessage } from "./send_shard_message.ts";
 import { ws } from "./ws.ts";
 
 export async function identify(shardId: number, maxShards: number) {
@@ -40,11 +41,10 @@ export async function identify(shardId: number, maxShards: number) {
   });
 
   socket.onopen = () => {
-    ws.shards.get(shardId)?.queue.unshift({
+    sendShardMessage(shardId, {
       op: DiscordGatewayOpcodes.Identify,
       d: { ...ws.identifyPayload, shard: [shardId, maxShards] },
-    });
-    ws.processQueue(shardId);
+    }, true);
   };
 
   return new Promise((resolve, reject) => {

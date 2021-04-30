@@ -14,18 +14,6 @@ export let eventHandlers: EventHandlers = {};
 
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
-export const identifyPayload = {
-  token: "",
-  compress: true,
-  properties: {
-    $os: "linux",
-    $browser: "Discordeno",
-    $device: "Discordeno",
-  },
-  intents: 0,
-  shard: [0, 0],
-};
-
 export async function startBot(config: BotConfig) {
   if (config.eventHandlers) eventHandlers = config.eventHandlers;
   authorization = `Bot ${config.token}`;
@@ -49,17 +37,8 @@ export async function startBot(config: BotConfig) {
   ws.botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
 
   proxyWSURL = ws.botGatewayData.url;
-  identifyPayload.token = config.token;
-  identifyPayload.intents = config.intents.reduce(
-    (
-      bits,
-      next,
-    ) => (bits |= typeof next === "string"
-      ? DiscordGatewayIntents[next]
-      : next),
-    0,
-  );
-  identifyPayload.shard = [0, ws.botGatewayData.shards];
+
+  // ws.lastShardId = ws.maxShards;
 
   ws.spawnShards();
 }
@@ -90,34 +69,43 @@ export function setApplicationId(id: string) {
  *
  * Advanced Devs: This function will allow you to have an insane amount of customization potential as when you get to large bots you need to be able to optimize every tiny detail to make you bot work the way you need.
  */
-export async function startBigBrainBot(data: BigBrainBotConfig) {
-  authorization = `Bot ${data.token}`;
-  identifyPayload.token = `Bot ${data.token}`;
+export async function startBigBrainBot(options: BigBrainBotConfig) {
+  authorization = `Bot ${options.token}`;
+  rest.token = `Bot ${options.token}`;
 
-  if (data.secretKey) secretKey = data.secretKey;
-  if (data.restURL) baseEndpoints.BASE_URL = data.restURL;
-  if (data.cdnURL) baseEndpoints.CDN_URL = data.cdnURL;
-  if (data.eventHandlers) eventHandlers = data.eventHandlers;
-  if (data.compress) {
-    identifyPayload.compress = data.compress;
-  }
-
-  identifyPayload.intents = data.intents.reduce(
-    (
-      bits,
-      next,
-    ) => (bits |= typeof next === "string"
-      ? DiscordGatewayIntents[next]
-      : next),
-    0,
-  );
+  if (options.secretKey) secretKey = options.secretKey;
+  if (options.restURL) baseEndpoints.BASE_URL = options.restURL;
+  if (options.cdnURL) baseEndpoints.CDN_URL = options.cdnURL;
+  if (options.eventHandlers) eventHandlers = options.eventHandlers;
 
   // PROXY DOESNT NEED US SPAWNING SHARDS
-  if (!data.wsPort) {
+  if (!options.wsPort) {
+    ws.identifyPayload.token = `Bot ${options.token}`;
+
+    if (options.compress) {
+      ws.identifyPayload.compress = options.compress;
+    }
+
+    ws.identifyPayload.intents = options.intents.reduce(
+      (
+        bits,
+        next,
+      ) => (bits |= typeof next === "string"
+        ? DiscordGatewayIntents[next]
+        : next),
+      0,
+    );
+
     // Initial API connection to get info about bots connection
     ws.botGatewayData = await getGatewayBot();
+    ws.maxShards = ws.maxShards ||
+      ws.botGatewayData.shards;
+    ws.lastShardId = options.lastShardId || ws.botGatewayData.shards;
+    // Explicitly append gateway version and encoding
+    ws.botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
     proxyWSURL = ws.botGatewayData.url;
-    ws.spawnShards(data.firstShardId);
+
+    ws.spawnShards(options.firstShardId);
   }
 }
 
@@ -133,6 +121,8 @@ export interface BigBrainBotConfig extends BotConfig {
   firstShardId: number;
   /** The last shard to start for this worker. By default it will be 25 + the firstShardId. */
   lastShardId?: number;
+  /** The maximum shard Id number. Useful for zero-downtime updates or resharding. */
+  maxShards?: number;
   /** This can be used to forward the ws handling to a proxy. It will disable the sharding done by the bot side. */
   wsPort?: number;
   /** This can be used to forward the REST handling to a proxy. */
