@@ -1,3 +1,4 @@
+/** https://discord.com/developers/docs/resources/voice#voice-region-object-voice-region-structure */
 export interface VoiceRegion {
   /** Unique Id for the region */
   id: string;
@@ -12,6 +13,3 @@ export interface VoiceRegion {
   /** Whether this is a custom voice region (used for events/etc) */
   custom: boolean;
 }
-
-/** https://discord.com/developers/docs/resources/voice#voice-region-object-voice-region-structure */
-export type DiscordVoiceRegion = VoiceRegion;

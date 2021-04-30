@@ -1,6 +1,6 @@
 import { GuildMemberWithUser } from "../guilds/guild_member.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 
+/** https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure */
 export interface VoiceState {
   /** The guild id this voice state is for */
   guildId?: string;
@@ -29,6 +29,3 @@ export interface VoiceState {
   /** The time at which the user requested to speak */
   requestToSpeakTimestamp: string | null;
 }
-
-/** https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure */
-export type DiscordVoiceState = SnakeCasedPropertiesDeep<VoiceState>;
