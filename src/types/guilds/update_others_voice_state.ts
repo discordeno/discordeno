@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedProperties } from "../util.ts";
 
 export interface UpdateOthersVoiceState {
   /** The id of the channel the user is currently in */
@@ -7,7 +7,7 @@ export interface UpdateOthersVoiceState {
   suppress?: boolean;
 }
 
-// TODO: add corresponding link to the resource
-export type DiscordUpdateOthersVoiceState = SnakeCaseProps<
+/** https://discord.com/developers/docs/resources/guild#update-user-voice-state */
+export type DiscordUpdateOthersVoiceState = SnakeCasedProperties<
   UpdateOthersVoiceState
 >;

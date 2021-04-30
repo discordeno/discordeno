@@ -1,3 +1,4 @@
+import { DiscordGatewayCloseEventCodes } from "../types/codes/gateway_close_event_codes.ts";
 import { identify } from "./identify.ts";
 import { resume } from "./resume.ts";
 import { ws } from "./ws.ts";
@@ -33,25 +34,24 @@ export async function createShard(shardId: number) {
       return ws.log("CLOSED_RECONNECT", { shardId, payload: event });
     }
 
-    // TODO: ENUM FOR THESE CODES?
     switch (event.code) {
-      case 4001:
-      case 4002:
-      case 4004:
-      case 4005:
-      case 4010:
-      case 4011:
-      case 4012:
-      case 4013:
-      case 4014:
+      case DiscordGatewayCloseEventCodes.UnknownOpcode:
+      case DiscordGatewayCloseEventCodes.DecodeError:
+      case DiscordGatewayCloseEventCodes.AuthenticationFailed:
+      case DiscordGatewayCloseEventCodes.AlreadyAuthenticated:
+      case DiscordGatewayCloseEventCodes.InvalidShard:
+      case DiscordGatewayCloseEventCodes.ShardingRequired:
+      case DiscordGatewayCloseEventCodes.InvalidApiVersion:
+      case DiscordGatewayCloseEventCodes.InvalidIntents:
+      case DiscordGatewayCloseEventCodes.DisallowedIntents:
         throw new Error(
           event.reason || "Discord gave no reason! GG! You broke Discord!",
         );
       // THESE ERRORS CAN NO BE RESUMED! THEY MUST RE-IDENTIFY!
-      case 4003:
-      case 4007:
-      case 4008:
-      case 4009:
+      case DiscordGatewayCloseEventCodes.NotAuthenticated:
+      case DiscordGatewayCloseEventCodes.InvalidSeq:
+      case DiscordGatewayCloseEventCodes.RateLimited:
+      case DiscordGatewayCloseEventCodes.SessionTimedOut:
         identify(shardId, ws.maxShards);
         break;
       default:

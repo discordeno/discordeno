@@ -1,4 +1,4 @@
-import { SnakeCaseProps } from "../util.ts";
+import { SnakeCasedProperties } from "../util.ts";
 
 export interface UpdateSelfVoiceState {
   /** The id of the channel the user is currently in */
@@ -9,5 +9,7 @@ export interface UpdateSelfVoiceState {
   requestToSpeakTimestamp?: string | null;
 }
 
-// TODO: add corresponding link to the resource
-export type DiscordUpdateSelfVoiceState = SnakeCaseProps<UpdateSelfVoiceState>;
+/** https://discord.com/developers/docs/resources/guild#update-current-user-voice-state */
+export type DiscordUpdateSelfVoiceState = SnakeCasedProperties<
+  UpdateSelfVoiceState
+>;

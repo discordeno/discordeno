@@ -12,5 +12,8 @@ export async function getWidget(guildId: string, options?: { force: boolean }) {
   }
 
   // TODO: add return type
-  return await rest.runMethod("get", `${endpoints.GUILD_WIDGET(guildId)}.json`);
+  return await rest.runMethod(
+    "get",
+    `${endpoints.GUILD_WIDGET(guildId)}.json`,
+  );
 }
