@@ -10,7 +10,7 @@ export interface ModifyGuildWelcomeScreen {
   description?: string | null;
 }
 
-// TODO: add documentation link
+/** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */
 export type DiscordModifyGuildWelcomeScreen = SnakeCasedPropertiesDeep<
   ModifyGuildWelcomeScreen
 >;

@@ -1,5 +1,6 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
+import { DiscordGuildWidget } from "../../types/guilds/guild_widget.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 
@@ -11,6 +12,8 @@ export async function getWidget(guildId: string, options?: { force: boolean }) {
     if (!guild?.widgetEnabled) throw new Error(Errors.GUILD_WIDGET_NOT_ENABLED);
   }
 
-  // TODO: add return type
-  return await rest.runMethod("get", `${endpoints.GUILD_WIDGET(guildId)}.json`);
+  return await rest.runMethod<DiscordGuildWidget>(
+    "get",
+    `${endpoints.GUILD_WIDGET(guildId)}.json`,
+  );
 }
