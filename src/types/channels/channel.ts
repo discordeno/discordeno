@@ -1,3 +1,5 @@
+import { ThreadMember } from "../messages/thread_member.ts";
+import { ThreadMetadata } from "../messages/thread_metadata.ts";
 import { User } from "../users/user.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordChannelTypes } from "./channel_types.ts";
@@ -33,11 +35,11 @@ export interface Channel {
   recipients?: User[];
   /** Icon hash */
   icon?: string | null;
-  /** id of the DM creator */
+  /** Id of the creator of the group DM or thread */
   ownerId?: string;
   /** Application id of the group DM creator if it is bot-created */
   applicationId?: string;
-  /** Id of the parent category for a channel (each parent category can contain up to 50 channels) */
+  /** For guild channels: Id of the parent category for a channel (each parent category can contain up to 50 channels), for threads: id of the text channel this thread was created */
   parentId?: string | null;
   /** When the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
   lastPinTimestamp?: string | null;
@@ -45,6 +47,14 @@ export interface Channel {
   rtcRegion?: string | null;
   /** The camera video quality mode of the voice channel, 1 when not present */
   videoQualityMode?: DiscordVideoQualityModes;
+  /** An approximate count of messages in a thread, stops counting at 50 */
+  messageCount?: number;
+  /** An approximate count of users in a thread, stops counting at 50 */
+  memberCount?: number;
+  /** Thread-specifig fields not needed by other channels */
+  threadMetadata?: ThreadMetadata;
+  /** Thread member object for the current user, if they have joined the thread, only included on certain API endpoints */
+  member?: ThreadMember;
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-object */
