@@ -38,7 +38,7 @@ import { emojiURL } from "./emojis/emoji_url.ts";
 import { getEmoji } from "./emojis/get_emoji.ts";
 import { getEmojis } from "./emojis/get_emojis.ts";
 import { createGuild } from "./guilds/create_guild.ts";
-import { deleteServer } from "./guilds/delete_server.ts";
+import { deleteGuild } from "./guilds/delete_guild.ts";
 import { editGuild } from "./guilds/edit_guild.ts";
 import { editWelcomeScreen } from "./guilds/edit_welcome_screen.ts";
 import { editWidget } from "./guilds/edit_widget.ts";
@@ -147,13 +147,13 @@ export {
   deleteChannel,
   deleteChannelOverwrite,
   deleteEmoji,
+  deleteGuild,
   deleteGuildTemplate,
   deleteIntegration,
   deleteInvite,
   deleteMessage,
   deleteMessages,
   deleteRole,
-  deleteServer,
   deleteSlashCommand,
   deleteSlashResponse,
   deleteWebhook,
@@ -295,7 +295,7 @@ export let helpers = {
   // guilds
   categoryChildren,
   createGuild,
-  deleteServer,
+  deleteGuild,
   editGuild,
   editWidget,
   editWelcomeScreen,

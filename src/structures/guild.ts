@@ -1,6 +1,6 @@
 import { botId, eventHandlers } from "../bot.ts";
 import { cache, cacheHandlers } from "../cache.ts";
-import { deleteServer } from "../helpers/guilds/delete_server.ts";
+import { deleteGuild } from "../helpers/guilds/delete_guild.ts";
 import { editGuild } from "../helpers/guilds/edit_guild.ts";
 import { getAuditLogs } from "../helpers/guilds/get_audit_logs.ts";
 import { getBan } from "../helpers/guilds/get_ban.ts";
@@ -79,7 +79,7 @@ const baseGuild: Partial<DiscordenoGuild> = {
     return guildSplashURL(this.id!, this.splash!, size, format);
   },
   delete() {
-    return deleteServer(this.id!);
+    return deleteGuild(this.id!);
   },
   edit(options) {
     return editGuild(this.id!, options);
@@ -272,7 +272,7 @@ export interface DiscordenoGuild extends
     format?: DiscordImageFormat,
   ): string | undefined;
   /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event. */
-  delete(): ReturnType<typeof deleteServer>;
+  delete(): ReturnType<typeof deleteGuild>;
   /** Leave a guild */
   leave(): ReturnType<typeof leaveGuild>;
   /** Edit the server. Requires the MANAGE_GUILD permission. */
