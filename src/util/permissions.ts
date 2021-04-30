@@ -268,13 +268,13 @@ export function requireBotChannelPermissions(
 }
 
 /** This function converts a bitwise string to permission strings */
-export function calculatePermissions(permissionBits: bigint) {
+export function calculatePermissions(permissionBits: string) {
   return Object.keys(DiscordBitwisePermissionFlags).filter((permission) => {
     // Since Object.keys() not only returns the permission names but also the bit values we need to return false if it is a Number
     if (Number(permission)) return false;
     // Check if permissionBits has this permission
     return (
-      permissionBits &
+      BigInt(permissionBits) &
       BigInt(DiscordBitwisePermissionFlags[permission as PermissionStrings])
     );
   }) as PermissionStrings[];
