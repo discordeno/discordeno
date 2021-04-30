@@ -1,7 +1,7 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { ApplicationCommandOptionChoice } from "./application_command_option_choice.ts";
 import { DiscordApplicationCommandOptionTypes } from "./application_command_option_types.ts";
 
+/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption */
 export interface ApplicationCommandOption {
   /** Value of Application Command Option Type */
   type: DiscordApplicationCommandOptionTypes;
@@ -16,8 +16,3 @@ export interface ApplicationCommandOption {
   /** If the optino is a subcommand or subcommand group type, this nested options will be the parameters */
   options?: ApplicationCommandOption[];
 }
-
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption */
-export type DiscordApplicationCommandOption = SnakeCasedPropertiesDeep<
-  ApplicationCommandOption
->;

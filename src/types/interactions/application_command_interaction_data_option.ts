@@ -1,6 +1,6 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordApplicationCommandOptionTypes } from "./application_command_option_types.ts";
 
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction-applicationcommandinteractiondataoption */
 export interface ApplicationCommandInteractionDataOption {
   /** The name of the parameter */
   name: string;
@@ -11,7 +11,3 @@ export interface ApplicationCommandInteractionDataOption {
   /** Present if this option is a group or subcommand */
   options?: ApplicationCommandInteractionDataOption[];
 }
-
-/** https://discord.com/developers/docs/interactions/slash-commands#interaction-applicationcommandinteractiondataoption */
-export type DiscordApplicationCommandInteractionDataOption =
-  SnakeCasedPropertiesDeep<ApplicationCommandInteractionDataOption>;
