@@ -1,3 +1,4 @@
+import { Channel } from "../channels/channel.ts";
 import { ChannelMention } from "../channels/channel_mention.ts";
 import { Embed } from "../embeds/embed.ts";
 import { GuildMember } from "../guilds/guild_member.ts";
@@ -11,6 +12,7 @@ import { MessageReference } from "./message_reference.ts";
 import { MessageSticker } from "./message_sticker.ts";
 import { DiscordMessageTypes } from "./message_types.ts";
 import { DiscordReaction } from "./reaction.ts";
+import { ThreadMember } from "./thread_member.ts";
 
 export interface Message {
   /** id of the message */
@@ -82,6 +84,8 @@ export interface Message {
   referencedMessage?: Message;
   /** Sent if the message is a response to an Interaction */
   interaction?: MessageInteraction;
+  /** The thread that was started from this message, includes thread member object */
+  thread?: Omit<Channel, "member"> & { member: ThreadMember };
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object */
