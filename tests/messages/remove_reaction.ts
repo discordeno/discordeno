@@ -31,7 +31,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", user = false) {
       message.channelId,
       message.id,
       "❤",
-      user ? message.author.id : undefined,
+      user ? { userId: message.author.id } : undefined,
     );
   } else {
     await message.removeReaction("❤", user ? message.author.id : undefined);

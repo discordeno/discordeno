@@ -122,7 +122,7 @@ const baseMessage: Partial<DiscordenoMessage> = {
     return removeReactionEmoji(this.channelId!, this.id!, reaction);
   },
   removeReaction(reaction, userId) {
-    return removeReaction(this.channelId!, this.id!, reaction, userId);
+    return removeReaction(this.channelId!, this.id!, reaction, { userId });
   },
 };
 

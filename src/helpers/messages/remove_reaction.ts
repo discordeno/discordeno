@@ -7,9 +7,9 @@ export async function removeReaction(
   channelId: string,
   messageId: string,
   reaction: string,
-  userId?: string,
+  options?: { userId?: string },
 ) {
-  if (userId) {
+  if (options?.userId) {
     await requireBotChannelPermissions(channelId, ["MANAGE_MESSAGES"]);
   }
 
@@ -21,12 +21,12 @@ export async function removeReaction(
 
   return await rest.runMethod<undefined>(
     "delete",
-    userId
+    options?.userId
       ? endpoints.CHANNEL_MESSAGE_REACTION_USER(
         channelId,
         messageId,
         reaction,
-        userId,
+        options.userId,
       )
       : endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction),
   );
