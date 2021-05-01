@@ -1,5 +1,6 @@
 import { Channel } from "../channels/channel.ts";
 import { ChannelMention } from "../channels/channel_mention.ts";
+import { ThreadMember } from "../channels/threads/thread_member.ts";
 import { Embed } from "../embeds/embed.ts";
 import { GuildMember } from "../guilds/guild_member.ts";
 import { MessageInteraction } from "../interactions/message_interaction.ts";
@@ -12,7 +13,6 @@ import { MessageReference } from "./message_reference.ts";
 import { MessageSticker } from "./message_sticker.ts";
 import { DiscordMessageTypes } from "./message_types.ts";
 import { Reaction } from "./reaction.ts";
-import { ThreadMember } from "./thread_member.ts";
 
 /** https://discord.com/developers/docs/resources/channel#message-object */
 export interface Message {
