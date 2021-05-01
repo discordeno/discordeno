@@ -122,6 +122,9 @@ import { executeWebhook } from "./webhooks/execute_webhook.ts";
 import { getWebhook } from "./webhooks/get_webhook.ts";
 import { getWebhooks } from "./webhooks/get_webhooks.ts";
 import { getWebhookWithToken } from "./webhooks/get_webhook_with_token.ts";
+// Type Guards
+import { isActionRow } from "./type_guards/is_action_row.ts";
+import { isButton } from "./type_guards/is_button.ts";
 
 export {
   addDiscoverySubcategory,
@@ -225,6 +228,8 @@ export {
   guildBannerURL,
   guildIconURL,
   guildSplashURL,
+  isActionRow,
+  isButton,
   isChannelSynced,
   kick,
   kickMember,
