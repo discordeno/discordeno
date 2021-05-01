@@ -1,4 +1,4 @@
-export enum ButtonStyles {
+export enum DiscordButtonStyles {
   /** A blurple button */
   Primary = 1,
   /** A grey button */
@@ -10,3 +10,6 @@ export enum ButtonStyles {
   /** A button that navigates to a URL */
   Link,
 }
+
+export type ButtonStyles = DiscordButtonStyles;
+export const ButtonStyles = DiscordButtonStyles;
