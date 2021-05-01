@@ -109,11 +109,9 @@ export async function sendMessage(
           throw new Error(Errors.LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID);
         }
         if (
-          !component.customId
+          !component.customId && component.type !== ButtonStyles.Link
         ) {
-          if (component.type !== ButtonStyles.Link) {
-            throw new Error(Errors.BUTTON_REQUIRES_CUSTOM_ID);
-          }
+          throw new Error(Errors.BUTTON_REQUIRES_CUSTOM_ID);
         }
 
         if (!validateLength(component.label, { max: 80 })) {
