@@ -13,6 +13,6 @@ export interface EditWebhookMessage {
   file: FileContent | FileContent[];
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions | null;
-  /** Attached files to keep. */
+  /** Attached files to keep */
   attachments?: Attachment | null;
 }
