@@ -3,6 +3,7 @@ import { AllowedMentions } from "../messages/allowed_mentions.ts";
 import { MessageReference } from "../messages/message_reference.ts";
 import { FileContent } from "../misc/file_content.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
+import { MessageComponents } from "./components/message_components.ts";
 
 export interface CreateMessage {
   /** The message contents (up to 2000 characters) */
@@ -19,6 +20,8 @@ export interface CreateMessage {
   messageReference?: MessageReference;
   /** The contents of the file being sent */
   file?: FileContent | FileContent[];
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents;
 }
 
 /** https://discord.com/developers/docs/resources/channel#create-message */

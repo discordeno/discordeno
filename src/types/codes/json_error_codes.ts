@@ -43,6 +43,7 @@ export enum DiscordJsonErrorCodes {
   MaximumNumberOfInvitesReached,
   MaximumNumberOfGuildDiscoverySubcategoriesHasBeenReached = 30030,
   GuildAlreadyHasTemplate = 30031,
+  MaximumNumberOfBansForNonGuildMembersHaveBeenExceeded = 30035,
   UnauthorizedProvideAValidTokenAndTryAgain = 40001,
   YouNeedToVerifyYourAccountInOrderToPerformThisAction,
   RequestEntityTooLargeTrySendingSomethingSmallerInSize = 40005,

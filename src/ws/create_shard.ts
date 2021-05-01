@@ -35,6 +35,15 @@ export async function createShard(shardId: number) {
     }
 
     switch (event.code) {
+      // Discordeno tests finished
+      case 3061:
+        return;
+      case 3063: // Resharded
+      case 3064: // Resuming
+      case 3065: // Reidentifying
+      case 3066: // Missing ACK
+        // Will restart shard manually
+        return ws.log("CLOSED_RECONNECT", { shardId, payload: event });
       case DiscordGatewayCloseEventCodes.UnknownOpcode:
       case DiscordGatewayCloseEventCodes.DecodeError:
       case DiscordGatewayCloseEventCodes.AuthenticationFailed:

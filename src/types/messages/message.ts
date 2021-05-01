@@ -6,6 +6,7 @@ import { MessageInteraction } from "../interactions/message_interaction.ts";
 import { Application } from "../oauth2/application.ts";
 import { User } from "../users/user.ts";
 import { Attachment } from "./attachment.ts";
+import { MessageComponents } from "./components/message_components.ts";
 import { MessageActivity } from "./message_activity.ts";
 import { MessageReference } from "./message_reference.ts";
 import { MessageSticker } from "./message_sticker.ts";
@@ -86,4 +87,6 @@ export interface Message {
   interaction?: MessageInteraction;
   /** The thread that was started from this message, includes thread member object */
   thread?: Omit<Channel, "member"> & { member: ThreadMember };
+  /** The components related to this message */
+  components: MessageComponents;
 }

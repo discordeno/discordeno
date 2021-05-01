@@ -17,11 +17,6 @@ export interface MessageSticker {
    * Note: The URL for fetching sticker assets is currently private.
    */
   asset: string;
-  /**
-   * Sticker preview asset hash
-   * Note: The URL for fetching sticker assets is currently private.
-   */
-  previewAsset?: string | null;
   /** Type of sticker format */
   formatType: DiscordMessageStickerFormatTypes;
 }

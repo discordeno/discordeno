@@ -61,5 +61,6 @@ export function log(
     | "DEBUG",
   data: unknown,
 ) {
-  console.log(type, data);
+  // This is just a placeholder for the dev to override
+  if (!type && !data) console.log(type, data);
 }

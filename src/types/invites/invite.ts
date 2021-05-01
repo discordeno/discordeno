@@ -24,4 +24,6 @@ export interface Invite {
   approximatePresenceCount?: number;
   /** Approximate count of total members */
   approximateMemberCount?: number;
+  /** The expiration date of this invite, returned from the `GET /invites/<code>` endpoint when `with_expiration` is `true` */
+  expiresAt?: string | null;
 }
