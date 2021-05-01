@@ -12,6 +12,6 @@ export interface EditMessage {
   flags?: 4 | null;
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions | null;
-  /** Attached files to keep. */
+  /** Attached files to keep */
   attachments?: Attachment | null;
 }
