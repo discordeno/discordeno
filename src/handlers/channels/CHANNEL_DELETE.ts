@@ -11,7 +11,7 @@ export async function handleChannelDelete(data: DiscordGatewayPayload) {
   if (!cachedChannel) return;
 
   if (
-    cachedChannel.type === DiscordChannelTypes.GUILD_VOICE && payload.guildId
+    cachedChannel.type === DiscordChannelTypes.GuildVoice && payload.guildId
   ) {
     const guild = await cacheHandlers.get("guilds", payload.guildId);
 
