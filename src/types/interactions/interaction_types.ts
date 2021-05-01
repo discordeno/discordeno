@@ -2,4 +2,5 @@
 export enum DiscordInteractionTypes {
   Ping = 1,
   ApplicationCommand,
+  Button
 }

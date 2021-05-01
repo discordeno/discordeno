@@ -17,24 +17,17 @@ export async function createShard(shardId: number) {
   socket.onclose = (event) => {
     ws.log("CLOSED", { shardId, payload: event });
 
-    if (
-      event.code === 3064 ||
-      event.reason === "Discordeno Testing Finished! Do Not RESUME!"
-    ) {
-      return;
-    }
-
-    if (
-      event.code === 3065 ||
-      ["Resharded!", "Resuming the shard, closing old shard."].includes(
-        event.reason,
-      )
-    ) {
-      return ws.log("CLOSED_RECONNECT", { shardId, payload: event });
-    }
-
     // TODO: ENUM FOR THESE CODES?
     switch (event.code) {
+      // Discordeno tests finished
+      case 3061:
+        return;
+      case 3063: // Resharded
+      case 3064: // Resuming
+      case 3065: // Reidentifying
+      case 3066: // Missing ACK
+        // Will restart shard manually
+        return ws.log("CLOSED_RECONNECT", { shardId, payload: event });
       case 4001:
       case 4002:
       case 4004:

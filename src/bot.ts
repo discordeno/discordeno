@@ -5,7 +5,6 @@ import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { ws } from "./ws/ws.ts";
 
-export let authorization = "";
 export let secretKey = "";
 export let botId = "";
 export let applicationId = "";
@@ -14,21 +13,8 @@ export let eventHandlers: EventHandlers = {};
 
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
-export const identifyPayload = {
-  token: "",
-  compress: true,
-  properties: {
-    $os: "linux",
-    $browser: "Discordeno",
-    $device: "Discordeno",
-  },
-  intents: 0,
-  shard: [0, 0],
-};
-
 export async function startBot(config: BotConfig) {
   if (config.eventHandlers) eventHandlers = config.eventHandlers;
-  authorization = `Bot ${config.token}`;
   ws.identifyPayload.token = `Bot ${config.token}`;
   rest.token = `Bot ${config.token}`;
   ws.identifyPayload.intents = config.intents.reduce(
@@ -49,17 +35,6 @@ export async function startBot(config: BotConfig) {
   ws.botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
 
   proxyWSURL = ws.botGatewayData.url;
-  identifyPayload.token = config.token;
-  identifyPayload.intents = config.intents.reduce(
-    (
-      bits,
-      next,
-    ) => (bits |= typeof next === "string"
-      ? DiscordGatewayIntents[next]
-      : next),
-    0,
-  );
-  identifyPayload.shard = [0, ws.botGatewayData.shards];
 
   ws.spawnShards();
 }
@@ -91,18 +66,15 @@ export function setApplicationId(id: string) {
  * Advanced Devs: This function will allow you to have an insane amount of customization potential as when you get to large bots you need to be able to optimize every tiny detail to make you bot work the way you need.
  */
 export async function startBigBrainBot(data: BigBrainBotConfig) {
-  authorization = `Bot ${data.token}`;
-  identifyPayload.token = `Bot ${data.token}`;
-
   if (data.secretKey) secretKey = data.secretKey;
   if (data.restURL) baseEndpoints.BASE_URL = data.restURL;
   if (data.cdnURL) baseEndpoints.CDN_URL = data.cdnURL;
   if (data.eventHandlers) eventHandlers = data.eventHandlers;
   if (data.compress) {
-    identifyPayload.compress = data.compress;
+    ws.identifyPayload.compress = data.compress;
   }
 
-  identifyPayload.intents = data.intents.reduce(
+  ws.identifyPayload.intents = data.intents.reduce(
     (
       bits,
       next,
