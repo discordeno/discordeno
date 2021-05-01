@@ -4,6 +4,7 @@ import { DiscordenoChannel } from "../structures/channel.ts";
 import { DiscordenoGuild } from "../structures/guild.ts";
 import { DiscordenoMember } from "../structures/member.ts";
 import { DiscordenoRole } from "../structures/role.ts";
+import { Overwrite } from "../types/channels/overwrite.ts";
 import { Errors } from "../types/misc/errors.ts";
 import { DiscordBitwisePermissionFlags } from "../types/permissions/bitwise_permission_flags.ts";
 import { PermissionStrings } from "../types/permissions/permission_strings.ts";
@@ -28,11 +29,6 @@ async function getCached(
     ? // @ts-ignore TS is wrong here
       await cacheHandlers.get(table, key)
     : key;
-  if (!cached || typeof cached === "string") {
-    throw new Error(
-      Errors[`${table.slice(0, -1).toUpperCase()}_NOT_FOUND` as Errors],
-    );
-  }
 
   return typeof cached === "string" ? undefined : cached;
 }
@@ -50,7 +46,7 @@ export async function calculateBasePermissions(
   let permissions = 0n;
   // Calculate the role permissions bits, @everyone role is not in memberRoleIds so we need to pass guildId manualy
   permissions |= [...(member.guilds.get(guild.id)?.roles || []), guild.id]
-    .map((id) => (guild as DiscordenoGuild).roles.get(id)?.permissions)
+    .map((id) => guild.roles.get(id)?.permissions)
     // Removes any edge case undefined
     .filter((perm) => perm)
     .reduce((bits, perms) => {
@@ -76,7 +72,7 @@ export async function calculateChannelOverwrites(
 
   const member = await getCached("members", memberOrId);
 
-  if (!member) return "8";
+  if (!channel || !member) return "8";
 
   // Get all the role permissions this member already has
   let permissions = BigInt(
@@ -84,7 +80,7 @@ export async function calculateChannelOverwrites(
   );
 
   // First calculate @everyone overwrites since these have the lowest priority
-  const overwriteEveryone = channel?.permissionOverwrites?.find(
+  const overwriteEveryone = channel.permissionOverwrites.find(
     (overwrite) => overwrite.id === (channel as DiscordenoChannel).guildId,
   );
   if (overwriteEveryone) {
@@ -93,7 +89,7 @@ export async function calculateChannelOverwrites(
     permissions |= BigInt(overwriteEveryone.allow);
   }
 
-  const overwrites = channel?.permissionOverwrites;
+  const overwrites = channel.permissionOverwrites;
 
   // In order to calculate the role permissions correctly we need to temporarily save the allowed and denied permissions
   let allow = 0n;
@@ -111,8 +107,8 @@ export async function calculateChannelOverwrites(
   permissions |= allow;
 
   // Third calculate member specific overwrites since these have the highest priority
-  const overwriteMember = overwrites?.find(
-    (overwrite) => overwrite.id === (member as DiscordenoMember).id,
+  const overwriteMember = overwrites.find(
+    (overwrite) => overwrite.id === member.id,
   );
   if (overwriteMember) {
     permissions &= ~BigInt(overwriteMember.deny);
@@ -288,6 +284,26 @@ export function calculateBits(permissions: PermissionStrings[]) {
       return bits;
     }, 0n)
     .toString();
+}
+
+/** Internal function to check if the bot has the permissions to set these overwrites */
+export async function requireOverwritePermissions(
+  guildOrId: string | DiscordenoGuild,
+  overwrites: Overwrite[],
+) {
+  let requiredPerms: Set<PermissionStrings> = new Set(["MANAGE_CHANNELS"]);
+
+  overwrites?.forEach((overwrite) => {
+    overwrite.allow.forEach(requiredPerms.add, requiredPerms);
+    overwrite.deny.forEach(requiredPerms.add, requiredPerms);
+  });
+
+  // MANAGE_ROLES permission can only be set by administrators
+  if (requiredPerms.has("MANAGE_ROLES")) {
+    requiredPerms = new Set<PermissionStrings>(["ADMINISTRATOR"]);
+  }
+
+  await requireGuildPermissions(guildOrId, botId, [...requiredPerms]);
 }
 
 /** Gets the highest role from the member in this guild */

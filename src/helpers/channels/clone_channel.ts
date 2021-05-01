@@ -13,8 +13,8 @@ export async function cloneChannel(channelId: string, reason?: string) {
 
   //Check for DM channel
   if (
-    channelToClone.type === DiscordChannelTypes.DM ||
-    channelToClone.type === DiscordChannelTypes.GROUP_DM
+    channelToClone.type === DiscordChannelTypes.Dm ||
+    channelToClone.type === DiscordChannelTypes.GroupDm
   ) {
     throw new Error(Errors.CHANNEL_NOT_IN_GUILD);
   }

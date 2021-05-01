@@ -1,20 +1,27 @@
 import { eventHandlers } from "../../bot.ts";
+import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { ModifyChannel } from "../../types/channels/modify_channel.ts";
 import { Channel } from "../../types/mod.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,
-  requireBotChannelPermissions,
+  requireOverwritePermissions,
 } from "../../util/permissions.ts";
-
+//TODO: implement DM group channel edit
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(
   channelId: string,
   options: ModifyChannel,
   reason?: string,
 ) {
-  await requireBotChannelPermissions(channelId, ["MANAGE_CHANNELS"]);
+  const channel = await cacheHandlers.get("channels", channelId);
+  if (channel?.guildId) {
+    await requireOverwritePermissions(
+      channel.guildId,
+      options.permissionOverwrites || [],
+    );
+  }
 
   if (options.name || options.topic) {
     const request = editChannelNameTopicQueue.get(channelId);
