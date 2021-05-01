@@ -8,5 +8,3 @@ export interface ActionRow {
   /** The button components */
   components: ButtonComponent[];
 }
-
-export type DiscordActionRow = SnakeCasedPropertiesDeep<ActionRow>;
