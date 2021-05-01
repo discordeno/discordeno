@@ -26,6 +26,6 @@ export interface Interaction {
   token: string;
   /** Read-only property, always `1` */
   version: 1;
-  /** for the message the button was attached to */
+  /** For the message the button was attached to */
   message?: Message;
 }
