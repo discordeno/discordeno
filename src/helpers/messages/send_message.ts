@@ -29,6 +29,9 @@ export async function sendMessage(
         DiscordChannelTypes.Dm,
         DiscordChannelTypes.GuildNews,
         DiscordChannelTypes.GuildText,
+        DiscordChannelTypes.GuildPublicThread,
+        DiscordChannelTypes.GuildPivateThread,
+        DiscordChannelTypes.GuildNewsThread,
       ].includes(channel.type)
     ) {
       throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
