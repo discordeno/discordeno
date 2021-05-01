@@ -80,7 +80,7 @@ export async function calculateChannelOverwrites(
   );
 
   // First calculate @everyone overwrites since these have the lowest priority
-  const overwriteEveryone = channel.permissionOverwrites.find(
+  const overwriteEveryone = channel.permissionOverwrites?.find(
     (overwrite) => overwrite.id === channel.guildId,
   );
   if (overwriteEveryone) {
@@ -107,7 +107,7 @@ export async function calculateChannelOverwrites(
   permissions |= allow;
 
   // Third calculate member specific overwrites since these have the highest priority
-  const overwriteMember = overwrites.find(
+  const overwriteMember = overwrites?.find(
     (overwrite) => overwrite.id === member.id,
   );
   if (overwriteMember) {
