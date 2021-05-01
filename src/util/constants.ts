@@ -7,8 +7,9 @@ export const API_VERSION = 9;
 /** https://discord.com/developers/docs/topics/gateway#gateways-gateway-versions */
 export const GATEWAY_VERSION = 8;
 
+// TODO: update this version
 /** https://github.com/discordeno/discordeno/releases */
-export const DISCORDENO_VERSION = 11;
+export const DISCORDENO_VERSION = "v11.0.0";
 
 /** https://discord.com/developers/docs/reference#user-agent */
 export const USER_AGENT =
