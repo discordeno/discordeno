@@ -100,7 +100,7 @@ export async function sendMessage(
     let actionRowCounter = 0;
 
     for (const component of content.components) {
-      // 5 Link buttons can not have a custom_id
+      // 5 Link buttons can not have a customId
       if (isButton(component)) {
         if (
           component.type === ButtonStyles.Link &&
@@ -108,6 +108,7 @@ export async function sendMessage(
         ) {
           throw new Error(Errors.LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID);
         }
+        // Other buttons must have a customId
         if (
           !component.customId && component.type !== ButtonStyles.Link
         ) {
