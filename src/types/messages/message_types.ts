@@ -22,3 +22,6 @@ export enum DiscordMessageTypes {
   ApplicationCommand,
   GuildInviteReminder = 22,
 }
+
+export type MessageTypes = DiscordMessageTypes;
+export const MessageTypes = DiscordMessageTypes;

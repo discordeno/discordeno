@@ -17,3 +17,6 @@ export enum DiscordMessageFlags {
   /** This message is an Interaction Response and the bot is "thinking" */
   Loading = 1 << 7,
 }
+
+export type MessageFlags = DiscordMessageFlags;
+export const MessageFlags = DiscordMessageFlags;

@@ -2,9 +2,9 @@ import { Channel } from "../channels/channel.ts";
 import { Guild } from "../guilds/guild.ts";
 import { Application } from "../oauth2/application.ts";
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordTargetTypes } from "./target_types.ts";
 
+/** https://discord.com/developers/docs/resources/invite#invite-object */
 export interface Invite {
   /** The invite code (unique Id) */
   code: string;
@@ -25,6 +25,3 @@ export interface Invite {
   /** Approximate count of total members */
   approximateMemberCount?: number;
 }
-
-/** https://discord.com/developers/docs/resources/invite#invite-object */
-export type DiscordInvite = SnakeCasedPropertiesDeep<Invite>;

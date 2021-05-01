@@ -1,7 +1,7 @@
 import { Embed } from "../embeds/embed.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { AllowedMentions } from "./allowed_mentions.ts";
 
+/** https://discord.com/developers/docs/resources/channel#edit-message-json-params */
 export interface EditMessage {
   /** The new message contents (up to 2000 characters) */
   content?: string | null;
@@ -12,6 +12,3 @@ export interface EditMessage {
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions | null;
 }
-
-/** https://discord.com/developers/docs/resources/channel#edit-message-json-params */
-export type DiscordEditMessage = SnakeCasedPropertiesDeep<EditMessage>;

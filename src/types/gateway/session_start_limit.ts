@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/topics/gateway#session-start-limit-object */
 export interface SessionStartLimit {
   /** The total number of session starts the current user is allowed */
   total: number;
@@ -10,8 +9,3 @@ export interface SessionStartLimit {
   /** The number of identify requests allowed per 5 seconds */
   maxConcurrency: number;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#session-start-limit-object */
-export type DiscordSessionStartLimit = SnakeCasedPropertiesDeep<
-  SessionStartLimit
->;

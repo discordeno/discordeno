@@ -1,6 +1,6 @@
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 
+/** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
 export interface Emoji {
   /** Emoji id */
   id: string | null;
@@ -19,6 +19,3 @@ export interface Emoji {
   /** Whether this emoji can be used, may be false due to loss of Server Boosts */
   available?: boolean;
 }
-
-/** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
-export type DiscordEmoji = SnakeCasedPropertiesDeep<Emoji>;

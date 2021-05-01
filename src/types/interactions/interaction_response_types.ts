@@ -7,3 +7,6 @@ export enum DiscordInteractionResponseTypes {
   /** ACK an interaction and edit a response later, the user sees a loading state */
   DeferredChannelMessageWithSource = 5,
 }
+
+export type InteractionResponseTypes = DiscordInteractionResponseTypes;
+export const InteractionResponseTypes = DiscordInteractionResponseTypes;

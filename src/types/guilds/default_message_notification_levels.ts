@@ -5,3 +5,8 @@ export enum DiscordDefaultMessageNotificationLevels {
   /** Members will receive notifications only for messages that @mention them by default */
   ONLY_MENTIONS,
 }
+
+export type DefaultMessageNotificationLevels =
+  DiscordDefaultMessageNotificationLevels;
+export const DefaultMessageNotificationLevels =
+  DiscordDefaultMessageNotificationLevels;

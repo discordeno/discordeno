@@ -12,3 +12,6 @@ export enum DiscordVoiceOpcodes {
   Resumed,
   ClientDisconnect = 13,
 }
+
+export type VoiceOpcodes = DiscordVoiceOpcodes;
+export const VoiceOpcodes = DiscordVoiceOpcodes;

@@ -7,3 +7,6 @@ export enum DiscordAllowedMentionsTypes {
   /** Controls @everyone and @here mentions */
   EveryoneMentions = "everyone",
 }
+
+export type AllowedMentionsTypes = DiscordAllowedMentionsTypes;
+export const AllowedMentionsTypes = DiscordAllowedMentionsTypes;

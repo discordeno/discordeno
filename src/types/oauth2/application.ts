@@ -1,8 +1,8 @@
 import { Team } from "../teams/team.ts";
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordApplicationFlags } from "./application_flags.ts";
 
+/** https://discord.com/developers/docs/topics/oauth2#application-object */
 export interface Application {
   /** The id of the app */
   id: string;
@@ -41,6 +41,3 @@ export interface Application {
   /** The application's public flags */
   flags: DiscordApplicationFlags;
 }
-
-/** https://discord.com/developers/docs/topics/oauth2#application-object */
-export type DiscordApplication = SnakeCasedPropertiesDeep<Application>;

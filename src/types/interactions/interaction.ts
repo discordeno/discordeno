@@ -1,9 +1,9 @@
 import { GuildMemberWithUser } from "../guilds/guild_member.ts";
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { ApplicationCommandInteractionData } from "./application_command_interaction_data.ts";
 import { DiscordInteractionTypes } from "./interaction_types.ts";
 
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction */
 export interface Interaction {
   /** Id of the interaction */
   id: string;
@@ -26,6 +26,3 @@ export interface Interaction {
   /** Read-only property, always `1` */
   version: 1;
 }
-
-/** https://discord.com/developers/docs/interactions/slash-commands#interaction */
-export type DiscordInteraction = SnakeCasedPropertiesDeep<Interaction>;

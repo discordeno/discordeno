@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/resources/webhook#modify-webhook-json-params */
 export interface ModifyWebhook {
   /** The default name of the webhook */
   name?: string;
@@ -8,6 +7,3 @@ export interface ModifyWebhook {
   /** The new channel id this webhook should be moved to */
   channelId?: string;
 }
-
-/** https://discord.com/developers/docs/resources/webhook#modify-webhook-json-params */
-export type DiscordModifyWebhook = SnakeCasedPropertiesDeep<ModifyWebhook>;

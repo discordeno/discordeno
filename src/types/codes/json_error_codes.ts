@@ -81,3 +81,6 @@ export enum DiscordJsonErrorCodes {
   ReqctionWasBlocked = 90001,
   ApiResourceIsCurrentlyOverloadedTryAgainALittleLater = 130000,
 }
+
+export type JsonErrrorCodes = DiscordJsonErrorCodes;
+export const JsonErrrorCodes = DiscordJsonErrorCodes;

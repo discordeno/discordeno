@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/topics/gateway#request-guild-members */
 export interface RequestGuildMembers {
   /** id of the guild to get members for */
   guildId: string;
@@ -14,8 +13,3 @@ export interface RequestGuildMembers {
   /** Nonce to identify the Guild Members Chunk response */
   nonce?: string;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#request-guild-members */
-export type DiscordRequestGuildMembers = SnakeCasedPropertiesDeep<
-  RequestGuildMembers
->;

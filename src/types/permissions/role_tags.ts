@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure */
 export interface RoleTags {
   /** The id of the bot this role belongs to */
   botId?: string;
@@ -8,6 +7,3 @@ export interface RoleTags {
   /** Whether this is the guild's premium subscriber role */
   premiumSubscriber?: null;
 }
-
-/** https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure */
-export type DiscordRoleTags = SnakeCasedPropertiesDeep<RoleTags>;

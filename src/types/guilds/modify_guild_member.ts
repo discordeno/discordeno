@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/resources/guild#modify-guild-member */
 export interface ModifyGuildMember {
   /** Value to set users nickname to. Requires the `MANAGE_NICKNAMES` permission */
   nick?: string | null;
@@ -12,8 +11,3 @@ export interface ModifyGuildMember {
   /** Id of channel to move user to (if they are connected to voice). Requires the `MOVE_MEMBERS` permission */
   channelId: string | null;
 }
-
-/** https://discord.com/developers/docs/resources/guild#modify-guild-member */
-export type DiscordModifyGuildMember = SnakeCasedPropertiesDeep<
-  ModifyGuildMember
->;

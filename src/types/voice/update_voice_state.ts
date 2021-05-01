@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/topics/gateway#update-voice-state */
 export interface UpdateVoiceState {
   /** id of the guild */
   guildId: string;
@@ -10,8 +9,3 @@ export interface UpdateVoiceState {
   /** Is the client deafened */
   selfDeaf: boolean;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#update-voice-state */
-export type DiscordUpdateVoiceState = SnakeCasedPropertiesDeep<
-  UpdateVoiceState
->;

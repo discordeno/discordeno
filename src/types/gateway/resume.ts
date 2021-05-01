@@ -1,3 +1,4 @@
+/** https://discord.com/developers/docs/topics/gateway#resume */
 export interface Resume {
   /** Session token */
   token: string;
@@ -6,6 +7,3 @@ export interface Resume {
   /** Last sequence number received */
   seq: number;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#resume */
-export type DiscordResume = Resume;

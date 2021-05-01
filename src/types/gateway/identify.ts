@@ -1,7 +1,7 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { IdentifyConnectionProperties } from "./identify_connection_properties.ts";
 import { StatusUpdate } from "./status_update.ts";
 
+/** https://discord.com/developers/docs/topics/gateway#identify */
 export interface Identify {
   /** Authentication token */
   token: string;
@@ -18,6 +18,3 @@ export interface Identify {
   /** The Gateway Intents you wish to receive */
   intents: number;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#identify */
-export type DiscordIdentify = SnakeCasedPropertiesDeep<Identify>;

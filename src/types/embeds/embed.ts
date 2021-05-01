@@ -7,6 +7,7 @@ import { EmbedThumbnail } from "./embed_thumbnail.ts";
 import { DiscordEmbedTypes } from "./embed_types.ts";
 import { EmbedVideo } from "./embed_video.ts";
 
+/** https://discord.com/developers/docs/resources/channel#embed-object */
 export interface Embed {
   /** Title of embed */
   title?: string;
@@ -35,6 +36,3 @@ export interface Embed {
   /** Fields information */
   fields?: EmbedField[];
 }
-
-/** https://discord.com/developers/docs/resources/channel#embed-object */
-export type DiscordEmbed = Embed;

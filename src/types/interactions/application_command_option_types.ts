@@ -9,3 +9,8 @@ export enum DiscordApplicationCommandOptionTypes {
   CHANNEL,
   ROLE,
 }
+
+export type ApplicationCommandOptionTypes =
+  DiscordApplicationCommandOptionTypes;
+export const ApplicationCommandOptionTypes =
+  DiscordApplicationCommandOptionTypes;

@@ -23,3 +23,6 @@ export enum DiscordChannelTypes {
   /** A voice channel for hosting events with an audience */
   GUILD_STAGE_VOICE = 13,
 }
+
+export type ChannelTypes = DiscordChannelTypes;
+export const ChannelTypes = DiscordChannelTypes;

@@ -1,6 +1,6 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordOAuth2Scopes } from "./scopes.ts";
 
+/** https://discord.com/developers/docs/topics/oauth2#bot-authorization-flow-bot-auth-parameters */
 export interface BotAuthenticationFlowQuery {
   /** App's client id */
   clientId: string;
@@ -13,8 +13,3 @@ export interface BotAuthenticationFlowQuery {
   /** True or false—disallows the user from changing the guild dropdown */
   disableGuildSelect: boolean;
 }
-
-/** https://discord.com/developers/docs/topics/oauth2#bot-authorization-flow-bot-auth-parameters */
-export type DiscordBotAuthenticationFlowQuery = SnakeCasedPropertiesDeep<
-  BotAuthenticationFlowQuery
->;

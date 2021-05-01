@@ -1,6 +1,6 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordMessageStickerFormatTypes } from "./message_sticker_format_types.ts";
 
+/** https://discord.com/developers/docs/resources/channel#message-object-message-sticker-structure */
 export interface MessageSticker {
   /** id of the sticker */
   id: string;
@@ -25,6 +25,3 @@ export interface MessageSticker {
   /** Type of sticker format */
   formatType: DiscordMessageStickerFormatTypes;
 }
-
-/** https://discord.com/developers/docs/resources/channel#message-object-message-sticker-structure */
-export type DiscordMessageSticker = SnakeCasedPropertiesDeep<MessageSticker>;

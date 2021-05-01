@@ -2,7 +2,6 @@ import { Channel } from "../channels/channel.ts";
 import { Emoji } from "../emojis/emoji.ts";
 import { PresenceUpdate } from "../misc/presence_update.ts";
 import { Role } from "../permissions/role.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { VoiceState } from "../voice/voice_state.ts";
 import { DiscordDefaultMessageNotificationLevels } from "./default_message_notification_levels.ts";
 import { DiscordExplicitContentFilterLevels } from "./explicit_content_filter_levels.ts";
@@ -14,6 +13,7 @@ import { DiscordSystemChannelFlags } from "./system_channel_flags.ts";
 import { DiscordVerificationLevels } from "./verification_levels.ts";
 import { WelcomeScreen } from "./welcome_screen.ts";
 
+/** https://discord.com/developers/docs/resources/guild#guild-object */
 export interface Guild {
   /** Guild id */
   id: string;
@@ -111,6 +111,3 @@ export interface Guild {
   /** The welcome screen of a Community guild, shown to new members, returned when in the invite object */
   welcomeScreen?: WelcomeScreen;
 }
-
-/** https://discord.com/developers/docs/resources/guild#guild-object */
-export type DiscordGuild = SnakeCasedPropertiesDeep<Guild>;
