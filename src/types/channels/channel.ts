@@ -1,8 +1,8 @@
-import { ThreadMember } from "../messages/thread_member.ts";
-import { ThreadMetadata } from "../messages/thread_metadata.ts";
 import { User } from "../users/user.ts";
 import { DiscordChannelTypes } from "./channel_types.ts";
 import { Overwrite } from "./overwrite.ts";
+import { ThreadMember } from "./threads/thread_member.ts";
+import { ThreadMetadata } from "./threads/thread_metadata.ts";
 import { DiscordVideoQualityModes } from "./video_quality_modes.ts";
 
 /** https://discord.com/developers/docs/resources/channel#channel-object */
@@ -47,6 +47,7 @@ export interface Channel {
   rtcRegion?: string | null;
   /** The camera video quality mode of the voice channel, 1 when not present */
   videoQualityMode?: DiscordVideoQualityModes;
+  // TODO(threads): consider a ThreadChannel object
   /** An approximate count of messages in a thread, stops counting at 50 */
   messageCount?: number;
   /** An approximate count of users in a thread, stops counting at 50 */
