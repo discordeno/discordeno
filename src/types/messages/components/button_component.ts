@@ -1,6 +1,7 @@
 import { SnakeCasedPropertiesDeep } from "../../util.ts";
 import { ButtonStyles } from "./button_styles.ts";
 
+// TODO: add docs link
 export interface ButtonComponent {
   /** All button components have type 2 */
   type: 2;
