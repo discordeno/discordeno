@@ -1,4 +1,5 @@
-export enum ButtonStyles {
+// TODO: add docs link
+export enum DiscordButtonStyles {
   /** A blurple button */
   Primary = 1,
   /** A grey button */
