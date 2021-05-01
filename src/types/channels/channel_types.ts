@@ -21,7 +21,7 @@ export enum DiscordChannelTypes {
   /** A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission */
   GuildPivateThread,
   /** A voice channel for hosting events with an audience */
-  GUILD_STAGE_VOICE = 13,
+  GuildStageVoice = 13,
 }
 
 export type ChannelTypes = DiscordChannelTypes;
