@@ -1,3 +1,4 @@
+// TODO: add docs link
 export interface ListPublicArchivedThreads {
   // TODO: convert unix to ISO9601 timestamp
   /** Returns threads before this timestamp. UNIX or ISO8601 timestamp */

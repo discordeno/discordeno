@@ -1,6 +1,7 @@
 import { ThreadMember } from "../messages/thread_member.ts";
 import { Channel } from "./channel.ts";
 
+// TODO: add docs link
 export interface ListActiveThreads {
   /** The active threads */
   threads: Channel[];

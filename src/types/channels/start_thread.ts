@@ -1,3 +1,4 @@
+// TODO: add docs link
 export interface StartThread {
   /** 2-100 character thread name */
   name: string;
