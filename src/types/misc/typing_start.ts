@@ -1,6 +1,6 @@
 import { GuildMember } from "../guilds/guild_member.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 
+/** https://discord.com/developers/docs/topics/gateway#typing-start */
 export interface TypingStart {
   /** id of the channel */
   channelId: string;
@@ -13,6 +13,3 @@ export interface TypingStart {
   /** The member who started typing if this happened in a guild */
   member?: GuildMember;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#typing-start */
-export type DiscordTypingStart = SnakeCasedPropertiesDeep<TypingStart>;

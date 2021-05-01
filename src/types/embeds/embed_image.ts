@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/resources/channel#embed-object-embed-image-structure */
 export interface EmbedImage {
   /** Source url of image (only supports http(s) and attachments) */
   url?: string;
@@ -10,6 +9,3 @@ export interface EmbedImage {
   /** Width of image */
   width?: number;
 }
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-image-structure */
-export type DiscordEmbedImage = SnakeCasedPropertiesDeep<EmbedImage>;

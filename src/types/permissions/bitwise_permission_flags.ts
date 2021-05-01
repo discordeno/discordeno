@@ -67,3 +67,6 @@ export enum DiscordBitwisePermissionFlags {
   /** Allows for requesting to speak in stage channels. */
   REQUEST_TO_SPEAK = 0x100000000,
 }
+
+export type BitwisePermissions = DiscordBitwisePermissionFlags;
+export const BitwisePermissions = DiscordBitwisePermissionFlags;

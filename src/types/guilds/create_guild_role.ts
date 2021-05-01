@@ -18,3 +18,4 @@ export interface DiscordCreateGuildRole
   extends Omit<CreateGuildRole, "permissions"> {
   permissions?: string;
 }
+// TODO: check this

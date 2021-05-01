@@ -1,7 +1,7 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-import { DiscordVisibilityTypes } from "./visibility_types.ts";
 import { Integration } from "../integration/integration.ts";
+import { DiscordVisibilityTypes } from "./visibility_types.ts";
 
+/** https://discord.com/developers/docs/resources/user#connection-objecthttps://discord.com/developers/docs/resources/user#user-object-premium-types */
 export interface Connection {
   /** id of the connection account */
   id: string;
@@ -22,6 +22,3 @@ export interface Connection {
   /** Visibility of this connection */
   visibility: DiscordVisibilityTypes;
 }
-
-/** https://discord.com/developers/docs/resources/user#connection-objecthttps://discord.com/developers/docs/resources/user#user-object-premium-types */
-export type DiscordConnection = SnakeCasedPropertiesDeep<Connection>;

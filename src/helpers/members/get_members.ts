@@ -19,7 +19,10 @@ import { ws } from "../../ws/ws.ts";
  * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
  */
-export async function getMembers(guildId: string, options?: ListGuildMembers) {
+export async function getMembers(
+  guildId: string,
+  options?: ListGuildMembers & { addToCache?: boolean },
+) {
   if (!(ws.identifyPayload.intents && DiscordGatewayIntents.GUILD_MEMBERS)) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
@@ -61,11 +64,13 @@ export async function getMembers(guildId: string, options?: ListGuildMembers) {
           guildId,
         );
 
-        await cacheHandlers.set(
-          "members",
-          discordenoMember.id,
-          discordenoMember,
-        );
+        if (options?.addToCache !== false) {
+          await cacheHandlers.set(
+            "members",
+            discordenoMember.id,
+            discordenoMember,
+          );
+        }
 
         return discordenoMember;
       }),

@@ -4,3 +4,6 @@ export enum DiscordInteractionTypes {
   ApplicationCommand,
   Button
 }
+
+export type InteractionTypes = DiscordInteractionTypes;
+export const InteractionTypes = DiscordInteractionTypes;

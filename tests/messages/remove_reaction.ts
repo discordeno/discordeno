@@ -1,9 +1,9 @@
 import { addReaction, cache, removeReaction, sendMessage } from "../../mod.ts";
-import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
+import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
-async function ifItFailsBlameWolf(type: "getter" | "raw") {
+async function ifItFailsBlameWolf(type: "getter" | "raw", user = false) {
   const message = await sendMessage(tempData.channelId, "Hello World!");
 
   // Assertions
@@ -27,9 +27,14 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   assertEquals(await cache.messages.get(message.id)?.reactions?.length, 1);
 
   if (type === "raw") {
-    await removeReaction(message.channelId, message.id, "❤");
+    await removeReaction(
+      message.channelId,
+      message.id,
+      "❤",
+      user ? { userId: message.author.id } : undefined,
+    );
   } else {
-    await message.removeReaction("❤");
+    await message.removeReaction("❤", user ? message.author.id : undefined);
   }
 
   // Delay the execution by 5 seconds to allow MESSAGE_REACTION_REMOVE_ALL event to be processed
@@ -54,6 +59,22 @@ Deno.test({
   name: "[message] message.removeReaction()",
   async fn() {
     await ifItFailsBlameWolf("getter");
+  },
+  ...defaultTestOptions,
+});
+
+Deno.test({
+  name: "[message] remove a user reaction",
+  async fn() {
+    await ifItFailsBlameWolf("raw", true);
+  },
+  ...defaultTestOptions,
+});
+
+Deno.test({
+  name: "[message] message.removeReaction with user",
+  async fn() {
+    await ifItFailsBlameWolf("getter", true);
   },
   ...defaultTestOptions,
 });

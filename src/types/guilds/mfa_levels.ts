@@ -5,3 +5,6 @@ export enum DiscordMfaLevels {
   /** Guild has a 2FA requirement for moderation actions */
   ELEVATED,
 }
+
+export type MfaLevels = DiscordMfaLevels;
+export const MfaLevels = DiscordMfaLevels;

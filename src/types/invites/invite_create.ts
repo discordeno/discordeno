@@ -1,8 +1,8 @@
 import { Application } from "../oauth2/application.ts";
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordTargetTypes } from "./target_types.ts";
 
+/** https://discord.com/developers/docs/topics/gateway#invite-create */
 export interface InviteCreate {
   /** The channel the invite is for */
   channelId: string;
@@ -29,6 +29,3 @@ export interface InviteCreate {
   /** How many times the invite has been used (always will be 0) */
   uses: number;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#invite-create */
-export type DiscordInviteCreate = SnakeCasedPropertiesDeep<InviteCreate>;

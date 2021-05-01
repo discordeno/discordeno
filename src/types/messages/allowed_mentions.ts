@@ -1,6 +1,6 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordAllowedMentionsTypes } from "./allowed_mentions_types.ts";
 
+/** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
 export interface AllowedMentions {
   /** An array of allowed mention types to parse from the content. */
   parse?: DiscordAllowedMentionsTypes[];
@@ -11,6 +11,3 @@ export interface AllowedMentions {
   /** For replies, whether to mention the author of the message being replied to (default false) */
   repliedUser?: boolean;
 }
-
-/** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
-export type DiscordAllowedMentions = SnakeCasedPropertiesDeep<AllowedMentions>;

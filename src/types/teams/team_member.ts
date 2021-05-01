@@ -1,7 +1,7 @@
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordTeamMembershipStates } from "./team_membership_states.ts";
 
+/** https://discord.com/developers/docs/topics/teams#data-models-team-members-object */
 export interface TeamMember {
   /** The user's membership state on the team */
   membershipState: DiscordTeamMembershipStates;
@@ -14,6 +14,3 @@ export interface TeamMember {
     & Partial<User>
     & Pick<User, "avatar" | "discriminator" | "id" | "username">;
 }
-
-/** https://discord.com/developers/docs/topics/teams#data-models-team-members-object */
-export type DiscordTeamMember = SnakeCasedPropertiesDeep<TeamMember>;

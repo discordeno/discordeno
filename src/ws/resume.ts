@@ -1,12 +1,10 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { closeWS } from "./close_ws.ts";
+import { sendShardMessage } from "./send_shard_message.ts";
 import { ws } from "./ws.ts";
 
 export async function resume(shardId: number) {
   ws.log("RESUMING", { shardId });
-
-  // CREATE A SHARD
-  const socket = await ws.createShard(shardId);
 
   // NOW WE HANDLE RESUMING THIS SHARD
   // Get the old data for this shard necessary for resuming
@@ -18,6 +16,9 @@ export async function resume(shardId: number) {
     // STOP OLD HEARTBEAT
     clearInterval(oldShard.heartbeat.intervalId);
   }
+
+  // CREATE A SHARD
+  const socket = await ws.createShard(shardId);
 
   const sessionId = oldShard?.sessionId || "";
   const previousSequenceNumber = oldShard?.previousSequenceNumber || 0;
@@ -47,15 +48,13 @@ export async function resume(shardId: number) {
 
   // Resume on open
   socket.onopen = () => {
-    ws.shards.get(shardId)?.queue.unshift({
+    sendShardMessage(shardId, {
       op: DiscordGatewayOpcodes.Resume,
       d: {
         token: ws.identifyPayload.token,
         session_id: sessionId,
         seq: previousSequenceNumber,
       },
-    });
-
-    ws.processQueue(shardId);
+    }, true);
   };
 }

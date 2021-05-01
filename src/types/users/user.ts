@@ -1,7 +1,7 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordPremiumTypes } from "./premium_types.ts";
 import { DiscordUserFlags } from "./user_flags.ts";
 
+/** https://discord.com/developers/docs/resources/user#user-object */
 export interface User {
   /** The user's id */
   id: string;
@@ -30,6 +30,3 @@ export interface User {
   /** The public flags on a user's account */
   publicFlags?: DiscordUserFlags;
 }
-
-/** https://discord.com/developers/docs/resources/user#user-object */
-export type DiscordUser = SnakeCasedPropertiesDeep<User>;

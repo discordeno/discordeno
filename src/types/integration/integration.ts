@@ -1,9 +1,9 @@
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { IntegrationAccount } from "./integration_account.ts";
 import { IntegrationApplication } from "./integration_application.ts";
 import { DiscordIntegrationExpireBehaviors } from "./integration_expire_behaviors.ts";
 
+/** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
 export interface Integration {
   /** Integration Id */
   id: string;
@@ -36,6 +36,3 @@ export interface Integration {
   /** The bot/OAuth2 application for discord integrations */
   application?: IntegrationApplication;
 }
-
-/** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
-export type DiscordIntegration = SnakeCasedPropertiesDeep<Integration>;

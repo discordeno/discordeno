@@ -121,8 +121,8 @@ const baseMessage: Partial<DiscordenoMessage> = {
   removeReactionEmoji(reaction) {
     return removeReactionEmoji(this.channelId!, this.id!, reaction);
   },
-  removeReaction(reaction) {
-    return removeReaction(this.channelId!, this.id!, reaction);
+  removeReaction(reaction, userId) {
+    return removeReaction(this.channelId!, this.id!, reaction, { userId });
   },
 };
 
@@ -155,6 +155,7 @@ export async function createDiscordenoMessage(data: Message) {
     ...props,
     /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
     channelId: createNewProp(channelId),
+    content: createNewProp(data.content || ""),
     guildId: createNewProp(guildIdFinal),
     mentionedUserIds: createNewProp(mentions.map((m) => m.id)),
     mentionedRoleIds: createNewProp(mentionRoles),
@@ -177,8 +178,12 @@ export async function createDiscordenoMessage(data: Message) {
 }
 
 export interface DiscordenoMessage
-  extends Omit<Message, "timestamp" | "editedTimestamp"> {
+  extends Omit<Message, "timestamp" | "editedTimestamp" | "guildId"> {
   // For better user experience
+  /** Id of the guild which the massage has been send in. Empty string if it a DM */
+  guildId: string;
+  /** The message content for this message. Empty string if no content was sent like an attachment only. */
+  content: string;
   /** Ids of users specifically mentioned in the message */
   mentionedUserIds: string[];
   /** Ids of roles specifically mentioned in this message */
@@ -245,10 +250,13 @@ export interface DiscordenoMessage
     timeout?: number,
     reason?: string,
   ): Promise<unknown>;
-  /** Remove all reactions */
+  /** Removes all reactions for all emojis on this message */
   removeAllReactions(): ReturnType<typeof removeAllReactions>;
-  /** Remove all reactions */
+  /** Removes all reactions for a single emoji on this message */
   removeReactionEmoji(reaction: string): ReturnType<typeof removeReactionEmoji>;
-  /** Remove all reactions */
-  removeReaction(reaction: string): ReturnType<typeof removeReaction>;
+  /** Removes a reaction from the given user on this message, defaults to bot */
+  removeReaction(
+    reaction: string,
+    userId?: string,
+  ): ReturnType<typeof removeReaction>;
 }

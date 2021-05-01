@@ -3,3 +3,6 @@ export enum DiscordIntegrationExpireBehaviors {
   RemoveRole,
   Kick,
 }
+
+export type IntegrationExpireBehaviors = DiscordIntegrationExpireBehaviors;
+export const IntegrationExpireBehaviors = DiscordIntegrationExpireBehaviors;

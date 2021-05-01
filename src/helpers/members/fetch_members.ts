@@ -1,8 +1,11 @@
+import { cache } from "../../cache.ts";
 import { DiscordenoMember } from "../../structures/member.ts";
+import { DiscordGatewayOpcodes } from "../../types/codes/gateway_opcodes.ts";
 import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
-import { RequestGuildMembers } from "../../types/guilds/request_guild_members.ts";
+import type { RequestGuildMembers } from "../../types/guilds/request_guild_members.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { Collection } from "../../util/collection.ts";
+import { sendShardMessage } from "../../ws/send_shard_message.ts";
 import { ws } from "../../ws/ws.ts";
 
 /**
@@ -16,12 +19,12 @@ import { ws } from "../../ws/ws.ts";
 export function fetchMembers(
   guildId: string,
   shardId: number,
-  options?: RequestGuildMembers,
+  options?: Omit<RequestGuildMembers, "guildId">,
 ) {
   // You can request 1 member without the intent
   if (
     (!options?.limit || options.limit > 1) &&
-    !(ws.identifyPayload.intents && DiscordGatewayIntents.GUILD_MEMBERS)
+    !(ws.identifyPayload.intents & DiscordGatewayIntents.GUILD_MEMBERS)
   ) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
@@ -31,21 +34,20 @@ export function fetchMembers(
   }
 
   return new Promise((resolve) => {
-    return requestAllMembers(guildId, shardId, resolve, options);
-  }) as Promise<Collection<string, DiscordenoMember>>;
-}
+    const nonce = `${guildId}-${Date.now()}`;
+    cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
 
-// TODO: finish implementing this
-function requestAllMembers(
-  _guildId: string,
-  _shardId: number,
-  _resolve: (
-    value:
-      | Collection<string, DiscordenoMember>
-      | PromiseLike<Collection<string, DiscordenoMember>>,
-  ) => void,
-  // deno-lint-ignore no-explicit-any
-  _options: any,
-): void {
-  throw new Error("Function not implemented.");
+    sendShardMessage(shardId, {
+      op: DiscordGatewayOpcodes.RequestGuildMembers,
+      d: {
+        guild_id: guildId,
+        // If a query is provided use it, OR if a limit is NOT provided use ""
+        query: options?.query || (options?.limit ? undefined : ""),
+        limit: options?.limit || 0,
+        presences: options?.presences || false,
+        user_ids: options?.userIds,
+        nonce,
+      },
+    });
+  }) as Promise<Collection<string, DiscordenoMember>>;
 }

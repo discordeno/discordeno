@@ -1,9 +1,9 @@
 import { Channel } from "../channels/channel.ts";
 import { Guild } from "../guilds/guild.ts";
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordWebhookTypes } from "./discord_webhook_types.ts";
 
+/** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
 export interface Webhook {
   /** The id of the webhook */
   id: string;
@@ -30,6 +30,3 @@ export interface Webhook {
   /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
   url?: string;
 }
-
-/** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
-export type DiscordWebhook = SnakeCasedPropertiesDeep<Webhook>;

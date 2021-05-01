@@ -12,3 +12,6 @@ export enum DiscordGatewayOpcodes {
   Hello,
   HeartbeatACK,
 }
+
+export type GatewayOpcodes = DiscordGatewayOpcodes;
+export const GatewayOpcodes = DiscordGatewayOpcodes;

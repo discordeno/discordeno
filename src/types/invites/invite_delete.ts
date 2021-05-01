@@ -1,5 +1,3 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
 /** https://discord.com/developers/docs/topics/gateway#invite-delete */
 export interface InviteDelete {
   /** The channel of the invite */
@@ -9,5 +7,3 @@ export interface InviteDelete {
   /** The unique invite code */
   code: string;
 }
-
-export type DiscordInviteDelete = SnakeCasedPropertiesDeep<InviteDelete>;

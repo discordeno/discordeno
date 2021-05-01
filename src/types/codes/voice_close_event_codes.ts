@@ -13,3 +13,6 @@ export enum DiscordVoiceCloseEventCodes {
   VoiceServerCrashed,
   UnknownEncryptionMode,
 }
+
+export type VoiceCloseEventCodes = DiscordVoiceCloseEventCodes;
+export const VoiceCloseEventCodes = DiscordVoiceCloseEventCodes;

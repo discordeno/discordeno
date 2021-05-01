@@ -4,3 +4,6 @@ export enum DiscordPremiumTypes {
   NitroClassic,
   Nitro,
 }
+
+export type PremiumTypes = DiscordPremiumTypes;
+export const PremiumTypes = DiscordPremiumTypes;

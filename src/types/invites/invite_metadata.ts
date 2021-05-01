@@ -1,6 +1,6 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { Invite } from "./invite.ts";
 
+/** https://discord.com/developers/docs/resources/invite#invite-metadata-object */
 export interface InviteMetadata extends Invite {
   /** Number of times this invite has been used */
   uses: number;
@@ -13,6 +13,3 @@ export interface InviteMetadata extends Invite {
   /** When this invite was created */
   createdAt: string;
 }
-
-/** https://discord.com/developers/docs/resources/invite#invite-metadata-object */
-export type DiscordInviteMetadata = SnakeCasedPropertiesDeep<InviteMetadata>;

@@ -1,3 +1,4 @@
+/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-secrets */
 export interface ActivitySecrets {
   /** The secret for joining a party */
   join?: string;
@@ -6,6 +7,3 @@ export interface ActivitySecrets {
   /** The secret for a specific instanced match */
   match?: string;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-secrets */
-export type DiscordActivitySecrets = ActivitySecrets;

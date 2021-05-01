@@ -1,9 +1,9 @@
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordChannelTypes } from "./channel_types.ts";
-import { DiscordOverwrite, Overwrite } from "./overwrite.ts";
+import { Overwrite } from "./overwrite.ts";
 import { DiscordVideoQualityModes } from "./video_quality_modes.ts";
 
+/** https://discord.com/developers/docs/resources/channel#channel-object */
 export interface Channel {
   /** The id of the channel */
   id: string;
@@ -45,10 +45,4 @@ export interface Channel {
   rtcRegion?: string | null;
   /** The camera video quality mode of the voice channel, 1 when not present */
   videoQualityMode?: DiscordVideoQualityModes;
-}
-
-/** https://discord.com/developers/docs/resources/channel#channel-object */
-export interface DiscordChannel
-  extends SnakeCasedPropertiesDeep<Omit<Channel, "permissionOverwrites">> {
-  permission_overwrites?: DiscordOverwrite[];
 }

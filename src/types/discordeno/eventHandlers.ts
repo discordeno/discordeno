@@ -161,8 +161,6 @@ export interface EventHandlers {
   ) => unknown;
   /** Sent before every event execution. Discordeno will not await its execution. */
   raw?: (data: GatewayPayload) => unknown;
-  // TODO: remove this?
-  // rawGateway?: (data: unknown) => unknown;
   /** Sent when all shards went ready. */
   ready?: () => unknown;
   /** Sent when a user adds a reaction to a message. */

@@ -3,6 +3,7 @@ import { Application } from "../oauth2/application.ts";
 import { User } from "../users/user.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 
+/** https://discord.com/developers/docs/topics/gateway#ready */
 export interface Ready {
   /** Gateway version */
   v: number;
@@ -20,5 +21,4 @@ export interface Ready {
   application: Partial<Application> & Pick<Application, "id" | "flags">;
 }
 
-/** https://discord.com/developers/docs/topics/gateway#ready */
 export type DiscordReady = SnakeCasedPropertiesDeep<Ready>;

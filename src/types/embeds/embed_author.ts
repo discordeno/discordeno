@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/resources/channel#embed-object-embed-author-structure */
 export interface EmbedAuthor {
   /** Name of author */
   name?: string;
@@ -10,6 +9,3 @@ export interface EmbedAuthor {
   /** A proxied url of author icon */
   proxyIconUrl?: string;
 }
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-author-structure */
-export type DiscordEmbedAuthor = SnakeCasedPropertiesDeep<EmbedAuthor>;

@@ -1,5 +1,6 @@
 import { Emoji } from "../emojis/emoji.ts";
 
+/** https://discord.com/developers/docs/resources/channel#reaction-object */
 export interface Reaction {
   /** Times this emoji has been used to react */
   count: number;
@@ -8,6 +9,3 @@ export interface Reaction {
   /** Emoji information */
   emoji: Partial<Emoji>;
 }
-
-/** https://discord.com/developers/docs/resources/channel#reaction-object */
-export type DiscordReaction = Reaction;

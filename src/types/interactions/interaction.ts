@@ -1,10 +1,10 @@
 import { GuildMemberWithUser } from "../guilds/guild_member.ts";
 import { Message } from "../messages/message.ts";
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { ApplicationCommandInteractionData } from "./application_command_interaction_data.ts";
 import { DiscordInteractionTypes } from "./interaction_types.ts";
 
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction */
 export interface Interaction {
   /** Id of the interaction */
   id: string;
@@ -29,6 +29,3 @@ export interface Interaction {
   /** for the message the button was attached to */
   message?: Message;
 }
-
-/** https://discord.com/developers/docs/interactions/slash-commands#interaction */
-export type DiscordInteraction = SnakeCasedPropertiesDeep<Interaction>;

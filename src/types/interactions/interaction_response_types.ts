@@ -9,3 +9,6 @@ export enum DiscordInteractionResponseTypes {
   /** It has no data fields. You can send this type **only in response to a button interaction .** It will acknowledge the interaction and update the button to a loading state. */
   DeferredMessageUpdate,
 }
+
+export type InteractionResponseTypes = DiscordInteractionResponseTypes;
+export const InteractionResponseTypes = DiscordInteractionResponseTypes;

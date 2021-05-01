@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure */
 export interface EmbedFooter {
   /** Footer text */
   text: string;
@@ -8,6 +7,3 @@ export interface EmbedFooter {
   /** A proxied url of footer icon */
   proxyIconUrl?: string;
 }
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure */
-export type DiscordEmbedFooter = SnakeCasedPropertiesDeep<EmbedFooter>;

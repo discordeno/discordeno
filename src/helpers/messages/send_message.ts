@@ -5,7 +5,7 @@ import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
 import { ButtonStyles } from "../../types/messages/components/button_styles.ts";
 import { CreateMessage } from "../../types/messages/create_message.ts";
-import { DiscordMessage, Message } from "../../types/messages/message.ts";
+import { Message } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -153,7 +153,7 @@ export async function sendMessage(
   const result = await rest.runMethod<Message>(
     "post",
     endpoints.CHANNEL_MESSAGES(channelId),
-    camelKeysToSnakeCase<DiscordMessage>({
+    camelKeysToSnakeCase({
       ...content,
       ...(content.messageReference?.messageId
         ? {

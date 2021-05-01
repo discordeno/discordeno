@@ -7,3 +7,6 @@ export enum DiscordActivityTypes {
   Custom = 4,
   Competing,
 }
+
+export type ActivityTypes = DiscordActivityTypes;
+export const ActivityTypes = DiscordActivityTypes;

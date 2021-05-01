@@ -36,3 +36,6 @@ export enum DiscordAuditLogEvents {
   INTEGRATION_UPDATE,
   INTEGRATION_DELETE,
 }
+
+export type AuditLogEvents = DiscordAuditLogEvents;
+export const AuditLogEvents = DiscordAuditLogEvents;

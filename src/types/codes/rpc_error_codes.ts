@@ -17,3 +17,6 @@ export enum DiscordRpcErrorCodes {
   SelectVoiceForceRequired,
   CaptureShortcutAlreadyListening,
 }
+
+export type RpcErrorCodes = DiscordRpcErrorCodes;
+export const RpcErrorCodes = DiscordRpcErrorCodes;
