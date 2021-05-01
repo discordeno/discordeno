@@ -1,4 +1,5 @@
 import { GuildMemberWithUser } from "../guilds/guild_member.ts";
+import { Message } from "../messages/message.ts";
 import { User } from "../users/user.ts";
 import { ApplicationCommandInteractionData } from "./application_command_interaction_data.ts";
 import { DiscordInteractionTypes } from "./interaction_types.ts";
@@ -25,4 +26,6 @@ export interface Interaction {
   token: string;
   /** Read-only property, always `1` */
   version: 1;
+  /** For the message the button was attached to */
+  message?: Message;
 }

@@ -5,6 +5,7 @@ import { MessageInteraction } from "../interactions/message_interaction.ts";
 import { Application } from "../oauth2/application.ts";
 import { User } from "../users/user.ts";
 import { Attachment } from "./attachment.ts";
+import { MessageComponents } from "./components/message_components.ts";
 import { MessageActivity } from "./message_activity.ts";
 import { MessageReference } from "./message_reference.ts";
 import { MessageSticker } from "./message_sticker.ts";
@@ -82,4 +83,6 @@ export interface Message {
   referencedMessage?: Message;
   /** Sent if the message is a response to an Interaction */
   interaction?: MessageInteraction;
+  /** The components related to this message */
+  components: MessageComponents;
 }
