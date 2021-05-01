@@ -2,7 +2,7 @@
 export const BASE_URL = "https://discord.com/api";
 
 /** https://discord.com/developers/docs/reference#api-versioning-api-versions */
-export const API_VERSION = 8;
+export const API_VERSION = 9;
 
 /** https://discord.com/developers/docs/topics/gateway#gateways-gateway-versions */
 export const GATEWAY_VERSION = 8;
