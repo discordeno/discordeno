@@ -24,7 +24,7 @@ export async function cloneChannel(channelId: string, reason?: string) {
     name: channelToClone.name!,
     topic: channelToClone.topic || undefined,
     parentId: channelToClone.parentId || undefined,
-    permissionOverwrites: channelToClone.permissionOverwrites.map((
+    permissionOverwrites: channelToClone.permissionOverwrites?.map((
       overwrite,
     ) => ({
       id: overwrite.id,
