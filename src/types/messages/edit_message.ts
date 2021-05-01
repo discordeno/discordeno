@@ -1,5 +1,6 @@
 import { Embed } from "../embeds/embed.ts";
 import { AllowedMentions } from "./allowed_mentions.ts";
+import { Attachment } from "./attachment.ts";
 
 /** https://discord.com/developers/docs/resources/channel#edit-message-json-params */
 export interface EditMessage {
@@ -11,4 +12,6 @@ export interface EditMessage {
   flags?: 4 | null;
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions | null;
+  /** Attached files to keep. */
+  attachments?: Attachment | null;
 }
