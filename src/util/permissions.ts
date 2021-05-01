@@ -81,7 +81,7 @@ export async function calculateChannelOverwrites(
 
   // First calculate @everyone overwrites since these have the lowest priority
   const overwriteEveryone = channel.permissionOverwrites.find(
-    (overwrite) => overwrite.id === (channel as DiscordenoChannel).guildId,
+    (overwrite) => overwrite.id === channel.guildId,
   );
   if (overwriteEveryone) {
     // First remove denied permissions since denied < allowed
