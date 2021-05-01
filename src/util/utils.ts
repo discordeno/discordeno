@@ -208,7 +208,7 @@ export function validateSlashCommands(
 // Typescript is not so good as we developers so we need this little utility function to help it out
 // Taken from https://fettblog.eu/typescript-hasownproperty/
 /** TS save way to check if a property exists in an object */
-export function hasOwnProperty<T extends {}, Y extends PropertyKey>(
+export function hasOwnProperty<T extends {}, Y extends PropertyKey = string>(
   obj: T,
   prop: Y,
 ): obj is T & Record<Y, unknown> {
