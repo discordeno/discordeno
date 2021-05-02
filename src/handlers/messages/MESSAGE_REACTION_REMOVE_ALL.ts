@@ -10,12 +10,19 @@ export async function handleMessageReactionRemoveAll(
   data: DiscordGatewayPayload,
 ) {
   const payload = data.d as MessageReactionRemoveAll;
-  const message = await cacheHandlers.get("messages", snowflakeToBigint(payload.messageId));
+  const message = await cacheHandlers.get(
+    "messages",
+    snowflakeToBigint(payload.messageId),
+  );
 
   if (message?.reactions) {
     message.reactions = undefined;
 
-    await cacheHandlers.set("messages", snowflakeToBigint(payload.messageId), message);
+    await cacheHandlers.set(
+      "messages",
+      snowflakeToBigint(payload.messageId),
+      message,
+    );
   }
 
   eventHandlers.reactionRemoveAll?.(

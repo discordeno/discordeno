@@ -10,7 +10,8 @@ export function channelOverwriteHasPermission(
   overwrites: DiscordOverwrite[],
   permissions: PermissionStrings[],
 ) {
-  const overwrite = overwrites.find((perm) => snowflakeToBigint(perm.id) === id) ||
+  const overwrite =
+    overwrites.find((perm) => snowflakeToBigint(perm.id) === id) ||
     overwrites.find((perm) => snowflakeToBigint(perm.id) === guildId);
 
   return permissions.every((perm) => {

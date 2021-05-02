@@ -7,10 +7,16 @@ import { bigintToSnowflake, snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as GuildMemberUpdate;
-  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
+  const guild = await cacheHandlers.get(
+    "guilds",
+    snowflakeToBigint(payload.guildId),
+  );
   if (!guild) return;
 
-  const cachedMember = await cacheHandlers.get("members", snowflakeToBigint(payload.user.id));
+  const cachedMember = await cacheHandlers.get(
+    "members",
+    snowflakeToBigint(payload.user.id),
+  );
   const guildMember = cachedMember?.guilds.get(guild.id);
 
   const newMemberData = {
@@ -60,7 +66,11 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
         `2. Running forEach loop in GUILD_MEMBER_UPDATE file.`,
       );
       if (!roleIds.includes(snowflakeToBigint(id))) {
-        eventHandlers.roleGained?.(guild, discordenoMember, snowflakeToBigint(id));
+        eventHandlers.roleGained?.(
+          guild,
+          discordenoMember,
+          snowflakeToBigint(id),
+        );
       }
     });
   }

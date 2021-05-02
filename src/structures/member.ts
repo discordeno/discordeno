@@ -211,7 +211,9 @@ export interface DiscordenoMember extends
   /** Edit the member in a guild */
   edit(
     guildId: bigint,
-    options: Omit<ModifyGuildMember, "channelId"> & { channelId?: bigint | null },
+    options: Omit<ModifyGuildMember, "channelId"> & {
+      channelId?: bigint | null;
+    },
   ): ReturnType<typeof editMember>;
   /** Ban a member in a guild */
   ban(guildId: bigint, options: CreateGuildBan): ReturnType<typeof banMember>;

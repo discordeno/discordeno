@@ -11,7 +11,10 @@ export async function handleGuildDelete(
 ) {
   const payload = data.d as UnavailableGuild;
 
-  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.id));
+  const guild = await cacheHandlers.get(
+    "guilds",
+    snowflakeToBigint(payload.id),
+  );
   if (!guild) return;
 
   await cacheHandlers.delete("guilds", guild.id);
