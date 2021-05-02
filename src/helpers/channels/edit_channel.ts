@@ -17,6 +17,7 @@ import {
 import { camelKeysToSnakeCase, hasOwnProperty } from "../../util/utils.ts";
 
 //TODO: implement DM group channel edit
+//TODO(threads): check thread perms
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(
   channelId: string,
