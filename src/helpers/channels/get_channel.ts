@@ -2,6 +2,7 @@ import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { Channel } from "../../types/channels/channel.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Fetches a single channel object from the api.
@@ -16,7 +17,7 @@ export async function getChannel(channelId: bigint, addToCache = true) {
 
   const discordenoChannel = await structures.createDiscordenoChannel(
     result,
-    result.guildId,
+    result.guildId ? snowflakeToBigint(result.guildId) : undefined,
   );
   if (addToCache) {
     await cacheHandlers.set(

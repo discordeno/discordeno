@@ -10,7 +10,7 @@ import { endpoints } from "../../util/constants.ts";
  */
 export async function getMember(
   guildId: bigint,
-  id: string,
+  id: bigint,
   options?: { force?: boolean },
 ) {
   const guild = await cacheHandlers.get("guilds", guildId);

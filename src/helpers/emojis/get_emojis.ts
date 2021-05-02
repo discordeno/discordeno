@@ -3,6 +3,7 @@ import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { Emoji } from "../../types/emojis/emoji.ts";
 import { Errors } from "../../types/misc/errors.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 
@@ -26,7 +27,7 @@ export async function getEmojis(guildId: bigint, addToCache = true) {
         "loop",
         `Running forEach loop in get_emojis file.`,
       );
-      guild.emojis.set(emoji.id!, emoji);
+      guild.emojis.set(snowflakeToBigint(emoji.id!), emoji);
     });
 
     await cacheHandlers.set("guilds", guildId, guild);

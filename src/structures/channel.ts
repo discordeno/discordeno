@@ -97,7 +97,7 @@ const baseChannel: Partial<DiscordenoChannel> = {
 // deno-lint-ignore require-await
 export async function createDiscordenoChannel(
   data: Channel,
-  guildId?: string,
+  guildId?: bigint,
 ) {
   const {
     lastPinTimestamp,

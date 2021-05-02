@@ -12,7 +12,7 @@ import { validateSlashCommands } from "../../util/utils.ts";
  */
 export async function upsertSlashCommands(
   options: EditGlobalApplicationCommand[],
-  guildId?: string,
+  guildId?: bigint,
 ) {
   validateSlashCommands(options);
 

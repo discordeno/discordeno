@@ -237,9 +237,10 @@ export interface DiscordenoMessage extends
   /** The member for the user who sent the message. Can be undefined if not in cache or in dm. */
   member?: DiscordenoMember;
   /** The guild member details for this guild and member. Can be undefined if not in cache or in dm. */
-  guildMember?: Omit<GuildMember, "joinedAt" | "premiumSince"> & {
+  guildMember?: Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
     joinedAt: number;
     premiumSince?: number;
+    roles: bigint[];
   };
   /** The url link to this message */
   link: string;

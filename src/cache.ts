@@ -25,11 +25,11 @@ export const cache = {
     string,
     (
       value:
-        | Collection<string, DiscordenoMember>
-        | PromiseLike<Collection<string, DiscordenoMember>>,
+        | Collection<bigint, DiscordenoMember>
+        | PromiseLike<Collection<bigint, DiscordenoMember>>,
     ) => void
   >(),
-  executedSlashCommands: new Collection<string, string>(),
+  executedSlashCommands: new Set<string>(),
   get emojis() {
     return new Collection<string, Emoji>(
       this.guilds.reduce(

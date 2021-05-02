@@ -183,7 +183,7 @@ export interface EventHandlers {
     emoji: Partial<Emoji>,
     messageId: bigint,
     channelId: bigint,
-    guildId?: string,
+    guildId?: bigint,
   ) => unknown;
   /** Sent when a guild role is created. */
   roleCreate?: (guild: DiscordenoGuild, role: DiscordenoRole) => unknown;

@@ -21,7 +21,7 @@ import {
  */
 export async function createSlashCommand(
   options: CreateGlobalApplicationCommand,
-  guildId?: string,
+  guildId?: bigint,
 ) {
   validateSlashCommands([options], true);
 
