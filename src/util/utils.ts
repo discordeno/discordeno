@@ -208,9 +208,11 @@ export function validateSlashCommands(
 // Typescript is not so good as we developers so we need this little utility function to help it out
 // Taken from https://fettblog.eu/typescript-hasownproperty/
 /** TS save way to check if a property exists in an object */
+// deno-lint-ignore ban-types
 export function hasOwnProperty<T extends {}, Y extends PropertyKey = string>(
   obj: T,
   prop: Y,
 ): obj is T & Record<Y, unknown> {
+  // deno-lint-ignore no-prototype-builtins
   return obj.hasOwnProperty(prop);
 }

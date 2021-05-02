@@ -90,7 +90,7 @@ export async function editChannel(
   }
 
   const payload = {
-    ...camelKeysToSnakeCase<{}>(options),
+    ...camelKeysToSnakeCase<Record<string, unknown>>(options),
     // deno-lint-ignore camelcase
     permission_overwrites:
       hasOwnProperty<ModifyChannel>(options, "permissionOverwrites")
