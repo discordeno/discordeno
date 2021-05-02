@@ -92,7 +92,7 @@ export const endpoints = {
   THREAD_USER: (channelId: string, userId: string) =>
     `${endpoints.THREAD_MEMBERS(channelId)}/${userId}`,
   THREAD_ARCHIVED_BASE: (channelId: string) =>
-    `${CHANNEL_BASE(channelId)}/archived`,
+    `${CHANNEL_BASE(channelId)}/threads/archived`,
   THREAD_ARCHIVED_PUBLIC: (channelId: string) =>
     `${endpoints.THREAD_ARCHIVED_BASE(channelId)}/public`,
   THREAD_ARCHIVED_PRIVATE: (channelId: string) =>
