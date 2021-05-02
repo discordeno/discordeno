@@ -118,6 +118,7 @@ export async function createDiscordenoGuild(
     memberCount = 0,
     voiceStates = [],
     channels = [],
+    threads = [],
     presences = [],
     joinedAt = "",
     emojis,
@@ -131,7 +132,7 @@ export async function createDiscordenoGuild(
     ),
   );
 
-  await Promise.all(channels.map(async (channel) => {
+  await Promise.all([...channels, ...threads].map(async (channel) => {
     const discordenoChannel = await structures.createDiscordenoChannel(
       channel,
       rest.id,
