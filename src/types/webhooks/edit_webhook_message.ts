@@ -10,7 +10,7 @@ export interface EditWebhookMessage {
   /** Embedded `rich` content */
   embeds?: Embed[] | null;
   /** The contents of the file being sent/edited */
-  file: FileContent | FileContent[];
+  file?: FileContent | FileContent[];
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions | null;
   /** Attached files to keep */
