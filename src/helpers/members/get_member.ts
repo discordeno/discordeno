@@ -9,7 +9,7 @@ import { endpoints } from "../../util/constants.ts";
  * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
  */
 export async function getMember(
-  guildId: string,
+  guildId: bigint,
   id: string,
   options?: { force?: boolean },
 ) {

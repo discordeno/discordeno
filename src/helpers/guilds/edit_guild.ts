@@ -9,7 +9,7 @@ import { urlToBase64 } from "../../util/utils.ts";
 import { ws } from "../../ws/ws.ts";
 
 /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
-export async function editGuild(guildId: string, options: ModifyGuild) {
+export async function editGuild(guildId: bigint, options: ModifyGuild) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
   if (options.icon && !options.icon.startsWith("data:image/")) {

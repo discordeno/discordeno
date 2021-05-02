@@ -20,7 +20,7 @@ import { ws } from "../../ws/ws.ts";
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
  */
 export async function getMembers(
-  guildId: string,
+  guildId: bigint,
   options?: ListGuildMembers & { addToCache?: boolean },
 ) {
   if (!(ws.identifyPayload.intents && DiscordGatewayIntents.GUILD_MEMBERS)) {
@@ -30,7 +30,7 @@ export async function getMembers(
   const guild = await cacheHandlers.get("guilds", guildId);
   if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
-  const members = new Collection<string, DiscordenoMember>();
+  const members = new Collection<bigint, DiscordenoMember>();
 
   let membersLeft = options?.limit ?? guild.memberCount;
   let loops = 1;

@@ -17,7 +17,7 @@ import { isButton } from "../type_guards/is_button.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(
-  channelId: string,
+  channelId: bigint,
   content: string | CreateMessage,
 ) {
   if (typeof content === "string") content = { content };

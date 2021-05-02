@@ -14,6 +14,7 @@ import { GuildMember } from "../types/guilds/guild_member.ts";
 import { CreateMessage } from "../types/messages/create_message.ts";
 import { EditMessage } from "../types/messages/edit_message.ts";
 import { Message } from "../types/messages/message.ts";
+import { bigintToSnowflake, snowflakeToBigint } from "../util/bigint.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoChannel } from "./channel.ts";
@@ -21,18 +22,25 @@ import { DiscordenoGuild } from "./guild.ts";
 import { DiscordenoMember } from "./member.ts";
 import { DiscordenoRole } from "./role.ts";
 
+const MESSAGE_SNOWFLAKES = [
+  "id",
+  "channelId",
+  "guildId",
+  "webhookId",
+];
+
 const baseMessage: Partial<DiscordenoMessage> = {
   get channel() {
     if (this.guildId) return cache.channels.get(this.channelId!);
-    return cache.channels.get(this.author?.id!);
+    return cache.channels.get(this.authorId!);
   },
   get guild() {
     if (!this.guildId) return undefined;
     return cache.guilds.get(this.guildId);
   },
   get member() {
-    if (!this.author?.id) return undefined;
-    return cache.members.get(this.author?.id);
+    if (!this.authorId) return undefined;
+    return cache.members.get(this.authorId);
   },
   get guildMember() {
     if (!this.guildId) return undefined;
@@ -76,7 +84,7 @@ const baseMessage: Partial<DiscordenoMessage> = {
           repliedUser: true,
         },
         messageReference: {
-          messageId: this.id,
+          messageId: bigintToSnowflake(this.id!),
           failIfNotExists: false,
         },
       }
@@ -87,17 +95,17 @@ const baseMessage: Partial<DiscordenoMessage> = {
           repliedUser: true,
         },
         messageReference: {
-          messageId: this.id,
+          messageId: bigintToSnowflake(this.id!),
           failIfNotExists: content.messageReference?.failIfNotExists === true,
         },
       };
 
     if (this.guildId) return sendMessage(this.channelId!, contentWithMention);
-    return sendDirectMessage(this.author!.id, contentWithMention);
+    return sendDirectMessage(this.authorId!, contentWithMention);
   },
   send(content) {
     if (this.guildId) return sendMessage(this.channelId!, content);
-    return sendDirectMessage(this.author!.id, content);
+    return sendDirectMessage(this.authorId!, content);
   },
   alert(content, timeout = 10, reason = "") {
     if (this.guildId) {
@@ -106,7 +114,7 @@ const baseMessage: Partial<DiscordenoMessage> = {
       });
     }
 
-    return sendDirectMessage(this.author!.id, content).then((response) => {
+    return sendDirectMessage(this.authorId!, content).then((response) => {
       response.delete(reason, timeout * 1000).catch(console.error);
     });
   },
@@ -129,43 +137,53 @@ const baseMessage: Partial<DiscordenoMessage> = {
 export async function createDiscordenoMessage(data: Message) {
   const {
     guildId = "",
-    channelId,
     mentionChannels = [],
     mentions = [],
     mentionRoles = [],
     editedTimestamp,
+    author,
     ...rest
   } = data;
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
-  for (const key of Object.keys(rest)) {
+  for (const [key, value] of Object.entries(rest)) {
     eventHandlers.debug?.(
       "loop",
       `Running for of loop in createDiscordenoMessage function.`,
     );
-    // @ts-ignore index signature
-    props[key] = createNewProp(rest[key]);
+
+    props[key] = createNewProp(
+      MESSAGE_SNOWFLAKES.includes(key)
+        ? value ? snowflakeToBigint(value) : undefined
+        : value,
+    );
   }
+
+  props.authorId = createNewProp(snowflakeToBigint(author.id));
 
   // Discord doesnt give guild id for getMessage() so this will fill it in
   const guildIdFinal = guildId ||
-    (await cacheHandlers.get("channels", channelId))?.guildId || "";
+    (await cacheHandlers.get("channels", snowflakeToBigint(data.channelId)))
+      ?.guildId ||
+    "";
 
   const message: DiscordenoMessage = Object.create(baseMessage, {
     ...props,
-    /** The message id of the original message if this message was sent as a reply. If null, the original message was deleted. */
-    channelId: createNewProp(channelId),
     content: createNewProp(data.content || ""),
     guildId: createNewProp(guildIdFinal),
-    mentionedUserIds: createNewProp(mentions.map((m) => m.id)),
-    mentionedRoleIds: createNewProp(mentionRoles),
+    mentionedUserIds: createNewProp(
+      mentions.map((m) => snowflakeToBigint(m.id)),
+    ),
+    mentionedRoleIds: createNewProp(
+      mentionRoles.map((id) => snowflakeToBigint(id)),
+    ),
     mentionedChannelIds: createNewProp([
       // Keep any ids that discord sends
-      ...mentionChannels.map((m) => m.id),
+      ...mentionChannels.map((m) => snowflakeToBigint(m.id)),
       // Add any other ids that can be validated in a channel mention format
       ...(rest.content?.match(CHANNEL_MENTION_REGEX) || []).map((text) =>
         // converts the <#123> into 123
-        text.substring(2, text.length - 1)
+        snowflakeToBigint(text.substring(2, text.length - 1))
       ),
     ]),
     timestamp: createNewProp(Date.parse(data.timestamp)),
@@ -177,19 +195,35 @@ export async function createDiscordenoMessage(data: Message) {
   return message;
 }
 
-export interface DiscordenoMessage
-  extends Omit<Message, "timestamp" | "editedTimestamp" | "guildId"> {
+export interface DiscordenoMessage extends
+  Omit<
+    Message,
+    | "id"
+    | "webhookId"
+    | "timestamp"
+    | "editedTimestamp"
+    | "guildId"
+    | "channelId"
+    | "member"
+  > {
+  id: bigint;
   // For better user experience
-  /** Id of the guild which the massage has been send in. Empty string if it a DM */
-  guildId: string;
+  /** Id of the guild which the massage has been send in. "0n" if it a DM */
+  guildId: bigint;
+  /** id of the channel the message was sent in */
+  channelId: bigint;
+  /** If the message is generated by a webhook, this is the webhook's id */
+  webhookId?: bigint;
+  /** The id of the user who sent this message */
+  authorId: bigint;
   /** The message content for this message. Empty string if no content was sent like an attachment only. */
   content: string;
   /** Ids of users specifically mentioned in the message */
-  mentionedUserIds: string[];
+  mentionedUserIds: bigint[];
   /** Ids of roles specifically mentioned in this message */
-  mentionedRoleIds: string[];
+  mentionedRoleIds: bigint[];
   /** Channels specifically mentioned in this message */
-  mentionedChannelIds?: string[];
+  mentionedChannelIds?: bigint[];
   /** When this message was sent */
   timestamp: number;
   /** When this message was edited (or undefined if never) */
@@ -257,6 +291,6 @@ export interface DiscordenoMessage
   /** Removes a reaction from the given user on this message, defaults to bot */
   removeReaction(
     reaction: string,
-    userId?: string,
+    userId?: bigint,
   ): ReturnType<typeof removeReaction>;
 }

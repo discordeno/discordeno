@@ -101,8 +101,8 @@ export interface EventHandlers {
   /** Sent when a guild's emojis have been updated. */
   guildEmojisUpdate?: (
     guild: DiscordenoGuild,
-    emojis: Collection<string, Emoji>,
-    oldEmojis: Collection<string, Emoji>,
+    emojis: Collection<bigint, Emoji>,
+    oldEmojis: Collection<bigint, Emoji>,
   ) => unknown;
   /** Sent when a new user joins a guild. */
   guildMemberAdd?: (
@@ -181,8 +181,8 @@ export interface EventHandlers {
   /** Sent when a bot removes all instances of a given emoji from the reactions of a message. */
   reactionRemoveEmoji?: (
     emoji: Partial<Emoji>,
-    messageId: string,
-    channelId: string,
+    messageId: bigint,
+    channelId: bigint,
     guildId?: string,
   ) => unknown;
   /** Sent when a guild role is created. */
@@ -198,12 +198,12 @@ export interface EventHandlers {
   roleGained?: (
     guild: DiscordenoGuild,
     member: DiscordenoMember,
-    roleId: string,
+    roleId: bigint,
   ) => unknown;
   roleLost?: (
     guild: DiscordenoGuild,
     member: DiscordenoMember,
-    roleId: string,
+    roleId: bigint,
   ) => unknown;
   shardReady?: (shardId: number) => unknown;
   /** Sent when a shard failed to load. */
@@ -214,14 +214,14 @@ export interface EventHandlers {
   /** Sent when a user starts typing in a channel. */
   typingStart?: (data: TypingStart) => unknown;
   /** Sent when a user joins a voice channel */
-  voiceChannelJoin?: (member: DiscordenoMember, channelId: string) => unknown;
+  voiceChannelJoin?: (member: DiscordenoMember, channelId: bigint) => unknown;
   /** Sent when a user leaves a voice channel. Does not get sent when user switches the voice channel */
-  voiceChannelLeave?: (member: DiscordenoMember, channelId: string) => unknown;
+  voiceChannelLeave?: (member: DiscordenoMember, channelId: bigint) => unknown;
   /** Sent when a user switches the voice channel */
   voiceChannelSwitch?: (
     member: DiscordenoMember,
-    channelId: string,
-    oldChannelId: string,
+    channelId: bigint,
+    oldChannelId: bigint,
   ) => unknown;
   /** Sent when a voice server is updated with information for making the bot connect to a voice channel. */
   voiceServerUpdate?: (
@@ -234,7 +234,7 @@ export interface EventHandlers {
     voiceState: VoiceState,
   ) => unknown;
   /** Sent when a guild channel's webhook is created, updated, or deleted. */
-  webhooksUpdate?: (channelId: string, guildId: string) => unknown;
+  webhooksUpdate?: (channelId: bigint, guildId: bigint) => unknown;
   /** Sent when a member has passed the guild's Membership Screening requirements */
   membershipScreeningPassed?: (
     guild: DiscordenoGuild,

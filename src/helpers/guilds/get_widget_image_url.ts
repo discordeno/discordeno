@@ -5,7 +5,7 @@ import { endpoints } from "../../util/constants.ts";
 
 /** Returns the widget image URL for the guild. */
 export async function getWidgetImageURL(
-  guildId: string,
+  guildId: bigint,
   options?: GetGuildWidgetImageQuery & { force?: boolean },
 ) {
   if (!options?.force) {

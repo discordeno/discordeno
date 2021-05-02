@@ -5,7 +5,7 @@ import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
 /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
-export async function getInvites(guildId: string) {
+export async function getInvites(guildId: bigint) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
   const result = await rest.runMethod<Invite[]>(

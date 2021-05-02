@@ -10,7 +10,7 @@ import {
 
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(
-  channelId: string,
+  channelId: bigint,
   options: ModifyChannel,
   reason?: string,
 ) {

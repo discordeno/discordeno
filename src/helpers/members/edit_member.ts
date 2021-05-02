@@ -14,8 +14,8 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 /** Edit the member */
 export async function editMember(
-  guildId: string,
-  memberId: string,
+  guildId: bigint,
+  memberId: bigint,
   options: ModifyGuildMember,
 ) {
   const requiredPerms: Set<PermissionStrings> = new Set();

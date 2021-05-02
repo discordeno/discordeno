@@ -34,7 +34,7 @@ const baseRole: Partial<DiscordenoRole> = {
   edit(options) {
     return editRole(this.guildId!, this.id!, options);
   },
-  higherThanRole(roleId: string, position?: number) {
+  higherThanRole(roleId: bigint, position?: number) {
     // If no position try and find one from cache
     if (!position) position = this.guild?.roles.get(roleId)?.position;
     // If still none error out.
@@ -51,7 +51,7 @@ const baseRole: Partial<DiscordenoRole> = {
 
     return this.position! > position;
   },
-  async higherThanMember(memberId: string) {
+  async higherThanMember(memberId: bigint) {
     const guild = this.guild;
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
@@ -113,7 +113,7 @@ export interface DiscordenoRole extends Omit<Role, "tags"> {
   /** The hex color for this role. */
   hexColor: string;
   /** The cached members that have this role */
-  members: Collection<string, DiscordenoMember>;
+  members: Collection<bigint, DiscordenoMember>;
   /** The @ mention of the role in a string. */
   mention: string;
 
@@ -124,7 +124,7 @@ export interface DiscordenoRole extends Omit<Role, "tags"> {
   /** Edits the role */
   edit(options: CreateGuildRole): ReturnType<typeof editRole>;
   /** Checks if this role is higher than another role. */
-  higherThanRole(roleId: string, position?: number): boolean;
+  higherThanRole(roleId: bigint, position?: number): boolean;
   /** Checks if the role has a higher position than the given member */
-  higherThanMember(memberId: string): Promise<boolean>;
+  higherThanMember(memberId: bigint): Promise<boolean>;
 }

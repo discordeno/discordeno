@@ -9,7 +9,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
  * Requires the `MANAGE_GUILD` permission.
  */
 export async function editGuildTemplate(
-  guildId: string,
+  guildId: bigint,
   templateCode: string,
   data: ModifyGuildTemplate,
 ) {

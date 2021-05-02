@@ -8,7 +8,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
  * Requires the `MANAGE_GUILD` permission.
  */
 export async function deleteGuildTemplate(
-  guildId: string,
+  guildId: bigint,
   templateCode: string,
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);

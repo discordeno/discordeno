@@ -7,8 +7,8 @@ import { delay } from "../../util/utils.ts";
 
 /** Delete a message with the channel id and message id only. */
 export async function deleteMessage(
-  channelId: string,
-  messageId: string,
+  channelId: bigint,
+  messageId: bigint,
   reason?: string,
   delayMilliseconds = 0,
 ) {

@@ -17,9 +17,16 @@ import { CreateMessage } from "../types/messages/create_message.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { User } from "../types/users/user.ts";
+import { snowflakeToBigint } from "../util/bigint.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
+
+const MEMBER_SNOWFLAKES = [
+  "roles",
+  "id",
+  "discriminator",
+];
 
 const baseMember: Partial<DiscordenoMember> = {
   get avatarURL() {
@@ -74,7 +81,7 @@ const baseMember: Partial<DiscordenoMember> = {
 export async function createDiscordenoMember(
   // The `user` param in `DiscordGuildMember` is optional since discord does not send it in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events. But this data in there is required to build this structure so it is required in this case
   data: GuildMemberWithUser,
-  guildId: string,
+  guildId: bigint,
 ) {
   const {
     user,
@@ -85,31 +92,39 @@ export async function createDiscordenoMember(
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
 
-  for (const key of Object.keys(rest)) {
+  for (const [key, value] of Object.entries(rest)) {
     eventHandlers.debug?.(
       "loop",
       `Running for of loop for Object.keys(rest) in DiscordenoMember function.`,
     );
-    // @ts-ignore index signature
-    props[key] = createNewProp(rest[key]);
+
+    props[key] = createNewProp(
+      MEMBER_SNOWFLAKES.includes(key)
+        ? value ? snowflakeToBigint(value) : undefined
+        : value,
+    );
   }
 
-  for (const key of Object.keys(user)) {
+  for (const [key, value] of Object.entries(user)) {
     eventHandlers.debug?.(
       "loop",
       `Running for of for Object.keys(user) loop in DiscordenoMember function.`,
     );
-    // @ts-ignore index signature
-    props[key] = createNewProp(user[key]);
+
+    props[key] = createNewProp(
+      MEMBER_SNOWFLAKES.includes(key)
+        ? value ? snowflakeToBigint(value) : undefined
+        : value,
+    );
   }
 
   const member: DiscordenoMember = Object.create(baseMember, {
     ...props,
     /** The guild related data mapped by guild id */
-    guilds: createNewProp(new Collection<string, GuildMember>()),
+    guilds: createNewProp(new Collection<bigint, GuildMember>()),
   });
 
-  const cached = await cacheHandlers.get("members", user.id);
+  const cached = await cacheHandlers.get("members", snowflakeToBigint(user.id));
   if (cached) {
     for (const [id, guild] of cached.guilds.entries()) {
       eventHandlers.debug?.(
@@ -133,10 +148,25 @@ export async function createDiscordenoMember(
   return member;
 }
 
-export interface DiscordenoMember extends GuildMember, User {
+export interface DiscordenoMember extends
+  Omit<
+    GuildMember,
+    "roles"
+  >,
+  Omit<
+    User,
+    | "discriminator"
+    | "id"
+  > {
+  /** Array of role object ids */
+  roles: bigint[];
+  /** The user's id */
+  id: bigint;
+  /** The user's 4-digit discord-tag */
+  discriminator: bigint;
   /** The guild related data mapped by guild id */
   guilds: Collection<
-    string,
+    bigint,
     Omit<GuildMember, "joinedAt" | "premiumSince"> & {
       joinedAt: number;
       premiumSince?: number;
@@ -157,13 +187,13 @@ export interface DiscordenoMember extends GuildMember, User {
   makeAvatarURL(
     options: { size?: DiscordImageSize; format?: DiscordImageFormat },
   ): string;
-  /** Returns the guild for this guildID */
-  guild(guildID: string): DiscordenoGuild | undefined;
+  /** Returns the guild for this guildId */
+  guild(guildId: bigint): DiscordenoGuild | undefined;
   /** Get the nickname or the username if no nickname */
-  name(guildID: string): string;
+  name(guildId: bigint): string;
   /** Get the guild member object for the specified guild */
   guildMember(
-    guildID: string,
+    guildId: bigint,
   ):
     | Omit<GuildMember, "joinedAt" | "premiumSince"> & {
       joinedAt: number;
@@ -175,24 +205,24 @@ export interface DiscordenoMember extends GuildMember, User {
     content: string | CreateMessage,
   ): ReturnType<typeof sendDirectMessage>;
   /** Kick the member from a guild */
-  kick(guildID: string, reason?: string): ReturnType<typeof kickMember>;
+  kick(guildId: bigint, reason?: string): ReturnType<typeof kickMember>;
   /** Edit the member in a guild */
   edit(
-    guildID: string,
+    guildId: bigint,
     options: ModifyGuildMember,
   ): ReturnType<typeof editMember>;
   /** Ban a member in a guild */
-  ban(guildID: string, options: CreateGuildBan): ReturnType<typeof banMember>;
+  ban(guildId: bigint, options: CreateGuildBan): ReturnType<typeof banMember>;
   /** Add a role to the member */
   addRole(
-    guildID: string,
-    roleID: string,
+    guildId: bigint,
+    roleId: bigint,
     reason?: string,
   ): ReturnType<typeof addRole>;
   /** Remove a role from the member */
   removeRole(
-    guildID: string,
-    roleID: string,
+    guildId: bigint,
+    roleId: bigint,
     reason?: string,
   ): ReturnType<typeof removeRole>;
 }

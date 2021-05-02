@@ -4,7 +4,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
 /** Edit the nickname of the bot in this guild */
 export async function editBotNickname(
-  guildId: string,
+  guildId: bigint,
   nickname: string | null,
 ) {
   await requireBotGuildPermissions(guildId, ["CHANGE_NICKNAME"]);

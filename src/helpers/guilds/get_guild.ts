@@ -13,7 +13,7 @@ import { ws } from "../../ws/ws.ts";
  * So it does not cache the guild, you must do it manually.
  * */
 export async function getGuild(
-  guildId: string,
+  guildId: bigint,
   options: { counts?: boolean; addToCache?: boolean } = {
     counts: true,
     addToCache: true,

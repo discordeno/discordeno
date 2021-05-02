@@ -4,8 +4,8 @@ import { PermissionStrings } from "../../types/permissions/permission_strings.ts
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(
-  guildId: string,
-  id: string,
+  guildId: bigint,
+  id: bigint,
   overwrites: DiscordOverwrite[],
   permissions: PermissionStrings[],
 ) {

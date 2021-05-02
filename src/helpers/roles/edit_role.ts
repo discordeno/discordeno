@@ -9,7 +9,7 @@ import {
 
 /** Edit a guild role. Requires the MANAGE_ROLES permission. */
 export async function editRole(
-  guildId: string,
+  guildId: bigint,
   id: string,
   options: CreateGuildRole,
 ) {

@@ -4,7 +4,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
 /** Delete the given emoji. Requires the MANAGE_EMOJIS permission. Returns 204 No Content on success. */
 export async function deleteEmoji(
-  guildId: string,
+  guildId: bigint,
   id: string,
   reason?: string,
 ) {
