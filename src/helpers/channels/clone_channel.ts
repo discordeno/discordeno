@@ -24,7 +24,9 @@ export async function cloneChannel(channelId: bigint, reason?: string) {
     ...channelToClone,
     name: channelToClone.name!,
     topic: channelToClone.topic || undefined,
-    parentId: channelToClone.parentId ? bigintToSnowflake(channelToClone.parentId) : undefined,
+    parentId: channelToClone.parentId
+      ? bigintToSnowflake(channelToClone.parentId)
+      : undefined,
     permissionOverwrites: channelToClone.permissionOverwrites.map((
       overwrite,
     ) => ({
