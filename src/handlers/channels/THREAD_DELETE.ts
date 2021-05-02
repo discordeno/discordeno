@@ -20,5 +20,5 @@ export async function handleThreadDelete(data: DiscordGatewayPayload) {
     }
   });
 
-  eventHandlers.channelDelete?.(cachedChannel);
+  eventHandlers.threadDelete?.(cachedChannel);
 }
