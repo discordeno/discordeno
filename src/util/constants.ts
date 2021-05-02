@@ -78,6 +78,10 @@ export const endpoints = {
   // Bots SHALL NOT use this endpoint but they can
   CHANNEL_TYPING: (channelId: string) => `${CHANNEL_BASE(channelId)}/typing`,
 
+  // Thread Endpoints
+  START_THREAD: (channelId: string, messageId: string) =>
+    `${endpoints.CHANNEL_MESSAGE(channelId, messageId)}/threads`,
+
   // Guild Endpoints
   GUILDS: `${baseEndpoints.BASE_URL}/guilds`,
   GUILD_AUDIT_LOGS: (guildId: string) => `${GUILDS_BASE(guildId)}/audit-logs`,
