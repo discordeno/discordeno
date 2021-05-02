@@ -79,8 +79,26 @@ export const endpoints = {
   CHANNEL_TYPING: (channelId: string) => `${CHANNEL_BASE(channelId)}/typing`,
 
   // Thread Endpoints
-  START_THREAD: (channelId: string, messageId: string) =>
+  THREAD_START_PUBLIC: (channelId: string, messageId: string) =>
     `${endpoints.CHANNEL_MESSAGE(channelId, messageId)}/threads`,
+  THREAD_START_PRIVATE: (channelId: string) =>
+    `${CHANNEL_BASE(channelId)}/threads`,
+  THREAD_ACTIVE: (channelId: string) =>
+    `${CHANNEL_BASE(channelId)}/threads/active`,
+  THREAD_MEMBERS: (channelId: string) =>
+    `${CHANNEL_BASE(channelId)}/thread-members`,
+  THREAD_ME: (channelId: string) =>
+    `${endpoints.THREAD_MEMBERS(channelId)}/@me`,
+  THREAD_USER: (channelId: string, userId: string) =>
+    `${endpoints.THREAD_MEMBERS(channelId)}/${userId}`,
+  THREAD_ARCHIVED_BASE: (channelId: string) =>
+    `${CHANNEL_BASE(channelId)}/archived`,
+  THREAD_ARCHIVED_PUBLIC: (channelId: string) =>
+    `${endpoints.THREAD_ARCHIVED_BASE(channelId)}/public`,
+  THREAD_ARCHIVED_PRIVATE: (channelId: string) =>
+    `${endpoints.THREAD_ARCHIVED_BASE(channelId)}/private`,
+  THREAD_ARCHIVED_PRIVATE_JOINED: (channelId: string) =>
+    `${CHANNEL_BASE(channelId)}/users/@me/threads/archived/private`,
 
   // Guild Endpoints
   GUILDS: `${baseEndpoints.BASE_URL}/guilds`,
