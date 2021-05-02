@@ -72,9 +72,9 @@ export async function editChannel(
 interface EditChannelRequest {
   amount: number;
   timestamp: number;
-  channelId: string;
+  channelId: bigint;
   items: {
-    channelId: string;
+    channelId: bigint;
     options: ModifyChannel;
   }[];
 }
