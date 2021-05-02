@@ -49,8 +49,8 @@ const baseChannel: Partial<DiscordenoChannel> = {
   disconnect(memberId) {
     return disconnectMember(this.guildId!, memberId);
   },
-  delete() {
-    return deleteChannel(this.guildId!, this.id!);
+  delete(reason) {
+    return deleteChannel(this.id!, reason);
   },
   editOverwrite(id, options) {
     return editChannelOverwrite(this.guildId!, this.id!, id, options);
@@ -147,7 +147,7 @@ export interface DiscordenoChannel
   /** Disconnect a member from a voice channel. Requires MOVE_MEMBERS permission. */
   disconnect(memberID: string): ReturnType<typeof disconnectMember>;
   /** Delete the channel */
-  delete(): ReturnType<typeof deleteChannel>;
+  delete(reason?: string): ReturnType<typeof deleteChannel>;
   /** Edit a channel Overwrite */
   editOverwrite(
     overwriteID: string,

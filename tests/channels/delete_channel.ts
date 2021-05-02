@@ -21,7 +21,7 @@ Deno.test({
     }
 
     // Delete the channel now without a reason
-    await deleteChannel(tempData.guildId, channel.id);
+    await deleteChannel(channel.id);
     // wait 5 seconds to give it time for CHANNEL_DELETE event
     await delayUntil(3000, () => !cache.channels.has(channel.id));
     // Make sure it is gone from cache
