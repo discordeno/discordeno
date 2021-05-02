@@ -143,15 +143,13 @@ export async function createDiscordenoGuild(
     (data.roles || []).map((role) =>
       structures.createDiscordenoRole({
         role,
-        guildId
+        guildId,
       })
     ),
   );
 
   const voiceStateStructs = await Promise.all(
-    voiceStates.map((vs) =>
-      structures.createDiscordenoVoiceState(guildId, vs)
-    ),
+    voiceStates.map((vs) => structures.createDiscordenoVoiceState(guildId, vs)),
   );
 
   await Promise.all(channels.map(async (channel) => {

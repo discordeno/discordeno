@@ -7,7 +7,10 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 export async function handleUserUpdate(data: DiscordGatewayPayload) {
   const userData = data.d as User;
 
-  const member = await cacheHandlers.get("members", snowflakeToBigint(userData.id));
+  const member = await cacheHandlers.get(
+    "members",
+    snowflakeToBigint(userData.id),
+  );
   if (!member) return;
 
   Object.entries(userData).forEach(([key, value]) => {
