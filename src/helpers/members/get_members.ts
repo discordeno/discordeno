@@ -89,7 +89,9 @@ export async function getMembers(
 
     options = {
       limit: options?.limit,
-      after: bigintToSnowflake(discordenoMembers[discordenoMembers.length - 1].id),
+      after: bigintToSnowflake(
+        discordenoMembers[discordenoMembers.length - 1].id,
+      ),
     };
 
     membersLeft -= 1000;
