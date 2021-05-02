@@ -1,6 +1,6 @@
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 
+/** https://discord.com/developers/docs/topics/gateway#guild-member-update */
 export interface GuildMemberUpdate {
   /** The id of the guild */
   guildId: string;
@@ -21,8 +21,3 @@ export interface GuildMemberUpdate {
   /** whether the user is muted in voice channels */
   mute?: boolean;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#guild-member-update */
-export type DiscordGuildMemberUpdate = SnakeCasedPropertiesDeep<
-  GuildMemberUpdate
->;

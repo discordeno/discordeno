@@ -17,7 +17,8 @@ export enum DiscordGuildFeatures {
   /** Guild has access to create news channels */
   NEWS = "NEWS",
   /** Guild is able to be discovered in the directory */
-  DISCOVERABLE = "DISCOVERABLE", /** guild cannot be discoverable */
+  DISCOVERABLE = "DISCOVERABLE",
+  /** guild cannot be discoverable */
   DISCOVERABLE_DISABLED = "DISCOVERABLE_DISABLED",
   /** Guild is able to be featured in the directory */
   FEATURABLE = "FEATURABLE",
@@ -32,3 +33,6 @@ export enum DiscordGuildFeatures {
   /** Guild can be previewed before joining via Membership Screening or the directory */
   PREVIEW_ENABLED = "PREVIEW_ENABLED",
 }
+
+export type GuildFeatures = DiscordGuildFeatures;
+export const GuildFeatures = DiscordGuildFeatures;

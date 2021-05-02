@@ -5,3 +5,6 @@ export enum DiscordVisibilityTypes {
   /** Visible to everyone */
   Everyone,
 }
+
+export type VisibilityTypes = DiscordVisibilityTypes;
+export const VisibilityTypes = DiscordVisibilityTypes;

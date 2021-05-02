@@ -1,6 +1,6 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { WelcomeScreenChannel } from "./welcome_screen_channel.ts";
 
+/** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */
 export interface ModifyGuildWelcomeScreen {
   /** Whether the welcome screen is enabled */
   enabled?: boolean | null;
@@ -9,8 +9,3 @@ export interface ModifyGuildWelcomeScreen {
   /** The server description to show in the welcome screen */
   description?: string | null;
 }
-
-/** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */
-export type DiscordModifyGuildWelcomeScreen = SnakeCasedPropertiesDeep<
-  ModifyGuildWelcomeScreen
->;

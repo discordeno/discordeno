@@ -4,14 +4,15 @@ import { GuildMember } from "../guilds/guild_member.ts";
 import { MessageInteraction } from "../interactions/message_interaction.ts";
 import { Application } from "../oauth2/application.ts";
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { Attachment } from "./attachment.ts";
+import { MessageComponents } from "./components/message_components.ts";
 import { MessageActivity } from "./message_activity.ts";
 import { MessageReference } from "./message_reference.ts";
 import { MessageSticker } from "./message_sticker.ts";
 import { DiscordMessageTypes } from "./message_types.ts";
-import { DiscordReaction } from "./reaction.ts";
+import { Reaction } from "./reaction.ts";
 
+/** https://discord.com/developers/docs/resources/channel#message-object */
 export interface Message {
   /** id of the message */
   id: string;
@@ -56,7 +57,7 @@ export interface Message {
   /** Any embedded content */
   embeds: Embed[];
   /** Reactions to the message */
-  reactions?: DiscordReaction[];
+  reactions?: Reaction[];
   /** Used for validating a message was sent */
   nonce?: number | string;
   /** Whether this message is pinned */
@@ -82,7 +83,6 @@ export interface Message {
   referencedMessage?: Message;
   /** Sent if the message is a response to an Interaction */
   interaction?: MessageInteraction;
+  /** The components related to this message */
+  components: MessageComponents;
 }
-
-/** https://discord.com/developers/docs/resources/channel#message-object */
-export type DiscordMessage = SnakeCasedPropertiesDeep<Message>;

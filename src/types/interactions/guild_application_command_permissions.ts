@@ -1,6 +1,6 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { ApplicationCommandPermissions } from "./application_command_permissions.ts";
 
+/** https://discord.com/developers/docs/interactions/slash-commands#guildapplicationcommandpermissions */
 export interface GuildApplicationCommandPermissions {
   /** The id of the command */
   id: string;
@@ -11,7 +11,3 @@ export interface GuildApplicationCommandPermissions {
   /** The permissions for the command in the guild */
   permissions: ApplicationCommandPermissions[];
 }
-
-/** https://discord.com/developers/docs/interactions/slash-commands#guildapplicationcommandpermissions */
-export type DiscordGuildApplicationCommandPermissions =
-  SnakeCasedPropertiesDeep<GuildApplicationCommandPermissions>;

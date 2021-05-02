@@ -1,8 +1,8 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { AuditLogChange } from "./audit_log_change.ts";
 import { DiscordAuditLogEvents } from "./audit_log_events.ts";
 import { OptionalAuditEntryInfo } from "./optional_audit_entry_info.ts";
 
+/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
 export interface AuditLogEntry {
   /** id of the affected entity (webhook, user, role, etc.) */
   targetId: string | null;
@@ -19,6 +19,3 @@ export interface AuditLogEntry {
   /** The reason for the change (0-512 characters) */
   reason?: string;
 }
-
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
-export type DiscordAuditLogEntry = SnakeCasedPropertiesDeep<AuditLogEntry>;

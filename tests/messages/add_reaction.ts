@@ -1,11 +1,11 @@
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 import { cache } from "../../src/cache.ts";
-import { DiscordReaction } from "../../src/types/messages/reaction.ts";
 import { sendMessage } from "../../src/helpers/messages/send_message.ts";
 import { addReaction } from "../../src/helpers/messages/add_reaction.ts";
 import { createEmoji } from "../../src/helpers/emojis/create_emoji.ts";
 import { delayUntil } from "../util/delay_until.ts";
+import { Reaction } from "../../src/types/messages/reaction.ts";
 
 async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
   const message = await sendMessage(tempData.channelId, "Hello World!");
@@ -54,7 +54,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
     await cache.messages
       .get(message.id)
       ?.reactions?.filter(
-        (reaction: DiscordReaction) =>
+        (reaction: Reaction) =>
           reaction.emoji?.name === (custom ? "blamewolf" : "❤"),
       ).length,
     1,

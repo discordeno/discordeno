@@ -2,16 +2,11 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import {
-  DiscordVoiceState,
-  VoiceState,
-} from "../../types/voice/voice_state.ts";
-import { snakeKeysToCamelCase } from "../../util/utils.ts";
+import { VoiceState } from "../../types/voice/voice_state.ts";
 
 export async function handleVoiceStateUpdate(data: DiscordGatewayPayload) {
-  const payload = snakeKeysToCamelCase<VoiceState>(
-    data.d as DiscordVoiceState,
-  );
+  const payload = data.d as VoiceState;
+
   if (!payload.guildId) return;
 
   const guild = await cacheHandlers.get("guilds", payload.guildId);

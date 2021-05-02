@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure */
 export interface WelcomeScreenChannel {
   /** The channel's id */
   channelId: string;
@@ -10,8 +9,3 @@ export interface WelcomeScreenChannel {
   /** The emoji name if custom, the unicode character if standard, or `null` if no emoji is set */
   emojiName: string | null;
 }
-
-/** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure */
-export type DiscordWelcomeScreenChannel = SnakeCasedPropertiesDeep<
-  WelcomeScreenChannel
->;

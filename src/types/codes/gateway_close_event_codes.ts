@@ -15,3 +15,6 @@ export enum DiscordGatewayCloseEventCodes {
   InvalidIntents,
   DisallowedIntents,
 }
+
+export type GatewayCloseEventCodes = DiscordGatewayCloseEventCodes;
+export const GatewayCloseEventCodes = DiscordGatewayCloseEventCodes;

@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+// TODO: add docs link
 export interface ModifyGuildDiscoveryMetadata {
   /** The id of the primary discovery category. Default: 0 */
   primaryCategoryId?: number | null;
@@ -8,7 +7,3 @@ export interface ModifyGuildDiscoveryMetadata {
   /** Whether guild info is shown when custom emojis are clicked. Default: true */
   emojiDiscoverabilityEnabled?: boolean | null;
 }
-
-export type DiscordModifyGuildDiscoveryMetadata = SnakeCasedPropertiesDeep<
-  ModifyGuildDiscoveryMetadata
->;

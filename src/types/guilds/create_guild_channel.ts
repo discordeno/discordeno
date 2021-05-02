@@ -32,3 +32,4 @@ export interface DiscordCreateGuildChannel extends
   > {
   permission_overwrites: DiscordOverwrite[];
 }
+// TODO: check this

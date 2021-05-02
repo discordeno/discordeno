@@ -1,11 +1,7 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/topics/gateway#webhooks-update-webhook-update-event-fields */
 export interface WebhookUpdate {
   /** id of the guild */
   guildId: string;
   /** id of the channel */
   channelId: string;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#webhooks-update-webhook-update-event-fields */
-export type DiscordWebhookUpdate = SnakeCasedPropertiesDeep<WebhookUpdate>;

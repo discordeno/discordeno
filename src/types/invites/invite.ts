@@ -2,9 +2,9 @@ import { Channel } from "../channels/channel.ts";
 import { Guild } from "../guilds/guild.ts";
 import { Application } from "../oauth2/application.ts";
 import { User } from "../users/user.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { DiscordTargetTypes } from "./target_types.ts";
 
+/** https://discord.com/developers/docs/resources/invite#invite-object */
 export interface Invite {
   /** The invite code (unique Id) */
   code: string;
@@ -24,7 +24,6 @@ export interface Invite {
   approximatePresenceCount?: number;
   /** Approximate count of total members */
   approximateMemberCount?: number;
+  /** The expiration date of this invite, returned from the `GET /invites/<code>` endpoint when `with_expiration` is `true` */
+  expiresAt?: string | null;
 }
-
-/** https://discord.com/developers/docs/resources/invite#invite-object */
-export type DiscordInvite = SnakeCasedPropertiesDeep<Invite>;

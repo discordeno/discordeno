@@ -1,6 +1,6 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { ApplicationCommandOption } from "./application_command_option.ts";
 
+/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommand */
 export interface ApplicationCommand {
   /** Unique id of the command */
   id: string;
@@ -15,8 +15,3 @@ export interface ApplicationCommand {
   /** Whether the command is enbaled by default when the app is added to a guild */
   defaultPermission?: boolean;
 }
-
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommand */
-export type DiscordApplicationCommand = SnakeCasedPropertiesDeep<
-  ApplicationCommand
->;

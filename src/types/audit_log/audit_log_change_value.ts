@@ -1,7 +1,7 @@
 import { Overwrite } from "../channels/overwrite.ts";
 import { Role } from "../permissions/role.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 
+/** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
 export type AuditLogChangeValue =
   | {
     newValue: string;
@@ -83,8 +83,3 @@ export type AuditLogChangeValue =
     oldValue: string | number;
     key: "type";
   };
-
-/** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
-export type DiscordAuditLogChangeValue = SnakeCasedPropertiesDeep<
-  AuditLogChangeValue
->;

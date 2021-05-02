@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-assets */
 export interface ActivityAssets {
   /** The id for a large asset of the activity, usually a snowflake */
   largeImage?: string;
@@ -10,6 +9,3 @@ export interface ActivityAssets {
   /** Text displayed when hovering over the small image of the activity */
   smallText?: string;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-assets */
-export type DiscordActivityAssets = SnakeCasedPropertiesDeep<ActivityAssets>;

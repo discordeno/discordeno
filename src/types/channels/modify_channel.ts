@@ -37,3 +37,5 @@ export interface DiscordModifyChannel extends
   > {
   permission_overwrites?: DiscordOverwrite[];
 }
+
+//TODO: check this

@@ -50,7 +50,6 @@ export function spawnShards(firstShardId = 0) {
     }
   }
 
-  console.log("BUCKETS", ws.buckets);
   // SPREAD THIS OUT TO DIFFERENT CLUSTERS TO BEGIN STARTING UP
   ws.buckets.forEach(async (bucket, bucketId) => {
     ws.log(

@@ -1,5 +1,4 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
-
+/** https://discord.com/developers/docs/resources/channel#attachment-object */
 export interface Attachment {
   /** Attachment id */
   id: string;
@@ -18,6 +17,3 @@ export interface Attachment {
   /** Width of file (if image) */
   width?: number | null;
 }
-
-/** https://discord.com/developers/docs/resources/channel#attachment-object */
-export type DiscordAttachment = SnakeCasedPropertiesDeep<Attachment>;

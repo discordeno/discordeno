@@ -5,7 +5,6 @@ import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { ws } from "./ws/ws.ts";
 
-export let authorization = "";
 export let secretKey = "";
 export let botId = "";
 export let applicationId = "";
@@ -23,7 +22,6 @@ export async function startBot(config: BotConfig) {
     startOptions.cacheMembersOnStart = false;
   }
 
-  authorization = `Bot ${config.token}`;
   ws.identifyPayload.token = `Bot ${config.token}`;
   rest.token = `Bot ${config.token}`;
   ws.identifyPayload.intents = config.intents.reduce(
@@ -44,8 +42,6 @@ export async function startBot(config: BotConfig) {
   ws.botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
 
   proxyWSURL = ws.botGatewayData.url;
-
-  // ws.lastShardId = ws.maxShards;
 
   ws.spawnShards();
 }
@@ -77,7 +73,6 @@ export function setApplicationId(id: string) {
  * Advanced Devs: This function will allow you to have an insane amount of customization potential as when you get to large bots you need to be able to optimize every tiny detail to make you bot work the way you need.
  */
 export async function startBigBrainBot(options: BigBrainBotConfig) {
-  authorization = `Bot ${options.token}`;
   rest.token = `Bot ${options.token}`;
 
   if (options.secretKey) secretKey = options.secretKey;
