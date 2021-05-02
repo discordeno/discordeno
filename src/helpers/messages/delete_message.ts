@@ -14,7 +14,7 @@ export async function deleteMessage(
 ) {
   const message = await cacheHandlers.get("messages", messageId);
 
-  if (message && message.author.id !== botId) {
+  if (message && message.authorId !== botId) {
     await requireBotChannelPermissions(message.channelId, ["MANAGE_MESSAGES"]);
   }
 

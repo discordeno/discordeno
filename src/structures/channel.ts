@@ -101,6 +101,7 @@ export async function createDiscordenoChannel(
 ) {
   const {
     lastPinTimestamp,
+    permissionOverwrites = [],
     ...rest
   } = data;
 
@@ -125,6 +126,12 @@ export async function createDiscordenoChannel(
     lastPinTimestamp: createNewProp(
       lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined,
     ),
+    permissionOverwrites: createNewProp(permissionOverwrites.map((o) => ({
+      ...o,
+      id: snowflakeToBigint(o.id),
+      allow: snowflakeToBigint(o.allow),
+      deny: snowflakeToBigint(o.deny),
+    }))),
   });
 
   return channel;
@@ -141,7 +148,11 @@ export interface DiscordenoChannel extends
     | "parentId"
     | "permissionOverwrites"
   > {
-  permissionOverwrites: DiscordOverwrite[];
+  permissionOverwrites: (Omit<DiscordOverwrite, "id" | "allow" | "deny"> & {
+    id: bigint;
+    allow: bigint;
+    deny: bigint;
+  })[];
   /** The id of the channel */
   id: bigint;
   /** The id of the guild */
