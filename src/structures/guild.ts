@@ -25,7 +25,6 @@ import { ModifyGuild } from "../types/guilds/modify_guild.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { PresenceUpdate } from "../types/misc/presence_update.ts";
-import { VoiceState } from "../types/voice/voice_state.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
@@ -33,6 +32,7 @@ import { DiscordenoChannel } from "./channel.ts";
 import { DiscordenoMember } from "./member.ts";
 import { structures } from "./mod.ts";
 import { DiscordenoRole } from "./role.ts";
+import { DiscordenoVoiceState } from "./voice_state.ts";
 
 export const initialMemberLoadQueue = new Map<bigint, GuildMember[]>();
 const GUILD_SNOWFLAKES = [
@@ -139,7 +139,10 @@ export async function createDiscordenoGuild(
 
   const roles = await Promise.all(
     (data.roles || []).map((role) =>
-      structures.createDiscordenoRole({ role, guildId: rest.id })
+      structures.createDiscordenoRole({
+        role,
+        guildId: snowflakeToBigint(rest.id),
+      })
     ),
   );
 
@@ -181,7 +184,7 @@ export async function createDiscordenoGuild(
     shardId: createNewProp(shardId),
     roles: createNewProp(
       new Collection(
-        roles.map((r: DiscordenoRole) => [snowflakeToBigint(r.id), r]),
+        roles.map((r: DiscordenoRole) => [r.id, r]),
       ),
     ),
     joinedAt: createNewProp(Date.parse(joinedAt)),
@@ -272,7 +275,7 @@ export interface DiscordenoGuild extends
   /** The presences of all the users in the guild. */
   presences: Collection<bigint, PresenceUpdate>;
   /** The Voice State data for each user in a voice channel in this server. */
-  voiceStates: Collection<bigint, VoiceState>;
+  voiceStates: Collection<bigint, DiscordenoVoiceState>;
   /** Custom guild emojis */
   emojis: Collection<bigint, Emoji>;
 
@@ -292,12 +295,13 @@ export interface DiscordenoGuild extends
   /** The bot member in this guild if cached */
   bot?: DiscordenoMember;
   /** The bot guild member in this guild if cached */
-  botMember?: Omit<GuildMember, "joinedAt" | "premiumSince"> & {
+  botMember?: Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
     joinedAt: number;
     premiumSince?: number;
+    roles: bigint[];
   };
   /** The bots voice state if there is one in this guild */
-  botVoice?: VoiceState;
+  botVoice?: DiscordenoVoiceState;
   /** The owner member of this guild */
   owner?: DiscordenoMember;
   /** Whether or not this guild is partnered */

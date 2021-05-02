@@ -7,6 +7,7 @@ import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
 import { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
 import { ListGuildMembers } from "../../types/guilds/list_guild_members.ts";
 import { Errors } from "../../types/misc/errors.ts";
+import { bigintToSnowflake } from "../../util/bigint.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import { ws } from "../../ws/ws.ts";
@@ -88,7 +89,7 @@ export async function getMembers(
 
     options = {
       limit: options?.limit,
-      after: discordenoMembers[discordenoMembers.length - 1].id,
+      after: bigintToSnowflake(discordenoMembers[discordenoMembers.length - 1].id),
     };
 
     membersLeft -= 1000;

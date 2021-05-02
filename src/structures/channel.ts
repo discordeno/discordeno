@@ -13,13 +13,13 @@ import { ModifyChannel } from "../types/channels/modify_channel.ts";
 import { DiscordOverwrite, Overwrite } from "../types/channels/overwrite.ts";
 import { CreateMessage } from "../types/messages/create_message.ts";
 import { PermissionStrings } from "../types/permissions/permission_strings.ts";
-import { VoiceState } from "../types/voice/voice_state.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 import { DiscordenoMember } from "./member.ts";
 import { DiscordenoMessage } from "./message.ts";
+import { DiscordenoVoiceState } from "./voice_state.ts";
 
 const CHANNEL_SNOWFLAKES = [
   "id",
@@ -175,7 +175,7 @@ export interface DiscordenoChannel extends
    *
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
-  voiceStates?: Collection<bigint, VoiceState>;
+  voiceStates?: Collection<bigint, DiscordenoVoiceState>;
   /**
    * Gets the connected members for this channel undefined if member is not cached
    *
