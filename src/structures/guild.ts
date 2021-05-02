@@ -180,7 +180,9 @@ export async function createDiscordenoGuild(
     ...props,
     shardId: createNewProp(shardId),
     roles: createNewProp(
-      new Collection(roles.map((r: DiscordenoRole) => [snowflakeToBigint(r.id), r])),
+      new Collection(
+        roles.map((r: DiscordenoRole) => [snowflakeToBigint(r.id), r]),
+      ),
     ),
     joinedAt: createNewProp(Date.parse(joinedAt)),
     presences: createNewProp(
@@ -189,7 +191,9 @@ export async function createDiscordenoGuild(
     memberCount: createNewProp(memberCount),
     emojis: createNewProp(
       new Collection(
-        (emojis || []).map((emoji) => [emoji.id ? snowflakeToBigint(emoji.id) : emoji.name, emoji]),
+        (emojis || []).map((
+          emoji,
+        ) => [emoji.id ? snowflakeToBigint(emoji.id) : emoji.name, emoji]),
       ),
     ),
     voiceStates: createNewProp(
