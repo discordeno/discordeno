@@ -1,4 +1,4 @@
-import { ThreadMember } from "../messages/thread_member.ts";
+import { ThreadMember } from "./thread_member.ts";
 
 // TODO: add docs link
 export interface ThreadMembersUpdate {

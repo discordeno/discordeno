@@ -1,5 +1,5 @@
-import { ThreadMember } from "../messages/thread_member.ts";
-import { Channel } from "./channel.ts";
+import { Channel } from "../channel.ts";
+import { ThreadMember } from "./thread_member.ts";
 
 // TODO: add docs link
 export interface ListActiveThreads {
