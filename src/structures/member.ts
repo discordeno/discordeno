@@ -138,7 +138,7 @@ export async function createDiscordenoMember(
   // User was never cached before
   member.guilds.set(guildId, {
     nick: rest.nick,
-    roles: rest.roles,
+    roles: rest.roles.map(id => snowflakeToBigint(id)),
     joinedAt: Date.parse(joinedAt),
     premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
     deaf: rest.deaf,
@@ -167,9 +167,10 @@ export interface DiscordenoMember extends
   /** The guild related data mapped by guild id */
   guilds: Collection<
     bigint,
-    Omit<GuildMember, "joinedAt" | "premiumSince"> & {
+    Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
       joinedAt: number;
       premiumSince?: number;
+      roles: bigint[];
     }
   >;
 
@@ -195,9 +196,10 @@ export interface DiscordenoMember extends
   guildMember(
     guildId: bigint,
   ):
-    | Omit<GuildMember, "joinedAt" | "premiumSince"> & {
+    | Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
       joinedAt: number;
       premiumSince?: number;
+      roles: bigint[]
     }
     | undefined;
   /** Send a direct message to the user is possible */

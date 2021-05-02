@@ -10,7 +10,7 @@ import {
 /** Edit a guild role. Requires the MANAGE_ROLES permission. */
 export async function editRole(
   guildId: bigint,
-  id: string,
+  id: bigint,
   options: CreateGuildRole,
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);

@@ -79,7 +79,7 @@ interface EditChannelRequest {
   }[];
 }
 
-const editChannelNameTopicQueue = new Map<string, EditChannelRequest>();
+const editChannelNameTopicQueue = new Map<bigint, EditChannelRequest>();
 let editChannelProcessing = false;
 
 function processEditChannelQueue() {

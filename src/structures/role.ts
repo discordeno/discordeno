@@ -5,11 +5,19 @@ import { editRole } from "../helpers/roles/edit_role.ts";
 import { CreateGuildRole } from "../types/guilds/create_guild_role.ts";
 import { Errors } from "../types/misc/errors.ts";
 import { Role } from "../types/permissions/role.ts";
+import { snowflakeToBigint } from "../util/bigint.ts";
 import { Collection } from "../util/collection.ts";
 import { highestRole } from "../util/permissions.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 import { DiscordenoMember } from "./member.ts";
+
+const ROLE_SNOWFLAKES = [
+  "id",
+  "botId",
+  "integrationId",
+  "guildId",
+];
 
 const baseRole: Partial<DiscordenoRole> = {
   get guild() {
@@ -68,7 +76,7 @@ const baseRole: Partial<DiscordenoRole> = {
 // deno-lint-ignore require-await
 export async function createDiscordenoRole(
   data: { role: Role } & {
-    guildId: string;
+    guildId: bigint;
   },
 ) {
   const {
@@ -77,34 +85,44 @@ export async function createDiscordenoRole(
   } = ({ guildId: data.guildId, ...data.role });
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
-  for (const key of Object.keys(rest)) {
+  for (const [key, value] of Object.entries(rest)) {
     eventHandlers.debug?.(
       "loop",
       `Running for of loop in createDiscordenoRole function.`,
     );
-    // @ts-ignore index signature
-    props[key] = createNewProp(rest[key]);
+
+    props[key] = createNewProp(
+      ROLE_SNOWFLAKES.includes(key)
+        ? value ? snowflakeToBigint(value) : undefined
+        : value,
+    );
   }
 
   const role: DiscordenoRole = Object.create(baseRole, {
     ...props,
-    botId: createNewProp(tags.botId),
+    botId: createNewProp(
+      tags.botId ? snowflakeToBigint(tags.botId) : undefined,
+    ),
     isNitroBoostRole: createNewProp("premiumSubscriber" in tags),
-    integrationId: createNewProp(tags.integrationId),
+    integrationId: createNewProp(
+      tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined,
+    ),
   });
 
   return role;
 }
 
-export interface DiscordenoRole extends Omit<Role, "tags"> {
+export interface DiscordenoRole extends Omit<Role, "tags" | "id"> {
+  /** The role id */
+  id: bigint;
   /** The bot id that is associated with this role. */
-  botId?: string;
+  botId?: bigint;
   /** If this role is the nitro boost role. */
   isNitroBoostRole: boolean;
   /** The integration id that is associated with this role */
-  integrationId: string;
+  integrationId: bigint;
   /** The roles guildId */
-  guildId: string;
+  guildId: bigint;
 
   // GETTERS
 
