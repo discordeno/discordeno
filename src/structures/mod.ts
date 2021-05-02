@@ -12,7 +12,7 @@ export let structures = {
   createDiscordenoMember,
   createDiscordenoMessage,
   createDiscordenoRole,
-  createDiscordenoVoiceState
+  createDiscordenoVoiceState,
 };
 
 // export type { Channel, Guild, Member, Message, Role, Template };
