@@ -143,6 +143,12 @@ export async function createDiscordenoGuild(
     ),
   );
 
+  const voiceStateStructs = await Promise.all(
+    voiceStates.map((vs) =>
+      structures.createDiscordenoVoiceState(snowflakeToBigint(rest.id), vs)
+    ),
+  );
+
   await Promise.all(channels.map(async (channel) => {
     const discordenoChannel = await structures.createDiscordenoChannel(
       channel,
@@ -174,22 +180,20 @@ export async function createDiscordenoGuild(
     ...props,
     shardId: createNewProp(shardId),
     roles: createNewProp(
-      new Collection(roles.map((r: DiscordenoRole) => [r.id, r])),
+      new Collection(roles.map((r: DiscordenoRole) => [snowflakeToBigint(r.id), r])),
     ),
     joinedAt: createNewProp(Date.parse(joinedAt)),
     presences: createNewProp(
-      new Collection(presences.map((p) => [p.user?.id, p])),
+      new Collection(presences.map((p) => [snowflakeToBigint(p.user!.id), p])),
     ),
     memberCount: createNewProp(memberCount),
     emojis: createNewProp(
       new Collection(
-        (emojis || []).map((emoji) => [emoji.id ?? emoji.name, emoji]),
+        (emojis || []).map((emoji) => [emoji.id ? snowflakeToBigint(emoji.id) : emoji.name, emoji]),
       ),
     ),
     voiceStates: createNewProp(
-      new Collection(
-        voiceStates.map((vs) => [vs.userId, vs]),
-      ),
+      new Collection(voiceStateStructs.map((vs) => [vs.userId, vs])),
     ),
   });
 
