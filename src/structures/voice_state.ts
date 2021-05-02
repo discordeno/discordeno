@@ -115,9 +115,10 @@ export interface DiscordenoVoiceState
 
   // GETTERS
   member: DiscordenoMember;
-  guildMember?: Omit<GuildMember, "joinedAt" | "premiumSince"> & {
+  guildMember?: Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
     joinedAt: number;
     premiumSince?: number;
+    roles: bigint[];
   };
   /** The guild where this role is. If undefined, the guild is not cached */
   guild?: DiscordenoGuild;

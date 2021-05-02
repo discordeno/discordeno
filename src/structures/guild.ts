@@ -137,25 +137,27 @@ export async function createDiscordenoGuild(
     ...rest
   } = data;
 
+  const guildId = snowflakeToBigint(rest.id);
+
   const roles = await Promise.all(
     (data.roles || []).map((role) =>
       structures.createDiscordenoRole({
         role,
-        guildId: snowflakeToBigint(rest.id),
+        guildId
       })
     ),
   );
 
   const voiceStateStructs = await Promise.all(
     voiceStates.map((vs) =>
-      structures.createDiscordenoVoiceState(snowflakeToBigint(rest.id), vs)
+      structures.createDiscordenoVoiceState(guildId, vs)
     ),
   );
 
   await Promise.all(channels.map(async (channel) => {
     const discordenoChannel = await structures.createDiscordenoChannel(
       channel,
-      rest.id,
+      guildId,
     );
 
     return await cacheHandlers.set(
