@@ -26,4 +26,3 @@ export interface ExecuteWebhook {
 export type DiscordExecuteWebhook = SnakeCasedPropertiesDeep<
   Omit<ExecuteWebhook, "wait">
 >;
-//TODO: check this
