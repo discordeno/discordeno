@@ -40,7 +40,12 @@ Deno.test({
   fn() {
     const converted = loopObject(
       objWithBigints,
-      (value) => typeof value === "bigint" ? value.toString() : value,
+      (value) =>
+        typeof value === "bigint"
+          ? value.toString()
+          : Array.isArray(value)
+          ? value.map((v) => typeof v === "bigint" ? v.toString() : v)
+          : value,
       `Running for loop in unit test function for changing bigints to strings.`,
     );
 
