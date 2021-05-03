@@ -4,7 +4,7 @@ import { endpoints } from "../../../util/constants.ts";
 import { camelKeysToSnakeCase } from "../../../util/utils.ts";
 
 export async function getArchivedThreads(
-  channelId: string,
+  channelId: bigint,
   options?: ListPublicArchivedThreads & {
     type?: "public" | "private" | "privateJoinedThreads";
   },

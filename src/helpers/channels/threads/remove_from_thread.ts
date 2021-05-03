@@ -5,7 +5,7 @@ import { Errors } from "../../../types/misc/errors.ts";
 import { endpoints } from "../../../util/constants.ts";
 
 /** Removes another user from a thread. Requires the MANAGE_THREADS permission or that you are the creator of the thread. Also requires the thread is not archived. Returns a 204 empty response on success. Fires a Thread Members Update Gateway event. */
-export async function removeFromThread(channelId: string, userId?: string) {
+export async function removeFromThread(channelId: bigint, userId?: bigint) {
   // TODO(threads): perm check
   const channel = await cacheHandlers.get("channels", channelId);
   if (channel) {

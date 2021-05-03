@@ -11,8 +11,8 @@ import { camelKeysToSnakeCase } from "../../../util/utils.ts";
  * @param messageId when provided the thread will be public
  */
 export async function startThread(
-  channelId: string,
-  options: StartThread & { messageId?: string },
+  channelId: bigint,
+  options: StartThread & { messageId?: bigint },
 ) {
   const channel = await cacheHandlers.get("channels", channelId);
   if (channel) {

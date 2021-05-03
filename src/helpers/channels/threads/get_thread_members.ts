@@ -6,7 +6,7 @@ import { endpoints } from "../../../util/constants.ts";
 
 // TODO(threads): it seems like the documented return type is wrong
 /** Returns array of thread members objects that are members of the thread. */
-export async function getThreadMembers(channelId: string) {
+export async function getThreadMembers(channelId: bigint) {
   // TODO(threads): perm check
   // TODO(threads): intents check
   const channel = await cacheHandlers.get("channels", channelId);
