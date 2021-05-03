@@ -58,7 +58,10 @@ function startup() {
           "Shard ID:",
           shardID,
         );
-        redis.publish("sharder", JSON.stringify({ clusterID: clusters.get(shardID), shardID }));
+        redis.publish(
+          "sharder",
+          JSON.stringify({ clusterID: clusters.get(shardID), shardID }),
+        );
       }
 
       // AFTER THIS QUEUE IS CREATED WE WAIT FOR ALL SHARDS TO LOAD BEFORE NEXT CLUSTER

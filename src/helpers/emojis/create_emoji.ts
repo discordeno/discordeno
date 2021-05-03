@@ -19,14 +19,18 @@ export async function createEmoji(
     image = await urlToBase64(image);
   }
 
-  const emoji = await rest.runMethod<Emoji>("post", endpoints.GUILD_EMOJIS(guildId), {
-    ...options,
-    name,
-    image,
-  });
+  const emoji = await rest.runMethod<Emoji>(
+    "post",
+    endpoints.GUILD_EMOJIS(guildId),
+    {
+      ...options,
+      name,
+      image,
+    },
+  );
 
   return {
     ...emoji,
-    id: snowflakeToBigint(emoji.id!)
-  }
+    id: snowflakeToBigint(emoji.id!),
+  };
 }
