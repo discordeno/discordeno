@@ -1,9 +1,9 @@
-import { sign } from "./deps.ts";
+import { verify } from "./deps.ts";
 
 export function verifySignature(
   { publicKey, signature, timestamp, body }: VerifySignatureOptions,
 ): { isValid: boolean; body: string } {
-  const isValid = sign.verify(
+  const isValid = verify(
     new TextEncoder().encode(timestamp + body),
     hexToUint8Array(signature),
     hexToUint8Array(publicKey),
