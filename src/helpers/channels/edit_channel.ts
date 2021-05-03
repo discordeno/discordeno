@@ -20,7 +20,7 @@ import { camelKeysToSnakeCase, hasOwnProperty } from "../../util/utils.ts";
 //TODO(threads): check thread perms
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(
-  channelId: string,
+  channelId: bigint,
   options: ModifyChannel | ModifyThread,
   reason?: string,
 ) {
@@ -46,7 +46,7 @@ export async function editChannel(
         permissions.add("MANAGE_THREADS");
       }
 
-      await requireBotChannelPermissions(channel.parentId ?? "", [
+      await requireBotChannelPermissions(channel.parentId ?? 0n, [
         ...permissions,
       ]);
     }
@@ -117,15 +117,14 @@ export async function editChannel(
 interface EditChannelRequest {
   amount: number;
   timestamp: number;
-  channelId: string;
+  channelId: bigint;
   items: {
-    channelId: string;
+    channelId: bigint;
     options: ModifyChannel;
   }[];
 }
 
-const editChannelNameTopicQueue = new Map<string, EditChannelRequest>();
-
+const editChannelNameTopicQueue = new Map<bigint, EditChannelRequest>();
 let editChannelProcessing = false;
 
 function processEditChannelQueue() {

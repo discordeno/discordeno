@@ -16,7 +16,7 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(
-  guildId: string,
+  guildId: bigint,
   options?: CreateGuildChannel,
   reason?: string,
 ) {

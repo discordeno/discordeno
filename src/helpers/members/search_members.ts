@@ -13,7 +13,7 @@ import { endpoints } from "../../util/constants.ts";
  * @param query Query string to match username(s) and nickname(s) against
  */
 export async function searchMembers(
-  guildId: string,
+  guildId: bigint,
   query: string,
   options?: Omit<SearchGuildMembers, "query"> & { cache?: boolean },
 ) {
@@ -45,7 +45,7 @@ export async function searchMembers(
     return discordenoMember;
   }));
 
-  return new Collection<string, DiscordenoMember>(
+  return new Collection<bigint, DiscordenoMember>(
     members.map((member) => [member.id, member]),
   );
 }

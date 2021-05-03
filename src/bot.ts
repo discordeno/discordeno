@@ -2,12 +2,13 @@ import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
 import { rest } from "./rest/rest.ts";
 import { EventHandlers } from "./types/discordeno/eventHandlers.ts";
 import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
+import { snowflakeToBigint } from "./util/bigint.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
 import { ws } from "./ws/ws.ts";
 
 export let secretKey = "";
-export let botId = "";
-export let applicationId = "";
+export let botId = 0n;
+export let applicationId = 0n;
 
 export let eventHandlers: EventHandlers = {};
 
@@ -49,12 +50,12 @@ export function updateEventHandlers(newEventHandlers: EventHandlers) {
 
 /** INTERNAL LIB function used to set the bot Id once the READY event is sent by Discord. */
 export function setBotId(id: string) {
-  if (botId !== id) botId = id;
+  botId = snowflakeToBigint(id);
 }
 
 /** INTERNAL LIB function used to set the application Id once the READY event is sent by Discord. */
 export function setApplicationId(id: string) {
-  if (applicationId !== id) applicationId = id;
+  applicationId = snowflakeToBigint(id);
 }
 
 // BIG BRAIN BOT STUFF ONLY BELOW THIS

@@ -5,7 +5,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
 /** Modify a guild widget object for the guild. Requires the MANAGE_GUILD permission. */
 export async function editWidget(
-  guildId: string,
+  guildId: bigint,
   enabled: boolean,
   channelId?: string | null,
 ) {

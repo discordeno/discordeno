@@ -4,14 +4,18 @@ import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
 import { Message } from "../../types/messages/message.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleMessageCreate(data: DiscordGatewayPayload) {
   const payload = data.d as Message;
-  const channel = await cacheHandlers.get("channels", payload.channelId);
-  if (channel) channel.lastMessageId = payload.id;
+  const channel = await cacheHandlers.get(
+    "channels",
+    snowflakeToBigint(payload.channelId),
+  );
+  if (channel) channel.lastMessageId = snowflakeToBigint(payload.id);
 
   const guild = payload.guildId
-    ? await cacheHandlers.get("guilds", payload.guildId)
+    ? await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId))
     : undefined;
 
   if (payload.member && guild) {
@@ -34,7 +38,7 @@ export async function handleMessageCreate(data: DiscordGatewayPayload) {
 
         return cacheHandlers.set(
           "members",
-          mention.id,
+          snowflakeToBigint(mention.id),
           discordenoMember,
         );
       }
@@ -45,7 +49,7 @@ export async function handleMessageCreate(data: DiscordGatewayPayload) {
     data.d as Message,
   );
   // Cache the message
-  await cacheHandlers.set("messages", payload.id, message);
+  await cacheHandlers.set("messages", snowflakeToBigint(payload.id), message);
 
   eventHandlers.messageCreate?.(message);
 }

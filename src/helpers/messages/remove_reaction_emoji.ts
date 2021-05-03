@@ -4,8 +4,8 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
 /** Removes all reactions for a single emoji on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
 export async function removeReactionEmoji(
-  channelId: string,
-  messageId: string,
+  channelId: bigint,
+  messageId: bigint,
   reaction: string,
 ) {
   await requireBotChannelPermissions(channelId, ["MANAGE_MESSAGES"]);

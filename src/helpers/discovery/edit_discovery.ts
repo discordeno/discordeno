@@ -7,7 +7,7 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 /** Modify the discovery metadata for the guild. Requires the MANAGE_GUILD permission. Returns the updated discovery metadata object on success. */
 export async function editDiscovery(
-  guildId: string,
+  guildId: bigint,
   data: ModifyGuildDiscoveryMetadata,
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);

@@ -13,12 +13,22 @@ import { ModifyChannel } from "../types/channels/modify_channel.ts";
 import { DiscordOverwrite, Overwrite } from "../types/channels/overwrite.ts";
 import { CreateMessage } from "../types/messages/create_message.ts";
 import { PermissionStrings } from "../types/permissions/permission_strings.ts";
-import { VoiceState } from "../types/voice/voice_state.ts";
+import { snowflakeToBigint } from "../util/bigint.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 import { DiscordenoMember } from "./member.ts";
 import { DiscordenoMessage } from "./message.ts";
+import { DiscordenoVoiceState } from "./voice_state.ts";
+
+const CHANNEL_SNOWFLAKES = [
+  "id",
+  "guildId",
+  "lastMessageId",
+  "ownerId",
+  "applicationId",
+  "parentId",
+];
 
 const baseChannel: Partial<DiscordenoChannel> = {
   get guild() {
@@ -32,7 +42,7 @@ const baseChannel: Partial<DiscordenoChannel> = {
   },
   get voiceStates() {
     return this.guild?.voiceStates.filter(
-      (voiceState) => voiceState.channelId === this.id,
+      (voiceState) => voiceState.channelId === this.id!,
     );
   },
   get connectedMembers() {
@@ -53,10 +63,19 @@ const baseChannel: Partial<DiscordenoChannel> = {
     return deleteChannel(this.id!, reason);
   },
   editOverwrite(id, options) {
-    return editChannelOverwrite(this.guildId!, this.id!, id, options);
+    return editChannelOverwrite(
+      this.guildId!,
+      this.id!,
+      id,
+      options,
+    );
   },
   deleteOverwrite(id) {
-    return deleteChannelOverwrite(this.guildId!, this.id!, id);
+    return deleteChannelOverwrite(
+      this.guildId!,
+      this.id!,
+      id,
+    );
   },
   hasPermission(overwrites, permissions) {
     return channelOverwriteHasPermission(
@@ -78,39 +97,74 @@ const baseChannel: Partial<DiscordenoChannel> = {
 // deno-lint-ignore require-await
 export async function createDiscordenoChannel(
   data: Channel,
-  guildId?: string,
+  guildId?: bigint,
 ) {
   const {
-    guildId: rawGuildId = "",
     lastPinTimestamp,
+    permissionOverwrites = [],
     ...rest
   } = data;
 
   const props: Record<string, PropertyDescriptor> = {};
-  Object.keys(rest).forEach((key) => {
+  Object.entries(rest).forEach(([key, value]) => {
     eventHandlers.debug?.(
       "loop",
       `Running forEach loop in createDiscordenoChannel function.`,
     );
-    // @ts-ignore index signature
-    props[key] = createNewProp(rest[key]);
+
+    if (key === "guildId") value = guildId || data.guildId || "";
+
+    props[key] = createNewProp(
+      CHANNEL_SNOWFLAKES.includes(key)
+        ? value ? snowflakeToBigint(value) : undefined
+        : value,
+    );
   });
 
   const channel: DiscordenoChannel = Object.create(baseChannel, {
     ...props,
-    guildId: createNewProp(guildId || rawGuildId),
     lastPinTimestamp: createNewProp(
       lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined,
     ),
+    permissionOverwrites: createNewProp(permissionOverwrites.map((o) => ({
+      ...o,
+      id: snowflakeToBigint(o.id),
+      allow: snowflakeToBigint(o.allow),
+      deny: snowflakeToBigint(o.deny),
+    }))),
   });
 
   return channel;
 }
 
-export interface DiscordenoChannel
-  extends Omit<Channel, "permissionOverwrites"> {
-  permissionOverwrites?: DiscordOverwrite[];
-  guildId: string;
+export interface DiscordenoChannel extends
+  Omit<
+    Channel,
+    | "id"
+    | "guildId"
+    | "lastMessageId"
+    | "ownerId"
+    | "applicationId"
+    | "parentId"
+    | "permissionOverwrites"
+  > {
+  permissionOverwrites: (Omit<DiscordOverwrite, "id" | "allow" | "deny"> & {
+    id: bigint;
+    allow: bigint;
+    deny: bigint;
+  })[];
+  /** The id of the channel */
+  id: bigint;
+  /** The id of the guild */
+  guildId: bigint;
+  /** The id of the last message sent in this channel (may not point to an existing or valid message) */
+  lastMessageId?: bigint;
+  /** id of the DM creator */
+  ownerId?: bigint;
+  /** Application id of the group DM creator if it is bot-created */
+  applicationId?: bigint;
+  /** Id of the parent category for a channel (each parent category can contain up to 50 channels) */
+  parentId?: bigint;
   // GETTERS
 
   /**
@@ -124,7 +178,7 @@ export interface DiscordenoChannel
    *
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
-  messages: Collection<string, DiscordenoMessage>;
+  messages: Collection<bigint, DiscordenoMessage>;
   /** The mention of the channel */
   mention: string;
   /**
@@ -132,34 +186,38 @@ export interface DiscordenoChannel
    *
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
-  voiceStates?: Collection<string, VoiceState>;
+  voiceStates?: Collection<bigint, DiscordenoVoiceState>;
   /**
    * Gets the connected members for this channel undefined if member is not cached
    *
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
-  connectedMembers?: Collection<string, DiscordenoMember | undefined>;
+  connectedMembers?: Collection<bigint, DiscordenoMember | undefined>;
 
   // METHODS
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
   send(content: string | CreateMessage): ReturnType<typeof sendMessage>;
   /** Disconnect a member from a voice channel. Requires MOVE_MEMBERS permission. */
-  disconnect(memberID: string): ReturnType<typeof disconnectMember>;
+  disconnect(memberId: bigint): ReturnType<typeof disconnectMember>;
   /** Delete the channel */
   delete(reason?: string): ReturnType<typeof deleteChannel>;
   /** Edit a channel Overwrite */
   editOverwrite(
-    overwriteID: string,
+    overwriteId: bigint,
     options: Omit<Overwrite, "id">,
   ): ReturnType<typeof editChannelOverwrite>;
   /** Delete a channel Overwrite */
   deleteOverwrite(
-    overwriteID: string,
+    overwriteId: bigint,
   ): ReturnType<typeof deleteChannelOverwrite>;
   /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
   hasPermission(
-    overwrites: DiscordOverwrite[],
+    overwrites: (Omit<DiscordOverwrite, "id" | "allow" | "deny"> & {
+      id: bigint;
+      allow: bigint;
+      deny: bigint;
+    })[],
     permissions: PermissionStrings[],
   ): ReturnType<typeof channelOverwriteHasPermission>;
   /** Edit the channel */

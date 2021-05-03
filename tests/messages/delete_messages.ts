@@ -1,7 +1,7 @@
 import { cache, deleteMessages, sendMessage } from "../../mod.ts";
-import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
+import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
 async function ifItFailsBlameWolf(reason?: string) {
   const message = await sendMessage(tempData.channelId, "Hello World!");

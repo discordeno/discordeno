@@ -6,8 +6,8 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 /** Edits command permissions for a specific command for your application in a guild. */
 export async function editSlashCommandPermissions(
-  guildId: string,
-  commandId: string,
+  guildId: bigint,
+  commandId: bigint,
   options: ApplicationCommandPermissions[],
 ) {
   return await rest.runMethod(

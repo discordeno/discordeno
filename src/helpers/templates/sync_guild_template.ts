@@ -7,7 +7,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
  * Syncs the template to the guild's current state.
  * Requires the `MANAGE_GUILD` permission.
  */
-export async function syncGuildTemplate(guildId: string, templateCode: string) {
+export async function syncGuildTemplate(guildId: bigint, templateCode: string) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
   return await rest.runMethod<Template>(

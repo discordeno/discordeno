@@ -4,6 +4,7 @@ import { createChannel } from "../../src/helpers/channels/create_channel.ts";
 import { isChannelSynced } from "../../src/helpers/channels/is_channel_synced.ts";
 import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
 import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
+import { bigintToSnowflake } from "../../src/util/bigint.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
@@ -16,7 +17,7 @@ Deno.test({
       type: DiscordChannelTypes.GuildCategory,
       permissionOverwrites: [
         {
-          id: botId,
+          id: bigintToSnowflake(botId),
           type: DiscordOverwriteTypes.MEMBER,
           allow: ["VIEW_CHANNEL"],
           deny: [],
@@ -38,7 +39,7 @@ Deno.test({
 
     const channel = await createChannel(tempData.guildId, {
       name: "synced-channel",
-      parentId: category.id,
+      parentId: category.id.toString(),
     });
 
     // Assertions
