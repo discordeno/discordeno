@@ -4,6 +4,7 @@ import { DiscordenoChannel } from "../../structures/channel.ts";
 import { structures } from "../../structures/mod.ts";
 import { ThreadListSync } from "../../types/channels/threads/thread_list_sync.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
 import { Collection } from "../../util/collection.ts";
 
 export async function handleThreadListSync(data: DiscordGatewayPayload) {
@@ -13,7 +14,7 @@ export async function handleThreadListSync(data: DiscordGatewayPayload) {
     payload.threads.map(async (thread) => {
       const discordenoChannel = await structures.createDiscordenoChannel(
         thread,
-        payload.guildId,
+        snowflakeToBigint(payload.guildId),
       );
 
       await cacheHandlers.set(
@@ -26,9 +27,13 @@ export async function handleThreadListSync(data: DiscordGatewayPayload) {
     }),
   );
 
-  const threads = new Collection<string, DiscordenoChannel>(
+  const threads = new Collection<bigint, DiscordenoChannel>(
     discordenoChannels.map((t) => [t.id, t]),
   );
 
-  eventHandlers.threadListSync?.(threads, payload.members, payload.guildId);
+  eventHandlers.threadListSync?.(
+    threads,
+    payload.members,
+    snowflakeToBigint(payload.guildId),
+  );
 }
