@@ -7,7 +7,10 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleGuildUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as Guild;
-  const newGuild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.id));
+  const newGuild = await cacheHandlers.get(
+    "guilds",
+    snowflakeToBigint(payload.id),
+  );
   if (!newGuild) return;
 
   const keysToSkip = [

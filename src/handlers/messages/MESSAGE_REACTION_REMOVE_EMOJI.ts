@@ -8,7 +8,10 @@ export async function handleMessageReactionRemoveEmoji(
   data: DiscordGatewayPayload,
 ) {
   const payload = data.d as MessageReactionRemoveEmoji;
-  const message = await cacheHandlers.get("messages", snowflakeToBigint(payload.messageId));
+  const message = await cacheHandlers.get(
+    "messages",
+    snowflakeToBigint(payload.messageId),
+  );
 
   if (message?.reactions) {
     message.reactions = message.reactions.filter(

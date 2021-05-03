@@ -30,7 +30,9 @@ export function handleReady(
   // Set ready to false just to go sure
   shard.ready = false;
   // All guilds are unavailable at first
-  shard.unavailableGuildIds = new Set(payload.guilds.map((g) => snowflakeToBigint(g.id)));
+  shard.unavailableGuildIds = new Set(
+    payload.guilds.map((g) => snowflakeToBigint(g.id)),
+  );
 
   // Start ready check in 2 seconds
   setTimeout(async () => {

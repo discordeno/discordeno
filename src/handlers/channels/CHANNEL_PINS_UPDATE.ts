@@ -7,7 +7,10 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 export async function handleChannelPinsUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as ChannelPinsUpdate;
 
-  const channel = await cacheHandlers.get("channels", snowflakeToBigint(payload.channelId));
+  const channel = await cacheHandlers.get(
+    "channels",
+    snowflakeToBigint(payload.channelId),
+  );
   if (!channel) return;
 
   const guild = payload.guildId

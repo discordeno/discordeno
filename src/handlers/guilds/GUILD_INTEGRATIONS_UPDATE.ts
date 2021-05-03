@@ -9,7 +9,10 @@ export async function handleGuildIntegrationsUpdate(
 ) {
   const payload = data.d as GuildIntegrationsUpdate;
 
-  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
+  const guild = await cacheHandlers.get(
+    "guilds",
+    snowflakeToBigint(payload.guildId),
+  );
   if (!guild) return;
 
   eventHandlers.guildIntegrationsUpdate?.(guild);

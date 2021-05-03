@@ -9,8 +9,6 @@ export interface Ready {
   v: number;
   /** Information about the user including email */
   user: User;
-  /** Empty array */
-  privateChannels: [];
   /** The guilds the user is in */
   guilds: UnavailableGuild[];
   /** Used for resuming connections */

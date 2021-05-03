@@ -8,7 +8,7 @@ import { Collection } from "../../util/collection.ts";
 export async function handleGuildMembersChunk(data: DiscordGatewayPayload) {
   const payload = data.d as GuildMembersChunk;
 
-  const guildId = snowflakeToBigint(payload.guildId)
+  const guildId = snowflakeToBigint(payload.guildId);
 
   const members = await Promise.all(
     payload.members.map(async (member) => {
