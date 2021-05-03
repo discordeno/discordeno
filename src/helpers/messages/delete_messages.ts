@@ -6,7 +6,7 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */
 export async function deleteMessages(
   channelId: bigint,
-  ids: string[],
+  ids: bigint[],
   reason?: string,
 ) {
   await requireBotChannelPermissions(channelId, ["MANAGE_MESSAGES"]);
