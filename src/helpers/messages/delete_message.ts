@@ -7,14 +7,14 @@ import { delay } from "../../util/utils.ts";
 
 /** Delete a message with the channel id and message id only. */
 export async function deleteMessage(
-  channelId: string,
-  messageId: string,
+  channelId: bigint,
+  messageId: bigint,
   reason?: string,
   delayMilliseconds = 0,
 ) {
   const message = await cacheHandlers.get("messages", messageId);
 
-  if (message && message.author.id !== botId) {
+  if (message && message.authorId !== botId) {
     await requireBotChannelPermissions(message.channelId, ["MANAGE_MESSAGES"]);
   }
 

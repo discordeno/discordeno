@@ -10,7 +10,7 @@ import {
 
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(
-  channelId: string,
+  channelId: bigint,
   options: ModifyChannel,
   reason?: string,
 ) {
@@ -72,14 +72,14 @@ export async function editChannel(
 interface EditChannelRequest {
   amount: number;
   timestamp: number;
-  channelId: string;
+  channelId: bigint;
   items: {
-    channelId: string;
+    channelId: bigint;
     options: ModifyChannel;
   }[];
 }
 
-const editChannelNameTopicQueue = new Map<string, EditChannelRequest>();
+const editChannelNameTopicQueue = new Map<bigint, EditChannelRequest>();
 let editChannelProcessing = false;
 
 function processEditChannelQueue() {

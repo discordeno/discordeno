@@ -5,8 +5,8 @@ import { formatImageURL } from "../../util/utils.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
 export function avatarURL(
-  userId: string,
-  discriminator: string,
+  userId: bigint,
+  discriminator: bigint,
   avatar?: string | null,
   size: DiscordImageSize = 128,
   format?: DiscordImageFormat,

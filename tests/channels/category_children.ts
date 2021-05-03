@@ -4,6 +4,7 @@ import { cache } from "../../src/cache.ts";
 import { categoryChildren, createChannel } from "../../src/helpers/mod.ts";
 import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
 import { delayUntil } from "../util/delay_until.ts";
+import { bigintToSnowflake } from "../../src/util/bigint.ts";
 
 Deno.test({
   name: "[channel] category channel ids",
@@ -29,7 +30,7 @@ Deno.test({
       channelsToCreate.map((num) =>
         createChannel(tempData.guildId, {
           name: `Discordeno-test-${num}`,
-          parentId: category.id,
+          parentId: bigintToSnowflake(category.id),
         })
       ),
     );

@@ -6,8 +6,8 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
 export async function ban(
-  guildId: string,
-  id: string,
+  guildId: bigint,
+  id: bigint,
   options: CreateGuildBan,
 ) {
   await requireBotGuildPermissions(guildId, ["BAN_MEMBERS"]);

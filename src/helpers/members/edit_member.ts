@@ -5,6 +5,7 @@ import { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { ModifyGuildMember } from "../../types/mod.ts";
 import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
+import { bigintToSnowflake } from "../../util/bigint.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   requireBotChannelPermissions,
@@ -14,9 +15,9 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 /** Edit the member */
 export async function editMember(
-  guildId: string,
-  memberId: string,
-  options: ModifyGuildMember,
+  guildId: bigint,
+  memberId: bigint,
+  options: Omit<ModifyGuildMember, "channelId"> & { channelId?: bigint | null },
 ) {
   const requiredPerms: Set<PermissionStrings> = new Set();
 
@@ -72,7 +73,12 @@ export async function editMember(
   const result = await rest.runMethod<GuildMemberWithUser>(
     "patch",
     endpoints.GUILD_MEMBER(guildId, memberId),
-    camelKeysToSnakeCase(options),
+    camelKeysToSnakeCase({
+      ...options,
+      channelId: options.channelId
+        ? bigintToSnowflake(options.channelId)
+        : undefined,
+    }) as ModifyGuildMember,
   );
 
   const member = await structures.createDiscordenoMember(

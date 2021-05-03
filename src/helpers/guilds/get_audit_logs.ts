@@ -7,7 +7,7 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
 export async function getAuditLogs(
-  guildId: string,
+  guildId: bigint,
   options: GetGuildAuditLog,
 ) {
   await requireBotGuildPermissions(guildId, ["VIEW_AUDIT_LOG"]);

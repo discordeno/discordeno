@@ -39,11 +39,11 @@ Deno.test({
 
     await swapChannels(tempData.guildId, [
       {
-        id: channel.id,
+        id: channel.id.toString(),
         position: secondChannel.position!,
       },
       {
-        id: secondChannel.id,
+        id: secondChannel.id.toString(),
         position: channel.position!,
       },
     ]);

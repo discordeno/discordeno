@@ -9,9 +9,9 @@ import { validateSlashCommands } from "../../util/utils.ts";
  * Edit an existing slash command. If this command did not exist, it will create it.
  */
 export async function upsertSlashCommand(
-  commandId: string,
+  commandId: bigint,
   options: EditGlobalApplicationCommand,
-  guildId?: string,
+  guildId?: bigint,
 ) {
   validateSlashCommands([options]);
 

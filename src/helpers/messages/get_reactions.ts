@@ -6,8 +6,8 @@ import { endpoints } from "../../util/constants.ts";
 
 /** Get a list of users that reacted with this emoji. */
 export async function getReactions(
-  channelId: string,
-  messageId: string,
+  channelId: bigint,
+  messageId: bigint,
   reaction: string,
   options?: GetReactions,
 ) {

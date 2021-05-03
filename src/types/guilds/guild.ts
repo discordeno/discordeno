@@ -74,7 +74,7 @@ export interface Guild {
   /** Total number of members in this guild */
   memberCount?: number;
   /** States of members currently in voice channels; lacks the guild_id key */
-  voiceStates?: Partial<VoiceState>[];
+  voiceStates?: Omit<VoiceState, "guildId">[];
   /** Users in the guild */
   members?: GuildMember[];
   /** Channels in the guild */

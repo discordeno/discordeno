@@ -4,7 +4,7 @@ import { Message } from "../../types/messages/message.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Crosspost a message in a News Channel to following channels. */
-export async function publishMessage(channelId: string, messageId: string) {
+export async function publishMessage(channelId: bigint, messageId: bigint) {
   const data = await rest.runMethod<Message>(
     "post",
     endpoints.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId),

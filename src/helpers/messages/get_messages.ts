@@ -12,7 +12,7 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
 /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
 export async function getMessages(
-  channelId: string,
+  channelId: bigint,
   options?:
     | GetMessagesAfter
     | GetMessagesBefore

@@ -16,7 +16,7 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
  *  - You are able to set `request_to_speak_timestamp` to any present or future time.
  */
 export function updateBotVoiceState(
-  guildId: string,
+  guildId: bigint,
   data: UpdateSelfVoiceState,
 ) {
   const payload = camelKeysToSnakeCase<DiscordUpdateSelfVoiceState>(data);

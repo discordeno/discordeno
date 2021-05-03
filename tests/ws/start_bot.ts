@@ -21,10 +21,10 @@ export const defaultTestOptions: Partial<Deno.TestDefinition> = {
 
 // Temporary data
 export const tempData = {
-  guildId: "",
-  roleId: "",
-  channelId: "",
-  messageId: "",
+  guildId: 0n,
+  roleId: 0n,
+  channelId: 0n,
+  messageId: 0n,
 };
 
 Deno.test({

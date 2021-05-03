@@ -10,7 +10,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
  * @param description description for the template (0-120 characters
  */
 export async function createGuildTemplate(
-  guildId: string,
+  guildId: bigint,
   data: Template,
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);

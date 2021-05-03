@@ -5,7 +5,7 @@ import { endpoints } from "../../util/constants.ts";
 
 /** Edit a webhook. Returns the updated webhook object on success. */
 export async function editWebhookWithToken(
-  webhookId: string,
+  webhookId: bigint,
   webhookToken: string,
   options: Omit<ModifyWebhook, "channelId">,
 ) {

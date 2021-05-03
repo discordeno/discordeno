@@ -5,6 +5,7 @@
 // Don't waste api rate limits if a early test fails.
 import "./util/utils.ts";
 import "./util/validate_length.ts";
+import "./util/loop_object.ts";
 
 // API TESTING BELOW
 
@@ -73,5 +74,5 @@ import "./discoveries/get_discovery_categories.ts";
 import "./discoveries/valid_discovery_term.ts";
 
 // Final cleanup
-import "./guilds/delete_server.ts";
+import "./guilds/delete_guild.ts";
 import "./ws/ws_close.ts";
