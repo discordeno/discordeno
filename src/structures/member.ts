@@ -23,7 +23,6 @@ import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 
 const MEMBER_SNOWFLAKES = [
-  "roles",
   "id",
   "discriminator",
 ];
@@ -87,28 +86,9 @@ export async function createDiscordenoMember(
     user,
     joinedAt,
     premiumSince,
-    ...rest
   } = data;
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
-
-  for (const [key, value] of Object.entries(rest)) {
-    eventHandlers.debug?.(
-      "loop",
-      `Running for of loop for Object.keys(rest) in DiscordenoMember function.`,
-    );
-
-    if (key === "roles") {
-      props[key] = value.map((id: string) => snowflakeToBigint(id));
-      continue;
-    }
-
-    props[key] = createNewProp(
-      MEMBER_SNOWFLAKES.includes(key)
-        ? value ? snowflakeToBigint(value) : undefined
-        : value,
-    );
-  }
 
   for (const [key, value] of Object.entries(user)) {
     eventHandlers.debug?.(
@@ -142,12 +122,10 @@ export async function createDiscordenoMember(
 
   // User was never cached before
   member.guilds.set(guildId, {
-    nick: rest.nick,
-    roles: rest.roles.map((id) => snowflakeToBigint(id)),
+    ...data,
+    roles: data.roles.map((id) => snowflakeToBigint(id)),
     joinedAt: Date.parse(joinedAt),
     premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
-    deaf: rest.deaf,
-    mute: rest.mute,
   });
 
   return member;
@@ -155,16 +133,10 @@ export async function createDiscordenoMember(
 
 export interface DiscordenoMember extends
   Omit<
-    GuildMember,
-    "roles"
-  >,
-  Omit<
     User,
     | "discriminator"
     | "id"
   > {
-  /** Array of role object ids */
-  roles: bigint[];
   /** The user's id */
   id: bigint;
   /** The user's 4-digit discord-tag */
