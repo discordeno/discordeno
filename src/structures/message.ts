@@ -231,7 +231,9 @@ export interface DiscordenoMessage extends
   isBot: boolean;
   /** The username#discrimnator for the user who sent this message */
   tag: string;
+
   // For better user experience
+
   /** Id of the guild which the massage has been send in. "0n" if it a DM */
   guildId: bigint;
   /** id of the channel the message was sent in */
@@ -252,6 +254,7 @@ export interface DiscordenoMessage extends
   timestamp: number;
   /** When this message was edited (or undefined if never) */
   editedTimestamp?: number;
+
   // GETTERS
 
   /** The channel where this message was sent. Can be undefined if uncached. */
