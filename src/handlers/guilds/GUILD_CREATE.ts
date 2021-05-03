@@ -14,22 +14,22 @@ export async function handleGuildCreate(
   // When shards resume they emit GUILD_CREATE again.
   if (await cacheHandlers.has("guilds", snowflakeToBigint(payload.id))) return;
 
-  const discordenoGuild = await structures.createDiscordenoGuild(
+  const guild = await structures.createDiscordenoGuild(
     payload,
     shardId,
   );
-  await cacheHandlers.set("guilds", discordenoGuild.id, discordenoGuild);
+  await cacheHandlers.set("guilds", guild.id, guild);
 
   const shard = ws.shards.get(shardId);
 
-  if (shard?.unavailableGuildIds.has(discordenoGuild.id)) {
-    await cacheHandlers.delete("unavailableGuilds", discordenoGuild.id);
+  if (shard?.unavailableGuildIds.has(guild.id)) {
+    await cacheHandlers.delete("unavailableGuilds", guild.id);
 
-    shard.unavailableGuildIds.delete(discordenoGuild.id);
+    shard.unavailableGuildIds.delete(guild.id);
 
-    return eventHandlers.guildAvailable?.(discordenoGuild);
+    return eventHandlers.guildAvailable?.(guild);
   }
 
-  if (!cache.isReady) return eventHandlers.guildLoaded?.(discordenoGuild);
-  eventHandlers.guildCreate?.(discordenoGuild);
+  if (!cache.isReady) return eventHandlers.guildLoaded?.(guild);
+  eventHandlers.guildCreate?.(guild);
 }

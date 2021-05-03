@@ -31,7 +31,7 @@ export async function handleVoiceStateUpdate(data: DiscordGatewayPayload) {
     await structures.createDiscordenoVoiceState(guild.id, payload),
   );
 
-  await cacheHandlers.set("guilds", snowflakeToBigint(payload.guildId), guild);
+  await cacheHandlers.set("guilds", guild.id, guild);
 
   if (
     cachedState?.channelId !==

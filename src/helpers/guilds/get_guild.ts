@@ -27,14 +27,14 @@ export async function getGuild(
     },
   );
 
-  const structure = await structures.createDiscordenoGuild(
+  const guild = await structures.createDiscordenoGuild(
     result,
     Number((BigInt(guildId) >> 22n) % BigInt(ws.botGatewayData.shards)),
   );
 
   if (options.addToCache) {
-    await cacheHandlers.set("guilds", guildId, structure);
+    await cacheHandlers.set("guilds", guild.id, guild);
   }
 
-  return structure;
+  return guild;
 }
