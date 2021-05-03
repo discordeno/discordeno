@@ -4,9 +4,9 @@ export function verifySignature(
   { publicKey, signature, timestamp, body }: VerifySignatureOptions,
 ): { isValid: boolean; body: string } {
   const isValid = verify(
-    new TextEncoder().encode(timestamp + body),
-    hexToUint8Array(signature),
     hexToUint8Array(publicKey),
+    hexToUint8Array(signature),
+    new TextEncoder().encode(timestamp + body),
   );
 
   return { isValid, body };
