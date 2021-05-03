@@ -14,6 +14,7 @@ export async function handleGuildUpdate(data: DiscordGatewayPayload) {
   if (!newGuild) return;
 
   const keysToSkip = [
+    "id",
     "roles",
     "guildHashes",
     "guildId",

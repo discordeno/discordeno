@@ -100,7 +100,7 @@ export async function createDiscordenoMember(
 
     if (key === "roles") {
       props[key] = value.map((id: string) => snowflakeToBigint(id));
-      continue
+      continue;
     }
 
     props[key] = createNewProp(
