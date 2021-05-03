@@ -142,6 +142,7 @@ export async function createDiscordenoMessage(data: Message) {
     mentionRoles = [],
     editedTimestamp,
     author,
+    messageReference,
     ...rest
   } = data;
 
@@ -189,6 +190,21 @@ export async function createDiscordenoMessage(data: Message) {
     timestamp: createNewProp(Date.parse(data.timestamp)),
     editedTimestamp: createNewProp(
       editedTimestamp ? Date.parse(editedTimestamp) : undefined,
+    ),
+    messageReference: createNewProp(
+      messageReference
+        ? {
+          messageId: messageReference.messageId
+            ? snowflakeToBigint(messageReference.messageId)
+            : undefined,
+          channelId: messageReference.channelId
+            ? snowflakeToBigint(messageReference.channelId)
+            : undefined,
+          guildId: messageReference.guildId
+            ? snowflakeToBigint(messageReference.guildId)
+            : undefined,
+        }
+        : undefined,
     ),
   });
 

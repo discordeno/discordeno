@@ -213,7 +213,11 @@ export interface DiscordenoChannel extends
   ): ReturnType<typeof deleteChannelOverwrite>;
   /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
   hasPermission(
-    overwrites: DiscordOverwrite[],
+    overwrites: (Omit<DiscordOverwrite, "id" | "allow" | "deny"> & {
+      id: bigint;
+      allow: bigint;
+      deny: bigint;
+    })[],
     permissions: PermissionStrings[],
   ): ReturnType<typeof channelOverwriteHasPermission>;
   /** Edit the channel */

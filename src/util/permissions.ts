@@ -24,17 +24,17 @@ async function getCached(
   table: "guilds" | "channels" | "members",
   key: bigint | DiscordenoGuild | DiscordenoChannel | DiscordenoMember,
 ) {
-  const cached = typeof key === "string"
+  const cached = typeof key === "bigint"
     ? // @ts-ignore TS is wrong here
       await cacheHandlers.get(table, key)
     : key;
-  if (!cached || typeof cached === "string") {
+  if (!cached || typeof cached === "bigint") {
     throw new Error(
       Errors[`${table.slice(0, -1).toUpperCase()}_NOT_FOUND` as Errors],
     );
   }
 
-  return typeof cached === "string" ? undefined : cached;
+  return typeof cached === "bigint" ? undefined : cached;
 }
 
 /** Calculates the permissions this member has in the given guild */

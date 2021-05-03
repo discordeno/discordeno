@@ -1,6 +1,7 @@
 import { rest } from "../../rest/rest.ts";
 import { CreateGuildEmoji } from "../../types/emojis/create_guild_emoji.ts";
 import { Emoji } from "../../types/emojis/emoji.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";
@@ -18,9 +19,14 @@ export async function createEmoji(
     image = await urlToBase64(image);
   }
 
-  return await rest.runMethod<Emoji>("post", endpoints.GUILD_EMOJIS(guildId), {
+  const emoji = await rest.runMethod<Emoji>("post", endpoints.GUILD_EMOJIS(guildId), {
     ...options,
     name,
     image,
   });
+
+  return {
+    ...emoji,
+    id: snowflakeToBigint(emoji.id!)
+  }
 }

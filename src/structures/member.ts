@@ -98,6 +98,11 @@ export async function createDiscordenoMember(
       `Running for of loop for Object.keys(rest) in DiscordenoMember function.`,
     );
 
+    if (key === "roles") {
+      props[key] = value.map((id: string) => snowflakeToBigint(id));
+      continue
+    }
+
     props[key] = createNewProp(
       MEMBER_SNOWFLAKES.includes(key)
         ? value ? snowflakeToBigint(value) : undefined
