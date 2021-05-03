@@ -7,9 +7,9 @@ import { EditWebhookMessage } from "../../types/webhooks/edit_webhook_message.ts
 import { endpoints } from "../../util/constants.ts";
 
 export async function editWebhookMessage(
-  webhookId: string,
+  webhookId: bigint,
   webhookToken: string,
-  messageId: string,
+  messageId: bigint,
   options: EditWebhookMessage,
 ) {
   if (options.content && options.content.length > 2000) {

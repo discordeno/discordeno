@@ -14,7 +14,7 @@ export async function editMessage(
   message: DiscordenoMessage,
   content: string | EditMessage,
 ) {
-  if (message.author.id !== botId) {
+  if (message.authorId !== botId) {
     throw "You can only edit a message that was sent by the bot.";
   }
 

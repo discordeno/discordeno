@@ -8,7 +8,7 @@ import { endpoints } from "../../util/constants.ts";
 
 /** Execute a webhook with webhook Id and webhook token */
 export async function executeWebhook(
-  webhookId: string,
+  webhookId: bigint,
   webhookToken: string,
   options: ExecuteWebhook,
 ) {

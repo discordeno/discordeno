@@ -9,7 +9,7 @@ import {
 } from "../../util/permissions.ts";
 
 /** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
-export async function deleteInvite(channelId: string, inviteCode: string) {
+export async function deleteInvite(channelId: bigint, inviteCode: string) {
   const channel = await cacheHandlers.get("channels", channelId);
 
   if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);

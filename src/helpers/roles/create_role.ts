@@ -11,7 +11,7 @@ import {
 
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
 export async function createRole(
-  guildId: string,
+  guildId: bigint,
   options: CreateGuildRole,
   reason?: string,
 ) {

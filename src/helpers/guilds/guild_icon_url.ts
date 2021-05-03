@@ -5,7 +5,7 @@ import { formatImageURL } from "../../util/utils.ts";
 
 /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
 export function guildIconURL(
-  id: string,
+  id: bigint,
   icon?: string,
   size: DiscordImageSize = 128,
   format?: DiscordImageFormat,

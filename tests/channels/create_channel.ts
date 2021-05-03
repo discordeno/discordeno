@@ -7,6 +7,7 @@ import { createChannel } from "../../src/helpers/channels/create_channel.ts";
 import { delayUntil } from "../util/delay_until.ts";
 import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
 import { botId } from "../../src/bot.ts";
+import { bigintToSnowflake } from "../../src/util/bigint.ts";
 
 async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
   const channel = await createChannel(tempData.guildId, options);
@@ -158,7 +159,7 @@ Deno.test({
         name: "Discordeno-test",
         permissionOverwrites: [
           {
-            id: botId,
+            id: bigintToSnowflake(botId),
             type: DiscordOverwriteTypes.MEMBER,
             allow: ["VIEW_CHANNEL"],
             deny: [],

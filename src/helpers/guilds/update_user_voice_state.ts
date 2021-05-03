@@ -16,8 +16,8 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
  *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
  */
 export function updateVoiceState(
-  guildId: string,
-  userId: string,
+  guildId: bigint,
+  userId: bigint,
   data: UpdateOthersVoiceState,
 ) {
   const payload = camelKeysToSnakeCase<DiscordUpdateOthersVoiceState>(data);

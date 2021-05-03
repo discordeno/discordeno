@@ -29,7 +29,7 @@ async function ifItFailsBlameWolf(reason?: string) {
   // Delete the message now
   await deleteMessages(
     tempData.channelId,
-    [message.id, secondMessage.id],
+    [message.id.toString(), secondMessage.id.toString()],
     reason,
   );
 

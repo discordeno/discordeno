@@ -2,11 +2,12 @@ import { cacheHandlers } from "../../cache.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import { CreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
 import { Errors } from "../../types/misc/errors.ts";
+import { bigintToSnowflake } from "../../util/bigint.ts";
 import { calculatePermissions } from "../../util/permissions.ts";
 import { createChannel } from "./create_channel.ts";
 
 /** Create a copy of a channel */
-export async function cloneChannel(channelId: string, reason?: string) {
+export async function cloneChannel(channelId: bigint, reason?: string) {
   const channelToClone = await cacheHandlers.get("channels", channelId);
   //Return undefined if channel is not cached
   if (!channelToClone) throw new Error(Errors.CHANNEL_NOT_FOUND);
@@ -23,14 +24,16 @@ export async function cloneChannel(channelId: string, reason?: string) {
     ...channelToClone,
     name: channelToClone.name!,
     topic: channelToClone.topic || undefined,
-    parentId: channelToClone.parentId || undefined,
+    parentId: channelToClone.parentId
+      ? bigintToSnowflake(channelToClone.parentId)
+      : undefined,
     permissionOverwrites: channelToClone.permissionOverwrites.map((
       overwrite,
     ) => ({
-      id: overwrite.id,
+      id: overwrite.id.toString(),
       type: overwrite.type,
-      allow: calculatePermissions(overwrite.allow),
-      deny: calculatePermissions(overwrite.deny),
+      allow: calculatePermissions(overwrite.allow.toString()),
+      deny: calculatePermissions(overwrite.deny.toString()),
     })),
   };
 

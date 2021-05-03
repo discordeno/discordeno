@@ -71,7 +71,7 @@ export interface Message {
   /** Sent with Rich Presence-related chat embeds */
   application?: Partial<Application>;
   /** Data showing the source of a crossposted channel follow add, pin or reply message */
-  messageReference?: MessageReference;
+  messageReference?: Omit<MessageReference, "failIfNotExists">;
   /** Message flags combined as a bitfield */
   flags?: number;
   /** The stickers sent with the message (bots currently can only receive messages with stickers, not send) */

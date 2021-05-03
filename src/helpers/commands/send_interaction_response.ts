@@ -11,7 +11,7 @@ import { endpoints } from "../../util/constants.ts";
  * NOTE: By default we will suppress mentions. To enable mentions, just pass any mentions object.
  */
 export async function sendInteractionResponse(
-  id: string,
+  id: bigint,
   token: string,
   options: DiscordenoInteractionResponse,
 ) {
@@ -27,7 +27,7 @@ export async function sendInteractionResponse(
   }
 
   // Expire in 15 minutes
-  cache.executedSlashCommands.set(token, id);
+  cache.executedSlashCommands.add(token);
   setTimeout(
     () => {
       eventHandlers.debug?.(

@@ -25,15 +25,27 @@ import { ModifyGuild } from "../types/guilds/modify_guild.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { PresenceUpdate } from "../types/misc/presence_update.ts";
-import { VoiceState } from "../types/voice/voice_state.ts";
+import { snowflakeToBigint } from "../util/bigint.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoChannel } from "./channel.ts";
 import { DiscordenoMember } from "./member.ts";
 import { structures } from "./mod.ts";
 import { DiscordenoRole } from "./role.ts";
+import { DiscordenoVoiceState } from "./voice_state.ts";
 
-export const initialMemberLoadQueue = new Map<string, GuildMember[]>();
+export const initialMemberLoadQueue = new Map<bigint, GuildMember[]>();
+const GUILD_SNOWFLAKES = [
+  "id",
+  "ownerId",
+  "permissions",
+  "afkChannelId",
+  "widgetChannelId",
+  "applicationId",
+  "systemChannelId",
+  "rulesChannelId",
+  "publicUpdatesChannelId",
+];
 
 const baseGuild: Partial<DiscordenoGuild> = {
   get members() {
@@ -125,19 +137,28 @@ export async function createDiscordenoGuild(
     ...rest
   } = data;
 
+  const guildId = snowflakeToBigint(rest.id);
+
   const roles = await Promise.all(
     (data.roles || []).map((role) =>
-      structures.createDiscordenoRole({ role, guildId: rest.id })
+      structures.createDiscordenoRole({
+        role,
+        guildId,
+      })
     ),
+  );
+
+  const voiceStateStructs = await Promise.all(
+    voiceStates.map((vs) => structures.createDiscordenoVoiceState(guildId, vs)),
   );
 
   await Promise.all(channels.map(async (channel) => {
     const discordenoChannel = await structures.createDiscordenoChannel(
       channel,
-      rest.id,
+      guildId,
     );
 
-    return cacheHandlers.set(
+    return await cacheHandlers.set(
       "channels",
       discordenoChannel.id,
       discordenoChannel,
@@ -145,35 +166,41 @@ export async function createDiscordenoGuild(
   }));
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
-  for (const key of Object.keys(rest)) {
+  for (const [key, value] of Object.entries(rest)) {
     eventHandlers.debug?.(
       "loop",
       `Running for of loop in createDiscordenoGuild function.`,
     );
-    // @ts-ignore index signature
-    props[key] = createNewProp(rest[key]);
+
+    props[key] = createNewProp(
+      GUILD_SNOWFLAKES.includes(key)
+        ? value ? snowflakeToBigint(value) : undefined
+        : value,
+    );
   }
 
   const guild: DiscordenoGuild = Object.create(baseGuild, {
     ...props,
     shardId: createNewProp(shardId),
     roles: createNewProp(
-      new Collection(roles.map((r: DiscordenoRole) => [r.id, r])),
+      new Collection(
+        roles.map((r: DiscordenoRole) => [r.id, r]),
+      ),
     ),
     joinedAt: createNewProp(Date.parse(joinedAt)),
     presences: createNewProp(
-      new Collection(presences.map((p) => [p.user?.id, p])),
+      new Collection(presences.map((p) => [snowflakeToBigint(p.user!.id), p])),
     ),
     memberCount: createNewProp(memberCount),
     emojis: createNewProp(
       new Collection(
-        (emojis || []).map((emoji) => [emoji.id ?? emoji.name, emoji]),
+        (emojis || []).map((
+          emoji,
+        ) => [emoji.id ? snowflakeToBigint(emoji.id) : emoji.name, emoji]),
       ),
     ),
     voiceStates: createNewProp(
-      new Collection(
-        voiceStates.map((vs) => [vs.userId, vs]),
-      ),
+      new Collection(voiceStateStructs.map((vs) => [vs.userId, vs])),
     ),
   });
 
@@ -211,25 +238,52 @@ export interface DiscordenoGuild extends
     | "memberCount"
     | "owner"
     | "emojis"
+    | "id"
+    | "ownerId"
+    | "permissions"
+    | "afkChannelId"
+    | "widgetChannelId"
+    | "applicationId"
+    | "systemChannelId"
+    | "rulesChannelId"
+    | "publicUpdatesChannelId"
   > {
+  /** Guild id */
+  id: bigint;
+  /** Id of the owner */
+  ownerId: bigint;
+  /** Total permissions for the user in the guild (execludes overrides) */
+  permissions: bigint;
+  /** Id of afk channel */
+  afkChannelId?: bigint;
+  /** The channel id that the widget will generate an invite to, or null if set to no invite */
+  widgetChannelId?: bigint;
+  /** Application id of the guild creator if it is bot-created */
+  applicationId?: bigint;
+  /** The id of the channel where guild notices such as welcome messages and boost events are posted */
+  systemChannelId?: bigint;
+  /** The id of the channel where community guilds can display rules and/or guidelines */
+  rulesChannelId?: bigint;
+  /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
+  publicUpdatesChannelId?: bigint;
   /** The id of the shard this guild is bound to */
   shardId: number;
   /** Total number of members in this guild */
   memberCount: number;
   /** The roles in the guild */
-  roles: Collection<string, DiscordenoRole>;
+  roles: Collection<bigint, DiscordenoRole>;
   /** The presences of all the users in the guild. */
-  presences: Collection<string, PresenceUpdate>;
+  presences: Collection<bigint, PresenceUpdate>;
   /** The Voice State data for each user in a voice channel in this server. */
-  voiceStates: Collection<string, VoiceState>;
+  voiceStates: Collection<bigint, DiscordenoVoiceState>;
   /** Custom guild emojis */
-  emojis: Collection<string, Emoji>;
+  emojis: Collection<bigint, Emoji>;
 
   // GETTERS
   /** Members in this guild. */
-  members: Collection<string, DiscordenoMember>;
+  members: Collection<bigint, DiscordenoMember>;
   /** Channels in this guild. */
-  channels: Collection<string, DiscordenoChannel>;
+  channels: Collection<bigint, DiscordenoChannel>;
   /** The afk channel if one is set */
   afkChannel?: DiscordenoChannel;
   /** The public update channel if one is set */
@@ -241,12 +295,13 @@ export interface DiscordenoGuild extends
   /** The bot member in this guild if cached */
   bot?: DiscordenoMember;
   /** The bot guild member in this guild if cached */
-  botMember?: Omit<GuildMember, "joinedAt" | "premiumSince"> & {
+  botMember?: Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
     joinedAt: number;
     premiumSince?: number;
+    roles: bigint[];
   };
   /** The bots voice state if there is one in this guild */
-  botVoice?: VoiceState;
+  botVoice?: DiscordenoVoiceState;
   /** The owner member of this guild */
   owner?: DiscordenoMember;
   /** Whether or not this guild is partnered */
@@ -280,13 +335,13 @@ export interface DiscordenoGuild extends
   /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
   auditLogs(options: GetGuildAuditLog): ReturnType<typeof getAuditLogs>;
   /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
-  getBan(memberId: string): ReturnType<typeof getBan>;
+  getBan(memberId: bigint): ReturnType<typeof getBan>;
   /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
   bans(): ReturnType<typeof getBans>;
   /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
-  ban(memberId: string, options: CreateGuildBan): ReturnType<typeof banMember>;
+  ban(memberId: bigint, options: CreateGuildBan): ReturnType<typeof banMember>;
   /** Remove the ban for a user. Requires BAN_MEMBERS permission */
-  unban(memberId: string): ReturnType<typeof unbanMember>;
+  unban(memberId: bigint): ReturnType<typeof unbanMember>;
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   invites(): ReturnType<typeof getInvites>;
 }

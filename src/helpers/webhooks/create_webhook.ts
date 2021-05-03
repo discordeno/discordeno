@@ -13,7 +13,7 @@ import { validateLength } from "../../util/validate_length.ts";
  * Webhook names cannot be: 'clyde'
  */
 export async function createWebhook(
-  channelId: string,
+  channelId: bigint,
   options: CreateWebhook,
 ) {
   await requireBotChannelPermissions(channelId, ["MANAGE_WEBHOOKS"]);

@@ -17,7 +17,7 @@ import { ws } from "../../ws/ws.ts";
  * GW(this function): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is now 960/m.
  */
 export function fetchMembers(
-  guildId: string,
+  guildId: bigint,
   shardId: number,
   options?: Omit<RequestGuildMembers, "guildId">,
 ) {
@@ -49,5 +49,5 @@ export function fetchMembers(
         nonce,
       },
     });
-  }) as Promise<Collection<string, DiscordenoMember>>;
+  }) as Promise<Collection<bigint, DiscordenoMember>>;
 }

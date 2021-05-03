@@ -7,7 +7,7 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
 export async function getPruneCount(
-  guildId: string,
+  guildId: bigint,
   options?: GetGuildPruneCountQuery,
 ) {
   if (options?.days && options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);

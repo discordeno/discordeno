@@ -1,6 +1,6 @@
 import { User } from "../users/user.ts";
 import { DiscordChannelTypes } from "./channel_types.ts";
-import { Overwrite } from "./overwrite.ts";
+import { DiscordOverwrite } from "./overwrite.ts";
 import { DiscordVideoQualityModes } from "./video_quality_modes.ts";
 
 /** https://discord.com/developers/docs/resources/channel#channel-object */
@@ -14,7 +14,7 @@ export interface Channel {
   /** Sorting position of the channel */
   position?: number;
   /** Explicit permission overwrites for members and roles */
-  permissionOverwrites?: Overwrite[];
+  permissionOverwrites?: DiscordOverwrite[];
   /** The name of the channel (2-100 characters) */
   name?: string;
   /** The channel topic (0-1024 characters) */

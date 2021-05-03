@@ -5,7 +5,7 @@ import { endpoints } from "../../util/constants.ts";
 import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 export async function editWelcomeScreen(
-  guildId: string,
+  guildId: bigint,
   options: ModifyGuildWelcomeScreen,
 ) {
   return await rest.runMethod<WelcomeScreen>(

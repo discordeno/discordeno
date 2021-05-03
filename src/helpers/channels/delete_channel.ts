@@ -6,8 +6,8 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function deleteChannel(
-  guildId: string,
-  channelId: string,
+  guildId: bigint,
+  channelId: bigint,
   reason?: string,
 ): Promise<undefined> {
   await requireBotGuildPermissions(guildId, ["MANAGE_CHANNELS"]);
