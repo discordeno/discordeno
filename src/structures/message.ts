@@ -161,6 +161,8 @@ export async function createDiscordenoMessage(data: Message) {
   }
 
   props.authorId = createNewProp(snowflakeToBigint(author.id));
+  props.isBot = createNewProp(author.bot || false);
+  props.tag = createNewProp(`${author.username}#${author.discriminator}`);
 
   // Discord doesnt give guild id for getMessage() so this will fill it in
   const guildIdFinal = guildId ||
@@ -221,8 +223,14 @@ export interface DiscordenoMessage extends
     | "guildId"
     | "channelId"
     | "member"
+    | "author"
   > {
   id: bigint;
+  author: undefined;
+  /** Whether or not this message was sent by a bot */
+  isBot: boolean;
+  /** The username#discrimnator for the user who sent this message */
+  tag: string;
   // For better user experience
   /** Id of the guild which the massage has been send in. "0n" if it a DM */
   guildId: bigint;
