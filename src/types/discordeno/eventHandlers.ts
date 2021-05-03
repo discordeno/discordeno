@@ -4,6 +4,8 @@ import { DiscordenoMember } from "../../structures/member.ts";
 import { DiscordenoMessage } from "../../structures/message.ts";
 import { DiscordenoRole } from "../../structures/role.ts";
 import { Collection } from "../../util/collection.ts";
+import { ThreadMember } from "../channels/threads/thread_member.ts";
+import { ThreadMembersUpdate } from "../channels/threads/thread_members_update.ts";
 import { IntegrationCreateUpdate } from "../integration/integration_create_update.ts";
 import { ApplicationCommandCreateUpdateDelete } from "../interactions/application_command_create_update_delete.ts";
 import {
@@ -211,6 +213,25 @@ export interface EventHandlers {
     shardId: number,
     unavailableGuildIds: Set<bigint>,
   ) => unknown;
+  /** Sent when a thread is created */
+  threadCreate?: (channel: DiscordenoChannel) => unknown;
+  /** Sent when a thread is updated */
+  threadUpdate?: (
+    cahnnel: DiscordenoChannel,
+    oldChannel: DiscordenoChannel,
+  ) => unknown;
+  /** Sent when the bot gains access to threads */
+  threadListSync?: (
+    channels: Collection<bigint, DiscordenoChannel>,
+    members: ThreadMember[],
+    guildId: bigint,
+  ) => unknown;
+  /** Sent when the current users thread member is updated */
+  threadMemberUpdate?: (threadMember: ThreadMember) => unknown;
+  /** Sent when anyone is added to or removed from a thread */
+  threadMembersUpdate?: (update: ThreadMembersUpdate) => unknown;
+  /** Sent when a thread is deleted */
+  threadDelete?: (channel: DiscordenoChannel) => unknown;
   /** Sent when a user starts typing in a channel. */
   typingStart?: (data: TypingStart) => unknown;
   /** Sent when a user joins a voice channel */
