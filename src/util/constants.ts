@@ -79,25 +79,25 @@ export const endpoints = {
   CHANNEL_TYPING: (channelId: bigint) => `${CHANNEL_BASE(channelId)}/typing`,
 
   // Thread Endpoints
-  THREAD_START_PUBLIC: (channelId: string, messageId: string) =>
+  THREAD_START_PUBLIC: (channelId: bigint, messageId: bigint) =>
     `${endpoints.CHANNEL_MESSAGE(channelId, messageId)}/threads`,
-  THREAD_START_PRIVATE: (channelId: string) =>
+  THREAD_START_PRIVATE: (channelId: bigint) =>
     `${CHANNEL_BASE(channelId)}/threads`,
-  THREAD_ACTIVE: (channelId: string) =>
+  THREAD_ACTIVE: (channelId: bigint) =>
     `${CHANNEL_BASE(channelId)}/threads/active`,
-  THREAD_MEMBERS: (channelId: string) =>
+  THREAD_MEMBERS: (channelId: bigint) =>
     `${CHANNEL_BASE(channelId)}/thread-members`,
-  THREAD_ME: (channelId: string) =>
+  THREAD_ME: (channelId: bigint) =>
     `${endpoints.THREAD_MEMBERS(channelId)}/@me`,
-  THREAD_USER: (channelId: string, userId: string) =>
+  THREAD_USER: (channelId: bigint, userId: bigint) =>
     `${endpoints.THREAD_MEMBERS(channelId)}/${userId}`,
-  THREAD_ARCHIVED_BASE: (channelId: string) =>
+  THREAD_ARCHIVED_BASE: (channelId: bigint) =>
     `${CHANNEL_BASE(channelId)}/threads/archived`,
-  THREAD_ARCHIVED_PUBLIC: (channelId: string) =>
+  THREAD_ARCHIVED_PUBLIC: (channelId: bigint) =>
     `${endpoints.THREAD_ARCHIVED_BASE(channelId)}/public`,
-  THREAD_ARCHIVED_PRIVATE: (channelId: string) =>
+  THREAD_ARCHIVED_PRIVATE: (channelId: bigint) =>
     `${endpoints.THREAD_ARCHIVED_BASE(channelId)}/private`,
-  THREAD_ARCHIVED_PRIVATE_JOINED: (channelId: string) =>
+  THREAD_ARCHIVED_PRIVATE_JOINED: (channelId: bigint) =>
     `${CHANNEL_BASE(channelId)}/users/@me/threads/archived/private`,
 
   // Guild Endpoints
