@@ -14,7 +14,12 @@ export async function runMethod<T = any>(
   if (body) {
     body = loopObject(
       body as Record<string, unknown>,
-      (value) => typeof value === "bigint" ? value.toString() : value,
+      (value) =>
+        typeof value === "bigint"
+          ? value.toString()
+          : Array.isArray(value)
+          ? value.map((v) => typeof v === "bigint" ? v.toString() : v)
+          : value,
       `Running forEach loop in runMethod function for changing bigints to strings.`,
     );
   }
