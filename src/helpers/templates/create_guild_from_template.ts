@@ -1,9 +1,11 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
+import { structures } from "../../structures/mod.ts";
 import { Guild } from "../../types/guilds/guild.ts";
 import { CreateGuildFromTemplate } from "../../types/templates/create_guild_from_template.ts";
 import { endpoints } from "../../util/constants.ts";
 import { urlToBase64 } from "../../util/utils.ts";
+import { ws } from "../../ws/ws.ts";
 
 /**
  * Create a new guild based on a template
@@ -23,11 +25,17 @@ export async function createGuildFromTemplate(
     data.icon = await urlToBase64(data.icon);
   }
 
-  // TODO: discordeno guild?
-
-  return await rest.runMethod<Guild>(
+  const createdGuild = await rest.runMethod<Guild>(
     "post",
     endpoints.GUILD_TEMPLATE(templateCode),
     data,
+  );
+
+  return await structures.createDiscordenoGuild(
+    createdGuild,
+    Number(
+      (BigInt(createdGuild.id) >> 22n % BigInt(ws.botGatewayData.shards))
+        .toString(),
+    ),
   );
 }
