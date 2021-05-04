@@ -8,11 +8,14 @@ import { editChannel } from "../helpers/channels/edit_channel.ts";
 import { editChannelOverwrite } from "../helpers/channels/edit_channel_overwrite.ts";
 import { sendMessage } from "../helpers/messages/send_message.ts";
 import { disconnectMember } from "../helpers/mod.ts";
-import { Channel } from "../types/channels/channel.ts";
-import { ModifyChannel } from "../types/channels/modify_channel.ts";
-import { DiscordOverwrite, Overwrite } from "../types/channels/overwrite.ts";
-import { CreateMessage } from "../types/messages/create_message.ts";
-import { PermissionStrings } from "../types/permissions/permission_strings.ts";
+import type { Channel } from "../types/channels/channel.ts";
+import type { ModifyChannel } from "../types/channels/modify_channel.ts";
+import type {
+  DiscordOverwrite,
+  Overwrite,
+} from "../types/channels/overwrite.ts";
+import type { CreateMessage } from "../types/messages/create_message.ts";
+import type { PermissionStrings } from "../types/permissions/permission_strings.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";

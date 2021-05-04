@@ -13,18 +13,18 @@ import { getInvites } from "../helpers/invites/get_invites.ts";
 import { banMember } from "../helpers/members/ban_member.ts";
 import { unbanMember } from "../helpers/members/unban_member.ts";
 import { GetGuildAuditLog } from "../types/audit_log/get_guild_audit_log.ts";
-import { Emoji } from "../types/emojis/emoji.ts";
-import { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
-import { Guild } from "../types/guilds/guild.ts";
+import type { Emoji } from "../types/emojis/emoji.ts";
+import type { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
+import type { Guild } from "../types/guilds/guild.ts";
 import { DiscordGuildFeatures } from "../types/guilds/guild_features.ts";
-import {
+import type {
   GuildMember,
   GuildMemberWithUser,
 } from "../types/guilds/guild_member.ts";
-import { ModifyGuild } from "../types/guilds/modify_guild.ts";
-import { DiscordImageFormat } from "../types/misc/image_format.ts";
-import { DiscordImageSize } from "../types/misc/image_size.ts";
-import { PresenceUpdate } from "../types/misc/presence_update.ts";
+import type { ModifyGuild } from "../types/guilds/modify_guild.ts";
+import type { DiscordImageFormat } from "../types/misc/image_format.ts";
+import type { DiscordImageSize } from "../types/misc/image_size.ts";
+import type { PresenceUpdate } from "../types/misc/presence_update.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
@@ -46,6 +46,19 @@ const GUILD_SNOWFLAKES = [
   "rulesChannelId",
   "publicUpdatesChannelId",
 ];
+
+export const guildToggles = {
+  /** Whether this user is owner of this guild */
+  owner: 1n,
+  /** Whether the guild widget is enabled */
+  widgetEnabled: 2n,
+  /** Whether this is a large guild */
+  large: 4n,
+  /** Whether this guild is unavailable due to an outage */
+  unavailable: 8n,
+  /** Whether this server is an nsfw guild */
+  nsfw: 16n,
+};
 
 const baseGuild: Partial<DiscordenoGuild> = {
   get members() {
@@ -120,6 +133,21 @@ const baseGuild: Partial<DiscordenoGuild> = {
   leave() {
     return leaveGuild(this.id!);
   },
+  get isOwner() {
+    return Boolean(this.bitfield! & guildToggles.owner);
+  },
+  get widgetEnabled() {
+    return Boolean(this.bitfield! & guildToggles.widgetEnabled);
+  },
+  get large() {
+    return Boolean(this.bitfield! & guildToggles.large);
+  },
+  get unavailable() {
+    return Boolean(this.bitfield! & guildToggles.unavailable);
+  },
+  get nsfw() {
+    return Boolean(this.bitfield! & guildToggles.nsfw);
+  },
 };
 
 export async function createDiscordenoGuild(
@@ -138,6 +166,7 @@ export async function createDiscordenoGuild(
     ...rest
   } = data;
 
+  let bitfield = 0n;
   const guildId = snowflakeToBigint(rest.id);
 
   const roles = await Promise.all(
@@ -173,6 +202,12 @@ export async function createDiscordenoGuild(
       `Running for of loop in createDiscordenoGuild function.`,
     );
 
+    const toggleBits = guildToggles[key as keyof typeof guildToggles];
+    if (toggleBits) {
+      bitfield |= value ? toggleBits : 0n;
+      continue;
+    }
+
     props[key] = createNewProp(
       GUILD_SNOWFLAKES.includes(key)
         ? value ? snowflakeToBigint(value) : undefined
@@ -203,6 +238,7 @@ export async function createDiscordenoGuild(
     voiceStates: createNewProp(
       new Collection(voiceStateStructs.map((vs) => [vs.userId, vs])),
     ),
+    bitfield: createNewProp(bitfield),
   });
 
   // ONLY ADD TO QUEUE WHEN BOT IS NOT FULLY ONLINE
@@ -279,6 +315,10 @@ export interface DiscordenoGuild extends
   voiceStates: Collection<bigint, DiscordenoVoiceState>;
   /** Custom guild emojis */
   emojis: Collection<bigint, Emoji>;
+  /** Whether the bot is the owner of this guild */
+  isOwner: boolean;
+  /** Holds all the boolean toggles. */
+  bitfield: bigint;
 
   // GETTERS
   /** Members in this guild. */

@@ -1,7 +1,7 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { ChannelPinsUpdate } from "../../types/channels/channel_pins_update.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { ChannelPinsUpdate } from "../../types/channels/channel_pins_update.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleChannelPinsUpdate(data: DiscordGatewayPayload) {

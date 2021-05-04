@@ -1,13 +1,13 @@
 import { encode } from "../../deps.ts";
 import { eventHandlers } from "../bot.ts";
-import { ApplicationCommandOption } from "../types/interactions/application_command_option.ts";
-import { ApplicationCommandOptionChoice } from "../types/interactions/application_command_option_choice.ts";
+import type { ApplicationCommandOption } from "../types/interactions/application_command_option.ts";
+import type { ApplicationCommandOptionChoice } from "../types/interactions/application_command_option_choice.ts";
 import { DiscordApplicationCommandOptionTypes } from "../types/interactions/application_command_option_types.ts";
-import { CreateGlobalApplicationCommand } from "../types/interactions/create_global_application_command.ts";
+import type { CreateGlobalApplicationCommand } from "../types/interactions/create_global_application_command.ts";
+import type { EditGlobalApplicationCommand } from "../types/interactions/edit_global_application_command.ts";
 import { Errors } from "../types/misc/errors.ts";
-import { DiscordImageFormat } from "../types/misc/image_format.ts";
-import { DiscordImageSize } from "../types/misc/image_size.ts";
-import { EditGlobalApplicationCommand } from "../types/mod.ts";
+import type { DiscordImageFormat } from "../types/misc/image_format.ts";
+import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 import { validateLength } from "./validate_length.ts";
 

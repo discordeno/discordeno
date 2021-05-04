@@ -7,7 +7,7 @@ import { DiscordenoRole } from "../structures/role.ts";
 import { Overwrite } from "../types/channels/overwrite.ts";
 import { Errors } from "../types/misc/errors.ts";
 import { DiscordBitwisePermissionFlags } from "../types/permissions/bitwise_permission_flags.ts";
-import { PermissionStrings } from "../types/permissions/permission_strings.ts";
+import type { PermissionStrings } from "../types/permissions/permission_strings.ts";
 
 async function getCached(
   table: "guilds",

@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { Webhook } from "../../types/webhooks/webhook.ts";
+import type { Webhook } from "../../types/webhooks/webhook.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";

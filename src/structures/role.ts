@@ -4,7 +4,7 @@ import { deleteRole } from "../helpers/roles/delete_role.ts";
 import { editRole } from "../helpers/roles/edit_role.ts";
 import { CreateGuildRole } from "../types/guilds/create_guild_role.ts";
 import { Errors } from "../types/misc/errors.ts";
-import { Role } from "../types/permissions/role.ts";
+import type { Role } from "../types/permissions/role.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { Collection } from "../util/collection.ts";
 import { highestRole } from "../util/permissions.ts";
@@ -18,6 +18,17 @@ const ROLE_SNOWFLAKES = [
   "integrationId",
   "guildId",
 ];
+
+const roleToggles = {
+  /** If this role is showed seperately in the user listing */
+  hoist: 1n,
+  /** Whether this role is managed by an integration */
+  managed: 2n,
+  /** Whether this role is mentionable */
+  mentionable: 4n,
+  /** If this role is the nitro boost role. */
+  isNitroBoostRole: 8n,
+};
 
 const baseRole: Partial<DiscordenoRole> = {
   get guild() {
@@ -71,6 +82,18 @@ const baseRole: Partial<DiscordenoRole> = {
       memberHighestRole.position,
     );
   },
+  get hoist() {
+    return Boolean(this.bitfield! & roleToggles.hoist);
+  },
+  get managed() {
+    return Boolean(this.bitfield! & roleToggles.managed);
+  },
+  get mentionable() {
+    return Boolean(this.bitfield! & roleToggles.mentionable);
+  },
+  get isNitroBoostRole() {
+    return Boolean(this.bitfield! & roleToggles.isNitroBoostRole);
+  },
 };
 
 // deno-lint-ignore require-await
@@ -84,12 +107,20 @@ export async function createDiscordenoRole(
     ...rest
   } = ({ guildId: data.guildId, ...data.role });
 
+  let bitfield = 0n;
+
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const [key, value] of Object.entries(rest)) {
     eventHandlers.debug?.(
       "loop",
       `Running for of loop in createDiscordenoRole function.`,
     );
+
+    const toggleBits = roleToggles[key as keyof typeof roleToggles];
+    if (toggleBits) {
+      bitfield |= value ? toggleBits : 0n;
+      continue;
+    }
 
     props[key] = createNewProp(
       ROLE_SNOWFLAKES.includes(key)
@@ -107,6 +138,7 @@ export async function createDiscordenoRole(
     integrationId: createNewProp(
       tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined,
     ),
+    bitfield: createNewProp(bitfield),
   });
 
   return role;
@@ -123,6 +155,8 @@ export interface DiscordenoRole extends Omit<Role, "tags" | "id"> {
   integrationId: bigint;
   /** The roles guildId */
   guildId: bigint;
+  /** Holds all the boolean toggles. */
+  bitfield: bigint;
 
   // GETTERS
 

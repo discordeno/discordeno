@@ -1,7 +1,7 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { MessageDeleteBulk } from "../../types/messages/message_delete_bulk.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { MessageDeleteBulk } from "../../types/messages/message_delete_bulk.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleMessageDeleteBulk(data: DiscordGatewayPayload) {

@@ -1,4 +1,4 @@
-import { FileContent } from "../types/misc/file_content.ts";
+import type { FileContent } from "../types/misc/file_content.ts";
 import { USER_AGENT } from "../util/constants.ts";
 import { rest, RestPayload, RestRequest } from "./rest.ts";
 

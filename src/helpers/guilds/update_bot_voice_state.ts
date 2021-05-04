@@ -1,6 +1,5 @@
-import { RequestManager } from "../../rest/request_manager.ts";
-import {
-  DiscordUpdateSelfVoiceState,
+import { rest } from "../../rest/rest.ts";
+import type {
   UpdateSelfVoiceState,
 } from "../../types/guilds/update_self_voice_state.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -15,14 +14,13 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
  *  - You must have the `REQUEST_TO_SPEAK` permission to request to speak. You can always clear your own request to speak.
  *  - You are able to set `request_to_speak_timestamp` to any present or future time.
  */
-export function updateBotVoiceState(
+export async function updateBotVoiceState(
   guildId: bigint,
   data: UpdateSelfVoiceState,
 ) {
-  const payload = camelKeysToSnakeCase<DiscordUpdateSelfVoiceState>(data);
-
-  return RequestManager.patch(
+  return await rest.runMethod(
+    "patch",
     endpoints.UPDATE_VOICE_STATE(guildId),
-    payload,
+    camelKeysToSnakeCase(data),
   );
 }

@@ -118,7 +118,7 @@ import { deleteWebhookWithToken } from "./webhooks/delete_webhook_with_token.ts"
 import { editWebhook } from "./webhooks/edit_webhook.ts";
 import { editWebhookMessage } from "./webhooks/edit_webhook_message.ts";
 import { editWebhookWithToken } from "./webhooks/edit_webhook_with_token.ts";
-import { executeWebhook } from "./webhooks/execute_webhook.ts";
+import { sendWebhook } from "./webhooks/send_webhook.ts";
 import { getWebhook } from "./webhooks/get_webhook.ts";
 import { getWebhooks } from "./webhooks/get_webhooks.ts";
 import { getWebhookWithToken } from "./webhooks/get_webhook_with_token.ts";
@@ -181,7 +181,6 @@ export {
   editWelcomeScreen,
   editWidget,
   emojiURL,
-  executeWebhook,
   fetchMembers,
   followChannel,
   getAuditLogs,
@@ -247,6 +246,7 @@ export {
   sendDirectMessage,
   sendInteractionResponse,
   sendMessage,
+  sendWebhook,
   startTyping,
   swapChannels,
   syncGuildTemplate,
@@ -392,7 +392,7 @@ export let helpers = {
   editWebhookMessage,
   editWebhookWithToken,
   editWebhook,
-  executeWebhook,
+  sendWebhook,
   getWebhookWithToken,
   getWebhook,
   getWebhooks,

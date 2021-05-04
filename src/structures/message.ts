@@ -10,10 +10,10 @@ import { removeAllReactions } from "../helpers/messages/remove_all_reactions.ts"
 import { removeReaction } from "../helpers/messages/remove_reaction.ts";
 import { removeReactionEmoji } from "../helpers/messages/remove_reaction_emoji.ts";
 import { sendMessage } from "../helpers/messages/send_message.ts";
-import { GuildMember } from "../types/guilds/guild_member.ts";
-import { CreateMessage } from "../types/messages/create_message.ts";
-import { EditMessage } from "../types/messages/edit_message.ts";
-import { Message } from "../types/messages/message.ts";
+import type { GuildMember } from "../types/guilds/guild_member.ts";
+import type { CreateMessage } from "../types/messages/create_message.ts";
+import type { EditMessage } from "../types/messages/edit_message.ts";
+import type { Message } from "../types/messages/message.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "../util/bigint.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
 import { createNewProp } from "../util/utils.ts";
@@ -28,6 +28,15 @@ const MESSAGE_SNOWFLAKES = [
   "guildId",
   "webhookId",
 ];
+
+const messageToggles = {
+  /** Whether this was a TTS message */
+  tts: 1n,
+  /** Whether this message mentions everyone */
+  mentionEveryone: 2n,
+  /** Whether this message is pinned */
+  pinned: 4n,
+};
 
 const baseMessage: Partial<DiscordenoMessage> = {
   get channel() {
@@ -132,6 +141,15 @@ const baseMessage: Partial<DiscordenoMessage> = {
   removeReaction(reaction, userId) {
     return removeReaction(this.channelId!, this.id!, reaction, { userId });
   },
+  get tts() {
+    return Boolean(this.bitfield! & messageToggles.tts);
+  },
+  get mentionEveryone() {
+    return Boolean(this.bitfield! & messageToggles.mentionEveryone);
+  },
+  get pinned() {
+    return Boolean(this.bitfield! & messageToggles.pinned);
+  },
 };
 
 export async function createDiscordenoMessage(data: Message) {
@@ -146,12 +164,20 @@ export async function createDiscordenoMessage(data: Message) {
     ...rest
   } = data;
 
+  let bitfield = 0n;
+
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const [key, value] of Object.entries(rest)) {
     eventHandlers.debug?.(
       "loop",
       `Running for of loop in createDiscordenoMessage function.`,
     );
+
+    const toggleBits = messageToggles[key as keyof typeof messageToggles];
+    if (toggleBits) {
+      bitfield |= value ? toggleBits : 0n;
+      continue;
+    }
 
     props[key] = createNewProp(
       MESSAGE_SNOWFLAKES.includes(key)
@@ -208,6 +234,7 @@ export async function createDiscordenoMessage(data: Message) {
         }
         : undefined,
     ),
+    bitfield: createNewProp(bitfield),
   });
 
   return message;
@@ -231,7 +258,11 @@ export interface DiscordenoMessage extends
   isBot: boolean;
   /** The username#discrimnator for the user who sent this message */
   tag: string;
+  /** Holds all the boolean toggles. */
+  bitfield: bigint;
+
   // For better user experience
+
   /** Id of the guild which the massage has been send in. "0n" if it a DM */
   guildId: bigint;
   /** id of the channel the message was sent in */
@@ -252,6 +283,7 @@ export interface DiscordenoMessage extends
   timestamp: number;
   /** When this message was edited (or undefined if never) */
   editedTimestamp?: number;
+
   // GETTERS
 
   /** The channel where this message was sent. Can be undefined if uncached. */

@@ -1,5 +1,5 @@
 import { cacheHandlers } from "../../cache.ts";
-import { GetGuildWidgetImageQuery } from "../../types/guilds/get_guild_widget_image.ts";
+import type { GetGuildWidgetImageQuery } from "../../types/guilds/get_guild_widget_image.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 

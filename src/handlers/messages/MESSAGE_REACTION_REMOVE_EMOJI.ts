@@ -1,7 +1,7 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { MessageReactionRemoveEmoji } from "../../types/messages/message_reaction_remove_emoji.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { MessageReactionRemoveEmoji } from "../../types/messages/message_reaction_remove_emoji.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleMessageReactionRemoveEmoji(

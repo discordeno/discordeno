@@ -1,8 +1,8 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { GuildRoleUpdate } from "../../types/mod.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { GuildRoleUpdate } from "../../types/mod.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleGuildRoleUpdate(data: DiscordGatewayPayload) {

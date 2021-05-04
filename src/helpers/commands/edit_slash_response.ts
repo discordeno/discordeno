@@ -1,7 +1,7 @@
 import { applicationId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordenoEditWebhookMessage } from "../../types/discordeno/edit_webhook_message.ts";
+import type { DiscordenoEditWebhookMessage } from "../../types/discordeno/edit_webhook_message.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";

@@ -2,9 +2,9 @@ import { eventHandlers, setApplicationId, setBotId } from "../../bot.ts";
 import { cache, cacheHandlers } from "../../cache.ts";
 import { initialMemberLoadQueue } from "../../structures/guild.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { Ready } from "../../types/gateway/ready.ts";
-import { GuildMemberWithUser } from "../../types/mod.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { Ready } from "../../types/gateway/ready.ts";
+import type { GuildMemberWithUser } from "../../types/mod.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 import { ws } from "../../ws/ws.ts";
 

@@ -1,5 +1,5 @@
-import { DiscordImageFormat } from "../../types/misc/image_format.ts";
-import { DiscordImageSize } from "../../types/misc/image_size.ts";
+import type { DiscordImageFormat } from "../../types/misc/image_format.ts";
+import type { DiscordImageSize } from "../../types/misc/image_size.ts";
 import { endpoints } from "../../util/constants.ts";
 import { formatImageURL } from "../../util/utils.ts";
 

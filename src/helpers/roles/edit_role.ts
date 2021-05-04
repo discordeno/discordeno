@@ -1,6 +1,7 @@
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { CreateGuildRole, Role } from "../../types/mod.ts";
+import type { CreateGuildRole } from "../../types/guilds/create_guild_role.ts";
+import type { Role } from "../../types/permissions/role.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,

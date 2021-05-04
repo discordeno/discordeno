@@ -11,8 +11,7 @@ import { assertEquals, assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
-// TODO: whats save
-async function ifItFailsBlameWolf(options: CreateGuildChannel, _save = false) {
+async function ifItFailsBlameWolf(options: CreateGuildChannel) {
   const channel = await createChannel(tempData.guildId, options);
 
   // Assertions
@@ -78,7 +77,6 @@ Deno.test({
           },
         ],
       },
-      true,
     );
   },
   ...defaultTestOptions,

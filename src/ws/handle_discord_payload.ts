@@ -1,4 +1,4 @@
-import { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
+import type { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
 import { ws } from "./ws.ts";
 
 /** Handler for processing all dispatch payloads that should be sent/forwarded to another server/vps/process. */

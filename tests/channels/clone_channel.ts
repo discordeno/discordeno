@@ -10,8 +10,7 @@ import { assertEquals, assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
-// TODO: whats save
-async function ifItFailsBlameWolf(options: CreateGuildChannel, _save = false) {
+async function ifItFailsBlameWolf(options: CreateGuildChannel) {
   const channel = await createChannel(tempData.guildId, options);
 
   const cloned = await cloneChannel(channel.id);
@@ -51,7 +50,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, _save = false) {
 Deno.test({
   name: "[channel] clone a new text channel",
   async fn() {
-    await ifItFailsBlameWolf({ name: "Discordeno-clone-test" }, false);
+    await ifItFailsBlameWolf({ name: "Discordeno-clone-test" });
   },
   ...defaultTestOptions,
 });
@@ -64,7 +63,6 @@ Deno.test({
         name: "Discordeno-clone-test",
         type: DiscordChannelTypes.GuildCategory,
       },
-      false,
     );
   },
   ...defaultTestOptions,
@@ -78,7 +76,6 @@ Deno.test({
         name: "Discordeno-clone-test",
         type: DiscordChannelTypes.GuildVoice,
       },
-      false,
     );
   },
   ...defaultTestOptions,
@@ -93,7 +90,6 @@ Deno.test({
         type: DiscordChannelTypes.GuildVoice,
         bitrate: 32000,
       },
-      false,
     );
   },
   ...defaultTestOptions,
@@ -108,7 +104,6 @@ Deno.test({
         type: DiscordChannelTypes.GuildVoice,
         userLimit: 32,
       },
-      false,
     );
   },
   ...defaultTestOptions,
@@ -122,7 +117,6 @@ Deno.test({
         name: "Discordeno-clone-test",
         rateLimitPerUser: 2423,
       },
-      false,
     );
   },
   ...defaultTestOptions,
@@ -133,7 +127,6 @@ Deno.test({
   async fn() {
     await ifItFailsBlameWolf(
       { name: "Discordeno-clone-test", nsfw: true },
-      false,
     );
   },
   ...defaultTestOptions,
@@ -154,7 +147,6 @@ Deno.test({
           },
         ],
       },
-      false,
     );
   },
   ...defaultTestOptions,

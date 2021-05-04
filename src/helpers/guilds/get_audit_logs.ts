@@ -1,6 +1,6 @@
 import { rest } from "../../rest/rest.ts";
-import { AuditLog } from "../../types/audit_log/audit_log.ts";
-import { GetGuildAuditLog } from "../../types/audit_log/get_guild_audit_log.ts";
+import type { AuditLog } from "../../types/audit_log/audit_log.ts";
+import type { GetGuildAuditLog } from "../../types/audit_log/get_guild_audit_log.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 import { camelKeysToSnakeCase } from "../../util/utils.ts";

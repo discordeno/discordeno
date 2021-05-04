@@ -1,6 +1,6 @@
 import { rest } from "../../rest/rest.ts";
-import { GetReactions } from "../../types/messages/message_get_reactions.ts";
-import { User } from "../../types/users/user.ts";
+import type { GetReactions } from "../../types/messages/message_get_reactions.ts";
+import type { User } from "../../types/users/user.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 

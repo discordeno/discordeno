@@ -1,13 +1,11 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
-import { ModifyChannel } from "../../types/channels/modify_channel.ts";
-import { ModifyThread } from "../../types/channels/threads/modify_thread.ts";
-import {
-  Channel,
-  DiscordChannelTypes,
-  PermissionStrings,
-} from "../../types/mod.ts";
+import type { Channel } from "../../types/channels/channel.ts";
+import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import type { ModifyChannel } from "../../types/channels/modify_channel.ts";
+import type { ModifyThread } from "../../types/channels/threads/modify_thread.ts";
+import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,
