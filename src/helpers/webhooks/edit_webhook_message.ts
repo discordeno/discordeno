@@ -9,8 +9,7 @@ import { endpoints } from "../../util/constants.ts";
 export async function editWebhookMessage(
   webhookId: bigint,
   webhookToken: string,
-  messageId: bigint,
-  options: EditWebhookMessage,
+  options: EditWebhookMessage & { messageId?: bigint },
 ) {
   if (options.content && options.content.length > 2000) {
     throw Error(Errors.MESSAGE_MAX_LENGTH);
@@ -62,7 +61,9 @@ export async function editWebhookMessage(
 
   const result = await rest.runMethod<Message>(
     "patch",
-    endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId),
+    options.messageId
+      ? endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, options.messageId)
+      : endpoints.WEBHOOK_MESSAGE_ORIGINAL(webhookId, webhookToken),
     { ...options, allowedMentions: options.allowedMentions },
   );
 

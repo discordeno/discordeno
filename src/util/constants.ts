@@ -138,6 +138,8 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/webhooks/${webhookId}`,
   WEBHOOK_MESSAGE: (webhookId: bigint, token: string, messageId: bigint) =>
     `${baseEndpoints.BASE_URL}/webhooks/${webhookId}/${token}/messages/${messageId}`,
+  WEBHOOK_MESSAGE_ORIGINAL: (webhookId: bigint, token: string) =>
+    `${baseEndpoints.BASE_URL}/webhooks/${webhookId}/${token}/messages/@original`,
   WEBHOOK_SLACK: (webhookId: bigint, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${webhookId}/${token}/slack`,
   WEBHOOK_GITHUB: (webhookId: bigint, token: string) =>
