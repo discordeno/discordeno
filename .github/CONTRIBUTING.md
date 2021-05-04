@@ -38,10 +38,9 @@
 
 ## Types Guide
 
-- Must use snake case (according to Discord API).
+- Must use camel case (same property name as in the docs just in camel case).
 - Each field or property must be accompanied with a reasonable JSDoc comment
   right above its type definition.
-- The name of the type must be prefixed with `Discord`.
 - Must be placed inside of the types module (in `src/types` directory).
 
 Example:
@@ -61,6 +60,4 @@ export interface User {
   flags?: number;
   premiumType?: number;
 }
-
-export type DiscordUser = SnakeCasedPropertiesDeep<DiscordUserInternal>;
 ```
