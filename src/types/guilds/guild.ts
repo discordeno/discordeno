@@ -79,6 +79,9 @@ export interface Guild {
   members?: GuildMember[];
   /** Channels in the guild */
   channels?: Channel[];
+  // TODO: check if need to omit
+  /** All active threads in the guild that the current user has permission to view */
+  threads?: Channel[];
   /** Presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
   presences?: Partial<PresenceUpdate>[];
   /** The maximum number of presences for the guild (the default value, currently 25000, is in effect when null is returned) */

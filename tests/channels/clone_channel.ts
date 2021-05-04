@@ -61,7 +61,7 @@ Deno.test({
     await ifItFailsBlameWolf(
       {
         name: "Discordeno-clone-test",
-        type: DiscordChannelTypes.GUILD_CATEGORY,
+        type: DiscordChannelTypes.GuildCategory,
       },
     );
   },
@@ -74,7 +74,7 @@ Deno.test({
     await ifItFailsBlameWolf(
       {
         name: "Discordeno-clone-test",
-        type: DiscordChannelTypes.GUILD_VOICE,
+        type: DiscordChannelTypes.GuildVoice,
       },
     );
   },
@@ -87,7 +87,7 @@ Deno.test({
     await ifItFailsBlameWolf(
       {
         name: "discordeno-clone-test",
-        type: DiscordChannelTypes.GUILD_VOICE,
+        type: DiscordChannelTypes.GuildVoice,
         bitrate: 32000,
       },
     );
@@ -101,7 +101,7 @@ Deno.test({
     await ifItFailsBlameWolf(
       {
         name: "Discordeno-clone-test",
-        type: DiscordChannelTypes.GUILD_VOICE,
+        type: DiscordChannelTypes.GuildVoice,
         userLimit: 32,
       },
     );

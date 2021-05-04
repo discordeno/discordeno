@@ -16,9 +16,12 @@ export async function startTyping(channelId: bigint) {
   if (channel) {
     if (
       ![
-        DiscordChannelTypes.DM,
-        DiscordChannelTypes.GUILD_NEWS,
-        DiscordChannelTypes.GUILD_TEXT,
+        DiscordChannelTypes.Dm,
+        DiscordChannelTypes.GuildNews,
+        DiscordChannelTypes.GuildText,
+        DiscordChannelTypes.GuildNewsThread,
+        DiscordChannelTypes.GuildPivateThread,
+        DiscordChannelTypes.GuildPublicThread,
       ].includes(channel.type)
     ) {
       throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);

@@ -2,13 +2,14 @@
 export const BASE_URL = "https://discord.com/api";
 
 /** https://discord.com/developers/docs/reference#api-versioning-api-versions */
-export const API_VERSION = 8;
+export const API_VERSION = 9;
 
 /** https://discord.com/developers/docs/topics/gateway#gateways-gateway-versions */
-export const GATEWAY_VERSION = 8;
+export const GATEWAY_VERSION = 9;
 
+// TODO: update this version
 /** https://github.com/discordeno/discordeno/releases */
-export const DISCORDENO_VERSION = 11;
+export const DISCORDENO_VERSION = "11.0.0";
 
 /** https://discord.com/developers/docs/reference#user-agent */
 export const USER_AGENT =
@@ -76,6 +77,28 @@ export const endpoints = {
     `${CHANNEL_BASE(channelId)}/permissions/${overwriteId}`,
   // Bots SHALL NOT use this endpoint but they can
   CHANNEL_TYPING: (channelId: bigint) => `${CHANNEL_BASE(channelId)}/typing`,
+
+  // Thread Endpoints
+  THREAD_START_PUBLIC: (channelId: bigint, messageId: bigint) =>
+    `${endpoints.CHANNEL_MESSAGE(channelId, messageId)}/threads`,
+  THREAD_START_PRIVATE: (channelId: bigint) =>
+    `${CHANNEL_BASE(channelId)}/threads`,
+  THREAD_ACTIVE: (channelId: bigint) =>
+    `${CHANNEL_BASE(channelId)}/threads/active`,
+  THREAD_MEMBERS: (channelId: bigint) =>
+    `${CHANNEL_BASE(channelId)}/thread-members`,
+  THREAD_ME: (channelId: bigint) =>
+    `${endpoints.THREAD_MEMBERS(channelId)}/@me`,
+  THREAD_USER: (channelId: bigint, userId: bigint) =>
+    `${endpoints.THREAD_MEMBERS(channelId)}/${userId}`,
+  THREAD_ARCHIVED_BASE: (channelId: bigint) =>
+    `${CHANNEL_BASE(channelId)}/threads/archived`,
+  THREAD_ARCHIVED_PUBLIC: (channelId: bigint) =>
+    `${endpoints.THREAD_ARCHIVED_BASE(channelId)}/public`,
+  THREAD_ARCHIVED_PRIVATE: (channelId: bigint) =>
+    `${endpoints.THREAD_ARCHIVED_BASE(channelId)}/private`,
+  THREAD_ARCHIVED_PRIVATE_JOINED: (channelId: bigint) =>
+    `${CHANNEL_BASE(channelId)}/users/@me/threads/archived/private`,
 
   // Guild Endpoints
   GUILDS: `${baseEndpoints.BASE_URL}/guilds`,
