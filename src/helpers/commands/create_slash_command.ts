@@ -1,7 +1,7 @@
 import { applicationId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
-import { CreateGlobalApplicationCommand } from "../../types/interactions/create_global_application_command.ts";
-import { ApplicationCommand } from "../../types/mod.ts";
+import type { ApplicationCommand } from "../../types/interactions/application_command.ts";
+import type { CreateGlobalApplicationCommand } from "../../types/interactions/create_global_application_command.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   camelKeysToSnakeCase,

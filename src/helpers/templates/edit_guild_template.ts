@@ -1,6 +1,6 @@
 import { rest } from "../../rest/rest.ts";
-import { ModifyGuildTemplate } from "../../types/templates/modify_guild_template.ts";
-import { Template } from "../../types/templates/template.ts";
+import type { ModifyGuildTemplate } from "../../types/templates/modify_guild_template.ts";
+import type { Template } from "../../types/templates/template.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 

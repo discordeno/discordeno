@@ -1,6 +1,6 @@
-import { DiscordOverwrite } from "../../types/channels/overwrite.ts";
+import type { DiscordOverwrite } from "../../types/channels/overwrite.ts";
 import { DiscordBitwisePermissionFlags } from "../../types/permissions/bitwise_permission_flags.ts";
-import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
+import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(

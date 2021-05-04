@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { GetGuildPruneCountQuery } from "../../types/guilds/get_guild_prune_count.ts";
+import type { GetGuildPruneCountQuery } from "../../types/guilds/get_guild_prune_count.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";

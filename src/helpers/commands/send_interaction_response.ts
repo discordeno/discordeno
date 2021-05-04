@@ -1,7 +1,7 @@
 import { applicationId, eventHandlers } from "../../bot.ts";
 import { cache } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
-import { DiscordenoInteractionResponse } from "../../types/discordeno/interaction_response.ts";
+import type { DiscordenoInteractionResponse } from "../../types/discordeno/interaction_response.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /**

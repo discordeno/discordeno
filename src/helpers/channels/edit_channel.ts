@@ -1,7 +1,7 @@
 import { eventHandlers } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
-import { ModifyChannel } from "../../types/channels/modify_channel.ts";
-import { Channel } from "../../types/mod.ts";
+import type { Channel } from "../../types/channels/channel.ts";
+import type { ModifyChannel } from "../../types/channels/modify_channel.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,

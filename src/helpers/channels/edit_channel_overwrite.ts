@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { Overwrite } from "../../types/channels/overwrite.ts";
+import type { Overwrite } from "../../types/channels/overwrite.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,

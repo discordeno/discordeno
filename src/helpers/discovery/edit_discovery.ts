@@ -1,6 +1,6 @@
 import { rest } from "../../rest/rest.ts";
-import { DiscoveryMetadata } from "../../types/discovery/discovery_metadata.ts";
-import { ModifyGuildDiscoveryMetadata } from "../../types/discovery/modify_guild_discovery_metadata.ts";
+import type { DiscoveryMetadata } from "../../types/discovery/discovery_metadata.ts";
+import type { ModifyGuildDiscoveryMetadata } from "../../types/discovery/modify_guild_discovery_metadata.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 import { camelKeysToSnakeCase } from "../../util/utils.ts";

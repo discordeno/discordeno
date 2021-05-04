@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { Ban } from "../../types/guilds/ban.ts";
+import type { Ban } from "../../types/guilds/ban.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";

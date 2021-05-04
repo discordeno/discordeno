@@ -1,9 +1,9 @@
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
-import { Message } from "../../types/messages/message.ts";
+import type { Message } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";
-import { EditWebhookMessage } from "../../types/webhooks/edit_webhook_message.ts";
+import type { EditWebhookMessage } from "../../types/webhooks/edit_webhook_message.ts";
 import { endpoints } from "../../util/constants.ts";
 
 export async function editWebhookMessage(

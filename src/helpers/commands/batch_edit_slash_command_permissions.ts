@@ -1,6 +1,6 @@
 import { applicationId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
-import { ApplicationCommandPermissions } from "../../types/interactions/application_command_permissions.ts";
+import type { ApplicationCommandPermissions } from "../../types/interactions/application_command_permissions.ts";
 import { endpoints } from "../../util/constants.ts";
 import { camelKeysToSnakeCase } from "../../util/utils.ts";
 

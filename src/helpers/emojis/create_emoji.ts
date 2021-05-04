@@ -1,6 +1,6 @@
 import { rest } from "../../rest/rest.ts";
 import { CreateGuildEmoji } from "../../types/emojis/create_guild_emoji.ts";
-import { Emoji } from "../../types/emojis/emoji.ts";
+import type { Emoji } from "../../types/emojis/emoji.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
