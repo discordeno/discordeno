@@ -1,7 +1,7 @@
 import { cache, cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { GuildMembersChunk } from "../../types/members/guild_members_chunk.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { GuildMembersChunk } from "../../types/members/guild_members_chunk.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 import { Collection } from "../../util/collection.ts";
 

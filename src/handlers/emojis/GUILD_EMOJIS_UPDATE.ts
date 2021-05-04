@@ -1,7 +1,7 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { GuildEmojisUpdate } from "../../types/emojis/guild_emojis_update.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { GuildEmojisUpdate } from "../../types/emojis/guild_emojis_update.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 import { Collection } from "../../util/collection.ts";
 

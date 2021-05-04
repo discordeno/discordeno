@@ -1,7 +1,7 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import {
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type {
   MessageReactionRemoveAll,
 } from "../../types/messages/message_reaction_remove_all.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
