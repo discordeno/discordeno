@@ -4,7 +4,7 @@ import { deleteRole } from "../helpers/roles/delete_role.ts";
 import { editRole } from "../helpers/roles/edit_role.ts";
 import { CreateGuildRole } from "../types/guilds/create_guild_role.ts";
 import { Errors } from "../types/misc/errors.ts";
-import { Role } from "../types/permissions/role.ts";
+import type { Role } from "../types/permissions/role.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { Collection } from "../util/collection.ts";
 import { highestRole } from "../util/permissions.ts";
@@ -138,6 +138,7 @@ export async function createDiscordenoRole(
     integrationId: createNewProp(
       tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined,
     ),
+    bitfield: createNewProp(bitfield),
   });
 
   return role;

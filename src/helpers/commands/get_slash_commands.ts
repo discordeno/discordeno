@@ -1,6 +1,6 @@
 import { applicationId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
-import { ApplicationCommand } from "../../types/interactions/application_command.ts";
+import type { ApplicationCommand } from "../../types/interactions/application_command.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 

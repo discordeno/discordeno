@@ -1,8 +1,8 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { Guild } from "../../types/guilds/guild.ts";
-import { ModifyGuild } from "../../types/guilds/modify_guild.ts";
+import type { Guild } from "../../types/guilds/guild.ts";
+import type { ModifyGuild } from "../../types/guilds/modify_guild.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";

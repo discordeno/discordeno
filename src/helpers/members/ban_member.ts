@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { CreateGuildBan } from "../../types/guilds/create_guild_ban.ts";
+import type { CreateGuildBan } from "../../types/guilds/create_guild_ban.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 import { camelKeysToSnakeCase } from "../../util/utils.ts";

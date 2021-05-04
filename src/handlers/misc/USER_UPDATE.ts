@@ -1,7 +1,7 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { User } from "../../types/users/user.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { User } from "../../types/users/user.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleUserUpdate(data: DiscordGatewayPayload) {

@@ -1,10 +1,10 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
+import type { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
+import type { ModifyGuildMember } from "../../types/guilds/modify_guild_member.ts";
 import { Errors } from "../../types/misc/errors.ts";
-import { ModifyGuildMember } from "../../types/mod.ts";
-import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
+import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { bigintToSnowflake } from "../../util/bigint.ts";
 import { endpoints } from "../../util/constants.ts";
 import {

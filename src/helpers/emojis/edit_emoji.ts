@@ -1,6 +1,6 @@
 import { rest } from "../../rest/rest.ts";
-import { ModifyGuildEmoji } from "../../types/emojis/modify_guild_emoji.ts";
-import { Emoji } from "../../types/mod.ts";
+import type { Emoji } from "../../types/emojis/emoji.ts";
+import type { ModifyGuildEmoji } from "../../types/emojis/modify_guild_emoji.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 

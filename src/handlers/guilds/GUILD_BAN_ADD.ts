@@ -1,7 +1,7 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { GuildBanAddRemove } from "../../types/guilds/guild_ban_add_remove.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { GuildBanAddRemove } from "../../types/guilds/guild_ban_add_remove.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleGuildBanAdd(data: DiscordGatewayPayload) {

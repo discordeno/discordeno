@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { Template } from "../../types/templates/template.ts";
+import type { Template } from "../../types/templates/template.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";

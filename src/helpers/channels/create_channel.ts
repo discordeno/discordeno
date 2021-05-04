@@ -2,13 +2,13 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { Channel } from "../../types/channels/channel.ts";
+import type { Channel } from "../../types/channels/channel.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
-import {
+import type {
   CreateGuildChannel,
   DiscordCreateGuildChannel,
 } from "../../types/guilds/create_guild_channel.ts";
-import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
+import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,

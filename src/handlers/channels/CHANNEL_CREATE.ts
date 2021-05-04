@@ -1,8 +1,8 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
-import { Channel } from "../../types/channels/channel.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { Channel } from "../../types/channels/channel.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 
 export async function handleChannelCreate(data: DiscordGatewayPayload) {
   const payload = data.d as Channel;

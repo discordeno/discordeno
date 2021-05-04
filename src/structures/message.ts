@@ -10,10 +10,10 @@ import { removeAllReactions } from "../helpers/messages/remove_all_reactions.ts"
 import { removeReaction } from "../helpers/messages/remove_reaction.ts";
 import { removeReactionEmoji } from "../helpers/messages/remove_reaction_emoji.ts";
 import { sendMessage } from "../helpers/messages/send_message.ts";
-import { GuildMember } from "../types/guilds/guild_member.ts";
-import { CreateMessage } from "../types/messages/create_message.ts";
-import { EditMessage } from "../types/messages/edit_message.ts";
-import { Message } from "../types/messages/message.ts";
+import type { GuildMember } from "../types/guilds/guild_member.ts";
+import type { CreateMessage } from "../types/messages/create_message.ts";
+import type { EditMessage } from "../types/messages/edit_message.ts";
+import type { Message } from "../types/messages/message.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "../util/bigint.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
 import { createNewProp } from "../util/utils.ts";
@@ -234,6 +234,7 @@ export async function createDiscordenoMessage(data: Message) {
         }
         : undefined,
     ),
+    bitfield: createNewProp(bitfield),
   });
 
   return message;

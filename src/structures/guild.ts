@@ -13,18 +13,18 @@ import { getInvites } from "../helpers/invites/get_invites.ts";
 import { banMember } from "../helpers/members/ban_member.ts";
 import { unbanMember } from "../helpers/members/unban_member.ts";
 import { GetGuildAuditLog } from "../types/audit_log/get_guild_audit_log.ts";
-import { Emoji } from "../types/emojis/emoji.ts";
-import { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
-import { Guild } from "../types/guilds/guild.ts";
+import type { Emoji } from "../types/emojis/emoji.ts";
+import type { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
+import type { Guild } from "../types/guilds/guild.ts";
 import { DiscordGuildFeatures } from "../types/guilds/guild_features.ts";
-import {
+import type {
   GuildMember,
   GuildMemberWithUser,
 } from "../types/guilds/guild_member.ts";
-import { ModifyGuild } from "../types/guilds/modify_guild.ts";
-import { DiscordImageFormat } from "../types/misc/image_format.ts";
-import { DiscordImageSize } from "../types/misc/image_size.ts";
-import { PresenceUpdate } from "../types/misc/presence_update.ts";
+import type { ModifyGuild } from "../types/guilds/modify_guild.ts";
+import type { DiscordImageFormat } from "../types/misc/image_format.ts";
+import type { DiscordImageSize } from "../types/misc/image_size.ts";
+import type { PresenceUpdate } from "../types/misc/presence_update.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
@@ -237,6 +237,7 @@ export async function createDiscordenoGuild(
     voiceStates: createNewProp(
       new Collection(voiceStateStructs.map((vs) => [vs.userId, vs])),
     ),
+    bitfield: createNewProp(bitfield),
   });
 
   // ONLY ADD TO QUEUE WHEN BOT IS NOT FULLY ONLINE
