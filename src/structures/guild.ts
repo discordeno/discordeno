@@ -47,6 +47,19 @@ const GUILD_SNOWFLAKES = [
   "publicUpdatesChannelId",
 ];
 
+export const guildToggles = {
+  /** Whether this user is owner of this guild */
+  owner: 1n,
+  /** Whether the guild widget is enabled */
+  widgetEnabled: 2n,
+  /** Whether this is a large guild */
+  large: 4n,
+  /** Whether this guild is unavailable due to an outage */
+  unavailable: 8n,
+  /** Whether this server is an nsfw guild */
+  nsfw: 16n,
+};
+
 const baseGuild: Partial<DiscordenoGuild> = {
   get members() {
     return cache.members.filter((member) => member.guilds.has(this.id!));
@@ -120,6 +133,21 @@ const baseGuild: Partial<DiscordenoGuild> = {
   leave() {
     return leaveGuild(this.id!);
   },
+  get isOwner() {
+    return Boolean(this.bitfield! & guildToggles.owner);
+  },
+  get widgetEnabled() {
+    return Boolean(this.bitfield! & guildToggles.widgetEnabled);
+  },
+  get large() {
+    return Boolean(this.bitfield! & guildToggles.large);
+  },
+  get unavailable() {
+    return Boolean(this.bitfield! & guildToggles.unavailable);
+  },
+  get nsfw() {
+    return Boolean(this.bitfield! & guildToggles.nsfw);
+  },
 };
 
 export async function createDiscordenoGuild(
@@ -137,6 +165,7 @@ export async function createDiscordenoGuild(
     ...rest
   } = data;
 
+  let bitfield = 0n;
   const guildId = snowflakeToBigint(rest.id);
 
   const roles = await Promise.all(
@@ -171,6 +200,12 @@ export async function createDiscordenoGuild(
       "loop",
       `Running for of loop in createDiscordenoGuild function.`,
     );
+
+    const toggleBits = guildToggles[key as keyof typeof guildToggles];
+    if (toggleBits) {
+      bitfield |= value ? toggleBits : 0n;
+      continue;
+    }
 
     props[key] = createNewProp(
       GUILD_SNOWFLAKES.includes(key)
@@ -278,6 +313,10 @@ export interface DiscordenoGuild extends
   voiceStates: Collection<bigint, DiscordenoVoiceState>;
   /** Custom guild emojis */
   emojis: Collection<bigint, Emoji>;
+  /** Whether the bot is the owner of this guild */
+  isOwner: boolean;
+  /** Holds all the boolean toggles. */
+  bitfield: bigint;
 
   // GETTERS
   /** Members in this guild. */
