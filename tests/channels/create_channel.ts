@@ -160,7 +160,7 @@ Deno.test({
         permissionOverwrites: [
           {
             id: bigintToSnowflake(botId),
-            type: DiscordOverwriteTypes.MEMBER,
+            type: DiscordOverwriteTypes.Member,
             allow: ["VIEW_CHANNEL"],
             deny: [],
           },

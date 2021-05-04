@@ -26,7 +26,7 @@ export async function sendMessage(
   if (channel) {
     if (
       ![
-        DiscordChannelTypes.Dm,
+        DiscordChannelTypes.DM,
         DiscordChannelTypes.GuildNews,
         DiscordChannelTypes.GuildText,
         DiscordChannelTypes.GuildPublicThread,

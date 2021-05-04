@@ -92,10 +92,10 @@ const baseGuild: Partial<DiscordenoGuild> = {
     return cache.members.get(this.ownerId!);
   },
   get partnered() {
-    return Boolean(this.features?.includes(DiscordGuildFeatures.PARTNERED));
+    return Boolean(this.features?.includes(DiscordGuildFeatures.Partnered));
   },
   get verified() {
-    return Boolean(this.features?.includes(DiscordGuildFeatures.VERIFIED));
+    return Boolean(this.features?.includes(DiscordGuildFeatures.Verified));
   },
   bannerURL(size, format) {
     return guildBannerURL(this.id!, this.banner!, size, format);
