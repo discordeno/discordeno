@@ -1,7 +1,7 @@
 # Contributing
 
 - Read the [style guide](#style-guide).
-- Ask for help on the [official Discord server](https:)
+- Ask for help on the [official Discord server](https://discord.gg/5vBgXk3UcZ)
 - If you are going to work on an issue, mention so in the issue comments before
   you start working on the issue.
 - If you are going to work on a new feature, create an issue and discuss with
