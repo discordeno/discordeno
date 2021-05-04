@@ -152,10 +152,12 @@ export async function createDiscordenoMember(
 
   // User was never cached before
   member.guilds.set(guildId, {
-    ...data,
+    nick: data.nick,
     roles: data.roles.map((id) => snowflakeToBigint(id)),
     joinedAt: Date.parse(joinedAt),
     premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
+    deaf: data.deaf,
+    mute: data.mute,
   });
 
   return member;
