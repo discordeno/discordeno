@@ -28,5 +28,3 @@ export interface CreateMessage {
 export type DiscordCreateMessage = SnakeCasedPropertiesDeep<
   Omit<CreateMessage, "file">
 >;
-
-// TODO: check this

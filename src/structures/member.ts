@@ -23,10 +23,20 @@ import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 
 const MEMBER_SNOWFLAKES = [
-  "roles",
   "id",
   "discriminator",
 ];
+
+export const memberToggles = {
+  /** Whether the user belongs to an OAuth2 application */
+  bot: 1n,
+  /** Whether the user is an Official Discord System user (part of the urgent message system) */
+  system: 2n,
+  /** Whether the user has two factor enabled on their account */
+  mfaEnabled: 4n,
+  /** Whether the email on this account has been verified */
+  verified: 8n,
+};
 
 const baseMember: Partial<DiscordenoMember> = {
   get avatarURL() {
@@ -76,6 +86,18 @@ const baseMember: Partial<DiscordenoMember> = {
   removeRole(guildId, roleId, reason) {
     return removeRole(guildId, this.id!, roleId, reason);
   },
+  get bot() {
+    return Boolean(this.bitfield! & memberToggles.bot);
+  },
+  get system() {
+    return Boolean(this.bitfield! & memberToggles.system);
+  },
+  get mfaEnabled() {
+    return Boolean(this.bitfield! & memberToggles.mfaEnabled);
+  },
+  get verified() {
+    return Boolean(this.bitfield! & memberToggles.verified);
+  },
 };
 
 export async function createDiscordenoMember(
@@ -87,34 +109,22 @@ export async function createDiscordenoMember(
     user,
     joinedAt,
     premiumSince,
-    ...rest
   } = data;
 
+  let bitfield = 0n;
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
-
-  for (const [key, value] of Object.entries(rest)) {
-    eventHandlers.debug?.(
-      "loop",
-      `Running for of loop for Object.keys(rest) in DiscordenoMember function.`,
-    );
-
-    if (key === "roles") {
-      props[key] = value.map((id: string) => snowflakeToBigint(id));
-      continue;
-    }
-
-    props[key] = createNewProp(
-      MEMBER_SNOWFLAKES.includes(key)
-        ? value ? snowflakeToBigint(value) : undefined
-        : value,
-    );
-  }
 
   for (const [key, value] of Object.entries(user)) {
     eventHandlers.debug?.(
       "loop",
       `Running for of for Object.keys(user) loop in DiscordenoMember function.`,
     );
+
+    const toggleBits = memberToggles[key as keyof typeof memberToggles];
+    if (toggleBits) {
+      bitfield |= value ? toggleBits : 0n;
+      continue;
+    }
 
     props[key] = createNewProp(
       MEMBER_SNOWFLAKES.includes(key)
@@ -142,12 +152,12 @@ export async function createDiscordenoMember(
 
   // User was never cached before
   member.guilds.set(guildId, {
-    nick: rest.nick,
-    roles: rest.roles.map((id) => snowflakeToBigint(id)),
+    nick: data.nick,
+    roles: data.roles.map((id) => snowflakeToBigint(id)),
     joinedAt: Date.parse(joinedAt),
     premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
-    deaf: rest.deaf,
-    mute: rest.mute,
+    deaf: data.deaf,
+    mute: data.mute,
   });
 
   return member;
@@ -155,16 +165,10 @@ export async function createDiscordenoMember(
 
 export interface DiscordenoMember extends
   Omit<
-    GuildMember,
-    "roles"
-  >,
-  Omit<
     User,
     | "discriminator"
     | "id"
   > {
-  /** Array of role object ids */
-  roles: bigint[];
   /** The user's id */
   id: bigint;
   /** The user's 4-digit discord-tag */
@@ -178,6 +182,8 @@ export interface DiscordenoMember extends
       roles: bigint[];
     }
   >;
+  /** Holds all the boolean toggles. */
+  bitfield: bigint;
 
   // GETTERS
   /** The avatar url using the default format and size. */

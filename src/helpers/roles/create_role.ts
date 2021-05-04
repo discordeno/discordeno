@@ -31,9 +31,13 @@ export async function createRole(
     role: result,
     guildId,
   });
-  const guild = await cacheHandlers.get("guilds", guildId);
-  guild?.roles.set(role.id, role);
 
-  // TODO: ADD TO CACHE?
+  const guild = await cacheHandlers.get("guilds", guildId);
+  if (guild) {
+    guild.roles.set(role.id, role);
+
+    await cacheHandlers.set("guilds", guildId, guild);
+  }
+
   return role;
 }
