@@ -90,14 +90,14 @@ const baseMember: Partial<DiscordenoMember> = {
     return Boolean(this.bitfield! & memberToggles.bot);
   },
   get system() {
-    return Boolean(this.bitfield! & memberToggles.system)
+    return Boolean(this.bitfield! & memberToggles.system);
   },
   get mfaEnabled() {
-    return Boolean(this.bitfield! & memberToggles.mfaEnabled)
+    return Boolean(this.bitfield! & memberToggles.mfaEnabled);
   },
   get verified() {
-    return Boolean(this.bitfield! & memberToggles.verified)
-  }
+    return Boolean(this.bitfield! & memberToggles.verified);
+  },
 };
 
 export async function createDiscordenoMember(
