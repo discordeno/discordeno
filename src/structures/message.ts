@@ -234,6 +234,7 @@ export async function createDiscordenoMessage(data: Message) {
         }
         : undefined,
     ),
+    bitfield: createNewProp(bitfield),
   });
 
   return message;

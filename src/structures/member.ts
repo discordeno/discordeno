@@ -137,6 +137,7 @@ export async function createDiscordenoMember(
     ...props,
     /** The guild related data mapped by guild id */
     guilds: createNewProp(new Collection<bigint, GuildMember>()),
+    bitfield: createNewProp(bitfield),
   });
 
   const cached = await cacheHandlers.get("members", snowflakeToBigint(user.id));

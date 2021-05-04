@@ -138,6 +138,7 @@ export async function createDiscordenoRole(
     integrationId: createNewProp(
       tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined,
     ),
+    bitfield: createNewProp(bitfield),
   });
 
   return role;

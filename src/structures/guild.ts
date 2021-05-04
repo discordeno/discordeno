@@ -237,6 +237,7 @@ export async function createDiscordenoGuild(
     voiceStates: createNewProp(
       new Collection(voiceStateStructs.map((vs) => [vs.userId, vs])),
     ),
+    bitfield: createNewProp(bitfield),
   });
 
   // ONLY ADD TO QUEUE WHEN BOT IS NOT FULLY ONLINE
