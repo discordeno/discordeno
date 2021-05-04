@@ -29,6 +29,15 @@ const MESSAGE_SNOWFLAKES = [
   "webhookId",
 ];
 
+const messageToggles = {
+  /** Whether this was a TTS message */
+  tts: 1n,
+  /** Whether this message mentions everyone */
+  mentionEveryone: 2n,
+  /** Whether this message is pinned */
+  pinned: 4n,
+};
+
 const baseMessage: Partial<DiscordenoMessage> = {
   get channel() {
     if (this.guildId) return cache.channels.get(this.channelId!);
@@ -132,6 +141,15 @@ const baseMessage: Partial<DiscordenoMessage> = {
   removeReaction(reaction, userId) {
     return removeReaction(this.channelId!, this.id!, reaction, { userId });
   },
+  get tts() {
+    return Boolean(this.bitfield! & messageToggles.tts);
+  },
+  get mentionEveryone() {
+    return Boolean(this.bitfield! & messageToggles.mentionEveryone);
+  },
+  get pinned() {
+    return Boolean(this.bitfield! & messageToggles.pinned);
+  },
 };
 
 export async function createDiscordenoMessage(data: Message) {
@@ -146,12 +164,20 @@ export async function createDiscordenoMessage(data: Message) {
     ...rest
   } = data;
 
+  let bitfield = 0n;
+
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const [key, value] of Object.entries(rest)) {
     eventHandlers.debug?.(
       "loop",
       `Running for of loop in createDiscordenoMessage function.`,
     );
+
+    const toggleBits = messageToggles[key as keyof typeof messageToggles];
+    if (toggleBits) {
+      bitfield |= value ? toggleBits : 0n;
+      continue;
+    }
 
     props[key] = createNewProp(
       MESSAGE_SNOWFLAKES.includes(key)
@@ -231,6 +257,8 @@ export interface DiscordenoMessage extends
   isBot: boolean;
   /** The username#discrimnator for the user who sent this message */
   tag: string;
+  /** Holds all the boolean toggles. */
+  bitfield: bigint;
 
   // For better user experience
 
