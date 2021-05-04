@@ -82,7 +82,7 @@ export async function createDiscordenoVoiceState(
 
     const toggleBits = voiceStateToggles[key as keyof typeof voiceStateToggles];
     if (toggleBits) {
-      bitfield |= toggleBits;
+      bitfield |= value ? toggleBits : 0n;
       continue;
     }
 

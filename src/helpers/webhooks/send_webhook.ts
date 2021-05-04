@@ -6,8 +6,8 @@ import { Errors } from "../../types/misc/errors.ts";
 import { ExecuteWebhook } from "../../types/webhooks/execute_webhook.ts";
 import { endpoints } from "../../util/constants.ts";
 
-/** Execute a webhook with webhook Id and webhook token */
-export async function executeWebhook(
+/** Send a webhook with webhook Id and webhook token */
+export async function sendWebhook(
   webhookId: bigint,
   webhookToken: string,
   options: ExecuteWebhook,
@@ -75,7 +75,6 @@ export async function executeWebhook(
       avatar_url: options.avatarUrl,
     },
   );
-  // TODO: not sure
   if (!options.wait) return;
 
   return structures.createDiscordenoMessage(result);

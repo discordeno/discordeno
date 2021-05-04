@@ -35,7 +35,6 @@ export interface DiscordModifyChannel extends
   SnakeCasedPropertiesDeep<
     Omit<ModifyChannel, "permissionOverwrites">
   > {
+  // deno-lint-ignore camelcase
   permission_overwrites?: DiscordOverwrite[];
 }
-
-//TODO: check this

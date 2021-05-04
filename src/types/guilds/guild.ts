@@ -105,7 +105,7 @@ export interface Guild {
   approximateMemberCount?: number;
   /**	Approximate number of non-offline members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
   approximatePresenceCount?: number;
-  /** The welcome screen of a Community guild, shown to new members, returned when in the invite object */
+  /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
   welcomeScreen?: WelcomeScreen;
   /** `true` if this guild is designated as NSFW */
   nsfw: boolean;
