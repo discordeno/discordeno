@@ -1,4 +1,6 @@
+import { Channel } from "../channels/channel.ts";
 import { ChannelMention } from "../channels/channel_mention.ts";
+import { ThreadMember } from "../channels/threads/thread_member.ts";
 import { Embed } from "../embeds/embed.ts";
 import { GuildMember } from "../guilds/guild_member.ts";
 import { MessageInteraction } from "../interactions/message_interaction.ts";
@@ -83,6 +85,8 @@ export interface Message {
   referencedMessage?: Message;
   /** Sent if the message is a response to an Interaction */
   interaction?: MessageInteraction;
+  /** The thread that was started from this message, includes thread member object */
+  thread?: Omit<Channel, "member"> & { member: ThreadMember };
   /** The components related to this message */
   components: MessageComponents;
 }

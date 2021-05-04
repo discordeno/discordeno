@@ -1,8 +1,8 @@
 import { cache } from "../../src/cache.ts";
 import { createChannel } from "../../src/helpers/channels/create_channel.ts";
 import { deleteChannel } from "../../src/helpers/channels/delete_channel.ts";
-import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { delayUntil } from "../util/delay_until.ts";
+import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
 Deno.test({
   name: "[channel] delete a channel without a reason.",
@@ -21,7 +21,7 @@ Deno.test({
     }
 
     // Delete the channel now without a reason
-    await deleteChannel(tempData.guildId, channel.id);
+    await deleteChannel(channel.id);
     // wait 5 seconds to give it time for CHANNEL_DELETE event
     await delayUntil(3000, () => !cache.channels.has(channel.id));
     // Make sure it is gone from cache
@@ -51,7 +51,7 @@ Deno.test({
     }
 
     // Delete the channel now without a reason
-    await deleteChannel(tempData.guildId, channel.id, "with a reason");
+    await deleteChannel(channel.id, "with a reason");
     // wait 5 seconds to give it time for CHANNEL_DELETE event
     await delayUntil(10000, () => !cache.channels.has(channel.id));
     // Make sure it is gone from cache
