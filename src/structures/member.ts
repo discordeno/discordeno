@@ -27,6 +27,17 @@ const MEMBER_SNOWFLAKES = [
   "discriminator",
 ];
 
+export const memberToggles = {
+  /** Whether the user belongs to an OAuth2 application */
+  bot: 1n,
+  /** Whether the user is an Official Discord System user (part of the urgent message system) */
+  system: 2n,
+  /** Whether the user has two factor enabled on their account */
+  mfaEnabled: 4n,
+  /** Whether the email on this account has been verified */
+  verified: 8n,
+};
+
 const baseMember: Partial<DiscordenoMember> = {
   get avatarURL() {
     return avatarURL(this.id!, this.discriminator!, this.avatar!);
@@ -75,6 +86,18 @@ const baseMember: Partial<DiscordenoMember> = {
   removeRole(guildId, roleId, reason) {
     return removeRole(guildId, this.id!, roleId, reason);
   },
+  get bot() {
+    return Boolean(this.bitfield! & memberToggles.bot);
+  },
+  get system() {
+    return Boolean(this.bitfield! & memberToggles.system)
+  },
+  get mfaEnabled() {
+    return Boolean(this.bitfield! & memberToggles.mfaEnabled)
+  },
+  get verified() {
+    return Boolean(this.bitfield! & memberToggles.verified)
+  }
 };
 
 export async function createDiscordenoMember(
@@ -88,6 +111,7 @@ export async function createDiscordenoMember(
     premiumSince,
   } = data;
 
+  let bitfield = 0n;
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
 
   for (const [key, value] of Object.entries(user)) {
@@ -95,6 +119,12 @@ export async function createDiscordenoMember(
       "loop",
       `Running for of for Object.keys(user) loop in DiscordenoMember function.`,
     );
+
+    const toggleBits = memberToggles[key as keyof typeof memberToggles];
+    if (toggleBits) {
+      bitfield |= value ? toggleBits : 0n;
+      continue;
+    }
 
     props[key] = createNewProp(
       MEMBER_SNOWFLAKES.includes(key)
@@ -150,6 +180,8 @@ export interface DiscordenoMember extends
       roles: bigint[];
     }
   >;
+  /** Holds all the boolean toggles. */
+  bitfield: bigint;
 
   // GETTERS
   /** The avatar url using the default format and size. */
