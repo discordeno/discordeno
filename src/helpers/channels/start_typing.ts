@@ -19,6 +19,9 @@ export async function startTyping(channelId: bigint) {
         DiscordChannelTypes.Dm,
         DiscordChannelTypes.GuildNews,
         DiscordChannelTypes.GuildText,
+        DiscordChannelTypes.GuildNewsThread,
+        DiscordChannelTypes.GuildPivateThread,
+        DiscordChannelTypes.GuildPublicThread,
       ].includes(channel.type)
     ) {
       throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
