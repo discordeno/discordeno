@@ -1,12 +1,12 @@
+import { PresenceUpdate } from "../activity/presence_update.ts";
 import { Channel } from "../channels/channel.ts";
 import { Emoji } from "../emojis/emoji.ts";
-import { PresenceUpdate } from "../misc/presence_update.ts";
+import { GuildMember } from "../members/guild_member.ts";
 import { Role } from "../permissions/role.ts";
 import { VoiceState } from "../voice/voice_state.ts";
 import { DiscordDefaultMessageNotificationLevels } from "./default_message_notification_levels.ts";
 import { DiscordExplicitContentFilterLevels } from "./explicit_content_filter_levels.ts";
 import { DiscordGuildFeatures } from "./guild_features.ts";
-import { GuildMember } from "./guild_member.ts";
 import { DiscordMfaLevels } from "./mfa_levels.ts";
 import { DiscordPremiumTiers } from "./premium_tiers.ts";
 import { DiscordSystemChannelFlags } from "./system_channel_flags.ts";

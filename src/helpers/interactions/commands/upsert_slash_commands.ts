@@ -1,9 +1,9 @@
-import { applicationId } from "../../bot.ts";
-import { rest } from "../../rest/rest.ts";
-import type { ApplicationCommand } from "../../types/interactions/application_command.ts";
-import type { EditGlobalApplicationCommand } from "../../types/interactions/edit_global_application_command.ts";
-import { endpoints } from "../../util/constants.ts";
-import { validateSlashCommands } from "../../util/utils.ts";
+import { applicationId } from "../../../bot.ts";
+import { rest } from "../../../rest/rest.ts";
+import type { ApplicationCommand } from "../../../types/interactions/commands/application_command.ts";
+import type { EditGlobalApplicationCommand } from "../../../types/interactions/commands/edit_global_application_command.ts";
+import { endpoints } from "../../../util/constants.ts";
+import { validateSlashCommands } from "../../../util/utils.ts";
 
 /**
  * Bulk edit existing slash commands. If a command does not exist, it will create it.

@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import type { Integration } from "../../types/integration/integration.ts";
+import type { Integration } from "../../types/integrations/integration.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 

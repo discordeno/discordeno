@@ -6,8 +6,8 @@ import { DiscordenoRole } from "../../structures/role.ts";
 import { Collection } from "../../util/collection.ts";
 import { ThreadMember } from "../channels/threads/thread_member.ts";
 import { ThreadMembersUpdate } from "../channels/threads/thread_members_update.ts";
-import { IntegrationCreateUpdate } from "../integration/integration_create_update.ts";
-import { ApplicationCommandCreateUpdateDelete } from "../interactions/application_command_create_update_delete.ts";
+import { IntegrationCreateUpdate } from "../integrations/integration_create_update.ts";
+import { ApplicationCommandCreateUpdateDelete } from "../interactions/commands/application_command_create_update_delete.ts";
 import {
   DiscordGatewayPayload,
   Emoji,

@@ -1,4 +1,4 @@
-import { Integration } from "../integration/integration.ts";
+import { Integration } from "../integrations/integration.ts";
 import { User } from "../users/user.ts";
 import { Webhook } from "../webhooks/webhook.ts";
 import { AuditLogEntry } from "./audit_log_entry.ts";

@@ -3,7 +3,7 @@ import type {
   UpdateOthersVoiceState,
 } from "../../types/guilds/update_others_voice_state.ts";
 import { endpoints } from "../../util/constants.ts";
-import { camelKeysToSnakeCase } from "../../util/utils.ts";
+import { snakelize } from "../../util/utils.ts";
 
 /**
  * Updates another user's voice state.
@@ -22,6 +22,6 @@ export function updateVoiceState(
   return rest.runMethod(
     "patch",
     endpoints.UPDATE_VOICE_STATE(guildId, userId),
-    camelKeysToSnakeCase(data),
+    snakelize(data),
   );
 }

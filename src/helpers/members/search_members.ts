@@ -2,9 +2,9 @@ import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { DiscordenoMember } from "../../structures/member.ts";
 import { structures } from "../../structures/mod.ts";
-import type { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
-import type { SearchGuildMembers } from "../../types/members/search_guild_members.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
+import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
+import type { SearchGuildMembers } from "../../types/members/search_guild_members.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 
