@@ -9,6 +9,7 @@ const guildMemberQueue = new Map<
 >();
 let processingQueue = false;
 
+/** Cache all guild members without need to worry about overwriting something. */
 export async function cacheMembers(
   guildId: bigint,
   members: GuildMemberWithUser[],
