@@ -253,7 +253,6 @@ export interface DiscordenoMessage extends
     | "author"
   > {
   id: bigint;
-  author: undefined;
   /** Whether or not this message was sent by a bot */
   isBot: boolean;
   /** The username#discrimnator for the user who sent this message */
