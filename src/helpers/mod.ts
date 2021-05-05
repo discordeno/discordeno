@@ -19,6 +19,7 @@ import { deleteSlashCommand } from "./commands/delete_slash_command.ts";
 import { deleteSlashResponse } from "./commands/delete_slash_response.ts";
 import { editSlashCommandPermissions } from "./commands/edit_slash_command_permissions.ts";
 import { editSlashResponse } from "./commands/edit_slash_response.ts";
+import { getOriginalInteractionResponse } from "./commands/get_original_interaction_response.ts";
 import { getSlashCommand } from "./commands/get_slash_command.ts";
 import { getSlashCommands } from "./commands/get_slash_commands.ts";
 import { getSlashCommandPermission } from "./commands/get_slash_command_permission.ts";
@@ -111,6 +112,9 @@ import { editGuildTemplate } from "./templates/edit_guild_template.ts";
 import { getGuildTemplates } from "./templates/get_guild_templates.ts";
 import { getTemplate } from "./templates/get_template.ts";
 import { syncGuildTemplate } from "./templates/sync_guild_template.ts";
+// Type Guards
+import { isActionRow } from "./type_guards/is_action_row.ts";
+import { isButton } from "./type_guards/is_button.ts";
 import { createWebhook } from "./webhooks/create_webhook.ts";
 import { deleteWebhook } from "./webhooks/delete_webhook.ts";
 import { deleteWebhookMessage } from "./webhooks/delete_webhook_message.ts";
@@ -118,13 +122,11 @@ import { deleteWebhookWithToken } from "./webhooks/delete_webhook_with_token.ts"
 import { editWebhook } from "./webhooks/edit_webhook.ts";
 import { editWebhookMessage } from "./webhooks/edit_webhook_message.ts";
 import { editWebhookWithToken } from "./webhooks/edit_webhook_with_token.ts";
-import { sendWebhook } from "./webhooks/send_webhook.ts";
 import { getWebhook } from "./webhooks/get_webhook.ts";
 import { getWebhooks } from "./webhooks/get_webhooks.ts";
+import { getWebhookMessage } from "./webhooks/get_webhook_message.ts";
 import { getWebhookWithToken } from "./webhooks/get_webhook_with_token.ts";
-// Type Guards
-import { isActionRow } from "./type_guards/is_action_row.ts";
-import { isButton } from "./type_guards/is_button.ts";
+import { sendWebhook } from "./webhooks/send_webhook.ts";
 
 export {
   addDiscoverySubcategory,
@@ -205,6 +207,7 @@ export {
   getMembers,
   getMessage,
   getMessages,
+  getOriginalInteractionResponse,
   getPins,
   getPruneCount,
   getReactions,
@@ -218,6 +221,7 @@ export {
   getVanityURL,
   getVoiceRegions,
   getWebhook,
+  getWebhookMessage,
   getWebhooks,
   getWebhookWithToken,
   getWelcomeScreen,
@@ -289,6 +293,7 @@ export let helpers = {
   getSlashCommands,
   upsertSlashCommand,
   upsertSlashCommands,
+  getOriginalInteractionResponse,
   // emojis
   createEmoji,
   deleteEmoji,
@@ -396,6 +401,7 @@ export let helpers = {
   getWebhookWithToken,
   getWebhook,
   getWebhooks,
+  getWebhookMessage,
 };
 
 export type Helpers = typeof helpers;
