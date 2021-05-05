@@ -12,19 +12,19 @@ import { leaveGuild } from "../helpers/guilds/leave_guild.ts";
 import { getInvites } from "../helpers/invites/get_invites.ts";
 import { banMember } from "../helpers/members/ban_member.ts";
 import { unbanMember } from "../helpers/members/unban_member.ts";
+import type { PresenceUpdate } from "../types/activity/presence_update.ts";
 import { GetGuildAuditLog } from "../types/audit_log/get_guild_audit_log.ts";
 import type { Emoji } from "../types/emojis/emoji.ts";
 import type { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
 import type { Guild } from "../types/guilds/guild.ts";
 import { DiscordGuildFeatures } from "../types/guilds/guild_features.ts";
+import type { ModifyGuild } from "../types/guilds/modify_guild.ts";
 import type {
   GuildMember,
   GuildMemberWithUser,
-} from "../types/guilds/guild_member.ts";
-import type { ModifyGuild } from "../types/guilds/modify_guild.ts";
+} from "../types/members/guild_member.ts";
 import type { DiscordImageFormat } from "../types/misc/image_format.ts";
 import type { DiscordImageSize } from "../types/misc/image_size.ts";
-import type { PresenceUpdate } from "../types/misc/presence_update.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { cacheMembers } from "../util/cache_members.ts";
 import { Collection } from "../util/collection.ts";

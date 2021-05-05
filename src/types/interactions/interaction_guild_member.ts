@@ -1,4 +1,4 @@
-import { GuildMember } from "../guilds/guild_member.ts";
+import { GuildMember } from "../members/guild_member.ts";
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */
 export interface InteractionGuildMember extends GuildMember {

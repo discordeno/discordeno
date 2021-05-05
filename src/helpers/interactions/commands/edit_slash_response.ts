@@ -1,10 +1,10 @@
-import { applicationId } from "../../bot.ts";
-import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
-import type { DiscordenoEditWebhookMessage } from "../../types/discordeno/edit_webhook_message.ts";
-import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
-import { Errors } from "../../types/discordeno/errors.ts";
-import { endpoints } from "../../util/constants.ts";
+import { applicationId } from "../../../bot.ts";
+import { rest } from "../../../rest/rest.ts";
+import { structures } from "../../../structures/mod.ts";
+import type { DiscordenoEditWebhookMessage } from "../../../types/discordeno/edit_webhook_message.ts";
+import { Errors } from "../../../types/discordeno/errors.ts";
+import { DiscordAllowedMentionsTypes } from "../../../types/messages/allowed_mentions_types.ts";
+import { endpoints } from "../../../util/constants.ts";
 
 /** To edit your response to a slash command. If a messageId is not provided it will default to editing the original response. */
 export async function editSlashResponse(

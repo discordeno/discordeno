@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import type { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
+import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Returns a guild member object for the specified user.

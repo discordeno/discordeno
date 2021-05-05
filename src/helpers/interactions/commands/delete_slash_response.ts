@@ -1,6 +1,6 @@
-import { applicationId } from "../../bot.ts";
-import { rest } from "../../rest/rest.ts";
-import { endpoints } from "../../util/constants.ts";
+import { applicationId } from "../../../bot.ts";
+import { rest } from "../../../rest/rest.ts";
+import { endpoints } from "../../../util/constants.ts";
 
 /** To delete your response to a slash command. If a message id is not provided, it will default to deleting the original response. */
 export async function deleteSlashResponse(
