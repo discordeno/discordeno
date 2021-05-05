@@ -3,7 +3,7 @@ import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import type { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
 import type { ModifyGuildMember } from "../../types/guilds/modify_guild_member.ts";
-import { Errors } from "../../types/misc/errors.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { bigintToSnowflake } from "../../util/bigint.ts";
 import { endpoints } from "../../util/constants.ts";

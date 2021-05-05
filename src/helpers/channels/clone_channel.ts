@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import type { CreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
-import { Errors } from "../../types/misc/errors.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import { bigintToSnowflake } from "../../util/bigint.ts";
 import { calculatePermissions } from "../../util/permissions.ts";
 import { createChannel } from "./create_channel.ts";

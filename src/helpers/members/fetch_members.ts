@@ -3,7 +3,7 @@ import { DiscordenoMember } from "../../structures/member.ts";
 import { DiscordGatewayOpcodes } from "../../types/codes/gateway_opcodes.ts";
 import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
 import type { RequestGuildMembers } from "../../types/guilds/request_guild_members.ts";
-import { Errors } from "../../types/misc/errors.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import { Collection } from "../../util/collection.ts";
 import { sendShardMessage } from "../../ws/send_shard_message.ts";
 import { ws } from "../../ws/ws.ts";

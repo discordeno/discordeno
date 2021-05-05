@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../../cache.ts";
 import { rest } from "../../../rest/rest.ts";
 import { ChannelTypes } from "../../../types/channels/channel_types.ts";
-import { Errors } from "../../../types/misc/errors.ts";
+import { Errors } from "../../../types/discordeno/errors.ts";
 import { endpoints } from "../../../util/constants.ts";
 
 /** Removes another user from a thread. Requires the MANAGE_THREADS permission or that you are the creator of the thread. Also requires the thread is not archived. Returns a 204 empty response on success. Fires a Thread Members Update Gateway event. */

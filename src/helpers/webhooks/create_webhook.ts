@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { Errors } from "../../types/misc/errors.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import type { CreateWebhook } from "../../types/webhooks/create_webhook.ts";
 import type { Webhook } from "../../types/webhooks/webhook.ts";
 import { endpoints } from "../../util/constants.ts";

@@ -1,6 +1,6 @@
 import { Embed } from "../embeds/embed.ts";
 import { AllowedMentions } from "../messages/allowed_mentions.ts";
-import { FileContent } from "../misc/file_content.ts";
+import { FileContent } from "../discordeno/file_content.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 /** https://discord.com/developers/docs/resources/webhook#execute-webhook */
