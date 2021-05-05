@@ -1,35 +1,55 @@
+import { eventHandlers } from "../bot.ts";
 import { cacheHandlers } from "../cache.ts";
 import { structures } from "../structures/mod.ts";
 import { GuildMemberWithUser } from "../types/guilds/guild_member.ts";
 
-const memberQueue = new Map<string, GuildMemberWithUser[]>();
+const guildMemberQueue = new Map<
+  bigint,
+  { members: GuildMemberWithUser[]; resolve?: (value?: unknown) => void }
+>();
+let processingQueue = false;
 
 export async function cacheMembers(
   guildId: bigint,
   members: GuildMemberWithUser[],
 ) {
-  return Promise.allSettled(
-    members.map((member) => {
-      const queue = memberQueue.get(member.user.id);
-
-      if (queue) return queue.push(member);
-
-      memberQueue.set(member.user.id, [member]);
-      return startQueue(guildId, member.user.id);
-    }),
-  );
+  return new Promise((resolve) => {
+    guildMemberQueue.set(guildId, { members, resolve });
+    startQueue();
+  });
 }
 
-async function startQueue(guildId: bigint, memberId: string) {
-  const queue = memberQueue.get(memberId);
-  if (!queue) return;
+async function startQueue() {
+  if (processingQueue) return;
 
-  while (queue.length) {
-    const discordenoMember = await structures.createDiscordenoMember(
-      queue.shift()!,
-      guildId,
-    );
+  processingQueue = true;
 
-    await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
+  while (guildMemberQueue.size) {
+    eventHandlers.debug?.("loop", "Running whille loop in cache_members file.");
+    const [guildId, queue]: [
+      bigint,
+      { members: GuildMemberWithUser[]; resolve: (value?: unknown) => void },
+    ] = guildMemberQueue.entries().next().value;
+
+    await Promise.allSettled([
+      queue.members.map(async (member) => {
+        const discordenoMember = await structures.createDiscordenoMember(
+          member,
+          guildId,
+        );
+
+        await cacheHandlers.set(
+          "members",
+          discordenoMember.id,
+          discordenoMember,
+        );
+      }),
+    ]);
+
+    queue.resolve?.();
+
+    guildMemberQueue.delete(guildId);
   }
+
+  processingQueue = false;
 }
