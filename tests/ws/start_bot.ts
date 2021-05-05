@@ -36,11 +36,10 @@ Deno.test({
     await startBot({
       token,
       intents: [
-        "GUILD_MESSAGES",
-        "GUILDS",
-        "GUILD_EMOJIS",
-        "GUILD_MESSAGE_REACTIONS",
-        "GUILD_EMOJIS",
+        "GuildMessages",
+        "Guilds",
+        "GuildEmojis",
+        "GuildMessageReactions",
       ],
     });
 

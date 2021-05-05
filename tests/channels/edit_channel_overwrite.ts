@@ -35,7 +35,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel) {
   }
 
   await editChannelOverwrite(channel.guildId, channel.id, botId, {
-    type: DiscordOverwriteTypes.MEMBER,
+    type: DiscordOverwriteTypes.Member,
     allow: ["VIEW_CHANNEL", "ADD_REACTIONS"],
     deny: [],
   });
@@ -71,7 +71,7 @@ Deno.test({
         permissionOverwrites: [
           {
             id: bigintToSnowflake(botId),
-            type: DiscordOverwriteTypes.MEMBER,
+            type: DiscordOverwriteTypes.Member,
             allow: ["VIEW_CHANNEL"],
             deny: [],
           },

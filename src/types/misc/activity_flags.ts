@@ -1,11 +1,11 @@
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags */
 export enum DiscordActivityFlags {
-  INSTANCE = 1 << 0,
-  JOIN = 1 << 1,
-  SPECTATE = 1 << 2,
-  JOIN_REQUEST = 1 << 3,
-  SYNC = 1 << 4,
-  PLAY = 1 << 5,
+  Instance = 1 << 0,
+  Join = 1 << 1,
+  Spectate = 1 << 2,
+  JoinRequest = 1 << 3,
+  Sync = 1 << 4,
+  Play = 1 << 5,
 }
 
 export type ActivityFlags = DiscordActivityFlags;

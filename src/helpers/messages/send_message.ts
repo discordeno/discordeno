@@ -26,7 +26,7 @@ export async function sendMessage(
   if (channel) {
     if (
       ![
-        DiscordChannelTypes.Dm,
+        DiscordChannelTypes.DM,
         DiscordChannelTypes.GuildNews,
         DiscordChannelTypes.GuildText,
         DiscordChannelTypes.GuildPublicThread,
@@ -143,13 +143,6 @@ export async function sendMessage(
         throw new Error(Errors.TOO_MANY_COMPONENTS);
       }
     }
-  }
-
-  if (
-    content.nonce &&
-    !validateLength(content.nonce.toString(), { max: 25 })
-  ) {
-    throw new Error(Errors.NONCE_TOO_LONG);
   }
 
   const result = await rest.runMethod<Message>(
