@@ -109,7 +109,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "[utils] validateSlashCommands(): invalid number of options",
+  name: "[utils] validateSlashCommands(): validates number of options",
   fn() {
     const option = {
       name: "option1",
