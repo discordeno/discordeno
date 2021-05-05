@@ -1,7 +1,7 @@
 import { eventHandlers } from "../bot.ts";
 import { cacheHandlers } from "../cache.ts";
 import { structures } from "../structures/mod.ts";
-import { GuildMemberWithUser } from "../types/guilds/guild_member.ts";
+import { GuildMemberWithUser } from "../types/members/guild_member.ts";
 
 const guildMemberQueue = new Map<
   bigint,

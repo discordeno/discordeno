@@ -1,5 +1,5 @@
-import { Embed } from "../embeds/embed.ts";
-import { AllowedMentions } from "../messages/allowed_mentions.ts";
+import { Embed } from "../../embeds/embed.ts";
+import { AllowedMentions } from "../../messages/allowed_mentions.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
 export interface InteractionApplicationCommandCallbackData {

@@ -3,7 +3,7 @@ import type {
   UpdateSelfVoiceState,
 } from "../../types/guilds/update_self_voice_state.ts";
 import { endpoints } from "../../util/constants.ts";
-import { camelKeysToSnakeCase } from "../../util/utils.ts";
+import { snakelize } from "../../util/utils.ts";
 
 /**
  * Updates the current user's voice state.
@@ -21,6 +21,6 @@ export async function updateBotVoiceState(
   return await rest.runMethod(
     "patch",
     endpoints.UPDATE_VOICE_STATE(guildId),
-    camelKeysToSnakeCase(data),
+    snakelize(data),
   );
 }

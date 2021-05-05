@@ -4,7 +4,7 @@ import { ChannelTypes } from "../../../types/channels/channel_types.ts";
 import { StartThread } from "../../../types/channels/threads/start_thread.ts";
 import { Errors } from "../../../types/discordeno/errors.ts";
 import { endpoints } from "../../../util/constants.ts";
-import { camelKeysToSnakeCase } from "../../../util/utils.ts";
+import { snakelize } from "../../../util/utils.ts";
 
 /** 
  * Creates a new public thread from an existing message. Returns a channel on success, and a 400 BAD REQUEST on invalid parameters. Fires a Thread Create Gateway event. 
@@ -33,6 +33,6 @@ export async function startThread(
     options?.messageId
       ? endpoints.THREAD_START_PUBLIC(channelId, options.messageId)
       : endpoints.THREAD_START_PRIVATE(channelId),
-    camelKeysToSnakeCase(options),
+    snakelize(options),
   );
 }

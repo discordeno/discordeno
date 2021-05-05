@@ -12,7 +12,7 @@ import {
   requireBotChannelPermissions,
   requireOverwritePermissions,
 } from "../../util/permissions.ts";
-import { camelKeysToSnakeCase, hasOwnProperty } from "../../util/utils.ts";
+import { hasOwnProperty, snakelize } from "../../util/utils.ts";
 
 //TODO: implement DM group channel edit
 //TODO(threads): check thread perms
@@ -88,7 +88,7 @@ export async function editChannel(
   }
 
   const payload = {
-    ...camelKeysToSnakeCase<Record<string, unknown>>(options),
+    ...snakelize<Record<string, unknown>>(options),
     // deno-lint-ignore camelcase
     permission_overwrites:
       hasOwnProperty<ModifyChannel>(options, "permissionOverwrites")
