@@ -26,6 +26,7 @@ import type { DiscordImageFormat } from "../types/misc/image_format.ts";
 import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import type { PresenceUpdate } from "../types/misc/presence_update.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
+import { cacheMembers } from "../util/cache_members.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoChannel } from "./channel.ts";
@@ -34,7 +35,6 @@ import { structures } from "./mod.ts";
 import { DiscordenoRole } from "./role.ts";
 import { DiscordenoVoiceState } from "./voice_state.ts";
 
-export const initialMemberLoadQueue = new Map<bigint, GuildMember[]>();
 const GUILD_SNOWFLAKES = [
   "id",
   "ownerId",
@@ -241,25 +241,7 @@ export async function createDiscordenoGuild(
     bitfield: createNewProp(bitfield),
   });
 
-  // ONLY ADD TO QUEUE WHEN BOT IS NOT FULLY ONLINE
-  if (!cache.isReady) initialMemberLoadQueue.set(guild.id, members);
-  // BOT IS ONLINE, JUST DIRECTLY ADD MEMBERS
-  else {
-    await Promise.allSettled(
-      members.map(async (member) => {
-        const discordenoMember = await structures.createDiscordenoMember(
-          member as GuildMemberWithUser,
-          guild.id,
-        );
-
-        return cacheHandlers.set(
-          "members",
-          discordenoMember.id,
-          discordenoMember,
-        );
-      }),
-    );
-  }
+  await cacheMembers(guild.id, members as GuildMemberWithUser[]);
 
   return guild;
 }
