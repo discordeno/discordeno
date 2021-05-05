@@ -37,7 +37,7 @@ export async function handleChannelDelete(data: DiscordGatewayPayload) {
   if (
     [
       DiscordChannelTypes.GuildText,
-      DiscordChannelTypes.Dm,
+      DiscordChannelTypes.DM,
       DiscordChannelTypes.GroupDm,
       DiscordChannelTypes.GuildNews,
     ].includes(payload.type)

@@ -1,14 +1,14 @@
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype */
 export enum DiscordApplicationCommandOptionTypes {
-  SUB_COMMAND = 1,
-  SUB_COMMAND_GROUP,
-  STRING,
-  INTEGER,
-  BOOLEAN,
-  USER,
-  CHANNEL,
-  ROLE,
-  MENTIONABLE,
+  SubCommand = 1,
+  SubCommandGroup,
+  String,
+  Integer,
+  Boolean,
+  User,
+  Channel,
+  Role,
+  Mentionable,
 }
 
 export type ApplicationCommandOptionTypes =
