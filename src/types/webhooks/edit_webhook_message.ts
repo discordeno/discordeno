@@ -1,7 +1,7 @@
 import { Embed } from "../embeds/embed.ts";
 import { AllowedMentions } from "../messages/allowed_mentions.ts";
-import { FileContent } from "../misc/file_content.ts";
 import { Attachment } from "../messages/attachment.ts";
+import { FileContent } from "../misc/file_content.ts";
 
 /** https://discord.com/developers/docs/resources/webhook#edit-webhook-message-jsonform-params */
 export interface EditWebhookMessage {
@@ -10,7 +10,7 @@ export interface EditWebhookMessage {
   /** Embedded `rich` content */
   embeds?: Embed[] | null;
   /** The contents of the file being sent/edited */
-  file?: FileContent | FileContent[];
+  file?: FileContent | FileContent[] | null;
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions | null;
   /** Attached files to keep */

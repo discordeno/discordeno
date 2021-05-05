@@ -145,13 +145,6 @@ export async function sendMessage(
     }
   }
 
-  if (
-    content.nonce &&
-    !validateLength(content.nonce.toString(), { max: 25 })
-  ) {
-    throw new Error(Errors.NONCE_TOO_LONG);
-  }
-
   const result = await rest.runMethod<Message>(
     "post",
     endpoints.CHANNEL_MESSAGES(channelId),
