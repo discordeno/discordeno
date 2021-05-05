@@ -1,8 +1,11 @@
+import { ApplicationCommandOption } from "../../src/types/interactions/application_command_option.ts";
+import { DiscordApplicationCommandOptionTypes } from "../../src/types/interactions/application_command_option_types.ts";
 import {
   camelKeysToSnakeCase,
   snakeKeysToCamelCase,
+  validateSlashCommands,
 } from "../../src/util/utils.ts";
-import { assertEquals } from "../deps.ts";
+import { assertEquals, assertThrows } from "../deps.ts";
 
 const testSnakeObject = {
   // deno-lint-ignore camelcase
@@ -72,5 +75,44 @@ Deno.test({
     assertEquals(result, testSnakeObject);
     const resultTwo = camelKeysToSnakeCase(someElseOther);
     assertEquals(resultTwo, someElseOther);
+  },
+});
+
+Deno.test({
+  name:
+    "[utils] if the name of the application command does not match the regexp, validateSlashCommands() should throw an error.",
+  fn() {
+    assertThrows(() =>
+      validateSlashCommands([{
+        // The maximum length of the name of an application command is 32.
+        name: "a".repeat(33),
+      }])
+    );
+  },
+});
+
+Deno.test({
+  name:
+    "[utils] if the name of the application command exceeds the limit, an error should be thrown.",
+  fn() {
+    assertThrows(() =>
+      // The maximum length of the description of an application command is 100.
+      validateSlashCommands([{ description: "a".repeat(101) }])
+    );
+  },
+});
+
+Deno.test({
+  name:
+    "[utils] if the number of options of an application command limit is exceed, an error should be thrown",
+  fn() {
+    // The maximum number of options an application command can "accomodate" is 25.
+    const options: ApplicationCommandOption[] = Array(26).fill({
+      name: "option1",
+      description: "The description of the application command's option.",
+      type: DiscordApplicationCommandOptionTypes.STRING,
+    });
+
+    assertThrows(() => validateSlashCommands([{ options }]));
   },
 });
