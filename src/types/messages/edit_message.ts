@@ -1,5 +1,5 @@
+import { FileContent } from "../discordeno/file_content.ts";
 import { Embed } from "../embeds/embed.ts";
-import { FileContent } from "../misc/file_content.ts";
 import { AllowedMentions } from "./allowed_mentions.ts";
 import { Attachment } from "./attachment.ts";
 
