@@ -74,11 +74,14 @@ export interface Guild {
   /** Total number of members in this guild */
   memberCount?: number;
   /** States of members currently in voice channels; lacks the guild_id key */
-  voiceStates?: Partial<VoiceState>[];
+  voiceStates?: Omit<VoiceState, "guildId">[];
   /** Users in the guild */
   members?: GuildMember[];
   /** Channels in the guild */
   channels?: Channel[];
+  // TODO: check if need to omit
+  /** All active threads in the guild that the current user has permission to view */
+  threads?: Channel[];
   /** Presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
   presences?: Partial<PresenceUpdate>[];
   /** The maximum number of presences for the guild (the default value, currently 25000, is in effect when null is returned) */
@@ -105,7 +108,7 @@ export interface Guild {
   approximateMemberCount?: number;
   /**	Approximate number of non-offline members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
   approximatePresenceCount?: number;
-  /** The welcome screen of a Community guild, shown to new members, returned when in the invite object */
+  /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
   welcomeScreen?: WelcomeScreen;
   /** `true` if this guild is designated as NSFW */
   nsfw: boolean;

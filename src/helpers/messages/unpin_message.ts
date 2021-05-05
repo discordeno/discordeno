@@ -4,8 +4,8 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
 /** Unpin a message in a channel. Requires MANAGE_MESSAGES. */
 export async function unpin(
-  channelId: string,
-  messageId: string,
+  channelId: bigint,
+  messageId: bigint,
 ): Promise<undefined> {
   await requireBotChannelPermissions(channelId, ["MANAGE_MESSAGES"]);
 

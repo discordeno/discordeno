@@ -9,9 +9,9 @@ import {
 
 /** Add a role to the member */
 export async function addRole(
-  guildId: string,
-  memberId: string,
-  roleId: string,
+  guildId: bigint,
+  memberId: bigint,
+  roleId: bigint,
   reason?: string,
 ) {
   const isHigherRolePosition = await isHigherPosition(

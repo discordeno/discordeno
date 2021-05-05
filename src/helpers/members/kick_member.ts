@@ -8,7 +8,7 @@ import {
 } from "../../util/permissions.ts";
 
 /** Kick a member from the server */
-export async function kick(guildId: string, memberId: string, reason?: string) {
+export async function kick(guildId: bigint, memberId: bigint, reason?: string) {
   const botsHighestRole = await highestRole(guildId, botId);
   const membersHighestRole = await highestRole(guildId, memberId);
   if (

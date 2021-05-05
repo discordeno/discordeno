@@ -1,7 +1,7 @@
 # Contributing
 
 - Read the [style guide](#style-guide).
-- Ask for help on the [official Discord server](https:)
+- Ask for help on the [official Discord server](https://discord.gg/5vBgXk3UcZ)
 - If you are going to work on an issue, mention so in the issue comments before
   you start working on the issue.
 - If you are going to work on a new feature, create an issue and discuss with
@@ -38,10 +38,9 @@
 
 ## Types Guide
 
-- Must use snake case (according to Discord API).
+- Must use camel case (same property name as in the docs just in camel case).
 - Each field or property must be accompanied with a reasonable JSDoc comment
   right above its type definition.
-- The name of the type must be prefixed with `Discord`.
 - Must be placed inside of the types module (in `src/types` directory).
 
 Example:
@@ -61,6 +60,4 @@ export interface User {
   flags?: number;
   premiumType?: number;
 }
-
-export type DiscordUser = SnakeCasedPropertiesDeep<DiscordUserInternal>;
 ```

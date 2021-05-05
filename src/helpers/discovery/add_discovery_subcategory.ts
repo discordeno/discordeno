@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import {
+import type {
   AddGuildDiscoverySubcategory,
 } from "../../types/discovery/add_guild_discovery_subcategory.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -7,7 +7,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
 /** Add a discovery subcategory to the guild. Requires the `MANAGE_GUILD` permission. */
 export async function addDiscoverySubcategory(
-  guildId: string,
+  guildId: bigint,
   categoryId: number,
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);

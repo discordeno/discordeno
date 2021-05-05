@@ -2,8 +2,8 @@ import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { DiscordenoMember } from "../../structures/member.ts";
 import { structures } from "../../structures/mod.ts";
-import { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
-import { SearchGuildMembers } from "../../types/members/search_guild_members.ts";
+import type { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
+import type { SearchGuildMembers } from "../../types/members/search_guild_members.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -13,7 +13,7 @@ import { endpoints } from "../../util/constants.ts";
  * @param query Query string to match username(s) and nickname(s) against
  */
 export async function searchMembers(
-  guildId: string,
+  guildId: bigint,
   query: string,
   options?: Omit<SearchGuildMembers, "query"> & { cache?: boolean },
 ) {
@@ -45,7 +45,7 @@ export async function searchMembers(
     return discordenoMember;
   }));
 
-  return new Collection<string, DiscordenoMember>(
+  return new Collection<bigint, DiscordenoMember>(
     members.map((member) => [member.id, member]),
   );
 }

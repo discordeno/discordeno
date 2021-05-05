@@ -4,8 +4,8 @@ import { endpoints } from "../../util/constants.ts";
 
 /** Deletes a slash command. */
 export async function deleteSlashCommand(
-  id: string,
-  guildId?: string,
+  id: bigint,
+  guildId?: bigint,
 ) {
   return await rest.runMethod<undefined>(
     "delete",

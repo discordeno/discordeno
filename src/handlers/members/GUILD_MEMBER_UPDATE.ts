@@ -1,16 +1,23 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { GuildMemberUpdate } from "../../types/members/guild_member_update.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { GuildMemberUpdate } from "../../types/members/guild_member_update.ts";
+import { bigintToSnowflake, snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as GuildMemberUpdate;
-  const guild = await cacheHandlers.get("guilds", payload.guildId);
+  const guild = await cacheHandlers.get(
+    "guilds",
+    snowflakeToBigint(payload.guildId),
+  );
   if (!guild) return;
 
-  const cachedMember = await cacheHandlers.get("members", payload.user.id);
-  const guildMember = cachedMember?.guilds.get(payload.guildId);
+  const cachedMember = await cacheHandlers.get(
+    "members",
+    snowflakeToBigint(payload.user.id),
+  );
+  const guildMember = cachedMember?.guilds.get(guild.id);
 
   const newMemberData = {
     ...payload,
@@ -23,7 +30,7 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
   };
   const discordenoMember = await structures.createDiscordenoMember(
     newMemberData,
-    payload.guildId,
+    guild.id,
   );
   await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 
@@ -48,7 +55,7 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
         "loop",
         `1. Running forEach loop in GUILD_MEMBER_UPDATE file.`,
       );
-      if (!payload.roles.includes(id)) {
+      if (!payload.roles.includes(bigintToSnowflake(id))) {
         eventHandlers.roleLost?.(guild, discordenoMember, id);
       }
     });
@@ -58,8 +65,12 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
         "loop",
         `2. Running forEach loop in GUILD_MEMBER_UPDATE file.`,
       );
-      if (!roleIds.includes(id)) {
-        eventHandlers.roleGained?.(guild, discordenoMember, id);
+      if (!roleIds.includes(snowflakeToBigint(id))) {
+        eventHandlers.roleGained?.(
+          guild,
+          discordenoMember,
+          snowflakeToBigint(id),
+        );
       }
     });
   }

@@ -5,6 +5,7 @@ import { deleteChannelOverwrite } from "../../src/helpers/channels/delete_channe
 import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
 import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
 import { CreateGuildChannel } from "../../src/types/guilds/create_guild_channel.ts";
+import { bigintToSnowflake } from "../../src/util/bigint.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
@@ -14,7 +15,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, _save = false) {
 
   // Assertions
   assertExists(channel);
-  assertEquals(channel.type, options.type || DiscordChannelTypes.GUILD_TEXT);
+  assertEquals(channel.type, options.type || DiscordChannelTypes.GuildText);
 
   // Delay the execution by 5 seconds to allow CHANNEL_CREATE event to be processed
   await delayUntil(10000, () => cache.channels.has(channel.id));
@@ -54,7 +55,7 @@ Deno.test({
         name: "Discordeno-test",
         permissionOverwrites: [
           {
-            id: botId,
+            id: bigintToSnowflake(botId),
             type: DiscordOverwriteTypes.MEMBER,
             allow: ["VIEW_CHANNEL"],
             deny: [],

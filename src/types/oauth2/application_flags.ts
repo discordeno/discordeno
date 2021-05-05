@@ -1,5 +1,4 @@
-// https://github.com/discord/discord-api-docs/pull/2624
-// TODO: add documentation link
+/** https://discord.com/developers/docs/topics/oauth2#application-application-flags */
 export enum DiscordApplicationFlags {
   GatewayPresence = 1 << 12,
   GatewayPresenceLimited = 1 << 13,

@@ -9,9 +9,9 @@ import {
 
 /** Remove a role from the member */
 export async function removeRole(
-  guildId: string,
-  memberId: string,
-  roleId: string,
+  guildId: bigint,
+  memberId: bigint,
+  roleId: bigint,
   reason?: string,
 ) {
   const isHigherRolePosition = await isHigherPosition(

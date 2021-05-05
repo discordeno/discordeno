@@ -4,10 +4,10 @@ import { structures } from "../../structures/mod.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
 import { ButtonStyles } from "../../types/messages/components/button_styles.ts";
-import { CreateMessage } from "../../types/messages/create_message.ts";
-import { Message } from "../../types/messages/message.ts";
+import type { CreateMessage } from "../../types/messages/create_message.ts";
+import type { Message } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";
-import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
+import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 import { camelKeysToSnakeCase } from "../../util/utils.ts";
@@ -17,7 +17,7 @@ import { isButton } from "../type_guards/is_button.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(
-  channelId: string,
+  channelId: bigint,
   content: string | CreateMessage,
 ) {
   if (typeof content === "string") content = { content };
@@ -26,9 +26,12 @@ export async function sendMessage(
   if (channel) {
     if (
       ![
-        DiscordChannelTypes.DM,
-        DiscordChannelTypes.GUILD_NEWS,
-        DiscordChannelTypes.GUILD_TEXT,
+        DiscordChannelTypes.Dm,
+        DiscordChannelTypes.GuildNews,
+        DiscordChannelTypes.GuildText,
+        DiscordChannelTypes.GuildPublicThread,
+        DiscordChannelTypes.GuildPivateThread,
+        DiscordChannelTypes.GuildNewsThread,
       ].includes(channel.type)
     ) {
       throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);

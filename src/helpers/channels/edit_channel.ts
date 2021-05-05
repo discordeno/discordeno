@@ -1,22 +1,68 @@
 import { eventHandlers } from "../../bot.ts";
+import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
-import { ModifyChannel } from "../../types/channels/modify_channel.ts";
-import { Channel } from "../../types/mod.ts";
+import type { Channel } from "../../types/channels/channel.ts";
+import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import type { ModifyChannel } from "../../types/channels/modify_channel.ts";
+import type { ModifyThread } from "../../types/channels/threads/modify_thread.ts";
+import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,
   requireBotChannelPermissions,
+  requireOverwritePermissions,
 } from "../../util/permissions.ts";
+import { camelKeysToSnakeCase, hasOwnProperty } from "../../util/utils.ts";
 
+//TODO: implement DM group channel edit
+//TODO(threads): check thread perms
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(
-  channelId: string,
-  options: ModifyChannel,
+  channelId: bigint,
+  options: ModifyChannel | ModifyThread,
   reason?: string,
 ) {
-  await requireBotChannelPermissions(channelId, ["MANAGE_CHANNELS"]);
+  const channel = await cacheHandlers.get("channels", channelId);
 
-  if (options.name || options.topic) {
+  if (channel) {
+    if (
+      [
+        DiscordChannelTypes.GuildNewsThread,
+        DiscordChannelTypes.GuildPivateThread,
+        DiscordChannelTypes.GuildPublicThread,
+      ].includes(channel.type)
+    ) {
+      const permissions = new Set<PermissionStrings>();
+
+      if (hasOwnProperty(options, "archive") && options.archive === false) {
+        permissions.add("SEND_MESSAGES");
+      }
+
+      // TODO(threads): change this to a better check
+      // hacky way of checking if more is being modified
+      if (Object.keys(options).length > 1) {
+        permissions.add("MANAGE_THREADS");
+      }
+
+      await requireBotChannelPermissions(channel.parentId ?? 0n, [
+        ...permissions,
+      ]);
+    }
+
+    if (
+      hasOwnProperty<ModifyChannel>(
+        options,
+        "permissionOverwrites",
+      ) && Array.isArray(options.permissionOverwrites)
+    ) {
+      await requireOverwritePermissions(
+        channel.guildId,
+        options.permissionOverwrites,
+      );
+    }
+  }
+
+  if (options.name || (options as ModifyChannel).topic) {
     const request = editChannelNameTopicQueue.get(channelId);
     if (!request) {
       // If this hasnt been done before simply add 1 for it
@@ -42,21 +88,18 @@ export async function editChannel(
   }
 
   const payload = {
-    ...options,
+    ...camelKeysToSnakeCase<Record<string, unknown>>(options),
     // deno-lint-ignore camelcase
-    rate_limit_per_user: options.rateLimitPerUser,
-    // deno-lint-ignore camelcase
-    parent_id: options.parentId,
-    // deno-lint-ignore camelcase
-    user_limit: options.userLimit,
-    // deno-lint-ignore camelcase
-    permission_overwrites: options.permissionOverwrites?.map((overwrite) => {
-      return {
-        ...overwrite,
-        allow: calculateBits(overwrite.allow),
-        deny: calculateBits(overwrite.deny),
-      };
-    }),
+    permission_overwrites:
+      hasOwnProperty<ModifyChannel>(options, "permissionOverwrites")
+        ? options.permissionOverwrites?.map((overwrite) => {
+          return {
+            ...overwrite,
+            allow: calculateBits(overwrite.allow),
+            deny: calculateBits(overwrite.deny),
+          };
+        })
+        : undefined,
   };
 
   return await rest.runMethod<Channel>(
@@ -72,14 +115,14 @@ export async function editChannel(
 interface EditChannelRequest {
   amount: number;
   timestamp: number;
-  channelId: string;
+  channelId: bigint;
   items: {
-    channelId: string;
+    channelId: bigint;
     options: ModifyChannel;
   }[];
 }
 
-const editChannelNameTopicQueue = new Map<string, EditChannelRequest>();
+const editChannelNameTopicQueue = new Map<bigint, EditChannelRequest>();
 let editChannelProcessing = false;
 
 function processEditChannelQueue() {

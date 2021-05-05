@@ -1,16 +1,15 @@
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
-import { Message } from "../../types/messages/message.ts";
+import type { Message } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";
-import { EditWebhookMessage } from "../../types/webhooks/edit_webhook_message.ts";
+import type { EditWebhookMessage } from "../../types/webhooks/edit_webhook_message.ts";
 import { endpoints } from "../../util/constants.ts";
 
 export async function editWebhookMessage(
-  webhookId: string,
+  webhookId: bigint,
   webhookToken: string,
-  messageId: string,
-  options: EditWebhookMessage,
+  options: EditWebhookMessage & { messageId?: bigint },
 ) {
   if (options.content && options.content.length > 2000) {
     throw Error(Errors.MESSAGE_MAX_LENGTH);
@@ -62,7 +61,9 @@ export async function editWebhookMessage(
 
   const result = await rest.runMethod<Message>(
     "patch",
-    endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId),
+    options.messageId
+      ? endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, options.messageId)
+      : endpoints.WEBHOOK_MESSAGE_ORIGINAL(webhookId, webhookToken),
     { ...options, allowedMentions: options.allowedMentions },
   );
 

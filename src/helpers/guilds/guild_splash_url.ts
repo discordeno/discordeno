@@ -1,11 +1,11 @@
-import { DiscordImageFormat } from "../../types/misc/image_format.ts";
-import { DiscordImageSize } from "../../types/misc/image_size.ts";
+import type { DiscordImageFormat } from "../../types/misc/image_format.ts";
+import type { DiscordImageSize } from "../../types/misc/image_size.ts";
 import { endpoints } from "../../util/constants.ts";
 import { formatImageURL } from "../../util/utils.ts";
 
 /** The full URL of the splash from Discords CDN. Undefined if no splash is set. */
 export function guildSplashURL(
-  id: string,
+  id: bigint,
   splash?: string,
   size: DiscordImageSize = 128,
   format?: DiscordImageFormat,

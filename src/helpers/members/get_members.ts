@@ -4,9 +4,10 @@ import { rest } from "../../rest/rest.ts";
 import { DiscordenoMember } from "../../structures/member.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
-import { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
-import { ListGuildMembers } from "../../types/guilds/list_guild_members.ts";
+import type { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
+import type { ListGuildMembers } from "../../types/guilds/list_guild_members.ts";
 import { Errors } from "../../types/misc/errors.ts";
+import { bigintToSnowflake } from "../../util/bigint.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import { ws } from "../../ws/ws.ts";
@@ -20,7 +21,7 @@ import { ws } from "../../ws/ws.ts";
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
  */
 export async function getMembers(
-  guildId: string,
+  guildId: bigint,
   options?: ListGuildMembers & { addToCache?: boolean },
 ) {
   if (!(ws.identifyPayload.intents && DiscordGatewayIntents.GUILD_MEMBERS)) {
@@ -30,7 +31,7 @@ export async function getMembers(
   const guild = await cacheHandlers.get("guilds", guildId);
   if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
-  const members = new Collection<string, DiscordenoMember>();
+  const members = new Collection<bigint, DiscordenoMember>();
 
   let membersLeft = options?.limit ?? guild.memberCount;
   let loops = 1;
@@ -88,7 +89,9 @@ export async function getMembers(
 
     options = {
       limit: options?.limit,
-      after: discordenoMembers[discordenoMembers.length - 1].id,
+      after: bigintToSnowflake(
+        discordenoMembers[discordenoMembers.length - 1].id,
+      ),
     };
 
     membersLeft -= 1000;

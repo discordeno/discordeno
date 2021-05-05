@@ -3,9 +3,9 @@ import { rest } from "../../rest/rest.ts";
 import { DiscordenoMessage } from "../../structures/message.ts";
 import { structures } from "../../structures/mod.ts";
 import { EditMessage } from "../../types/messages/edit_message.ts";
-import { Message } from "../../types/messages/message.ts";
+import type { Message } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";
-import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
+import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -14,7 +14,7 @@ export async function editMessage(
   message: DiscordenoMessage,
   content: string | EditMessage,
 ) {
-  if (message.author.id !== botId) {
+  if (message.authorId !== botId) {
     throw "You can only edit a message that was sent by the bot.";
   }
 

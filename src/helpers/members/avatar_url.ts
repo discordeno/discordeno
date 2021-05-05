@@ -1,12 +1,12 @@
-import { DiscordImageFormat } from "../../types/misc/image_format.ts";
-import { DiscordImageSize } from "../../types/misc/image_size.ts";
+import type { DiscordImageFormat } from "../../types/misc/image_format.ts";
+import type { DiscordImageSize } from "../../types/misc/image_size.ts";
 import { endpoints } from "../../util/constants.ts";
 import { formatImageURL } from "../../util/utils.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
 export function avatarURL(
-  userId: string,
-  discriminator: string,
+  userId: bigint,
+  discriminator: bigint,
   avatar?: string | null,
   size: DiscordImageSize = 128,
   format?: DiscordImageFormat,

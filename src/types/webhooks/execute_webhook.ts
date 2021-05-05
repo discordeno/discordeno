@@ -16,14 +16,13 @@ export interface ExecuteWebhook {
   /** True if this is a TTS message */
   tts?: boolean;
   /** The contents of the file being sent */
-  file: FileContent | FileContent[];
+  file?: FileContent | FileContent[];
   /** Embedded `rich` content */
-  embeds: Embed[];
+  embeds?: Embed[];
   /** Allowed mentions for the message */
-  allowedMentions: AllowedMentions;
+  allowedMentions?: AllowedMentions;
 }
 
 export type DiscordExecuteWebhook = SnakeCasedPropertiesDeep<
   Omit<ExecuteWebhook, "wait">
 >;
-//TODO: check this

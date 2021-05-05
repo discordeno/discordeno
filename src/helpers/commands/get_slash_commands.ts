@@ -1,11 +1,11 @@
 import { applicationId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
-import { ApplicationCommand } from "../../types/interactions/application_command.ts";
+import type { ApplicationCommand } from "../../types/interactions/application_command.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Fetch all of the global commands for your application. */
-export async function getSlashCommands(guildId?: string) {
+export async function getSlashCommands(guildId?: bigint) {
   const result = await rest.runMethod<ApplicationCommand[]>(
     "get",
     guildId

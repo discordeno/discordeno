@@ -1,7 +1,7 @@
 import { applicationId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
-import { EditGlobalApplicationCommand } from "../../types/interactions/edit_global_application_command.ts";
-import { ApplicationCommand } from "../../types/mod.ts";
+import type { ApplicationCommand } from "../../types/interactions/application_command.ts";
+import type { EditGlobalApplicationCommand } from "../../types/interactions/edit_global_application_command.ts";
 import { endpoints } from "../../util/constants.ts";
 import { validateSlashCommands } from "../../util/utils.ts";
 
@@ -9,9 +9,9 @@ import { validateSlashCommands } from "../../util/utils.ts";
  * Edit an existing slash command. If this command did not exist, it will create it.
  */
 export async function upsertSlashCommand(
-  commandId: string,
+  commandId: bigint,
   options: EditGlobalApplicationCommand,
-  guildId?: string,
+  guildId?: bigint,
 ) {
   validateSlashCommands([options]);
 
