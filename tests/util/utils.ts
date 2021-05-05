@@ -79,7 +79,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "[utils] validateSlashCommands(): invalid name",
+  name: "[utils] validateSlashCommands(): validates name",
   fn() {
     assertThrows(() =>
       validateSlashCommands([{
@@ -87,29 +87,42 @@ Deno.test({
         name: "a".repeat(33),
       }])
     );
+
+    validateSlashCommands([{
+      name: "workingname",
+    }]);
   },
 });
 
 Deno.test({
-  name: "[utils] validateSlashCommands(): invalid description",
+  name: "[utils] validateSlashCommands(): validates description",
   fn() {
     assertThrows(() =>
       // The maximum length of the description of an application command is 100.
       validateSlashCommands([{ description: "a".repeat(101) }])
     );
+
+    validateSlashCommands([{
+      description: "valid description (should not throw)",
+    }]);
   },
 });
 
 Deno.test({
   name: "[utils] validateSlashCommands(): invalid number of options",
   fn() {
-    // The maximum number of options an application command can "accomodate" is 25.
-    const options: ApplicationCommandOption[] = Array(26).fill({
+    const option = {
       name: "option1",
       description: "The description of the application command's option.",
       type: DiscordApplicationCommandOptionTypes.STRING,
-    });
+    };
+    // The maximum number of options an application command can "accomodate" is 25.
+    const options: ApplicationCommandOption[] = Array(26).fill(option);
 
     assertThrows(() => validateSlashCommands([{ options }]));
+
+    validateSlashCommands([{
+      options: [option],
+    }]);
   },
 });
