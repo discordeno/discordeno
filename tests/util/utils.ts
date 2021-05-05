@@ -114,7 +114,7 @@ Deno.test({
     const option = {
       name: "option1",
       description: "The description of the application command's option.",
-      type: DiscordApplicationCommandOptionTypes.STRING,
+      type: DiscordApplicationCommandOptionTypes.String,
     };
     // The maximum number of options an application command can "accomodate" is 25.
     const options: ApplicationCommandOption[] = Array(26).fill(option);

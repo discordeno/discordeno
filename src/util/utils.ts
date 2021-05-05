@@ -130,11 +130,11 @@ function validateSlashOptionChoices(
     }
 
     if (
-      (optionType === DiscordApplicationCommandOptionTypes.STRING &&
+      (optionType === DiscordApplicationCommandOptionTypes.String &&
         (typeof choice.value !== "string" ||
           choice.value.length < 1 ||
           choice.value.length > 100)) ||
-      (optionType === DiscordApplicationCommandOptionTypes.INTEGER &&
+      (optionType === DiscordApplicationCommandOptionTypes.Integer &&
         typeof choice.value !== "number")
     ) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
@@ -152,8 +152,8 @@ function validateSlashOptions(options: ApplicationCommandOption[]) {
     if (
       option.choices?.length &&
       (option.choices.length > 25 ||
-        (option.type !== DiscordApplicationCommandOptionTypes.STRING &&
-          option.type !== DiscordApplicationCommandOptionTypes.INTEGER))
+        (option.type !== DiscordApplicationCommandOptionTypes.String &&
+          option.type !== DiscordApplicationCommandOptionTypes.Integer))
     ) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }

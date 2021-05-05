@@ -3,7 +3,7 @@ export enum DiscordChannelTypes {
   /** A text channel within a server */
   GuildText,
   /** A direct message between users */
-  Dm,
+  DM,
   /** A voice channel within a server */
   GuildVoice,
   /** A direct message between multiple users */

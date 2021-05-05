@@ -1,11 +1,11 @@
 /** https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level */
 export enum DiscordExplicitContentFilterLevels {
   /** Media content will not be scanned */
-  DISABLED,
+  Disabled,
   /** Media content sent by members without roles will be scanned */
-  MEMBERS_WITHOUT_ROLES,
+  MembersWithoutRoles,
   /** Media content sent by all members will be scanned */
-  ALL_MEMBERS,
+  AllMembers,
 }
 
 export type ExplicitContentFilterLevels = DiscordExplicitContentFilterLevels;
