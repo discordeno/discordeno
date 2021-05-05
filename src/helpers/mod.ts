@@ -13,6 +13,7 @@ import { getPins } from "./channels/get_pins.ts";
 import { isChannelSynced } from "./channels/is_channel_synced.ts";
 import { startTyping } from "./channels/start_typing.ts";
 import { swapChannels } from "./channels/swap_channels.ts";
+import { updateBotVoiceState } from "./channels/update_voice_state.ts";
 import { batchEditSlashCommandPermissions } from "./commands/batch_edit_slash_command_permissions.ts";
 import { createSlashCommand } from "./commands/create_slash_command.ts";
 import { deleteSlashCommand } from "./commands/delete_slash_command.ts";
@@ -258,6 +259,7 @@ export {
   unbanMember,
   unpin,
   unpinMessage,
+  updateBotVoiceState,
   upsertSlashCommand,
   upsertSlashCommands,
   validDiscoveryTerm,
@@ -279,6 +281,7 @@ export let helpers = {
   isChannelSynced,
   startTyping,
   swapChannels,
+  updateBotVoiceState,
   // commands
   createSlashCommand,
   deleteSlashCommand,
