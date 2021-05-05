@@ -1,15 +1,15 @@
 /** https://discord.com/developers/docs/resources/guild#guild-object-verification-level */
 export enum DiscordVerificationLevels {
   /** Unrestricted */
-  NONE,
+  None,
   /** Must have verified email on account */
-  LOW,
+  Low,
   /** Must be registered on Discord for longer than 5 minutes */
-  MEDIUM,
+  Medium,
   /** Must be a member of the server for longer than 10 minutes */
-  HIGH,
+  High,
   /** Must have a verified phone number */
-  VERY_HIGH,
+  VeryHigh,
 }
 
 export type VerificationLevels = DiscordVerificationLevels;

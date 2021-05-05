@@ -16,7 +16,7 @@ export async function startTyping(channelId: bigint) {
   if (channel) {
     if (
       ![
-        DiscordChannelTypes.Dm,
+        DiscordChannelTypes.DM,
         DiscordChannelTypes.GuildNews,
         DiscordChannelTypes.GuildText,
         DiscordChannelTypes.GuildNewsThread,
