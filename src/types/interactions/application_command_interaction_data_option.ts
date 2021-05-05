@@ -27,7 +27,7 @@ interface ApplicationCommandInteractionDataOptionBase<
 export interface ApplicationCommandInteractionDataOptionSubCommand
   extends
     ApplicationCommandInteractionDataOptionBase<
-      DiscordApplicationCommandOptionTypes.SUB_COMMAND
+      DiscordApplicationCommandOptionTypes.SubCommand
     > {
   /** Present if this option is a group or subcommand */
   options?: ApplicationCommandInteractionDataOption[];
@@ -36,7 +36,7 @@ export interface ApplicationCommandInteractionDataOptionSubCommand
 export interface ApplicationCommandInteractionDataOptionSubCommandGroup
   extends
     ApplicationCommandInteractionDataOptionBase<
-      DiscordApplicationCommandOptionTypes.SUB_COMMAND_GROUP
+      DiscordApplicationCommandOptionTypes.SubCommandGroup
     > {
   /** Present if this option is a group or subcommand */
   options?: ApplicationCommandInteractionDataOption[];
@@ -44,42 +44,42 @@ export interface ApplicationCommandInteractionDataOptionSubCommandGroup
 
 export type ApplicationCommandInteractionDataOptionString =
   ApplicationCommandInteractionDataOptionBase<
-    DiscordApplicationCommandOptionTypes.STRING,
+    DiscordApplicationCommandOptionTypes.String,
     string
   >;
 
 export type ApplicationCommandInteractionDataOptionInteger =
   ApplicationCommandInteractionDataOptionBase<
-    DiscordApplicationCommandOptionTypes.INTEGER,
+    DiscordApplicationCommandOptionTypes.Integer,
     number
   >;
 
 export type ApplicationCommandInteractionDataOptionBoolean =
   ApplicationCommandInteractionDataOptionBase<
-    DiscordApplicationCommandOptionTypes.BOOLEAN,
+    DiscordApplicationCommandOptionTypes.Boolean,
     boolean
   >;
 
 export type ApplicationCommandInteractionDataOptionUser =
   ApplicationCommandInteractionDataOptionBase<
-    DiscordApplicationCommandOptionTypes.USER,
+    DiscordApplicationCommandOptionTypes.User,
     bigint
   >;
 
 export type ApplicationCommandInteractionDataOptionChannel =
   ApplicationCommandInteractionDataOptionBase<
-    DiscordApplicationCommandOptionTypes.CHANNEL,
+    DiscordApplicationCommandOptionTypes.Channel,
     bigint
   >;
 
 export type ApplicationCommandInteractionDataOptionRole =
   ApplicationCommandInteractionDataOptionBase<
-    DiscordApplicationCommandOptionTypes.ROLE,
+    DiscordApplicationCommandOptionTypes.Role,
     bigint
   >;
 
 export type ApplicationCommandInteractionDataOptionMentionable =
   ApplicationCommandInteractionDataOptionBase<
-    DiscordApplicationCommandOptionTypes.MENTIONABLE,
+    DiscordApplicationCommandOptionTypes.Mentionable,
     bigint
   >;
