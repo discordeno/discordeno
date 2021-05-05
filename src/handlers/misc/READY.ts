@@ -1,10 +1,7 @@
 import { eventHandlers, setApplicationId, setBotId } from "../../bot.ts";
-import { cache, cacheHandlers } from "../../cache.ts";
-import { initialMemberLoadQueue } from "../../structures/guild.ts";
-import { structures } from "../../structures/mod.ts";
+import { cache } from "../../cache.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { Ready } from "../../types/gateway/ready.ts";
-import type { GuildMemberWithUser } from "../../types/mod.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 import { ws } from "../../ws/ws.ts";
 
@@ -92,28 +89,6 @@ async function loaded(shardId: number) {
     } else {
       cache.isReady = true;
       eventHandlers.ready?.();
-
-      // All the members that came in on guild creates should now be processed 1 by 1
-      for (const [guildId, members] of initialMemberLoadQueue.entries()) {
-        eventHandlers.debug?.(
-          "loop",
-          "Running for of loop in READY file for loading members.",
-        );
-        await Promise.allSettled(
-          members.map(async (member) => {
-            const discordenoMember = await structures.createDiscordenoMember(
-              member as GuildMemberWithUser,
-              guildId,
-            );
-
-            return cacheHandlers.set(
-              "members",
-              discordenoMember.id,
-              discordenoMember,
-            );
-          }),
-        );
-      }
     }
   }
 }
