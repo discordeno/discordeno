@@ -2,9 +2,10 @@ import { eventHandlers, setApplicationId, setBotId } from "../../bot.ts";
 import { cache, cacheHandlers } from "../../cache.ts";
 import { initialMemberLoadQueue } from "../../structures/guild.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { Ready } from "../../types/gateway/ready.ts";
-import { GuildMemberWithUser } from "../../types/mod.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { Ready } from "../../types/gateway/ready.ts";
+import type { GuildMemberWithUser } from "../../types/mod.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
 import { ws } from "../../ws/ws.ts";
 
 export function handleReady(
@@ -29,7 +30,9 @@ export function handleReady(
   // Set ready to false just to go sure
   shard.ready = false;
   // All guilds are unavailable at first
-  shard.unavailableGuildIds = new Set(payload.guilds.map((g) => g.id));
+  shard.unavailableGuildIds = new Set(
+    payload.guilds.map((g) => snowflakeToBigint(g.id)),
+  );
 
   // Start ready check in 2 seconds
   setTimeout(async () => {

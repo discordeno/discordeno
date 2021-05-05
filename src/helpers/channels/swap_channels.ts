@@ -1,10 +1,10 @@
 import { rest } from "../../rest/rest.ts";
-import { ModifyGuildChannelPositions } from "../../types/guilds/modify_guild_channel_position.ts";
+import type { ModifyGuildChannelPositions } from "../../types/guilds/modify_guild_channel_position.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
 export async function swapChannels(
-  guildId: string,
+  guildId: bigint,
   channelPositions: ModifyGuildChannelPositions[],
 ) {
   if (channelPositions.length < 2) {

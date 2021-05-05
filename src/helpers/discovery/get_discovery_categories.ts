@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { DiscoveryCategory } from "../../types/discovery/discovery_category.ts";
+import type { DiscoveryCategory } from "../../types/discovery/discovery_category.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 

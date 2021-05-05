@@ -44,6 +44,7 @@ export enum DiscordJsonErrorCodes {
   MaximumNumberOfGuildDiscoverySubcategoriesHasBeenReached = 30030,
   GuildAlreadyHasTemplate = 30031,
   MaximumNumberOfBansForNonGuildMembersHaveBeenExceeded = 30035,
+  MaximumNumberOfBansFetchesHasBeenReached = 30037,
   UnauthorizedProvideAValidTokenAndTryAgain = 40001,
   YouNeedToVerifyYourAccountInOrderToPerformThisAction,
   RequestEntityTooLargeTrySendingSomethingSmallerInSize = 40005,
@@ -79,6 +80,11 @@ export enum DiscordJsonErrorCodes {
   InvalidApiVersionProvided = 50041,
   CannotDeleteAChannelRequiredForCommunityGuilds = 50074,
   InvalidStickerSent = 50081,
+  TriedToPerformAnOperationOnAnArchivedThreadSuchAsEditingAMessageOrAddingAUserToTheThread =
+    50083,
+  InvalidThreadNotificationSettings,
+  BeforeValueIsEarlierThanTheThreadCreationDate,
+  TwoFactorIsRequiredForThisOperation = 60003,
   ReqctionWasBlocked = 90001,
   ApiResourceIsCurrentlyOverloadedTryAgainALittleLater = 130000,
 }

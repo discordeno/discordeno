@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { BeginGuildPrune } from "../../types/guilds/begin_guild_prune.ts";
+import type { BeginGuildPrune } from "../../types/guilds/begin_guild_prune.ts";
 import { Errors } from "../../types/misc/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
@@ -11,7 +11,7 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
  * By default, prune will not remove users with roles. You can optionally include specific roles in your prune by providing the roles (resolved to include_roles internally) parameter. Any inactive user that has a subset of the provided role(s) will be included in the prune and users with additional roles will not.
  */
 export async function pruneMembers(
-  guildId: string,
+  guildId: bigint,
   options: BeginGuildPrune,
 ) {
   if (options.days && options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);

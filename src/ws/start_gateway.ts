@@ -1,5 +1,5 @@
 import { DiscordGatewayIntents } from "../types/gateway/gateway_intents.ts";
-import { GetGatewayBot } from "../types/gateway/get_gateway_bot.ts";
+import type { GetGatewayBot } from "../types/gateway/get_gateway_bot.ts";
 import { snakeKeysToCamelCase } from "../util/utils.ts";
 import { StartGatewayOptions } from "./start_gateway_options.ts";
 import { ws } from "./ws.ts";

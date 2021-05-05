@@ -1,14 +1,14 @@
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
-import { Message } from "../../types/messages/message.ts";
+import type { Message } from "../../types/messages/message.ts";
 import { Errors } from "../../types/misc/errors.ts";
-import { ExecuteWebhook } from "../../types/webhooks/execute_webhook.ts";
+import type { ExecuteWebhook } from "../../types/webhooks/execute_webhook.ts";
 import { endpoints } from "../../util/constants.ts";
 
-/** Execute a webhook with webhook Id and webhook token */
-export async function executeWebhook(
-  webhookId: string,
+/** Send a webhook with webhook Id and webhook token */
+export async function sendWebhook(
+  webhookId: bigint,
   webhookToken: string,
   options: ExecuteWebhook,
 ) {
@@ -75,7 +75,6 @@ export async function executeWebhook(
       avatar_url: options.avatarUrl,
     },
   );
-  // TODO: not sure
   if (!options.wait) return;
 
   return structures.createDiscordenoMessage(result);

@@ -31,10 +31,10 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", user = false) {
       message.channelId,
       message.id,
       "❤",
-      user ? { userId: message.author.id } : undefined,
+      user ? { userId: message.authorId } : undefined,
     );
   } else {
-    await message.removeReaction("❤", user ? message.author.id : undefined);
+    await message.removeReaction("❤", user ? message.authorId : undefined);
   }
 
   // Delay the execution by 5 seconds to allow MESSAGE_REACTION_REMOVE_ALL event to be processed

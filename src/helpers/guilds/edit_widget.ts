@@ -1,11 +1,11 @@
 import { rest } from "../../rest/rest.ts";
-import { GuildWidget } from "../../types/guilds/guild_widget.ts";
+import type { GuildWidget } from "../../types/guilds/guild_widget.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
 /** Modify a guild widget object for the guild. Requires the MANAGE_GUILD permission. */
 export async function editWidget(
-  guildId: string,
+  guildId: bigint,
   enabled: boolean,
   channelId?: string | null,
 ) {

@@ -1,13 +1,17 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { MessageReactionRemoveEmoji } from "../../types/messages/message_reaction_remove_emoji.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { MessageReactionRemoveEmoji } from "../../types/messages/message_reaction_remove_emoji.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleMessageReactionRemoveEmoji(
   data: DiscordGatewayPayload,
 ) {
   const payload = data.d as MessageReactionRemoveEmoji;
-  const message = await cacheHandlers.get("messages", payload.messageId);
+  const message = await cacheHandlers.get(
+    "messages",
+    snowflakeToBigint(payload.messageId),
+  );
 
   if (message?.reactions) {
     message.reactions = message.reactions.filter(
@@ -21,13 +25,13 @@ export async function handleMessageReactionRemoveEmoji(
 
     if (!message.reactions.length) message.reactions = undefined;
 
-    await cacheHandlers.set("messages", payload.messageId, message);
+    await cacheHandlers.set("messages", message.id, message);
   }
 
   eventHandlers.reactionRemoveEmoji?.(
     payload.emoji,
-    payload.messageId,
-    payload.channelId,
-    payload.guildId,
+    snowflakeToBigint(payload.messageId),
+    snowflakeToBigint(payload.channelId),
+    payload.guildId ? snowflakeToBigint(payload.guildId) : undefined,
   );
 }

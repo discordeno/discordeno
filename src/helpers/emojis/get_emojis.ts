@@ -1,8 +1,9 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
-import { Emoji } from "../../types/emojis/emoji.ts";
+import type { Emoji } from "../../types/emojis/emoji.ts";
 import { Errors } from "../../types/misc/errors.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 
@@ -11,7 +12,7 @@ import { endpoints } from "../../util/constants.ts";
  *
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  */
-export async function getEmojis(guildId: string, addToCache = true) {
+export async function getEmojis(guildId: bigint, addToCache = true) {
   const result = await rest.runMethod<Emoji[]>(
     "get",
     endpoints.GUILD_EMOJIS(guildId),
@@ -26,7 +27,7 @@ export async function getEmojis(guildId: string, addToCache = true) {
         "loop",
         `Running forEach loop in get_emojis file.`,
       );
-      guild.emojis.set(emoji.id!, emoji);
+      guild.emojis.set(snowflakeToBigint(emoji.id!), emoji);
     });
 
     await cacheHandlers.set("guilds", guildId, guild);

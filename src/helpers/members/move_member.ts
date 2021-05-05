@@ -7,9 +7,9 @@ import { editMember } from "./edit_member.ts";
  * @param channelId id of channel to move user to (if they are connected to voice)
  */
 export function moveMember(
-  guildId: string,
-  memberId: string,
-  channelId: string,
+  guildId: bigint,
+  memberId: bigint,
+  channelId: bigint,
 ) {
   return editMember(guildId, memberId, { channelId });
 }

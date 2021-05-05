@@ -5,7 +5,7 @@ import { endpoints } from "../../util/constants.ts";
 /** To delete your response to a slash command. If a message id is not provided, it will default to deleting the original response. */
 export async function deleteSlashResponse(
   token: string,
-  messageId?: string,
+  messageId?: bigint,
 ) {
   return await rest.runMethod<undefined>(
     "delete",

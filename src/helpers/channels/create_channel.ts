@@ -1,39 +1,31 @@
-import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { Channel } from "../../types/channels/channel.ts";
+import type { Channel } from "../../types/channels/channel.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
-import {
+import type {
   CreateGuildChannel,
   DiscordCreateGuildChannel,
 } from "../../types/guilds/create_guild_channel.ts";
-import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,
-  requireBotGuildPermissions,
+  requireOverwritePermissions,
 } from "../../util/permissions.ts";
 import { camelKeysToSnakeCase } from "../../util/utils.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(
-  guildId: string,
+  guildId: bigint,
   options?: CreateGuildChannel,
   reason?: string,
 ) {
-  const requiredPerms: Set<PermissionStrings> = new Set(["MANAGE_CHANNELS"]);
-
-  options?.permissionOverwrites?.forEach((overwrite) => {
-    eventHandlers.debug?.(
-      "loop",
-      `Running forEach loop in create_channel file.`,
+  if (options?.permissionOverwrites) {
+    await requireOverwritePermissions(
+      guildId,
+      options.permissionOverwrites,
     );
-    overwrite.allow.forEach(requiredPerms.add, requiredPerms);
-    overwrite.deny.forEach(requiredPerms.add, requiredPerms);
-  });
-
-  await requireBotGuildPermissions(guildId, [...requiredPerms]);
+  }
 
   // BITRATES ARE IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
@@ -48,7 +40,7 @@ export async function createChannel(
         allow: calculateBits(perm.allow),
         deny: calculateBits(perm.deny),
       })),
-      type: options?.type || DiscordChannelTypes.GUILD_TEXT,
+      type: options?.type || DiscordChannelTypes.GuildText,
       reason,
     },
   );

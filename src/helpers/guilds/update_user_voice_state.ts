@@ -1,6 +1,5 @@
-import { RequestManager } from "../../rest/request_manager.ts";
-import {
-  DiscordUpdateOthersVoiceState,
+import { rest } from "../../rest/rest.ts";
+import type {
   UpdateOthersVoiceState,
 } from "../../types/guilds/update_others_voice_state.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -16,14 +15,13 @@ import { camelKeysToSnakeCase } from "../../util/utils.ts";
  *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
  */
 export function updateVoiceState(
-  guildId: string,
-  userId: string,
+  guildId: bigint,
+  userId: bigint,
   data: UpdateOthersVoiceState,
 ) {
-  const payload = camelKeysToSnakeCase<DiscordUpdateOthersVoiceState>(data);
-
-  return RequestManager.patch(
+  return rest.runMethod(
+    "patch",
     endpoints.UPDATE_VOICE_STATE(guildId, userId),
-    payload,
+    camelKeysToSnakeCase(data),
   );
 }

@@ -1,4 +1,5 @@
 import { API_VERSION, BASE_URL, IMAGE_BASE_URL } from "../util/constants.ts";
+import { loopObject } from "../util/loop_object.ts";
 import { snakeKeysToCamelCase } from "../util/utils.ts";
 import { rest } from "./rest.ts";
 
@@ -10,6 +11,19 @@ export async function runMethod<T = any>(
   retryCount = 0,
   bucketId?: string,
 ): Promise<T> {
+  if (body) {
+    body = loopObject(
+      body as Record<string, unknown>,
+      (value) =>
+        typeof value === "bigint"
+          ? value.toString()
+          : Array.isArray(value)
+          ? value.map((v) => typeof v === "bigint" ? v.toString() : v)
+          : value,
+      `Running forEach loop in runMethod function for changing bigints to strings.`,
+    );
+  }
+
   rest.eventHandlers.debug?.("requestCreate", {
     method,
     url,

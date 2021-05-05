@@ -128,7 +128,7 @@ export interface DiscordenoShard {
   /** Whether the shard has received the ready event */
   ready: boolean;
   /** The list of guild ids that are currently unavailable due to an outage. */
-  unavailableGuildIds: Set<string>;
+  unavailableGuildIds: Set<bigint>;
   heartbeat: {
     /** The exact timestamp the last heartbeat was sent */
     lastSentAt: number;

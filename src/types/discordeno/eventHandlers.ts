@@ -4,6 +4,8 @@ import { DiscordenoMember } from "../../structures/member.ts";
 import { DiscordenoMessage } from "../../structures/message.ts";
 import { DiscordenoRole } from "../../structures/role.ts";
 import { Collection } from "../../util/collection.ts";
+import { ThreadMember } from "../channels/threads/thread_member.ts";
+import { ThreadMembersUpdate } from "../channels/threads/thread_members_update.ts";
 import { IntegrationCreateUpdate } from "../integration/integration_create_update.ts";
 import { ApplicationCommandCreateUpdateDelete } from "../interactions/application_command_create_update_delete.ts";
 import {
@@ -101,8 +103,8 @@ export interface EventHandlers {
   /** Sent when a guild's emojis have been updated. */
   guildEmojisUpdate?: (
     guild: DiscordenoGuild,
-    emojis: Collection<string, Emoji>,
-    oldEmojis: Collection<string, Emoji>,
+    emojis: Collection<bigint, Emoji>,
+    oldEmojis: Collection<bigint, Emoji>,
   ) => unknown;
   /** Sent when a new user joins a guild. */
   guildMemberAdd?: (
@@ -181,9 +183,9 @@ export interface EventHandlers {
   /** Sent when a bot removes all instances of a given emoji from the reactions of a message. */
   reactionRemoveEmoji?: (
     emoji: Partial<Emoji>,
-    messageId: string,
-    channelId: string,
-    guildId?: string,
+    messageId: bigint,
+    channelId: bigint,
+    guildId?: bigint,
   ) => unknown;
   /** Sent when a guild role is created. */
   roleCreate?: (guild: DiscordenoGuild, role: DiscordenoRole) => unknown;
@@ -198,30 +200,49 @@ export interface EventHandlers {
   roleGained?: (
     guild: DiscordenoGuild,
     member: DiscordenoMember,
-    roleId: string,
+    roleId: bigint,
   ) => unknown;
   roleLost?: (
     guild: DiscordenoGuild,
     member: DiscordenoMember,
-    roleId: string,
+    roleId: bigint,
   ) => unknown;
   shardReady?: (shardId: number) => unknown;
   /** Sent when a shard failed to load. */
   shardFailedToLoad?: (
     shardId: number,
-    unavailableGuildIds: Set<string>,
+    unavailableGuildIds: Set<bigint>,
   ) => unknown;
+  /** Sent when a thread is created */
+  threadCreate?: (channel: DiscordenoChannel) => unknown;
+  /** Sent when a thread is updated */
+  threadUpdate?: (
+    cahnnel: DiscordenoChannel,
+    oldChannel: DiscordenoChannel,
+  ) => unknown;
+  /** Sent when the bot gains access to threads */
+  threadListSync?: (
+    channels: Collection<bigint, DiscordenoChannel>,
+    members: ThreadMember[],
+    guildId: bigint,
+  ) => unknown;
+  /** Sent when the current users thread member is updated */
+  threadMemberUpdate?: (threadMember: ThreadMember) => unknown;
+  /** Sent when anyone is added to or removed from a thread */
+  threadMembersUpdate?: (update: ThreadMembersUpdate) => unknown;
+  /** Sent when a thread is deleted */
+  threadDelete?: (channel: DiscordenoChannel) => unknown;
   /** Sent when a user starts typing in a channel. */
   typingStart?: (data: TypingStart) => unknown;
   /** Sent when a user joins a voice channel */
-  voiceChannelJoin?: (member: DiscordenoMember, channelId: string) => unknown;
+  voiceChannelJoin?: (member: DiscordenoMember, channelId: bigint) => unknown;
   /** Sent when a user leaves a voice channel. Does not get sent when user switches the voice channel */
-  voiceChannelLeave?: (member: DiscordenoMember, channelId: string) => unknown;
+  voiceChannelLeave?: (member: DiscordenoMember, channelId: bigint) => unknown;
   /** Sent when a user switches the voice channel */
   voiceChannelSwitch?: (
     member: DiscordenoMember,
-    channelId: string,
-    oldChannelId: string,
+    channelId: bigint,
+    oldChannelId: bigint,
   ) => unknown;
   /** Sent when a voice server is updated with information for making the bot connect to a voice channel. */
   voiceServerUpdate?: (
@@ -234,7 +255,7 @@ export interface EventHandlers {
     voiceState: VoiceState,
   ) => unknown;
   /** Sent when a guild channel's webhook is created, updated, or deleted. */
-  webhooksUpdate?: (channelId: string, guildId: string) => unknown;
+  webhooksUpdate?: (channelId: bigint, guildId: bigint) => unknown;
   /** Sent when a member has passed the guild's Membership Screening requirements */
   membershipScreeningPassed?: (
     guild: DiscordenoGuild,

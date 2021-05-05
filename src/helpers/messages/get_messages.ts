@@ -6,13 +6,13 @@ import {
   GetMessagesBefore,
   GetMessagesLimit,
 } from "../../types/messages/get_messages.ts";
-import { Message } from "../../types/messages/message.ts";
+import type { Message } from "../../types/messages/message.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
 /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
 export async function getMessages(
-  channelId: string,
+  channelId: bigint,
   options?:
     | GetMessagesAfter
     | GetMessagesBefore

@@ -1,17 +1,20 @@
 import { cache, cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { GuildMembersChunk } from "../../types/members/guild_members_chunk.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { GuildMembersChunk } from "../../types/members/guild_members_chunk.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
 import { Collection } from "../../util/collection.ts";
 
 export async function handleGuildMembersChunk(data: DiscordGatewayPayload) {
   const payload = data.d as GuildMembersChunk;
 
+  const guildId = snowflakeToBigint(payload.guildId);
+
   const members = await Promise.all(
     payload.members.map(async (member) => {
       const discordenoMember = await structures.createDiscordenoMember(
         member,
-        payload.guildId,
+        guildId,
       );
       await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 
@@ -36,7 +39,7 @@ export async function handleGuildMembersChunk(data: DiscordGatewayPayload) {
       return resolve(
         await cacheHandlers.filter(
           "members",
-          (m) => m.guilds.has(payload.guildId),
+          (m) => m.guilds.has(guildId),
         ),
       );
     }
