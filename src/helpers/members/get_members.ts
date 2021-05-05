@@ -24,7 +24,7 @@ export async function getMembers(
   guildId: bigint,
   options?: ListGuildMembers & { addToCache?: boolean },
 ) {
-  if (!(ws.identifyPayload.intents && DiscordGatewayIntents.GUILD_MEMBERS)) {
+  if (!(ws.identifyPayload.intents && DiscordGatewayIntents.GuildMembers)) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
