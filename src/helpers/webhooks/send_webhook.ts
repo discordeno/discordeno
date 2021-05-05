@@ -66,9 +66,9 @@ export async function sendWebhook(
 
   const result = await rest.runMethod<Message>(
     "post",
-    `${endpoints.WEBHOOK(webhookId, webhookToken)}?wait=${
-      options.wait ? "true" : "false"
-    }${options.threadId ? `&thread_id=${options.threadId}` : ""}`,
+    `${endpoints.WEBHOOK(webhookId, webhookToken)}?wait=${options.wait}${
+      options.threadId ? `&thread_id=${options.threadId}` : ""
+    }`,
     {
       ...options,
       allowed_mentions: options.allowedMentions,
