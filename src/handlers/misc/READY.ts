@@ -52,7 +52,7 @@ async function checkReady(payload: Ready, shardId: number, now: number) {
     if (Date.now() - now > 10000) {
       eventHandlers.shardFailedToLoad?.(shardId, shard.unavailableGuildIds);
       // Force execute the loaded function to prevent infinite loop
-      await loaded(shardId);
+      loaded(shardId);
     } else {
       // Not all guilds were loaded but 10 seconds haven't passed so check again
       setTimeout(async () => {
@@ -65,11 +65,11 @@ async function checkReady(payload: Ready, shardId: number, now: number) {
     }
   } else {
     // All guilds were loaded
-    await loaded(shardId);
+    loaded(shardId);
   }
 }
 
-async function loaded(shardId: number) {
+function loaded(shardId: number) {
   const shard = ws.shards.get(shardId);
   if (!shard) return;
 
@@ -84,7 +84,7 @@ async function loaded(shardId: number) {
           "loop",
           `3. Running setTimeout in CHANNEL_DELTE file.`,
         );
-        await loaded(shardId);
+        loaded(shardId);
       }, 2000);
     } else {
       cache.isReady = true;
