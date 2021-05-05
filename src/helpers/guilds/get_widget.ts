@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import type { GuildWidgetDetails } from "../../types/guilds/guild_widget_details.ts";
-import { Errors } from "../../types/misc/errors.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 
 /** Returns the widget for the guild. */

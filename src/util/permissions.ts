@@ -5,7 +5,7 @@ import { DiscordenoGuild } from "../structures/guild.ts";
 import { DiscordenoMember } from "../structures/member.ts";
 import { DiscordenoRole } from "../structures/role.ts";
 import { Overwrite } from "../types/channels/overwrite.ts";
-import { Errors } from "../types/misc/errors.ts";
+import { Errors } from "../types/discordeno/errors.ts";
 import { DiscordBitwisePermissionFlags } from "../types/permissions/bitwise_permission_flags.ts";
 import type { PermissionStrings } from "../types/permissions/permission_strings.ts";
 

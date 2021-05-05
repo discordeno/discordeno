@@ -2,7 +2,7 @@ import { cacheHandlers } from "../../../cache.ts";
 import { rest } from "../../../rest/rest.ts";
 import { ChannelTypes } from "../../../types/channels/channel_types.ts";
 import { StartThread } from "../../../types/channels/threads/start_thread.ts";
-import { Errors } from "../../../types/misc/errors.ts";
+import { Errors } from "../../../types/discordeno/errors.ts";
 import { endpoints } from "../../../util/constants.ts";
 import { camelKeysToSnakeCase } from "../../../util/utils.ts";
 

@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { Errors } from "../../types/misc/errors.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import type { User } from "../../types/users/user.ts";
 import { endpoints } from "../../util/constants.ts";
 import { urlToBase64 } from "../../util/utils.ts";

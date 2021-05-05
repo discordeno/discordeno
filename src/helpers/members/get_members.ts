@@ -6,7 +6,7 @@ import { structures } from "../../structures/mod.ts";
 import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
 import type { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
 import type { ListGuildMembers } from "../../types/guilds/list_guild_members.ts";
-import { Errors } from "../../types/misc/errors.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import { bigintToSnowflake } from "../../util/bigint.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";

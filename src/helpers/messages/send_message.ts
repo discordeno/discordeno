@@ -6,7 +6,7 @@ import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentio
 import { ButtonStyles } from "../../types/messages/components/button_styles.ts";
 import type { CreateMessage } from "../../types/messages/create_message.ts";
 import type { Message } from "../../types/messages/message.ts";
-import { Errors } from "../../types/misc/errors.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";

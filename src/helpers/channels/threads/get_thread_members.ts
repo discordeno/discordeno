@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../../cache.ts";
 import { rest } from "../../../rest/rest.ts";
 import { ChannelTypes } from "../../../types/channels/channel_types.ts";
-import { Errors } from "../../../types/misc/errors.ts";
+import { Errors } from "../../../types/discordeno/errors.ts";
 import { endpoints } from "../../../util/constants.ts";
 
 // TODO(threads): it seems like the documented return type is wrong
