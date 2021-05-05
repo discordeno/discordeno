@@ -79,8 +79,7 @@ Deno.test({
 });
 
 Deno.test({
-  name:
-    "[utils] if the name of the application command does not match the regexp, validateSlashCommands() should throw an error.",
+  name: "[utils] validateSlashCommands(): invalid name",
   fn() {
     assertThrows(() =>
       validateSlashCommands([{
@@ -92,8 +91,7 @@ Deno.test({
 });
 
 Deno.test({
-  name:
-    "[utils] if the name of the application command exceeds the limit, an error should be thrown.",
+  name: "[utils] validateSlashCommands(): invalid description",
   fn() {
     assertThrows(() =>
       // The maximum length of the description of an application command is 100.
@@ -103,8 +101,7 @@ Deno.test({
 });
 
 Deno.test({
-  name:
-    "[utils] if the number of options of an application command limit is exceed, an error should be thrown",
+  name: "[utils] validateSlashCommands(): invalid number of options",
   fn() {
     // The maximum number of options an application command can "accomodate" is 25.
     const options: ApplicationCommandOption[] = Array(26).fill({
