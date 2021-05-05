@@ -79,10 +79,10 @@ function loaded(shardId: number) {
   if (shardId === ws.lastShardId - 1) {
     // Still some shards are loading so wait another 2 seconds for them
     if (ws.shards.some((shard) => !shard.ready)) {
-      setTimeout(async () => {
+      setTimeout(() => {
         eventHandlers.debug?.(
           "loop",
-          `3. Running setTimeout in CHANNEL_DELTE file.`,
+          `3. Running setTimeout in READY file.`,
         );
         loaded(shardId);
       }, 2000);
