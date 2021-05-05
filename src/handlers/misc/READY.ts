@@ -32,18 +32,18 @@ export function handleReady(
   );
 
   // Start ready check in 2 seconds
-  setTimeout(async () => {
+  setTimeout(() => {
     eventHandlers.debug?.(
       "loop",
       `1. Running setTimeout in READY file.`,
     );
-    await checkReady(payload, shardId, now);
+    checkReady(payload, shardId, now);
   }, 2000);
 }
 
 // Don't pass the shard itself because unavailableGuilds won't be updated by the GUILD_CREATE event
 /** This function checks if the shard is fully loaded */
-async function checkReady(payload: Ready, shardId: number, now: number) {
+function checkReady(payload: Ready, shardId: number, now: number) {
   const shard = ws.shards.get(shardId);
   if (!shard) return;
 
@@ -55,12 +55,12 @@ async function checkReady(payload: Ready, shardId: number, now: number) {
       loaded(shardId);
     } else {
       // Not all guilds were loaded but 10 seconds haven't passed so check again
-      setTimeout(async () => {
+      setTimeout(() => {
         eventHandlers.debug?.(
           "loop",
           `2. Running setTimeout in READY file.`,
         );
-        await checkReady(payload, shardId, now);
+        checkReady(payload, shardId, now);
       }, 2000);
     }
   } else {
