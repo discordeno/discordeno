@@ -5,7 +5,6 @@ import { Errors } from "../../types/discordeno/errors.ts";
 import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
 import type { RequestGuildMembers } from "../../types/members/request_guild_members.ts";
 import { Collection } from "../../util/collection.ts";
-import { sendShardMessage } from "../../ws/send_shard_message.ts";
 import { ws } from "../../ws/ws.ts";
 
 /**
@@ -37,7 +36,7 @@ export function fetchMembers(
     const nonce = `${guildId}-${Date.now()}`;
     cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
 
-    sendShardMessage(shardId, {
+    ws.sendShardMessage(shardId, {
       op: DiscordGatewayOpcodes.RequestGuildMembers,
       d: {
         guild_id: guildId,
