@@ -14,7 +14,7 @@ export const rest = {
   token: "",
   /** The maximum amount of retries allowed */
   maxRetryCount: 10,
-  apiVersion: "8",
+  apiVersion: "9",
   /** The secret authorization key to confirm that this was a request made by you and not a DDOS attack. */
   authorization: "discordeno_best_lib_ever",
   pathQueues: new Map<
