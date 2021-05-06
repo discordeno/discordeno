@@ -80,7 +80,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "[utils] validateSlashCommands(): validates application command name",
+  name: "[utils] validateSlashCommands(): application command name",
   fn() {
     assertThrows(() =>
       validateSlashCommands([{
@@ -97,7 +97,7 @@ Deno.test({
 
 Deno.test({
   name:
-    "[utils] validateSlashCommands(): validates application command description",
+    "[utils] validateSlashCommands(): application command description",
   fn() {
     assertThrows(() =>
       // The maximum length of the description of an application command is 100.
@@ -111,7 +111,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "[utils] validateSlashCommands(): validates number of options",
+  name: "[utils] validateSlashCommands(): number of options",
   fn() {
     const option = {
       name: "optionname",
@@ -130,7 +130,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "[utils] validateSlashCommands(): validates number of option choices",
+  name: "[utils] validateSlashCommands(): number of option choices",
   fn() {
     const choice: ApplicationCommandOptionChoice = {
       name: "choicename",
@@ -162,7 +162,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "[utils] validateSlashCommands(): validates option name",
+  name: "[utils] validateSlashCommands(): option name",
   fn() {
     assertThrows(() =>
       validateSlashCommands([{
@@ -186,7 +186,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "[utils] validateSlashCommands(): validates option description",
+  name: "[utils] validateSlashCommands(): option description",
   fn() {
     assertThrows(() =>
       validateSlashCommands([{
@@ -210,7 +210,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "[utils] validateSlashCommands(): validates the option choice name",
+  name: "[utils] validateSlashCommands(): the option choice name",
   fn() {
     assertThrows(() =>
       validateSlashCommands([{
@@ -242,7 +242,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "[utils] validateSlashCommands(): validates option choice value",
+  name: "[utils] validateSlashCommands(): option choice value",
   fn() {
     assertThrows(() =>
       validateSlashCommands([{
