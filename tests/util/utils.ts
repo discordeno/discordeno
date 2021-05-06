@@ -96,8 +96,7 @@ Deno.test({
 });
 
 Deno.test({
-  name:
-    "[utils] validateSlashCommands(): application command description",
+  name: "[utils] validateSlashCommands(): application command description",
   fn() {
     assertThrows(() =>
       // The maximum length of the description of an application command is 100.
