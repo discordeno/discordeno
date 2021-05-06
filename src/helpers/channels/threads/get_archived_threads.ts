@@ -1,7 +1,7 @@
 import { rest } from "../../../rest/rest.ts";
 import { ListPublicArchivedThreads } from "../../../types/channels/threads/list_public_archived_threads.ts";
 import { endpoints } from "../../../util/constants.ts";
-import { camelKeysToSnakeCase } from "../../../util/utils.ts";
+import { snakelize } from "../../../util/utils.ts";
 
 export async function getArchivedThreads(
   channelId: bigint,
@@ -19,6 +19,6 @@ export async function getArchivedThreads(
       : options?.type === "private"
       ? endpoints.THREAD_ARCHIVED_PRIVATE(channelId)
       : endpoints.THREAD_ARCHIVED_PUBLIC(channelId),
-    camelKeysToSnakeCase(options ?? {}),
+    snakelize(options ?? {}),
   );
 }

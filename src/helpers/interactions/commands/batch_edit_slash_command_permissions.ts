@@ -1,8 +1,8 @@
-import { applicationId } from "../../bot.ts";
-import { rest } from "../../rest/rest.ts";
-import type { ApplicationCommandPermissions } from "../../types/interactions/application_command_permissions.ts";
-import { endpoints } from "../../util/constants.ts";
-import { camelKeysToSnakeCase } from "../../util/utils.ts";
+import { applicationId } from "../../../bot.ts";
+import { rest } from "../../../rest/rest.ts";
+import type { ApplicationCommandPermissions } from "../../../types/interactions/commands/application_command_permissions.ts";
+import { endpoints } from "../../../util/constants.ts";
+import { snakelize } from "../../../util/utils.ts";
 
 /** Batch edits permissions for all commands in a guild. Takes an array of partial GuildApplicationCommandPermissions objects including `id` and `permissions`. */
 export async function batchEditSlashCommandPermissions(
@@ -12,6 +12,6 @@ export async function batchEditSlashCommandPermissions(
   return await rest.runMethod(
     "put",
     endpoints.COMMANDS_PERMISSIONS(applicationId, guildId),
-    camelKeysToSnakeCase(options),
+    snakelize(options),
   );
 }

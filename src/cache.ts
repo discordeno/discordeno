@@ -3,8 +3,8 @@ import type { DiscordenoChannel } from "./structures/channel.ts";
 import type { DiscordenoGuild } from "./structures/guild.ts";
 import type { DiscordenoMember } from "./structures/member.ts";
 import type { DiscordenoMessage } from "./structures/message.ts";
+import type { PresenceUpdate } from "./types/activity/presence_update.ts";
 import type { Emoji } from "./types/emojis/emoji.ts";
-import type { PresenceUpdate } from "./types/misc/presence_update.ts";
 import { Collection } from "./util/collection.ts";
 
 export const cache = {

@@ -1,4 +1,4 @@
-import { CreateGlobalApplicationCommand } from "../interactions/create_global_application_command.ts";
+import { CreateGlobalApplicationCommand } from "../interactions/commands/create_global_application_command.ts";
 
 export interface DiscordenoCreateApplicationCommand
   extends CreateGlobalApplicationCommand {

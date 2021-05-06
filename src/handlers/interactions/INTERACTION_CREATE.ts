@@ -2,8 +2,8 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
 import type { Interaction } from "../../types/interactions/interaction.ts";
+import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleInteractionCreate(data: DiscordGatewayPayload) {

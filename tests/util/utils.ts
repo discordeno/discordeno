@@ -1,9 +1,9 @@
-import { ApplicationCommandOption } from "../../src/types/interactions/application_command_option.ts";
-import { ApplicationCommandOptionChoice } from "../../src/types/interactions/application_command_option_choice.ts";
-import { DiscordApplicationCommandOptionTypes } from "../../src/types/interactions/application_command_option_types.ts";
+import { ApplicationCommandOption } from "../../src/types/interactions/commands/application_command_option.ts";
+import { ApplicationCommandOptionChoice } from "../../src/types/interactions/commands/application_command_option_choice.ts";
+import { DiscordApplicationCommandOptionTypes } from "../../src/types/interactions/commands/application_command_option_types.ts";
 import {
-  camelKeysToSnakeCase,
-  snakeKeysToCamelCase,
+  camelize,
+  snakelize,
   validateSlashCommands,
 } from "../../src/util/utils.ts";
 import { assertEquals, assertThrows } from "../deps.ts";
@@ -62,9 +62,9 @@ const someElseOther = {
 Deno.test({
   name: "[utils] convert snake case keys to camel case",
   fn() {
-    const result = snakeKeysToCamelCase(testSnakeObject);
+    const result = camelize(testSnakeObject);
     assertEquals(result, testCamelObject);
-    const resultTwo = snakeKeysToCamelCase(someOther);
+    const resultTwo = camelize(someOther);
     assertEquals(resultTwo, someOther);
   },
 });
@@ -72,9 +72,9 @@ Deno.test({
 Deno.test({
   name: "[utils] convert camel case keys to snake case",
   fn() {
-    const result = camelKeysToSnakeCase(testCamelObject);
+    const result = snakelize(testCamelObject);
     assertEquals(result, testSnakeObject);
-    const resultTwo = camelKeysToSnakeCase(someElseOther);
+    const resultTwo = snakelize(someElseOther);
     assertEquals(resultTwo, someElseOther);
   },
 });

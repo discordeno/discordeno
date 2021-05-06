@@ -1,4 +1,4 @@
-import { Integration } from "../integration/integration.ts";
+import { Integration } from "../integrations/integration.ts";
 import { DiscordVisibilityTypes } from "./visibility_types.ts";
 
 /** https://discord.com/developers/docs/resources/user#connection-objecthttps://discord.com/developers/docs/resources/user#user-object-premium-types */
