@@ -16,6 +16,7 @@ jobs:
       - name: Run test script if label added
         if: ${{ github.event.issue.pull_request }}
         if: github.actor == 'Skillz4Killz' || github.actor == 'itohatweb'
+        if: github.event.issue.comment.body == 'run-tests'
         run: DISCORD_TOKEN=${{ env.DISCORD_TOKEN }} deno test --unstable --coverage=coverage -A tests/mod.ts
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
