@@ -258,12 +258,10 @@ export function validateComponents(components: MessageComponents) {
         if (/^[0-9]+$/.test(component.emoji)) {
           component.emoji = {
             id: component.emoji,
-            name: component.emoji,
           };
         } else {
           // A unicode emoji was provided
           component.emoji = {
-            id: "",
             name: component.emoji,
           };
         }
