@@ -12,7 +12,7 @@ import {
   calculateBits,
   requireOverwritePermissions,
 } from "../../util/permissions.ts";
-import { camelKeysToSnakeCase } from "../../util/utils.ts";
+import { snakelize } from "../../util/utils.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(
@@ -34,7 +34,7 @@ export async function createChannel(
     "post",
     endpoints.GUILD_CHANNELS(guildId),
     {
-      ...camelKeysToSnakeCase<DiscordCreateGuildChannel>(options ?? {}),
+      ...snakelize<DiscordCreateGuildChannel>(options ?? {}),
       permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
         ...perm,
         allow: calculateBits(perm.allow),

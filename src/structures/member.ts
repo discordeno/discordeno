@@ -8,11 +8,11 @@ import { sendDirectMessage } from "../helpers/members/send_direct_message.ts";
 import { addRole } from "../helpers/roles/add_role.ts";
 import { removeRole } from "../helpers/roles/remove_role.ts";
 import type { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
+import type { ModifyGuildMember } from "../types/guilds/modify_guild_member.ts";
 import type {
   GuildMember,
   GuildMemberWithUser,
-} from "../types/guilds/guild_member.ts";
-import type { ModifyGuildMember } from "../types/guilds/modify_guild_member.ts";
+} from "../types/members/guild_member.ts";
 import type { CreateMessage } from "../types/messages/create_message.ts";
 import type { DiscordImageFormat } from "../types/misc/image_format.ts";
 import type { DiscordImageSize } from "../types/misc/image_size.ts";

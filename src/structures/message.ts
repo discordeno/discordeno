@@ -10,7 +10,7 @@ import { removeAllReactions } from "../helpers/messages/remove_all_reactions.ts"
 import { removeReaction } from "../helpers/messages/remove_reaction.ts";
 import { removeReactionEmoji } from "../helpers/messages/remove_reaction_emoji.ts";
 import { sendMessage } from "../helpers/messages/send_message.ts";
-import type { GuildMember } from "../types/guilds/guild_member.ts";
+import type { GuildMember } from "../types/members/guild_member.ts";
 import type { CreateMessage } from "../types/messages/create_message.ts";
 import type { EditMessage } from "../types/messages/edit_message.ts";
 import type { Message } from "../types/messages/message.ts";
@@ -253,7 +253,6 @@ export interface DiscordenoMessage extends
     | "author"
   > {
   id: bigint;
-  author: undefined;
   /** Whether or not this message was sent by a bot */
   isBot: boolean;
   /** The username#discrimnator for the user who sent this message */

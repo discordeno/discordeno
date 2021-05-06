@@ -2,15 +2,15 @@ import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
 import { ButtonStyles } from "../../types/messages/components/button_styles.ts";
 import type { CreateMessage } from "../../types/messages/create_message.ts";
 import type { Message } from "../../types/messages/message.ts";
-import { Errors } from "../../types/discordeno/errors.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
-import { camelKeysToSnakeCase } from "../../util/utils.ts";
+import { snakelize } from "../../util/utils.ts";
 import { validateLength } from "../../util/validate_length.ts";
 import { isActionRow } from "../type_guards/is_action_row.ts";
 import { isButton } from "../type_guards/is_button.ts";
@@ -148,7 +148,7 @@ export async function sendMessage(
   const result = await rest.runMethod<Message>(
     "post",
     endpoints.CHANNEL_MESSAGES(channelId),
-    camelKeysToSnakeCase({
+    snakelize({
       ...content,
       ...(content.messageReference?.messageId
         ? {

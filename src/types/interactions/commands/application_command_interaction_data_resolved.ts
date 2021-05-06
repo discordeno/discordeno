@@ -1,7 +1,7 @@
-import { Channel } from "../channels/channel.ts";
-import { GuildMember } from "../guilds/guild_member.ts";
-import { Role } from "../permissions/role.ts";
-import { User } from "../users/user.ts";
+import { Channel } from "../../channels/channel.ts";
+import { GuildMember } from "../../members/guild_member.ts";
+import { Role } from "../../permissions/role.ts";
+import { User } from "../../users/user.ts";
 
 export interface ApplicationCommandInteractionDataResolved {
   /** The Ids and User objects */

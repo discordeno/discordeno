@@ -1,6 +1,6 @@
 import { eventHandlers } from "../bot.ts";
 import { cache } from "../cache.ts";
-import type { GuildMember } from "../types/guilds/guild_member.ts";
+import type { GuildMember } from "../types/members/guild_member.ts";
 import type { VoiceState } from "../types/voice/voice_state.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { createNewProp } from "../util/utils.ts";
