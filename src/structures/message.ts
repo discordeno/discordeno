@@ -191,10 +191,10 @@ export async function createDiscordenoMessage(data: Message) {
   props.tag = createNewProp(`${author.username}#${author.discriminator}`);
 
   // Discord doesnt give guild id for getMessage() so this will fill it in
-  const guildIdFinal = guildId ||
+  const guildIdFinal = snowflakeToBigint(guildId) ||
     (await cacheHandlers.get("channels", snowflakeToBigint(data.channelId)))
       ?.guildId ||
-    "";
+    0n;
 
   const message: DiscordenoMessage = Object.create(baseMessage, {
     ...props,
