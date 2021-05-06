@@ -1,7 +1,6 @@
 name: Test Contributor Pull Requests
 on:
   pull_request:
-    types: [labeled]
 jobs:
   test:
     runs-on: ubuntu-latest
