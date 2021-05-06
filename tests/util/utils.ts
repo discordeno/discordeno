@@ -1,4 +1,5 @@
 import { ApplicationCommandOption } from "../../src/types/interactions/application_command_option.ts";
+import { ApplicationCommandOptionChoice } from "../../src/types/interactions/application_command_option_choice.ts";
 import { DiscordApplicationCommandOptionTypes } from "../../src/types/interactions/application_command_option_types.ts";
 import {
   camelKeysToSnakeCase,
@@ -79,7 +80,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: "[utils] validateSlashCommands(): validates name",
+  name: "[utils] validateSlashCommands(): validates application command name",
   fn() {
     assertThrows(() =>
       validateSlashCommands([{
@@ -95,7 +96,8 @@ Deno.test({
 });
 
 Deno.test({
-  name: "[utils] validateSlashCommands(): validates description",
+  name:
+    "[utils] validateSlashCommands(): validates application command description",
   fn() {
     assertThrows(() =>
       // The maximum length of the description of an application command is 100.
@@ -112,8 +114,8 @@ Deno.test({
   name: "[utils] validateSlashCommands(): validates number of options",
   fn() {
     const option = {
-      name: "option1",
-      description: "The description of the application command's option.",
+      name: "optionname",
+      description: "The description of the option.",
       type: DiscordApplicationCommandOptionTypes.String,
     };
     // The maximum number of options an application command can "accomodate" is 25.
@@ -123,6 +125,164 @@ Deno.test({
 
     validateSlashCommands([{
       options: [option],
+    }]);
+  },
+});
+
+Deno.test({
+  name: "[utils] validateSlashCommands(): validates number of option choices",
+  fn() {
+    const choice: ApplicationCommandOptionChoice = {
+      name: "choicename",
+      value: "choicevalue",
+    };
+    // The maximum number of application command option choices is 25.
+    const choices = Array(26).fill(choice);
+
+    assertThrows(() =>
+      validateSlashCommands([{
+        options: [{
+          name: "optionname",
+          type: DiscordApplicationCommandOptionTypes.String,
+          description: "The description of the option.",
+          choices,
+        }],
+      }])
+    );
+
+    validateSlashCommands([{
+      options: [{
+        name: "optionname",
+        type: DiscordApplicationCommandOptionTypes.String,
+        description: "The description of the option.",
+        choices: [choice],
+      }],
+    }]);
+  },
+});
+
+Deno.test({
+  name: "[utils] validateSlashCommands(): validates option name",
+  fn() {
+    assertThrows(() =>
+      validateSlashCommands([{
+        options: [{
+          // The maximum length of application command option name is 32.
+          name: "a".repeat(33),
+          description: "The description of the option.",
+          type: DiscordApplicationCommandOptionTypes.String,
+        }],
+      }])
+    );
+
+    validateSlashCommands([{
+      options: [{
+        name: "optionname",
+        description: "The description of the option.",
+        type: DiscordApplicationCommandOptionTypes.String,
+      }],
+    }]);
+  },
+});
+
+Deno.test({
+  name: "[utils] validateSlashCommands(): validates option description",
+  fn() {
+    assertThrows(() =>
+      validateSlashCommands([{
+        options: [{
+          name: "optionname",
+          // The maximum length of application command option description is 100.
+          description: "a".repeat(101),
+          type: DiscordApplicationCommandOptionTypes.String,
+        }],
+      }])
+    );
+
+    validateSlashCommands([{
+      options: [{
+        name: "optionname",
+        description: "The description of the option.",
+        type: DiscordApplicationCommandOptionTypes.String,
+      }],
+    }]);
+  },
+});
+
+Deno.test({
+  name: "[utils] validateSlashCommands(): validates the option choice name",
+  fn() {
+    assertThrows(() =>
+      validateSlashCommands([{
+        options: [{
+          name: "optionname",
+          choices: [{
+            // The maximum length of an option choice name is 100.
+            name: "a".repeat(101),
+            value: "choicevalue",
+          }],
+          description: "The description of the option.",
+          type: DiscordApplicationCommandOptionTypes.String,
+        }],
+      }])
+    );
+
+    validateSlashCommands([{
+      options: [{
+        name: "optionname",
+        description: "The description of the option.",
+        type: DiscordApplicationCommandOptionTypes.String,
+        choices: [{
+          name: "choicename",
+          value: "choicevalue",
+        }],
+      }],
+    }]);
+  },
+});
+
+Deno.test({
+  name: "[utils] validateSlashCommands(): validates option choice value",
+  fn() {
+    assertThrows(() =>
+      validateSlashCommands([{
+        options: [{
+          type: DiscordApplicationCommandOptionTypes.String,
+          description: "The description of the option.",
+          name: "optionname",
+          choices: [{
+            name: "choicename",
+            value: 123,
+          }],
+        }],
+      }])
+    );
+
+    assertThrows(() => {
+      validateSlashCommands([{
+        options: [{
+          description: "The description of the option.",
+          name: "optionname",
+          type: DiscordApplicationCommandOptionTypes.String,
+          choices: [{
+            name: "choicename",
+            // The maximum length of an option choice value is 100.
+            value: "a".repeat(101),
+          }],
+        }],
+      }]);
+    });
+
+    validateSlashCommands([{
+      options: [{
+        type: DiscordApplicationCommandOptionTypes.String,
+        description: "The description of the option.",
+        name: "optionname",
+        choices: [{
+          name: "choicename",
+          value: "choicevalue",
+        }],
+      }],
     }]);
   },
 });
