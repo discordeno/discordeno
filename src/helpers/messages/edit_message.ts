@@ -2,12 +2,13 @@ import { botId } from "../../bot.ts";
 import { rest } from "../../rest/rest.ts";
 import { DiscordenoMessage } from "../../structures/message.ts";
 import { structures } from "../../structures/mod.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import { EditMessage } from "../../types/messages/edit_message.ts";
 import type { Message } from "../../types/messages/message.ts";
-import { Errors } from "../../types/discordeno/errors.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
+import { validateComponents } from "../../util/utils.ts";
 
 /** Edit the message. */
 export async function editMessage(
@@ -19,6 +20,10 @@ export async function editMessage(
   }
 
   if (typeof content === "string") content = { content };
+
+  if (content.components?.length) {
+    validateComponents(content.components);
+  }
 
   const requiredPerms: PermissionStrings[] = ["SEND_MESSAGES"];
 

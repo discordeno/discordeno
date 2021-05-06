@@ -49,7 +49,7 @@ export const ws = {
   },
   botGatewayData: {
     /** The WSS URL that can be used for connecting to the gateway. */
-    url: "wss://gateway.discord.gg/?v=8&encoding=json",
+    url: "wss://gateway.discord.gg/?v=9&encoding=json",
     /** The recommended number of shards to use when connecting. */
     shards: 1,
     /** Info on the current start limit. */

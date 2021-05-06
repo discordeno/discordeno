@@ -2,6 +2,7 @@ import { FileContent } from "../discordeno/file_content.ts";
 import { Embed } from "../embeds/embed.ts";
 import { AllowedMentions } from "./allowed_mentions.ts";
 import { Attachment } from "./attachment.ts";
+import { MessageComponents } from "./components/message_components.ts";
 
 /** https://discord.com/developers/docs/resources/channel#edit-message-json-params */
 export interface EditMessage {
@@ -17,4 +18,6 @@ export interface EditMessage {
   allowedMentions?: AllowedMentions | null;
   /** Attached files to keep */
   attachments?: Attachment | null;
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents;
 }
