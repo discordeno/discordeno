@@ -1,10 +1,11 @@
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
 import type { Message } from "../../types/messages/message.ts";
-import { Errors } from "../../types/discordeno/errors.ts";
 import type { EditWebhookMessage } from "../../types/webhooks/edit_webhook_message.ts";
 import { endpoints } from "../../util/constants.ts";
+import { validateComponents } from "../../util/utils.ts";
 
 export async function editWebhookMessage(
   webhookId: bigint,
@@ -57,6 +58,10 @@ export async function editWebhookMessage(
         );
       }
     }
+  }
+
+  if (options.components?.length) {
+    validateComponents(options.components);
   }
 
   const result = await rest.runMethod<Message>(
