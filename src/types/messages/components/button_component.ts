@@ -12,11 +12,11 @@ export interface ButtonComponent {
   /** For different styles/colors of the buttons */
   style: ButtonStyles;
   /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
-  emoji?: {
+  emoji?: string | {
     /** Emoji id */
-    id: string | null;
-    /** Emoji name (can only be null in reaction emoji objects) */
-    name: string | null;
+    id?: string;
+    /** Emoji name */
+    name?: string;
     /** Whether this emoji is animated */
     animated?: boolean;
   };
