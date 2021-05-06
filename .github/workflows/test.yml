@@ -21,7 +21,7 @@ jobs:
         run: deno test --unstable --coverage=coverage -A tests/mod.ts
       - name: Run test script if label added
         if: ${{ github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'run-tests' }}
-        run: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} deno test --unstable --coverage=coverage --allow-net tests/mod.ts
+        run: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} deno test --unstable --coverage=coverage --allow-net --allow-env tests/mod.ts
       - name: Create coverage report
         if: github.ref == 'refs/heads/main'
         run: deno --unstable coverage ./coverage --lcov > coverage.lcov
