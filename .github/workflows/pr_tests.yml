@@ -1,7 +1,5 @@
 name: Test Contributor Pull Requests
-on:
-  pull_request:
-    types: [labeled, opened]
+on: issue_comment
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -16,8 +14,9 @@ jobs:
       - name: Cache dependencies
         run: deno cache mod.ts
       - name: Run test script if label added
-        if: ${{ github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'run-tests' }}
-        run: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} deno test --unstable --coverage=coverage -A tests/mod.ts
+        if: ${{ github.event.issue.pull_request }}
+        if: github.actor == 'Skillz4Killz' || github.actor == 'itohatweb'
+        run: DISCORD_TOKEN=${{ env.DISCORD_TOKEN }} deno test --unstable --coverage=coverage -A tests/mod.ts
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
       - name: Create coverage report
