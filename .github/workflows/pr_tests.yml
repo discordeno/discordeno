@@ -17,7 +17,7 @@ jobs:
         run: deno cache mod.ts
       - name: Run test script if label added
         if: ${{ github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'run-tests' }}
-        run: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} deno test --unstable --coverage=coverage -A tests/mod.ts
+        run: DISCORD_TOKEN=${{ env.DISCORD_TOKEN }} deno test --unstable --coverage=coverage -A tests/mod.ts
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
       - name: Create coverage report
