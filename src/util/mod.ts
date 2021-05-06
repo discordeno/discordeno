@@ -1,4 +1,5 @@
 export * from "./bigint.ts";
+export * from "./cache_members.ts";
 export * from "./collection.ts";
 export * from "./constants.ts";
 export * from "./loop_object.ts";

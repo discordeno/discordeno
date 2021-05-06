@@ -1,8 +1,8 @@
 import { eventHandlers } from "../../bot.ts";
 import { cache, cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { Guild } from "../../types/guilds/guild.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { Guild } from "../../types/guilds/guild.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 import { ws } from "../../ws/ws.ts";
 

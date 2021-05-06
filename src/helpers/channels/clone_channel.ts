@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
-import { CreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
-import { Errors } from "../../types/misc/errors.ts";
+import type { CreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import { bigintToSnowflake } from "../../util/bigint.ts";
 import { calculatePermissions } from "../../util/permissions.ts";
 import { createChannel } from "./create_channel.ts";
@@ -15,7 +15,7 @@ export async function cloneChannel(channelId: bigint, reason?: string) {
   //Check for DM channel
   if (
     channelToClone.type === DiscordChannelTypes.DM ||
-    channelToClone.type === DiscordChannelTypes.GROUP_DM
+    channelToClone.type === DiscordChannelTypes.GroupDm
   ) {
     throw new Error(Errors.CHANNEL_NOT_IN_GUILD);
   }

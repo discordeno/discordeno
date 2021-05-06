@@ -1,7 +1,7 @@
 import { eventHandlers } from "../bot.ts";
 import { cache } from "../cache.ts";
-import { GuildMember } from "../types/guilds/guild_member.ts";
-import { VoiceState } from "../types/voice/voice_state.ts";
+import type { GuildMember } from "../types/members/guild_member.ts";
+import type { VoiceState } from "../types/voice/voice_state.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
@@ -82,7 +82,7 @@ export async function createDiscordenoVoiceState(
 
     const toggleBits = voiceStateToggles[key as keyof typeof voiceStateToggles];
     if (toggleBits) {
-      bitfield |= toggleBits;
+      bitfield |= value ? toggleBits : 0n;
       continue;
     }
 

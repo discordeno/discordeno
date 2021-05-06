@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { Channel } from "../../types/channels/channel.ts";
+import type { Channel } from "../../types/channels/channel.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 import { endpoints } from "../../util/constants.ts";
 

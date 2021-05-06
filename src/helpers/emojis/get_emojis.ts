@@ -1,8 +1,8 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
-import { Emoji } from "../../types/emojis/emoji.ts";
-import { Errors } from "../../types/misc/errors.ts";
+import type { Emoji } from "../../types/emojis/emoji.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";

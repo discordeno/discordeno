@@ -1,6 +1,6 @@
 import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
 import { rest } from "./rest/rest.ts";
-import { EventHandlers } from "./types/discordeno/eventHandlers.ts";
+import type { EventHandlers } from "./types/discordeno/eventHandlers.ts";
 import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
 import { snowflakeToBigint } from "./util/bigint.ts";
 import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";

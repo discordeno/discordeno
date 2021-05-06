@@ -1,8 +1,11 @@
+import { ApplicationCommandOption } from "../../src/types/interactions/commands/application_command_option.ts";
+import { DiscordApplicationCommandOptionTypes } from "../../src/types/interactions/commands/application_command_option_types.ts";
 import {
-  camelKeysToSnakeCase,
-  snakeKeysToCamelCase,
+  camelize,
+  snakelize,
+  validateSlashCommands,
 } from "../../src/util/utils.ts";
-import { assertEquals } from "../deps.ts";
+import { assertEquals, assertThrows } from "../deps.ts";
 
 const testSnakeObject = {
   // deno-lint-ignore camelcase
@@ -58,9 +61,9 @@ const someElseOther = {
 Deno.test({
   name: "[utils] convert snake case keys to camel case",
   fn() {
-    const result = snakeKeysToCamelCase(testSnakeObject);
+    const result = camelize(testSnakeObject);
     assertEquals(result, testCamelObject);
-    const resultTwo = snakeKeysToCamelCase(someOther);
+    const resultTwo = camelize(someOther);
     assertEquals(resultTwo, someOther);
   },
 });
@@ -68,9 +71,58 @@ Deno.test({
 Deno.test({
   name: "[utils] convert camel case keys to snake case",
   fn() {
-    const result = camelKeysToSnakeCase(testCamelObject);
+    const result = snakelize(testCamelObject);
     assertEquals(result, testSnakeObject);
-    const resultTwo = camelKeysToSnakeCase(someElseOther);
+    const resultTwo = snakelize(someElseOther);
     assertEquals(resultTwo, someElseOther);
+  },
+});
+
+Deno.test({
+  name: "[utils] validateSlashCommands(): validates name",
+  fn() {
+    assertThrows(() =>
+      validateSlashCommands([{
+        // The maximum length of the name of an application command is 32.
+        name: "a".repeat(33),
+      }])
+    );
+
+    validateSlashCommands([{
+      name: "workingname",
+    }]);
+  },
+});
+
+Deno.test({
+  name: "[utils] validateSlashCommands(): validates description",
+  fn() {
+    assertThrows(() =>
+      // The maximum length of the description of an application command is 100.
+      validateSlashCommands([{ description: "a".repeat(101) }])
+    );
+
+    validateSlashCommands([{
+      description: "valid description (should not throw)",
+    }]);
+  },
+});
+
+Deno.test({
+  name: "[utils] validateSlashCommands(): validates number of options",
+  fn() {
+    const option = {
+      name: "option1",
+      description: "The description of the application command's option.",
+      type: DiscordApplicationCommandOptionTypes.String,
+    };
+    // The maximum number of options an application command can "accomodate" is 25.
+    const options: ApplicationCommandOption[] = Array(26).fill(option);
+
+    assertThrows(() => validateSlashCommands([{ options }]));
+
+    validateSlashCommands([{
+      options: [option],
+    }]);
   },
 });

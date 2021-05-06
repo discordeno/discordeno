@@ -1,8 +1,8 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { Channel } from "../../types/channels/channel.ts";
-import { CreateMessage } from "../../types/messages/create_message.ts";
+import type { Channel } from "../../types/channels/channel.ts";
+import type { CreateMessage } from "../../types/messages/create_message.ts";
 import { endpoints } from "../../util/constants.ts";
 import { sendMessage } from "../messages/send_message.ts";
 

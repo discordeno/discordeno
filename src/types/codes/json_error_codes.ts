@@ -80,6 +80,11 @@ export enum DiscordJsonErrorCodes {
   InvalidApiVersionProvided = 50041,
   CannotDeleteAChannelRequiredForCommunityGuilds = 50074,
   InvalidStickerSent = 50081,
+  TriedToPerformAnOperationOnAnArchivedThreadSuchAsEditingAMessageOrAddingAUserToTheThread =
+    50083,
+  InvalidThreadNotificationSettings,
+  BeforeValueIsEarlierThanTheThreadCreationDate,
+  TwoFactorIsRequiredForThisOperation = 60003,
   ReqctionWasBlocked = 90001,
   ApiResourceIsCurrentlyOverloadedTryAgainALittleLater = 130000,
 }

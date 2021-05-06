@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { ValidateDiscoverySearchTerm } from "../../types/discovery/validate_discovery_search_term.ts";
+import type { ValidateDiscoverySearchTerm } from "../../types/discovery/validate_discovery_search_term.ts";
 import { endpoints } from "../../util/constants.ts";
 
 export async function validDiscoveryTerm(term: string) {

@@ -1,24 +1,24 @@
+import { botId } from "../../src/bot.ts";
 import { cache } from "../../src/cache.ts";
 import { createChannel } from "../../src/helpers/channels/create_channel.ts";
-import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
-import { delayUntil } from "../util/delay_until.ts";
-import { assertEquals, assertExists } from "../deps.ts";
 import { isChannelSynced } from "../../src/helpers/channels/is_channel_synced.ts";
 import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
-import { botId } from "../../src/bot.ts";
 import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
 import { bigintToSnowflake } from "../../src/util/bigint.ts";
+import { assertEquals, assertExists } from "../deps.ts";
+import { delayUntil } from "../util/delay_until.ts";
+import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
 Deno.test({
   name: "[channel] is channel synced.",
   async fn() {
     const category = await createChannel(tempData.guildId, {
       name: "synced-category",
-      type: DiscordChannelTypes.GUILD_CATEGORY,
+      type: DiscordChannelTypes.GuildCategory,
       permissionOverwrites: [
         {
           id: bigintToSnowflake(botId),
-          type: DiscordOverwriteTypes.MEMBER,
+          type: DiscordOverwriteTypes.Member,
           allow: ["VIEW_CHANNEL"],
           deny: [],
         },

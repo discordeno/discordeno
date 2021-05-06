@@ -1,7 +1,7 @@
 import { rest } from "../../rest/rest.ts";
-import { Errors } from "../../types/misc/errors.ts";
-import { CreateWebhook } from "../../types/webhooks/create_webhook.ts";
-import { Webhook } from "../../types/webhooks/webhook.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
+import type { CreateWebhook } from "../../types/webhooks/create_webhook.ts";
+import type { Webhook } from "../../types/webhooks/webhook.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 import { urlToBase64 } from "../../util/utils.ts";

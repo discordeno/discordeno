@@ -12,20 +12,21 @@ import { leaveGuild } from "../helpers/guilds/leave_guild.ts";
 import { getInvites } from "../helpers/invites/get_invites.ts";
 import { banMember } from "../helpers/members/ban_member.ts";
 import { unbanMember } from "../helpers/members/unban_member.ts";
+import type { PresenceUpdate } from "../types/activity/presence_update.ts";
 import { GetGuildAuditLog } from "../types/audit_log/get_guild_audit_log.ts";
-import { Emoji } from "../types/emojis/emoji.ts";
-import { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
-import { Guild } from "../types/guilds/guild.ts";
+import type { Emoji } from "../types/emojis/emoji.ts";
+import type { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
+import type { Guild } from "../types/guilds/guild.ts";
 import { DiscordGuildFeatures } from "../types/guilds/guild_features.ts";
-import {
+import type { ModifyGuild } from "../types/guilds/modify_guild.ts";
+import type {
   GuildMember,
   GuildMemberWithUser,
-} from "../types/guilds/guild_member.ts";
-import { ModifyGuild } from "../types/guilds/modify_guild.ts";
-import { DiscordImageFormat } from "../types/misc/image_format.ts";
-import { DiscordImageSize } from "../types/misc/image_size.ts";
-import { PresenceUpdate } from "../types/misc/presence_update.ts";
+} from "../types/members/guild_member.ts";
+import type { DiscordImageFormat } from "../types/misc/image_format.ts";
+import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
+import { cacheMembers } from "../util/cache_members.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoChannel } from "./channel.ts";
@@ -34,7 +35,6 @@ import { structures } from "./mod.ts";
 import { DiscordenoRole } from "./role.ts";
 import { DiscordenoVoiceState } from "./voice_state.ts";
 
-export const initialMemberLoadQueue = new Map<bigint, GuildMember[]>();
 const GUILD_SNOWFLAKES = [
   "id",
   "ownerId",
@@ -46,6 +46,19 @@ const GUILD_SNOWFLAKES = [
   "rulesChannelId",
   "publicUpdatesChannelId",
 ];
+
+export const guildToggles = {
+  /** Whether this user is owner of this guild */
+  owner: 1n,
+  /** Whether the guild widget is enabled */
+  widgetEnabled: 2n,
+  /** Whether this is a large guild */
+  large: 4n,
+  /** Whether this guild is unavailable due to an outage */
+  unavailable: 8n,
+  /** Whether this server is an nsfw guild */
+  nsfw: 16n,
+};
 
 const baseGuild: Partial<DiscordenoGuild> = {
   get members() {
@@ -79,10 +92,10 @@ const baseGuild: Partial<DiscordenoGuild> = {
     return cache.members.get(this.ownerId!);
   },
   get partnered() {
-    return Boolean(this.features?.includes(DiscordGuildFeatures.PARTNERED));
+    return Boolean(this.features?.includes(DiscordGuildFeatures.Partnered));
   },
   get verified() {
-    return Boolean(this.features?.includes(DiscordGuildFeatures.VERIFIED));
+    return Boolean(this.features?.includes(DiscordGuildFeatures.Verified));
   },
   bannerURL(size, format) {
     return guildBannerURL(this.id!, this.banner!, size, format);
@@ -120,6 +133,21 @@ const baseGuild: Partial<DiscordenoGuild> = {
   leave() {
     return leaveGuild(this.id!);
   },
+  get isOwner() {
+    return Boolean(this.bitfield! & guildToggles.owner);
+  },
+  get widgetEnabled() {
+    return Boolean(this.bitfield! & guildToggles.widgetEnabled);
+  },
+  get large() {
+    return Boolean(this.bitfield! & guildToggles.large);
+  },
+  get unavailable() {
+    return Boolean(this.bitfield! & guildToggles.unavailable);
+  },
+  get nsfw() {
+    return Boolean(this.bitfield! & guildToggles.nsfw);
+  },
 };
 
 export async function createDiscordenoGuild(
@@ -130,6 +158,7 @@ export async function createDiscordenoGuild(
     memberCount = 0,
     voiceStates = [],
     channels = [],
+    threads = [],
     presences = [],
     joinedAt = "",
     emojis,
@@ -137,6 +166,7 @@ export async function createDiscordenoGuild(
     ...rest
   } = data;
 
+  let bitfield = 0n;
   const guildId = snowflakeToBigint(rest.id);
 
   const roles = await Promise.all(
@@ -152,7 +182,7 @@ export async function createDiscordenoGuild(
     voiceStates.map((vs) => structures.createDiscordenoVoiceState(guildId, vs)),
   );
 
-  await Promise.all(channels.map(async (channel) => {
+  await Promise.all([...channels, ...threads].map(async (channel) => {
     const discordenoChannel = await structures.createDiscordenoChannel(
       channel,
       guildId,
@@ -171,6 +201,12 @@ export async function createDiscordenoGuild(
       "loop",
       `Running for of loop in createDiscordenoGuild function.`,
     );
+
+    const toggleBits = guildToggles[key as keyof typeof guildToggles];
+    if (toggleBits) {
+      bitfield |= value ? toggleBits : 0n;
+      continue;
+    }
 
     props[key] = createNewProp(
       GUILD_SNOWFLAKES.includes(key)
@@ -202,27 +238,10 @@ export async function createDiscordenoGuild(
     voiceStates: createNewProp(
       new Collection(voiceStateStructs.map((vs) => [vs.userId, vs])),
     ),
+    bitfield: createNewProp(bitfield),
   });
 
-  // ONLY ADD TO QUEUE WHEN BOT IS NOT FULLY ONLINE
-  if (!cache.isReady) initialMemberLoadQueue.set(guild.id, members);
-  // BOT IS ONLINE, JUST DIRECTLY ADD MEMBERS
-  else {
-    await Promise.allSettled(
-      members.map(async (member) => {
-        const discordenoMember = await structures.createDiscordenoMember(
-          member as GuildMemberWithUser,
-          guild.id,
-        );
-
-        return cacheHandlers.set(
-          "members",
-          discordenoMember.id,
-          discordenoMember,
-        );
-      }),
-    );
-  }
+  await cacheMembers(guild.id, members as GuildMemberWithUser[]);
 
   return guild;
 }
@@ -278,6 +297,10 @@ export interface DiscordenoGuild extends
   voiceStates: Collection<bigint, DiscordenoVoiceState>;
   /** Custom guild emojis */
   emojis: Collection<bigint, Emoji>;
+  /** Whether the bot is the owner of this guild */
+  isOwner: boolean;
+  /** Holds all the boolean toggles. */
+  bitfield: bigint;
 
   // GETTERS
   /** Members in this guild. */

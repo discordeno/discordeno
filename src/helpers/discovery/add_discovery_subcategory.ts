@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import {
+import type {
   AddGuildDiscoverySubcategory,
 } from "../../types/discovery/add_guild_discovery_subcategory.ts";
 import { endpoints } from "../../util/constants.ts";

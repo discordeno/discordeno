@@ -1,12 +1,11 @@
 import { botId, eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import {
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type {
   MessageReactionAdd,
 } from "../../types/messages/message_reaction_add.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
-import { snakeKeysToCamelCase } from "../../util/utils.ts";
 
 export async function handleMessageReactionAdd(data: DiscordGatewayPayload) {
   const payload = data.d as MessageReactionAdd;
@@ -56,7 +55,7 @@ export async function handleMessageReactionAdd(data: DiscordGatewayPayload) {
   }
 
   eventHandlers.reactionAdd?.(
-    snakeKeysToCamelCase<MessageReactionAdd>(payload),
+    payload,
     message,
   );
 }

@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { Guild } from "../../types/guilds/guild.ts";
+import type { Guild } from "../../types/guilds/guild.ts";
 import { endpoints } from "../../util/constants.ts";
 import { ws } from "../../ws/ws.ts";
 

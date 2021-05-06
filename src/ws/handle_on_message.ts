@@ -1,10 +1,10 @@
 import { eventHandlers } from "../bot.ts";
 import { handlers } from "../handlers/mod.ts";
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
-import { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
-import { DiscordHello } from "../types/gateway/hello.ts";
-import { DiscordReady } from "../types/gateway/ready.ts";
-import { delay, snakeKeysToCamelCase } from "../util/utils.ts";
+import type { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
+import type { DiscordHello } from "../types/gateway/hello.ts";
+import type { DiscordReady } from "../types/gateway/ready.ts";
+import { camelize, delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
 import { identify } from "./identify.ts";
 import { resume } from "./resume.ts";
@@ -128,7 +128,7 @@ export async function handleOnMessage(message: any, shardId: number) {
         if (!messageData.t) return;
 
         return handlers[messageData.t]?.(
-          snakeKeysToCamelCase(messageData),
+          camelize(messageData),
           shardId,
         );
       }

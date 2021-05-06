@@ -11,13 +11,12 @@ import { assertEquals, assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
-// TODO: whats save
-async function ifItFailsBlameWolf(options: CreateGuildChannel, _save = false) {
+async function ifItFailsBlameWolf(options: CreateGuildChannel) {
   const channel = await createChannel(tempData.guildId, options);
 
   // Assertions
   assertExists(channel);
-  assertEquals(channel.type, options.type || DiscordChannelTypes.GUILD_TEXT);
+  assertEquals(channel.type, options.type || DiscordChannelTypes.GuildText);
 
   // Delay the execution by 5 seconds to allow CHANNEL_CREATE event to be processed
   await delayUntil(10000, () => cache.channels.has(channel.id));
@@ -36,7 +35,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, _save = false) {
   }
 
   await editChannelOverwrite(channel.guildId, channel.id, botId, {
-    type: DiscordOverwriteTypes.MEMBER,
+    type: DiscordOverwriteTypes.Member,
     allow: ["VIEW_CHANNEL", "ADD_REACTIONS"],
     deny: [],
   });
@@ -72,13 +71,12 @@ Deno.test({
         permissionOverwrites: [
           {
             id: bigintToSnowflake(botId),
-            type: DiscordOverwriteTypes.MEMBER,
+            type: DiscordOverwriteTypes.Member,
             allow: ["VIEW_CHANNEL"],
             deny: [],
           },
         ],
       },
-      true,
     );
   },
   ...defaultTestOptions,

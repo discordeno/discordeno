@@ -1,8 +1,8 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
-import { Channel } from "../../types/channels/channel.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { Channel } from "../../types/channels/channel.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleChannelUpdate(data: DiscordGatewayPayload) {
@@ -11,11 +11,10 @@ export async function handleChannelUpdate(data: DiscordGatewayPayload) {
     "channels",
     snowflakeToBigint(payload.id),
   );
+  if (!cachedChannel) return;
 
   const discordenoChannel = await structures.createDiscordenoChannel(payload);
   await cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);
-
-  if (!cachedChannel) return;
 
   eventHandlers.channelUpdate?.(discordenoChannel, cachedChannel);
 }

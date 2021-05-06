@@ -3,10 +3,10 @@ import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { DiscordenoMember } from "../../structures/member.ts";
 import { structures } from "../../structures/mod.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
-import { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
-import { ListGuildMembers } from "../../types/guilds/list_guild_members.ts";
-import { Errors } from "../../types/misc/errors.ts";
+import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
+import type { ListGuildMembers } from "../../types/members/list_guild_members.ts";
 import { bigintToSnowflake } from "../../util/bigint.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
@@ -24,7 +24,7 @@ export async function getMembers(
   guildId: bigint,
   options?: ListGuildMembers & { addToCache?: boolean },
 ) {
-  if (!(ws.identifyPayload.intents && DiscordGatewayIntents.GUILD_MEMBERS)) {
+  if (!(ws.identifyPayload.intents && DiscordGatewayIntents.GuildMembers)) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 

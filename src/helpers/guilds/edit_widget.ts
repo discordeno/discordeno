@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { GuildWidget } from "../../types/guilds/guild_widget.ts";
+import type { GuildWidget } from "../../types/guilds/guild_widget.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 

@@ -1,22 +1,68 @@
 import { eventHandlers } from "../../bot.ts";
+import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
-import { ModifyChannel } from "../../types/channels/modify_channel.ts";
-import { Channel } from "../../types/mod.ts";
+import type { Channel } from "../../types/channels/channel.ts";
+import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import type { ModifyChannel } from "../../types/channels/modify_channel.ts";
+import type { ModifyThread } from "../../types/channels/threads/modify_thread.ts";
+import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   calculateBits,
   requireBotChannelPermissions,
+  requireOverwritePermissions,
 } from "../../util/permissions.ts";
+import { hasOwnProperty, snakelize } from "../../util/utils.ts";
 
+//TODO: implement DM group channel edit
+//TODO(threads): check thread perms
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(
   channelId: bigint,
-  options: ModifyChannel,
+  options: ModifyChannel | ModifyThread,
   reason?: string,
 ) {
-  await requireBotChannelPermissions(channelId, ["MANAGE_CHANNELS"]);
+  const channel = await cacheHandlers.get("channels", channelId);
 
-  if (options.name || options.topic) {
+  if (channel) {
+    if (
+      [
+        DiscordChannelTypes.GuildNewsThread,
+        DiscordChannelTypes.GuildPivateThread,
+        DiscordChannelTypes.GuildPublicThread,
+      ].includes(channel.type)
+    ) {
+      const permissions = new Set<PermissionStrings>();
+
+      if (hasOwnProperty(options, "archive") && options.archive === false) {
+        permissions.add("SEND_MESSAGES");
+      }
+
+      // TODO(threads): change this to a better check
+      // hacky way of checking if more is being modified
+      if (Object.keys(options).length > 1) {
+        permissions.add("MANAGE_THREADS");
+      }
+
+      await requireBotChannelPermissions(channel.parentId ?? 0n, [
+        ...permissions,
+      ]);
+    }
+
+    if (
+      hasOwnProperty<ModifyChannel>(
+        options,
+        "permissionOverwrites",
+      ) && Array.isArray(options.permissionOverwrites)
+    ) {
+      await requireOverwritePermissions(
+        channel.guildId,
+        options.permissionOverwrites,
+      );
+    }
+  }
+
+  if (options.name || (options as ModifyChannel).topic) {
     const request = editChannelNameTopicQueue.get(channelId);
     if (!request) {
       // If this hasnt been done before simply add 1 for it
@@ -42,21 +88,18 @@ export async function editChannel(
   }
 
   const payload = {
-    ...options,
+    ...snakelize<Record<string, unknown>>(options),
     // deno-lint-ignore camelcase
-    rate_limit_per_user: options.rateLimitPerUser,
-    // deno-lint-ignore camelcase
-    parent_id: options.parentId,
-    // deno-lint-ignore camelcase
-    user_limit: options.userLimit,
-    // deno-lint-ignore camelcase
-    permission_overwrites: options.permissionOverwrites?.map((overwrite) => {
-      return {
-        ...overwrite,
-        allow: calculateBits(overwrite.allow),
-        deny: calculateBits(overwrite.deny),
-      };
-    }),
+    permission_overwrites:
+      hasOwnProperty<ModifyChannel>(options, "permissionOverwrites")
+        ? options.permissionOverwrites?.map((overwrite) => {
+          return {
+            ...overwrite,
+            allow: calculateBits(overwrite.allow),
+            deny: calculateBits(overwrite.deny),
+          };
+        })
+        : undefined,
   };
 
   return await rest.runMethod<Channel>(

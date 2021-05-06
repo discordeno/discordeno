@@ -2,8 +2,8 @@ import { botId } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { CreateGuild } from "../../types/guilds/create_guild.ts";
-import { Guild } from "../../types/guilds/guild.ts";
+import type { CreateGuild } from "../../types/guilds/create_guild.ts";
+import type { Guild } from "../../types/guilds/guild.ts";
 import { endpoints } from "../../util/constants.ts";
 import { getMember } from "../members/get_member.ts";
 

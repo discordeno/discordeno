@@ -1,12 +1,14 @@
 import { Embed } from "../embeds/embed.ts";
 import { AllowedMentions } from "../messages/allowed_mentions.ts";
-import { FileContent } from "../misc/file_content.ts";
+import { FileContent } from "../discordeno/file_content.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 /** https://discord.com/developers/docs/resources/webhook#execute-webhook */
 export interface ExecuteWebhook {
   /** Waits for server confirmation of message send before response, and returns the created message body (defaults to `false`; when `false` a message that is not saved does not return an error) */
   wait?: boolean;
+  /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
+  threadId?: bigint;
   /** The message contents (up to 2000 characters) */
   content?: string;
   /** Override the default username of the webhook */
@@ -26,4 +28,3 @@ export interface ExecuteWebhook {
 export type DiscordExecuteWebhook = SnakeCasedPropertiesDeep<
   Omit<ExecuteWebhook, "wait">
 >;
-//TODO: check this

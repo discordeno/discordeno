@@ -1,8 +1,8 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { Channel } from "../../types/channels/channel.ts";
+import type { Channel } from "../../types/channels/channel.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleChannelDelete(data: DiscordGatewayPayload) {
@@ -15,7 +15,7 @@ export async function handleChannelDelete(data: DiscordGatewayPayload) {
   if (!cachedChannel) return;
 
   if (
-    cachedChannel.type === DiscordChannelTypes.GUILD_VOICE && payload.guildId
+    cachedChannel.type === DiscordChannelTypes.GuildVoice && payload.guildId
   ) {
     const guild = await cacheHandlers.get("guilds", cachedChannel.guildId);
 
@@ -34,15 +34,27 @@ export async function handleChannelDelete(data: DiscordGatewayPayload) {
     }
   }
 
+  if (
+    [
+      DiscordChannelTypes.GuildText,
+      DiscordChannelTypes.DM,
+      DiscordChannelTypes.GroupDm,
+      DiscordChannelTypes.GuildNews,
+    ].includes(payload.type)
+  ) {
+    await cacheHandlers.delete("channels", snowflakeToBigint(payload.id));
+    cacheHandlers.forEach("messages", (message) => {
+      eventHandlers.debug?.(
+        "loop",
+        `Running forEach messages loop in CHANNEL_DELTE file.`,
+      );
+      if (message.channelId === snowflakeToBigint(payload.id)) {
+        cacheHandlers.delete("messages", message.id);
+      }
+    });
+  }
+
   await cacheHandlers.delete("channels", snowflakeToBigint(payload.id));
-  cacheHandlers.forEach("messages", (message) => {
-    eventHandlers.debug?.(
-      "loop",
-      `Running forEach messages loop in CHANNEL_DELTE file.`,
-    );
-    if (message.channelId === snowflakeToBigint(payload.id)) {
-      cacheHandlers.delete("messages", message.id);
-    }
-  });
+
   eventHandlers.channelDelete?.(cachedChannel);
 }

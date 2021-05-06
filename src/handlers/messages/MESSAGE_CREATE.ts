@@ -1,9 +1,9 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { GuildMemberWithUser } from "../../types/guilds/guild_member.ts";
-import { Message } from "../../types/messages/message.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
+import type { Message } from "../../types/messages/message.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleMessageCreate(data: DiscordGatewayPayload) {

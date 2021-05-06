@@ -1,7 +1,7 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { PresenceUpdate } from "../../types/misc/presence_update.ts";
+import type { PresenceUpdate } from "../../types/activity/presence_update.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handlePresenceUpdate(data: DiscordGatewayPayload) {

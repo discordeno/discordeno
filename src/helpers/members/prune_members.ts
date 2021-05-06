@@ -1,9 +1,9 @@
 import { rest } from "../../rest/rest.ts";
-import { BeginGuildPrune } from "../../types/guilds/begin_guild_prune.ts";
-import { Errors } from "../../types/misc/errors.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
+import type { BeginGuildPrune } from "../../types/guilds/begin_guild_prune.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
-import { camelKeysToSnakeCase } from "../../util/utils.ts";
+import { snakelize } from "../../util/utils.ts";
 
 /**
  * Begin a prune operation. Requires the KICK_MEMBERS permission. Returns an object with one 'pruned' key indicating the number of members that were removed in the prune operation. For large guilds it's recommended to set the computePruneCount option to false, forcing 'pruned' to null. Fires multiple Guild Member Remove Gateway events.
@@ -22,7 +22,7 @@ export async function pruneMembers(
   const result = await rest.runMethod<{ pruned: number }>(
     "post",
     endpoints.GUILD_PRUNE(guildId),
-    camelKeysToSnakeCase(options),
+    snakelize(options),
   );
 
   return result.pruned;

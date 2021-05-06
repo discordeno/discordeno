@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
-import { Errors } from "../../types/misc/errors.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions } from "../../util/permissions.ts";
 
@@ -17,8 +17,11 @@ export async function startTyping(channelId: bigint) {
     if (
       ![
         DiscordChannelTypes.DM,
-        DiscordChannelTypes.GUILD_NEWS,
-        DiscordChannelTypes.GUILD_TEXT,
+        DiscordChannelTypes.GuildNews,
+        DiscordChannelTypes.GuildText,
+        DiscordChannelTypes.GuildNewsThread,
+        DiscordChannelTypes.GuildPivateThread,
+        DiscordChannelTypes.GuildPublicThread,
       ].includes(channel.type)
     ) {
       throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);

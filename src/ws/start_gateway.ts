@@ -1,6 +1,6 @@
 import { DiscordGatewayIntents } from "../types/gateway/gateway_intents.ts";
-import { GetGatewayBot } from "../types/gateway/get_gateway_bot.ts";
-import { snakeKeysToCamelCase } from "../util/utils.ts";
+import type { GetGatewayBot } from "../types/gateway/get_gateway_bot.ts";
+import { camelize } from "../util/utils.ts";
 import { StartGatewayOptions } from "./start_gateway_options.ts";
 import { ws } from "./ws.ts";
 
@@ -33,7 +33,7 @@ export async function startGateway(options: StartGatewayOptions) {
     0,
   );
 
-  ws.botGatewayData = snakeKeysToCamelCase(
+  ws.botGatewayData = camelize(
     await fetch(`https://discord.com/api/gateway/bot`, {
       headers: { Authorization: ws.identifyPayload.token },
     }).then((res) => res.json()),

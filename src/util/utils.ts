@@ -1,13 +1,13 @@
 import { encode } from "../../deps.ts";
 import { eventHandlers } from "../bot.ts";
-import { ApplicationCommandOption } from "../types/interactions/application_command_option.ts";
-import { ApplicationCommandOptionChoice } from "../types/interactions/application_command_option_choice.ts";
-import { DiscordApplicationCommandOptionTypes } from "../types/interactions/application_command_option_types.ts";
-import { CreateGlobalApplicationCommand } from "../types/interactions/create_global_application_command.ts";
-import { Errors } from "../types/misc/errors.ts";
-import { DiscordImageFormat } from "../types/misc/image_format.ts";
-import { DiscordImageSize } from "../types/misc/image_size.ts";
-import { EditGlobalApplicationCommand } from "../types/mod.ts";
+import { Errors } from "../types/discordeno/errors.ts";
+import type { ApplicationCommandOption } from "../types/interactions/commands/application_command_option.ts";
+import type { ApplicationCommandOptionChoice } from "../types/interactions/commands/application_command_option_choice.ts";
+import { DiscordApplicationCommandOptionTypes } from "../types/interactions/commands/application_command_option_types.ts";
+import type { CreateGlobalApplicationCommand } from "../types/interactions/commands/create_global_application_command.ts";
+import type { EditGlobalApplicationCommand } from "../types/interactions/commands/edit_global_application_command.ts";
+import type { DiscordImageFormat } from "../types/misc/image_format.ts";
+import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 import { validateLength } from "./validate_length.ts";
 
@@ -61,7 +61,7 @@ function isConvertableObject(obj: unknown) {
   );
 }
 
-export function camelKeysToSnakeCase<T>(
+export function snakelize<T>(
   // deno-lint-ignore no-explicit-any
   obj: Record<string, any> | Record<string, any>[],
 ): T {
@@ -72,9 +72,9 @@ export function camelKeysToSnakeCase<T>(
     Object.keys(obj).forEach((key) => {
       eventHandlers.debug?.(
         "loop",
-        `Running forEach loop in camelKeysToSnakeCase function.`,
+        `Running forEach loop in snakelize function.`,
       );
-      convertedObject[camelToSnakeCase(key)] = camelKeysToSnakeCase(
+      convertedObject[camelToSnakeCase(key)] = snakelize(
         // deno-lint-ignore no-explicit-any
         (obj as Record<string, any>)[key],
       );
@@ -82,13 +82,13 @@ export function camelKeysToSnakeCase<T>(
 
     return convertedObject as T;
   } else if (Array.isArray(obj)) {
-    obj = obj.map((element) => camelKeysToSnakeCase(element));
+    obj = obj.map((element) => snakelize(element));
   }
 
   return obj as T;
 }
 
-export function snakeKeysToCamelCase<T>(
+export function camelize<T>(
   // deno-lint-ignore no-explicit-any
   obj: Record<string, any> | Record<string, any>[],
 ): T {
@@ -99,9 +99,9 @@ export function snakeKeysToCamelCase<T>(
     Object.keys(obj).forEach((key) => {
       eventHandlers.debug?.(
         "loop",
-        `Running forEach loop in snakeKeysToCamelCase function.`,
+        `Running forEach loop in camelize function.`,
       );
-      convertedObject[snakeToCamelCase(key)] = snakeKeysToCamelCase(
+      convertedObject[snakeToCamelCase(key)] = camelize(
         // deno-lint-ignore no-explicit-any
         (obj as Record<string, any>)[key],
       );
@@ -109,7 +109,7 @@ export function snakeKeysToCamelCase<T>(
 
     return convertedObject as T;
   } else if (Array.isArray(obj)) {
-    obj = obj.map((element) => snakeKeysToCamelCase(element));
+    obj = obj.map((element) => camelize(element));
   }
 
   return obj as T;
@@ -130,11 +130,11 @@ function validateSlashOptionChoices(
     }
 
     if (
-      (optionType === DiscordApplicationCommandOptionTypes.STRING &&
+      (optionType === DiscordApplicationCommandOptionTypes.String &&
         (typeof choice.value !== "string" ||
           choice.value.length < 1 ||
           choice.value.length > 100)) ||
-      (optionType === DiscordApplicationCommandOptionTypes.INTEGER &&
+      (optionType === DiscordApplicationCommandOptionTypes.Integer &&
         typeof choice.value !== "number")
     ) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
@@ -152,8 +152,8 @@ function validateSlashOptions(options: ApplicationCommandOption[]) {
     if (
       option.choices?.length &&
       (option.choices.length > 25 ||
-        (option.type !== DiscordApplicationCommandOptionTypes.STRING &&
-          option.type !== DiscordApplicationCommandOptionTypes.INTEGER))
+        (option.type !== DiscordApplicationCommandOptionTypes.String &&
+          option.type !== DiscordApplicationCommandOptionTypes.Integer))
     ) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
@@ -203,4 +203,16 @@ export function validateSlashCommands(
       validateSlashOptions(command.options);
     }
   }
+}
+
+// Typescript is not so good as we developers so we need this little utility function to help it out
+// Taken from https://fettblog.eu/typescript-hasownproperty/
+/** TS save way to check if a property exists in an object */
+// deno-lint-ignore ban-types
+export function hasOwnProperty<T extends {}, Y extends PropertyKey = string>(
+  obj: T,
+  prop: Y,
+): obj is T & Record<Y, unknown> {
+  // deno-lint-ignore no-prototype-builtins
+  return obj.hasOwnProperty(prop);
 }

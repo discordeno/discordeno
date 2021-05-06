@@ -1,6 +1,6 @@
 import { API_VERSION, BASE_URL, IMAGE_BASE_URL } from "../util/constants.ts";
 import { loopObject } from "../util/loop_object.ts";
-import { snakeKeysToCamelCase } from "../util/utils.ts";
+import { camelize } from "../util/utils.ts";
 import { rest } from "./rest.ts";
 
 // deno-lint-ignore no-explicit-any
@@ -62,7 +62,7 @@ export async function runMethod<T = any>(
         method,
         reject,
         respond: (data: { status: number; body?: string }) =>
-          resolve(snakeKeysToCamelCase<T>(JSON.parse(data.body || "{}"))),
+          resolve(camelize<T>(JSON.parse(data.body || "{}"))),
       },
       {
         bucketId,

@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { FollowedChannel } from "../../types/channels/followed_channel.ts";
+import type { FollowedChannel } from "../../types/channels/followed_channel.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 

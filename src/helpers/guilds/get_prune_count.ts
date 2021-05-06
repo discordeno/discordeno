@@ -1,9 +1,9 @@
 import { rest } from "../../rest/rest.ts";
-import { GetGuildPruneCountQuery } from "../../types/guilds/get_guild_prune_count.ts";
-import { Errors } from "../../types/misc/errors.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
+import type { GetGuildPruneCountQuery } from "../../types/guilds/get_guild_prune_count.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
-import { camelKeysToSnakeCase } from "../../util/utils.ts";
+import { snakelize } from "../../util/utils.ts";
 
 /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
 export async function getPruneCount(
@@ -20,7 +20,7 @@ export async function getPruneCount(
   const result = await rest.runMethod(
     "get",
     endpoints.GUILD_PRUNE(guildId),
-    camelKeysToSnakeCase(options ?? {}),
+    snakelize(options ?? {}),
   );
 
   return result.pruned as number;
