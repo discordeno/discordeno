@@ -8,7 +8,6 @@ import { camelize, delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
 import { identify } from "./identify.ts";
 import { resume } from "./resume.ts";
-import { sendShardMessage } from "./send_shard_message.ts";
 import { ws } from "./ws.ts";
 
 /** Handler for handling every message event from websocket. */
@@ -39,7 +38,7 @@ export async function handleOnMessage(message: any, shardId: number) {
 
       shard.heartbeat.lastSentAt = Date.now();
       // Discord randomly sends this requiring an immediate heartbeat back
-      sendShardMessage(shard, {
+      ws.sendShardMessage(shard, {
         op: DiscordGatewayOpcodes.Heartbeat,
         d: shard?.previousSequenceNumber,
       }, true);

@@ -1,6 +1,4 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
-import { closeWS } from "./close_ws.ts";
-import { sendShardMessage } from "./send_shard_message.ts";
 import { ws } from "./ws.ts";
 
 export async function identify(shardId: number, maxShards: number) {
@@ -9,7 +7,7 @@ export async function identify(shardId: number, maxShards: number) {
   // Need to clear the old heartbeat interval
   const oldShard = ws.shards.get(shardId);
   if (oldShard) {
-    closeWS(oldShard.ws, 3065, "Reidentifying closure of old shard");
+    ws.closeWS(oldShard.ws, 3065, "Reidentifying closure of old shard");
     clearInterval(oldShard.heartbeat.intervalId);
   }
 
@@ -41,7 +39,7 @@ export async function identify(shardId: number, maxShards: number) {
   });
 
   socket.onopen = () => {
-    sendShardMessage(shardId, {
+    ws.sendShardMessage(shardId, {
       op: DiscordGatewayOpcodes.Identify,
       d: { ...ws.identifyPayload, shard: [shardId, maxShards] },
     }, true);

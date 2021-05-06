@@ -1,6 +1,4 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
-import { closeWS } from "./close_ws.ts";
-import { sendShardMessage } from "./send_shard_message.ts";
 import { ws } from "./ws.ts";
 
 export async function resume(shardId: number) {
@@ -12,7 +10,7 @@ export async function resume(shardId: number) {
 
   if (oldShard) {
     // HOW TO CLOSE OLD SHARD SOCKET!!!
-    closeWS(oldShard.ws, 3064, "Resuming the shard, closing old shard.");
+    ws.closeWS(oldShard.ws, 3064, "Resuming the shard, closing old shard.");
     // STOP OLD HEARTBEAT
     clearInterval(oldShard.heartbeat.intervalId);
   }
@@ -48,7 +46,7 @@ export async function resume(shardId: number) {
 
   // Resume on open
   socket.onopen = () => {
-    sendShardMessage(shardId, {
+    ws.sendShardMessage(shardId, {
       op: DiscordGatewayOpcodes.Resume,
       d: {
         token: ws.identifyPayload.token,

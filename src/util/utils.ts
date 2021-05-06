@@ -1,11 +1,15 @@
 import { encode } from "../../deps.ts";
 import { eventHandlers } from "../bot.ts";
+import { isActionRow } from "../helpers/type_guards/is_action_row.ts";
+import { isButton } from "../helpers/type_guards/is_button.ts";
 import { Errors } from "../types/discordeno/errors.ts";
 import type { ApplicationCommandOption } from "../types/interactions/commands/application_command_option.ts";
 import type { ApplicationCommandOptionChoice } from "../types/interactions/commands/application_command_option_choice.ts";
 import { DiscordApplicationCommandOptionTypes } from "../types/interactions/commands/application_command_option_types.ts";
 import type { CreateGlobalApplicationCommand } from "../types/interactions/commands/create_global_application_command.ts";
 import type { EditGlobalApplicationCommand } from "../types/interactions/commands/edit_global_application_command.ts";
+import { ButtonStyles } from "../types/messages/components/button_styles.ts";
+import type { MessageComponents } from "../types/messages/components/message_components.ts";
 import type { DiscordImageFormat } from "../types/misc/image_format.ts";
 import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
@@ -215,4 +219,52 @@ export function hasOwnProperty<T extends {}, Y extends PropertyKey = string>(
 ): obj is T & Record<Y, unknown> {
   // deno-lint-ignore no-prototype-builtins
   return obj.hasOwnProperty(prop);
+}
+
+export function validateComponents(components: MessageComponents) {
+  if (components?.length) {
+    let actionRowCounter = 0;
+
+    for (const component of components) {
+      // 5 Link buttons can not have a customId
+      if (isButton(component)) {
+        if (
+          component.type === ButtonStyles.Link &&
+          component.customId
+        ) {
+          throw new Error(Errors.LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID);
+        }
+        // Other buttons must have a customId
+        if (
+          !component.customId && component.type !== ButtonStyles.Link
+        ) {
+          throw new Error(Errors.BUTTON_REQUIRES_CUSTOM_ID);
+        }
+
+        if (!validateLength(component.label, { max: 80 })) {
+          throw new Error(Errors.COMPONENT_LABEL_TOO_BIG);
+        }
+
+        if (
+          component.customId &&
+          !validateLength(component.customId, { max: 100 })
+        ) {
+          throw new Error(Errors.COMPONENT_CUSTOM_ID_TOO_BIG);
+        }
+      }
+
+      if (!isActionRow(component)) {
+        continue;
+      }
+
+      actionRowCounter++;
+      // Max of 5 ActionRows per message
+      if (actionRowCounter > 5) throw new Error(Errors.TOO_MANY_ACTION_ROWS);
+
+      // Max of 5 Buttons (or any component type) within an ActionRow
+      if (component.components?.length > 5) {
+        throw new Error(Errors.TOO_MANY_COMPONENTS);
+      }
+    }
+  }
 }

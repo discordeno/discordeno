@@ -1,7 +1,8 @@
+import { FileContent } from "../discordeno/file_content.ts";
 import { Embed } from "../embeds/embed.ts";
 import { AllowedMentions } from "../messages/allowed_mentions.ts";
 import { Attachment } from "../messages/attachment.ts";
-import { FileContent } from "../discordeno/file_content.ts";
+import { MessageComponents } from "../messages/components/message_components.ts";
 
 /** https://discord.com/developers/docs/resources/webhook#edit-webhook-message-jsonform-params */
 export interface EditWebhookMessage {
@@ -15,4 +16,6 @@ export interface EditWebhookMessage {
   allowedMentions?: AllowedMentions | null;
   /** Attached files to keep */
   attachments?: Attachment | null;
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents;
 }

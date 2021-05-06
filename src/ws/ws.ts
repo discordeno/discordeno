@@ -1,6 +1,7 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { Collection } from "../util/collection.ts";
 import { cleanupLoadingShards } from "./cleanup_loading_shards.ts";
+import { closeWS } from "./close_ws.ts";
 import { createShard } from "./create_shard.ts";
 import { log } from "./events.ts";
 import { handleDiscordPayload } from "./handle_discord_payload.ts";
@@ -9,6 +10,7 @@ import { heartbeat } from "./heartbeat.ts";
 import { identify } from "./identify.ts";
 import { processQueue } from "./process_queue.ts";
 import { resharder } from "./resharder.ts";
+import { sendShardMessage } from "./send_shard_message.ts";
 import { spawnShards } from "./spawn_shards.ts";
 import { startGateway } from "./start_gateway.ts";
 import { tellClusterToIdentify } from "./tell_cluster_to_identify.ts";
@@ -92,7 +94,7 @@ export const ws = {
   spawnShards,
   /** Create the websocket and adds the proper handlers to the websocket. */
   createShard,
-  /** Begins identification of the shard to discord */
+  /** Begins identification of the shard to discord. */
   identify,
   /** Begins heartbeating of the shard to keep it alive */
   heartbeat,
@@ -106,10 +108,14 @@ export const ws = {
   resharder,
   /** Cleanups loading shards that were unable to load. */
   cleanupLoadingShards,
-  /** Handles the message events from websocket */
+  /** Handles the message events from websocket. */
   handleOnMessage,
-  /** Handles processing queue of requests send to this shard */
+  /** Handles processing queue of requests send to this shard. */
   processQueue,
+  /** Closes shard WebSocket connection properly. */
+  closeWS,
+  /** Properly adds a message to the shards queue */
+  sendShardMessage,
 };
 
 export interface DiscordenoShard {
