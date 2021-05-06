@@ -4,16 +4,13 @@ import { structures } from "../../structures/mod.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
-import { ButtonStyles } from "../../types/messages/components/button_styles.ts";
 import type { CreateMessage } from "../../types/messages/create_message.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
-import { snakelize } from "../../util/utils.ts";
+import { snakelize, validateComponents } from "../../util/utils.ts";
 import { validateLength } from "../../util/validate_length.ts";
-import { isActionRow } from "../type_guards/is_action_row.ts";
-import { isButton } from "../type_guards/is_button.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(
@@ -100,49 +97,7 @@ export async function sendMessage(
   }
 
   if (content.components?.length) {
-    let actionRowCounter = 0;
-
-    for (const component of content.components) {
-      // 5 Link buttons can not have a customId
-      if (isButton(component)) {
-        if (
-          component.type === ButtonStyles.Link &&
-          component.customId
-        ) {
-          throw new Error(Errors.LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID);
-        }
-        // Other buttons must have a customId
-        if (
-          !component.customId && component.type !== ButtonStyles.Link
-        ) {
-          throw new Error(Errors.BUTTON_REQUIRES_CUSTOM_ID);
-        }
-
-        if (!validateLength(component.label, { max: 80 })) {
-          throw new Error(Errors.COMPONENT_LABEL_TOO_BIG);
-        }
-
-        if (
-          component.customId &&
-          !validateLength(component.customId, { max: 100 })
-        ) {
-          throw new Error(Errors.COMPONENT_CUSTOM_ID_TOO_BIG);
-        }
-      }
-
-      if (!isActionRow(component)) {
-        continue;
-      }
-
-      actionRowCounter++;
-      // Max of 5 ActionRows per message
-      if (actionRowCounter > 5) throw new Error(Errors.TOO_MANY_ACTION_ROWS);
-
-      // Max of 5 Buttons (or any component type) within an ActionRow
-      if (component.components?.length > 5) {
-        throw new Error(Errors.TOO_MANY_COMPONENTS);
-      }
-    }
+    validateComponents(content.components);
   }
 
   const result = await rest.runMethod<Message>(
