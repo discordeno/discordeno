@@ -8,12 +8,12 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleGuildUpdate(
   data: DiscordGatewayPayload,
-  shardId: number
+  shardId: number,
 ) {
   const payload = data.d as Guild;
   const oldGuild = await cacheHandlers.get(
     "guilds",
-    snowflakeToBigint(payload.id)
+    snowflakeToBigint(payload.id),
   );
   if (!oldGuild) return;
 
@@ -40,8 +40,7 @@ export async function handleGuildUpdate(
       if (!cachedValue && !value) return;
 
       if (Array.isArray(cachedValue) && Array.isArray(value)) {
-        const different =
-          cachedValue.length !== value.length ||
+        const different = cachedValue.length !== value.length ||
           cachedValue.find((val) => !value.includes(val)) ||
           value.find((val) => !cachedValue.includes(val));
         if (!different) return;
