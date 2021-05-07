@@ -1,6 +1,8 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
+import type { DiscordenoChannel } from "../../structures/channel.ts";
+import { structures } from "../../structures/mod.ts";
 import type { Channel } from "../../types/channels/channel.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import type { ModifyChannel } from "../../types/channels/modify_channel.ts";
@@ -20,7 +22,7 @@ import { hasOwnProperty, snakelize } from "../../util/utils.ts";
 export async function editChannel(
   channelId: bigint,
   options: ModifyChannel | ModifyThread,
-  reason?: string,
+  reason?: string
 ) {
   const channel = await cacheHandlers.get("channels", channelId);
 
@@ -50,14 +52,12 @@ export async function editChannel(
     }
 
     if (
-      hasOwnProperty<ModifyChannel>(
-        options,
-        "permissionOverwrites",
-      ) && Array.isArray(options.permissionOverwrites)
+      hasOwnProperty<ModifyChannel>(options, "permissionOverwrites") &&
+      Array.isArray(options.permissionOverwrites)
     ) {
       await requireOverwritePermissions(
         channel.guildId,
-        options.permissionOverwrites,
+        options.permissionOverwrites
       );
     }
   }
@@ -78,38 +78,43 @@ export async function editChannel(
       request.amount = 2;
       request.timestamp = Date.now() + 600000;
     } else {
-      // 2 have already been used add to queue
-      request.items.push({ channelId, options });
-      if (editChannelProcessing) return;
-      editChannelProcessing = true;
-      processEditChannelQueue();
-      return;
+      return new Promise<DiscordenoChannel>((resolve, reject) => {
+        // 2 have already been used add to queue
+        request.items.push({ channelId, options, resolve, reject });
+        if (editChannelProcessing) return;
+        processEditChannelQueue();
+        editChannelProcessing = true;
+      });
     }
   }
 
   const payload = {
     ...snakelize<Record<string, unknown>>(options),
     // deno-lint-ignore camelcase
-    permission_overwrites:
-      hasOwnProperty<ModifyChannel>(options, "permissionOverwrites")
-        ? options.permissionOverwrites?.map((overwrite) => {
+    permission_overwrites: hasOwnProperty<ModifyChannel>(
+      options,
+      "permissionOverwrites"
+    )
+      ? options.permissionOverwrites?.map((overwrite) => {
           return {
             ...overwrite,
             allow: calculateBits(overwrite.allow),
             deny: calculateBits(overwrite.deny),
           };
         })
-        : undefined,
+      : undefined,
   };
 
-  return await rest.runMethod<Channel>(
+  const result = await rest.runMethod<Channel>(
     "patch",
     endpoints.CHANNEL_BASE(channelId),
     {
       ...payload,
       reason,
-    },
+    }
   );
+
+  return await structures.createDiscordenoChannel(result);
 }
 
 interface EditChannelRequest {
@@ -119,6 +124,9 @@ interface EditChannelRequest {
   items: {
     channelId: bigint;
     options: ModifyChannel;
+    resolve: (channel: DiscordenoChannel) => void;
+    // deno-lint-ignore no-explicit-any
+    reject: (error: any) => void;
   }[];
 }
 
@@ -129,11 +137,8 @@ function processEditChannelQueue() {
   if (!editChannelProcessing) return;
 
   const now = Date.now();
-  editChannelNameTopicQueue.forEach((request) => {
-    eventHandlers.debug?.(
-      "loop",
-      `Running forEach loop in edit_channel file.`,
-    );
+  editChannelNameTopicQueue.forEach(async (request) => {
+    eventHandlers.debug?.("loop", `Running forEach loop in edit_channel file.`);
     if (now > request.timestamp) return;
     // 10 minutes have passed so we can reset this channel again
     if (!request.items.length) {
@@ -145,21 +150,23 @@ function processEditChannelQueue() {
 
     if (!details) return;
 
-    editChannel(details.channelId, details.options);
+    await editChannel(details.channelId, details.options)
+      .then((result) => details.resolve(result))
+      .catch(details.reject);
     const secondDetails = request.items.shift();
     if (!secondDetails) return;
 
-    return editChannel(secondDetails.channelId, secondDetails.options);
+    await editChannel(secondDetails.channelId, secondDetails.options)
+      .then((result) => secondDetails.resolve(result))
+      .catch(secondDetails.reject);
+    return;
   });
 
   if (editChannelNameTopicQueue.size) {
     setTimeout(() => {
-      eventHandlers.debug?.(
-        "loop",
-        `Running setTimeout in EDIT_CHANNEL file.`,
-      );
+      eventHandlers.debug?.("loop", `Running setTimeout in EDIT_CHANNEL file.`);
       processEditChannelQueue();
-    }, 600000);
+    }, 60000);
   } else {
     editChannelProcessing = false;
   }
