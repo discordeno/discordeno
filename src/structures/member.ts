@@ -19,6 +19,7 @@ import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import type { User } from "../types/users/user.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { Collection } from "../util/collection.ts";
+import { iconHashToBigInt } from "../util/hash.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 
@@ -36,11 +37,16 @@ export const memberToggles = {
   mfaEnabled: 4n,
   /** Whether the email on this account has been verified */
   verified: 8n,
+  /** Whether the users avatar is animated. */
+  animatedAvatar: 16n,
 };
 
 const baseMember: Partial<DiscordenoMember> = {
   get avatarURL() {
-    return avatarURL(this.id!, this.discriminator!, this.avatar!);
+    return avatarURL(this.id!, this.discriminator!, {
+      avatar: this.avatar!,
+      animated: this.animatedAvatar,
+    });
   },
   get mention() {
     return `<@!${this.id!}>`;
@@ -54,9 +60,12 @@ const baseMember: Partial<DiscordenoMember> = {
     return avatarURL(
       this.id!,
       this.discriminator!,
-      this.avatar!,
-      options.size,
-      options.format,
+      {
+        avatar: this.avatar!,
+        size: options.size,
+        format: options.format,
+        animated: this.animatedAvatar!,
+      },
     );
   },
   guild(guildId) {
@@ -98,6 +107,9 @@ const baseMember: Partial<DiscordenoMember> = {
   get verified() {
     return Boolean(this.bitfield! & memberToggles.verified);
   },
+  get animatedAvatar() {
+    return Boolean(this.bitfield! & memberToggles.animatedAvatar);
+  },
 };
 
 export async function createDiscordenoMember(
@@ -124,6 +136,12 @@ export async function createDiscordenoMember(
     if (toggleBits) {
       bitfield |= value ? toggleBits : 0n;
       continue;
+    }
+
+    if (key === "avatar") {
+      const transformed = value ? iconHashToBigInt(value) : undefined;
+      if (transformed?.animated) bitfield |= memberToggles.animatedAvatar;
+      props.avatar = createNewProp(transformed?.bigint);
     }
 
     props[key] = createNewProp(
@@ -193,6 +211,8 @@ export interface DiscordenoMember extends
   mention: string;
   /** The username#discriminator tag for this member */
   tag: string;
+  /** Whether or not the avatar is animated. */
+  animatedAvatar: boolean;
 
   // METHODS
 

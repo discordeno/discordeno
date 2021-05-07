@@ -28,6 +28,7 @@ import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { cacheMembers } from "../util/cache_members.ts";
 import { Collection } from "../util/collection.ts";
+import { iconHashToBigInt } from "../util/hash.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoChannel } from "./channel.ts";
 import { DiscordenoMember } from "./member.ts";
@@ -58,6 +59,12 @@ export const guildToggles = {
   unavailable: 8n,
   /** Whether this server is an nsfw guild */
   nsfw: 16n,
+  /** Whether this server's icon is animated */
+  animatedIcon: 32n,
+  /** Whether this server's banner is animated. */
+  animatedBanner: 64n,
+  /** Whether this server's splash is animated. */
+  animatedSplash: 128n,
 };
 
 const baseGuild: Partial<DiscordenoGuild> = {
@@ -98,10 +105,20 @@ const baseGuild: Partial<DiscordenoGuild> = {
     return Boolean(this.features?.includes(DiscordGuildFeatures.Verified));
   },
   bannerURL(size, format) {
-    return guildBannerURL(this.id!, this.banner!, size, format);
+    return guildBannerURL(this.id!, {
+      banner: this.banner!,
+      size,
+      format,
+      animated: this.animatedBanner!,
+    });
   },
   splashURL(size, format) {
-    return guildSplashURL(this.id!, this.splash!, size, format);
+    return guildSplashURL(this.id!, {
+      splash: this.splash!,
+      size,
+      format,
+      animated: this.animatedSplash,
+    });
   },
   delete() {
     return deleteGuild(this.id!);
@@ -128,7 +145,12 @@ const baseGuild: Partial<DiscordenoGuild> = {
     return getInvites(this.id!);
   },
   iconURL(size, format) {
-    return guildIconURL(this.id!, this.icon!, size, format);
+    return guildIconURL(this.id!, {
+      icon: this.icon!,
+      size,
+      format,
+      animated: this.animatedIcon!,
+    });
   },
   leave() {
     return leaveGuild(this.id!);
@@ -148,6 +170,15 @@ const baseGuild: Partial<DiscordenoGuild> = {
   get nsfw() {
     return Boolean(this.bitfield! & guildToggles.nsfw);
   },
+  get animatedIcon() {
+    return Boolean(this.bitfield! & guildToggles.animatedIcon);
+  },
+  get animatedBanner() {
+    return Boolean(this.bitfield! & guildToggles.animatedBanner);
+  },
+  get animatedSplash() {
+    return Boolean(this.bitfield! & guildToggles.animatedSplash);
+  },
 };
 
 export async function createDiscordenoGuild(
@@ -163,6 +194,9 @@ export async function createDiscordenoGuild(
     joinedAt = "",
     emojis,
     members = [],
+    icon,
+    splash,
+    banner,
     ...rest
   } = data;
 
@@ -213,6 +247,20 @@ export async function createDiscordenoGuild(
         ? value ? snowflakeToBigint(value) : undefined
         : value,
     );
+  }
+
+  const hashes = [
+    { name: "icon", toggle: guildToggles.animatedIcon, value: icon },
+    { name: "banner", toggle: guildToggles.animatedBanner, value: banner },
+    { name: "splash", toggle: guildToggles.animatedSplash, value: splash },
+  ];
+
+  for (const hash of hashes) {
+    const transformed = hash.value ? iconHashToBigInt(hash.value) : undefined;
+    if (transformed) {
+      props[hash.name] = createNewProp(hash.value);
+      if (transformed.animated) bitfield |= hash.toggle;
+    }
   }
 
   const guild: DiscordenoGuild = Object.create(baseGuild, {
@@ -285,6 +333,12 @@ export interface DiscordenoGuild extends
   rulesChannelId?: bigint;
   /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
   publicUpdatesChannelId?: bigint;
+  /** Whether this server's icon is animated */
+  animatedIcon: boolean;
+  /** Whether this server's banner is animated. */
+  animatedBanner: boolean;
+  /** Whether this server's splash is animated. */
+  animatedSplash: boolean;
   /** The id of the shard this guild is bound to */
   shardId: number;
   /** Total number of members in this guild */
