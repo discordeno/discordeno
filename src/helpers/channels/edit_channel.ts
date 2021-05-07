@@ -82,8 +82,8 @@ export async function editChannel(
         // 2 have already been used add to queue
         request.items.push({ channelId, options, resolve, reject });
         if (editChannelProcessing) return;
-        processEditChannelQueue();
         editChannelProcessing = true;
+        processEditChannelQueue();
       });
     }
   }
