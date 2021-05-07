@@ -14,7 +14,7 @@ import { validateComponents } from "../../util/utils.ts";
 export async function sendInteractionResponse(
   id: bigint,
   token: string,
-  options: DiscordenoInteractionResponse
+  options: DiscordenoInteractionResponse,
 ) {
   // TODO: add more options validations
   if (options.data?.components) validateComponents(options.data?.components);
@@ -25,7 +25,7 @@ export async function sendInteractionResponse(
       endpoints.WEBHOOK(applicationId, token),
       {
         ...options,
-      }
+      },
     );
   }
 
@@ -34,7 +34,7 @@ export async function sendInteractionResponse(
   setTimeout(() => {
     eventHandlers.debug?.(
       "loop",
-      `Running setTimeout in send_interaction_response file.`
+      `Running setTimeout in send_interaction_response file.`,
     );
     cache.executedSlashCommands.delete(token);
   }, 900000);
@@ -52,6 +52,6 @@ export async function sendInteractionResponse(
   return await rest.runMethod(
     "post",
     endpoints.INTERACTION_ID_TOKEN(id, token),
-    options
+    options,
   );
 }
