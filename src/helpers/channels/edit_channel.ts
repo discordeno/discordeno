@@ -139,7 +139,7 @@ function processEditChannelQueue() {
   const now = Date.now();
   editChannelNameTopicQueue.forEach(async (request) => {
     eventHandlers.debug?.("loop", `Running forEach loop in edit_channel file.`);
-    if (now > request.timestamp) return;
+    if (now < request.timestamp) return;
     // 10 minutes have passed so we can reset this channel again
     if (!request.items.length) {
       return editChannelNameTopicQueue.delete(request.channelId);
