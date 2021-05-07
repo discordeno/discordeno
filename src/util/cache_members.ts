@@ -15,6 +15,8 @@ export async function cacheMembers(
   guildId: bigint,
   members: GuildMemberWithUser[],
 ) {
+  if (!members.length) return;
+
   return new Promise((resolve) => {
     guildMemberQueue.set(guildId, { members, resolve });
     startQueue();
