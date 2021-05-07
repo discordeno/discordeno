@@ -258,7 +258,7 @@ export async function createDiscordenoGuild(
   for (const hash of hashes) {
     const transformed = hash.value ? iconHashToBigInt(hash.value) : undefined;
     if (transformed) {
-      props.icon = createNewProp(hash.value);
+      props[hash.name] = createNewProp(hash.value);
       if (transformed.animated) bitfield |= hash.toggle;
     }
   }

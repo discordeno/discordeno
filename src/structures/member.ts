@@ -138,10 +138,10 @@ export async function createDiscordenoMember(
       continue;
     }
 
-    if (key === "icon") {
+    if (key === "avatar") {
       const transformed = value ? iconHashToBigInt(value) : undefined;
       if (transformed?.animated) bitfield |= memberToggles.animatedAvatar;
-      props.icon = createNewProp(transformed?.bigint);
+      props.avatar = createNewProp(transformed?.bigint);
     }
 
     props[key] = createNewProp(
