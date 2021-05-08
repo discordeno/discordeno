@@ -37,16 +37,14 @@ Here is a minimal example to get started with:
 import { startBot } from "https://deno.land/x/discordeno/mod.ts";
 
 startBot({
-  token: "BOT TOKEN",
+  token: "BOT_TOKEN",
   intents: ["Guilds", "GuildMessages"],
   eventHandlers: {
     ready() {
       console.log("Successfully connected to gateway");
     },
     messageCreate(message) {
-      if (message.content === "ping") {
-        message.reply("Pong using Discordeno!");
-      }
+      // Process the message with your command handler here
     },
   },
 });
