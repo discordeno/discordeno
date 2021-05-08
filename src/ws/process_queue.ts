@@ -1,6 +1,6 @@
 import { loopObject } from "../util/loop_object.ts";
 import { delay } from "../util/utils.ts";
-import { WebSocketRequest, ws } from "./ws.ts";
+import { ws } from "./ws.ts";
 
 export async function processQueue(id: number) {
   const shard = ws.shards.get(id);
