@@ -116,19 +116,19 @@ const baseMessage: Partial<DiscordenoMessage> = {
     if (this.guildId) return sendMessage(this.channelId!, content);
     return sendDirectMessage(this.authorId!, content);
   },
-  alert(content, timeout = 10, reason = "") {
+  async alert(content, timeout = 10, reason = "") {
     if (this.guildId) {
-      return sendMessage(this.channelId!, content).then((response) => {
+      return await sendMessage(this.channelId!, content).then((response) => {
         response.delete(reason, timeout * 1000).catch(console.error);
       });
     }
 
-    return sendDirectMessage(this.authorId!, content).then((response) => {
+    return await sendDirectMessage(this.authorId!, content).then((response) => {
       response.delete(reason, timeout * 1000).catch(console.error);
     });
   },
-  alertReply(content, timeout = 10, reason = "") {
-    return this.reply!(content).then((response) =>
+  async alertReply(content, timeout = 10, reason = "") {
+    return await this.reply!(content).then((response) =>
       response.delete(reason, timeout * 1000).catch(console.error)
     );
   },
