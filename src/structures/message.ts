@@ -179,6 +179,9 @@ export async function createDiscordenoMessage(data: Message) {
       continue;
     }
 
+    // Don't add member to props since it would overwrite the message.member getter
+    if (key === "member") continue;
+
     props[key] = createNewProp(
       MESSAGE_SNOWFLAKES.includes(key)
         ? value ? snowflakeToBigint(value) : undefined
