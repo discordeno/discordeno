@@ -1,5 +1,6 @@
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import {
   GetMessagesAfter,
   GetMessagesAround,
@@ -24,7 +25,9 @@ export async function getMessages(
     "READ_MESSAGE_HISTORY",
   ]);
 
-  if (options?.limit && options.limit > 100) return;
+  if (options?.limit && (options.limit < 0 || options.limit > 100)) {
+    throw new Error(Errors.INVALID_GET_MESSAGES_LIMIT);
+  }
 
   const result = await rest.runMethod<Message[]>(
     "get",

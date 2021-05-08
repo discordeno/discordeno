@@ -39,7 +39,7 @@ Deno.test({
 
     // Fetch the messages
     const fetchedMessages = await getMessages(tempData.channelId, {
-      after: message.id.toString(),
+      after: message.id,
       limit: 2,
     });
     // Check if getMessages has worked
