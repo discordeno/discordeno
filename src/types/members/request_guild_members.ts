@@ -9,7 +9,7 @@ export interface RequestGuildMembers {
   /** Used to specify if we want the presences of the matched members */
   presences?: boolean;
   /** Used to specify which users you wish to fetch */
-  userIds?: string[];
+  userIds?: bigint[];
   /** Nonce to identify the Guild Members Chunk response */
   nonce?: string;
 }
