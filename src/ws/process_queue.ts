@@ -1,5 +1,6 @@
+import { loopObject } from "../util/loop_object.ts";
 import { delay } from "../util/utils.ts";
-import { ws } from "./ws.ts";
+import { WebSocketRequest, ws } from "./ws.ts";
 
 export async function processQueue(id: number) {
   const shard = ws.shards.get(id);
@@ -22,6 +23,19 @@ export async function processQueue(id: number) {
 
     // Send a request that is next in line
     const request = shard.queue.shift();
+
+    if (request?.d) {
+      request.d = loopObject(
+        request.d as Record<string, unknown>,
+        (value) =>
+          typeof value === "bigint"
+            ? value.toString()
+            : Array.isArray(value)
+            ? value.map((v) => typeof v === "bigint" ? v.toString() : v)
+            : value,
+        `Running forEach loop in ws.processQueue function for changing bigints to strings.`,
+      );
+    }
 
     shard.ws.send(JSON.stringify(request));
 

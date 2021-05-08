@@ -162,8 +162,8 @@ export interface DiscordenoShard {
 export interface WebSocketRequest {
   op: DiscordGatewayOpcodes;
   d: unknown;
-  // guildId: string;
+  // guildId: bigint;
   // shardId: number;
-  // nonce?: string;
+  // nonce?: bigint;
   // options?: Record<string, unknown>;
 }

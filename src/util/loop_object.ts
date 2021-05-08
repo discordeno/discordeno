@@ -1,6 +1,6 @@
 import { eventHandlers } from "../bot.ts";
 
-export function loopObject(
+export function loopObject<T = Record<string, unknown>>(
   obj: Record<string, unknown>,
   handler: (value: unknown, key: string) => unknown,
   log: string,
@@ -35,5 +35,5 @@ export function loopObject(
     }
   }
 
-  return res;
+  return res as T;
 }
