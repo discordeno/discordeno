@@ -27,10 +27,10 @@ export async function handleMessageCreate(data: DiscordGatewayPayload) {
     await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
   }
 
-  if (payload.mentions) {
+  if (payload.mentions && guild) {
     await Promise.all(payload.mentions.map(async (mention) => {
       // Cache the member if its a valid member
-      if (mention.member && guild) {
+      if (mention.member) {
         const discordenoMember = await structures.createDiscordenoMember(
           { ...mention.member, user: mention } as GuildMemberWithUser,
           guild.id,
