@@ -71,23 +71,23 @@ export type ApplicationCommandInteractionDataOptionBoolean =
 export type ApplicationCommandInteractionDataOptionUser =
   ApplicationCommandInteractionDataOptionBase<
     DiscordApplicationCommandOptionTypes.User,
-    bigint
+    string
   >;
 
 export type ApplicationCommandInteractionDataOptionChannel =
   ApplicationCommandInteractionDataOptionBase<
     DiscordApplicationCommandOptionTypes.Channel,
-    bigint
+    string
   >;
 
 export type ApplicationCommandInteractionDataOptionRole =
   ApplicationCommandInteractionDataOptionBase<
     DiscordApplicationCommandOptionTypes.Role,
-    bigint
+    string
   >;
 
 export type ApplicationCommandInteractionDataOptionMentionable =
   ApplicationCommandInteractionDataOptionBase<
     DiscordApplicationCommandOptionTypes.Mentionable,
-    bigint
+    string
   >;
