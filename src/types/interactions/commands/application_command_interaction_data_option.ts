@@ -4,6 +4,9 @@ import { DiscordApplicationCommandOptionTypes } from "./application_command_opti
 export type ApplicationCommandInteractionDataOption =
   | ApplicationCommandInteractionDataOptionSubCommand
   | ApplicationCommandInteractionDataOptionSubCommandGroup
+  | ApplicationCommandInteractionDataOptionWithValue;
+
+export type ApplicationCommandInteractionDataOptionWithValue =
   | ApplicationCommandInteractionDataOptionString
   | ApplicationCommandInteractionDataOptionInteger
   | ApplicationCommandInteractionDataOptionBoolean
@@ -24,22 +27,27 @@ interface ApplicationCommandInteractionDataOptionBase<
   value: V;
 }
 
-export interface ApplicationCommandInteractionDataOptionSubCommand
-  extends
+export interface ApplicationCommandInteractionDataOptionSubCommand extends
+  Omit<
     ApplicationCommandInteractionDataOptionBase<
       DiscordApplicationCommandOptionTypes.SubCommand
-    > {
+    >,
+    "value"
+  > {
   /** Present if this option is a group or subcommand */
-  options?: ApplicationCommandInteractionDataOption[];
+  options?: ApplicationCommandInteractionDataOptionWithValue[];
 }
 
 export interface ApplicationCommandInteractionDataOptionSubCommandGroup
   extends
-    ApplicationCommandInteractionDataOptionBase<
-      DiscordApplicationCommandOptionTypes.SubCommandGroup
+    Omit<
+      ApplicationCommandInteractionDataOptionBase<
+        DiscordApplicationCommandOptionTypes.SubCommandGroup
+      >,
+      "value"
     > {
   /** Present if this option is a group or subcommand */
-  options?: ApplicationCommandInteractionDataOption[];
+  options?: ApplicationCommandInteractionDataOptionSubCommand[];
 }
 
 export type ApplicationCommandInteractionDataOptionString =
