@@ -45,7 +45,7 @@ const baseChannel: Partial<DiscordenoChannel> = {
   },
   get voiceStates() {
     return this.guild?.voiceStates.filter(
-      (voiceState) => voiceState.channelId === this.id!,
+      (voiceState) => voiceState.channelId === this.id!
     );
   },
   get connectedMembers() {
@@ -53,7 +53,7 @@ const baseChannel: Partial<DiscordenoChannel> = {
     if (!voiceStates) return undefined;
 
     return new Collection(
-      voiceStates.map((vs) => [vs.userId, cache.members.get(vs.userId)]),
+      voiceStates.map((vs) => [vs.userId, cache.members.get(vs.userId)])
     );
   },
   send(content) {
@@ -66,26 +66,17 @@ const baseChannel: Partial<DiscordenoChannel> = {
     return deleteChannel(this.id!, reason);
   },
   editOverwrite(id, options) {
-    return editChannelOverwrite(
-      this.guildId!,
-      this.id!,
-      id,
-      options,
-    );
+    return editChannelOverwrite(this.guildId!, this.id!, id, options);
   },
   deleteOverwrite(id) {
-    return deleteChannelOverwrite(
-      this.guildId!,
-      this.id!,
-      id,
-    );
+    return deleteChannelOverwrite(this.guildId!, this.id!, id);
   },
   hasPermission(overwrites, permissions) {
     return channelOverwriteHasPermission(
       this.guildId!,
       this.id!,
       overwrites,
-      permissions,
+      permissions
     );
   },
   edit(options, reason) {
@@ -98,50 +89,50 @@ const baseChannel: Partial<DiscordenoChannel> = {
 
 /** Create a structure object  */
 // deno-lint-ignore require-await
-export async function createDiscordenoChannel(
-  data: Channel,
-  guildId?: bigint,
-) {
-  const {
-    lastPinTimestamp,
-    permissionOverwrites = [],
-    ...rest
-  } = data;
+export async function createDiscordenoChannel(data: Channel, guildId?: bigint) {
+  const { lastPinTimestamp, permissionOverwrites = [], ...rest } = data;
 
   const props: Record<string, PropertyDescriptor> = {};
   Object.entries(rest).forEach(([key, value]) => {
     eventHandlers.debug?.(
       "loop",
-      `Running forEach loop in createDiscordenoChannel function.`,
+      `Running forEach loop in createDiscordenoChannel function.`
     );
-
-    if (key === "guildId") value = guildId?.toString() || data.guildId || "";
 
     props[key] = createNewProp(
       CHANNEL_SNOWFLAKES.includes(key)
-        ? value ? snowflakeToBigint(value) : undefined
-        : value,
+        ? value
+          ? snowflakeToBigint(value)
+          : undefined
+        : value
     );
   });
+
+  // Set the guildId seperately because sometimes guildId is not included
+  props.guildId = createNewProp(
+    snowflakeToBigint(guildId?.toString() || data.guildId || "")
+  );
 
   const channel: DiscordenoChannel = Object.create(baseChannel, {
     ...props,
     lastPinTimestamp: createNewProp(
-      lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined,
+      lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined
     ),
-    permissionOverwrites: createNewProp(permissionOverwrites.map((o) => ({
-      ...o,
-      id: snowflakeToBigint(o.id),
-      allow: snowflakeToBigint(o.allow),
-      deny: snowflakeToBigint(o.deny),
-    }))),
+    permissionOverwrites: createNewProp(
+      permissionOverwrites.map((o) => ({
+        ...o,
+        id: snowflakeToBigint(o.id),
+        allow: snowflakeToBigint(o.allow),
+        deny: snowflakeToBigint(o.deny),
+      }))
+    ),
   });
 
   return channel;
 }
 
-export interface DiscordenoChannel extends
-  Omit<
+export interface DiscordenoChannel
+  extends Omit<
     Channel,
     | "id"
     | "guildId"
@@ -158,7 +149,7 @@ export interface DiscordenoChannel extends
   })[];
   /** The id of the channel */
   id: bigint;
-  /** The id of the guild */
+  /** The id of the guild, 0n if it is a DM */
   guildId: bigint;
   /** The id of the last message sent in this channel (may not point to an existing or valid message) */
   lastMessageId?: bigint;
@@ -208,11 +199,11 @@ export interface DiscordenoChannel extends
   /** Edit a channel Overwrite */
   editOverwrite(
     overwriteId: bigint,
-    options: Omit<Overwrite, "id">,
+    options: Omit<Overwrite, "id">
   ): ReturnType<typeof editChannelOverwrite>;
   /** Delete a channel Overwrite */
   deleteOverwrite(
-    overwriteId: bigint,
+    overwriteId: bigint
   ): ReturnType<typeof deleteChannelOverwrite>;
   /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
   hasPermission(
@@ -221,7 +212,7 @@ export interface DiscordenoChannel extends
       allow: bigint;
       deny: bigint;
     })[],
-    permissions: PermissionStrings[],
+    permissions: PermissionStrings[]
   ): ReturnType<typeof channelOverwriteHasPermission>;
   /** Edit the channel */
   edit(options: ModifyChannel, reason?: string): ReturnType<typeof editChannel>;
