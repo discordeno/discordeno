@@ -66,19 +66,10 @@ const baseChannel: Partial<DiscordenoChannel> = {
     return deleteChannel(this.id!, reason);
   },
   editOverwrite(id, options) {
-    return editChannelOverwrite(
-      this.guildId!,
-      this.id!,
-      id,
-      options,
-    );
+    return editChannelOverwrite(this.guildId!, this.id!, id, options);
   },
   deleteOverwrite(id) {
-    return deleteChannelOverwrite(
-      this.guildId!,
-      this.id!,
-      id,
-    );
+    return deleteChannelOverwrite(this.guildId!, this.id!, id);
   },
   hasPermission(overwrites, permissions) {
     return channelOverwriteHasPermission(
@@ -98,15 +89,8 @@ const baseChannel: Partial<DiscordenoChannel> = {
 
 /** Create a structure object  */
 // deno-lint-ignore require-await
-export async function createDiscordenoChannel(
-  data: Channel,
-  guildId?: bigint,
-) {
-  const {
-    lastPinTimestamp,
-    permissionOverwrites = [],
-    ...rest
-  } = data;
+export async function createDiscordenoChannel(data: Channel, guildId?: bigint) {
+  const { lastPinTimestamp, permissionOverwrites = [], ...rest } = data;
 
   const props: Record<string, PropertyDescriptor> = {};
   Object.entries(rest).forEach(([key, value]) => {
@@ -115,8 +99,6 @@ export async function createDiscordenoChannel(
       `Running forEach loop in createDiscordenoChannel function.`,
     );
 
-    if (key === "guildId") value = guildId || data.guildId || "";
-
     props[key] = createNewProp(
       CHANNEL_SNOWFLAKES.includes(key)
         ? value ? snowflakeToBigint(value) : undefined
@@ -124,17 +106,24 @@ export async function createDiscordenoChannel(
     );
   });
 
+  // Set the guildId seperately because sometimes guildId is not included
+  props.guildId = createNewProp(
+    snowflakeToBigint(guildId?.toString() || data.guildId || ""),
+  );
+
   const channel: DiscordenoChannel = Object.create(baseChannel, {
     ...props,
     lastPinTimestamp: createNewProp(
       lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined,
     ),
-    permissionOverwrites: createNewProp(permissionOverwrites.map((o) => ({
-      ...o,
-      id: snowflakeToBigint(o.id),
-      allow: snowflakeToBigint(o.allow),
-      deny: snowflakeToBigint(o.deny),
-    }))),
+    permissionOverwrites: createNewProp(
+      permissionOverwrites.map((o) => ({
+        ...o,
+        id: snowflakeToBigint(o.id),
+        allow: snowflakeToBigint(o.allow),
+        deny: snowflakeToBigint(o.deny),
+      })),
+    ),
   });
 
   return channel;
@@ -158,7 +147,7 @@ export interface DiscordenoChannel extends
   })[];
   /** The id of the channel */
   id: bigint;
-  /** The id of the guild */
+  /** The id of the guild, 0n if it is a DM */
   guildId: bigint;
   /** The id of the last message sent in this channel (may not point to an existing or valid message) */
   lastMessageId?: bigint;
