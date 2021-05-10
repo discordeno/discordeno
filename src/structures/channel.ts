@@ -115,7 +115,7 @@ export async function createDiscordenoChannel(
       `Running forEach loop in createDiscordenoChannel function.`,
     );
 
-    if (key === "guildId") value = guildId || data.guildId || "";
+    if (key === "guildId") value = guildId?.toString() || data.guildId || "";
 
     props[key] = createNewProp(
       CHANNEL_SNOWFLAKES.includes(key)
