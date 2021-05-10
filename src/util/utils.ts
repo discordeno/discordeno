@@ -1,4 +1,4 @@
-import { encode } from "../../deps.ts";
+import { encode } from "./deps.ts";
 import { eventHandlers } from "../bot.ts";
 import { isActionRow } from "../helpers/type_guards/is_action_row.ts";
 import { isButton } from "../helpers/type_guards/is_button.ts";
