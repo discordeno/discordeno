@@ -174,10 +174,6 @@ export async function processQueue(id: string) {
       // SOMETHING WENT WRONG, LOG AND RESPOND WITH ERROR
       rest.eventHandlers.fetchFailed(queuedRequest.payload, error);
       queuedRequest.request.reject?.(error);
-      queuedRequest.request.respond({
-        status: 404,
-        body: JSON.stringify({ error }),
-      });
       // REMOVE FROM QUEUE
       queue.shift();
     }
