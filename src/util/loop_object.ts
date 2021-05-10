@@ -11,9 +11,7 @@ export function loopObject<T = Record<string, unknown>>(
     res = [];
 
     for (const o of obj) {
-      if (
-        typeof o === "object" && !Array.isArray(o) && o !== null
-      ) {
+      if (typeof o === "object" && !Array.isArray(o) && o !== null) {
         // A nested object
         res.push(loopObject(o as Record<string, unknown>, handler, log));
       } else {
@@ -25,7 +23,10 @@ export function loopObject<T = Record<string, unknown>>(
       eventHandlers.debug?.("loop", log);
 
       if (
-        typeof value === "object" && !Array.isArray(value) && value !== null
+        typeof value === "object" &&
+        !Array.isArray(value) &&
+        value !== null &&
+        !(value instanceof Blob)
       ) {
         // A nested object
         res[key] = loopObject(value as Record<string, unknown>, handler, log);
