@@ -9,14 +9,3 @@ export interface StageInstance {
   /** The topic of the Stage instance (1-120 characters) */
   topic: string;
 }
-
-// Example:
-// {
-//   guildId: "838659849071230997",
-//   channelId: "841612765089234946",
-//   topic: "test",
-//   privacyLevel: 2,
-//   id: "841615532243025932",
-//   discoverableDisabled: false,
-//   guildScheduledEventId: null
-// }
