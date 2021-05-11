@@ -128,6 +128,10 @@ import { getWebhooks } from "./webhooks/get_webhooks.ts";
 import { getWebhookMessage } from "./webhooks/get_webhook_message.ts";
 import { getWebhookWithToken } from "./webhooks/get_webhook_with_token.ts";
 import { sendWebhook } from "./webhooks/send_webhook.ts";
+import { createStageInstance } from "./misc/create_stage_instance.ts";
+import { updateStageInstance } from "./misc/update_stage_instance.ts";
+import { getStageInstance } from "./misc/get_stage_instance.ts";
+import { deleteStageInstance } from "./misc/delete_stage_instance.ts";
 
 export {
   addDiscoverySubcategory,
@@ -148,6 +152,7 @@ export {
   createInvite,
   createRole,
   createSlashCommand,
+  createStageInstance,
   createWebhook,
   deleteChannel,
   deleteChannelOverwrite,
@@ -161,6 +166,7 @@ export {
   deleteRole,
   deleteSlashCommand,
   deleteSlashResponse,
+  deleteStageInstance,
   deleteWebhook,
   deleteWebhookMessage,
   deleteWebhookWithToken,
@@ -217,6 +223,7 @@ export {
   getSlashCommandPermission,
   getSlashCommandPermissions,
   getSlashCommands,
+  getStageInstance,
   getTemplate,
   getUser,
   getVanityURL,
@@ -260,6 +267,7 @@ export {
   unpin,
   unpinMessage,
   updateBotVoiceState,
+  updateStageInstance,
   upsertSlashCommand,
   upsertSlashCommands,
   validDiscoveryTerm,
@@ -375,6 +383,10 @@ export let helpers = {
   sendMessage,
   unpinMessage,
   // misc
+  createStageInstance,
+  getStageInstance,
+  updateStageInstance,
+  deleteStageInstance,
   getGatewayBot,
   getUser,
   // roles
