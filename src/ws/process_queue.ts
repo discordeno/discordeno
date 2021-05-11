@@ -34,11 +34,11 @@ export async function processQueue(id: number) {
             : Array.isArray(value)
             ? value.map((v) => (typeof v === "bigint" ? v.toString() : v))
             : value,
-        `Running forEach loop in ws.processQueue function for changing bigints to strings.`,
+        `Running forEach loop in ws.processQueue function for changing bigints to strings.`
       );
     }
 
-    ws.log("RAW_SEND", shard.id, { ...request });
+    ws.log("RAW_SEND", shard.id, request);
 
     shard.ws.send(JSON.stringify(request));
 
