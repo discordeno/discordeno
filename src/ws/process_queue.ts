@@ -23,6 +23,7 @@ export async function processQueue(id: number) {
 
     // Send a request that is next in line
     const request = shard.queue.shift();
+    if (!request) return;
 
     if (request?.d) {
       request.d = loopObject(
@@ -31,11 +32,13 @@ export async function processQueue(id: number) {
           typeof value === "bigint"
             ? value.toString()
             : Array.isArray(value)
-            ? value.map((v) => typeof v === "bigint" ? v.toString() : v)
+            ? value.map((v) => (typeof v === "bigint" ? v.toString() : v))
             : value,
         `Running forEach loop in ws.processQueue function for changing bigints to strings.`,
       );
     }
+
+    ws.log("RAW_SEND", shard.id, request);
 
     shard.ws.send(JSON.stringify(request));
 
@@ -44,6 +47,11 @@ export async function processQueue(id: number) {
 
     // Handle if the requests have been maxed
     if (shard.queueCounter >= 118) {
+      ws.log("DEBUG", {
+        message:
+          "Max gateway requests per minute reached setting timeout for one minute",
+        shardId: shard.id,
+      });
       await delay(60000);
       shard.queueCounter = 0;
       continue;

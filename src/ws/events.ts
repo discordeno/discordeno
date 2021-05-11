@@ -1,5 +1,5 @@
 import type { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
-import { DiscordenoShard } from "./ws.ts";
+import { DiscordenoShard, WebSocketRequest } from "./ws.ts";
 
 /** The handler for logging different actions happening inside the ws. User can override and put custom handling per event. */
 export function log(
@@ -39,6 +39,11 @@ export function log(
   data: { shardId: number; payload: DiscordGatewayPayload },
 ): unknown;
 export function log(type: "RAW", data: Record<string, unknown>): unknown;
+export function log(
+  type: "RAW_SEND",
+  shardId: number,
+  data: WebSocketRequest,
+): unknown;
 export function log(type: "RECONNECT", data: { shardId: number }): unknown;
 export function log(type: "RESUMED", data: { shardId: number }): unknown;
 export function log(type: "RESUMING", data: { shardId: number }): unknown;
@@ -55,6 +60,7 @@ export function log(
     | "IDENTIFYING"
     | "INVALID_SESSION"
     | "RAW"
+    | "RAW_SEND"
     | "RECONNECT"
     | "RESUMED"
     | "RESUMING"
