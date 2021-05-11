@@ -23,6 +23,7 @@ export async function processQueue(id: number) {
 
     // Send a request that is next in line
     const request = shard.queue.shift();
+    if (!request) return;
 
     if (request?.d) {
       request.d = loopObject(
@@ -37,11 +38,7 @@ export async function processQueue(id: number) {
       );
     }
 
-    ws.log("DEBUG", {
-      message: "Sending gateway request",
-      shardId: shard.id,
-      request,
-    });
+    ws.log("RAW_SEND", shard.id, { ...request });
 
     shard.ws.send(JSON.stringify(request));
 
