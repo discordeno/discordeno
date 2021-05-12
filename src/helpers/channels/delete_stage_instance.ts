@@ -8,17 +8,18 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 /** Deletes the Stage instance. Requires the user to be a moderator of the Stage channel. */
 export async function deleteStageInstance(channelId: bigint) {
   const channel = await cacheHandlers.get("channels", channelId);
-  if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);
 
-  if (channel.type !== ChannelTypes.GuildStageVoice) {
-    throw new Error(Errors.CHANNEL_NOT_STAGE_VOICE);
+  if (channel) {
+    if (channel.type !== ChannelTypes.GuildStageVoice) {
+      throw new Error(Errors.CHANNEL_NOT_STAGE_VOICE);
+    }
+
+    await requireBotChannelPermissions(channel, [
+      "MUTE_MEMBERS",
+      "MANAGE_CHANNELS",
+      "MOVE_MEMBERS",
+    ]);
   }
-
-  await requireBotChannelPermissions(channel, [
-    "MUTE_MEMBERS",
-    "MANAGE_CHANNELS",
-    "MOVE_MEMBERS",
-  ]);
 
   return await rest.runMethod<undefined>(
     "delete",
