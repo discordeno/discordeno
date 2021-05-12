@@ -1,7 +1,6 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import type { Invite } from "../../types/invites/invite.ts";
-import { Errors } from "../../types/discordeno/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 import {
   botHasChannelPermissions,
