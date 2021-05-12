@@ -16,6 +16,7 @@ export enum DiscordJsonErrorCodes {
   UnknownUser,
   UnknownEmoji,
   UnknownWebhook,
+  UnknownWebhookService,
   UnknownBan = 10026,
   UnknownSKU,
   UnknownStoreListing,
