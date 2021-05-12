@@ -62,6 +62,7 @@ export enum DiscordJsonErrorCodes {
   RequestEntityTooLargeTrySendingSomethingSmallerInSize = 40005,
   ThisFeatureHasBeenTemporarilyDisabledServerSide,
   ThisUserBannedFromThisGuild,
+  TargetUserIsNotConnectedToVoice = 40032,
   ThisMessageHasAlreadyBeenCrossposted = 40033,
   MissingAccess = 50001,
   InvalidAccountType,
