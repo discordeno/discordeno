@@ -5,7 +5,7 @@ import { DiscordApplicationCommandOptionTypes } from "./application_command_opti
 export interface ApplicationCommandOption {
   /** Value of Application Command Option Type */
   type: DiscordApplicationCommandOptionTypes;
-  /** 1-32 character name matching `^[\w-]{1,32}$` */
+  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
   name: string;
   /** 1-100 character description */
   description: string;
