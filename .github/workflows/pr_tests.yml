@@ -19,7 +19,7 @@ jobs:
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
       - name: Create coverage report
-        run: deno --unstable coverage ./coverage --lcov > coverage.lcov
+        run: deno --unstable --exclude=test coverage ./coverage --lcov > coverage.lcov
       - name: Collect and upload the coverage report
         uses: codecov/codecov-action@v1.0.10
         with:
