@@ -290,6 +290,10 @@ export let helpers = {
   startTyping,
   swapChannels,
   updateBotVoiceState,
+  createStageInstance,
+  getStageInstance,
+  updateStageInstance,
+  deleteStageInstance,
   // commands
   createSlashCommand,
   deleteSlashCommand,
@@ -383,10 +387,6 @@ export let helpers = {
   sendMessage,
   unpinMessage,
   // misc
-  createStageInstance,
-  getStageInstance,
-  updateStageInstance,
-  deleteStageInstance,
   getGatewayBot,
   getUser,
   // roles
