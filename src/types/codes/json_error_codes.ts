@@ -25,6 +25,7 @@ export enum DiscordJsonErrorCodes {
   UnknownBuild,
   UnknownLobby,
   UnknownBranch,
+  UnknownStoreDirectoryLayout,
   UnknownRedistributable = 10036,
   UnknownGuildTemplate = 10057,
   UnknownDiscoveryCategory = 10059,
