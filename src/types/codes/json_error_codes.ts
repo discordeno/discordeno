@@ -38,6 +38,7 @@ export enum DiscordJsonErrorCodes {
   ExplicitContentCannotBeSentToTheDesiredRecipient = 20009,
   YouAreNotAuthorizedToPerformThisActionOnThisApplication = 20012,
   ThisActionCannotBePerformedDueToSlowmodeRateLimit = 20016,
+  OnlyTheOwnerOfThisAccountCanPerformThisAction = 20018,
   ThisMessageCannotBeEditedDueToAnnouncementRateLimits = 20022,
   TheChannelYouAreWritingHasHitTheWriteRateLimit = 20028,
   MaximumNumberOfGuildsReached = 30001,
