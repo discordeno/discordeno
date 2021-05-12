@@ -128,10 +128,10 @@ import { getWebhooks } from "./webhooks/get_webhooks.ts";
 import { getWebhookMessage } from "./webhooks/get_webhook_message.ts";
 import { getWebhookWithToken } from "./webhooks/get_webhook_with_token.ts";
 import { sendWebhook } from "./webhooks/send_webhook.ts";
-import { createStageInstance } from "./misc/create_stage_instance.ts";
-import { updateStageInstance } from "./misc/update_stage_instance.ts";
-import { getStageInstance } from "./misc/get_stage_instance.ts";
-import { deleteStageInstance } from "./misc/delete_stage_instance.ts";
+import { createStageInstance } from "./channels/create_stage_instance.ts";
+import { updateStageInstance } from "./channels/update_stage_instance.ts";
+import { getStageInstance } from "./channels/get_stage_instance.ts";
+import { deleteStageInstance } from "./channels/delete_stage_instance.ts";
 
 export {
   addDiscoverySubcategory,

@@ -1,6 +1,6 @@
 import { rest } from "../../rest/rest.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
-import { StageInstance } from "../../types/misc/stage_instance.ts";
+import { StageInstance } from "../../types/channels/stage_instance.ts";
 import { endpoints } from "../../util/constants.ts";
 import { validateLength } from "../../util/validate_length.ts";
 
