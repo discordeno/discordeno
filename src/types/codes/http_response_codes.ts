@@ -13,5 +13,4 @@ export enum DiscordHTTPResponseCodes {
   GatewayUnavailable = 502,
 }
 
-export type HTTPPResponseCodes = DiscordHTTPResponseCodes;
-export const HTTPPResponseCodes = DiscordHTTPResponseCodes;
+export { DiscordHTTPResponseCodes as HTTPResponseCodes };
