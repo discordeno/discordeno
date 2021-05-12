@@ -9,7 +9,6 @@ import { createChannel } from "./create_channel.ts";
 /** Create a copy of a channel */
 export async function cloneChannel(channelId: bigint, reason?: string) {
   const channelToClone = await cacheHandlers.get("channels", channelId);
-  //Return undefined if channel is not cached
   if (!channelToClone) throw new Error(Errors.CHANNEL_NOT_FOUND);
 
   //Check for DM channel
