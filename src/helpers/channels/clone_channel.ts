@@ -5,6 +5,7 @@ import { Errors } from "../../types/discordeno/errors.ts";
 import { bigintToSnowflake } from "../../util/bigint.ts";
 import { calculatePermissions } from "../../util/permissions.ts";
 import { createChannel } from "./create_channel.ts";
+import { helpers } from "../mod.ts";
 
 /** Create a copy of a channel */
 export async function cloneChannel(channelId: bigint, reason?: string) {
@@ -37,5 +38,9 @@ export async function cloneChannel(channelId: bigint, reason?: string) {
   };
 
   //Create the channel (also handles permissions)
-  return createChannel(channelToClone.guildId!, createChannelOptions, reason);
+  return await helpers.createChannel(
+    channelToClone.guildId!,
+    createChannelOptions,
+    reason,
+  );
 }
