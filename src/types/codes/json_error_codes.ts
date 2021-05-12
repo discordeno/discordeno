@@ -94,6 +94,7 @@ export enum DiscordJsonErrorCodes {
   InvalidFormBodyOrContentTypeProvided,
   AnInviteWasAcceptedToAGuildTheApplicationsBotIsNotIn,
   InvalidApiVersionProvided = 50041,
+  CannotSelfRedeemThisGift = 50054,
   CannotDeleteAChannelRequiredForCommunityGuilds = 50074,
   InvalidStickerSent = 50081,
   TriedToPerformAnOperationOnAnArchivedThreadSuchAsEditingAMessageOrAddingAUserToTheThread =
