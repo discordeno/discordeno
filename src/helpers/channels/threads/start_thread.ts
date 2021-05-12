@@ -28,7 +28,7 @@ export async function startThread(
     }
   }
 
-  return rest.runMethod(
+  return await rest.runMethod(
     "post",
     options?.messageId
       ? endpoints.THREAD_START_PUBLIC(channelId, options.messageId)
