@@ -5,11 +5,7 @@ import { endpoints } from "../../util/constants.ts";
 import { StageInstance } from "../../types/channels/stage_instance.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { ChannelTypes } from "../../types/channels/channel_types.ts";
-import {
-  botHasChannelPermissions,
-  requireBotChannelPermissions,
-} from "../../util/permissions.ts";
-import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
+import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
 /** Creates a new Stage instance associated to a Stage channel. Requires the user to be a moderator of the Stage channel. */
 export async function createStageInstance(channelId: bigint, topic: string) {
