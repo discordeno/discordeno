@@ -103,6 +103,7 @@ export enum DiscordJsonErrorCodes {
   InvalidThreadNotificationSettings,
   BeforeValueIsEarlierThanTheThreadCreationDate,
   TwoFactorIsRequiredForThisOperation = 60003,
+  NoUsersWithDiscordTagExist = 80004,
   ReqctionWasBlocked = 90001,
   ApiResourceIsCurrentlyOverloadedTryAgainALittleLater = 130000,
 }
