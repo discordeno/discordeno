@@ -3,9 +3,29 @@ import { Errors } from "../../types/discordeno/errors.ts";
 import { rest } from "../../rest/rest.ts";
 import { endpoints } from "../../util/constants.ts";
 import { StageInstance } from "../../types/channels/stage_instance.ts";
+import { cacheHandlers } from "../../cache.ts";
+import { ChannelTypes } from "../../types/channels/channel_types.ts";
+import {
+  botHasChannelPermissions,
+  requireBotChannelPermissions,
+} from "../../util/permissions.ts";
+import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 
 /** Creates a new Stage instance associated to a Stage channel. Requires the user to be a moderator of the Stage channel. */
-export async function createStageInstance(channelId: string, topic: string) {
+export async function createStageInstance(channelId: bigint, topic: string) {
+  const channel = await cacheHandlers.get("channels", channelId);
+  if (!channel) throw new Error(Errors.CHANNEL_NOT_FOUND);
+
+  if (channel.type !== ChannelTypes.GuildStageVoice) {
+    throw new Error(Errors.CHANNEL_NOT_STAGE_VOICE);
+  }
+
+  await requireBotChannelPermissions(channel, [
+    "MANAGE_CHANNELS",
+    "MUTE_MEMBERS",
+    "MOVE_MEMBERS",
+  ]);
+
   if (
     !validateLength(topic, { max: 120, min: 1 })
   ) {
