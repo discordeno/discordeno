@@ -35,6 +35,7 @@ export enum DiscordJsonErrorCodes {
   UnknownApplicationCommandPermissions = 10066,
   BotsCannotUseThisEndpoint = 20001,
   OnlyBotsCanUseThisEndpoint,
+  ExplicitContentCannotBeSentToTheDesiredRecipient = 20009,
   ThisMessageCannotBeEditedDueToAnnouncementRateLimits = 20022,
   TheChannelYouAreWritingHasHitTheWriteRateLimit = 20028,
   MaximumNumberOfGuildsReached = 30001,
