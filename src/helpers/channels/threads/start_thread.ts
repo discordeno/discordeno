@@ -6,8 +6,8 @@ import { Errors } from "../../../types/discordeno/errors.ts";
 import { endpoints } from "../../../util/constants.ts";
 import { snakelize } from "../../../util/utils.ts";
 
-/** 
- * Creates a new public thread from an existing message. Returns a channel on success, and a 400 BAD REQUEST on invalid parameters. Fires a Thread Create Gateway event. 
+/**
+ * Creates a new public thread from an existing message. Returns a channel on success, and a 400 BAD REQUEST on invalid parameters. Fires a Thread Create Gateway event.
  * @param messageId when provided the thread will be public
  */
 export async function startThread(
