@@ -32,6 +32,7 @@ export enum DiscordJsonErrorCodes {
   UnknownDiscoveryCategory = 10059,
   UnknownInteraction = 10062,
   UnknownApplicationCommand = 10063,
+  UnknownApplicationCommandPermissions = 10066,
   BotsCannotUseThisEndpoint = 20001,
   OnlyBotsCanUseThisEndpoint,
   ThisMessageCannotBeEditedDueToAnnouncementRateLimits = 20022,
