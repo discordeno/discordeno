@@ -64,6 +64,7 @@ export enum DiscordJsonErrorCodes {
   ThisUserBannedFromThisGuild,
   TargetUserIsNotConnectedToVoice = 40032,
   ThisMessageHasAlreadyBeenCrossposted = 40033,
+  AnApplicationCommandWithThatNameAlreadyExists = 40041,
   MissingAccess = 50001,
   InvalidAccountType,
   CannotExecuteActionOnADMChannel,
