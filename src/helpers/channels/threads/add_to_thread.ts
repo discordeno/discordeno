@@ -20,12 +20,7 @@ export async function addToThread(channelId: bigint, userId?: bigint) {
       throw new Error(Errors.NOT_A_THREAD_CHANNEL);
     }
   }
-  console.log(
-    "put",
-    userId
-      ? endpoints.THREAD_USER(channelId, userId)
-      : endpoints.THREAD_ME(channelId),
-  );
+
   return await rest.runMethod(
     "put",
     userId
