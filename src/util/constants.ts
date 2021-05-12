@@ -226,6 +226,11 @@ export const endpoints = {
 
   // OAuth2
   OAUTH2_APPLICATION: `${baseEndpoints.BASE_URL}/oauth2/applications/@me`,
+
+  // Stage instances
+  STAGE_INSTANCES: `${baseEndpoints.BASE_URL}/stage-instances`,
+  STAGE_INSTANCE: (channelId: bigint) =>
+    `${baseEndpoints.BASE_URL}/stage-instances/${channelId}`,
 };
 
 export const SLASH_COMMANDS_NAME_REGEX = /^[\w-]{1,32}$/;

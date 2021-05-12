@@ -231,3 +231,4 @@ export * from "./webhooks/execute_webhook.ts";
 export * from "./webhooks/modify_webhook.ts";
 export * from "./webhooks/webhook.ts";
 export * from "./webhooks/webhooks_update.ts";
+export * from "./channels/stage_instance.ts";
