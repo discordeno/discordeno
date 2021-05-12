@@ -27,6 +27,7 @@ const MESSAGE_SNOWFLAKES = [
   "channelId",
   "guildId",
   "webhookId",
+  "applicationId",
 ];
 
 const messageToggles = {
@@ -254,6 +255,7 @@ export interface DiscordenoMessage extends
     | "channelId"
     | "member"
     | "author"
+    | "applicationId"
   > {
   id: bigint;
   /** Whether or not this message was sent by a bot */
@@ -273,6 +275,8 @@ export interface DiscordenoMessage extends
   webhookId?: bigint;
   /** The id of the user who sent this message */
   authorId: bigint;
+  /** If the message is a response to an Interaction, this is the id of the interaction's application */
+  applicationId?: bigint;
   /** The message content for this message. Empty string if no content was sent like an attachment only. */
   content: string;
   /** Ids of users specifically mentioned in the message */
