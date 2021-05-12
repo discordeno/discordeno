@@ -88,6 +88,7 @@ export enum DiscordJsonErrorCodes {
   InvalidOAuth2AccessTokenProvided,
   MissingRequiredOAuth2Scope,
   InvalidWebhookTokenProvided,
+  InvalidRole,
   InvalidRecipients = 50033,
   AMessageProvidedWasTooOldToBulkDelete,
   InvalidFormBodyOrContentTypeProvided,
