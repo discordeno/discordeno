@@ -73,6 +73,16 @@ export async function runMethod<T = any>(
         body: body as Record<string, unknown> | undefined,
         retryCount,
       },
-    );
+    ).catch((error) => {
+      console.error(error);
+      console.error("Something went wrong in this request", {
+        method,
+        url,
+        body,
+        retryCount,
+        bucketId,
+      });
+      throw errorStack;
+    });
   });
 }
