@@ -185,7 +185,9 @@ export function validateSlashCommands(
       `Running for of loop in validateSlashCommands function.`,
     );
     if (
-      (command.name && !SLASH_COMMANDS_NAME_REGEX.test(command.name)) ||
+      (command.name &&
+        (!SLASH_COMMANDS_NAME_REGEX.test(command.name) ||
+          command.name.toLowerCase() !== command.name)) ||
       (create && !command.name)
     ) {
       throw new Error(Errors.INVALID_SLASH_NAME);
