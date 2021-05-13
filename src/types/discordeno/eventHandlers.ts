@@ -4,6 +4,7 @@ import { DiscordenoMember } from "../../structures/member.ts";
 import { DiscordenoMessage } from "../../structures/message.ts";
 import { DiscordenoRole } from "../../structures/role.ts";
 import { Collection } from "../../util/collection.ts";
+import { DiscordenoShard } from "../../ws/ws.ts";
 import { ThreadMember } from "../channels/threads/thread_member.ts";
 import { ThreadMembersUpdate } from "../channels/threads/thread_members_update.ts";
 import { IntegrationCreateUpdate } from "../integrations/integration_create_update.ts";
@@ -207,10 +208,10 @@ export interface EventHandlers {
     member: DiscordenoMember,
     roleId: bigint,
   ) => unknown;
-  shardReady?: (shardId: number) => unknown;
+  shardReady?: (shard: DiscordenoShard) => unknown;
   /** Sent when a shard failed to load. */
   shardFailedToLoad?: (
-    shardId: number,
+    shard: DiscordenoShard,
     unavailableGuildIds: Set<bigint>,
   ) => unknown;
   /** Sent when a thread is created */
