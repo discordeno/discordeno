@@ -1,5 +1,4 @@
 import { Channel } from "../../channels/channel.ts";
-import { GuildMember } from "../../members/guild_member.ts";
 import { Role } from "../../permissions/role.ts";
 import { User } from "../../users/user.ts";
 import { InteractionGuildMember } from "../interaction_guild_member.ts";

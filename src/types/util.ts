@@ -1,3 +1,5 @@
+// deno-lint-ignore-file ban-types no-explicit-any
+
 export type UpperCaseCharacters =
   | "A"
   | "B"
