@@ -60,7 +60,10 @@ export async function runMethod<T = any>(
       {
         url,
         method,
-        reject,
+        reject: (error) => {
+          console.error(error);
+          reject(errorStack);
+        },
         respond: (data: { status: number; body?: string }) =>
           resolve(
             data.status !== 204
