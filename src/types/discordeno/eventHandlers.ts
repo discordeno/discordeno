@@ -208,10 +208,10 @@ export interface EventHandlers {
     member: DiscordenoMember,
     roleId: bigint,
   ) => unknown;
-  shardReady?: (shard: DiscordenoShard) => unknown;
+  shardReady?: (shardId: number) => unknown;
   /** Sent when a shard failed to load. */
   shardFailedToLoad?: (
-    shard: DiscordenoShard,
+    shardId: number,
     unavailableGuildIds: Set<bigint>,
   ) => unknown;
   /** Sent when a thread is created */
