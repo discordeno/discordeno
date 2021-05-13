@@ -30,6 +30,7 @@ export async function resume(shardId: number) {
     resuming: false,
     ready: false,
     unavailableGuildIds: new Set(),
+    lastAvailable: 0,
     heartbeat: {
       lastSentAt: 0,
       lastReceivedAt: 0,
