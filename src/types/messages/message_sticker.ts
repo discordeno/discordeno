@@ -5,7 +5,7 @@ export interface MessageSticker {
   /** id of the sticker */
   id: string;
   /** id of the pack the sticker is from */
-  pack_id: string;
+  packId: string;
   /** Name of the sticker */
   name: string;
   /** Description of the sticker */
