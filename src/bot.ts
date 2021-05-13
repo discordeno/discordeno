@@ -31,6 +31,9 @@ export async function startBot(config: BotConfig) {
   // Initial API connection to get info about bots connection
   ws.botGatewayData = await getGatewayBot();
   ws.maxShards = ws.maxShards || ws.botGatewayData.shards;
+  ws.lastShardId = ws.lastShardId === 1
+    ? ws.botGatewayData.shards - 1
+    : ws.lastShardId;
 
   // Explicitly append gateway version and encoding
   ws.botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
@@ -94,7 +97,7 @@ export async function startBigBrainBot(options: BigBrainBotConfig) {
 
     // Initial API connection to get info about bots connection
     ws.botGatewayData = await getGatewayBot();
-    ws.maxShards = ws.maxShards ||
+    ws.maxShards = options.lastShardId || ws.maxShards ||
       ws.botGatewayData.shards;
     ws.lastShardId = options.lastShardId || ws.botGatewayData.shards;
     // Explicitly append gateway version and encoding

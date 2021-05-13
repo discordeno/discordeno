@@ -17,7 +17,7 @@ import { tellClusterToIdentify } from "./tell_cluster_to_identify.ts";
 
 // CONTROLLER LIKE INTERFACE FOR WS HANDLING
 export const ws = {
-  /** The secret key authorization header the bot will expect when sending payloads */
+  /** The secret key authorization header the bot will expect when sending payloads. */
   secretKey: "",
   /** The url that all discord payloads for the dispatch type should be sent to. */
   url: "",
@@ -29,7 +29,7 @@ export const ws = {
   maxShards: 0,
   /** Whether or not the resharder should automatically switch to LARGE BOT SHARDING when you are above 100K servers. */
   useOptimalLargeBotSharding: true,
-  /** The amount of shards to load per cluster */
+  /** The amount of shards to load per cluster. */
   shardsPerCluster: 25,
   /** The maximum amount of clusters to use for your bot. */
   maxClusters: 4,
@@ -96,7 +96,7 @@ export const ws = {
   createShard,
   /** Begins identification of the shard to discord. */
   identify,
-  /** Begins heartbeating of the shard to keep it alive */
+  /** Begins heartbeating of the shard to keep it alive. */
   heartbeat,
   /** Sends the discord payload to another server. */
   handleDiscordPayload,
@@ -114,16 +114,16 @@ export const ws = {
   processQueue,
   /** Closes shard WebSocket connection properly. */
   closeWS,
-  /** Properly adds a message to the shards queue */
+  /** Properly adds a message to the shards queue. */
   sendShardMessage,
 };
 
 export interface DiscordenoShard {
-  /** The shard id number */
+  /** The shard id number. */
   id: number;
-  /** The websocket for this shard */
+  /** The websocket for this shard. */
   ws: WebSocket;
-  /** The amount of milliseconds to wait between heartbeats */
+  /** The amount of milliseconds to wait between heartbeats. */
   resumeInterval: number;
   /** The session id important for resuming connections. */
   sessionId: string;
@@ -131,12 +131,14 @@ export interface DiscordenoShard {
   previousSequenceNumber: number | null;
   /** Whether the shard is currently resuming. */
   resuming: boolean;
-  /** Whether the shard has received the ready event */
+  /** Whether the shard has received the ready event. */
   ready: boolean;
   /** The list of guild ids that are currently unavailable due to an outage. */
   unavailableGuildIds: Set<bigint>;
+  /** Last time when a GUILD_CREATE event has been received for an unavailable guild. This is used to prevent infinite loops in the READY event handler. */
+  lastAvailable: number;
   heartbeat: {
-    /** The exact timestamp the last heartbeat was sent */
+    /** The exact timestamp the last heartbeat was sent. */
     lastSentAt: number;
     /** The timestamp the last heartbeat ACK was received from discord. */
     lastReceivedAt: number;
@@ -155,7 +157,7 @@ export interface DiscordenoShard {
   processingQueue: boolean;
   /** When the first request for this minute has been sent. */
   queueStartedAt: number;
-  /** The request counter of the queue */
+  /** The request counter of the queue. */
   queueCounter: number;
 }
 

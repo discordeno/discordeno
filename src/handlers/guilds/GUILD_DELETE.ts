@@ -22,7 +22,6 @@ export async function handleGuildDelete(
   if (payload.unavailable) {
     const shard = ws.shards.get(shardId);
     if (shard) shard.unavailableGuildIds.add(guild.id);
-
     await cacheHandlers.set("unavailableGuilds", guild.id, Date.now());
 
     eventHandlers.guildUnavailable?.(guild);

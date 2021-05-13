@@ -24,8 +24,8 @@ export async function handleGuildCreate(
 
   if (shard?.unavailableGuildIds.has(guild.id)) {
     await cacheHandlers.delete("unavailableGuilds", guild.id);
-
     shard.unavailableGuildIds.delete(guild.id);
+    shard.lastAvailable = Date.now();
 
     return eventHandlers.guildAvailable?.(guild);
   }
