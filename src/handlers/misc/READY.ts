@@ -3,7 +3,7 @@ import { cache } from "../../cache.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { Ready } from "../../types/gateway/ready.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
-import { ws } from "../../ws/ws.ts";
+import { DiscordenoShard, ws } from "../../ws/ws.ts";
 
 export function handleReady(
   data: DiscordGatewayPayload,
@@ -12,17 +12,15 @@ export function handleReady(
   // The bot has already started, the last shard is resumed, however.
   if (cache.isReady) return;
 
+  const shard = ws.shards.get(shardId);
+  if (!shard) return;
+
   const payload = data.d as Ready;
   setBotId(payload.user.id);
   setApplicationId(payload.application.id);
 
   // Triggered on each shard
-  eventHandlers.shardReady?.(shardId);
-  // Save when the READY event was received to prevent infinite load loops
-  const now = Date.now();
-
-  const shard = ws.shards.get(shardId);
-  if (!shard) return;
+  eventHandlers.shardReady?.(shard);
 
   // Set ready to false just to go sure
   shard.ready = false;
@@ -30,6 +28,8 @@ export function handleReady(
   shard.unavailableGuildIds = new Set(
     payload.guilds.map((g) => snowflakeToBigint(g.id)),
   );
+  // Set the last available to now
+  shard.lastAvailable = Date.now();
 
   // Start ready check in 2 seconds
   setTimeout(() => {
@@ -37,58 +37,50 @@ export function handleReady(
       "loop",
       `1. Running setTimeout in READY file.`,
     );
-    checkReady(payload, shardId, now);
+    checkReady(payload, shard);
   }, 2000);
 }
 
-// Don't pass the shard itself because unavailableGuilds won't be updated by the GUILD_CREATE event
 /** This function checks if the shard is fully loaded */
-function checkReady(payload: Ready, shardId: number, now: number) {
-  const shard = ws.shards.get(shardId);
-  if (!shard) return;
-
+function checkReady(payload: Ready, shard: DiscordenoShard) {
   // Check if all guilds were loaded
-  if (shard.unavailableGuildIds.size) {
-    if (Date.now() - now > 10000) {
-      eventHandlers.shardFailedToLoad?.(shardId, shard.unavailableGuildIds);
-      // Force execute the loaded function to prevent infinite loop
-      loaded(shardId);
-    } else {
-      // Not all guilds were loaded but 10 seconds haven't passed so check again
-      setTimeout(() => {
-        eventHandlers.debug?.(
-          "loop",
-          `2. Running setTimeout in READY file.`,
-        );
-        checkReady(payload, shardId, now);
-      }, 2000);
-    }
-  } else {
-    // All guilds were loaded
-    loaded(shardId);
+  if (!shard.unavailableGuildIds.size) return loaded(shard);
+
+  // If the last GUILD_CREATE has been received before 5 seconds if so most likely the remaining guilds are unavailable
+  if (shard.lastAvailable + 5000 < Date.now()) {
+    eventHandlers.shardFailedToLoad?.(shard, shard.unavailableGuildIds);
+    // Force execute the loaded function to prevent infinite loop
+    loaded(shard);
   }
+
+  // Not all guilds were loaded but 5 seconds haven't passed so check again
+  setTimeout(() => {
+    eventHandlers.debug?.(
+      "loop",
+      `2. Running setTimeout in READY file.`,
+    );
+    checkReady(payload, shard);
+  }, 2000);
 }
 
-function loaded(shardId: number) {
-  const shard = ws.shards.get(shardId);
-  if (!shard) return;
-
+function loaded(shard: DiscordenoShard) {
   shard.ready = true;
 
-  // If it is the last shard we can go full ready
-  if (shardId === ws.maxShards - 1) {
-    // Still some shards are loading so wait another 2 seconds for them
-    if (ws.shards.some((shard) => !shard.ready)) {
-      setTimeout(() => {
-        eventHandlers.debug?.(
-          "loop",
-          `3. Running setTimeout in READY file.`,
-        );
-        loaded(shardId);
-      }, 2000);
-    } else {
-      cache.isReady = true;
-      eventHandlers.ready?.();
-    }
+  // If it is not the last shard we can't go full ready
+  if (shard.id !== ws.maxShards - 1) return;
+
+  // Still some shards are loading so wait another 2 seconds for them
+  if (ws.shards.some((shard) => !shard.ready)) {
+    setTimeout(() => {
+      eventHandlers.debug?.(
+        "loop",
+        `3. Running setTimeout in READY file.`,
+      );
+      loaded(shard);
+    }, 2000);
+    return;
   }
+
+  cache.isReady = true;
+  eventHandlers.ready?.();
 }
