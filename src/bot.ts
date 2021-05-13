@@ -31,8 +31,9 @@ export async function startBot(config: BotConfig) {
   // Initial API connection to get info about bots connection
   ws.botGatewayData = await getGatewayBot();
   ws.maxShards = ws.maxShards || ws.botGatewayData.shards;
-  ws.lastShardId =
-    ws.lastShardId === 1 ? ws.botGatewayData.shards : ws.lastShardId;
+  ws.lastShardId = ws.lastShardId === 1
+    ? ws.botGatewayData.shards
+    : ws.lastShardId;
 
   // Explicitly append gateway version and encoding
   ws.botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
