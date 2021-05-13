@@ -67,7 +67,7 @@ function loaded(shard: DiscordenoShard) {
   shard.ready = true;
 
   // If it is not the last shard we can't go full ready
-  if (shard.id !== ws.maxShards - 1) return;
+  if (shard.id !== ws.lastShardId) return;
 
   // Still some shards are loading so wait another 2 seconds for them
   if (ws.shards.some((shard) => !shard.ready)) {
@@ -78,6 +78,7 @@ function loaded(shard: DiscordenoShard) {
       );
       loaded(shard);
     }, 2000);
+
     return;
   }
 
