@@ -50,7 +50,7 @@ function checkReady(payload: Ready, shard: DiscordenoShard) {
   if (shard.lastAvailable + 5000 < Date.now()) {
     eventHandlers.shardFailedToLoad?.(shard, shard.unavailableGuildIds);
     // Force execute the loaded function to prevent infinite loop
-    loaded(shard);
+    return loaded(shard);
   }
 
   // Not all guilds were loaded but 5 seconds haven't passed so check again
