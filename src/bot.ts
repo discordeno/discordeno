@@ -3,9 +3,10 @@ import { rest } from "./rest/rest.ts";
 import type { EventHandlers } from "./types/discordeno/eventHandlers.ts";
 import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
 import { snowflakeToBigint } from "./util/bigint.ts";
-import { baseEndpoints, GATEWAY_VERSION } from "./util/constants.ts";
+import { GATEWAY_VERSION } from "./util/constants.ts";
 import { ws } from "./ws/ws.ts";
 
+// deno-lint-ignore prefer-const
 export let secretKey = "";
 export let botId = 0n;
 export let applicationId = 0n;
