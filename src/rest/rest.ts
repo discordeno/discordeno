@@ -63,6 +63,7 @@ export interface RestPayload {
   bucketId?: string;
   body?: Record<string, unknown>;
   retryCount: number;
+  errorStack: Error;
 }
 
 export interface RestRateLimitedPath {
