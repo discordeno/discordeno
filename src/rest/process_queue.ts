@@ -120,9 +120,7 @@ export async function processQueue(id: string) {
         }
 
         queuedRequest.request.reject?.(
-          new Error(
-            `[${response.status}] ${error} ${queuedRequest.payload.errorStack}`,
-          ),
+          `[${response.status}] ${error} ${queuedRequest.payload.errorStack}`,
         );
 
         // If Rate limited should not remove from queue
