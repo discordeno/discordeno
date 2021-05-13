@@ -76,7 +76,7 @@ function loaded(shardId: number) {
   shard.ready = true;
 
   // If it is the last shard we can go full ready
-  if (shardId === ws.maxShards - 1) {
+  if (shardId === ws.lastShardId) {
     // Still some shards are loading so wait another 2 seconds for them
     if (ws.shards.some((shard) => !shard.ready)) {
       setTimeout(() => {
