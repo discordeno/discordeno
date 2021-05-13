@@ -75,7 +75,6 @@ export async function runMethod<T = any>(
         bucketId,
         body: body as Record<string, unknown> | undefined,
         retryCount,
-        errorStack,
       },
     );
   });
