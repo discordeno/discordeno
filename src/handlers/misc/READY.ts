@@ -9,6 +9,9 @@ export function handleReady(
   data: DiscordGatewayPayload,
   shardId: number,
 ) {
+  // Triggered on each shard
+  eventHandlers.shardReady?.(shardId);
+
   // The bot has already started, the last shard is resumed, however.
   if (cache.isReady) return;
 
@@ -18,9 +21,6 @@ export function handleReady(
   const payload = data.d as Ready;
   setBotId(payload.user.id);
   setApplicationId(payload.application.id);
-
-  // Triggered on each shard
-  eventHandlers.shardReady?.(shard);
 
   // Set ready to false just to go sure
   shard.ready = false;
