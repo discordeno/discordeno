@@ -10,7 +10,7 @@ export async function delayUntil(
     if (isReady() || Date.now() >= maxTime) {
       resolve();
     } else {
-      setTimeout(async () => hackyFix(resolve), timeoutTime);
+      setTimeout(() => hackyFix(resolve), timeoutTime);
     }
   }
 
