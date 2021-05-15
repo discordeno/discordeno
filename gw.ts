@@ -31,7 +31,6 @@ startBot({
         (Date.now() - started) / 1000,
         "seconds to start.",
       );
-      console.log(`Fully online in ${(time - started) / 1000} seconds`);
       logMemory();
       setInterval(logMemory, 60000);
     },
