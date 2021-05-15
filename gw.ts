@@ -7,8 +7,8 @@ let time = Date.now();
 
 let idk = 0;
 ws.log = function (type: string, x: any) {
-    console.log(idk++, x)
-}
+  console.log(idk++, x);
+};
 
 startBot({
   token: token,
