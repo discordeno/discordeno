@@ -61,11 +61,11 @@ export function spawnShards(firstShardId = 0) {
         `4. Running for of loop in spawnShards function.`,
       );
 
-      queue.forEach(shardId => {
+      queue.forEach((shardId) => {
         bucket.createNextShard.push(async () => {
           await ws.tellClusterToIdentify(clusterId, shardId, bucketId);
-        })
-      })
+        });
+      });
 
       bucket.createNextShard[0]?.();
     }
