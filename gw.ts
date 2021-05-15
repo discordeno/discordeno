@@ -1,4 +1,4 @@
-import { token } from "./conf.ts";
+import { token } from "./debug.ts";
 import { startBot } from "./src/bot.ts";
 import { ws } from "./src/ws/ws.ts";
 
