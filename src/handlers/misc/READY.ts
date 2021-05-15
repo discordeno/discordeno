@@ -10,7 +10,7 @@ export function handleReady(
   shardId: number,
 ) {
   // Triggered on each shard
-  eventHandlers.shardReady?.(shardId);
+  // eventHandlers.shardReady?.(shardId);
 
   // The bot has already started, the last shard is resumed, however.
   if (cache.isReady) return;

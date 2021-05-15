@@ -82,7 +82,10 @@ export const ws = {
   /** Stored as bucketId: { clusters: [clusterId, [ShardIds]], createNextShard: boolean } */
   buckets: new Collection<
     number,
-    { clusters: number[][]; createNextShard: boolean }
+    {
+      clusters: number[][];
+      createNextShard: (() => unknown)[];
+    }
   >(),
   utf8decoder: new TextDecoder(),
 

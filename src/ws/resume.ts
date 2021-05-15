@@ -1,7 +1,7 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { ws } from "./ws.ts";
 
-export async function resume(shardId: number) {
+export function resume(shardId: number) {
   ws.log("RESUMING", { shardId });
 
   // NOW WE HANDLE RESUMING THIS SHARD
@@ -16,7 +16,7 @@ export async function resume(shardId: number) {
   }
 
   // CREATE A SHARD
-  const socket = await ws.createShard(shardId);
+  const socket = ws.createShard(shardId);
 
   const sessionId = oldShard?.sessionId || "";
   const previousSequenceNumber = oldShard?.previousSequenceNumber || 0;

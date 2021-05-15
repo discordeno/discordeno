@@ -93,6 +93,8 @@ export async function handleOnMessage(message: any, shardId: number) {
 
       // Important for RESUME
       if (messageData.t === "READY") {
+        eventHandlers.shardReady?.(shardId);
+
         const shard = ws.shards.get(shardId);
         if (shard) {
           shard.sessionId = (messageData.d as DiscordReady).session_id;
@@ -105,7 +107,7 @@ export async function handleOnMessage(message: any, shardId: number) {
           const bucket = ws.buckets.get(
             shardId % ws.botGatewayData.sessionStartLimit.maxConcurrency,
           );
-          if (bucket) bucket.createNextShard = true;
+          if (bucket) bucket.createNextShard[0]?.();
         }, 5000);
       }
 

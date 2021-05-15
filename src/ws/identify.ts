@@ -12,7 +12,7 @@ export async function identify(shardId: number, maxShards: number) {
   }
 
   // CREATE A SHARD
-  const socket = await ws.createShard(shardId);
+  const socket = ws.createShard(shardId);
 
   // Identify can just set/reset the settings for the shard
   ws.shards.set(shardId, {

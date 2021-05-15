@@ -3,8 +3,7 @@ import { identify } from "./identify.ts";
 import { resume } from "./resume.ts";
 import { ws } from "./ws.ts";
 
-// deno-lint-ignore require-await
-export async function createShard(shardId: number) {
+export function createShard(shardId: number) {
   const socket = new WebSocket(ws.botGatewayData.url);
   socket.binaryType = "arraybuffer";
 
