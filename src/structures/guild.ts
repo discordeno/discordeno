@@ -373,7 +373,7 @@ export interface DiscordenoGuild extends
   bot?: DiscordenoMember;
   /** The bot guild member in this guild if cached */
   botMember?: Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
-    joinedAt: number;
+    joinedAt?: number;
     premiumSince?: number;
     roles: bigint[];
   };
