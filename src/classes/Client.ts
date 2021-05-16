@@ -71,7 +71,7 @@ export class Client extends EventEmitter {
   startedAt: number;
   /** The rest api manager. */
   rest: RestManager;
-  /** The rest api manager. */
+  /** The gateway manager. */
   gateway: GatewayManager;
 
   constructor(options: ClientOptions) {
