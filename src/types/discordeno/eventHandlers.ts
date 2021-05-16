@@ -10,7 +10,6 @@ import { ThreadMembersUpdate } from "../channels/threads/thread_members_update.t
 import { IntegrationCreateUpdate } from "../integrations/integration_create_update.ts";
 import { ApplicationCommandCreateUpdateDelete } from "../interactions/commands/application_command_create_update_delete.ts";
 import type {
-  DiscordenoStageInstance,
   DiscordGatewayPayload,
   Emoji,
   GatewayPayload,
@@ -29,6 +28,7 @@ import type {
 import { VoiceServerUpdate } from "../voice/voice_server_update.ts";
 import { DebugArg } from "./debug_arg.ts";
 import { GuildUpdateChange } from "./guild_update_change.ts";
+import { DiscordenoStageInstance } from "./stage_instance.ts";
 
 export interface EventHandlers {
   /** Sent when a new Slash Command is created, relevant to the current user. */
