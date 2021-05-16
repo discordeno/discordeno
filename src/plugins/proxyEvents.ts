@@ -1,5 +1,5 @@
 import { overloadEventHandlers, _eventHandlers } from "../bot.ts";
-import { EventHandlerFunctions } from "../types/discordeno/eventHandlers.ts";
+import type { EventHandlerFunctions } from "../types/discordeno/eventHandlers.ts";
 import type { EventEmitter } from "https://deno.land/std@0.96.0/node/events.ts";
 
 export function proxyEvent(emitter: EventEmitter) {

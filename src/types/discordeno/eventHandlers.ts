@@ -15,8 +15,7 @@ import { VoiceServerUpdate } from "../voice/voice_server_update.ts";
 import { DebugArg } from "./debug_arg.ts";
 import { GuildUpdateChange } from "./guild_update_change.ts";
 
-type EventHandlersTestT = {
-  /** Test */
+export type EventHandlers = {
   applicationCommandCreate: [data: ApplicationCommandCreateUpdateDelete];
   applicationCommandUpdate: [data: ApplicationCommandCreateUpdateDelete];
   applicationCommandDelete: [data: ApplicationCommandCreateUpdateDelete];
@@ -83,5 +82,5 @@ type EventHandlersTestT = {
 }
 
 export type EventHandlerFunctions = {
-  [E in keyof EventHandlersTestT]?: (...args: EventHandlersTestT[E]) => unknown;
+  [E in keyof EventHandlers]?: (...args: EventHandlers[E]) => unknown;
 };
