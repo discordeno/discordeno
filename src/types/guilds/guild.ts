@@ -12,6 +12,7 @@ import { DiscordPremiumTiers } from "./premium_tiers.ts";
 import { DiscordSystemChannelFlags } from "./system_channel_flags.ts";
 import { DiscordVerificationLevels } from "./verification_levels.ts";
 import { WelcomeScreen } from "./welcome_screen.ts";
+import { StageInstance } from "../channels/stage_instance.ts";
 
 /** https://discord.com/developers/docs/resources/guild#guild-object */
 export interface Guild {
@@ -112,4 +113,6 @@ export interface Guild {
   welcomeScreen?: WelcomeScreen;
   /** `true` if this guild is designated as NSFW */
   nsfw: boolean;
+  /** Stage instances in the guild */
+  stageInstances?: StageInstance[];
 }

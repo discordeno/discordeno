@@ -9,7 +9,8 @@ import { ThreadMember } from "../channels/threads/thread_member.ts";
 import { ThreadMembersUpdate } from "../channels/threads/thread_members_update.ts";
 import { IntegrationCreateUpdate } from "../integrations/integration_create_update.ts";
 import { ApplicationCommandCreateUpdateDelete } from "../interactions/commands/application_command_create_update_delete.ts";
-import {
+import type {
+  DiscordenoStageInstance,
   DiscordGatewayPayload,
   Emoji,
   GatewayPayload,
@@ -233,6 +234,12 @@ export interface EventHandlers {
   threadMembersUpdate?: (update: ThreadMembersUpdate) => unknown;
   /** Sent when a thread is deleted */
   threadDelete?: (channel: DiscordenoChannel) => unknown;
+  /** Sent when a Stage instance is created (i.e. the Stage is now "live"). */
+  stageInstanceCreate?: (instance: DiscordenoStageInstance) => unknown;
+  /** Sent when a Stage instance has been updated. */
+  stageInstanceUpdate?: (instance: DiscordenoStageInstance) => unknown;
+  /** Sent when a Stage instance has been deleted (i.e. the Stage has been closed). */
+  stageInstanceDelete?: (instance: DiscordenoStageInstance) => unknown;
   /** Sent when a user starts typing in a channel. */
   typingStart?: (data: TypingStart) => unknown;
   /** Sent when a user joins a voice channel */
