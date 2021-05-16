@@ -3,7 +3,7 @@ import type { DiscoveryCategory } from "../../types/discovery/discovery_category
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 
-/** Returns an array of discovery category objects that can be used when editing guilds */
+/** Returns discovery category objects that can be used when editing guilds */
 export async function getDiscoveryCategories() {
   const result = await rest.runMethod<DiscoveryCategory[]>(
     "get",

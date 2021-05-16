@@ -20,7 +20,6 @@ import { getPins } from "./channels/get_pins.ts";
 import { isChannelSynced } from "./channels/is_channel_synced.ts";
 import { startTyping } from "./channels/start_typing.ts";
 import { swapChannels } from "./channels/swap_channels.ts";
-import { updateBotVoiceState } from "./channels/update_voice_state.ts";
 import { addDiscoverySubcategory } from "./discovery/add_discovery_subcategory.ts";
 import { editDiscovery } from "./discovery/edit_discovery.ts";
 import { getDiscoveryCategories } from "./discovery/get_discovery_categories.ts";
@@ -281,7 +280,6 @@ export {
   unbanMember,
   unpin,
   unpinMessage,
-  updateBotVoiceState,
   updateStageInstance,
   updateVoiceState,
   upsertSlashCommand,
@@ -312,7 +310,6 @@ export let helpers = {
   isChannelSynced,
   startTyping,
   swapChannels,
-  updateBotVoiceState,
   createStageInstance,
   getStageInstance,
   updateStageInstance,

@@ -9,6 +9,7 @@ import {
   ListPublicArchivedThreads,
   ModifyChannel,
   ModifyGuildChannelPositions,
+  ModifyGuildDiscoveryMetadata,
   ModifyThread,
   Overwrite,
   PermissionStrings,
@@ -88,6 +89,7 @@ export class Client extends EventEmitter {
     return helpers.categoryChildren(id);
   }
 
+  /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
   channelOverwriteHasPermission(
     guildId: bigint,
     id: bigint,
@@ -241,6 +243,32 @@ export class Client extends EventEmitter {
     options: UpdateSelfVoiceState | { userId: bigint } & UpdateOthersVoiceState,
   ) {
     return helpers.updateVoiceState(guildId, options);
+  }
+
+  // DISCOVERY METHODS
+
+  /** Add a discovery subcategory to the guild. Requires the MANAGE_GUILD permission. */
+  addDiscoverySubcategory(guildId: bigint, categoryId: number) {
+    return helpers.addDiscoverySubcategory(guildId, categoryId);
+  }
+
+  /** Modify the discovery metadata for the guild. Requires the MANAGE_GUILD permission. Returns the updated discovery metadata object on success. */
+  editDiscovery(guildId: bigint, data: ModifyGuildDiscoveryMetadata) {
+    return helpers.editDiscovery(guildId, data);
+  }
+
+  /** Returns discovery category objects that can be used when editing guilds */
+  getDiscoveryCategories() {
+    return helpers.getDiscoveryCategories();
+  }
+
+  /** Removes a discovery subcategory from the guild. Requires the MANAGE_GUILD permission. Returns a 204 No Content on success. */
+  removeDiscoverySubcategory(guildId: bigint, categoryId: number) {
+    return helpers.removeDiscoverySubcategory(guildId, categoryId);
+  }
+
+  validDiscoveryTerm(term: string) {
+    return helpers.validDiscoveryTerm(term);
   }
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
