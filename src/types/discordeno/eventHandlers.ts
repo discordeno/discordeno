@@ -28,7 +28,7 @@ import type {
 import { VoiceServerUpdate } from "../voice/voice_server_update.ts";
 import { DebugArg } from "./debug_arg.ts";
 import { GuildUpdateChange } from "./guild_update_change.ts";
-import { DiscordenoStageInstance } from "./stage_instance.ts";
+import type { DiscordenoStageInstance } from "./stage_instance.ts";
 
 export interface EventHandlers {
   /** Sent when a new Slash Command is created, relevant to the current user. */
