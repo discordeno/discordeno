@@ -4,7 +4,7 @@ import { ThreadMember } from "../channels/threads/thread_member.ts";
 import { Embed } from "../embeds/embed.ts";
 import { MessageInteraction } from "../interactions/message_interaction.ts";
 import { GuildMember } from "../members/guild_member.ts";
-import { Application } from "../oauth2/application.ts";
+import { Application } from "../applications/application.ts";
 import { User } from "../users/user.ts";
 import { Attachment } from "./attachment.ts";
 import { MessageComponents } from "./components/message_components.ts";

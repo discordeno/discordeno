@@ -116,7 +116,7 @@ export interface DiscordenoVoiceState
   // GETTERS
   member: DiscordenoMember;
   guildMember?: Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
-    joinedAt: number;
+    joinedAt?: number;
     premiumSince?: number;
     roles: bigint[];
   };

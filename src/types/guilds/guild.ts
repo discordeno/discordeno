@@ -90,7 +90,7 @@ export interface Guild {
   maxMembers?: number;
   /** The vaniy url code for the guild */
   vanityUrlCode: string | null;
-  /** The description for the guild, if the guild is discoverable */
+  /** The description of a Community guild */
   description: string | null;
   /** Banner hash */
   banner: string | null;

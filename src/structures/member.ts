@@ -162,7 +162,7 @@ export async function createDiscordenoMember(
   member.guilds.set(guildId, {
     nick: data.nick,
     roles: data.roles.map((id) => snowflakeToBigint(id)),
-    joinedAt: Date.parse(joinedAt),
+    joinedAt: joinedAt ? Date.parse(joinedAt) : undefined,
     premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
     deaf: data.deaf,
     mute: data.mute,
@@ -180,7 +180,7 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id"> {
   guilds: Collection<
     bigint,
     Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
-      joinedAt: number;
+      joinedAt?: number;
       premiumSince?: number;
       roles: bigint[];
     }
@@ -214,7 +214,7 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id"> {
     guildId: bigint,
   ):
     | (Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
-      joinedAt: number;
+      joinedAt?: number;
       premiumSince?: number;
       roles: bigint[];
     })
