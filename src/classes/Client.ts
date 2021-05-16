@@ -4,6 +4,7 @@ import { helpers } from "../helpers/mod.ts";
 import { ClientOptions } from "./types/client_options.ts";
 import {
   ApplicationCommandPermissions,
+CreateChannelInvite,
   CreateGlobalApplicationCommand,
   CreateGuild,
   CreateGuildChannel,
@@ -18,6 +19,7 @@ import {
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetGuildWidgetImageQuery,
+GetInvite,
   ListPublicArchivedThreads,
   ModifyChannel,
   ModifyGuild,
@@ -574,6 +576,33 @@ export class Client extends EventEmitter {
     options: DiscordenoInteractionResponse,
   ) {
     return helpers.sendInteractionResponse(id, token, options);
+  }
+
+  // INVITE METHODS
+
+  /** channelId: bigint, options: CreateChannelInvite */
+  createInvite(channelId: bigint, options: CreateChannelInvite) {
+    return helpers.createInvite(channelId, options);
+  }
+
+  /** Deletes an invite for the given code. Requires MANAGE_CHANNELS or MANAGE_GUILD permission */
+  deleteInvite(channelId: bigint, inviteCode: string) {
+    return helpers.deleteInvite(channelId, inviteCode);
+  }
+
+  /** Gets the invites for this channel. Requires MANAGE_CHANNEL */
+  getChannelInvites(channelId: bigint) {
+    return helpers.getChannelInvites(channelId);
+  }
+
+  /** Returns an invite for the given code or throws an error if the invite doesn't exists. */
+  getInvite(inviteCode: string, options?: GetInvite) {
+    return helpers.getInvite(inviteCode, options);
+  }
+
+  /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
+  getInvites(guildId: bigint) {
+    return helpers.getInvites(guildId);
   }
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
