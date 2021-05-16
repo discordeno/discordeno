@@ -85,6 +85,7 @@ export class Client extends EventEmitter {
 
   // GETTERS
 
+  /** The amount of milliseconds since the bot has been online. */
   get uptime() {
     return Date.now() - this.startedAt;
   }
