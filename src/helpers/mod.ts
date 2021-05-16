@@ -85,6 +85,7 @@ import { getMembers } from "./members/get_members.ts";
 import { kick, kickMember } from "./members/kick_member.ts";
 import { moveMember } from "./members/move_member.ts";
 import { pruneMembers } from "./members/prune_members.ts";
+import { searchMembers } from "./members/search_members.ts";
 import { sendDirectMessage } from "./members/send_direct_message.ts";
 import { unban, unbanMember } from "./members/unban_member.ts";
 import { addReaction } from "./messages/add_reaction.ts";
@@ -268,6 +269,7 @@ export {
   removeReaction,
   removeReactionEmoji,
   removeRole,
+  searchMembers,
   sendDirectMessage,
   sendInteractionResponse,
   sendMessage,
@@ -389,6 +391,7 @@ export let helpers = {
   kickMember,
   moveMember,
   pruneMembers,
+  searchMembers,
   sendDirectMessage,
   unbanMember,
   // messages

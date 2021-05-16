@@ -4,9 +4,11 @@ import { helpers } from "../helpers/mod.ts";
 import { ClientOptions } from "./types/client_options.ts";
 import {
   ApplicationCommandPermissions,
-CreateChannelInvite,
+BeginGuildPrune,
+  CreateChannelInvite,
   CreateGlobalApplicationCommand,
   CreateGuild,
+CreateGuildBan,
   CreateGuildChannel,
   CreateGuildEmoji,
   CreateMessage,
@@ -19,17 +21,21 @@ CreateChannelInvite,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetGuildWidgetImageQuery,
-GetInvite,
+  GetInvite,
+ListGuildMembers,
   ListPublicArchivedThreads,
   ModifyChannel,
   ModifyGuild,
   ModifyGuildChannelPositions,
   ModifyGuildDiscoveryMetadata,
   ModifyGuildEmoji,
+ModifyGuildMember,
   ModifyGuildWelcomeScreen,
   ModifyThread,
   Overwrite,
   PermissionStrings,
+RequestGuildMembers,
+SearchGuildMembers,
   StartThread,
   UpdateOthersVoiceState,
   UpdateSelfVoiceState,
@@ -603,6 +609,111 @@ export class Client extends EventEmitter {
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   getInvites(guildId: bigint) {
     return helpers.getInvites(guildId);
+  }
+
+  // MEMBER METHODS
+
+  /** The users custom avatar or the default avatar if you don't have a member object. */
+  avatarURL(userId: bigint, discriminator: bigint, options: {
+    avatar?: string | bigint;
+    size?: DiscordImageSize;
+    format?: DiscordImageFormat;
+    animated?: boolean;
+  }) {
+    return helpers.avatarURL(userId, discriminator, options);
+  }
+
+  /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
+  banMember(guildId: bigint, id: bigint, options: CreateGuildBan) {
+    return helpers.banMember(guildId, id, options);
+  }
+
+  /** Kicks a member from a voice channel */
+  disconnectMember(guildId: bigint, memberId: bigint) {
+    return helpers.disconnectMember(guildId, memberId);
+  }
+
+  /** Edit the nickname of the bot in this guild */
+  editBotNickname(guildId: bigint, nickname: string | null) {
+    return helpers.editBotNickname(guildId, nickname);
+  }
+
+  /** Edit the member */
+  editMember(
+    guildId: bigint,
+    memberId: bigint,
+    options: Omit<ModifyGuildMember, "channelId"> & {
+      channelId?: bigint | null;
+    },
+  ) {
+    return helpers.editMember(guildId, memberId, options);
+  }
+
+  /**
+   * Highly recommended to use this function to fetch members instead of getMember from REST.
+   * REST: 50/s global(across all shards) rate limit with ALL requests this included
+   * GW(this function): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is now 960/m.
+  */
+  fetchMembers(
+    guildId: bigint,
+    shardId: number,
+    options?: Omit<RequestGuildMembers, "guildId">,
+  ) {
+    return helpers.fetchMembers(guildId, shardId, options);
+  }
+
+  /** Returns a guild member object for the specified user. */
+  getMember(guildId: bigint, id: bigint, options?: { force?: boolean }) {
+    return helpers.getMember(guildId, id, options);
+  }
+
+  /**
+   * Highly recommended to **NOT** use this function to get members instead use fetchMembers().
+   * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
+   * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
+  */
+  getMembers(
+    guildId: bigint,
+    options?: ListGuildMembers & { addToCache?: boolean },
+  ) {
+    return helpers.getMembers(guildId, options);
+  }
+
+  /** Kick a member from the server */
+  kickMember(guildId: bigint, memberId: bigint, reason?: string) {
+    return helpers.kickMember(guildId, memberId, reason);
+  }
+
+  /** Move a member from a voice channel to another. */
+  moveMember(guildId: bigint, memberId: bigint, channelId: bigint) {
+    return helpers.moveMember(guildId, memberId, channelId);
+  }
+
+  /**
+   * Begin a prune operation. Requires the KICK_MEMBERS permission. Returns an object with one 'pruned' key indicating the number of members that were removed in the prune operation. For large guilds it's recommended to set the computePruneCount option to false, forcing 'pruned' to null. Fires multiple Guild Member Remove Gateway events.
+   * By default, prune will not remove users with roles. You can optionally include specific roles in your prune by providing the roles (resolved to include_roles internally) parameter. Any inactive user that has a subset of the provided role(s) will be included in the prune and users with additional roles will not.
+  */
+  pruneMembers(guildId: bigint, options: BeginGuildPrune) {
+    return helpers.pruneMembers(guildId, options);
+  }
+
+  /** Query string to match username(s) and nickname(s) against */
+  searchMembers(
+    guildId: bigint,
+    query: string,
+    options?: Omit<SearchGuildMembers, "query"> & { cache?: boolean },
+  ) {
+    return helpers.searchMembers(guildId, query, options);
+  }
+
+  /** Send a message to a users DM. Note: this takes 2 API calls. 1 is to fetch the users dm channel. 2 is to send a message to that channel. */
+  sendDirectMessage(memberId: bigint, content: string | CreateMessage) {
+    return helpers.sendDirectMessage(memberId, content);
+  }
+
+  /** Remove the ban for a user. Requires BAN_MEMBERS permission */
+  unbanMember(guildId: bigint, id: bigint) {
+    return helpers.unbanMember(guildId, id);
   }
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
