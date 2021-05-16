@@ -3,15 +3,23 @@ import { EventEmitter } from "./deps.ts";
 import { helpers } from "../helpers/mod.ts";
 import { ClientOptions } from "./types/client_options.ts";
 import {
+  CreateGuild,
   CreateGuildChannel,
   CreateGuildEmoji,
   CreateMessage,
+  DiscordImageFormat,
+  DiscordImageSize,
   DiscordOverwrite,
+  GetGuildAuditLog,
+  GetGuildPruneCountQuery,
+  GetGuildWidgetImageQuery,
   ListPublicArchivedThreads,
   ModifyChannel,
+  ModifyGuild,
   ModifyGuildChannelPositions,
   ModifyGuildDiscoveryMetadata,
   ModifyGuildEmoji,
+  ModifyGuildWelcomeScreen,
   ModifyThread,
   Overwrite,
   PermissionStrings,
@@ -308,6 +316,140 @@ export class Client extends EventEmitter {
   /** Returns a list of emojis for the given guild. */
   getEmojis(guildId: bigint, addToCache?: boolean) {
     return helpers.getEmojis(guildId, addToCache);
+  }
+
+  // GUILD METHODS
+
+  /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
+  createGuild(options: CreateGuild) {
+    return helpers.createGuild(options);
+  }
+
+  /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event. */
+  deleteGuild(guildId: bigint) {
+    return helpers.deleteGuild(guildId);
+  }
+
+  /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
+  editGuild(guildId: bigint, options: ModifyGuild) {
+    return helpers.editGuild(guildId, options);
+  }
+
+  editWelcomeScreen(guildId: bigint, options: ModifyGuildWelcomeScreen) {
+    return helpers.editWelcomeScreen(guildId, options);
+  }
+
+  /** Modify a guild widget object for the guild. Requires the MANAGE_GUILD permission. */
+  editWidget(guildId: bigint, enabled: boolean, channelId?: string | null) {
+    return helpers.editWidget(guildId, enabled, channelId);
+  }
+
+  /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
+  getAuditLogs(guildId: bigint, options: GetGuildAuditLog) {
+    return helpers.getAuditLogs(guildId, options);
+  }
+
+  /** Returns an array of voice regions that can be used when creating servers. */
+  getAvailableVoiceRegions() {
+    return helpers.getAvailableVoiceRegions();
+  }
+
+  /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
+  getBan(guildId: bigint, memberId: bigint) {
+    return helpers.getBan(guildId, memberId);
+  }
+
+  /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
+  getBans(guildId: bigint) {
+    return helpers.getBans(guildId);
+  }
+
+  /** Returns the guild preview object for the given id. If the bot is not in the guild, then the guild must be Discoverable. */
+  getGuildPreview(guildId: bigint) {
+    return helpers.getGuildPreview(guildId);
+  }
+
+  /** This function fetches a guild's data. This is not the same data as a GUILD_CREATE. */
+  getGuild(
+    guildId: bigint,
+    options: { counts?: boolean; addToCache?: boolean } = {
+      counts: true,
+      addToCache: true,
+    },
+  ) {
+    return helpers.getGuild(guildId, options);
+  }
+
+  /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
+  getPruneCount(guildId: bigint, options?: GetGuildPruneCountQuery) {
+    return helpers.getPruneCount(guildId, options);
+  }
+
+  /** Returns the code and uses of the vanity url for this server if it is enabled else code will be null. Requires the MANAGE_GUILD permission. */
+  getVanityURL(guildId: bigint) {
+    return helpers.getVanityURL(guildId);
+  }
+
+  /** Returns a list of voice region objects for the guild. Unlike the similar /voice route, this returns VIP servers when the guild is VIP-enabled. */
+  getVoiceRegions(guildId: bigint) {
+    return helpers.getVoiceRegions(guildId);
+  }
+
+  getWelcomeScreen(guildId: bigint) {
+    return helpers.getWelcomeScreen(guildId);
+  }
+
+  /** Returns the widget image URL for the guild. */
+  getWidgetImageURL(
+    guildId: bigint,
+    options?: GetGuildWidgetImageQuery & { force?: boolean },
+  ) {
+    return helpers.getWidgetImageURL(guildId, options);
+  }
+
+  /** Returns the guild widget object. Requires the MANAGE_GUILD permission. */
+  getWidgetSettings(guildId: bigint) {
+    return helpers.getWidgetSettings(guildId);
+  }
+
+  /** Returns the widget for the guild. */
+  getWidget(guildId: bigint, options?: { force: boolean }) {
+    return helpers.getWidget(guildId, options);
+  }
+
+  /** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
+  guildBannerURL(id: bigint, options: {
+    banner?: string | bigint;
+    size?: DiscordImageSize;
+    format?: DiscordImageFormat;
+    animated?: boolean;
+  }) {
+    return helpers.guildBannerURL(id, options);
+  }
+
+  /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
+  guildIconURL(id: bigint, options: {
+    banner?: string | bigint;
+    size?: DiscordImageSize;
+    format?: DiscordImageFormat;
+    animated?: boolean;
+  }) {
+    return helpers.guildIconURL(id, options);
+  }
+
+  /** The full URL of the splash from Discords CDN. Undefined if no splash is set. */
+  guildSplashURL(id: bigint, options: {
+    banner?: string | bigint;
+    size?: DiscordImageSize;
+    format?: DiscordImageFormat;
+    animated?: boolean;
+  }) {
+    return helpers.guildSplashURL(id, options);
+  }
+
+  /** Leave a guild */
+  leaveGuild(guildId: bigint) {
+    return helpers.leaveGuild(guildId);
   }
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
