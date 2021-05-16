@@ -5,6 +5,7 @@ import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
 import { snowflakeToBigint } from "./util/bigint.ts";
 import { GATEWAY_VERSION } from "./util/constants.ts";
 import { ws } from "./ws/ws.ts";
+import { EventEmitter } from "https://deno.land/std@0.96.0/node/events.ts";
 
 // deno-lint-ignore prefer-const
 export let secretKey = "";
@@ -16,7 +17,15 @@ export let eventHandlers: EventHandlers = {};
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
 export async function startBot(config: BotConfig) {
-  if (config.eventHandlers) eventHandlers = config.eventHandlers;
+  if (config.eventProxy) {
+    eventHandlers = new Proxy(eventHandlers, {
+      get(target, prop: keyof EventHandlers) {
+        return target[prop] !== undefined ? target[prop] : ((...args: unknown[]) => config.eventProxy!.emit(prop, ...args));
+      },
+    });
+    if (config.eventHandlers) updateEventHandlers(config.eventHandlers);
+  }
+  if (config.eventHandlers && !config.eventProxy) eventHandlers = config.eventHandlers;
   ws.identifyPayload.token = `Bot ${config.token}`;
   rest.token = `Bot ${config.token}`;
   ws.identifyPayload.intents = config.intents.reduce(
@@ -67,4 +76,5 @@ export interface BotConfig {
   compress?: boolean;
   intents: (DiscordGatewayIntents | keyof typeof DiscordGatewayIntents)[];
   eventHandlers?: EventHandlers;
+  eventProxy?: EventEmitter;
 }
