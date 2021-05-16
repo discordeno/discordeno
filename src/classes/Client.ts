@@ -63,6 +63,7 @@ import {
 import { DiscordenoMessage } from "../structures/message.ts";
 import { RestManager } from "./structures/RestManager.ts";
 import GatewayManager from "./structures/GatewayManager.ts";
+import { cache } from "../cache.ts";
 
 export class Client extends EventEmitter {
   /** The bot's token */
@@ -88,6 +89,36 @@ export class Client extends EventEmitter {
   /** The amount of milliseconds since the bot has been online. */
   get uptime() {
     return Date.now() - this.startedAt;
+  }
+
+  /** The guilds available in cache. */
+  get guilds() {
+    return cache.guilds;
+  }
+
+  /** The unavailable guilds in cache. */
+  get unavailableGuilds() {
+    return cache.unavailableGuilds;
+  }
+
+  /** The presences in cache. */
+  get presences() {
+    return cache.presences;
+  }
+
+  /** The emojis in cache in all guilds. */
+  get emojis() {
+    return cache.emojis;
+  }
+
+  /** The channels available in cache. */
+  get channels() {
+    return cache.channels;
+  }
+
+  /** The messages available in cache. */
+  get messages() {
+    return cache.messages;
   }
 
   /** Start connecting shards?? */
