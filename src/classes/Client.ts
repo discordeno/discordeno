@@ -1,6 +1,7 @@
 import { EventEmitter } from "./deps.ts";
 
 import { helpers } from "../helpers/mod.ts";
+import { verifySignature, VerifySignatureOptions } from "../interactions/mod.ts";
 import { ClientOptions } from "./types/client_options.ts";
 import {
   ApplicationCommandPermissions,
@@ -1034,6 +1035,11 @@ export class Client extends EventEmitter {
     options: ExecuteWebhook,
   ) {
     return helpers.sendWebhook(webhookId, webhookToken, options);
+  }
+
+  /** Verifies the signature for interactions sent by discord to an http endpoint. */
+  verifySignature(data: VerifySignatureOptions) {
+    return verifySignature(data);
   }
 }
 

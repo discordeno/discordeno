@@ -1,5 +1,6 @@
 import { verify } from "./deps.ts";
 
+/** Verifies the signature for interactions sent by discord to an http endpoint. */
 export function verifySignature(
   { publicKey, signature, timestamp, body }: VerifySignatureOptions,
 ): { isValid: boolean; body: string } {
