@@ -3,13 +3,18 @@ import { EventEmitter } from "./deps.ts";
 import { helpers } from "../helpers/mod.ts";
 import { ClientOptions } from "./types/client_options.ts";
 import {
+  ApplicationCommandPermissions,
+  CreateGlobalApplicationCommand,
   CreateGuild,
   CreateGuildChannel,
   CreateGuildEmoji,
   CreateMessage,
+  DiscordenoEditWebhookMessage,
+  DiscordenoInteractionResponse,
   DiscordImageFormat,
   DiscordImageSize,
   DiscordOverwrite,
+  EditGlobalApplicationCommand,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetGuildWidgetImageQuery,
@@ -450,6 +455,125 @@ export class Client extends EventEmitter {
   /** Leave a guild */
   leaveGuild(guildId: bigint) {
     return helpers.leaveGuild(guildId);
+  }
+
+  // INTEGRATION METHODS
+
+  /** Delete the attached integration object for the guild with this id. Requires MANAGE_GUILD permission. */
+  deleteIntegration(guildId: bigint, id: bigint) {
+    return helpers.deleteIntegration(guildId, id);
+  }
+
+  /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
+  getIntegrations(guildId: bigint) {
+    return helpers.getIntegrations(guildId);
+  }
+
+  // INTERACTION METHODS
+
+  /** Batch edits permissions for all commands in a guild. Takes an array of partial GuildApplicationCommandPermissions objects including `id` and `permissions`. */
+  batchEditSlashCommandPermissions(
+    guildId: bigint,
+    options: { id: string; permissions: ApplicationCommandPermissions[] }[],
+  ) {
+    return helpers.batchEditSlashCommandPermissions(guildId, options);
+  }
+
+  /**
+   * There are two kinds of Slash Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:
+   *
+   * - Your app **cannot** have two global commands with the same name
+   * - Your app **cannot** have two guild commands within the same name **on the same guild**
+   * - Your app **can** have a global and guild command with the same name
+   * - Multiple apps **can** have commands with the same names
+   *
+   * Global commands are cached for **1 hour**. That means that new global commands will fan out slowly across all guilds, and will be guaranteed to be updated in an hour.
+   * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
+ */
+  createSlashCommand(
+    options: CreateGlobalApplicationCommand,
+    guildId?: bigint,
+  ) {
+    return helpers.createSlashCommand(options, guildId);
+  }
+
+  /** Deletes a slash command. */
+  deleteSlashCommand(id: bigint, guildId?: bigint) {
+    return helpers.deleteSlashCommand(id, guildId);
+  }
+
+  /** To delete your response to a slash command. If a message id is not provided, it will default to deleting the original response. */
+  deleteSlashResponse(token: string, messageId?: bigint) {
+    return helpers.deleteSlashResponse(token, messageId);
+  }
+
+  /** Edits command permissions for a specific command for your application in a guild. */
+  editSlashCommandPermissions(
+    guildId: bigint,
+    commandId: bigint,
+    options: ApplicationCommandPermissions[],
+  ) {
+    return helpers.editSlashCommandPermissions(guildId, commandId, options);
+  }
+
+  /** To edit your response to a slash command. If a messageId is not provided it will default to editing the original response. */
+  editSlashResponse(token: string, options: DiscordenoEditWebhookMessage) {
+    return helpers.editSlashResponse(token, options);
+  }
+
+  /** Fetch all of the global commands for your application. If a guildId is provided, the guild command will be fetched. */
+  getSlashCommandPermissions(guildId: bigint) {
+    return helpers.getSlashCommandPermissions(guildId);
+  }
+
+  /** Fetchs the global command for the given Id. If a guildId is provided, the guild command will be fetched. */
+  getSlashCommand(commandId: bigint, guildId?: bigint) {
+    return helpers.getSlashCommand(commandId, guildId);
+  }
+
+  /** Fetch all of the global commands for your application. If a guildId is provided, the guild command will be fetched. */
+  getSlashCommands(guildId?: bigint) {
+    return helpers.getSlashCommands(guildId);
+  }
+
+  /** Edit an existing slash command. If this command did not exist, it will create it. */
+  upsertSlashCommand(
+    commandId: bigint,
+    options: EditGlobalApplicationCommand,
+    guildId?: bigint,
+  ) {
+    return helpers.upsertSlashCommand(commandId, options, guildId);
+  }
+
+  /**
+   * Bulk edit existing slash commands. If a command does not exist, it will create it.
+   *
+   * **NOTE:** Any slash commands that are not specified in this function will be **deleted**. If you don't provide the commandId and rename your command, the command gets a new Id.
+ */
+  upsertSlashCommands(
+    options: EditGlobalApplicationCommand[],
+    guildId?: bigint,
+  ) {
+    return helpers.upsertSlashCommands(options, guildId);
+  }
+
+  /** Returns the initial Interactio response. Functions the same as Get Webhook Message */
+  getOriginalInteractionResponse(token: string) {
+    return helpers.getOriginalInteractionResponse(token);
+  }
+
+  /**
+   * Send a response to a users slash command. The command data will have the id and token necessary to respond.
+   * Interaction `tokens` are valid for **15 minutes** and can be used to send followup messages.
+   *
+   * NOTE: By default we will suppress mentions. To enable mentions, just pass any mentions object.
+  */
+  sendInteractionResponse(
+    id: bigint,
+    token: string,
+    options: DiscordenoInteractionResponse,
+  ) {
+    return helpers.sendInteractionResponse(id, token, options);
   }
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
