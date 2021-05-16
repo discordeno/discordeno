@@ -23,7 +23,7 @@ import {
   EditGlobalApplicationCommand,
   EditMessage,
   EditWebhookMessage,
-ExecuteWebhook,
+  ExecuteWebhook,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetGuildWidgetImageQuery,
