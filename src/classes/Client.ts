@@ -1,7 +1,10 @@
 import { EventEmitter } from "./deps.ts";
 
 import { helpers } from "../helpers/mod.ts";
-import { verifySignature, VerifySignatureOptions } from "../interactions/mod.ts";
+import {
+  verifySignature,
+  VerifySignatureOptions,
+} from "../interactions/mod.ts";
 import { ClientOptions } from "./types/client_options.ts";
 import {
   ApplicationCommandPermissions,
