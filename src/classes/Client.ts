@@ -4,7 +4,7 @@ import { helpers } from "../helpers/mod.ts";
 import { ClientOptions } from "./types/client_options.ts";
 import {
   ApplicationCommandPermissions,
-CreateChannelInvite,
+  CreateChannelInvite,
   CreateGlobalApplicationCommand,
   CreateGuild,
   CreateGuildChannel,
@@ -19,7 +19,7 @@ CreateChannelInvite,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetGuildWidgetImageQuery,
-GetInvite,
+  GetInvite,
   ListPublicArchivedThreads,
   ModifyChannel,
   ModifyGuild,
