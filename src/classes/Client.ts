@@ -18,10 +18,16 @@ import {
   DiscordImageSize,
   DiscordOverwrite,
   EditGlobalApplicationCommand,
+  EditMessage,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetGuildWidgetImageQuery,
   GetInvite,
+  GetMessagesAfter,
+  GetMessagesAround,
+  GetMessagesBefore,
+  GetMessagesLimit,
+  GetReactions,
   ListGuildMembers,
   ListPublicArchivedThreads,
   ModifyChannel,
@@ -40,6 +46,7 @@ import {
   UpdateOthersVoiceState,
   UpdateSelfVoiceState,
 } from "../types/mod.ts";
+import { DiscordenoMessage } from "../structures/message.ts";
 
 export class Client extends EventEmitter {
   /** The bot's token */
@@ -78,11 +85,9 @@ export class Client extends EventEmitter {
 
   getArchivedThreads(
     channelId: bigint,
-    options?:
-      | (ListPublicArchivedThreads & {
-        type?: "public" | "private" | "privateJoinedThreads" | undefined;
-      })
-      | undefined,
+    options?: ListPublicArchivedThreads & {
+      type?: "public" | "private" | "privateJoinedThreads";
+    },
   ) {
     return helpers.getArchivedThreads(channelId, options);
   }
@@ -716,9 +721,117 @@ export class Client extends EventEmitter {
     return helpers.unbanMember(guildId, id);
   }
 
+  // MESSAGE METHODS
+
+  /** Create a reaction for the message. Reaction takes the form of name:id for custom guild emoji, or Unicode characters. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS */
+  addReaction(channelId: bigint, messageId: bigint, reaction: string) {
+    return helpers.addReaction(channelId, messageId, reaction);
+  }
+
+  /** Adds multiple reactions to a message. If ordered is true(default is false), it will add the reactions one at a time in the order provided. Note: Reaction takes the form of name:id for custom guild emoji, or Unicode characters. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS */
+  addReactions(
+    channelId: bigint,
+    messageId: bigint,
+    reactions: string[],
+    ordered?: boolean,
+  ) {
+    return helpers.addReactions(channelId, messageId, reactions, ordered);
+  }
+
+  /** Delete a message with the channel id and message id only. */
+  deleteMessage(
+    channelId: bigint,
+    messageId: bigint,
+    reason?: string,
+    delayMilliseconds?: number,
+  ) {
+    return helpers.deleteMessage(
+      channelId,
+      messageId,
+      reason,
+      delayMilliseconds,
+    );
+  }
+
+  /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */
+  deleteMessages(
+    channelId: bigint,
+    ids: bigint[],
+    reason?: string,
+  ) {
+    return helpers.deleteMessages(channelId, ids, reason);
+  }
+
+  /** Edit the message. */
+  editMessage(message: DiscordenoMessage, content: string | EditMessage) {
+    return helpers.editMessage(message, content);
+  }
+
+  /** Fetch a single message from the server. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
+  getMessage(channelId: bigint, id: bigint) {
+    return helpers.getMessage(channelId, id);
+  }
+
+  /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
+  getMessages(
+    channelId: bigint,
+    options?:
+      | GetMessagesAfter
+      | GetMessagesBefore
+      | GetMessagesAround
+      | GetMessagesLimit,
+  ) {
+    return helpers.getMessages(channelId, options);
+  }
+
+  /** Get a list of users that reacted with this emoji. */
+  getReactions(
+    channelId: bigint,
+    messageId: bigint,
+    reaction: string,
+    options?: GetReactions,
+  ) {
+    return helpers.getReactions(channelId, messageId, reaction, options);
+  }
+
+  /** Pin a message in a channel. Requires MANAGE_MESSAGES. Max pins allowed in a channel = 50. */
+  pinMessage(channelId: bigint, messageId: bigint) {
+    return helpers.pinMessage(channelId, messageId);
+  }
+
+  /** Crosspost a message in a News Channel to following channels. */
+  publishMessage(channelId: bigint, messageId: bigint) {
+    return helpers.publishMessage(channelId, messageId);
+  }
+
+  /** Removes all reactions for all emojis on this message. */
+  removeAllReactions(channelId: bigint, messageId: bigint) {
+    return helpers.removeAllReactions(channelId, messageId);
+  }
+
+  /** Removes all reactions for a single emoji on this message. Reaction takes the form of name:id for custom guild emoji, or Unicode characters. */
+  removeReactionEmoji(channelId: bigint, messageId: bigint, reaction: string) {
+    return helpers.removeReactionEmoji(channelId, messageId, reaction);
+  }
+
+  /** Removes a reaction from the given user on this message, defaults to bot. Reaction takes the form of name:id for custom guild emoji, or Unicode characters. */
+  removeReaction(
+    channelId: bigint,
+    messageId: bigint,
+    reaction: string,
+    options?: { userId?: bigint },
+  ) {
+    return helpers.removeReaction(channelId, messageId, reaction, options);
+  }
+
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
   sendMessage(channelId: bigint, content: string | CreateMessage) {
     return helpers.sendMessage(channelId, content);
+  }
+
+  /** Unpin a message in a channel. Requires MANAGE_MESSAGES. */
+  unpinMessage(channelId: bigint, messageId: bigint) {
+    return helpers.unpinMessage(channelId, messageId);
   }
 }
 
