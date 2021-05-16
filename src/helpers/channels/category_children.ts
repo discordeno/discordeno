@@ -1,6 +1,6 @@
 import { cacheHandlers } from "../../cache.ts";
 
-/** Gets an array of all the channels ids that are the children of this category. */
+/** Gets all the channels ids that are the children of this category. */
 export async function categoryChildren(id: bigint) {
   return await cacheHandlers.filter(
     "channels",

@@ -1,5 +1,12 @@
+import { addToThread } from "./channels/threads/add_to_thread.ts";
+import { getActiveThreads } from "./channels/threads/get_active_threads.ts";
+import { getArchivedThreads } from "./channels/threads/get_archived_threads.ts";
+import { getThreadMembers } from "./channels/threads/get_thread_members.ts";
+import { removeFromThread } from "./channels/threads/remove_from_thread.ts";
+import { startThread } from "./channels/threads/start_thread.ts";
 import { categoryChildren } from "./channels/category_children.ts";
 import { channelOverwriteHasPermission } from "./channels/channel_overwrite_has_permission.ts";
+import { cloneChannel } from "./channels/clone_channel.ts";
 import { createChannel } from "./channels/create_channel.ts";
 import { deleteChannel } from "./channels/delete_channel.ts";
 import { deleteChannelOverwrite } from "./channels/delete_channel_overwrite.ts";
@@ -132,18 +139,21 @@ import { createStageInstance } from "./channels/create_stage_instance.ts";
 import { updateStageInstance } from "./channels/update_stage_instance.ts";
 import { getStageInstance } from "./channels/get_stage_instance.ts";
 import { deleteStageInstance } from "./channels/delete_stage_instance.ts";
+import { updateVoiceState } from "./channels/update_voice_state.ts";
 
 export {
   addDiscoverySubcategory,
   addReaction,
   addReactions,
   addRole,
+  addToThread,
   avatarURL,
   ban,
   banMember,
   batchEditSlashCommandPermissions,
   categoryChildren,
   channelOverwriteHasPermission,
+  cloneChannel,
   createChannel,
   createEmoji,
   createGuild,
@@ -192,6 +202,8 @@ export {
   emojiURL,
   fetchMembers,
   followChannel,
+  getActiveThreads,
+  getArchivedThreads,
   getAuditLogs,
   getAvailableVoiceRegions,
   getBan,
@@ -225,6 +237,7 @@ export {
   getSlashCommands,
   getStageInstance,
   getTemplate,
+  getThreadMembers,
   getUser,
   getVanityURL,
   getVoiceRegions,
@@ -252,6 +265,7 @@ export {
   publishMessage,
   removeAllReactions,
   removeDiscoverySubcategory,
+  removeFromThread,
   removeReaction,
   removeReactionEmoji,
   removeRole,
@@ -259,6 +273,7 @@ export {
   sendInteractionResponse,
   sendMessage,
   sendWebhook,
+  startThread,
   startTyping,
   swapChannels,
   syncGuildTemplate,
@@ -268,6 +283,7 @@ export {
   unpinMessage,
   updateBotVoiceState,
   updateStageInstance,
+  updateVoiceState,
   upsertSlashCommand,
   upsertSlashCommands,
   validDiscoveryTerm,
@@ -275,7 +291,14 @@ export {
 
 export let helpers = {
   // channels
+  addToThread,
+  getActiveThreads,
+  getArchivedThreads,
+  getThreadMembers,
+  removeFromThread,
+  startThread,
   channelOverwriteHasPermission,
+  cloneChannel,
   createChannel,
   deleteChannelOverwrite,
   deleteChannel,
@@ -294,6 +317,7 @@ export let helpers = {
   getStageInstance,
   updateStageInstance,
   deleteStageInstance,
+  updateVoiceState,
   // commands
   createSlashCommand,
   deleteSlashCommand,

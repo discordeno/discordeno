@@ -17,7 +17,7 @@ import { hasOwnProperty, snakelize } from "../../util/utils.ts";
  *  - You are able to set `request_to_speak_timestamp` to any present or future time.
  *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
  */
-export async function updateBotVoiceState(
+export async function updateVoiceState(
   guildId: bigint,
   options: UpdateSelfVoiceState | { userId: bigint } & UpdateOthersVoiceState,
 ) {
