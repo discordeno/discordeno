@@ -12,20 +12,21 @@ export let secretKey = "";
 export let botId = 0n;
 export let applicationId = 0n;
 
-export let eventHandlers: EventHandlers = {};
+let _eventHandlers: EventHandlers = {};
+export let eventHandlers: EventHandlers = _eventHandlers;
 
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
 export async function startBot(config: BotConfig) {
   if (config.eventProxy) {
-    eventHandlers = new Proxy(eventHandlers, {
+    eventHandlers = new Proxy(_eventHandlers, {
       get(target, prop: keyof EventHandlers) {
         return target[prop] !== undefined ? target[prop] : ((...args: unknown[]) => config.eventProxy!.emit(prop, ...args));
       },
     });
     if (config.eventHandlers) updateEventHandlers(config.eventHandlers);
   }
-  if (config.eventHandlers && !config.eventProxy) eventHandlers = config.eventHandlers;
+  if (config.eventHandlers && !config.eventProxy) _eventHandlers = config.eventHandlers;
   ws.identifyPayload.token = `Bot ${config.token}`;
   rest.token = `Bot ${config.token}`;
   ws.identifyPayload.intents = config.intents.reduce(
@@ -55,8 +56,8 @@ export async function startBot(config: BotConfig) {
 
 /** Allows you to dynamically update the event handlers by passing in new eventHandlers */
 export function updateEventHandlers(newEventHandlers: EventHandlers) {
-  eventHandlers = {
-    ...eventHandlers,
+  _eventHandlers = {
+    ..._eventHandlers,
     ...newEventHandlers,
   };
 }
