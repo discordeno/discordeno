@@ -5,28 +5,19 @@ import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
 import { snowflakeToBigint } from "./util/bigint.ts";
 import { GATEWAY_VERSION } from "./util/constants.ts";
 import { ws } from "./ws/ws.ts";
-import { EventEmitter } from "https://deno.land/std@0.96.0/node/events.ts";
 
 // deno-lint-ignore prefer-const
 export let secretKey = "";
 export let botId = 0n;
 export let applicationId = 0n;
 
-let _eventHandlers: EventHandlers = {};
+export let _eventHandlers: EventHandlers = {};
 export let eventHandlers: EventHandlers = _eventHandlers;
 
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
 export async function startBot(config: BotConfig) {
-  if (config.eventProxy) {
-    eventHandlers = new Proxy(_eventHandlers, {
-      get(target, prop: keyof EventHandlers) {
-        return target[prop] !== undefined ? target[prop] : ((...args: unknown[]) => config.eventProxy!.emit(prop, ...args));
-      },
-    });
-    if (config.eventHandlers) updateEventHandlers(config.eventHandlers);
-  }
-  if (config.eventHandlers && !config.eventProxy) _eventHandlers = config.eventHandlers;
+  if (config.eventHandlers) _eventHandlers = config.eventHandlers;
   ws.identifyPayload.token = `Bot ${config.token}`;
   rest.token = `Bot ${config.token}`;
   ws.identifyPayload.intents = config.intents.reduce(
@@ -54,6 +45,10 @@ export async function startBot(config: BotConfig) {
   ws.spawnShards();
 }
 
+export function overloadEventHandlers(__eventHandlers: EventHandlers) {
+  eventHandlers = __eventHandlers;
+}
+
 /** Allows you to dynamically update the event handlers by passing in new eventHandlers */
 export function updateEventHandlers(newEventHandlers: EventHandlers) {
   _eventHandlers = {
@@ -77,5 +72,4 @@ export interface BotConfig {
   compress?: boolean;
   intents: (DiscordGatewayIntents | keyof typeof DiscordGatewayIntents)[];
   eventHandlers?: EventHandlers;
-  eventProxy?: EventEmitter;
 }
