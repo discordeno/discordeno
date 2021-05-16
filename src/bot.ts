@@ -11,6 +11,10 @@ export let secretKey = "";
 export let botId = 0n;
 export let applicationId = 0n;
 
+/**
+ * Used internally to track the source of truth for event functions
+ * @private
+ */
 export let _eventHandlers: EventHandlers = {};
 export let eventHandlers: EventHandlers = _eventHandlers;
 
