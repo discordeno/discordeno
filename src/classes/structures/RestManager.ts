@@ -83,3 +83,5 @@ export class RestManager {
     return rest.simplifyUrl(url, method);
   }
 }
+
+export default RestManager;

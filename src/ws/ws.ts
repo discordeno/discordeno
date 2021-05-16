@@ -8,6 +8,7 @@ import { handleDiscordPayload } from "./handle_discord_payload.ts";
 import { handleOnMessage } from "./handle_on_message.ts";
 import { heartbeat } from "./heartbeat.ts";
 import { identify } from "./identify.ts";
+import { resume } from "./resume.ts";
 import { processQueue } from "./process_queue.ts";
 import { resharder } from "./resharder.ts";
 import { sendShardMessage } from "./send_shard_message.ts";
@@ -116,6 +117,7 @@ export const ws = {
   closeWS,
   /** Properly adds a message to the shards queue. */
   sendShardMessage,
+  resume,
 };
 
 export interface DiscordenoShard {

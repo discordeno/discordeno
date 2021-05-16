@@ -62,6 +62,7 @@ import {
 } from "../types/mod.ts";
 import { DiscordenoMessage } from "../structures/message.ts";
 import { RestManager } from "./structures/RestManager.ts";
+import GatewayManager from "./structures/GatewayManager.ts";
 
 export class Client extends EventEmitter {
   /** The bot's token */
@@ -70,6 +71,8 @@ export class Client extends EventEmitter {
   startedAt: number;
   /** The rest api manager. */
   rest: RestManager;
+  /** The rest api manager. */
+  gateway: GatewayManager;
 
   constructor(options: ClientOptions) {
     super();
@@ -77,6 +80,7 @@ export class Client extends EventEmitter {
     this.token = options.token;
     this.startedAt = Date.now();
     this.rest = new RestManager(this);
+    this.gateway = new GatewayManager(this);
   }
 
   // GETTERS
@@ -1044,6 +1048,8 @@ export class Client extends EventEmitter {
   ) {
     return helpers.sendWebhook(webhookId, webhookToken, options);
   }
+
+  // HTTP INTERACTION METHODS
 
   /** Verifies the signature for interactions sent by discord to an http endpoint. */
   verifySignature(data: VerifySignatureOptions) {
