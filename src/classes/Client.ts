@@ -1,7 +1,10 @@
 import { EventEmitter } from "./deps.ts";
 
 import { helpers } from "../helpers/mod.ts";
-import { verifySignature, VerifySignatureOptions } from "../interactions/mod.ts";
+import {
+  verifySignature,
+  VerifySignatureOptions,
+} from "../interactions/mod.ts";
 import { ClientOptions } from "./types/client_options.ts";
 import {
   ApplicationCommandPermissions,
@@ -58,17 +61,22 @@ import {
   UpdateSelfVoiceState,
 } from "../types/mod.ts";
 import { DiscordenoMessage } from "../structures/message.ts";
+import { RestManager } from "./structures/RestManager.ts";
 
 export class Client extends EventEmitter {
   /** The bot's token */
   token: string;
   /** The timestamp when the bot started. */
-  startedAt = Date.now();
+  startedAt: number;
+  /** The rest api manager. */
+  rest: RestManager;
 
   constructor(options: ClientOptions) {
     super();
 
     this.token = options.token;
+    this.startedAt = Date.now();
+    this.rest = new RestManager(this);
   }
 
   // GETTERS
