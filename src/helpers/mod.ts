@@ -384,6 +384,7 @@ export let helpers = {
   disconnectMember,
   editBotNickname,
   editBotProfile,
+  editBotStatus,
   editMember,
   fetchMembers,
   getMember,

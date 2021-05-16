@@ -11,6 +11,7 @@ import {
   CreateGuildBan,
   CreateGuildChannel,
   CreateGuildEmoji,
+CreateGuildRole,
   CreateMessage,
   DiscordenoEditWebhookMessage,
   DiscordenoInteractionResponse,
@@ -43,6 +44,7 @@ import {
   RequestGuildMembers,
   SearchGuildMembers,
   StartThread,
+  StatusUpdate,
   UpdateOthersVoiceState,
   UpdateSelfVoiceState,
 } from "../types/mod.ts";
@@ -832,6 +834,64 @@ export class Client extends EventEmitter {
   /** Unpin a message in a channel. Requires MANAGE_MESSAGES. */
   unpinMessage(channelId: bigint, messageId: bigint) {
     return helpers.unpinMessage(channelId, messageId);
+  }
+
+  // MISC METHODS
+
+  /** Modifies the bot's username or avatar. NOTE: username: if changed may cause the bot's discriminator to be randomized. */
+  editBotProfile(username?: string, botAvatarURL?: string) {
+    return helpers.editBotProfile(username, botAvatarURL);
+  }
+
+  editBotStatus(data: Omit<StatusUpdate, "afk" | "since">) {
+    return helpers.editBotStatus(data);
+  }
+
+  /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
+  getGatewayBot() {
+    return helpers.getGatewayBot();
+  }
+
+  /** This function will return the raw user payload in the rare cases you need to fetch a user directly from the API. */
+  getUser(userId: bigint) {
+    return helpers.getUser(userId);
+  }
+
+  // ROLE METHODS
+
+  /** Add a role to the member */
+  addRole(guildId: bigint, memberId: bigint, roleId: bigint, reason?: string) {
+    return helpers.addRole(guildId, memberId, roleId, reason);
+  }
+
+  /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
+  createRole(guildId: bigint, options: CreateGuildRole, reason?: string) {
+    return helpers.createRole(guildId, options, reason);
+  }
+
+  /** Delete a guild role. Requires the MANAGE_ROLES permission. */
+  deleteRole(guildId: bigint, id: bigint) {
+    return helpers.deleteRole(guildId, id);
+  }
+
+  /** Edit a guild role. Requires the MANAGE_ROLES permission. */
+  editRole(guildId: bigint, id: bigint, options: CreateGuildRole) {
+    return helpers.editRole(guildId, id, options);
+  }
+
+  /** Returns a list of role objects for the guild. */
+  getRoles(guildId: bigint, addToCache = true) {
+    return helpers.getRoles(guildId, addToCache);
+  }
+
+  /** Remove a role from the member  */
+  removeRole(
+    guildId: bigint,
+    memberId: bigint,
+    roleId: bigint,
+    reason?: string,
+  ) {
+    return helpers.removeRole(guildId, memberId, roleId, reason);
   }
 }
 
