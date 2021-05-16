@@ -215,6 +215,12 @@ export interface EventHandlers {
     shardId: number,
     unavailableGuildIds: Set<bigint>,
   ) => unknown;
+  /** Sent when a Stage instance is created (i.e. the Stage is now "live"). */
+  stageInstanceCreate?: (instance: DiscordenoStageInstance) => unknown;
+  /** Sent when a Stage instance has been deleted (i.e. the Stage has been closed). */
+  stageInstanceDelete?: (instance: DiscordenoStageInstance) => unknown;
+  /** Sent when a Stage instance has been updated. */
+  stageInstanceUpdate?: (instance: DiscordenoStageInstance) => unknown;
   /** Sent when a thread is created */
   threadCreate?: (channel: DiscordenoChannel) => unknown;
   /** Sent when a thread is updated */
@@ -234,12 +240,6 @@ export interface EventHandlers {
   threadMembersUpdate?: (update: ThreadMembersUpdate) => unknown;
   /** Sent when a thread is deleted */
   threadDelete?: (channel: DiscordenoChannel) => unknown;
-  /** Sent when a Stage instance is created (i.e. the Stage is now "live"). */
-  stageInstanceCreate?: (instance: DiscordenoStageInstance) => unknown;
-  /** Sent when a Stage instance has been updated. */
-  stageInstanceUpdate?: (instance: DiscordenoStageInstance) => unknown;
-  /** Sent when a Stage instance has been deleted (i.e. the Stage has been closed). */
-  stageInstanceDelete?: (instance: DiscordenoStageInstance) => unknown;
   /** Sent when a user starts typing in a channel. */
   typingStart?: (data: TypingStart) => unknown;
   /** Sent when a user joins a voice channel */
