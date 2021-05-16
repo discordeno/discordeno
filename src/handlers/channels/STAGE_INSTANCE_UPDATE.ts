@@ -12,6 +12,7 @@ export async function handleStageInstanceUpdate(data: DiscordGatewayPayload) {
     snowflakeToBigint(guildId),
   );
   if (!cachedGuild) return;
+
   const cachedChannel = await cacheHandlers.get(
     "channels",
     snowflakeToBigint(channelId),
