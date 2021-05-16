@@ -11,8 +11,10 @@ import {
   CreateGuildBan,
   CreateGuildChannel,
   CreateGuildEmoji,
-CreateGuildRole,
+  CreateGuildFromTemplate,
+  CreateGuildRole,
   CreateMessage,
+  CreateWebhook,
   DiscordenoEditWebhookMessage,
   DiscordenoInteractionResponse,
   DiscordImageFormat,
@@ -20,6 +22,8 @@ CreateGuildRole,
   DiscordOverwrite,
   EditGlobalApplicationCommand,
   EditMessage,
+  EditWebhookMessage,
+ExecuteWebhook,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetGuildWidgetImageQuery,
@@ -31,20 +35,24 @@ CreateGuildRole,
   GetReactions,
   ListGuildMembers,
   ListPublicArchivedThreads,
+  MessageComponent,
   ModifyChannel,
   ModifyGuild,
   ModifyGuildChannelPositions,
   ModifyGuildDiscoveryMetadata,
   ModifyGuildEmoji,
   ModifyGuildMember,
+  ModifyGuildTemplate,
   ModifyGuildWelcomeScreen,
   ModifyThread,
+  ModifyWebhook,
   Overwrite,
   PermissionStrings,
   RequestGuildMembers,
   SearchGuildMembers,
   StartThread,
   StatusUpdate,
+  Template,
   UpdateOthersVoiceState,
   UpdateSelfVoiceState,
 } from "../types/mod.ts";
@@ -892,6 +900,140 @@ export class Client extends EventEmitter {
     reason?: string,
   ) {
     return helpers.removeRole(guildId, memberId, roleId, reason);
+  }
+
+  // TEMPLATE METHODS
+
+  /** Create a new guild based on a template NOTE: This endpoint can be used only by bots in less than 10 guilds. */
+  createGuildFromTemplate(templateCode: string, data: CreateGuildFromTemplate) {
+    return helpers.createGuildFromTemplate(templateCode, data);
+  }
+
+  /** Creates a template for the guild. Requires the MANAGE_GUILD permission. */
+  createGuildTemplate(guildId: bigint, data: Template) {
+    return helpers.createGuildTemplate(guildId, data);
+  }
+
+  /** Deletes a template from a guild. Requires the MANAGE_GUILD permission. */
+  deleteGuildTemplate(guildId: bigint, templateCode: string) {
+    return helpers.deleteGuildTemplate(guildId, templateCode);
+  }
+
+  /** Edit a template's metadata. Requires the `MANAGE_GUILD` permission. */
+  editGuildTemplate(
+    guildId: bigint,
+    templateCode: string,
+    data: ModifyGuildTemplate,
+  ) {
+    return helpers.editGuildTemplate(guildId, templateCode, data);
+  }
+
+  /** Returns an array of templates. Requires the `MANAGE_GUILD` permission. */
+  getGuildTemplates(guildId: bigint) {
+    return helpers.getGuildTemplates(guildId);
+  }
+
+  /** Returns the guild template if it exists */
+  getTemplate(templateCode: string) {
+    return helpers.getTemplate(templateCode);
+  }
+
+  /** Syncs the template to the guild's current state. Requires the MANAGE_GUILD permission. */
+  syncGuildTemplate(guildId: bigint, templateCode: string) {
+    return helpers.syncGuildTemplate(guildId, templateCode);
+  }
+
+  // TYPE GUARDS
+
+  /** A type guard function to tell if it is a action row component */
+  isActionRow(component: MessageComponent) {
+    return helpers.isActionRow(component);
+  }
+
+  /** A type guard function to tell if it is a button component */
+  isButton(component: MessageComponent) {
+    return helpers.isButton(component);
+  }
+
+  // WEBHOOK METHODS
+
+  /** Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations: Webhook names cannot be: 'clyde' */
+  createWebhook(channelId: bigint, options: CreateWebhook) {
+    return helpers.createWebhook(channelId, options);
+  }
+
+  deleteWebhookMessage(
+    webhookId: bigint,
+    webhookToken: string,
+    messageId: bigint,
+  ) {
+    return helpers.deleteWebhookMessage(webhookId, webhookToken, messageId);
+  }
+
+  /** Delete a webhook permanently. Returns a undefined on success */
+  deleteWebhookWithToken(webhookId: bigint, webhookToken: string) {
+    return helpers.deleteWebhookWithToken(webhookId, webhookToken);
+  }
+
+  /** Delete a webhook permanently. Requires the MANAGE_WEBHOOKS permission. Returns a undefined on success */
+  deleteWebhook(channelId: bigint, webhookId: bigint) {
+    return helpers.deleteWebhook(channelId, webhookId);
+  }
+
+  /**  */
+  editWebhookMessage(
+    webhookId: bigint,
+    webhookToken: string,
+    options: EditWebhookMessage & { messageId?: bigint },
+  ) {
+    return helpers.editWebhookMessage(webhookId, webhookToken, options);
+  }
+
+  /** Edit a webhook. Returns the updated webhook object on success. */
+  editWebhookWithToken(
+    webhookId: bigint,
+    webhookToken: string,
+    options: Omit<ModifyWebhook, "channelId">,
+  ) {
+    return helpers.editWebhookWithToken(webhookId, webhookToken, options);
+  }
+
+  /** Edit a webhook. Requires the MANAGE_WEBHOOKS permission. Returns the updated webhook object on success. */
+  editWebhook(channelId: bigint, webhookId: bigint, options: ModifyWebhook) {
+    return helpers.editWebhook(channelId, webhookId, options);
+  }
+
+  /** Returns a previousy-sent webhook message from the same token. Returns a message object on success. */
+  getWebhookMessage(
+    webhookId: bigint,
+    webhookToken: string,
+    messageId: bigint,
+  ) {
+    return helpers.getWebhookMessage(webhookId, webhookToken, messageId);
+  }
+
+  /** Returns the new webhook object for the given id, this call does not require authentication and returns no user in the webhook object. */
+  getWebhookWithToken(webhookId: bigint, token: string) {
+    return helpers.getWebhookWithToken(webhookId, token);
+  }
+
+  /** Returns the new webhook object for the given id. */
+  getWebhook(webhookId: bigint) {
+    return helpers.getWebhook(webhookId);
+  }
+
+  /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
+  getWebhooks(guildId: bigint) {
+    return helpers.getWebhooks(guildId);
+  }
+
+  /** Send a webhook with webhook Id and webhook token */
+  sendWebhook(
+    webhookId: bigint,
+    webhookToken: string,
+    options: ExecuteWebhook,
+  ) {
+    return helpers.sendWebhook(webhookId, webhookToken, options);
   }
 }
 

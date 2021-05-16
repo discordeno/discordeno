@@ -429,6 +429,9 @@ export let helpers = {
   getGuildTemplates,
   getTemplate,
   syncGuildTemplate,
+  // type Guards
+  isActionRow,
+  isButton,
   // webhooks
   createWebhook,
   deleteWebhookMessage,
