@@ -4,12 +4,14 @@ import { helpers } from "../helpers/mod.ts";
 import { ClientOptions } from "./types/client_options.ts";
 import {
   CreateGuildChannel,
+  CreateGuildEmoji,
   CreateMessage,
   DiscordOverwrite,
   ListPublicArchivedThreads,
   ModifyChannel,
   ModifyGuildChannelPositions,
   ModifyGuildDiscoveryMetadata,
+  ModifyGuildEmoji,
   ModifyThread,
   Overwrite,
   PermissionStrings,
@@ -269,6 +271,43 @@ export class Client extends EventEmitter {
 
   validDiscoveryTerm(term: string) {
     return helpers.validDiscoveryTerm(term);
+  }
+
+  // EMOJI METHODS
+
+  /** Create an emoji in the server. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. */
+  createEmoji(
+    guildId: bigint,
+    name: string,
+    image: string,
+    options: CreateGuildEmoji,
+  ) {
+    return helpers.createEmoji(guildId, name, image, options);
+  }
+
+  /** Delete the given emoji. Requires the MANAGE_EMOJIS permission. Returns 204 No Content on success. */
+  deleteEmoji(guildId: bigint, id: bigint, reason?: string) {
+    return helpers.deleteEmoji(guildId, id, reason);
+  }
+
+  /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */
+  editEmoji(guildId: bigint, id: bigint, options: ModifyGuildEmoji) {
+    return helpers.editEmoji(guildId, id, options);
+  }
+
+  /** Creates a url to the emoji from the Discord CDN. */
+  emojiURL(id: bigint, animated?: boolean) {
+    return helpers.emojiURL(id, animated);
+  }
+
+  /** Returns an emoji for the given guild and emoji Id. */
+  getEmoji(guildId: bigint, emojiId: bigint, addToCache?: boolean) {
+    return helpers.getEmoji(guildId, emojiId, addToCache);
+  }
+
+  /** Returns a list of emojis for the given guild. */
+  getEmojis(guildId: bigint, addToCache?: boolean) {
+    return helpers.getEmojis(guildId, addToCache);
   }
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
