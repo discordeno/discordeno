@@ -50,6 +50,9 @@ export interface GatewayPayload {
     | "INTEGRATION_CREATE"
     | "INTEGRATION_UPDATE"
     | "INTEGRATION_DELETE"
+    | "STAGE_INSTANCE_CREATE"
+    | "STAGE_INSTANCE_UPDATE"
+    | "STAGE_INSTANCE_DELETE"
     | null;
 }
 
