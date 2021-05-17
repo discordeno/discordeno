@@ -300,7 +300,7 @@ export interface DiscordenoMessage extends
   member?: DiscordenoMember;
   /** The guild member details for this guild and member. Can be undefined if not in cache or in dm. */
   guildMember?: Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
-    joinedAt: number;
+    joinedAt?: number;
     premiumSince?: number;
     roles: bigint[];
   };
