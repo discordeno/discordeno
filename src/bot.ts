@@ -1,6 +1,6 @@
 import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
 import { rest } from "./rest/rest.ts";
-import type { EventHandlerFunctions } from "./types/discordeno/eventHandlers.ts";
+import type { EventHandlers } from "./types/discordeno/eventHandlers.ts";
 import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
 import { snowflakeToBigint } from "./util/bigint.ts";
 import { GATEWAY_VERSION } from "./util/constants.ts";
@@ -11,17 +11,12 @@ export let secretKey = "";
 export let botId = 0n;
 export let applicationId = 0n;
 
-/**
- * Used internally to track the source of truth for event functions
- * @private
- */
-export let _eventHandlers: EventHandlerFunctions = {};
-export let eventHandlers: EventHandlerFunctions = _eventHandlers;
+export let eventHandlers: EventHandlers = {};
 
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
 export async function startBot(config: BotConfig) {
-  if (config.eventHandlers) _eventHandlers = config.eventHandlers;
+  if (config.eventHandlers) eventHandlers = config.eventHandlers;
   ws.identifyPayload.token = `Bot ${config.token}`;
   rest.token = `Bot ${config.token}`;
   ws.identifyPayload.intents = config.intents.reduce(
@@ -49,16 +44,14 @@ export async function startBot(config: BotConfig) {
   ws.spawnShards();
 }
 
-export function overloadEventHandlers(__eventHandlers: EventHandlerFunctions) {
-  eventHandlers = __eventHandlers;
+export function replaceEventHandlers(newEventHandlers: EventHandlers) {
+  eventHandlers = newEventHandlers;
 }
 
 /** Allows you to dynamically update the event handlers by passing in new eventHandlers */
-export function updateEventHandlers(newEventHandlers: EventHandlerFunctions) {
-  _eventHandlers = {
-    ..._eventHandlers,
-    ...newEventHandlers,
-  };
+export function updateEventHandlers(newEventHandlers: EventHandlers) {
+  // Object.assign instead of ... operator because of the Proxy used
+  Object.assign(eventHandlers, newEventHandlers);
 }
 
 /** INTERNAL LIB function used to set the bot Id once the READY event is sent by Discord. */
@@ -75,5 +68,5 @@ export interface BotConfig {
   token: string;
   compress?: boolean;
   intents: (DiscordGatewayIntents | keyof typeof DiscordGatewayIntents)[];
-  eventHandlers?: EventHandlerFunctions;
+  eventHandlers?: EventHandlers;
 }
