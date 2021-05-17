@@ -78,10 +78,10 @@ export class Client extends EventEmitter {
   constructor(options: ClientOptions) {
     super();
 
-    this.token = options.token;
+    this.token = `Bot ${options.token}`;
     this.startedAt = Date.now();
     this.rest = new RestManager(this);
-    this.gateway = new GatewayManager(this);
+    this.gateway = new GatewayManager(this, options);
   }
 
   // GETTERS

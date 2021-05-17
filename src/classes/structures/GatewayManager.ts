@@ -1,4 +1,6 @@
-import { GatewayPayload } from "../../types/mod.ts";
+import { getGatewayBot } from "../../helpers/mod.ts";
+import { DiscordGatewayIntents, GatewayPayload } from "../../types/mod.ts";
+import { Collection } from "../../util/collection.ts";
 import {
   DiscordenoShard,
   StartGatewayOptions,
@@ -6,13 +8,137 @@ import {
   ws,
 } from "../../ws/mod.ts";
 import Client from "../Client.ts";
+import { ClientOptions } from "../types/client_options.ts";
 
-export class GatewayManager {
+// PLACEHOLDER
+export class Shard {}
+
+export class GatewayManager extends Collection<number, Shard> {
   /** The bot client this is managing for. */
   client: Client;
+  lastConnectedAt: number;
+  timeout: number;
 
-  constructor(client: Client) {
+  /** The gateway version to use. */
+  gatewayVersion: number;
+  /** The url to connect to. */
+  url: string;
+  /** The token for the bot. */
+  token: string;
+
+  constructor(client: Client, options: ClientOptions) {
+    super();
+
     this.client = client;
+    this.lastConnectedAt = 0;
+    this.timeout = 0;
+
+    this.gatewayVersion = options.gatewayVersion || 9;
+    this.url = "wss://gateway.discord.gg/";
+    this.token = options.token;
+
+    this.setup(options);
+  }
+
+  /** The amount of buckets available to start shards concurrently. */
+  get maxConcurrency() {
+    return ws.botGatewayData.sessionStartLimit.maxConcurrency;
+  }
+
+  /** Change the amount of buckets available to start shards concurrently. */
+  set maxConcurrency(amount: number) {
+    ws.botGatewayData.sessionStartLimit.maxConcurrency = amount;
+  }
+
+  /** The max amount of shards. */
+  get maxShards() {
+    return ws.maxShards;
+  }
+
+  /** Change the max amount of shards. */
+  set maxShards(amount: number) {
+    ws.maxShards = amount;
+  }
+
+  /** The first shard id to use. */
+  get firstShardId() {
+    return ws.firstShardId;
+  }
+
+  /** Change the last shard id to use. */
+  set firstShardId(amount: number) {
+    ws.firstShardId = amount;
+  }
+
+  /** The last shard id to use. */
+  get lastShardId() {
+    return ws.lastShardId;
+  }
+
+  /** Change the last shard id to use. */
+  set lastShardId(amount: number) {
+    ws.lastShardId = amount;
+  }
+
+  /** The intents to use for the bot. */
+  get intents() {
+    return ws.identifyPayload.intents;
+  }
+
+  /** Change the intents to use for the bot. */
+  set intents(
+    intents:
+      | number
+      | (DiscordGatewayIntents | keyof typeof DiscordGatewayIntents)[],
+  ) {
+    if (typeof intents === "number") {
+      ws.identifyPayload.intents = intents;
+      return;
+    }
+
+    ws.identifyPayload.intents = intents.reduce(
+      (
+        bits,
+        next,
+      ) => (bits |= typeof next === "string"
+        ? DiscordGatewayIntents[next]
+        : next),
+      0,
+    );
+  }
+
+  /** Whether or not to use compression. */
+  get compress() {
+    return ws.identifyPayload.compress;
+  }
+
+  /** Change whether or not to use compression. */
+  set compress(enabled: boolean) {
+    ws.identifyPayload.compress = enabled;
+  }
+
+  async setup(options: ClientOptions) {
+    // Initial API connection to get info about bots connection
+    const data = await getGatewayBot();
+    if (!this.maxShards) this.maxShards = data.shards;
+    if (!this.lastShardId) this.lastShardId = data.shards - 1;
+
+    // Explicitly append gateway version and encoding
+    this.url += `?v=${this.gatewayVersion}&encoding=json`;
+
+    ws.log = this.client.emit;
+
+    // Set the options provided by the constructor
+    for (const [key, value] of Object.entries(options)) {
+      if (this[key as keyof ClientOptions]) {
+        // TODO: find a better way to do this
+        // deno-lint-ignore ban-ts-comment
+        // @ts-ignore
+        this[key] = value;
+      }
+    }
+
+    this.spawnShards();
   }
 
   /** The handler to clean up shards that identified but never received a READY. */
@@ -78,8 +204,8 @@ export class GatewayManager {
   }
 
   /** Begin spawning shards. */
-  spawnShards(firstShardId?: number) {
-    return ws.spawnShards(firstShardId);
+  spawnShards() {
+    return ws.spawnShards(this.firstShardId);
   }
 
   /** Starts the standalone gateway. This will require starting the bot separately. */
