@@ -50,6 +50,7 @@ export function replaceEventHandlers(newEventHandlers: EventHandlers) {
 
 /** Allows you to dynamically update the event handlers by passing in new eventHandlers */
 export function updateEventHandlers(newEventHandlers: EventHandlers) {
+  // Object.assign instead of ... operator because of the Proxy used
   Object.assign(eventHandlers, newEventHandlers);
 }
 
