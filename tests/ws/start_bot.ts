@@ -3,7 +3,7 @@ import { cache } from "../../src/cache.ts";
 import { deleteGuild } from "../../src/helpers/guilds/delete_guild.ts";
 import { delay } from "../../src/util/utils.ts";
 import { ws } from "../../src/ws/ws.ts";
-import { assertExists } from "../deps.ts";
+import { assertExists, assertEquals } from "../deps.ts";
 
 // Set necessary settings
 // Disables the logger which logs everything
@@ -33,8 +33,13 @@ Deno.test({
     const token = Deno.env.get("DISCORD_TOKEN");
     if (!token) throw new Error("Token is not provided");
 
+    let didReady = false;
+
     await startBot({
       token,
+      eventHandlers: {
+        ready: () => didReady = true
+      },
       intents: [
         "GuildMessages",
         "Guilds",
@@ -53,6 +58,7 @@ Deno.test({
 
     // Assertions
     assertExists(botId);
+    assertEquals(true, didReady);
   },
   ...defaultTestOptions,
 });
