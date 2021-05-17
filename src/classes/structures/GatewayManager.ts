@@ -35,7 +35,7 @@ export class GatewayManager extends Collection<number, Shard> {
 
     this.gatewayVersion = options.gatewayVersion || 9;
     this.url = "wss://gateway.discord.gg/";
-    this.token = options.token;
+    this.token = `Bot ${options.token}`;
 
     this.setup(options);
   }
@@ -126,7 +126,9 @@ export class GatewayManager extends Collection<number, Shard> {
     // Explicitly append gateway version and encoding
     this.url += `?v=${this.gatewayVersion}&encoding=json`;
 
-    ws.log = this.client.emit;
+    ws.log = (type: string, data: unknown) => {
+      this.client.emit("debug", type, data);
+    };
 
     // Set the options provided by the constructor
     for (const [key, value] of Object.entries(options)) {
@@ -138,6 +140,12 @@ export class GatewayManager extends Collection<number, Shard> {
       }
     }
 
+    ws.identifyPayload.token = this.token;
+
+    this.startup();
+  }
+
+  startup() {
     this.spawnShards();
   }
 

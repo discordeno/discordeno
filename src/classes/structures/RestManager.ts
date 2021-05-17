@@ -1,12 +1,19 @@
 import { rest, RestPayload, RestRequest } from "../../rest/rest.ts";
 import Client from "../Client.ts";
+import { ClientOptions } from "../mod.ts";
 
 export class RestManager {
   /** The bot client this is managing for. */
   client: Client;
 
-  constructor(client: Client) {
+  constructor(client: Client, options: ClientOptions) {
     this.client = client;
+
+    this.setup(options);
+  }
+
+  setup(options: ClientOptions) {
+    rest.token = `Bot ${options.token}`;
   }
 
   /** Check the rate limits for a url or a bucket. */
