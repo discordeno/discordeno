@@ -226,5 +226,7 @@ export type EventHandlersDefinitions = {
 };
 
 export type EventHandlers = {
-  [E in keyof EventHandlersDefinitions]?: (...args: EventHandlersDefinitions[E]) => unknown;
+  [E in keyof EventHandlersDefinitions]?: (
+    ...args: EventHandlersDefinitions[E]
+  ) => unknown;
 };
