@@ -28,7 +28,7 @@ import { VoiceServerUpdate } from "../voice/voice_server_update.ts";
 import { DebugArg } from "./debug_arg.ts";
 import { GuildUpdateChange } from "./guild_update_change.ts";
 
-export type EventHandlers = {
+export type EventHandlersDefinitions = {
   /** Sent when a new Slash Command is created, relevant to the current user. */
   applicationCommandCreate: [data: ApplicationCommandCreateUpdateDelete];
   /** Sent when a Slash Command relevant to the current user is updated. */
@@ -160,6 +160,6 @@ export type EventHandlers = {
   inviteDelete: [data: InviteDelete];
 }
 
-export type EventHandlerFunctions = {
-  [E in keyof EventHandlers]?: (...args: EventHandlers[E]) => unknown;
+export type EventHandlers = {
+  [E in keyof EventHandlersDefinitions]?: (...args: EventHandlersDefinitions[E]) => unknown;
 };
