@@ -73,7 +73,9 @@ export class Client extends EventEmitter {
   /** The rest api manager. */
   rest: RestManager;
   /** The gateway manager. */
-  gateway: GatewayManager;
+  private gateway!: GatewayManager;
+
+  options: ClientOptions;
 
   constructor(options: ClientOptions) {
     super();
@@ -81,7 +83,8 @@ export class Client extends EventEmitter {
     this.token = `Bot ${options.token}`;
     this.startedAt = Date.now();
     this.rest = new RestManager(this, options);
-    this.gateway = new GatewayManager(this, options);
+    this.options = options;
+    // THIS TRIGGERS SPAWN ATM
   }
 
   // GETTERS
@@ -122,8 +125,10 @@ export class Client extends EventEmitter {
   }
 
   /** Start connecting shards?? */
-  async connect() {
-    // TODO: we might wana do this slightly differently
+  connect() {
+    this.gateway = new GatewayManager(this);
+
+    // THE TOKEN IS NOW EMPTY, ALL THE VARIABLES IN GATEWAY ARE DEFAULTED BROKEN
   }
 
   // CHANNEL HELPER METHODS

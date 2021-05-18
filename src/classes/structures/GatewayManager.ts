@@ -26,18 +26,18 @@ export class GatewayManager extends Collection<number, Shard> {
   /** The token for the bot. */
   token: string;
 
-  constructor(client: Client, options: ClientOptions) {
+  constructor(client: Client) {
     super();
 
     this.client = client;
     this.lastConnectedAt = 0;
     this.timeout = 0;
 
-    this.gatewayVersion = options.gatewayVersion || 9;
+    this.gatewayVersion = this.client.options.gatewayVersion || 9;
     this.url = "wss://gateway.discord.gg/";
-    this.token = `Bot ${options.token}`;
+    this.token = `Bot ${this.client.options.token}`;
 
-    this.setup(options);
+    this.setup(this.client.options);
   }
 
   /** The amount of buckets available to start shards concurrently. */
@@ -142,6 +142,7 @@ export class GatewayManager extends Collection<number, Shard> {
 
     ws.identifyPayload.token = this.token;
 
+    // THIS IS WHAT STARTS IT!
     this.startup();
   }
 
