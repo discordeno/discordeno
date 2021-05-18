@@ -124,11 +124,9 @@ export class Client extends EventEmitter {
     return cache.messages;
   }
 
-  /** Start connecting shards?? */
+  /** Start connecting shards. You can also override this method if you want a standalone gateway solution instead. */
   connect() {
     this.gateway = new GatewayManager(this);
-
-    // THE TOKEN IS NOW EMPTY, ALL THE VARIABLES IN GATEWAY ARE DEFAULTED BROKEN
   }
 
   // CHANNEL HELPER METHODS
