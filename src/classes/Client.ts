@@ -124,6 +124,21 @@ export class Client extends EventEmitter {
     return cache.messages;
   }
 
+  /** The slash commands that have been executed. */
+  get executedSlashCommands() {
+    return cache.executedSlashCommands;
+  }
+
+  /** Whether or not the bot is fully ready and all shards are available. */
+  get ready() {
+    return cache.isReady;
+  }
+
+  /** Changes whether or not the bot is ready. */
+  set ready(ready: boolean) {
+    cache.isReady = ready;
+  }
+
   /** Start connecting shards. You can also override this method if you want a standalone gateway solution instead. */
   connect() {
     this.gateway = new GatewayManager(this);
