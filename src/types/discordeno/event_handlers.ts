@@ -4,27 +4,26 @@ import { DiscordenoMember } from "../../structures/member.ts";
 import { DiscordenoMessage } from "../../structures/message.ts";
 import { DiscordenoRole } from "../../structures/role.ts";
 import { Collection } from "../../util/collection.ts";
+import { PresenceUpdate } from "../activity/presence_update.ts";
+import { StageInstance } from "../channels/stage_instance.ts";
 import { ThreadMember } from "../channels/threads/thread_member.ts";
 import { ThreadMembersUpdate } from "../channels/threads/thread_members_update.ts";
+import { Emoji } from "../emojis/emoji.ts";
+import { GatewayPayload } from "../gateway/gateway_payload.ts";
+import { DiscordGatewayPayload } from "../gateway/gateway_payload.ts";
 import { IntegrationCreateUpdate } from "../integrations/integration_create_update.ts";
+import { IntegrationDelete } from "../integrations/integration_delete.ts";
 import { ApplicationCommandCreateUpdateDelete } from "../interactions/commands/application_command_create_update_delete.ts";
-import {
-  DiscordGatewayPayload,
-  Emoji,
-  GatewayPayload,
-  IntegrationDelete,
-  Interaction,
-  InviteCreate,
-  InviteDelete,
-  MessageReactionAdd,
-  MessageReactionRemove,
-  MessageReactionRemoveAll,
-  PresenceUpdate,
-  TypingStart,
-  User,
-  VoiceState,
-} from "../mod.ts";
+import { Interaction } from "../interactions/interaction.ts";
+import { InviteCreate } from "../invites/invite_create.ts";
+import { InviteDelete } from "../invites/invite_delete.ts";
+import { MessageReactionAdd } from "../messages/message_reaction_add.ts";
+import { MessageReactionRemove } from "../messages/message_reaction_remove.ts";
+import { MessageReactionRemoveAll } from "../messages/message_reaction_remove_all.ts";
+import { TypingStart } from "../misc/typing_start.ts";
+import { User } from "../users/user.ts";
 import { VoiceServerUpdate } from "../voice/voice_server_update.ts";
+import { VoiceState } from "../voice/voice_state.ts";
 import { DebugArg } from "./debug_arg.ts";
 import { GuildUpdateChange } from "./guild_update_change.ts";
 
@@ -170,6 +169,12 @@ export type EventHandlersDefinitions = {
   shardReady: [shardId: number];
   /** Sent when a shard failed to load. */
   shardFailedToLoad: [shardId: number, unavailableGuildIds: Set<bigint>];
+  /** Sent when a Stage instance is created (i.e. the Stage is now "live"). */
+  stageInstanceCreate: [instance: StageInstance];
+  /** Sent when a Stage instance has been deleted (i.e. the Stage has been closed). */
+  stageInstanceDelete: [instance: StageInstance];
+  /** Sent when a Stage instance has been updated. */
+  stageInstanceUpdate: [instance: StageInstance];
   /** Sent when a thread is created */
   threadCreate: [channel: DiscordenoChannel];
   /** Sent when a thread is updated */
