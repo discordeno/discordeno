@@ -1,6 +1,6 @@
 import { cacheHandlers } from "../../../cache.ts";
 import { rest } from "../../../rest/rest.ts";
-import type { ChannelTypes } from "../../../types/channels/channel_types.ts";
+import { ChannelTypes } from "../../../types/channels/channel_types.ts";
 import { Errors } from "../../../types/discordeno/errors.ts";
 import { endpoints } from "../../../util/constants.ts";
 //TODO(threads): this does not work rn
