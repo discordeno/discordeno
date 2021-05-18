@@ -1,6 +1,7 @@
 import { Role, RoleTags } from "../../../types/mod.ts";
 import { Collection } from "../../../util/collection.ts";
-import { Base, Client } from "../../mod.ts";
+import Base from "../Base.ts";
+import Client from "../../Client.ts";
 import RoleBitField from "../BitFields/Role.ts";
 
 export class DDRole extends Base {
