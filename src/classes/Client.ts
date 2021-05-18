@@ -1,6 +1,7 @@
 import { EventEmitter } from "./deps.ts";
 
 import { helpers } from "../helpers/mod.ts";
+import { proxyEvent } from "../plugins/proxyEvents.ts";
 import {
   verifySignature,
   VerifySignatureOptions,
@@ -84,7 +85,9 @@ export class Client extends EventEmitter {
     this.startedAt = Date.now();
     this.rest = new RestManager(this, options);
     this.options = options;
-    // THIS TRIGGERS SPAWN ATM
+
+    // Set the eventHandlers to instead use the EventEmitter
+    proxyEvent(this);
   }
 
   // GETTERS
