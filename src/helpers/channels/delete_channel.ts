@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
-import { ChannelTypes } from "../../types/mod.ts";
+import { ChannelTypes } from "../../types/channels/channel_types.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
