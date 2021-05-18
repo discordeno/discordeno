@@ -1,4 +1,5 @@
 import { Role, RoleTags } from "../../../types/mod.ts";
+import { Collection } from "../../../util/collection.ts";
 import { Base, Client } from "../../mod.ts";
 import RoleBitField from "../BitFields/Role.ts";
 
@@ -88,12 +89,15 @@ export class DDRole extends Base {
     return `<@&${this.id}>`;
   }
 
-  // /** The cached members that have this role */
-  // get members() {
-  //   return this.guild.members.filter((m) =>
-  //     m.guilds.some((g) => g.roles.includes(this.id!))
-  //   );
-  // }
+  /** The cached members that have this role */
+  get members() {
+    if (!this.guild) return new Collection();
+
+    // TODO: THIS WILL ERROR FOR NOW BUT WILL FIX WHEN OHER STRUCTS ARE IMPLEMENTED
+    // deno-lint-ignore ban-ts-comment most dumbest rule ever in deno lint
+    // @ts-ignore
+    return this.guild.members.filter((m) => m.roles.has(this.id));
+  }
 
   update(payload: Role) {
     for (const [key, value] of Object.entries(payload)) {
