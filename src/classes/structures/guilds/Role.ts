@@ -6,6 +6,7 @@ import RoleBitField from "../BitFields/Role.ts";
 import { deleteRole } from "../../../helpers/roles/delete_role.ts";
 import { editRole } from "../../../helpers/roles/edit_role.ts";
 import { highestRole } from "../../../util/permissions.ts";
+import { Permissions } from "../BitFields/Permissions.ts";
 
 export class DDRole extends Base {
   /** The client itself. */
@@ -18,9 +19,8 @@ export class DDRole extends Base {
   bitfield!: RoleBitField;
   /** The position number of the role in the server heiarchy. */
   position!: number;
-  // TODO: Maybe a RolePermissions class here to better UX
   /** The permissions that this role has. */
-  permissions!: bigint;
+  permissions!: Permissions;
   /** 🛑 The tags for this role. Will always be undefined!! */
   tags?: RoleTags;
   /** The bot id that is associated with this role. */
@@ -104,27 +104,26 @@ export class DDRole extends Base {
 
     if (this.isEveryoneRole) return this.guild.members;
 
-    // TODO: THIS WILL ERROR FOR NOW BUT WILL FIX WHEN OHER STRUCTS ARE IMPLEMENTED
-    // deno-lint-ignore ban-ts-comment most dumbest rule ever in deno lint
-    // @ts-ignore
+    // @ts-ignore THIS WILL ERROR FOR NOW BUT WILL FIX WHEN OHER STRUCTS ARE IMPLEMENTED
     return this.guild.members.filter((m) => m.roles.has(this.id));
   }
 
   update(payload: Role) {
     for (const [key, value] of Object.entries(payload)) {
-      if (key === "bitfield") {
-        this.bitfield = new RoleBitField(value);
-        continue;
-      }
-
-      // Properties to skip
-      if (["tags"].includes(key)) continue;
-
-      if (this[key as keyof Role]) {
-        // find a better way to do this
-        // deno-lint-ignore ban-ts-comment so dumb deno lint redundancy
-        // @ts-ignore
-        this[key] = value;
+      switch (key) {
+        case "bitfield":
+          this.bitfield = new RoleBitField(value);
+          break;
+        case "permissions":
+          this[key] = new Permissions(value);
+          break;
+        case "tags":
+          break;
+        default:
+          if (this[key as keyof Role]) {
+            // @ts-ignore find a better way to do this
+            this[key] = value;
+          }
       }
     }
   }
