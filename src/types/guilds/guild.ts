@@ -32,7 +32,7 @@ export interface Guild {
   owner?: boolean;
   /** Id of the owner */
   ownerId: string;
-  /** Total permissions for the user in the guild (execludes overrides) */
+  /** Total permissions for the user in the guild (execludes overwrites) */
   permissions?: string;
   /** Voice region id for the guild */
   region: string;
