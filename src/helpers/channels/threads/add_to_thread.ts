@@ -1,6 +1,7 @@
 import { cacheHandlers } from "../../../cache.ts";
 import { rest } from "../../../rest/rest.ts";
-import { ChannelTypes, Errors } from "../../../types/mod.ts";
+import { ChannelTypes } from "../../../types/channels/channel_types.ts";
+import { Errors } from "../../../types/discordeno/errors.ts";
 import { endpoints } from "../../../util/constants.ts";
 //TODO(threads): this does not work rn
 /** Adds the current user to a thread. Returns a 204 empty response on success. Also requires the thread is not archived. Fires a Thread Members Update Gateway event.Adds another user to a thread. Requires the ability to send messages in the thread. Also requires the thread is not archived. Returns a 204 empty response on success. Fires a Thread Members Update Gateway event.

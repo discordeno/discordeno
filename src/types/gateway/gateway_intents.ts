@@ -10,6 +10,15 @@ export enum DiscordGatewayIntents {
    * - CHANNEL_UPDATE
    * - CHANNEL_DELETE
    * - CHANNEL_PINS_UPDATE
+   * - THREAD_CREATE
+   * - THREAD_UPDATE
+   * - THREAD_DELETE
+   * - THREAD_LIST_SYNC
+   * - THREAD_MEMBER_UPDATE
+   * - THREAD_MEMBERS_UPDATE
+   * - STAGE_INSTANCE_CREATE
+   * - STAGE_INSTANCE_UPDATE
+   * - STAGE_INSTANCE_DELETE
    */
   Guilds = 1 << 0,
   /**
