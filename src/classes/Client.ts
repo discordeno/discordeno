@@ -65,6 +65,7 @@ import { DiscordenoMessage } from "../structures/message.ts";
 import { RestManager } from "./structures/RestManager.ts";
 import GatewayManager from "./structures/GatewayManager.ts";
 import { cache } from "../cache.ts";
+import { botId } from "../bot";
 
 export class Client extends EventEmitter {
   /** The bot's token */
@@ -95,6 +96,16 @@ export class Client extends EventEmitter {
   /** The amount of milliseconds since the bot has been online. */
   get uptime() {
     return Date.now() - this.startedAt;
+  }
+
+  /** The snowflake id of the bot. */
+  get id() {
+    return botId;
+  }
+
+  /** The bot member for this client. */
+  get bot() {
+    return cache.members.get(this.id);
   }
 
   /** The guilds available in cache. */
