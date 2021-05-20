@@ -31,7 +31,7 @@ export const cache = {
   >(),
   executedSlashCommands: new Set<string>(),
   get emojis() {
-    return new Collection<string, Emoji>(
+    return new Collection<bigint, Emoji>(
       this.guilds.reduce(
         (a, b) => [...a, ...b.emojis.map((e) => [e.id, e])],
         [] as any[],
