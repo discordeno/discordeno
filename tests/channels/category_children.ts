@@ -1,7 +1,6 @@
 import { cache } from "../../src/cache.ts";
 import { categoryChildren, createChannel } from "../../src/helpers/mod.ts";
 import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
-import { bigintToSnowflake } from "../../src/util/bigint.ts";
 import { assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
@@ -30,7 +29,7 @@ Deno.test({
       channelsToCreate.map((num) =>
         createChannel(tempData.guildId, {
           name: `Discordeno-test-${num}`,
-          parentId: bigintToSnowflake(category.id),
+          parentId: category.id,
         })
       )
     );

@@ -39,7 +39,7 @@ Deno.test({
 
     const channel = await createChannel(tempData.guildId, {
       name: "synced-channel",
-      parentId: category.id.toString(),
+      parentId: category.id,
     });
 
     // Assertions
