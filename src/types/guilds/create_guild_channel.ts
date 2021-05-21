@@ -20,7 +20,7 @@ export interface CreateGuildChannel {
   /** The channel's permission overwrites */
   permissionOverwrites?: Overwrite[];
   /** Id of the parent category for a channel */
-  parentId?: string;
+  parentId?: bigint;
   /** Whether the channel is nsfw */
   nsfw?: boolean;
 }
