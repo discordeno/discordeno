@@ -6,9 +6,15 @@ import type { StageInstance } from "../../types/channels/stage_instance.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { ChannelTypes } from "../../types/channels/channel_types.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
+import { PrivacyLevel } from "../../types/channels/privacy_level.ts";
+import { snakelize } from "../../util/utils.ts";
 
 /** Creates a new Stage instance associated to a Stage channel. Requires the user to be a moderator of the Stage channel. */
-export async function createStageInstance(channelId: bigint, topic: string) {
+export async function createStageInstance(
+  channelId: bigint,
+  topic: string,
+  privacyLevel?: PrivacyLevel,
+) {
   const channel = await cacheHandlers.get("channels", channelId);
 
   if (channel) {
@@ -32,9 +38,10 @@ export async function createStageInstance(channelId: bigint, topic: string) {
   return await rest.runMethod<StageInstance>(
     "post",
     endpoints.STAGE_INSTANCES,
-    {
-      "channel_id": channelId,
+    snakelize({
+      channelId,
       topic,
-    },
+      privacyLevel,
+    }),
   );
 }
