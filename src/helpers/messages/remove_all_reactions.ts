@@ -6,8 +6,5 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 export async function removeAllReactions(channelId: bigint, messageId: bigint) {
   await requireBotChannelPermissions(channelId, ["MANAGE_MESSAGES"]);
 
-  return await rest.runMethod<undefined>(
-    "delete",
-    endpoints.CHANNEL_MESSAGE_REACTIONS(channelId, messageId),
-  );
+  return await rest.runMethod<undefined>("delete", endpoints.CHANNEL_MESSAGE_REACTIONS(channelId, messageId));
 }

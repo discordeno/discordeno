@@ -8,23 +8,13 @@ import { endpoints } from "../../util/constants.ts";
  *
  * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
  */
-export async function getMember(
-  guildId: bigint,
-  id: bigint,
-  options?: { force?: boolean },
-) {
+export async function getMember(guildId: bigint, id: bigint, options?: { force?: boolean }) {
   const guild = await cacheHandlers.get("guilds", guildId);
   if (!guild && !options?.force) return;
 
-  const data = (await rest.runMethod<GuildMemberWithUser>(
-    "get",
-    endpoints.GUILD_MEMBER(guildId, id),
-  ));
+  const data = await rest.runMethod<GuildMemberWithUser>("get", endpoints.GUILD_MEMBER(guildId, id));
 
-  const discordenoMember = await structures.createDiscordenoMember(
-    data,
-    guildId,
-  );
+  const discordenoMember = await structures.createDiscordenoMember(data, guildId);
   await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 
   return discordenoMember;

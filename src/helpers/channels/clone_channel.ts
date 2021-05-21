@@ -11,10 +11,7 @@ export async function cloneChannel(channelId: bigint, reason?: string) {
   if (!channelToClone) throw new Error(Errors.CHANNEL_NOT_FOUND);
 
   //Check for DM channel
-  if (
-    channelToClone.type === DiscordChannelTypes.DM ||
-    channelToClone.type === DiscordChannelTypes.GroupDm
-  ) {
+  if (channelToClone.type === DiscordChannelTypes.DM || channelToClone.type === DiscordChannelTypes.GroupDm) {
     throw new Error(Errors.CHANNEL_NOT_IN_GUILD);
   }
 
@@ -22,9 +19,7 @@ export async function cloneChannel(channelId: bigint, reason?: string) {
     ...channelToClone,
     name: channelToClone.name!,
     topic: channelToClone.topic || undefined,
-    permissionOverwrites: channelToClone.permissionOverwrites.map((
-      overwrite,
-    ) => ({
+    permissionOverwrites: channelToClone.permissionOverwrites.map((overwrite) => ({
       id: overwrite.id.toString(),
       type: overwrite.type,
       allow: calculatePermissions(overwrite.allow.toString()),
@@ -33,9 +28,5 @@ export async function cloneChannel(channelId: bigint, reason?: string) {
   };
 
   //Create the channel (also handles permissions)
-  return await helpers.createChannel(
-    channelToClone.guildId!,
-    createChannelOptions,
-    reason,
-  );
+  return await helpers.createChannel(channelToClone.guildId!, createChannelOptions, reason);
 }

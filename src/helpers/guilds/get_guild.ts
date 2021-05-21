@@ -17,19 +17,15 @@ export async function getGuild(
   options: { counts?: boolean; addToCache?: boolean } = {
     counts: true,
     addToCache: true,
-  },
+  }
 ) {
-  const result = await rest.runMethod<Guild>(
-    "get",
-    endpoints.GUILDS_BASE(guildId),
-    {
-      with_counts: options.counts,
-    },
-  );
+  const result = await rest.runMethod<Guild>("get", endpoints.GUILDS_BASE(guildId), {
+    with_counts: options.counts,
+  });
 
   const guild = await structures.createDiscordenoGuild(
     result,
-    Number((BigInt(guildId) >> 22n) % BigInt(ws.botGatewayData.shards)),
+    Number((BigInt(guildId) >> 22n) % BigInt(ws.botGatewayData.shards))
   );
 
   if (options.addToCache) {

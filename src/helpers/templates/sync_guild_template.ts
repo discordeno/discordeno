@@ -10,8 +10,5 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function syncGuildTemplate(guildId: bigint, templateCode: string) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  return await rest.runMethod<Template>(
-    "put",
-    `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
-  );
+  return await rest.runMethod<Template>("put", `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`);
 }

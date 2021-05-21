@@ -13,19 +13,18 @@ export function avatarURL(
     size?: DiscordImageSize;
     format?: DiscordImageFormat;
     animated?: boolean;
-  },
+  }
 ) {
   return options.avatar
     ? formatImageURL(
-      endpoints.USER_AVATAR(
-        userId,
-        typeof options.avatar === "string" ? options.avatar : iconBigintToHash(
-          options.avatar,
-          options.animated ?? true,
+        endpoints.USER_AVATAR(
+          userId,
+          typeof options.avatar === "string"
+            ? options.avatar
+            : iconBigintToHash(options.avatar, options.animated ?? true)
         ),
-      ),
-      options.size || 128,
-      options.format,
-    )
+        options.size || 128,
+        options.format
+      )
     : endpoints.USER_DEFAULT_AVATAR(Number(discriminator) % 5);
 }

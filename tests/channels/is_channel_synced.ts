@@ -32,9 +32,7 @@ Deno.test({
     await delayUntil(10000, () => cache.channels.has(category.id));
 
     if (!cache.channels.has(category.id)) {
-      throw new Error(
-        "The channel seemed to be created but it was not cached.",
-      );
+      throw new Error("The channel seemed to be created but it was not cached.");
     }
 
     const channel = await createChannel(tempData.guildId, {
@@ -49,17 +47,12 @@ Deno.test({
     await delayUntil(10000, () => cache.channels.has(channel.id));
 
     if (!cache.channels.has(channel.id)) {
-      throw new Error(
-        "The channel seemed to be created but it was not cached.",
-      );
+      throw new Error("The channel seemed to be created but it was not cached.");
     }
 
     const isSynced = await isChannelSynced(channel.id);
 
-    assertEquals(
-      isSynced,
-      true,
-    );
+    assertEquals(isSynced, true);
   },
   ...defaultTestOptions,
 });

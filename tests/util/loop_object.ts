@@ -44,14 +44,11 @@ Deno.test({
         typeof value === "bigint"
           ? value.toString()
           : Array.isArray(value)
-          ? value.map((v) => typeof v === "bigint" ? v.toString() : v)
+          ? value.map((v) => (typeof v === "bigint" ? v.toString() : v))
           : value,
-      `Running for loop in unit test function for changing bigints to strings.`,
+      `Running for loop in unit test function for changing bigints to strings.`
     );
 
-    assertEquals(
-      converted,
-      correctlyConverted,
-    );
+    assertEquals(converted, correctlyConverted);
   },
 });

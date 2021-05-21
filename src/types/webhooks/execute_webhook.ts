@@ -25,6 +25,4 @@ export interface ExecuteWebhook {
   allowedMentions?: AllowedMentions;
 }
 
-export type DiscordExecuteWebhook = SnakeCasedPropertiesDeep<
-  Omit<ExecuteWebhook, "wait">
->;
+export type DiscordExecuteWebhook = SnakeCasedPropertiesDeep<Omit<ExecuteWebhook, "wait">>;

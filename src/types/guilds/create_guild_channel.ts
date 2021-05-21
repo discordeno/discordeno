@@ -26,10 +26,8 @@ export interface CreateGuildChannel {
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-channel */
-export interface DiscordCreateGuildChannel extends
-  SnakeCasedPropertiesDeep<
-    Omit<CreateGuildChannel, "permissionOverwrites">
-  > {
+export interface DiscordCreateGuildChannel
+  extends SnakeCasedPropertiesDeep<Omit<CreateGuildChannel, "permissionOverwrites">> {
   // deno-lint-ignore camelcase
   permission_overwrites: DiscordOverwrite[];
 }

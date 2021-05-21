@@ -3,7 +3,5 @@ export enum DiscordApplicationCommandPermissionTypes {
   User,
 }
 
-export type ApplicationCommandPermissionTypes =
-  DiscordApplicationCommandPermissionTypes;
-export const ApplicationCommandPermissionTypes =
-  DiscordApplicationCommandPermissionTypes;
+export type ApplicationCommandPermissionTypes = DiscordApplicationCommandPermissionTypes;
+export const ApplicationCommandPermissionTypes = DiscordApplicationCommandPermissionTypes;

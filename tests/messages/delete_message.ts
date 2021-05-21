@@ -28,9 +28,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", reason?: string) {
   await delayUntil(10000, () => !cache.messages.has(message.id));
   // Make sure it is gone from cache
   if (cache.messages.has(message.id)) {
-    throw new Error(
-      "The message should have been deleted but it is still in cache.",
-    );
+    throw new Error("The message should have been deleted but it is still in cache.");
   }
 }
 

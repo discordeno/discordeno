@@ -6,10 +6,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: denoland/setup-deno@main
-      - name: Run fmt script
-        run: deno fmt
-      - name: Commit formatted files
-        uses: EndBug/add-and-commit@v7
       - name: Run lint script
         run: deno lint ./src ./tests
-

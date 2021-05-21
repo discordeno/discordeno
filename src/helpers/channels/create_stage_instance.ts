@@ -16,25 +16,15 @@ export async function createStageInstance(channelId: bigint, topic: string) {
       throw new Error(Errors.CHANNEL_NOT_STAGE_VOICE);
     }
 
-    await requireBotChannelPermissions(channel, [
-      "MANAGE_CHANNELS",
-      "MUTE_MEMBERS",
-      "MOVE_MEMBERS",
-    ]);
+    await requireBotChannelPermissions(channel, ["MANAGE_CHANNELS", "MUTE_MEMBERS", "MOVE_MEMBERS"]);
   }
 
-  if (
-    !validateLength(topic, { max: 120, min: 1 })
-  ) {
+  if (!validateLength(topic, { max: 120, min: 1 })) {
     throw new Error(Errors.INVALID_TOPIC_LENGTH);
   }
 
-  return await rest.runMethod<StageInstance>(
-    "post",
-    endpoints.STAGE_INSTANCES,
-    {
-      "channel_id": channelId,
-      topic,
-    },
-  );
+  return await rest.runMethod<StageInstance>("post", endpoints.STAGE_INSTANCES, {
+    channel_id: channelId,
+    topic,
+  });
 }

@@ -7,17 +7,11 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleGuildMemberAdd(data: DiscordGatewayPayload) {
   const payload = data.d as GuildMemberAdd;
-  const guild = await cacheHandlers.get(
-    "guilds",
-    snowflakeToBigint(payload.guildId),
-  );
+  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
   if (!guild) return;
 
   guild.memberCount++;
-  const discordenoMember = await structures.createDiscordenoMember(
-    payload,
-    guild.id,
-  );
+  const discordenoMember = await structures.createDiscordenoMember(payload, guild.id);
   await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 
   eventHandlers.guildMemberAdd?.(guild, discordenoMember);
