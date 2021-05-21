@@ -11,25 +11,23 @@ export async function handleMessageCreate(data: DiscordGatewayPayload) {
   const channel = await cacheHandlers.get("channels", snowflakeToBigint(payload.channelId));
   if (channel) channel.lastMessageId = snowflakeToBigint(payload.id);
 
-  const guild = payload.guildId ? await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId)) : undefined;
+  const guildId = payload.guildId ? snowflakeToBigint(payload.guildId) : undefined;
 
-  if (payload.member && guild) {
-    // If in a guild cache the author as a member
-    const discordenoMember = await structures.createDiscordenoMember(payload.author, {
-      member: payload.member as GuildMember,
-      guildId: guild.id,
-    });
-    await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
-  }
+  const discordenoMember = await structures.createDiscordenoMember(
+    payload.author,
+    guildId ? { member: payload.member! as GuildMember, guildId } : undefined
+  );
+  await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 
-  if (payload.mentions && guild) {
+  // TODO: maybe cache mentioned members too when in dm?
+  if (payload.mentions && guildId) {
     await Promise.all(
       payload.mentions.map(async (mention) => {
         // Cache the member if its a valid member
         if (mention.member) {
           const discordenoMember = await structures.createDiscordenoMember(mention, {
             member: mention.member as GuildMember,
-            guildId: guild.id,
+            guildId,
           });
 
           return cacheHandlers.set("members", snowflakeToBigint(mention.id), discordenoMember);
