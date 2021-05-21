@@ -186,7 +186,7 @@ export async function createDiscordenoGuild(data: Guild, shardId: number) {
     threads = [],
     presences = [],
     joinedAt = "",
-    emojis,
+    emojis = [],
     members = [],
     icon,
     splash,
@@ -252,9 +252,7 @@ export async function createDiscordenoGuild(data: Guild, shardId: number) {
     joinedAt: createNewProp(Date.parse(joinedAt)),
     presences: createNewProp(new Collection(presences.map((p) => [snowflakeToBigint(p.user!.id), p]))),
     memberCount: createNewProp(memberCount),
-    emojis: createNewProp(
-      new Collection((emojis || []).map((emoji) => [emoji.id ? snowflakeToBigint(emoji.id) : emoji.name, emoji]))
-    ),
+    emojis: createNewProp(new Collection(emojis.map((emoji) => [snowflakeToBigint(emoji.id!), emoji]))),
     voiceStates: createNewProp(new Collection(voiceStateStructs.map((vs) => [vs.userId, vs]))),
     bitfield: createNewProp(bitfield),
   });
