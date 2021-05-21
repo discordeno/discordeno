@@ -6,7 +6,5 @@ export enum DiscordDefaultMessageNotificationLevels {
   OnlyMentions,
 }
 
-export type DefaultMessageNotificationLevels =
-  DiscordDefaultMessageNotificationLevels;
-export const DefaultMessageNotificationLevels =
-  DiscordDefaultMessageNotificationLevels;
+export type DefaultMessageNotificationLevels = DiscordDefaultMessageNotificationLevels;
+export const DefaultMessageNotificationLevels = DiscordDefaultMessageNotificationLevels;

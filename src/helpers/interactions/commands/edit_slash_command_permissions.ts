@@ -10,9 +10,7 @@ export async function editSlashCommandPermissions(
   commandId: bigint,
   options: ApplicationCommandPermissions[]
 ) {
-  return await rest.runMethod(
-    "put",
-    endpoints.COMMANDS_PERMISSION(applicationId, guildId, commandId),
-    { permissions: snakelize(options) }
-  );
+  return await rest.runMethod("put", endpoints.COMMANDS_PERMISSION(applicationId, guildId, commandId), {
+    permissions: snakelize(options),
+  });
 }

@@ -2,10 +2,7 @@ export class Collection<K, V> extends Map<K, V> {
   maxSize?: number;
   private sweeper?: CollectionSweeper<K, V> & { intervalId?: number };
 
-  constructor(
-    entries?: (readonly (readonly [K, V])[] | null) | Map<K, V>,
-    options?: CollectionOptions<K, V>
-  ) {
+  constructor(entries?: (readonly (readonly [K, V])[] | null) | Map<K, V>, options?: CollectionOptions<K, V>) {
     super(entries ?? []);
 
     this.maxSize = options?.maxSize;
@@ -106,10 +103,7 @@ export class Collection<K, V> extends Map<K, V> {
     return true;
   }
 
-  reduce<T>(
-    callback: (accumulator: T, value: V, key: K) => T,
-    initialValue?: T
-  ): T {
+  reduce<T>(callback: (accumulator: T, value: V, key: K) => T, initialValue?: T): T {
     let accumulator: T = initialValue!;
 
     for (const key of this.keys()) {

@@ -8,10 +8,7 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 export async function getChannelInvites(channelId: bigint) {
   await requireBotChannelPermissions(channelId, ["MANAGE_CHANNELS"]);
 
-  const result = await rest.runMethod<Invite[]>(
-    "get",
-    endpoints.CHANNEL_INVITES(channelId)
-  );
+  const result = await rest.runMethod<Invite[]>("get", endpoints.CHANNEL_INVITES(channelId));
 
   return new Collection(result.map((invite) => [invite.code, invite]));
 }

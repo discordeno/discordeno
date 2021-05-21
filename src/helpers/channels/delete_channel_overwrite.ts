@@ -10,8 +10,5 @@ export async function deleteChannelOverwrite(
 ): Promise<undefined> {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
-  return await rest.runMethod<undefined>(
-    "delete",
-    endpoints.CHANNEL_OVERWRITE(channelId, overwriteId)
-  );
+  return await rest.runMethod<undefined>("delete", endpoints.CHANNEL_OVERWRITE(channelId, overwriteId));
 }

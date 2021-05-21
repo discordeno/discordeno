@@ -23,6 +23,4 @@ export interface CreateMessage {
 }
 
 /** https://discord.com/developers/docs/resources/channel#create-message */
-export type DiscordCreateMessage = SnakeCasedPropertiesDeep<
-  Omit<CreateMessage, "file">
->;
+export type DiscordCreateMessage = SnakeCasedPropertiesDeep<Omit<CreateMessage, "file">>;

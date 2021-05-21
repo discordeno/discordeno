@@ -60,18 +60,12 @@ const baseRole: Partial<DiscordenoVoiceState> = {
 };
 
 // deno-lint-ignore require-await
-export async function createDiscordenoVoiceState(
-  guildId: bigint,
-  data: VoiceState
-) {
+export async function createDiscordenoVoiceState(guildId: bigint, data: VoiceState) {
   let bitfield = 0n;
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const [key, value] of Object.entries(data)) {
-    eventHandlers.debug?.(
-      "loop",
-      `Running for of loop in createDiscordenoVoiceState function.`
-    );
+    eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoVoiceState function.`);
 
     // We don't need to cache member twice. It will be in cache.members
     if (key === "member") continue;
@@ -83,11 +77,7 @@ export async function createDiscordenoVoiceState(
     }
 
     props[key] = createNewProp(
-      VOICE_STATE_SNOWFLAKES.includes(key)
-        ? value
-          ? snowflakeToBigint(value)
-          : undefined
-        : value
+      VOICE_STATE_SNOWFLAKES.includes(key) ? (value ? snowflakeToBigint(value) : undefined) : value
     );
   }
 
@@ -100,8 +90,7 @@ export async function createDiscordenoVoiceState(
   return voiceState;
 }
 
-export interface DiscordenoVoiceState
-  extends Omit<VoiceState, "channelId" | "guildId" | "userId" | "member"> {
+export interface DiscordenoVoiceState extends Omit<VoiceState, "channelId" | "guildId" | "userId" | "member"> {
   /** The guild id */
   guildId: bigint;
   /** The channel id this user is connected to */

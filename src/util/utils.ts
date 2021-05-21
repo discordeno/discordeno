@@ -36,14 +36,8 @@ export function delay(ms: number): Promise<void> {
   );
 }
 
-export const formatImageURL = (
-  url: string,
-  size: DiscordImageSize = 128,
-  format?: DiscordImageFormat
-) => {
-  return `${url}.${
-    format || (url.includes("/a_") ? "gif" : "jpg")
-  }?size=${size}`;
+export const formatImageURL = (url: string, size: DiscordImageSize = 128, format?: DiscordImageFormat) => {
+  return `${url}.${format || (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
 };
 
 function camelToSnakeCase(text: string) {
@@ -51,18 +45,11 @@ function camelToSnakeCase(text: string) {
 }
 
 function snakeToCamelCase(text: string) {
-  return text.replace(/([-_][a-z])/gi, ($1) =>
-    $1.toUpperCase().replace("_", "")
-  );
+  return text.replace(/([-_][a-z])/gi, ($1) => $1.toUpperCase().replace("_", ""));
 }
 
 function isConvertableObject(obj: unknown) {
-  return (
-    obj === Object(obj) &&
-    !Array.isArray(obj) &&
-    typeof obj !== "function" &&
-    !(obj instanceof Blob)
-  );
+  return obj === Object(obj) && !Array.isArray(obj) && typeof obj !== "function" && !(obj instanceof Blob);
 }
 
 export function snakelize<T>(
@@ -74,10 +61,7 @@ export function snakelize<T>(
     const convertedObject: Record<string, any> = {};
 
     Object.keys(obj).forEach((key) => {
-      eventHandlers.debug?.(
-        "loop",
-        `Running forEach loop in snakelize function.`
-      );
+      eventHandlers.debug?.("loop", `Running forEach loop in snakelize function.`);
       convertedObject[camelToSnakeCase(key)] = snakelize(
         // deno-lint-ignore no-explicit-any
         (obj as Record<string, any>)[key]
@@ -101,10 +85,7 @@ export function camelize<T>(
     const convertedObject: Record<string, any> = {};
 
     Object.keys(obj).forEach((key) => {
-      eventHandlers.debug?.(
-        "loop",
-        `Running forEach loop in camelize function.`
-      );
+      eventHandlers.debug?.("loop", `Running forEach loop in camelize function.`);
       convertedObject[snakeToCamelCase(key)] = camelize(
         // deno-lint-ignore no-explicit-any
         (obj as Record<string, any>)[key]
@@ -125,21 +106,15 @@ function validateSlashOptionChoices(
   optionType: DiscordApplicationCommandOptionTypes
 ) {
   for (const choice of choices) {
-    eventHandlers.debug?.(
-      "loop",
-      `Running for of loop in validateSlashOptionChoices function.`
-    );
+    eventHandlers.debug?.("loop", `Running for of loop in validateSlashOptionChoices function.`);
     if (!validateLength(choice.name, { min: 1, max: 100 })) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
 
     if (
       (optionType === DiscordApplicationCommandOptionTypes.String &&
-        (typeof choice.value !== "string" ||
-          choice.value.length < 1 ||
-          choice.value.length > 100)) ||
-      (optionType === DiscordApplicationCommandOptionTypes.Integer &&
-        typeof choice.value !== "number")
+        (typeof choice.value !== "string" || choice.value.length < 1 || choice.value.length > 100)) ||
+      (optionType === DiscordApplicationCommandOptionTypes.Integer && typeof choice.value !== "number")
     ) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
     }
@@ -149,10 +124,7 @@ function validateSlashOptionChoices(
 /** @private */
 function validateSlashOptions(options: ApplicationCommandOption[]) {
   for (const option of options) {
-    eventHandlers.debug?.(
-      "loop",
-      `Running for of loop in validateSlashOptions function.`
-    );
+    eventHandlers.debug?.("loop", `Running for of loop in validateSlashOptions function.`);
     if (
       option.choices?.length &&
       (option.choices.length > 25 ||
@@ -180,22 +152,17 @@ export function validateSlashCommands(
   create = false
 ) {
   for (const command of commands) {
-    eventHandlers.debug?.(
-      "loop",
-      `Running for of loop in validateSlashCommands function.`
-    );
+    eventHandlers.debug?.("loop", `Running for of loop in validateSlashCommands function.`);
     if (
       (command.name &&
-        (!SLASH_COMMANDS_NAME_REGEX.test(command.name) ||
-          command.name.toLowerCase() !== command.name)) ||
+        (!SLASH_COMMANDS_NAME_REGEX.test(command.name) || command.name.toLowerCase() !== command.name)) ||
       (create && !command.name)
     ) {
       throw new Error(Errors.INVALID_SLASH_NAME);
     }
 
     if (
-      (command.description &&
-        !validateLength(command.description, { min: 1, max: 100 })) ||
+      (command.description && !validateLength(command.description, { min: 1, max: 100 })) ||
       (create && !command.description)
     ) {
       throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
@@ -243,10 +210,7 @@ export function validateComponents(components: MessageComponents) {
         throw new Error(Errors.COMPONENT_LABEL_TOO_BIG);
       }
 
-      if (
-        component.customId &&
-        !validateLength(component.customId, { max: 100 })
-      ) {
+      if (component.customId && !validateLength(component.customId, { max: 100 })) {
         throw new Error(Errors.COMPONENT_CUSTOM_ID_TOO_BIG);
       }
 

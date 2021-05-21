@@ -26,21 +26,14 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
   }
 
   if (options.topic && channel.topic !== options.topic) {
-    throw new Error(
-      "The channel was supposed to have a topic but it does not appear to be the same topic."
-    );
+    throw new Error("The channel was supposed to have a topic but it does not appear to be the same topic.");
   }
 
   if (options.bitrate && channel.bitrate !== options.bitrate) {
-    throw new Error(
-      "The channel was supposed to have a bitrate but it does not appear to be the same bitrate."
-    );
+    throw new Error("The channel was supposed to have a bitrate but it does not appear to be the same bitrate.");
   }
 
-  if (
-    options.permissionOverwrites &&
-    channel.permissionOverwrites?.length !== options.permissionOverwrites.length
-  ) {
+  if (options.permissionOverwrites && channel.permissionOverwrites?.length !== options.permissionOverwrites.length) {
     throw new Error(
       "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites."
     );

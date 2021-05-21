@@ -21,10 +21,7 @@ export async function updateBotVoiceState(
 ) {
   return await rest.runMethod(
     "patch",
-    endpoints.UPDATE_VOICE_STATE(
-      guildId,
-      hasOwnProperty(options, "userId") ? options.userId : undefined
-    ),
+    endpoints.UPDATE_VOICE_STATE(guildId, hasOwnProperty(options, "userId") ? options.userId : undefined),
     snakelize(options)
   );
 }

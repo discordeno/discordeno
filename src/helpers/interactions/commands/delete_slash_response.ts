@@ -7,11 +7,7 @@ export async function deleteSlashResponse(token: string, messageId?: bigint) {
   return await rest.runMethod<undefined>(
     "delete",
     messageId
-      ? endpoints.INTERACTION_ID_TOKEN_MESSAGE_ID(
-          applicationId,
-          token,
-          messageId
-        )
+      ? endpoints.INTERACTION_ID_TOKEN_MESSAGE_ID(applicationId, token, messageId)
       : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationId, token)
   );
 }

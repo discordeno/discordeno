@@ -19,13 +19,9 @@ export async function getGuild(
     addToCache: true,
   }
 ) {
-  const result = await rest.runMethod<Guild>(
-    "get",
-    endpoints.GUILDS_BASE(guildId),
-    {
-      with_counts: options.counts,
-    }
-  );
+  const result = await rest.runMethod<Guild>("get", endpoints.GUILDS_BASE(guildId), {
+    with_counts: options.counts,
+  });
 
   const guild = await structures.createDiscordenoGuild(
     result,

@@ -5,15 +5,12 @@ import { ws } from "./ws.ts";
 export async function resharder() {
   ws.botGatewayData = await getGatewayBot();
 
-  const percentage =
-    ((ws.botGatewayData.shards - ws.maxShards) / ws.maxShards) * 100;
+  const percentage = ((ws.botGatewayData.shards - ws.maxShards) / ws.maxShards) * 100;
   // Less than necessary% being used so do nothing
   if (percentage < ws.reshardPercentage) return;
 
   // Don't have enough identify rate limits to reshard
-  if (
-    ws.botGatewayData.sessionStartLimit.remaining < ws.botGatewayData.shards
-  ) {
+  if (ws.botGatewayData.sessionStartLimit.remaining < ws.botGatewayData.shards) {
     return;
   }
 

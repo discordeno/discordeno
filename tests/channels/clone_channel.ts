@@ -10,16 +10,10 @@ import { assertEquals, assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
-async function ifItFailsBlameWolf(
-  options: CreateGuildChannel,
-  useGetter = false,
-  reason?: string
-) {
+async function ifItFailsBlameWolf(options: CreateGuildChannel, useGetter = false, reason?: string) {
   const channel = await createChannel(tempData.guildId, options);
 
-  const cloned = useGetter
-    ? await channel.clone(reason)
-    : await cloneChannel(channel.id, reason);
+  const cloned = useGetter ? await channel.clone(reason) : await cloneChannel(channel.id, reason);
 
   //Assertations
   assertExists(cloned);
@@ -33,21 +27,14 @@ async function ifItFailsBlameWolf(
   }
 
   if (channel.topic && cloned.topic !== channel.topic) {
-    throw new Error(
-      "The clone was supposed to have a topic but it does not appear to be the same topic."
-    );
+    throw new Error("The clone was supposed to have a topic but it does not appear to be the same topic.");
   }
 
   if (channel.bitrate && cloned.bitrate !== channel.bitrate) {
-    throw new Error(
-      "The clone was supposed to have a bitrate but it does not appear to be the same bitrate."
-    );
+    throw new Error("The clone was supposed to have a bitrate but it does not appear to be the same bitrate.");
   }
 
-  if (
-    channel.permissionOverwrites &&
-    cloned.permissionOverwrites?.length !== channel.permissionOverwrites.length
-  ) {
+  if (channel.permissionOverwrites && cloned.permissionOverwrites?.length !== channel.permissionOverwrites.length) {
     throw new Error(
       "The clone was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites."
     );
@@ -65,11 +52,7 @@ Deno.test({
 Deno.test({
   name: "[channel] clone a new text channel w/reason",
   async fn() {
-    await ifItFailsBlameWolf(
-      { name: "Discordeno-clone-test" },
-      false,
-      "w/reason"
-    );
+    await ifItFailsBlameWolf({ name: "Discordeno-clone-test" }, false, "w/reason");
   },
   ...defaultTestOptions,
 });
@@ -219,11 +202,7 @@ Deno.test({
 Deno.test({
   name: "[channel] clone a new text channel with NSFW w/reason",
   async fn() {
-    await ifItFailsBlameWolf(
-      { name: "Discordeno-clone-test", nsfw: true },
-      false,
-      "w/reason"
-    );
+    await ifItFailsBlameWolf({ name: "Discordeno-clone-test", nsfw: true }, false, "w/reason");
   },
   ...defaultTestOptions,
 });
@@ -281,11 +260,7 @@ Deno.test({
 Deno.test({
   name: "[channel] clone() a new text channel w/reason",
   async fn() {
-    await ifItFailsBlameWolf(
-      { name: "Discordeno-clone-test" },
-      true,
-      "w/reason"
-    );
+    await ifItFailsBlameWolf({ name: "Discordeno-clone-test" }, true, "w/reason");
   },
   ...defaultTestOptions,
 });
@@ -442,10 +417,7 @@ Deno.test({
 Deno.test({
   name: "[channel] clone() a new text channel with NSFW",
   async fn() {
-    await ifItFailsBlameWolf(
-      { name: "Discordeno-clone-test", nsfw: true },
-      true
-    );
+    await ifItFailsBlameWolf({ name: "Discordeno-clone-test", nsfw: true }, true);
   },
   ...defaultTestOptions,
 });
@@ -453,11 +425,7 @@ Deno.test({
 Deno.test({
   name: "[channel] clone() a new text channel with NSFW w/reason",
   async fn() {
-    await ifItFailsBlameWolf(
-      { name: "Discordeno-clone-test", nsfw: true },
-      true,
-      "w/reason"
-    );
+    await ifItFailsBlameWolf({ name: "Discordeno-clone-test", nsfw: true }, true, "w/reason");
   },
   ...defaultTestOptions,
 });

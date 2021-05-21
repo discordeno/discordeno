@@ -9,9 +9,5 @@ export async function batchEditSlashCommandPermissions(
   guildId: bigint,
   options: { id: string; permissions: ApplicationCommandPermissions[] }[]
 ) {
-  return await rest.runMethod(
-    "put",
-    endpoints.COMMANDS_PERMISSIONS(applicationId, guildId),
-    snakelize(options)
-  );
+  return await rest.runMethod("put", endpoints.COMMANDS_PERMISSIONS(applicationId, guildId), snakelize(options));
 }

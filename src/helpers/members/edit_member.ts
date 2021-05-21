@@ -7,10 +7,7 @@ import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { bigintToSnowflake } from "../../util/bigint.ts";
 import { endpoints } from "../../util/constants.ts";
-import {
-  requireBotChannelPermissions,
-  requireBotGuildPermissions,
-} from "../../util/permissions.ts";
+import { requireBotChannelPermissions, requireBotGuildPermissions } from "../../util/permissions.ts";
 import { snakelize } from "../../util/utils.ts";
 
 /** Edit the member */
@@ -36,9 +33,7 @@ export async function editMember(
     typeof options.channelId !== "undefined" ||
     "null"
   ) {
-    const memberVoiceState = (
-      await cacheHandlers.get("guilds", guildId)
-    )?.voiceStates.get(memberId);
+    const memberVoiceState = (await cacheHandlers.get("guilds", guildId))?.voiceStates.get(memberId);
 
     if (!memberVoiceState?.channelId) {
       throw new Error(Errors.MEMBER_NOT_IN_VOICE_CHANNEL);
@@ -53,18 +48,11 @@ export async function editMember(
     }
 
     if (options.channelId) {
-      const requiredVoicePerms: Set<PermissionStrings> = new Set([
-        "CONNECT",
-        "MOVE_MEMBERS",
-      ]);
+      const requiredVoicePerms: Set<PermissionStrings> = new Set(["CONNECT", "MOVE_MEMBERS"]);
       if (memberVoiceState) {
-        await requireBotChannelPermissions(memberVoiceState?.channelId, [
-          ...requiredVoicePerms,
-        ]);
+        await requireBotChannelPermissions(memberVoiceState?.channelId, [...requiredVoicePerms]);
       }
-      await requireBotChannelPermissions(options.channelId, [
-        ...requiredVoicePerms,
-      ]);
+      await requireBotChannelPermissions(options.channelId, [...requiredVoicePerms]);
     }
   }
 
@@ -75,9 +63,7 @@ export async function editMember(
     endpoints.GUILD_MEMBER(guildId, memberId),
     snakelize({
       ...options,
-      channelId: options.channelId
-        ? bigintToSnowflake(options.channelId)
-        : undefined,
+      channelId: options.channelId ? bigintToSnowflake(options.channelId) : undefined,
     }) as ModifyGuildMember
   );
 
