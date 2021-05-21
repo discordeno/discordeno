@@ -13,7 +13,7 @@ import { DiscordSystemChannelFlags } from "./system_channel_flags.ts";
 import { DiscordVerificationLevels } from "./verification_levels.ts";
 import { WelcomeScreen } from "./welcome_screen.ts";
 import type { StageInstance } from "../channels/stage_instance.ts";
-import { GuildNSFWLevel } from "./guild_nsfw_level.ts"
+import { GuildNSFWLevel } from "./guild_nsfw_level.ts";
 
 /** https://discord.com/developers/docs/resources/guild#guild-object */
 export interface Guild {
