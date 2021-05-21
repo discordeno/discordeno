@@ -9,7 +9,7 @@ import { addRole } from "../helpers/roles/add_role.ts";
 import { removeRole } from "../helpers/roles/remove_role.ts";
 import type { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
 import type { ModifyGuildMember } from "../types/guilds/modify_guild_member.ts";
-import type { GuildMember, GuildMemberWithUser } from "../types/members/guild_member.ts";
+import type { GuildMember } from "../types/members/guild_member.ts";
 import type { CreateMessage } from "../types/messages/create_message.ts";
 import type { DiscordImageFormat } from "../types/misc/image_format.ts";
 import type { DiscordImageSize } from "../types/misc/image_size.ts";
@@ -102,13 +102,7 @@ const baseMember: Partial<DiscordenoMember> = {
   },
 };
 
-export async function createDiscordenoMember(
-  // The `user` param in `DiscordGuildMember` is optional since discord does not send it in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events. But this data in there is required to build this structure so it is required in this case
-  data: GuildMemberWithUser,
-  guildId: bigint
-) {
-  const { user, joinedAt, premiumSince } = data;
-
+export async function createDiscordenoMember(user: User, options?: { guildId: bigint; member: GuildMember }) {
   let bitfield = 0n;
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
 
@@ -147,15 +141,17 @@ export async function createDiscordenoMember(
     }
   }
 
-  // User was never cached before
-  member.guilds.set(guildId, {
-    nick: data.nick,
-    roles: data.roles.map((id) => snowflakeToBigint(id)),
-    joinedAt: joinedAt ? Date.parse(joinedAt) : undefined,
-    premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
-    deaf: data.deaf,
-    mute: data.mute,
-  });
+  if (options) {
+    // User was never cached before
+    member.guilds.set(options.guildId, {
+      nick: options.member.nick,
+      roles: options.member.roles.map((id) => snowflakeToBigint(id)),
+      joinedAt: options.member.joinedAt ? Date.parse(options.member.joinedAt) : undefined,
+      premiumSince: options.member.premiumSince ? Date.parse(options.member.premiumSince) : undefined,
+      deaf: options.member.deaf,
+      mute: options.member.mute,
+    });
+  }
 
   return member;
 }
@@ -196,7 +192,9 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id"> {
   /** Get the nickname or the username if no nickname */
   name(guildId: bigint): string;
   /** Get the guild member object for the specified guild */
-  guildMember(guildId: bigint):
+  guildMember(
+    guildId: bigint
+  ):
     | (Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
         joinedAt?: number;
         premiumSince?: number;
