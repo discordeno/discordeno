@@ -25,7 +25,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   // Delay the execution by 5 seconds to allow MESSAGE_REACTION_ALL event to be processed
   await delayUntil(
     10000,
-    () => cache.messages.get(message.id)?.reactions?.length === 3,
+    () => cache.messages.get(message.id)?.reactions?.length === 3
   );
 
   // Be sure that the message has the reactions
@@ -40,7 +40,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   // Delay the execution by 5 seconds to allow MESSAGE_REACTION_REMOVE_ALL event to be processed
   await delayUntil(
     10000,
-    () => cache.messages.get(message.id)?.reactions === undefined,
+    () => cache.messages.get(message.id)?.reactions === undefined
   );
 
   // Check if the reactions has been deleted

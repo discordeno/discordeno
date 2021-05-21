@@ -33,7 +33,7 @@ Deno.test({
 
     if (!cache.channels.has(category.id)) {
       throw new Error(
-        "The channel seemed to be created but it was not cached.",
+        "The channel seemed to be created but it was not cached."
       );
     }
 
@@ -50,16 +50,13 @@ Deno.test({
 
     if (!cache.channels.has(channel.id)) {
       throw new Error(
-        "The channel seemed to be created but it was not cached.",
+        "The channel seemed to be created but it was not cached."
       );
     }
 
     const isSynced = await isChannelSynced(channel.id);
 
-    assertEquals(
-      isSynced,
-      true,
-    );
+    assertEquals(isSynced, true);
   },
   ...defaultTestOptions,
 });

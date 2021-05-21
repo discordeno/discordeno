@@ -30,7 +30,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel) {
     channel.permissionOverwrites?.length !== options.permissionOverwrites.length
   ) {
     throw new Error(
-      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites.",
+      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites."
     );
   }
 
@@ -40,15 +40,13 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel) {
     deny: [],
   });
 
-  await delayUntil(
-    10000,
-    () =>
-      channelOverwriteHasPermission(
-        channel.guildId,
-        botId,
-        cache.channels.get(channel.id)?.permissionOverwrites || [],
-        ["VIEW_CHANNEL", "ADD_REACTIONS"],
-      ),
+  await delayUntil(10000, () =>
+    channelOverwriteHasPermission(
+      channel.guildId,
+      botId,
+      cache.channels.get(channel.id)?.permissionOverwrites || [],
+      ["VIEW_CHANNEL", "ADD_REACTIONS"]
+    )
   );
 
   assertEquals(
@@ -56,28 +54,26 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel) {
       channel.guildId,
       botId,
       cache.channels.get(channel.id)?.permissionOverwrites || [],
-      ["VIEW_CHANNEL", "ADD_REACTIONS"],
+      ["VIEW_CHANNEL", "ADD_REACTIONS"]
     ),
-    true,
+    true
   );
 }
 
 Deno.test({
   name: "[channel] edit channel permission overwrites",
   async fn() {
-    await ifItFailsBlameWolf(
-      {
-        name: "Discordeno-test",
-        permissionOverwrites: [
-          {
-            id: bigintToSnowflake(botId),
-            type: DiscordOverwriteTypes.Member,
-            allow: ["VIEW_CHANNEL"],
-            deny: [],
-          },
-        ],
-      },
-    );
+    await ifItFailsBlameWolf({
+      name: "Discordeno-test",
+      permissionOverwrites: [
+        {
+          id: bigintToSnowflake(botId),
+          type: DiscordOverwriteTypes.Member,
+          allow: ["VIEW_CHANNEL"],
+          deny: [],
+        },
+      ],
+    });
   },
   ...defaultTestOptions,
 });

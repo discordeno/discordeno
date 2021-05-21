@@ -8,11 +8,11 @@ import { snakelize } from "../../../util/utils.ts";
 export async function editSlashCommandPermissions(
   guildId: bigint,
   commandId: bigint,
-  options: ApplicationCommandPermissions[],
+  options: ApplicationCommandPermissions[]
 ) {
   return await rest.runMethod(
     "put",
     endpoints.COMMANDS_PERMISSION(applicationId, guildId, commandId),
-    { permissions: snakelize(options) },
+    { permissions: snakelize(options) }
   );
 }

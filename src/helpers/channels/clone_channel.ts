@@ -26,20 +26,20 @@ export async function cloneChannel(channelId: bigint, reason?: string) {
     parentId: channelToClone.parentId
       ? bigintToSnowflake(channelToClone.parentId)
       : undefined,
-    permissionOverwrites: channelToClone.permissionOverwrites.map((
-      overwrite,
-    ) => ({
-      id: overwrite.id.toString(),
-      type: overwrite.type,
-      allow: calculatePermissions(overwrite.allow.toString()),
-      deny: calculatePermissions(overwrite.deny.toString()),
-    })),
+    permissionOverwrites: channelToClone.permissionOverwrites.map(
+      (overwrite) => ({
+        id: overwrite.id.toString(),
+        type: overwrite.type,
+        allow: calculatePermissions(overwrite.allow.toString()),
+        deny: calculatePermissions(overwrite.deny.toString()),
+      })
+    ),
   };
 
   //Create the channel (also handles permissions)
   return await helpers.createChannel(
     channelToClone.guildId!,
     createChannelOptions,
-    reason,
+    reason
   );
 }

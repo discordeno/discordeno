@@ -20,7 +20,7 @@ export function createRequestBody(queuedRequest: {
   // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
   if (queuedRequest.payload.body?.reason) {
     headers["X-Audit-Log-Reason"] = encodeURIComponent(
-      queuedRequest.payload.body.reason as string,
+      queuedRequest.payload.body.reason as string
     );
   }
 
@@ -40,13 +40,13 @@ export function createRequestBody(queuedRequest: {
       form.append(
         `file${i}`,
         (queuedRequest.payload.body.file as FileContent[])[i].blob,
-        (queuedRequest.payload.body.file as FileContent[])[i].name,
+        (queuedRequest.payload.body.file as FileContent[])[i].name
       );
     }
 
     form.append(
       "payload_json",
-      JSON.stringify({ ...queuedRequest.payload.body, file: undefined }),
+      JSON.stringify({ ...queuedRequest.payload.body, file: undefined })
     );
     queuedRequest.payload.body.file = form;
   } else if (

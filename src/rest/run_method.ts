@@ -9,7 +9,7 @@ export async function runMethod<T = any>(
   url: string,
   body?: unknown,
   retryCount = 0,
-  bucketId?: string,
+  bucketId?: string
 ): Promise<T> {
   if (body) {
     body = loopObject(
@@ -20,7 +20,7 @@ export async function runMethod<T = any>(
           : Array.isArray(value)
           ? value.map((v) => (typeof v === "bigint" ? v.toString() : v))
           : value,
-      `Running forEach loop in runMethod function for changing bigints to strings.`,
+      `Running forEach loop in runMethod function for changing bigints to strings.`
     );
   }
 
@@ -68,14 +68,14 @@ export async function runMethod<T = any>(
           resolve(
             data.status !== 204
               ? camelize<T>(JSON.parse(data.body ?? "{}"))
-              : ((undefined as unknown) as T),
+              : (undefined as unknown as T)
           ),
       },
       {
         bucketId,
         body: body as Record<string, unknown> | undefined,
         retryCount,
-      },
+      }
     );
   });
 }

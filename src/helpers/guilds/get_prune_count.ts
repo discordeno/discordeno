@@ -8,7 +8,7 @@ import { snakelize } from "../../util/utils.ts";
 /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
 export async function getPruneCount(
   guildId: bigint,
-  options?: GetGuildPruneCountQuery,
+  options?: GetGuildPruneCountQuery
 ) {
   if (options?.days && options.days < 1) throw new Error(Errors.PRUNE_MIN_DAYS);
   if (options?.days && options.days > 30) {
@@ -20,7 +20,7 @@ export async function getPruneCount(
   const result = await rest.runMethod(
     "get",
     endpoints.GUILD_PRUNE(guildId),
-    snakelize(options ?? {}),
+    snakelize(options ?? {})
   );
 
   return result.pruned as number;

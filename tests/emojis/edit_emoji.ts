@@ -16,14 +16,13 @@ Deno.test({
         name: "blamewolf",
         image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
         roles: [],
-      },
+      }
     );
 
     assertExists(emoji);
 
-    await delayUntil(
-      10000,
-      () => cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id!),
+    await delayUntil(10000, () =>
+      cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id!)
     );
 
     await editEmoji(tempData.guildId, emoji.id!, {
@@ -34,12 +33,12 @@ Deno.test({
       10000,
       () =>
         cache.guilds.get(tempData.guildId)?.emojis?.get(emoji.id!)?.name ===
-          "blamewolf_infinite",
+        "blamewolf_infinite"
     );
 
     assertEquals(
       cache.guilds.get(tempData.guildId)?.emojis?.get(emoji.id!)?.name,
-      "blamewolf_infinite",
+      "blamewolf_infinite"
     );
   },
   ...defaultTestOptions,

@@ -7,13 +7,13 @@ import { ws } from "../../ws/ws.ts";
 
 export async function handleGuildDelete(
   data: DiscordGatewayPayload,
-  shardId: number,
+  shardId: number
 ) {
   const payload = data.d as UnavailableGuild;
 
   const guild = await cacheHandlers.get(
     "guilds",
-    snowflakeToBigint(payload.id),
+    snowflakeToBigint(payload.id)
   );
   if (!guild) return;
 
@@ -32,7 +32,7 @@ export async function handleGuildDelete(
   cacheHandlers.forEach("messages", (message) => {
     eventHandlers.debug?.(
       "loop",
-      `1. Running forEach messages loop in CHANNEL_DELTE file.`,
+      `1. Running forEach messages loop in CHANNEL_DELTE file.`
     );
     if (message.guildId === guild.id) {
       cacheHandlers.delete("messages", message.id);
@@ -42,7 +42,7 @@ export async function handleGuildDelete(
   cacheHandlers.forEach("channels", (channel) => {
     eventHandlers.debug?.(
       "loop",
-      `2. Running forEach channels loop in CHANNEL_DELTE file.`,
+      `2. Running forEach channels loop in CHANNEL_DELTE file.`
     );
     if (channel.guildId === guild.id) {
       cacheHandlers.delete("channels", channel.id);
@@ -52,7 +52,7 @@ export async function handleGuildDelete(
   cacheHandlers.forEach("members", (member) => {
     eventHandlers.debug?.(
       "loop",
-      `3. Running forEach members loop in CHANNEL_DELTE file.`,
+      `3. Running forEach members loop in CHANNEL_DELTE file.`
     );
     if (!member.guilds.has(guild.id)) return;
 

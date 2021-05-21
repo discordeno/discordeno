@@ -8,7 +8,7 @@ export async function pin(channelId: bigint, messageId: bigint) {
 
   return await rest.runMethod<undefined>(
     "put",
-    endpoints.CHANNEL_PIN(channelId, messageId),
+    endpoints.CHANNEL_PIN(channelId, messageId)
   );
 }
 

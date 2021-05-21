@@ -29,7 +29,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, _save = false) {
     channel.permissionOverwrites?.length !== options.permissionOverwrites.length
   ) {
     throw new Error(
-      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites.",
+      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites."
     );
   }
 
@@ -37,12 +37,12 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, _save = false) {
 
   await delayUntil(
     10000,
-    () => cache.channels.get(channel.id)?.permissionOverwrites?.length === 0,
+    () => cache.channels.get(channel.id)?.permissionOverwrites?.length === 0
   );
 
   if (cache.channels.get(channel.id)?.permissionOverwrites?.length !== 0) {
     throw new Error(
-      "The channel permission overwrite was supposed to be deleted but it does not appear to be.",
+      "The channel permission overwrite was supposed to be deleted but it does not appear to be."
     );
   }
 }
@@ -62,7 +62,7 @@ Deno.test({
           },
         ],
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,

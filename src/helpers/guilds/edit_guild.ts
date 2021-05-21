@@ -27,7 +27,7 @@ export async function editGuild(guildId: bigint, options: ModifyGuild) {
   const result = await rest.runMethod<Guild>(
     "patch",
     endpoints.GUILDS_BASE(guildId),
-    options,
+    options
   );
 
   const cached = await cacheHandlers.get("guilds", guildId);
@@ -35,8 +35,7 @@ export async function editGuild(guildId: bigint, options: ModifyGuild) {
     result,
     cached?.shardId ||
       Number(
-        (BigInt(result.id) >> 22n % BigInt(ws.botGatewayData.shards))
-          .toString(),
-      ),
+        (BigInt(result.id) >> 22n % BigInt(ws.botGatewayData.shards)).toString()
+      )
   );
 }

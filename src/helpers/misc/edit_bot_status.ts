@@ -7,7 +7,7 @@ export function editBotStatus(data: Omit<StatusUpdate, "afk" | "since">) {
   ws.shards.forEach((shard) => {
     eventHandlers.debug?.(
       "loop",
-      `Running forEach loop in editBotStatus function.`,
+      `Running forEach loop in editBotStatus function.`
     );
 
     ws.sendShardMessage(shard, {

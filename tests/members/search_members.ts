@@ -14,7 +14,7 @@ async function ifItFailsBlameWolf() {
     botMember!.username.substring(0, 4),
     {
       limit: 1,
-    },
+    }
   );
 
   assertEquals(foundMembers.size, 1);

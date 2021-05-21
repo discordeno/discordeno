@@ -6,7 +6,7 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 /** Follow a News Channel to send messages to a target channel. Requires the `MANAGE_WEBHOOKS` permission in the target channel. Returns the webhook id. */
 export async function followChannel(
   sourceChannelId: bigint,
-  targetChannelId: bigint,
+  targetChannelId: bigint
 ) {
   await requireBotChannelPermissions(targetChannelId, ["MANAGE_WEBHOOKS"]);
 
@@ -15,7 +15,7 @@ export async function followChannel(
     endpoints.CHANNEL_FOLLOW(sourceChannelId),
     {
       webhook_channel_id: targetChannelId,
-    },
+    }
   );
 
   return data.webhookId;

@@ -9,7 +9,7 @@ export async function handleGuildRoleCreate(data: DiscordGatewayPayload) {
   const payload = data.d as GuildRoleCreate;
   const guild = await cacheHandlers.get(
     "guilds",
-    snowflakeToBigint(payload.guildId),
+    snowflakeToBigint(payload.guildId)
   );
   if (!guild) return;
 

@@ -12,7 +12,7 @@ import {
 export async function editRole(
   guildId: bigint,
   id: bigint,
-  options: CreateGuildRole,
+  options: CreateGuildRole
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
@@ -24,7 +24,7 @@ export async function editRole(
       permissions: options.permissions
         ? calculateBits(options.permissions)
         : undefined,
-    },
+    }
   );
 
   return await structures.createDiscordenoRole({ role: result, guildId });

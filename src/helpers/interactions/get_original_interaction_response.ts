@@ -8,7 +8,7 @@ import { endpoints } from "../../util/constants.ts";
 export async function getOriginalInteractionResponse(token: string) {
   const result = await rest.runMethod<Message>(
     "get",
-    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationId, token),
+    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationId, token)
   );
 
   return await structures.createDiscordenoMessage(result);

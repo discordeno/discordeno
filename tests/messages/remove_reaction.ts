@@ -20,7 +20,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", user = false) {
   // Delay the execution by 5 seconds to allow MESSAGE_REACTION_ALL event to be processed
   await delayUntil(
     10000,
-    () => cache.messages.get(message.id)?.reactions?.length === 1,
+    () => cache.messages.get(message.id)?.reactions?.length === 1
   );
 
   // Be sure that the message has the reactions
@@ -31,7 +31,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", user = false) {
       message.channelId,
       message.id,
       "❤",
-      user ? { userId: message.authorId } : undefined,
+      user ? { userId: message.authorId } : undefined
     );
   } else {
     await message.removeReaction("❤", user ? message.authorId : undefined);
@@ -40,7 +40,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", user = false) {
   // Delay the execution by 5 seconds to allow MESSAGE_REACTION_REMOVE_ALL event to be processed
   await delayUntil(
     10000,
-    () => cache.messages.get(message.id)?.reactions === undefined,
+    () => cache.messages.get(message.id)?.reactions === undefined
   );
 
   // Check if the reactions has been deleted

@@ -5,13 +5,13 @@ import type { GuildIntegrationsUpdate } from "../../types/integrations/guild_int
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleGuildIntegrationsUpdate(
-  data: DiscordGatewayPayload,
+  data: DiscordGatewayPayload
 ) {
   const payload = data.d as GuildIntegrationsUpdate;
 
   const guild = await cacheHandlers.get(
     "guilds",
-    snowflakeToBigint(payload.guildId),
+    snowflakeToBigint(payload.guildId)
   );
   if (!guild) return;
 

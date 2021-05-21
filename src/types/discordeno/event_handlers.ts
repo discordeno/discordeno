@@ -46,7 +46,7 @@ export type EventHandlersDefinitions = {
   channelPinsUpdate: [
     channel: DiscordenoChannel,
     guild?: DiscordenoGuild,
-    lastPinTimestamp?: string | null,
+    lastPinTimestamp?: string | null
   ];
   debug: [args: string | DebugArg, data?: string];
   /** Sent before every event. Discordeno awaits the execution of this event before main event gets sent. */
@@ -57,7 +57,7 @@ export type EventHandlersDefinitions = {
   guildBanRemove: [
     guild: DiscordenoGuild,
     user: User,
-    member?: DiscordenoMember,
+    member?: DiscordenoMember
   ];
   /**
    * This event can be sent in three different scenarios:
@@ -84,7 +84,7 @@ export type EventHandlersDefinitions = {
   guildEmojisUpdate: [
     guild: DiscordenoGuild,
     emojis: Collection<bigint, Emoji>,
-    oldEmojis: Collection<bigint, Emoji>,
+    oldEmojis: Collection<bigint, Emoji>
   ];
   /** Sent when a new user joins a guild. */
   guildMemberAdd: [guild: DiscordenoGuild, member: DiscordenoMember];
@@ -92,23 +92,23 @@ export type EventHandlersDefinitions = {
   guildMemberRemove: [
     guild: DiscordenoGuild,
     user: User,
-    member?: DiscordenoMember,
+    member?: DiscordenoMember
   ];
   /** Sent when a guild member is updated. This will also fire when the user object of a guild member changes. */
   guildMemberUpdate: [
     guild: DiscordenoGuild,
     member: DiscordenoMember,
-    oldMember?: DiscordenoMember,
+    oldMember?: DiscordenoMember
   ];
   /** Sent when a user uses a Slash Command. */
   interactionCreate: [
     data: Omit<Interaction, "member">,
-    member?: DiscordenoMember,
+    member?: DiscordenoMember
   ];
   /** Sent when a user uses a Slash Command in a guild. */
   interactionGuildCreate: [
     data: Omit<Interaction, "member">,
-    member: DiscordenoMember,
+    member: DiscordenoMember
   ];
   /** Sent when a user uses a Slash Command in a dm. */
   interactionDMCreate: [data: Omit<Interaction, "member">];
@@ -117,7 +117,7 @@ export type EventHandlersDefinitions = {
   /** Sent when a message is deleted. */
   messageDelete: [
     partial: { id: string; channel: DiscordenoChannel },
-    message?: DiscordenoMessage,
+    message?: DiscordenoMessage
   ];
   /** Sent when a message is updated. */
   messageUpdate: [message: DiscordenoMessage, oldMessage: DiscordenoMessage];
@@ -126,7 +126,7 @@ export type EventHandlersDefinitions = {
     guild: DiscordenoGuild,
     member: DiscordenoMember,
     nickname: string,
-    oldNickname?: string,
+    oldNickname?: string
   ];
   /** A user's presence is their current state on a guild. This event is sent when a user's presence or info, such as name or avatar, is updated. */
   presenceUpdate: [presence: PresenceUpdate, oldPresence?: PresenceUpdate];
@@ -141,14 +141,14 @@ export type EventHandlersDefinitions = {
   /** Sent when a user explicitly removes all reactions from a message. */
   reactionRemoveAll: [
     payload: MessageReactionRemoveAll,
-    message?: DiscordenoMessage,
+    message?: DiscordenoMessage
   ];
   /** Sent when a bot removes all instances of a given emoji from the reactions of a message. */
   reactionRemoveEmoji: [
     emoji: Partial<Emoji>,
     messageId: bigint,
     channelId: bigint,
-    guildId?: bigint,
+    guildId?: bigint
   ];
   /** Sent when a guild role is created. */
   roleCreate: [guild: DiscordenoGuild, role: DiscordenoRole];
@@ -158,12 +158,12 @@ export type EventHandlersDefinitions = {
   roleUpdate: [
     guild: DiscordenoGuild,
     role: DiscordenoRole,
-    old: DiscordenoRole,
+    old: DiscordenoRole
   ];
   roleGained: [
     guild: DiscordenoGuild,
     member: DiscordenoMember,
-    roleId: bigint,
+    roleId: bigint
   ];
   roleLost: [guild: DiscordenoGuild, member: DiscordenoMember, roleId: bigint];
   shardReady: [shardId: number];
@@ -183,7 +183,7 @@ export type EventHandlersDefinitions = {
   threadListSync: [
     channels: Collection<bigint, DiscordenoChannel>,
     members: ThreadMember[],
-    guildId: bigint,
+    guildId: bigint
   ];
   /** Sent when the current users thread member is updated */
   threadMemberUpdate: [threadMember: ThreadMember];
@@ -201,7 +201,7 @@ export type EventHandlersDefinitions = {
   voiceChannelSwitch: [
     member: DiscordenoMember,
     channelId: bigint,
-    oldChannelId: bigint,
+    oldChannelId: bigint
   ];
   /** Sent when a voice server is updated with information for making the bot connect to a voice channel. */
   voiceServerUpdate: [payload: VoiceServerUpdate, guild: DiscordenoGuild];

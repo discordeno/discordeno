@@ -8,6 +8,6 @@ export async function deleteWebhook(channelId: bigint, webhookId: bigint) {
 
   return await rest.runMethod<undefined>(
     "delete",
-    endpoints.WEBHOOK_ID(webhookId),
+    endpoints.WEBHOOK_ID(webhookId)
   );
 }

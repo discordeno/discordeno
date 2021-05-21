@@ -12,22 +12,18 @@ import { endpoints } from "../../util/constants.ts";
 export async function getEmoji(
   guildId: bigint,
   emojiId: bigint,
-  addToCache = true,
+  addToCache = true
 ) {
   const result = await rest.runMethod<Emoji>(
     "get",
-    endpoints.GUILD_EMOJI(guildId, emojiId),
+    endpoints.GUILD_EMOJI(guildId, emojiId)
   );
 
   if (addToCache) {
     const guild = await cacheHandlers.get("guilds", guildId);
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
     guild.emojis.set(emojiId, result);
-    await cacheHandlers.set(
-      "guilds",
-      guildId,
-      guild,
-    );
+    await cacheHandlers.set("guilds", guildId, guild);
   }
 
   return result;

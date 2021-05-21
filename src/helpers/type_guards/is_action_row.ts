@@ -4,7 +4,7 @@ import { MessageComponentTypes } from "../../types/messages/components/message_c
 
 /** A type guard function to tell if it is a action row component */
 export function isActionRow(
-  component: MessageComponent,
+  component: MessageComponent
 ): component is ActionRow {
   return component.type === MessageComponentTypes.ActionRow;
 }

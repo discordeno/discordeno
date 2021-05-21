@@ -26,14 +26,15 @@ Deno.test({
     await delayUntil(
       10000,
       () =>
-        cache.channels.has(channel.id) && cache.channels.has(secondChannel.id),
+        cache.channels.has(channel.id) && cache.channels.has(secondChannel.id)
     );
 
     if (
-      !cache.channels.has(channel.id) || !cache.channels.has(secondChannel.id)
+      !cache.channels.has(channel.id) ||
+      !cache.channels.has(secondChannel.id)
     ) {
       throw new Error(
-        "The channel seemed to be created but it was not cached.",
+        "The channel seemed to be created but it was not cached."
       );
     }
 
@@ -53,17 +54,17 @@ Deno.test({
       10000,
       () =>
         cache.channels.get(channel.id)?.position === secondChannel.position &&
-        cache.channels.get(secondChannel.id)?.position === channel.position,
+        cache.channels.get(secondChannel.id)?.position === channel.position
     );
 
     assertEquals(
       cache.channels.get(channel.id)?.position,
-      secondChannel.position,
+      secondChannel.position
     );
 
     assertEquals(
       cache.channels.get(secondChannel.id)?.position,
-      channel.position,
+      channel.position
     );
   },
   ...defaultTestOptions,

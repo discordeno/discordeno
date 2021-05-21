@@ -9,14 +9,14 @@ export async function handleGuildMemberAdd(data: DiscordGatewayPayload) {
   const payload = data.d as GuildMemberAdd;
   const guild = await cacheHandlers.get(
     "guilds",
-    snowflakeToBigint(payload.guildId),
+    snowflakeToBigint(payload.guildId)
   );
   if (!guild) return;
 
   guild.memberCount++;
   const discordenoMember = await structures.createDiscordenoMember(
     payload,
-    guild.id,
+    guild.id
   );
   await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 

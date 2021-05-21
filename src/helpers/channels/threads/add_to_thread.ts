@@ -26,6 +26,6 @@ export async function addToThread(channelId: bigint, userId?: bigint) {
     "put",
     userId
       ? endpoints.THREAD_USER(channelId, userId)
-      : endpoints.THREAD_ME(channelId),
+      : endpoints.THREAD_ME(channelId)
   );
 }

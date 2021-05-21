@@ -17,7 +17,7 @@ export type ApplicationCommandInteractionDataOptionWithValue =
 
 interface ApplicationCommandInteractionDataOptionBase<
   T extends DiscordApplicationCommandOptionTypes,
-  V = unknown,
+  V = unknown
 > {
   /** The name of the parameter */
   name: string;
@@ -27,11 +27,9 @@ interface ApplicationCommandInteractionDataOptionBase<
   value: V;
 }
 
-export interface ApplicationCommandInteractionDataOptionSubCommand extends
-  Omit<
-    ApplicationCommandInteractionDataOptionBase<
-      DiscordApplicationCommandOptionTypes.SubCommand
-    >,
+export interface ApplicationCommandInteractionDataOptionSubCommand
+  extends Omit<
+    ApplicationCommandInteractionDataOptionBase<DiscordApplicationCommandOptionTypes.SubCommand>,
     "value"
   > {
   /** Present if this option is a group or subcommand */
@@ -39,13 +37,10 @@ export interface ApplicationCommandInteractionDataOptionSubCommand extends
 }
 
 export interface ApplicationCommandInteractionDataOptionSubCommandGroup
-  extends
-    Omit<
-      ApplicationCommandInteractionDataOptionBase<
-        DiscordApplicationCommandOptionTypes.SubCommandGroup
-      >,
-      "value"
-    > {
+  extends Omit<
+    ApplicationCommandInteractionDataOptionBase<DiscordApplicationCommandOptionTypes.SubCommandGroup>,
+    "value"
+  > {
   /** Present if this option is a group or subcommand */
   options?: ApplicationCommandInteractionDataOptionSubCommand[];
 }

@@ -10,10 +10,8 @@ export async function getChannelInvites(channelId: bigint) {
 
   const result = await rest.runMethod<Invite[]>(
     "get",
-    endpoints.CHANNEL_INVITES(channelId),
+    endpoints.CHANNEL_INVITES(channelId)
   );
 
-  return new Collection(
-    result.map((invite) => [invite.code, invite]),
-  );
+  return new Collection(result.map((invite) => [invite.code, invite]));
 }

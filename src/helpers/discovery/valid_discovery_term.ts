@@ -6,7 +6,7 @@ export async function validDiscoveryTerm(term: string) {
   const result = await rest.runMethod<ValidateDiscoverySearchTerm>(
     "get",
     endpoints.DISCOVERY_VALID_TERM,
-    { term },
+    { term }
   );
 
   return result.valid;

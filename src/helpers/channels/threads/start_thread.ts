@@ -12,7 +12,7 @@ import { snakelize } from "../../../util/utils.ts";
  */
 export async function startThread(
   channelId: bigint,
-  options: StartThread & { messageId?: bigint },
+  options: StartThread & { messageId?: bigint }
 ) {
   const channel = await cacheHandlers.get("channels", channelId);
   if (channel) {
@@ -33,6 +33,6 @@ export async function startThread(
     options?.messageId
       ? endpoints.THREAD_START_PUBLIC(channelId, options.messageId)
       : endpoints.THREAD_START_PRIVATE(channelId),
-    snakelize(options),
+    snakelize(options)
   );
 }

@@ -7,12 +7,10 @@ import { endpoints } from "../../util/constants.ts";
 export async function getDiscoveryCategories() {
   const result = await rest.runMethod<DiscoveryCategory[]>(
     "get",
-    endpoints.DISCOVERY_CATEGORIES,
+    endpoints.DISCOVERY_CATEGORIES
   );
 
   return new Collection<number, DiscoveryCategory>(
-    result.map(
-      (category) => [category.id, category],
-    ),
+    result.map((category) => [category.id, category])
   );
 }

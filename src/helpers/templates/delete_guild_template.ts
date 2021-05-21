@@ -9,12 +9,12 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
  */
 export async function deleteGuildTemplate(
   guildId: bigint,
-  templateCode: string,
+  templateCode: string
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
   return await rest.runMethod<Template>(
     "delete",
-    `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
+    `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`
   );
 }

@@ -6,7 +6,7 @@ import { endpoints } from "../../util/constants.ts";
 /** Returns the widget image URL for the guild. */
 export async function getWidgetImageURL(
   guildId: bigint,
-  options?: GetGuildWidgetImageQuery & { force?: boolean },
+  options?: GetGuildWidgetImageQuery & { force?: boolean }
 ) {
   if (!options?.force) {
     const guild = await cacheHandlers.get("guilds", guildId);
@@ -14,6 +14,7 @@ export async function getWidgetImageURL(
     if (!guild.widgetEnabled) throw new Error(Errors.GUILD_WIDGET_NOT_ENABLED);
   }
 
-  return `${endpoints.GUILD_WIDGET(guildId)}.png?style=${options?.style ??
-    "shield"}`;
+  return `${endpoints.GUILD_WIDGET(guildId)}.png?style=${
+    options?.style ?? "shield"
+  }`;
 }

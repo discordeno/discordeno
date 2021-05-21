@@ -38,7 +38,7 @@ Deno.test({
     await startBot({
       token,
       eventHandlers: {
-        ready: () => didReady = true,
+        ready: () => (didReady = true),
       },
       intents: [
         "GuildMessages",

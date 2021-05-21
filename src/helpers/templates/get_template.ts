@@ -6,6 +6,6 @@ import { endpoints } from "../../util/constants.ts";
 export async function getTemplate(templateCode: string) {
   return await rest.runMethod<Template>(
     "get",
-    endpoints.GUILD_TEMPLATE(templateCode),
+    endpoints.GUILD_TEMPLATE(templateCode)
   );
 }

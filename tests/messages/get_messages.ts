@@ -9,11 +9,11 @@ Deno.test({
     const message = await sendMessage(tempData.channelId, "Hello World!");
     const secondMessage = await sendMessage(
       tempData.channelId,
-      "Hello World 2!",
+      "Hello World 2!"
     );
     const thirdMessage = await sendMessage(
       tempData.channelId,
-      "Hello World 3!",
+      "Hello World 3!"
     );
 
     // Assertions
@@ -26,7 +26,7 @@ Deno.test({
       () =>
         cache.messages.has(message.id) &&
         cache.messages.has(secondMessage.id) &&
-        cache.messages.has(thirdMessage.id),
+        cache.messages.has(thirdMessage.id)
     );
     // Make sure the message was created.
     if (

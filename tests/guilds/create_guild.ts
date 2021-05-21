@@ -22,9 +22,9 @@ Deno.test({
 
     if (!cache.guilds.has(guild.id)) {
       throw new Error(
-        `The guild seemed to be created but it was not cached. ${
-          JSON.stringify(guild)
-        }`,
+        `The guild seemed to be created but it was not cached. ${JSON.stringify(
+          guild
+        )}`
       );
     }
   },

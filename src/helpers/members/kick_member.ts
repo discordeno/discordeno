@@ -12,7 +12,8 @@ export async function kick(guildId: bigint, memberId: bigint, reason?: string) {
   const botsHighestRole = await highestRole(guildId, botId);
   const membersHighestRole = await highestRole(guildId, memberId);
   if (
-    botsHighestRole && membersHighestRole &&
+    botsHighestRole &&
+    membersHighestRole &&
     botsHighestRole.position <= membersHighestRole.position
   ) {
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
@@ -23,7 +24,7 @@ export async function kick(guildId: bigint, memberId: bigint, reason?: string) {
   return await rest.runMethod<undefined>(
     "delete",
     endpoints.GUILD_MEMBER(guildId, memberId),
-    { reason },
+    { reason }
   );
 }
 

@@ -9,6 +9,6 @@ export async function getIntegrations(guildId: bigint) {
 
   return await rest.runMethod<Integration>(
     "get",
-    endpoints.GUILD_INTEGRATIONS(guildId),
+    endpoints.GUILD_INTEGRATIONS(guildId)
   );
 }

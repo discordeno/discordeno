@@ -11,7 +11,7 @@ import { validateSlashCommands } from "../../../util/utils.ts";
 export async function upsertSlashCommand(
   commandId: bigint,
   options: EditGlobalApplicationCommand,
-  guildId?: bigint,
+  guildId?: bigint
 ) {
   validateSlashCommands([options]);
 
@@ -20,6 +20,6 @@ export async function upsertSlashCommand(
     guildId
       ? endpoints.COMMANDS_GUILD_ID(applicationId, guildId, commandId)
       : endpoints.COMMANDS_ID(applicationId, commandId),
-    options,
+    options
   );
 }

@@ -13,7 +13,7 @@ import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 async function ifItFailsBlameWolf(
   options: CreateGuildChannel,
   useGetter = false,
-  reason?: string,
+  reason?: string
 ) {
   const channel = await createChannel(tempData.guildId, options);
 
@@ -34,13 +34,13 @@ async function ifItFailsBlameWolf(
 
   if (channel.topic && cloned.topic !== channel.topic) {
     throw new Error(
-      "The clone was supposed to have a topic but it does not appear to be the same topic.",
+      "The clone was supposed to have a topic but it does not appear to be the same topic."
     );
   }
 
   if (channel.bitrate && cloned.bitrate !== channel.bitrate) {
     throw new Error(
-      "The clone was supposed to have a bitrate but it does not appear to be the same bitrate.",
+      "The clone was supposed to have a bitrate but it does not appear to be the same bitrate."
     );
   }
 
@@ -49,7 +49,7 @@ async function ifItFailsBlameWolf(
     cloned.permissionOverwrites?.length !== channel.permissionOverwrites.length
   ) {
     throw new Error(
-      "The clone was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites.",
+      "The clone was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites."
     );
   }
 }
@@ -68,7 +68,7 @@ Deno.test({
     await ifItFailsBlameWolf(
       { name: "Discordeno-clone-test" },
       false,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,
@@ -77,12 +77,10 @@ Deno.test({
 Deno.test({
   name: "[channel] clone a new category channel",
   async fn() {
-    await ifItFailsBlameWolf(
-      {
-        name: "Discordeno-clone-test",
-        type: DiscordChannelTypes.GuildCategory,
-      },
-    );
+    await ifItFailsBlameWolf({
+      name: "Discordeno-clone-test",
+      type: DiscordChannelTypes.GuildCategory,
+    });
   },
   ...defaultTestOptions,
 });
@@ -96,7 +94,7 @@ Deno.test({
         type: DiscordChannelTypes.GuildCategory,
       },
       false,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,
@@ -105,12 +103,10 @@ Deno.test({
 Deno.test({
   name: "[channel] clone a new voice channel",
   async fn() {
-    await ifItFailsBlameWolf(
-      {
-        name: "Discordeno-clone-test",
-        type: DiscordChannelTypes.GuildVoice,
-      },
-    );
+    await ifItFailsBlameWolf({
+      name: "Discordeno-clone-test",
+      type: DiscordChannelTypes.GuildVoice,
+    });
   },
   ...defaultTestOptions,
 });
@@ -124,7 +120,7 @@ Deno.test({
         type: DiscordChannelTypes.GuildVoice,
       },
       false,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,
@@ -133,13 +129,11 @@ Deno.test({
 Deno.test({
   name: "[channel] clone a new voice channel with a bitrate",
   async fn() {
-    await ifItFailsBlameWolf(
-      {
-        name: "discordeno-clone-test",
-        type: DiscordChannelTypes.GuildVoice,
-        bitrate: 32000,
-      },
-    );
+    await ifItFailsBlameWolf({
+      name: "discordeno-clone-test",
+      type: DiscordChannelTypes.GuildVoice,
+      bitrate: 32000,
+    });
   },
   ...defaultTestOptions,
 });
@@ -154,7 +148,7 @@ Deno.test({
         bitrate: 32000,
       },
       false,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,
@@ -163,13 +157,11 @@ Deno.test({
 Deno.test({
   name: "[channel] clone a new voice channel with a user limit",
   async fn() {
-    await ifItFailsBlameWolf(
-      {
-        name: "Discordeno-clone-test",
-        type: DiscordChannelTypes.GuildVoice,
-        userLimit: 32,
-      },
-    );
+    await ifItFailsBlameWolf({
+      name: "Discordeno-clone-test",
+      type: DiscordChannelTypes.GuildVoice,
+      userLimit: 32,
+    });
   },
   ...defaultTestOptions,
 });
@@ -184,7 +176,7 @@ Deno.test({
         userLimit: 32,
       },
       false,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,
@@ -193,19 +185,16 @@ Deno.test({
 Deno.test({
   name: "[channel] clone a new text channel with a rate limit per user",
   async fn() {
-    await ifItFailsBlameWolf(
-      {
-        name: "Discordeno-clone-test",
-        rateLimitPerUser: 2423,
-      },
-    );
+    await ifItFailsBlameWolf({
+      name: "Discordeno-clone-test",
+      rateLimitPerUser: 2423,
+    });
   },
   ...defaultTestOptions,
 });
 
 Deno.test({
-  name:
-    "[channel] clone a new text channel with a rate limit per user w/reason",
+  name: "[channel] clone a new text channel with a rate limit per user w/reason",
   async fn() {
     await ifItFailsBlameWolf(
       {
@@ -213,7 +202,7 @@ Deno.test({
         rateLimitPerUser: 2423,
       },
       false,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,
@@ -222,9 +211,7 @@ Deno.test({
 Deno.test({
   name: "[channel] clone a new text channel with NSFW",
   async fn() {
-    await ifItFailsBlameWolf(
-      { name: "Discordeno-clone-test", nsfw: true },
-    );
+    await ifItFailsBlameWolf({ name: "Discordeno-clone-test", nsfw: true });
   },
   ...defaultTestOptions,
 });
@@ -235,7 +222,7 @@ Deno.test({
     await ifItFailsBlameWolf(
       { name: "Discordeno-clone-test", nsfw: true },
       false,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,
@@ -244,19 +231,17 @@ Deno.test({
 Deno.test({
   name: "[channel] clone a new text channel with permission overwrites",
   async fn() {
-    await ifItFailsBlameWolf(
-      {
-        name: "Discordeno-clone-test",
-        permissionOverwrites: [
-          {
-            id: bigintToSnowflake(botId),
-            type: DiscordOverwriteTypes.Member,
-            allow: ["VIEW_CHANNEL"],
-            deny: [],
-          },
-        ],
-      },
-    );
+    await ifItFailsBlameWolf({
+      name: "Discordeno-clone-test",
+      permissionOverwrites: [
+        {
+          id: bigintToSnowflake(botId),
+          type: DiscordOverwriteTypes.Member,
+          allow: ["VIEW_CHANNEL"],
+          deny: [],
+        },
+      ],
+    });
   },
   ...defaultTestOptions,
 });
@@ -277,7 +262,7 @@ Deno.test({
         ],
       },
       false,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,
@@ -299,7 +284,7 @@ Deno.test({
     await ifItFailsBlameWolf(
       { name: "Discordeno-clone-test" },
       true,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,
@@ -313,7 +298,7 @@ Deno.test({
         name: "Discordeno-clone-test",
         type: DiscordChannelTypes.GuildCategory,
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
@@ -328,7 +313,7 @@ Deno.test({
         type: DiscordChannelTypes.GuildCategory,
       },
       true,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,
@@ -342,7 +327,7 @@ Deno.test({
         name: "Discordeno-clone-test",
         type: DiscordChannelTypes.GuildVoice,
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
@@ -357,7 +342,7 @@ Deno.test({
         type: DiscordChannelTypes.GuildVoice,
       },
       true,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,
@@ -372,7 +357,7 @@ Deno.test({
         type: DiscordChannelTypes.GuildVoice,
         bitrate: 32000,
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
@@ -388,7 +373,7 @@ Deno.test({
         bitrate: 32000,
       },
       true,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,
@@ -403,7 +388,7 @@ Deno.test({
         type: DiscordChannelTypes.GuildVoice,
         userLimit: 32,
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
@@ -419,7 +404,7 @@ Deno.test({
         userLimit: 32,
       },
       true,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,
@@ -433,15 +418,14 @@ Deno.test({
         name: "Discordeno-clone-test",
         rateLimitPerUser: 2423,
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
 });
 
 Deno.test({
-  name:
-    "[channel] clone() a new text channel with a rate limit per user w/reason",
+  name: "[channel] clone() a new text channel with a rate limit per user w/reason",
   async fn() {
     await ifItFailsBlameWolf(
       {
@@ -449,7 +433,7 @@ Deno.test({
         rateLimitPerUser: 2423,
       },
       true,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,
@@ -460,7 +444,7 @@ Deno.test({
   async fn() {
     await ifItFailsBlameWolf(
       { name: "Discordeno-clone-test", nsfw: true },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
@@ -472,7 +456,7 @@ Deno.test({
     await ifItFailsBlameWolf(
       { name: "Discordeno-clone-test", nsfw: true },
       true,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,
@@ -493,15 +477,14 @@ Deno.test({
           },
         ],
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
 });
 
 Deno.test({
-  name:
-    "[channel] clone() a new text channel with permission overwrites w/reason",
+  name: "[channel] clone() a new text channel with permission overwrites w/reason",
   async fn() {
     await ifItFailsBlameWolf(
       {
@@ -516,7 +499,7 @@ Deno.test({
         ],
       },
       true,
-      "w/reason",
+      "w/reason"
     );
   },
   ...defaultTestOptions,

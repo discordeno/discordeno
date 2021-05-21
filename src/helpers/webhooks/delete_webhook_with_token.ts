@@ -4,10 +4,10 @@ import { endpoints } from "../../util/constants.ts";
 /** Delete a webhook permanently. Returns a undefined on success */
 export async function deleteWebhookWithToken(
   webhookId: bigint,
-  webhookToken: string,
+  webhookToken: string
 ) {
   return await rest.runMethod<undefined>(
     "delete",
-    endpoints.WEBHOOK(webhookId, webhookToken),
+    endpoints.WEBHOOK(webhookId, webhookToken)
   );
 }

@@ -10,7 +10,7 @@ export async function getSlashCommands(guildId?: bigint) {
     "get",
     guildId
       ? endpoints.COMMANDS_GUILD(applicationId, guildId)
-      : endpoints.COMMANDS(applicationId),
+      : endpoints.COMMANDS(applicationId)
   );
 
   return new Collection(result.map((command) => [command.name, command]));

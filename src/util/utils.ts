@@ -39,10 +39,11 @@ export function delay(ms: number): Promise<void> {
 export const formatImageURL = (
   url: string,
   size: DiscordImageSize = 128,
-  format?: DiscordImageFormat,
+  format?: DiscordImageFormat
 ) => {
-  return `${url}.${format ||
-    (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
+  return `${url}.${
+    format || (url.includes("/a_") ? "gif" : "jpg")
+  }?size=${size}`;
 };
 
 function camelToSnakeCase(text: string) {
@@ -50,9 +51,8 @@ function camelToSnakeCase(text: string) {
 }
 
 function snakeToCamelCase(text: string) {
-  return text.replace(
-    /([-_][a-z])/gi,
-    ($1) => $1.toUpperCase().replace("_", ""),
+  return text.replace(/([-_][a-z])/gi, ($1) =>
+    $1.toUpperCase().replace("_", "")
   );
 }
 
@@ -67,7 +67,7 @@ function isConvertableObject(obj: unknown) {
 
 export function snakelize<T>(
   // deno-lint-ignore no-explicit-any
-  obj: Record<string, any> | Record<string, any>[],
+  obj: Record<string, any> | Record<string, any>[]
 ): T {
   if (isConvertableObject(obj)) {
     // deno-lint-ignore no-explicit-any
@@ -76,11 +76,11 @@ export function snakelize<T>(
     Object.keys(obj).forEach((key) => {
       eventHandlers.debug?.(
         "loop",
-        `Running forEach loop in snakelize function.`,
+        `Running forEach loop in snakelize function.`
       );
       convertedObject[camelToSnakeCase(key)] = snakelize(
         // deno-lint-ignore no-explicit-any
-        (obj as Record<string, any>)[key],
+        (obj as Record<string, any>)[key]
       );
     });
 
@@ -94,7 +94,7 @@ export function snakelize<T>(
 
 export function camelize<T>(
   // deno-lint-ignore no-explicit-any
-  obj: Record<string, any> | Record<string, any>[],
+  obj: Record<string, any> | Record<string, any>[]
 ): T {
   if (isConvertableObject(obj)) {
     // deno-lint-ignore no-explicit-any
@@ -103,11 +103,11 @@ export function camelize<T>(
     Object.keys(obj).forEach((key) => {
       eventHandlers.debug?.(
         "loop",
-        `Running forEach loop in camelize function.`,
+        `Running forEach loop in camelize function.`
       );
       convertedObject[snakeToCamelCase(key)] = camelize(
         // deno-lint-ignore no-explicit-any
-        (obj as Record<string, any>)[key],
+        (obj as Record<string, any>)[key]
       );
     });
 
@@ -122,12 +122,12 @@ export function camelize<T>(
 /** @private */
 function validateSlashOptionChoices(
   choices: ApplicationCommandOptionChoice[],
-  optionType: DiscordApplicationCommandOptionTypes,
+  optionType: DiscordApplicationCommandOptionTypes
 ) {
   for (const choice of choices) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of loop in validateSlashOptionChoices function.`,
+      `Running for of loop in validateSlashOptionChoices function.`
     );
     if (!validateLength(choice.name, { min: 1, max: 100 })) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
@@ -151,7 +151,7 @@ function validateSlashOptions(options: ApplicationCommandOption[]) {
   for (const option of options) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of loop in validateSlashOptions function.`,
+      `Running for of loop in validateSlashOptions function.`
     );
     if (
       option.choices?.length &&
@@ -177,12 +177,12 @@ function validateSlashOptions(options: ApplicationCommandOption[]) {
 
 export function validateSlashCommands(
   commands: (CreateGlobalApplicationCommand | EditGlobalApplicationCommand)[],
-  create = false,
+  create = false
 ) {
   for (const command of commands) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of loop in validateSlashCommands function.`,
+      `Running for of loop in validateSlashCommands function.`
     );
     if (
       (command.name &&
@@ -217,7 +217,7 @@ export function validateSlashCommands(
 // deno-lint-ignore ban-types
 export function hasOwnProperty<T extends {}, Y extends PropertyKey = string>(
   obj: T,
-  prop: Y,
+  prop: Y
 ): obj is T & Record<Y, unknown> {
   // deno-lint-ignore no-prototype-builtins
   return obj.hasOwnProperty(prop);
@@ -231,16 +231,11 @@ export function validateComponents(components: MessageComponents) {
   for (const component of components) {
     // 5 Link buttons can not have a customId
     if (isButton(component)) {
-      if (
-        component.type === ButtonStyles.Link &&
-        component.customId
-      ) {
+      if (component.type === ButtonStyles.Link && component.customId) {
         throw new Error(Errors.LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID);
       }
       // Other buttons must have a customId
-      if (
-        !component.customId && component.type !== ButtonStyles.Link
-      ) {
+      if (!component.customId && component.type !== ButtonStyles.Link) {
         throw new Error(Errors.BUTTON_REQUIRES_CUSTOM_ID);
       }
 

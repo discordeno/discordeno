@@ -10,7 +10,7 @@ export async function deleteMessage(
   channelId: bigint,
   messageId: bigint,
   reason?: string,
-  delayMilliseconds = 0,
+  delayMilliseconds = 0
 ) {
   const message = await cacheHandlers.get("messages", messageId);
 
@@ -23,6 +23,6 @@ export async function deleteMessage(
   return await rest.runMethod<undefined>(
     "delete",
     endpoints.CHANNEL_MESSAGE(channelId, messageId),
-    { reason },
+    { reason }
   );
 }

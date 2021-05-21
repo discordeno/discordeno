@@ -9,6 +9,6 @@ export async function getBan(guildId: bigint, memberId: bigint) {
 
   return await rest.runMethod<Ban>(
     "get",
-    endpoints.GUILD_BAN(guildId, memberId),
+    endpoints.GUILD_BAN(guildId, memberId)
   );
 }

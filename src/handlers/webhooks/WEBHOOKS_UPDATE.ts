@@ -7,6 +7,6 @@ export function handleWebhooksUpdate(data: DiscordGatewayPayload) {
   const options = data.d as WebhookUpdate;
   eventHandlers.webhooksUpdate?.(
     snowflakeToBigint(options.channelId),
-    snowflakeToBigint(options.guildId),
+    snowflakeToBigint(options.guildId)
   );
 }

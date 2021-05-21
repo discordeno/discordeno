@@ -6,12 +6,12 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function deleteChannelOverwrite(
   guildId: bigint,
   channelId: bigint,
-  overwriteId: bigint,
+  overwriteId: bigint
 ): Promise<undefined> {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
   return await rest.runMethod<undefined>(
     "delete",
-    endpoints.CHANNEL_OVERWRITE(channelId, overwriteId),
+    endpoints.CHANNEL_OVERWRITE(channelId, overwriteId)
   );
 }

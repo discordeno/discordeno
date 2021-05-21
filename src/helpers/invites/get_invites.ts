@@ -10,10 +10,8 @@ export async function getInvites(guildId: bigint) {
 
   const result = await rest.runMethod<Invite[]>(
     "get",
-    endpoints.GUILD_INVITES(guildId),
+    endpoints.GUILD_INVITES(guildId)
   );
 
-  return new Collection(
-    result.map((invite) => [invite.code, invite]),
-  );
+  return new Collection(result.map((invite) => [invite.code, invite]));
 }

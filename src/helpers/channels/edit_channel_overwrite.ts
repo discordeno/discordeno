@@ -11,7 +11,7 @@ export async function editChannelOverwrite(
   guildId: bigint,
   channelId: bigint,
   overwriteId: bigint,
-  options: Omit<Overwrite, "id">,
+  options: Omit<Overwrite, "id">
 ): Promise<undefined> {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
@@ -22,6 +22,6 @@ export async function editChannelOverwrite(
       allow: calculateBits(options.allow),
       deny: calculateBits(options.deny),
       type: options.type,
-    },
+    }
   );
 }

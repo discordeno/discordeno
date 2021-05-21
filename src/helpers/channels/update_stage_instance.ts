@@ -37,6 +37,6 @@ export async function updateStageInstance(channelId: bigint, topic: string) {
     endpoints.STAGE_INSTANCE(channelId),
     {
       topic,
-    },
+    }
   );
 }

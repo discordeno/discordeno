@@ -7,11 +7,11 @@ import { snakelize } from "../../../util/utils.ts";
 /** Batch edits permissions for all commands in a guild. Takes an array of partial GuildApplicationCommandPermissions objects including `id` and `permissions`. */
 export async function batchEditSlashCommandPermissions(
   guildId: bigint,
-  options: { id: string; permissions: ApplicationCommandPermissions[] }[],
+  options: { id: string; permissions: ApplicationCommandPermissions[] }[]
 ) {
   return await rest.runMethod(
     "put",
     endpoints.COMMANDS_PERMISSIONS(applicationId, guildId),
-    snakelize(options),
+    snakelize(options)
   );
 }

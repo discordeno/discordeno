@@ -9,7 +9,7 @@ export async function handleChannelPinsUpdate(data: DiscordGatewayPayload) {
 
   const channel = await cacheHandlers.get(
     "channels",
-    snowflakeToBigint(payload.channelId),
+    snowflakeToBigint(payload.channelId)
   );
   if (!channel) return;
 

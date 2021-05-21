@@ -10,27 +10,30 @@ export async function handleChannelDelete(data: DiscordGatewayPayload) {
 
   const cachedChannel = await cacheHandlers.get(
     "channels",
-    snowflakeToBigint(payload.id),
+    snowflakeToBigint(payload.id)
   );
   if (!cachedChannel) return;
 
   if (
-    cachedChannel.type === DiscordChannelTypes.GuildVoice && payload.guildId
+    cachedChannel.type === DiscordChannelTypes.GuildVoice &&
+    payload.guildId
   ) {
     const guild = await cacheHandlers.get("guilds", cachedChannel.guildId);
 
     if (guild) {
-      return Promise.all(guild.voiceStates.map(async (vs, key) => {
-        if (vs.channelId !== cachedChannel.id) return;
+      return Promise.all(
+        guild.voiceStates.map(async (vs, key) => {
+          if (vs.channelId !== cachedChannel.id) return;
 
-        // Since this channel was deleted all voice states for this channel should be deleted
-        guild.voiceStates.delete(key);
+          // Since this channel was deleted all voice states for this channel should be deleted
+          guild.voiceStates.delete(key);
 
-        const member = await cacheHandlers.get("members", vs.userId);
-        if (!member) return;
+          const member = await cacheHandlers.get("members", vs.userId);
+          if (!member) return;
 
-        eventHandlers.voiceChannelLeave?.(member, vs.channelId);
-      }));
+          eventHandlers.voiceChannelLeave?.(member, vs.channelId);
+        })
+      );
     }
   }
 
@@ -46,7 +49,7 @@ export async function handleChannelDelete(data: DiscordGatewayPayload) {
     cacheHandlers.forEach("messages", (message) => {
       eventHandlers.debug?.(
         "loop",
-        `Running forEach messages loop in CHANNEL_DELTE file.`,
+        `Running forEach messages loop in CHANNEL_DELTE file.`
       );
       if (message.channelId === snowflakeToBigint(payload.id)) {
         cacheHandlers.delete("messages", message.id);

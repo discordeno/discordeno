@@ -26,7 +26,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   // Wait 5 seconds to give it time for MESSAGE_UPDATE event
   await delayUntil(
     10000,
-    () => cache.messages.get(message.id)?.content === "Goodbye World!",
+    () => cache.messages.get(message.id)?.content === "Goodbye World!"
   );
 
   // Make sure it has been modified in cache

@@ -3,7 +3,7 @@ import { eventHandlers } from "../bot.ts";
 export function loopObject<T = Record<string, unknown>>(
   obj: Record<string, unknown>,
   handler: (value: unknown, key: string) => unknown,
-  log: string,
+  log: string
 ) {
   let res: Record<string, unknown> | unknown[] = {};
 

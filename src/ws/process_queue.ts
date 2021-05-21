@@ -34,7 +34,7 @@ export async function processQueue(id: number) {
             : Array.isArray(value)
             ? value.map((v) => (typeof v === "bigint" ? v.toString() : v))
             : value,
-        `Running forEach loop in ws.processQueue function for changing bigints to strings.`,
+        `Running forEach loop in ws.processQueue function for changing bigints to strings.`
       );
     }
 

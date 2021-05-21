@@ -9,6 +9,6 @@ export async function getSlashCommand(commandId: bigint, guildId?: bigint) {
     "get",
     guildId
       ? endpoints.COMMANDS_GUILD_ID(applicationId, guildId, commandId)
-      : endpoints.COMMANDS_ID(applicationId, commandId),
+      : endpoints.COMMANDS_ID(applicationId, commandId)
   );
 }

@@ -6,13 +6,13 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function deleteEmoji(
   guildId: bigint,
   id: bigint,
-  reason?: string,
+  reason?: string
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_EMOJIS"]);
 
   return await rest.runMethod<undefined>(
     "delete",
     endpoints.GUILD_EMOJI(guildId, id),
-    { reason },
+    { reason }
   );
 }

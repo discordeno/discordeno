@@ -6,7 +6,7 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 export async function removeReactionEmoji(
   channelId: bigint,
   messageId: bigint,
-  reaction: string,
+  reaction: string
 ) {
   await requireBotChannelPermissions(channelId, ["MANAGE_MESSAGES"]);
 
@@ -18,6 +18,6 @@ export async function removeReactionEmoji(
 
   return await rest.runMethod<undefined>(
     "delete",
-    endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction),
+    endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction)
   );
 }

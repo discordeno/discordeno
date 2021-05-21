@@ -7,10 +7,10 @@ import { endpoints } from "../../util/constants.ts";
 export async function getPins(channelId: bigint) {
   const result = await rest.runMethod<Message[]>(
     "get",
-    endpoints.CHANNEL_PINS(channelId),
+    endpoints.CHANNEL_PINS(channelId)
   );
 
   return Promise.all(
-    result.map((res) => structures.createDiscordenoMessage(res)),
+    result.map((res) => structures.createDiscordenoMessage(res))
   );
 }

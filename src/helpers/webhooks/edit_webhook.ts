@@ -8,7 +8,7 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 export async function editWebhook(
   channelId: bigint,
   webhookId: bigint,
-  options: ModifyWebhook,
+  options: ModifyWebhook
 ) {
   await requireBotChannelPermissions(channelId, ["MANAGE_WEBHOOKS"]);
 
@@ -18,6 +18,6 @@ export async function editWebhook(
     {
       ...options,
       channel_id: options.channelId,
-    },
+    }
   );
 }

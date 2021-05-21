@@ -6,6 +6,6 @@ import { endpoints } from "../../util/constants.ts";
 export async function getGuildPreview(guildId: bigint) {
   return await rest.runMethod<GuildPreview>(
     "get",
-    endpoints.GUILD_PREVIEW(guildId),
+    endpoints.GUILD_PREVIEW(guildId)
   );
 }

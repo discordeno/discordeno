@@ -12,13 +12,9 @@ export async function addRole(
   guildId: bigint,
   memberId: bigint,
   roleId: bigint,
-  reason?: string,
+  reason?: string
 ) {
-  const isHigherRolePosition = await isHigherPosition(
-    guildId,
-    botId,
-    roleId,
-  );
+  const isHigherRolePosition = await isHigherPosition(guildId, botId, roleId);
   if (!isHigherRolePosition) {
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
@@ -28,6 +24,6 @@ export async function addRole(
   return await rest.runMethod<undefined>(
     "put",
     endpoints.GUILD_MEMBER_ROLE(guildId, memberId, roleId),
-    { reason },
+    { reason }
   );
 }

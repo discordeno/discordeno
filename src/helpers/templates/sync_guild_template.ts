@@ -12,6 +12,6 @@ export async function syncGuildTemplate(guildId: bigint, templateCode: string) {
 
   return await rest.runMethod<Template>(
     "put",
-    `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
+    `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`
   );
 }

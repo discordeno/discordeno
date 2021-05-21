@@ -8,7 +8,7 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
 export async function createInvite(
   channelId: bigint,
-  options: CreateChannelInvite,
+  options: CreateChannelInvite
 ) {
   await requireBotChannelPermissions(channelId, ["CREATE_INSTANT_INVITE"]);
 
@@ -22,6 +22,6 @@ export async function createInvite(
   return await rest.runMethod<Invite>(
     "post",
     endpoints.CHANNEL_INVITES(channelId),
-    options,
+    options
   );
 }

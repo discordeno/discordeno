@@ -13,7 +13,7 @@ let processingQueue = false;
 // deno-lint-ignore require-await
 export async function cacheMembers(
   guildId: bigint,
-  members: GuildMemberWithUser[],
+  members: GuildMemberWithUser[]
 ) {
   if (!members.length) return;
 
@@ -32,20 +32,20 @@ async function startQueue() {
     eventHandlers.debug?.("loop", "Running whille loop in cache_members file.");
     const [guildId, queue]: [
       bigint,
-      { members: GuildMemberWithUser[]; resolve: (value?: unknown) => void },
+      { members: GuildMemberWithUser[]; resolve: (value?: unknown) => void }
     ] = guildMemberQueue.entries().next().value;
 
     await Promise.allSettled([
       queue.members.map(async (member) => {
         const discordenoMember = await structures.createDiscordenoMember(
           member,
-          guildId,
+          guildId
         );
 
         await cacheHandlers.set(
           "members",
           discordenoMember.id,
-          discordenoMember,
+          discordenoMember
         );
       }),
     ]);

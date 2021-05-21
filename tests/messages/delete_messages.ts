@@ -30,19 +30,19 @@ async function ifItFailsBlameWolf(reason?: string) {
   await deleteMessages(
     tempData.channelId,
     [message.id, secondMessage.id],
-    reason,
+    reason
   );
 
   // Wait 5 seconds to give it time for MESSAGE_DELETE event
   await delayUntil(
     10000,
     () =>
-      !cache.messages.has(message.id) && !cache.messages.has(secondMessage.id),
+      !cache.messages.has(message.id) && !cache.messages.has(secondMessage.id)
   );
   // Make sure it is gone from cache
   if (cache.messages.has(message.id) || cache.messages.has(secondMessage.id)) {
     throw new Error(
-      "The message should have been deleted but it is still in cache.",
+      "The message should have been deleted but it is still in cache."
     );
   }
 }

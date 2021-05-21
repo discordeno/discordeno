@@ -24,6 +24,6 @@ export async function removeFromThread(channelId: bigint, userId?: bigint) {
     "delete",
     userId
       ? endpoints.THREAD_USER(channelId, userId)
-      : endpoints.THREAD_ME(channelId),
+      : endpoints.THREAD_ME(channelId)
   );
 }

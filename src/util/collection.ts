@@ -4,7 +4,7 @@ export class Collection<K, V> extends Map<K, V> {
 
   constructor(
     entries?: (readonly (readonly [K, V])[] | null) | Map<K, V>,
-    options?: CollectionOptions<K, V>,
+    options?: CollectionOptions<K, V>
   ) {
     super(entries ?? []);
 
@@ -108,7 +108,7 @@ export class Collection<K, V> extends Map<K, V> {
 
   reduce<T>(
     callback: (accumulator: T, value: V, key: K) => T,
-    initialValue?: T,
+    initialValue?: T
   ): T {
     let accumulator: T = initialValue!;
 
@@ -128,7 +128,7 @@ interface CollectionOptions<K, V> {
 
 interface CollectionSweeper<K, V> {
   /** The filter to determine whether an element should be deleted or not */
-  filter: ((value: V, key: K) => boolean | Promise<boolean>);
+  filter: (value: V, key: K) => boolean | Promise<boolean>;
   /** The interval in which the sweeper should run */
   interval: number;
 }

@@ -10,7 +10,7 @@ export async function isChannelSynced(channelId: bigint) {
 
   return channel.permissionOverwrites?.every((overwrite) => {
     const permission = parentChannel.permissionOverwrites?.find(
-      (ow) => ow.id === overwrite.id,
+      (ow) => ow.id === overwrite.id
     );
     if (!permission) return false;
     return !(

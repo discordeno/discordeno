@@ -9,6 +9,6 @@ export async function getInvite(inviteCode: string, options?: GetInvite) {
   return await rest.runMethod<Invite>(
     "get",
     endpoints.INVITE(inviteCode),
-    snakelize(options ?? {}),
+    snakelize(options ?? {})
   );
 }

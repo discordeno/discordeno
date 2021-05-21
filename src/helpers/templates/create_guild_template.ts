@@ -9,10 +9,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
  * @param name name of the template (1-100 characters)
  * @param description description for the template (0-120 characters
  */
-export async function createGuildTemplate(
-  guildId: bigint,
-  data: Template,
-) {
+export async function createGuildTemplate(guildId: bigint, data: Template) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
   if (data.name.length < 1 || data.name.length > 100) {
@@ -26,6 +23,6 @@ export async function createGuildTemplate(
   return await rest.runMethod<Template>(
     "post",
     endpoints.GUILD_TEMPLATES(guildId),
-    data,
+    data
   );
 }

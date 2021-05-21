@@ -9,6 +9,6 @@ export async function getWidgetSettings(guildId: bigint) {
 
   return await rest.runMethod<GuildWidget>(
     "get",
-    endpoints.GUILD_WIDGET(guildId),
+    endpoints.GUILD_WIDGET(guildId)
   );
 }

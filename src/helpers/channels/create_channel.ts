@@ -18,13 +18,10 @@ import { snakelize } from "../../util/utils.ts";
 export async function createChannel(
   guildId: bigint,
   options?: CreateGuildChannel,
-  reason?: string,
+  reason?: string
 ) {
   if (options?.permissionOverwrites) {
-    await requireOverwritePermissions(
-      guildId,
-      options.permissionOverwrites,
-    );
+    await requireOverwritePermissions(guildId, options.permissionOverwrites);
   }
 
   // BITRATES ARE IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
@@ -42,7 +39,7 @@ export async function createChannel(
       })),
       type: options?.type || DiscordChannelTypes.GuildText,
       reason,
-    },
+    }
   );
 
   const discordenoChannel = await structures.createDiscordenoChannel(result);

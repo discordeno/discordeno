@@ -23,8 +23,7 @@ export interface GetMessagesAfter extends GetMessagesLimit {
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
-export type GetMessages =
-  & GetMessagesLimit
-  & GetMessagesAfter
-  & GetMessagesBefore
-  & GetMessagesAround;
+export type GetMessages = GetMessagesLimit &
+  GetMessagesAfter &
+  GetMessagesBefore &
+  GetMessagesAround;

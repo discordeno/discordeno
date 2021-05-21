@@ -4,7 +4,7 @@ import { ws } from "./ws.ts";
 export async function tellClusterToIdentify(
   _workerId: number,
   shardId: number,
-  _bucketId: number,
+  _bucketId: number
 ) {
   await ws.identify(shardId, ws.maxShards);
 }

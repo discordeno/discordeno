@@ -5,6 +5,6 @@ import { endpoints } from "../../util/constants.ts";
 export async function deleteGuild(guildId: bigint) {
   return await rest.runMethod<undefined>(
     "delete",
-    endpoints.GUILDS_BASE(guildId),
+    endpoints.GUILDS_BASE(guildId)
   );
 }

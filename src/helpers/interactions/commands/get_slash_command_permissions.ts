@@ -7,6 +7,6 @@ import { endpoints } from "../../../util/constants.ts";
 export async function getSlashCommandPermissions(guildId: bigint) {
   return await rest.runMethod<GuildApplicationCommandPermissions[]>(
     "get",
-    endpoints.COMMANDS_PERMISSIONS(applicationId, guildId),
+    endpoints.COMMANDS_PERMISSIONS(applicationId, guildId)
   );
 }

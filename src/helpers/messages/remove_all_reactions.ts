@@ -8,6 +8,6 @@ export async function removeAllReactions(channelId: bigint, messageId: bigint) {
 
   return await rest.runMethod<undefined>(
     "delete",
-    endpoints.CHANNEL_MESSAGE_REACTIONS(channelId, messageId),
+    endpoints.CHANNEL_MESSAGE_REACTIONS(channelId, messageId)
   );
 }

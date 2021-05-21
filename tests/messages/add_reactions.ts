@@ -6,7 +6,7 @@ import { delayUntil } from "../util/delay_until.ts";
 async function ifItFailsBlameWolf(
   type: "getter" | "raw",
   custom = false,
-  ordered = false,
+  ordered = false
 ) {
   const message = await sendMessage(tempData.channelId, "Hello World!");
 
@@ -34,7 +34,7 @@ async function ifItFailsBlameWolf(
               name: "blamewolf",
               image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
               roles: [],
-            },
+            }
           )
         ).id
       }>`,
@@ -48,7 +48,7 @@ async function ifItFailsBlameWolf(
               name: "blamewolf2",
               image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
               roles: [],
-            },
+            }
           )
         ).id
       }>`,
@@ -63,7 +63,7 @@ async function ifItFailsBlameWolf(
 
   await delayUntil(
     10000,
-    () => cache.messages.get(message.id)?.reactions?.length === 2,
+    () => cache.messages.get(message.id)?.reactions?.length === 2
   );
 
   assertEquals(await cache.messages.get(message.id)?.reactions?.length, 2);

@@ -22,7 +22,7 @@ import { hasOwnProperty, snakelize } from "../../util/utils.ts";
 export async function editChannel(
   channelId: bigint,
   options: ModifyChannel | ModifyThread,
-  reason?: string,
+  reason?: string
 ) {
   const channel = await cacheHandlers.get("channels", channelId);
 
@@ -57,7 +57,7 @@ export async function editChannel(
     ) {
       await requireOverwritePermissions(
         channel.guildId,
-        options.permissionOverwrites,
+        options.permissionOverwrites
       );
     }
   }
@@ -92,16 +92,16 @@ export async function editChannel(
     ...snakelize<Record<string, unknown>>(options),
     // deno-lint-ignore camelcase
     permission_overwrites: hasOwnProperty<ModifyChannel>(
-        options,
-        "permissionOverwrites",
-      )
+      options,
+      "permissionOverwrites"
+    )
       ? options.permissionOverwrites?.map((overwrite) => {
-        return {
-          ...overwrite,
-          allow: calculateBits(overwrite.allow),
-          deny: calculateBits(overwrite.deny),
-        };
-      })
+          return {
+            ...overwrite,
+            allow: calculateBits(overwrite.allow),
+            deny: calculateBits(overwrite.deny),
+          };
+        })
       : undefined,
   };
 
@@ -111,7 +111,7 @@ export async function editChannel(
     {
       ...payload,
       reason,
-    },
+    }
   );
 
   return await structures.createDiscordenoChannel(result);

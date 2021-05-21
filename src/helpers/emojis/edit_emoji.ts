@@ -8,7 +8,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function editEmoji(
   guildId: bigint,
   id: bigint,
-  options: ModifyGuildEmoji,
+  options: ModifyGuildEmoji
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_EMOJIS"]);
 
@@ -18,6 +18,6 @@ export async function editEmoji(
     {
       name: options.name,
       roles: options.roles,
-    },
+    }
   );
 }

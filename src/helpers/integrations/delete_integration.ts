@@ -8,6 +8,6 @@ export async function deleteIntegration(guildId: bigint, id: bigint) {
 
   return await rest.runMethod<undefined>(
     "delete",
-    endpoints.GUILD_INTEGRATION(guildId, id),
+    endpoints.GUILD_INTEGRATION(guildId, id)
   );
 }

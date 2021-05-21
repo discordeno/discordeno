@@ -10,10 +10,8 @@ export async function getChannelWebhooks(channelId: bigint) {
 
   const result = await rest.runMethod<Webhook[]>(
     "get",
-    endpoints.CHANNEL_WEBHOOKS(channelId),
+    endpoints.CHANNEL_WEBHOOKS(channelId)
   );
 
-  return new Collection(
-    result.map((webhook) => [webhook.id, webhook]),
-  );
+  return new Collection(result.map((webhook) => [webhook.id, webhook]));
 }

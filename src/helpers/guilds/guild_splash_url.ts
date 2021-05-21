@@ -12,19 +12,18 @@ export function guildSplashURL(
     size?: DiscordImageSize;
     format?: DiscordImageFormat;
     animated?: boolean;
-  },
+  }
 ) {
   return options.splash
     ? formatImageURL(
-      endpoints.GUILD_SPLASH(
-        id,
-        typeof options.splash === "string" ? options.splash : iconBigintToHash(
-          options.splash,
-          options.animated ?? true,
+        endpoints.GUILD_SPLASH(
+          id,
+          typeof options.splash === "string"
+            ? options.splash
+            : iconBigintToHash(options.splash, options.animated ?? true)
         ),
-      ),
-      options.size || 128,
-      options.format,
-    )
+        options.size || 128,
+        options.format
+      )
     : undefined;
 }

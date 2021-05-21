@@ -12,16 +12,10 @@ export async function removeRole(
   guildId: bigint,
   memberId: bigint,
   roleId: bigint,
-  reason?: string,
+  reason?: string
 ) {
-  const isHigherRolePosition = await isHigherPosition(
-    guildId,
-    botId,
-    roleId,
-  );
-  if (
-    !isHigherRolePosition
-  ) {
+  const isHigherRolePosition = await isHigherPosition(guildId, botId, roleId);
+  if (!isHigherRolePosition) {
     throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
@@ -30,6 +24,6 @@ export async function removeRole(
   return await rest.runMethod<undefined>(
     "delete",
     endpoints.GUILD_MEMBER_ROLE(guildId, memberId, roleId),
-    { reason },
+    { reason }
   );
 }

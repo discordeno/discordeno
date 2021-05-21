@@ -12,8 +12,7 @@ export const GATEWAY_VERSION = 9;
 export const DISCORDENO_VERSION = "11.0.0";
 
 /** https://discord.com/developers/docs/reference#user-agent */
-export const USER_AGENT =
-  `DiscordBot (https://github.com/discordeno/discordeno, v${DISCORDENO_VERSION})`;
+export const USER_AGENT = `DiscordBot (https://github.com/discordeno/discordeno, v${DISCORDENO_VERSION})`;
 
 /** https://discord.com/developers/docs/reference#image-formatting-image-base-url */
 export const IMAGE_BASE_URL = "https://cdn.discordapp.com";
@@ -51,24 +50,24 @@ export const endpoints = {
   CHANNEL_MESSAGE_REACTION_ME: (
     channelId: bigint,
     messageId: bigint,
-    emoji: string,
+    emoji: string
   ) =>
     `${CHANNEL_BASE(channelId)}/messages/${messageId}/reactions/${emoji}/@me`,
   CHANNEL_MESSAGE_REACTION_USER: (
     channelId: bigint,
     messageId: bigint,
     emoji: string,
-    userId: bigint,
+    userId: bigint
   ) =>
-    `${
-      CHANNEL_BASE(channelId)
-    }/messages/${messageId}/reactions/${emoji}/${userId}`,
+    `${CHANNEL_BASE(
+      channelId
+    )}/messages/${messageId}/reactions/${emoji}/${userId}`,
   CHANNEL_MESSAGE_REACTIONS: (channelId: bigint, messageId: bigint) =>
     `${CHANNEL_BASE(channelId)}/messages/${messageId}/reactions`,
   CHANNEL_MESSAGE_REACTION: (
     channelId: bigint,
     messageId: bigint,
-    emoji: string,
+    emoji: string
   ) => `${CHANNEL_BASE(channelId)}/messages/${messageId}/reactions/${emoji}`,
   CHANNEL_FOLLOW: (channelId: bigint) => `${CHANNEL_BASE(channelId)}/followers`,
   CHANNEL_MESSAGE_CROSSPOST: (channelId: bigint, messageId: bigint) =>
@@ -178,17 +177,18 @@ export const endpoints = {
   COMMANDS_PERMISSION: (
     applicationId: bigint,
     guildId: bigint,
-    commandId: bigint,
+    commandId: bigint
   ) =>
-    `${
-      endpoints.COMMANDS_GUILD(applicationId, guildId)
-    }/${commandId}/permissions`,
+    `${endpoints.COMMANDS_GUILD(
+      applicationId,
+      guildId
+    )}/${commandId}/permissions`,
   COMMANDS_ID: (applicationId: bigint, commandId: bigint) =>
     `${baseEndpoints.BASE_URL}/applications/${applicationId}/commands/${commandId}`,
   COMMANDS_GUILD_ID: (
     applicationId: bigint,
     guildId: bigint,
-    commandId: bigint,
+    commandId: bigint
   ) =>
     `${baseEndpoints.BASE_URL}/applications/${applicationId}/guilds/${guildId}/commands/${commandId}`,
 
@@ -200,7 +200,7 @@ export const endpoints = {
   INTERACTION_ID_TOKEN_MESSAGE_ID: (
     applicationId: bigint,
     token: string,
-    messageId: bigint,
+    messageId: bigint
   ) =>
     `${baseEndpoints.BASE_URL}/webhooks/${applicationId}/${token}/messages/${messageId}`,
 

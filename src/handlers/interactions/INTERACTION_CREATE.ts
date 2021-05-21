@@ -10,9 +10,9 @@ export async function handleInteractionCreate(data: DiscordGatewayPayload) {
   const payload = data.d as Interaction;
   const discordenoMember = payload.guildId
     ? await structures.createDiscordenoMember(
-      payload.member as GuildMemberWithUser,
-      snowflakeToBigint(payload.guildId),
-    )
+        payload.member as GuildMemberWithUser,
+        snowflakeToBigint(payload.guildId)
+      )
     : undefined;
   if (discordenoMember) {
     await cacheHandlers.set("members", discordenoMember.id, discordenoMember);

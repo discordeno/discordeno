@@ -8,8 +8,8 @@ export function proxyEvent(emitter: EventEmitter) {
       get(target, prop: keyof EventHandlers) {
         return target[prop] !== undefined
           ? target[prop]
-          : ((...args: unknown[]) => emitter.emit(prop, ...args));
+          : (...args: unknown[]) => emitter.emit(prop, ...args);
       },
-    }),
+    })
   );
 }

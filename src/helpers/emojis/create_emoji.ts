@@ -11,7 +11,7 @@ export async function createEmoji(
   guildId: bigint,
   name: string,
   image: string,
-  options: CreateGuildEmoji,
+  options: CreateGuildEmoji
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_EMOJIS"]);
 
@@ -26,7 +26,7 @@ export async function createEmoji(
       ...options,
       name,
       image,
-    },
+    }
   );
 
   return {

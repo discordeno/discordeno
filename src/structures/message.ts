@@ -57,8 +57,9 @@ const baseMessage: Partial<DiscordenoMessage> = {
     return this.member?.guilds.get(this.guildId);
   },
   get link() {
-    return `https://discord.com/channels/${this.guildId ||
-      "@me"}/${this.channelId}/${this.id}`;
+    return `https://discord.com/channels/${this.guildId || "@me"}/${
+      this.channelId
+    }/${this.id}`;
   },
   get mentionedRoles() {
     return this.mentionedRoleIds?.map((id) => this.guild?.roles.get(id)) || [];
@@ -87,28 +88,30 @@ const baseMessage: Partial<DiscordenoMessage> = {
     return addReactions(this.channelId!, this.id!, reactions, ordered);
   },
   reply(content) {
-    const contentWithMention: CreateMessage = typeof content === "string"
-      ? {
-        content,
-        allowedMentions: {
-          repliedUser: true,
-        },
-        messageReference: {
-          messageId: bigintToSnowflake(this.id!),
-          failIfNotExists: false,
-        },
-      }
-      : {
-        ...content,
-        allowedMentions: {
-          ...(content.allowedMentions || {}),
-          repliedUser: true,
-        },
-        messageReference: {
-          messageId: bigintToSnowflake(this.id!),
-          failIfNotExists: content.messageReference?.failIfNotExists === true,
-        },
-      };
+    const contentWithMention: CreateMessage =
+      typeof content === "string"
+        ? {
+            content,
+            allowedMentions: {
+              repliedUser: true,
+            },
+            messageReference: {
+              messageId: bigintToSnowflake(this.id!),
+              failIfNotExists: false,
+            },
+          }
+        : {
+            ...content,
+            allowedMentions: {
+              ...(content.allowedMentions || {}),
+              repliedUser: true,
+            },
+            messageReference: {
+              messageId: bigintToSnowflake(this.id!),
+              failIfNotExists:
+                content.messageReference?.failIfNotExists === true,
+            },
+          };
 
     if (this.guildId) return sendMessage(this.channelId!, contentWithMention);
     return sendDirectMessage(this.authorId!, contentWithMention);
@@ -171,7 +174,7 @@ export async function createDiscordenoMessage(data: Message) {
   for (const [key, value] of Object.entries(rest)) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of loop in createDiscordenoMessage function.`,
+      `Running for of loop in createDiscordenoMessage function.`
     );
 
     const toggleBits = messageToggles[key as keyof typeof messageToggles];
@@ -185,8 +188,10 @@ export async function createDiscordenoMessage(data: Message) {
 
     props[key] = createNewProp(
       MESSAGE_SNOWFLAKES.includes(key)
-        ? value ? snowflakeToBigint(value) : undefined
-        : value,
+        ? value
+          ? snowflakeToBigint(value)
+          : undefined
+        : value
     );
   }
 
@@ -195,7 +200,8 @@ export async function createDiscordenoMessage(data: Message) {
   props.tag = createNewProp(`${author.username}#${author.discriminator}`);
 
   // Discord doesnt give guild id for getMessage() so this will fill it in
-  const guildIdFinal = snowflakeToBigint(guildId) ||
+  const guildIdFinal =
+    snowflakeToBigint(guildId) ||
     (await cacheHandlers.get("channels", snowflakeToBigint(data.channelId)))
       ?.guildId ||
     0n;
@@ -205,10 +211,10 @@ export async function createDiscordenoMessage(data: Message) {
     content: createNewProp(data.content || ""),
     guildId: createNewProp(guildIdFinal),
     mentionedUserIds: createNewProp(
-      mentions.map((m) => snowflakeToBigint(m.id)),
+      mentions.map((m) => snowflakeToBigint(m.id))
     ),
     mentionedRoleIds: createNewProp(
-      mentionRoles.map((id) => snowflakeToBigint(id)),
+      mentionRoles.map((id) => snowflakeToBigint(id))
     ),
     mentionedChannelIds: createNewProp([
       // Keep any ids that discord sends
@@ -221,22 +227,22 @@ export async function createDiscordenoMessage(data: Message) {
     ]),
     timestamp: createNewProp(Date.parse(data.timestamp)),
     editedTimestamp: createNewProp(
-      editedTimestamp ? Date.parse(editedTimestamp) : undefined,
+      editedTimestamp ? Date.parse(editedTimestamp) : undefined
     ),
     messageReference: createNewProp(
       messageReference
         ? {
-          messageId: messageReference.messageId
-            ? snowflakeToBigint(messageReference.messageId)
-            : undefined,
-          channelId: messageReference.channelId
-            ? snowflakeToBigint(messageReference.channelId)
-            : undefined,
-          guildId: messageReference.guildId
-            ? snowflakeToBigint(messageReference.guildId)
-            : undefined,
-        }
-        : undefined,
+            messageId: messageReference.messageId
+              ? snowflakeToBigint(messageReference.messageId)
+              : undefined,
+            channelId: messageReference.channelId
+              ? snowflakeToBigint(messageReference.channelId)
+              : undefined,
+            guildId: messageReference.guildId
+              ? snowflakeToBigint(messageReference.guildId)
+              : undefined,
+          }
+        : undefined
     ),
     bitfield: createNewProp(bitfield),
   });
@@ -244,8 +250,8 @@ export async function createDiscordenoMessage(data: Message) {
   return message;
 }
 
-export interface DiscordenoMessage extends
-  Omit<
+export interface DiscordenoMessage
+  extends Omit<
     Message,
     | "id"
     | "webhookId"
@@ -318,7 +324,7 @@ export interface DiscordenoMessage extends
   /** Delete the message */
   delete(
     reason?: string,
-    delayMilliseconds?: number,
+    delayMilliseconds?: number
   ): ReturnType<typeof deleteMessage>;
   /** Edit the message */
   edit(content: string | EditMessage): ReturnType<typeof editMessage>;
@@ -329,7 +335,7 @@ export interface DiscordenoMessage extends
   /** Add multiple reactions to the message without or without order. */
   addReactions(
     reactions: string[],
-    ordered?: boolean,
+    ordered?: boolean
   ): ReturnType<typeof addReactions>;
   /** Send a inline reply to this message */
   reply(content: string | CreateMessage): ReturnType<typeof sendMessage>;
@@ -339,13 +345,13 @@ export interface DiscordenoMessage extends
   alert(
     content: string | CreateMessage,
     timeout?: number,
-    reason?: string,
+    reason?: string
   ): Promise<void>;
   /** Send a inline reply to this message but then delete it after a bit. By default it will delete after 10 seconds with no reason provided.  */
   alertReply(
     content: string | CreateMessage,
     timeout?: number,
-    reason?: string,
+    reason?: string
   ): Promise<unknown>;
   /** Removes all reactions for all emojis on this message */
   removeAllReactions(): ReturnType<typeof removeAllReactions>;
@@ -354,6 +360,6 @@ export interface DiscordenoMessage extends
   /** Removes a reaction from the given user on this message, defaults to bot */
   removeReaction(
     reaction: string,
-    userId?: bigint,
+    userId?: bigint
   ): ReturnType<typeof removeReaction>;
 }

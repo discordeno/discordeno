@@ -26,7 +26,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   const pins = await getPins(tempData.channelId);
   assertEquals(
     pins.filter((msg: DiscordenoMessage) => msg.id === message.id).length,
-    1,
+    1
   );
 }
 

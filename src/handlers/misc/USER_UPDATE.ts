@@ -9,17 +9,14 @@ export async function handleUserUpdate(data: DiscordGatewayPayload) {
 
   const member = await cacheHandlers.get(
     "members",
-    snowflakeToBigint(userData.id),
+    snowflakeToBigint(userData.id)
   );
   if (!member) return;
 
   Object.entries(userData).forEach(([key, value]) => {
-    eventHandlers.debug?.(
-      "loop",
-      `Running forEach loop in USER_UPDATE file.`,
-    );
+    eventHandlers.debug?.("loop", `Running forEach loop in USER_UPDATE file.`);
     // @ts-ignore index signatures
-    if (member[key] !== value) return member[key] = value;
+    if (member[key] !== value) return (member[key] = value);
   });
 
   await cacheHandlers.set("members", snowflakeToBigint(userData.id), member);

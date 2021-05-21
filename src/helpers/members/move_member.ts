@@ -9,7 +9,7 @@ import { editMember } from "./edit_member.ts";
 export function moveMember(
   guildId: bigint,
   memberId: bigint,
-  channelId: bigint,
+  channelId: bigint
 ) {
   return editMember(guildId, memberId, { channelId });
 }

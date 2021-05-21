@@ -8,6 +8,6 @@ export async function deleteRole(guildId: bigint, id: bigint) {
 
   return await rest.runMethod<undefined>(
     "delete",
-    endpoints.GUILD_ROLE(guildId, id),
+    endpoints.GUILD_ROLE(guildId, id)
   );
 }

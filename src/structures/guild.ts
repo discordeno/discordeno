@@ -181,10 +181,7 @@ const baseGuild: Partial<DiscordenoGuild> = {
   },
 };
 
-export async function createDiscordenoGuild(
-  data: Guild,
-  shardId: number,
-) {
+export async function createDiscordenoGuild(data: Guild, shardId: number) {
   const {
     memberCount = 0,
     voiceStates = [],
@@ -209,31 +206,33 @@ export async function createDiscordenoGuild(
         role,
         guildId,
       })
-    ),
+    )
   );
 
   const voiceStateStructs = await Promise.all(
-    voiceStates.map((vs) => structures.createDiscordenoVoiceState(guildId, vs)),
+    voiceStates.map((vs) => structures.createDiscordenoVoiceState(guildId, vs))
   );
 
-  await Promise.all([...channels, ...threads].map(async (channel) => {
-    const discordenoChannel = await structures.createDiscordenoChannel(
-      channel,
-      guildId,
-    );
+  await Promise.all(
+    [...channels, ...threads].map(async (channel) => {
+      const discordenoChannel = await structures.createDiscordenoChannel(
+        channel,
+        guildId
+      );
 
-    return await cacheHandlers.set(
-      "channels",
-      discordenoChannel.id,
-      discordenoChannel,
-    );
-  }));
+      return await cacheHandlers.set(
+        "channels",
+        discordenoChannel.id,
+        discordenoChannel
+      );
+    })
+  );
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const [key, value] of Object.entries(rest)) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of loop in createDiscordenoGuild function.`,
+      `Running for of loop in createDiscordenoGuild function.`
     );
 
     const toggleBits = guildToggles[key as keyof typeof guildToggles];
@@ -244,8 +243,10 @@ export async function createDiscordenoGuild(
 
     props[key] = createNewProp(
       GUILD_SNOWFLAKES.includes(key)
-        ? value ? snowflakeToBigint(value) : undefined
-        : value,
+        ? value
+          ? snowflakeToBigint(value)
+          : undefined
+        : value
     );
   }
 
@@ -267,24 +268,23 @@ export async function createDiscordenoGuild(
     ...props,
     shardId: createNewProp(shardId),
     roles: createNewProp(
-      new Collection(
-        roles.map((r: DiscordenoRole) => [r.id, r]),
-      ),
+      new Collection(roles.map((r: DiscordenoRole) => [r.id, r]))
     ),
     joinedAt: createNewProp(Date.parse(joinedAt)),
     presences: createNewProp(
-      new Collection(presences.map((p) => [snowflakeToBigint(p.user!.id), p])),
+      new Collection(presences.map((p) => [snowflakeToBigint(p.user!.id), p]))
     ),
     memberCount: createNewProp(memberCount),
     emojis: createNewProp(
       new Collection(
-        (emojis || []).map((
+        (emojis || []).map((emoji) => [
+          emoji.id ? snowflakeToBigint(emoji.id) : emoji.name,
           emoji,
-        ) => [emoji.id ? snowflakeToBigint(emoji.id) : emoji.name, emoji]),
-      ),
+        ])
+      )
     ),
     voiceStates: createNewProp(
-      new Collection(voiceStateStructs.map((vs) => [vs.userId, vs])),
+      new Collection(voiceStateStructs.map((vs) => [vs.userId, vs]))
     ),
     bitfield: createNewProp(bitfield),
   });
@@ -294,8 +294,8 @@ export async function createDiscordenoGuild(
   return guild;
 }
 
-export interface DiscordenoGuild extends
-  Omit<
+export interface DiscordenoGuild
+  extends Omit<
     Guild,
     | "roles"
     | "presences"
@@ -391,17 +391,17 @@ export interface DiscordenoGuild extends
   /** The banner url for this server */
   bannerURL(
     size?: DiscordImageSize,
-    format?: DiscordImageFormat,
+    format?: DiscordImageFormat
   ): string | undefined;
   /** The splash url for this server */
   splashURL(
     size?: DiscordImageSize,
-    format?: DiscordImageFormat,
+    format?: DiscordImageFormat
   ): string | undefined;
   /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
   iconURL(
     size?: DiscordImageSize,
-    format?: DiscordImageFormat,
+    format?: DiscordImageFormat
   ): string | undefined;
   /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event. */
   delete(): ReturnType<typeof deleteGuild>;

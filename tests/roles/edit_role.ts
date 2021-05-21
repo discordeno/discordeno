@@ -15,9 +15,8 @@ Deno.test({
     assertExists(role);
 
     // Delay the execution by 5 seconds to allow GUILD_ROLE_CREATE event to be processed
-    await delayUntil(
-      10000,
-      () => cache.guilds.get(tempData.guildId)?.roles.has(role.id),
+    await delayUntil(10000, () =>
+      cache.guilds.get(tempData.guildId)?.roles.has(role.id)
     );
 
     if (!cache.guilds.get(tempData.guildId)?.roles.has(role.id)) {
@@ -33,13 +32,13 @@ Deno.test({
       10000,
       () =>
         cache.guilds.get(tempData.guildId)?.roles.get(role.id)?.name ===
-          "#rememberAyntee",
+        "#rememberAyntee"
     );
 
     assertEquals(
       cache.guilds.get(tempData.guildId)?.roles.get(role.id)?.name ===
         "#rememberAyntee",
-      true,
+      true
     );
   },
   ...defaultTestOptions,

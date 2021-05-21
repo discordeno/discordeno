@@ -1,18 +1,16 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type {
-  MessageReactionRemoveAll,
-} from "../../types/messages/message_reaction_remove_all.ts";
+import type { MessageReactionRemoveAll } from "../../types/messages/message_reaction_remove_all.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleMessageReactionRemoveAll(
-  data: DiscordGatewayPayload,
+  data: DiscordGatewayPayload
 ) {
   const payload = data.d as MessageReactionRemoveAll;
   const message = await cacheHandlers.get(
     "messages",
-    snowflakeToBigint(payload.messageId),
+    snowflakeToBigint(payload.messageId)
   );
 
   if (message?.reactions) {
@@ -21,12 +19,9 @@ export async function handleMessageReactionRemoveAll(
     await cacheHandlers.set(
       "messages",
       snowflakeToBigint(payload.messageId),
-      message,
+      message
     );
   }
 
-  eventHandlers.reactionRemoveAll?.(
-    payload,
-    message,
-  );
+  eventHandlers.reactionRemoveAll?.(payload, message);
 }

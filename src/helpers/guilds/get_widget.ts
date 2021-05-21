@@ -14,6 +14,6 @@ export async function getWidget(guildId: bigint, options?: { force: boolean }) {
 
   return await rest.runMethod<GuildWidgetDetails>(
     "get",
-    `${endpoints.GUILD_WIDGET(guildId)}.json`,
+    `${endpoints.GUILD_WIDGET(guildId)}.json`
   );
 }

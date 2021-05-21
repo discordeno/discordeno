@@ -13,11 +13,11 @@ import { ws } from "../../ws/ws.ts";
  */
 export async function createGuildFromTemplate(
   templateCode: string,
-  data: CreateGuildFromTemplate,
+  data: CreateGuildFromTemplate
 ) {
   if ((await cacheHandlers.size("guilds")) >= 10) {
     throw new Error(
-      "This function can only be used by bots in less than 10 guilds.",
+      "This function can only be used by bots in less than 10 guilds."
     );
   }
 
@@ -28,14 +28,16 @@ export async function createGuildFromTemplate(
   const createdGuild = await rest.runMethod<Guild>(
     "post",
     endpoints.GUILD_TEMPLATE(templateCode),
-    data,
+    data
   );
 
   return await structures.createDiscordenoGuild(
     createdGuild,
     Number(
-      (BigInt(createdGuild.id) >> 22n % BigInt(ws.botGatewayData.shards))
-        .toString(),
-    ),
+      (
+        BigInt(createdGuild.id) >>
+        22n % BigInt(ws.botGatewayData.shards)
+      ).toString()
+    )
   );
 }

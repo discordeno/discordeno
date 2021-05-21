@@ -29,7 +29,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", reason?: string) {
   // Make sure it is gone from cache
   if (cache.messages.has(message.id)) {
     throw new Error(
-      "The message should have been deleted but it is still in cache.",
+      "The message should have been deleted but it is still in cache."
     );
   }
 }

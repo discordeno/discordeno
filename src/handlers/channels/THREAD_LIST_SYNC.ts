@@ -14,26 +14,26 @@ export async function handleThreadListSync(data: DiscordGatewayPayload) {
     payload.threads.map(async (thread) => {
       const discordenoChannel = await structures.createDiscordenoChannel(
         thread,
-        snowflakeToBigint(payload.guildId),
+        snowflakeToBigint(payload.guildId)
       );
 
       await cacheHandlers.set(
         "channels",
         discordenoChannel.id,
-        discordenoChannel,
+        discordenoChannel
       );
 
       return discordenoChannel;
-    }),
+    })
   );
 
   const threads = new Collection<bigint, DiscordenoChannel>(
-    discordenoChannels.map((t) => [t.id, t]),
+    discordenoChannels.map((t) => [t.id, t])
   );
 
   eventHandlers.threadListSync?.(
     threads,
     payload.members,
-    snowflakeToBigint(payload.guildId),
+    snowflakeToBigint(payload.guildId)
   );
 }

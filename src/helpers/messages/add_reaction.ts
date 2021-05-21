@@ -6,7 +6,7 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 export async function addReaction(
   channelId: bigint,
   messageId: bigint,
-  reaction: string,
+  reaction: string
 ) {
   await requireBotChannelPermissions(channelId, [
     "ADD_REACTIONS",
@@ -21,6 +21,6 @@ export async function addReaction(
 
   return await rest.runMethod<undefined>(
     "put",
-    endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction),
+    endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction)
   );
 }

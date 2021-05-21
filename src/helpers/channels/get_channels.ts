@@ -12,7 +12,7 @@ import { endpoints } from "../../util/constants.ts";
 export async function getChannels(guildId: bigint, addToCache = true) {
   const result = await rest.runMethod<Channel[]>(
     "get",
-    endpoints.GUILD_CHANNELS(guildId),
+    endpoints.GUILD_CHANNELS(guildId)
   );
 
   return new Collection(
@@ -21,19 +21,19 @@ export async function getChannels(guildId: bigint, addToCache = true) {
         result.map(async (res) => {
           const discordenoChannel = await structures.createDiscordenoChannel(
             res,
-            guildId,
+            guildId
           );
           if (addToCache) {
             await cacheHandlers.set(
               "channels",
               discordenoChannel.id,
-              discordenoChannel,
+              discordenoChannel
             );
           }
 
           return discordenoChannel;
-        }),
+        })
       )
-    ).map((c) => [c.id, c]),
+    ).map((c) => [c.id, c])
   );
 }

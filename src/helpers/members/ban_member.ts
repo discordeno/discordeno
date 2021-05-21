@@ -8,14 +8,14 @@ import { snakelize } from "../../util/utils.ts";
 export async function ban(
   guildId: bigint,
   id: bigint,
-  options: CreateGuildBan,
+  options: CreateGuildBan
 ) {
   await requireBotGuildPermissions(guildId, ["BAN_MEMBERS"]);
 
   return await rest.runMethod<undefined>(
     "put",
     endpoints.GUILD_BAN(guildId, id),
-    snakelize(options),
+    snakelize(options)
   );
 }
 

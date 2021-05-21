@@ -13,13 +13,8 @@ export async function getGuildTemplates(guildId: bigint) {
 
   const templates = await rest.runMethod<Template[]>(
     "get",
-    endpoints.GUILD_TEMPLATES(guildId),
+    endpoints.GUILD_TEMPLATES(guildId)
   );
 
-  return new Collection(
-    templates.map((template) => [
-      template.code,
-      template,
-    ]),
-  );
+  return new Collection(templates.map((template) => [template.code, template]));
 }

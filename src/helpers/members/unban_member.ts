@@ -8,7 +8,7 @@ export async function unban(guildId: bigint, id: bigint) {
 
   return await rest.runMethod<undefined>(
     "delete",
-    endpoints.GUILD_BAN(guildId, id),
+    endpoints.GUILD_BAN(guildId, id)
   );
 }
 

@@ -7,7 +7,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function editWidget(
   guildId: bigint,
   enabled: boolean,
-  channelId?: string | null,
+  channelId?: string | null
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
@@ -17,6 +17,6 @@ export async function editWidget(
     {
       enabled,
       channel_id: channelId,
-    },
+    }
   );
 }

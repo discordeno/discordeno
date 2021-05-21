@@ -13,7 +13,7 @@ import {
 export async function createRole(
   guildId: bigint,
   options: CreateGuildRole,
-  reason?: string,
+  reason?: string
 ) {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
@@ -24,7 +24,7 @@ export async function createRole(
       ...options,
       permissions: calculateBits(options?.permissions || []),
       reason,
-    },
+    }
   );
 
   const role = await structures.createDiscordenoRole({

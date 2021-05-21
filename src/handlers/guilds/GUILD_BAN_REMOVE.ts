@@ -8,13 +8,13 @@ export async function handleGuildBanRemove(data: DiscordGatewayPayload) {
   const payload = data.d as GuildBanAddRemove;
   const guild = await cacheHandlers.get(
     "guilds",
-    snowflakeToBigint(payload.guildId),
+    snowflakeToBigint(payload.guildId)
   );
   if (!guild) return;
 
   const member = await cacheHandlers.get(
     "members",
-    snowflakeToBigint(payload.user.id),
+    snowflakeToBigint(payload.user.id)
   );
   eventHandlers.guildBanRemove?.(guild, payload.user, member);
 }

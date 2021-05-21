@@ -8,15 +8,17 @@ export async function handleMessageDeleteBulk(data: DiscordGatewayPayload) {
   const payload = data.d as MessageDeleteBulk;
   const channel = await cacheHandlers.get(
     "channels",
-    snowflakeToBigint(payload.channelId),
+    snowflakeToBigint(payload.channelId)
   );
   if (!channel) return;
 
-  return Promise.all(payload.ids.map(async (id) => {
-    eventHandlers.messageDelete?.(
-      { id, channel },
-      await cacheHandlers.get("messages", snowflakeToBigint(id)),
-    );
-    await cacheHandlers.delete("messages", snowflakeToBigint(id));
-  }));
+  return Promise.all(
+    payload.ids.map(async (id) => {
+      eventHandlers.messageDelete?.(
+        { id, channel },
+        await cacheHandlers.get("messages", snowflakeToBigint(id))
+      );
+      await cacheHandlers.delete("messages", snowflakeToBigint(id));
+    })
+  );
 }

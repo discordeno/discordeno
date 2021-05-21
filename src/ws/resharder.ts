@@ -25,7 +25,7 @@ export async function resharder() {
       ws.maxShards /
         (ws.botGatewayData.sessionStartLimit.maxConcurrency === 1
           ? 16
-          : ws.botGatewayData.sessionStartLimit.maxConcurrency),
+          : ws.botGatewayData.sessionStartLimit.maxConcurrency)
     );
   }
 

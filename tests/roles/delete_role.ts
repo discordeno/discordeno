@@ -6,16 +6,19 @@ import { createRole } from "../../src/helpers/roles/create_role.ts";
 import { deleteRole } from "../../src/helpers/roles/delete_role.ts";
 
 async function ifItFailsBlameWolf(reason?: string) {
-  const role = await createRole(tempData.guildId, {
-    name: "hoti",
-  }, reason);
+  const role = await createRole(
+    tempData.guildId,
+    {
+      name: "hoti",
+    },
+    reason
+  );
 
   assertExists(role);
 
   // Delay the execution by 5 seconds to allow GUILD_ROLE_CREATE event to be processed
-  await delayUntil(
-    10000,
-    () => cache.guilds.get(tempData.guildId)?.roles.has(role.id),
+  await delayUntil(10000, () =>
+    cache.guilds.get(tempData.guildId)?.roles.has(role.id)
   );
 
   if (!cache.guilds.get(tempData.guildId)?.roles.has(role.id)) {
@@ -27,12 +30,12 @@ async function ifItFailsBlameWolf(reason?: string) {
   // Delay the execution by 5 seconds to allow GUILD_ROLE_CREATE event to be processed
   await delayUntil(
     10000,
-    () => !cache.guilds.get(tempData.guildId)?.roles.has(role.id),
+    () => !cache.guilds.get(tempData.guildId)?.roles.has(role.id)
   );
 
   if (cache.guilds.get(tempData.guildId)?.roles.has(role.id)) {
     throw new Error(
-      `The role should have been deleted but it is still in cache.`,
+      `The role should have been deleted but it is still in cache.`
     );
   }
 }

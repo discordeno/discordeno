@@ -12,12 +12,7 @@ import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 import { DiscordenoMember } from "./member.ts";
 
-const ROLE_SNOWFLAKES = [
-  "id",
-  "botId",
-  "integrationId",
-  "guildId",
-];
+const ROLE_SNOWFLAKES = ["id", "botId", "integrationId", "guildId"];
 
 const roleToggles = {
   /** If this role is showed seperately in the user listing */
@@ -59,7 +54,7 @@ const baseRole: Partial<DiscordenoRole> = {
     // If still none error out.
     if (!position) {
       throw new Error(
-        "role.higherThanRoleId() did not have a position provided and the role or guild was not found in cache. Please provide a position like role.higherThanRoleId(roleId, position)",
+        "role.higherThanRoleId() did not have a position provided and the role or guild was not found in cache. Please provide a position like role.higherThanRoleId(roleId, position)"
       );
     }
 
@@ -79,7 +74,7 @@ const baseRole: Partial<DiscordenoRole> = {
     const memberHighestRole = await highestRole(guild, memberId);
     return this.higherThanRole!(
       memberHighestRole.id,
-      memberHighestRole.position,
+      memberHighestRole.position
     );
   },
   get hoist() {
@@ -100,12 +95,9 @@ const baseRole: Partial<DiscordenoRole> = {
 export async function createDiscordenoRole(
   data: { role: Role } & {
     guildId: bigint;
-  },
+  }
 ) {
-  const {
-    tags = {},
-    ...rest
-  } = ({ guildId: data.guildId, ...data.role });
+  const { tags = {}, ...rest } = { guildId: data.guildId, ...data.role };
 
   let bitfield = 0n;
 
@@ -113,7 +105,7 @@ export async function createDiscordenoRole(
   for (const [key, value] of Object.entries(rest)) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of loop in createDiscordenoRole function.`,
+      `Running for of loop in createDiscordenoRole function.`
     );
 
     const toggleBits = roleToggles[key as keyof typeof roleToggles];
@@ -124,19 +116,21 @@ export async function createDiscordenoRole(
 
     props[key] = createNewProp(
       ROLE_SNOWFLAKES.includes(key)
-        ? value ? snowflakeToBigint(value) : undefined
-        : value,
+        ? value
+          ? snowflakeToBigint(value)
+          : undefined
+        : value
     );
   }
 
   const role: DiscordenoRole = Object.create(baseRole, {
     ...props,
     botId: createNewProp(
-      tags.botId ? snowflakeToBigint(tags.botId) : undefined,
+      tags.botId ? snowflakeToBigint(tags.botId) : undefined
     ),
     isNitroBoostRole: createNewProp("premiumSubscriber" in tags),
     integrationId: createNewProp(
-      tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined,
+      tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined
     ),
     bitfield: createNewProp(bitfield),
   });

@@ -10,10 +10,8 @@ export async function getWebhooks(guildId: bigint) {
 
   const result = await rest.runMethod<Webhook[]>(
     "get",
-    endpoints.GUILD_WEBHOOKS(guildId),
+    endpoints.GUILD_WEBHOOKS(guildId)
   );
 
-  return new Collection(
-    result.map((webhook) => [webhook.id, webhook]),
-  );
+  return new Collection(result.map((webhook) => [webhook.id, webhook]));
 }

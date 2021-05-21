@@ -6,11 +6,11 @@ import { snakelize } from "../../util/utils.ts";
 
 export async function editWelcomeScreen(
   guildId: bigint,
-  options: ModifyGuildWelcomeScreen,
+  options: ModifyGuildWelcomeScreen
 ) {
   return await rest.runMethod<WelcomeScreen>(
     "patch",
     endpoints.GUILD_WELCOME_SCREEN(guildId),
-    snakelize(options),
+    snakelize(options)
   );
 }

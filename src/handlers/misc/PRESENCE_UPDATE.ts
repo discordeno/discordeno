@@ -9,12 +9,12 @@ export async function handlePresenceUpdate(data: DiscordGatewayPayload) {
 
   const oldPresence = await cacheHandlers.get(
     "presences",
-    snowflakeToBigint(payload.user.id),
+    snowflakeToBigint(payload.user.id)
   );
   await cacheHandlers.set(
     "presences",
     snowflakeToBigint(payload.user.id),
-    payload,
+    payload
   );
 
   eventHandlers.presenceUpdate?.(payload, oldPresence);

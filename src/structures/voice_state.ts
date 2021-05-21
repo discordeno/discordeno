@@ -7,11 +7,7 @@ import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 import { DiscordenoMember } from "./member.ts";
 
-const VOICE_STATE_SNOWFLAKES = [
-  "userId",
-  "channelId",
-  "guildId",
-];
+const VOICE_STATE_SNOWFLAKES = ["userId", "channelId", "guildId"];
 
 export const voiceStateToggles = {
   /** Whether this user is deafened by the server */
@@ -66,7 +62,7 @@ const baseRole: Partial<DiscordenoVoiceState> = {
 // deno-lint-ignore require-await
 export async function createDiscordenoVoiceState(
   guildId: bigint,
-  data: VoiceState,
+  data: VoiceState
 ) {
   let bitfield = 0n;
 
@@ -74,7 +70,7 @@ export async function createDiscordenoVoiceState(
   for (const [key, value] of Object.entries(data)) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of loop in createDiscordenoVoiceState function.`,
+      `Running for of loop in createDiscordenoVoiceState function.`
     );
 
     // We don't need to cache member twice. It will be in cache.members
@@ -88,8 +84,10 @@ export async function createDiscordenoVoiceState(
 
     props[key] = createNewProp(
       VOICE_STATE_SNOWFLAKES.includes(key)
-        ? value ? snowflakeToBigint(value) : undefined
-        : value,
+        ? value
+          ? snowflakeToBigint(value)
+          : undefined
+        : value
     );
   }
 

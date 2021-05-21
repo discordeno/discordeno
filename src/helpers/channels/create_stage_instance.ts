@@ -23,9 +23,7 @@ export async function createStageInstance(channelId: bigint, topic: string) {
     ]);
   }
 
-  if (
-    !validateLength(topic, { max: 120, min: 1 })
-  ) {
+  if (!validateLength(topic, { max: 120, min: 1 })) {
     throw new Error(Errors.INVALID_TOPIC_LENGTH);
   }
 
@@ -33,8 +31,8 @@ export async function createStageInstance(channelId: bigint, topic: string) {
     "post",
     endpoints.STAGE_INSTANCES,
     {
-      "channel_id": channelId,
+      channel_id: channelId,
       topic,
-    },
+    }
   );
 }

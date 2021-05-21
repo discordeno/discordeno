@@ -17,6 +17,6 @@ export async function getStageInstance(channelId: bigint) {
 
   return await rest.runMethod<StageInstance>(
     "get",
-    endpoints.STAGE_INSTANCE(channelId),
+    endpoints.STAGE_INSTANCE(channelId)
   );
 }

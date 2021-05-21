@@ -20,8 +20,5 @@ export async function deleteInvite(channelId: bigint, inviteCode: string) {
     }
   }
 
-  return await rest.runMethod<Invite>(
-    "delete",
-    endpoints.INVITE(inviteCode),
-  );
+  return await rest.runMethod<Invite>("delete", endpoints.INVITE(inviteCode));
 }

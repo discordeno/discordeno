@@ -23,6 +23,6 @@ export async function deleteStageInstance(channelId: bigint) {
 
   return await rest.runMethod<undefined>(
     "delete",
-    endpoints.STAGE_INSTANCE(channelId),
+    endpoints.STAGE_INSTANCE(channelId)
   );
 }

@@ -4,6 +4,6 @@ import { cacheHandlers } from "../../cache.ts";
 export async function categoryChildren(id: bigint) {
   return await cacheHandlers.filter(
     "channels",
-    (channel) => channel.parentId === id,
+    (channel) => channel.parentId === id
   );
 }

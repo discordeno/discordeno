@@ -7,10 +7,10 @@ import { endpoints } from "../../util/constants.ts";
 export async function getVoiceRegions(guildId: bigint) {
   const result = await rest.runMethod<VoiceRegion[]>(
     "get",
-    endpoints.GUILD_REGIONS(guildId),
+    endpoints.GUILD_REGIONS(guildId)
   );
 
   return new Collection<string, VoiceRegion>(
-    result.map((region) => [region.id, region]),
+    result.map((region) => [region.id, region])
   );
 }

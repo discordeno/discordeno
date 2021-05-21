@@ -22,7 +22,7 @@ import { ws } from "../../ws/ws.ts";
  */
 export async function getMembers(
   guildId: bigint,
-  options?: ListGuildMembers & { addToCache?: boolean },
+  options?: ListGuildMembers & { addToCache?: boolean }
 ) {
   if (!(ws.identifyPayload.intents && DiscordGatewayIntents.GuildMembers)) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
@@ -43,38 +43,36 @@ export async function getMembers(
 
     if (options?.limit && options.limit > 1000) {
       console.log(
-        `Paginating get members from REST. #${loops} / ${
-          Math.ceil(
-            (options?.limit ?? 1) / 1000,
-          )
-        }`,
+        `Paginating get members from REST. #${loops} / ${Math.ceil(
+          (options?.limit ?? 1) / 1000
+        )}`
       );
     }
 
-    const result = (await rest.runMethod<GuildMemberWithUser[]>(
+    const result = await rest.runMethod<GuildMemberWithUser[]>(
       "get",
       `${endpoints.GUILD_MEMBERS(guildId)}?limit=${
         membersLeft > 1000 ? 1000 : membersLeft
-      }${options?.after ? `&after=${options.after}` : ""}`,
-    ));
+      }${options?.after ? `&after=${options.after}` : ""}`
+    );
 
     const discordenoMembers = await Promise.all(
       result.map(async (member) => {
         const discordenoMember = await structures.createDiscordenoMember(
           member,
-          guildId,
+          guildId
         );
 
         if (options?.addToCache !== false) {
           await cacheHandlers.set(
             "members",
             discordenoMember.id,
-            discordenoMember,
+            discordenoMember
           );
         }
 
         return discordenoMember;
-      }),
+      })
     );
 
     if (!discordenoMembers.length) break;
@@ -82,7 +80,7 @@ export async function getMembers(
     discordenoMembers.forEach((member) => {
       eventHandlers.debug?.(
         "loop",
-        `Running forEach loop in get_members file.`,
+        `Running forEach loop in get_members file.`
       );
       members.set(member.id, member);
     });
@@ -90,7 +88,7 @@ export async function getMembers(
     options = {
       limit: options?.limit,
       after: bigintToSnowflake(
-        discordenoMembers[discordenoMembers.length - 1].id,
+        discordenoMembers[discordenoMembers.length - 1].id
       ),
     };
 

@@ -108,7 +108,7 @@ const baseMember: Partial<DiscordenoMember> = {
 export async function createDiscordenoMember(
   // The `user` param in `DiscordGuildMember` is optional since discord does not send it in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events. But this data in there is required to build this structure so it is required in this case
   data: GuildMemberWithUser,
-  guildId: bigint,
+  guildId: bigint
 ) {
   const { user, joinedAt, premiumSince } = data;
 
@@ -118,7 +118,7 @@ export async function createDiscordenoMember(
   for (const [key, value] of Object.entries(user)) {
     eventHandlers.debug?.(
       "loop",
-      `Running for of for Object.keys(user) loop in DiscordenoMember function.`,
+      `Running for of for Object.keys(user) loop in DiscordenoMember function.`
     );
 
     const toggleBits = memberToggles[key as keyof typeof memberToggles];
@@ -135,8 +135,10 @@ export async function createDiscordenoMember(
 
     props[key] = createNewProp(
       MEMBER_SNOWFLAKES.includes(key)
-        ? value ? snowflakeToBigint(value) : undefined
-        : value,
+        ? value
+          ? snowflakeToBigint(value)
+          : undefined
+        : value
     );
   }
 
@@ -152,7 +154,7 @@ export async function createDiscordenoMember(
     for (const [id, guild] of cached.guilds.entries()) {
       eventHandlers.debug?.(
         "loop",
-        `Running for of for cached.guilds.entries() loop in DiscordenoMember function.`,
+        `Running for of for cached.guilds.entries() loop in DiscordenoMember function.`
       );
       member.guilds.set(id, guild);
     }
@@ -210,14 +212,12 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id"> {
   /** Get the nickname or the username if no nickname */
   name(guildId: bigint): string;
   /** Get the guild member object for the specified guild */
-  guildMember(
-    guildId: bigint,
-  ):
+  guildMember(guildId: bigint):
     | (Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
-      joinedAt?: number;
-      premiumSince?: number;
-      roles: bigint[];
-    })
+        joinedAt?: number;
+        premiumSince?: number;
+        roles: bigint[];
+      })
     | undefined;
   /** Send a direct message to the user is possible */
   sendDM(content: string | CreateMessage): ReturnType<typeof sendDirectMessage>;
@@ -228,7 +228,7 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id"> {
     guildId: bigint,
     options: Omit<ModifyGuildMember, "channelId"> & {
       channelId?: bigint | null;
-    },
+    }
   ): ReturnType<typeof editMember>;
   /** Ban a member in a guild */
   ban(guildId: bigint, options: CreateGuildBan): ReturnType<typeof banMember>;
@@ -236,12 +236,12 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id"> {
   addRole(
     guildId: bigint,
     roleId: bigint,
-    reason?: string,
+    reason?: string
   ): ReturnType<typeof addRole>;
   /** Remove a role from the member */
   removeRole(
     guildId: bigint,
     roleId: bigint,
-    reason?: string,
+    reason?: string
   ): ReturnType<typeof removeRole>;
 }

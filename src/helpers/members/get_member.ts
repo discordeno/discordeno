@@ -11,19 +11,19 @@ import { endpoints } from "../../util/constants.ts";
 export async function getMember(
   guildId: bigint,
   id: bigint,
-  options?: { force?: boolean },
+  options?: { force?: boolean }
 ) {
   const guild = await cacheHandlers.get("guilds", guildId);
   if (!guild && !options?.force) return;
 
-  const data = (await rest.runMethod<GuildMemberWithUser>(
+  const data = await rest.runMethod<GuildMemberWithUser>(
     "get",
-    endpoints.GUILD_MEMBER(guildId, id),
-  ));
+    endpoints.GUILD_MEMBER(guildId, id)
+  );
 
   const discordenoMember = await structures.createDiscordenoMember(
     data,
-    guildId,
+    guildId
   );
   await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 

@@ -11,10 +11,10 @@ export async function getBans(guildId: bigint) {
 
   const results = await rest.runMethod<Ban[]>(
     "get",
-    endpoints.GUILD_BANS(guildId),
+    endpoints.GUILD_BANS(guildId)
   );
 
   return new Collection<bigint, Ban>(
-    results.map((res) => [snowflakeToBigint(res.user.id), res]),
+    results.map((res) => [snowflakeToBigint(res.user.id), res])
   );
 }

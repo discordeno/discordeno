@@ -17,7 +17,7 @@ import { snakelize } from "../../util/utils.ts";
 export async function editMember(
   guildId: bigint,
   memberId: bigint,
-  options: Omit<ModifyGuildMember, "channelId"> & { channelId?: bigint | null },
+  options: Omit<ModifyGuildMember, "channelId"> & { channelId?: bigint | null }
 ) {
   const requiredPerms: Set<PermissionStrings> = new Set();
 
@@ -33,10 +33,12 @@ export async function editMember(
   if (
     typeof options.mute !== "undefined" ||
     typeof options.deaf !== "undefined" ||
-    (typeof options.channelId !== "undefined" || "null")
+    typeof options.channelId !== "undefined" ||
+    "null"
   ) {
-    const memberVoiceState = (await cacheHandlers.get("guilds", guildId))
-      ?.voiceStates.get(memberId);
+    const memberVoiceState = (
+      await cacheHandlers.get("guilds", guildId)
+    )?.voiceStates.get(memberId);
 
     if (!memberVoiceState?.channelId) {
       throw new Error(Errors.MEMBER_NOT_IN_VOICE_CHANNEL);
@@ -56,15 +58,13 @@ export async function editMember(
         "MOVE_MEMBERS",
       ]);
       if (memberVoiceState) {
-        await requireBotChannelPermissions(
-          memberVoiceState?.channelId,
-          [...requiredVoicePerms],
-        );
+        await requireBotChannelPermissions(memberVoiceState?.channelId, [
+          ...requiredVoicePerms,
+        ]);
       }
-      await requireBotChannelPermissions(
-        options.channelId,
-        [...requiredVoicePerms],
-      );
+      await requireBotChannelPermissions(options.channelId, [
+        ...requiredVoicePerms,
+      ]);
     }
   }
 
@@ -78,13 +78,10 @@ export async function editMember(
       channelId: options.channelId
         ? bigintToSnowflake(options.channelId)
         : undefined,
-    }) as ModifyGuildMember,
+    }) as ModifyGuildMember
   );
 
-  const member = await structures.createDiscordenoMember(
-    result,
-    guildId,
-  );
+  const member = await structures.createDiscordenoMember(result, guildId);
 
   return member;
 }

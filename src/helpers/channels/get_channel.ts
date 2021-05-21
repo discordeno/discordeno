@@ -12,18 +12,18 @@ import { endpoints } from "../../util/constants.ts";
 export async function getChannel(channelId: bigint, addToCache = true) {
   const result = await rest.runMethod<Channel>(
     "get",
-    endpoints.CHANNEL_BASE(channelId),
+    endpoints.CHANNEL_BASE(channelId)
   );
 
   const discordenoChannel = await structures.createDiscordenoChannel(
     result,
-    result.guildId ? snowflakeToBigint(result.guildId) : undefined,
+    result.guildId ? snowflakeToBigint(result.guildId) : undefined
   );
   if (addToCache) {
     await cacheHandlers.set(
       "channels",
       discordenoChannel.id,
-      discordenoChannel,
+      discordenoChannel
     );
   }
 

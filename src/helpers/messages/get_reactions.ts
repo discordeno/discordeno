@@ -9,12 +9,12 @@ export async function getReactions(
   channelId: bigint,
   messageId: bigint,
   reaction: string,
-  options?: GetReactions,
+  options?: GetReactions
 ) {
   const users = await rest.runMethod<User[]>(
     "get",
     endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction),
-    options,
+    options
   );
 
   return new Collection(users.map((user) => [user.id, user]));

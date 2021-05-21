@@ -9,7 +9,7 @@ export async function handleVoiceServerUpdate(data: DiscordGatewayPayload) {
 
   const guild = await cacheHandlers.get(
     "guilds",
-    snowflakeToBigint(payload.guildId),
+    snowflakeToBigint(payload.guildId)
   );
   if (!guild) return;
 

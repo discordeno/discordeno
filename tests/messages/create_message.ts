@@ -6,7 +6,7 @@ import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
 async function ifItFailsBlameWolf(
   type: "getter" | "raw",
-  content: "string" | "embed" | "reply" = "string",
+  content: "string" | "embed" | "reply" = "string"
 ) {
   const channel = cache.channels.get(tempData.channelId);
   assertExists(channel);
@@ -46,9 +46,10 @@ async function ifItFailsBlameWolf(
     };
   }
 
-  const message = type === "raw"
-    ? await sendMessage(channel!.id, messageContent)
-    : await channel?.send(messageContent);
+  const message =
+    type === "raw"
+      ? await sendMessage(channel!.id, messageContent)
+      : await channel?.send(messageContent);
 
   // Assertions
   assertExists(message);
@@ -67,7 +68,7 @@ async function ifItFailsBlameWolf(
   } else {
     assertEquals(
       cache.messages.get(message!.id)?.messageReference?.messageId,
-      secondMessageId,
+      secondMessageId
     );
   }
 }
@@ -140,7 +141,7 @@ Deno.test({
 
     assertEquals(
       cache.messages.get(reply.id)?.messageReference?.messageId,
-      message.id,
+      message.id
     );
   },
   ...defaultTestOptions,

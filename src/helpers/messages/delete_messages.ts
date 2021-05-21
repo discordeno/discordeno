@@ -7,7 +7,7 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 export async function deleteMessages(
   channelId: bigint,
   ids: bigint[],
-  reason?: string,
+  reason?: string
 ) {
   await requireBotChannelPermissions(channelId, ["MANAGE_MESSAGES"]);
 
@@ -17,7 +17,7 @@ export async function deleteMessages(
 
   if (ids.length > 100) {
     console.warn(
-      `This endpoint only accepts a maximum of 100 messages. Deleting the first 100 message ids provided.`,
+      `This endpoint only accepts a maximum of 100 messages. Deleting the first 100 message ids provided.`
     );
   }
 
@@ -27,6 +27,6 @@ export async function deleteMessages(
     {
       messages: ids.splice(0, 100),
       reason,
-    },
+    }
   );
 }

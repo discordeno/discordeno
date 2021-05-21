@@ -16,7 +16,7 @@ export async function getMessage(channelId: bigint, id: bigint) {
 
   const result = await rest.runMethod<Message>(
     "get",
-    endpoints.CHANNEL_MESSAGE(channelId, id),
+    endpoints.CHANNEL_MESSAGE(channelId, id)
   );
 
   return await structures.createDiscordenoMessage(result);

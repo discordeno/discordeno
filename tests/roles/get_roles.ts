@@ -15,12 +15,12 @@ Deno.test({
     await delayUntil(
       10000,
       () =>
-        cache.members.get(botId)?.guilds.get(tempData.guildId).roles.length > 0,
+        cache.members.get(botId)?.guilds.get(tempData.guildId).roles.length > 0
     );
 
     assertEquals(
       cache.members.get(botId)?.guilds.get(tempData.guildId).roles.length > 0,
-      true,
+      true
     );
   },
   ...defaultTestOptions,

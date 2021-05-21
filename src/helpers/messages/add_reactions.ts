@@ -6,17 +6,17 @@ export async function addReactions(
   channelId: bigint,
   messageId: bigint,
   reactions: string[],
-  ordered = false,
+  ordered = false
 ) {
   if (!ordered) {
     await Promise.all(
-      reactions.map((reaction) => addReaction(channelId, messageId, reaction)),
+      reactions.map((reaction) => addReaction(channelId, messageId, reaction))
     );
   } else {
     for (const reaction of reactions) {
       eventHandlers.debug?.(
         "loop",
-        "Running for of loop in addReactions function.",
+        "Running for of loop in addReactions function."
       );
       await addReaction(channelId, messageId, reaction);
     }

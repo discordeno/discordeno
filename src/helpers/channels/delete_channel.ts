@@ -6,10 +6,7 @@ import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-export async function deleteChannel(
-  channelId: bigint,
-  reason?: string,
-) {
+export async function deleteChannel(channelId: bigint, reason?: string) {
   const channel = await cacheHandlers.get("channels", channelId);
 
   if (channel?.guildId) {
@@ -20,12 +17,12 @@ export async function deleteChannel(
     await requireBotGuildPermissions(
       guild,
       [
-          ChannelTypes.GuildNewsThread,
-          ChannelTypes.GuildPivateThread,
-          ChannelTypes.GuildPublicThread,
-        ].includes(channel.type)
+        ChannelTypes.GuildNewsThread,
+        ChannelTypes.GuildPivateThread,
+        ChannelTypes.GuildPublicThread,
+      ].includes(channel.type)
         ? ["MANAGE_THREADS"]
-        : ["MANAGE_CHANNELS"],
+        : ["MANAGE_CHANNELS"]
     );
     if (guild.rulesChannelId === channelId) {
       throw new Error(Errors.RULES_CHANNEL_CANNOT_BE_DELETED);
@@ -39,6 +36,6 @@ export async function deleteChannel(
   return await rest.runMethod<undefined>(
     "delete",
     endpoints.CHANNEL_BASE(channelId),
-    { reason },
+    { reason }
   );
 }

@@ -4,7 +4,7 @@ import { MessageComponentTypes } from "../../types/messages/components/message_c
 
 /** A type guard function to tell if it is a button component */
 export function isButton(
-  component: MessageComponent,
+  component: MessageComponent
 ): component is ButtonComponent {
   return component.type === MessageComponentTypes.Button;
 }

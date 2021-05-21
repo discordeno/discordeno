@@ -98,8 +98,7 @@ export enum DiscordJsonErrorCodes {
   PaymentSourceRequiredToRedeemGift = 50070,
   CannotDeleteAChannelRequiredForCommunityGuilds = 50074,
   InvalidStickerSent = 50081,
-  TriedToPerformAnOperationOnAnArchivedThreadSuchAsEditingAMessageOrAddingAUserToTheThread =
-    50083,
+  TriedToPerformAnOperationOnAnArchivedThreadSuchAsEditingAMessageOrAddingAUserToTheThread = 50083,
   InvalidThreadNotificationSettings,
   BeforeValueIsEarlierThanTheThreadCreationDate,
   TwoFactorIsRequiredForThisOperation = 60003,

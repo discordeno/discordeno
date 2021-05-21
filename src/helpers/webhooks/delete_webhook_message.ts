@@ -4,10 +4,10 @@ import { endpoints } from "../../util/constants.ts";
 export async function deleteWebhookMessage(
   webhookId: bigint,
   webhookToken: string,
-  messageId: bigint,
+  messageId: bigint
 ) {
   return await rest.runMethod<undefined>(
     "delete",
-    endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId),
+    endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId)
   );
 }

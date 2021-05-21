@@ -21,7 +21,7 @@ Deno.test({
 
     if (!cache.channels.has(channel.id)) {
       throw new Error(
-        "The channel seemed to be created but it was not cached.",
+        "The channel seemed to be created but it was not cached."
       );
     }
 
@@ -35,10 +35,7 @@ Deno.test({
     // Assertions
     assertExists(invite);
 
-    assertEquals(
-      await getInvite(invite.code) !== undefined,
-      true,
-    );
+    assertEquals((await getInvite(invite.code)) !== undefined, true);
   },
   ...defaultTestOptions,
 });

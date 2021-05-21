@@ -2,23 +2,21 @@ import { botId, eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type {
-  MessageReactionAdd,
-} from "../../types/messages/message_reaction_add.ts";
+import type { MessageReactionAdd } from "../../types/messages/message_reaction_add.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleMessageReactionAdd(data: DiscordGatewayPayload) {
   const payload = data.d as MessageReactionAdd;
   const message = await cacheHandlers.get(
     "messages",
-    snowflakeToBigint(payload.messageId),
+    snowflakeToBigint(payload.messageId)
   );
 
   if (message) {
     const reactionExisted = message.reactions?.find(
       (reaction) =>
         reaction.emoji.id === payload.emoji.id &&
-        reaction.emoji.name === payload.emoji.name,
+        reaction.emoji.name === payload.emoji.name
     );
 
     if (reactionExisted) reactionExisted.count++;
@@ -36,26 +34,23 @@ export async function handleMessageReactionAdd(data: DiscordGatewayPayload) {
     await cacheHandlers.set(
       "messages",
       snowflakeToBigint(payload.messageId),
-      message,
+      message
     );
   }
 
   if (payload.member && payload.guildId) {
     const guild = await cacheHandlers.get(
       "guilds",
-      snowflakeToBigint(payload.guildId),
+      snowflakeToBigint(payload.guildId)
     );
     if (guild) {
       const discordenoMember = await structures.createDiscordenoMember(
         payload.member,
-        guild.id,
+        guild.id
       );
       await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
     }
   }
 
-  eventHandlers.reactionAdd?.(
-    payload,
-    message,
-  );
+  eventHandlers.reactionAdd?.(payload, message);
 }

@@ -18,7 +18,7 @@ import { snakelize, validateSlashCommands } from "../../../util/utils.ts";
  */
 export async function createSlashCommand(
   options: CreateGlobalApplicationCommand,
-  guildId?: bigint,
+  guildId?: bigint
 ) {
   validateSlashCommands([options], true);
 
@@ -27,6 +27,6 @@ export async function createSlashCommand(
     guildId
       ? endpoints.COMMANDS_GUILD(applicationId, guildId)
       : endpoints.COMMANDS(applicationId),
-    snakelize(options),
+    snakelize(options)
   );
 }

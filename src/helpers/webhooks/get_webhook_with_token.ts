@@ -6,6 +6,6 @@ import { endpoints } from "../../util/constants.ts";
 export async function getWebhookWithToken(webhookId: bigint, token: string) {
   return await rest.runMethod<Webhook>(
     "get",
-    endpoints.WEBHOOK(webhookId, token),
+    endpoints.WEBHOOK(webhookId, token)
   );
 }

@@ -14,9 +14,8 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", reason?: string) {
   assertExists(role);
 
   // Delay the execution by 5 seconds to allow GUILD_ROLE_CREATE event to be processed
-  await delayUntil(
-    10000,
-    () => cache.guilds.get(tempData.guildId)?.roles.has(role.id),
+  await delayUntil(10000, () =>
+    cache.guilds.get(tempData.guildId)?.roles.has(role.id)
   );
 
   if (!cache.guilds.get(tempData.guildId)?.roles.has(role.id)) {
@@ -30,19 +29,19 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", reason?: string) {
   }
 
   // Delay the execution by 5 seconds to allow GUILD_MEMBER_UPDATE event to be processed
-  await delayUntil(
-    10000,
-    () =>
-      cache.members.get(botId)?.guilds.get(tempData.guildId)!.roles.includes(
-        role.id,
-      ),
+  await delayUntil(10000, () =>
+    cache.members
+      .get(botId)
+      ?.guilds.get(tempData.guildId)!
+      .roles.includes(role.id)
   );
 
   assertEquals(
-    cache.members.get(botId)?.guilds.get(tempData.guildId)!.roles.includes(
-      role.id,
-    ),
-    true,
+    cache.members
+      .get(botId)
+      ?.guilds.get(tempData.guildId)!
+      .roles.includes(role.id),
+    true
   );
 }
 

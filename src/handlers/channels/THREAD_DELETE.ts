@@ -9,7 +9,7 @@ export async function handleThreadDelete(data: DiscordGatewayPayload) {
 
   const cachedChannel = await cacheHandlers.get(
     "channels",
-    snowflakeToBigint(payload.id),
+    snowflakeToBigint(payload.id)
   );
   if (!cachedChannel) return;
 
@@ -17,7 +17,7 @@ export async function handleThreadDelete(data: DiscordGatewayPayload) {
   cacheHandlers.forEach("messages", (message) => {
     eventHandlers.debug?.(
       "loop",
-      `Running forEach messages loop in CHANNEL_DELTE file.`,
+      `Running forEach messages loop in CHANNEL_DELTE file.`
     );
     if (message.channelId === snowflakeToBigint(payload.id)) {
       cacheHandlers.delete("messages", message.id);
