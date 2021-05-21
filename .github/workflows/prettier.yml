@@ -21,6 +21,6 @@ jobs:
           commit_message: "change: prettier code"
           # This part is also where you can pass other options, for example:
           prettier_options: --write **/*
-          only_changed: False
+          only_changed: True
         env:
           GITHUB_TOKEN: ${{ github.token }}
