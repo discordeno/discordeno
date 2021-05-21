@@ -19,10 +19,7 @@ import type { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
 import type { Guild } from "../types/guilds/guild.ts";
 import { DiscordGuildFeatures } from "../types/guilds/guild_features.ts";
 import type { ModifyGuild } from "../types/guilds/modify_guild.ts";
-import type {
-  GuildMember,
-  GuildMemberWithUser,
-} from "../types/members/guild_member.ts";
+import type { GuildMember, GuildMemberWithUser } from "../types/members/guild_member.ts";
 import type { DiscordImageFormat } from "../types/misc/image_format.ts";
 import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
@@ -215,25 +212,15 @@ export async function createDiscordenoGuild(data: Guild, shardId: number) {
 
   await Promise.all(
     [...channels, ...threads].map(async (channel) => {
-      const discordenoChannel = await structures.createDiscordenoChannel(
-        channel,
-        guildId
-      );
+      const discordenoChannel = await structures.createDiscordenoChannel(channel, guildId);
 
-      return await cacheHandlers.set(
-        "channels",
-        discordenoChannel.id,
-        discordenoChannel
-      );
+      return await cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);
     })
   );
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const [key, value] of Object.entries(rest)) {
-    eventHandlers.debug?.(
-      "loop",
-      `Running for of loop in createDiscordenoGuild function.`
-    );
+    eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoGuild function.`);
 
     const toggleBits = guildToggles[key as keyof typeof guildToggles];
     if (toggleBits) {
@@ -241,13 +228,7 @@ export async function createDiscordenoGuild(data: Guild, shardId: number) {
       continue;
     }
 
-    props[key] = createNewProp(
-      GUILD_SNOWFLAKES.includes(key)
-        ? value
-          ? snowflakeToBigint(value)
-          : undefined
-        : value
-    );
+    props[key] = createNewProp(GUILD_SNOWFLAKES.includes(key) ? (value ? snowflakeToBigint(value) : undefined) : value);
   }
 
   const hashes = [
@@ -267,25 +248,14 @@ export async function createDiscordenoGuild(data: Guild, shardId: number) {
   const guild: DiscordenoGuild = Object.create(baseGuild, {
     ...props,
     shardId: createNewProp(shardId),
-    roles: createNewProp(
-      new Collection(roles.map((r: DiscordenoRole) => [r.id, r]))
-    ),
+    roles: createNewProp(new Collection(roles.map((r: DiscordenoRole) => [r.id, r]))),
     joinedAt: createNewProp(Date.parse(joinedAt)),
-    presences: createNewProp(
-      new Collection(presences.map((p) => [snowflakeToBigint(p.user!.id), p]))
-    ),
+    presences: createNewProp(new Collection(presences.map((p) => [snowflakeToBigint(p.user!.id), p]))),
     memberCount: createNewProp(memberCount),
     emojis: createNewProp(
-      new Collection(
-        (emojis || []).map((emoji) => [
-          emoji.id ? snowflakeToBigint(emoji.id) : emoji.name,
-          emoji,
-        ])
-      )
+      new Collection((emojis || []).map((emoji) => [emoji.id ? snowflakeToBigint(emoji.id) : emoji.name, emoji]))
     ),
-    voiceStates: createNewProp(
-      new Collection(voiceStateStructs.map((vs) => [vs.userId, vs]))
-    ),
+    voiceStates: createNewProp(new Collection(voiceStateStructs.map((vs) => [vs.userId, vs]))),
     bitfield: createNewProp(bitfield),
   });
 
@@ -389,20 +359,11 @@ export interface DiscordenoGuild
   // METHODS
 
   /** The banner url for this server */
-  bannerURL(
-    size?: DiscordImageSize,
-    format?: DiscordImageFormat
-  ): string | undefined;
+  bannerURL(size?: DiscordImageSize, format?: DiscordImageFormat): string | undefined;
   /** The splash url for this server */
-  splashURL(
-    size?: DiscordImageSize,
-    format?: DiscordImageFormat
-  ): string | undefined;
+  splashURL(size?: DiscordImageSize, format?: DiscordImageFormat): string | undefined;
   /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
-  iconURL(
-    size?: DiscordImageSize,
-    format?: DiscordImageFormat
-  ): string | undefined;
+  iconURL(size?: DiscordImageSize, format?: DiscordImageFormat): string | undefined;
   /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event. */
   delete(): ReturnType<typeof deleteGuild>;
   /** Leave a guild */

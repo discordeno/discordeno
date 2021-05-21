@@ -14,10 +14,7 @@ export async function getAuditLogs(guildId: bigint, options: GetGuildAuditLog) {
     endpoints.GUILD_AUDIT_LOGS(guildId),
     snakelize({
       ...options,
-      limit:
-        options.limit && options.limit >= 1 && options.limit <= 100
-          ? options.limit
-          : 50,
+      limit: options.limit && options.limit >= 1 && options.limit <= 100 ? options.limit : 50,
     })
   );
 }

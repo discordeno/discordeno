@@ -22,13 +22,7 @@ import { DiscordenoGuild } from "./guild.ts";
 import { DiscordenoMember } from "./member.ts";
 import { DiscordenoRole } from "./role.ts";
 
-const MESSAGE_SNOWFLAKES = [
-  "id",
-  "channelId",
-  "guildId",
-  "webhookId",
-  "applicationId",
-];
+const MESSAGE_SNOWFLAKES = ["id", "channelId", "guildId", "webhookId", "applicationId"];
 
 const messageToggles = {
   /** Whether this was a TTS message */
@@ -57,9 +51,7 @@ const baseMessage: Partial<DiscordenoMessage> = {
     return this.member?.guilds.get(this.guildId);
   },
   get link() {
-    return `https://discord.com/channels/${this.guildId || "@me"}/${
-      this.channelId
-    }/${this.id}`;
+    return `https://discord.com/channels/${this.guildId || "@me"}/${this.channelId}/${this.id}`;
   },
   get mentionedRoles() {
     return this.mentionedRoleIds?.map((id) => this.guild?.roles.get(id)) || [];
@@ -108,8 +100,7 @@ const baseMessage: Partial<DiscordenoMessage> = {
             },
             messageReference: {
               messageId: bigintToSnowflake(this.id!),
-              failIfNotExists:
-                content.messageReference?.failIfNotExists === true,
+              failIfNotExists: content.messageReference?.failIfNotExists === true,
             },
           };
 
@@ -132,9 +123,7 @@ const baseMessage: Partial<DiscordenoMessage> = {
     });
   },
   async alertReply(content, timeout = 10, reason = "") {
-    return await this.reply!(content).then((response) =>
-      response.delete(reason, timeout * 1000).catch(console.error)
-    );
+    return await this.reply!(content).then((response) => response.delete(reason, timeout * 1000).catch(console.error));
   },
   removeAllReactions() {
     return removeAllReactions(this.channelId!, this.id!);
@@ -172,10 +161,7 @@ export async function createDiscordenoMessage(data: Message) {
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const [key, value] of Object.entries(rest)) {
-    eventHandlers.debug?.(
-      "loop",
-      `Running for of loop in createDiscordenoMessage function.`
-    );
+    eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoMessage function.`);
 
     const toggleBits = messageToggles[key as keyof typeof messageToggles];
     if (toggleBits) {
@@ -187,11 +173,7 @@ export async function createDiscordenoMessage(data: Message) {
     if (key === "member") continue;
 
     props[key] = createNewProp(
-      MESSAGE_SNOWFLAKES.includes(key)
-        ? value
-          ? snowflakeToBigint(value)
-          : undefined
-        : value
+      MESSAGE_SNOWFLAKES.includes(key) ? (value ? snowflakeToBigint(value) : undefined) : value
     );
   }
 
@@ -202,20 +184,15 @@ export async function createDiscordenoMessage(data: Message) {
   // Discord doesnt give guild id for getMessage() so this will fill it in
   const guildIdFinal =
     snowflakeToBigint(guildId) ||
-    (await cacheHandlers.get("channels", snowflakeToBigint(data.channelId)))
-      ?.guildId ||
+    (await cacheHandlers.get("channels", snowflakeToBigint(data.channelId)))?.guildId ||
     0n;
 
   const message: DiscordenoMessage = Object.create(baseMessage, {
     ...props,
     content: createNewProp(data.content || ""),
     guildId: createNewProp(guildIdFinal),
-    mentionedUserIds: createNewProp(
-      mentions.map((m) => snowflakeToBigint(m.id))
-    ),
-    mentionedRoleIds: createNewProp(
-      mentionRoles.map((id) => snowflakeToBigint(id))
-    ),
+    mentionedUserIds: createNewProp(mentions.map((m) => snowflakeToBigint(m.id))),
+    mentionedRoleIds: createNewProp(mentionRoles.map((id) => snowflakeToBigint(id))),
     mentionedChannelIds: createNewProp([
       // Keep any ids that discord sends
       ...mentionChannels.map((m) => snowflakeToBigint(m.id)),
@@ -226,21 +203,13 @@ export async function createDiscordenoMessage(data: Message) {
       ),
     ]),
     timestamp: createNewProp(Date.parse(data.timestamp)),
-    editedTimestamp: createNewProp(
-      editedTimestamp ? Date.parse(editedTimestamp) : undefined
-    ),
+    editedTimestamp: createNewProp(editedTimestamp ? Date.parse(editedTimestamp) : undefined),
     messageReference: createNewProp(
       messageReference
         ? {
-            messageId: messageReference.messageId
-              ? snowflakeToBigint(messageReference.messageId)
-              : undefined,
-            channelId: messageReference.channelId
-              ? snowflakeToBigint(messageReference.channelId)
-              : undefined,
-            guildId: messageReference.guildId
-              ? snowflakeToBigint(messageReference.guildId)
-              : undefined,
+            messageId: messageReference.messageId ? snowflakeToBigint(messageReference.messageId) : undefined,
+            channelId: messageReference.channelId ? snowflakeToBigint(messageReference.channelId) : undefined,
+            guildId: messageReference.guildId ? snowflakeToBigint(messageReference.guildId) : undefined,
           }
         : undefined
     ),
@@ -322,10 +291,7 @@ export interface DiscordenoMessage
   // METHODS
 
   /** Delete the message */
-  delete(
-    reason?: string,
-    delayMilliseconds?: number
-  ): ReturnType<typeof deleteMessage>;
+  delete(reason?: string, delayMilliseconds?: number): ReturnType<typeof deleteMessage>;
   /** Edit the message */
   edit(content: string | EditMessage): ReturnType<typeof editMessage>;
   /** Pins the message in the channel */
@@ -333,33 +299,19 @@ export interface DiscordenoMessage
   /** Add a reaction to the message */
   addReaction(reaction: string): ReturnType<typeof addReaction>;
   /** Add multiple reactions to the message without or without order. */
-  addReactions(
-    reactions: string[],
-    ordered?: boolean
-  ): ReturnType<typeof addReactions>;
+  addReactions(reactions: string[], ordered?: boolean): ReturnType<typeof addReactions>;
   /** Send a inline reply to this message */
   reply(content: string | CreateMessage): ReturnType<typeof sendMessage>;
   /** Send a message to this channel where this message is */
   send(content: string | CreateMessage): ReturnType<typeof sendMessage>;
   /** Send a message to this channel and then delete it after a bit. By default it will delete after 10 seconds with no reason provided. */
-  alert(
-    content: string | CreateMessage,
-    timeout?: number,
-    reason?: string
-  ): Promise<void>;
+  alert(content: string | CreateMessage, timeout?: number, reason?: string): Promise<void>;
   /** Send a inline reply to this message but then delete it after a bit. By default it will delete after 10 seconds with no reason provided.  */
-  alertReply(
-    content: string | CreateMessage,
-    timeout?: number,
-    reason?: string
-  ): Promise<unknown>;
+  alertReply(content: string | CreateMessage, timeout?: number, reason?: string): Promise<unknown>;
   /** Removes all reactions for all emojis on this message */
   removeAllReactions(): ReturnType<typeof removeAllReactions>;
   /** Removes all reactions for a single emoji on this message */
   removeReactionEmoji(reaction: string): ReturnType<typeof removeReactionEmoji>;
   /** Removes a reaction from the given user on this message, defaults to bot */
-  removeReaction(
-    reaction: string,
-    userId?: bigint
-  ): ReturnType<typeof removeReaction>;
+  removeReaction(reaction: string, userId?: bigint): ReturnType<typeof removeReaction>;
 }

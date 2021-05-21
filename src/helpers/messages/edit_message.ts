@@ -11,10 +11,7 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 import { validateComponents } from "../../util/utils.ts";
 
 /** Edit the message. */
-export async function editMessage(
-  message: DiscordenoMessage,
-  content: string | EditMessage
-) {
+export async function editMessage(message: DiscordenoMessage, content: string | EditMessage) {
   if (message.authorId !== botId) {
     throw "You can only edit a message that was sent by the bot.";
   }

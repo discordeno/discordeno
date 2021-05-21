@@ -33,9 +33,7 @@ const baseRole: Partial<DiscordenoRole> = {
     return this.color!.toString(16);
   },
   get members() {
-    return cache.members.filter((m) =>
-      m.guilds.some((g) => g.roles.includes(this.id!))
-    );
+    return cache.members.filter((m) => m.guilds.some((g) => g.roles.includes(this.id!)));
   },
   get mention() {
     return `<@&${this.id}>`;
@@ -72,10 +70,7 @@ const baseRole: Partial<DiscordenoRole> = {
     if (guild.ownerId === memberId) return false;
 
     const memberHighestRole = await highestRole(guild, memberId);
-    return this.higherThanRole!(
-      memberHighestRole.id,
-      memberHighestRole.position
-    );
+    return this.higherThanRole!(memberHighestRole.id, memberHighestRole.position);
   },
   get hoist() {
     return Boolean(this.bitfield! & roleToggles.hoist);
@@ -103,10 +98,7 @@ export async function createDiscordenoRole(
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const [key, value] of Object.entries(rest)) {
-    eventHandlers.debug?.(
-      "loop",
-      `Running for of loop in createDiscordenoRole function.`
-    );
+    eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoRole function.`);
 
     const toggleBits = roleToggles[key as keyof typeof roleToggles];
     if (toggleBits) {
@@ -114,24 +106,14 @@ export async function createDiscordenoRole(
       continue;
     }
 
-    props[key] = createNewProp(
-      ROLE_SNOWFLAKES.includes(key)
-        ? value
-          ? snowflakeToBigint(value)
-          : undefined
-        : value
-    );
+    props[key] = createNewProp(ROLE_SNOWFLAKES.includes(key) ? (value ? snowflakeToBigint(value) : undefined) : value);
   }
 
   const role: DiscordenoRole = Object.create(baseRole, {
     ...props,
-    botId: createNewProp(
-      tags.botId ? snowflakeToBigint(tags.botId) : undefined
-    ),
+    botId: createNewProp(tags.botId ? snowflakeToBigint(tags.botId) : undefined),
     isNitroBoostRole: createNewProp("premiumSubscriber" in tags),
-    integrationId: createNewProp(
-      tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined
-    ),
+    integrationId: createNewProp(tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined),
     bitfield: createNewProp(bitfield),
   });
 

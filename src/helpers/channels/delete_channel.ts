@@ -16,11 +16,9 @@ export async function deleteChannel(channelId: bigint, reason?: string) {
     // TODO(threads): check if this requires guild perms or channel is enough
     await requireBotGuildPermissions(
       guild,
-      [
-        ChannelTypes.GuildNewsThread,
-        ChannelTypes.GuildPivateThread,
-        ChannelTypes.GuildPublicThread,
-      ].includes(channel.type)
+      [ChannelTypes.GuildNewsThread, ChannelTypes.GuildPivateThread, ChannelTypes.GuildPublicThread].includes(
+        channel.type
+      )
         ? ["MANAGE_THREADS"]
         : ["MANAGE_CHANNELS"]
     );
@@ -33,9 +31,5 @@ export async function deleteChannel(channelId: bigint, reason?: string) {
     }
   }
 
-  return await rest.runMethod<undefined>(
-    "delete",
-    endpoints.CHANNEL_BASE(channelId),
-    { reason }
-  );
+  return await rest.runMethod<undefined>("delete", endpoints.CHANNEL_BASE(channelId), { reason });
 }

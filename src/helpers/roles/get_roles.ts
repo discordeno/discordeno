@@ -13,15 +13,10 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function getRoles(guildId: bigint, addToCache = true) {
   await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
 
-  const result = await rest.runMethod<Role[]>(
-    "get",
-    endpoints.GUILD_ROLES(guildId)
-  );
+  const result = await rest.runMethod<Role[]>("get", endpoints.GUILD_ROLES(guildId));
 
   const roleStructures = await Promise.all(
-    result.map(
-      async (role) => await structures.createDiscordenoRole({ role, guildId })
-    )
+    result.map(async (role) => await structures.createDiscordenoRole({ role, guildId }))
   );
 
   const roles = new Collection(roleStructures.map((role) => [role.id, role]));

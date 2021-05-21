@@ -24,10 +24,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel) {
     throw new Error("The channel seemed to be created but it was not cached.");
   }
 
-  if (
-    options.permissionOverwrites &&
-    channel.permissionOverwrites?.length !== options.permissionOverwrites.length
-  ) {
+  if (options.permissionOverwrites && channel.permissionOverwrites?.length !== options.permissionOverwrites.length) {
     throw new Error(
       "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites."
     );

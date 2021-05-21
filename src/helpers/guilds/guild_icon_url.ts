@@ -18,9 +18,7 @@ export function guildIconURL(
     ? formatImageURL(
         endpoints.GUILD_ICON(
           id,
-          typeof options.icon === "string"
-            ? options.icon
-            : iconBigintToHash(options.icon, options.animated ?? true)
+          typeof options.icon === "string" ? options.icon : iconBigintToHash(options.icon, options.animated ?? true)
         ),
         options.size || 128,
         options.format

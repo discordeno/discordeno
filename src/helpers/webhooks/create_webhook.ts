@@ -23,12 +23,8 @@ export async function createWebhook(channelId: bigint, options: CreateWebhook) {
     throw new Error(Errors.INVALID_WEBHOOK_NAME);
   }
 
-  return await rest.runMethod<Webhook>(
-    "post",
-    endpoints.CHANNEL_WEBHOOKS(channelId),
-    {
-      ...options,
-      avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
-    }
-  );
+  return await rest.runMethod<Webhook>("post", endpoints.CHANNEL_WEBHOOKS(channelId), {
+    ...options,
+    avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
+  });
 }

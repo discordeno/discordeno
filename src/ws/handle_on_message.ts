@@ -18,9 +18,7 @@ export async function handleOnMessage(message: any, shardId: number) {
   }
 
   if (message instanceof Uint8Array) {
-    message = decompressWith(message, 0, (slice: Uint8Array) =>
-      ws.utf8decoder.decode(slice)
-    );
+    message = decompressWith(message, 0, (slice: Uint8Array) => ws.utf8decoder.decode(slice));
   }
 
   if (typeof message !== "string") return;
@@ -101,9 +99,7 @@ export async function handleOnMessage(message: any, shardId: number) {
         ws.loadingShards.delete(shardId);
         // Wait 5 seconds to spawn next shard
         setTimeout(() => {
-          const bucket = ws.buckets.get(
-            shardId % ws.botGatewayData.sessionStartLimit.maxConcurrency
-          );
+          const bucket = ws.buckets.get(shardId % ws.botGatewayData.sessionStartLimit.maxConcurrency);
           if (bucket) bucket.createNextShard = true;
         }, 5000);
       }

@@ -8,9 +8,7 @@ import { endpoints } from "../../../util/constants.ts";
 export async function getSlashCommands(guildId?: bigint) {
   const result = await rest.runMethod<ApplicationCommand[]>(
     "get",
-    guildId
-      ? endpoints.COMMANDS_GUILD(applicationId, guildId)
-      : endpoints.COMMANDS(applicationId)
+    guildId ? endpoints.COMMANDS_GUILD(applicationId, guildId) : endpoints.COMMANDS(applicationId)
   );
 
   return new Collection(result.map((command) => [command.name, command]));

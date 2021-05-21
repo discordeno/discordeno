@@ -3,7 +3,5 @@ import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.
 import type { ApplicationCommandCreateUpdateDelete } from "../../types/interactions/commands/application_command_create_update_delete.ts";
 
 export function handleApplicationCommandCreate(data: DiscordGatewayPayload) {
-  eventHandlers.applicationCommandCreate?.(
-    data.d as ApplicationCommandCreateUpdateDelete
-  );
+  eventHandlers.applicationCommandCreate?.(data.d as ApplicationCommandCreateUpdateDelete);
 }

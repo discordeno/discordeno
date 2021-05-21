@@ -21,9 +21,7 @@ Deno.test({
 
     assertExists(emoji);
 
-    await delayUntil(10000, () =>
-      cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id!)
-    );
+    await delayUntil(10000, () => cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id!));
 
     await editEmoji(tempData.guildId, emoji.id!, {
       name: "blamewolf_infinite",
@@ -31,15 +29,10 @@ Deno.test({
 
     await delayUntil(
       10000,
-      () =>
-        cache.guilds.get(tempData.guildId)?.emojis?.get(emoji.id!)?.name ===
-        "blamewolf_infinite"
+      () => cache.guilds.get(tempData.guildId)?.emojis?.get(emoji.id!)?.name === "blamewolf_infinite"
     );
 
-    assertEquals(
-      cache.guilds.get(tempData.guildId)?.emojis?.get(emoji.id!)?.name,
-      "blamewolf_infinite"
-    );
+    assertEquals(cache.guilds.get(tempData.guildId)?.emojis?.get(emoji.id!)?.name, "blamewolf_infinite");
   },
   ...defaultTestOptions,
 });

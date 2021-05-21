@@ -35,10 +35,7 @@ export async function heartbeat(shardId: number, interval: number) {
 
     ws.log("HEARTBEATING", { shardId, shard: currentShard });
 
-    if (
-      currentShard.ws.readyState === WebSocket.CLOSED ||
-      !currentShard.heartbeat.keepAlive
-    ) {
+    if (currentShard.ws.readyState === WebSocket.CLOSED || !currentShard.heartbeat.keepAlive) {
       ws.log("HEARTBEATING_CLOSED", { shardId, shard: currentShard });
 
       // STOP THE HEARTBEAT

@@ -8,15 +8,10 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleMessageCreate(data: DiscordGatewayPayload) {
   const payload = data.d as Message;
-  const channel = await cacheHandlers.get(
-    "channels",
-    snowflakeToBigint(payload.channelId)
-  );
+  const channel = await cacheHandlers.get("channels", snowflakeToBigint(payload.channelId));
   if (channel) channel.lastMessageId = snowflakeToBigint(payload.id);
 
-  const guild = payload.guildId
-    ? await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId))
-    : undefined;
+  const guild = payload.guildId ? await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId)) : undefined;
 
   if (payload.member && guild) {
     // If in a guild cache the author as a member
@@ -37,11 +32,7 @@ export async function handleMessageCreate(data: DiscordGatewayPayload) {
             guild.id
           );
 
-          return cacheHandlers.set(
-            "members",
-            snowflakeToBigint(mention.id),
-            discordenoMember
-          );
+          return cacheHandlers.set("members", snowflakeToBigint(mention.id), discordenoMember);
         }
       })
     );

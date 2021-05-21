@@ -13,9 +13,7 @@ export function channelOverwriteHasPermission(
   })[],
   permissions: PermissionStrings[]
 ) {
-  const overwrite =
-    overwrites.find((perm) => perm.id === id) ||
-    overwrites.find((perm) => perm.id === guildId);
+  const overwrite = overwrites.find((perm) => perm.id === id) || overwrites.find((perm) => perm.id === guildId);
 
   if (!overwrite) return false;
 

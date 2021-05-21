@@ -22,9 +22,7 @@ export function handleReady(data: DiscordGatewayPayload, shardId: number) {
   // Set ready to false just to go sure
   shard.ready = false;
   // All guilds are unavailable at first
-  shard.unavailableGuildIds = new Set(
-    payload.guilds.map((g) => snowflakeToBigint(g.id))
-  );
+  shard.unavailableGuildIds = new Set(payload.guilds.map((g) => snowflakeToBigint(g.id)));
   // Set the last available to now
   shard.lastAvailable = Date.now();
 

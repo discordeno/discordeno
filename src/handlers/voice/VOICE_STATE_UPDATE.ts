@@ -9,10 +9,7 @@ export async function handleVoiceStateUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as VoiceState;
   if (!payload.guildId) return;
 
-  const guild = await cacheHandlers.get(
-    "guilds",
-    snowflakeToBigint(payload.guildId)
-  );
+  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
   if (!guild) return;
 
   const member = payload.member
@@ -30,25 +27,15 @@ export async function handleVoiceStateUpdate(data: DiscordGatewayPayload) {
 
   await cacheHandlers.set("guilds", guild.id, guild);
 
-  if (
-    cachedState?.channelId !==
-    (payload.channelId ? snowflakeToBigint(payload.channelId) : null)
-  ) {
+  if (cachedState?.channelId !== (payload.channelId ? snowflakeToBigint(payload.channelId) : null)) {
     // Either joined or moved channels
     if (payload.channelId) {
       if (cachedState?.channelId) {
         // Was in a channel before
-        eventHandlers.voiceChannelSwitch?.(
-          member,
-          snowflakeToBigint(payload.channelId),
-          cachedState.channelId
-        );
+        eventHandlers.voiceChannelSwitch?.(member, snowflakeToBigint(payload.channelId), cachedState.channelId);
       } else {
         // Was not in a channel before so user just joined
-        eventHandlers.voiceChannelJoin?.(
-          member,
-          snowflakeToBigint(payload.channelId)
-        );
+        eventHandlers.voiceChannelJoin?.(member, snowflakeToBigint(payload.channelId));
       }
     } // Left the channel
     else if (cachedState?.channelId) {

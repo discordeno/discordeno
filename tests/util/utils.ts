@@ -1,11 +1,7 @@
 import { ApplicationCommandOption } from "../../src/types/interactions/commands/application_command_option.ts";
 import { ApplicationCommandOptionChoice } from "../../src/types/interactions/commands/application_command_option_choice.ts";
 import { DiscordApplicationCommandOptionTypes } from "../../src/types/interactions/commands/application_command_option_types.ts";
-import {
-  camelize,
-  snakelize,
-  validateSlashCommands,
-} from "../../src/util/utils.ts";
+import { camelize, snakelize, validateSlashCommands } from "../../src/util/utils.ts";
 import { assertEquals, assertThrows } from "../deps.ts";
 
 const testSnakeObject = {

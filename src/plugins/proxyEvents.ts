@@ -6,9 +6,7 @@ export function proxyEvent(emitter: EventEmitter) {
   replaceEventHandlers(
     new Proxy(eventHandlers, {
       get(target, prop: keyof EventHandlers) {
-        return target[prop] !== undefined
-          ? target[prop]
-          : (...args: unknown[]) => emitter.emit(prop, ...args);
+        return target[prop] !== undefined ? target[prop] : (...args: unknown[]) => emitter.emit(prop, ...args);
       },
     })
   );

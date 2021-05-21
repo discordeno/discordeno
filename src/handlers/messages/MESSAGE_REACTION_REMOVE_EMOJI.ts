@@ -4,24 +4,16 @@ import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.
 import type { MessageReactionRemoveEmoji } from "../../types/messages/message_reaction_remove_emoji.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
-export async function handleMessageReactionRemoveEmoji(
-  data: DiscordGatewayPayload
-) {
+export async function handleMessageReactionRemoveEmoji(data: DiscordGatewayPayload) {
   const payload = data.d as MessageReactionRemoveEmoji;
-  const message = await cacheHandlers.get(
-    "messages",
-    snowflakeToBigint(payload.messageId)
-  );
+  const message = await cacheHandlers.get("messages", snowflakeToBigint(payload.messageId));
 
   if (message?.reactions) {
     message.reactions = message.reactions.filter(
       (reaction) =>
         !(
           // MUST USE == because discord sends null and we use undefined
-          (
-            reaction.emoji.id == payload.emoji.id &&
-            reaction.emoji.name === payload.emoji.name
-          )
+          (reaction.emoji.id == payload.emoji.id && reaction.emoji.name === payload.emoji.name)
         )
     );
 

@@ -25,10 +25,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel) {
     throw new Error("The channel seemed to be created but it was not cached.");
   }
 
-  if (
-    options.permissionOverwrites &&
-    channel.permissionOverwrites?.length !== options.permissionOverwrites.length
-  ) {
+  if (options.permissionOverwrites && channel.permissionOverwrites?.length !== options.permissionOverwrites.length) {
     throw new Error(
       "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites."
     );
@@ -41,21 +38,17 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel) {
   });
 
   await delayUntil(10000, () =>
-    channelOverwriteHasPermission(
-      channel.guildId,
-      botId,
-      cache.channels.get(channel.id)?.permissionOverwrites || [],
-      ["VIEW_CHANNEL", "ADD_REACTIONS"]
-    )
+    channelOverwriteHasPermission(channel.guildId, botId, cache.channels.get(channel.id)?.permissionOverwrites || [], [
+      "VIEW_CHANNEL",
+      "ADD_REACTIONS",
+    ])
   );
 
   assertEquals(
-    channelOverwriteHasPermission(
-      channel.guildId,
-      botId,
-      cache.channels.get(channel.id)?.permissionOverwrites || [],
-      ["VIEW_CHANNEL", "ADD_REACTIONS"]
-    ),
+    channelOverwriteHasPermission(channel.guildId, botId, cache.channels.get(channel.id)?.permissionOverwrites || [], [
+      "VIEW_CHANNEL",
+      "ADD_REACTIONS",
+    ]),
     true
   );
 }

@@ -48,8 +48,7 @@ export async function processQueue(id: number) {
     // Handle if the requests have been maxed
     if (shard.queueCounter >= 118) {
       ws.log("DEBUG", {
-        message:
-          "Max gateway requests per minute reached setting timeout for one minute",
+        message: "Max gateway requests per minute reached setting timeout for one minute",
         shardId: shard.id,
       });
       await delay(60000);

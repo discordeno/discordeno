@@ -22,12 +22,7 @@ export async function removeReaction(
   return await rest.runMethod<undefined>(
     "delete",
     options?.userId
-      ? endpoints.CHANNEL_MESSAGE_REACTION_USER(
-          channelId,
-          messageId,
-          reaction,
-          options.userId
-        )
+      ? endpoints.CHANNEL_MESSAGE_REACTION_USER(channelId, messageId, reaction, options.userId)
       : endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction)
   );
 }

@@ -16,11 +16,7 @@ export async function updateStageInstance(channelId: bigint, topic: string) {
       throw new Error(Errors.CHANNEL_NOT_STAGE_VOICE);
     }
 
-    await requireBotChannelPermissions(channel, [
-      "MOVE_MEMBERS",
-      "MUTE_MEMBERS",
-      "MANAGE_CHANNELS",
-    ]);
+    await requireBotChannelPermissions(channel, ["MOVE_MEMBERS", "MUTE_MEMBERS", "MANAGE_CHANNELS"]);
   }
 
   if (
@@ -32,11 +28,7 @@ export async function updateStageInstance(channelId: bigint, topic: string) {
     throw new Error(Errors.INVALID_TOPIC_LENGTH);
   }
 
-  return await rest.runMethod<StageInstance>(
-    "patch",
-    endpoints.STAGE_INSTANCE(channelId),
-    {
-      topic,
-    }
-  );
+  return await rest.runMethod<StageInstance>("patch", endpoints.STAGE_INSTANCE(channelId), {
+    topic,
+  });
 }

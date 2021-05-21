@@ -9,10 +9,7 @@ import { addRole } from "../helpers/roles/add_role.ts";
 import { removeRole } from "../helpers/roles/remove_role.ts";
 import type { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
 import type { ModifyGuildMember } from "../types/guilds/modify_guild_member.ts";
-import type {
-  GuildMember,
-  GuildMemberWithUser,
-} from "../types/members/guild_member.ts";
+import type { GuildMember, GuildMemberWithUser } from "../types/members/guild_member.ts";
 import type { CreateMessage } from "../types/messages/create_message.ts";
 import type { DiscordImageFormat } from "../types/misc/image_format.ts";
 import type { DiscordImageSize } from "../types/misc/image_size.ts";
@@ -116,10 +113,7 @@ export async function createDiscordenoMember(
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
 
   for (const [key, value] of Object.entries(user)) {
-    eventHandlers.debug?.(
-      "loop",
-      `Running for of for Object.keys(user) loop in DiscordenoMember function.`
-    );
+    eventHandlers.debug?.("loop", `Running for of for Object.keys(user) loop in DiscordenoMember function.`);
 
     const toggleBits = memberToggles[key as keyof typeof memberToggles];
     if (toggleBits) {
@@ -134,11 +128,7 @@ export async function createDiscordenoMember(
     }
 
     props[key] = createNewProp(
-      MEMBER_SNOWFLAKES.includes(key)
-        ? value
-          ? snowflakeToBigint(value)
-          : undefined
-        : value
+      MEMBER_SNOWFLAKES.includes(key) ? (value ? snowflakeToBigint(value) : undefined) : value
     );
   }
 
@@ -152,10 +142,7 @@ export async function createDiscordenoMember(
   const cached = await cacheHandlers.get("members", snowflakeToBigint(user.id));
   if (cached) {
     for (const [id, guild] of cached.guilds.entries()) {
-      eventHandlers.debug?.(
-        "loop",
-        `Running for of for cached.guilds.entries() loop in DiscordenoMember function.`
-      );
+      eventHandlers.debug?.("loop", `Running for of for cached.guilds.entries() loop in DiscordenoMember function.`);
       member.guilds.set(id, guild);
     }
   }
@@ -203,10 +190,7 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id"> {
   // METHODS
 
   /** Returns the avatar url for this member and can be dynamically modified with a size or format */
-  makeAvatarURL(options?: {
-    size?: DiscordImageSize;
-    format?: DiscordImageFormat;
-  }): string;
+  makeAvatarURL(options?: { size?: DiscordImageSize; format?: DiscordImageFormat }): string;
   /** Returns the guild for this guildId */
   guild(guildId: bigint): DiscordenoGuild | undefined;
   /** Get the nickname or the username if no nickname */
@@ -233,15 +217,7 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id"> {
   /** Ban a member in a guild */
   ban(guildId: bigint, options: CreateGuildBan): ReturnType<typeof banMember>;
   /** Add a role to the member */
-  addRole(
-    guildId: bigint,
-    roleId: bigint,
-    reason?: string
-  ): ReturnType<typeof addRole>;
+  addRole(guildId: bigint, roleId: bigint, reason?: string): ReturnType<typeof addRole>;
   /** Remove a role from the member */
-  removeRole(
-    guildId: bigint,
-    roleId: bigint,
-    reason?: string
-  ): ReturnType<typeof removeRole>;
+  removeRole(guildId: bigint, roleId: bigint, reason?: string): ReturnType<typeof removeRole>;
 }

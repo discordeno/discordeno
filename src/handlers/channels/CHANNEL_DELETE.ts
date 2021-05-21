@@ -8,16 +8,10 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 export async function handleChannelDelete(data: DiscordGatewayPayload) {
   const payload = data.d as Channel;
 
-  const cachedChannel = await cacheHandlers.get(
-    "channels",
-    snowflakeToBigint(payload.id)
-  );
+  const cachedChannel = await cacheHandlers.get("channels", snowflakeToBigint(payload.id));
   if (!cachedChannel) return;
 
-  if (
-    cachedChannel.type === DiscordChannelTypes.GuildVoice &&
-    payload.guildId
-  ) {
+  if (cachedChannel.type === DiscordChannelTypes.GuildVoice && payload.guildId) {
     const guild = await cacheHandlers.get("guilds", cachedChannel.guildId);
 
     if (guild) {
@@ -47,10 +41,7 @@ export async function handleChannelDelete(data: DiscordGatewayPayload) {
   ) {
     await cacheHandlers.delete("channels", snowflakeToBigint(payload.id));
     cacheHandlers.forEach("messages", (message) => {
-      eventHandlers.debug?.(
-        "loop",
-        `Running forEach messages loop in CHANNEL_DELTE file.`
-      );
+      eventHandlers.debug?.("loop", `Running forEach messages loop in CHANNEL_DELTE file.`);
       if (message.channelId === snowflakeToBigint(payload.id)) {
         cacheHandlers.delete("messages", message.id);
       }

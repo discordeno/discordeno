@@ -40,12 +40,7 @@ Deno.test({
       eventHandlers: {
         ready: () => (didReady = true),
       },
-      intents: [
-        "GuildMessages",
-        "Guilds",
-        "GuildEmojis",
-        "GuildMessageReactions",
-      ],
+      intents: ["GuildMessages", "Guilds", "GuildEmojis", "GuildMessageReactions"],
     });
 
     // Delay the execution by 5 seconds

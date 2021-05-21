@@ -36,10 +36,7 @@ export async function runMethod<T = any>(
   Error.captureStackTrace(errorStack);
 
   // For proxies we don't need to do any of the legwork so we just forward the request
-  if (
-    !url.startsWith(`${BASE_URL}/v${API_VERSION}`) &&
-    !url.startsWith(IMAGE_BASE_URL)
-  ) {
+  if (!url.startsWith(`${BASE_URL}/v${API_VERSION}`) && !url.startsWith(IMAGE_BASE_URL)) {
     const result = await fetch(url, {
       body: JSON.stringify(body || {}),
       headers: {
@@ -65,11 +62,7 @@ export async function runMethod<T = any>(
           reject(errorStack);
         },
         respond: (data: { status: number; body?: string }) =>
-          resolve(
-            data.status !== 204
-              ? camelize<T>(JSON.parse(data.body ?? "{}"))
-              : (undefined as unknown as T)
-          ),
+          resolve(data.status !== 204 ? camelize<T>(JSON.parse(data.body ?? "{}")) : (undefined as unknown as T)),
       },
       {
         bucketId,

@@ -22,12 +22,7 @@ export function loopObject<T = Record<string, unknown>>(
     for (const [key, value] of Object.entries(obj)) {
       eventHandlers.debug?.("loop", log);
 
-      if (
-        typeof value === "object" &&
-        !Array.isArray(value) &&
-        value !== null &&
-        !(value instanceof Blob)
-      ) {
+      if (typeof value === "object" && !Array.isArray(value) && value !== null && !(value instanceof Blob)) {
         // A nested object
         res[key] = loopObject(value as Record<string, unknown>, handler, log);
       } else {

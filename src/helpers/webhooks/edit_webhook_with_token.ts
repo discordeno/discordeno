@@ -9,9 +9,5 @@ export async function editWebhookWithToken(
   webhookToken: string,
   options: Omit<ModifyWebhook, "channelId">
 ) {
-  return await rest.runMethod<Webhook>(
-    "patch",
-    endpoints.WEBHOOK(webhookId, webhookToken),
-    options
-  );
+  return await rest.runMethod<Webhook>("patch", endpoints.WEBHOOK(webhookId, webhookToken), options);
 }

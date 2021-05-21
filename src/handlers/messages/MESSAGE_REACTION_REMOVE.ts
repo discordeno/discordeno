@@ -6,17 +6,13 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleMessageReactionRemove(data: DiscordGatewayPayload) {
   const payload = data.d as MessageReactionRemove;
-  const message = await cacheHandlers.get(
-    "messages",
-    snowflakeToBigint(payload.messageId)
-  );
+  const message = await cacheHandlers.get("messages", snowflakeToBigint(payload.messageId));
 
   if (message) {
     const reaction = message.reactions?.find(
       (reaction) =>
         // MUST USE == because discord sends null and we use undefined
-        reaction.emoji.id == payload.emoji.id &&
-        reaction.emoji.name === payload.emoji.name
+        reaction.emoji.id == payload.emoji.id && reaction.emoji.name === payload.emoji.name
     );
 
     if (reaction) {
