@@ -11,11 +11,7 @@ import { requireBotChannelPermissions, requireBotGuildPermissions } from "../../
 import { snakelize } from "../../util/utils.ts";
 
 /** Edit the member */
-export async function editMember(
-  guildId: bigint,
-  memberId: bigint,
-  options: Omit<ModifyGuildMember, "channelId"> & { channelId?: bigint | null }
-) {
+export async function editMember(guildId: bigint, memberId: bigint, options: ModifyGuildMember) {
   const requiredPerms: Set<PermissionStrings> = new Set();
 
   if (options.nick) {
