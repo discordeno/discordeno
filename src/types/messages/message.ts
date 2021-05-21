@@ -79,7 +79,7 @@ export interface Message {
   /** Message flags combined as a bitfield */
   flags?: number;
   /** The stickers sent with the message (bots currently can only receive messages with stickers, not send) */
-  stickers?: MessageSticker;
+  stickers?: MessageSticker[];
   /**
    * The message associated with the `message_reference`
    * Note: This field is only returned for messages with a `type` of `19` (REPLY). If the message is a reply but the `referenced_message` field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.
