@@ -31,7 +31,7 @@ export async function searchMembers(
 
   const members = await Promise.all(
     result.map(async (member) => {
-      const discordenoMember = await structures.createDiscordenoMember(member, guildId);
+      const discordenoMember = await structures.createDiscordenoMember(member.user, { member, guildId });
       if (options?.cache) {
         await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
       }

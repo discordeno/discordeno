@@ -21,7 +21,10 @@ export async function handleGuildMemberUpdate(data: DiscordGatewayPayload) {
     mute: guildMember?.mute || false,
     roles: payload.roles,
   };
-  const discordenoMember = await structures.createDiscordenoMember(newMemberData, guild.id);
+  const discordenoMember = await structures.createDiscordenoMember(newMemberData.user, {
+    member: newMemberData,
+    guildId: guild.id,
+  });
   await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 
   if (guildMember) {

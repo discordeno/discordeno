@@ -14,7 +14,7 @@ export async function getMember(guildId: bigint, id: bigint, options?: { force?:
 
   const data = await rest.runMethod<GuildMemberWithUser>("get", endpoints.GUILD_MEMBER(guildId, id));
 
-  const discordenoMember = await structures.createDiscordenoMember(data, guildId);
+  const discordenoMember = await structures.createDiscordenoMember(data.user, { member: data, guildId });
   await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 
   return discordenoMember;

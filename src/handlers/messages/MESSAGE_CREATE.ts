@@ -2,7 +2,7 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
+import type { GuildMember } from "../../types/members/guild_member.ts";
 import type { Message } from "../../types/messages/message.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
@@ -15,10 +15,10 @@ export async function handleMessageCreate(data: DiscordGatewayPayload) {
 
   if (payload.member && guild) {
     // If in a guild cache the author as a member
-    const discordenoMember = await structures.createDiscordenoMember(
-      { ...payload.member, user: payload.author } as GuildMemberWithUser,
-      guild.id
-    );
+    const discordenoMember = await structures.createDiscordenoMember(payload.author, {
+      member: payload.member as GuildMember,
+      guildId: guild.id,
+    });
     await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
   }
 
@@ -27,10 +27,10 @@ export async function handleMessageCreate(data: DiscordGatewayPayload) {
       payload.mentions.map(async (mention) => {
         // Cache the member if its a valid member
         if (mention.member) {
-          const discordenoMember = await structures.createDiscordenoMember(
-            { ...mention.member, user: mention } as GuildMemberWithUser,
-            guild.id
-          );
+          const discordenoMember = await structures.createDiscordenoMember(mention, {
+            member: mention.member as GuildMember,
+            guildId: guild.id,
+          });
 
           return cacheHandlers.set("members", snowflakeToBigint(mention.id), discordenoMember);
         }

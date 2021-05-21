@@ -11,7 +11,10 @@ export async function handleGuildMemberAdd(data: DiscordGatewayPayload) {
   if (!guild) return;
 
   guild.memberCount++;
-  const discordenoMember = await structures.createDiscordenoMember(payload, guild.id);
+  const discordenoMember = await structures.createDiscordenoMember(payload.user, {
+    member: payload,
+    guildId: guild.id,
+  });
   await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 
   eventHandlers.guildMemberAdd?.(guild, discordenoMember);

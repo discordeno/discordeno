@@ -67,7 +67,7 @@ export async function editMember(
     }) as ModifyGuildMember
   );
 
-  const member = await structures.createDiscordenoMember(result, guildId);
+  const member = await structures.createDiscordenoMember(result.user, { member: result, guildId });
 
   return member;
 }

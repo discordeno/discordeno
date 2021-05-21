@@ -48,7 +48,7 @@ export async function getMembers(guildId: bigint, options?: ListGuildMembers & {
 
     const discordenoMembers = await Promise.all(
       result.map(async (member) => {
-        const discordenoMember = await structures.createDiscordenoMember(member, guildId);
+        const discordenoMember = await structures.createDiscordenoMember(member.user, { member, guildId });
 
         if (options?.addToCache !== false) {
           await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
