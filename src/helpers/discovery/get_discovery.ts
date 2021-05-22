@@ -4,5 +4,5 @@ import { endpoints } from "../../util/constants.ts";
 
 /** Returns the discovery metadata object for the guild. Requires the `MANAGE_GUILD` permission. */
 export async function getDiscovery(guildId: bigint) {
-	return rest.runMethod<DiscoveryMetadata>(endpoints.DISCOVERY_METADATA(guildId));
+	return await rest.runMethod<DiscoveryMetadata>("get", endpoints.DISCOVERY_METADATA(guildId));
 }
