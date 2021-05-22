@@ -13,6 +13,7 @@ import { DiscordSystemChannelFlags } from "./system_channel_flags.ts";
 import { DiscordVerificationLevels } from "./verification_levels.ts";
 import { WelcomeScreen } from "./welcome_screen.ts";
 import type { StageInstance } from "../channels/stage_instance.ts";
+import { GuildNsfwLevel } from "./guild_nsfw_level.ts";
 
 /** https://discord.com/developers/docs/resources/guild#guild-object */
 export interface Guild {
@@ -111,8 +112,8 @@ export interface Guild {
   approximatePresenceCount?: number;
   /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
   welcomeScreen?: WelcomeScreen;
-  /** `true` if this guild is designated as NSFW */
-  nsfw: boolean;
+  /** Guild NSFW level */
+  nsfwLevel: GuildNsfwLevel;
   /** Stage instances in the guild */
   stageInstances?: StageInstance[];
 }
