@@ -27,19 +27,11 @@ export async function startTyping(channelId: bigint) {
       throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
     }
 
-    const hasSendMessagesPerm = await botHasChannelPermissions(
-      channelId,
-      ["SEND_MESSAGES"],
-    );
-    if (
-      !hasSendMessagesPerm
-    ) {
+    const hasSendMessagesPerm = await botHasChannelPermissions(channelId, ["SEND_MESSAGES"]);
+    if (!hasSendMessagesPerm) {
       throw new Error(Errors.MISSING_SEND_MESSAGES);
     }
   }
 
-  return await rest.runMethod<undefined>(
-    "post",
-    endpoints.CHANNEL_TYPING(channelId),
-  );
+  return await rest.runMethod<undefined>("post", endpoints.CHANNEL_TYPING(channelId));
 }

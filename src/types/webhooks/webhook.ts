@@ -33,8 +33,7 @@ export interface IncomingWebhook {
   url?: string;
 }
 
-export interface ApplicationWebhook
-  extends Omit<IncomingWebhook, "type" | "guildId" | "channelId"> {
+export interface ApplicationWebhook extends Omit<IncomingWebhook, "type" | "guildId" | "channelId"> {
   type: DiscordWebhookTypes.Application;
   guildId?: string | null;
   channelId?: string | null;

@@ -12,20 +12,15 @@ export async function handleGuildMembersChunk(data: DiscordGatewayPayload) {
 
   const members = await Promise.all(
     payload.members.map(async (member) => {
-      const discordenoMember = await structures.createDiscordenoMember(
-        member,
-        guildId,
-      );
+      const discordenoMember = await structures.createDiscordenoMember(member, guildId);
       await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
 
       return discordenoMember;
-    }),
+    })
   );
 
   // Check if its necessary to resolve the fetchmembers promise for this chunk or if more chunks will be coming
-  if (
-    payload.nonce
-  ) {
+  if (payload.nonce) {
     const resolve = cache.fetchAllMembersProcessingRequests.get(payload.nonce);
     if (!resolve) return;
 
@@ -36,12 +31,7 @@ export async function handleGuildMembersChunk(data: DiscordGatewayPayload) {
         return resolve(new Collection(members.map((m) => [m.id, m])));
       }
 
-      return resolve(
-        await cacheHandlers.filter(
-          "members",
-          (m) => m.guilds.has(guildId),
-        ),
-      );
+      return resolve(await cacheHandlers.filter("members", (m) => m.guilds.has(guildId)));
     }
   }
 }

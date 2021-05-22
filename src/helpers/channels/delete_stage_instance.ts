@@ -14,15 +14,8 @@ export async function deleteStageInstance(channelId: bigint) {
       throw new Error(Errors.CHANNEL_NOT_STAGE_VOICE);
     }
 
-    await requireBotChannelPermissions(channel, [
-      "MUTE_MEMBERS",
-      "MANAGE_CHANNELS",
-      "MOVE_MEMBERS",
-    ]);
+    await requireBotChannelPermissions(channel, ["MUTE_MEMBERS", "MANAGE_CHANNELS", "MOVE_MEMBERS"]);
   }
 
-  return await rest.runMethod<undefined>(
-    "delete",
-    endpoints.STAGE_INSTANCE(channelId),
-  );
+  return await rest.runMethod<undefined>("delete", endpoints.STAGE_INSTANCE(channelId));
 }

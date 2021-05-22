@@ -13,10 +13,7 @@ Deno.test({
     await getChannels(tempData.guildId);
     await delayUntil(3000, () => cache.channels.size > 0);
 
-    assertEquals(
-      cache.channels.size > 0,
-      true,
-    );
+    assertEquals(cache.channels.size > 0, true);
   },
   ...defaultTestOptions,
 });

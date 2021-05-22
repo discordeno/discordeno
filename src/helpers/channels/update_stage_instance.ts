@@ -20,11 +20,7 @@ export async function updateStageInstance(
       throw new Error(Errors.CHANNEL_NOT_STAGE_VOICE);
     }
 
-    await requireBotChannelPermissions(channel, [
-      "MOVE_MEMBERS",
-      "MUTE_MEMBERS",
-      "MANAGE_CHANNELS",
-    ]);
+    await requireBotChannelPermissions(channel, ["MOVE_MEMBERS", "MUTE_MEMBERS", "MANAGE_CHANNELS"]);
   }
 
   if (

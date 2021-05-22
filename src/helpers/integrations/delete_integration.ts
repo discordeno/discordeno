@@ -6,8 +6,5 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function deleteIntegration(guildId: bigint, id: bigint) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  return await rest.runMethod<undefined>(
-    "delete",
-    endpoints.GUILD_INTEGRATION(guildId, id),
-  );
+  return await rest.runMethod<undefined>("delete", endpoints.GUILD_INTEGRATION(guildId, id));
 }

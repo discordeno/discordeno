@@ -20,11 +20,7 @@ Deno.test({
     await addReaction(message.channelId, message.id, "❤");
 
     // Fetch the message
-    const fetchedReactions = await getReactions(
-      tempData.channelId,
-      message.id,
-      "❤",
-    );
+    const fetchedReactions = await getReactions(tempData.channelId, message.id, "❤");
     // Check if getMessage has worked
     assertEquals(fetchedReactions.size, 1);
   },

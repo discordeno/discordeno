@@ -10,11 +10,9 @@ export async function removeFromThread(channelId: bigint, userId?: bigint) {
   const channel = await cacheHandlers.get("channels", channelId);
   if (channel) {
     if (
-      ![
-        ChannelTypes.GuildNewsThread,
-        ChannelTypes.GuildPivateThread,
-        ChannelTypes.GuildPublicThread,
-      ].includes(channel.type)
+      ![ChannelTypes.GuildNewsThread, ChannelTypes.GuildPivateThread, ChannelTypes.GuildPublicThread].includes(
+        channel.type
+      )
     ) {
       throw new Error(Errors.NOT_A_THREAD_CHANNEL);
     }
@@ -22,8 +20,6 @@ export async function removeFromThread(channelId: bigint, userId?: bigint) {
 
   return await rest.runMethod(
     "delete",
-    userId
-      ? endpoints.THREAD_USER(channelId, userId)
-      : endpoints.THREAD_ME(channelId),
+    userId ? endpoints.THREAD_USER(channelId, userId) : endpoints.THREAD_ME(channelId)
   );
 }

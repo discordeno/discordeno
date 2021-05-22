@@ -9,13 +9,9 @@ async function ifItFailsBlameWolf() {
   // Assertions
   assertExists(botMember);
 
-  const foundMembers = await searchMembers(
-    tempData.guildId,
-    botMember!.username.substring(0, 4),
-    {
-      limit: 1,
-    },
-  );
+  const foundMembers = await searchMembers(tempData.guildId, botMember!.username.substring(0, 4), {
+    limit: 1,
+  });
 
   assertEquals(foundMembers.size, 1);
 }

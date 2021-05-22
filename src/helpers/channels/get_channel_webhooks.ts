@@ -8,12 +8,7 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 export async function getChannelWebhooks(channelId: bigint) {
   await requireBotChannelPermissions(channelId, ["MANAGE_WEBHOOKS"]);
 
-  const result = await rest.runMethod<Webhook[]>(
-    "get",
-    endpoints.CHANNEL_WEBHOOKS(channelId),
-  );
+  const result = await rest.runMethod<Webhook[]>("get", endpoints.CHANNEL_WEBHOOKS(channelId));
 
-  return new Collection(
-    result.map((webhook) => [webhook.id, webhook]),
-  );
+  return new Collection(result.map((webhook) => [webhook.id, webhook]));
 }

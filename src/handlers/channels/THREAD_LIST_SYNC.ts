@@ -12,28 +12,15 @@ export async function handleThreadListSync(data: DiscordGatewayPayload) {
 
   const discordenoChannels = await Promise.all(
     payload.threads.map(async (thread) => {
-      const discordenoChannel = await structures.createDiscordenoChannel(
-        thread,
-        snowflakeToBigint(payload.guildId),
-      );
+      const discordenoChannel = await structures.createDiscordenoChannel(thread, snowflakeToBigint(payload.guildId));
 
-      await cacheHandlers.set(
-        "channels",
-        discordenoChannel.id,
-        discordenoChannel,
-      );
+      await cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);
 
       return discordenoChannel;
-    }),
+    })
   );
 
-  const threads = new Collection<bigint, DiscordenoChannel>(
-    discordenoChannels.map((t) => [t.id, t]),
-  );
+  const threads = new Collection<bigint, DiscordenoChannel>(discordenoChannels.map((t) => [t.id, t]));
 
-  eventHandlers.threadListSync?.(
-    threads,
-    payload.members,
-    snowflakeToBigint(payload.guildId),
-  );
+  eventHandlers.threadListSync?.(threads, payload.members, snowflakeToBigint(payload.guildId));
 }

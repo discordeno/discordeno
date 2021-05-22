@@ -12,14 +12,16 @@ export interface ButtonComponent {
   /** For different styles/colors of the buttons */
   style: ButtonStyles;
   /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
-  emoji?: string | {
-    /** Emoji id */
-    id?: string;
-    /** Emoji name */
-    name?: string;
-    /** Whether this emoji is animated */
-    animated?: boolean;
-  };
+  emoji?:
+    | string
+    | {
+        /** Emoji id */
+        id?: string;
+        /** Emoji name */
+        name?: string;
+        /** Whether this emoji is animated */
+        animated?: boolean;
+      };
   /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
   url?: string;
   /** Whether or not this button is disabled */

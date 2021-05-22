@@ -2,10 +2,7 @@ import { BASE_URL } from "../util/constants.ts";
 import { rest, RestPayload, RestRequest } from "./rest.ts";
 
 /** Processes a request and assigns it to a queue or creates a queue if none exists for it. */
-export async function processRequest(
-  request: RestRequest,
-  payload: RestPayload,
-) {
+export async function processRequest(request: RestRequest, payload: RestPayload) {
   const route = request.url.substring(request.url.indexOf("api/"));
   const parts = route.split("/");
   // REMOVE THE API

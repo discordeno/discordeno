@@ -10,16 +10,11 @@ import { snakelize } from "../../../util/utils.ts";
  * Creates a new public thread from an existing message. Returns a channel on success, and a 400 BAD REQUEST on invalid parameters. Fires a Thread Create Gateway event.
  * @param messageId when provided the thread will be public
  */
-export async function startThread(
-  channelId: bigint,
-  options: StartThread & { messageId?: bigint },
-) {
+export async function startThread(channelId: bigint, options: StartThread & { messageId?: bigint }) {
   const channel = await cacheHandlers.get("channels", channelId);
   if (channel) {
     // TODO(threads): perm check
-    if (
-      ![ChannelTypes.GuildText, ChannelTypes.GuildNews].includes(channel.type)
-    ) {
+    if (![ChannelTypes.GuildText, ChannelTypes.GuildNews].includes(channel.type)) {
       throw new Error(Errors.INVALID_THREAD_PARENT_CHANNEL_TYPE);
     }
 
@@ -33,6 +28,6 @@ export async function startThread(
     options?.messageId
       ? endpoints.THREAD_START_PUBLIC(channelId, options.messageId)
       : endpoints.THREAD_START_PRIVATE(channelId),
-    snakelize(options),
+    snakelize(options)
   );
 }

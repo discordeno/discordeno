@@ -22,16 +22,10 @@ export async function createStageInstance(
       throw new Error(Errors.CHANNEL_NOT_STAGE_VOICE);
     }
 
-    await requireBotChannelPermissions(channel, [
-      "MANAGE_CHANNELS",
-      "MUTE_MEMBERS",
-      "MOVE_MEMBERS",
-    ]);
+    await requireBotChannelPermissions(channel, ["MANAGE_CHANNELS", "MUTE_MEMBERS", "MOVE_MEMBERS"]);
   }
 
-  if (
-    !validateLength(topic, { max: 120, min: 1 })
-  ) {
+  if (!validateLength(topic, { max: 120, min: 1 })) {
     throw new Error(Errors.INVALID_TOPIC_LENGTH);
   }
 

@@ -15,7 +15,7 @@ import { endpoints } from "../../util/constants.ts";
 export async function searchMembers(
   guildId: bigint,
   query: string,
-  options?: Omit<SearchGuildMembers, "query"> & { cache?: boolean },
+  options?: Omit<SearchGuildMembers, "query"> & { cache?: boolean }
 ) {
   if (options?.limit) {
     if (options.limit < 1) throw new Error(Errors.MEMBER_SEARCH_LIMIT_TOO_LOW);
@@ -24,28 +24,21 @@ export async function searchMembers(
     }
   }
 
-  const result = await rest.runMethod<GuildMemberWithUser[]>(
-    "get",
-    endpoints.GUILD_MEMBERS_SEARCH(guildId),
-    {
-      ...options,
-      query,
-    },
+  const result = await rest.runMethod<GuildMemberWithUser[]>("get", endpoints.GUILD_MEMBERS_SEARCH(guildId), {
+    ...options,
+    query,
+  });
+
+  const members = await Promise.all(
+    result.map(async (member) => {
+      const discordenoMember = await structures.createDiscordenoMember(member, guildId);
+      if (options?.cache) {
+        await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
+      }
+
+      return discordenoMember;
+    })
   );
 
-  const members = await Promise.all(result.map(async (member) => {
-    const discordenoMember = await structures.createDiscordenoMember(
-      member,
-      guildId,
-    );
-    if (options?.cache) {
-      await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
-    }
-
-    return discordenoMember;
-  }));
-
-  return new Collection<bigint, DiscordenoMember>(
-    members.map((member) => [member.id, member]),
-  );
+  return new Collection<bigint, DiscordenoMember>(members.map((member) => [member.id, member]));
 }

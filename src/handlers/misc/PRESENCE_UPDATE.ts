@@ -7,15 +7,8 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 export async function handlePresenceUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as PresenceUpdate;
 
-  const oldPresence = await cacheHandlers.get(
-    "presences",
-    snowflakeToBigint(payload.user.id),
-  );
-  await cacheHandlers.set(
-    "presences",
-    snowflakeToBigint(payload.user.id),
-    payload,
-  );
+  const oldPresence = await cacheHandlers.get("presences", snowflakeToBigint(payload.user.id));
+  await cacheHandlers.set("presences", snowflakeToBigint(payload.user.id), payload);
 
   eventHandlers.presenceUpdate?.(payload, oldPresence);
 }

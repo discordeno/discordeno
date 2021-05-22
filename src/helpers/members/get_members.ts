@@ -20,10 +20,7 @@ import { ws } from "../../ws/ws.ts";
  * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
  */
-export async function getMembers(
-  guildId: bigint,
-  options?: ListGuildMembers & { addToCache?: boolean },
-) {
+export async function getMembers(guildId: bigint, options?: ListGuildMembers & { addToCache?: boolean }) {
   if (!(ws.identifyPayload.intents && DiscordGatewayIntents.GuildMembers)) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
@@ -35,63 +32,42 @@ export async function getMembers(
 
   let membersLeft = options?.limit ?? guild.memberCount;
   let loops = 1;
-  while (
-    (options?.limit ?? guild.memberCount) > members.size &&
-    membersLeft > 0
-  ) {
+  while ((options?.limit ?? guild.memberCount) > members.size && membersLeft > 0) {
     eventHandlers.debug?.("loop", "Running while loop in getMembers function.");
 
     if (options?.limit && options.limit > 1000) {
-      console.log(
-        `Paginating get members from REST. #${loops} / ${
-          Math.ceil(
-            (options?.limit ?? 1) / 1000,
-          )
-        }`,
-      );
+      console.log(`Paginating get members from REST. #${loops} / ${Math.ceil((options?.limit ?? 1) / 1000)}`);
     }
 
-    const result = (await rest.runMethod<GuildMemberWithUser[]>(
+    const result = await rest.runMethod<GuildMemberWithUser[]>(
       "get",
-      `${endpoints.GUILD_MEMBERS(guildId)}?limit=${
-        membersLeft > 1000 ? 1000 : membersLeft
-      }${options?.after ? `&after=${options.after}` : ""}`,
-    ));
+      `${endpoints.GUILD_MEMBERS(guildId)}?limit=${membersLeft > 1000 ? 1000 : membersLeft}${
+        options?.after ? `&after=${options.after}` : ""
+      }`
+    );
 
     const discordenoMembers = await Promise.all(
       result.map(async (member) => {
-        const discordenoMember = await structures.createDiscordenoMember(
-          member,
-          guildId,
-        );
+        const discordenoMember = await structures.createDiscordenoMember(member, guildId);
 
         if (options?.addToCache !== false) {
-          await cacheHandlers.set(
-            "members",
-            discordenoMember.id,
-            discordenoMember,
-          );
+          await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
         }
 
         return discordenoMember;
-      }),
+      })
     );
 
     if (!discordenoMembers.length) break;
 
     discordenoMembers.forEach((member) => {
-      eventHandlers.debug?.(
-        "loop",
-        `Running forEach loop in get_members file.`,
-      );
+      eventHandlers.debug?.("loop", `Running forEach loop in get_members file.`);
       members.set(member.id, member);
     });
 
     options = {
       limit: options?.limit,
-      after: bigintToSnowflake(
-        discordenoMembers[discordenoMembers.length - 1].id,
-      ),
+      after: bigintToSnowflake(discordenoMembers[discordenoMembers.length - 1].id),
     };
 
     membersLeft -= 1000;

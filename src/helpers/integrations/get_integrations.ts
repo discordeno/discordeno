@@ -7,8 +7,5 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function getIntegrations(guildId: bigint) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  return await rest.runMethod<Integration>(
-    "get",
-    endpoints.GUILD_INTEGRATIONS(guildId),
-  );
+  return await rest.runMethod<Integration>("get", endpoints.GUILD_INTEGRATIONS(guildId));
 }

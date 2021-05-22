@@ -12,10 +12,7 @@ import { validateLength } from "../../util/validate_length.ts";
  *
  * Webhook names cannot be: 'clyde'
  */
-export async function createWebhook(
-  channelId: bigint,
-  options: CreateWebhook,
-) {
+export async function createWebhook(channelId: bigint, options: CreateWebhook) {
   await requireBotChannelPermissions(channelId, ["MANAGE_WEBHOOKS"]);
 
   if (
@@ -26,12 +23,8 @@ export async function createWebhook(
     throw new Error(Errors.INVALID_WEBHOOK_NAME);
   }
 
-  return await rest.runMethod<Webhook>(
-    "post",
-    endpoints.CHANNEL_WEBHOOKS(channelId),
-    {
-      ...options,
-      avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
-    },
-  );
+  return await rest.runMethod<Webhook>("post", endpoints.CHANNEL_WEBHOOKS(channelId), {
+    ...options,
+    avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
+  });
 }

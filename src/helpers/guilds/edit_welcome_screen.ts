@@ -4,13 +4,6 @@ import type { WelcomeScreen } from "../../types/guilds/welcome_screen.ts";
 import { endpoints } from "../../util/constants.ts";
 import { snakelize } from "../../util/utils.ts";
 
-export async function editWelcomeScreen(
-  guildId: bigint,
-  options: ModifyGuildWelcomeScreen,
-) {
-  return await rest.runMethod<WelcomeScreen>(
-    "patch",
-    endpoints.GUILD_WELCOME_SCREEN(guildId),
-    snakelize(options),
-  );
+export async function editWelcomeScreen(guildId: bigint, options: ModifyGuildWelcomeScreen) {
+  return await rest.runMethod<WelcomeScreen>("patch", endpoints.GUILD_WELCOME_SCREEN(guildId), snakelize(options));
 }
