@@ -112,8 +112,6 @@ export interface Guild {
   approximatePresenceCount?: number;
   /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
   welcomeScreen?: WelcomeScreen;
-  /** `true` if this guild is designated as NSFW */
-  nsfw: boolean;
   /** Guild NSFW level */
   nsfwLevel: GuildNSFWLevel;
   /** Stage instances in the guild */
