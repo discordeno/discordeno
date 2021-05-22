@@ -1,5 +1,5 @@
 // TODO: add resource link
-export enum GuildNSFWLevel {
+export enum GuildNsfwLevel {
   Default,
   Explicit,
   Safe,
