@@ -155,7 +155,7 @@ export const endpoints = {
   // Discovery Endpoints
   DISCOVERY_CATEGORIES: `${baseEndpoints.BASE_URL}/discovery/categories`,
   DISCOVERY_VALID_TERM: `${baseEndpoints.BASE_URL}/discovery/valid-term`,
-  DISCOVERY_MODIFY: (guildId: bigint) => `${GUILDS_BASE(guildId)}/discovery-metadata`,
+  DISCOVERY_METADATA: (guildId: bigint) => `${GUILDS_BASE(guildId)}/discovery-metadata`,
   DISCOVERY_SUBCATEGORY: (guildId: bigint, categoryId: number) =>
     `${GUILDS_BASE(guildId)}/discovery-categories/${categoryId}`,
 
