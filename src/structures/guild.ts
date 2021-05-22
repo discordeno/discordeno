@@ -54,14 +54,12 @@ export const guildToggles = {
   large: 4n,
   /** Whether this guild is unavailable due to an outage */
   unavailable: 8n,
-  /** Whether this server is an nsfw guild */
-  nsfw: 16n,
   /** Whether this server's icon is animated */
-  animatedIcon: 32n,
+  animatedIcon: 16n,
   /** Whether this server's banner is animated. */
-  animatedBanner: 64n,
+  animatedBanner: 32n,
   /** Whether this server's splash is animated. */
-  animatedSplash: 128n,
+  animatedSplash: 64n,
 };
 
 const baseGuild: Partial<DiscordenoGuild> = {
@@ -163,9 +161,6 @@ const baseGuild: Partial<DiscordenoGuild> = {
   },
   get unavailable() {
     return Boolean(this.bitfield! & guildToggles.unavailable);
-  },
-  get nsfw() {
-    return Boolean(this.bitfield! & guildToggles.nsfw);
   },
   get animatedIcon() {
     return Boolean(this.bitfield! & guildToggles.animatedIcon);
