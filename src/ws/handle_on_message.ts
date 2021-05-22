@@ -6,8 +6,6 @@ import type { DiscordHello } from "../types/gateway/hello.ts";
 import type { DiscordReady } from "../types/gateway/ready.ts";
 import { camelize, delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
-import { identify } from "./identify.ts";
-import { resume } from "./resume.ts";
 import { ws } from "./ws.ts";
 
 /** Handler for handling every message event from websocket. */
@@ -61,7 +59,7 @@ export async function handleOnMessage(message: any, shardId: number) {
         ws.shards.get(shardId)!.resuming = true;
       }
 
-      await resume(shardId);
+      ws.resume(shardId);
       break;
     case DiscordGatewayOpcodes.InvalidSession:
       ws.log("INVALID_SESSION", { shardId, payload: messageData });
@@ -71,7 +69,7 @@ export async function handleOnMessage(message: any, shardId: number) {
 
       // When d is false we need to reidentify
       if (!messageData.d) {
-        await identify(shardId, ws.maxShards);
+        await ws.identify(shardId, ws.maxShards);
         break;
       }
 
@@ -79,7 +77,7 @@ export async function handleOnMessage(message: any, shardId: number) {
         ws.shards.get(shardId)!.resuming = true;
       }
 
-      await resume(shardId);
+      ws.resume(shardId);
       break;
     default:
       if (messageData.t === "RESUMED") {

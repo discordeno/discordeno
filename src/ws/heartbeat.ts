@@ -1,6 +1,5 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { delay } from "../util/utils.ts";
-import { identify } from "./identify.ts";
 import { ws } from "./ws.ts";
 
 export async function heartbeat(shardId: number, interval: number) {
@@ -45,7 +44,7 @@ export async function heartbeat(shardId: number, interval: number) {
 
     if (!currentShard.heartbeat.acknowledged) {
       ws.closeWS(currentShard.ws, 3066, "Did not receive an ACK in time.");
-      return identify(shardId, ws.maxShards);
+      return ws.identify(shardId, ws.maxShards);
     }
 
     if (currentShard.ws.readyState !== WebSocket.OPEN) return;

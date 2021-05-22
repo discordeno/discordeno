@@ -14,6 +14,7 @@ import { sendShardMessage } from "./send_shard_message.ts";
 import { spawnShards } from "./spawn_shards.ts";
 import { startGateway } from "./start_gateway.ts";
 import { tellClusterToIdentify } from "./tell_cluster_to_identify.ts";
+import { resume } from "./resume.ts";
 
 // CONTROLLER LIKE INTERFACE FOR WS HANDLING
 export const ws = {
@@ -119,6 +120,8 @@ export const ws = {
   closeWS,
   /** Properly adds a message to the shards queue. */
   sendShardMessage,
+  /** Properly resume an old shards session. */
+  resume,
 };
 
 export interface DiscordenoShard {
