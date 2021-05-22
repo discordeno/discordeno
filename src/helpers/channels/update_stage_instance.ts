@@ -11,7 +11,7 @@ import { snakelize } from "../../util/utils.ts";
 /** Updates fields of an existing Stage instance. Requires the user to be a moderator of the Stage channel. */
 export async function updateStageInstance(
   channelId: bigint,
-  data: Partial<Pick<StageInstance, "topic" | "privacyLevel">> = {},
+  data: Partial<Pick<StageInstance, "topic" | "privacyLevel">> = {}
 ) {
   const channel = await cacheHandlers.get("channels", channelId);
 
@@ -33,9 +33,5 @@ export async function updateStageInstance(
     throw new Error(Errors.INVALID_TOPIC_LENGTH);
   }
 
-  return await rest.runMethod<StageInstance>(
-    "patch",
-    endpoints.STAGE_INSTANCE(channelId),
-    snakelize(data),
-  );
+  return await rest.runMethod<StageInstance>("patch", endpoints.STAGE_INSTANCE(channelId), snakelize(data));
 }

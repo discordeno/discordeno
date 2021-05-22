@@ -10,11 +10,7 @@ import { PrivacyLevel } from "../../types/channels/privacy_level.ts";
 import { snakelize } from "../../util/utils.ts";
 
 /** Creates a new Stage instance associated to a Stage channel. Requires the user to be a moderator of the Stage channel. */
-export async function createStageInstance(
-  channelId: bigint,
-  topic: string,
-  privacyLevel?: PrivacyLevel,
-) {
+export async function createStageInstance(channelId: bigint, topic: string, privacyLevel?: PrivacyLevel) {
   const channel = await cacheHandlers.get("channels", channelId);
 
   if (channel) {
@@ -36,6 +32,6 @@ export async function createStageInstance(
       channelId,
       topic,
       privacyLevel,
-    }),
+    })
   );
 }
