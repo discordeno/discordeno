@@ -6,7 +6,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 import { snakelize } from "../../util/utils.ts";
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
-export async function getAuditLogs(guildId: bigint, options: GetGuildAuditLog) {
+export async function getAuditLogs(guildId: bigint, options: Partial<GetGuildAuditLog>) {
   await requireBotGuildPermissions(guildId, ["VIEW_AUDIT_LOG"]);
 
   return await rest.runMethod<AuditLog>(
