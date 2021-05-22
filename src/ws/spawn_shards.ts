@@ -67,7 +67,7 @@ export function spawnShards(firstShardId = 0) {
         });
       });
 
-      bucket.createNextShard[0]?.();
+      bucket.createNextShard.shift()?.();
     }
   });
 }

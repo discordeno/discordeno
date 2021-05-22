@@ -107,7 +107,7 @@ export async function handleOnMessage(message: any, shardId: number) {
           const bucket = ws.buckets.get(
             shardId % ws.botGatewayData.sessionStartLimit.maxConcurrency,
           );
-          if (bucket) bucket.createNextShard[0]?.();
+          if (bucket) bucket.createNextShard.shift()?.();
         }, 5000);
       }
 
