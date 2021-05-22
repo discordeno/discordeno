@@ -2,15 +2,12 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { GuildRoleCreate } from "../../types/mod.ts";
+import type { GuildRoleCreate } from "../../types/guilds/guild_role_create.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleGuildRoleCreate(data: DiscordGatewayPayload) {
   const payload = data.d as GuildRoleCreate;
-  const guild = await cacheHandlers.get(
-    "guilds",
-    snowflakeToBigint(payload.guildId),
-  );
+  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
   if (!guild) return;
 
   const role = await structures.createDiscordenoRole({

@@ -9,17 +9,11 @@ export async function processQueue(id: string) {
   if (!queue) return;
 
   while (queue.length) {
-    rest.eventHandlers.debug?.(
-      "loop",
-      "Running while loop in processQueue function.",
-    );
+    rest.eventHandlers.debug?.("loop", "Running while loop in processQueue function.");
     // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
     if (rest.globallyRateLimited) {
       setTimeout(async () => {
-        eventHandlers.debug?.(
-          "loop",
-          `Running setTimeout in processQueue function.`,
-        );
+        eventHandlers.debug?.("loop", `Running setTimeout in processQueue function.`);
         await processQueue(id);
       }, 1000);
 
@@ -30,10 +24,7 @@ export async function processQueue(id: string) {
     // IF THIS DOESNT HAVE ANY ITEMS JUST CANCEL, THE CLEANER WILL REMOVE IT.
     if (!queuedRequest) return;
 
-    const basicURL = rest.simplifyUrl(
-      queuedRequest.request.url,
-      queuedRequest.request.method.toUpperCase(),
-    );
+    const basicURL = rest.simplifyUrl(queuedRequest.request.url, queuedRequest.request.method.toUpperCase());
 
     // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
     const urlResetIn = rest.checkRateLimits(basicURL);
@@ -44,28 +35,19 @@ export async function processQueue(id: string) {
     }
 
     // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
-    const bucketResetIn = queuedRequest.payload.bucketId
-      ? rest.checkRateLimits(queuedRequest.payload.bucketId)
-      : false;
+    const bucketResetIn = queuedRequest.payload.bucketId ? rest.checkRateLimits(queuedRequest.payload.bucketId) : false;
     // THIS BUCKET IS STILL RATELIMITED, RE-ADD TO QUEUE
     if (bucketResetIn) continue;
 
     // EXECUTE THE REQUEST
 
     // IF THIS IS A GET REQUEST, CHANGE THE BODY TO QUERY PARAMETERS
-    const query = queuedRequest.request.method.toUpperCase() === "GET" &&
-        queuedRequest.payload.body
-      ? Object.entries(queuedRequest.payload.body)
-        .map(
-          ([key, value]) =>
-            `${encodeURIComponent(key)}=${
-              encodeURIComponent(
-                value as string,
-              )
-            }`,
-        )
-        .join("&")
-      : "";
+    const query =
+      queuedRequest.request.method.toUpperCase() === "GET" && queuedRequest.payload.body
+        ? Object.entries(queuedRequest.payload.body)
+            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
+            .join("&")
+        : "";
     const urlToUse =
       queuedRequest.request.method.toUpperCase() === "GET" && query
         ? `${queuedRequest.request.url}?${query}`
@@ -75,16 +57,10 @@ export async function processQueue(id: string) {
     rest.eventHandlers.fetching(queuedRequest.payload);
 
     try {
-      const response = await fetch(
-        urlToUse,
-        rest.createRequestBody(queuedRequest),
-      );
+      const response = await fetch(urlToUse, rest.createRequestBody(queuedRequest));
 
       rest.eventHandlers.fetched(queuedRequest.payload);
-      const bucketIdFromHeaders = rest.processRequestHeaders(
-        basicURL,
-        response.headers,
-      );
+      const bucketIdFromHeaders = rest.processRequestHeaders(basicURL, response.headers);
       // SET THE BUCKET Id IF IT WAS PRESENT
       if (bucketIdFromHeaders) {
         queuedRequest.payload.bucketId = bucketIdFromHeaders;
@@ -96,32 +72,26 @@ export async function processQueue(id: string) {
         let error = "REQUEST_UNKNOWN_ERROR";
         switch (response.status) {
           case DiscordHTTPResponseCodes.BadRequest:
-            error =
-              "The request was improperly formatted, or the server couldn't understand it.";
+            error = "The request was improperly formatted, or the server couldn't understand it.";
             break;
           case DiscordHTTPResponseCodes.Unauthorized:
             error = "The Authorization header was missing or invalid.";
             break;
           case DiscordHTTPResponseCodes.Forbidden:
-            error =
-              "The Authorization token you passed did not have permission to the resource.";
+            error = "The Authorization token you passed did not have permission to the resource.";
             break;
           case DiscordHTTPResponseCodes.NotFound:
             error = "The resource at the location specified doesn't exist.";
             break;
           case DiscordHTTPResponseCodes.MethodNotAllowed:
-            error =
-              "The HTTP method used is not valid for the location specified.";
+            error = "The HTTP method used is not valid for the location specified.";
             break;
           case DiscordHTTPResponseCodes.GatewayUnavailable:
-            error =
-              "There was not a gateway available to process your request. Wait a bit and retry.";
+            error = "There was not a gateway available to process your request. Wait a bit and retry.";
             break;
         }
 
-        queuedRequest.request.reject?.(
-          new Error(`[${response.status}] ${error}`),
-        );
+        queuedRequest.request.reject?.(new Error(`[${response.status}] ${error}`));
 
         // If Rate limited should not remove from queue
         if (response.status !== 429) queue.shift();
@@ -138,18 +108,14 @@ export async function processQueue(id: string) {
         // CONVERT THE RESPONSE TO JSON
         const json = await response.json();
         // IF THE RESPONSE WAS RATE LIMITED, HANDLE ACCORDINGLY
-        if (
-          json.retry_after ||
-          json.message === "You are being rate limited."
-        ) {
+        if (json.retry_after || json.message === "You are being rate limited.") {
           // IF IT HAS MAXED RETRIES SOMETHING SERIOUSLY WRONG. CANCEL OUT.
           if (queuedRequest.payload.retryCount >= rest.maxRetryCount) {
             rest.eventHandlers.retriesMaxed(queuedRequest.payload);
             queuedRequest.request.respond({
               status: 200,
               body: JSON.stringify({
-                error:
-                  "The request was rate limited and it maxed out the retries limit.",
+                error: "The request was rate limited and it maxed out the retries limit.",
               }),
             });
             // REMOVE ITEM FROM QUEUE TO PREVENT RETRY

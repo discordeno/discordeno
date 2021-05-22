@@ -3,11 +3,7 @@ import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
 
-async function ifItFailsBlameWolf(
-  type: "getter" | "raw",
-  custom = false,
-  ordered = false,
-) {
+async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false, ordered = false) {
   const message = await sendMessage(tempData.channelId, "Hello World!");
 
   // Assertions
@@ -26,16 +22,11 @@ async function ifItFailsBlameWolf(
     emojiIds = [
       `<:blamewolf:${
         (
-          await createEmoji(
-            tempData.guildId,
-            "blamewolf",
-            "https://cdn.discordapp.com/emojis/814955268123000832.png",
-            {
-              name: "blamewolf",
-              image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
-              roles: [],
-            },
-          )
+          await createEmoji(tempData.guildId, "blamewolf", "https://cdn.discordapp.com/emojis/814955268123000832.png", {
+            name: "blamewolf",
+            image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
+            roles: [],
+          })
         ).id
       }>`,
       `<:blamewolf2:${
@@ -48,7 +39,7 @@ async function ifItFailsBlameWolf(
               name: "blamewolf2",
               image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
               roles: [],
-            },
+            }
           )
         ).id
       }>`,
@@ -61,10 +52,7 @@ async function ifItFailsBlameWolf(
     await message.addReactions(emojiIds, ordered);
   }
 
-  await delayUntil(
-    10000,
-    () => cache.messages.get(message.id)?.reactions?.length === 2,
-  );
+  await delayUntil(10000, () => cache.messages.get(message.id)?.reactions?.length === 2);
 
   assertEquals(await cache.messages.get(message.id)?.reactions?.length, 2);
 }

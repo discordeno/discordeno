@@ -34,7 +34,7 @@ export async function processQueue(id: number) {
             : Array.isArray(value)
             ? value.map((v) => (typeof v === "bigint" ? v.toString() : v))
             : value,
-        `Running forEach loop in ws.processQueue function for changing bigints to strings.`,
+        `Running forEach loop in ws.processQueue function for changing bigints to strings.`
       );
     }
 
@@ -48,8 +48,7 @@ export async function processQueue(id: number) {
     // Handle if the requests have been maxed
     if (shard.queueCounter >= 118) {
       ws.log("DEBUG", {
-        message:
-          "Max gateway requests per minute reached setting timeout for one minute",
+        message: "Max gateway requests per minute reached setting timeout for one minute",
         shardId: shard.id,
       });
       await delay(60000);

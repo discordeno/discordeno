@@ -16,9 +16,7 @@ Deno.test({
     await delayUntil(3000, () => cache.channels.has(channel.id));
     // Make sure the channel was created.
     if (!cache.channels.has(channel.id)) {
-      throw new Error(
-        "The channel should have been created but it is not in the cache.",
-      );
+      throw new Error("The channel should have been created but it is not in the cache.");
     }
 
     cache.channels.delete(channel.id);
@@ -27,10 +25,7 @@ Deno.test({
     await getChannel(channel.id);
     await delayUntil(3000, () => cache.channels.has(channel.id));
 
-    assertEquals(
-      cache.channels.has(channel.id),
-      true,
-    );
+    assertEquals(cache.channels.has(channel.id), true);
   },
   ...defaultTestOptions,
 });

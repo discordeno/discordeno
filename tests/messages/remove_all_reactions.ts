@@ -1,9 +1,4 @@
-import {
-  addReactions,
-  cache,
-  removeAllReactions,
-  sendMessage,
-} from "../../mod.ts";
+import { addReactions, cache, removeAllReactions, sendMessage } from "../../mod.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
@@ -23,10 +18,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   // Add reactions to the message
   await addReactions(message.channelId, message.id, ["❤", "😃", "🤫"]);
   // Delay the execution by 5 seconds to allow MESSAGE_REACTION_ALL event to be processed
-  await delayUntil(
-    10000,
-    () => cache.messages.get(message.id)?.reactions?.length === 3,
-  );
+  await delayUntil(10000, () => cache.messages.get(message.id)?.reactions?.length === 3);
 
   // Be sure that the message has the reactions
   assertEquals(await cache.messages.get(message.id)?.reactions?.length, 3);
@@ -38,10 +30,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
   }
 
   // Delay the execution by 5 seconds to allow MESSAGE_REACTION_REMOVE_ALL event to be processed
-  await delayUntil(
-    10000,
-    () => cache.messages.get(message.id)?.reactions === undefined,
-  );
+  await delayUntil(10000, () => cache.messages.get(message.id)?.reactions === undefined);
 
   // Check if the reactions has been deleted
   assertEquals(await cache.messages.get(message.id)?.reactions, undefined);

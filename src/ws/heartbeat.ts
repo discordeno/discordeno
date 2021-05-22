@@ -15,10 +15,12 @@ export async function heartbeat(shardId: number, interval: number) {
 
   if (shard.ws.readyState !== WebSocket.OPEN) return;
 
-  shard.ws.send(JSON.stringify({
-    op: DiscordGatewayOpcodes.Heartbeat,
-    d: shard.previousSequenceNumber,
-  }));
+  shard.ws.send(
+    JSON.stringify({
+      op: DiscordGatewayOpcodes.Heartbeat,
+      d: shard.previousSequenceNumber,
+    })
+  );
 
   shard.heartbeat.keepAlive = true;
   shard.heartbeat.acknowledged = false;
@@ -32,10 +34,7 @@ export async function heartbeat(shardId: number, interval: number) {
 
     ws.log("HEARTBEATING", { shardId, shard: currentShard });
 
-    if (
-      currentShard.ws.readyState === WebSocket.CLOSED ||
-      !currentShard.heartbeat.keepAlive
-    ) {
+    if (currentShard.ws.readyState === WebSocket.CLOSED || !currentShard.heartbeat.keepAlive) {
       ws.log("HEARTBEATING_CLOSED", { shardId, shard: currentShard });
 
       // STOP THE HEARTBEAT
@@ -51,9 +50,11 @@ export async function heartbeat(shardId: number, interval: number) {
 
     currentShard.heartbeat.acknowledged = false;
 
-    currentShard.ws.send(JSON.stringify({
-      op: DiscordGatewayOpcodes.Heartbeat,
-      d: currentShard.previousSequenceNumber,
-    }));
+    currentShard.ws.send(
+      JSON.stringify({
+        op: DiscordGatewayOpcodes.Heartbeat,
+        d: currentShard.previousSequenceNumber,
+      })
+    );
   }, shard.heartbeat.interval);
 }

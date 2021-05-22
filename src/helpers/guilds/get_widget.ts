@@ -12,8 +12,5 @@ export async function getWidget(guildId: bigint, options?: { force: boolean }) {
     if (!guild?.widgetEnabled) throw new Error(Errors.GUILD_WIDGET_NOT_ENABLED);
   }
 
-  return await rest.runMethod<GuildWidgetDetails>(
-    "get",
-    `${endpoints.GUILD_WIDGET(guildId)}.json`,
-  );
+  return await rest.runMethod<GuildWidgetDetails>("get", `${endpoints.GUILD_WIDGET(guildId)}.json`);
 }

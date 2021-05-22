@@ -47,13 +47,17 @@ export function resume(shardId: number) {
 
   // Resume on open
   socket.onopen = () => {
-    ws.sendShardMessage(shardId, {
-      op: DiscordGatewayOpcodes.Resume,
-      d: {
-        token: ws.identifyPayload.token,
-        session_id: sessionId,
-        seq: previousSequenceNumber,
+    ws.sendShardMessage(
+      shardId,
+      {
+        op: DiscordGatewayOpcodes.Resume,
+        d: {
+          token: ws.identifyPayload.token,
+          session_id: sessionId,
+          seq: previousSequenceNumber,
+        },
       },
-    }, true);
+      true
+    );
   };
 }

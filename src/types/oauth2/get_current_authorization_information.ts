@@ -1,5 +1,5 @@
 import { User } from "../users/user.ts";
-import { Application } from "./application.ts";
+import { Application } from "../applications/application.ts";
 import { DiscordOAuth2Scopes } from "./scopes.ts";
 
 /** https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information-response-structure */

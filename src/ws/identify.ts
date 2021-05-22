@@ -40,10 +40,14 @@ export function identify(shardId: number, maxShards: number) {
   });
 
   socket.onopen = () => {
-    ws.sendShardMessage(shardId, {
-      op: DiscordGatewayOpcodes.Identify,
-      d: { ...ws.identifyPayload, shard: [shardId, maxShards] },
-    }, true);
+    ws.sendShardMessage(
+      shardId,
+      {
+        op: DiscordGatewayOpcodes.Identify,
+        d: { ...ws.identifyPayload, shard: [shardId, maxShards] },
+      },
+      true
+    );
   };
 
   return new Promise((resolve, reject) => {

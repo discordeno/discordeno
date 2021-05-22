@@ -7,8 +7,5 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function getBan(guildId: bigint, memberId: bigint) {
   await requireBotGuildPermissions(guildId, ["BAN_MEMBERS"]);
 
-  return await rest.runMethod<Ban>(
-    "get",
-    endpoints.GUILD_BAN(guildId, memberId),
-  );
+  return await rest.runMethod<Ban>("get", endpoints.GUILD_BAN(guildId, memberId));
 }

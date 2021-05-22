@@ -10,30 +10,20 @@ import { endpoints } from "../../util/constants.ts";
  * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
  */
 export async function getChannels(guildId: bigint, addToCache = true) {
-  const result = await rest.runMethod<Channel[]>(
-    "get",
-    endpoints.GUILD_CHANNELS(guildId),
-  );
+  const result = await rest.runMethod<Channel[]>("get", endpoints.GUILD_CHANNELS(guildId));
 
   return new Collection(
     (
       await Promise.all(
         result.map(async (res) => {
-          const discordenoChannel = await structures.createDiscordenoChannel(
-            res,
-            guildId,
-          );
+          const discordenoChannel = await structures.createDiscordenoChannel(res, guildId);
           if (addToCache) {
-            await cacheHandlers.set(
-              "channels",
-              discordenoChannel.id,
-              discordenoChannel,
-            );
+            await cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);
           }
 
           return discordenoChannel;
-        }),
+        })
       )
-    ).map((c) => [c.id, c]),
+    ).map((c) => [c.id, c])
   );
 }

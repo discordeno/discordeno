@@ -9,12 +9,8 @@ export async function isChannelSynced(channelId: bigint) {
   if (!parentChannel) return false;
 
   return channel.permissionOverwrites?.every((overwrite) => {
-    const permission = parentChannel.permissionOverwrites?.find(
-      (ow) => ow.id === overwrite.id,
-    );
+    const permission = parentChannel.permissionOverwrites?.find((ow) => ow.id === overwrite.id);
     if (!permission) return false;
-    return !(
-      overwrite.allow !== permission.allow || overwrite.deny !== permission.deny
-    );
+    return !(overwrite.allow !== permission.allow || overwrite.deny !== permission.deny);
   });
 }

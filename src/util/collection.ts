@@ -1,5 +1,35 @@
 export class Collection<K, V> extends Map<K, V> {
   maxSize?: number;
+  private sweeper?: CollectionSweeper<K, V> & { intervalId?: number };
+
+  constructor(entries?: (readonly (readonly [K, V])[] | null) | Map<K, V>, options?: CollectionOptions<K, V>) {
+    super(entries ?? []);
+
+    this.maxSize = options?.maxSize;
+    if (!options?.sweeper) return;
+
+    this.startSweeper(options.sweeper);
+  }
+
+  startSweeper(options: CollectionSweeper<K, V>): number {
+    if (this.sweeper?.intervalId) clearInterval(this.sweeper.intervalId);
+
+    this.sweeper = options;
+    this.sweeper.intervalId = setInterval(() => {
+      this.map(async (value, key) => {
+        if (!(await this.sweeper?.filter(value, key))) return;
+
+        this.delete(key);
+        return key;
+      });
+    }, options.interval);
+
+    return this.sweeper.intervalId!;
+  }
+
+  stopSweeper(): void {
+    return clearInterval(this.sweeper?.intervalId);
+  }
 
   set(key: K, value: V) {
     // When this collection is maxSizeed make sure we can add first
@@ -73,10 +103,7 @@ export class Collection<K, V> extends Map<K, V> {
     return true;
   }
 
-  reduce<T>(
-    callback: (accumulator: T, value: V, key: K) => T,
-    initialValue?: T,
-  ): T {
+  reduce<T>(callback: (accumulator: T, value: V, key: K) => T, initialValue?: T): T {
     let accumulator: T = initialValue!;
 
     for (const key of this.keys()) {
@@ -86,4 +113,16 @@ export class Collection<K, V> extends Map<K, V> {
 
     return accumulator;
   }
+}
+
+interface CollectionOptions<K, V> {
+  sweeper?: CollectionSweeper<K, V>;
+  maxSize?: number;
+}
+
+interface CollectionSweeper<K, V> {
+  /** The filter to determine whether an element should be deleted or not */
+  filter: (value: V, key: K) => boolean | Promise<boolean>;
+  /** The interval in which the sweeper should run */
+  interval: number;
 }

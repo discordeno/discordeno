@@ -14,26 +14,25 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", reason?: string) {
   await delayUntil(3000, () => cache.channels.has(channel.id));
   // Make sure the channel was created.
   if (!cache.channels.has(channel.id)) {
-    throw new Error(
-      "The channel should have been created but it is not in the cache.",
-    );
+    throw new Error("The channel should have been created but it is not in the cache.");
   }
 
   // Edit the channel now
   if (type === "raw") {
-    await editChannel(channel.id, {
-      name: "new-name",
-    }, reason);
+    await editChannel(
+      channel.id,
+      {
+        name: "new-name",
+      },
+      reason
+    );
   } else {
     await channel.edit({
       name: "new-name",
     });
   }
   // wait 5 seconds to give it time for CHANNEL_UPDATE event
-  await delayUntil(
-    3000,
-    () => cache.channels.get(channel.id)?.name === "new-name",
-  );
+  await delayUntil(3000, () => cache.channels.get(channel.id)?.name === "new-name");
   assertEquals(cache.channels.get(channel.id)?.name, "new-name");
 }
 

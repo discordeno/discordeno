@@ -2,15 +2,12 @@ import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { GuildRoleUpdate } from "../../types/mod.ts";
+import type { GuildRoleUpdate } from "../../types/guilds/guild_role_update.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleGuildRoleUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as GuildRoleUpdate;
-  const guild = await cacheHandlers.get(
-    "guilds",
-    snowflakeToBigint(payload.guildId),
-  );
+  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
   if (!guild) return;
 
   const cachedRole = guild.roles.get(snowflakeToBigint(payload.role.id));

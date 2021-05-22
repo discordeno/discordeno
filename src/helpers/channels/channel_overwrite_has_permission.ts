@@ -11,24 +11,19 @@ export function channelOverwriteHasPermission(
     allow: bigint;
     deny: bigint;
   })[],
-  permissions: PermissionStrings[],
+  permissions: PermissionStrings[]
 ) {
-  const overwrite = overwrites.find((perm) => perm.id === id) ||
-    overwrites.find((perm) => perm.id === guildId);
+  const overwrite = overwrites.find((perm) => perm.id === id) || overwrites.find((perm) => perm.id === guildId);
 
   if (!overwrite) return false;
 
   return permissions.every((perm) => {
     const allowBits = overwrite.allow;
     const denyBits = overwrite.deny;
-    if (
-      BigInt(denyBits) & BigInt(DiscordBitwisePermissionFlags[perm])
-    ) {
+    if (BigInt(denyBits) & BigInt(DiscordBitwisePermissionFlags[perm])) {
       return false;
     }
-    if (
-      BigInt(allowBits) & BigInt(DiscordBitwisePermissionFlags[perm])
-    ) {
+    if (BigInt(allowBits) & BigInt(DiscordBitwisePermissionFlags[perm])) {
       return true;
     }
   });

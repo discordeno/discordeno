@@ -15,9 +15,7 @@ Deno.test({
     await delayUntil(3000, () => cache.channels.has(channel.id));
     // Make sure the channel was created.
     if (!cache.channels.has(channel.id)) {
-      throw new Error(
-        "The channel should have been created but it is not in the cache.",
-      );
+      throw new Error("The channel should have been created but it is not in the cache.");
     }
 
     // Delete the channel now without a reason
@@ -26,9 +24,7 @@ Deno.test({
     await delayUntil(3000, () => !cache.channels.has(channel.id));
     // Make sure it is gone from cache
     if (cache.channels.has(channel.id)) {
-      throw new Error(
-        "The channel should have been deleted but it is still in cache.",
-      );
+      throw new Error("The channel should have been deleted but it is still in cache.");
     }
   },
   ...defaultTestOptions,
@@ -45,9 +41,7 @@ Deno.test({
     await delayUntil(10000, () => cache.channels.has(channel.id));
     // Make sure the channel was created.
     if (!cache.channels.has(channel.id)) {
-      throw new Error(
-        "The channel should have been created but it is not in the cache.",
-      );
+      throw new Error("The channel should have been created but it is not in the cache.");
     }
 
     // Delete the channel now without a reason
@@ -56,9 +50,7 @@ Deno.test({
     await delayUntil(10000, () => !cache.channels.has(channel.id));
     // Make sure it is gone from cache
     if (cache.channels.has(channel.id)) {
-      throw new Error(
-        "The channel should have been deleted but it is still in cache.",
-      );
+      throw new Error("The channel should have been deleted but it is still in cache.");
     }
   },
   ...defaultTestOptions,
