@@ -1,7 +1,7 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { ws } from "./ws.ts";
 
-export async function identify(shardId: number, maxShards: number) {
+export function identify(shardId: number, maxShards: number) {
   ws.log("IDENTIFYING", { shardId, maxShards });
 
   // Need to clear the old heartbeat interval
