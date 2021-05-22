@@ -113,7 +113,7 @@ export interface Guild {
   /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
   welcomeScreen?: WelcomeScreen;
   /** Guild NSFW level */
-  nsfwLevel: GuildNSFWLevel;
+  nsfwLevel: GuildNsfwLevel;
   /** Stage instances in the guild */
   stageInstances?: StageInstance[];
 }
