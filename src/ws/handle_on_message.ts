@@ -88,8 +88,6 @@ export async function handleOnMessage(message: any, shardId: number) {
 
       // Important for RESUME
       if (messageData.t === "READY") {
-        eventHandlers.shardReady?.(shardId);
-
         const shard = ws.shards.get(shardId);
         if (shard) {
           shard.sessionId = (messageData.d as DiscordReady).session_id;
