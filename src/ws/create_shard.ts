@@ -1,6 +1,4 @@
 import { DiscordGatewayCloseEventCodes } from "../types/codes/gateway_close_event_codes.ts";
-import { identify } from "./identify.ts";
-import { resume } from "./resume.ts";
 import { ws } from "./ws.ts";
 
 export function createShard(shardId: number) {
@@ -49,10 +47,10 @@ export function createShard(shardId: number) {
       case DiscordGatewayCloseEventCodes.InvalidSeq:
       case DiscordGatewayCloseEventCodes.RateLimited:
       case DiscordGatewayCloseEventCodes.SessionTimedOut:
-        identify(shardId, ws.maxShards);
+        ws.identify(shardId, ws.maxShards);
         break;
       default:
-        resume(shardId);
+        ws.resume(shardId);
         break;
     }
   };
