@@ -11,7 +11,7 @@ export function createShard(shardId: number) {
 
   socket.onmessage = ({ data: message }) => ws.handleOnMessage(message, shardId);
 
-  socket.onclose = (event) => {
+  socket.onclose = async (event) => {
     ws.log("CLOSED", { shardId, payload: event });
 
     if (event.code === 3064 || event.reason === "Discordeno Testing Finished! Do Not RESUME!") {
@@ -47,7 +47,7 @@ export function createShard(shardId: number) {
       case DiscordGatewayCloseEventCodes.InvalidSeq:
       case DiscordGatewayCloseEventCodes.RateLimited:
       case DiscordGatewayCloseEventCodes.SessionTimedOut:
-        ws.identify(shardId, ws.maxShards);
+        await ws.identify(shardId, ws.maxShards);
         break;
       default:
         ws.resume(shardId);

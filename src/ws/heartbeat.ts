@@ -27,7 +27,7 @@ export async function heartbeat(shardId: number, interval: number) {
   shard.heartbeat.lastSentAt = Date.now();
   shard.heartbeat.interval = interval;
 
-  shard.heartbeat.intervalId = setInterval(() => {
+  shard.heartbeat.intervalId = setInterval(async () => {
     ws.log("DEBUG", `Running setInterval in heartbeat file.`);
     const currentShard = ws.shards.get(shardId);
     if (!currentShard) return;
@@ -43,7 +43,7 @@ export async function heartbeat(shardId: number, interval: number) {
 
     if (!currentShard.heartbeat.acknowledged) {
       ws.closeWS(currentShard.ws, 3066, "Did not receive an ACK in time.");
-      return ws.identify(shardId, ws.maxShards);
+      return await ws.identify(shardId, ws.maxShards);
     }
 
     if (currentShard.ws.readyState !== WebSocket.OPEN) return;
