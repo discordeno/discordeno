@@ -9,7 +9,7 @@ import { validateSlashCommands } from "../../../util/utils.ts";
  * Edit an existing slash command. If this command did not exist, it will create it.
  */
 export async function upsertSlashCommand(commandId: bigint, options: EditGlobalApplicationCommand, guildId?: bigint) {
-  validateSlashCommands([options]);
+  [options] = validateSlashCommands([options]);
 
   return await rest.runMethod<ApplicationCommand>(
     "patch",

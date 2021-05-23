@@ -108,74 +108,93 @@ function validateSlashOptionChoices(
   for (const choice of choices) {
     eventHandlers.debug?.("loop", `Running for of loop in validateSlashOptionChoices function.`);
     if (!validateLength(choice.name, { min: 1, max: 100 })) {
-      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+      throw new Error(Errors.INVALID_SLASH_OPTION_CHOICE_NAME);
     }
 
     if (
-      (optionType === DiscordApplicationCommandOptionTypes.String &&
-        (typeof choice.value !== "string" || choice.value.length < 1 || choice.value.length > 100)) ||
-      (optionType === DiscordApplicationCommandOptionTypes.Integer && typeof choice.value !== "number")
+      optionType === DiscordApplicationCommandOptionTypes.String &&
+      (typeof choice.value !== "string" || choice.value.length < 1 || choice.value.length > 100)
     ) {
-      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICE_VALUE_TYPE);
+    }
+
+    if (optionType === DiscordApplicationCommandOptionTypes.Integer && typeof choice.value !== "number") {
+      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICE_VALUE_TYPE);
     }
   }
 }
 
 /** @private */
 function validateSlashOptions(options: ApplicationCommandOption[]) {
+  const requiredOptions: ApplicationCommandOption[] = [];
+  const optionalOptions: ApplicationCommandOption[] = [];
+
   for (const option of options) {
     eventHandlers.debug?.("loop", `Running for of loop in validateSlashOptions function.`);
-    if (
-      option.choices?.length &&
-      (option.choices.length > 25 ||
-        (option.type !== DiscordApplicationCommandOptionTypes.String &&
-          option.type !== DiscordApplicationCommandOptionTypes.Integer))
-    ) {
-      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
+    option.name = option.name.toLowerCase();
+
+    if (option.choices?.length) {
+      if (option.choices.length > 25) throw new Error(Errors.TOO_MANY_SLASH_OPTION_CHOICES);
+      if (
+        option.type !== DiscordApplicationCommandOptionTypes.String &&
+        option.type !== DiscordApplicationCommandOptionTypes.Integer
+      )
+        throw new Error(Errors.ONLY_STRING_OR_INTEGER_OPTIONS_CAN_HAVE_CHOICES);
     }
 
-    if (
-      !validateLength(option.name, { min: 1, max: 32 }) ||
-      !validateLength(option.description, { min: 1, max: 100 })
-    ) {
-      throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICES);
-    }
+    if (!validateLength(option.name, { min: 1, max: 32 })) throw new Error(Errors.INVALID_SLASH_OPTION_NAME);
+
+    if (!validateLength(option.description, { min: 1, max: 100 }))
+      throw new Error(Errors.INVALID_SLASH_OPTION_DESCRIPTION);
 
     if (option.choices) {
       validateSlashOptionChoices(option.choices, option.type);
     }
+
+    if (option.required) {
+      requiredOptions.push(option);
+      continue;
+    }
+
+    optionalOptions.push(option);
   }
+
+  return [...requiredOptions, ...optionalOptions];
 }
 
 export function validateSlashCommands(
   commands: (CreateGlobalApplicationCommand | EditGlobalApplicationCommand)[],
   create = false
 ) {
-  for (const command of commands) {
+  return commands.map((command) => {
     eventHandlers.debug?.("loop", `Running for of loop in validateSlashCommands function.`);
-    if (
-      (command.name &&
-        (!SLASH_COMMANDS_NAME_REGEX.test(command.name) || command.name.toLowerCase() !== command.name)) ||
-      (create && !command.name)
-    ) {
-      throw new Error(Errors.INVALID_SLASH_NAME);
+    if (create) {
+      if (!command.name) throw new Error(Errors.INVALID_SLASH_NAME);
+      if (!command.description) throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
     }
 
-    if (
-      (command.description && !validateLength(command.description, { min: 1, max: 100 })) ||
-      (create && !command.description)
-    ) {
+    if (command.name) {
+      if (!SLASH_COMMANDS_NAME_REGEX.test(command.name)) {
+        throw new Error(Errors.INVALID_SLASH_NAME);
+      }
+
+      command.name = command.name.toLowerCase();
+    }
+
+    if (command.description && !validateLength(command.description, { min: 1, max: 100 })) {
       throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
     }
 
     if (command.options?.length) {
       if (command.options.length > 25) {
-        throw new Error(Errors.INVALID_SLASH_OPTIONS);
+        throw new Error(Errors.TOO_MANY_SLASH_OPTIONS);
       }
 
-      validateSlashOptions(command.options);
+      command.options = validateSlashOptions(command.options);
     }
-  }
+
+    return command;
+  });
 }
 
 // Typescript is not so good as we developers so we need this little utility function to help it out

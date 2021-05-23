@@ -11,7 +11,7 @@ import { validateSlashCommands } from "../../../util/utils.ts";
  * **NOTE:** Any slash commands that are not specified in this function will be **deleted**. If you don't provide the commandId and rename your command, the command gets a new Id.
  */
 export async function upsertSlashCommands(options: EditGlobalApplicationCommand[], guildId?: bigint) {
-  validateSlashCommands(options);
+  options = validateSlashCommands(options);
 
   return await rest.runMethod<ApplicationCommand[]>(
     "put",
