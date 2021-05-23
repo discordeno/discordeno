@@ -37,14 +37,15 @@ export async function calculateBasePermissions(
 
   let permissions = 0n;
   // Calculate the role permissions bits, @everyone role is not in memberRoleIds so we need to pass guildId manualy
-  permissions |= [...(member.guilds.get(guild.id)?.roles || []), guild.id]
-    .map((id) => guild.roles.get(id)?.permissions)
-    // Removes any edge case undefined
-    .filter((perm) => perm)
-    .reduce((bits, perms) => {
-      bits |= BigInt(perms);
-      return bits;
-    }, 0n);
+  permissions |=
+    [...(member.guilds.get(guild.id)?.roles || []), guild.id]
+      .map((id) => guild.roles.get(id)?.permissions)
+      // Removes any edge case undefined
+      .filter((perm) => perm)
+      .reduce((bits, perms) => {
+        bits! |= perms!;
+        return bits;
+      }, 0n) || 0n;
 
   // If the memberId is equal to the guild ownerId he automatically has every permission so we add ADMINISTRATOR permission
   if (guild.ownerId === member.id) permissions |= 8n;
