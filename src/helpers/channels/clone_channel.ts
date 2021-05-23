@@ -22,8 +22,8 @@ export async function cloneChannel(channelId: bigint, reason?: string) {
     permissionOverwrites: channelToClone.permissionOverwrites.map((overwrite) => ({
       id: overwrite.id.toString(),
       type: overwrite.type,
-      allow: calculatePermissions(overwrite.allow.toString()),
-      deny: calculatePermissions(overwrite.deny.toString()),
+      allow: calculatePermissions(overwrite.allow),
+      deny: calculatePermissions(overwrite.deny),
     })),
   };
 
