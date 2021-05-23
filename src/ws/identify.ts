@@ -54,10 +54,11 @@ export function identify(shardId: number, maxShards: number) {
     ws.loadingShards.set(shardId, {
       shardId,
       resolve,
-      reject,
       startedAt: Date.now(),
     });
 
-    ws.cleanupLoadingShards();
+    setTimeout(() => {
+      reject(`[Identify Failure] Shard ${shardId} has not received READY event in over a minute.`);
+    }, 600000);
   });
 }

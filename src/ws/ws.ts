@@ -1,6 +1,5 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { Collection } from "../util/collection.ts";
-import { cleanupLoadingShards } from "./cleanup_loading_shards.ts";
 import { closeWS } from "./close_ws.ts";
 import { createShard } from "./create_shard.ts";
 import { log } from "./events.ts";
@@ -78,7 +77,6 @@ export const ws = {
     {
       shardId: number;
       resolve: (value: unknown) => void;
-      reject: (reason?: unknown) => void;
       startedAt: number;
     }
   >(),
@@ -112,8 +110,6 @@ export const ws = {
   log,
   /** Handles resharding the bot when necessary. */
   resharder,
-  /** Cleanups loading shards that were unable to load. */
-  cleanupLoadingShards,
   /** Handles the message events from websocket. */
   handleOnMessage,
   /** Handles processing queue of requests send to this shard. */
