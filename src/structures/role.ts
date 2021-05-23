@@ -129,6 +129,7 @@ export async function createDiscordenoRole(
 
   const role: DiscordenoRole = Object.create(baseRole, {
     ...props,
+    permissions: createNewProp(BigInt(rest.permissions)),
     botId: createNewProp(tags.botId ? snowflakeToBigint(tags.botId) : undefined),
     isNitroBoostRole: createNewProp("premiumSubscriber" in tags),
     integrationId: createNewProp(tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined),
@@ -138,7 +139,7 @@ export async function createDiscordenoRole(
   return role;
 }
 
-export interface DiscordenoRole extends Omit<Role, "tags" | "id"> {
+export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions"> {
   /** The role id */
   id: bigint;
   /** The bot id that is associated with this role. */
@@ -149,6 +150,8 @@ export interface DiscordenoRole extends Omit<Role, "tags" | "id"> {
   integrationId: bigint;
   /** The roles guildId */
   guildId: bigint;
+  /** Permission bit set */
+  permissions: bigint;
   /** Holds all the boolean toggles. */
   bitfield: bigint;
 
