@@ -126,11 +126,13 @@ function validateSlashOptionChoices(
 
 /** @private */
 function validateSlashOptions(options: ApplicationCommandOption[]) {
-  let allowRequired = true;
-  const newOptions: ApplicationCommandOption[] = [];
+  const requiredOptions: ApplicationCommandOption[] = [];
+  const optionalOptions: ApplicationCommandOption[] = [];
 
   for (const option of options) {
     eventHandlers.debug?.("loop", `Running for of loop in validateSlashOptions function.`);
+    option.name = option.name.toLowerCase();
+
     if (option.choices?.length) {
       if (option.choices.length > 25) throw new Error(Errors.TOO_MANY_SLASH_OPTION_CHOICES);
       if (
@@ -149,17 +151,15 @@ function validateSlashOptions(options: ApplicationCommandOption[]) {
       validateSlashOptionChoices(option.choices, option.type);
     }
 
-    if (!allowRequired && option.required) {
-      newOptions.unshift(option);
+    if (option.required) {
+      requiredOptions.push(option);
       continue;
     }
 
-    if (allowRequired && !option.required) allowRequired = false;
-
-    newOptions.push(option);
+    optionalOptions.push(option);
   }
 
-  return newOptions;
+  return [...requiredOptions, ...optionalOptions];
 }
 
 export function validateSlashCommands(
