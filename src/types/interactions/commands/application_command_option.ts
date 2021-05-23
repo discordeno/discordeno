@@ -13,6 +13,6 @@ export interface ApplicationCommandOption {
   required?: boolean;
   /** Choices for `string` and `int` types for the user to pick from */
   choices?: ApplicationCommandOptionChoice[];
-  /** If the optino is a subcommand or subcommand group type, this nested options will be the parameters */
+  /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
   options?: ApplicationCommandOption[];
 }
