@@ -174,8 +174,6 @@ export const ws = {
   log,
   /** Handles resharding the bot when necessary. */
   resharder,
-  /** Cleanups loading shards that were unable to load. */
-  cleanupLoadingShards,
 };
 
 export interface DiscordenoShard {
