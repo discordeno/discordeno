@@ -190,7 +190,7 @@ const baseMessage: Partial<DiscordenoMessage> = {
       thread: this.thread,
       components: this.components,
     } as Message;
-  }
+  },
 };
 
 export async function createDiscordenoMessage(data: Message) {
