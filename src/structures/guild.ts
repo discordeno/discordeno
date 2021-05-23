@@ -63,7 +63,7 @@ export const guildToggles = {
 };
 
 const baseGuild: Partial<DiscordenoGuild> = {
-  get toJSON() {
+  toJSON() {
     return {
       shardId: this.shardId!,
       id: this.id?.toString(),
@@ -430,5 +430,5 @@ export interface DiscordenoGuild
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   invites(): ReturnType<typeof getInvites>;
   /** Get the JSON version of the Guild object used to create this. Includes the shardId as well */
-  toJSON: Guild & { shardId: number };
+  toJSON(): Guild & { shardId: number };
 }
