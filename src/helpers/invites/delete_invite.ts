@@ -1,6 +1,6 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
-import type { Invite } from "../../types/invites/invite.ts";
+import type { InviteMetadata } from "../../types/invites/invite_metadata.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions, requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -15,5 +15,5 @@ export async function deleteInvite(channelId: bigint, inviteCode: string) {
     }
   }
 
-  return await rest.runMethod<Invite>("delete", endpoints.INVITE(inviteCode));
+  return await rest.runMethod<InviteMetadata>("delete", endpoints.INVITE(inviteCode));
 }
