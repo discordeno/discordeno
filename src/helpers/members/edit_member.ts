@@ -26,8 +26,8 @@ export async function editMember(guildId: bigint, memberId: bigint, options: Mod
   if (
     typeof options.mute !== "undefined" ||
     typeof options.deaf !== "undefined" ||
-    typeof options.channelId !== "undefined" ||
-    "null"
+    // "object" to do simple null check
+    (typeof options.channelId !== "undefined" && typeof options.channelId !== "object")
   ) {
     const memberVoiceState = (await cacheHandlers.get("guilds", guildId))?.voiceStates.get(memberId);
 
