@@ -23,23 +23,18 @@ export async function editMember(guildId: bigint, memberId: bigint, options: Mod
 
   if (options.roles) requiredPerms.add("MANAGE_ROLES");
 
-  if (
-    typeof options.mute !== "undefined" ||
-    typeof options.deaf !== "undefined" ||
-    typeof options.channelId !== "undefined" ||
-    "null"
-  ) {
+  if (options.mute !== undefined || options.deaf !== undefined || options.channelId || options.channelId === null) {
     const memberVoiceState = (await cacheHandlers.get("guilds", guildId))?.voiceStates.get(memberId);
 
     if (!memberVoiceState?.channelId) {
       throw new Error(Errors.MEMBER_NOT_IN_VOICE_CHANNEL);
     }
 
-    if (typeof options.mute !== "undefined") {
+    if (options.mute !== undefined) {
       requiredPerms.add("MUTE_MEMBERS");
     }
 
-    if (typeof options.deaf !== "undefined") {
+    if (options.deaf !== undefined) {
       requiredPerms.add("DEAFEN_MEMBERS");
     }
 
