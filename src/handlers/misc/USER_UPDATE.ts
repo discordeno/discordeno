@@ -19,13 +19,11 @@ export async function handleUserUpdate(data: DiscordGatewayPayload) {
 
   // Check if a avatar is available
   const hash = userData.avatar ? iconHashToBigInt(userData.avatar) : undefined;
-  if (hash) {
-    // Update the avatar
-    member.avatar = hash.bigint;
-    // Update the animated status if its animated
-    if (hash.animated) member.bitfield |= memberToggles.animatedAvatar;
-    else member.bitfield &= ~memberToggles.animatedAvatar;
-  }
+  // Update the avatar
+  member.avatar = hash?.bigint || 0n;
+  // Update the animated status if its animated
+  if (hash?.animated) member.bitfield |= memberToggles.animatedAvatar;
+  else member.bitfield &= ~memberToggles.animatedAvatar;
 
   await cacheHandlers.set("members", snowflakeToBigint(userData.id), member);
 
