@@ -14,6 +14,7 @@ import { sendShardMessage } from "./send_shard_message.ts";
 import { spawnShards } from "./spawn_shards.ts";
 import { startGateway } from "./start_gateway.ts";
 import { tellClusterToIdentify } from "./tell_cluster_to_identify.ts";
+import { resume } from "./resume.ts";
 
 // CONTROLLER LIKE INTERFACE FOR WS HANDLING
 export const ws = {
@@ -25,6 +26,8 @@ export const ws = {
   reshard: true,
   /** The percentage at which resharding should occur. */
   reshardPercentage: 80,
+  /** The delay in milliseconds to wait before spawning next shard. OPTIMAL IS ABOVE 2500. YOU DON"T WANT TO HIT THE RATE LIMIT!!! */
+  spawnShardDelay: 2500,
   /** The maximum shard Id number. Useful for zero-downtime updates or resharding. */
   maxShards: 0,
   /** Whether or not the resharder should automatically switch to LARGE BOT SHARDING when you are above 100K servers. */
@@ -80,7 +83,13 @@ export const ws = {
     }
   >(),
   /** Stored as bucketId: { clusters: [clusterId, [ShardIds]], createNextShard: boolean } */
-  buckets: new Collection<number, { clusters: number[][]; createNextShard: boolean }>(),
+  buckets: new Collection<
+    number,
+    {
+      clusters: number[][];
+      createNextShard: (() => unknown)[];
+    }
+  >(),
   utf8decoder: new TextDecoder(),
 
   // METHODS
@@ -113,6 +122,8 @@ export const ws = {
   closeWS,
   /** Properly adds a message to the shards queue. */
   sendShardMessage,
+  /** Properly resume an old shards session. */
+  resume,
 };
 
 export interface DiscordenoShard {

@@ -1,7 +1,7 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { ws } from "./ws.ts";
 
-export async function identify(shardId: number, maxShards: number) {
+export function identify(shardId: number, maxShards: number) {
   ws.log("IDENTIFYING", { shardId, maxShards });
 
   // Need to clear the old heartbeat interval
@@ -12,7 +12,7 @@ export async function identify(shardId: number, maxShards: number) {
   }
 
   // CREATE A SHARD
-  const socket = await ws.createShard(shardId);
+  const socket = ws.createShard(shardId);
 
   // Identify can just set/reset the settings for the shard
   ws.shards.set(shardId, {

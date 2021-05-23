@@ -38,5 +38,4 @@ export async function startGateway(options: StartGatewayOptions) {
   ws.lastShardId = options.lastShardId || ws.botGatewayData.shards - 1;
 
   ws.spawnShards(ws.firstShardId);
-  await ws.cleanupLoadingShards();
 }
