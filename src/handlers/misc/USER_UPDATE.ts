@@ -25,6 +25,10 @@ export async function handleUserUpdate(data: DiscordGatewayPayload) {
   if (hash?.animated) member.bitfield |= memberToggles.animatedAvatar;
   else member.bitfield &= ~memberToggles.animatedAvatar;
 
+  member.flags = userData.flags;
+  member.premiumType = userData.premiumType;
+  member.publicFlags = userData.publicFlags;
+
   await cacheHandlers.set("members", snowflakeToBigint(userData.id), member);
 
   eventHandlers.botUpdate?.(userData);
