@@ -186,11 +186,13 @@ export async function createDiscordenoMember(
   return member;
 }
 
-export interface DiscordenoMember extends Omit<User, "discriminator" | "id"> {
+export interface DiscordenoMember extends Omit<User, "discriminator" | "id" | "avatar"> {
   /** The user's id */
   id: bigint;
   /** The user's 4-digit discord-tag */
   discriminator: bigint;
+  /** The avatar in bigint format. */
+  avatar: bigint;
   /** The guild related data mapped by guild id */
   guilds: Collection<
     bigint,
