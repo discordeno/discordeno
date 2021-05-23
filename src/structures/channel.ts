@@ -24,7 +24,7 @@ import { DiscordenoVoiceState } from "./voice_state.ts";
 const CHANNEL_SNOWFLAKES = ["id", "guildId", "lastMessageId", "ownerId", "applicationId", "parentId"];
 
 const baseChannel: Partial<DiscordenoChannel> = {
-  get toJSON() {
+  toJSON() {
     return {
       id: this.id?.toString(),
       type: this.type,
@@ -211,5 +211,5 @@ export interface DiscordenoChannel
   /** Create a new channel with the same properties */
   clone(reason?: string): ReturnType<typeof cloneChannel>;
   /** Returns the Channel object json value */
-  toJSON: Channel;
+  toJSON(): Channel;
 }
