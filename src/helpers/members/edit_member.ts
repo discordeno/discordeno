@@ -30,11 +30,11 @@ export async function editMember(guildId: bigint, memberId: bigint, options: Mod
       throw new Error(Errors.MEMBER_NOT_IN_VOICE_CHANNEL);
     }
 
-    if (typeof options.mute !== "undefined") {
+    if (options.mute !== undefined) {
       requiredPerms.add("MUTE_MEMBERS");
     }
 
-    if (typeof options.deaf !== "undefined") {
+    if (options.deaf !== undefined) {
       requiredPerms.add("DEAFEN_MEMBERS");
     }
 
