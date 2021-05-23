@@ -83,7 +83,7 @@ const baseGuild: Partial<DiscordenoGuild> = {
       verificationLevel: this.verificationLevel,
       defaultMessageNotifications: this.defaultMessageNotifications,
       explicitContentFilter: this.explicitContentFilter,
-      roles: this.roles?.map(r => r.toJSON()) || [],
+      roles: this.roles?.map((r) => r.toJSON()) || [],
       emojis: this.emojis?.array() || [],
       features: this.features,
       mfaLevel: this.mfaLevel,
@@ -114,8 +114,8 @@ const baseGuild: Partial<DiscordenoGuild> = {
       approximatePresenceCount: this.approximatePresenceCount,
       welcomeScreen: this.welcomeScreen,
       nsfwLevel: this.nsfwLevel,
-      stageInstances: this.stageInstances
-    } as Guild & { shardId: number};
+      stageInstances: this.stageInstances,
+    } as Guild & { shardId: number };
   },
   get members() {
     return cache.members.filter((member) => member.guilds.has(this.id!));
