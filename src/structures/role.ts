@@ -129,7 +129,7 @@ export async function createDiscordenoRole(
 
   const role: DiscordenoRole = Object.create(baseRole, {
     ...props,
-    permissions: createNewProp(snowflakeToBigint(rest.permissions)),
+    permissions: createNewProp(BigInt(rest.permissions)),
     botId: createNewProp(tags.botId ? snowflakeToBigint(tags.botId) : undefined),
     isNitroBoostRole: createNewProp("premiumSubscriber" in tags),
     integrationId: createNewProp(tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined),
