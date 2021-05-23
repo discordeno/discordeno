@@ -24,24 +24,18 @@ export async function startGateway(options: StartGatewayOptions) {
   setInterval(ws.resharder, 1000 * 60 * 60);
 
   ws.identifyPayload.intents = options.intents.reduce(
-    (
-      bits,
-      next,
-    ) => (bits |= typeof next === "string"
-      ? DiscordGatewayIntents[next]
-      : next),
-    0,
+    (bits, next) => (bits |= typeof next === "string" ? DiscordGatewayIntents[next] : next),
+    0
   );
 
   ws.botGatewayData = camelize(
     await fetch(`https://discord.com/api/gateway/bot`, {
       headers: { Authorization: ws.identifyPayload.token },
-    }).then((res) => res.json()),
+    }).then((res) => res.json())
   ) as GetGatewayBot;
 
   ws.maxShards = options.maxShards || ws.botGatewayData.shards;
   ws.lastShardId = options.lastShardId || ws.botGatewayData.shards - 1;
 
   ws.spawnShards(ws.firstShardId);
-  await ws.cleanupLoadingShards();
 }

@@ -7,14 +7,8 @@ Deno.test({
   name: "[message] fetch messages",
   async fn() {
     const message = await sendMessage(tempData.channelId, "Hello World!");
-    const secondMessage = await sendMessage(
-      tempData.channelId,
-      "Hello World 2!",
-    );
-    const thirdMessage = await sendMessage(
-      tempData.channelId,
-      "Hello World 3!",
-    );
+    const secondMessage = await sendMessage(tempData.channelId, "Hello World 2!");
+    const thirdMessage = await sendMessage(tempData.channelId, "Hello World 3!");
 
     // Assertions
     assertExists(message);
@@ -24,9 +18,7 @@ Deno.test({
     await delayUntil(
       10000,
       () =>
-        cache.messages.has(message.id) &&
-        cache.messages.has(secondMessage.id) &&
-        cache.messages.has(thirdMessage.id),
+        cache.messages.has(message.id) && cache.messages.has(secondMessage.id) && cache.messages.has(thirdMessage.id)
     );
     // Make sure the message was created.
     if (

@@ -18,11 +18,12 @@ jobs:
         run: DISCORD_TOKEN=${{ env.DISCORD_TOKEN }} deno test --unstable --coverage=coverage -A tests/mod.ts
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
-      - name: Create coverage report
-        run: deno --unstable --exclude=test coverage ./coverage --lcov > coverage.lcov
-      - name: Collect and upload the coverage report
-        uses: codecov/codecov-action@v1.0.10
-        with:
-          file: ./coverage.lcov
+    # TODO: add coverage back when it is stable
+    #      - name: Create coverage report
+    #        run: deno --unstable --exclude=test coverage ./coverage --lcov > coverage.lcov
+    #      - name: Collect and upload the coverage report
+    #        uses: codecov/codecov-action@v1.0.10
+    #        with:
+    #          file: ./coverage.lcov
     env:
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}

@@ -5,10 +5,7 @@ import type { Ready } from "../../types/gateway/ready.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 import { DiscordenoShard, ws } from "../../ws/ws.ts";
 
-export function handleReady(
-  data: DiscordGatewayPayload,
-  shardId: number,
-) {
+export function handleReady(data: DiscordGatewayPayload, shardId: number) {
   // Triggered on each shard
   eventHandlers.shardReady?.(shardId);
 
@@ -25,18 +22,13 @@ export function handleReady(
   // Set ready to false just to go sure
   shard.ready = false;
   // All guilds are unavailable at first
-  shard.unavailableGuildIds = new Set(
-    payload.guilds.map((g) => snowflakeToBigint(g.id)),
-  );
+  shard.unavailableGuildIds = new Set(payload.guilds.map((g) => snowflakeToBigint(g.id)));
   // Set the last available to now
   shard.lastAvailable = Date.now();
 
   // Start ready check in 2 seconds
   setTimeout(() => {
-    eventHandlers.debug?.(
-      "loop",
-      `1. Running setTimeout in READY file.`,
-    );
+    eventHandlers.debug?.("loop", `1. Running setTimeout in READY file.`);
     checkReady(payload, shard);
   }, 2000);
 }
@@ -55,10 +47,7 @@ function checkReady(payload: Ready, shard: DiscordenoShard) {
 
   // Not all guilds were loaded but 5 seconds haven't passed so check again
   setTimeout(() => {
-    eventHandlers.debug?.(
-      "loop",
-      `2. Running setTimeout in READY file.`,
-    );
+    eventHandlers.debug?.("loop", `2. Running setTimeout in READY file.`);
     checkReady(payload, shard);
   }, 2000);
 }
@@ -72,10 +61,7 @@ function loaded(shard: DiscordenoShard) {
   // Still some shards are loading so wait another 2 seconds for them
   if (ws.shards.some((shard) => !shard.ready)) {
     setTimeout(() => {
-      eventHandlers.debug?.(
-        "loop",
-        `3. Running setTimeout in READY file.`,
-      );
+      eventHandlers.debug?.("loop", `3. Running setTimeout in READY file.`);
       loaded(shard);
     }, 2000);
 

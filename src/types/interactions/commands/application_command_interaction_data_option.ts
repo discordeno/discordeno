@@ -15,10 +15,7 @@ export type ApplicationCommandInteractionDataOptionWithValue =
   | ApplicationCommandInteractionDataOptionRole
   | ApplicationCommandInteractionDataOptionMentionable;
 
-interface ApplicationCommandInteractionDataOptionBase<
-  T extends DiscordApplicationCommandOptionTypes,
-  V = unknown,
-> {
+interface ApplicationCommandInteractionDataOptionBase<T extends DiscordApplicationCommandOptionTypes, V = unknown> {
   /** The name of the parameter */
   name: string;
   /** Type of the option */
@@ -27,67 +24,52 @@ interface ApplicationCommandInteractionDataOptionBase<
   value: V;
 }
 
-export interface ApplicationCommandInteractionDataOptionSubCommand extends
-  Omit<
-    ApplicationCommandInteractionDataOptionBase<
-      DiscordApplicationCommandOptionTypes.SubCommand
-    >,
-    "value"
-  > {
+export interface ApplicationCommandInteractionDataOptionSubCommand
+  extends Omit<ApplicationCommandInteractionDataOptionBase<DiscordApplicationCommandOptionTypes.SubCommand>, "value"> {
   /** Present if this option is a group or subcommand */
   options?: ApplicationCommandInteractionDataOptionWithValue[];
 }
 
 export interface ApplicationCommandInteractionDataOptionSubCommandGroup
-  extends
-    Omit<
-      ApplicationCommandInteractionDataOptionBase<
-        DiscordApplicationCommandOptionTypes.SubCommandGroup
-      >,
-      "value"
-    > {
+  extends Omit<
+    ApplicationCommandInteractionDataOptionBase<DiscordApplicationCommandOptionTypes.SubCommandGroup>,
+    "value"
+  > {
   /** Present if this option is a group or subcommand */
   options?: ApplicationCommandInteractionDataOptionSubCommand[];
 }
 
-export type ApplicationCommandInteractionDataOptionString =
-  ApplicationCommandInteractionDataOptionBase<
-    DiscordApplicationCommandOptionTypes.String,
-    string
-  >;
+export type ApplicationCommandInteractionDataOptionString = ApplicationCommandInteractionDataOptionBase<
+  DiscordApplicationCommandOptionTypes.String,
+  string
+>;
 
-export type ApplicationCommandInteractionDataOptionInteger =
-  ApplicationCommandInteractionDataOptionBase<
-    DiscordApplicationCommandOptionTypes.Integer,
-    number
-  >;
+export type ApplicationCommandInteractionDataOptionInteger = ApplicationCommandInteractionDataOptionBase<
+  DiscordApplicationCommandOptionTypes.Integer,
+  number
+>;
 
-export type ApplicationCommandInteractionDataOptionBoolean =
-  ApplicationCommandInteractionDataOptionBase<
-    DiscordApplicationCommandOptionTypes.Boolean,
-    boolean
-  >;
+export type ApplicationCommandInteractionDataOptionBoolean = ApplicationCommandInteractionDataOptionBase<
+  DiscordApplicationCommandOptionTypes.Boolean,
+  boolean
+>;
 
-export type ApplicationCommandInteractionDataOptionUser =
-  ApplicationCommandInteractionDataOptionBase<
-    DiscordApplicationCommandOptionTypes.User,
-    string
-  >;
+export type ApplicationCommandInteractionDataOptionUser = ApplicationCommandInteractionDataOptionBase<
+  DiscordApplicationCommandOptionTypes.User,
+  string
+>;
 
-export type ApplicationCommandInteractionDataOptionChannel =
-  ApplicationCommandInteractionDataOptionBase<
-    DiscordApplicationCommandOptionTypes.Channel,
-    string
-  >;
+export type ApplicationCommandInteractionDataOptionChannel = ApplicationCommandInteractionDataOptionBase<
+  DiscordApplicationCommandOptionTypes.Channel,
+  string
+>;
 
-export type ApplicationCommandInteractionDataOptionRole =
-  ApplicationCommandInteractionDataOptionBase<
-    DiscordApplicationCommandOptionTypes.Role,
-    string
-  >;
+export type ApplicationCommandInteractionDataOptionRole = ApplicationCommandInteractionDataOptionBase<
+  DiscordApplicationCommandOptionTypes.Role,
+  string
+>;
 
-export type ApplicationCommandInteractionDataOptionMentionable =
-  ApplicationCommandInteractionDataOptionBase<
-    DiscordApplicationCommandOptionTypes.Mentionable,
-    string
-  >;
+export type ApplicationCommandInteractionDataOptionMentionable = ApplicationCommandInteractionDataOptionBase<
+  DiscordApplicationCommandOptionTypes.Mentionable,
+  string
+>;

@@ -19,10 +19,7 @@ import type { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
 import type { Guild } from "../types/guilds/guild.ts";
 import { DiscordGuildFeatures } from "../types/guilds/guild_features.ts";
 import type { ModifyGuild } from "../types/guilds/modify_guild.ts";
-import type {
-  GuildMember,
-  GuildMemberWithUser,
-} from "../types/members/guild_member.ts";
+import type { GuildMember, GuildMemberWithUser } from "../types/members/guild_member.ts";
 import type { DiscordImageFormat } from "../types/misc/image_format.ts";
 import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
@@ -57,17 +54,69 @@ export const guildToggles = {
   large: 4n,
   /** Whether this guild is unavailable due to an outage */
   unavailable: 8n,
-  /** Whether this server is an nsfw guild */
-  nsfw: 16n,
   /** Whether this server's icon is animated */
-  animatedIcon: 32n,
+  animatedIcon: 16n,
   /** Whether this server's banner is animated. */
-  animatedBanner: 64n,
+  animatedBanner: 32n,
   /** Whether this server's splash is animated. */
-  animatedSplash: 128n,
+  animatedSplash: 64n,
 };
 
 const baseGuild: Partial<DiscordenoGuild> = {
+  toJSON() {
+    return {
+      shardId: this.shardId!,
+      id: this.id?.toString(),
+      name: this.name,
+      icon: this.icon,
+      iconHash: undefined,
+      splash: this.splash,
+      discoverySplash: this.discoverySplash,
+      owner: this.owner,
+      ownerId: this.ownerId?.toString(),
+      permissions: this.permissions,
+      region: this.region,
+      afkChannelId: this.afkChannelId?.toString(),
+      afkTimeout: this.afkTimeout,
+      widgetEnabled: this.widgetEnabled,
+      widgetChannelId: this.widgetChannelId?.toString(),
+      verificationLevel: this.verificationLevel,
+      defaultMessageNotifications: this.defaultMessageNotifications,
+      explicitContentFilter: this.explicitContentFilter,
+      roles: this.roles?.map((r) => r.toJSON()) || [],
+      emojis: this.emojis?.array() || [],
+      features: this.features,
+      mfaLevel: this.mfaLevel,
+      applicationId: this.applicationId?.toString(),
+      systemChannelId: this.systemChannelId?.toString(),
+      systemChannelFlags: this.systemChannelFlags,
+      rulesChannelId: this.rulesChannelId?.toString(),
+      joinedAt: this.joinedAt ? new Date(this.joinedAt).toISOString() : undefined,
+      large: this.large,
+      unavailable: this.unavailable,
+      memberCount: this.memberCount,
+      voiceStates: this.voiceStates,
+      members: this.members,
+      channels: this.channels,
+      threads: this.threads,
+      presences: this.presences,
+      maxPresences: this.maxPresences,
+      maxMembers: this.maxMembers,
+      vanityUrlCode: this.vanityUrlCode,
+      description: this.description,
+      banner: this.banner,
+      premiumTier: this.premiumTier,
+      premiumSubscriptionCount: this.premiumSubscriptionCount,
+      preferredLocale: this.preferredLocale,
+      publicUpdatesChannelId: this.publicUpdatesChannelId?.toString(),
+      maxVideoChannelUsers: this.maxVideoChannelUsers,
+      approximateMemberCount: this.approximateMemberCount,
+      approximatePresenceCount: this.approximatePresenceCount,
+      welcomeScreen: this.welcomeScreen,
+      nsfwLevel: this.nsfwLevel,
+      stageInstances: this.stageInstances,
+    } as Guild & { shardId: number };
+  },
   get members() {
     return cache.members.filter((member) => member.guilds.has(this.id!));
   },
@@ -167,9 +216,6 @@ const baseGuild: Partial<DiscordenoGuild> = {
   get unavailable() {
     return Boolean(this.bitfield! & guildToggles.unavailable);
   },
-  get nsfw() {
-    return Boolean(this.bitfield! & guildToggles.nsfw);
-  },
   get animatedIcon() {
     return Boolean(this.bitfield! & guildToggles.animatedIcon);
   },
@@ -181,10 +227,7 @@ const baseGuild: Partial<DiscordenoGuild> = {
   },
 };
 
-export async function createDiscordenoGuild(
-  data: Guild,
-  shardId: number,
-) {
+export async function createDiscordenoGuild(data: Guild, shardId: number) {
   const {
     memberCount = 0,
     voiceStates = [],
@@ -192,7 +235,7 @@ export async function createDiscordenoGuild(
     threads = [],
     presences = [],
     joinedAt = "",
-    emojis,
+    emojis = [],
     members = [],
     icon,
     splash,
@@ -209,32 +252,24 @@ export async function createDiscordenoGuild(
         role,
         guildId,
       })
-    ),
+    )
   );
 
   const voiceStateStructs = await Promise.all(
-    voiceStates.map((vs) => structures.createDiscordenoVoiceState(guildId, vs)),
+    voiceStates.map((vs) => structures.createDiscordenoVoiceState(guildId, vs))
   );
 
-  await Promise.all([...channels, ...threads].map(async (channel) => {
-    const discordenoChannel = await structures.createDiscordenoChannel(
-      channel,
-      guildId,
-    );
+  await Promise.all(
+    [...channels, ...threads].map(async (channel) => {
+      const discordenoChannel = await structures.createDiscordenoChannel(channel, guildId);
 
-    return await cacheHandlers.set(
-      "channels",
-      discordenoChannel.id,
-      discordenoChannel,
-    );
-  }));
+      return await cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);
+    })
+  );
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const [key, value] of Object.entries(rest)) {
-    eventHandlers.debug?.(
-      "loop",
-      `Running for of loop in createDiscordenoGuild function.`,
-    );
+    eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoGuild function.`);
 
     const toggleBits = guildToggles[key as keyof typeof guildToggles];
     if (toggleBits) {
@@ -242,11 +277,7 @@ export async function createDiscordenoGuild(
       continue;
     }
 
-    props[key] = createNewProp(
-      GUILD_SNOWFLAKES.includes(key)
-        ? value ? snowflakeToBigint(value) : undefined
-        : value,
-    );
+    props[key] = createNewProp(GUILD_SNOWFLAKES.includes(key) ? (value ? snowflakeToBigint(value) : undefined) : value);
   }
 
   const hashes = [
@@ -266,26 +297,12 @@ export async function createDiscordenoGuild(
   const guild: DiscordenoGuild = Object.create(baseGuild, {
     ...props,
     shardId: createNewProp(shardId),
-    roles: createNewProp(
-      new Collection(
-        roles.map((r: DiscordenoRole) => [r.id, r]),
-      ),
-    ),
+    roles: createNewProp(new Collection(roles.map((r: DiscordenoRole) => [r.id, r]))),
     joinedAt: createNewProp(Date.parse(joinedAt)),
-    presences: createNewProp(
-      new Collection(presences.map((p) => [snowflakeToBigint(p.user!.id), p])),
-    ),
+    presences: createNewProp(new Collection(presences.map((p) => [snowflakeToBigint(p.user!.id), p]))),
     memberCount: createNewProp(memberCount),
-    emojis: createNewProp(
-      new Collection(
-        (emojis || []).map((
-          emoji,
-        ) => [emoji.id ? snowflakeToBigint(emoji.id) : emoji.name, emoji]),
-      ),
-    ),
-    voiceStates: createNewProp(
-      new Collection(voiceStateStructs.map((vs) => [vs.userId, vs])),
-    ),
+    emojis: createNewProp(new Collection(emojis.map((emoji) => [snowflakeToBigint(emoji.id!), emoji]))),
+    voiceStates: createNewProp(new Collection(voiceStateStructs.map((vs) => [vs.userId, vs]))),
     bitfield: createNewProp(bitfield),
   });
 
@@ -294,8 +311,8 @@ export async function createDiscordenoGuild(
   return guild;
 }
 
-export interface DiscordenoGuild extends
-  Omit<
+export interface DiscordenoGuild
+  extends Omit<
     Guild,
     | "roles"
     | "presences"
@@ -389,20 +406,11 @@ export interface DiscordenoGuild extends
   // METHODS
 
   /** The banner url for this server */
-  bannerURL(
-    size?: DiscordImageSize,
-    format?: DiscordImageFormat,
-  ): string | undefined;
+  bannerURL(size?: DiscordImageSize, format?: DiscordImageFormat): string | undefined;
   /** The splash url for this server */
-  splashURL(
-    size?: DiscordImageSize,
-    format?: DiscordImageFormat,
-  ): string | undefined;
+  splashURL(size?: DiscordImageSize, format?: DiscordImageFormat): string | undefined;
   /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
-  iconURL(
-    size?: DiscordImageSize,
-    format?: DiscordImageFormat,
-  ): string | undefined;
+  iconURL(size?: DiscordImageSize, format?: DiscordImageFormat): string | undefined;
   /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event. */
   delete(): ReturnType<typeof deleteGuild>;
   /** Leave a guild */
@@ -410,7 +418,7 @@ export interface DiscordenoGuild extends
   /** Edit the server. Requires the MANAGE_GUILD permission. */
   edit(options: ModifyGuild): ReturnType<typeof editGuild>;
   /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
-  auditLogs(options: GetGuildAuditLog): ReturnType<typeof getAuditLogs>;
+  auditLogs(options: Partial<GetGuildAuditLog>): ReturnType<typeof getAuditLogs>;
   /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
   getBan(memberId: bigint): ReturnType<typeof getBan>;
   /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
@@ -421,4 +429,6 @@ export interface DiscordenoGuild extends
   unban(memberId: bigint): ReturnType<typeof unbanMember>;
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   invites(): ReturnType<typeof getInvites>;
+  /** Get the JSON version of the Guild object used to create this. Includes the shardId as well */
+  toJSON(): Guild & { shardId: number };
 }

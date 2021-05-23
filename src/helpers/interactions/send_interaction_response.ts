@@ -11,31 +11,20 @@ import { validateComponents } from "../../util/utils.ts";
  *
  * NOTE: By default we will suppress mentions. To enable mentions, just pass any mentions object.
  */
-export async function sendInteractionResponse(
-  id: bigint,
-  token: string,
-  options: DiscordenoInteractionResponse,
-) {
+export async function sendInteractionResponse(id: bigint, token: string, options: DiscordenoInteractionResponse) {
   // TODO: add more options validations
   if (options.data?.components) validateComponents(options.data?.components);
   // If its already been executed, we need to send a followup response
   if (cache.executedSlashCommands.has(token)) {
-    return await rest.runMethod(
-      "post",
-      endpoints.WEBHOOK(applicationId, token),
-      {
-        ...options,
-      },
-    );
+    return await rest.runMethod("post", endpoints.WEBHOOK(applicationId, token), {
+      ...options,
+    });
   }
 
   // Expire in 15 minutes
   cache.executedSlashCommands.add(token);
   setTimeout(() => {
-    eventHandlers.debug?.(
-      "loop",
-      `Running setTimeout in send_interaction_response file.`,
-    );
+    eventHandlers.debug?.("loop", `Running setTimeout in send_interaction_response file.`);
     cache.executedSlashCommands.delete(token);
   }, 900000);
 
@@ -49,9 +38,5 @@ export async function sendInteractionResponse(
     options.data = { ...options.data, allowedMentions: { parse: [] } };
   }
 
-  return await rest.runMethod(
-    "post",
-    endpoints.INTERACTION_ID_TOKEN(id, token),
-    options,
-  );
+  return await rest.runMethod("post", endpoints.INTERACTION_ID_TOKEN(id, token), options);
 }

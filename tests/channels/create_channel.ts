@@ -26,23 +26,16 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
   }
 
   if (options.topic && channel.topic !== options.topic) {
-    throw new Error(
-      "The channel was supposed to have a topic but it does not appear to be the same topic.",
-    );
+    throw new Error("The channel was supposed to have a topic but it does not appear to be the same topic.");
   }
 
   if (options.bitrate && channel.bitrate !== options.bitrate) {
-    throw new Error(
-      "The channel was supposed to have a bitrate but it does not appear to be the same bitrate.",
-    );
+    throw new Error("The channel was supposed to have a bitrate but it does not appear to be the same bitrate.");
   }
 
-  if (
-    options.permissionOverwrites &&
-    channel.permissionOverwrites?.length !== options.permissionOverwrites.length
-  ) {
+  if (options.permissionOverwrites && channel.permissionOverwrites?.length !== options.permissionOverwrites.length) {
     throw new Error(
-      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites.",
+      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites."
     );
   }
 }
@@ -63,7 +56,7 @@ Deno.test({
         name: "Discordeno-test",
         type: DiscordChannelTypes.GuildCategory,
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
@@ -93,7 +86,7 @@ Deno.test({
         name: "Discordeno-test",
         type: DiscordChannelTypes.GuildVoice,
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
@@ -108,7 +101,7 @@ Deno.test({
         type: DiscordChannelTypes.GuildVoice,
         bitrate: 32000,
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
@@ -123,7 +116,7 @@ Deno.test({
         type: DiscordChannelTypes.GuildVoice,
         userLimit: 32,
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
@@ -137,7 +130,7 @@ Deno.test({
         name: "Discordeno-test",
         rateLimitPerUser: 2423,
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
@@ -166,7 +159,7 @@ Deno.test({
           },
         ],
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,

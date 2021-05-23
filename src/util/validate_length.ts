@@ -1,8 +1,5 @@
 /** Validates the length of a string in JS. Certain characters in JS can have multiple numbers in length in unicode and discords api is in python which treats length differently. */
-export function validateLength(
-  text: string,
-  options: { max?: number; min?: number },
-) {
+export function validateLength(text: string, options: { max?: number; min?: number }) {
   const length = [...text].length;
 
   // Text is too long

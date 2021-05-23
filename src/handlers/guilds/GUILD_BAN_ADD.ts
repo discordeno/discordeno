@@ -6,15 +6,9 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleGuildBanAdd(data: DiscordGatewayPayload) {
   const payload = data.d as GuildBanAddRemove;
-  const guild = await cacheHandlers.get(
-    "guilds",
-    snowflakeToBigint(payload.guildId),
-  );
+  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
   if (!guild) return;
 
-  const member = await cacheHandlers.get(
-    "members",
-    snowflakeToBigint(payload.user.id),
-  );
+  const member = await cacheHandlers.get("members", snowflakeToBigint(payload.user.id));
   eventHandlers.guildBanAdd?.(guild, payload.user, member);
 }

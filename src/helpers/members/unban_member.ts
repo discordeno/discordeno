@@ -6,10 +6,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function unban(guildId: bigint, id: bigint) {
   await requireBotGuildPermissions(guildId, ["BAN_MEMBERS"]);
 
-  return await rest.runMethod<undefined>(
-    "delete",
-    endpoints.GUILD_BAN(guildId, id),
-  );
+  return await rest.runMethod<undefined>("delete", endpoints.GUILD_BAN(guildId, id));
 }
 
 // aliases

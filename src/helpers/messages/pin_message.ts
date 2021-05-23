@@ -6,10 +6,7 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 export async function pin(channelId: bigint, messageId: bigint) {
   await requireBotChannelPermissions(channelId, ["MANAGE_MESSAGES"]);
 
-  return await rest.runMethod<undefined>(
-    "put",
-    endpoints.CHANNEL_PIN(channelId, messageId),
-  );
+  return await rest.runMethod<undefined>("put", endpoints.CHANNEL_PIN(channelId, messageId));
 }
 
 // aliases

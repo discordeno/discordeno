@@ -5,8 +5,5 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export function handleWebhooksUpdate(data: DiscordGatewayPayload) {
   const options = data.d as WebhookUpdate;
-  eventHandlers.webhooksUpdate?.(
-    snowflakeToBigint(options.channelId),
-    snowflakeToBigint(options.guildId),
-  );
+  eventHandlers.webhooksUpdate?.(snowflakeToBigint(options.channelId), snowflakeToBigint(options.guildId));
 }

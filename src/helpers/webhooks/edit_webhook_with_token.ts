@@ -7,11 +7,7 @@ import { endpoints } from "../../util/constants.ts";
 export async function editWebhookWithToken(
   webhookId: bigint,
   webhookToken: string,
-  options: Omit<ModifyWebhook, "channelId">,
+  options: Omit<ModifyWebhook, "channelId">
 ) {
-  return await rest.runMethod<Webhook>(
-    "patch",
-    endpoints.WEBHOOK(webhookId, webhookToken),
-    options,
-  );
+  return await rest.runMethod<Webhook>("patch", endpoints.WEBHOOK(webhookId, webhookToken), options);
 }

@@ -5,10 +5,7 @@ import { ws } from "../../ws/ws.ts";
 
 export function editBotStatus(data: Omit<StatusUpdate, "afk" | "since">) {
   ws.shards.forEach((shard) => {
-    eventHandlers.debug?.(
-      "loop",
-      `Running forEach loop in editBotStatus function.`,
-    );
+    eventHandlers.debug?.("loop", `Running forEach loop in editBotStatus function.`);
 
     ws.sendShardMessage(shard, {
       op: DiscordGatewayOpcodes.StatusUpdate,

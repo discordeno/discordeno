@@ -11,7 +11,5 @@ export enum DiscordApplicationCommandOptionTypes {
   Mentionable,
 }
 
-export type ApplicationCommandOptionTypes =
-  DiscordApplicationCommandOptionTypes;
-export const ApplicationCommandOptionTypes =
-  DiscordApplicationCommandOptionTypes;
+export type ApplicationCommandOptionTypes = DiscordApplicationCommandOptionTypes;
+export const ApplicationCommandOptionTypes = DiscordApplicationCommandOptionTypes;

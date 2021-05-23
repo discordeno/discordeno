@@ -12,19 +12,18 @@ export function guildBannerURL(
     size?: DiscordImageSize;
     format?: DiscordImageFormat;
     animated?: boolean;
-  },
+  }
 ) {
   return options.banner
     ? formatImageURL(
-      endpoints.GUILD_BANNER(
-        id,
-        typeof options.banner === "string" ? options.banner : iconBigintToHash(
-          options.banner,
-          options.animated ?? true,
+        endpoints.GUILD_BANNER(
+          id,
+          typeof options.banner === "string"
+            ? options.banner
+            : iconBigintToHash(options.banner, options.animated ?? true)
         ),
-      ),
-      options.size || 128,
-      options.format,
-    )
+        options.size || 128,
+        options.format
+      )
     : undefined;
 }

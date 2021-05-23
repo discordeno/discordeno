@@ -20,33 +20,21 @@ Deno.test({
     await delayUntil(10000, () => cache.channels.has(channel.id));
 
     if (!cache.channels.has(channel.id)) {
-      throw new Error(
-        "The channel seemed to be created but it was not cached.",
-      );
+      throw new Error("The channel seemed to be created but it was not cached.");
     }
 
     const message = await sendMessage(tempData.channelId, "Hello World!");
-    const secondMessage = await sendMessage(
-      tempData.channelId,
-      "Goodbye World!",
-    );
+    const secondMessage = await sendMessage(tempData.channelId, "Goodbye World!");
 
     // Delay the execution by 5 seconds to allow MESSAGE_CREATE event to be processed
-    await delayUntil(
-      10000,
-      () =>
-        cache.messages.has(message.id) && cache.messages.has(secondMessage.id),
-    );
+    await delayUntil(10000, () => cache.messages.has(message.id) && cache.messages.has(secondMessage.id));
 
     await message.pin();
     await secondMessage.pin();
 
     const pins = await getPins(tempData.channelId);
 
-    assertEquals(
-      pins.length,
-      2,
-    );
+    assertEquals(pins.length, 2);
   },
   ...defaultTestOptions,
 });

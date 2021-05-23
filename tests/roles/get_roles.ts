@@ -12,16 +12,9 @@ Deno.test({
 
     await getRoles(tempData.guildId);
 
-    await delayUntil(
-      10000,
-      () =>
-        cache.members.get(botId)?.guilds.get(tempData.guildId).roles.length > 0,
-    );
+    await delayUntil(10000, () => cache.members.get(botId)?.guilds.get(tempData.guildId).roles.length > 0);
 
-    assertEquals(
-      cache.members.get(botId)?.guilds.get(tempData.guildId).roles.length > 0,
-      true,
-    );
+    assertEquals(cache.members.get(botId)?.guilds.get(tempData.guildId).roles.length > 0, true);
   },
   ...defaultTestOptions,
 });

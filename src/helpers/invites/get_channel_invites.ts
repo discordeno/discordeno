@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import type { Invite } from "../../types/invites/invite.ts";
+import type { InviteMetadata } from "../../types/invites/invite_metadata.ts";
 import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
@@ -8,12 +8,7 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 export async function getChannelInvites(channelId: bigint) {
   await requireBotChannelPermissions(channelId, ["MANAGE_CHANNELS"]);
 
-  const result = await rest.runMethod<Invite[]>(
-    "get",
-    endpoints.CHANNEL_INVITES(channelId),
-  );
+  const result = await rest.runMethod<InviteMetadata[]>("get", endpoints.CHANNEL_INVITES(channelId));
 
-  return new Collection(
-    result.map((invite) => [invite.code, invite]),
-  );
+  return new Collection(result.map((invite) => [invite.code, invite]));
 }

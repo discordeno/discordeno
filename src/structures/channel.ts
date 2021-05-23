@@ -10,10 +10,7 @@ import { sendMessage } from "../helpers/messages/send_message.ts";
 import { disconnectMember } from "../helpers/mod.ts";
 import type { Channel } from "../types/channels/channel.ts";
 import type { ModifyChannel } from "../types/channels/modify_channel.ts";
-import type {
-  DiscordOverwrite,
-  Overwrite,
-} from "../types/channels/overwrite.ts";
+import type { DiscordOverwrite, Overwrite } from "../types/channels/overwrite.ts";
 import type { CreateMessage } from "../types/messages/create_message.ts";
 import type { PermissionStrings } from "../types/permissions/permission_strings.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
@@ -24,16 +21,42 @@ import { DiscordenoMember } from "./member.ts";
 import { DiscordenoMessage } from "./message.ts";
 import { DiscordenoVoiceState } from "./voice_state.ts";
 
-const CHANNEL_SNOWFLAKES = [
-  "id",
-  "guildId",
-  "lastMessageId",
-  "ownerId",
-  "applicationId",
-  "parentId",
-];
+const CHANNEL_SNOWFLAKES = ["id", "guildId", "lastMessageId", "ownerId", "applicationId", "parentId"];
 
 const baseChannel: Partial<DiscordenoChannel> = {
+  toJSON() {
+    return {
+      id: this.id?.toString(),
+      type: this.type,
+      guildId: this.guildId?.toString(),
+      position: this.position,
+      permissionOverwrites: this.permissionOverwrites?.map((o) => ({
+        ...o,
+        id: o.id.toString(),
+        allow: o.allow.toString(),
+        deny: o.deny.toString(),
+      })),
+      name: this.name,
+      topic: this.topic,
+      nsfw: this.nsfw,
+      lastMessageId: this.lastMessageId?.toString(),
+      bitrate: this.bitrate,
+      userLimit: this.userLimit,
+      rateLimitPerUser: this.rateLimitPerUser,
+      recipients: this.recipients,
+      icon: this.icon,
+      ownerId: this.ownerId,
+      applicationId: this.applicationId,
+      parentId: this.parentId,
+      lastPinTimestamp: this.lastPinTimestamp ? new Date(this.lastPinTimestamp).toISOString() : undefined,
+      rtcRegion: this.rtcRegion,
+      videoQualityMode: this.videoQualityMode,
+      messageCount: this.messageCount,
+      memberCount: this.memberCount,
+      threadMetadata: this.threadMetadata,
+      member: this.member,
+    } as Channel;
+  },
   get guild() {
     return cache.guilds.get(this.guildId!);
   },
@@ -44,17 +67,13 @@ const baseChannel: Partial<DiscordenoChannel> = {
     return `<#${this.id!}>`;
   },
   get voiceStates() {
-    return this.guild?.voiceStates.filter(
-      (voiceState) => voiceState.channelId === this.id!,
-    );
+    return this.guild?.voiceStates.filter((voiceState) => voiceState.channelId === this.id!);
   },
   get connectedMembers() {
     const voiceStates = this.voiceStates;
     if (!voiceStates) return undefined;
 
-    return new Collection(
-      voiceStates.map((vs) => [vs.userId, cache.members.get(vs.userId)]),
-    );
+    return new Collection(voiceStates.map((vs) => [vs.userId, cache.members.get(vs.userId)]));
   },
   send(content) {
     return sendMessage(this.id!, content);
@@ -72,12 +91,7 @@ const baseChannel: Partial<DiscordenoChannel> = {
     return deleteChannelOverwrite(this.guildId!, this.id!, id);
   },
   hasPermission(overwrites, permissions) {
-    return channelOverwriteHasPermission(
-      this.guildId!,
-      this.id!,
-      overwrites,
-      permissions,
-    );
+    return channelOverwriteHasPermission(this.guildId!, this.id!, overwrites, permissions);
   },
   edit(options, reason) {
     return editChannel(this.id!, options, reason);
@@ -94,51 +108,36 @@ export async function createDiscordenoChannel(data: Channel, guildId?: bigint) {
 
   const props: Record<string, PropertyDescriptor> = {};
   Object.entries(rest).forEach(([key, value]) => {
-    eventHandlers.debug?.(
-      "loop",
-      `Running forEach loop in createDiscordenoChannel function.`,
-    );
+    eventHandlers.debug?.("loop", `Running forEach loop in createDiscordenoChannel function.`);
 
     props[key] = createNewProp(
-      CHANNEL_SNOWFLAKES.includes(key)
-        ? value ? snowflakeToBigint(value) : undefined
-        : value,
+      CHANNEL_SNOWFLAKES.includes(key) ? (value ? snowflakeToBigint(value) : undefined) : value
     );
   });
 
   // Set the guildId seperately because sometimes guildId is not included
-  props.guildId = createNewProp(
-    snowflakeToBigint(guildId?.toString() || data.guildId || ""),
-  );
+  props.guildId = createNewProp(snowflakeToBigint(guildId?.toString() || data.guildId || ""));
 
   const channel: DiscordenoChannel = Object.create(baseChannel, {
     ...props,
-    lastPinTimestamp: createNewProp(
-      lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined,
-    ),
+    lastPinTimestamp: createNewProp(lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined),
     permissionOverwrites: createNewProp(
       permissionOverwrites.map((o) => ({
         ...o,
         id: snowflakeToBigint(o.id),
         allow: snowflakeToBigint(o.allow),
         deny: snowflakeToBigint(o.deny),
-      })),
+      }))
     ),
   });
 
   return channel;
 }
 
-export interface DiscordenoChannel extends
-  Omit<
+export interface DiscordenoChannel
+  extends Omit<
     Channel,
-    | "id"
-    | "guildId"
-    | "lastMessageId"
-    | "ownerId"
-    | "applicationId"
-    | "parentId"
-    | "permissionOverwrites"
+    "id" | "guildId" | "lastMessageId" | "ownerId" | "applicationId" | "parentId" | "permissionOverwrites"
   > {
   permissionOverwrites: (Omit<DiscordOverwrite, "id" | "allow" | "deny"> & {
     id: bigint;
@@ -195,14 +194,9 @@ export interface DiscordenoChannel extends
   /** Delete the channel */
   delete(reason?: string): ReturnType<typeof deleteChannel>;
   /** Edit a channel Overwrite */
-  editOverwrite(
-    overwriteId: bigint,
-    options: Omit<Overwrite, "id">,
-  ): ReturnType<typeof editChannelOverwrite>;
+  editOverwrite(overwriteId: bigint, options: Omit<Overwrite, "id">): ReturnType<typeof editChannelOverwrite>;
   /** Delete a channel Overwrite */
-  deleteOverwrite(
-    overwriteId: bigint,
-  ): ReturnType<typeof deleteChannelOverwrite>;
+  deleteOverwrite(overwriteId: bigint): ReturnType<typeof deleteChannelOverwrite>;
   /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
   hasPermission(
     overwrites: (Omit<DiscordOverwrite, "id" | "allow" | "deny"> & {
@@ -210,10 +204,12 @@ export interface DiscordenoChannel extends
       allow: bigint;
       deny: bigint;
     })[],
-    permissions: PermissionStrings[],
+    permissions: PermissionStrings[]
   ): ReturnType<typeof channelOverwriteHasPermission>;
   /** Edit the channel */
   edit(options: ModifyChannel, reason?: string): ReturnType<typeof editChannel>;
   /** Create a new channel with the same properties */
   clone(reason?: string): ReturnType<typeof cloneChannel>;
+  /** Returns the Channel object json value */
+  toJSON(): Channel;
 }

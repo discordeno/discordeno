@@ -6,25 +6,12 @@ import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.
 import type { Guild } from "../../types/guilds/guild.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
-export async function handleGuildUpdate(
-  data: DiscordGatewayPayload,
-  shardId: number,
-) {
+export async function handleGuildUpdate(data: DiscordGatewayPayload, shardId: number) {
   const payload = data.d as Guild;
-  const oldGuild = await cacheHandlers.get(
-    "guilds",
-    snowflakeToBigint(payload.id),
-  );
+  const oldGuild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.id));
   if (!oldGuild) return;
 
-  const keysToSkip = [
-    "id",
-    "roles",
-    "guildHashes",
-    "guildId",
-    "maxMembers",
-    "emojis",
-  ];
+  const keysToSkip = ["id", "roles", "guildHashes", "guildId", "maxMembers", "emojis"];
 
   const newGuild = await structures.createDiscordenoGuild(payload, shardId);
 
@@ -40,7 +27,8 @@ export async function handleGuildUpdate(
       if (!cachedValue && !value) return;
 
       if (Array.isArray(cachedValue) && Array.isArray(value)) {
-        const different = cachedValue.length !== value.length ||
+        const different =
+          cachedValue.length !== value.length ||
           cachedValue.find((val) => !value.includes(val)) ||
           value.find((val) => !cachedValue.includes(val));
         if (!different) return;

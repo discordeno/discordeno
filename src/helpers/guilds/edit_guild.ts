@@ -24,19 +24,11 @@ export async function editGuild(guildId: bigint, options: ModifyGuild) {
     options.splash = await urlToBase64(options.splash);
   }
 
-  const result = await rest.runMethod<Guild>(
-    "patch",
-    endpoints.GUILDS_BASE(guildId),
-    options,
-  );
+  const result = await rest.runMethod<Guild>("patch", endpoints.GUILDS_BASE(guildId), options);
 
   const cached = await cacheHandlers.get("guilds", guildId);
   return structures.createDiscordenoGuild(
     result,
-    cached?.shardId ||
-      Number(
-        (BigInt(result.id) >> 22n % BigInt(ws.botGatewayData.shards))
-          .toString(),
-      ),
+    cached?.shardId || Number((BigInt(result.id) >> 22n % BigInt(ws.botGatewayData.shards)).toString())
   );
 }

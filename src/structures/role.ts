@@ -12,12 +12,7 @@ import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 import { DiscordenoMember } from "./member.ts";
 
-const ROLE_SNOWFLAKES = [
-  "id",
-  "botId",
-  "integrationId",
-  "guildId",
-];
+const ROLE_SNOWFLAKES = ["id", "botId", "integrationId", "guildId"];
 
 const roleToggles = {
   /** If this role is showed seperately in the user listing */
@@ -38,9 +33,7 @@ const baseRole: Partial<DiscordenoRole> = {
     return this.color!.toString(16);
   },
   get members() {
-    return cache.members.filter((m) =>
-      m.guilds.some((g) => g.roles.includes(this.id!))
-    );
+    return cache.members.filter((m) => m.guilds.some((g) => g.roles.includes(this.id!)));
   },
   get mention() {
     return `<@&${this.id}>`;
@@ -59,7 +52,7 @@ const baseRole: Partial<DiscordenoRole> = {
     // If still none error out.
     if (!position) {
       throw new Error(
-        "role.higherThanRoleId() did not have a position provided and the role or guild was not found in cache. Please provide a position like role.higherThanRoleId(roleId, position)",
+        "role.higherThanRoleId() did not have a position provided and the role or guild was not found in cache. Please provide a position like role.higherThanRoleId(roleId, position)"
       );
     }
 
@@ -77,10 +70,7 @@ const baseRole: Partial<DiscordenoRole> = {
     if (guild.ownerId === memberId) return false;
 
     const memberHighestRole = await highestRole(guild, memberId);
-    return this.higherThanRole!(
-      memberHighestRole.id,
-      memberHighestRole.position,
-    );
+    return this.higherThanRole!(memberHighestRole.id, memberHighestRole.position);
   },
   get hoist() {
     return Boolean(this.bitfield! & roleToggles.hoist);
@@ -94,27 +84,39 @@ const baseRole: Partial<DiscordenoRole> = {
   get isNitroBoostRole() {
     return Boolean(this.bitfield! & roleToggles.isNitroBoostRole);
   },
+  toJSON() {
+    return {
+      guildId: this.guildId?.toString(),
+      id: this.id?.toString(),
+      name: this.name,
+      color: this.color,
+      hoist: this.hoist,
+      position: this.position,
+      permissions: this.permissions?.toString(),
+      managed: this.managed,
+      mentionable: this.mentionable,
+      tags: {
+        botId: this.botId?.toString(),
+        integrationId: this.integrationId?.toString(),
+        premiumSubscriber: this.isNitroBoostRole,
+      },
+    } as Role & { guildId: string };
+  },
 };
 
 // deno-lint-ignore require-await
 export async function createDiscordenoRole(
   data: { role: Role } & {
     guildId: bigint;
-  },
+  }
 ) {
-  const {
-    tags = {},
-    ...rest
-  } = ({ guildId: data.guildId, ...data.role });
+  const { tags = {}, ...rest } = { guildId: data.guildId, ...data.role };
 
   let bitfield = 0n;
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
   for (const [key, value] of Object.entries(rest)) {
-    eventHandlers.debug?.(
-      "loop",
-      `Running for of loop in createDiscordenoRole function.`,
-    );
+    eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoRole function.`);
 
     const toggleBits = roleToggles[key as keyof typeof roleToggles];
     if (toggleBits) {
@@ -122,29 +124,22 @@ export async function createDiscordenoRole(
       continue;
     }
 
-    props[key] = createNewProp(
-      ROLE_SNOWFLAKES.includes(key)
-        ? value ? snowflakeToBigint(value) : undefined
-        : value,
-    );
+    props[key] = createNewProp(ROLE_SNOWFLAKES.includes(key) ? (value ? snowflakeToBigint(value) : undefined) : value);
   }
 
   const role: DiscordenoRole = Object.create(baseRole, {
     ...props,
-    botId: createNewProp(
-      tags.botId ? snowflakeToBigint(tags.botId) : undefined,
-    ),
+    permissions: createNewProp(BigInt(rest.permissions)),
+    botId: createNewProp(tags.botId ? snowflakeToBigint(tags.botId) : undefined),
     isNitroBoostRole: createNewProp("premiumSubscriber" in tags),
-    integrationId: createNewProp(
-      tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined,
-    ),
+    integrationId: createNewProp(tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined),
     bitfield: createNewProp(bitfield),
   });
 
   return role;
 }
 
-export interface DiscordenoRole extends Omit<Role, "tags" | "id"> {
+export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions"> {
   /** The role id */
   id: bigint;
   /** The bot id that is associated with this role. */
@@ -155,6 +150,8 @@ export interface DiscordenoRole extends Omit<Role, "tags" | "id"> {
   integrationId: bigint;
   /** The roles guildId */
   guildId: bigint;
+  /** Permission bit set */
+  permissions: bigint;
   /** Holds all the boolean toggles. */
   bitfield: bigint;
 
@@ -179,4 +176,6 @@ export interface DiscordenoRole extends Omit<Role, "tags" | "id"> {
   higherThanRole(roleId: bigint, position?: number): boolean;
   /** Checks if the role has a higher position than the given member */
   higherThanMember(memberId: bigint): Promise<boolean>;
+  /** Convert to json friendly role with guild id */
+  toJSON(): Role & { guildId: string };
 }

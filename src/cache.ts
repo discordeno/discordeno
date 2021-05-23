@@ -23,19 +23,12 @@ export const cache = {
   presences: new Collection<bigint, PresenceUpdate>(),
   fetchAllMembersProcessingRequests: new Collection<
     string,
-    (
-      value:
-        | Collection<bigint, DiscordenoMember>
-        | PromiseLike<Collection<bigint, DiscordenoMember>>,
-    ) => void
+    (value: Collection<bigint, DiscordenoMember> | PromiseLike<Collection<bigint, DiscordenoMember>>) => void
   >(),
   executedSlashCommands: new Set<string>(),
   get emojis() {
-    return new Collection<string, Emoji>(
-      this.guilds.reduce(
-        (a, b) => [...a, ...b.emojis.map((e) => [e.id, e])],
-        [] as any[],
-      ),
+    return new Collection<bigint, Emoji>(
+      this.guilds.reduce((a, b) => [...a, ...b.emojis.map((e) => [e.id, e])], [] as any[])
     );
   },
 };
@@ -70,142 +63,72 @@ export let cacheHandlers = {
   filter,
 };
 
-export type TableName =
-  | "guilds"
-  | "unavailableGuilds"
-  | "channels"
-  | "messages"
-  | "members"
-  | "presences";
+export type TableName = "guilds" | "unavailableGuilds" | "channels" | "messages" | "members" | "presences";
 
-function set(
-  table: "guilds",
-  key: bigint,
-  value: DiscordenoGuild,
-): Promise<Collection<bigint, DiscordenoGuild>>;
-function set(
-  table: "channels",
-  key: bigint,
-  value: DiscordenoChannel,
-): Promise<Collection<bigint, DiscordenoChannel>>;
-function set(
-  table: "messages",
-  key: bigint,
-  value: DiscordenoMessage,
-): Promise<Collection<bigint, DiscordenoMessage>>;
-function set(
-  table: "members",
-  key: bigint,
-  value: DiscordenoMember,
-): Promise<Collection<bigint, DiscordenoMember>>;
-function set(
-  table: "presences",
-  key: bigint,
-  value: PresenceUpdate,
-): Promise<Collection<bigint, PresenceUpdate>>;
-function set(
-  table: "unavailableGuilds",
-  key: bigint,
-  value: number,
-): Promise<Collection<bigint, number>>;
+function set(table: "guilds", key: bigint, value: DiscordenoGuild): Promise<Collection<bigint, DiscordenoGuild>>;
+function set(table: "channels", key: bigint, value: DiscordenoChannel): Promise<Collection<bigint, DiscordenoChannel>>;
+function set(table: "messages", key: bigint, value: DiscordenoMessage): Promise<Collection<bigint, DiscordenoMessage>>;
+function set(table: "members", key: bigint, value: DiscordenoMember): Promise<Collection<bigint, DiscordenoMember>>;
+function set(table: "presences", key: bigint, value: PresenceUpdate): Promise<Collection<bigint, PresenceUpdate>>;
+function set(table: "unavailableGuilds", key: bigint, value: number): Promise<Collection<bigint, number>>;
 async function set(table: TableName, key: bigint, value: any) {
   return cache[table].set(key, value);
 }
 
-function get(
-  table: "guilds",
-  key: bigint,
-): Promise<DiscordenoGuild | undefined>;
-function get(
-  table: "channels",
-  key: bigint,
-): Promise<DiscordenoChannel | undefined>;
-function get(
-  table: "messages",
-  key: bigint,
-): Promise<DiscordenoMessage | undefined>;
-function get(
-  table: "members",
-  key: bigint,
-): Promise<DiscordenoMember | undefined>;
-function get(
-  table: "presences",
-  key: bigint,
-): Promise<PresenceUpdate | undefined>;
-function get(
-  table: "unavailableGuilds",
-  key: bigint,
-): Promise<number | undefined>;
+function get(table: "guilds", key: bigint): Promise<DiscordenoGuild | undefined>;
+function get(table: "channels", key: bigint): Promise<DiscordenoChannel | undefined>;
+function get(table: "messages", key: bigint): Promise<DiscordenoMessage | undefined>;
+function get(table: "members", key: bigint): Promise<DiscordenoMember | undefined>;
+function get(table: "presences", key: bigint): Promise<PresenceUpdate | undefined>;
+function get(table: "unavailableGuilds", key: bigint): Promise<number | undefined>;
 async function get(table: TableName, key: bigint) {
   return cache[table].get(key);
 }
 
 function forEach(
   table: "guilds",
-  callback: (
-    value: DiscordenoGuild,
-    key: bigint,
-    map: Map<bigint, DiscordenoGuild>,
-  ) => unknown,
+  callback: (value: DiscordenoGuild, key: bigint, map: Map<bigint, DiscordenoGuild>) => unknown
 ): void;
 function forEach(
   table: "unavailableGuilds",
-  callback: (value: number, key: bigint, map: Map<bigint, number>) => unknown,
+  callback: (value: number, key: bigint, map: Map<bigint, number>) => unknown
 ): void;
 function forEach(
   table: "channels",
-  callback: (
-    value: DiscordenoChannel,
-    key: bigint,
-    map: Map<bigint, DiscordenoChannel>,
-  ) => unknown,
+  callback: (value: DiscordenoChannel, key: bigint, map: Map<bigint, DiscordenoChannel>) => unknown
 ): void;
 function forEach(
   table: "messages",
-  callback: (
-    value: DiscordenoMessage,
-    key: bigint,
-    map: Map<bigint, DiscordenoMessage>,
-  ) => unknown,
+  callback: (value: DiscordenoMessage, key: bigint, map: Map<bigint, DiscordenoMessage>) => unknown
 ): void;
 function forEach(
   table: "members",
-  callback: (
-    value: DiscordenoMember,
-    key: bigint,
-    map: Map<bigint, DiscordenoMember>,
-  ) => unknown,
+  callback: (value: DiscordenoMember, key: bigint, map: Map<bigint, DiscordenoMember>) => unknown
 ): void;
-function forEach(
-  table: TableName,
-  callback: (value: any, key: bigint, map: Map<bigint, any>) => unknown,
-) {
+function forEach(table: TableName, callback: (value: any, key: bigint, map: Map<bigint, any>) => unknown) {
   return cache[table].forEach(callback);
 }
 
 function filter(
   table: "guilds",
-  callback: (value: DiscordenoGuild, key: bigint) => boolean,
+  callback: (value: DiscordenoGuild, key: bigint) => boolean
 ): Promise<Collection<bigint, DiscordenoGuild>>;
 function filter(
   table: "unavailableGuilds",
-  callback: (value: number, key: bigint) => boolean,
+  callback: (value: number, key: bigint) => boolean
 ): Promise<Collection<bigint, number>>;
 function filter(
   table: "channels",
-  callback: (value: DiscordenoChannel, key: bigint) => boolean,
+  callback: (value: DiscordenoChannel, key: bigint) => boolean
 ): Promise<Collection<bigint, DiscordenoChannel>>;
 function filter(
   table: "messages",
-  callback: (value: DiscordenoMessage, key: bigint) => boolean,
+  callback: (value: DiscordenoMessage, key: bigint) => boolean
 ): Promise<Collection<bigint, DiscordenoMessage>>;
 function filter(
   table: "members",
-  callback: (value: DiscordenoMember, key: bigint) => boolean,
+  callback: (value: DiscordenoMember, key: bigint) => boolean
 ): Promise<Collection<bigint, DiscordenoMember>>;
-async function filter(
-  table: TableName,
-  callback: (value: any, key: bigint) => boolean,
-) {
+async function filter(table: TableName, callback: (value: any, key: bigint) => boolean) {
   return cache[table].filter(callback);
 }

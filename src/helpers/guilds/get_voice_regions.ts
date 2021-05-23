@@ -5,12 +5,7 @@ import { endpoints } from "../../util/constants.ts";
 
 /** Returns a list of voice region objects for the guild. Unlike the similar /voice route, this returns VIP servers when the guild is VIP-enabled. */
 export async function getVoiceRegions(guildId: bigint) {
-  const result = await rest.runMethod<VoiceRegion[]>(
-    "get",
-    endpoints.GUILD_REGIONS(guildId),
-  );
+  const result = await rest.runMethod<VoiceRegion[]>("get", endpoints.GUILD_REGIONS(guildId));
 
-  return new Collection<string, VoiceRegion>(
-    result.map((region) => [region.id, region]),
-  );
+  return new Collection<string, VoiceRegion>(result.map((region) => [region.id, region]));
 }

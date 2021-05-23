@@ -1,31 +1,31 @@
-import { DiscordenoChannel } from "../../structures/channel.ts";
-import { DiscordenoGuild } from "../../structures/guild.ts";
-import { DiscordenoMember } from "../../structures/member.ts";
-import { DiscordenoMessage } from "../../structures/message.ts";
-import { DiscordenoRole } from "../../structures/role.ts";
-import { Collection } from "../../util/collection.ts";
-import { PresenceUpdate } from "../activity/presence_update.ts";
-import { StageInstance } from "../channels/stage_instance.ts";
-import { ThreadMember } from "../channels/threads/thread_member.ts";
-import { ThreadMembersUpdate } from "../channels/threads/thread_members_update.ts";
-import { Emoji } from "../emojis/emoji.ts";
-import { GatewayPayload } from "../gateway/gateway_payload.ts";
-import { DiscordGatewayPayload } from "../gateway/gateway_payload.ts";
-import { IntegrationCreateUpdate } from "../integrations/integration_create_update.ts";
-import { IntegrationDelete } from "../integrations/integration_delete.ts";
-import { ApplicationCommandCreateUpdateDelete } from "../interactions/commands/application_command_create_update_delete.ts";
-import { Interaction } from "../interactions/interaction.ts";
-import { InviteCreate } from "../invites/invite_create.ts";
-import { InviteDelete } from "../invites/invite_delete.ts";
-import { MessageReactionAdd } from "../messages/message_reaction_add.ts";
-import { MessageReactionRemove } from "../messages/message_reaction_remove.ts";
-import { MessageReactionRemoveAll } from "../messages/message_reaction_remove_all.ts";
-import { TypingStart } from "../misc/typing_start.ts";
-import { User } from "../users/user.ts";
-import { VoiceServerUpdate } from "../voice/voice_server_update.ts";
-import { VoiceState } from "../voice/voice_state.ts";
-import { DebugArg } from "./debug_arg.ts";
-import { GuildUpdateChange } from "./guild_update_change.ts";
+import type { DiscordenoChannel } from "../../structures/channel.ts";
+import type { DiscordenoGuild } from "../../structures/guild.ts";
+import type { DiscordenoMember } from "../../structures/member.ts";
+import type { DiscordenoMessage } from "../../structures/message.ts";
+import type { DiscordenoRole } from "../../structures/role.ts";
+import type { Collection } from "../../util/collection.ts";
+import type { PresenceUpdate } from "../activity/presence_update.ts";
+import type { StageInstance } from "../channels/stage_instance.ts";
+import type { ThreadMember } from "../channels/threads/thread_member.ts";
+import type { ThreadMembersUpdate } from "../channels/threads/thread_members_update.ts";
+import type { Emoji } from "../emojis/emoji.ts";
+import type { GatewayPayload } from "../gateway/gateway_payload.ts";
+import type { DiscordGatewayPayload } from "../gateway/gateway_payload.ts";
+import type { IntegrationCreateUpdate } from "../integrations/integration_create_update.ts";
+import type { IntegrationDelete } from "../integrations/integration_delete.ts";
+import type { ApplicationCommandCreateUpdateDelete } from "../interactions/commands/application_command_create_update_delete.ts";
+import type { Interaction } from "../interactions/interaction.ts";
+import type { InviteCreate } from "../invites/invite_create.ts";
+import type { InviteDelete } from "../invites/invite_delete.ts";
+import type { MessageReactionAdd } from "../messages/message_reaction_add.ts";
+import type { MessageReactionRemove } from "../messages/message_reaction_remove.ts";
+import type { MessageReactionRemoveAll } from "../messages/message_reaction_remove_all.ts";
+import type { TypingStart } from "../misc/typing_start.ts";
+import type { User } from "../users/user.ts";
+import type { VoiceServerUpdate } from "../voice/voice_server_update.ts";
+import type { VoiceState } from "../voice/voice_state.ts";
+import type { DebugArg } from "./debug_arg.ts";
+import type { GuildUpdateChange } from "./guild_update_change.ts";
 
 export type EventHandlersDefinitions = {
   /** Sent when a new Slash Command is created, relevant to the current user. */
@@ -43,22 +43,14 @@ export type EventHandlersDefinitions = {
   /** Sent when a channel relevant to the current user is deleted. */
   channelDelete: [channel: DiscordenoChannel];
   /** Sent when a message pin is updated */
-  channelPinsUpdate: [
-    channel: DiscordenoChannel,
-    guild?: DiscordenoGuild,
-    lastPinTimestamp?: string | null,
-  ];
+  channelPinsUpdate: [channel: DiscordenoChannel, guild?: DiscordenoGuild, lastPinTimestamp?: string | null];
   debug: [args: string | DebugArg, data?: string];
   /** Sent before every event. Discordeno awaits the execution of this event before main event gets sent. */
   dispatchRequirements: [data: DiscordGatewayPayload, shardId: number];
   /** Sent when a user is banned from a guild. */
   guildBanAdd: [guild: DiscordenoGuild, user: User, member?: DiscordenoMember];
   /** Sent when a user is unbanned from a guild. */
-  guildBanRemove: [
-    guild: DiscordenoGuild,
-    user: User,
-    member?: DiscordenoMember,
-  ];
+  guildBanRemove: [guild: DiscordenoGuild, user: User, member?: DiscordenoMember];
   /**
    * This event can be sent in three different scenarios:
    * 1. When a user is initially connecting, to lazily load and backfill information for all unavailable guilds sent in the `READY` event. Guilds that are unavailable due to an outage will send a `GUILD_DELETE` event.
@@ -81,53 +73,27 @@ export type EventHandlersDefinitions = {
   /** Sent when a guild becomes or was already unavailable due to an outage, or when the user leaves or is removed from a guild. If the `unavailable` field is not set, the user was removed from the guild. */
   guildDelete: [guild: DiscordenoGuild];
   /** Sent when a guild's emojis have been updated. */
-  guildEmojisUpdate: [
-    guild: DiscordenoGuild,
-    emojis: Collection<bigint, Emoji>,
-    oldEmojis: Collection<bigint, Emoji>,
-  ];
+  guildEmojisUpdate: [guild: DiscordenoGuild, emojis: Collection<bigint, Emoji>, oldEmojis: Collection<bigint, Emoji>];
   /** Sent when a new user joins a guild. */
   guildMemberAdd: [guild: DiscordenoGuild, member: DiscordenoMember];
   /** Sent when a user is removed from a guild (leave/kick/ban). */
-  guildMemberRemove: [
-    guild: DiscordenoGuild,
-    user: User,
-    member?: DiscordenoMember,
-  ];
+  guildMemberRemove: [guild: DiscordenoGuild, user: User, member?: DiscordenoMember];
   /** Sent when a guild member is updated. This will also fire when the user object of a guild member changes. */
-  guildMemberUpdate: [
-    guild: DiscordenoGuild,
-    member: DiscordenoMember,
-    oldMember?: DiscordenoMember,
-  ];
+  guildMemberUpdate: [guild: DiscordenoGuild, member: DiscordenoMember, oldMember?: DiscordenoMember];
   /** Sent when a user uses a Slash Command. */
-  interactionCreate: [
-    data: Omit<Interaction, "member">,
-    member?: DiscordenoMember,
-  ];
+  interactionCreate: [data: Omit<Interaction, "member">, member?: DiscordenoMember];
   /** Sent when a user uses a Slash Command in a guild. */
-  interactionGuildCreate: [
-    data: Omit<Interaction, "member">,
-    member: DiscordenoMember,
-  ];
+  interactionGuildCreate: [data: Omit<Interaction, "member">, member: DiscordenoMember];
   /** Sent when a user uses a Slash Command in a dm. */
   interactionDMCreate: [data: Omit<Interaction, "member">];
   /** Sent when a message is created. */
   messageCreate: [message: DiscordenoMessage];
   /** Sent when a message is deleted. */
-  messageDelete: [
-    partial: { id: string; channel: DiscordenoChannel },
-    message?: DiscordenoMessage,
-  ];
+  messageDelete: [partial: { id: string; channel: DiscordenoChannel }, message?: DiscordenoMessage];
   /** Sent when a message is updated. */
   messageUpdate: [message: DiscordenoMessage, oldMessage: DiscordenoMessage];
   /** Sent when a user updates its nickname */
-  nicknameUpdate: [
-    guild: DiscordenoGuild,
-    member: DiscordenoMember,
-    nickname: string,
-    oldNickname?: string,
-  ];
+  nicknameUpdate: [guild: DiscordenoGuild, member: DiscordenoMember, nickname: string, oldNickname?: string];
   /** A user's presence is their current state on a guild. This event is sent when a user's presence or info, such as name or avatar, is updated. */
   presenceUpdate: [presence: PresenceUpdate, oldPresence?: PresenceUpdate];
   /** Sent before every event execution. Discordeno will not await its execution. */
@@ -139,32 +105,16 @@ export type EventHandlersDefinitions = {
   /** Sent when a user removes a reaction from a message. */
   reactionRemove: [data: MessageReactionRemove, message?: DiscordenoMessage];
   /** Sent when a user explicitly removes all reactions from a message. */
-  reactionRemoveAll: [
-    payload: MessageReactionRemoveAll,
-    message?: DiscordenoMessage,
-  ];
+  reactionRemoveAll: [payload: MessageReactionRemoveAll, message?: DiscordenoMessage];
   /** Sent when a bot removes all instances of a given emoji from the reactions of a message. */
-  reactionRemoveEmoji: [
-    emoji: Partial<Emoji>,
-    messageId: bigint,
-    channelId: bigint,
-    guildId?: bigint,
-  ];
+  reactionRemoveEmoji: [emoji: Partial<Emoji>, messageId: bigint, channelId: bigint, guildId?: bigint];
   /** Sent when a guild role is created. */
   roleCreate: [guild: DiscordenoGuild, role: DiscordenoRole];
   /** Sent when a guild role is deleted. */
   roleDelete: [guild: DiscordenoGuild, role: DiscordenoRole];
   /** Sent when a guild role is updated. */
-  roleUpdate: [
-    guild: DiscordenoGuild,
-    role: DiscordenoRole,
-    old: DiscordenoRole,
-  ];
-  roleGained: [
-    guild: DiscordenoGuild,
-    member: DiscordenoMember,
-    roleId: bigint,
-  ];
+  roleUpdate: [guild: DiscordenoGuild, role: DiscordenoRole, old: DiscordenoRole];
+  roleGained: [guild: DiscordenoGuild, member: DiscordenoMember, roleId: bigint];
   roleLost: [guild: DiscordenoGuild, member: DiscordenoMember, roleId: bigint];
   shardReady: [shardId: number];
   /** Sent when a shard failed to load. */
@@ -180,11 +130,7 @@ export type EventHandlersDefinitions = {
   /** Sent when a thread is updated */
   threadUpdate: [cahnnel: DiscordenoChannel, oldChannel: DiscordenoChannel];
   /** Sent when the bot gains access to threads */
-  threadListSync: [
-    channels: Collection<bigint, DiscordenoChannel>,
-    members: ThreadMember[],
-    guildId: bigint,
-  ];
+  threadListSync: [channels: Collection<bigint, DiscordenoChannel>, members: ThreadMember[], guildId: bigint];
   /** Sent when the current users thread member is updated */
   threadMemberUpdate: [threadMember: ThreadMember];
   /** Sent when anyone is added to or removed from a thread */
@@ -198,11 +144,7 @@ export type EventHandlersDefinitions = {
   /** Sent when a user leaves a voice channel. Does not get sent when user switches the voice channel */
   voiceChannelLeave: [member: DiscordenoMember, channelId: bigint];
   /** Sent when a user switches the voice channel */
-  voiceChannelSwitch: [
-    member: DiscordenoMember,
-    channelId: bigint,
-    oldChannelId: bigint,
-  ];
+  voiceChannelSwitch: [member: DiscordenoMember, channelId: bigint, oldChannelId: bigint];
   /** Sent when a voice server is updated with information for making the bot connect to a voice channel. */
   voiceServerUpdate: [payload: VoiceServerUpdate, guild: DiscordenoGuild];
   /** Sent when someone joins/leaves/moves voice channels. */
@@ -224,7 +166,5 @@ export type EventHandlersDefinitions = {
 };
 
 export type EventHandlers = {
-  [E in keyof EventHandlersDefinitions]?: (
-    ...args: EventHandlersDefinitions[E]
-  ) => unknown;
+  [E in keyof EventHandlersDefinitions]?: (...args: EventHandlersDefinitions[E]) => unknown;
 };

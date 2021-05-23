@@ -6,12 +6,7 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 import { delay } from "../../util/utils.ts";
 
 /** Delete a message with the channel id and message id only. */
-export async function deleteMessage(
-  channelId: bigint,
-  messageId: bigint,
-  reason?: string,
-  delayMilliseconds = 0,
-) {
+export async function deleteMessage(channelId: bigint, messageId: bigint, reason?: string, delayMilliseconds = 0) {
   const message = await cacheHandlers.get("messages", messageId);
 
   if (message && message.authorId !== botId) {
@@ -20,9 +15,5 @@ export async function deleteMessage(
 
   if (delayMilliseconds) await delay(delayMilliseconds);
 
-  return await rest.runMethod<undefined>(
-    "delete",
-    endpoints.CHANNEL_MESSAGE(channelId, messageId),
-    { reason },
-  );
+  return await rest.runMethod<undefined>("delete", endpoints.CHANNEL_MESSAGE(channelId, messageId), { reason });
 }

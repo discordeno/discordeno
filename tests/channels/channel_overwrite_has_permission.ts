@@ -24,12 +24,9 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel) {
     throw new Error("The channel seemed to be created but it was not cached.");
   }
 
-  if (
-    options.permissionOverwrites &&
-    channel.permissionOverwrites?.length !== options.permissionOverwrites.length
-  ) {
+  if (options.permissionOverwrites && channel.permissionOverwrites?.length !== options.permissionOverwrites.length) {
     throw new Error(
-      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites.",
+      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites."
     );
   }
 
@@ -38,28 +35,26 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel) {
       channel.guildId,
       botId,
       cache.channels.get(channel.id)?.permissionOverwrites || [],
-      options.permissionOverwrites ? options.permissionOverwrites[0].allow : [],
+      options.permissionOverwrites ? options.permissionOverwrites[0].allow : []
     ),
-    true,
+    true
   );
 }
 
 Deno.test({
   name: "[channel] edit channel permission overwrites",
   async fn() {
-    await ifItFailsBlameWolf(
-      {
-        name: "Discordeno-test",
-        permissionOverwrites: [
-          {
-            id: bigintToSnowflake(botId),
-            type: DiscordOverwriteTypes.Member,
-            allow: ["VIEW_CHANNEL"],
-            deny: [],
-          },
-        ],
-      },
-    );
+    await ifItFailsBlameWolf({
+      name: "Discordeno-test",
+      permissionOverwrites: [
+        {
+          id: bigintToSnowflake(botId),
+          type: DiscordOverwriteTypes.Member,
+          allow: ["VIEW_CHANNEL"],
+          deny: [],
+        },
+      ],
+    });
   },
   ...defaultTestOptions,
 });

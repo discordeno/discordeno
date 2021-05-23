@@ -5,10 +5,7 @@ import { endpoints } from "../../util/constants.ts";
 
 /** Crosspost a message in a News Channel to following channels. */
 export async function publishMessage(channelId: bigint, messageId: bigint) {
-  const data = await rest.runMethod<Message>(
-    "post",
-    endpoints.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId),
-  );
+  const data = await rest.runMethod<Message>("post", endpoints.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId));
 
   return await structures.createDiscordenoMessage(data);
 }

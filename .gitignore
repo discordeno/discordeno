@@ -26,3 +26,6 @@ desktop.ini
 !.vscode/tasks.json
 !.vscode/launch.json
 *.code-workspace
+
+# Sublime Text
+.sublime-project

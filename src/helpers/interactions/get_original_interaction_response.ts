@@ -6,10 +6,7 @@ import { endpoints } from "../../util/constants.ts";
 
 /** Returns the initial Interactio response. Functions the same as Get Webhook Message */
 export async function getOriginalInteractionResponse(token: string) {
-  const result = await rest.runMethod<Message>(
-    "get",
-    endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationId, token),
-  );
+  const result = await rest.runMethod<Message>("get", endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationId, token));
 
   return await structures.createDiscordenoMessage(result);
 }

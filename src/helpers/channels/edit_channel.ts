@@ -9,21 +9,13 @@ import type { ModifyChannel } from "../../types/channels/modify_channel.ts";
 import type { ModifyThread } from "../../types/channels/threads/modify_thread.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
-import {
-  calculateBits,
-  requireBotChannelPermissions,
-  requireOverwritePermissions,
-} from "../../util/permissions.ts";
+import { calculateBits, requireBotChannelPermissions, requireOverwritePermissions } from "../../util/permissions.ts";
 import { hasOwnProperty, snakelize } from "../../util/utils.ts";
 
 //TODO: implement DM group channel edit
 //TODO(threads): check thread perms
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
-export async function editChannel(
-  channelId: bigint,
-  options: ModifyChannel | ModifyThread,
-  reason?: string,
-) {
+export async function editChannel(channelId: bigint, options: ModifyChannel | ModifyThread, reason?: string) {
   const channel = await cacheHandlers.get("channels", channelId);
 
   if (channel) {
@@ -46,19 +38,11 @@ export async function editChannel(
         permissions.add("MANAGE_THREADS");
       }
 
-      await requireBotChannelPermissions(channel.parentId ?? 0n, [
-        ...permissions,
-      ]);
+      await requireBotChannelPermissions(channel.parentId ?? 0n, [...permissions]);
     }
 
-    if (
-      hasOwnProperty<ModifyChannel>(options, "permissionOverwrites") &&
-      Array.isArray(options.permissionOverwrites)
-    ) {
-      await requireOverwritePermissions(
-        channel.guildId,
-        options.permissionOverwrites,
-      );
+    if (hasOwnProperty<ModifyChannel>(options, "permissionOverwrites") && Array.isArray(options.permissionOverwrites)) {
+      await requireOverwritePermissions(channel.guildId, options.permissionOverwrites);
     }
   }
 
@@ -91,28 +75,21 @@ export async function editChannel(
   const payload = {
     ...snakelize<Record<string, unknown>>(options),
     // deno-lint-ignore camelcase
-    permission_overwrites: hasOwnProperty<ModifyChannel>(
-        options,
-        "permissionOverwrites",
-      )
+    permission_overwrites: hasOwnProperty<ModifyChannel>(options, "permissionOverwrites")
       ? options.permissionOverwrites?.map((overwrite) => {
-        return {
-          ...overwrite,
-          allow: calculateBits(overwrite.allow),
-          deny: calculateBits(overwrite.deny),
-        };
-      })
+          return {
+            ...overwrite,
+            allow: calculateBits(overwrite.allow),
+            deny: calculateBits(overwrite.deny),
+          };
+        })
       : undefined,
   };
 
-  const result = await rest.runMethod<Channel>(
-    "patch",
-    endpoints.CHANNEL_BASE(channelId),
-    {
-      ...payload,
-      reason,
-    },
-  );
+  const result = await rest.runMethod<Channel>("patch", endpoints.CHANNEL_BASE(channelId), {
+    ...payload,
+    reason,
+  });
 
   return await structures.createDiscordenoChannel(result);
 }

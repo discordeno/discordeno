@@ -20,21 +20,14 @@ export async function startBot(config: BotConfig) {
   ws.identifyPayload.token = `Bot ${config.token}`;
   rest.token = `Bot ${config.token}`;
   ws.identifyPayload.intents = config.intents.reduce(
-    (
-      bits,
-      next,
-    ) => (bits |= typeof next === "string"
-      ? DiscordGatewayIntents[next]
-      : next),
-    0,
+    (bits, next) => (bits |= typeof next === "string" ? DiscordGatewayIntents[next] : next),
+    0
   );
 
   // Initial API connection to get info about bots connection
   ws.botGatewayData = await getGatewayBot();
   ws.maxShards = ws.maxShards || ws.botGatewayData.shards;
-  ws.lastShardId = ws.lastShardId === 1
-    ? ws.botGatewayData.shards - 1
-    : ws.lastShardId;
+  ws.lastShardId = ws.lastShardId === 1 ? ws.botGatewayData.shards - 1 : ws.lastShardId;
 
   // Explicitly append gateway version and encoding
   ws.botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;

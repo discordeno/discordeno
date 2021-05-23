@@ -12,7 +12,5 @@ export enum DiscordGetGuildWidgetImageStyleOptions {
   Banner4 = "banner4",
 }
 
-export type GetGuildWidgetImageStyleOptions =
-  DiscordGetGuildWidgetImageStyleOptions;
-export const GetGuildWidgetImageStyleOptions =
-  DiscordGetGuildWidgetImageStyleOptions;
+export type GetGuildWidgetImageStyleOptions = DiscordGetGuildWidgetImageStyleOptions;
+export const GetGuildWidgetImageStyleOptions = DiscordGetGuildWidgetImageStyleOptions;

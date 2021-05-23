@@ -7,10 +7,7 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleGuildRoleUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as GuildRoleUpdate;
-  const guild = await cacheHandlers.get(
-    "guilds",
-    snowflakeToBigint(payload.guildId),
-  );
+  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
   if (!guild) return;
 
   const cachedRole = guild.roles.get(snowflakeToBigint(payload.role.id));

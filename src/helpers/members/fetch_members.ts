@@ -15,16 +15,9 @@ import { ws } from "../../ws/ws.ts";
  * REST: 50/s global(across all shards) rate limit with ALL requests this included
  * GW(this function): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is now 960/m.
  */
-export function fetchMembers(
-  guildId: bigint,
-  shardId: number,
-  options?: Omit<RequestGuildMembers, "guildId">,
-) {
+export function fetchMembers(guildId: bigint, shardId: number, options?: Omit<RequestGuildMembers, "guildId">) {
   // You can request 1 member without the intent
-  if (
-    (!options?.limit || options.limit > 1) &&
-    !(ws.identifyPayload.intents & DiscordGatewayIntents.GuildMembers)
-  ) {
+  if ((!options?.limit || options.limit > 1) && !(ws.identifyPayload.intents & DiscordGatewayIntents.GuildMembers)) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 

@@ -5,8 +5,5 @@ import { endpoints } from "../../../util/constants.ts";
 export async function getActiveThreads(channelId: bigint) {
   // TODO(threads): perm check
   // TODO(threads): test if it works
-  return await rest.runMethod(
-    "get",
-    endpoints.THREAD_ACTIVE(channelId),
-  );
+  return await rest.runMethod("get", endpoints.THREAD_ACTIVE(channelId));
 }

@@ -7,7 +7,7 @@ export async function getArchivedThreads(
   channelId: bigint,
   options?: ListPublicArchivedThreads & {
     type?: "public" | "private" | "privateJoinedThreads";
-  },
+  }
 ) {
   // TODO(threads): perm check
   // TODO(threads): check if this works
@@ -19,6 +19,6 @@ export async function getArchivedThreads(
       : options?.type === "private"
       ? endpoints.THREAD_ARCHIVED_PRIVATE(channelId)
       : endpoints.THREAD_ARCHIVED_PUBLIC(channelId),
-    snakelize(options ?? {}),
+    snakelize(options ?? {})
   );
 }

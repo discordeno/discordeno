@@ -25,16 +25,11 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
   if (custom) {
     emojiId = `<:blamewolf:${
       (
-        await createEmoji(
-          tempData.guildId,
-          "blamewolf",
-          "https://cdn.discordapp.com/emojis/814955268123000832.png",
-          {
-            name: "blamewolf",
-            image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
-            roles: [],
-          },
-        )
+        await createEmoji(tempData.guildId, "blamewolf", "https://cdn.discordapp.com/emojis/814955268123000832.png", {
+          name: "blamewolf",
+          image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
+          roles: [],
+        })
       ).id
     }>`;
   }
@@ -45,19 +40,13 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", custom = false) {
     await message.addReaction(emojiId);
   }
 
-  await delayUntil(
-    10000,
-    () => cache.messages.get(message.id)?.reactions?.length === 1,
-  );
+  await delayUntil(10000, () => cache.messages.get(message.id)?.reactions?.length === 1);
 
   assertEquals(
     await cache.messages
       .get(message.id)
-      ?.reactions?.filter(
-        (reaction: Reaction) =>
-          reaction.emoji?.name === (custom ? "blamewolf" : "❤"),
-      ).length,
-    1,
+      ?.reactions?.filter((reaction: Reaction) => reaction.emoji?.name === (custom ? "blamewolf" : "❤")).length,
+    1
   );
 }
 

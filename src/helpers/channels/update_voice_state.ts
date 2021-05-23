@@ -1,8 +1,6 @@
 import { rest } from "../../rest/rest.ts";
 import { UpdateOthersVoiceState } from "../../types/guilds/update_others_voice_state.ts";
-import type {
-  UpdateSelfVoiceState,
-} from "../../types/guilds/update_self_voice_state.ts";
+import type { UpdateSelfVoiceState } from "../../types/guilds/update_self_voice_state.ts";
 import { endpoints } from "../../util/constants.ts";
 import { hasOwnProperty, snakelize } from "../../util/utils.ts";
 
@@ -19,14 +17,11 @@ import { hasOwnProperty, snakelize } from "../../util/utils.ts";
  */
 export async function updateVoiceState(
   guildId: bigint,
-  options: UpdateSelfVoiceState | { userId: bigint } & UpdateOthersVoiceState,
+  options: UpdateSelfVoiceState | ({ userId: bigint } & UpdateOthersVoiceState)
 ) {
   return await rest.runMethod(
     "patch",
-    endpoints.UPDATE_VOICE_STATE(
-      guildId,
-      hasOwnProperty(options, "userId") ? options.userId : undefined,
-    ),
-    snakelize(options),
+    endpoints.UPDATE_VOICE_STATE(guildId, hasOwnProperty(options, "userId") ? options.userId : undefined),
+    snakelize(options)
   );
 }

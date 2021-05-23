@@ -8,12 +8,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function getWebhooks(guildId: bigint) {
   await requireBotGuildPermissions(guildId, ["MANAGE_WEBHOOKS"]);
 
-  const result = await rest.runMethod<Webhook[]>(
-    "get",
-    endpoints.GUILD_WEBHOOKS(guildId),
-  );
+  const result = await rest.runMethod<Webhook[]>("get", endpoints.GUILD_WEBHOOKS(guildId));
 
-  return new Collection(
-    result.map((webhook) => [webhook.id, webhook]),
-  );
+  return new Collection(result.map((webhook) => [webhook.id, webhook]));
 }

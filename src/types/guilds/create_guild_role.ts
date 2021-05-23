@@ -14,7 +14,6 @@ export interface CreateGuildRole {
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-role */
-export interface DiscordCreateGuildRole
-  extends Omit<CreateGuildRole, "permissions"> {
+export interface DiscordCreateGuildRole extends Omit<CreateGuildRole, "permissions"> {
   permissions?: string;
 }

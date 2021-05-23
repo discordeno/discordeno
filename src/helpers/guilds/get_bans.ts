@@ -9,12 +9,7 @@ import { requireBotGuildPermissions } from "../../util/permissions.ts";
 export async function getBans(guildId: bigint) {
   await requireBotGuildPermissions(guildId, ["BAN_MEMBERS"]);
 
-  const results = await rest.runMethod<Ban[]>(
-    "get",
-    endpoints.GUILD_BANS(guildId),
-  );
+  const results = await rest.runMethod<Ban[]>("get", endpoints.GUILD_BANS(guildId));
 
-  return new Collection<bigint, Ban>(
-    results.map((res) => [snowflakeToBigint(res.user.id), res]),
-  );
+  return new Collection<bigint, Ban>(results.map((res) => [snowflakeToBigint(res.user.id), res]));
 }

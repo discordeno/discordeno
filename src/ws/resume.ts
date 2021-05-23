@@ -1,7 +1,7 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { ws } from "./ws.ts";
 
-export async function resume(shardId: number) {
+export function resume(shardId: number) {
   ws.log("RESUMING", { shardId });
 
   // NOW WE HANDLE RESUMING THIS SHARD
@@ -16,7 +16,7 @@ export async function resume(shardId: number) {
   }
 
   // CREATE A SHARD
-  const socket = await ws.createShard(shardId);
+  const socket = ws.createShard(shardId);
 
   const sessionId = oldShard?.sessionId || "";
   const previousSequenceNumber = oldShard?.previousSequenceNumber || 0;
@@ -47,13 +47,17 @@ export async function resume(shardId: number) {
 
   // Resume on open
   socket.onopen = () => {
-    ws.sendShardMessage(shardId, {
-      op: DiscordGatewayOpcodes.Resume,
-      d: {
-        token: ws.identifyPayload.token,
-        session_id: sessionId,
-        seq: previousSequenceNumber,
+    ws.sendShardMessage(
+      shardId,
+      {
+        op: DiscordGatewayOpcodes.Resume,
+        d: {
+          token: ws.identifyPayload.token,
+          session_id: sessionId,
+          seq: previousSequenceNumber,
+        },
       },
-    }, true);
+      true
+    );
   };
 }

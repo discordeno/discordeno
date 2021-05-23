@@ -1,7 +1,7 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { ws } from "./ws.ts";
 
-export async function identify(shardId: number, maxShards: number) {
+export function identify(shardId: number, maxShards: number) {
   ws.log("IDENTIFYING", { shardId, maxShards });
 
   // Need to clear the old heartbeat interval
@@ -12,7 +12,7 @@ export async function identify(shardId: number, maxShards: number) {
   }
 
   // CREATE A SHARD
-  const socket = await ws.createShard(shardId);
+  const socket = ws.createShard(shardId);
 
   // Identify can just set/reset the settings for the shard
   ws.shards.set(shardId, {
@@ -40,20 +40,25 @@ export async function identify(shardId: number, maxShards: number) {
   });
 
   socket.onopen = () => {
-    ws.sendShardMessage(shardId, {
-      op: DiscordGatewayOpcodes.Identify,
-      d: { ...ws.identifyPayload, shard: [shardId, maxShards] },
-    }, true);
+    ws.sendShardMessage(
+      shardId,
+      {
+        op: DiscordGatewayOpcodes.Identify,
+        d: { ...ws.identifyPayload, shard: [shardId, maxShards] },
+      },
+      true
+    );
   };
 
   return new Promise((resolve, reject) => {
     ws.loadingShards.set(shardId, {
       shardId,
       resolve,
-      reject,
       startedAt: Date.now(),
     });
 
-    ws.cleanupLoadingShards();
+    setTimeout(() => {
+      reject(`[Identify Failure] Shard ${shardId} has not received READY event in over a minute.`);
+    }, 600000);
   });
 }

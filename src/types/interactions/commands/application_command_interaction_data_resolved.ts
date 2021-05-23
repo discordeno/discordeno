@@ -7,15 +7,9 @@ export interface ApplicationCommandInteractionDataResolved {
   /** The Ids and User objects */
   users?: Record<string, User>;
   /** The Ids and partial Member objects */
-  members?: Record<
-    string,
-    Omit<InteractionGuildMember, "user" | "deaf" | "mute">
-  >;
+  members?: Record<string, Omit<InteractionGuildMember, "user" | "deaf" | "mute">>;
   /** The Ids and Role objects */
-  roes?: Record<string, Role>;
+  roles?: Record<string, Role>;
   /** The Ids and partial Channel objects */
-  channels?: Record<
-    string,
-    Pick<Channel, "id" | "name" | "type" | "permissionOverwrites">
-  >;
+  channels?: Record<string, Pick<Channel, "id" | "name" | "type" | "permissionOverwrites">>;
 }

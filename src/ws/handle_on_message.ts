@@ -6,8 +6,6 @@ import type { DiscordHello } from "../types/gateway/hello.ts";
 import type { DiscordReady } from "../types/gateway/ready.ts";
 import { camelize, delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
-import { identify } from "./identify.ts";
-import { resume } from "./resume.ts";
 import { ws } from "./ws.ts";
 
 /** Handler for handling every message event from websocket. */
@@ -18,11 +16,7 @@ export async function handleOnMessage(message: any, shardId: number) {
   }
 
   if (message instanceof Uint8Array) {
-    message = decompressWith(
-      message,
-      0,
-      (slice: Uint8Array) => ws.utf8decoder.decode(slice),
-    );
+    message = decompressWith(message, 0, (slice: Uint8Array) => ws.utf8decoder.decode(slice));
   }
 
   if (typeof message !== "string") return;
@@ -38,16 +32,17 @@ export async function handleOnMessage(message: any, shardId: number) {
 
       shard.heartbeat.lastSentAt = Date.now();
       // Discord randomly sends this requiring an immediate heartbeat back
-      ws.sendShardMessage(shard, {
-        op: DiscordGatewayOpcodes.Heartbeat,
-        d: shard?.previousSequenceNumber,
-      }, true);
+      ws.sendShardMessage(
+        shard,
+        {
+          op: DiscordGatewayOpcodes.Heartbeat,
+          d: shard?.previousSequenceNumber,
+        },
+        true
+      );
       break;
     case DiscordGatewayOpcodes.Hello:
-      ws.heartbeat(
-        shardId,
-        (messageData.d as DiscordHello).heartbeat_interval,
-      );
+      ws.heartbeat(shardId, (messageData.d as DiscordHello).heartbeat_interval);
       break;
     case DiscordGatewayOpcodes.HeartbeatACK:
       if (ws.shards.has(shardId)) {
@@ -61,7 +56,7 @@ export async function handleOnMessage(message: any, shardId: number) {
         ws.shards.get(shardId)!.resuming = true;
       }
 
-      await resume(shardId);
+      ws.resume(shardId);
       break;
     case DiscordGatewayOpcodes.InvalidSession:
       ws.log("INVALID_SESSION", { shardId, payload: messageData });
@@ -71,7 +66,7 @@ export async function handleOnMessage(message: any, shardId: number) {
 
       // When d is false we need to reidentify
       if (!messageData.d) {
-        await identify(shardId, ws.maxShards);
+        await ws.identify(shardId, ws.maxShards);
         break;
       }
 
@@ -79,7 +74,7 @@ export async function handleOnMessage(message: any, shardId: number) {
         ws.shards.get(shardId)!.resuming = true;
       }
 
-      await resume(shardId);
+      ws.resume(shardId);
       break;
     default:
       if (messageData.t === "RESUMED") {
@@ -100,13 +95,11 @@ export async function handleOnMessage(message: any, shardId: number) {
 
         ws.loadingShards.get(shardId)?.resolve(true);
         ws.loadingShards.delete(shardId);
-        // Wait 5 seconds to spawn next shard
+        // Wait few seconds to spawn next shard
         setTimeout(() => {
-          const bucket = ws.buckets.get(
-            shardId % ws.botGatewayData.sessionStartLimit.maxConcurrency,
-          );
-          if (bucket) bucket.createNextShard = true;
-        }, 5000);
+          const bucket = ws.buckets.get(shardId % ws.botGatewayData.sessionStartLimit.maxConcurrency);
+          if (bucket) bucket.createNextShard.shift()?.();
+        }, ws.spawnShardDelay);
       }
 
       // Update the sequence number if it is present
@@ -126,10 +119,7 @@ export async function handleOnMessage(message: any, shardId: number) {
 
         if (!messageData.t) return;
 
-        return handlers[messageData.t]?.(
-          camelize(messageData),
-          shardId,
-        );
+        return handlers[messageData.t]?.(camelize(messageData), shardId);
       }
 
       break;

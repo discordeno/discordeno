@@ -1,6 +1,5 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { Collection } from "../util/collection.ts";
-import { cleanupLoadingShards } from "./cleanup_loading_shards.ts";
 import { closeWS } from "./close_ws.ts";
 import { createShard } from "./create_shard.ts";
 import { log } from "./events.ts";
@@ -15,6 +14,7 @@ import { sendShardMessage } from "./send_shard_message.ts";
 import { spawnShards } from "./spawn_shards.ts";
 import { startGateway } from "./start_gateway.ts";
 import { tellClusterToIdentify } from "./tell_cluster_to_identify.ts";
+import { resume } from "./resume.ts";
 
 // CONTROLLER LIKE INTERFACE FOR WS HANDLING
 export const ws = {
@@ -26,6 +26,8 @@ export const ws = {
   reshard: true,
   /** The percentage at which resharding should occur. */
   reshardPercentage: 80,
+  /** The delay in milliseconds to wait before spawning next shard. OPTIMAL IS ABOVE 2500. YOU DON"T WANT TO HIT THE RATE LIMIT!!! */
+  spawnShardDelay: 2500,
   /** The maximum shard Id number. Useful for zero-downtime updates or resharding. */
   maxShards: 0,
   /** Whether or not the resharder should automatically switch to LARGE BOT SHARDING when you are above 100K servers. */
@@ -76,14 +78,16 @@ export const ws = {
     {
       shardId: number;
       resolve: (value: unknown) => void;
-      reject: (reason?: unknown) => void;
       startedAt: number;
     }
   >(),
   /** Stored as bucketId: { clusters: [clusterId, [ShardIds]], createNextShard: boolean } */
   buckets: new Collection<
     number,
-    { clusters: number[][]; createNextShard: boolean }
+    {
+      clusters: number[][];
+      createNextShard: (() => unknown)[];
+    }
   >(),
   utf8decoder: new TextDecoder(),
 
@@ -107,8 +111,6 @@ export const ws = {
   log,
   /** Handles resharding the bot when necessary. */
   resharder,
-  /** Cleanups loading shards that were unable to load. */
-  cleanupLoadingShards,
   /** Handles the message events from websocket. */
   handleOnMessage,
   /** Handles processing queue of requests send to this shard. */
@@ -117,6 +119,7 @@ export const ws = {
   closeWS,
   /** Properly adds a message to the shards queue. */
   sendShardMessage,
+  /** Properly resume an old shards session. */
   resume,
 };
 

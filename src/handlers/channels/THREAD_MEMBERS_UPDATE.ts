@@ -6,10 +6,7 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleThreadMembersUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as ThreadMembersUpdate;
-  const thread = await cacheHandlers.get(
-    "channels",
-    snowflakeToBigint(payload.id),
-  );
+  const thread = await cacheHandlers.get("channels", snowflakeToBigint(payload.id));
   if (!thread) return;
 
   thread.memberCount = payload.memberCount;

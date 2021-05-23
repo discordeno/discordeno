@@ -1,15 +1,12 @@
 import { rest } from "../../rest/rest.ts";
 import type { CreateChannelInvite } from "../../types/invites/create_channel_invite.ts";
-import type { Invite } from "../../types/invites/invite.ts";
+import type { InviteMetadata } from "../../types/invites/invite_metadata.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
-export async function createInvite(
-  channelId: bigint,
-  options: CreateChannelInvite,
-) {
+export async function createInvite(channelId: bigint, options: CreateChannelInvite = {}) {
   await requireBotChannelPermissions(channelId, ["CREATE_INSTANT_INVITE"]);
 
   if (options.maxAge && (options.maxAge < 0 || options.maxAge > 604800)) {
@@ -19,9 +16,5 @@ export async function createInvite(
     throw new Error(Errors.INVITE_MAX_USES_INVALID);
   }
 
-  return await rest.runMethod<Invite>(
-    "post",
-    endpoints.CHANNEL_INVITES(channelId),
-    options,
-  );
+  return await rest.runMethod<InviteMetadata>("post", endpoints.CHANNEL_INVITES(channelId), options);
 }

@@ -13,20 +13,14 @@ import { endpoints } from "../../util/constants.ts";
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  */
 export async function getEmojis(guildId: bigint, addToCache = true) {
-  const result = await rest.runMethod<Emoji[]>(
-    "get",
-    endpoints.GUILD_EMOJIS(guildId),
-  );
+  const result = await rest.runMethod<Emoji[]>("get", endpoints.GUILD_EMOJIS(guildId));
 
   if (addToCache) {
     const guild = await cacheHandlers.get("guilds", guildId);
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
     result.forEach((emoji) => {
-      eventHandlers.debug?.(
-        "loop",
-        `Running forEach loop in get_emojis file.`,
-      );
+      eventHandlers.debug?.("loop", `Running forEach loop in get_emojis file.`);
       guild.emojis.set(snowflakeToBigint(emoji.id!), emoji);
     });
 

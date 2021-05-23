@@ -12,11 +12,9 @@ export async function getThreadMembers(channelId: bigint) {
   const channel = await cacheHandlers.get("channels", channelId);
   if (channel) {
     if (
-      ![
-        ChannelTypes.GuildNewsThread,
-        ChannelTypes.GuildPivateThread,
-        ChannelTypes.GuildPublicThread,
-      ].includes(channel.type)
+      ![ChannelTypes.GuildNewsThread, ChannelTypes.GuildPivateThread, ChannelTypes.GuildPublicThread].includes(
+        channel.type
+      )
     ) {
       throw new Error(Errors.NOT_A_THREAD_CHANNEL);
     }

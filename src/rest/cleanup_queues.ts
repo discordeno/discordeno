@@ -3,10 +3,7 @@ import { rest } from "./rest.ts";
 /** Cleans up the queues by checking if there is nothing left and removing it. */
 export function cleanupQueues() {
   for (const [key, queue] of rest.pathQueues) {
-    rest.eventHandlers.debug?.(
-      "loop",
-      "Running for of loop in cleanupQueues function.",
-    );
+    rest.eventHandlers.debug?.("loop", "Running for of loop in cleanupQueues function.");
     if (queue.length) continue;
     // REMOVE IT FROM CACHE
     rest.pathQueues.delete(key);

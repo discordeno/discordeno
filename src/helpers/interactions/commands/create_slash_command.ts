@@ -16,17 +16,12 @@ import { snakelize, validateSlashCommands } from "../../../util/utils.ts";
  * Global commands are cached for **1 hour**. That means that new global commands will fan out slowly across all guilds, and will be guaranteed to be updated in an hour.
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
-export async function createSlashCommand(
-  options: CreateGlobalApplicationCommand,
-  guildId?: bigint,
-) {
-  validateSlashCommands([options], true);
+export async function createSlashCommand(options: CreateGlobalApplicationCommand, guildId?: bigint) {
+  [options] = validateSlashCommands([options], true) as CreateGlobalApplicationCommand[];
 
   return await rest.runMethod<ApplicationCommand>(
     "post",
-    guildId
-      ? endpoints.COMMANDS_GUILD(applicationId, guildId)
-      : endpoints.COMMANDS(applicationId),
-    snakelize(options),
+    guildId ? endpoints.COMMANDS_GUILD(applicationId, guildId) : endpoints.COMMANDS(applicationId),
+    snakelize(options)
   );
 }
