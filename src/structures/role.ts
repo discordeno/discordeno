@@ -84,6 +84,24 @@ const baseRole: Partial<DiscordenoRole> = {
   get isNitroBoostRole() {
     return Boolean(this.bitfield! & roleToggles.isNitroBoostRole);
   },
+  toJSON() {
+    return {
+      guildId: this.guildId?.toString(),
+      id: this.id?.toString(),
+      name: this.name,
+      color: this.color,
+      hoist: this.hoist,
+      position: this.position,
+      permissions: this.permissions?.toString(),
+      managed: this.managed,
+      mentionable: this.mentionable,
+      tags: {
+        botId: this.botId?.toString(),
+        integrationId: this.integrationId?.toString(),
+        premiumSubscriber: this.isNitroBoostRole,
+      },
+    } as Role & { guildId: string };
+  },
 };
 
 // deno-lint-ignore require-await
@@ -155,4 +173,6 @@ export interface DiscordenoRole extends Omit<Role, "tags" | "id"> {
   higherThanRole(roleId: bigint, position?: number): boolean;
   /** Checks if the role has a higher position than the given member */
   higherThanMember(memberId: bigint): Promise<boolean>;
+  /** Convert to json friendly role with guild id */
+  toJSON(): Role & { guildId: string };
 }

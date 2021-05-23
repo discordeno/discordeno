@@ -63,6 +63,60 @@ export const guildToggles = {
 };
 
 const baseGuild: Partial<DiscordenoGuild> = {
+  toJSON() {
+    return {
+      shardId: this.shardId!,
+      id: this.id?.toString(),
+      name: this.name,
+      icon: this.icon,
+      iconHash: undefined,
+      splash: this.splash,
+      discoverySplash: this.discoverySplash,
+      owner: this.owner,
+      ownerId: this.ownerId?.toString(),
+      permissions: this.permissions,
+      region: this.region,
+      afkChannelId: this.afkChannelId?.toString(),
+      afkTimeout: this.afkTimeout,
+      widgetEnabled: this.widgetEnabled,
+      widgetChannelId: this.widgetChannelId?.toString(),
+      verificationLevel: this.verificationLevel,
+      defaultMessageNotifications: this.defaultMessageNotifications,
+      explicitContentFilter: this.explicitContentFilter,
+      roles: this.roles?.map((r) => r.toJSON()) || [],
+      emojis: this.emojis?.array() || [],
+      features: this.features,
+      mfaLevel: this.mfaLevel,
+      applicationId: this.applicationId?.toString(),
+      systemChannelId: this.systemChannelId?.toString(),
+      systemChannelFlags: this.systemChannelFlags,
+      rulesChannelId: this.rulesChannelId?.toString(),
+      joinedAt: this.joinedAt ? new Date(this.joinedAt).toISOString() : undefined,
+      large: this.large,
+      unavailable: this.unavailable,
+      memberCount: this.memberCount,
+      voiceStates: this.voiceStates,
+      members: this.members,
+      channels: this.channels,
+      threads: this.threads,
+      presences: this.presences,
+      maxPresences: this.maxPresences,
+      maxMembers: this.maxMembers,
+      vanityUrlCode: this.vanityUrlCode,
+      description: this.description,
+      banner: this.banner,
+      premiumTier: this.premiumTier,
+      premiumSubscriptionCount: this.premiumSubscriptionCount,
+      preferredLocale: this.preferredLocale,
+      publicUpdatesChannelId: this.publicUpdatesChannelId?.toString(),
+      maxVideoChannelUsers: this.maxVideoChannelUsers,
+      approximateMemberCount: this.approximateMemberCount,
+      approximatePresenceCount: this.approximatePresenceCount,
+      welcomeScreen: this.welcomeScreen,
+      nsfwLevel: this.nsfwLevel,
+      stageInstances: this.stageInstances,
+    } as Guild & { shardId: number };
+  },
   get members() {
     return cache.members.filter((member) => member.guilds.has(this.id!));
   },
@@ -375,4 +429,6 @@ export interface DiscordenoGuild
   unban(memberId: bigint): ReturnType<typeof unbanMember>;
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
   invites(): ReturnType<typeof getInvites>;
+  /** Get the JSON version of the Guild object used to create this. Includes the shardId as well */
+  toJSON(): Guild & { shardId: number };
 }

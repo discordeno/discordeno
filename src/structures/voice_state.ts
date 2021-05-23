@@ -57,6 +57,23 @@ const baseRole: Partial<DiscordenoVoiceState> = {
   get suppress() {
     return Boolean(this.bitfield! & voiceStateToggles.suppress);
   },
+  toJSON() {
+    return {
+      guildId: this.guildId?.toString(),
+      channelId: this.channelId?.toString(),
+      userId: this.userId?.toString(),
+      member: this.member,
+      sessionId: this.sessionId,
+      deaf: this.deaf,
+      mute: this.mute,
+      selfDeaf: this.selfDeaf,
+      selfMute: this.selfMute,
+      selfStream: this.selfStream,
+      selfVideo: this.selfVideo,
+      suppress: this.suppress,
+      requestToSpeakTimestamp: this.requestToSpeakTimestamp,
+    } as VoiceState;
+  }
 };
 
 // deno-lint-ignore require-await
@@ -109,4 +126,6 @@ export interface DiscordenoVoiceState extends Omit<VoiceState, "channelId" | "gu
   };
   /** The guild where this role is. If undefined, the guild is not cached */
   guild?: DiscordenoGuild;
+  /** Converts to the raw JSON format. */
+  toJSON(): VoiceState;
 }
