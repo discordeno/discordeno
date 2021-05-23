@@ -58,9 +58,7 @@ export function identify(shardId: number, maxShards: number) {
     });
 
     setTimeout(() => {
-      reject(
-        `[Identify Failure] Shard ${shardId} has not received READY event in over a minute.`
-      );
+      reject(`[Identify Failure] Shard ${shardId} has not received READY event in over a minute.`);
     }, 600000);
   });
 }
