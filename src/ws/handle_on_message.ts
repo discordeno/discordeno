@@ -95,11 +95,11 @@ export async function handleOnMessage(message: any, shardId: number) {
 
         ws.loadingShards.get(shardId)?.resolve(true);
         ws.loadingShards.delete(shardId);
-        // Wait 5 seconds to spawn next shard
+        // Wait few seconds to spawn next shard
         setTimeout(() => {
           const bucket = ws.buckets.get(shardId % ws.botGatewayData.sessionStartLimit.maxConcurrency);
           if (bucket) bucket.createNextShard.shift()?.();
-        }, 5000);
+        }, ws.spawnShardDelay);
       }
 
       // Update the sequence number if it is present

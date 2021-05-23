@@ -28,7 +28,7 @@ export async function heartbeat(shardId: number, interval: number) {
   shard.heartbeat.interval = interval;
 
   shard.heartbeat.intervalId = setInterval(async () => {
-    ws.log("DEBUG", `Running setInterval in heartbeat file.`);
+    ws.log("DEBUG", `Running setInterval in heartbeat file. Shard: ${shardId}`);
     const currentShard = ws.shards.get(shardId);
     if (!currentShard) return;
 
