@@ -2,10 +2,7 @@ import { EventEmitter } from "./deps.ts";
 
 import { helpers } from "../helpers/mod.ts";
 import { proxyEvent } from "../plugins/proxyEvents.ts";
-import {
-  verifySignature,
-  VerifySignatureOptions,
-} from "../interactions/mod.ts";
+import { verifySignature, VerifySignatureOptions } from "../interactions/mod.ts";
 import { ClientOptions } from "./types/client_options.ts";
 import {
   ApplicationCommandPermissions,
@@ -174,7 +171,7 @@ export class Client extends EventEmitter {
     channelId: bigint,
     options?: ListPublicArchivedThreads & {
       type?: "public" | "private" | "privateJoinedThreads";
-    },
+    }
   ) {
     return helpers.getArchivedThreads(channelId, options);
   }
@@ -194,7 +191,7 @@ export class Client extends EventEmitter {
     channelId: bigint,
     options: StartThread & {
       messageId?: bigint | undefined;
-    },
+    }
   ) {
     return helpers.startThread(channelId, options);
   }
@@ -213,14 +210,9 @@ export class Client extends EventEmitter {
       allow: bigint;
       deny: bigint;
     })[],
-    permissions: PermissionStrings[],
+    permissions: PermissionStrings[]
   ) {
-    return helpers.channelOverwriteHasPermission(
-      guildId,
-      id,
-      overwrites,
-      permissions,
-    );
+    return helpers.channelOverwriteHasPermission(guildId, id, overwrites, permissions);
   }
 
   /** Create a copy of a channel */
@@ -229,11 +221,7 @@ export class Client extends EventEmitter {
   }
 
   /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-  createChannel(
-    guildId: bigint,
-    options?: CreateGuildChannel,
-    reason?: string,
-  ) {
+  createChannel(guildId: bigint, options?: CreateGuildChannel, reason?: string) {
     return helpers.createChannel(guildId, options, reason);
   }
 
@@ -243,11 +231,7 @@ export class Client extends EventEmitter {
   }
 
   /** Delete the channel permission overwrites for a user or role in this channel. Requires MANAGE_ROLES permission. */
-  deleteChannelOverwrite(
-    guildId: bigint,
-    channelId: bigint,
-    overwriteId: bigint,
-  ) {
+  deleteChannelOverwrite(guildId: bigint, channelId: bigint, overwriteId: bigint) {
     return helpers.deleteChannelOverwrite(guildId, channelId, overwriteId);
   }
 
@@ -262,26 +246,12 @@ export class Client extends EventEmitter {
   }
 
   /** Edit the channel permission overwrites for a user or role in this channel. Requires `MANAGE_ROLES` permission. */
-  editChannelOverwrite(
-    guildId: bigint,
-    channelId: bigint,
-    overwriteId: bigint,
-    options: Omit<Overwrite, "id">,
-  ) {
-    return helpers.editChannelOverwrite(
-      guildId,
-      channelId,
-      overwriteId,
-      options,
-    );
+  editChannelOverwrite(guildId: bigint, channelId: bigint, overwriteId: bigint, options: Omit<Overwrite, "id">) {
+    return helpers.editChannelOverwrite(guildId, channelId, overwriteId, options);
   }
 
   /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
-  editChannel(
-    channelId: bigint,
-    options: ModifyChannel | ModifyThread,
-    reason?: string,
-  ) {
+  editChannel(channelId: bigint, options: ModifyChannel | ModifyThread, reason?: string) {
     return helpers.editChannel(channelId, options, reason);
   }
 
@@ -324,16 +294,13 @@ export class Client extends EventEmitter {
    * Trigger a typing indicator for the specified channel. Generally bots should **NOT** implement this route.
    * However, if a bot is responding to a command and expects the computation to take a few seconds,
    * this endpoint may be called to let the user know that the bot is processing their message.
- */
+   */
   startTyping(channelId: bigint) {
     return helpers.startTyping(channelId);
   }
 
   /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
-  swapChannels(
-    guildId: bigint,
-    channelPositions: ModifyGuildChannelPositions[],
-  ) {
+  swapChannels(guildId: bigint, channelPositions: ModifyGuildChannelPositions[]) {
     return helpers.swapChannels(guildId, channelPositions);
   }
 
@@ -352,11 +319,8 @@ export class Client extends EventEmitter {
    *  - You must have the `REQUEST_TO_SPEAK` permission to request to speak. You can always clear your own request to speak.
    *  - You are able to set `request_to_speak_timestamp` to any present or future time.
    *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
- */
-  updateVoiceState(
-    guildId: bigint,
-    options: UpdateSelfVoiceState | { userId: bigint } & UpdateOthersVoiceState,
-  ) {
+   */
+  updateVoiceState(guildId: bigint, options: UpdateSelfVoiceState | ({ userId: bigint } & UpdateOthersVoiceState)) {
     return helpers.updateVoiceState(guildId, options);
   }
 
@@ -389,12 +353,7 @@ export class Client extends EventEmitter {
   // EMOJI METHODS
 
   /** Create an emoji in the server. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. */
-  createEmoji(
-    guildId: bigint,
-    name: string,
-    image: string,
-    options: CreateGuildEmoji,
-  ) {
+  createEmoji(guildId: bigint, name: string, image: string, options: CreateGuildEmoji) {
     return helpers.createEmoji(guildId, name, image, options);
   }
 
@@ -480,7 +439,7 @@ export class Client extends EventEmitter {
     options: { counts?: boolean; addToCache?: boolean } = {
       counts: true,
       addToCache: true,
-    },
+    }
   ) {
     return helpers.getGuild(guildId, options);
   }
@@ -505,10 +464,7 @@ export class Client extends EventEmitter {
   }
 
   /** Returns the widget image URL for the guild. */
-  getWidgetImageURL(
-    guildId: bigint,
-    options?: GetGuildWidgetImageQuery & { force?: boolean },
-  ) {
+  getWidgetImageURL(guildId: bigint, options?: GetGuildWidgetImageQuery & { force?: boolean }) {
     return helpers.getWidgetImageURL(guildId, options);
   }
 
@@ -523,32 +479,41 @@ export class Client extends EventEmitter {
   }
 
   /** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
-  guildBannerURL(id: bigint, options: {
-    banner?: string | bigint;
-    size?: DiscordImageSize;
-    format?: DiscordImageFormat;
-    animated?: boolean;
-  }) {
+  guildBannerURL(
+    id: bigint,
+    options: {
+      banner?: string | bigint;
+      size?: DiscordImageSize;
+      format?: DiscordImageFormat;
+      animated?: boolean;
+    }
+  ) {
     return helpers.guildBannerURL(id, options);
   }
 
   /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
-  guildIconURL(id: bigint, options: {
-    banner?: string | bigint;
-    size?: DiscordImageSize;
-    format?: DiscordImageFormat;
-    animated?: boolean;
-  }) {
+  guildIconURL(
+    id: bigint,
+    options: {
+      banner?: string | bigint;
+      size?: DiscordImageSize;
+      format?: DiscordImageFormat;
+      animated?: boolean;
+    }
+  ) {
     return helpers.guildIconURL(id, options);
   }
 
   /** The full URL of the splash from Discords CDN. Undefined if no splash is set. */
-  guildSplashURL(id: bigint, options: {
-    banner?: string | bigint;
-    size?: DiscordImageSize;
-    format?: DiscordImageFormat;
-    animated?: boolean;
-  }) {
+  guildSplashURL(
+    id: bigint,
+    options: {
+      banner?: string | bigint;
+      size?: DiscordImageSize;
+      format?: DiscordImageFormat;
+      animated?: boolean;
+    }
+  ) {
     return helpers.guildSplashURL(id, options);
   }
 
@@ -574,7 +539,7 @@ export class Client extends EventEmitter {
   /** Batch edits permissions for all commands in a guild. Takes an array of partial GuildApplicationCommandPermissions objects including `id` and `permissions`. */
   batchEditSlashCommandPermissions(
     guildId: bigint,
-    options: { id: string; permissions: ApplicationCommandPermissions[] }[],
+    options: { id: string; permissions: ApplicationCommandPermissions[] }[]
   ) {
     return helpers.batchEditSlashCommandPermissions(guildId, options);
   }
@@ -589,11 +554,8 @@ export class Client extends EventEmitter {
    *
    * Global commands are cached for **1 hour**. That means that new global commands will fan out slowly across all guilds, and will be guaranteed to be updated in an hour.
    * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
- */
-  createSlashCommand(
-    options: CreateGlobalApplicationCommand,
-    guildId?: bigint,
-  ) {
+   */
+  createSlashCommand(options: CreateGlobalApplicationCommand, guildId?: bigint) {
     return helpers.createSlashCommand(options, guildId);
   }
 
@@ -608,11 +570,7 @@ export class Client extends EventEmitter {
   }
 
   /** Edits command permissions for a specific command for your application in a guild. */
-  editSlashCommandPermissions(
-    guildId: bigint,
-    commandId: bigint,
-    options: ApplicationCommandPermissions[],
-  ) {
+  editSlashCommandPermissions(guildId: bigint, commandId: bigint, options: ApplicationCommandPermissions[]) {
     return helpers.editSlashCommandPermissions(guildId, commandId, options);
   }
 
@@ -637,11 +595,7 @@ export class Client extends EventEmitter {
   }
 
   /** Edit an existing slash command. If this command did not exist, it will create it. */
-  upsertSlashCommand(
-    commandId: bigint,
-    options: EditGlobalApplicationCommand,
-    guildId?: bigint,
-  ) {
+  upsertSlashCommand(commandId: bigint, options: EditGlobalApplicationCommand, guildId?: bigint) {
     return helpers.upsertSlashCommand(commandId, options, guildId);
   }
 
@@ -649,11 +603,8 @@ export class Client extends EventEmitter {
    * Bulk edit existing slash commands. If a command does not exist, it will create it.
    *
    * **NOTE:** Any slash commands that are not specified in this function will be **deleted**. If you don't provide the commandId and rename your command, the command gets a new Id.
- */
-  upsertSlashCommands(
-    options: EditGlobalApplicationCommand[],
-    guildId?: bigint,
-  ) {
+   */
+  upsertSlashCommands(options: EditGlobalApplicationCommand[], guildId?: bigint) {
     return helpers.upsertSlashCommands(options, guildId);
   }
 
@@ -667,12 +618,8 @@ export class Client extends EventEmitter {
    * Interaction `tokens` are valid for **15 minutes** and can be used to send followup messages.
    *
    * NOTE: By default we will suppress mentions. To enable mentions, just pass any mentions object.
-  */
-  sendInteractionResponse(
-    id: bigint,
-    token: string,
-    options: DiscordenoInteractionResponse,
-  ) {
+   */
+  sendInteractionResponse(id: bigint, token: string, options: DiscordenoInteractionResponse) {
     return helpers.sendInteractionResponse(id, token, options);
   }
 
@@ -706,12 +653,16 @@ export class Client extends EventEmitter {
   // MEMBER METHODS
 
   /** The users custom avatar or the default avatar if you don't have a member object. */
-  avatarURL(userId: bigint, discriminator: bigint, options: {
-    avatar?: string | bigint;
-    size?: DiscordImageSize;
-    format?: DiscordImageFormat;
-    animated?: boolean;
-  }) {
+  avatarURL(
+    userId: bigint,
+    discriminator: bigint,
+    options: {
+      avatar?: string | bigint;
+      size?: DiscordImageSize;
+      format?: DiscordImageFormat;
+      animated?: boolean;
+    }
+  ) {
     return helpers.avatarURL(userId, discriminator, options);
   }
 
@@ -736,7 +687,7 @@ export class Client extends EventEmitter {
     memberId: bigint,
     options: Omit<ModifyGuildMember, "channelId"> & {
       channelId?: bigint | null;
-    },
+    }
   ) {
     return helpers.editMember(guildId, memberId, options);
   }
@@ -745,12 +696,8 @@ export class Client extends EventEmitter {
    * Highly recommended to use this function to fetch members instead of getMember from REST.
    * REST: 50/s global(across all shards) rate limit with ALL requests this included
    * GW(this function): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is now 960/m.
-  */
-  fetchMembers(
-    guildId: bigint,
-    shardId: number,
-    options?: Omit<RequestGuildMembers, "guildId">,
-  ) {
+   */
+  fetchMembers(guildId: bigint, shardId: number, options?: Omit<RequestGuildMembers, "guildId">) {
     return helpers.fetchMembers(guildId, shardId, options);
   }
 
@@ -763,11 +710,8 @@ export class Client extends EventEmitter {
    * Highly recommended to **NOT** use this function to get members instead use fetchMembers().
    * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
    * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
-  */
-  getMembers(
-    guildId: bigint,
-    options?: ListGuildMembers & { addToCache?: boolean },
-  ) {
+   */
+  getMembers(guildId: bigint, options?: ListGuildMembers & { addToCache?: boolean }) {
     return helpers.getMembers(guildId, options);
   }
 
@@ -784,17 +728,13 @@ export class Client extends EventEmitter {
   /**
    * Begin a prune operation. Requires the KICK_MEMBERS permission. Returns an object with one 'pruned' key indicating the number of members that were removed in the prune operation. For large guilds it's recommended to set the computePruneCount option to false, forcing 'pruned' to null. Fires multiple Guild Member Remove Gateway events.
    * By default, prune will not remove users with roles. You can optionally include specific roles in your prune by providing the roles (resolved to include_roles internally) parameter. Any inactive user that has a subset of the provided role(s) will be included in the prune and users with additional roles will not.
-  */
+   */
   pruneMembers(guildId: bigint, options: BeginGuildPrune) {
     return helpers.pruneMembers(guildId, options);
   }
 
   /** Query string to match username(s) and nickname(s) against */
-  searchMembers(
-    guildId: bigint,
-    query: string,
-    options?: Omit<SearchGuildMembers, "query"> & { cache?: boolean },
-  ) {
+  searchMembers(guildId: bigint, query: string, options?: Omit<SearchGuildMembers, "query"> & { cache?: boolean }) {
     return helpers.searchMembers(guildId, query, options);
   }
 
@@ -816,36 +756,17 @@ export class Client extends EventEmitter {
   }
 
   /** Adds multiple reactions to a message. If ordered is true(default is false), it will add the reactions one at a time in the order provided. Note: Reaction takes the form of name:id for custom guild emoji, or Unicode characters. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS */
-  addReactions(
-    channelId: bigint,
-    messageId: bigint,
-    reactions: string[],
-    ordered?: boolean,
-  ) {
+  addReactions(channelId: bigint, messageId: bigint, reactions: string[], ordered?: boolean) {
     return helpers.addReactions(channelId, messageId, reactions, ordered);
   }
 
   /** Delete a message with the channel id and message id only. */
-  deleteMessage(
-    channelId: bigint,
-    messageId: bigint,
-    reason?: string,
-    delayMilliseconds?: number,
-  ) {
-    return helpers.deleteMessage(
-      channelId,
-      messageId,
-      reason,
-      delayMilliseconds,
-    );
+  deleteMessage(channelId: bigint, messageId: bigint, reason?: string, delayMilliseconds?: number) {
+    return helpers.deleteMessage(channelId, messageId, reason, delayMilliseconds);
   }
 
   /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */
-  deleteMessages(
-    channelId: bigint,
-    ids: bigint[],
-    reason?: string,
-  ) {
+  deleteMessages(channelId: bigint, ids: bigint[], reason?: string) {
     return helpers.deleteMessages(channelId, ids, reason);
   }
 
@@ -862,22 +783,13 @@ export class Client extends EventEmitter {
   /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
   getMessages(
     channelId: bigint,
-    options?:
-      | GetMessagesAfter
-      | GetMessagesBefore
-      | GetMessagesAround
-      | GetMessagesLimit,
+    options?: GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit
   ) {
     return helpers.getMessages(channelId, options);
   }
 
   /** Get a list of users that reacted with this emoji. */
-  getReactions(
-    channelId: bigint,
-    messageId: bigint,
-    reaction: string,
-    options?: GetReactions,
-  ) {
+  getReactions(channelId: bigint, messageId: bigint, reaction: string, options?: GetReactions) {
     return helpers.getReactions(channelId, messageId, reaction, options);
   }
 
@@ -902,12 +814,7 @@ export class Client extends EventEmitter {
   }
 
   /** Removes a reaction from the given user on this message, defaults to bot. Reaction takes the form of name:id for custom guild emoji, or Unicode characters. */
-  removeReaction(
-    channelId: bigint,
-    messageId: bigint,
-    reaction: string,
-    options?: { userId?: bigint },
-  ) {
+  removeReaction(channelId: bigint, messageId: bigint, reaction: string, options?: { userId?: bigint }) {
     return helpers.removeReaction(channelId, messageId, reaction, options);
   }
 
@@ -970,12 +877,7 @@ export class Client extends EventEmitter {
   }
 
   /** Remove a role from the member  */
-  removeRole(
-    guildId: bigint,
-    memberId: bigint,
-    roleId: bigint,
-    reason?: string,
-  ) {
+  removeRole(guildId: bigint, memberId: bigint, roleId: bigint, reason?: string) {
     return helpers.removeRole(guildId, memberId, roleId, reason);
   }
 
@@ -997,11 +899,7 @@ export class Client extends EventEmitter {
   }
 
   /** Edit a template's metadata. Requires the `MANAGE_GUILD` permission. */
-  editGuildTemplate(
-    guildId: bigint,
-    templateCode: string,
-    data: ModifyGuildTemplate,
-  ) {
+  editGuildTemplate(guildId: bigint, templateCode: string, data: ModifyGuildTemplate) {
     return helpers.editGuildTemplate(guildId, templateCode, data);
   }
 
@@ -1039,11 +937,7 @@ export class Client extends EventEmitter {
     return helpers.createWebhook(channelId, options);
   }
 
-  deleteWebhookMessage(
-    webhookId: bigint,
-    webhookToken: string,
-    messageId: bigint,
-  ) {
+  deleteWebhookMessage(webhookId: bigint, webhookToken: string, messageId: bigint) {
     return helpers.deleteWebhookMessage(webhookId, webhookToken, messageId);
   }
 
@@ -1058,20 +952,12 @@ export class Client extends EventEmitter {
   }
 
   /**  */
-  editWebhookMessage(
-    webhookId: bigint,
-    webhookToken: string,
-    options: EditWebhookMessage & { messageId?: bigint },
-  ) {
+  editWebhookMessage(webhookId: bigint, webhookToken: string, options: EditWebhookMessage & { messageId?: bigint }) {
     return helpers.editWebhookMessage(webhookId, webhookToken, options);
   }
 
   /** Edit a webhook. Returns the updated webhook object on success. */
-  editWebhookWithToken(
-    webhookId: bigint,
-    webhookToken: string,
-    options: Omit<ModifyWebhook, "channelId">,
-  ) {
+  editWebhookWithToken(webhookId: bigint, webhookToken: string, options: Omit<ModifyWebhook, "channelId">) {
     return helpers.editWebhookWithToken(webhookId, webhookToken, options);
   }
 
@@ -1081,11 +967,7 @@ export class Client extends EventEmitter {
   }
 
   /** Returns a previousy-sent webhook message from the same token. Returns a message object on success. */
-  getWebhookMessage(
-    webhookId: bigint,
-    webhookToken: string,
-    messageId: bigint,
-  ) {
+  getWebhookMessage(webhookId: bigint, webhookToken: string, messageId: bigint) {
     return helpers.getWebhookMessage(webhookId, webhookToken, messageId);
   }
 
@@ -1105,11 +987,7 @@ export class Client extends EventEmitter {
   }
 
   /** Send a webhook with webhook Id and webhook token */
-  sendWebhook(
-    webhookId: bigint,
-    webhookToken: string,
-    options: ExecuteWebhook,
-  ) {
+  sendWebhook(webhookId: bigint, webhookToken: string, options: ExecuteWebhook) {
     return helpers.sendWebhook(webhookId, webhookToken, options);
   }
 
