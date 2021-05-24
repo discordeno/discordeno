@@ -65,7 +65,7 @@ import { DiscordenoMessage } from "../structures/message.ts";
 import { RestManager } from "./structures/RestManager.ts";
 import GatewayManager from "./structures/GatewayManager.ts";
 import { cache } from "../cache.ts";
-import { botId } from "../bot";
+import { botId } from "../bot.ts";
 
 export class Client extends EventEmitter {
   /** The bot's token */
