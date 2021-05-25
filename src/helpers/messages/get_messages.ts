@@ -1,5 +1,5 @@
 import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
+import { DiscordenoMessage, structures } from "../../structures/mod.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
 import {
   GetMessagesAfter,
@@ -8,6 +8,7 @@ import {
   GetMessagesLimit,
 } from "../../types/messages/get_messages.ts";
 import type { Message } from "../../types/messages/message.ts";
+import { Collection } from "../../util/collection.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
@@ -24,5 +25,12 @@ export async function getMessages(
 
   const result = await rest.runMethod<Message[]>("get", endpoints.CHANNEL_MESSAGES(channelId), options);
 
-  return await Promise.all(result.map((res) => structures.createDiscordenoMessage(res)));
+  return new Collection<bigint, DiscordenoMessage>(
+    await Promise.all(
+      result.map(async (message) => {
+        const discordenoMessage = await structures.createDiscordenoMessage(message);
+        return [discordenoMessage.id, discordenoMessage] as [bigint, DiscordenoMessage];
+      })
+    )
+  );
 }
