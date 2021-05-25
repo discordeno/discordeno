@@ -7,6 +7,7 @@ import { deleteRole } from "../../../helpers/roles/delete_role.ts";
 import { editRole } from "../../../helpers/roles/edit_role.ts";
 import { highestRole } from "../../../util/permissions.ts";
 import { Permissions } from "../BitFields/Permissions.ts";
+import { roleToggles } from "../../../structures/role.ts";
 
 export class DDRole extends Base {
   /** The client itself. */
@@ -40,42 +41,42 @@ export class DDRole extends Base {
 
   /** Whether or not the role is hoisted. */
   get hoist() {
-    return this.bitfield!.hoisted;
+    return this.bitfield!.hoist;
   }
 
   /** Change whether or not the role is hoisted. */
   set hoist(enabled: boolean) {
-    this.bitfield!.set(this.bitfield.hoist, enabled);
+    this.bitfield!.set(roleToggles.hoist, enabled);
   }
 
   /** Whether or not the role is managed such as a bot role. */
   get managed() {
-    return this.bitfield.managedRole;
+    return this.bitfield.managed;
   }
 
   /** Change whether or not the role is managed. */
   set managed(enabled: boolean) {
-    this.bitfield!.set(this.bitfield.managed, enabled);
+    this.bitfield!.set(roleToggles.managed, enabled);
   }
 
   /** Whether or not the role is mentionable by everyone. */
   get mentionable() {
-    return this.bitfield.mentionableRole;
+    return this.bitfield.mentionable;
   }
 
   /** Change whether or not the role is mentionable. */
   set mentionable(enabled: boolean) {
-    this.bitfield!.set(this.bitfield.mentionable, enabled);
+    this.bitfield!.set(roleToggles.mentionable, enabled);
   }
 
   /** Whether or not the role is the nitro booster role in this server. */
   get isNitroBoostRole() {
-    return this.bitfield.isNitroBoostRole;
+    return this.bitfield.isNitroBoost;
   }
 
   /** Change whether or not the role is isNitroBoostRole. */
   set isNitroBoostRole(enabled: boolean) {
-    this.bitfield!.set(this.bitfield.isNitroBoost, enabled);
+    this.bitfield!.set(roleToggles.isNitroBoostRole, enabled);
   }
 
   /** The guild where this role is. If undefined, the guild is not cached */

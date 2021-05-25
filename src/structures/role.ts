@@ -14,7 +14,7 @@ import { DiscordenoMember } from "./member.ts";
 
 const ROLE_SNOWFLAKES = ["id", "botId", "integrationId", "guildId"];
 
-const roleToggles = {
+export const roleToggles = {
   /** If this role is showed seperately in the user listing */
   hoist: 1n,
   /** Whether this role is managed by an integration */
