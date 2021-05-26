@@ -3,7 +3,7 @@ import { cache } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import type { DiscordenoInteractionResponse } from "../../types/discordeno/interaction_response.ts";
 import { endpoints } from "../../util/constants.ts";
-import { validateComponents } from "../../util/utils.ts";
+import { snakelize, validateComponents } from "../../util/utils.ts";
 
 /**
  * Send a response to a users slash command. The command data will have the id and token necessary to respond.
@@ -16,9 +16,7 @@ export async function sendInteractionResponse(id: bigint, token: string, options
   if (options.data?.components) validateComponents(options.data?.components);
   // If its already been executed, we need to send a followup response
   if (cache.executedSlashCommands.has(token)) {
-    return await rest.runMethod("post", endpoints.WEBHOOK(applicationId, token), {
-      ...options,
-    });
+    return await rest.runMethod("post", endpoints.WEBHOOK(applicationId, token), snakelize(options));
   }
 
   // Expire in 15 minutes
@@ -38,5 +36,5 @@ export async function sendInteractionResponse(id: bigint, token: string, options
     options.data = { ...options.data, allowedMentions: { parse: [] } };
   }
 
-  return await rest.runMethod("post", endpoints.INTERACTION_ID_TOKEN(id, token), options);
+  return await rest.runMethod("post", endpoints.INTERACTION_ID_TOKEN(id, token), snakelize(options));
 }
