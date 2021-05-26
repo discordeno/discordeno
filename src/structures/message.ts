@@ -16,6 +16,7 @@ import type { EditMessage } from "../types/messages/edit_message.ts";
 import type { Message } from "../types/messages/message.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "../util/bigint.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
+import { iconBigintToHash } from "../util/hash.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoChannel } from "./channel.ts";
 import { DiscordenoGuild } from "./guild.ts";
@@ -152,7 +153,7 @@ const baseMessage: Partial<DiscordenoMessage> = {
         id: this.authorId?.toString(),
         username: this.tag?.substring(0, this.tag.length - 5),
         discriminator: this.tag?.substring(this.tag.length - 4),
-        avatar: this.member?.avatar,
+        avatar: this.member?.avatar ? iconBigintToHash(this.member.avatar) : undefined,
         bot: this.member?.bot,
         system: this.member?.system,
         mfaEnabled: this.member?.mfaEnabled,

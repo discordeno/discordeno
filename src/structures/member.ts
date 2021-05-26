@@ -16,7 +16,7 @@ import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import type { User } from "../types/users/user.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { Collection } from "../util/collection.ts";
-import { iconHashToBigInt } from "../util/hash.ts";
+import { iconBigintToHash, iconHashToBigInt } from "../util/hash.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 
@@ -106,7 +106,7 @@ const baseMember: Partial<DiscordenoMember> = {
         id: this.id?.toString(),
         username: this.username,
         discriminator: this.discriminator?.toString(),
-        avatar: this.avatar,
+        avatar: this.avatar ? iconBigintToHash(this.avatar) : undefined,
         bot: this.bot,
         system: this.system,
         mfaEnabled: this.mfaEnabled,
@@ -186,11 +186,13 @@ export async function createDiscordenoMember(
   return member;
 }
 
-export interface DiscordenoMember extends Omit<User, "discriminator" | "id"> {
+export interface DiscordenoMember extends Omit<User, "discriminator" | "id" | "avatar"> {
   /** The user's id */
   id: bigint;
   /** The user's 4-digit discord-tag */
   discriminator: bigint;
+  /** The avatar in bigint format. */
+  avatar: bigint;
   /** The guild related data mapped by guild id */
   guilds: Collection<
     bigint,
