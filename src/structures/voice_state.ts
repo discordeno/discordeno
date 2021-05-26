@@ -73,7 +73,7 @@ const baseRole: Partial<DiscordenoVoiceState> = {
       suppress: this.suppress,
       requestToSpeakTimestamp: this.requestToSpeakTimestamp,
     } as VoiceState;
-  }
+  },
 };
 
 // deno-lint-ignore require-await
