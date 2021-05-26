@@ -5,7 +5,7 @@ import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentio
 import type { Message } from "../../types/messages/message.ts";
 import type { EditWebhookMessage } from "../../types/webhooks/edit_webhook_message.ts";
 import { endpoints } from "../../util/constants.ts";
-import { validateComponents } from "../../util/utils.ts";
+import { snakelize, validateComponents } from "../../util/utils.ts";
 
 export async function editWebhookMessage(
   webhookId: bigint,
@@ -51,7 +51,7 @@ export async function editWebhookMessage(
     options.messageId
       ? endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, options.messageId)
       : endpoints.WEBHOOK_MESSAGE_ORIGINAL(webhookId, webhookToken),
-    { ...options, allowedMentions: options.allowedMentions }
+    snakelize({ ...options, allowedMentions: options.allowedMentions })
   );
 
   return await structures.createDiscordenoMessage(result);
