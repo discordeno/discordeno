@@ -656,7 +656,7 @@ export class Client extends EventEmitter {
   /** The users custom avatar or the default avatar if you don't have a member object. */
   avatarURL(
     userId: bigint,
-    discriminator: bigint,
+    discriminator: number,
     options: {
       avatar?: string | bigint;
       size?: DiscordImageSize;
