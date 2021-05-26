@@ -1,10 +1,7 @@
 import { DiscordGatewayCloseEventCodes } from "../types/codes/gateway_close_event_codes.ts";
-import { identify } from "./identify.ts";
-import { resume } from "./resume.ts";
 import { ws } from "./ws.ts";
 
-// deno-lint-ignore require-await
-export async function createShard(shardId: number) {
+export function createShard(shardId: number) {
   const socket = new WebSocket(ws.botGatewayData.url);
   socket.binaryType = "arraybuffer";
 
@@ -14,7 +11,7 @@ export async function createShard(shardId: number) {
 
   socket.onmessage = ({ data: message }) => ws.handleOnMessage(message, shardId);
 
-  socket.onclose = (event) => {
+  socket.onclose = async (event) => {
     ws.log("CLOSED", { shardId, payload: event });
 
     if (event.code === 3064 || event.reason === "Discordeno Testing Finished! Do Not RESUME!") {
@@ -50,10 +47,10 @@ export async function createShard(shardId: number) {
       case DiscordGatewayCloseEventCodes.InvalidSeq:
       case DiscordGatewayCloseEventCodes.RateLimited:
       case DiscordGatewayCloseEventCodes.SessionTimedOut:
-        identify(shardId, ws.maxShards);
+        await ws.identify(shardId, ws.maxShards);
         break;
       default:
-        resume(shardId);
+        ws.resume(shardId);
         break;
     }
   };

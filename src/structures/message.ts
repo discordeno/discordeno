@@ -16,6 +16,7 @@ import type { EditMessage } from "../types/messages/edit_message.ts";
 import type { Message } from "../types/messages/message.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "../util/bigint.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
+import { iconBigintToHash } from "../util/hash.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoChannel } from "./channel.ts";
 import { DiscordenoGuild } from "./guild.ts";
@@ -142,6 +143,54 @@ const baseMessage: Partial<DiscordenoMessage> = {
   },
   get pinned() {
     return Boolean(this.bitfield! & messageToggles.pinned);
+  },
+  toJSON() {
+    return {
+      id: this.id?.toString(),
+      channelId: this.channelId?.toString(),
+      guildId: this.guildId?.toString(),
+      author: {
+        id: this.authorId?.toString(),
+        username: this.tag?.substring(0, this.tag.length - 5),
+        discriminator: this.tag?.substring(this.tag.length - 4),
+        avatar: this.member?.avatar ? iconBigintToHash(this.member.avatar) : undefined,
+        bot: this.member?.bot,
+        system: this.member?.system,
+        mfaEnabled: this.member?.mfaEnabled,
+        locale: this.member?.locale,
+        verified: this.member?.verified,
+        email: this.member?.email,
+        flags: this.member?.flags,
+        premiumType: this.member?.premiumType,
+        publicFlags: this.member?.publicFlags,
+      },
+      member: this.member,
+      content: this.content,
+      timestamp: this.timestamp ? new Date(this.timestamp).toISOString() : undefined,
+      editedTimestamp: this.editedTimestamp ? new Date(this.editedTimestamp).toISOString() : undefined,
+      tts: this.tts,
+      mentionEveryone: this.mentionEveryone,
+      mentions: this.mentions,
+      mentionRoles: this.mentionRoles,
+      mentionChannels: this.mentionChannels,
+      attachments: this.attachments,
+      embeds: this.embeds,
+      reactions: this.reactions,
+      nonce: this.nonce,
+      pinned: this.pinned,
+      webhookId: this.webhookId,
+      type: this.type,
+      activity: this.activity,
+      application: this.application,
+      applicationId: this.applicationId,
+      messageReference: this.messageReference,
+      flags: this.flags,
+      stickers: this.stickers,
+      referencedMessage: this.referencedMessage,
+      interaction: this.interaction,
+      thread: this.thread,
+      components: this.components,
+    } as Message;
   },
 };
 
@@ -314,4 +363,6 @@ export interface DiscordenoMessage
   removeReactionEmoji(reaction: string): ReturnType<typeof removeReactionEmoji>;
   /** Removes a reaction from the given user on this message, defaults to bot */
   removeReaction(reaction: string, userId?: bigint): ReturnType<typeof removeReaction>;
+  /** Convert to json */
+  toJSON(): Message;
 }

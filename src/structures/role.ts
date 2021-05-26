@@ -84,6 +84,24 @@ const baseRole: Partial<DiscordenoRole> = {
   get isNitroBoostRole() {
     return Boolean(this.bitfield! & roleToggles.isNitroBoostRole);
   },
+  toJSON() {
+    return {
+      guildId: this.guildId?.toString(),
+      id: this.id?.toString(),
+      name: this.name,
+      color: this.color,
+      hoist: this.hoist,
+      position: this.position,
+      permissions: this.permissions?.toString(),
+      managed: this.managed,
+      mentionable: this.mentionable,
+      tags: {
+        botId: this.botId?.toString(),
+        integrationId: this.integrationId?.toString(),
+        premiumSubscriber: this.isNitroBoostRole,
+      },
+    } as Role & { guildId: string };
+  },
 };
 
 // deno-lint-ignore require-await
@@ -111,6 +129,7 @@ export async function createDiscordenoRole(
 
   const role: DiscordenoRole = Object.create(baseRole, {
     ...props,
+    permissions: createNewProp(BigInt(rest.permissions)),
     botId: createNewProp(tags.botId ? snowflakeToBigint(tags.botId) : undefined),
     isNitroBoostRole: createNewProp("premiumSubscriber" in tags),
     integrationId: createNewProp(tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined),
@@ -120,7 +139,7 @@ export async function createDiscordenoRole(
   return role;
 }
 
-export interface DiscordenoRole extends Omit<Role, "tags" | "id"> {
+export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions"> {
   /** The role id */
   id: bigint;
   /** The bot id that is associated with this role. */
@@ -131,6 +150,8 @@ export interface DiscordenoRole extends Omit<Role, "tags" | "id"> {
   integrationId: bigint;
   /** The roles guildId */
   guildId: bigint;
+  /** Permission bit set */
+  permissions: bigint;
   /** Holds all the boolean toggles. */
   bitfield: bigint;
 
@@ -155,4 +176,6 @@ export interface DiscordenoRole extends Omit<Role, "tags" | "id"> {
   higherThanRole(roleId: bigint, position?: number): boolean;
   /** Checks if the role has a higher position than the given member */
   higherThanMember(memberId: bigint): Promise<boolean>;
+  /** Convert to json friendly role with guild id */
+  toJSON(): Role & { guildId: string };
 }

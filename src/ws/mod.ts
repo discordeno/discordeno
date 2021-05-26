@@ -1,4 +1,3 @@
-export * from "./cleanup_loading_shards.ts";
 export * from "./create_shard.ts";
 export * from "./events.ts";
 export * from "./handle_discord_payload.ts";

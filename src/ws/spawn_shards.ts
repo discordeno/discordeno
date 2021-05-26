@@ -1,4 +1,3 @@
-import { delay } from "../util/utils.ts";
 import { ws } from "./ws.ts";
 
 /** Begin spawning shards. */
@@ -19,7 +18,7 @@ export function spawnShards(firstShardId = 0) {
         // Create the bucket since it doesnt exist
         ws.buckets.set(bucketId, {
           clusters: [[cluster, i]],
-          createNextShard: true,
+          createNextShard: [],
         });
 
         if (cluster + 1 <= ws.maxClusters) cluster++;
@@ -39,23 +38,18 @@ export function spawnShards(firstShardId = 0) {
   }
 
   // SPREAD THIS OUT TO DIFFERENT CLUSTERS TO BEGIN STARTING UP
-  ws.buckets.forEach(async (bucket, bucketId) => {
+  ws.buckets.forEach((bucket, bucketId) => {
     ws.log("DEBUG", `3. Running forEach loop in spawnShards function.`);
     for (const [clusterId, ...queue] of bucket.clusters) {
       ws.log("DEBUG", `4. Running for of loop in spawnShards function.`);
-      let shardId = queue.shift();
 
-      while (shardId !== undefined) {
-        ws.log("DEBUG", "5. Running while loop in spawnShards function.");
-        if (!bucket.createNextShard) {
-          await delay(100);
-          continue;
-        }
+      queue.forEach((shardId) => {
+        bucket.createNextShard.push(async () => {
+          await ws.tellClusterToIdentify(clusterId, shardId, bucketId);
+        });
+      });
 
-        bucket.createNextShard = false;
-        await ws.tellClusterToIdentify(clusterId, shardId, bucketId);
-        shardId = queue.shift();
-      }
+      bucket.createNextShard.shift()?.();
     }
   });
 }

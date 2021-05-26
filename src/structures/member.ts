@@ -16,7 +16,7 @@ import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import type { User } from "../types/users/user.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { Collection } from "../util/collection.ts";
-import { iconHashToBigInt } from "../util/hash.ts";
+import { iconBigintToHash, iconHashToBigInt } from "../util/hash.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 
@@ -100,6 +100,32 @@ const baseMember: Partial<DiscordenoMember> = {
   get animatedAvatar() {
     return Boolean(this.bitfield! & memberToggles.animatedAvatar);
   },
+  toJSON() {
+    return (this.guilds?.map((g) => ({
+      user: {
+        id: this.id?.toString(),
+        username: this.username,
+        discriminator: this.discriminator?.toString(),
+        avatar: this.avatar ? iconBigintToHash(this.avatar) : undefined,
+        bot: this.bot,
+        system: this.system,
+        mfaEnabled: this.mfaEnabled,
+        locale: this.locale,
+        verified: this.verified,
+        email: this.email,
+        flags: this.flags,
+        premiumType: this.premiumType,
+        publicFlags: this.publicFlags,
+      },
+      nick: g.nick,
+      roles: g.roles.map((id) => id.toString()),
+      joinedAt: g.joinedAt ? new Date(g.joinedAt).toISOString() : undefined,
+      premiumSince: g.premiumSince,
+      deaf: g.deaf,
+      mute: g.mute,
+      pending: g.pending,
+    })) || []) as (GuildMemberWithUser & { guildId: string })[];
+  },
 };
 
 export async function createDiscordenoMember(
@@ -160,11 +186,13 @@ export async function createDiscordenoMember(
   return member;
 }
 
-export interface DiscordenoMember extends Omit<User, "discriminator" | "id"> {
+export interface DiscordenoMember extends Omit<User, "discriminator" | "id" | "avatar"> {
   /** The user's id */
   id: bigint;
   /** The user's 4-digit discord-tag */
   discriminator: bigint;
+  /** The avatar in bigint format. */
+  avatar: bigint;
   /** The guild related data mapped by guild id */
   guilds: Collection<
     bigint,
@@ -220,4 +248,6 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id"> {
   addRole(guildId: bigint, roleId: bigint, reason?: string): ReturnType<typeof addRole>;
   /** Remove a role from the member */
   removeRole(guildId: bigint, roleId: bigint, reason?: string): ReturnType<typeof removeRole>;
+  /** Converts to a json object */
+  toJSON(): (GuildMemberWithUser & { guildId: string })[];
 }

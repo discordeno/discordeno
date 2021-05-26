@@ -9,7 +9,7 @@ export const GATEWAY_VERSION = 9;
 
 // TODO: update this version
 /** https://github.com/discordeno/discordeno/releases */
-export const DISCORDENO_VERSION = "11.0.0";
+export const DISCORDENO_VERSION = "11.0.0-rc.3";
 
 /** https://discord.com/developers/docs/reference#user-agent */
 export const USER_AGENT = `DiscordBot (https://github.com/discordeno/discordeno, v${DISCORDENO_VERSION})`;

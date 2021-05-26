@@ -24,6 +24,39 @@ import { DiscordenoVoiceState } from "./voice_state.ts";
 const CHANNEL_SNOWFLAKES = ["id", "guildId", "lastMessageId", "ownerId", "applicationId", "parentId"];
 
 const baseChannel: Partial<DiscordenoChannel> = {
+  toJSON() {
+    return {
+      id: this.id?.toString(),
+      type: this.type,
+      guildId: this.guildId?.toString(),
+      position: this.position,
+      permissionOverwrites: this.permissionOverwrites?.map((o) => ({
+        ...o,
+        id: o.id.toString(),
+        allow: o.allow.toString(),
+        deny: o.deny.toString(),
+      })),
+      name: this.name,
+      topic: this.topic,
+      nsfw: this.nsfw,
+      lastMessageId: this.lastMessageId?.toString(),
+      bitrate: this.bitrate,
+      userLimit: this.userLimit,
+      rateLimitPerUser: this.rateLimitPerUser,
+      recipients: this.recipients,
+      icon: this.icon,
+      ownerId: this.ownerId,
+      applicationId: this.applicationId,
+      parentId: this.parentId,
+      lastPinTimestamp: this.lastPinTimestamp ? new Date(this.lastPinTimestamp).toISOString() : undefined,
+      rtcRegion: this.rtcRegion,
+      videoQualityMode: this.videoQualityMode,
+      messageCount: this.messageCount,
+      memberCount: this.memberCount,
+      threadMetadata: this.threadMetadata,
+      member: this.member,
+    } as Channel;
+  },
   get guild() {
     return cache.guilds.get(this.guildId!);
   },
@@ -177,4 +210,6 @@ export interface DiscordenoChannel
   edit(options: ModifyChannel, reason?: string): ReturnType<typeof editChannel>;
   /** Create a new channel with the same properties */
   clone(reason?: string): ReturnType<typeof cloneChannel>;
+  /** Returns the Channel object json value */
+  toJSON(): Channel;
 }

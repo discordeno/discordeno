@@ -17,7 +17,7 @@ import { snakelize, validateSlashCommands } from "../../../util/utils.ts";
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
 export async function createSlashCommand(options: CreateGlobalApplicationCommand, guildId?: bigint) {
-  validateSlashCommands([options], true);
+  [options] = validateSlashCommands([options], true) as CreateGlobalApplicationCommand[];
 
   return await rest.runMethod<ApplicationCommand>(
     "post",

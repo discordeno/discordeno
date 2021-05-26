@@ -33,23 +33,24 @@ export async function calculateBasePermissions(
   const guild = await getCached("guilds", guildOrId);
   const member = await getCached("members", memberOrId);
 
-  if (!guild || !member) return "8";
+  if (!guild || !member) return 8n;
 
   let permissions = 0n;
   // Calculate the role permissions bits, @everyone role is not in memberRoleIds so we need to pass guildId manualy
-  permissions |= [...(member.guilds.get(guild.id)?.roles || []), guild.id]
-    .map((id) => guild.roles.get(id)?.permissions)
-    // Removes any edge case undefined
-    .filter((perm) => perm)
-    .reduce((bits, perms) => {
-      bits |= BigInt(perms);
-      return bits;
-    }, 0n);
+  permissions |=
+    [...(member.guilds.get(guild.id)?.roles || []), guild.id]
+      .map((id) => guild.roles.get(id)?.permissions)
+      // Removes any edge case undefined
+      .filter((perm) => perm)
+      .reduce((bits, perms) => {
+        bits! |= perms!;
+        return bits;
+      }, 0n) || 0n;
 
   // If the memberId is equal to the guild ownerId he automatically has every permission so we add ADMINISTRATOR permission
   if (guild.ownerId === member.id) permissions |= 8n;
   // Return the members permission bits as a string
-  return permissions.toString();
+  return permissions;
 }
 
 /** Calculates the permissions this member has for the given Channel */
@@ -60,21 +61,21 @@ export async function calculateChannelOverwrites(
   const channel = await getCached("channels", channelOrId);
 
   // This is a DM channel so return ADMINISTRATOR permission
-  if (!channel?.guildId) return "8";
+  if (!channel?.guildId) return 8n;
 
   const member = await getCached("members", memberOrId);
 
-  if (!channel || !member) return "8";
+  if (!channel || !member) return 8n;
 
   // Get all the role permissions this member already has
-  let permissions = BigInt(await calculateBasePermissions(channel.guildId, member));
+  let permissions = await calculateBasePermissions(channel.guildId, member);
 
   // First calculate @everyone overwrites since these have the lowest priority
   const overwriteEveryone = channel.permissionOverwrites?.find((overwrite) => overwrite.id === channel.guildId);
   if (overwriteEveryone) {
     // First remove denied permissions since denied < allowed
-    permissions &= ~BigInt(overwriteEveryone.deny);
-    permissions |= BigInt(overwriteEveryone.allow);
+    permissions &= ~overwriteEveryone.deny;
+    permissions |= overwriteEveryone.allow;
   }
 
   const overwrites = channel.permissionOverwrites;
@@ -87,8 +88,8 @@ export async function calculateChannelOverwrites(
   for (const overwrite of overwrites || []) {
     if (!memberRoles.includes(overwrite.id)) continue;
 
-    deny |= BigInt(overwrite.deny);
-    allow |= BigInt(overwrite.allow);
+    deny |= overwrite.deny;
+    allow |= overwrite.allow;
   }
   // After role overwrite calculate save allowed permissions first we remove denied permissions since "denied < allowed"
   permissions &= ~deny;
@@ -97,21 +98,21 @@ export async function calculateChannelOverwrites(
   // Third calculate member specific overwrites since these have the highest priority
   const overwriteMember = overwrites?.find((overwrite) => overwrite.id === member.id);
   if (overwriteMember) {
-    permissions &= ~BigInt(overwriteMember.deny);
-    permissions |= BigInt(overwriteMember.allow);
+    permissions &= ~overwriteMember.deny;
+    permissions |= overwriteMember.allow;
   }
 
-  return permissions.toString();
+  return permissions;
 }
 
 /** Checks if the given permission bits are matching the given permissions. `ADMINISTRATOR` always returns `true` */
-export function validatePermissions(permissionBits: string, permissions: PermissionStrings[]) {
-  if (BigInt(permissionBits) & 8n) return true;
+export function validatePermissions(permissionBits: bigint, permissions: PermissionStrings[]) {
+  if (permissionBits & 8n) return true;
 
   return permissions.every(
     (permission) =>
       // Check if permission is in permissionBits
-      BigInt(permissionBits) & BigInt(DiscordBitwisePermissionFlags[permission])
+      permissionBits & BigInt(DiscordBitwisePermissionFlags[permission])
   );
 }
 
@@ -152,12 +153,10 @@ export function botHasChannelPermissions(channel: bigint | DiscordenoChannel, pe
 }
 
 /** Returns the permissions that are not in the given permissionBits */
-export function missingPermissions(permissionBits: string, permissions: PermissionStrings[]) {
-  if (BigInt(permissionBits) & 8n) return [];
+export function missingPermissions(permissionBits: bigint, permissions: PermissionStrings[]) {
+  if (permissionBits & 8n) return [];
 
-  return permissions.filter(
-    (permission) => !(BigInt(permissionBits) & BigInt(DiscordBitwisePermissionFlags[permission]))
-  );
+  return permissions.filter((permission) => !(permissionBits & BigInt(DiscordBitwisePermissionFlags[permission])));
 }
 
 /** Get the missing Guild permissions this member has */
@@ -223,12 +222,12 @@ export function requireBotChannelPermissions(channel: bigint | DiscordenoChannel
 }
 
 /** This function converts a bitwise string to permission strings */
-export function calculatePermissions(permissionBits: string) {
+export function calculatePermissions(permissionBits: bigint) {
   return Object.keys(DiscordBitwisePermissionFlags).filter((permission) => {
     // Since Object.keys() not only returns the permission names but also the bit values we need to return false if it is a Number
     if (Number(permission)) return false;
     // Check if permissionBits has this permission
-    return BigInt(permissionBits) & BigInt(DiscordBitwisePermissionFlags[permission as PermissionStrings]);
+    return permissionBits & BigInt(DiscordBitwisePermissionFlags[permission as PermissionStrings]);
   }) as PermissionStrings[];
 }
 
