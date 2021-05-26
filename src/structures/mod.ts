@@ -11,9 +11,28 @@ import type { DiscordenoMember } from "./member.ts";
 import type { DiscordenoMessage } from "./message.ts";
 import type { DiscordenoRole } from "./role.ts";
 import type { DiscordenoVoiceState } from "./voice_state.ts";
+import type { Channel } from "../types/channels/channel.ts";
+import type { Guild } from "../types/guilds/guild.ts";
+import type { GuildMemberWithUser } from "../types/members/guild_member.ts";
+import type { Message } from "../types/messages/message.ts";
+import type { Role } from "../types/permissions/role.ts";
+import type { VoiceState } from "../types/voice/voice_state.ts";
 
 /** This is the placeholder where the structure creation functions are kept. */
-export let structures = {
+export let structures: {
+  createDiscordenoChannel: (
+    data: Channel,
+    guildId?: bigint | undefined
+  ) => Promise<DiscordenoChannel> | DiscordenoChannel;
+  createDiscordenoGuild: (data: Guild, shardId: number) => Promise<DiscordenoGuild> | DiscordenoGuild;
+  createDiscordenoMember: (data: GuildMemberWithUser, guildId: bigint) => Promise<DiscordenoMember> | DiscordenoMember;
+  createDiscordenoMessage: (data: Message) => Promise<DiscordenoMessage> | DiscordenoMessage;
+  createDiscordenoRole: (data: { role: Role } & { guildId: bigint }) => Promise<DiscordenoRole> | DiscordenoRole;
+  createDiscordenoVoiceState: (
+    guildId: bigint,
+    data: VoiceState
+  ) => Promise<DiscordenoVoiceState> | DiscordenoVoiceState;
+} = {
   createDiscordenoChannel,
   createDiscordenoGuild,
   createDiscordenoMember,

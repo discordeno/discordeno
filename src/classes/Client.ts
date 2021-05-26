@@ -64,6 +64,8 @@ import { RestManager } from "./structures/RestManager.ts";
 import GatewayManager from "./structures/GatewayManager.ts";
 import { cache } from "../cache.ts";
 import { botId } from "../bot.ts";
+import { structures } from "../structures/mod.ts";
+import { DDChannel, DDGuild, DDMember, DDMessage, DDRole, DDVoiceState } from "./mod.ts";
 
 export class Client extends EventEmitter {
   /** The bot's token */
@@ -87,8 +89,18 @@ export class Client extends EventEmitter {
 
     // Set the eventHandlers to instead use the EventEmitter
     proxyEvent(this);
+    // Uses the class based Structures
+    this.setClassStructures();
   }
 
+  setClassStructures() {
+    structures.createDiscordenoChannel = (data, guildId) => new DDChannel(this, data, guildId);
+    structures.createDiscordenoGuild = (data, shardId) => new DDGuild(this, data, shardId);
+    structures.createDiscordenoMember = (data, guildId) => new DDMember(this, data, guildId);
+    structures.createDiscordenoMessage = (data) => new DDMessage(this, data);
+    structures.createDiscordenoRole = (data, guildId) => new DDRole(this, data, guildId);
+    structures.createDiscordenoVoiceState = (guildId, data) => new DDVoiceState(this, guildId, data);
+  }
   // GETTERS
 
   /** The amount of milliseconds since the bot has been online. */

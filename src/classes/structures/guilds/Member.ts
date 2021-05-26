@@ -3,13 +3,15 @@ import {
   CreateMessage,
   DiscordImageFormat,
   DiscordImageSize,
+  DiscordPremiumTypes,
+  DiscordUserFlags,
   GuildMember,
   GuildMemberWithUser,
   ModifyGuildMember,
 } from "../../../types/mod.ts";
 import { snowflakeToBigint } from "../../../util/bigint.ts";
 import { Collection } from "../../../util/collection.ts";
-import { iconHashToBigInt } from "../../../util/hash.ts";
+import { iconBigintToHash, iconHashToBigInt } from "../../../util/hash.ts";
 import Client from "../../Client.ts";
 import Base from "../Base.ts";
 import MemberBitField from "../BitFields/Member.ts";
@@ -33,6 +35,15 @@ export class DDMember extends Base {
   /** Holds all the boolean toggles. */
   bitfield: MemberBitField;
 
+  /** The user's chosen language option */
+  locale?: string;
+  /** The user's email */
+  email?: string;
+  /** The flags on a user's account */
+  flags?: DiscordUserFlags;
+  premiumType?: DiscordPremiumTypes;
+  publicFlags?: DiscordUserFlags;
+
   constructor(client: Client, payload: GuildMemberWithUser, guildId: bigint) {
     super(client, payload.user.id);
 
@@ -45,6 +56,11 @@ export class DDMember extends Base {
   update(payload: GuildMemberWithUser, guildId: bigint) {
     this.username = payload.user.username;
     this.discriminator = Number(payload.user.discriminator);
+    if (payload.user.email) this.email = payload.user.email;
+    this.locale = payload.user.locale;
+    this.flags = payload.user.flags;
+    this.premiumType = payload.user.premiumType;
+    this.publicFlags = payload.user.publicFlags;
 
     const transformed = payload.user.avatar ? iconHashToBigInt(payload.user.avatar) : undefined;
     this.avatar = transformed?.bigint;
@@ -167,6 +183,33 @@ export class DDMember extends Base {
   /** Remove a role from the member */
   async removeRole(guildId: bigint, roleId: bigint, reason?: string) {
     return await this.client.removeRole(guildId, this.id, roleId, reason);
+  }
+
+  toJSON() {
+    return (this.guilds?.map((g) => ({
+      user: {
+        id: this.id?.toString(),
+        username: this.username,
+        discriminator: this.discriminator?.toString(),
+        avatar: this.avatar ? iconBigintToHash(this.avatar) : null,
+        bot: this.bot,
+        system: this.system,
+        mfaEnabled: this.mfaEnabled,
+        locale: this.locale,
+        verified: this.verified,
+        email: this.email,
+        flags: this.flags,
+        premiumType: this.premiumType,
+        publicFlags: this.publicFlags,
+      },
+      nick: g.nick,
+      roles: g.roles.map((id) => id.toString()),
+      joinedAt: g.joinedAt ? new Date(g.joinedAt).toISOString() : undefined,
+      premiumSince: g.premiumSince,
+      deaf: g.deaf,
+      mute: g.mute,
+      pending: g.pending,
+    })) || []) as (GuildMemberWithUser & { guildId: string })[];
   }
 }
 

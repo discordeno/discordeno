@@ -9,7 +9,7 @@ export function handleReady(data: DiscordGatewayPayload, shardId: number) {
   // Triggered on each shard
   eventHandlers.shardReady?.(shardId);
 
-  // The bot has already started, the last shard is resumed, however.
+  // If bots already started, this is just a shard being resumed
   if (cache.isReady) return;
 
   const shard = ws.shards.get(shardId);

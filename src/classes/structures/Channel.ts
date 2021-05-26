@@ -34,7 +34,7 @@ export class DDChannel extends Base {
   /** Whether the channel is nsfw */
   nsfw?: boolean;
   /** The id of the guild */
-  guildId?: bigint;
+  guildId: bigint;
   /** The id of the last message sent in this channel (may not point to an existing or valid message) */
   lastMessageId?: bigint;
   /** id of the DM creator */
@@ -67,7 +67,7 @@ export class DDChannel extends Base {
   /** Thread member object for the current user, if they have joined the thread, only included on certain API endpoints */
   member?: ThreadMember;
 
-  constructor(client: Client, payload: Channel, guildId?: bigint) {
+  constructor(client: Client, payload: Channel, guildId = 0n) {
     super(client, payload.id);
 
     this.guildId = guildId;
@@ -113,17 +113,17 @@ export class DDChannel extends Base {
 
   /** Gets the messages from cache that were sent in this channel */
   get messages() {
-    return cache.messages.filter((m) => m.channelId === this.id!);
+    return cache.messages.filter((m) => m.channelId === this.id);
   }
 
   /** The mention of the channel */
   get mention() {
-    return `<#${this.id!}>`;
+    return `<#${this.id}>`;
   }
 
   /** Gets the voice states for this channel */
   get voiceStates() {
-    return this.guild?.voiceStates.filter((voiceState) => voiceState.channelId === this.id!);
+    return this.guild?.voiceStates.filter((voiceState) => voiceState.channelId === this.id);
   }
 
   /** Gets the connected members for this channel undefined if member is not cached */
@@ -179,6 +179,40 @@ export class DDChannel extends Base {
   /** Create a new channel with the same properties */
   async clone(reason?: string) {
     return await this.client.cloneChannel(this.id, reason);
+  }
+
+  toJSON() {
+    return {
+      id: this.id?.toString(),
+      type: this.type,
+      guildId: this.guildId?.toString(),
+      position: this.position,
+      permissionOverwrites: this.permissionOverwrites?.map((o) => ({
+        ...o,
+        id: o.id.toString(),
+        allow: o.allow.toString(),
+        deny: o.deny.toString(),
+      })),
+      name: this.name,
+      topic: this.topic,
+      nsfw: this.nsfw,
+      lastMessageId: this.lastMessageId?.toString(),
+      bitrate: this.bitrate,
+      userLimit: this.userLimit,
+      rateLimitPerUser: this.rateLimitPerUser,
+      recipients: [],
+      icon: this.icon,
+      ownerId: this.ownerId,
+      applicationId: this.applicationId,
+      parentId: this.parentId,
+      lastPinTimestamp: this.lastPinTimestamp ? new Date(this.lastPinTimestamp).toISOString() : undefined,
+      rtcRegion: this.rtcRegion,
+      videoQualityMode: this.videoQualityMode,
+      messageCount: this.messageCount,
+      memberCount: this.memberCount,
+      threadMetadata: this.threadMetadata,
+      member: this.member,
+    } as Channel;
   }
 }
 
