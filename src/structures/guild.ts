@@ -418,7 +418,7 @@ export interface DiscordenoGuild
   /** Edit the server. Requires the MANAGE_GUILD permission. */
   edit(options: ModifyGuild): ReturnType<typeof editGuild>;
   /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
-  auditLogs(options: Partial<GetGuildAuditLog>): ReturnType<typeof getAuditLogs>;
+  auditLogs(options?: GetGuildAuditLog): ReturnType<typeof getAuditLogs>;
   /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
   getBan(memberId: bigint): ReturnType<typeof getBan>;
   /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
