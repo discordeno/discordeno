@@ -132,6 +132,24 @@ export class DDMessage extends Base {
     if (payload.webhookId) this.webhookId = snowflakeToBigint(payload.webhookId);
   }
 
+  get author() {
+    return {
+      id: this.id,
+      username: this.tag?.substring(0, this.tag.length - 5),
+      discriminator: this.tag?.substring(this.tag.length - 4),
+      avatar: this.member?.avatar || null,
+      bot: this.member?.bot,
+      system: this.member?.system,
+      mfaEnabled: this.member?.mfaEnabled,
+      locale: this.member?.locale,
+      verified: this.member?.verified,
+      email: this.member?.email,
+      flags: this.member?.flags,
+      premiumType: this.member?.premiumType,
+      publicFlags: this.member?.publicFlags,
+    };
+  }
+
   /** Whether this was a TTS message */
   get tts() {
     return this.bitfield.tts;
