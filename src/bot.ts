@@ -17,6 +17,7 @@ export let proxyWSURL = `wss://gateway.discord.gg`;
 
 export async function startBot(config: BotConfig) {
   if (config.eventHandlers) eventHandlers = config.eventHandlers;
+
   ws.identifyPayload.token = `Bot ${config.token}`;
   rest.token = `Bot ${config.token}`;
   ws.identifyPayload.intents = config.intents.reduce(
@@ -59,7 +60,6 @@ export function setApplicationId(id: string) {
 
 export interface BotConfig {
   token: string;
-  compress?: boolean;
   intents: (DiscordGatewayIntents | keyof typeof DiscordGatewayIntents)[];
   eventHandlers?: EventHandlers;
 }

@@ -24,7 +24,7 @@ import { DiscordenoRole } from "./role.ts";
 
 const MESSAGE_SNOWFLAKES = ["id", "channelId", "guildId", "webhookId", "applicationId"];
 
-const messageToggles = {
+export const messageToggles = {
   /** Whether this was a TTS message */
   tts: 1n,
   /** Whether this message mentions everyone */

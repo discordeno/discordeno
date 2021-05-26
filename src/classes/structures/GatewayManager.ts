@@ -150,11 +150,6 @@ export class GatewayManager extends Collection<number, Shard> {
     this.spawnShards();
   }
 
-  /** The handler to clean up shards that identified but never received a READY. */
-  cleanupLoadingShards() {
-    return ws.cleanupLoadingShards();
-  }
-
   /** Use this function to close a ws connection properly */
   closeWS(
     socket: WebSocket,
