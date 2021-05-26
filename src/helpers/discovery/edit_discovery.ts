@@ -9,5 +9,5 @@ import { snakelize } from "../../util/utils.ts";
 export async function editDiscovery(guildId: bigint, data: ModifyGuildDiscoveryMetadata) {
   await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  return await rest.runMethod<DiscoveryMetadata>("patch", endpoints.DISCOVERY_MODIFY(guildId), snakelize(data));
+  return await rest.runMethod<DiscoveryMetadata>("patch", endpoints.DISCOVERY_METADATA(guildId), snakelize(data));
 }
