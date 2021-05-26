@@ -51,7 +51,7 @@ export async function editWebhookMessage(
     options.messageId
       ? endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, options.messageId)
       : endpoints.WEBHOOK_MESSAGE_ORIGINAL(webhookId, webhookToken),
-    snakelize({ ...options, allowedMentions: options.allowedMentions })
+    snakelize(options)
   );
 
   return await structures.createDiscordenoMessage(result);
