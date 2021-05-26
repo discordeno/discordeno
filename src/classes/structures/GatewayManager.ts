@@ -1,12 +1,7 @@
 import { getGatewayBot } from "../../helpers/mod.ts";
 import { DiscordGatewayIntents, GatewayPayload } from "../../types/mod.ts";
 import { Collection } from "../../util/collection.ts";
-import {
-  DiscordenoShard,
-  StartGatewayOptions,
-  WebSocketRequest,
-  ws,
-} from "../../ws/mod.ts";
+import { DiscordenoShard, StartGatewayOptions, WebSocketRequest, ws } from "../../ws/mod.ts";
 import Client from "../Client.ts";
 import { ClientOptions } from "../types/client_options.ts";
 
@@ -86,24 +81,15 @@ export class GatewayManager extends Collection<number, Shard> {
   }
 
   /** Change the intents to use for the bot. */
-  set intents(
-    intents:
-      | number
-      | (DiscordGatewayIntents | keyof typeof DiscordGatewayIntents)[],
-  ) {
+  set intents(intents: number | (DiscordGatewayIntents | keyof typeof DiscordGatewayIntents)[]) {
     if (typeof intents === "number") {
       ws.identifyPayload.intents = intents;
       return;
     }
 
     ws.identifyPayload.intents = intents.reduce(
-      (
-        bits,
-        next,
-      ) => (bits |= typeof next === "string"
-        ? DiscordGatewayIntents[next]
-        : next),
-      0,
+      (bits, next) => (bits |= typeof next === "string" ? DiscordGatewayIntents[next] : next),
+      0
     );
   }
 
@@ -151,11 +137,7 @@ export class GatewayManager extends Collection<number, Shard> {
   }
 
   /** Use this function to close a ws connection properly */
-  closeWS(
-    socket: WebSocket,
-    code?: number | undefined,
-    reason?: string | undefined,
-  ) {
+  closeWS(socket: WebSocket, code?: number | undefined, reason?: string | undefined) {
     return ws.closeWS(socket, code, reason);
   }
 
@@ -199,11 +181,7 @@ export class GatewayManager extends Collection<number, Shard> {
   }
 
   /** Properly adds a message to the shards queue. */
-  sendShardMessage(
-    shard: number | DiscordenoShard,
-    message: WebSocketRequest,
-    highPriority?: boolean,
-  ) {
+  sendShardMessage(shard: number | DiscordenoShard, message: WebSocketRequest, highPriority?: boolean) {
     return ws.sendShardMessage(shard, message, highPriority);
   }
 
