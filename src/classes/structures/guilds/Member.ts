@@ -135,7 +135,6 @@ export class DDMember extends Base {
   }
 
   /** Get the guild member object for the specified guild */
-
   guildMember(guildId: bigint) {
     return this.guilds?.get(guildId);
   }
