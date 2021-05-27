@@ -62,7 +62,6 @@ export function guildSweeper(guild: DiscordenoGuild) {
 
   // This is inactive guild. Not a single thing has happened for atleast 30 minutes.
   // Not a reaction, not a message, not any event!
-  cache.guilds.delete(guild.id);
   cache.dispatchedGuildIds.add(guild.id);
 
   // Remove all channel if they were dispatched
@@ -74,7 +73,9 @@ export function guildSweeper(guild: DiscordenoGuild) {
   });
 
   // Reset activity for next interval
-  cache.activeGuildIds.clear();
+  cache.activeGuildIds.delete(guild.id);
+
+  return true;
 }
 
 export let cacheHandlers = {
