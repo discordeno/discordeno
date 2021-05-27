@@ -42,9 +42,7 @@ function messageSweeper(message: DiscordenoMessage) {
   if (!message.guildId) return true;
 
   // Only delete messages older than 10 minutes
-  if (Date.now() - message.timestamp > 600000) return true;
-
-  return false;
+  return Date.now() - message.timestamp > 600000;
 }
 
 function memberSweeper(member: DiscordenoMember) {
@@ -52,9 +50,7 @@ function memberSweeper(member: DiscordenoMember) {
   if (member.id === botId) return false;
 
   // Only sweep members who were not active the last 30 minutes
-  if (member.cachedAt - Date.now() < 1800000) return false;
-
-  return true;
+  return member.cachedAt - Date.now() < 1800000;
 }
 
 export function guildSweeper(guild: DiscordenoGuild) {
