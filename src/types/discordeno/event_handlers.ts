@@ -9,8 +9,7 @@ import type { StageInstance } from "../channels/stage_instance.ts";
 import type { ThreadMember } from "../channels/threads/thread_member.ts";
 import type { ThreadMembersUpdate } from "../channels/threads/thread_members_update.ts";
 import type { Emoji } from "../emojis/emoji.ts";
-import type { GatewayPayload } from "../gateway/gateway_payload.ts";
-import type { DiscordGatewayPayload } from "../gateway/gateway_payload.ts";
+import type { DiscordGatewayPayload, GatewayPayload } from "../gateway/gateway_payload.ts";
 import type { IntegrationCreateUpdate } from "../integrations/integration_create_update.ts";
 import type { IntegrationDelete } from "../integrations/integration_delete.ts";
 import type { ApplicationCommandCreateUpdateDelete } from "../interactions/commands/application_command_create_update_delete.ts";
@@ -148,7 +147,7 @@ export type EventHandlersDefinitions = {
   /** Sent when a voice server is updated with information for making the bot connect to a voice channel. */
   voiceServerUpdate: [payload: VoiceServerUpdate, guild: DiscordenoGuild];
   /** Sent when someone joins/leaves/moves voice channels. */
-  voiceStateUpdate: [member: DiscordenoMember, voiceState: VoiceState];
+  voiceStateUpdate: [voiceState: VoiceState, member?: DiscordenoMember];
   /** Sent when a guild channel's webhook is created, updated, or deleted. */
   webhooksUpdate: [channelId: bigint, guildId: bigint];
   /** Sent when a member has passed the guild's Membership Screening requirements */
