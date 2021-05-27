@@ -11,7 +11,7 @@ import { Collection } from "./util/collection.ts";
 export const cache = {
   isReady: false,
   /** All of the guild objects the bot has access to, mapped by their Ids */
-  guilds: new Collection<bigint, DiscordenoGuild>(),
+  guilds: new Collection<bigint, DiscordenoGuild>([], { sweeper: { filter: guildSweeper, interval: 3600000 } }),
   /** All of the channel objects the bot has access to, mapped by their Ids */
   channels: new Collection<bigint, DiscordenoChannel>(),
   /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their Ids */
@@ -32,6 +32,9 @@ export const cache = {
       this.guilds.reduce((a, b) => [...a, ...b.emojis.map((e) => [e.id, e])], [] as any[])
     );
   },
+  activeGuildIds: new Set<bigint>(),
+  dispatchedGuildIds: new Set<bigint>(),
+  dispatchedChannelIds: new Set<bigint>(),
 };
 
 function messageSweeper(message: DiscordenoMessage) {
@@ -52,6 +55,26 @@ function memberSweeper(member: DiscordenoMember) {
   if (member.cachedAt - Date.now() < 1800000) return false;
 
   return true;
+}
+
+export function guildSweeper(guild: DiscordenoGuild) {
+  if (cache.activeGuildIds.has(guild.id)) return false;
+
+  // This is inactive guild. Not a single thing has happened for atleast 30 minutes.
+  // Not a reaction, not a message, not any event!
+  cache.guilds.delete(guild.id);
+  cache.dispatchedGuildIds.add(guild.id);
+
+  // Remove all channel if they were dispatched
+  cache.channels.forEach((channel) => {
+    if (!cache.dispatchedGuildIds.has(channel.guildId)) return;
+
+    cache.channels.delete(channel.id);
+    cache.dispatchedChannelIds.add(channel.id);
+  });
+
+  // Reset activity for next interval
+  cache.activeGuildIds.clear();
 }
 
 export let cacheHandlers = {
