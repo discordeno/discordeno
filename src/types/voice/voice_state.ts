@@ -9,7 +9,7 @@ export interface VoiceState {
   /** The user id this voice state is for */
   userId: string;
   /** The guild member this voice state is for */
-  member?: GuildMemberWithUser;
+  member?: GuildMemberWithUser | null;
   /** The session id for this voice state */
   sessionId: string;
   /** Whether this user is deafened by the server */
