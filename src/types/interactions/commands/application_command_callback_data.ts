@@ -15,5 +15,5 @@ export interface InteractionApplicationCommandCallbackData {
   /** Set to `64` to make your response ephemeral */
   flags?: number;
   /** The components you would like to have sent in this message */
-  components?: MessageComponents;
+  components?: MessageComponents[];
 }
