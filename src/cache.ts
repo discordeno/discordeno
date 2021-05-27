@@ -14,7 +14,7 @@ export const cache = {
   /** All of the channel objects the bot has access to, mapped by their Ids */
   channels: new Collection<bigint, DiscordenoChannel>(),
   /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their Ids */
-  messages: new Collection<bigint, DiscordenoMessage>(),
+  messages: new Collection<bigint, DiscordenoMessage>([], { sweeper: { filter: messageSweeper, interval: 300000 } }),
   /** All of the member objects that have been cached since the bot acquired `READY` state, mapped by their Ids */
   members: new Collection<bigint, DiscordenoMember>(),
   /** All of the unavailable guilds, mapped by their Ids (id, timestamp) */
@@ -32,6 +32,16 @@ export const cache = {
     );
   },
 };
+
+function messageSweeper(message: DiscordenoMessage) {
+  // DM messages aren't needed
+  if (!message.guildId) return true;
+
+  // Only delete messages older than 10 minutes
+  if (Date.now() - message.timestamp > 600000) return true;
+
+  return false;
+}
 
 export let cacheHandlers = {
   /** Deletes all items from the cache */
