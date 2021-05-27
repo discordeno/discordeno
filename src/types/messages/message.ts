@@ -90,5 +90,5 @@ export interface Message {
   /** The thread that was started from this message, includes thread member object */
   thread?: Omit<Channel, "member"> & { member: ThreadMember };
   /** The components related to this message */
-  components: MessageComponents[];
+  components?: MessageComponents[];
 }
