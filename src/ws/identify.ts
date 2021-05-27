@@ -51,14 +51,17 @@ export function identify(shardId: number, maxShards: number) {
   };
 
   return new Promise((resolve, reject) => {
-    ws.loadingShards.set(shardId, {
-      shardId,
-      resolve,
-      startedAt: Date.now(),
-    });
-
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       reject(`[Identify Failure] Shard ${shardId} has not received READY event in over a minute.`);
     }, 600000);
+
+    ws.loadingShards.set(shardId, {
+      shardId,
+      resolve: (args) => {
+        clearTimeout(timeout);
+        resolve(args);
+      },
+      startedAt: Date.now(),
+    });
   });
 }
