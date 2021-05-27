@@ -30,10 +30,18 @@ export let structures: {
     data: Channel,
     guildId?: bigint | undefined
   ) => Promise<DiscordenoChannel | DDChannel> | DiscordenoChannel | DDChannel;
-  createDiscordenoGuild: (data: Guild, shardId: number) => Promise<DiscordenoGuild | DDGuild> | DiscordenoGuild | DDGuild;
-  createDiscordenoMember: (data: GuildMemberWithUser, guildId: bigint) => Promise<DiscordenoMember | DDMember> | DiscordenoMember | DDMember;
+  createDiscordenoGuild: (
+    data: Guild,
+    shardId: number
+  ) => Promise<DiscordenoGuild | DDGuild> | DiscordenoGuild | DDGuild;
+  createDiscordenoMember: (
+    data: GuildMemberWithUser,
+    guildId: bigint
+  ) => Promise<DiscordenoMember | DDMember> | DiscordenoMember | DDMember;
   createDiscordenoMessage: (data: Message) => Promise<DiscordenoMessage | DDMessage> | DiscordenoMessage | DDMessage;
-  createDiscordenoRole: (data: { role: Role } & { guildId: bigint }) => Promise<DiscordenoRole | DDRole> | DiscordenoRole | DDRole;
+  createDiscordenoRole: (
+    data: { role: Role } & { guildId: bigint }
+  ) => Promise<DiscordenoRole | DDRole> | DiscordenoRole | DDRole;
   createDiscordenoVoiceState: (
     guildId: bigint,
     data: VoiceState

@@ -56,8 +56,8 @@ export class GuildBitField extends BitField {
     this.set(guildToggles.animatedIcon, value);
   }
 
-   /** Whether this server's banner is animated */
-   get animatedBanner() {
+  /** Whether this server's banner is animated */
+  get animatedBanner() {
     return this.has(guildToggles.animatedBanner);
   }
 
@@ -66,8 +66,8 @@ export class GuildBitField extends BitField {
     this.set(guildToggles.animatedBanner, value);
   }
 
-   /** Whether this server's splash is animated */
-   get animatedSplash() {
+  /** Whether this server's splash is animated */
+  get animatedSplash() {
     return this.has(guildToggles.animatedSplash);
   }
 

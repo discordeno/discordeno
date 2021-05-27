@@ -315,13 +315,13 @@ export class DDMessage extends Base {
     const mentionChannels: ChannelMention[] = [];
     for (const channel of this.mentionedChannels.values()) {
       if (!channel.guildId) continue;
-      
+
       mentionChannels.push({
         id: channel.id.toString(),
         guildId: channel.guildId.toString(),
         type: channel.type,
         name: channel.name!,
-      })
+      });
     }
 
     return {
