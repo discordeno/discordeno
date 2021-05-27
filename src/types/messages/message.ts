@@ -1,10 +1,10 @@
+import { Application } from "../applications/application.ts";
 import { Channel } from "../channels/channel.ts";
 import { ChannelMention } from "../channels/channel_mention.ts";
 import { ThreadMember } from "../channels/threads/thread_member.ts";
 import { Embed } from "../embeds/embed.ts";
 import { MessageInteraction } from "../interactions/message_interaction.ts";
 import { GuildMember } from "../members/guild_member.ts";
-import { Application } from "../applications/application.ts";
 import { User } from "../users/user.ts";
 import { Attachment } from "./attachment.ts";
 import { MessageComponents } from "./components/message_components.ts";
@@ -90,5 +90,5 @@ export interface Message {
   /** The thread that was started from this message, includes thread member object */
   thread?: Omit<Channel, "member"> & { member: ThreadMember };
   /** The components related to this message */
-  components: MessageComponents;
+  components: MessageComponents[];
 }
