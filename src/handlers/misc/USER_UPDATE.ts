@@ -15,7 +15,7 @@ export async function handleUserUpdate(data: DiscordGatewayPayload) {
   // Update username
   member.username = userData.username;
   // Update discriminator
-  member.discriminator = BigInt(userData.discriminator);
+  member.discriminator = Number(userData.discriminator);
 
   // Check if a avatar is available
   const hash = userData.avatar ? iconHashToBigInt(userData.avatar) : undefined;

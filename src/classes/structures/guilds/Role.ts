@@ -144,7 +144,7 @@ export class DDRole extends Base {
     // If still none error out.
     if (!position) {
       throw new Error(
-        "role.higherThanRoleId() did not have a position provided and the role or guild was not found in cache. Please provide a position like role.higherThanRoleId(roleId, position)",
+        "role.higherThanRoleId() did not have a position provided and the role or guild was not found in cache. Please provide a position like role.higherThanRoleId(roleId, position)"
       );
     }
 
@@ -163,10 +163,26 @@ export class DDRole extends Base {
     if (guild.ownerId === memberId) return false;
 
     const memberHighestRole = await highestRole(guild, memberId);
-    return this.higherThanRole!(
-      memberHighestRole.id,
-      memberHighestRole.position,
-    );
+    return this.higherThanRole!(memberHighestRole.id, memberHighestRole.position);
+  }
+
+  toJSON() {
+    return {
+      guildId: this.guildId?.toString(),
+      id: this.id?.toString(),
+      name: this.name,
+      color: this.color,
+      hoist: this.hoist,
+      position: this.position,
+      permissions: this.permissions?.toString(),
+      managed: this.managed,
+      mentionable: this.mentionable,
+      tags: {
+        botId: this.botId?.toString(),
+        integrationId: this.integrationId?.toString(),
+        premiumSubscriber: this.isNitroBoostRole ? null : undefined,
+      },
+    } as Role & { guildId: string };
   }
 }
 

@@ -22,7 +22,7 @@ export class DDMember extends Base {
   /** The user's 4-digit discord-tag */
   discriminator!: number;
   /** The users avatar hash */
-  avatar?: bigint;
+  avatar: bigint;
   /** The guild related data mapped by guild id */
   guilds: Collection<
     bigint,
@@ -49,6 +49,7 @@ export class DDMember extends Base {
 
     this.bitfield = new MemberBitField(0n);
     this.guilds = new Collection();
+    this.avatar = 0n;
 
     this.update(payload, guildId);
   }
@@ -63,7 +64,7 @@ export class DDMember extends Base {
     this.publicFlags = payload.user.publicFlags;
 
     const transformed = payload.user.avatar ? iconHashToBigInt(payload.user.avatar) : undefined;
-    this.avatar = transformed?.bigint;
+    this.avatar = transformed?.bigint || 0n;
 
     this.bitfield.animatedAvatar = transformed?.animated || false;
     this.bitfield.bot = payload.user.bot || false;

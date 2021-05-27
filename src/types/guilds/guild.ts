@@ -74,7 +74,7 @@ export interface Guild {
   /** True if this guild is unavailable due to an outage */
   unavailable?: boolean;
   /** Total number of members in this guild */
-  memberCount?: number;
+  memberCount: number;
   /** States of members currently in voice channels; lacks the guild_id key */
   voiceStates?: Omit<VoiceState, "guildId">[];
   /** Users in the guild */

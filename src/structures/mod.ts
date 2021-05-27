@@ -17,21 +17,27 @@ import type { GuildMemberWithUser } from "../types/members/guild_member.ts";
 import type { Message } from "../types/messages/message.ts";
 import type { Role } from "../types/permissions/role.ts";
 import type { VoiceState } from "../types/voice/voice_state.ts";
+import type DDChannel from "../classes/structures/Channel.ts";
+import type DDVoiceState from "../classes/structures/guilds/VoiceState.ts";
+import type DDRole from "../classes/structures/guilds/Role.ts";
+import type DDMember from "../classes/structures/guilds/Member.ts";
+import type DDMessage from "../classes/structures/Message.ts";
+import type DDGuild from "../classes/structures/guilds/Guild.ts";
 
 /** This is the placeholder where the structure creation functions are kept. */
 export let structures: {
   createDiscordenoChannel: (
     data: Channel,
     guildId?: bigint | undefined
-  ) => Promise<DiscordenoChannel> | DiscordenoChannel;
-  createDiscordenoGuild: (data: Guild, shardId: number) => Promise<DiscordenoGuild> | DiscordenoGuild;
-  createDiscordenoMember: (data: GuildMemberWithUser, guildId: bigint) => Promise<DiscordenoMember> | DiscordenoMember;
-  createDiscordenoMessage: (data: Message) => Promise<DiscordenoMessage> | DiscordenoMessage;
-  createDiscordenoRole: (data: { role: Role } & { guildId: bigint }) => Promise<DiscordenoRole> | DiscordenoRole;
+  ) => Promise<DiscordenoChannel | DDChannel> | DiscordenoChannel | DDChannel;
+  createDiscordenoGuild: (data: Guild, shardId: number) => Promise<DiscordenoGuild | DDGuild> | DiscordenoGuild | DDGuild;
+  createDiscordenoMember: (data: GuildMemberWithUser, guildId: bigint) => Promise<DiscordenoMember | DDMember> | DiscordenoMember | DDMember;
+  createDiscordenoMessage: (data: Message) => Promise<DiscordenoMessage | DDMessage> | DiscordenoMessage | DDMessage;
+  createDiscordenoRole: (data: { role: Role } & { guildId: bigint }) => Promise<DiscordenoRole | DDRole> | DiscordenoRole | DDRole;
   createDiscordenoVoiceState: (
     guildId: bigint,
     data: VoiceState
-  ) => Promise<DiscordenoVoiceState> | DiscordenoVoiceState;
+  ) => Promise<DiscordenoVoiceState | DDVoiceState> | DiscordenoVoiceState | DDVoiceState;
 } = {
   createDiscordenoChannel,
   createDiscordenoGuild,

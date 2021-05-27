@@ -20,7 +20,7 @@ import { iconBigintToHash, iconHashToBigInt } from "../util/hash.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 
-const MEMBER_SNOWFLAKES = ["id", "discriminator"];
+const MEMBER_SNOWFLAKES = ["id"];
 
 export const memberToggles = {
   /** Whether the user belongs to an OAuth2 application */
@@ -190,7 +190,7 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id" | "a
   /** The user's id */
   id: bigint;
   /** The user's 4-digit discord-tag */
-  discriminator: bigint;
+  discriminator: number;
   /** The avatar in bigint format. */
   avatar: bigint;
   /** The guild related data mapped by guild id */

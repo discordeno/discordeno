@@ -15,9 +15,13 @@ import {
   MessageComponents,
   EditMessage,
   CreateMessage,
+  GuildMember,
+  User,
+  ChannelMention,
 } from "../../types/mod.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "../../util/bigint.ts";
 import { CHANNEL_MENTION_REGEX } from "../../util/constants.ts";
+import { iconBigintToHash } from "../../util/hash.ts";
 import Client from "../Client.ts";
 import Base from "./Base.ts";
 import MessageBitField from "./BitFields/Message.ts";
@@ -197,12 +201,12 @@ export class DDMessage extends Base {
 
   /** The channel objects for all the channels that were mentioned in this message. */
   get mentionedChannels() {
-    return this.mentionedChannelIds?.map((id) => this.client.channels.get(id)) || [];
+    return this.mentionedChannelIds.map((id) => this.client.channels.get(id)!).filter((c) => c) || [];
   }
 
   /** The member objects for all the members that were mentioned in this message. */
   get mentionedMembers() {
-    return this.mentionedUserIds?.map((id) => this.guild?.members.get(id)) || [];
+    return this.guild ? this.mentionedUserIds.map((id) => this.guild!.members.get(id)!).filter((m) => m) : [];
   }
 
   /** Delete the message */
@@ -297,6 +301,75 @@ export class DDMessage extends Base {
   /** Removes a reaction from the given user on this message, defaults to bot */
   async removeReaction(reaction: string, userId?: bigint) {
     return await this.client.removeReaction(this.channelId, this.id, reaction, { userId });
+  }
+
+  toJSON() {
+    const mentions: (User & { member?: Partial<GuildMember> })[] = [];
+    for (const member of this.mentionedMembers.values()) {
+      for (const m of member.toJSON()) {
+        const { user, ...rest } = m;
+        mentions.push({ ...rest, ...user });
+      }
+    }
+
+    const mentionChannels: ChannelMention[] = [];
+    for (const channel of this.mentionedChannels.values()) {
+      if (!channel.guildId) continue;
+      
+      mentionChannels.push({
+        id: channel.id.toString(),
+        guildId: channel.guildId.toString(),
+        type: channel.type,
+        name: channel.name!,
+      })
+    }
+
+    return {
+      id: this.id?.toString(),
+      channelId: this.channelId?.toString(),
+      guildId: this.guildId?.toString(),
+      author: {
+        id: this.authorId?.toString(),
+        username: this.tag?.substring(0, this.tag.length - 5),
+        discriminator: this.tag?.substring(this.tag.length - 4),
+        avatar: this.member?.avatar ? iconBigintToHash(this.member.avatar) : undefined,
+        bot: this.member?.bot,
+        system: this.member?.system,
+        mfaEnabled: this.member?.mfaEnabled,
+        locale: this.member?.locale,
+        verified: this.member?.verified,
+        email: this.member?.email,
+        flags: this.member?.flags,
+        premiumType: this.member?.premiumType,
+        publicFlags: this.member?.publicFlags,
+      },
+      member: this.member,
+      content: this.content,
+      timestamp: this.timestamp ? new Date(this.timestamp).toISOString() : undefined,
+      editedTimestamp: this.editedTimestamp ? new Date(this.editedTimestamp).toISOString() : undefined,
+      tts: this.tts,
+      mentionEveryone: this.mentionEveryone,
+      mentions,
+      mentionRoles: this.mentionedRoleIds.map((id) => id.toString()),
+      mentionChannels,
+      attachments: this.attachments,
+      embeds: this.embeds,
+      reactions: this.reactions,
+      nonce: this.nonce,
+      pinned: this.pinned,
+      webhookId: this.webhookId,
+      type: this.type,
+      activity: this.activity,
+      application: this.application,
+      applicationId: this.applicationId,
+      messageReference: this.messageReference,
+      flags: this.flags,
+      stickers: this.stickers,
+      referencedMessage: this.referencedMessage,
+      interaction: this.interaction,
+      thread: this.thread,
+      components: this.components,
+    } as Message;
   }
 }
 

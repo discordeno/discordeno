@@ -98,7 +98,7 @@ export class Client extends EventEmitter {
     structures.createDiscordenoGuild = (data, shardId) => new DDGuild(this, data, shardId);
     structures.createDiscordenoMember = (data, guildId) => new DDMember(this, data, guildId);
     structures.createDiscordenoMessage = (data) => new DDMessage(this, data);
-    structures.createDiscordenoRole = (data, guildId) => new DDRole(this, data, guildId);
+    structures.createDiscordenoRole = (data) => new DDRole(this, data.role, data.guildId);
     structures.createDiscordenoVoiceState = (guildId, data) => new DDVoiceState(this, guildId, data);
   }
   // GETTERS
@@ -422,7 +422,7 @@ export class Client extends EventEmitter {
   }
 
   /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
-  getAuditLogs(guildId: bigint, options: GetGuildAuditLog) {
+  getAuditLogs(guildId: bigint, options: Partial<GetGuildAuditLog>) {
     return helpers.getAuditLogs(guildId, options);
   }
 
@@ -508,7 +508,7 @@ export class Client extends EventEmitter {
   guildIconURL(
     id: bigint,
     options: {
-      banner?: string | bigint;
+      icon?: string | bigint;
       size?: DiscordImageSize;
       format?: DiscordImageFormat;
       animated?: boolean;
@@ -521,7 +521,7 @@ export class Client extends EventEmitter {
   guildSplashURL(
     id: bigint,
     options: {
-      banner?: string | bigint;
+      splash?: string | bigint;
       size?: DiscordImageSize;
       format?: DiscordImageFormat;
       animated?: boolean;

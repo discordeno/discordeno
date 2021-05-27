@@ -139,6 +139,26 @@ export class DDVoiceState {
   get isMuted() {
     return this.mute || this.selfMute;
   }
+
+  toJSON() {
+    return {
+      guildId: this.guildId.toString(),
+      channelId: this.channelId?.toString(),
+      userId: this.memberId?.toString(),
+      member: this.member,
+      sessionId: this.sessionId,
+      deaf: this.deaf,
+      mute: this.mute,
+      selfDeaf: this.selfDeaf,
+      selfMute: this.selfMute,
+      selfStream: this.selfStream,
+      selfVideo: this.selfVideo,
+      suppress: this.suppress,
+      requestToSpeakTimestamp: this.requestToSpeakTimestamp
+        ? new Date(this.requestToSpeakTimestamp).toISOString()
+        : null,
+    } as VoiceState & { guildId: string };
+  }
 }
 
 export default DDVoiceState;
