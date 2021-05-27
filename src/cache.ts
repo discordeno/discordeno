@@ -1,4 +1,5 @@
 // deno-lint-ignore-file require-await no-explicit-any prefer-const
+import { botId } from "./bot.ts";
 import type { DiscordenoChannel } from "./structures/channel.ts";
 import type { DiscordenoGuild } from "./structures/guild.ts";
 import type { DiscordenoMember } from "./structures/member.ts";
@@ -16,7 +17,7 @@ export const cache = {
   /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their Ids */
   messages: new Collection<bigint, DiscordenoMessage>([], { sweeper: { filter: messageSweeper, interval: 300000 } }),
   /** All of the member objects that have been cached since the bot acquired `READY` state, mapped by their Ids */
-  members: new Collection<bigint, DiscordenoMember>(),
+  members: new Collection<bigint, DiscordenoMember>([], { sweeper: { filter: memberSweeper, interval: 1800000 } }),
   /** All of the unavailable guilds, mapped by their Ids (id, timestamp) */
   unavailableGuilds: new Collection<bigint, number>(),
   /** All of the presence update objects received in PRESENCE_UPDATE gateway event, mapped by their user Id */
@@ -41,6 +42,12 @@ function messageSweeper(message: DiscordenoMessage) {
   if (Date.now() - message.timestamp > 600000) return true;
 
   return false;
+}
+
+function memberSweeper(member: DiscordenoMember) {
+  if (member.id === botId) return false;
+
+  return true;
 }
 
 export let cacheHandlers = {
