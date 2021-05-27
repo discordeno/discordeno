@@ -196,7 +196,7 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id" | "a
   /** The user's id */
   id: bigint;
   /** The user's 4-digit discord-tag */
-  discriminator: bigint;
+  discriminator: number;
   /** The avatar in bigint format. */
   avatar: bigint;
   /** The guild related data mapped by guild id */
