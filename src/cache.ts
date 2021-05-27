@@ -17,7 +17,7 @@ export const cache = {
   /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their Ids */
   messages: new Collection<bigint, DiscordenoMessage>([], { sweeper: { filter: messageSweeper, interval: 300000 } }),
   /** All of the member objects that have been cached since the bot acquired `READY` state, mapped by their Ids */
-  members: new Collection<bigint, DiscordenoMember>([], { sweeper: { filter: memberSweeper, interval: 1800000 } }),
+  members: new Collection<bigint, DiscordenoMember>([], { sweeper: { filter: memberSweeper, interval: 300000 } }),
   /** All of the unavailable guilds, mapped by their Ids (id, timestamp) */
   unavailableGuilds: new Collection<bigint, number>(),
   /** All of the presence update objects received in PRESENCE_UPDATE gateway event, mapped by their user Id */
@@ -45,7 +45,11 @@ function messageSweeper(message: DiscordenoMessage) {
 }
 
 function memberSweeper(member: DiscordenoMember) {
+  // Don't sweep the bot else strange things will happen
   if (member.id === botId) return false;
+
+  // Only sweep members who were not active the last 30 minutes
+  if (member.cachedAt - Date.now() < 1800000) return false;
 
   return true;
 }
