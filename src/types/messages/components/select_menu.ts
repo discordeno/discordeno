@@ -1,6 +1,7 @@
 import { SelectOption } from "./select_option.ts";
 
 export interface SelectMenuComponent {
+    type: 3;
     /** A custom identifier for this component. Maximum 100 characters. */
     customId: string;
     /** A custom placeholder text if nothing is selected. Maximum 100 characters. */
