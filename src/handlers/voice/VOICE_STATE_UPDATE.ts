@@ -44,5 +44,5 @@ export async function handleVoiceStateUpdate(data: DiscordGatewayPayload) {
     }
   }
 
-  eventHandlers.voiceStateUpdate?.(payload, member);
+  eventHandlers.voiceStateUpdate?.(member, payload);
 }
