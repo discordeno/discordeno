@@ -1,7 +1,7 @@
-import { GuildMemberWithUser } from "../guilds/guild_member.ts";
 import { Message } from "../messages/message.ts";
 import { User } from "../users/user.ts";
-import { ApplicationCommandInteractionData } from "./application_command_interaction_data.ts";
+import { ApplicationCommandInteractionData } from "./commands/application_command_interaction_data.ts";
+import { InteractionGuildMember } from "./interaction_guild_member.ts";
 import { DiscordInteractionTypes } from "./interaction_types.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction */
@@ -19,7 +19,7 @@ export interface Interaction {
   /** The channel it was sent from */
   channelId?: string;
   /** Guild member data for the invoking user, including permissions */
-  member?: GuildMemberWithUser;
+  member?: InteractionGuildMember;
   /** User object for the invoking user, if invoked in a DM */
   user?: User;
   /** A continuation token for responding to the interaction */

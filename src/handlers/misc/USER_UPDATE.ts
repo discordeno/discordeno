@@ -1,24 +1,35 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { User } from "../../types/users/user.ts";
+import { memberToggles } from "../../structures/member.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { User } from "../../types/users/user.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
+import { iconHashToBigInt } from "../../util/hash.ts";
 
 export async function handleUserUpdate(data: DiscordGatewayPayload) {
   const userData = data.d as User;
 
-  const member = await cacheHandlers.get("members", userData.id);
+  const member = await cacheHandlers.get("members", snowflakeToBigint(userData.id));
   if (!member) return;
 
-  Object.entries(userData).forEach(([key, value]) => {
-    eventHandlers.debug?.(
-      "loop",
-      `Running forEach loop in USER_UPDATE file.`,
-    );
-    // @ts-ignore index signatures
-    if (member[key] !== value) return member[key] = value;
-  });
+  // Update username
+  member.username = userData.username;
+  // Update discriminator
+  member.discriminator = Number(userData.discriminator);
 
-  await cacheHandlers.set("members", userData.id, member);
+  // Check if a avatar is available
+  const hash = userData.avatar ? iconHashToBigInt(userData.avatar) : undefined;
+  // Update the avatar
+  member.avatar = hash?.bigint || 0n;
+  // Update the animated status if its animated
+  if (hash?.animated) member.bitfield |= memberToggles.animatedAvatar;
+  else member.bitfield &= ~memberToggles.animatedAvatar;
+
+  member.flags = userData.flags;
+  member.premiumType = userData.premiumType;
+  member.publicFlags = userData.publicFlags;
+
+  await cacheHandlers.set("members", snowflakeToBigint(userData.id), member);
 
   eventHandlers.botUpdate?.(userData);
 }

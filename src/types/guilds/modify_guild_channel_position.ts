@@ -1,4 +1,3 @@
-// TODO: most likely it is but check if lockPositions and parentId really are optional
 /** https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions */
 export interface ModifyGuildChannelPositions {
   /** Channel id */

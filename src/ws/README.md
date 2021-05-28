@@ -5,6 +5,7 @@ This WS service is meant for ADVANCED DEVELOPERS ONLY!
 ## Benefits
 
 - **Zero Downtime Updates**:
+
   - Your bot can be updated in a matter of seconds. With normal sharding, you
     have to restart which also has to process identifying all your shards with a
     1/~5s rate limit. With WS handling moved to a proxy process, this allows you
@@ -13,9 +14,10 @@ This WS service is meant for ADVANCED DEVELOPERS ONLY!
     to restart your bot if you made a small change and restarted.
 
 - **Zero Downtime Resharding**:
+
   - Discord stops letting your bot get added to new servers at certain points in
     time. For example, suppose you had 150,000 servers running 150 shards. The
-    maximum amount of servers your shards could hold is 150 * 2500 = 375,000. If
+    maximum amount of servers your shards could hold is 150 \* 2500 = 375,000. If
     your bot reaches this, it can no longer join new servers until it re-shards.
   - DD proxy provides 2 types of re-sharding. Automated and manual. You can also
     have both.
@@ -28,12 +30,14 @@ This WS service is meant for ADVANCED DEVELOPERS ONLY!
     - `Manual`: You can also trigger this manually should you choose.
 
 - **Horizontal Scaling**:
+
   - The proxy system allows you to scale the bot horizontally. When you reach a
     huge size, you can either keep spending more money to keep beefing up your
     server or you can buy several cheaper servers and scale horizontally. The
     proxy means you can have WS handling on a completely separate system.
 
 - **No Loss Restarts**:
+
   - When you restart a bot without the proxy system, normally you would lose
     many events. Users may be using commands or messages are sent that will not
     be filtered. As your bot's grow this number rises dramatically. Users may
@@ -44,6 +48,7 @@ This WS service is meant for ADVANCED DEVELOPERS ONLY!
     processing all events.
 
 - **Controllers**:
+
   - The controller aspect gives you full control over everything inside the
     proxy. You can provide a function to simply override the handler. For
     example, if you would like a certain function to do something different,
@@ -169,8 +174,6 @@ export const ws = {
   log,
   /** Handles resharding the bot when necessary. */
   resharder,
-  /** Cleanups loading shards that were unable to load. */
-  cleanupLoadingShards,
 };
 
 export interface DiscordenoShard {

@@ -8,19 +8,55 @@ import { editChannel } from "../helpers/channels/edit_channel.ts";
 import { editChannelOverwrite } from "../helpers/channels/edit_channel_overwrite.ts";
 import { sendMessage } from "../helpers/messages/send_message.ts";
 import { disconnectMember } from "../helpers/mod.ts";
-import { Channel } from "../types/channels/channel.ts";
-import { ModifyChannel } from "../types/channels/modify_channel.ts";
-import { DiscordOverwrite, Overwrite } from "../types/channels/overwrite.ts";
-import { CreateMessage } from "../types/messages/create_message.ts";
-import { PermissionStrings } from "../types/permissions/permission_strings.ts";
-import { VoiceState } from "../types/voice/voice_state.ts";
+import type { Channel } from "../types/channels/channel.ts";
+import type { ModifyChannel } from "../types/channels/modify_channel.ts";
+import type { DiscordOverwrite, Overwrite } from "../types/channels/overwrite.ts";
+import type { CreateMessage } from "../types/messages/create_message.ts";
+import type { PermissionStrings } from "../types/permissions/permission_strings.ts";
+import { snowflakeToBigint } from "../util/bigint.ts";
 import { Collection } from "../util/collection.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 import { DiscordenoMember } from "./member.ts";
 import { DiscordenoMessage } from "./message.ts";
+import { DiscordenoVoiceState } from "./voice_state.ts";
+
+const CHANNEL_SNOWFLAKES = ["id", "guildId", "lastMessageId", "ownerId", "applicationId", "parentId"];
 
 const baseChannel: Partial<DiscordenoChannel> = {
+  toJSON() {
+    return {
+      id: this.id?.toString(),
+      type: this.type,
+      guildId: this.guildId?.toString(),
+      position: this.position,
+      permissionOverwrites: this.permissionOverwrites?.map((o) => ({
+        ...o,
+        id: o.id.toString(),
+        allow: o.allow.toString(),
+        deny: o.deny.toString(),
+      })),
+      name: this.name,
+      topic: this.topic,
+      nsfw: this.nsfw,
+      lastMessageId: this.lastMessageId?.toString(),
+      bitrate: this.bitrate,
+      userLimit: this.userLimit,
+      rateLimitPerUser: this.rateLimitPerUser,
+      recipients: this.recipients,
+      icon: this.icon,
+      ownerId: this.ownerId,
+      applicationId: this.applicationId,
+      parentId: this.parentId,
+      lastPinTimestamp: this.lastPinTimestamp ? new Date(this.lastPinTimestamp).toISOString() : undefined,
+      rtcRegion: this.rtcRegion,
+      videoQualityMode: this.videoQualityMode,
+      messageCount: this.messageCount,
+      memberCount: this.memberCount,
+      threadMetadata: this.threadMetadata,
+      member: this.member,
+    } as Channel;
+  },
   get guild() {
     return cache.guilds.get(this.guildId!);
   },
@@ -31,17 +67,13 @@ const baseChannel: Partial<DiscordenoChannel> = {
     return `<#${this.id!}>`;
   },
   get voiceStates() {
-    return this.guild?.voiceStates.filter(
-      (voiceState) => voiceState.channelId === this.id,
-    );
+    return this.guild?.voiceStates.filter((voiceState) => voiceState.channelId === this.id!);
   },
   get connectedMembers() {
     const voiceStates = this.voiceStates;
     if (!voiceStates) return undefined;
 
-    return new Collection(
-      voiceStates.map((vs) => [vs.userId, cache.members.get(vs.userId)]),
-    );
+    return new Collection(voiceStates.map((vs) => [vs.userId, cache.members.get(vs.userId)]));
   },
   send(content) {
     return sendMessage(this.id!, content);
@@ -49,8 +81,8 @@ const baseChannel: Partial<DiscordenoChannel> = {
   disconnect(memberId) {
     return disconnectMember(this.guildId!, memberId);
   },
-  delete() {
-    return deleteChannel(this.guildId!, this.id!);
+  delete(reason) {
+    return deleteChannel(this.id!, reason);
   },
   editOverwrite(id, options) {
     return editChannelOverwrite(this.guildId!, this.id!, id, options);
@@ -59,12 +91,7 @@ const baseChannel: Partial<DiscordenoChannel> = {
     return deleteChannelOverwrite(this.guildId!, this.id!, id);
   },
   hasPermission(overwrites, permissions) {
-    return channelOverwriteHasPermission(
-      this.guildId!,
-      this.id!,
-      overwrites,
-      permissions,
-    );
+    return channelOverwriteHasPermission(this.guildId!, this.id!, overwrites, permissions);
   },
   edit(options, reason) {
     return editChannel(this.id!, options, reason);
@@ -76,31 +103,31 @@ const baseChannel: Partial<DiscordenoChannel> = {
 
 /** Create a structure object  */
 // deno-lint-ignore require-await
-export async function createDiscordenoChannel(
-  data: Channel,
-  guildId?: string,
-) {
-  const {
-    guildId: rawGuildId = "",
-    lastPinTimestamp,
-    ...rest
-  } = data;
+export async function createDiscordenoChannel(data: Channel, guildId?: bigint) {
+  const { lastPinTimestamp, permissionOverwrites = [], ...rest } = data;
 
   const props: Record<string, PropertyDescriptor> = {};
-  Object.keys(rest).forEach((key) => {
-    eventHandlers.debug?.(
-      "loop",
-      `Running forEach loop in createDiscordenoChannel function.`,
+  Object.entries(rest).forEach(([key, value]) => {
+    eventHandlers.debug?.("loop", `Running forEach loop in createDiscordenoChannel function.`);
+
+    props[key] = createNewProp(
+      CHANNEL_SNOWFLAKES.includes(key) ? (value ? snowflakeToBigint(value) : undefined) : value
     );
-    // @ts-ignore index signature
-    props[key] = createNewProp(rest[key]);
   });
+
+  // Set the guildId seperately because sometimes guildId is not included
+  props.guildId = createNewProp(snowflakeToBigint(guildId?.toString() || data.guildId || ""));
 
   const channel: DiscordenoChannel = Object.create(baseChannel, {
     ...props,
-    guildId: createNewProp(guildId || rawGuildId),
-    lastPinTimestamp: createNewProp(
-      lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined,
+    lastPinTimestamp: createNewProp(lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined),
+    permissionOverwrites: createNewProp(
+      permissionOverwrites.map((o) => ({
+        ...o,
+        id: snowflakeToBigint(o.id),
+        allow: snowflakeToBigint(o.allow),
+        deny: snowflakeToBigint(o.deny),
+      }))
     ),
   });
 
@@ -108,9 +135,27 @@ export async function createDiscordenoChannel(
 }
 
 export interface DiscordenoChannel
-  extends Omit<Channel, "permissionOverwrites"> {
-  permissionOverwrites: DiscordOverwrite[];
-  guildId: string;
+  extends Omit<
+    Channel,
+    "id" | "guildId" | "lastMessageId" | "ownerId" | "applicationId" | "parentId" | "permissionOverwrites"
+  > {
+  permissionOverwrites: (Omit<DiscordOverwrite, "id" | "allow" | "deny"> & {
+    id: bigint;
+    allow: bigint;
+    deny: bigint;
+  })[];
+  /** The id of the channel */
+  id: bigint;
+  /** The id of the guild, 0n if it is a DM */
+  guildId: bigint;
+  /** The id of the last message sent in this channel (may not point to an existing or valid message) */
+  lastMessageId?: bigint;
+  /** id of the DM creator */
+  ownerId?: bigint;
+  /** Application id of the group DM creator if it is bot-created */
+  applicationId?: bigint;
+  /** Id of the parent category for a channel (each parent category can contain up to 50 channels) */
+  parentId?: bigint;
   // GETTERS
 
   /**
@@ -124,7 +169,7 @@ export interface DiscordenoChannel
    *
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
-  messages: Collection<string, DiscordenoMessage>;
+  messages: Collection<bigint, DiscordenoMessage>;
   /** The mention of the channel */
   mention: string;
   /**
@@ -132,38 +177,39 @@ export interface DiscordenoChannel
    *
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
-  voiceStates?: Collection<string, VoiceState>;
+  voiceStates?: Collection<bigint, DiscordenoVoiceState>;
   /**
    * Gets the connected members for this channel undefined if member is not cached
    *
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
-  connectedMembers?: Collection<string, DiscordenoMember | undefined>;
+  connectedMembers?: Collection<bigint, DiscordenoMember | undefined>;
 
   // METHODS
 
   /** Send a message to the channel. Requires SEND_MESSAGES permission. */
   send(content: string | CreateMessage): ReturnType<typeof sendMessage>;
   /** Disconnect a member from a voice channel. Requires MOVE_MEMBERS permission. */
-  disconnect(memberID: string): ReturnType<typeof disconnectMember>;
+  disconnect(memberId: bigint): ReturnType<typeof disconnectMember>;
   /** Delete the channel */
-  delete(): ReturnType<typeof deleteChannel>;
+  delete(reason?: string): ReturnType<typeof deleteChannel>;
   /** Edit a channel Overwrite */
-  editOverwrite(
-    overwriteID: string,
-    options: Omit<Overwrite, "id">,
-  ): ReturnType<typeof editChannelOverwrite>;
+  editOverwrite(overwriteId: bigint, options: Omit<Overwrite, "id">): ReturnType<typeof editChannelOverwrite>;
   /** Delete a channel Overwrite */
-  deleteOverwrite(
-    overwriteID: string,
-  ): ReturnType<typeof deleteChannelOverwrite>;
+  deleteOverwrite(overwriteId: bigint): ReturnType<typeof deleteChannelOverwrite>;
   /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
   hasPermission(
-    overwrites: DiscordOverwrite[],
-    permissions: PermissionStrings[],
+    overwrites: (Omit<DiscordOverwrite, "id" | "allow" | "deny"> & {
+      id: bigint;
+      allow: bigint;
+      deny: bigint;
+    })[],
+    permissions: PermissionStrings[]
   ): ReturnType<typeof channelOverwriteHasPermission>;
   /** Edit the channel */
   edit(options: ModifyChannel, reason?: string): ReturnType<typeof editChannel>;
   /** Create a new channel with the same properties */
   clone(reason?: string): ReturnType<typeof cloneChannel>;
+  /** Returns the Channel object json value */
+  toJSON(): Channel;
 }

@@ -7,10 +7,7 @@ Deno.test({
   async fn() {
     const categories = await getDiscoveryCategories();
 
-    assertEquals(
-      categories.size > 0,
-      true,
-    );
+    assertEquals(categories.size > 0, true);
   },
   ...defaultTestOptions,
 });

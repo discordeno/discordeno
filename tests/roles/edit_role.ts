@@ -15,10 +15,7 @@ Deno.test({
     assertExists(role);
 
     // Delay the execution by 5 seconds to allow GUILD_ROLE_CREATE event to be processed
-    await delayUntil(
-      10000,
-      () => cache.guilds.get(tempData.guildId)?.roles.has(role.id),
-    );
+    await delayUntil(10000, () => cache.guilds.get(tempData.guildId)?.roles.has(role.id));
 
     if (!cache.guilds.get(tempData.guildId)?.roles.has(role.id)) {
       throw new Error(`The role seemed to be created but it was not cached.`);
@@ -29,18 +26,9 @@ Deno.test({
     });
 
     // Delay the execution by 5 seconds to allow GUILD_ROLE_UPDATE event to be processed
-    await delayUntil(
-      10000,
-      () =>
-        cache.guilds.get(tempData.guildId)?.roles.get(role.id)?.name ===
-          "#rememberAyntee",
-    );
+    await delayUntil(10000, () => cache.guilds.get(tempData.guildId)?.roles.get(role.id)?.name === "#rememberAyntee");
 
-    assertEquals(
-      cache.guilds.get(tempData.guildId)?.roles.get(role.id)?.name ===
-        "#rememberAyntee",
-      true,
-    );
+    assertEquals(cache.guilds.get(tempData.guildId)?.roles.get(role.id)?.name === "#rememberAyntee", true);
   },
   ...defaultTestOptions,
 });

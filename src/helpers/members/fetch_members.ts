@@ -1,11 +1,10 @@
 import { cache } from "../../cache.ts";
 import { DiscordenoMember } from "../../structures/member.ts";
 import { DiscordGatewayOpcodes } from "../../types/codes/gateway_opcodes.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
 import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
-import type { RequestGuildMembers } from "../../types/guilds/request_guild_members.ts";
-import { Errors } from "../../types/misc/errors.ts";
+import type { RequestGuildMembers } from "../../types/members/request_guild_members.ts";
 import { Collection } from "../../util/collection.ts";
-import { sendShardMessage } from "../../ws/send_shard_message.ts";
 import { ws } from "../../ws/ws.ts";
 
 /**
@@ -16,16 +15,9 @@ import { ws } from "../../ws/ws.ts";
  * REST: 50/s global(across all shards) rate limit with ALL requests this included
  * GW(this function): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is now 960/m.
  */
-export function fetchMembers(
-  guildId: string,
-  shardId: number,
-  options?: Omit<RequestGuildMembers, "guildId">,
-) {
+export function fetchMembers(guildId: bigint, shardId: number, options?: Omit<RequestGuildMembers, "guildId">) {
   // You can request 1 member without the intent
-  if (
-    (!options?.limit || options.limit > 1) &&
-    !(ws.identifyPayload.intents & DiscordGatewayIntents.GUILD_MEMBERS)
-  ) {
+  if ((!options?.limit || options.limit > 1) && !(ws.identifyPayload.intents & DiscordGatewayIntents.GuildMembers)) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
@@ -37,7 +29,7 @@ export function fetchMembers(
     const nonce = `${guildId}-${Date.now()}`;
     cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
 
-    sendShardMessage(shardId, {
+    ws.sendShardMessage(shardId, {
       op: DiscordGatewayOpcodes.RequestGuildMembers,
       d: {
         guild_id: guildId,
@@ -49,5 +41,5 @@ export function fetchMembers(
         nonce,
       },
     });
-  }) as Promise<Collection<string, DiscordenoMember>>;
+  }) as Promise<Collection<bigint, DiscordenoMember>>;
 }

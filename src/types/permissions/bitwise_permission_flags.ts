@@ -65,7 +65,13 @@ export enum DiscordBitwisePermissionFlags {
   /** Allows members to use slash commands in text channels */
   USE_SLASH_COMMANDS = 0x80000000,
   /** Allows for requesting to speak in stage channels. */
-  REQUEST_TO_SPEAK = 0x100000000,
+  REQUEST_TO_SPEAK = 0x100000001,
+  /** Allows for deleting and archiving threads, and viewing all private threads */
+  MANAGE_THREADS = 0x0400000000,
+  /** Allows for creating and participating in threads */
+  USE_PUBLIC_THREADS = 0x0800000000,
+  /** Allows for creating and participating in private threads */
+  USE_PRIVATE_THREADS = 0x1000000000,
 }
 
 export type BitwisePermissions = DiscordBitwisePermissionFlags;

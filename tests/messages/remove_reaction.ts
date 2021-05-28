@@ -18,30 +18,19 @@ async function ifItFailsBlameWolf(type: "getter" | "raw", user = false) {
   // Add reactions to the message
   await addReaction(message.channelId, message.id, "❤");
   // Delay the execution by 5 seconds to allow MESSAGE_REACTION_ALL event to be processed
-  await delayUntil(
-    10000,
-    () => cache.messages.get(message.id)?.reactions?.length === 1,
-  );
+  await delayUntil(10000, () => cache.messages.get(message.id)?.reactions?.length === 1);
 
   // Be sure that the message has the reactions
   assertEquals(await cache.messages.get(message.id)?.reactions?.length, 1);
 
   if (type === "raw") {
-    await removeReaction(
-      message.channelId,
-      message.id,
-      "❤",
-      user ? { userId: message.author.id } : undefined,
-    );
+    await removeReaction(message.channelId, message.id, "❤", user ? { userId: message.authorId } : undefined);
   } else {
-    await message.removeReaction("❤", user ? message.author.id : undefined);
+    await message.removeReaction("❤", user ? message.authorId : undefined);
   }
 
   // Delay the execution by 5 seconds to allow MESSAGE_REACTION_REMOVE_ALL event to be processed
-  await delayUntil(
-    10000,
-    () => cache.messages.get(message.id)?.reactions === undefined,
-  );
+  await delayUntil(10000, () => cache.messages.get(message.id)?.reactions === undefined);
 
   // Check if the reactions has been deleted
   assertEquals(await cache.messages.get(message.id)?.reactions, undefined);

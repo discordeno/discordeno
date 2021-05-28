@@ -1,13 +1,13 @@
 /** https://discord.com/developers/docs/resources/guild#guild-object-premium-tier */
 export enum DiscordPremiumTiers {
   /** Guild has not unlocked any Server Boost perks */
-  NONE,
+  None,
   /** Guild has unlocked Server Boost level 1 perks */
-  TIER_1,
+  Tier1,
   /** Guild has unlocked Server Boost level 2 perks */
-  TIER_2,
+  Tier2,
   /** Guild has unlocked Server Boost level 3 perks */
-  TIER_3,
+  Tier3,
 }
 
 export type PremiumTiers = DiscordPremiumTiers;

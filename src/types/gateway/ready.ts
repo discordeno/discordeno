@@ -1,5 +1,5 @@
 import { UnavailableGuild } from "../guilds/unavailable_guild.ts";
-import { Application } from "../oauth2/application.ts";
+import { Application } from "../applications/application.ts";
 import { User } from "../users/user.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 
@@ -9,8 +9,6 @@ export interface Ready {
   v: number;
   /** Information about the user including email */
   user: User;
-  /** Empty array */
-  privateChannels: [];
   /** The guilds the user is in */
   guilds: UnavailableGuild[];
   /** Used for resuming connections */

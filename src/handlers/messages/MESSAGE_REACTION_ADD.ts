@@ -1,51 +1,39 @@
 import { botId, eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
 import { structures } from "../../structures/mod.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import {
-  MessageReactionAdd,
-} from "../../types/messages/message_reaction_add.ts";
-import { snakeKeysToCamelCase } from "../../util/utils.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { MessageReactionAdd } from "../../types/messages/message_reaction_add.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleMessageReactionAdd(data: DiscordGatewayPayload) {
   const payload = data.d as MessageReactionAdd;
-  const message = await cacheHandlers.get("messages", payload.messageId);
+  const message = await cacheHandlers.get("messages", snowflakeToBigint(payload.messageId));
 
   if (message) {
     const reactionExisted = message.reactions?.find(
-      (reaction) =>
-        reaction.emoji.id === payload.emoji.id &&
-        reaction.emoji.name === payload.emoji.name,
+      (reaction) => reaction.emoji.id === payload.emoji.id && reaction.emoji.name === payload.emoji.name
     );
 
     if (reactionExisted) reactionExisted.count++;
     else {
       const newReaction = {
         count: 1,
-        me: payload.userId === botId,
+        me: snowflakeToBigint(payload.userId) === botId,
         emoji: { ...payload.emoji, id: payload.emoji.id || undefined },
       };
-      message.reactions = message.reactions
-        ? [...message.reactions, newReaction]
-        : [newReaction];
+      message.reactions = message.reactions ? [...message.reactions, newReaction] : [newReaction];
     }
 
-    await cacheHandlers.set("messages", payload.messageId, message);
+    await cacheHandlers.set("messages", snowflakeToBigint(payload.messageId), message);
   }
 
   if (payload.member && payload.guildId) {
-    const guild = await cacheHandlers.get("guilds", payload.guildId);
+    const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
     if (guild) {
-      const discordenoMember = await structures.createDiscordenoMember(
-        payload.member,
-        guild.id,
-      );
+      const discordenoMember = await structures.createDiscordenoMember(payload.member, guild.id);
       await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
     }
   }
 
-  eventHandlers.reactionAdd?.(
-    snakeKeysToCamelCase<MessageReactionAdd>(payload),
-    message,
-  );
+  eventHandlers.reactionAdd?.(payload, message);
 }

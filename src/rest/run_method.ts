@@ -1,5 +1,6 @@
 import { API_VERSION, BASE_URL, IMAGE_BASE_URL } from "../util/constants.ts";
-import { snakeKeysToCamelCase } from "../util/utils.ts";
+import { loopObject } from "../util/loop_object.ts";
+import { camelize } from "../util/utils.ts";
 import { rest } from "./rest.ts";
 
 // deno-lint-ignore no-explicit-any
@@ -8,8 +9,21 @@ export async function runMethod<T = any>(
   url: string,
   body?: unknown,
   retryCount = 0,
-  bucketId?: string,
+  bucketId?: string
 ): Promise<T> {
+  if (body) {
+    body = loopObject(
+      body as Record<string, unknown>,
+      (value) =>
+        typeof value === "bigint"
+          ? value.toString()
+          : Array.isArray(value)
+          ? value.map((v) => (typeof v === "bigint" ? v.toString() : v))
+          : value,
+      `Running forEach loop in runMethod function for changing bigints to strings.`
+    );
+  }
+
   rest.eventHandlers.debug?.("requestCreate", {
     method,
     url,
@@ -22,10 +36,7 @@ export async function runMethod<T = any>(
   Error.captureStackTrace(errorStack);
 
   // For proxies we don't need to do any of the legwork so we just forward the request
-  if (
-    !url.startsWith(`${BASE_URL}/v${API_VERSION}`) &&
-    !url.startsWith(IMAGE_BASE_URL)
-  ) {
+  if (!url.startsWith(`${BASE_URL}/v${API_VERSION}`) && !url.startsWith(IMAGE_BASE_URL)) {
     const result = await fetch(url, {
       body: JSON.stringify(body || {}),
       headers: {
@@ -46,15 +57,18 @@ export async function runMethod<T = any>(
       {
         url,
         method,
-        reject,
+        reject: (error) => {
+          console.error(error);
+          reject(errorStack);
+        },
         respond: (data: { status: number; body?: string }) =>
-          resolve(snakeKeysToCamelCase<T>(JSON.parse(data.body || "{}"))),
+          resolve(data.status !== 204 ? camelize<T>(JSON.parse(data.body ?? "{}")) : (undefined as unknown as T)),
       },
       {
         bucketId,
         body: body as Record<string, unknown> | undefined,
         retryCount,
-      },
+      }
     );
   });
 }

@@ -2,6 +2,15 @@ import { handleChannelCreate } from "./channels/CHANNEL_CREATE.ts";
 import { handleChannelDelete } from "./channels/CHANNEL_DELETE.ts";
 import { handleChannelPinsUpdate } from "./channels/CHANNEL_PINS_UPDATE.ts";
 import { handleChannelUpdate } from "./channels/CHANNEL_UPDATE.ts";
+import { handleStageInstanceCreate } from "./channels/STAGE_INSTANCE_CREATE.ts";
+import { handleStageInstanceUpdate } from "./channels/STAGE_INSTANCE_UPDATE.ts";
+import { handleStageInstanceDelete } from "./channels/STAGE_INSTANCE_DELETE.ts";
+import { handleThreadCreate } from "./channels/THREAD_CREATE.ts";
+import { handleThreadDelete } from "./channels/THREAD_DELETE.ts";
+import { handleThreadListSync } from "./channels/THREAD_LIST_SYNC.ts";
+import { handleThreadMembersUpdate } from "./channels/THREAD_MEMBERS_UPDATE.ts";
+import { handleThreadMemberUpdate } from "./channels/THREAD_MEMBER_UPDATE.ts";
+import { handleThreadUpdate } from "./channels/THREAD_UPDATE.ts";
 import { handleApplicationCommandCreate } from "./commands/APPLICATION_COMMAND_CREATE.ts";
 import { handleApplicationCommandDelete } from "./commands/APPLICATION_COMMAND_DELETE.ts";
 import { handleApplicationCommandUpdate } from "./commands/APPLICATION_COMMAND_UPDATE.ts";
@@ -77,6 +86,15 @@ export {
   handleMessageUpdate,
   handlePresenceUpdate,
   handleReady,
+  handleStageInstanceCreate,
+  handleStageInstanceDelete,
+  handleStageInstanceUpdate,
+  handleThreadCreate,
+  handleThreadDelete,
+  handleThreadListSync,
+  handleThreadMembersUpdate,
+  handleThreadMemberUpdate,
+  handleThreadUpdate,
   handleTypingStart,
   handleUserUpdate,
   handleVoiceServerUpdate,
@@ -92,6 +110,16 @@ export let handlers = {
   CHANNEL_DELETE: handleChannelDelete,
   CHANNEL_PINS_UPDATE: handleChannelPinsUpdate,
   CHANNEL_UPDATE: handleChannelUpdate,
+  THREAD_CREATE: handleThreadCreate,
+  THREAD_UPDATE: handleThreadUpdate,
+  THREAD_DELETE: handleThreadDelete,
+  THREAD_LIST_SYNC: handleThreadListSync,
+  THREAD_MEMBER_UPDATE: handleThreadMemberUpdate,
+  THREAD_MEMBERS_UPDATE: handleThreadMembersUpdate,
+  STAGE_INSTANCE_CREATE: handleStageInstanceCreate,
+  STAGE_INSTANCE_UPDATE: handleStageInstanceUpdate,
+  STAGE_INSTANCE_DELETE: handleStageInstanceDelete,
+
   // commands
   APPLICATION_COMMAND_CREATE: handleApplicationCommandCreate,
   APPLICATION_COMMAND_DELETE: handleApplicationCommandDelete,

@@ -10,64 +10,73 @@ export enum DiscordGatewayIntents {
    * - CHANNEL_UPDATE
    * - CHANNEL_DELETE
    * - CHANNEL_PINS_UPDATE
+   * - THREAD_CREATE
+   * - THREAD_UPDATE
+   * - THREAD_DELETE
+   * - THREAD_LIST_SYNC
+   * - THREAD_MEMBER_UPDATE
+   * - THREAD_MEMBERS_UPDATE
+   * - STAGE_INSTANCE_CREATE
+   * - STAGE_INSTANCE_UPDATE
+   * - STAGE_INSTANCE_DELETE
    */
-  GUILDS = 1 << 0,
+  Guilds = 1 << 0,
   /**
    * - GUILD_MEMBER_ADD
    * - GUILD_MEMBER_UPDATE
    * - GUILD_MEMBER_REMOVE
    */
-  GUILD_MEMBERS = 1 << 1,
+  GuildMembers = 1 << 1,
   /**
    * - GUILD_BAN_ADD
    * - GUILD_BAN_REMOVE
    */
-  GUILD_BANS = 1 << 2,
+  GuildBans = 1 << 2,
   /**
    * - GUILD_EMOJIS_UPDATE
    */
-  GUILD_EMOJIS = 1 << 3,
+  GuildEmojis = 1 << 3,
   /**
    * - GUILD_INTEGRATIONS_UPDATE
    * - INTEGRATION_CREATE
    * - INTEGRATION_UPDATE
    * - INTEGRATION_DELETE
    */
-  GUILD_INTEGRATIONS = 1 << 4,
+  GuildIntegrations = 1 << 4,
   /** Enables the following events:
    * - WEBHOOKS_UPDATE
    */
-  GUILD_WEBHOOKS = 1 << 5,
+  GuildWebhooks = 1 << 5,
   /**
    * - INVITE_CREATE
    * - INVITE_DELETE
    */
-  GUILD_INVITES = 1 << 6,
+  GuildInvites = 1 << 6,
   /**
    * - VOICE_STATE_UPDATE
    */
-  GUILD_VOICE_STATES = 1 << 7,
+  GuildVoiceStates = 1 << 7,
   /**
    * - PRESENCE_UPDATE
    */
-  GUILD_PRESENCES = 1 << 8,
+  GuildPresences = 1 << 8,
   /**
    * - MESSAGE_CREATE
    * - MESSAGE_UPDATE
    * - MESSAGE_DELETE
    */
-  GUILD_MESSAGES = 1 << 9,
+  GuildMessages = 1 << 9,
   /**
    * - MESSAGE_REACTION_ADD
    * - MESSAGE_REACTION_REMOVE
    * - MESSAGE_REACTION_REMOVE_ALL
    * - MESSAGE_REACTION_REMOVE_EMOJI
    */
-  GUILD_MESSAGE_REACTIONS = 1 << 10,
+  GuildMessageReactions = 1 << 10,
   /**
    * - TYPING_START
    */
-  GUILD_MESSAGE_TYPING = 1 << 11,
+  GuildMessageTyping = 1 << 11,
   /**
    * - CHANNEL_CREATE
    * - MESSAGE_CREATE
@@ -75,18 +84,18 @@ export enum DiscordGatewayIntents {
    * - MESSAGE_DELETE
    * - CHANNEL_PINS_UPDATE
    */
-  DIRECT_MESSAGES = 1 << 12,
+  DirectMessages = 1 << 12,
   /**
    * - MESSAGE_REACTION_ADD
    * - MESSAGE_REACTION_REMOVE
    * - MESSAGE_REACTION_REMOVE_ALL
    * - MESSAGE_REACTION_REMOVE_EMOJI
    */
-  DIRECT_MESSAGE_REACTIONS = 1 << 13,
+  DirectMessageReactions = 1 << 13,
   /**
    * - TYPING_START
    */
-  DIRECT_MESSAGE_TYPING = 1 << 14,
+  DirectMessageTyping = 1 << 14,
 }
 
 export type Intents = DiscordGatewayIntents;

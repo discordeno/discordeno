@@ -13,19 +13,7 @@ import { getPins } from "./channels/get_pins.ts";
 import { isChannelSynced } from "./channels/is_channel_synced.ts";
 import { startTyping } from "./channels/start_typing.ts";
 import { swapChannels } from "./channels/swap_channels.ts";
-import { batchEditSlashCommandPermissions } from "./commands/batch_edit_slash_command_permissions.ts";
-import { createSlashCommand } from "./commands/create_slash_command.ts";
-import { deleteSlashCommand } from "./commands/delete_slash_command.ts";
-import { deleteSlashResponse } from "./commands/delete_slash_response.ts";
-import { editSlashCommandPermissions } from "./commands/edit_slash_command_permissions.ts";
-import { editSlashResponse } from "./commands/edit_slash_response.ts";
-import { getSlashCommand } from "./commands/get_slash_command.ts";
-import { getSlashCommands } from "./commands/get_slash_commands.ts";
-import { getSlashCommandPermission } from "./commands/get_slash_command_permission.ts";
-import { getSlashCommandPermissions } from "./commands/get_slash_command_permissions.ts";
-import { sendInteractionResponse } from "./commands/send_interaction_response.ts";
-import { upsertSlashCommand } from "./commands/upsert_slash_command.ts";
-import { upsertSlashCommands } from "./commands/upsert_slash_commands.ts";
+import { updateBotVoiceState } from "./channels/update_voice_state.ts";
 import { addDiscoverySubcategory } from "./discovery/add_discovery_subcategory.ts";
 import { editDiscovery } from "./discovery/edit_discovery.ts";
 import { getDiscoveryCategories } from "./discovery/get_discovery_categories.ts";
@@ -61,6 +49,20 @@ import { guildSplashURL } from "./guilds/guild_splash_url.ts";
 import { leaveGuild } from "./guilds/leave_guild.ts";
 import { deleteIntegration } from "./integrations/delete_integration.ts";
 import { getIntegrations } from "./integrations/get_integrations.ts";
+import { batchEditSlashCommandPermissions } from "./interactions/commands/batch_edit_slash_command_permissions.ts";
+import { createSlashCommand } from "./interactions/commands/create_slash_command.ts";
+import { deleteSlashCommand } from "./interactions/commands/delete_slash_command.ts";
+import { deleteSlashResponse } from "./interactions/commands/delete_slash_response.ts";
+import { editSlashCommandPermissions } from "./interactions/commands/edit_slash_command_permissions.ts";
+import { editSlashResponse } from "./interactions/commands/edit_slash_response.ts";
+import { getSlashCommand } from "./interactions/commands/get_slash_command.ts";
+import { getSlashCommands } from "./interactions/commands/get_slash_commands.ts";
+import { getSlashCommandPermission } from "./interactions/commands/get_slash_command_permission.ts";
+import { getSlashCommandPermissions } from "./interactions/commands/get_slash_command_permissions.ts";
+import { upsertSlashCommand } from "./interactions/commands/upsert_slash_command.ts";
+import { upsertSlashCommands } from "./interactions/commands/upsert_slash_commands.ts";
+import { getOriginalInteractionResponse } from "./interactions/get_original_interaction_response.ts";
+import { sendInteractionResponse } from "./interactions/send_interaction_response.ts";
 import { createInvite } from "./invites/create_invite.ts";
 import { deleteInvite } from "./invites/delete_invite.ts";
 import { getChannelInvites } from "./invites/get_channel_invites.ts";
@@ -70,7 +72,6 @@ import { avatarURL } from "./members/avatar_url.ts";
 import { ban, banMember } from "./members/ban_member.ts";
 import { disconnectMember } from "./members/disconnect_member.ts";
 import { editBotNickname } from "./members/edit_bot_nickname.ts";
-import { editBotProfile } from "./members/edit_bot_profile.ts";
 import { editMember } from "./members/edit_member.ts";
 import { fetchMembers } from "./members/fetch_members.ts";
 import { getMember } from "./members/get_member.ts";
@@ -95,6 +96,7 @@ import { removeReaction } from "./messages/remove_reaction.ts";
 import { removeReactionEmoji } from "./messages/remove_reaction_emoji.ts";
 import { sendMessage } from "./messages/send_message.ts";
 import { unpin, unpinMessage } from "./messages/unpin_message.ts";
+import { editBotProfile } from "./misc/edit_bot_profile.ts";
 import { editBotStatus } from "./misc/edit_bot_status.ts";
 import { getGatewayBot } from "./misc/get_gateway_bot.ts";
 import { getUser } from "./misc/get_user.ts";
@@ -111,6 +113,9 @@ import { editGuildTemplate } from "./templates/edit_guild_template.ts";
 import { getGuildTemplates } from "./templates/get_guild_templates.ts";
 import { getTemplate } from "./templates/get_template.ts";
 import { syncGuildTemplate } from "./templates/sync_guild_template.ts";
+// Type Guards
+import { isActionRow } from "./type_guards/is_action_row.ts";
+import { isButton } from "./type_guards/is_button.ts";
 import { createWebhook } from "./webhooks/create_webhook.ts";
 import { deleteWebhook } from "./webhooks/delete_webhook.ts";
 import { deleteWebhookMessage } from "./webhooks/delete_webhook_message.ts";
@@ -118,13 +123,15 @@ import { deleteWebhookWithToken } from "./webhooks/delete_webhook_with_token.ts"
 import { editWebhook } from "./webhooks/edit_webhook.ts";
 import { editWebhookMessage } from "./webhooks/edit_webhook_message.ts";
 import { editWebhookWithToken } from "./webhooks/edit_webhook_with_token.ts";
-import { executeWebhook } from "./webhooks/execute_webhook.ts";
 import { getWebhook } from "./webhooks/get_webhook.ts";
 import { getWebhooks } from "./webhooks/get_webhooks.ts";
+import { getWebhookMessage } from "./webhooks/get_webhook_message.ts";
 import { getWebhookWithToken } from "./webhooks/get_webhook_with_token.ts";
-// Type Guards
-import { isActionRow } from "./type_guards/is_action_row.ts";
-import { isButton } from "./type_guards/is_button.ts";
+import { sendWebhook } from "./webhooks/send_webhook.ts";
+import { createStageInstance } from "./channels/create_stage_instance.ts";
+import { updateStageInstance } from "./channels/update_stage_instance.ts";
+import { getStageInstance } from "./channels/get_stage_instance.ts";
+import { deleteStageInstance } from "./channels/delete_stage_instance.ts";
 
 export {
   addDiscoverySubcategory,
@@ -145,6 +152,7 @@ export {
   createInvite,
   createRole,
   createSlashCommand,
+  createStageInstance,
   createWebhook,
   deleteChannel,
   deleteChannelOverwrite,
@@ -158,6 +166,7 @@ export {
   deleteRole,
   deleteSlashCommand,
   deleteSlashResponse,
+  deleteStageInstance,
   deleteWebhook,
   deleteWebhookMessage,
   deleteWebhookWithToken,
@@ -181,7 +190,6 @@ export {
   editWelcomeScreen,
   editWidget,
   emojiURL,
-  executeWebhook,
   fetchMembers,
   followChannel,
   getAuditLogs,
@@ -206,6 +214,7 @@ export {
   getMembers,
   getMessage,
   getMessages,
+  getOriginalInteractionResponse,
   getPins,
   getPruneCount,
   getReactions,
@@ -214,11 +223,13 @@ export {
   getSlashCommandPermission,
   getSlashCommandPermissions,
   getSlashCommands,
+  getStageInstance,
   getTemplate,
   getUser,
   getVanityURL,
   getVoiceRegions,
   getWebhook,
+  getWebhookMessage,
   getWebhooks,
   getWebhookWithToken,
   getWelcomeScreen,
@@ -247,6 +258,7 @@ export {
   sendDirectMessage,
   sendInteractionResponse,
   sendMessage,
+  sendWebhook,
   startTyping,
   swapChannels,
   syncGuildTemplate,
@@ -254,6 +266,8 @@ export {
   unbanMember,
   unpin,
   unpinMessage,
+  updateBotVoiceState,
+  updateStageInstance,
   upsertSlashCommand,
   upsertSlashCommands,
   validDiscoveryTerm,
@@ -275,6 +289,11 @@ export let helpers = {
   isChannelSynced,
   startTyping,
   swapChannels,
+  updateBotVoiceState,
+  createStageInstance,
+  getStageInstance,
+  updateStageInstance,
+  deleteStageInstance,
   // commands
   createSlashCommand,
   deleteSlashCommand,
@@ -289,6 +308,7 @@ export let helpers = {
   getSlashCommands,
   upsertSlashCommand,
   upsertSlashCommands,
+  getOriginalInteractionResponse,
   // emojis
   createEmoji,
   deleteEmoji,
@@ -392,10 +412,11 @@ export let helpers = {
   editWebhookMessage,
   editWebhookWithToken,
   editWebhook,
-  executeWebhook,
+  sendWebhook,
   getWebhookWithToken,
   getWebhook,
   getWebhooks,
+  getWebhookMessage,
 };
 
 export type Helpers = typeof helpers;

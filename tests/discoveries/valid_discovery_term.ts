@@ -7,10 +7,7 @@ Deno.test({
   async fn() {
     const valid = await validDiscoveryTerm("Bots");
 
-    assertEquals(
-      valid,
-      true,
-    );
+    assertEquals(valid, true);
   },
   ...defaultTestOptions,
 });

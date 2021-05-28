@@ -17,5 +17,3 @@ export interface DiscordOverwrite extends Omit<Overwrite, "allow" | "deny"> {
   allow: string;
   deny: string;
 }
-
-// TODO: check this

@@ -1,5 +1,5 @@
-import { GuildMemberWithUser } from "../guilds/guild_member.ts";
-import { PresenceUpdate } from "../misc/presence_update.ts";
+import { PresenceUpdate } from "../activity/presence_update.ts";
+import { GuildMemberWithUser } from "../members/guild_member.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#guild-members-chunk */
 export interface GuildMembersChunk {

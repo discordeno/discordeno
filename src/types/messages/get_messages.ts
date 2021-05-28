@@ -7,24 +7,20 @@ export interface GetMessagesLimit {
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesAround extends GetMessagesLimit {
   /** Get messages around this message id */
-  around?: string;
+  around?: bigint;
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesBefore extends GetMessagesLimit {
   /** Get messages before this message id */
-  before?: string;
+  before?: bigint;
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesAfter extends GetMessagesLimit {
   /** Get messages after this message id */
-  after?: string;
+  after?: bigint;
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
-export type GetMessages =
-  & GetMessagesLimit
-  & GetMessagesAfter
-  & GetMessagesBefore
-  & GetMessagesAround;
+export type GetMessages = GetMessagesLimit & GetMessagesAfter & GetMessagesBefore & GetMessagesAround;

@@ -1,0 +1,29 @@
+name: Test Contributor Pull Requests
+on: issue_comment
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        deno: ["v1.x"]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denoland/setup-deno@main
+        with:
+          deno-version: ${{ matrix.deno }}
+      - name: Cache dependencies
+        run: deno cache mod.ts
+      - name: Run tests if requested by maintainers
+        if: ${{ github.event.issue.pull_request && github.event.comment.body == 'run-tests' && (github.actor == 'Skillz4Killz' || github.actor == 'itohatweb') }}
+        run: DISCORD_TOKEN=${{ env.DISCORD_TOKEN }} deno test --unstable --coverage=coverage -A tests/mod.ts
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+    # TODO: add coverage back when it is stable
+    #      - name: Create coverage report
+    #        run: deno --unstable --exclude=test coverage ./coverage --lcov > coverage.lcov
+    #      - name: Collect and upload the coverage report
+    #        uses: codecov/codecov-action@v1.0.10
+    #        with:
+    #          file: ./coverage.lcov
+    env:
+      DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}

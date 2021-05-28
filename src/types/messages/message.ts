@@ -1,8 +1,10 @@
+import { Channel } from "../channels/channel.ts";
 import { ChannelMention } from "../channels/channel_mention.ts";
+import { ThreadMember } from "../channels/threads/thread_member.ts";
 import { Embed } from "../embeds/embed.ts";
-import { GuildMember } from "../guilds/guild_member.ts";
 import { MessageInteraction } from "../interactions/message_interaction.ts";
-import { Application } from "../oauth2/application.ts";
+import { GuildMember } from "../members/guild_member.ts";
+import { Application } from "../applications/application.ts";
 import { User } from "../users/user.ts";
 import { Attachment } from "./attachment.ts";
 import { MessageComponents } from "./components/message_components.ts";
@@ -70,12 +72,14 @@ export interface Message {
   activity?: MessageActivity;
   /** Sent with Rich Presence-related chat embeds */
   application?: Partial<Application>;
+  /** If the message is a response to an Interaction, this is the id of the interaction's application */
+  applicationId?: string;
   /** Data showing the source of a crossposted channel follow add, pin or reply message */
-  messageReference?: MessageReference;
+  messageReference?: Omit<MessageReference, "failIfNotExists">;
   /** Message flags combined as a bitfield */
   flags?: number;
   /** The stickers sent with the message (bots currently can only receive messages with stickers, not send) */
-  stickers?: MessageSticker;
+  stickers?: MessageSticker[];
   /**
    * The message associated with the `message_reference`
    * Note: This field is only returned for messages with a `type` of `19` (REPLY). If the message is a reply but the `referenced_message` field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.
@@ -83,6 +87,8 @@ export interface Message {
   referencedMessage?: Message;
   /** Sent if the message is a response to an Interaction */
   interaction?: MessageInteraction;
+  /** The thread that was started from this message, includes thread member object */
+  thread?: Omit<Channel, "member"> & { member: ThreadMember };
   /** The components related to this message */
   components: MessageComponents;
 }

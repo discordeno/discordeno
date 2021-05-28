@@ -1,4 +1,4 @@
-import { Application } from "../oauth2/application.ts";
+import { Application } from "../applications/application.ts";
 import { User } from "../users/user.ts";
 import { DiscordTargetTypes } from "./target_types.ts";
 

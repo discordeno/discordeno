@@ -4,10 +4,7 @@ import { assertEquals, assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
-async function ifItFailsBlameWolf(
-  type: "getter" | "raw",
-  content: "string" | "embed" | "reply" = "string",
-) {
+async function ifItFailsBlameWolf(type: "getter" | "raw", content: "string" | "embed" | "reply" = "string") {
   const channel = cache.channels.get(tempData.channelId);
   assertExists(channel);
 
@@ -46,9 +43,7 @@ async function ifItFailsBlameWolf(
     };
   }
 
-  const message = type === "raw"
-    ? await sendMessage(channel!.id, messageContent)
-    : await channel?.send(messageContent);
+  const message = type === "raw" ? await sendMessage(channel!.id, messageContent) : await channel?.send(messageContent);
 
   // Assertions
   assertExists(message);
@@ -65,10 +60,7 @@ async function ifItFailsBlameWolf(
   } else if (content === "embed") {
     assertEquals(cache.messages.get(message!.id)?.embeds?.length, 1);
   } else {
-    assertEquals(
-      cache.messages.get(message!.id)?.messageReference?.messageId,
-      secondMessageId,
-    );
+    assertEquals(cache.messages.get(message!.id)?.messageReference?.messageId, secondMessageId);
   }
 }
 
@@ -138,10 +130,7 @@ Deno.test({
       throw new Error("The message seemed to be sent but it was not cached.");
     }
 
-    assertEquals(
-      cache.messages.get(reply.id)?.messageReference?.messageId,
-      message.id,
-    );
+    assertEquals(cache.messages.get(reply.id)?.messageReference?.messageId, message.id);
   },
   ...defaultTestOptions,
 });

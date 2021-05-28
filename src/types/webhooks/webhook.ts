@@ -4,7 +4,9 @@ import { User } from "../users/user.ts";
 import { DiscordWebhookTypes } from "./discord_webhook_types.ts";
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
-export interface Webhook {
+export type Webhook = IncomingWebhook | ApplicationWebhook;
+
+export interface IncomingWebhook {
   /** The id of the webhook */
   id: string;
   /** The type of the webhook */
@@ -29,4 +31,10 @@ export interface Webhook {
   sourceChannel?: Partial<Channel>;
   /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
   url?: string;
+}
+
+export interface ApplicationWebhook extends Omit<IncomingWebhook, "type" | "guildId" | "channelId"> {
+  type: DiscordWebhookTypes.Application;
+  guildId?: string | null;
+  channelId?: string | null;
 }

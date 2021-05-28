@@ -1,21 +1,18 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import {
-  MessageReactionRemove,
-} from "../../types/messages/message_reaction_remove.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { MessageReactionRemove } from "../../types/messages/message_reaction_remove.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
 
-export async function handleMessageReactionRemove(
-  data: DiscordGatewayPayload,
-) {
+export async function handleMessageReactionRemove(data: DiscordGatewayPayload) {
   const payload = data.d as MessageReactionRemove;
-  const message = await cacheHandlers.get("messages", payload.messageId);
+  const message = await cacheHandlers.get("messages", snowflakeToBigint(payload.messageId));
 
   if (message) {
-    const reaction = message.reactions?.find((reaction) =>
-      // MUST USE == because discord sends null and we use undefined
-      reaction.emoji.id == payload.emoji.id &&
-      reaction.emoji.name === payload.emoji.name
+    const reaction = message.reactions?.find(
+      (reaction) =>
+        // MUST USE == because discord sends null and we use undefined
+        reaction.emoji.id == payload.emoji.id && reaction.emoji.name === payload.emoji.name
     );
 
     if (reaction) {
@@ -25,12 +22,9 @@ export async function handleMessageReactionRemove(
       }
       if (!message.reactions?.length) message.reactions = undefined;
 
-      await cacheHandlers.set("messages", payload.messageId, message);
+      await cacheHandlers.set("messages", message.id, message);
     }
   }
 
-  eventHandlers.reactionRemove?.(
-    payload,
-    message,
-  );
+  eventHandlers.reactionRemove?.(payload, message);
 }

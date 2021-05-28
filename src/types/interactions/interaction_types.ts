@@ -2,7 +2,7 @@
 export enum DiscordInteractionTypes {
   Ping = 1,
   ApplicationCommand,
-  Button,
+  MessageComponent,
 }
 
 export type InteractionTypes = DiscordInteractionTypes;

@@ -1,9 +1,7 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
-import { closeWS } from "./close_ws.ts";
-import { sendShardMessage } from "./send_shard_message.ts";
 import { ws } from "./ws.ts";
 
-export async function resume(shardId: number) {
+export function resume(shardId: number) {
   ws.log("RESUMING", { shardId });
 
   // NOW WE HANDLE RESUMING THIS SHARD
@@ -12,13 +10,13 @@ export async function resume(shardId: number) {
 
   if (oldShard) {
     // HOW TO CLOSE OLD SHARD SOCKET!!!
-    closeWS(oldShard.ws, 3064, "Resuming the shard, closing old shard.");
+    ws.closeWS(oldShard.ws, 3064, "Resuming the shard, closing old shard.");
     // STOP OLD HEARTBEAT
     clearInterval(oldShard.heartbeat.intervalId);
   }
 
   // CREATE A SHARD
-  const socket = await ws.createShard(shardId);
+  const socket = ws.createShard(shardId);
 
   const sessionId = oldShard?.sessionId || "";
   const previousSequenceNumber = oldShard?.previousSequenceNumber || 0;
@@ -32,6 +30,7 @@ export async function resume(shardId: number) {
     resuming: false,
     ready: false,
     unavailableGuildIds: new Set(),
+    lastAvailable: 0,
     heartbeat: {
       lastSentAt: 0,
       lastReceivedAt: 0,
@@ -48,13 +47,17 @@ export async function resume(shardId: number) {
 
   // Resume on open
   socket.onopen = () => {
-    sendShardMessage(shardId, {
-      op: DiscordGatewayOpcodes.Resume,
-      d: {
-        token: ws.identifyPayload.token,
-        session_id: sessionId,
-        seq: previousSequenceNumber,
+    ws.sendShardMessage(
+      shardId,
+      {
+        op: DiscordGatewayOpcodes.Resume,
+        d: {
+          token: ws.identifyPayload.token,
+          session_id: sessionId,
+          seq: previousSequenceNumber,
+        },
       },
-    }, true);
+      true
+    );
   };
 }

@@ -1,46 +1,44 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { GuildUpdateChange } from "../../types/discordeno/guild_update_change.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { Guild } from "../../types/guilds/guild.ts";
+import { structures } from "../../structures/mod.ts";
+import type { GuildUpdateChange } from "../../types/discordeno/guild_update_change.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { Guild } from "../../types/guilds/guild.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
 
-export async function handleGuildUpdate(data: DiscordGatewayPayload) {
+export async function handleGuildUpdate(data: DiscordGatewayPayload, shardId: number) {
   const payload = data.d as Guild;
-  const newGuild = await cacheHandlers.get("guilds", payload.id);
-  if (!newGuild) return;
+  const oldGuild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.id));
+  if (!oldGuild) return;
 
-  const keysToSkip = [
-    "roles",
-    "guildHashes",
-    "guildId",
-    "maxMembers",
-    "emojis",
-  ];
+  const keysToSkip = ["id", "roles", "guildHashes", "guildId", "maxMembers", "emojis"];
 
-  const changes = Object.entries(payload)
+  const newGuild = await structures.createDiscordenoGuild(payload, shardId);
+
+  const changes = Object.entries(newGuild)
     .map(([key, value]) => {
       if (keysToSkip.includes(key)) return;
 
       // @ts-ignore index signature
-      const cachedValue = newGuild[key];
-      if (cachedValue !== value) {
-        // Guild create sends undefined and update sends false.
-        if (!cachedValue && !value) return;
+      const cachedValue = oldGuild[key];
 
-        if (Array.isArray(cachedValue) && Array.isArray(value)) {
-          const different = (cachedValue.length !== value.length) ||
-            cachedValue.find((val) => !value.includes(val)) ||
-            value.find((val) => !cachedValue.includes(val));
-          if (!different) return;
-        }
+      if (cachedValue === value) return;
+      // Guild create sends undefined and update sends false.
+      if (!cachedValue && !value) return;
 
-        // @ts-ignore index signature
-        newGuild[key] = value;
-        return { key, oldValue: cachedValue, value };
+      if (Array.isArray(cachedValue) && Array.isArray(value)) {
+        const different =
+          cachedValue.length !== value.length ||
+          cachedValue.find((val) => !value.includes(val)) ||
+          value.find((val) => !cachedValue.includes(val));
+        if (!different) return;
       }
-    }).filter((change) => change) as GuildUpdateChange[];
 
-  await cacheHandlers.set("guilds", payload.id, newGuild);
+      return { key, oldValue: cachedValue, value };
+    })
+    .filter((change) => change) as GuildUpdateChange[];
+
+  await cacheHandlers.set("guilds", newGuild.id, newGuild);
 
   eventHandlers.guildUpdate?.(newGuild, changes);
 }

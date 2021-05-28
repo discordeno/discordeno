@@ -16,29 +16,20 @@ Deno.test({
         name: "blamewolf",
         image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
         roles: [],
-      },
+      }
     );
 
     assertExists(emoji);
 
-    await delayUntil(
-      10000,
-      () => cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id!),
-    );
+    await delayUntil(10000, () => cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id!));
 
     cache.guilds.get(tempData.guildId)?.emojis?.delete(emoji.id!);
 
     await getEmoji(tempData.guildId, emoji.id!);
 
-    await delayUntil(
-      10000,
-      () => cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id!),
-    );
+    await delayUntil(10000, () => cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id!));
 
-    assertEquals(
-      cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id!),
-      true,
-    );
+    assertEquals(cache.guilds.get(tempData.guildId)?.emojis?.has(emoji.id!), true);
   },
   ...defaultTestOptions,
 });

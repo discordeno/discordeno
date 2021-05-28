@@ -3,7 +3,7 @@ import { cache } from "../../src/cache.ts";
 import { deleteGuild } from "../../src/helpers/guilds/delete_guild.ts";
 import { delay } from "../../src/util/utils.ts";
 import { ws } from "../../src/ws/ws.ts";
-import { assertExists } from "../deps.ts";
+import { assertEquals, assertExists } from "../deps.ts";
 
 // Set necessary settings
 // Disables the logger which logs everything
@@ -21,10 +21,10 @@ export const defaultTestOptions: Partial<Deno.TestDefinition> = {
 
 // Temporary data
 export const tempData = {
-  guildId: "",
-  roleId: "",
-  channelId: "",
-  messageId: "",
+  guildId: 0n,
+  roleId: 0n,
+  channelId: 0n,
+  messageId: 0n,
 };
 
 Deno.test({
@@ -33,15 +33,14 @@ Deno.test({
     const token = Deno.env.get("DISCORD_TOKEN");
     if (!token) throw new Error("Token is not provided");
 
+    let didReady = false;
+
     await startBot({
       token,
-      intents: [
-        "GUILD_MESSAGES",
-        "GUILDS",
-        "GUILD_EMOJIS",
-        "GUILD_MESSAGE_REACTIONS",
-        "GUILD_EMOJIS",
-      ],
+      eventHandlers: {
+        ready: () => (didReady = true),
+      },
+      intents: ["GuildMessages", "Guilds", "GuildEmojis", "GuildMessageReactions"],
     });
 
     // Delay the execution by 5 seconds
@@ -54,6 +53,7 @@ Deno.test({
 
     // Assertions
     assertExists(botId);
+    assertEquals(true, didReady);
   },
   ...defaultTestOptions,
 });

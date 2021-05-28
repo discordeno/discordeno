@@ -20,16 +20,14 @@ export interface CreateGuildChannel {
   /** The channel's permission overwrites */
   permissionOverwrites?: Overwrite[];
   /** Id of the parent category for a channel */
-  parentId?: string;
+  parentId?: bigint;
   /** Whether the channel is nsfw */
   nsfw?: boolean;
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-channel */
-export interface DiscordCreateGuildChannel extends
-  SnakeCasedPropertiesDeep<
-    Omit<CreateGuildChannel, "permissionOverwrites">
-  > {
+export interface DiscordCreateGuildChannel
+  extends SnakeCasedPropertiesDeep<Omit<CreateGuildChannel, "permissionOverwrites">> {
+  // deno-lint-ignore camelcase
   permission_overwrites: DiscordOverwrite[];
 }
-// TODO: check this

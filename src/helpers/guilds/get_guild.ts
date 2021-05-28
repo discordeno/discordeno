@@ -1,7 +1,7 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { structures } from "../../structures/mod.ts";
-import { Guild } from "../../types/guilds/guild.ts";
+import type { Guild } from "../../types/guilds/guild.ts";
 import { endpoints } from "../../util/constants.ts";
 import { ws } from "../../ws/ws.ts";
 
@@ -13,28 +13,24 @@ import { ws } from "../../ws/ws.ts";
  * So it does not cache the guild, you must do it manually.
  * */
 export async function getGuild(
-  guildId: string,
+  guildId: bigint,
   options: { counts?: boolean; addToCache?: boolean } = {
     counts: true,
     addToCache: true,
-  },
+  }
 ) {
-  const result = await rest.runMethod<Guild>(
-    "get",
-    endpoints.GUILDS_BASE(guildId),
-    {
-      with_counts: options.counts,
-    },
-  );
+  const result = await rest.runMethod<Guild>("get", endpoints.GUILDS_BASE(guildId), {
+    with_counts: options.counts,
+  });
 
-  const structure = await structures.createDiscordenoGuild(
+  const guild = await structures.createDiscordenoGuild(
     result,
-    Number((BigInt(guildId) >> 22n) % BigInt(ws.botGatewayData.shards)),
+    Number((BigInt(guildId) >> 22n) % BigInt(ws.botGatewayData.shards))
   );
 
   if (options.addToCache) {
-    await cacheHandlers.set("guilds", guildId, structure);
+    await cacheHandlers.set("guilds", guild.id, guild);
   }
 
-  return structure;
+  return guild;
 }

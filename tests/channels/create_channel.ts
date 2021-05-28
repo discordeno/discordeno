@@ -1,19 +1,20 @@
-import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
-import { assertEquals, assertExists } from "../deps.ts";
-import { cache } from "../../src/cache.ts";
-import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
-import { CreateGuildChannel } from "../../src/types/guilds/create_guild_channel.ts";
-import { createChannel } from "../../src/helpers/channels/create_channel.ts";
-import { delayUntil } from "../util/delay_until.ts";
-import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
 import { botId } from "../../src/bot.ts";
+import { cache } from "../../src/cache.ts";
+import { createChannel } from "../../src/helpers/channels/create_channel.ts";
+import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
+import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
+import { CreateGuildChannel } from "../../src/types/guilds/create_guild_channel.ts";
+import { bigintToSnowflake } from "../../src/util/bigint.ts";
+import { assertEquals, assertExists } from "../deps.ts";
+import { delayUntil } from "../util/delay_until.ts";
+import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
 async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
   const channel = await createChannel(tempData.guildId, options);
 
   // Assertions
   assertExists(channel);
-  assertEquals(channel.type, options.type || DiscordChannelTypes.GUILD_TEXT);
+  assertEquals(channel.type, options.type || DiscordChannelTypes.GuildText);
 
   if (save) tempData.channelId = channel.id;
 
@@ -25,23 +26,16 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, save = false) {
   }
 
   if (options.topic && channel.topic !== options.topic) {
-    throw new Error(
-      "The channel was supposed to have a topic but it does not appear to be the same topic.",
-    );
+    throw new Error("The channel was supposed to have a topic but it does not appear to be the same topic.");
   }
 
   if (options.bitrate && channel.bitrate !== options.bitrate) {
-    throw new Error(
-      "The channel was supposed to have a bitrate but it does not appear to be the same bitrate.",
-    );
+    throw new Error("The channel was supposed to have a bitrate but it does not appear to be the same bitrate.");
   }
 
-  if (
-    options.permissionOverwrites &&
-    channel.permissionOverwrites?.length !== options.permissionOverwrites.length
-  ) {
+  if (options.permissionOverwrites && channel.permissionOverwrites?.length !== options.permissionOverwrites.length) {
     throw new Error(
-      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites.",
+      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites."
     );
   }
 }
@@ -60,9 +54,9 @@ Deno.test({
     await ifItFailsBlameWolf(
       {
         name: "Discordeno-test",
-        type: DiscordChannelTypes.GUILD_CATEGORY,
+        type: DiscordChannelTypes.GuildCategory,
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
@@ -90,9 +84,9 @@ Deno.test({
     await ifItFailsBlameWolf(
       {
         name: "Discordeno-test",
-        type: DiscordChannelTypes.GUILD_VOICE,
+        type: DiscordChannelTypes.GuildVoice,
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
@@ -104,10 +98,10 @@ Deno.test({
     await ifItFailsBlameWolf(
       {
         name: "discordeno-test",
-        type: DiscordChannelTypes.GUILD_VOICE,
+        type: DiscordChannelTypes.GuildVoice,
         bitrate: 32000,
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
@@ -119,10 +113,10 @@ Deno.test({
     await ifItFailsBlameWolf(
       {
         name: "Discordeno-test",
-        type: DiscordChannelTypes.GUILD_VOICE,
+        type: DiscordChannelTypes.GuildVoice,
         userLimit: 32,
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
@@ -136,7 +130,7 @@ Deno.test({
         name: "Discordeno-test",
         rateLimitPerUser: 2423,
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,
@@ -158,14 +152,14 @@ Deno.test({
         name: "Discordeno-test",
         permissionOverwrites: [
           {
-            id: botId,
-            type: DiscordOverwriteTypes.MEMBER,
+            id: bigintToSnowflake(botId),
+            type: DiscordOverwriteTypes.Member,
             allow: ["VIEW_CHANNEL"],
             deny: [],
           },
         ],
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,

@@ -1,10 +1,7 @@
 import { DiscordGatewayCloseEventCodes } from "../types/codes/gateway_close_event_codes.ts";
-import { identify } from "./identify.ts";
-import { resume } from "./resume.ts";
 import { ws } from "./ws.ts";
 
-// deno-lint-ignore require-await
-export async function createShard(shardId: number) {
+export function createShard(shardId: number) {
   const socket = new WebSocket(ws.botGatewayData.url);
   socket.binaryType = "arraybuffer";
 
@@ -12,25 +9,16 @@ export async function createShard(shardId: number) {
     ws.log("ERROR", { shardId, error: errorEvent });
   };
 
-  socket.onmessage = ({ data: message }) =>
-    ws.handleOnMessage(message, shardId);
+  socket.onmessage = ({ data: message }) => ws.handleOnMessage(message, shardId);
 
-  socket.onclose = (event) => {
+  socket.onclose = async (event) => {
     ws.log("CLOSED", { shardId, payload: event });
 
-    if (
-      event.code === 3064 ||
-      event.reason === "Discordeno Testing Finished! Do Not RESUME!"
-    ) {
+    if (event.code === 3064 || event.reason === "Discordeno Testing Finished! Do Not RESUME!") {
       return;
     }
 
-    if (
-      event.code === 3065 ||
-      ["Resharded!", "Resuming the shard, closing old shard."].includes(
-        event.reason,
-      )
-    ) {
+    if (event.code === 3065 || ["Resharded!", "Resuming the shard, closing old shard."].includes(event.reason)) {
       return ws.log("CLOSED_RECONNECT", { shardId, payload: event });
     }
 
@@ -53,18 +41,16 @@ export async function createShard(shardId: number) {
       case DiscordGatewayCloseEventCodes.InvalidApiVersion:
       case DiscordGatewayCloseEventCodes.InvalidIntents:
       case DiscordGatewayCloseEventCodes.DisallowedIntents:
-        throw new Error(
-          event.reason || "Discord gave no reason! GG! You broke Discord!",
-        );
+        throw new Error(event.reason || "Discord gave no reason! GG! You broke Discord!");
       // THESE ERRORS CAN NO BE RESUMED! THEY MUST RE-IDENTIFY!
       case DiscordGatewayCloseEventCodes.NotAuthenticated:
       case DiscordGatewayCloseEventCodes.InvalidSeq:
       case DiscordGatewayCloseEventCodes.RateLimited:
       case DiscordGatewayCloseEventCodes.SessionTimedOut:
-        identify(shardId, ws.maxShards);
+        await ws.identify(shardId, ws.maxShards);
         break;
       default:
-        resume(shardId);
+        ws.resume(shardId);
         break;
     }
   };

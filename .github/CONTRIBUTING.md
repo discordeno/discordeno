@@ -1,7 +1,7 @@
 # Contributing
 
 - Read the [style guide](#style-guide).
-- Ask for help on the [official Discord server](https:)
+- Ask for help on the [official Discord server](https://discord.gg/5vBgXk3UcZ)
 - If you are going to work on an issue, mention so in the issue comments before
   you start working on the issue.
 - If you are going to work on a new feature, create an issue and discuss with
@@ -38,29 +38,41 @@
 
 ## Types Guide
 
-- Must use snake case (according to Discord API).
+- Must use camel case (same property name as in the docs just in camel case).
 - Each field or property must be accompanied with a reasonable JSDoc comment
   right above its type definition.
-- The name of the type must be prefixed with `Discord`.
 - Must be placed inside of the types module (in `src/types` directory).
 
 Example:
 
 ```ts
+/** https://discord.com/developers/docs/resources/user#user-object */
 export interface User {
+  /** The user's id */
   id: string;
+  /** The user's username, not unique across the platform */
   username: string;
+  /** The user's 4-digit discord-tag */
   discriminator: string;
+  /** The user's avatar hash */
   avatar: string | null;
+  /** Whether the user belongs to an OAuth2 application */
   bot?: boolean;
+  /** Whether the user is an Official Discord System user (part of the urgent message system) */
   system?: boolean;
+  /** Whether the user has two factor enabled on their account */
   mfaEnabled?: boolean;
+  /** The user's chosen language option */
   locale?: string;
+  /** Whether the email on this account has been verified */
   verified?: boolean;
-  email?: string;
-  flags?: number;
-  premiumType?: number;
+  /** The user's email */
+  email?: string | null;
+  /** The flags on a user's account */
+  flags?: DiscordUserFlags;
+  /** The type of Nitro subscription on a user's account */
+  premiumType?: DiscordPremiumTypes;
+  /** The public flags on a user's account */
+  publicFlags?: DiscordUserFlags;
 }
-
-export type DiscordUser = SnakeCasedPropertiesDeep<DiscordUserInternal>;
 ```

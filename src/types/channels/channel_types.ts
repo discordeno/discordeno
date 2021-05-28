@@ -1,21 +1,27 @@
 /** https://discord.com/developers/docs/resources/channel#channel-object-channel-types */
 export enum DiscordChannelTypes {
   /** A text channel within a server */
-  GUILD_TEXT,
+  GuildText,
   /** A direct message between users */
   DM,
   /** A voice channel within a server */
-  GUILD_VOICE,
+  GuildVoice,
   /** A direct message between multiple users */
-  GROUP_DM,
+  GroupDm,
   /** An organizational category that contains up to 50 channels */
-  GUILD_CATEGORY,
+  GuildCategory,
   /** A channel that users can follow and crosspost into their own server */
-  GUILD_NEWS,
+  GuildNews,
   /** A channel in which game developers can sell their game on Discord */
-  GUILD_STORE,
+  GuildStore,
+  /** A temporary sub-channel within a GUILD_NEWS channel */
+  GuildNewsThread = 10,
+  /** A temporary sub-channel within a GUILD_TEXT channel */
+  GuildPublicThread,
+  /** A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission */
+  GuildPivateThread,
   /** A voice channel for hosting events with an audience */
-  GUILD_STAGE_VOICE = 13,
+  GuildStageVoice = 13,
 }
 
 export type ChannelTypes = DiscordChannelTypes;

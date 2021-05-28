@@ -2,4 +2,5 @@ export {
   assertArrayIncludes,
   assertEquals,
   assertExists,
-} from "https://deno.land/std@0.90.0/testing/asserts.ts";
+  assertThrows,
+} from "https://deno.land/std@0.97.0/testing/asserts.ts";

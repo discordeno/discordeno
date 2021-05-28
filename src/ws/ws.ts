@@ -1,6 +1,6 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { Collection } from "../util/collection.ts";
-import { cleanupLoadingShards } from "./cleanup_loading_shards.ts";
+import { closeWS } from "./close_ws.ts";
 import { createShard } from "./create_shard.ts";
 import { log } from "./events.ts";
 import { handleDiscordPayload } from "./handle_discord_payload.ts";
@@ -9,13 +9,15 @@ import { heartbeat } from "./heartbeat.ts";
 import { identify } from "./identify.ts";
 import { processQueue } from "./process_queue.ts";
 import { resharder } from "./resharder.ts";
+import { sendShardMessage } from "./send_shard_message.ts";
 import { spawnShards } from "./spawn_shards.ts";
 import { startGateway } from "./start_gateway.ts";
 import { tellClusterToIdentify } from "./tell_cluster_to_identify.ts";
+import { resume } from "./resume.ts";
 
 // CONTROLLER LIKE INTERFACE FOR WS HANDLING
 export const ws = {
-  /** The secret key authorization header the bot will expect when sending payloads */
+  /** The secret key authorization header the bot will expect when sending payloads. */
   secretKey: "",
   /** The url that all discord payloads for the dispatch type should be sent to. */
   url: "",
@@ -23,11 +25,13 @@ export const ws = {
   reshard: true,
   /** The percentage at which resharding should occur. */
   reshardPercentage: 80,
+  /** The delay in milliseconds to wait before spawning next shard. OPTIMAL IS ABOVE 2500. YOU DON"T WANT TO HIT THE RATE LIMIT!!! */
+  spawnShardDelay: 2500,
   /** The maximum shard Id number. Useful for zero-downtime updates or resharding. */
   maxShards: 0,
   /** Whether or not the resharder should automatically switch to LARGE BOT SHARDING when you are above 100K servers. */
   useOptimalLargeBotSharding: true,
-  /** The amount of shards to load per cluster */
+  /** The amount of shards to load per cluster. */
   shardsPerCluster: 25,
   /** The maximum amount of clusters to use for your bot. */
   maxClusters: 4,
@@ -49,7 +53,7 @@ export const ws = {
   },
   botGatewayData: {
     /** The WSS URL that can be used for connecting to the gateway. */
-    url: "wss://gateway.discord.gg/?v=8&encoding=json",
+    url: "wss://gateway.discord.gg/?v=9&encoding=json",
     /** The recommended number of shards to use when connecting. */
     shards: 1,
     /** Info on the current start limit. */
@@ -73,14 +77,16 @@ export const ws = {
     {
       shardId: number;
       resolve: (value: unknown) => void;
-      reject: (reason?: unknown) => void;
       startedAt: number;
     }
   >(),
   /** Stored as bucketId: { clusters: [clusterId, [ShardIds]], createNextShard: boolean } */
   buckets: new Collection<
     number,
-    { clusters: number[][]; createNextShard: boolean }
+    {
+      clusters: number[][];
+      createNextShard: (() => unknown)[];
+    }
   >(),
   utf8decoder: new TextDecoder(),
 
@@ -92,9 +98,9 @@ export const ws = {
   spawnShards,
   /** Create the websocket and adds the proper handlers to the websocket. */
   createShard,
-  /** Begins identification of the shard to discord */
+  /** Begins identification of the shard to discord. */
   identify,
-  /** Begins heartbeating of the shard to keep it alive */
+  /** Begins heartbeating of the shard to keep it alive. */
   heartbeat,
   /** Sends the discord payload to another server. */
   handleDiscordPayload,
@@ -104,20 +110,24 @@ export const ws = {
   log,
   /** Handles resharding the bot when necessary. */
   resharder,
-  /** Cleanups loading shards that were unable to load. */
-  cleanupLoadingShards,
-  /** Handles the message events from websocket */
+  /** Handles the message events from websocket. */
   handleOnMessage,
-  /** Handles processing queue of requests send to this shard */
+  /** Handles processing queue of requests send to this shard. */
   processQueue,
+  /** Closes shard WebSocket connection properly. */
+  closeWS,
+  /** Properly adds a message to the shards queue. */
+  sendShardMessage,
+  /** Properly resume an old shards session. */
+  resume,
 };
 
 export interface DiscordenoShard {
-  /** The shard id number */
+  /** The shard id number. */
   id: number;
-  /** The websocket for this shard */
+  /** The websocket for this shard. */
   ws: WebSocket;
-  /** The amount of milliseconds to wait between heartbeats */
+  /** The amount of milliseconds to wait between heartbeats. */
   resumeInterval: number;
   /** The session id important for resuming connections. */
   sessionId: string;
@@ -125,12 +135,14 @@ export interface DiscordenoShard {
   previousSequenceNumber: number | null;
   /** Whether the shard is currently resuming. */
   resuming: boolean;
-  /** Whether the shard has received the ready event */
+  /** Whether the shard has received the ready event. */
   ready: boolean;
   /** The list of guild ids that are currently unavailable due to an outage. */
-  unavailableGuildIds: Set<string>;
+  unavailableGuildIds: Set<bigint>;
+  /** Last time when a GUILD_CREATE event has been received for an unavailable guild. This is used to prevent infinite loops in the READY event handler. */
+  lastAvailable: number;
   heartbeat: {
-    /** The exact timestamp the last heartbeat was sent */
+    /** The exact timestamp the last heartbeat was sent. */
     lastSentAt: number;
     /** The timestamp the last heartbeat ACK was received from discord. */
     lastReceivedAt: number;
@@ -149,15 +161,15 @@ export interface DiscordenoShard {
   processingQueue: boolean;
   /** When the first request for this minute has been sent. */
   queueStartedAt: number;
-  /** The request counter of the queue */
+  /** The request counter of the queue. */
   queueCounter: number;
 }
 
 export interface WebSocketRequest {
   op: DiscordGatewayOpcodes;
   d: unknown;
-  // guildId: string;
+  // guildId: bigint;
   // shardId: number;
-  // nonce?: string;
+  // nonce?: bigint;
   // options?: Record<string, unknown>;
 }

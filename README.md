@@ -9,7 +9,11 @@ Discordeno follows [Semantic Versioning](https://semver.org/)
 [![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
+
+<!--
+TODO: add coverage back when it is stable
 [![Coverage](https://img.shields.io/codecov/c/gh/discordeno/discordeno)](https://codecov.io/gh/discordeno/discordeno)
+-->
 
 ## Features
 
@@ -37,16 +41,14 @@ Here is a minimal example to get started with:
 import { startBot } from "https://deno.land/x/discordeno/mod.ts";
 
 startBot({
-  token: "BOT TOKEN",
-  intents: ["GUILDS", "GUILD_MESSAGES"],
+  token: "BOT_TOKEN",
+  intents: ["Guilds", "GuildMessages"],
   eventHandlers: {
     ready() {
       console.log("Successfully connected to gateway");
     },
     messageCreate(message) {
-      if (message.content === "ping") {
-        message.reply("Pong using Discordeno!");
-      }
+      // Process the message with your command handler here
     },
   },
 });

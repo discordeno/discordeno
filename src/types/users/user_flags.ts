@@ -10,10 +10,10 @@ export enum DiscordUserFlags {
   HouseBalance = 1 << 8,
   EarlySupporter = 1 << 9,
   TeamUser = 1 << 10,
-  System = 1 << 12,
   BugHunterLevel2 = 1 << 14,
   VerifiedBot = 1 << 16,
   EarlyVerifiedBotDeveloper = 1 << 17,
+  DiscordCertifiedModerator = 1 << 18,
 }
 
 export type UserFlags = DiscordUserFlags;

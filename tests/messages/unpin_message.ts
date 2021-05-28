@@ -21,10 +21,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
 
   // Be sure that the pin got added
   const pins = await getPins(tempData.channelId);
-  assertEquals(
-    pins.filter((msg: DiscordenoMessage) => msg.id === message.id).length,
-    1,
-  );
+  assertEquals(pins.filter((msg: DiscordenoMessage) => msg.id === message.id).length, 1);
 
   if (type === "raw") {
     await unpin(message.channelId, message.id);
@@ -34,11 +31,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
 
   // Be sure that the pin got removed
   const removedPins = await getPins(tempData.channelId);
-  assertEquals(
-    removedPins.filter((msg: DiscordenoMessage) => msg.id === message.id)
-      .length,
-    0,
-  );
+  assertEquals(removedPins.filter((msg: DiscordenoMessage) => msg.id === message.id).length, 0);
 }
 
 Deno.test({

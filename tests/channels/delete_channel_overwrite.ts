@@ -5,6 +5,7 @@ import { deleteChannelOverwrite } from "../../src/helpers/channels/delete_channe
 import { DiscordChannelTypes } from "../../src/types/channels/channel_types.ts";
 import { DiscordOverwriteTypes } from "../../src/types/channels/overwrite_types.ts";
 import { CreateGuildChannel } from "../../src/types/guilds/create_guild_channel.ts";
+import { bigintToSnowflake } from "../../src/util/bigint.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
 import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
@@ -14,7 +15,7 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, _save = false) {
 
   // Assertions
   assertExists(channel);
-  assertEquals(channel.type, options.type || DiscordChannelTypes.GUILD_TEXT);
+  assertEquals(channel.type, options.type || DiscordChannelTypes.GuildText);
 
   // Delay the execution by 5 seconds to allow CHANNEL_CREATE event to be processed
   await delayUntil(10000, () => cache.channels.has(channel.id));
@@ -23,26 +24,18 @@ async function ifItFailsBlameWolf(options: CreateGuildChannel, _save = false) {
     throw new Error("The channel seemed to be created but it was not cached.");
   }
 
-  if (
-    options.permissionOverwrites &&
-    channel.permissionOverwrites?.length !== options.permissionOverwrites.length
-  ) {
+  if (options.permissionOverwrites && channel.permissionOverwrites?.length !== options.permissionOverwrites.length) {
     throw new Error(
-      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites.",
+      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites."
     );
   }
 
   await deleteChannelOverwrite(channel.guildId, channel.id, botId);
 
-  await delayUntil(
-    10000,
-    () => cache.channels.get(channel.id)?.permissionOverwrites?.length === 0,
-  );
+  await delayUntil(10000, () => cache.channels.get(channel.id)?.permissionOverwrites?.length === 0);
 
   if (cache.channels.get(channel.id)?.permissionOverwrites?.length !== 0) {
-    throw new Error(
-      "The channel permission overwrite was supposed to be deleted but it does not appear to be.",
-    );
+    throw new Error("The channel permission overwrite was supposed to be deleted but it does not appear to be.");
   }
 }
 
@@ -54,14 +47,14 @@ Deno.test({
         name: "Discordeno-test",
         permissionOverwrites: [
           {
-            id: botId,
-            type: DiscordOverwriteTypes.MEMBER,
+            id: bigintToSnowflake(botId),
+            type: DiscordOverwriteTypes.Member,
             allow: ["VIEW_CHANNEL"],
             deny: [],
           },
         ],
       },
-      true,
+      true
     );
   },
   ...defaultTestOptions,

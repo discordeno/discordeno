@@ -1,7 +1,7 @@
 import { cache, deleteMessages, sendMessage } from "../../mod.ts";
-import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 import { assertExists } from "../deps.ts";
 import { delayUntil } from "../util/delay_until.ts";
+import { defaultTestOptions, tempData } from "../ws/start_bot.ts";
 
 async function ifItFailsBlameWolf(reason?: string) {
   const message = await sendMessage(tempData.channelId, "Hello World!");
@@ -27,23 +27,13 @@ async function ifItFailsBlameWolf(reason?: string) {
   }
 
   // Delete the message now
-  await deleteMessages(
-    tempData.channelId,
-    [message.id, secondMessage.id],
-    reason,
-  );
+  await deleteMessages(tempData.channelId, [message.id, secondMessage.id], reason);
 
   // Wait 5 seconds to give it time for MESSAGE_DELETE event
-  await delayUntil(
-    10000,
-    () =>
-      !cache.messages.has(message.id) && !cache.messages.has(secondMessage.id),
-  );
+  await delayUntil(10000, () => !cache.messages.has(message.id) && !cache.messages.has(secondMessage.id));
   // Make sure it is gone from cache
   if (cache.messages.has(message.id) || cache.messages.has(secondMessage.id)) {
-    throw new Error(
-      "The message should have been deleted but it is still in cache.",
-    );
+    throw new Error("The message should have been deleted but it is still in cache.");
   }
 }
 

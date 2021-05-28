@@ -8,6 +8,8 @@ export interface Team {
   id: string;
   /** The members of the team */
   members: TeamMember[];
+  /** The name of the team */
+  name: string;
   /** The user id of the current team owner */
   ownerUserId: string;
 }

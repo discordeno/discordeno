@@ -4,10 +4,10 @@ import { requireBotChannelPermissions } from "../../util/permissions.ts";
 
 /** Removes a reaction from the given user on this message, defaults to bot. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
 export async function removeReaction(
-  channelId: string,
-  messageId: string,
+  channelId: bigint,
+  messageId: bigint,
   reaction: string,
-  options?: { userId?: string },
+  options?: { userId?: bigint }
 ) {
   if (options?.userId) {
     await requireBotChannelPermissions(channelId, ["MANAGE_MESSAGES"]);
@@ -22,12 +22,7 @@ export async function removeReaction(
   return await rest.runMethod<undefined>(
     "delete",
     options?.userId
-      ? endpoints.CHANNEL_MESSAGE_REACTION_USER(
-        channelId,
-        messageId,
-        reaction,
-        options.userId,
-      )
-      : endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction),
+      ? endpoints.CHANNEL_MESSAGE_REACTION_USER(channelId, messageId, reaction, options.userId)
+      : endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction)
   );
 }

@@ -1,116 +1,73 @@
 import { eventHandlers, setApplicationId, setBotId } from "../../bot.ts";
-import { cache, cacheHandlers } from "../../cache.ts";
-import { initialMemberLoadQueue } from "../../structures/guild.ts";
-import { structures } from "../../structures/mod.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { Ready } from "../../types/gateway/ready.ts";
-import { GuildMemberWithUser } from "../../types/mod.ts";
-import { ws } from "../../ws/ws.ts";
+import { cache } from "../../cache.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { Ready } from "../../types/gateway/ready.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
+import { DiscordenoShard, ws } from "../../ws/ws.ts";
 
-export function handleReady(
-  data: DiscordGatewayPayload,
-  shardId: number,
-) {
+export function handleReady(data: DiscordGatewayPayload, shardId: number) {
+  // Triggered on each shard
+  eventHandlers.shardReady?.(shardId);
+
   // The bot has already started, the last shard is resumed, however.
   if (cache.isReady) return;
+
+  const shard = ws.shards.get(shardId);
+  if (!shard) return;
 
   const payload = data.d as Ready;
   setBotId(payload.user.id);
   setApplicationId(payload.application.id);
 
-  // Triggered on each shard
-  eventHandlers.shardReady?.(shardId);
-  // Save when the READY event was received to prevent infinite load loops
-  const now = Date.now();
-
-  const shard = ws.shards.get(shardId);
-  if (!shard) return;
-
   // Set ready to false just to go sure
   shard.ready = false;
   // All guilds are unavailable at first
-  shard.unavailableGuildIds = new Set(payload.guilds.map((g) => g.id));
+  shard.unavailableGuildIds = new Set(payload.guilds.map((g) => snowflakeToBigint(g.id)));
+  // Set the last available to now
+  shard.lastAvailable = Date.now();
 
   // Start ready check in 2 seconds
-  setTimeout(async () => {
-    eventHandlers.debug?.(
-      "loop",
-      `1. Running setTimeout in READY file.`,
-    );
-    await checkReady(payload, shardId, now);
+  setTimeout(() => {
+    eventHandlers.debug?.("loop", `1. Running setTimeout in READY file.`);
+    checkReady(payload, shard);
   }, 2000);
 }
 
-// Don't pass the shard itself because unavailableGuilds won't be updated by the GUILD_CREATE event
 /** This function checks if the shard is fully loaded */
-async function checkReady(payload: Ready, shardId: number, now: number) {
-  const shard = ws.shards.get(shardId);
-  if (!shard) return;
-
+function checkReady(payload: Ready, shard: DiscordenoShard) {
   // Check if all guilds were loaded
-  if (shard.unavailableGuildIds.size) {
-    if (Date.now() - now > 10000) {
-      eventHandlers.shardFailedToLoad?.(shardId, shard.unavailableGuildIds);
-      // Force execute the loaded function to prevent infinite loop
-      await loaded(shardId);
-    } else {
-      // Not all guilds were loaded but 10 seconds haven't passed so check again
-      setTimeout(async () => {
-        eventHandlers.debug?.(
-          "loop",
-          `2. Running setTimeout in READY file.`,
-        );
-        await checkReady(payload, shardId, now);
-      }, 2000);
-    }
-  } else {
-    // All guilds were loaded
-    await loaded(shardId);
+  if (!shard.unavailableGuildIds.size) return loaded(shard);
+
+  // If the last GUILD_CREATE has been received before 5 seconds if so most likely the remaining guilds are unavailable
+  if (shard.lastAvailable + 5000 < Date.now()) {
+    eventHandlers.shardFailedToLoad?.(shard.id, shard.unavailableGuildIds);
+    // Force execute the loaded function to prevent infinite loop
+    return loaded(shard);
   }
+
+  // Not all guilds were loaded but 5 seconds haven't passed so check again
+  setTimeout(() => {
+    eventHandlers.debug?.("loop", `2. Running setTimeout in READY file.`);
+    checkReady(payload, shard);
+  }, 2000);
 }
 
-async function loaded(shardId: number) {
-  const shard = ws.shards.get(shardId);
-  if (!shard) return;
-
+function loaded(shard: DiscordenoShard) {
   shard.ready = true;
 
-  // If it is the last shard we can go full ready
-  if (shardId === ws.lastShardId - 1) {
-    // Still some shards are loading so wait another 2 seconds for them
-    if (ws.shards.some((shard) => !shard.ready)) {
-      setTimeout(async () => {
-        eventHandlers.debug?.(
-          "loop",
-          `3. Running setTimeout in CHANNEL_DELTE file.`,
-        );
-        await loaded(shardId);
-      }, 2000);
-    } else {
-      cache.isReady = true;
-      eventHandlers.ready?.();
+  // If it is not the last shard we can't go full ready
+  if (shard.id !== ws.lastShardId) return;
 
-      // All the members that came in on guild creates should now be processed 1 by 1
-      for (const [guildId, members] of initialMemberLoadQueue.entries()) {
-        eventHandlers.debug?.(
-          "loop",
-          "Running for of loop in READY file for loading members.",
-        );
-        await Promise.allSettled(
-          members.map(async (member) => {
-            const discordenoMember = await structures.createDiscordenoMember(
-              member as GuildMemberWithUser,
-              guildId,
-            );
+  // Still some shards are loading so wait another 2 seconds for them
+  if (ws.shards.some((shard) => !shard.ready)) {
+    setTimeout(() => {
+      eventHandlers.debug?.("loop", `3. Running setTimeout in READY file.`);
+      loaded(shard);
+    }, 2000);
 
-            return cacheHandlers.set(
-              "members",
-              discordenoMember.id,
-              discordenoMember,
-            );
-          }),
-        );
-      }
-    }
+    return;
   }
+
+  cache.isReady = true;
+  eventHandlers.ready?.();
 }

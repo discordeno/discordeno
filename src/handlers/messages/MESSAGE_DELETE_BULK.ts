@@ -1,18 +1,18 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { MessageDeleteBulk } from "../../types/messages/message_delete_bulk.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { MessageDeleteBulk } from "../../types/messages/message_delete_bulk.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleMessageDeleteBulk(data: DiscordGatewayPayload) {
   const payload = data.d as MessageDeleteBulk;
-  const channel = await cacheHandlers.get("channels", payload.channelId);
+  const channel = await cacheHandlers.get("channels", snowflakeToBigint(payload.channelId));
   if (!channel) return;
 
-  return Promise.all(payload.ids.map(async (id) => {
-    eventHandlers.messageDelete?.(
-      { id, channel },
-      await cacheHandlers.get("messages", id),
-    );
-    await cacheHandlers.delete("messages", id);
-  }));
+  return Promise.all(
+    payload.ids.map(async (id) => {
+      eventHandlers.messageDelete?.({ id, channel }, await cacheHandlers.get("messages", snowflakeToBigint(id)));
+      await cacheHandlers.delete("messages", snowflakeToBigint(id));
+    })
+  );
 }
