@@ -264,6 +264,11 @@ export function validateComponents(components: MessageComponents) {
           if (subcomponent.minValues > 25) {
             throw new Error(Errors.COMPONENT_SELECT_MINVALUE_TOO_MANY);
           }
+
+          if (!subcomponent.maxValues) subcomponent.maxValues = subcomponent.minValues;
+          if (subcomponent.minValues > subcomponent.maxValues) {
+            throw new Error(Errors.COMPONENT_SELECT_MIN_HIGHER_THAN_MAX);
+          }
         }
 
         if (subcomponent.maxValues) {
@@ -284,7 +289,16 @@ export function validateComponents(components: MessageComponents) {
           throw new Error(Errors.COMPONENT_SELECT_OPTIONS_TOO_MANY);
         }
 
+        let defaults = 0;
+
         for (const option of subcomponent.options) {
+          if (option.default) {
+            defaults++;
+            if (defaults > (subcomponent.maxValues || 25)) {
+              throw new Error(Errors.SELECT_OPTION_TOO_MANY_DEFAULTS);
+            }
+          }
+
           if (!validateLength(option.label, { max: 25 })) {
             throw new Error(Errors.SELECT_OPTION_LABEL_TOO_BIG);
           }
