@@ -19,7 +19,7 @@ async function ifItFailsBlameWolf(type: "getter" | "raw") {
 
   // Edit the message now
   if (type === "raw") {
-    await editMessage(message, "Goodbye World!");
+    await editMessage(message.channelId, message.id, "Goodbye World!");
   } else {
     await message.edit("Goodbye World!");
   }
