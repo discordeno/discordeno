@@ -1,6 +1,5 @@
 import { encode } from "./deps.ts";
 import { eventHandlers } from "../bot.ts";
-import { isActionRow } from "../helpers/type_guards/is_action_row.ts";
 import { isButton } from "../helpers/type_guards/is_button.ts";
 import { Errors } from "../types/discordeno/errors.ts";
 import type { ApplicationCommandOption } from "../types/interactions/commands/application_command_option.ts";
@@ -215,43 +214,6 @@ export function validateComponents(components: MessageComponents) {
   let actionRowCounter = 0;
 
   for (const component of components) {
-    // 5 Link buttons can not have a customId
-    if (isButton(component)) {
-      if (component.type === ButtonStyles.Link && component.customId) {
-        throw new Error(Errors.LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID);
-      }
-      // Other buttons must have a customId
-      if (!component.customId && component.type !== ButtonStyles.Link) {
-        throw new Error(Errors.BUTTON_REQUIRES_CUSTOM_ID);
-      }
-
-      if (!validateLength(component.label, { max: 80 })) {
-        throw new Error(Errors.COMPONENT_LABEL_TOO_BIG);
-      }
-
-      if (component.customId && !validateLength(component.customId, { max: 100 })) {
-        throw new Error(Errors.COMPONENT_CUSTOM_ID_TOO_BIG);
-      }
-
-      if (typeof component.emoji === "string") {
-        // A snowflake id was provided
-        if (/^[0-9]+$/.test(component.emoji)) {
-          component.emoji = {
-            id: component.emoji,
-          };
-        } else {
-          // A unicode emoji was provided
-          component.emoji = {
-            name: component.emoji,
-          };
-        }
-      }
-    }
-
-    if (!isActionRow(component)) {
-      continue;
-    }
-
     actionRowCounter++;
     // Max of 5 ActionRows per message
     if (actionRowCounter > 5) throw new Error(Errors.TOO_MANY_ACTION_ROWS);
@@ -259,6 +221,41 @@ export function validateComponents(components: MessageComponents) {
     // Max of 5 Buttons (or any component type) within an ActionRow
     if (component.components?.length > 5) {
       throw new Error(Errors.TOO_MANY_COMPONENTS);
+    }
+
+    for (const subcomponent of component.components) {
+      // 5 Link buttons can not have a customId
+      if (isButton(subcomponent)) {
+        if (subcomponent.type === ButtonStyles.Link && subcomponent.customId) {
+          throw new Error(Errors.LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID);
+        }
+        // Other buttons must have a customId
+        if (!subcomponent.customId && subcomponent.type !== ButtonStyles.Link) {
+          throw new Error(Errors.BUTTON_REQUIRES_CUSTOM_ID);
+        }
+
+        if (!validateLength(subcomponent.label, { max: 80 })) {
+          throw new Error(Errors.subcomponent_LABEL_TOO_BIG);
+        }
+
+        if (subcomponent.customId && !validateLength(subcomponent.customId, { max: 100 })) {
+          throw new Error(Errors.subcomponent_CUSTOM_ID_TOO_BIG);
+        }
+
+        if (typeof subcomponent.emoji === "string") {
+          // A snowflake id was provided
+          if (/^[0-9]+$/.test(subcomponent.emoji)) {
+            subcomponent.emoji = {
+              id: subcomponent.emoji,
+            };
+          } else {
+            // A unicode emoji was provided
+            subcomponent.emoji = {
+              name: subcomponent.emoji,
+            };
+          }
+        }
+      }
     }
   }
 }

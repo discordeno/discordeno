@@ -4,6 +4,8 @@ export enum DiscordMessageComponentTypes {
   ActionRow = 1,
   /** A button! */
   Button,
+  /** A select menu. */
+  SelectMenu,
 }
 
 export type MessageComponentTypes = DiscordMessageComponentTypes;

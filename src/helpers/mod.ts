@@ -114,8 +114,9 @@ import { getGuildTemplates } from "./templates/get_guild_templates.ts";
 import { getTemplate } from "./templates/get_template.ts";
 import { syncGuildTemplate } from "./templates/sync_guild_template.ts";
 // Type Guards
-import { isActionRow } from "./type_guards/is_action_row.ts";
 import { isButton } from "./type_guards/is_button.ts";
+import { isSelectMenu } from "./type_guards/is_select_menu.ts";
+
 import { createWebhook } from "./webhooks/create_webhook.ts";
 import { deleteWebhook } from "./webhooks/delete_webhook.ts";
 import { deleteWebhookMessage } from "./webhooks/delete_webhook_message.ts";
@@ -239,8 +240,8 @@ export {
   guildBannerURL,
   guildIconURL,
   guildSplashURL,
-  isActionRow,
   isButton,
+  isSelectMenu,
   isChannelSynced,
   kick,
   kickMember,
