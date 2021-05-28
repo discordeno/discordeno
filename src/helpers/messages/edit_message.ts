@@ -8,7 +8,7 @@ import type { Message } from "../../types/messages/message.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
-import { validateComponents } from "../../util/utils.ts";
+import { snakelize, validateComponents } from "../../util/utils.ts";
 
 /** Edit the message. */
 export async function editMessage(channelId: bigint, messageId: bigint, content: string | EditMessage) {
@@ -33,7 +33,11 @@ export async function editMessage(channelId: bigint, messageId: bigint, content:
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
   }
 
-  const result = await rest.runMethod<Message>("patch", endpoints.CHANNEL_MESSAGE(channelId, messageId), content);
+  const result = await rest.runMethod<Message>(
+    "patch",
+    endpoints.CHANNEL_MESSAGE(channelId, messageId),
+    snakelize(content)
+  );
 
   return await structures.createDiscordenoMessage(result);
 }
