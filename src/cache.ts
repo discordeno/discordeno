@@ -53,23 +53,18 @@ function memberSweeper(member: DiscordenoMember) {
   return member.cachedAt - Date.now() < 1800000;
 }
 
-export function guildSweeper(guild: DiscordenoGuild) {
-  if (cache.activeGuildIds.has(guild.id)) return false;
+function guildSweeper(guild: DiscordenoGuild) {
+  // Reset activity for next interval
+  if (!cache.activeGuildIds.delete(guild.id)) return false;
 
-  // This is inactive guild. Not a single thing has happened for atleast 30 minutes.
-  // Not a reaction, not a message, not any event!
-  cache.dispatchedGuildIds.add(guild.id);
-
-  // Remove all channel if they were dispatched
-  cache.channels.forEach((channel) => {
-    if (!cache.dispatchedGuildIds.has(channel.guildId)) return;
-
+  guild.channels.forEach((channel) => {
     cache.channels.delete(channel.id);
     cache.dispatchedChannelIds.add(channel.id);
   });
 
-  // Reset activity for next interval
-  cache.activeGuildIds.delete(guild.id);
+  // This is inactive guild. Not a single thing has happened for atleast 30 minutes.
+  // Not a reaction, not a message, not any event!
+  cache.dispatchedGuildIds.add(guild.id);
 
   return true;
 }
