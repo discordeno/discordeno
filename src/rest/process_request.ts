@@ -14,20 +14,20 @@ export async function processRequest(request: RestRequest, payload: RestPayload)
   // REMOVE THE MAJOR PARAM
   parts.shift();
 
-  const [id] = parts;
+  const url = rest.simplifyUrl(request.url, request.method);
 
-  const queue = rest.pathQueues.get(id);
+  const queue = rest.pathQueues.get(url);
   // IF THE QUEUE EXISTS JUST ADD THIS TO THE QUEUE
   if (queue) {
     queue.push({ request, payload });
   } else {
     // CREATES A NEW QUEUE
-    rest.pathQueues.set(id, [
+    rest.pathQueues.set(url, [
       {
         request,
         payload,
       },
     ]);
-    await rest.processQueue(id);
+    await rest.processQueue(url);
   }
 }
