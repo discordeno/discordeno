@@ -100,7 +100,18 @@ export async function processQueue(id: string) {
         if (response.status !== 429) {
           queuedRequest.request.reject?.(new Error(`[${response.status}] ${error}`));
           queue.shift();
+        } else {
+          if (queuedRequest.payload.retryCount++ >= rest.maxRetryCount) {
+            rest.eventHandlers.retriesMaxed(queuedRequest.payload);
+            queuedRequest.request.reject?.(
+              new Error(`[${response.status}] The request was rate limited and it maxed out the retries limit.`)
+            );
+            // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
+            queue.shift();
+            continue;
+          }
         }
+
         continue;
       }
 
@@ -114,24 +125,24 @@ export async function processQueue(id: string) {
         // CONVERT THE RESPONSE TO JSON
         const json = await response.json();
         // IF THE RESPONSE WAS RATE LIMITED, HANDLE ACCORDINGLY
-        if (json.retry_after || json.message === "You are being rate limited.") {
-          // IF IT HAS MAXED RETRIES SOMETHING SERIOUSLY WRONG. CANCEL OUT.
-          if (queuedRequest.payload.retryCount >= rest.maxRetryCount) {
-            rest.eventHandlers.retriesMaxed(queuedRequest.payload);
-            queuedRequest.request.respond({
-              status: 200,
-              body: JSON.stringify({
-                error: "The request was rate limited and it maxed out the retries limit.",
-              }),
-            });
-            // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
-            queue.shift();
-            continue;
-          }
+        // if (json.retry_after || json.message === "You are being rate limited.") {
+        //   // IF IT HAS MAXED RETRIES SOMETHING SERIOUSLY WRONG. CANCEL OUT.
+        //   if (queuedRequest.payload.retryCount >= rest.maxRetryCount) {
+        //     rest.eventHandlers.retriesMaxed(queuedRequest.payload);
+        //     queuedRequest.request.respond({
+        //       status: 200,
+        //       body: JSON.stringify({
+        //         error: "The request was rate limited and it maxed out the retries limit.",
+        //       }),
+        //     });
+        //     // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
+        //     queue.shift();
+        //     continue;
+        //   }
 
-          // SINCE IT WAS RATELIMITE, RETRY AGAIN
-          continue;
-        }
+        //   // SINCE IT WAS RATELIMITE, RETRY AGAIN
+        //   continue;
+        // }
 
         rest.eventHandlers.fetchSuccess(queuedRequest.payload);
         // REMOVE FROM QUEUE
