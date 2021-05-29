@@ -81,22 +81,26 @@ export async function createDiscordenoVoiceState(guildId: bigint, data: VoiceSta
   let bitfield = 0n;
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
-  for (const [key, value] of Object.entries(data)) {
+  (Object.keys(data) as (keyof typeof data)[]).forEach((key) => {
     eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoVoiceState function.`);
 
     // We don't need to cache member twice. It will be in cache.members
-    if (key === "member") continue;
+    if (key === "member") return;
 
     const toggleBits = voiceStateToggles[key as keyof typeof voiceStateToggles];
     if (toggleBits) {
-      bitfield |= value ? toggleBits : 0n;
-      continue;
+      bitfield |= data[key] ? toggleBits : 0n;
+      return;
     }
 
     props[key] = createNewProp(
-      VOICE_STATE_SNOWFLAKES.includes(key) ? (value ? snowflakeToBigint(value) : undefined) : value
+      VOICE_STATE_SNOWFLAKES.includes(key)
+        ? data[key]
+          ? snowflakeToBigint(data[key] as string)
+          : undefined
+        : data[key]
     );
-  }
+  });
 
   const voiceState: DiscordenoVoiceState = Object.create(baseRole, {
     ...props,

@@ -137,32 +137,31 @@ export async function createDiscordenoMember(
 
   let bitfield = 0n;
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
-
-  for (const [key, value] of Object.entries(user)) {
+  (Object.keys(user) as (keyof typeof user)[]).forEach((key) => {
     eventHandlers.debug?.("loop", `Running for of for Object.keys(user) loop in DiscordenoMember function.`);
 
     const toggleBits = memberToggles[key as keyof typeof memberToggles];
     if (toggleBits) {
-      bitfield |= value ? toggleBits : 0n;
-      continue;
+      bitfield |= user[key] ? toggleBits : 0n;
+      return;
     }
 
     if (key === "avatar") {
-      const transformed = value ? iconHashToBigInt(value) : undefined;
+      const transformed = user[key] ? iconHashToBigInt(user[key] as string) : undefined;
       if (transformed?.animated) bitfield |= memberToggles.animatedAvatar;
       props.avatar = createNewProp(transformed?.bigint);
-      continue;
+      return;
     }
 
     if (key === "discriminator") {
-      props.discriminator = createNewProp(Number(value));
-      continue;
+      props.discriminator = createNewProp(Number(user[key]));
+      return;
     }
 
     props[key] = createNewProp(
-      MEMBER_SNOWFLAKES.includes(key) ? (value ? snowflakeToBigint(value) : undefined) : value
+      MEMBER_SNOWFLAKES.includes(key) ? (user[key] ? snowflakeToBigint(user[key] as string) : undefined) : user[key]
     );
-  }
+  });
 
   const member: DiscordenoMember = Object.create(baseMember, {
     ...props,
@@ -230,7 +229,9 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id" | "a
   /** Get the nickname or the username if no nickname */
   name(guildId: bigint): string;
   /** Get the guild member object for the specified guild */
-  guildMember(guildId: bigint):
+  guildMember(
+    guildId: bigint
+  ):
     | (Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
         joinedAt?: number;
         premiumSince?: number;

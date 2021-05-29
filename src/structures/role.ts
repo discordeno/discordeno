@@ -115,17 +115,19 @@ export async function createDiscordenoRole(
   let bitfield = 0n;
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
-  for (const [key, value] of Object.entries(rest)) {
+  (Object.keys(rest) as (keyof typeof rest)[]).forEach((key) => {
     eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoRole function.`);
 
     const toggleBits = roleToggles[key as keyof typeof roleToggles];
     if (toggleBits) {
-      bitfield |= value ? toggleBits : 0n;
-      continue;
+      bitfield |= rest[key] ? toggleBits : 0n;
+      return;
     }
 
-    props[key] = createNewProp(ROLE_SNOWFLAKES.includes(key) ? (value ? snowflakeToBigint(value) : undefined) : value);
-  }
+    props[key] = createNewProp(
+      ROLE_SNOWFLAKES.includes(key) ? (rest[key] ? snowflakeToBigint(rest[key] as string) : undefined) : rest[key]
+    );
+  });
 
   const role: DiscordenoRole = Object.create(baseRole, {
     ...props,
