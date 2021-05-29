@@ -38,7 +38,7 @@ function checkReady(payload: Ready, shard: DiscordenoShard) {
   // Check if all guilds were loaded
   if (!shard.unavailableGuildIds.size) return loaded(shard);
 
-  // If the last GUILD_CREATE has been received before 5 seconds if so most likely the remaining guilds are unavailable
+  // If the last GUILD_CREATE was received 5 seconds ago, the remaining guilds are most likely not available
   if (shard.lastAvailable + 5000 < Date.now()) {
     eventHandlers.shardFailedToLoad?.(shard.id, shard.unavailableGuildIds);
     // Force execute the loaded function to prevent infinite loop

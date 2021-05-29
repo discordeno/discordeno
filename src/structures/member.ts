@@ -169,6 +169,7 @@ export async function createDiscordenoMember(
     /** The guild related data mapped by guild id */
     guilds: createNewProp(new Collection<bigint, GuildMember>()),
     bitfield: createNewProp(bitfield),
+    cachedAt: createNewProp(Date.now()),
   });
 
   const cached = await cacheHandlers.get("members", snowflakeToBigint(user.id));
@@ -210,6 +211,8 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id" | "a
   >;
   /** Holds all the boolean toggles. */
   bitfield: bigint;
+  /** When the member has been cached the last time. */
+  cachedAt: number;
 
   // GETTERS
   /** The avatar url using the default format and size. */
