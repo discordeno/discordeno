@@ -3,17 +3,32 @@ import { User } from "../users/user.ts";
 import { ApplicationCommandInteractionData } from "./commands/application_command_interaction_data.ts";
 import { InteractionGuildMember } from "./interaction_guild_member.ts";
 import { DiscordInteractionTypes } from "./interaction_types.ts";
+import { SelectMenuData } from "../messages/components/select_data.ts";
+import { ButtonData } from "../messages/components/button_data.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction */
-export interface Interaction {
+export interface Interaction extends BaseInteraction {
+  /** The command data payload */
+  data?: ApplicationCommandInteractionData | ButtonData | SelectMenuData;
+}
+
+export interface SlashCommandInteraction extends BaseInteraction {
+  type: DiscordInteractionTypes.ApplicationCommand;
+  data?: ApplicationCommandInteractionData;
+}
+
+export interface ComponentInteraction extends BaseInteraction {
+  type: DiscordInteractionTypes.MessageComponent;
+  data?: ButtonData | SelectMenuData;
+}
+
+export interface BaseInteraction {
   /** Id of the interaction */
   id: string;
   /** Id of the application this interaction is for */
   applicationId: string;
   /** The type of interaction */
   type: DiscordInteractionTypes;
-  /** The command data payload */
-  data?: ApplicationCommandInteractionData;
   /** The guild it was sent from */
   guildId?: string;
   /** The channel it was sent from */

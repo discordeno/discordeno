@@ -1,4 +1,5 @@
 // deno-lint-ignore-file require-await no-explicit-any prefer-const
+import { botId } from "./bot.ts";
 import type { DiscordenoChannel } from "./structures/channel.ts";
 import type { DiscordenoGuild } from "./structures/guild.ts";
 import type { DiscordenoMember } from "./structures/member.ts";
@@ -10,17 +11,17 @@ import { Collection } from "./util/collection.ts";
 export const cache = {
   isReady: false,
   /** All of the guild objects the bot has access to, mapped by their Ids */
-  guilds: new Collection<bigint, DiscordenoGuild>(),
+  guilds: new Collection<bigint, DiscordenoGuild>([], { sweeper: { filter: guildSweeper, interval: 3600000 } }),
   /** All of the channel objects the bot has access to, mapped by their Ids */
   channels: new Collection<bigint, DiscordenoChannel>(),
   /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their Ids */
-  messages: new Collection<bigint, DiscordenoMessage>(),
+  messages: new Collection<bigint, DiscordenoMessage>([], { sweeper: { filter: messageSweeper, interval: 300000 } }),
   /** All of the member objects that have been cached since the bot acquired `READY` state, mapped by their Ids */
-  members: new Collection<bigint, DiscordenoMember>(),
+  members: new Collection<bigint, DiscordenoMember>([], { sweeper: { filter: memberSweeper, interval: 300000 } }),
   /** All of the unavailable guilds, mapped by their Ids (id, timestamp) */
   unavailableGuilds: new Collection<bigint, number>(),
   /** All of the presence update objects received in PRESENCE_UPDATE gateway event, mapped by their user Id */
-  presences: new Collection<bigint, PresenceUpdate>(),
+  presences: new Collection<bigint, PresenceUpdate>([], { sweeper: { filter: () => true, interval: 300000 } }),
   fetchAllMembersProcessingRequests: new Collection<
     string,
     (value: Collection<bigint, DiscordenoMember> | PromiseLike<Collection<bigint, DiscordenoMember>>) => void
@@ -31,7 +32,42 @@ export const cache = {
       this.guilds.reduce((a, b) => [...a, ...b.emojis.map((e) => [e.id, e])], [] as any[])
     );
   },
+  activeGuildIds: new Set<bigint>(),
+  dispatchedGuildIds: new Set<bigint>(),
+  dispatchedChannelIds: new Set<bigint>(),
 };
+
+function messageSweeper(message: DiscordenoMessage) {
+  // DM messages aren't needed
+  if (!message.guildId) return true;
+
+  // Only delete messages older than 10 minutes
+  return Date.now() - message.timestamp > 600000;
+}
+
+function memberSweeper(member: DiscordenoMember) {
+  // Don't sweep the bot else strange things will happen
+  if (member.id === botId) return false;
+
+  // Only sweep members who were not active the last 30 minutes
+  return member.cachedAt - Date.now() < 1800000;
+}
+
+function guildSweeper(guild: DiscordenoGuild) {
+  // Reset activity for next interval
+  if (!cache.activeGuildIds.delete(guild.id)) return false;
+
+  guild.channels.forEach((channel) => {
+    cache.channels.delete(channel.id);
+    cache.dispatchedChannelIds.add(channel.id);
+  });
+
+  // This is inactive guild. Not a single thing has happened for atleast 30 minutes.
+  // Not a reaction, not a message, not any event!
+  cache.dispatchedGuildIds.add(guild.id);
+
+  return true;
+}
 
 export let cacheHandlers = {
   /** Deletes all items from the cache */

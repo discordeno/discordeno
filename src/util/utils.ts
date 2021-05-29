@@ -1,6 +1,5 @@
 import { encode } from "./deps.ts";
 import { eventHandlers } from "../bot.ts";
-import { isActionRow } from "../helpers/type_guards/is_action_row.ts";
 import { isButton } from "../helpers/type_guards/is_button.ts";
 import { Errors } from "../types/discordeno/errors.ts";
 import type { ApplicationCommandOption } from "../types/interactions/commands/application_command_option.ts";
@@ -14,6 +13,7 @@ import type { DiscordImageFormat } from "../types/misc/image_format.ts";
 import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 import { validateLength } from "./validate_length.ts";
+import { isSelectMenu } from "../helpers/type_guards/is_select_menu.ts";
 
 export async function urlToBase64(url: string) {
   const buffer = await fetch(url).then((res) => res.arrayBuffer());
@@ -215,43 +215,6 @@ export function validateComponents(components: MessageComponents) {
   let actionRowCounter = 0;
 
   for (const component of components) {
-    // 5 Link buttons can not have a customId
-    if (isButton(component)) {
-      if (component.type === ButtonStyles.Link && component.customId) {
-        throw new Error(Errors.LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID);
-      }
-      // Other buttons must have a customId
-      if (!component.customId && component.type !== ButtonStyles.Link) {
-        throw new Error(Errors.BUTTON_REQUIRES_CUSTOM_ID);
-      }
-
-      if (!validateLength(component.label, { max: 80 })) {
-        throw new Error(Errors.COMPONENT_LABEL_TOO_BIG);
-      }
-
-      if (component.customId && !validateLength(component.customId, { max: 100 })) {
-        throw new Error(Errors.COMPONENT_CUSTOM_ID_TOO_BIG);
-      }
-
-      if (typeof component.emoji === "string") {
-        // A snowflake id was provided
-        if (/^[0-9]+$/.test(component.emoji)) {
-          component.emoji = {
-            id: component.emoji,
-          };
-        } else {
-          // A unicode emoji was provided
-          component.emoji = {
-            name: component.emoji,
-          };
-        }
-      }
-    }
-
-    if (!isActionRow(component)) {
-      continue;
-    }
-
     actionRowCounter++;
     // Max of 5 ActionRows per message
     if (actionRowCounter > 5) throw new Error(Errors.TOO_MANY_ACTION_ROWS);
@@ -259,6 +222,124 @@ export function validateComponents(components: MessageComponents) {
     // Max of 5 Buttons (or any component type) within an ActionRow
     if (component.components?.length > 5) {
       throw new Error(Errors.TOO_MANY_COMPONENTS);
+    } else if (
+      component.components?.length > 1 &&
+      component.components.some((subcomponent) => isSelectMenu(subcomponent))
+    ) {
+      throw new Error(Errors.COMPONENT_SELECT_MUST_BE_ALONE);
+    }
+
+    for (const subcomponent of component.components) {
+      if (subcomponent.customId && !validateLength(subcomponent.customId, { max: 100 })) {
+        throw new Error(Errors.COMPONENT_CUSTOM_ID_TOO_BIG);
+      }
+
+      // 5 Link buttons can not have a customId
+      if (isButton(subcomponent)) {
+        if (subcomponent.type === ButtonStyles.Link && subcomponent.customId) {
+          throw new Error(Errors.LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID);
+        }
+        // Other buttons must have a customId
+        if (!subcomponent.customId && subcomponent.type !== ButtonStyles.Link) {
+          throw new Error(Errors.BUTTON_REQUIRES_CUSTOM_ID);
+        }
+
+        if (!validateLength(subcomponent.label, { max: 80 })) {
+          throw new Error(Errors.COMPONENT_LABEL_TOO_BIG);
+        }
+
+        subcomponent.emoji = makeEmojiFromString(subcomponent.emoji);
+      }
+
+      if (isSelectMenu(subcomponent)) {
+        if (subcomponent.placeholder && !validateLength(subcomponent.placeholder, { max: 100 })) {
+          throw new Error(Errors.COMPONENT_PLACEHOLDER_TOO_BIG);
+        }
+
+        if (subcomponent.minValues) {
+          if (subcomponent.minValues < 1) {
+            throw new Error(Errors.COMPONENT_SELECT_MINVALUE_TOO_LOW);
+          }
+
+          if (subcomponent.minValues > 25) {
+            throw new Error(Errors.COMPONENT_SELECT_MINVALUE_TOO_MANY);
+          }
+
+          if (!subcomponent.maxValues) subcomponent.maxValues = subcomponent.minValues;
+          if (subcomponent.minValues > subcomponent.maxValues) {
+            throw new Error(Errors.COMPONENT_SELECT_MIN_HIGHER_THAN_MAX);
+          }
+        }
+
+        if (subcomponent.maxValues) {
+          if (subcomponent.maxValues < 1) {
+            throw new Error(Errors.COMPONENT_SELECT_MAXVALUE_TOO_LOW);
+          }
+
+          if (subcomponent.maxValues > 25) {
+            throw new Error(Errors.COMPONENT_SELECT_MAXVALUE_TOO_MANY);
+          }
+        }
+
+        if (subcomponent.options.length < 1) {
+          throw new Error(Errors.COMPONENT_SELECT_OPTIONS_TOO_LOW);
+        }
+
+        if (subcomponent.options.length > 25) {
+          throw new Error(Errors.COMPONENT_SELECT_OPTIONS_TOO_MANY);
+        }
+
+        let defaults = 0;
+
+        for (const option of subcomponent.options) {
+          if (option.default) {
+            defaults++;
+            if (defaults > (subcomponent.maxValues || 25)) {
+              throw new Error(Errors.SELECT_OPTION_TOO_MANY_DEFAULTS);
+            }
+          }
+
+          if (!validateLength(option.label, { max: 25 })) {
+            throw new Error(Errors.SELECT_OPTION_LABEL_TOO_BIG);
+          }
+
+          if (!validateLength(option.value, { max: 100 })) {
+            throw new Error(Errors.SELECT_OPTION_VALUE_TOO_BIG);
+          }
+
+          if (option.description && !validateLength(option.description, { max: 50 })) {
+            throw new Error(Errors.SELECT_OPTION_VALUE_TOO_BIG);
+          }
+
+          option.emoji = makeEmojiFromString(option.emoji);
+        }
+      }
     }
   }
+}
+
+function makeEmojiFromString(
+  emoji?:
+    | string
+    | {
+        id?: string | undefined;
+        name?: string | undefined;
+        animated?: boolean | undefined;
+      }
+) {
+  if (typeof emoji !== "string") return emoji;
+
+  // A snowflake id was provided
+  if (/^[0-9]+$/.test(emoji)) {
+    emoji = {
+      id: emoji,
+    };
+  } else {
+    // A unicode emoji was provided
+    emoji = {
+      name: emoji,
+    };
+  }
+
+  return emoji;
 }
