@@ -74,3 +74,17 @@ import "./discoveries/valid_discovery_term.ts";
 // Final cleanup
 import "./guilds/delete_guild.ts";
 import "./ws/ws_close.ts";
+
+import { cache } from "../src/cache.ts";
+import { delay } from "../src/util/utils.ts";
+if (import.meta.main) {
+  // clear all the sweeper intervals
+  for (const c of Object.values(cache)) {
+    if (!(c instanceof Map)) continue;
+
+    c.stopSweeper();
+    console.log("Cleaned");
+  }
+
+  await delay(3000);
+}

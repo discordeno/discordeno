@@ -31,6 +31,18 @@ export class Collection<K, V> extends Map<K, V> {
     return clearInterval(this.sweeper?.intervalId);
   }
 
+  changeSweeperInterval(newInterval: number) {
+    if (!this.sweeper) return;
+
+    this.startSweeper({ filter: this.sweeper.filter, interval: newInterval });
+  }
+
+  changeSweeperFilter(newFilter: (value: V, key: K) => boolean | Promise<boolean>) {
+    if (!this.sweeper) return;
+
+    this.startSweeper({ filter: newFilter, interval: this.sweeper.interval });
+  }
+
   set(key: K, value: V) {
     // When this collection is maxSizeed make sure we can add first
     if ((this.maxSize || this.maxSize === 0) && this.size >= this.maxSize) {

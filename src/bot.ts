@@ -5,13 +5,14 @@ import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
 import { snowflakeToBigint } from "./util/bigint.ts";
 import { GATEWAY_VERSION } from "./util/constants.ts";
 import { ws } from "./ws/ws.ts";
+import { dispatchRequirements } from "./util/dispatch_requirements.ts";
 
 // deno-lint-ignore prefer-const
 export let secretKey = "";
 export let botId = 0n;
 export let applicationId = 0n;
 
-export let eventHandlers: EventHandlers = {};
+export let eventHandlers: EventHandlers = { dispatchRequirements };
 
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
