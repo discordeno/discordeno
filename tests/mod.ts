@@ -74,3 +74,4 @@ import "./discoveries/valid_discovery_term.ts";
 // Final cleanup
 import "./guilds/delete_guild.ts";
 import "./ws/ws_close.ts";
+import "./stop_sweepers.ts";
