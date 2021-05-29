@@ -1,5 +1,4 @@
 import { cache } from "../src/cache.ts";
-import { defaultTestOptions } from "./ws/start_bot.ts";
 
 // Exit the Deno process once all tests are done.
 Deno.test({
@@ -12,5 +11,4 @@ Deno.test({
       c.stopSweeper();
     }
   },
-  ...defaultTestOptions,
 });
