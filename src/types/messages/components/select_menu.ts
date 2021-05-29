@@ -1,7 +1,8 @@
+import { DiscordMessageComponentTypes } from "./message_component_types.ts";
 import { SelectOption } from "./select_option.ts";
 
 export interface SelectMenuComponent {
-  type: 3;
+  type: DiscordMessageComponentTypes.SelectMenu;
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string;
   /** A custom placeholder text if nothing is selected. Maximum 100 characters. */
