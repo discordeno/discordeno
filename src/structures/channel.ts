@@ -107,14 +107,6 @@ export async function createDiscordenoChannel(data: Channel, guildId?: bigint) {
   const { lastPinTimestamp, permissionOverwrites = [], ...rest } = data;
 
   const props: Record<string, PropertyDescriptor> = {};
-  Object.entries(rest).forEach(([key, value]) => {
-    eventHandlers.debug?.("loop", `Running forEach loop in createDiscordenoChannel function.`);
-
-    props[key] = createNewProp(
-      CHANNEL_SNOWFLAKES.includes(key) ? (value ? snowflakeToBigint(value) : undefined) : value
-    );
-  });
-
   (Object.keys(rest) as (keyof typeof rest)[]).forEach((key) => {
     eventHandlers.debug?.("loop", `Running forEach loop in createDiscordenoChannel function.`);
 
