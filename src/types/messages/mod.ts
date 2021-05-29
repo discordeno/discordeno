@@ -3,6 +3,7 @@ export * from "./allowed_mentions_types.ts";
 export * from "./attachment.ts";
 export * from "./components/action_row.ts";
 export * from "./components/button_component.ts";
+export * from "./components/button_data.ts";
 export * from "./components/button_styles.ts";
 export * from "./components/message_component_types.ts";
 export * from "./components/message_components.ts";
