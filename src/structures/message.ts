@@ -209,22 +209,22 @@ export async function createDiscordenoMessage(data: Message) {
   let bitfield = 0n;
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
-  for (const [key, value] of Object.entries(rest)) {
+  (Object.keys(rest) as (keyof typeof rest)[]).forEach((key) => {
     eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoMessage function.`);
 
     const toggleBits = messageToggles[key as keyof typeof messageToggles];
     if (toggleBits) {
-      bitfield |= value ? toggleBits : 0n;
-      continue;
+      bitfield |= rest[key] ? toggleBits : 0n;
+      return;
     }
 
     // Don't add member to props since it would overwrite the message.member getter
-    if (key === "member") continue;
+    if (key === "member") return;
 
     props[key] = createNewProp(
-      MESSAGE_SNOWFLAKES.includes(key) ? (value ? snowflakeToBigint(value) : undefined) : value
+      MESSAGE_SNOWFLAKES.includes(key) ? (rest[key] ? snowflakeToBigint(rest[key] as string) : undefined) : rest[key]
     );
-  }
+  });
 
   props.authorId = createNewProp(snowflakeToBigint(author.id));
   props.isBot = createNewProp(author.bot || false);
