@@ -47,6 +47,10 @@ export async function sendMessage(channelId: bigint, content: string | CreateMes
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
   }
 
+  if (content.components?.length) {
+    validateComponents(content.components);
+  }
+
   if (content.allowedMentions) {
     if (content.allowedMentions.users?.length) {
       if (content.allowedMentions.parse?.includes(DiscordAllowedMentionsTypes.UserMentions)) {
@@ -67,10 +71,6 @@ export async function sendMessage(channelId: bigint, content: string | CreateMes
         content.allowedMentions.roles = content.allowedMentions.roles.slice(0, 100);
       }
     }
-  }
-
-  if (content.components?.length) {
-    validateComponents(content.components);
   }
 
   const result = await rest.runMethod<Message>(
