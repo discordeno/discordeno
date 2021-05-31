@@ -17,16 +17,20 @@ export async function createChannel(guildId: bigint, options?: CreateGuildChanne
   // BITRATES ARE IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
 
-  const result = await rest.runMethod<Channel>("post", endpoints.GUILD_CHANNELS(guildId), {
-    ...snakelize<DiscordCreateGuildChannel>(options ?? {}),
-    permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
-      ...perm,
-      allow: calculateBits(perm.allow),
-      deny: calculateBits(perm.deny),
-    })),
-    type: options?.type || DiscordChannelTypes.GuildText,
-    reason,
-  });
+  const result = await rest.runMethod<Channel>(
+    "post",
+    endpoints.GUILD_CHANNELS(guildId),
+    snakelize<DiscordCreateGuildChannel>({
+      ...options,
+      permissionOverwrites: options?.permissionOverwrites?.map((perm) => ({
+        ...perm,
+        allow: calculateBits(perm.allow),
+        deny: calculateBits(perm.deny),
+      })),
+      type: options?.type || DiscordChannelTypes.GuildText,
+      reason,
+    })
+  );
 
   const discordenoChannel = await structures.createDiscordenoChannel(result);
   await cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);

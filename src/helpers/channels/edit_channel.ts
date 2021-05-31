@@ -72,24 +72,23 @@ export async function editChannel(channelId: bigint, options: ModifyChannel | Mo
     }
   }
 
-  const payload = {
-    ...snakelize<Record<string, unknown>>(options),
-    // deno-lint-ignore camelcase
-    permission_overwrites: hasOwnProperty<ModifyChannel>(options, "permissionOverwrites")
-      ? options.permissionOverwrites?.map((overwrite) => {
-          return {
-            ...overwrite,
-            allow: calculateBits(overwrite.allow),
-            deny: calculateBits(overwrite.deny),
-          };
-        })
-      : undefined,
-  };
-
-  const result = await rest.runMethod<Channel>("patch", endpoints.CHANNEL_BASE(channelId), {
-    ...payload,
-    reason,
-  });
+  const result = await rest.runMethod<Channel>(
+    "patch",
+    endpoints.CHANNEL_BASE(channelId),
+    snakelize({
+      ...options,
+      permissionOverwrites: hasOwnProperty<ModifyChannel>(options, "permissionOverwrites")
+        ? options.permissionOverwrites?.map((overwrite) => {
+            return {
+              ...overwrite,
+              allow: calculateBits(overwrite.allow),
+              deny: calculateBits(overwrite.deny),
+            };
+          })
+        : undefined,
+      reason,
+    })
+  );
 
   return await structures.createDiscordenoChannel(result);
 }
