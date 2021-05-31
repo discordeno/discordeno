@@ -4,6 +4,7 @@ import type { InviteMetadata } from "../../types/invites/invite_metadata.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
+import { snakelize } from "../../util/utils.ts"
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
 export async function createInvite(channelId: bigint, options: CreateChannelInvite = {}) {
@@ -16,5 +17,5 @@ export async function createInvite(channelId: bigint, options: CreateChannelInvi
     throw new Error(Errors.INVITE_MAX_USES_INVALID);
   }
 
-  return await rest.runMethod<InviteMetadata>("post", endpoints.CHANNEL_INVITES(channelId), options);
+  return await rest.runMethod<InviteMetadata>("post", endpoints.CHANNEL_INVITES(channelId), snakelize(options));
 }
