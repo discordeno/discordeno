@@ -5,5 +5,5 @@ export interface CreateGuildEmoji {
   /** The 128x128 emoji image */
   image: string;
   /** Roles allowed to use this emoji */
-  roles: string[];
+  roles: bigint[];
 }
