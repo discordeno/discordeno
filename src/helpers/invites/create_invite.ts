@@ -4,7 +4,7 @@ import type { InviteMetadata } from "../../types/invites/invite_metadata.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
-import { snakelize } from "../../util/utils.ts"
+import { snakelize } from "../../util/utils.ts";
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
 export async function createInvite(channelId: bigint, options: CreateChannelInvite = {}) {
