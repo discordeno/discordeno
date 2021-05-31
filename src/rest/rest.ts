@@ -56,7 +56,7 @@ export interface RestRequest {
   url: string;
   method: string;
   respond: (payload: { status: number; body?: string }) => unknown;
-  reject?: (error: unknown) => unknown;
+  reject: (error: unknown) => unknown;
 }
 
 export interface RestPayload {
