@@ -5,11 +5,16 @@ import type { DiscordenoEditWebhookMessage } from "../../../types/discordeno/edi
 import { Errors } from "../../../types/discordeno/errors.ts";
 import { DiscordAllowedMentionsTypes } from "../../../types/messages/allowed_mentions_types.ts";
 import { endpoints } from "../../../util/constants.ts";
+import { snakelize, validateComponents } from "../../../util/utils.ts";
 
 /** To edit your response to a slash command. If a messageId is not provided it will default to editing the original response. */
 export async function editSlashResponse(token: string, options: DiscordenoEditWebhookMessage) {
   if (options.content && options.content.length > 2000) {
     throw Error(Errors.MESSAGE_MAX_LENGTH);
+  }
+
+  if (options.components?.length) {
+    validateComponents(options.components);
   }
 
   if (options.embeds && options.embeds.length > 10) {
@@ -43,7 +48,7 @@ export async function editSlashResponse(token: string, options: DiscordenoEditWe
     options.messageId
       ? endpoints.WEBHOOK_MESSAGE(applicationId, token, options.messageId)
       : endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationId, token),
-    options
+    snakelize(options)
   );
 
   // If the original message was edited, this will not return a message

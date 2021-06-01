@@ -7,29 +7,29 @@ import { urlToBase64 } from "../../util/utils.ts";
 /** Modifies the bot's username or avatar.
  * NOTE: username: if changed may cause the bot's discriminator to be randomized.
  */
-export async function editBotProfile(username?: string, botAvatarURL?: string) {
+export async function editBotProfile(options: { username?: string; botAvatarURL?: string }) {
   // Nothing was edited
-  if (!username && !botAvatarURL) return;
+  if (!options.username && !options.botAvatarURL) return;
   // Check username requirements if username was provided
-  if (username) {
-    if (username.length > 32) {
+  if (options.username) {
+    if (options.username.length > 32) {
       throw new Error(Errors.USERNAME_MAX_LENGTH);
     }
-    if (username.length < 2) {
+    if (options.username.length < 2) {
       throw new Error(Errors.USERNAME_MIN_LENGTH);
     }
-    if (["@", "#", ":", "```"].some((char) => username.includes(char))) {
+    if (["@", "#", ":", "```"].some((char) => options.username!.includes(char))) {
       throw new Error(Errors.USERNAME_INVALID_CHARACTER);
     }
-    if (["discordtag", "everyone", "here"].includes(username)) {
+    if (["discordtag", "everyone", "here"].includes(options.username)) {
       throw new Error(Errors.USERNAME_INVALID_USERNAME);
     }
   }
 
-  const avatar = botAvatarURL ? await urlToBase64(botAvatarURL) : undefined;
+  const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : undefined;
 
   return await rest.runMethod<User>("patch", endpoints.USER_BOT, {
-    username: username?.trim(),
+    username: options.username?.trim(),
     avatar,
   });
 }

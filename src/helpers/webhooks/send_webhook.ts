@@ -5,6 +5,7 @@ import type { Message } from "../../types/messages/message.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
 import type { ExecuteWebhook } from "../../types/webhooks/execute_webhook.ts";
 import { endpoints } from "../../util/constants.ts";
+import { snakelize } from "../../util/utils.ts";
 
 /** Send a webhook with webhook Id and webhook token */
 export async function sendWebhook(webhookId: bigint, webhookToken: string, options: ExecuteWebhook) {
@@ -47,11 +48,7 @@ export async function sendWebhook(webhookId: bigint, webhookToken: string, optio
     `${endpoints.WEBHOOK(webhookId, webhookToken)}?wait=${options.wait ?? false}${
       options.threadId ? `&thread_id=${options.threadId}` : ""
     }`,
-    {
-      ...options,
-      allowed_mentions: options.allowedMentions,
-      avatar_url: options.avatarUrl,
-    }
+    snakelize(options)
   );
   if (!options.wait) return;
 

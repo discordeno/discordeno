@@ -15,7 +15,7 @@ export async function sendDirectMessage(memberId: bigint, content: string | Crea
       recipient_id: memberId,
     });
     const discordenoChannel = await structures.createDiscordenoChannel(dmChannelData);
-    // Recreate the channel and add it undert he users id
+    // Recreate the channel and add it under the users id
     await cacheHandlers.set("channels", memberId, discordenoChannel);
     dmChannel = discordenoChannel;
   }

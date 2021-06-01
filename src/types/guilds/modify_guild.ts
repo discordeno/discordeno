@@ -17,13 +17,13 @@ export interface ModifyGuild {
   /** Explicit content filter level */
   explicitContentFilter?: DiscordExplicitContentFilterLevels | null;
   /** Id for afk channel */
-  afkChannelId?: string | null;
+  afkChannelId?: bigint | null;
   /** Afk timeout in seconds */
   afkTimeout?: number;
   /** Base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has the `ANIMATED_ICON` feature) */
   icon?: string | null;
   /** User id to transfer guild ownership to (must be owner) */
-  ownerId?: string;
+  ownerId?: bigint;
   /** Base64 16:9 png/jpeg image for the guild splash (when the server has `INVITE_SPLASH` feature) */
   splash?: string | null;
   /** Base64 16:9 png/jpeg image for the guild discovery spash (when the server has the `DISCOVERABLE` feature) */
@@ -31,13 +31,13 @@ export interface ModifyGuild {
   /** Base64 16:9 png/jpeg image for the guild banner (when the server has BANNER feature) */
   banner?: string | null;
   /** The id of the channel where guild notices such as welcome messages and boost events are posted */
-  systemChannelId?: string | null;
+  systemChannelId?: bigint | null;
   /** System channel flags */
   systemChannelFlags?: DiscordSystemChannelFlags;
   /** The id of the channel where Community guilds display rules and/or guidelines */
-  rulesChannelId?: string | null;
+  rulesChannelId?: bigint | null;
   /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
-  publicUpdatesChannelId?: string | null;
+  publicUpdatesChannelId?: bigint | null;
   /** The preferred locale of a Community guild used in server discovery and notices from Discord; defaults to "en-US" */
   preferredLocale?: string | null;
   /** Enabled guild features */
