@@ -98,12 +98,12 @@ export async function processQueue(id: string) {
 
         // If Rate limited should not remove from queue
         if (response.status !== 429) {
-          queuedRequest.request.reject?.(new Error(`[${response.status}] ${error}`));
+          queuedRequest.request.reject(new Error(`[${response.status}] ${error}`));
           queue.shift();
         } else {
           if (queuedRequest.payload.retryCount++ >= rest.maxRetryCount) {
             rest.eventHandlers.retriesMaxed(queuedRequest.payload);
-            queuedRequest.request.reject?.(
+            queuedRequest.request.reject(
               new Error(`[${response.status}] The request was rate limited and it maxed out the retries limit.`)
             );
             // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
@@ -155,7 +155,7 @@ export async function processQueue(id: string) {
     } catch (error) {
       // SOMETHING WENT WRONG, LOG AND RESPOND WITH ERROR
       rest.eventHandlers.fetchFailed(queuedRequest.payload, error);
-      queuedRequest.request.reject?.(error);
+      queuedRequest.request.reject(error);
       // REMOVE FROM QUEUE
       queue.shift();
     }
