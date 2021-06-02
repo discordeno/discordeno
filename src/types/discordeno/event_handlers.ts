@@ -80,11 +80,11 @@ export type EventHandlersDefinitions = {
   guildMemberRemove: [guild: DiscordenoGuild, user: User, member?: DiscordenoMember];
   /** Sent when a guild member is updated. This will also fire when the user object of a guild member changes. */
   guildMemberUpdate: [guild: DiscordenoGuild, member: DiscordenoMember, oldMember?: DiscordenoMember];
-  /** Sent when a user uses a Slash Command. */
+  /** Sent when a user uses a Slash Command (type 2) or clicks a button (type 3). */
   interactionCreate: [data: Omit<Interaction, "member">, member?: DiscordenoMember];
-  /** Sent when a user uses a Slash Command in a guild. */
+  /** Sent when a user uses a Slash Command in a guild (type 2) or clicks a button (type 3). */
   interactionGuildCreate: [data: Omit<Interaction, "member">, member: DiscordenoMember];
-  /** Sent when a user uses a Slash Command in a dm. */
+  /** Sent when a user uses a Slash Command in a dm (type 2) or clicks a button (type 3). */
   interactionDMCreate: [data: Omit<Interaction, "member">];
   /** Sent when a message is created. */
   messageCreate: [message: DiscordenoMessage];
