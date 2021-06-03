@@ -32,6 +32,12 @@ export enum DiscordGuildFeatures {
   MemberVerificationGateEnabled = "MEMBER_VERIFICATION_GATE_ENABLED",
   /** Guild can be previewed before joining via Membership Screening or the directory */
   PreviewEnabled = "PREVIEW_ENABLED",
+  /** Guild has enabled ticketed events */
+  TicketedEventsEnabled = "TICKETED_EVENTS_ENABLED",
+  /** Guild has enabled monetization */
+  MonetizationEnabled = "MONETIZATION_ENABLED",
+  /** Guild has increased custom sticker slots */
+  MoreStickers = "MORE_STICKERS",
 }
 
 export type GuildFeatures = DiscordGuildFeatures;
