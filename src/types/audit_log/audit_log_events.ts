@@ -35,6 +35,8 @@ export enum DiscordAuditLogEvents {
   IntegrationCreate = 80,
   IntegrationUpdate,
   IntegrationDelete,
+  StageInstanceCreate,
+  StageInstanceDelete,
 }
 
 export type AuditLogEvents = DiscordAuditLogEvents;
