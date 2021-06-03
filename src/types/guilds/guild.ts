@@ -116,4 +116,6 @@ export interface Guild {
   nsfwLevel: GuildNsfwLevel;
   /** Stage instances in the guild */
   stageInstances?: StageInstance[];
+  /** Approximate number of slash commands in this guild */
+  applicationCommandCount?: number;
 }
