@@ -41,6 +41,7 @@ export enum DiscordJsonErrorCodes {
   OnlyTheOwnerOfThisAccountCanPerformThisAction = 20018,
   ThisMessageCannotBeEditedDueToAnnouncementRateLimits = 20022,
   TheChannelYouAreWritingHasHitTheWriteRateLimit = 20028,
+  YourStageTopicContainsWordsThatAreNotAllowedForPublicStages = 20031,
   MaximumNumberOfGuildsReached = 30001,
   MaximumNumberOfFriendsReached,
   MaximumNumberOfPinsReachedForTheChannel,
