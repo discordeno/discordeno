@@ -9,8 +9,7 @@ import type { StageInstance } from "../channels/stage_instance.ts";
 import type { ThreadMember } from "../channels/threads/thread_member.ts";
 import type { ThreadMembersUpdate } from "../channels/threads/thread_members_update.ts";
 import type { Emoji } from "../emojis/emoji.ts";
-import type { GatewayPayload } from "../gateway/gateway_payload.ts";
-import type { DiscordGatewayPayload } from "../gateway/gateway_payload.ts";
+import type { DiscordGatewayPayload, GatewayPayload } from "../gateway/gateway_payload.ts";
 import type { IntegrationCreateUpdate } from "../integrations/integration_create_update.ts";
 import type { IntegrationDelete } from "../integrations/integration_delete.ts";
 import type { ApplicationCommandCreateUpdateDelete } from "../interactions/commands/application_command_create_update_delete.ts";
@@ -145,6 +144,8 @@ export type EventHandlersDefinitions = {
   voiceChannelLeave: [member: DiscordenoMember, channelId: bigint];
   /** Sent when a user switches the voice channel */
   voiceChannelSwitch: [member: DiscordenoMember, channelId: bigint, oldChannelId: bigint];
+  /** Sent when a user/lurker joins a live stage, but they are not inside the guild. */
+  voiceLurkerJoin: [voiceState: VoiceState];
   /** Sent when a voice server is updated with information for making the bot connect to a voice channel. */
   voiceServerUpdate: [payload: VoiceServerUpdate, guild: DiscordenoGuild];
   /** Sent when someone joins/leaves/moves voice channels. */
