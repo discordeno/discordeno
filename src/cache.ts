@@ -50,12 +50,12 @@ function memberSweeper(member: DiscordenoMember) {
   if (member.id === botId) return false;
 
   // Only sweep members who were not active the last 30 minutes
-  return member.cachedAt - Date.now() < 1800000;
+  return Date.now() - member.cachedAt < 1800000;
 }
 
 function guildSweeper(guild: DiscordenoGuild) {
   // Reset activity for next interval
-  if (!cache.activeGuildIds.delete(guild.id)) return false;
+  if (cache.activeGuildIds.delete(guild.id)) return false;
 
   guild.channels.forEach((channel) => {
     cache.channels.delete(channel.id);
