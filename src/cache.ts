@@ -50,7 +50,7 @@ function memberSweeper(member: DiscordenoMember) {
   if (member.id === botId) return false;
 
   // Only sweep members who were not active the last 30 minutes
-  return Date.now() - member.cachedAt < 1800000;
+  return Date.now() - member.cachedAt > 1800000;
 }
 
 function guildSweeper(guild: DiscordenoGuild) {
