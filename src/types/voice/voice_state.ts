@@ -8,8 +8,8 @@ export interface VoiceState {
   channelId: string | null;
   /** The user id this voice state is for */
   userId: string;
-  /** The guild member this voice state is for, or `null` if the user is in a live stage but not in the guild */
-  member?: GuildMemberWithUser | null;
+  /** The guild member this voice state is for */
+  member?: GuildMemberWithUser;
   /** The session id for this voice state */
   sessionId: string;
   /** Whether this user is deafened by the server */
