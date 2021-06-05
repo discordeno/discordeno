@@ -6,7 +6,7 @@ export interface OptionalAuditEntryInfo {
   membersRemoved: string;
   /** Channel in which the entities were targeted */
   channelId: string;
-  /** id of the message that was targeted, types: MESSAGE_PIN & MESSAGE_UNPIN */
+  /** id of the message that was targeted, types: MESSAGE_PIN & MESSAGE_UNPIN & STAGE_INSTANCE_CREATE & STAGE_INSTANCE_UPDATE & STAGE_INSTANCE_DELETE */
   messageId: string;
   /** Number of entities that were targeted */
   count: string;
