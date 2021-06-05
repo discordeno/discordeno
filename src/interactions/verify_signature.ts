@@ -1,6 +1,11 @@
 import { verify } from "./deps.ts";
 
-export function verifySignature({ publicKey, signature, timestamp, body }: VerifySignatureOptions): {
+export function verifySignature({
+  publicKey,
+  signature,
+  timestamp,
+  body,
+}: VerifySignatureOptions): {
   isValid: boolean;
   body: string;
 } {

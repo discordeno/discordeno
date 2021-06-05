@@ -24,8 +24,10 @@ async function startQueue() {
 
   while (guildMemberQueue.size) {
     eventHandlers.debug?.("loop", "Running whille loop in cache_members file.");
-    const [guildId, queue]: [bigint, { members: GuildMemberWithUser[]; resolve: (value?: unknown) => void }] =
-      guildMemberQueue.entries().next().value;
+    const [guildId, queue]: [
+      bigint,
+      { members: GuildMemberWithUser[]; resolve: (value?: unknown) => void }
+    ] = guildMemberQueue.entries().next().value;
 
     await Promise.allSettled([
       queue.members.map(async (member) => {
