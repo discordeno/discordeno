@@ -12,8 +12,8 @@ export const cache = {
   isReady: false,
   /** All of the guild objects the bot has access to, mapped by their Ids */
   guilds: new Collection<bigint, DiscordenoGuild>([], { sweeper: { filter: guildSweeper, interval: 3600000 } }),
-  /** All of the channel objects the bot has access to, mapped by their Ids */
-  channels: new Collection<bigint, DiscordenoChannel>(),
+  /** All of the channel objects the bot has access to, mapped by their Ids. Sweep channels 1 minute after guilds are sweeped so dispatchedGuildIds is filled. */
+  channels: new Collection<bigint, DiscordenoChannel>([], { sweeper: { filter: channelSweeper, interval: 3660000 } }),
   /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their Ids */
   messages: new Collection<bigint, DiscordenoMessage>([], { sweeper: { filter: messageSweeper, interval: 300000 } }),
   /** All of the member objects that have been cached since the bot acquired `READY` state, mapped by their Ids */
@@ -57,16 +57,24 @@ function guildSweeper(guild: DiscordenoGuild) {
   // Reset activity for next interval
   if (cache.activeGuildIds.delete(guild.id)) return false;
 
-  guild.channels.forEach((channel) => {
-    cache.channels.delete(channel.id);
-    cache.dispatchedChannelIds.add(channel.id);
-  });
-
   // This is inactive guild. Not a single thing has happened for atleast 30 minutes.
   // Not a reaction, not a message, not any event!
   cache.dispatchedGuildIds.add(guild.id);
 
   return true;
+}
+
+function channelSweeper(channel: DiscordenoChannel, key: bigint) {
+  // If this is in a guild and the guild was dispatched, then we can dispatch the channel
+  if (channel.guildId && cache.dispatchedGuildIds.has(channel.guildId)) {
+    cache.dispatchedChannelIds.add(channel.id);
+    return true;
+  }
+
+  // THE KEY DM CHANNELS ARE STORED BY IS THE USER ID. If the user is not cached, we dont need to cache their dm channel.
+  if (!channel.guildId && !cache.members.has(key)) return true;
+
+  return false;
 }
 
 export let cacheHandlers = {

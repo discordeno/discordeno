@@ -26,7 +26,7 @@ export const ws = {
   /** The percentage at which resharding should occur. */
   reshardPercentage: 80,
   /** The delay in milliseconds to wait before spawning next shard. OPTIMAL IS ABOVE 2500. YOU DON"T WANT TO HIT THE RATE LIMIT!!! */
-  spawnShardDelay: 2700,
+  spawnShardDelay: 2600,
   /** The maximum shard Id number. Useful for zero-downtime updates or resharding. */
   maxShards: 0,
   /** Whether or not the resharder should automatically switch to LARGE BOT SHARDING when you are above 100K servers. */
