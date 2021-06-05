@@ -53,7 +53,8 @@ export type AuditLogChange =
         | "max_age"
         | "expire_behavior"
         | "expire_grace_period"
-        | "user_limit";
+        | "user_limit"
+        | "privacy_level";
     }
   | {
       newValue: Partial<Role>;
