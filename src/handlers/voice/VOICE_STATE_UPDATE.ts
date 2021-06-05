@@ -9,9 +9,6 @@ export async function handleVoiceStateUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as VoiceState;
   if (!payload.guildId) return;
 
-  // The "member" field in the payload is `null` if the user is in a live stage but not in the guild.
-  if (payload.member === null) return eventHandlers.voiceLurkerJoin?.(payload);
-
   const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
   if (!guild) return;
 

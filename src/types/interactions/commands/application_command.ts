@@ -6,6 +6,8 @@ export interface ApplicationCommand {
   id: string;
   /** Unique id of the parent application */
   applicationId: string;
+  /** Guild id of the command, if not global */
+  guildId?: string;
   /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
   name: string;
   /** 1-100 character description */
