@@ -23,33 +23,27 @@ export function handleReady(data: DiscordGatewayPayload, shardId: number) {
   shard.ready = false;
   // All guilds are unavailable at first
   shard.unavailableGuildIds = new Set(payload.guilds.map((g) => snowflakeToBigint(g.id)));
-  // Set the last available to now
-  shard.lastAvailable = Date.now();
 
-  // Start ready check in 2 seconds
-  setTimeout(() => {
-    eventHandlers.debug?.("loop", `1. Running setTimeout in READY file.`);
-    checkReady(payload, shard);
-  }, 2000);
-}
-
-/** This function checks if the shard is fully loaded */
-function checkReady(payload: Ready, shard: DiscordenoShard) {
-  // Check if all guilds were loaded
-  if (!shard.unavailableGuildIds.size) return loaded(shard);
-
-  // If the last GUILD_CREATE was received 5 seconds ago, the remaining guilds are most likely not available
-  if (shard.lastAvailable + 5000 < Date.now()) {
+  // Falied to load check
+  shard.failedToLoadTimeoutId = setTimeout(() => {
     eventHandlers.shardFailedToLoad?.(shard.id, shard.unavailableGuildIds);
     // Force execute the loaded function to prevent infinite loop
     return loaded(shard);
-  }
+  }, 5000);
+}
 
-  // Not all guilds were loaded but 5 seconds haven't passed so check again
-  setTimeout(() => {
-    eventHandlers.debug?.("loop", `2. Running setTimeout in READY file.`);
-    checkReady(payload, shard);
-  }, 2000);
+export function guildAvailable(shard: DiscordenoShard, guildId: bigint) {
+  if (!shard.failedToLoadTimeoutId) return;
+
+  clearTimeout(shard.failedToLoadTimeoutId);
+  shard.unavailableGuildIds.delete(guildId);
+  if (!shard.unavailableGuildIds.size) return loaded(shard);
+
+  shard.failedToLoadTimeoutId = setTimeout(() => {
+    eventHandlers.shardFailedToLoad?.(shard.id, shard.unavailableGuildIds);
+    // Force execute the loaded function to prevent infinite loop
+    return loaded(shard);
+  }, 5000);
 }
 
 function loaded(shard: DiscordenoShard) {
