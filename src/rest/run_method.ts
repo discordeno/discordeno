@@ -62,7 +62,7 @@ export async function runMethod<T = any>(
           reject(errorStack);
         },
         respond: (data: { status: number; body?: string }) =>
-          resolve(data.status !== 204 ? camelize<T>(JSON.parse(data.body ?? "{}")) : ((undefined as unknown) as T)),
+          resolve(data.status !== 204 ? camelize<T>(JSON.parse(data.body ?? "{}")) : (undefined as unknown as T)),
       },
       {
         bucketId,
