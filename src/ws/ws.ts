@@ -139,8 +139,7 @@ export interface DiscordenoShard {
   ready: boolean;
   /** The list of guild ids that are currently unavailable due to an outage. */
   unavailableGuildIds: Set<bigint>;
-  /** Last time when a GUILD_CREATE event has been received for an unavailable guild. This is used to prevent infinite loops in the READY event handler. */
-  lastAvailable: number;
+  failedToLoadTimeoutId?: number;
   heartbeat: {
     /** The exact timestamp the last heartbeat was sent. */
     lastSentAt: number;

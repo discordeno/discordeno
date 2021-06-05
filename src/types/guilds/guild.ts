@@ -35,8 +35,6 @@ export interface Guild {
   ownerId: string;
   /** Total permissions for the user in the guild (execludes overwrites) */
   permissions?: string;
-  /** Voice region id for the guild */
-  region: string;
   /** Id of afk channel */
   afkChannelId: string | null;
   /** Afk timeout in seconds */
