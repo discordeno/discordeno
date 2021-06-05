@@ -12,12 +12,16 @@ export let secretKey = "";
 export let botId = 0n;
 export let applicationId = 0n;
 
-export let eventHandlers: EventHandlers = { dispatchRequirements };
+export let eventHandlers: EventHandlers = {};
 
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
 export async function startBot(config: BotConfig) {
-  if (config.eventHandlers) eventHandlers = config.eventHandlers;
+  if (config.eventHandlers)
+    eventHandlers = {
+      ...config.eventHandlers,
+      dispatchRequirements: config.eventHandlers.dispatchRequirements || dispatchRequirements,
+    };
   ws.identifyPayload.token = `Bot ${config.token}`;
   rest.token = `Bot ${config.token}`;
   ws.identifyPayload.intents = config.intents.reduce(
