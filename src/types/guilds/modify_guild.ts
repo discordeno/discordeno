@@ -8,8 +8,6 @@ import { DiscordVerificationLevels } from "./verification_levels.ts";
 export interface ModifyGuild {
   /** Guild name */
   name?: string;
-  /** Guild voice region id */
-  region?: string | null;
   /** Verification level */
   verificationLevel?: DiscordVerificationLevels | null;
   /** Default message notification filter level */
