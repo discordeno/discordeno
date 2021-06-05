@@ -36,6 +36,7 @@ export enum DiscordAuditLogEvents {
   IntegrationUpdate,
   IntegrationDelete,
   StageInstanceCreate,
+  StageInstanceUpdate,
   StageInstanceDelete,
 }
 
