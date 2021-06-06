@@ -7,11 +7,7 @@ import { SelectMenuData } from "../messages/components/select_data.ts";
 import { ButtonData } from "../messages/components/button_data.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction */
-export interface Interaction extends BaseInteraction {
-  /** The command data payload */
-  data?: ApplicationCommandInteractionData | ButtonData | SelectMenuData;
-}
-
+export type Interaction = SlashCommandInteraction | ComponentInteraction;
 export interface SlashCommandInteraction extends BaseInteraction {
   type: DiscordInteractionTypes.ApplicationCommand;
   data?: ApplicationCommandInteractionData;
