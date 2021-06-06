@@ -55,7 +55,7 @@ export async function dispatchRequirements(data: DiscordGatewayPayload, shardId:
   const rawGuild = (await getGuild(id, {
     counts: true,
     addToCache: false,
-  }).catch(eventHandlers.debug?.)) as Guild | undefined;
+  }).catch(console.log)) as Guild | undefined;
 
   if (!rawGuild) {
     processing.delete(id);
