@@ -255,7 +255,10 @@ export async function createDiscordenoGuild(data: Guild, shardId: number) {
   );
 
   const voiceStateStructs = await Promise.all(
-    voiceStates.map((vs) => structures.createDiscordenoVoiceState(guildId, vs))
+    voiceStates.map((vs) => {
+      if (vs.member?.joinedAt) members.push(vs.member);
+      return structures.createDiscordenoVoiceState(guildId, vs);
+    })
   );
 
   await Promise.all(
