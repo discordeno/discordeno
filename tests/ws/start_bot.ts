@@ -4,6 +4,7 @@ import { deleteGuild } from "../../src/helpers/guilds/delete_guild.ts";
 import { delay } from "../../src/util/utils.ts";
 import { ws } from "../../src/ws/ws.ts";
 import { assertEquals, assertExists } from "../deps.ts";
+import { delayUntil } from "../util/delay_until.ts";
 
 // Set necessary settings
 // Disables the logger which logs everything
@@ -33,18 +34,16 @@ Deno.test({
     const token = Deno.env.get("DISCORD_TOKEN");
     if (!token) throw new Error("Token is not provided");
 
-    let didReady = false;
-
     await startBot({
       token,
-      eventHandlers: {
-        ready: () => (didReady = true),
-      },
+      eventHandlers: {},
       intents: ["GuildMessages", "Guilds", "GuildEmojis", "GuildMessageReactions"],
     });
 
     // Delay the execution by 5 seconds
     await delay(3000);
+
+    await delayUntil(10000, () => cache.isReady);
 
     // DELETE GUILDS IF LESS THAN 10 SERVERS AS SAFETY MEASURE
     if (cache.guilds.size <= 10) {
@@ -53,7 +52,7 @@ Deno.test({
 
     // Assertions
     assertExists(botId);
-    assertEquals(true, didReady);
+    assertEquals(true, cache.isReady);
   },
   ...defaultTestOptions,
 });
