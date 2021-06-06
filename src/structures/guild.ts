@@ -75,7 +75,6 @@ const baseGuild: Partial<DiscordenoGuild> = {
       owner: this.owner,
       ownerId: this.ownerId?.toString(),
       permissions: this.permissions,
-      region: this.region,
       afkChannelId: this.afkChannelId?.toString(),
       afkTimeout: this.afkTimeout,
       widgetEnabled: this.widgetEnabled,

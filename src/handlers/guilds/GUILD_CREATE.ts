@@ -5,6 +5,7 @@ import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.
 import type { Guild } from "../../types/guilds/guild.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 import { ws } from "../../ws/ws.ts";
+import { guildAvailable } from "../misc/READY.ts";
 
 export async function handleGuildCreate(data: DiscordGatewayPayload, shardId: number) {
   const payload = data.d as Guild;
@@ -18,8 +19,7 @@ export async function handleGuildCreate(data: DiscordGatewayPayload, shardId: nu
 
   if (shard?.unavailableGuildIds.has(guild.id)) {
     await cacheHandlers.delete("unavailableGuilds", guild.id);
-    shard.unavailableGuildIds.delete(guild.id);
-    shard.lastAvailable = Date.now();
+    guildAvailable(shard, guild.id);
 
     return eventHandlers.guildAvailable?.(guild);
   }

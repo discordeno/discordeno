@@ -24,7 +24,6 @@ export function identify(shardId: number, maxShards: number) {
     resuming: false,
     ready: false,
     unavailableGuildIds: new Set(),
-    lastAvailable: 0,
     heartbeat: {
       lastSentAt: 0,
       lastReceivedAt: 0,
