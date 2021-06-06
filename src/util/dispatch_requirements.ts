@@ -1,4 +1,4 @@
-import { botId } from "../bot.ts";
+import { botId, eventHandlers } from "../bot.ts";
 import { cache } from "../cache.ts";
 import { getChannels } from "../helpers/channels/get_channels.ts";
 import { getGuild } from "../helpers/guilds/get_guild.ts";
@@ -34,7 +34,7 @@ export async function dispatchRequirements(data: DiscordGatewayPayload, shardId:
   }
 
   if (processing.has(id)) {
-    console.info(`[DISPATCH] New Guild ID already being processed: ${id} in ${data.t} event`);
+    eventHandlers.debug?.(`[DISPATCH] New Guild ID already being processed: ${id} in ${data.t} event`);
 
     let runs = 0;
     do {
@@ -44,37 +44,37 @@ export async function dispatchRequirements(data: DiscordGatewayPayload, shardId:
 
     if (!processing.has(id)) return;
 
-    return console.warn(`[DISPATCH] Already processed guild was not successfully fetched:  ${id} in ${data.t} event`);
+    return eventHandlers.debug?.(`[DISPATCH] Already processed guild was not successfully fetched:  ${id} in ${data.t} event`);
   }
 
   processing.add(id);
 
   // New guild id has appeared, fetch all relevant data
-  console.info(`[DISPATCH] New Guild ID has appeared: ${id} in ${data.t} event`);
+  eventHandlers.debug?.(`[DISPATCH] New Guild ID has appeared: ${id} in ${data.t} event`);
 
   const rawGuild = (await getGuild(id, {
     counts: true,
     addToCache: false,
-  }).catch(console.info)) as Guild | undefined;
+  }).catch(eventHandlers.debug?.)) as Guild | undefined;
 
   if (!rawGuild) {
     processing.delete(id);
-    return console.warn(`[DISPATCH] Guild ID ${id} failed to fetch.`);
+    return eventHandlers.debug?.(`[DISPATCH] Guild ID ${id} failed to fetch.`);
   }
 
-  console.info(`[DISPATCH] Guild ID ${id} has been found. ${rawGuild.name}`);
+  eventHandlers.debug?.(`[DISPATCH] Guild ID ${id} has been found. ${rawGuild.name}`);
 
   const [channels, botMember] = await Promise.all([
     getChannels(id, false),
     getMember(id, botId, { force: true }),
   ]).catch((error) => {
-    console.warn(error);
+    eventHandlers.debug?.(error);
     return [];
   });
 
   if (!botMember || !channels) {
     processing.delete(id);
-    return console.info(`[DISPATCH] Guild ID ${id} Name: ${rawGuild.name} failed. Unable to get botMember or channels`);
+    return eventHandlers.debug?.(`[DISPATCH] Guild ID ${id} Name: ${rawGuild.name} failed. Unable to get botMember or channels`);
   }
 
   const guild = await structures.createDiscordenoGuild(rawGuild, shardId);
@@ -89,5 +89,5 @@ export async function dispatchRequirements(data: DiscordGatewayPayload, shardId:
 
   processing.delete(id);
 
-  console.info(`[DISPATCH] Guild ID ${id} Name: ${guild.name} completely loaded.`);
+  eventHandlers.debug?.(`[DISPATCH] Guild ID ${id} Name: ${guild.name} completely loaded.`);
 }
