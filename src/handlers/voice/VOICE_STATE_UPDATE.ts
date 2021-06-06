@@ -17,6 +17,8 @@ export async function handleVoiceStateUpdate(data: DiscordGatewayPayload) {
     : await cacheHandlers.get("members", snowflakeToBigint(payload.userId));
   if (!member) return;
 
+  if (!payload.member?.joinedAt) return eventHandlers.lurkerVoiceStateUpdate?.(member, payload);
+
   // No cached state before so lets make one for em
   const cachedState = guild.voiceStates.get(snowflakeToBigint(payload.userId));
 

@@ -86,6 +86,8 @@ export type EventHandlersDefinitions = {
   interactionGuildCreate: [data: Omit<Interaction, "member">, member: DiscordenoMember];
   /** Sent when a user uses a Slash Command in a dm (type 2) or clicks a button (type 3). */
   interactionDMCreate: [data: Omit<Interaction, "member">];
+  /** Sent when a lurker joins/leaves/moves stage channels. */
+  lurkerVoiceStateUpdate: [member: DiscordenoMember, voiceState: VoiceState];
   /** Sent when a message is created. */
   messageCreate: [message: DiscordenoMessage];
   /** Sent when a message is deleted. */
