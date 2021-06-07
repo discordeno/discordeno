@@ -44,7 +44,9 @@ export async function dispatchRequirements(data: DiscordGatewayPayload, shardId:
 
     if (!processing.has(id)) return;
 
-    return eventHandlers.debug?.(`[DISPATCH] Already processed guild was not successfully fetched:  ${id} in ${data.t} event`);
+    return eventHandlers.debug?.(
+      `[DISPATCH] Already processed guild was not successfully fetched:  ${id} in ${data.t} event`
+    );
   }
 
   processing.add(id);
@@ -74,7 +76,9 @@ export async function dispatchRequirements(data: DiscordGatewayPayload, shardId:
 
   if (!botMember || !channels) {
     processing.delete(id);
-    return eventHandlers.debug?.(`[DISPATCH] Guild ID ${id} Name: ${rawGuild.name} failed. Unable to get botMember or channels`);
+    return eventHandlers.debug?.(
+      `[DISPATCH] Guild ID ${id} Name: ${rawGuild.name} failed. Unable to get botMember or channels`
+    );
   }
 
   const guild = await structures.createDiscordenoGuild(rawGuild, shardId);
