@@ -80,13 +80,13 @@ const baseMessage: Partial<DiscordenoMessage> = {
   addReactions(reactions, ordered) {
     return addReactions(this.channelId!, this.id!, reactions, ordered);
   },
-  reply(content) {
+  reply(content, mentionUser = true) {
     const contentWithMention: CreateMessage =
       typeof content === "string"
         ? {
             content,
             allowedMentions: {
-              repliedUser: true,
+              repliedUser: mentionUser,
             },
             messageReference: {
               messageId: bigintToSnowflake(this.id!),
@@ -96,8 +96,8 @@ const baseMessage: Partial<DiscordenoMessage> = {
         : {
             ...content,
             allowedMentions: {
+              repliedUser: mentionUser,
               ...(content.allowedMentions || {}),
-              repliedUser: true,
             },
             messageReference: {
               messageId: bigintToSnowflake(this.id!),
@@ -350,7 +350,7 @@ export interface DiscordenoMessage
   /** Add multiple reactions to the message without or without order. */
   addReactions(reactions: string[], ordered?: boolean): ReturnType<typeof addReactions>;
   /** Send a inline reply to this message */
-  reply(content: string | CreateMessage): ReturnType<typeof sendMessage>;
+  reply(content: string | CreateMessage, mentionUser?: boolean): ReturnType<typeof sendMessage>;
   /** Send a message to this channel where this message is */
   send(content: string | CreateMessage): ReturnType<typeof sendMessage>;
   /** Send a message to this channel and then delete it after a bit. By default it will delete after 10 seconds with no reason provided. */
