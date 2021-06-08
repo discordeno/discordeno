@@ -8,23 +8,27 @@ import { ButtonData } from "../messages/components/button_data.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction */
 export type Interaction = SlashCommandInteraction | ComponentInteraction;
-export interface SlashCommandInteraction extends BaseInteraction {
-  type: DiscordInteractionTypes.ApplicationCommand;
-  data?: ApplicationCommandInteractionData;
-}
 
-export interface ComponentInteraction extends BaseInteraction {
-  type: DiscordInteractionTypes.MessageComponent;
-  data?: ButtonData | SelectMenuData;
-}
+export type SlashCommandInteraction = BaseInteraction<
+  DiscordInteractionTypes.ApplicationCommand,
+  ApplicationCommandInteractionData
+>;
 
-export interface BaseInteraction {
+export type ComponentInteraction = BaseInteraction<
+  DiscordInteractionTypes.MessageComponent,
+  ButtonData | SelectMenuData
+>;
+
+export interface BaseInteraction<
+  T extends DiscordInteractionTypes,
+  D extends ApplicationCommandInteractionData | ButtonData | SelectMenuData
+> {
   /** Id of the interaction */
   id: string;
   /** Id of the application this interaction is for */
   applicationId: string;
   /** The type of interaction */
-  type: DiscordInteractionTypes;
+  type: T;
   /** The guild it was sent from */
   guildId?: string;
   /** The channel it was sent from */
@@ -39,4 +43,6 @@ export interface BaseInteraction {
   version: 1;
   /** For the message the button was attached to */
   message?: Message;
+
+  data?: D;
 }
