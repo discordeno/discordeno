@@ -81,9 +81,9 @@ export type EventHandlersDefinitions = {
   /** Sent when a guild member is updated. This will also fire when the user object of a guild member changes. */
   guildMemberUpdate: [guild: DiscordenoGuild, member: DiscordenoMember, oldMember?: DiscordenoMember];
   /** Sent when a user uses a Slash Command (type 2) or clicks a button (type 3). */
-  interactionCreate: [data: Omit<Interaction, "member">, member?: DiscordenoMember];
+  interactionCreate: [data: Interaction, member?: DiscordenoMember];
   /** Sent when a user uses a Slash Command in a guild (type 2) or clicks a button (type 3). */
-  interactionGuildCreate: [data: Omit<Interaction, "member">, member: DiscordenoMember];
+  interactionGuildCreate: [data: Interaction, member: DiscordenoMember];
   /** Sent when a user uses a Slash Command in a dm (type 2) or clicks a button (type 3). */
   interactionDMCreate: [data: Omit<Interaction, "member">];
   /** Sent when a lurker joins/leaves/moves stage channels. */
