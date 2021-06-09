@@ -4,6 +4,7 @@ import { ChannelTypes } from "../../../types/channels/channel_types.ts";
 import { StartThread } from "../../../types/channels/threads/start_thread.ts";
 import { Errors } from "../../../types/discordeno/errors.ts";
 import { endpoints } from "../../../util/constants.ts";
+import { requireBotChannelPermissions } from "../../../util/permissions.ts";
 import { snakelize } from "../../../util/utils.ts";
 
 /**
@@ -21,6 +22,8 @@ export async function startThread(channelId: bigint, options: StartThread & { me
     if (!options.messageId && channel.type === ChannelTypes.GuildNews) {
       throw new Error(Errors.GUILD_NEWS_CHANNEL_ONLY_SUPPORT_PUBLIC_THREADS);
     }
+
+    await requireBotChannelPermissions(channel, options.messageId ? ["USE_PUBLIC_THREADS"] : ["USE_PRIVATE_THREADS"]);
   }
 
   return await rest.runMethod(
