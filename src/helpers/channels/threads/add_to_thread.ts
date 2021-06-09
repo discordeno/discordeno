@@ -3,7 +3,7 @@ import { rest } from "../../../rest/rest.ts";
 import { ChannelTypes } from "../../../types/channels/channel_types.ts";
 import { Errors } from "../../../types/discordeno/errors.ts";
 import { endpoints } from "../../../util/constants.ts";
-import { botHasChannelPermissions, requireBotChannelPermissions } from "../../../util/permissions.ts";
+import { botHasChannelPermissions } from "../../../util/permissions.ts";
 
 /** Adds the current user to a thread. Returns a 204 empty response on success. Also requires the thread is not archived. Fires a Thread Members Update Gateway event.
  *  Adds another user to a thread. Requires the ability to send messages in the thread. Also requires the thread is not archived. Returns a 204 empty response on success. Fires a Thread Members Update Gateway event.
