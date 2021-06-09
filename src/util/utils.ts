@@ -236,11 +236,11 @@ export function validateComponents(components: MessageComponents) {
 
       // 5 Link buttons can not have a customId
       if (isButton(subcomponent)) {
-        if (subcomponent.type === ButtonStyles.Link && subcomponent.customId) {
+        if (subcomponent.style === ButtonStyles.Link && subcomponent.customId) {
           throw new Error(Errors.LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID);
         }
         // Other buttons must have a customId
-        if (!subcomponent.customId && subcomponent.type !== ButtonStyles.Link) {
+        if (!subcomponent.customId && subcomponent.style !== ButtonStyles.Link) {
           throw new Error(Errors.BUTTON_REQUIRES_CUSTOM_ID);
         }
 
