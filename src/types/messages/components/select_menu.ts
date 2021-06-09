@@ -1,6 +1,7 @@
 import { DiscordMessageComponentTypes } from "./message_component_types.ts";
 import { SelectOption } from "./select_option.ts";
 
+// TODO: add dock link
 export interface SelectMenuComponent {
   type: DiscordMessageComponentTypes.SelectMenu;
   /** A custom identifier for this component. Maximum 100 characters. */

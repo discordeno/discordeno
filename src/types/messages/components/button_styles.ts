@@ -1,4 +1,4 @@
-// TODO: add docs link
+/** https://discord.com/developers/docs/interactions/message-components#buttons-button-styles */
 export enum DiscordButtonStyles {
   /** A blurple button */
   Primary = 1,

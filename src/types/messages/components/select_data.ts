@@ -1,5 +1,6 @@
 import { DiscordMessageComponentTypes } from "./message_component_types.ts";
 
+// TODO: add dock link
 export interface SelectMenuData {
   /** The type of component */
   componentType: DiscordMessageComponentTypes.SelectMenu;
