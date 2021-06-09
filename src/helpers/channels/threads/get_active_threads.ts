@@ -6,6 +6,6 @@ import { requireBotChannelPermissions } from "../../../util/permissions.ts";
 export async function getActiveThreads(channelId: bigint) {
   await requireBotChannelPermissions(channelId, ["READ_MESSAGE_HISTORY"]);
 
-  // TODO: v12 map the result to a nice collection
+  // TODO: v12 map the result to a nice collection, check what it returns
   return await rest.runMethod("get", endpoints.THREAD_ACTIVE(channelId));
 }
