@@ -1,4 +1,4 @@
-// TODO: add docs link
+/** https://discord.com/developers/docs/interactions/message-components#component-types */
 export enum DiscordMessageComponentTypes {
   /** A row of components at the bottom of a message */
   ActionRow = 1,

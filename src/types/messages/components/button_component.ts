@@ -1,10 +1,11 @@
 import { SnakeCasedPropertiesDeep } from "../../util.ts";
 import { ButtonStyles } from "./button_styles.ts";
+import { DiscordMessageComponentTypes } from "./message_component_types.ts";
 
-// TODO: add docs link
+/** https://discord.com/developers/docs/interactions/message-components#buttons-button-object */
 export interface ButtonComponent {
   /** All button components have type 2 */
-  type: 2;
+  type: DiscordMessageComponentTypes.Button;
   /** for what the button says (max 80 characters) */
   label: string;
   /** a dev-defined unique string sent on click (max 100 characters). type 5 Link buttons can not have a custom_id */
@@ -28,4 +29,5 @@ export interface ButtonComponent {
   disabled?: boolean;
 }
 
+// TODO: v12 remove this
 export type DiscordButtonComponent = SnakeCasedPropertiesDeep<ButtonComponent>;

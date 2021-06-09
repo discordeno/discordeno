@@ -1,3 +1,4 @@
+// TODO: add dock link
 export interface SelectOption {
   /** The user-facing name of the option. Maximum 25 characters. */
   label: string;

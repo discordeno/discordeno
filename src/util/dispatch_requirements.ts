@@ -81,7 +81,10 @@ export async function dispatchRequirements(data: DiscordGatewayPayload, shardId:
     );
   }
 
-  const guild = await structures.createDiscordenoGuild(rawGuild, shardId);
+  const guild = await structures.createDiscordenoGuild(
+    { ...rawGuild, memberCount: rawGuild.approximateMemberCount },
+    shardId
+  );
 
   // Add to cache
   cache.guilds.set(id, guild);
