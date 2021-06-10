@@ -10,6 +10,7 @@ export interface CreateMessage {
   content?: string;
   /** true if this is a TTS message */
   tts?: boolean;
+  // TODO: v12 remove
   /** Embedded `rich` content
    * @deprecated will be removed in Discordeno v12 use embeds
    */
