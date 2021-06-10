@@ -29,6 +29,12 @@ export async function editMessage(channelId: bigint, messageId: bigint, content:
     validateComponents(content.components);
   }
 
+  // TODO: v12 remove
+  if (content.embed) content.embeds = [content.embed, ...(content.embeds || [])];
+  if (content.embeds && content.embeds.length > 10) {
+    content.embeds.splice(10);
+  }
+
   if (content.content && content.content.length > 2000) {
     throw new Error(Errors.MESSAGE_MAX_LENGTH);
   }
