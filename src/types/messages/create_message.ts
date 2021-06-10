@@ -10,7 +10,9 @@ export interface CreateMessage {
   content?: string;
   /** true if this is a TTS message */
   tts?: boolean;
-  /** Embedded `rich` content */
+  /** Embedded `rich` content
+   * @deprecated will be removed in Discordeno v12 use embeds
+   */
   embed?: Embed;
   /** Embedded `rich` content (up to 6000 characters) */
   embeds?: Embed[];
