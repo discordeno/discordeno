@@ -35,10 +35,13 @@ export async function sendMessage(channelId: bigint, content: string | CreateMes
 
     if (content.tts) requiredPerms.add("SEND_TTS_MESSAGES");
     // TODO: v12 remove
-    if (content.embed) content.embeds = [content.embed, ...(content.embeds || [])];
-    if (content.embeds?.length) requiredPerms.add("EMBED_LINKS");
-    if (content.embeds && content.embeds.length > 10) {
-      content.embeds.splice(10);
+    if (content.embed) {
+      content.embeds = [content.embed, ...(content.embeds || [])];
+      content.embed = undefined;
+    }
+    if (content.embeds?.length) {
+      requiredPerms.add("EMBED_LINKS");
+      content.embeds?.splice(10);
     }
 
     if (content.messageReference?.messageId || content.allowedMentions?.repliedUser) {
