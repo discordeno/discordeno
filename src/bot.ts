@@ -17,6 +17,7 @@ export let eventHandlers: EventHandlers = {};
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
 export async function startBot(config: BotConfig) {
+  if (!config.token) throw Error("No token provided!")
   if (config.eventHandlers)
     eventHandlers = {
       ...config.eventHandlers,
