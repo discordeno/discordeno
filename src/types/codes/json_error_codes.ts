@@ -54,6 +54,7 @@ export enum DiscordJsonErrorCodes {
   MaximumNumberOfAttachmentsInAMessageReached = 30015,
   MaximumNumberOfInvitesReached,
   MaximumNumberOfAnimatedEmojisReached = 30018,
+  MaximumNumberOfServerMembersReached,
   MaximumNumberOfGuildDiscoverySubcategoriesHasBeenReached = 30030,
   GuildAlreadyHasTemplate = 30031,
   MaximumNumberOfBansForNonGuildMembersHaveBeenExceeded = 30035,
