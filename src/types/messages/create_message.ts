@@ -12,6 +12,8 @@ export interface CreateMessage {
   tts?: boolean;
   /** Embedded `rich` content */
   embed?: Embed;
+  /** Embedded `rich` content (up to 6000 characters) */
+  embeds?: Embed[];
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions;
   /** Include to make your message a reply */
