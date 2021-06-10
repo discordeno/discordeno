@@ -34,7 +34,13 @@ export async function sendMessage(channelId: bigint, content: string | CreateMes
     const requiredPerms: Set<PermissionStrings> = new Set(["SEND_MESSAGES", "VIEW_CHANNEL"]);
 
     if (content.tts) requiredPerms.add("SEND_TTS_MESSAGES");
-    if (content.embed) requiredPerms.add("EMBED_LINKS");
+    // TODO: v12 remove
+    if (content.embed) content.embeds = [content.embed, ...(content.embeds || [])];
+    if (content.embeds?.length) requiredPerms.add("EMBED_LINKS");
+    if (content.embeds && content.embeds.length > 10) {
+      content.embeds.splice(10);
+    }
+
     if (content.messageReference?.messageId || content.allowedMentions?.repliedUser) {
       requiredPerms.add("READ_MESSAGE_HISTORY");
     }
