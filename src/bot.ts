@@ -6,6 +6,7 @@ import { snowflakeToBigint } from "./util/bigint.ts";
 import { GATEWAY_VERSION } from "./util/constants.ts";
 import { ws } from "./ws/ws.ts";
 import { dispatchRequirements } from "./util/dispatch_requirements.ts";
+import { Errors } from "./types/discordeno/errors.ts";
 
 // deno-lint-ignore prefer-const
 export let secretKey = "";
@@ -17,7 +18,7 @@ export let eventHandlers: EventHandlers = {};
 export let proxyWSURL = `wss://gateway.discord.gg`;
 
 export async function startBot(config: BotConfig) {
-  if (!config.token) throw Error("No token provided!")
+  if (!config.token) throw Error(Errors.NO_TOKEN_PROVIDED)
   if (config.eventHandlers)
     eventHandlers = {
       ...config.eventHandlers,
