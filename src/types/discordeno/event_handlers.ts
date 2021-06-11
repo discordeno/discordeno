@@ -130,7 +130,7 @@ export type EventHandlersDefinitions = {
   /** Sent when a thread is created */
   threadCreate: [channel: DiscordenoChannel];
   /** Sent when a thread is updated */
-  threadUpdate: [cahnnel: DiscordenoChannel, oldChannel: DiscordenoChannel];
+  threadUpdate: [channel: DiscordenoChannel, oldChannel: DiscordenoChannel];
   /** Sent when the bot gains access to threads */
   threadListSync: [channels: Collection<bigint, DiscordenoChannel>, members: ThreadMember[], guildId: bigint];
   /** Sent when the current users thread member is updated */
