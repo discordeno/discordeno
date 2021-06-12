@@ -18,6 +18,8 @@ export interface GuildMember {
   mute: boolean;
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
   pending?: boolean;
+  /** Total permissions of the member in the channel, including overwrites, returned when in the interaction object */
+  permissions?: string;
 }
 
 // We use these types much since user always exists unless its a `CREATE_MESSAGE` or `MESSAGE_UPDATE` event
