@@ -3,6 +3,7 @@ import { cacheHandlers } from "../../cache.ts";
 import { ThreadMembersUpdate } from "../../types/channels/threads/thread_members_update.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
+import { threadMembersUpdateModified } from "../../util/transformers/thread_members_update_modified.ts";
 
 export async function handleThreadMembersUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as ThreadMembersUpdate;
@@ -12,5 +13,5 @@ export async function handleThreadMembersUpdate(data: DiscordGatewayPayload) {
   thread.memberCount = payload.memberCount;
   await cacheHandlers.set("threads", thread.id, thread);
 
-  eventHandlers.threadMembersUpdate?.(payload);
+  eventHandlers.threadMembersUpdate?.(threadMembersUpdateModified(payload));
 }

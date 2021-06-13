@@ -8,7 +8,7 @@ import type { Collection } from "../../util/collection.ts";
 import type { PresenceUpdate } from "../activity/presence_update.ts";
 import type { StageInstance } from "../channels/stage_instance.ts";
 import type { ThreadMemberModified } from "../channels/threads/thread_member.ts";
-import type { ThreadMembersUpdate } from "../channels/threads/thread_members_update.ts";
+import type { ThreadMembersUpdateModified } from "../channels/threads/thread_members_update.ts";
 import type { Emoji } from "../emojis/emoji.ts";
 import type { GatewayPayload } from "../gateway/gateway_payload.ts";
 import type { DiscordGatewayPayload } from "../gateway/gateway_payload.ts";
@@ -137,7 +137,7 @@ export type EventHandlersDefinitions = {
   /** Sent when the current users thread member is updated */
   threadMemberUpdate: [threadMember: ThreadMemberModified, thread: Thread];
   /** Sent when anyone is added to or removed from a thread */
-  threadMembersUpdate: [update: ThreadMembersUpdate];
+  threadMembersUpdate: [update: ThreadMembersUpdateModified];
   /** Sent when a thread is deleted */
   threadDelete: [thread: Thread];
   /** Sent when a user starts typing in a channel. */
