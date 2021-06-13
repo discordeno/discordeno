@@ -17,4 +17,4 @@ export function channelToThread(channel: Channel) {
   };
 }
 
-export type Thread = ReturnType<typeof channelToThread>
+export type Thread = ReturnType<typeof channelToThread>;
