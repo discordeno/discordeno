@@ -228,7 +228,7 @@ export async function createDiscordenoMessage(data: Message) {
 
   props.authorId = createNewProp(snowflakeToBigint(author.id));
   props.isBot = createNewProp(author.bot || false);
-  props.tag = createNewProp(`${author.username}#${author.discriminator}`);
+  props.tag = createNewProp(`${author.username}#${author.discriminator.toString().padStart(4, "0")}`);
 
   // Discord doesnt give guild id for getMessage() so this will fill it in
   const guildIdFinal =
