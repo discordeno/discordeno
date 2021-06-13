@@ -3,6 +3,7 @@ import type { DiscordenoGuild } from "../../structures/guild.ts";
 import type { DiscordenoMember } from "../../structures/member.ts";
 import type { DiscordenoMessage } from "../../structures/message.ts";
 import type { DiscordenoRole } from "../../structures/role.ts";
+import { Thread } from "../../util/channel_to_thread.ts";
 import type { Collection } from "../../util/collection.ts";
 import type { PresenceUpdate } from "../activity/presence_update.ts";
 import type { StageInstance } from "../channels/stage_instance.ts";
@@ -128,11 +129,11 @@ export type EventHandlersDefinitions = {
   /** Sent when a Stage instance has been updated. */
   stageInstanceUpdate: [instance: StageInstance];
   /** Sent when a thread is created */
-  threadCreate: [channel: DiscordenoChannel];
+  threadCreate: [channel: Thread];
   /** Sent when a thread is updated */
-  threadUpdate: [cahnnel: DiscordenoChannel, oldChannel: DiscordenoChannel];
+  threadUpdate: [channel: Thread, oldChannel: Thread];
   /** Sent when the bot gains access to threads */
-  threadListSync: [channels: Collection<bigint, DiscordenoChannel>, members: ThreadMember[], guildId: bigint];
+  threadListSync: [channels: Collection<bigint, Thread>, members: ThreadMember[], guildId: bigint];
   /** Sent when the current users thread member is updated */
   threadMemberUpdate: [threadMember: ThreadMember];
   /** Sent when anyone is added to or removed from a thread */
