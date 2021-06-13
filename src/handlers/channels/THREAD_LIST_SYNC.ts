@@ -1,7 +1,5 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { DiscordenoChannel } from "../../structures/channel.ts";
-import { structures } from "../../structures/mod.ts";
 import { ThreadListSync } from "../../types/channels/threads/thread_list_sync.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";

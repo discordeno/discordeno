@@ -129,17 +129,17 @@ export type EventHandlersDefinitions = {
   /** Sent when a Stage instance has been updated. */
   stageInstanceUpdate: [instance: StageInstance];
   /** Sent when a thread is created */
-  threadCreate: [channel: Thread];
+  threadCreate: [thread: Thread];
   /** Sent when a thread is updated */
-  threadUpdate: [channel: Thread, oldChannel: Thread];
+  threadUpdate: [thread: Thread, oldThread: Thread];
   /** Sent when the bot gains access to threads */
-  threadListSync: [channels: Collection<bigint, Thread>, members: ThreadMember[], guildId: bigint];
+  threadListSync: [threads: Collection<bigint, Thread>, members: ThreadMember[], guildId: bigint];
   /** Sent when the current users thread member is updated */
   threadMemberUpdate: [threadMember: ThreadMember];
   /** Sent when anyone is added to or removed from a thread */
   threadMembersUpdate: [update: ThreadMembersUpdate];
   /** Sent when a thread is deleted */
-  threadDelete: [channel: DiscordenoChannel];
+  threadDelete: [thread: Thread];
   /** Sent when a user starts typing in a channel. */
   typingStart: [data: TypingStart];
   /** Sent when a user joins a voice channel */
