@@ -28,12 +28,10 @@ export async function startGateway(options: StartGatewayOptions) {
     0
   );
 
-  const body = await fetch(`https://discord.com/api/gateway/bot`, {
-    headers: { Authorization: ws.identifyPayload.token },
-  }).then((res) => res.json());
-  console.log(body);
   ws.botGatewayData = camelize(
-    body
+    await fetch(`https://discord.com/api/gateway/bot`, {
+      headers: { Authorization: ws.identifyPayload.token },
+    }).then((res) => res.json())
   ) as GetGatewayBot;
 
   ws.maxShards = options.maxShards || ws.botGatewayData.shards;
