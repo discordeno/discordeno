@@ -6,7 +6,7 @@ import type { DiscordenoMember } from "./structures/member.ts";
 import type { DiscordenoMessage } from "./structures/message.ts";
 import type { PresenceUpdate } from "./types/activity/presence_update.ts";
 import type { Emoji } from "./types/emojis/emoji.ts";
-import { Thread } from "./util/channel_to_thread.ts";
+import { Thread } from "./util/transformers/channel_to_thread.ts";
 import { Collection } from "./util/collection.ts";
 
 export const cache = {

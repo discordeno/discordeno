@@ -1,5 +1,5 @@
-import { Channel } from "../types/channels/channel.ts";
-import { snowflakeToBigint } from "./bigint.ts";
+import { Channel } from "../../types/channels/channel.ts";
+import { snowflakeToBigint } from "../bigint.ts";
 
 export function channelToThread(channel: Channel) {
   return {
