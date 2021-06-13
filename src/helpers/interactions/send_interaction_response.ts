@@ -5,13 +5,18 @@ import type { DiscordenoInteractionResponse } from "../../types/discordeno/inter
 import { endpoints } from "../../util/constants.ts";
 import { snakelize, validateComponents } from "../../util/utils.ts";
 
+// TODO: v12 remove | string
 /**
  * Send a response to a users slash command. The command data will have the id and token necessary to respond.
  * Interaction `tokens` are valid for **15 minutes** and can be used to send followup messages.
  *
  * NOTE: By default we will suppress mentions. To enable mentions, just pass any mentions object.
  */
-export async function sendInteractionResponse(id: bigint, token: string, options: DiscordenoInteractionResponse) {
+export async function sendInteractionResponse(
+  id: bigint | string,
+  token: string,
+  options: DiscordenoInteractionResponse
+) {
   // TODO: add more options validations
   if (options.data?.components) validateComponents(options.data?.components);
 
@@ -37,5 +42,9 @@ export async function sendInteractionResponse(id: bigint, token: string, options
     cache.executedSlashCommands.delete(token);
   }, 900000);
 
-  return await rest.runMethod("post", endpoints.INTERACTION_ID_TOKEN(id, token), snakelize(options));
+  return await rest.runMethod(
+    "post",
+    endpoints.INTERACTION_ID_TOKEN(typeof id === "bigint" ? id : BigInt(id), token),
+    snakelize(options)
+  );
 }
