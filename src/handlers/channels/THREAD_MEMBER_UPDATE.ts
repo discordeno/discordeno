@@ -9,12 +9,11 @@ export async function handleThreadMemberUpdate(data: DiscordGatewayPayload) {
   const thread = await cacheHandlers.get("threads", snowflakeToBigint(payload.id));
   if (!thread) return;
 
-  const member = { 
+  const member = {
     ...payload,
     id: snowflakeToBigint(payload.id),
     userId: snowflakeToBigint(payload.userId),
     joinTimestamp: Date.parse(payload.joinTimestamp),
-    
   };
 
   eventHandlers.threadMemberUpdate?.(member, thread);
