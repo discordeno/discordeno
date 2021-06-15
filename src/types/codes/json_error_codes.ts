@@ -108,6 +108,10 @@ export enum DiscordJsonErrorCodes {
   NoUsersWithDiscordTagExist = 80004,
   ReqctionWasBlocked = 90001,
   ApiResourceIsCurrentlyOverloadedTryAgainALittleLater = 130000,
+  AThreadHasAlreadyBeenCreatedForThisMessage = 160004,
+  ThreadIsLocked = 160005,
+  MaximumNumberOfActiveThreadsReached = 160006,
+  MaximumNumberOfActiveAnnouncementThreadsReached = 160007,
 }
 
 export type JsonErrrorCodes = DiscordJsonErrorCodes;
