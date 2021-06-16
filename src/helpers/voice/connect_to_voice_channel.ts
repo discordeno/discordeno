@@ -5,6 +5,7 @@ import { calculateShardId } from "../../util/calculate_shard_id.ts";
 import { snakelize } from "../../util/utils.ts";
 import { ws } from "../../ws/ws.ts";
 
+/** Connect or join a voice channel inside a guild. By default, the "selfDeaf" option is true. Requires `CONNECT` and `VIEW_CHANNEL` permissions. */
 export async function connectToVoiceChannel(
   guildId: bigint,
   channelId: bigint,
