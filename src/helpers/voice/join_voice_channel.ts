@@ -5,7 +5,7 @@ import { sendShardMessage } from "../../ws/send_shard_message.ts";
 import { calculateShardId } from "../../util/calculate_shard_id.ts";
 import { snakelize } from "../../util/utils.ts";
 
-export async function joinVoiceChannel(
+export async function connectToVoiceChannel(
   guildId: bigint,
   channelId: bigint,
   { selfDeaf = false, selfMute = false }: Partial<Omit<UpdateVoiceState, "guildId" | "channelId">>
