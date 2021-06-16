@@ -12,11 +12,10 @@ export async function connectToVoiceChannel(
   channelId: bigint,
   options?: AtLeastOne<Omit<UpdateVoiceState, "guildId" | "channelId">>
 ) {
-  if (options && !options.selfDeaf) options.selfDeaf ??= true;
   await requireBotChannelPermissions(channelId, ["CONNECT", "VIEW_CHANNEL"]);
 
   ws.sendShardMessage(calculateShardId(guildId), {
     op: DiscordGatewayOpcodes.VoiceStateUpdate,
-    d: snakelize<UpdateVoiceState>({ ...options, guildId, channelId, selfMute: Boolean(options?.selfMute) }),
+    d: snakelize<UpdateVoiceState>({guildId, channelId, selfMute: Boolean(options?.selfMute), selfDeaf: options.selfDeaf ?? true }),
   });
 }
