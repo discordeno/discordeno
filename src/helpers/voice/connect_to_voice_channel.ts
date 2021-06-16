@@ -17,6 +17,6 @@ export async function connectToVoiceChannel(
 
   ws.sendShardMessage(calculateShardId(guildId), {
     op: DiscordGatewayOpcodes.VoiceStateUpdate,
-    d: snakelize<UpdateVoiceState>({ guildId, channelId, ...options }),
+    d: snakelize<UpdateVoiceState>({ ...options, guildId, channelId, selfMute: Boolean(options?.selfMute) }),
   });
 }
