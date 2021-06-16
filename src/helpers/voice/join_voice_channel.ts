@@ -3,6 +3,7 @@ import type { UpdateVoiceState } from "../../types/voice/update_voice_state.ts";
 import { requireBotChannelPermissions } from "../../util/permissions.ts";
 import { sendShardMessage } from "../../ws/send_shard_message.ts";
 import { calculateShardId } from "../../util/calculate_shard_id.ts";
+import { snakelize } from "../../util/utils.ts";
 
 export async function joinVoiceChannel(
   guildId: bigint,
@@ -15,11 +16,6 @@ export async function joinVoiceChannel(
 
   sendShardMessage(calculateShardId(guildId), {
     op: DiscordGatewayOpcodes.VoiceStateUpdate,
-    d: {
-      guild_id: guildId,
-      channel_id: channelId,
-      self_deaf: selfDeaf,
-      self_mute: selfMute,
-    },
+    d: snakelize<UpdateVoiceState>({ guildId, channelId, selfDeaf, selfMute }),
   });
 }
