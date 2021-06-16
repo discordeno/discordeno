@@ -8,12 +8,12 @@ import { snakelize } from "../../util/utils.ts";
 export async function connectToVoiceChannel(
   guildId: bigint,
   channelId: bigint,
-  { selfDeaf = false, selfMute = false }: Partial<Omit<UpdateVoiceState, "guildId" | "channelId">> = {}
+  options?: Omit<UpdateVoiceState, "guildId" | "channelId">
 ) {
   await requireBotChannelPermissions(channelId, ["CONNECT", "VIEW_CHANNEL"]);
 
   sendShardMessage(calculateShardId(guildId), {
     op: DiscordGatewayOpcodes.VoiceStateUpdate,
-    d: snakelize<UpdateVoiceState>({ guildId, channelId, selfDeaf, selfMute }),
+    d: snakelize<UpdateVoiceState>({ guildId, channelId, ...options }),
   });
 }
