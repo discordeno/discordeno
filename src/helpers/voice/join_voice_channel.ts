@@ -8,7 +8,7 @@ import { snakelize } from "../../util/utils.ts";
 export async function joinVoiceChannel(
   guildId: bigint,
   channelId: bigint,
-  { selfDeaf = false, selfMute = false }: Partial<Omit<UpdateVoiceState, "guildId" | "channelId">>
+  { selfDeaf = false, selfMute = false }: Partial<Omit<UpdateVoiceState, "guildId" | "channelId">> = {}
 ) {
   await requireBotChannelPermissions(channelId, ["CONNECT"]);
 
