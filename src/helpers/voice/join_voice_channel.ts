@@ -10,7 +10,7 @@ export async function connectToVoiceChannel(
   channelId: bigint,
   { selfDeaf = false, selfMute = false }: Partial<Omit<UpdateVoiceState, "guildId" | "channelId">>
 ) {
-  await requireBotChannelPermissions(channelId, ["CONNECT"]);
+  await requireBotChannelPermissions(channelId, ["CONNECT", "VIEW_CHANNEL"]);
 
   sendShardMessage(calculateShardId(guildId), {
     op: DiscordGatewayOpcodes.VoiceStateUpdate,
