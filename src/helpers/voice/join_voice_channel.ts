@@ -10,6 +10,8 @@ export async function connectToVoiceChannel(
   channelId: bigint,
   options?: Omit<UpdateVoiceState, "guildId" | "channelId">
 ) {
+  if (!options?.selfDeaf) options?.selfDeaf = true;
+
   await requireBotChannelPermissions(channelId, ["CONNECT", "VIEW_CHANNEL"]);
 
   sendShardMessage(calculateShardId(guildId), {
