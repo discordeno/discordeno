@@ -1,6 +1,8 @@
 import { Channel } from "../../types/channels/channel.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import { ThreadMemberModified } from "../../types/channels/threads/thread_member.ts";
 import { snowflakeToBigint } from "../bigint.ts";
+import { Collection } from "../collection.ts";
 import { createNewProp } from "../utils.ts";
 
 export const threadToggles = {
@@ -60,8 +62,9 @@ export function channelToThread(channel: Channel) {
     autoArchiveDuration: createNewProp(channel.threadMetadata?.autoArchiveDuration || 0),
     bitfield: createNewProp(bitfield),
     ownerId: createNewProp(snowflakeToBigint(channel.ownerId!)),
-    botIsMember: createNewProp(Boolean(channel.member))
-  });
+    botIsMember: createNewProp(Boolean(channel.member)),
+    members: createNewProp(new Collection<bigint, Omit<ThreadMemberModified, "id">>()),
+  }) as DiscordenoThread;
 }
 
 export interface Thread {
@@ -101,5 +104,6 @@ export interface DiscordenoThread {
   isPrivate: boolean;
   isPublic: boolean;
   botIsMember: boolean;
+  members: Collection<bigint, Omit<ThreadMemberModified, "id">>;
   toJSON(): Thread;
 }
