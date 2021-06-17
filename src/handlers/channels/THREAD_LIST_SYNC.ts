@@ -20,7 +20,7 @@ export async function handleThreadListSync(data: DiscordGatewayPayload) {
   );
 
   eventHandlers.threadListSync?.(
-    new Collection(threads.map((t) => [t.id, channelToThread(t)])),
+    new Collection(threads.map((t) => [t.id, t])),
     payload.members.map((member) => threadMemberModified(member)),
     snowflakeToBigint(payload.guildId)
   );
