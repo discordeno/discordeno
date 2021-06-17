@@ -1,7 +1,6 @@
 import { cacheHandlers } from "../../cache.ts";
 import { rest } from "../../rest/rest.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
-import { ChannelTypes } from "../../types/channels/channel_types.ts";
 import { endpoints } from "../../util/constants.ts";
 import { requireBotGuildPermissions } from "../../util/permissions.ts";
 
@@ -14,14 +13,7 @@ export async function deleteChannel(channelId: bigint, reason?: string) {
     if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
     // TODO(threads): check if this requires guild perms or channel is enough
-    await requireBotGuildPermissions(
-      guild,
-      [ChannelTypes.GuildNewsThread, ChannelTypes.GuildPivateThread, ChannelTypes.GuildPublicThread].includes(
-        channel.type
-      )
-        ? ["MANAGE_THREADS"]
-        : ["MANAGE_CHANNELS"]
-    );
+    await requireBotGuildPermissions(guild, channel.isThreadChannel ? ["MANAGE_THREADS"] : ["MANAGE_CHANNELS"]);
     if (guild.rulesChannelId === channelId) {
       throw new Error(Errors.RULES_CHANNEL_CANNOT_BE_DELETED);
     }

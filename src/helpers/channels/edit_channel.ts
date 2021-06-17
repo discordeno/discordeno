@@ -4,7 +4,6 @@ import { rest } from "../../rest/rest.ts";
 import type { DiscordenoChannel } from "../../structures/channel.ts";
 import { structures } from "../../structures/mod.ts";
 import type { Channel } from "../../types/channels/channel.ts";
-import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import type { ModifyChannel } from "../../types/channels/modify_channel.ts";
 import type { ModifyThread } from "../../types/channels/threads/modify_thread.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
@@ -19,13 +18,7 @@ export async function editChannel(channelId: bigint, options: ModifyChannel | Mo
   const channel = await cacheHandlers.get("channels", channelId);
 
   if (channel) {
-    if (
-      [
-        DiscordChannelTypes.GuildNewsThread,
-        DiscordChannelTypes.GuildPivateThread,
-        DiscordChannelTypes.GuildPublicThread,
-      ].includes(channel.type)
-    ) {
+    if (channel.isThreadChannel) {
       const permissions = new Set<PermissionStrings>();
 
       if (hasOwnProperty(options, "archive") && options.archive === false) {
