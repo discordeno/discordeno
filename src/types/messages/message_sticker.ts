@@ -10,7 +10,7 @@ export interface MessageSticker {
   name: string;
   /** Description of the sticker */
   description: string;
-  /** A comma-separated list of tags for the sticker */
+  /** For guild stickers, a unicode emoji representing the sticker's expression. For Nitro stickers, a comma-separated list of related expressions */
   tags?: string;
   /**
    * Sticker asset hash
