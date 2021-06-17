@@ -6,7 +6,7 @@ import type { DiscordenoMember } from "./structures/member.ts";
 import type { DiscordenoMessage } from "./structures/message.ts";
 import type { PresenceUpdate } from "./types/activity/presence_update.ts";
 import type { Emoji } from "./types/emojis/emoji.ts";
-import { Thread } from "./util/transformers/channel_to_thread.ts";
+import { DiscordenoThread } from "./util/transformers/channel_to_thread.ts";
 import { Collection } from "./util/collection.ts";
 
 export const cache = {
@@ -36,7 +36,7 @@ export const cache = {
   activeGuildIds: new Set<bigint>(),
   dispatchedGuildIds: new Set<bigint>(),
   dispatchedChannelIds: new Set<bigint>(),
-  threads: new Collection<bigint, Thread>(),
+  threads: new Collection<bigint, DiscordenoThread>(),
 };
 
 function messageSweeper(message: DiscordenoMessage) {
@@ -111,7 +111,7 @@ export let cacheHandlers = {
 
 export type TableName = "guilds" | "unavailableGuilds" | "channels" | "messages" | "members" | "presences" | "threads";
 
-async function set(table: "threads", key: bigint, value: Thread): Promise<Collection<bigint, Thread>>;
+async function set(table: "threads", key: bigint, value: DiscordenoThread): Promise<Collection<bigint, DiscordenoThread>>;
 async function set(table: "guilds", key: bigint, value: DiscordenoGuild): Promise<Collection<bigint, DiscordenoGuild>>;
 async function set(
   table: "channels",
@@ -134,7 +134,7 @@ async function set(table: TableName, key: bigint, value: any) {
   return cache[table].set(key, value);
 }
 
-async function get(table: "threads", key: bigint): Promise<Thread | undefined>;
+async function get(table: "threads", key: bigint): Promise<DiscordenoThread | undefined>;
 async function get(table: "guilds", key: bigint): Promise<DiscordenoGuild | undefined>;
 async function get(table: "channels", key: bigint): Promise<DiscordenoChannel | undefined>;
 async function get(table: "messages", key: bigint): Promise<DiscordenoMessage | undefined>;
@@ -145,7 +145,7 @@ async function get(table: TableName, key: bigint) {
   return cache[table].get(key);
 }
 
-function forEach(table: "threads", callback: (value: Thread, key: bigint, map: Map<bigint, Thread>) => unknown): void;
+function forEach(table: "threads", callback: (value: DiscordenoThread, key: bigint, map: Map<bigint, DiscordenoThread>) => unknown): void;
 function forEach(
   table: "guilds",
   callback: (value: DiscordenoGuild, key: bigint, map: Map<bigint, DiscordenoGuild>) => unknown
@@ -172,8 +172,8 @@ function forEach(table: TableName, callback: (value: any, key: bigint, map: Map<
 
 async function filter(
   table: "threads",
-  callback: (value: Thread, key: bigint) => boolean
-): Promise<Collection<bigint, Thread>>;
+  callback: (value: DiscordenoThread, key: bigint) => boolean
+): Promise<Collection<bigint, DiscordenoThread>>;
 async function filter(
   table: "guilds",
   callback: (value: DiscordenoGuild, key: bigint) => boolean
