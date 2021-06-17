@@ -110,8 +110,6 @@ export async function createDiscordenoChannel(data: Channel, guildId?: bigint) {
   (Object.keys(rest) as (keyof typeof rest)[]).forEach((key) => {
     eventHandlers.debug?.("loop", `Running forEach loop in createDiscordenoChannel function.`);
 
-    if (key === "threadMetadata") return;
-
     props[key] = createNewProp(
       CHANNEL_SNOWFLAKES.includes(key) ? (rest[key] ? snowflakeToBigint(rest[key] as string) : undefined) : rest[key]
     );
