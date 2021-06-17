@@ -1,4 +1,5 @@
 import { DiscordMessageStickerFormatTypes } from "./message_sticker_format_types.ts";
+import type { User } from "../users/user.ts";
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-sticker-structure */
 export interface MessageSticker {
@@ -19,4 +20,12 @@ export interface MessageSticker {
   asset: string;
   /** Type of sticker format */
   formatType: DiscordMessageStickerFormatTypes;
+  /**  Whether or not the sticker is available */
+  available?: boolean;
+  /** Id of the guild that owns this sticker */
+  guildId?: string;
+  /** The user that uploaded the sticker */
+  user?: User;
+  /** A sticker's sort order within a pack */
+  sortValue?: number;
 }
