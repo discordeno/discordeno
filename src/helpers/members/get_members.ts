@@ -21,7 +21,8 @@ import { ws } from "../../ws/ws.ts";
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
  */
 export async function getMembers(guildId: bigint, options?: ListGuildMembers & { addToCache?: boolean }) {
-  if (!(ws.identifyPayload.intents && DiscordGatewayIntents.GuildMembers)) {
+  // Check if intents is not 0 as proxy ws won't set intents in other instances
+  if (ws.identifyPayload.intents && !(ws.identifyPayload.intents & DiscordGatewayIntents.GuildMembers)) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
