@@ -3,19 +3,20 @@ import type { User } from "../users/user.ts";
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-sticker-structure */
 export interface MessageSticker {
-  /** id of the sticker */
+  /** Id of the sticker */
   id: string;
-  /** id of the pack the sticker is from */
-  packId: string;
+  /** Id of the pack the sticker is from */
+  packId?: string;
   /** Name of the sticker */
   name: string;
   /** Description of the sticker */
   description: string;
   /** For guild stickers, a unicode emoji representing the sticker's expression. For Nitro stickers, a comma-separated list of related expressions */
-  tags?: string;
+  tags: string;
   /**
    * Sticker asset hash
    * Note: The URL for fetching sticker assets is currently private.
+   * @deprecated the value of the asset field will an empty string.
    */
   asset: string;
   /** Type of sticker format */
