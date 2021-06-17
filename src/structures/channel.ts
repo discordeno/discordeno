@@ -9,6 +9,7 @@ import { editChannelOverwrite } from "../helpers/channels/edit_channel_overwrite
 import { sendMessage } from "../helpers/messages/send_message.ts";
 import { disconnectMember } from "../helpers/mod.ts";
 import type { Channel } from "../types/channels/channel.ts";
+import { DiscordChannelTypes } from "../types/channels/channel_types.ts";
 import type { ModifyChannel } from "../types/channels/modify_channel.ts";
 import type { DiscordOverwrite, Overwrite } from "../types/channels/overwrite.ts";
 import type { CreateMessage } from "../types/messages/create_message.ts";
@@ -74,6 +75,12 @@ const baseChannel: Partial<DiscordenoChannel> = {
     if (!voiceStates) return undefined;
 
     return new Collection(voiceStates.map((vs) => [vs.userId, cache.members.get(vs.userId)]));
+  },
+  get isNewsChannel() {
+    return this.type === DiscordChannelTypes.GuildNews;
+  },
+  get isGuildTextBasedChannel() {
+    return [DiscordChannelTypes.GuildNews, DiscordChannelTypes.GuildText].includes(this.type!);
   },
   send(content) {
     return sendMessage(this.id!, content);
@@ -184,6 +191,10 @@ export interface DiscordenoChannel
    * ⚠️ ADVANCED: If you use the custom cache, these will not work for you. Getters can not be async and custom cache requires async.
    */
   connectedMembers?: Collection<bigint, DiscordenoMember | undefined>;
+  /** Whether the channel is a news channel. */
+  isNewsChannel: boolean;
+  /** Whether the channel is a news or text channel in a guild. */
+  isGuildTextBasedChannel: boolean;
 
   // METHODS
 
