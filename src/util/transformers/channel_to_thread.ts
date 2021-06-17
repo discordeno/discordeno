@@ -50,6 +50,7 @@ export function channelToThread(channel: Channel) {
     ),
     autoArchiveDuration: createNewProp(channel.threadMetadata?.autoArchiveDuration || 0),
     bitfield: createNewProp(bitfield),
+    ownerId: createNewProp(snowflakeToBigint(channel.ownerId!))
   });
 }
 
@@ -63,6 +64,7 @@ export interface Thread {
   autoArchiveDuration: number;
   archived: boolean;
   locked: boolean;
+  ownerId: string;
 }
 
 export interface DiscordenoThread {
@@ -76,5 +78,6 @@ export interface DiscordenoThread {
   archived: boolean;
   locked: boolean;
   bitfield: bigint;
+  ownerId: bigint;
   toJSON(): Thread;
 }
