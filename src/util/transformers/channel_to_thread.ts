@@ -50,7 +50,7 @@ export function channelToThread(channel: Channel) {
     ),
     autoArchiveDuration: createNewProp(channel.threadMetadata?.autoArchiveDuration || 0),
     bitfield: createNewProp(bitfield),
-    ownerId: createNewProp(snowflakeToBigint(channel.ownerId!))
+    ownerId: createNewProp(snowflakeToBigint(channel.ownerId!)),
   });
 }
 
