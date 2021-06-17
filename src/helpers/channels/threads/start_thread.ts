@@ -14,7 +14,7 @@ export async function startThread(channelId: bigint, options: StartThread & { me
       throw new Error(Errors.INVALID_THREAD_PARENT_CHANNEL_TYPE);
     }
 
-    await requireBotChannelPermissions(channel, ["USE_PUBLIC_THREADS"]);
+    await requireBotChannelPermissions(channel, ["SEND_MESSAGES", "USE_PUBLIC_THREADS"]);
   }
 
   return await rest.runMethod(

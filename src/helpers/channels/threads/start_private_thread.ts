@@ -15,7 +15,7 @@ export async function startPrivateThread(channelId: bigint, options: StartThread
 
     if (channel.isNewsChannel) throw new Error(Errors.GUILD_NEWS_CHANNEL_ONLY_SUPPORT_PUBLIC_THREADS);
 
-    await requireBotChannelPermissions(channel, ["USE_PRIVATE_THREADS"]);
+    await requireBotChannelPermissions(channel, ["SEND_MESSAGES", "USE_PRIVATE_THREADS"]);
   }
 
   return channelToThread(await rest.runMethod("post", endpoints.THREAD_START_PRIVATE(channelId), snakelize(options)));
