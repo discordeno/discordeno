@@ -7,9 +7,9 @@ import { urlToBase64 } from "../../util/utils.ts";
 /** Modifies the bot's username or avatar.
  * NOTE: username: if changed may cause the bot's discriminator to be randomized.
  */
-export async function editBotProfile(options: { username?: string; botAvatarURL?: string }) {
+export async function editBotProfile(options: { username?: string; botAvatarURL?: string | null }) {
   // Nothing was edited
-  if (!options.username && !options.botAvatarURL) return;
+  if (!options.username && options.botAvatarURL === undefined) return;
   // Check username requirements if username was provided
   if (options.username) {
     if (options.username.length > 32) {
@@ -26,7 +26,7 @@ export async function editBotProfile(options: { username?: string; botAvatarURL?
     }
   }
 
-  const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : undefined;
+  const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : options?.botAvatarURL;
 
   return await rest.runMethod<User>("patch", endpoints.USER_BOT, {
     username: options.username?.trim(),
