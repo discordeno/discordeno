@@ -3,6 +3,7 @@ import { Guild } from "../guilds/guild.ts";
 import { Application } from "../applications/application.ts";
 import { User } from "../users/user.ts";
 import { DiscordTargetTypes } from "./target_types.ts";
+import { InviteStageInstance } from "./invite_stage_instance.ts";
 
 /** https://discord.com/developers/docs/resources/invite#invite-object */
 export interface Invite {
@@ -26,4 +27,6 @@ export interface Invite {
   approximateMemberCount?: number;
   /** The expiration date of this invite, returned from the `GET /invites/<code>` endpoint when `with_expiration` is `true` */
   expiresAt?: string | null;
+  /** Stage instance data if there is a public Stage instance in the Stage channel this invite is for */
+  stageInstance?: InviteStageInstance;
 }

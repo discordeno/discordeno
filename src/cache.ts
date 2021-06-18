@@ -30,7 +30,7 @@ export const cache = {
   executedSlashCommands: new Set<string>(),
   get emojis() {
     return new Collection<bigint, Emoji>(
-      this.guilds.reduce((a, b) => [...a, ...b.emojis.map((e) => [e.id, e])], [] as any[])
+      this.guilds.reduce((a, b) => [...a, ...b.emojis.map((e, id) => [id, e])], [] as any[])
     );
   },
   activeGuildIds: new Set<bigint>(),

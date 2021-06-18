@@ -17,9 +17,7 @@ export async function sendWebhook(webhookId: bigint, webhookToken: string, optio
     throw Error(Errors.MESSAGE_MAX_LENGTH);
   }
 
-  if (options.embeds && options.embeds.length > 10) {
-    options.embeds.splice(10);
-  }
+  options.embeds?.splice(10);
 
   if (options.allowedMentions) {
     if (options.allowedMentions.users?.length) {

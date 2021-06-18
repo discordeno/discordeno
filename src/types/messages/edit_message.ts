@@ -8,8 +8,13 @@ import { MessageComponents } from "./components/message_components.ts";
 export interface EditMessage {
   /** The new message contents (up to 2000 characters) */
   content?: string | null;
-  /** Embedded `rich` content */
+  // TODO: v12 remove
+  /** Embedded `rich` content
+   * @deprecated will be removed in Discordeno v12 use embeds
+   */
   embed?: Embed | null;
+  /** Embedded `rich` content (up to 6000 characters) */
+  embeds?: Embed[] | null;
   /** Edit the flags of the message (only `SUPRESS_EMBEDS` can currently be set/unset) */
   flags?: 4 | null;
   /** The contents of the file being sent/edited */

@@ -46,7 +46,7 @@ const baseMember: Partial<DiscordenoMember> = {
     return `<@!${this.id!}>`;
   },
   get tag() {
-    return `${this.username!}#${this.discriminator!}`;
+    return `${this.username!}#${this.discriminator!.toString().padStart(4, "0")}`;
   },
 
   // METHODS
@@ -232,7 +232,9 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id" | "a
   /** Get the nickname or the username if no nickname */
   name(guildId: bigint): string;
   /** Get the guild member object for the specified guild */
-  guildMember(guildId: bigint):
+  guildMember(
+    guildId: bigint
+  ):
     | (Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
         joinedAt?: number;
         premiumSince?: number;
