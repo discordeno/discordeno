@@ -33,7 +33,6 @@ const baseThread: Partial<DiscordenoThread> = {
       memberCount: this.memberCount,
       messageCount: this.messageCount,
       archiveTimestamp: new Date(this.archiveTimestamp!).toISOString(),
-      archiverId: this.archiverId?.toString(),
       autoArchiveDuration: this.autoArchiveDuration,
       archived: this.archived,
       locked: this.locked,
@@ -56,9 +55,6 @@ export function channelToThread(channel: Channel) {
     archiveTimestamp: createNewProp(
       channel.threadMetadata?.archiveTimestamp ? Date.parse(channel.threadMetadata.archiveTimestamp) : undefined
     ),
-    archiverId: createNewProp(
-      channel.threadMetadata?.archiverId ? snowflakeToBigint(channel.threadMetadata.archiverId) : undefined
-    ),
     autoArchiveDuration: createNewProp(channel.threadMetadata?.autoArchiveDuration || 0),
     bitfield: createNewProp(bitfield),
     ownerId: createNewProp(snowflakeToBigint(channel.ownerId!)),
@@ -77,7 +73,6 @@ export interface Thread {
   memberCount: number;
   messageCount: number;
   archiveTimestamp: string;
-  archiverId?: string;
   autoArchiveDuration: number;
   archived: boolean;
   locked: boolean;
@@ -95,7 +90,6 @@ export interface DiscordenoThread {
   memberCount: number;
   messageCount: number;
   archiveTimestamp: number;
-  archiverId?: bigint;
   autoArchiveDuration: number;
   archived: boolean;
   locked: boolean;

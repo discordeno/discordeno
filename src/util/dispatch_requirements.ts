@@ -1,7 +1,6 @@
 import { botId, eventHandlers } from "../bot.ts";
 import { cache } from "../cache.ts";
 import { getChannels } from "../helpers/channels/get_channels.ts";
-import { getActiveThreads } from "../helpers/channels/threads/get_active_threads.ts";
 import { getGuild } from "../helpers/guilds/get_guild.ts";
 import { getMember } from "../helpers/members/get_member.ts";
 import { structures } from "../structures/mod.ts";

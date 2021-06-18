@@ -6,8 +6,6 @@ export interface ThreadMetadata {
   // TODO(threads): channel struct should convert this to a unixx
   /** Timestamp when the thread's archive status was last changed, used for calculating recent activity */
   archiveTimestamp: string;
-  /** id of the user that last archived or unarchived the thread */
-  archiverId?: string;
   /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
   locked?: boolean;
 }

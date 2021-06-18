@@ -56,4 +56,6 @@ export interface Channel {
   threadMetadata?: ThreadMetadata;
   /** Thread member object for the current user, if they have joined the thread, only included on certain API endpoints */
   member?: ThreadMember;
+  /** the default duration for newly created threads in the channel, in minutes, to automatically archive the thread after recent activity */
+  defaultAutoArchiveDuration: number;
 }
