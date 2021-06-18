@@ -10,6 +10,7 @@ import { channelToThread } from "../../../util/transformers/channel_to_thread.ts
 export async function getActiveThreads(channelId: bigint) {
   await requireBotChannelPermissions(channelId, ["VIEW_CHANNEL"]);
 
+  // TODO: pagination
   const result = (await rest.runMethod("get", endpoints.THREAD_ACTIVE(channelId))) as ListActiveThreads;
 
   const threads = new Collection(
