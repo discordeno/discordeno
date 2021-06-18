@@ -30,7 +30,7 @@ export const cache = {
   executedSlashCommands: new Set<string>(),
   get emojis() {
     return new Collection<bigint, Emoji>(
-      this.guilds.reduce((a, b) => [...a, ...b.emojis.map((e) => [e.id, e])], [] as any[])
+      this.guilds.reduce((a, b) => [...a, ...b.emojis.map((e, id) => [id, e])], [] as any[])
     );
   },
   activeGuildIds: new Set<bigint>(),
@@ -111,7 +111,11 @@ export let cacheHandlers = {
 
 export type TableName = "guilds" | "unavailableGuilds" | "channels" | "messages" | "members" | "presences" | "threads";
 
-async function set(table: "threads", key: bigint, value: DiscordenoThread): Promise<Collection<bigint, DiscordenoThread>>;
+async function set(
+  table: "threads",
+  key: bigint,
+  value: DiscordenoThread
+): Promise<Collection<bigint, DiscordenoThread>>;
 async function set(table: "guilds", key: bigint, value: DiscordenoGuild): Promise<Collection<bigint, DiscordenoGuild>>;
 async function set(
   table: "channels",
@@ -145,7 +149,10 @@ async function get(table: TableName, key: bigint) {
   return cache[table].get(key);
 }
 
-function forEach(table: "threads", callback: (value: DiscordenoThread, key: bigint, map: Map<bigint, DiscordenoThread>) => unknown): void;
+function forEach(
+  table: "threads",
+  callback: (value: DiscordenoThread, key: bigint, map: Map<bigint, DiscordenoThread>) => unknown
+): void;
 function forEach(
   table: "guilds",
   callback: (value: DiscordenoGuild, key: bigint, map: Map<bigint, DiscordenoGuild>) => unknown

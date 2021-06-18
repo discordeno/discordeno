@@ -133,6 +133,8 @@ import { createStageInstance } from "./channels/create_stage_instance.ts";
 import { updateStageInstance } from "./channels/update_stage_instance.ts";
 import { getStageInstance } from "./channels/get_stage_instance.ts";
 import { deleteStageInstance } from "./channels/delete_stage_instance.ts";
+import { isSlashCommand } from "./type_guards/is_slash_command.ts";
+import { connectToVoiceChannel } from "./voice/connect_to_voice_channel.ts";
 
 export {
   addDiscoverySubcategory,
@@ -145,6 +147,7 @@ export {
   batchEditSlashCommandPermissions,
   categoryChildren,
   channelOverwriteHasPermission,
+  connectToVoiceChannel,
   createChannel,
   createEmoji,
   createGuild,
@@ -242,6 +245,7 @@ export {
   guildSplashURL,
   isButton,
   isSelectMenu,
+  isSlashCommand,
   isChannelSynced,
   kick,
   kickMember,
@@ -405,6 +409,8 @@ export let helpers = {
   getGuildTemplates,
   getTemplate,
   syncGuildTemplate,
+  // voice
+  connectToVoiceChannel,
   // webhooks
   createWebhook,
   deleteWebhookMessage,

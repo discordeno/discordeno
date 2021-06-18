@@ -5,9 +5,9 @@ export interface ThreadMemberBase {
 
 export interface ThreadMember extends ThreadMemberBase {
   /** The id of the thread */
-  id: string;
+  id?: string;
   /** The id of the user */
-  userId: string;
+  userId?: string;
   /** The time the current user last joined the thread */
   joinTimestamp: string;
 }

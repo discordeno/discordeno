@@ -6,7 +6,8 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleThreadMemberUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as ThreadMember;
-  const thread = await cacheHandlers.get("threads", snowflakeToBigint(payload.id));
+  // The id field is omitted from the thread member dispatched within the GUILD_CREATE gateway event.
+  const thread = await cacheHandlers.get("threads", snowflakeToBigint(payload.id!));
   if (!thread) return;
 
   thread.botIsMember = true;

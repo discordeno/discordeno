@@ -53,6 +53,8 @@ export enum DiscordJsonErrorCodes {
   MaximumNumberOfGuildChannelsReached = 30013,
   MaximumNumberOfAttachmentsInAMessageReached = 30015,
   MaximumNumberOfInvitesReached,
+  MaximumNumberOfAnimatedEmojisReached = 30018,
+  MaximumNumberOfServerMembersReached,
   MaximumNumberOfGuildDiscoverySubcategoriesHasBeenReached = 30030,
   GuildAlreadyHasTemplate = 30031,
   MaximumNumberOfBansForNonGuildMembersHaveBeenExceeded = 30035,
@@ -106,6 +108,10 @@ export enum DiscordJsonErrorCodes {
   NoUsersWithDiscordTagExist = 80004,
   ReqctionWasBlocked = 90001,
   ApiResourceIsCurrentlyOverloadedTryAgainALittleLater = 130000,
+  AThreadHasAlreadyBeenCreatedForThisMessage = 160004,
+  ThreadIsLocked = 160005,
+  MaximumNumberOfActiveThreadsReached = 160006,
+  MaximumNumberOfActiveAnnouncementThreadsReached = 160007,
 }
 
 export type JsonErrrorCodes = DiscordJsonErrorCodes;

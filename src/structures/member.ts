@@ -46,7 +46,7 @@ const baseMember: Partial<DiscordenoMember> = {
     return `<@!${this.id!}>`;
   },
   get tag() {
-    return `${this.username!}#${this.discriminator!}`;
+    return `${this.username!}#${this.discriminator!.toString().padStart(4, "0")}`;
   },
 
   // METHODS
