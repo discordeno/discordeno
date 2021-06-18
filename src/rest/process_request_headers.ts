@@ -1,3 +1,4 @@
+import { eventHandlers } from "../bot.ts";
 import { rest } from "./rest.ts";
 
 /** Processes the rate limit headers and determines if it needs to be ratelimited and returns the bucket id if available */
@@ -56,8 +57,20 @@ export function processRequestHeaders(url: string, headers: Headers) {
     }
   }
 
+  if (ratelimited) {
+    eventHandlers.rateLimit?.({
+      remaining,
+      bucketId,
+      global,
+      reset,
+      retryAfter,
+      url,
+    });
+  }
+
   if (ratelimited && !rest.processingRateLimitedPaths) {
     rest.processRateLimitedPaths();
   }
+
   return ratelimited ? bucketId : undefined;
 }

@@ -26,6 +26,7 @@ import type { VoiceServerUpdate } from "../voice/voice_server_update.ts";
 import type { VoiceState } from "../voice/voice_state.ts";
 import type { DebugArg } from "./debug_arg.ts";
 import type { GuildUpdateChange } from "./guild_update_change.ts";
+import type { RateLimitData } from "./rate_limit_data.ts";
 
 export type EventHandlersDefinitions = {
   /** Sent when a new Slash Command is created, relevant to the current user. */
@@ -98,6 +99,8 @@ export type EventHandlersDefinitions = {
   nicknameUpdate: [guild: DiscordenoGuild, member: DiscordenoMember, nickname: string, oldNickname?: string];
   /** A user's presence is their current state on a guild. This event is sent when a user's presence or info, such as name or avatar, is updated. */
   presenceUpdate: [presence: PresenceUpdate, oldPresence?: PresenceUpdate];
+  /** Sent when the bot is rate-limited, contains useful information about  */
+  rateLimit: [data: RateLimitData];
   /** Sent before every event execution. Discordeno will not await its execution. */
   raw: [data: GatewayPayload];
   /** Sent when all shards went ready. */
