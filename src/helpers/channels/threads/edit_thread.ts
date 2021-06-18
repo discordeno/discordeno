@@ -8,6 +8,8 @@ import { snakelize } from "../../../util/utils.ts";
 export async function editThread(threadId: bigint, options: ModifyThread, reason?: string) {
   // const thread = await cacheHandlers.get("threads", threadId);
 
+  // TODO: permission checking
+
   const result = await rest.runMethod(
     "patch",
     endpoints.CHANNEL_BASE(threadId),
