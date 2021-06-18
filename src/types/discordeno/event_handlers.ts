@@ -99,7 +99,7 @@ export type EventHandlersDefinitions = {
   nicknameUpdate: [guild: DiscordenoGuild, member: DiscordenoMember, nickname: string, oldNickname?: string];
   /** A user's presence is their current state on a guild. This event is sent when a user's presence or info, such as name or avatar, is updated. */
   presenceUpdate: [presence: PresenceUpdate, oldPresence?: PresenceUpdate];
-  /** Sent when the bot is rate-limited, contains useful information about  */
+  /** Sent when the bot is rate-limited, contains useful information about the route, timeout, etc */
   rateLimit: [data: RateLimitData];
   /** Sent before every event execution. Discordeno will not await its execution. */
   raw: [data: GatewayPayload];
