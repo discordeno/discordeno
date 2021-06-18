@@ -78,7 +78,10 @@ export interface Message {
   messageReference?: Omit<MessageReference, "failIfNotExists">;
   /** Message flags combined as a bitfield */
   flags?: number;
-  /** The stickers sent with the message (bots currently can only receive messages with stickers, not send) */
+  /**
+   * The stickers sent with the message (bots currently can only receive messages with stickers, not send)
+   * @deprecated
+   */
   stickers?: MessageSticker[];
   /**
    * The message associated with the `message_reference`
