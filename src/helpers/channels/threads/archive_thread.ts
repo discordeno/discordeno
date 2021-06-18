@@ -1,6 +1,6 @@
-import { editChannel } from "../edit_channel.ts";
+import { editThread } from "./edit_thread.ts";
 
 /** Sets a thread channel to be archived. */
 export function archiveThread(threadId: bigint) {
-  return editChannel(threadId, { archived: true });
+  return editThread(threadId, { archived: true });
 }

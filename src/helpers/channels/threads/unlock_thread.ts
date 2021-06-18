@@ -1,6 +1,6 @@
-import { editChannel } from "../edit_channel.ts";
+import { editThread } from "./edit_thread.ts";
 
 /** Sets a thread channel to be unlocked. */
 export function unlockThread(threadId: bigint) {
-  return editChannel(threadId, { locked: false });
+  return editThread(threadId, { locked: false });
 }

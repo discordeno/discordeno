@@ -82,13 +82,6 @@ const baseChannel: Partial<DiscordenoChannel> = {
   get isGuildTextBasedChannel() {
     return [DiscordChannelTypes.GuildNews, DiscordChannelTypes.GuildText].includes(this.type!);
   },
-  get isThreadChannel() {
-    return [
-      DiscordChannelTypes.GuildNewsThread,
-      DiscordChannelTypes.GuildPrivateThread,
-      DiscordChannelTypes.GuildPublicThread,
-    ].includes(this.type!);
-  },
   send(content) {
     return sendMessage(this.id!, content);
   },
@@ -202,8 +195,6 @@ export interface DiscordenoChannel
   isNewsChannel: boolean;
   /** Whether the channel is a news or text channel in a guild. */
   isGuildTextBasedChannel: boolean;
-  /** Whether the channel is a thread type channel. */
-  isThreadChannel: boolean;
 
   // METHODS
 

@@ -5,41 +5,22 @@ import type { DiscordenoChannel } from "../../structures/channel.ts";
 import { structures } from "../../structures/mod.ts";
 import type { Channel } from "../../types/channels/channel.ts";
 import type { ModifyChannel } from "../../types/channels/modify_channel.ts";
-import type { ModifyThread } from "../../types/channels/threads/modify_thread.ts";
-import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import { endpoints } from "../../util/constants.ts";
-import { calculateBits, requireBotChannelPermissions, requireOverwritePermissions } from "../../util/permissions.ts";
-import { hasOwnProperty, snakelize } from "../../util/utils.ts";
+import { calculateBits, requireOverwritePermissions } from "../../util/permissions.ts";
+import { snakelize } from "../../util/utils.ts";
 
 //TODO: implement DM group channel edit
-//TODO(threads): check thread perms
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
-export async function editChannel(channelId: bigint, options: ModifyChannel | ModifyThread, reason?: string) {
+export async function editChannel(channelId: bigint, options: ModifyChannel, reason?: string) {
   const channel = await cacheHandlers.get("channels", channelId);
 
   if (channel) {
-    if (channel.isThreadChannel) {
-      const permissions = new Set<PermissionStrings>();
-
-      if (hasOwnProperty(options, "archive") && options.archive === false) {
-        permissions.add("SEND_MESSAGES");
-      }
-
-      // TODO(threads): change this to a better check
-      // hacky way of checking if more is being modified
-      if (Object.keys(options).length > 1) {
-        permissions.add("MANAGE_THREADS");
-      }
-
-      await requireBotChannelPermissions(channel.parentId ?? 0n, [...permissions]);
-    }
-
-    if (hasOwnProperty<ModifyChannel>(options, "permissionOverwrites") && Array.isArray(options.permissionOverwrites)) {
+    if (options.permissionOverwrites && Array.isArray(options.permissionOverwrites)) {
       await requireOverwritePermissions(channel.guildId, options.permissionOverwrites);
     }
   }
 
-  if (options.name || (options as ModifyChannel).topic) {
+  if (options.name || options.topic) {
     const request = editChannelNameTopicQueue.get(channelId);
     if (!request) {
       // If this hasnt been done before simply add 1 for it
@@ -70,7 +51,7 @@ export async function editChannel(channelId: bigint, options: ModifyChannel | Mo
     endpoints.CHANNEL_BASE(channelId),
     snakelize({
       ...options,
-      permissionOverwrites: hasOwnProperty<ModifyChannel>(options, "permissionOverwrites")
+      permissionOverwrites: options.permissionOverwrites
         ? options.permissionOverwrites?.map((overwrite) => {
             return {
               ...overwrite,
