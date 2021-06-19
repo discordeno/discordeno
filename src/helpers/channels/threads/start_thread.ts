@@ -9,7 +9,7 @@ import { channelToThread } from "../../../util/transformers/channel_to_thread.ts
 import { snakelize } from "../../../util/utils.ts";
 
 /** Creates a new public thread from an existing message. Returns a thread channel. */
-export async function startThread(channelId: bigint, options: StartThread & { messageId: bigint }) {
+export async function startThread(channelId: bigint, messageId: bigint, options: StartThread) {
   const channel = await cacheHandlers.get("channels", channelId);
   if (channel) {
     if (!channel.isGuildTextBasedChannel) {
@@ -20,10 +20,6 @@ export async function startThread(channelId: bigint, options: StartThread & { me
   }
 
   return channelToThread(
-    await rest.runMethod<Channel>(
-      "post",
-      endpoints.THREAD_START_PUBLIC(channelId, options.messageId),
-      snakelize(options)
-    )
+    await rest.runMethod<Channel>("post", endpoints.THREAD_START_PUBLIC(channelId, messageId), snakelize(options))
   );
 }
