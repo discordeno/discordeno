@@ -20,7 +20,6 @@ export async function deleteChannel(channelId: bigint, reason?: string) {
       throw new Error(Errors.UPDATES_CHANNEL_CANNOT_BE_DELETED);
     }
 
-    // TODO(threads): check if this requires guild perms or channel is enough
     await requireBotGuildPermissions(guild, ["MANAGE_CHANNELS"]);
   }
 

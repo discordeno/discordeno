@@ -11,5 +11,5 @@ export async function deleteThread(threadId: bigint, reason?: string) {
     if (channel?.guildId) await requireBotGuildPermissions(channel.guildId, ["MANAGE_THREADS"]);
   }
 
-  return await rest.runMethod("delete", endpoints.CHANNEL_BASE(threadId), { reason });
+  return await rest.runMethod<undefined>("delete", endpoints.CHANNEL_BASE(threadId), { reason });
 }

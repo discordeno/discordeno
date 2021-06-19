@@ -59,6 +59,7 @@ export function channelToThread(channel: Channel) {
     bitfield: createNewProp(bitfield),
     ownerId: createNewProp(snowflakeToBigint(channel.ownerId!)),
     botIsMember: createNewProp(Boolean(channel.member)),
+    guildId: createNewProp(snowflakeToBigint(channel.guildId!)),
     members: createNewProp(new Collection<bigint, Omit<ThreadMemberModified, "id">>()),
   }) as DiscordenoThread;
 }
@@ -78,6 +79,7 @@ export interface Thread {
   locked: boolean;
   ownerId: string;
   botIsMember: boolean;
+  guildId: string;
 }
 
 export interface DiscordenoThread {
@@ -98,6 +100,7 @@ export interface DiscordenoThread {
   isPrivate: boolean;
   isPublic: boolean;
   botIsMember: boolean;
+  guildId: bigint;
   members: Collection<bigint, Omit<ThreadMemberModified, "id">>;
   toJSON(): Thread;
 }

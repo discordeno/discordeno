@@ -17,5 +17,5 @@ export async function removeThreadMember(threadId: bigint, userId: bigint) {
     }
   }
 
-  return await rest.runMethod("delete", endpoints.THREAD_USER(threadId, userId));
+  return await rest.runMethod<undefined>("delete", endpoints.THREAD_USER(threadId, userId));
 }
