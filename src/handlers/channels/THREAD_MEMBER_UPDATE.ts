@@ -15,8 +15,8 @@ export async function handleThreadMemberUpdate(data: DiscordGatewayPayload) {
 
   const member = {
     ...payload,
-    id: snowflakeToBigint(payload.id),
-    userId: snowflakeToBigint(payload.userId),
+    id: snowflakeToBigint(payload.id!),
+    userId: snowflakeToBigint(payload.userId!),
     joinTimestamp: Date.parse(payload.joinTimestamp),
   };
 

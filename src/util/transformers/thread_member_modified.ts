@@ -4,8 +4,8 @@ import { snowflakeToBigint } from "../bigint.ts";
 export function threadMemberModified(member: ThreadMember) {
   return {
     ...member,
-    id: snowflakeToBigint(member.id),
-    userId: snowflakeToBigint(member.userId),
+    id: snowflakeToBigint(member.id!),
+    userId: snowflakeToBigint(member.userId!),
     joinTimestamp: Date.parse(member.joinTimestamp),
   } as ThreadMemberModified;
 }

@@ -20,7 +20,7 @@ export async function connectToVoiceChannel(
       guildId,
       channelId,
       selfMute: Boolean(options?.selfMute),
-      selfDeaf: options.selfDeaf ?? true,
+      selfDeaf: options?.selfDeaf ?? true,
     }),
   });
 }

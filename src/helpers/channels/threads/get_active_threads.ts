@@ -21,9 +21,9 @@ export async function getActiveThreads(channelId: bigint) {
   );
 
   for (const member of result.members) {
-    const thread = threads.get(snowflakeToBigint(member.id));
-    thread?.members.set(snowflakeToBigint(member.userId), {
-      userId: snowflakeToBigint(member.userId),
+    const thread = threads.get(snowflakeToBigint(member.id!));
+    thread?.members.set(snowflakeToBigint(member.userId!), {
+      userId: snowflakeToBigint(member.userId!),
       flags: member.flags,
       joinTimestamp: Date.parse(member.joinTimestamp),
     });
