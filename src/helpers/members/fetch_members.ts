@@ -17,7 +17,8 @@ import { ws } from "../../ws/ws.ts";
  */
 export function fetchMembers(guildId: bigint, shardId: number, options?: Omit<RequestGuildMembers, "guildId">) {
   // You can request 1 member without the intent
-  if ((!options?.limit || options.limit > 1) && !(ws.identifyPayload.intents & DiscordGatewayIntents.GuildMembers)) {
+  // Check if intents is not 0 as proxy ws won't set intents in other instances
+  if (ws.identifyPayload.intents && (!options?.limit || options.limit > 1) && !(ws.identifyPayload.intents & DiscordGatewayIntents.GuildMembers)) {
     throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 

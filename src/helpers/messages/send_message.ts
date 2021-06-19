@@ -24,7 +24,7 @@ export async function sendMessage(channelId: bigint, content: string | CreateMes
         DiscordChannelTypes.GuildNews,
         DiscordChannelTypes.GuildText,
         DiscordChannelTypes.GuildPublicThread,
-        DiscordChannelTypes.GuildPivateThread,
+        DiscordChannelTypes.GuildPrivateThread,
         DiscordChannelTypes.GuildNewsThread,
       ].includes(channel.type)
     ) {

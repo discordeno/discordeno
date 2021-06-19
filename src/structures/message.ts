@@ -17,6 +17,7 @@ import type { Message } from "../types/messages/message.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "../util/bigint.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
 import { iconBigintToHash } from "../util/hash.ts";
+import { channelToThread, DiscordenoThread } from "../util/transformers/channel_to_thread.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoChannel } from "./channel.ts";
 import { DiscordenoGuild } from "./guild.ts";
@@ -144,6 +145,9 @@ const baseMessage: Partial<DiscordenoMessage> = {
   get pinned() {
     return Boolean(this.bitfield! & messageToggles.pinned);
   },
+  get thread() {
+    return cache.threads.get(this.id!);
+  },
   toJSON() {
     return {
       id: this.id?.toString(),
@@ -219,12 +223,15 @@ export async function createDiscordenoMessage(data: Message) {
     }
 
     // Don't add member to props since it would overwrite the message.member getter
-    if (key === "member") return;
+    // thread should not be cached on a message
+    if (["member", "thread"].includes(key)) return;
 
     props[key] = createNewProp(
       MESSAGE_SNOWFLAKES.includes(key) ? (rest[key] ? snowflakeToBigint(rest[key] as string) : undefined) : rest[key]
     );
   });
+
+  if (rest.thread) await cacheHandlers.set("threads", snowflakeToBigint(data.id), channelToThread(rest.thread));
 
   props.authorId = createNewProp(snowflakeToBigint(author.id));
   props.isBot = createNewProp(author.bot || false);
@@ -280,6 +287,7 @@ export interface DiscordenoMessage
     | "member"
     | "author"
     | "applicationId"
+    | "thread"
   > {
   id: bigint;
   /** Whether or not this message was sent by a bot */
@@ -336,6 +344,8 @@ export interface DiscordenoMessage
   mentionedChannels: (DiscordenoChannel | undefined)[];
   /** The member objects for all the members that were mentioned in this message. */
   mentionedMembers: (DiscordenoMember | undefined)[];
+  /** The thread if this message has a thread. */
+  thread?: DiscordenoThread;
 
   // METHODS
 

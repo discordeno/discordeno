@@ -20,7 +20,7 @@ export async function startTyping(channelId: bigint) {
         DiscordChannelTypes.GuildNews,
         DiscordChannelTypes.GuildText,
         DiscordChannelTypes.GuildNewsThread,
-        DiscordChannelTypes.GuildPivateThread,
+        DiscordChannelTypes.GuildPrivateThread,
         DiscordChannelTypes.GuildPublicThread,
       ].includes(channel.type)
     ) {

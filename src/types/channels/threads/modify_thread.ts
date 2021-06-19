@@ -1,4 +1,4 @@
-// TODO: add docs link
+/** https://discord.com/developers/docs/resources/channel#modify-channel-json-params-thread */
 export interface ModifyThread {
   /** 2-100 character thread name */
   name?: string;

@@ -3,11 +3,12 @@ import type { DiscordenoGuild } from "../../structures/guild.ts";
 import type { DiscordenoMember } from "../../structures/member.ts";
 import type { DiscordenoMessage } from "../../structures/message.ts";
 import type { DiscordenoRole } from "../../structures/role.ts";
+import { DiscordenoThread } from "../../util/transformers/channel_to_thread.ts";
 import type { Collection } from "../../util/collection.ts";
 import type { PresenceUpdate } from "../activity/presence_update.ts";
 import type { StageInstance } from "../channels/stage_instance.ts";
-import type { ThreadMember } from "../channels/threads/thread_member.ts";
-import type { ThreadMembersUpdate } from "../channels/threads/thread_members_update.ts";
+import type { ThreadMemberModified } from "../channels/threads/thread_member.ts";
+import type { ThreadMembersUpdateModified } from "../channels/threads/thread_members_update.ts";
 import type { Emoji } from "../emojis/emoji.ts";
 import type { GatewayPayload } from "../gateway/gateway_payload.ts";
 import type { DiscordGatewayPayload } from "../gateway/gateway_payload.ts";
@@ -128,17 +129,17 @@ export type EventHandlersDefinitions = {
   /** Sent when a Stage instance has been updated. */
   stageInstanceUpdate: [instance: StageInstance];
   /** Sent when a thread is created */
-  threadCreate: [channel: DiscordenoChannel];
+  threadCreate: [thread: DiscordenoThread];
   /** Sent when a thread is updated */
-  threadUpdate: [cahnnel: DiscordenoChannel, oldChannel: DiscordenoChannel];
+  threadUpdate: [thread: DiscordenoThread, oldThread: DiscordenoThread];
   /** Sent when the bot gains access to threads */
-  threadListSync: [channels: Collection<bigint, DiscordenoChannel>, members: ThreadMember[], guildId: bigint];
+  threadListSync: [threads: Collection<bigint, DiscordenoThread>, members: ThreadMemberModified[], guildId: bigint];
   /** Sent when the current users thread member is updated */
-  threadMemberUpdate: [threadMember: ThreadMember];
+  threadMemberUpdate: [threadMember: ThreadMemberModified, thread: DiscordenoThread];
   /** Sent when anyone is added to or removed from a thread */
-  threadMembersUpdate: [update: ThreadMembersUpdate];
+  threadMembersUpdate: [update: ThreadMembersUpdateModified];
   /** Sent when a thread is deleted */
-  threadDelete: [channel: DiscordenoChannel];
+  threadDelete: [thread: DiscordenoThread];
   /** Sent when a user starts typing in a channel. */
   typingStart: [data: TypingStart];
   /** Sent when a user joins a voice channel */

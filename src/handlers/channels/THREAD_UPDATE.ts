@@ -1,17 +1,17 @@
 import { eventHandlers } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { structures } from "../../structures/mod.ts";
 import { Channel } from "../../types/channels/channel.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
+import { channelToThread } from "../../util/transformers/channel_to_thread.ts";
 
 export async function handleThreadUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as Channel;
-  const oldChannel = await cacheHandlers.get("channels", snowflakeToBigint(payload.id));
-  if (!oldChannel) return;
+  const oldThread = await cacheHandlers.get("threads", snowflakeToBigint(payload.id));
+  if (!oldThread) return;
 
-  const discordenoChannel = await structures.createDiscordenoChannel(payload);
-  await cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);
+  const thread = channelToThread(payload);
+  await cacheHandlers.set("threads", thread.id, thread);
 
-  eventHandlers.threadUpdate?.(discordenoChannel, oldChannel);
+  eventHandlers.threadUpdate?.(thread, oldThread);
 }

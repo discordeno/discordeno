@@ -7,12 +7,18 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 export async function handleThreadMemberUpdate(data: DiscordGatewayPayload) {
   const payload = data.d as ThreadMember;
   // The id field is omitted from the thread member dispatched within the GUILD_CREATE gateway event.
-  const thread = await cacheHandlers.get("channels", snowflakeToBigint(payload.id!));
+  const thread = await cacheHandlers.get("threads", snowflakeToBigint(payload.id!));
   if (!thread) return;
 
-  thread.member = payload;
+  thread.botIsMember = true;
+  await cacheHandlers.set("threads", thread.id, thread);
 
-  await cacheHandlers.set("channels", thread.id, thread);
+  const member = {
+    ...payload,
+    id: snowflakeToBigint(payload.id!),
+    userId: snowflakeToBigint(payload.userId!),
+    joinTimestamp: Date.parse(payload.joinTimestamp),
+  };
 
-  eventHandlers.threadMemberUpdate?.(payload);
+  eventHandlers.threadMemberUpdate?.(member, thread);
 }
