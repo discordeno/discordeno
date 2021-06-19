@@ -8,5 +8,5 @@ export async function leaveThread(threadId: bigint) {
   const thread = await cacheHandlers.get("threads", threadId);
   if (thread?.archived) throw new Error(Errors.CANNOT_LEAVE_ARCHIVED_THREAD);
 
-  return await rest.runMethod("delete", endpoints.THREAD_ME(threadId));
+  return await rest.runMethod<undefined>("delete", endpoints.THREAD_ME(threadId));
 }

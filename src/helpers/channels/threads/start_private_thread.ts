@@ -1,5 +1,6 @@
 import { cacheHandlers } from "../../../cache.ts";
 import { rest } from "../../../rest/rest.ts";
+import { Channel } from "../../../types/channels/channel.ts";
 import { StartThread } from "../../../types/channels/threads/start_thread.ts";
 import { Errors } from "../../../types/discordeno/errors.ts";
 import { endpoints } from "../../../util/constants.ts";
@@ -18,5 +19,7 @@ export async function startPrivateThread(channelId: bigint, options: StartThread
     await requireBotChannelPermissions(channel, ["SEND_MESSAGES", "USE_PRIVATE_THREADS"]);
   }
 
-  return channelToThread(await rest.runMethod("post", endpoints.THREAD_START_PRIVATE(channelId), snakelize(options)));
+  return channelToThread(
+    await rest.runMethod<Channel>("post", endpoints.THREAD_START_PRIVATE(channelId), snakelize(options))
+  );
 }
