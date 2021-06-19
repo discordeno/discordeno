@@ -15,7 +15,7 @@ export async function getThreadMembers(threadId: bigint) {
 
   const thread = await cacheHandlers.get("threads", threadId);
   if (thread?.isPrivate) {
-    const channel = await cacheHandlers.get("channels", thread.channelId);
+    const channel = await cacheHandlers.get("channels", thread.parentId);
     if (channel && !(await botHasChannelPermissions(channel, ["MANAGE_THREADS"])) && !thread.botIsMember)
       throw new Error(Errors.CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD);
   }

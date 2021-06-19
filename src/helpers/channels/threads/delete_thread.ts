@@ -7,7 +7,7 @@ import { requireBotGuildPermissions } from "../../../util/permissions.ts";
 export async function deleteThread(threadId: bigint, reason?: string) {
   const thread = await cacheHandlers.get("threads", threadId);
   if (thread) {
-    const channel = await cacheHandlers.get("channels", thread?.channelId);
+    const channel = await cacheHandlers.get("channels", thread?.parentId);
     if (channel?.guildId) await requireBotGuildPermissions(channel.guildId, ["MANAGE_THREADS"]);
   }
 

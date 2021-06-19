@@ -12,7 +12,7 @@ export async function removeThreadMember(threadId: bigint, userId: bigint) {
     if (thread.archived) throw new Error(Errors.CANNOT_REMOVE_FROM_ARCHIVED_THREAD);
 
     if (thread.ownerId !== botId) {
-      const channel = await cacheHandlers.get("channels", thread.channelId);
+      const channel = await cacheHandlers.get("channels", thread.parentId);
       if (channel) await requireBotChannelPermissions(channel, ["MANAGE_THREADS"]);
     }
   }

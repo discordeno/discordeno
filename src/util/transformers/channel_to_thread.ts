@@ -29,7 +29,7 @@ const baseThread: Partial<DiscordenoThread> = {
     return {
       id: this.id?.toString(),
       type: this.type,
-      channelId: this.channelId?.toString(),
+      parentId: this.parentId?.toString(),
       memberCount: this.memberCount,
       messageCount: this.messageCount,
       archiveTimestamp: new Date(this.archiveTimestamp!).toISOString(),
@@ -49,7 +49,7 @@ export function channelToThread(channel: Channel) {
   return Object.create(baseThread, {
     id: createNewProp(snowflakeToBigint(channel.id)),
     type: createNewProp(channel.type),
-    channelId: createNewProp(snowflakeToBigint(channel.parentId!)),
+    parentId: createNewProp(snowflakeToBigint(channel.parentId!)),
     memberCount: createNewProp(channel.memberCount),
     messageCount: createNewProp(channel.messageCount),
     archiveTimestamp: createNewProp(
@@ -69,7 +69,7 @@ export interface Thread {
     | DiscordChannelTypes.GuildNewsThread
     | DiscordChannelTypes.GuildPublicThread
     | DiscordChannelTypes.GuildPrivateThread;
-  channelId: string;
+  parentId: string;
   memberCount: number;
   messageCount: number;
   archiveTimestamp: string;
@@ -86,7 +86,7 @@ export interface DiscordenoThread {
     | DiscordChannelTypes.GuildNewsThread
     | DiscordChannelTypes.GuildPublicThread
     | DiscordChannelTypes.GuildPrivateThread;
-  channelId: bigint;
+  parentId: bigint;
   memberCount: number;
   messageCount: number;
   archiveTimestamp: number;

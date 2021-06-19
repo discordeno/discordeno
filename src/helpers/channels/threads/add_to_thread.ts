@@ -14,7 +14,7 @@ export async function addToThread(threadId: bigint, userId: bigint) {
     }
 
     // If a user id is provided SEND_MESSAGES is required.
-    const channel = await cacheHandlers.get("channels", thread.channelId);
+    const channel = await cacheHandlers.get("channels", thread.parentId);
     // TODO: does MANAGE_THREADS override this????
     if (channel) await requireBotChannelPermissions(channel, ["SEND_MESSAGES"]);
   }
