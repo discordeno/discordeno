@@ -144,7 +144,17 @@ export async function createDiscordenoChannel(data: Channel, guildId?: bigint) {
 export interface DiscordenoChannel
   extends Omit<
     Channel,
-    "id" | "guildId" | "lastMessageId" | "ownerId" | "applicationId" | "parentId" | "permissionOverwrites"
+    | "id"
+    | "guildId"
+    | "lastMessageId"
+    | "ownerId"
+    | "applicationId"
+    | "parentId"
+    | "permissionOverwrites"
+    | "messageCount"
+    | "memberCount"
+    | "threadMetadata"
+    | "member"
   > {
   permissionOverwrites: (Omit<DiscordOverwrite, "id" | "allow" | "deny"> & {
     id: bigint;
