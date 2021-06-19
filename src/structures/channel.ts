@@ -52,10 +52,6 @@ const baseChannel: Partial<DiscordenoChannel> = {
       lastPinTimestamp: this.lastPinTimestamp ? new Date(this.lastPinTimestamp).toISOString() : undefined,
       rtcRegion: this.rtcRegion,
       videoQualityMode: this.videoQualityMode,
-      messageCount: this.messageCount,
-      memberCount: this.memberCount,
-      threadMetadata: this.threadMetadata,
-      member: this.member,
     } as Channel;
   },
   get guild() {
