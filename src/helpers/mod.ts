@@ -135,6 +135,10 @@ import { getStageInstance } from "./channels/get_stage_instance.ts";
 import { deleteStageInstance } from "./channels/delete_stage_instance.ts";
 import { isSlashCommand } from "./type_guards/is_slash_command.ts";
 import { connectToVoiceChannel } from "./voice/connect_to_voice_channel.ts";
+import { getGuildSticker } from "./stickers/get_guild_sticker.ts";
+import { getSticker } from "./stickers/get_sticker.ts";
+import { getNitroStickerPacks } from "./stickers/get_nitro_sticker_packs.ts";
+import { getGuildStickers } from "./stickers/get_guild_stickers.ts";
 
 export {
   addDiscoverySubcategory,
@@ -276,6 +280,10 @@ export {
   upsertSlashCommand,
   upsertSlashCommands,
   validDiscoveryTerm,
+  getSticker,
+  getGuildStickers,
+  getNitroStickerPacks,
+  getGuildSticker,
 };
 
 export let helpers = {
@@ -401,6 +409,11 @@ export let helpers = {
   editRole,
   getRoles,
   removeRole,
+  // stickers
+  getGuildSticker,
+  getGuildStickers,
+  getNitroStickerPacks,
+  getSticker,
   // templates
   createGuildFromTemplate,
   createGuildTemplate,
