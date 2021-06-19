@@ -136,6 +136,22 @@ import { deleteStageInstance } from "./channels/delete_stage_instance.ts";
 import { isSlashCommand } from "./type_guards/is_slash_command.ts";
 import { connectToVoiceChannel } from "./voice/connect_to_voice_channel.ts";
 
+import { addToThread } from "./channels/threads/add_to_thread.ts";
+import { archiveThread } from "./channels/threads/archive_thread.ts";
+import { deleteThread } from "./channels/threads/delete_thread.ts";
+import { editThread } from "./channels/threads/edit_thread.ts";
+import { getActiveThreads } from "./channels/threads/get_active_threads.ts";
+import { getArchivedThreads } from "./channels/threads/get_archived_threads.ts";
+import { getThreadMembers } from "./channels/threads/get_thread_members.ts";
+import { joinThread } from "./channels/threads/join_thread.ts";
+import { leaveThread } from "./channels/threads/leave_thread.ts";
+import { lockThread } from "./channels/threads/lock_thread.ts";
+import { removeThreadMember } from "./channels/threads/remove_thread_member.ts";
+import { startPrivateThread } from "./channels/threads/start_private_thread.ts";
+import { startThread } from "./channels/threads/start_thread.ts";
+import { unarchiveThread } from "./channels/threads/unarchive_thread.ts";
+import { unlockThread } from "./channels/threads/unlock_thread.ts";
+
 export {
   addDiscoverySubcategory,
   addReaction,
@@ -276,6 +292,21 @@ export {
   upsertSlashCommand,
   upsertSlashCommands,
   validDiscoveryTerm,
+  addToThread,
+  archiveThread,
+  deleteThread,
+  editThread,
+  getActiveThreads,
+  getArchivedThreads,
+  getThreadMembers,
+  joinThread,
+  leaveThread,
+  lockThread,
+  removeThreadMember,
+  startPrivateThread,
+  startThread,
+  unarchiveThread,
+  unlockThread,
 };
 
 export let helpers = {
@@ -424,6 +455,22 @@ export let helpers = {
   getWebhook,
   getWebhooks,
   getWebhookMessage,
+  // threads
+  addToThread,
+  archiveThread,
+  deleteThread,
+  editThread,
+  getActiveThreads,
+  getArchivedThreads,
+  getThreadMembers,
+  joinThread,
+  leaveThread,
+  lockThread,
+  removeThreadMember,
+  startPrivateThread,
+  startThread,
+  unarchiveThread,
+  unlockThread,
 };
 
 export type Helpers = typeof helpers;

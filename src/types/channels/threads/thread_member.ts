@@ -3,6 +3,11 @@ export interface ThreadMemberBase {
   flags: number;
 }
 
+export interface ThreadMemberOnGuildCreate extends ThreadMemberBase {
+  /** The time the current user last joined the thread */
+  joinTimestamp: string;
+}
+
 export interface ThreadMember extends ThreadMemberBase {
   /** The id of the thread */
   id?: string;
