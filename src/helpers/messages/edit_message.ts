@@ -29,11 +29,6 @@ export async function editMessage(channelId: bigint, messageId: bigint, content:
     validateComponents(content.components);
   }
 
-  // TODO: v12 remove
-  if (content.embed) {
-    content.embeds = [content.embed, ...(content.embeds || [])];
-    content.embed = undefined;
-  }
   content.embeds?.splice(10);
 
   if (content.content && content.content.length > 2000) {

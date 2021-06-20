@@ -26,6 +26,7 @@ import { snowflakeToBigint } from "../util/bigint.ts";
 import { cacheMembers } from "../util/cache_members.ts";
 import { Collection } from "../util/collection.ts";
 import { iconHashToBigInt } from "../util/hash.ts";
+import { channelToThread } from "../util/transformers/channel_to_thread.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoChannel } from "./channel.ts";
 import { DiscordenoMember } from "./member.ts";
@@ -245,6 +246,26 @@ export async function createDiscordenoGuild(data: Guild, shardId: number) {
   let bitfield = 0n;
   const guildId = snowflakeToBigint(rest.id);
 
+  const promises = [];
+
+  for (const channel of channels) {
+    promises.push(async () => {
+      const discordenoChannel = await structures.createDiscordenoChannel(channel, guildId);
+
+      return cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);
+    });
+  }
+
+  for (const thread of threads) {
+    promises.push(() => {
+      const discordenoThread = channelToThread(thread);
+
+      return cacheHandlers.set("threads", discordenoThread.id, discordenoThread);
+    });
+  }
+
+  await Promise.all(promises);
+
   const roles = await Promise.all(
     (data.roles || []).map((role) =>
       structures.createDiscordenoRole({
@@ -258,14 +279,6 @@ export async function createDiscordenoGuild(data: Guild, shardId: number) {
     voiceStates.map((vs) => {
       if (vs.member?.joinedAt) members.push(vs.member);
       return structures.createDiscordenoVoiceState(guildId, vs);
-    })
-  );
-
-  await Promise.all(
-    [...channels, ...threads].map(async (channel) => {
-      const discordenoChannel = await structures.createDiscordenoChannel(channel, guildId);
-
-      return await cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);
     })
   );
 
