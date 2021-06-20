@@ -441,7 +441,7 @@ export interface DiscordenoGuild
   /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
   bans(): ReturnType<typeof getBans>;
   /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
-  ban(memberId: bigint, options: CreateGuildBan): ReturnType<typeof banMember>;
+  ban(memberId: bigint, options?: CreateGuildBan): ReturnType<typeof banMember>;
   /** Remove the ban for a user. Requires BAN_MEMBERS permission */
   unban(memberId: bigint): ReturnType<typeof unbanMember>;
   /** Get all the invites for this guild. Requires MANAGE_GUILD permission */

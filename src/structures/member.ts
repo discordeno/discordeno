@@ -232,7 +232,9 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id" | "a
   /** Get the nickname or the username if no nickname */
   name(guildId: bigint): string;
   /** Get the guild member object for the specified guild */
-  guildMember(guildId: bigint):
+  guildMember(
+    guildId: bigint
+  ):
     | (Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
         joinedAt?: number;
         premiumSince?: number;
@@ -251,7 +253,7 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id" | "a
     }
   ): ReturnType<typeof editMember>;
   /** Ban a member in a guild */
-  ban(guildId: bigint, options: CreateGuildBan): ReturnType<typeof banMember>;
+  ban(guildId: bigint, options?: CreateGuildBan): ReturnType<typeof banMember>;
   /** Add a role to the member */
   addRole(guildId: bigint, roleId: bigint, reason?: string): ReturnType<typeof addRole>;
   /** Remove a role from the member */
