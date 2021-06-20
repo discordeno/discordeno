@@ -14,4 +14,5 @@ export interface StickerPack {
   /** Description of the sticker pack */
   description: string;
   /** Id of the sticker pack's banner image */
+  bannerAssetId: string;
 }
