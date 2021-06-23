@@ -100,6 +100,7 @@ import { editBotProfile } from "./misc/edit_bot_profile.ts";
 import { editBotStatus } from "./misc/edit_bot_status.ts";
 import { getGatewayBot } from "./misc/get_gateway_bot.ts";
 import { getUser } from "./misc/get_user.ts";
+import { getApplicationInfo } from "./oauth/get_application.ts";
 import { addRole } from "./roles/add_role.ts";
 import { createRole } from "./roles/create_role.ts";
 import { deleteRole } from "./roles/delete_role.ts";
@@ -250,6 +251,7 @@ export {
   getStageInstance,
   getTemplate,
   getUser,
+  getApplicationInfo,
   getVanityURL,
   getVoiceRegions,
   getWebhook,

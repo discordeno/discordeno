@@ -251,7 +251,7 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id" | "a
     }
   ): ReturnType<typeof editMember>;
   /** Ban a member in a guild */
-  ban(guildId: bigint, options: CreateGuildBan): ReturnType<typeof banMember>;
+  ban(guildId: bigint, options?: CreateGuildBan): ReturnType<typeof banMember>;
   /** Add a role to the member */
   addRole(guildId: bigint, roleId: bigint, reason?: string): ReturnType<typeof addRole>;
   /** Remove a role from the member */
