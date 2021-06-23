@@ -264,7 +264,11 @@ export async function createDiscordenoGuild(data: Guild, shardId: number) {
     });
   }
 
-  await Promise.all(promises);
+  await Promise.all(
+    promises.map(async (promise) => {
+      return await promise();
+    })
+  );
 
   const roles = await Promise.all(
     (data.roles || []).map((role) =>
