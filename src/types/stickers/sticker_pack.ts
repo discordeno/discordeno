@@ -10,7 +10,7 @@ export interface StickerPack {
   /** Id of the pack's SKU */
   skuId: string;
   /** Id of a sticker in the pack which is shown as the pack's icon */
-  coverSkuId: string;
+  coverStickerId: string;
   /** Description of the sticker pack */
   description: string;
   /** Id of the sticker pack's banner image */
