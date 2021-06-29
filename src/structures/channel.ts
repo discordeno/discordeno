@@ -109,32 +109,36 @@ const baseChannel: Partial<DiscordenoChannel> = {
 export async function createDiscordenoChannel(data: Channel, guildId?: bigint) {
   const { lastPinTimestamp, permissionOverwrites = [], ...rest } = data;
 
+  const requiredPropsSize = cache.requiredStructureProperties.channels.size;
+
   const props: Record<string, PropertyDescriptor> = {};
-  (Object.keys(rest) as (keyof typeof rest)[]).forEach((key) => {
+  for (const key of Object.keys(rest) as (keyof typeof rest)[]) {
     eventHandlers.debug?.("loop", `Running forEach loop in createDiscordenoChannel function.`);
+    // If empty then support all, otherwise we only allow the ones user added
+    if (requiredPropsSize && !cache.requiredStructureProperties.channels.has(key)) continue;
 
     props[key] = createNewProp(
       CHANNEL_SNOWFLAKES.includes(key) ? (rest[key] ? snowflakeToBigint(rest[key] as string) : undefined) : rest[key]
     );
-  });
+  }
 
   // Set the guildId seperately because sometimes guildId is not included
-  props.guildId = createNewProp(snowflakeToBigint(guildId?.toString() || data.guildId || ""));
+  if (!requiredPropsSize || cache.requiredStructureProperties.channels.has("guildId"))
+    props.guildId = createNewProp(snowflakeToBigint(guildId?.toString() || data.guildId || ""));
 
-  const channel: DiscordenoChannel = Object.create(baseChannel, {
-    ...props,
-    lastPinTimestamp: createNewProp(lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined),
-    permissionOverwrites: createNewProp(
+  if (!requiredPropsSize || cache.requiredStructureProperties.channels.has("lastPinTimestamp"))
+    props.lastPinTimestamp = createNewProp(lastPinTimestamp ? Date.parse(lastPinTimestamp) : undefined);
+  if (!requiredPropsSize || cache.requiredStructureProperties.channels.has("permissionOverwrites"))
+    props.permissionOverwrites = createNewProp(
       permissionOverwrites.map((o) => ({
         ...o,
         id: snowflakeToBigint(o.id),
         allow: snowflakeToBigint(o.allow),
         deny: snowflakeToBigint(o.deny),
       }))
-    ),
-  });
+    );
 
-  return channel;
+  return Object.create(baseChannel, props) as DiscordenoChannel;
 }
 
 export interface DiscordenoChannel
