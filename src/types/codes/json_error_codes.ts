@@ -43,6 +43,7 @@ export enum DiscordJsonErrorCodes {
   ThisMessageCannotBeEditedDueToAnnouncementRateLimits = 20022,
   TheChannelYouAreWritingHasHitTheWriteRateLimit = 20028,
   YourStageTopicContainsWordsThatAreNotAllowedForPublicStages = 20031,
+  GuildPremiumSubscriptionLevelTooLow = 20035,
   MaximumNumberOfGuildsReached = 30001,
   MaximumNumberOfFriendsReached,
   MaximumNumberOfPinsReachedForTheChannel,
