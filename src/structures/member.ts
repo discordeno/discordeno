@@ -137,8 +137,12 @@ export async function createDiscordenoMember(
 
   let bitfield = 0n;
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
-  (Object.keys(user) as (keyof typeof user)[]).forEach((key) => {
+
+  for (const key of Object.keys(user) as (keyof typeof user)[]) {
     eventHandlers.debug?.("loop", `Running for of for Object.keys(user) loop in DiscordenoMember function.`);
+
+    // @ts-ignore allow user prop args
+    if (cache.requiredStructureProperties.members.size && !cache.requiredStructureProperties.members.has(key)) continue;
 
     const toggleBits = memberToggles[key as keyof typeof memberToggles];
     if (toggleBits) {
@@ -161,15 +165,20 @@ export async function createDiscordenoMember(
     props[key] = createNewProp(
       MEMBER_SNOWFLAKES.includes(key) ? (user[key] ? snowflakeToBigint(user[key] as string) : undefined) : user[key]
     );
-  });
+  }
 
-  const member: DiscordenoMember = Object.create(baseMember, {
-    ...props,
-    /** The guild related data mapped by guild id */
-    guilds: createNewProp(new Collection<bigint, GuildMember>()),
-    bitfield: createNewProp(bitfield),
-    cachedAt: createNewProp(Date.now()),
-  });
+  /** The guild related data mapped by guild id */
+  // @ts-ignore allow this prop to be required
+  if (!cache.requiredStructureProperties.members.size || cache.requiredStructureProperties.members.has("guilds"))
+    props.guilds = createNewProp(new Collection<bigint, GuildMember>());
+  // @ts-ignore allow this prop to be required
+  if (!cache.requiredStructureProperties.members.size || cache.requiredStructureProperties.members.has("bitfield"))
+    props.bitfield = createNewProp(bitfield);
+  // @ts-ignore allow this prop to be required
+  if (!cache.requiredStructureProperties.members.size || cache.requiredStructureProperties.members.has("cachedAt"))
+    props.cachedAt = createNewProp(Date.now());
+
+  const member: DiscordenoMember = Object.create(baseMember, props);
 
   const cached = await cacheHandlers.get("members", snowflakeToBigint(user.id));
   if (cached) {
