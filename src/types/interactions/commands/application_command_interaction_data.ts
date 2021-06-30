@@ -4,9 +4,9 @@ import { ApplicationCommandInteractionDataResolved } from "./application_command
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-applicationcommandinteractiondata */
 export interface ApplicationCommandInteractionData {
   /** The Id of the invoked command */
-  id?: string;
+  id: string;
   /** The name of the invoked command */
-  name?: string;
+  name: string;
   /** Converted users + roles + channels */
   resolved?: ApplicationCommandInteractionDataResolved;
   /** The params + values from the user */

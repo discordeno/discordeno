@@ -24,7 +24,7 @@ export async function sendMessage(channelId: bigint, content: string | CreateMes
         DiscordChannelTypes.GuildNews,
         DiscordChannelTypes.GuildText,
         DiscordChannelTypes.GuildPublicThread,
-        DiscordChannelTypes.GuildPivateThread,
+        DiscordChannelTypes.GuildPrivateThread,
         DiscordChannelTypes.GuildNewsThread,
       ].includes(channel.type)
     ) {
@@ -34,11 +34,6 @@ export async function sendMessage(channelId: bigint, content: string | CreateMes
     const requiredPerms: Set<PermissionStrings> = new Set(["SEND_MESSAGES", "VIEW_CHANNEL"]);
 
     if (content.tts) requiredPerms.add("SEND_TTS_MESSAGES");
-    // TODO: v12 remove
-    if (content.embed) {
-      content.embeds = [content.embed, ...(content.embeds || [])];
-      content.embed = undefined;
-    }
     if (content.embeds?.length) {
       requiredPerms.add("EMBED_LINKS");
       content.embeds?.splice(10);

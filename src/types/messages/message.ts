@@ -13,6 +13,7 @@ import { MessageReference } from "./message_reference.ts";
 import { MessageSticker } from "./message_sticker.ts";
 import { DiscordMessageTypes } from "./message_types.ts";
 import { Reaction } from "./reaction.ts";
+import { MessageStickerItem } from "./message_sticker_item.ts";
 
 /** https://discord.com/developers/docs/resources/channel#message-object */
 export interface Message {
@@ -93,5 +94,7 @@ export interface Message {
   /** The thread that was started from this message, includes thread member object */
   thread?: Omit<Channel, "member"> & { member: ThreadMember };
   /** The components related to this message */
-  components: MessageComponents;
+  components?: MessageComponents;
+  /** Sent if the message contains stickers */
+  stickerItems?: MessageStickerItem[];
 }
