@@ -287,27 +287,37 @@ export async function createDiscordenoGuild(data: Guild, shardId: number) {
   );
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
-  (Object.keys(rest) as (keyof typeof rest)[]).forEach((key) => {
+  for (const key of Object.keys(rest) as (keyof typeof rest)[]) {
     eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoGuild function.`);
+
+    // If its empty default allows all, otherwise only allow those users required.
+    if (cache.requiredStructureProperties.guilds.size && !cache.requiredStructureProperties.guilds.has(key)) {
+      continue;
+    }
 
     const toggleBits = guildToggles[key as keyof typeof guildToggles];
     if (toggleBits) {
       bitfield |= rest[key] ? toggleBits : 0n;
-      return;
+      continue;
     }
 
     props[key] = createNewProp(
       GUILD_SNOWFLAKES.includes(key) ? (rest[key] ? snowflakeToBigint(rest[key] as string) : undefined) : rest[key]
     );
-  });
+  }
 
   const hashes = [
     { name: "icon", toggle: guildToggles.animatedIcon, value: icon },
     { name: "banner", toggle: guildToggles.animatedBanner, value: banner },
     { name: "splash", toggle: guildToggles.animatedSplash, value: splash },
-  ];
+  ] as const;
 
   for (const hash of hashes) {
+    // If its empty default allows all, otherwise only allow those users required.
+    if (cache.requiredStructureProperties.guilds.size && !cache.requiredStructureProperties.guilds.has(hash.name)) {
+      continue;
+    }
+
     const transformed = hash.value ? iconHashToBigInt(hash.value) : undefined;
     if (transformed) {
       props[hash.name] = createNewProp(hash.value);
@@ -315,20 +325,35 @@ export async function createDiscordenoGuild(data: Guild, shardId: number) {
     }
   }
 
-  const guild: DiscordenoGuild = Object.create(baseGuild, {
-    ...props,
-    shardId: createNewProp(shardId),
-    roles: createNewProp(new Collection(roles.map((r: DiscordenoRole) => [r.id, r]))),
-    joinedAt: createNewProp(Date.parse(joinedAt)),
-    presences: createNewProp(new Collection(presences.map((p) => [snowflakeToBigint(p.user!.id), p]))),
-    memberCount: createNewProp(memberCount),
-    emojis: createNewProp(new Collection(emojis.map((emoji) => [snowflakeToBigint(emoji.id!), emoji]))),
-    voiceStates: createNewProp(new Collection(voiceStateStructs.map((vs) => [vs.userId, vs]))),
-    bitfield: createNewProp(bitfield),
-  });
+  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("roles")) {
+    props.roles = createNewProp(new Collection(roles.map((r: DiscordenoRole) => [r.id, r])));
+  }
+  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("joinedAt")) {
+    props.joinedAt = createNewProp(Date.parse(joinedAt));
+  }
+  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("presences")) {
+    props.presences = createNewProp(new Collection(presences.map((p) => [snowflakeToBigint(p.user!.id), p])));
+  }
+  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("memberCount")) {
+    props.memberCount = createNewProp(memberCount);
+  }
+  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("emojis")) {
+    props.emojis = createNewProp(new Collection(emojis.map((emoji) => [snowflakeToBigint(emoji.id!), emoji])));
+  }
+  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("voiceStates")) {
+    props.voiceStates = createNewProp(new Collection(voiceStateStructs.map((vs) => [vs.userId, vs])));
+  }
+  // @ts-ignore allow using these props
+  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("shardId")) {
+    props.shardId = createNewProp(shardId);
+  }
+  // @ts-ignore allow using these props
+  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("bitfield")) {
+    props.bitfield = createNewProp(bitfield);
+  }
 
+  const guild: DiscordenoGuild = Object.create(baseGuild, props);
   await cacheMembers(guild.id, members as GuildMemberWithUser[]);
-
   return guild;
 }
 
