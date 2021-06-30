@@ -225,12 +225,12 @@ export async function createDiscordenoMessage(data: Message) {
     const toggleBits = messageToggles[key as keyof typeof messageToggles];
     if (toggleBits) {
       bitfield |= rest[key] ? toggleBits : 0n;
-      return;
+      continue;
     }
 
     // Don't add member to props since it would overwrite the message.member getter
     // thread should not be cached on a message
-    if (["member", "thread"].includes(key)) return;
+    if (["member", "thread"].includes(key)) continue;
 
     props[key] = createNewProp(
       MESSAGE_SNOWFLAKES.includes(key) ? (rest[key] ? snowflakeToBigint(rest[key] as string) : undefined) : rest[key]
@@ -303,11 +303,7 @@ export async function createDiscordenoMessage(data: Message) {
   if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("bitfield"))
     props.bitfield = createNewProp(bitfield);
 
-  const message: DiscordenoMessage = Object.create(baseMessage, {
-    ...props,
-  });
-
-  return message;
+  return Object.create(baseMessage, props) as DiscordenoMessage;
 }
 
 export interface DiscordenoMessage

@@ -147,19 +147,19 @@ export async function createDiscordenoMember(
     const toggleBits = memberToggles[key as keyof typeof memberToggles];
     if (toggleBits) {
       bitfield |= user[key] ? toggleBits : 0n;
-      return;
+      continue;
     }
 
     if (key === "avatar") {
       const transformed = user[key] ? iconHashToBigInt(user[key] as string) : undefined;
       if (transformed?.animated) bitfield |= memberToggles.animatedAvatar;
       props.avatar = createNewProp(transformed?.bigint);
-      return;
+      continue;
     }
 
     if (key === "discriminator") {
       props.discriminator = createNewProp(Number(user[key]));
-      return;
+      continue;
     }
 
     props[key] = createNewProp(
