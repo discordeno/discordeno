@@ -1,3 +1,4 @@
+import { cache } from "../../cache.ts";
 import { Channel } from "../../types/channels/channel.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import { ThreadMemberModified } from "../../types/channels/threads/thread_member.ts";
@@ -24,6 +25,9 @@ const baseThread: Partial<DiscordenoThread> = {
   },
   get isPublic() {
     return !this.isPrivate;
+  },
+  get guildId() {
+    return cache.channels.get(this.parentId!)!.guildId;
   },
   toJSON() {
     return {
@@ -59,7 +63,6 @@ export function channelToThread(channel: Channel) {
     bitfield: createNewProp(bitfield),
     ownerId: createNewProp(snowflakeToBigint(channel.ownerId!)),
     botIsMember: createNewProp(Boolean(channel.member)),
-    guildId: createNewProp(snowflakeToBigint(channel.guildId!)),
     members: createNewProp(new Collection<bigint, Omit<ThreadMemberModified, "id">>()),
   }) as DiscordenoThread;
 }
