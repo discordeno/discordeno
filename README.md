@@ -65,7 +65,7 @@ unofficial templates:
 
 - [Discordeno Template (official)](https://github.com/discordeno/template)
 - [Serverless Slash Commands Template
-  (official)](https://github.com/discordeno/slash-commands-template)
+  (official)](https://github.com/discordeno/serverless-deno-deploy-template)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
 ## Links
