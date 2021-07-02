@@ -8,6 +8,12 @@ import type { PresenceUpdate } from "./types/activity/presence_update.ts";
 import type { Emoji } from "./types/emojis/emoji.ts";
 import { DiscordenoThread } from "./util/transformers/channel_to_thread.ts";
 import { Collection } from "./util/collection.ts";
+import { Channel } from "./types/channels/channel.ts";
+import { Guild } from "./types/guilds/guild.ts";
+import { GuildMemberWithUser } from "./types/members/guild_member.ts";
+import { Message } from "./types/messages/message.ts";
+import { Role } from "./types/permissions/role.ts";
+import { VoiceState } from "./types/voice/voice_state.ts";
 
 export const cache = {
   isReady: false,
@@ -37,6 +43,21 @@ export const cache = {
   dispatchedGuildIds: new Set<bigint>(),
   dispatchedChannelIds: new Set<bigint>(),
   threads: new Collection<bigint, DiscordenoThread>(),
+  /** ADVANCED USER ONLY: Please ask for help before modifying these. The properties that you want to use for your bot's structures. If you do not set any properties, all properties will be used by default. */
+  requiredStructureProperties: {
+    /** Only these properties will be added to memory for your channels. */
+    channels: new Set<keyof Channel>(),
+    /** Only these properties will be added to memory for your guilds. */
+    guilds: new Set<keyof Guild>(),
+    /** Only these properties will be added to memory for your members. */
+    members: new Set<keyof GuildMemberWithUser>(),
+    /** Only these properties will be added to memory for your messages. */
+    messages: new Set<keyof Message>(),
+    /** Only these properties will be added to memory for your roles. */
+    roles: new Set<keyof Role>(),
+    /** Only these properties will be added to memory for your voice states. */
+    voiceStates: new Set<keyof VoiceState>(),
+  },
 };
 
 function messageSweeper(message: DiscordenoMessage) {
