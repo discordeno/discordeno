@@ -82,7 +82,6 @@ export interface Thread {
   locked: boolean;
   ownerId: string;
   botIsMember: boolean;
-  guildId: string;
 }
 
 export interface DiscordenoThread {
