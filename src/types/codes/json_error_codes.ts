@@ -33,7 +33,7 @@ export enum DiscordJsonErrorCodes {
   UnknownInteraction = 10062,
   UnknownApplicationCommand = 10063,
   UnknownApplicationCommandPermissions = 10066,
-  UnknownGuildMemberVerficationForm = 10068,
+  UnknownGuildMemberVerificationForm = 10068,
   BotsCannotUseThisEndpoint = 20001,
   OnlyBotsCanUseThisEndpoint,
   ExplicitContentCannotBeSentToTheDesiredRecipient = 20009,
