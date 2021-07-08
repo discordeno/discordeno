@@ -14,6 +14,7 @@ import { GuildMemberWithUser } from "./types/members/guild_member.ts";
 import { Message } from "./types/messages/message.ts";
 import { Role } from "./types/permissions/role.ts";
 import { VoiceState } from "./types/voice/voice_state.ts";
+import { snowflakeToBigint } from "./util/bigint.ts";
 
 export const cache = {
   isReady: false,
@@ -170,32 +171,69 @@ async function get(table: TableName, key: bigint) {
   return cache[table].get(key);
 }
 
-function forEach(
-  table: "threads",
-  callback: (value: DiscordenoThread, key: bigint, map: Map<bigint, DiscordenoThread>) => unknown
-): void;
-function forEach(
-  table: "guilds",
-  callback: (value: DiscordenoGuild, key: bigint, map: Map<bigint, DiscordenoGuild>) => unknown
-): void;
-function forEach(
-  table: "unavailableGuilds",
-  callback: (value: number, key: bigint, map: Map<bigint, number>) => unknown
-): void;
-function forEach(
-  table: "channels",
-  callback: (value: DiscordenoChannel, key: bigint, map: Map<bigint, DiscordenoChannel>) => unknown
-): void;
-function forEach(
-  table: "messages",
-  callback: (value: DiscordenoMessage, key: bigint, map: Map<bigint, DiscordenoMessage>) => unknown
-): void;
-function forEach(
-  table: "members",
-  callback: (value: DiscordenoMember, key: bigint, map: Map<bigint, DiscordenoMember>) => unknown
-): void;
-function forEach(table: TableName, callback: (value: any, key: bigint, map: Map<bigint, any>) => unknown) {
-  return cache[table].forEach(callback);
+// callback: (value: DiscordenoThread, key: bigint, map: Map<bigint, DiscordenoThread>) => void
+async function forEach(type: "DELETE_MESSAGES_FROM_CHANNEL", options: { channelId: bigint }): Promise<void>;
+async function forEach(type: "DELETE_MESSAGES_FROM_GUILD", options: { guildId: bigint }): Promise<void>;
+async function forEach(type: "DELETE_CHANNELS_FROM_GUILD", options: { guildId: bigint }): Promise<void>;
+async function forEach(type: "DELETE_GUILD_FROM_MEMBER", options: { guildId: bigint }): Promise<void>;
+async function forEach(type: "DELETE_ROLE_FROM_MEMBER", options: { guildId: bigint; roleId: bigint }): Promise<void>;
+async function forEach(
+  type:
+    | "DELETE_MESSAGES_FROM_CHANNEL"
+    | "DELETE_MESSAGES_FROM_GUILD"
+    | "DELETE_CHANNELS_FROM_GUILD"
+    | "DELETE_GUILD_FROM_MEMBER"
+    | "DELETE_ROLE_FROM_MEMBER",
+  options?: Record<string, unknown>
+) {
+  if (type === "DELETE_MESSAGES_FROM_CHANNEL") {
+    cache.messages.forEach((message) => {
+      if (message.channelId === options?.channelId) cache.messages.delete(message.id);
+    });
+    return;
+  }
+
+  if (type === "DELETE_MESSAGES_FROM_GUILD") {
+    cache.messages.forEach((message) => {
+      if (message.guildId === options?.guildId) cache.messages.delete(message.id);
+    });
+    return;
+  }
+
+  if (type === "DELETE_CHANNELS_FROM_GUILD") {
+    cache.channels.forEach((channel) => {
+      if (channel.guildId === options?.guildId) cache.channels.delete(channel.id);
+    });
+    return;
+  }
+
+  if (type === "DELETE_GUILD_FROM_MEMBER") {
+    cache.members.forEach((member) => {
+      if (!member.guilds.has(options?.guildId as bigint)) return;
+
+      member.guilds.delete(options?.guildId as bigint);
+
+      if (!member.guilds.size) {
+        return cache.members.delete(member.id);
+      }
+
+      cache.members.set(member.id, member);
+    });
+    return;
+  }
+
+  if (type === "DELETE_ROLE_FROM_MEMBER") {
+    cache.members.forEach((member) => {
+      // Not in the relevant guild so just skip
+      if (!member.guilds.has(options?.guildId as bigint)) return;
+
+      const guildMember = member.guilds.get(options?.guildId as bigint)!;
+
+      guildMember.roles = guildMember.roles.filter((id) => id !== (options?.roleId as bigint));
+      cache.members.set(member.id, member);
+    });
+    return;
+  }
 }
 
 async function filter(

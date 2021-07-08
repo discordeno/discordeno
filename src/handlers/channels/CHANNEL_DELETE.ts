@@ -40,12 +40,7 @@ export async function handleChannelDelete(data: DiscordGatewayPayload) {
     ].includes(payload.type)
   ) {
     await cacheHandlers.delete("channels", snowflakeToBigint(payload.id));
-    cacheHandlers.forEach("messages", (message) => {
-      eventHandlers.debug?.("loop", `Running forEach messages loop in CHANNEL_DELTE file.`);
-      if (message.channelId === snowflakeToBigint(payload.id)) {
-        cacheHandlers.delete("messages", message.id);
-      }
-    });
+    await cacheHandlers.forEach("DELETE_MESSAGES_FROM_CHANNEL", { channelId: snowflakeToBigint(payload.id) });
   }
 
   await cacheHandlers.delete("channels", snowflakeToBigint(payload.id));
