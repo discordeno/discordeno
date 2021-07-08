@@ -31,7 +31,7 @@ export async function handleGuildMembersChunk(data: DiscordGatewayPayload) {
         return resolve(new Collection(members.map((m) => [m.id, m])));
       }
 
-      return resolve(await cacheHandlers.filter("members", (m) => m.guilds.has(guildId)));
+      return resolve(await cacheHandlers.filter("GET_MEMBERS_IN_GUILD", { guildId }));
     }
   }
 }
