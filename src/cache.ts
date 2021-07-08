@@ -236,34 +236,6 @@ async function forEach(
   }
 }
 
-// async function filter(
-//   table: "threads",
-//   callback: (value: DiscordenoThread, key: bigint) => boolean
-// ): Promise<Collection<bigint, DiscordenoThread>>;
-// async function filter(
-//   table: "guilds",
-//   callback: (value: DiscordenoGuild, key: bigint) => boolean
-// ): Promise<Collection<bigint, DiscordenoGuild>>;
-// async function filter(
-//   table: "unavailableGuilds",
-//   callback: (value: number, key: bigint) => boolean
-// ): Promise<Collection<bigint, number>>;
-// async function filter(
-//   table: "channels",
-//   callback: (value: DiscordenoChannel, key: bigint) => boolean
-// ): Promise<Collection<bigint, DiscordenoChannel>>;
-// async function filter(
-//   table: "messages",
-//   callback: (value: DiscordenoMessage, key: bigint) => boolean
-// ): Promise<Collection<bigint, DiscordenoMessage>>;
-// async function filter(
-//   table: "members",
-//   callback: (value: DiscordenoMember, key: bigint) => boolean
-// ): Promise<Collection<bigint, DiscordenoMember>>;
-// async function filter(table: TableName, callback: (value: any, key: bigint) => boolean) {
-//   return cache[table].filter(callback);
-// }
-
 async function filter(
   type: "GET_MEMBERS_IN_GUILD",
   options: { guildId: bigint }
