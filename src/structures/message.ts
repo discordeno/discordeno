@@ -116,16 +116,16 @@ const baseMessage: Partial<DiscordenoMessage> = {
   async alert(content, timeout = 10, reason = "") {
     if (this.guildId) {
       return await sendMessage(this.channelId!, content).then((response) => {
-        response.delete(reason, timeout * 1000).catch(console.error);
+        response?.delete(reason, timeout * 1000).catch(console.error);
       });
     }
 
     return await sendDirectMessage(this.authorId!, content).then((response) => {
-      response.delete(reason, timeout * 1000).catch(console.error);
+      response?.delete(reason, timeout * 1000).catch(console.error);
     });
   },
   async alertReply(content, timeout = 10, reason = "") {
-    return await this.reply!(content).then((response) => response.delete(reason, timeout * 1000).catch(console.error));
+    return await this.reply!(content).then((response) => response?.delete(reason, timeout * 1000).catch(console.error));
   },
   removeAllReactions() {
     return removeAllReactions(this.channelId!, this.id!);
@@ -213,29 +213,41 @@ export async function createDiscordenoMessage(data: Message) {
   let bitfield = 0n;
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
-  (Object.keys(rest) as (keyof typeof rest)[]).forEach((key) => {
+
+  const requiredPropsSize = cache.requiredStructureProperties.messages.size;
+
+  for (const key of Object.keys(rest) as (keyof typeof rest)[]) {
     eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoMessage function.`);
+
+    // If empty all are allowed, otherwise check if this prop is allowed
+    if (requiredPropsSize && !cache.requiredStructureProperties.messages.has(key)) continue;
 
     const toggleBits = messageToggles[key as keyof typeof messageToggles];
     if (toggleBits) {
       bitfield |= rest[key] ? toggleBits : 0n;
-      return;
+      continue;
     }
 
     // Don't add member to props since it would overwrite the message.member getter
     // thread should not be cached on a message
-    if (["member", "thread"].includes(key)) return;
+    if (["member", "thread"].includes(key)) continue;
 
     props[key] = createNewProp(
       MESSAGE_SNOWFLAKES.includes(key) ? (rest[key] ? snowflakeToBigint(rest[key] as string) : undefined) : rest[key]
     );
-  });
+  }
 
   if (rest.thread) await cacheHandlers.set("threads", snowflakeToBigint(data.id), channelToThread(rest.thread));
 
-  props.authorId = createNewProp(snowflakeToBigint(author.id));
-  props.isBot = createNewProp(author.bot || false);
-  props.tag = createNewProp(`${author.username}#${author.discriminator.toString().padStart(4, "0")}`);
+  // @ts-ignore allow this prop
+  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("authorId"))
+    props.authorId = createNewProp(snowflakeToBigint(author.id));
+  // @ts-ignore allow this prop
+  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("isBot"))
+    props.isBot = createNewProp(author.bot || false);
+  // @ts-ignore allow this prop
+  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("tag"))
+    props.tag = createNewProp(`${author.username}#${author.discriminator.toString().padStart(4, "0")}`);
 
   // Discord doesnt give guild id for getMessage() so this will fill it in
   const guildIdFinal =
@@ -243,13 +255,28 @@ export async function createDiscordenoMessage(data: Message) {
     (await cacheHandlers.get("channels", snowflakeToBigint(data.channelId)))?.guildId ||
     0n;
 
-  const message: DiscordenoMessage = Object.create(baseMessage, {
-    ...props,
-    content: createNewProp(data.content || ""),
-    guildId: createNewProp(guildIdFinal),
-    mentionedUserIds: createNewProp(mentions.map((m) => snowflakeToBigint(m.id))),
-    mentionedRoleIds: createNewProp(mentionRoles.map((id) => snowflakeToBigint(id))),
-    mentionedChannelIds: createNewProp([
+  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("content"))
+    props.content = createNewProp(data.content || "");
+  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("guildId"))
+    props.guildId = createNewProp(guildIdFinal);
+  if (
+    !requiredPropsSize ||
+    // @ts-ignore allow this prop
+    cache.requiredStructureProperties.messages.has("mentionedUserIds")
+  )
+    props.mentionedUserIds = createNewProp(mentions.map((m) => snowflakeToBigint(m.id)));
+  if (
+    !requiredPropsSize ||
+    // @ts-ignore allow this prop
+    cache.requiredStructureProperties.messages.has("mentionedRoleIds")
+  )
+    props.mentionedRoleIds = createNewProp(mentionRoles.map((id) => snowflakeToBigint(id)));
+  if (
+    !requiredPropsSize ||
+    // @ts-ignore allow this prop
+    cache.requiredStructureProperties.messages.has("mentionedChannelIds")
+  )
+    props.mentionedChannelIds = createNewProp([
       // Keep any ids that discord sends
       ...mentionChannels.map((m) => snowflakeToBigint(m.id)),
       // Add any other ids that can be validated in a channel mention format
@@ -257,10 +284,13 @@ export async function createDiscordenoMessage(data: Message) {
         // converts the <#123> into 123
         snowflakeToBigint(text.substring(2, text.length - 1))
       ),
-    ]),
-    timestamp: createNewProp(Date.parse(data.timestamp)),
-    editedTimestamp: createNewProp(editedTimestamp ? Date.parse(editedTimestamp) : undefined),
-    messageReference: createNewProp(
+    ]);
+  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("timestamp"))
+    props.timestamp = createNewProp(Date.parse(data.timestamp));
+  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("editedTimestamp"))
+    props.editedTimestamp = createNewProp(editedTimestamp ? Date.parse(editedTimestamp) : undefined);
+  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("messageReference"))
+    props.messageReference = createNewProp(
       messageReference
         ? {
             messageId: messageReference.messageId ? snowflakeToBigint(messageReference.messageId) : undefined,
@@ -268,11 +298,12 @@ export async function createDiscordenoMessage(data: Message) {
             guildId: messageReference.guildId ? snowflakeToBigint(messageReference.guildId) : undefined,
           }
         : undefined
-    ),
-    bitfield: createNewProp(bitfield),
-  });
+    );
+  // @ts-ignore allow this prop
+  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("bitfield"))
+    props.bitfield = createNewProp(bitfield);
 
-  return message;
+  return Object.create(baseMessage, props) as DiscordenoMessage;
 }
 
 export interface DiscordenoMessage

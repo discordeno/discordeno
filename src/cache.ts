@@ -8,6 +8,12 @@ import type { PresenceUpdate } from "./types/activity/presence_update.ts";
 import type { Emoji } from "./types/emojis/emoji.ts";
 import { DiscordenoThread } from "./util/transformers/channel_to_thread.ts";
 import { Collection } from "./util/collection.ts";
+import { Channel } from "./types/channels/channel.ts";
+import { Guild } from "./types/guilds/guild.ts";
+import { GuildMemberWithUser } from "./types/members/guild_member.ts";
+import { Message } from "./types/messages/message.ts";
+import { Role } from "./types/permissions/role.ts";
+import { VoiceState } from "./types/voice/voice_state.ts";
 
 export const cache = {
   isReady: false,
@@ -37,6 +43,21 @@ export const cache = {
   dispatchedGuildIds: new Set<bigint>(),
   dispatchedChannelIds: new Set<bigint>(),
   threads: new Collection<bigint, DiscordenoThread>(),
+  /** ADVANCED USER ONLY: Please ask for help before modifying these. The properties that you want to use for your bot's structures. If you do not set any properties, all properties will be used by default. */
+  requiredStructureProperties: {
+    /** Only these properties will be added to memory for your channels. */
+    channels: new Set<keyof Channel>(),
+    /** Only these properties will be added to memory for your guilds. */
+    guilds: new Set<keyof Guild>(),
+    /** Only these properties will be added to memory for your members. */
+    members: new Set<keyof GuildMemberWithUser>(),
+    /** Only these properties will be added to memory for your messages. */
+    messages: new Set<keyof Message>(),
+    /** Only these properties will be added to memory for your roles. */
+    roles: new Set<keyof Role>(),
+    /** Only these properties will be added to memory for your voice states. */
+    voiceStates: new Set<keyof VoiceState>(),
+  },
 };
 
 function messageSweeper(message: DiscordenoMessage) {
@@ -149,58 +170,80 @@ async function get(table: TableName, key: bigint) {
   return cache[table].get(key);
 }
 
-function forEach(
-  table: "threads",
-  callback: (value: DiscordenoThread, key: bigint, map: Map<bigint, DiscordenoThread>) => unknown
-): void;
-function forEach(
-  table: "guilds",
-  callback: (value: DiscordenoGuild, key: bigint, map: Map<bigint, DiscordenoGuild>) => unknown
-): void;
-function forEach(
-  table: "unavailableGuilds",
-  callback: (value: number, key: bigint, map: Map<bigint, number>) => unknown
-): void;
-function forEach(
-  table: "channels",
-  callback: (value: DiscordenoChannel, key: bigint, map: Map<bigint, DiscordenoChannel>) => unknown
-): void;
-function forEach(
-  table: "messages",
-  callback: (value: DiscordenoMessage, key: bigint, map: Map<bigint, DiscordenoMessage>) => unknown
-): void;
-function forEach(
-  table: "members",
-  callback: (value: DiscordenoMember, key: bigint, map: Map<bigint, DiscordenoMember>) => unknown
-): void;
-function forEach(table: TableName, callback: (value: any, key: bigint, map: Map<bigint, any>) => unknown) {
-  return cache[table].forEach(callback);
+// callback: (value: DiscordenoThread, key: bigint, map: Map<bigint, DiscordenoThread>) => void
+async function forEach(type: "DELETE_MESSAGES_FROM_CHANNEL", options: { channelId: bigint }): Promise<void>;
+async function forEach(type: "DELETE_MESSAGES_FROM_GUILD", options: { guildId: bigint }): Promise<void>;
+async function forEach(type: "DELETE_CHANNELS_FROM_GUILD", options: { guildId: bigint }): Promise<void>;
+async function forEach(type: "DELETE_GUILD_FROM_MEMBER", options: { guildId: bigint }): Promise<void>;
+async function forEach(type: "DELETE_ROLE_FROM_MEMBER", options: { guildId: bigint; roleId: bigint }): Promise<void>;
+async function forEach(
+  type:
+    | "DELETE_MESSAGES_FROM_CHANNEL"
+    | "DELETE_MESSAGES_FROM_GUILD"
+    | "DELETE_CHANNELS_FROM_GUILD"
+    | "DELETE_GUILD_FROM_MEMBER"
+    | "DELETE_ROLE_FROM_MEMBER",
+  options?: Record<string, unknown>
+) {
+  if (type === "DELETE_MESSAGES_FROM_CHANNEL") {
+    cache.messages.forEach((message) => {
+      if (message.channelId === options?.channelId) cache.messages.delete(message.id);
+    });
+    return;
+  }
+
+  if (type === "DELETE_MESSAGES_FROM_GUILD") {
+    cache.messages.forEach((message) => {
+      if (message.guildId === options?.guildId) cache.messages.delete(message.id);
+    });
+    return;
+  }
+
+  if (type === "DELETE_CHANNELS_FROM_GUILD") {
+    cache.channels.forEach((channel) => {
+      if (channel.guildId === options?.guildId) cache.channels.delete(channel.id);
+    });
+    return;
+  }
+
+  if (type === "DELETE_GUILD_FROM_MEMBER") {
+    cache.members.forEach((member) => {
+      if (!member.guilds.has(options?.guildId as bigint)) return;
+
+      member.guilds.delete(options?.guildId as bigint);
+
+      if (!member.guilds.size) {
+        return cache.members.delete(member.id);
+      }
+
+      cache.members.set(member.id, member);
+    });
+    return;
+  }
+
+  if (type === "DELETE_ROLE_FROM_MEMBER") {
+    cache.members.forEach((member) => {
+      // Not in the relevant guild so just skip
+      if (!member.guilds.has(options?.guildId as bigint)) return;
+
+      const guildMember = member.guilds.get(options?.guildId as bigint)!;
+
+      guildMember.roles = guildMember.roles.filter((id) => id !== (options?.roleId as bigint));
+      cache.members.set(member.id, member);
+    });
+    return;
+  }
 }
 
 async function filter(
-  table: "threads",
-  callback: (value: DiscordenoThread, key: bigint) => boolean
-): Promise<Collection<bigint, DiscordenoThread>>;
-async function filter(
-  table: "guilds",
-  callback: (value: DiscordenoGuild, key: bigint) => boolean
-): Promise<Collection<bigint, DiscordenoGuild>>;
-async function filter(
-  table: "unavailableGuilds",
-  callback: (value: number, key: bigint) => boolean
-): Promise<Collection<bigint, number>>;
-async function filter(
-  table: "channels",
-  callback: (value: DiscordenoChannel, key: bigint) => boolean
-): Promise<Collection<bigint, DiscordenoChannel>>;
-async function filter(
-  table: "messages",
-  callback: (value: DiscordenoMessage, key: bigint) => boolean
-): Promise<Collection<bigint, DiscordenoMessage>>;
-async function filter(
-  table: "members",
-  callback: (value: DiscordenoMember, key: bigint) => boolean
+  type: "GET_MEMBERS_IN_GUILD",
+  options: { guildId: bigint }
 ): Promise<Collection<bigint, DiscordenoMember>>;
-async function filter(table: TableName, callback: (value: any, key: bigint) => boolean) {
-  return cache[table].filter(callback);
+async function filter(
+  type: "GET_MEMBERS_IN_GUILD",
+  options?: Record<string, unknown>
+): Promise<Collection<bigint, DiscordenoMember> | undefined> {
+  if (type === "GET_MEMBERS_IN_GUILD") {
+    return cache.members.filter((member) => member.guilds.has(options?.guildId as bigint));
+  }
 }

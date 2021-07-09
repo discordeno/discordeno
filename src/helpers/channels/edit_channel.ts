@@ -9,7 +9,6 @@ import { endpoints } from "../../util/constants.ts";
 import { calculateBits, requireOverwritePermissions } from "../../util/permissions.ts";
 import { snakelize } from "../../util/utils.ts";
 
-//TODO: implement DM group channel edit
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(channelId: bigint, options: ModifyChannel, reason?: string) {
   const channel = await cacheHandlers.get("channels", channelId);

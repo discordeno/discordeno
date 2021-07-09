@@ -5,7 +5,7 @@ export enum DiscordMessageFlags {
   /** This message originated from a message in another channel (via Channel Following) */
   IsCrosspost = 1 << 1,
   /** Do not include any embeds when serializing this message */
-  SuppressEmbeeds = 1 << 2,
+  SuppressEmbeds = 1 << 2,
   /** The source message for this crosspost has been deleted (via Channel Following) */
   SourceMessageDeleted = 1 << 3,
   /** This message came from the urgent message system */

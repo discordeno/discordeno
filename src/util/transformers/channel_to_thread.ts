@@ -1,3 +1,4 @@
+import { cache } from "../../cache.ts";
 import { Channel } from "../../types/channels/channel.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import { ThreadMemberModified } from "../../types/channels/threads/thread_member.ts";
@@ -24,6 +25,9 @@ const baseThread: Partial<DiscordenoThread> = {
   },
   get isPublic() {
     return !this.isPrivate;
+  },
+  get guildId() {
+    return cache.channels.get(this.parentId!)!.guildId;
   },
   toJSON() {
     return {
@@ -98,6 +102,7 @@ export interface DiscordenoThread {
   isPrivate: boolean;
   isPublic: boolean;
   botIsMember: boolean;
+  guildId: bigint;
   members: Collection<bigint, Omit<ThreadMemberModified, "id">>;
   toJSON(): Thread;
 }

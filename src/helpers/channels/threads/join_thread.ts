@@ -10,5 +10,5 @@ export async function joinThread(threadId: bigint) {
     throw new Error(Errors.CANNOT_ADD_USER_TO_ARCHIVED_THREADS);
   }
 
-  return await rest.runMethod("put", endpoints.THREAD_ME(threadId));
+  return await rest.runMethod<undefined>("put", endpoints.THREAD_ME(threadId));
 }

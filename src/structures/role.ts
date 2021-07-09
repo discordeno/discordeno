@@ -115,30 +115,36 @@ export async function createDiscordenoRole(
   let bitfield = 0n;
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
-  (Object.keys(rest) as (keyof typeof rest)[]).forEach((key) => {
+  for (const key of Object.keys(rest) as (keyof typeof rest)[]) {
     eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoRole function.`);
 
     const toggleBits = roleToggles[key as keyof typeof roleToggles];
     if (toggleBits) {
       bitfield |= rest[key] ? toggleBits : 0n;
-      return;
+      continue;
     }
 
     props[key] = createNewProp(
       ROLE_SNOWFLAKES.includes(key) ? (rest[key] ? snowflakeToBigint(rest[key] as string) : undefined) : rest[key]
     );
-  });
+  }
 
-  const role: DiscordenoRole = Object.create(baseRole, {
-    ...props,
-    permissions: createNewProp(BigInt(rest.permissions)),
-    botId: createNewProp(tags.botId ? snowflakeToBigint(tags.botId) : undefined),
-    isNitroBoostRole: createNewProp("premiumSubscriber" in tags),
-    integrationId: createNewProp(tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined),
-    bitfield: createNewProp(bitfield),
-  });
+  if (!cache.requiredStructureProperties.roles.size || cache.requiredStructureProperties.roles.has("permissions"))
+    props.permissions = createNewProp(BigInt(rest.permissions));
+  // @ts-ignore allow this prop
+  if (!cache.requiredStructureProperties.roles.size || cache.requiredStructureProperties.roles.has("botId"))
+    props.botId = createNewProp(tags.botId ? snowflakeToBigint(tags.botId) : undefined);
+  // @ts-ignore allow this prop
+  if (!cache.requiredStructureProperties.roles.size || cache.requiredStructureProperties.roles.has("isNitroBoostRole"))
+    props.isNitroBoostRole = createNewProp("premiumSubscriber" in tags);
+  // @ts-ignore allow this prop
+  if (!cache.requiredStructureProperties.roles.size || cache.requiredStructureProperties.roles.has("integrationId"))
+    props.integrationId = createNewProp(tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined);
+  // @ts-ignore allow this prop
+  if (!cache.requiredStructureProperties.roles.size || cache.requiredStructureProperties.roles.has("bitfield"))
+    props.bitfield = createNewProp(bitfield);
 
-  return role;
+  return Object.create(baseRole, props) as DiscordenoRole;
 }
 
 export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions"> {

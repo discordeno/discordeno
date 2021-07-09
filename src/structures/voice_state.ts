@@ -81,16 +81,20 @@ export async function createDiscordenoVoiceState(guildId: bigint, data: VoiceSta
   let bitfield = 0n;
 
   const props: Record<string, ReturnType<typeof createNewProp>> = {};
-  (Object.keys(data) as (keyof typeof data)[]).forEach((key) => {
+  for (const key of Object.keys(data) as (keyof typeof data)[]) {
     eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoVoiceState function.`);
 
+    // if is empty allow all, otherwise check if prop is required
+    if (cache.requiredStructureProperties.voiceStates.size && !cache.requiredStructureProperties.voiceStates.has(key))
+      continue;
+
     // We don't need to cache member twice. It will be in cache.members
-    if (key === "member") return;
+    if (key === "member") continue;
 
     const toggleBits = voiceStateToggles[key as keyof typeof voiceStateToggles];
     if (toggleBits) {
       bitfield |= data[key] ? toggleBits : 0n;
-      return;
+      continue;
     }
 
     props[key] = createNewProp(
@@ -100,15 +104,21 @@ export async function createDiscordenoVoiceState(guildId: bigint, data: VoiceSta
           : undefined
         : data[key]
     );
-  });
+  }
 
-  const voiceState: DiscordenoVoiceState = Object.create(baseRole, {
-    ...props,
-    guildId: createNewProp(guildId),
-    bitfield: createNewProp(bitfield),
-  });
+  if (
+    !cache.requiredStructureProperties.voiceStates.size ||
+    cache.requiredStructureProperties.voiceStates.has("guildId")
+  )
+    props.guildId = createNewProp(guildId);
+  if (
+    !cache.requiredStructureProperties.voiceStates.size ||
+    // @ts-ignore allow this prop
+    cache.requiredStructureProperties.voiceStates.has("bitfield")
+  )
+    props.bitfield = createNewProp(bitfield);
 
-  return voiceState;
+  return Object.create(baseRole, props) as DiscordenoVoiceState;
 }
 
 export interface DiscordenoVoiceState extends Omit<VoiceState, "channelId" | "guildId" | "userId" | "member"> {

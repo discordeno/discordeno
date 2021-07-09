@@ -4,8 +4,7 @@ import { Errors } from "../../../types/discordeno/errors.ts";
 import { endpoints } from "../../../util/constants.ts";
 import { requireBotChannelPermissions } from "../../../util/permissions.ts";
 
-/** Adds a user to a thread. Requires the ability to send messages in the thread. Requires the thread is not archived.
- */
+/** Adds a user to a thread. Requires the ability to send messages in the thread. Requires the thread is not archived. */
 export async function addToThread(threadId: bigint, userId: bigint) {
   const thread = await cacheHandlers.get("threads", threadId);
   if (thread) {
@@ -19,5 +18,5 @@ export async function addToThread(threadId: bigint, userId: bigint) {
     if (channel) await requireBotChannelPermissions(channel, ["SEND_MESSAGES"]);
   }
 
-  return await rest.runMethod("put", endpoints.THREAD_USER(threadId, userId));
+  return await rest.runMethod<undefined>("put", endpoints.THREAD_USER(threadId, userId));
 }
