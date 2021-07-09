@@ -14,7 +14,6 @@ import { GuildMemberWithUser } from "./types/members/guild_member.ts";
 import { Message } from "./types/messages/message.ts";
 import { Role } from "./types/permissions/role.ts";
 import { VoiceState } from "./types/voice/voice_state.ts";
-import { snowflakeToBigint } from "./util/bigint.ts";
 
 export const cache = {
   isReady: false,
