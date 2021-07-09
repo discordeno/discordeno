@@ -50,7 +50,7 @@ export const cache = {
     /** Only these properties will be added to memory for your guilds. */
     guilds: new Set<keyof Guild>(),
     /** Only these properties will be added to memory for your members. */
-    members: new Set<keyof GuildMemberWithUser>(),
+    members: new Set<keyof GuildMemberWithUser | "guilds">(),
     /** Only these properties will be added to memory for your messages. */
     messages: new Set<keyof Message>(),
     /** Only these properties will be added to memory for your roles. */
