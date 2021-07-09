@@ -23,30 +23,9 @@ export async function handleGuildDelete(data: DiscordGatewayPayload, shardId: nu
     eventHandlers.guildDelete?.(guild);
   }
 
-  cacheHandlers.forEach("messages", (message) => {
-    eventHandlers.debug?.("loop", `1. Running forEach messages loop in CHANNEL_DELTE file.`);
-    if (message.guildId === guild.id) {
-      cacheHandlers.delete("messages", message.id);
-    }
-  });
-
-  cacheHandlers.forEach("channels", (channel) => {
-    eventHandlers.debug?.("loop", `2. Running forEach channels loop in CHANNEL_DELTE file.`);
-    if (channel.guildId === guild.id) {
-      cacheHandlers.delete("channels", channel.id);
-    }
-  });
-
-  cacheHandlers.forEach("members", (member) => {
-    eventHandlers.debug?.("loop", `3. Running forEach members loop in CHANNEL_DELTE file.`);
-    if (!member.guilds.has(guild.id)) return;
-
-    member.guilds.delete(guild.id);
-
-    if (!member.guilds.size) {
-      return cacheHandlers.delete("members", member.id);
-    }
-
-    cacheHandlers.set("members", member.id, member);
-  });
+  await Promise.all([
+    cacheHandlers.forEach("DELETE_MESSAGES_FROM_GUILD", { guildId: guild.id }),
+    cacheHandlers.forEach("DELETE_CHANNELS_FROM_GUILD", { guildId: guild.id }),
+    cacheHandlers.forEach("DELETE_GUILD_FROM_MEMBER", { guildId: guild.id }),
+  ]);
 }
