@@ -13,6 +13,6 @@ export function iconHashToBigInt(hash: string) {
 }
 
 export function iconBigintToHash(icon: bigint, animated = true) {
-  const hash = icon.toString(16);
+  const hash = icon.toString(16).padStart(32, "0");
   return `${animated ? "a_" : ""}${hash}`;
 }
