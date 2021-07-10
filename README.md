@@ -68,6 +68,10 @@ unofficial templates:
   (official)](https://github.com/discordeno/serverless-deno-deploy-template)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
+### Frameworks
+
+- [Natico](https://github.com/naticoo/framework)
+
 ## Links
 
 - [Website](https://discordeno.mod.land)
