@@ -70,7 +70,7 @@ unofficial templates:
 
 ### Frameworks
 
-- [Natico](https://deno.land/x/natico)
+- [Natico](https://github.com/naticoo/framework)
 
 ## Links
 
