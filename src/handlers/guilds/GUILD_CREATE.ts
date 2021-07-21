@@ -10,7 +10,11 @@ import { guildAvailable } from "../misc/READY.ts";
 export async function handleGuildCreate(data: DiscordGatewayPayload, shardId: number) {
   const payload = data.d as Guild;
   // When shards resume they emit GUILD_CREATE again.
-  if (await cacheHandlers.has("guilds", snowflakeToBigint(payload.id))) return;
+  if (
+    (await cacheHandlers.has("guilds", snowflakeToBigint(payload.id))) ||
+    cache.dispatchedGuildIds.has(snowflakeToBigint(payload.id))
+  )
+    return;
 
   const guild = await structures.createDiscordenoGuild(payload, shardId);
   await cacheHandlers.set("guilds", guild.id, guild);
