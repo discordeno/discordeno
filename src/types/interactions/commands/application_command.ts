@@ -1,4 +1,5 @@
 import { ApplicationCommandOption } from "./application_command_option.ts";
+import { ApplicationCommandTypes } from "./application_command_types.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommand */
 export interface ApplicationCommand {
@@ -16,4 +17,6 @@ export interface ApplicationCommand {
   options?: ApplicationCommandOption[];
   /** Whether the command is enbaled by default when the app is added to a guild */
   defaultPermission?: boolean;
+  /** The type of command. By default this is a slash command(CHAT_INPUT). */
+  type?: ApplicationCommandTypes;
 }
