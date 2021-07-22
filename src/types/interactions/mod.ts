@@ -14,7 +14,7 @@ export * from "./commands/edit_global_application_command.ts";
 export * from "./commands/edit_guild_application_command.ts";
 export * from "./commands/guild_application_command_permissions.ts";
 export * from "./commands/application_command.ts";
-export * from "./commands/application_command_types.ts"
+export * from "./commands/application_command_types.ts";
 export * from "./interaction.ts";
 export * from "./interaction_guild_member.ts";
 export * from "./interaction_response.ts";
