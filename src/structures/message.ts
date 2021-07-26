@@ -239,13 +239,13 @@ export async function createDiscordenoMessage(data: Message) {
 
   if (rest.thread) await cacheHandlers.set("threads", snowflakeToBigint(data.id), channelToThread(rest.thread));
 
-  // @ts-ignore allow this prop
+
   if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("authorId"))
     props.authorId = createNewProp(snowflakeToBigint(author.id));
-  // @ts-ignore allow this prop
+
   if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("isBot"))
     props.isBot = createNewProp(author.bot || false);
-  // @ts-ignore allow this prop
+
   if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("tag"))
     props.tag = createNewProp(`${author.username}#${author.discriminator.toString().padStart(4, "0")}`);
 
@@ -261,19 +261,16 @@ export async function createDiscordenoMessage(data: Message) {
     props.guildId = createNewProp(guildIdFinal);
   if (
     !requiredPropsSize ||
-    // @ts-ignore allow this prop
     cache.requiredStructureProperties.messages.has("mentionedUserIds")
   )
     props.mentionedUserIds = createNewProp(mentions.map((m) => snowflakeToBigint(m.id)));
   if (
     !requiredPropsSize ||
-    // @ts-ignore allow this prop
     cache.requiredStructureProperties.messages.has("mentionedRoleIds")
   )
     props.mentionedRoleIds = createNewProp(mentionRoles.map((id) => snowflakeToBigint(id)));
   if (
     !requiredPropsSize ||
-    // @ts-ignore allow this prop
     cache.requiredStructureProperties.messages.has("mentionedChannelIds")
   )
     props.mentionedChannelIds = createNewProp([
@@ -299,7 +296,7 @@ export async function createDiscordenoMessage(data: Message) {
           }
         : undefined
     );
-  // @ts-ignore allow this prop
+
   if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("bitfield"))
     props.bitfield = createNewProp(bitfield);
 
