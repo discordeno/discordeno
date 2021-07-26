@@ -14,6 +14,7 @@ import { GuildMemberWithUser } from "./types/members/guild_member.ts";
 import { Message } from "./types/messages/message.ts";
 import { Role } from "./types/permissions/role.ts";
 import { VoiceState } from "./types/voice/voice_state.ts";
+import { User } from "./types/users/user.ts";
 
 export const cache = {
   isReady: false,
@@ -50,7 +51,7 @@ export const cache = {
     /** Only these properties will be added to memory for your guilds. */
     guilds: new Set<keyof Guild>(),
     /** Only these properties will be added to memory for your members. */
-    members: new Set<keyof GuildMemberWithUser | "guilds">(),
+    members: new Set<keyof GuildMemberWithUser | keyof User | "guilds">(),
     /** Only these properties will be added to memory for your messages. */
     messages: new Set<keyof Message | "isBot"| "tag" | "authorId" | "mentionedUserIds">(),
     /** Only these properties will be added to memory for your roles. */
