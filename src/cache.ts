@@ -52,7 +52,7 @@ export const cache = {
     /** Only these properties will be added to memory for your members. */
     members: new Set<keyof GuildMemberWithUser | "guilds">(),
     /** Only these properties will be added to memory for your messages. */
-    messages: new Set<keyof Message | "isBot"| "tag" | "authorId", | "mentionedUserIds">(),
+    messages: new Set<keyof Message | "isBot"| "tag" | "authorId" | "mentionedUserIds">(),
     /** Only these properties will be added to memory for your roles. */
     roles: new Set<keyof Role>(),
     /** Only these properties will be added to memory for your voice states. */
