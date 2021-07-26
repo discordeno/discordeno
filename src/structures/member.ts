@@ -141,7 +141,6 @@ export async function createDiscordenoMember(
   for (const key of Object.keys(user) as (keyof typeof user)[]) {
     eventHandlers.debug?.("loop", `Running for of for Object.keys(user) loop in DiscordenoMember function.`);
 
-    // @ts-ignore allow user prop args
     if (cache.requiredStructureProperties.members.size && !cache.requiredStructureProperties.members.has(key)) continue;
 
     const toggleBits = memberToggles[key as keyof typeof memberToggles];
@@ -168,35 +167,44 @@ export async function createDiscordenoMember(
   }
 
   /** The guild related data mapped by guild id */
-  // @ts-ignore allow this prop to be required
-  if (!cache.requiredStructureProperties.members.size || cache.requiredStructureProperties.members.has("guilds"))
+  if (
+    !cache.requiredStructureProperties.members.size ||
+    cache.requiredStructureProperties.members.has("guilds")
+  ) {
     props.guilds = createNewProp(new Collection<bigint, GuildMember>());
-  // @ts-ignore allow this prop to be required
+    const member: DiscordenoMember = Object.create(baseMember, props);
+    const cached = await cacheHandlers.get(
+      "members",
+      snowflakeToBigint(user.id)
+    );
+    if (cached) {
+      for (const [id, guild] of cached.guilds.entries()) {
+        eventHandlers.debug?.(
+          "loop",
+          `Running for of for cached.guilds.entries() loop in DiscordenoMember function.`
+        );
+        member.guilds.set(id, guild);
+      }
+    }
+
+    // User was never cached before
+    member.guilds.set(guildId, {
+      nick: data.nick,
+      roles: data.roles.map((id) => snowflakeToBigint(id)),
+      joinedAt: joinedAt ? Date.parse(joinedAt) : undefined,
+      premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
+      deaf: data.deaf,
+      mute: data.mute,
+    });
+  }
+
   if (!cache.requiredStructureProperties.members.size || cache.requiredStructureProperties.members.has("bitfield"))
     props.bitfield = createNewProp(bitfield);
-  // @ts-ignore allow this prop to be required
+
   if (!cache.requiredStructureProperties.members.size || cache.requiredStructureProperties.members.has("cachedAt"))
     props.cachedAt = createNewProp(Date.now());
 
-  const member: DiscordenoMember = Object.create(baseMember, props);
 
-  const cached = await cacheHandlers.get("members", snowflakeToBigint(user.id));
-  if (cached) {
-    for (const [id, guild] of cached.guilds.entries()) {
-      eventHandlers.debug?.("loop", `Running for of for cached.guilds.entries() loop in DiscordenoMember function.`);
-      member.guilds.set(id, guild);
-    }
-  }
-
-  // User was never cached before
-  member.guilds.set(guildId, {
-    nick: data.nick,
-    roles: data.roles.map((id) => snowflakeToBigint(id)),
-    joinedAt: joinedAt ? Date.parse(joinedAt) : undefined,
-    premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
-    deaf: data.deaf,
-    mute: data.mute,
-  });
 
   return member;
 }
