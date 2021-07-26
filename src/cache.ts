@@ -10,7 +10,7 @@ import { DiscordenoThread } from "./util/transformers/channel_to_thread.ts";
 import { Collection } from "./util/collection.ts";
 import { Channel } from "./types/channels/channel.ts";
 import { Guild } from "./types/guilds/guild.ts";
-import { GuildMemberWithUser } from "./types/members/guild_member.ts";
+import { GuildMember } from "./types/members/guild_member.ts";
 import { Message } from "./types/messages/message.ts";
 import { Role } from "./types/permissions/role.ts";
 import { VoiceState } from "./types/voice/voice_state.ts";
@@ -51,7 +51,7 @@ export const cache = {
     /** Only these properties will be added to memory for your guilds. */
     guilds: new Set<keyof Guild>(),
     /** Only these properties will be added to memory for your members. */
-    members: new Set<keyof GuildMemberWithUser | keyof User | "guilds">(),
+    members: new Set<keyof GuildMember | keyof User | "guilds" | "bitfield" | "cachedAt">(),
     /** Only these properties will be added to memory for your messages. */
     messages: new Set<keyof Message | "isBot"| "tag" | "authorId" | "mentionedUserIds">(),
     /** Only these properties will be added to memory for your roles. */
