@@ -240,9 +240,13 @@ export async function createDiscordenoMessage(data: Message) {
   if (rest.thread) await cacheHandlers.set("threads", snowflakeToBigint(data.id), channelToThread(rest.thread));
 
   // @ts-ignore allow this prop
-  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("author"))
+  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("authorId"))
     props.authorId = createNewProp(snowflakeToBigint(author.id));
+  // @ts-ignore allow this prop
+  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("isBot"))
     props.isBot = createNewProp(author.bot || false);
+  // @ts-ignore allow this prop
+  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("tag"))
     props.tag = createNewProp(`${author.username}#${author.discriminator.toString().padStart(4, "0")}`);
 
   // Discord doesnt give guild id for getMessage() so this will fill it in
