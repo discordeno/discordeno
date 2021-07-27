@@ -1,7 +1,7 @@
 export enum DiscordApplicationCommandTypes {
-  CHAT_INPUT = 1,
-  USER,
-  MESSAGE,
+  ChatInput = 1,
+  User,
+  Message,
 }
 
 export type ApplicationCommandTypes = DiscordApplicationCommandTypes;
