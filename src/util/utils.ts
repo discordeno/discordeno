@@ -14,6 +14,7 @@ import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import { SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
 import { validateLength } from "./validate_length.ts";
 import { isSelectMenu } from "../helpers/type_guards/is_select_menu.ts";
+import { ApplicationCommandTypes } from "../types/interactions/commands/application_command_types.ts";
 
 export async function urlToBase64(url: string) {
   const buffer = await fetch(url).then((res) => res.arrayBuffer());
@@ -170,7 +171,12 @@ export function validateSlashCommands(
     eventHandlers.debug?.("loop", `Running for of loop in validateSlashCommands function.`);
     if (create) {
       if (!command.name) throw new Error(Errors.INVALID_SLASH_NAME);
-      if (!command.description) throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+      // Slash commands require description
+      if (!command.description && (!command.type || command.type === ApplicationCommandTypes.CHAT_INPUT))
+        throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
+
+      if (command.description && (!command.type || command.type !== ApplicationCommandTypes.CHAT_INPUT))
+        throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
     }
 
     if (command.name) {

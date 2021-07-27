@@ -1,4 +1,5 @@
 import { ApplicationCommandOption } from "./application_command_option.ts";
+import { ApplicationCommandTypes } from "./application_command_types.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#create-global-application-command-json-params */
 export interface CreateGlobalApplicationCommand {
@@ -6,6 +7,8 @@ export interface CreateGlobalApplicationCommand {
   name: string;
   /** 1-100 character description */
   description: string;
+  /** The type of the command */
+  type?: ApplicationCommandTypes;
   /** The parameters for the command */
   options?: ApplicationCommandOption[];
 }
