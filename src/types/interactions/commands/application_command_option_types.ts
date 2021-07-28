@@ -9,6 +9,7 @@ export enum DiscordApplicationCommandOptionTypes {
   Channel,
   Role,
   Mentionable,
+  Number,
 }
 
 export type ApplicationCommandOptionTypes = DiscordApplicationCommandOptionTypes;
