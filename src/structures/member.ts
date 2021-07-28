@@ -166,37 +166,33 @@ export async function createDiscordenoMember(
     );
   }
 
+  const member: DiscordenoMember = Object.create(baseMember, props);
+  
   /** The guild related data mapped by guild id */
   if (
     !cache.requiredStructureProperties.members.size ||
     cache.requiredStructureProperties.members.has("guilds")
-  ) 
+  ) {
     props.guilds = createNewProp(new Collection<bigint, GuildMember>());
-  const member: DiscordenoMember = Object.create(baseMember, props);
-  const cached = await cacheHandlers.get(
-    "members",
-    snowflakeToBigint(user.id)
-  );
-  if (cached) {
-    for (const [id, guild] of cached.guilds.entries()) {
-      eventHandlers.debug?.(
-        "loop",
-        `Running for of for cached.guilds.entries() loop in DiscordenoMember function.`
-      );
-      member.guilds.set(id, guild);
+    if (cached) {
+      for (const [id, guild] of cached.guilds.entries()) {
+        eventHandlers.debug?.(
+          "loop",
+          `Running for of for cached.guilds.entries() loop in DiscordenoMember function.`
+        );
+        member.guilds.set(id, guild);
+      }
+
+      // User was never cached before
+      member.guilds.set(guildId, {
+        nick: data.nick,
+        roles: data.roles.map((id) => snowflakeToBigint(id)),
+        joinedAt: joinedAt ? Date.parse(joinedAt) : undefined,
+        premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
+        deaf: data.deaf,
+        mute: data.mute,
+      });
     }
-    
-
-    // User was never cached before
-  member.guilds.set(guildId, {
-    nick: data.nick,
-    roles: data.roles.map((id) => snowflakeToBigint(id)),
-    joinedAt: joinedAt ? Date.parse(joinedAt) : undefined,
-    premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
-    deaf: data.deaf,
-    mute: data.mute,
-  });
-
   }
 
   if (!cache.requiredStructureProperties.members.size || cache.requiredStructureProperties.members.has("bitfield"))
