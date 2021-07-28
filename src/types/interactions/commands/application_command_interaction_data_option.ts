@@ -9,6 +9,7 @@ export type ApplicationCommandInteractionDataOption =
 export type ApplicationCommandInteractionDataOptionWithValue =
   | ApplicationCommandInteractionDataOptionString
   | ApplicationCommandInteractionDataOptionInteger
+  | ApplicationCommandInteractionDataOptionNumber
   | ApplicationCommandInteractionDataOptionBoolean
   | ApplicationCommandInteractionDataOptionUser
   | ApplicationCommandInteractionDataOptionChannel
@@ -46,6 +47,11 @@ export type ApplicationCommandInteractionDataOptionString = ApplicationCommandIn
 
 export type ApplicationCommandInteractionDataOptionInteger = ApplicationCommandInteractionDataOptionBase<
   DiscordApplicationCommandOptionTypes.Integer,
+  number
+>;
+
+export type ApplicationCommandInteractionDataOptionNumber = ApplicationCommandInteractionDataOptionBase<
+  DiscordApplicationCommandOptionTypes.Number,
   number
 >;
 
