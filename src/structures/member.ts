@@ -167,19 +167,14 @@ export async function createDiscordenoMember(
   }
 
   const member: DiscordenoMember = Object.create(baseMember, props);
-  
+
   /** The guild related data mapped by guild id */
-  if (
-    !cache.requiredStructureProperties.members.size ||
-    cache.requiredStructureProperties.members.has("guilds")
-  ) {
+  if (!cache.requiredStructureProperties.members.size || cache.requiredStructureProperties.members.has("guilds")) {
     props.guilds = createNewProp(new Collection<bigint, GuildMember>());
+    const cached = await cacheHandlers.get("members", snowflakeToBigint(user.id));
     if (cached) {
       for (const [id, guild] of cached.guilds.entries()) {
-        eventHandlers.debug?.(
-          "loop",
-          `Running for of for cached.guilds.entries() loop in DiscordenoMember function.`
-        );
+        eventHandlers.debug?.("loop", `Running for of for cached.guilds.entries() loop in DiscordenoMember function.`);
         member.guilds.set(id, guild);
       }
 
@@ -200,8 +195,6 @@ export async function createDiscordenoMember(
 
   if (!cache.requiredStructureProperties.members.size || cache.requiredStructureProperties.members.has("cachedAt"))
     props.cachedAt = createNewProp(Date.now());
-
-
 
   return member;
 }
@@ -246,7 +239,9 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id" | "a
   /** Get the nickname or the username if no nickname */
   name(guildId: bigint): string;
   /** Get the guild member object for the specified guild */
-  guildMember(guildId: bigint):
+  guildMember(
+    guildId: bigint
+  ):
     | (Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
         joinedAt?: number;
         premiumSince?: number;
