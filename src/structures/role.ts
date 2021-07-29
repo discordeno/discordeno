@@ -131,16 +131,16 @@ export async function createDiscordenoRole(
 
   if (!cache.requiredStructureProperties.roles.size || cache.requiredStructureProperties.roles.has("permissions"))
     props.permissions = createNewProp(BigInt(rest.permissions));
-  // @ts-ignore allow this prop
+
   if (!cache.requiredStructureProperties.roles.size || cache.requiredStructureProperties.roles.has("botId"))
     props.botId = createNewProp(tags.botId ? snowflakeToBigint(tags.botId) : undefined);
-  // @ts-ignore allow this prop
+
   if (!cache.requiredStructureProperties.roles.size || cache.requiredStructureProperties.roles.has("isNitroBoostRole"))
     props.isNitroBoostRole = createNewProp("premiumSubscriber" in tags);
-  // @ts-ignore allow this prop
+
   if (!cache.requiredStructureProperties.roles.size || cache.requiredStructureProperties.roles.has("integrationId"))
     props.integrationId = createNewProp(tags.integrationId ? snowflakeToBigint(tags.integrationId) : undefined);
-  // @ts-ignore allow this prop
+
   if (!cache.requiredStructureProperties.roles.size || cache.requiredStructureProperties.roles.has("bitfield"))
     props.bitfield = createNewProp(bitfield);
 

@@ -113,7 +113,6 @@ export async function createDiscordenoVoiceState(guildId: bigint, data: VoiceSta
     props.guildId = createNewProp(guildId);
   if (
     !cache.requiredStructureProperties.voiceStates.size ||
-    // @ts-ignore allow this prop
     cache.requiredStructureProperties.voiceStates.has("bitfield")
   )
     props.bitfield = createNewProp(bitfield);

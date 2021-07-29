@@ -10,10 +10,11 @@ import { DiscordenoThread } from "./util/transformers/channel_to_thread.ts";
 import { Collection } from "./util/collection.ts";
 import { Channel } from "./types/channels/channel.ts";
 import { Guild } from "./types/guilds/guild.ts";
-import { GuildMemberWithUser } from "./types/members/guild_member.ts";
+import { GuildMember } from "./types/members/guild_member.ts";
 import { Message } from "./types/messages/message.ts";
 import { Role } from "./types/permissions/role.ts";
 import { VoiceState } from "./types/voice/voice_state.ts";
+import { User } from "./types/users/user.ts";
 
 export const cache = {
   isReady: false,
@@ -48,15 +49,15 @@ export const cache = {
     /** Only these properties will be added to memory for your channels. */
     channels: new Set<keyof Channel>(),
     /** Only these properties will be added to memory for your guilds. */
-    guilds: new Set<keyof Guild>(),
+    guilds: new Set<keyof Guild | "shardId" | "bitfield">(),
     /** Only these properties will be added to memory for your members. */
-    members: new Set<keyof GuildMemberWithUser | "guilds">(),
+    members: new Set<keyof GuildMember | keyof User | "guilds" | "bitfield" | "cachedAt">(),
     /** Only these properties will be added to memory for your messages. */
-    messages: new Set<keyof Message>(),
+    messages: new Set<keyof Message | "isBot" | "tag" | "authorId" | "mentionedUserIds">(),
     /** Only these properties will be added to memory for your roles. */
-    roles: new Set<keyof Role>(),
+    roles: new Set<keyof Role | "botId" | "isNitroBoostRole" | "integrationId" | "bitfield">(),
     /** Only these properties will be added to memory for your voice states. */
-    voiceStates: new Set<keyof VoiceState>(),
+    voiceStates: new Set<keyof VoiceState | "bitfield">(),
   },
 };
 
