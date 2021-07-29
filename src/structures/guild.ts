@@ -343,11 +343,11 @@ export async function createDiscordenoGuild(data: Guild, shardId: number) {
   if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("voiceStates")) {
     props.voiceStates = createNewProp(new Collection(voiceStateStructs.map((vs) => [vs.userId, vs])));
   }
-  
+
   if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("shardId")) {
     props.shardId = createNewProp(shardId);
   }
-  
+
   if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("bitfield")) {
     props.bitfield = createNewProp(bitfield);
   }

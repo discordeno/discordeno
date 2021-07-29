@@ -239,7 +239,6 @@ export async function createDiscordenoMessage(data: Message) {
 
   if (rest.thread) await cacheHandlers.set("threads", snowflakeToBigint(data.id), channelToThread(rest.thread));
 
-
   if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("authorId"))
     props.authorId = createNewProp(snowflakeToBigint(author.id));
 
@@ -259,20 +258,11 @@ export async function createDiscordenoMessage(data: Message) {
     props.content = createNewProp(data.content || "");
   if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("guildId"))
     props.guildId = createNewProp(guildIdFinal);
-  if (
-    !requiredPropsSize ||
-    cache.requiredStructureProperties.messages.has("mentionedUserIds")
-  )
+  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("mentionedUserIds"))
     props.mentionedUserIds = createNewProp(mentions.map((m) => snowflakeToBigint(m.id)));
-  if (
-    !requiredPropsSize ||
-    cache.requiredStructureProperties.messages.has("mentionedRoleIds")
-  )
+  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("mentionedRoleIds"))
     props.mentionedRoleIds = createNewProp(mentionRoles.map((id) => snowflakeToBigint(id)));
-  if (
-    !requiredPropsSize ||
-    cache.requiredStructureProperties.messages.has("mentionedChannelIds")
-  )
+  if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("mentionedChannelIds"))
     props.mentionedChannelIds = createNewProp([
       // Keep any ids that discord sends
       ...mentionChannels.map((m) => snowflakeToBigint(m.id)),
