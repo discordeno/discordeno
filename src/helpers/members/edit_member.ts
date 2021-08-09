@@ -54,7 +54,7 @@ export async function editMember(guildId: bigint, memberId: bigint, options: Mod
     endpoints.GUILD_MEMBER(guildId, memberId),
     snakelize({
       ...options,
-      channelId: options.channelId ? bigintToSnowflake(options.channelId) : null,
+      channelId: typeof options.channelId === "bigint" ? bigintToSnowflake(options.channelId) : options.channelId,
     }) as ModifyGuildMember
   );
 
