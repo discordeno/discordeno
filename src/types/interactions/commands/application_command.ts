@@ -9,14 +9,14 @@ export interface ApplicationCommand {
   applicationId: string;
   /** Guild id of the command, if not global */
   guildId?: string;
-  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
+  /** 1-32 character name matching */
   name: string;
   /** 1-100 character description */
-  description: string;
+  description?: string;
   /** The parameters for the command */
   options?: ApplicationCommandOption[];
   /** Whether the command is enbaled by default when the app is added to a guild */
   defaultPermission?: boolean;
-  /** The type of command. By default this is a slash command(CHAT_INPUT). */
+  /** The type of command. By default this is a slash command(ChatInput). */
   type?: ApplicationCommandTypes;
 }

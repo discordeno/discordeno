@@ -12,3 +12,10 @@ export interface CreateGlobalApplicationCommand {
   /** The parameters for the command */
   options?: ApplicationCommandOption[];
 }
+
+export interface CreateGlobalContextMenuCommand {
+  /** 1-31 character name matching `^[\w-]{1,32}$` */
+  name: string;
+  /** The type of the command */
+  type: ApplicationCommandTypes;
+}
