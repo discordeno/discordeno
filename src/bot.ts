@@ -62,6 +62,7 @@ export function setApplicationId(id: string) {
   applicationId = snowflakeToBigint(id);
 }
 
+// TODO: Move this to a separate file.
 export interface BotConfig {
   token: string;
   compress?: boolean;
