@@ -11,4 +11,6 @@ export interface ApplicationCommandInteractionData {
   resolved?: ApplicationCommandInteractionDataResolved;
   /** The params + values from the user */
   options?: ApplicationCommandInteractionDataOption[];
+  /** The target id if this is a context menu command. */
+  targetId?: string;
 }
