@@ -46,7 +46,9 @@ export async function handleOnMessage(message: any, shardId: number) {
       break;
     case DiscordGatewayOpcodes.HeartbeatACK:
       if (ws.shards.has(shardId)) {
-        ws.shards.get(shardId)!.heartbeat.acknowledged = true;
+        const shard = ws.shards.get(shardId)!;
+        shard.heartbeat.acknowledged = true;
+        shard.heartbeat.lastReceivedAt = Date.now();
       }
       break;
     case DiscordGatewayOpcodes.Reconnect:
