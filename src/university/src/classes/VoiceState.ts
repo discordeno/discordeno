@@ -12,18 +12,18 @@ export class VoiceState extends Base {
   constructor(client: Client, payload: VoiceStatePayload) {
     super(client, snowflakeToBigint(payload.userId));
 
-    this.guildId = snowflakeToBigint(payload.guildId!)
+    this.guildId = snowflakeToBigint(payload.guildId!);
     this.channelId = snowflakeToBigint(payload.channelId!);
   }
 
   /** The member that is associated with this voice connection. */
   get member() {
-      return this.guild?.members.get(this.id); 
+    return this.guild?.members.get(this.id);
   }
 
   /** The guild that is associated with this voice connection. */
   get guild() {
-      return this.client.guilds.get(this.guildId);
+    return this.client.guilds.get(this.guildId);
   }
 }
 

@@ -34,12 +34,10 @@ export class Member extends Base {
     this.mute = payload.mute;
     this.nick = payload.nick || "";
     this.pending = payload.pending;
-    this.roleIds = payload.roles.map(id => snowflakeToBigint(id));
+    this.roleIds = payload.roles.map((id) => snowflakeToBigint(id));
 
     this.user = new User(client, payload.user);
   }
-
-  
 }
 
 export default Member;

@@ -26,7 +26,7 @@ export class Channel extends Base {
     this.type = payload.type;
     this.memberCount = payload.memberCount || 0;
 
-    this.messages = new Collection([], { sweeper: { filter: client.messageSweeper, interval: 300000 } })
+    this.messages = new Collection([], { sweeper: { filter: client.messageSweeper, interval: 300000 } });
   }
 }
 
