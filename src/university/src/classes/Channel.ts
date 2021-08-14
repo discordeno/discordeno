@@ -193,7 +193,7 @@ export class Channel extends Base {
     if (!this.parent) return false;
 
     return this.permissionOverwrites?.every((overwrite) => {
-      const permission = this.parent.permissionOverwrites.find((ow) => ow.id === overwrite.id);
+      const permission = this.parent?.permissionOverwrites.find((ow) => ow.id === overwrite.id);
       if (!permission) return false;
       return !(overwrite.allow !== permission.allow || overwrite.deny !== permission.deny);
     });
@@ -204,7 +204,7 @@ export class Channel extends Base {
    * However, if a bot is responding to a command and expects the computation to take a few seconds,
    * this endpoint may be called to let the user know that the bot is processing their message.
    */
-   async startTyping() {
+  async startTyping() {
     return await this.client.rest.post(endpoints.CHANNEL_TYPING(this.id));
   }
 
@@ -222,7 +222,6 @@ export class Channel extends Base {
     });
 
     return data.webhookId;
-
   }
 }
 
