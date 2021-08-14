@@ -86,7 +86,7 @@ export class Channel extends Base {
 
   /** The parent channel */
   get parent() {
-    return this.parentId ? this.guild?.channels.get(this.parentId) : undefined;
+    return this.guild?.channels.get(this.parentId!);
   }
 
   /** Create a copy of a channel */
@@ -222,6 +222,7 @@ export class Channel extends Base {
     });
 
     return data.webhookId;
+
   }
 }
 
