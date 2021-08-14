@@ -12,5 +12,5 @@ export interface EditGlobalApplicationCommand {
   /** The parameters for the command */
   options?: ApplicationCommandOption[] | null;
   /** Whether the command is enabled by default when the app is added to a guild. Default: true */
-  default_permission?: boolean;
+  defaultPermission?: boolean;
 }
