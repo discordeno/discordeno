@@ -1,4 +1,5 @@
 import { BotConfig } from "../../../bot.ts";
+import { PresenceUpdate } from "../../../types/activity/presence_update.ts";
 import { Intents } from "../../../types/gateway/gateway_intents.ts";
 import { snowflakeToBigint } from "../../../util/bigint.ts";
 import { Collection } from "../../../util/collection.ts";
@@ -7,6 +8,7 @@ import Channel from "./Channel.ts";
 import { GatewayManager } from "./Gateway/GatewayManager.ts";
 import { Guild } from "./Guild.ts";
 import Member from "./Member.ts";
+import Message from "./Message.ts";
 import HelperManager from "./utils/helpers/HelperManager.ts";
 import RestManager from "./utils/RestManager.ts";
 
@@ -43,6 +45,21 @@ export class Client extends EventEmitter {
   /** The ids for the channels that have been removed from cache and awaiting a dispatch event to recache. */
   dispatchedChannelIds = new Set<bigint>();
 
+  /** The ids of the guilds that are unavailable. When discord's servers crash they go into here until they are available again. */
+  unavailableGuildIds = new Collection<bigint, number>();
+
+  /** The dm channels that this bot has cached. */
+  dmChannels = new Collection<bigint, Channel>();
+
+  /** The nonce used for the fetch member requests on the websocketthat are currently pending. */
+  fetchAllMembersProcessingRequests = new Collection<
+    string,
+    (value: Collection<bigint, Member> | PromiseLike<Collection<bigint, Member>>) => void
+  >();
+
+  /** All the presences that were cached for all the users */
+  presences: Collection<bigint, PresenceUpdate>;
+
   constructor(options: Omit<BotConfig, "eventHandlers">) {
     super();
 
@@ -55,6 +72,8 @@ export class Client extends EventEmitter {
 
     // SETUP THE CACHE HOLDERS
     this.guilds = new Collection<bigint, Guild>([], { sweeper: { filter: this.guildsSweeper, interval: 3600000 } });
+
+    this.presences = new Collection<bigint, PresenceUpdate>([], { sweeper: { filter: () => true, interval: 300000 } });
 
     // SETUP THE GATEWAY MANAGER
     this.gateway = new GatewayManager(this);
@@ -93,7 +112,14 @@ export class Client extends EventEmitter {
 
   /** All the users that have been cached. */
   get users() {
-    return this.guilds.reduce((a, b) => [...a, ...b.members.values()], [] as unknown[]);
+    const users = new Collection<bigint, Member>();
+    for (const guild of this.guilds.values()) {
+      for (const member of guild.members.values()) {
+        if (!users.has(member.id)) users.set(member.id, member);
+      }
+    }
+
+    return users;
   }
 
   /** Begin the bot startup process. Connects to the discord gateway. */
@@ -176,9 +202,17 @@ export class Client extends EventEmitter {
   memberSweeper(member: Member) {
     // Don't sweep the bot else strange things will happen
     if (member.id === this.id) return false;
-  
+
     // Only sweep members who were not active the last 30 minutes
     return Date.now() - member.cachedAt > 1800000;
+  }
+
+  messageSweeper(message: Message) {
+    // DM messages aren't needed
+    if (!message.guildId) return true;
+
+    // Only delete messages older than 10 minutes
+    return Date.now() - message.timestamp > 600000;
   }
 }
 
