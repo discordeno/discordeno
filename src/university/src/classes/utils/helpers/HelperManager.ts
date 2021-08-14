@@ -5,6 +5,7 @@ import { User } from "../../../../../types/users/user.ts";
 import { endpoints } from "../../../../../util/constants.ts";
 import { snakelize, urlToBase64 } from "../../../../../util/utils.ts";
 import Client from "../../Client.ts";
+import ChannelHelpers from "./channels/ChannelHelper.ts";
 
 export class HelperManager {
   /** The client itself. */

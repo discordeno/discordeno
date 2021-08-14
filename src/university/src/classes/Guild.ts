@@ -9,6 +9,14 @@ import Member from "./Member.ts";
 import VoiceState from "./VoiceState.ts";
 import { Emoji } from "../../../types/emojis/emoji.ts";
 import Role from "./Role.ts";
+import { CreateGuildChannel, DiscordCreateGuildChannel } from "../../../types/guilds/create_guild_channel.ts";
+import { endpoints } from "../../../util/constants.ts";
+import { DiscordChannelTypes } from "../../../types/channels/channel_types.ts";
+import { calculateBits } from "../../../util/permissions.ts";
+import { hasOwnProperty, snakelize } from "../../../util/utils.ts";
+import { UpdateSelfVoiceState } from "../../../types/guilds/update_self_voice_state.ts";
+import { UpdateOthersVoiceState } from "../../../types/guilds/update_others_voice_state.ts";
+import { ModifyGuildChannelPositions } from "../../../types/guilds/modify_guild_channel_position.ts";
 
 export class Guild extends Base {
   /** The channels available in this guild. */
@@ -49,5 +57,53 @@ export class Guild extends Base {
     );
 
     this.roles = new Collection(payload.roles?.map((r) => [snowflakeToBigint(r.id), new Role(client, r)]) || []);
+  }
+
+  /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
+  async createChannel(options?: CreateGuildChannel, reason?: string) {
+    // BITRATES ARE IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
+    if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
+
+    const result = await this.client.rest.post(
+      endpoints.GUILD_CHANNELS(this.id),
+      snakelize<DiscordCreateGuildChannel>({
+        ...options,
+        permissionOverwrites: options?.permissionOverwrites?.map((perm) => ({
+          ...perm,
+          allow: calculateBits(perm.allow),
+          deny: calculateBits(perm.deny),
+        })),
+        type: options?.type || DiscordChannelTypes.GuildText,
+        reason,
+      })
+    );
+
+    const discordenoChannel = new Channel(this.client, result);
+    this.channels.set(discordenoChannel.id, discordenoChannel);
+
+    return discordenoChannel;
+  }
+
+  /**
+   * Updates the a user's voice state, defaults to the current user
+   * Caveats:
+   *  - `channel_id` must currently point to a stage channel.
+   *  - User must already have joined `channel_id`.
+   *  - You must have the `MUTE_MEMBERS` permission. But can always suppress yourself.
+   *  - When unsuppressed, non-bot users will have their `request_to_speak_timestamp` set to the current time. Bot users will not.
+   *  - You must have the `REQUEST_TO_SPEAK` permission to request to speak. You can always clear your own request to speak.
+   *  - You are able to set `request_to_speak_timestamp` to any present or future time.
+   *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
+   */
+  async updateVoiceState(options: UpdateSelfVoiceState | ({ userId: bigint } & UpdateOthersVoiceState)) {
+    return await this.client.rest.patch(
+      endpoints.UPDATE_VOICE_STATE(this.id, hasOwnProperty(options, "userId") ? options.userId : undefined),
+      snakelize(options)
+    );
+  }
+
+  /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
+  async swapChannels(channelPositions: ModifyGuildChannelPositions[]) {
+    return await this.client.rest.patch(endpoints.GUILD_CHANNELS(this.id), snakelize(channelPositions));
   }
 }

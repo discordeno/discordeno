@@ -1,6 +1,6 @@
 import { DiscordOverwrite } from "../../../../../../types/channels/overwrite.ts";
-import { endpoints } from "../../../../../../util/constants.ts";
-import { snakelize } from "../../../../../../util/utils.ts";
+import { DiscordBitwisePermissionFlags } from "../../../../../../types/permissions/bitwise_permission_flags.ts";
+import { PermissionStrings } from "../../../../../../types/permissions/permission_strings.ts";
 import Client from "../../../Client.ts";
 import ThreadHelpers from "./ThreadHelpers.ts";
 
@@ -13,143 +13,6 @@ export class ChannelHelpers {
   constructor(client: Client) {
     this.client = client;
     this.threads = new ThreadHelpers(client);
-  }
-
-  /** Gets an array of all the channels ids that are the children of this category. */
-  async categoryChildren(id: bigint) {
-    return await this.client.channels.filter((channel) => channel.parentId === id);
-  }
-
-  /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
-  channelOverwriteHasPermission(
-    guildId: bigint,
-    id: bigint,
-    overwrites: (Omit<DiscordOverwrite, "id" | "allow" | "deny"> & {
-      id: bigint;
-      allow: bigint;
-      deny: bigint;
-    })[],
-    permissions: PermissionStrings[]
-  ) {
-    const overwrite = overwrites.find((perm) => perm.id === id) || overwrites.find((perm) => perm.id === guildId);
-
-    if (!overwrite) return false;
-
-    return permissions.every((perm) => {
-      const allowBits = overwrite.allow;
-      const denyBits = overwrite.deny;
-      if (BigInt(denyBits) & BigInt(DiscordBitwisePermissionFlags[perm])) {
-        return false;
-      }
-      if (BigInt(allowBits) & BigInt(DiscordBitwisePermissionFlags[perm])) {
-        return true;
-      }
-    });
-  }
-
-  /** Create a copy of a channel */
-  async cloneChannel(channelId: bigint, reason?: string) {
-    const channelToClone = await this.client.cache.get("channels", channelId);
-    if (!channelToClone) throw new Error(Errors.CHANNEL_NOT_FOUND);
-
-    const createChannelOptions: CreateGuildChannel = {
-      ...channelToClone,
-      name: channelToClone.name!,
-      topic: channelToClone.topic || undefined,
-      permissionOverwrites: channelToClone.permissionOverwrites.map((overwrite) => ({
-        id: overwrite.id.toString(),
-        type: overwrite.type,
-        allow: calculatePermissions(overwrite.allow),
-        deny: calculatePermissions(overwrite.deny),
-      })),
-    };
-
-    //Create the channel (also handles permissions)
-    return await this.createChannel(channelToClone.guildId!, createChannelOptions, reason);
-  }
-
-  /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-  async createChannel(guildId: bigint, options?: CreateGuildChannel, reason?: string) {
-    if (options?.permissionOverwrites) {
-      await this.client.requireOverwritePermissions(guildId, options.permissionOverwrites);
-    }
-
-    // BITRATES ARE IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
-    if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
-
-    const result = await this.client.rest.post(
-      endpoints.GUILD_CHANNELS(guildId),
-      snakelize<DiscordCreateGuildChannel>({
-        ...options,
-        permissionOverwrites: options?.permissionOverwrites?.map((perm) => ({
-          ...perm,
-          allow: calculateBits(perm.allow),
-          deny: calculateBits(perm.deny),
-        })),
-        type: options?.type || DiscordChannelTypes.GuildText,
-        reason,
-      })
-    );
-
-    const discordenoChannel = new UniversityChannel(this.client, result);
-    await this.client.cache.set("channels", discordenoChannel.id, discordenoChannel);
-
-    return discordenoChannel;
-  }
-
-  /** Creates a new Stage instance associated to a Stage channel. Requires the user to be a moderator of the Stage channel. */
-  async createStageInstance(channelId: bigint, topic: string, privacyLevel?: PrivacyLevel) {
-    const channel = await this.client.cache.get("channels", channelId);
-
-    if (channel) {
-      if (channel.type !== ChannelTypes.GuildStageVoice) {
-        throw new Error(Errors.CHANNEL_NOT_STAGE_VOICE);
-      }
-
-      await this.client.requireBotChannelPermissions(channel, ["MANAGE_CHANNELS", "MUTE_MEMBERS", "MOVE_MEMBERS"]);
-    }
-
-    if (!validateLength(topic, { max: 120, min: 1 })) {
-      throw new Error(Errors.INVALID_TOPIC_LENGTH);
-    }
-
-    return await this.client.rest.post(
-      endpoints.STAGE_INSTANCES,
-      snakelize({
-        channelId,
-        topic,
-        privacyLevel,
-      })
-    );
-  }
-
-  /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-  async deleteChannel(channelId: bigint, reason?: string) {
-    return await this.client.rest.delete(endpoints.CHANNEL_BASE(channelId), {
-      reason,
-    });
-  }
-
-  /** Delete the channel permission overwrites for a user or role in this channel. Requires `MANAGE_ROLES` permission. */
-  async deleteChannelOverwrite(guildId: bigint, channelId: bigint, overwriteId: bigint): Promise<undefined> {
-    await this.client.requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
-
-    return await this.client.rest.delete(endpoints.CHANNEL_OVERWRITE(channelId, overwriteId));
-  }
-
-  /** Deletes the Stage instance. Requires the user to be a moderator of the Stage channel. */
-  async deleteStageInstance(channelId: bigint) {
-    const channel = await this.client.cache.get("channels", channelId);
-
-    if (channel) {
-      if (channel.type !== ChannelTypes.GuildStageVoice) {
-        throw new Error(Errors.CHANNEL_NOT_STAGE_VOICE);
-      }
-
-      await this.client.requireBotChannelPermissions(channel, ["MUTE_MEMBERS", "MANAGE_CHANNELS", "MOVE_MEMBERS"]);
-    }
-
-    return await this.client.rest.delete(endpoints.STAGE_INSTANCE(channelId));
   }
 
   //TODO: implement DM group channel edit
@@ -274,33 +137,6 @@ export class ChannelHelpers {
     }
   }
 
-  /** Edit the channel permission overwrites for a user or role in this channel. Requires `MANAGE_ROLES` permission. */
-  async editChannelOverwrite(
-    guildId: bigint,
-    channelId: bigint,
-    overwriteId: bigint,
-    options: Omit<Overwrite, "id">
-  ): Promise<undefined> {
-    await this.client.requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
-
-    return await this.client.rest.put(endpoints.CHANNEL_OVERWRITE(channelId, overwriteId), {
-      allow: calculateBits(options.allow),
-      deny: calculateBits(options.deny),
-      type: options.type,
-    });
-  }
-
-  /** Follow a News Channel to send messages to a target channel. Requires the `MANAGE_WEBHOOKS` permission in the target channel. Returns the webhook id. */
-  async followChannel(sourceChannelId: bigint, targetChannelId: bigint) {
-    await this.client.requireBotChannelPermissions(targetChannelId, ["MANAGE_WEBHOOKS"]);
-
-    const data = await this.client.rest.post(endpoints.CHANNEL_FOLLOW(sourceChannelId), {
-      webhook_channel_id: targetChannelId,
-    });
-
-    return data.webhookId;
-  }
-
   /** Fetches a single channel object from the api.
    *
    * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
@@ -314,15 +150,6 @@ export class ChannelHelpers {
     }
 
     return UniversityChannel;
-  }
-
-  /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
-  async getChannelWebhooks(channelId: bigint) {
-    await this.client.requireBotChannelPermissions(channelId, ["MANAGE_WEBHOOKS"]);
-
-    const result = (await this.client.rest.get(endpoints.CHANNEL_WEBHOOKS(channelId))) as Webhook[];
-
-    return new Collection(result.map((webhook) => [webhook.id, webhook]));
   }
 
   /** Returns a list of guild channel objects.
@@ -345,127 +172,6 @@ export class ChannelHelpers {
           })
         )
       ).map((c) => [c.id, c])
-    );
-  }
-
-  /** Get pinned messages in this channel. */
-  async getPins(channelId: bigint) {
-    const result = (await this.client.rest.get(endpoints.CHANNEL_PINS(channelId))) as Message[];
-
-    return Promise.all(result.map((res) => new UniversityMessage(this.client, res)));
-  }
-
-  /** Gets the stage instance associated with the Stage channel, if it exists. */
-  async getStageInstance(channelId: bigint) {
-    const channel = await this.client.cache.get("channels", channelId);
-
-    if (channel) {
-      if (channel.type !== ChannelTypes.GuildStageVoice) {
-        throw new Error(Errors.CHANNEL_NOT_STAGE_VOICE);
-      }
-    }
-
-    return await this.client.rest.get(endpoints.STAGE_INSTANCE(channelId));
-  }
-
-  /** Checks whether a channel is synchronized with its parent/category channel or not. */
-  async isChannelSynced(channelId: bigint) {
-    const channel = await this.client.cache.get("channels", channelId);
-    if (!channel?.parentId) return false;
-
-    const parentChannel = await this.client.cache.get("channels", channel.parentId);
-    if (!parentChannel) return false;
-
-    return channel.permissionOverwrites?.every((overwrite) => {
-      const permission = parentChannel.permissionOverwrites?.find((ow) => ow.id === overwrite.id);
-      if (!permission) return false;
-      return !(overwrite.allow !== permission.allow || overwrite.deny !== permission.deny);
-    });
-  }
-
-  /**
-   * Trigger a typing indicator for the specified channel. Generally bots should **NOT** implement this route.
-   * However, if a bot is responding to a command and expects the computation to take a few seconds,
-   * this endpoint may be called to let the user know that the bot is processing their message.
-   */
-  async startTyping(channelId: bigint) {
-    const channel = await this.client.cache.get("channels", channelId);
-    // If the channel is cached, we can do extra checks/safety
-    if (channel) {
-      if (
-        ![
-          DiscordChannelTypes.DM,
-          DiscordChannelTypes.GuildNews,
-          DiscordChannelTypes.GuildText,
-          DiscordChannelTypes.GuildNewsThread,
-          DiscordChannelTypes.GuildPivateThread,
-          DiscordChannelTypes.GuildPublicThread,
-        ].includes(channel.type)
-      ) {
-        throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
-      }
-
-      const hasSendMessagesPerm = await this.client.botHasChannelPermissions(channelId, ["SEND_MESSAGES"]);
-      if (!hasSendMessagesPerm) {
-        throw new Error(Errors.MISSING_SEND_MESSAGES);
-      }
-    }
-
-    return await this.client.rest.post(endpoints.CHANNEL_TYPING(channelId));
-  }
-
-  /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
-  async swapChannels(guildId: bigint, channelPositions: ModifyGuildChannelPositions[]) {
-    if (channelPositions.length < 2) {
-      throw "You must provide at least two channels to be swapped.";
-    }
-
-    return await this.client.rest.patch(endpoints.GUILD_CHANNELS(guildId), snakelize(channelPositions));
-  }
-
-  /** Updates fields of an existing Stage instance. Requires the user to be a moderator of the Stage channel. */
-  async updateStageInstance(channelId: bigint, data: Partial<Pick<StageInstance, "topic" | "privacyLevel">> = {}) {
-    const channel = await this.client.cache.get("channels", channelId);
-
-    if (channel) {
-      if (channel.type !== ChannelTypes.GuildStageVoice) {
-        throw new Error(Errors.CHANNEL_NOT_STAGE_VOICE);
-      }
-
-      await this.client.requireBotChannelPermissions(channel, ["MOVE_MEMBERS", "MUTE_MEMBERS", "MANAGE_CHANNELS"]);
-    }
-
-    if (
-      data?.topic &&
-      !validateLength(data.topic, {
-        min: 1,
-        max: 120,
-      })
-    ) {
-      throw new Error(Errors.INVALID_TOPIC_LENGTH);
-    }
-
-    return await this.client.rest.patch(endpoints.STAGE_INSTANCE(channelId), snakelize(data));
-  }
-
-  /**
-   * Updates the a user's voice state, defaults to the current user
-   * Caveats:
-   *  - `channel_id` must currently point to a stage channel.
-   *  - User must already have joined `channel_id`.
-   *  - You must have the `MUTE_MEMBERS` permission. But can always suppress yourself.
-   *  - When unsuppressed, non-bot users will have their `request_to_speak_timestamp` set to the current time. Bot users will not.
-   *  - You must have the `REQUEST_TO_SPEAK` permission to request to speak. You can always clear your own request to speak.
-   *  - You are able to set `request_to_speak_timestamp` to any present or future time.
-   *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
-   */
-  async updateBotVoiceState(
-    guildId: bigint,
-    options: UpdateSelfVoiceState | ({ userId: bigint } & UpdateOthersVoiceState)
-  ) {
-    return await this.client.rest.patch(
-      endpoints.UPDATE_VOICE_STATE(guildId, hasOwnProperty(options, "userId") ? options.userId : undefined),
-      snakelize(options)
     );
   }
 }
