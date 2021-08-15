@@ -1,22 +1,23 @@
 import Base from "./Base.ts";
 import Client from "./Client.ts";
 
-import { snowflakeToBigint } from "../../../util/bigint.ts";
-import { Guild as GuildPayload } from "../../../types/guilds/guild.ts";
-import { Collection } from "../../../util/collection.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
+import { Guild as GuildPayload } from "../../types/guilds/guild.ts";
+import { Collection } from "../../util/collection.ts";
 import Channel from "./Channel.ts";
 import Member from "./Member.ts";
 import VoiceState from "./VoiceState.ts";
-import { Emoji } from "../../../types/emojis/emoji.ts";
+import { Emoji } from "../../types/emojis/emoji.ts";
 import Role from "./Role.ts";
-import { CreateGuildChannel, DiscordCreateGuildChannel } from "../../../types/guilds/create_guild_channel.ts";
-import { endpoints } from "../../../util/constants.ts";
-import { DiscordChannelTypes } from "../../../types/channels/channel_types.ts";
-import { calculateBits } from "../../../util/permissions.ts";
-import { hasOwnProperty, snakelize } from "../../../util/utils.ts";
-import { UpdateSelfVoiceState } from "../../../types/guilds/update_self_voice_state.ts";
-import { UpdateOthersVoiceState } from "../../../types/guilds/update_others_voice_state.ts";
-import { ModifyGuildChannelPositions } from "../../../types/guilds/modify_guild_channel_position.ts";
+import { CreateGuildChannel, DiscordCreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
+import { endpoints } from "../../util/constants.ts";
+import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import { calculateBits } from "../../util/permissions.ts";
+import { hasOwnProperty, snakelize } from "../../util/utils.ts";
+import { UpdateSelfVoiceState } from "../../types/guilds/update_self_voice_state.ts";
+import { UpdateOthersVoiceState } from "../../types/guilds/update_others_voice_state.ts";
+import { ModifyGuildChannelPositions } from "../../types/guilds/modify_guild_channel_position.ts";
+import { Channel as ChannelPayload } from "../../types/channels/channel.ts";
 
 export class Guild extends Base {
   /** The channels available in this guild. */
@@ -105,5 +106,33 @@ export class Guild extends Base {
   /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
   async swapChannels(channelPositions: ModifyGuildChannelPositions[]) {
     return await this.client.rest.patch(endpoints.GUILD_CHANNELS(this.id), snakelize(channelPositions));
+  }
+
+  /** Returns a list of guild channel objects.
+   *
+   * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
+   */
+  async fetchChannels() {
+    const result = (await this.client.rest.get(endpoints.GUILD_CHANNELS(this.id))) as ChannelPayload[];
+
+    for (const res of result) {
+      const channel = new Channel(this.client, res);
+      this.channels.set(channel.id, channel);
+    }
+
+    return this.channels;
+  }
+
+  /** Fetches a single channel object from the api.
+   *
+   * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
+   */
+   async fetchChannel(channelId: bigint) {
+    const result = await this.client.rest.get(endpoints.CHANNEL_BASE(channelId));
+
+    const channel = new Channel(this.client, result);
+    this.channels.set(channel.id, channel);
+
+    return channel;
   }
 }

@@ -1,16 +1,21 @@
-import { BotConfig } from "../../../bot.ts";
-import { PresenceUpdate } from "../../../types/activity/presence_update.ts";
-import { Intents } from "../../../types/gateway/gateway_intents.ts";
-import { snowflakeToBigint } from "../../../util/bigint.ts";
-import { Collection } from "../../../util/collection.ts";
-import { EventEmitter, decode } from "../../deps.ts";
+import { BotConfig } from "../../bot.ts";
+import { PresenceUpdate } from "../../types/activity/presence_update.ts";
+import { DiscordGatewayOpcodes } from "../../types/codes/gateway_opcodes.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
+import { Intents } from "../../types/gateway/gateway_intents.ts";
+import { StatusUpdate } from "../../types/gateway/status_update.ts";
+import { User } from "../../types/users/user.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
+import { Collection } from "../../util/collection.ts";
+import { endpoints } from "../../util/constants.ts";
+import { snakelize, urlToBase64 } from "../../util/utils.ts";
+import { EventEmitter, decode } from "../deps.ts";
 import Channel from "./Channel.ts";
 import { GatewayManager } from "./Gateway/GatewayManager.ts";
 import { Guild } from "./Guild.ts";
 import Member from "./Member.ts";
 import Message from "./Message.ts";
-import HelperManager from "./utils/helpers/HelperManager.ts";
-import RestManager from "./utils/RestManager.ts";
+import RestManager from "./RestManager.ts";
 
 export interface ClientOptions {
   /** The bot token to use for this client. */
@@ -30,8 +35,6 @@ export class Client extends EventEmitter {
   gateway: GatewayManager;
   /** The rest manager for the api. */
   rest: RestManager;
-  /** All the helper methods */
-  helpers: HelperManager;
 
   /** The guilds that are cached. */
   guilds: Collection<bigint, Guild>;
@@ -59,6 +62,8 @@ export class Client extends EventEmitter {
 
   /** All the presences that were cached for all the users */
   presences: Collection<bigint, PresenceUpdate>;
+  /** If you are using a proxy websocket connection, this is the url the payloads will be sent to. */
+  proxyWebsocketURL?: string;
 
   constructor(options: Omit<BotConfig, "eventHandlers">) {
     super();
@@ -85,9 +90,6 @@ export class Client extends EventEmitter {
 
     // SETUP THE REST MANAGER
     this.rest = new RestManager(this);
-
-    // SETUP THE HELPER METHODS
-    this.helpers = new HelperManager(this);
   }
 
   /** The token for the bot. */
@@ -125,7 +127,7 @@ export class Client extends EventEmitter {
   /** Begin the bot startup process. Connects to the discord gateway. */
   async connect() {
     // INITIAL API CONNECTION TO GET INFO ABOUT BOTS CONNECTION
-    this.gateway.botGatewayData = await this.helpers.getGatewayBot();
+    this.gateway.botGatewayData = await this.getGatewayBot();
     this.gateway.botGatewayData.url += `?v=${this.gateway.version}&encoding=json`;
     // IF DEFAULTS WERE NOT MODIFED, SET TO RECOMMENDED DISCORD DEFAULTS
     if (!this.gateway.maxShards) {
@@ -213,6 +215,61 @@ export class Client extends EventEmitter {
 
     // Only delete messages older than 10 minutes
     return Date.now() - message.timestamp > 600000;
+  }
+
+  /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
+  async getGatewayBot() {
+    return await this.rest.get(endpoints.GATEWAY_BOT);
+  }
+
+  /** Modifies the bot's username or avatar.
+   * NOTE: username: if changed may cause the bot's discriminator to be randomized.
+   */
+  async editBotProfile(options: { username?: string; botAvatarURL?: string }) {
+    // Nothing was edited
+    if (!options.username && !options.botAvatarURL) return;
+    // Check username requirements if username was provided
+    if (options.username) {
+      if (options.username.length > 32) {
+        throw new Error(Errors.USERNAME_MAX_LENGTH);
+      }
+      if (options.username.length < 2) {
+        throw new Error(Errors.USERNAME_MIN_LENGTH);
+      }
+      if (["@", "#", ":", "```"].some((char) => options.username!.includes(char))) {
+        throw new Error(Errors.USERNAME_INVALID_CHARACTER);
+      }
+      if (["discordtag", "everyone", "here"].includes(options.username)) {
+        throw new Error(Errors.USERNAME_INVALID_USERNAME);
+      }
+    }
+
+    const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : undefined;
+
+    return (await this.rest.patch(endpoints.USER_BOT, {
+      username: options.username?.trim(),
+      avatar,
+    })) as User;
+  }
+
+  editBotStatus(data: Omit<StatusUpdate, "afk" | "since">) {
+    this.gateway.forEach((shard) => { 
+      this.emit("DEBUG", "loop", `Running forEach loop in editBotStatus function.`);
+
+      shard.sendShardMessage({
+        op: DiscordGatewayOpcodes.StatusUpdate,
+        d: {
+          since: null,
+          afk: false,
+          ...snakelize<Omit<StatusUpdate, "afk" | "since">>(data),
+        },
+      });
+    });
+  }
+
+  /** This function will return the raw user payload in the rare cases you need to fetch a user directly from the API. */
+  async getUser(userId: bigint) {
+    return (await this.rest.get(endpoints.USER(userId))) as User;
   }
 }
 

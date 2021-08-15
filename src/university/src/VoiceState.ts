@@ -1,7 +1,7 @@
 import Base from "./Base.ts";
 import Client from "./Client.ts";
-import { snowflakeToBigint } from "../../../util/bigint.ts";
-import { VoiceState as VoiceStatePayload } from "../../../types/voice/voice_state.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
+import { VoiceState as VoiceStatePayload } from "../../types/voice/voice_state.ts";
 
 export class VoiceState extends Base {
   /** The guild id where this voice connection is in. */

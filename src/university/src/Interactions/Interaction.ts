@@ -1,5 +1,5 @@
-import { Interaction as InteractionPayload } from "../../../../types/interactions/interaction.ts";
-import { snowflakeToBigint } from "../../../../util/bigint.ts";
+import { Interaction as InteractionPayload } from "../../../types/interactions/interaction.ts";
+import { snowflakeToBigint } from "../../../util/bigint.ts";
 import Base from "../Base.ts";
 import Client from "../Client.ts";
 

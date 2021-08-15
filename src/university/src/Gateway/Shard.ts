@@ -1,4 +1,13 @@
+import { DiscordGatewayCloseEventCodes } from "../../../types/codes/gateway_close_event_codes.ts";
+import { DiscordGatewayOpcodes } from "../../../types/codes/gateway_opcodes.ts";
+import { GatewayPayload } from "../../../types/gateway/gateway_payload.ts";
+import { Hello } from "../../../types/gateway/hello.ts";
+import { Ready } from "../../../types/gateway/ready.ts";
+import { camelize, delay } from "../../../util/utils.ts";
+import { decompressWith } from "../../../ws/deps.ts";
+import { WebSocketRequest } from "../../../ws/ws.ts";
 import Client from "../Client.ts";
+import GatewayEvents from "./Events.ts";
 
 export class Shard {
   /** The client itself */
@@ -244,7 +253,7 @@ export class Shard {
   }
 
   createWebSocket() {
-    const socket = new WebSocket(this.gateway.botGatewayData.url);
+    const socket = new WebSocket(this.client.proxyWebsocketURL || this.gateway.botGatewayData.url);
     socket.binaryType = "arraybuffer";
 
     socket.onerror = (errorEvent) => {
@@ -404,16 +413,12 @@ export class Shard {
         // Update the sequence number if it is present
         if (messageData.s) this.previousSequenceNumber = messageData.s;
 
-        if (this.client.proxyWSURL) {
-          await this.handleDiscordPayload(messageData);
-        } else {
-          this.client.emit("raw", messageData);
-          this.client.emit("dispatchRequirements", messageData, this.id);
+        this.client.emit("raw", messageData);
+        this.client.emit("dispatchRequirements", messageData, this.id);
 
-          if (messageData.op !== DiscordGatewayOpcodes.Dispatch) return;
+        if (messageData.op !== DiscordGatewayOpcodes.Dispatch) return;
 
-          if (!messageData.t) return;
-
+        if (messageData.t) {
           const handler = this.events[messageData.t];
           if (!handler) return this.events.missing(messageData.t, messageData);
 
@@ -486,19 +491,6 @@ export class Shard {
         })
       );
     }, this.heartbeat.interval);
-  }
-
-  async handleDiscordPayload(data: DiscordGatewayPayload) {
-    await fetch(this.client.wsUrl, {
-      headers: {
-        authorization: this.client.secretKey,
-      },
-      method: "post",
-      body: JSON.stringify({
-        shardId: this.id,
-        data,
-      }),
-    }).catch(console.error);
   }
 }
 

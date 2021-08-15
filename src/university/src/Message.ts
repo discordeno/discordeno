@@ -1,5 +1,5 @@
-import { Message as MessagePayload } from "../../../types/messages/message.ts";
-import { bigintToTimestamp, snowflakeToBigint } from "../../../util/bigint.ts";
+import { Message as MessagePayload } from "../../types/messages/message.ts";
+import { bigintToTimestamp, snowflakeToBigint } from "../../util/bigint.ts";
 import Base from "./Base.ts";
 import Client from "./Client.ts";
 

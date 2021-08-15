@@ -1,4 +1,4 @@
-import { Interaction as InteractionPayload } from "../../../../types/interactions/interaction.ts";
+import { Interaction as InteractionPayload } from "../../../types/interactions/interaction.ts";
 import Client from "../Client.ts";
 import Interaction from "./Interaction.ts";
 

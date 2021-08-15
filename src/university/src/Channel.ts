@@ -1,22 +1,26 @@
 import Base from "./Base.ts";
-import { Channel as ChannelPayload } from "../../../types/channels/channel.ts";
+import { Channel as ChannelPayload } from "../../types/channels/channel.ts";
 import Client from "./Client.ts";
-import { snowflakeToBigint } from "../../../util/bigint.ts";
-import { DiscordChannelTypes } from "../../../types/channels/channel_types.ts";
-import { Collection } from "../../../util/collection.ts";
+import { snowflakeToBigint } from "../../util/bigint.ts";
+import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import { Collection } from "../../util/collection.ts";
 import Message from "./Message.ts";
-import { CreateGuildChannel } from "../../../types/guilds/create_guild_channel.ts";
-import { calculatePermissions } from "../../../util/permissions.ts";
-import { DiscordOverwrite, Overwrite } from "../../../types/channels/overwrite.ts";
-import { PermissionStrings } from "../../../types/permissions/permission_strings.ts";
-import { DiscordBitwisePermissionFlags } from "../../../types/permissions/bitwise_permission_flags.ts";
-import { endpoints } from "../../../util/constants.ts";
-import { snakelize } from "../../../util/utils.ts";
-import { PrivacyLevel } from "../../../types/channels/privacy_level.ts";
-import { calculateBits } from "../../../util/permissions.ts";
-import { Webhook } from "../../../types/webhooks/webhook.ts";
-import { StageInstance } from "../../../types/channels/stage_instance.ts";
-import { Message as MessagePayload } from "../../../types/messages/message.ts";
+import { CreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
+import { calculatePermissions } from "../../util/permissions.ts";
+import { DiscordOverwrite, Overwrite } from "../../types/channels/overwrite.ts";
+import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
+import { DiscordBitwisePermissionFlags } from "../../types/permissions/bitwise_permission_flags.ts";
+import { endpoints } from "../../util/constants.ts";
+import { hasOwnProperty, snakelize } from "../../util/utils.ts";
+import { PrivacyLevel } from "../../types/channels/privacy_level.ts";
+import { calculateBits } from "../../util/permissions.ts";
+import { Webhook } from "../../types/webhooks/webhook.ts";
+import { StageInstance } from "../../types/channels/stage_instance.ts";
+import { Message as MessagePayload } from "../../types/messages/message.ts";
+import { ModifyChannel } from "../../types/channels/modify_channel.ts";
+import { ModifyThread } from "../../types/channels/threads/modify_thread.ts";
+import { ListPublicArchivedThreads } from "../../types/channels/threads/list_public_archived_threads.ts";
+import { StartThread } from "../../types/channels/threads/start_thread.ts";
 
 export class Channel extends Base {
   /** The guild id where this channel is located. If in a DM this is undefined. */
@@ -222,6 +226,146 @@ export class Channel extends Base {
     });
 
     return data.webhookId;
+  }
+
+  /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
+  async edit(options: ModifyChannel | ModifyThread, reason?: string, channelId?: bigint) {
+    if (!channelId) channelId = this.id;
+    
+    if (options.name || (options as ModifyChannel).topic) {
+      const request = this.client.rest.editChannelNameTopicQueue.get(channelId);
+      if (!request) {
+        // If this hasnt been done before simply add 1 for it
+        this.client.rest.editChannelNameTopicQueue.set(channelId, {
+          channelId: channelId,
+          amount: 1,
+          // 10 minutes from now
+          timestamp: Date.now() + 600000,
+          items: [],
+        });
+      } else if (request.amount === 1) {
+        // Start queuing future requests to this channel
+        request.amount = 2;
+        request.timestamp = Date.now() + 600000;
+      } else {
+        return new Promise((resolve, reject) => {
+          // 2 have already been used add to queue
+          request.items.push({ channelId: channelId!, reason, options, resolve, reject }); 
+          if (this.client.rest.editChannelProcessing) return;
+          this.client.rest.editChannelProcessing = true;
+          this.processEditChannelQueue();
+        });
+      }
+    }
+
+    const result = await this.client.rest.patch(
+      endpoints.CHANNEL_BASE(channelId),
+      snakelize({
+        ...options,
+        permissionOverwrites: hasOwnProperty<ModifyChannel>(options, "permissionOverwrites")
+          ? options.permissionOverwrites?.map((overwrite) => {
+              return {
+                ...overwrite,
+                allow: calculateBits(overwrite.allow),
+                deny: calculateBits(overwrite.deny),
+              };
+            })
+          : undefined,
+        reason,
+      })
+    );
+
+    return new Channel(this.client, result);
+  }
+
+  processEditChannelQueue() {
+    if (!this.client.rest.editChannelProcessing) return;
+
+    const now = Date.now();
+    this.client.rest.editChannelNameTopicQueue.forEach(async (request) => {
+      this.client.emit("debug", `Running forEach loop in edit_channel file.`);
+      if (now < request.timestamp) return;
+      // 10 minutes have passed so we can reset this channel again
+      if (!request.items.length) {
+        return this.client.rest.editChannelNameTopicQueue.delete(request.channelId);
+      }
+      request.amount = 0;
+      // There are items to process for this request
+      const details = request.items.shift();
+
+      if (!details) return;
+
+      await this.edit(details.options, details.reason, details.channelId)
+        .then((result) => details.resolve(result))
+        .catch(details.reject);
+      const secondDetails = request.items.shift();
+      if (!secondDetails) return;
+
+      await this.edit(secondDetails.options, secondDetails.reason, secondDetails.channelId)
+        .then((result) => secondDetails.resolve(result))
+        .catch(secondDetails.reject);
+      return;
+    });
+
+    if (this.client.rest.editChannelNameTopicQueue.size) {
+      setTimeout(() => {
+        this.client.emit("debug", `Running setTimeout in EDIT_CHANNEL file.`);
+        this.processEditChannelQueue();
+      }, 60000);
+    } else {
+      this.client.rest.editChannelProcessing = false;
+    }
+  }
+
+  async addToThread(userId?: bigint) {
+    return await this.client.rest.put(
+      userId ? endpoints.THREAD_USER(this.id, userId) : endpoints.THREAD_ME(this.id)
+    );
+  }
+
+  /** Returns all active threads in the channel, including public and private threads. Threads are ordered by their id, in descending order. Requires the READ_MESSAGE_HISTORY permission. */
+  async fetchActiveThreads() {
+    return await this.client.rest.get(endpoints.THREAD_ACTIVE(this.id));
+  }
+
+  async fetchArchivedThreads(
+    options?: ListPublicArchivedThreads & {
+      type?: "public" | "private" | "privateJoinedThreads";
+    }
+  ) {
+    return await this.client.rest.get(
+      options?.type === "privateJoinedThreads"
+        ? endpoints.THREAD_ARCHIVED_PRIVATE_JOINED(this.id)
+        : options?.type === "private"
+        ? endpoints.THREAD_ARCHIVED_PRIVATE(this.id)
+        : endpoints.THREAD_ARCHIVED_PUBLIC(this.id),
+      snakelize(options ?? {})
+    );
+  }
+
+  /** Returns array of thread members objects that are members of the thread. */
+  async fetchThreadMembers() {
+    return await this.client.rest.get(endpoints.THREAD_MEMBERS(this.id));
+  }
+
+  /** Removes another user from a thread. Requires the MANAGE_THREADS permission or that you are the creator of the thread. Also requires the thread is not archived. Returns a 204 empty response on success. Fires a Thread Members Update Gateway event. */
+  async removeFromThread(userId?: bigint) {
+    return await this.client.rest.delete(
+      userId ? endpoints.THREAD_USER(this.id, userId) : endpoints.THREAD_ME(this.id)
+    );
+  }
+
+  /**
+   * Creates a new public thread from an existing message. Returns a channel on success, and a 400 BAD REQUEST on invalid parameters. Fires a Thread Create Gateway event.
+   * @param messageId when provided the thread will be public
+   */
+  async startThread(options: StartThread & { messageId?: bigint }) {
+    return await this.client.rest.post(
+      options?.messageId
+        ? endpoints.THREAD_START_PUBLIC(this.id, options.messageId)
+        : endpoints.THREAD_START_PRIVATE(this.id),
+      snakelize(options)
+    );
   }
 }
 
