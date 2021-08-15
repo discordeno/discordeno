@@ -165,29 +165,9 @@ export async function createDiscordenoMember(
       MEMBER_SNOWFLAKES.includes(key) ? (user[key] ? snowflakeToBigint(user[key] as string) : undefined) : user[key]
     );
   }
-
-  const member: DiscordenoMember = Object.create(baseMember, props);
-
   /** The guild related data mapped by guild id */
   if (!cache.requiredStructureProperties.members.size || cache.requiredStructureProperties.members.has("guilds")) {
     props.guilds = createNewProp(new Collection<bigint, GuildMember>());
-    const cached = await cacheHandlers.get("members", snowflakeToBigint(user.id));
-    if (cached) {
-      for (const [id, guild] of cached.guilds.entries()) {
-        eventHandlers.debug?.("loop", `Running for of for cached.guilds.entries() loop in DiscordenoMember function.`);
-        member.guilds.set(id, guild);
-      }
-
-      // User was never cached before
-      member.guilds.set(guildId, {
-        nick: data.nick,
-        roles: data.roles.map((id) => snowflakeToBigint(id)),
-        joinedAt: joinedAt ? Date.parse(joinedAt) : undefined,
-        premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
-        deaf: data.deaf,
-        mute: data.mute,
-      });
-    }
   }
 
   if (!cache.requiredStructureProperties.members.size || cache.requiredStructureProperties.members.has("bitfield"))
@@ -195,6 +175,26 @@ export async function createDiscordenoMember(
 
   if (!cache.requiredStructureProperties.members.size || cache.requiredStructureProperties.members.has("cachedAt"))
     props.cachedAt = createNewProp(Date.now());
+
+  const member: DiscordenoMember = Object.create(baseMember, props);
+
+  const cached = await cacheHandlers.get("members", snowflakeToBigint(user.id));
+  if (cached?.guilds) {
+    for (const [id, guild] of cached.guilds.entries()) {
+      eventHandlers.debug?.("loop", `Running for of for cached.guilds.entries() loop in DiscordenoMember function.`);
+      member.guilds.set(id, guild);
+    }
+
+    // User was never cached before
+    member.guilds.set(guildId, {
+      nick: data.nick,
+      roles: data.roles.map((id) => snowflakeToBigint(id)),
+      joinedAt: joinedAt ? Date.parse(joinedAt) : undefined,
+      premiumSince: premiumSince ? Date.parse(premiumSince) : undefined,
+      deaf: data.deaf,
+      mute: data.mute,
+    });
+  }
 
   return member;
 }
@@ -239,9 +239,7 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id" | "a
   /** Get the nickname or the username if no nickname */
   name(guildId: bigint): string;
   /** Get the guild member object for the specified guild */
-  guildMember(
-    guildId: bigint
-  ):
+  guildMember(guildId: bigint):
     | (Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
         joinedAt?: number;
         premiumSince?: number;
