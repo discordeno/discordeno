@@ -1,7 +1,7 @@
 import Base from "./Base.ts";
 import Client from "./Client.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
-import { GuildMemberWithUser } from "../../types/members/guild_member.ts";
+import { snowflakeToBigint } from "../../../util/bigint.ts";
+import { GuildMemberWithUser } from "../../../types/members/guild_member.ts";
 import User from "./User.ts";
 
 export class Member extends Base {

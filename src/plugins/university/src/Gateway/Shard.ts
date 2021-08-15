@@ -1,11 +1,11 @@
-import { DiscordGatewayCloseEventCodes } from "../../../types/codes/gateway_close_event_codes.ts";
-import { DiscordGatewayOpcodes } from "../../../types/codes/gateway_opcodes.ts";
-import { GatewayPayload } from "../../../types/gateway/gateway_payload.ts";
-import { Hello } from "../../../types/gateway/hello.ts";
-import { Ready } from "../../../types/gateway/ready.ts";
-import { camelize, delay } from "../../../util/utils.ts";
-import { decompressWith } from "../../../ws/deps.ts";
-import { WebSocketRequest } from "../../../ws/ws.ts";
+import { DiscordGatewayCloseEventCodes } from "../../../../types/codes/gateway_close_event_codes.ts";
+import { DiscordGatewayOpcodes } from "../../../../types/codes/gateway_opcodes.ts";
+import { GatewayPayload } from "../../../../types/gateway/gateway_payload.ts";
+import { Hello } from "../../../../types/gateway/hello.ts";
+import { Ready } from "../../../../types/gateway/ready.ts";
+import { camelize, delay } from "../../../../util/utils.ts";
+import { decompressWith } from "../../../../ws/deps.ts";
+import { WebSocketRequest } from "../../../../ws/ws.ts";
 import Client from "../Client.ts";
 import GatewayEvents from "./Events.ts";
 

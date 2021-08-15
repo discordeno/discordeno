@@ -1,26 +1,26 @@
 import Base from "./Base.ts";
-import { Channel as ChannelPayload } from "../../types/channels/channel.ts";
+import { Channel as ChannelPayload } from "../../../types/channels/channel.ts";
 import Client from "./Client.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
-import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
-import { Collection } from "../../util/collection.ts";
+import { snowflakeToBigint } from "../../../util/bigint.ts";
+import { DiscordChannelTypes } from "../../../types/channels/channel_types.ts";
+import { Collection } from "../../../util/collection.ts";
 import Message from "./Message.ts";
-import { CreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
-import { calculatePermissions } from "../../util/permissions.ts";
-import { DiscordOverwrite, Overwrite } from "../../types/channels/overwrite.ts";
-import { PermissionStrings } from "../../types/permissions/permission_strings.ts";
-import { DiscordBitwisePermissionFlags } from "../../types/permissions/bitwise_permission_flags.ts";
-import { endpoints } from "../../util/constants.ts";
-import { hasOwnProperty, snakelize } from "../../util/utils.ts";
-import { PrivacyLevel } from "../../types/channels/privacy_level.ts";
-import { calculateBits } from "../../util/permissions.ts";
-import { Webhook } from "../../types/webhooks/webhook.ts";
-import { StageInstance } from "../../types/channels/stage_instance.ts";
-import { Message as MessagePayload } from "../../types/messages/message.ts";
-import { ModifyChannel } from "../../types/channels/modify_channel.ts";
-import { ModifyThread } from "../../types/channels/threads/modify_thread.ts";
-import { ListPublicArchivedThreads } from "../../types/channels/threads/list_public_archived_threads.ts";
-import { StartThread } from "../../types/channels/threads/start_thread.ts";
+import { CreateGuildChannel } from "../../../types/guilds/create_guild_channel.ts";
+import { calculatePermissions } from "../../../util/permissions.ts";
+import { DiscordOverwrite, Overwrite } from "../../../types/channels/overwrite.ts";
+import { PermissionStrings } from "../../../types/permissions/permission_strings.ts";
+import { DiscordBitwisePermissionFlags } from "../../../types/permissions/bitwise_permission_flags.ts";
+import { endpoints } from "../../../util/constants.ts";
+import { hasOwnProperty, snakelize } from "../../../util/utils.ts";
+import { PrivacyLevel } from "../../../types/channels/privacy_level.ts";
+import { calculateBits } from "../../../util/permissions.ts";
+import { Webhook } from "../../../types/webhooks/webhook.ts";
+import { StageInstance } from "../../../types/channels/stage_instance.ts";
+import { Message as MessagePayload } from "../../../types/messages/message.ts";
+import { ModifyChannel } from "../../../types/channels/modify_channel.ts";
+import { ModifyThread } from "../../../types/channels/threads/modify_thread.ts";
+import { ListPublicArchivedThreads } from "../../../types/channels/threads/list_public_archived_threads.ts";
+import { StartThread } from "../../../types/channels/threads/start_thread.ts";
 
 export class Channel extends Base {
   /** The guild id where this channel is located. If in a DM this is undefined. */
@@ -197,7 +197,7 @@ export class Channel extends Base {
     if (!this.parent) return false;
 
     return this.permissionOverwrites?.every((overwrite) => {
-      const permission = this.parent?.permissionOverwrites.find((ow) => ow.id === overwrite.id);
+      const permission = this.parent?.permissionOverwrites.find((ow) => ow.id === overwrite.id); 
       if (!permission) return false;
       return !(overwrite.allow !== permission.allow || overwrite.deny !== permission.deny);
     });

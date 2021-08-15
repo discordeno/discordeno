@@ -1,5 +1,5 @@
-import { Role as RolePayload } from "../../types/permissions/role.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { Role as RolePayload } from "../../../types/permissions/role.ts";
+import { snowflakeToBigint } from "../../../util/bigint.ts";
 import Base from "./Base.ts";
 import Client from "./Client.ts";
 

@@ -1,8 +1,8 @@
-import { DiscordPremiumTypes } from "../../types/users/premium_types.ts";
-import { User as UserPayload } from "../../types/users/user.ts";
-import { DiscordUserFlags } from "../../types/users/user_flags.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
-import { iconHashToBigInt } from "../../util/hash.ts";
+import { DiscordPremiumTypes } from "../../../types/users/premium_types.ts";
+import { User as UserPayload } from "../../../types/users/user.ts";
+import { DiscordUserFlags } from "../../../types/users/user_flags.ts";
+import { snowflakeToBigint } from "../../../util/bigint.ts";
+import { iconHashToBigInt } from "../../../util/hash.ts";
 import Base from "./Base.ts";
 import UserBitfield from "./Bitfields/User.ts";
 import Client from "./Client.ts";

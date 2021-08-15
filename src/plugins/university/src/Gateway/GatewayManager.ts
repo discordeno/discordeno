@@ -1,5 +1,5 @@
-import { GetGatewayBot } from "../../../types/gateway/get_gateway_bot.ts";
-import { Collection } from "../../../util/collection.ts";
+import { GetGatewayBot } from "../../../../types/gateway/get_gateway_bot.ts";
+import { Collection } from "../../../../util/collection.ts";
 import Client from "../Client.ts";
 import Shard from "./Shard.ts";
 

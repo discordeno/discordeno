@@ -1,10 +1,10 @@
-import { RestPayload, RestRequest } from "../../rest/rest.ts";
-import { ModifyChannel } from "../../types/channels/modify_channel.ts";
-import { DiscordHTTPResponseCodes } from "../../types/codes/http_response_codes.ts";
-import { FileContent } from "../../types/discordeno/file_content.ts";
-import { Collection } from "../../util/collection.ts";
-import { BASE_URL, IMAGE_BASE_URL, USER_AGENT } from "../../util/constants.ts";
-import { camelize, delay } from "../../util/utils.ts";
+import { RestPayload, RestRequest } from "../../../rest/rest.ts";
+import { ModifyChannel } from "../../../types/channels/modify_channel.ts";
+import { DiscordHTTPResponseCodes } from "../../../types/codes/http_response_codes.ts";
+import { FileContent } from "../../../types/discordeno/file_content.ts";
+import { Collection } from "../../../util/collection.ts";
+import { BASE_URL, IMAGE_BASE_URL, USER_AGENT } from "../../../util/constants.ts";
+import { camelize, delay } from "../../../util/utils.ts";
 import Client from "./Client.ts";
 
 export class RestManager {
