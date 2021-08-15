@@ -2,9 +2,14 @@ import { BotConfig } from "../../../bot.ts";
 import { PresenceUpdate } from "../../../types/activity/presence_update.ts";
 import { DiscordGatewayOpcodes } from "../../../types/codes/gateway_opcodes.ts";
 import { Errors } from "../../../types/discordeno/errors.ts";
+import { DiscoveryCategory } from "../../../types/discovery/discovery_category.ts";
+import { ValidateDiscoverySearchTerm } from "../../../types/discovery/validate_discovery_search_term.ts";
 import { Intents } from "../../../types/gateway/gateway_intents.ts";
 import { StatusUpdate } from "../../../types/gateway/status_update.ts";
+import { CreateGuild } from "../../../types/guilds/create_guild.ts";
+import { Guild as GuildPayload } from "../../../types/guilds/guild.ts";
 import { User } from "../../../types/users/user.ts";
+import { VoiceRegion } from "../../../types/voice/voice_region.ts";
 import { snowflakeToBigint } from "../../../util/bigint.ts";
 import { Collection } from "../../../util/collection.ts";
 import { endpoints } from "../../../util/constants.ts";
@@ -270,6 +275,69 @@ export class Client extends EventEmitter {
   /** This function will return the raw user payload in the rare cases you need to fetch a user directly from the API. */
   async getUser(userId: bigint) {
     return (await this.rest.get(endpoints.USER(userId))) as User;
+  }
+
+  /** Returns a Collection (mapped by Id of the discovery category object) of discovery category objects that can be used when editing guilds */
+  async getDiscoveryCategories() {
+    const result = (await this.rest.get(endpoints.DISCOVERY_CATEGORIES)) as DiscoveryCategory[];
+
+    return new Collection<number, DiscoveryCategory>(result.map((category) => [category.id, category]));
+  }
+
+  async validDiscoveryTerm(term: string) {
+    const result = (await this.rest.get(endpoints.DISCOVERY_VALID_TERM, {
+      term,
+    })) as ValidateDiscoverySearchTerm;
+
+    return result.valid;
+  }
+
+  /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
+  async createGuild(options: CreateGuild) {
+    const result = (await this.rest.post(
+      endpoints.GUILDS,
+      snakelize(options)
+    )) as GuildPayload;
+
+    const guild = new Guild(this, result, 0);
+    this.guilds.set(guild.id, guild);
+    // MANUALLY CACHE THE BOT
+    await guild.fetchMember(this.id);
+
+    return guild;
+  }
+
+   /** Returns an array of voice regions that can be used when creating servers. */
+   async getAvailableVoiceRegions() {
+    return (await this.rest.get(endpoints.VOICE_REGIONS)) as VoiceRegion;
+  }
+
+  /**
+   * ⚠️ **If you need this, you are probably doing something wrong. Always use client.guilds.get()
+   *
+   * Advanced Devs:
+   * This function fetches a guild's data. This is not the same data as a GUILD_CREATE.
+   * So it does not cache the guild, you must do it manually.
+   * */
+   async fetchGuild(
+    guildId: bigint,
+    options: { counts?: boolean; } = {
+      counts: true,
+    }
+  ) {
+    const result = (await this.rest.get(endpoints.GUILDS_BASE(guildId), {
+      with_counts: options.counts,
+    })) as GuildPayload;
+
+    const guild = new Guild(
+      this,
+      result,
+      Number((BigInt(guildId) >> 22n) % BigInt(this.gateway.botGatewayData.shards))
+    );
+
+    this.guilds.set(guild.id, guild);
+
+    return guild;
   }
 }
 
