@@ -1,4 +1,4 @@
-export * from './src/mod.ts';
+export * from "./src/mod.ts";
 export * from "../../util/mod.ts";
 
 export * from "../../types/activity/mod.ts";
