@@ -59,3 +59,8 @@ export interface Channel {
   /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
   defaultAutoArchiveDuration?: number;
 }
+
+export interface InteractionChannel extends Channel {
+  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a slash command interaction */
+  permissions: string;
+}
