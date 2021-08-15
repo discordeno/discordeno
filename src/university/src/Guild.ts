@@ -127,7 +127,7 @@ export class Guild extends Base {
    *
    * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your channels will be cached in your guild.**
    */
-   async fetchChannel(channelId: bigint) {
+  async fetchChannel(channelId: bigint) {
     const result = await this.client.rest.get(endpoints.CHANNEL_BASE(channelId));
 
     const channel = new Channel(this.client, result);

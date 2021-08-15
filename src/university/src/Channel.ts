@@ -231,7 +231,7 @@ export class Channel extends Base {
   /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
   async edit(options: ModifyChannel | ModifyThread, reason?: string, channelId?: bigint) {
     if (!channelId) channelId = this.id;
-    
+
     if (options.name || (options as ModifyChannel).topic) {
       const request = this.client.rest.editChannelNameTopicQueue.get(channelId);
       if (!request) {
@@ -250,7 +250,7 @@ export class Channel extends Base {
       } else {
         return new Promise((resolve, reject) => {
           // 2 have already been used add to queue
-          request.items.push({ channelId: channelId!, reason, options, resolve, reject }); 
+          request.items.push({ channelId: channelId!, reason, options, resolve, reject });
           if (this.client.rest.editChannelProcessing) return;
           this.client.rest.editChannelProcessing = true;
           this.processEditChannelQueue();
@@ -318,9 +318,7 @@ export class Channel extends Base {
   }
 
   async addToThread(userId?: bigint) {
-    return await this.client.rest.put(
-      userId ? endpoints.THREAD_USER(this.id, userId) : endpoints.THREAD_ME(this.id)
-    );
+    return await this.client.rest.put(userId ? endpoints.THREAD_USER(this.id, userId) : endpoints.THREAD_ME(this.id));
   }
 
   /** Returns all active threads in the channel, including public and private threads. Threads are ordered by their id, in descending order. Requires the READ_MESSAGE_HISTORY permission. */

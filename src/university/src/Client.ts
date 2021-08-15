@@ -253,7 +253,7 @@ export class Client extends EventEmitter {
   }
 
   editBotStatus(data: Omit<StatusUpdate, "afk" | "since">) {
-    this.gateway.forEach((shard) => { 
+    this.gateway.forEach((shard) => {
       this.emit("DEBUG", "loop", `Running forEach loop in editBotStatus function.`);
 
       shard.sendShardMessage({
