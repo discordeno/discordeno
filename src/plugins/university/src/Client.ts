@@ -294,10 +294,7 @@ export class Client extends EventEmitter {
 
   /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
   async createGuild(options: CreateGuild) {
-    const result = (await this.rest.post(
-      endpoints.GUILDS,
-      snakelize(options)
-    )) as GuildPayload;
+    const result = (await this.rest.post(endpoints.GUILDS, snakelize(options))) as GuildPayload;
 
     const guild = new Guild(this, result, 0);
     this.guilds.set(guild.id, guild);
@@ -307,8 +304,8 @@ export class Client extends EventEmitter {
     return guild;
   }
 
-   /** Returns an array of voice regions that can be used when creating servers. */
-   async getAvailableVoiceRegions() {
+  /** Returns an array of voice regions that can be used when creating servers. */
+  async getAvailableVoiceRegions() {
     return (await this.rest.get(endpoints.VOICE_REGIONS)) as VoiceRegion;
   }
 
@@ -319,9 +316,9 @@ export class Client extends EventEmitter {
    * This function fetches a guild's data. This is not the same data as a GUILD_CREATE.
    * So it does not cache the guild, you must do it manually.
    * */
-   async fetchGuild(
+  async fetchGuild(
     guildId: bigint,
-    options: { counts?: boolean; } = {
+    options: { counts?: boolean } = {
       counts: true,
     }
   ) {
