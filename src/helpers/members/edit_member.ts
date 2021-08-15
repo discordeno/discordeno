@@ -52,10 +52,7 @@ export async function editMember(guildId: bigint, memberId: bigint, options: Mod
   const result = await rest.runMethod<GuildMemberWithUser>(
     "patch",
     endpoints.GUILD_MEMBER(guildId, memberId),
-    snakelize({
-      ...options,
-      channelId: options.channelId ? bigintToSnowflake(options.channelId) : options.channelId,
-    }) as ModifyGuildMember
+    snakelize(options) as ModifyGuildMember
   );
 
   const member = await structures.createDiscordenoMember(result, guildId);
