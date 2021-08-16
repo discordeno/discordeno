@@ -11,7 +11,7 @@ import { DiscordOverwrite, Overwrite } from "../../../types/channels/overwrite.t
 import { PermissionStrings } from "../../../types/permissions/permission_strings.ts";
 import { DiscordBitwisePermissionFlags } from "../../../types/permissions/bitwise_permission_flags.ts";
 import { endpoints } from "../../../util/constants.ts";
-import { hasOwnProperty, snakelize } from "../../../util/utils.ts";
+import { hasOwnProperty, snakelize, urlToBase64 } from "../../../util/utils.ts";
 import { PrivacyLevel } from "../../../types/channels/privacy_level.ts";
 import { calculateBits } from "../../../util/permissions.ts";
 import { Webhook } from "../../../types/webhooks/webhook.ts";
@@ -21,6 +21,17 @@ import { ModifyChannel } from "../../../types/channels/modify_channel.ts";
 import { ModifyThread } from "../../../types/channels/threads/modify_thread.ts";
 import { ListPublicArchivedThreads } from "../../../types/channels/threads/list_public_archived_threads.ts";
 import { StartThread } from "../../../types/channels/threads/start_thread.ts";
+import { CreateChannelInvite } from "../../../types/invites/create_channel_invite.ts";
+import { InviteMetadata } from "../../../types/invites/invite_metadata.ts";
+import { GetInvite } from "../../../types/invites/get_invite.ts";
+import {
+  GetMessagesAfter,
+  GetMessagesBefore,
+  GetMessagesAround,
+  GetMessagesLimit,
+} from "../../../types/messages/get_messages.ts";
+import { CreateMessage } from "../../../types/messages/create_message.ts";
+import { CreateWebhook } from "../../../types/webhooks/create_webhook.ts";
 
 export class Channel extends Base {
   /** The guild id where this channel is located. If in a DM this is undefined. */
@@ -197,7 +208,7 @@ export class Channel extends Base {
     if (!this.parent) return false;
 
     return this.permissionOverwrites?.every((overwrite) => {
-      const permission = this.parent?.permissionOverwrites.find((ow) => ow.id === overwrite.id); 
+      const permission = this.parent?.permissionOverwrites.find((ow) => ow.id === overwrite.id);
       if (!permission) return false;
       return !(overwrite.allow !== permission.allow || overwrite.deny !== permission.deny);
     });
@@ -365,6 +376,105 @@ export class Channel extends Base {
       snakelize(options)
     );
   }
+
+  /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
+  async createInvite(options: CreateChannelInvite = {}) {
+    return (await this.client.rest.post(endpoints.CHANNEL_INVITES(this.id), snakelize(options))) as InviteMetadata;
+  }
+
+  /** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
+  async deleteInvite(inviteCode: string) {
+    return (await this.client.rest.delete(endpoints.INVITE(inviteCode))) as InviteMetadata;
+  }
+
+  /** Gets the invites for this channel. Requires MANAGE_CHANNEL */
+  async fetchInvites() {
+    const result = (await this.client.rest.get(endpoints.CHANNEL_INVITES(this.id))) as InviteMetadata[];
+
+    return new Collection(result.map((invite) => [invite.code, invite]));
+  }
+
+  /** Returns an invite for the given code or throws an error if the invite doesn't exists. */
+  async getInvite(inviteCode: string, options?: GetInvite) {
+    return (await this.client.rest.get(endpoints.INVITE(inviteCode), snakelize(options ?? {}))) as InviteMetadata;
+  }
+
+  /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */
+  async deleteMessages(ids: bigint[], reason?: string) {
+    if (ids.length > 100) {
+      console.warn(
+        `This endpoint only accepts a maximum of 100 messages. Deleting the first 100 message ids provided.`
+      );
+    }
+
+    return await this.client.rest.post(endpoints.CHANNEL_BULK_DELETE(this.id), {
+      messages: ids.splice(0, 100),
+      reason,
+    });
+  }
+
+  /** Fetch a single message from the server. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
+  async fetchMessage(id: bigint) {
+    const result = (await this.client.rest.get(endpoints.CHANNEL_MESSAGE(this.id, id))) as MessagePayload;
+
+    const message = new Message(this.client, result);
+    this.messages.set(message.id, message);
+
+    return message;
+  }
+
+  /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
+  async fetchMessages(options?: GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit) {
+    const result = (await this.client.rest.get(endpoints.CHANNEL_MESSAGES(this.id), options)) as MessagePayload[];
+
+    return new Collection<bigint, Message>(
+      result.map((res) => {
+        const message = new Message(this.client, res);
+        this.messages.set(message.id, message);
+        return [message.id, message];
+      })
+    );
+  }
+
+  /** Send a message to the channel. Requires SEND_MESSAGES permission. */
+  async sendMessage(content: string | CreateMessage) {
+    if (typeof content === "string") content = { content };
+    if (Array.isArray(content)) content = { embeds: content };
+
+    const result = (await this.client.rest.post(
+      endpoints.CHANNEL_MESSAGES(this.id),
+      snakelize({
+        ...content,
+        ...(content.messageReference?.messageId
+          ? {
+              messageReference: {
+                ...content.messageReference,
+                failIfNotExists: content.messageReference.failIfNotExists === true,
+              },
+            }
+          : {}),
+      })
+    )) as MessagePayload;
+
+    const message = new Message(this.client, result);
+    this.messages.set(message.id, message);
+
+    return message;
+  }
+
+  /**
+   * Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
+   *
+   * Webhook names cannot be: 'clyde'
+   */
+  async createWebhook(options: CreateWebhook) {
+    return (await this.client.rest.post(endpoints.CHANNEL_WEBHOOKS(this.id), {
+      ...options,
+      avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
+    })) as Webhook;
+  }
+
+
 }
 
 export default Channel;

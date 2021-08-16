@@ -1,7 +1,7 @@
 import Base from "./Base.ts";
 import Client from "./Client.ts";
 
-import { snowflakeToBigint } from "../../../util/bigint.ts";
+import { bigintToSnowflake, snowflakeToBigint } from "../../../util/bigint.ts";
 import { Guild as GuildPayload } from "../../../types/guilds/guild.ts";
 import { Collection } from "../../../util/collection.ts";
 import Channel from "./Channel.ts";
@@ -38,6 +38,23 @@ import { iconBigintToHash } from "../../../util/hash.ts";
 import { DiscordImageSize } from "../../../types/misc/image_size.ts";
 import { DiscordImageFormat } from "../../../types/misc/image_format.ts";
 import { Integration } from "../../../types/integrations/integration.ts";
+import { ApplicationCommandPermissions } from "../../../types/interactions/commands/application_command_permissions.ts";
+import { CreateGlobalApplicationCommand } from "../../../types/interactions/commands/create_global_application_command.ts";
+import { ApplicationCommand } from "../../../types/interactions/commands/application_command.ts";
+import { GuildApplicationCommandPermissions } from "../../../types/interactions/commands/guild_application_command_permissions.ts";
+import { EditGlobalApplicationCommand } from "../../../types/interactions/commands/edit_global_application_command.ts";
+import { CreateGuildBan } from "../../../types/guilds/create_guild_ban.ts";
+import { RequestGuildMembers } from "../../../types/members/request_guild_members.ts";
+import { DiscordGatewayOpcodes } from "../../../types/codes/gateway_opcodes.ts";
+import { GuildMemberWithUser } from "../../../types/members/guild_member.ts";
+import { ListGuildMembers } from "../../../types/members/list_guild_members.ts";
+import { SearchGuildMembers } from "../../../types/members/search_guild_members.ts";
+import { BeginGuildPrune } from "../../../types/guilds/begin_guild_prune.ts";
+import { CreateGuildRole } from "../../../types/guilds/create_guild_role.ts";
+import { Role as RolePayload } from "../../../types/permissions/role.ts";
+import { Template } from "../../../types/templates/template.ts";
+import { ModifyGuildTemplate } from "../../../types/templates/modify_guild_template.ts";
+import { Webhook } from "../../../types/webhooks/webhook.ts";
 
 export class Guild extends Base {
   /** The channels available in this guild. */
@@ -77,7 +94,7 @@ export class Guild extends Base {
       payload.voiceStates?.map((vs) => [snowflakeToBigint(vs.userId), new VoiceState(client, vs)]) || []
     );
 
-    this.roles = new Collection(payload.roles?.map((r) => [snowflakeToBigint(r.id), new Role(client, r)]) || []);
+    this.roles = new Collection(payload.roles?.map((r) => [snowflakeToBigint(r.id), new Role(client, r, this)]) || []);
   }
 
   /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
@@ -413,5 +430,346 @@ export class Guild extends Base {
   /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
   async getIntegrations() {
     return (await this.client.rest.get(endpoints.GUILD_INTEGRATIONS(this.id))) as Integration;
+  }
+
+  /** Batch edits permissions for all commands in a guild. Takes an array of partial GuildApplicationCommandPermissions objects including `id` and `permissions`. */
+  async batchEditSlashCommandPermissions(options: { id: string; permissions: ApplicationCommandPermissions[] }[]) {
+    return await this.client.rest.put(
+      endpoints.COMMANDS_PERMISSIONS(this.client.applicationId, this.id),
+      snakelize(options)
+    );
+  }
+
+  /** Create a guild slash command */
+  async createSlashCommand(options: CreateGlobalApplicationCommand) {
+    return (await this.client.rest.post(
+      endpoints.COMMANDS_GUILD(this.client.applicationId, this.id),
+      snakelize(options)
+    )) as ApplicationCommand;
+  }
+
+  /** Deletes a slash command. */
+  async deleteSlashCommand(id: bigint) {
+    return await this.client.rest.delete(endpoints.COMMANDS_GUILD_ID(this.client.applicationId, this.id, id));
+  }
+
+  /** Edits command permissions for a specific command for your application in a guild. */
+  async editSlashCommandPermissions(commandId: bigint, options: ApplicationCommandPermissions[]) {
+    return await this.client.rest.put(endpoints.COMMANDS_PERMISSION(this.client.applicationId, this.id, commandId), {
+      permissions: snakelize(options),
+    });
+  }
+
+  /** Fetchs the guild command. */
+  async getSlashCommand(commandId: bigint) {
+    const result = (await this.client.rest.get(
+      endpoints.COMMANDS_GUILD_ID(this.client.applicationId, this.id, commandId)
+    )) as ApplicationCommand;
+
+    return {
+      ...result,
+      id: snowflakeToBigint(result.id),
+      applicationId: snowflakeToBigint(result.applicationId),
+    };
+  }
+
+  /** Fetches command permissions for a specific command for your application in a guild. Returns a GuildApplicationCommandPermissions object. */
+  async getSlashCommandPermission(commandId: bigint) {
+    return (await this.client.rest.get(
+      endpoints.COMMANDS_PERMISSION(this.client.applicationId, this.id, commandId)
+    )) as GuildApplicationCommandPermissions;
+  }
+
+  /** Fetches command permissions for all commands for your application in a guild. Returns an array of GuildApplicationCommandPermissions objects. */
+  async getSlashCommandPermissions() {
+    return (await this.client.rest.get(
+      endpoints.COMMANDS_PERMISSIONS(this.client.applicationId, this.id)
+    )) as GuildApplicationCommandPermissions[];
+  }
+
+  /** Fetch all of the guild commands for your application. */
+  async getSlashCommands() {
+    const result = (await this.client.rest.get(
+      endpoints.COMMANDS_GUILD(this.client.applicationId, this.id)
+    )) as ApplicationCommand[];
+
+    return new Collection(
+      result.map((command) => [
+        command.name,
+        {
+          ...command,
+          id: snowflakeToBigint(command.id),
+          applicationId: snowflakeToBigint(command.applicationId),
+        },
+      ])
+    );
+  }
+
+  /**
+   * Edit an existing slash command. If this command did not exist, it will create it.
+   */
+  async upsertSlashCommand(commandId: bigint, options: EditGlobalApplicationCommand) {
+    return (await this.client.rest.patch(
+      endpoints.COMMANDS_GUILD_ID(this.client.applicationId, this.id, commandId),
+      options
+    )) as ApplicationCommand;
+  }
+
+  /**
+   * Bulk edit existing slash commands. If a command does not exist, it will create it.
+   *
+   * **NOTE:** Any slash commands that are not specified in this function will be **deleted**. If you don't provide the commandId and rename your command, the command gets a new Id.
+   */
+  async upsertSlashCommands(options: EditGlobalApplicationCommand[]) {
+    return (await this.client.rest.put(
+      endpoints.COMMANDS_GUILD(this.client.applicationId, this.id),
+      options
+    )) as ApplicationCommand[];
+  }
+
+  /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
+  async fetchInvites() {
+    const result = (await this.client.rest.get(endpoints.GUILD_INVITES(this.id))) as InviteMetadata[];
+
+    return new Collection(result.map((invite) => [invite.code, invite]));
+  }
+
+  /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
+  async ban(id: bigint, options: CreateGuildBan) {
+    return await this.client.rest.put(endpoints.GUILD_BAN(this.id, id), snakelize(options));
+  }
+
+  /** Kick a member from the server */
+  async kick(memberId: bigint, reason?: string) {
+    return await this.client.rest.delete(endpoints.GUILD_MEMBER(this.id, memberId), { reason });
+  }
+
+  /** Edit the nickname of the bot in this guild */
+  async editBotNickname(nickname: string | null) {
+    const response = (await this.client.rest.patch(endpoints.USER_NICK(this.id), {
+      nick: nickname,
+    })) as { nick: string };
+
+    return response.nick;
+  }
+
+  /**
+   * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM this.client.members.get()
+   *
+   * ADVANCED:
+   * Highly recommended to use this function to fetch members instead of getMember from REST.
+   * REST: 50/s global(across all shards) rate limit with ALL requests this included
+   * GW(this function): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is now 960/m.
+   */
+  fetchMembers(options?: Omit<RequestGuildMembers, "guildId">) {
+    if (options?.userIds?.length) {
+      options.limit = options.userIds.length;
+    }
+
+    return new Promise((resolve) => {
+      const nonce = `${this.id}-${Date.now()}`;
+      this.client.fetchAllMembersProcessingRequests.set(nonce, resolve);
+
+      this.client.gateway.get(this.shardId)?.sendShardMessage({
+        op: DiscordGatewayOpcodes.RequestGuildMembers,
+        d: {
+          guild_id: this.id,
+          // If a query is provided use it, OR if a limit is NOT provided use ""
+          query: options?.query || (options?.limit ? undefined : ""),
+          limit: options?.limit || 0,
+          presences: options?.presences || false,
+          user_ids: options?.userIds,
+          nonce,
+        },
+      });
+    }) as Promise<Collection<bigint, Member>>;
+  }
+
+  /** Returns a guild member object for the specified user.
+   *
+   * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
+   */
+  async fetchMember(id: bigint) {
+    const data = (await this.client.rest.get(endpoints.GUILD_MEMBER(this.id, id))) as GuildMemberWithUser;
+
+    const member = new Member(this.client, data, this.id);
+    this.members.set(member.id, member);
+
+    return member;
+  }
+
+  /**
+   * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM this.client.members.get()
+   *
+   * ADVANCED:
+   * Highly recommended to **NOT** use this function to get members instead use fetchMembers().
+   * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
+   * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
+   */
+  async fetchMembersUsingRest(options?: ListGuildMembers) {
+    const members = new Collection<bigint, Member>();
+
+    let membersLeft = options?.limit ?? this.memberCount;
+    let loops = 1;
+    while ((options?.limit ?? this.memberCount) > members.size && membersLeft > 0) {
+      this.client.emit("DEBUG", "loop", "Running while loop in getMembers function.");
+
+      if (options?.limit && options.limit > 1000) {
+        console.log(`Paginating get members from REST. #${loops} / ${Math.ceil((options?.limit ?? 1) / 1000)}`);
+      }
+
+      const result = (await this.client.rest.get(
+        `${endpoints.GUILD_MEMBERS(this.id)}?limit=${membersLeft > 1000 ? 1000 : membersLeft}${
+          options?.after ? `&after=${options.after}` : ""
+        }`
+      )) as GuildMemberWithUser[];
+
+      const discordenoMembers = result.map((member) => {
+        const discordenoMember = new Member(this.client, member, this.id);
+        this.members.set(discordenoMember.id, discordenoMember);
+
+        return discordenoMember;
+      });
+
+      if (!discordenoMembers.length) break;
+
+      discordenoMembers.forEach((member) => {
+        this.client.emit("DEBUG", "loop", `Running forEach loop in get_members file.`);
+        members.set(member.id, member);
+      });
+
+      options = {
+        limit: options?.limit,
+        after: bigintToSnowflake(discordenoMembers[discordenoMembers.length - 1].id),
+      };
+
+      membersLeft -= 1000;
+
+      loops++;
+    }
+
+    return members;
+  }
+
+  /**
+   * Begin a prune operation. Requires the KICK_MEMBERS permission. Returns an object with one 'pruned' key indicating the number of members that were removed in the prune operation. For large guilds it's recommended to set the computePruneCount option to false, forcing 'pruned' to null. Fires multiple Guild Member Remove Gateway events.
+   *
+   * By default, prune will not remove users with roles. You can optionally include specific roles in your prune by providing the roles (resolved to include_roles internally) parameter. Any inactive user that has a subset of the provided role(s) will be included in the prune and users with additional roles will not.
+   */
+  async pruneMembers(options: BeginGuildPrune) {
+    const result = (await this.client.rest.post(endpoints.GUILD_PRUNE(this.id), snakelize(options))) as {
+      pruned: number;
+    };
+
+    return result.pruned;
+  }
+
+  /**
+   * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM this.client.members.filter()
+   * @param query Query string to match username(s) and nickname(s) against
+   */
+  async searchMembers(query: string, options?: Omit<SearchGuildMembers, "query"> & { cache?: boolean }) {
+    const result = (await this.client.rest.get(endpoints.GUILD_MEMBERS_SEARCH(this.id), {
+      ...options,
+      query,
+    })) as GuildMemberWithUser[];
+
+    return new Collection<bigint, Member>(
+      result.map((member) => {
+        const discordenoMember = new Member(this.client, member, this.id);
+        this.members.set(discordenoMember.id, discordenoMember);
+
+        return [discordenoMember.id, discordenoMember];
+      })
+    );
+  }
+
+  /** Remove the ban for a user. Requires BAN_MEMBERS permission */
+  async unban(id: bigint) {
+    return await this.client.rest.delete(endpoints.GUILD_BAN(this.id, id));
+  }
+
+  /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
+  async createRole(options: CreateGuildRole, reason?: string) {
+    const result = (await this.client.rest.post(endpoints.GUILD_ROLES(this.id), {
+      ...options,
+      permissions: calculateBits(options?.permissions || []),
+      reason,
+    })) as RolePayload;
+
+    const role = new Role(this.client, result, this);
+    this.roles.set(role.id, role);
+
+    return role;
+  }
+
+  /** Returns a list of role objects for the guild.
+   *
+   * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your roles will be cached in your guild.**
+   */
+  async fetchRoles() {
+    const result = (await this.client.rest.get(endpoints.GUILD_ROLES(this.id))) as RolePayload[];
+
+    return new Collection<bigint, Role>(
+      result.map((res) => {
+        const role = new Role(this.client, res, this);
+        this.roles.set(role.id, role);
+
+        return [role.id, role];
+      })
+    );
+  }
+
+  /**
+   * Creates a template for the guild.
+   * Requires the `MANAGE_GUILD` permission.
+   * name of the template (1-100 characters).
+   * description for the template (0-120 characters
+   */
+  async createTemplate(data: Template) {
+    return (await this.client.rest.post(endpoints.GUILD_TEMPLATES(this.id), snakelize(data))) as Template;
+  }
+
+  /**
+   * Deletes a template from a guild.
+   * Requires the `MANAGE_GUILD` permission.
+   */
+  async deleteTemplate(templateCode: string) {
+    return await this.client.rest.delete(`${endpoints.GUILD_TEMPLATES(this.id)}/${templateCode}`);
+  }
+
+  /**
+   * Edit a template's metadata.
+   * Requires the `MANAGE_GUILD` permission.
+   */
+  async editTemplate(templateCode: string, data: ModifyGuildTemplate) {
+    return (await this.client.rest.patch(`${endpoints.GUILD_TEMPLATES(this.id)}/${templateCode}`, data)) as Template;
+  }
+
+  /**
+   * Returns an array of templates.
+   * Requires the `MANAGE_GUILD` permission.
+   */
+  async fetchTemplates() {
+    const templates = (await this.client.rest.get(endpoints.GUILD_TEMPLATES(this.id))) as Template[];
+
+    return new Collection(templates.map((template) => [template.code, template]));
+  }
+
+  /**
+   * Syncs the template to the guild's current state.
+   * Requires the `MANAGE_GUILD` permission.
+   */
+  async syncTemplate(templateCode: string) {
+    return (await this.client.rest.put(`${endpoints.GUILD_TEMPLATES(this.id)}/${templateCode}`)) as Template;
+  }
+
+  /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
+  async fetchWebhooks() {
+    const result = (await this.client.rest.get(
+      endpoints.GUILD_WEBHOOKS(this.id)
+    )) as Webhook[];
+
+    return new Collection(result.map((webhook) => [webhook.id, webhook]));
   }
 }

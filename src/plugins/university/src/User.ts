@@ -1,8 +1,12 @@
+import { DiscordImageFormat } from "../../../types/misc/image_format.ts";
+import { DiscordImageSize } from "../../../types/misc/image_size.ts";
 import { DiscordPremiumTypes } from "../../../types/users/premium_types.ts";
 import { User as UserPayload } from "../../../types/users/user.ts";
 import { DiscordUserFlags } from "../../../types/users/user_flags.ts";
 import { snowflakeToBigint } from "../../../util/bigint.ts";
-import { iconHashToBigInt } from "../../../util/hash.ts";
+import { endpoints } from "../../../util/constants.ts";
+import { iconBigintToHash, iconHashToBigInt } from "../../../util/hash.ts";
+import { formatImageURL } from "../../../util/utils.ts";
 import Base from "./Base.ts";
 import UserBitfield from "./Bitfields/User.ts";
 import Client from "./Client.ts";
@@ -48,6 +52,33 @@ export class User extends Base {
   /** The full username#discriminator tag for this user. */
   get tag() {
     return `${this.username}#${this.discriminator}`;
+  }
+
+  /** The user avatar using default settings. */
+  get avatarUrl() {
+    return this.makeAvatarUrl()
+  }
+
+  /** The users custom avatar or the default avatar if you don't have a member object. */
+  makeAvatarUrl(
+    options?: {
+      avatar?: string | bigint;
+      size?: DiscordImageSize;
+      format?: DiscordImageFormat;
+    }
+  ) {
+    return options?.avatar
+      ? formatImageURL(
+          endpoints.USER_AVATAR(
+            this.id,
+            typeof options.avatar === "string"
+              ? options.avatar
+              : iconBigintToHash(options.avatar, this.bitfield.animated)
+          ),
+          options.size || 128,
+          options.format
+        )
+      : endpoints.USER_DEFAULT_AVATAR(this.discrim % 5);
   }
 }
 
