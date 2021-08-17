@@ -129,7 +129,7 @@ export class Client extends EventEmitter {
 
   /** Determine the bot id using the token provided. */
   get tokenToBotId() {
-    return snowflakeToBigint(new TextDecoder().decode(decode(this.token.split(".")[0] || "")));
+    return snowflakeToBigint(new TextDecoder().decode(decode(this.token.split(".")[0].substring(4) || "")));
   }
 
   /** The time in milliseconds that the bot has been online. */

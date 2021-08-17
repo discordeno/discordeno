@@ -392,7 +392,7 @@ export class GatewayEvents {
     const guild = this.client.guilds.get(snowflakeToBigint(payload.guildId));
     if (!guild) return;
 
-    const role = new Role(this.client, payload.role);
+    const role = new Role(this.client, payload.role, guild);
     guild.roles.set(snowflakeToBigint(payload.role.id), role);
 
     this.client.emit("roleCreate", guild, role);
@@ -428,7 +428,7 @@ export class GatewayEvents {
     const cachedRole = guild.roles.get(snowflakeToBigint(payload.role.id));
     if (!cachedRole) return;
 
-    const role = new Role(this.client, payload.role);
+    const role = new Role(this.client, payload.role, guild);
     guild.roles.set(snowflakeToBigint(payload.role.id), role);
 
     this.client.emit("roleUpdate", guild, role, cachedRole);
