@@ -43,7 +43,14 @@ import { Collection } from "../../../util/collection.ts";
 import { endpoints } from "../../../util/constants.ts";
 import { snakelize, urlToBase64 } from "../../../util/utils.ts";
 import { EventEmitter, decode, GenericFunction, WrappedFunction } from "../deps.ts";
-import { IntegrationCreateUpdate, IntegrationDelete, StageInstance, ThreadMember, ThreadMembersUpdate, VoiceStatePayload } from "../mod.ts";
+import {
+  IntegrationCreateUpdate,
+  IntegrationDelete,
+  StageInstance,
+  ThreadMember,
+  ThreadMembersUpdate,
+  VoiceStatePayload,
+} from "../mod.ts";
 import Channel from "./Channel.ts";
 import { GatewayManager } from "./Gateway/GatewayManager.ts";
 import { Guild } from "./Guild.ts";
@@ -656,7 +663,10 @@ export class Client extends EventEmitter {
   on(event: "guildAvailable", listener: (guild: Guild) => unknown): this;
   on(event: "guildCreate", listener: (guild: Guild) => unknown): this;
   on(event: "guildDelete", listener: (guild: Guild) => unknown): this;
-  on(event: "guildEmojisUpdate", listener: (guild: Guild, emojis: Collection<bigint, Emoji>, oldEmojis: Collection<bigint, Emoji>) => unknown): this;
+  on(
+    event: "guildEmojisUpdate",
+    listener: (guild: Guild, emojis: Collection<bigint, Emoji>, oldEmojis: Collection<bigint, Emoji>) => unknown
+  ): this;
   on(event: "guildIntegrationsUpdate", listener: (guild: Guild) => unknown): this;
   on(event: "guildLoaded", listener: (guild: Guild) => unknown): this;
   on(event: "guildMemberAdd", listener: (guild: Guild, member: Member) => unknown): this;
@@ -674,13 +684,22 @@ export class Client extends EventEmitter {
   on(event: "integrationDelete", listener: (payload: IntegrationDelete) => unknown): this;
   on(event: "integrationUpdate", listener: (payload: IntegrationCreateUpdate) => unknown): this;
   on(event: "interactionDMCreate", listener: (payload: ApplicationCommand | Button | Dropdown) => unknown): this;
-  on(event: "interactionGuildCreate", listener: (payload: ApplicationCommand | Button | Dropdown, member: Member) => unknown): this;
-  on(event: "interactionCreate", listener: (payload: ApplicationCommand | Button | Dropdown, member?: Member) => unknown): this;
+  on(
+    event: "interactionGuildCreate",
+    listener: (payload: ApplicationCommand | Button | Dropdown, member: Member) => unknown
+  ): this;
+  on(
+    event: "interactionCreate",
+    listener: (payload: ApplicationCommand | Button | Dropdown, member?: Member) => unknown
+  ): this;
   on(event: "membershipScreeningPassed", listener: (guild: Guild, member: Member) => unknown): this;
   on(event: "messageCreate", listener: (message: Message) => unknown): this;
-  on(event: "messageDelete", listener: (payload: { id: bigint, channel: Channel } , message?: Message) => unknown): this;
+  on(event: "messageDelete", listener: (payload: { id: bigint; channel: Channel }, message?: Message) => unknown): this;
   on(event: "messageUpdate", listener: (message: Message, oldMessage: Message) => unknown): this;
-  on(event: "nicknameUpdate", listener: (guild: Guild, member: Member, nickname: string, oldNickname: string) => unknown): this;
+  on(
+    event: "nicknameUpdate",
+    listener: (guild: Guild, member: Member, nickname: string, oldNickname: string) => unknown
+  ): this;
   on(event: "presenceUpdate", listener: (presence: PresenceUpdate, oldPresence?: PresenceUpdate) => unknown): this;
   on(event: "raw", listener: (payload: GatewayPayload) => unknown): this;
   on(event: "reactionAdd", listener: (payload: MessageReactionAdd, message?: Message) => unknown): this;
@@ -700,7 +719,10 @@ export class Client extends EventEmitter {
   on(event: "stageInstanceUpdate", listener: (payload: StageInstance) => unknown): this;
   on(event: "threadCreate", listener: (channel: Channel) => unknown): this;
   on(event: "threadDelete", listener: (channel: Channel) => unknown): this;
-  on(event: "threadListSync", listener: (threads: Collection<bigint, Channel>, members: ThreadMember[], guildId: bigint) => unknown): this;
+  on(
+    event: "threadListSync",
+    listener: (threads: Collection<bigint, Channel>, members: ThreadMember[], guildId: bigint) => unknown
+  ): this;
   on(event: "threadMembersUpdate", listener: (payload: ThreadMembersUpdate) => unknown): this;
   on(event: "threadMemberUpdate", listener: (payload: ThreadMember) => unknown): this;
   on(event: "threadUpdate", listener: (thread: Channel, oldThread: Channel) => unknown): this;
