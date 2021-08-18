@@ -1,5 +1,6 @@
 import { BotConfig } from "../../../bot.ts";
 import { verify } from "../../../interactions/deps.ts";
+import { RestPayload } from "../../../rest/rest.ts";
 import { PresenceUpdate } from "../../../types/activity/presence_update.ts";
 import { DiscordGatewayOpcodes } from "../../../types/codes/gateway_opcodes.ts";
 import { DiscordenoEditWebhookMessage } from "../../../types/discordeno/edit_webhook_message.ts";
@@ -7,22 +8,32 @@ import { Errors } from "../../../types/discordeno/errors.ts";
 import { DiscordenoInteractionResponse } from "../../../types/discordeno/interaction_response.ts";
 import { DiscoveryCategory } from "../../../types/discovery/discovery_category.ts";
 import { ValidateDiscoverySearchTerm } from "../../../types/discovery/validate_discovery_search_term.ts";
+import { Emoji } from "../../../types/emojis/emoji.ts";
 import { Intents } from "../../../types/gateway/gateway_intents.ts";
+import { GatewayPayload } from "../../../types/gateway/gateway_payload.ts";
 import { StatusUpdate } from "../../../types/gateway/status_update.ts";
 import { CreateGuild } from "../../../types/guilds/create_guild.ts";
 import { Guild as GuildPayload } from "../../../types/guilds/guild.ts";
 import { ApplicationCommand } from "../../../types/interactions/commands/application_command.ts";
+import { ApplicationCommandCreateUpdateDelete } from "../../../types/interactions/commands/application_command_create_update_delete.ts";
 import { CreateGlobalApplicationCommand } from "../../../types/interactions/commands/create_global_application_command.ts";
 import { EditGlobalApplicationCommand } from "../../../types/interactions/commands/edit_global_application_command.ts";
 import { ComponentInteraction, Interaction, SlashCommandInteraction } from "../../../types/interactions/interaction.ts";
 import { DiscordInteractionTypes } from "../../../types/interactions/interaction_types.ts";
+import { InviteCreate } from "../../../types/invites/invite_create.ts";
+import { InviteDelete } from "../../../types/invites/invite_delete.ts";
 import { ButtonData } from "../../../types/messages/components/button_data.ts";
 import { MessageComponentTypes } from "../../../types/messages/components/message_component_types.ts";
 import { SelectMenuData } from "../../../types/messages/components/select_data.ts";
 import { Message as MessagePayload } from "../../../types/messages/message.ts";
+import { MessageReactionAdd } from "../../../types/messages/message_reaction_add.ts";
+import { MessageReactionRemove } from "../../../types/messages/message_reaction_remove.ts";
+import { MessageReactionRemoveAll } from "../../../types/messages/message_reaction_remove_all.ts";
+import { TypingStart } from "../../../types/misc/typing_start.ts";
 import { CreateGuildFromTemplate } from "../../../types/templates/create_guild_from_template.ts";
 import { User } from "../../../types/users/user.ts";
 import { VoiceRegion } from "../../../types/voice/voice_region.ts";
+import { VoiceServerUpdate } from "../../../types/voice/voice_server_update.ts";
 import { EditWebhookMessage } from "../../../types/webhooks/edit_webhook_message.ts";
 import { ExecuteWebhook } from "../../../types/webhooks/execute_webhook.ts";
 import { ModifyWebhook } from "../../../types/webhooks/modify_webhook.ts";
@@ -31,14 +42,18 @@ import { snowflakeToBigint } from "../../../util/bigint.ts";
 import { Collection } from "../../../util/collection.ts";
 import { endpoints } from "../../../util/constants.ts";
 import { snakelize, urlToBase64 } from "../../../util/utils.ts";
-import { EventEmitter, decode } from "../deps.ts";
+import { EventEmitter, decode, GenericFunction, WrappedFunction } from "../deps.ts";
+import { IntegrationCreateUpdate, IntegrationDelete, StageInstance, ThreadMember, ThreadMembersUpdate, VoiceStatePayload } from "../mod.ts";
 import Channel from "./Channel.ts";
 import { GatewayManager } from "./Gateway/GatewayManager.ts";
 import { Guild } from "./Guild.ts";
+import Button from "./Interactions/Button.ts";
+import Dropdown from "./Interactions/Dropdown.ts";
 import Member from "./Member.ts";
 import Message from "./Message.ts";
 
 import RestManager from "./RestManager.ts";
+import Role from "./Role.ts";
 
 export interface ClientOptions {
   /** The bot token to use for this client. */
@@ -188,7 +203,7 @@ export class Client extends EventEmitter {
       }
     } else {
       for (const [key, value] of Object.entries(obj)) {
-        this.emit("DEBUG", "LOOPING", log);
+        this.emit("debug", "LOOPING", log);
 
         if (typeof value === "object" && !Array.isArray(value) && value !== null && !(value instanceof Blob)) {
           // A nested object
@@ -279,7 +294,7 @@ export class Client extends EventEmitter {
 
   editBotStatus(data: Omit<StatusUpdate, "afk" | "since">) {
     this.gateway.forEach((shard) => {
-      this.emit("DEBUG", "loop", `Running forEach loop in editBotStatus function.`);
+      this.emit("debug", "loop", `Running forEach loop in editBotStatus function.`);
 
       shard.sendShardMessage({
         op: DiscordGatewayOpcodes.StatusUpdate,
@@ -461,7 +476,7 @@ export class Client extends EventEmitter {
     // Expire in 15 minutes
     this.executedSlashCommands.add(token);
     setTimeout(() => {
-      this.emit("DEBUG", "loop", `Running setTimeout in send_interaction_response file.`);
+      this.emit("debug", "loop", `Running setTimeout in send_interaction_response file.`);
       this.executedSlashCommands.delete(token);
     }, 900000);
 
@@ -619,6 +634,86 @@ export class Client extends EventEmitter {
     this.guilds.get(message.guildId!)?.channels.get(message.channelId)?.messages.set(message.id, message);
 
     return message;
+  }
+
+  on(event: string | symbol, listener: (...args: unknown[]) => unknown): this;
+  on(event: "applicationCommandCreate", listener: (payload: ApplicationCommandCreateUpdateDelete) => unknown): this;
+  on(event: "applicationCommandDelete", listener: (payload: ApplicationCommandCreateUpdateDelete) => unknown): this;
+  on(event: "applicationCommandUpdate", listener: (payload: ApplicationCommandCreateUpdateDelete) => unknown): this;
+  on(event: "botUpdate", listener: (user: User) => unknown): this;
+  on(event: "channelCreate", listener: (channel: Channel) => unknown): this;
+  on(event: "channelDelete", listener: (channel: Channel) => unknown): this;
+  on(event: "channelPinsUpdate", listener: (channel: Channel, lastPinTimestamp?: string | null) => unknown): this;
+  on(event: "channelUpdate", listener: (channel: Channel, oldChannel: Channel) => unknown): this;
+  // deno-lint-ignore no-explicit-any
+  on(event: "debug", listener: (...args: any[]) => unknown): this;
+  on(event: "dispatchRequirements", listener: (payload: GatewayPayload, shardId: number) => unknown): this;
+  on(event: "fetching", listener: (payload: RestPayload) => unknown): this;
+  on(event: "fetched", listener: (payload: RestPayload) => unknown): this;
+  on(event: "fetchSuccess", listener: (payload: RestPayload) => unknown): this;
+  // deno-lint-ignore no-explicit-any
+  on(event: "fetchFailed", listener: (payload: RestPayload, error: any) => unknown): this;
+  on(event: "guildAvailable", listener: (guild: Guild) => unknown): this;
+  on(event: "guildCreate", listener: (guild: Guild) => unknown): this;
+  on(event: "guildDelete", listener: (guild: Guild) => unknown): this;
+  on(event: "guildEmojisUpdate", listener: (guild: Guild, emojis: Collection<bigint, Emoji>, oldEmojis: Collection<bigint, Emoji>) => unknown): this;
+  on(event: "guildIntegrationsUpdate", listener: (guild: Guild) => unknown): this;
+  on(event: "guildLoaded", listener: (guild: Guild) => unknown): this;
+  on(event: "guildMemberAdd", listener: (guild: Guild, member: Member) => unknown): this;
+  on(event: "guildMemberRemove", listener: (guild: Guild, user: User, member?: Member) => unknown): this;
+  on(event: "guildUnavailable", listener: (guild: Guild) => unknown): this;
+  on(event: "guildBanAdd", listener: (guild: Guild, user: User, member?: Member) => unknown): this;
+  on(event: "guildBanRemove", listener: (guild: Guild, user: User, member?: Member) => unknown): this;
+  on(event: "globallyRateLimited", listener: (url: string, maxRetries: number) => unknown): this;
+  on(event: "guildMemberUpdate", listener: (guild: Guild, member: Member, oldMember?: Member) => unknown): this;
+  on(event: "guildUpdate", listener: (guild: Guild, oldGuild: Guild) => unknown): this;
+  on(event: "httpError", listener: (payload: RestPayload, response: Response) => unknown): this;
+  on(event: "inviteCreate", listener: (payload: InviteCreate) => unknown): this;
+  on(event: "inviteDelete", listener: (payload: InviteDelete) => unknown): this;
+  on(event: "integrationCreate", listener: (payload: IntegrationCreateUpdate) => unknown): this;
+  on(event: "integrationDelete", listener: (payload: IntegrationDelete) => unknown): this;
+  on(event: "integrationUpdate", listener: (payload: IntegrationCreateUpdate) => unknown): this;
+  on(event: "interactionDMCreate", listener: (payload: ApplicationCommand | Button | Dropdown) => unknown): this;
+  on(event: "interactionGuildCreate", listener: (payload: ApplicationCommand | Button | Dropdown, member: Member) => unknown): this;
+  on(event: "interactionCreate", listener: (payload: ApplicationCommand | Button | Dropdown, member?: Member) => unknown): this;
+  on(event: "membershipScreeningPassed", listener: (guild: Guild, member: Member) => unknown): this;
+  on(event: "messageCreate", listener: (message: Message) => unknown): this;
+  on(event: "messageDelete", listener: (payload: { id: bigint, channel: Channel } , message?: Message) => unknown): this;
+  on(event: "messageUpdate", listener: (message: Message, oldMessage: Message) => unknown): this;
+  on(event: "nicknameUpdate", listener: (guild: Guild, member: Member, nickname: string, oldNickname: string) => unknown): this;
+  on(event: "presenceUpdate", listener: (presence: PresenceUpdate, oldPresence?: PresenceUpdate) => unknown): this;
+  on(event: "raw", listener: (payload: GatewayPayload) => unknown): this;
+  on(event: "reactionAdd", listener: (payload: MessageReactionAdd, message?: Message) => unknown): this;
+  on(event: "reactionRemove", listener: (payload: MessageReactionRemove, message?: Message) => unknown): this;
+  on(event: "reactionRemoveAll", listener: (payload: MessageReactionRemoveAll, message?: Message) => unknown): this;
+  on(event: "ready", listener: () => unknown): this;
+  on(event: "retriesMaxed", listener: (payload: RestPayload) => unknown): this;
+  on(event: "roleCreate", listener: (guild: Guild, role: Role) => unknown): this;
+  on(event: "roleDelete", listener: (guild: Guild, role: Role) => unknown): this;
+  on(event: "roleGained", listener: (guild: Guild, member: Member, id: bigint) => unknown): this;
+  on(event: "roleLost", listener: (guild: Guild, member: Member, id: bigint) => unknown): this;
+  on(event: "roleUpdate", listener: (guild: Guild, role: Role, oldRole: Role) => unknown): this;
+  on(event: "shardReady", listener: (shardId: number) => unknown): this;
+  on(event: "shardFailedToLoad", listener: (shardId: number, unavailableGuildIds: Set<bigint>) => unknown): this;
+  on(event: "stageInstanceCreate", listener: (payload: StageInstance) => unknown): this;
+  on(event: "stageInstanceDelete", listener: (payload: StageInstance) => unknown): this;
+  on(event: "stageInstanceUpdate", listener: (payload: StageInstance) => unknown): this;
+  on(event: "threadCreate", listener: (channel: Channel) => unknown): this;
+  on(event: "threadDelete", listener: (channel: Channel) => unknown): this;
+  on(event: "threadListSync", listener: (threads: Collection<bigint, Channel>, members: ThreadMember[], guildId: bigint) => unknown): this;
+  on(event: "threadMembersUpdate", listener: (payload: ThreadMembersUpdate) => unknown): this;
+  on(event: "threadMemberUpdate", listener: (payload: ThreadMember) => unknown): this;
+  on(event: "threadUpdate", listener: (thread: Channel, oldThread: Channel) => unknown): this;
+  on(event: "typingStart", listener: (payload: TypingStart) => unknown): this;
+  on(event: "voiceChannelJoin", listener: (member: Member, channelId: bigint) => unknown): this;
+  on(event: "voiceChannelLeave", listener: (member: Member, channelId: bigint) => unknown): this;
+  on(event: "voiceChannelSwitch", listener: (member: Member, channelId: bigint, oldChannelId: bigint) => unknown): this;
+  on(event: "voiceServerUpdate", listener: (payload: VoiceServerUpdate, guild: Guild) => unknown): this;
+  on(event: "voiceStateUpdate", listener: (member: Member, payload: VoiceStatePayload) => unknown): this;
+  on(event: "webhooksUpdate", listener: (channelId: bigint, guildId: bigint) => unknown): this;
+  on(event: string | symbol, listener: GenericFunction | WrappedFunction): this {
+    super.on(event, listener);
+    return this;
   }
 }
 

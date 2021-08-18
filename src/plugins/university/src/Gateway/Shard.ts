@@ -90,7 +90,7 @@ export class Shard {
   }
 
   identify() {
-    this.client.emit("DEBUG", "IDENTIFYING", {
+    this.client.emit("debug", "IDENTIFYING", {
       shardId: this.id,
       maxShards: this.gateway.maxShards,
     });
@@ -141,7 +141,7 @@ export class Shard {
   }
 
   resume() {
-    this.client.emit("DEBUG", "RESUMING", { shardId: this.id });
+    this.client.emit("debug", "RESUMING", { shardId: this.id });
 
     // NOW WE HANDLE RESUMING THIS SHARD
     // Get the old data for this shard necessary for resuming
@@ -230,7 +230,7 @@ export class Shard {
         );
       }
 
-      this.client.emit("DEBUG", "RAW_SEND", this.id, request);
+      this.client.emit("debug", "RAW_SEND", this.id, request);
 
       this.socket.send(JSON.stringify(request));
 
@@ -239,7 +239,7 @@ export class Shard {
 
       // Handle if the requests have been maxed
       if (this.queueCounter >= 118) {
-        this.client.emit("DEBUG", "DEBUG", {
+        this.client.emit("debug", "DEBUG", {
           message: "Max gateway requests per minute reached setting timeout for one minute",
           shardId: this.id,
         });
@@ -257,7 +257,7 @@ export class Shard {
     socket.binaryType = "arraybuffer";
 
     socket.onerror = (errorEvent) => {
-      this.client.emit("DEBUG", "ERROR", {
+      this.client.emit("debug", "ERROR", {
         shardId: this.id,
         error: errorEvent,
       });
@@ -266,7 +266,7 @@ export class Shard {
     socket.onmessage = ({ data: message }) => this.handleOnMessage(message);
 
     socket.onclose = (event) => {
-      this.client.emit("DEBUG", "CLOSED", {
+      this.client.emit("debug", "CLOSED", {
         shardId: this.id,
         payload: event,
       });
@@ -276,7 +276,7 @@ export class Shard {
       }
 
       if (event.code === 3065 || ["Resharded!", "Resuming the shard, closing old shard."].includes(event.reason)) {
-        return this.client.emit("DEBUG", "CLOSED_RECONNECT", {
+        return this.client.emit("debug", "CLOSED_RECONNECT", {
           shardId: this.id,
           payload: event,
         });
@@ -291,7 +291,7 @@ export class Shard {
         case 3065: // Reidentifying
         case 3066: // Missing ACK
           // Will restart shard manually
-          return this.client.emit("DEBUG", "CLOSED_RECONNECT", {
+          return this.client.emit("debug", "CLOSED_RECONNECT", {
             shardId: this.id,
             payload: event,
           });
@@ -342,7 +342,7 @@ export class Shard {
     if (typeof message !== "string") return;
 
     const messageData = camelize(JSON.parse(message)) as GatewayPayload;
-    this.client.emit("DEBUG", "RAW", {
+    this.client.emit("debug", "RAW", {
       shardId: this.id,
       payload: messageData,
     });
@@ -368,12 +368,12 @@ export class Shard {
         this.heartbeat.acknowledged = true;
         break;
       case DiscordGatewayOpcodes.Reconnect:
-        this.client.emit("DEBUG", "RECONNECT", { shardId: this.id });
+        this.client.emit("debug", "RECONNECT", { shardId: this.id });
         this.resuming = true;
         this.resume;
         break;
       case DiscordGatewayOpcodes.InvalidSession:
-        this.client.emit("DEBUG", "INVALID_SESSION", {
+        this.client.emit("debug", "INVALID_SESSION", {
           shardId: this.id,
           payload: messageData,
         });
@@ -392,7 +392,7 @@ export class Shard {
         break;
       default:
         if (messageData.t === "RESUMED") {
-          this.client.emit("DEBUG", "RESUMED", { shardId: this.id });
+          this.client.emit("debug", "RESUMED", { shardId: this.id });
 
           this.resuming = false;
           break;
@@ -430,12 +430,12 @@ export class Shard {
   }
 
   async sendHeartbeat(interval: number) {
-    this.client.emit("DEBUG", "HEARTBEATING_STARTED", {
+    this.client.emit("debug", "HEARTBEATING_STARTED", {
       shardId: this.id,
       interval,
     });
 
-    this.client.emit("DEBUG", "HEARTBEATING_DETAILS", {
+    this.client.emit("debug", "HEARTBEATING_DETAILS", {
       shardId: this.id,
       interval,
       shard: this,
@@ -459,14 +459,14 @@ export class Shard {
     this.heartbeat.interval = interval;
 
     this.heartbeat.intervalId = setInterval(() => {
-      this.client.emit("DEBUG", "loop", `Running setInterval in heartbeat file.`);
+      this.client.emit("debug", "loop", `Running setInterval in heartbeat file.`);
 
-      this.client.emit("DEBUG", "HEARTBEATING", {
+      this.client.emit("debug", "HEARTBEATING", {
         shardId: this.id,
       });
 
       if (this.socket.readyState === WebSocket.CLOSED || !this.heartbeat.keepAlive) {
-        this.client.emit("DEBUG", "HEARTBEATING_CLOSED", {
+        this.client.emit("debug", "HEARTBEATING_CLOSED", {
           shardId: this.id,
           shard: this,
         });

@@ -86,7 +86,7 @@ export class GatewayManager extends Collection<number, Shard> {
 
   prepareBuckets(firstShardId = 0) {
     for (let i = firstShardId; i <= this.lastShardId; i++) {
-      this.client.emit("DEBUG", "Running for loop inside spawnshards to prepare buckets.");
+      this.client.emit("debug", "Running for loop inside spawnshards to prepare buckets.");
       const bucketId = i % this.botGatewayData.sessionStartLimit.maxConcurrency;
       const bucket = this.buckets.get(bucketId);
       if (!bucket) {
@@ -101,7 +101,7 @@ export class GatewayManager extends Collection<number, Shard> {
 
     for (const [bucketId, bucket] of this.buckets.entries()) {
       for (const shardId of bucket.queue) {
-        this.client.emit("DEBUG", `Running for loop inside startup for each bucket.`);
+        this.client.emit("debug", `Running for loop inside startup for each bucket.`);
 
         bucket.createNextShard.push(async () => {
           await this.tellClusterToIdentify(shardId, clusterId, bucketId);

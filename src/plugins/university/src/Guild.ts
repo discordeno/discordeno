@@ -241,7 +241,7 @@ export class Guild extends Base {
     const result = (await this.client.rest.get(endpoints.GUILD_EMOJIS(guildId))) as Emoji[];
 
     result.forEach((emoji) => {
-      this.client.emit("DEBUG", "loop", `Running forEach loop in get_emojis file.`);
+      this.client.emit("debug", "loop", `Running forEach loop in get_emojis file.`);
       this.emojis.set(snowflakeToBigint(emoji.id!), emoji);
     });
 
@@ -612,7 +612,7 @@ export class Guild extends Base {
     let membersLeft = options?.limit ?? this.memberCount;
     let loops = 1;
     while ((options?.limit ?? this.memberCount) > members.size && membersLeft > 0) {
-      this.client.emit("DEBUG", "loop", "Running while loop in getMembers function.");
+      this.client.emit("debug", "loop", "Running while loop in getMembers function.");
 
       if (options?.limit && options.limit > 1000) {
         console.log(`Paginating get members from REST. #${loops} / ${Math.ceil((options?.limit ?? 1) / 1000)}`);
@@ -634,7 +634,7 @@ export class Guild extends Base {
       if (!discordenoMembers.length) break;
 
       discordenoMembers.forEach((member) => {
-        this.client.emit("DEBUG", "loop", `Running forEach loop in get_members file.`);
+        this.client.emit("debug", "loop", `Running forEach loop in get_members file.`);
         members.set(member.id, member);
       });
 
@@ -766,9 +766,7 @@ export class Guild extends Base {
 
   /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
   async fetchWebhooks() {
-    const result = (await this.client.rest.get(
-      endpoints.GUILD_WEBHOOKS(this.id)
-    )) as Webhook[];
+    const result = (await this.client.rest.get(endpoints.GUILD_WEBHOOKS(this.id))) as Webhook[];
 
     return new Collection(result.map((webhook) => [webhook.id, webhook]));
   }

@@ -77,7 +77,7 @@ export class RestManager {
   /** Cleans up the queues by checking if there is nothing left and removing it. */
   cleanupQueues() {
     for (const [key, queue] of this.pathQueues) {
-      this.client.emit("DEBUG", "loop", "Running for of loop in cleanupQueues function.");
+      this.client.emit("debug", "loop", "Running for of loop in cleanupQueues function.");
       if (queue.length) continue;
 
       // REMOVE IT FROM CACHE
@@ -140,11 +140,11 @@ export class RestManager {
     if (!queue) return;
 
     while (queue.length) {
-      this.client.emit("DEBUG", "loop", "Running while loop in processQueue function.");
+      this.client.emit("debug", "loop", "Running while loop in processQueue function.");
       // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
       if (this.globallyRateLimited) {
         setTimeout(() => {
-          this.client.emit("DEBUG", "loop", `Running setTimeout in processQueue function.`);
+          this.client.emit("debug", "loop", `Running setTimeout in processQueue function.`);
           this.processQueue(id);
         }, 1000);
 
@@ -200,7 +200,7 @@ export class RestManager {
         }
 
         if (response.status < 200 || response.status >= 400) {
-          this.client.emit("error", "httpError", queuedRequest.payload, response);
+          this.client.emit("httpError", queuedRequest.payload, response);
 
           let error = "REQUEST_UNKNOWN_ERROR";
           switch (response.status) {
@@ -286,7 +286,7 @@ export class RestManager {
     const now = Date.now();
 
     for (const [key, value] of this.ratelimitedPaths.entries()) {
-      this.client.emit("DEBUG", "loop", `Running forEach loop in process_rate_limited_paths file.`);
+      this.client.emit("debug", "loop", `Running forEach loop in process_rate_limited_paths file.`);
       // IF THE TIME HAS NOT REACHED CANCEL
       if (value.resetTimestamp > now) continue;
 
@@ -304,7 +304,7 @@ export class RestManager {
       this.processingRateLimitedPaths = true;
       // RECHECK IN 1 SECOND
       setTimeout(() => {
-        this.client.emit("DEBUG", "loop", `Running setTimeout in processRateLimitedPaths function.`);
+        this.client.emit("debug", "loop", `Running setTimeout in processRateLimitedPaths function.`);
         this.processRateLimitedPaths();
       }, 1000);
     }
@@ -423,7 +423,7 @@ export class RestManager {
       );
     }
 
-    this.client.emit("DEBUG", "requestCreate", {
+    this.client.emit("debug", "requestCreate", {
       method,
       url,
       body,

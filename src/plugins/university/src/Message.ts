@@ -69,7 +69,7 @@ export class Message extends Base {
       await Promise.all(reactions.map((reaction) => this.addReaction(reaction)));
     } else {
       for (const reaction of reactions) {
-        this.client.emit("DEBUG", "loop", "Running for of loop in addReactions function.");
+        this.client.emit("debug", "loop", "Running for of loop in addReactions function.");
         await this.addReaction(reaction);
       }
     }

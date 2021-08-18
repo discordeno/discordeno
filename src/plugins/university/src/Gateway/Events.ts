@@ -65,7 +65,7 @@ export class GatewayEvents {
   }
 
   missing(type: string, data: unknown) {
-    this.client.emit("DEBUG", "MISSING_GATEWAY_EVENT_HANDLER", type, data);
+    this.client.emit("debug", "MISSING_GATEWAY_EVENT_HANDLER", type, data);
   }
 
   READY(data: DiscordGatewayPayload, shardId: number) {
@@ -91,7 +91,7 @@ export class GatewayEvents {
 
     // Start ready check in 2 seconds
     setTimeout(() => {
-      this.client.emit("DEBUG", "loop", `1. Running setTimeout in READY file.`);
+      this.client.emit("debug", "loop", `1. Running setTimeout in READY file.`);
       this.checkReady(payload, shard);
     }, 2000);
   }
@@ -110,7 +110,7 @@ export class GatewayEvents {
 
     // Not all guilds were loaded but 5 seconds haven't passed so check again
     setTimeout(() => {
-      this.client.emit("DEBUG", "loop", `2. Running setTimeout in READY file.`);
+      this.client.emit("debug", "loop", `2. Running setTimeout in READY file.`);
       this.checkReady(payload, shard);
     }, 2000);
   }
@@ -124,7 +124,7 @@ export class GatewayEvents {
     // Still some shards are loading so wait another 2 seconds for them
     if (this.client.gateway.some((shard) => !shard.ready)) {
       setTimeout(() => {
-        this.client.emit("DEBUG", "loop", `3. Running setTimeout in READY file.`);
+        this.client.emit("debug", "loop", `3. Running setTimeout in READY file.`);
         this.loaded(shard);
       }, 2000);
 
@@ -161,7 +161,7 @@ export class GatewayEvents {
         // Since this channel was deleted all voice states for this channel should be deleted
         guild.voiceStates.delete(key);
 
-        this.client.emit("voiceChannelLeave", vs, vs.member);
+        this.client.emit("voiceChannelLeave", vs.member, vs.channelId);
       });
     }
 
@@ -296,10 +296,10 @@ export class GatewayEvents {
     if (!guild) return;
 
     guild.memberCount++;
-    const discordenoMember = new Member(this.client, payload, guild.id);
-    guild.members.set(discordenoMember.id, discordenoMember);
+    const member = new Member(this.client, payload, guild.id);
+    guild.members.set(member.id, member);
 
-    this.client.emit("guildMemberAdd", guild, Member);
+    this.client.emit("guildMemberAdd", guild, member);
   }
 
   GUILD_MEMBER_REMOVE(data: DiscordGatewayPayload) {
@@ -337,8 +337,8 @@ export class GatewayEvents {
     guild.members.set(discordenoMember.id, discordenoMember);
 
     if (member) {
-      if (member.nick !== payload.nick) {
-        this.client.emit("nicknameUpdate", guild, discordenoMember, payload.nick!, member.nick ?? undefined);
+      if ((member.nick || payload.nick) && member.nick !== payload.nick) {
+        this.client.emit("nicknameUpdate", guild, discordenoMember, payload.nick ?? "", member.nick ?? "");
       }
 
       if (payload.pending === false && member.pending === true) {
@@ -348,14 +348,14 @@ export class GatewayEvents {
       const roleIds = member.roleIds || [];
 
       roleIds.forEach((id) => {
-        this.client.emit("DEBUG", "loop", `1. Running forEach loop in GUILD_MEMBER_UPDATE file.`);
+        this.client.emit("debug", "loop", `1. Running forEach loop in GUILD_MEMBER_UPDATE file.`);
         if (!payload.roles.includes(bigintToSnowflake(id))) {
           this.client.emit("roleLost", guild, discordenoMember, id);
         }
       });
 
       payload.roles.forEach((id) => {
-        this.client.emit("DEBUG", "loop", `2. Running forEach loop in GUILD_MEMBER_UPDATE file.`);
+        this.client.emit("debug", "loop", `2. Running forEach loop in GUILD_MEMBER_UPDATE file.`);
         if (!roleIds.includes(snowflakeToBigint(id))) {
           this.client.emit("roleGained", guild, discordenoMember, snowflakeToBigint(id));
         }
@@ -412,7 +412,7 @@ export class GatewayEvents {
 
     // For bots without GUILD_MEMBERS member.roles is never updated breaking permissions checking.
     guild.members.forEach((member) => {
-      this.client.emit("DEBUG", "loop", `1. Running forEach members loop in GUILD_ROLE_DELETE file.`);
+      this.client.emit("debug", "loop", `1. Running forEach members loop in GUILD_ROLE_DELETE file.`);
 
       if (!member.roleIds.includes(roleId)) return;
 
