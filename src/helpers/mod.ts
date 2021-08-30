@@ -205,6 +205,7 @@ export {
   editMessage,
   editRole,
   editSlashResponse,
+  editSlashCommandPermissions,
   editWebhook,
   editWebhookMessage,
   editWebhookWithToken,
