@@ -71,6 +71,7 @@ unofficial templates:
 ### Frameworks
 
 - [Natico](https://github.com/naticoo/framework)
+- [Amethyst](https://github.com/AmethystFramework/framework)
 
 ## Links
 
