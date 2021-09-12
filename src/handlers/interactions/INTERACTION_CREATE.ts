@@ -10,6 +10,7 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 export async function handleInteractionCreate(data: DiscordGatewayPayload) {
   const basePayload = data.d as Interaction;
 
+  // Change strings to bigints
   const payload = {
     ...basePayload,
     id: snowflakeToBigint(basePayload.id),
