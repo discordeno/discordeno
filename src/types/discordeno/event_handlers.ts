@@ -15,7 +15,7 @@ import type { DiscordGatewayPayload } from "../gateway/gateway_payload.ts";
 import type { IntegrationCreateUpdate } from "../integrations/integration_create_update.ts";
 import type { IntegrationDelete } from "../integrations/integration_delete.ts";
 import type { ApplicationCommandCreateUpdateDelete } from "../interactions/commands/application_command_create_update_delete.ts";
-import type { BigInteraction, Interaction } from "../interactions/interaction.ts";
+import type { Interaction } from "../interactions/interaction.ts";
 import type { InviteCreate } from "../invites/invite_create.ts";
 import type { InviteDelete } from "../invites/invite_delete.ts";
 import type { MessageReactionAdd } from "../messages/message_reaction_add.ts";
@@ -82,11 +82,11 @@ export type EventHandlersDefinitions = {
   /** Sent when a guild member is updated. This will also fire when the user object of a guild member changes. */
   guildMemberUpdate: [guild: DiscordenoGuild, member: DiscordenoMember, oldMember?: DiscordenoMember];
   /** Sent when a user uses a Slash Command (type 2) or clicks a button (type 3). */
-  interactionCreate: [data: BigInteraction, member?: DiscordenoMember];
+  interactionCreate: [data: Interaction, member?: DiscordenoMember];
   /** Sent when a user uses a Slash Command in a guild (type 2) or clicks a button (type 3). */
-  interactionGuildCreate: [data: BigInteraction, member: DiscordenoMember];
+  interactionGuildCreate: [data: Interaction, member: DiscordenoMember];
   /** Sent when a user uses a Slash Command in a dm (type 2) or clicks a button (type 3). */
-  interactionDMCreate: [data: Omit<BigInteraction, "member">];
+  interactionDMCreate: [data: Omit<Interaction, "member">];
   /** Sent when a lurker joins/leaves/moves stage channels. */
   lurkerVoiceStateUpdate: [member: DiscordenoMember, voiceState: VoiceState];
   /** Sent when a message is created. */

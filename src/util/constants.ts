@@ -170,4 +170,3 @@ export const endpoints = {
 export const SLASH_COMMANDS_NAME_REGEX = /^[\w-]{1,32}$/;
 export const CONTEXT_MENU_COMMANDS_NAME_REGEX = /^[\w-\s]{1,32}$/;
 export const CHANNEL_MENTION_REGEX = /<#[0-9]+>/g;
-export const DISCORD_SNOWFLAKE_REGEX = /^(?<id>\d{17,19})$/;
