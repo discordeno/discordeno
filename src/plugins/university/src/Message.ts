@@ -49,7 +49,7 @@ export class Message extends Base {
   }
   /** The channel where this message was sent. */
   get channel() {
-    return this.guild?.channels.get(this.channelId) || this.client.dmChannels.get(this.channelId);
+    return this.guild?.channels.get(this.channelId) || this.client.dmChannels.get(this.channelId)!;
   }
 
   /** Create a reaction for the message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS */
