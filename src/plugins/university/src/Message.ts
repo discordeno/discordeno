@@ -1,3 +1,4 @@
+import { CreateMessage } from "../../../types/messages/create_message.ts";
 import { EditMessage } from "../../../types/messages/edit_message.ts";
 import { Message as MessagePayload } from "../../../types/messages/message.ts";
 import { bigintToTimestamp, snowflakeToBigint } from "../../../util/bigint.ts";
@@ -47,6 +48,7 @@ export class Message extends Base {
   get guild() {
     return this.guildId ? this.client.guilds.get(this.guildId) : undefined;
   }
+
   /** The channel where this message was sent. */
   get channel() {
     return this.guild?.channels.get(this.channelId) || this.client.dmChannels.get(this.channelId)!;
@@ -101,6 +103,11 @@ export class Message extends Base {
   /** Unpin a message in a channel. Requires MANAGE_MESSAGES. */
   async unpin() {
     return await this.client.rest.delete(endpoints.CHANNEL_PIN(this.channelId, this.id));
+  }
+
+  /** Send a message to the channel. Requires SEND_MESSAGES permission. */
+  async send(content: string | CreateMessage) {
+    return await this.channel.sendMessage(content);
   }
 }
 
