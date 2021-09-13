@@ -95,6 +95,7 @@ import { removeAllReactions } from "./messages/remove_all_reactions.ts";
 import { removeReaction } from "./messages/remove_reaction.ts";
 import { removeReactionEmoji } from "./messages/remove_reaction_emoji.ts";
 import { sendMessage } from "./messages/send_message.ts";
+import { suppressEmbeds } from "./messages/suppress_embeds.ts";
 import { unpin, unpinMessage } from "./messages/unpin_message.ts";
 import { editBotProfile } from "./misc/edit_bot_profile.ts";
 import { editBotStatus } from "./misc/edit_bot_status.ts";
@@ -310,6 +311,7 @@ export {
   startThread,
   unarchiveThread,
   unlockThread,
+  suppressEmbeds,
 };
 
 export let helpers = {
@@ -474,6 +476,7 @@ export let helpers = {
   startThread,
   unarchiveThread,
   unlockThread,
+  suppressEmbeds,
 };
 
 export type Helpers = typeof helpers;

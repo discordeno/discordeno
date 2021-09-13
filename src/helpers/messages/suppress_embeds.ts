@@ -1,0 +1,26 @@
+import { botId } from "../../bot.ts";
+import { cacheHandlers } from "../../cache.ts";
+import { rest } from "../../rest/rest.ts";
+import { structures } from "../../structures/mod.ts";
+import { Errors } from "../../types/discordeno/errors.ts";
+import { EditMessage } from "../../types/messages/edit_message.ts";
+import type { Message } from "../../types/messages/message.ts";
+import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
+import { endpoints } from "../../util/constants.ts";
+import { requireBotChannelPermissions } from "../../util/permissions.ts";
+import { snakelize, validateComponents } from "../../util/utils.ts";
+
+/** Suppress all the embeds in this message */
+export async function suppressEmbeds(channelId: bigint, messageId: bigint) {
+  const message = await cacheHandlers.get("messages", messageId);
+
+  await requireBotChannelPermissions(channelId, message ? ["MANAGE_MESSAGES"] : ["SEND_MESSAGES"]);
+
+  const result = await rest.runMethod<Message>(
+    "patch",
+    endpoints.CHANNEL_MESSAGE(channelId, messageId),
+    snakelize({ flags: 4 })
+  );
+
+  return await structures.createDiscordenoMessage(result);
+}
