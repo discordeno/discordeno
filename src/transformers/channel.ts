@@ -23,14 +23,7 @@ export async function transformChannel(data: Channel, guildId?: bigint) {
 }
 
 export interface DiscordenoChannel
-  extends Omit<
-    Channel,
-    | "id"
-    | "guildId"
-    | "lastMessageId"
-    | "parentId"
-    | "permissionOverwrites"
-  > {
+  extends Omit<Channel, "id" | "guildId" | "lastMessageId" | "parentId" | "permissionOverwrites"> {
   permissionOverwrites: (Omit<DiscordOverwrite, "id" | "allow" | "deny"> & {
     id: bigint;
     allow: bigint;
