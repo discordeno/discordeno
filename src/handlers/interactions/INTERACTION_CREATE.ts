@@ -37,8 +37,8 @@ export async function handleInteractionCreate(data: DiscordGatewayPayload) {
 
   if (payload.member) payload.user = payload.member.user;
 
-  const discordenoMember = payload.guildId
-    ? await structures.createDiscordenoMember(payload.member as GuildMemberWithUser, payload.guildId)
+  const discordenoMember = payload.guildId && basePayload.member
+    ? await structures.createDiscordenoMember(basePayload.member, payload.guildId)
     : undefined;
 
   if (discordenoMember) {
