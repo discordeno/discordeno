@@ -4,7 +4,7 @@
 
 Discord API library for [Deno](https://deno.land)
 
-Discordeno follows [Semantic Versioning](https://semver.org/)
+Discordeno follows [semantic versioning](https://semver.org/)
 
 [![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
 ![Lint](https://github.com/discordeno/discordeno/workflows/Lint/badge.svg)
@@ -21,14 +21,14 @@ TODO: add coverage back when it is stable
   performance and convenience. Moreover, it internally checks all missing
   permissions before forwarding a request to the Discord API so that the client
   does not get
-  [globally-banned by Discord](https://discord.com/developers/docs/topics/rate-limits#invalid-request-limit).
-- **Simple, Efficient, & Lightweight**: Discordeno is simplistic, easy-to-use,
-  versatile while being efficient and lightweight. Follows
-  [Convention Over Configuration](https://en.wikipedia.org/wiki/Convention_over_configuration)
-  design paradigm ― prefers defaults options or values that are recommended by
+  [globally banned by Discord](https://discord.com/developers/docs/topics/rate-limits#invalid-request-limit).
+- **Simple, Efficient, & Lightweight**: Discordeno is simplistic, easy-to-use
+  and versatile while being efficient and lightweight. Discordeno follows the
+  [convention over configuration](https://en.wikipedia.org/wiki/Convention_over_configuration)
+  design paradigm; it prefers default options or values that are recommended by
   Discord or the best configuration for the majority of the users.
 - [**Functional API**](https://en.wikipedia.org/wiki/Functional_programming):
-  Functional API ensures an overall concise yet performant code while removing
+  The functional API ensures overall concise yet performant code while removing
   the difficulties of extending built-in classes and inheritance.
 
 ## Getting Started
@@ -56,16 +56,15 @@ startBot({
 
 ### Templates
 
-Note to developers: don't worry a lot of developers start out programming a
-Discord bot as their first project (I did 😉) and it is not so easy to do so.
-Discordeno is designed and built considering all the issues that I and a lot of
-developers had when I first started out coding Discord bots with existing
-libraries. If you are a beginner, you can check out these awesome official and
-unofficial templates:
+Note to developers: don't worry, a lot of developers start out by building a
+Discord bot as their first project, and it's not easy. Discordeno is designed
+and built with all of the issues in mind that many developers have encountered
+when they initially started writing Discord bots using existing libraries. If
+you are a beginner, you can check out these awesome official and unofficial
+templates:
 
 - [Discordeno Template (official)](https://github.com/discordeno/template)
-- [Serverless Slash Commands Template
-  (official)](https://github.com/discordeno/serverless-deno-deploy-template)
+- [Serverless Slash Commands Template (official)](https://github.com/discordeno/serverless-deno-deploy-template)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
 ### Frameworks
