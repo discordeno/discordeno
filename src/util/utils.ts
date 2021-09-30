@@ -125,6 +125,7 @@ function validateSlashOptionChoices(
   }
 }
 
+// TODO: add checks for autocomplete options when discord provides more info about them.
 /** @private */
 function validateSlashOptions(options: ApplicationCommandOption[]) {
   const requiredOptions: ApplicationCommandOption[] = [];
