@@ -10,6 +10,8 @@ export enum DiscordInteractionResponseTypes {
   DeferredUpdateMessage,
   /** For components, edit the message the component was attached to */
   UpdateMessage,
+  /** For Application Command Options, send an autocomplete result */
+  ApplicationCommandAutocompleteResult,
 }
 
 export type InteractionResponseTypes = DiscordInteractionResponseTypes;
