@@ -1,70 +1,135 @@
 import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
-import { rest } from "./rest/rest.ts";
-import type { EventHandlers } from "./types/discordeno/event_handlers.ts";
+import { checkRateLimits } from "./rest/check_rate_limits.ts";
+import { cleanupQueues } from "./rest/cleanup_queues.ts";
+import { createRequestBody } from "./rest/create_request_body.ts";
+import { processRateLimitedPaths } from "./rest/process_rate_limited_paths.ts";
+import { processRequest } from "./rest/process_request.ts";
+import { processRequestHeaders } from "./rest/process_request_headers.ts";
+import { RestPayload, RestRateLimitedPath, RestRequest } from "./rest/rest.ts";
+import { runMethod } from "./rest/run_method.ts";
+import { simplifyUrl } from "./rest/simplify_url.ts";
 import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
-import { snowflakeToBigint } from "./util/bigint.ts";
-import { GATEWAY_VERSION } from "./util/constants.ts";
-import { ws } from "./ws/ws.ts";
+import { GetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
 import { dispatchRequirements } from "./util/dispatch_requirements.ts";
+import { processQueue } from "./rest/process_queue.ts";
 
-// deno-lint-ignore prefer-const
-export let secretKey = "";
-export let botId = 0n;
-export let applicationId = 0n;
-
-export let eventHandlers: EventHandlers = {};
-
-export let proxyWSURL = `wss://gateway.discord.gg`;
-
-export async function startBot(config: BotConfig) {
-  if (config.eventHandlers)
-    eventHandlers = {
-      ...config.eventHandlers,
-      dispatchRequirements: config.eventHandlers.dispatchRequirements || dispatchRequirements,
-    };
-  ws.identifyPayload.token = `Bot ${config.token}`;
-  rest.token = `Bot ${config.token}`;
-  ws.identifyPayload.intents = config.intents.reduce(
-    (bits, next) => (bits |= typeof next === "string" ? DiscordGatewayIntents[next] : next),
-    0
-  );
-
-  // Initial API connection to get info about bots connection
-  ws.botGatewayData = await getGatewayBot();
-  ws.maxShards = ws.maxShards || ws.botGatewayData.shards;
-  ws.lastShardId = ws.lastShardId === 1 ? ws.botGatewayData.shards - 1 : ws.lastShardId;
-
-  // Explicitly append gateway version and encoding
-  ws.botGatewayData.url += `?v=${GATEWAY_VERSION}&encoding=json`;
-
-  proxyWSURL = ws.botGatewayData.url;
-
-  ws.spawnShards();
+export async function createBot(options: CreateBotOptions) {
+  return {
+    id: options.botId,
+    applicationId: options.applicationId || options.botId,
+    token: `Bot ${options.token}`,
+    events: {dispatchRequirements: dispatchRequirements, ...options.events},
+    intents: options.intents.reduce(
+          (bits, next) => (bits |= DiscordGatewayIntents[next]),
+          0
+        ),
+    botGatewayData: options.botGatewayData || await getGatewayBot(),
+    isReady: false,
+    rest: createRestManager(options.rest ? { token: options.token, ...options.rest} : { token: options.token})
+  }
 }
 
-export function replaceEventHandlers(newEventHandlers: EventHandlers) {
-  eventHandlers = newEventHandlers;
+const bot = await createBot({
+  token: "",
+  botId: 0n,
+  events: createEventHandlers(),
+  intents: [],
+})
+
+export function createEventHandlers(options?: Partial<EventHandlers>) {
+  return {
+    debug: () => undefined,
+    // PROVIDED OPTIONS OVERRIDE EVERYTHING ABOVE
+    ...options
+  }
 }
 
-/** Allows you to dynamically update the event handlers by passing in new eventHandlers */
-export function updateEventHandlers(newEventHandlers: EventHandlers) {
-  // Object.assign instead of ... operator because of the Proxy used
-  Object.assign(eventHandlers, newEventHandlers);
-}
-
-/** INTERNAL LIB function used to set the bot Id once the READY event is sent by Discord. */
-export function setBotId(id: string) {
-  botId = snowflakeToBigint(id);
-}
-
-/** INTERNAL LIB function used to set the application Id once the READY event is sent by Discord. */
-export function setApplicationId(id: string) {
-  applicationId = snowflakeToBigint(id);
-}
-
-export interface BotConfig {
+export interface CreateRestManagerOptions {
   token: string;
-  compress?: boolean;
-  intents: (DiscordGatewayIntents | keyof typeof DiscordGatewayIntents)[];
-  eventHandlers?: EventHandlers;
+  maxRetryCount?: number;
+  version?: number;
+  secretKey?: string;
+  debug?: (text: string) => unknown;
+  checkRateLimits?: typeof checkRateLimits;
+  cleanupQueues?: typeof cleanupQueues;
+  processQueue?: typeof processQueue;
+  processRateLimitedPaths?: typeof processRateLimitedPaths;
+  processRequestHeaders?: typeof processRequestHeaders;
+  processRequest?: typeof processRequest;
+  createRequestBody?: typeof createRequestBody;
+  runMethod?: typeof runMethod;
+  simplifyUrl?: typeof simplifyUrl
+}
+
+export function createRestManager(options: CreateRestManagerOptions) {
+  return {
+    token: `${options.token.startsWith("Bot ") ? "" : "Bot "}${options.token}`,
+    maxRetryCount: options.maxRetryCount || 10,
+    version: options.version || "9",
+    secretKey: options.secretKey || "discordeno_best_lib_ever",
+    pathQueues: new Map<
+      string,
+      {
+        request: RestRequest;
+        payload: RestPayload;
+      }[]
+    >(),
+    processingQueue: false,
+    processingRateLimitedPaths: false,
+    globallyRateLimited: false,
+    ratelimitedPaths: new Map<string, RestRateLimitedPath>(),
+    debug: options.debug || function (_text: string) {},
+    checkRateLimits: options.checkRateLimits || checkRateLimits,
+    cleanupQueues: options.cleanupQueues || cleanupQueues,
+    processQueue: options.processQueue || processQueue,
+    processRateLimitedPaths: options.processRateLimitedPaths || processRateLimitedPaths,
+    processRequestHeaders: options.processRequestHeaders || processRequestHeaders,
+    processRequest: options.processRequest || processRequest,
+    createRequestBody: options.createRequestBody || createRequestBody,
+    runMethod: options.runMethod || runMethod,
+    simplifyUrl: options.simplifyUrl || simplifyUrl,
+  }
+}
+
+export async function startBot(bot: Bot) {
+  // START REST
+  bot.rest = createRestManager({ token: bot.token });
+
+  // START WS
+  bot.gateway = createGatewayManager()
+}
+
+export function stopBot(bot: Bot) {
+ // STOP REST
+
+      // STOP WS
+}
+
+export interface CreateBotOptions {
+  token: string;
+  botId: bigint;
+  applicationId?: bigint;
+  events: EventHandlers;
+  intents: (keyof typeof DiscordGatewayIntents)[];
+  botGatewayData?: GetGatewayBot;
+  rest?: Omit<CreateRestManagerOptions, "token">;
+}
+
+export type UnPromise<T extends Promise<unknown>> = T extends Promise<infer K> ? K : never;
+
+export type CreatedBot = UnPromise<ReturnType<typeof createBot>>;
+
+export type Bot = CreatedBot & {
+  rest: RestManager;
+  gateway: GatewayManager;
+}
+
+export type RestManager = ReturnType<typeof createRestManager>;
+
+export interface GatewayManager {
+
+}
+
+export interface EventHandlers {
+  debug: (text: string) => unknown;
 }

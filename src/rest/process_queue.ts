@@ -1,20 +1,19 @@
-import { eventHandlers } from "../bot.ts";
+import { RestManager } from "../bot.ts";
 import { DiscordHTTPResponseCodes } from "../types/codes/http_response_codes.ts";
 import { delay } from "../util/utils.ts";
-import { rest } from "./rest.ts";
 
 /** Processes the queue by looping over each path separately until the queues are empty. */
-export async function processQueue(id: string) {
+export async function processQueue(rest: RestManager, id: string) {
   const queue = rest.pathQueues.get(id);
   if (!queue) return;
 
   while (queue.length) {
-    rest.eventHandlers.debug?.("loop", "Running while loop in processQueue function.");
+    rest.debug(`[REST - processQueue] Running while loop.`);
     // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
     if (rest.globallyRateLimited) {
       setTimeout(async () => {
-        eventHandlers.debug?.("loop", `Running setTimeout in processQueue function.`);
-        await processQueue(id);
+        rest.debug(`[REST - processQueue] Running setTimeout.`);
+        await processQueue(rest, id);
       }, 1000);
 
       break;
@@ -27,7 +26,7 @@ export async function processQueue(id: string) {
     const basicURL = rest.simplifyUrl(queuedRequest.request.url, queuedRequest.request.method.toUpperCase());
 
     // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
-    const urlResetIn = rest.checkRateLimits(basicURL);
+    const urlResetIn = rest.checkRateLimits(rest, basicURL);
     if (urlResetIn) {
       // PAUSE FOR THIS SPECIFC REQUEST
       await delay(urlResetIn);
@@ -35,7 +34,7 @@ export async function processQueue(id: string) {
     }
 
     // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
-    const bucketResetIn = queuedRequest.payload.bucketId ? rest.checkRateLimits(queuedRequest.payload.bucketId) : false;
+    const bucketResetIn = queuedRequest.payload.bucketId ? rest.checkRateLimits(rest, queuedRequest.payload.bucketId) : false;
     // THIS BUCKET IS STILL RATELIMITED, RE-ADD TO QUEUE
     if (bucketResetIn) continue;
 
@@ -59,20 +58,20 @@ export async function processQueue(id: string) {
         : queuedRequest.request.url;
 
     // CUSTOM HANDLER FOR USER TO LOG OR WHATEVER WHENEVER A FETCH IS MADE
-    rest.eventHandlers.fetching(queuedRequest.payload);
+    rest.debug(`[REST - fetching] ${JSON.stringify(queuedRequest.payload)}`);
 
     try {
-      const response = await fetch(urlToUse, rest.createRequestBody(queuedRequest));
+      const response = await fetch(urlToUse, rest.createRequestBody(rest, queuedRequest));
+      rest.debug(`[REST - fetched] ${JSON.stringify(queuedRequest.payload)}`);
 
-      rest.eventHandlers.fetched(queuedRequest.payload);
-      const bucketIdFromHeaders = rest.processRequestHeaders(basicURL, response.headers);
+      const bucketIdFromHeaders = rest.processRequestHeaders(rest, basicURL, response.headers);
       // SET THE BUCKET Id IF IT WAS PRESENT
       if (bucketIdFromHeaders) {
         queuedRequest.payload.bucketId = bucketIdFromHeaders;
       }
 
       if (response.status < 200 || response.status >= 400) {
-        rest.eventHandlers.error("httpError", queuedRequest.payload, response);
+        rest.debug(`[REST - httpError] Payload: ${JSON.stringify(queuedRequest.payload)} | Response: ${JSON.stringify(response)}`);
 
         let error = "REQUEST_UNKNOWN_ERROR";
         switch (response.status) {
@@ -102,7 +101,7 @@ export async function processQueue(id: string) {
           queue.shift();
         } else {
           if (queuedRequest.payload.retryCount++ >= rest.maxRetryCount) {
-            rest.eventHandlers.retriesMaxed(queuedRequest.payload);
+            rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(queuedRequest.payload)}`);
             queuedRequest.request.reject(
               new Error(`[${response.status}] The request was rate limited and it maxed out the retries limit.`)
             );
@@ -117,7 +116,7 @@ export async function processQueue(id: string) {
 
       // SOMETIMES DISCORD RETURNS AN EMPTY 204 RESPONSE THAT CAN'T BE MADE TO JSON
       if (response.status === 204) {
-        rest.eventHandlers.fetchSuccess(queuedRequest.payload);
+        rest.debug(`[REST - FetchSuccess] ${JSON.stringify(queuedRequest.payload)}`);
         // REMOVE FROM QUEUE
         queue.shift();
         queuedRequest.request.respond({ status: 204 });
@@ -144,7 +143,7 @@ export async function processQueue(id: string) {
         //   continue;
         // }
 
-        rest.eventHandlers.fetchSuccess(queuedRequest.payload);
+        rest.debug(`[REST - fetchSuccess] ${JSON.stringify(queuedRequest.payload)}`);
         // REMOVE FROM QUEUE
         queue.shift();
         queuedRequest.request.respond({
@@ -154,7 +153,7 @@ export async function processQueue(id: string) {
       }
     } catch (error) {
       // SOMETHING WENT WRONG, LOG AND RESPOND WITH ERROR
-      rest.eventHandlers.fetchFailed(queuedRequest.payload, error);
+      rest.debug(`[REST - fetchFailed] Payload: ${JSON.stringify(queuedRequest.payload)} | Error: ${error}`);
       queuedRequest.request.reject(error);
       // REMOVE FROM QUEUE
       queue.shift();
@@ -162,5 +161,5 @@ export async function processQueue(id: string) {
   }
 
   // ONCE QUEUE IS DONE, WE CAN TRY CLEANING UP
-  rest.cleanupQueues();
+  rest.cleanupQueues(rest);
 }

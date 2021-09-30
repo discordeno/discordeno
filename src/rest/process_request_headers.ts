@@ -1,7 +1,7 @@
-import { rest } from "./rest.ts";
+import { RestManager } from "../bot.ts";
 
 /** Processes the rate limit headers and determines if it needs to be ratelimited and returns the bucket id if available */
-export function processRequestHeaders(url: string, headers: Headers) {
+export function processRequestHeaders(rest: RestManager, url: string, headers: Headers) {
   let ratelimited = false;
 
   // GET ALL NECESSARY HEADERS
@@ -37,7 +37,7 @@ export function processRequestHeaders(url: string, headers: Headers) {
   if (global) {
     const retryAfter = headers.get("retry-after");
     const globalReset = Date.now() + Number(retryAfter) * 1000;
-    rest.eventHandlers.globallyRateLimited(url, globalReset);
+    rest.debug(`[REST = Globally Rate Limited] URL: ${url} | Global Rest: ${globalReset}`);
     rest.globallyRateLimited = true;
     ratelimited = true;
 

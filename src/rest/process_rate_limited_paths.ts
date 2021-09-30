@@ -1,12 +1,11 @@
-import { eventHandlers } from "../bot.ts";
-import { rest } from "./rest.ts";
+import { RestManager } from "../bot.ts";
 
 /** This will create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
-export function processRateLimitedPaths() {
+export function processRateLimitedPaths(rest: RestManager) {
   const now = Date.now();
 
   for (const [key, value] of rest.ratelimitedPaths.entries()) {
-    rest.eventHandlers.debug?.("loop", `Running forEach loop in process_rate_limited_paths file.`);
+    rest.debug(`[REST - processRateLimitedPaths] Running forEach loop.`);
     // IF THE TIME HAS NOT REACHED CANCEL
     if (value.resetTimestamp > now) continue;
 
@@ -24,8 +23,8 @@ export function processRateLimitedPaths() {
     rest.processingRateLimitedPaths = true;
     // RECHECK IN 1 SECOND
     setTimeout(() => {
-      eventHandlers.debug?.("loop", `Running setTimeout in processRateLimitedPaths function.`);
-      processRateLimitedPaths();
+      rest.debug(`[REST - processRateLimitedPaths] Running setTimeout.`);
+      processRateLimitedPaths(rest);
     }, 1000);
   }
 }

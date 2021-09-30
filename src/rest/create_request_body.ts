@@ -1,9 +1,10 @@
+import { RestManager } from "../bot.ts";
 import type { FileContent } from "../types/discordeno/file_content.ts";
 import { USER_AGENT } from "../util/constants.ts";
-import { rest, RestPayload, RestRequest } from "./rest.ts";
+import { RestPayload, RestRequest } from "./rest.ts";
 
 /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
-export function createRequestBody(queuedRequest: { request: RestRequest; payload: RestPayload }) {
+export function createRequestBody(rest: RestManager, queuedRequest: { request: RestRequest; payload: RestPayload }) {
   const headers: { [key: string]: string } = {
     Authorization: rest.token,
     "User-Agent": USER_AGENT,

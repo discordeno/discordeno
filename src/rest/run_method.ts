@@ -1,36 +1,15 @@
+import { RestManager } from "../bot.ts";
 import { API_VERSION, BASE_URL, IMAGE_BASE_URL } from "../util/constants.ts";
-import { loopObject } from "../util/loop_object.ts";
-import { camelize } from "../util/utils.ts";
-import { rest } from "./rest.ts";
 
-// deno-lint-ignore no-explicit-any
 export async function runMethod<T = any>(
+  rest: RestManager,
   method: "get" | "post" | "put" | "delete" | "patch",
   url: string,
   body?: unknown,
   retryCount = 0,
   bucketId?: string
 ): Promise<T> {
-  if (body) {
-    body = loopObject(
-      body as Record<string, unknown>,
-      (value) =>
-        typeof value === "bigint"
-          ? value.toString()
-          : Array.isArray(value)
-          ? value.map((v) => (typeof v === "bigint" ? v.toString() : v))
-          : value,
-      `Running forEach loop in runMethod function for changing bigints to strings.`
-    );
-  }
-
-  rest.eventHandlers.debug?.("requestCreate", {
-    method,
-    url,
-    body,
-    retryCount,
-    bucketId,
-  });
+  rest.debug(`[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${JSON.stringify(body)}`)
 
   const errorStack = new Error("Location:");
   // @ts-ignore Breaks deno deploy. Luca said add tsignore until it's fixed
@@ -41,7 +20,7 @@ export async function runMethod<T = any>(
     const result = await fetch(url, {
       body: JSON.stringify(body || {}),
       headers: {
-        authorization: rest.authorization,
+        authorization: rest.secretKey,
       },
       method: method.toUpperCase(),
     }).catch((error) => {
@@ -64,7 +43,7 @@ export async function runMethod<T = any>(
           reject(errorStack);
         },
         respond: (data: { status: number; body?: string }) =>
-          resolve(data.status !== 204 ? camelize<T>(JSON.parse(data.body ?? "{}")) : (undefined as unknown as T)),
+          resolve(data.status !== 204 ? JSON.parse(data.body ?? "{}") : (undefined as unknown as T)),
       },
       {
         bucketId,

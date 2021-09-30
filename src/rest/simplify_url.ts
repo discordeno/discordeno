@@ -3,6 +3,7 @@
  * Modified for our usecase
  */
 
+/** Split a url to separate rate limit buckets based on major/minor parameters. */
 export function simplifyUrl(url: string, method: string) {
   let route = url
     .replace(/\/([a-z-]+)\/(?:[0-9]{17,19})/g, function (match, p) {
