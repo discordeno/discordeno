@@ -15,4 +15,6 @@ export interface ApplicationCommandOption {
   choices?: ApplicationCommandOptionChoice[];
   /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
   options?: ApplicationCommandOption[];
+  /** Whether this option should make autocomplete interactions. */
+  autocomplete?: boolean;
 }
