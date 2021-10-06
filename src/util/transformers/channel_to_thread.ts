@@ -87,8 +87,8 @@ export interface Thread {
 }
 
 export interface DiscordenoThread {
-  name: string;
   id: bigint;
+  name: string;
   type:
     | DiscordChannelTypes.GuildNewsThread
     | DiscordChannelTypes.GuildPublicThread
