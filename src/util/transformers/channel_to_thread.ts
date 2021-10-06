@@ -51,6 +51,7 @@ export function channelToThread(channel: Channel) {
   if (channel.threadMetadata?.locked) bitfield |= threadToggles.locked;
 
   return Object.create(baseThread, {
+    name: createNewProp(channel.name),
     id: createNewProp(snowflakeToBigint(channel.id)),
     type: createNewProp(channel.type),
     parentId: createNewProp(snowflakeToBigint(channel.parentId!)),
@@ -69,6 +70,7 @@ export function channelToThread(channel: Channel) {
 
 export interface Thread {
   id: string;
+  name: string;
   type:
     | DiscordChannelTypes.GuildNewsThread
     | DiscordChannelTypes.GuildPublicThread
@@ -86,6 +88,7 @@ export interface Thread {
 
 export interface DiscordenoThread {
   id: bigint;
+  name: string;
   type:
     | DiscordChannelTypes.GuildNewsThread
     | DiscordChannelTypes.GuildPublicThread
