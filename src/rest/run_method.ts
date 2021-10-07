@@ -9,7 +9,11 @@ export async function runMethod<T = any>(
   retryCount = 0,
   bucketId?: string
 ): Promise<T> {
-  rest.debug(`[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${JSON.stringify(body)}`)
+  rest.debug(
+    `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${JSON.stringify(
+      body
+    )}`
+  );
 
   const errorStack = new Error("Location:");
   // @ts-ignore Breaks deno deploy. Luca said add tsignore until it's fixed

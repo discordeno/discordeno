@@ -18,15 +18,12 @@ export async function createBot(options: CreateBotOptions) {
     id: options.botId,
     applicationId: options.applicationId || options.botId,
     token: `Bot ${options.token}`,
-    events: {dispatchRequirements: dispatchRequirements, ...options.events},
-    intents: options.intents.reduce(
-          (bits, next) => (bits |= DiscordGatewayIntents[next]),
-          0
-        ),
-    botGatewayData: options.botGatewayData || await getGatewayBot(),
+    events: { dispatchRequirements: dispatchRequirements, ...options.events },
+    intents: options.intents.reduce((bits, next) => (bits |= DiscordGatewayIntents[next]), 0),
+    botGatewayData: options.botGatewayData || (await getGatewayBot()),
     isReady: false,
-    rest: createRestManager(options.rest ? { token: options.token, ...options.rest} : { token: options.token})
-  }
+    rest: createRestManager(options.rest ? { token: options.token, ...options.rest } : { token: options.token }),
+  };
 }
 
 const bot = await createBot({
@@ -34,14 +31,14 @@ const bot = await createBot({
   botId: 0n,
   events: createEventHandlers(),
   intents: [],
-})
+});
 
 export function createEventHandlers(options?: Partial<EventHandlers>) {
   return {
     debug: () => undefined,
     // PROVIDED OPTIONS OVERRIDE EVERYTHING ABOVE
-    ...options
-  }
+    ...options,
+  };
 }
 
 export interface CreateRestManagerOptions {
@@ -58,7 +55,7 @@ export interface CreateRestManagerOptions {
   processRequest?: typeof processRequest;
   createRequestBody?: typeof createRequestBody;
   runMethod?: typeof runMethod;
-  simplifyUrl?: typeof simplifyUrl
+  simplifyUrl?: typeof simplifyUrl;
 }
 
 export function createRestManager(options: CreateRestManagerOptions) {
@@ -88,7 +85,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
     createRequestBody: options.createRequestBody || createRequestBody,
     runMethod: options.runMethod || runMethod,
     simplifyUrl: options.simplifyUrl || simplifyUrl,
-  }
+  };
 }
 
 export async function startBot(bot: Bot) {
@@ -96,13 +93,12 @@ export async function startBot(bot: Bot) {
   bot.rest = createRestManager({ token: bot.token });
 
   // START WS
-  bot.gateway = createGatewayManager()
+  bot.gateway = createGatewayManager();
 }
 
 export function stopBot(bot: Bot) {
- // STOP REST
-
-      // STOP WS
+  // STOP REST
+  // STOP WS
 }
 
 export interface CreateBotOptions {
@@ -122,13 +118,11 @@ export type CreatedBot = UnPromise<ReturnType<typeof createBot>>;
 export type Bot = CreatedBot & {
   rest: RestManager;
   gateway: GatewayManager;
-}
+};
 
 export type RestManager = ReturnType<typeof createRestManager>;
 
-export interface GatewayManager {
-
-}
+export interface GatewayManager {}
 
 export interface EventHandlers {
   debug: (text: string) => unknown;

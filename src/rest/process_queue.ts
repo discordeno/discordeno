@@ -34,7 +34,9 @@ export async function processQueue(rest: RestManager, id: string) {
     }
 
     // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
-    const bucketResetIn = queuedRequest.payload.bucketId ? rest.checkRateLimits(rest, queuedRequest.payload.bucketId) : false;
+    const bucketResetIn = queuedRequest.payload.bucketId
+      ? rest.checkRateLimits(rest, queuedRequest.payload.bucketId)
+      : false;
     // THIS BUCKET IS STILL RATELIMITED, RE-ADD TO QUEUE
     if (bucketResetIn) continue;
 
@@ -71,7 +73,9 @@ export async function processQueue(rest: RestManager, id: string) {
       }
 
       if (response.status < 200 || response.status >= 400) {
-        rest.debug(`[REST - httpError] Payload: ${JSON.stringify(queuedRequest.payload)} | Response: ${JSON.stringify(response)}`);
+        rest.debug(
+          `[REST - httpError] Payload: ${JSON.stringify(queuedRequest.payload)} | Response: ${JSON.stringify(response)}`
+        );
 
         let error = "REQUEST_UNKNOWN_ERROR";
         switch (response.status) {
