@@ -1,5 +1,5 @@
 /** Begin spawning shards. */
-import {Bot} from "../bot.ts";
+import { Bot } from "../bot.ts";
 
 export function spawnShards(bot: Bot, firstShardId = 0) {
   /** Stored as bucketId: [clusterId, [ShardIds]] */
