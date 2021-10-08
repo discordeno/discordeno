@@ -9,6 +9,10 @@ export interface CreateGuildRole {
   color?: number;
   /** Whether the role should be displayed separately in the sidebar, default: false */
   hoist?: boolean;
+  /** The role's icon image (if the guild has the `ROLE_ICONS` feature) */
+  icon: string | null;
+  /** The role's unicode emoji as a standard emoji (if the guild has the `ROLE_ICONS` feature) */
+  unicodeEmoji: string | null;
   /** Whether the role should be mentionable, default: false */
   mentionable?: boolean;
 }
