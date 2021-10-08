@@ -7,7 +7,7 @@ export interface ModifyGuildRole {
   permissions?: PermissionStrings[] | null;
   /** RGB color value */
   color?: number | null;
-  /** Whether the role should be displayed separately in the sidebar */
+  /** Whether the role should be displayed seperately in the sidebar */
   hoist?: boolean | null;
   /** Whether the role should be mentionable */
   mentionable?: boolean | null;

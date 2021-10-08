@@ -10,7 +10,7 @@ export interface EditMessage {
   content?: string | null;
   /** Embedded `rich` content (up to 6000 characters) */
   embeds?: Embed[] | null;
-  /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
+  /** Edit the flags of the message (only `SUPRESS_EMBEDS` can currently be set/unset) */
   flags?: 4 | null;
   /** The contents of the file being sent/edited */
   file?: FileContent | FileContent[] | null;

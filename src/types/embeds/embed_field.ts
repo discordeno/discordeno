@@ -4,6 +4,6 @@ export interface EmbedField {
   name: string;
   /** Value of the field */
   value: string;
-  /** Whether this field should display inline */
+  /** Whether or not this field should display inline */
   inline?: boolean;
 }

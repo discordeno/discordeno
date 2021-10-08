@@ -8,7 +8,7 @@ export interface DiscoveryMetadata {
   keywords: string[] | null;
   /** Whether guild info is shown when custom emojis from this guild are clicked */
   emojiDiscoverabilityEnabled: boolean;
-  /** When the server's partner application was accepted or denied, for applications via Server Settings */
+  /** When the server's partner applicationo was accepted or denied, for applications via Server Settings */
   partnerActionedTimestamp: string | null;
   /** When the server applied for partnership, if it has a pending application */
   partnerApplicationTimestamp: string | null;

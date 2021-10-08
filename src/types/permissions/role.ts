@@ -8,8 +8,10 @@ export interface Role {
   name: string;
   /** Integer representation of hexadecimal color code */
   color: number;
-  /** If this role is showed separately in the user listing */
+  /** If this role is showed seperately in the user listing */
   hoist: boolean;
+  /** The role's icon image (if the guild has the `ROLE_ICONS` feature) */
+  icon: string | null;
   /** Position of this role */
   position: number;
   /** Permission bit set */
@@ -20,4 +22,6 @@ export interface Role {
   mentionable: boolean;
   /** The tags this role has */
   tags?: RoleTags;
+  /** The role's unicode emoji as a standard emoji (if the guild has the `ROLE_ICONS` feature) */
+  unicodeEmoji: string | null;
 }

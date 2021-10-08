@@ -4,7 +4,7 @@ import type { InviteMetadata } from "../../types/invites/invite_metadata.ts";
 import { endpoints } from "../../util/constants.ts";
 import { botHasChannelPermissions, requireBotGuildPermissions } from "../../util/permissions.ts";
 
-/** Deletes an invitation for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
+/** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
 export async function deleteInvite(channelId: bigint, inviteCode: string) {
   const channel = await cacheHandlers.get("channels", channelId);
   if (channel) {

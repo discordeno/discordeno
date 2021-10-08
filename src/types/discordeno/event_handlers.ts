@@ -63,11 +63,11 @@ export type EventHandlersDefinitions = {
   guildCreate: [guild: DiscordenoGuild];
   /** This event does get sent on start when shards are loading the guilds */
   guildLoaded: [guild: DiscordenoGuild];
-  /** When a guild goes available this event will be run. */
+  /** When a guild goes available this event will be ran. */
   guildAvailable: [guild: DiscordenoGuild];
-  /** When a guild goes unavailable this event will be run. */
+  /** When a guild goes unavailable this event will be ran. */
   guildUnavailable: [guild: DiscordenoGuild];
-  /** Sent when a guilds' integration gets updated */
+  /** Sent when a guilds integration gets updated */
   guildIntegrationsUpdate: [guild: DiscordenoGuild];
   /** Sent when a guild is updated. */
   guildUpdate: [guild: DiscordenoGuild, changes: GuildUpdateChange[]];
@@ -156,7 +156,7 @@ export type EventHandlersDefinitions = {
   webhooksUpdate: [channelId: bigint, guildId: bigint];
   /** Sent when a member has passed the guild's Membership Screening requirements */
   membershipScreeningPassed: [guild: DiscordenoGuild, member: DiscordenoMember];
-  /** Sent when an integration is created on a server such as Twitch, YouTube etc... */
+  /** Sent when an integration is created on a server such as twitch, youtube etc.. */
   integrationCreate: [data: IntegrationCreateUpdate];
   /** Sent when an integration is updated. */
   integrationUpdate: [data: IntegrationCreateUpdate];
@@ -164,7 +164,7 @@ export type EventHandlersDefinitions = {
   integrationDelete: [data: IntegrationDelete];
   /** Sent when a new invite to a channel is created. */
   inviteCreate: [data: InviteCreate];
-  /** Sent when an invitation is deleted. */
+  /** Sent when an invite is deleted. */
   inviteDelete: [data: InviteDelete];
 };
 

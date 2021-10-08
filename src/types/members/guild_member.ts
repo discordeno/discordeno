@@ -4,13 +4,13 @@ import { User } from "../users/user.ts";
 export interface GuildMember {
   /** The user this guild member represents */
   user?: User;
-  /** These users' guild nickname */
+  /** This users guild nickname */
   nick?: string | null;
   /** Array of role object ids */
   roles: string[];
   /** When the user joined the guild */
   joinedAt: string;
-  /** When the user started boosting the guild */
+  /** When the user started boosing the guild */
   premiumSince?: string | null;
   /** Whether the user is deafened in voice channels */
   deaf: boolean;
@@ -20,7 +20,7 @@ export interface GuildMember {
   pending?: boolean;
 }
 
-// We use these types much since user always exists unless it's a `CREATE_MESSAGE` or `MESSAGE_UPDATE` event
+// We use these types much since user always exists unless its a `CREATE_MESSAGE` or `MESSAGE_UPDATE` event
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */
 export type GuildMemberWithUser = Omit<GuildMember, "user"> & { user: User };

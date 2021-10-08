@@ -13,7 +13,7 @@ export enum DiscordMessageFlags {
   /** This message has an associated thread, with the same id as the message */
   HasThread = 1 << 5,
   /** This message is only visible to the user who invoked the Interaction */
-  Ephemeral = 1 << 6,
+  Empheral = 1 << 6,
   /** This message is an Interaction Response and the bot is "thinking" */
   Loading = 1 << 7,
 }

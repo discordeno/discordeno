@@ -15,7 +15,7 @@ export function spawnShards(firstShardId = 0) {
       const bucket = ws.buckets.get(bucketId);
 
       if (!bucket) {
-        // Create the bucket since it doesn't exist
+        // Create the bucket since it doesnt exist
         ws.buckets.set(bucketId, {
           clusters: [[cluster, i]],
           createNextShard: [],

@@ -11,11 +11,14 @@ import { highestRole } from "../util/permissions.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
 import { DiscordenoMember } from "./member.ts";
+import { roleIconURL } from "../helpers/roles/icon_url.ts";
+import { DiscordImageSize } from "../types/misc/image_size.ts";
+import { DiscordImageFormat } from "../types/misc/image_format.ts";
 
 const ROLE_SNOWFLAKES = ["id", "botId", "integrationId", "guildId"];
 
 const roleToggles = {
-  /** If this role is showed separately in the user listing */
+  /** If this role is showed seperately in the user listing */
   hoist: 1n,
   /** Whether this role is managed by an integration */
   managed: 2n,
@@ -32,6 +35,9 @@ const baseRole: Partial<DiscordenoRole> = {
   get hexColor() {
     return this.color!.toString(16);
   },
+  get iconURL() {
+    return roleIconURL(this.id!, { icon: this.icon });
+  },
   get members() {
     return cache.members.filter((m) => m.guilds.some((g) => g.roles.includes(this.id!)));
   },
@@ -40,6 +46,13 @@ const baseRole: Partial<DiscordenoRole> = {
   },
 
   // METHODS
+  makeIconURL(options) {
+    return roleIconURL(this.id!, {
+      icon: this.icon!,
+      size: options?.size,
+      format: options?.format,
+    });
+  },
   delete() {
     return deleteRole(this.guildId!, this.id!);
   },
@@ -118,6 +131,12 @@ export async function createDiscordenoRole(
   for (const key of Object.keys(rest) as (keyof typeof rest)[]) {
     eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoRole function.`);
 
+    if (key === "icon") {
+      const transformed = rest[key] ? BigInt(`0x${rest[key] as string}`) : undefined;
+      props.icon = createNewProp(transformed);
+      continue;
+    }
+
     const toggleBits = roleToggles[key as keyof typeof roleToggles];
     if (toggleBits) {
       bitfield |= rest[key] ? toggleBits : 0n;
@@ -147,7 +166,7 @@ export async function createDiscordenoRole(
   return Object.create(baseRole, props) as DiscordenoRole;
 }
 
-export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions"> {
+export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions" | "icon"> {
   /** The role id */
   id: bigint;
   /** The bot id that is associated with this role. */
@@ -162,6 +181,10 @@ export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions"
   permissions: bigint;
   /** Holds all the boolean toggles. */
   bitfield: bigint;
+  /** The role's icon image in bigint format. (if the guild has the `ROLE_ICONS` feature) */
+  icon?: bigint;
+  /** The role's unicode emoji as a standard emoji (if the guild has the `ROLE_ICONS` feature) */
+  unicodeEmoji: string | null;
 
   // GETTERS
 
@@ -169,13 +192,16 @@ export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions"
   guild?: DiscordenoGuild;
   /** The hex color for this role. */
   hexColor: string;
+  /** The avatar url using the default format and size. */
+  iconURL: string | null;
   /** The cached members that have this role */
   members: Collection<bigint, DiscordenoMember>;
   /** The @ mention of the role in a string. */
   mention: string;
 
   // METHODS
-
+  /** Returns the icon url for this role and can be dynamically modified with a size or format */
+  makeIconURL(options?: { size?: DiscordImageSize; format?: DiscordImageFormat }): string | null;
   /** Delete the role */
   delete(): ReturnType<typeof deleteRole>;
   /** Edits the role */

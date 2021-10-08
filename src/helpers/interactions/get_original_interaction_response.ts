@@ -4,7 +4,7 @@ import { structures } from "../../structures/mod.ts";
 import type { Message } from "../../types/messages/message.ts";
 import { endpoints } from "../../util/constants.ts";
 
-/** Returns the initial Interaction response. Functions the same as Get Webhook Message */
+/** Returns the initial Interactio response. Functions the same as Get Webhook Message */
 export async function getOriginalInteractionResponse(token: string) {
   const result = await rest.runMethod<Message>("get", endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationId, token));
 

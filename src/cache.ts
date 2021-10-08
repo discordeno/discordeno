@@ -18,17 +18,17 @@ import { User } from "./types/users/user.ts";
 
 export const cache = {
   isReady: false,
-  /** All the guild objects the bot has access to, mapped by their Ids */
+  /** All of the guild objects the bot has access to, mapped by their Ids */
   guilds: new Collection<bigint, DiscordenoGuild>([], { sweeper: { filter: guildSweeper, interval: 3600000 } }),
-  /** All the channel objects the bot has access to, mapped by their Ids. Sweep channels 1 minute after guilds are sweeped so dispatchedGuildIds is filled. */
+  /** All of the channel objects the bot has access to, mapped by their Ids. Sweep channels 1 minute after guilds are sweeped so dispatchedGuildIds is filled. */
   channels: new Collection<bigint, DiscordenoChannel>([], { sweeper: { filter: channelSweeper, interval: 3660000 } }),
-  /** All the message objects the bot has cached since the bot acquired `READY` state, mapped by their Ids */
+  /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their Ids */
   messages: new Collection<bigint, DiscordenoMessage>([], { sweeper: { filter: messageSweeper, interval: 300000 } }),
-  /** All the member objects that have been cached since the bot acquired `READY` state, mapped by their Ids */
+  /** All of the member objects that have been cached since the bot acquired `READY` state, mapped by their Ids */
   members: new Collection<bigint, DiscordenoMember>([], { sweeper: { filter: memberSweeper, interval: 300000 } }),
-  /** All the unavailable guilds, mapped by their Ids (id, timestamp) */
+  /** All of the unavailable guilds, mapped by their Ids (id, timestamp) */
   unavailableGuilds: new Collection<bigint, number>(),
-  /** All the presence update objects received in PRESENCE_UPDATE gateway event, mapped by their user Id */
+  /** All of the presence update objects received in PRESENCE_UPDATE gateway event, mapped by their user Id */
   presences: new Collection<bigint, PresenceUpdate>([], { sweeper: { filter: () => true, interval: 300000 } }),
   fetchAllMembersProcessingRequests: new Collection<
     string,
@@ -90,7 +90,7 @@ function guildSweeper(guild: DiscordenoGuild) {
   // Reset activity for next interval
   if (cache.activeGuildIds.delete(guild.id)) return false;
 
-  // This is inactive guild. Not a single thing has happened for at least 30 minutes.
+  // This is inactive guild. Not a single thing has happened for atleast 30 minutes.
   // Not a reaction, not a message, not any event!
   cache.dispatchedGuildIds.add(guild.id);
 
@@ -104,7 +104,7 @@ function channelSweeper(channel: DiscordenoChannel, key: bigint) {
     return true;
   }
 
-  // THE KEY DM CHANNELS ARE STORED BY IS THE USER ID. If the user is not cached, we don't need to cache their dm channel.
+  // THE KEY DM CHANNELS ARE STORED BY IS THE USER ID. If the user is not cached, we dont need to cache their dm channel.
   if (!channel.guildId && !cache.members.has(key)) return true;
 
   return false;

@@ -14,7 +14,7 @@ const processing = new Set<bigint>();
 export async function dispatchRequirements(data: DiscordGatewayPayload, shardId: number) {
   if (!cache.isReady) return;
 
-  // DELETE MEANS WE DON'T NEED TO FETCH. CREATE SHOULD HAVE DATA TO CACHE
+  // DELETE MEANS WE DONT NEED TO FETCH. CREATE SHOULD HAVE DATA TO CACHE
   if (data.t && ["GUILD_CREATE", "GUILD_DELETE"].includes(data.t)) return;
 
   const id = snowflakeToBigint(
@@ -27,7 +27,7 @@ export async function dispatchRequirements(data: DiscordGatewayPayload, shardId:
 
   if (!id || cache.activeGuildIds.has(id)) return;
 
-  // If this guild is in cache, it has not been swept, and we can cancel
+  // If this guild is in cache, it has not been swept and we can cancel
   if (cache.guilds.has(id)) {
     cache.activeGuildIds.add(id);
     return;
