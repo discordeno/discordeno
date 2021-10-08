@@ -2,10 +2,7 @@ import { Bot } from "../bot.ts";
 import { Message } from "../types/messages/message.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
 
-export function transformMessage(
-  bot: Bot,
-  data: Message
-  ) {
+export function transformMessage(bot: Bot, data: Message) {
   return {
     // UNTRANSFORMED STUFF HERE
     content: data.content || "",
@@ -13,10 +10,7 @@ export function transformMessage(
     tag: `${data.author.username}#${data.author.discriminator.toString().padStart(4, "0")}`,
     timestamp: Date.parse(data.timestamp),
     editedTimestamp: data.editedTimestamp ? Date.parse(data.editedTimestamp) : undefined,
-    bitfield:
-      (data.tts ? 1n : 0n) |
-      (data.mentionEveryone ? 2n : 0n) |
-      (data.pinned ? 4n : 0n),
+    bitfield: (data.tts ? 1n : 0n) | (data.mentionEveryone ? 2n : 0n) | (data.pinned ? 4n : 0n),
     attachments: data.attachments,
     embeds: data.embeds,
     reactions: data.reactions,
@@ -36,11 +30,19 @@ export function transformMessage(
     webhookId: data.webhookId ? bot.transformers.snowflake(data.webhookId) : undefined,
     authorId: bot.transformers.snowflake(data.author.id),
     applicationId: data.applicationId ? bot.transformers.snowflake(data.applicationId) : undefined,
-    messageReference: data.messageReference ? {
-      messageId: data.messageReference.messageId ?  bot.transformers.snowflake(data.messageReference.messageId) : undefined,
-      channelId: data.messageReference.channelId ?  bot.transformers.snowflake(data.messageReference.channelId) : undefined,
-      guildId: data.messageReference.guildId ?  bot.transformers.snowflake(data.messageReference.guildId) : undefined,
-    } : undefined,
+    messageReference: data.messageReference
+      ? {
+          messageId: data.messageReference.messageId
+            ? bot.transformers.snowflake(data.messageReference.messageId)
+            : undefined,
+          channelId: data.messageReference.channelId
+            ? bot.transformers.snowflake(data.messageReference.channelId)
+            : undefined,
+          guildId: data.messageReference.guildId
+            ? bot.transformers.snowflake(data.messageReference.guildId)
+            : undefined,
+        }
+      : undefined,
     mentionedUserIds: data.mentions.map((m) => bot.transformers.snowflake(m.id)),
     mentionedRoleIds: data.mentionRoles.map((id) => bot.transformers.snowflake(id)),
     mentionedChannelIds: [
@@ -51,8 +53,8 @@ export function transformMessage(
         // converts the <#123> into 123
         bot.transformers.snowflake(text.substring(2, text.length - 1))
       ),
-    ]
-  }
+    ],
+  };
 }
 
 export interface DiscordenoMessage
