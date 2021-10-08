@@ -15,10 +15,8 @@ export function iconURL(
   return options.icon
     ? formatImageURL(
         endpoints.ROLE_ICON(
-            roleId,
-          typeof options.icon === "string"
-            ? options.icon
-            : options.icon.toString(16).padStart(32, "0")
+          roleId,
+          typeof options.icon === "string" ? options.icon : options.icon.toString(16).padStart(32, "0")
         ),
         options.size || 128,
         options.format
