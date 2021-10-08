@@ -10,10 +10,8 @@ import { Collection } from "../util/collection.ts";
 import { highestRole } from "../util/permissions.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
-import { DiscordenoMember, memberToggles } from "./member.ts";
-import { iconHashToBigInt } from "../util/hash.ts";
-import { avatarURL } from "../helpers/members/avatar_url.ts";
-import { iconURL } from "../helpers/roles/icon_url.ts";
+import { DiscordenoMember } from "./member.ts";
+import { roleIconURL } from "../helpers/roles/icon_url.ts";
 import { DiscordImageSize } from "../types/misc/image_size.ts";
 import { DiscordImageFormat } from "../types/misc/image_format.ts";
 
@@ -38,7 +36,7 @@ const baseRole: Partial<DiscordenoRole> = {
     return this.color!.toString(16);
   },
   get iconURL() {
-    return iconURL(this.id!, { icon: this.icon });
+    return roleIconURL(this.id!, { icon: this.icon });
   },
   get members() {
     return cache.members.filter((m) => m.guilds.some((g) => g.roles.includes(this.id!)));
@@ -49,7 +47,7 @@ const baseRole: Partial<DiscordenoRole> = {
 
   // METHODS
   makeIconURL(options) {
-    return iconURL(this.id!, {
+    return roleIconURL(this.id!, {
       icon: this.icon!,
       size: options?.size,
       format: options?.format,
