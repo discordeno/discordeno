@@ -45,7 +45,7 @@ export enum DiscordGuildFeatures {
   /** guild has access to the three days archive time for threads */
   ThreeDayThreadArchive = "THREE_DAY_THREAD_ARCHIVE",
   /** Guild is able to set role icons */
-  RoleIcons = "ROLE_ICONS"
+  RoleIcons = "ROLE_ICONS",
 }
 
 export type GuildFeatures = DiscordGuildFeatures;

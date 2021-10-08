@@ -10,12 +10,12 @@ import { Collection } from "../util/collection.ts";
 import { highestRole } from "../util/permissions.ts";
 import { createNewProp } from "../util/utils.ts";
 import { DiscordenoGuild } from "./guild.ts";
-import {DiscordenoMember, memberToggles} from "./member.ts";
-import {iconHashToBigInt} from "../util/hash.ts";
-import {avatarURL} from "../helpers/members/avatar_url.ts";
-import {iconURL} from "../helpers/roles/icon_url.ts";
-import {DiscordImageSize} from "../types/misc/image_size.ts";
-import {DiscordImageFormat} from "../types/misc/image_format.ts";
+import { DiscordenoMember, memberToggles } from "./member.ts";
+import { iconHashToBigInt } from "../util/hash.ts";
+import { avatarURL } from "../helpers/members/avatar_url.ts";
+import { iconURL } from "../helpers/roles/icon_url.ts";
+import { DiscordImageSize } from "../types/misc/image_size.ts";
+import { DiscordImageFormat } from "../types/misc/image_format.ts";
 
 const ROLE_SNOWFLAKES = ["id", "botId", "integrationId", "guildId"];
 
@@ -38,7 +38,7 @@ const baseRole: Partial<DiscordenoRole> = {
     return this.color!.toString(16);
   },
   get iconURL() {
-    return iconURL(this.id!, {icon: this.icon});
+    return iconURL(this.id!, { icon: this.icon });
   },
   get members() {
     return cache.members.filter((m) => m.guilds.some((g) => g.roles.includes(this.id!)));
@@ -52,7 +52,7 @@ const baseRole: Partial<DiscordenoRole> = {
     return iconURL(this.id!, {
       icon: this.icon!,
       size: options?.size,
-      format: options?.format
+      format: options?.format,
     });
   },
   delete() {
@@ -67,7 +67,7 @@ const baseRole: Partial<DiscordenoRole> = {
     // If still none error out.
     if (!position) {
       throw new Error(
-          "role.higherThanRoleId() did not have a position provided and the role or guild was not found in cache. Please provide a position like role.higherThanRoleId(roleId, position)"
+        "role.higherThanRoleId() did not have a position provided and the role or guild was not found in cache. Please provide a position like role.higherThanRoleId(roleId, position)"
       );
     }
 
@@ -121,9 +121,9 @@ const baseRole: Partial<DiscordenoRole> = {
 
 // deno-lint-ignore require-await
 export async function createDiscordenoRole(
-    data: { role: Role } & {
-      guildId: bigint;
-    }
+  data: { role: Role } & {
+    guildId: bigint;
+  }
 ) {
   const { tags = {}, ...rest } = { guildId: data.guildId, ...data.role };
 
@@ -146,7 +146,7 @@ export async function createDiscordenoRole(
     }
 
     props[key] = createNewProp(
-        ROLE_SNOWFLAKES.includes(key) ? (rest[key] ? snowflakeToBigint(rest[key] as string) : undefined) : rest[key]
+      ROLE_SNOWFLAKES.includes(key) ? (rest[key] ? snowflakeToBigint(rest[key] as string) : undefined) : rest[key]
     );
   }
 
