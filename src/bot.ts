@@ -123,13 +123,13 @@ export type Bot = CreatedBot & {
 };
 
 export interface Transformers {
-  snowflake: typeof snowflakeToBigint,
+  snowflake: typeof snowflakeToBigint;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
   return {
     snowflake: options.snowflake || snowflakeToBigint,
-  }
+  };
 }
 
 export type RestManager = ReturnType<typeof createRestManager>;
