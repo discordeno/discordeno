@@ -7,7 +7,7 @@ export interface Connection {
   id: string;
   /** The username of the connection account */
   name: string;
-  /** The service of the connection (Twitch, YouTube) */
+  /** The service of the connection (twitch, youtube) */
   type: string;
   /** Whether the connection is revoked */
   revoked?: boolean;

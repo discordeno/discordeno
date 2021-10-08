@@ -36,7 +36,7 @@ export async function calculateBasePermissions(
   if (!guild || !member) return 8n;
 
   let permissions = 0n;
-  // Calculate the role permissions bits, @everyone role is not in memberRoleIds, so we need to pass guildId manually
+  // Calculate the role permissions bits, @everyone role is not in memberRoleIds so we need to pass guildId manualy
   permissions |=
     [...(member.guilds.get(guild.id)?.roles || []), guild.id]
       .map((id) => guild.roles.get(id)?.permissions)
@@ -49,7 +49,7 @@ export async function calculateBasePermissions(
 
   // If the memberId is equal to the guild ownerId he automatically has every permission so we add ADMINISTRATOR permission
   if (guild.ownerId === member.id) permissions |= 8n;
-  // Return the members' permission bits as a string
+  // Return the members permission bits as a string
   return permissions;
 }
 
@@ -140,7 +140,7 @@ export async function hasChannelPermissions(
   member: bigint | DiscordenoMember,
   permissions: PermissionStrings[]
 ) {
-  // First we need to overwrite bits this member has
+  // First we need the overwrite bits this member has
   const channelOverwrites = await calculateChannelOverwrites(channel, member);
   // Second use the validatePermissions function to check if the member has every permission
   return validatePermissions(channelOverwrites, permissions);
@@ -177,13 +177,13 @@ export async function getMissingChannelPermissions(
   member: bigint | DiscordenoMember,
   permissions: PermissionStrings[]
 ) {
-  // First we need the role permission bits this member has
+  // First we need the role permissino bits this member has
   const permissionBits = await calculateChannelOverwrites(channel, member);
-  // Second return the members missing permissions
+  // Second returnn the members missing permissions
   return missingPermissions(permissionBits, permissions);
 }
 
-/** Throws an error if this member has not all the given permissions */
+/** Throws an error if this member has not all of the given permissions */
 export async function requireGuildPermissions(
   guild: bigint | DiscordenoGuild,
   member: bigint | DiscordenoMember,
@@ -202,7 +202,7 @@ export function requireBotGuildPermissions(guild: bigint | DiscordenoGuild, perm
   return requireGuildPermissions(guild, botId, permissions);
 }
 
-/** Throws an error if this member has not all the given permissions */
+/** Throws an error if this member has not all of the given permissions */
 export async function requireChannelPermissions(
   channel: bigint | DiscordenoChannel,
   member: bigint | DiscordenoMember,
@@ -215,7 +215,7 @@ export async function requireChannelPermissions(
   }
 }
 
-/** Throws an error if the bot has not all the given channel permissions */
+/** Throws an error if the bot has not all of the given channel permissions */
 export function requireBotChannelPermissions(channel: bigint | DiscordenoChannel, permissions: PermissionStrings[]) {
   // Since Bot is a normal member we can use the throwOnMissingChannelPermission() function
   return requireChannelPermissions(channel, botId, permissions);
@@ -241,7 +241,7 @@ export function calculateBits(permissions: PermissionStrings[]) {
     .toString();
 }
 
-/** Internal function to check if the bot has the permissions to set this overwrites */
+/** Internal function to check if the bot has the permissions to set these overwrites */
 export async function requireOverwritePermissions(guildOrId: bigint | DiscordenoGuild, overwrites: Overwrite[]) {
   let requiredPerms: Set<PermissionStrings> = new Set(["MANAGE_CHANNELS"]);
 

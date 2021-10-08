@@ -40,7 +40,7 @@ export const rest = {
     globallyRateLimited(url: string, resetsAt: number) {},
     retriesMaxed(payload: RestPayload) {},
   },
-  /** Handler functions for every request. Converts to json, verified authorization & requirements and begins processing the request */
+  /** Handler function for every request. Converts to json, verified authorization & requirements and begins processing the request */
   checkRateLimits,
   cleanupQueues,
   processQueue,

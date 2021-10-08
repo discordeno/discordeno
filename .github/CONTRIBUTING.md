@@ -12,9 +12,9 @@
 ## Submitting a Pull Request
 
 - Give the PR a descriptive title.
-- Ensure there is a related issue, and it is referenced in the pull request text.
+- Ensure there is a related issue and it is referenced in the pull request text.
 - Ensure there are tests that cover the changes.
-- Ensure all the checks (lint and test) are passing.
+- Ensure all of the checks (lint and test) are passing.
 
 ## Style Guide
 
@@ -22,7 +22,7 @@
 - Comply with
   [these guidelines for inclusive code](https://chromium.googlesource.com/chromium/src/+/master/styleguide/inclusive_code.md).
 - An exported function must not have more than 4 individual parameters, the rest
-  arguments should be incorporated inside an object as a single parameter.
+  arguments should be encorporated inside an object as a single parameter.
 - Export all interfaces, types, and enums that are used for or inside an
   exported entity.
 - Every exported entity must be accompanied by a Typedoc (JSDoc without explicit
@@ -39,9 +39,9 @@
 ## Types Guide
 
 - Must use camel case (same property name as in the docs just in camel case).
-- Each field or property must be accompanied by a reasonable JSDoc comment
+- Each field or property must be accompanied with a reasonable JSDoc comment
   right above its type definition.
-- Must be placed inside the types' module (in `src/types` directory).
+- Must be placed inside of the types module (in `src/types` directory).
 
 Example:
 

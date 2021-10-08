@@ -1,6 +1,6 @@
 /** https://discord.com/developers/docs/resources/guild#guild-object-guild-features */
 export enum DiscordGuildFeatures {
-  /** Guild has access to set an invitation splash background */
+  /** Guild has access to set an invite splash background */
   InviteSplash = "INVITE_SPLASH",
   /** Guild has access to set 384kbps bitrate in voice (previously VIP voice servers) */
   VipRegions = "VIP_REGIONS",
@@ -10,7 +10,7 @@ export enum DiscordGuildFeatures {
   Verified = "VERIFIED",
   /** Guild is partnered */
   Partnered = "PARTNERED",
-  /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
+  /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and recives community updates */
   Community = "COMMUNITY",
   /** Guild has access to use commerce features (i.e. create store channels) */
   Commerce = "COMMERCE",

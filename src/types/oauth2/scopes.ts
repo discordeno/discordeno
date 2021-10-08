@@ -14,7 +14,7 @@ export type DiscordOAuth2Scopes =
   | "rpc.notifications.read"
   | "rpc.voice.read"
   | "rpc.voice.write"
-  | "webhook.incoming"
+  | "webhook.incomming"
   | "applications.builds.upload"
   | "applications.builds.read"
   | "applications.store.update"

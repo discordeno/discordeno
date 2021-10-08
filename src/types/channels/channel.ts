@@ -52,7 +52,7 @@ export interface Channel {
   messageCount?: number;
   /** An approximate count of users in a thread, stops counting at 50 */
   memberCount?: number;
-  /** Thread-specific fields not needed by other channels */
+  /** Thread-specifig fields not needed by other channels */
   threadMetadata?: ThreadMetadata;
   /** Thread member object for the current user, if they have joined the thread, only included on certain API endpoints */
   member?: ThreadMember;

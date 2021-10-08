@@ -1,6 +1,6 @@
 # Discordeno
 
-<img alt="discordeno" align="right" src="https://raw.githubusercontent.com/discordeno/guide/main/src/.vuepress/public/logo.png" height="150px">
+<img align="right" src="https://raw.githubusercontent.com/discordeno/guide/main/src/.vuepress/public/logo.png" height="150px">
 
 Discord API library for [Deno](https://deno.land)
 
@@ -57,7 +57,7 @@ startBot({
 
 Note to developers: don't worry, a lot of developers start out by building a
 Discord bot as their first project, and it's not easy. Discordeno is designed
-and built with all the issues in mind that many developers have encountered
+and built with all of the issues in mind that many developers have encountered
 when they initially started writing Discord bots using existing libraries. If
 you are a beginner, you can check out these awesome official and unofficial
 templates:

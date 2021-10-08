@@ -122,7 +122,7 @@ export async function createDiscordenoChannel(data: Channel, guildId?: bigint) {
     );
   }
 
-  // Set the guildId separately because sometimes guildId is not included
+  // Set the guildId seperately because sometimes guildId is not included
   if (!requiredPropsSize || cache.requiredStructureProperties.channels.has("guildId"))
     props.guildId = createNewProp(snowflakeToBigint(guildId?.toString() || data.guildId || ""));
 

@@ -19,7 +19,7 @@ import { GuildNsfwLevel } from "./guild_nsfw_level.ts";
 export interface Guild {
   /** Guild id */
   id: string;
-  /** Guild name (2-100 characters, excluding trailing and leading whitespace) */
+  /** Guild name (2-100 characaters, excluding trailing and leading whitespace) */
   name: string;
   /** Icon hash */
   icon: string | null;
@@ -33,7 +33,7 @@ export interface Guild {
   owner?: boolean;
   /** Id of the owner */
   ownerId: string;
-  /** Total permissions for the user in the guild (excludes overwrites) */
+  /** Total permissions for the user in the guild (execludes overwrites) */
   permissions?: string;
   /** Id of afk channel */
   afkChannelId: string | null;
@@ -41,7 +41,7 @@ export interface Guild {
   afkTimeout: number;
   /** True if the server widget is enabled */
   widgetEnabled?: boolean;
-  /** The channel id that the widget will generate an invitation to, or null if set to no invite */
+  /** The channel id that the widget will generate an invite to, or null if set to no invite */
   widgetChannelId?: string | null;
   /** Verification level required for the guild */
   verificationLevel: DiscordVerificationLevels;
@@ -88,7 +88,7 @@ export interface Guild {
   maxPresences?: number | null;
   /** The maximum number of members for the guild */
   maxMembers?: number;
-  /** The vanity url code for the guild */
+  /** The vaniy url code for the guild */
   vanityUrlCode: string | null;
   /** The description of a Community guild */
   description: string | null;
@@ -108,7 +108,7 @@ export interface Guild {
   approximateMemberCount?: number;
   /**	Approximate number of non-offline members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
   approximatePresenceCount?: number;
-  /** The welcome screen of a Community guild, shown to new members, returned in an Invitation's guild object */
+  /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
   welcomeScreen?: WelcomeScreen;
   /** Guild NSFW level */
   nsfwLevel: GuildNsfwLevel;

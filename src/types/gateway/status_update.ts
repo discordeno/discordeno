@@ -9,6 +9,6 @@ export interface StatusUpdate {
   activities: Activity[];
   /** The user's new status */
   status: DiscordStatusTypes;
-  /** Whether the client is afk */
+  /** Whether or not the client is afk */
   afk: boolean;
 }

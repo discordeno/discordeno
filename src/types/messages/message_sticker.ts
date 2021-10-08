@@ -21,7 +21,7 @@ export interface MessageSticker {
   asset: string;
   /** Type of sticker format */
   formatType: DiscordMessageStickerFormatTypes;
-  /**  Whether the sticker is available */
+  /**  Whether or not the sticker is available */
   available?: boolean;
   /** Id of the guild that owns this sticker */
   guildId?: string;

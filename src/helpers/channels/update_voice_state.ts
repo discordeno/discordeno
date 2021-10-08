@@ -5,7 +5,7 @@ import { endpoints } from "../../util/constants.ts";
 import { hasOwnProperty, snakelize } from "../../util/utils.ts";
 
 /**
- * Updates the user's voice state, defaults to the current user
+ * Updates the a user's voice state, defaults to the current user
  * Caveats:
  *  - `channel_id` must currently point to a stage channel.
  *  - User must already have joined `channel_id`.

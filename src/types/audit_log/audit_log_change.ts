@@ -42,7 +42,7 @@ export type AuditLogChange =
         | "mfa_level"
         | "verification_level"
         | "explicit_content_filter"
-        | "default_message_notifications"
+        | "default_messagae_notifications"
         | "prune_delete_days"
         | "position"
         | "bitrate"

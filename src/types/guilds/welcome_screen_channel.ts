@@ -2,7 +2,7 @@
 export interface WelcomeScreenChannel {
   /** The channel's id */
   channelId: bigint;
-  /** The description shown for the channel */
+  /** The descriptino schown for the channel */
   description: string;
   /** The emoji id, if the emoji is custom */
   emojiId: bigint | null;

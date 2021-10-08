@@ -18,7 +18,7 @@ import { DiscordImageFormat } from "../types/misc/image_format.ts";
 const ROLE_SNOWFLAKES = ["id", "botId", "integrationId", "guildId"];
 
 const roleToggles = {
-  /** If this role is showed separately in the user listing */
+  /** If this role is showed seperately in the user listing */
   hoist: 1n,
   /** Whether this role is managed by an integration */
   managed: 2n,

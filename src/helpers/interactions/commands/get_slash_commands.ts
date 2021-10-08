@@ -5,7 +5,7 @@ import { snowflakeToBigint } from "../../../util/bigint.ts";
 import { Collection } from "../../../util/collection.ts";
 import { endpoints } from "../../../util/constants.ts";
 
-/** Fetch all the global commands for your application. */
+/** Fetch all of the global commands for your application. */
 export async function getSlashCommands(guildId?: bigint) {
   const result = await rest.runMethod<ApplicationCommand[]>(
     "get",

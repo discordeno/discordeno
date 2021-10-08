@@ -24,10 +24,10 @@ export function handleReady(data: DiscordGatewayPayload, shardId: number) {
   // All guilds are unavailable at first
   shard.unavailableGuildIds = new Set(payload.guilds.map((g) => snowflakeToBigint(g.id)));
 
-  // Failed to load check
+  // Falied to load check
   shard.failedToLoadTimeoutId = setTimeout(() => {
     eventHandlers.shardFailedToLoad?.(shard.id, shard.unavailableGuildIds);
-    // Force executes the loaded function to prevent infinite loop
+    // Force execute the loaded function to prevent infinite loop
     return loaded(shard);
   }, 5000);
 }
