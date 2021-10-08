@@ -248,7 +248,7 @@ export async function createDiscordenoMessage(data: Message) {
   if (!requiredPropsSize || cache.requiredStructureProperties.messages.has("tag"))
     props.tag = createNewProp(`${author.username}#${author.discriminator.toString().padStart(4, "0")}`);
 
-  // Discord doesnt give guild id for getMessage() so this will fill it in
+  // Discord doesn't give guild id for getMessage() so this will fill it in
   const guildIdFinal =
     snowflakeToBigint(guildId) ||
     (await cacheHandlers.get("channels", snowflakeToBigint(data.channelId)))?.guildId ||
@@ -308,7 +308,7 @@ export interface DiscordenoMessage
     | "thread"
   > {
   id: bigint;
-  /** Whether or not this message was sent by a bot */
+  /** Whether this message was sent by a bot */
   isBot: boolean;
   /** The username#discrimnator for the user who sent this message */
   tag: string;
@@ -317,7 +317,7 @@ export interface DiscordenoMessage
 
   // For better user experience
 
-  /** Id of the guild which the massage has been send in. "0n" if it a DM */
+  /** Id of the guild which the message has been sent in. "0n" if it is a DM */
   guildId: bigint;
   /** id of the channel the message was sent in */
   channelId: bigint;
@@ -377,13 +377,13 @@ export interface DiscordenoMessage
   addReaction(reaction: string): ReturnType<typeof addReaction>;
   /** Add multiple reactions to the message without or without order. */
   addReactions(reactions: string[], ordered?: boolean): ReturnType<typeof addReactions>;
-  /** Send a inline reply to this message */
+  /** Send an inline reply to this message */
   reply(content: string | CreateMessage, mentionUser?: boolean): ReturnType<typeof sendMessage>;
   /** Send a message to this channel where this message is */
   send(content: string | CreateMessage): ReturnType<typeof sendMessage>;
-  /** Send a message to this channel and then delete it after a bit. By default it will delete after 10 seconds with no reason provided. */
+  /** Send a message to this channel and then delete it after a bit. By default, it will delete after 10 seconds with no reason provided. */
   alert(content: string | CreateMessage, timeout?: number, reason?: string): Promise<void>;
-  /** Send a inline reply to this message but then delete it after a bit. By default it will delete after 10 seconds with no reason provided.  */
+  /** Send an inline reply to this message but then delete it after a bit. By default, it will delete after 10 seconds with no reason provided.  */
   alertReply(content: string | CreateMessage, timeout?: number, reason?: string): Promise<unknown>;
   /** Removes all reactions for all emojis on this message */
   removeAllReactions(): ReturnType<typeof removeAllReactions>;

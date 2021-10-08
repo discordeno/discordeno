@@ -24,7 +24,7 @@ export interface InviteCreate {
   targetUser?: Partial<User>;
   /** The embedded application to open for this voice channel embedded application invite */
   targetApplication?: Partial<Application>;
-  /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
+  /** Whether the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
   temporary: boolean;
   /** How many times the invite has been used (always will be 0) */
   uses: number;

@@ -42,7 +42,7 @@ export function createShard(shardId: number) {
       case DiscordGatewayCloseEventCodes.InvalidIntents:
       case DiscordGatewayCloseEventCodes.DisallowedIntents:
         throw new Error(event.reason || "Discord gave no reason! GG! You broke Discord!");
-      // THESE ERRORS CAN NO BE RESUMED! THEY MUST RE-IDENTIFY!
+      // THESE ERRORS CAN NOT BE RESUMED! THEY MUST RE-IDENTIFY!
       case DiscordGatewayCloseEventCodes.NotAuthenticated:
       case DiscordGatewayCloseEventCodes.InvalidSeq:
       case DiscordGatewayCloseEventCodes.RateLimited:

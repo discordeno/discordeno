@@ -12,7 +12,7 @@ export interface AuditLogEntry {
   userId: string | null;
   /** id of the entry */
   id: string;
-  /** Type of action that occured */
+  /** Type of action that occurred */
   actionType: DiscordAuditLogEvents;
   /** Additional info for certain action types */
   options?: OptionalAuditEntryInfo;

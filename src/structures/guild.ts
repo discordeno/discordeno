@@ -382,11 +382,11 @@ export interface DiscordenoGuild
   id: bigint;
   /** Id of the owner */
   ownerId: bigint;
-  /** Total permissions for the user in the guild (execludes overrides) */
+  /** Total permissions for the user in the guild (excludes overrides) */
   permissions: bigint;
   /** Id of afk channel */
   afkChannelId?: bigint;
-  /** The channel id that the widget will generate an invite to, or null if set to no invite */
+  /** The channel id that the widget will generate an invitation to, or null if set to no invite */
   widgetChannelId?: bigint;
   /** Application id of the guild creator if it is bot-created */
   applicationId?: bigint;
@@ -444,9 +444,9 @@ export interface DiscordenoGuild
   botVoice?: DiscordenoVoiceState;
   /** The owner member of this guild */
   owner?: DiscordenoMember;
-  /** Whether or not this guild is partnered */
+  /** Whether this guild is partnered */
   partnered: boolean;
-  /** Whether or not this guild is verified */
+  /** Whether this guild is verified */
   verified: boolean;
 
   // METHODS

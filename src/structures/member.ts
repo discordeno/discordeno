@@ -31,7 +31,7 @@ export const memberToggles = {
   mfaEnabled: 4n,
   /** Whether the email on this account has been verified */
   verified: 8n,
-  /** Whether the users avatar is animated. */
+  /** Whether the users' avatar is animated. */
   animatedAvatar: 16n,
 };
 
@@ -129,7 +129,7 @@ const baseMember: Partial<DiscordenoMember> = {
 };
 
 export async function createDiscordenoMember(
-  // The `user` param in `DiscordGuildMember` is optional since discord does not send it in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events. But this data in there is required to build this structure so it is required in this case
+  // The `user` param in `DiscordGuildMember` is optional since discord does not send it in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events. But this data in there is required to build this structure, so it is required in this case
   data: GuildMemberWithUser,
   guildId: bigint
 ) {
@@ -227,7 +227,7 @@ export interface DiscordenoMember extends Omit<User, "discriminator" | "id" | "a
   mention: string;
   /** The username#discriminator tag for this member */
   tag: string;
-  /** Whether or not the avatar is animated. */
+  /** Whether the avatar is animated. */
   animatedAvatar: boolean;
 
   // METHODS

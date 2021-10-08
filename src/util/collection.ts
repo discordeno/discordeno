@@ -44,7 +44,7 @@ export class Collection<K, V> extends Map<K, V> {
   }
 
   set(key: K, value: V) {
-    // When this collection is maxSizeed make sure we can add first
+    // When this collection is maxSized make sure we can add first
     if ((this.maxSize || this.maxSize === 0) && this.size >= this.maxSize) {
       return this;
     }

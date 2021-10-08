@@ -12,7 +12,7 @@ export async function handleMessageReactionRemoveEmoji(data: DiscordGatewayPaylo
     message.reactions = message.reactions.filter(
       (reaction) =>
         !(
-          // MUST USE == because discord sends null and we use undefined
+          // MUST USE == because discord sends null, and we use undefined
           (reaction.emoji.id == payload.emoji.id && reaction.emoji.name === payload.emoji.name)
         )
     );

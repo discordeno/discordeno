@@ -22,7 +22,7 @@ export async function editChannel(channelId: bigint, options: ModifyChannel, rea
   if (options.name || options.topic) {
     const request = editChannelNameTopicQueue.get(channelId);
     if (!request) {
-      // If this hasnt been done before simply add 1 for it
+      // If this hasn't been done before simply add 1 for it
       editChannelNameTopicQueue.set(channelId, {
         channelId: channelId,
         amount: 1,
@@ -89,7 +89,7 @@ function processEditChannelQueue() {
   editChannelNameTopicQueue.forEach(async (request) => {
     eventHandlers.debug?.("loop", `Running forEach loop in edit_channel file.`);
     if (now < request.timestamp) return;
-    // 10 minutes have passed so we can reset this channel again
+    // 10 minutes have passed, so we can reset this channel again
     if (!request.items.length) {
       return editChannelNameTopicQueue.delete(request.channelId);
     }

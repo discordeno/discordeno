@@ -4,7 +4,7 @@ import type { ApplicationCommand } from "../../../types/interactions/commands/ap
 import { snowflakeToBigint } from "../../../util/bigint.ts";
 import { endpoints } from "../../../util/constants.ts";
 
-/** Fetchs the global command for the given Id. If a guildId is provided, the guild command will be fetched. */
+/** Fetches the global command for the given Id. If a guildId is provided, the guild command will be fetched. */
 export async function getSlashCommand(commandId: bigint, guildId?: bigint) {
   const result = await rest.runMethod<ApplicationCommand>(
     "get",

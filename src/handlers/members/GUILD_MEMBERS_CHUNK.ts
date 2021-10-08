@@ -19,7 +19,7 @@ export async function handleGuildMembersChunk(data: DiscordGatewayPayload) {
     })
   );
 
-  // Check if its necessary to resolve the fetchmembers promise for this chunk or if more chunks will be coming
+  // Check if It's necessary to resolve the fetchmembers promise for this chunk or if more chunks will be coming
   if (payload.nonce) {
     const resolve = cache.fetchAllMembersProcessingRequests.get(payload.nonce);
     if (!resolve) return;

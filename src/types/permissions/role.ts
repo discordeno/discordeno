@@ -8,7 +8,7 @@ export interface Role {
   name: string;
   /** Integer representation of hexadecimal color code */
   color: number;
-  /** If this role is showed seperately in the user listing */
+  /** If this role is showed separately in the user listing */
   hoist: boolean;
   /** Position of this role */
   position: number;

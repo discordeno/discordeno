@@ -108,7 +108,7 @@ export enum DiscordJsonErrorCodes {
   BeforeValueIsEarlierThanTheThreadCreationDate,
   TwoFactorIsRequiredForThisOperation = 60003,
   NoUsersWithDiscordTagExist = 80004,
-  ReqctionWasBlocked = 90001,
+  ReactionWasBlocked = 90001,
   ApiResourceIsCurrentlyOverloadedTryAgainALittleLater = 130000,
   AThreadHasAlreadyBeenCreatedForThisMessage = 160004,
   ThreadIsLocked = 160005,
@@ -116,5 +116,5 @@ export enum DiscordJsonErrorCodes {
   MaximumNumberOfActiveAnnouncementThreadsReached = 160007,
 }
 
-export type JsonErrrorCodes = DiscordJsonErrorCodes;
-export const JsonErrrorCodes = DiscordJsonErrorCodes;
+export type JsonErrorCodes = DiscordJsonErrorCodes;
+export const JsonErrorCodes = DiscordJsonErrorCodes;

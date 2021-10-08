@@ -23,7 +23,7 @@ async function startQueue() {
   processingQueue = true;
 
   while (guildMemberQueue.size) {
-    eventHandlers.debug?.("loop", "Running whille loop in cache_members file.");
+    eventHandlers.debug?.("loop", "Running while loop in cache_members file.");
     const [guildId, queue]: [bigint, { members: GuildMemberWithUser[]; resolve: (value?: unknown) => void }] =
       guildMemberQueue.entries().next().value;
 

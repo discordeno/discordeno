@@ -36,7 +36,7 @@ export async function runMethod<T = any>(
   // @ts-ignore Breaks deno deploy. Luca said add tsignore until it's fixed
   Error.captureStackTrace(errorStack);
 
-  // For proxies we don't need to do any of the legwork so we just forward the request
+  // For proxies, we don't need to do any of the legwork so we just forward the request
   if (!url.startsWith(`${BASE_URL}/v${API_VERSION}`) && !url.startsWith(IMAGE_BASE_URL)) {
     const result = await fetch(url, {
       body: JSON.stringify(body || {}),

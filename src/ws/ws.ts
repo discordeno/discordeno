@@ -21,7 +21,7 @@ export const ws = {
   secretKey: "",
   /** The url that all discord payloads for the dispatch type should be sent to. */
   url: "",
-  /** Whether or not to automatically reshard. */
+  /** Whether to automatically reshard. */
   reshard: true,
   /** The percentage at which resharding should occur. */
   reshardPercentage: 80,
@@ -29,7 +29,7 @@ export const ws = {
   spawnShardDelay: 2600,
   /** The maximum shard Id number. Useful for zero-downtime updates or resharding. */
   maxShards: 0,
-  /** Whether or not the resharder should automatically switch to LARGE BOT SHARDING when you are above 100K servers. */
+  /** Whether the resharder should automatically switch to LARGE BOT SHARDING when you are above 100K servers. */
   useOptimalLargeBotSharding: true,
   /** The amount of shards to load per cluster. */
   shardsPerCluster: 25,
@@ -118,7 +118,7 @@ export const ws = {
   closeWS,
   /** Properly adds a message to the shards queue. */
   sendShardMessage,
-  /** Properly resume an old shards session. */
+  /** Properly resume an old shards' session. */
   resume,
 };
 
@@ -145,18 +145,18 @@ export interface DiscordenoShard {
     lastSentAt: number;
     /** The timestamp the last heartbeat ACK was received from discord. */
     lastReceivedAt: number;
-    /** Whether or not the heartbeat was acknowledged  by discord in time. */
+    /** Whether the heartbeat was acknowledged  by discord in time. */
     acknowledged: boolean;
-    /** Whether or not to keep heartbeating. Useful for when needing to stop heartbeating. */
+    /** Whether to keep heartbeating. Useful for when needing to stop heartbeating. */
     keepAlive: boolean;
     /** The interval between heartbeats requested by discord. */
     interval: number;
     /** The id of the interval, useful for stopping the interval if ws closed. */
     intervalId: number;
   };
-  /** The items/requestst that are in queue to be sent to this shard websocket. */
+  /** The items/requests that are in queue to be sent to this shard websocket. */
   queue: WebSocketRequest[];
-  /** Whether or not the queue for this shard is being processed. */
+  /** Whether the queue for this shard is being processed. */
   processingQueue: boolean;
   /** When the first request for this minute has been sent. */
   queueStartedAt: number;

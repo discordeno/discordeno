@@ -1,8 +1,8 @@
 // THE ORDER OF THE IMPORTS IN THIS FILE MATTER!
-// DO NOT MOVE THEM UNLESS YOU KNOW WHAT YOUR DOING!
+// DO NOT MOVE THEM UNLESS YOU KNOW WHAT YOU'RE DOING!
 
 // First complete non-api reliant testing.
-// Don't waste api rate limits if a early test fails.
+// Don't waste api rate limits if an early test fails.
 import "./local.ts";
 
 // API TESTING BELOW

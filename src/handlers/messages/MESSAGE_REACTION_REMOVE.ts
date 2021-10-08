@@ -11,7 +11,7 @@ export async function handleMessageReactionRemove(data: DiscordGatewayPayload) {
   if (message) {
     const reaction = message.reactions?.find(
       (reaction) =>
-        // MUST USE == because discord sends null and we use undefined
+        // MUST USE == because discord sends null, and we use undefined
         reaction.emoji.id == payload.emoji.id && reaction.emoji.name === payload.emoji.name
     );
 

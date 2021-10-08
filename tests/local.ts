@@ -1,5 +1,5 @@
 // THE ORDER OF THE IMPORTS IN THIS FILE MATTER!
-// DO NOT MOVE THEM UNLESS YOU KNOW WHAT YOUR DOING!
+// DO NOT MOVE THEM UNLESS YOU KNOW WHAT YOU'RE DOING!
 
 import "./util/utils.ts";
 import "./util/validate_length.ts";

@@ -4,7 +4,7 @@ import type { InviteMetadata } from "../../types/invites/invite_metadata.ts";
 import { endpoints } from "../../util/constants.ts";
 import { snakelize } from "../../util/utils.ts";
 
-/** Returns an invite for the given code or throws an error if the invite doesn't exists. */
+/** Returns an invitation for the given code or throws an error if the invite doesn't exist. */
 export async function getInvite(inviteCode: string, options?: GetInvite) {
   return await rest.runMethod<InviteMetadata>("get", endpoints.INVITE(inviteCode), snakelize(options ?? {}));
 }

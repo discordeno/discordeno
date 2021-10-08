@@ -32,7 +32,7 @@ export interface Activity {
   assets?: ActivityAssets;
   /** Secrets for Rich Presence joining and spectating */
   secrets?: ActivitySecrets;
-  /** Whether or not the activity is an instanced game session */
+  /** Whether the activity is an instanced game session */
   instance?: boolean;
   /** Activity flags `OR`d together, describes what the payload includes */
   flags?: number;

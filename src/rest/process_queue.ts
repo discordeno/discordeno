@@ -10,7 +10,7 @@ export async function processQueue(id: string) {
 
   while (queue.length) {
     rest.eventHandlers.debug?.("loop", "Running while loop in processQueue function.");
-    // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
+    // IF THE BOT IS GLOBALLY RATE LIMITED TRY AGAIN
     if (rest.globallyRateLimited) {
       setTimeout(async () => {
         eventHandlers.debug?.("loop", `Running setTimeout in processQueue function.`);
@@ -21,7 +21,7 @@ export async function processQueue(id: string) {
     }
     // SELECT THE FIRST ITEM FROM THIS QUEUE
     const [queuedRequest] = queue;
-    // IF THIS DOESNT HAVE ANY ITEMS JUST CANCEL, THE CLEANER WILL REMOVE IT.
+    // IF THIS DOESN'T HAVE ANY ITEMS JUST CANCEL, THE CLEANER WILL REMOVE IT.
     if (!queuedRequest) return;
 
     const basicURL = rest.simplifyUrl(queuedRequest.request.url, queuedRequest.request.method.toUpperCase());
@@ -36,7 +36,7 @@ export async function processQueue(id: string) {
 
     // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
     const bucketResetIn = queuedRequest.payload.bucketId ? rest.checkRateLimits(queuedRequest.payload.bucketId) : false;
-    // THIS BUCKET IS STILL RATELIMITED, RE-ADD TO QUEUE
+    // THIS BUCKET IS STILL RATE LIMITED, RE-ADD TO QUEUE
     if (bucketResetIn) continue;
 
     // EXECUTE THE REQUEST
@@ -132,7 +132,7 @@ export async function processQueue(id: string) {
         //     queuedRequest.request.respond({
         //       status: 200,
         //       body: JSON.stringify({
-        //         error: "The request was rate limited and it maxed out the retries limit.",
+        //         error: "The request was rate limited, and it maxed out the retries limit.",
         //       }),
         //     });
         //     // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
@@ -140,7 +140,7 @@ export async function processQueue(id: string) {
         //     continue;
         //   }
 
-        //   // SINCE IT WAS RATELIMITE, RETRY AGAIN
+        //   // SINCE IT WAS RATE LIMITED, RETRY AGAIN
         //   continue;
         // }
 

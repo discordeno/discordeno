@@ -10,7 +10,7 @@ This WS service is meant for ADVANCED DEVELOPERS ONLY!
     have to restart which also has to process identifying all your shards with a
     1/~5s rate limit. With WS handling moved to a proxy process, this allows you
     to instantly get the bot code restarted without any concerns of delays. If
-    you have a bot on 200,000 servers normally this would mean a 20 minute delay
+    you have a bot on 200,000 servers normally this would mean a 20-minute delay
     to restart your bot if you made a small change and restarted.
 
 - **Zero Downtime Resharding**:
@@ -33,7 +33,7 @@ This WS service is meant for ADVANCED DEVELOPERS ONLY!
 
   - The proxy system allows you to scale the bot horizontally. When you reach a
     huge size, you can either keep spending more money to keep beefing up your
-    server or you can buy several cheaper servers and scale horizontally. The
+    server, or you can buy several cheaper servers and scale horizontally. The
     proxy means you can have WS handling on a completely separate system.
 
 - **No Loss Restarts**:
@@ -41,7 +41,7 @@ This WS service is meant for ADVANCED DEVELOPERS ONLY!
   - When you restart a bot without the proxy system, normally you would lose
     many events. Users may be using commands or messages are sent that will not
     be filtered. As your bot's grow this number rises dramatically. Users may
-    join who wont get the auto-roles or any other actions your bot should take.
+    join who won't get the auto-roles or any other actions your bot should take.
     With the proxy system, you can keep restarting your bot and never lose any
     events. Events will be put into a queue while your bot is down(max size of
     queue is customizable), once the bot is available the queue will begin
@@ -66,7 +66,7 @@ This WS service is meant for ADVANCED DEVELOPERS ONLY!
 startGateway({
   /** The bot token. */
   token: "BOT_TOKEN_HERE",
-  /** Whether or not to use compression for gateway payloads. */
+  /** Whether to use compression for gateway payloads. */
   compress: true,
   /** The intents you would like to enable. */
   intents: ["GUILDS", "GUILD_MESSAGES"],
@@ -82,8 +82,8 @@ startGateway({
   shardsPerCluster: 25,
   /** The maximum amount of clusters available. By default this is 4. Another way to think of cluster is how many CPU cores does your server/machine have. */
   maxClusters: 46,
-  /** Whether or not you want to allow automated sharding. By default this is true. */
-  reshard: true;
+  /** Whether you want to allow automated sharding. By default this is true. */
+  reshard: true,
 });
 ```
 
@@ -94,7 +94,7 @@ startGateway({
 export const ws = {
   /** The url that all discord payloads for the dispatch type should be sent to. */
   url: "",
-  /** Whether or not to automatically reshard. */
+  /** Whether to automatically reshard. */
   reshard: true,
   /** The percentage at which resharding should occur. */
   reshardPercentage: 80,
@@ -194,9 +194,9 @@ export interface DiscordenoShard {
     lastSentAt: number;
     /** The timestamp the last heartbeat ACK was received from discord. */
     lastReceivedAt: number;
-    /** Whether or not the heartbeat was acknowledged  by discord in time. */
+    /** Whether the heartbeat was acknowledged  by discord in time. */
     acknowledged: boolean;
-    /** Whether or not to keep heartbeating. Useful for when needing to stop heartbeating. */
+    /** Whether to keep heartbeating. Useful for when needing to stop heartbeating. */
     keepAlive: boolean;
     /** The interval between heartbeats requested by discord. */
     interval: number;

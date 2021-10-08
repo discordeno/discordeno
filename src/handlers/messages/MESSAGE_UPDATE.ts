@@ -13,7 +13,7 @@ export async function handleMessageUpdate(data: DiscordGatewayPayload) {
   const oldMessage = await cacheHandlers.get("messages", snowflakeToBigint(payload.id));
   if (!oldMessage) return;
 
-  // Messages with embeds can trigger update but they wont have edited_timestamp
+  // Messages with embeds can trigger update, but they won't have edited_timestamp
   if (!payload.editedTimestamp || oldMessage.content === payload.content) {
     return;
   }

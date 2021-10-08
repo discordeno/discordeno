@@ -5,7 +5,7 @@
 
 export function simplifyUrl(url: string, method: string) {
   let route = url
-    .replace(/\/([a-z-]+)\/(?:[0-9]{17,19})/g, function (match, p) {
+    .replace(/\/([a-z-]+)\/[0-9]{17,19}/g, function (match, p) {
       return ["channels", "guilds", "webhooks"].includes(p) ? match : `/${p}/skillzPrefersID`;
     })
     .replace(/\/reactions\/[^/]+/g, "/reactions/skillzPrefersID")

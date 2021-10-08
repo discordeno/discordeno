@@ -9,7 +9,7 @@ export interface Integration {
   id: string;
   /** Integration name */
   name: string;
-  /** Integration type (twitch, youtube or discord) */
+  /** Integration type (Twitch, YouTube or Discord) */
   type: "twitch" | "youtube" | "discord";
   /** Is this integration enabled */
   enabled: boolean;
