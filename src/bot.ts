@@ -12,6 +12,7 @@ import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
 import { GetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
 import { dispatchRequirements } from "./util/dispatch_requirements.ts";
 import { processQueue } from "./rest/process_queue.ts";
+import { snowflakeToBigint } from "./util/bigint.ts";
 
 export async function createBot(options: CreateBotOptions) {
   return {
@@ -118,7 +119,18 @@ export type CreatedBot = UnPromise<ReturnType<typeof createBot>>;
 export type Bot = CreatedBot & {
   rest: RestManager;
   gateway: GatewayManager;
+  transformers: Transformers;
 };
+
+export interface Transformers {
+  snowflake: typeof snowflakeToBigint,
+}
+
+export function createTransformers(options: Partial<Transformers>) {
+  return {
+    snowflake: options.snowflake || snowflakeToBigint,
+  }
+}
 
 export type RestManager = ReturnType<typeof createRestManager>;
 
