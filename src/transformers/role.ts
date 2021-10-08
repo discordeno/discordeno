@@ -8,14 +8,16 @@ export function transformRole(
   }
 ) {
   return {
-    // TODO: decide if its better to spread like this or do manually
-    // ...payload,
     // UNTRANSFORMED STUFF HERE
-    // TODO: decide if we should use spread above or do manually
     name: payload.role.name,
     guildId: payload.guildId,
     position: payload.role.position,
     color: payload.role.color,
+    bitfield:
+      (payload.role.hoist ? 1n : 0n) |
+      (payload.role.managed ? 2n : 0n) |
+      (payload.role.mentionable ? 4n : 0n) |
+      (payload.role.tags?.premiumSubscriber ? 8n : 0n),
 
     // TRANSFORMED STUFF BELOW
     id: bot.transformers.snowflake(payload.role.id),
@@ -24,11 +26,6 @@ export function transformRole(
       ? bot.transformers.snowflake(payload.role.tags.integrationId)
       : undefined,
     permissions: payload.role.permissions ? bot.transformers.snowflake(payload.role.permissions) : undefined,
-    bitfield:
-      (payload.role?.hoist ? 1n : 0n) |
-      (payload.role?.managed ? 2n : 0n) |
-      (payload.role?.mentionable ? 4n : 0n) |
-      (payload.role.tags?.premiumSubscriber ? 8n : 0n),
   };
 }
 
