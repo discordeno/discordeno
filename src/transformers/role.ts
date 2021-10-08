@@ -25,10 +25,9 @@ export function transformRole(
       : undefined,
     permissions: payload.role.permissions ? bot.transformers.snowflake(payload.role.permissions) : undefined,
     bitfield:
-      0n &
-      (payload.role?.hoist ? 1n : 0n) &
-      (payload.role?.managed ? 2n : 0n) &
-      (payload.role?.mentionable ? 4n : 0n) &
+      (payload.role?.hoist ? 1n : 0n) |
+      (payload.role?.managed ? 2n : 0n) |
+      (payload.role?.mentionable ? 4n : 0n) |
       (payload.role.tags?.premiumSubscriber ? 8n : 0n),
   };
 }
