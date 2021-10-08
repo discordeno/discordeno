@@ -2,10 +2,10 @@ import { Bot } from "../bot.ts";
 import { Role } from "../types/mod.ts";
 
 export function transformRole(
-    bot: Bot,
-    payload: { role: Role } & {
-      guildId: bigint;
-    }
+  bot: Bot,
+  payload: { role: Role } & {
+    guildId: bigint;
+  }
 ) {
   return {
     // TODO: decide if its better to spread like this or do manually
@@ -20,9 +20,16 @@ export function transformRole(
     // TRANSFORMED STUFF BELOW
     id: bot.transformers.snowflake(payload.role.id),
     botId: payload.role.tags?.botId ? bot.transformers.snowflake(payload.role.tags.botId) : undefined,
-    integrationId: payload.role.tags?.integrationId ? bot.transformers.snowflake(payload.role.tags.integrationId) : undefined,
+    integrationId: payload.role.tags?.integrationId
+      ? bot.transformers.snowflake(payload.role.tags.integrationId)
+      : undefined,
     permissions: payload.role.permissions ? bot.transformers.snowflake(payload.role.permissions) : undefined,
-    bitfield: 0n & (payload.role?.hoist ? 1n : 0n) & (payload.role?.managed ? 2n : 0n) & (payload.role?.mentionable ? 4n : 0n) & (payload.role.tags?.premiumSubscriber ? 8n : 0n)
+    bitfield:
+      0n &
+      (payload.role?.hoist ? 1n : 0n) &
+      (payload.role?.managed ? 2n : 0n) &
+      (payload.role?.mentionable ? 4n : 0n) &
+      (payload.role.tags?.premiumSubscriber ? 8n : 0n),
   };
 }
 
