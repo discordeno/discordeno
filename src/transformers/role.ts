@@ -156,6 +156,11 @@ export function transformRole(bot: Bot, payload: { role: Role } & {
       return {
         // TODO: decide if its better to spread like this or do manually
         ...payload,
+        // UNTRANSFORMED STUFF HERE
+        // TODO: decide if we should use spread above or do manually
+        // name: payload.role.name,
+        
+        // TRANSFORMED STUFF BELOW
         id: bot.transformers.snowflake(payload.role.id),
         botId: payload.role.tags?.botId ? bot.transformers.snowflake(payload.role.tags?.botId) : undefined,
       }
