@@ -1,23 +1,23 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
-import { ws } from "./ws.ts";
+import {GatewayManager} from "../bot.ts";
 
-export function identify(shardId: number, maxShards: number) {
-  ws.log("IDENTIFYING", { shardId, maxShards });
+export function identify(gateway: GatewayManager, shardId: number, maxShards: number) {
+  gateway.log("IDENTIFYING", { shardId, maxShards });
 
   // Need to clear the old heartbeat interval
-  const oldShard = ws.shards.get(shardId);
+  const oldShard = gateway.shards.get(shardId);
   if (oldShard) {
-    ws.closeWS(oldShard.ws, 3065, "Reidentifying closure of old shard");
+    gateway.closeWS(oldShard.gateway, 3065, "Reidentifying closure of old shard");
     clearInterval(oldShard.heartbeat.intervalId);
   }
 
   // CREATE A SHARD
-  const socket = ws.createShard(shardId);
+  const socket = gateway.createShard(gateway, shardId);
 
   // Identify can just set/reset the settings for the shard
-  ws.shards.set(shardId, {
+  gateway.shards.set(shardId, {
     id: shardId,
-    ws: socket,
+    gateway: socket,
     resumeInterval: 0,
     sessionId: "",
     previousSequenceNumber: 0,
@@ -39,11 +39,12 @@ export function identify(shardId: number, maxShards: number) {
   });
 
   socket.onopen = () => {
-    ws.sendShardMessage(
+    gateway.sendShardMessage(
+        gateway,
       shardId,
       {
         op: DiscordGatewayOpcodes.Identify,
-        d: { ...ws.identifyPayload, shard: [shardId, maxShards] },
+        d: { ...gateway.identifyPayload, shard: [shardId, maxShards] },
       },
       true
     );
@@ -54,7 +55,7 @@ export function identify(shardId: number, maxShards: number) {
       reject(`[Identify Failure] Shard ${shardId} has not received READY event in over a minute.`);
     }, 600000);
 
-    ws.loadingShards.set(shardId, {
+    gateway.loadingShards.set(shardId, {
       shardId,
       resolve: (args) => {
         clearTimeout(timeout);

@@ -1,11 +1,11 @@
 import type { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
-import { ws } from "./ws.ts";
+import {GatewayManager} from "../bot.ts";
 
 /** Handler for processing all dispatch payloads that should be sent/forwarded to another server/vps/process. */
-export async function handleDiscordPayload(data: DiscordGatewayPayload, shardId: number) {
-  await fetch(ws.url, {
+export async function handleDiscordPayload(gateway: GatewayManager, data: DiscordGatewayPayload, shardId: number) {
+  await fetch(gateway.url, {
     headers: {
-      authorization: ws.secretKey,
+      authorization: gateway.secretKey,
     },
     method: "post",
     body: JSON.stringify({

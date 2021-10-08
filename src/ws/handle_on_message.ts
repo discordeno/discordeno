@@ -1,4 +1,4 @@
-import { eventHandlers } from "../bot.ts";
+import {eventHandlers, GatewayManager} from "../bot.ts";
 import { handlers } from "../handlers/mod.ts";
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import type { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
@@ -6,33 +6,33 @@ import type { DiscordHello } from "../types/gateway/hello.ts";
 import type { DiscordReady } from "../types/gateway/ready.ts";
 import { camelize, delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
-import { ws } from "./ws.ts";
 
 /** Handler for handling every message event from websocket. */
 // deno-lint-ignore no-explicit-any
-export async function handleOnMessage(message: any, shardId: number) {
+export async function handleOnMessage(gateway: GatewayManager, message: any, shardId: number) {
   if (message instanceof ArrayBuffer) {
     message = new Uint8Array(message);
   }
 
   if (message instanceof Uint8Array) {
-    message = decompressWith(message, 0, (slice: Uint8Array) => ws.utf8decoder.decode(slice));
+    message = decompressWith(message, 0, (slice: Uint8Array) => gateway.utf8decoder.decode(slice));
   }
 
   if (typeof message !== "string") return;
 
-  const shard = ws.shards.get(shardId);
+  const shard = gateway.shards.get(shardId);
 
   const messageData = JSON.parse(message) as DiscordGatewayPayload;
-  ws.log("RAW", { shardId, payload: messageData });
+  gateway.log("RAW", { shardId, payload: messageData });
 
   switch (messageData.op) {
     case DiscordGatewayOpcodes.Heartbeat:
-      if (shard?.ws.readyState !== WebSocket.OPEN) return;
+      if (shard?.gateway.readyState !== WebSocket.OPEN) return;
 
       shard.heartbeat.lastSentAt = Date.now();
       // Discord randomly sends this requiring an immediate heartbeat back
-      ws.sendShardMessage(
+      gateway.sendShardMessage(
+          gateway,
         shard,
         {
           op: DiscordGatewayOpcodes.Heartbeat,
@@ -42,77 +42,77 @@ export async function handleOnMessage(message: any, shardId: number) {
       );
       break;
     case DiscordGatewayOpcodes.Hello:
-      ws.heartbeat(shardId, (messageData.d as DiscordHello).heartbeat_interval);
+      gateway.heartbeat(gateway, shardId, (messageData.d as DiscordHello).heartbeat_interval);
       break;
     case DiscordGatewayOpcodes.HeartbeatACK:
-      if (ws.shards.has(shardId)) {
-        const shard = ws.shards.get(shardId)!;
+      if (gateway.shards.has(shardId)) {
+        const shard = gateway.shards.get(shardId)!;
         shard.heartbeat.acknowledged = true;
         shard.heartbeat.lastReceivedAt = Date.now();
       }
       break;
     case DiscordGatewayOpcodes.Reconnect:
-      ws.log("RECONNECT", { shardId });
+      gateway.log("RECONNECT", { shardId });
 
-      if (ws.shards.has(shardId)) {
-        ws.shards.get(shardId)!.resuming = true;
+      if (gateway.shards.has(shardId)) {
+        gateway.shards.get(shardId)!.resuming = true;
       }
 
-      ws.resume(shardId);
+      gateway.resume(gateway, shardId);
       break;
     case DiscordGatewayOpcodes.InvalidSession:
-      ws.log("INVALID_SESSION", { shardId, payload: messageData });
+      gateway.log("INVALID_SESSION", { shardId, payload: messageData });
 
       // We need to wait for a random amount of time between 1 and 5: https://discord.com/developers/docs/topics/gateway#resuming
       await delay(Math.floor((Math.random() * 4 + 1) * 1000));
 
       // When d is false we need to reidentify
       if (!messageData.d) {
-        await ws.identify(shardId, ws.maxShards);
+        await gateway.identify(gateway, shardId, gateway.maxShards);
         break;
       }
 
-      if (ws.shards.has(shardId)) {
-        ws.shards.get(shardId)!.resuming = true;
+      if (gateway.shards.has(shardId)) {
+        gateway.shards.get(shardId)!.resuming = true;
       }
 
-      ws.resume(shardId);
+      gateway.resume(gateway, shardId);
       break;
     default:
       if (messageData.t === "RESUMED") {
-        ws.log("RESUMED", { shardId });
+        gateway.log("RESUMED", { shardId });
 
-        if (ws.shards.has(shardId)) {
-          ws.shards.get(shardId)!.resuming = false;
+        if (gateway.shards.has(shardId)) {
+          gateway.shards.get(shardId)!.resuming = false;
         }
         break;
       }
 
       // Important for RESUME
       if (messageData.t === "READY") {
-        const shard = ws.shards.get(shardId);
+        const shard = gateway.shards.get(shardId);
         if (shard) {
           shard.sessionId = (messageData.d as DiscordReady).session_id;
         }
 
-        ws.loadingShards.get(shardId)?.resolve(true);
-        ws.loadingShards.delete(shardId);
+        gateway.loadingShards.get(shardId)?.resolve(true);
+        gateway.loadingShards.delete(shardId);
         // Wait few seconds to spawn next shard
         setTimeout(() => {
-          const bucket = ws.buckets.get(shardId % ws.botGatewayData.sessionStartLimit.maxConcurrency);
+          const bucket = gateway.buckets.get(shardId % gateway.botGatewayData.sessionStartLimit.maxConcurrency);
           if (bucket) bucket.createNextShard.shift()?.();
-        }, ws.spawnShardDelay);
+        }, gateway.spawnShardDelay);
       }
 
       // Update the sequence number if it is present
       if (messageData.s) {
-        const shard = ws.shards.get(shardId);
+        const shard = gateway.shards.get(shardId);
         if (shard) {
           shard.previousSequenceNumber = messageData.s;
         }
       }
 
-      if (ws.url) await ws.handleDiscordPayload(messageData, shardId);
+      if (gateway.url) await gateway.handleDiscordPayload(gateway, messageData, shardId);
       else {
         eventHandlers.raw?.(messageData);
         await eventHandlers.dispatchRequirements?.(messageData, shardId);
