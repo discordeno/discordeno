@@ -1,5 +1,5 @@
 import { DiscordGatewayCloseEventCodes } from "../types/codes/gateway_close_event_codes.ts";
-import {GatewayManager} from "../bot.ts";
+import { GatewayManager } from "../bot.ts";
 
 export function createShard(gateway: GatewayManager, shardId: number) {
   const socket = new WebSocket(gateway.botGatewayData.url);

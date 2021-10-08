@@ -1,4 +1,4 @@
-import {eventHandlers, GatewayManager} from "../bot.ts";
+import { eventHandlers, GatewayManager } from "../bot.ts";
 import { handlers } from "../handlers/mod.ts";
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import type { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
@@ -32,7 +32,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
       shard.heartbeat.lastSentAt = Date.now();
       // Discord randomly sends this requiring an immediate heartbeat back
       gateway.sendShardMessage(
-          gateway,
+        gateway,
         shard,
         {
           op: DiscordGatewayOpcodes.Heartbeat,

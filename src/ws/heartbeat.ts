@@ -1,6 +1,6 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { delay } from "../util/utils.ts";
-import {GatewayManager} from "../bot.ts";
+import { GatewayManager } from "../bot.ts";
 
 export async function heartbeat(gateway: GatewayManager, shardId: number, interval: number) {
   gateway.log("HEARTBEATING_STARTED", { shardId, interval });

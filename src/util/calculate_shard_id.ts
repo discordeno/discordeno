@@ -1,4 +1,4 @@
-import {GatewayManager} from "../bot.ts";
+import { GatewayManager } from "../bot.ts";
 
 export function calculateShardId(gateway: GatewayManager, guildId: bigint) {
   if (gateway.maxShards === 1) return 0;

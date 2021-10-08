@@ -1,6 +1,6 @@
 import { loopObject } from "../util/loop_object.ts";
 import { delay } from "../util/utils.ts";
-import {GatewayManager} from "../bot.ts";
+import { GatewayManager } from "../bot.ts";
 
 export async function processQueue(gateway: GatewayManager, id: number) {
   const shard = gateway.shards.get(id);

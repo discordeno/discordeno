@@ -1,5 +1,5 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
-import {GatewayManager} from "../bot.ts";
+import { GatewayManager } from "../bot.ts";
 
 export function identify(gateway: GatewayManager, shardId: number, maxShards: number) {
   gateway.log("IDENTIFYING", { shardId, maxShards });
@@ -40,7 +40,7 @@ export function identify(gateway: GatewayManager, shardId: number, maxShards: nu
 
   socket.onopen = () => {
     gateway.sendShardMessage(
-        gateway,
+      gateway,
       shardId,
       {
         op: DiscordGatewayOpcodes.Identify,

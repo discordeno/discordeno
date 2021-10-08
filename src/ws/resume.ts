@@ -1,5 +1,5 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
-import {GatewayManager} from "../bot.ts";
+import { GatewayManager } from "../bot.ts";
 
 export function resume(gateway: GatewayManager, shardId: number) {
   gateway.log("RESUMING", { shardId });
@@ -47,7 +47,7 @@ export function resume(gateway: GatewayManager, shardId: number) {
   // Resume on open
   socket.onopen = () => {
     gateway.sendShardMessage(
-        gateway,
+      gateway,
       shardId,
       {
         op: DiscordGatewayOpcodes.Resume,
