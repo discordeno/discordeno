@@ -134,7 +134,7 @@ export async function createDiscordenoRole(
     eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoRole function.`);
 
     if (key === "icon") {
-      const transformed = rest[key] ? BigInt(rest[key] as string) : undefined;
+      const transformed = rest[key] ? BigInt(`0x${rest[key] as string}`) : undefined;
       props.icon = createNewProp(transformed);
       continue;
     }
