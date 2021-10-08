@@ -165,6 +165,9 @@ export const endpoints = {
   // Stage instances
   STAGE_INSTANCES: `${baseEndpoints.BASE_URL}/stage-instances`,
   STAGE_INSTANCE: (channelId: bigint) => `${baseEndpoints.BASE_URL}/stage-instances/${channelId}`,
+
+  // Role endpoints
+  ROLE_ICON: (roleId: bigint, icon: string) => `${baseEndpoints.CDN_URL}/role-icons/${roleId}/${icon}`,
 };
 
 export const SLASH_COMMANDS_NAME_REGEX = /^[\w-]{1,32}$/;
