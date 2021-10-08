@@ -181,28 +181,4 @@ export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions"
   permissions: bigint;
   /** Holds all the boolean toggles. */
   bitfield: bigint;
-
-  // GETTERS
-
-  /** The guild where this role is. If undefined, the guild is not cached */
-  guild?: DiscordenoGuild;
-  /** The hex color for this role. */
-  hexColor: string;
-  /** The cached members that have this role */
-  members: Collection<bigint, DiscordenoMember>;
-  /** The @ mention of the role in a string. */
-  mention: string;
-
-  // METHODS
-
-  /** Delete the role */
-  delete(): ReturnType<typeof deleteRole>;
-  /** Edits the role */
-  edit(options: CreateGuildRole): ReturnType<typeof editRole>;
-  /** Checks if this role is higher than another role. */
-  higherThanRole(roleId: bigint, position?: number): boolean;
-  /** Checks if the role has a higher position than the given member */
-  higherThanMember(memberId: bigint): Promise<boolean>;
-  /** Convert to json friendly role with guild id */
-  toJSON(): Role & { guildId: string };
 }
