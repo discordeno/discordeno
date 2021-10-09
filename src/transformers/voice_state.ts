@@ -1,123 +1,24 @@
-import { eventHandlers } from "../bot.ts";
-import { cache } from "../cache.ts";
-import type { GuildMember } from "../types/members/guild_member.ts";
 import type { VoiceState } from "../types/voice/voice_state.ts";
-import { snowflakeToBigint } from "../util/bigint.ts";
-import { createNewProp } from "../util/utils.ts";
-import { DiscordenoGuild } from "./guild.ts";
-import { DiscordenoMember } from "./member.ts";
+import { Bot } from "../bot.ts";
+import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
-const VOICE_STATE_SNOWFLAKES = ["userId", "channelId", "guildId"];
+export function transformVoiceState(bot: Bot, payload: {voiceState: SnakeCasedPropertiesDeep<VoiceState> } & {guildId: bigint}): DiscordenoVoiceState {
+  return {
+    bitfield: (payload.voiceState.deaf ? 1n : 0n) |
+      (payload.voiceState.mute ? 2n : 0n) |
+      (payload.voiceState.selfDeaf ? 4n : 0n) |
+      (payload.voiceState.selfMute ? 8n : 0n) |
+      (payload.voiceState.selfStream ? 16 : 0n) |
+      (payload.voiceState.selfVideo ? 32 : 0n) |
+      (payload.voiceState.suppress ? 64 : 0n),
 
-export const voiceStateToggles = {
-  /** Whether this user is deafened by the server */
-  deaf: 1n,
-  /** Whether this user is muted by the server */
-  mute: 2n,
-  /** Whether this user is locally deafened */
-  selfDeaf: 4n,
-  /** Whether this user is locally muted */
-  selfMute: 8n,
-  /** Whether this user is streaming using "Go Live" */
-  selfStream: 16n,
-  /** Whether this user's camera is enabled */
-  selfVideo: 32n,
-  /** Whether this user is muted by the current user */
-  suppress: 64n,
-};
+    requestToSpeakTimestamp: payload.voiceState.request_to_speak_timestamp,
+    sessionId: payload.voiceState.session_id,
 
-const baseRole: Partial<DiscordenoVoiceState> = {
-  get member() {
-    return cache.members.get(this.userId!);
-  },
-  get guildMember() {
-    return this.member?.guilds.get(this.guildId!);
-  },
-  get guild() {
-    return cache.guilds.get(this.guildId!);
-  },
-  get deaf() {
-    return Boolean(this.bitfield! & voiceStateToggles.deaf);
-  },
-  get mute() {
-    return Boolean(this.bitfield! & voiceStateToggles.mute);
-  },
-  get selfDeaf() {
-    return Boolean(this.bitfield! & voiceStateToggles.selfDeaf);
-  },
-  get selfMute() {
-    return Boolean(this.bitfield! & voiceStateToggles.selfMute);
-  },
-  get selfStream() {
-    return Boolean(this.bitfield! & voiceStateToggles.selfStream);
-  },
-  get selfVideo() {
-    return Boolean(this.bitfield! & voiceStateToggles.selfVideo);
-  },
-  get suppress() {
-    return Boolean(this.bitfield! & voiceStateToggles.suppress);
-  },
-  toJSON() {
-    return {
-      guildId: this.guildId?.toString(),
-      channelId: this.channelId?.toString(),
-      userId: this.userId?.toString(),
-      member: this.member,
-      sessionId: this.sessionId,
-      deaf: this.deaf,
-      mute: this.mute,
-      selfDeaf: this.selfDeaf,
-      selfMute: this.selfMute,
-      selfStream: this.selfStream,
-      selfVideo: this.selfVideo,
-      suppress: this.suppress,
-      requestToSpeakTimestamp: this.requestToSpeakTimestamp,
-    } as VoiceState;
-  },
-};
-
-// deno-lint-ignore require-await
-export async function createDiscordenoVoiceState(guildId: bigint, data: VoiceState) {
-  let bitfield = 0n;
-
-  const props: Record<string, ReturnType<typeof createNewProp>> = {};
-  for (const key of Object.keys(data) as (keyof typeof data)[]) {
-    eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoVoiceState function.`);
-
-    // if is empty allow all, otherwise check if prop is required
-    if (cache.requiredStructureProperties.voiceStates.size && !cache.requiredStructureProperties.voiceStates.has(key))
-      continue;
-
-    // We don't need to cache member twice. It will be in cache.members
-    if (key === "member") continue;
-
-    const toggleBits = voiceStateToggles[key as keyof typeof voiceStateToggles];
-    if (toggleBits) {
-      bitfield |= data[key] ? toggleBits : 0n;
-      continue;
-    }
-
-    props[key] = createNewProp(
-      VOICE_STATE_SNOWFLAKES.includes(key)
-        ? data[key]
-          ? snowflakeToBigint(data[key] as string)
-          : undefined
-        : data[key]
-    );
+    channelId: payload.voiceState.channel_id ? bot.transformers.snowflake(payload.voiceState.channel_id) : undefined,
+    guildId: payload.guildId || (payload.voiceState.guild_id ? bot.transformers.snowflake(payload.voiceState.guild_id) : 0n),
+    userId: payload.guildId || (payload.voiceState.user_id ? bot.transformers.snowflake(payload.voiceState.user_id) : 0n)
   }
-
-  if (
-    !cache.requiredStructureProperties.voiceStates.size ||
-    cache.requiredStructureProperties.voiceStates.has("guildId")
-  )
-    props.guildId = createNewProp(guildId);
-  if (
-    !cache.requiredStructureProperties.voiceStates.size ||
-    cache.requiredStructureProperties.voiceStates.has("bitfield")
-  )
-    props.bitfield = createNewProp(bitfield);
-
-  return Object.create(baseRole, props) as DiscordenoVoiceState;
 }
 
 export interface DiscordenoVoiceState extends Omit<VoiceState, "channelId" | "guildId" | "userId" | "member"> {
@@ -129,16 +30,4 @@ export interface DiscordenoVoiceState extends Omit<VoiceState, "channelId" | "gu
   userId: bigint;
   /** Holds all the boolean toggles. */
   bitfield: bigint;
-
-  // GETTERS
-  member: DiscordenoMember;
-  guildMember?: Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
-    joinedAt?: number;
-    premiumSince?: number;
-    roles: bigint[];
-  };
-  /** The guild where this role is. If undefined, the guild is not cached */
-  guild?: DiscordenoGuild;
-  /** Converts to the raw JSON format. */
-  toJSON(): VoiceState;
 }
