@@ -5,15 +5,15 @@ import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 export function transformVoiceState(
   bot: Bot,
   payload: { voiceState: SnakeCasedPropertiesDeep<VoiceState> } & { guildId: bigint }
-): DiscordenoVoiceState {
+) {
   return {
     bitfield:
       (payload.voiceState.deaf ? 1n : 0n) |
       (payload.voiceState.mute ? 2n : 0n) |
-      (payload.voiceState.selfDeaf ? 4n : 0n) |
-      (payload.voiceState.selfMute ? 8n : 0n) |
-      (payload.voiceState.selfStream ? 16n : 0n) |
-      (payload.voiceState.selfVideo ? 32n : 0n) |
+      (payload.voiceState.self_deaf ? 4n : 0n) |
+      (payload.voiceState.self_mute ? 8n : 0n) |
+      (payload.voiceState.self_stream ? 16n : 0n) |
+      (payload.voiceState.self_video ? 32n : 0n) |
       (payload.voiceState.suppress ? 64n : 0n),
 
     requestToSpeakTimestamp: payload.voiceState.request_to_speak_timestamp,
