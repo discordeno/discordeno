@@ -10,7 +10,10 @@ import { DiscordenoRole, transformRole } from "./role.ts";
 import { DiscordenoVoiceState, transformVoiceState } from "./voice_state.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
-export function transformGuild(bot: Bot, payload: { guild: SnakeCasedPropertiesDeep<Guild> } & { shardId : number }) {
+export function transformGuild(
+  bot: Bot,
+  payload: { guild: SnakeCasedPropertiesDeep<Guild> } & { shardId: number }
+) {
   return {
     afkTimeout: payload.guild.afk_timeout,
     approximateMemberCount: payload.guild.approximate_member_count,
@@ -45,7 +48,7 @@ export function transformGuild(bot: Bot, payload: { guild: SnakeCasedPropertiesD
     shardId: payload.shardId,
     icon: payload.guild.icon ? iconHashToBigInt(payload.guild.icon) : undefined,
     banner: payload.guild.banner ? iconHashToBigInt(payload.guild.banner) : undefined,
-    splash: payload.guild.splash ? iconHashToBigInt(payload.guild.splash) : undefined,
+    splash: payload.guild.icon ? iconHashToBigInt(payload.guild.splash) : undefined,
 
     // TRANSFORMED STUFF BELOW
     // TODO: Handle channels/threads in a better way?
