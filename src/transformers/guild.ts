@@ -10,10 +10,7 @@ import { DiscordenoRole, transformRole } from "./role.ts";
 import { DiscordenoVoiceState, transformVoiceState } from "./voice_state.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
-export function transformGuild(
-  bot: Bot,
-  payload: { guild: SnakeCasedPropertiesDeep<Guild> } & { shardId: number }
-) {
+export function transformGuild(bot: Bot, payload: { guild: SnakeCasedPropertiesDeep<Guild> } & { shardId: number }) {
   return {
     afkTimeout: payload.guild.afk_timeout,
     approximateMemberCount: payload.guild.approximate_member_count,
@@ -38,7 +35,8 @@ export function transformGuild(
     welcomeScreen: payload.guild.welcome_screen,
     discoverySplash: payload.guild.discovery_splash,
 
-    bitfield: (payload.guild.owner ? 1n : 0n) |
+    bitfield:
+      (payload.guild.owner ? 1n : 0n) |
       (payload.guild.widget_enabled ? 2n : 0n) |
       (payload.guild.large ? 4n : 0n) |
       (payload.guild.unavailable ? 8n : 0n),
@@ -52,24 +50,44 @@ export function transformGuild(
 
     // TRANSFORMED STUFF BELOW
     // TODO: Handle channels/threads in a better way?
-    channels: (payload.guild.channels || []).map((channel) => transformChannel(bot, { channel, guildId: bot.transformers.snowflake(payload.guild.id) })),
+    channels: (payload.guild.channels || []).map((channel) =>
+      transformChannel(bot, { channel, guildId: bot.transformers.snowflake(payload.guild.id) })
+    ),
     threads: (payload.guild.threads || []).map((channel) => channelToThread(channel)),
 
-    roles: new Collection((payload.guild.roles || []).map(role => transformRole(bot, {role, guildId: bot.transformers.snowflake(payload.guild.id)})).map(role => [role.id, role])),
+    roles: new Collection(
+      (payload.guild.roles || [])
+        .map((role) => transformRole(bot, { role, guildId: bot.transformers.snowflake(payload.guild.id) }))
+        .map((role) => [role.id, role])
+    ),
     presences: new Collection((payload.guild.presences || []).map((p) => [bot.transformers.snowflake(p.user!.id), p])),
     emojis: new Collection((payload.guild.emojis || []).map((emoji) => [bot.transformers.snowflake(emoji.id!), emoji])),
-    voiceStates: new Collection((payload.guild.voice_states || []).map((vs) => transformVoiceState(bot, {voiceState: vs, guildId: bot.transformers.snowflake(payload.guild.id)})).map((vs) => [vs.userId, vs])),
+    voiceStates: new Collection(
+      (payload.guild.voice_states || [])
+        .map((vs) =>
+          transformVoiceState(bot, { voiceState: vs, guildId: bot.transformers.snowflake(payload.guild.id) })
+        )
+        .map((vs) => [vs.userId, vs])
+    ),
 
     id: bot.transformers.snowflake(payload.guild.id),
     ownerId: bot.transformers.snowflake(payload.guild.owner_id),
     permissions: payload.guild.permissions ? bot.transformers.snowflake(payload.guild.permissions) : 0n,
     afkChannelId: payload.guild.afk_channel_id ? bot.transformers.snowflake(payload.guild.afk_channel_id) : undefined,
-    widgetChannelId: payload.guild.widget_channel_id ? bot.transformers.snowflake(payload.guild.widget_channel_id) : undefined,
+    widgetChannelId: payload.guild.widget_channel_id
+      ? bot.transformers.snowflake(payload.guild.widget_channel_id)
+      : undefined,
     applicationId: payload.guild.application_id ? bot.transformers.snowflake(payload.guild.application_id) : undefined,
-    systemChannelId: payload.guild.system_channel_id ? bot.transformers.snowflake(payload.guild.system_channel_id) : undefined,
-    rulesChannelId: payload.guild.rules_channel_id ? bot.transformers.snowflake(payload.guild.rules_channel_id) : undefined,
-    publicUpdatesChannelId: payload.guild.public_updates_channel_id ? bot.transformers.snowflake(payload.guild.public_updates_channel_id) : undefined
-  }
+    systemChannelId: payload.guild.system_channel_id
+      ? bot.transformers.snowflake(payload.guild.system_channel_id)
+      : undefined,
+    rulesChannelId: payload.guild.rules_channel_id
+      ? bot.transformers.snowflake(payload.guild.rules_channel_id)
+      : undefined,
+    publicUpdatesChannelId: payload.guild.public_updates_channel_id
+      ? bot.transformers.snowflake(payload.guild.public_updates_channel_id)
+      : undefined,
+  };
 }
 
 export interface DiscordenoGuild
@@ -92,7 +110,7 @@ export interface DiscordenoGuild
     | "systemChannelId"
     | "rulesChannelId"
     | "publicUpdatesChannelId"
-    > {
+  > {
   /** Guild id */
   id: bigint;
   /** Id of the owner */
