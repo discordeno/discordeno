@@ -1,360 +1,93 @@
-import { botId, eventHandlers } from "../bot.ts";
-import { cache, cacheHandlers } from "../cache.ts";
-import { deleteGuild } from "../helpers/guilds/delete_guild.ts";
-import { editGuild } from "../helpers/guilds/edit_guild.ts";
-import { getAuditLogs } from "../helpers/guilds/get_audit_logs.ts";
-import { getBan } from "../helpers/guilds/get_ban.ts";
-import { getBans } from "../helpers/guilds/get_bans.ts";
-import { guildBannerURL } from "../helpers/guilds/guild_banner_url.ts";
-import { guildIconURL } from "../helpers/guilds/guild_icon_url.ts";
-import { guildSplashURL } from "../helpers/guilds/guild_splash_url.ts";
-import { leaveGuild } from "../helpers/guilds/leave_guild.ts";
-import { getInvites } from "../helpers/invites/get_invites.ts";
-import { banMember } from "../helpers/members/ban_member.ts";
-import { unbanMember } from "../helpers/members/unban_member.ts";
+import { Bot } from "../bot.ts";
 import type { PresenceUpdate } from "../types/activity/presence_update.ts";
-import { GetGuildAuditLog } from "../types/audit_log/get_guild_audit_log.ts";
 import type { Emoji } from "../types/emojis/emoji.ts";
-import type { CreateGuildBan } from "../types/guilds/create_guild_ban.ts";
 import type { Guild } from "../types/guilds/guild.ts";
-import { DiscordGuildFeatures } from "../types/guilds/guild_features.ts";
-import type { ModifyGuild } from "../types/guilds/modify_guild.ts";
-import type { GuildMember, GuildMemberWithUser } from "../types/members/guild_member.ts";
-import type { DiscordImageFormat } from "../types/misc/image_format.ts";
-import type { DiscordImageSize } from "../types/misc/image_size.ts";
-import { snowflakeToBigint } from "../util/bigint.ts";
-import { cacheMembers } from "../util/cache_members.ts";
 import { Collection } from "../util/collection.ts";
 import { iconHashToBigInt } from "../util/hash.ts";
 import { channelToThread } from "../util/transformers/channel_to_thread.ts";
-import { createNewProp } from "../util/utils.ts";
-import { DiscordenoChannel } from "./channel.ts";
-import { DiscordenoMember } from "./member.ts";
-import { structures } from "./mod.ts";
-import { DiscordenoRole } from "./role.ts";
-import { DiscordenoVoiceState } from "./voice_state.ts";
+import { transformChannel } from "./channel.ts";
+import { DiscordenoRole, transformRole } from "./role.ts";
+import { DiscordenoVoiceState, transformVoiceState } from "./voice_state.ts";
+import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
-const GUILD_SNOWFLAKES = [
-  "id",
-  "ownerId",
-  "permissions",
-  "afkChannelId",
-  "widgetChannelId",
-  "applicationId",
-  "systemChannelId",
-  "rulesChannelId",
-  "publicUpdatesChannelId",
-];
+export function transformGuild(bot: Bot, payload: { guild: SnakeCasedPropertiesDeep<Guild> } & { shardId: number }) {
+  return {
+    afkTimeout: payload.guild.afk_timeout,
+    approximateMemberCount: payload.guild.approximate_member_count,
+    approximatePresenceCount: payload.guild.approximate_presence_count,
+    defaultMessageNotifications: payload.guild.default_message_notifications,
+    description: payload.guild.description,
+    explicitContentFilter: payload.guild.explicit_content_filter,
+    features: payload.guild.features,
+    maxMembers: payload.guild.max_members,
+    maxPresences: payload.guild.max_presences,
+    maxVideoChannelUsers: payload.guild.max_video_channel_users,
+    mfaLevel: payload.guild.mfa_level,
+    name: payload.guild.name,
+    nsfwLevel: payload.guild.nsfw_level,
+    preferredLocale: payload.guild.preferred_locale,
+    premiumSubscriptionCount: payload.guild.premium_subscription_count,
+    premiumTier: payload.guild.premium_tier,
+    stageInstances: payload.guild.stage_instances,
+    systemChannelFlags: payload.guild.system_channel_flags,
+    vanityUrlCode: payload.guild.vanity_url_code,
+    verificationLevel: payload.guild.verification_level,
+    welcomeScreen: payload.guild.welcome_screen,
+    discoverySplash: payload.guild.discovery_splash,
 
-export const guildToggles = {
-  /** Whether this user is owner of this guild */
-  owner: 1n,
-  /** Whether the guild widget is enabled */
-  widgetEnabled: 2n,
-  /** Whether this is a large guild */
-  large: 4n,
-  /** Whether this guild is unavailable due to an outage */
-  unavailable: 8n,
-  /** Whether this server's icon is animated */
-  animatedIcon: 16n,
-  /** Whether this server's banner is animated. */
-  animatedBanner: 32n,
-  /** Whether this server's splash is animated. */
-  animatedSplash: 64n,
-};
+    bitfield:
+      (payload.guild.owner ? 1n : 0n) |
+      (payload.guild.widget_enabled ? 2n : 0n) |
+      (payload.guild.large ? 4n : 0n) |
+      (payload.guild.unavailable ? 8n : 0n),
 
-const baseGuild: Partial<DiscordenoGuild> = {
-  toJSON() {
-    return {
-      shardId: this.shardId!,
-      id: this.id?.toString(),
-      name: this.name,
-      icon: this.icon,
-      iconHash: undefined,
-      splash: this.splash,
-      discoverySplash: this.discoverySplash,
-      owner: this.owner,
-      ownerId: this.ownerId?.toString(),
-      permissions: this.permissions,
-      afkChannelId: this.afkChannelId?.toString(),
-      afkTimeout: this.afkTimeout,
-      widgetEnabled: this.widgetEnabled,
-      widgetChannelId: this.widgetChannelId?.toString(),
-      verificationLevel: this.verificationLevel,
-      defaultMessageNotifications: this.defaultMessageNotifications,
-      explicitContentFilter: this.explicitContentFilter,
-      roles: this.roles?.map((r) => r.toJSON()) || [],
-      emojis: this.emojis?.array() || [],
-      features: this.features,
-      mfaLevel: this.mfaLevel,
-      applicationId: this.applicationId?.toString(),
-      systemChannelId: this.systemChannelId?.toString(),
-      systemChannelFlags: this.systemChannelFlags,
-      rulesChannelId: this.rulesChannelId?.toString(),
-      joinedAt: this.joinedAt ? new Date(this.joinedAt).toISOString() : undefined,
-      large: this.large,
-      unavailable: this.unavailable,
-      memberCount: this.memberCount,
-      voiceStates: this.voiceStates,
-      members: this.members,
-      channels: this.channels,
-      threads: this.threads,
-      presences: this.presences,
-      maxPresences: this.maxPresences,
-      maxMembers: this.maxMembers,
-      vanityUrlCode: this.vanityUrlCode,
-      description: this.description,
-      banner: this.banner,
-      premiumTier: this.premiumTier,
-      premiumSubscriptionCount: this.premiumSubscriptionCount,
-      preferredLocale: this.preferredLocale,
-      publicUpdatesChannelId: this.publicUpdatesChannelId?.toString(),
-      maxVideoChannelUsers: this.maxVideoChannelUsers,
-      approximateMemberCount: this.approximateMemberCount,
-      approximatePresenceCount: this.approximatePresenceCount,
-      welcomeScreen: this.welcomeScreen,
-      nsfwLevel: this.nsfwLevel,
-      stageInstances: this.stageInstances,
-    } as Guild & { shardId: number };
-  },
-  get members() {
-    return cache.members.filter((member) => member.guilds.has(this.id!));
-  },
-  get channels() {
-    return cache.channels.filter((channel) => channel.guildId === this.id);
-  },
-  get afkChannel() {
-    return cache.channels.get(this.afkChannelId!);
-  },
-  get publicUpdatesChannel() {
-    return cache.channels.get(this.publicUpdatesChannelId!);
-  },
-  get rulesChannel() {
-    return cache.channels.get(this.rulesChannelId!);
-  },
-  get systemChannel() {
-    return cache.channels.get(this.systemChannelId!);
-  },
-  get bot() {
-    return cache.members.get(botId);
-  },
-  get botMember() {
-    return this.bot?.guilds.get(this.id!);
-  },
-  get botVoice() {
-    return this.voiceStates?.get(botId);
-  },
-  get owner() {
-    return cache.members.get(this.ownerId!);
-  },
-  get partnered() {
-    return Boolean(this.features?.includes(DiscordGuildFeatures.Partnered));
-  },
-  get verified() {
-    return Boolean(this.features?.includes(DiscordGuildFeatures.Verified));
-  },
-  bannerURL(size, format) {
-    return guildBannerURL(this.id!, {
-      banner: this.banner!,
-      size,
-      format,
-      animated: this.animatedBanner!,
-    });
-  },
-  splashURL(size, format) {
-    return guildSplashURL(this.id!, {
-      splash: this.splash!,
-      size,
-      format,
-      animated: this.animatedSplash,
-    });
-  },
-  delete() {
-    return deleteGuild(this.id!);
-  },
-  edit(options) {
-    return editGuild(this.id!, options);
-  },
-  auditLogs(options) {
-    return getAuditLogs(this.id!, options);
-  },
-  getBan(memberId) {
-    return getBan(this.id!, memberId);
-  },
-  bans() {
-    return getBans(this.id!);
-  },
-  ban(memberId, options) {
-    return banMember(this.id!, memberId, options);
-  },
-  unban(memberId) {
-    return unbanMember(this.id!, memberId);
-  },
-  invites() {
-    return getInvites(this.id!);
-  },
-  iconURL(size, format) {
-    return guildIconURL(this.id!, {
-      icon: this.icon!,
-      size,
-      format,
-      animated: this.animatedIcon!,
-    });
-  },
-  leave() {
-    return leaveGuild(this.id!);
-  },
-  get isOwner() {
-    return Boolean(this.bitfield! & guildToggles.owner);
-  },
-  get widgetEnabled() {
-    return Boolean(this.bitfield! & guildToggles.widgetEnabled);
-  },
-  get large() {
-    return Boolean(this.bitfield! & guildToggles.large);
-  },
-  get unavailable() {
-    return Boolean(this.bitfield! & guildToggles.unavailable);
-  },
-  get animatedIcon() {
-    return Boolean(this.bitfield! & guildToggles.animatedIcon);
-  },
-  get animatedBanner() {
-    return Boolean(this.bitfield! & guildToggles.animatedBanner);
-  },
-  get animatedSplash() {
-    return Boolean(this.bitfield! & guildToggles.animatedSplash);
-  },
-};
+    joinedAt: payload.guild.joined_at ? Date.parse(payload.guild.joined_at) : undefined,
+    memberCount: payload.guild.member_count ?? 0,
+    shardId: payload.shardId,
+    icon: payload.guild.icon ? iconHashToBigInt(payload.guild.icon) : undefined,
+    banner: payload.guild.banner ? iconHashToBigInt(payload.guild.banner) : undefined,
+    splash: payload.guild.icon ? iconHashToBigInt(payload.guild.splash) : undefined,
 
-export async function createDiscordenoGuild(data: Guild, shardId: number) {
-  const {
-    memberCount = 0,
-    voiceStates = [],
-    channels = [],
-    threads = [],
-    presences = [],
-    joinedAt = "",
-    emojis = [],
-    members = [],
-    icon,
-    splash,
-    banner,
-    ...rest
-  } = data;
+    // TRANSFORMED STUFF BELOW
+    // TODO: Handle channels/threads in a better way?
+    channels: (payload.guild.channels || []).map((channel) =>
+      transformChannel(bot, { channel, guildId: bot.transformers.snowflake(payload.guild.id) })
+    ),
+    threads: (payload.guild.threads || []).map((channel) => channelToThread(channel)),
 
-  let bitfield = 0n;
-  const guildId = snowflakeToBigint(rest.id);
+    roles: new Collection(
+      (payload.guild.roles || [])
+        .map((role) => transformRole(bot, { role, guildId: bot.transformers.snowflake(payload.guild.id) }))
+        .map((role) => [role.id, role])
+    ),
+    presences: new Collection((payload.guild.presences || []).map((p) => [bot.transformers.snowflake(p.user!.id), p])),
+    emojis: new Collection((payload.guild.emojis || []).map((emoji) => [bot.transformers.snowflake(emoji.id!), emoji])),
+    voiceStates: new Collection(
+      (payload.guild.voice_states || [])
+        .map((vs) =>
+          transformVoiceState(bot, { voiceState: vs, guildId: bot.transformers.snowflake(payload.guild.id) })
+        )
+        .map((vs) => [vs.userId, vs])
+    ),
 
-  const promises = [];
-
-  for (const channel of channels) {
-    promises.push(async () => {
-      const discordenoChannel = await structures.createDiscordenoChannel(channel, guildId);
-
-      return cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);
-    });
-  }
-
-  for (const thread of threads) {
-    promises.push(() => {
-      const discordenoThread = channelToThread(thread);
-
-      return cacheHandlers.set("threads", discordenoThread.id, discordenoThread);
-    });
-  }
-
-  await Promise.all(
-    promises.map(async (promise) => {
-      return await promise();
-    })
-  );
-
-  const roles = await Promise.all(
-    (data.roles || []).map((role) =>
-      structures.createDiscordenoRole({
-        role,
-        guildId,
-      })
-    )
-  );
-
-  const voiceStateStructs = await Promise.all(
-    voiceStates.map((vs) => {
-      if (vs.member?.joinedAt) members.push(vs.member);
-      return structures.createDiscordenoVoiceState(guildId, vs);
-    })
-  );
-
-  const props: Record<string, ReturnType<typeof createNewProp>> = {};
-  for (const key of Object.keys(rest) as (keyof typeof rest)[]) {
-    eventHandlers.debug?.("loop", `Running for of loop in createDiscordenoGuild function.`);
-
-    // If its empty default allows all, otherwise only allow those users required.
-    if (cache.requiredStructureProperties.guilds.size && !cache.requiredStructureProperties.guilds.has(key)) {
-      continue;
-    }
-
-    const toggleBits = guildToggles[key as keyof typeof guildToggles];
-    if (toggleBits) {
-      bitfield |= rest[key] ? toggleBits : 0n;
-      continue;
-    }
-
-    props[key] = createNewProp(
-      GUILD_SNOWFLAKES.includes(key) ? (rest[key] ? snowflakeToBigint(rest[key] as string) : undefined) : rest[key]
-    );
-  }
-
-  const hashes = [
-    { name: "icon", toggle: guildToggles.animatedIcon, value: icon },
-    { name: "banner", toggle: guildToggles.animatedBanner, value: banner },
-    { name: "splash", toggle: guildToggles.animatedSplash, value: splash },
-  ] as const;
-
-  for (const hash of hashes) {
-    // If its empty default allows all, otherwise only allow those users required.
-    if (cache.requiredStructureProperties.guilds.size && !cache.requiredStructureProperties.guilds.has(hash.name)) {
-      continue;
-    }
-
-    const transformed = hash.value ? iconHashToBigInt(hash.value) : undefined;
-    if (transformed) {
-      props[hash.name] = createNewProp(hash.value);
-      if (transformed.animated) bitfield |= hash.toggle;
-    }
-  }
-
-  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("roles")) {
-    props.roles = createNewProp(new Collection(roles.map((r: DiscordenoRole) => [r.id, r])));
-  }
-  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("joinedAt")) {
-    props.joinedAt = createNewProp(Date.parse(joinedAt));
-  }
-  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("presences")) {
-    props.presences = createNewProp(new Collection(presences.map((p) => [snowflakeToBigint(p.user!.id), p])));
-  }
-  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("memberCount")) {
-    props.memberCount = createNewProp(memberCount);
-  }
-  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("emojis")) {
-    props.emojis = createNewProp(new Collection(emojis.map((emoji) => [snowflakeToBigint(emoji.id!), emoji])));
-  }
-  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("voiceStates")) {
-    props.voiceStates = createNewProp(new Collection(voiceStateStructs.map((vs) => [vs.userId, vs])));
-  }
-
-  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("shardId")) {
-    props.shardId = createNewProp(shardId);
-  }
-
-  if (!cache.requiredStructureProperties.guilds.size || cache.requiredStructureProperties.guilds.has("bitfield")) {
-    props.bitfield = createNewProp(bitfield);
-  }
-
-  const guild: DiscordenoGuild = Object.create(baseGuild, props);
-  await cacheMembers(guild.id, members as GuildMemberWithUser[]);
-  return guild;
+    id: bot.transformers.snowflake(payload.guild.id),
+    ownerId: bot.transformers.snowflake(payload.guild.owner_id),
+    permissions: payload.guild.permissions ? bot.transformers.snowflake(payload.guild.permissions) : 0n,
+    afkChannelId: payload.guild.afk_channel_id ? bot.transformers.snowflake(payload.guild.afk_channel_id) : undefined,
+    widgetChannelId: payload.guild.widget_channel_id
+      ? bot.transformers.snowflake(payload.guild.widget_channel_id)
+      : undefined,
+    applicationId: payload.guild.application_id ? bot.transformers.snowflake(payload.guild.application_id) : undefined,
+    systemChannelId: payload.guild.system_channel_id
+      ? bot.transformers.snowflake(payload.guild.system_channel_id)
+      : undefined,
+    rulesChannelId: payload.guild.rules_channel_id
+      ? bot.transformers.snowflake(payload.guild.rules_channel_id)
+      : undefined,
+    publicUpdatesChannelId: payload.guild.public_updates_channel_id
+      ? bot.transformers.snowflake(payload.guild.public_updates_channel_id)
+      : undefined,
+  };
 }
 
 export interface DiscordenoGuild
@@ -418,63 +151,4 @@ export interface DiscordenoGuild
   isOwner: boolean;
   /** Holds all the boolean toggles. */
   bitfield: bigint;
-
-  // GETTERS
-  /** Members in this guild. */
-  members: Collection<bigint, DiscordenoMember>;
-  /** Channels in this guild. */
-  channels: Collection<bigint, DiscordenoChannel>;
-  /** The afk channel if one is set */
-  afkChannel?: DiscordenoChannel;
-  /** The public update channel if one is set */
-  publicUpdatesChannel?: DiscordenoChannel;
-  /** The rules channel in this guild if one is set */
-  rulesChannel?: DiscordenoChannel;
-  /** The system channel in this guild if one is set */
-  systemChannel?: DiscordenoChannel;
-  /** The bot member in this guild if cached */
-  bot?: DiscordenoMember;
-  /** The bot guild member in this guild if cached */
-  botMember?: Omit<GuildMember, "joinedAt" | "premiumSince" | "roles"> & {
-    joinedAt?: number;
-    premiumSince?: number;
-    roles: bigint[];
-  };
-  /** The bots voice state if there is one in this guild */
-  botVoice?: DiscordenoVoiceState;
-  /** The owner member of this guild */
-  owner?: DiscordenoMember;
-  /** Whether or not this guild is partnered */
-  partnered: boolean;
-  /** Whether or not this guild is verified */
-  verified: boolean;
-
-  // METHODS
-
-  /** The banner url for this server */
-  bannerURL(size?: DiscordImageSize, format?: DiscordImageFormat): string | undefined;
-  /** The splash url for this server */
-  splashURL(size?: DiscordImageSize, format?: DiscordImageFormat): string | undefined;
-  /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
-  iconURL(size?: DiscordImageSize, format?: DiscordImageFormat): string | undefined;
-  /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event. */
-  delete(): ReturnType<typeof deleteGuild>;
-  /** Leave a guild */
-  leave(): ReturnType<typeof leaveGuild>;
-  /** Edit the server. Requires the MANAGE_GUILD permission. */
-  edit(options: ModifyGuild): ReturnType<typeof editGuild>;
-  /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
-  auditLogs(options?: GetGuildAuditLog): ReturnType<typeof getAuditLogs>;
-  /** Returns a ban object for the given user or a 404 not found if the ban cannot be found. Requires the BAN_MEMBERS permission. */
-  getBan(memberId: bigint): ReturnType<typeof getBan>;
-  /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
-  bans(): ReturnType<typeof getBans>;
-  /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */
-  ban(memberId: bigint, options?: CreateGuildBan): ReturnType<typeof banMember>;
-  /** Remove the ban for a user. Requires BAN_MEMBERS permission */
-  unban(memberId: bigint): ReturnType<typeof unbanMember>;
-  /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
-  invites(): ReturnType<typeof getInvites>;
-  /** Get the JSON version of the Guild object used to create this. Includes the shardId as well */
-  toJSON(): Guild & { shardId: number };
 }
