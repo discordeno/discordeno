@@ -1,7 +1,7 @@
 import { Bot } from "../bot.ts";
 import { GuildMemberWithUser } from "../types/members/guild_member.ts";
 import { User } from "../types/users/user.ts";
-import { SnakeCase, SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { iconHashToBigInt } from "../util/hash.ts";
 
 export type DiscordenoUser = ReturnType<typeof transformUser>;
@@ -30,13 +30,8 @@ export function transformMember(
   payload: SnakeCasedPropertiesDeep<GuildMemberWithUser>,
   guildId: bigint
 ) {
-  // ADD USER TO CACHE
-  const transformedUser = bot.transformers.user(bot, payload.user);
-  // PULL USER FROM CACHE
-  bot.users.set(transformedUser.id, transformedUser);
-
   return {
-    user: bot.users.get(transformedUser.id),
+    id: bot.transformers.snowflake(payload.user.id),
     guildId,
     nick: payload.nick,
     roles: payload.roles.map((id) => BigInt(id)),
