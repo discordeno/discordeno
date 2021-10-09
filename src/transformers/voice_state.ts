@@ -8,9 +8,9 @@ export function transformVoiceState(bot: Bot, payload: {voiceState: SnakeCasedPr
       (payload.voiceState.mute ? 2n : 0n) |
       (payload.voiceState.selfDeaf ? 4n : 0n) |
       (payload.voiceState.selfMute ? 8n : 0n) |
-      (payload.voiceState.selfStream ? 16 : 0n) |
-      (payload.voiceState.selfVideo ? 32 : 0n) |
-      (payload.voiceState.suppress ? 64 : 0n),
+      (payload.voiceState.selfStream ? 16n : 0n) |
+      (payload.voiceState.selfVideo ? 32n : 0n) |
+      (payload.voiceState.suppress ? 64n : 0n),
 
     requestToSpeakTimestamp: payload.voiceState.request_to_speak_timestamp,
     sessionId: payload.voiceState.session_id,
