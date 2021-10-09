@@ -3,7 +3,10 @@ import { Bot } from "../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordOverwrite } from "../types/channels/overwrite.ts";
 
-export function transformChannel(bot: Bot, payload: { channel: SnakeCasedPropertiesDeep<Channel> } & { guildId?: bigint }) {
+export function transformChannel(
+  bot: Bot,
+  payload: { channel: SnakeCasedPropertiesDeep<Channel> } & { guildId?: bigint }
+) {
   return {
     // UNTRANSFORMED STUFF HERE
     type: payload.channel.type,
@@ -20,20 +23,26 @@ export function transformChannel(bot: Bot, payload: { channel: SnakeCasedPropert
     videoQualityMode: payload.channel.video_quality_mode,
     guildId: payload.guildId || (payload.channel.guild_id ? bot.transformers.snowflake(payload.channel.guild_id) : 0n),
     lastPinTimestamp: payload.channel.last_pin_timestamp,
-    permissionOverwrites: payload.channel.permission_overwrites ? payload.channel.permission_overwrites.map((o) => ({
-      type: o.type,
-      id: bot.transformers.snowflake(o.id),
-      allow: bot.transformers.snowflake(o.allow),
-      deny: bot.transformers.snowflake(o.deny),
-    })) : [],
+    permissionOverwrites: payload.channel.permission_overwrites
+      ? payload.channel.permission_overwrites.map((o) => ({
+          type: o.type,
+          id: bot.transformers.snowflake(o.id),
+          allow: bot.transformers.snowflake(o.allow),
+          deny: bot.transformers.snowflake(o.deny),
+        }))
+      : [],
 
     // TRANSFORMED STUFF BELOW
     id: bot.transformers.snowflake(payload.channel.id),
-    lastMessageId: payload.channel.last_message_id ? bot.transformers.snowflake(payload.channel.last_message_id) : undefined,
+    lastMessageId: payload.channel.last_message_id
+      ? bot.transformers.snowflake(payload.channel.last_message_id)
+      : undefined,
     ownerId: payload.channel.owner_id ? bot.transformers.snowflake(payload.channel.owner_id) : undefined,
-    applicationId: payload.channel.application_id ? bot.transformers.snowflake(payload.channel.application_id) : undefined,
+    applicationId: payload.channel.application_id
+      ? bot.transformers.snowflake(payload.channel.application_id)
+      : undefined,
     parentId: payload.channel.parent_id ? bot.transformers.snowflake(payload.channel.parent_id) : undefined,
-  }
+  };
 }
 
 export interface DiscordenoChannel
