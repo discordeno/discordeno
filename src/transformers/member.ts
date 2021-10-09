@@ -6,7 +6,7 @@ import { iconHashToBigInt } from "../util/hash.ts";
 
 export type DiscordenoUser = ReturnType<typeof transformUser>;
 
-export function transformUser(bot: Bot, payload: User) {
+export function transformUser(bot: Bot, payload: SnakeCasedPropertiesDeep<User>) {
   return {
     id: BigInt(payload.id),
     username: payload.username,
