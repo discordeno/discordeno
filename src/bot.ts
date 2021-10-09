@@ -15,6 +15,8 @@ import { processQueue } from "./rest/process_queue.ts";
 import { snowflakeToBigint } from "./util/bigint.ts";
 import { Collection } from "./util/collection.ts";
 import { DiscordenoUser, transformMember, transformUser } from "./transformers/member.ts";
+import { SnakeCasedPropertiesDeep } from "./types/util.ts";
+import { Channel } from "./types/channels/channel.ts";
 
 export async function createBot(options: CreateBotOptions) {
   return {
@@ -91,6 +93,8 @@ export function createRestManager(options: CreateRestManagerOptions) {
 }
 
 export async function startBot(bot: Bot) {
+  const transformers = createTransformers(bot.transformers);
+
   // SETUP CACHE
   bot.users = new Collection();
 
@@ -99,6 +103,16 @@ export async function startBot(bot: Bot) {
 
   // START WS
   bot.gateway = createGatewayManager();
+
+
+}
+
+export interface CreateGatewayManagerOptions {
+  transformers: Partial<Transformers>;
+}
+
+export function createGatewayManager(options: CreateGatewayManagerOptions) {
+
 }
 
 export function stopBot(bot: Bot) {
@@ -124,13 +138,16 @@ export type Bot = CreatedBot & {
   rest: RestManager;
   gateway: GatewayManager;
   transformers: Transformers;
+  // TODO: Support async cache
   users: Collection<bigint, DiscordenoUser>;
+  channels: Collection<bigint, SnakeCasedPropertiesDeep<Channel>>;
 };
 
 export interface Transformers {
   snowflake: typeof snowflakeToBigint;
   user: typeof transformUser;
   member: typeof transformMember;
+  channel: typeof transformChannel;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -145,4 +162,5 @@ export interface GatewayManager {}
 
 export interface EventHandlers {
   debug: (text: string) => unknown;
+  channelCreate: (bot: Bot, channel: DiscordenoChannel);
 }
