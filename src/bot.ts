@@ -13,6 +13,8 @@ import { GetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
 import { dispatchRequirements } from "./util/dispatch_requirements.ts";
 import { processQueue } from "./rest/process_queue.ts";
 import { snowflakeToBigint } from "./util/bigint.ts";
+import { Collection } from "./util/collection.ts";
+import { DiscordenoUser, transformMember, transformUser } from "./transformers/member.ts";
 
 export async function createBot(options: CreateBotOptions) {
   return {
@@ -23,7 +25,6 @@ export async function createBot(options: CreateBotOptions) {
     intents: options.intents.reduce((bits, next) => (bits |= DiscordGatewayIntents[next]), 0),
     botGatewayData: options.botGatewayData || (await getGatewayBot()),
     isReady: false,
-    rest: createRestManager(options.rest ? { token: options.token, ...options.rest } : { token: options.token }),
   };
 }
 
@@ -90,6 +91,9 @@ export function createRestManager(options: CreateRestManagerOptions) {
 }
 
 export async function startBot(bot: Bot) {
+  // SETUP CACHE
+  bot.users = new Collection();
+
   // START REST
   bot.rest = createRestManager({ token: bot.token });
 
@@ -120,10 +124,13 @@ export type Bot = CreatedBot & {
   rest: RestManager;
   gateway: GatewayManager;
   transformers: Transformers;
+  users: Collection<bigint, DiscordenoUser>;
 };
 
 export interface Transformers {
   snowflake: typeof snowflakeToBigint;
+  user: typeof transformUser;
+  member: typeof transformMember;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
