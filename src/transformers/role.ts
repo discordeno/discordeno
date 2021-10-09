@@ -17,6 +17,7 @@ export function transformRole(bot: Bot, payload: { role: Role } & {
       }
 }
 
+
 export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions"> {
   /** The role id */
   id: bigint;
