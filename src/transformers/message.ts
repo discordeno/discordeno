@@ -1,16 +1,17 @@
 import { Bot } from "../bot.ts";
 import { Message } from "../types/messages/message.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
+import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
-export function transformMessage(bot: Bot, data: Message) {
+export function transformMessage(bot: Bot, data: SnakeCasedPropertiesDeep<Message>) {
   return {
     // UNTRANSFORMED STUFF HERE
     content: data.content || "",
     isBot: data.author.bot || false,
     tag: `${data.author.username}#${data.author.discriminator.toString().padStart(4, "0")}`,
     timestamp: Date.parse(data.timestamp),
-    editedTimestamp: data.editedTimestamp ? Date.parse(data.editedTimestamp) : undefined,
-    bitfield: (data.tts ? 1n : 0n) | (data.mentionEveryone ? 2n : 0n) | (data.pinned ? 4n : 0n),
+    editedTimestamp: data.edited_timestamp ? Date.parse(data.edited_timestamp) : undefined,
+    bitfield: (data.tts ? 1n : 0n) | (data.mention_everyone ? 2n : 0n) | (data.pinned ? 4n : 0n),
     attachments: data.attachments,
     embeds: data.embeds,
     reactions: data.reactions,
@@ -21,33 +22,33 @@ export function transformMessage(bot: Bot, data: Message) {
     interaction: data.interaction,
     thread: data.thread,
     components: data.components,
-    stickerItems: data.stickerItems,
+    stickerItems: data.sticker_items,
 
     // TRANSFORMED STUFF BELOW
     id: bot.transformers.snowflake(data.id),
-    guildId: data.guildId ? bot.transformers.snowflake(data.guildId) : undefined,
-    channelId: bot.transformers.snowflake(data.channelId),
-    webhookId: data.webhookId ? bot.transformers.snowflake(data.webhookId) : undefined,
+    guildId: data.guild_id ? bot.transformers.snowflake(data.guild_id) : undefined,
+    channelId: bot.transformers.snowflake(data.channel_id),
+    webhookId: data.webhook_id ? bot.transformers.snowflake(data.webhook_id) : undefined,
     authorId: bot.transformers.snowflake(data.author.id),
-    applicationId: data.applicationId ? bot.transformers.snowflake(data.applicationId) : undefined,
-    messageReference: data.messageReference
+    applicationId: data.application_id ? bot.transformers.snowflake(data.application_id) : undefined,
+    messageReference: data.message_reference
       ? {
-          messageId: data.messageReference.messageId
-            ? bot.transformers.snowflake(data.messageReference.messageId)
+          messageId: data.message_reference.message_id
+            ? bot.transformers.snowflake(data.message_reference.message_id)
             : undefined,
-          channelId: data.messageReference.channelId
-            ? bot.transformers.snowflake(data.messageReference.channelId)
+          channelId: data.message_reference.channel_id
+            ? bot.transformers.snowflake(data.message_reference.channel_id)
             : undefined,
-          guildId: data.messageReference.guildId
-            ? bot.transformers.snowflake(data.messageReference.guildId)
+          guildId: data.message_reference.guild_id
+            ? bot.transformers.snowflake(data.message_reference.guild_id)
             : undefined,
         }
       : undefined,
-    mentionedUserIds: data.mentions.map((m) => bot.transformers.snowflake(m.id)),
-    mentionedRoleIds: data.mentionRoles.map((id) => bot.transformers.snowflake(id)),
+    mentionedUserIds: data.mentions ? data.mentions.map((m) => bot.transformers.snowflake(m.id)) : [],
+    mentionedRoleIds: data.mention_roles ? data.mention_roles.map((id) => bot.transformers.snowflake(id)) : [],
     mentionedChannelIds: [
       // Keep any ids tht discord sends
-      ...data.mentionChannels.map((m) => bot.transformers.snowflake(m.id)),
+      ...(data.mention_channels ?? []).map((m) => bot.transformers.snowflake(m.id)),
       // Add any other ids that can be validated in a channel mention format
       ...(data.content?.match(CHANNEL_MENTION_REGEX) || []).map((text) =>
         // converts the <#123> into 123
