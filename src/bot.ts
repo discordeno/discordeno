@@ -12,7 +12,7 @@ import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
 import { GetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
 import { dispatchRequirements } from "./util/dispatch_requirements.ts";
 import { processQueue } from "./rest/process_queue.ts";
-import { snowflakeToBigint } from "./util/bigint.ts";
+import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
 import { Collection } from "./util/collection.ts";
 import { DiscordenoUser, transformMember, transformUser } from "./transformers/member.ts";
 import { SnakeCasedPropertiesDeep } from "./types/util.ts";
@@ -36,31 +36,50 @@ import { handleOnMessage } from "./ws/handle_on_message.ts";
 import { closeWS } from "./ws/close_ws.ts";
 import { sendShardMessage } from "./ws/send_shard_message.ts";
 import { resume } from "./ws/resume.ts";
+import { calculateShardId } from "./util/calculate_shard_id.ts";
+import {
+  baseEndpoints,
+  CHANNEL_MENTION_REGEX,
+  CONTEXT_MENU_COMMANDS_NAME_REGEX,
+  DISCORDENO_VERSION,
+  DISCORD_SNOWFLAKE_REGEX,
+  endpoints,
+  SLASH_COMMANDS_NAME_REGEX,
+  USER_AGENT,
+} from "./util/constants.ts";
+import { GatewayPayload } from "./types/gateway/gateway_payload.ts";
+import { delay } from "./util/utils.ts";
+import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
+import { loopObject } from "./util/loop_object.ts";
 
 export async function createBot(options: CreateBotOptions) {
   return {
     id: options.botId,
     applicationId: options.applicationId || options.botId,
     token: `Bot ${options.token}`,
-    events: { dispatchRequirements: dispatchRequirements, ...options.events },
+    events: options.events,
     intents: options.intents.reduce((bits, next) => (bits |= DiscordGatewayIntents[next]), 0),
     botGatewayData: options.botGatewayData || (await getGatewayBot()),
     isReady: false,
+    activeGuildIds: new Set<bigint>(),
+    constants: createBotConstants(),
   };
 }
 
 const bot = await createBot({
   token: "",
   botId: 0n,
-  events: createEventHandlers(),
+  events: createEventHandlers({}),
   intents: [],
 });
 
-export function createEventHandlers(options?: Partial<EventHandlers>) {
+export function createEventHandlers(events: Partial<EventHandlers>): EventHandlers {
+  function ignore() {}
+
   return {
-    debug: () => undefined,
-    // PROVIDED OPTIONS OVERRIDE EVERYTHING ABOVE
-    ...options,
+    channelCreate: events.channelCreate ?? ignore,
+    debug: events.debug ?? ignore,
+    dispatchRequirements: events.dispatchRequirements ?? ignore,
   };
 }
 
@@ -114,6 +133,9 @@ export function createRestManager(options: CreateRestManagerOptions) {
 export async function startBot(bot: Bot) {
   const transformers = createTransformers(bot.transformers);
 
+  // SETUP UTILS
+  bot.utils = createUtils({});
+
   // SETUP CACHE
   bot.users = new Collection();
 
@@ -122,6 +144,28 @@ export async function startBot(bot: Bot) {
 
   // START WS
   bot.gateway = createGatewayManager({});
+}
+
+export function createUtils(options: Partial<HelperUtils>) {
+  return {
+    snowflakeToBigint,
+    bigintToSnowflake,
+    calculateShardId,
+    delay,
+    iconHashToBigInt,
+    iconBigintToHash,
+    loopObject,
+  };
+}
+
+export interface HelperUtils {
+  snowflakeToBigint: typeof snowflakeToBigint;
+  bigintToSnowflake: typeof bigintToSnowflake;
+  calculateShardId: typeof calculateShardId;
+  delay: typeof delay;
+  iconHashToBigInt: typeof iconHashToBigInt;
+  iconBigintToHash: typeof iconBigintToHash;
+  loopObject: typeof loopObject;
 }
 
 export function createGatewayManager(options: Partial<GatewayManager>): GatewayManager {
@@ -181,7 +225,7 @@ export interface CreateBotOptions {
   token: string;
   botId: bigint;
   applicationId?: bigint;
-  events: Partial<EventHandlers>;
+  events: EventHandlers;
   intents: (keyof typeof DiscordGatewayIntents)[];
   botGatewayData?: GetGatewayBot;
   rest?: Omit<CreateRestManagerOptions, "token">;
@@ -192,6 +236,7 @@ export type UnPromise<T extends Promise<unknown>> = T extends Promise<infer K> ?
 export type CreatedBot = UnPromise<ReturnType<typeof createBot>>;
 
 export type Bot = CreatedBot & {
+  utils: HelperUtils;
   rest: RestManager;
   gateway: GatewayManager;
   transformers: Transformers;
@@ -326,4 +371,21 @@ export interface GatewayManager {
 export interface EventHandlers {
   debug: (text: string) => unknown;
   channelCreate: (bot: Bot, channel: DiscordenoChannel) => unknown;
+  dispatchRequirements: (bot: Bot, data: GatewayPayload, shardId: number) => Promise<unknown> | unknown;
+}
+
+export function createBotConstants() {
+  return {
+    DISCORDENO_VERSION,
+    USER_AGENT,
+    BASE_URL: baseEndpoints.BASE_URL,
+    CDN_URL: baseEndpoints.CDN_URL,
+    endpoints,
+    regexes: {
+      SLASH_COMMANDS_NAME_REGEX,
+      CONTEXT_MENU_COMMANDS_NAME_REGEX,
+      CHANNEL_MENTION_REGEX,
+      DISCORD_SNOWFLAKE_REGEX,
+    },
+  };
 }

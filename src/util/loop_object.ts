@@ -1,6 +1,6 @@
-import { eventHandlers } from "../bot.ts";
+import { Bot } from "../bot.ts";
 
-export function loopObject<T = {}>(obj: {}, handler: (value: unknown, key: string) => unknown, log: string) {
+export function loopObject<T = {}>(bot: Bot, obj: {}, handler: (value: unknown, key: string) => unknown, log: string) {
   let res: Record<string, unknown> | unknown[] = {};
 
   if (Array.isArray(obj)) {
@@ -9,18 +9,21 @@ export function loopObject<T = {}>(obj: {}, handler: (value: unknown, key: strin
     for (const o of obj) {
       if (typeof o === "object" && !Array.isArray(o) && o !== null) {
         // A nested object
-        res.push(loopObject(o as {}, handler, log));
+        res.push(loopObject(bot, o as {}, handler, log));
       } else {
         res.push(handler(o, "array"));
       }
     }
   } else {
     for (const [key, value] of Object.entries(obj)) {
-      eventHandlers.debug?.("loop", log);
+      bot.events.debug(log);
 
-      if (typeof value === "object" && !Array.isArray(value) && value !== null && !(value instanceof Blob)) {
+      if (
+        Array.isArray(value) ||
+        (typeof value === "object" && !Array.isArray(value) && value !== null && !(value instanceof Blob))
+      ) {
         // A nested object
-        res[key] = loopObject(value as {}, handler, log);
+        res[key] = loopObject(bot, value as {}, handler, log);
       } else {
         res[key] = handler(value, key);
       }

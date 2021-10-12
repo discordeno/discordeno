@@ -1,13 +1,7 @@
 import { Bot } from "../bot.ts";
-import { cache } from "../cache.ts";
-import { getChannels } from "../helpers/channels/get_channels.ts";
-import { getGuild } from "../helpers/guilds/get_guild.ts";
-import { getMember } from "../helpers/members/get_member.ts";
-import { structures } from "../structures/mod.ts";
 import type { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
 import type { Guild } from "../types/guilds/guild.ts";
-import { snowflakeToBigint } from "./bigint.ts";
-import { delay } from "./utils.ts";
+import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
 const processing = new Set<bigint>();
 
@@ -17,7 +11,7 @@ export async function dispatchRequirements(bot: Bot, data: DiscordGatewayPayload
   // DELETE MEANS WE DONT NEED TO FETCH. CREATE SHOULD HAVE DATA TO CACHE
   if (data.t && ["GUILD_CREATE", "GUILD_DELETE"].includes(data.t)) return;
 
-  const id = snowflakeToBigint(
+  const id = bot.utils.snowflakeToBigint(
     (data.t && ["GUILD_UPDATE"].includes(data.t)
       ? // deno-lint-ignore no-explicit-any
         (data.d as any)?.id
@@ -25,11 +19,11 @@ export async function dispatchRequirements(bot: Bot, data: DiscordGatewayPayload
         (data.d as any)?.guild_id) ?? ""
   );
 
-  if (!id || cache.activeGuildIds.has(id)) return;
+  if (!id || bot.activeGuildIds.has(id)) return;
 
   // If this guild is in cache, it has not been swept and we can cancel
-  if (cache.guilds.has(id)) {
-    cache.activeGuildIds.add(id);
+  if (bot.guilds.has(id)) {
+    bot.activeGuildIds.add(id);
     return;
   }
 
@@ -38,7 +32,7 @@ export async function dispatchRequirements(bot: Bot, data: DiscordGatewayPayload
 
     let runs = 0;
     do {
-      await delay(500);
+      await bot.utils.delay(500);
       runs++;
     } while (processing.has(id) && runs < 40);
 
@@ -54,10 +48,12 @@ export async function dispatchRequirements(bot: Bot, data: DiscordGatewayPayload
   // New guild id has appeared, fetch all relevant data
   bot.events.debug(`[DISPATCH] New Guild ID has appeared: ${id} in ${data.t} event`);
 
-  const rawGuild = (await getGuild(id, {
-    counts: true,
-    addToCache: false,
-  }).catch(console.log)) as Guild | undefined;
+  const rawGuild = (await bot.helpers
+    .getGuild(id, {
+      counts: true,
+      addToCache: false,
+    })
+    .catch(console.log)) as SnakeCasedPropertiesDeep<Guild> | undefined;
 
   if (!rawGuild) {
     processing.delete(id);
@@ -67,8 +63,8 @@ export async function dispatchRequirements(bot: Bot, data: DiscordGatewayPayload
   bot.events.debug(`[DISPATCH] Guild ID ${id} has been found. ${rawGuild.name}`);
 
   const [channels, botMember] = await Promise.all([
-    getChannels(id, false),
-    getMember(id, bot.id, { force: true }),
+    bot.helpers.getChannels(id, false),
+    bot.helpers.getMember(id, bot.id, { force: true }),
   ]).catch((error) => {
     bot.events.debug(error);
     return [];
@@ -81,17 +77,18 @@ export async function dispatchRequirements(bot: Bot, data: DiscordGatewayPayload
     );
   }
 
-  const guild = await structures.createDiscordenoGuild(
-    { ...rawGuild, memberCount: rawGuild.approximateMemberCount },
-    shardId
-  );
+  const guild = await bot.transformers.guild(bot, {
+    ...rawGuild,
+    member_count: rawGuild.approximateMemberCount,
+    shardId,
+  });
 
   // Add to cache
-  cache.guilds.set(id, guild);
-  cache.dispatchedGuildIds.delete(id);
+  bot.guilds.set(id, guild);
+  bot.dispatchedGuildIds.delete(id);
   channels.forEach((channel) => {
-    cache.dispatchedChannelIds.delete(channel.id);
-    cache.channels.set(channel.id, channel);
+    bot.dispatchedChannelIds.delete(channel.id);
+    bot.channels.set(channel.id, channel);
   });
 
   processing.delete(id);
