@@ -33,7 +33,7 @@ async function guildSweeper(bot: Bot, guild: DiscordenoGuild) {
 
 async function channelSweeper(bot: Bot, channel: DiscordenoChannel, key: bigint) {
   // If this is in a guild and the guild was dispatched, then we can dispatch the channel
-  if (channel.guildId && await bot.cache.dispatchedGuildIds.has(channel.guildId)) {
+  if (channel.guildId && (await bot.cache.dispatchedGuildIds.has(channel.guildId))) {
     await bot.cache.dispatchedChannelIds.set(channel.id);
     return true;
   }

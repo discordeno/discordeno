@@ -506,30 +506,39 @@ export interface EventHandlers {
   channelDelete: (bot: Bot, channel: DiscordenoChannel) => any;
   channelPinsUpdate: (bot: Bot, data: { guildId?: bigint; channelId: bigint; lastPinTimestamp?: number }) => any;
   channelUpdate: (bot: Bot, channel: DiscordenoChannel, oldChannel: DiscordenoChannel) => any;
-  stageInstanceCreate: (bot: Bot, data: {
-    id: bigint;
-    guildId: bigint;
-    channelId: bigint;
-    topic: string;
-    privacyLevel: number;
-    discoverableDisabled: boolean;
-  }) => any;
-  stageInstanceDelete: (bot: Bot, data: {
-    id: bigint;
-    guildId: bigint;
-    channelId: bigint;
-    topic: string;
-    privacyLevel: number;
-    discoverableDisabled: boolean;
-  }) => any;
-  stageInstanceUpdate: (bot: Bot, data: {
-    id: bigint;
-    guildId: bigint;
-    channelId: bigint;
-    topic: string;
-    privacyLevel: number;
-    discoverableDisabled: boolean;
-  }) => any;
+  stageInstanceCreate: (
+    bot: Bot,
+    data: {
+      id: bigint;
+      guildId: bigint;
+      channelId: bigint;
+      topic: string;
+      privacyLevel: number;
+      discoverableDisabled: boolean;
+    }
+  ) => any;
+  stageInstanceDelete: (
+    bot: Bot,
+    data: {
+      id: bigint;
+      guildId: bigint;
+      channelId: bigint;
+      topic: string;
+      privacyLevel: number;
+      discoverableDisabled: boolean;
+    }
+  ) => any;
+  stageInstanceUpdate: (
+    bot: Bot,
+    data: {
+      id: bigint;
+      guildId: bigint;
+      channelId: bigint;
+      topic: string;
+      privacyLevel: number;
+      discoverableDisabled: boolean;
+    }
+  ) => any;
 }
 
 export function createBotConstants() {
