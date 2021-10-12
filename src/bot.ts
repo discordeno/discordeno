@@ -21,7 +21,7 @@ import { DiscordenoChannel, transformChannel } from "./transformers/channel.ts";
 import { transformVoiceState } from "./transformers/voice_state.ts";
 import { transformRole } from "./transformers/role.ts";
 import { transformMessage } from "./transformers/message.ts";
-import { transformGuild } from "./transformers/guild.ts";
+import { DiscordenoGuild, transformGuild } from "./transformers/guild.ts";
 import { DiscordenoShard } from "./ws/ws.ts";
 import { startGateway } from "./ws/start_gateway.ts";
 import { spawnShards } from "./ws/spawn_shards.ts";
@@ -63,6 +63,52 @@ export async function createBot(options: CreateBotOptions) {
     isReady: false,
     activeGuildIds: new Set<bigint>(),
     constants: createBotConstants(),
+    cache: {
+      guilds: {
+        get: async function (id: bigint): Promise<DiscordenoGuild | undefined> {
+          return {} as any as DiscordenoGuild;
+        },
+        has: async function (id: bigint): Promise<boolean> {
+          return false;
+        },
+        set: async function (id: bigint, guild: DiscordenoGuild): Promise<void> {
+          return;
+        },
+      },
+      channels: {
+        get: async function (id: bigint): Promise<DiscordenoChannel | undefined> {
+          return {} as any as DiscordenoChannel;
+        },
+        has: async function (id: bigint): Promise<boolean> {
+          return false;
+        },
+        set: async function (id: bigint, guild: DiscordenoChannel): Promise<void> {
+          return;
+        },
+      },
+      dispatchedGuildIds: {
+        has: async function (id: bigint): Promise<boolean> {
+          return false;
+        },
+        set: async function (id: bigint): Promise<void> {
+          return;
+        },
+        delete: async function (id: bigint): Promise<void> {
+          return;
+        },
+      },
+      dispatchedChannelIds: {
+        has: async function (id: bigint): Promise<boolean> {
+          return false;
+        },
+        set: async function (id: bigint): Promise<void> {
+          return;
+        },
+        delete: async function (id: bigint): Promise<void> {
+          return;
+        },
+      },
+    },
   };
 }
 

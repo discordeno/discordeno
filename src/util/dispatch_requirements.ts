@@ -22,7 +22,7 @@ export async function dispatchRequirements(bot: Bot, data: DiscordGatewayPayload
   if (!id || bot.activeGuildIds.has(id)) return;
 
   // If this guild is in cache, it has not been swept and we can cancel
-  if (bot.guilds.has(id)) {
+  if (await bot.cache.guilds.has(id)) {
     bot.activeGuildIds.add(id);
     return;
   }
@@ -77,18 +77,18 @@ export async function dispatchRequirements(bot: Bot, data: DiscordGatewayPayload
     );
   }
 
-  const guild = await bot.transformers.guild(bot, {
+  const guild = bot.transformers.guild(bot, {
     ...rawGuild,
     member_count: rawGuild.approximateMemberCount,
     shardId,
   });
 
   // Add to cache
-  bot.guilds.set(id, guild);
-  bot.dispatchedGuildIds.delete(id);
+  await bot.cache.guilds.set(id, guild);
+  bot.cache.dispatchedGuildIds.delete(id);
   channels.forEach((channel) => {
-    bot.dispatchedChannelIds.delete(channel.id);
-    bot.channels.set(channel.id, channel);
+    bot.cache.dispatchedChannelIds.delete(channel.id);
+    bot.cache.channels.set(channel.id, channel);
   });
 
   processing.delete(id);
