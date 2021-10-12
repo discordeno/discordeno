@@ -1,3 +1,4 @@
+export { verify } from "https://unpkg.com/@evan/wasm@0.0.65/target/ed25519/deno.js";
 import { verify } from "./deps.ts";
 
 export function verifySignature({ publicKey, signature, timestamp, body }: VerifySignatureOptions): {
