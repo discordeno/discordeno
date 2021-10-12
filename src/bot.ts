@@ -294,29 +294,29 @@ export interface GatewayManager {
   firstShardId: number;
   /** The last shard Id for this cluster. */
   lastShardId: number;
-  token: "";
-  compress: false;
-  $os: "linux";
-  $browser: "Discordeno";
-  $device: "Discordeno";
-  intents: 0;
-  shard: [0, 0];
+  token: string;
+  compress: boolean;
+  $os: string;
+  $browser: string;
+  $device: string;
+  intents: number;
+  shard: [number, number];
 
   /** The WSS URL that can be used for connecting to the gateway. */
-  urlWSS: "wss://gateway.discord.gg/?v=9&encoding=json";
+  urlWSS: string;
   /** The recommended number of shards to use when connecting. */
-  shardsRecommended: 1;
+  shardsRecommended: number;
   /** The total number of session starts the current user is allowed. */
-  sessionStartLimitTotal: 1000;
+  sessionStartLimitTotal: number;
   /** The remaining number of session starts the current user is allowed. */
-  sessionStartLimitRemaining: 1000;
+  sessionStartLimitRemaining: number;
   /** Milliseconds left until limit is reset. */
-  sessionStartLimitResetAfter: 0;
+  sessionStartLimitResetAfter: number;
   /** The number of identify requests allowed per 5 seconds.
    * So, if you had a max concurrency of 16, and 16 shards for example, you could start them all up at the same time.
    * Whereas if you had 32 shards, if you tried to start up shard 0 and 16 at the same time for example, it would not work. You can start shards 0-15 concurrently, then 16-31...
    */
-  maxConcurrency: 1;
+  maxConcurrency: number;
   shards: Collection<number, DiscordenoShard>;
   loadingShards: Collection<
     number,
