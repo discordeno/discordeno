@@ -1,4 +1,3 @@
-import { loopObject } from "../util/loop_object.ts";
 import { delay } from "../util/utils.ts";
 import { GatewayManager } from "../bot.ts";
 
@@ -24,19 +23,6 @@ export async function processQueue(gateway: GatewayManager, id: number) {
     // Send a request that is next in line
     const request = shard.queue.shift();
     if (!request) return;
-
-    if (request?.d) {
-      request.d = loopObject(
-        request.d as Record<string, unknown>,
-        (value) =>
-          typeof value === "bigint"
-            ? value.toString()
-            : Array.isArray(value)
-            ? value.map((v) => (typeof v === "bigint" ? v.toString() : v))
-            : value,
-        `Running forEach loop in gateway.processQueue function for changing bigints to strings.`
-      );
-    }
 
     gateway.log("RAW_SEND", shard.id, request);
 

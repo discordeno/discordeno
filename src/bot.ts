@@ -1,3 +1,17 @@
+import {
+  calculateChannelOverwrites,
+  calculateBasePermissions,
+  getCached,
+  hasChannelPermissions,
+  hasGuildPermissions,
+  validatePermissions,
+  getMissingChannelPermissions,
+  getMissingGuildPermissions,
+  requireGuildPermissions,
+  requireChannelPermissions,
+  highestRole,
+  higherRolePosition,
+} from "./util/permissions.ts";
 import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
 import { checkRateLimits } from "./rest/check_rate_limits.ts";
 import { cleanupQueues } from "./rest/cleanup_queues.ts";
@@ -14,7 +28,8 @@ import { dispatchRequirements } from "./util/dispatch_requirements.ts";
 import { processQueue } from "./rest/process_queue.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
 import { Collection } from "./util/collection.ts";
-import { DiscordenoUser, transformMember, transformUser } from "./transformers/member.ts";
+import type { DiscordenoMember, DiscordenoUser } from "./transformers/member.ts";
+import { transformMember, transformUser } from "./transformers/member.ts";
 import { SnakeCasedPropertiesDeep } from "./types/util.ts";
 import { Channel } from "./types/channels/channel.ts";
 import { DiscordenoChannel, transformChannel } from "./transformers/channel.ts";
@@ -48,9 +63,9 @@ import {
   USER_AGENT,
 } from "./util/constants.ts";
 import { GatewayPayload } from "./types/gateway/gateway_payload.ts";
-import { delay } from "./util/utils.ts";
+import { delay, validateSlashOptionChoices, validateSlashOptions } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
-import { loopObject } from "./util/loop_object.ts";
+import { validateLength } from "./util/validate_length.ts";
 
 export async function createBot(options: CreateBotOptions) {
   return {
@@ -83,6 +98,28 @@ export async function createBot(options: CreateBotOptions) {
           return false;
         },
         set: async function (id: bigint, guild: DiscordenoChannel): Promise<void> {
+          return;
+        },
+      },
+      members: {
+        get: async function (id: bigint): Promise<DiscordenoMember | undefined> {
+          return {} as any as DiscordenoMember;
+        },
+        has: async function (id: bigint): Promise<boolean> {
+          return false;
+        },
+        set: async function (id: bigint, member: DiscordenoMember): Promise<void> {
+          return;
+        },
+      },
+      users: {
+        get: async function (id: bigint): Promise<DiscordenoUser | undefined> {
+          return {} as any as DiscordenoUser;
+        },
+        has: async function (id: bigint): Promise<boolean> {
+          return false;
+        },
+        set: async function (id: bigint, member: DiscordenoUser): Promise<void> {
           return;
         },
       },
@@ -200,7 +237,22 @@ export function createUtils(options: Partial<HelperUtils>) {
     delay,
     iconHashToBigInt,
     iconBigintToHash,
-    loopObject,
+    // Permissions
+    getCached,
+    calculateBasePermissions,
+    calculateChannelOverwrites,
+    getMissingChannelPermissions,
+    getMissingGuildPermissions,
+    hasGuildPermissions,
+    hasChannelPermissions,
+    requireGuildPermissions,
+    requireChannelPermissions,
+    validatePermissions,
+    highestRole,
+    higherRolePosition,
+    validateLength,
+    validateSlashOptions,
+    validateSlashOptionChoices
   };
 }
 
@@ -211,7 +263,21 @@ export interface HelperUtils {
   delay: typeof delay;
   iconHashToBigInt: typeof iconHashToBigInt;
   iconBigintToHash: typeof iconBigintToHash;
-  loopObject: typeof loopObject;
+  getCached: typeof getCached;
+  calculateBasePermissions: typeof calculateBasePermissions;
+  calculateChannelOverwrites: typeof calculateChannelOverwrites;
+  hasGuildPermissions: typeof hasGuildPermissions;
+  hasChannelPermissions: typeof hasChannelPermissions;
+  validatePermissions: typeof validatePermissions;
+  getMissingChannelPermissions: typeof getMissingChannelPermissions;
+  getMissingGuildPermissions: typeof getMissingGuildPermissions;
+  requireGuildPermissions: typeof requireGuildPermissions;
+  requireChannelPermissions: typeof requireChannelPermissions;
+  highestRole: typeof highestRole;
+  higherRolePosition: typeof higherRolePosition;
+  validateLength: typeof validateLength;
+  validateSlashOptions: typeof validateSlashOptions;
+  validateSlashOptionChoices: typeof validateSlashOptionChoices;
 }
 
 export function createGatewayManager(options: Partial<GatewayManager>): GatewayManager {
