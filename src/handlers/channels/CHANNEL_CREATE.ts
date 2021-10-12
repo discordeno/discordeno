@@ -5,8 +5,8 @@ import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 import { Bot } from "../../bot.ts";
 
 export async function handleChannelCreate(bot: Bot, payload: SnakeCasedPropertiesDeep<DiscordGatewayPayload>) {
-  const channel = bot.transformers.channel(bot, payload.d as SnakeCasedPropertiesDeep<Channel>);
-  await bot.channels.set(channel.id, channel);
+  const channel = bot.transformers.channel(bot, { channel: payload.d as SnakeCasedPropertiesDeep<Channel> });
+  await bot.cache.channels.set(channel.id, channel);
 
   bot.events.channelCreate(bot, channel);
 }

@@ -6,7 +6,7 @@ import { DiscordOverwrite } from "../types/channels/overwrite.ts";
 export function transformChannel(
   bot: Bot,
   payload: { channel: SnakeCasedPropertiesDeep<Channel> } & { guildId?: bigint }
-) {
+): DiscordenoChannel {
   return {
     // UNTRANSFORMED STUFF HERE
     type: payload.channel.type,

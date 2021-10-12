@@ -232,9 +232,6 @@ export async function startBot(bot: Bot) {
   // SETUP UTILS
   bot.utils = createUtils({});
 
-  // SETUP CACHE
-  bot.users = new Collection();
-
   // START REST
   bot.rest = createRestManager({ token: bot.token });
 
@@ -365,9 +362,6 @@ export type Bot = CreatedBot & {
   rest: RestManager;
   gateway: GatewayManager;
   transformers: Transformers;
-  // TODO: Support async cache
-  users: Collection<bigint, DiscordenoUser>;
-  channels: Collection<bigint, SnakeCasedPropertiesDeep<Channel>>;
 };
 
 export interface Transformers {
