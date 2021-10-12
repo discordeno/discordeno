@@ -10,7 +10,10 @@ import { DiscordenoRole, transformRole } from "./role.ts";
 import { DiscordenoVoiceState, transformVoiceState } from "./voice_state.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
-export function transformGuild(bot: Bot, payload: { guild: SnakeCasedPropertiesDeep<Guild> } & { shardId: number }): DiscordenoGuild {
+export function transformGuild(
+  bot: Bot,
+  payload: { guild: SnakeCasedPropertiesDeep<Guild> } & { shardId: number }
+): DiscordenoGuild {
   return {
     afkTimeout: payload.guild.afk_timeout,
     approximateMemberCount: payload.guild.approximate_member_count,
