@@ -1,16 +1,14 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
+import { Bot } from "../../bot.ts";
 import type { ChannelPinsUpdate } from "../../types/channels/channel_pins_update.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleChannelPinsUpdate(data: DiscordGatewayPayload) {
-  const payload = data.d as ChannelPinsUpdate;
+export async function handleChannelPinsUpdate(bot: Bot, data: SnakeCasedPropertiesDeep<DiscordGatewayPayload>) {
+  const payload = data.d as SnakeCasedPropertiesDeep<ChannelPinsUpdate>;
 
-  const channel = await cacheHandlers.get("channels", snowflakeToBigint(payload.channelId));
-  if (!channel) return;
-
-  const guild = payload.guildId ? await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId)) : undefined;
-
-  eventHandlers.channelPinsUpdate?.(channel, guild, payload.lastPinTimestamp);
+  bot.events.channelPinsUpdate(bot, {
+    guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
+    channelId: bot.transformers.snowflake(payload.channel_id),
+    lastPinTimestamp: payload.last_pin_timestamp ? Date.parse(payload.last_pin_timestamp) : undefined,
+  });
 }

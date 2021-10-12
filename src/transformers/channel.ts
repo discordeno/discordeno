@@ -2,6 +2,9 @@ import { Channel } from "../types/channels/channel.ts";
 import { Bot } from "../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordOverwrite } from "../types/channels/overwrite.ts";
+import { DiscordChannelTypes } from "../types/channels/channel_types.ts";
+import type { DiscordenoVoiceState } from "./voice_state.ts";
+import { Collection } from "../util/collection.ts";
 
 export function transformChannel(
   bot: Bot,
@@ -42,6 +45,7 @@ export function transformChannel(
       ? bot.transformers.snowflake(payload.channel.application_id)
       : undefined,
     parentId: payload.channel.parent_id ? bot.transformers.snowflake(payload.channel.parent_id) : undefined,
+    voiceStates: payload.channel.type === DiscordChannelTypes.GuildVoice ? new Collection() : undefined,
   };
 }
 
@@ -77,4 +81,6 @@ export interface DiscordenoChannel
   applicationId?: bigint;
   /** Id of the parent category for a channel (each parent category can contain up to 50 channels) */
   parentId?: bigint;
+  /** The voice states that are in this channel assuming it is a voice channel. */
+  voiceStates?: Collection<bigint, DiscordenoVoiceState>;
 }

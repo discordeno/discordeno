@@ -1,17 +1,16 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
-import { structures } from "../../structures/mod.ts";
+import { Bot } from "../../bot.ts";
 import type { Channel } from "../../types/channels/channel.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleChannelUpdate(data: DiscordGatewayPayload) {
-  const payload = data.d as Channel;
-  const cachedChannel = await cacheHandlers.get("channels", snowflakeToBigint(payload.id));
+export async function handleChannelUpdate(bot: Bot, data: SnakeCasedPropertiesDeep<DiscordGatewayPayload>) {
+  const payload = data.d as SnakeCasedPropertiesDeep<Channel>;
+
+  const cachedChannel = await bot.cache.channels.get(bot.transformers.snowflake(payload.id));
   if (!cachedChannel) return;
 
-  const discordenoChannel = await structures.createDiscordenoChannel(payload);
-  await cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);
+  const channel = bot.transformers.channel(bot, { channel: payload });
+  await bot.cache.channels.set(channel.id, channel);
 
-  eventHandlers.channelUpdate?.(discordenoChannel, cachedChannel);
+  bot.events.channelUpdate(bot, channel, cachedChannel);
 }

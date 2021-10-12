@@ -33,7 +33,7 @@ import { transformMember, transformUser } from "./transformers/member.ts";
 import { SnakeCasedPropertiesDeep } from "./types/util.ts";
 import { Channel } from "./types/channels/channel.ts";
 import { DiscordenoChannel, transformChannel } from "./transformers/channel.ts";
-import { transformVoiceState } from "./transformers/voice_state.ts";
+import { DiscordenoVoiceState, transformVoiceState } from "./transformers/voice_state.ts";
 import { transformRole } from "./transformers/role.ts";
 import { transformMessage } from "./transformers/message.ts";
 import { DiscordenoGuild, transformGuild } from "./transformers/guild.ts";
@@ -67,6 +67,7 @@ import { delay, validateSlashOptionChoices, validateSlashOptions } from "./util/
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { validateLength } from "./util/validate_length.ts";
 import { processGlobalQueue } from "./rest/process_global_queue.ts";
+import { ChannelPinsUpdate } from "./types/channels/channel_pins_update.ts";
 
 export async function createBot(options: CreateBotOptions) {
   return {
@@ -99,6 +100,9 @@ export async function createBot(options: CreateBotOptions) {
           return false;
         },
         set: async function (id: bigint, guild: DiscordenoChannel): Promise<void> {
+          return;
+        },
+        delete: async function (id: bigint): Promise<void> {
           return;
         },
       },
@@ -164,6 +168,13 @@ export function createEventHandlers(events: Partial<EventHandlers>): EventHandle
     channelCreate: events.channelCreate ?? ignore,
     debug: events.debug ?? ignore,
     dispatchRequirements: events.dispatchRequirements ?? ignore,
+    voiceChannelLeave: events.voiceChannelLeave ?? ignore,
+    channelDelete: events.channelDelete ?? ignore,
+    channelPinsUpdate: events.channelPinsUpdate ?? ignore,
+    channelUpdate: events.channelUpdate ?? ignore,
+    stageInstanceCreate: events.stageInstanceCreate ?? ignore,
+    stageInstanceDelete: events.stageInstanceDelete ?? ignore,
+    stageInstanceUpdate: events.stageInstanceUpdate ?? ignore,
   };
 }
 
@@ -489,8 +500,36 @@ export interface GatewayManager {
 
 export interface EventHandlers {
   debug: (text: string) => unknown;
-  channelCreate: (bot: Bot, channel: DiscordenoChannel) => unknown;
-  dispatchRequirements: (bot: Bot, data: GatewayPayload, shardId: number) => Promise<unknown> | unknown;
+  channelCreate: (bot: Bot, channel: DiscordenoChannel) => any;
+  dispatchRequirements: (bot: Bot, data: GatewayPayload, shardId: number) => any;
+  voiceChannelLeave: (bot: Bot, voiceState: DiscordenoVoiceState, channel: DiscordenoChannel) => any;
+  channelDelete: (bot: Bot, channel: DiscordenoChannel) => any;
+  channelPinsUpdate: (bot: Bot, data: { guildId?: bigint; channelId: bigint; lastPinTimestamp?: number }) => any;
+  channelUpdate: (bot: Bot, channel: DiscordenoChannel, oldChannel: DiscordenoChannel) => any;
+  stageInstanceCreate: (bot: Bot, data: {
+    id: bigint;
+    guildId: bigint;
+    channelId: bigint;
+    topic: string;
+    privacyLevel: number;
+    discoverableDisabled: boolean;
+  }) => any;
+  stageInstanceDelete: (bot: Bot, data: {
+    id: bigint;
+    guildId: bigint;
+    channelId: bigint;
+    topic: string;
+    privacyLevel: number;
+    discoverableDisabled: boolean;
+  }) => any;
+  stageInstanceUpdate: (bot: Bot, data: {
+    id: bigint;
+    guildId: bigint;
+    channelId: bigint;
+    topic: string;
+    privacyLevel: number;
+    discoverableDisabled: boolean;
+  }) => any;
 }
 
 export function createBotConstants() {

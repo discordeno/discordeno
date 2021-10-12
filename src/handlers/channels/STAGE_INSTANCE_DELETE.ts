@@ -1,7 +1,17 @@
-import { eventHandlers } from "../../bot.ts";
+import { Bot } from "../../bot.ts";
 import type { StageInstance } from "../../types/channels/stage_instance.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export function handleStageInstanceDelete(data: DiscordGatewayPayload) {
-  eventHandlers.stageInstanceDelete?.(data.d as StageInstance);
+export function handleStageInstanceDelete(bot: Bot, data: SnakeCasedPropertiesDeep<DiscordGatewayPayload>) {
+  const payload = data.d as SnakeCasedPropertiesDeep<StageInstance>;
+
+  bot.events.stageInstanceDelete(bot, {
+    id: bot.transformers.snowflake(payload.id),
+    guildId: bot.transformers.snowflake(payload.guild_id),
+    channelId: bot.transformers.snowflake(payload.channel_id),
+    topic: payload.topic,
+    privacyLevel: payload.privacy_level,
+    discoverableDisabled: payload.discoverable_disabled,
+  });
 }

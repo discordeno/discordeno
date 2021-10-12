@@ -1,37 +1,25 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
 import type { Channel } from "../../types/channels/channel.ts";
-import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { Bot } from "../../bot.ts";
+import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleChannelDelete(data: DiscordGatewayPayload) {
-  const payload = data.d as Channel;
+export async function handleChannelDelete(bot: Bot, data: SnakeCasedPropertiesDeep<DiscordGatewayPayload>) {
+  const payload = data.d as SnakeCasedPropertiesDeep<Channel>;
 
-  const cachedChannel = await cacheHandlers.get("channels", snowflakeToBigint(payload.id));
-  if (!cachedChannel) return;
+  const channel = await bot.cache.channels.get(bot.transformers.snowflake(payload.id));
+  if (!channel) return;
 
-  if (cachedChannel.type === DiscordChannelTypes.GuildVoice && payload.guildId) {
-    const guild = await cacheHandlers.get("guilds", cachedChannel.guildId);
+  if ([DiscordChannelTypes.GuildVoice, DiscordChannelTypes.GuildStageVoice].includes(channel.type)) {
+    channel.voiceStates?.forEach((vs, key) => {
+      if (vs.channelId !== channel.id) return;
 
-    if (guild) {
-      return Promise.all(
-        guild.voiceStates.map(async (vs, key) => {
-          if (vs.channelId !== cachedChannel.id) return;
+      // Since this channel was deleted all voice states for this channel should be deleted
+      channel.voiceStates?.delete(key);
 
-          // Since this channel was deleted all voice states for this channel should be deleted
-          guild.voiceStates.delete(key);
-
-          const member = await cacheHandlers.get("members", vs.userId);
-          if (!member) return;
-
-          eventHandlers.voiceChannelLeave?.(member, vs.channelId);
-        })
-      );
-    }
-  }
-
-  if (
+      bot.events.voiceChannelLeave(bot, vs, channel);
+    });
+  } else if (
     [
       DiscordChannelTypes.GuildText,
       DiscordChannelTypes.DM,
@@ -39,11 +27,12 @@ export async function handleChannelDelete(data: DiscordGatewayPayload) {
       DiscordChannelTypes.GuildNews,
     ].includes(payload.type)
   ) {
-    await cacheHandlers.delete("channels", snowflakeToBigint(payload.id));
-    await cacheHandlers.forEach("DELETE_MESSAGES_FROM_CHANNEL", { channelId: snowflakeToBigint(payload.id) });
+    await bot.cache.channels.forEach("DELETE_MESSAGES_FROM_CHANNEL", {
+      channelId: bot.transformers.snowflake(payload.id),
+    });
   }
 
-  await cacheHandlers.delete("channels", snowflakeToBigint(payload.id));
+  await bot.cache.channels.delete(bot.transformers.snowflake(payload.id));
 
-  eventHandlers.channelDelete?.(cachedChannel);
+  bot.events.channelDelete(bot, channel);
 }
