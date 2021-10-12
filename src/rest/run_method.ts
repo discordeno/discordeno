@@ -39,6 +39,7 @@ export async function runMethod<T = any>(
   // No proxy so we need to handle all rate limiting and such
   return new Promise((resolve, reject) => {
     rest.processRequest(
+      rest,
       {
         url,
         method,

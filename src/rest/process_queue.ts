@@ -1,25 +1,14 @@
 import { RestManager } from "../bot.ts";
-import { DiscordHTTPResponseCodes } from "../types/codes/http_response_codes.ts";
-import { delay } from "../util/utils.ts";
 
 /** Processes the queue by looping over each path separately until the queues are empty. */
-export async function processQueue(rest: RestManager, id: string) {
+export function processQueue(rest: RestManager, id: string) {
   const queue = rest.pathQueues.get(id);
   if (!queue) return;
 
-  while (queue.length) {
+  while (queue.requests.length) {
     rest.debug(`[REST - processQueue] Running while loop.`);
-    // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
-    if (rest.globallyRateLimited) {
-      setTimeout(async () => {
-        rest.debug(`[REST - processQueue] Running setTimeout.`);
-        await processQueue(rest, id);
-      }, 1000);
-
-      break;
-    }
     // SELECT THE FIRST ITEM FROM THIS QUEUE
-    const [queuedRequest] = queue;
+    const queuedRequest = queue.requests[0];
     // IF THIS DOESNT HAVE ANY ITEMS JUST CANCEL, THE CLEANER WILL REMOVE IT.
     if (!queuedRequest) return;
 
@@ -28,9 +17,18 @@ export async function processQueue(rest: RestManager, id: string) {
     // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
     const urlResetIn = rest.checkRateLimits(rest, basicURL);
     if (urlResetIn) {
-      // PAUSE FOR THIS SPECIFC REQUEST
-      await delay(urlResetIn);
-      continue;
+      // ONLY ADD TIMEOUT IF ANOTHER QUEUE IS NOT PENDING
+      if (!queue.isWaiting) {
+        queue.isWaiting = true;
+        
+        setTimeout(() => {
+          rest.debug(`[REST - processQueue] rate limited, running setTimeout.`);
+          rest.processQueue(rest, id);
+        }, 1000);
+      }
+
+      // BREAK WHILE LOOP
+      break;
     }
 
     // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
@@ -60,108 +58,12 @@ export async function processQueue(rest: RestManager, id: string) {
         : queuedRequest.request.url;
 
     // CUSTOM HANDLER FOR USER TO LOG OR WHATEVER WHENEVER A FETCH IS MADE
-    rest.debug(`[REST - fetching] ${JSON.stringify(queuedRequest.payload)}`);
-
-    try {
-      const response = await fetch(urlToUse, rest.createRequestBody(rest, queuedRequest));
-      rest.debug(`[REST - fetched] ${JSON.stringify(queuedRequest.payload)}`);
-
-      const bucketIdFromHeaders = rest.processRequestHeaders(rest, basicURL, response.headers);
-      // SET THE BUCKET Id IF IT WAS PRESENT
-      if (bucketIdFromHeaders) {
-        queuedRequest.payload.bucketId = bucketIdFromHeaders;
-      }
-
-      if (response.status < 200 || response.status >= 400) {
-        rest.debug(
-          `[REST - httpError] Payload: ${JSON.stringify(queuedRequest.payload)} | Response: ${JSON.stringify(response)}`
-        );
-
-        let error = "REQUEST_UNKNOWN_ERROR";
-        switch (response.status) {
-          case DiscordHTTPResponseCodes.BadRequest:
-            error = "The request was improperly formatted, or the server couldn't understand it.";
-            break;
-          case DiscordHTTPResponseCodes.Unauthorized:
-            error = "The Authorization header was missing or invalid.";
-            break;
-          case DiscordHTTPResponseCodes.Forbidden:
-            error = "The Authorization token you passed did not have permission to the resource.";
-            break;
-          case DiscordHTTPResponseCodes.NotFound:
-            error = "The resource at the location specified doesn't exist.";
-            break;
-          case DiscordHTTPResponseCodes.MethodNotAllowed:
-            error = "The HTTP method used is not valid for the location specified.";
-            break;
-          case DiscordHTTPResponseCodes.GatewayUnavailable:
-            error = "There was not a gateway available to process your request. Wait a bit and retry.";
-            break;
-        }
-
-        // If Rate limited should not remove from queue
-        if (response.status !== 429) {
-          queuedRequest.request.reject(new Error(`[${response.status}] ${error}`));
-          queue.shift();
-        } else {
-          if (queuedRequest.payload.retryCount++ >= rest.maxRetryCount) {
-            rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(queuedRequest.payload)}`);
-            queuedRequest.request.reject(
-              new Error(`[${response.status}] The request was rate limited and it maxed out the retries limit.`)
-            );
-            // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
-            queue.shift();
-            continue;
-          }
-        }
-
-        continue;
-      }
-
-      // SOMETIMES DISCORD RETURNS AN EMPTY 204 RESPONSE THAT CAN'T BE MADE TO JSON
-      if (response.status === 204) {
-        rest.debug(`[REST - FetchSuccess] ${JSON.stringify(queuedRequest.payload)}`);
-        // REMOVE FROM QUEUE
-        queue.shift();
-        queuedRequest.request.respond({ status: 204 });
-      } else {
-        // CONVERT THE RESPONSE TO JSON
-        const json = await response.json();
-        // IF THE RESPONSE WAS RATE LIMITED, HANDLE ACCORDINGLY
-        // if (json.retry_after || json.message === "You are being rate limited.") {
-        //   // IF IT HAS MAXED RETRIES SOMETHING SERIOUSLY WRONG. CANCEL OUT.
-        //   if (queuedRequest.payload.retryCount >= rest.maxRetryCount) {
-        //     rest.eventHandlers.retriesMaxed(queuedRequest.payload);
-        //     queuedRequest.request.respond({
-        //       status: 200,
-        //       body: JSON.stringify({
-        //         error: "The request was rate limited and it maxed out the retries limit.",
-        //       }),
-        //     });
-        //     // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
-        //     queue.shift();
-        //     continue;
-        //   }
-
-        //   // SINCE IT WAS RATELIMITE, RETRY AGAIN
-        //   continue;
-        // }
-
-        rest.debug(`[REST - fetchSuccess] ${JSON.stringify(queuedRequest.payload)}`);
-        // REMOVE FROM QUEUE
-        queue.shift();
-        queuedRequest.request.respond({
-          status: 200,
-          body: JSON.stringify(json),
-        });
-      }
-    } catch (error) {
-      // SOMETHING WENT WRONG, LOG AND RESPOND WITH ERROR
-      rest.debug(`[REST - fetchFailed] Payload: ${JSON.stringify(queuedRequest.payload)} | Error: ${error}`);
-      queuedRequest.request.reject(error);
-      // REMOVE FROM QUEUE
-      queue.shift();
-    }
+    rest.debug(`[REST - Add To Global Queue] ${JSON.stringify(queuedRequest.payload)}`);
+    rest.globalQueue.push({
+      ...queuedRequest,
+      basicURL,
+      urlToUse,
+    });
   }
 
   // ONCE QUEUE IS DONE, WE CAN TRY CLEANING UP

@@ -66,6 +66,7 @@ import { GatewayPayload } from "./types/gateway/gateway_payload.ts";
 import { delay, validateSlashOptionChoices, validateSlashOptions } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { validateLength } from "./util/validate_length.ts";
+import { processGlobalQueue } from "./rest/process_global_queue.ts";
 
 export async function createBot(options: CreateBotOptions) {
   return {
@@ -181,6 +182,7 @@ export interface CreateRestManagerOptions {
   createRequestBody?: typeof createRequestBody;
   runMethod?: typeof runMethod;
   simplifyUrl?: typeof simplifyUrl;
+  processGlobalQueue?: typeof processGlobalQueue;
 }
 
 export function createRestManager(options: CreateRestManagerOptions) {
@@ -192,13 +194,23 @@ export function createRestManager(options: CreateRestManagerOptions) {
     pathQueues: new Map<
       string,
       {
-        request: RestRequest;
-        payload: RestPayload;
-      }[]
+        isWaiting: boolean;
+        requests: {
+          request: RestRequest;
+          payload: RestPayload;
+        }[];
+      }
     >(),
     processingQueue: false,
     processingRateLimitedPaths: false,
     globallyRateLimited: false,
+    globalQueue: [] as {
+      request: RestRequest;
+      payload: RestPayload;
+      basicURL: string;
+      urlToUse: string;
+    }[],
+    globalQueueProcessing: false,
     ratelimitedPaths: new Map<string, RestRateLimitedPath>(),
     debug: options.debug || function (_text: string) {},
     checkRateLimits: options.checkRateLimits || checkRateLimits,
@@ -210,6 +222,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
     createRequestBody: options.createRequestBody || createRequestBody,
     runMethod: options.runMethod || runMethod,
     simplifyUrl: options.simplifyUrl || simplifyUrl,
+    processGlobalQueue: options.processGlobalQueue || processGlobalQueue,
   };
 }
 
@@ -252,7 +265,7 @@ export function createUtils(options: Partial<HelperUtils>) {
     higherRolePosition,
     validateLength,
     validateSlashOptions,
-    validateSlashOptionChoices
+    validateSlashOptionChoices,
   };
 }
 
