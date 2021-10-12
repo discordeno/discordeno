@@ -20,7 +20,7 @@ export function processQueue(rest: RestManager, id: string) {
       // ONLY ADD TIMEOUT IF ANOTHER QUEUE IS NOT PENDING
       if (!queue.isWaiting) {
         queue.isWaiting = true;
-        
+
         setTimeout(() => {
           rest.debug(`[REST - processQueue] rate limited, running setTimeout.`);
           rest.processQueue(rest, id);
