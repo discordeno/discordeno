@@ -1,74 +1,74 @@
-// deno-lint-ignore-file require-await no-explicit-any prefer-const
-import { botId } from "./bot.ts";
-import type { DiscordenoChannel } from "./structures/channel.ts";
-import type { DiscordenoGuild } from "./structures/guild.ts";
-import type { DiscordenoMember } from "./structures/member.ts";
-import type { DiscordenoMessage } from "./structures/message.ts";
-import type { PresenceUpdate } from "./types/activity/presence_update.ts";
-import type { Emoji } from "./types/emojis/emoji.ts";
-import { DiscordenoThread } from "./util/transformers/channel_to_thread.ts";
-import { Collection } from "./util/collection.ts";
-import { Channel } from "./types/channels/channel.ts";
-import { Guild } from "./types/guilds/guild.ts";
-import { GuildMember } from "./types/members/guild_member.ts";
-import { Message } from "./types/messages/message.ts";
-import { Role } from "./types/permissions/role.ts";
-import { VoiceState } from "./types/voice/voice_state.ts";
-import { User } from "./types/users/user.ts";
+// // deno-lint-ignore-file require-await no-explicit-any prefer-const
+// import { botId } from "./bot.ts";
+// import type { DiscordenoChannel } from "./structures/channel.ts";
+// import type { DiscordenoGuild } from "./structures/guild.ts";
+// import type { DiscordenoMember } from "./structures/member.ts";
+// import type { DiscordenoMessage } from "./structures/message.ts";
+// import type { PresenceUpdate } from "./types/activity/presence_update.ts";
+// import type { Emoji } from "./types/emojis/emoji.ts";
+// import { DiscordenoThread } from "./util/transformers/channel_to_thread.ts";
+// import { Collection } from "./util/collection.ts";
+// import { Channel } from "./types/channels/channel.ts";
+// import { Guild } from "./types/guilds/guild.ts";
+// import { GuildMember } from "./types/members/guild_member.ts";
+// import { Message } from "./types/messages/message.ts";
+// import { Role } from "./types/permissions/role.ts";
+// import { VoiceState } from "./types/voice/voice_state.ts";
+// import { User } from "./types/users/user.ts";
 
-export const cache = {
-  isReady: false,
-  /** All of the guild objects the bot has access to, mapped by their Ids */
-  guilds: new Collection<bigint, DiscordenoGuild>([], { sweeper: { filter: guildSweeper, interval: 3600000 } }),
-  /** All of the channel objects the bot has access to, mapped by their Ids. Sweep channels 1 minute after guilds are sweeped so dispatchedGuildIds is filled. */
-  channels: new Collection<bigint, DiscordenoChannel>([], { sweeper: { filter: channelSweeper, interval: 3660000 } }),
-  /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their Ids */
-  messages: new Collection<bigint, DiscordenoMessage>([], { sweeper: { filter: messageSweeper, interval: 300000 } }),
-  /** All of the member objects that have been cached since the bot acquired `READY` state, mapped by their Ids */
-  members: new Collection<bigint, DiscordenoMember>([], { sweeper: { filter: memberSweeper, interval: 300000 } }),
-  /** All of the unavailable guilds, mapped by their Ids (id, timestamp) */
-  unavailableGuilds: new Collection<bigint, number>(),
-  /** All of the presence update objects received in PRESENCE_UPDATE gateway event, mapped by their user Id */
-  presences: new Collection<bigint, PresenceUpdate>([], { sweeper: { filter: () => true, interval: 300000 } }),
-  fetchAllMembersProcessingRequests: new Collection<
-    string,
-    (value: Collection<bigint, DiscordenoMember> | PromiseLike<Collection<bigint, DiscordenoMember>>) => void
-  >(),
-  executedSlashCommands: new Set<string>(),
-  get emojis() {
-    return new Collection<bigint, Emoji>(
-      this.guilds.reduce((a, b) => [...a, ...b.emojis.map((e, id) => [id, e])], [] as any[])
-    );
-  },
-  activeGuildIds: new Set<bigint>(),
-  dispatchedGuildIds: new Set<bigint>(),
-  dispatchedChannelIds: new Set<bigint>(),
-  threads: new Collection<bigint, DiscordenoThread>(),
-  /** ADVANCED USER ONLY: Please ask for help before modifying these. The properties that you want to use for your bot's structures. If you do not set any properties, all properties will be used by default. */
-  requiredStructureProperties: {
-    /** Only these properties will be added to memory for your channels. */
-    channels: new Set<keyof Channel>(),
-    /** Only these properties will be added to memory for your guilds. */
-    guilds: new Set<keyof Guild | "shardId" | "bitfield">(),
-    /** Only these properties will be added to memory for your members. */
-    members: new Set<keyof GuildMember | keyof User | "guilds" | "bitfield" | "cachedAt">(),
-    /** Only these properties will be added to memory for your messages. */
-    messages: new Set<
-      | keyof Message
-      | "isBot"
-      | "tag"
-      | "authorId"
-      | "mentionedUserIds"
-      | "mentionedRoleIds"
-      | "mentionedChannelIds"
-      | "bitfield"
-    >(),
-    /** Only these properties will be added to memory for your roles. */
-    roles: new Set<keyof Role | "botId" | "isNitroBoostRole" | "integrationId" | "bitfield">(),
-    /** Only these properties will be added to memory for your voice states. */
-    voiceStates: new Set<keyof VoiceState | "bitfield">(),
-  },
-};
+// export const cache = {
+//   isReady: false,
+//   /** All of the guild objects the bot has access to, mapped by their Ids */
+//   guilds: new Collection<bigint, DiscordenoGuild>([], { sweeper: { filter: guildSweeper, interval: 3600000 } }),
+//   /** All of the channel objects the bot has access to, mapped by their Ids. Sweep channels 1 minute after guilds are sweeped so dispatchedGuildIds is filled. */
+//   channels: new Collection<bigint, DiscordenoChannel>([], { sweeper: { filter: channelSweeper, interval: 3660000 } }),
+//   /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their Ids */
+//   messages: new Collection<bigint, DiscordenoMessage>([], { sweeper: { filter: messageSweeper, interval: 300000 } }),
+//   /** All of the member objects that have been cached since the bot acquired `READY` state, mapped by their Ids */
+//   members: new Collection<bigint, DiscordenoMember>([], { sweeper: { filter: memberSweeper, interval: 300000 } }),
+//   /** All of the unavailable guilds, mapped by their Ids (id, timestamp) */
+//   unavailableGuilds: new Collection<bigint, number>(),
+//   /** All of the presence update objects received in PRESENCE_UPDATE gateway event, mapped by their user Id */
+//   presences: new Collection<bigint, PresenceUpdate>([], { sweeper: { filter: () => true, interval: 300000 } }),
+//   fetchAllMembersProcessingRequests: new Collection<
+//     string,
+//     (value: Collection<bigint, DiscordenoMember> | PromiseLike<Collection<bigint, DiscordenoMember>>) => void
+//   >(),
+//   executedSlashCommands: new Set<string>(),
+//   get emojis() {
+//     return new Collection<bigint, Emoji>(
+//       this.guilds.reduce((a, b) => [...a, ...b.emojis.map((e, id) => [id, e])], [] as any[])
+//     );
+//   },
+//   activeGuildIds: new Set<bigint>(),
+//   dispatchedGuildIds: new Set<bigint>(),
+//   dispatchedChannelIds: new Set<bigint>(),
+//   threads: new Collection<bigint, DiscordenoThread>(),
+//   /** ADVANCED USER ONLY: Please ask for help before modifying these. The properties that you want to use for your bot's structures. If you do not set any properties, all properties will be used by default. */
+//   requiredStructureProperties: {
+//     /** Only these properties will be added to memory for your channels. */
+//     channels: new Set<keyof Channel>(),
+//     /** Only these properties will be added to memory for your guilds. */
+//     guilds: new Set<keyof Guild | "shardId" | "bitfield">(),
+//     /** Only these properties will be added to memory for your members. */
+//     members: new Set<keyof GuildMember | keyof User | "guilds" | "bitfield" | "cachedAt">(),
+//     /** Only these properties will be added to memory for your messages. */
+//     messages: new Set<
+//       | keyof Message
+//       | "isBot"
+//       | "tag"
+//       | "authorId"
+//       | "mentionedUserIds"
+//       | "mentionedRoleIds"
+//       | "mentionedChannelIds"
+//       | "bitfield"
+//     >(),
+//     /** Only these properties will be added to memory for your roles. */
+//     roles: new Set<keyof Role | "botId" | "isNitroBoostRole" | "integrationId" | "bitfield">(),
+//     /** Only these properties will be added to memory for your voice states. */
+//     voiceStates: new Set<keyof VoiceState | "bitfield">(),
+//   },
+// };
 
 function messageSweeper(message: DiscordenoMessage) {
   // DM messages aren't needed
