@@ -1,10 +1,9 @@
 import { cacheHandlers } from "../../cache.ts";
-import { EditMessage } from "../../types/messages/edit_message.ts";
+import type { EditMessage } from "../../types/messages/edit_message.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
-import { validateComponents } from "../../util/utils.ts";
-import { Bot } from "../../bot.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import type { Bot } from "../../bot.ts";
+import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Edit the message. */
 export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: string | EditMessage) {
@@ -22,7 +21,7 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
   if (typeof content === "string") content = { content };
 
   if (content.components?.length) {
-    validateComponents(bot, content.components);
+    bot.utils.validateComponents(bot, content.components);
   }
 
   content.embeds?.splice(10);

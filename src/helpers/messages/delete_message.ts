@@ -1,6 +1,4 @@
-import { Bot } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
-import { delay } from "../../util/utils.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Delete a message with the channel id and message id only. */
 export async function deleteMessage(
@@ -16,7 +14,7 @@ export async function deleteMessage(
     await bot.utils.requireBotChannelPermissions(bot, message.channelId, ["MANAGE_MESSAGES"]);
   }
 
-  if (delayMilliseconds) await delay(delayMilliseconds);
+  if (delayMilliseconds) await bot.utils.delay(delayMilliseconds);
 
   return await bot.rest.runMethod<undefined>(
     bot.rest,

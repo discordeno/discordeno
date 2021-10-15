@@ -74,7 +74,7 @@ import {
   DiscordenoShard,
 } from "./ws/mod.ts";
 import { validateLength } from "./util/validate_length.ts";
-import { delay, validateSlashOptionChoices, validateSlashOptions } from "./util/utils.ts";
+import {delay, validateComponents, validateSlashOptionChoices, validateSlashOptions} from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { calculateShardId } from "./util/calculate_shard_id.ts";
 
@@ -284,6 +284,7 @@ export function createUtils(options: Partial<HelperUtils>) {
     validateSlashOptions,
     validateSlashOptionChoices,
     requireBotChannelPermissions,
+    validateComponents
   };
 }
 
@@ -310,6 +311,7 @@ export interface HelperUtils {
   validateSlashOptions: typeof validateSlashOptions;
   validateSlashOptionChoices: typeof validateSlashOptionChoices;
   requireBotChannelPermissions: typeof requireBotChannelPermissions;
+  validateComponents: typeof validateComponents;
 }
 
 export function createGatewayManager(options: Partial<GatewayManager>): GatewayManager {

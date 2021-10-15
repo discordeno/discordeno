@@ -1,4 +1,4 @@
-import { Bot } from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Delete messages from the channel. 2-100. Requires the MANAGE_MESSAGES permission */
 export async function deleteMessages(bot: Bot, channelId: bigint, ids: bigint[], reason?: string) {
