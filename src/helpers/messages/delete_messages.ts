@@ -12,7 +12,7 @@ export async function deleteMessages(bot: Bot, channelId: bigint, ids: bigint[],
     console.warn(`This endpoint only accepts a maximum of 100 messages. Deleting the first 100 message ids provided.`);
   }
 
-  return await bot.rest.runMethod<undefined>(bot.rest,"post", bot.constants.endpoints.CHANNEL_BULK_DELETE(channelId), {
+  return await bot.rest.runMethod<undefined>(bot.rest, "post", bot.constants.endpoints.CHANNEL_BULK_DELETE(channelId), {
     messages: ids.splice(0, 100),
     reason,
   });

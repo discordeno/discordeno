@@ -11,26 +11,52 @@ import {
   requireChannelPermissions,
   highestRole,
   higherRolePosition,
-  requireBotChannelPermissions
+  requireBotChannelPermissions,
 } from "./util/permissions.ts";
 import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
-import { checkRateLimits, processQueue, cleanupQueues, createRequestBody, processRateLimitedPaths, processRequest, processRequestHeaders, runMethod, processGlobalQueue, simplifyUrl } from "./rest/mod.ts";
+import {
+  checkRateLimits,
+  processQueue,
+  cleanupQueues,
+  createRequestBody,
+  processRateLimitedPaths,
+  processRequest,
+  processRequestHeaders,
+  runMethod,
+  processGlobalQueue,
+  simplifyUrl,
+} from "./rest/mod.ts";
 import type { RestPayload, RestRateLimitedPath, RestRequest } from "./rest/rest.ts";
 import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
 import { GetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
-import {bigintToSnowflake, snowflakeToBigint} from "./util/bigint.ts";
+import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
 import { Collection } from "./util/collection.ts";
-import {DiscordenoMember, DiscordenoUser, transformMember, transformUser, DiscordenoGuild, transformGuild, DiscordenoChannel, transformChannel, transformMessage, transformRole, DiscordenoVoiceState, transformVoiceState} from "./transformers/mod.ts";
 import {
-  baseEndpoints, CHANNEL_MENTION_REGEX,
-  CONTEXT_MENU_COMMANDS_NAME_REGEX, DISCORD_SNOWFLAKE_REGEX,
+  DiscordenoMember,
+  DiscordenoUser,
+  transformMember,
+  transformUser,
+  DiscordenoGuild,
+  transformGuild,
+  DiscordenoChannel,
+  transformChannel,
+  transformMessage,
+  transformRole,
+  DiscordenoVoiceState,
+  transformVoiceState,
+} from "./transformers/mod.ts";
+import {
+  baseEndpoints,
+  CHANNEL_MENTION_REGEX,
+  CONTEXT_MENU_COMMANDS_NAME_REGEX,
+  DISCORD_SNOWFLAKE_REGEX,
   DISCORDENO_VERSION,
   endpoints,
   SLASH_COMMANDS_NAME_REGEX,
-  USER_AGENT
+  USER_AGENT,
 } from "./util/constants.ts";
-import {Errors} from "./types/discordeno/errors.ts";
-import {GatewayPayload} from "./types/gateway/gateway_payload.ts";
+import { Errors } from "./types/discordeno/errors.ts";
+import { GatewayPayload } from "./types/gateway/gateway_payload.ts";
 import {
   closeWS,
   handleOnMessage,
@@ -45,12 +71,12 @@ import {
   handleDiscordPayload,
   tellClusterToIdentify,
   sendShardMessage,
-  DiscordenoShard
+  DiscordenoShard,
 } from "./ws/mod.ts";
-import {validateLength} from "./util/validate_length.ts";
-import {delay, validateSlashOptionChoices, validateSlashOptions} from "./util/utils.ts";
-import {iconBigintToHash, iconHashToBigInt} from "./util/hash.ts";
-import {calculateShardId} from "./util/calculate_shard_id.ts";
+import { validateLength } from "./util/validate_length.ts";
+import { delay, validateSlashOptionChoices, validateSlashOptions } from "./util/utils.ts";
+import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
+import { calculateShardId } from "./util/calculate_shard_id.ts";
 
 export async function createBot(options: CreateBotOptions) {
   return {
@@ -531,6 +557,6 @@ export function createBotConstants() {
       CHANNEL_MENTION_REGEX,
       DISCORD_SNOWFLAKE_REGEX,
     },
-    Errors
+    Errors,
   };
 }
