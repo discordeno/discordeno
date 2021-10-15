@@ -7,7 +7,7 @@ export async function deleteMessage(bot: Bot, channelId: bigint, messageId: bigi
   const message = await cacheHandlers.get("messages", messageId);
 
   if (message && message.authorId !== bot.id) {
-    await bot.utils.requireBotChannelPermissions(message.channelId, ["MANAGE_MESSAGES"]);
+    await bot.utils.requireBotChannelPermissions(bot, message.channelId, ["MANAGE_MESSAGES"]);
   }
 
   if (delayMilliseconds) await delay(delayMilliseconds);

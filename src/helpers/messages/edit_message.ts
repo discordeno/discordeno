@@ -16,7 +16,7 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
     }
     const requiredPerms: PermissionStrings[] = ["SEND_MESSAGES"];
 
-    await bot.utils.requireBotChannelPermissions(message.channelId, requiredPerms);
+    await bot.utils.requireBotChannelPermissions(bot, message.channelId, requiredPerms);
   }
 
   if (typeof content === "string") content = { content };
