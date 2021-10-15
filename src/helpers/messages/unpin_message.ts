@@ -1,12 +1,10 @@
-import { rest } from "../../rest/rest.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotChannelPermissions } from "../../util/permissions.ts";
-
 /** Unpin a message in a channel. Requires MANAGE_MESSAGES. */
-export async function unpin(channelId: bigint, messageId: bigint): Promise<undefined> {
-  await requireBotChannelPermissions(channelId, ["MANAGE_MESSAGES"]);
+import {Bot} from "../../bot.ts";
 
-  return await rest.runMethod<undefined>("delete", endpoints.CHANNEL_PIN(channelId, messageId));
+export async function unpin(bot: Bot, channelId: bigint, messageId: bigint): Promise<undefined> {
+  await bot.utils.requireBotChannelPermissions(bot, channelId, ["MANAGE_MESSAGES"]);
+
+  return await bot.rest.runMethod<undefined>(bot.rest,"delete", bot.constants.endpoints.CHANNEL_PIN(channelId, messageId));
 }
 
 // aliases

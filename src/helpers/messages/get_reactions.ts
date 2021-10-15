@@ -1,14 +1,14 @@
-import { rest } from "../../rest/rest.ts";
 import type { GetReactions } from "../../types/messages/message_get_reactions.ts";
 import type { User } from "../../types/users/user.ts";
 import { Collection } from "../../util/collection.ts";
-import { endpoints } from "../../util/constants.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Get a list of users that reacted with this emoji. */
-export async function getReactions(channelId: bigint, messageId: bigint, reaction: string, options?: GetReactions) {
-  const users = await rest.runMethod<User[]>(
+export async function getReactions(bot: Bot, channelId: bigint, messageId: bigint, reaction: string, options?: GetReactions) {
+  const users = await bot.rest.runMethod<User[]>(
+      bot.rest,
     "get",
-    endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction),
+    bot.constants.endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction),
     options
   );
 

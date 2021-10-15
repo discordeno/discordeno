@@ -1,3 +1,4 @@
+import { cacheHandlers } from "../../cache.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Delete a message with the channel id and message id only. */
