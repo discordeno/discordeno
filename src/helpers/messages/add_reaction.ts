@@ -1,10 +1,8 @@
-import { rest } from "../../rest/rest.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotChannelPermissions } from "../../util/permissions.ts";
+import { Bot } from "../../bot.ts";
 
 /** Create a reaction for the message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS */
-export async function addReaction(channelId: bigint, messageId: bigint, reaction: string) {
-  await requireBotChannelPermissions(channelId, ["ADD_REACTIONS", "READ_MESSAGE_HISTORY"]);
+export async function addReaction(bot: Bot, channelId: bigint, messageId: bigint, reaction: string) {
+  await bot.utils.requireBotChannelPermissions(channelId, ["ADD_REACTIONS", "READ_MESSAGE_HISTORY"]);
 
   if (reaction.startsWith("<:")) {
     reaction = reaction.substring(2, reaction.length - 1);
@@ -12,5 +10,5 @@ export async function addReaction(channelId: bigint, messageId: bigint, reaction
     reaction = reaction.substring(3, reaction.length - 1);
   }
 
-  return await rest.runMethod<undefined>("put", endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction));
+  return await bot.rest.runMethod<undefined>(bot.rest, "put", bot.constants.endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction));
 }
