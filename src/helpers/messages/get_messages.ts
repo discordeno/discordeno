@@ -6,7 +6,7 @@ import type {
 } from "../../types/messages/get_messages.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { Bot } from "../../bot.ts";
-import type {SnakeCasedPropertiesDeep} from "../../types/util.ts";
+import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
 export async function getMessages(
@@ -20,7 +20,12 @@ export async function getMessages(
     throw new Error(bot.constants.Errors.INVALID_GET_MESSAGES_LIMIT);
   }
 
-  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Message>[]>(bot.rest, "get", bot.constants.endpoints.CHANNEL_MESSAGES(channelId), options);
+  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Message>[]>(
+    bot.rest,
+    "get",
+    bot.constants.endpoints.CHANNEL_MESSAGES(channelId),
+    options
+  );
 
   return await Promise.all(result.map((res) => bot.transformers.message(bot, res)));
 }
