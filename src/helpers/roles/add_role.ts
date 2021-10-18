@@ -1,4 +1,4 @@
-import type {Bot} from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Add a role to the member */
 export async function addRole(bot: Bot, guildId: bigint, memberId: bigint, roleId: bigint, reason?: string) {
@@ -9,5 +9,10 @@ export async function addRole(bot: Bot, guildId: bigint, memberId: bigint, roleI
 
   await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_ROLES"]);
 
-  return await bot.rest.runMethod<undefined>(bot.rest,"put", bot.constants.endpoints.GUILD_MEMBER_ROLE(guildId, memberId, roleId), { reason });
+  return await bot.rest.runMethod<undefined>(
+    bot.rest,
+    "put",
+    bot.constants.endpoints.GUILD_MEMBER_ROLE(guildId, memberId, roleId),
+    { reason }
+  );
 }

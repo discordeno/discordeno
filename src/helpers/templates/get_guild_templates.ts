@@ -1,6 +1,6 @@
 import type { Template } from "../../types/templates/template.ts";
 import { Collection } from "../../util/collection.ts";
-import type {Bot} from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 
 /**
  * Returns an array of templates.

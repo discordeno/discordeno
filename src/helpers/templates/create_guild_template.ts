@@ -1,7 +1,7 @@
 import type { Template } from "../../types/templates/template.ts";
-import type {Bot} from "../../bot.ts";
-import {User} from "../../types/users/user.ts";
-import {Guild} from "../../types/guilds/guild.ts";
+import type { Bot } from "../../bot.ts";
+import { User } from "../../types/users/user.ts";
+import { Guild } from "../../types/guilds/guild.ts";
 
 /**
  * Creates a template for the guild.
@@ -21,7 +21,7 @@ export async function createGuildTemplate(bot: Bot, guildId: bigint, data: Templ
     throw new Error("The description can only be in between 0-120 characters.");
   }
 
-  return await bot.rest.runMethod<Template>(bot.rest,"post", bot.constants.endpoints.GUILD_TEMPLATES(guildId), {
+  return await bot.rest.runMethod<Template>(bot.rest, "post", bot.constants.endpoints.GUILD_TEMPLATES(guildId), {
     code: data.code,
     name: data.name,
     description: data.description,
@@ -32,6 +32,6 @@ export async function createGuildTemplate(bot: Bot, guildId: bigint, data: Templ
     updated_at: data.updatedAt,
     source_guild_id: data.sourceGuildId,
     serialized_source_guild: data.serializedSourceGuild,
-    is_dirty: data.isDirty
+    is_dirty: data.isDirty,
   });
 }

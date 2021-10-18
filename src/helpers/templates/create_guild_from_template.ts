@@ -1,6 +1,6 @@
 import type { Guild } from "../../types/guilds/guild.ts";
 import type { CreateGuildFromTemplate } from "../../types/templates/create_guild_from_template.ts";
-import type {Bot} from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 
 /**
  * Create a new guild based on a template
@@ -15,7 +15,12 @@ export async function createGuildFromTemplate(bot: Bot, templateCode: string, da
     data.icon = await bot.utils.urlToBase64(data.icon);
   }
 
-  const createdGuild = await bot.rest.runMethod<Guild>(bot.rest,"post", bot.constants.endpoints.GUILD_TEMPLATE(templateCode), data);
+  const createdGuild = await bot.rest.runMethod<Guild>(
+    bot.rest,
+    "post",
+    bot.constants.endpoints.GUILD_TEMPLATE(templateCode),
+    data
+  );
 
   return bot.transformers.guild(
     createdGuild,

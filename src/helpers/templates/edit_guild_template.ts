@@ -1,6 +1,6 @@
 import type { ModifyGuildTemplate } from "../../types/templates/modify_guild_template.ts";
 import type { Template } from "../../types/templates/template.ts";
-import type {Bot} from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 
 /**
  * Edit a template's metadata.
@@ -17,8 +17,13 @@ export async function editGuildTemplate(bot: Bot, guildId: bigint, templateCode:
     throw new Error("The description can only be in between 0-120 characters.");
   }
 
-  return await bot.rest.runMethod<Template>(bot.rest,"patch", `${bot.constants.endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`, {
-    name: data.name,
-    description: data.description
-  });
+  return await bot.rest.runMethod<Template>(
+    bot.rest,
+    "patch",
+    `${bot.constants.endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
+    {
+      name: data.name,
+      description: data.description,
+    }
+  );
 }
