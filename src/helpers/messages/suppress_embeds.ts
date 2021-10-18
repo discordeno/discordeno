@@ -10,7 +10,7 @@ export async function suppressEmbeds(bot: Bot, channelId: bigint, messageId: big
   await bot.utils.requireBotChannelPermissions(bot, channelId, message ? ["MANAGE_MESSAGES"] : ["SEND_MESSAGES"]);
 
   const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Message>>(
-      bot.rest,
+    bot.rest,
     "patch",
     bot.constants.endpoints.CHANNEL_MESSAGE(channelId, messageId),
     { flags: 4 }
