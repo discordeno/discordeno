@@ -1,7 +1,7 @@
 import { Errors } from "../../types/discordeno/errors.ts";
 import type { User } from "../../types/users/user.ts";
-import {Bot} from "../../bot.ts";
-import {SnakeCasedPropertiesDeep} from "../../types/util.ts";
+import { Bot } from "../../bot.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Modifies the bot's username or avatar.
  * NOTE: username: if changed may cause the bot's discriminator to be randomized.
@@ -27,7 +27,7 @@ export async function editBotProfile(bot: Bot, options: { username?: string; bot
 
   const avatar = options?.botAvatarURL ? await bot.utils.urlToBase64(options?.botAvatarURL) : options?.botAvatarURL;
 
-  return await bot.rest.runMethod<SnakeCasedPropertiesDeep<User>>(bot,"patch", bot.constants.endpoints.USER_BOT, {
+  return await bot.rest.runMethod<SnakeCasedPropertiesDeep<User>>(bot, "patch", bot.constants.endpoints.USER_BOT, {
     username: options.username?.trim(),
     avatar,
   });

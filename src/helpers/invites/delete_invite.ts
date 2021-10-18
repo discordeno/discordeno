@@ -1,6 +1,6 @@
 import type { InviteMetadata } from "../../types/invites/invite_metadata.ts";
-import {Bot} from "../../bot.ts";
-import {SnakeCasedPropertiesDeep} from "../../types/util.ts";
+import { Bot } from "../../bot.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
 export async function deleteInvite(bot: Bot, channelId: bigint, inviteCode: string) {
@@ -13,5 +13,9 @@ export async function deleteInvite(bot: Bot, channelId: bigint, inviteCode: stri
     }
   }
 
-  return await bot.rest.runMethod<SnakeCasedPropertiesDeep<InviteMetadata>>(bot.rest,"delete", bot.constants.endpoints.INVITE(inviteCode));
+  return await bot.rest.runMethod<SnakeCasedPropertiesDeep<InviteMetadata>>(
+    bot.rest,
+    "delete",
+    bot.constants.endpoints.INVITE(inviteCode)
+  );
 }
