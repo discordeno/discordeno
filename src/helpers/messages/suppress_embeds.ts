@@ -13,7 +13,7 @@ export async function suppressEmbeds(bot: Bot, channelId: bigint, messageId: big
       bot.rest,
     "patch",
     bot.constants.endpoints.CHANNEL_MESSAGE(channelId, messageId),
-    bot.utils.snakelize({ flags: 4 })
+    { flags: 4 }
   );
 
   return await bot.transformers.message(bot, result);
