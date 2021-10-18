@@ -1,17 +1,13 @@
-import { botId } from "../../bot.ts";
-import { rest } from "../../rest/rest.ts";
-import { Errors } from "../../types/discordeno/errors.ts";
-import { endpoints } from "../../util/constants.ts";
-import { isHigherPosition, requireBotGuildPermissions } from "../../util/permissions.ts";
+import {Bot} from "../../bot.ts";
 
 /** Add a role to the member */
-export async function addRole(guildId: bigint, memberId: bigint, roleId: bigint, reason?: string) {
-  const isHigherRolePosition = await isHigherPosition(guildId, botId, roleId);
+export async function addRole(bot: Bot, guildId: bigint, memberId: bigint, roleId: bigint, reason?: string) {
+  const isHigherRolePosition = await bot.utils.isHigherPosition(guildId, bot.id, roleId);
   if (!isHigherRolePosition) {
-    throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
+    throw new Error(bot.constants.Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
-  await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
+  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_ROLES"]);
 
-  return await rest.runMethod<undefined>("put", endpoints.GUILD_MEMBER_ROLE(guildId, memberId, roleId), { reason });
+  return await bot.rest.runMethod<undefined>(bot.rest,"put", bot.constants.endpoints.GUILD_MEMBER_ROLE(guildId, memberId, roleId), { reason });
 }

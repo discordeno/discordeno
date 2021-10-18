@@ -5,7 +5,7 @@ import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */
 export async function editEmoji(bot: Bot, guildId: bigint, id: bigint, options: ModifyGuildEmoji) {
-  await bot.utils.requireBotGuildPermissions(guildId, ["MANAGE_EMOJIS"]);
+  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_EMOJIS"]);
 
   return await bot.rest.runMethod<SnakeCasedPropertiesDeep<Emoji>>(
     "patch",

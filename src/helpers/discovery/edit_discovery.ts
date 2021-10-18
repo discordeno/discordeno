@@ -5,7 +5,7 @@ import {Bot} from "../../bot.ts";
 
 /** Modify the discovery metadata for the guild. Requires the MANAGE_GUILD permission. Returns the updated discovery metadata object on success. */
 export async function editDiscovery(bot: Bot, guildId: bigint, data: ModifyGuildDiscoveryMetadata) {
-  await bot.utils.requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
+  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
   return await bot.rest.runMethod<SnakeCasedPropertiesDeep<DiscoveryMetadata>>(bot.rest,"patch", bot.constants.endpoints.DISCOVERY_METADATA(guildId), {
     primary_category_id: data.primaryCategoryId,
