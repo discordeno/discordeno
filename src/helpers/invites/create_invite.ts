@@ -2,7 +2,7 @@ import type { CreateChannelInvite } from "../../types/invites/create_channel_inv
 import type { InviteMetadata } from "../../types/invites/invite_metadata.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
 import { Bot } from "../../bot.ts";
-import {SnakeCasedPropertiesDeep} from "../../types/util.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
 export async function createInvite(bot: Bot, channelId: bigint, options: CreateChannelInvite = {}) {
@@ -15,13 +15,18 @@ export async function createInvite(bot: Bot, channelId: bigint, options: CreateC
     throw new Error(Errors.INVITE_MAX_USES_INVALID);
   }
 
-  return await bot.rest.runMethod<SnakeCasedPropertiesDeep<InviteMetadata>>(bot.rest,"post", bot.constants.endpoints.CHANNEL_INVITES(channelId), {
-    max_age: options.maxAge,
-    max_uses: options.maxUses,
-    temporary: options.temporary,
-    unique: options.unique,
-    target_type: options.targetType,
-    target_user_id: options.targetUserId,
-    target_application_id: options.targetUserId,
-  });
+  return await bot.rest.runMethod<SnakeCasedPropertiesDeep<InviteMetadata>>(
+    bot.rest,
+    "post",
+    bot.constants.endpoints.CHANNEL_INVITES(channelId),
+    {
+      max_age: options.maxAge,
+      max_uses: options.maxUses,
+      temporary: options.temporary,
+      unique: options.unique,
+      target_type: options.targetType,
+      target_user_id: options.targetUserId,
+      target_application_id: options.targetUserId,
+    }
+  );
 }

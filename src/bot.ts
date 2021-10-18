@@ -12,7 +12,7 @@ import {
   highestRole,
   higherRolePosition,
   requireBotChannelPermissions,
-  requireBotGuildPermissions
+  requireBotGuildPermissions,
 } from "./util/permissions.ts";
 import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
 import {

@@ -1,4 +1,4 @@
-import {Bot} from "../../bot.ts";
+import { Bot } from "../../bot.ts";
 import { DiscordGatewayOpcodes } from "../../types/codes/gateway_opcodes.ts";
 import type { StatusUpdate } from "../../types/gateway/status_update.ts";
 
@@ -12,7 +12,7 @@ export function editBotStatus(bot: Bot, data: Omit<StatusUpdate, "afk" | "since"
         since: null,
         afk: false,
         activities: data.activities,
-        status: data.status
+        status: data.status,
       },
     });
   });

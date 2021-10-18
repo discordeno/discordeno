@@ -1,6 +1,6 @@
 import type { UpdateVoiceState } from "../../types/voice/update_voice_state.ts";
 import type { AtLeastOne } from "../../types/util.ts";
-import {Bot} from "../../bot.ts";
+import { Bot } from "../../bot.ts";
 
 /** Connect or join a voice channel inside a guild. By default, the "selfDeaf" option is true. Requires `CONNECT` and `VIEW_CHANNEL` permissions. */
 export async function connectToVoiceChannel(
