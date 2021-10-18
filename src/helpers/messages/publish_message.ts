@@ -1,5 +1,5 @@
 import type { Message } from "../../types/messages/message.ts";
-import {Bot} from "../../bot.ts";
+import type {Bot} from "../../bot.ts";
 import {SnakeCasedPropertiesDeep} from "../../types/util.ts";
 
 /** Crosspost a message in a News Channel to following channels. */

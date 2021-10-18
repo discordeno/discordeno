@@ -1,5 +1,5 @@
 import type { Role } from "../../types/permissions/role.ts";
-import {Bot} from "../../bot.ts";
+import type {Bot} from "../../bot.ts";
 import {Collection} from "../../util/collection.ts";
 import {DiscordenoRole} from "../../transformers/role.ts";
 /** Returns a list of role objects for the guild.

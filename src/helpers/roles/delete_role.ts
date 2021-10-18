@@ -1,4 +1,4 @@
-import {Bot} from "../../bot.ts";
+import type {Bot} from "../../bot.ts";
 
 /** Delete a guild role. Requires the MANAGE_ROLES permission. */
 export async function deleteRole(bot: Bot, guildId: bigint, id: bigint) {

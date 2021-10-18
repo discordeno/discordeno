@@ -1,5 +1,5 @@
 import type { Integration } from "../../types/integrations/integration.ts";
-import {Bot} from "../../bot.ts";
+import type {Bot} from "../../bot.ts";
 import {SnakeCasedPropertiesDeep} from "../../types/util.ts";
 
 /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */

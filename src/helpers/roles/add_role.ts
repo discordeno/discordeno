@@ -1,4 +1,4 @@
-import {Bot} from "../../bot.ts";
+import type {Bot} from "../../bot.ts";
 
 /** Add a role to the member */
 export async function addRole(bot: Bot, guildId: bigint, memberId: bigint, roleId: bigint, reason?: string) {

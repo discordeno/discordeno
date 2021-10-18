@@ -1,8 +1,7 @@
-import { rest } from "../../rest/rest.ts";
 import type { Template } from "../../types/templates/template.ts";
-import { endpoints } from "../../util/constants.ts";
+import type {Bot} from "../../bot.ts";
 
 /** Returns the guild template if it exists */
-export async function getTemplate(templateCode: string) {
-  return await rest.runMethod<Template>("get", endpoints.GUILD_TEMPLATE(templateCode));
+export async function getTemplate(bot: Bot, templateCode: string) {
+  return await bot.rest.runMethod<Template>(bot.rest, "get", bot.constants.endpoints.GUILD_TEMPLATE(templateCode));
 }
