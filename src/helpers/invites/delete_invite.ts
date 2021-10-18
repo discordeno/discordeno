@@ -1,19 +1,17 @@
-import { cacheHandlers } from "../../cache.ts";
-import { rest } from "../../rest/rest.ts";
 import type { InviteMetadata } from "../../types/invites/invite_metadata.ts";
-import { endpoints } from "../../util/constants.ts";
-import { botHasChannelPermissions, requireBotGuildPermissions } from "../../util/permissions.ts";
+import {Bot} from "../../bot.ts";
+import {SnakeCasedPropertiesDeep} from "../../types/util.ts";
 
 /** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */
-export async function deleteInvite(channelId: bigint, inviteCode: string) {
-  const channel = await cacheHandlers.get("channels", channelId);
+export async function deleteInvite(bot: Bot, channelId: bigint, inviteCode: string) {
+  const channel = await bot.cache.channels.get(channelId);
   if (channel) {
-    const hasPerm = await botHasChannelPermissions(channel, ["MANAGE_CHANNELS"]);
+    const hasPerm = await bot.utils.botHasChannelPermissions(channel, ["MANAGE_CHANNELS"]);
 
     if (!hasPerm) {
-      await requireBotGuildPermissions(channel.guildId, ["MANAGE_GUILD"]);
+      await bot.utils.requireBotGuildPermissions(channel.guildId, ["MANAGE_GUILD"]);
     }
   }
 
-  return await rest.runMethod<InviteMetadata>("delete", endpoints.INVITE(inviteCode));
+  return await bot.rest.runMethod<SnakeCasedPropertiesDeep<InviteMetadata>>(bot.rest,"delete", bot.constants.endpoints.INVITE(inviteCode));
 }

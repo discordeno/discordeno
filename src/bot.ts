@@ -12,6 +12,7 @@ import {
   highestRole,
   higherRolePosition,
   requireBotChannelPermissions,
+  requireBotGuildPermissions
 } from "./util/permissions.ts";
 import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
 import {
@@ -284,6 +285,7 @@ export function createUtils(options: Partial<HelperUtils>) {
     validateSlashOptions,
     validateSlashOptionChoices,
     requireBotChannelPermissions,
+    requireBotGuildPermissions,
     validateComponents,
   };
 }
@@ -311,6 +313,7 @@ export interface HelperUtils {
   validateSlashOptions: typeof validateSlashOptions;
   validateSlashOptionChoices: typeof validateSlashOptionChoices;
   requireBotChannelPermissions: typeof requireBotChannelPermissions;
+  requireBotGuildPermissions: typeof requireBotGuildPermissions;
   validateComponents: typeof validateComponents;
 }
 

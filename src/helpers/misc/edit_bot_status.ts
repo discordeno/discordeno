@@ -1,19 +1,18 @@
-import { eventHandlers } from "../../bot.ts";
+import {Bot} from "../../bot.ts";
 import { DiscordGatewayOpcodes } from "../../types/codes/gateway_opcodes.ts";
 import type { StatusUpdate } from "../../types/gateway/status_update.ts";
-import { snakelize } from "../../util/utils.ts";
-import { ws } from "../../ws/ws.ts";
 
-export function editBotStatus(data: Omit<StatusUpdate, "afk" | "since">) {
-  ws.shards.forEach((shard) => {
-    eventHandlers.debug?.("loop", `Running forEach loop in editBotStatus function.`);
+export function editBotStatus(bot: Bot, data: Omit<StatusUpdate, "afk" | "since">) {
+  bot.ws.shards.forEach((shard) => {
+    bot.events.debug("loop", `Running forEach loop in editBotStatus function.`);
 
-    ws.sendShardMessage(shard, {
+    bot.ws.sendShardMessage(shard, {
       op: DiscordGatewayOpcodes.StatusUpdate,
       d: {
         since: null,
         afk: false,
-        ...snakelize<Omit<StatusUpdate, "afk" | "since">>(data),
+        activities: data.activities,
+        status: data.status
       },
     });
   });
