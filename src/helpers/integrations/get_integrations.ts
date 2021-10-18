@@ -1,11 +1,10 @@
-import { rest } from "../../rest/rest.ts";
 import type { Integration } from "../../types/integrations/integration.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotGuildPermissions } from "../../util/permissions.ts";
+import {Bot} from "../../bot.ts";
+import {SnakeCasedPropertiesDeep} from "../../types/util.ts";
 
 /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
-export async function getIntegrations(guildId: bigint) {
-  await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
+export async function getIntegrations(bot: Bot, guildId: bigint) {
+  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-  return await rest.runMethod<Integration>("get", endpoints.GUILD_INTEGRATIONS(guildId));
+  return await bot.rest.runMethod<SnakeCasedPropertiesDeep<Integration>>(bot.rest,"get", bot.constants.endpoints.GUILD_INTEGRATIONS(guildId));
 }
