@@ -1,6 +1,6 @@
 import type { Emoji } from "../../types/emojis/emoji.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
-import {Bot} from "../../bot.ts";
+import { Bot } from "../../bot.ts";
 
 /**
  * Returns an emoji for the given guild and emoji Id.
