@@ -1,14 +1,14 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
+import { Bot } from "../../bot.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { GuildBanAddRemove } from "../../types/guilds/guild_ban_add_remove.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleGuildBanRemove(data: DiscordGatewayPayload) {
-  const payload = data.d as GuildBanAddRemove;
-  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
-  if (!guild) return;
+export async function handleGuildBanRemove(bot: Bot, data: SnakeCasedPropertiesDeep<DiscordGatewayPayload>) {
+  const payload = data.d as SnakeCasedPropertiesDeep<GuildBanAddRemove>;
 
-  const member = await cacheHandlers.get("members", snowflakeToBigint(payload.user.id));
-  eventHandlers.guildBanRemove?.(guild, payload.user, member);
+  await bot.events.guildBanRemove(
+    bot,
+    bot.transformers.user(bot, payload.user),
+    bot.transformers.snowflake(payload.guild_id)
+  );
 }

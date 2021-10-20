@@ -11,9 +11,6 @@ import { handleThreadListSync } from "./channels/THREAD_LIST_SYNC.ts";
 import { handleThreadMembersUpdate } from "./channels/THREAD_MEMBERS_UPDATE.ts";
 import { handleThreadMemberUpdate } from "./channels/THREAD_MEMBER_UPDATE.ts";
 import { handleThreadUpdate } from "./channels/THREAD_UPDATE.ts";
-import { handleApplicationCommandCreate } from "./commands/APPLICATION_COMMAND_CREATE.ts";
-import { handleApplicationCommandDelete } from "./commands/APPLICATION_COMMAND_DELETE.ts";
-import { handleApplicationCommandUpdate } from "./commands/APPLICATION_COMMAND_UPDATE.ts";
 import { handleGuildEmojisUpdate } from "./emojis/GUILD_EMOJIS_UPDATE.ts";
 import { handleGuildBanAdd } from "./guilds/GUILD_BAN_ADD.ts";
 import { handleGuildBanRemove } from "./guilds/GUILD_BAN_REMOVE.ts";
@@ -48,11 +45,9 @@ import { handleGuildRoleUpdate } from "./roles/GUILD_ROLE_UPDATE.ts";
 import { handleVoiceServerUpdate } from "./voice/VOICE_SERVER_UPDATE.ts";
 import { handleVoiceStateUpdate } from "./voice/VOICE_STATE_UPDATE.ts";
 import { handleWebhooksUpdate } from "./webhooks/WEBHOOKS_UPDATE.ts";
+import { handleGuildLoaded } from "./guilds/GUILD_LOADED_DD.ts";
 
 export {
-  handleApplicationCommandCreate,
-  handleApplicationCommandDelete,
-  handleApplicationCommandUpdate,
   handleChannelCreate,
   handleChannelDelete,
   handleChannelPinsUpdate,
@@ -102,77 +97,6 @@ export {
   handleWebhooksUpdate,
 };
 
-export let handlers = {
-  // misc
-  READY: handleReady,
-  // channels
-  CHANNEL_CREATE: handleChannelCreate,
-  CHANNEL_DELETE: handleChannelDelete,
-  CHANNEL_PINS_UPDATE: handleChannelPinsUpdate,
-  CHANNEL_UPDATE: handleChannelUpdate,
-  THREAD_CREATE: handleThreadCreate,
-  THREAD_UPDATE: handleThreadUpdate,
-  THREAD_DELETE: handleThreadDelete,
-  THREAD_LIST_SYNC: handleThreadListSync,
-  THREAD_MEMBER_UPDATE: handleThreadMemberUpdate,
-  THREAD_MEMBERS_UPDATE: handleThreadMembersUpdate,
-  STAGE_INSTANCE_CREATE: handleStageInstanceCreate,
-  STAGE_INSTANCE_UPDATE: handleStageInstanceUpdate,
-  STAGE_INSTANCE_DELETE: handleStageInstanceDelete,
-
-  // commands
-  APPLICATION_COMMAND_CREATE: handleApplicationCommandCreate,
-  APPLICATION_COMMAND_DELETE: handleApplicationCommandDelete,
-  APPLICATION_COMMAND_UPDATE: handleApplicationCommandUpdate,
-  // guilds
-  GUILD_BAN_ADD: handleGuildBanAdd,
-  GUILD_BAN_REMOVE: handleGuildBanRemove,
-  GUILD_CREATE: handleGuildCreate,
-  GUILD_DELETE: handleGuildDelete,
-  GUILD_EMOJIS_UPDATE: handleGuildEmojisUpdate,
-  GUILD_INTEGRATIONS_UPDATE: handleGuildIntegrationsUpdate,
-  GUILD_MEMBER_ADD: handleGuildMemberAdd,
-  GUILD_MEMBER_REMOVE: handleGuildMemberRemove,
-  GUILD_MEMBER_UPDATE: handleGuildMemberUpdate,
-  GUILD_MEMBERS_CHUNK: handleGuildMembersChunk,
-  GUILD_ROLE_CREATE: handleGuildRoleCreate,
-  GUILD_ROLE_DELETE: handleGuildRoleDelete,
-  GUILD_ROLE_UPDATE: handleGuildRoleUpdate,
-  GUILD_UPDATE: handleGuildUpdate,
-  // interactions
-  INTERACTION_CREATE: handleInteractionCreate,
-  // invites
-  INVITE_CREATE: handleInviteCreate,
-  INVITE_DELETE: handleInviteCreate,
-  // messages
-  MESSAGE_CREATE: handleMessageCreate,
-  MESSAGE_DELETE_BULK: handleMessageDeleteBulk,
-  MESSAGE_DELETE: handleMessageDelete,
-  MESSAGE_REACTION_ADD: handleMessageReactionAdd,
-  MESSAGE_REACTION_REMOVE_ALL: handleMessageReactionRemoveAll,
-  MESSAGE_REACTION_REMOVE_EMOJI: handleMessageReactionRemoveEmoji,
-  MESSAGE_REACTION_REMOVE: handleMessageReactionRemove,
-  MESSAGE_UPDATE: handleMessageUpdate,
-  // presence
-  PRESENCE_UPDATE: handlePresenceUpdate,
-  TYPING_START: handleTypingStart,
-  USER_UPDATE: handleUserUpdate,
-  // voice
-  VOICE_SERVER_UPDATE: handleVoiceServerUpdate,
-  VOICE_STATE_UPDATE: handleVoiceStateUpdate,
-  // webhooks
-  WEBHOOKS_UPDATE: handleWebhooksUpdate,
-  // integrations
-  INTEGRATION_CREATE: handleIntegrationCreate,
-  INTEGRATION_UPDATE: handleIntegrationUpdate,
-  INTEGRATION_DELETE: handleIntegrationDelete,
+export const handlers = {
+  
 };
-
-export type Handlers = typeof handlers;
-
-export function updateHandlers(newHandlers: Handlers) {
-  handlers = {
-    ...handlers,
-    ...newHandlers,
-  };
-}

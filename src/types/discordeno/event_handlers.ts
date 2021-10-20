@@ -1,8 +1,3 @@
-import type { DiscordenoChannel } from "../../structures/channel.ts";
-import type { DiscordenoGuild } from "../../structures/guild.ts";
-import type { DiscordenoMember } from "../../structures/member.ts";
-import type { DiscordenoMessage } from "../../structures/message.ts";
-import type { DiscordenoRole } from "../../structures/role.ts";
 import { DiscordenoThread } from "../../util/transformers/channel_to_thread.ts";
 import type { Collection } from "../../util/collection.ts";
 import type { PresenceUpdate } from "../activity/presence_update.ts";
@@ -29,12 +24,6 @@ import type { DebugArg } from "./debug_arg.ts";
 import type { GuildUpdateChange } from "./guild_update_change.ts";
 
 export type EventHandlersDefinitions = {
-  /** Sent when a new Slash Command is created, relevant to the current user. */
-  applicationCommandCreate: [data: ApplicationCommandCreateUpdateDelete];
-  /** Sent when a Slash Command relevant to the current user is updated. */
-  applicationCommandUpdate: [data: ApplicationCommandCreateUpdateDelete];
-  /** Sent when a Slash Command relevant to the current user is deleted. */
-  applicationCommandDelete: [data: ApplicationCommandCreateUpdateDelete];
   /** Sent when properties about the user change. */
   botUpdate: [user: User];
   /** Sent when a new guild channel is created, relevant to the current user. */

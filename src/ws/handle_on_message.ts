@@ -1,10 +1,13 @@
-import { eventHandlers, GatewayManager } from "../bot.ts";
-import { handlers } from "../handlers/mod.ts";
+import { GatewayManager } from "../bot.ts";
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import type { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
 import type { DiscordHello } from "../types/gateway/hello.ts";
 import type { DiscordReady } from "../types/gateway/ready.ts";
-import { camelize, delay } from "../util/utils.ts";
+import { Guild } from "../types/guilds/guild.ts";
+import { UnavailableGuild } from "../types/guilds/unavailable_guild.ts";
+import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { snowflakeToBigint } from "../util/bigint.ts";
+import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
 
 /** Handler for handling every message event from websocket. */
@@ -27,7 +30,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
 
   switch (messageData.op) {
     case DiscordGatewayOpcodes.Heartbeat:
-      if (shard?.gateway.readyState !== WebSocket.OPEN) return;
+      if (shard?.ws.readyState !== WebSocket.OPEN) return;
 
       shard.heartbeat.lastSentAt = Date.now();
       // Discord randomly sends this requiring an immediate heartbeat back
@@ -91,15 +94,18 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
       // Important for RESUME
       if (messageData.t === "READY") {
         const shard = gateway.shards.get(shardId);
+        const payload = messageData.d as DiscordReady;
         if (shard) {
-          shard.sessionId = (messageData.d as DiscordReady).session_id;
+          shard.sessionId = payload.session_id;
         }
+
+        payload.guilds.forEach((g) => gateway.cache.loadingGuildIds.add(snowflakeToBigint(g.id)));
 
         gateway.loadingShards.get(shardId)?.resolve(true);
         gateway.loadingShards.delete(shardId);
         // Wait few seconds to spawn next shard
         setTimeout(() => {
-          const bucket = gateway.buckets.get(shardId % gateway.botGatewayData.sessionStartLimit.maxConcurrency);
+          const bucket = gateway.buckets.get(shardId % gateway.maxConcurrency);
           if (bucket) bucket.createNextShard.shift()?.();
         }, gateway.spawnShardDelay);
       }
@@ -112,17 +118,32 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
         }
       }
 
-      if (gateway.url) await gateway.handleDiscordPayload(gateway, messageData, shardId);
-      else {
-        eventHandlers.raw?.(messageData);
-        await eventHandlers.dispatchRequirements?.(messageData, shardId);
+      // MUST HANDLE GUILD_CREATE EVENTS AS THEY ARE EXPENSIVE WITHOUT GATEWAY CACHE
+      if (messageData.t === "GUILD_CREATE") {
+        const id = snowflakeToBigint((messageData.d as SnakeCasedPropertiesDeep<Guild>).id);
 
-        if (messageData.op !== DiscordGatewayOpcodes.Dispatch) return;
+        // SHARD RESUMED MOST LIKELY, THEY EMIT GUILD CREATES. OR GUILD BECAME AVAILABLE AGAIN
+        if (gateway.cache.guildIds.has(id)) return;
 
-        if (!messageData.t) return;
+        // GUILD WAS MARKED LOADING IN READY EVENT, THIS WAS THE FIRST GUILD_CREATE TO ARRIVE
+        if (gateway.cache.loadingGuildIds.has(id)) {
+          // @ts-ignore override with a custom event
+          messageData.t = "GUILD_LOADED_DD";
+          gateway.cache.loadingGuildIds.delete(id);
+        }
 
-        return handlers[messageData.t]?.(camelize(messageData), shardId);
+        gateway.cache.guildIds.add(id);
       }
+
+      // MUST HANDLE GUILD_DELETE EVENTS FOR UNAVAILABLE
+      if (messageData.t === "GUILD_DELETE") {
+        if ((messageData.d as UnavailableGuild).unavailable) return;
+      }
+
+      // IF NO TYPE THEN THIS SHOULD NOT BE SENT FORWARD
+      if (!messageData.t) return;
+
+      await gateway.handleDiscordPayload(gateway, messageData, shardId);
 
       break;
   }

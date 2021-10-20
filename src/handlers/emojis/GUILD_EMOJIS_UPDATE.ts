@@ -1,19 +1,18 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
+import { Bot } from "../../bot.ts";
 import type { GuildEmojisUpdate } from "../../types/emojis/guild_emojis_update.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 import { Collection } from "../../util/collection.ts";
 
-export async function handleGuildEmojisUpdate(data: DiscordGatewayPayload) {
-  const payload = data.d as GuildEmojisUpdate;
-  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
+export async function handleGuildEmojisUpdate(bot: Bot, data: SnakeCasedPropertiesDeep<DiscordGatewayPayload>) {
+  const payload = data.d as SnakeCasedPropertiesDeep<GuildEmojisUpdate>;
+  const guild = await bot.cache.guilds.get(bot.transformers.snowflake(payload.guild_id));
   if (!guild) return;
 
   const cachedEmojis = guild.emojis;
-  guild.emojis = new Collection(payload.emojis.map((emoji) => [snowflakeToBigint(emoji.id!), emoji]));
+  guild.emojis = new Collection(payload.emojis.map((emoji) => [bot.transformers.snowflake(emoji.id!), emoji]));
 
-  await cacheHandlers.set("guilds", guild.id, guild);
+  await bot.cache.guilds.set(guild.id, guild);
 
-  eventHandlers.guildEmojisUpdate?.(guild, guild.emojis, cachedEmojis);
+  bot.events.guildEmojisUpdate(bot, guild, guild.emojis, cachedEmojis);
 }
