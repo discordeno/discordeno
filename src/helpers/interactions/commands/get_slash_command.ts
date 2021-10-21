@@ -1,5 +1,5 @@
 import type { ApplicationCommand } from "../../../types/interactions/commands/application_command.ts";
-import type {Bot} from "../../../bot.ts";
+import type { Bot } from "../../../bot.ts";
 
 /** Fetches the global command for the given Id. If a guildId is provided, the guild command will be fetched. */
 export async function getSlashCommand(bot: Bot, commandId: bigint, guildId?: bigint) {

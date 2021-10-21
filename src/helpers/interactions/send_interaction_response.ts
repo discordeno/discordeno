@@ -1,10 +1,10 @@
 import type { DiscordenoInteractionResponse } from "../../types/discordeno/interaction_response.ts";
-import type {Bot} from "../../bot.ts";
-import {Embed} from "../../types/embeds/embed.ts";
-import {AllowedMentions} from "../../types/messages/allowed_mentions.ts";
-import {MessageReference} from "../../types/messages/message_reference.ts";
-import {FileContent} from "../../types/discordeno/file_content.ts";
-import {MessageComponents} from "../../types/messages/components/message_components.ts";
+import type { Bot } from "../../bot.ts";
+import { Embed } from "../../types/embeds/embed.ts";
+import { AllowedMentions } from "../../types/messages/allowed_mentions.ts";
+import { MessageReference } from "../../types/messages/message_reference.ts";
+import { FileContent } from "../../types/discordeno/file_content.ts";
+import { MessageComponents } from "../../types/messages/components/message_components.ts";
 
 // TODO: v12 remove | string
 /**
@@ -14,10 +14,10 @@ import {MessageComponents} from "../../types/messages/components/message_compone
  * NOTE: By default we will suppress mentions. To enable mentions, just pass any mentions object.
  */
 export async function sendInteractionResponse(
-    bot: Bot,
-    id: bigint | string,
-    token: string,
-    options: DiscordenoInteractionResponse
+  bot: Bot,
+  id: bigint | string,
+  token: string,
+  options: DiscordenoInteractionResponse
 ) {
   // TODO: add more options validations
   if (options.data?.components) bot.utils.validateComponents(bot, options.data?.components);
@@ -34,7 +34,7 @@ export async function sendInteractionResponse(
 
   // If its already been executed, we need to send a followup response
   if (bot.cache.executedSlashCommands.has(token)) {
-    return await bot.rest.runMethod(bot.rest,"post", bot.cosntants.endpoints.WEBHOOK(bot.applicationId, token), {
+    return await bot.rest.runMethod(bot.rest, "post", bot.cosntants.endpoints.WEBHOOK(bot.applicationId, token), {
       content: options.data.content,
       tts: options.data.tts,
       embeds: options.data.embeds,
@@ -42,10 +42,10 @@ export async function sendInteractionResponse(
         parse: options.data.allowedMentions.parse,
         roles: options.data.allowedMentions.roles,
         users: options.data.allowedMentions.users,
-        replied_user: options.data.allowedMentions.repliedUser
+        replied_user: options.data.allowedMentions.repliedUser,
       },
       ...(options.data.messageReference?.messageId
-          ? {
+        ? {
             message_reference: {
               message_id: options.data.messageReference.messageId,
               channel_id: options.data.messageReference.channelId,
@@ -53,11 +53,11 @@ export async function sendInteractionResponse(
               fail_if_not_exists: options.data.messageReference.failIfNotExists === true,
             },
           }
-          : {}),
+        : {}),
       file: options.data.file,
       // TODO: Snakelize components??
       components: options.data.components,
-      flags: options.data.flags
+      flags: options.data.flags,
     });
   }
 
@@ -69,33 +69,33 @@ export async function sendInteractionResponse(
   }, 900000);
 
   return await bot.rest.runMethod(
-      bot.rest,
-      "post",
-      bot.constants.endpoints.INTERACTION_ID_TOKEN(typeof id === "bigint" ? id : bot.transformers.snowflake(id), token),
-      {
-        content: options.data.content,
-        tts: options.data.tts,
-        embeds: options.data.embeds,
-        allowed_mentions: {
-          parse: options.data.allowedMentions.parse,
-          roles: options.data.allowedMentions.roles,
-          users: options.data.allowedMentions.users,
-          replied_user: options.data.allowedMentions.repliedUser
-        },
-        ...(options.data.messageReference?.messageId
-            ? {
-              message_reference: {
-                message_id: options.data.messageReference.messageId,
-                channel_id: options.data.messageReference.channelId,
-                guild_id: options.data.messageReference.guildId,
-                fail_if_not_exists: options.data.messageReference.failIfNotExists === true,
-              },
-            }
-            : {}),
-        file: options.data.file,
-        // TODO: Snakelize components??
-        components: options.data.components,
-        flags: options.data.flags
-      }
+    bot.rest,
+    "post",
+    bot.constants.endpoints.INTERACTION_ID_TOKEN(typeof id === "bigint" ? id : bot.transformers.snowflake(id), token),
+    {
+      content: options.data.content,
+      tts: options.data.tts,
+      embeds: options.data.embeds,
+      allowed_mentions: {
+        parse: options.data.allowedMentions.parse,
+        roles: options.data.allowedMentions.roles,
+        users: options.data.allowedMentions.users,
+        replied_user: options.data.allowedMentions.repliedUser,
+      },
+      ...(options.data.messageReference?.messageId
+        ? {
+            message_reference: {
+              message_id: options.data.messageReference.messageId,
+              channel_id: options.data.messageReference.channelId,
+              guild_id: options.data.messageReference.guildId,
+              fail_if_not_exists: options.data.messageReference.failIfNotExists === true,
+            },
+          }
+        : {}),
+      file: options.data.file,
+      // TODO: Snakelize components??
+      components: options.data.components,
+      flags: options.data.flags,
+    }
   );
 }

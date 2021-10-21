@@ -74,7 +74,7 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
   }
 
   const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Message>>(
-      bot.rest,
+    bot.rest,
     "post",
     bot.constants.endpoints.CHANNEL_MESSAGES(channelId),
     bot.utils.snakelize({
@@ -85,7 +85,7 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
         parse: content.allowedMentions.parse,
         roles: content.allowedMentions.roles,
         users: content.allowedMentions.users,
-        replied_user: content.allowedMentions.repliedUser
+        replied_user: content.allowedMentions.repliedUser,
       },
       file: content.file,
       // TODO: Snakelize components??

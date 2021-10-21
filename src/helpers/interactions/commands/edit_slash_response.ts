@@ -1,6 +1,6 @@
 import type { DiscordenoEditWebhookMessage } from "../../../types/discordeno/edit_webhook_message.ts";
-import type {Bot} from "../../../bot.ts";
-import {DiscordAllowedMentionsTypes} from "../../../types/messages/allowed_mentions_types.ts";
+import type { Bot } from "../../../bot.ts";
+import { DiscordAllowedMentionsTypes } from "../../../types/messages/allowed_mentions_types.ts";
 
 /** To edit your response to a slash command. If a messageId is not provided it will default to editing the original response. */
 export async function editSlashResponse(bot: Bot, token: string, options: DiscordenoEditWebhookMessage) {
@@ -39,26 +39,28 @@ export async function editSlashResponse(bot: Bot, token: string, options: Discor
   }
 
   const result = await bot.rest.runMethod(
-      bot.rest,
+    bot.rest,
     "patch",
     options.messageId
       ? bot.constants.endpoints.WEBHOOK_MESSAGE(bot.applicationId, token, options.messageId)
       : bot.constants.endpoints.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token),
-      {
-        content: options.content,
-        embeds: options.embeds,
-        file: options.file,
-        allowed_mentions: options.allowedMentions ? {
-          parse: options.allowedMentions.parse,
-          roles: options.allowedMentions.roles,
-          users: options.allowedMentions.users,
-          replied_user: options.allowedMentions.repliedUser
-        } : undefined,
-        attachments: options.attachments,
-        // TODO: Snakelize components??
-        components: options.components,
-        message_id: options.messageId,
-      }
+    {
+      content: options.content,
+      embeds: options.embeds,
+      file: options.file,
+      allowed_mentions: options.allowedMentions
+        ? {
+            parse: options.allowedMentions.parse,
+            roles: options.allowedMentions.roles,
+            users: options.allowedMentions.users,
+            replied_user: options.allowedMentions.repliedUser,
+          }
+        : undefined,
+      attachments: options.attachments,
+      // TODO: Snakelize components??
+      components: options.components,
+      message_id: options.messageId,
+    }
   );
 
   // If the original message was edited, this will not return a message
