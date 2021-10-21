@@ -1,7 +1,7 @@
 import type { Channel } from "../../../types/channels/channel.ts";
 import type { StartThread } from "../../../types/channels/threads/start_thread.ts";
 import type { Bot } from "../../../bot.ts";
-import {channelToThread} from "../../../util/transformers/channel_to_thread.ts";
+import { channelToThread } from "../../../util/transformers/channel_to_thread.ts";
 
 /** Creates a new private thread. Returns a thread channel. */
 export async function startPrivateThread(bot: Bot, channelId: bigint, options: StartThread) {
@@ -15,9 +15,9 @@ export async function startPrivateThread(bot: Bot, channelId: bigint, options: S
   }
 
   return channelToThread(
-    await bot.rest.runMethod<Channel>(bot.rest,"post", bot.constants.endpoints.THREAD_START_PRIVATE(channelId), {
+    await bot.rest.runMethod<Channel>(bot.rest, "post", bot.constants.endpoints.THREAD_START_PRIVATE(channelId), {
       name: options.name,
-      auto_archive_duration: options.autoArchiveDuration
+      auto_archive_duration: options.autoArchiveDuration,
     })
   );
 }

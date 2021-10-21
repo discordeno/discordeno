@@ -8,5 +8,7 @@ export async function deleteThread(bot: Bot, threadId: bigint, reason?: string) 
     if (channel?.guildId) await bot.utils.requireBotGuildPermissions(bot, channel.guildId, ["MANAGE_THREADS"]);
   }
 
-  return await bot.rest.runMethod<undefined>(bot.rest,"delete", bot.constants.endpoints.CHANNEL_BASE(threadId), { reason });
+  return await bot.rest.runMethod<undefined>(bot.rest, "delete", bot.constants.endpoints.CHANNEL_BASE(threadId), {
+    reason,
+  });
 }
