@@ -50,8 +50,8 @@ import {
   baseEndpoints,
   CHANNEL_MENTION_REGEX,
   CONTEXT_MENU_COMMANDS_NAME_REGEX,
-  DISCORD_SNOWFLAKE_REGEX,
   DISCORDENO_VERSION,
+  DISCORD_SNOWFLAKE_REGEX,
   endpoints,
   SLASH_COMMANDS_NAME_REGEX,
   USER_AGENT,
@@ -90,7 +90,12 @@ export async function createBot(options: CreateBotOptions) {
     isReady: false,
     activeGuildIds: new Set<bigint>(),
     constants: createBotConstants(),
+    handlers: createBotGatewayHandlers({}),
     cache: {
+      forEach: function (
+        type: "DELETE_MESSAGES_FROM_GUILD" | "DELETE_CHANNELS_FROM_GUILD" | "DELETE_GUILD_FROM_MEMBER",
+        options: Record<string, any>
+      ) {},
       guilds: {
         get: async function (id: bigint): Promise<DiscordenoGuild | undefined> {
           return {} as any as DiscordenoGuild;
@@ -99,6 +104,9 @@ export async function createBot(options: CreateBotOptions) {
           return false;
         },
         set: async function (id: bigint, guild: DiscordenoGuild): Promise<void> {
+          return;
+        },
+        delete: async function (id: bigint): Promise<void> {
           return;
         },
       },
@@ -124,6 +132,9 @@ export async function createBot(options: CreateBotOptions) {
           return false;
         },
         set: async function (id: bigint, member: DiscordenoMember): Promise<void> {
+          return;
+        },
+        delete: async function (id: bigint): Promise<void> {
           return;
         },
       },
@@ -182,6 +193,15 @@ export function createEventHandlers(events: Partial<EventHandlers>): EventHandle
     channelDelete: events.channelDelete ?? ignore,
     channelPinsUpdate: events.channelPinsUpdate ?? ignore,
     channelUpdate: events.channelUpdate ?? ignore,
+    guildEmojisUpdate: events.guildEmojisUpdate ?? ignore,
+    guildBanAdd: events.guildBanAdd ?? ignore,
+    guildBanRemove: events.guildBanRemove ?? ignore,
+    guildLoaded: events.guildLoaded ?? ignore,
+    guildCreate: events.guildCreate ?? ignore,
+    guildDelete: events.guildDelete ?? ignore,
+    guildUpdate: events.guildUpdate ?? ignore,
+    integrationsUpdate: events.integrationsUpdate ?? ignore,
+    raw: events.raw ?? ignore,
     stageInstanceCreate: events.stageInstanceCreate ?? ignore,
     stageInstanceDelete: events.stageInstanceDelete ?? ignore,
     stageInstanceUpdate: events.stageInstanceUpdate ?? ignore,
@@ -319,6 +339,10 @@ export interface HelperUtils {
 
 export function createGatewayManager(options: Partial<GatewayManager>): GatewayManager {
   return {
+    cache: {
+      guildIds: new Set(),
+      loadingGuildIds: new Set(),
+    },
     secretKey: options.secretKey ?? "",
     url: options.url ?? "",
     reshard: options.reshard ?? true,
@@ -347,12 +371,12 @@ export function createGatewayManager(options: Partial<GatewayManager>): GatewayM
     loadingShards: options.loadingShards ?? new Collection(),
     buckets: new Collection(),
     utf8decoder: new TextDecoder(),
+
     startGateway,
     spawnShards,
     createShard,
     identify,
     heartbeat,
-    handleDiscordPayload,
     tellClusterToIdentify,
     log,
     resharder,
@@ -361,6 +385,18 @@ export function createGatewayManager(options: Partial<GatewayManager>): GatewayM
     closeWS,
     sendShardMessage,
     resume,
+    handleDiscordPayload:
+      options.handleDiscordPayload ||
+      async function (_, data: GatewayPayload, shardId: number) {
+        // TRIGGER RAW EVENT
+        bot.events.raw(bot as Bot, data, shardId);
+
+        if (!data.t) return;
+
+        // RUN DISPATCH CHECK
+        await bot.events.dispatchRequirements(bot as Bot, data, shardId);
+        bot.handlers[data.t as GatewayDispatchEventNames]?.(bot, data, shardId);
+      },
   };
 }
 
@@ -394,8 +430,8 @@ export interface Transformers {
   snowflake: typeof snowflakeToBigint;
   channel: typeof transformChannel;
   guild: typeof transformGuild;
-  member: typeof transformMember;
   user: typeof transformUser;
+  member: typeof transformMember;
   message: typeof transformMessage;
   role: typeof transformRole;
   voiceState: typeof transformVoiceState;
@@ -404,6 +440,13 @@ export interface Transformers {
 export function createTransformers(options: Partial<Transformers>) {
   return {
     snowflake: options.snowflake || snowflakeToBigint,
+    channel: options.channel || transformChannel,
+    guild: options.guild || transformGuild,
+    user: options.user || transformUser,
+    member: options.member || transformMember,
+    message: options.message || transformMessage,
+    role: options.role || transformRole,
+    voiceState: options.voiceState || transformVoiceState,
   };
 }
 
@@ -474,6 +517,11 @@ export interface GatewayManager {
   >;
   utf8decoder: TextDecoder;
 
+  cache: {
+    guildIds: Set<bigint>;
+    loadingGuildIds: Set<bigint>;
+  };
+
   // METHODS
 
   /** The handler function that starts the gateway. */
@@ -487,7 +535,7 @@ export interface GatewayManager {
   /** Begins heartbeating of the shard to keep it alive. */
   heartbeat: typeof heartbeat;
   /** Sends the discord payload to another server. */
-  handleDiscordPayload: typeof handleDiscordPayload;
+  handleDiscordPayload: (gateway: GatewayManager, data: GatewayPayload, shardId: number) => any;
   /** Tell the cluster/worker to begin identifying this shard  */
   tellClusterToIdentify: typeof tellClusterToIdentify;
   /** Handle the different logs. Used for debugging. */
@@ -547,6 +595,21 @@ export interface EventHandlers {
       discoverableDisabled: boolean;
     }
   ) => any;
+  // TODO: THREADS
+  guildEmojisUpdate: (
+    bot: Bot,
+    guild: DiscordenoGuild,
+    emojis: Collection<bigint, Emoji>,
+    cachedEmojis: Collection<bigint, Emoji>
+  ) => any;
+  guildBanAdd: (bot: Bot, user: DiscordenoUser, guildId: bigint) => any;
+  guildBanRemove: (bot: Bot, user: DiscordenoUser, guildId: bigint) => any;
+  guildLoaded: (bot: Bot, guild: DiscordenoGuild) => any;
+  guildCreate: (bot: Bot, guild: DiscordenoGuild) => any;
+  guildDelete: (bot: Bot, id: bigint, guild?: DiscordenoGuild) => any;
+  guildUpdate: (bot: Bot, guild: DiscordenoGuild, cachedGuild?: DiscordenoGuild) => any;
+  integrationsUpdate: (bot: Bot, data: { guildId: bigint }) => any;
+  raw: (bot: Bot, data: GatewayPayload, shardId: number) => any;
 }
 
 export function createBotConstants() {
@@ -563,5 +626,122 @@ export function createBotConstants() {
       DISCORD_SNOWFLAKE_REGEX,
     },
     Errors,
+  };
+}
+
+export interface BotGatewayHandlerOptions {
+  READY: typeof handleReady;
+  CHANNEL_CREATE: typeof handleChannelCreate;
+  CHANNEL_DELETE: typeof handleChannelDelete;
+  CHANNEL_PINS_UPDATE: typeof handleChannelPinsUpdate;
+  CHANNEL_UPDATE: typeof handleChannelUpdate;
+  THREAD_CREATE: typeof handleThreadCreate;
+  THREAD_UPDATE: typeof handleThreadUpdate;
+  THREAD_DELETE: typeof handleThreadDelete;
+  THREAD_LIST_SYNC: typeof handleThreadListSync;
+  THREAD_MEMBER_UPDATE: typeof handleThreadMemberUpdate;
+  THREAD_MEMBERS_UPDATE: typeof handleThreadMembersUpdate;
+  STAGE_INSTANCE_CREATE: typeof handleStageInstanceCreate;
+  STAGE_INSTANCE_UPDATE: typeof handleStageInstanceUpdate;
+  STAGE_INSTANCE_DELETE: typeof handleStageInstanceDelete;
+  GUILD_BAN_ADD: typeof handleGuildBanAdd;
+  GUILD_BAN_REMOVE: typeof handleGuildBanRemove;
+  GUILD_CREATE: typeof handleGuildCreate;
+  GUILD_LOADED_DD: typeof handleGuildLoaded;
+  GUILD_DELETE: typeof handleGuildDelete;
+  GUILD_EMOJIS_UPDATE: typeof handleGuildEmojisUpdate;
+  GUILD_INTEGRATIONS_UPDATE: typeof handleGuildIntegrationsUpdate;
+  GUILD_MEMBER_ADD: typeof handleGuildMemberAdd;
+  GUILD_MEMBER_REMOVE: typeof handleGuildMemberRemove;
+  GUILD_MEMBER_UPDATE: typeof handleGuildMemberUpdate;
+  GUILD_MEMBERS_CHUNK: typeof handleGuildMembersChunk;
+  GUILD_ROLE_CREATE: typeof handleGuildRoleCreate;
+  GUILD_ROLE_DELETE: typeof handleGuildRoleDelete;
+  GUILD_ROLE_UPDATE: typeof handleGuildRoleUpdate;
+  GUILD_UPDATE: typeof handleGuildUpdate;
+  INTERACTION_CREATE: typeof handleInteractionCreate;
+  INVITE_CREATE: typeof handleInviteCreate;
+  INVITE_DELETE: typeof handleInviteCreate;
+  MESSAGE_CREATE: typeof handleMessageCreate;
+  MESSAGE_DELETE_BULK: typeof handleMessageDeleteBulk;
+  MESSAGE_DELETE: typeof handleMessageDelete;
+  MESSAGE_REACTION_ADD: typeof handleMessageReactionAdd;
+  MESSAGE_REACTION_REMOVE_ALL: typeof handleMessageReactionRemoveAll;
+  MESSAGE_REACTION_REMOVE_EMOJI: typeof handleMessageReactionRemoveEmoji;
+  MESSAGE_REACTION_REMOVE: typeof handleMessageReactionRemove;
+  MESSAGE_UPDATE: typeof handleMessageUpdate;
+  PRESENCE_UPDATE: typeof handlePresenceUpdate;
+  TYPING_START: typeof handleTypingStart;
+  USER_UPDATE: typeof handleUserUpdate;
+  VOICE_SERVER_UPDATE: typeof handleVoiceServerUpdate;
+  VOICE_STATE_UPDATE: typeof handleVoiceStateUpdate;
+  WEBHOOKS_UPDATE: typeof handleWebhooksUpdate;
+  INTEGRATION_CREATE: typeof handleIntegrationCreate;
+  INTEGRATION_UPDATE: typeof handleIntegrationUpdate;
+  INTEGRATION_DELETE: typeof handleIntegrationDelete;
+}
+
+export function createBotGatewayHandlers(options: Partial<BotGatewayHandlerOptions>) {
+  return {
+    // misc
+    READY: options.READY ?? handleReady,
+    // channels
+    CHANNEL_CREATE: options.CHANNEL_CREATE ?? handleChannelCreate,
+    CHANNEL_DELETE: options.CHANNEL_DELETE ?? handleChannelDelete,
+    CHANNEL_PINS_UPDATE: options.CHANNEL_PINS_UPDATE ?? handleChannelPinsUpdate,
+    CHANNEL_UPDATE: options.CHANNEL_UPDATE ?? handleChannelUpdate,
+    THREAD_CREATE: options.THREAD_CREATE ?? handleThreadCreate,
+    THREAD_UPDATE: options.THREAD_UPDATE ?? handleThreadUpdate,
+    THREAD_DELETE: options.THREAD_DELETE ?? handleThreadDelete,
+    THREAD_LIST_SYNC: options.THREAD_LIST_SYNC ?? handleThreadListSync,
+    THREAD_MEMBER_UPDATE: options.THREAD_MEMBER_UPDATE ?? handleThreadMemberUpdate,
+    THREAD_MEMBERS_UPDATE: options.THREAD_MEMBERS_UPDATE ?? handleThreadMembersUpdate,
+    STAGE_INSTANCE_CREATE: options.STAGE_INSTANCE_CREATE ?? handleStageInstanceCreate,
+    STAGE_INSTANCE_UPDATE: options.STAGE_INSTANCE_UPDATE ?? handleStageInstanceUpdate,
+    STAGE_INSTANCE_DELETE: options.STAGE_INSTANCE_DELETE ?? handleStageInstanceDelete,
+
+    // guilds
+    GUILD_BAN_ADD: options.GUILD_BAN_ADD ?? handleGuildBanAdd,
+    GUILD_BAN_REMOVE: options.GUILD_BAN_REMOVE ?? handleGuildBanRemove,
+    GUILD_CREATE: options.GUILD_CREATE ?? handleGuildCreate,
+    GUILD_LOADED_DD: options.GUILD_LOADED_DD ?? handleGuildLoaded,
+    GUILD_DELETE: options.GUILD_DELETE ?? handleGuildDelete,
+    GUILD_EMOJIS_UPDATE: options.GUILD_EMOJIS_UPDATE ?? handleGuildEmojisUpdate,
+    GUILD_INTEGRATIONS_UPDATE: options.GUILD_INTEGRATIONS_UPDATE ?? handleGuildIntegrationsUpdate,
+    GUILD_MEMBER_ADD: options.GUILD_MEMBER_ADD ?? handleGuildMemberAdd,
+    GUILD_MEMBER_REMOVE: options.GUILD_MEMBER_REMOVE ?? handleGuildMemberRemove,
+    GUILD_MEMBER_UPDATE: options.GUILD_MEMBER_UPDATE ?? handleGuildMemberUpdate,
+    GUILD_MEMBERS_CHUNK: options.GUILD_MEMBERS_CHUNK ?? handleGuildMembersChunk,
+    GUILD_ROLE_CREATE: options.GUILD_ROLE_CREATE ?? handleGuildRoleCreate,
+    GUILD_ROLE_DELETE: options.GUILD_ROLE_DELETE ?? handleGuildRoleDelete,
+    GUILD_ROLE_UPDATE: options.GUILD_ROLE_UPDATE ?? handleGuildRoleUpdate,
+    GUILD_UPDATE: options.GUILD_UPDATE ?? handleGuildUpdate,
+    // interactions
+    INTERACTION_CREATE: options.INTERACTION_CREATE ?? handleInteractionCreate,
+    // invites
+    INVITE_CREATE: options.INVITE_CREATE ?? handleInviteCreate,
+    INVITE_DELETE: options.INVITE_DELETE ?? handleInviteCreate,
+    // messages
+    MESSAGE_CREATE: options.MESSAGE_CREATE ?? handleMessageCreate,
+    MESSAGE_DELETE_BULK: options.MESSAGE_DELETE_BULK ?? handleMessageDeleteBulk,
+    MESSAGE_DELETE: options.MESSAGE_DELETE ?? handleMessageDelete,
+    MESSAGE_REACTION_ADD: options.MESSAGE_REACTION_ADD ?? handleMessageReactionAdd,
+    MESSAGE_REACTION_REMOVE_ALL: options.MESSAGE_REACTION_REMOVE_ALL ?? handleMessageReactionRemoveAll,
+    MESSAGE_REACTION_REMOVE_EMOJI: options.MESSAGE_REACTION_REMOVE_EMOJI ?? handleMessageReactionRemoveEmoji,
+    MESSAGE_REACTION_REMOVE: options.MESSAGE_REACTION_REMOVE ?? handleMessageReactionRemove,
+    MESSAGE_UPDATE: options.MESSAGE_UPDATE ?? handleMessageUpdate,
+    // presence
+    PRESENCE_UPDATE: options.PRESENCE_UPDATE ?? handlePresenceUpdate,
+    TYPING_START: options.TYPING_START ?? handleTypingStart,
+    USER_UPDATE: options.USER_UPDATE ?? handleUserUpdate,
+    // voice
+    VOICE_SERVER_UPDATE: options.VOICE_SERVER_UPDATE ?? handleVoiceServerUpdate,
+    VOICE_STATE_UPDATE: options.VOICE_STATE_UPDATE ?? handleVoiceStateUpdate,
+    // webhooks
+    WEBHOOKS_UPDATE: options.WEBHOOKS_UPDATE ?? handleWebhooksUpdate,
+    // integrations
+    INTEGRATION_CREATE: options.INTEGRATION_CREATE ?? handleIntegrationCreate,
+    INTEGRATION_UPDATE: options.INTEGRATION_UPDATE ?? handleIntegrationUpdate,
+    INTEGRATION_DELETE: options.INTEGRATION_DELETE ?? handleIntegrationDelete,
   };
 }
