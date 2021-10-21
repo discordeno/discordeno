@@ -1,8 +1,8 @@
 import type { Message } from "../../types/messages/message.ts";
 import type { EditWebhookMessage } from "../../types/webhooks/edit_webhook_message.ts";
-import type {Bot} from "../../bot.ts";
-import {DiscordAllowedMentionsTypes} from "../../types/messages/allowed_mentions_types.ts";
-import type {SnakeCasedPropertiesDeep} from "../../types/util.ts";
+import type { Bot } from "../../bot.ts";
+import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
+import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export async function editWebhookMessage(
   bot: Bot,
@@ -45,20 +45,20 @@ export async function editWebhookMessage(
   }
 
   const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Message>>(
-      bot.rest,
+    bot.rest,
     "patch",
     options.messageId
       ? bot.constants.endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, options.messageId)
       : bot.constants.endpoints.WEBHOOK_MESSAGE_ORIGINAL(webhookId, webhookToken),
-      {
-        content: options.content,
-        embeds: options.embeds,
-        file: options.file,
-        allowedMentions: options.allowed_mentions,
-        attachments: options.attachments,
-        components: options.components,
-        message_id: options.messageId
-      }
+    {
+      content: options.content,
+      embeds: options.embeds,
+      file: options.file,
+      allowedMentions: options.allowed_mentions,
+      attachments: options.attachments,
+      components: options.components,
+      message_id: options.messageId,
+    }
   );
 
   return bot.transformers.message(result);

@@ -1,8 +1,8 @@
-import type {Bot} from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { ExecuteWebhook } from "../../types/webhooks/execute_webhook.ts";
-import type {SnakeCasedPropertiesDeep} from "../../types/util.ts";
+import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Send a webhook with webhook Id and webhook token */
 export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: string, options: ExecuteWebhook) {
@@ -39,22 +39,22 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
   }
 
   const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Message>>(
-      bot.rest,
+    bot.rest,
     "post",
     `${bot.constants.endpoints.WEBHOOK(webhookId, webhookToken)}?wait=${options.wait ?? false}${
       options.threadId ? `&thread_id=${options.threadId}` : ""
     }`,
-      {
-        wait: options.wait,
-        thread_id: options.threadId,
-        content: options.content,
-        username: options.username,
-        avatar_url: options.avatarUrl,
-        tts: options.tts,
-        file: options.file,
-        embeds: options.embeds,
-        allowed_mentions: options.allowedMentions,
-      }
+    {
+      wait: options.wait,
+      thread_id: options.threadId,
+      content: options.content,
+      username: options.username,
+      avatar_url: options.avatarUrl,
+      tts: options.tts,
+      file: options.file,
+      embeds: options.embeds,
+      allowed_mentions: options.allowedMentions,
+    }
   );
   if (!options.wait) return;
 
