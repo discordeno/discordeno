@@ -1,7 +1,14 @@
-import { eventHandlers } from "../../bot.ts";
+import { Bot } from "../../bot.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { IntegrationDelete } from "../../types/integrations/integration_delete.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export function handleIntegrationDelete(data: DiscordGatewayPayload) {
-  eventHandlers.integrationDelete?.(data.d as IntegrationDelete);
+export function handleIntegrationDelete(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<IntegrationDelete>;
+
+  bot.events.integrationDelete(bot, {
+    id: bot.transformers.snowflake(payload.id),
+    guildId: bot.transformers.snowflake(payload.guild_id),
+    applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
+  });
 }

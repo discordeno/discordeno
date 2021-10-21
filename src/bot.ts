@@ -67,7 +67,7 @@ import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { validateLength } from "./util/validate_length.ts";
 import { processGlobalQueue } from "./rest/process_global_queue.ts";
 import { ChannelPinsUpdate } from "./types/channels/channel_pins_update.ts";
-import { ApplicationCommandTypes, Emoji } from "./types/mod.ts";
+import { ApplicationCommandTypes, Emoji, IntegrationCreateUpdate } from "./types/mod.ts";
 import { ApplicationCommandOption } from "./types/mod.ts";
 import { handleGuildLoaded } from "./handlers/guilds/GUILD_LOADED_DD.ts";
 import {
@@ -119,6 +119,8 @@ import {
   handleIntegrationUpdate,
   handleIntegrationDelete,
 } from "./handlers/mod.ts";
+import { DiscordenoInteraction, transformInteraction } from "./transformers/interaction.ts";
+import { DiscordenoIntegration, transformIntegration } from "./transformers/integration.ts";
 
 export async function createBot(options: CreateBotOptions) {
   return {
@@ -227,9 +229,12 @@ export function createEventHandlers(events: Partial<EventHandlers>): EventHandle
   function ignore() {}
 
   return {
-    channelCreate: events.channelCreate ?? ignore,
     debug: events.debug ?? ignore,
     dispatchRequirements: events.dispatchRequirements ?? ignore,
+    integrationCreate: events.integrationCreate ?? ignore,
+    integrationDelete: events.integrationDelete ?? ignore,
+    interactionCreate: events.interactionCreate ?? ignore,
+    channelCreate: events.channelCreate ?? ignore,
     voiceChannelLeave: events.voiceChannelLeave ?? ignore,
     channelDelete: events.channelDelete ?? ignore,
     channelPinsUpdate: events.channelPinsUpdate ?? ignore,
@@ -470,6 +475,8 @@ export interface Transformers {
   message: typeof transformMessage;
   role: typeof transformRole;
   voiceState: typeof transformVoiceState;
+  interaction: typeof transformInteraction;
+  integration: typeof transformIntegration,
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -482,6 +489,7 @@ export function createTransformers(options: Partial<Transformers>) {
     message: options.message || transformMessage,
     role: options.role || transformRole,
     voiceState: options.voiceState || transformVoiceState,
+    integration: options.integration || transformIntegration,
   };
 }
 
@@ -591,6 +599,10 @@ export interface GatewayManager {
 
 export interface EventHandlers {
   debug: (text: string) => unknown;
+  interactionCreate: (bot: Bot, interaction: DiscordenoInteraction) => any;
+  integrationCreate: (bot: Bot, integration: DiscordenoIntegration) => any;
+  integrationDelete: (bot: Bot, payload: { id: bigint; guildId: bigint; applicationId?: bigint }) => any;
+  integrationsUpdate: (bot: Bot, integration: DiscordenoIntegration) => any;
   channelCreate: (bot: Bot, channel: DiscordenoChannel) => any;
   dispatchRequirements: (bot: Bot, data: GatewayPayload, shardId: number) => any;
   voiceChannelLeave: (bot: Bot, voiceState: DiscordenoVoiceState, channel: DiscordenoChannel) => any;
@@ -643,7 +655,6 @@ export interface EventHandlers {
   guildCreate: (bot: Bot, guild: DiscordenoGuild) => any;
   guildDelete: (bot: Bot, id: bigint, guild?: DiscordenoGuild) => any;
   guildUpdate: (bot: Bot, guild: DiscordenoGuild, cachedGuild?: DiscordenoGuild) => any;
-  integrationsUpdate: (bot: Bot, data: { guildId: bigint }) => any;
   raw: (bot: Bot, data: GatewayPayload, shardId: number) => any;
 }
 
