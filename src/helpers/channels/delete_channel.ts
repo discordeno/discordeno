@@ -1,27 +1,23 @@
-import { cacheHandlers } from "../../cache.ts";
-import { rest } from "../../rest/rest.ts";
-import { Errors } from "../../types/discordeno/errors.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotGuildPermissions } from "../../util/permissions.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-export async function deleteChannel(channelId: bigint, reason?: string) {
+export async function deleteChannel(bot: Bot, channelId: bigint, reason?: string) {
   const channel = await cacheHandlers.get("channels", channelId);
 
   if (channel?.guildId) {
     const guild = await cacheHandlers.get("guilds", channel.guildId);
-    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+    if (!guild) throw new Error(bot.constants.Errors.GUILD_NOT_FOUND);
 
     if (guild.rulesChannelId === channelId) {
-      throw new Error(Errors.RULES_CHANNEL_CANNOT_BE_DELETED);
+      throw new Error(bot.constants.Errors.RULES_CHANNEL_CANNOT_BE_DELETED);
     }
 
     if (guild.publicUpdatesChannelId === channelId) {
-      throw new Error(Errors.UPDATES_CHANNEL_CANNOT_BE_DELETED);
+      throw new Error(bot.constants.Errors.UPDATES_CHANNEL_CANNOT_BE_DELETED);
     }
 
-    await requireBotGuildPermissions(guild, ["MANAGE_CHANNELS"]);
+    await bot.utils.requireBotGuildPermissions(bot, guild, ["MANAGE_CHANNELS"]);
   }
 
-  return await rest.runMethod<undefined>("delete", endpoints.CHANNEL_BASE(channelId), { reason });
+  return await bot.rest.runMethod<undefined>(bot.rest, "delete", bot.constants.endpoints.CHANNEL_BASE(channelId), { reason });
 }

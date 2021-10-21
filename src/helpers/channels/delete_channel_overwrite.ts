@@ -1,14 +1,13 @@
-import { rest } from "../../rest/rest.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotGuildPermissions } from "../../util/permissions.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Delete the channel permission overwrites for a user or role in this channel. Requires `MANAGE_ROLES` permission. */
 export async function deleteChannelOverwrite(
+    bot: Bot,
   guildId: bigint,
   channelId: bigint,
   overwriteId: bigint
 ): Promise<undefined> {
-  await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
+  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_ROLES"]);
 
-  return await rest.runMethod<undefined>("delete", endpoints.CHANNEL_OVERWRITE(channelId, overwriteId));
+  return await bot.rest.runMethod<undefined>(bot.rest,"delete", bot.constants.endpoints.CHANNEL_OVERWRITE(channelId, overwriteId));
 }

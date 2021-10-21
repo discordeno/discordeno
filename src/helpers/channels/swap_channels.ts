@@ -1,13 +1,18 @@
-import { rest } from "../../rest/rest.ts";
 import type { ModifyGuildChannelPositions } from "../../types/guilds/modify_guild_channel_position.ts";
-import { endpoints } from "../../util/constants.ts";
-import { snakelize } from "../../util/utils.ts";
+import type { Bot } from "../../bot.ts";
 
-/** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permisison. */
-export async function swapChannels(guildId: bigint, channelPositions: ModifyGuildChannelPositions[]) {
+/** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permission. */
+export async function swapChannels(bot: Bot, guildId: bigint, channelPositions: ModifyGuildChannelPositions[]) {
   if (channelPositions.length < 2) {
     throw "You must provide at least two channels to be swapped.";
   }
 
-  return await rest.runMethod<undefined>("patch", endpoints.GUILD_CHANNELS(guildId), snakelize(channelPositions));
+  return await bot.rest.runMethod<undefined>(bot.rest,"patch", bot.constants.endpoints.GUILD_CHANNELS(guildId), channelPositions.map((channelPosition) => {
+    return {
+      id: channelPosition.id,
+      position: channelPosition.position,
+      lock_positions: channelPosition.lockPositions,
+      parent_id: channelPosition.parentId
+    }
+  }));
 }

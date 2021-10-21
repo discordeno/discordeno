@@ -1,11 +1,11 @@
-import { cacheHandlers } from "../../cache.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Checks whether a channel is synchronized with its parent/category channel or not. */
-export async function isChannelSynced(channelId: bigint) {
-  const channel = await cacheHandlers.get("channels", channelId);
+export async function isChannelSynced(bot: Bot, channelId: bigint) {
+  const channel = await bot.cache.channels.get(channelId);
   if (!channel?.parentId) return false;
 
-  const parentChannel = await cacheHandlers.get("channels", channel.parentId);
+  const parentChannel = await bot.cache.channels.get(channel.parentId);
   if (!parentChannel) return false;
 
   return channel.permissionOverwrites?.every((overwrite) => {
