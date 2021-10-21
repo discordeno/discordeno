@@ -67,5 +67,5 @@ export async function editWebhookMessage(
     }
   );
 
-  return bot.transformers.message(result);
+  return bot.transformers.message(bot, result);
 }

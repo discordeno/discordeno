@@ -10,5 +10,5 @@ export async function getOriginalInteractionResponse(bot: Bot, token: string) {
     bot.constants.endpoints.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token)
   );
 
-  return bot.transformers.message(result);
+  return bot.transformers.message(bot, result);
 }

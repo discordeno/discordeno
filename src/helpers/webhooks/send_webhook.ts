@@ -58,5 +58,5 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
   );
   if (!options.wait) return;
 
-  return bot.transformers.message(result);
+  return bot.transformers.message(bot, result);
 }

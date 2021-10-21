@@ -66,5 +66,5 @@ export async function editSlashResponse(bot: Bot, token: string, options: Discor
   // If the original message was edited, this will not return a message
   if (!options.messageId) return result as undefined;
 
-  return bot.transformers.message(result);
+  return bot.transformers.message(bot, result);
 }

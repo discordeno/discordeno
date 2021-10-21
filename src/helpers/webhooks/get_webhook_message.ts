@@ -10,5 +10,5 @@ export async function getWebhookMessage(bot: Bot, webhookId: bigint, webhookToke
     bot.constants.endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId)
   );
 
-  return bot.transformers.message(result);
+  return bot.transformers.message(bot, result);
 }
