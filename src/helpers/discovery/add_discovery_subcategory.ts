@@ -1,5 +1,5 @@
 import type { AddGuildDiscoverySubcategory } from "../../types/discovery/add_guild_discovery_subcategory.ts";
-import { Bot } from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Add a discovery subcategory to the guild. Requires the `MANAGE_GUILD` permission. */

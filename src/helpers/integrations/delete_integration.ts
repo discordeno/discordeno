@@ -1,4 +1,4 @@
-import { Bot } from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Delete the attached integration object for the guild with this id. Requires MANAGE_GUILD permission. */
 export async function deleteIntegration(bot: Bot, guildId: bigint, id: bigint) {

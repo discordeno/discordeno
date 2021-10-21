@@ -1,4 +1,4 @@
-import { Bot } from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Removes a discovery subcategory from the guild. Requires the MANAGE_GUILD permission. Returns a 204 No Content on success. */
 export async function removeDiscoverySubcategory(bot: Bot, guildId: bigint, categoryId: number) {

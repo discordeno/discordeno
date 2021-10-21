@@ -1,5 +1,5 @@
 import { Application } from "../../types/applications/application.ts";
-import { Bot } from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Get the applications info */

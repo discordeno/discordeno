@@ -10,5 +10,5 @@ export async function publishMessage(bot: Bot, channelId: bigint, messageId: big
     bot.constants.endpoints.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId)
   );
 
-  return await bot.transformers.message(bot, data);
+  return bot.transformers.message(bot, data);
 }

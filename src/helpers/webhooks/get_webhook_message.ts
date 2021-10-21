@@ -1,11 +1,10 @@
-import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
 import type { Message } from "../../types/messages/message.ts";
-import { endpoints } from "../../util/constants.ts";
+import {SnakeCasedPropertiesDeep} from "../../types/util.ts";
+import type {Bot} from "../../bot.ts";
 
-/** Returns a previousy-sent webhook message from the same token. Returns a message object on success. */
-export async function getWebhookMessage(webhookId: bigint, webhookToken: string, messageId: bigint) {
-  const result = await rest.runMethod<Message>("get", endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId));
+/** Returns a previously-sent webhook message from the same token. Returns a message object on success. */
+export async function getWebhookMessage(bot: Bot, webhookId: bigint, webhookToken: string, messageId: bigint) {
+  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Message>>(bot.rest,"get", bot.constants.endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId));
 
-  return await structures.createDiscordenoMessage(result);
+  return bot.transformers.message(result);
 }

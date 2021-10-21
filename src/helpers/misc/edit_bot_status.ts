@@ -1,4 +1,4 @@
-import { Bot } from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 import { DiscordGatewayOpcodes } from "../../types/codes/gateway_opcodes.ts";
 import type { StatusUpdate } from "../../types/gateway/status_update.ts";
 

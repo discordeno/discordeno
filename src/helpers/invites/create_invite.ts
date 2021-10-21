@@ -1,7 +1,7 @@
 import type { CreateChannelInvite } from "../../types/invites/create_channel_invite.ts";
 import type { InviteMetadata } from "../../types/invites/invite_metadata.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
-import { Bot } from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */

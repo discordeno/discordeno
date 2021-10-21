@@ -16,5 +16,5 @@ export async function suppressEmbeds(bot: Bot, channelId: bigint, messageId: big
     { flags: 4 }
   );
 
-  return await bot.transformers.message(bot, result);
+  return bot.transformers.message(bot, result);
 }

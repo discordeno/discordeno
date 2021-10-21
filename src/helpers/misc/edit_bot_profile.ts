@@ -1,6 +1,6 @@
 import { Errors } from "../../types/discordeno/errors.ts";
 import type { User } from "../../types/users/user.ts";
-import { Bot } from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Modifies the bot's username or avatar.

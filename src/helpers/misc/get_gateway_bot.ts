@@ -1,5 +1,5 @@
 import type { GetGatewayBot } from "../../types/gateway/get_gateway_bot.ts";
-import { Bot } from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */

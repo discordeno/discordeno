@@ -15,5 +15,5 @@ export async function getMessage(bot: Bot, channelId: bigint, id: bigint) {
     bot.constants.endpoints.CHANNEL_MESSAGE(channelId, id)
   );
 
-  return await bot.transformers.message(bot, result);
+  return bot.transformers.message(bot, result);
 }

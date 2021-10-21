@@ -1,4 +1,4 @@
-import { Bot } from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 import type { Emoji } from "../../types/emojis/emoji.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
 import { Collection } from "../../util/collection.ts";

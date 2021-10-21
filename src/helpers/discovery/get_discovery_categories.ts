@@ -1,6 +1,6 @@
 import type { DiscoveryCategory } from "../../types/discovery/discovery_category.ts";
 import { Collection } from "../../util/collection.ts";
-import { Bot } from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Returns a Collection (mapped by Id of the discovery category object) of discovery category objects that can be used when editing guilds */
