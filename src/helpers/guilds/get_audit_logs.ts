@@ -6,15 +6,10 @@ import type { Bot } from "../../bot.ts";
 export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuildAuditLog) {
   await bot.utils.requireBotGuildPermissions(bot, guildId, ["VIEW_AUDIT_LOG"]);
 
-  return await bot.rest.runMethod<AuditLog>(
-      bot.rest,
-    "get",
-    bot.constants.endpoints.GUILD_AUDIT_LOGS(guildId),
-    {
-        user_id: options.userId,
-        action_type: options.actionType,
-        before: options.before,
-      limit: options?.limit && options.limit >= 1 && options.limit <= 100 ? options.limit : 50,
-    }
-  );
+  return await bot.rest.runMethod<AuditLog>(bot.rest, "get", bot.constants.endpoints.GUILD_AUDIT_LOGS(guildId), {
+    user_id: options.userId,
+    action_type: options.actionType,
+    before: options.before,
+    limit: options?.limit && options.limit >= 1 && options.limit <= 100 ? options.limit : 50,
+  });
 }

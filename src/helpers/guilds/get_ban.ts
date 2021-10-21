@@ -5,5 +5,5 @@ import type { Bot } from "../../bot.ts";
 export async function getBan(bot: Bot, guildId: bigint, memberId: bigint) {
   await bot.utils.requireBotGuildPermissions(bot, guildId, ["BAN_MEMBERS"]);
 
-  return await bot.rest.runMethod<Ban>(bot.rest,"get", bot.constants.endpoints.GUILD_BAN(guildId, memberId));
+  return await bot.rest.runMethod<Ban>(bot.rest, "get", bot.constants.endpoints.GUILD_BAN(guildId, memberId));
 }

@@ -18,16 +18,12 @@ export async function editGuild(bot: Bot, guildId: bigint, options: ModifyGuild)
     options.splash = await bot.utils.urlToBase64(options.splash);
   }
 
-  const result = await bot.rest.runMethod<Guild>(bot.rest,"patch", bot.constants.endpoints.GUILDS_BASE(guildId), {
-
-  });
+  const result = await bot.rest.runMethod<Guild>(bot.rest, "patch", bot.constants.endpoints.GUILDS_BASE(guildId), {});
 
   const cached = await bot.cache.guilds.get(guildId);
-  return bot.transformers.guild(
-      bot,
-      {
-        guild: result,
-        shardId: cached?.shardId || Number((BigInt(result.id) >> 22n % BigInt(bot.gateway.botGatewayData.shards)).toString())
-      }
-  );
+  return bot.transformers.guild(bot, {
+    guild: result,
+    shardId:
+      cached?.shardId || Number((BigInt(result.id) >> 22n % BigInt(bot.gateway.botGatewayData.shards)).toString()),
+  });
 }

@@ -6,7 +6,7 @@ import { Collection } from "../../util/collection.ts";
 export async function getBans(bot: Bot, guildId: bigint) {
   await bot.utils.requireBotGuildPermissions(bot, guildId, ["BAN_MEMBERS"]);
 
-  const results = await bot.rest.runMethod<Ban[]>(bot.rest,"get", bot.constants.endpoints.GUILD_BANS(guildId));
+  const results = await bot.rest.runMethod<Ban[]>(bot.rest, "get", bot.constants.endpoints.GUILD_BANS(guildId));
 
   return new Collection<bigint, Ban>(results.map((res) => [bot.transformers.snowflake(res.user.id), res]));
 }

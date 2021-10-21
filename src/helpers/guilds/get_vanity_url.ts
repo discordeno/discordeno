@@ -8,5 +8,5 @@ export async function getVanityURL(bot: Bot, guildId: bigint) {
     | {
         code: null;
       }
-  >(bot.rest,"get", bot.constants.endpoints.GUILD_VANITY_URL(guildId));
+  >(bot.rest, "get", bot.constants.endpoints.GUILD_VANITY_URL(guildId));
 }

@@ -5,7 +5,7 @@ import type { Bot } from "../../bot.ts";
 export async function editWidget(bot: Bot, guildId: bigint, enabled: boolean, channelId?: string | null) {
   await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-  return await bot.rest.runMethod<GuildWidget>(bot.rest,"patch", bot.constants.endpoints.GUILD_WIDGET(guildId), {
+  return await bot.rest.runMethod<GuildWidget>(bot.rest, "patch", bot.constants.endpoints.GUILD_WIDGET(guildId), {
     enabled,
     channel_id: channelId,
   });

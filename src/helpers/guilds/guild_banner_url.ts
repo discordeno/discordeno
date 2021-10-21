@@ -4,7 +4,7 @@ import type { Bot } from "../../bot.ts";
 
 /** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
 export function guildBannerURL(
-    bot: Bot,
+  bot: Bot,
   id: bigint,
   options: {
     banner?: string | bigint;

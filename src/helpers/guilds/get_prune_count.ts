@@ -10,10 +10,17 @@ export async function getPruneCount(bot: Bot, guildId: bigint, options?: GetGuil
 
   await bot.utils.requireBotGuildPermissions(guildId, ["KICK_MEMBERS"]);
 
-  const result = await bot.rest.runMethod(bot.rest,"get", bot.constants.endpoints.GUILD_PRUNE(guildId), options ? {
-    days: options.days,
-    include_roles: options.includeRoles
-  } : {});
+  const result = await bot.rest.runMethod(
+    bot.rest,
+    "get",
+    bot.constants.endpoints.GUILD_PRUNE(guildId),
+    options
+      ? {
+          days: options.days,
+          include_roles: options.includeRoles,
+        }
+      : {}
+  );
 
   return result.pruned as number;
 }

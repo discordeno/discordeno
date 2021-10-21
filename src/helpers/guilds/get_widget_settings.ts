@@ -5,5 +5,5 @@ import type { Bot } from "../../bot.ts";
 export async function getWidgetSettings(bot: Bot, guildId: bigint) {
   await bot.utils.requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
 
-  return await bot.rest.runMethod<GuildWidget>(bot.rest,"get", bot.constants.endpoints.GUILD_WIDGET(guildId));
+  return await bot.rest.runMethod<GuildWidget>(bot.rest, "get", bot.constants.endpoints.GUILD_WIDGET(guildId));
 }

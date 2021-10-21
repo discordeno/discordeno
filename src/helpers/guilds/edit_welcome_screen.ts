@@ -10,9 +10,9 @@ export async function editWelcomeScreen(bot: Bot, guildId: bigint, options: Modi
         channel_id: welcomeScreen.channelId,
         description: welcomeScreen.description,
         emoji_id: welcomeScreen.emojiId,
-        emoji_name: welcomeScreen.emojiName
-      }
+        emoji_name: welcomeScreen.emojiName,
+      };
     }),
-    description: options.description
+    description: options.description,
   });
 }

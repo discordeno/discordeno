@@ -9,5 +9,9 @@ export async function getWidget(bot: Bot, guildId: bigint, options?: { force: bo
     if (!guild?.widgetEnabled) throw new Error(bot.constants.Errors.GUILD_WIDGET_NOT_ENABLED);
   }
 
-  return await bot.rest.runMethod<GuildWidgetDetails>(bot.rest,"get", `${bot.constants.endpoints.GUILD_WIDGET(guildId)}.json`);
+  return await bot.rest.runMethod<GuildWidgetDetails>(
+    bot.rest,
+    "get",
+    `${bot.constants.endpoints.GUILD_WIDGET(guildId)}.json`
+  );
 }
