@@ -3,11 +3,11 @@ import { ListPublicArchivedThreads } from "../../../types/channels/threads/list_
 import { PermissionStrings } from "../../../types/permissions/permission_strings.ts";
 import { Collection } from "../../../util/collection.ts";
 import type { Bot } from "../../../bot.ts";
-import {channelToThread} from "../../../util/transformers/channel_to_thread.ts";
+import { channelToThread } from "../../../util/transformers/channel_to_thread.ts";
 
 /** Get the archived threads for this channel, defaults to public */
 export async function getArchivedThreads(
-    bot: Bot,
+  bot: Bot,
   channelId: bigint,
   options?: ListPublicArchivedThreads & {
     type?: "public" | "private" | "privateJoinedThreads";
@@ -21,18 +21,20 @@ export async function getArchivedThreads(
   // TODO: pagination
 
   const result = (await bot.rest.runMethod(
-      bot.rest,
+    bot.rest,
     "get",
     options?.type === "privateJoinedThreads"
       ? bot.constants.endpoints.THREAD_ARCHIVED_PRIVATE_JOINED(channelId)
       : options?.type === "private"
       ? bot.constants.endpoints.THREAD_ARCHIVED_PRIVATE(channelId)
       : bot.constants.endpoints.THREAD_ARCHIVED_PUBLIC(channelId),
-    options ? {
-      before: options.before,
-      limit: options.limit,
-      type: options.type
-    } : {}
+    options
+      ? {
+          before: options.before,
+          limit: options.limit,
+          type: options.type,
+        }
+      : {}
   )) as ListActiveThreads;
 
   const threads = new Collection(

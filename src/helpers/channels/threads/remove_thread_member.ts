@@ -12,5 +12,5 @@ export async function removeThreadMember(bot: Bot, threadId: bigint, userId: big
     }
   }
 
-  return await bot.rest.runMethod<undefined>(bot.rest,"delete", bot.constants.endpoints.THREAD_USER(threadId, userId));
+  return await bot.rest.runMethod<undefined>(bot.rest, "delete", bot.constants.endpoints.THREAD_USER(threadId, userId));
 }

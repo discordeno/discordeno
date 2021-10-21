@@ -7,5 +7,5 @@ export async function joinThread(bot: Bot, threadId: bigint) {
     throw new Error(bot.contants.Errors.CANNOT_ADD_USER_TO_ARCHIVED_THREADS);
   }
 
-  return await bot.rest.runMethod<undefined>(bot.rest,"put", bot.constants.endpoints.THREAD_ME(threadId));
+  return await bot.rest.runMethod<undefined>(bot.rest, "put", bot.constants.endpoints.THREAD_ME(threadId));
 }
