@@ -126,8 +126,8 @@ import {
   handleIntegrationUpdate,
   handleIntegrationDelete,
 } from "./handlers/mod.ts";
-import {Emoji} from "./types/emojis/emoji.ts";
-import {handleGuildLoaded} from "./handlers/guilds/GUILD_LOADED_DD.ts";
+import { Emoji } from "./types/emojis/emoji.ts";
+import { handleGuildLoaded } from "./handlers/guilds/GUILD_LOADED_DD.ts";
 
 export async function createBot(options: CreateBotOptions) {
   return {
