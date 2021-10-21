@@ -1,5 +1,5 @@
 import type { Message } from "../../types/messages/message.ts";
-import {SnakeCasedPropertiesDeep} from "../../types/util.ts";
+import type {SnakeCasedPropertiesDeep} from "../../types/util.ts";
 import type {Bot} from "../../bot.ts";
 
 /** Returns a previously-sent webhook message from the same token. Returns a message object on success. */

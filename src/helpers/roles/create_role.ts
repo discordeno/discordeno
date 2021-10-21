@@ -1,7 +1,7 @@
 import type { CreateGuildRole } from "../../types/guilds/create_guild_role.ts";
 import type { Role } from "../../types/permissions/role.ts";
 import type {Bot} from "../../bot.ts";
-import {SnakeCasedPropertiesDeep} from "../../types/util.ts";
+import type {SnakeCasedPropertiesDeep} from "../../types/util.ts";
 
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
 export async function createRole(bot: Bot, guildId: bigint, options: CreateGuildRole, reason?: string) {
