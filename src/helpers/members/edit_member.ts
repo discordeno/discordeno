@@ -1,8 +1,8 @@
 import type { ModifyGuildMember } from "../../types/guilds/modify_guild_member.ts";
 import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
-import type {Bot} from "../../bot.ts";
-import type {SnakeCasedPropertiesDeep} from "../../types/util.ts";
+import type { Bot } from "../../bot.ts";
+import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Edit the member */
 export async function editMember(bot: Bot, guildId: bigint, memberId: bigint, options: ModifyGuildMember) {
@@ -35,25 +35,25 @@ export async function editMember(bot: Bot, guildId: bigint, memberId: bigint, op
     if (options.channelId) {
       const requiredVoicePerms: Set<PermissionStrings> = new Set(["CONNECT", "MOVE_MEMBERS"]);
       if (memberVoiceState) {
-        await bot.utils.requireBotChannelPermissions(bot,memberVoiceState?.channelId, [...requiredVoicePerms]);
+        await bot.utils.requireBotChannelPermissions(bot, memberVoiceState?.channelId, [...requiredVoicePerms]);
       }
-      await bot.utils.requireBotChannelPermissions(bot,options.channelId, [...requiredVoicePerms]);
+      await bot.utils.requireBotChannelPermissions(bot, options.channelId, [...requiredVoicePerms]);
     }
   }
 
-  await bot.utils.requireBotGuildPermissions(bot,guildId, [...requiredPerms]);
+  await bot.utils.requireBotGuildPermissions(bot, guildId, [...requiredPerms]);
 
   const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<GuildMemberWithUser>>(
-      bot.rest,
+    bot.rest,
     "patch",
     bot.constants.endpoints.GUILD_MEMBER(guildId, memberId),
-      {
-        nick: options.nick,
-        roles: options.roles,
-        mute: options.mute,
-        deaf: options.deaf,
-        channel_id: options.channelId
-      }
+    {
+      nick: options.nick,
+      roles: options.roles,
+      mute: options.mute,
+      deaf: options.deaf,
+      channel_id: options.channelId,
+    }
   );
 
   return bot.transformers.member(bot, result, guildId);

@@ -1,9 +1,9 @@
 import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
 import type { SearchGuildMembers } from "../../types/members/search_guild_members.ts";
 import { Collection } from "../../util/collection.ts";
-import {Bot} from "../../bot.ts";
-import {DiscordenoMember} from "../../transformers/member.ts";
-import type {SnakeCasedPropertiesDeep} from "../../types/util.ts";
+import { Bot } from "../../bot.ts";
+import { DiscordenoMember } from "../../transformers/member.ts";
+import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /**
  * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM cache.members.filter()
@@ -13,7 +13,7 @@ import type {SnakeCasedPropertiesDeep} from "../../types/util.ts";
  * @param options
  */
 export async function searchMembers(
-    bot: Bot,
+  bot: Bot,
   guildId: bigint,
   query: string,
   options?: Omit<SearchGuildMembers, "query"> & { cache?: boolean }
@@ -25,10 +25,15 @@ export async function searchMembers(
     }
   }
 
-  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<GuildMemberWithUser>[]>(bot.rest,"get", bot.constants.endpoints.GUILD_MEMBERS_SEARCH(guildId), {
-    ...options,
-    query,
-  });
+  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<GuildMemberWithUser>[]>(
+    bot.rest,
+    "get",
+    bot.constants.endpoints.GUILD_MEMBERS_SEARCH(guildId),
+    {
+      ...options,
+      query,
+    }
+  );
 
   const members = await Promise.all(
     result.map(async (member) => {

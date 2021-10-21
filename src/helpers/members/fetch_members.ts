@@ -1,9 +1,9 @@
 import type { RequestGuildMembers } from "../../types/members/request_guild_members.ts";
 import { Collection } from "../../util/collection.ts";
-import type {Bot} from "../../bot.ts";
-import {DiscordGatewayIntents} from "../../types/gateway/gateway_intents.ts";
-import {DiscordGatewayOpcodes} from "../../types/codes/gateway_opcodes.ts";
-import type {DiscordenoMember} from "../../transformers/member.ts";
+import type { Bot } from "../../bot.ts";
+import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
+import { DiscordGatewayOpcodes } from "../../types/codes/gateway_opcodes.ts";
+import type { DiscordenoMember } from "../../transformers/member.ts";
 
 /**
  * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM cache.members.get()
@@ -13,7 +13,12 @@ import type {DiscordenoMember} from "../../transformers/member.ts";
  * REST: 50/s global(across all shards) rate limit with ALL requests this included
  * GW(this function): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is now 960/m.
  */
-export function fetchMembers(bot: Bot, guildId: bigint, shardId: number, options?: Omit<RequestGuildMembers, "guildId">) {
+export function fetchMembers(
+  bot: Bot,
+  guildId: bigint,
+  shardId: number,
+  options?: Omit<RequestGuildMembers, "guildId">
+) {
   // You can request 1 member without the intent
   // Check if intents is not 0 as proxy ws won't set intents in other instances
   if (

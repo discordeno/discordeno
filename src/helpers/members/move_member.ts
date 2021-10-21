@@ -1,4 +1,4 @@
-import type {Bot} from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 
 /**
  * Move a member from a voice channel to another.

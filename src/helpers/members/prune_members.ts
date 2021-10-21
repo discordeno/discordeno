@@ -1,5 +1,5 @@
 import type { BeginGuildPrune } from "../../types/guilds/begin_guild_prune.ts";
-import type {Bot} from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 
 /**
  * Begin a prune operation. Requires the KICK_MEMBERS permission. Returns an object with one 'pruned' key indicating the number of members that were removed in the prune operation. For large guilds it's recommended to set the computePruneCount option to false, forcing 'pruned' to null. Fires multiple Guild Member Remove Gateway events.
@@ -10,13 +10,18 @@ export async function pruneMembers(bot: Bot, guildId: bigint, options: BeginGuil
   if (options.days && options.days < 1) throw new Error(bot.constants.Errors.PRUNE_MIN_DAYS);
   if (options.days && options.days > 30) throw new Error(bot.constants.Errors.PRUNE_MAX_DAYS);
 
-  await bot.utils.requireBotGuildPermissions(bot,guildId, ["KICK_MEMBERS"]);
+  await bot.utils.requireBotGuildPermissions(bot, guildId, ["KICK_MEMBERS"]);
 
-  const result = await bot.rest.runMethod<{ pruned: number }>(bot.rest,"post", bot.constants.endpoints.GUILD_PRUNE(guildId), {
-    days: options.days,
-    compute_prune_count: options.computePruneCount,
-    include_roles: options.includeRoles
-  });
+  const result = await bot.rest.runMethod<{ pruned: number }>(
+    bot.rest,
+    "post",
+    bot.constants.endpoints.GUILD_PRUNE(guildId),
+    {
+      days: options.days,
+      compute_prune_count: options.computePruneCount,
+      include_roles: options.includeRoles,
+    }
+  );
 
   return result.pruned;
 }

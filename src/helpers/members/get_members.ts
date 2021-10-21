@@ -1,10 +1,10 @@
 import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
 import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
 import type { ListGuildMembers } from "../../types/members/list_guild_members.ts";
-import type {Bot} from "../../bot.ts";
-import {Collection} from "../../util/collection.ts";
-import type {DiscordenoMember} from "../../transformers/member.ts";
-import type {SnakeCasedPropertiesDeep} from "../../types/util.ts";
+import type { Bot } from "../../bot.ts";
+import { Collection } from "../../util/collection.ts";
+import type { DiscordenoMember } from "../../transformers/member.ts";
+import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /**
  * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM cache.members.get()
@@ -16,7 +16,10 @@ import type {SnakeCasedPropertiesDeep} from "../../types/util.ts";
  */
 export async function getMembers(bot: Bot, guildId: bigint, options?: ListGuildMembers & { addToCache?: boolean }) {
   // Check if intents is not 0 as proxy ws won't set intents in other instances
-  if (bot.gateway.identifyPayload.intents && !(bot.gateway.identifyPayload.intents & DiscordGatewayIntents.GuildMembers)) {
+  if (
+    bot.gateway.identifyPayload.intents &&
+    !(bot.gateway.identifyPayload.intents & DiscordGatewayIntents.GuildMembers)
+  ) {
     throw new Error(bot.cache.Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
@@ -35,7 +38,7 @@ export async function getMembers(bot: Bot, guildId: bigint, options?: ListGuildM
     }
 
     const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<GuildMemberWithUser>[]>(
-        bot.rest,
+      bot.rest,
       "get",
       `${bot.constants.endpoints.GUILD_MEMBERS(guildId)}?limit=${membersLeft > 1000 ? 1000 : membersLeft}${
         options?.after ? `&after=${options.after}` : ""

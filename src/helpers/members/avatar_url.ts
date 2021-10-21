@@ -1,10 +1,10 @@
 import type { DiscordImageFormat } from "../../types/misc/image_format.ts";
 import type { DiscordImageSize } from "../../types/misc/image_size.ts";
-import type {Bot} from "../../bot.ts";
+import type { Bot } from "../../bot.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
 export function avatarURL(
-    bot: Bot,
+  bot: Bot,
   userId: bigint,
   discriminator: number,
   options: {
