@@ -57,7 +57,7 @@ import {
   USER_AGENT,
 } from "./util/constants.ts";
 import { Errors } from "./types/discordeno/errors.ts";
-import {GatewayDispatchEventNames, GatewayPayload} from "./types/gateway/gateway_payload.ts";
+import { GatewayDispatchEventNames, GatewayPayload } from "./types/gateway/gateway_payload.ts";
 import {
   closeWS,
   handleOnMessage,
@@ -82,7 +82,8 @@ import {
   handleChannelDelete,
   handleChannelPinsUpdate,
   handleChannelUpdate,
-  handleGuildBanAdd, handleGuildBanRemove,
+  handleGuildBanAdd,
+  handleGuildBanRemove,
   handleGuildCreate,
   handleGuildDelete,
   handleGuildEmojisUpdate,
@@ -90,35 +91,43 @@ import {
   handleGuildMemberAdd,
   handleGuildMemberRemove,
   handleGuildMembersChunk,
-  handleGuildMemberUpdate, handleGuildRoleCreate,
+  handleGuildMemberUpdate,
+  handleGuildRoleCreate,
   handleGuildRoleDelete,
   handleGuildRoleUpdate,
   handleGuildUpdate,
   handleIntegrationCreate,
-  handleIntegrationDelete, handleIntegrationUpdate, handleInteractionCreate,
-  handleInviteCreate, handleMessageCreate,
+  handleIntegrationDelete,
+  handleIntegrationUpdate,
+  handleInteractionCreate,
+  handleInviteCreate,
+  handleMessageCreate,
   handleMessageDelete,
-  handleMessageDeleteBulk, handleMessageReactionAdd,
+  handleMessageDeleteBulk,
+  handleMessageReactionAdd,
   handleMessageReactionRemove,
   handleMessageReactionRemoveAll,
   handleMessageReactionRemoveEmoji,
-  handleMessageUpdate, handlePresenceUpdate,
+  handleMessageUpdate,
+  handlePresenceUpdate,
   handleReady,
-  handleStageInstanceCreate, handleStageInstanceDelete,
+  handleStageInstanceCreate,
+  handleStageInstanceDelete,
   handleStageInstanceUpdate,
   handleThreadCreate,
   handleThreadDelete,
   handleThreadListSync,
   handleThreadMembersUpdate,
   handleThreadMemberUpdate,
-  handleThreadUpdate, handleTypingStart,
+  handleThreadUpdate,
+  handleTypingStart,
   handleUserUpdate,
   handleVoiceServerUpdate,
   handleVoiceStateUpdate,
-  handleWebhooksUpdate
+  handleWebhooksUpdate,
 } from "./handlers/mod.ts";
-import {handleGuildLoaded} from "./handlers/guilds/GUILD_LOADED_DD.ts";
-import {Emoji} from "./types/emojis/emoji.ts";
+import { handleGuildLoaded } from "./handlers/guilds/GUILD_LOADED_DD.ts";
+import { Emoji } from "./types/emojis/emoji.ts";
 
 export async function createBot(options: CreateBotOptions) {
   return {
