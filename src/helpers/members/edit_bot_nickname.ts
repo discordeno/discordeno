@@ -1,12 +1,10 @@
-import { rest } from "../../rest/rest.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotGuildPermissions } from "../../util/permissions.ts";
+import type {Bot} from "../../bot.ts";
 
 /** Edit the nickname of the bot in this guild */
-export async function editBotNickname(guildId: bigint, nickname: string | null) {
-  await requireBotGuildPermissions(guildId, ["CHANGE_NICKNAME"]);
+export async function editBotNickname(bot: Bot, guildId: bigint, nickname: string | null) {
+  await bot.utils.requireBotGuildPermissions(bot,guildId, ["CHANGE_NICKNAME"]);
 
-  const response = await rest.runMethod<{ nick: string }>("patch", endpoints.USER_NICK(guildId), {
+  const response = await bot.rest.runMethod<{ nick: string }>(bot.rest,"patch", bot.constants.endpoints.USER_NICK(guildId), {
     nick: nickname,
   });
 

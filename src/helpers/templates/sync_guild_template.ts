@@ -6,7 +6,7 @@ import type { Bot } from "../../bot.ts";
  * Requires the `MANAGE_GUILD` permission.
  */
 export async function syncGuildTemplate(bot: Bot, guildId: bigint, templateCode: string) {
-  await bot.utils.requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
+  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
   return await bot.rest.runMethod<Template>(
     bot.rest,

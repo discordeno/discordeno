@@ -1,16 +1,10 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
-import { rest } from "../../rest/rest.ts";
-import { DiscordenoMember } from "../../structures/member.ts";
-import { structures } from "../../structures/mod.ts";
-import { Errors } from "../../types/discordeno/errors.ts";
 import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
 import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
 import type { ListGuildMembers } from "../../types/members/list_guild_members.ts";
-import { bigintToSnowflake } from "../../util/bigint.ts";
-import { Collection } from "../../util/collection.ts";
-import { endpoints } from "../../util/constants.ts";
-import { ws } from "../../ws/ws.ts";
+import type {Bot} from "../../bot.ts";
+import {Collection} from "../../util/collection.ts";
+import type {DiscordenoMember} from "../../transformers/member.ts";
+import type {SnakeCasedPropertiesDeep} from "../../types/util.ts";
 
 /**
  * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM cache.members.get()
@@ -20,14 +14,14 @@ import { ws } from "../../ws/ws.ts";
  * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
  */
-export async function getMembers(guildId: bigint, options?: ListGuildMembers & { addToCache?: boolean }) {
+export async function getMembers(bot: Bot, guildId: bigint, options?: ListGuildMembers & { addToCache?: boolean }) {
   // Check if intents is not 0 as proxy ws won't set intents in other instances
-  if (ws.identifyPayload.intents && !(ws.identifyPayload.intents & DiscordGatewayIntents.GuildMembers)) {
-    throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
+  if (bot.gateway.identifyPayload.intents && !(bot.gateway.identifyPayload.intents & DiscordGatewayIntents.GuildMembers)) {
+    throw new Error(bot.cache.Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
   const guild = await cacheHandlers.get("guilds", guildId);
-  if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
+  if (!guild) throw new Error(bot.constants.Errors.GUILD_NOT_FOUND);
 
   const members = new Collection<bigint, DiscordenoMember>();
 
@@ -40,19 +34,20 @@ export async function getMembers(guildId: bigint, options?: ListGuildMembers & {
       console.log(`Paginating get members from REST. #${loops} / ${Math.ceil((options?.limit ?? 1) / 1000)}`);
     }
 
-    const result = await rest.runMethod<GuildMemberWithUser[]>(
+    const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<GuildMemberWithUser>[]>(
+        bot.rest,
       "get",
-      `${endpoints.GUILD_MEMBERS(guildId)}?limit=${membersLeft > 1000 ? 1000 : membersLeft}${
+      `${bot.constants.endpoints.GUILD_MEMBERS(guildId)}?limit=${membersLeft > 1000 ? 1000 : membersLeft}${
         options?.after ? `&after=${options.after}` : ""
       }`
     );
 
     const discordenoMembers = await Promise.all(
       result.map(async (member) => {
-        const discordenoMember = await structures.createDiscordenoMember(member, guildId);
+        const discordenoMember = bot.transformers.member(member, guildId);
 
         if (options?.addToCache !== false) {
-          await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
+          await bot.cache.members.set(discordenoMember.id, discordenoMember);
         }
 
         return discordenoMember;
@@ -62,13 +57,13 @@ export async function getMembers(guildId: bigint, options?: ListGuildMembers & {
     if (!discordenoMembers.length) break;
 
     discordenoMembers.forEach((member) => {
-      eventHandlers.debug?.("loop", `Running forEach loop in get_members file.`);
+      bot.events.debug("loop", `Running forEach loop in get_members file.`);
       members.set(member.id, member);
     });
 
     options = {
       limit: options?.limit,
-      after: bigintToSnowflake(discordenoMembers[discordenoMembers.length - 1].id),
+      after: bot.transformers.snowflake(discordenoMembers[discordenoMembers.length - 1].id),
     };
 
     membersLeft -= 1000;
