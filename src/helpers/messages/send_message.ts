@@ -78,12 +78,25 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
     "post",
     bot.constants.endpoints.CHANNEL_MESSAGES(channelId),
     bot.utils.snakelize({
-      ...content,
+      content: content.content,
+      tts: content.tts,
+      embeds: content.embeds,
+      allowed_mentions: {
+        parse: content.allowedMentions.parse,
+        roles: content.allowedMentions.roles,
+        users: content.allowedMentions.users,
+        replied_user: content.allowedMentions.repliedUser
+      },
+      file: content.file,
+      // TODO: Snakelize components??
+      components: content.components,
       ...(content.messageReference?.messageId
         ? {
-            messageReference: {
-              ...content.messageReference,
-              failIfNotExists: content.messageReference.failIfNotExists === true,
+            message_reference: {
+              message_id: content.messageReference.messageId,
+              channel_id: content.messageReference.channelId,
+              guild_id: content.messageReference.guildId,
+              fail_if_not_exists: content.messageReference.failIfNotExists === true,
             },
           }
         : {}),

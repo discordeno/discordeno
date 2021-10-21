@@ -1,12 +1,11 @@
-import { applicationId } from "../../../bot.ts";
-import { rest } from "../../../rest/rest.ts";
+import type {Bot} from "../../../bot.ts";
 import type { GuildApplicationCommandPermissions } from "../../../types/interactions/commands/guild_application_command_permissions.ts";
-import { endpoints } from "../../../util/constants.ts";
 
 /** Fetches command permissions for all commands for your application in a guild. Returns an array of GuildApplicationCommandPermissions objects. */
-export async function getSlashCommandPermissions(guildId: bigint) {
-  return await rest.runMethod<GuildApplicationCommandPermissions[]>(
+export async function getSlashCommandPermissions(bot: Bot, guildId: bigint) {
+  return await bot.rest.runMethod<GuildApplicationCommandPermissions[]>(
+      bot.rest,
     "get",
-    endpoints.COMMANDS_PERMISSIONS(applicationId, guildId)
+    bot.constants.endpoints.COMMANDS_PERMISSIONS(bot.applicationId, guildId)
   );
 }

@@ -1,21 +1,18 @@
-import { applicationId } from "../../../bot.ts";
-import { rest } from "../../../rest/rest.ts";
 import type { ApplicationCommand } from "../../../types/interactions/commands/application_command.ts";
-import { snowflakeToBigint } from "../../../util/bigint.ts";
-import { endpoints } from "../../../util/constants.ts";
+import type {Bot} from "../../../bot.ts";
 
-/** Fetchs the global command for the given Id. If a guildId is provided, the guild command will be fetched. */
-export async function getSlashCommand(commandId: bigint, guildId?: bigint) {
-  const result = await rest.runMethod<ApplicationCommand>(
+/** Fetches the global command for the given Id. If a guildId is provided, the guild command will be fetched. */
+export async function getSlashCommand(bot: Bot, commandId: bigint, guildId?: bigint) {
+  const result = await bot.rest.runMethod<ApplicationCommand>(
     "get",
     guildId
-      ? endpoints.COMMANDS_GUILD_ID(applicationId, guildId, commandId)
-      : endpoints.COMMANDS_ID(applicationId, commandId)
+      ? bot.constants.endpoints.COMMANDS_GUILD_ID(bot.applicationId, guildId, commandId)
+      : bot.constants.endpoints.COMMANDS_ID(bot.applicationId, commandId)
   );
 
   return {
     ...result,
-    id: snowflakeToBigint(result.id),
-    applicationId: snowflakeToBigint(result.applicationId),
+    id: bot.transformers.snowflake(result.id),
+    applicationId: bot.transformers.snowflake(result.applicationId),
   };
 }

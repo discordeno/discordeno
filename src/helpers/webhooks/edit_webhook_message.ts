@@ -54,8 +54,14 @@ export async function editWebhookMessage(
       content: options.content,
       embeds: options.embeds,
       file: options.file,
-      allowedMentions: options.allowed_mentions,
+      allowed_mentions: {
+        parse: content.allowedMentions.parse,
+        roles: content.allowedMentions.roles,
+        users: content.allowedMentions.users,
+        replied_user: content.allowedMentions.repliedUser
+      },
       attachments: options.attachments,
+      // TODO: Snakelize components??
       components: options.components,
       message_id: options.messageId,
     }
