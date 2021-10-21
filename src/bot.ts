@@ -476,7 +476,7 @@ export interface Transformers {
   role: typeof transformRole;
   voiceState: typeof transformVoiceState;
   interaction: typeof transformInteraction;
-  integration: typeof transformIntegration,
+  integration: typeof transformIntegration;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
