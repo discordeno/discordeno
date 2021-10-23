@@ -12,5 +12,5 @@ export async function getStageInstance(bot: Bot, channelId: bigint) {
     }
   }
 
-  return await bot.rest.runMethod<StageInstance>(bot.rest,"get", bot.constants.endpoints.STAGE_INSTANCE(channelId));
+  return await bot.rest.runMethod<StageInstance>(bot.rest, "get", bot.constants.endpoints.STAGE_INSTANCE(channelId));
 }

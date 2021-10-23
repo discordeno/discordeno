@@ -6,7 +6,11 @@ import type { Bot } from "../../bot.ts";
 export async function getChannelWebhooks(bot: Bot, channelId: bigint) {
   await bot.utils.requireBotChannelPermissions(bot, channelId, ["MANAGE_WEBHOOKS"]);
 
-  const result = await bot.rest.runMethod<Webhook[]>(bot.rest,"get", bot.constants.endpoints.CHANNEL_WEBHOOKS(channelId));
+  const result = await bot.rest.runMethod<Webhook[]>(
+    bot.rest,
+    "get",
+    bot.constants.endpoints.CHANNEL_WEBHOOKS(channelId)
+  );
 
   return new Collection(result.map((webhook) => [webhook.id, webhook]));
 }

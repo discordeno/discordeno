@@ -125,11 +125,11 @@ import {
   handleIntegrationCreate,
   handleIntegrationUpdate,
   handleIntegrationDelete,
-  handleGuildLoaded
+  handleGuildLoaded,
 } from "./handlers/mod.ts";
 import { DiscordenoInteraction, transformInteraction } from "./transformers/interaction.ts";
 import { DiscordenoIntegration, transformIntegration } from "./transformers/integration.ts";
-import {Emoji} from "./types/emojis/emoji.ts";
+import { Emoji } from "./types/emojis/emoji.ts";
 import { transformApplication } from "./transformers/application.ts";
 import { transformTeam } from "./transformers/team.ts";
 import { DiscordenoInvite, transformInvite } from "./transformers/invite.ts";

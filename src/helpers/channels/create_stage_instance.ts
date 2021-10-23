@@ -19,14 +19,9 @@ export async function createStageInstance(bot: Bot, channelId: bigint, topic: st
     throw new Error(bot.constants.Errors.INVALID_TOPIC_LENGTH);
   }
 
-  return await bot.rest.runMethod<StageInstance>(
-      bot.rest,
-    "post",
-    bot.constants.endpoints.STAGE_INSTANCES,
-    {
-      channel_id: channelId,
-      topic,
-      privacy_level: privacyLevel,
-    }
-  );
+  return await bot.rest.runMethod<StageInstance>(bot.rest, "post", bot.constants.endpoints.STAGE_INSTANCES, {
+    channel_id: channelId,
+    topic,
+    privacy_level: privacyLevel,
+  });
 }

@@ -5,9 +5,14 @@ import type { Bot } from "../../bot.ts";
 export async function followChannel(bot: Bot, sourceChannelId: bigint, targetChannelId: bigint) {
   await bot.utils.requireBotChannelPermissions(bot, targetChannelId, ["MANAGE_WEBHOOKS"]);
 
-  const data = await bot.rest.runMethod<FollowedChannel>(bot.rest,"post", bot.constants.endpoints.CHANNEL_FOLLOW(sourceChannelId), {
-    webhook_channel_id: targetChannelId,
-  });
+  const data = await bot.rest.runMethod<FollowedChannel>(
+    bot.rest,
+    "post",
+    bot.constants.endpoints.CHANNEL_FOLLOW(sourceChannelId),
+    {
+      webhook_channel_id: targetChannelId,
+    }
+  );
 
   return data.webhookId;
 }

@@ -18,14 +18,17 @@ export async function updateBotVoiceState(
   options: UpdateSelfVoiceState | ({ userId: bigint } & UpdateOthersVoiceState)
 ) {
   return await bot.rest.runMethod(
-      bot.rest,
+    bot.rest,
     "patch",
-    bot.constants.endpoints.UPDATE_VOICE_STATE(guildId, bot.utils.hasOwnProperty(options, "userId") ? options.userId : undefined),
-      {
-        channel_id: options.channelId,
-        suppress: options.suppress,
-        request_to_speak_timestamp: options.requestToSpeakTimestamp,
-        user_id: options.userId
-      }
+    bot.constants.endpoints.UPDATE_VOICE_STATE(
+      guildId,
+      bot.utils.hasOwnProperty(options, "userId") ? options.userId : undefined
+    ),
+    {
+      channel_id: options.channelId,
+      suppress: options.suppress,
+      request_to_speak_timestamp: options.requestToSpeakTimestamp,
+      user_id: options.userId,
+    }
   );
 }
