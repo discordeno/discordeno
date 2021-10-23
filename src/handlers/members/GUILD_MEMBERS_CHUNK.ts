@@ -1,37 +1,30 @@
-import { cache, cacheHandlers } from "../../cache.ts";
-import { structures } from "../../structures/mod.ts";
+import { Bot } from "../../bot.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { GuildMembersChunk } from "../../types/members/guild_members_chunk.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
-import { Collection } from "../../util/collection.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleGuildMembersChunk(data: DiscordGatewayPayload) {
-  const payload = data.d as GuildMembersChunk;
+export async function handleGuildMembersChunk(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<GuildMembersChunk>;
 
-  const guildId = snowflakeToBigint(payload.guildId);
+  const guildId = bot.transformers.snowflake(payload.guild_id);
 
-  const members = await Promise.all(
-    payload.members.map(async (member) => {
-      const discordenoMember = await structures.createDiscordenoMember(member, guildId);
-      await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
+  await bot.cache.execute("GUILD_MEMBER_CHUNK", {
+    members: payload.members.map((m) => bot.transformers.member(bot, m, guildId)),
+    users: payload.members.map((m) => bot.transformers.user(bot, m.user)),
+  });
 
-      return discordenoMember;
-    })
-  );
-
+  if (!payload.nonce) return;
+  
   // Check if its necessary to resolve the fetchmembers promise for this chunk or if more chunks will be coming
-  if (payload.nonce) {
-    const resolve = cache.fetchAllMembersProcessingRequests.get(payload.nonce);
-    if (!resolve) return;
+  const resolve = bot.cache.fetchAllMembersProcessingRequests.get(payload.nonce);
+  if (!resolve) return;
 
-    if (payload.chunkIndex + 1 === payload.chunkCount) {
-      cache.fetchAllMembersProcessingRequests.delete(payload.nonce);
-      // Only 1 chunk most likely is all members or users only request a small amount of users
-      if (payload.chunkCount === 1) {
-        return resolve(new Collection(members.map((m) => [m.id, m])));
-      }
-
-      return resolve(await cacheHandlers.filter("GET_MEMBERS_IN_GUILD", { guildId }));
-    }
+  if (payload.chunk_index + 1 === payload.chunk_count) {
+    bot.cache.fetchAllMembersProcessingRequests.delete(payload.nonce);
+    return resolve("Finished chunking members");
   }
 }
+
+// TODO: add a helper function that runs await fetch
+// await fetchMembers();
+// const members = await bot.cache.members.findMany(guildId);
