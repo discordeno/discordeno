@@ -1,20 +1,18 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
+import { Bot } from "../../bot.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { GuildMemberRemove } from "../../types/members/guild_member_remove.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
-export async function handleGuildMemberRemove(data: DiscordGatewayPayload) {
-  const payload = data.d as GuildMemberRemove;
-  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
-  if (!guild) return;
+export async function handleGuildMemberRemove(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<GuildMemberRemove>;
+  const guildId = bot.transformers.snowflake(payload.guild_id);
+  const user = bot.transformers.user(bot, payload.user);
 
-  guild.memberCount--;
-  const member = await cacheHandlers.get("members", snowflakeToBigint(payload.user.id));
-  eventHandlers.guildMemberRemove?.(guild, payload.user, member);
+  await Promise.all([
+    bot.cache.members.delete(user.id),
+    bot.cache.execute("GUILD_MEMBER_COUNT_DECREMENT", { guildId }),
+  ]);
 
-  member?.guilds.delete(guild.id);
-  if (member && !member.guilds.size) {
-    await cacheHandlers.delete("members", member.id);
-  }
+  bot.events.guildMemberRemove(bot, user, guildId);
 }
