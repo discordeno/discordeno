@@ -249,6 +249,7 @@ export function createEventHandlers(events: Partial<EventHandlers>): EventHandle
     inviteDelete: events.inviteDelete ?? ignore,
     guildMemberAdd: events.guildMemberAdd ?? ignore,
     guildMemberRemove: events.guildMemberRemove ?? ignore,
+    guildMemberUpdate: events.guildMemberUpdate ?? ignore,
     channelCreate: events.channelCreate ?? ignore,
     voiceChannelLeave: events.voiceChannelLeave ?? ignore,
     channelDelete: events.channelDelete ?? ignore,
