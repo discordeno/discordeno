@@ -1,11 +1,14 @@
-import { rest } from "../../rest/rest.ts";
 import type { DiscoveryMetadata } from "../../types/discovery/discovery_metadata.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotGuildPermissions } from "../../util/permissions.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Returns the discovery metadata object for the guild. Requires the `MANAGE_GUILD` permission. */
-export async function getDiscovery(guildId: bigint) {
-  await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
+export async function getDiscovery(bot: Bot, guildId: bigint) {
+  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-  return await rest.runMethod<DiscoveryMetadata>("get", endpoints.DISCOVERY_METADATA(guildId));
+  return await bot.rest.runMethod<SnakeCasedPropertiesDeep<DiscoveryMetadata>>(
+    bot.rest,
+    "get",
+    bot.constants.endpoints.DISCOVERY_METADATA(guildId)
+  );
 }

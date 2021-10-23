@@ -1,17 +1,18 @@
-import { botId } from "../../bot.ts";
-import { rest } from "../../rest/rest.ts";
-import { Errors } from "../../types/discordeno/errors.ts";
-import { endpoints } from "../../util/constants.ts";
-import { isHigherPosition, requireBotGuildPermissions } from "../../util/permissions.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Remove a role from the member */
-export async function removeRole(guildId: bigint, memberId: bigint, roleId: bigint, reason?: string) {
-  const isHigherRolePosition = await isHigherPosition(guildId, botId, roleId);
+export async function removeRole(bot: Bot, guildId: bigint, memberId: bigint, roleId: bigint, reason?: string) {
+  const isHigherRolePosition = await bot.utils.isHigherPosition(bot, guildId, bot.id, roleId);
   if (!isHigherRolePosition) {
-    throw new Error(Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
+    throw new Error(bot.constants.Errors.BOTS_HIGHEST_ROLE_TOO_LOW);
   }
 
-  await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
+  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_ROLES"]);
 
-  return await rest.runMethod<undefined>("delete", endpoints.GUILD_MEMBER_ROLE(guildId, memberId, roleId), { reason });
+  return await bot.rest.runMethod<undefined>(
+    bot.rest,
+    "delete",
+    bot.constants.endpoints.GUILD_MEMBER_ROLE(guildId, memberId, roleId),
+    { reason }
+  );
 }

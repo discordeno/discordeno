@@ -1,20 +1,15 @@
-import { rest } from "../../rest/rest.ts";
 import type { AuditLog } from "../../types/audit_log/audit_log.ts";
 import type { GetGuildAuditLog } from "../../types/audit_log/get_guild_audit_log.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotGuildPermissions } from "../../util/permissions.ts";
-import { snakelize } from "../../util/utils.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
-export async function getAuditLogs(guildId: bigint, options?: GetGuildAuditLog) {
-  await requireBotGuildPermissions(guildId, ["VIEW_AUDIT_LOG"]);
+export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuildAuditLog) {
+  await bot.utils.requireBotGuildPermissions(bot, guildId, ["VIEW_AUDIT_LOG"]);
 
-  return await rest.runMethod<AuditLog>(
-    "get",
-    endpoints.GUILD_AUDIT_LOGS(guildId),
-    snakelize({
-      ...options,
-      limit: options?.limit && options.limit >= 1 && options.limit <= 100 ? options.limit : 50,
-    })
-  );
+  return await bot.rest.runMethod<AuditLog>(bot.rest, "get", bot.constants.endpoints.GUILD_AUDIT_LOGS(guildId), {
+    user_id: options.userId,
+    action_type: options.actionType,
+    before: options.before,
+    limit: options?.limit && options.limit >= 1 && options.limit <= 100 ? options.limit : 50,
+  });
 }

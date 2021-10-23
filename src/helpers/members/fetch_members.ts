@@ -1,11 +1,9 @@
-import { cache } from "../../cache.ts";
-import { DiscordenoMember } from "../../structures/member.ts";
-import { DiscordGatewayOpcodes } from "../../types/codes/gateway_opcodes.ts";
-import { Errors } from "../../types/discordeno/errors.ts";
-import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
 import type { RequestGuildMembers } from "../../types/members/request_guild_members.ts";
 import { Collection } from "../../util/collection.ts";
-import { ws } from "../../ws/ws.ts";
+import type { Bot } from "../../bot.ts";
+import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
+import { DiscordGatewayOpcodes } from "../../types/codes/gateway_opcodes.ts";
+import type { DiscordenoMember } from "../../transformers/member.ts";
 
 /**
  * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM cache.members.get()
@@ -15,15 +13,20 @@ import { ws } from "../../ws/ws.ts";
  * REST: 50/s global(across all shards) rate limit with ALL requests this included
  * GW(this function): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is now 960/m.
  */
-export function fetchMembers(guildId: bigint, shardId: number, options?: Omit<RequestGuildMembers, "guildId">) {
+export function fetchMembers(
+  bot: Bot,
+  guildId: bigint,
+  shardId: number,
+  options?: Omit<RequestGuildMembers, "guildId">
+) {
   // You can request 1 member without the intent
   // Check if intents is not 0 as proxy ws won't set intents in other instances
   if (
-    ws.identifyPayload.intents &&
+    bot.gateway.identifyPayload.intents &&
     (!options?.limit || options.limit > 1) &&
-    !(ws.identifyPayload.intents & DiscordGatewayIntents.GuildMembers)
+    !(bot.gateway.identifyPayload.intents & DiscordGatewayIntents.GuildMembers)
   ) {
-    throw new Error(Errors.MISSING_INTENT_GUILD_MEMBERS);
+    throw new Error(bot.constants.Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
   if (options?.userIds?.length) {
@@ -32,9 +35,10 @@ export function fetchMembers(guildId: bigint, shardId: number, options?: Omit<Re
 
   return new Promise((resolve) => {
     const nonce = `${guildId}-${Date.now()}`;
+    // TODO: FIND A BETTER WAY TO DO THAT?
     cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
 
-    ws.sendShardMessage(shardId, {
+    bot.gateway.sendShardMessage(shardId, {
       op: DiscordGatewayOpcodes.RequestGuildMembers,
       d: {
         guild_id: guildId,

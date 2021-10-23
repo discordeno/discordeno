@@ -1,6 +1,6 @@
-import { editThread } from "./edit_thread.ts";
+import type { Bot } from "../../../bot.ts";
 
 /** Sets a thread channel to be locked. */
-export async function lockThread(threadId: bigint) {
-  return await editThread(threadId, { locked: true });
+export async function lockThread(bot: Bot, threadId: bigint) {
+  return await bot.utils.editThread(bot, threadId, { locked: true });
 }

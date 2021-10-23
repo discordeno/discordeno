@@ -11,46 +11,41 @@ import {
   requireChannelPermissions,
   highestRole,
   higherRolePosition,
+  requireBotChannelPermissions,
+  requireBotGuildPermissions,
 } from "./util/permissions.ts";
 import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
-import { checkRateLimits } from "./rest/check_rate_limits.ts";
-import { cleanupQueues } from "./rest/cleanup_queues.ts";
-import { createRequestBody } from "./rest/create_request_body.ts";
-import { processRateLimitedPaths } from "./rest/process_rate_limited_paths.ts";
-import { processRequest } from "./rest/process_request.ts";
-import { processRequestHeaders } from "./rest/process_request_headers.ts";
+import {
+  checkRateLimits,
+  processQueue,
+  cleanupQueues,
+  createRequestBody,
+  processRateLimitedPaths,
+  processRequest,
+  processRequestHeaders,
+  runMethod,
+  processGlobalQueue,
+  simplifyUrl,
+} from "./rest/mod.ts";
 import type { RestPayload, RestRateLimitedPath, RestRequest } from "./rest/rest.ts";
-import { runMethod } from "./rest/run_method.ts";
-import { simplifyUrl } from "./rest/simplify_url.ts";
 import { DiscordGatewayIntents } from "./types/gateway/gateway_intents.ts";
 import { GetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
-import { dispatchRequirements } from "./util/dispatch_requirements.ts";
-import { processQueue } from "./rest/process_queue.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
 import { Collection } from "./util/collection.ts";
-import type { DiscordenoMember, DiscordenoUser } from "./transformers/member.ts";
-import { transformMember, transformUser } from "./transformers/member.ts";
-import { SnakeCasedPropertiesDeep } from "./types/util.ts";
-import { Channel } from "./types/channels/channel.ts";
-import { DiscordenoChannel, transformChannel } from "./transformers/channel.ts";
-import { DiscordenoVoiceState, transformVoiceState } from "./transformers/voice_state.ts";
-import { transformRole } from "./transformers/role.ts";
-import { transformMessage } from "./transformers/message.ts";
-import { DiscordenoGuild, transformGuild } from "./transformers/guild.ts";
-import type { DiscordenoShard } from "./ws/ws.ts";
-import { startGateway } from "./ws/start_gateway.ts";
-import { spawnShards } from "./ws/spawn_shards.ts";
-import { createShard } from "./ws/create_shard.ts";
-import { identify } from "./ws/identify.ts";
-import { heartbeat } from "./ws/heartbeat.ts";
-import { resharder } from "./ws/resharder.ts";
-import { tellClusterToIdentify } from "./ws/tell_cluster_to_identify.ts";
-import { log } from "./ws/events.ts";
-import { handleOnMessage } from "./ws/handle_on_message.ts";
-import { closeWS } from "./ws/close_ws.ts";
-import { sendShardMessage } from "./ws/send_shard_message.ts";
-import { resume } from "./ws/resume.ts";
-import { calculateShardId } from "./util/calculate_shard_id.ts";
+import {
+  DiscordenoMember,
+  DiscordenoUser,
+  transformMember,
+  transformUser,
+  DiscordenoGuild,
+  transformGuild,
+  DiscordenoChannel,
+  transformChannel,
+  transformMessage,
+  transformRole,
+  DiscordenoVoiceState,
+  transformVoiceState,
+} from "./transformers/mod.ts";
 import {
   baseEndpoints,
   CHANNEL_MENTION_REGEX,
@@ -61,15 +56,27 @@ import {
   SLASH_COMMANDS_NAME_REGEX,
   USER_AGENT,
 } from "./util/constants.ts";
-import { GatewayDispatchEventNames, GatewayEventNames, GatewayPayload } from "./types/gateway/gateway_payload.ts";
-import { delay, validateSlashOptionChoices, validateSlashOptions } from "./util/utils.ts";
-import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
+import { Errors } from "./types/discordeno/errors.ts";
+import { GatewayDispatchEventNames, GatewayPayload } from "./types/gateway/gateway_payload.ts";
+import {
+  closeWS,
+  handleOnMessage,
+  resume,
+  resharder,
+  log,
+  startGateway,
+  spawnShards,
+  createShard,
+  identify,
+  heartbeat,
+  tellClusterToIdentify,
+  sendShardMessage,
+  DiscordenoShard,
+} from "./ws/mod.ts";
 import { validateLength } from "./util/validate_length.ts";
-import { processGlobalQueue } from "./rest/process_global_queue.ts";
-import { ChannelPinsUpdate } from "./types/channels/channel_pins_update.ts";
-import { ApplicationCommandTypes, Emoji, IntegrationCreateUpdate } from "./types/mod.ts";
-import { ApplicationCommandOption } from "./types/mod.ts";
-import { handleGuildLoaded } from "./handlers/guilds/GUILD_LOADED_DD.ts";
+import { delay, validateComponents, validateSlashOptionChoices, validateSlashOptions } from "./util/utils.ts";
+import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
+import { calculateShardId } from "./util/calculate_shard_id.ts";
 import {
   handleReady,
   handleChannelCreate,
@@ -118,9 +125,11 @@ import {
   handleIntegrationCreate,
   handleIntegrationUpdate,
   handleIntegrationDelete,
+  handleGuildLoaded
 } from "./handlers/mod.ts";
 import { DiscordenoInteraction, transformInteraction } from "./transformers/interaction.ts";
 import { DiscordenoIntegration, transformIntegration } from "./transformers/integration.ts";
+import {Emoji} from "./types/emojis/emoji.ts";
 import { transformApplication } from "./transformers/application.ts";
 import { transformTeam } from "./transformers/team.ts";
 import { DiscordenoInvite, transformInvite } from "./transformers/invite.ts";
@@ -239,6 +248,7 @@ export function createEventHandlers(events: Partial<EventHandlers>): EventHandle
   function ignore() {}
 
   return {
+    channelCreate: events.channelCreate ?? ignore,
     debug: events.debug ?? ignore,
     dispatchRequirements: events.dispatchRequirements ?? ignore,
     integrationCreate: events.integrationCreate ?? ignore,
@@ -365,6 +375,9 @@ export function createUtils(options: Partial<HelperUtils>) {
     validateLength,
     validateSlashOptions,
     validateSlashOptionChoices,
+    requireBotChannelPermissions,
+    requireBotGuildPermissions,
+    validateComponents,
   };
 }
 
@@ -390,6 +403,9 @@ export interface HelperUtils {
   validateLength: typeof validateLength;
   validateSlashOptions: typeof validateSlashOptions;
   validateSlashOptionChoices: typeof validateSlashOptionChoices;
+  requireBotChannelPermissions: typeof requireBotChannelPermissions;
+  requireBotGuildPermissions: typeof requireBotGuildPermissions;
+  validateComponents: typeof validateComponents;
 }
 
 export function createGatewayManager(options: Partial<GatewayManager>): GatewayManager {
@@ -704,6 +720,7 @@ export function createBotConstants() {
       CHANNEL_MENTION_REGEX,
       DISCORD_SNOWFLAKE_REGEX,
     },
+    Errors,
   };
 }
 

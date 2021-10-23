@@ -1,7 +1,6 @@
-import { rest } from "../../rest/rest.ts";
-import { endpoints } from "../../util/constants.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Delete a guild permanently. User must be owner. Returns 204 No Content on success. Fires a Guild Delete Gateway event. */
-export async function deleteGuild(guildId: bigint) {
-  return await rest.runMethod<undefined>("delete", endpoints.GUILDS_BASE(guildId));
+export async function deleteGuild(bot: Bot, guildId: bigint) {
+  return await bot.rest.runMethod<undefined>(bot.rest, "delete", bot.constants.endpoints.GUILDS_BASE(guildId));
 }

@@ -1,19 +1,26 @@
-import { botId } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { rest } from "../../rest/rest.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotChannelPermissions } from "../../util/permissions.ts";
-import { delay } from "../../util/utils.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Delete a message with the channel id and message id only. */
-export async function deleteMessage(channelId: bigint, messageId: bigint, reason?: string, delayMilliseconds = 0) {
+export async function deleteMessage(
+  bot: Bot,
+  channelId: bigint,
+  messageId: bigint,
+  reason?: string,
+  delayMilliseconds = 0
+) {
   const message = await cacheHandlers.get("messages", messageId);
 
-  if (message && message.authorId !== botId) {
-    await requireBotChannelPermissions(message.channelId, ["MANAGE_MESSAGES"]);
+  if (message && message.authorId !== bot.id) {
+    await bot.utils.requireBotChannelPermissions(bot, message.channelId, ["MANAGE_MESSAGES"]);
   }
 
-  if (delayMilliseconds) await delay(delayMilliseconds);
+  if (delayMilliseconds) await bot.utils.delay(delayMilliseconds);
 
-  return await rest.runMethod<undefined>("delete", endpoints.CHANNEL_MESSAGE(channelId, messageId), { reason });
+  return await bot.rest.runMethod<undefined>(
+    bot.rest,
+    "delete",
+    bot.constants.endpoints.CHANNEL_MESSAGE(channelId, messageId),
+    { reason }
+  );
 }

@@ -1,12 +1,14 @@
-import { applicationId } from "../../bot.ts";
-import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
+import type { Bot } from "../../bot.ts";
 import type { Message } from "../../types/messages/message.ts";
-import { endpoints } from "../../util/constants.ts";
+import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-/** Returns the initial Interactio response. Functions the same as Get Webhook Message */
-export async function getOriginalInteractionResponse(token: string) {
-  const result = await rest.runMethod<Message>("get", endpoints.INTERACTION_ORIGINAL_ID_TOKEN(applicationId, token));
+/** Returns the initial Interaction response. Functions the same as Get Webhook Message */
+export async function getOriginalInteractionResponse(bot: Bot, token: string) {
+  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Message>>(
+    bot.rest,
+    "get",
+    bot.constants.endpoints.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token)
+  );
 
-  return await structures.createDiscordenoMessage(result);
+  return bot.transformers.message(bot, result);
 }

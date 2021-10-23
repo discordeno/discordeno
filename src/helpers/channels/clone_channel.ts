@@ -1,18 +1,15 @@
-import { cacheHandlers } from "../../cache.ts";
+import type { Bot } from "../../bot.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import type { CreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
-import { Errors } from "../../types/discordeno/errors.ts";
-import { calculatePermissions } from "../../util/permissions.ts";
-import { helpers } from "../mod.ts";
 
 /** Create a copy of a channel */
-export async function cloneChannel(channelId: bigint, reason?: string) {
-  const channelToClone = await cacheHandlers.get("channels", channelId);
-  if (!channelToClone) throw new Error(Errors.CHANNEL_NOT_FOUND);
+export async function cloneChannel(bot: Bot, channelId: bigint, reason?: string) {
+  const channelToClone = await bot.cache.channels.get(channelId);
+  if (!channelToClone) throw new Error(bot.constants.Errors.CHANNEL_NOT_FOUND);
 
   //Check for DM channel
   if (channelToClone.type === DiscordChannelTypes.DM || channelToClone.type === DiscordChannelTypes.GroupDm) {
-    throw new Error(Errors.CHANNEL_NOT_IN_GUILD);
+    throw new Error(bot.constants.Errors.CHANNEL_NOT_IN_GUILD);
   }
 
   const createChannelOptions: CreateGuildChannel = {
@@ -22,11 +19,11 @@ export async function cloneChannel(channelId: bigint, reason?: string) {
     permissionOverwrites: channelToClone.permissionOverwrites.map((overwrite) => ({
       id: overwrite.id.toString(),
       type: overwrite.type,
-      allow: calculatePermissions(overwrite.allow),
-      deny: calculatePermissions(overwrite.deny),
+      allow: bot.utils.calculatePermissions(overwrite.allow),
+      deny: bot.utils.calculatePermissions(overwrite.deny),
     })),
   };
 
   //Create the channel (also handles permissions)
-  return await helpers.createChannel(channelToClone.guildId!, createChannelOptions, reason);
+  return await bot.helpers.createChannel(bot, channelToClone.guildId!, createChannelOptions, reason);
 }

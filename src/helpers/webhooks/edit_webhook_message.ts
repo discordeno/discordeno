@@ -1,19 +1,17 @@
-import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
-import { Errors } from "../../types/discordeno/errors.ts";
-import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { EditWebhookMessage } from "../../types/webhooks/edit_webhook_message.ts";
-import { endpoints } from "../../util/constants.ts";
-import { snakelize, validateComponents } from "../../util/utils.ts";
+import type { Bot } from "../../bot.ts";
+import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
+import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export async function editWebhookMessage(
+  bot: Bot,
   webhookId: bigint,
   webhookToken: string,
   options: EditWebhookMessage & { messageId?: bigint }
 ) {
   if (options.content && options.content.length > 2000) {
-    throw Error(Errors.MESSAGE_MAX_LENGTH);
+    throw Error(bot.constants.Errors.MESSAGE_MAX_LENGTH);
   }
 
   if (options.embeds && options.embeds.length > 10) {
@@ -43,16 +41,31 @@ export async function editWebhookMessage(
   }
 
   if (options.components?.length) {
-    validateComponents(options.components);
+    bot.utils.validateComponents(options.components);
   }
 
-  const result = await rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Message>>(
+    bot.rest,
     "patch",
     options.messageId
-      ? endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, options.messageId)
-      : endpoints.WEBHOOK_MESSAGE_ORIGINAL(webhookId, webhookToken),
-    snakelize(options)
+      ? bot.constants.endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, options.messageId)
+      : bot.constants.endpoints.WEBHOOK_MESSAGE_ORIGINAL(webhookId, webhookToken),
+    {
+      content: options.content,
+      embeds: options.embeds,
+      file: options.file,
+      allowed_mentions: {
+        parse: content.allowedMentions.parse,
+        roles: content.allowedMentions.roles,
+        users: content.allowedMentions.users,
+        replied_user: content.allowedMentions.repliedUser,
+      },
+      attachments: options.attachments,
+      // TODO: Snakelize components??
+      components: options.components,
+      message_id: options.messageId,
+    }
   );
 
-  return await structures.createDiscordenoMessage(result);
+  return bot.transformers.message(bot, result);
 }

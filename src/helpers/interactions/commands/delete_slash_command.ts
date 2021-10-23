@@ -1,11 +1,12 @@
-import { applicationId } from "../../../bot.ts";
-import { rest } from "../../../rest/rest.ts";
-import { endpoints } from "../../../util/constants.ts";
+import type { Bot } from "../../../bot.ts";
 
 /** Deletes a slash command. */
-export async function deleteSlashCommand(id: bigint, guildId?: bigint) {
-  return await rest.runMethod<undefined>(
+export async function deleteSlashCommand(bot: Bot, id: bigint, guildId?: bigint) {
+  return await bot.rest.runMethod<undefined>(
+    bot.rest,
     "delete",
-    guildId ? endpoints.COMMANDS_GUILD_ID(applicationId, guildId, id) : endpoints.COMMANDS_ID(applicationId, id)
+    guildId
+      ? bot.constants.endpoints.COMMANDS_GUILD_ID(bot.applicationId, guildId, id)
+      : bot.constants.endpoints.COMMANDS_ID(bot.applicationId, id)
   );
 }

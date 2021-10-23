@@ -1,11 +1,10 @@
 import type { DiscordImageFormat } from "../../types/misc/image_format.ts";
 import type { DiscordImageSize } from "../../types/misc/image_size.ts";
-import { endpoints } from "../../util/constants.ts";
-import { iconBigintToHash } from "../../util/hash.ts";
-import { formatImageURL } from "../../util/utils.ts";
+import type { Bot } from "../../bot.ts";
 
 /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
 export function guildIconURL(
+  bot: Bot,
   id: bigint,
   options: {
     icon?: string | bigint;
@@ -15,10 +14,12 @@ export function guildIconURL(
   }
 ) {
   return options.icon
-    ? formatImageURL(
-        endpoints.GUILD_ICON(
+    ? bot.utils.formatImageURL(
+        bot.constants.endpoints.GUILD_ICON(
           id,
-          typeof options.icon === "string" ? options.icon : iconBigintToHash(options.icon, options.animated ?? true)
+          typeof options.icon === "string"
+            ? options.icon
+            : bot.utils.iconBigintToHash(options.icon, options.animated ?? true)
         ),
         options.size || 128,
         options.format

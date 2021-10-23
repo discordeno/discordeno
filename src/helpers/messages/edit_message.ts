@@ -1,45 +1,41 @@
-import { botId } from "../../bot.ts";
 import { cacheHandlers } from "../../cache.ts";
-import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
-import { Errors } from "../../types/discordeno/errors.ts";
-import { EditMessage } from "../../types/messages/edit_message.ts";
+import type { EditMessage } from "../../types/messages/edit_message.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotChannelPermissions } from "../../util/permissions.ts";
-import { snakelize, validateComponents } from "../../util/utils.ts";
+import type { Bot } from "../../bot.ts";
+import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Edit the message. */
-export async function editMessage(channelId: bigint, messageId: bigint, content: string | EditMessage) {
+export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: string | EditMessage) {
   const message = await cacheHandlers.get("messages", messageId);
 
   if (message) {
-    if (message.authorId !== botId) {
+    if (message.authorId !== bot.id) {
       throw new Error("You can only edit a message that was sent by the bot.");
     }
     const requiredPerms: PermissionStrings[] = ["SEND_MESSAGES"];
 
-    await requireBotChannelPermissions(message.channelId, requiredPerms);
+    await bot.utils.requireBotChannelPermissions(bot, message.channelId, requiredPerms);
   }
 
   if (typeof content === "string") content = { content };
 
   if (content.components?.length) {
-    validateComponents(content.components);
+    bot.utils.validateComponents(bot, content.components);
   }
 
   content.embeds?.splice(10);
 
   if (content.content && content.content.length > 2000) {
-    throw new Error(Errors.MESSAGE_MAX_LENGTH);
+    throw new Error(bot.constants.Errors.MESSAGE_MAX_LENGTH);
   }
 
-  const result = await rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Message>>(
+    bot.rest,
     "patch",
-    endpoints.CHANNEL_MESSAGE(channelId, messageId),
-    snakelize(content)
+    bot.constants.endpoints.CHANNEL_MESSAGE(channelId, messageId),
+    bot.utils.snakelize(content)
   );
 
-  return await structures.createDiscordenoMessage(result);
+  return bot.transformers.message(bot, result);
 }

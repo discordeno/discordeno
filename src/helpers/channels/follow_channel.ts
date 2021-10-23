@@ -1,13 +1,11 @@
-import { rest } from "../../rest/rest.ts";
 import type { FollowedChannel } from "../../types/channels/followed_channel.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotChannelPermissions } from "../../util/permissions.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Follow a News Channel to send messages to a target channel. Requires the `MANAGE_WEBHOOKS` permission in the target channel. Returns the webhook id. */
-export async function followChannel(sourceChannelId: bigint, targetChannelId: bigint) {
-  await requireBotChannelPermissions(targetChannelId, ["MANAGE_WEBHOOKS"]);
+export async function followChannel(bot: Bot, sourceChannelId: bigint, targetChannelId: bigint) {
+  await bot.utils.requireBotChannelPermissions(bot, targetChannelId, ["MANAGE_WEBHOOKS"]);
 
-  const data = await rest.runMethod<FollowedChannel>("post", endpoints.CHANNEL_FOLLOW(sourceChannelId), {
+  const data = await bot.rest.runMethod<FollowedChannel>(bot.rest,"post", bot.constants.endpoints.CHANNEL_FOLLOW(sourceChannelId), {
     webhook_channel_id: targetChannelId,
   });
 

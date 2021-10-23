@@ -1,21 +1,16 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
-import { rest } from "../../rest/rest.ts";
 import type { DiscordenoChannel } from "../../structures/channel.ts";
-import { structures } from "../../structures/mod.ts";
 import type { Channel } from "../../types/channels/channel.ts";
 import type { ModifyChannel } from "../../types/channels/modify_channel.ts";
-import { endpoints } from "../../util/constants.ts";
-import { calculateBits, requireOverwritePermissions } from "../../util/permissions.ts";
-import { snakelize } from "../../util/utils.ts";
+import type { Bot } from "../../bot.ts";
+import {SnakeCasedPropertiesDeep} from "../../types/util.ts";
 
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
-export async function editChannel(channelId: bigint, options: ModifyChannel, reason?: string) {
-  const channel = await cacheHandlers.get("channels", channelId);
+export async function editChannel(bot: Bot, channelId: bigint, options: ModifyChannel, reason?: string) {
+  const channel = await bot.cache.channels.get(channelId);
 
   if (channel) {
     if (options.permissionOverwrites && Array.isArray(options.permissionOverwrites)) {
-      await requireOverwritePermissions(channel.guildId, options.permissionOverwrites);
+      await bot.utils.requireOverwritePermissions(bot, channel.guildId, options.permissionOverwrites);
     }
   }
 
@@ -40,16 +35,25 @@ export async function editChannel(channelId: bigint, options: ModifyChannel, rea
         request.items.push({ channelId, options, resolve, reject });
         if (editChannelProcessing) return;
         editChannelProcessing = true;
-        processEditChannelQueue();
+        processEditChannelQueue(bot);
       });
     }
   }
 
-  const result = await rest.runMethod<Channel>(
+  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Channel>>(
+      bot.rest,
     "patch",
-    endpoints.CHANNEL_BASE(channelId),
-    snakelize({
-      ...options,
+    bot.constants.endpoints.CHANNEL_BASE(channelId),
+    {
+      name: options.name,
+      topic: options.topic,
+      bitrate: options.bitrate,
+      userLimit: options.userLimit,
+      rateLimitPerUser: options.rateLimitPerUser,
+      position: options.position,
+      parentId: options.parentId,
+      nsfw: options.nsfw,
+      type: options.type,
       permissionOverwrites: options.permissionOverwrites
         ? options.permissionOverwrites?.map((overwrite) => {
             return {
@@ -60,10 +64,10 @@ export async function editChannel(channelId: bigint, options: ModifyChannel, rea
           })
         : undefined,
       reason,
-    })
+    }
   );
 
-  return await structures.createDiscordenoChannel(result);
+  return bot.transformers.channel(result);
 }
 
 interface EditChannelRequest {
@@ -82,7 +86,7 @@ interface EditChannelRequest {
 const editChannelNameTopicQueue = new Map<bigint, EditChannelRequest>();
 let editChannelProcessing = false;
 
-function processEditChannelQueue() {
+function processEditChannelQueue(bot: Bot) {
   if (!editChannelProcessing) return;
 
   const now = Date.now();
@@ -99,13 +103,13 @@ function processEditChannelQueue() {
 
     if (!details) return;
 
-    await editChannel(details.channelId, details.options)
+    await bot.helpers.editChannel(bot, details.channelId, details.options)
       .then((result) => details.resolve(result))
       .catch(details.reject);
     const secondDetails = request.items.shift();
     if (!secondDetails) return;
 
-    await editChannel(secondDetails.channelId, secondDetails.options)
+    await bot.helpers.editChannel(bot, secondDetails.channelId, secondDetails.options)
       .then((result) => secondDetails.resolve(result))
       .catch(secondDetails.reject);
     return;
@@ -114,7 +118,7 @@ function processEditChannelQueue() {
   if (editChannelNameTopicQueue.size) {
     setTimeout(() => {
       eventHandlers.debug?.("loop", `Running setTimeout in EDIT_CHANNEL file.`);
-      processEditChannelQueue();
+      processEditChannelQueue(bot);
     }, 60000);
   } else {
     editChannelProcessing = false;

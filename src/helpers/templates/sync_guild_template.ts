@@ -1,14 +1,16 @@
-import { rest } from "../../rest/rest.ts";
 import type { Template } from "../../types/templates/template.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotGuildPermissions } from "../../util/permissions.ts";
+import type { Bot } from "../../bot.ts";
 
 /**
  * Syncs the template to the guild's current state.
  * Requires the `MANAGE_GUILD` permission.
  */
-export async function syncGuildTemplate(guildId: bigint, templateCode: string) {
-  await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
+export async function syncGuildTemplate(bot: Bot, guildId: bigint, templateCode: string) {
+  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-  return await rest.runMethod<Template>("put", `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`);
+  return await bot.rest.runMethod<Template>(
+    bot.rest,
+    "put",
+    `${bot.constants.endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`
+  );
 }

@@ -1,15 +1,14 @@
-import { cacheHandlers } from "../../../cache.ts";
-import { rest } from "../../../rest/rest.ts";
-import { endpoints } from "../../../util/constants.ts";
-import { requireBotGuildPermissions } from "../../../util/permissions.ts";
+import type { Bot } from "../../../bot.ts";
 
 /** Delete a thread in your server. Bot needs MANAGE_THREADS permissions in the server. */
-export async function deleteThread(threadId: bigint, reason?: string) {
-  const thread = await cacheHandlers.get("threads", threadId);
+export async function deleteThread(bot: Bot, threadId: bigint, reason?: string) {
+  const thread = await bot.cache.threads.get(threadId);
   if (thread) {
-    const channel = await cacheHandlers.get("channels", thread?.parentId);
-    if (channel?.guildId) await requireBotGuildPermissions(channel.guildId, ["MANAGE_THREADS"]);
+    const channel = await bot.cache.channels.get(thread?.parentId);
+    if (channel?.guildId) await bot.utils.requireBotGuildPermissions(bot, channel.guildId, ["MANAGE_THREADS"]);
   }
 
-  return await rest.runMethod<undefined>("delete", endpoints.CHANNEL_BASE(threadId), { reason });
+  return await bot.rest.runMethod<undefined>(bot.rest, "delete", bot.constants.endpoints.CHANNEL_BASE(threadId), {
+    reason,
+  });
 }

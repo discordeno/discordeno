@@ -1,25 +1,28 @@
-import { cacheHandlers } from "../../../cache.ts";
-import { rest } from "../../../rest/rest.ts";
-import { Channel } from "../../../types/channels/channel.ts";
-import { StartThread } from "../../../types/channels/threads/start_thread.ts";
-import { Errors } from "../../../types/discordeno/errors.ts";
-import { endpoints } from "../../../util/constants.ts";
-import { requireBotChannelPermissions } from "../../../util/permissions.ts";
+import type { Channel } from "../../../types/channels/channel.ts";
+import type { StartThread } from "../../../types/channels/threads/start_thread.ts";
+import type { Bot } from "../../../bot.ts";
 import { channelToThread } from "../../../util/transformers/channel_to_thread.ts";
-import { snakelize } from "../../../util/utils.ts";
 
 /** Creates a new public thread from an existing message. Returns a thread channel. */
-export async function startThread(channelId: bigint, messageId: bigint, options: StartThread) {
-  const channel = await cacheHandlers.get("channels", channelId);
+export async function startThread(bot: Bot, channelId: bigint, messageId: bigint, options: StartThread) {
+  const channel = await bot.cache.channels.get(channelId);
   if (channel) {
     if (!channel.isGuildTextBasedChannel) {
-      throw new Error(Errors.INVALID_THREAD_PARENT_CHANNEL_TYPE);
+      throw new Error(bot.constants.Errors.INVALID_THREAD_PARENT_CHANNEL_TYPE);
     }
 
-    await requireBotChannelPermissions(channel, ["SEND_MESSAGES", "USE_PUBLIC_THREADS"]);
+    await bot.utils.requireBotChannelPermissions(bot, channel, ["SEND_MESSAGES", "USE_PUBLIC_THREADS"]);
   }
 
   return channelToThread(
-    await rest.runMethod<Channel>("post", endpoints.THREAD_START_PUBLIC(channelId, messageId), snakelize(options))
+    await bot.rest.runMethod<Channel>(
+      bot.rest,
+      "post",
+      bot.constants.endpoints.THREAD_START_PUBLIC(channelId, messageId),
+      {
+        name: options.name,
+        auto_archive_duration: options.autoArchiveDuration,
+      }
+    )
   );
 }

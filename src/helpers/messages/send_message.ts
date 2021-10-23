@@ -1,19 +1,15 @@
 import { cacheHandlers } from "../../cache.ts";
-import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
 import type { CreateMessage } from "../../types/messages/create_message.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotChannelPermissions } from "../../util/permissions.ts";
-import { snakelize, validateComponents } from "../../util/utils.ts";
-import { validateLength } from "../../util/validate_length.ts";
+import type { Bot } from "../../bot.ts";
+import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
-export async function sendMessage(channelId: bigint, content: string | CreateMessage) {
+export async function sendMessage(bot: Bot, channelId: bigint, content: string | CreateMessage) {
   if (typeof content === "string") content = { content };
 
   const channel = await cacheHandlers.get("channels", channelId);
@@ -43,16 +39,16 @@ export async function sendMessage(channelId: bigint, content: string | CreateMes
       requiredPerms.add("READ_MESSAGE_HISTORY");
     }
 
-    await requireBotChannelPermissions(channelId, [...requiredPerms]);
+    await bot.utils.requireBotChannelPermissions(bot, channelId, [...requiredPerms]);
   }
 
   // Use ... for content length due to unicode characters and js .length handling
-  if (content.content && !validateLength(content.content, { max: 2000 })) {
-    throw new Error(Errors.MESSAGE_MAX_LENGTH);
+  if (content.content && !bot.utils.validateLength(content.content, { max: 2000 })) {
+    throw new Error(bot.constants.Errors.MESSAGE_MAX_LENGTH);
   }
 
   if (content.components?.length) {
-    validateComponents(content.components);
+    bot.utils.validateComponents(bot, content.components);
   }
 
   if (content.allowedMentions) {
@@ -77,21 +73,35 @@ export async function sendMessage(channelId: bigint, content: string | CreateMes
     }
   }
 
-  const result = await rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Message>>(
+    bot.rest,
     "post",
-    endpoints.CHANNEL_MESSAGES(channelId),
-    snakelize({
-      ...content,
+    bot.constants.endpoints.CHANNEL_MESSAGES(channelId),
+    bot.utils.snakelize({
+      content: content.content,
+      tts: content.tts,
+      embeds: content.embeds,
+      allowed_mentions: {
+        parse: content.allowedMentions.parse,
+        roles: content.allowedMentions.roles,
+        users: content.allowedMentions.users,
+        replied_user: content.allowedMentions.repliedUser,
+      },
+      file: content.file,
+      // TODO: Snakelize components??
+      components: content.components,
       ...(content.messageReference?.messageId
         ? {
-            messageReference: {
-              ...content.messageReference,
-              failIfNotExists: content.messageReference.failIfNotExists === true,
+            message_reference: {
+              message_id: content.messageReference.messageId,
+              channel_id: content.messageReference.channelId,
+              guild_id: content.messageReference.guildId,
+              fail_if_not_exists: content.messageReference.failIfNotExists === true,
             },
           }
         : {}),
     })
   );
 
-  return structures.createDiscordenoMessage(result);
+  return bot.transformers.message(bot, result);
 }
