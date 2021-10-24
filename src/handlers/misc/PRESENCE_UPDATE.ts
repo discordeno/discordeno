@@ -10,8 +10,7 @@ export async function handlePresenceUpdate(bot: Bot, data: DiscordGatewayPayload
 
   const oldPresence = await bot.cache.presence.get(id);
   const presence = bot.transformers.presence(bot, payload);
-  await bot.cache.presence.set(id, presence)
+  await bot.cache.presence.set(id, presence);
 
-  
- bot.events.presenceUpdate(bot, presence, oldPresence);
+  bot.events.presenceUpdate(bot, presence, oldPresence);
 }

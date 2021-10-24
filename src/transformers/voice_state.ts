@@ -16,7 +16,9 @@ export function transformVoiceState(
       (payload.voiceState.self_video ? 32n : 0n) |
       (payload.voiceState.suppress ? 64n : 0n),
 
-    requestToSpeakTimestamp: payload.voiceState.request_to_speak_timestamp ? Date.parse(payload.voiceState.request_to_speak_timestamp) : undefined,
+    requestToSpeakTimestamp: payload.voiceState.request_to_speak_timestamp
+      ? Date.parse(payload.voiceState.request_to_speak_timestamp)
+      : undefined,
     sessionId: payload.voiceState.session_id,
 
     channelId: payload.voiceState.channel_id ? bot.transformers.snowflake(payload.voiceState.channel_id) : undefined,
