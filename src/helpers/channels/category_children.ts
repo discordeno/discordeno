@@ -1,4 +1,4 @@
-import {Bot} from "../../bot.ts";
+import { Bot } from "../../bot.ts";
 
 /** Gets an array of all the channels ids that are the children of this category.
  * ⚠️ This does not work for custom cache users!

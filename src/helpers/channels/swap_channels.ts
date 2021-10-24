@@ -7,12 +7,17 @@ export async function swapChannels(bot: Bot, guildId: bigint, channelPositions: 
     throw "You must provide at least two channels to be swapped.";
   }
 
-  return await bot.rest.runMethod<undefined>(bot.rest,"patch", bot.constants.endpoints.GUILD_CHANNELS(guildId), channelPositions.map((channelPosition) => {
-    return {
-      id: channelPosition.id,
-      position: channelPosition.position,
-      lock_positions: channelPosition.lockPositions,
-      parent_id: channelPosition.parentId
-    }
-  }));
+  return await bot.rest.runMethod<undefined>(
+    bot.rest,
+    "patch",
+    bot.constants.endpoints.GUILD_CHANNELS(guildId),
+    channelPositions.map((channelPosition) => {
+      return {
+        id: channelPosition.id,
+        position: channelPosition.position,
+        lock_positions: channelPosition.lockPositions,
+        parent_id: channelPosition.parentId,
+      };
+    })
+  );
 }

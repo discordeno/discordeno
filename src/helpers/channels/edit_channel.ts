@@ -2,7 +2,7 @@ import type { DiscordenoChannel } from "../../structures/channel.ts";
 import type { Channel } from "../../types/channels/channel.ts";
 import type { ModifyChannel } from "../../types/channels/modify_channel.ts";
 import type { Bot } from "../../bot.ts";
-import {SnakeCasedPropertiesDeep} from "../../types/util.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(bot: Bot, channelId: bigint, options: ModifyChannel, reason?: string) {
@@ -41,7 +41,7 @@ export async function editChannel(bot: Bot, channelId: bigint, options: ModifyCh
   }
 
   const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Channel>>(
-      bot.rest,
+    bot.rest,
     "patch",
     bot.constants.endpoints.CHANNEL_BASE(channelId),
     {
@@ -103,13 +103,15 @@ function processEditChannelQueue(bot: Bot) {
 
     if (!details) return;
 
-    await bot.helpers.editChannel(bot, details.channelId, details.options)
+    await bot.helpers
+      .editChannel(bot, details.channelId, details.options)
       .then((result) => details.resolve(result))
       .catch(details.reject);
     const secondDetails = request.items.shift();
     if (!secondDetails) return;
 
-    await bot.helpers.editChannel(bot, secondDetails.channelId, secondDetails.options)
+    await bot.helpers
+      .editChannel(bot, secondDetails.channelId, secondDetails.options)
       .then((result) => secondDetails.resolve(result))
       .catch(secondDetails.reject);
     return;

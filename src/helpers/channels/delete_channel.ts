@@ -19,5 +19,7 @@ export async function deleteChannel(bot: Bot, channelId: bigint, reason?: string
     await bot.utils.requireBotGuildPermissions(bot, guild, ["MANAGE_CHANNELS"]);
   }
 
-  return await bot.rest.runMethod<undefined>(bot.rest, "delete", bot.constants.endpoints.CHANNEL_BASE(channelId), { reason });
+  return await bot.rest.runMethod<undefined>(bot.rest, "delete", bot.constants.endpoints.CHANNEL_BASE(channelId), {
+    reason,
+  });
 }

@@ -4,7 +4,7 @@ import type { ChannelTypes } from "../../types/channels/channel_types.ts";
 
 /** Updates fields of an existing Stage instance. Requires the user to be a moderator of the Stage channel. */
 export async function updateStageInstance(
-    bot: Bot,
+  bot: Bot,
   channelId: bigint,
   data: Partial<Pick<StageInstance, "topic" | "privacyLevel">> = {}
 ) {
@@ -28,8 +28,8 @@ export async function updateStageInstance(
     throw new Error(bot.constants.Errors.INVALID_TOPIC_LENGTH);
   }
 
-  return await bot.rest.runMethod<StageInstance>(bot.rest,"patch", bot.constants.endpoints.STAGE_INSTANCE(channelId), {
+  return await bot.rest.runMethod<StageInstance>(bot.rest, "patch", bot.constants.endpoints.STAGE_INSTANCE(channelId), {
     topic: data.topic,
-    privacy_level: data.privacyLevel
+    privacy_level: data.privacyLevel,
   });
 }

@@ -10,9 +10,8 @@ export async function handleGuildDelete(bot: Bot, data: DiscordGatewayPayload, s
   const guild = await bot.cache.guilds.get(id);
   await bot.events.guildDelete(bot, id, guild);
   if (!guild) return;
-  
-  await bot.cache.guilds.delete(id);
 
+  await bot.cache.guilds.delete(id);
 
   await Promise.all([
     bot.cache.forEach("DELETE_MESSAGES_FROM_GUILD", { guildId: guild.id }),

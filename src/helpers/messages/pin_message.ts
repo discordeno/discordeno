@@ -4,7 +4,11 @@ import type { Bot } from "../../bot.ts";
 export async function pin(bot: Bot, channelId: bigint, messageId: bigint) {
   await bot.utils.requireBotChannelPermissions(bot, channelId, ["MANAGE_MESSAGES"]);
 
-  return await bot.rest.runMethod<undefined>(bot.rest,"put", bot.constants.endpoints.CHANNEL_PIN(channelId, messageId));
+  return await bot.rest.runMethod<undefined>(
+    bot.rest,
+    "put",
+    bot.constants.endpoints.CHANNEL_PIN(channelId, messageId)
+  );
 }
 
 // aliases

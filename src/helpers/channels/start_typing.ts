@@ -29,5 +29,5 @@ export async function startTyping(bot: Bot, channelId: bigint) {
     }
   }
 
-  return await bot.rest.runMethod<undefined>(bot.rest,"post", bot.constants.endpoints.CHANNEL_TYPING(channelId));
+  return await bot.rest.runMethod<undefined>(bot.rest, "post", bot.constants.endpoints.CHANNEL_TYPING(channelId));
 }
