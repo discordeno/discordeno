@@ -14,8 +14,8 @@ export async function handleGuildDelete(bot: Bot, data: DiscordGatewayPayload, s
   await bot.cache.guilds.delete(id);
 
   await Promise.all([
-    bot.cache.forEach("DELETE_MESSAGES_FROM_GUILD", { guildId: guild.id }),
-    bot.cache.forEach("DELETE_CHANNELS_FROM_GUILD", { guildId: guild.id }),
-    bot.cache.forEach("DELETE_GUILD_FROM_MEMBER", { guildId: guild.id }),
+    bot.cache.execute("DELETE_MESSAGES_FROM_GUILD", { guildId: guild.id }),
+    bot.cache.execute("DELETE_CHANNELS_FROM_GUILD", { guildId: guild.id }),
+    bot.cache.execute("DELETE_GUILD_FROM_MEMBER", { guildId: guild.id }),
   ]);
 }

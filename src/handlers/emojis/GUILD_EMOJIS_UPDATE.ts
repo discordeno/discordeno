@@ -4,7 +4,7 @@ import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 import { Collection } from "../../util/collection.ts";
 
-export async function handleGuildEmojisUpdate(bot: Bot, data: SnakeCasedPropertiesDeep<DiscordGatewayPayload>) {
+export async function handleGuildEmojisUpdate(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as SnakeCasedPropertiesDeep<GuildEmojisUpdate>;
   const guild = await bot.cache.guilds.get(bot.transformers.snowflake(payload.guild_id));
   if (!guild) return;

@@ -3,7 +3,7 @@ import type { ChannelPinsUpdate } from "../../types/channels/channel_pins_update
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleChannelPinsUpdate(bot: Bot, data: SnakeCasedPropertiesDeep<DiscordGatewayPayload>) {
+export async function handleChannelPinsUpdate(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as SnakeCasedPropertiesDeep<ChannelPinsUpdate>;
 
   bot.events.channelPinsUpdate(bot, {

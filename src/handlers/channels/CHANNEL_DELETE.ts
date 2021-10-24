@@ -4,7 +4,7 @@ import type { Bot } from "../../bot.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleChannelDelete(bot: Bot, data: SnakeCasedPropertiesDeep<DiscordGatewayPayload>) {
+export async function handleChannelDelete(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as SnakeCasedPropertiesDeep<Channel>;
   if (!payload.guild_id) return;
 

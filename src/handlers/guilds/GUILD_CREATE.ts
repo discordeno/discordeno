@@ -5,7 +5,7 @@ import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export async function handleGuildCreate(
   bot: Bot,
-  data: SnakeCasedPropertiesDeep<DiscordGatewayPayload>,
+  data: DiscordGatewayPayload,
   shardId: number
 ) {
   const payload = data.d as SnakeCasedPropertiesDeep<Guild>;

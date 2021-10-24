@@ -3,7 +3,7 @@ import type { StageInstance } from "../../types/channels/stage_instance.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export function handleStageInstanceDelete(bot: Bot, data: SnakeCasedPropertiesDeep<DiscordGatewayPayload>) {
+export function handleStageInstanceDelete(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as SnakeCasedPropertiesDeep<StageInstance>;
 
   bot.events.stageInstanceDelete(bot, {

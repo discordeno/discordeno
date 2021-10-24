@@ -57,7 +57,7 @@ import {
   USER_AGENT,
 } from "./util/constants.ts";
 import { Errors } from "./types/discordeno/errors.ts";
-import { GatewayDispatchEventNames, GatewayPayload } from "./types/gateway/gateway_payload.ts";
+import { DiscordGatewayPayload, GatewayDispatchEventNames, GatewayPayload } from "./types/gateway/gateway_payload.ts";
 import {
   closeWS,
   handleOnMessage,
@@ -663,7 +663,7 @@ export function createGatewayManager(options: Partial<GatewayManager>): GatewayM
     resume,
     handleDiscordPayload:
       options.handleDiscordPayload ||
-      async function (_, data: GatewayPayload, shardId: number) {
+      async function (_, data: DiscordGatewayPayload, shardId: number) {
         // TRIGGER RAW EVENT
         bot.events.raw(bot as Bot, data, shardId);
 
@@ -671,7 +671,7 @@ export function createGatewayManager(options: Partial<GatewayManager>): GatewayM
 
         // RUN DISPATCH CHECK
         await bot.events.dispatchRequirements(bot as Bot, data, shardId);
-        bot.handlers[data.t as GatewayDispatchEventNames]?.(bot, data, shardId);
+        bot.handlers[data.t as GatewayDispatchEventNames]?.(bot as Bot, data, shardId);
       },
   };
 }
@@ -1369,7 +1369,7 @@ export interface BotGatewayHandlerOptions {
   INTEGRATION_DELETE: typeof handleIntegrationDelete;
 }
 
-export function createBotGatewayHandlers(options: Partial<BotGatewayHandlerOptions>) {
+export function createBotGatewayHandlers(options: Partial<BotGatewayHandlerOptions>): Record<GatewayDispatchEventNames | "GUILD_LOADED_DD", (bot: Bot, data: GatewayPayload, shardId: number) => any> {
   return {
     // misc
     READY: options.READY ?? handleReady,
@@ -1378,12 +1378,12 @@ export function createBotGatewayHandlers(options: Partial<BotGatewayHandlerOptio
     CHANNEL_DELETE: options.CHANNEL_DELETE ?? handleChannelDelete,
     CHANNEL_PINS_UPDATE: options.CHANNEL_PINS_UPDATE ?? handleChannelPinsUpdate,
     CHANNEL_UPDATE: options.CHANNEL_UPDATE ?? handleChannelUpdate,
-    THREAD_CREATE: options.THREAD_CREATE ?? handleThreadCreate,
-    THREAD_UPDATE: options.THREAD_UPDATE ?? handleThreadUpdate,
-    THREAD_DELETE: options.THREAD_DELETE ?? handleThreadDelete,
-    THREAD_LIST_SYNC: options.THREAD_LIST_SYNC ?? handleThreadListSync,
-    THREAD_MEMBER_UPDATE: options.THREAD_MEMBER_UPDATE ?? handleThreadMemberUpdate,
-    THREAD_MEMBERS_UPDATE: options.THREAD_MEMBERS_UPDATE ?? handleThreadMembersUpdate,
+    // THREAD_CREATE: options.THREAD_CREATE ?? handleThreadCreate,
+    // THREAD_UPDATE: options.THREAD_UPDATE ?? handleThreadUpdate,
+    // THREAD_DELETE: options.THREAD_DELETE ?? handleThreadDelete,
+    // THREAD_LIST_SYNC: options.THREAD_LIST_SYNC ?? handleThreadListSync,
+    // THREAD_MEMBER_UPDATE: options.THREAD_MEMBER_UPDATE ?? handleThreadMemberUpdate,
+    // THREAD_MEMBERS_UPDATE: options.THREAD_MEMBERS_UPDATE ?? handleThreadMembersUpdate,
     STAGE_INSTANCE_CREATE: options.STAGE_INSTANCE_CREATE ?? handleStageInstanceCreate,
     STAGE_INSTANCE_UPDATE: options.STAGE_INSTANCE_UPDATE ?? handleStageInstanceUpdate,
     STAGE_INSTANCE_DELETE: options.STAGE_INSTANCE_DELETE ?? handleStageInstanceDelete,
