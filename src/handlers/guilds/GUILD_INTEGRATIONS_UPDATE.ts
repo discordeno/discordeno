@@ -6,5 +6,5 @@ import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 export async function handleGuildIntegrationsUpdate(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as SnakeCasedPropertiesDeep<GuildIntegrationsUpdate>;
 
-  bot.events.integrationsUpdate(bot, { guildId: bot.transformers.snowflake(payload.guild_id) });
+  bot.events.integrationUpdate(bot, { guildId: bot.transformers.snowflake(payload.guild_id) });
 }

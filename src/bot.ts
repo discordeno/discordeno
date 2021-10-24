@@ -293,6 +293,8 @@ import {
   validDiscoveryTerm,
 } from "./helpers/mod.ts";
 import { DiscordenoEmoji, transformEmoji } from "./transformers/emoji.ts";
+import { transformActivity } from "./transformers/activity.ts";
+import { DiscordenoPresence, transformPresence } from "./transformers/presence.ts";
 
 export async function createBot(options: CreateBotOptions) {
   return {
@@ -309,6 +311,9 @@ export async function createBot(options: CreateBotOptions) {
     cache: {
       execute: async function (
         type:
+          | "DELETE_MESSAGES_FROM_CHANNEL"
+          | "DELETE_ROLE_FROM_MEMBER"
+          | "BULK_DELETE_MESSAGES"
           | "GUILD_MEMBER_CHUNK"
           | "GUILD_MEMBER_COUNT_DECREMENT"
           | "GUILD_MEMBER_COUNT_INCREMENT"
@@ -368,6 +373,20 @@ export async function createBot(options: CreateBotOptions) {
           return false;
         },
         set: async function (id: bigint, member: DiscordenoMember): Promise<void> {
+          return;
+        },
+        delete: async function (id: bigint): Promise<void> {
+          return;
+        },
+      },
+      presence: {
+        get: async function (id: bigint): Promise<DiscordenoPresence | undefined> {
+          return {} as any as DiscordenoPresence;
+        },
+        has: async function (id: bigint): Promise<boolean> {
+          return false;
+        },
+        set: async function (id: bigint, guild: DiscordenoPresence): Promise<void> {
           return;
         },
         delete: async function (id: bigint): Promise<void> {
@@ -440,6 +459,9 @@ export function createEventHandlers(events: Partial<EventHandlers>): EventHandle
     reactionRemove: events.reactionRemove ?? ignore,
     reactionRemoveAll: events.reactionRemoveAll ?? ignore,
     reactionRemoveEmoji: events.reactionRemoveEmoji ?? ignore,
+    presenceUpdate: events.presenceUpdate ?? ignore,
+    voiceServerUpdate: events.voiceServerUpdate ?? ignore,
+    voiceStateUpdate: events.voiceStateUpdate ?? ignore,
     channelCreate: events.channelCreate ?? ignore,
     voiceChannelLeave: events.voiceChannelLeave ?? ignore,
     channelDelete: events.channelDelete ?? ignore,
@@ -1018,10 +1040,13 @@ export interface Transformers {
   application: typeof transformApplication;
   team: typeof transformTeam;
   emoji: typeof transformEmoji;
+  activity: typeof transformActivity;
+  presence: typeof transformPresence;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
   return {
+    activity: options.activity || transformActivity,
     application: options.application || transformApplication,
     channel: options.channel || transformChannel,
     emoji: options.emoji || transformEmoji,
@@ -1031,6 +1056,7 @@ export function createTransformers(options: Partial<Transformers>) {
     invite: options.invite || transformInvite,
     member: options.member || transformMember,
     message: options.message || transformMessage,
+    presence: options.presence || transformPresence,
     role: options.role || transformRole,
     user: options.user || transformUser,
     team: options.team || transformTeam,
@@ -1149,7 +1175,7 @@ export interface EventHandlers {
   interactionCreate: (bot: Bot, interaction: DiscordenoInteraction) => any;
   integrationCreate: (bot: Bot, integration: DiscordenoIntegration) => any;
   integrationDelete: (bot: Bot, payload: { id: bigint; guildId: bigint; applicationId?: bigint }) => any;
-  integrationUpdate: (bot: Bot, integration: DiscordenoIntegration) => any;
+  integrationUpdate: (bot: Bot, payload: { guildId: bigint }) => any;
   inviteCreate: (bot: Bot, invite: DiscordenoInvite) => any;
   inviteDelete: (
     bot: Bot,
@@ -1207,9 +1233,21 @@ export interface EventHandlers {
       guildId?: bigint;
     }
   ) => any;
+  presenceUpdate: (bot: Bot, presence: DiscordenoPresence, oldPresence?: DiscordenoPresence) => any;
+  voiceServerUpdate: (bot: Bot, payload: { token: string; endpoint?: string; guildId: bigint }) => any;
+  voiceStateUpdate: (
+    bot: Bot,
+    voiceState: DiscordenoVoiceState,
+    payload: { guild?: DiscordenoGuild; member?: DiscordenoMember; user?: DiscordenoUser }
+  ) => any;
   channelCreate: (bot: Bot, channel: DiscordenoChannel) => any;
   dispatchRequirements: (bot: Bot, data: GatewayPayload, shardId: number) => any;
-  voiceChannelLeave: (bot: Bot, voiceState: DiscordenoVoiceState, channel: DiscordenoChannel) => any;
+  voiceChannelLeave: (
+    bot: Bot,
+    voiceState: DiscordenoVoiceState,
+    guild: DiscordenoGuild,
+    channel?: DiscordenoChannel
+  ) => any;
   channelDelete: (bot: Bot, channel: DiscordenoChannel) => any;
   channelPinsUpdate: (bot: Bot, data: { guildId?: bigint; channelId: bigint; lastPinTimestamp?: number }) => any;
   channelUpdate: (bot: Bot, channel: DiscordenoChannel, oldChannel: DiscordenoChannel) => any;

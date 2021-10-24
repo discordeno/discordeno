@@ -1,35 +1,12 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
-import { memberToggles } from "../../structures/member.ts";
+import { Bot } from "../../bot.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { User } from "../../types/users/user.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
-import { iconHashToBigInt } from "../../util/hash.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleUserUpdate(data: DiscordGatewayPayload) {
-  const userData = data.d as User;
+export async function handleUserUpdate(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<User>;
+  const user = bot.transformers.user(bot, payload);
+  await bot.cache.users.set(user.id, user);
 
-  const member = await cacheHandlers.get("members", snowflakeToBigint(userData.id));
-  if (!member) return;
-
-  // Update username
-  member.username = userData.username;
-  // Update discriminator
-  member.discriminator = Number(userData.discriminator);
-
-  // Check if a avatar is available
-  const hash = userData.avatar ? iconHashToBigInt(userData.avatar) : undefined;
-  // Update the avatar
-  member.avatar = hash?.bigint || 0n;
-  // Update the animated status if its animated
-  if (hash?.animated) member.bitfield |= memberToggles.animatedAvatar;
-  else member.bitfield &= ~memberToggles.animatedAvatar;
-
-  member.flags = userData.flags;
-  member.premiumType = userData.premiumType;
-  member.publicFlags = userData.publicFlags;
-
-  await cacheHandlers.set("members", snowflakeToBigint(userData.id), member);
-
-  eventHandlers.botUpdate?.(userData);
+  bot.events.botUpdate(bot, user);
 }

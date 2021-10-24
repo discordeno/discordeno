@@ -16,7 +16,7 @@ export function transformVoiceState(
       (payload.voiceState.self_video ? 32n : 0n) |
       (payload.voiceState.suppress ? 64n : 0n),
 
-    requestToSpeakTimestamp: payload.voiceState.request_to_speak_timestamp,
+    requestToSpeakTimestamp: payload.voiceState.request_to_speak_timestamp ? Date.parse(payload.voiceState.request_to_speak_timestamp) : undefined,
     sessionId: payload.voiceState.session_id,
 
     channelId: payload.voiceState.channel_id ? bot.transformers.snowflake(payload.voiceState.channel_id) : undefined,
@@ -27,7 +27,7 @@ export function transformVoiceState(
   };
 }
 
-export interface DiscordenoVoiceState extends Omit<VoiceState, "channelId" | "guildId" | "userId" | "member"> {
+export interface DiscordenoVoiceState {
   /** The guild id */
   guildId: bigint;
   /** The channel id this user is connected to */
@@ -36,4 +36,6 @@ export interface DiscordenoVoiceState extends Omit<VoiceState, "channelId" | "gu
   userId: bigint;
   /** Holds all the boolean toggles. */
   bitfield: bigint;
+  /** The time at which the user requested to speak */
+  requestToSpeakTimestamp?: number;
 }

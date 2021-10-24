@@ -1,14 +1,17 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
+import { Bot } from "../../bot.ts";
 import type { PresenceUpdate } from "../../types/activity/presence_update.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handlePresenceUpdate(data: DiscordGatewayPayload) {
-  const payload = data.d as PresenceUpdate;
+export async function handlePresenceUpdate(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<PresenceUpdate>;
 
-  const oldPresence = await cacheHandlers.get("presences", snowflakeToBigint(payload.user.id));
-  await cacheHandlers.set("presences", snowflakeToBigint(payload.user.id), payload);
+  const id = bot.transformers.snowflake(payload.user.id);
 
-  eventHandlers.presenceUpdate?.(payload, oldPresence);
+  const oldPresence = await bot.cache.presence.get(id);
+  const presence = bot.transformers.presence(bot, payload);
+  await bot.cache.presence.set(id, presence)
+
+  
+ bot.events.presenceUpdate(bot, presence, oldPresence);
 }
