@@ -5,7 +5,7 @@ import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export function handleTypingStart(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as SnakeCasedPropertiesDeep<TypingStart>;
-  
+
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
 
   bot.events.typingStart(bot, {
