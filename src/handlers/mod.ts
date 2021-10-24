@@ -56,6 +56,7 @@ export {
   handleGuildBanRemove,
   handleGuildCreate,
   handleGuildDelete,
+  handleGuildLoaded,
   handleGuildEmojisUpdate,
   handleGuildIntegrationsUpdate,
   handleGuildMemberAdd,
@@ -95,8 +96,4 @@ export {
   handleVoiceServerUpdate,
   handleVoiceStateUpdate,
   handleWebhooksUpdate,
-};
-
-export const handlers = {
-  
 };

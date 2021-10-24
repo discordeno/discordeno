@@ -1,26 +1,18 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
-import { structures } from "../../structures/mod.ts";
+import { Bot } from "../../bot.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { Message } from "../../types/messages/message.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleMessageUpdate(data: DiscordGatewayPayload) {
-  const payload = data.d as Message;
-  const channel = await cacheHandlers.get("channels", snowflakeToBigint(payload.channelId));
-  if (!channel) return;
+export async function handleMessageUpdate(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<Message>;
+  if (!payload.edited_timestamp) return;
 
-  const oldMessage = await cacheHandlers.get("messages", snowflakeToBigint(payload.id));
-  if (!oldMessage) return;
+  const message = bot.transformers.message(bot, payload);
 
-  // Messages with embeds can trigger update but they wont have edited_timestamp
-  if (!payload.editedTimestamp || oldMessage.content === payload.content) {
-    return;
-  }
+  // GET OLD CACHED MESSAGE IF ONE WAS CACHED
+  const oldMessage = await bot.cache.messages.get(message.id);
+  if (oldMessage?.content === message.content) return;
 
-  const message = await structures.createDiscordenoMessage(payload);
-
-  await cacheHandlers.set("messages", snowflakeToBigint(payload.id), message);
-
-  eventHandlers.messageUpdate?.(message, oldMessage);
+  await bot.cache.messages.set(message.id, message);
+  bot.events.messageUpdate(bot, message, oldMessage);
 }

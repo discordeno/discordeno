@@ -14,7 +14,6 @@ import {
   requireBotChannelPermissions,
   requireBotGuildPermissions,
 } from "./util/permissions.ts";
-import { getGatewayBot } from "./helpers/misc/get_gateway_bot.ts";
 import {
   checkRateLimits,
   processQueue,
@@ -45,6 +44,7 @@ import {
   transformRole,
   DiscordenoVoiceState,
   transformVoiceState,
+  DiscordenoMessage,
 } from "./transformers/mod.ts";
 import {
   baseEndpoints,
@@ -125,14 +125,174 @@ import {
   handleIntegrationCreate,
   handleIntegrationUpdate,
   handleIntegrationDelete,
-  handleGuildLoaded
+  handleGuildLoaded,
 } from "./handlers/mod.ts";
 import { DiscordenoInteraction, transformInteraction } from "./transformers/interaction.ts";
 import { DiscordenoIntegration, transformIntegration } from "./transformers/integration.ts";
-import {Emoji} from "./types/emojis/emoji.ts";
+import { Emoji } from "./types/emojis/emoji.ts";
 import { transformApplication } from "./transformers/application.ts";
 import { transformTeam } from "./transformers/team.ts";
 import { DiscordenoInvite, transformInvite } from "./transformers/invite.ts";
+import {
+  addDiscoverySubcategory,
+  addReaction,
+  addReactions,
+  addRole,
+  addToThread,
+  archiveThread,
+  avatarURL,
+  ban,
+  banMember,
+  batchEditSlashCommandPermissions,
+  categoryChildren,
+  channelOverwriteHasPermission,
+  connectToVoiceChannel,
+  createChannel,
+  createEmoji,
+  createGuild,
+  createGuildFromTemplate,
+  createGuildTemplate,
+  createInvite,
+  createRole,
+  createSlashCommand,
+  createStageInstance,
+  createWebhook,
+  deleteChannel,
+  deleteChannelOverwrite,
+  deleteEmoji,
+  deleteGuild,
+  deleteGuildTemplate,
+  deleteIntegration,
+  deleteInvite,
+  deleteMessage,
+  deleteMessages,
+  deleteRole,
+  deleteSlashCommand,
+  deleteSlashResponse,
+  deleteStageInstance,
+  deleteThread,
+  deleteWebhook,
+  deleteWebhookMessage,
+  deleteWebhookWithToken,
+  disconnectMember,
+  editBotNickname,
+  editBotProfile,
+  editBotStatus,
+  editChannel,
+  editChannelOverwrite,
+  editDiscovery,
+  editEmoji,
+  editGuild,
+  editGuildTemplate,
+  editMember,
+  editMessage,
+  editRole,
+  editSlashCommandPermissions,
+  editSlashResponse,
+  editThread,
+  editWebhook,
+  editWebhookMessage,
+  editWebhookWithToken,
+  editWelcomeScreen,
+  editWidget,
+  emojiURL,
+  fetchMembers,
+  followChannel,
+  getActiveThreads,
+  getApplicationInfo,
+  getArchivedThreads,
+  getAuditLogs,
+  getAvailableVoiceRegions,
+  getBan,
+  getBans,
+  getChannel,
+  getChannelInvites,
+  getChannels,
+  getChannelWebhooks,
+  getDiscoveryCategories,
+  getEmoji,
+  getEmojis,
+  getGatewayBot,
+  getGuild,
+  getGuildPreview,
+  getGuildTemplates,
+  getIntegrations,
+  getInvite,
+  getInvites,
+  getMember,
+  getMembers,
+  getMessage,
+  getMessages,
+  getOriginalInteractionResponse,
+  getPins,
+  getPruneCount,
+  getReactions,
+  getRoles,
+  getSlashCommand,
+  getSlashCommandPermission,
+  getSlashCommandPermissions,
+  getSlashCommands,
+  getStageInstance,
+  getTemplate,
+  getThreadMembers,
+  getUser,
+  getVanityURL,
+  getVoiceRegions,
+  getWebhook,
+  getWebhookMessage,
+  getWebhooks,
+  getWebhookWithToken,
+  getWelcomeScreen,
+  getWidget,
+  getWidgetImageURL,
+  getWidgetSettings,
+  guildBannerURL,
+  guildIconURL,
+  guildSplashURL,
+  isButton,
+  isChannelSynced,
+  isSelectMenu,
+  isSlashCommand,
+  joinThread,
+  kick,
+  kickMember,
+  leaveGuild,
+  leaveThread,
+  lockThread,
+  moveMember,
+  pin,
+  pinMessage,
+  pruneMembers,
+  publishMessage,
+  removeAllReactions,
+  removeDiscoverySubcategory,
+  removeReaction,
+  removeReactionEmoji,
+  removeRole,
+  removeThreadMember,
+  sendDirectMessage,
+  sendInteractionResponse,
+  sendMessage,
+  sendWebhook,
+  startPrivateThread,
+  startThread,
+  startTyping,
+  suppressEmbeds,
+  swapChannels,
+  syncGuildTemplate,
+  unarchiveThread,
+  unban,
+  unbanMember,
+  unlockThread,
+  unpin,
+  unpinMessage,
+  updateBotVoiceState,
+  updateStageInstance,
+  upsertSlashCommand,
+  upsertSlashCommands,
+  validDiscoveryTerm,
+} from "./helpers/mod.ts";
+import { DiscordenoEmoji, transformEmoji } from "./transformers/emoji.ts";
 
 export async function createBot(options: CreateBotOptions) {
   return {
@@ -141,7 +301,7 @@ export async function createBot(options: CreateBotOptions) {
     token: `Bot ${options.token}`,
     events: options.events,
     intents: options.intents.reduce((bits, next) => (bits |= DiscordGatewayIntents[next]), 0),
-    botGatewayData: options.botGatewayData || (await getGatewayBot()),
+    botGatewayData: options.botGatewayData,
     isReady: false,
     activeGuildIds: new Set<bigint>(),
     constants: createBotConstants(),
@@ -158,6 +318,20 @@ export async function createBot(options: CreateBotOptions) {
         options: Record<string, any>
       ) {},
       fetchAllMembersProcessingRequests: new Collection<string, Function>(),
+      messages: {
+        get: async function (id: bigint): Promise<DiscordenoMessage | undefined> {
+          return {} as any as DiscordenoMessage;
+        },
+        has: async function (id: bigint): Promise<boolean> {
+          return false;
+        },
+        set: async function (id: bigint, guild: DiscordenoMessage): Promise<void> {
+          return;
+        },
+        delete: async function (id: bigint): Promise<void> {
+          return;
+        },
+      },
       guilds: {
         get: async function (id: bigint): Promise<DiscordenoGuild | undefined> {
           return {} as any as DiscordenoGuild;
@@ -248,7 +422,6 @@ export function createEventHandlers(events: Partial<EventHandlers>): EventHandle
   function ignore() {}
 
   return {
-    channelCreate: events.channelCreate ?? ignore,
     debug: events.debug ?? ignore,
     dispatchRequirements: events.dispatchRequirements ?? ignore,
     integrationCreate: events.integrationCreate ?? ignore,
@@ -260,6 +433,13 @@ export function createEventHandlers(events: Partial<EventHandlers>): EventHandle
     guildMemberAdd: events.guildMemberAdd ?? ignore,
     guildMemberRemove: events.guildMemberRemove ?? ignore,
     guildMemberUpdate: events.guildMemberUpdate ?? ignore,
+    messageCreate: events.messageCreate ?? ignore,
+    messageDelete: events.messageDelete ?? ignore,
+    messageUpdate: events.messageUpdate ?? ignore,
+    reactionAdd: events.reactionAdd ?? ignore,
+    reactionRemove: events.reactionRemove ?? ignore,
+    reactionRemoveAll: events.reactionRemoveAll ?? ignore,
+    reactionRemoveEmoji: events.reactionRemoveEmoji ?? ignore,
     channelCreate: events.channelCreate ?? ignore,
     voiceChannelLeave: events.voiceChannelLeave ?? ignore,
     channelDelete: events.channelDelete ?? ignore,
@@ -339,16 +519,18 @@ export function createRestManager(options: CreateRestManagerOptions) {
 }
 
 export async function startBot(bot: Bot) {
-  const transformers = createTransformers(bot.transformers);
-
-  // SETUP UTILS
+  // SETUP
   bot.utils = createUtils({});
+  bot.transformers = createTransformers(bot.transformers);
+  bot.helpers = createHelpers(bot.helpers);
 
   // START REST
   bot.rest = createRestManager({ token: bot.token });
 
   // START WS
   bot.gateway = createGatewayManager({});
+
+  if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot(bot);
 }
 
 export function createUtils(options: Partial<HelperUtils>) {
@@ -413,6 +595,7 @@ export function createGatewayManager(options: Partial<GatewayManager>): GatewayM
     cache: {
       guildIds: new Set(),
       loadingGuildIds: new Set(),
+      editedMessages: new Collection(),
     },
     secretKey: options.secretKey ?? "",
     url: options.url ?? "",
@@ -495,7 +678,330 @@ export type Bot = CreatedBot & {
   rest: RestManager;
   gateway: GatewayManager;
   transformers: Transformers;
+  helpers: Helpers;
 };
+
+export interface Helpers {
+  addDiscoverySubcategory: typeof addDiscoverySubcategory;
+  addReaction: typeof addReaction;
+  addReactions: typeof addReactions;
+  addRole: typeof addRole;
+  avatarURL: typeof avatarURL;
+  ban: typeof ban;
+  banMember: typeof banMember;
+  batchEditSlashCommandPermissions: typeof batchEditSlashCommandPermissions;
+  categoryChildren: typeof categoryChildren;
+  channelOverwriteHasPermission: typeof channelOverwriteHasPermission;
+  connectToVoiceChannel: typeof connectToVoiceChannel;
+  createChannel: typeof createChannel;
+  createEmoji: typeof createEmoji;
+  createGuild: typeof createGuild;
+  createGuildFromTemplate: typeof createGuildFromTemplate;
+  createGuildTemplate: typeof createGuildTemplate;
+  createInvite: typeof createInvite;
+  createRole: typeof createRole;
+  createSlashCommand: typeof createSlashCommand;
+  createStageInstance: typeof createStageInstance;
+  createWebhook: typeof createWebhook;
+  deleteChannel: typeof deleteChannel;
+  deleteChannelOverwrite: typeof deleteChannelOverwrite;
+  deleteEmoji: typeof deleteEmoji;
+  deleteGuild: typeof deleteGuild;
+  deleteGuildTemplate: typeof deleteGuildTemplate;
+  deleteIntegration: typeof deleteIntegration;
+  deleteInvite: typeof deleteInvite;
+  deleteMessage: typeof deleteMessage;
+  deleteMessages: typeof deleteMessages;
+  deleteRole: typeof deleteRole;
+  deleteSlashCommand: typeof deleteSlashCommand;
+  deleteSlashResponse: typeof deleteSlashResponse;
+  deleteStageInstance: typeof deleteStageInstance;
+  deleteWebhook: typeof deleteWebhook;
+  deleteWebhookMessage: typeof deleteWebhookMessage;
+  deleteWebhookWithToken: typeof deleteWebhookWithToken;
+  disconnectMember: typeof disconnectMember;
+  editBotNickname: typeof editBotNickname;
+  editBotProfile: typeof editBotProfile;
+  editBotStatus: typeof editBotStatus;
+  editChannel: typeof editChannel;
+  editChannelOverwrite: typeof editChannelOverwrite;
+  editDiscovery: typeof editDiscovery;
+  editEmoji: typeof editEmoji;
+  editGuild: typeof editGuild;
+  editGuildTemplate: typeof editGuildTemplate;
+  editMember: typeof editMember;
+  editMessage: typeof editMessage;
+  editRole: typeof editRole;
+  editSlashResponse: typeof editSlashResponse;
+  editSlashCommandPermissions: typeof editSlashCommandPermissions;
+  editWebhook: typeof editWebhook;
+  editWebhookMessage: typeof editWebhookMessage;
+  editWebhookWithToken: typeof editWebhookWithToken;
+  editWelcomeScreen: typeof editWelcomeScreen;
+  editWidget: typeof editWidget;
+  emojiURL: typeof emojiURL;
+  fetchMembers: typeof fetchMembers;
+  followChannel: typeof followChannel;
+  getAuditLogs: typeof getAuditLogs;
+  getAvailableVoiceRegions: typeof getAvailableVoiceRegions;
+  getBan: typeof getBan;
+  getBans: typeof getBans;
+  getChannel: typeof getChannel;
+  getChannelInvites: typeof getChannelInvites;
+  getChannels: typeof getChannels;
+  getChannelWebhooks: typeof getChannelWebhooks;
+  getDiscoveryCategories: typeof getDiscoveryCategories;
+  getEmoji: typeof getEmoji;
+  getEmojis: typeof getEmojis;
+  getGatewayBot: typeof getGatewayBot;
+  getGuild: typeof getGuild;
+  getGuildPreview: typeof getGuildPreview;
+  getGuildTemplates: typeof getGuildTemplates;
+  getIntegrations: typeof getIntegrations;
+  getInvite: typeof getInvite;
+  getInvites: typeof getInvites;
+  getMember: typeof getMember;
+  getMembers: typeof getMembers;
+  getMessage: typeof getMessage;
+  getMessages: typeof getMessages;
+  getOriginalInteractionResponse: typeof getOriginalInteractionResponse;
+  getPins: typeof getPins;
+  getPruneCount: typeof getPruneCount;
+  getReactions: typeof getReactions;
+  getRoles: typeof getRoles;
+  getSlashCommand: typeof getSlashCommand;
+  getSlashCommandPermission: typeof getSlashCommandPermission;
+  getSlashCommandPermissions: typeof getSlashCommandPermissions;
+  getSlashCommands: typeof getSlashCommands;
+  getStageInstance: typeof getStageInstance;
+  getTemplate: typeof getTemplate;
+  getUser: typeof getUser;
+  getApplicationInfo: typeof getApplicationInfo;
+  getVanityURL: typeof getVanityURL;
+  getVoiceRegions: typeof getVoiceRegions;
+  getWebhook: typeof getWebhook;
+  getWebhookMessage: typeof getWebhookMessage;
+  getWebhooks: typeof getWebhooks;
+  getWebhookWithToken: typeof getWebhookWithToken;
+  getWelcomeScreen: typeof getWelcomeScreen;
+  getWidget: typeof getWidget;
+  getWidgetImageURL: typeof getWidgetImageURL;
+  getWidgetSettings: typeof getWidgetSettings;
+  guildBannerURL: typeof guildBannerURL;
+  guildIconURL: typeof guildIconURL;
+  guildSplashURL: typeof guildSplashURL;
+  isButton: typeof isButton;
+  isSelectMenu: typeof isSelectMenu;
+  isSlashCommand: typeof isSlashCommand;
+  isChannelSynced: typeof isChannelSynced;
+  kick: typeof kick;
+  kickMember: typeof kickMember;
+  leaveGuild: typeof leaveGuild;
+  moveMember: typeof moveMember;
+  pin: typeof pin;
+  pinMessage: typeof pinMessage;
+  pruneMembers: typeof pruneMembers;
+  publishMessage: typeof publishMessage;
+  removeAllReactions: typeof removeAllReactions;
+  removeDiscoverySubcategory: typeof removeDiscoverySubcategory;
+  removeReaction: typeof removeReaction;
+  removeReactionEmoji: typeof removeReactionEmoji;
+  removeRole: typeof removeRole;
+  sendDirectMessage: typeof sendDirectMessage;
+  sendInteractionResponse: typeof sendInteractionResponse;
+  sendMessage: typeof sendMessage;
+  sendWebhook: typeof sendWebhook;
+  startTyping: typeof startTyping;
+  swapChannels: typeof swapChannels;
+  syncGuildTemplate: typeof syncGuildTemplate;
+  unban: typeof unban;
+  unbanMember: typeof unbanMember;
+  unpin: typeof unpin;
+  unpinMessage: typeof unpinMessage;
+  updateBotVoiceState: typeof updateBotVoiceState;
+  updateStageInstance: typeof updateStageInstance;
+  upsertSlashCommand: typeof upsertSlashCommand;
+  upsertSlashCommands: typeof upsertSlashCommands;
+  validDiscoveryTerm: typeof validDiscoveryTerm;
+  addToThread: typeof addToThread;
+  archiveThread: typeof archiveThread;
+  deleteThread: typeof deleteThread;
+  editThread: typeof editThread;
+  getActiveThreads: typeof getActiveThreads;
+  getArchivedThreads: typeof getArchivedThreads;
+  getThreadMembers: typeof getThreadMembers;
+  joinThread: typeof joinThread;
+  leaveThread: typeof leaveThread;
+  lockThread: typeof lockThread;
+  removeThreadMember: typeof removeThreadMember;
+  startPrivateThread: typeof startPrivateThread;
+  startThread: typeof startThread;
+  unarchiveThread: typeof unarchiveThread;
+  unlockThread: typeof unlockThread;
+  suppressEmbeds: typeof suppressEmbeds;
+}
+
+export function createHelpers(options: Partial<Helpers>) {
+  return {
+    addDiscoverySubcategory: options.addDiscoverySubcategory || addDiscoverySubcategory,
+    addReaction: options.addReaction || addReaction,
+    addReactions: options.addReactions || addReactions,
+    addRole: options.addRole || addRole,
+    avatarURL: options.avatarURL || avatarURL,
+    ban: options.ban || ban,
+    banMember: options.banMember || banMember,
+    batchEditSlashCommandPermissions: options.batchEditSlashCommandPermissions || batchEditSlashCommandPermissions,
+    categoryChildren: options.categoryChildren || categoryChildren,
+    channelOverwriteHasPermission: options.channelOverwriteHasPermission || channelOverwriteHasPermission,
+    connectToVoiceChannel: options.connectToVoiceChannel || connectToVoiceChannel,
+    createChannel: options.createChannel || createChannel,
+    createEmoji: options.createEmoji || createEmoji,
+    createGuild: options.createGuild || createGuild,
+    createGuildFromTemplate: options.createGuildFromTemplate || createGuildFromTemplate,
+    createGuildTemplate: options.createGuildTemplate || createGuildTemplate,
+    createInvite: options.createInvite || createInvite,
+    createRole: options.createRole || createRole,
+    createSlashCommand: options.createSlashCommand || createSlashCommand,
+    createStageInstance: options.createStageInstance || createStageInstance,
+    createWebhook: options.createWebhook || createWebhook,
+    deleteChannel: options.deleteChannel || deleteChannel,
+    deleteChannelOverwrite: options.deleteChannelOverwrite || deleteChannelOverwrite,
+    deleteEmoji: options.deleteEmoji || deleteEmoji,
+    deleteGuild: options.deleteGuild || deleteGuild,
+    deleteGuildTemplate: options.deleteGuildTemplate || deleteGuildTemplate,
+    deleteIntegration: options.deleteIntegration || deleteIntegration,
+    deleteInvite: options.deleteInvite || deleteInvite,
+    deleteMessage: options.deleteMessage || deleteMessage,
+    deleteMessages: options.deleteMessages || deleteMessages,
+    deleteRole: options.deleteRole || deleteRole,
+    deleteSlashCommand: options.deleteSlashCommand || deleteSlashCommand,
+    deleteSlashResponse: options.deleteSlashResponse || deleteSlashResponse,
+    deleteStageInstance: options.deleteStageInstance || deleteStageInstance,
+    deleteWebhook: options.deleteWebhook || deleteWebhook,
+    deleteWebhookMessage: options.deleteWebhookMessage || deleteWebhookMessage,
+    deleteWebhookWithToken: options.deleteWebhookWithToken || deleteWebhookWithToken,
+    disconnectMember: options.disconnectMember || disconnectMember,
+    editBotNickname: options.editBotNickname || editBotNickname,
+    editBotProfile: options.editBotProfile || editBotProfile,
+    editBotStatus: options.editBotStatus || editBotStatus,
+    editChannel: options.editChannel || editChannel,
+    editChannelOverwrite: options.editChannelOverwrite || editChannelOverwrite,
+    editDiscovery: options.editDiscovery || editDiscovery,
+    editEmoji: options.editEmoji || editEmoji,
+    editGuild: options.editGuild || editGuild,
+    editGuildTemplate: options.editGuildTemplate || editGuildTemplate,
+    editMember: options.editMember || editMember,
+    editMessage: options.editMessage || editMessage,
+    editRole: options.editRole || editRole,
+    editSlashResponse: options.editSlashResponse || editSlashResponse,
+    editSlashCommandPermissions: options.editSlashCommandPermissions || editSlashCommandPermissions,
+    editWebhook: options.editWebhook || editWebhook,
+    editWebhookMessage: options.editWebhookMessage || editWebhookMessage,
+    editWebhookWithToken: options.editWebhookWithToken || editWebhookWithToken,
+    editWelcomeScreen: options.editWelcomeScreen || editWelcomeScreen,
+    editWidget: options.editWidget || editWidget,
+    emojiURL: options.emojiURL || emojiURL,
+    fetchMembers: options.fetchMembers || fetchMembers,
+    followChannel: options.followChannel || followChannel,
+    getAuditLogs: options.getAuditLogs || getAuditLogs,
+    getAvailableVoiceRegions: options.getAvailableVoiceRegions || getAvailableVoiceRegions,
+    getBan: options.getBan || getBan,
+    getBans: options.getBans || getBans,
+    getChannel: options.getChannel || getChannel,
+    getChannelInvites: options.getChannelInvites || getChannelInvites,
+    getChannels: options.getChannels || getChannels,
+    getChannelWebhooks: options.getChannelWebhooks || getChannelWebhooks,
+    getDiscoveryCategories: options.getDiscoveryCategories || getDiscoveryCategories,
+    getEmoji: options.getEmoji || getEmoji,
+    getEmojis: options.getEmojis || getEmojis,
+    getGatewayBot: options.getGatewayBot || getGatewayBot,
+    getGuild: options.getGuild || getGuild,
+    getGuildPreview: options.getGuildPreview || getGuildPreview,
+    getGuildTemplates: options.getGuildTemplates || getGuildTemplates,
+    getIntegrations: options.getIntegrations || getIntegrations,
+    getInvite: options.getInvite || getInvite,
+    getInvites: options.getInvites || getInvites,
+    getMember: options.getMember || getMember,
+    getMembers: options.getMembers || getMembers,
+    getMessage: options.getMessage || getMessage,
+    getMessages: options.getMessages || getMessages,
+    getOriginalInteractionResponse: options.getOriginalInteractionResponse || getOriginalInteractionResponse,
+    getPins: options.getPins || getPins,
+    getPruneCount: options.getPruneCount || getPruneCount,
+    getReactions: options.getReactions || getReactions,
+    getRoles: options.getRoles || getRoles,
+    getSlashCommand: options.getSlashCommand || getSlashCommand,
+    getSlashCommandPermission: options.getSlashCommandPermission || getSlashCommandPermission,
+    getSlashCommandPermissions: options.getSlashCommandPermissions || getSlashCommandPermissions,
+    getSlashCommands: options.getSlashCommands || getSlashCommands,
+    getStageInstance: options.getStageInstance || getStageInstance,
+    getTemplate: options.getTemplate || getTemplate,
+    getUser: options.getUser || getUser,
+    getApplicationInfo: options.getApplicationInfo || getApplicationInfo,
+    getVanityURL: options.getVanityURL || getVanityURL,
+    getVoiceRegions: options.getVoiceRegions || getVoiceRegions,
+    getWebhook: options.getWebhook || getWebhook,
+    getWebhookMessage: options.getWebhookMessage || getWebhookMessage,
+    getWebhooks: options.getWebhooks || getWebhooks,
+    getWebhookWithToken: options.getWebhookWithToken || getWebhookWithToken,
+    getWelcomeScreen: options.getWelcomeScreen || getWelcomeScreen,
+    getWidget: options.getWidget || getWidget,
+    getWidgetImageURL: options.getWidgetImageURL || getWidgetImageURL,
+    getWidgetSettings: options.getWidgetSettings || getWidgetSettings,
+    guildBannerURL: options.guildBannerURL || guildBannerURL,
+    guildIconURL: options.guildIconURL || guildIconURL,
+    guildSplashURL: options.guildSplashURL || guildSplashURL,
+    isButton: options.isButton || isButton,
+    isSelectMenu: options.isSelectMenu || isSelectMenu,
+    isSlashCommand: options.isSlashCommand || isSlashCommand,
+    isChannelSynced: options.isChannelSynced || isChannelSynced,
+    kick: options.kick || kick,
+    kickMember: options.kickMember || kickMember,
+    leaveGuild: options.leaveGuild || leaveGuild,
+    moveMember: options.moveMember || moveMember,
+    pin: options.pin || pin,
+    pinMessage: options.pinMessage || pinMessage,
+    pruneMembers: options.pruneMembers || pruneMembers,
+    publishMessage: options.publishMessage || publishMessage,
+    removeAllReactions: options.removeAllReactions || removeAllReactions,
+    removeDiscoverySubcategory: options.removeDiscoverySubcategory || removeDiscoverySubcategory,
+    removeReaction: options.removeReaction || removeReaction,
+    removeReactionEmoji: options.removeReactionEmoji || removeReactionEmoji,
+    removeRole: options.removeRole || removeRole,
+    sendDirectMessage: options.sendDirectMessage || sendDirectMessage,
+    sendInteractionResponse: options.sendInteractionResponse || sendInteractionResponse,
+    sendMessage: options.sendMessage || sendMessage,
+    sendWebhook: options.sendWebhook || sendWebhook,
+    startTyping: options.startTyping || startTyping,
+    swapChannels: options.swapChannels || swapChannels,
+    syncGuildTemplate: options.syncGuildTemplate || syncGuildTemplate,
+    unban: options.unban || unban,
+    unbanMember: options.unbanMember || unbanMember,
+    unpin: options.unpin || unpin,
+    unpinMessage: options.unpinMessage || unpinMessage,
+    updateBotVoiceState: options.updateBotVoiceState || updateBotVoiceState,
+    updateStageInstance: options.updateStageInstance || updateStageInstance,
+    upsertSlashCommand: options.upsertSlashCommand || upsertSlashCommand,
+    upsertSlashCommands: options.upsertSlashCommands || upsertSlashCommands,
+    validDiscoveryTerm: options.validDiscoveryTerm || validDiscoveryTerm,
+    addToThread: options.addToThread || addToThread,
+    archiveThread: options.archiveThread || archiveThread,
+    deleteThread: options.deleteThread || deleteThread,
+    editThread: options.editThread || editThread,
+    getActiveThreads: options.getActiveThreads || getActiveThreads,
+    getArchivedThreads: options.getArchivedThreads || getArchivedThreads,
+    getThreadMembers: options.getThreadMembers || getThreadMembers,
+    joinThread: options.joinThread || joinThread,
+    leaveThread: options.leaveThread || leaveThread,
+    lockThread: options.lockThread || lockThread,
+    removeThreadMember: options.removeThreadMember || removeThreadMember,
+    startPrivateThread: options.startPrivateThread || startPrivateThread,
+    startThread: options.startThread || startThread,
+    unarchiveThread: options.unarchiveThread || unarchiveThread,
+    unlockThread: options.unlockThread || unlockThread,
+    suppressEmbeds: options.suppressEmbeds || suppressEmbeds,
+  };
+}
 
 export interface Transformers {
   snowflake: typeof snowflakeToBigint;
@@ -511,22 +1017,25 @@ export interface Transformers {
   invite: typeof transformInvite;
   application: typeof transformApplication;
   team: typeof transformTeam;
+  emoji: typeof transformEmoji;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
   return {
-    snowflake: options.snowflake || snowflakeToBigint,
+    application: options.application || transformApplication,
     channel: options.channel || transformChannel,
+    emoji: options.emoji || transformEmoji,
     guild: options.guild || transformGuild,
-    user: options.user || transformUser,
+    integration: options.integration || transformIntegration,
+    interaction: options.interaction || transformInteraction,
+    invite: options.invite || transformInvite,
     member: options.member || transformMember,
     message: options.message || transformMessage,
     role: options.role || transformRole,
-    voiceState: options.voiceState || transformVoiceState,
-    integration: options.integration || transformIntegration,
-    invite: options.invite || transformInvite,
-    application: options.application || transformApplication,
+    user: options.user || transformUser,
     team: options.team || transformTeam,
+    voiceState: options.voiceState || transformVoiceState,
+    snowflake: options.snowflake || snowflakeToBigint,
   };
 }
 
@@ -600,6 +1109,7 @@ export interface GatewayManager {
   cache: {
     guildIds: Set<bigint>;
     loadingGuildIds: Set<bigint>;
+    editedMessages: Collection<bigint, string>;
   };
 
   // METHODS
@@ -652,6 +1162,51 @@ export interface EventHandlers {
   guildMemberAdd: (bot: Bot, member: DiscordenoMember, user: DiscordenoUser) => any;
   guildMemberRemove: (bot: Bot, user: DiscordenoUser, guildId: bigint) => any;
   guildMemberUpdate: (bot: Bot, member: DiscordenoMember, user: DiscordenoUser) => any;
+  messageCreate: (bot: Bot, message: DiscordenoMessage) => any;
+  messageDelete: (
+    bot: Bot,
+    payload: { id: bigint; channelId: bigint; guildId?: bigint },
+    message?: DiscordenoMessage
+  ) => any;
+  messageUpdate: (bot: Bot, message: DiscordenoMessage, oldMessage?: DiscordenoMessage) => any;
+  reactionAdd: (
+    bot: Bot,
+    payload: {
+      userId: bigint;
+      channelId: bigint;
+      messageId: bigint;
+      guildId?: bigint;
+      member?: DiscordenoMember;
+      emoji: DiscordenoEmoji;
+    }
+  ) => any;
+  reactionRemove: (
+    bot: Bot,
+    payload: {
+      userId: bigint;
+      channelId: bigint;
+      messageId: bigint;
+      guildId?: bigint;
+      emoji: DiscordenoEmoji;
+    }
+  ) => any;
+  reactionRemoveEmoji: (
+    bot: Bot,
+    payload: {
+      channelId: bigint;
+      messageId: bigint;
+      guildId?: bigint;
+      emoji: DiscordenoEmoji;
+    }
+  ) => any;
+  reactionRemoveAll: (
+    bot: Bot,
+    payload: {
+      channelId: bigint;
+      messageId: bigint;
+      guildId?: bigint;
+    }
+  ) => any;
   channelCreate: (bot: Bot, channel: DiscordenoChannel) => any;
   dispatchRequirements: (bot: Bot, data: GatewayPayload, shardId: number) => any;
   voiceChannelLeave: (bot: Bot, voiceState: DiscordenoVoiceState, channel: DiscordenoChannel) => any;

@@ -5,6 +5,7 @@ import type { DiscordHello } from "../types/gateway/hello.ts";
 import type { DiscordReady } from "../types/gateway/ready.ts";
 import { Guild } from "../types/guilds/guild.ts";
 import { UnavailableGuild } from "../types/guilds/unavailable_guild.ts";
+import { Message } from "../types/messages/mod.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { delay } from "../util/utils.ts";
@@ -133,6 +134,23 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
         }
 
         gateway.cache.guildIds.add(id);
+      }
+
+      // MESSAGE_UPDATE CAN SPAM FOR NO REASON USE THIS TO IGNORE
+      if (messageData.t === "MESSAGE_UPDATE") {
+        const payload = messageData.d as SnakeCasedPropertiesDeep<Message>;
+
+        const id = snowflakeToBigint(payload.id);
+        const content = payload.content || "";
+        const cached = gateway.cache.editedMessages.get(id);
+
+        if (cached === content) return;
+        else {
+          // ADD TO LOCAL CACHE FOR FUTURE EVENTS.
+          gateway.cache.editedMessages.set(id, content);
+          // REMOVE AFTER 10 SECONDS FROM CACHE
+          setTimeout(() => gateway.cache.editedMessages.delete(id), 10000);
+        }
       }
 
       // MUST HANDLE GUILD_DELETE EVENTS FOR UNAVAILABLE
