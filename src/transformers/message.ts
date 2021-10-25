@@ -2,6 +2,8 @@ import { Bot } from "../bot.ts";
 import { Message } from "../types/messages/message.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordenoAttachment } from "./attachment.ts";
+import { DiscordMessageStickerFormatTypes } from "../types/messages/message_sticker_format_types.ts";
 
 export function transformMessage(bot: Bot, data: SnakeCasedPropertiesDeep<Message>): DiscordenoMessage {
   return {
@@ -12,7 +14,7 @@ export function transformMessage(bot: Bot, data: SnakeCasedPropertiesDeep<Messag
     timestamp: Date.parse(data.timestamp),
     editedTimestamp: data.edited_timestamp ? Date.parse(data.edited_timestamp) : undefined,
     bitfield: (data.tts ? 1n : 0n) | (data.mention_everyone ? 2n : 0n) | (data.pinned ? 4n : 0n),
-    attachments: data.attachments,
+    attachments: data.attachments.map((attachment) => bot.transformers.attachment(bot, attachment)),
     embeds: data.embeds,
     reactions: data.reactions,
     type: data.type,
@@ -22,7 +24,11 @@ export function transformMessage(bot: Bot, data: SnakeCasedPropertiesDeep<Messag
     interaction: data.interaction,
     thread: data.thread,
     components: data.components,
-    stickerItems: data.sticker_items,
+    stickerItems: data.sticker_items?.map((sticker) => ({
+      id: bot.transformers.snowflake(sticker.id),
+      name: sticker.name,
+      formatType: sticker.format_type,
+    })),
 
     // TRANSFORMED STUFF BELOW
     id: bot.transformers.snowflake(data.id),
@@ -74,6 +80,9 @@ export interface DiscordenoMessage
     | "tts"
     | "pinned"
     | "mentionEveryone"
+    | "attachments"
+    | "messageReference"
+    | "stickerItems"
   > {
   id: bigint;
   /** Whether or not this message was sent by a bot */
@@ -107,4 +116,24 @@ export interface DiscordenoMessage
   timestamp: number;
   /** When this message was edited (or undefined if never) */
   editedTimestamp?: number;
+  /** The attachments uploaded with this message */
+  attachments: DiscordenoAttachment[];
+  /** Data showing the source of a crossposted channel follow add, pin or reply message */
+  messageReference?: {
+    /** id of the originating message */
+    messageId?: bigint;
+    /** id of the originating message's channel */
+    channelId?: bigint;
+    /** id of the originating message's guild */
+    guildId?: bigint;
+  };
+  /** Sent if the message contains stickers */
+  stickerItems?: {
+    /** Id of the sticker */
+    id: bigint;
+    /** Name of the sticker */
+    name: string;
+    /** Type of sticker format */
+    formatType: DiscordMessageStickerFormatTypes;
+  }[];
 }
