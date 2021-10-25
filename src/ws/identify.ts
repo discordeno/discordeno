@@ -7,7 +7,7 @@ export function identify(gateway: GatewayManager, shardId: number, maxShards: nu
   // Need to clear the old heartbeat interval
   const oldShard = gateway.shards.get(shardId);
   if (oldShard) {
-    gateway.closeWS(oldShard.gateway, 3065, "Reidentifying closure of old shard");
+    gateway.closeWS(oldShard.ws, 3065, "Reidentifying closure of old shard");
     clearInterval(oldShard.heartbeat.intervalId);
   }
 
@@ -17,7 +17,7 @@ export function identify(gateway: GatewayManager, shardId: number, maxShards: nu
   // Identify can just set/reset the settings for the shard
   gateway.shards.set(shardId, {
     id: shardId,
-    gateway: socket,
+    ws: socket,
     resumeInterval: 0,
     sessionId: "",
     previousSequenceNumber: 0,
@@ -44,7 +44,17 @@ export function identify(gateway: GatewayManager, shardId: number, maxShards: nu
       shardId,
       {
         op: DiscordGatewayOpcodes.Identify,
-        d: { ...gateway.identifyPayload, shard: [shardId, maxShards] },
+        d: {
+          token: gateway.token,
+          compress: gateway.compress,
+          properties: {
+            $os: gateway.$os,
+            $browser: gateway.$browser,
+            $device: gateway.$device,
+          },
+          intents: gateway.intents,
+          shard: [shardId, maxShards],
+        },
       },
       true
     );

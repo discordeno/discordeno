@@ -6,8 +6,8 @@ Deno.test("[Bot] - Starting Tests",  async (t) => {
         token: TOKEN || Deno.env.get('DISCORD_TOKEN'),
         botId: 0n,
         events: createEventHandlers({
-            
-        }),
+            raw: console.log,
+                    }),
         intents: [],
     })
 

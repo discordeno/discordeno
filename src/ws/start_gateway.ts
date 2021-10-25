@@ -32,7 +32,7 @@ export async function startGateway(gateway: GatewayManager, options: StartGatewa
     headers: { Authorization: gateway.token },
   }).then((res) => res.json())) as SnakeCasedPropertiesDeep<GetGatewayBot>;
 
-  gateway.url = result.url;
+  gateway.urlWSS = result.url;
   gateway.sessionStartLimitTotal = result.session_start_limit.total;
   gateway.sessionStartLimitRemaining = result.session_start_limit.remaining;
   gateway.sessionStartLimitResetAfter = result.session_start_limit.reset_after;

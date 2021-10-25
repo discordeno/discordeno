@@ -541,9 +541,16 @@ export async function startBot(bot: Bot) {
 
   // START REST
   bot.rest = createRestManager({ token: bot.token });
+  if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot(bot);
 
   // START WS
   bot.gateway = createGatewayManager({
+    urlWSS: bot.botGatewayData.url,
+    shardsRecommended: bot.botGatewayData.shards,
+    sessionStartLimitTotal: bot.botGatewayData.sessionStartLimit.total,
+    sessionStartLimitRemaining: bot.botGatewayData.sessionStartLimit.remaining,
+    sessionStartLimitResetAfter: bot.botGatewayData.sessionStartLimit.resetAfter,
+    maxConcurrency: bot.botGatewayData.sessionStartLimit.maxConcurrency,
     handleDiscordPayload:
       // bot.handleDiscordPayload ||
       async function (_, data: DiscordGatewayPayload, shardId: number) {
@@ -558,7 +565,7 @@ export async function startBot(bot: Bot) {
       },
   });
 
-  if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot(bot);
+  bot.gateway.spawnShards(bot.gateway)
 }
 
 export function createUtils(options: Partial<HelperUtils>) {
@@ -1079,13 +1086,13 @@ export interface GatewayManager {
   maxShards: number;
   /** Whether or not the resharder should automatically switch to LARGE BOT SHARDING when you are above 100K servers. */
   useOptimalLargeBotSharding: boolean;
-  /** The amount of shards to load per cluster. */
+  /** The amount of shards to load per worker. */
   shardsPerCluster: number;
-  /** The maximum amount of clusters to use for your bot. */
+  /** The maximum amount of workers to use for your bot. */
   maxClusters: number;
   /** The first shard Id to start spawning. */
   firstShardId: number;
-  /** The last shard Id for this cluster. */
+  /** The last shard Id for this worker. */
   lastShardId: number;
   token: string;
   compress: boolean;
@@ -1119,11 +1126,11 @@ export interface GatewayManager {
       startedAt: number;
     }
   >;
-  /** Stored as bucketId: { clusters: [clusterId, [ShardIds]], createNextShard: boolean } */
+  /** Stored as bucketId: { workers: [workerId, [ShardIds]], createNextShard: boolean } */
   buckets: Collection<
     number,
     {
-      clusters: number[][];
+      workers: number[][];
       createNextShard: (() => unknown)[];
     }
   >;
@@ -1149,7 +1156,7 @@ export interface GatewayManager {
   heartbeat: typeof heartbeat;
   /** Sends the discord payload to another server. */
   handleDiscordPayload: (gateway: GatewayManager, data: GatewayPayload, shardId: number) => any;
-  /** Tell the cluster/worker to begin identifying this shard  */
+  /** Tell the worker to begin identifying this shard  */
   tellClusterToIdentify: typeof tellClusterToIdentify;
   /** Handle the different logs. Used for debugging. */
   log: typeof log;

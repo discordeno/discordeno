@@ -2,7 +2,7 @@ import { DiscordGatewayCloseEventCodes } from "../types/codes/gateway_close_even
 import { GatewayManager } from "../bot.ts";
 
 export function createShard(gateway: GatewayManager, shardId: number) {
-  const socket = new WebSocket(gateway.botGatewayData.url);
+  const socket = new WebSocket(gateway.urlWSS);
   socket.binaryType = "arraybuffer";
 
   socket.onerror = (errorEvent) => {

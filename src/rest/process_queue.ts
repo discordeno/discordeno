@@ -10,7 +10,7 @@ export function processQueue(rest: RestManager, id: string) {
     // SELECT THE FIRST ITEM FROM THIS QUEUE
     const queuedRequest = queue.requests[0];
     // IF THIS DOESNT HAVE ANY ITEMS JUST CANCEL, THE CLEANER WILL REMOVE IT.
-    if (!queuedRequest) return;
+    if (!queuedRequest) break;
 
     const basicURL = rest.simplifyUrl(queuedRequest.request.url, queuedRequest.request.method.toUpperCase());
 
@@ -30,14 +30,12 @@ export function processQueue(rest: RestManager, id: string) {
       // BREAK WHILE LOOP
       break;
     }
-
     // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
     const bucketResetIn = queuedRequest.payload.bucketId
       ? rest.checkRateLimits(rest, queuedRequest.payload.bucketId)
       : false;
     // THIS BUCKET IS STILL RATELIMITED, RE-ADD TO QUEUE
     if (bucketResetIn) continue;
-
     // EXECUTE THE REQUEST
 
     // IF THIS IS A GET REQUEST, CHANGE THE BODY TO QUERY PARAMETERS
@@ -56,7 +54,6 @@ export function processQueue(rest: RestManager, id: string) {
       queuedRequest.request.method.toUpperCase() === "GET" && query
         ? `${queuedRequest.request.url}?${query}`
         : queuedRequest.request.url;
-
     // CUSTOM HANDLER FOR USER TO LOG OR WHATEVER WHENEVER A FETCH IS MADE
     rest.debug(`[REST - Add To Global Queue] ${JSON.stringify(queuedRequest.payload)}`);
     rest.globalQueue.push({
@@ -64,6 +61,8 @@ export function processQueue(rest: RestManager, id: string) {
       basicURL,
       urlToUse,
     });
+    rest.processGlobalQueue(rest);
+    queue.requests.splice(0, 1)
   }
 
   // ONCE QUEUE IS DONE, WE CAN TRY CLEANING UP
