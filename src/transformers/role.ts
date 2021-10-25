@@ -30,13 +30,11 @@ export function transformRole(
   };
 }
 
-export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions"> {
+export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions" | "hoist" | "mentionable" | "managed"> {
   /** The role id */
   id: bigint;
   /** The bot id that is associated with this role. */
   botId?: bigint;
-  /** If this role is the nitro boost role. */
-  isNitroBoostRole: boolean;
   /** The integration id that is associated with this role */
   integrationId?: bigint;
   /** The roles guildId */

@@ -23,7 +23,7 @@ export async function startTyping(bot: Bot, channelId: bigint) {
       throw new Error(bot.constants.Errors.CHANNEL_NOT_TEXT_BASED);
     }
 
-    const hasSendMessagesPerm = await bot.utils.botHasChannelPermissions(bots, channelId, ["SEND_MESSAGES"]);
+    const hasSendMessagesPerm = await bot.utils.botHasChannelPermissions(bot, channelId, ["SEND_MESSAGES"]);
     if (!hasSendMessagesPerm) {
       throw new Error(bot.constants.Errors.MISSING_SEND_MESSAGES);
     }

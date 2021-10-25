@@ -37,8 +37,8 @@ export async function createChannel(bot: Bot, guildId: bigint, options?: CreateG
       : {}
   );
 
-  const discordenoChannel = bot.transformers.channel(result);
-  await bot.cache.channels.set(discordenoChannel.id, discordenoChannel);
+  const channel = bot.transformers.channel(bot, { channel: result, guildId });
+  await bot.cache.channels.set(channel.id, channel);
 
-  return discordenoChannel;
+  return channel;
 }

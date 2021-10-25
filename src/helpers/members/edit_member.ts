@@ -43,7 +43,7 @@ export async function editMember(bot: Bot, guildId: bigint, memberId: bigint, op
 
   await bot.utils.requireBotGuildPermissions(bot, guildId, [...requiredPerms]);
 
-  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<GuildMemberWithUser>>(
+  const result = await bot.rest.runMethod<GuildMemberWithUser>(
     bot.rest,
     "patch",
     bot.constants.endpoints.GUILD_MEMBER(guildId, memberId),

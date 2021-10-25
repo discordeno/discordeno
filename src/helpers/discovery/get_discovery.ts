@@ -6,7 +6,7 @@ import type { Bot } from "../../bot.ts";
 export async function getDiscovery(bot: Bot, guildId: bigint) {
   await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-  return await bot.rest.runMethod<SnakeCasedPropertiesDeep<DiscoveryMetadata>>(
+  return await bot.rest.runMethod<DiscoveryMetadata>(
     bot.rest,
     "get",
     bot.constants.endpoints.DISCOVERY_METADATA(guildId)

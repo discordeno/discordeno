@@ -8,7 +8,7 @@ import type { Bot } from "../../bot.ts";
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()?.emojis
  */
 export async function getEmoji(bot: Bot, guildId: bigint, emojiId: bigint, addToCache = true) {
-  const result = await bot.rest.runMethod<Emoji>("get", bot.constants.endpoints.GUILD_EMOJI(guildId, emojiId));
+  const result = await bot.rest.runMethod<Emoji>(bot.rest, "get", bot.constants.endpoints.GUILD_EMOJI(guildId, emojiId));
 
   if (addToCache) {
     const guild = await bot.cache.guilds.get(guildId);

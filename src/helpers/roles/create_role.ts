@@ -7,7 +7,7 @@ import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 export async function createRole(bot: Bot, guildId: bigint, options: CreateGuildRole, reason?: string) {
   await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_ROLES"]);
 
-  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Role>>(
+  const result = await bot.rest.runMethod<Role>(bot.rest,
     "post",
     bot.constants.endpoints.GUILD_ROLES(guildId),
     {

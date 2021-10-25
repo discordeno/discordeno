@@ -22,9 +22,9 @@ export function fetchMembers(
   // You can request 1 member without the intent
   // Check if intents is not 0 as proxy ws won't set intents in other instances
   if (
-    bot.gateway.identifyPayload.intents &&
+    bot.intents &&
     (!options?.limit || options.limit > 1) &&
-    !(bot.gateway.identifyPayload.intents & DiscordGatewayIntents.GuildMembers)
+    !(bot.intents & DiscordGatewayIntents.GuildMembers)
   ) {
     throw new Error(bot.constants.Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
@@ -35,10 +35,9 @@ export function fetchMembers(
 
   return new Promise((resolve) => {
     const nonce = `${guildId}-${Date.now()}`;
-    // TODO: FIND A BETTER WAY TO DO THAT?
-    cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
+    bot.cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
 
-    bot.gateway.sendShardMessage(shardId, {
+    bot.gateway.sendShardMessage(bot.gateway, shardId, {
       op: DiscordGatewayOpcodes.RequestGuildMembers,
       d: {
         guild_id: guildId,

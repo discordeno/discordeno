@@ -18,7 +18,7 @@ export async function getSlashCommands(bot: Bot, guildId?: bigint) {
       {
         ...command,
         id: bot.transformers.snowflake(command.id),
-        applicationId: bot.transformers.snowflake(command.applicationId),
+        applicationId: bot.transformers.snowflake(command.application_id),
       },
     ])
   );

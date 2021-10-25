@@ -14,7 +14,7 @@ import type { Bot } from "../../../bot.ts";
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
 export async function createSlashCommand(bot: Bot, options: CreateGlobalApplicationCommand, guildId?: bigint) {
-  [options] = bot.utils.validateSlashCommands([options], true) as CreateGlobalApplicationCommand[];
+  [options] = bot.utils.validateSlashCommands(bot, [options], true) as CreateGlobalApplicationCommand[];
 
   return await bot.rest.runMethod<ApplicationCommand>(
     bot.rest,

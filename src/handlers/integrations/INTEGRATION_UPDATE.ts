@@ -4,7 +4,7 @@ import type { IntegrationCreateUpdate } from "../../types/integrations/integrati
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export function handleIntegrationUpdate(bot: Bot, data: DiscordGatewayPayload) {
-  bot.events.integrationsUpdate(
+  bot.events.integrationUpdate(
     bot,
     bot.transformers.integration(bot, data.d as SnakeCasedPropertiesDeep<IntegrationCreateUpdate>)
   );

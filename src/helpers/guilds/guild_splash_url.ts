@@ -19,7 +19,7 @@ export function guildSplashURL(
           id,
           typeof options.splash === "string"
             ? options.splash
-            : bot.utils.iconBigintToHash(options.splash, options.animated ?? true)
+            : bot.utils.iconBigintToHash(options.splash)
         ),
         options.size || 128,
         options.format

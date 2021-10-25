@@ -10,11 +10,8 @@ export function sendShardMessage(
   if (typeof shard === "number") shard = gateway.shards.get(shard)!;
   if (!shard) return;
 
-  if (!highPriority) {
-    shard.queue.push(message);
-  } else {
-    shard.queue.unshift(message);
-  }
+  if (highPriority) shard.queue.unshift(message);
+  else shard.queue.push(message);
 
   gateway.processGatewayQueue(gateway, shard.id);
 }

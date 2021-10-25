@@ -12,7 +12,7 @@ export async function addReactions(
     await Promise.all(reactions.map((reaction) => bot.helpers.addReaction(bot, channelId, messageId, reaction)));
   } else {
     for (const reaction of reactions) {
-      bot.events.debug("loop", "Running for of loop in addReactions function.");
+      bot.events.debug("Running for of loop in addReactions function.");
       await bot.helpers.addReaction(bot, channelId, messageId, reaction);
     }
   }

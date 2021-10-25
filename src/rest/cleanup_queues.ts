@@ -4,7 +4,7 @@ import { RestManager } from "../bot.ts";
 export function cleanupQueues(rest: RestManager) {
   for (const [key, queue] of rest.pathQueues) {
     rest.debug(`[REST - cleanupQueues] Running for of loop. ${key}`);
-    if (queue.length) continue;
+    if (queue.requests.length) continue;
     // REMOVE IT FROM CACHE
     rest.pathQueues.delete(key);
   }

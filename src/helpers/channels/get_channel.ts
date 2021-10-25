@@ -8,9 +8,9 @@ import type { Channel } from "../../types/channels/channel.ts";
 export async function getChannel(bot: Bot, channelId: bigint, addToCache = true) {
   const result = await bot.rest.runMethod<Channel>(bot.rest, "get", bot.constants.endpoints.CHANNEL_BASE(channelId));
 
-  const discordenoChannel = bot.transformers.channel({
+  const discordenoChannel = bot.transformers.channel(bot, {
     channel: result,
-    guildId: result.guildId ? bot.transformers.snowflake(result.guildId) : undefined,
+    guildId: result.guild_id ? bot.transformers.snowflake(result.guild_id) : undefined,
   });
   if (addToCache) {
     await bot.cache.channels.set(discordenoChannel.id, discordenoChannel);

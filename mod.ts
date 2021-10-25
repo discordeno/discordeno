@@ -1,5 +1,4 @@
 export * from "./src/bot.ts";
-export * from "./src/cache.ts";
 export * from "./src/handlers/mod.ts";
 export * from "./src/helpers/mod.ts";
 export * from "./src/rest/mod.ts";

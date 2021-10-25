@@ -1,4 +1,4 @@
-import type { ChannelTypes } from "../../types/channels/channel_types.ts";
+import { ChannelTypes } from "../../types/channels/channel_types.ts";
 import type { StageInstance } from "../../types/channels/stage_instance.ts";
 import type { Bot } from "../../bot.ts";
 

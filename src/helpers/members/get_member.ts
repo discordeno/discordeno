@@ -10,7 +10,7 @@ export async function getMember(bot: Bot, guildId: bigint, id: bigint, options?:
   const guild = await bot.cache.guilds.get(guildId);
   if (!guild && !options?.force) return;
 
-  const data = await bot.rest.runMethod<SnakeCasedPropertiesDeep<GuildMemberWithUser>>(
+  const data = await bot.rest.runMethod<GuildMemberWithUser>(
     bot.rest,
     "get",
     bot.constants.endpoints.GUILD_MEMBER(guildId, id)

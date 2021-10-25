@@ -10,7 +10,7 @@ export async function sendDirectMessage(bot: Bot, memberId: bigint, content: str
   let dmChannel = await bot.cache.channels.get(memberId);
   if (!dmChannel) {
     // If not available in cache create a new one.
-    const dmChannelData = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Channel>>(
+    const dmChannelData = await bot.rest.runMethod<Channel>(
       bot.rest,
       "post",
       bot.constants.endpoints.USER_DM,
@@ -25,5 +25,5 @@ export async function sendDirectMessage(bot: Bot, memberId: bigint, content: str
   }
 
   // If it does exist try sending a message to this user
-  return await bot.helpers.sendMessage(dmChannel.id, content);
+  return await bot.helpers.sendMessage(bot, dmChannel.id, content);
 }

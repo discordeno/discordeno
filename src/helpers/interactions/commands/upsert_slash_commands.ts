@@ -13,7 +13,7 @@ export async function upsertSlashCommands(
   options: MakeRequired<EditGlobalApplicationCommand, "name">[],
   guildId?: bigint
 ) {
-  options = bot.utils.validateSlashCommands(options) as MakeRequired<EditGlobalApplicationCommand, "name">[];
+  options = bot.utils.validateSlashCommands(bot, options) as MakeRequired<EditGlobalApplicationCommand, "name">[];
 
   return await bot.rest.runMethod<ApplicationCommand[]>(
     bot.rest,

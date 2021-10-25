@@ -49,7 +49,7 @@ export async function dispatchRequirements(bot: Bot, data: DiscordGatewayPayload
   bot.events.debug(`[DISPATCH] New Guild ID has appeared: ${id} in ${data.t} event`);
 
   const rawGuild = (await bot.helpers
-    .getGuild(id, {
+    .getGuild(bot, id, {
       counts: true,
       addToCache: false,
     })
@@ -63,8 +63,8 @@ export async function dispatchRequirements(bot: Bot, data: DiscordGatewayPayload
   bot.events.debug(`[DISPATCH] Guild ID ${id} has been found. ${rawGuild.name}`);
 
   const [channels, botMember] = await Promise.all([
-    bot.helpers.getChannels(id, false),
-    bot.helpers.getMember(id, bot.id, { force: true }),
+    bot.helpers.getChannels(bot, id, false),
+    bot.helpers.getMember(bot, id, bot.id, { force: true }),
   ]).catch((error) => {
     bot.events.debug(error);
     return [];
@@ -78,8 +78,10 @@ export async function dispatchRequirements(bot: Bot, data: DiscordGatewayPayload
   }
 
   const guild = bot.transformers.guild(bot, {
-    ...rawGuild,
-    member_count: rawGuild.approximateMemberCount,
+    guild: {
+      ...rawGuild,
+      member_count: rawGuild.approximate_member_count,
+    },
     shardId,
   });
 

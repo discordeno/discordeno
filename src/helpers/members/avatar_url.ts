@@ -20,7 +20,7 @@ export function avatarURL(
           userId,
           typeof options.avatar === "string"
             ? options.avatar
-            : bot.utils.iconBigintToHash(options.avatar, options.animated ?? true)
+            : bot.utils.iconBigintToHash(options.avatar)
         ),
         options.size || 128,
         options.format

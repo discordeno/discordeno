@@ -14,5 +14,5 @@ export async function followChannel(bot: Bot, sourceChannelId: bigint, targetCha
     }
   );
 
-  return data.webhookId;
+  return bot.transformers.snowflake(data.webhook_id);
 }

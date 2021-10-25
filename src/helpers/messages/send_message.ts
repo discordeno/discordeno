@@ -73,7 +73,7 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
     }
   }
 
-  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Message>>(
+  const result = await bot.rest.runMethod<Message>(
     bot.rest,
     "post",
     bot.constants.endpoints.CHANNEL_MESSAGES(channelId),

@@ -10,7 +10,7 @@ export async function editWebhookWithToken(
   webhookToken: string,
   options: Omit<ModifyWebhook, "channelId">
 ) {
-  return await bot.rest.runMethod<SnakeCasedPropertiesDeep<Webhook>>(
+  return await bot.rest.runMethod<Webhook>(
     bot.rest,
     "patch",
     bot.constants.endpoints.WEBHOOK(webhookId, webhookToken),

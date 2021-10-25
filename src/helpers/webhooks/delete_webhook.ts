@@ -4,5 +4,5 @@ import type { Bot } from "../../bot.ts";
 export async function deleteWebhook(bot: Bot, channelId: bigint, webhookId: bigint) {
   await bot.utils.requireBotChannelPermissions(bot, channelId, ["MANAGE_WEBHOOKS"]);
 
-  return await bot.rest.runMethod<undefined>(bot.rset, "delete", bot.constants.endpoints.WEBHOOK_ID(webhookId));
+  return await bot.rest.runMethod<undefined>(bot.rest, "delete", bot.constants.endpoints.WEBHOOK_ID(webhookId));
 }

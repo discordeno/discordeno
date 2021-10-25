@@ -10,7 +10,7 @@ export function resume(gateway: GatewayManager, shardId: number) {
 
   if (oldShard) {
     // HOW TO CLOSE OLD SHARD SOCKET!!!
-    gateway.closeWS(oldShard.gateway, 3064, "Resuming the shard, closing old shard.");
+    gateway.closeWS(oldShard.ws, 3064, "Resuming the shard, closing old shard.");
     // STOP OLD HEARTBEAT
     clearInterval(oldShard.heartbeat.intervalId);
   }
@@ -23,7 +23,7 @@ export function resume(gateway: GatewayManager, shardId: number) {
 
   gateway.shards.set(shardId, {
     id: shardId,
-    gateway: socket,
+    ws: socket,
     resumeInterval: 0,
     sessionId: sessionId,
     previousSequenceNumber: previousSequenceNumber,
@@ -52,7 +52,7 @@ export function resume(gateway: GatewayManager, shardId: number) {
       {
         op: DiscordGatewayOpcodes.Resume,
         d: {
-          token: gateway.identifyPayload.token,
+          token: gateway.token,
           session_id: sessionId,
           seq: previousSequenceNumber,
         },

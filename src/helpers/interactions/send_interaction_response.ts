@@ -32,28 +32,20 @@ export async function sendInteractionResponse(
     options.data = { ...options.data, allowedMentions: { parse: [] } };
   }
 
+  const allowedMentions: AllowedMentions = options.data?.allowedMentions || { parse: [] };
+
   // If its already been executed, we need to send a followup response
   if (bot.cache.executedSlashCommands.has(token)) {
-    return await bot.rest.runMethod(bot.rest, "post", bot.cosntants.endpoints.WEBHOOK(bot.applicationId, token), {
+    return await bot.rest.runMethod(bot.rest, "post", bot.constants.endpoints.WEBHOOK(bot.applicationId, token), {
       content: options.data.content,
       tts: options.data.tts,
       embeds: options.data.embeds,
       allowed_mentions: {
-        parse: options.data.allowedMentions.parse,
-        roles: options.data.allowedMentions.roles,
-        users: options.data.allowedMentions.users,
-        replied_user: options.data.allowedMentions.repliedUser,
+        parse: allowedMentions.parse,
+        roles: allowedMentions.roles,
+        users: allowedMentions.users,
+        replied_user: allowedMentions.repliedUser,
       },
-      ...(options.data.messageReference?.messageId
-        ? {
-            message_reference: {
-              message_id: options.data.messageReference.messageId,
-              channel_id: options.data.messageReference.channelId,
-              guild_id: options.data.messageReference.guildId,
-              fail_if_not_exists: options.data.messageReference.failIfNotExists === true,
-            },
-          }
-        : {}),
       file: options.data.file,
       // TODO: Snakelize components??
       components: options.data.components,
@@ -62,10 +54,10 @@ export async function sendInteractionResponse(
   }
 
   // Expire in 15 minutes
-  cache.executedSlashCommands.add(token);
+  bot.cache.executedSlashCommands.add(token);
   setTimeout(() => {
-    eventHandlers.debug?.("loop", `Running setTimeout in send_interaction_response file.`);
-    cache.executedSlashCommands.delete(token);
+    bot.events.debug(`Running setTimeout in send_interaction_response file.`);
+    bot.cache.executedSlashCommands.delete(token);
   }, 900000);
 
   return await bot.rest.runMethod(
@@ -77,21 +69,11 @@ export async function sendInteractionResponse(
       tts: options.data.tts,
       embeds: options.data.embeds,
       allowed_mentions: {
-        parse: options.data.allowedMentions.parse,
-        roles: options.data.allowedMentions.roles,
-        users: options.data.allowedMentions.users,
-        replied_user: options.data.allowedMentions.repliedUser,
+        parse: allowedMentions.parse,
+        roles: allowedMentions.roles,
+        users: allowedMentions.users,
+        replied_user: allowedMentions.repliedUser,
       },
-      ...(options.data.messageReference?.messageId
-        ? {
-            message_reference: {
-              message_id: options.data.messageReference.messageId,
-              channel_id: options.data.messageReference.channelId,
-              guild_id: options.data.messageReference.guildId,
-              fail_if_not_exists: options.data.messageReference.failIfNotExists === true,
-            },
-          }
-        : {}),
       file: options.data.file,
       // TODO: Snakelize components??
       components: options.data.components,

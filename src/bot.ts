@@ -13,6 +13,10 @@ import {
   higherRolePosition,
   requireBotChannelPermissions,
   requireBotGuildPermissions,
+  botHasChannelPermissions,
+  calculateBits,
+  isHigherPosition,
+  requireOverwritePermissions,
 } from "./util/permissions.ts";
 import {
   checkRateLimits,
@@ -45,6 +49,7 @@ import {
   DiscordenoVoiceState,
   transformVoiceState,
   DiscordenoMessage,
+  DiscordenoRole,
 } from "./transformers/mod.ts";
 import {
   baseEndpoints,
@@ -74,7 +79,15 @@ import {
   processGatewayQueue,
 } from "./ws/mod.ts";
 import { validateLength } from "./util/validate_length.ts";
-import { delay, validateComponents, validateSlashOptionChoices, validateSlashOptions } from "./util/utils.ts";
+import {
+  delay,
+  formatImageURL,
+  hasProperty,
+  validateComponents,
+  validateSlashCommands,
+  validateSlashOptionChoices,
+  validateSlashOptions,
+} from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { calculateShardId } from "./util/calculate_shard_id.ts";
 import {
@@ -296,6 +309,8 @@ import { DiscordenoEmoji, transformEmoji } from "./transformers/emoji.ts";
 import { transformActivity } from "./transformers/activity.ts";
 import { DiscordenoPresence, transformPresence } from "./transformers/presence.ts";
 import { DiscordReady } from "./types/gateway/ready.ts";
+import { urlToBase64 } from "./util/url_to_base64.ts";
+import { transformAttachment } from "./transformers/attachment.ts";
 
 export function createBot(options: CreateBotOptions) {
   return {
@@ -312,6 +327,7 @@ export function createBot(options: CreateBotOptions) {
     cache: {
       execute: async function (
         type:
+          | "FILTER_CATEGORY_CHILDREN_CHANNELS"
           | "DELETE_MESSAGES_FROM_CHANNEL"
           | "DELETE_ROLE_FROM_MEMBER"
           | "BULK_DELETE_MESSAGES"
@@ -323,6 +339,7 @@ export function createBot(options: CreateBotOptions) {
           | "DELETE_GUILD_FROM_MEMBER",
         options: Record<string, any>
       ) {},
+      executedSlashCommands: new Set<string>(),
       fetchAllMembersProcessingRequests: new Collection<string, Function>(),
       messages: {
         get: async function (id: bigint): Promise<DiscordenoMessage | undefined> {
@@ -350,6 +367,9 @@ export function createBot(options: CreateBotOptions) {
         },
         delete: async function (id: bigint): Promise<void> {
           return;
+        },
+        size: async function (): Promise<number> {
+          return 0;
         },
       },
       channels: {
@@ -473,6 +493,12 @@ export function createEventHandlers(events: Partial<EventHandlers>): EventHandle
     stageInstanceCreate: events.stageInstanceCreate ?? ignore,
     stageInstanceDelete: events.stageInstanceDelete ?? ignore,
     stageInstanceUpdate: events.stageInstanceUpdate ?? ignore,
+    roleCreate: events.roleCreate ?? ignore,
+    roleDelete: events.roleDelete ?? ignore,
+    roleUpdate: events.roleUpdate ?? ignore,
+    webhooksUpdate: events.webhooksUpdate ?? ignore,
+    botUpdate: events.botUpdate ?? ignore,
+    typingStart: events.typingStart ?? ignore,
   };
 }
 
@@ -599,6 +625,14 @@ export function createUtils(options: Partial<HelperUtils>) {
     requireBotChannelPermissions,
     requireBotGuildPermissions,
     validateComponents,
+    hasProperty,
+    urlToBase64,
+    botHasChannelPermissions,
+    calculateBits,
+    isHigherPosition,
+    formatImageURL,
+    validateSlashCommands,
+    requireOverwritePermissions,
   };
 }
 
@@ -626,7 +660,15 @@ export interface HelperUtils {
   validateSlashOptionChoices: typeof validateSlashOptionChoices;
   requireBotChannelPermissions: typeof requireBotChannelPermissions;
   requireBotGuildPermissions: typeof requireBotGuildPermissions;
+  botHasChannelPermissions: typeof botHasChannelPermissions;
   validateComponents: typeof validateComponents;
+  hasProperty: typeof hasProperty;
+  urlToBase64: typeof urlToBase64;
+  calculateBits: typeof calculateBits;
+  isHigherPosition: typeof isHigherPosition;
+  formatImageURL: typeof formatImageURL;
+  validateSlashCommands: typeof validateSlashCommands;
+  requireOverwritePermissions: typeof requireOverwritePermissions;
 }
 
 export function createGatewayManager(
@@ -691,7 +733,7 @@ export async function stopBot(bot: Bot) {
     bot.gateway.closeWS(shard.ws, 3061, "Discordeno Testing Finished! Do Not RESUME!");
   });
 
-  await delay(3000);
+  await delay(5000);
 }
 
 export interface CreateBotOptions {
@@ -1055,12 +1097,14 @@ export interface Transformers {
   emoji: typeof transformEmoji;
   activity: typeof transformActivity;
   presence: typeof transformPresence;
+  attachment: typeof transformAttachment;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
   return {
     activity: options.activity || transformActivity,
     application: options.application || transformApplication,
+    attachment: options.attachment || transformAttachment,
     channel: options.channel || transformChannel,
     emoji: options.emoji || transformEmoji,
     guild: options.guild || transformGuild,
@@ -1322,6 +1366,21 @@ export interface EventHandlers {
   guildDelete: (bot: Bot, id: bigint, guild?: DiscordenoGuild) => any;
   guildUpdate: (bot: Bot, guild: DiscordenoGuild, cachedGuild?: DiscordenoGuild) => any;
   raw: (bot: Bot, data: GatewayPayload, shardId: number) => any;
+  roleCreate: (bot: Bot, guild: DiscordenoGuild, role: DiscordenoRole) => any;
+  roleDelete: (bot: Bot, guild: DiscordenoGuild, role: DiscordenoRole) => any;
+  roleUpdate: (bot: Bot, guild: DiscordenoGuild, role: DiscordenoRole, oldRole?: DiscordenoRole) => any;
+  webhooksUpdate: (bot: Bot, payload: { channelId: bigint; guildId: bigint }) => any;
+  botUpdate: (bot: Bot, user: DiscordenoUser) => any;
+  typingStart: (
+    bot: Bot,
+    payload: {
+      guildId: bigint | undefined;
+      channelId: bigint;
+      userId: bigint;
+      timestamp: number;
+      member: DiscordenoMember | undefined;
+    }
+  ) => any;
 }
 
 export function createBotConstants() {

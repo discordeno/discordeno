@@ -6,14 +6,14 @@ import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 export async function deleteInvite(bot: Bot, channelId: bigint, inviteCode: string) {
   const channel = await bot.cache.channels.get(channelId);
   if (channel) {
-    const hasPerm = await bot.utils.botHasChannelPermissions(channel, ["MANAGE_CHANNELS"]);
+    const hasPerm = await bot.utils.botHasChannelPermissions(bot, channel, ["MANAGE_CHANNELS"]);
 
     if (!hasPerm) {
-      await bot.utils.requireBotGuildPermissions(channel.guildId, ["MANAGE_GUILD"]);
+      await bot.utils.requireBotGuildPermissions(bot, channel.guildId, ["MANAGE_GUILD"]);
     }
   }
 
-  return await bot.rest.runMethod<SnakeCasedPropertiesDeep<InviteMetadata>>(
+  return await bot.rest.runMethod<InviteMetadata>(
     bot.rest,
     "delete",
     bot.constants.endpoints.INVITE(inviteCode)

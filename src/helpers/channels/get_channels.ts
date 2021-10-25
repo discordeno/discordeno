@@ -13,12 +13,12 @@ export async function getChannels(bot: Bot, guildId: bigint, addToCache = true) 
     (
       await Promise.all(
         result.map(async (res) => {
-          const discordenoChannel = await bot.transformers.channel({ channel: res, guildId });
+          const channel = bot.transformers.channel(bot, { channel: res, guildId });
           if (addToCache) {
-            await bot.cache.channels.set(discordenoChannel.id, discordenoChannel);
+            await bot.cache.channels.set(channel.id, channel);
           }
 
-          return discordenoChannel;
+          return channel;
         })
       )
     ).map((c) => [c.id, c])

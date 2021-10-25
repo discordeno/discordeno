@@ -5,7 +5,7 @@ import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Returns a Collection (mapped by Id of the discovery category object) of discovery category objects that can be used when editing guilds */
 export async function getDiscoveryCategories(bot: Bot) {
-  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<DiscoveryCategory>[]>(
+  const result = await bot.rest.runMethod<DiscoveryCategory[]>(
     bot.rest,
     "get",
     bot.constants.endpoints.DISCOVERY_CATEGORIES

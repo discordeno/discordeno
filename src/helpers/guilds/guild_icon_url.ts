@@ -17,9 +17,7 @@ export function guildIconURL(
     ? bot.utils.formatImageURL(
         bot.constants.endpoints.GUILD_ICON(
           id,
-          typeof options.icon === "string"
-            ? options.icon
-            : bot.utils.iconBigintToHash(options.icon, options.animated ?? true)
+          typeof options.icon === "string" ? options.icon : bot.utils.iconBigintToHash(options.icon)
         ),
         options.size || 128,
         options.format

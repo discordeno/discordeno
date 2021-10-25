@@ -7,7 +7,8 @@ import type { Bot } from "../../bot.ts";
 export async function getInvites(bot: Bot, guildId: bigint) {
   await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<InviteMetadata>[]>(
+  const result = await bot.rest.runMethod<InviteMetadata[]>(
+    bot.rest,
     "get",
     bot.constants.endpoints.GUILD_INVITES(guildId)
   );

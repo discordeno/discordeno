@@ -17,9 +17,7 @@ export function guildBannerURL(
     ? bot.utils.formatImageURL(
         bot.constants.endpoints.GUILD_BANNER(
           id,
-          typeof options.banner === "string"
-            ? options.banner
-            : bot.utils.iconBigintToHash(options.banner, options.animated ?? true)
+          typeof options.banner === "string" ? options.banner : bot.utils.iconBigintToHash(options.banner)
         ),
         options.size || 128,
         options.format

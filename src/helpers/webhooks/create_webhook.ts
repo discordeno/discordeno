@@ -9,7 +9,7 @@ import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
  * Webhook names cannot be: 'clyde'
  */
 export async function createWebhook(bot: Bot, channelId: bigint, options: CreateWebhook) {
-  await bot.utils.requireBotChannelPermissions(channelId, ["MANAGE_WEBHOOKS"]);
+  await bot.utils.requireBotChannelPermissions(bot, channelId, ["MANAGE_WEBHOOKS"]);
 
   if (
     // Specific usernames that discord does not allow
@@ -19,7 +19,7 @@ export async function createWebhook(bot: Bot, channelId: bigint, options: Create
     throw new Error(bot.constants.Errors.INVALID_WEBHOOK_NAME);
   }
 
-  return await bot.rest.runMethod<SnakeCasedPropertiesDeep<Webhook>>(
+  return await bot.rest.runMethod<Webhook>(
     bot.rest,
     "post",
     bot.constants.endpoints.CHANNEL_WEBHOOKS(channelId),

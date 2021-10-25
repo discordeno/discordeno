@@ -2,10 +2,10 @@ import type { Bot } from "../../bot.ts";
 
 /** Delete a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function deleteChannel(bot: Bot, channelId: bigint, reason?: string) {
-  const channel = await cacheHandlers.get("channels", channelId);
+  const channel = await bot.cache.channels.get(channelId);
 
   if (channel?.guildId) {
-    const guild = await cacheHandlers.get("guilds", channel.guildId);
+    const guild = await bot.cache.guilds.get(channel.guildId);
     if (!guild) throw new Error(bot.constants.Errors.GUILD_NOT_FOUND);
 
     if (guild.rulesChannelId === channelId) {

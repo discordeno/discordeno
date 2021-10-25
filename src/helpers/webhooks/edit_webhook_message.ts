@@ -41,10 +41,10 @@ export async function editWebhookMessage(
   }
 
   if (options.components?.length) {
-    bot.utils.validateComponents(options.components);
+    bot.utils.validateComponents(bot, options.components);
   }
 
-  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Message>>(
+  const result = await bot.rest.runMethod<Message>(
     bot.rest,
     "patch",
     options.messageId
@@ -54,12 +54,12 @@ export async function editWebhookMessage(
       content: options.content,
       embeds: options.embeds,
       file: options.file,
-      allowed_mentions: {
-        parse: content.allowedMentions.parse,
-        roles: content.allowedMentions.roles,
-        users: content.allowedMentions.users,
-        replied_user: content.allowedMentions.repliedUser,
-      },
+      allowed_mentions: options.allowedMentions ? {
+        parse: options.allowedMentions.parse,
+        roles: options.allowedMentions.roles,
+        users: options.allowedMentions.users,
+        replied_user: options.allowedMentions.repliedUser,
+      } : undefined,
       attachments: options.attachments,
       // TODO: Snakelize components??
       components: options.components,

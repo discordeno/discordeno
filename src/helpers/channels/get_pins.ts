@@ -5,5 +5,5 @@ import type { Bot } from "../../bot.ts";
 export async function getPins(bot: Bot, channelId: bigint) {
   const result = await bot.rest.runMethod<Message[]>(bot.rest, "get", bot.constants.endpoints.CHANNEL_PINS(channelId));
 
-  return result.map(bot.transformers.message);
+  return result.map((msg) => bot.transformers.message(bot, msg));
 }

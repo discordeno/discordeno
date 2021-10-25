@@ -22,7 +22,7 @@ export async function getGuild(
 
   const guild = await bot.transformers.guild(bot, {
     guild: result,
-    shardId: Number((BigInt(guildId) >> 22n) % BigInt(ws.botGatewayData.shards)),
+    shardId: bot.utils.calculateShardId(bot.gateway, guildId),
   });
 
   if (options.addToCache) {

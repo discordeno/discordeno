@@ -1,7 +1,6 @@
 import type { Channel } from "../../types/channels/channel.ts";
 import type { ModifyChannel } from "../../types/channels/modify_channel.ts";
 import type { Bot } from "../../bot.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 import { DiscordenoChannel } from "../../transformers/channel.ts";
 
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
@@ -40,34 +39,29 @@ export async function editChannel(bot: Bot, channelId: bigint, options: ModifyCh
     }
   }
 
-  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Channel>>(
-    bot.rest,
-    "patch",
-    bot.constants.endpoints.CHANNEL_BASE(channelId),
-    {
-      name: options.name,
-      topic: options.topic,
-      bitrate: options.bitrate,
-      userLimit: options.userLimit,
-      rateLimitPerUser: options.rateLimitPerUser,
-      position: options.position,
-      parentId: options.parentId,
-      nsfw: options.nsfw,
-      type: options.type,
-      permissionOverwrites: options.permissionOverwrites
-        ? options.permissionOverwrites?.map((overwrite) => {
-            return {
-              ...overwrite,
-              allow: calculateBits(overwrite.allow),
-              deny: calculateBits(overwrite.deny),
-            };
-          })
-        : undefined,
-      reason,
-    }
-  );
+  const result = await bot.rest.runMethod<Channel>(bot.rest, "patch", bot.constants.endpoints.CHANNEL_BASE(channelId), {
+    name: options.name,
+    topic: options.topic,
+    bitrate: options.bitrate,
+    userLimit: options.userLimit,
+    rateLimitPerUser: options.rateLimitPerUser,
+    position: options.position,
+    parentId: options.parentId,
+    nsfw: options.nsfw,
+    type: options.type,
+    permissionOverwrites: options.permissionOverwrites
+      ? options.permissionOverwrites?.map((overwrite) => {
+          return {
+            ...overwrite,
+            allow: bot.utils.calculateBits(overwrite.allow),
+            deny: bot.utils.calculateBits(overwrite.deny),
+          };
+        })
+      : undefined,
+    reason,
+  });
 
-  return bot.transformers.channel(result);
+  return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) });
 }
 
 interface EditChannelRequest {
@@ -91,7 +85,7 @@ function processEditChannelQueue(bot: Bot) {
 
   const now = Date.now();
   editChannelNameTopicQueue.forEach(async (request) => {
-    eventHandlers.debug?.("loop", `Running forEach loop in edit_channel file.`);
+    bot.events.debug(`Running forEach loop in edit_channel file.`);
     if (now < request.timestamp) return;
     // 10 minutes have passed so we can reset this channel again
     if (!request.items.length) {
@@ -119,7 +113,7 @@ function processEditChannelQueue(bot: Bot) {
 
   if (editChannelNameTopicQueue.size) {
     setTimeout(() => {
-      eventHandlers.debug?.("loop", `Running setTimeout in EDIT_CHANNEL file.`);
+      bot.events.debug(`Running setTimeout in EDIT_CHANNEL file.`);
       processEditChannelQueue(bot);
     }, 60000);
   } else {

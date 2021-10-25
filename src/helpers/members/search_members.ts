@@ -25,7 +25,7 @@ export async function searchMembers(
     }
   }
 
-  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<GuildMemberWithUser>[]>(
+  const result = await bot.rest.runMethod<GuildMemberWithUser[]>(
     bot.rest,
     "get",
     bot.constants.endpoints.GUILD_MEMBERS_SEARCH(guildId),

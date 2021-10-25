@@ -30,7 +30,7 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
     throw new Error(bot.constants.Errors.MESSAGE_MAX_LENGTH);
   }
 
-  const result = await bot.rest.runMethod<SnakeCasedPropertiesDeep<Message>>(
+  const result = await bot.rest.runMethod<Message>(
     bot.rest,
     "patch",
     bot.constants.endpoints.CHANNEL_MESSAGE(channelId, messageId),

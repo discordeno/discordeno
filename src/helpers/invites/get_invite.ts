@@ -5,12 +5,12 @@ import type { Bot } from "../../bot.ts";
 
 /** Returns an invite for the given code or throws an error if the invite doesn't exists. */
 export async function getInvite(bot: Bot, inviteCode: string, options?: GetInvite) {
-  return await bot.rest.runMethod<SnakeCasedPropertiesDeep<InviteMetadata>>(
+  return await bot.rest.runMethod<InviteMetadata>(bot.rest,
     "get",
     bot.constants.endpoints.INVITE(inviteCode),
     {
-      with_counts: options.withCounts,
-      with_expiration: options.withExpiration,
+      with_counts: options?.withCounts,
+      with_expiration: options?.withExpiration,
     }
   );
 }

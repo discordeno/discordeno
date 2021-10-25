@@ -22,8 +22,8 @@ export async function createGuildFromTemplate(bot: Bot, templateCode: string, da
     data
   );
 
-  return bot.transformers.guild(
-    createdGuild,
-    Number((BigInt(createdGuild.id) >> 22n % BigInt(bot.ws.botGatewayData.shards)).toString())
-  );
+  return bot.transformers.guild(bot, {
+    guild: createdGuild,
+    shardId: bot.utils.calculateShardId(bot.gateway, bot.transformers.snowflake(createdGuild.id)),
+  });
 }

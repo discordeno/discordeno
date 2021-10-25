@@ -6,7 +6,7 @@ import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 export async function addDiscoverySubcategory(bot: Bot, guildId: bigint, categoryId: number) {
   await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-  return await bot.rest.runMethod<SnakeCasedPropertiesDeep<AddGuildDiscoverySubcategory>>(
+  return await bot.rest.runMethod<AddGuildDiscoverySubcategory>(
     bot.rest,
     "post",
     bot.constants.endpoints.DISCOVERY_SUBCATEGORY(guildId, categoryId)
