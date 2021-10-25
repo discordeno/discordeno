@@ -9,10 +9,8 @@ export async function startThread(bot: Bot, channelId: bigint, messageId: bigint
   //   if (!channel.isGuildTextBasedChannel) {
   //     throw new Error(bot.constants.Errors.INVALID_THREAD_PARENT_CHANNEL_TYPE);
   //   }
-
   //   await bot.utils.requireBotChannelPermissions(bot, channel, ["SEND_MESSAGES", "USE_PUBLIC_THREADS"]);
   // }
-
   // return channelToThread(
   //   await bot.rest.runMethod<Channel>(
   //     bot.rest,

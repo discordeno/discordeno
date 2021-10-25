@@ -1,29 +1,20 @@
 import { TOKEN } from "../configs.ts";
 import { Bot, createBot, createEventHandlers, startBot } from "../mod.ts";
 
-Deno.test("[Bot] - Starting Tests",  async (t) => {
-    const bot = createBot({
-        token: TOKEN || Deno.env.get('DISCORD_TOKEN'),
-        botId: 0n,
-        events: createEventHandlers({
-            raw: console.log,
-                    }),
-        intents: [],
-    })
+Deno.test("[Bot] - Starting Tests", async (t) => {
+  const bot = createBot({
+    token: TOKEN || Deno.env.get("DISCORD_TOKEN"),
+    botId: 0n,
+    events: createEventHandlers({
+      raw: console.log,
+    }),
+    intents: [],
+  });
 
-    await startBot(bot as Bot);
+  await startBot(bot as Bot);
 
-    console.log('Bot online')
-})
-
-
-
-
-
-
-
-
-
+  console.log("Bot online");
+});
 
 // // THE ORDER OF THE IMPORTS IN THIS FILE MATTER!
 // // DO NOT MOVE THEM UNLESS YOU KNOW WHAT YOUR DOING!
@@ -115,5 +106,3 @@ Deno.test("[Bot] - Starting Tests",  async (t) => {
 
 //   await delay(3000);
 // }
-
-

@@ -6,12 +6,9 @@ import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleThreadDelete(data: DiscordGatewayPayload) {
   // const payload = data.d as Channel;
-
   // const cachedChannel = await cacheHandlers.get("threads", snowflakeToBigint(payload.id));
   // if (!cachedChannel) return;
-
   // await cacheHandlers.delete("threads", snowflakeToBigint(payload.id));
   // await cacheHandlers.forEach("DELETE_MESSAGES_FROM_CHANNEL", { channelId: snowflakeToBigint(payload.id) });
-
   // eventHandlers.threadDelete?.(cachedChannel);
 }

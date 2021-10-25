@@ -5,9 +5,7 @@ import type { Bot } from "../../../bot.ts";
 /** Update a thread's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editThread(bot: Bot, threadId: bigint, options: ModifyThread, reason?: string) {
   // const thread = await cacheHandlers.get("threads", threadId);
-
   // TODO: permission checking
-
   // const result = await bot.rest.runMethod(bot.rest, "patch", bot.constants.endpoints.CHANNEL_BASE(threadId), {
   //   name: options.name,
   //   archived: options.archived,
@@ -16,6 +14,5 @@ export async function editThread(bot: Bot, threadId: bigint, options: ModifyThre
   //   rate_limit_per_user: options.rateLimitPerUser,
   //   reason,
   // });
-
   // return channelToThread(result);
 }
