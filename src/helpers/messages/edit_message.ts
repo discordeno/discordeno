@@ -1,4 +1,4 @@
-import { cacheHandlers } from "../../cache.ts";
+// import { cacheHandlers } from "../../cache.ts";
 import type { EditMessage } from "../../types/messages/edit_message.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
@@ -7,7 +7,7 @@ import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Edit the message. */
 export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: string | EditMessage) {
-  const message = await cacheHandlers.get("messages", messageId);
+  const message = await bot.cache.messages.get(messageId);
 
   if (message) {
     if (message.authorId !== bot.id) {
@@ -34,7 +34,18 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
     bot.rest,
     "patch",
     bot.constants.endpoints.CHANNEL_MESSAGE(channelId, messageId),
-    bot.utils.snakelize(content)
+    {
+      content: content.content,
+      embeds: content.embeds,
+      allowed_mentions: {
+        parse: content.allowedMentions?.parse,
+        roles: content.allowedMentions?.roles,
+        users: content.allowedMentions?.users,
+        replied_user: content.allowedMentions?.repliedUser,
+      },
+      file: content.file,
+      components: content.components,
+    }
   );
 
   return bot.transformers.message(bot, result);

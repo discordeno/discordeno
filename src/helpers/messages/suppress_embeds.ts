@@ -1,11 +1,11 @@
 import type { Bot } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
+// import { cacheHandlers } from "../../cache.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Suppress all the embeds in this message */
 export async function suppressEmbeds(bot: Bot, channelId: bigint, messageId: bigint) {
-  const message = await cacheHandlers.get("messages", messageId);
+  const message = await bot.cache.messages.get(messageId);
 
   await bot.utils.requireBotChannelPermissions(bot, channelId, message ? ["MANAGE_MESSAGES"] : ["SEND_MESSAGES"]);
 

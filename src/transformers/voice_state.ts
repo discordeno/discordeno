@@ -5,7 +5,7 @@ import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 export function transformVoiceState(
   bot: Bot,
   payload: { voiceState: SnakeCasedPropertiesDeep<VoiceState> } & { guildId: bigint }
-) {
+): DiscordenoVoiceState {
   return {
     bitfield:
       (payload.voiceState.deaf ? 1n : 0n) |
@@ -40,4 +40,6 @@ export interface DiscordenoVoiceState {
   bitfield: bigint;
   /** The time at which the user requested to speak */
   requestToSpeakTimestamp?: number;
+  /** The unique session id */
+  sessionId: string;
 }

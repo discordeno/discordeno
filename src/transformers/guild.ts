@@ -1,13 +1,10 @@
 import { Bot } from "../bot.ts";
-import type { PresenceUpdate } from "../types/activity/presence_update.ts";
 import type { Emoji } from "../types/emojis/emoji.ts";
 import type { Guild } from "../types/guilds/guild.ts";
 import { Collection } from "../util/collection.ts";
 import { iconHashToBigInt } from "../util/hash.ts";
-import { channelToThread } from "../util/transformers/channel_to_thread.ts";
-import { transformChannel } from "./channel.ts";
-import { DiscordenoRole, transformRole } from "./role.ts";
-import { DiscordenoVoiceState, transformVoiceState } from "./voice_state.ts";
+import { DiscordenoRole } from "./role.ts";
+import { DiscordenoVoiceState } from "./voice_state.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
 export function transformGuild(
@@ -31,11 +28,34 @@ export function transformGuild(
     preferredLocale: payload.guild.preferred_locale,
     premiumSubscriptionCount: payload.guild.premium_subscription_count,
     premiumTier: payload.guild.premium_tier,
-    stageInstances: payload.guild.stage_instances,
+    stageInstances: payload.guild.stage_instances?.map((si) => ({
+      /** The id of this Stage instance */
+      id: bot.transformers.snowflake(si.id),
+      /** The guild id of the associated Stage channel */
+      guildId: bot.transformers.snowflake(si.guild_id),
+      /** The id of the associated Stage channel */
+      channelId: bot.transformers.snowflake(si.channel_id),
+      /** The topic of the Stage instance (1-120 characters) */
+      topic: si.topic,
+      /** The privacy level of the Stage instance */
+      privacyLevel: si.privacy_level,
+      /** Whether or not Stage discovery is disabled */
+      discoverableDisabled: si.discoverable_disabled,
+    })),
     systemChannelFlags: payload.guild.system_channel_flags,
     vanityUrlCode: payload.guild.vanity_url_code,
     verificationLevel: payload.guild.verification_level,
-    welcomeScreen: payload.guild.welcome_screen,
+    welcomeScreen: payload.guild.welcome_screen
+      ? {
+          description: payload.guild.welcome_screen.description ?? undefined,
+          welcomeChannels: payload.guild.welcome_screen.welcome_channels.map((wc) => ({
+            channelId: bot.transformers.snowflake(wc.channel_id),
+            description: wc.description,
+            emojiId: wc.emoji_id ? bot.transformers.snowflake(wc.emoji_id) : undefined,
+            emojiName: wc.emoji_name ?? undefined,
+          })),
+        }
+      : undefined,
     discoverySplash: payload.guild.discovery_splash,
 
     bitfield:
@@ -49,26 +69,31 @@ export function transformGuild(
     shardId: payload.shardId,
     icon: payload.guild.icon ? iconHashToBigInt(payload.guild.icon) : undefined,
     banner: payload.guild.banner ? iconHashToBigInt(payload.guild.banner) : undefined,
-    splash: payload.guild.icon ? iconHashToBigInt(payload.guild.splash) : undefined,
+    splash: payload.guild.splash ? iconHashToBigInt(payload.guild.splash) : undefined,
 
     // TRANSFORMED STUFF BELOW
     // TODO: Handle channels/threads in a better way?
-    channels: (payload.guild.channels || []).map((channel) =>
-      transformChannel(bot, { channel, guildId: bot.transformers.snowflake(payload.guild.id) })
-    ),
-    threads: (payload.guild.threads || []).map((channel) => channelToThread(channel)),
+    // channels: (payload.guild.channels || []).map((channel) =>
+    //   bot.transformers.channel(bot, { channel, guildId: bot.transformers.snowflake(payload.guild.id) })
+    // ),
+    // threads: (payload.guild.threads || []).map((channel) => channelToThread(channel)),
 
     roles: new Collection(
       (payload.guild.roles || [])
-        .map((role) => transformRole(bot, { role, guildId: bot.transformers.snowflake(payload.guild.id) }))
+        .map((role) => bot.transformers.role(bot, { role, guildId: bot.transformers.snowflake(payload.guild.id) }))
         .map((role) => [role.id, role])
     ),
-    presences: new Collection((payload.guild.presences || []).map((p) => [bot.transformers.snowflake(p.user!.id), p])),
+    // presences: new Collection(
+    //   (payload.guild.presences || []).map((p) => [
+    //     bot.transformers.snowflake(p.user!.id),
+    //     bot.transformers.presence(bot, p),
+    //   ])
+    // ),
     emojis: new Collection((payload.guild.emojis || []).map((emoji) => [bot.transformers.snowflake(emoji.id!), emoji])),
     voiceStates: new Collection(
       (payload.guild.voice_states || [])
         .map((vs) =>
-          transformVoiceState(bot, { voiceState: vs, guildId: bot.transformers.snowflake(payload.guild.id) })
+          bot.transformers.voiceState(bot, { voiceState: vs, guildId: bot.transformers.snowflake(payload.guild.id) })
         )
         .map((vs) => [vs.userId, vs])
     ),
@@ -113,6 +138,13 @@ export interface DiscordenoGuild
     | "systemChannelId"
     | "rulesChannelId"
     | "publicUpdatesChannelId"
+    | "joinedAt"
+    | "icon"
+    | "banner"
+    | "splash"
+    | "stageInstances"
+    | "welcomeScreen"
+    | "channels"
   > {
   /** Guild id */
   id: bigint;
@@ -132,12 +164,6 @@ export interface DiscordenoGuild
   rulesChannelId?: bigint;
   /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
   publicUpdatesChannelId?: bigint;
-  /** Whether this server's icon is animated */
-  animatedIcon: boolean;
-  /** Whether this server's banner is animated. */
-  animatedBanner: boolean;
-  /** Whether this server's splash is animated. */
-  animatedSplash: boolean;
   /** The id of the shard this guild is bound to */
   shardId: number;
   /** Total number of members in this guild */
@@ -145,13 +171,49 @@ export interface DiscordenoGuild
   /** The roles in the guild */
   roles: Collection<bigint, DiscordenoRole>;
   /** The presences of all the users in the guild. */
-  presences: Collection<bigint, PresenceUpdate>;
+  // presences: Collection<bigint, DiscordenoPresence>;
   /** The Voice State data for each user in a voice channel in this server. */
   voiceStates: Collection<bigint, DiscordenoVoiceState>;
   /** Custom guild emojis */
   emojis: Collection<bigint, Emoji>;
-  /** Whether the bot is the owner of this guild */
-  isOwner: boolean;
   /** Holds all the boolean toggles. */
   bitfield: bigint;
+  /** When this guild was joined at */
+  joinedAt?: number;
+  /** Icon hash */
+  icon?: bigint;
+  /** Splash hash */
+  splash?: bigint;
+  /** Banner hash */
+  banner?: bigint;
+  /** The stage instances in this guild */
+  stageInstances?: {
+    /** The id of this Stage instance */
+    id: bigint;
+    /** The guild id of the associated Stage channel */
+    guildId: bigint;
+    /** The id of the associated Stage channel */
+    channelId: bigint;
+    /** The topic of the Stage instance (1-120 characters) */
+    topic: string;
+    /** The privacy level of the Stage instance */
+    privacyLevel: number;
+    /** Whether or not Stage discovery is disabled */
+    discoverableDisabled: boolean;
+  }[];
+  welcomeScreen?: {
+    /** The server description shown in the welcome screen */
+    description?: string;
+    /** The channels shown in the welcome screen, up to 5 */
+    welcomeChannels: {
+      /** The channel's id */
+      channelId: bigint;
+      /** The descriptino schown for the channel */
+      description: string;
+      /** The emoji id, if the emoji is custom */
+      emojiId?: bigint;
+      /** The emoji name if custom, the unicode character if standard, or `null` if no emoji is set */
+      emojiName?: string;
+    }[];
+  };
 }

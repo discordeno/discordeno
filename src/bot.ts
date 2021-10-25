@@ -296,7 +296,7 @@ import { DiscordenoEmoji, transformEmoji } from "./transformers/emoji.ts";
 import { transformActivity } from "./transformers/activity.ts";
 import { DiscordenoPresence, transformPresence } from "./transformers/presence.ts";
 
-export async function createBot(options: CreateBotOptions) {
+export function createBot(options: CreateBotOptions) {
   return {
     id: options.botId,
     applicationId: options.applicationId || options.botId,
@@ -430,13 +430,6 @@ export async function createBot(options: CreateBotOptions) {
   };
 }
 
-const bot = await createBot({
-  token: "",
-  botId: 0n,
-  events: createEventHandlers({}),
-  intents: [],
-});
-
 export function createEventHandlers(events: Partial<EventHandlers>): EventHandlers {
   function ignore() {}
 
@@ -543,14 +536,27 @@ export function createRestManager(options: CreateRestManagerOptions) {
 export async function startBot(bot: Bot) {
   // SETUP
   bot.utils = createUtils({});
-  bot.transformers = createTransformers(bot.transformers);
-  bot.helpers = createHelpers(bot.helpers);
+  bot.transformers = createTransformers(bot.transformers || {});
+  bot.helpers = createHelpers(bot.helpers || {});
 
   // START REST
   bot.rest = createRestManager({ token: bot.token });
 
   // START WS
-  bot.gateway = createGatewayManager({});
+  bot.gateway = createGatewayManager({
+    handleDiscordPayload:
+      // bot.handleDiscordPayload ||
+      async function (_, data: DiscordGatewayPayload, shardId: number) {
+        // TRIGGER RAW EVENT
+        bot.events.raw(bot as Bot, data, shardId);
+
+        if (!data.t) return;
+
+        // RUN DISPATCH CHECK
+        await bot.events.dispatchRequirements(bot as Bot, data, shardId);
+        bot.handlers[data.t as GatewayDispatchEventNames]?.(bot as Bot, data, shardId);
+      },
+  });
 
   if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot(bot);
 }
@@ -612,7 +618,9 @@ export interface HelperUtils {
   validateComponents: typeof validateComponents;
 }
 
-export function createGatewayManager(options: Partial<GatewayManager>): GatewayManager {
+export function createGatewayManager(
+  options: Partial<GatewayManager> & Pick<GatewayManager, "handleDiscordPayload">
+): GatewayManager {
   return {
     cache: {
       guildIds: new Set(),
@@ -661,18 +669,7 @@ export function createGatewayManager(options: Partial<GatewayManager>): GatewayM
     closeWS,
     sendShardMessage,
     resume,
-    handleDiscordPayload:
-      options.handleDiscordPayload ||
-      async function (_, data: DiscordGatewayPayload, shardId: number) {
-        // TRIGGER RAW EVENT
-        bot.events.raw(bot as Bot, data, shardId);
-
-        if (!data.t) return;
-
-        // RUN DISPATCH CHECK
-        await bot.events.dispatchRequirements(bot as Bot, data, shardId);
-        bot.handlers[data.t as GatewayDispatchEventNames]?.(bot as Bot, data, shardId);
-      },
+    handleDiscordPayload: options.handleDiscordPayload,
   };
 }
 
@@ -693,7 +690,7 @@ export interface CreateBotOptions {
 
 export type UnPromise<T extends Promise<unknown>> = T extends Promise<infer K> ? K : never;
 
-export type CreatedBot = UnPromise<ReturnType<typeof createBot>>;
+export type CreatedBot = ReturnType<typeof createBot>;
 
 export type Bot = CreatedBot & {
   utils: HelperUtils;
@@ -1369,7 +1366,9 @@ export interface BotGatewayHandlerOptions {
   INTEGRATION_DELETE: typeof handleIntegrationDelete;
 }
 
-export function createBotGatewayHandlers(options: Partial<BotGatewayHandlerOptions>): Record<GatewayDispatchEventNames | "GUILD_LOADED_DD", (bot: Bot, data: GatewayPayload, shardId: number) => any> {
+export function createBotGatewayHandlers(
+  options: Partial<BotGatewayHandlerOptions>
+): Record<GatewayDispatchEventNames | "GUILD_LOADED_DD", (bot: Bot, data: GatewayPayload, shardId: number) => any> {
   return {
     // misc
     READY: options.READY ?? handleReady,

@@ -1,4 +1,4 @@
-import { cacheHandlers } from "../../cache.ts";
+// import { cacheHandlers } from "../../cache.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
@@ -12,7 +12,7 @@ import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 export async function sendMessage(bot: Bot, channelId: bigint, content: string | CreateMessage) {
   if (typeof content === "string") content = { content };
 
-  const channel = await cacheHandlers.get("channels", channelId);
+  const channel = await bot.cache.channels.get(channelId);
   if (channel) {
     if (
       ![
@@ -77,15 +77,15 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
     bot.rest,
     "post",
     bot.constants.endpoints.CHANNEL_MESSAGES(channelId),
-    bot.utils.snakelize({
+    {
       content: content.content,
       tts: content.tts,
       embeds: content.embeds,
       allowed_mentions: {
-        parse: content.allowedMentions.parse,
-        roles: content.allowedMentions.roles,
-        users: content.allowedMentions.users,
-        replied_user: content.allowedMentions.repliedUser,
+        parse: content.allowedMentions?.parse,
+        roles: content.allowedMentions?.roles,
+        users: content.allowedMentions?.users,
+        replied_user: content.allowedMentions?.repliedUser,
       },
       file: content.file,
       // TODO: Snakelize components??
@@ -100,7 +100,7 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
             },
           }
         : {}),
-    })
+    }
   );
 
   return bot.transformers.message(bot, result);

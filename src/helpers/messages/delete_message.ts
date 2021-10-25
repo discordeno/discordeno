@@ -1,4 +1,4 @@
-import { cacheHandlers } from "../../cache.ts";
+// import { cacheHandlers } from "../../cache.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Delete a message with the channel id and message id only. */
@@ -9,7 +9,7 @@ export async function deleteMessage(
   reason?: string,
   delayMilliseconds = 0
 ) {
-  const message = await cacheHandlers.get("messages", messageId);
+  const message = await bot.cache.messages.get(messageId);
 
   if (message && message.authorId !== bot.id) {
     await bot.utils.requireBotChannelPermissions(bot, message.channelId, ["MANAGE_MESSAGES"]);
