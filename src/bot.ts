@@ -565,7 +565,7 @@ export async function startBot(bot: Bot) {
       },
   });
 
-  bot.gateway.spawnShards(bot.gateway)
+  bot.gateway.spawnShards(bot.gateway);
 }
 
 export function createUtils(options: Partial<HelperUtils>) {
