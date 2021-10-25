@@ -1,7 +1,7 @@
 import { delay } from "../util/utils.ts";
 import { GatewayManager } from "../bot.ts";
 
-export async function processQueue(gateway: GatewayManager, id: number) {
+export async function processGatewayQueue(gateway: GatewayManager, id: number) {
   const shard = gateway.shards.get(id);
   // If no items or its already processing then exit
   if (!shard?.queue.length || shard.processingQueue) return;
@@ -9,7 +9,7 @@ export async function processQueue(gateway: GatewayManager, id: number) {
   shard.processingQueue = true;
 
   while (shard.queue.length) {
-    if (shard.gateway.readyState !== WebSocket.OPEN) {
+    if (shard.ws.readyState !== WebSocket.OPEN) {
       shard.processingQueue = false;
       return;
     }
@@ -26,7 +26,7 @@ export async function processQueue(gateway: GatewayManager, id: number) {
 
     gateway.log("RAW_SEND", shard.id, request);
 
-    shard.gateway.send(JSON.stringify(request));
+    shard.ws.send(JSON.stringify(request));
 
     // Counter is useful for preventing 120/m requests.
     shard.queueCounter++;

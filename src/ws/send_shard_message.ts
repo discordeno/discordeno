@@ -16,5 +16,5 @@ export function sendShardMessage(
     shard.queue.unshift(message);
   }
 
-  gateway.processQueue(gateway, shard.id);
+  gateway.processGatewayQueue(gateway, shard.id);
 }

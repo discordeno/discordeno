@@ -13,9 +13,9 @@ export async function heartbeat(gateway: GatewayManager, shardId: number, interv
   // The first heartbeat is special so we send it without setInterval: https://discord.com/developers/docs/topics/gateway#heartbeating
   await delay(Math.floor(shard.heartbeat.interval * Math.random()));
 
-  if (shard.gateway.readyState !== WebSocket.OPEN) return;
+  if (shard.ws.readyState !== WebSocket.OPEN) return;
 
-  shard.gateway.send(
+  shard.ws.send(
     JSON.stringify({
       op: DiscordGatewayOpcodes.Heartbeat,
       d: shard.previousSequenceNumber,
@@ -34,7 +34,7 @@ export async function heartbeat(gateway: GatewayManager, shardId: number, interv
 
     gateway.log("HEARTBEATING", { shardId, shard: currentShard });
 
-    if (currentShard.gateway.readyState === WebSocket.CLOSED || !currentShard.heartbeat.keepAlive) {
+    if (currentShard.ws.readyState === WebSocket.CLOSED || !currentShard.heartbeat.keepAlive) {
       gateway.log("HEARTBEATING_CLOSED", { shardId, shard: currentShard });
 
       // STOP THE HEARTBEAT
@@ -42,15 +42,15 @@ export async function heartbeat(gateway: GatewayManager, shardId: number, interv
     }
 
     if (!currentShard.heartbeat.acknowledged) {
-      gateway.closeWS(currentShard.gateway, 3066, "Did not receive an ACK in time.");
+      gateway.closeWS(currentShard.ws, 3066, "Did not receive an ACK in time.");
       return await gateway.identify(gateway, shardId, gateway.maxShards);
     }
 
-    if (currentShard.gateway.readyState !== WebSocket.OPEN) return;
+    if (currentShard.ws.readyState !== WebSocket.OPEN) return;
 
     currentShard.heartbeat.acknowledged = false;
 
-    currentShard.gateway.send(
+    currentShard.ws.send(
       JSON.stringify({
         op: DiscordGatewayOpcodes.Heartbeat,
         d: currentShard.previousSequenceNumber,

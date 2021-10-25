@@ -4,7 +4,7 @@ import { Bot, createBot, createEventHandlers, startBot } from "../mod.ts";
 Deno.test("[Bot] - Starting Tests", async (t) => {
   const bot = createBot({
     token: TOKEN || Deno.env.get("DISCORD_TOKEN"),
-    botId: 0n,
+    botId: 675412054529540107n,
     events: createEventHandlers({
       raw: console.log,
     }),

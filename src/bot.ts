@@ -72,6 +72,7 @@ import {
   tellClusterToIdentify,
   sendShardMessage,
   DiscordenoShard,
+  processGatewayQueue,
 } from "./ws/mod.ts";
 import { validateLength } from "./util/validate_length.ts";
 import { delay, validateComponents, validateSlashOptionChoices, validateSlashOptions } from "./util/utils.ts";
@@ -295,6 +296,7 @@ import {
 import { DiscordenoEmoji, transformEmoji } from "./transformers/emoji.ts";
 import { transformActivity } from "./transformers/activity.ts";
 import { DiscordenoPresence, transformPresence } from "./transformers/presence.ts";
+import { DiscordReady } from "./types/gateway/ready.ts";
 
 export function createBot(options: CreateBotOptions) {
   return {
@@ -435,6 +437,7 @@ export function createEventHandlers(events: Partial<EventHandlers>): EventHandle
 
   return {
     debug: events.debug ?? ignore,
+    ready: events.ready ?? ignore,
     dispatchRequirements: events.dispatchRequirements ?? ignore,
     integrationCreate: events.integrationCreate ?? ignore,
     integrationDelete: events.integrationDelete ?? ignore,
@@ -545,6 +548,8 @@ export async function startBot(bot: Bot) {
 
   // START WS
   bot.gateway = createGatewayManager({
+    token: bot.token,
+    intents: bot.intents,
     urlWSS: bot.botGatewayData.url,
     shardsRecommended: bot.botGatewayData.shards,
     sessionStartLimitTotal: bot.botGatewayData.sessionStartLimit.total,
@@ -565,7 +570,7 @@ export async function startBot(bot: Bot) {
       },
   });
 
-  bot.gateway.spawnShards(bot.gateway)
+  bot.gateway.spawnShards(bot.gateway);
 }
 
 export function createUtils(options: Partial<HelperUtils>) {
@@ -639,7 +644,7 @@ export function createGatewayManager(
     reshard: options.reshard ?? true,
     reshardPercentage: options.reshardPercentage ?? 80,
     spawnShardDelay: options.spawnShardDelay ?? 2600,
-    maxShards: options.maxShards ?? 0,
+    maxShards: options.maxShards ?? options.shardsRecommended ?? 0,
     useOptimalLargeBotSharding: options.useOptimalLargeBotSharding ?? true,
     shardsPerCluster: options.shardsPerCluster ?? 25,
     maxClusters: options.maxClusters ?? 4,
@@ -651,7 +656,7 @@ export function createGatewayManager(
     $browser: options.$browser ?? "Discordeno",
     $device: options.$device ?? "Discordeno",
     intents: options.intents ?? 0,
-    shard: options.shard ?? [0, 0],
+    shard: options.shard ?? [0, options.shardsRecommended ?? 1],
     urlWSS: options.urlWSS ?? "wss://gateway.discord.gg/?v=9&encoding=json",
     shardsRecommended: options.shardsRecommended ?? 1,
     sessionStartLimitTotal: options.sessionStartLimitTotal ?? 1000,
@@ -672,7 +677,7 @@ export function createGatewayManager(
     log,
     resharder,
     handleOnMessage,
-    processQueue,
+    processGatewayQueue,
     closeWS,
     sendShardMessage,
     resume,
@@ -1165,7 +1170,7 @@ export interface GatewayManager {
   /** Handles the message events from websocket. */
   handleOnMessage: typeof handleOnMessage;
   /** Handles processing queue of requests send to this shard. */
-  processQueue: typeof processQueue;
+  processGatewayQueue: typeof processGatewayQueue;
   /** Closes shard WebSocket connection properly. */
   closeWS: typeof closeWS;
   /** Properly adds a message to the shards queue. */
@@ -1176,6 +1181,19 @@ export interface GatewayManager {
 
 export interface EventHandlers {
   debug: (text: string) => unknown;
+  ready: (
+    bot: Bot,
+    payload: {
+      shardId: number;
+      v: number;
+      user: DiscordenoUser;
+      guilds: bigint[];
+      sessionId: string;
+      shard?: number[];
+      applicationId: bigint;
+    },
+    rawPayload: DiscordReady
+  ) => any;
   interactionCreate: (bot: Bot, interaction: DiscordenoInteraction) => any;
   integrationCreate: (bot: Bot, integration: DiscordenoIntegration) => any;
   integrationDelete: (bot: Bot, payload: { id: bigint; guildId: bigint; applicationId?: bigint }) => any;

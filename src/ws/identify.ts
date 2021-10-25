@@ -39,6 +39,20 @@ export function identify(gateway: GatewayManager, shardId: number, maxShards: nu
   });
 
   socket.onopen = () => {
+    console.log({
+      op: DiscordGatewayOpcodes.Identify,
+      d: {
+        token: gateway.token,
+        compress: gateway.compress,
+        properties: {
+          $os: gateway.$os,
+          $browser: gateway.$browser,
+          $device: gateway.$device,
+        },
+        intents: gateway.intents,
+        shard: [shardId, maxShards],
+      },
+    },)
     gateway.sendShardMessage(
       gateway,
       shardId,
