@@ -15,11 +15,8 @@ export async function getArchivedThreads(
 ) {
   // const permissions = new Set<PermissionStrings>(["READ_MESSAGE_HISTORY"]);
   // if (options?.type === "private") permissions.add("MANAGE_THREADS");
-
   // await bot.utils.requireBotChannelPermissions(bot, channelId, [...permissions]);
-
   // // TODO: pagination
-
   // const result = (await bot.rest.runMethod(
   //   bot.rest,
   //   "get",
@@ -36,14 +33,12 @@ export async function getArchivedThreads(
   //       }
   //     : {}
   // )) as ListActiveThreads;
-
   // const threads = new Collection(
   //   result.threads.map((t) => {
   //     const ddThread = channelToThread(t);
   //     return [ddThread.id, ddThread];
   //   })
   // );
-
   // for (const member of result.members) {
   //   const thread = threads.get(bot.transformers.snowflake(member.id!));
   //   thread?.members.set(bot.transformers.snowflake(member.userId!), {
@@ -52,6 +47,5 @@ export async function getArchivedThreads(
   //     joinTimestamp: Date.parse(member.joinTimestamp),
   //   });
   // }
-
   // return threads;
 }

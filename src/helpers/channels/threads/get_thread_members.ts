@@ -13,21 +13,17 @@ export async function getThreadMembers(bot: Bot, threadId: bigint) {
   // ) {
   //   throw new Error(bot.constants.Errors.MISSING_INTENT_GUILD_MEMBERS);
   // }
-
   // const thread = await bot.cache.threads.get(threadId);
   // if (thread?.isPrivate) {
   //   const channel = await bot.cache.channels.get(thread.parentId);
   //   if (channel && !(await bot.utils.botHasChannelPermissions(bot, channel, ["MANAGE_THREADS"])) && !thread.botIsMember)
   //     throw new Error(bot.constants.Errors.CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD);
   // }
-
   // const result = await bot.rest.runMethod<ThreadMember[]>(
   //   bot.rest,
   //   "get",
   //   bot.constants.endpoints.THREAD_MEMBERS(threadId)
   // );
-
   // const members = result.map((member) => threadMemberModified(member));
-
   // return new Collection(members.map((member) => [member.id, member]));
 }

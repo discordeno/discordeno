@@ -6,21 +6,18 @@ import { Collection } from "../../../util/collection.ts";
 /** Returns all active threads in the channel, including public and private threads. Threads are ordered by their id, in descending order. Requires the VIEW_CHANNEL permission. */
 export async function getActiveThreads(bot: Bot, channelId: bigint) {
   // await bot.utils.requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL"]);
-
   // // TODO: pagination
   // const result = (await bot.rest.runMethod(
   //   bot.rest,
   //   "get",
   //   bot.constants.endpoints.THREAD_ACTIVE(channelId)
   // )) as ListActiveThreads;
-
   // const threads = new Collection(
   //   result.threads.map((t) => {
   //     const ddThread = channelToThread(t);
   //     return [ddThread.id, ddThread];
   //   })
   // );
-
   // for (const member of result.members) {
   //   const thread = threads.get(bot.transformers.snowflake(member.id!));
   //   thread?.members.set(bot.transformers.snowflake(member.userId!), {
@@ -29,6 +26,5 @@ export async function getActiveThreads(bot: Bot, channelId: bigint) {
   //     joinTimestamp: Date.parse(member.joinTimestamp),
   //   });
   // }
-
   // return threads;
 }
