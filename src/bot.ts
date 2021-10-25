@@ -1131,7 +1131,7 @@ export interface GatewayManager {
     number,
     {
       workers: number[][];
-      createNextShard: (() => unknown)[];
+      createNextShard: (() => Promise<unknown>)[];
     }
   >;
   utf8decoder: TextDecoder;
