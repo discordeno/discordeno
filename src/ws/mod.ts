@@ -4,7 +4,7 @@ export * from "./events.ts";
 export * from "./handle_on_message.ts";
 export * from "./heartbeat.ts";
 export * from "./identify.ts";
-export * from './process_gateway_queue.ts'
+export * from "./process_gateway_queue.ts";
 export * from "./resharder.ts";
 export * from "./resume.ts";
 export * from "./spawn_shards.ts";
