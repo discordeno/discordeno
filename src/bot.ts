@@ -64,7 +64,6 @@ import {
   resume,
   resharder,
   log,
-  startGateway,
   spawnShards,
   createShard,
   identify,
@@ -668,7 +667,6 @@ export function createGatewayManager(
     buckets: new Collection(),
     utf8decoder: new TextDecoder(),
 
-    startGateway,
     spawnShards,
     createShard,
     identify,
@@ -685,9 +683,15 @@ export function createGatewayManager(
   };
 }
 
-export function stopBot(bot: Bot) {
+export async function stopBot(bot: Bot) {
   // STOP REST
   // STOP WS
+  bot.gateway.shards.forEach((shard) => {
+    clearInterval(shard.heartbeat.intervalId);
+    bot.gateway.closeWS(shard.ws, 3061, "Discordeno Testing Finished! Do Not RESUME!");
+  });
+
+  await delay(3000);
 }
 
 export interface CreateBotOptions {
@@ -1149,8 +1153,6 @@ export interface GatewayManager {
 
   // METHODS
 
-  /** The handler function that starts the gateway. */
-  startGateway: typeof startGateway;
   /** The handler for spawning ALL the shards. */
   spawnShards: typeof spawnShards;
   /** Create the websocket and adds the proper handlers to the websocket. */

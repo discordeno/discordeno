@@ -10,7 +10,7 @@ export async function heartbeat(gateway: GatewayManager, shardId: number, interv
 
   gateway.log("HEARTBEATING_DETAILS", { shardId, interval, shard });
 
-  // The first heartbeat is special so we send it without setInterval: https://discord.com/developers/docs/topics/gateway#heartbeating
+  // The first heartbeat is special so we send it without set Interval: https://discord.com/developers/docs/topics/gateway#heartbeating
   await delay(Math.floor(shard.heartbeat.interval * Math.random()));
 
   if (shard.ws.readyState !== WebSocket.OPEN) return;
