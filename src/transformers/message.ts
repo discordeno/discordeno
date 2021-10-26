@@ -4,8 +4,20 @@ import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoAttachment } from "./attachment.ts";
 import { DiscordMessageStickerFormatTypes } from "../types/messages/message_sticker_format_types.ts";
+import { DiscordenoMember, DiscordenoUser } from "./member.ts";
+import { DiscordenoEmbed } from "./embed.ts";
+import { DiscordMessageTypes } from "../types/messages/message_types.ts";
+import { DiscordMessageActivityTypes } from "../types/messages/message_activity_types.ts";
+import { DiscordInteractionTypes } from "../types/interactions/interaction_types.ts";
+import { DiscordMessageComponentTypes } from "../types/messages/components/message_component_types.ts";
+import { ButtonStyles } from "../types/messages/components/button_styles.ts";
+import { DiscordenoComponent } from "./component.ts";
+import { Application } from "../types/applications/application.ts";
 
 export function transformMessage(bot: Bot, data: SnakeCasedPropertiesDeep<Message>): DiscordenoMessage {
+  const guildId = data.guild_id ? bot.transformers.snowflake(data.guild_id) : undefined;
+  const userId = bot.transformers.snowflake(data.author.id);
+
   return {
     // UNTRANSFORMED STUFF HERE
     content: data.content || "",
@@ -15,15 +27,35 @@ export function transformMessage(bot: Bot, data: SnakeCasedPropertiesDeep<Messag
     editedTimestamp: data.edited_timestamp ? Date.parse(data.edited_timestamp) : undefined,
     bitfield: (data.tts ? 1n : 0n) | (data.mention_everyone ? 2n : 0n) | (data.pinned ? 4n : 0n),
     attachments: data.attachments.map((attachment) => bot.transformers.attachment(bot, attachment)),
-    embeds: data.embeds,
-    reactions: data.reactions,
+    embeds: data.embeds.map((embed) => bot.transformers.embed(bot, embed)),
+    reactions: data.reactions?.map((reaction) => ({
+      me: reaction.me,
+      count: reaction.count,
+      emoji: {
+        id: reaction.emoji.id ? bot.transformers.snowflake(reaction.emoji.id) : undefined,
+        name: reaction.emoji.name,
+        animated: reaction.emoji.animated,
+      },
+    })),
     type: data.type,
-    activity: data.activity,
+    activity: data.activity
+      ? {
+          type: data.activity.type,
+          partyId: data.activity.party_id,
+        }
+      : undefined,
     application: data.application,
     flags: data.flags,
-    interaction: data.interaction,
+    interaction: data.interaction
+      ? {
+          id: bot.transformers.snowflake(data.interaction.id),
+          type: data.interaction.type,
+          name: data.interaction.name,
+          user: bot.transformers.user(bot, data.interaction.user),
+        }
+      : undefined,
     thread: data.thread,
-    components: data.components,
+    components: data.components?.map((component) => bot.transformers.component(bot, component)),
     stickerItems: data.sticker_items?.map((sticker) => ({
       id: bot.transformers.snowflake(sticker.id),
       name: sticker.name,
@@ -32,10 +64,10 @@ export function transformMessage(bot: Bot, data: SnakeCasedPropertiesDeep<Messag
 
     // TRANSFORMED STUFF BELOW
     id: bot.transformers.snowflake(data.id),
-    guildId: data.guild_id ? bot.transformers.snowflake(data.guild_id) : undefined,
+    guildId,
     channelId: bot.transformers.snowflake(data.channel_id),
     webhookId: data.webhook_id ? bot.transformers.snowflake(data.webhook_id) : undefined,
-    authorId: bot.transformers.snowflake(data.author.id),
+    authorId: userId,
     applicationId: data.application_id ? bot.transformers.snowflake(data.application_id) : undefined,
     messageReference: data.message_reference
       ? {
@@ -61,29 +93,11 @@ export function transformMessage(bot: Bot, data: SnakeCasedPropertiesDeep<Messag
         bot.transformers.snowflake(text.substring(2, text.length - 1))
       ),
     ],
+    member: data.member && guildId ? bot.transformers.member(bot, data.member, guildId, userId) : undefined,
   };
 }
 
-export interface DiscordenoMessage
-  extends Omit<
-    Message,
-    | "id"
-    | "webhookId"
-    | "timestamp"
-    | "editedTimestamp"
-    | "guildId"
-    | "channelId"
-    | "member"
-    | "author"
-    | "applicationId"
-    | "thread"
-    | "tts"
-    | "pinned"
-    | "mentionEveryone"
-    | "attachments"
-    | "messageReference"
-    | "stickerItems"
-  > {
+export interface DiscordenoMessage {
   id: bigint;
   /** Whether or not this message was sent by a bot */
   isBot: boolean;
@@ -136,4 +150,53 @@ export interface DiscordenoMessage
     /** Type of sticker format */
     formatType: DiscordMessageStickerFormatTypes;
   }[];
+
+  /**
+   * Member properties for this message's author
+   * Note: The member object exists in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events from text-based guild channels. This allows bots to obtain real-time member data without requiring bots to store member state in memory.
+   */
+  member?: DiscordenoMember;
+  /** Any embedded content */
+  embeds: DiscordenoEmbed[];
+  /** Reactions to the message */
+  reactions?: {
+    me: boolean;
+    count: number;
+    emoji: { id?: bigint; name?: string; animated?: boolean };
+  }[];
+  /** Used for validating a message was sent */
+  nonce?: number | string;
+  /** Type of message */
+  type: DiscordMessageTypes;
+  /** Sent with Rich Presence-related chat embeds */
+  activity?: {
+    /** Type of message activity */
+    type: DiscordMessageActivityTypes;
+    /** `party_id` from a Rich Presence event */
+    partyId?: string;
+  };
+  /** Sent with Rich Presence-related chat embeds */
+  application?: Partial<SnakeCasedPropertiesDeep<Application>>;
+  /** Message flags combined as a bitfield */
+  flags?: number;
+  /**
+   * The message associated with the `message_reference`
+   * Note: This field is only returned for messages with a `type` of `19` (REPLY). If the message is a reply but the `referenced_message` field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.
+   */
+  referencedMessage?: Message | null;
+  /** Sent if the message is a response to an Interaction */
+  interaction?: {
+    /** Id of the interaction */
+    id: bigint;
+    /** The type of interaction */
+    type: DiscordInteractionTypes;
+    /** The name of the ApplicationCommand */
+    name: string;
+    /** The user who invoked the interaction */
+    user: DiscordenoUser;
+  };
+  /** The thread that was started from this message, includes thread member object */
+  thread?: Omit<Channel, "member"> & { member: ThreadMember };
+  /** The components related to this message */
+  components?: DiscordenoComponent[];
 }

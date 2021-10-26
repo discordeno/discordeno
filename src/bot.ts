@@ -311,6 +311,8 @@ import { DiscordenoPresence, transformPresence } from "./transformers/presence.t
 import { DiscordReady } from "./types/gateway/ready.ts";
 import { urlToBase64 } from "./util/url_to_base64.ts";
 import { transformAttachment } from "./transformers/attachment.ts";
+import { transformEmbed } from "./transformers/embed.ts";
+import { transformComponent } from "./transformers/component.ts";
 
 export function createBot(options: CreateBotOptions) {
   return {
@@ -1098,6 +1100,8 @@ export interface Transformers {
   activity: typeof transformActivity;
   presence: typeof transformPresence;
   attachment: typeof transformAttachment;
+  embed: typeof transformEmbed;
+  component: typeof transformComponent;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -1106,6 +1110,8 @@ export function createTransformers(options: Partial<Transformers>) {
     application: options.application || transformApplication,
     attachment: options.attachment || transformAttachment,
     channel: options.channel || transformChannel,
+    component: options.component || transformComponent,
+    embed: options.embed || transformEmbed,
     emoji: options.emoji || transformEmoji,
     guild: options.guild || transformGuild,
     integration: options.integration || transformIntegration,

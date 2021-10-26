@@ -7,16 +7,14 @@ export interface SelectOption {
   /** An additional description of the option. Maximum 50 characters. */
   description?: string;
   /** The id, name, and animated properties of an emoji. */
-  emoji?:
-    | string
-    | {
-        /** Emoji id */
-        id?: string;
-        /** Emoji name */
-        name?: string;
-        /** Whether this emoji is animated */
-        animated?: boolean;
-      };
+  emoji?: {
+    /** Emoji id */
+    id?: string;
+    /** Emoji name */
+    name?: string;
+    /** Whether this emoji is animated */
+    animated?: boolean;
+  };
   /** Will render this option as already-selected by default. */
   default: boolean;
 }

@@ -1,5 +1,5 @@
 import type { Bot } from "../bot.ts";
-import type { GuildMemberWithUser } from "../types/members/guild_member.ts";
+import type { GuildMember, GuildMemberWithUser } from "../types/members/guild_member.ts";
 import type { DiscordPremiumTypes } from "../types/users/premium_types.ts";
 import type { User } from "../types/users/user.ts";
 import type { DiscordUserFlags } from "../types/users/user_flags.ts";
@@ -41,11 +41,12 @@ export function transformUser(bot: Bot, payload: SnakeCasedPropertiesDeep<User>)
 
 export function transformMember(
   bot: Bot,
-  payload: SnakeCasedPropertiesDeep<GuildMemberWithUser>,
-  guildId: bigint
+  payload: SnakeCasedPropertiesDeep<GuildMember>,
+  guildId: bigint,
+  userId: bigint
 ): DiscordenoMember {
   return {
-    id: bot.transformers.snowflake(payload.user.id),
+    id: userId,
     guildId,
     nick: payload.nick ?? undefined,
     roles: payload.roles.map((id) => BigInt(id)),
