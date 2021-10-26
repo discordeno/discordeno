@@ -19,7 +19,7 @@ export interface DiscordenoUser {
   mfaEnabled?: boolean;
   premiumType?: DiscordPremiumTypes;
   publicFlags?: DiscordUserFlags;
-};
+}
 
 export function transformUser(bot: Bot, payload: SnakeCasedPropertiesDeep<User>): DiscordenoUser {
   return {
