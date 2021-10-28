@@ -7,7 +7,7 @@ export async function handleMessageReactionAdd(bot: Bot, data: DiscordGatewayPay
   const payload = data.d as SnakeCasedPropertiesDeep<MessageReactionAdd>;
 
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
-  const userId =  bot.transformers.snowflake(payload.user_id)
+  const userId = bot.transformers.snowflake(payload.user_id);
   bot.events.reactionAdd(bot, {
     userId,
     channelId: bot.transformers.snowflake(payload.channel_id),

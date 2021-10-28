@@ -15,10 +15,7 @@ import type { DiscordenoMember } from "../../transformers/member.ts";
  */
 export async function getMembers(bot: Bot, guildId: bigint, options?: ListGuildMembers & { addToCache?: boolean }) {
   // Check if intents is not 0 as proxy ws won't set intents in other instances
-  if (
-    bot.intents &&
-    !(bot.intents & DiscordGatewayIntents.GuildMembers)
-  ) {
+  if (bot.intents && !(bot.intents & DiscordGatewayIntents.GuildMembers)) {
     throw new Error(bot.constants.Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
@@ -46,7 +43,12 @@ export async function getMembers(bot: Bot, guildId: bigint, options?: ListGuildM
 
     const discordenoMembers = await Promise.all(
       result.map(async (member) => {
-        const discordenoMember = bot.transformers.member(bot, member, guildId, bot.transformers.snowflake(member.user.id));
+        const discordenoMember = bot.transformers.member(
+          bot,
+          member,
+          guildId,
+          bot.transformers.snowflake(member.user.id)
+        );
 
         if (options?.addToCache !== false) {
           await bot.cache.members.set(discordenoMember.id, discordenoMember);

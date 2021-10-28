@@ -21,7 +21,7 @@ export async function handleMessageDeleteBulk(bot: Bot, data: DiscordGatewayPayl
         channelId: bot.transformers.snowflake(payload.channel_id),
         guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
       },
-      message  
+      message
     );
   });
 }
