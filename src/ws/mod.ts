@@ -1,6 +1,5 @@
 export * from "./close_ws.ts";
 export * from "./create_shard.ts";
-export * from "./events.ts";
 export * from "./handle_on_message.ts";
 export * from "./heartbeat.ts";
 export * from "./identify.ts";

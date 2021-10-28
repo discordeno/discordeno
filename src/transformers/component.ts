@@ -141,5 +141,5 @@ export interface DiscordenoComponent {
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   maxValues?: number;
   /** a list of child components */
-  components?: Component[];
+  components?: DiscordenoComponent[];
 }

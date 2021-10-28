@@ -15,7 +15,7 @@ export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
 
   // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
   for (let i = firstShardId; i < maxShards; i++) {
-    gateway.log("DEBUG", `2. Running for loop in spawnShards function.`);
+    gateway.debug(`1. Running for loop in spawnShards function.`);
     const bucketId = i % gateway.maxConcurrency;
     const bucket = gateway.buckets.get(bucketId);
     if (!bucket) throw new Error("Bucket not found when spawning shards.");
@@ -34,9 +34,9 @@ export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
 
   // SPREAD THIS OUT TO DIFFERENT CLUSTERS TO BEGIN STARTING UP
   gateway.buckets.forEach(async (bucket, bucketId) => {
-    gateway.log("DEBUG", `3. Running forEach loop in spawnShards function.`);
+    gateway.debug(`2. Running forEach loop in spawnShards function.`);
     for (const [workerId, ...queue] of bucket.workers) {
-      gateway.log("DEBUG", `4. Running for of loop in spawnShards function.`);
+      gateway.debug(`3. Running for of loop in spawnShards function.`);
 
       queue.forEach((shardId) => {
         bucket.createNextShard.push(async () => {

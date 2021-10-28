@@ -130,5 +130,5 @@ export async function processGlobalQueue(rest: RestManager) {
   }
 
   // ALLOW OTHER QUEUES TO START WHEN NEW REQUEST IS MADE
-  rest.globalQueueProcessing = true;
+  rest.globalQueueProcessing = false;
 }

@@ -16,8 +16,8 @@ export async function handleVoiceStateUpdate(bot: Bot, data: DiscordGatewayPaylo
     await bot.cache.guilds.set(guild.id, guild);
   }
 
-  const member = payload.member ? bot.transformers.member(bot, payload.member, guildId) : undefined;
   const user = payload.member ? bot.transformers.user(bot, payload.member.user) : undefined;
+  const member = payload.member ? bot.transformers.member(bot, payload.member, guildId, user!.id) : undefined;
 
   bot.events.voiceStateUpdate(bot, voiceState, { guild, member, user });
 }

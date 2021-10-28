@@ -2,7 +2,7 @@ import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { GatewayManager } from "../bot.ts";
 
 export function resume(gateway: GatewayManager, shardId: number) {
-  gateway.log("RESUMING", { shardId });
+  gateway.debug("GW RESUMING", { shardId });
 
   // NOW WE HANDLE RESUMING THIS SHARD
   // Get the old data for this shard necessary for resuming

@@ -9,10 +9,9 @@ import { DiscordenoEmbed } from "./embed.ts";
 import { DiscordMessageTypes } from "../types/messages/message_types.ts";
 import { DiscordMessageActivityTypes } from "../types/messages/message_activity_types.ts";
 import { DiscordInteractionTypes } from "../types/interactions/interaction_types.ts";
-import { DiscordMessageComponentTypes } from "../types/messages/components/message_component_types.ts";
-import { ButtonStyles } from "../types/messages/components/button_styles.ts";
 import { DiscordenoComponent } from "./component.ts";
 import { Application } from "../types/applications/application.ts";
+import { DiscordenoThread } from "./thread.ts";
 
 export function transformMessage(bot: Bot, data: SnakeCasedPropertiesDeep<Message>): DiscordenoMessage {
   const guildId = data.guild_id ? bot.transformers.snowflake(data.guild_id) : undefined;
@@ -54,7 +53,7 @@ export function transformMessage(bot: Bot, data: SnakeCasedPropertiesDeep<Messag
           user: bot.transformers.user(bot, data.interaction.user),
         }
       : undefined,
-    thread: data.thread,
+    thread: data.thread ? bot.transformers.thread(bot, data.thread) : undefined,
     components: data.components?.map((component) => bot.transformers.component(bot, component)),
     stickerItems: data.sticker_items?.map((sticker) => ({
       id: bot.transformers.snowflake(sticker.id),
@@ -196,7 +195,7 @@ export interface DiscordenoMessage {
     user: DiscordenoUser;
   };
   /** The thread that was started from this message, includes thread member object */
-  thread?: Omit<Channel, "member"> & { member: ThreadMember };
+  thread?: DiscordenoThread;
   /** The components related to this message */
   components?: DiscordenoComponent[];
 }

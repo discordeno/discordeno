@@ -1,11 +1,12 @@
 import { Bot } from "../bot.ts";
-import { Interaction, Role } from "../types/mod.ts";
+import { Interaction } from "../types/mod.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoMember, DiscordenoUser } from "./member.ts";
 import { DiscordenoMessage } from "./message.ts";
 
 export function transformInteraction(bot: Bot, payload: SnakeCasedPropertiesDeep<Interaction>): DiscordenoInteraction {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
+  const user = bot.transformers.user(bot, payload.member?.user || payload.user!);
 
   return {
     // UNTRANSFORMED STUFF HERE
@@ -15,12 +16,12 @@ export function transformInteraction(bot: Bot, payload: SnakeCasedPropertiesDeep
 
     // TRANSFORMED STUFF BELOW
     guildId,
+    user,
     id: bot.transformers.snowflake(payload.id),
     applicationId: bot.transformers.snowflake(payload.application_id),
-    user: bot.transformers.user(bot, payload.member?.user || payload.user!),
     message: payload.message ? bot.transformers.message(bot, payload.message) : undefined,
     channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
-    member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId) : undefined,
+    member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, user.id) : undefined,
   };
 }
 

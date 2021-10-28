@@ -68,7 +68,6 @@ import {
   handleOnMessage,
   resume,
   resharder,
-  log,
   spawnShards,
   createShard,
   identify,
@@ -380,7 +379,7 @@ export async function startBot(bot: Bot) {
   bot.helpers = createHelpers(bot.helpers || {});
 
   // START REST
-  bot.rest = createRestManager({ token: bot.token });
+  bot.rest = createRestManager({ token: bot.token, debug: bot.events.debug });
   if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot(bot);
 
   // START WS
@@ -393,6 +392,7 @@ export async function startBot(bot: Bot) {
     sessionStartLimitRemaining: bot.botGatewayData.sessionStartLimit.remaining,
     sessionStartLimitResetAfter: bot.botGatewayData.sessionStartLimit.resetAfter,
     maxConcurrency: bot.botGatewayData.sessionStartLimit.maxConcurrency,
+    debug: bot.events.debug,
     handleDiscordPayload:
       // bot.handleDiscordPayload ||
       async function (_, data: DiscordGatewayPayload, shardId: number) {
@@ -526,7 +526,7 @@ export function createGatewayManager(
     identify,
     heartbeat,
     tellClusterToIdentify,
-    log,
+    debug: options.debug || function () {},
     resharder,
     handleOnMessage,
     processGatewayQueue,
@@ -935,6 +935,7 @@ export interface Transformers {
   attachment: typeof transformAttachment;
   embed: typeof transformEmbed;
   component: typeof transformComponent;
+  thread: typeof transformThread;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -956,6 +957,7 @@ export function createTransformers(options: Partial<Transformers>) {
     role: options.role || transformRole,
     user: options.user || transformUser,
     team: options.team || transformTeam,
+    thread: options.thread || transformThread,
     voiceState: options.voiceState || transformVoiceState,
     snowflake: options.snowflake || snowflakeToBigint,
   };
@@ -1049,7 +1051,7 @@ export interface GatewayManager {
   /** Tell the worker to begin identifying this shard  */
   tellClusterToIdentify: typeof tellClusterToIdentify;
   /** Handle the different logs. Used for debugging. */
-  log: typeof log;
+  debug: (text: string, ...args: any[]) => unknown;
   /** Handles resharding the bot when necessary. */
   resharder: typeof resharder;
   /** Handles the message events from websocket. */
@@ -1065,7 +1067,7 @@ export interface GatewayManager {
 }
 
 export interface EventHandlers {
-  debug: (text: string) => unknown;
+  debug: (text: string, ...args: any[]) => unknown;
   ready: (
     bot: Bot,
     payload: {

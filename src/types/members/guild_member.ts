@@ -13,9 +13,9 @@ export interface GuildMember {
   /** When the user started boosing the guild */
   premiumSince?: string | null;
   /** Whether the user is deafened in voice channels */
-  deaf: boolean;
+  deaf?: boolean;
   /** Whether the user is muted in voice channels */
-  mute: boolean;
+  mute?: boolean;
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
   pending?: boolean;
 }
