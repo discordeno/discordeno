@@ -130,12 +130,12 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
           : undefined,
         fields: embed.fields,
       })),
-      allowed_mentions: {
+      allowed_mentions: content.allowedMentions ? {
         parse: content.allowedMentions?.parse,
         roles: content.allowedMentions?.roles,
         users: content.allowedMentions?.users,
         replied_user: content.allowedMentions?.repliedUser,
-      },
+      } : undefined,
       file: content.file,
       // TODO: Snakelize components??
       components: content.components,
