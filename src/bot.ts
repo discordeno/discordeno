@@ -106,6 +106,7 @@ import { transformAttachment } from "./transformers/attachment.ts";
 import { transformEmbed } from "./transformers/embed.ts";
 import { transformComponent } from "./transformers/component.ts";
 import { AsyncCache, AsyncCacheHandler, Cache, CacheHandler, createCache, TableNames } from "./cache.ts";
+import { transformThread } from "./transformers/thread.ts";
 
 type CacheOptions =
   | {

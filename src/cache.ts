@@ -3,9 +3,12 @@ import type { DiscordenoChannel } from "./transformers/channel.ts";
 import type { DiscordenoGuild } from "./transformers/guild.ts";
 import type { DiscordenoMember, DiscordenoUser } from "./transformers/member.ts";
 import type { DiscordenoMessage } from "./transformers/message.ts";
+import { DiscordenoPresence } from "./transformers/presence.ts";
 import { PresenceUpdate } from "./types/activity/presence_update.ts";
 import { Channel } from "./types/channels/channel.ts";
+import { GuildMember } from "./types/members/guild_member.ts";
 import { Message } from "./types/messages/message.ts";
+import { SnakeCasedPropertiesDeep } from "./types/util.ts";
 import { Collection } from "./util/collection.ts";
 
 export function createCache(
@@ -55,15 +58,21 @@ export function createCache(
   } as Cache;
 }
 
+export type CachedDiscordenoUser = DiscordenoUser & { guilds: Map<bigint, GuildMember> };
+
 export interface Cache {
   guilds: CacheHandler<DiscordenoGuild>;
   users: CacheHandler<DiscordenoUser>;
-  channels: CacheHandler<Channel>;
-  messages: CacheHandler<Message>;
-  presences: CacheHandler<PresenceUpdate>;
+  members: CacheHandler<DiscordenoMember>;
+  channels: CacheHandler<DiscordenoChannel>;
+  messages: CacheHandler<DiscordenoMessage>;
+  presences: CacheHandler<DiscordenoPresence>;
   // threads: CacheHandler<DiscordenoThread>;
   unavailableGuilds: CacheHandler<CachedUnavailableGuild>;
-  executedSlashCommands: Set<BigInt>;
+  dispatchedGuildIds: CacheHandler<bigint>;
+  dispatchedChannelIds: CacheHandler<bigint>;
+  executedSlashCommands: Set<string>;
+  fetchAllMembersProcessingRequests: Map<string, Function>;
   execute: CacheExecutor;
 }
 
@@ -76,12 +85,16 @@ export interface CachedUnavailableGuild {
 export interface AsyncCache {
   guilds: AsyncCacheHandler<DiscordenoGuild>;
   users: AsyncCacheHandler<DiscordenoUser>;
-  channels: AsyncCacheHandler<Channel>;
-  messages: AsyncCacheHandler<Message>;
-  presences: AsyncCacheHandler<PresenceUpdate>;
+  members: CacheHandler<DiscordenoMember>;
+  channels: AsyncCacheHandler<DiscordenoChannel>;
+  messages: AsyncCacheHandler<DiscordenoMessage>;
+  presences: AsyncCacheHandler<DiscordenoPresence>;
   // threads: AsyncCacheHandler<DiscordenoThread>;
   unavailableGuilds: AsyncCacheHandler<CachedUnavailableGuild>;
-  executedSlashCommands: Set<BigInt>;
+  dispatchedGuildIds: AsyncCacheHandler<bigint>;
+  dispatchedChannelIds: AsyncCacheHandler<bigint>;
+  executedSlashCommands: Set<string>;
+  fetchAllMembersProcessingRequests: Map<string, Function>;
   execute: CacheExecutor;
 }
 
@@ -130,14 +143,27 @@ export type AsyncCacheHandler<T> = {
   [K in keyof CacheHandler<T>]: (...args: Parameters<CacheHandler<T>[K]>) => Promise<ReturnType<CacheHandler<T>[K]>>;
 };
 
-export interface CacheExecutor {
-  (type: "DELETE_MESSAGES_FROM_CHANNEL", options: { channelId: bigint }): Promise<undefined>;
-}
+export type CacheExecutor = (
+  type:
+    | "FILTER_CATEGORY_CHILDREN_CHANNELS"
+    | "DELETE_MESSAGES_FROM_CHANNEL"
+    | "DELETE_ROLE_FROM_MEMBER"
+    | "BULK_DELETE_MESSAGES"
+    | "GUILD_MEMBER_CHUNK"
+    | "GUILD_MEMBER_COUNT_DECREMENT"
+    | "GUILD_MEMBER_COUNT_INCREMENT"
+    | "DELETE_MESSAGES_FROM_GUILD"
+    | "DELETE_CHANNELS_FROM_GUILD"
+    | "DELETE_GUILD_FROM_MEMBER",
+  options: Record<string, any>
+) => Promise<undefined>;
 
 export function createExecute(cache: Cache | AsyncCache): CacheExecutor {
+  // @ts-ignore no time to look into these errors now
   return async (type, options) => {
     if (type === "DELETE_MESSAGES_FROM_CHANNEL") {
       await cache.messages.forEach(async (message) => {
+        // @ts-ignore me smarter than u
         if (BigInt(message.channelId) === options.channelId) {
           await cache.messages.delete(BigInt(message.id));
         }
@@ -145,6 +171,10 @@ export function createExecute(cache: Cache | AsyncCache): CacheExecutor {
 
       return undefined;
     }
+
+    // switch type {
+    //   case ""
+    // }
   };
 }
 
