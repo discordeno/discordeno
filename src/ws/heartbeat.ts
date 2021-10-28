@@ -3,12 +3,12 @@ import { delay } from "../util/utils.ts";
 import { GatewayManager } from "../bot.ts";
 
 export async function heartbeat(gateway: GatewayManager, shardId: number, interval: number) {
-  gateway.log("HEARTBEATING_STARTED", { shardId, interval });
+  gateway.debug("GW HEARTBEATING_STARTED", { shardId, interval });
 
   const shard = gateway.shards.get(shardId);
   if (!shard) return;
 
-  gateway.log("HEARTBEATING_DETAILS", { shardId, interval, shard });
+  gateway.debug("GW HEARTBEATING_DETAILS", { shardId, interval, shard });
 
   // The first heartbeat is special so we send it without set Interval: https://discord.com/developers/docs/topics/gateway#heartbeating
   await delay(Math.floor(shard.heartbeat.interval * Math.random()));
@@ -28,14 +28,14 @@ export async function heartbeat(gateway: GatewayManager, shardId: number, interv
   shard.heartbeat.interval = interval;
 
   shard.heartbeat.intervalId = setInterval(async () => {
-    gateway.log("DEBUG", `Running setInterval in heartbeat file. Shard: ${shardId}`);
+    gateway.debug("GW DEBUG", `Running setInterval in heartbeat file. Shard: ${shardId}`);
     const currentShard = gateway.shards.get(shardId);
     if (!currentShard) return;
 
-    gateway.log("HEARTBEATING", { shardId, shard: currentShard });
+    gateway.debug("GW HEARTBEATING", { shardId, shard: currentShard });
 
     if (currentShard.ws.readyState === WebSocket.CLOSED || !currentShard.heartbeat.keepAlive) {
-      gateway.log("HEARTBEATING_CLOSED", { shardId, shard: currentShard });
+      gateway.debug("GW HEARTBEATING_CLOSED", { shardId, shard: currentShard });
 
       // STOP THE HEARTBEAT
       return clearInterval(shard.heartbeat.intervalId);

@@ -24,7 +24,7 @@ export async function processGatewayQueue(gateway: GatewayManager, id: number) {
     const request = shard.queue.shift();
     if (!request) return;
 
-    gateway.log("RAW_SEND", shard.id, request);
+    gateway.debug("GW RAW_SEND", shard.id, request);
 
     shard.ws.send(JSON.stringify(request));
 
@@ -33,7 +33,7 @@ export async function processGatewayQueue(gateway: GatewayManager, id: number) {
 
     // Handle if the requests have been maxed
     if (shard.queueCounter >= 118) {
-      gateway.log("DEBUG", {
+      gateway.debug("GW MAX_REQUESTS", {
         message: "Max gateway requests per minute reached setting timeout for one minute",
         shardId: shard.id,
       });

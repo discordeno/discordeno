@@ -2,7 +2,7 @@ import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { GatewayManager } from "../bot.ts";
 
 export function identify(gateway: GatewayManager, shardId: number, maxShards: number) {
-  gateway.log("IDENTIFYING", { shardId, maxShards });
+  gateway.debug("GW IDENTIFYING", { shardId, maxShards });
 
   // Need to clear the old heartbeat interval
   const oldShard = gateway.shards.get(shardId);

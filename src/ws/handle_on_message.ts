@@ -27,7 +27,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
   const shard = gateway.shards.get(shardId);
 
   const messageData = JSON.parse(message) as DiscordGatewayPayload;
-  gateway.log("RAW", { shardId, payload: messageData });
+  gateway.debug("GW RAW", { shardId, payload: messageData });
 
   switch (messageData.op) {
     case DiscordGatewayOpcodes.Heartbeat:
@@ -56,7 +56,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
       }
       break;
     case DiscordGatewayOpcodes.Reconnect:
-      gateway.log("RECONNECT", { shardId });
+      gateway.debug("GW RECONNECT", { shardId });
 
       if (gateway.shards.has(shardId)) {
         gateway.shards.get(shardId)!.resuming = true;
@@ -65,7 +65,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
       gateway.resume(gateway, shardId);
       break;
     case DiscordGatewayOpcodes.InvalidSession:
-      gateway.log("INVALID_SESSION", { shardId, payload: messageData });
+      gateway.debug("GW INVALID_SESSION", { shardId, payload: messageData });
 
       // We need to wait for a random amount of time between 1 and 5: https://discord.com/developers/docs/topics/gateway#resuming
       await delay(Math.floor((Math.random() * 4 + 1) * 1000));
@@ -84,7 +84,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
       break;
     default:
       if (messageData.t === "RESUMED") {
-        gateway.log("RESUMED", { shardId });
+        gateway.debug("GW RESUMED", { shardId });
 
         if (gateway.shards.has(shardId)) {
           gateway.shards.get(shardId)!.resuming = false;

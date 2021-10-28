@@ -6,20 +6,20 @@ export function createShard(gateway: GatewayManager, shardId: number) {
   socket.binaryType = "arraybuffer";
 
   socket.onerror = (errorEvent) => {
-    gateway.log("ERROR", { shardId, error: errorEvent });
+    gateway.debug("GW ERROR", { shardId, error: errorEvent });
   };
 
   socket.onmessage = ({ data: message }) => gateway.handleOnMessage(gateway, message, shardId);
 
   socket.onclose = async (event) => {
-    gateway.log("CLOSED", { shardId, payload: event });
+    gateway.debug("GW CLOSED", { shardId, payload: event });
 
     if (event.code === 3064 || event.reason === "Discordeno Testing Finished! Do Not RESUME!") {
       return;
     }
 
     if (event.code === 3065 || ["Resharded!", "Resuming the shard, closing old shard."].includes(event.reason)) {
-      return gateway.log("CLOSED_RECONNECT", { shardId, payload: event });
+      return gateway.debug("GW CLOSED_RECONNECT", { shardId, payload: event });
     }
 
     switch (event.code) {
@@ -31,7 +31,7 @@ export function createShard(gateway: GatewayManager, shardId: number) {
       case 3065: // Reidentifying
       case 3066: // Missing ACK
         // Will restart shard manually
-        return gateway.log("CLOSED_RECONNECT", { shardId, payload: event });
+        return gateway.debug("GW CLOSED_RECONNECT", { shardId, payload: event });
       case DiscordGatewayCloseEventCodes.UnknownOpcode:
       case DiscordGatewayCloseEventCodes.DecodeError:
       case DiscordGatewayCloseEventCodes.AuthenticationFailed:

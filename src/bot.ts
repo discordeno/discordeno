@@ -68,7 +68,6 @@ import {
   handleOnMessage,
   resume,
   resharder,
-  log,
   spawnShards,
   createShard,
   identify,
@@ -584,6 +583,7 @@ export async function startBot(bot: Bot) {
     sessionStartLimitRemaining: bot.botGatewayData.sessionStartLimit.remaining,
     sessionStartLimitResetAfter: bot.botGatewayData.sessionStartLimit.resetAfter,
     maxConcurrency: bot.botGatewayData.sessionStartLimit.maxConcurrency,
+    debug: bot.events.debug,
     handleDiscordPayload:
       // bot.handleDiscordPayload ||
       async function (_, data: DiscordGatewayPayload, shardId: number) {
@@ -717,7 +717,7 @@ export function createGatewayManager(
     identify,
     heartbeat,
     tellClusterToIdentify,
-    log,
+    debug: options.debug || function () {},
     resharder,
     handleOnMessage,
     processGatewayQueue,
@@ -1219,7 +1219,7 @@ export interface GatewayManager {
   /** Tell the worker to begin identifying this shard  */
   tellClusterToIdentify: typeof tellClusterToIdentify;
   /** Handle the different logs. Used for debugging. */
-  log: typeof log;
+  debug: (text: string, ...args: any[]) => unknown;
   /** Handles resharding the bot when necessary. */
   resharder: typeof resharder;
   /** Handles the message events from websocket. */
@@ -1235,7 +1235,7 @@ export interface GatewayManager {
 }
 
 export interface EventHandlers {
-  debug: (text: string) => unknown;
+  debug: (text: string, ...args: any[]) => unknown;
   ready: (
     bot: Bot,
     payload: {
