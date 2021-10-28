@@ -7,6 +7,7 @@ import type { Message } from "../../types/messages/message.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import type { Bot } from "../../bot.ts";
 import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { Embed } from "../../types/embeds/embed.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(bot: Bot, channelId: bigint, content: string | CreateMessage) {
@@ -80,7 +81,55 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
     {
       content: content.content,
       tts: content.tts,
-      embeds: content.embeds,
+      embeds: content.embeds?.map((embed) => ({
+        title: embed.title,
+        type: embed.type,
+        description: embed.description,
+        url: embed.url,
+        timestamp: embed.timestamp,
+        color: embed.color,
+        footer: embed.footer
+          ? {
+              text: embed.footer.text,
+              icon_url: embed.footer.iconUrl,
+              proxy_icon_url: embed.footer.proxyIconUrl,
+            }
+          : undefined,
+        image: embed.image
+          ? {
+              url: embed.image.url,
+              proxy_url: embed.image.proxyUrl,
+              height: embed.image.height,
+              width: embed.image.width,
+            }
+          : undefined,
+        thumbnail: embed.thumbnail
+          ? {
+              url: embed.thumbnail.url,
+              proxy_url: embed.thumbnail.proxyUrl,
+              height: embed.thumbnail.height,
+              width: embed.thumbnail.width,
+            }
+          : undefined,
+        video: embed.video
+          ? {
+              url: embed.video.url,
+              proxy_url: embed.video.proxyUrl,
+              height: embed.video.height,
+              width: embed.video.width,
+            }
+          : undefined,
+        provider: embed.provider,
+        author: embed.author
+          ? {
+              name: embed.author.name,
+              url: embed.author.url,
+              icon_url: embed.author.iconUrl,
+              proxy_icon_url: embed.author.proxyIconUrl,
+            }
+          : undefined,
+        fields: embed.fields,
+      })),
       allowed_mentions: {
         parse: content.allowedMentions?.parse,
         roles: content.allowedMentions?.roles,
