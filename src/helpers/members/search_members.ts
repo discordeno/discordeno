@@ -37,7 +37,7 @@ export async function searchMembers(
 
   const members = await Promise.all(
     result.map(async (member) => {
-      const discordenoMember = bot.transformers.member(bot, member, guildId);
+      const discordenoMember = bot.transformers.member(bot, member, guildId, bot.transformers.snowflake(member.user.id));
       if (options?.cache) {
         await bot.cache.members.set(discordenoMember.id, discordenoMember);
       }

@@ -23,7 +23,7 @@ export interface DiscordenoUser {
 
 export function transformUser(bot: Bot, payload: SnakeCasedPropertiesDeep<User>): DiscordenoUser {
   return {
-    id: bot.transformers.snowflake(payload.id),
+    id: bot.transformers.snowflake(payload.id || ""),
     username: payload.username,
     discriminator: Number(payload.discriminator),
     avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : null,
@@ -75,9 +75,9 @@ export interface DiscordenoMember {
   /** When this member began boosting this server if this member is boosting the server. */
   premiumSince?: number;
   /** Whether or not the member is deafened. */
-  deaf: boolean;
+  deaf?: boolean;
   /** Whether or not the member is muted. */
-  mute: boolean;
+  mute?: boolean;
   /** Whether or not this member is pending in server verification. */
   pending?: boolean;
 }

@@ -10,6 +10,10 @@ export async function handleMessageDeleteBulk(bot: Bot, data: DiscordGatewayPayl
   const messages = await bot.cache.execute("BULK_DELETE_MESSAGES", { messageIds: ids });
 
   ids.forEach((id) => {
+    // @ts-ignore let itoh fix cache typings hes the king of typigns and cache
+    const msg = messages.find((m) => m.id === id);
+    const message = msg ? bot.transformers.message(bot, msg) : undefined;
+
     bot.events.messageDelete(
       bot,
       {
@@ -17,7 +21,7 @@ export async function handleMessageDeleteBulk(bot: Bot, data: DiscordGatewayPayl
         channelId: bot.transformers.snowflake(payload.channel_id),
         guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
       },
-      messages.find((m) => m.id === id)
+      message  
     );
   });
 }

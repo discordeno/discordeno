@@ -46,7 +46,7 @@ export async function getMembers(bot: Bot, guildId: bigint, options?: ListGuildM
 
     const discordenoMembers = await Promise.all(
       result.map(async (member) => {
-        const discordenoMember = bot.transformers.member(bot, member, guildId);
+        const discordenoMember = bot.transformers.member(bot, member, guildId, bot.transformers.snowflake(member.user.id));
 
         if (options?.addToCache !== false) {
           await bot.cache.members.set(discordenoMember.id, discordenoMember);

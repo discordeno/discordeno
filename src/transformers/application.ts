@@ -23,6 +23,7 @@ export function transformApplication(bot: Bot, payload: SnakeCasedPropertiesDeep
 
     id: bot.transformers.snowflake(payload.id),
     icon: payload.icon ? bot.utils.iconHashToBigInt(payload.icon) : undefined,
+    // @ts-ignore the partial here wont break anything
     owner: payload.owner ? bot.transformers.user(bot, payload.owner) : undefined,
     team: payload.team ? bot.transformers.team(bot, payload.team) : undefined,
     guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,

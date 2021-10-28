@@ -9,7 +9,7 @@ export async function handleGuildMembersChunk(bot: Bot, data: DiscordGatewayPayl
   const guildId = bot.transformers.snowflake(payload.guild_id);
 
   await bot.cache.execute("GUILD_MEMBER_CHUNK", {
-    members: payload.members.map((m) => bot.transformers.member(bot, m, guildId)),
+    members: payload.members.map((m) => bot.transformers.member(bot, m, guildId, bot.transformers.snowflake(m.user.id))),
     users: payload.members.map((m) => bot.transformers.user(bot, m.user)),
   });
 

@@ -56,5 +56,5 @@ export async function editMember(bot: Bot, guildId: bigint, memberId: bigint, op
     }
   );
 
-  return bot.transformers.member(bot, result, guildId);
+  return bot.transformers.member(bot, result, guildId, memberId);
 }

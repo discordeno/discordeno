@@ -5,11 +5,16 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
   const bot = createBot({
     token: TOKEN || Deno.env.get("DISCORD_TOKEN"),
     botId: 675412054529540107n,
-    events: createEventHandlers({}),
+    events: createEventHandlers({
+      debug: console.log,
+    }),
     intents: [],
   }) as Bot;
 
   await startBot(bot);
+  console.log("started");
+  const x = await bot.helpers.sendMessage(bot, 806947972004839444n, "testing");
+  console.log("x");
 
   console.log("Bot online");
 

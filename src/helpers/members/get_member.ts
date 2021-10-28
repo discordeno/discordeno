@@ -16,7 +16,7 @@ export async function getMember(bot: Bot, guildId: bigint, id: bigint, options?:
     bot.constants.endpoints.GUILD_MEMBER(guildId, id)
   );
 
-  const discordenoMember = await bot.transformers.member(bot, data, guildId);
+  const discordenoMember = bot.transformers.member(bot, data, guildId, id);
   await bot.cache.members.set(discordenoMember.id, discordenoMember);
 
   return discordenoMember;

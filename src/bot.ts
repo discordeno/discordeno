@@ -313,6 +313,7 @@ import { urlToBase64 } from "./util/url_to_base64.ts";
 import { transformAttachment } from "./transformers/attachment.ts";
 import { transformEmbed } from "./transformers/embed.ts";
 import { transformComponent } from "./transformers/component.ts";
+import { transformThread } from "./transformers/thread.ts";
 
 export function createBot(options: CreateBotOptions) {
   return {
@@ -345,7 +346,7 @@ export function createBot(options: CreateBotOptions) {
       fetchAllMembersProcessingRequests: new Collection<string, Function>(),
       messages: {
         get: async function (id: bigint): Promise<DiscordenoMessage | undefined> {
-          return {} as any as DiscordenoMessage;
+          return;
         },
         has: async function (id: bigint): Promise<boolean> {
           return false;
@@ -359,7 +360,7 @@ export function createBot(options: CreateBotOptions) {
       },
       guilds: {
         get: async function (id: bigint): Promise<DiscordenoGuild | undefined> {
-          return {} as any as DiscordenoGuild;
+          return;
         },
         has: async function (id: bigint): Promise<boolean> {
           return false;
@@ -376,7 +377,7 @@ export function createBot(options: CreateBotOptions) {
       },
       channels: {
         get: async function (id: bigint): Promise<DiscordenoChannel | undefined> {
-          return {} as any as DiscordenoChannel;
+          return;
         },
         has: async function (id: bigint): Promise<boolean> {
           return false;
@@ -390,7 +391,7 @@ export function createBot(options: CreateBotOptions) {
       },
       members: {
         get: async function (id: bigint): Promise<DiscordenoMember | undefined> {
-          return {} as any as DiscordenoMember;
+          return;
         },
         has: async function (id: bigint): Promise<boolean> {
           return false;
@@ -404,7 +405,7 @@ export function createBot(options: CreateBotOptions) {
       },
       presence: {
         get: async function (id: bigint): Promise<DiscordenoPresence | undefined> {
-          return {} as any as DiscordenoPresence;
+          return;
         },
         has: async function (id: bigint): Promise<boolean> {
           return false;
@@ -418,7 +419,7 @@ export function createBot(options: CreateBotOptions) {
       },
       users: {
         get: async function (id: bigint): Promise<DiscordenoUser | undefined> {
-          return {} as any as DiscordenoUser;
+          return;
         },
         has: async function (id: bigint): Promise<boolean> {
           return false;
@@ -570,7 +571,7 @@ export async function startBot(bot: Bot) {
   bot.helpers = createHelpers(bot.helpers || {});
 
   // START REST
-  bot.rest = createRestManager({ token: bot.token });
+  bot.rest = createRestManager({ token: bot.token, debug: bot.events.debug });
   if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot(bot);
 
   // START WS
@@ -1102,6 +1103,7 @@ export interface Transformers {
   attachment: typeof transformAttachment;
   embed: typeof transformEmbed;
   component: typeof transformComponent;
+  thread: typeof transformThread;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -1123,6 +1125,7 @@ export function createTransformers(options: Partial<Transformers>) {
     role: options.role || transformRole,
     user: options.user || transformUser,
     team: options.team || transformTeam,
+    thread: options.thread || transformThread,
     voiceState: options.voiceState || transformVoiceState,
     snowflake: options.snowflake || snowflakeToBigint,
   };
