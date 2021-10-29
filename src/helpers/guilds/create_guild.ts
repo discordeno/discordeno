@@ -22,7 +22,7 @@ export async function createGuild(bot: Bot, options: CreateGuild) {
   // MANUALLY CACHE THE GUILD
   await bot.cache.guilds.set(guild.id, guild);
   // MANUALLY CACHE THE BOT
-  await bot.helpers.getMember(bot, guild.id, bot.id);
+  await bot.helpers.getMember(guild.id, bot.id);
 
   return guild;
 }

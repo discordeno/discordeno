@@ -1,4 +1,3 @@
-// import { cacheHandlers } from "../../cache.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
@@ -6,8 +5,6 @@ import type { CreateMessage } from "../../types/messages/create_message.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import type { Bot } from "../../bot.ts";
-import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
-import { Embed } from "../../types/embeds/embed.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(bot: Bot, channelId: bigint, content: string | CreateMessage) {

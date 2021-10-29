@@ -1,14 +1,9 @@
-import { Bot } from "./bot.ts";
 import type { DiscordenoChannel } from "./transformers/channel.ts";
 import type { DiscordenoGuild } from "./transformers/guild.ts";
 import type { DiscordenoMember, DiscordenoUser } from "./transformers/member.ts";
 import type { DiscordenoMessage } from "./transformers/message.ts";
 import { DiscordenoPresence } from "./transformers/presence.ts";
-import { PresenceUpdate } from "./types/activity/presence_update.ts";
-import { Channel } from "./types/channels/channel.ts";
 import { GuildMember } from "./types/members/guild_member.ts";
-import { Message } from "./types/messages/message.ts";
-import { SnakeCasedPropertiesDeep } from "./types/util.ts";
 import { Collection } from "./util/collection.ts";
 
 export function createCache(
@@ -33,7 +28,7 @@ export function createCache(
       throw new Error("Async cache requires a tableCreator to be passed.");
     }
 
-    return {
+    const cache = {
       guilds: tableCreator("guilds"),
       users: tableCreator("users"),
       members: tableCreator("members"),
@@ -44,10 +39,14 @@ export function createCache(
       unavailableGuilds: tableCreator("unavailableGuilds"),
       executedSlashCommands: new Set(),
     } as AsyncCache;
+
+    cache.execute = createExecute(cache);
+
+    return cache;
   }
   if (!tableCreator) tableCreator = createTable;
 
-  return {
+  const cache = {
     guilds: tableCreator("guilds"),
     users: tableCreator("users"),
     members: tableCreator("members"),
@@ -58,6 +57,10 @@ export function createCache(
     unavailableGuilds: tableCreator("unavailableGuilds"),
     executedSlashCommands: new Set(),
   } as Cache;
+
+  cache.execute = createExecute(cache);
+
+  return cache;
 }
 
 export type CachedDiscordenoUser = DiscordenoUser & { guilds: Map<bigint, GuildMember> };
@@ -180,7 +183,15 @@ export function createExecute(cache: Cache | AsyncCache): CacheExecutor {
   };
 }
 
-export type TableNames = "channels" | "users" | "guilds" | "messages" | "presences" | "threads" | "unavailableGuilds" | "members";
+export type TableNames =
+  | "channels"
+  | "users"
+  | "guilds"
+  | "messages"
+  | "presences"
+  | "threads"
+  | "unavailableGuilds"
+  | "members";
 
 // function messageSweeper(bot: Bot, message: DiscordenoMessage) {
 //   // DM messages aren't needed

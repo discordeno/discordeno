@@ -98,14 +98,14 @@ function processEditChannelQueue(bot: Bot) {
     if (!details) return;
 
     await bot.helpers
-      .editChannel(bot, details.channelId, details.options)
+      .editChannel(details.channelId, details.options)
       .then((result) => details.resolve(result))
       .catch(details.reject);
     const secondDetails = request.items.shift();
     if (!secondDetails) return;
 
     await bot.helpers
-      .editChannel(bot, secondDetails.channelId, secondDetails.options)
+      .editChannel(secondDetails.channelId, secondDetails.options)
       .then((result) => secondDetails.resolve(result))
       .catch(secondDetails.reject);
     return;

@@ -9,11 +9,11 @@ export async function addReactions(
   ordered = false
 ) {
   if (!ordered) {
-    await Promise.all(reactions.map((reaction) => bot.helpers.addReaction(bot, channelId, messageId, reaction)));
+    await Promise.all(reactions.map((reaction) => bot.helpers.addReaction(channelId, messageId, reaction)));
   } else {
     for (const reaction of reactions) {
       bot.events.debug("Running for of loop in addReactions function.");
-      await bot.helpers.addReaction(bot, channelId, messageId, reaction);
+      await bot.helpers.addReaction(channelId, messageId, reaction);
     }
   }
 }

@@ -25,5 +25,5 @@ export async function sendDirectMessage(bot: Bot, memberId: bigint, content: str
   }
 
   // If it does exist try sending a message to this user
-  return await bot.helpers.sendMessage(bot, dmChannel.id, content);
+  return await bot.helpers.sendMessage(dmChannel.id, content);
 }

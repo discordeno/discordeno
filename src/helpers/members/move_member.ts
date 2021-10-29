@@ -8,5 +8,5 @@ import type { Bot } from "../../bot.ts";
  * @param channelId id of channel to move user to (if they are connected to voice)
  */
 export function moveMember(bot: Bot, guildId: bigint, memberId: bigint, channelId: bigint) {
-  return bot.helpers.editMember(bot, guildId, memberId, { channelId });
+  return bot.helpers.editMember(guildId, memberId, { channelId });
 }

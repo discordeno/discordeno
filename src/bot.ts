@@ -253,11 +253,11 @@ export async function startBot(bot: Bot) {
   // SETUP
   bot.utils = createUtils({});
   bot.transformers = createTransformers(bot.transformers || {});
-  bot.helpers = createHelpers(bot.helpers || {});
+  bot.helpers = createHelpers(bot);
 
   // START REST
   bot.rest = createRestManager({ token: bot.token, debug: bot.events.debug });
-  if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot(bot);
+  if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot();
 
   // START WS
   bot.gateway = createGatewayManager({
@@ -629,7 +629,24 @@ export interface Helpers {
   suppressEmbeds: typeof helpers.suppressEmbeds;
 }
 
-export function createHelpers(options: Partial<Helpers>) {
+export function createHelpers(
+  bot: Bot,
+  customHelpers?: Partial<Helpers>,
+): FinalHelpers {
+  const converted = {} as FinalHelpers;
+  for (const [name, fun] of Object.entries({ ...createBaseHelpers(customHelpers || {}) })) {
+    // @ts-ignore - TODO: make the types better
+    converted[name as keyof FinalHelpers] = (
+      ...args: RemoveFirstFromTuple<Parameters<typeof fun>>
+    ) =>
+      // @ts-ignore - TODO: make the types better
+      fun(bot, ...args);
+  }
+
+  return converted;
+}
+
+export function createBaseHelpers(options: Partial<Helpers>) {
   return {
     addDiscoverySubcategory: options.addDiscoverySubcategory || helpers.addDiscoverySubcategory,
     addReaction: options.addReaction || helpers.addReaction,
@@ -1236,3 +1253,12 @@ export function createBotGatewayHandlers(
     INTEGRATION_DELETE: options.INTEGRATION_DELETE ?? handlers.handleIntegrationDelete,
   };
 }
+
+export type RemoveFirstFromTuple<T extends any[]> = T["length"] extends 0 ? []
+  : ((...b: T) => void) extends (a: any, ...b: infer I) => void ? I
+  : [];
+export type FinalHelpers = {
+  [K in keyof Helpers]: (
+    ...args: RemoveFirstFromTuple<Parameters<Helpers[K]>>
+  ) => ReturnType<Helpers[K]>;
+};
