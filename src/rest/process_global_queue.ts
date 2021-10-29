@@ -33,9 +33,7 @@ export async function processGlobalQueue(rest: RestManager) {
     // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
     const urlResetIn = rest.checkRateLimits(rest, request.basicURL);
     // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
-    const bucketResetIn = request.payload.bucketId
-      ? rest.checkRateLimits(rest, request.payload.bucketId)
-      : false;
+    const bucketResetIn = request.payload.bucketId ? rest.checkRateLimits(rest, request.payload.bucketId) : false;
 
     if (urlResetIn || bucketResetIn) {
       const rateLimitedRequest = rest.globalQueue.shift();
@@ -47,7 +45,7 @@ export async function processGlobalQueue(rest: RestManager) {
           rest.globalQueue.unshift(rateLimitedRequest);
           // START QUEUE IF NOT STARTED
           rest.processGlobalQueue(rest);
-        }, urlResetIn || bucketResetIn as number);
+        }, urlResetIn || (bucketResetIn as number));
       }
 
       continue;
