@@ -15,8 +15,8 @@ export async function connectToVoiceChannel(
   bot.gateway.sendShardMessage(bot.gateway, bot.utils.calculateShardId(bot.gateway, guildId), {
     op: DiscordGatewayOpcodes.VoiceStateUpdate,
     d: {
-      guild_id: guildId,
-      channel_id: channelId,
+      guild_id: guildId.toString(),
+      channel_id: channelId.toString(),
       self_mute: Boolean(options?.selfMute),
       self_deaf: options?.selfDeaf ?? true,
     },

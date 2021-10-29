@@ -85,3 +85,4 @@ export interface DiscordenoChannel
   /** The voice states that are in this channel assuming it is a voice channel. */
   voiceStates?: Collection<bigint, DiscordenoVoiceState>;
 }
+

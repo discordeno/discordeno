@@ -36,6 +36,7 @@ export function createCache(
     return {
       guilds: tableCreator("guilds"),
       users: tableCreator("users"),
+      members: tableCreator("members"),
       channels: tableCreator("channels"),
       messages: tableCreator("messages"),
       presences: tableCreator("presences"),
@@ -49,6 +50,7 @@ export function createCache(
   return {
     guilds: tableCreator("guilds"),
     users: tableCreator("users"),
+    members: tableCreator("members"),
     channels: tableCreator("channels"),
     messages: tableCreator("messages"),
     presences: tableCreator("presences"),
@@ -178,7 +180,7 @@ export function createExecute(cache: Cache | AsyncCache): CacheExecutor {
   };
 }
 
-export type TableNames = "channels" | "users" | "guilds" | "messages" | "presences" | "threads" | "unavailableGuilds";
+export type TableNames = "channels" | "users" | "guilds" | "messages" | "presences" | "threads" | "unavailableGuilds" | "members";
 
 // function messageSweeper(bot: Bot, message: DiscordenoMessage) {
 //   // DM messages aren't needed

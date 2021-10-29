@@ -11,6 +11,14 @@ export function transformGuild(
   bot: Bot,
   payload: { guild: SnakeCasedPropertiesDeep<Guild> } & { shardId: number }
 ): DiscordenoGuild {
+  const guildId = bot.transformers.snowflake(payload.guild.id);
+  const channels = payload.guild.channels || [];
+
+  channels.forEach(async (channel) => {
+    const chnl = bot.transformers.channel(bot, { channel, guildId });
+    await bot.cache.channels.set(chnl.id, chnl);
+  });
+
   return {
     afkTimeout: payload.guild.afk_timeout,
     approximateMemberCount: payload.guild.approximate_member_count,
