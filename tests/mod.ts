@@ -5,6 +5,9 @@ import { deleteMessageWithReasonTest } from "./messages/deleteMessage.ts";
 import { deleteMessageWithoutReasonTest } from "./messages/deleteMessage.ts";
 import { delayUntil } from "./utils.ts";
 
+// CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
+import "./local.ts";
+
 Deno.test("[Bot] - Starting Tests", async (t) => {
   let startedAt = 0;
   const bot = createBot({
