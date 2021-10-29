@@ -123,7 +123,7 @@ type CacheOptions =
 export function createBot<C extends CacheOptions = CacheOptions>(
   options: CreateBotOptions<C>
 ): Bot<C extends { isAsync: true } ? AsyncCache : Cache> {
-  return ({
+  return {
     id: options.botId,
     applicationId: options.applicationId || options.botId,
     token: `Bot ${options.token}`,
@@ -136,7 +136,7 @@ export function createBot<C extends CacheOptions = CacheOptions>(
     handlers: createBotGatewayHandlers({}),
     // @ts-ignore b quiet
     cache: createCache(options?.cache?.isAsync ?? false, options?.cache?.customTableCreator),
-  } as unknown) as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
+  } as unknown as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
 }
 
 export function createEventHandlers(events: Partial<EventHandlers>): EventHandlers {
