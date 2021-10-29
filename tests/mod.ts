@@ -82,10 +82,12 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
       }
 
       // CONDUCT ALL TESTS RELATED TO A MESSAGE HERE
-      await Promise.all([
-        deleteMessageWithoutReasonTest(bot, channel.id, t),
-        deleteMessageWithReasonTest(bot, channel.id, t),
-      ]);
+      await t.step("[message] delete message without a reason", async (t) => {
+        await deleteMessageWithoutReasonTest(bot, channel.id, t);
+      });
+      await t.step("[message] delete message with a reason", async (t) => {
+        await deleteMessageWithReasonTest(bot, channel.id, t);
+      });
     });
   });
 
