@@ -8,6 +8,13 @@ import { delayUntil } from "./utils.ts";
 import "./local.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
+  // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
+  const sanitizeMode = {
+    sanitizeResources: false,
+    sanitizeOps: false,
+    sanitizeExit: false,
+  };
+
   let startedAt = 0;
   const bot = createBot({
     token: TOKEN || Deno.env.get("DISCORD_TOKEN"),
@@ -82,12 +89,22 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
       }
 
       // CONDUCT ALL TESTS RELATED TO A MESSAGE HERE
-      await t.step("[message] delete message without a reason", async (t) => {
-        await deleteMessageWithoutReasonTest(bot, channel.id, t);
-      });
-      await t.step("[message] delete message with a reason", async (t) => {
-        await deleteMessageWithReasonTest(bot, channel.id, t);
-      });
+      await Promise.all([
+        t.step({
+          name: "[message] delete message without a reason",
+          fn: async (t) => {
+            await deleteMessageWithoutReasonTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] delete message with a reason",
+          fn: async (t) => {
+            await deleteMessageWithReasonTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+      ]);
     });
   });
 
