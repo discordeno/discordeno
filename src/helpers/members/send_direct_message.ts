@@ -10,14 +10,9 @@ export async function sendDirectMessage(bot: Bot, memberId: bigint, content: str
   let dmChannel = await bot.cache.channels.get(memberId);
   if (!dmChannel) {
     // If not available in cache create a new one.
-    const dmChannelData = await bot.rest.runMethod<Channel>(
-      bot.rest,
-      "post",
-      bot.constants.endpoints.USER_DM,
-      {
-        recipient_id: memberId,
-      }
-    );
+    const dmChannelData = await bot.rest.runMethod<Channel>(bot.rest, "post", bot.constants.endpoints.USER_DM, {
+      recipient_id: memberId,
+    });
     const discordenoChannel = await bot.transformers.channel(bot, { channel: dmChannelData });
     // Recreate the channel and add it under the users id
     await bot.cache.channels.set(memberId, discordenoChannel);
