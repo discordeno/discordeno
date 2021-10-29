@@ -629,16 +629,11 @@ export interface Helpers {
   suppressEmbeds: typeof helpers.suppressEmbeds;
 }
 
-export function createHelpers(
-  bot: Bot,
-  customHelpers?: Partial<Helpers>,
-): FinalHelpers {
+export function createHelpers(bot: Bot, customHelpers?: Partial<Helpers>): FinalHelpers {
   const converted = {} as FinalHelpers;
   for (const [name, fun] of Object.entries({ ...createBaseHelpers(customHelpers || {}) })) {
     // @ts-ignore - TODO: make the types better
-    converted[name as keyof FinalHelpers] = (
-      ...args: RemoveFirstFromTuple<Parameters<typeof fun>>
-    ) =>
+    converted[name as keyof FinalHelpers] = (...args: RemoveFirstFromTuple<Parameters<typeof fun>>) =>
       // @ts-ignore - TODO: make the types better
       fun(bot, ...args);
   }
@@ -1254,11 +1249,11 @@ export function createBotGatewayHandlers(
   };
 }
 
-export type RemoveFirstFromTuple<T extends any[]> = T["length"] extends 0 ? []
-  : ((...b: T) => void) extends (a: any, ...b: infer I) => void ? I
+export type RemoveFirstFromTuple<T extends any[]> = T["length"] extends 0
+  ? []
+  : ((...b: T) => void) extends (a: any, ...b: infer I) => void
+  ? I
   : [];
 export type FinalHelpers = {
-  [K in keyof Helpers]: (
-    ...args: RemoveFirstFromTuple<Parameters<Helpers[K]>>
-  ) => ReturnType<Helpers[K]>;
+  [K in keyof Helpers]: (...args: RemoveFirstFromTuple<Parameters<Helpers[K]>>) => ReturnType<Helpers[K]>;
 };
