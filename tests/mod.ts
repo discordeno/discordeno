@@ -1,8 +1,7 @@
 import { TOKEN } from "../configs.ts";
 import { createBot, createEventHandlers, DiscordChannelTypes, startBot, stopBot } from "../mod.ts";
 import { assertEquals, assertExists } from "./deps.ts";
-import { deleteMessageWithReasonTest } from "./messages/deleteMessage.ts";
-import { deleteMessageWithoutReasonTest } from "./messages/deleteMessage.ts";
+import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
 import { delayUntil } from "./utils.ts";
 
 // CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST

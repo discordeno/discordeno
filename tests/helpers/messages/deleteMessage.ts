@@ -1,6 +1,6 @@
-import { Bot } from "../../src/bot.ts";
-import { assertExists } from "../deps.ts";
-import { delayUntil } from "../utils.ts";
+import { Bot } from "../../../src/bot.ts";
+import { assertExists } from "../../deps.ts";
+import { delayUntil } from "../../utils.ts";
 
 async function ifItFailsBlameWolf(bot: Bot, channelId: bigint, reason?: string) {
   const message = await bot.helpers.sendMessage(channelId, "Hello World!");
