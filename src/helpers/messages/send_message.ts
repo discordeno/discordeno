@@ -23,6 +23,7 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
         DiscordChannelTypes.GuildPublicThread,
         DiscordChannelTypes.GuildPrivateThread,
         DiscordChannelTypes.GuildNewsThread,
+        DiscordChannelTypes.GuildVoice,
       ].includes(channel.type)
     ) {
       throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);

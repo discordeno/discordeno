@@ -18,6 +18,7 @@ export async function startTyping(bot: Bot, channelId: bigint) {
         DiscordChannelTypes.GuildNewsThread,
         DiscordChannelTypes.GuildPrivateThread,
         DiscordChannelTypes.GuildPublicThread,
+        DiscordChannelTypes.GuildVoice,
       ].includes(channel.type)
     ) {
       throw new Error(bot.constants.Errors.CHANNEL_NOT_TEXT_BASED);

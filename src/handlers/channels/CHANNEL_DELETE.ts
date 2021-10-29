@@ -23,8 +23,11 @@ export async function handleChannelDelete(bot: Bot, data: DiscordGatewayPayload)
 
       bot.events.voiceChannelLeave(bot, vs, guild, channel);
     });
-  } else if (
+  } 
+  
+  if (
     [
+      DiscordChannelTypes.GuildVoice,
       DiscordChannelTypes.GuildText,
       DiscordChannelTypes.DM,
       DiscordChannelTypes.GroupDm,

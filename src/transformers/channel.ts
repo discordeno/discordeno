@@ -45,6 +45,7 @@ export function transformChannel(
       ? bot.transformers.snowflake(payload.channel.application_id)
       : undefined,
     parentId: payload.channel.parent_id ? bot.transformers.snowflake(payload.channel.parent_id) : undefined,
+    // TODO: stage channels?
     voiceStates: payload.channel.type === DiscordChannelTypes.GuildVoice ? new Collection() : undefined,
   };
 }
