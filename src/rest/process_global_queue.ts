@@ -23,6 +23,35 @@ export async function processGlobalQueue(rest: RestManager) {
     }
 
     const request = rest.globalQueue[0];
+    // REMOVES ANY POTENTIAL INVALID CONFLICTS
+    if (!request) {
+      rest.globalQueue.shift();
+      continue;
+    }
+
+    // CHECK RATELIMITS FOR 429 REPEATS
+    // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
+    const urlResetIn = rest.checkRateLimits(rest, request.basicURL);
+    // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
+    const bucketResetIn = request.payload.bucketId
+      ? rest.checkRateLimits(rest, request.payload.bucketId)
+      : false;
+
+    if (urlResetIn || bucketResetIn) {
+      const rateLimitedRequest = rest.globalQueue.shift();
+      if (rateLimitedRequest) {
+        // ONLY ADD TIMEOUT IF ANOTHER QUEUE IS NOT PENDING
+        setTimeout(() => {
+          rest.debug(`[REST - processGlobalQueue] rate limited, running setTimeout.`);
+          // THIS REST IS RATE LIMITED, SO PUSH BACK TO START
+          rest.globalQueue.unshift(rateLimitedRequest);
+          // START QUEUE IF NOT STARTED
+          rest.processGlobalQueue(rest);
+        }, urlResetIn || bucketResetIn as number);
+      }
+
+      continue;
+    }
 
     try {
       // CUSTOM HANDLER FOR USER TO LOG OR WHATEVER WHENEVER A FETCH IS MADE
@@ -71,13 +100,16 @@ export async function processGlobalQueue(rest: RestManager) {
         } else {
           if (request.payload.retryCount++ >= rest.maxRetryCount) {
             rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(request.payload)}`);
+            // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
+            rest.globalQueue.shift();
             request.request.reject(
               new Error(`[${response.status}] The request was rate limited and it maxed out the retries limit.`)
             );
-            // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
-            rest.globalQueue.shift();
             continue;
           }
+
+          // WAS RATE LIMITED. PUSH TO END OF GLOBAL QUEUE, SO WE DON'T BLOCK OTHER REQUESTS.
+          rest.globalQueue.push(rest.globalQueue.shift()!);
         }
 
         continue;
