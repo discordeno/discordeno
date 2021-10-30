@@ -111,7 +111,7 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
             await editMessageTest(bot, channel.id, t);
           },
           ...sanitizeMode,
-        })
+        }),
       ]);
     });
   });
