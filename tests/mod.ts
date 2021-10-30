@@ -11,6 +11,7 @@ import {
 
 // CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
 import "./local.ts";
+import { getMessageTest } from "./helpers/messages/getMessage.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
@@ -115,6 +116,13 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
           name: "[message] delete message with a reason",
           fn: async (t) => {
             await deleteMessageWithReasonTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] fetch a message",
+          fn: async (t) => {
+            await getMessageTest(bot, channel.id, t);
           },
           ...sanitizeMode,
         }),
