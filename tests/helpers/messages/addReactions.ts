@@ -14,12 +14,12 @@ export async function addReactionsTest(bot: Bot, channelId: bigint, t: Deno.Test
     throw new Error("The message seemed to be sent but it was not cached.");
   }
 
-  // Delete the message now
+  // Add reactions
   await bot.helpers.addReactions(channelId, message.id, ["☑️", "❌"]);
 
   // Wait to give it time for MESSAGE_UPDATE event
   await delayUntil(10000, async () => ((await bot.cache.messages.get(message.id))?.reactions?.length ?? 0) === 2);
-  // Make sure it is gone from cache
+  // Make sure they got added
   if ((await bot.cache.messages.get(message.id))?.reactions?.length === 2) {
     throw new Error("The message should have got a reaction but it doesn't have any.");
   }
