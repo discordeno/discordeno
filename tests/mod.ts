@@ -16,6 +16,7 @@ import "./local.ts";
 import { getMessageTest } from "./helpers/messages/getMessage.ts";
 import { addReactionTest } from "./helpers/messages/addReaction.ts";
 import { editMessageTest } from "./helpers/messages/editMessage.ts";
+import { fetchSingleMemberTest } from "./helpers/members/fetchMembers.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
@@ -204,6 +205,19 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
         }),
       ]);
     });
+  });
+
+  // MEMBER TESTS GROUPED
+  await t.step("Members related tests", async (t) => {
+    await Promise.all([
+      t.step({
+        name: "[member] fetch a single member by id",
+        fn: async (t) => {
+          await fetchSingleMemberTest(bot, guild.id, t);
+        },
+        ...sanitizeMode,
+      }),
+    ]);
   });
 
   await stopBot(bot);
