@@ -55,12 +55,14 @@ export async function editWebhookMessage(
       content: options.content,
       embeds: options.embeds,
       file: options.file,
-      allowed_mentions: options.allowedMentions ? {
-        parse: options.allowedMentions.parse,
-        roles: options.allowedMentions.roles,
-        users: options.allowedMentions.users,
-        replied_user: options.allowedMentions.repliedUser,
-      } : undefined,
+      allowed_mentions: options.allowedMentions
+        ? {
+            parse: options.allowedMentions.parse,
+            roles: options.allowedMentions.roles,
+            users: options.allowedMentions.users,
+            replied_user: options.allowedMentions.repliedUser,
+          }
+        : undefined,
       attachments: options.attachments,
       components: options.components?.map((component) => ({
         type: component.type,
