@@ -4,9 +4,15 @@ import { assertEquals, assertExists } from "./deps.ts";
 import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
 import { deleteMessagesWithoutReasonTest, deleteMessagesWithReasonTest } from "./helpers/messages/deleteMessages.ts";
 import { delayUntil } from "./utils.ts";
+import {
+  sendMessageWithComponents,
+  sendMessageWithEmbedsTest,
+  sendMessageWithTextTest,
+} from "./helpers/messages/sendMessage.ts";
 
 // CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
 import "./local.ts";
+import { getMessageTest } from "./helpers/messages/getMessage.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
@@ -77,20 +83,29 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
 
     // ALL MESSAGE RELATED TESTS THAT DEPEND ON AN EXISTING CHANNEL
     await t.step("Message related tests", async (t) => {
-      const message = await bot.helpers.sendMessage(channel.id, "Testing");
-
-      // Assertions
-      assertExists(message);
-
-      // Delay the execution to allow MESSAGE_CREATE event to be processed
-      await delayUntil(10000, () => bot.cache.messages.has(message.id));
-
-      if (!bot.cache.messages.has(message.id)) {
-        throw new Error("The message seemed to be sent but it was not cached.");
-      }
-
       // CONDUCT ALL TESTS RELATED TO A MESSAGE HERE
       await Promise.all([
+        t.step({
+          name: "[message] send message with text",
+          fn: async (t) => {
+            await sendMessageWithTextTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] send message with embeds",
+          fn: async (t) => {
+            await sendMessageWithEmbedsTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] send message with components",
+          fn: async (t) => {
+            await sendMessageWithComponents(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
         t.step({
           name: "[message] delete message without a reason",
           fn: async (t) => {
@@ -116,6 +131,13 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
           name: "[message] delete messages with a reason",
           fn: async (t) => {
             await deleteMessagesWithReasonTest(bot, channel.id, t);
+            },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] fetch a message",
+          fn: async (t) => {
+            await getMessageTest(bot, channel.id, t);
           },
           ...sanitizeMode,
         }),
