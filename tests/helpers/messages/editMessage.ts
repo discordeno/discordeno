@@ -14,7 +14,7 @@ export async function editMessageTest(bot: Bot, channelId: bigint, t: Deno.TestC
     throw new Error("The message seemed to be sent but it was not cached. Reason: ${reason}");
   }
 
-  // Delete the message now
+  // Edit the message
   await bot.helpers.editMessage(channelId, message.id, "Goodbye World!");
 
   // Wait to give it time for MESSAGE_UPDATE event
