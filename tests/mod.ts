@@ -131,7 +131,7 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
           name: "[message] delete messages with a reason",
           fn: async (t) => {
             await deleteMessagesWithReasonTest(bot, channel.id, t);
-            },
+          },
           ...sanitizeMode,
         }),
         t.step({
