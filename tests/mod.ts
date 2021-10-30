@@ -105,19 +105,19 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
           ...sanitizeMode,
         }),
         t.step({
+          name: "[message] send message with components",
+          fn: async (t) => {
+            await sendMessageWithComponents(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
           name: "[message] edit message",
           fn: async (t) => {
             await editMessageTest(bot, channel.id, t);
           },
           ...sanitizeMode,
         }),
-        // t.step({
-        //   name: "[message] send message with components",
-        //   fn: async (t) => {
-        //     await sendMessageWithComponents(bot, channel.id, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
         t.step({
           name: "[message] delete message without a reason",
           fn: async (t) => {

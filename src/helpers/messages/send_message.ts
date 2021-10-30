@@ -5,6 +5,7 @@ import type { CreateMessage } from "../../types/messages/create_message.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import type { Bot } from "../../bot.ts";
+import { DiscordMessageComponentTypes } from "../../types/messages/components/message_component_types.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(bot: Bot, channelId: bigint, content: string | CreateMessage) {
@@ -137,8 +138,49 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
           }
         : undefined,
       file: content.file,
-      // TODO: Snakelize components??
-      components: content.components,
+      components: content.components?.map((component) => ({
+        type: component.type,
+        components: component.components.map((subcomponent) => {
+          if (subcomponent.type === DiscordMessageComponentTypes.SelectMenu)
+            return {
+              type: subcomponent.type,
+              custom_id: subcomponent.customId,
+              placeholder: subcomponent.placeholder,
+              min_values: subcomponent.minValues,
+              max_values: subcomponent.maxValues,
+              options: subcomponent.options.map((option) => ({
+                label: option.label,
+                value: option.value,
+                description: option.description,
+                emoji: option.emoji
+                  ? {
+                      id: option.emoji.id?.toString(),
+                      name: option.emoji.name,
+                      animated: option.emoji.animated,
+                    }
+                  : undefined,
+                default: option.default,
+              })),
+            };
+
+          return {
+            type: subcomponent.type,
+            custom_id: subcomponent.customId,
+            label: subcomponent.label,
+            customId: subcomponent.customId,
+            style: subcomponent.style,
+            emoji: subcomponent.emoji
+              ? {
+                  id: subcomponent.emoji.id?.toString(),
+                  name: subcomponent.emoji.name,
+                  animated: subcomponent.emoji.animated,
+                }
+              : undefined,
+            url: subcomponent.url,
+            disabled: subcomponent.disabled,
+          };
+        }),
+      })),
       ...(content.messageReference?.messageId
         ? {
             message_reference: {
