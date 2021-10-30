@@ -2,7 +2,6 @@ import { TOKEN } from "../configs.ts";
 import { createBot, createEventHandlers, DiscordChannelTypes, startBot, stopBot } from "../mod.ts";
 import { assertEquals, assertExists } from "./deps.ts";
 import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
-import { editMessageTest } from "./helpers/messages/editMessage.ts";
 import { delayUntil } from "./utils.ts";
 import {
   sendMessageWithComponents,
@@ -119,13 +118,6 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
           },
           ...sanitizeMode,
         }),
-        t.step({
-          name: "[message] edit message",
-          fn: async (t) => {
-            await editMessageTest(bot, channel.id, t);
-          },
-          ...sanitizeMode,
-        })
       ]);
     });
   });
