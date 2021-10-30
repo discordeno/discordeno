@@ -19,6 +19,12 @@ export async function getMessages(
     throw new Error(bot.constants.Errors.INVALID_GET_MESSAGES_LIMIT);
   }
 
+  if (options) {
+    if (bot.utils.hasProperty(options, "around")) options.around = (options.around as bigint).toString();
+    if (bot.utils.hasProperty(options, "before")) options.before = (options.before as bigint).toString();
+    if (bot.utils.hasProperty(options, "after")) options.after = (options.after as bigint).toString();
+  }
+
   const result = await bot.rest.runMethod<Message[]>(
     bot.rest,
     "get",

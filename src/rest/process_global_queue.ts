@@ -22,13 +22,9 @@ export async function processGlobalQueue(rest: RestManager) {
       break;
     }
 
-    const request = rest.globalQueue[0];
+    const request = rest.globalQueue.shift();
     // REMOVES ANY POTENTIAL INVALID CONFLICTS
-    if (!request) {
-      console.log("removing invalid request");
-      rest.globalQueue.shift();
-      continue;
-    }
+    if (!request) continue;
 
     // CHECK RATELIMITS FOR 429 REPEATS
     // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
@@ -37,21 +33,14 @@ export async function processGlobalQueue(rest: RestManager) {
     const bucketResetIn = request.payload.bucketId ? rest.checkRateLimits(rest, request.payload.bucketId) : false;
 
     if (urlResetIn || bucketResetIn) {
-      console.log("rate limited shifting 1", rest.globalQueue.length);
-      const rateLimitedRequest = rest.globalQueue.shift();
-      console.log("rate limited shifting 2", rest.globalQueue.length);
-      if (rateLimitedRequest) {
-        // ONLY ADD TIMEOUT IF ANOTHER QUEUE IS NOT PENDING
-        setTimeout(() => {
-          rest.debug(`[REST - processGlobalQueue] rate limited, running setTimeout.`);
-          // THIS REST IS RATE LIMITED, SO PUSH BACK TO START
-          console.log("rate limited unshifting 1", rest.globalQueue.length);
-          rest.globalQueue.unshift(rateLimitedRequest);
-          console.log("rate limited unshifting 2", rest.globalQueue.length);
-          // START QUEUE IF NOT STARTED
-          rest.processGlobalQueue(rest);
-        }, urlResetIn || (bucketResetIn as number));
-      }
+      // ONLY ADD TIMEOUT IF ANOTHER QUEUE IS NOT PENDING
+      setTimeout(() => {
+        rest.debug(`[REST - processGlobalQueue] rate limited, running setTimeout.`);
+        // THIS REST IS RATE LIMITED, SO PUSH BACK TO START
+        rest.globalQueue.unshift(request);
+        // START QUEUE IF NOT STARTED
+        rest.processGlobalQueue(rest);
+      }, urlResetIn || (bucketResetIn as number));
 
       continue;
     }
@@ -99,14 +88,10 @@ export async function processGlobalQueue(rest: RestManager) {
         // If NOT rate limited remove from queue
         if (response.status !== 429) {
           request.request.reject(new Error(`[${response.status}] ${error}`));
-          console.log("error but no rate limit shifting");
-          rest.globalQueue.shift();
         } else {
           if (request.payload.retryCount++ >= rest.maxRetryCount) {
             rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(request.payload)}`);
             // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
-            console.log("removing from queue max retries");
-            rest.globalQueue.shift();
             request.request.reject(
               new Error(`[${response.status}] The request was rate limited and it maxed out the retries limit.`)
             );
@@ -115,7 +100,7 @@ export async function processGlobalQueue(rest: RestManager) {
 
           // WAS RATE LIMITED. PUSH TO END OF GLOBAL QUEUE, SO WE DON'T BLOCK OTHER REQUESTS.
           console.log("delaying request, rate limit 1", rest.globalQueue.length);
-          rest.globalQueue.push(rest.globalQueue.shift()!);
+          rest.globalQueue.push(request);
           console.log("delaying request, rate limit 2", rest.globalQueue.length);
         }
 
@@ -125,18 +110,12 @@ export async function processGlobalQueue(rest: RestManager) {
       // SOMETIMES DISCORD RETURNS AN EMPTY 204 RESPONSE THAT CAN'T BE MADE TO JSON
       if (response.status === 204) {
         rest.debug(`[REST - FetchSuccess] URL: ${request.urlToUse} | ${JSON.stringify(request.payload)}`);
-        // REMOVE FROM QUEUE
-        console.log("204 response removing from queue");
-        rest.globalQueue.shift();
         request.request.respond({ status: 204 });
       } else {
         // CONVERT THE RESPONSE TO JSON
         const json = await response.json();
 
         rest.debug(`[REST - fetchSuccess] ${JSON.stringify(request.payload)}`);
-        // REMOVE FROM QUEUE
-        console.log("request success removing from queue");
-        rest.globalQueue.shift();
         request.request.respond({
           status: 200,
           body: JSON.stringify(json),
@@ -146,9 +125,6 @@ export async function processGlobalQueue(rest: RestManager) {
       // SOMETHING WENT WRONG, LOG AND RESPOND WITH ERROR
       rest.debug(`[REST - fetchFailed] Payload: ${JSON.stringify(request.payload)} | Error: ${error}`);
       request.request.reject(error);
-      // REMOVE FROM QUEUE
-      console.log("big error removing from queue");
-      rest.globalQueue.shift();
     }
   }
 

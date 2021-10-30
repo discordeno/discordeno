@@ -2,6 +2,8 @@ import { Bot } from "../../../src/bot.ts";
 import { assertEquals, assertExists } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
 
+const reactionCounters = new Map<bigint, number>();
+
 export async function addReactionTest(
   bot: Bot,
   guildId: bigint,
@@ -59,18 +61,17 @@ export async function addReactionTest(
     }
   }
 
-  let reactions = 0;
+  reactionCounters.set(message.id, 0);
 
   bot.events.reactionAdd = function (bot, payload) {
-    if (payload.messageId !== message.id) return;
-
-    reactions++;
+    const current = reactionCounters.get(payload.messageId) || 0;
+    reactionCounters.set(payload.messageId, current + 1);
   };
 
   if (options.single) await bot.helpers.addReaction(message.channelId, message.id, emojiId);
   else await bot.helpers.addReactions(message.channelId, message.id, emojiIds, options.ordered);
 
-  await delayUntil(10000, () => reactions === (options.single ? 1 : emojiIds.length));
+  await delayUntil(10000, () => reactionCounters.get(message.id) === (options.single ? 1 : emojiIds.length));
 
-  assertEquals(reactions, options.single ? 1 : emojiIds.length);
+  assertEquals(reactionCounters.get(message.id), options.single ? 1 : emojiIds.length);
 }
