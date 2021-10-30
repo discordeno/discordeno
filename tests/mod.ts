@@ -91,7 +91,7 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
     // ALL MESSAGE RELATED TESTS THAT DEPEND ON AN EXISTING CHANNEL
     await t.step("Message related tests", async (t) => {
       const message = await bot.helpers.sendMessage(channel.id, "Hello Skillz");
-      
+
       // CONDUCT ALL TESTS RELATED TO A MESSAGE HERE
       await Promise.all([
         t.step({
