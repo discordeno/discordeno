@@ -17,6 +17,7 @@ import { getMessageTest } from "./helpers/messages/getMessage.ts";
 import { addReactionTest } from "./helpers/messages/addReaction.ts";
 import { editMessageTest } from "./helpers/messages/editMessage.ts";
 import { fetchSingleMemberTest } from "./helpers/members/fetchMembers.ts";
+import { pinMessageTests } from "./helpers/messages/pin.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
@@ -89,6 +90,8 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
 
     // ALL MESSAGE RELATED TESTS THAT DEPEND ON AN EXISTING CHANNEL
     await t.step("Message related tests", async (t) => {
+      const message = await bot.helpers.sendMessage(channel.id, "Hello Skillz");
+      
       // CONDUCT ALL TESTS RELATED TO A MESSAGE HERE
       await Promise.all([
         t.step({
@@ -200,6 +203,13 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
           name: "[message] add multiple custom reactions in order",
           fn: async (t) => {
             await addReactionTest(bot, guild.id, channel.id, { custom: true, single: false, ordered: true }, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] pin a message",
+          fn: async (t) => {
+            await pinMessageTests(bot, channel.id, message.id, t);
           },
           ...sanitizeMode,
         }),
