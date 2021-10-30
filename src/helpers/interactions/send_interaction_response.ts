@@ -39,12 +39,60 @@ export async function sendInteractionResponse(
     return await bot.rest.runMethod(bot.rest, "post", bot.constants.endpoints.WEBHOOK(bot.applicationId, token), {
       content: options.data.content,
       tts: options.data.tts,
-      embeds: options.data.embeds,
+      embeds: options.data.embeds?.map((embed) => ({
+        title: embed.title,
+        type: embed.type,
+        description: embed.description,
+        url: embed.url,
+        timestamp: embed.timestamp,
+        color: embed.color,
+        footer: embed.footer
+          ? {
+              text: embed.footer.text,
+              icon_url: embed.footer.iconUrl,
+              proxy_icon_url: embed.footer.proxyIconUrl,
+            }
+          : undefined,
+        image: embed.image
+          ? {
+              url: embed.image.url,
+              proxy_url: embed.image.proxyUrl,
+              height: embed.image.height,
+              width: embed.image.width,
+            }
+          : undefined,
+        thumbnail: embed.thumbnail
+          ? {
+              url: embed.thumbnail.url,
+              proxy_url: embed.thumbnail.proxyUrl,
+              height: embed.thumbnail.height,
+              width: embed.thumbnail.width,
+            }
+          : undefined,
+        video: embed.video
+          ? {
+              url: embed.video.url,
+              proxy_url: embed.video.proxyUrl,
+              height: embed.video.height,
+              width: embed.video.width,
+            }
+          : undefined,
+        provider: embed.provider,
+        author: embed.author
+          ? {
+              name: embed.author.name,
+              url: embed.author.url,
+              icon_url: embed.author.iconUrl,
+              proxy_icon_url: embed.author.proxyIconUrl,
+            }
+          : undefined,
+        fields: embed.fields,
+      })),
       allowed_mentions: {
-        parse: allowedMentions.parse,
-        roles: allowedMentions.roles,
-        users: allowedMentions.users,
-        replied_user: allowedMentions.repliedUser,
+        parse: allowedMentions?.parse,
+        roles: allowedMentions?.roles,
+        users: allowedMentions?.users,
+        replied_user: allowedMentions?.repliedUser,
       },
       file: options.data.file,
       // TODO: Snakelize components??
@@ -67,12 +115,60 @@ export async function sendInteractionResponse(
     {
       content: options.data.content,
       tts: options.data.tts,
-      embeds: options.data.embeds,
+      embeds: options.data.embeds?.map((embed) => ({
+        title: embed.title,
+        type: embed.type,
+        description: embed.description,
+        url: embed.url,
+        timestamp: embed.timestamp,
+        color: embed.color,
+        footer: embed.footer
+          ? {
+              text: embed.footer.text,
+              icon_url: embed.footer.iconUrl,
+              proxy_icon_url: embed.footer.proxyIconUrl,
+            }
+          : undefined,
+        image: embed.image
+          ? {
+              url: embed.image.url,
+              proxy_url: embed.image.proxyUrl,
+              height: embed.image.height,
+              width: embed.image.width,
+            }
+          : undefined,
+        thumbnail: embed.thumbnail
+          ? {
+              url: embed.thumbnail.url,
+              proxy_url: embed.thumbnail.proxyUrl,
+              height: embed.thumbnail.height,
+              width: embed.thumbnail.width,
+            }
+          : undefined,
+        video: embed.video
+          ? {
+              url: embed.video.url,
+              proxy_url: embed.video.proxyUrl,
+              height: embed.video.height,
+              width: embed.video.width,
+            }
+          : undefined,
+        provider: embed.provider,
+        author: embed.author
+          ? {
+              name: embed.author.name,
+              url: embed.author.url,
+              icon_url: embed.author.iconUrl,
+              proxy_icon_url: embed.author.proxyIconUrl,
+            }
+          : undefined,
+        fields: embed.fields,
+      })),
       allowed_mentions: {
-        parse: allowedMentions.parse,
-        roles: allowedMentions.roles,
-        users: allowedMentions.users,
-        replied_user: allowedMentions.repliedUser,
+        parse: allowedMentions?.parse,
+        roles: allowedMentions?.roles,
+        users: allowedMentions?.users,
+        replied_user: allowedMentions?.repliedUser,
       },
       file: options.data.file,
       // TODO: Snakelize components??
