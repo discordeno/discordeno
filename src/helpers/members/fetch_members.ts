@@ -21,11 +21,7 @@ export function fetchMembers(
 ) {
   // You can request 1 member without the intent
   // Check if intents is not 0 as proxy ws won't set intents in other instances
-  if (
-    bot.intents &&
-    (!options?.limit || options.limit > 1) &&
-    !(bot.intents & DiscordGatewayIntents.GuildMembers)
-  ) {
+  if (bot.intents && (!options?.limit || options.limit > 1) && !(bot.intents & DiscordGatewayIntents.GuildMembers)) {
     throw new Error(bot.constants.Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
@@ -45,7 +41,7 @@ export function fetchMembers(
         query: options?.query || (options?.limit ? undefined : ""),
         limit: options?.limit || 0,
         presences: options?.presences || false,
-        user_ids: options?.userIds?.map(id => id.toString()),
+        user_ids: options?.userIds?.map((id) => id.toString()),
         nonce,
       },
     });
