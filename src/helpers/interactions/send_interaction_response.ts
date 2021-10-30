@@ -88,14 +88,12 @@ export async function sendInteractionResponse(
           : undefined,
         fields: embed.fields,
       })),
-      allowed_mentions: allowedMentions
-        ? {
-            parse: allowedMentions?.parse,
-            roles: allowedMentions?.roles,
-            users: allowedMentions?.users,
-            replied_user: allowedMentions?.repliedUser,
-          }
-        : undefined,
+      allowed_mentions: {
+        parse: allowedMentions?.parse,
+        roles: allowedMentions?.roles,
+        users: allowedMentions?.users,
+        replied_user: allowedMentions?.repliedUser,
+      },
       file: options.data.file,
       // TODO: Snakelize components??
       components: options.data.components,
@@ -166,14 +164,12 @@ export async function sendInteractionResponse(
           : undefined,
         fields: embed.fields,
       })),
-      allowed_mentions: allowedMentions
-        ? {
-            parse: allowedMentions?.parse,
-            roles: allowedMentions?.roles,
-            users: allowedMentions?.users,
-            replied_user: allowedMentions?.repliedUser,
-          }
-        : undefined,
+      allowed_mentions: {
+        parse: allowedMentions?.parse,
+        roles: allowedMentions?.roles,
+        users: allowedMentions?.users,
+        replied_user: allowedMentions?.repliedUser,
+      },
       file: options.data.file,
       // TODO: Snakelize components??
       components: options.data.components,
