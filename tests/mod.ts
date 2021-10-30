@@ -7,7 +7,7 @@ import { delayUntil } from "./utils.ts";
 import {
   sendMessageWithComponents,
   sendMessageWithEmbedsTest,
-  sendMessageWithTextTest
+  sendMessageWithTextTest,
 } from "./helpers/messages/sendMessage.ts";
 
 // CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
@@ -125,7 +125,7 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
             await editMessageTest(bot, channel.id, t);
           },
           ...sanitizeMode,
-        })
+        }),
       ]);
     });
   });
