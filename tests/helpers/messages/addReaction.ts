@@ -6,7 +6,7 @@ export async function addReactionTest(
   bot: Bot,
   guildId: bigint,
   channelId: bigint,
-  options: { custom: boolean; single: boolean, ordered: boolean; },
+  options: { custom: boolean; single: boolean; ordered: boolean },
   t: Deno.TestContext
 ) {
   const message = await bot.helpers.sendMessage(channelId, "Hello World!");
@@ -60,13 +60,13 @@ export async function addReactionTest(
   }
 
   let reactions = 0;
-  
+
   bot.events.reactionAdd = function (bot, payload) {
     if (payload.messageId !== message.id) return;
-    
+
     reactions++;
   };
-  
+
   if (options.single) await bot.helpers.addReaction(message.channelId, message.id, emojiId);
   else await bot.helpers.addReactions(message.channelId, message.id, emojiIds, options.ordered);
 
