@@ -146,7 +146,7 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
           name: "[message] fetch messages",
           fn: async (t) => {
             await getMessagesTest(bot, channel.id, t);
-           },
+          },
           ...sanitizeMode,
         }),
       ]);
