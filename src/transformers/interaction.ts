@@ -1,5 +1,11 @@
 import { Bot } from "../bot.ts";
-import { ApplicationCommandInteractionData, ButtonData, DiscordInteractionTypes, Interaction, SelectMenuData } from "../types/mod.ts";
+import {
+  ApplicationCommandInteractionData,
+  ButtonData,
+  DiscordInteractionTypes,
+  Interaction,
+  SelectMenuData,
+} from "../types/mod.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoMember, DiscordenoUser } from "./member.ts";
 import { DiscordenoMessage } from "./message.ts";
@@ -23,7 +29,7 @@ export function transformInteraction(bot: Bot, payload: SnakeCasedPropertiesDeep
     channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
     member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, user.id) : undefined,
     // TODO: CamelCase INTERACTION DATA
-    // @ts-ignore 
+    // @ts-ignore
     data: payload.data,
   };
 }
