@@ -16,12 +16,12 @@ async function ifItFailsBlameWolf(bot: Bot, channelId: bigint, reason?: string) 
     throw new Error(`The message seemed to be sent but it was not cached. Reason: ${reason}`);
   }
 
-  // Delete the message now
+  // Delete the messages now
   await bot.helpers.deleteMessages(channelId, [message.id, secondMessage.id], reason);
 
   // Wait to give it time for MESSAGE_DELETE event
   await delayUntil(10000, () => !bot.cache.messages.has(message.id) && !bot.cache.messages.has(secondMessage.id));
-  // Make sure it is gone from cache
+  // Make sure they are gone from cache
   if (bot.cache.messages.has(message.id) || bot.cache.messages.has(secondMessage.id)) {
     throw new Error("The messages should have been deleted but they are still in cache.");
   }
