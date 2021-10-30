@@ -117,7 +117,7 @@ export async function sendInteractionResponse(
     {
       content: options.data.content,
       tts: options.data.tts,
-       embeds: options.data.embeds?.map((embed) => ({
+      embeds: options.data.embeds?.map((embed) => ({
         title: embed.title,
         type: embed.type,
         description: embed.description,
