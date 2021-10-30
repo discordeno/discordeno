@@ -4,6 +4,7 @@ import type { Message } from "../../types/messages/message.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import type { Bot } from "../../bot.ts";
 import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordMessageComponentTypes } from "../../types/messages/components/message_component_types.ts";
 
 /** Edit the message. */
 export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: string | EditMessage) {
@@ -92,7 +93,49 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
         replied_user: content.allowedMentions?.repliedUser,
       },
       file: content.file,
-      components: content.components,
+      components: content.components?.map((component) => ({
+        type: component.type,
+        components: component.components.map((subcomponent) => {
+          if (subcomponent.type === DiscordMessageComponentTypes.SelectMenu)
+            return {
+              type: subcomponent.type,
+              custom_id: subcomponent.customId,
+              placeholder: subcomponent.placeholder,
+              min_values: subcomponent.minValues,
+              max_values: subcomponent.maxValues,
+              options: subcomponent.options.map((option) => ({
+                label: option.label,
+                value: option.value,
+                description: option.description,
+                emoji: option.emoji
+                  ? {
+                      id: option.emoji.id?.toString(),
+                      name: option.emoji.name,
+                      animated: option.emoji.animated,
+                    }
+                  : undefined,
+                default: option.default,
+              })),
+            };
+
+          return {
+            type: subcomponent.type,
+            custom_id: subcomponent.customId,
+            label: subcomponent.label,
+            customId: subcomponent.customId,
+            style: subcomponent.style,
+            emoji: subcomponent.emoji
+              ? {
+                  id: subcomponent.emoji.id?.toString(),
+                  name: subcomponent.emoji.name,
+                  animated: subcomponent.emoji.animated,
+                }
+              : undefined,
+            url: subcomponent.url,
+            disabled: subcomponent.disabled,
+          };
+        }),
+      })),
     }
   );
 

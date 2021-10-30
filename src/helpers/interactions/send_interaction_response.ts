@@ -5,6 +5,7 @@ import { AllowedMentions } from "../../types/messages/allowed_mentions.ts";
 import { MessageReference } from "../../types/messages/message_reference.ts";
 import { FileContent } from "../../types/discordeno/file_content.ts";
 import { MessageComponents } from "../../types/messages/components/message_components.ts";
+import { DiscordMessageComponentTypes } from "../../types/messages/components/message_component_types.ts";
 
 // TODO: v12 remove | string
 /**
@@ -95,8 +96,49 @@ export async function sendInteractionResponse(
         replied_user: allowedMentions?.repliedUser,
       },
       file: options.data.file,
-      // TODO: Snakelize components??
-      components: options.data.components,
+      components: options.data.components?.map((component) => ({
+        type: component.type,
+        components: component.components.map((subcomponent) => {
+          if (subcomponent.type === DiscordMessageComponentTypes.SelectMenu)
+            return {
+              type: subcomponent.type,
+              custom_id: subcomponent.customId,
+              placeholder: subcomponent.placeholder,
+              min_values: subcomponent.minValues,
+              max_values: subcomponent.maxValues,
+              options: subcomponent.options.map((option) => ({
+                label: option.label,
+                value: option.value,
+                description: option.description,
+                emoji: option.emoji
+                  ? {
+                      id: option.emoji.id?.toString(),
+                      name: option.emoji.name,
+                      animated: option.emoji.animated,
+                    }
+                  : undefined,
+                default: option.default,
+              })),
+            };
+
+          return {
+            type: subcomponent.type,
+            custom_id: subcomponent.customId,
+            label: subcomponent.label,
+            customId: subcomponent.customId,
+            style: subcomponent.style,
+            emoji: subcomponent.emoji
+              ? {
+                  id: subcomponent.emoji.id?.toString(),
+                  name: subcomponent.emoji.name,
+                  animated: subcomponent.emoji.animated,
+                }
+              : undefined,
+            url: subcomponent.url,
+            disabled: subcomponent.disabled,
+          };
+        }),
+      })),
       flags: options.data.flags,
     });
   }
@@ -171,8 +213,49 @@ export async function sendInteractionResponse(
         replied_user: allowedMentions?.repliedUser,
       },
       file: options.data.file,
-      // TODO: Snakelize components??
-      components: options.data.components,
+      components: options.data.components?.map((component) => ({
+        type: component.type,
+        components: component.components.map((subcomponent) => {
+          if (subcomponent.type === DiscordMessageComponentTypes.SelectMenu)
+            return {
+              type: subcomponent.type,
+              custom_id: subcomponent.customId,
+              placeholder: subcomponent.placeholder,
+              min_values: subcomponent.minValues,
+              max_values: subcomponent.maxValues,
+              options: subcomponent.options.map((option) => ({
+                label: option.label,
+                value: option.value,
+                description: option.description,
+                emoji: option.emoji
+                  ? {
+                      id: option.emoji.id?.toString(),
+                      name: option.emoji.name,
+                      animated: option.emoji.animated,
+                    }
+                  : undefined,
+                default: option.default,
+              })),
+            };
+
+          return {
+            type: subcomponent.type,
+            custom_id: subcomponent.customId,
+            label: subcomponent.label,
+            customId: subcomponent.customId,
+            style: subcomponent.style,
+            emoji: subcomponent.emoji
+              ? {
+                  id: subcomponent.emoji.id?.toString(),
+                  name: subcomponent.emoji.name,
+                  animated: subcomponent.emoji.animated,
+                }
+              : undefined,
+            url: subcomponent.url,
+            disabled: subcomponent.disabled,
+          };
+        }),
+      })),
       flags: options.data.flags,
     }
   );
