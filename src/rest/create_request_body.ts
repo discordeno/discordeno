@@ -42,6 +42,7 @@ export function createRequestBody(rest: RestManager, queuedRequest: { request: R
     headers["Content-Type"] = "application/json";
   }
 
+  if (!queuedRequest.payload.body) headers["Content-Length"] = "0";
   return {
     headers,
     body: (queuedRequest.payload.body?.file || JSON.stringify(queuedRequest.payload.body)) as FormData | string,

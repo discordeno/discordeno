@@ -15,6 +15,7 @@ import {
 // CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
 import "./local.ts";
 import { getMessageTest } from "./helpers/messages/getMessage.ts";
+import { addReactionTest } from "./helpers/messages/addReaction.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
@@ -38,13 +39,15 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
       },
       // debug: console.log,
     }),
-    intents: ["Guilds", "GuildMessages"],
+    intents: ["Guilds", "GuildMessages", "GuildMessageReactions"],
     cache: {
       isAsync: false,
     },
   });
 
   await startBot(bot);
+
+  // bot.rest.debug = console.log;
 
   // Delay the execution to allow READY events to be processed
   await delayUntil(10000, () => Boolean(startedAt));
@@ -90,63 +93,135 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
         t.step({
           name: "[message] send message with text",
           fn: async (t) => {
+            console.log('start', 1)
             await sendMessageWithTextTest(bot, channel.id, t);
+            console.log('pass', 1)
           },
           ...sanitizeMode,
         }),
         t.step({
           name: "[message] send message with embeds",
           fn: async (t) => {
+            console.log('start', 2)
             await sendMessageWithEmbedsTest(bot, channel.id, t);
+            console.log('pass', 2)
           },
           ...sanitizeMode,
         }),
-        t.step({
-          name: "[message] send message with components",
-          fn: async (t) => {
-            await sendMessageWithComponents(bot, channel.id, t);
-          },
-          ...sanitizeMode,
-        }),
+        // t.step({
+        //   name: "[message] send message with components",
+        //   fn: async (t) => {
+        //     console.log('start', 2.5)
+        //     await sendMessageWithComponents(bot, channel.id, t);
+        //     console.log('pass', 2.5)
+        //   },
+        //   ...sanitizeMode,
+        // }),
         t.step({
           name: "[message] delete message without a reason",
           fn: async (t) => {
+            console.log('start', 3)
             await deleteMessageWithoutReasonTest(bot, channel.id, t);
+            console.log('pass', 3)
           },
           ...sanitizeMode,
         }),
         t.step({
           name: "[message] delete message with a reason",
           fn: async (t) => {
+            console.log('start', 4)
             await deleteMessageWithReasonTest(bot, channel.id, t);
+            console.log('pass', 4)
           },
           ...sanitizeMode,
         }),
         t.step({
           name: "[message] delete messages without a reason",
           fn: async (t) => {
+            console.log('start', 5)
             await deleteMessagesWithoutReasonTest(bot, channel.id, t);
+            console.log('pass', 5)
           },
           ...sanitizeMode,
         }),
         t.step({
           name: "[message] delete messages with a reason",
           fn: async (t) => {
+            console.log('start', 6)
             await deleteMessagesWithReasonTest(bot, channel.id, t);
+            console.log('pass', 6)
           },
           ...sanitizeMode,
         }),
         t.step({
           name: "[message] fetch a message",
           fn: async (t) => {
+            console.log('start', 6.1)
             await getMessageTest(bot, channel.id, t);
+            console.log('pass', 6.1)
           },
           ...sanitizeMode,
         }),
         t.step({
           name: "[message] fetch messages",
           fn: async (t) => {
+            console.log('start', 6.2)
             await getMessagesTest(bot, channel.id, t);
+            console.log('pass', 6.2)
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] add a reaction",
+          fn: async (t) => {
+            console.log('start', 7)
+            await addReactionTest(bot, guild.id, channel.id, { custom: false, single: true, ordered: false }, t);
+            console.log('pass', 7)
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] add a custom reaction",
+          fn: async (t) => {
+            console.log('start', 8)
+            await addReactionTest(bot, guild.id, channel.id, { custom: true, single: true, ordered: false }, t);
+            console.log('pass', 8)
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] add multiple reactions",
+          fn: async (t) => {
+            console.log('start', 9)
+            await addReactionTest(bot, guild.id, channel.id, { custom: false, single: false, ordered: false }, t);
+            console.log('pass', 9)
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] add multiple custom reactions",
+          fn: async (t) => {
+            console.log('start', 10)
+            await addReactionTest(bot, guild.id, channel.id, { custom: true, single: false, ordered: false }, t);
+            console.log('pass', 10)
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] add multiple reactions in order",
+          fn: async (t) => {
+            console.log('start', 11)
+            await addReactionTest(bot, guild.id, channel.id, { custom: false, single: false, ordered: true }, t);
+            console.log('pass', 11)
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] add multiple custom reactions in order",
+          fn: async (t) => {
+            console.log('start', 12)
+            await addReactionTest(bot, guild.id, channel.id, { custom: true, single: false, ordered: true }, t);
+            console.log('pass', 12)
           },
           ...sanitizeMode,
         }),

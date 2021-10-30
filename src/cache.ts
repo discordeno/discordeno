@@ -40,7 +40,9 @@ export function createCache(
       executedSlashCommands: new Set(),
     } as AsyncCache;
 
-    cache.execute = createExecute(cache);
+    cache.execute = async function () {
+      throw new Error("Async Cache requires a custom execute function to be implemented.");
+    };
 
     return cache;
   }
@@ -161,25 +163,30 @@ export type CacheExecutor = (
     | "DELETE_CHANNELS_FROM_GUILD"
     | "DELETE_GUILD_FROM_MEMBER",
   options: Record<string, any>
-) => Promise<undefined>;
+) => Promise<any>;
 
-export function createExecute(cache: Cache | AsyncCache): CacheExecutor {
-  // @ts-ignore no time to look into these errors now
-  return async (type, options) => {
-    if (type === "DELETE_MESSAGES_FROM_CHANNEL") {
-      await cache.messages.forEach(async (message) => {
-        // @ts-ignore me smarter than u
-        if (BigInt(message.channelId) === options.channelId) {
-          await cache.messages.delete(BigInt(message.id));
-        }
-      });
+export function createExecute(cache: Cache): CacheExecutor {
+  return function (type, options) {
+    switch (type) {
+      case "DELETE_MESSAGES_FROM_CHANNEL":
+        cache.messages.forEach((message) => {
+          if (message.channelId === options.channelId) {
+            cache.messages.delete(message.id);
+          }
+        });
+        return;
+      case "BULK_DELETE_MESSAGES":
+        return options.messageIds
+          .map((id: bigint) => {
+            const cached = cache.messages.get(id);
+            if (!cached) return;
 
-      return undefined;
+            cache.messages.delete(id);
+
+            return cached;
+          })
+          .filter((m: DiscordenoMessage) => m);
     }
-
-    // switch type {
-    //   case ""
-    // }
   };
 }
 

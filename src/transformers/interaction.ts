@@ -1,5 +1,11 @@
 import { Bot } from "../bot.ts";
-import { Interaction } from "../types/mod.ts";
+import {
+  ApplicationCommandInteractionData,
+  ButtonData,
+  DiscordInteractionTypes,
+  Interaction,
+  SelectMenuData,
+} from "../types/mod.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoMember, DiscordenoUser } from "./member.ts";
 import { DiscordenoMessage } from "./message.ts";
@@ -23,12 +29,12 @@ export function transformInteraction(bot: Bot, payload: SnakeCasedPropertiesDeep
     channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
     member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, user.id) : undefined,
     // TODO: CamelCase INTERACTION DATA
+    // @ts-ignore
     data: payload.data,
   };
 }
 
-export interface DiscordenoInteraction
-  extends Omit<Interaction, "id" | "applicationId" | "guildId" | "channelId" | "member" | "user" | "message"> {
+export interface DiscordenoInteraction {
   /** Id of the interaction */
   id: bigint;
   /** Id of the application this interaction is for */
@@ -43,4 +49,12 @@ export interface DiscordenoInteraction
   user: DiscordenoUser;
   /** For the message the button was attached to */
   message?: DiscordenoMessage;
+  /** The type of interaction */
+  type: DiscordInteractionTypes;
+  /** A continuation token for responding to the interaction */
+  token: string;
+  /** Read-only property, always `1` */
+  version: 1;
+
+  data?: ApplicationCommandInteractionData | ButtonData | SelectMenuData;
 }

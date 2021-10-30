@@ -13,7 +13,7 @@ export async function deleteMessages(bot: Bot, channelId: bigint, ids: bigint[],
   }
 
   return await bot.rest.runMethod<undefined>(bot.rest, "post", bot.constants.endpoints.CHANNEL_BULK_DELETE(channelId), {
-    messages: ids.splice(0, 100),
+    messages: ids.splice(0, 100).map((id) => id.toString()),
     reason,
   });
 }
