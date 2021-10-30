@@ -2,8 +2,8 @@ import { Bot } from "../../../src/bot.ts";
 import { assertExists } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
 import { CreateMessage } from "../../../src/types/messages/create_message.ts";
-import { DiscordMessageComponentTypes } from "https://raw.githubusercontent.com/discordeno/discordeno/cool-stuff/src/types/messages/components/message_component_types.ts";
-import { DiscordButtonStyles } from "https://raw.githubusercontent.com/discordeno/discordeno/cool-stuff/src/types/messages/components/button_styles.ts";
+import { DiscordMessageComponentTypes } from "../../../src/types/messages/components/message_component_types.ts";
+import { DiscordButtonStyles } from "../../../src/types/messages/components/button_styles.ts";
 
 async function ifItFailsBlameWolf(bot: Bot, channelId: bigint, content: string | CreateMessage) {
   const message = await bot.helpers.sendMessage(channelId, content);

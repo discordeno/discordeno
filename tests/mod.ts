@@ -14,6 +14,7 @@ import {
 // CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
 import "./local.ts";
 import { getMessageTest } from "./helpers/messages/getMessage.ts";
+import { addReactionTest } from "./helpers/messages/addReaction.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
@@ -37,7 +38,7 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
       },
       // debug: console.log,
     }),
-    intents: ["Guilds", "GuildMessages"],
+    intents: ["Guilds", "GuildMessages", "GuildMessageReactions"],
     cache: {
       isAsync: false,
     },
@@ -100,13 +101,13 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
           },
           ...sanitizeMode,
         }),
-        t.step({
-          name: "[message] send message with components",
-          fn: async (t) => {
-            await sendMessageWithComponents(bot, channel.id, t);
-          },
-          ...sanitizeMode,
-        }),
+        // t.step({
+        //   name: "[message] send message with components",
+        //   fn: async (t) => {
+        //     await sendMessageWithComponents(bot, channel.id, t);
+        //   },
+        //   ...sanitizeMode,
+        // }),
         t.step({
           name: "[message] delete message without a reason",
           fn: async (t) => {
@@ -128,27 +129,69 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
           },
           ...sanitizeMode,
         }),
-        t.step({
-          name: "[message] delete messages with a reason",
-          fn: async (t) => {
-            await deleteMessagesWithReasonTest(bot, channel.id, t);
-          },
-          ...sanitizeMode,
-        }),
-        t.step({
-          name: "[message] fetch a message",
-          fn: async (t) => {
-            await getMessageTest(bot, channel.id, t);
-          },
-          ...sanitizeMode,
-        }),
-        t.step({
-          name: "[message] fetch messages",
-          fn: async (t) => {
-            await getMessagesTest(bot, channel.id, t);
-          },
-          ...sanitizeMode,
-        }),
+        // t.step({
+        //   name: "[message] delete messages with a reason",
+        //   fn: async (t) => {
+        //     await deleteMessagesWithReasonTest(bot, channel.id, t);
+        //   },
+        //   ...sanitizeMode,
+        // }),
+        // t.step({
+        //   name: "[message] fetch a message",
+        //   fn: async (t) => {
+        //     await getMessageTest(bot, channel.id, t);
+        //   },
+        //   ...sanitizeMode,
+        // }),
+        // t.step({
+        //   name: "[message] fetch messages",
+        //   fn: async (t) => {
+        //     await getMessagesTest(bot, channel.id, t);
+        //   },
+        //   ...sanitizeMode,
+        // }),
+        // t.step({
+        //   name: "[message] add a reaction",
+        //   fn: async (t) => {
+        //     await addReactionTest(bot, guild.id, channel.id, { custom: false, single: true, ordered: false }, t);
+        //   },
+        //   ...sanitizeMode,
+        // }),
+        // t.step({
+        //   name: "[message] add a custom reaction",
+        //   fn: async (t) => {
+        //     await addReactionTest(bot, guild.id, channel.id, { custom: true, single: true, ordered: false }, t);
+        //   },
+        //   ...sanitizeMode,
+        // }),
+        // t.step({
+        //   name: "[message] add multiple reactions",
+        //   fn: async (t) => {
+        //     await addReactionTest(bot, guild.id, channel.id, { custom: false, single: false, ordered: false }, t);
+        //   },
+        //   ...sanitizeMode,
+        // }),
+        // t.step({
+        //   name: "[message] add multiple custom reactions",
+        //   fn: async (t) => {
+        //     await addReactionTest(bot, guild.id, channel.id, { custom: true, single: false, ordered: false }, t);
+        //   },
+        //   ...sanitizeMode,
+        // }),
+        // t.step({
+        //   name: "[message] add multiple reactions in order",
+        //   fn: async (t) => {
+        //     await addReactionTest(bot, guild.id, channel.id, { custom: false, single: false, ordered: true }, t);
+        //   },
+        //   ...sanitizeMode,
+        // }),
+        // t.step({
+        //   name: "[message] add multiple custom reactions in order",
+        //   fn: async (t) => {
+        //     await addReactionTest(bot, guild.id, channel.id, { custom: true, single: false, ordered: true }, t);
+        //   },
+        //   ...sanitizeMode,
+        // }),
       ]);
     });
   });

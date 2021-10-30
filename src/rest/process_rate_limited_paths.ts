@@ -5,7 +5,7 @@ export function processRateLimitedPaths(rest: RestManager) {
   const now = Date.now();
 
   for (const [key, value] of rest.ratelimitedPaths.entries()) {
-    rest.debug(`[REST - processRateLimitedPaths] Running forEach loop.`);
+    rest.debug(`[REST - processRateLimitedPaths] Running for of loop.`);
     // IF THE TIME HAS NOT REACHED CANCEL
     if (value.resetTimestamp > now) continue;
 
@@ -18,13 +18,12 @@ export function processRateLimitedPaths(rest: RestManager) {
   // ALL PATHS ARE CLEARED CAN CANCEL OUT!
   if (!rest.ratelimitedPaths.size) {
     rest.processingRateLimitedPaths = false;
-    return;
   } else {
     rest.processingRateLimitedPaths = true;
     // RECHECK IN 1 SECOND
     setTimeout(() => {
       rest.debug(`[REST - processRateLimitedPaths] Running setTimeout.`);
-      processRateLimitedPaths(rest);
+      rest.processRateLimitedPaths(rest);
     }, 1000);
   }
 }

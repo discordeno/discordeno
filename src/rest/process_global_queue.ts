@@ -53,10 +53,10 @@ export async function processGlobalQueue(rest: RestManager) {
 
     try {
       // CUSTOM HANDLER FOR USER TO LOG OR WHATEVER WHENEVER A FETCH IS MADE
-      rest.debug(`[REST - fetching] ${JSON.stringify(request.payload)}`);
+      rest.debug(`[REST - fetching] URL: ${request.urlToUse} | ${JSON.stringify(request.payload)}`);
 
       const response = await fetch(request.urlToUse, rest.createRequestBody(rest, request));
-      rest.debug(`[REST - fetched] ${JSON.stringify(request.payload)}`);
+      rest.debug(`[REST - fetched] URL: ${request.urlToUse} | ${JSON.stringify(request.payload)}`);
 
       const bucketIdFromHeaders = rest.processRequestHeaders(rest, request.basicURL, response.headers);
       // SET THE BUCKET Id IF IT WAS PRESENT
@@ -115,32 +115,13 @@ export async function processGlobalQueue(rest: RestManager) {
 
       // SOMETIMES DISCORD RETURNS AN EMPTY 204 RESPONSE THAT CAN'T BE MADE TO JSON
       if (response.status === 204) {
-        rest.debug(`[REST - FetchSuccess] ${JSON.stringify(request.payload)}`);
+        rest.debug(`[REST - FetchSuccess] URL: ${request.urlToUse} | ${JSON.stringify(request.payload)}`);
         // REMOVE FROM QUEUE
         rest.globalQueue.shift();
         request.request.respond({ status: 204 });
       } else {
         // CONVERT THE RESPONSE TO JSON
         const json = await response.json();
-        // IF THE RESPONSE WAS RATE LIMITED, HANDLE ACCORDINGLY
-        // if (json.retry_after || json.message === "You are being rate limited.") {
-        //   // IF IT HAS MAXED RETRIES SOMETHING SERIOUSLY WRONG. CANCEL OUT.
-        //   if (request.payload.retryCount >= rest.maxRetryCount) {
-        //     rest.eventHandlers.retriesMaxed(request.payload);
-        //     request.request.respond({
-        //       status: 200,
-        //       body: JSON.stringify({
-        //         error: "The request was rate limited and it maxed out the retries limit.",
-        //       }),
-        //     });
-        //     // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
-        //     rest.globalQueue.shift();
-        //     continue;
-        //   }
-
-        //   // SINCE IT WAS RATELIMITE, RETRY AGAIN
-        //   continue;
-        // }
 
         rest.debug(`[REST - fetchSuccess] ${JSON.stringify(request.payload)}`);
         // REMOVE FROM QUEUE
