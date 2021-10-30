@@ -2,6 +2,7 @@ import { TOKEN } from "../configs.ts";
 import { createBot, createEventHandlers, DiscordChannelTypes, startBot, stopBot } from "../mod.ts";
 import { assertEquals, assertExists } from "./deps.ts";
 import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
+import { getMessagesTest } from "./helpers/messages/getMessages.ts";
 import { delayUntil } from "./utils.ts";
 
 // CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
@@ -101,6 +102,13 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
           name: "[message] delete message with a reason",
           fn: async (t) => {
             await deleteMessageWithReasonTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] fetch messages",
+          fn: async (t) => {
+            await getMessagesTest(bot, channel.id, t);
           },
           ...sanitizeMode,
         }),
