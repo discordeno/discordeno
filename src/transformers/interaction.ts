@@ -23,7 +23,7 @@ export function transformInteraction(bot: Bot, payload: SnakeCasedPropertiesDeep
     channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
     member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, user.id) : undefined,
     // TODO: CamelCase INTERACTION DATA
-    data: payload.data
+    data: payload.data,
   };
 }
 
