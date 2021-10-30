@@ -15,6 +15,7 @@ import {
 import "./local.ts";
 import { getMessageTest } from "./helpers/messages/getMessage.ts";
 import { addReactionTest } from "./helpers/messages/addReaction.ts";
+import { editMessageTest } from "./helpers/messages/editMessage.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
@@ -107,6 +108,13 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
           name: "[message] send message with components",
           fn: async (t) => {
             await sendMessageWithComponents(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] edit message",
+          fn: async (t) => {
+            await editMessageTest(bot, channel.id, t);
           },
           ...sanitizeMode,
         }),
