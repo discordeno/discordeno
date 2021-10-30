@@ -1,5 +1,5 @@
 import { Bot } from "../../../src/bot.ts";
-import {assertEquals, assertExists} from "../../deps.ts";
+import { assertEquals, assertExists } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
 
 export async function getMessageTest(bot: Bot, channelId: bigint, t: Deno.TestContext) {
