@@ -15,7 +15,7 @@ export async function addReactionsTest(bot: Bot, channelId: bigint, t: Deno.Test
   }
 
   // Delete the message now
-  await bot.helpers.addReactions(channelId, message.id, ['☑️', '❌']);
+  await bot.helpers.addReactions(channelId, message.id, ["☑️", "❌"]);
 
   // Wait to give it time for MESSAGE_UPDATE event
   await delayUntil(10000, async () => ((await bot.cache.messages.get(message.id))?.reactions?.length ?? 0) === 2);

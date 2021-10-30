@@ -6,7 +6,7 @@ import { delayUntil } from "./utils.ts";
 
 // CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
 import "./local.ts";
-import {addReactionsTest} from "./helpers/messages/addReactions.ts";
+import { addReactionsTest } from "./helpers/messages/addReactions.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
