@@ -2,6 +2,7 @@ import { TOKEN } from "../configs.ts";
 import { createBot, createEventHandlers, DiscordChannelTypes, startBot, stopBot } from "../mod.ts";
 import { assertEquals, assertExists } from "./deps.ts";
 import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
+import { getMessagesTest } from "./helpers/messages/getMessages.ts";
 import { deleteMessagesWithoutReasonTest, deleteMessagesWithReasonTest } from "./helpers/messages/deleteMessages.ts";
 import { delayUntil } from "./utils.ts";
 import {
@@ -139,6 +140,13 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
           fn: async (t) => {
             await getMessageTest(bot, channel.id, t);
           },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] fetch messages",
+          fn: async (t) => {
+            await getMessagesTest(bot, channel.id, t);
+           },
           ...sanitizeMode,
         }),
       ]);
