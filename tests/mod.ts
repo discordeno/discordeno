@@ -2,11 +2,11 @@ import { TOKEN } from "../configs.ts";
 import { createBot, createEventHandlers, DiscordChannelTypes, startBot, stopBot } from "../mod.ts";
 import { assertEquals, assertExists } from "./deps.ts";
 import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
+import { addReactionsTest } from "./helpers/messages/addReactions.ts";
 import { delayUntil } from "./utils.ts";
 
 // CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
 import "./local.ts";
-import { addReactionsTest } from "./helpers/messages/addReactions.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
