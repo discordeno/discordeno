@@ -1,13 +1,9 @@
 import { Bot } from "../../../src/bot.ts";
 import { assertExists } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
-import {CreateMessage} from "../../../src/types/messages/create_message.ts";
-import {
-  DiscordMessageComponentTypes
-} from "https://raw.githubusercontent.com/discordeno/discordeno/cool-stuff/src/types/messages/components/message_component_types.ts";
-import {
-  DiscordButtonStyles
-} from "https://raw.githubusercontent.com/discordeno/discordeno/cool-stuff/src/types/messages/components/button_styles.ts";
+import { CreateMessage } from "../../../src/types/messages/create_message.ts";
+import { DiscordMessageComponentTypes } from "https://raw.githubusercontent.com/discordeno/discordeno/cool-stuff/src/types/messages/components/message_component_types.ts";
+import { DiscordButtonStyles } from "https://raw.githubusercontent.com/discordeno/discordeno/cool-stuff/src/types/messages/components/button_styles.ts";
 
 async function ifItFailsBlameWolf(bot: Bot, channelId: bigint, content: string | CreateMessage) {
   const message = await bot.helpers.sendMessage(channelId, content);
@@ -36,15 +32,15 @@ export async function sendMessageWithComponents(bot: Bot, channelId: bigint, t: 
             type: DiscordMessageComponentTypes.Button,
             label: "Doc",
             style: DiscordButtonStyles.Link,
-            url: `https://discordeno.mod.land/`
+            url: `https://discordeno.mod.land/`,
           },
           {
             type: DiscordMessageComponentTypes.Button,
             label: "Server",
             style: DiscordButtonStyles.Link,
-            url: `https://discord.gg/ddeno`
+            url: `https://discord.gg/ddeno`,
           },
-        ]
+        ],
       },
       {
         type: DiscordMessageComponentTypes.ActionRow,
@@ -55,9 +51,9 @@ export async function sendMessageWithComponents(bot: Bot, channelId: bigint, t: 
             customId: `hi`,
             style: DiscordButtonStyles.Primary,
           },
-        ]
-      }
-    ]
+        ],
+      },
+    ],
   });
 }
 
@@ -66,26 +62,28 @@ export async function sendMessageWithEmbedsTest(bot: Bot, channelId: bigint, t: 
     embeds: [
       {
         title: "Hello World",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam at cursus libero. Sed egestas nec ligula sit amet sollicitudin. Curabitur.",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam at cursus libero. Sed egestas nec ligula sit amet sollicitudin. Curabitur.",
         color: 0x00ff00,
         footer: {
-          text: "Discordeno Best Lib"
+          text: "Discordeno Best Lib",
         },
         author: {
-          name: "Cacahe"
-        }
+          name: "Cacahe",
+        },
       },
       {
         title: "Goodbye World",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean libero enim, blandit tincidunt magna non, auctor pellentesque lacus. Nulla diam.",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean libero enim, blandit tincidunt magna non, auctor pellentesque lacus. Nulla diam.",
         color: 0x0000ff,
         footer: {
-          text: "Discordeno Best Lib"
+          text: "Discordeno Best Lib",
         },
         author: {
-          name: "Wolf"
-        }
-      }
-    ]
+          name: "Wolf",
+        },
+      },
+    ],
   });
 }

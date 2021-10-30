@@ -6,7 +6,7 @@ import { delayUntil } from "./utils.ts";
 import {
   sendMessageWithComponents,
   sendMessageWithEmbedsTest,
-  sendMessageWithTextTest
+  sendMessageWithTextTest,
 } from "./helpers/messages/sendMessage.ts";
 
 // CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
