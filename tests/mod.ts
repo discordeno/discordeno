@@ -216,9 +216,9 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
           await fetchSingleMemberTest(bot, guild.id, t);
         },
         ...sanitizeMode,
-      })
-    ])
-  })
+      }),
+    ]);
+  });
 
   await stopBot(bot);
 });
