@@ -38,6 +38,7 @@ export function createCache(
       // threads: tableCreator("threads"),
       unavailableGuilds: tableCreator("unavailableGuilds"),
       executedSlashCommands: new Set(),
+      fetchAllMembersProcessingRequests: new Map(),
     } as AsyncCache;
 
     cache.execute = async function () {
@@ -58,6 +59,7 @@ export function createCache(
     // threads: tableCreator("threads"),
     unavailableGuilds: tableCreator("unavailableGuilds"),
     executedSlashCommands: new Set(),
+    fetchAllMembersProcessingRequests: new Map(),
   } as Cache;
 
   cache.execute = createExecute(cache);

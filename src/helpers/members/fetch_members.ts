@@ -40,12 +40,12 @@ export function fetchMembers(
     bot.gateway.sendShardMessage(bot.gateway, shardId, {
       op: DiscordGatewayOpcodes.RequestGuildMembers,
       d: {
-        guild_id: guildId,
+        guild_id: guildId.toString(),
         // If a query is provided use it, OR if a limit is NOT provided use ""
         query: options?.query || (options?.limit ? undefined : ""),
         limit: options?.limit || 0,
         presences: options?.presences || false,
-        user_ids: options?.userIds,
+        user_ids: options?.userIds?.map(id => id.toString()),
         nonce,
       },
     });

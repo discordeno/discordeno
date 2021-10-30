@@ -1,6 +1,5 @@
 import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
 import type { Bot } from "../../bot.ts";
-import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Returns a guild member object for the specified user.
  *
