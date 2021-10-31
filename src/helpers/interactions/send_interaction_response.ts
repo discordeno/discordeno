@@ -1,13 +1,8 @@
 import type { DiscordenoInteractionResponse } from "../../types/discordeno/interaction_response.ts";
 import type { Bot } from "../../bot.ts";
-import { Embed } from "../../types/embeds/embed.ts";
 import { AllowedMentions } from "../../types/messages/allowed_mentions.ts";
-import { MessageReference } from "../../types/messages/message_reference.ts";
-import { FileContent } from "../../types/discordeno/file_content.ts";
-import { MessageComponents } from "../../types/messages/components/message_components.ts";
 import { DiscordMessageComponentTypes } from "../../types/messages/components/message_component_types.ts";
 
-// TODO: v12 remove | string
 /**
  * Send a response to a users slash command. The command data will have the id and token necessary to respond.
  * Interaction `tokens` are valid for **15 minutes** and can be used to send followup messages.
@@ -16,7 +11,7 @@ import { DiscordMessageComponentTypes } from "../../types/messages/components/me
  */
 export async function sendInteractionResponse(
   bot: Bot,
-  id: bigint | string,
+  id: bigint,
   token: string,
   options: DiscordenoInteractionResponse
 ) {
@@ -38,107 +33,110 @@ export async function sendInteractionResponse(
   // If its already been executed, we need to send a followup response
   if (bot.cache.executedSlashCommands.has(token)) {
     return await bot.rest.runMethod(bot.rest, "post", bot.constants.endpoints.WEBHOOK(bot.applicationId, token), {
-      content: options.data.content,
-      tts: options.data.tts,
-      embeds: options.data.embeds?.map((embed) => ({
-        title: embed.title,
-        type: embed.type,
-        description: embed.description,
-        url: embed.url,
-        timestamp: embed.timestamp,
-        color: embed.color,
-        footer: embed.footer
-          ? {
-              text: embed.footer.text,
-              icon_url: embed.footer.iconUrl,
-              proxy_icon_url: embed.footer.proxyIconUrl,
-            }
-          : undefined,
-        image: embed.image
-          ? {
-              url: embed.image.url,
-              proxy_url: embed.image.proxyUrl,
-              height: embed.image.height,
-              width: embed.image.width,
-            }
-          : undefined,
-        thumbnail: embed.thumbnail
-          ? {
-              url: embed.thumbnail.url,
-              proxy_url: embed.thumbnail.proxyUrl,
-              height: embed.thumbnail.height,
-              width: embed.thumbnail.width,
-            }
-          : undefined,
-        video: embed.video
-          ? {
-              url: embed.video.url,
-              proxy_url: embed.video.proxyUrl,
-              height: embed.video.height,
-              width: embed.video.width,
-            }
-          : undefined,
-        provider: embed.provider,
-        author: embed.author
-          ? {
-              name: embed.author.name,
-              url: embed.author.url,
-              icon_url: embed.author.iconUrl,
-              proxy_icon_url: embed.author.proxyIconUrl,
-            }
-          : undefined,
-        fields: embed.fields,
-      })),
-      allowed_mentions: {
-        parse: allowedMentions?.parse,
-        roles: allowedMentions?.roles,
-        users: allowedMentions?.users,
-        replied_user: allowedMentions?.repliedUser,
-      },
-      file: options.data.file,
-      components: options.data.components?.map((component) => ({
-        type: component.type,
-        components: component.components.map((subcomponent) => {
-          if (subcomponent.type === DiscordMessageComponentTypes.SelectMenu)
+      type: options.type,
+      data: {
+        content: options.data.content,
+        tts: options.data.tts,
+        embeds: options.data.embeds?.map((embed) => ({
+          title: embed.title,
+          type: embed.type,
+          description: embed.description,
+          url: embed.url,
+          timestamp: embed.timestamp,
+          color: embed.color,
+          footer: embed.footer
+            ? {
+                text: embed.footer.text,
+                icon_url: embed.footer.iconUrl,
+                proxy_icon_url: embed.footer.proxyIconUrl,
+              }
+            : undefined,
+          image: embed.image
+            ? {
+                url: embed.image.url,
+                proxy_url: embed.image.proxyUrl,
+                height: embed.image.height,
+                width: embed.image.width,
+              }
+            : undefined,
+          thumbnail: embed.thumbnail
+            ? {
+                url: embed.thumbnail.url,
+                proxy_url: embed.thumbnail.proxyUrl,
+                height: embed.thumbnail.height,
+                width: embed.thumbnail.width,
+              }
+            : undefined,
+          video: embed.video
+            ? {
+                url: embed.video.url,
+                proxy_url: embed.video.proxyUrl,
+                height: embed.video.height,
+                width: embed.video.width,
+              }
+            : undefined,
+          provider: embed.provider,
+          author: embed.author
+            ? {
+                name: embed.author.name,
+                url: embed.author.url,
+                icon_url: embed.author.iconUrl,
+                proxy_icon_url: embed.author.proxyIconUrl,
+              }
+            : undefined,
+          fields: embed.fields,
+        })),
+        allowed_mentions: {
+          parse: allowedMentions.parse,
+          roles: allowedMentions.roles,
+          users: allowedMentions.users,
+          replied_user: allowedMentions.repliedUser,
+        },
+        file: options.data.file,
+        components: options.data.components?.map((component) => ({
+          type: component.type,
+          components: component.components.map((subcomponent) => {
+            if (subcomponent.type === DiscordMessageComponentTypes.SelectMenu)
+              return {
+                type: subcomponent.type,
+                custom_id: subcomponent.customId,
+                placeholder: subcomponent.placeholder,
+                min_values: subcomponent.minValues,
+                max_values: subcomponent.maxValues,
+                options: subcomponent.options.map((option) => ({
+                  label: option.label,
+                  value: option.value,
+                  description: option.description,
+                  emoji: option.emoji
+                    ? {
+                        id: option.emoji.id?.toString(),
+                        name: option.emoji.name,
+                        animated: option.emoji.animated,
+                      }
+                    : undefined,
+                  default: option.default,
+                })),
+              };
+
             return {
               type: subcomponent.type,
               custom_id: subcomponent.customId,
-              placeholder: subcomponent.placeholder,
-              min_values: subcomponent.minValues,
-              max_values: subcomponent.maxValues,
-              options: subcomponent.options.map((option) => ({
-                label: option.label,
-                value: option.value,
-                description: option.description,
-                emoji: option.emoji
-                  ? {
-                      id: option.emoji.id?.toString(),
-                      name: option.emoji.name,
-                      animated: option.emoji.animated,
-                    }
-                  : undefined,
-                default: option.default,
-              })),
+              label: subcomponent.label,
+              style: subcomponent.style,
+              emoji: subcomponent.emoji
+                ? {
+                    id: subcomponent.emoji.id?.toString(),
+                    name: subcomponent.emoji.name,
+                    animated: subcomponent.emoji.animated,
+                  }
+                : undefined,
+              url: subcomponent.url,
+              disabled: subcomponent.disabled,
             };
-
-          return {
-            type: subcomponent.type,
-            custom_id: subcomponent.customId,
-            label: subcomponent.label,
-            style: subcomponent.style,
-            emoji: subcomponent.emoji
-              ? {
-                  id: subcomponent.emoji.id?.toString(),
-                  name: subcomponent.emoji.name,
-                  animated: subcomponent.emoji.animated,
-                }
-              : undefined,
-            url: subcomponent.url,
-            disabled: subcomponent.disabled,
-          };
-        }),
-      })),
-      flags: options.data.flags,
+          }),
+        })),
+        flags: options.data.flags,
+      },
     });
   }
 
@@ -154,107 +152,110 @@ export async function sendInteractionResponse(
     "post",
     bot.constants.endpoints.INTERACTION_ID_TOKEN(typeof id === "bigint" ? id : bot.transformers.snowflake(id), token),
     {
-      content: options.data.content,
-      tts: options.data.tts,
-      embeds: options.data.embeds?.map((embed) => ({
-        title: embed.title,
-        type: embed.type,
-        description: embed.description,
-        url: embed.url,
-        timestamp: embed.timestamp,
-        color: embed.color,
-        footer: embed.footer
-          ? {
-              text: embed.footer.text,
-              icon_url: embed.footer.iconUrl,
-              proxy_icon_url: embed.footer.proxyIconUrl,
-            }
-          : undefined,
-        image: embed.image
-          ? {
-              url: embed.image.url,
-              proxy_url: embed.image.proxyUrl,
-              height: embed.image.height,
-              width: embed.image.width,
-            }
-          : undefined,
-        thumbnail: embed.thumbnail
-          ? {
-              url: embed.thumbnail.url,
-              proxy_url: embed.thumbnail.proxyUrl,
-              height: embed.thumbnail.height,
-              width: embed.thumbnail.width,
-            }
-          : undefined,
-        video: embed.video
-          ? {
-              url: embed.video.url,
-              proxy_url: embed.video.proxyUrl,
-              height: embed.video.height,
-              width: embed.video.width,
-            }
-          : undefined,
-        provider: embed.provider,
-        author: embed.author
-          ? {
-              name: embed.author.name,
-              url: embed.author.url,
-              icon_url: embed.author.iconUrl,
-              proxy_icon_url: embed.author.proxyIconUrl,
-            }
-          : undefined,
-        fields: embed.fields,
-      })),
-      allowed_mentions: {
-        parse: allowedMentions?.parse,
-        roles: allowedMentions?.roles,
-        users: allowedMentions?.users,
-        replied_user: allowedMentions?.repliedUser,
-      },
-      file: options.data.file,
-      components: options.data.components?.map((component) => ({
-        type: component.type,
-        components: component.components.map((subcomponent) => {
-          if (subcomponent.type === DiscordMessageComponentTypes.SelectMenu)
+      type: options.type,
+      data: {
+        content: options.data.content,
+        tts: options.data.tts,
+        embeds: options.data.embeds?.map((embed) => ({
+          title: embed.title,
+          type: embed.type,
+          description: embed.description,
+          url: embed.url,
+          timestamp: embed.timestamp,
+          color: embed.color,
+          footer: embed.footer
+            ? {
+                text: embed.footer.text,
+                icon_url: embed.footer.iconUrl,
+                proxy_icon_url: embed.footer.proxyIconUrl,
+              }
+            : undefined,
+          image: embed.image
+            ? {
+                url: embed.image.url,
+                proxy_url: embed.image.proxyUrl,
+                height: embed.image.height,
+                width: embed.image.width,
+              }
+            : undefined,
+          thumbnail: embed.thumbnail
+            ? {
+                url: embed.thumbnail.url,
+                proxy_url: embed.thumbnail.proxyUrl,
+                height: embed.thumbnail.height,
+                width: embed.thumbnail.width,
+              }
+            : undefined,
+          video: embed.video
+            ? {
+                url: embed.video.url,
+                proxy_url: embed.video.proxyUrl,
+                height: embed.video.height,
+                width: embed.video.width,
+              }
+            : undefined,
+          provider: embed.provider,
+          author: embed.author
+            ? {
+                name: embed.author.name,
+                url: embed.author.url,
+                icon_url: embed.author.iconUrl,
+                proxy_icon_url: embed.author.proxyIconUrl,
+              }
+            : undefined,
+          fields: embed.fields,
+        })),
+        allowed_mentions: {
+          parse: allowedMentions.parse,
+          roles: allowedMentions.roles,
+          users: allowedMentions.users,
+          replied_user: allowedMentions.repliedUser,
+        },
+        file: options.data.file,
+        components: options.data.components?.map((component) => ({
+          type: component.type,
+          components: component.components.map((subcomponent) => {
+            if (subcomponent.type === DiscordMessageComponentTypes.SelectMenu)
+              return {
+                type: subcomponent.type,
+                custom_id: subcomponent.customId,
+                placeholder: subcomponent.placeholder,
+                min_values: subcomponent.minValues,
+                max_values: subcomponent.maxValues,
+                options: subcomponent.options.map((option) => ({
+                  label: option.label,
+                  value: option.value,
+                  description: option.description,
+                  emoji: option.emoji
+                    ? {
+                        id: option.emoji.id?.toString(),
+                        name: option.emoji.name,
+                        animated: option.emoji.animated,
+                      }
+                    : undefined,
+                  default: option.default,
+                })),
+              };
+
             return {
               type: subcomponent.type,
               custom_id: subcomponent.customId,
-              placeholder: subcomponent.placeholder,
-              min_values: subcomponent.minValues,
-              max_values: subcomponent.maxValues,
-              options: subcomponent.options.map((option) => ({
-                label: option.label,
-                value: option.value,
-                description: option.description,
-                emoji: option.emoji
-                  ? {
-                      id: option.emoji.id?.toString(),
-                      name: option.emoji.name,
-                      animated: option.emoji.animated,
-                    }
-                  : undefined,
-                default: option.default,
-              })),
+              label: subcomponent.label,
+              style: subcomponent.style,
+              emoji: subcomponent.emoji
+                ? {
+                    id: subcomponent.emoji.id?.toString(),
+                    name: subcomponent.emoji.name,
+                    animated: subcomponent.emoji.animated,
+                  }
+                : undefined,
+              url: subcomponent.url,
+              disabled: subcomponent.disabled,
             };
-
-          return {
-            type: subcomponent.type,
-            custom_id: subcomponent.customId,
-            label: subcomponent.label,
-            style: subcomponent.style,
-            emoji: subcomponent.emoji
-              ? {
-                  id: subcomponent.emoji.id?.toString(),
-                  name: subcomponent.emoji.name,
-                  animated: subcomponent.emoji.animated,
-                }
-              : undefined,
-            url: subcomponent.url,
-            disabled: subcomponent.disabled,
-          };
-        }),
-      })),
-      flags: options.data.flags,
+          }),
+        })),
+        flags: options.data.flags,
+      },
     }
   );
 }
