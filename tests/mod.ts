@@ -27,6 +27,7 @@ import { fetchSingleMemberTest } from "./helpers/members/fetchMembers.ts";
 import { pinMessageTests } from "./helpers/messages/pin.ts";
 import { removeAllReactionTests, removeReactionEmojiTest, removeReactionTest } from "./helpers/messages/reactions.ts";
 import { createChannelTests } from "./helpers/channels/createChannel.ts";
+import { deleteChannelTests } from "./helpers/channels/deleteChannel.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
@@ -255,7 +256,6 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
         },
         ...sanitizeMode,
       }),
-
       t.step({
         name: "[channel] create a new text channel",
         async fn() {
@@ -263,7 +263,6 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
         },
         ...sanitizeMode,
       }),
-
       t.step({
         name: "[channel] create a new category channel",
         async fn() {
@@ -279,7 +278,6 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
         },
         ...sanitizeMode,
       }),
-
       // t.step({
       //   name: "[channel] create a new news channel",
       //   async fn() {
@@ -295,7 +293,6 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
       //   },
       //   ...sanitizeMode,
       // }),
-
       t.step({
         name: "[channel] create a new voice channel",
         async fn() {
@@ -311,7 +308,6 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
         },
         ...sanitizeMode,
       }),
-
       t.step({
         name: "[channel] create a new voice channel with a bitrate",
         async fn() {
@@ -328,7 +324,6 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
         },
         ...sanitizeMode,
       }),
-
       t.step({
         name: "[channel] create a new voice channel with a user limit",
         async fn() {
@@ -345,7 +340,6 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
         },
         ...sanitizeMode,
       }),
-
       t.step({
         name: "[channel] create a new text channel with a rate limit per user",
         async fn() {
@@ -361,7 +355,6 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
         },
         ...sanitizeMode,
       }),
-
       t.step({
         name: "[channel] create a new text channel with NSFW",
         async fn() {
@@ -369,7 +362,6 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
         },
         ...sanitizeMode,
       }),
-
       t.step({
         name: "[channel] create a new text channel with permission overwrites",
         async fn() {
@@ -389,6 +381,27 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
             },
             t
           );
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[channel] delete a channel with a reason",
+        async fn() {
+          await deleteChannelTests(
+            bot,
+            guild.id,
+            {
+              reason: "with a reason",
+            },
+            t
+          );
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[channel] delete a channel without a reason",
+        async fn() {
+          await deleteChannelTests(bot, guild.id, {}, t);
         },
         ...sanitizeMode,
       }),
