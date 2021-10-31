@@ -1,5 +1,12 @@
 import { TOKEN } from "../configs.ts";
-import { createBot, createEventHandlers, DiscordChannelTypes, DiscordOverwriteTypes, startBot, stopBot } from "../mod.ts";
+import {
+  createBot,
+  createEventHandlers,
+  DiscordChannelTypes,
+  DiscordOverwriteTypes,
+  startBot,
+  stopBot,
+} from "../mod.ts";
 import { assertEquals, assertExists } from "./deps.ts";
 import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
 import { getMessagesTest } from "./helpers/messages/getMessages.ts";
@@ -260,10 +267,15 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
       t.step({
         name: "[channel] create a new category channel",
         async fn() {
-          await createChannelTests(bot, guild.id, {
-            name: "Discordeno-test",
-            type: DiscordChannelTypes.GuildCategory,
-          }, t);
+          await createChannelTests(
+            bot,
+            guild.id,
+            {
+              name: "Discordeno-test",
+              type: DiscordChannelTypes.GuildCategory,
+            },
+            t
+          );
         },
         ...sanitizeMode,
       }),
