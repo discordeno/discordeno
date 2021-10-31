@@ -1,5 +1,5 @@
 import { TOKEN } from "../configs.ts";
-import { createBot, createEventHandlers, DiscordChannelTypes, startBot, stopBot } from "../mod.ts";
+import { createBot, createEventHandlers, DiscordChannelTypes, DiscordOverwriteTypes, startBot, stopBot } from "../mod.ts";
 import { assertEquals, assertExists } from "./deps.ts";
 import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
 import { getMessagesTest } from "./helpers/messages/getMessages.ts";
@@ -19,6 +19,7 @@ import { editMessageTest } from "./helpers/messages/editMessage.ts";
 import { fetchSingleMemberTest } from "./helpers/members/fetchMembers.ts";
 import { pinMessageTests } from "./helpers/messages/pin.ts";
 import { removeAllReactionTests, removeReactionEmojiTest, removeReactionTest } from "./helpers/messages/reactions.ts";
+import { createChannelTests } from "./helpers/channels/createChannel.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
@@ -237,6 +238,149 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
         }),
       ]);
     });
+
+    // ALL CHANNEL RELATED TESTS CAN GO HERE
+    await Promise.all([
+      t.step({
+        name: "[channel] send message with text",
+        fn: async (t) => {
+          await sendMessageWithTextTest(bot, channel.id, t);
+        },
+        ...sanitizeMode,
+      }),
+
+      t.step({
+        name: "[channel] create a new text channel",
+        async fn() {
+          await createChannelTests(bot, guild.id, { name: "Discordeno-test" }, t);
+        },
+        ...sanitizeMode,
+      }),
+
+      t.step({
+        name: "[channel] create a new category channel",
+        async fn() {
+          await createChannelTests(bot, guild.id, {
+            name: "Discordeno-test",
+            type: DiscordChannelTypes.GuildCategory,
+          }, t);
+        },
+        ...sanitizeMode,
+      }),
+
+      // t.step({
+      //   name: "[channel] create a new news channel",
+      //   async fn() {
+      //     await createChannelTests(bot, guild.id,{ name: "Discordeno-test", type: DiscordChannelTypes.GUILD_NEWS}, t);
+      //   },
+      //   ...sanitizeMode,
+      // }),
+
+      // t.step({
+      //   name: "[channel] create a new store channel",
+      //   async fn() {
+      //     await createChannelTests(bot, guild.id,{ name: "Discordeno-test", type: DiscordChannelTypes.GUILD_STORE}, t);
+      //   },
+      //   ...sanitizeMode,
+      // }),
+
+      t.step({
+        name: "[channel] create a new voice channel",
+        async fn() {
+          await createChannelTests(
+            bot,
+            guild.id,
+            {
+              name: "Discordeno-test",
+              type: DiscordChannelTypes.GuildVoice,
+            },
+            t
+          );
+        },
+        ...sanitizeMode,
+      }),
+
+      t.step({
+        name: "[channel] create a new voice channel with a bitrate",
+        async fn() {
+          await createChannelTests(
+            bot,
+            guild.id,
+            {
+              name: "discordeno-test",
+              type: DiscordChannelTypes.GuildVoice,
+              bitrate: 32000,
+            },
+            t
+          );
+        },
+        ...sanitizeMode,
+      }),
+
+      t.step({
+        name: "[channel] create a new voice channel with a user limit",
+        async fn() {
+          await createChannelTests(
+            bot,
+            guild.id,
+            {
+              name: "Discordeno-test",
+              type: DiscordChannelTypes.GuildVoice,
+              userLimit: 32,
+            },
+            t
+          );
+        },
+        ...sanitizeMode,
+      }),
+
+      t.step({
+        name: "[channel] create a new text channel with a rate limit per user",
+        async fn() {
+          await createChannelTests(
+            bot,
+            guild.id,
+            {
+              name: "Discordeno-test",
+              rateLimitPerUser: 2423,
+            },
+            t
+          );
+        },
+        ...sanitizeMode,
+      }),
+
+      t.step({
+        name: "[channel] create a new text channel with NSFW",
+        async fn() {
+          await createChannelTests(bot, guild.id, { name: "Discordeno-test", nsfw: true }, t);
+        },
+        ...sanitizeMode,
+      }),
+
+      t.step({
+        name: "[channel] create a new text channel with permission overwrites",
+        async fn() {
+          await createChannelTests(
+            bot,
+            guild.id,
+            {
+              name: "Discordeno-test",
+              permissionOverwrites: [
+                {
+                  id: bot.id,
+                  type: DiscordOverwriteTypes.Member,
+                  allow: ["VIEW_CHANNEL"],
+                  deny: [],
+                },
+              ],
+            },
+            t
+          );
+        },
+        ...sanitizeMode,
+      }),
+    ]);
   });
 
   // MEMBER TESTS GROUPED

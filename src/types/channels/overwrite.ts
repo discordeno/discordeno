@@ -3,7 +3,7 @@ import { DiscordOverwriteTypes } from "./overwrite_types.ts";
 
 export interface Overwrite {
   /** Role or user id */
-  id: string;
+  id: bigint;
   /** Either 0 (role) or 1 (member) */
   type: DiscordOverwriteTypes;
   /** Permission bit set */
@@ -13,7 +13,8 @@ export interface Overwrite {
 }
 
 /** https://discord.com/developers/docs/resources/channel#overwrite-object */
-export interface DiscordOverwrite extends Omit<Overwrite, "allow" | "deny"> {
+export interface DiscordOverwrite extends Omit<Overwrite, "allow" | "deny" | "id"> {
+  id: string;
   allow: string;
   deny: string;
 }
