@@ -99,9 +99,7 @@ export async function processGlobalQueue(rest: RestManager) {
           }
 
           // WAS RATE LIMITED. PUSH TO END OF GLOBAL QUEUE, SO WE DON'T BLOCK OTHER REQUESTS.
-          console.log("delaying request, rate limit 1", rest.globalQueue.length);
           rest.globalQueue.push(request);
-          console.log("delaying request, rate limit 2", rest.globalQueue.length);
         }
 
         continue;

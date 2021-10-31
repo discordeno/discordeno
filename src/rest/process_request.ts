@@ -18,8 +18,6 @@ export function processRequest(rest: RestManager, request: RestRequest, payload:
   const url = rest.simplifyUrl(request.url, request.method);
 
   const queue = rest.pathQueues.get(url);
-  // console.log('process request', url, Boolean(queue));
-  // IF THE QUEUE EXISTS JUST ADD THIS TO THE QUEUE
   if (queue) {
     queue.requests.push({ request, payload });
   } else {
