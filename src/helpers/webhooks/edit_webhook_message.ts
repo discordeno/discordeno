@@ -2,7 +2,6 @@ import type { Message } from "../../types/messages/message.ts";
 import type { EditWebhookMessage } from "../../types/webhooks/edit_webhook_message.ts";
 import type { Bot } from "../../bot.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
-import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 import { DiscordMessageComponentTypes } from "../../types/messages/components/message_component_types.ts";
 
 export async function editWebhookMessage(
@@ -106,7 +105,7 @@ export async function editWebhookMessage(
           };
         }),
       })),
-      message_id: options.messageId,
+      message_id: options.messageId?.toString(),
     }
   );
 
