@@ -14,10 +14,11 @@ import {
 // CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
 import "./local.ts";
 import { getMessageTest } from "./helpers/messages/getMessage.ts";
-import { addReactionTest } from "./helpers/messages/addReaction.ts";
+import { addReactionTest } from "./helpers/messages/reactions.ts";
 import { editMessageTest } from "./helpers/messages/editMessage.ts";
 import { fetchSingleMemberTest } from "./helpers/members/fetchMembers.ts";
 import { pinMessageTests } from "./helpers/messages/pin.ts";
+import { removeAllReactionTests, removeReactionEmojiTest, removeReactionTest } from "./helpers/messages/reactions.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
@@ -91,7 +92,7 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
     // ALL MESSAGE RELATED TESTS THAT DEPEND ON AN EXISTING CHANNEL
     await t.step("Message related tests", async (t) => {
       const message = await bot.helpers.sendMessage(channel.id, "Hello Skillz");
-      
+
       // CONDUCT ALL TESTS RELATED TO A MESSAGE HERE
       await Promise.all([
         t.step({
@@ -203,6 +204,27 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
           name: "[message] add multiple custom reactions in order",
           fn: async (t) => {
             await addReactionTest(bot, guild.id, channel.id, { custom: true, single: false, ordered: true }, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] remove a reaction.",
+          fn: async (t) => {
+            await removeReactionTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] remove all reactions.",
+          fn: async (t) => {
+            await removeAllReactionTests(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[message] remove emoji reactions.",
+          fn: async (t) => {
+            await removeReactionEmojiTest(bot, channel.id, t);
           },
           ...sanitizeMode,
         }),
