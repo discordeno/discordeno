@@ -87,7 +87,6 @@ export async function editSlashResponse(bot: Bot, token: string, options: Discor
             type: subcomponent.type,
             custom_id: subcomponent.customId,
             label: subcomponent.label,
-            customId: subcomponent.customId,
             style: subcomponent.style,
             emoji: subcomponent.emoji
               ? {

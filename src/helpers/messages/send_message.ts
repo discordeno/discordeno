@@ -167,7 +167,6 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
             type: subcomponent.type,
             custom_id: subcomponent.customId,
             label: subcomponent.label,
-            customId: subcomponent.customId,
             style: subcomponent.style,
             emoji: subcomponent.emoji
               ? {

@@ -125,7 +125,6 @@ export async function sendInteractionResponse(
             type: subcomponent.type,
             custom_id: subcomponent.customId,
             label: subcomponent.label,
-            customId: subcomponent.customId,
             style: subcomponent.style,
             emoji: subcomponent.emoji
               ? {
@@ -242,7 +241,6 @@ export async function sendInteractionResponse(
             type: subcomponent.type,
             custom_id: subcomponent.customId,
             label: subcomponent.label,
-            customId: subcomponent.customId,
             style: subcomponent.style,
             emoji: subcomponent.emoji
               ? {
