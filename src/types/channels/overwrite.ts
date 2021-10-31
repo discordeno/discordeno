@@ -7,9 +7,9 @@ export interface Overwrite {
   /** Either 0 (role) or 1 (member) */
   type: DiscordOverwriteTypes;
   /** Permission bit set */
-  allow: PermissionStrings[];
+  allow?: PermissionStrings[];
   /** Permission bit set */
-  deny: PermissionStrings[];
+  deny?: PermissionStrings[];
 }
 
 /** https://discord.com/developers/docs/resources/channel#overwrite-object */

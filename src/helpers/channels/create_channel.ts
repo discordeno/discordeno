@@ -29,8 +29,8 @@ export async function createChannel(bot: Bot, guildId: bigint, options?: CreateG
           permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
             id: perm.id.toString(),
             type: perm.type,
-            allow: bot.utils.calculateBits(perm.allow),
-            deny: bot.utils.calculateBits(perm.deny),
+            allow: perm.allow ? bot.utils.calculateBits(perm.allow) : "0",
+            deny: perm.deny ? bot.utils.calculateBits(perm.deny) : "0",
           })),
           type: options?.type || DiscordChannelTypes.GuildText,
           reason,

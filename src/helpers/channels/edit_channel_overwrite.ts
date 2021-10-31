@@ -16,8 +16,8 @@ export async function editChannelOverwrite(
     "put",
     bot.constants.endpoints.CHANNEL_OVERWRITE(channelId, overwriteId),
     {
-      allow: bot.utils.calculateBits(options.allow),
-      deny: bot.utils.calculateBits(options.deny),
+      allow: options.allow ? bot.utils.calculateBits(options.allow) : "0",
+      deny: options.deny ? bot.utils.calculateBits(options.deny) : "0",
       type: options.type,
     }
   );

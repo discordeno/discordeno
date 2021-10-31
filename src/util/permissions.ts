@@ -159,7 +159,11 @@ export async function hasChannelPermissions(
 }
 
 /** Checks if the bot has these permissions f0r the given channel */
-export function botHasChannelPermissions(bot: Bot, channel: bigint | DiscordenoChannel, permissions: PermissionStrings[]) {
+export function botHasChannelPermissions(
+  bot: Bot,
+  channel: bigint | DiscordenoChannel,
+  permissions: PermissionStrings[]
+) {
   // Since Bot is a normal member we can use the hasRolePermissions() function
   return bot.utils.hasChannelPermissions(bot, channel, bot.id, permissions);
 }
@@ -212,7 +216,11 @@ export async function requireGuildPermissions(
 }
 
 /** Throws an error if the bot does not have all permissions */
-export function requireBotGuildPermissions(bot: Bot, guild: bigint | DiscordenoGuild, permissions: PermissionStrings[]) {
+export function requireBotGuildPermissions(
+  bot: Bot,
+  guild: bigint | DiscordenoGuild,
+  permissions: PermissionStrings[]
+) {
   // Since Bot is a normal member we can use the throwOnMissingGuildPermission() function
   return bot.utils.requireGuildPermissions(bot, guild, bot.id, permissions);
 }
@@ -232,7 +240,11 @@ export async function requireChannelPermissions(
 }
 
 /** Throws an error if the bot has not all of the given channel permissions */
-export function requireBotChannelPermissions(bot: Bot, channel: bigint | DiscordenoChannel, permissions: PermissionStrings[]) {
+export function requireBotChannelPermissions(
+  bot: Bot,
+  channel: bigint | DiscordenoChannel,
+  permissions: PermissionStrings[]
+) {
   // Since Bot is a normal member we can use the throwOnMissingChannelPermission() function
   return bot.utils.requireChannelPermissions(bot, channel, bot.id, permissions);
 }
@@ -258,12 +270,16 @@ export function calculateBits(permissions: PermissionStrings[]) {
 }
 
 /** Internal function to check if the bot has the permissions to set these overwrites */
-export async function requireOverwritePermissions(bot: Bot, guildOrId: bigint | DiscordenoGuild, overwrites: Overwrite[]) {
+export async function requireOverwritePermissions(
+  bot: Bot,
+  guildOrId: bigint | DiscordenoGuild,
+  overwrites: Overwrite[]
+) {
   let requiredPerms: Set<PermissionStrings> = new Set(["MANAGE_CHANNELS"]);
 
   overwrites?.forEach((overwrite) => {
-    overwrite.allow.forEach(requiredPerms.add, requiredPerms);
-    overwrite.deny.forEach(requiredPerms.add, requiredPerms);
+    if (overwrite.allow) overwrite.allow.forEach(requiredPerms.add, requiredPerms);
+    if (overwrite.deny) overwrite.deny.forEach(requiredPerms.add, requiredPerms);
   });
 
   // MANAGE_ROLES permission can only be set by administrators
@@ -275,7 +291,11 @@ export async function requireOverwritePermissions(bot: Bot, guildOrId: bigint | 
 }
 
 /** Gets the highest role from the member in this guild */
-export async function highestRole(bot: Bot, guildOrId: bigint | DiscordenoGuild, memberOrId: bigint | DiscordenoMember) {
+export async function highestRole(
+  bot: Bot,
+  guildOrId: bigint | DiscordenoGuild,
+  memberOrId: bigint | DiscordenoMember
+) {
   const guild = await bot.utils.getCached(bot, "guilds", guildOrId);
 
   if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
@@ -308,7 +328,12 @@ export async function highestRole(bot: Bot, guildOrId: bigint | DiscordenoGuild,
 }
 
 /** Checks if the first role is higher than the second role */
-export async function higherRolePosition(bot: Bot, guildOrId: bigint | DiscordenoGuild, roleId: bigint, otherRoleId: bigint) {
+export async function higherRolePosition(
+  bot: Bot,
+  guildOrId: bigint | DiscordenoGuild,
+  roleId: bigint,
+  otherRoleId: bigint
+) {
   const guild = await bot.utils.getCached(bot, "guilds", guildOrId);
 
   if (!guild) return true;
@@ -326,7 +351,12 @@ export async function higherRolePosition(bot: Bot, guildOrId: bigint | Discorden
 }
 
 /** Checks if the member has a higher position than the given role */
-export async function isHigherPosition(bot: Bot, guildOrId: bigint | DiscordenoGuild, memberId: bigint, compareRoleId: bigint) {
+export async function isHigherPosition(
+  bot: Bot,
+  guildOrId: bigint | DiscordenoGuild,
+  memberId: bigint,
+  compareRoleId: bigint
+) {
   const guild = await bot.utils.getCached(bot, "guilds", guildOrId);
 
   if (!guild || guild.ownerId === memberId) return true;
