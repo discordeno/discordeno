@@ -10,7 +10,6 @@ export function guildBannerURL(
     banner?: string | bigint;
     size?: DiscordImageSize;
     format?: DiscordImageFormat;
-    animated?: boolean;
   }
 ) {
   return options.banner

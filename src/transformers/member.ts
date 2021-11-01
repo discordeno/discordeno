@@ -1,5 +1,5 @@
 import type { Bot } from "../bot.ts";
-import type { GuildMember, GuildMemberWithUser } from "../types/members/guild_member.ts";
+import type { GuildMember } from "../types/members/guild_member.ts";
 import type { DiscordPremiumTypes } from "../types/users/premium_types.ts";
 import type { User } from "../types/users/user.ts";
 import type { DiscordUserFlags } from "../types/users/user_flags.ts";
@@ -9,7 +9,7 @@ export interface DiscordenoUser {
   id: bigint;
   username: string;
   discriminator: number;
-  avatar: bigint | null;
+  avatar?: bigint;
   bot?: boolean;
   system?: boolean;
   locale?: string;
@@ -26,7 +26,7 @@ export function transformUser(bot: Bot, payload: SnakeCasedPropertiesDeep<User>)
     id: bot.transformers.snowflake(payload.id || ""),
     username: payload.username,
     discriminator: Number(payload.discriminator),
-    avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : null,
+    avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,
     bot: payload.bot,
     system: payload.system,
     locale: payload.locale,

@@ -10,7 +10,6 @@ export function guildIconURL(
     icon?: string | bigint;
     size?: DiscordImageSize;
     format?: DiscordImageFormat;
-    animated?: boolean;
   }
 ) {
   return options.icon

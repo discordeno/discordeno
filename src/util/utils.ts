@@ -10,7 +10,6 @@ import type { MessageComponents } from "../types/messages/components/message_com
 import type { DiscordImageFormat } from "../types/misc/image_format.ts";
 import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import { CONTEXT_MENU_COMMANDS_NAME_REGEX, SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
-import { validateLength } from "./validate_length.ts";
 import { isSelectMenu } from "../helpers/type_guards/is_select_menu.ts";
 import { ApplicationCommandTypes } from "../types/interactions/commands/application_command_types.ts";
 import { Bot } from "../bot.ts";

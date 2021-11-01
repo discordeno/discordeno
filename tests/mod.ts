@@ -59,8 +59,6 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
 
   await startBot(bot);
 
-  // bot.rest.debug = console.log;
-
   // Delay the execution to allow READY events to be processed
   await delayUntil(10000, () => Boolean(startedAt));
   console.log("Bot online");
@@ -89,6 +87,48 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
   if (!bot.cache.guilds.has(guild.id)) {
     throw new Error(`The guild seemed to be created but it was not cached. ${guild.id.toString()}`);
   }
+
+  await Promise.all([
+    t.step({
+      name: "[guild] format a guild's icon url",
+      fn: async (t) => {
+        assertEquals(bot.helpers.guildIconURL(guild.id, { icon: guild.icon }), undefined);
+        assertEquals(
+          bot.helpers.guildIconURL(785384884197392384n, {
+            icon: 3837424427068676005442449262648382018748n,
+          }),
+          "https://cdn.discordapp.com/icons/785384884197392384/46f50fb412eab14ec455d5cf777154bc.jpg?size=128"
+        );
+      },
+      ...sanitizeMode,
+    }),
+    t.step({
+      name: "[guild] format a guild's banner url",
+      fn: async (t) => {
+        assertEquals(bot.helpers.guildBannerURL(guild.id, { banner: guild.banner }), undefined);
+        assertEquals(
+          bot.helpers.guildBannerURL(613425648685547541n, {
+            banner: 3919584870146358272366452115178209474142n,
+          }),
+          "https://cdn.discordapp.com/banners/613425648685547541/84c4964c115c128fb9100952c3b4f65e.jpg?size=128"
+        );
+      },
+      ...sanitizeMode,
+    }),
+    t.step({
+      name: "[guild] format a guild's splash url",
+      fn: async (t) => {
+        assertEquals(bot.helpers.guildSplashURL(guild.id, { splash: guild.splash }), undefined);
+        assertEquals(
+          bot.helpers.guildSplashURL(785384884197392384n, {
+            splash: 3837424427068676005442449262648382018748n,
+          }),
+          "https://cdn.discordapp.com/splashes/785384884197392384/46f50fb412eab14ec455d5cf777154bc.jpg?size=128"
+        );
+      },
+      ...sanitizeMode,
+    }),
+  ]);
 
   // CHANNEL TESTS GROUPED
   await t.step("Channel related tests", async (t) => {
@@ -415,6 +455,18 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
         name: "[member] fetch a single member by id",
         fn: async (t) => {
           await fetchSingleMemberTest(bot, guild.id, t);
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[member] format a members avatar url",
+        fn: async (t) => {
+          assertEquals(
+            bot.helpers.avatarURL(130136895395987456n, 8840, {
+              avatar: 4055337350987360625717955448021200177333n,
+            }),
+            "https://cdn.discordapp.com/avatars/130136895395987456/eae5905ad2d18d7c8deca20478b088b5.jpg?size=128"
+          );
         },
         ...sanitizeMode,
       }),

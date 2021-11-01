@@ -10,7 +10,6 @@ export function guildSplashURL(
     splash?: string | bigint;
     size?: DiscordImageSize;
     format?: DiscordImageFormat;
-    animated?: boolean;
   }
 ) {
   return options.splash
