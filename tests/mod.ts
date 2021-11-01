@@ -546,7 +546,7 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
       t.step({
         name: "[member] ban member from guild without reason",
         fn: async (t) => {
-          await banTestWReason(bot, t, guild.id, 456226577798135808n, {reason: "Blame Wolf"});
+          await banTestWReason(bot, t, guild.id, 456226577798135808n, { reason: "Blame Wolf" });
         },
         ...sanitizeMode,
       }),
