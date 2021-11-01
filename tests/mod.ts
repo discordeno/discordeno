@@ -38,6 +38,7 @@ import { deleteEmojiWithoutReasonTest, deleteEmojiWithReasonTest } from "./helpe
 import { editEmojiTest } from "./helpers/emojis/edit_emoji.ts";
 import { getEmojiTest } from "./helpers/emojis/get_emoji.ts";
 import { getEmojisTest } from "./helpers/emojis/get_emojis.ts";
+import { getBansTest, unbanTest, banTest, banTestWReason } from "./helpers/members/ban.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
@@ -518,6 +519,34 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
             }),
             "https://cdn.discordapp.com/avatars/130136895395987456/eae5905ad2d18d7c8deca20478b088b5.jpg?size=128"
           );
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[member] getBans from guild",
+        fn: async (t) => {
+          await getBansTest(bot, t, guild.id);
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[member] unban member from guild",
+        fn: async (t) => {
+          await unbanTest(bot, t, guild.id, 456226577798135808n);
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[member] ban member from guild without reason",
+        fn: async (t) => {
+          await banTest(bot, t, guild.id, 456226577798135808n);
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[member] ban member from guild without reason",
+        fn: async (t) => {
+          await banTestWReason(bot, t, guild.id, 456226577798135808n, {reason: "Blame Wolf"});
         },
         ...sanitizeMode,
       }),
