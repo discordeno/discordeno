@@ -26,6 +26,11 @@ import { editMessageTest } from "./helpers/messages/edit_message.ts";
 import { fetchSingleMemberTest } from "./helpers/members/fetch_members.ts";
 import { pinMessageTests } from "./helpers/messages/pin.ts";
 import { removeAllReactionTests, removeReactionEmojiTest, removeReactionTest } from "./helpers/messages/reactions.ts";
+import { createInviteTest } from "./helpers/invites/create_invite.ts";
+import { deleteInviteTest } from "./helpers/invites/delete_invite.ts";
+import { getChannelInvitesTest } from "./helpers/invites/get_channels_invites.ts";
+import { getInviteTest } from "./helpers/invites/get_invite.ts";
+import { getInvitesTest } from "./helpers/invites/get_invites.ts";
 import { createChannelTests } from "./helpers/channels/create_channel.ts";
 import { deleteChannelTests } from "./helpers/channels/delete_channel.ts";
 import { createEmojiTest } from "./helpers/emojis/create_emoji.ts";
@@ -451,6 +456,47 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
         ...sanitizeMode,
       }),
     ]);
+
+    // ALL TEST RELATED TO INVITES
+    await t.step("Invites related tests", async (t) => {
+      await Promise.all([
+        t.step({
+          name: "[invite] create an invite",
+          async fn() {
+            await createInviteTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[invite] delete an invite",
+          async fn() {
+            await deleteInviteTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[invite] get channels invites",
+          async fn() {
+            await getChannelInvitesTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[invite] get invite",
+          async fn() {
+            await getInviteTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[invite] get invites",
+          async fn() {
+            await getInvitesTest(bot, channel.id, guild.id, t);
+          },
+          ...sanitizeMode,
+        }),
+      ]);
+    });
   });
 
   // MEMBER TESTS GROUPED
