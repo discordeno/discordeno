@@ -8,31 +8,36 @@ import {
   stopBot,
 } from "../mod.ts";
 import { assertEquals, assertExists } from "./deps.ts";
-import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
-import { getMessagesTest } from "./helpers/messages/getMessages.ts";
-import { deleteMessagesWithoutReasonTest, deleteMessagesWithReasonTest } from "./helpers/messages/deleteMessages.ts";
+import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/delete_message.ts";
+import { getMessagesTest } from "./helpers/messages/get_messages.ts";
+import { deleteMessagesWithoutReasonTest, deleteMessagesWithReasonTest } from "./helpers/messages/delete_messages.ts";
 import { delayUntil } from "./utils.ts";
 import {
   sendMessageWithComponents,
   sendMessageWithEmbedsTest,
   sendMessageWithTextTest,
-} from "./helpers/messages/sendMessage.ts";
+} from "./helpers/messages/send_message.ts";
 
 // CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
 import "./local.ts";
-import { getMessageTest } from "./helpers/messages/getMessage.ts";
+import { getMessageTest } from "./helpers/messages/get_message.ts";
 import { addReactionTest } from "./helpers/messages/reactions.ts";
-import { editMessageTest } from "./helpers/messages/editMessage.ts";
-import { fetchSingleMemberTest } from "./helpers/members/fetchMembers.ts";
+import { editMessageTest } from "./helpers/messages/edit_message.ts";
+import { fetchSingleMemberTest } from "./helpers/members/fetch_members.ts";
 import { pinMessageTests } from "./helpers/messages/pin.ts";
 import { removeAllReactionTests, removeReactionEmojiTest, removeReactionTest } from "./helpers/messages/reactions.ts";
-import { createChannelTests } from "./helpers/channels/createChannel.ts";
-import { deleteChannelTests } from "./helpers/channels/deleteChannel.ts";
 import { createInviteTest } from "./helpers/invites/create_invite.ts";
 import { deleteInviteTest } from "./helpers/invites/delete_invite.ts";
 import { getChannelInvitesTest } from "./helpers/invites/get_channels_invites.ts";
 import { getInviteTest } from "./helpers/invites/get_invite.ts";
 import { getInvitesTest } from "./helpers/invites/get_invites.ts";
+import { createChannelTests } from "./helpers/channels/create_channel.ts";
+import { deleteChannelTests } from "./helpers/channels/delete_channel.ts";
+import { createEmojiTest } from "./helpers/emojis/create_emoji.ts";
+import { deleteEmojiWithoutReasonTest, deleteEmojiWithReasonTest } from "./helpers/emojis/delete_emoji.ts";
+import { editEmojiTest } from "./helpers/emojis/edit_emoji.ts";
+import { getEmojiTest } from "./helpers/emojis/get_emoji.ts";
+import { getEmojisTest } from "./helpers/emojis/get_emojis.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
@@ -56,7 +61,7 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
       },
       // debug: console.log,
     }),
-    intents: ["Guilds", "GuildMessages", "GuildMessageReactions"],
+    intents: ["Guilds", "GuildEmojis", "GuildMessages", "GuildMessageReactions"],
     cache: {
       isAsync: false,
     },
@@ -513,6 +518,54 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
             }),
             "https://cdn.discordapp.com/avatars/130136895395987456/eae5905ad2d18d7c8deca20478b088b5.jpg?size=128"
           );
+        },
+        ...sanitizeMode,
+      }),
+    ]);
+  });
+
+  // EMOJIS TESTS GROUPED
+  await t.step("Emojis related tests", async (t) => {
+    await Promise.all([
+      t.step({
+        name: "[emoji] create an emoji",
+        fn: async (t) => {
+          await createEmojiTest(bot, guild.id, t);
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[emoji] delete an emoji without a reason",
+        fn: async (t) => {
+          await deleteEmojiWithoutReasonTest(bot, guild.id, t);
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[emoji] delete an emoji with a reason",
+        fn: async (t) => {
+          await deleteEmojiWithReasonTest(bot, guild.id, t);
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[emoji] edit an emoji",
+        fn: async (t) => {
+          await editEmojiTest(bot, guild.id, t);
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[emoji] get an emoji",
+        fn: async (t) => {
+          await getEmojiTest(bot, guild.id, t);
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[emoji] get multiple emojis",
+        fn: async (t) => {
+          await getEmojisTest(bot, guild.id, t);
         },
         ...sanitizeMode,
       }),
