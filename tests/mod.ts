@@ -28,11 +28,11 @@ import { pinMessageTests } from "./helpers/messages/pin.ts";
 import { removeAllReactionTests, removeReactionEmojiTest, removeReactionTest } from "./helpers/messages/reactions.ts";
 import { createChannelTests } from "./helpers/channels/createChannel.ts";
 import { deleteChannelTests } from "./helpers/channels/deleteChannel.ts";
-import { createEmojiTest } from "./helpers/emojis/createEmoji.ts";
-import { deleteEmojiWithoutReasonTest, deleteEmojiWithReasonTest } from "./helpers/emojis/deleteEmoji.ts";
-import { editEmojiTest } from "./helpers/emojis/editEmoji.ts";
-import { getEmojiTest } from "./helpers/emojis/getEmoji.ts";
-import { getEmojisTest } from "./helpers/emojis/getEmojis.ts";
+import { createEmojiTest } from "./helpers/emojis/create_emoji.ts";
+import { deleteEmojiWithoutReasonTest, deleteEmojiWithReasonTest } from "./helpers/emojis/delete_emoji.ts";
+import { editEmojiTest } from "./helpers/emojis/edit_emoji.ts";
+import { getEmojiTest } from "./helpers/emojis/get_emoji.ts";
+import { getEmojisTest } from "./helpers/emojis/get_emojis.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
