@@ -63,7 +63,7 @@ export function setApplicationId(id: string) {
 }
 
 export interface BotConfig {
-  token: string;
+  token: string | undefined;
   compress?: boolean;
   intents: (DiscordGatewayIntents | keyof typeof DiscordGatewayIntents)[];
   eventHandlers?: EventHandlers;
