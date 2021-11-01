@@ -188,6 +188,15 @@ export function createExecute(cache: Cache): CacheExecutor {
             return cached;
           })
           .filter((m: DiscordenoMessage) => m);
+      case "GUILD_MEMBER_CHUNK":
+        options.users.forEach((user) => {
+          cache.users.set(user.id, user);
+        });
+        // TODO: FIND A GOOD WAY FOR MEMBERS CACHE (GUILD ID)
+        // options.members.forEach((member) => {
+        //   cache.members.set(member.id, member);
+        // });
+      return;
     }
   };
 }
