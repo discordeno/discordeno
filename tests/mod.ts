@@ -28,6 +28,11 @@ import { pinMessageTests } from "./helpers/messages/pin.ts";
 import { removeAllReactionTests, removeReactionEmojiTest, removeReactionTest } from "./helpers/messages/reactions.ts";
 import { createChannelTests } from "./helpers/channels/create_channel.ts";
 import { deleteChannelTests } from "./helpers/channels/delete_channel.ts";
+import { createEmojiTest } from "./helpers/emojis/create_emoji.ts";
+import { deleteEmojiWithoutReasonTest, deleteEmojiWithReasonTest } from "./helpers/emojis/delete_emoji.ts";
+import { editEmojiTest } from "./helpers/emojis/edit_emoji.ts";
+import { getEmojiTest } from "./helpers/emojis/get_emoji.ts";
+import { getEmojisTest } from "./helpers/emojis/get_emojis.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
@@ -51,7 +56,7 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
       },
       // debug: console.log,
     }),
-    intents: ["Guilds", "GuildMessages", "GuildMessageReactions"],
+    intents: ["Guilds", "GuildEmojis", "GuildMessages", "GuildMessageReactions"],
     cache: {
       isAsync: false,
     },
@@ -467,6 +472,54 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
             }),
             "https://cdn.discordapp.com/avatars/130136895395987456/eae5905ad2d18d7c8deca20478b088b5.jpg?size=128"
           );
+        },
+        ...sanitizeMode,
+      }),
+    ]);
+  });
+
+  // EMOJIS TESTS GROUPED
+  await t.step("Emojis related tests", async (t) => {
+    await Promise.all([
+      t.step({
+        name: "[emoji] create an emoji",
+        fn: async (t) => {
+          await createEmojiTest(bot, guild.id, t);
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[emoji] delete an emoji without a reason",
+        fn: async (t) => {
+          await deleteEmojiWithoutReasonTest(bot, guild.id, t);
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[emoji] delete an emoji with a reason",
+        fn: async (t) => {
+          await deleteEmojiWithReasonTest(bot, guild.id, t);
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[emoji] edit an emoji",
+        fn: async (t) => {
+          await editEmojiTest(bot, guild.id, t);
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[emoji] get an emoji",
+        fn: async (t) => {
+          await getEmojiTest(bot, guild.id, t);
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[emoji] get multiple emojis",
+        fn: async (t) => {
+          await getEmojisTest(bot, guild.id, t);
         },
         ...sanitizeMode,
       }),
