@@ -189,7 +189,7 @@ export function createExecute(cache: Cache): CacheExecutor {
           })
           .filter((m: DiscordenoMessage) => m);
       case "GUILD_MEMBER_CHUNK":
-        options.users.forEach((user) => {
+        options.users.forEach((user: DiscordenoUser) => {
           cache.users.set(user.id, user);
         });
         // TODO: FIND A GOOD WAY FOR MEMBERS CACHE (GUILD ID)
