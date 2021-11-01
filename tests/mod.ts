@@ -28,6 +28,11 @@ import { pinMessageTests } from "./helpers/messages/pin.ts";
 import { removeAllReactionTests, removeReactionEmojiTest, removeReactionTest } from "./helpers/messages/reactions.ts";
 import { createChannelTests } from "./helpers/channels/createChannel.ts";
 import { deleteChannelTests } from "./helpers/channels/deleteChannel.ts";
+import {createInviteTest} from "./helpers/invites/createInvite.ts";
+import {deleteInviteTest} from "./helpers/invites/deleteInvite.ts";
+import {getChannelInvitesTest} from "./helpers/invites/getChannelInvites.ts";
+import {getInviteTest} from "./helpers/invites/getInvite.ts";
+import {getInvitesTest} from "./helpers/invites/getInvites.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
@@ -446,6 +451,47 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
         ...sanitizeMode,
       }),
     ]);
+
+    // ALL TEST RELATED TO INVITES
+    await t.step("Invites related tests", async (t) => {
+      await Promise.all([
+        t.step({
+          name: "[invite] create an invite",
+          async fn() {
+            await createInviteTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[invite] delete an invite",
+          async fn() {
+            await deleteInviteTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[invite] get channels invites",
+          async fn() {
+            await getChannelInvitesTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[invite] get invite",
+          async fn() {
+            await getInviteTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[invite] get invites",
+          async fn() {
+            await getInvitesTest(bot, channel.id, guild.id, t);
+          },
+          ...sanitizeMode,
+        }),
+      ]);
+    });
   });
 
   // MEMBER TESTS GROUPED
