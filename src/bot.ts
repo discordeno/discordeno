@@ -422,6 +422,8 @@ export async function stopBot(bot: Bot) {
   });
 
   await delay(5000);
+
+  return bot;
 }
 
 export interface CreateBotOptions<C extends CacheOptions = CacheOptions> {
