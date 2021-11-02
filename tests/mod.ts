@@ -45,6 +45,7 @@ import { deleteRoleTests } from "./helpers/roles/deleteRole.ts";
 import { getRolesTest } from "./helpers/roles/getRoles.ts";
 import { editRoleTests } from "./helpers/roles/editRole.ts";
 import { addRoleTest, removeRoleTest } from "./helpers/roles/roleChanges.ts";
+import { getUserTests } from "./helpers/misc/user.ts";
 import { createGuildTests } from "./helpers/guilds/createGuild.ts";
 import { deleteGuildTests } from "./helpers/guilds/deleteGuild.ts";
 import { editGuildTests } from "./helpers/guilds/editGuild.ts";
@@ -764,15 +765,33 @@ Deno.test({
           }),
         ]);
       },
-    });
+    });    
 
+    // SOME MISC TESTS
+    await Promise.all([
+      t.step({
+        name: "[User] get a user and transform",
+        fn: async (t) => {
+          await getUserTests(bot, t);
+        },
+        ...sanitizeMode,
+      }),t.step({
+        name: "[tranform] snowflake to bigint",
+        fn: async (t) => {
+          assertEquals(130136895395987456n, bot.transformers.snowflake("130136895395987456"));
+        },
+        ...sanitizeMode
+      }),
     // CONDUCT MEMORY BENCHMARK TESTS
-    await t.step({
-      name: "[Memory] Benchmark memory tests",
-      fn: async (t) => {
-        await memoryBenchmarks(bot, true);
-      },
-    });
+
+      await t.step({
+        name: "[Memory] Benchmark memory tests",
+        fn: async (t) => {
+          await memoryBenchmarks(bot, true);
+        },
+      })
+    ])
+    
 
     await stopBot(bot);
   },
