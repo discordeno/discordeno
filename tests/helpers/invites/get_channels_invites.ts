@@ -6,17 +6,17 @@ export async function getChannelInvitesTest(bot: Bot, channelId: bigint, t: Deno
     maxAge: 86400,
     maxUses: 0,
     temporary: false,
-    unique: false,
+    unique: true,
   });
 
   // Assertions
   assertExists(invite);
 
   const secondInvite = await bot.helpers.createInvite(channelId, {
-    maxAge: 86400,
-    maxUses: 0,
-    temporary: false,
-    unique: false,
+    maxAge: 0,
+    maxUses: 2,
+    temporary: true,
+    unique: true,
   });
 
   // Assertions

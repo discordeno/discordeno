@@ -87,8 +87,9 @@ export async function processGlobalQueue(rest: RestManager) {
 
         // If NOT rate limited remove from queue
         if (response.status !== 429) {
-          rest.debug(JSON.stringify((await response.json()).errors.type._errors));
-
+          // rest.debug(JSON.stringify((await response.json()).errors));
+          console.log(JSON.stringify((await response.json())));
+          
           request.request.reject(new Error(`[${response.status}] ${error}`));
         } else {
           if (request.payload.retryCount++ >= rest.maxRetryCount) {

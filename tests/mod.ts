@@ -39,7 +39,7 @@ import { deleteEmojiWithoutReasonTest, deleteEmojiWithReasonTest } from "./helpe
 import { editEmojiTest } from "./helpers/emojis/edit_emoji.ts";
 import { getEmojiTest } from "./helpers/emojis/get_emoji.ts";
 import { getEmojisTest } from "./helpers/emojis/get_emojis.ts";
-import { getBansTest, unbanTest, banTest, banTestWReason } from "./helpers/members/ban.ts";
+import { getBansTest, unbanTest, banTest } from "./helpers/members/ban.ts";
 
 Deno.test("[Bot] - Starting Tests", async (t) => {
   // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
@@ -63,7 +63,7 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
       },
       // debug: console.log,
     }),
-    intents: ["Guilds", "GuildEmojis", "GuildMessages", "GuildMessageReactions"],
+    intents: ["Guilds", "GuildEmojis", "GuildMessages", "GuildMessageReactions", "GuildBans"],
     cache: {
       isAsync: false,
     },
@@ -462,47 +462,81 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
     // ALL TEST RELATED TO INVITES
     await t.step("Invites related tests", async (t) => {
       await Promise.all([
-        // t.step({
-        //   name: "[invite] create an invite",
-        //   async fn() {
-        //     await createInviteTest(bot, channel.id, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
-        // t.step({
-        //   name: "[invite] delete an invite",
-        //   async fn() {
-        //     await deleteInviteTest(bot, channel.id, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
-        // t.step({
-        //   name: "[invite] get channels invites",
-        //   async fn() {
-        //     await getChannelInvitesTest(bot, channel.id, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
-        // t.step({
-        //   name: "[invite] get invite",
-        //   async fn() {
-        //     await getInviteTest(bot, channel.id, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
-        // t.step({
-        //   name: "[invite] get invites",
-        //   async fn() {
-        //     await getInvitesTest(bot, channel.id, guild.id, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
+        t.step({
+          name: "[invite] create an invite",
+          async fn() {
+            await createInviteTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[invite] delete an invite",
+          async fn() {
+            await deleteInviteTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[invite] get channels invites",
+          async fn() {
+            await getChannelInvitesTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[invite] get invite",
+          async fn() {
+            await getInviteTest(bot, channel.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[invite] get invites",
+          async fn() {
+            await getInvitesTest(bot, channel.id, guild.id, t);
+          },
+          ...sanitizeMode,
+        }),
       ]);
     });
   });
 
   // MEMBER TESTS GROUPED
   await t.step("Members related tests", async (t) => {
+    // THESE BAN TESTS SHOULD BE DONE ONE BY ONE
+    await t.step({
+      name: "[member] ban user from guild without reason",
+      fn: async (t) => {
+        // THIS IS WOLF, IF ANYTHING BREAKS BLAME HIM!
+        await banTest(bot, t, guild.id, 270273690074087427n, { reason: "Blame Wolf" });
+      },
+      ...sanitizeMode,
+    });
+
+    await t.step({
+      name: "[member] get a single user's ban",
+      fn: async (t) => {
+        assertExists(await bot.helpers.getBan(guild.id, 270273690074087427n));
+      },
+      ...sanitizeMode,
+    });
+
+    await t.step({
+      name: "[member] ban member from guild without reason",
+      fn: async (t) => {
+        // THIS IS IAN, HE PLAY'S GOLDEN SUN. BAN BEFORE HE MAKES US ADDICTED TO IT!!!
+        await banTest(bot, t, guild.id, 90339695967350784n);
+      },
+      ...sanitizeMode,
+    });
+    await t.step({
+      name: "[member] get bans on a server",
+      fn: async (t) => {
+        await getBansTest(bot, t, guild.id);
+      },
+      ...sanitizeMode,
+    });
+
     await Promise.all([
       t.step({
         name: "[member] fetch a single member by id",
@@ -523,34 +557,16 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
         },
         ...sanitizeMode,
       }),
-      // t.step({
-      //   name: "[member] getBans from guild",
-      //   fn: async (t) => {
-      //     await getBansTest(bot, t, guild.id);
-      //   },
-      //   ...sanitizeMode,
-      // }),
-      // t.step({
-      //   name: "[member] unban member from guild",
-      //   fn: async (t) => {
-      //     await unbanTest(bot, t, guild.id, 456226577798135808n);
-      //   },
-      //   ...sanitizeMode,
-      // }),
-      // t.step({
-      //   name: "[member] ban member from guild without reason",
-      //   fn: async (t) => {
-      //     await banTest(bot, t, guild.id, 456226577798135808n);
-      //   },
-      //   ...sanitizeMode,
-      // }),
-      // t.step({
-      //   name: "[member] ban member from guild without reason",
-      //   fn: async (t) => {
-      //     await banTestWReason(bot, t, guild.id, 456226577798135808n, { reason: "Blame Wolf" });
-      //   },
-      //   ...sanitizeMode,
-      // }),
+      t.step({
+        name: "[member] unban member from guild",
+        fn: async (t) => {
+          await Promise.all([
+            unbanTest(bot, t, guild.id, 270273690074087427n),
+            unbanTest(bot, t, guild.id, 90339695967350784n),
+          ]);
+        },
+        ...sanitizeMode,
+      }),
     ]);
   });
 
