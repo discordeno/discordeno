@@ -6,7 +6,7 @@ import { delayUntil } from "../../utils.ts";
 
 export async function deleteGuildTests(bot: Bot, t: Deno.TestContext) {
   const guild = await bot.helpers.createGuild({
-    name: "Isekai Maid Fake Server"
+    name: "Isekai Maid Fake Server",
   });
 
   // Assertions

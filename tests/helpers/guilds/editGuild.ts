@@ -5,8 +5,8 @@ import { assertExists, assertEquals } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
 
 export async function editGuildTests(bot: Bot, guildId: bigint, t: Deno.TestContext) {
-  const guild = await bot.helpers.editGuild(guildId,{
-    name: "Discordeno Test 1.0"
+  const guild = await bot.helpers.editGuild(guildId, {
+    name: "Discordeno Test 1.0",
   });
 
   // Assertions

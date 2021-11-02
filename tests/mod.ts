@@ -40,15 +40,15 @@ import { editEmojiTest } from "./helpers/emojis/edit_emoji.ts";
 import { getEmojiTest } from "./helpers/emojis/get_emoji.ts";
 import { getEmojisTest } from "./helpers/emojis/get_emojis.ts";
 import { getBansTest, unbanTest, banTest } from "./helpers/members/ban.ts";
-import {createGuildTests} from "./helpers/guilds/createGuild.ts";
-import {deleteGuildTests} from "./helpers/guilds/deleteGuild.ts";
-import {editGuildTests} from "./helpers/guilds/editGuild.ts";
-import {getAuditLogsTests} from "./helpers/guilds/getAuditLogs.ts";
-import {getAvailableVoiceRegionsTests} from "./helpers/guilds/getAvailableVoiceRegions.ts";
-import {getBanTests} from "./helpers/guilds/getBan.ts";
-import {getBansTests} from "./helpers/guilds/getBans.ts";
-import {getGuildTests} from "./helpers/guilds/getGuild.ts";
-import {getVanityURLTests} from "./helpers/guilds/getVanityUrl.ts";
+import { createGuildTests } from "./helpers/guilds/createGuild.ts";
+import { deleteGuildTests } from "./helpers/guilds/deleteGuild.ts";
+import { editGuildTests } from "./helpers/guilds/editGuild.ts";
+import { getAuditLogsTests } from "./helpers/guilds/getAuditLogs.ts";
+import { getAvailableVoiceRegionsTests } from "./helpers/guilds/getAvailableVoiceRegions.ts";
+import { getBanTests } from "./helpers/guilds/getBan.ts";
+import { getBansTests } from "./helpers/guilds/getBans.ts";
+import { getGuildTests } from "./helpers/guilds/getGuild.ts";
+import { getVanityURLTests } from "./helpers/guilds/getVanityUrl.ts";
 
 // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
 const sanitizeMode = {
@@ -119,10 +119,10 @@ Deno.test({
           fn: async (t) => {
             assertEquals(bot.helpers.guildIconURL(guild.id, { icon: guild.icon }), undefined);
             assertEquals(
-                bot.helpers.guildIconURL(785384884197392384n, {
-                  icon: 3837424427068676005442449262648382018748n,
-                }),
-                "https://cdn.discordapp.com/icons/785384884197392384/46f50fb412eab14ec455d5cf777154bc.jpg?size=128"
+              bot.helpers.guildIconURL(785384884197392384n, {
+                icon: 3837424427068676005442449262648382018748n,
+              }),
+              "https://cdn.discordapp.com/icons/785384884197392384/46f50fb412eab14ec455d5cf777154bc.jpg?size=128"
             );
           },
           ...sanitizeMode,
@@ -132,10 +132,10 @@ Deno.test({
           fn: async (t) => {
             assertEquals(bot.helpers.guildBannerURL(guild.id, { banner: guild.banner }), undefined);
             assertEquals(
-                bot.helpers.guildBannerURL(613425648685547541n, {
-                  banner: 3919584870146358272366452115178209474142n,
-                }),
-                "https://cdn.discordapp.com/banners/613425648685547541/84c4964c115c128fb9100952c3b4f65e.jpg?size=128"
+              bot.helpers.guildBannerURL(613425648685547541n, {
+                banner: 3919584870146358272366452115178209474142n,
+              }),
+              "https://cdn.discordapp.com/banners/613425648685547541/84c4964c115c128fb9100952c3b4f65e.jpg?size=128"
             );
           },
           ...sanitizeMode,
@@ -145,10 +145,10 @@ Deno.test({
           fn: async (t) => {
             assertEquals(bot.helpers.guildSplashURL(guild.id, { splash: guild.splash }), undefined);
             assertEquals(
-                bot.helpers.guildSplashURL(785384884197392384n, {
-                  splash: 3837424427068676005442449262648382018748n,
-                }),
-                "https://cdn.discordapp.com/splashes/785384884197392384/46f50fb412eab14ec455d5cf777154bc.jpg?size=128"
+              bot.helpers.guildSplashURL(785384884197392384n, {
+                splash: 3837424427068676005442449262648382018748n,
+              }),
+              "https://cdn.discordapp.com/splashes/785384884197392384/46f50fb412eab14ec455d5cf777154bc.jpg?size=128"
             );
           },
           ...sanitizeMode,
