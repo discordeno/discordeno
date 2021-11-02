@@ -40,6 +40,11 @@ import { editEmojiTest } from "./helpers/emojis/edit_emoji.ts";
 import { getEmojiTest } from "./helpers/emojis/get_emoji.ts";
 import { getEmojisTest } from "./helpers/emojis/get_emojis.ts";
 import { getBansTest, unbanTest, banTest } from "./helpers/members/ban.ts";
+import { createRoleTests } from "./helpers/roles/createRole.ts";
+import { deleteRoleTests } from "./helpers/roles/deleteRole.ts";
+import { getRolesTest } from "./helpers/roles/getRoles.ts";
+import { editRoleTests } from "./helpers/roles/editRole.ts";
+import { addRoleTest, removeRoleTest } from "./helpers/roles/roleChanges.ts";
 import { createGuildTests } from "./helpers/guilds/createGuild.ts";
 import { deleteGuildTests } from "./helpers/guilds/deleteGuild.ts";
 import { editGuildTests } from "./helpers/guilds/editGuild.ts";
@@ -74,7 +79,7 @@ Deno.test({
         },
         // debug: console.log,
       }),
-      intents: ["Guilds", "GuildEmojis", "GuildMessages", "GuildMessageReactions", "GuildBans"],
+      intents: ["Guilds", "GuildEmojis", "GuildMessages", "GuildMessageReactions", "GuildBans", "GuildMembers"],
       cache: {
         isAsync: false,
       },
@@ -693,6 +698,72 @@ Deno.test({
           ...sanitizeMode,
         }),
       ]);
+    });
+
+    // ROLE RELATED TESTS
+    await t.step({
+      name: "[Role] Role related tests",
+      fn: async (t) => {
+        await t.step({
+          name: "[Role] get all roles on a server",
+          fn: async (t) => {
+            await getRolesTest(bot, guild.id, t);
+          },
+          ...sanitizeMode,
+        });
+
+        await Promise.all([
+          t.step({
+            name: "[Role] create a role without a reason",
+            fn: async (t) => {
+              await createRoleTests(bot, guild.id, {}, t);
+            },
+            ...sanitizeMode,
+          }),
+          t.step({
+            name: "[Role] create a role with a reason",
+            fn: async (t) => {
+              await createRoleTests(bot, guild.id, { reason: "Blame wolfy" }, t);
+            },
+            ...sanitizeMode,
+          }),
+          t.step({
+            name: "[Role] delete a role without a reason",
+            fn: async (t) => {
+              await deleteRoleTests(bot, guild.id, {}, t);
+            },
+            ...sanitizeMode,
+          }),
+          t.step({
+            name: "[Role] delete a role with a reason",
+            fn: async (t) => {
+              await deleteRoleTests(bot, guild.id, { reason: "Blame wolfy" }, t);
+            },
+            ...sanitizeMode,
+          }),
+          t.step({
+            name: "[Role] edit a role",
+            fn: async (t) => {
+              await editRoleTests(bot, guild.id, t);
+            },
+            ...sanitizeMode,
+          }),
+          t.step({
+            name: "[Role] add a role to a member",
+            fn: async (t) => {
+              await addRoleTest(bot, guild.id, { reason: "Blame wolf" }, t);
+            },
+            ...sanitizeMode,
+          }),
+          t.step({
+            name: "[Role] remove a role to a member",
+            fn: async (t) => {
+              await removeRoleTest(bot, guild.id, { reason: "Blame wolf" }, t);
+            },
+            ...sanitizeMode,
+          }),
+        ]);
+      },
     });
 
     // CONDUCT MEMORY BENCHMARK TESTS

@@ -15,7 +15,7 @@ export async function deleteChannelTests(bot: Bot, guildId: bigint, options: { r
 
   // Delete the channel now without a reason
   await bot.helpers.deleteChannel(channel.id, options.reason);
-  // wait 5 seconds to give it time for CHANNEL_DELETE event
+  // wait to give it time for event
   await delayUntil(10000, () => !bot.cache.channels.has(channel.id));
   // Make sure it is gone from cache
   if (bot.cache.channels.has(channel.id)) {
