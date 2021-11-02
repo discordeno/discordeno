@@ -25,6 +25,6 @@ Deno.test({
     const before = Date.now();
     await delay(2000);
     const after = Date.now();
-    if (after - before < 2000) throw new Error(`delay(2000) delayed ${after - before}ms`);
+    assertEquals(after - before >= 2000, true);
   },
 });
