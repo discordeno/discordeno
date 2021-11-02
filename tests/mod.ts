@@ -765,7 +765,7 @@ Deno.test({
           }),
         ]);
       },
-    });    
+    });
 
     // SOME MISC TESTS
     await Promise.all([
@@ -775,23 +775,23 @@ Deno.test({
           await getUserTests(bot, t);
         },
         ...sanitizeMode,
-      }),t.step({
+      }),
+      t.step({
         name: "[tranform] snowflake to bigint",
         fn: async (t) => {
           assertEquals(130136895395987456n, bot.transformers.snowflake("130136895395987456"));
         },
-        ...sanitizeMode
+        ...sanitizeMode,
       }),
-    // CONDUCT MEMORY BENCHMARK TESTS
+      // CONDUCT MEMORY BENCHMARK TESTS
 
       await t.step({
         name: "[Memory] Benchmark memory tests",
         fn: async (t) => {
           await memoryBenchmarks(bot, true);
         },
-      })
-    ])
-    
+      }),
+    ]);
 
     await stopBot(bot);
   },
