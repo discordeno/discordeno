@@ -7,19 +7,18 @@ export function resume(gateway: GatewayManager, shardId: number) {
   // NOW WE HANDLE RESUMING THIS SHARD
   // Get the old data for this shard necessary for resuming
   const oldShard = gateway.shards.get(shardId);
+  if (!oldShard) return gateway.debug(`[Error] Trying to resume a shard (id: ${shardId}) that was not first identified.`);
 
-  if (oldShard) {
-    // HOW TO CLOSE OLD SHARD SOCKET!!!
-    gateway.closeWS(oldShard.ws, 3064, "Resuming the shard, closing old shard.");
-    // STOP OLD HEARTBEAT
-    clearInterval(oldShard.heartbeat.intervalId);
-  }
+  // HOW TO CLOSE OLD SHARD SOCKET!!!
+  gateway.closeWS(oldShard.ws, 3064, "Resuming the shard, closing old shard.");
+  // STOP OLD HEARTBEAT
+  clearInterval(oldShard.heartbeat.intervalId);
 
   // CREATE A SHARD
   const socket = gateway.createShard(gateway, shardId);
 
-  const sessionId = oldShard?.sessionId || "";
-  const previousSequenceNumber = oldShard?.previousSequenceNumber || 0;
+  const sessionId = oldShard.sessionId || "";
+  const previousSequenceNumber = oldShard.previousSequenceNumber || 0;
 
   gateway.shards.set(shardId, {
     id: shardId,
@@ -38,7 +37,7 @@ export function resume(gateway: GatewayManager, shardId: number) {
       interval: 0,
       intervalId: 0,
     },
-    queue: oldShard?.queue || [],
+    queue: oldShard.queue || [],
     processingQueue: false,
     queueStartedAt: Date.now(),
     queueCounter: 0,

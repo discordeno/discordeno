@@ -619,13 +619,12 @@ Deno.test("[Bot] - Starting Tests", async (t) => {
   });
 
   // CONDUCT MEMORY BENCHMARK TESTS
-
-  t.step({
+  await t.step({
     name: "[Memory] Benchmark memory tests",
     fn: async (t) => {
       await memoryBenchmarks(bot, true);
     },
-    ...sanitizeMode,
-  }),
-    await stopBot(bot);
+  });
+
+  await stopBot(bot);
 });

@@ -415,7 +415,6 @@ export function createGatewayManager(
 }
 
 export async function stopBot(bot: Bot) {
-  // STOP REST
   // STOP WS
   bot.gateway.shards.forEach((shard) => {
     clearInterval(shard.heartbeat.intervalId);
