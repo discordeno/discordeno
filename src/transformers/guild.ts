@@ -158,7 +158,7 @@ export interface DiscordenoGuild
   id: bigint;
   /** Id of the owner */
   ownerId: bigint;
-  /** Total permissions for the user in the guild (execludes overrides) */
+  /** Total permissions for the user in the guild (excludes overwrites) */
   permissions: bigint;
   /** Id of afk channel */
   afkChannelId?: bigint;

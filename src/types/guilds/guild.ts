@@ -33,7 +33,7 @@ export interface Guild {
   owner?: boolean;
   /** Id of the owner */
   ownerId: string;
-  /** Total permissions for the user in the guild (execludes overwrites) */
+  /** Total permissions for the user in the guild (excludes overwrites) */
   permissions?: string;
   /** Id of afk channel */
   afkChannelId: string | null;
