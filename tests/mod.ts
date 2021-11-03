@@ -55,6 +55,7 @@ import { getBanTests } from "./helpers/guilds/getBan.ts";
 import { getBansTests } from "./helpers/guilds/getBans.ts";
 import { getGuildTests } from "./helpers/guilds/getGuild.ts";
 import { getVanityURLTests } from "./helpers/guilds/getVanityUrl.ts";
+import { getDiscoveryCategoriesTest, validDiscoveryTermTest } from "./helpers/misc/discoveries.ts";
 
 // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
 const sanitizeMode = {
@@ -780,6 +781,20 @@ Deno.test({
         name: "[tranform] snowflake to bigint",
         fn: async (t) => {
           assertEquals(130136895395987456n, bot.transformers.snowflake("130136895395987456"));
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[discovery] Validate a discovery search term",
+        fn: async (t) => {
+          await validDiscoveryTermTest(bot, t);
+        },
+        ...sanitizeMode,
+      }),
+      t.step({
+        name: "[discovery] get categories from discovery",
+        fn: async (t) => {
+          await getDiscoveryCategoriesTest(bot, t);
         },
         ...sanitizeMode,
       }),
