@@ -1,6 +1,7 @@
 import { memoryBenchmarks } from "../benchmarks/index.ts";
 import { TOKEN } from "../configs.ts";
 import {
+channelOverwriteHasPermission,
   createBot,
   createEventHandlers,
   DiscordChannelTypes,
@@ -57,6 +58,7 @@ import { getGuildTests } from "./helpers/guilds/getGuild.ts";
 import { getVanityURLTests } from "./helpers/guilds/getVanityUrl.ts";
 import { getDiscoveryCategoriesTest, validDiscoveryTermTest } from "./helpers/misc/discoveries.ts";
 import { categoryChildrenTest } from "./helpers/channels/categoryChannels.ts";
+import { channelOverwriteHasPermissionTest } from "./helpers/channels/channelOverwriteHasPermission.ts";
 
 // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
 const sanitizeMode = {
@@ -548,6 +550,12 @@ Deno.test({
             await categoryChildrenTest(bot, guild.id, t);
           },
         }),
+        t.step({
+          name: "[channel] edit a channel permission overwrite",
+          async fn() {
+            await channelOverwriteHasPermissionTest(bot, guild.id, t);
+          }
+        })
       ]);
 
       // ALL TEST RELATED TO INVITES
