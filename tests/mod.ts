@@ -56,6 +56,7 @@ import { getBansTests } from "./helpers/guilds/getBans.ts";
 import { getGuildTests } from "./helpers/guilds/getGuild.ts";
 import { getVanityURLTests } from "./helpers/guilds/getVanityUrl.ts";
 import { getDiscoveryCategoriesTest, validDiscoveryTermTest } from "./helpers/misc/discoveries.ts";
+import { categoryChildrenTest } from "./helpers/channels/categoryChannels.ts";
 
 // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
 const sanitizeMode = {
@@ -540,6 +541,12 @@ Deno.test({
             await deleteChannelTests(bot, guild.id, {}, t);
           },
           ...sanitizeMode,
+        }),
+        t.step({
+          name: "[channel] filter all category channels",
+          async fn() {
+            await categoryChildrenTest(bot, guild.id, t);
+          },
         }),
       ]);
 
