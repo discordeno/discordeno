@@ -17,6 +17,7 @@ import {
   calculateBits,
   isHigherPosition,
   requireOverwritePermissions,
+  calculatePermissions,
 } from "./util/permissions.ts";
 import {
   checkRateLimits,
@@ -322,6 +323,7 @@ export function createUtils(options: Partial<HelperUtils>) {
     formatImageURL,
     validateSlashCommands,
     requireOverwritePermissions,
+    calculatePermissions,
   };
 }
 
@@ -358,6 +360,7 @@ export interface HelperUtils {
   formatImageURL: typeof formatImageURL;
   validateSlashCommands: typeof validateSlashCommands;
   requireOverwritePermissions: typeof requireOverwritePermissions;
+  calculatePermissions: typeof calculatePermissions;
 }
 
 export function createGatewayManager(
@@ -481,6 +484,7 @@ export interface Helpers {
   batchEditSlashCommandPermissions: typeof helpers.batchEditSlashCommandPermissions;
   categoryChildren: typeof helpers.categoryChildren;
   channelOverwriteHasPermission: typeof helpers.channelOverwriteHasPermission;
+  cloneChannel: typeof helpers.cloneChannel;
   connectToVoiceChannel: typeof helpers.connectToVoiceChannel;
   createChannel: typeof helpers.createChannel;
   createEmoji: typeof helpers.createEmoji;

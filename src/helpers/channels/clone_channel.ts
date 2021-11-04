@@ -17,7 +17,7 @@ export async function cloneChannel(bot: Bot, channelId: bigint, reason?: string)
     name: channelToClone.name!,
     topic: channelToClone.topic || undefined,
     permissionOverwrites: channelToClone.permissionOverwrites.map((overwrite) => ({
-      id: overwrite.id.toString(),
+      id: overwrite.id,
       type: overwrite.type,
       allow: bot.utils.calculatePermissions(overwrite.allow),
       deny: bot.utils.calculatePermissions(overwrite.deny),

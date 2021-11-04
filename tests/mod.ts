@@ -59,6 +59,7 @@ import { getVanityURLTests } from "./helpers/guilds/getVanityUrl.ts";
 import { getDiscoveryCategoriesTest, validDiscoveryTermTest } from "./helpers/misc/discoveries.ts";
 import { categoryChildrenTest } from "./helpers/channels/categoryChannels.ts";
 import { channelOverwriteHasPermissionTest } from "./helpers/channels/channelOverwriteHasPermission.ts";
+import { cloneChannelTests } from "./helpers/channels/cloneChannel.ts";
 
 // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
 const sanitizeMode = {
@@ -554,6 +555,18 @@ Deno.test({
           name: "[channel] edit a channel permission overwrite",
           async fn() {
             await channelOverwriteHasPermissionTest(bot, guild.id, t);
+          }
+        }),
+        t.step({
+          name: "[channel] clone a channel w/o a reason",
+          async fn() {
+            await cloneChannelTests(bot, guild.id, channel, {}, t);
+          }
+        }),
+        t.step({
+          name: "[channel] clone a channel w a reason",
+          async fn() {
+            await cloneChannelTests(bot, guild.id, channel, { reason: "Blame wolf"}, t);
           }
         })
       ]);
