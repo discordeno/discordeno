@@ -73,11 +73,11 @@ export interface Component {
 }
 
 export interface SelectOption {
-  /** The user-facing name of the option. Maximum 25 characters. */
+  /** The user-facing name of the option. Maximum 100 characters. */
   label: string;
   /** The dev-defined value of the option. Maximum 100 characters. */
   value: string;
-  /** An additional description of the option. Maximum 50 characters. */
+  /** An additional description of the option. Maximum 100 characters. */
   description?: string;
   /** The id, name, and animated properties of an emoji. */
   emoji?: {
