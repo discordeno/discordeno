@@ -6,6 +6,8 @@ export enum DiscordApplicationFlags {
   GatewayGuildMembersLimited = 1 << 15,
   VerificationPendingGuildLimit = 1 << 16,
   Embedded = 1 << 17,
+  GatewayMessageCount = 1 << 18,
+  GatewayMessageContentLimited = 1 << 19,
 }
 
 export type ApplicationFlags = DiscordApplicationFlags;
