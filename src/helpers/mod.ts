@@ -153,6 +153,7 @@ import { startPrivateThread } from "./channels/threads/start_private_thread.ts";
 import { startThread } from "./channels/threads/start_thread.ts";
 import { unarchiveThread } from "./channels/threads/unarchive_thread.ts";
 import { unlockThread } from "./channels/threads/unlock_thread.ts";
+import { cloneChannel } from "./channels/clone_channel.ts";
 
 export {
   addDiscoverySubcategory,
@@ -165,6 +166,7 @@ export {
   batchEditSlashCommandPermissions,
   categoryChildren,
   channelOverwriteHasPermission,
+  cloneChannel,
   connectToVoiceChannel,
   createChannel,
   createEmoji,

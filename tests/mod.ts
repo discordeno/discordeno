@@ -1,6 +1,7 @@
 import { memoryBenchmarks } from "../benchmarks/index.ts";
 import { TOKEN } from "../configs.ts";
 import {
+channelOverwriteHasPermission,
   createBot,
   createEventHandlers,
   DiscordChannelTypes,
@@ -56,6 +57,10 @@ import { getBansTests } from "./helpers/guilds/getBans.ts";
 import { getGuildTests } from "./helpers/guilds/getGuild.ts";
 import { getVanityURLTests } from "./helpers/guilds/getVanityUrl.ts";
 import { getDiscoveryCategoriesTest, validDiscoveryTermTest } from "./helpers/misc/discoveries.ts";
+import { categoryChildrenTest } from "./helpers/channels/categoryChannels.ts";
+import { channelOverwriteHasPermissionTest } from "./helpers/channels/channelOverwriteHasPermission.ts";
+import { cloneChannelTests } from "./helpers/channels/cloneChannel.ts";
+import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOverwrite.ts";
 
 // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
 const sanitizeMode = {
@@ -541,6 +546,36 @@ Deno.test({
           },
           ...sanitizeMode,
         }),
+        t.step({
+          name: "[channel] filter all category channels",
+          async fn() {
+            await categoryChildrenTest(bot, guild.id, t);
+          },
+        }),
+        t.step({
+          name: "[channel] edit a channel permission overwrite",
+          async fn() {
+            await channelOverwriteHasPermissionTest(bot, guild.id, t);
+          }
+        }),
+        t.step({
+          name: "[channel] clone a channel w/o a reason",
+          async fn() {
+            await cloneChannelTests(bot, guild.id, channel, {}, t);
+          }
+        }),
+        t.step({
+          name: "[channel] clone a channel w a reason",
+          async fn() {
+            await cloneChannelTests(bot, guild.id, channel, { reason: "Blame wolf"}, t);
+          }
+        }),
+        t.step({
+          name: "[channel] delete a channel overwrite",
+          async fn() {
+            await deleteChannelOverwriteTests(bot, guild.id, t);
+          }
+        })
       ]);
 
       // ALL TEST RELATED TO INVITES
