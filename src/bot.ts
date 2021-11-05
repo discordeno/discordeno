@@ -395,7 +395,10 @@ export function createGatewayManager(
     $os: options.$os ?? "linux",
     $browser: options.$browser ?? "Discordeno",
     $device: options.$device ?? "Discordeno",
-    intents: (Array.isArray(options.intents) ? options.intents.reduce((bits, next) => (bits |= DiscordGatewayIntents[next]), 0) : options.intents) ?? 0,
+    intents:
+      (Array.isArray(options.intents)
+        ? options.intents.reduce((bits, next) => (bits |= DiscordGatewayIntents[next]), 0)
+        : options.intents) ?? 0,
     shard: options.shard ?? [0, options.shardsRecommended ?? 1],
     urlWSS: options.urlWSS ?? "wss://gateway.discord.gg/?v=9&encoding=json",
     shardsRecommended: options.shardsRecommended ?? 1,
