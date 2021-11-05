@@ -5,9 +5,5 @@ import type { Bot } from "../../bot.ts";
 export async function getIntegrations(bot: Bot, guildId: bigint) {
   await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-  return await bot.rest.runMethod<Integration>(
-    bot.rest,
-    "get",
-    bot.constants.endpoints.GUILD_INTEGRATIONS(guildId)
-  );
+  return await bot.rest.runMethod<Integration>(bot.rest, "get", bot.constants.endpoints.GUILD_INTEGRATIONS(guildId));
 }
