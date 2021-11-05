@@ -214,7 +214,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
   const version = options.version || "9";
 
   if (options.customUrl) {
-    baseEndpoints.BASE_URL = `${options.customUrl}/v${version}`
+    baseEndpoints.BASE_URL = `${options.customUrl}/v${version}`;
   }
 
   return {
