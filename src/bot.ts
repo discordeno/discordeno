@@ -277,6 +277,8 @@ export async function startBot(bot: Bot) {
     sessionStartLimitRemaining: bot.botGatewayData.sessionStartLimit.remaining,
     sessionStartLimitResetAfter: bot.botGatewayData.sessionStartLimit.resetAfter,
     maxConcurrency: bot.botGatewayData.sessionStartLimit.maxConcurrency,
+    lastShardId: bot.botGatewayData.shards,
+    maxShards: bot.botGatewayData.shards,
     debug: bot.events.debug,
     handleDiscordPayload:
       // bot.handleDiscordPayload ||
@@ -389,7 +391,7 @@ export function createGatewayManager(
     shardsPerCluster: options.shardsPerCluster ?? 25,
     maxClusters: options.maxClusters ?? 4,
     firstShardId: options.firstShardId ?? 0,
-    lastShardId: options.lastShardId ?? 1,
+    lastShardId: options.lastShardId ?? options.maxShards ?? options.shardsRecommended ?? 1,
     token: options.token ?? "",
     compress: options.compress ?? false,
     $os: options.$os ?? "linux",
