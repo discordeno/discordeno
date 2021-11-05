@@ -1,7 +1,7 @@
 import { memoryBenchmarks } from "../benchmarks/index.ts";
 import { TOKEN } from "../configs.ts";
 import {
-channelOverwriteHasPermission,
+  channelOverwriteHasPermission,
   createBot,
   createEventHandlers,
   DiscordChannelTypes,
@@ -557,19 +557,19 @@ Deno.test({
           name: "[channel] edit a channel permission overwrite",
           async fn() {
             await channelOverwriteHasPermissionTest(bot, guild.id, t);
-          }
+          },
         }),
         t.step({
           name: "[channel] clone a channel w/o a reason",
           async fn() {
             await cloneChannelTests(bot, guild.id, channel, {}, t);
-          }
+          },
         }),
         t.step({
           name: "[channel] clone a channel w/ a reason",
           async fn() {
-            await cloneChannelTests(bot, guild.id, channel, { reason: "Blame wolf"}, t);
-          }
+            await cloneChannelTests(bot, guild.id, channel, { reason: "Blame wolf" }, t);
+          },
         }),
         t.step({
           name: "[channel] delete a channel overwrite",
@@ -587,7 +587,7 @@ Deno.test({
           name: "[channel] edit a channel w/ a reason",
           async fn() {
             await editChannelTests(bot, guild.id, { reason: "Blame wolf"}, t);
-          }
+          },
         }),
       ]);
 
