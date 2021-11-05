@@ -193,6 +193,7 @@ export function createEventHandlers(events: Partial<EventHandlers>): EventHandle
 
 export interface CreateRestManagerOptions {
   token: string;
+  customUrl?: string;
   maxRetryCount?: number;
   version?: number;
   secretKey?: string;
@@ -210,10 +211,16 @@ export interface CreateRestManagerOptions {
 }
 
 export function createRestManager(options: CreateRestManagerOptions) {
+  const version = options.version || "9";
+
+  if (options.customUrl) {
+    baseEndpoints.BASE_URL = `${options.customUrl}/v${version}`
+  }
+
   return {
+    version,
     token: `${options.token.startsWith("Bot ") ? "" : "Bot "}${options.token}`,
     maxRetryCount: options.maxRetryCount || 10,
-    version: options.version || "9",
     secretKey: options.secretKey || "discordeno_best_lib_ever",
     pathQueues: new Map<
       string,

@@ -61,6 +61,7 @@ import { categoryChildrenTest } from "./helpers/channels/categoryChannels.ts";
 import { channelOverwriteHasPermissionTest } from "./helpers/channels/channelOverwriteHasPermission.ts";
 import { cloneChannelTests } from "./helpers/channels/cloneChannel.ts";
 import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOverwrite.ts";
+import { editChannelTests } from "./helpers/channels/editChannel.ts";
 
 // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
 const sanitizeMode = {
@@ -565,7 +566,7 @@ Deno.test({
           },
         }),
         t.step({
-          name: "[channel] clone a channel w a reason",
+          name: "[channel] clone a channel w/ a reason",
           async fn() {
             await cloneChannelTests(bot, guild.id, channel, { reason: "Blame wolf" }, t);
           },
@@ -574,6 +575,18 @@ Deno.test({
           name: "[channel] delete a channel overwrite",
           async fn() {
             await deleteChannelOverwriteTests(bot, guild.id, t);
+          }
+        }),
+        t.step({
+          name: "[channel] edit a channel w/o a reason",
+          async fn() {
+            await editChannelTests(bot, guild.id, {}, t);
+          }
+        }),
+        t.step({
+          name: "[channel] edit a channel w/ a reason",
+          async fn() {
+            await editChannelTests(bot, guild.id, { reason: "Blame wolf"}, t);
           },
         }),
       ]);
