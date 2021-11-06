@@ -222,6 +222,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
     token: `${options.token.startsWith("Bot ") ? "" : "Bot "}${options.token}`,
     maxRetryCount: options.maxRetryCount || 10,
     secretKey: options.secretKey || "discordeno_best_lib_ever",
+    customUrl: options.customUrl || "",
     pathQueues: new Map<
       string,
       {
