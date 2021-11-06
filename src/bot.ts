@@ -128,7 +128,7 @@ export function createBot<C extends CacheOptions = CacheOptions>(
     id: options.botId,
     applicationId: options.applicationId || options.botId,
     token: `Bot ${options.token}`,
-    events: options.events,
+    events: createEventHandlers(options.events),
     intents: options.intents.reduce((bits, next) => (bits |= DiscordGatewayIntents[next]), 0),
     botGatewayData: options.botGatewayData,
     isReady: false,
@@ -446,7 +446,7 @@ export interface CreateBotOptions<C extends CacheOptions = CacheOptions> {
   token: string;
   botId: bigint;
   applicationId?: bigint;
-  events: EventHandlers;
+  events: Partial<EventHandlers>;
   intents: (keyof typeof DiscordGatewayIntents)[];
   botGatewayData?: GetGatewayBot;
   rest?: Omit<CreateRestManagerOptions, "token">;
