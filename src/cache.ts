@@ -108,7 +108,7 @@ export interface AsyncCache {
 }
 
 function createTable<T>(_table: TableNames): CacheHandler<T> {
-  const table = new Collection<BigInt, T>();
+  const table = new Collection<bigint, T>();
   return {
     clear: () => table.clear(),
     delete: (key) => table.delete(key),
@@ -125,27 +125,27 @@ export interface CacheHandler<T> {
   /** Completely empty this table. */
   clear(): void;
   /** Delete the data related to this key from table. */
-  delete(key: BigInt): boolean;
+  delete(key: bigint): boolean;
   /** Check if there is data assigned to this key. */
-  has(key: BigInt): boolean;
+  has(key: bigint): boolean;
   /** Check how many items are stored in this table. */
   size(): number;
   /** Store new data to this table. */
-  set(key: BigInt, data: T): boolean;
+  set(key: bigint, data: T): boolean;
   /** Get a stored item from the table. */
-  get(key: BigInt): T | undefined;
+  get(key: bigint): T | undefined;
   // TODO: maybe its possible to stringify the function and send it to the custom cache handler :thinking:
   /**
    * Loop over each entry and execute callback function.
    * @important This function NOT optimised and will force load everything when using custom cache.
    */
-  forEach(callback: (value: T, key: BigInt) => unknown): void;
+  forEach(callback: (value: T, key: bigint) => unknown): void;
   // TODO: maybe its possible to stringify the function and send it to the custom cache handler :thinking:
   /**
    * Loop over each entry and execute callback function.
    * @important This function NOT optimised and will force load everything when using custom cache.
    */
-  filter(callback: (value: T, key: BigInt) => boolean): Collection<BigInt, T>;
+  filter(callback: (value: T, key: bigint) => boolean): Collection<bigint, T>;
 }
 
 export type AsyncCacheHandler<T> = {
