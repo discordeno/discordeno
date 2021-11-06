@@ -128,7 +128,7 @@ export function createBot<C extends CacheOptions = CacheOptions>(
     id: options.botId,
     applicationId: options.applicationId || options.botId,
     token: `Bot ${options.token}`,
-    events: options.events,
+    events: createEventHandlers(options.events),
     intents: options.intents.reduce((bits, next) => (bits |= DiscordGatewayIntents[next]), 0),
     botGatewayData: options.botGatewayData,
     isReady: false,
@@ -214,7 +214,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
   const version = options.version || "9";
 
   if (options.customUrl) {
-    baseEndpoints.BASE_URL = `${options.customUrl}/v${version}`
+    baseEndpoints.BASE_URL = `${options.customUrl}/v${version}`;
   }
 
   return {
@@ -397,7 +397,10 @@ export function createGatewayManager(
     $os: options.$os ?? "linux",
     $browser: options.$browser ?? "Discordeno",
     $device: options.$device ?? "Discordeno",
-    intents: (Array.isArray(options.intents) ? options.intents.reduce((bits, next) => (bits |= DiscordGatewayIntents[next]), 0) : options.intents) ?? 0,
+    intents:
+      (Array.isArray(options.intents)
+        ? options.intents.reduce((bits, next) => (bits |= DiscordGatewayIntents[next]), 0)
+        : options.intents) ?? 0,
     shard: options.shard ?? [0, options.shardsRecommended ?? 1],
     urlWSS: options.urlWSS ?? "wss://gateway.discord.gg/?v=9&encoding=json",
     shardsRecommended: options.shardsRecommended ?? 1,
@@ -442,7 +445,7 @@ export interface CreateBotOptions<C extends CacheOptions = CacheOptions> {
   token: string;
   botId: bigint;
   applicationId?: bigint;
-  events: EventHandlers;
+  events: Partial<EventHandlers>;
   intents: (keyof typeof DiscordGatewayIntents)[];
   botGatewayData?: GetGatewayBot;
   rest?: Omit<CreateRestManagerOptions, "token">;
