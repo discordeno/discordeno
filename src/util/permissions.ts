@@ -1,5 +1,5 @@
 import type { Bot } from "../bot.ts";
-import type { DiscordenoChannel } from "../transformers/channel.ts";
+import { DiscordenoChannel, separate } from "../transformers/channel.ts";
 import type { DiscordenoGuild } from "../transformers/guild.ts";
 import type { DiscordenoMember } from "../transformers/member.ts";
 import { DiscordenoRole } from "../transformers/role.ts";
@@ -81,11 +81,15 @@ export async function calculateChannelOverwrites(
   let permissions = await bot.utils.calculateBasePermissions(bot, channel.guildId, member);
 
   // First calculate @everyone overwrites since these have the lowest priority
-  const overwriteEveryone = channel.permissionOverwrites?.find((overwrite) => overwrite.id === channel.guildId);
+  const overwriteEveryone = channel.permissionOverwrites?.find((overwrite) => {
+    const [_, id] = separate(overwrite);
+    return id === channel.guildId;
+  });
   if (overwriteEveryone) {
+    const [type, id, allow, deny] = separate(overwriteEveryone);
     // First remove denied permissions since denied < allowed
-    permissions &= ~overwriteEveryone.deny;
-    permissions |= overwriteEveryone.allow;
+    permissions &= ~deny;
+    permissions |= allow;
   }
 
   const overwrites = channel.permissionOverwrites;
@@ -96,20 +100,27 @@ export async function calculateChannelOverwrites(
   const memberRoles = member.roles || [];
   // Second calculate members role overwrites since these have middle priority
   for (const overwrite of overwrites || []) {
-    if (!memberRoles.includes(overwrite.id)) continue;
+    const [type, id, allowBits, denyBits] = separate(overwrite);
 
-    deny |= overwrite.deny;
-    allow |= overwrite.allow;
+    if (!memberRoles.includes(id)) continue;
+
+    deny |= denyBits;
+    allow |= allowBits;
   }
   // After role overwrite calculate save allowed permissions first we remove denied permissions since "denied < allowed"
   permissions &= ~deny;
   permissions |= allow;
 
   // Third calculate member specific overwrites since these have the highest priority
-  const overwriteMember = overwrites?.find((overwrite) => overwrite.id === member.id);
+  const overwriteMember = overwrites?.find((overwrite) => {
+    const [_, id] = separate(overwrite);
+    return id === member.id;
+  });
   if (overwriteMember) {
-    permissions &= ~overwriteMember.deny;
-    permissions |= overwriteMember.allow;
+    const [type, id, allowBits, denyBits] = separate(overwriteMember);
+
+    permissions &= ~denyBits;
+    permissions |= allowBits;
   }
 
   return permissions;

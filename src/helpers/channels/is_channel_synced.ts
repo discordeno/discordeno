@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { separate } from "../../transformers/channel.ts";
 
 /** Checks whether a channel is synchronized with its parent/category channel or not. */
 export async function isChannelSynced(bot: Bot, channelId: bigint) {
@@ -9,8 +10,15 @@ export async function isChannelSynced(bot: Bot, channelId: bigint) {
   if (!parentChannel) return false;
 
   return channel.permissionOverwrites?.every((overwrite) => {
-    const permission = parentChannel.permissionOverwrites?.find((ow) => ow.id === overwrite.id);
+    const [type, id, allow, deny] = separate(overwrite);
+
+    const permission = parentChannel.permissionOverwrites?.find((ow) => {
+      const [_, owID] = separate(ow);
+      return owID === id;
+    });
+
     if (!permission) return false;
-    return !(overwrite.allow !== permission.allow || overwrite.deny !== permission.deny);
+    const [parentType, parentId, parentAllow, parentDeny] = separate(permission);
+    return !(allow !== parentAllow || deny !== parentDeny);
   });
 }
