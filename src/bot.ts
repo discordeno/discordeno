@@ -108,6 +108,8 @@ import { transformEmbed } from "./transformers/embed.ts";
 import { transformComponent } from "./transformers/component.ts";
 import { AsyncCache, AsyncCacheHandler, Cache, CacheHandler, createCache, TableNames } from "./cache.ts";
 import { transformThread } from "./transformers/thread.ts";
+import { transformWebhook } from "./transformers/webhook.ts";
+import { transformAuditlogEntry } from "./transformers/auditlogEntry.ts";
 
 type CacheOptions =
   | {
@@ -672,6 +674,7 @@ export function createBaseHelpers(options: Partial<Helpers>) {
       options.batchEditSlashCommandPermissions || helpers.batchEditSlashCommandPermissions,
     categoryChildren: options.categoryChildren || helpers.categoryChildren,
     channelOverwriteHasPermission: options.channelOverwriteHasPermission || helpers.channelOverwriteHasPermission,
+    cloneChannel: options.cloneChannel || helpers.cloneChannel,
     connectToVoiceChannel: options.connectToVoiceChannel || helpers.connectToVoiceChannel,
     createChannel: options.createChannel || helpers.createChannel,
     createEmoji: options.createEmoji || helpers.createEmoji,
@@ -843,6 +846,8 @@ export interface Transformers {
   embed: typeof transformEmbed;
   component: typeof transformComponent;
   thread: typeof transformThread;
+  webhook: typeof transformWebhook;
+  auditlogEntry: typeof transformAuditlogEntry;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -867,6 +872,8 @@ export function createTransformers(options: Partial<Transformers>) {
     thread: options.thread || transformThread,
     voiceState: options.voiceState || transformVoiceState,
     snowflake: options.snowflake || snowflakeToBigint,
+    webhook: options.webhook || transformWebhook,
+    auditlogEntry: options.auditlogEntry || transformAuditlogEntry,
   };
 }
 

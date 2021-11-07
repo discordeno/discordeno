@@ -34,7 +34,9 @@ export async function categoryChildrenTest(bot: Bot, guildId: bigint, t: Deno.Te
   }
 
   const ids = await bot.helpers.categoryChildren(category.id);
-  if (ids.size !== channelsToCreate.length || !channels.every((c) => ids.has(c.id))) {
+  if (ids.size !== channels.length || !channels.every((c) => ids.has(c.id))) {
+    console.log('cccc 1', ids.size, channels.length);
+    console.log('cccc 2', channels.every((c) => ids.has(c.id)), ids);
     throw new Error("The category channel ids did not match with the category channels.");
   }
 }

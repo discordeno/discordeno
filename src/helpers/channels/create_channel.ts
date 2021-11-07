@@ -21,10 +21,10 @@ export async function createChannel(bot: Bot, guildId: bigint, options?: CreateG
           name: options.name,
           topic: options.topic,
           bitrate: options.bitrate,
-          userLimit: options.userLimit,
-          rateLimitPerUser: options.rateLimitPerUser,
+          user_limit: options.userLimit,
+          rate_limit_per_user: options.rateLimitPerUser,
           position: options.position,
-          parentId: options.parentId?.toString(),
+          parent_id: options.parentId?.toString(),
           nsfw: options.nsfw,
           permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
             id: perm.id.toString(),

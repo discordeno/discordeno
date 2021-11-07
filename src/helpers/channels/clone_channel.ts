@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { separate } from "../../transformers/channel.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import type { CreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
 
@@ -16,13 +17,19 @@ export async function cloneChannel(bot: Bot, channelId: bigint, reason?: string)
     ...channelToClone,
     name: channelToClone.name!,
     topic: channelToClone.topic || undefined,
-    permissionOverwrites: channelToClone.permissionOverwrites.map((overwrite) => ({
-      id: overwrite.id,
-      type: overwrite.type,
-      allow: bot.utils.calculatePermissions(overwrite.allow),
-      deny: bot.utils.calculatePermissions(overwrite.deny),
-    })),
+    permissionOverwrites: channelToClone.permissionOverwrites.map((overwrite) => {
+      const [type, id, allow, deny] = separate(overwrite);
+
+      return {
+        id,
+        type,
+        allow: bot.utils.calculatePermissions(BigInt(allow)),
+        deny: bot.utils.calculatePermissions(BigInt(deny)),
+      };
+    }),
   };
+
+  
 
   //Create the channel (also handles permissions)
   return await bot.helpers.createChannel(channelToClone.guildId!, createChannelOptions, reason);

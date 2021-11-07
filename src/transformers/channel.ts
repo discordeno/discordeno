@@ -6,6 +6,34 @@ import { DiscordChannelTypes } from "../types/channels/channel_types.ts";
 import type { DiscordenoVoiceState } from "./voice_state.ts";
 import { Collection } from "../util/collection.ts";
 
+// function merge(allow: string, deny: string, id: string, type: number) {
+//   return BigInt(`0x${type}g${BigInt(id)}g${BigInt(allow).toString(16)}g${BigInt(deny).toString(16)}`);
+// }
+
+// export function separate(thing: bigint) {
+//   return thing
+//     .toString(16)
+//     .split("g")
+//     .map((x, index) => index ? BigInt(`0x${x}`) : Number(x)) as [number, bigint, bigint, bigint];
+// }
+
+const Mask = (1n << 64n) - 1n;
+
+function merge(allow: string, deny: string, id: string, type: number) {
+  return pack64(allow, 0) | pack64(deny, 1) | pack64(id, 2) | pack64(type, 3);
+}
+function unpack64(v: bigint, shift: number) {
+  return (v >> BigInt(shift * 64)) & Mask;
+}
+function pack64(v: string | number, shift: number) {
+    const b = BigInt(v);
+    if(b < 0 || b > Mask) throw new Error("should have been a 64 bit unsigned integer: " + v);
+    return b << BigInt(shift * 64)
+}
+export function separate(v: bigint) {
+  return [Number(unpack64(v, 3)), unpack64(v, 2), unpack64(v, 0), unpack64(v, 1)] as [number, bigint, bigint, bigint];
+}
+
 export function transformChannel(
   bot: Bot,
   payload: { channel: SnakeCasedPropertiesDeep<Channel> } & { guildId?: bigint }
@@ -27,12 +55,7 @@ export function transformChannel(
     guildId: payload.guildId || (payload.channel.guild_id ? bot.transformers.snowflake(payload.channel.guild_id) : 0n),
     lastPinTimestamp: payload.channel.last_pin_timestamp,
     permissionOverwrites: payload.channel.permission_overwrites
-      ? payload.channel.permission_overwrites.map((o) => ({
-          type: o.type,
-          id: bot.transformers.snowflake(o.id),
-          allow: bot.transformers.snowflake(o.allow),
-          deny: bot.transformers.snowflake(o.deny),
-        }))
+      ? payload.channel.permission_overwrites.map((o) => merge(o.allow, o.deny, o.id, o.type))
       : [],
 
     // TRANSFORMED STUFF BELOW
@@ -65,11 +88,7 @@ export interface DiscordenoChannel
     | "threadMetadata"
     | "member"
   > {
-  permissionOverwrites: (Omit<DiscordOverwrite, "id" | "allow" | "deny"> & {
-    id: bigint;
-    allow: bigint;
-    deny: bigint;
-  })[];
+  permissionOverwrites: bigint[];
   /** The id of the channel */
   id: bigint;
   /** The id of the guild, 0n if it is a DM */
@@ -85,4 +104,3 @@ export interface DiscordenoChannel
   /** The voice states that are in this channel assuming it is a voice channel. */
   voiceStates?: Collection<bigint, DiscordenoVoiceState>;
 }
-

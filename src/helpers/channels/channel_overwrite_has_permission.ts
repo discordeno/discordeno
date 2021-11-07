@@ -1,3 +1,4 @@
+import { separate } from "../../transformers/channel.ts";
 import type { DiscordOverwrite } from "../../types/channels/overwrite.ts";
 import { DiscordBitwisePermissionFlags } from "../../types/permissions/bitwise_permission_flags.ts";
 import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
@@ -6,20 +7,23 @@ import type { PermissionStrings } from "../../types/permissions/permission_strin
 export function channelOverwriteHasPermission(
   guildId: bigint,
   id: bigint,
-  overwrites: (Omit<DiscordOverwrite, "id" | "allow" | "deny"> & {
-    id: bigint;
-    allow: bigint;
-    deny: bigint;
-  })[],
+  overwrites: bigint[],
   permissions: PermissionStrings[]
 ) {
-  const overwrite = overwrites.find((perm) => perm.id === id) || overwrites.find((perm) => perm.id === guildId);
+  const overwrite =
+    overwrites.find((perm) => {
+      const [_, bitID] = separate(perm);
+      return id === bitID;
+    }) ||
+    overwrites.find((perm) => {
+      const [_, bitID] = separate(perm);
+      return bitID === guildId;
+    });
 
   if (!overwrite) return false;
 
   return permissions.every((perm) => {
-    const allowBits = overwrite.allow;
-    const denyBits = overwrite.deny;
+    const [type, id, allowBits, denyBits] = separate(overwrite);
     if (BigInt(denyBits) & BigInt(DiscordBitwisePermissionFlags[perm])) {
       return false;
     }
