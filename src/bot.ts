@@ -849,7 +849,7 @@ export interface Transformers {
   thread: typeof transformThread;
   webhook: typeof transformWebhook;
   auditlogEntry: typeof transformAuditlogEntry;
-  applicationCommandPermission: typeof transformApplicationCommandPermission
+  applicationCommandPermission: typeof transformApplicationCommandPermission;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -876,7 +876,7 @@ export function createTransformers(options: Partial<Transformers>) {
     snowflake: options.snowflake || snowflakeToBigint,
     webhook: options.webhook || transformWebhook,
     auditlogEntry: options.auditlogEntry || transformAuditlogEntry,
-    applicationCommandPermission: transformApplicationCommandPermission
+    applicationCommandPermission: transformApplicationCommandPermission,
   };
 }
 
