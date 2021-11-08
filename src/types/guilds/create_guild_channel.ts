@@ -3,7 +3,7 @@ import { DiscordOverwrite, Overwrite } from "../channels/overwrite.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 
 export interface CreateGuildChannel {
-  /** Channel name (2-100 characters) */
+  /** Channel name (1-100 characters) */
   name: string;
   /** The type of channel */
   type?: DiscordChannelTypes;

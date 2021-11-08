@@ -1,6 +1,6 @@
 /** https://discord.com/developers/docs/resources/channel#modify-channel-json-params-thread */
 export interface ModifyThread {
-  /** 2-100 character thread name */
+  /** 1-100 character thread name */
   name?: string;
   /** Whether the thread is archived */
   archived?: boolean;
