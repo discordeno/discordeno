@@ -4,7 +4,7 @@ import { assertExists, assertEquals } from "../../deps.ts";
 export async function getVanityURLTests(bot: Bot, guildId: bigint, t: Deno.TestContext) {
   await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-  // TODO: VANITY IS BROKEN ATM
+  // TODO: VANITY IS BROKEN ATM FROM DISCORDS SIDE
   return;
   // const fetchedVanityURL = await bot.helpers.getVanityURL(guildId);
 
