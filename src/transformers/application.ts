@@ -66,5 +66,5 @@ export interface DiscordenoApplication {
   /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
   coverImage?: string;
   /** The application's public flags */
-  flags: DiscordApplicationFlags;
+  flags?: DiscordApplicationFlags;
 }

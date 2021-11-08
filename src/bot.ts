@@ -110,6 +110,7 @@ import { AsyncCache, AsyncCacheHandler, Cache, CacheHandler, createCache, TableN
 import { transformThread } from "./transformers/thread.ts";
 import { transformWebhook } from "./transformers/webhook.ts";
 import { transformAuditlogEntry } from "./transformers/auditlogEntry.ts";
+import { transformApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
 
 type CacheOptions =
   | {
@@ -848,6 +849,7 @@ export interface Transformers {
   thread: typeof transformThread;
   webhook: typeof transformWebhook;
   auditlogEntry: typeof transformAuditlogEntry;
+  applicationCommandPermission: typeof transformApplicationCommandPermission
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -874,6 +876,7 @@ export function createTransformers(options: Partial<Transformers>) {
     snowflake: options.snowflake || snowflakeToBigint,
     webhook: options.webhook || transformWebhook,
     auditlogEntry: options.auditlogEntry || transformAuditlogEntry,
+    applicationCommandPermission: transformApplicationCommandPermission
   };
 }
 

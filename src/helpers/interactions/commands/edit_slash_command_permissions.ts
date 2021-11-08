@@ -1,5 +1,6 @@
 import type { ApplicationCommandPermissions } from "../../../types/interactions/commands/application_command_permissions.ts";
 import type { Bot } from "../../../bot.ts";
+import { GuildApplicationCommandPermissions } from "../../../types/interactions/commands/guild_application_command_permissions.ts";
 
 /** Edits command permissions for a specific command for your application in a guild. */
 export async function editSlashCommandPermissions(
@@ -8,7 +9,7 @@ export async function editSlashCommandPermissions(
   commandId: bigint,
   options: ApplicationCommandPermissions[]
 ) {
-  return await bot.rest.runMethod(
+  const result = await bot.rest.runMethod<GuildApplicationCommandPermissions>(
     bot.rest,
     "put",
     bot.constants.endpoints.COMMANDS_PERMISSION(bot.applicationId, guildId, commandId),
@@ -16,4 +17,6 @@ export async function editSlashCommandPermissions(
       permissions: options,
     }
   );
+
+  return bot.transformers.applicationCommandPermission(bot, result);
 }
