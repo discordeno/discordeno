@@ -38,6 +38,9 @@ export enum DiscordGuildFeatures {
   MonetizationEnabled = "MONETIZATION_ENABLED",
   /** Guild has increased custom sticker slots */
   MoreStickers = "MORE_STICKERS",
+  ThreeDayThreadArchive = "THREE_DAY_THREAD_ARCHIVE",
+  SevenDayThreadArchive = "SEVEN_DAY_THREAD_ARCHIVE",
+  PrivateThreads = "PRIVATE_THREADS",
 }
 
 export type GuildFeatures = DiscordGuildFeatures;
