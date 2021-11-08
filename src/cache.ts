@@ -1,3 +1,4 @@
+import type { Bot } from "./bot.ts";
 import type { DiscordenoChannel } from "./transformers/channel.ts";
 import type { DiscordenoGuild } from "./transformers/guild.ts";
 import type { DiscordenoMember, DiscordenoUser } from "./transformers/member.ts";
@@ -5,6 +6,46 @@ import type { DiscordenoMessage } from "./transformers/message.ts";
 import { DiscordenoPresence } from "./transformers/presence.ts";
 import { GuildMember } from "./types/members/guild_member.ts";
 import { Collection } from "./util/collection.ts";
+
+function messageSweeper(bot: Bot, message: DiscordenoMessage) {
+  // DM messages aren't needed
+  if (!message.guildId) return true;
+
+  // Only delete messages older than 10 minutes
+  return Date.now() - message.timestamp > 600000;
+}
+
+function memberSweeper(bot: Bot, member: DiscordenoMember) {
+  // Don't sweep the bot else strange things will happen
+  if (member.id === bot.id) return false;
+
+  // Only sweep members who were not active the last 30 minutes
+  return Date.now() - member.cachedAt > 1800000;
+}
+
+function guildSweeper(bot: Bot<Cache>, guild: DiscordenoGuild) {
+  // Reset activity for next interval
+  if (bot.cache.activeGuildIds.delete(guild.id)) return false;
+
+  // This is inactive guild. Not a single thing has happened for atleast 30 minutes.
+  // Not a reaction, not a message, not any event!
+  bot.cache.dispatchedGuildIds.add(guild.id);
+
+  return true;
+}
+
+function channelSweeper(bot: Bot<Cache>, channel: DiscordenoChannel, key: bigint) {
+  // If this is in a guild and the guild was dispatched, then we can dispatch the channel
+  if (channel.guildId && bot.cache.dispatchedGuildIds.has(channel.guildId)) {
+    bot.cache.dispatchedChannelIds.add(channel.id);
+    return true;
+  }
+
+  // THE KEY DM CHANNELS ARE STORED BY IS THE USER ID. If the user is not cached, we dont need to cache their dm channel.
+  if (!channel.guildId && !bot.cache.members.has(key)) return true;
+
+  return false;
+}
 
 export function createCache(
   isAsync: true,
@@ -78,8 +119,9 @@ export interface Cache {
   presences: CacheHandler<DiscordenoPresence>;
   // threads: CacheHandler<DiscordenoThread>;
   unavailableGuilds: CacheHandler<CachedUnavailableGuild>;
-  dispatchedGuildIds: CacheHandler<bigint>;
-  dispatchedChannelIds: CacheHandler<bigint>;
+  dispatchedGuildIds: Set<bigint>;
+  dispatchedChannelIds: Set<bigint>;
+  activeGuildIds: Set<bigint>;
   executedSlashCommands: Set<string>;
   fetchAllMembersProcessingRequests: Map<string, Function>;
   execute: CacheExecutor;
@@ -109,6 +151,17 @@ export interface AsyncCache {
 
 function createTable<T>(_table: TableNames): CacheHandler<T> {
   const table = new Collection<bigint, T>();
+
+  // @ts-ignore TODO: fix type error itoh pwease
+  if (_table === "guilds") table.startSweeper({ filter: guildSweeper, interval: 3660000 });
+  // @ts-ignore TODO: fix type error itoh pwease
+  if (_table === "channels") table.startSweeper({ filter: channelSweeper, interval: 3660000 });
+  // @ts-ignore TODO: fix type error itoh pwease
+  if (_table === "messages") table.startSweeper({ filter: messageSweeper, interval: 300000 });
+  // @ts-ignore TODO: fix type error itoh pwease
+  if (_table === "members") table.startSweeper({ filter: memberSweeper, interval: 300000 });
+  if (_table === "presences") table.startSweeper({ filter: () => true, interval: 300000 });
+
   return {
     clear: () => table.clear(),
     delete: (key) => table.delete(key),
@@ -212,43 +265,3 @@ export type TableNames =
   | "threads"
   | "unavailableGuilds"
   | "members";
-
-// function messageSweeper(bot: Bot, message: DiscordenoMessage) {
-//   // DM messages aren't needed
-//   if (!message.guildId) return true;
-
-//   // Only delete messages older than 10 minutes
-//   return Date.now() - message.timestamp > 600000;
-// }
-
-// function memberSweeper(bot: Bot, member: DiscordenoMember) {
-//   // Don't sweep the bot else strange things will happen
-//   if (member.id === bot.id) return false;
-
-//   // Only sweep members who were not active the last 30 minutes
-//   return Date.now() - member.cachedAt > 1800000;
-// }
-
-// async function guildSweeper(bot: Bot, guild: DiscordenoGuild) {
-//   // Reset activity for next interval
-//   if (await bot.cache.activeGuildIds.delete(guild.id)) return false;
-
-//   // This is inactive guild. Not a single thing has happened for atleast 30 minutes.
-//   // Not a reaction, not a message, not any event!
-//   await bot.cache.dispatchedGuildIds.set(guild.id);
-
-//   return true;
-// }
-
-// async function channelSweeper(bot: Bot, channel: DiscordenoChannel, key: bigint) {
-//   // If this is in a guild and the guild was dispatched, then we can dispatch the channel
-//   if (channel.guildId && (await bot.cache.dispatchedGuildIds.has(channel.guildId))) {
-//     await bot.cache.dispatchedChannelIds.set(channel.id);
-//     return true;
-//   }
-
-//   // THE KEY DM CHANNELS ARE STORED BY IS THE USER ID. If the user is not cached, we dont need to cache their dm channel.
-//   if (!channel.guildId && !(await bot.cache.members.has(key))) return true;
-
-//   return false;
-// }
