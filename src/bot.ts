@@ -138,7 +138,7 @@ export function createBot<C extends CacheOptions = CacheOptions>(
     activeGuildIds: new Set<bigint>(),
     constants: createBotConstants(),
     handlers: createBotGatewayHandlers({}),
-  }
+  };
 
   // @ts-ignore itoh cache types plz
   bot.cache = createCache(bot as Bot, options.cache);
@@ -275,7 +275,7 @@ export function setupBot(bot: Bot) {
 export async function startBot(bot: Bot) {
   // SETUP BOT
   bot = setupBot(bot);
-  
+
   // START REST
   bot.rest = createRestManager({ token: bot.token, debug: bot.events.debug });
   if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot();
