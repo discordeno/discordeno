@@ -10,7 +10,7 @@ export async function cloneChannelTests(
   options: { reason?: string },
   t: Deno.TestContext
 ) {
-  const cloned = await bot.helpers.cloneChannel(channel.id, options.reason);
+  const cloned = await bot.helpers.cloneChannel(channel, options.reason);
 
   //Assertations
   assertExists(cloned);

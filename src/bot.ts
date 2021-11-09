@@ -508,7 +508,6 @@ export interface Helpers {
   ban: typeof helpers.ban;
   banMember: typeof helpers.banMember;
   batchEditSlashCommandPermissions: typeof helpers.batchEditSlashCommandPermissions;
-  categoryChildren: typeof helpers.categoryChildren;
   channelOverwriteHasPermission: typeof helpers.channelOverwriteHasPermission;
   cloneChannel: typeof helpers.cloneChannel;
   connectToVoiceChannel: typeof helpers.connectToVoiceChannel;
@@ -612,12 +611,10 @@ export interface Helpers {
   isButton: typeof helpers.isButton;
   isSelectMenu: typeof helpers.isSelectMenu;
   isSlashCommand: typeof helpers.isSlashCommand;
-  isChannelSynced: typeof helpers.isChannelSynced;
   kick: typeof helpers.kick;
   kickMember: typeof helpers.kickMember;
   leaveGuild: typeof helpers.leaveGuild;
   moveMember: typeof helpers.moveMember;
-  pin: typeof helpers.pin;
   pinMessage: typeof helpers.pinMessage;
   pruneMembers: typeof helpers.pruneMembers;
   publishMessage: typeof helpers.publishMessage;
@@ -626,7 +623,7 @@ export interface Helpers {
   removeReaction: typeof helpers.removeReaction;
   removeReactionEmoji: typeof helpers.removeReactionEmoji;
   removeRole: typeof helpers.removeRole;
-  sendDirectMessage: typeof helpers.sendDirectMessage;
+  getDmChannel: typeof helpers.getDmChannel;
   sendInteractionResponse: typeof helpers.sendInteractionResponse;
   sendMessage: typeof helpers.sendMessage;
   sendWebhook: typeof helpers.sendWebhook;
@@ -683,7 +680,6 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     banMember: options.banMember || helpers.banMember,
     batchEditSlashCommandPermissions:
       options.batchEditSlashCommandPermissions || helpers.batchEditSlashCommandPermissions,
-    categoryChildren: options.categoryChildren || helpers.categoryChildren,
     channelOverwriteHasPermission: options.channelOverwriteHasPermission || helpers.channelOverwriteHasPermission,
     cloneChannel: options.cloneChannel || helpers.cloneChannel,
     connectToVoiceChannel: options.connectToVoiceChannel || helpers.connectToVoiceChannel,
@@ -787,12 +783,10 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     isButton: options.isButton || helpers.isButton,
     isSelectMenu: options.isSelectMenu || helpers.isSelectMenu,
     isSlashCommand: options.isSlashCommand || helpers.isSlashCommand,
-    isChannelSynced: options.isChannelSynced || helpers.isChannelSynced,
     kick: options.kick || helpers.kick,
     kickMember: options.kickMember || helpers.kickMember,
     leaveGuild: options.leaveGuild || helpers.leaveGuild,
     moveMember: options.moveMember || helpers.moveMember,
-    pin: options.pin || helpers.pin,
     pinMessage: options.pinMessage || helpers.pinMessage,
     pruneMembers: options.pruneMembers || helpers.pruneMembers,
     publishMessage: options.publishMessage || helpers.publishMessage,
@@ -801,7 +795,7 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     removeReaction: options.removeReaction || helpers.removeReaction,
     removeReactionEmoji: options.removeReactionEmoji || helpers.removeReactionEmoji,
     removeRole: options.removeRole || helpers.removeRole,
-    sendDirectMessage: options.sendDirectMessage || helpers.sendDirectMessage,
+    getDmChannel: options.getDmChannel || helpers.getDmChannel,
     sendInteractionResponse: options.sendInteractionResponse || helpers.sendInteractionResponse,
     sendMessage: options.sendMessage || helpers.sendMessage,
     sendWebhook: options.sendWebhook || helpers.sendWebhook,

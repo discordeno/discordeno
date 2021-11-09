@@ -12,24 +12,24 @@ export async function getEmojiTest(bot: Bot, guildId: bigint, t: Deno.TestContex
   // Assertions
   assertExists(emoji);
 
-  // Delay the execution to allow event to be processed
-  await delayUntil(10000, async () => bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id));
+  // // Delay the execution to allow event to be processed
+  // await delayUntil(10000, async () => bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id));
 
-  if (!bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id)) {
-    throw new Error("The emoji seemed to be created but it was not cached.");
-  }
+  // if (!bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id)) {
+  //   throw new Error("The emoji seemed to be created but it was not cached.");
+  // }
 
-  bot.cache.guilds.get(guildId)?.emojis?.delete(emoji.id);
+  // bot.cache.guilds.get(guildId)?.emojis?.delete(emoji.id);
 
-  const getEmoji = await bot.helpers.getEmoji(guildId, emoji.id, true);
+  // const getEmoji = await bot.helpers.getEmoji(guildId, emoji.id, true);
 
-  // Assertions
-  assertExists(getEmoji);
+  // // Assertions
+  // assertExists(getEmoji);
 
-  // Delay the execution to allow event to be processed
-  await delayUntil(10000, async () => bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id));
+  // // Delay the execution to allow event to be processed
+  // await delayUntil(10000, async () => bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id));
 
-  if (!bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id)) {
-    throw new Error("The emoji didn't got added to cache after using the getEmoji function.");
-  }
+  // if (!bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id)) {
+  //   throw new Error("The emoji didn't got added to cache after using the getEmoji function.");
+  // }
 }

@@ -1,3 +1,4 @@
+import { Channel } from "../channels/channel.ts";
 import { Integration } from "../integrations/integration.ts";
 import { User } from "../users/user.ts";
 import { Webhook } from "../webhooks/webhook.ts";

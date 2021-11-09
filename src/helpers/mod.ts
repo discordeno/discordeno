@@ -9,7 +9,6 @@ import { getChannel } from "./channels/get_channel.ts";
 import { getChannels } from "./channels/get_channels.ts";
 import { getChannelWebhooks } from "./channels/get_channel_webhooks.ts";
 import { getPins } from "./channels/get_pins.ts";
-import { isChannelSynced } from "./channels/is_channel_synced.ts";
 import { startTyping } from "./channels/start_typing.ts";
 import { swapChannels } from "./channels/swap_channels.ts";
 import { updateBotVoiceState } from "./channels/update_voice_state.ts";
@@ -78,7 +77,7 @@ import { getMembers } from "./members/get_members.ts";
 import { kick, kickMember } from "./members/kick_member.ts";
 import { moveMember } from "./members/move_member.ts";
 import { pruneMembers } from "./members/prune_members.ts";
-import { sendDirectMessage } from "./members/send_direct_message.ts";
+import { getDmChannel } from "./members/send_direct_message.ts";
 import { unban, unbanMember } from "./members/unban_member.ts";
 import { addReaction } from "./messages/add_reaction.ts";
 import { addReactions } from "./messages/add_reactions.ts";
@@ -88,7 +87,7 @@ import { editMessage } from "./messages/edit_message.ts";
 import { getMessage } from "./messages/get_message.ts";
 import { getMessages } from "./messages/get_messages.ts";
 import { getReactions } from "./messages/get_reactions.ts";
-import { pin, pinMessage } from "./messages/pin_message.ts";
+import { pinMessage } from "./messages/pin_message.ts";
 import { publishMessage } from "./messages/publish_message.ts";
 import { removeAllReactions } from "./messages/remove_all_reactions.ts";
 import { removeReaction } from "./messages/remove_reaction.ts";
@@ -266,12 +265,10 @@ export {
   isButton,
   isSelectMenu,
   isSlashCommand,
-  isChannelSynced,
   kick,
   kickMember,
   leaveGuild,
   moveMember,
-  pin,
   pinMessage,
   pruneMembers,
   publishMessage,
@@ -280,7 +277,7 @@ export {
   removeReaction,
   removeReactionEmoji,
   removeRole,
-  sendDirectMessage,
+  getDmChannel,
   sendInteractionResponse,
   sendMessage,
   sendWebhook,
