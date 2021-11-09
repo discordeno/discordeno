@@ -127,7 +127,7 @@ type CacheOptions =
 export function createBot<C extends CacheOptions = CacheOptions>(
   options: CreateBotOptions<C>
 ): Bot<C extends { isAsync: true } ? AsyncCache : Cache> {
-  return {
+  const bot = {
     id: options.botId,
     applicationId: options.applicationId || options.botId,
     token: `Bot ${options.token}`,
@@ -138,9 +138,12 @@ export function createBot<C extends CacheOptions = CacheOptions>(
     activeGuildIds: new Set<bigint>(),
     constants: createBotConstants(),
     handlers: createBotGatewayHandlers({}),
-    // @ts-ignore b quiet
-    cache: createCache(options?.cache?.isAsync ?? false, options?.cache?.customTableCreator),
-  } as unknown as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
+  };
+
+  // @ts-ignore itoh cache types plz
+  bot.cache = createCache(bot as Bot, options.cache);
+
+  return bot as unknown as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
 }
 
 export function createEventHandlers(events: Partial<EventHandlers>): EventHandlers {
@@ -261,11 +264,17 @@ export function createRestManager(options: CreateRestManagerOptions) {
   };
 }
 
-export async function startBot(bot: Bot) {
-  // SETUP
+export function setupBot(bot: Bot) {
   bot.utils = createUtils({});
   bot.transformers = createTransformers(bot.transformers || {});
   bot.helpers = createHelpers(bot);
+
+  return bot;
+}
+
+export async function startBot(bot: Bot) {
+  // SETUP BOT
+  bot = setupBot(bot);
 
   // START REST
   bot.rest = createRestManager({ token: bot.token, debug: bot.events.debug });
@@ -643,8 +652,8 @@ export interface Helpers {
   leaveThread: typeof helpers.leaveThread;
   lockThread: typeof helpers.lockThread;
   removeThreadMember: typeof helpers.removeThreadMember;
-  startPrivateThread: typeof helpers.startPrivateThread;
-  startThread: typeof helpers.startThread;
+  startThreadWithoutMessage: typeof helpers.startThreadWithoutMessage;
+  startThreadWithMessage: typeof helpers.startThreadWithMessage;
   unarchiveThread: typeof helpers.unarchiveThread;
   unlockThread: typeof helpers.unlockThread;
   suppressEmbeds: typeof helpers.suppressEmbeds;
@@ -818,8 +827,8 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     leaveThread: options.leaveThread || helpers.leaveThread,
     lockThread: options.lockThread || helpers.lockThread,
     removeThreadMember: options.removeThreadMember || helpers.removeThreadMember,
-    startPrivateThread: options.startPrivateThread || helpers.startPrivateThread,
-    startThread: options.startThread || helpers.startThread,
+    startThreadWithoutMessage: options.startThreadWithoutMessage || helpers.startThreadWithoutMessage,
+    startThreadWithMessage: options.startThreadWithMessage || helpers.startThreadWithMessage,
     unarchiveThread: options.unarchiveThread || helpers.unarchiveThread,
     unlockThread: options.unlockThread || helpers.unlockThread,
     suppressEmbeds: options.suppressEmbeds || helpers.suppressEmbeds,
