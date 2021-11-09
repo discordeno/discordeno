@@ -13,17 +13,17 @@ export async function ifItFailsBlameWolf(bot: Bot, guildId: bigint, reason?: str
   assertExists(emoji);
 
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, async () => (await bot.cache.guilds.get(guildId))?.emojis?.has(emoji.id));
+  await delayUntil(10000, async () => bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id));
 
-  if (!(await bot.cache.guilds.get(guildId))?.emojis?.has(emoji.id)) {
+  if (!bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id)) {
     throw new Error("The emoji seemed to be created but it was not cached.");
   }
 
   await bot.helpers.deleteEmoji(guildId, emoji.id, reason);
 
-  await delayUntil(10000, async () => !(await bot.cache.guilds.get(guildId))?.emojis?.has(emoji.id));
+  await delayUntil(10000, async () => !bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id));
 
-  if ((await bot.cache.guilds.get(guildId))?.emojis?.has(emoji.id)) {
+  if (bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id)) {
     throw new Error("The emoji seemed to be deleted but it's still cached.");
   }
 }

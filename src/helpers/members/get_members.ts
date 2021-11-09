@@ -13,20 +13,12 @@ import type { DiscordenoMember } from "../../transformers/member.ts";
  * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
  */
-export async function getMembers(bot: Bot, guildId: bigint, options?: ListGuildMembers & { addToCache?: boolean }) {
-  // Check if intents is not 0 as proxy ws won't set intents in other instances
-  if (bot.intents && !(bot.intents & DiscordGatewayIntents.GuildMembers)) {
-    throw new Error(bot.constants.Errors.MISSING_INTENT_GUILD_MEMBERS);
-  }
-
-  const guild = await bot.cache.guilds.get(guildId);
-  if (!guild) throw new Error(bot.constants.Errors.GUILD_NOT_FOUND);
-
+export async function getMembers(bot: Bot, guildId: bigint, options: ListGuildMembers & { memberCount: number }) {
   const members = new Collection<bigint, DiscordenoMember>();
 
-  let membersLeft = options?.limit ?? guild.memberCount;
+  let membersLeft = options?.limit ?? options.memberCount;
   let loops = 1;
-  while ((options?.limit ?? guild.memberCount) > members.size && membersLeft > 0) {
+  while ((options?.limit ?? options.memberCount) > members.size && membersLeft > 0) {
     bot.events.debug("Running while loop in getMembers function.");
 
     if (options?.limit && options.limit > 1000) {
@@ -41,21 +33,8 @@ export async function getMembers(bot: Bot, guildId: bigint, options?: ListGuildM
       }`
     );
 
-    const discordenoMembers = await Promise.all(
-      result.map(async (member) => {
-        const discordenoMember = bot.transformers.member(
-          bot,
-          member,
-          guildId,
-          bot.transformers.snowflake(member.user.id)
-        );
-
-        if (options?.addToCache !== false) {
-          await bot.cache.members.set(discordenoMember.id, discordenoMember);
-        }
-
-        return discordenoMember;
-      })
+    const discordenoMembers = result.map((member) =>
+      bot.transformers.member(bot, member, guildId, bot.transformers.snowflake(member.user.id))
     );
 
     if (!discordenoMembers.length) break;
@@ -68,6 +47,7 @@ export async function getMembers(bot: Bot, guildId: bigint, options?: ListGuildM
     options = {
       limit: options?.limit,
       after: discordenoMembers[discordenoMembers.length - 1].id.toString(),
+      memberCount: options.memberCount,
     };
 
     membersLeft -= 1000;

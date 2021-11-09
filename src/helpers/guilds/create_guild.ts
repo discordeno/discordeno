@@ -18,11 +18,5 @@ export async function createGuild(bot: Bot, options: CreateGuild) {
     verification_level: options.verificationLevel,
   });
 
-  const guild = bot.transformers.guild(bot, { guild: result, shardId: 0 });
-  // MANUALLY CACHE THE GUILD
-  await bot.cache.guilds.set(guild.id, guild);
-  // MANUALLY CACHE THE BOT
-  await bot.helpers.getMember(guild.id, bot.id);
-
-  return guild;
+  return bot.transformers.guild(bot, { guild: result, shardId: 0 });
 }

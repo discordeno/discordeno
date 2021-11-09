@@ -8,16 +8,6 @@ export async function updateStageInstance(
   channelId: bigint,
   data: Partial<Pick<StageInstance, "topic" | "privacyLevel">> = {}
 ) {
-  const channel = await bot.cache.channels.get(channelId);
-
-  if (channel) {
-    if (channel.type !== ChannelTypes.GuildStageVoice) {
-      throw new Error(bot.constants.Errors.CHANNEL_NOT_STAGE_VOICE);
-    }
-
-    await bot.utils.requireBotChannelPermissions(bot, channel, ["MOVE_MEMBERS", "MUTE_MEMBERS", "MANAGE_CHANNELS"]);
-  }
-
   if (
     data?.topic &&
     !bot.utils.validateLength(data.topic, {

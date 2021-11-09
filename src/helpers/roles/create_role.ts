@@ -1,7 +1,6 @@
 import type { CreateGuildRole } from "../../types/guilds/create_guild_role.ts";
 import type { Role } from "../../types/permissions/role.ts";
 import type { Bot } from "../../bot.ts";
-import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
 export async function createRole(bot: Bot, guildId: bigint, options: CreateGuildRole, reason?: string) {
@@ -24,13 +23,6 @@ export async function createRole(bot: Bot, guildId: bigint, options: CreateGuild
     role: result,
     guildId,
   });
-
-  const guild = await bot.cache.guilds.get(guildId);
-  if (guild) {
-    guild.roles.set(role.id, role);
-
-    await bot.cache.guilds.set(guildId, guild);
-  }
 
   return role;
 }

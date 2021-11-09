@@ -212,7 +212,6 @@ export type AsyncCacheHandler<T> = {
 export type CacheExecutor = (
   type:
     | "GET_ALL_MEMBERS"
-    | "FILTER_CATEGORY_CHILDREN_CHANNELS"
     | "DELETE_MESSAGES_FROM_CHANNEL"
     | "DELETE_ROLE_FROM_MEMBER"
     | "BULK_DELETE_MESSAGES"
@@ -228,8 +227,6 @@ export type CacheExecutor = (
 export function createExecute(cache: Cache): CacheExecutor {
   return function (type, options) {
     switch (type) {
-      case "FILTER_CATEGORY_CHILDREN_CHANNELS":
-        return cache.channels.filter((c) => c.parentId === options.parentChannelId);
       case "DELETE_MESSAGES_FROM_CHANNEL":
         cache.messages.forEach((message) => {
           if (message.channelId === options.channelId) {

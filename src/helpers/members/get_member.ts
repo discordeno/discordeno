@@ -5,18 +5,12 @@ import type { Bot } from "../../bot.ts";
  *
  * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
  */
-export async function getMember(bot: Bot, guildId: bigint, id: bigint, options?: { force?: boolean }) {
-  const guild = await bot.cache.guilds.get(guildId);
-  if (!guild && !options?.force) return;
-
+export async function getMember(bot: Bot, guildId: bigint, id: bigint) {
   const data = await bot.rest.runMethod<GuildMemberWithUser>(
     bot.rest,
     "get",
     bot.constants.endpoints.GUILD_MEMBER(guildId, id)
   );
 
-  const discordenoMember = bot.transformers.member(bot, data, guildId, id);
-  await bot.cache.members.set(discordenoMember.id, discordenoMember);
-
-  return discordenoMember;
+  return bot.transformers.member(bot, data, guildId, id);
 }

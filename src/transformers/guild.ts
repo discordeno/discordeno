@@ -12,12 +12,6 @@ export function transformGuild(
   payload: { guild: SnakeCasedPropertiesDeep<Guild> } & { shardId: number }
 ): DiscordenoGuild {
   const guildId = bot.transformers.snowflake(payload.guild.id);
-  const channels = payload.guild.channels || [];
-
-  channels.forEach(async (channel) => {
-    const chnl = bot.transformers.channel(bot, { channel, guildId });
-    await bot.cache.channels.set(chnl.id, chnl);
-  });
 
   return {
     afkTimeout: payload.guild.afk_timeout,
@@ -78,25 +72,11 @@ export function transformGuild(
     icon: payload.guild.icon ? iconHashToBigInt(payload.guild.icon) : undefined,
     banner: payload.guild.banner ? iconHashToBigInt(payload.guild.banner) : undefined,
     splash: payload.guild.splash ? iconHashToBigInt(payload.guild.splash) : undefined,
-
-    // TRANSFORMED STUFF BELOW
-    // TODO: Handle channels/threads in a better way?
-    // channels: (payload.guild.channels || []).map((channel) =>
-    //   bot.transformers.channel(bot, { channel, guildId: bot.transformers.snowflake(payload.guild.id) })
-    // ),
-    // threads: (payload.guild.threads || []).map((channel) => channelToThread(channel)),
-
     roles: new Collection(
       (payload.guild.roles || [])
         .map((role) => bot.transformers.role(bot, { role, guildId: bot.transformers.snowflake(payload.guild.id) }))
         .map((role) => [role.id, role])
     ),
-    // presences: new Collection(
-    //   (payload.guild.presences || []).map((p) => [
-    //     bot.transformers.snowflake(p.user!.id),
-    //     bot.transformers.presence(bot, p),
-    //   ])
-    // ),
     emojis: new Collection((payload.guild.emojis || []).map((emoji) => [bot.transformers.snowflake(emoji.id!), emoji])),
     voiceStates: new Collection(
       (payload.guild.voice_states || [])

@@ -1,23 +1,22 @@
 import type { Bot } from "../../bot.ts";
-import { separate } from "../../transformers/channel.ts";
-import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import { DiscordenoChannel, separate } from "../../transformers/channel.ts";
 import type { CreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
 
 /** Create a copy of a channel */
-export async function cloneChannel(bot: Bot, channelId: bigint, reason?: string) {
-  const channelToClone = await bot.cache.channels.get(channelId);
-  if (!channelToClone) throw new Error(bot.constants.Errors.CHANNEL_NOT_FOUND);
-
-  //Check for DM channel
-  if (channelToClone.type === DiscordChannelTypes.DM || channelToClone.type === DiscordChannelTypes.GroupDm) {
-    throw new Error(bot.constants.Errors.CHANNEL_NOT_IN_GUILD);
-  }
+export async function cloneChannel(bot: Bot, channel: DiscordenoChannel, reason?: string) {
+  if (!channel.guildId) throw new Error(`Cannot clone a channel outside a guild`);
 
   const createChannelOptions: CreateGuildChannel = {
-    ...channelToClone,
-    name: channelToClone.name!,
-    topic: channelToClone.topic || undefined,
-    permissionOverwrites: channelToClone.permissionOverwrites.map((overwrite) => {
+    type: channel.type,
+    bitrate: channel.bitrate,
+    userLimit: channel.userLimit,
+    rateLimitPerUser: channel.rateLimitPerUser,
+    position: channel.position,
+    parentId: channel.parentId,
+    nsfw: channel.nsfw,
+    name: channel.name!,
+    topic: channel.topic || undefined,
+    permissionOverwrites: channel.permissionOverwrites.map((overwrite) => {
       const [type, id, allow, deny] = separate(overwrite);
 
       return {
@@ -30,5 +29,5 @@ export async function cloneChannel(bot: Bot, channelId: bigint, reason?: string)
   };
 
   //Create the channel (also handles permissions)
-  return await bot.helpers.createChannel(channelToClone.guildId!, createChannelOptions, reason);
+  return await bot.helpers.createChannel(channel.guildId!, createChannelOptions, reason);
 }

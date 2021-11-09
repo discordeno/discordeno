@@ -5,10 +5,6 @@ import type { Bot } from "../../bot.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(bot: Bot, guildId: bigint, options?: CreateGuildChannel, reason?: string) {
-  if (options?.permissionOverwrites) {
-    await bot.utils.requireOverwritePermissions(bot, guildId, options.permissionOverwrites);
-  }
-
   // BITRATES ARE IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
 
@@ -38,8 +34,5 @@ export async function createChannel(bot: Bot, guildId: bigint, options?: CreateG
       : {}
   );
 
-  const channel = bot.transformers.channel(bot, { channel: result, guildId });
-  await bot.cache.channels.set(channel.id, channel);
-
-  return channel;
+  return bot.transformers.channel(bot, { channel: result, guildId });
 }

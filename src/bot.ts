@@ -1074,8 +1074,22 @@ export interface EventHandlers {
   voiceServerUpdate: (bot: Bot, payload: { token: string; endpoint?: string; guildId: bigint }) => any;
   voiceStateUpdate: (
     bot: Bot,
-    voiceState: DiscordenoVoiceState,
-    payload: { guild?: DiscordenoGuild; member?: DiscordenoMember; user?: DiscordenoUser }
+    voiceState: {
+      guildId?: bigint;
+      channelId?: bigint;
+      userId: bigint;
+      member?: DiscordenoMember;
+      user?: DiscordenoUser;
+      sessionId: string;
+      deaf: boolean;
+      mute: boolean;
+      selfDeaf: boolean;
+      selfMute: boolean;
+      selfStream?: boolean;
+      selfVideo: boolean;
+      suppress: boolean;
+      requestToSpeakTimestamp?: number;
+    }
   ) => any;
   channelCreate: (bot: Bot, channel: DiscordenoChannel) => any;
   dispatchRequirements: (bot: Bot, data: GatewayPayload, shardId: number) => any;
@@ -1136,9 +1150,9 @@ export interface EventHandlers {
   guildDelete: (bot: Bot, id: bigint, shardId: number) => any;
   guildUpdate: (bot: Bot, guild: DiscordenoGuild) => any;
   raw: (bot: Bot, data: GatewayPayload, shardId: number) => any;
-  roleCreate: (bot: Bot, guild: DiscordenoGuild, role: DiscordenoRole) => any;
-  roleDelete: (bot: Bot, guild: DiscordenoGuild, role: DiscordenoRole) => any;
-  roleUpdate: (bot: Bot, guild: DiscordenoGuild, role: DiscordenoRole, oldRole?: DiscordenoRole) => any;
+  roleCreate: (bot: Bot, role: DiscordenoRole) => any;
+  roleDelete: (bot: Bot, payload: { guildId: bigint; roleId: bigint }) => any;
+  roleUpdate: (bot: Bot, role: DiscordenoRole) => any;
   webhooksUpdate: (bot: Bot, payload: { channelId: bigint; guildId: bigint }) => any;
   botUpdate: (bot: Bot, user: DiscordenoUser) => any;
   typingStart: (

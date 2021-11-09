@@ -9,22 +9,13 @@ export async function startThreadWithMessage(
   messageId: bigint,
   options: StartThreadWithMessage
 ) {
-  // const channel = await bot.cache.channels.get(channelId);
-  // if (channel) {
-  //   if (!channel.isGuildTextBasedChannel) {
-  //     throw new Error(bot.constants.Errors.INVALID_THREAD_PARENT_CHANNEL_TYPE);
-  //   }
-  //   await bot.utils.requireBotChannelPermissions(bot, channel, ["SEND_MESSAGES", "USE_PUBLIC_THREADS"]);
-  // }
-  // return channelToThread(
-  //   await bot.rest.runMethod<Channel>(
-  //     bot.rest,
-  //     "post",
-  //     bot.constants.endpoints.THREAD_START_PUBLIC(channelId, messageId),
-  //     {
-  //       name: options.name,
-  //       auto_archive_duration: options.autoArchiveDuration,
-  //     }
-  //   )
-  // );
+  return await bot.rest.runMethod<Channel>(
+    bot.rest,
+    "post",
+    bot.constants.endpoints.THREAD_START_PUBLIC(channelId, messageId),
+    {
+      name: options.name,
+      auto_archive_duration: options.autoArchiveDuration,
+    }
+  );
 }
