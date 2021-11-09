@@ -127,7 +127,7 @@ type CacheOptions =
 export function createBot<C extends CacheOptions = CacheOptions>(
   options: CreateBotOptions<C>
 ): Bot<C extends { isAsync: true } ? AsyncCache : Cache> {
-  return {
+  const bot = {
     id: options.botId,
     applicationId: options.applicationId || options.botId,
     token: `Bot ${options.token}`,
@@ -138,9 +138,12 @@ export function createBot<C extends CacheOptions = CacheOptions>(
     activeGuildIds: new Set<bigint>(),
     constants: createBotConstants(),
     handlers: createBotGatewayHandlers({}),
-    // @ts-ignore b quiet
-    cache: createCache(options?.cache?.isAsync ?? false, options?.cache?.customTableCreator),
-  } as unknown as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
+  }
+
+  // @ts-ignore itoh cache types plz
+  bot.cache = createCache(bot as Bot, options.cache);
+
+  return bot as unknown as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
 }
 
 export function createEventHandlers(events: Partial<EventHandlers>): EventHandlers {
@@ -261,12 +264,18 @@ export function createRestManager(options: CreateRestManagerOptions) {
   };
 }
 
-export async function startBot(bot: Bot) {
-  // SETUP
+export function setupBot(bot: Bot) {
   bot.utils = createUtils({});
   bot.transformers = createTransformers(bot.transformers || {});
   bot.helpers = createHelpers(bot);
 
+  return bot;
+}
+
+export async function startBot(bot: Bot) {
+  // SETUP BOT
+  bot = setupBot(bot);
+  
   // START REST
   bot.rest = createRestManager({ token: bot.token, debug: bot.events.debug });
   if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot();
