@@ -8,4 +8,6 @@ export interface ThreadMetadata {
   archiveTimestamp: string;
   /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
   locked?: boolean;
+  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
+  invitable?: boolean;
 }

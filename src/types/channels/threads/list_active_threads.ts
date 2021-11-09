@@ -7,6 +7,4 @@ export interface ListActiveThreads {
   threads: Channel[];
   /** A thread member object for each returned thread the current user has joined */
   members: ThreadMember[];
-  /** Whether there are potentially additional threads that could be returned on subsequent call */
-  hasMore: boolean;
 }

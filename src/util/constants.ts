@@ -60,7 +60,7 @@ export const endpoints = {
   THREAD_START_PUBLIC: (channelId: bigint, messageId: bigint) =>
     `${endpoints.CHANNEL_MESSAGE(channelId, messageId)}/threads`,
   THREAD_START_PRIVATE: (channelId: bigint) => `${CHANNEL_BASE(channelId)}/threads`,
-  THREAD_ACTIVE: (channelId: bigint) => `${CHANNEL_BASE(channelId)}/threads/active`,
+  THREAD_ACTIVE: (guildId: bigint) => `${GUILDS_BASE(guildId)}/threads/active`,
   THREAD_MEMBERS: (channelId: bigint) => `${CHANNEL_BASE(channelId)}/thread-members`,
   THREAD_ME: (channelId: bigint) => `${endpoints.THREAD_MEMBERS(channelId)}/@me`,
   THREAD_USER: (channelId: bigint, userId: bigint) => `${endpoints.THREAD_MEMBERS(channelId)}/${userId}`,

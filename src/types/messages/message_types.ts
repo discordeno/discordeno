@@ -18,9 +18,11 @@ export enum DiscordMessageTypes {
   GuildDiscoveryGracePeriodInitialWarning,
   GuildDiscoveryGracePeriodFinalWarning,
   ThreadCreated,
-  Reply = 19,
-  ApplicationCommand,
-  GuildInviteReminder = 22,
+  Reply,
+  ChatInputCommand,
+  ThreadStarterMessage,
+  GuildInviteReminder,
+  ContextMenuCommand,
 }
 
 export type MessageTypes = DiscordMessageTypes;

@@ -3,10 +3,8 @@ import type { ListActiveThreads } from "../../../types/channels/threads/list_act
 import { Collection } from "../../../util/collection.ts";
 // import { channelToThread } from "../../../util/transformers/channel_to_thread.ts";
 
-/** Returns all active threads in the channel, including public and private threads. Threads are ordered by their id, in descending order. Requires the VIEW_CHANNEL permission. */
-export async function getActiveThreads(bot: Bot, channelId: bigint) {
-  // await bot.utils.requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL"]);
-  // // TODO: pagination
+/** Returns all active threads in the guild, including public and private threads. Threads are ordered by their `id`, in descending order. */
+export async function getActiveThreads(bot: Bot, guildId: bigint) {  
   // const result = (await bot.rest.runMethod(
   //   bot.rest,
   //   "get",

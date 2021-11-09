@@ -29,4 +29,8 @@ export interface User {
   premiumType?: DiscordPremiumTypes;
   /** The public flags on a user's account */
   publicFlags?: DiscordUserFlags;
+  /** the user's banner, or null if unset */
+  banner?: string;
+  /** the user's banner color encoded as an integer representation of hexadecimal color code */
+  accent_color?: number;
 }
