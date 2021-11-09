@@ -6,8 +6,6 @@ import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 const processing = new Set<bigint>();
 
 export async function dispatchRequirements(bot: Bot, data: DiscordGatewayPayload, shardId: number) {
-  if (!bot.isReady) return;
-
   // DELETE MEANS WE DONT NEED TO FETCH. CREATE SHOULD HAVE DATA TO CACHE
   if (data.t && ["GUILD_CREATE", "GUILD_DELETE"].includes(data.t)) return;
 
