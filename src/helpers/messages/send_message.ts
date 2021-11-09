@@ -132,8 +132,8 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
       allowed_mentions: content.allowedMentions
         ? {
             parse: content.allowedMentions?.parse,
-            roles: content.allowedMentions?.roles,
-            users: content.allowedMentions?.users,
+            roles: content.allowedMentions?.roles?.map(id => id.toString()),
+            users: content.allowedMentions?.users?.map(id => id.toString()),
             replied_user: content.allowedMentions?.repliedUser,
           }
         : undefined,
@@ -183,9 +183,9 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
       ...(content.messageReference?.messageId
         ? {
             message_reference: {
-              message_id: content.messageReference.messageId,
-              channel_id: content.messageReference.channelId,
-              guild_id: content.messageReference.guildId,
+              message_id: content.messageReference.messageId.toString(),
+              channel_id: content.messageReference.channelId?.toString(),
+              guild_id: content.messageReference.guildId?.toString(),
               fail_if_not_exists: content.messageReference.failIfNotExists === true,
             },
           }
