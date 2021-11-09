@@ -575,18 +575,18 @@ Deno.test({
           name: "[channel] delete a channel overwrite",
           async fn() {
             await deleteChannelOverwriteTests(bot, guild.id, t);
-          }
+          },
         }),
         t.step({
           name: "[channel] edit a channel w/o a reason",
           async fn() {
             await editChannelTests(bot, guild.id, {}, t);
-          }
+          },
         }),
         t.step({
           name: "[channel] edit a channel w/ a reason",
           async fn() {
-            await editChannelTests(bot, guild.id, { reason: "Blame wolf"}, t);
+            await editChannelTests(bot, guild.id, { reason: "Blame wolf" }, t);
           },
         }),
       ]);

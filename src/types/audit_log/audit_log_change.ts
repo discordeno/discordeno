@@ -66,7 +66,17 @@ export type AuditLogChange =
   | {
       newValue: boolean;
       oldValue: boolean;
-      key: "widget_enabled" | "nsfw" | "hoist" | "mentionable" | "temporary" | "deaf" | "mute" | "enable_emoticons" | "archived" | "locked";
+      key:
+        | "widget_enabled"
+        | "nsfw"
+        | "hoist"
+        | "mentionable"
+        | "temporary"
+        | "deaf"
+        | "mute"
+        | "enable_emoticons"
+        | "archived"
+        | "locked";
     }
   | {
       newValue: Overwrite[];

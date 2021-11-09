@@ -4,7 +4,7 @@ import { Collection } from "../../../util/collection.ts";
 // import { channelToThread } from "../../../util/transformers/channel_to_thread.ts";
 
 /** Returns all active threads in the guild, including public and private threads. Threads are ordered by their `id`, in descending order. */
-export async function getActiveThreads(bot: Bot, guildId: bigint) {  
+export async function getActiveThreads(bot: Bot, guildId: bigint) {
   // const result = (await bot.rest.runMethod(
   //   bot.rest,
   //   "get",

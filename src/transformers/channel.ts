@@ -26,9 +26,9 @@ function unpack64(v: bigint, shift: number) {
   return (v >> BigInt(shift * 64)) & Mask;
 }
 function pack64(v: string | number, shift: number) {
-    const b = BigInt(v);
-    if(b < 0 || b > Mask) throw new Error("should have been a 64 bit unsigned integer: " + v);
-    return b << BigInt(shift * 64)
+  const b = BigInt(v);
+  if (b < 0 || b > Mask) throw new Error("should have been a 64 bit unsigned integer: " + v);
+  return b << BigInt(shift * 64);
 }
 export function separate(v: bigint) {
   return [Number(unpack64(v, 3)), unpack64(v, 2), unpack64(v, 0), unpack64(v, 1)] as [number, bigint, bigint, bigint];

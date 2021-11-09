@@ -88,10 +88,20 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
       })),
       allowed_mentions: {
         parse: content.allowedMentions?.parse,
-        roles: content.allowedMentions?.roles,
-        users: content.allowedMentions?.users,
+        roles: content.allowedMentions?.roles?.map((id) => id.toString()),
+        users: content.allowedMentions?.users?.map((id) => id.toString()),
         replied_user: content.allowedMentions?.repliedUser,
       },
+      attachments: content.attachments?.map((attachment) => ({
+        id: attachment.id.toString(),
+        filename: attachment.filename,
+        content_type: attachment.contentType,
+        size: attachment.size,
+        url: attachment.url,
+        proxy_url: attachment.proxyUrl,
+        height: attachment.height,
+        width: attachment.width,
+      })),
       file: content.file,
       components: content.components?.map((component) => ({
         type: component.type,

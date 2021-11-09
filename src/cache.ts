@@ -48,36 +48,40 @@ function channelSweeper(bot: Bot<Cache>, channel: DiscordenoChannel, key: bigint
 }
 
 export function createCache(
-  isAsync: true,
-  // deno-lint-ignore no-explicit-any
-  tableCreator: (tableName: TableNames) => AsyncCacheHandler<any>
+  bot: Bot,
+  options: {
+    isAsync: true;
+    tableCreator: (bot: Bot, tableName: TableNames) => AsyncCacheHandler<any>;
+  }
 ): AsyncCache;
 export function createCache(
-  isAsync: false,
-  // deno-lint-ignore no-explicit-any
-  tableCreator?: (tableName: TableNames) => CacheHandler<any>
+  bot: Bot,
+  options: {
+    isAsync: false;
+    tableCreator?: (bot: Bot, tableName: TableNames) => CacheHandler<any>;
+  }
 ): Cache;
 export function createCache(
-  isAsync: boolean,
-  tableCreator?: (
-    tableName: TableNames
-    // deno-lint-ignore no-explicit-any
-  ) => CacheHandler<any> | AsyncCacheHandler<any>
+  bot: Bot,
+  options: {
+    isAsync: boolean;
+    tableCreator?: (bot: Bot, tableName: TableNames) => CacheHandler<any> | AsyncCacheHandler<any>;
+  }
 ): Omit<Cache, "execute"> | Omit<AsyncCache, "execute"> {
-  if (isAsync) {
-    if (!tableCreator) {
+  if (options.isAsync) {
+    if (!options.tableCreator) {
       throw new Error("Async cache requires a tableCreator to be passed.");
     }
 
     const cache = {
-      guilds: tableCreator("guilds"),
-      users: tableCreator("users"),
-      members: tableCreator("members"),
-      channels: tableCreator("channels"),
-      messages: tableCreator("messages"),
-      presences: tableCreator("presences"),
-      // threads: tableCreator("threads"),
-      unavailableGuilds: tableCreator("unavailableGuilds"),
+      guilds: options.tableCreator(bot, "guilds"),
+      users: options.tableCreator(bot, "users"),
+      members: options.tableCreator(bot, "members"),
+      channels: options.tableCreator(bot, "channels"),
+      messages: options.tableCreator(bot, "messages"),
+      presences: options.tableCreator(bot, "presences"),
+      // threads: options.tableCreator(bot, "threads"),
+      unavailableGuilds: options.tableCreator(bot, "unavailableGuilds"),
       executedSlashCommands: new Set(),
       fetchAllMembersProcessingRequests: new Map(),
     } as AsyncCache;
@@ -88,17 +92,17 @@ export function createCache(
 
     return cache;
   }
-  if (!tableCreator) tableCreator = createTable;
+  if (!options.tableCreator) options.tableCreator = createTable;
 
   const cache = {
-    guilds: tableCreator("guilds"),
-    users: tableCreator("users"),
-    members: tableCreator("members"),
-    channels: tableCreator("channels"),
-    messages: tableCreator("messages"),
-    presences: tableCreator("presences"),
-    // threads: tableCreator("threads"),
-    unavailableGuilds: tableCreator("unavailableGuilds"),
+    guilds: options.tableCreator(bot, "guilds"),
+    users: options.tableCreator(bot, "users"),
+    members: options.tableCreator(bot, "members"),
+    channels: options.tableCreator(bot, "channels"),
+    messages: options.tableCreator(bot, "messages"),
+    presences: options.tableCreator(bot, "presences"),
+    // threads: options.tableCreator(bot, "threads"),
+    unavailableGuilds: options.tableCreator(bot, "unavailableGuilds"),
     executedSlashCommands: new Set(),
     fetchAllMembersProcessingRequests: new Map(),
   } as Cache;
@@ -149,18 +153,18 @@ export interface AsyncCache {
   execute: CacheExecutor;
 }
 
-function createTable<T>(_table: TableNames): CacheHandler<T> {
+function createTable<T>(bot: Bot, _table: TableNames): CacheHandler<T> {
   const table = new Collection<bigint, T>();
 
   // @ts-ignore TODO: fix type error itoh pwease
-  if (_table === "guilds") table.startSweeper({ filter: guildSweeper, interval: 3660000 });
+  if (_table === "guilds") table.startSweeper({ filter: guildSweeper, interval: 3660000, bot });
   // @ts-ignore TODO: fix type error itoh pwease
-  if (_table === "channels") table.startSweeper({ filter: channelSweeper, interval: 3660000 });
+  if (_table === "channels") table.startSweeper({ filter: channelSweeper, interval: 3660000, bot });
   // @ts-ignore TODO: fix type error itoh pwease
-  if (_table === "messages") table.startSweeper({ filter: messageSweeper, interval: 300000 });
+  if (_table === "messages") table.startSweeper({ filter: messageSweeper, interval: 300000, bot });
   // @ts-ignore TODO: fix type error itoh pwease
-  if (_table === "members") table.startSweeper({ filter: memberSweeper, interval: 300000 });
-  if (_table === "presences") table.startSweeper({ filter: () => true, interval: 300000 });
+  if (_table === "members") table.startSweeper({ filter: memberSweeper, interval: 300000, bot });
+  if (_table === "presences") table.startSweeper({ filter: () => true, interval: 300000, bot });
 
   return {
     clear: () => table.clear(),
