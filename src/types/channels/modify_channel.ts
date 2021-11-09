@@ -4,7 +4,7 @@ import { DiscordOverwrite, Overwrite } from "./overwrite.ts";
 import { DiscordVideoQualityModes } from "./video_quality_modes.ts";
 
 export interface ModifyChannel {
-  /** 2-100 character channel name */
+  /** 1-100 character channel name */
   name?: string;
   /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
   type?: DiscordChannelTypes;

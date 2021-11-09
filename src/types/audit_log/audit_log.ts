@@ -13,4 +13,6 @@ export interface AuditLog {
   auditLogEntries: AuditLogEntry[];
   /** List of partial integration objects */
   integrations: Partial<Integration>[];
+  /** List of threads found in the audit log. */
+  threads: Channel[];
 }
