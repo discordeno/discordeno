@@ -17,11 +17,11 @@ export async function dispatchRequirements(bot: Bot, data: DiscordGatewayPayload
         (data.d as any)?.guild_id) ?? ""
   );
 
-  if (!id || bot.activeGuildIds.has(id)) return;
+  if (!id || bot.cache.activeGuildIds.has(id)) return;
 
   // If this guild is in cache, it has not been swept and we can cancel
   if (await bot.cache.guilds.has(id)) {
-    bot.activeGuildIds.add(id);
+    bot.cache.activeGuildIds.add(id);
     return;
   }
 
