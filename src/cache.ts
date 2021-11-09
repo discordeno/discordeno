@@ -82,6 +82,9 @@ export function createCache(
       presences: options.tableCreator(bot, "presences"),
       // threads: options.tableCreator(bot, "threads"),
       unavailableGuilds: options.tableCreator(bot, "unavailableGuilds"),
+      dispatchedGuildIds: new Set(),
+      dispatchedChannelIds: new Set(),
+      activeGuildIds: new Set(),
       executedSlashCommands: new Set(),
       fetchAllMembersProcessingRequests: new Map(),
     } as AsyncCache;
@@ -103,6 +106,9 @@ export function createCache(
     presences: options.tableCreator(bot, "presences"),
     // threads: options.tableCreator(bot, "threads"),
     unavailableGuilds: options.tableCreator(bot, "unavailableGuilds"),
+    dispatchedGuildIds: new Set(),
+    dispatchedChannelIds: new Set(),
+    activeGuildIds: new Set(),
     executedSlashCommands: new Set(),
     fetchAllMembersProcessingRequests: new Map(),
   } as Cache;
