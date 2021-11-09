@@ -207,6 +207,7 @@ export type AsyncCacheHandler<T> = {
 
 export type CacheExecutor = (
   type:
+    | "GET_ALL_MEMBERS"
     | "FILTER_CATEGORY_CHILDREN_CHANNELS"
     | "DELETE_MESSAGES_FROM_CHANNEL"
     | "DELETE_ROLE_FROM_MEMBER"

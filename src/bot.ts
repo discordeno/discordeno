@@ -111,6 +111,7 @@ import { transformThread } from "./transformers/thread.ts";
 import { transformWebhook } from "./transformers/webhook.ts";
 import { transformAuditlogEntry } from "./transformers/auditlogEntry.ts";
 import { transformApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
+import { StatusUpdate } from "./types/gateway/status_update.ts";
 
 type CacheOptions =
   | {
@@ -911,6 +912,7 @@ export interface GatewayManager {
   $device: string;
   intents: number | (keyof typeof DiscordGatewayIntents)[];
   shard: [number, number];
+  presence?: Omit<StatusUpdate, "afk" | "since">;
 
   /** The WSS URL that can be used for connecting to the gateway. */
   urlWSS: string;
@@ -1075,7 +1077,7 @@ export interface EventHandlers {
   ) => any;
   channelDelete: (bot: Bot, channel: DiscordenoChannel) => any;
   channelPinsUpdate: (bot: Bot, data: { guildId?: bigint; channelId: bigint; lastPinTimestamp?: number }) => any;
-  channelUpdate: (bot: Bot, channel: DiscordenoChannel, oldChannel: DiscordenoChannel) => any;
+  channelUpdate: (bot: Bot, channel: DiscordenoChannel) => any;
   stageInstanceCreate: (
     bot: Bot,
     data: {
@@ -1112,16 +1114,17 @@ export interface EventHandlers {
   // TODO: THREADS
   guildEmojisUpdate: (
     bot: Bot,
-    guild: DiscordenoGuild,
-    emojis: Collection<bigint, Emoji>,
-    cachedEmojis: Collection<bigint, Emoji>
+    payload: {
+      guildId: bigint;
+      emojis: Collection<bigint, Emoji>;
+    }
   ) => any;
   guildBanAdd: (bot: Bot, user: DiscordenoUser, guildId: bigint) => any;
   guildBanRemove: (bot: Bot, user: DiscordenoUser, guildId: bigint) => any;
   guildLoaded: (bot: Bot, guild: DiscordenoGuild) => any;
   guildCreate: (bot: Bot, guild: DiscordenoGuild) => any;
-  guildDelete: (bot: Bot, id: bigint, guild?: DiscordenoGuild) => any;
-  guildUpdate: (bot: Bot, guild: DiscordenoGuild, cachedGuild?: DiscordenoGuild) => any;
+  guildDelete: (bot: Bot, id: bigint, shardId: number) => any;
+  guildUpdate: (bot: Bot, guild: DiscordenoGuild) => any;
   raw: (bot: Bot, data: GatewayPayload, shardId: number) => any;
   roleCreate: (bot: Bot, guild: DiscordenoGuild, role: DiscordenoRole) => any;
   roleDelete: (bot: Bot, guild: DiscordenoGuild, role: DiscordenoRole) => any;
