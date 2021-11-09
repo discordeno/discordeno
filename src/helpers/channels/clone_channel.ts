@@ -29,8 +29,6 @@ export async function cloneChannel(bot: Bot, channelId: bigint, reason?: string)
     }),
   };
 
-  
-
   //Create the channel (also handles permissions)
   return await bot.helpers.createChannel(channelToClone.guildId!, createChannelOptions, reason);
 }

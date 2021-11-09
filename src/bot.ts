@@ -138,7 +138,7 @@ export function createBot<C extends CacheOptions = CacheOptions>(
     activeGuildIds: new Set<bigint>(),
     constants: createBotConstants(),
     handlers: createBotGatewayHandlers({}),
-  }
+  };
 
   // @ts-ignore itoh cache types plz
   bot.cache = createCache(bot as Bot, options.cache);
@@ -228,6 +228,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
     token: `${options.token.startsWith("Bot ") ? "" : "Bot "}${options.token}`,
     maxRetryCount: options.maxRetryCount || 10,
     secretKey: options.secretKey || "discordeno_best_lib_ever",
+    customUrl: options.customUrl || "",
     pathQueues: new Map<
       string,
       {
@@ -274,7 +275,7 @@ export function setupBot(bot: Bot) {
 export async function startBot(bot: Bot) {
   // SETUP BOT
   bot = setupBot(bot);
-  
+
   // START REST
   bot.rest = createRestManager({ token: bot.token, debug: bot.events.debug });
   if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot();
@@ -857,7 +858,7 @@ export interface Transformers {
   thread: typeof transformThread;
   webhook: typeof transformWebhook;
   auditlogEntry: typeof transformAuditlogEntry;
-  applicationCommandPermission: typeof transformApplicationCommandPermission
+  applicationCommandPermission: typeof transformApplicationCommandPermission;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -884,7 +885,7 @@ export function createTransformers(options: Partial<Transformers>) {
     snowflake: options.snowflake || snowflakeToBigint,
     webhook: options.webhook || transformWebhook,
     auditlogEntry: options.auditlogEntry || transformAuditlogEntry,
-    applicationCommandPermission: transformApplicationCommandPermission
+    applicationCommandPermission: transformApplicationCommandPermission,
   };
 }
 

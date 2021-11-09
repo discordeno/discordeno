@@ -17,7 +17,10 @@ export interface StartThreadWithMessage extends StartThreadBase {
 
 export interface StartThreadWithoutMessage extends StartThreadBase {
   /** the type of thread to create */
-  type: DiscordChannelTypes.GuildNewsThread | DiscordChannelTypes.GuildPublicThread | DiscordChannelTypes.GuildPrivateThread;
+  type:
+    | DiscordChannelTypes.GuildNewsThread
+    | DiscordChannelTypes.GuildPublicThread
+    | DiscordChannelTypes.GuildPrivateThread;
   /** whether non-moderators can add other non-moderators to a thread; only available when creating a private thread */
   invitable?: boolean;
 }
