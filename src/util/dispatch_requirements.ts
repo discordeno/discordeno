@@ -46,19 +46,19 @@ export async function dispatchRequirements(bot: Bot, data: DiscordGatewayPayload
   // New guild id has appeared, fetch all relevant data
   bot.events.debug(`[DISPATCH] New Guild ID has appeared: ${id} in ${data.t} event`);
 
-  const rawGuild = (await bot.helpers
+  const guild = (await bot.helpers
     .getGuild(id, {
       counts: true,
       addToCache: false,
     })
     .catch(console.log)) as SnakeCasedPropertiesDeep<Guild> | undefined;
 
-  if (!rawGuild) {
+  if (!guild) {
     processing.delete(id);
     return bot.events.debug(`[DISPATCH] Guild ID ${id} failed to fetch.`);
   }
 
-  bot.events.debug(`[DISPATCH] Guild ID ${id} has been found. ${rawGuild.name}`);
+  bot.events.debug(`[DISPATCH] Guild ID ${id} has been found. ${guild.name}`);
 
   const [channels, botMember] = await Promise.all([
     bot.helpers.getChannels(id, false),
@@ -71,17 +71,9 @@ export async function dispatchRequirements(bot: Bot, data: DiscordGatewayPayload
   if (!botMember || !channels) {
     processing.delete(id);
     return bot.events.debug(
-      `[DISPATCH] Guild ID ${id} Name: ${rawGuild.name} failed. Unable to get botMember or channels`
+      `[DISPATCH] Guild ID ${id} Name: ${guild.name} failed. Unable to get botMember or channels`
     );
   }
-
-  const guild = bot.transformers.guild(bot, {
-    guild: {
-      ...rawGuild,
-      member_count: rawGuild.approximate_member_count,
-    },
-    shardId,
-  });
 
   // Add to cache
   await bot.cache.guilds.set(id, guild);
