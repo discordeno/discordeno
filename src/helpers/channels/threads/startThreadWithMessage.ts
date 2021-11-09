@@ -3,7 +3,12 @@ import type { StartThreadWithMessage } from "../../../types/channels/threads/sta
 import type { Bot } from "../../../bot.ts";
 
 /** Creates a new public thread from an existing message. Returns a thread channel. */
-export async function startThreadWithMessage(bot: Bot, channelId: bigint, messageId: bigint, options: StartThreadWithMessage) {
+export async function startThreadWithMessage(
+  bot: Bot,
+  channelId: bigint,
+  messageId: bigint,
+  options: StartThreadWithMessage
+) {
   // const channel = await bot.cache.channels.get(channelId);
   // if (channel) {
   //   if (!channel.isGuildTextBasedChannel) {
