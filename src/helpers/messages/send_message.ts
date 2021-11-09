@@ -132,8 +132,8 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
       allowed_mentions: content.allowedMentions
         ? {
             parse: content.allowedMentions?.parse,
-            roles: content.allowedMentions?.roles?.map(id => id.toString()),
-            users: content.allowedMentions?.users?.map(id => id.toString()),
+            roles: content.allowedMentions?.roles?.map((id) => id.toString()),
+            users: content.allowedMentions?.users?.map((id) => id.toString()),
             replied_user: content.allowedMentions?.repliedUser,
           }
         : undefined,

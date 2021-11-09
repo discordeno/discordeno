@@ -15,12 +15,14 @@ export interface EditMessage {
   /** The contents of the file being sent/edited */
   file?: FileContent | FileContent[] | null;
   /** Allowed mentions for the message */
-  allowedMentions?: Omit<AllowedMentions, "users" | "roles"> & {
-    /** Array of role_ids to mention (Max size of 100) */
-    roles?: bigint[];
-    /** Array of user_ids to mention (Max size of 100) */
-    users?: bigint[];
-  } | null;
+  allowedMentions?:
+    | (Omit<AllowedMentions, "users" | "roles"> & {
+        /** Array of role_ids to mention (Max size of 100) */
+        roles?: bigint[];
+        /** Array of user_ids to mention (Max size of 100) */
+        users?: bigint[];
+      })
+    | null;
   /** Attached files to keep */
   attachments?: Attachment[];
   /** The components you would like to have sent in this message */
