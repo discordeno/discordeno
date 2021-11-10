@@ -70,6 +70,7 @@ export enum DiscordJsonErrorCodes {
   MaximumNumberOfBansFetchesHasBeenReached = 30037,
   MaximumNumberOfStickersReached = 30039,
   MaximumNumberOfPruneRequestsHasBeenReachedTryAgainLater,
+  MaximumNumberOfGuildWidgetSettingsUpdatesHasBeenReachedTryAgainLater = 30042,
   UnauthorizedProvideAValidTokenAndTryAgain = 40001,
   YouNeedToVerifyYourAccountInOrderToPerformThisAction,
   YouAreOpeningDirectMessagesTooFast,

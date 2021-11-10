@@ -56,6 +56,7 @@ export function transformMember(
     mute: payload.mute,
     pending: payload.pending,
     cachedAt: Date.now(),
+    avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,
   };
 }
 
@@ -80,4 +81,6 @@ export interface DiscordenoMember {
   mute?: boolean;
   /** Whether or not this member is pending in server verification. */
   pending?: boolean;
+  /** The members avatar for this server. */
+  avatar?: bigint;
 }

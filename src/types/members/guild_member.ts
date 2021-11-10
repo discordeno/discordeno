@@ -18,6 +18,8 @@ export interface GuildMember {
   mute?: boolean;
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
   pending?: boolean;
+  /** The members custom avatar for this server. */
+  avatar?: string;
 }
 
 // We use these types much since user always exists unless its a `CREATE_MESSAGE` or `MESSAGE_UPDATE` event

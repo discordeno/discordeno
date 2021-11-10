@@ -27,10 +27,12 @@ export function transformRole(
       ? bot.transformers.snowflake(payload.role.tags.integration_id)
       : undefined,
     permissions: bot.transformers.snowflake(payload.role.permissions),
+    icon: payload.role.icon ? bot.utils.iconHashToBigInt(payload.role.icon) : undefined,
+    unicodeEmoji: payload.role.unicode_emoji,
   };
 }
 
-export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions" | "hoist" | "mentionable" | "managed"> {
+export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions" | "hoist" | "mentionable" | "managed" | "icon"> {
   /** The role id */
   id: bigint;
   /** The bot id that is associated with this role. */
@@ -43,4 +45,8 @@ export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions"
   permissions: bigint;
   /** Holds all the boolean toggles. */
   bitfield: bigint;
+  /** The role icon emoji icon */
+  icon?: bigint;
+  /** The role icon emoji unicode */
+  unicodeEmoji?: string;
 }

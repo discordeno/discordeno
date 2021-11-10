@@ -11,6 +11,8 @@ export interface CreateGuildRole {
   hoist?: boolean;
   /** Whether the role should be mentionable, default: false */
   mentionable?: boolean;
+  /** The role's unicode emoji (if the guild has the `ROLE_ICONS` feature) */
+  unicodeEmoji?: string;
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-role */

@@ -91,6 +91,7 @@ import { transformWebhook } from "./transformers/webhook.ts";
 import { transformAuditlogEntry } from "./transformers/auditlogEntry.ts";
 import { transformApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
 import { StatusUpdate } from "./types/gateway/status_update.ts";
+import { calculateBits, calculatePermissions } from "./util/permissions.ts";
 
 type CacheOptions =
   | {
@@ -307,6 +308,8 @@ export function createUtils(options: Partial<HelperUtils>) {
     urlToBase64,
     formatImageURL,
     validateSlashCommands,
+    calculateBits,
+    calculatePermissions,
   };
 }
 
@@ -325,6 +328,8 @@ export interface HelperUtils {
   urlToBase64: typeof urlToBase64;
   formatImageURL: typeof formatImageURL;
   validateSlashCommands: typeof validateSlashCommands;
+  calculateBits: typeof calculateBits;
+  calculatePermissions: typeof calculatePermissions;
 }
 
 export function createGatewayManager(
