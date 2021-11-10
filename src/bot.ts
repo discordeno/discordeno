@@ -139,6 +139,7 @@ export function createBot<C extends CacheOptions = CacheOptions>(
     activeGuildIds: new Set<bigint>(),
     constants: createBotConstants(),
     handlers: createBotGatewayHandlers({}),
+    enabledPlugins: new Set(),
   };
 
   // @ts-ignore itoh cache types plz
@@ -497,6 +498,7 @@ export interface Bot<C extends Cache | AsyncCache = AsyncCache | Cache> {
   activeGuildIds: Set<bigint>;
   constants: ReturnType<typeof createBotConstants>;
   cache: C;
+  enabledPlugins: Set<string>;
 }
 
 export interface Helpers {
