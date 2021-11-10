@@ -54,7 +54,7 @@ export function identify(gateway: GatewayManager, shardId: number, maxShards: nu
           },
           intents: gateway.intents,
           shard: [shardId, maxShards],
-          presence: gateway.presence
+          presence: gateway.presence,
         },
       },
       true

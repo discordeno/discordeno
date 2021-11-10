@@ -32,7 +32,8 @@ export function transformRole(
   };
 }
 
-export interface DiscordenoRole extends Omit<Role, "tags" | "id" | "permissions" | "hoist" | "mentionable" | "managed" | "icon"> {
+export interface DiscordenoRole
+  extends Omit<Role, "tags" | "id" | "permissions" | "hoist" | "mentionable" | "managed" | "icon"> {
   /** The role id */
   id: bigint;
   /** The bot id that is associated with this role. */
