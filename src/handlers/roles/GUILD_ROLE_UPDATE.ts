@@ -5,13 +5,9 @@ import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export async function handleGuildRoleUpdate(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as SnakeCasedPropertiesDeep<GuildRoleUpdate>;
-  const guildId = bot.transformers.snowflake(payload.guild_id);
-  const guild = await bot.cache.guilds.get(guildId);
-  if (!guild) return;
 
-  const role = bot.transformers.role(bot, { role: payload.role, guildId });
-  guild.roles = guild.roles.set(role.id, role);
-  await bot.cache.guilds.set(guild.id, guild);
-
-  bot.events.roleUpdate(bot, guild, role, guild.roles.get(role.id));
+  bot.events.roleUpdate(
+    bot,
+    bot.transformers.role(bot, { role: payload.role, guildId: bot.transformers.snowflake(payload.guild_id) })
+  );
 }

@@ -10,8 +10,6 @@ export async function pruneMembers(bot: Bot, guildId: bigint, options: BeginGuil
   if (options.days && options.days < 1) throw new Error(bot.constants.Errors.PRUNE_MIN_DAYS);
   if (options.days && options.days > 30) throw new Error(bot.constants.Errors.PRUNE_MAX_DAYS);
 
-  await bot.utils.requireBotGuildPermissions(bot, guildId, ["KICK_MEMBERS"]);
-
   const result = await bot.rest.runMethod<{ pruned: number }>(
     bot.rest,
     "post",

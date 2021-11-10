@@ -4,8 +4,6 @@ import type { Bot } from "../../bot.ts";
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
 export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuildAuditLog) {
-  await bot.utils.requireBotGuildPermissions(bot, guildId, ["VIEW_AUDIT_LOG"]);
-
   if (options?.userId) options.userId = options.userId.toString();
   if (options?.before) options.before = options.before.toString();
   if (options?.limit) options.limit = options.limit >= 1 && options.limit <= 100 ? options.limit : 50;

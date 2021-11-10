@@ -3,10 +3,6 @@ import type { Bot } from "../../bot.ts";
 
 /** Fetch a single message from the server. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
 export async function getMessage(bot: Bot, channelId: bigint, id: bigint) {
-  if (await bot.cache.channels.has(channelId)) {
-    await bot.utils.requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]);
-  }
-
   const result = await bot.rest.runMethod<Message>(
     bot.rest,
     "get",

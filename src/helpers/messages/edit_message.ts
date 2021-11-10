@@ -1,24 +1,10 @@
-// import { cacheHandlers } from "../../cache.ts";
 import type { EditMessage } from "../../types/messages/edit_message.ts";
 import type { Message } from "../../types/messages/message.ts";
-import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import type { Bot } from "../../bot.ts";
-import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 import { DiscordMessageComponentTypes } from "../../types/messages/components/message_component_types.ts";
 
 /** Edit the message. */
 export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: string | EditMessage) {
-  const message = await bot.cache.messages.get(messageId);
-
-  if (message) {
-    if (message.authorId !== bot.id) {
-      throw new Error("You can only edit a message that was sent by the bot.");
-    }
-    const requiredPerms: PermissionStrings[] = ["SEND_MESSAGES"];
-
-    await bot.utils.requireBotChannelPermissions(bot, message.channelId, requiredPerms);
-  }
-
   if (typeof content === "string") content = { content };
 
   if (content.components?.length) {

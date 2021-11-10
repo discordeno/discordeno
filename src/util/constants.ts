@@ -150,7 +150,7 @@ export const endpoints = {
   USER_DEFAULT_AVATAR: (icon: number) => `${baseEndpoints.CDN_URL}/embed/avatars/${icon}.png`,
   USER_DM: `${baseEndpoints.BASE_URL}/users/@me/channels`,
   USER_CONNECTIONS: `${baseEndpoints.BASE_URL}/users/@me/connections`,
-  USER_NICK: (guildId: bigint) => `${GUILDS_BASE(guildId)}/members/@me/nick`,
+  USER_NICK: (guildId: bigint) => `${GUILDS_BASE(guildId)}/members/@me`,
 
   // Discovery Endpoints
   DISCOVERY_CATEGORIES: `${baseEndpoints.BASE_URL}/discovery/categories`,

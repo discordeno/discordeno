@@ -45,7 +45,7 @@ export async function deleteChannelOverwriteTests(bot: Bot<Cache>, guildId: bigi
     true
   );
 
-  await bot.helpers.deleteChannelOverwrite(channel.guildId, channel.id, bot.id);
+  await bot.helpers.deleteChannelOverwrite(channel.id, bot.id);
 
   await delayUntil(10000, () => bot.cache.channels.get(channel.id)?.permissionOverwrites?.length === 0);
 

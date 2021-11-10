@@ -5,8 +5,5 @@ import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export async function handleUserUpdate(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as SnakeCasedPropertiesDeep<User>;
-  const user = bot.transformers.user(bot, payload);
-  await bot.cache.users.set(user.id, user);
-
-  bot.events.botUpdate(bot, user);
+  bot.events.botUpdate(bot, bot.transformers.user(bot, payload));
 }

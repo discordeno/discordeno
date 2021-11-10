@@ -5,8 +5,6 @@ import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
 export async function getWebhooks(bot: Bot, guildId: bigint) {
-  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_WEBHOOKS"]);
-
   const result = await bot.rest.runMethod<Webhook[]>(
     bot.rest,
     "get",

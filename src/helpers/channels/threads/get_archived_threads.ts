@@ -15,7 +15,6 @@ export async function getArchivedThreads(
 ) {
   // const permissions = new Set<PermissionStrings>(["READ_MESSAGE_HISTORY"]);
   // if (options?.type === "private") permissions.add("MANAGE_THREADS");
-  // await bot.utils.requireBotChannelPermissions(bot, channelId, [...permissions]);
   // // TODO: pagination
   // const result = (await bot.rest.runMethod(
   //   bot.rest,

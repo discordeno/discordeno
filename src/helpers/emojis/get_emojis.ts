@@ -11,17 +11,5 @@ import { Collection } from "../../util/collection.ts";
 export async function getEmojis(bot: Bot, guildId: bigint, addToCache = true) {
   const result = await bot.rest.runMethod<Emoji[]>(bot.rest, "get", bot.constants.endpoints.GUILD_EMOJIS(guildId));
 
-  if (addToCache) {
-    const guild = await bot.cache.guilds.get(guildId);
-    if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
-
-    result.forEach((emoji) => {
-      bot.events.debug(`Running forEach loop in get_emojis file.`);
-      guild.emojis.set(bot.transformers.snowflake(emoji.id!), emoji);
-    });
-
-    await bot.cache.guilds.set(guildId, guild);
-  }
-
-  return new Collection(result.map((e) => [e.id!, e]));
+  return new Collection(result.map((e) => [bot.transformers.snowflake(e.id!), bot.transformers.emoji(bot, e)]));
 }

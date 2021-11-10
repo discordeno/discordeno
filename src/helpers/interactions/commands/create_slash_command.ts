@@ -1,6 +1,7 @@
 import type { ApplicationCommand } from "../../../types/interactions/commands/application_command.ts";
 import type { CreateGlobalApplicationCommand } from "../../../types/interactions/commands/create_global_application_command.ts";
 import type { Bot } from "../../../bot.ts";
+import { ApplicationCommandOption } from "../../../types/interactions/commands/application_command_option.ts";
 
 /**
  * There are two kinds of Slash Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:
@@ -22,6 +23,24 @@ export async function createSlashCommand(bot: Bot, options: CreateGlobalApplicat
     guildId
       ? bot.constants.endpoints.COMMANDS_GUILD(bot.applicationId, guildId)
       : bot.constants.endpoints.COMMANDS(bot.applicationId),
-    options
+    {
+      name: options.name,
+      description: options.description,
+      type: options.type,
+      options: options.options ? makeOptionsForCommand(options.options) : undefined,
+    }
   );
+}
+
+// @ts-ignore TODO: see if we can make this not circular
+export function makeOptionsForCommand(options: ApplicationCommandOption[]) {
+  return options.map((option) => ({
+    type: option.type,
+    name: option.name,
+    description: option.description,
+    required: option.required,
+    choices: option.choices,
+    options: option.options ? makeOptionsForCommand(option.options) : undefined,
+    channel_types: option.channelTypes,
+  }));
 }

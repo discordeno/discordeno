@@ -5,8 +5,6 @@ import type { Bot } from "../../bot.ts";
 
 /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
 export async function getInvites(bot: Bot, guildId: bigint) {
-  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
-
   const result = await bot.rest.runMethod<InviteMetadata[]>(
     bot.rest,
     "get",

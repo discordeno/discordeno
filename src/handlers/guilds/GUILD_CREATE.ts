@@ -3,15 +3,7 @@ import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.
 import type { Guild } from "../../types/guilds/guild.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleGuildCreate(
-  bot: Bot,
-  data: DiscordGatewayPayload,
-  shardId: number
-) {
+export function handleGuildCreate(bot: Bot, data: DiscordGatewayPayload, shardId: number) {
   const payload = data.d as SnakeCasedPropertiesDeep<Guild>;
-
-  const guild = bot.transformers.guild(bot, { guild: payload, shardId });
-  await bot.cache.guilds.set(guild.id, guild);
-
-  await bot.events.guildCreate(bot, guild);
+  bot.events.guildCreate(bot, bot.transformers.guild(bot, { guild: payload, shardId }));
 }

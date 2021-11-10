@@ -13,22 +13,22 @@ export async function editEmojiTest(bot: Bot, guildId: bigint, t: Deno.TestConte
   assertExists(emoji);
 
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, async () => (await bot.cache.guilds.get(guildId))?.emojis?.has(emoji.id));
+  // await delayUntil(10000, async () => bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id));
 
-  if (!(await bot.cache.guilds.get(guildId))?.emojis?.has(emoji.id)) {
-    throw new Error("The emoji seemed to be created but it was not cached.");
-  }
+  // if (!bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id)) {
+  //   throw new Error("The emoji seemed to be created but it was not cached.");
+  // }
 
   await bot.helpers.editEmoji(guildId, emoji.id, {
     name: "blamewolf_infinite",
   });
 
-  await delayUntil(
-    10000,
-    async () => (await bot.cache.guilds.get(guildId))?.emojis?.get(emoji.id)?.name === "blamewolf_infinite"
-  );
+  // await delayUntil(
+  //   10000,
+  //   async () => bot.cache.guilds.get(guildId)?.emojis?.get(emoji.id)?.name === "blamewolf_infinite"
+  // );
 
-  if ((await bot.cache.guilds.get(guildId))?.emojis?.get(emoji.id)?.name !== "blamewolf_infinite") {
-    throw new Error("The emoji seemed to be edited but the cache was not updated.");
-  }
+  // if (bot.cache.guilds.get(guildId)?.emojis?.get(emoji.id)?.name !== "blamewolf_infinite") {
+  //   throw new Error("The emoji seemed to be edited but the cache was not updated.");
+  // }
 }

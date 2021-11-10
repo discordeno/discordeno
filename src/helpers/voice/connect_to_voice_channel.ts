@@ -10,8 +10,6 @@ export async function connectToVoiceChannel(
   channelId: bigint,
   options?: AtLeastOne<Omit<UpdateVoiceState, "guildId" | "channelId">>
 ) {
-  await bot.utils.requireBotChannelPermissions(bot, channelId, ["CONNECT", "VIEW_CHANNEL"]);
-
   bot.gateway.sendShardMessage(bot.gateway, bot.utils.calculateShardId(bot.gateway, guildId), {
     op: DiscordGatewayOpcodes.VoiceStateUpdate,
     d: {

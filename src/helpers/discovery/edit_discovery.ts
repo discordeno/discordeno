@@ -1,12 +1,9 @@
 import type { DiscoveryMetadata } from "../../types/discovery/discovery_metadata.ts";
 import type { ModifyGuildDiscoveryMetadata } from "../../types/discovery/modify_guild_discovery_metadata.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Modify the discovery metadata for the guild. Requires the MANAGE_GUILD permission. Returns the updated discovery metadata object on success. */
 export async function editDiscovery(bot: Bot, guildId: bigint, data: ModifyGuildDiscoveryMetadata) {
-  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
-
   return await bot.rest.runMethod<DiscoveryMetadata>(
     bot.rest,
     "patch",

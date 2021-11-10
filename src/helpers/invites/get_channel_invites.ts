@@ -5,8 +5,6 @@ import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Gets the invites for this channel. Requires MANAGE_CHANNEL */
 export async function getChannelInvites(bot: Bot, channelId: bigint) {
-  await bot.utils.requireBotChannelPermissions(bot, channelId, ["MANAGE_CHANNELS"]);
-
   const result = await bot.rest.runMethod<InviteMetadata[]>(
     bot.rest,
     "get",

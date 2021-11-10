@@ -7,8 +7,6 @@ import type { Bot } from "../../bot.ts";
  * Requires the `MANAGE_GUILD` permission.
  */
 export async function getGuildTemplates(bot: Bot, guildId: bigint) {
-  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
-
   const templates = await bot.rest.runMethod<Template[]>(bot.rest, "get", bot.constants.endpoints.GUILD_TEMPLATES(guildId));
 
   return new Collection(templates.map((template) => [template.code, template]));

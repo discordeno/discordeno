@@ -4,8 +4,6 @@ import type { Bot } from "../../bot.ts";
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
 export async function getChannelWebhooks(bot: Bot, channelId: bigint) {
-  await bot.utils.requireBotChannelPermissions(bot, channelId, ["MANAGE_WEBHOOKS"]);
-
   const result = await bot.rest.runMethod<Webhook[]>(
     bot.rest,
     "get",

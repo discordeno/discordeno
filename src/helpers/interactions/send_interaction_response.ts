@@ -28,7 +28,12 @@ export async function sendInteractionResponse(
     options.data = { ...options.data, allowedMentions: { parse: [] } };
   }
 
-  const allowedMentions: AllowedMentions = options.data?.allowedMentions || { parse: [] };
+  const allowedMentions: AllowedMentions = options.data?.allowedMentions ? {
+    parse: options.data?.allowedMentions.parse,
+    repliedUser: options.data?.allowedMentions.repliedUser,
+    users: options.data?.allowedMentions.users?.map(id => id.toString()),
+    roles: options.data?.allowedMentions.roles?.map(id => id.toString()),
+  } : { parse: [] };
 
   // If its already been executed, we need to send a followup response
   if (bot.cache.executedSlashCommands.has(token)) {

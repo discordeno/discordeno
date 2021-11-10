@@ -5,14 +5,6 @@ import { DiscordenoChannel } from "../../transformers/channel.ts";
 
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(bot: Bot, channelId: bigint, options: ModifyChannel, reason?: string) {
-  const channel = await bot.cache.channels.get(channelId);
-
-  if (channel) {
-    if (options.permissionOverwrites && Array.isArray(options.permissionOverwrites)) {
-      await bot.utils.requireOverwritePermissions(bot, channel.guildId, options.permissionOverwrites);
-    }
-  }
-
   if (options.name || options.topic) {
     const request = editChannelNameTopicQueue.get(channelId);
     if (!request) {

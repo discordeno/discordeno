@@ -1,46 +1,12 @@
-import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
-import { Errors } from "../../types/discordeno/errors.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
 import type { CreateMessage } from "../../types/messages/create_message.ts";
 import type { Message } from "../../types/messages/message.ts";
-import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
 import type { Bot } from "../../bot.ts";
 import { DiscordMessageComponentTypes } from "../../types/messages/components/message_component_types.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(bot: Bot, channelId: bigint, content: string | CreateMessage) {
   if (typeof content === "string") content = { content };
-
-  const channel = await bot.cache.channels.get(channelId);
-  if (channel) {
-    if (
-      ![
-        DiscordChannelTypes.DM,
-        DiscordChannelTypes.GuildNews,
-        DiscordChannelTypes.GuildText,
-        DiscordChannelTypes.GuildPublicThread,
-        DiscordChannelTypes.GuildPrivateThread,
-        DiscordChannelTypes.GuildNewsThread,
-        DiscordChannelTypes.GuildVoice,
-      ].includes(channel.type)
-    ) {
-      throw new Error(Errors.CHANNEL_NOT_TEXT_BASED);
-    }
-
-    const requiredPerms: Set<PermissionStrings> = new Set(["SEND_MESSAGES", "VIEW_CHANNEL"]);
-
-    if (content.tts) requiredPerms.add("SEND_TTS_MESSAGES");
-    if (content.embeds?.length) {
-      requiredPerms.add("EMBED_LINKS");
-      content.embeds?.splice(10);
-    }
-
-    if (content.messageReference?.messageId || content.allowedMentions?.repliedUser) {
-      requiredPerms.add("READ_MESSAGE_HISTORY");
-    }
-
-    await bot.utils.requireBotChannelPermissions(bot, channelId, [...requiredPerms]);
-  }
 
   // Use ... for content length due to unicode characters and js .length handling
   if (content.content && !bot.utils.validateLength(content.content, { max: 2000 })) {

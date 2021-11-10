@@ -19,4 +19,6 @@ export interface ApplicationCommand {
   defaultPermission?: boolean;
   /** The type of command. By default this is a slash command(ChatInput). */
   type?: ApplicationCommandTypes;
+  /** Autoincrementing version identifier updated during substantial record changes */
+  version: string;
 }

@@ -1,7 +1,6 @@
 import type { Bot } from "../../bot.ts";
 import type { CreateWebhook } from "../../types/webhooks/create_webhook.ts";
 import type { Webhook } from "../../types/webhooks/webhook.ts";
-import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /**
  * Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
@@ -9,8 +8,6 @@ import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
  * Webhook names cannot be: 'clyde'
  */
 export async function createWebhook(bot: Bot, channelId: bigint, options: CreateWebhook) {
-  await bot.utils.requireBotChannelPermissions(bot, channelId, ["MANAGE_WEBHOOKS"]);
-
   if (
     // Specific usernames that discord does not allow
     options.name === "clyde" ||

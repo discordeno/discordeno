@@ -12,7 +12,7 @@ export async function deleteInviteTest(bot: Bot, channelId: bigint, t: Deno.Test
   // Assertions
   assertExists(invite);
 
-  const deletedInvite = await bot.helpers.deleteInvite(channelId, invite.code);
+  const deletedInvite = await bot.helpers.deleteInvite(invite.code);
 
   // Assertions
   assertExists(deletedInvite);

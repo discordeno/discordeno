@@ -6,8 +6,5 @@ import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 export async function handleMessageCreate(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as SnakeCasedPropertiesDeep<Message>;
 
-  const message = bot.transformers.message(bot, payload);
-  await bot.cache.messages.set(message.id, message);
-
-  bot.events.messageCreate(bot, message);
+  bot.events.messageCreate(bot, bot.transformers.message(bot, payload));
 }

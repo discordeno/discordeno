@@ -7,10 +7,6 @@ import type { Bot } from "../../bot.ts";
  * NOTE: This endpoint can be used only by bots in less than 10 guilds.
  */
 export async function createGuildFromTemplate(bot: Bot, templateCode: string, data: CreateGuildFromTemplate) {
-  if ((await bot.cache.guilds.size()) >= 10) {
-    throw new Error("This function can only be used by bots in less than 10 guilds.");
-  }
-
   if (data.icon) {
     data.icon = await bot.utils.urlToBase64(data.icon);
   }

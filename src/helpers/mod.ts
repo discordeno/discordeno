@@ -1,4 +1,3 @@
-import { categoryChildren } from "./channels/category_children.ts";
 import { channelOverwriteHasPermission } from "./channels/channel_overwrite_has_permission.ts";
 import { createChannel } from "./channels/create_channel.ts";
 import { deleteChannel } from "./channels/delete_channel.ts";
@@ -10,7 +9,6 @@ import { getChannel } from "./channels/get_channel.ts";
 import { getChannels } from "./channels/get_channels.ts";
 import { getChannelWebhooks } from "./channels/get_channel_webhooks.ts";
 import { getPins } from "./channels/get_pins.ts";
-import { isChannelSynced } from "./channels/is_channel_synced.ts";
 import { startTyping } from "./channels/start_typing.ts";
 import { swapChannels } from "./channels/swap_channels.ts";
 import { updateBotVoiceState } from "./channels/update_voice_state.ts";
@@ -76,11 +74,11 @@ import { editMember } from "./members/edit_member.ts";
 import { fetchMembers } from "./members/fetch_members.ts";
 import { getMember } from "./members/get_member.ts";
 import { getMembers } from "./members/get_members.ts";
-import { kick, kickMember } from "./members/kick_member.ts";
+import { kickMember } from "./members/kick_member.ts";
 import { moveMember } from "./members/move_member.ts";
 import { pruneMembers } from "./members/prune_members.ts";
-import { sendDirectMessage } from "./members/send_direct_message.ts";
-import { unban, unbanMember } from "./members/unban_member.ts";
+import { getDmChannel } from "./members/send_direct_message.ts";
+import { unbanMember } from "./members/unban_member.ts";
 import { addReaction } from "./messages/add_reaction.ts";
 import { addReactions } from "./messages/add_reactions.ts";
 import { deleteMessage } from "./messages/delete_message.ts";
@@ -89,14 +87,14 @@ import { editMessage } from "./messages/edit_message.ts";
 import { getMessage } from "./messages/get_message.ts";
 import { getMessages } from "./messages/get_messages.ts";
 import { getReactions } from "./messages/get_reactions.ts";
-import { pin, pinMessage } from "./messages/pin_message.ts";
+import { pinMessage } from "./messages/pin_message.ts";
 import { publishMessage } from "./messages/publish_message.ts";
 import { removeAllReactions } from "./messages/remove_all_reactions.ts";
 import { removeReaction } from "./messages/remove_reaction.ts";
 import { removeReactionEmoji } from "./messages/remove_reaction_emoji.ts";
 import { sendMessage } from "./messages/send_message.ts";
 import { suppressEmbeds } from "./messages/suppress_embeds.ts";
-import { unpin, unpinMessage } from "./messages/unpin_message.ts";
+import { unpinMessage } from "./messages/unpin_message.ts";
 import { editBotProfile } from "./misc/edit_bot_profile.ts";
 import { editBotStatus } from "./misc/edit_bot_status.ts";
 import { getGatewayBot } from "./misc/get_gateway_bot.ts";
@@ -164,7 +162,6 @@ export {
   ban,
   banMember,
   batchEditSlashCommandPermissions,
-  categoryChildren,
   channelOverwriteHasPermission,
   cloneChannel,
   connectToVoiceChannel,
@@ -268,12 +265,9 @@ export {
   isButton,
   isSelectMenu,
   isSlashCommand,
-  isChannelSynced,
-  kick,
   kickMember,
   leaveGuild,
   moveMember,
-  pin,
   pinMessage,
   pruneMembers,
   publishMessage,
@@ -282,16 +276,14 @@ export {
   removeReaction,
   removeReactionEmoji,
   removeRole,
-  sendDirectMessage,
+  getDmChannel,
   sendInteractionResponse,
   sendMessage,
   sendWebhook,
   startTyping,
   swapChannels,
   syncGuildTemplate,
-  unban,
   unbanMember,
-  unpin,
   unpinMessage,
   updateBotVoiceState,
   updateStageInstance,

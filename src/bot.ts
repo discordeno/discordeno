@@ -1,25 +1,4 @@
 import {
-  calculateChannelOverwrites,
-  calculateBasePermissions,
-  getCached,
-  hasChannelPermissions,
-  hasGuildPermissions,
-  validatePermissions,
-  getMissingChannelPermissions,
-  getMissingGuildPermissions,
-  requireGuildPermissions,
-  requireChannelPermissions,
-  highestRole,
-  higherRolePosition,
-  requireBotChannelPermissions,
-  requireBotGuildPermissions,
-  botHasChannelPermissions,
-  calculateBits,
-  isHigherPosition,
-  requireOverwritePermissions,
-  calculatePermissions,
-} from "./util/permissions.ts";
-import {
   checkRateLimits,
   processQueue,
   cleanupQueues,
@@ -111,6 +90,8 @@ import { transformThread } from "./transformers/thread.ts";
 import { transformWebhook } from "./transformers/webhook.ts";
 import { transformAuditlogEntry } from "./transformers/auditlogEntry.ts";
 import { transformApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
+import { StatusUpdate } from "./types/gateway/status_update.ts";
+import { calculateBits, calculatePermissions } from "./util/permissions.ts";
 
 type CacheOptions =
   | {
@@ -138,6 +119,7 @@ export function createBot<C extends CacheOptions = CacheOptions>(
     activeGuildIds: new Set<bigint>(),
     constants: createBotConstants(),
     handlers: createBotGatewayHandlers({}),
+    enabledPlugins: new Set(),
   };
 
   // @ts-ignore itoh cache types plz
@@ -318,33 +300,15 @@ export function createUtils(options: Partial<HelperUtils>) {
     delay,
     iconHashToBigInt,
     iconBigintToHash,
-    // Permissions
-    getCached,
-    calculateBasePermissions,
-    calculateChannelOverwrites,
-    getMissingChannelPermissions,
-    getMissingGuildPermissions,
-    hasGuildPermissions,
-    hasChannelPermissions,
-    requireGuildPermissions,
-    requireChannelPermissions,
-    validatePermissions,
-    highestRole,
-    higherRolePosition,
     validateLength,
     validateSlashOptions,
     validateSlashOptionChoices,
-    requireBotChannelPermissions,
-    requireBotGuildPermissions,
     validateComponents,
     hasProperty,
     urlToBase64,
-    botHasChannelPermissions,
-    calculateBits,
-    isHigherPosition,
     formatImageURL,
     validateSlashCommands,
-    requireOverwritePermissions,
+    calculateBits,
     calculatePermissions,
   };
 }
@@ -356,32 +320,15 @@ export interface HelperUtils {
   delay: typeof delay;
   iconHashToBigInt: typeof iconHashToBigInt;
   iconBigintToHash: typeof iconBigintToHash;
-  getCached: typeof getCached;
-  calculateBasePermissions: typeof calculateBasePermissions;
-  calculateChannelOverwrites: typeof calculateChannelOverwrites;
-  hasGuildPermissions: typeof hasGuildPermissions;
-  hasChannelPermissions: typeof hasChannelPermissions;
-  validatePermissions: typeof validatePermissions;
-  getMissingChannelPermissions: typeof getMissingChannelPermissions;
-  getMissingGuildPermissions: typeof getMissingGuildPermissions;
-  requireGuildPermissions: typeof requireGuildPermissions;
-  requireChannelPermissions: typeof requireChannelPermissions;
-  highestRole: typeof highestRole;
-  higherRolePosition: typeof higherRolePosition;
   validateLength: typeof validateLength;
   validateSlashOptions: typeof validateSlashOptions;
   validateSlashOptionChoices: typeof validateSlashOptionChoices;
-  requireBotChannelPermissions: typeof requireBotChannelPermissions;
-  requireBotGuildPermissions: typeof requireBotGuildPermissions;
-  botHasChannelPermissions: typeof botHasChannelPermissions;
   validateComponents: typeof validateComponents;
   hasProperty: typeof hasProperty;
   urlToBase64: typeof urlToBase64;
-  calculateBits: typeof calculateBits;
-  isHigherPosition: typeof isHigherPosition;
   formatImageURL: typeof formatImageURL;
   validateSlashCommands: typeof validateSlashCommands;
-  requireOverwritePermissions: typeof requireOverwritePermissions;
+  calculateBits: typeof calculateBits;
   calculatePermissions: typeof calculatePermissions;
 }
 
@@ -496,6 +443,7 @@ export interface Bot<C extends Cache | AsyncCache = AsyncCache | Cache> {
   activeGuildIds: Set<bigint>;
   constants: ReturnType<typeof createBotConstants>;
   cache: C;
+  enabledPlugins: Set<string>;
 }
 
 export interface Helpers {
@@ -507,7 +455,6 @@ export interface Helpers {
   ban: typeof helpers.ban;
   banMember: typeof helpers.banMember;
   batchEditSlashCommandPermissions: typeof helpers.batchEditSlashCommandPermissions;
-  categoryChildren: typeof helpers.categoryChildren;
   channelOverwriteHasPermission: typeof helpers.channelOverwriteHasPermission;
   cloneChannel: typeof helpers.cloneChannel;
   connectToVoiceChannel: typeof helpers.connectToVoiceChannel;
@@ -611,12 +558,9 @@ export interface Helpers {
   isButton: typeof helpers.isButton;
   isSelectMenu: typeof helpers.isSelectMenu;
   isSlashCommand: typeof helpers.isSlashCommand;
-  isChannelSynced: typeof helpers.isChannelSynced;
-  kick: typeof helpers.kick;
   kickMember: typeof helpers.kickMember;
   leaveGuild: typeof helpers.leaveGuild;
   moveMember: typeof helpers.moveMember;
-  pin: typeof helpers.pin;
   pinMessage: typeof helpers.pinMessage;
   pruneMembers: typeof helpers.pruneMembers;
   publishMessage: typeof helpers.publishMessage;
@@ -625,16 +569,14 @@ export interface Helpers {
   removeReaction: typeof helpers.removeReaction;
   removeReactionEmoji: typeof helpers.removeReactionEmoji;
   removeRole: typeof helpers.removeRole;
-  sendDirectMessage: typeof helpers.sendDirectMessage;
+  getDmChannel: typeof helpers.getDmChannel;
   sendInteractionResponse: typeof helpers.sendInteractionResponse;
   sendMessage: typeof helpers.sendMessage;
   sendWebhook: typeof helpers.sendWebhook;
   startTyping: typeof helpers.startTyping;
   swapChannels: typeof helpers.swapChannels;
   syncGuildTemplate: typeof helpers.syncGuildTemplate;
-  unban: typeof helpers.unban;
   unbanMember: typeof helpers.unbanMember;
-  unpin: typeof helpers.unpin;
   unpinMessage: typeof helpers.unpinMessage;
   updateBotVoiceState: typeof helpers.updateBotVoiceState;
   updateStageInstance: typeof helpers.updateStageInstance;
@@ -682,7 +624,6 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     banMember: options.banMember || helpers.banMember,
     batchEditSlashCommandPermissions:
       options.batchEditSlashCommandPermissions || helpers.batchEditSlashCommandPermissions,
-    categoryChildren: options.categoryChildren || helpers.categoryChildren,
     channelOverwriteHasPermission: options.channelOverwriteHasPermission || helpers.channelOverwriteHasPermission,
     cloneChannel: options.cloneChannel || helpers.cloneChannel,
     connectToVoiceChannel: options.connectToVoiceChannel || helpers.connectToVoiceChannel,
@@ -786,12 +727,9 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     isButton: options.isButton || helpers.isButton,
     isSelectMenu: options.isSelectMenu || helpers.isSelectMenu,
     isSlashCommand: options.isSlashCommand || helpers.isSlashCommand,
-    isChannelSynced: options.isChannelSynced || helpers.isChannelSynced,
-    kick: options.kick || helpers.kick,
     kickMember: options.kickMember || helpers.kickMember,
     leaveGuild: options.leaveGuild || helpers.leaveGuild,
     moveMember: options.moveMember || helpers.moveMember,
-    pin: options.pin || helpers.pin,
     pinMessage: options.pinMessage || helpers.pinMessage,
     pruneMembers: options.pruneMembers || helpers.pruneMembers,
     publishMessage: options.publishMessage || helpers.publishMessage,
@@ -800,16 +738,14 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     removeReaction: options.removeReaction || helpers.removeReaction,
     removeReactionEmoji: options.removeReactionEmoji || helpers.removeReactionEmoji,
     removeRole: options.removeRole || helpers.removeRole,
-    sendDirectMessage: options.sendDirectMessage || helpers.sendDirectMessage,
+    getDmChannel: options.getDmChannel || helpers.getDmChannel,
     sendInteractionResponse: options.sendInteractionResponse || helpers.sendInteractionResponse,
     sendMessage: options.sendMessage || helpers.sendMessage,
     sendWebhook: options.sendWebhook || helpers.sendWebhook,
     startTyping: options.startTyping || helpers.startTyping,
     swapChannels: options.swapChannels || helpers.swapChannels,
     syncGuildTemplate: options.syncGuildTemplate || helpers.syncGuildTemplate,
-    unban: options.unban || helpers.unban,
     unbanMember: options.unbanMember || helpers.unbanMember,
-    unpin: options.unpin || helpers.unpin,
     unpinMessage: options.unpinMessage || helpers.unpinMessage,
     updateBotVoiceState: options.updateBotVoiceState || helpers.updateBotVoiceState,
     updateStageInstance: options.updateStageInstance || helpers.updateStageInstance,
@@ -921,6 +857,7 @@ export interface GatewayManager {
   $device: string;
   intents: number | (keyof typeof DiscordGatewayIntents)[];
   shard: [number, number];
+  presence?: Omit<StatusUpdate, "afk" | "since">;
 
   /** The WSS URL that can be used for connecting to the gateway. */
   urlWSS: string;
@@ -1072,8 +1009,22 @@ export interface EventHandlers {
   voiceServerUpdate: (bot: Bot, payload: { token: string; endpoint?: string; guildId: bigint }) => any;
   voiceStateUpdate: (
     bot: Bot,
-    voiceState: DiscordenoVoiceState,
-    payload: { guild?: DiscordenoGuild; member?: DiscordenoMember; user?: DiscordenoUser }
+    voiceState: {
+      guildId?: bigint;
+      channelId?: bigint;
+      userId: bigint;
+      member?: DiscordenoMember;
+      user?: DiscordenoUser;
+      sessionId: string;
+      deaf: boolean;
+      mute: boolean;
+      selfDeaf: boolean;
+      selfMute: boolean;
+      selfStream?: boolean;
+      selfVideo: boolean;
+      suppress: boolean;
+      requestToSpeakTimestamp?: number;
+    }
   ) => any;
   channelCreate: (bot: Bot, channel: DiscordenoChannel) => any;
   dispatchRequirements: (bot: Bot, data: GatewayPayload, shardId: number) => any;
@@ -1085,7 +1036,7 @@ export interface EventHandlers {
   ) => any;
   channelDelete: (bot: Bot, channel: DiscordenoChannel) => any;
   channelPinsUpdate: (bot: Bot, data: { guildId?: bigint; channelId: bigint; lastPinTimestamp?: number }) => any;
-  channelUpdate: (bot: Bot, channel: DiscordenoChannel, oldChannel: DiscordenoChannel) => any;
+  channelUpdate: (bot: Bot, channel: DiscordenoChannel) => any;
   stageInstanceCreate: (
     bot: Bot,
     data: {
@@ -1122,20 +1073,21 @@ export interface EventHandlers {
   // TODO: THREADS
   guildEmojisUpdate: (
     bot: Bot,
-    guild: DiscordenoGuild,
-    emojis: Collection<bigint, Emoji>,
-    cachedEmojis: Collection<bigint, Emoji>
+    payload: {
+      guildId: bigint;
+      emojis: Collection<bigint, Emoji>;
+    }
   ) => any;
   guildBanAdd: (bot: Bot, user: DiscordenoUser, guildId: bigint) => any;
   guildBanRemove: (bot: Bot, user: DiscordenoUser, guildId: bigint) => any;
   guildLoaded: (bot: Bot, guild: DiscordenoGuild) => any;
   guildCreate: (bot: Bot, guild: DiscordenoGuild) => any;
-  guildDelete: (bot: Bot, id: bigint, guild?: DiscordenoGuild) => any;
-  guildUpdate: (bot: Bot, guild: DiscordenoGuild, cachedGuild?: DiscordenoGuild) => any;
+  guildDelete: (bot: Bot, id: bigint, shardId: number) => any;
+  guildUpdate: (bot: Bot, guild: DiscordenoGuild) => any;
   raw: (bot: Bot, data: GatewayPayload, shardId: number) => any;
-  roleCreate: (bot: Bot, guild: DiscordenoGuild, role: DiscordenoRole) => any;
-  roleDelete: (bot: Bot, guild: DiscordenoGuild, role: DiscordenoRole) => any;
-  roleUpdate: (bot: Bot, guild: DiscordenoGuild, role: DiscordenoRole, oldRole?: DiscordenoRole) => any;
+  roleCreate: (bot: Bot, role: DiscordenoRole) => any;
+  roleDelete: (bot: Bot, payload: { guildId: bigint; roleId: bigint }) => any;
+  roleUpdate: (bot: Bot, role: DiscordenoRole) => any;
   webhooksUpdate: (bot: Bot, payload: { channelId: bigint; guildId: bigint }) => any;
   botUpdate: (bot: Bot, user: DiscordenoUser) => any;
   typingStart: (
