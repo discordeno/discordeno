@@ -7,8 +7,6 @@ import type { Bot } from "../../bot.ts";
  * Requires the `MANAGE_GUILD` permission.
  */
 export async function editGuildTemplate(bot: Bot, guildId: bigint, templateCode: string, data: ModifyGuildTemplate) {
-  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
-
   if (data.name?.length && (data.name.length < 1 || data.name.length > 100)) {
     throw new Error("The name can only be in between 1-100 characters.");
   }

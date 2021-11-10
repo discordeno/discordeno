@@ -1,7 +1,5 @@
 import type { Template } from "../../types/templates/template.ts";
 import type { Bot } from "../../bot.ts";
-import { User } from "../../types/users/user.ts";
-import { Guild } from "../../types/guilds/guild.ts";
 
 /**
  * Creates a template for the guild.
@@ -11,8 +9,6 @@ import { Guild } from "../../types/guilds/guild.ts";
  * @param data
  */
 export async function createGuildTemplate(bot: Bot, guildId: bigint, data: Template) {
-  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
-
   if (data.name.length < 1 || data.name.length > 100) {
     throw new Error("The name can only be in between 1-100 characters.");
   }

@@ -8,8 +8,6 @@ export async function getPruneCount(bot: Bot, guildId: bigint, options?: GetGuil
     throw new Error(bot.constants.Errors.PRUNE_MAX_DAYS);
   }
 
-  await bot.utils.requireBotGuildPermissions(bot, guildId, ["KICK_MEMBERS"]);
-
   const result = await bot.rest.runMethod(
     bot.rest,
     "get",

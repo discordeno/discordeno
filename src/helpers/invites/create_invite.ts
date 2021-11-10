@@ -6,8 +6,6 @@ import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
 export async function createInvite(bot: Bot, channelId: bigint, options: CreateChannelInvite = {}) {
-  await bot.utils.requireBotChannelPermissions(bot, channelId, ["CREATE_INSTANT_INVITE"]);
-
   if (options.maxAge && (options.maxAge < 0 || options.maxAge > 604800)) {
     throw new Error(Errors.INVITE_MAX_AGE_INVALID);
   }

@@ -2,8 +2,6 @@
 import type { Bot } from "../../bot.ts";
 
 export async function removeReactionEmoji(bot: Bot, channelId: bigint, messageId: bigint, reaction: string) {
-  await bot.utils.requireBotChannelPermissions(bot, channelId, ["MANAGE_MESSAGES"]);
-
   if (reaction.startsWith("<:")) {
     reaction = reaction.substring(2, reaction.length - 1);
   } else if (reaction.startsWith("<a:")) {

@@ -1,25 +1,4 @@
 import {
-  calculateChannelOverwrites,
-  calculateBasePermissions,
-  getCached,
-  hasChannelPermissions,
-  hasGuildPermissions,
-  validatePermissions,
-  getMissingChannelPermissions,
-  getMissingGuildPermissions,
-  requireGuildPermissions,
-  requireChannelPermissions,
-  highestRole,
-  higherRolePosition,
-  requireBotChannelPermissions,
-  requireBotGuildPermissions,
-  botHasChannelPermissions,
-  calculateBits,
-  isHigherPosition,
-  requireOverwritePermissions,
-  calculatePermissions,
-} from "./util/permissions.ts";
-import {
   checkRateLimits,
   processQueue,
   cleanupQueues,
@@ -320,34 +299,14 @@ export function createUtils(options: Partial<HelperUtils>) {
     delay,
     iconHashToBigInt,
     iconBigintToHash,
-    // Permissions
-    getCached,
-    calculateBasePermissions,
-    calculateChannelOverwrites,
-    getMissingChannelPermissions,
-    getMissingGuildPermissions,
-    hasGuildPermissions,
-    hasChannelPermissions,
-    requireGuildPermissions,
-    requireChannelPermissions,
-    validatePermissions,
-    highestRole,
-    higherRolePosition,
     validateLength,
     validateSlashOptions,
     validateSlashOptionChoices,
-    requireBotChannelPermissions,
-    requireBotGuildPermissions,
     validateComponents,
     hasProperty,
     urlToBase64,
-    botHasChannelPermissions,
-    calculateBits,
-    isHigherPosition,
     formatImageURL,
     validateSlashCommands,
-    requireOverwritePermissions,
-    calculatePermissions,
   };
 }
 
@@ -358,33 +317,14 @@ export interface HelperUtils {
   delay: typeof delay;
   iconHashToBigInt: typeof iconHashToBigInt;
   iconBigintToHash: typeof iconBigintToHash;
-  getCached: typeof getCached;
-  calculateBasePermissions: typeof calculateBasePermissions;
-  calculateChannelOverwrites: typeof calculateChannelOverwrites;
-  hasGuildPermissions: typeof hasGuildPermissions;
-  hasChannelPermissions: typeof hasChannelPermissions;
-  validatePermissions: typeof validatePermissions;
-  getMissingChannelPermissions: typeof getMissingChannelPermissions;
-  getMissingGuildPermissions: typeof getMissingGuildPermissions;
-  requireGuildPermissions: typeof requireGuildPermissions;
-  requireChannelPermissions: typeof requireChannelPermissions;
-  highestRole: typeof highestRole;
-  higherRolePosition: typeof higherRolePosition;
   validateLength: typeof validateLength;
   validateSlashOptions: typeof validateSlashOptions;
   validateSlashOptionChoices: typeof validateSlashOptionChoices;
-  requireBotChannelPermissions: typeof requireBotChannelPermissions;
-  requireBotGuildPermissions: typeof requireBotGuildPermissions;
-  botHasChannelPermissions: typeof botHasChannelPermissions;
   validateComponents: typeof validateComponents;
   hasProperty: typeof hasProperty;
   urlToBase64: typeof urlToBase64;
-  calculateBits: typeof calculateBits;
-  isHigherPosition: typeof isHigherPosition;
   formatImageURL: typeof formatImageURL;
   validateSlashCommands: typeof validateSlashCommands;
-  requireOverwritePermissions: typeof requireOverwritePermissions;
-  calculatePermissions: typeof calculatePermissions;
 }
 
 export function createGatewayManager(
@@ -613,7 +553,6 @@ export interface Helpers {
   isButton: typeof helpers.isButton;
   isSelectMenu: typeof helpers.isSelectMenu;
   isSlashCommand: typeof helpers.isSlashCommand;
-  kick: typeof helpers.kick;
   kickMember: typeof helpers.kickMember;
   leaveGuild: typeof helpers.leaveGuild;
   moveMember: typeof helpers.moveMember;
@@ -632,9 +571,7 @@ export interface Helpers {
   startTyping: typeof helpers.startTyping;
   swapChannels: typeof helpers.swapChannels;
   syncGuildTemplate: typeof helpers.syncGuildTemplate;
-  unban: typeof helpers.unban;
   unbanMember: typeof helpers.unbanMember;
-  unpin: typeof helpers.unpin;
   unpinMessage: typeof helpers.unpinMessage;
   updateBotVoiceState: typeof helpers.updateBotVoiceState;
   updateStageInstance: typeof helpers.updateStageInstance;
@@ -785,7 +722,6 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     isButton: options.isButton || helpers.isButton,
     isSelectMenu: options.isSelectMenu || helpers.isSelectMenu,
     isSlashCommand: options.isSlashCommand || helpers.isSlashCommand,
-    kick: options.kick || helpers.kick,
     kickMember: options.kickMember || helpers.kickMember,
     leaveGuild: options.leaveGuild || helpers.leaveGuild,
     moveMember: options.moveMember || helpers.moveMember,
@@ -804,9 +740,7 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     startTyping: options.startTyping || helpers.startTyping,
     swapChannels: options.swapChannels || helpers.swapChannels,
     syncGuildTemplate: options.syncGuildTemplate || helpers.syncGuildTemplate,
-    unban: options.unban || helpers.unban,
     unbanMember: options.unbanMember || helpers.unbanMember,
-    unpin: options.unpin || helpers.unpin,
     unpinMessage: options.unpinMessage || helpers.unpinMessage,
     updateBotVoiceState: options.updateBotVoiceState || helpers.updateBotVoiceState,
     updateStageInstance: options.updateStageInstance || helpers.updateStageInstance,

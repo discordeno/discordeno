@@ -74,11 +74,11 @@ import { editMember } from "./members/edit_member.ts";
 import { fetchMembers } from "./members/fetch_members.ts";
 import { getMember } from "./members/get_member.ts";
 import { getMembers } from "./members/get_members.ts";
-import { kick, kickMember } from "./members/kick_member.ts";
+import { kickMember } from "./members/kick_member.ts";
 import { moveMember } from "./members/move_member.ts";
 import { pruneMembers } from "./members/prune_members.ts";
 import { getDmChannel } from "./members/send_direct_message.ts";
-import { unban, unbanMember } from "./members/unban_member.ts";
+import { unbanMember } from "./members/unban_member.ts";
 import { addReaction } from "./messages/add_reaction.ts";
 import { addReactions } from "./messages/add_reactions.ts";
 import { deleteMessage } from "./messages/delete_message.ts";
@@ -94,7 +94,7 @@ import { removeReaction } from "./messages/remove_reaction.ts";
 import { removeReactionEmoji } from "./messages/remove_reaction_emoji.ts";
 import { sendMessage } from "./messages/send_message.ts";
 import { suppressEmbeds } from "./messages/suppress_embeds.ts";
-import { unpin, unpinMessage } from "./messages/unpin_message.ts";
+import { unpinMessage } from "./messages/unpin_message.ts";
 import { editBotProfile } from "./misc/edit_bot_profile.ts";
 import { editBotStatus } from "./misc/edit_bot_status.ts";
 import { getGatewayBot } from "./misc/get_gateway_bot.ts";
@@ -265,7 +265,6 @@ export {
   isButton,
   isSelectMenu,
   isSlashCommand,
-  kick,
   kickMember,
   leaveGuild,
   moveMember,
@@ -284,9 +283,7 @@ export {
   startTyping,
   swapChannels,
   syncGuildTemplate,
-  unban,
   unbanMember,
-  unpin,
   unpinMessage,
   updateBotVoiceState,
   updateStageInstance,

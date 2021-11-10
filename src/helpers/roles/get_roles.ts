@@ -8,8 +8,6 @@ import { DiscordenoRole } from "../../transformers/role.ts";
  * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your roles will be cached in your guild.**
  */
 export async function getRoles(bot: Bot, guildId: bigint) {
-  await bot.utils.requireBotGuildPermissions(bot, guildId, ["MANAGE_ROLES"]);
-
   const result = await bot.rest.runMethod<Role[]>(bot.rest, "get", bot.constants.endpoints.GUILD_ROLES(guildId));
 
   const roleStructures = result.map((role) => bot.transformers.role(bot, { role, guildId }));

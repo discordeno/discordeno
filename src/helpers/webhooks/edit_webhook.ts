@@ -1,19 +1,11 @@
 import type { ModifyWebhook } from "../../types/webhooks/modify_webhook.ts";
 import type { Webhook } from "../../types/webhooks/webhook.ts";
 import type { Bot } from "../../bot.ts";
-import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Edit a webhook. Requires the `MANAGE_WEBHOOKS` permission. Returns the updated webhook object on success. */
 export async function editWebhook(bot: Bot, channelId: bigint, webhookId: bigint, options: ModifyWebhook) {
-  await bot.utils.requireBotChannelPermissions(bot, channelId, ["MANAGE_WEBHOOKS"]);
-
-  return await bot.rest.runMethod<Webhook>(
-    bot.rest,
-    "patch",
-    bot.constants.endpoints.WEBHOOK_ID(webhookId),
-    {
-      ...options,
-      channel_id: options.channelId,
-    }
-  );
+  return await bot.rest.runMethod<Webhook>(bot.rest, "patch", bot.constants.endpoints.WEBHOOK_ID(webhookId), {
+    ...options,
+    channel_id: options.channelId,
+  });
 }

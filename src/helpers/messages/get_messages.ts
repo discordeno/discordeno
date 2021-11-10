@@ -13,8 +13,6 @@ export async function getMessages(
   channelId: bigint,
   options?: GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit
 ) {
-  await bot.utils.requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]);
-
   if (options?.limit && (options.limit < 0 || options.limit > 100)) {
     throw new Error(bot.constants.Errors.INVALID_GET_MESSAGES_LIMIT);
   }

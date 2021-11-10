@@ -8,10 +8,6 @@ export async function removeReaction(
   reaction: string,
   options?: { userId?: bigint }
 ) {
-  if (options?.userId) {
-    await bot.utils.requireBotChannelPermissions(bot, channelId, ["MANAGE_MESSAGES"]);
-  }
-
   if (reaction.startsWith("<:")) {
     reaction = reaction.substring(2, reaction.length - 1);
   } else if (reaction.startsWith("<a:")) {
