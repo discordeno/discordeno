@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import { DiscordenoChannel, separate } from "../../transformers/channel.ts";
+import { DiscordenoChannel, separateOverwrites } from "../../transformers/channel.ts";
 import type { CreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
 
 /** Create a copy of a channel */
@@ -17,7 +17,7 @@ export async function cloneChannel(bot: Bot, channel: DiscordenoChannel, reason?
     name: channel.name!,
     topic: channel.topic || undefined,
     permissionOverwrites: channel.permissionOverwrites.map((overwrite) => {
-      const [type, id, allow, deny] = separate(overwrite);
+      const [type, id, allow, deny] = separateOverwrites(overwrite);
 
       return {
         id,
