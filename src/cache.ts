@@ -87,11 +87,10 @@ export function createCache(
       activeGuildIds: new Set(),
       executedSlashCommands: new Set(),
       fetchAllMembersProcessingRequests: new Map(),
+      execute: async function () {
+        throw new Error("Async Cache requires a custom execute function to be implemented.");
+      }
     } as AsyncCache;
-
-    cache.execute = async function () {
-      throw new Error("Async Cache requires a custom execute function to be implemented.");
-    };
 
     return cache;
   }
