@@ -13,6 +13,6 @@ export async function getThreadMember(bot: Bot, threadId: bigint, userId: bigint
     id: result.id ? bot.transformers.snowflake(result.id) : undefined,
     userId: result.user_id ? bot.transformers.snowflake(result.user_id) : undefined,
     joinTimestamp: Date.parse(result.join_timestamp),
-    flags: result.flags
+    flags: result.flags,
   };
 }
