@@ -13,11 +13,13 @@ export interface GuildMember {
   /** When the user started boosing the guild */
   premiumSince?: string | null;
   /** Whether the user is deafened in voice channels */
-  deaf: boolean;
+  deaf?: boolean;
   /** Whether the user is muted in voice channels */
-  mute: boolean;
+  mute?: boolean;
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
   pending?: boolean;
+  /** The members custom avatar for this server. */
+  avatar?: string;
 }
 
 // We use these types much since user always exists unless its a `CREATE_MESSAGE` or `MESSAGE_UPDATE` event

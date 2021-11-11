@@ -1,14 +1,17 @@
-import { DiscordenoShard, WebSocketRequest, ws } from "./ws.ts";
+import { DiscordenoShard, WebSocketRequest } from "./ws.ts";
+import { GatewayManager } from "../bot.ts";
 
-export function sendShardMessage(shard: number | DiscordenoShard, message: WebSocketRequest, highPriority = false) {
-  if (typeof shard === "number") shard = ws.shards.get(shard)!;
+export function sendShardMessage(
+  gateway: GatewayManager,
+  shard: number | DiscordenoShard,
+  message: WebSocketRequest,
+  highPriority = false
+) {
+  if (typeof shard === "number") shard = gateway.shards.get(shard)!;
   if (!shard) return;
 
-  if (!highPriority) {
-    shard.queue.push(message);
-  } else {
-    shard.queue.unshift(message);
-  }
+  if (highPriority) shard.queue.unshift(message);
+  else shard.queue.push(message);
 
-  ws.processQueue(shard.id);
+  gateway.processGatewayQueue(gateway, shard.id);
 }

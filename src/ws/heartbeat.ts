@@ -1,16 +1,16 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import { delay } from "../util/utils.ts";
-import { ws } from "./ws.ts";
+import { GatewayManager } from "../bot.ts";
 
-export async function heartbeat(shardId: number, interval: number) {
-  ws.log("HEARTBEATING_STARTED", { shardId, interval });
+export async function heartbeat(gateway: GatewayManager, shardId: number, interval: number) {
+  gateway.debug("GW HEARTBEATING_STARTED", { shardId, interval });
 
-  const shard = ws.shards.get(shardId);
+  const shard = gateway.shards.get(shardId);
   if (!shard) return;
 
-  ws.log("HEARTBEATING_DETAILS", { shardId, interval, shard });
+  gateway.debug("GW HEARTBEATING_DETAILS", { shardId, interval, shard });
 
-  // The first heartbeat is special so we send it without setInterval: https://discord.com/developers/docs/topics/gateway#heartbeating
+  // The first heartbeat is special so we send it without set Interval: https://discord.com/developers/docs/topics/gateway#heartbeating
   await delay(Math.floor(shard.heartbeat.interval * Math.random()));
 
   if (shard.ws.readyState !== WebSocket.OPEN) return;
@@ -28,22 +28,22 @@ export async function heartbeat(shardId: number, interval: number) {
   shard.heartbeat.interval = interval;
 
   shard.heartbeat.intervalId = setInterval(async () => {
-    ws.log("DEBUG", `Running setInterval in heartbeat file. Shard: ${shardId}`);
-    const currentShard = ws.shards.get(shardId);
+    gateway.debug("GW DEBUG", `Running setInterval in heartbeat file. Shard: ${shardId}`);
+    const currentShard = gateway.shards.get(shardId);
     if (!currentShard) return;
 
-    ws.log("HEARTBEATING", { shardId, shard: currentShard });
+    gateway.debug("GW HEARTBEATING", { shardId, shard: currentShard });
 
     if (currentShard.ws.readyState === WebSocket.CLOSED || !currentShard.heartbeat.keepAlive) {
-      ws.log("HEARTBEATING_CLOSED", { shardId, shard: currentShard });
+      gateway.debug("GW HEARTBEATING_CLOSED", { shardId, shard: currentShard });
 
       // STOP THE HEARTBEAT
       return clearInterval(shard.heartbeat.intervalId);
     }
 
     if (!currentShard.heartbeat.acknowledged) {
-      ws.closeWS(currentShard.ws, 3066, "Did not receive an ACK in time.");
-      return await ws.identify(shardId, ws.maxShards);
+      gateway.closeWS(currentShard.ws, 3066, "Did not receive an ACK in time.");
+      return await gateway.identify(gateway, shardId, gateway.maxShards);
     }
 
     if (currentShard.ws.readyState !== WebSocket.OPEN) return;

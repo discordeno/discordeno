@@ -1,39 +1,19 @@
-import { botId, eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
-import { structures } from "../../structures/mod.ts";
+import { Bot } from "../../bot.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { MessageReactionAdd } from "../../types/messages/message_reaction_add.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleMessageReactionAdd(data: DiscordGatewayPayload) {
-  const payload = data.d as MessageReactionAdd;
-  const message = await cacheHandlers.get("messages", snowflakeToBigint(payload.messageId));
+export async function handleMessageReactionAdd(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<MessageReactionAdd>;
 
-  if (message) {
-    const reactionExisted = message.reactions?.find(
-      (reaction) => reaction.emoji.id === payload.emoji.id && reaction.emoji.name === payload.emoji.name
-    );
-
-    if (reactionExisted) reactionExisted.count++;
-    else {
-      const newReaction = {
-        count: 1,
-        me: snowflakeToBigint(payload.userId) === botId,
-        emoji: { ...payload.emoji, id: payload.emoji.id || undefined },
-      };
-      message.reactions = message.reactions ? [...message.reactions, newReaction] : [newReaction];
-    }
-
-    await cacheHandlers.set("messages", snowflakeToBigint(payload.messageId), message);
-  }
-
-  if (payload.member && payload.guildId) {
-    const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
-    if (guild) {
-      const discordenoMember = await structures.createDiscordenoMember(payload.member, guild.id);
-      await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
-    }
-  }
-
-  eventHandlers.reactionAdd?.(payload, message);
+  const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
+  const userId = bot.transformers.snowflake(payload.user_id);
+  bot.events.reactionAdd(bot, {
+    userId,
+    channelId: bot.transformers.snowflake(payload.channel_id),
+    messageId: bot.transformers.snowflake(payload.message_id),
+    guildId,
+    member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
+    emoji: bot.transformers.emoji(bot, payload.emoji),
+  });
 }

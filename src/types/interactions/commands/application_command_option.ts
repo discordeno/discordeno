@@ -1,3 +1,4 @@
+import { ChannelTypes } from "../../channels/channel_types.ts";
 import { ApplicationCommandOptionChoice } from "./application_command_option_choice.ts";
 import { DiscordApplicationCommandOptionTypes } from "./application_command_option_types.ts";
 
@@ -17,4 +18,6 @@ export interface ApplicationCommandOption {
   options?: ApplicationCommandOption[];
   /** Whether this option should make autocomplete interactions. */
   autocomplete?: boolean;
+  /** If the option is a channel type, the channels shown will be restricted to these types */
+  channelTypes?: ChannelTypes[];
 }

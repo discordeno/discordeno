@@ -1,14 +1,11 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
-import { structures } from "../../structures/mod.ts";
 import type { Channel } from "../../types/channels/channel.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleChannelCreate(data: DiscordGatewayPayload) {
-  const payload = data.d as Channel;
+import type { Bot } from "../../bot.ts";
 
-  const discordenoChannel = await structures.createDiscordenoChannel(payload);
-  await cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);
+export async function handleChannelCreate(bot: Bot, payload: DiscordGatewayPayload) {
+  const channel = bot.transformers.channel(bot, { channel: payload.d as SnakeCasedPropertiesDeep<Channel> });
 
-  eventHandlers.channelCreate?.(discordenoChannel);
+  bot.events.channelCreate(bot, channel);
 }

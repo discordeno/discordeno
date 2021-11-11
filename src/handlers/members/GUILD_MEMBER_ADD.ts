@@ -1,18 +1,19 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
-import { structures } from "../../structures/mod.ts";
+import { Bot } from "../../bot.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { GuildMemberAdd } from "../../types/members/guild_member_add.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleGuildMemberAdd(data: DiscordGatewayPayload) {
-  const payload = data.d as GuildMemberAdd;
-  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
-  if (!guild) return;
+export async function handleGuildMemberAdd(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<GuildMemberAdd>;
+  const guildId = bot.transformers.snowflake(payload.guild_id);
+  const user = bot.transformers.user(bot, payload.user);
+  const member = bot.transformers.member(bot, payload, guildId, user.id);
 
-  guild.memberCount++;
-  const discordenoMember = await structures.createDiscordenoMember(payload, guild.id);
-  await cacheHandlers.set("members", discordenoMember.id, discordenoMember);
+  await Promise.all([
+    bot.cache.members.set(member.id, member),
+    bot.cache.users.set(user.id, user),
+    bot.cache.execute("GUILD_MEMBER_COUNT_INCREMENT", { guildId }),
+  ]);
 
-  eventHandlers.guildMemberAdd?.(guild, discordenoMember);
+  bot.events.guildMemberAdd(bot, member, user);
 }

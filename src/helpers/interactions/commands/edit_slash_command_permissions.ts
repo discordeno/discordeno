@@ -1,16 +1,22 @@
-import { applicationId } from "../../../bot.ts";
-import { rest } from "../../../rest/rest.ts";
 import type { ApplicationCommandPermissions } from "../../../types/interactions/commands/application_command_permissions.ts";
-import { endpoints } from "../../../util/constants.ts";
-import { snakelize } from "../../../util/utils.ts";
+import type { Bot } from "../../../bot.ts";
+import { GuildApplicationCommandPermissions } from "../../../types/interactions/commands/guild_application_command_permissions.ts";
 
 /** Edits command permissions for a specific command for your application in a guild. */
 export async function editSlashCommandPermissions(
+  bot: Bot,
   guildId: bigint,
   commandId: bigint,
   options: ApplicationCommandPermissions[]
 ) {
-  return await rest.runMethod("put", endpoints.COMMANDS_PERMISSION(applicationId, guildId, commandId), {
-    permissions: snakelize(options),
-  });
+  const result = await bot.rest.runMethod<GuildApplicationCommandPermissions>(
+    bot.rest,
+    "put",
+    bot.constants.endpoints.COMMANDS_PERMISSION(bot.applicationId, guildId, commandId),
+    {
+      permissions: options,
+    }
+  );
+
+  return bot.transformers.applicationCommandPermission(bot, result);
 }

@@ -3,9 +3,9 @@ import { User } from "../users/user.ts";
 /** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
 export interface Emoji {
   /** Emoji id */
-  id: string | null;
+  id?: string;
   /** Emoji name (can only be null in reaction emoji objects) */
-  name: string | null;
+  name?: string;
   /** Roles allowed to use this emoji */
   roles?: string[];
   /** User that created this emoji */

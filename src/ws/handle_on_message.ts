@@ -1,30 +1,33 @@
-import { eventHandlers } from "../bot.ts";
-import { handlers } from "../handlers/mod.ts";
+import { GatewayManager } from "../bot.ts";
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
 import type { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
 import type { DiscordHello } from "../types/gateway/hello.ts";
 import type { DiscordReady } from "../types/gateway/ready.ts";
-import { camelize, delay } from "../util/utils.ts";
+import { Guild } from "../types/guilds/guild.ts";
+import { UnavailableGuild } from "../types/guilds/unavailable_guild.ts";
+import { Message } from "../types/messages/mod.ts";
+import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { snowflakeToBigint } from "../util/bigint.ts";
+import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
-import { ws } from "./ws.ts";
 
 /** Handler for handling every message event from websocket. */
 // deno-lint-ignore no-explicit-any
-export async function handleOnMessage(message: any, shardId: number) {
+export async function handleOnMessage(gateway: GatewayManager, message: any, shardId: number) {
   if (message instanceof ArrayBuffer) {
     message = new Uint8Array(message);
   }
 
   if (message instanceof Uint8Array) {
-    message = decompressWith(message, 0, (slice: Uint8Array) => ws.utf8decoder.decode(slice));
+    message = decompressWith(message, 0, (slice: Uint8Array) => gateway.utf8decoder.decode(slice));
   }
 
   if (typeof message !== "string") return;
 
-  const shard = ws.shards.get(shardId);
+  const shard = gateway.shards.get(shardId);
 
   const messageData = JSON.parse(message) as DiscordGatewayPayload;
-  ws.log("RAW", { shardId, payload: messageData });
+  gateway.debug("GW RAW", { shardId, payload: messageData });
 
   switch (messageData.op) {
     case DiscordGatewayOpcodes.Heartbeat:
@@ -32,7 +35,8 @@ export async function handleOnMessage(message: any, shardId: number) {
 
       shard.heartbeat.lastSentAt = Date.now();
       // Discord randomly sends this requiring an immediate heartbeat back
-      ws.sendShardMessage(
+      gateway.sendShardMessage(
+        gateway,
         shard,
         {
           op: DiscordGatewayOpcodes.Heartbeat,
@@ -42,87 +46,122 @@ export async function handleOnMessage(message: any, shardId: number) {
       );
       break;
     case DiscordGatewayOpcodes.Hello:
-      ws.heartbeat(shardId, (messageData.d as DiscordHello).heartbeat_interval);
+      gateway.heartbeat(gateway, shardId, (messageData.d as DiscordHello).heartbeat_interval);
       break;
     case DiscordGatewayOpcodes.HeartbeatACK:
-      if (ws.shards.has(shardId)) {
-        const shard = ws.shards.get(shardId)!;
+      if (gateway.shards.has(shardId)) {
+        const shard = gateway.shards.get(shardId)!;
         shard.heartbeat.acknowledged = true;
         shard.heartbeat.lastReceivedAt = Date.now();
       }
       break;
     case DiscordGatewayOpcodes.Reconnect:
-      ws.log("RECONNECT", { shardId });
+      gateway.debug("GW RECONNECT", { shardId });
 
-      if (ws.shards.has(shardId)) {
-        ws.shards.get(shardId)!.resuming = true;
+      if (gateway.shards.has(shardId)) {
+        gateway.shards.get(shardId)!.resuming = true;
       }
 
-      ws.resume(shardId);
+      gateway.resume(gateway, shardId);
       break;
     case DiscordGatewayOpcodes.InvalidSession:
-      ws.log("INVALID_SESSION", { shardId, payload: messageData });
+      gateway.debug("GW INVALID_SESSION", { shardId, payload: messageData });
 
       // We need to wait for a random amount of time between 1 and 5: https://discord.com/developers/docs/topics/gateway#resuming
       await delay(Math.floor((Math.random() * 4 + 1) * 1000));
 
       // When d is false we need to reidentify
       if (!messageData.d) {
-        await ws.identify(shardId, ws.maxShards);
+        await gateway.identify(gateway, shardId, gateway.maxShards);
         break;
       }
 
-      if (ws.shards.has(shardId)) {
-        ws.shards.get(shardId)!.resuming = true;
+      if (gateway.shards.has(shardId)) {
+        gateway.shards.get(shardId)!.resuming = true;
       }
 
-      ws.resume(shardId);
+      gateway.resume(gateway, shardId);
       break;
     default:
       if (messageData.t === "RESUMED") {
-        ws.log("RESUMED", { shardId });
+        gateway.debug("GW RESUMED", { shardId });
 
-        if (ws.shards.has(shardId)) {
-          ws.shards.get(shardId)!.resuming = false;
+        if (gateway.shards.has(shardId)) {
+          gateway.shards.get(shardId)!.resuming = false;
         }
         break;
       }
 
       // Important for RESUME
       if (messageData.t === "READY") {
-        const shard = ws.shards.get(shardId);
+        const shard = gateway.shards.get(shardId);
+        const payload = messageData.d as DiscordReady;
         if (shard) {
-          shard.sessionId = (messageData.d as DiscordReady).session_id;
+          shard.sessionId = payload.session_id;
         }
 
-        ws.loadingShards.get(shardId)?.resolve(true);
-        ws.loadingShards.delete(shardId);
+        payload.guilds.forEach((g) => gateway.cache.loadingGuildIds.add(snowflakeToBigint(g.id)));
+
+        gateway.loadingShards.get(shardId)?.resolve(true);
+        gateway.loadingShards.delete(shardId);
         // Wait few seconds to spawn next shard
         setTimeout(() => {
-          const bucket = ws.buckets.get(shardId % ws.botGatewayData.sessionStartLimit.maxConcurrency);
+          const bucket = gateway.buckets.get(shardId % gateway.maxConcurrency);
           if (bucket) bucket.createNextShard.shift()?.();
-        }, ws.spawnShardDelay);
+        }, gateway.spawnShardDelay);
       }
 
       // Update the sequence number if it is present
       if (messageData.s) {
-        const shard = ws.shards.get(shardId);
+        const shard = gateway.shards.get(shardId);
         if (shard) {
           shard.previousSequenceNumber = messageData.s;
         }
       }
 
-      if (ws.url) await ws.handleDiscordPayload(messageData, shardId);
-      else {
-        eventHandlers.raw?.(messageData);
-        await eventHandlers.dispatchRequirements?.(messageData, shardId);
+      // MUST HANDLE GUILD_CREATE EVENTS AS THEY ARE EXPENSIVE WITHOUT GATEWAY CACHE
+      if (messageData.t === "GUILD_CREATE") {
+        const id = snowflakeToBigint((messageData.d as SnakeCasedPropertiesDeep<Guild>).id);
 
-        if (messageData.op !== DiscordGatewayOpcodes.Dispatch) return;
+        // SHARD RESUMED MOST LIKELY, THEY EMIT GUILD CREATES. OR GUILD BECAME AVAILABLE AGAIN
+        if (gateway.cache.guildIds.has(id)) return;
 
-        if (!messageData.t) return;
+        // GUILD WAS MARKED LOADING IN READY EVENT, THIS WAS THE FIRST GUILD_CREATE TO ARRIVE
+        if (gateway.cache.loadingGuildIds.has(id)) {
+          // @ts-ignore override with a custom event
+          messageData.t = "GUILD_LOADED_DD";
+          gateway.cache.loadingGuildIds.delete(id);
+        }
 
-        return handlers[messageData.t]?.(camelize(messageData), shardId);
+        gateway.cache.guildIds.add(id);
       }
+
+      // MESSAGE_UPDATE CAN SPAM FOR NO REASON USE THIS TO IGNORE
+      if (messageData.t === "MESSAGE_UPDATE") {
+        const payload = messageData.d as SnakeCasedPropertiesDeep<Message>;
+
+        const id = snowflakeToBigint(payload.id);
+        const content = payload.content || "";
+        const cached = gateway.cache.editedMessages.get(id);
+
+        if (cached === content) return;
+        else {
+          // ADD TO LOCAL CACHE FOR FUTURE EVENTS.
+          gateway.cache.editedMessages.set(id, content);
+          // REMOVE AFTER 10 SECONDS FROM CACHE
+          setTimeout(() => gateway.cache.editedMessages.delete(id), 10000);
+        }
+      }
+
+      // MUST HANDLE GUILD_DELETE EVENTS FOR UNAVAILABLE
+      if (messageData.t === "GUILD_DELETE") {
+        if ((messageData.d as UnavailableGuild).unavailable) return;
+      }
+
+      // IF NO TYPE THEN THIS SHOULD NOT BE SENT FORWARD
+      if (!messageData.t) return;
+
+      await gateway.handleDiscordPayload(gateway, messageData, shardId);
 
       break;
   }

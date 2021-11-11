@@ -7,7 +7,7 @@ import { DiscordVerificationLevels } from "./verification_levels.ts";
 
 /** https://discord.com/developers/docs/resources/guild#create-guild */
 export interface CreateGuild {
-  /** Name of the guild (2-100 characters) */
+  /** Name of the guild (1-100 characters) */
   name: string;
   /** Base64 128x128 image for the guild icon */
   icon?: string;

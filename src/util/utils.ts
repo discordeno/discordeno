@@ -1,5 +1,3 @@
-import { encode } from "./deps.ts";
-import { eventHandlers } from "../bot.ts";
 import { isButton } from "../helpers/type_guards/is_button.ts";
 import { Errors } from "../types/discordeno/errors.ts";
 import type { ApplicationCommandOption } from "../types/interactions/commands/application_command_option.ts";
@@ -12,23 +10,11 @@ import type { MessageComponents } from "../types/messages/components/message_com
 import type { DiscordImageFormat } from "../types/misc/image_format.ts";
 import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import { CONTEXT_MENU_COMMANDS_NAME_REGEX, SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
-import { validateLength } from "./validate_length.ts";
 import { isSelectMenu } from "../helpers/type_guards/is_select_menu.ts";
 import { ApplicationCommandTypes } from "../types/interactions/commands/application_command_types.ts";
+import { Bot } from "../bot.ts";
 
-export async function urlToBase64(url: string) {
-  const buffer = await fetch(url).then((res) => res.arrayBuffer());
-  const imageStr = encode(buffer);
-  const type = url.substring(url.lastIndexOf(".") + 1);
-  return `data:image/${type};base64,${imageStr}`;
-}
-
-/** Allows easy way to add a prop to a base object when needing to use complicated getters solution. */
-// deno-lint-ignore no-explicit-any
-export function createNewProp(value: any): PropertyDescriptor {
-  return { configurable: true, enumerable: true, writable: true, value };
-}
-
+/** Pause the execution for a given amount of milliseconds. */
 export function delay(ms: number): Promise<void> {
   return new Promise((res): number =>
     setTimeout((): void => {
@@ -37,78 +23,19 @@ export function delay(ms: number): Promise<void> {
   );
 }
 
+/** Help format an image url. */
 export const formatImageURL = (url: string, size: DiscordImageSize = 128, format?: DiscordImageFormat) => {
   return `${url}.${format || (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
 };
 
-function camelToSnakeCase(text: string) {
-  return text.replace(/[A-Z]/g, ($1) => `_${$1.toLowerCase()}`);
-}
-
-function snakeToCamelCase(text: string) {
-  return text.replace(/([-_][a-z])/gi, ($1) => $1.toUpperCase().replace("_", ""));
-}
-
-function isConvertableObject(obj: unknown) {
-  return obj === Object(obj) && !Array.isArray(obj) && typeof obj !== "function" && !(obj instanceof Blob);
-}
-
-export function snakelize<T>(
-  // deno-lint-ignore no-explicit-any
-  obj: Record<string, any> | Record<string, any>[]
-): T {
-  if (isConvertableObject(obj)) {
-    // deno-lint-ignore no-explicit-any
-    const convertedObject: Record<string, any> = {};
-
-    Object.keys(obj).forEach((key) => {
-      eventHandlers.debug?.("loop", `Running forEach loop in snakelize function.`);
-      convertedObject[camelToSnakeCase(key)] = snakelize(
-        // deno-lint-ignore no-explicit-any
-        (obj as Record<string, any>)[key]
-      );
-    });
-
-    return convertedObject as T;
-  } else if (Array.isArray(obj)) {
-    obj = obj.map((element) => snakelize(element));
-  }
-
-  return obj as T;
-}
-
-export function camelize<T>(
-  // deno-lint-ignore no-explicit-any
-  obj: Record<string, any> | Record<string, any>[]
-): T {
-  if (isConvertableObject(obj)) {
-    // deno-lint-ignore no-explicit-any
-    const convertedObject: Record<string, any> = {};
-
-    Object.keys(obj).forEach((key) => {
-      eventHandlers.debug?.("loop", `Running forEach loop in camelize function.`);
-      convertedObject[snakeToCamelCase(key)] = camelize(
-        // deno-lint-ignore no-explicit-any
-        (obj as Record<string, any>)[key]
-      );
-    });
-
-    return convertedObject as T;
-  } else if (Array.isArray(obj)) {
-    obj = obj.map((element) => camelize(element));
-  }
-
-  return obj as T;
-}
-
-/** @private */
-function validateSlashOptionChoices(
+export function validateSlashOptionChoices(
+  bot: Bot,
   choices: ApplicationCommandOptionChoice[],
   optionType: DiscordApplicationCommandOptionTypes
 ) {
-  for (const choice of choices) {
-    eventHandlers.debug?.("loop", `Running for of loop in validateSlashOptionChoices function.`);
-    if (!validateLength(choice.name, { min: 1, max: 100 })) {
+  return choices.every((choice) => {
+    bot.events.debug(`Running for of loop in validateSlashOptionChoices function.`);
+    if (!bot.utils.validateLength(choice.name, { min: 1, max: 100 })) {
       throw new Error(Errors.INVALID_SLASH_OPTION_CHOICE_NAME);
     }
 
@@ -122,17 +49,16 @@ function validateSlashOptionChoices(
     if (optionType === DiscordApplicationCommandOptionTypes.Integer && typeof choice.value !== "number") {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICE_VALUE_TYPE);
     }
-  }
+  });
 }
 
 // TODO: add checks for autocomplete options when discord provides more info about them.
-/** @private */
-function validateSlashOptions(options: ApplicationCommandOption[]) {
+export function validateSlashOptions(bot: Bot, options: ApplicationCommandOption[]) {
   const requiredOptions: ApplicationCommandOption[] = [];
   const optionalOptions: ApplicationCommandOption[] = [];
 
   for (const option of options) {
-    eventHandlers.debug?.("loop", `Running for of loop in validateSlashOptions function.`);
+    bot.events.debug(`Running for of loop in validateSlashOptions function.`);
     option.name = option.name.toLowerCase();
 
     if (option.choices?.length) {
@@ -144,13 +70,13 @@ function validateSlashOptions(options: ApplicationCommandOption[]) {
         throw new Error(Errors.ONLY_STRING_OR_INTEGER_OPTIONS_CAN_HAVE_CHOICES);
     }
 
-    if (!validateLength(option.name, { min: 1, max: 32 })) throw new Error(Errors.INVALID_SLASH_OPTION_NAME);
+    if (!bot.utils.validateLength(option.name, { min: 1, max: 32 })) throw new Error(Errors.INVALID_SLASH_OPTION_NAME);
 
-    if (!validateLength(option.description, { min: 1, max: 100 }))
+    if (!bot.utils.validateLength(option.description, { min: 1, max: 100 }))
       throw new Error(Errors.INVALID_SLASH_OPTION_DESCRIPTION);
 
     if (option.choices) {
-      validateSlashOptionChoices(option.choices, option.type);
+      bot.utils.validateSlashOptionChoices(bot, option.choices, option.type);
     }
 
     if (option.required) {
@@ -165,11 +91,12 @@ function validateSlashOptions(options: ApplicationCommandOption[]) {
 }
 
 export function validateSlashCommands(
+  bot: Bot,
   commands: (CreateGlobalApplicationCommand | EditGlobalApplicationCommand)[],
   create = false
 ) {
   return commands.map((command) => {
-    eventHandlers.debug?.("loop", `Running for of loop in validateSlashCommands function.`);
+    bot.events.debug(`Running for of loop in validateSlashCommands function.`);
     if (create) {
       if (!command.name) throw new Error(Errors.INVALID_SLASH_NAME);
       // Slash commands require description
@@ -195,7 +122,7 @@ export function validateSlashCommands(
       }
     }
 
-    if (command.description && !validateLength(command.description, { min: 1, max: 100 })) {
+    if (command.description && !bot.utils.validateLength(command.description, { min: 1, max: 100 })) {
       throw new Error(Errors.INVALID_SLASH_DESCRIPTION);
     }
 
@@ -204,7 +131,7 @@ export function validateSlashCommands(
         throw new Error(Errors.TOO_MANY_SLASH_OPTIONS);
       }
 
-      command.options = validateSlashOptions(command.options);
+      command.options = bot.utils.validateSlashOptions(bot, command.options);
     }
 
     return command;
@@ -215,7 +142,7 @@ export function validateSlashCommands(
 // Taken from https://fettblog.eu/typescript-hasownproperty/
 /** TS save way to check if a property exists in an object */
 // deno-lint-ignore ban-types
-export function hasOwnProperty<T extends {}, Y extends PropertyKey = string>(
+export function hasProperty<T extends {}, Y extends PropertyKey = string>(
   obj: T,
   prop: Y
 ): obj is T & Record<Y, unknown> {
@@ -223,7 +150,7 @@ export function hasOwnProperty<T extends {}, Y extends PropertyKey = string>(
   return obj.hasOwnProperty(prop);
 }
 
-export function validateComponents(components: MessageComponents) {
+export function validateComponents(bot: Bot, components: MessageComponents) {
   if (!components?.length) return;
 
   let actionRowCounter = 0;
@@ -244,7 +171,7 @@ export function validateComponents(components: MessageComponents) {
     }
 
     for (const subcomponent of component.components) {
-      if (subcomponent.customId && !validateLength(subcomponent.customId, { max: 100 })) {
+      if (subcomponent.customId && !bot.utils.validateLength(subcomponent.customId, { max: 100 })) {
         throw new Error(Errors.COMPONENT_CUSTOM_ID_TOO_BIG);
       }
 
@@ -258,7 +185,7 @@ export function validateComponents(components: MessageComponents) {
           throw new Error(Errors.BUTTON_REQUIRES_CUSTOM_ID);
         }
 
-        if (!validateLength(subcomponent.label, { max: 80 })) {
+        if (!bot.utils.validateLength(subcomponent.label, { max: 80 })) {
           throw new Error(Errors.COMPONENT_LABEL_TOO_BIG);
         }
 
@@ -266,7 +193,7 @@ export function validateComponents(components: MessageComponents) {
       }
 
       if (isSelectMenu(subcomponent)) {
-        if (subcomponent.placeholder && !validateLength(subcomponent.placeholder, { max: 100 })) {
+        if (subcomponent.placeholder && !bot.utils.validateLength(subcomponent.placeholder, { max: 100 })) {
           throw new Error(Errors.COMPONENT_PLACEHOLDER_TOO_BIG);
         }
 
@@ -313,15 +240,15 @@ export function validateComponents(components: MessageComponents) {
             }
           }
 
-          if (!validateLength(option.label, { max: 25 })) {
+          if (!bot.utils.validateLength(option.label, { max: 25 })) {
             throw new Error(Errors.SELECT_OPTION_LABEL_TOO_BIG);
           }
 
-          if (!validateLength(option.value, { max: 100 })) {
+          if (!bot.utils.validateLength(option.value, { max: 100 })) {
             throw new Error(Errors.SELECT_OPTION_VALUE_TOO_BIG);
           }
 
-          if (option.description && !validateLength(option.description, { max: 50 })) {
+          if (option.description && !bot.utils.validateLength(option.description, { max: 50 })) {
             throw new Error(Errors.SELECT_OPTION_VALUE_TOO_BIG);
           }
 

@@ -17,7 +17,7 @@ export interface Channel {
   position?: number;
   /** Explicit permission overwrites for members and roles */
   permissionOverwrites?: DiscordOverwrite[];
-  /** The name of the channel (2-100 characters) */
+  /** The name of the channel (1-100 characters) */
   name?: string;
   /** The channel topic (0-1024 characters) */
   topic?: string | null;

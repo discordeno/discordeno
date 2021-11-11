@@ -1,11 +1,14 @@
-import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
 import type { Message } from "../../types/messages/message.ts";
-import { endpoints } from "../../util/constants.ts";
+import type { Bot } from "../../bot.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Crosspost a message in a News Channel to following channels. */
-export async function publishMessage(channelId: bigint, messageId: bigint) {
-  const data = await rest.runMethod<Message>("post", endpoints.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId));
+export async function publishMessage(bot: Bot, channelId: bigint, messageId: bigint) {
+  const data = await bot.rest.runMethod<Message>(
+    bot.rest,
+    "post",
+    bot.constants.endpoints.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId)
+  );
 
-  return await structures.createDiscordenoMessage(data);
+  return bot.transformers.message(bot, data);
 }

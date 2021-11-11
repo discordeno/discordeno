@@ -1,55 +1,50 @@
-import { ws } from "./ws.ts";
-
 /** Begin spawning shards. */
-export function spawnShards(firstShardId = 0) {
+import { GatewayManager } from "../bot.ts";
+
+export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
   /** Stored as bucketId: [clusterId, [ShardIds]] */
-  const maxShards = ws.maxShards || ws.botGatewayData.shards;
-  let cluster = 0;
+  const maxShards = gateway.lastShardId || gateway.maxShards;
+  let worker = 0;
 
-  for (let index = firstShardId; index < ws.botGatewayData.sessionStartLimit.maxConcurrency; index++) {
-    ws.log("DEBUG", `1. Running for loop in spawnShards function.`);
-    // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
-    for (let i = 0; i < maxShards; i++) {
-      ws.log("DEBUG", `2. Running for loop in spawnShards function.`);
-      const bucketId = i % ws.botGatewayData.sessionStartLimit.maxConcurrency;
-      const bucket = ws.buckets.get(bucketId);
+  for (let i = 0; i < gateway.maxConcurrency; i++) {
+    gateway.buckets.set(i, {
+      workers: [],
+      createNextShard: [],
+    });
+  }
 
-      if (!bucket) {
-        // Create the bucket since it doesnt exist
-        ws.buckets.set(bucketId, {
-          clusters: [[cluster, i]],
-          createNextShard: [],
-        });
+  // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
+  for (let i = firstShardId; i < maxShards; i++) {
+    gateway.debug(`1. Running for loop in spawnShards function.`);
+    const bucketId = i % gateway.maxConcurrency;
+    const bucket = gateway.buckets.get(bucketId);
+    if (!bucket) throw new Error("Bucket not found when spawning shards.");
 
-        if (cluster + 1 <= ws.maxClusters) cluster++;
-      } else {
-        // FIND A QUEUE IN THIS BUCKET THAT HAS SPACE
-        const queue = bucket.clusters.find((q) => q.length < ws.shardsPerCluster + 1);
-        if (queue) {
-          // IF THE QUEUE HAS SPACE JUST ADD IT TO THIS QUEUE
-          queue.push(i);
-        } else {
-          if (cluster + 1 <= ws.maxClusters) cluster++;
-          // ADD A NEW QUEUE FOR THIS SHARD
-          bucket.clusters.push([cluster, i]);
-        }
-      }
+    // FIND A QUEUE IN THIS BUCKET THAT HAS SPACE
+    const queue = bucket.workers.find((q) => q.length < gateway.shardsPerCluster + 1);
+    if (queue) {
+      // IF THE QUEUE HAS SPACE JUST ADD IT TO THIS QUEUE
+      queue.push(i);
+    } else {
+      if (worker + 1 <= gateway.maxClusters) worker++;
+      // ADD A NEW QUEUE FOR THIS SHARD
+      bucket.workers.push([worker, i]);
     }
   }
 
   // SPREAD THIS OUT TO DIFFERENT CLUSTERS TO BEGIN STARTING UP
-  ws.buckets.forEach((bucket, bucketId) => {
-    ws.log("DEBUG", `3. Running forEach loop in spawnShards function.`);
-    for (const [clusterId, ...queue] of bucket.clusters) {
-      ws.log("DEBUG", `4. Running for of loop in spawnShards function.`);
+  gateway.buckets.forEach(async (bucket, bucketId) => {
+    gateway.debug(`2. Running forEach loop in spawnShards function.`);
+    for (const [workerId, ...queue] of bucket.workers) {
+      gateway.debug(`3. Running for of loop in spawnShards function.`);
 
       queue.forEach((shardId) => {
         bucket.createNextShard.push(async () => {
-          await ws.tellClusterToIdentify(clusterId, shardId, bucketId);
+          await gateway.tellClusterToIdentify(gateway, workerId, shardId, bucketId);
         });
       });
 
-      bucket.createNextShard.shift()?.();
+      await bucket.createNextShard.shift()?.();
     }
   });
 }

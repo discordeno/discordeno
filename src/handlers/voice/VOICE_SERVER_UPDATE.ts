@@ -1,14 +1,14 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
+import { Bot } from "../../bot.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { VoiceServerUpdate } from "../../types/voice/voice_server_update.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
 
-export async function handleVoiceServerUpdate(data: DiscordGatewayPayload) {
-  const payload = data.d as VoiceServerUpdate;
+export async function handleVoiceServerUpdate(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<VoiceServerUpdate>;
 
-  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
-  if (!guild) return;
-
-  eventHandlers.voiceServerUpdate?.(payload, guild);
+  bot.events.voiceServerUpdate(bot, {
+    token: payload.token,
+    guildId: bot.transformers.snowflake(payload.guild_id),
+    endpoint: payload.endpoint ?? undefined,
+  });
 }

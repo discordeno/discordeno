@@ -1,8 +1,7 @@
-import { rest } from "../../rest/rest.ts";
 import type { VoiceRegion } from "../../types/voice/voice_region.ts";
-import { endpoints } from "../../util/constants.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Returns an array of voice regions that can be used when creating servers. */
-export async function getAvailableVoiceRegions() {
-  return await rest.runMethod<VoiceRegion>("get", endpoints.VOICE_REGIONS);
+export async function getAvailableVoiceRegions(bot: Bot) {
+  return await bot.rest.runMethod<VoiceRegion>(bot.rest, "get", bot.constants.endpoints.VOICE_REGIONS);
 }

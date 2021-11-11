@@ -9,6 +9,7 @@ export enum DiscordVoiceCloseEventCodes {
   SessionTimedOut = 4009,
   ServerNotFound = 4011,
   UnknownProtocol,
+  /** Channel was deleted, you were kicked, voice server changed, or the main gateway session was dropped. Should not reconnect. */
   Disconnect = 4014,
   VoiceServerCrashed,
   UnknownEncryptionMode,

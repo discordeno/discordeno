@@ -1,24 +1,13 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
-import { structures } from "../../structures/mod.ts";
+import { Bot } from "../../bot.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { GuildRoleUpdate } from "../../types/guilds/guild_role_update.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleGuildRoleUpdate(data: DiscordGatewayPayload) {
-  const payload = data.d as GuildRoleUpdate;
-  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
-  if (!guild) return;
+export async function handleGuildRoleUpdate(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<GuildRoleUpdate>;
 
-  const cachedRole = guild.roles.get(snowflakeToBigint(payload.role.id));
-  if (!cachedRole) return;
-
-  const role = await structures.createDiscordenoRole({
-    ...payload,
-    guildId: guild.id,
-  });
-  guild.roles.set(snowflakeToBigint(payload.role.id), role);
-  await cacheHandlers.set("guilds", guild.id, guild);
-
-  eventHandlers.roleUpdate?.(guild, role, cachedRole);
+  bot.events.roleUpdate(
+    bot,
+    bot.transformers.role(bot, { role: payload.role, guildId: bot.transformers.snowflake(payload.guild_id) })
+  );
 }

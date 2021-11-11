@@ -1,30 +1,16 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
+import { Bot,  } from "../../bot.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { MessageReactionRemove } from "../../types/messages/message_reaction_remove.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleMessageReactionRemove(data: DiscordGatewayPayload) {
-  const payload = data.d as MessageReactionRemove;
-  const message = await cacheHandlers.get("messages", snowflakeToBigint(payload.messageId));
+export async function handleMessageReactionRemove(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<MessageReactionRemove>;
 
-  if (message) {
-    const reaction = message.reactions?.find(
-      (reaction) =>
-        // MUST USE == because discord sends null and we use undefined
-        reaction.emoji.id == payload.emoji.id && reaction.emoji.name === payload.emoji.name
-    );
-
-    if (reaction) {
-      reaction.count--;
-      if (reaction.count === 0) {
-        message.reactions = message.reactions?.filter((r) => r.count !== 0);
-      }
-      if (!message.reactions?.length) message.reactions = undefined;
-
-      await cacheHandlers.set("messages", message.id, message);
-    }
-  }
-
-  eventHandlers.reactionRemove?.(payload, message);
+  bot.events.reactionRemove(bot, {
+    userId: bot.transformers.snowflake(payload.user_id),
+    channelId: bot.transformers.snowflake(payload.channel_id),
+    messageId: bot.transformers.snowflake(payload.message_id),
+    guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
+    emoji: bot.transformers.emoji(bot, payload.emoji),
+  });
 }

@@ -1,8 +1,6 @@
-import { rest } from "../../rest/rest.ts";
-import { UpdateOthersVoiceState } from "../../types/guilds/update_others_voice_state.ts";
+import type { UpdateOthersVoiceState } from "../../types/guilds/update_others_voice_state.ts";
 import type { UpdateSelfVoiceState } from "../../types/guilds/update_self_voice_state.ts";
-import { endpoints } from "../../util/constants.ts";
-import { hasOwnProperty, snakelize } from "../../util/utils.ts";
+import type { Bot } from "../../bot.ts";
 
 /**
  * Updates the a user's voice state, defaults to the current user
@@ -16,12 +14,22 @@ import { hasOwnProperty, snakelize } from "../../util/utils.ts";
  *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
  */
 export async function updateBotVoiceState(
+  bot: Bot,
   guildId: bigint,
   options: UpdateSelfVoiceState | ({ userId: bigint } & UpdateOthersVoiceState)
 ) {
-  return await rest.runMethod(
+  return await bot.rest.runMethod(
+    bot.rest,
     "patch",
-    endpoints.UPDATE_VOICE_STATE(guildId, hasOwnProperty(options, "userId") ? options.userId : undefined),
-    snakelize(options)
+    bot.constants.endpoints.UPDATE_VOICE_STATE(
+      guildId,
+      bot.utils.hasProperty(options, "userId") ? options.userId : undefined
+    ),
+    {
+      channel_id: options.channelId,
+      suppress: options.suppress,
+      request_to_speak_timestamp: bot.utils.hasProperty(options, "requestToSpeakTimestamp") ? options.requestToSpeakTimestamp : undefined,
+      user_id: bot.utils.hasProperty(options, "userId") ? options.userId : undefined
+    }
   );
 }

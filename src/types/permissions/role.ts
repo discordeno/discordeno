@@ -20,4 +20,8 @@ export interface Role {
   mentionable: boolean;
   /** The tags this role has */
   tags?: RoleTags;
+  /** role unicode emoji */
+  unicodeEmoji?: string;
+  /** the role emoji hash */
+  icon?: string;
 }

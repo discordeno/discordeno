@@ -26,4 +26,6 @@ export interface ThreadMembersUpdateModified extends ThreadMembersUpdateBase {
   addedMembers?: ThreadMemberModified[];
   /** The id of the users who were removed from the thread */
   removedMemberIds?: bigint[];
+  // TODO: verify this
+  // \* In this gateway event, the thread member objects will also include the [guild member](#DOCS_RESOURCES_GUILD/guild-member-object) and [presence](#DOCS_TOPICS_GATEWAY/presence) objects for each added thread member.
 }

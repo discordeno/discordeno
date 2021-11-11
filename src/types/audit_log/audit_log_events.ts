@@ -38,6 +38,12 @@ export enum DiscordAuditLogEvents {
   StageInstanceCreate,
   StageInstanceUpdate,
   StageInstanceDelete,
+  StickerCreate = 90,
+  StickerUpdate,
+  StickerDelete,
+  ThreadCreate = 110,
+  ThreadUpdate,
+  ThreadDelete,
 }
 
 export type AuditLogEvents = DiscordAuditLogEvents;

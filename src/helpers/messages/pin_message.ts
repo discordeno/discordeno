@@ -1,13 +1,10 @@
-import { rest } from "../../rest/rest.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotChannelPermissions } from "../../util/permissions.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Pin a message in a channel. Requires MANAGE_MESSAGES. Max pins allowed in a channel = 50. */
-export async function pin(channelId: bigint, messageId: bigint) {
-  await requireBotChannelPermissions(channelId, ["MANAGE_MESSAGES"]);
-
-  return await rest.runMethod<undefined>("put", endpoints.CHANNEL_PIN(channelId, messageId));
+export async function pinMessage(bot: Bot, channelId: bigint, messageId: bigint) {
+  return await bot.rest.runMethod<undefined>(
+    bot.rest,
+    "put",
+    bot.constants.endpoints.CHANNEL_PIN(channelId, messageId)
+  );
 }
-
-// aliases
-export { pin as pinMessage };

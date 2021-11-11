@@ -1,10 +1,10 @@
-import { rest } from "../../rest/rest.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotGuildPermissions } from "../../util/permissions.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Removes a discovery subcategory from the guild. Requires the MANAGE_GUILD permission. Returns a 204 No Content on success. */
-export async function removeDiscoverySubcategory(guildId: bigint, categoryId: number) {
-  await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
-
-  return await rest.runMethod<undefined>("delete", endpoints.DISCOVERY_SUBCATEGORY(guildId, categoryId));
+export async function removeDiscoverySubcategory(bot: Bot, guildId: bigint, categoryId: number) {
+  return await bot.rest.runMethod<undefined>(
+    bot.rest,
+    "delete",
+    bot.constants.endpoints.DISCOVERY_SUBCATEGORY(guildId, categoryId)
+  );
 }

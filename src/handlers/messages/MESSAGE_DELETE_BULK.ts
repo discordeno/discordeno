@@ -1,18 +1,14 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
+import { Bot } from "../../bot.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { MessageDeleteBulk } from "../../types/messages/message_delete_bulk.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleMessageDeleteBulk(data: DiscordGatewayPayload) {
-  const payload = data.d as MessageDeleteBulk;
-  const channel = await cacheHandlers.get("channels", snowflakeToBigint(payload.channelId));
-  if (!channel) return;
+export async function handleMessageDeleteBulk(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<MessageDeleteBulk>;
 
-  return Promise.all(
-    payload.ids.map(async (id) => {
-      eventHandlers.messageDelete?.({ id, channel }, await cacheHandlers.get("messages", snowflakeToBigint(id)));
-      await cacheHandlers.delete("messages", snowflakeToBigint(id));
-    })
-  );
+  return {
+    ids: payload.ids.map((id) => bot.transformers.snowflake(id)),
+    channelId: bot.transformers.snowflake(payload.channel_id),
+    guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
+  };
 }

@@ -14,6 +14,7 @@ export enum DiscordUserFlags {
   VerifiedBot = 1 << 16,
   EarlyVerifiedBotDeveloper = 1 << 17,
   DiscordCertifiedModerator = 1 << 18,
+  BotHttpInteractions = 1 << 19,
 }
 
 export type UserFlags = DiscordUserFlags;

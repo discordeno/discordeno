@@ -16,4 +16,6 @@ export interface Attachment {
   height?: number | null;
   /** Width of file (if image) */
   width?: number | null;
+  /** Whether this attachment is ephemeral */
+  ephemeral?: boolean;
 }

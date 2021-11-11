@@ -1,7 +1,7 @@
-import { ws } from "../ws/ws.ts";
+import { GatewayManager } from "../bot.ts";
 
-export function calculateShardId(guildId: bigint) {
-  if (ws.maxShards === 1) return 0;
+export function calculateShardId(gateway: GatewayManager, guildId: bigint) {
+  if (gateway.maxShards === 1) return 0;
 
-  return Number((guildId >> 22n) % BigInt(ws.maxShards - 1));
+  return Number((guildId >> 22n) % BigInt(gateway.maxShards - 1));
 }

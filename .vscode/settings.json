@@ -1,6 +1,7 @@
 {
   "deno.enable": true,
   "deno.lint": false,
+  "deno.unstable": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {

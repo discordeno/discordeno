@@ -1,29 +1,25 @@
-import { cacheHandlers } from "../../cache.ts";
-import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
 import type { Guild } from "../../types/guilds/guild.ts";
 import type { CreateGuildFromTemplate } from "../../types/templates/create_guild_from_template.ts";
-import { endpoints } from "../../util/constants.ts";
-import { urlToBase64 } from "../../util/utils.ts";
-import { ws } from "../../ws/ws.ts";
+import type { Bot } from "../../bot.ts";
 
 /**
  * Create a new guild based on a template
  * NOTE: This endpoint can be used only by bots in less than 10 guilds.
  */
-export async function createGuildFromTemplate(templateCode: string, data: CreateGuildFromTemplate) {
-  if ((await cacheHandlers.size("guilds")) >= 10) {
-    throw new Error("This function can only be used by bots in less than 10 guilds.");
-  }
-
+export async function createGuildFromTemplate(bot: Bot, templateCode: string, data: CreateGuildFromTemplate) {
   if (data.icon) {
-    data.icon = await urlToBase64(data.icon);
+    data.icon = await bot.utils.urlToBase64(data.icon);
   }
 
-  const createdGuild = await rest.runMethod<Guild>("post", endpoints.GUILD_TEMPLATE(templateCode), data);
-
-  return await structures.createDiscordenoGuild(
-    createdGuild,
-    Number((BigInt(createdGuild.id) >> 22n % BigInt(ws.botGatewayData.shards)).toString())
+  const createdGuild = await bot.rest.runMethod<Guild>(
+    bot.rest,
+    "post",
+    bot.constants.endpoints.GUILD_TEMPLATE(templateCode),
+    data
   );
+
+  return bot.transformers.guild(bot, {
+    guild: createdGuild,
+    shardId: bot.utils.calculateShardId(bot.gateway, bot.transformers.snowflake(createdGuild.id)),
+  });
 }

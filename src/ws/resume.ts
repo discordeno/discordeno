@@ -1,27 +1,26 @@
 import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
-import { ws } from "./ws.ts";
+import { GatewayManager } from "../bot.ts";
 
-export function resume(shardId: number) {
-  ws.log("RESUMING", { shardId });
+export function resume(gateway: GatewayManager, shardId: number) {
+  gateway.debug("GW RESUMING", { shardId });
 
   // NOW WE HANDLE RESUMING THIS SHARD
   // Get the old data for this shard necessary for resuming
-  const oldShard = ws.shards.get(shardId);
+  const oldShard = gateway.shards.get(shardId);
+  if (!oldShard) return gateway.debug(`[Error] Trying to resume a shard (id: ${shardId}) that was not first identified.`);
 
-  if (oldShard) {
-    // HOW TO CLOSE OLD SHARD SOCKET!!!
-    ws.closeWS(oldShard.ws, 3064, "Resuming the shard, closing old shard.");
-    // STOP OLD HEARTBEAT
-    clearInterval(oldShard.heartbeat.intervalId);
-  }
+  // HOW TO CLOSE OLD SHARD SOCKET!!!
+  gateway.closeWS(oldShard.ws, 3064, "Resuming the shard, closing old shard.");
+  // STOP OLD HEARTBEAT
+  clearInterval(oldShard.heartbeat.intervalId);
 
   // CREATE A SHARD
-  const socket = ws.createShard(shardId);
+  const socket = gateway.createShard(gateway, shardId);
 
-  const sessionId = oldShard?.sessionId || "";
-  const previousSequenceNumber = oldShard?.previousSequenceNumber || 0;
+  const sessionId = oldShard.sessionId || "";
+  const previousSequenceNumber = oldShard.previousSequenceNumber || 0;
 
-  ws.shards.set(shardId, {
+  gateway.shards.set(shardId, {
     id: shardId,
     ws: socket,
     resumeInterval: 0,
@@ -38,7 +37,7 @@ export function resume(shardId: number) {
       interval: 0,
       intervalId: 0,
     },
-    queue: oldShard?.queue || [],
+    queue: oldShard.queue || [],
     processingQueue: false,
     queueStartedAt: Date.now(),
     queueCounter: 0,
@@ -46,12 +45,13 @@ export function resume(shardId: number) {
 
   // Resume on open
   socket.onopen = () => {
-    ws.sendShardMessage(
+    gateway.sendShardMessage(
+      gateway,
       shardId,
       {
         op: DiscordGatewayOpcodes.Resume,
         d: {
-          token: ws.identifyPayload.token,
+          token: gateway.token,
           session_id: sessionId,
           seq: previousSequenceNumber,
         },

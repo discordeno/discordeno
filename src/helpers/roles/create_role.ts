@@ -1,32 +1,22 @@
-import { cacheHandlers } from "../../cache.ts";
-import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
-import { CreateGuildRole } from "../../types/guilds/create_guild_role.ts";
+import type { CreateGuildRole } from "../../types/guilds/create_guild_role.ts";
 import type { Role } from "../../types/permissions/role.ts";
-import { endpoints } from "../../util/constants.ts";
-import { calculateBits, requireBotGuildPermissions } from "../../util/permissions.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
-export async function createRole(guildId: bigint, options: CreateGuildRole, reason?: string) {
-  await requireBotGuildPermissions(guildId, ["MANAGE_ROLES"]);
-
-  const result = await rest.runMethod<Role>("post", endpoints.GUILD_ROLES(guildId), {
-    ...options,
-    permissions: calculateBits(options?.permissions || []),
+export async function createRole(bot: Bot, guildId: bigint, options: CreateGuildRole, reason?: string) {
+  const result = await bot.rest.runMethod<Role>(bot.rest, "post", bot.constants.endpoints.GUILD_ROLES(guildId), {
+    name: options.name,
+    color: options.color,
+    hoist: options.hoist,
+    mentionable: options.mentionable,
+    permissions: bot.utils.calculateBits(options?.permissions || []),
     reason,
   });
 
-  const role = await structures.createDiscordenoRole({
+  const role = bot.transformers.role(bot, {
     role: result,
     guildId,
   });
-
-  const guild = await cacheHandlers.get("guilds", guildId);
-  if (guild) {
-    guild.roles.set(role.id, role);
-
-    await cacheHandlers.set("guilds", guildId, guild);
-  }
 
   return role;
 }

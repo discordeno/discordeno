@@ -1,22 +1,22 @@
-import { botId } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
-import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
 import type { CreateGuild } from "../../types/guilds/create_guild.ts";
 import type { Guild } from "../../types/guilds/guild.ts";
-import { endpoints } from "../../util/constants.ts";
-import { snakelize } from "../../util/utils.ts";
-import { getMember } from "../members/get_member.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
-export async function createGuild(options: CreateGuild) {
-  const result = await rest.runMethod<Guild>("post", endpoints.GUILDS, snakelize(options));
+export async function createGuild(bot: Bot, options: CreateGuild) {
+  const result = await bot.rest.runMethod<Guild>(bot.rest, "post", bot.constants.endpoints.GUILDS, {
+    name: options.name,
+    afk_channel_id: options.afkChannelId,
+    afk_timeout: options.afkTimeout,
+    channels: options.channels,
+    default_message_notifications: options.defaultMessageNotifications,
+    explicit_content_filter: options.explicitContentFilter,
+    icon: options.icon,
+    roles: options.roles,
+    system_channel_flags: options.systemChannelFlags,
+    system_channel_id: options.systemChannelId,
+    verification_level: options.verificationLevel,
+  });
 
-  const guild = await structures.createDiscordenoGuild(result, 0);
-  // MANUALLY CACHE THE GUILD
-  await cacheHandlers.set("guilds", guild.id, guild);
-  // MANUALLY CACHE THE BOT
-  await getMember(guild.id, botId);
-
-  return guild;
+  return bot.transformers.guild(bot, { guild: result, shardId: 0 });
 }

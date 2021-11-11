@@ -1,8 +1,12 @@
-import { rest } from "../../rest/rest.ts";
-import { endpoints } from "../../util/constants.ts";
 import { Application } from "../../types/applications/application.ts";
+import type { Bot } from "../../bot.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Get the applications info */
-export async function getApplicationInfo() {
-  return await rest.runMethod<Omit<Application, "flags">>("get", endpoints.OAUTH2_APPLICATION);
+export async function getApplicationInfo(bot: Bot) {
+  return await bot.rest.runMethod<Omit<Application, "flags">>(
+    bot.rest,
+    "get",
+    bot.constants.endpoints.OAUTH2_APPLICATION
+  );
 }

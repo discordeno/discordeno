@@ -32,7 +32,7 @@ export interface Message {
    * Member properties for this message's author
    * Note: The member object exists in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events from text-based guild channels. This allows bots to obtain real-time member data without requiring bots to store member state in memory.
    */
-  member?: Partial<GuildMember>;
+  member?: GuildMember;
   /** Contents of the message */
   content?: string;
   /** When this message was sent */

@@ -5,7 +5,7 @@ import { InteractionGuildMember } from "./interaction_guild_member.ts";
 import { DiscordInteractionTypes } from "./interaction_types.ts";
 import { SelectMenuData } from "../messages/components/select_data.ts";
 import { ButtonData } from "../messages/components/button_data.ts";
-import { DiscordenoMessage } from "../../structures/message.ts";
+import { DiscordenoMessage } from "../../transformers/message.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction */
 export type Interaction = PingInteraction | SlashCommandInteraction | ComponentInteraction;

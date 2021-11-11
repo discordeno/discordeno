@@ -1,9 +1,5 @@
-import { cacheHandlers } from "../../cache.ts";
-import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
 import type { Guild } from "../../types/guilds/guild.ts";
-import { endpoints } from "../../util/constants.ts";
-import { ws } from "../../ws/ws.ts";
+import type { Bot } from "../../bot.ts";
 
 /**
  * ⚠️ **If you need this, you are probably doing something wrong. Always use cache.guilds.get()
@@ -13,24 +9,20 @@ import { ws } from "../../ws/ws.ts";
  * So it does not cache the guild, you must do it manually.
  * */
 export async function getGuild(
+  bot: Bot,
   guildId: bigint,
   options: { counts?: boolean; addToCache?: boolean } = {
     counts: true,
-    addToCache: true,
   }
 ) {
-  const result = await rest.runMethod<Guild>("get", endpoints.GUILDS_BASE(guildId), {
+  const result = await bot.rest.runMethod<Guild>(bot.rest, "get", bot.constants.endpoints.GUILDS_BASE(guildId), {
     with_counts: options.counts,
   });
 
-  const guild = await structures.createDiscordenoGuild(
-    result,
-    Number((BigInt(guildId) >> 22n) % BigInt(ws.botGatewayData.shards))
-  );
-
-  if (options.addToCache) {
-    await cacheHandlers.set("guilds", guild.id, guild);
-  }
+  const guild = bot.transformers.guild(bot, {
+    guild: result,
+    shardId: bot.utils.calculateShardId(bot.gateway, guildId),
+  });
 
   return guild;
 }

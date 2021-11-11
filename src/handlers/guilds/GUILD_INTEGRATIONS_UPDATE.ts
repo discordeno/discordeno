@@ -1,14 +1,10 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
+import type { Bot } from "../../bot.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { GuildIntegrationsUpdate } from "../../types/integrations/guild_integrations_update.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleGuildIntegrationsUpdate(data: DiscordGatewayPayload) {
-  const payload = data.d as GuildIntegrationsUpdate;
+export async function handleGuildIntegrationsUpdate(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<GuildIntegrationsUpdate>;
 
-  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
-  if (!guild) return;
-
-  eventHandlers.guildIntegrationsUpdate?.(guild);
+  bot.events.integrationUpdate(bot, { guildId: bot.transformers.snowflake(payload.guild_id) });
 }

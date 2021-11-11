@@ -1,14 +1,14 @@
-import { rest } from "../../rest/rest.ts";
 import type { Template } from "../../types/templates/template.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotGuildPermissions } from "../../util/permissions.ts";
+import type { Bot } from "../../bot.ts";
 
 /**
  * Deletes a template from a guild.
  * Requires the `MANAGE_GUILD` permission.
  */
-export async function deleteGuildTemplate(guildId: bigint, templateCode: string) {
-  await requireBotGuildPermissions(guildId, ["MANAGE_GUILD"]);
-
-  return await rest.runMethod<Template>("delete", `${endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`);
+export async function deleteGuildTemplate(bot: Bot, guildId: bigint, templateCode: string) {
+  return await bot.rest.runMethod<Template>(
+    bot.rest,
+    "delete",
+    `${bot.constants.endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`
+  );
 }

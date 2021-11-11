@@ -1,20 +1,16 @@
-import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
+import type { Bot } from "../../bot.ts";
 import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
 import type { Message } from "../../types/messages/message.ts";
-import { Errors } from "../../types/discordeno/errors.ts";
 import type { ExecuteWebhook } from "../../types/webhooks/execute_webhook.ts";
-import { endpoints } from "../../util/constants.ts";
-import { snakelize } from "../../util/utils.ts";
 
 /** Send a webhook with webhook Id and webhook token */
-export async function sendWebhook(webhookId: bigint, webhookToken: string, options: ExecuteWebhook) {
+export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: string, options: ExecuteWebhook) {
   if (!options.content && !options.file && !options.embeds) {
-    throw new Error(Errors.INVALID_WEBHOOK_OPTIONS);
+    throw new Error(bot.constants.Errors.INVALID_WEBHOOK_OPTIONS);
   }
 
   if (options.content && options.content.length > 2000) {
-    throw Error(Errors.MESSAGE_MAX_LENGTH);
+    throw Error(bot.constants.Errors.MESSAGE_MAX_LENGTH);
   }
 
   options.embeds?.splice(10);
@@ -41,14 +37,25 @@ export async function sendWebhook(webhookId: bigint, webhookToken: string, optio
     }
   }
 
-  const result = await rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<Message>(
+    bot.rest,
     "post",
-    `${endpoints.WEBHOOK(webhookId, webhookToken)}?wait=${options.wait ?? false}${
+    `${bot.constants.endpoints.WEBHOOK(webhookId, webhookToken)}?wait=${options.wait ?? false}${
       options.threadId ? `&thread_id=${options.threadId}` : ""
     }`,
-    snakelize(options)
+    {
+      wait: options.wait,
+      thread_id: options.threadId,
+      content: options.content,
+      username: options.username,
+      avatar_url: options.avatarUrl,
+      tts: options.tts,
+      file: options.file,
+      embeds: options.embeds,
+      allowed_mentions: options.allowedMentions,
+    }
   );
   if (!options.wait) return;
 
-  return structures.createDiscordenoMessage(result);
+  return bot.transformers.message(bot, result);
 }

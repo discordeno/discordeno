@@ -1,39 +1,38 @@
-import { cacheHandlers } from "../../cache.ts";
-import { rest } from "../../rest/rest.ts";
-import { structures } from "../../structures/mod.ts";
 import type { Channel } from "../../types/channels/channel.ts";
 import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
 import type { CreateGuildChannel, DiscordCreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
-import { endpoints } from "../../util/constants.ts";
-import { calculateBits, requireOverwritePermissions } from "../../util/permissions.ts";
-import { snakelize } from "../../util/utils.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-export async function createChannel(guildId: bigint, options?: CreateGuildChannel, reason?: string) {
-  if (options?.permissionOverwrites) {
-    await requireOverwritePermissions(guildId, options.permissionOverwrites);
-  }
-
+export async function createChannel(bot: Bot, guildId: bigint, options?: CreateGuildChannel, reason?: string) {
   // BITRATES ARE IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
 
-  const result = await rest.runMethod<Channel>(
+  const result = await bot.rest.runMethod<Channel>(
+    bot.rest,
     "post",
-    endpoints.GUILD_CHANNELS(guildId),
-    snakelize<DiscordCreateGuildChannel>({
-      ...options,
-      permissionOverwrites: options?.permissionOverwrites?.map((perm) => ({
-        ...perm,
-        allow: calculateBits(perm.allow),
-        deny: calculateBits(perm.deny),
-      })),
-      type: options?.type || DiscordChannelTypes.GuildText,
-      reason,
-    })
+    bot.constants.endpoints.GUILD_CHANNELS(guildId),
+    options
+      ? {
+          name: options.name,
+          topic: options.topic,
+          bitrate: options.bitrate,
+          user_limit: options.userLimit,
+          rate_limit_per_user: options.rateLimitPerUser,
+          position: options.position,
+          parent_id: options.parentId?.toString(),
+          nsfw: options.nsfw,
+          permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
+            id: perm.id.toString(),
+            type: perm.type,
+            allow: perm.allow ? bot.utils.calculateBits(perm.allow) : "0",
+            deny: perm.deny ? bot.utils.calculateBits(perm.deny) : "0",
+          })),
+          type: options?.type || DiscordChannelTypes.GuildText,
+          reason,
+        }
+      : {}
   );
 
-  const discordenoChannel = await structures.createDiscordenoChannel(result);
-  await cacheHandlers.set("channels", discordenoChannel.id, discordenoChannel);
-
-  return discordenoChannel;
+  return bot.transformers.channel(bot, { channel: result, guildId });
 }

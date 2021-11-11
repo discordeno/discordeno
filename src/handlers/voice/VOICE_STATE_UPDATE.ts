@@ -1,50 +1,31 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
-import { structures } from "../../structures/mod.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
 import type { VoiceState } from "../../types/voice/voice_state.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { Bot } from "../../bot.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleVoiceStateUpdate(data: DiscordGatewayPayload) {
-  const payload = data.d as VoiceState;
-  if (!payload.guildId) return;
+export async function handleVoiceStateUpdate(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<VoiceState>;
+  if (!payload.guild_id) return;
 
-  const guild = await cacheHandlers.get("guilds", snowflakeToBigint(payload.guildId));
-  if (!guild) return;
+  const guildId = bot.transformers.snowflake(payload.guild_id);
+  const userId = bot.transformers.snowflake(payload.user_id);
 
-  const member = payload.member
-    ? await structures.createDiscordenoMember(payload.member, guild.id)
-    : await cacheHandlers.get("members", snowflakeToBigint(payload.userId));
-  if (!member) return;
-
-  if (!payload.member?.joinedAt) return eventHandlers.lurkerVoiceStateUpdate?.(member, payload);
-
-  // No cached state before so lets make one for em
-  const cachedState = guild.voiceStates.get(snowflakeToBigint(payload.userId));
-
-  guild.voiceStates.set(
-    snowflakeToBigint(payload.userId),
-    await structures.createDiscordenoVoiceState(guild.id, payload)
-  );
-
-  await cacheHandlers.set("guilds", guild.id, guild);
-
-  if (cachedState?.channelId !== (payload.channelId ? snowflakeToBigint(payload.channelId) : null)) {
-    // Either joined or moved channels
-    if (payload.channelId) {
-      if (cachedState?.channelId) {
-        // Was in a channel before
-        eventHandlers.voiceChannelSwitch?.(member, snowflakeToBigint(payload.channelId), cachedState.channelId);
-      } else {
-        // Was not in a channel before so user just joined
-        eventHandlers.voiceChannelJoin?.(member, snowflakeToBigint(payload.channelId));
-      }
-    } // Left the channel
-    else if (cachedState?.channelId) {
-      guild.voiceStates.delete(snowflakeToBigint(payload.userId));
-      eventHandlers.voiceChannelLeave?.(member, cachedState.channelId);
-    }
-  }
-
-  eventHandlers.voiceStateUpdate?.(member, payload);
+  bot.events.voiceStateUpdate(bot, {
+    guildId,
+    userId,
+    channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
+    member: payload.member ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
+    user: payload.member ? bot.transformers.user(bot, payload.member.user) : undefined,
+    sessionId: payload.session_id,
+    deaf: payload.deaf,
+    mute: payload.mute,
+    selfDeaf: payload.self_deaf,
+    selfMute: payload.self_mute,
+    selfStream: payload.self_stream,
+    selfVideo: payload.self_video,
+    suppress: payload.suppress,
+    requestToSpeakTimestamp: payload.request_to_speak_timestamp
+      ? Date.parse(payload.request_to_speak_timestamp)
+      : undefined,
+  });
 }

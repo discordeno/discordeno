@@ -22,7 +22,7 @@ export enum DiscordBitwisePermissionFlags {
   STREAM = 0x00000200,
   /** Allows guild members to view a channel, which includes reading messages in text channels */
   VIEW_CHANNEL = 0x00000400,
-  /** Allows for sending messages in a channel */
+  /** Allows for sending messages in a channel. (does not allow sending messages in threads) */
   SEND_MESSAGES = 0x00000800,
   /** Allows for sending of /tts messages */
   SEND_TTS_MESSAGES = 0x00001000,
@@ -68,12 +68,16 @@ export enum DiscordBitwisePermissionFlags {
   REQUEST_TO_SPEAK = 0x0100000000,
   /** Allows for deleting and archiving threads, and viewing all private threads */
   MANAGE_THREADS = 0x0400000000,
-  /** Allows for creating and participating in threads */
-  USE_PUBLIC_THREADS = 0x0800000000,
-  /** Allows for creating and participating in private threads */
-  USE_PRIVATE_THREADS = 0x1000000000,
+  /** Allows for creating threads */
+  CREATE_PUBLIC_THREADS = 0x0800000000,
+  /** Allows for creating private threads */
+  CREATE_PRIVATE_THREADS = 0x1000000000,
   /** Allows the usage of custom stickers from other servers */
   USE_EXTERNAL_STICKERS = 0x2000000000,
+  /** Allows for sending messages in threads */
+  SEND_MESSAGES_IN_THREADS = 0x4000000000,
+  /** Allows for launching activities (applications with the `EMBEDDED` flag) in a voice channel. */
+  START_EMBEDDED_ACTIVITIES = 0x8000000000,
 }
 
 export type BitwisePermissions = DiscordBitwisePermissionFlags;

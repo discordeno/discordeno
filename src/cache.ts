@@ -1,76 +1,13 @@
-// deno-lint-ignore-file require-await no-explicit-any prefer-const
-import { botId } from "./bot.ts";
-import type { DiscordenoChannel } from "./structures/channel.ts";
-import type { DiscordenoGuild } from "./structures/guild.ts";
-import type { DiscordenoMember } from "./structures/member.ts";
-import type { DiscordenoMessage } from "./structures/message.ts";
-import type { PresenceUpdate } from "./types/activity/presence_update.ts";
-import type { Emoji } from "./types/emojis/emoji.ts";
-import { DiscordenoThread } from "./util/transformers/channel_to_thread.ts";
-import { Collection } from "./util/collection.ts";
-import { Channel } from "./types/channels/channel.ts";
-import { Guild } from "./types/guilds/guild.ts";
+import type { Bot } from "./bot.ts";
+import type { DiscordenoChannel } from "./transformers/channel.ts";
+import type { DiscordenoGuild } from "./transformers/guild.ts";
+import type { DiscordenoMember, DiscordenoUser } from "./transformers/member.ts";
+import type { DiscordenoMessage } from "./transformers/message.ts";
+import { DiscordenoPresence } from "./transformers/presence.ts";
 import { GuildMember } from "./types/members/guild_member.ts";
-import { Message } from "./types/messages/message.ts";
-import { Role } from "./types/permissions/role.ts";
-import { VoiceState } from "./types/voice/voice_state.ts";
-import { User } from "./types/users/user.ts";
+import { Collection } from "./util/collection.ts";
 
-export const cache = {
-  isReady: false,
-  /** All of the guild objects the bot has access to, mapped by their Ids */
-  guilds: new Collection<bigint, DiscordenoGuild>([], { sweeper: { filter: guildSweeper, interval: 3600000 } }),
-  /** All of the channel objects the bot has access to, mapped by their Ids. Sweep channels 1 minute after guilds are sweeped so dispatchedGuildIds is filled. */
-  channels: new Collection<bigint, DiscordenoChannel>([], { sweeper: { filter: channelSweeper, interval: 3660000 } }),
-  /** All of the message objects the bot has cached since the bot acquired `READY` state, mapped by their Ids */
-  messages: new Collection<bigint, DiscordenoMessage>([], { sweeper: { filter: messageSweeper, interval: 300000 } }),
-  /** All of the member objects that have been cached since the bot acquired `READY` state, mapped by their Ids */
-  members: new Collection<bigint, DiscordenoMember>([], { sweeper: { filter: memberSweeper, interval: 300000 } }),
-  /** All of the unavailable guilds, mapped by their Ids (id, timestamp) */
-  unavailableGuilds: new Collection<bigint, number>(),
-  /** All of the presence update objects received in PRESENCE_UPDATE gateway event, mapped by their user Id */
-  presences: new Collection<bigint, PresenceUpdate>([], { sweeper: { filter: () => true, interval: 300000 } }),
-  fetchAllMembersProcessingRequests: new Collection<
-    string,
-    (value: Collection<bigint, DiscordenoMember> | PromiseLike<Collection<bigint, DiscordenoMember>>) => void
-  >(),
-  executedSlashCommands: new Set<string>(),
-  get emojis() {
-    return new Collection<bigint, Emoji>(
-      this.guilds.reduce((a, b) => [...a, ...b.emojis.map((e, id) => [id, e])], [] as any[])
-    );
-  },
-  activeGuildIds: new Set<bigint>(),
-  dispatchedGuildIds: new Set<bigint>(),
-  dispatchedChannelIds: new Set<bigint>(),
-  threads: new Collection<bigint, DiscordenoThread>(),
-  /** ADVANCED USER ONLY: Please ask for help before modifying these. The properties that you want to use for your bot's structures. If you do not set any properties, all properties will be used by default. */
-  requiredStructureProperties: {
-    /** Only these properties will be added to memory for your channels. */
-    channels: new Set<keyof Channel>(),
-    /** Only these properties will be added to memory for your guilds. */
-    guilds: new Set<keyof Guild | "shardId" | "bitfield">(),
-    /** Only these properties will be added to memory for your members. */
-    members: new Set<keyof GuildMember | keyof User | "guilds" | "bitfield" | "cachedAt">(),
-    /** Only these properties will be added to memory for your messages. */
-    messages: new Set<
-      | keyof Message
-      | "isBot"
-      | "tag"
-      | "authorId"
-      | "mentionedUserIds"
-      | "mentionedRoleIds"
-      | "mentionedChannelIds"
-      | "bitfield"
-    >(),
-    /** Only these properties will be added to memory for your roles. */
-    roles: new Set<keyof Role | "botId" | "isNitroBoostRole" | "integrationId" | "bitfield">(),
-    /** Only these properties will be added to memory for your voice states. */
-    voiceStates: new Set<keyof VoiceState | "bitfield">(),
-  },
-};
-
-function messageSweeper(message: DiscordenoMessage) {
+function messageSweeper(bot: Bot, message: DiscordenoMessage) {
   // DM messages aren't needed
   if (!message.guildId) return true;
 
@@ -78,182 +15,264 @@ function messageSweeper(message: DiscordenoMessage) {
   return Date.now() - message.timestamp > 600000;
 }
 
-function memberSweeper(member: DiscordenoMember) {
+function memberSweeper(bot: Bot, member: DiscordenoMember) {
   // Don't sweep the bot else strange things will happen
-  if (member.id === botId) return false;
+  if (member.id === bot.id) return false;
 
   // Only sweep members who were not active the last 30 minutes
   return Date.now() - member.cachedAt > 1800000;
 }
 
-function guildSweeper(guild: DiscordenoGuild) {
+function guildSweeper(bot: Bot<Cache>, guild: DiscordenoGuild) {
   // Reset activity for next interval
-  if (cache.activeGuildIds.delete(guild.id)) return false;
+  if (bot.cache.activeGuildIds.delete(guild.id)) return false;
 
   // This is inactive guild. Not a single thing has happened for atleast 30 minutes.
   // Not a reaction, not a message, not any event!
-  cache.dispatchedGuildIds.add(guild.id);
+  bot.cache.dispatchedGuildIds.add(guild.id);
 
   return true;
 }
 
-function channelSweeper(channel: DiscordenoChannel, key: bigint) {
+function channelSweeper(bot: Bot<Cache>, channel: DiscordenoChannel, key: bigint) {
   // If this is in a guild and the guild was dispatched, then we can dispatch the channel
-  if (channel.guildId && cache.dispatchedGuildIds.has(channel.guildId)) {
-    cache.dispatchedChannelIds.add(channel.id);
+  if (channel.guildId && bot.cache.dispatchedGuildIds.has(channel.guildId)) {
+    bot.cache.dispatchedChannelIds.add(channel.id);
     return true;
   }
 
   // THE KEY DM CHANNELS ARE STORED BY IS THE USER ID. If the user is not cached, we dont need to cache their dm channel.
-  if (!channel.guildId && !cache.members.has(key)) return true;
+  if (!channel.guildId && !bot.cache.members.has(key)) return true;
 
   return false;
 }
 
-export let cacheHandlers = {
-  /** Deletes all items from the cache */
-  async clear(table: TableName) {
-    return cache[table].clear();
-  },
-  /** Deletes 1 item from cache using the key */
-  async delete(table: TableName, key: bigint) {
-    return cache[table].delete(key);
-  },
-  /** Check if something exists in cache with a key */
-  async has(table: TableName, key: bigint) {
-    return cache[table].has(key);
-  },
+export function createCache(
+  bot: Bot,
+  options: {
+    isAsync: true;
+    tableCreator: (bot: Bot, tableName: TableNames) => AsyncCacheHandler<any>;
+  }
+): AsyncCache;
+export function createCache(
+  bot: Bot,
+  options: {
+    isAsync: false;
+    tableCreator?: (bot: Bot, tableName: TableNames) => CacheHandler<any>;
+  }
+): Cache;
+export function createCache(
+  bot: Bot,
+  options: {
+    isAsync: boolean;
+    tableCreator?: (bot: Bot, tableName: TableNames) => CacheHandler<any> | AsyncCacheHandler<any>;
+  }
+): Omit<Cache, "execute"> | Omit<AsyncCache, "execute"> {
+  if (options.isAsync) {
+    if (!options.tableCreator) {
+      throw new Error("Async cache requires a tableCreator to be passed.");
+    }
 
-  /** Get the number of key-value pairs */
-  async size(table: TableName) {
-    return cache[table].size;
-  },
+    const cache = {
+      guilds: options.tableCreator(bot, "guilds"),
+      users: options.tableCreator(bot, "users"),
+      members: options.tableCreator(bot, "members"),
+      channels: options.tableCreator(bot, "channels"),
+      messages: options.tableCreator(bot, "messages"),
+      presences: options.tableCreator(bot, "presences"),
+      // threads: options.tableCreator(bot, "threads"),
+      unavailableGuilds: options.tableCreator(bot, "unavailableGuilds"),
+      dispatchedGuildIds: options.tableCreator(bot, "dispatchedGuildIds"),
+      dispatchedChannelIds: options.tableCreator(bot, "dispatchedChannelIds"),
+      activeGuildIds: options.tableCreator(bot, "activeGuildIds"),
+      executedSlashCommands: new Set(),
+      fetchAllMembersProcessingRequests: new Map(),
+      execute: async function () {
+        throw new Error("Async Cache requires a custom execute function to be implemented.");
+      },
+    } as AsyncCache;
 
-  // Done differently to have overloads
-  /** Add a key value pair to the cache */
-  set,
-  /** Get the value from the cache using its key */
-  get,
-  /** Run a function on all items in this cache */
-  forEach,
-  /** Allows you to filter our all items in this cache. */
-  filter,
+    return cache;
+  }
+  if (!options.tableCreator) options.tableCreator = createTable;
+
+  const cache = {
+    guilds: options.tableCreator(bot, "guilds"),
+    users: options.tableCreator(bot, "users"),
+    members: options.tableCreator(bot, "members"),
+    channels: options.tableCreator(bot, "channels"),
+    messages: options.tableCreator(bot, "messages"),
+    presences: options.tableCreator(bot, "presences"),
+    // threads: options.tableCreator(bot, "threads"),
+    unavailableGuilds: options.tableCreator(bot, "unavailableGuilds"),
+    dispatchedGuildIds: new Set(),
+    dispatchedChannelIds: new Set(),
+    activeGuildIds: new Set(),
+    executedSlashCommands: new Set(),
+    fetchAllMembersProcessingRequests: new Map(),
+  } as Cache;
+
+  cache.execute = createExecute(cache);
+
+  return cache;
+}
+
+export type CachedDiscordenoUser = DiscordenoUser & { guilds: Map<bigint, GuildMember> };
+
+export interface Cache {
+  guilds: CacheHandler<DiscordenoGuild>;
+  users: CacheHandler<DiscordenoUser>;
+  members: CacheHandler<DiscordenoMember>;
+  channels: CacheHandler<DiscordenoChannel>;
+  messages: CacheHandler<DiscordenoMessage>;
+  presences: CacheHandler<DiscordenoPresence>;
+  // threads: CacheHandler<DiscordenoThread>;
+  unavailableGuilds: CacheHandler<CachedUnavailableGuild>;
+  dispatchedGuildIds: Set<bigint>;
+  dispatchedChannelIds: Set<bigint>;
+  activeGuildIds: Set<bigint>;
+  executedSlashCommands: Set<string>;
+  fetchAllMembersProcessingRequests: Map<string, Function>;
+  execute: CacheExecutor;
+}
+
+export interface CachedUnavailableGuild {
+  shardId: number;
+  since: number;
+  dispatched?: true;
+}
+
+export interface AsyncCache {
+  guilds: AsyncCacheHandler<DiscordenoGuild>;
+  users: AsyncCacheHandler<DiscordenoUser>;
+  members: CacheHandler<DiscordenoMember>;
+  channels: AsyncCacheHandler<DiscordenoChannel>;
+  messages: AsyncCacheHandler<DiscordenoMessage>;
+  presences: AsyncCacheHandler<DiscordenoPresence>;
+  // threads: AsyncCacheHandler<DiscordenoThread>;
+  unavailableGuilds: AsyncCacheHandler<CachedUnavailableGuild>;
+  dispatchedGuildIds: AsyncCacheHandler<bigint>;
+  dispatchedChannelIds: AsyncCacheHandler<bigint>;
+  activeGuildIds: AsyncCacheHandler<bigint>;
+  executedSlashCommands: Set<string>;
+  fetchAllMembersProcessingRequests: Map<string, Function>;
+  execute: CacheExecutor;
+}
+
+function createTable<T>(bot: Bot, _table: TableNames): CacheHandler<T> {
+  const table = new Collection<bigint, T>();
+
+  // @ts-ignore TODO: fix type error itoh pwease
+  if (_table === "guilds") table.startSweeper({ filter: guildSweeper, interval: 3660000, bot });
+  // @ts-ignore TODO: fix type error itoh pwease
+  if (_table === "channels") table.startSweeper({ filter: channelSweeper, interval: 3660000, bot });
+  // @ts-ignore TODO: fix type error itoh pwease
+  if (_table === "messages") table.startSweeper({ filter: messageSweeper, interval: 300000, bot });
+  // @ts-ignore TODO: fix type error itoh pwease
+  if (_table === "members") table.startSweeper({ filter: memberSweeper, interval: 300000, bot });
+  if (_table === "presences") table.startSweeper({ filter: () => true, interval: 300000, bot });
+
+  return {
+    clear: () => table.clear(),
+    delete: (key) => table.delete(key),
+    has: (key) => table.has(key),
+    size: () => table.size,
+    set: (key, data) => !!table.set(key, data),
+    get: (key) => table.get(key),
+    forEach: (callback) => table.forEach(callback),
+    filter: (callback) => table.filter(callback),
+  };
+}
+
+export interface CacheHandler<T> {
+  /** Completely empty this table. */
+  clear(): void;
+  /** Delete the data related to this key from table. */
+  delete(key: bigint): boolean;
+  /** Check if there is data assigned to this key. */
+  has(key: bigint): boolean;
+  /** Check how many items are stored in this table. */
+  size(): number;
+  /** Store new data to this table. */
+  set(key: bigint, data: T): boolean;
+  /** Get a stored item from the table. */
+  get(key: bigint): T | undefined;
+  // TODO: maybe its possible to stringify the function and send it to the custom cache handler :thinking:
+  /**
+   * Loop over each entry and execute callback function.
+   * @important This function NOT optimised and will force load everything when using custom cache.
+   */
+  forEach(callback: (value: T, key: bigint) => unknown): void;
+  // TODO: maybe its possible to stringify the function and send it to the custom cache handler :thinking:
+  /**
+   * Loop over each entry and execute callback function.
+   * @important This function NOT optimised and will force load everything when using custom cache.
+   */
+  filter(callback: (value: T, key: bigint) => boolean): Collection<bigint, T>;
+}
+
+export type AsyncCacheHandler<T> = {
+  [K in keyof CacheHandler<T>]: (...args: Parameters<CacheHandler<T>[K]>) => Promise<ReturnType<CacheHandler<T>[K]>>;
 };
 
-export type TableName = "guilds" | "unavailableGuilds" | "channels" | "messages" | "members" | "presences" | "threads";
-
-async function set(
-  table: "threads",
-  key: bigint,
-  value: DiscordenoThread
-): Promise<Collection<bigint, DiscordenoThread>>;
-async function set(table: "guilds", key: bigint, value: DiscordenoGuild): Promise<Collection<bigint, DiscordenoGuild>>;
-async function set(
-  table: "channels",
-  key: bigint,
-  value: DiscordenoChannel
-): Promise<Collection<bigint, DiscordenoChannel>>;
-async function set(
-  table: "messages",
-  key: bigint,
-  value: DiscordenoMessage
-): Promise<Collection<bigint, DiscordenoMessage>>;
-async function set(
-  table: "members",
-  key: bigint,
-  value: DiscordenoMember
-): Promise<Collection<bigint, DiscordenoMember>>;
-async function set(table: "presences", key: bigint, value: PresenceUpdate): Promise<Collection<bigint, PresenceUpdate>>;
-async function set(table: "unavailableGuilds", key: bigint, value: number): Promise<Collection<bigint, number>>;
-async function set(table: TableName, key: bigint, value: any) {
-  return cache[table].set(key, value);
-}
-
-async function get(table: "threads", key: bigint): Promise<DiscordenoThread | undefined>;
-async function get(table: "guilds", key: bigint): Promise<DiscordenoGuild | undefined>;
-async function get(table: "channels", key: bigint): Promise<DiscordenoChannel | undefined>;
-async function get(table: "messages", key: bigint): Promise<DiscordenoMessage | undefined>;
-async function get(table: "members", key: bigint): Promise<DiscordenoMember | undefined>;
-async function get(table: "presences", key: bigint): Promise<PresenceUpdate | undefined>;
-async function get(table: "unavailableGuilds", key: bigint): Promise<number | undefined>;
-async function get(table: TableName, key: bigint) {
-  return cache[table].get(key);
-}
-
-// callback: (value: DiscordenoThread, key: bigint, map: Map<bigint, DiscordenoThread>) => void
-async function forEach(type: "DELETE_MESSAGES_FROM_CHANNEL", options: { channelId: bigint }): Promise<void>;
-async function forEach(type: "DELETE_MESSAGES_FROM_GUILD", options: { guildId: bigint }): Promise<void>;
-async function forEach(type: "DELETE_CHANNELS_FROM_GUILD", options: { guildId: bigint }): Promise<void>;
-async function forEach(type: "DELETE_GUILD_FROM_MEMBER", options: { guildId: bigint }): Promise<void>;
-async function forEach(type: "DELETE_ROLE_FROM_MEMBER", options: { guildId: bigint; roleId: bigint }): Promise<void>;
-async function forEach(
+export type CacheExecutor = (
   type:
+    | "GET_ALL_MEMBERS"
     | "DELETE_MESSAGES_FROM_CHANNEL"
+    | "DELETE_ROLE_FROM_MEMBER"
+    | "BULK_DELETE_MESSAGES"
+    | "GUILD_MEMBER_CHUNK"
+    | "GUILD_MEMBER_COUNT_DECREMENT"
+    | "GUILD_MEMBER_COUNT_INCREMENT"
     | "DELETE_MESSAGES_FROM_GUILD"
     | "DELETE_CHANNELS_FROM_GUILD"
-    | "DELETE_GUILD_FROM_MEMBER"
-    | "DELETE_ROLE_FROM_MEMBER",
-  options?: Record<string, unknown>
-) {
-  if (type === "DELETE_MESSAGES_FROM_CHANNEL") {
-    cache.messages.forEach((message) => {
-      if (message.channelId === options?.channelId) cache.messages.delete(message.id);
-    });
-    return;
-  }
+    | "DELETE_GUILD_FROM_MEMBER",
+  options: Record<string, any>
+) => Promise<any>;
 
-  if (type === "DELETE_MESSAGES_FROM_GUILD") {
-    cache.messages.forEach((message) => {
-      if (message.guildId === options?.guildId) cache.messages.delete(message.id);
-    });
-    return;
-  }
+export function createExecute(cache: Cache): CacheExecutor {
+  return function (type, options) {
+    switch (type) {
+      case "DELETE_MESSAGES_FROM_CHANNEL":
+        cache.messages.forEach((message) => {
+          if (message.channelId === options.channelId) {
+            cache.messages.delete(message.id);
+          }
+        });
+        return;
+      case "BULK_DELETE_MESSAGES":
+        return options.messageIds
+          .map((id: bigint) => {
+            const cached = cache.messages.get(id);
+            if (!cached) return;
 
-  if (type === "DELETE_CHANNELS_FROM_GUILD") {
-    cache.channels.forEach((channel) => {
-      if (channel.guildId === options?.guildId) cache.channels.delete(channel.id);
-    });
-    return;
-  }
+            cache.messages.delete(id);
 
-  if (type === "DELETE_GUILD_FROM_MEMBER") {
-    cache.members.forEach((member) => {
-      if (!member.guilds.has(options?.guildId as bigint)) return;
-
-      member.guilds.delete(options?.guildId as bigint);
-
-      if (!member.guilds.size) {
-        return cache.members.delete(member.id);
-      }
-
-      cache.members.set(member.id, member);
-    });
-    return;
-  }
-
-  if (type === "DELETE_ROLE_FROM_MEMBER") {
-    cache.members.forEach((member) => {
-      // Not in the relevant guild so just skip
-      if (!member.guilds.has(options?.guildId as bigint)) return;
-
-      const guildMember = member.guilds.get(options?.guildId as bigint)!;
-
-      guildMember.roles = guildMember.roles.filter((id) => id !== (options?.roleId as bigint));
-      cache.members.set(member.id, member);
-    });
-    return;
-  }
+            return cached;
+          })
+          .filter((m: DiscordenoMessage) => m);
+      case "GUILD_MEMBER_CHUNK":
+        options.users.forEach((user: DiscordenoUser) => {
+          cache.users.set(user.id, user);
+        });
+        // TODO: FIND A GOOD WAY FOR MEMBERS CACHE (GUILD ID)
+        // options.members.forEach((member) => {
+        //   cache.members.set(member.id, member);
+        // });
+        return;
+    }
+  };
 }
 
-async function filter(
-  type: "GET_MEMBERS_IN_GUILD",
-  options: { guildId: bigint }
-): Promise<Collection<bigint, DiscordenoMember>>;
-async function filter(
-  type: "GET_MEMBERS_IN_GUILD",
-  options?: Record<string, unknown>
-): Promise<Collection<bigint, DiscordenoMember> | undefined> {
-  if (type === "GET_MEMBERS_IN_GUILD") {
-    return cache.members.filter((member) => member.guilds.has(options?.guildId as bigint));
-  }
-}
+export type TableNames =
+  | "channels"
+  | "users"
+  | "guilds"
+  | "messages"
+  | "presences"
+  | "threads"
+  | "unavailableGuilds"
+  | "members"
+  | "dispatchedGuildIds"
+  | "dispatchedChannelIds"
+  | "activeGuildIds";

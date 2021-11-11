@@ -1,8 +1,9 @@
+import { RestManager } from "../bot.ts";
 import { BASE_URL } from "../util/constants.ts";
-import { rest, RestPayload, RestRequest } from "./rest.ts";
+import { RestPayload, RestRequest } from "./rest.ts";
 
 /** Processes a request and assigns it to a queue or creates a queue if none exists for it. */
-export async function processRequest(request: RestRequest, payload: RestPayload) {
+export function processRequest(rest: RestManager, request: RestRequest, payload: RestPayload) {
   const route = request.url.substring(request.url.indexOf("api/"));
   const parts = route.split("/");
   // REMOVE THE API
@@ -10,24 +11,26 @@ export async function processRequest(request: RestRequest, payload: RestPayload)
   // REMOVES THE VERSION NUMBER
   if (parts[0]?.startsWith("v")) parts.shift();
   // SET THE NEW REQUEST URL
-  request.url = `${BASE_URL}/v${rest.apiVersion}/${parts.join("/")}`;
+  request.url = `${BASE_URL}/v${rest.version}/${parts.join("/")}`;
   // REMOVE THE MAJOR PARAM
   parts.shift();
 
   const url = rest.simplifyUrl(request.url, request.method);
 
   const queue = rest.pathQueues.get(url);
-  // IF THE QUEUE EXISTS JUST ADD THIS TO THE QUEUE
   if (queue) {
-    queue.push({ request, payload });
+    queue.requests.push({ request, payload });
   } else {
     // CREATES A NEW QUEUE
-    rest.pathQueues.set(url, [
-      {
-        request,
-        payload,
-      },
-    ]);
-    await rest.processQueue(url);
+    rest.pathQueues.set(url, {
+      isWaiting: false,
+      requests: [
+        {
+          request,
+          payload,
+        },
+      ],
+    });
+    rest.processQueue(rest, url);
   }
 }

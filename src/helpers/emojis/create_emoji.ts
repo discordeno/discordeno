@@ -1,27 +1,22 @@
-import { rest } from "../../rest/rest.ts";
-import { CreateGuildEmoji } from "../../types/emojis/create_guild_emoji.ts";
+import type { CreateGuildEmoji } from "../../types/emojis/create_guild_emoji.ts";
 import type { Emoji } from "../../types/emojis/emoji.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
-import { endpoints } from "../../util/constants.ts";
-import { requireBotGuildPermissions } from "../../util/permissions.ts";
-import { urlToBase64 } from "../../util/utils.ts";
+import type { Bot } from "../../bot.ts";
 
 /** Create an emoji in the server. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. */
-export async function createEmoji(guildId: bigint, name: string, image: string, options: CreateGuildEmoji) {
-  await requireBotGuildPermissions(guildId, ["MANAGE_EMOJIS"]);
-
-  if (image && !image.startsWith("data:image/")) {
-    image = await urlToBase64(image);
+export async function createEmoji(bot: Bot, guildId: bigint, options: CreateGuildEmoji) {
+  if (options.image && !options.image.startsWith("data:image/")) {
+    options.image = await bot.utils.urlToBase64(options.image);
   }
 
-  const emoji = await rest.runMethod<Emoji>("post", endpoints.GUILD_EMOJIS(guildId), {
-    ...options,
-    name,
-    image,
-  });
+  const emoji = await bot.rest.runMethod<Emoji>(
+    bot.rest,
+    "post",
+    bot.constants.endpoints.GUILD_EMOJIS(guildId),
+    options
+  );
 
   return {
     ...emoji,
-    id: snowflakeToBigint(emoji.id!),
+    id: bot.transformers.snowflake(emoji.id!),
   };
 }

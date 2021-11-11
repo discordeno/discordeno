@@ -6,6 +6,8 @@ export enum DiscordSystemChannelFlags {
   SuppressPremiumSubscriptions = 1 << 1,
   /** Suppress server setup tips */
   SuppressGuildReminderNotifications = 1 << 2,
+  /** Hide member join sticker reply buttons */
+  SuppressJoinNotificationReplies = 1 << 3,
 }
 
 export type SystemChannelFlags = DiscordSystemChannelFlags;

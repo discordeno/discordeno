@@ -1,14 +1,10 @@
-import { eventHandlers } from "../../bot.ts";
-import { cacheHandlers } from "../../cache.ts";
+import { Bot } from "../../bot.ts";
 import { Channel } from "../../types/channels/channel.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import { channelToThread } from "../../util/transformers/channel_to_thread.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleThreadCreate(data: DiscordGatewayPayload) {
-  const payload = data.d as Channel;
+export async function handleThreadCreate(bot:  Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<Channel>;
 
-  const thread = channelToThread(payload);
-  await cacheHandlers.set("threads", thread.id, thread);
-
-  eventHandlers.threadCreate?.(thread);
+  // bot.events.threadCreate(bot, payload);
 }

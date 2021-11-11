@@ -54,7 +54,9 @@ export type AuditLogChange =
         | "expire_behavior"
         | "expire_grace_period"
         | "user_limit"
-        | "privacy_level";
+        | "privacy_level"
+        | "auto_archive_duration"
+        | "default_auto_archive_duration";
     }
   | {
       newValue: Partial<Role>;
@@ -64,7 +66,17 @@ export type AuditLogChange =
   | {
       newValue: boolean;
       oldValue: boolean;
-      key: "widget_enabled" | "nsfw" | "hoist" | "mentionable" | "temporary" | "deaf" | "mute" | "enable_emoticons";
+      key:
+        | "widget_enabled"
+        | "nsfw"
+        | "hoist"
+        | "mentionable"
+        | "temporary"
+        | "deaf"
+        | "mute"
+        | "enable_emoticons"
+        | "archived"
+        | "locked";
     }
   | {
       newValue: Overwrite[];

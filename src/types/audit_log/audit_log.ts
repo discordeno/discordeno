@@ -1,3 +1,4 @@
+import { Channel } from "../channels/channel.ts";
 import { Integration } from "../integrations/integration.ts";
 import { User } from "../users/user.ts";
 import { Webhook } from "../webhooks/webhook.ts";
@@ -13,4 +14,6 @@ export interface AuditLog {
   auditLogEntries: AuditLogEntry[];
   /** List of partial integration objects */
   integrations: Partial<Integration>[];
+  /** List of threads found in the audit log. */
+  threads: Channel[];
 }
