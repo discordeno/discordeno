@@ -82,9 +82,9 @@ export function createCache(
       presences: options.tableCreator(bot, "presences"),
       // threads: options.tableCreator(bot, "threads"),
       unavailableGuilds: options.tableCreator(bot, "unavailableGuilds"),
-      dispatchedGuildIds: new Set(),
-      dispatchedChannelIds: new Set(),
-      activeGuildIds: new Set(),
+      dispatchedGuildIds: options.tableCreator(bot, "dispatchedGuildIds"),
+      dispatchedChannelIds: options.tableCreator(bot, "dispatchedChannelIds"),
+      activeGuildIds: options.tableCreator(bot, "activeGuildIds"),
       executedSlashCommands: new Set(),
       fetchAllMembersProcessingRequests: new Map(),
       execute: async function () {
@@ -153,6 +153,7 @@ export interface AsyncCache {
   unavailableGuilds: AsyncCacheHandler<CachedUnavailableGuild>;
   dispatchedGuildIds: AsyncCacheHandler<bigint>;
   dispatchedChannelIds: AsyncCacheHandler<bigint>;
+  activeGuildIds: AsyncCacheHandler<bigint>;
   executedSlashCommands: Set<string>;
   fetchAllMembersProcessingRequests: Map<string, Function>;
   execute: CacheExecutor;
