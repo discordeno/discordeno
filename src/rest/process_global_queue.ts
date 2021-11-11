@@ -22,6 +22,21 @@ export async function processGlobalQueue(rest: RestManager) {
       break;
     }
 
+    if (rest.invalidRequests === rest.maxInvalidRequests - rest.invalidRequestsSafetyAmount) {
+      setTimeout(() => {
+        const time = rest.invalidRequestsInterval - (Date.now() - rest.invalidRequestFrozenAt);
+        rest.debug(
+          `[REST - processGlobalQueue] Freeze global queue because of invalid requests. Time Remaining: ${
+            time / 1000
+          } seconds.`
+        );
+        rest.processGlobalQueue(rest);
+      }, 1000);
+
+      // BREAK WHILE LOOP
+      break;
+    }
+
     const request = rest.globalQueue.shift();
     // REMOVES ANY POTENTIAL INVALID CONFLICTS
     if (!request) continue;
@@ -83,6 +98,22 @@ export async function processGlobalQueue(rest: RestManager) {
           case DiscordHTTPResponseCodes.GatewayUnavailable:
             error = "There was not a gateway available to process your request. Wait a bit and retry.";
             break;
+        }
+
+        if (
+          rest.invalidRequestErrorStatuses.includes(response.status) &&
+          !(response.status === 429 && response.headers.get("X-RateLimit-Scope"))
+        ) {
+          // INCREMENT CURRENT INVALID REQUESTS
+          ++rest.invalidRequests;
+
+          if (!rest.invalidRequestsTimeoutId) {
+            rest.invalidRequestsTimeoutId = setTimeout(() => {
+              rest.debug(`[REST - processGlobalQueue] Resetting invalid requests counter in setTimeout.`);
+              rest.invalidRequests = 0;
+              rest.invalidRequestsTimeoutId = 0;
+            }, rest.invalidRequestsInterval);
+          }
         }
 
         // If NOT rate limited remove from queue

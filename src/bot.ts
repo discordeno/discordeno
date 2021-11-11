@@ -206,6 +206,19 @@ export function createRestManager(options: CreateRestManagerOptions) {
   }
 
   return {
+    // current invalid amount
+    invalidRequests: 0,
+    // max invalid requests allowed until ban
+    maxInvalidRequests: 10000,
+    // 10 minutes
+    invalidRequestsInterval: 600000,
+    // timer to reset to 0
+    invalidRequestsTimeoutId: 0,
+    // how safe to be from max
+    invalidRequestsSafetyAmount: 1,
+    // when first request in this period was made
+    invalidRequestFrozenAt: 0,
+    invalidRequestErrorStatuses: [401, 403, 429],
     version,
     token: `${options.token.startsWith("Bot ") ? "" : "Bot "}${options.token}`,
     maxRetryCount: options.maxRetryCount || 10,
