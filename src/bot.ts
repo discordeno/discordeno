@@ -602,6 +602,7 @@ export interface Helpers {
   editThread: typeof helpers.editThread;
   getActiveThreads: typeof helpers.getActiveThreads;
   getArchivedThreads: typeof helpers.getArchivedThreads;
+  getThreadMember: typeof helpers.getThreadMember;
   getThreadMembers: typeof helpers.getThreadMembers;
   joinThread: typeof helpers.joinThread;
   leaveThread: typeof helpers.leaveThread;
@@ -771,6 +772,7 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     editThread: options.editThread || helpers.editThread,
     getActiveThreads: options.getActiveThreads || helpers.getActiveThreads,
     getArchivedThreads: options.getArchivedThreads || helpers.getArchivedThreads,
+    getThreadMember: options.getThreadMember || helpers.getThreadMember,
     getThreadMembers: options.getThreadMembers || helpers.getThreadMembers,
     joinThread: options.joinThread || helpers.joinThread,
     leaveThread: options.leaveThread || helpers.leaveThread,

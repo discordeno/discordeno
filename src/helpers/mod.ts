@@ -142,6 +142,7 @@ import { deleteThread } from "./channels/threads/delete_thread.ts";
 import { editThread } from "./channels/threads/edit_thread.ts";
 import { getActiveThreads } from "./channels/threads/get_active_threads.ts";
 import { getArchivedThreads } from "./channels/threads/get_archived_threads.ts";
+import { getThreadMember } from "./channels/threads/getThreadMember.ts";
 import { getThreadMembers } from "./channels/threads/get_thread_members.ts";
 import { joinThread } from "./channels/threads/join_thread.ts";
 import { leaveThread } from "./channels/threads/leave_thread.ts";
@@ -296,6 +297,7 @@ export {
   editThread,
   getActiveThreads,
   getArchivedThreads,
+  getThreadMember,
   getThreadMembers,
   joinThread,
   leaveThread,

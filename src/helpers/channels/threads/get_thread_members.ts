@@ -1,8 +1,5 @@
 import type { Bot } from "../../../bot.ts";
 import { ThreadMember } from "../../../types/channels/threads/thread_member.ts";
-import { DiscordGatewayIntents } from "../../../types/gateway/gateway_intents.ts";
-import { Collection } from "../../../util/collection.ts";
-// import { threadMemberModified } from "../../../util/transformers/thread_member_modified.ts";
 
 /** Returns thread members objects that are members of the thread. */
 export async function getThreadMembers(bot: Bot, threadId: bigint) {
