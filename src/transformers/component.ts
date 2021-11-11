@@ -2,6 +2,7 @@ import { Bot } from "../bot.ts";
 import { ButtonStyles } from "../types/messages/components/button_styles.ts";
 import { DiscordMessageComponentTypes } from "../types/messages/components/message_component_types.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { SelectOption } from "../types/messages/components/select_option.ts";
 
 export function transformComponent(bot: Bot, payload: SnakeCasedPropertiesDeep<Component>): DiscordenoComponent {
   return {
@@ -70,26 +71,6 @@ export interface Component {
   maxValues?: number;
   /** a list of child components */
   components?: Component[];
-}
-
-export interface SelectOption {
-  /** The user-facing name of the option. Maximum 100 characters. */
-  label: string;
-  /** The dev-defined value of the option. Maximum 100 characters. */
-  value: string;
-  /** An additional description of the option. Maximum 100 characters. */
-  description?: string;
-  /** The id, name, and animated properties of an emoji. */
-  emoji?: {
-    /** Emoji id */
-    id?: string;
-    /** Emoji name */
-    name?: string;
-    /** Whether this emoji is animated */
-    animated?: boolean;
-  };
-  /** Will render this option as already-selected by default. */
-  default: boolean;
 }
 
 export interface DiscordenoComponent {
