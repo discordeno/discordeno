@@ -52,6 +52,7 @@ export function validateSlashOptionChoices(
   });
 }
 
+// TODO: add checks for autocomplete options when discord provides more info about them.
 export function validateSlashOptions(bot: Bot, options: ApplicationCommandOption[]) {
   const requiredOptions: ApplicationCommandOption[] = [];
   const optionalOptions: ApplicationCommandOption[] = [];

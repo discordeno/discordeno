@@ -23,6 +23,8 @@ interface ApplicationCommandInteractionDataOptionBase<T extends DiscordApplicati
   type: T;
   /** The value of the pair */
   value: V;
+  /** Whether the user has focused this option for autocompletion. */
+  focused?: true;
 }
 
 export interface ApplicationCommandInteractionDataOptionSubCommand
