@@ -272,4 +272,7 @@ export type TableNames =
   | "presences"
   | "threads"
   | "unavailableGuilds"
-  | "members";
+  | "members"
+  | "dispatchedGuildIds"
+  | "dispatchedChannelIds"
+  | "activeGuildIds";
