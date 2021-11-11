@@ -89,7 +89,7 @@ export function createCache(
       fetchAllMembersProcessingRequests: new Map(),
       execute: async function () {
         throw new Error("Async Cache requires a custom execute function to be implemented.");
-      }
+      },
     } as AsyncCache;
 
     return cache;
