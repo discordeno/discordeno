@@ -25,8 +25,8 @@ export function transformMessage(bot: Bot, data: SnakeCasedPropertiesDeep<Messag
     timestamp: Date.parse(data.timestamp),
     editedTimestamp: data.edited_timestamp ? Date.parse(data.edited_timestamp) : undefined,
     bitfield: (data.tts ? 1n : 0n) | (data.mention_everyone ? 2n : 0n) | (data.pinned ? 4n : 0n),
-    attachments: data.attachments.map((attachment) => bot.transformers.attachment(bot, attachment)),
-    embeds: data.embeds.map((embed) => bot.transformers.embed(bot, embed)),
+    attachments: data.attachments?.map((attachment) => bot.transformers.attachment(bot, attachment)),
+    embeds: data.embeds?.map((embed) => bot.transformers.embed(bot, embed)),
     reactions: data.reactions?.map((reaction) => ({
       me: reaction.me,
       count: reaction.count,
