@@ -2,31 +2,6 @@
 debug.ts
 configs.ts
 
-.DS_Store
-.lock
-
-# Node modules - npm
-node_modules/
-
-# Log files
-npm-debug.log*
-
-# Docs
-dist/
-public/
-.cache/
-
-# IntelliJ IDEA
-.idea/
-
-# Windows
-desktop.ini
-
-# Visual Studio Code
-.vscode/*
-!.vscode/tasks.json
-!.vscode/launch.json
-*.code-workspace
-
-# Sublime Text
-.sublime-project
+# npm stuff
+.npmignore
+package.json
