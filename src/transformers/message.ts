@@ -13,21 +13,21 @@ import { DiscordenoComponent } from "./component.ts";
 import { Application } from "../types/applications/application.ts";
 import { DiscordenoThread } from "./thread.ts";
 
-export function transformMessage(bot: Bot, data: SnakeCasedPropertiesDeep<Message>): DiscordenoMessage {
-  const guildId = data.guild_id ? bot.transformers.snowflake(data.guild_id) : undefined;
-  const userId = bot.transformers.snowflake(data.author.id);
+export function transformMessage(bot: Bot, payload: SnakeCasedPropertiesDeep<Message>): DiscordenoMessage {
+  const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
+  const userId = bot.transformers.snowflake(payload.author.id);
 
   return {
     // UNTRANSFORMED STUFF HERE
-    content: data.content || "",
-    isBot: data.author.bot || false,
-    tag: `${data.author.username}#${data.author.discriminator.toString().padStart(4, "0")}`,
-    timestamp: Date.parse(data.timestamp),
-    editedTimestamp: data.edited_timestamp ? Date.parse(data.edited_timestamp) : undefined,
-    bitfield: (data.tts ? 1n : 0n) | (data.mention_everyone ? 2n : 0n) | (data.pinned ? 4n : 0n),
-    attachments: data.attachments?.map((attachment) => bot.transformers.attachment(bot, attachment)),
-    embeds: data.embeds?.map((embed) => bot.transformers.embed(bot, embed)),
-    reactions: data.reactions?.map((reaction) => ({
+    content: payload.content || "",
+    isBot: payload.author.bot || false,
+    tag: `${payload.author.username}#${payload.author.discriminator.toString().padStart(4, "0")}`,
+    timestamp: Date.parse(payload.timestamp),
+    editedTimestamp: payload.edited_timestamp ? Date.parse(payload.edited_timestamp) : undefined,
+    bitfield: (payload.tts ? 1n : 0n) | (payload.mention_everyone ? 2n : 0n) | (payload.pinned ? 4n : 0n),
+    attachments: payload.attachments?.map((attachment) => bot.transformers.attachment(bot, attachment)),
+    embeds: payload.embeds?.map((embed) => bot.transformers.embed(bot, embed)),
+    reactions: payload.reactions?.map((reaction) => ({
       me: reaction.me,
       count: reaction.count,
       emoji: {
@@ -36,63 +36,63 @@ export function transformMessage(bot: Bot, data: SnakeCasedPropertiesDeep<Messag
         animated: reaction.emoji.animated,
       },
     })),
-    type: data.type,
-    activity: data.activity
+    type: payload.type,
+    activity: payload.activity
       ? {
-          type: data.activity.type,
-          partyId: data.activity.party_id,
+          type: payload.activity.type,
+          partyId: payload.activity.party_id,
         }
       : undefined,
-    application: data.application,
-    flags: data.flags,
-    interaction: data.interaction
+    application: payload.application,
+    flags: payload.flags,
+    interaction: payload.interaction
       ? {
-          id: bot.transformers.snowflake(data.interaction.id),
-          type: data.interaction.type,
-          name: data.interaction.name,
-          user: bot.transformers.user(bot, data.interaction.user),
+          id: bot.transformers.snowflake(payload.interaction.id),
+          type: payload.interaction.type,
+          name: payload.interaction.name,
+          user: bot.transformers.user(bot, payload.interaction.user),
         }
       : undefined,
-    thread: data.thread ? bot.transformers.thread(bot, data.thread) : undefined,
-    components: data.components?.map((component) => bot.transformers.component(bot, component)),
-    stickerItems: data.sticker_items?.map((sticker) => ({
+    thread: payload.thread ? bot.transformers.thread(bot, payload.thread) : undefined,
+    components: payload.components?.map((component) => bot.transformers.component(bot, component)),
+    stickerItems: payload.sticker_items?.map((sticker) => ({
       id: bot.transformers.snowflake(sticker.id),
       name: sticker.name,
       formatType: sticker.format_type,
     })),
 
     // TRANSFORMED STUFF BELOW
-    id: bot.transformers.snowflake(data.id),
+    id: bot.transformers.snowflake(payload.id),
     guildId,
-    channelId: bot.transformers.snowflake(data.channel_id),
-    webhookId: data.webhook_id ? bot.transformers.snowflake(data.webhook_id) : undefined,
+    channelId: bot.transformers.snowflake(payload.channel_id),
+    webhookId: payload.webhook_id ? bot.transformers.snowflake(payload.webhook_id) : undefined,
     authorId: userId,
-    applicationId: data.application_id ? bot.transformers.snowflake(data.application_id) : undefined,
-    messageReference: data.message_reference
+    applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
+    messageReference: payload.message_reference
       ? {
-          messageId: data.message_reference.message_id
-            ? bot.transformers.snowflake(data.message_reference.message_id)
+          messageId: payload.message_reference.message_id
+            ? bot.transformers.snowflake(payload.message_reference.message_id)
             : undefined,
-          channelId: data.message_reference.channel_id
-            ? bot.transformers.snowflake(data.message_reference.channel_id)
+          channelId: payload.message_reference.channel_id
+            ? bot.transformers.snowflake(payload.message_reference.channel_id)
             : undefined,
-          guildId: data.message_reference.guild_id
-            ? bot.transformers.snowflake(data.message_reference.guild_id)
+          guildId: payload.message_reference.guild_id
+            ? bot.transformers.snowflake(payload.message_reference.guild_id)
             : undefined,
         }
       : undefined,
-    mentionedUserIds: data.mentions ? data.mentions.map((m) => bot.transformers.snowflake(m.id)) : [],
-    mentionedRoleIds: data.mention_roles ? data.mention_roles.map((id) => bot.transformers.snowflake(id)) : [],
+    mentionedUserIds: payload.mentions ? payload.mentions.map((m) => bot.transformers.snowflake(m.id)) : [],
+    mentionedRoleIds: payload.mention_roles ? payload.mention_roles.map((id) => bot.transformers.snowflake(id)) : [],
     mentionedChannelIds: [
       // Keep any ids tht discord sends
-      ...(data.mention_channels ?? []).map((m) => bot.transformers.snowflake(m.id)),
+      ...(payload.mention_channels ?? []).map((m) => bot.transformers.snowflake(m.id)),
       // Add any other ids that can be validated in a channel mention format
-      ...(data.content?.match(CHANNEL_MENTION_REGEX) || []).map((text) =>
+      ...(payload.content?.match(CHANNEL_MENTION_REGEX) || []).map((text) =>
         // converts the <#123> into 123
         bot.transformers.snowflake(text.substring(2, text.length - 1))
       ),
     ],
-    member: data.member && guildId ? bot.transformers.member(bot, data.member, guildId, userId) : undefined,
+    member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
   };
 }
 

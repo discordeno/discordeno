@@ -2,7 +2,6 @@ import { Bot } from "../bot.ts";
 import type { Emoji } from "../types/emojis/emoji.ts";
 import type { Guild } from "../types/guilds/guild.ts";
 import { Collection } from "../util/collection.ts";
-import { iconHashToBigInt } from "../util/hash.ts";
 import { DiscordenoRole } from "./role.ts";
 import { DiscordenoVoiceState } from "./voice_state.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
@@ -34,7 +33,7 @@ export function transformGuild(
       /** The id of this Stage instance */
       id: bot.transformers.snowflake(si.id),
       /** The guild id of the associated Stage channel */
-      guildId: bot.transformers.snowflake(si.guild_id),
+      guildId,
       /** The id of the associated Stage channel */
       channelId: bot.transformers.snowflake(si.channel_id),
       /** The topic of the Stage instance (1-120 characters) */
@@ -69,24 +68,23 @@ export function transformGuild(
     joinedAt: payload.guild.joined_at ? Date.parse(payload.guild.joined_at) : undefined,
     memberCount: payload.guild.member_count ?? 0,
     shardId: payload.shardId,
-    icon: payload.guild.icon ? iconHashToBigInt(payload.guild.icon) : undefined,
-    banner: payload.guild.banner ? iconHashToBigInt(payload.guild.banner) : undefined,
-    splash: payload.guild.splash ? iconHashToBigInt(payload.guild.splash) : undefined,
+    icon: payload.guild.icon ? bot.utils.iconHashToBigInt(payload.guild.icon) : undefined,
+    banner: payload.guild.banner ? bot.utils.iconHashToBigInt(payload.guild.banner) : undefined,
+    splash: payload.guild.splash ? bot.utils.iconHashToBigInt(payload.guild.splash) : undefined,
     roles: new Collection(
-      (payload.guild.roles || [])
-        .map((role) => bot.transformers.role(bot, { role, guildId: bot.transformers.snowflake(payload.guild.id) }))
-        .map((role) => [role.id, role])
+      payload.guild.roles?.map((role) => {
+        const result = bot.transformers.role(bot, { role, guildId });
+        return [result.id, result];
+      })
     ),
     emojis: new Collection((payload.guild.emojis || []).map((emoji) => [bot.transformers.snowflake(emoji.id!), emoji])),
     voiceStates: new Collection(
       (payload.guild.voice_states || [])
-        .map((vs) =>
-          bot.transformers.voiceState(bot, { voiceState: vs, guildId: bot.transformers.snowflake(payload.guild.id) })
-        )
+        .map((vs) => bot.transformers.voiceState(bot, { voiceState: vs, guildId }))
         .map((vs) => [vs.userId, vs])
     ),
 
-    id: bot.transformers.snowflake(payload.guild.id),
+    id: guildId,
     ownerId: bot.transformers.snowflake(payload.guild.owner_id),
     permissions: payload.guild.permissions ? bot.transformers.snowflake(payload.guild.permissions) : 0n,
     afkChannelId: payload.guild.afk_channel_id ? bot.transformers.snowflake(payload.guild.afk_channel_id) : undefined,
