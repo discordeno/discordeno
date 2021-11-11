@@ -2,7 +2,7 @@ import { Bot } from "../bot.ts";
 import { ButtonStyles } from "../types/messages/components/button_styles.ts";
 import { DiscordMessageComponentTypes } from "../types/messages/components/message_component_types.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import {SelectOption} from "../types/messages/components/select_option.ts";
+import { SelectOption } from "../types/messages/components/select_option.ts";
 
 export function transformComponent(bot: Bot, payload: SnakeCasedPropertiesDeep<Component>): DiscordenoComponent {
   return {
