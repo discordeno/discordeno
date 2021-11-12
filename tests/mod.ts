@@ -5,10 +5,11 @@ import {
   createEventHandlers,
   DiscordChannelTypes,
   DiscordOverwriteTypes,
+  setupBot,
   startBot,
   stopBot,
 } from "../mod.ts";
-import { assertEquals, assertExists } from "./deps.ts";
+import { assertEquals, assertExists, enableCachePlugin } from "./deps.ts";
 import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/delete_message.ts";
 import { getMessagesTest } from "./helpers/messages/get_messages.ts";
 import { deleteMessagesWithoutReasonTest, deleteMessagesWithReasonTest } from "./helpers/messages/delete_messages.ts";
@@ -91,7 +92,8 @@ Deno.test({
         isAsync: false,
       },
     });
-
+    setupBot(bot);
+    enableCachePlugin(bot);
     await startBot(bot);
 
     // Delay the execution to allow READY events to be processed
