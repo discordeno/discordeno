@@ -9,8 +9,7 @@ jobs:
         deno: ["v1.x"]
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: recursive
+        run: git submodule update --init --recursive
       - uses: denoland/setup-deno@main
         with:
           deno-version: ${{ matrix.deno }}
