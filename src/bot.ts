@@ -457,7 +457,7 @@ export interface Bot<C extends Cache | AsyncCache = AsyncCache | Cache> {
   constants: ReturnType<typeof createBotConstants>;
   cache: C;
   enabledPlugins: Set<string>;
-  handleDiscordPayload?: GatewayManager["handleDiscordPayload"],
+  handleDiscordPayload?: GatewayManager["handleDiscordPayload"];
 }
 
 export interface Helpers {
