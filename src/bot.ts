@@ -119,6 +119,7 @@ export function createBot<C extends CacheOptions = CacheOptions>(
     constants: createBotConstants(),
     handlers: createBotGatewayHandlers({}),
     enabledPlugins: new Set(),
+    handleDiscordPayload: options.handleDiscordPayload,
   };
 
   // @ts-ignore itoh cache types plz
@@ -288,7 +289,7 @@ export async function startBot(bot: Bot) {
     maxShards: bot.botGatewayData.shards,
     debug: bot.events.debug,
     handleDiscordPayload:
-      // bot.handleDiscordPayload ||
+      bot.handleDiscordPayload ??
       async function (_, data: DiscordGatewayPayload, shardId: number) {
         // TRIGGER RAW EVENT
         bot.events.raw(bot as Bot, data, shardId);
@@ -385,18 +386,18 @@ export function createGatewayManager(
     buckets: new Collection(),
     utf8decoder: new TextDecoder(),
 
-    spawnShards,
-    createShard,
-    identify,
-    heartbeat,
+    spawnShards: options.spawnShards ?? spawnShards,
+    createShard: options.createShard ?? createShard,
+    identify: options.identify ?? identify,
+    heartbeat: options.heartbeat ?? heartbeat,
     tellClusterToIdentify,
     debug: options.debug || function () {},
-    resharder,
-    handleOnMessage,
-    processGatewayQueue,
-    closeWS,
-    sendShardMessage,
-    resume,
+    resharder: options.resharder ?? resharder,
+    handleOnMessage: options.handleOnMessage ?? handleOnMessage,
+    processGatewayQueue: options.processGatewayQueue ?? processGatewayQueue,
+    closeWS: options.closeWS ?? closeWS,
+    sendShardMessage: options.sendShardMessage ?? sendShardMessage,
+    resume: options.resume ?? resume,
     handleDiscordPayload: options.handleDiscordPayload,
   };
 }
@@ -421,6 +422,7 @@ export interface CreateBotOptions<C extends CacheOptions = CacheOptions> {
   intents: (keyof typeof DiscordGatewayIntents)[];
   botGatewayData?: GetGatewayBot;
   rest?: Omit<CreateRestManagerOptions, "token">;
+  handleDiscordPayload?: GatewayManager["handleDiscordPayload"];
   cache: C;
 }
 
@@ -455,6 +457,7 @@ export interface Bot<C extends Cache | AsyncCache = AsyncCache | Cache> {
   constants: ReturnType<typeof createBotConstants>;
   cache: C;
   enabledPlugins: Set<string>;
+  handleDiscordPayload?: GatewayManager["handleDiscordPayload"],
 }
 
 export interface Helpers {
