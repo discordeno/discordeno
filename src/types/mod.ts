@@ -22,3 +22,4 @@ export * from "./templates/mod.ts";
 export * from "./users/mod.ts";
 export * from "./voice/mod.ts";
 export * from "./webhooks/mod.ts";
+export * from "./util.ts";
