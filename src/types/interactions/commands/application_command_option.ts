@@ -20,4 +20,8 @@ export interface ApplicationCommandOption {
   autocomplete?: boolean;
   /** If the option is a channel type, the channels shown will be restricted to these types */
   channelTypes?: ChannelTypes[];
+  /** Minimum number desired. */
+  minValue?: number;
+  /** Maximum number desired. */
+  maxValue?: number;
 }
