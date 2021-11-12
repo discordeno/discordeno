@@ -27,7 +27,7 @@ export async function unbanTest(bot: Bot, t: Deno.TestContext, guildId: bigint, 
     banCounters.set(user.id, false);
   };
 
-  await bot.helpers.unban(guildId, id);
+  await bot.helpers.unbanMember(guildId, id);
 
   await delayUntil(10000, () => !banCounters.get(id));
 
