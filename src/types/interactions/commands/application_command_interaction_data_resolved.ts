@@ -1,4 +1,4 @@
-import { InteractionChannel } from "../../channels/channel.ts";
+import { Channel } from "../../channels/channel.ts";
 import { Message } from "../../messages/message.ts";
 import { Role } from "../../permissions/role.ts";
 import { User } from "../../users/user.ts";
@@ -14,5 +14,5 @@ export interface ApplicationCommandInteractionDataResolved {
   /** The Ids and Role objects */
   roles?: Record<string, Role>;
   /** The Ids and partial Channel objects */
-  channels?: Record<string, Pick<InteractionChannel, "id" | "name" | "type" | "permissions">>;
+  channels?: Record<string, Pick<Channel, "id" | "name" | "type" | "permissions">>;
 }
