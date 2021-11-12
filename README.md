@@ -22,13 +22,12 @@ TODO: add coverage back when it is stable
   does not get
   [globally banned by Discord](https://discord.com/developers/docs/topics/rate-limits#invalid-request-limit).
 - **Simple, Efficient, & Lightweight**: Discordeno is simplistic, easy-to-use
-  and versatile while being efficient and lightweight. Discordeno follows the
-  [convention over configuration](https://en.wikipedia.org/wiki/Convention_over_configuration)
-  design paradigm; it prefers default options or values that are recommended by
-  Discord or the best configuration for the majority of the users.
+  and versatile while being efficient and lightweight.
 - [**Functional API**](https://en.wikipedia.org/wiki/Functional_programming):
   The functional API ensures overall concise yet performant code while removing
   the difficulties of extending built-in classes and inheritance.
+- **Cross Runtime**: Supports both Deno and Node.js runtimes.
+- **Standalone REST, Gateway, Custom Cache & more**: Discordeno provides the ability to have almost every part of a bot as a standalone piece.
 
 ## Getting Started
 
@@ -37,7 +36,7 @@ TODO: add coverage back when it is stable
 Here is a minimal example to get started with:
 
 ```typescript
-import { startBot } from "https://deno.land/x/discordeno/mod.ts";
+import { createBot } from "https://deno.land/x/discordeno/mod.ts";
 
 startBot({
   token: "BOT_TOKEN",
@@ -70,6 +69,7 @@ templates:
 
 - [Natico](https://github.com/naticoo/framework)
 - [Amethyst](https://github.com/AmethystFramework/framework)
+- [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
 ## Links
 
