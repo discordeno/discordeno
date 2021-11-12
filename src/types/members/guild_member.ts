@@ -20,6 +20,8 @@ export interface GuildMember {
   pending?: boolean;
   /** The members custom avatar for this server. */
   avatar?: string;
+  /** The permissions this member has in the guild. Only present on interaction events. */
+  permissions?: string;
 }
 
 // We use these types much since user always exists unless its a `CREATE_MESSAGE` or `MESSAGE_UPDATE` event

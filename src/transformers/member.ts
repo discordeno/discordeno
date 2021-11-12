@@ -57,6 +57,7 @@ export function transformMember(
     pending: payload.pending,
     cachedAt: Date.now(),
     avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,
+    permissions: payload.permissions ? bot.transformers.snowflake(payload.permissions) : undefined,
   };
 }
 
@@ -83,4 +84,6 @@ export interface DiscordenoMember {
   pending?: boolean;
   /** The members avatar for this server. */
   avatar?: bigint;
+  /** The permissions this member has in the guild. Only present on interaction events. */
+  permissions?: bigint;
 }
