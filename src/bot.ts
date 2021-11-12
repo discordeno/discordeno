@@ -97,12 +97,12 @@ type CacheOptions =
   | {
       isAsync: true;
       // deno-lint-ignore no-explicit-any
-      customTableCreator: (tableName: TableNames) => AsyncCacheHandler<any>;
+      tableCreator: (tableName: TableNames) => AsyncCacheHandler<any>;
     }
   | {
       isAsync: false;
       // deno-lint-ignore no-explicit-any
-      customTableCreator?: (tableName: TableNames) => CacheHandler<any>;
+      tableCreator?: (tableName: TableNames) => CacheHandler<any>;
     };
 
 export function createBot<C extends CacheOptions = CacheOptions>(
@@ -115,7 +115,6 @@ export function createBot<C extends CacheOptions = CacheOptions>(
     events: createEventHandlers(options.events),
     intents: options.intents.reduce((bits, next) => (bits |= DiscordGatewayIntents[next]), 0),
     botGatewayData: options.botGatewayData,
-    isReady: false,
     activeGuildIds: new Set<bigint>(),
     constants: createBotConstants(),
     handlers: createBotGatewayHandlers({}),
@@ -452,7 +451,6 @@ export interface Bot<C extends Cache | AsyncCache = AsyncCache | Cache> {
   gateway: ReturnType<typeof createGatewayManager>;
   events: EventHandlers;
   handlers: ReturnType<typeof createBotGatewayHandlers>;
-  isReady: boolean;
   activeGuildIds: Set<bigint>;
   constants: ReturnType<typeof createBotConstants>;
   cache: C;
