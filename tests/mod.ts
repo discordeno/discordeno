@@ -1,5 +1,4 @@
 import { memoryBenchmarks } from "../benchmarks/index.ts";
-import { TOKEN } from "../configs.ts";
 import {
   channelOverwriteHasPermission,
   createBot,
@@ -75,8 +74,8 @@ Deno.test({
   fn: async (t) => {
     let startedAt = 0;
     const bot = createBot({
-      token: TOKEN || Deno.env.get("DISCORD_TOKEN"),
-      // token: Deno.env.get("DISCORD_TOKEN")!,
+      // token: TOKEN || Deno.env.get("DISCORD_TOKEN"),
+      token: Deno.env.get("DISCORD_TOKEN")!,
       // TEST BOT
       botId: 770381961553510451n,
       // DD bot
