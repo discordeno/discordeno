@@ -73,12 +73,19 @@ const sanitizeMode = {
 Deno.test({
   name: "[Bot] - Starting Tests",
   fn: async (t) => {
+    const token = Deno.env.get("DISCORD_TOKEN")!;
+    if (!token) {
+      throw new Error("DISCORD_TOKEN not found");
+    }
+
+    const botId = BigInt(atob(token.split(".")[0]));
+
     let startedAt = 0;
     const bot = createBot({
       // token: TOKEN || Deno.env.get("DISCORD_TOKEN"),
       token: Deno.env.get("DISCORD_TOKEN")!,
       // TEST BOT
-      botId: 770381961553510451n,
+      botId,
       // DD bot
       // botId: 675412054529540107n,
       events: createEventHandlers({
