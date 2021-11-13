@@ -93,6 +93,7 @@ Deno.test({
       },
     });
     setupBot(bot);
+    // @ts-ignore
     enableCachePlugin(bot);
     await startBot(bot);
 
