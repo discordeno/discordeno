@@ -11,10 +11,16 @@ export async function getReactions(
   reaction: string,
   options?: GetReactions
 ) {
+  if (reaction.startsWith("<:")) {
+    reaction = reaction.substring(2, reaction.length - 1);
+  } else if (reaction.startsWith("<a:")) {
+    reaction = reaction.substring(3, reaction.length - 1);
+  }
+
   const users = await bot.rest.runMethod<User[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction),
+    bot.constants.endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, encodeURIComponent(reaction)),
     options
   );
 
