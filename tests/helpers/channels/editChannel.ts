@@ -13,7 +13,7 @@ export async function editChannelTests(
   const channel = await bot.helpers.createChannel(guildId, {
     name: "edit-channel",
   });
-  // wait 5 seconds to give it time for CHANNEL_CREATE event
+  // wait to give it time for events to process
   await delayUntil(3000, () => bot.cache.channels.has(channel.id));
   // Make sure the channel was created.
   if (!bot.cache.channels.has(channel.id)) {
@@ -30,7 +30,7 @@ export async function editChannelTests(
     options.reason
   );
 
-  // wait 5 seconds to give it time for CHANNEL_UPDATE event
+  // wait to give it time for events to process
   await delayUntil(3000, () => bot.cache.channels.get(channel.id)?.name === "new-name");
   assertEquals(bot.cache.channels.get(channel.id)?.name, "new-name");
 }
