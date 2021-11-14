@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags */
-export enum DiscordActivityFlags {
+export enum ActivityFlags {
   Instance = 1 << 0,
   Join = 1 << 1,
   Spectate = 1 << 2,
@@ -10,6 +10,3 @@ export enum DiscordActivityFlags {
   PartyPrivacyVoiceChannel = 1 << 7,
   Embedded = 1 << 8,
 }
-
-export type ActivityFlags = DiscordActivityFlags;
-export const ActivityFlags = DiscordActivityFlags;
