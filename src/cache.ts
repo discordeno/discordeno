@@ -87,7 +87,7 @@ export function createCache(
       dispatchedGuildIds: options.tableCreator(bot, "dispatchedGuildIds"),
       dispatchedChannelIds: options.tableCreator(bot, "dispatchedChannelIds"),
       activeGuildIds: options.tableCreator(bot, "activeGuildIds"),
-      unrepliedSlashCommands: new Set<bigint>(),
+      unrepliedInteractions: new Set<bigint>(),
       fetchAllMembersProcessingRequests: new Map(),
       execute: async function () {
         throw new Error("Async Cache requires a custom execute function to be implemented.");
@@ -108,7 +108,7 @@ export function createCache(
       dispatchedGuildIds: new Set(),
       dispatchedChannelIds: new Set(),
       activeGuildIds: new Set(),
-      unrepliedSlashCommands: new Set<bigint>(),
+      unrepliedInteractions: new Set<bigint>(),
       fetchAllMembersProcessingRequests: new Map(),
     } as Cache;
 
@@ -116,11 +116,11 @@ export function createCache(
   }
 
   setInterval(() => {
-    let values = cache.unrepliedSlashCommands.values();
+    let values = cache.unrepliedInteractions.values();
     let now = Date.now();
     for (let val; (val = values.next().value); ) {
       if ((val >> 22n) + 1420071300000n < now) {
-        cache.unrepliedSlashCommands.delete(val);
+        cache.unrepliedInteractions.delete(val);
       }
     }
   }, 300000);
@@ -142,7 +142,7 @@ export interface Cache {
   dispatchedGuildIds: Set<bigint>;
   dispatchedChannelIds: Set<bigint>;
   activeGuildIds: Set<bigint>;
-  unrepliedSlashCommands: Set<bigint>;
+  unrepliedInteractions: Set<bigint>;
   fetchAllMembersProcessingRequests: Map<string, Function>;
   execute: CacheExecutor;
 }
@@ -165,7 +165,7 @@ export interface AsyncCache {
   dispatchedGuildIds: AsyncCacheHandler<bigint>;
   dispatchedChannelIds: AsyncCacheHandler<bigint>;
   activeGuildIds: AsyncCacheHandler<bigint>;
-  unrepliedSlashCommands: Set<bigint>;
+  unrepliedInteractions: Set<bigint>;
   fetchAllMembersProcessingRequests: Map<string, Function>;
   execute: CacheExecutor;
 }
