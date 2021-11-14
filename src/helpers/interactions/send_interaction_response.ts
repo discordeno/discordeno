@@ -37,7 +37,7 @@ export async function sendInteractionResponse(
       }
     : { parse: [] };
 
-  let data = {
+  const data = {
     content: options.data.content,
     tts: options.data.tts,
     embeds: options.data.embeds?.map((embed) => ({
