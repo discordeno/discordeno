@@ -149,9 +149,5 @@ export async function sendInteractionResponse(
   }
 
   // If its already been executed, we need to send a followup response
-  return await bot.rest.runMethod(bot.rest, "post", bot.constants.endpoints.WEBHOOK(bot.applicationId, token), {
-    type: options.type,
-    data,
-  });
-  // }
+  return await bot.rest.runMethod(bot.rest, "post", bot.constants.endpoints.WEBHOOK(bot.applicationId, token), data);
 }
