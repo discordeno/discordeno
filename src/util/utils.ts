@@ -1,4 +1,3 @@
-import { isButton } from "../helpers/type_guards/is_button.ts";
 import { Errors } from "../types/discordeno/errors.ts";
 import type { ApplicationCommandOption } from "../types/interactions/commands/application_command_option.ts";
 import type { ApplicationCommandOptionChoice } from "../types/interactions/commands/application_command_option_choice.ts";
@@ -10,9 +9,10 @@ import type { MessageComponents } from "../types/messages/components/message_com
 import type { DiscordImageFormat } from "../types/misc/image_format.ts";
 import type { DiscordImageSize } from "../types/misc/image_size.ts";
 import { CONTEXT_MENU_COMMANDS_NAME_REGEX, SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
-import { isSelectMenu } from "../helpers/type_guards/is_select_menu.ts";
 import { ApplicationCommandTypes } from "../types/interactions/commands/application_command_types.ts";
 import { Bot } from "../bot.ts";
+import { InteractionTypes } from "../types/interactions/interaction_types.ts";
+import { MessageComponentTypes } from "../types/messages/components/message_component_types.ts";
 
 /** Pause the execution for a given amount of milliseconds. */
 export function delay(ms: number): Promise<void> {
@@ -165,7 +165,7 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
       throw new Error(Errors.TOO_MANY_COMPONENTS);
     } else if (
       component.components?.length > 1 &&
-      component.components.some((subcomponent) => isSelectMenu(subcomponent))
+      component.components.some((subcomponent) => subcomponent.type === MessageComponentTypes.SelectMenu)
     ) {
       throw new Error(Errors.COMPONENT_SELECT_MUST_BE_ALONE);
     }
@@ -176,7 +176,7 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
       }
 
       // 5 Link buttons can not have a customId
-      if (isButton(subcomponent)) {
+      if (subcomponent.type === MessageComponentTypes.Button) {
         if (subcomponent.style === ButtonStyles.Link && subcomponent.customId) {
           throw new Error(Errors.LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID);
         }
@@ -192,7 +192,7 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
         subcomponent.emoji = makeEmojiFromString(subcomponent.emoji);
       }
 
-      if (isSelectMenu(subcomponent)) {
+      if (subcomponent.type === MessageComponentTypes.SelectMenu) {
         if (subcomponent.placeholder && !bot.utils.validateLength(subcomponent.placeholder, { max: 100 })) {
           throw new Error(Errors.COMPONENT_PLACEHOLDER_TOO_BIG);
         }
