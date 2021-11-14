@@ -15,6 +15,3 @@ export async function ban(bot: Bot, guildId: bigint, id: bigint, options?: Creat
       : {}
   );
 }
-
-// aliases
-export { ban as banMember };
