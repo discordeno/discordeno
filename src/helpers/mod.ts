@@ -113,9 +113,6 @@ import { editGuildTemplate } from "./templates/edit_guild_template.ts";
 import { getGuildTemplates } from "./templates/get_guild_templates.ts";
 import { getTemplate } from "./templates/get_template.ts";
 import { syncGuildTemplate } from "./templates/sync_guild_template.ts";
-// Type Guards
-import { isButton } from "./type_guards/is_button.ts";
-import { isSelectMenu } from "./type_guards/is_select_menu.ts";
 
 import { createWebhook } from "./webhooks/create_webhook.ts";
 import { deleteWebhook } from "./webhooks/delete_webhook.ts";
@@ -133,7 +130,6 @@ import { createStageInstance } from "./channels/create_stage_instance.ts";
 import { updateStageInstance } from "./channels/update_stage_instance.ts";
 import { getStageInstance } from "./channels/get_stage_instance.ts";
 import { deleteStageInstance } from "./channels/delete_stage_instance.ts";
-import { isSlashCommand } from "./type_guards/is_slash_command.ts";
 import { connectToVoiceChannel } from "./voice/connect_to_voice_channel.ts";
 
 import { addToThread } from "./channels/threads/add_to_thread.ts";
@@ -263,9 +259,6 @@ export {
   guildBannerURL,
   guildIconURL,
   guildSplashURL,
-  isButton,
-  isSelectMenu,
-  isSlashCommand,
   kickMember,
   leaveGuild,
   moveMember,

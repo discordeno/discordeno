@@ -4,7 +4,7 @@ import { Role } from "../../permissions/role.ts";
 import { User } from "../../users/user.ts";
 import { InteractionGuildMember } from "../interaction_guild_member.ts";
 
-export interface ApplicationCommandInteractionDataResolved {
+export interface InteractionDataResolved {
   /** The Ids and Message objects */
   messages?: Record<string, Message>;
   /** The Ids and User objects */
