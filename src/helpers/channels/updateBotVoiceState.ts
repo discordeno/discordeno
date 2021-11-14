@@ -28,8 +28,10 @@ export async function updateBotVoiceState(
     {
       channel_id: options.channelId,
       suppress: options.suppress,
-      request_to_speak_timestamp: bot.utils.hasProperty(options, "requestToSpeakTimestamp") ? options.requestToSpeakTimestamp : undefined,
-      user_id: bot.utils.hasProperty(options, "userId") ? options.userId : undefined
+      request_to_speak_timestamp: bot.utils.hasProperty(options, "requestToSpeakTimestamp")
+        ? options.requestToSpeakTimestamp
+        : undefined,
+      user_id: bot.utils.hasProperty(options, "userId") ? options.userId : undefined,
     }
   );
 }
