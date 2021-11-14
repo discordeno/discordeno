@@ -17,9 +17,7 @@ export function avatarURL(
     ? bot.utils.formatImageURL(
         bot.constants.endpoints.USER_AVATAR(
           userId,
-          typeof options.avatar === "string"
-            ? options.avatar
-            : bot.utils.iconBigintToHash(options.avatar)
+          typeof options.avatar === "string" ? options.avatar : bot.utils.iconBigintToHash(options.avatar)
         ),
         options.size || 128,
         options.format
