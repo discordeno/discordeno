@@ -28,7 +28,7 @@ export async function sendInteractionResponse(
     options.data = { ...options.data, allowedMentions: { parse: [] } };
   }
 
-  // DRY code
+  // DRY code a little bit
   const data = {
     content: options.data.content,
     tts: options.data.tts,
