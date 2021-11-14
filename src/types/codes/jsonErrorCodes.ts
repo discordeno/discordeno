@@ -118,6 +118,7 @@ export enum JsonErrorCodes {
   BeforeValueIsEarlierThanTheThreadCreationDate,
   ThisServerIsNotAvailableInYourLocation = 50095,
   ThisServerNeedsMonetizationEnabledInOrderToPerformThisAction = 50097,
+  ThisServerNeedsMoreBoostsToPerformThisAction = 50101,
   TwoFactorIsRequiredForThisOperation = 60003,
   NoUsersWithDiscordTagExist = 80004,
   ReqctionWasBlocked = 90001,
