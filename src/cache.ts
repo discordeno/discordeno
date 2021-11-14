@@ -116,8 +116,8 @@ export function createCache(
   }
 
   setInterval(() => {
-    let values = cache.unrepliedInteractions.values();
-    let now = Date.now();
+    const values = cache.unrepliedInteractions.values();
+    const now = Date.now();
     for (let val; (val = values.next().value); ) {
       if ((val >> 22n) + 1420071300000n < now) {
         cache.unrepliedInteractions.delete(val);
