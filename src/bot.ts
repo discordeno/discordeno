@@ -569,9 +569,6 @@ export interface Helpers {
   guildBannerURL: typeof helpers.guildBannerURL;
   guildIconURL: typeof helpers.guildIconURL;
   guildSplashURL: typeof helpers.guildSplashURL;
-  isButton: typeof helpers.isButton;
-  isSelectMenu: typeof helpers.isSelectMenu;
-  isSlashCommand: typeof helpers.isSlashCommand;
   kickMember: typeof helpers.kickMember;
   leaveGuild: typeof helpers.leaveGuild;
   moveMember: typeof helpers.moveMember;
@@ -739,9 +736,6 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     guildBannerURL: options.guildBannerURL || helpers.guildBannerURL,
     guildIconURL: options.guildIconURL || helpers.guildIconURL,
     guildSplashURL: options.guildSplashURL || helpers.guildSplashURL,
-    isButton: options.isButton || helpers.isButton,
-    isSelectMenu: options.isSelectMenu || helpers.isSelectMenu,
-    isSlashCommand: options.isSlashCommand || helpers.isSlashCommand,
     kickMember: options.kickMember || helpers.kickMember,
     leaveGuild: options.leaveGuild || helpers.leaveGuild,
     moveMember: options.moveMember || helpers.moveMember,
