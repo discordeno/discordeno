@@ -28,15 +28,7 @@ export async function sendInteractionResponse(
     options.data = { ...options.data, allowedMentions: { parse: [] } };
   }
 
-  const allowedMentions: AllowedMentions = options.data?.allowedMentions
-    ? {
-        parse: options.data?.allowedMentions.parse,
-        repliedUser: options.data?.allowedMentions.repliedUser,
-        users: options.data?.allowedMentions.users?.map((id) => id.toString()),
-        roles: options.data?.allowedMentions.roles?.map((id) => id.toString()),
-      }
-    : { parse: [] };
-
+  // DRY code
   const data = {
     content: options.data.content,
     tts: options.data.tts,
@@ -90,10 +82,10 @@ export async function sendInteractionResponse(
       fields: embed.fields,
     })),
     allowed_mentions: {
-      parse: allowedMentions.parse,
-      roles: allowedMentions.roles,
-      users: allowedMentions.users,
-      replied_user: allowedMentions.repliedUser,
+      parse: options.data.allowedMentions!.parse,
+      replied_user: options.data.allowedMentions!.repliedUser,
+      users: options.data.allowedMentions!.users?.map((id) => id.toString()),
+      roles: options.data.allowedMentions!.roles?.map((id) => id.toString()),
     },
     file: options.data.file,
     components: options.data.components?.map((component) => ({
