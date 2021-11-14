@@ -1,6 +1,6 @@
 import type { Bot } from "../../bot.ts";
-import type { GuildEmojisUpdate } from "../../types/emojis/guild_emojis_update.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { GuildEmojisUpdate } from "../../types/emojis/guildEmojisUpdate.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 import { Collection } from "../../util/collection.ts";
 

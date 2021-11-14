@@ -1,13 +1,13 @@
-import { DiscordBitwisePermissionFlags } from "../types/permissions/bitwise_permission_flags.ts";
-import { PermissionStrings } from "../types/permissions/permission_strings.ts";
+import { BitwisePermissionFlags } from "../types/permissions/bitwisePermissionFlags.ts";
+import { PermissionStrings } from "../types/permissions/permissionStrings.ts";
 
 /** This function converts a bitwise string to permission strings */
 export function calculatePermissions(permissionBits: bigint) {
-  return Object.keys(DiscordBitwisePermissionFlags).filter((permission) => {
+  return Object.keys(BitwisePermissionFlags).filter((permission) => {
     // Since Object.keys() not only returns the permission names but also the bit values we need to return false if it is a Number
     if (Number(permission)) return false;
     // Check if permissionBits has this permission
-    return permissionBits & BigInt(DiscordBitwisePermissionFlags[permission as PermissionStrings]);
+    return permissionBits & BigInt(BitwisePermissionFlags[permission as PermissionStrings]);
   }) as PermissionStrings[];
 }
 
@@ -15,7 +15,7 @@ export function calculatePermissions(permissionBits: bigint) {
 export function calculateBits(permissions: PermissionStrings[]) {
   return permissions
     .reduce((bits, perm) => {
-      bits |= BigInt(DiscordBitwisePermissionFlags[perm]);
+      bits |= BigInt(BitwisePermissionFlags[perm]);
       return bits;
     }, 0n)
     .toString();

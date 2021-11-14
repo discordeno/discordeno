@@ -1,11 +1,11 @@
-import { PermissionStrings } from "../permissions/permission_strings.ts";
-import { DiscordOverwriteTypes } from "./overwrite_types.ts";
+import { PermissionStrings } from "../permissions/permissionStrings.ts";
+import { OverwriteTypes } from "./overwriteTypes.ts";
 
 export interface Overwrite {
   /** Role or user id */
   id: bigint;
   /** Either 0 (role) or 1 (member) */
-  type: DiscordOverwriteTypes;
+  type: OverwriteTypes;
   /** Permission bit set */
   allow?: PermissionStrings[];
   /** Permission bit set */

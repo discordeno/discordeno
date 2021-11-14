@@ -1,10 +1,4 @@
-import {
-  Bot,
-  createChannel,
-  DiscordChannelTypes,
-  channelOverwriteHasPermission,
-  DiscordOverwriteTypes,
-} from "../../../mod.ts";
+import { Bot, createChannel, ChannelTypes, channelOverwriteHasPermission, OverwriteTypes } from "../../../mod.ts";
 import { Cache } from "../../../src/cache.ts";
 import { assertExists, assertEquals } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
@@ -15,7 +9,7 @@ export async function deleteChannelOverwriteTests(bot: Bot<Cache>, guildId: bigi
     permissionOverwrites: [
       {
         id: bot.id,
-        type: DiscordOverwriteTypes.Member,
+        type: OverwriteTypes.Member,
         allow: ["VIEW_CHANNEL"],
         deny: [],
       },
@@ -24,7 +18,7 @@ export async function deleteChannelOverwriteTests(bot: Bot<Cache>, guildId: bigi
 
   // Assertions
   assertExists(channel);
-  assertEquals(channel.type, DiscordChannelTypes.GuildText);
+  assertEquals(channel.type, ChannelTypes.GuildText);
 
   // Delay the execution to allow event to be processed
   await delayUntil(10000, () => bot.cache.channels.has(channel.id));

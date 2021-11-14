@@ -1,6 +1,6 @@
 import { Bot } from "../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { DiscordEmbedTypes } from "../types/embeds/embed_types.ts";
+import { EmbedTypes } from "../types/embeds/embedTypes.ts";
 import { Embed } from "../types/embeds/embed.ts";
 
 export function transformEmbed(bot: Bot, payload: SnakeCasedPropertiesDeep<Embed>): DiscordenoEmbed {
@@ -68,7 +68,7 @@ export interface DiscordenoEmbed {
   /** Title of embed */
   title?: string;
   /** Type of embed (always "rich" for webhook embeds) */
-  type?: DiscordEmbedTypes;
+  type?: EmbedTypes;
   /** Description of embed */
   description?: string;
   /** Url of embed */

@@ -1,8 +1,8 @@
 import { Message } from "../messages/message.ts";
 import { User } from "../users/user.ts";
-import { InteractionData } from "./commands/application_command_interaction_data.ts";
-import { InteractionGuildMember } from "./interaction_guild_member.ts";
-import { InteractionTypes } from "./interaction_types.ts";
+import { InteractionData } from "./commands/applicationCommandInteractionData.ts";
+import { InteractionGuildMember } from "./interactionGuildMember.ts";
+import { InteractionTypes } from "./interactionTypes.ts";
 
 export interface Interaction {
   /** Id of the interaction */

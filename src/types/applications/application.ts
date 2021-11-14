@@ -1,6 +1,6 @@
 import { Team } from "../teams/team.ts";
 import { User } from "../users/user.ts";
-import { DiscordApplicationFlags } from "./application_flags.ts";
+import { ApplicationFlags } from "./applicationFlags.ts";
 
 /** https://discord.com/developers/docs/topics/oauth2#application-object */
 export interface Application {
@@ -39,5 +39,5 @@ export interface Application {
   /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
   coverImage?: string;
   /** The application's public flags */
-  flags?: DiscordApplicationFlags;
+  flags?: ApplicationFlags;
 }

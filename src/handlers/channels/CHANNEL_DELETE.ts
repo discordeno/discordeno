@@ -1,5 +1,5 @@
 import type { Channel } from "../../types/channels/channel.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
 import type { Bot } from "../../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 

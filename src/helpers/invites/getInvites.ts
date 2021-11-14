@@ -1,0 +1,15 @@
+import type { InviteMetadata } from "../../types/invites/inviteMetadata.ts";
+import { Collection } from "../../util/collection.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import type { Bot } from "../../bot.ts";
+
+/** Get all the invites for this guild. Requires MANAGE_GUILD permission */
+export async function getInvites(bot: Bot, guildId: bigint) {
+  const result = await bot.rest.runMethod<InviteMetadata[]>(
+    bot.rest,
+    "get",
+    bot.constants.endpoints.GUILD_INVITES(guildId)
+  );
+
+  return new Collection(result.map((invite) => [invite.code, invite]));
+}

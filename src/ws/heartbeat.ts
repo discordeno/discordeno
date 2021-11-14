@@ -1,4 +1,4 @@
-import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
+import { GatewayOpcodes } from "../types/codes/gatewayOpcodes.ts";
 import { delay } from "../util/utils.ts";
 import { GatewayManager } from "../bot.ts";
 
@@ -17,7 +17,7 @@ export async function heartbeat(gateway: GatewayManager, shardId: number, interv
 
   shard.ws.send(
     JSON.stringify({
-      op: DiscordGatewayOpcodes.Heartbeat,
+      op: GatewayOpcodes.Heartbeat,
       d: shard.previousSequenceNumber,
     })
   );
@@ -52,7 +52,7 @@ export async function heartbeat(gateway: GatewayManager, shardId: number, interv
 
     currentShard.ws.send(
       JSON.stringify({
-        op: DiscordGatewayOpcodes.Heartbeat,
+        op: GatewayOpcodes.Heartbeat,
         d: currentShard.previousSequenceNumber,
       })
     );

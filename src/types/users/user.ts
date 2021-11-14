@@ -1,5 +1,5 @@
-import { DiscordPremiumTypes } from "./premium_types.ts";
-import { DiscordUserFlags } from "./user_flags.ts";
+import { PremiumTypes } from "./premiumTypes.ts";
+import { UserFlags } from "./userFlags.ts";
 
 /** https://discord.com/developers/docs/resources/user#user-object */
 export interface User {
@@ -24,11 +24,11 @@ export interface User {
   /** The user's email */
   email?: string | null;
   /** The flags on a user's account */
-  flags?: DiscordUserFlags;
+  flags?: UserFlags;
   /** The type of Nitro subscription on a user's account */
-  premiumType?: DiscordPremiumTypes;
+  premiumType?: PremiumTypes;
   /** The public flags on a user's account */
-  publicFlags?: DiscordUserFlags;
+  publicFlags?: UserFlags;
   /** the user's banner, or null if unset */
   banner?: string;
   /** the user's banner color encoded as an integer representation of hexadecimal color code */

@@ -1,4 +1,4 @@
-import { UnavailableGuild } from "../guilds/unavailable_guild.ts";
+import { UnavailableGuild } from "../guilds/unavailableGuild.ts";
 import { Application } from "../applications/application.ts";
 import { User } from "../users/user.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";

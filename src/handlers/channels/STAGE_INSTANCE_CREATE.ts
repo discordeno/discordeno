@@ -1,6 +1,6 @@
 import type { Bot } from "../../bot.ts";
-import type { StageInstance } from "../../types/channels/stage_instance.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { StageInstance } from "../../types/channels/stageInstance.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export function handleStageInstanceCreate(bot: Bot, data: DiscordGatewayPayload) {

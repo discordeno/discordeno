@@ -1,4 +1,4 @@
-import type { DiscoveryMetadata } from "../../types/discovery/discovery_metadata.ts";
+import type { DiscoveryMetadata } from "../../types/discovery/discoveryMetadata.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Returns the discovery metadata object for the guild. Requires the `MANAGE_GUILD` permission. */

@@ -1,8 +1,8 @@
 import { Bot } from "../bot.ts";
-import { ButtonStyles } from "../types/messages/components/button_styles.ts";
-import { DiscordMessageComponentTypes } from "../types/messages/components/message_component_types.ts";
+import { ButtonStyles } from "../types/messages/components/buttonStyles.ts";
+import { MessageComponentTypes } from "../types/messages/components/messageComponentTypes.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { SelectOption } from "../types/messages/components/select_option.ts";
+import { SelectOption } from "../types/messages/components/selectOption.ts";
 
 export function transformComponent(bot: Bot, payload: SnakeCasedPropertiesDeep<Component>): DiscordenoComponent {
   return {
@@ -41,7 +41,7 @@ export function transformComponent(bot: Bot, payload: SnakeCasedPropertiesDeep<C
 
 export interface Component {
   /** component type */
-  type: DiscordMessageComponentTypes;
+  type: MessageComponentTypes;
   /** a developer-defined identifier for the component, max 100 characters */
   customId?: string;
   /** whether the component is disabled, default false */
@@ -75,7 +75,7 @@ export interface Component {
 
 export interface DiscordenoComponent {
   /** component type */
-  type: DiscordMessageComponentTypes;
+  type: MessageComponentTypes;
   /** a developer-defined identifier for the component, max 100 characters */
   customId?: string;
   /** whether the component is disabled, default false */

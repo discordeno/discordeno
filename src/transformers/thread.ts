@@ -1,13 +1,13 @@
 import { Bot } from "../bot.ts";
 import { Channel } from "../types/channels/channel.ts";
-import { DiscordChannelTypes } from "../types/channels/channel_types.ts";
+import { ChannelTypes } from "../types/channels/channelTypes.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
 export function transformThread(bot: Bot, channel: SnakeCasedPropertiesDeep<Channel>): DiscordenoThread {
   if (
-    channel.type !== DiscordChannelTypes.GuildNewsThread &&
-    channel.type !== DiscordChannelTypes.GuildPublicThread &&
-    channel.type !== DiscordChannelTypes.GuildPrivateThread
+    channel.type !== ChannelTypes.GuildNewsThread &&
+    channel.type !== ChannelTypes.GuildPublicThread &&
+    channel.type !== ChannelTypes.GuildPrivateThread
   )
     throw new Error("Cannot convert non-thread channel to a thread.");
 
@@ -32,10 +32,7 @@ export function transformThread(bot: Bot, channel: SnakeCasedPropertiesDeep<Chan
 export interface DiscordenoThread {
   id: bigint;
   name: string;
-  type:
-    | DiscordChannelTypes.GuildNewsThread
-    | DiscordChannelTypes.GuildPublicThread
-    | DiscordChannelTypes.GuildPrivateThread;
+  type: ChannelTypes.GuildNewsThread | ChannelTypes.GuildPublicThread | ChannelTypes.GuildPrivateThread;
   parentId: bigint;
   memberCount: number;
   messageCount: number;

@@ -1,5 +1,5 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
 import type { Interaction } from "../../types/interactions/interaction.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 

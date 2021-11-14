@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { InviteDelete } from "../../types/invites/invite_delete.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import type { InviteDelete } from "../../types/invites/inviteDelete.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export function handleInviteDelete(bot: Bot, data: DiscordGatewayPayload) {
