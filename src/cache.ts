@@ -115,10 +115,17 @@ export function createCache(
     cache.execute = createExecute(cache);
   }
 
+  // Interaction sweeper in case users don't reply do slash commands
+  // PS: always reply .-. its good practise
   setInterval(() => {
     const values = cache.unrepliedInteractions.values();
     const now = Date.now();
     for (let val; (val = values.next().value); ) {
+      // Interaction is older than 15 minutes
+      // and a reply has never been send
+      // so remove it from cache
+      // PS: DON'T USE THIS CODE TO CONVERT DC SNOWFLAKES TO UNIX
+      // SINCE U WILL GET AN INVALID RESULT
       if ((val >> 22n) + 1420071300000n < now) {
         cache.unrepliedInteractions.delete(val);
       }
