@@ -22,7 +22,12 @@ export interface ExecuteWebhook {
   /** Embedded `rich` content */
   embeds?: Embed[];
   /** Allowed mentions for the message */
-  allowedMentions?: AllowedMentions;
+  allowedMentions?: Omit<AllowedMentions, "users" | "roles"> & {
+    /** Array of role_ids to mention (Max size of 100) */
+    roles?: bigint[];
+    /** Array of user_ids to mention (Max size of 100) */
+    users?: bigint[];
+  };
 }
 
 export type DiscordExecuteWebhook = SnakeCasedPropertiesDeep<Omit<ExecuteWebhook, "wait">>;

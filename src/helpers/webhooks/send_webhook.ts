@@ -37,6 +37,15 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
     }
   }
 
+  const allowedMentions = options.allowedMentions
+    ? {
+        parse: options.allowedMentions.parse,
+        repliedUser: options.allowedMentions.repliedUser,
+        users: options.allowedMentions.users?.map((id) => id.toString()),
+        roles: options.allowedMentions.roles?.map((id) => id.toString()),
+      }
+    : { parse: [] };
+
   const result = await bot.rest.runMethod<Message>(
     bot.rest,
     "post",
@@ -52,7 +61,7 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
       tts: options.tts,
       file: options.file,
       embeds: options.embeds,
-      allowed_mentions: options.allowedMentions,
+      allowed_mentions: allowedMentions,
     }
   );
   if (!options.wait) return;
