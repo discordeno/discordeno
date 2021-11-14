@@ -137,15 +137,10 @@ export async function sendInteractionResponse(
   if (bot.cache.unrepliedInteractions.has(id)) {
     bot.cache.unrepliedInteractions.delete(id);
 
-    return await bot.rest.runMethod(
-      bot.rest,
-      "post",
-      bot.constants.endpoints.INTERACTION_ID_TOKEN(typeof id === "bigint" ? id : bot.transformers.snowflake(id), token),
-      {
-        type: options.type,
-        data,
-      }
-    );
+    return await bot.rest.runMethod(bot.rest, "post", bot.constants.endpoints.INTERACTION_ID_TOKEN(id, token), {
+      type: options.type,
+      data,
+    });
   }
 
   // If its already been executed, we need to send a followup response
