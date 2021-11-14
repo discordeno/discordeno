@@ -1,4 +1,4 @@
-import type { GuildWidget } from "../../types/guilds/guild_widget.ts";
+import type { GuildWidget } from "../../types/guilds/guildWidget.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Returns the guild widget object. Requires the MANAGE_GUILD permission. */

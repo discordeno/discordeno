@@ -1,6 +1,6 @@
-import type { ModifyGuildMember } from "../../types/guilds/modify_guild_member.ts";
-import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
-import type { PermissionStrings } from "../../types/permissions/permission_strings.ts";
+import type { ModifyGuildMember } from "../../types/guilds/modifyGuildMember.ts";
+import type { GuildMemberWithUser } from "../../types/members/guildMember.ts";
+import type { PermissionStrings } from "../../types/permissions/permissionStrings.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Edit the member */

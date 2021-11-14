@@ -1,7 +1,7 @@
-import type { ApplicationCommand } from "../../../types/interactions/commands/application_command.ts";
-import type { CreateGlobalApplicationCommand } from "../../../types/interactions/commands/create_global_application_command.ts";
+import type { ApplicationCommand } from "../../../types/interactions/commands/applicationCommand.ts";
+import type { CreateGlobalApplicationCommand } from "../../../types/interactions/commands/createGlobalApplicationCommand.ts";
 import type { Bot } from "../../../bot.ts";
-import { ApplicationCommandOption } from "../../../types/interactions/commands/application_command_option.ts";
+import { ApplicationCommandOption } from "../../../types/interactions/commands/applicationCommandOption.ts";
 
 /**
  * There are two kinds of Slash Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:

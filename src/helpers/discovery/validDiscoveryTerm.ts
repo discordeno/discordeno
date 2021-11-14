@@ -1,4 +1,4 @@
-import type { ValidateDiscoverySearchTerm } from "../../types/discovery/validate_discovery_search_term.ts";
+import type { ValidateDiscoverySearchTerm } from "../../types/discovery/validateDiscoverySearchTerm.ts";
 import type { Bot } from "../../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 

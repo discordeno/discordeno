@@ -1,13 +1,13 @@
 import { SnakeCasedPropertiesDeep } from "../util.ts";
-import { DiscordChannelTypes } from "./channel_types.ts";
+import { ChannelTypes } from "./channelTypes.ts";
 import { DiscordOverwrite, Overwrite } from "./overwrite.ts";
-import { DiscordVideoQualityModes } from "./video_quality_modes.ts";
+import { VideoQualityModes } from "./videoQualityModes.ts";
 
 export interface ModifyChannel {
   /** 1-100 character channel name */
   name?: string;
   /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
-  type?: DiscordChannelTypes;
+  type?: ChannelTypes;
   /** The position of the channel in the left-hand listing */
   position?: number | null;
   /** 0-1024 character channel topic */
@@ -27,7 +27,7 @@ export interface ModifyChannel {
   /** Voice region id for the voice channel, automatic when set to null */
   rtcRegion?: string | null;
   /** The camera video quality mode of the voice channel */
-  videoQualityMode?: DiscordVideoQualityModes;
+  videoQualityMode?: VideoQualityModes;
 }
 
 /** https://discord.com/developers/docs/resources/channel#modify-channel */

@@ -1,6 +1,6 @@
 import { Bot } from "../bot.ts";
-import { DiscordApplicationCommandPermissionTypes } from "../types/interactions/commands/application_command_permission_types.ts";
-import { GuildApplicationCommandPermissions } from "../types/interactions/commands/guild_application_command_permissions.ts";
+import { ApplicationCommandPermissionTypes } from "../types/interactions/commands/applicationCommandPermissionTypes.ts";
+import { GuildApplicationCommandPermissions } from "../types/interactions/commands/guildApplicationCommandPermissions.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
 export function transformApplicationCommandPermission(
@@ -31,7 +31,7 @@ export interface DiscordenoApplicationCommandPermission {
     /** The id of the role or user */
     id: bigint;
     /** Role or User */
-    type: DiscordApplicationCommandPermissionTypes;
+    type: ApplicationCommandPermissionTypes;
     /** `true` to allow, `false`, to disallow */
     permission: boolean;
   }[];

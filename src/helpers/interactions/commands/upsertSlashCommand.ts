@@ -1,7 +1,7 @@
-import type { ApplicationCommand } from "../../../types/interactions/commands/application_command.ts";
-import type { EditGlobalApplicationCommand } from "../../../types/interactions/commands/edit_global_application_command.ts";
+import type { ApplicationCommand } from "../../../types/interactions/commands/applicationCommand.ts";
+import type { EditGlobalApplicationCommand } from "../../../types/interactions/commands/editGlobalApplicationCommand.ts";
 import type { Bot } from "../../../bot.ts";
-import { makeOptionsForCommand } from "./create_slash_command.ts";
+import { makeOptionsForCommand } from "./createSlashCommand.ts";
 
 /**
  * Edit an existing slash command. If this command did not exist, it will create it.

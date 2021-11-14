@@ -1,4 +1,4 @@
-import { SessionStartLimit } from "./session_start_limit.ts";
+import { SessionStartLimit } from "./sessionStartLimit.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#get-gateway-bot */
 export interface GetGatewayBot {

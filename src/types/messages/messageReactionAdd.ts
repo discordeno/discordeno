@@ -1,5 +1,5 @@
 import { Emoji } from "../emojis/emoji.ts";
-import { GuildMemberWithUser } from "../members/guild_member.ts";
+import { GuildMemberWithUser } from "../members/guildMember.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-add */
 export interface MessageReactionAdd {

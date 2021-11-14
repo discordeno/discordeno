@@ -1,4 +1,4 @@
-import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
+import type { GuildMemberWithUser } from "../../types/members/guildMember.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Returns a guild member object for the specified user.

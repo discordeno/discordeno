@@ -1,5 +1,5 @@
 import { RestManager } from "../bot.ts";
-import type { FileContent } from "../types/discordeno/file_content.ts";
+import type { FileContent } from "../types/discordeno/fileContent.ts";
 import { USER_AGENT } from "../util/constants.ts";
 import { RestPayload, RestRequest } from "./rest.ts";
 

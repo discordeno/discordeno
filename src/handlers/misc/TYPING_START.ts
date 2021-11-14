@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { TypingStart } from "../../types/misc/typing_start.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import type { TypingStart } from "../../types/misc/typingStart.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export function handleTypingStart(bot: Bot, data: DiscordGatewayPayload) {

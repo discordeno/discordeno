@@ -1,7 +1,7 @@
-import type { EditMessage } from "../../types/messages/edit_message.ts";
+import type { EditMessage } from "../../types/messages/editMessage.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { Bot } from "../../bot.ts";
-import { DiscordMessageComponentTypes } from "../../types/messages/components/message_component_types.ts";
+import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
 
 /** Edit the message. */
 export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: string | EditMessage) {
@@ -92,7 +92,7 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
       components: content.components?.map((component) => ({
         type: component.type,
         components: component.components.map((subcomponent) => {
-          if (subcomponent.type === DiscordMessageComponentTypes.SelectMenu)
+          if (subcomponent.type === MessageComponentTypes.SelectMenu)
             return {
               type: subcomponent.type,
               custom_id: subcomponent.customId,

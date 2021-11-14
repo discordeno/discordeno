@@ -1,6 +1,6 @@
 import type { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { UnavailableGuild } from "../../types/guilds/unavailable_guild.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import type { UnavailableGuild } from "../../types/guilds/unavailableGuild.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export async function handleGuildDelete(bot: Bot, data: DiscordGatewayPayload, shardId: number) {

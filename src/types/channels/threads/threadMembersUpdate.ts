@@ -1,4 +1,4 @@
-import { ThreadMember, ThreadMemberModified } from "./thread_member.ts";
+import { ThreadMember, ThreadMemberModified } from "./threadMember.ts";
 
 export interface ThreadMembersUpdateBase {
   /** The approximate number of members in the thread, capped at 50 */

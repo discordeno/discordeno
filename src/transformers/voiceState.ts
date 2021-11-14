@@ -1,4 +1,4 @@
-import type { VoiceState } from "../types/voice/voice_state.ts";
+import type { VoiceState } from "../types/voice/voiceState.ts";
 import { Bot } from "../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 

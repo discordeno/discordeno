@@ -1,5 +1,5 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
 import type { DiscordReady } from "../../types/gateway/ready.ts";
 
 export function handleReady(bot: Bot, data: DiscordGatewayPayload, shardId: number) {

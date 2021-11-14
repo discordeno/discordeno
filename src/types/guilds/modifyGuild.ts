@@ -1,19 +1,19 @@
-import { DiscordDefaultMessageNotificationLevels } from "./default_message_notification_levels.ts";
-import { DiscordExplicitContentFilterLevels } from "./explicit_content_filter_levels.ts";
-import { DiscordGuildFeatures } from "./guild_features.ts";
-import { DiscordSystemChannelFlags } from "./system_channel_flags.ts";
-import { DiscordVerificationLevels } from "./verification_levels.ts";
+import { DefaultMessageNotificationLevels } from "./defaultMessageNotificationLevels.ts";
+import { ExplicitContentFilterLevels } from "./explicitContentFilterLevels.ts";
+import { GuildFeatures } from "./guildFeatures.ts";
+import { SystemChannelFlags } from "./systemChannelFlags.ts";
+import { VerificationLevels } from "./verificationLevels.ts";
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild */
 export interface ModifyGuild {
   /** Guild name */
   name?: string;
   /** Verification level */
-  verificationLevel?: DiscordVerificationLevels | null;
+  verificationLevel?: VerificationLevels | null;
   /** Default message notification filter level */
-  defaultMessageNotifications?: DiscordDefaultMessageNotificationLevels | null;
+  defaultMessageNotifications?: DefaultMessageNotificationLevels | null;
   /** Explicit content filter level */
-  explicitContentFilter?: DiscordExplicitContentFilterLevels | null;
+  explicitContentFilter?: ExplicitContentFilterLevels | null;
   /** Id for afk channel */
   afkChannelId?: bigint | null;
   /** Afk timeout in seconds */
@@ -31,7 +31,7 @@ export interface ModifyGuild {
   /** The id of the channel where guild notices such as welcome messages and boost events are posted */
   systemChannelId?: bigint | null;
   /** System channel flags */
-  systemChannelFlags?: DiscordSystemChannelFlags;
+  systemChannelFlags?: SystemChannelFlags;
   /** The id of the channel where Community guilds display rules and/or guidelines */
   rulesChannelId?: bigint | null;
   /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
@@ -39,5 +39,5 @@ export interface ModifyGuild {
   /** The preferred locale of a Community guild used in server discovery and notices from Discord; defaults to "en-US" */
   preferredLocale?: string | null;
   /** Enabled guild features */
-  features?: DiscordGuildFeatures[];
+  features?: GuildFeatures[];
 }

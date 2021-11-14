@@ -1,8 +1,8 @@
-import { FileContent } from "../discordeno/file_content.ts";
+import { FileContent } from "../discordeno/fileContent.ts";
 import { Embed } from "../embeds/embed.ts";
-import { AllowedMentions } from "../messages/allowed_mentions.ts";
+import { AllowedMentions } from "../messages/allowedMentions.ts";
 import { Attachment } from "../messages/attachment.ts";
-import { MessageComponents } from "../messages/components/message_components.ts";
+import { MessageComponents } from "../messages/components/messageComponents.ts";
 
 /** https://discord.com/developers/docs/resources/webhook#edit-webhook-message-jsonform-params */
 export interface EditWebhookMessage {

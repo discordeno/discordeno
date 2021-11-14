@@ -1,5 +1,5 @@
 import type { Channel } from "../../types/channels/channel.ts";
-import type { CreateMessage } from "../../types/messages/create_message.ts";
+import type { CreateMessage } from "../../types/messages/createMessage.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Send a message to a users DM. Note: this takes 2 API calls. 1 is to fetch the users dm channel. 2 is to send a message to that channel. */

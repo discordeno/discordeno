@@ -1,8 +1,8 @@
 import type { Message } from "../../types/messages/message.ts";
-import type { EditWebhookMessage } from "../../types/webhooks/edit_webhook_message.ts";
+import type { EditWebhookMessage } from "../../types/webhooks/editWebhookMessage.ts";
 import type { Bot } from "../../bot.ts";
-import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
-import { DiscordMessageComponentTypes } from "../../types/messages/components/message_component_types.ts";
+import { AllowedMentionsTypes } from "../../types/messages/allowedMentionsTypes.ts";
+import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
 
 export async function editWebhookMessage(
   bot: Bot,
@@ -20,7 +20,7 @@ export async function editWebhookMessage(
 
   if (options.allowedMentions) {
     if (options.allowedMentions.users?.length) {
-      if (options.allowedMentions.parse?.includes(DiscordAllowedMentionsTypes.UserMentions)) {
+      if (options.allowedMentions.parse?.includes(AllowedMentionsTypes.UserMentions)) {
         options.allowedMentions.parse = options.allowedMentions.parse.filter((p) => p !== "users");
       }
 
@@ -30,7 +30,7 @@ export async function editWebhookMessage(
     }
 
     if (options.allowedMentions.roles?.length) {
-      if (options.allowedMentions.parse?.includes(DiscordAllowedMentionsTypes.RoleMentions)) {
+      if (options.allowedMentions.parse?.includes(AllowedMentionsTypes.RoleMentions)) {
         options.allowedMentions.parse = options.allowedMentions.parse.filter((p) => p !== "roles");
       }
 
@@ -66,7 +66,7 @@ export async function editWebhookMessage(
       components: options.components?.map((component) => ({
         type: component.type,
         components: component.components.map((subcomponent) => {
-          if (subcomponent.type === DiscordMessageComponentTypes.SelectMenu)
+          if (subcomponent.type === MessageComponentTypes.SelectMenu)
             return {
               type: subcomponent.type,
               custom_id: subcomponent.customId,

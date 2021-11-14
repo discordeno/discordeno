@@ -1,9 +1,9 @@
 import { Embed } from "../embeds/embed.ts";
-import { AllowedMentions } from "../messages/allowed_mentions.ts";
-import { MessageReference } from "../messages/message_reference.ts";
-import { FileContent } from "../discordeno/file_content.ts";
+import { AllowedMentions } from "../messages/allowedMentions.ts";
+import { MessageReference } from "../messages/messageReference.ts";
+import { FileContent } from "../discordeno/fileContent.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
-import { MessageComponents } from "./components/message_components.ts";
+import { MessageComponents } from "./components/messageComponents.ts";
 
 export interface CreateMessage {
   /** The message contents (up to 2000 characters) */

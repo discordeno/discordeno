@@ -1,6 +1,6 @@
 import { Bot } from "../bot.ts";
 import { Team } from "../types/teams/team.ts";
-import { DiscordTeamMembershipStates } from "../types/teams/team_membership_states.ts";
+import { TeamMembershipStates } from "../types/teams/teamMembershipStates.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoUser } from "./member.ts";
 
@@ -16,7 +16,7 @@ export function transformTeam(bot: Bot, payload: SnakeCasedPropertiesDeep<Team>)
     members: payload.members.map((member) => ({
       membershipState: member.membership_state,
       // TODO: think about this seems useless to add ["*"] to everything
-        permissions: member.permissions,
+      permissions: member.permissions,
       // TODO: think about this seems useless to add another id here when its also on the one above
       teamId: id,
       user: bot.transformers.user(bot, member.user),
@@ -32,7 +32,7 @@ export interface DiscordenoTeam {
   /** The members of the team */
   members: {
     /** The user's membership state on the team */
-    membershipState: DiscordTeamMembershipStates;
+    membershipState: TeamMembershipStates;
     /** Will always be `["*"]` */
     permissions: "*"[];
     /** The id of the parent team of which they are a member */

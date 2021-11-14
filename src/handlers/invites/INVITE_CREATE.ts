@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { InviteCreate } from "../../types/invites/invite_create.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import type { InviteCreate } from "../../types/invites/inviteCreate.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export function handleInviteCreate(bot: Bot, data: DiscordGatewayPayload) {

@@ -1,4 +1,4 @@
-import { DiscordChannelTypes } from "../channel_types.ts";
+import { ChannelTypes } from "../channelTypes.ts";
 
 // TODO: add docs link
 export interface StartThreadBase {
@@ -17,10 +17,7 @@ export interface StartThreadWithMessage extends StartThreadBase {
 
 export interface StartThreadWithoutMessage extends StartThreadBase {
   /** the type of thread to create */
-  type:
-    | DiscordChannelTypes.GuildNewsThread
-    | DiscordChannelTypes.GuildPublicThread
-    | DiscordChannelTypes.GuildPrivateThread;
+  type: ChannelTypes.GuildNewsThread | ChannelTypes.GuildPublicThread | ChannelTypes.GuildPrivateThread;
   /** whether non-moderators can add other non-moderators to a thread; only available when creating a private thread */
   invitable?: boolean;
 }

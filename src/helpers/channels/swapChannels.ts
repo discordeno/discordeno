@@ -1,4 +1,4 @@
-import type { ModifyGuildChannelPositions } from "../../types/guilds/modify_guild_channel_position.ts";
+import type { ModifyGuildChannelPositions } from "../../types/guilds/modifyGuildChannelPosition.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permission. */

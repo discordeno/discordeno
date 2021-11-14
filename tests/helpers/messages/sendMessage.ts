@@ -1,9 +1,9 @@
 import { Bot } from "../../../src/bot.ts";
 import { assertExists } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
-import { CreateMessage } from "../../../src/types/messages/create_message.ts";
-import { DiscordMessageComponentTypes } from "../../../src/types/messages/components/message_component_types.ts";
-import { DiscordButtonStyles } from "../../../src/types/messages/components/button_styles.ts";
+import { CreateMessage } from "../../../src/types/messages/createMessage.ts";
+import { MessageComponentTypes } from "../../../src/types/messages/components/messageComponentTypes.ts";
+import { ButtonStyles } from "../../../src/types/messages/components/buttonStyles.ts";
 
 async function ifItFailsBlameWolf(bot: Bot, channelId: bigint, content: string | CreateMessage) {
   const message = await bot.helpers.sendMessage(channelId, content);
@@ -26,30 +26,30 @@ export async function sendMessageWithComponents(bot: Bot, channelId: bigint, t: 
     content: "Hello World!",
     components: [
       {
-        type: DiscordMessageComponentTypes.ActionRow,
+        type: MessageComponentTypes.ActionRow,
         components: [
           {
-            type: DiscordMessageComponentTypes.Button,
+            type: MessageComponentTypes.Button,
             label: "Doc",
-            style: DiscordButtonStyles.Link,
+            style: ButtonStyles.Link,
             url: `https://discordeno.mod.land/`,
           },
           {
-            type: DiscordMessageComponentTypes.Button,
+            type: MessageComponentTypes.Button,
             label: "Server",
-            style: DiscordButtonStyles.Link,
+            style: ButtonStyles.Link,
             url: `https://discord.gg/ddeno`,
           },
         ],
       },
       {
-        type: DiscordMessageComponentTypes.ActionRow,
+        type: MessageComponentTypes.ActionRow,
         components: [
           {
-            type: DiscordMessageComponentTypes.Button,
+            type: MessageComponentTypes.Button,
             label: "Hi",
             customId: `hi`,
-            style: DiscordButtonStyles.Primary,
+            style: ButtonStyles.Primary,
           },
         ],
       },

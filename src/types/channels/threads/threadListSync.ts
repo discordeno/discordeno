@@ -1,5 +1,5 @@
 import { Channel } from "../channel.ts";
-import { ThreadMember } from "./thread_member.ts";
+import { ThreadMember } from "./threadMember.ts";
 
 // TODO: add docs link
 export interface ThreadListSync {

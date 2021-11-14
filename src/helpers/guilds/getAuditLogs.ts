@@ -1,5 +1,5 @@
-import type { AuditLog } from "../../types/audit_log/audit_log.ts";
-import type { GetGuildAuditLog } from "../../types/audit_log/get_guild_audit_log.ts";
+import type { AuditLog } from "../../types/auditLog/auditLog.ts";
+import type { GetGuildAuditLog } from "../../types/auditLog/getGuildAuditLog.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */

@@ -1,10 +1,7 @@
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
-export enum DiscordMessageActivityTypes {
+export enum MessageActivityTypes {
   Join = 1,
   Spectate,
   Listen,
   JoinRequest,
 }
-
-export type MessageActivityTypes = DiscordMessageActivityTypes;
-export const MessageActivityTypes = DiscordMessageActivityTypes;

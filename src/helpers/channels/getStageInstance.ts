@@ -1,4 +1,4 @@
-import type { StageInstance } from "../../types/channels/stage_instance.ts";
+import type { StageInstance } from "../../types/channels/stageInstance.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Gets the stage instance associated with the Stage channel, if it exists. */

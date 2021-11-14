@@ -1,4 +1,4 @@
-import type { WelcomeScreen } from "../../types/guilds/welcome_screen.ts";
+import type { WelcomeScreen } from "../../types/guilds/welcomeScreen.ts";
 import type { Bot } from "../../bot.ts";
 
 export async function getWelcomeScreen(bot: Bot, guildId: bigint) {

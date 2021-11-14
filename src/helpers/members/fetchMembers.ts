@@ -1,8 +1,8 @@
-import type { RequestGuildMembers } from "../../types/members/request_guild_members.ts";
+import type { RequestGuildMembers } from "../../types/members/requestGuildMembers.ts";
 import { Collection } from "../../util/collection.ts";
 import type { Bot } from "../../bot.ts";
-import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
-import { DiscordGatewayOpcodes } from "../../types/codes/gateway_opcodes.ts";
+import { GatewayIntents } from "../../types/gateway/gatewayIntents.ts";
+import { GatewayOpcodes } from "../../types/codes/gatewayOpcodes.ts";
 import type { DiscordenoMember } from "../../transformers/member.ts";
 
 /**
@@ -21,7 +21,7 @@ export function fetchMembers(
 ) {
   // You can request 1 member without the intent
   // Check if intents is not 0 as proxy ws won't set intents in other instances
-  if (bot.intents && (!options?.limit || options.limit > 1) && !(bot.intents & DiscordGatewayIntents.GuildMembers)) {
+  if (bot.intents && (!options?.limit || options.limit > 1) && !(bot.intents & GatewayIntents.GuildMembers)) {
     throw new Error(bot.constants.Errors.MISSING_INTENT_GUILD_MEMBERS);
   }
 
@@ -34,7 +34,7 @@ export function fetchMembers(
     bot.cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
 
     bot.gateway.sendShardMessage(bot.gateway, shardId, {
-      op: DiscordGatewayOpcodes.RequestGuildMembers,
+      op: GatewayOpcodes.RequestGuildMembers,
       d: {
         guild_id: guildId.toString(),
         // If a query is provided use it, OR if a limit is NOT provided use ""

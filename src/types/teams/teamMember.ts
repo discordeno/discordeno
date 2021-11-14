@@ -1,10 +1,10 @@
 import { User } from "../users/user.ts";
-import { DiscordTeamMembershipStates } from "./team_membership_states.ts";
+import { TeamMembershipStates } from "./teamMembershipStates.ts";
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-members-object */
 export interface TeamMember {
   /** The user's membership state on the team */
-  membershipState: DiscordTeamMembershipStates;
+  membershipState: TeamMembershipStates;
   /** Will always be `["*"]` */
   permissions: ["*"];
   /** The id of the parent team of which they are a member */

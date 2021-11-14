@@ -1,8 +1,8 @@
 import type { Bot } from "../bot.ts";
-import type { GuildMember } from "../types/members/guild_member.ts";
-import type { DiscordPremiumTypes } from "../types/users/premium_types.ts";
+import type { GuildMember } from "../types/members/guildMember.ts";
+import type { PremiumTypes } from "../types/users/premiumTypes.ts";
 import type { User } from "../types/users/user.ts";
-import type { DiscordUserFlags } from "../types/users/user_flags.ts";
+import type { UserFlags } from "../types/users/userFlags.ts";
 import type { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
 export interface DiscordenoUser {
@@ -15,10 +15,10 @@ export interface DiscordenoUser {
   locale?: string;
   verified?: boolean;
   email?: string | null;
-  flags?: DiscordUserFlags;
+  flags?: UserFlags;
   mfaEnabled?: boolean;
-  premiumType?: DiscordPremiumTypes;
-  publicFlags?: DiscordUserFlags;
+  premiumType?: PremiumTypes;
+  publicFlags?: UserFlags;
 }
 
 export function transformUser(bot: Bot, payload: SnakeCasedPropertiesDeep<User>): DiscordenoUser {

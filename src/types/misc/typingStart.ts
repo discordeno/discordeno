@@ -1,4 +1,4 @@
-import { GuildMember } from "../members/guild_member.ts";
+import { GuildMember } from "../members/guildMember.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#typing-start */
 export interface TypingStart {

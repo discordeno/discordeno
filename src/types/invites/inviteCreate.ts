@@ -1,6 +1,6 @@
 import { Application } from "../applications/application.ts";
 import { User } from "../users/user.ts";
-import { DiscordTargetTypes } from "./target_types.ts";
+import { TargetTypes } from "./targetTypes.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#invite-create */
 export interface InviteCreate {
@@ -19,7 +19,7 @@ export interface InviteCreate {
   /** The maximum number of times the invite can be used */
   maxUses: number;
   /** The type of target for this voice channel invite */
-  targetType: DiscordTargetTypes;
+  targetType: TargetTypes;
   /** The target user for this invite */
   targetUser?: User;
   /** The embedded application to open for this voice channel embedded application invite */

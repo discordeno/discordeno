@@ -1,8 +1,5 @@
-export enum DiscordApplicationCommandTypes {
+export enum ApplicationCommandTypes {
   ChatInput = 1,
   User,
   Message,
 }
-
-export type ApplicationCommandTypes = DiscordApplicationCommandTypes;
-export const ApplicationCommandTypes = DiscordApplicationCommandTypes;

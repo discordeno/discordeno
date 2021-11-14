@@ -1,6 +1,6 @@
 import type { Bot } from "../../../bot.ts";
-import type { ApplicationCommandPermissions } from "../../../types/interactions/commands/application_command_permissions.ts";
-import { GuildApplicationCommandPermissions } from "../../../types/interactions/commands/guild_application_command_permissions.ts";
+import type { ApplicationCommandPermissions } from "../../../types/interactions/commands/applicationCommandPermissions.ts";
+import { GuildApplicationCommandPermissions } from "../../../types/interactions/commands/guildApplicationCommandPermissions.ts";
 
 /** Batch edits permissions for all commands in a guild. Takes an array of partial GuildApplicationCommandPermissions objects including `id` and `permissions`. */
 export async function batchEditSlashCommandPermissions(

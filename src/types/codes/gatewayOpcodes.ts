@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes */
-export enum DiscordGatewayOpcodes {
+export enum GatewayOpcodes {
   Dispatch,
   Heartbeat,
   Identify,
@@ -12,6 +12,3 @@ export enum DiscordGatewayOpcodes {
   Hello,
   HeartbeatACK,
 }
-
-export type GatewayOpcodes = DiscordGatewayOpcodes;
-export const GatewayOpcodes = DiscordGatewayOpcodes;

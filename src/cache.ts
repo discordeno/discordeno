@@ -4,7 +4,7 @@ import type { DiscordenoGuild } from "./transformers/guild.ts";
 import type { DiscordenoMember, DiscordenoUser } from "./transformers/member.ts";
 import type { DiscordenoMessage } from "./transformers/message.ts";
 import { DiscordenoPresence } from "./transformers/presence.ts";
-import { GuildMember } from "./types/members/guild_member.ts";
+import { GuildMember } from "./types/members/guildMember.ts";
 import { Collection } from "./util/collection.ts";
 
 function messageSweeper(bot: Bot, message: DiscordenoMessage) {

@@ -1,4 +1,4 @@
-import type { InviteMetadata } from "../../types/invites/invite_metadata.ts";
+import type { InviteMetadata } from "../../types/invites/inviteMetadata.ts";
 import { Collection } from "../../util/collection.ts";
 import type { Bot } from "../../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";

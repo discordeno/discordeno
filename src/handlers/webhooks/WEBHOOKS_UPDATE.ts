@@ -1,5 +1,5 @@
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { WebhookUpdate } from "../../types/webhooks/webhooks_update.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import type { WebhookUpdate } from "../../types/webhooks/webhooksUpdate.ts";
 import { Bot } from "../../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 

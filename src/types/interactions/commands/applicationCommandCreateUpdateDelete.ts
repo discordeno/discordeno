@@ -1,4 +1,4 @@
-import { ApplicationCommand } from "./application_command.ts";
+import { ApplicationCommand } from "./applicationCommand.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#application-command-delete-application-command-extra-fields */
 export interface ApplicationCommandCreateUpdateDelete extends ApplicationCommand {

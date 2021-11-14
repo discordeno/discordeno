@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
-export enum DiscordGatewayIntents {
+export enum GatewayIntents {
   /**
    * - GUILD_CREATE
    * - GUILD_DELETE
@@ -98,5 +98,4 @@ export enum DiscordGatewayIntents {
   DirectMessageTyping = 1 << 14,
 }
 
-export type Intents = DiscordGatewayIntents;
-export const Intents = DiscordGatewayIntents;
+export type Intents = GatewayIntents;

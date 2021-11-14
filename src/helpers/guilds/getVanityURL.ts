@@ -1,4 +1,4 @@
-import type { InviteMetadata } from "../../types/invites/invite_metadata.ts";
+import type { InviteMetadata } from "../../types/invites/inviteMetadata.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Returns the code and uses of the vanity url for this server if it is enabled else `code` will be null. Requires the `MANAGE_GUILD` permission. */

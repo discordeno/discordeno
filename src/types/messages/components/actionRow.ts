@@ -1,5 +1,5 @@
-import { ButtonComponent } from "./button_component.ts";
-import { SelectMenuComponent } from "./select_menu.ts";
+import { ButtonComponent } from "./buttonComponent.ts";
+import { SelectMenuComponent } from "./selectMenu.ts";
 
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
 export interface ActionRow {

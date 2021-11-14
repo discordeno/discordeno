@@ -1,5 +1,5 @@
 import type { Channel } from "../../types/channels/channel.ts";
-import type { ModifyChannel } from "../../types/channels/modify_channel.ts";
+import type { ModifyChannel } from "../../types/channels/modifyChannel.ts";
 import type { Bot } from "../../bot.ts";
 import { DiscordenoChannel } from "../../transformers/channel.ts";
 

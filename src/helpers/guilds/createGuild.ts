@@ -1,4 +1,4 @@
-import type { CreateGuild } from "../../types/guilds/create_guild.ts";
+import type { CreateGuild } from "../../types/guilds/createGuild.ts";
 import type { Guild } from "../../types/guilds/guild.ts";
 import type { Bot } from "../../bot.ts";
 

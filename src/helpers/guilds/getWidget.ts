@@ -1,4 +1,4 @@
-import type { GuildWidgetDetails } from "../../types/guilds/guild_widget_details.ts";
+import type { GuildWidgetDetails } from "../../types/guilds/guildWidgetDetails.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Returns the widget for the guild. */

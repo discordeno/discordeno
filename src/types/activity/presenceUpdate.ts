@@ -1,6 +1,6 @@
 import { User } from "../users/user.ts";
 import { Activity } from "./activity.ts";
-import { ClientStatus } from "./client_status.ts";
+import { ClientStatus } from "./clientStatus.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#presence-update */
 export interface PresenceUpdate {

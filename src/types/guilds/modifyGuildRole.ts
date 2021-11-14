@@ -1,4 +1,4 @@
-import { PermissionStrings } from "../permissions/permission_strings.ts";
+import { PermissionStrings } from "../permissions/permissionStrings.ts";
 
 export interface ModifyGuildRole {
   /** Name of the role */

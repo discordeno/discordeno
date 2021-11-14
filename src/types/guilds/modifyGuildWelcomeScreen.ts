@@ -1,4 +1,4 @@
-import { WelcomeScreenChannel } from "./welcome_screen_channel.ts";
+import { WelcomeScreenChannel } from "./welcomeScreenChannel.ts";
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */
 export interface ModifyGuildWelcomeScreen {

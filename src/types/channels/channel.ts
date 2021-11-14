@@ -1,22 +1,22 @@
 import { User } from "../users/user.ts";
-import { DiscordChannelTypes } from "./channel_types.ts";
-import { DiscordOverwrite } from "./overwrite.ts";
-import { ThreadMember } from "./threads/thread_member.ts";
-import { ThreadMetadata } from "./threads/thread_metadata.ts";
-import { DiscordVideoQualityModes } from "./video_quality_modes.ts";
+import { ChannelTypes } from "./channelTypes.ts";
+import { Overwrite } from "./overwrite.ts";
+import { ThreadMember } from "./threads/threadMember.ts";
+import { ThreadMetadata } from "./threads/threadMetadata.ts";
+import { VideoQualityModes } from "./videoQualityModes.ts";
 
 /** https://discord.com/developers/docs/resources/channel#channel-object */
 export interface Channel {
   /** The id of the channel */
   id: string;
   /** The type of channel */
-  type: DiscordChannelTypes;
+  type: ChannelTypes;
   /** The id of the guild */
   guildId?: string;
   /** Sorting position of the channel */
   position?: number;
   /** Explicit permission overwrites for members and roles */
-  permissionOverwrites?: DiscordOverwrite[];
+  permissionOverwrites?: Overwrite[];
   /** The name of the channel (1-100 characters) */
   name?: string;
   /** The channel topic (0-1024 characters) */
@@ -46,7 +46,7 @@ export interface Channel {
   /** Voice region id for the voice channel, automatic when set to null */
   rtcRegion?: string | null;
   /** The camera video quality mode of the voice channel, 1 when not present */
-  videoQualityMode?: DiscordVideoQualityModes;
+  videoQualityMode?: VideoQualityModes;
   // TODO(threads): consider a ThreadChannel object
   /** An approximate count of messages in a thread, stops counting at 50 */
   messageCount?: number;

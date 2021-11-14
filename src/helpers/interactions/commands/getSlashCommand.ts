@@ -1,4 +1,4 @@
-import type { ApplicationCommand } from "../../../types/interactions/commands/application_command.ts";
+import type { ApplicationCommand } from "../../../types/interactions/commands/applicationCommand.ts";
 import type { Bot } from "../../../bot.ts";
 
 /** Fetches the global command for the given Id. If a guildId is provided, the guild command will be fetched. */

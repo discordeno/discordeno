@@ -1,6 +1,6 @@
-import { DiscordGatewayIntents } from "../../types/gateway/gateway_intents.ts";
-import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
-import type { ListGuildMembers } from "../../types/members/list_guild_members.ts";
+import { GatewayIntents } from "../../types/gateway/gatewayIntents.ts";
+import type { GuildMemberWithUser } from "../../types/members/guildMember.ts";
+import type { ListGuildMembers } from "../../types/members/listGuildMembers.ts";
 import type { Bot } from "../../bot.ts";
 import { Collection } from "../../util/collection.ts";
 import type { DiscordenoMember } from "../../transformers/member.ts";

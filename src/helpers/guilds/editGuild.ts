@@ -1,6 +1,6 @@
 import type { Bot } from "../../bot.ts";
 import type { Guild } from "../../types/guilds/guild.ts";
-import type { ModifyGuild } from "../../types/guilds/modify_guild.ts";
+import type { ModifyGuild } from "../../types/guilds/modifyGuild.ts";
 
 /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
 export async function editGuild(bot: Bot, guildId: bigint, options: ModifyGuild, shardId: number) {

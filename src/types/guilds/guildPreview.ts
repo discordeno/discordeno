@@ -1,5 +1,5 @@
 import { Emoji } from "../emojis/emoji.ts";
-import { DiscordGuildFeatures } from "./guild_features.ts";
+import { GuildFeatures } from "./guildFeatures.ts";
 
 /** https://discord.com/developers/docs/resources/guild#guild-preview-object */
 export interface GuildPreview {
@@ -16,7 +16,7 @@ export interface GuildPreview {
   /** Custom guild emojis */
   emojis: Emoji[];
   /** Enabled guild features */
-  features: DiscordGuildFeatures[];
+  features: GuildFeatures[];
   /** Approximate number of members in this guild */
   approximateMemberCount: number;
   /** Approximate number of online members in this guild */

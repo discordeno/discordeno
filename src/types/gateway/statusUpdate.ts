@@ -1,5 +1,5 @@
 import { Activity } from "../activity/activity.ts";
-import { DiscordStatusTypes } from "./status_types.ts";
+import { DiscordStatusTypes } from "./statusTypes.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#update-status */
 export interface StatusUpdate {

@@ -1,5 +1,5 @@
 import { GuildMember, Channel, Role } from "../../mod.ts";
-import { ApplicationCommandOptionTypes } from "./application_command_option_types.ts";
+import { ApplicationCommandOptionTypes } from "./applicationCommandOptionTypes.ts";
 
 export type InteractionDataOption = {
   /** the name of the parameter */

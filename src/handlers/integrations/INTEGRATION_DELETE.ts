@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { IntegrationDelete } from "../../types/integrations/integration_delete.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import type { IntegrationDelete } from "../../types/integrations/integrationDelete.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export function handleIntegrationDelete(bot: Bot, data: DiscordGatewayPayload) {

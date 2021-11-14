@@ -1,4 +1,4 @@
-import { ApplicationCommandPermissions } from "./application_command_permissions.ts";
+import { ApplicationCommandPermissions } from "./applicationCommandPermissions.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#guildapplicationcommandpermissions */
 export interface GuildApplicationCommandPermissions {

@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#rpc */
-export enum DiscordRpcCloseEventCodes {
+export enum RpcCloseEventCodes {
   InvalidClientId = 4000,
   InvalidOrigin,
   RateLimited,
@@ -7,6 +7,3 @@ export enum DiscordRpcCloseEventCodes {
   InvalidVersion,
   InvalidEncoding,
 }
-
-export type RpcCloseEventCodes = DiscordRpcCloseEventCodes;
-export const RpcCloseEventCodes = DiscordRpcCloseEventCodes;

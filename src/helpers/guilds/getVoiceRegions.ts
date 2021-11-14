@@ -1,4 +1,4 @@
-import type { VoiceRegion } from "../../types/voice/voice_region.ts";
+import type { VoiceRegion } from "../../types/voice/voiceRegion.ts";
 import { Collection } from "../../util/collection.ts";
 import type { Bot } from "../../bot.ts";
 

@@ -1,5 +1,5 @@
-import type { UpdateOthersVoiceState } from "../../types/guilds/update_others_voice_state.ts";
-import type { UpdateSelfVoiceState } from "../../types/guilds/update_self_voice_state.ts";
+import type { UpdateOthersVoiceState } from "../../types/guilds/updateOthersVoiceState.ts";
+import type { UpdateSelfVoiceState } from "../../types/guilds/updateSelfVoiceState.ts";
 import type { Bot } from "../../bot.ts";
 
 /**

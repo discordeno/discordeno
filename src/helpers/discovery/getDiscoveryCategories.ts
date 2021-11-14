@@ -1,4 +1,4 @@
-import type { DiscoveryCategory } from "../../types/discovery/discovery_category.ts";
+import type { DiscoveryCategory } from "../../types/discovery/discoveryCategory.ts";
 import { Collection } from "../../util/collection.ts";
 import type { Bot } from "../../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";

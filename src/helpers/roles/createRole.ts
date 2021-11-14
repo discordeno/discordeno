@@ -1,4 +1,4 @@
-import type { CreateGuildRole } from "../../types/guilds/create_guild_role.ts";
+import type { CreateGuildRole } from "../../types/guilds/createGuildRole.ts";
 import type { Role } from "../../types/permissions/role.ts";
 import type { Bot } from "../../bot.ts";
 

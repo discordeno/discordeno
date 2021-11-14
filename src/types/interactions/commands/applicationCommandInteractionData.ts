@@ -1,6 +1,6 @@
-import { Message,User,Role,Channel, MessageComponentTypes } from "../../mod.ts";
-import { InteractionGuildMember } from "../interaction_guild_member.ts";
-import { InteractionDataOption } from "./application_command_interaction_data_option.ts";
+import { Message, User, Role, Channel, MessageComponentTypes } from "../../mod.ts";
+import { InteractionGuildMember } from "../interactionGuildMember.ts";
+import { InteractionDataOption } from "./applicationCommandInteractionDataOption.ts";
 
 export interface InteractionData {
   /** The type of component */

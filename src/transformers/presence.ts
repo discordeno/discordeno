@@ -1,5 +1,5 @@
 import { Bot } from "../bot.ts";
-import { PresenceUpdate } from "../types/activity/presence_update.ts";
+import { PresenceUpdate } from "../types/activity/presenceUpdate.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoActivity } from "./activity.ts";
 import { DiscordenoUser } from "./member.ts";

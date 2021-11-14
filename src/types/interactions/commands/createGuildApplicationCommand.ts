@@ -1,4 +1,4 @@
-import { ApplicationCommandOption } from "./application_command_option.ts";
+import { ApplicationCommandOption } from "./applicationCommandOption.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#create-guild-application-command-json-params */
 export interface CreateGuildApplicationCommand {

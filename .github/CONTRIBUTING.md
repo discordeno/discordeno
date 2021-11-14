@@ -69,10 +69,10 @@ export interface User {
   /** The user's email */
   email?: string | null;
   /** The flags on a user's account */
-  flags?: DiscordUserFlags;
+  flags?: UserFlags;
   /** The type of Nitro subscription on a user's account */
-  premiumType?: DiscordPremiumTypes;
+  premiumType?: PremiumTypes;
   /** The public flags on a user's account */
-  publicFlags?: DiscordUserFlags;
+  publicFlags?: UserFlags;
 }
 ```

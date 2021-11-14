@@ -1,5 +1,5 @@
-import type { DiscordImageFormat } from "../../types/misc/image_format.ts";
-import type { DiscordImageSize } from "../../types/misc/image_size.ts";
+import type { ImageFormat } from "../../types/misc/imageFormat.ts";
+import type { ImageSize } from "../../types/misc/imageSize.ts";
 import type { Bot } from "../../bot.ts";
 
 /** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
@@ -8,8 +8,8 @@ export function guildBannerURL(
   id: bigint,
   options: {
     banner?: string | bigint;
-    size?: DiscordImageSize;
-    format?: DiscordImageFormat;
+    size?: ImageSize;
+    format?: ImageFormat;
   }
 ) {
   return options.banner

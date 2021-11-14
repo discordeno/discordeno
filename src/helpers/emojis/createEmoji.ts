@@ -1,4 +1,4 @@
-import type { CreateGuildEmoji } from "../../types/emojis/create_guild_emoji.ts";
+import type { CreateGuildEmoji } from "../../types/emojis/createGuildEmoji.ts";
 import type { Emoji } from "../../types/emojis/emoji.ts";
 import type { Bot } from "../../bot.ts";
 

@@ -1,5 +1,5 @@
 import type { Bot } from "../../../bot.ts";
-import type { ListActiveThreads } from "../../../types/channels/threads/list_active_threads.ts";
+import type { ListActiveThreads } from "../../../types/channels/threads/listActiveThreads.ts";
 import { Collection } from "../../../util/collection.ts";
 // import { channelToThread } from "../../../util/transformers/channel_to_thread.ts";
 

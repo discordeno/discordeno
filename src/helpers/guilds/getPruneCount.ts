@@ -1,4 +1,4 @@
-import type { GetGuildPruneCountQuery } from "../../types/guilds/get_guild_prune_count.ts";
+import type { GetGuildPruneCountQuery } from "../../types/guilds/getGuildPruneCount.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */

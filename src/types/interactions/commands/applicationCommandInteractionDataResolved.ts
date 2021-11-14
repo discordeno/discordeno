@@ -2,7 +2,7 @@ import { Channel } from "../../channels/channel.ts";
 import { Message } from "../../messages/message.ts";
 import { Role } from "../../permissions/role.ts";
 import { User } from "../../users/user.ts";
-import { InteractionGuildMember } from "../interaction_guild_member.ts";
+import { InteractionGuildMember } from "../interactionGuildMember.ts";
 
 export interface InteractionDataResolved {
   /** The Ids and Message objects */

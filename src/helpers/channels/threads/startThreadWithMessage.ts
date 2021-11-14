@@ -1,5 +1,5 @@
 import type { Channel } from "../../../types/channels/channel.ts";
-import type { StartThreadWithMessage } from "../../../types/channels/threads/start_thread.ts";
+import type { StartThreadWithMessage } from "../../../types/channels/threads/startThread.ts";
 import type { Bot } from "../../../bot.ts";
 
 /** Creates a new public thread from an existing message. Returns a thread channel. */

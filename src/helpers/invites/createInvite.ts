@@ -1,5 +1,5 @@
-import type { CreateChannelInvite } from "../../types/invites/create_channel_invite.ts";
-import type { InviteMetadata } from "../../types/invites/invite_metadata.ts";
+import type { CreateChannelInvite } from "../../types/invites/createChannelInvite.ts";
+import type { InviteMetadata } from "../../types/invites/inviteMetadata.ts";
 import { Errors } from "../../types/discordeno/errors.ts";
 import type { Bot } from "../../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";

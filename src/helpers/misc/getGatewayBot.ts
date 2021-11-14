@@ -1,4 +1,4 @@
-import type { GetGatewayBot } from "../../types/gateway/get_gateway_bot.ts";
+import type { GetGatewayBot } from "../../types/gateway/getGatewayBot.ts";
 import type { Bot } from "../../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 

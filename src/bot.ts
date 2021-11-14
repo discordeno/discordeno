@@ -11,8 +11,8 @@ import {
   simplifyUrl,
 } from "./rest/mod.ts";
 import type { RestPayload, RestRateLimitedPath, RestRequest } from "./rest/rest.ts";
-import { DiscordGatewayIntents, Intents } from "./types/gateway/gateway_intents.ts";
-import { GetGatewayBot } from "./types/gateway/get_gateway_bot.ts";
+import { GatewayIntents, Intents } from "./types/gateway/gatewayIntents.ts";
+import { GetGatewayBot } from "./types/gateway/getGatewayBot.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
 import { Collection } from "./util/collection.ts";
 import {
@@ -42,7 +42,7 @@ import {
   USER_AGENT,
 } from "./util/constants.ts";
 import { Errors } from "./types/discordeno/errors.ts";
-import { DiscordGatewayPayload, GatewayDispatchEventNames, GatewayPayload } from "./types/gateway/gateway_payload.ts";
+import { DiscordGatewayPayload, GatewayDispatchEventNames, GatewayPayload } from "./types/gateway/gatewayPayload.ts";
 import {
   closeWS,
   handleOnMessage,
@@ -57,7 +57,7 @@ import {
   DiscordenoShard,
   processGatewayQueue,
 } from "./ws/mod.ts";
-import { validateLength } from "./util/validate_length.ts";
+import { validateLength } from "./util/validateLength.ts";
 import {
   delay,
   formatImageURL,
@@ -68,7 +68,7 @@ import {
   validateSlashOptions,
 } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
-import { calculateShardId } from "./util/calculate_shard_id.ts";
+import { calculateShardId } from "./util/calculateShardId.ts";
 import * as handlers from "./handlers/mod.ts";
 import { DiscordenoInteraction, transformInteraction } from "./transformers/interaction.ts";
 import { DiscordenoIntegration, transformIntegration } from "./transformers/integration.ts";
@@ -81,7 +81,7 @@ import { DiscordenoEmoji, transformEmoji } from "./transformers/emoji.ts";
 import { transformActivity } from "./transformers/activity.ts";
 import { DiscordenoPresence, transformPresence } from "./transformers/presence.ts";
 import { DiscordReady } from "./types/gateway/ready.ts";
-import { urlToBase64 } from "./util/url_to_base64.ts";
+import { urlToBase64 } from "./util/urlToBase64.ts";
 import { transformAttachment } from "./transformers/attachment.ts";
 import { transformEmbed } from "./transformers/embed.ts";
 import { transformComponent } from "./transformers/component.ts";
@@ -90,7 +90,7 @@ import { transformThread } from "./transformers/thread.ts";
 import { transformWebhook } from "./transformers/webhook.ts";
 import { transformAuditlogEntry } from "./transformers/auditlogEntry.ts";
 import { transformApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
-import { StatusUpdate } from "./types/gateway/status_update.ts";
+import { StatusUpdate } from "./types/gateway/statusUpdate.ts";
 import { calculateBits, calculatePermissions } from "./util/permissions.ts";
 
 type CacheOptions =
@@ -113,7 +113,7 @@ export function createBot<C extends CacheOptions = CacheOptions>(
     applicationId: options.applicationId || options.botId,
     token: `Bot ${options.token}`,
     events: createEventHandlers(options.events),
-    intents: options.intents.reduce((bits, next) => (bits |= DiscordGatewayIntents[next]), 0),
+    intents: options.intents.reduce((bits, next) => (bits |= GatewayIntents[next]), 0),
     botGatewayData: options.botGatewayData,
     activeGuildIds: new Set<bigint>(),
     constants: createBotConstants(),
@@ -125,7 +125,7 @@ export function createBot<C extends CacheOptions = CacheOptions>(
   // @ts-ignore itoh cache types plz
   bot.cache = createCache(bot as Bot, options.cache);
 
-  return bot as unknown as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
+  return (bot as unknown) as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
 }
 
 export function createEventHandlers(events: Partial<EventHandlers>): EventHandlers {
@@ -372,7 +372,7 @@ export function createGatewayManager(
     $device: options.$device ?? "Discordeno",
     intents:
       (Array.isArray(options.intents)
-        ? options.intents.reduce((bits, next) => (bits |= DiscordGatewayIntents[next]), 0)
+        ? options.intents.reduce((bits, next) => (bits |= GatewayIntents[next]), 0)
         : options.intents) ?? 0,
     shard: options.shard ?? [0, options.shardsRecommended ?? 1],
     urlWSS: options.urlWSS ?? "wss://gateway.discord.gg/?v=9&encoding=json",
@@ -419,7 +419,7 @@ export interface CreateBotOptions<C extends CacheOptions = CacheOptions> {
   botId: bigint;
   applicationId?: bigint;
   events: Partial<EventHandlers>;
-  intents: (keyof typeof DiscordGatewayIntents)[];
+  intents: (keyof typeof GatewayIntents)[];
   botGatewayData?: GetGatewayBot;
   rest?: Omit<CreateRestManagerOptions, "token">;
   handleDiscordPayload?: GatewayManager["handleDiscordPayload"];
@@ -443,7 +443,7 @@ export interface Bot<C extends Cache | AsyncCache = AsyncCache | Cache> {
   applicationId: bigint;
 
   token: string;
-  intents: DiscordGatewayIntents;
+  intents: GatewayIntents;
   urlWSS: string;
   botGatewayData?: GetGatewayBot;
   utils: ReturnType<typeof createUtils>;
@@ -466,7 +466,6 @@ export interface Helpers {
   addReactions: typeof helpers.addReactions;
   addRole: typeof helpers.addRole;
   avatarURL: typeof helpers.avatarURL;
-  ban: typeof helpers.ban;
   banMember: typeof helpers.banMember;
   batchEditSlashCommandPermissions: typeof helpers.batchEditSlashCommandPermissions;
   channelOverwriteHasPermission: typeof helpers.channelOverwriteHasPermission;
@@ -632,7 +631,6 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     addReactions: options.addReactions || helpers.addReactions,
     addRole: options.addRole || helpers.addRole,
     avatarURL: options.avatarURL || helpers.avatarURL,
-    ban: options.ban || helpers.ban,
     banMember: options.banMember || helpers.banMember,
     batchEditSlashCommandPermissions:
       options.batchEditSlashCommandPermissions || helpers.batchEditSlashCommandPermissions,
@@ -865,7 +863,7 @@ export interface GatewayManager {
   $os: string;
   $browser: string;
   $device: string;
-  intents: number | (keyof typeof DiscordGatewayIntents)[];
+  intents: number | (keyof typeof GatewayIntents)[];
   shard: [number, number];
   presence?: Omit<StatusUpdate, "afk" | "since">;
 

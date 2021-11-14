@@ -1,6 +1,6 @@
-import { AuditLogChange } from "./audit_log_change.ts";
-import { DiscordAuditLogEvents } from "./audit_log_events.ts";
-import { OptionalAuditEntryInfo } from "./optional_audit_entry_info.ts";
+import { AuditLogChange } from "./auditLogChange.ts";
+import { AuditLogEvents } from "./auditLogEvents.ts";
+import { OptionalAuditEntryInfo } from "./optionalAuditEntryInfo.ts";
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
 export interface AuditLogEntry {
@@ -13,7 +13,7 @@ export interface AuditLogEntry {
   /** id of the entry */
   id: string;
   /** Type of action that occured */
-  actionType: DiscordAuditLogEvents;
+  actionType: AuditLogEvents;
   /** Additional info for certain action types */
   options?: OptionalAuditEntryInfo;
   /** The reason for the change (0-512 characters) */

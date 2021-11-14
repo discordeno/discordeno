@@ -1,4 +1,4 @@
-import { DiscordGatewayIntents } from "../types/gateway/gateway_intents.ts";
+import { GatewayIntents } from "../types/gateway/gatewayIntents.ts";
 
 export interface StartGatewayOptions {
   /** The bot token. */
@@ -6,7 +6,7 @@ export interface StartGatewayOptions {
   /** Whether or not to use compression for gateway payloads. */
   compress?: boolean;
   /** The intents you would like to enable. */
-  intents: (DiscordGatewayIntents | keyof typeof DiscordGatewayIntents)[];
+  intents: (GatewayIntents | keyof typeof GatewayIntents)[];
   /** The max amount of shards used for identifying. This can be useful for zero-downtime updates or resharding. */
   maxShards?: number;
   /** The first shard Id for this group of shards. */

@@ -1,4 +1,4 @@
-import { DiscoveryName } from "./discovery_name.ts";
+import { DiscoveryName } from "./discoveryName.ts";
 
 //TODO: add docs link
 export interface DiscoveryCategory {

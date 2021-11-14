@@ -1,5 +1,5 @@
-import type { GuildMemberWithUser } from "../../types/members/guild_member.ts";
-import type { SearchGuildMembers } from "../../types/members/search_guild_members.ts";
+import type { GuildMemberWithUser } from "../../types/members/guildMember.ts";
+import type { SearchGuildMembers } from "../../types/members/searchGuildMembers.ts";
 import { Collection } from "../../util/collection.ts";
 import { Bot } from "../../bot.ts";
 

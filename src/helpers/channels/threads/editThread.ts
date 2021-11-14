@@ -1,4 +1,4 @@
-import type { ModifyThread } from "../../../types/channels/threads/modify_thread.ts";
+import type { ModifyThread } from "../../../types/channels/threads/modifyThread.ts";
 import type { Bot } from "../../../bot.ts";
 // import { channelToThread } from "../../../util/transformers/channel_to_thread.ts";
 

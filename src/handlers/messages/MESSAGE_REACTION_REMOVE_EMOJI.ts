@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { MessageReactionRemoveEmoji } from "../../types/messages/message_reaction_remove_emoji.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import type { MessageReactionRemoveEmoji } from "../../types/messages/messageReactionRemoveEmoji.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export async function handleMessageReactionRemoveEmoji(bot: Bot, data: DiscordGatewayPayload) {

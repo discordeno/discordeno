@@ -1,6 +1,6 @@
 import type { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { GuildBanAddRemove } from "../../types/guilds/guild_ban_add_remove.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import type { GuildBanAddRemove } from "../../types/guilds/guildBanAddRemove.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export async function handleGuildBanAdd(bot: Bot, data: DiscordGatewayPayload) {

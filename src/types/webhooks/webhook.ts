@@ -1,7 +1,7 @@
 import { Channel } from "../channels/channel.ts";
 import { Guild } from "../guilds/guild.ts";
 import { User } from "../users/user.ts";
-import { DiscordWebhookTypes } from "./discord_webhook_types.ts";
+import { WebhookTypes } from "./webhookTypes.ts";
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
 export type Webhook = IncomingWebhook | ApplicationWebhook;
@@ -10,7 +10,7 @@ export interface IncomingWebhook {
   /** The id of the webhook */
   id: string;
   /** The type of the webhook */
-  type: DiscordWebhookTypes;
+  type: WebhookTypes;
   /** The guild id this webhook is for */
   guildId?: string;
   /** The channel id this webhook is for */
@@ -34,7 +34,7 @@ export interface IncomingWebhook {
 }
 
 export interface ApplicationWebhook extends Omit<IncomingWebhook, "type" | "guildId" | "channelId"> {
-  type: DiscordWebhookTypes.Application;
+  type: WebhookTypes.Application;
   guildId?: string | null;
   channelId?: string | null;
 }

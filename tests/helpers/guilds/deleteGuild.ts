@@ -1,6 +1,4 @@
 import { Bot } from "../../../src/bot.ts";
-import { CreateGuildChannel } from "../../../src/types/guilds/create_guild_channel.ts";
-import { DiscordChannelTypes } from "../../../src/types/mod.ts";
 import { assertExists, assertEquals } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
 

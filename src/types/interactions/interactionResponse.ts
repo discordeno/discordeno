@@ -1,10 +1,10 @@
-import { InteractionApplicationCommandCallbackData } from "./commands/application_command_callback_data.ts";
-import { DiscordInteractionResponseTypes } from "./interaction_response_types.ts";
+import { InteractionApplicationCommandCallbackData } from "./commands/applicationCommandCallbackData.ts";
+import { InteractionResponseTypes } from "./interactionResponseTypes.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
 export interface InteractionResponse {
   /** The type of response */
-  type: DiscordInteractionResponseTypes;
+  type: InteractionResponseTypes;
   /** An optional response message */
   data?: InteractionApplicationCommandCallbackData;
 }

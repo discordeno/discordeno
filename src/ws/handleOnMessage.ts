@@ -1,10 +1,10 @@
 import { GatewayManager } from "../bot.ts";
-import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
-import type { DiscordGatewayPayload } from "../types/gateway/gateway_payload.ts";
+import { GatewayOpcodes } from "../types/codes/gatewayOpcodes.ts";
+import type { DiscordGatewayPayload } from "../types/gateway/gatewayPayload.ts";
 import type { DiscordHello } from "../types/gateway/hello.ts";
 import type { DiscordReady } from "../types/gateway/ready.ts";
 import { Guild } from "../types/guilds/guild.ts";
-import { UnavailableGuild } from "../types/guilds/unavailable_guild.ts";
+import { UnavailableGuild } from "../types/guilds/unavailableGuild.ts";
 import { Message } from "../types/messages/mod.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
@@ -30,7 +30,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
   gateway.debug("GW RAW", { shardId, payload: messageData });
 
   switch (messageData.op) {
-    case DiscordGatewayOpcodes.Heartbeat:
+    case GatewayOpcodes.Heartbeat:
       if (shard?.ws.readyState !== WebSocket.OPEN) return;
 
       shard.heartbeat.lastSentAt = Date.now();
@@ -39,23 +39,23 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
         gateway,
         shard,
         {
-          op: DiscordGatewayOpcodes.Heartbeat,
+          op: GatewayOpcodes.Heartbeat,
           d: shard?.previousSequenceNumber,
         },
         true
       );
       break;
-    case DiscordGatewayOpcodes.Hello:
+    case GatewayOpcodes.Hello:
       gateway.heartbeat(gateway, shardId, (messageData.d as DiscordHello).heartbeat_interval);
       break;
-    case DiscordGatewayOpcodes.HeartbeatACK:
+    case GatewayOpcodes.HeartbeatACK:
       if (gateway.shards.has(shardId)) {
         const shard = gateway.shards.get(shardId)!;
         shard.heartbeat.acknowledged = true;
         shard.heartbeat.lastReceivedAt = Date.now();
       }
       break;
-    case DiscordGatewayOpcodes.Reconnect:
+    case GatewayOpcodes.Reconnect:
       gateway.debug("GW RECONNECT", { shardId });
 
       if (gateway.shards.has(shardId)) {
@@ -64,7 +64,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
 
       gateway.resume(gateway, shardId);
       break;
-    case DiscordGatewayOpcodes.InvalidSession:
+    case GatewayOpcodes.InvalidSession:
       gateway.debug("GW INVALID_SESSION", { shardId, payload: messageData });
 
       // We need to wait for a random amount of time between 1 and 5: https://discord.com/developers/docs/topics/gateway#resuming

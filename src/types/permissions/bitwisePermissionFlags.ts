@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags */
-export enum DiscordBitwisePermissionFlags {
+export enum BitwisePermissionFlags {
   /** Allows creation of instant invites */
   CREATE_INSTANT_INVITE = 0x00000001,
   /** Allows kicking members */
@@ -79,6 +79,3 @@ export enum DiscordBitwisePermissionFlags {
   /** Allows for launching activities (applications with the `EMBEDDED` flag) in a voice channel. */
   START_EMBEDDED_ACTIVITIES = 0x8000000000,
 }
-
-export type BitwisePermissions = DiscordBitwisePermissionFlags;
-export const BitwisePermissions = DiscordBitwisePermissionFlags;

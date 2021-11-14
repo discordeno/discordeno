@@ -1,5 +1,5 @@
 import type { Emoji } from "../../types/emojis/emoji.ts";
-import type { ModifyGuildEmoji } from "../../types/emojis/modify_guild_emoji.ts";
+import type { ModifyGuildEmoji } from "../../types/emojis/modifyGuildEmoji.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */

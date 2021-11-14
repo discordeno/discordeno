@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { MessageReactionAdd } from "../../types/messages/message_reaction_add.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import type { MessageReactionAdd } from "../../types/messages/messageReactionAdd.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export async function handleMessageReactionAdd(bot: Bot, data: DiscordGatewayPayload) {

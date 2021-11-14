@@ -1,8 +1,8 @@
-import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
-import type { CreateMessage } from "../../types/messages/create_message.ts";
+import { AllowedMentionsTypes } from "../../types/messages/allowedMentionsTypes.ts";
+import type { CreateMessage } from "../../types/messages/createMessage.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { Bot } from "../../bot.ts";
-import { DiscordMessageComponentTypes } from "../../types/messages/components/message_component_types.ts";
+import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(bot: Bot, channelId: bigint, content: string | CreateMessage) {
@@ -19,7 +19,7 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
 
   if (content.allowedMentions) {
     if (content.allowedMentions.users?.length) {
-      if (content.allowedMentions.parse?.includes(DiscordAllowedMentionsTypes.UserMentions)) {
+      if (content.allowedMentions.parse?.includes(AllowedMentionsTypes.UserMentions)) {
         content.allowedMentions.parse = content.allowedMentions.parse.filter((p) => p !== "users");
       }
 
@@ -29,7 +29,7 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
     }
 
     if (content.allowedMentions.roles?.length) {
-      if (content.allowedMentions.parse?.includes(DiscordAllowedMentionsTypes.RoleMentions)) {
+      if (content.allowedMentions.parse?.includes(AllowedMentionsTypes.RoleMentions)) {
         content.allowedMentions.parse = content.allowedMentions.parse.filter((p) => p !== "roles");
       }
 
@@ -107,7 +107,7 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
       components: content.components?.map((component) => ({
         type: component.type,
         components: component.components.map((subcomponent) => {
-          if (subcomponent.type === DiscordMessageComponentTypes.SelectMenu)
+          if (subcomponent.type === MessageComponentTypes.SelectMenu)
             return {
               type: subcomponent.type,
               custom_id: subcomponent.customId,

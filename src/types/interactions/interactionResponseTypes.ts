@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
-export enum DiscordInteractionResponseTypes {
+export enum InteractionResponseTypes {
   /** ACK a `Ping` */
   Pong = 1,
   /** Respond to an interaction with a message */
@@ -13,6 +13,3 @@ export enum DiscordInteractionResponseTypes {
   /** For Application Command Options, send an autocomplete result */
   ApplicationCommandAutocompleteResult,
 }
-
-export type InteractionResponseTypes = DiscordInteractionResponseTypes;
-export const InteractionResponseTypes = DiscordInteractionResponseTypes;

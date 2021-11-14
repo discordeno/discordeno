@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { GuildMemberRemove } from "../../types/members/guild_member_remove.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import type { GuildMemberRemove } from "../../types/members/guildMemberRemove.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 

@@ -1,7 +1,7 @@
 import type { Bot } from "../../bot.ts";
-import { DiscordAllowedMentionsTypes } from "../../types/messages/allowed_mentions_types.ts";
+import { AllowedMentionsTypes } from "../../types/messages/allowedMentionsTypes.ts";
 import type { Message } from "../../types/messages/message.ts";
-import type { ExecuteWebhook } from "../../types/webhooks/execute_webhook.ts";
+import type { ExecuteWebhook } from "../../types/webhooks/executeWebhook.ts";
 
 /** Send a webhook with webhook Id and webhook token */
 export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: string, options: ExecuteWebhook) {
@@ -17,7 +17,7 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
 
   if (options.allowedMentions) {
     if (options.allowedMentions.users?.length) {
-      if (options.allowedMentions.parse?.includes(DiscordAllowedMentionsTypes.UserMentions)) {
+      if (options.allowedMentions.parse?.includes(AllowedMentionsTypes.UserMentions)) {
         options.allowedMentions.parse = options.allowedMentions.parse.filter((p) => p !== "users");
       }
 
@@ -27,7 +27,7 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
     }
 
     if (options.allowedMentions.roles?.length) {
-      if (options.allowedMentions.parse?.includes(DiscordAllowedMentionsTypes.RoleMentions)) {
+      if (options.allowedMentions.parse?.includes(AllowedMentionsTypes.RoleMentions)) {
         options.allowedMentions.parse = options.allowedMentions.parse.filter((p) => p !== "roles");
       }
 

@@ -1,6 +1,6 @@
 import type { Bot } from "../../bot.ts";
 import { DiscordenoChannel, separateOverwrites } from "../../transformers/channel.ts";
-import type { CreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
+import type { CreateGuildChannel } from "../../types/guilds/createGuildChannel.ts";
 
 /** Create a copy of a channel */
 export async function cloneChannel(bot: Bot, channel: DiscordenoChannel, reason?: string) {

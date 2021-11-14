@@ -1,6 +1,6 @@
 import type { Channel } from "../../types/channels/channel.ts";
-import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
-import type { CreateGuildChannel, DiscordCreateGuildChannel } from "../../types/guilds/create_guild_channel.ts";
+import { ChannelTypes } from "../../types/channels/channelTypes.ts";
+import type { CreateGuildChannel, DiscordCreateGuildChannel } from "../../types/guilds/createGuildChannel.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
@@ -28,7 +28,7 @@ export async function createChannel(bot: Bot, guildId: bigint, options?: CreateG
             allow: perm.allow ? bot.utils.calculateBits(perm.allow) : "0",
             deny: perm.deny ? bot.utils.calculateBits(perm.deny) : "0",
           })),
-          type: options?.type || DiscordChannelTypes.GuildText,
+          type: options?.type || ChannelTypes.GuildText,
           reason,
         }
       : {}

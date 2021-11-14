@@ -1,5 +1,5 @@
 import { RestManager } from "../bot.ts";
-import { DiscordHTTPResponseCodes } from "../types/codes/http_response_codes.ts";
+import { HTTPResponseCodes } from "../types/codes/httpResponseCodes.ts";
 
 export async function processGlobalQueue(rest: RestManager) {
   // IF QUEUE IS EMPTY EXIT
@@ -80,22 +80,22 @@ export async function processGlobalQueue(rest: RestManager) {
 
         let error = "REQUEST_UNKNOWN_ERROR";
         switch (response.status) {
-          case DiscordHTTPResponseCodes.BadRequest:
+          case HTTPResponseCodes.BadRequest:
             error = "The request was improperly formatted, or the server couldn't understand it.";
             break;
-          case DiscordHTTPResponseCodes.Unauthorized:
+          case HTTPResponseCodes.Unauthorized:
             error = "The Authorization header was missing or invalid.";
             break;
-          case DiscordHTTPResponseCodes.Forbidden:
+          case HTTPResponseCodes.Forbidden:
             error = "The Authorization token you passed did not have permission to the resource.";
             break;
-          case DiscordHTTPResponseCodes.NotFound:
+          case HTTPResponseCodes.NotFound:
             error = "The resource at the location specified doesn't exist.";
             break;
-          case DiscordHTTPResponseCodes.MethodNotAllowed:
+          case HTTPResponseCodes.MethodNotAllowed:
             error = "The HTTP method used is not valid for the location specified.";
             break;
-          case DiscordHTTPResponseCodes.GatewayUnavailable:
+          case HTTPResponseCodes.GatewayUnavailable:
             error = "There was not a gateway available to process your request. Wait a bit and retry.";
             break;
         }

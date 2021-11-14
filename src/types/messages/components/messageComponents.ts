@@ -1,6 +1,6 @@
-import { ActionRow } from "./action_row.ts";
-import { ButtonComponent } from "./button_component.ts";
-import { SelectMenuComponent } from "./select_menu.ts";
+import { ActionRow } from "./actionRow.ts";
+import { ButtonComponent } from "./buttonComponent.ts";
+import { SelectMenuComponent } from "./selectMenu.ts";
 
 export type ActionRoleComponents = ButtonComponent | SelectMenuComponent;
 

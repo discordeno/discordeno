@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/resources/guild#guild-object-verification-level */
-export enum DiscordVerificationLevels {
+export enum VerificationLevels {
   /** Unrestricted */
   None,
   /** Must have verified email on account */
@@ -11,6 +11,3 @@ export enum DiscordVerificationLevels {
   /** Must have a verified phone number */
   VeryHigh,
 }
-
-export type VerificationLevels = DiscordVerificationLevels;
-export const VerificationLevels = DiscordVerificationLevels;

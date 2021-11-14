@@ -1,4 +1,4 @@
-import type { GetReactions } from "../../types/messages/message_get_reactions.ts";
+import type { GetReactions } from "../../types/messages/messageGetReactions.ts";
 import type { User } from "../../types/users/user.ts";
 import { Collection } from "../../util/collection.ts";
 import type { Bot } from "../../bot.ts";

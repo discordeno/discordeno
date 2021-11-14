@@ -1,9 +1,9 @@
-import { DiscordAllowedMentionsTypes } from "./allowed_mentions_types.ts";
+import { AllowedMentionsTypes } from "./allowedMentionsTypes.ts";
 
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
 export interface AllowedMentions {
   /** An array of allowed mention types to parse from the content. */
-  parse?: DiscordAllowedMentionsTypes[];
+  parse?: AllowedMentionsTypes[];
   /** Array of role_ids to mention (Max size of 100) */
   roles?: string[];
   /** Array of user_ids to mention (Max size of 100) */

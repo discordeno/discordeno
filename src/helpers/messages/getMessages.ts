@@ -3,7 +3,7 @@ import type {
   GetMessagesAround,
   GetMessagesBefore,
   GetMessagesLimit,
-} from "../../types/messages/get_messages.ts";
+} from "../../types/messages/getMessages.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { Bot } from "../../bot.ts";
 

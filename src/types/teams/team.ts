@@ -1,4 +1,4 @@
-import { TeamMember } from "./team_member.ts";
+import { TeamMember } from "./teamMember.ts";
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
 export interface Team {

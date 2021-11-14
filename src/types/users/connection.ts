@@ -1,5 +1,5 @@
 import { Integration } from "../integrations/integration.ts";
-import { DiscordVisibilityTypes } from "./visibility_types.ts";
+import { VisibilityTypes } from "./visibilityTypes.ts";
 
 /** https://discord.com/developers/docs/resources/user#connection-objecthttps://discord.com/developers/docs/resources/user#user-object-premium-types */
 export interface Connection {
@@ -20,5 +20,5 @@ export interface Connection {
   /** Whether activities related to this connection will be shown in presence updates */
   showActivity: boolean;
   /** Visibility of this connection */
-  visibility: DiscordVisibilityTypes;
+  visibility: VisibilityTypes;
 }

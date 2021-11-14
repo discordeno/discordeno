@@ -1,4 +1,4 @@
-import type { FollowedChannel } from "../../types/channels/followed_channel.ts";
+import type { FollowedChannel } from "../../types/channels/followedChannel.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Follow a News Channel to send messages to a target channel. Requires the `MANAGE_WEBHOOKS` permission in the target channel. Returns the webhook id. */

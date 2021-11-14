@@ -1,8 +1,8 @@
-import { FileContent } from "../discordeno/file_content.ts";
+import { FileContent } from "../discordeno/fileContent.ts";
 import { Embed } from "../embeds/embed.ts";
-import { AllowedMentions } from "./allowed_mentions.ts";
+import { AllowedMentions } from "./allowedMentions.ts";
 import { Attachment } from "./attachment.ts";
-import { MessageComponents } from "./components/message_components.ts";
+import { MessageComponents } from "./components/messageComponents.ts";
 
 /** https://discord.com/developers/docs/resources/channel#edit-message-json-params */
 export interface EditMessage {

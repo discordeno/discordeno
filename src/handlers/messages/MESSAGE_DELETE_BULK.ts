@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { MessageDeleteBulk } from "../../types/messages/message_delete_bulk.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import type { MessageDeleteBulk } from "../../types/messages/messageDeleteBulk.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export async function handleMessageDeleteBulk(bot: Bot, data: DiscordGatewayPayload) {

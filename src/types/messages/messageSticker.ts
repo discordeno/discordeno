@@ -1,4 +1,4 @@
-import { DiscordMessageStickerFormatTypes } from "./message_sticker_format_types.ts";
+import { MessageStickerFormatTypes } from "./messageStickerFormatTypes.ts";
 import type { User } from "../users/user.ts";
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-sticker-structure */
@@ -14,7 +14,7 @@ export interface MessageSticker {
   /** a unicode emoji representing the sticker's expression */
   tags: string;
   /** Type of sticker format */
-  formatType: DiscordMessageStickerFormatTypes;
+  formatType: MessageStickerFormatTypes;
   /**  Whether or not the sticker is available */
   available?: boolean;
   /** Id of the guild that owns this sticker */

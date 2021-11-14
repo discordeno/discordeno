@@ -1,4 +1,4 @@
-import { DiscordChannelTypes } from "../../types/channels/channel_types.ts";
+import { ChannelTypes } from "../../types/channels/channelTypes.ts";
 import type { Bot } from "../../bot.ts";
 
 /**

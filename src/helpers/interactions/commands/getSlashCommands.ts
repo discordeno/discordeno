@@ -1,4 +1,4 @@
-import type { ApplicationCommand } from "../../../types/interactions/commands/application_command.ts";
+import type { ApplicationCommand } from "../../../types/interactions/commands/applicationCommand.ts";
 import { Collection } from "../../../util/collection.ts";
 import type { Bot } from "../../../bot.ts";
 

@@ -1,5 +1,5 @@
-import type { DiscoveryMetadata } from "../../types/discovery/discovery_metadata.ts";
-import type { ModifyGuildDiscoveryMetadata } from "../../types/discovery/modify_guild_discovery_metadata.ts";
+import type { DiscoveryMetadata } from "../../types/discovery/discoveryMetadata.ts";
+import type { ModifyGuildDiscoveryMetadata } from "../../types/discovery/modifyGuildDiscoveryMetadata.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Modify the discovery metadata for the guild. Requires the MANAGE_GUILD permission. Returns the updated discovery metadata object on success. */

@@ -1,4 +1,4 @@
-import { DiscordGatewayCloseEventCodes } from "../types/codes/gateway_close_event_codes.ts";
+import { GatewayCloseEventCodes } from "../types/codes/gatewayCloseEventCodes.ts";
 import { GatewayManager } from "../bot.ts";
 
 export function createShard(gateway: GatewayManager, shardId: number) {
@@ -33,21 +33,21 @@ export function createShard(gateway: GatewayManager, shardId: number) {
       case 3066: // Missing ACK
         // Will restart shard manually
         return gateway.debug("GW CLOSED_RECONNECT", { shardId, payload: event });
-      case DiscordGatewayCloseEventCodes.UnknownOpcode:
-      case DiscordGatewayCloseEventCodes.DecodeError:
-      case DiscordGatewayCloseEventCodes.AuthenticationFailed:
-      case DiscordGatewayCloseEventCodes.AlreadyAuthenticated:
-      case DiscordGatewayCloseEventCodes.InvalidShard:
-      case DiscordGatewayCloseEventCodes.ShardingRequired:
-      case DiscordGatewayCloseEventCodes.InvalidApiVersion:
-      case DiscordGatewayCloseEventCodes.InvalidIntents:
-      case DiscordGatewayCloseEventCodes.DisallowedIntents:
+      case GatewayCloseEventCodes.UnknownOpcode:
+      case GatewayCloseEventCodes.DecodeError:
+      case GatewayCloseEventCodes.AuthenticationFailed:
+      case GatewayCloseEventCodes.AlreadyAuthenticated:
+      case GatewayCloseEventCodes.InvalidShard:
+      case GatewayCloseEventCodes.ShardingRequired:
+      case GatewayCloseEventCodes.InvalidApiVersion:
+      case GatewayCloseEventCodes.InvalidIntents:
+      case GatewayCloseEventCodes.DisallowedIntents:
         throw new Error(event.reason || "Discord gave no reason! GG! You broke Discord!");
       // THESE ERRORS CAN NO BE RESUMED! THEY MUST RE-IDENTIFY!
-      case DiscordGatewayCloseEventCodes.NotAuthenticated:
-      case DiscordGatewayCloseEventCodes.InvalidSeq:
-      case DiscordGatewayCloseEventCodes.RateLimited:
-      case DiscordGatewayCloseEventCodes.SessionTimedOut:
+      case GatewayCloseEventCodes.NotAuthenticated:
+      case GatewayCloseEventCodes.InvalidSeq:
+      case GatewayCloseEventCodes.RateLimited:
+      case GatewayCloseEventCodes.SessionTimedOut:
         await gateway.identify(gateway, shardId, gateway.maxShards);
         break;
       default:

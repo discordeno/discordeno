@@ -1,4 +1,4 @@
-import type { ModifyGuildTemplate } from "../../types/templates/modify_guild_template.ts";
+import type { ModifyGuildTemplate } from "../../types/templates/modifyGuildTemplate.ts";
 import type { Template } from "../../types/templates/template.ts";
 import type { Bot } from "../../bot.ts";
 

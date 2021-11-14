@@ -1,4 +1,4 @@
-import { DiscordBitwisePermissionFlags } from "./bitwise_permission_flags.ts";
+import { BitwisePermissionFlags } from "./bitwisePermissionFlags.ts";
 
-export type PermissionStrings = keyof typeof DiscordBitwisePermissionFlags;
+export type PermissionStrings = keyof typeof BitwisePermissionFlags;
 export type Permission = PermissionStrings;

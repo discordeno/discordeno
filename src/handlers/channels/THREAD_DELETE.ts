@@ -1,7 +1,7 @@
 // import { eventHandlers } from "../../bot.ts";
 // import { cacheHandlers } from "../../cache.ts";
 import { Channel } from "../../types/channels/channel.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
+import { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";
 
 export async function handleThreadDelete(data: DiscordGatewayPayload) {

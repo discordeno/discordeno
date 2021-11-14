@@ -1,11 +1,11 @@
-import { ChannelTypes } from "../../channels/channel_types.ts";
-import { ApplicationCommandOptionChoice } from "./application_command_option_choice.ts";
-import { DiscordApplicationCommandOptionTypes } from "./application_command_option_types.ts";
+import { ChannelTypes } from "../../channels/channelTypes.ts";
+import { ApplicationCommandOptionChoice } from "./applicationCommandOptionChoice.ts";
+import { ApplicationCommandOptionTypes } from "./applicationCommandOptionTypes.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption */
 export interface ApplicationCommandOption {
   /** Value of Application Command Option Type */
-  type: DiscordApplicationCommandOptionTypes;
+  type: ApplicationCommandOptionTypes;
   /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
   name: string;
   /** 1-100 character description */

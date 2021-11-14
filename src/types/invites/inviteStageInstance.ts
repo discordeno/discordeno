@@ -1,4 +1,4 @@
-import { GuildMember } from "../members/guild_member.ts";
+import { GuildMember } from "../members/guildMember.ts";
 
 export interface InviteStageInstance {
   /** The members speaking in the Stage */

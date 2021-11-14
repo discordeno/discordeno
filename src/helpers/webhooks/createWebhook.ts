@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import type { CreateWebhook } from "../../types/webhooks/create_webhook.ts";
+import type { CreateWebhook } from "../../types/webhooks/createWebhook.ts";
 import type { Webhook } from "../../types/webhooks/webhook.ts";
 
 /**

@@ -1,6 +1,6 @@
 import { Bot } from "../bot.ts";
-import { IntegrationCreateUpdate } from "../types/integrations/integration_create_update.ts";
-import { DiscordIntegrationExpireBehaviors } from "../types/mod.ts";
+import { IntegrationCreateUpdate } from "../types/integrations/integrationCreateUpdate.ts";
+import { IntegrationExpireBehaviors } from "../types/mod.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoUser } from "./member.ts";
 
@@ -55,7 +55,7 @@ export interface DiscordenoIntegration {
   /** Whether emoticons should be synced for this integration (twitch only currently) */
   enableEmoticons?: boolean;
   /** The behavior of expiring subscribers */
-  expireBehavior?: DiscordIntegrationExpireBehaviors;
+  expireBehavior?: IntegrationExpireBehaviors;
   /** The grace period (in days) before expiring subscribers */
   expireGracePeriod?: number;
   /** User for this integration */

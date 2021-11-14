@@ -17,5 +17,5 @@ export * from "./presence.ts";
 export * from "./role.ts";
 export * from "./team.ts";
 export * from "./thread.ts";
-export * from "./voice_state.ts";
+export * from "./voiceState.ts";
 export * from "./webhook.ts";

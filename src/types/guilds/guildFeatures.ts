@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/resources/guild#guild-object-guild-features */
-export enum DiscordGuildFeatures {
+export enum GuildFeatures {
   /** Guild has access to set an invite splash background */
   InviteSplash = "INVITE_SPLASH",
   /** Guild has access to set 384kbps bitrate in voice (previously VIP voice servers) */
@@ -47,6 +47,3 @@ export enum DiscordGuildFeatures {
   /** Guild is able to set role icons */
   RoleIcons = "ROLE_ICONS",
 }
-
-export type GuildFeatures = DiscordGuildFeatures;
-export const GuildFeatures = DiscordGuildFeatures;

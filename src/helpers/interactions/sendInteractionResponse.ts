@@ -1,7 +1,7 @@
-import type { DiscordenoInteractionResponse } from "../../types/discordeno/interaction_response.ts";
+import type { DiscordenoInteractionResponse } from "../../types/discordeno/interactionResponse.ts";
 import type { Bot } from "../../bot.ts";
-import { AllowedMentions } from "../../types/messages/allowed_mentions.ts";
-import { DiscordMessageComponentTypes } from "../../types/messages/components/message_component_types.ts";
+import { AllowedMentions } from "../../types/messages/allowedMentions.ts";
+import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
 
 /**
  * Send a response to a users slash command. The command data will have the id and token necessary to respond.
@@ -102,7 +102,7 @@ export async function sendInteractionResponse(
       components: options.data.components?.map((component) => ({
         type: component.type,
         components: component.components.map((subcomponent) => {
-          if (subcomponent.type === DiscordMessageComponentTypes.SelectMenu)
+          if (subcomponent.type === MessageComponentTypes.SelectMenu)
             return {
               type: subcomponent.type,
               custom_id: subcomponent.customId,
@@ -220,7 +220,7 @@ export async function sendInteractionResponse(
         components: options.data.components?.map((component) => ({
           type: component.type,
           components: component.components.map((subcomponent) => {
-            if (subcomponent.type === DiscordMessageComponentTypes.SelectMenu)
+            if (subcomponent.type === MessageComponentTypes.SelectMenu)
               return {
                 type: subcomponent.type,
                 custom_id: subcomponent.customId,

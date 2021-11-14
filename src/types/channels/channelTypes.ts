@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/resources/channel#channel-object-channel-types */
-export enum DiscordChannelTypes {
+export enum ChannelTypes {
   /** A text channel within a server */
   GuildText,
   /** A direct message between users */
@@ -23,6 +23,3 @@ export enum DiscordChannelTypes {
   /** A voice channel for hosting events with an audience */
   GuildStageVoice = 13,
 }
-
-export type ChannelTypes = DiscordChannelTypes;
-export const ChannelTypes = DiscordChannelTypes;

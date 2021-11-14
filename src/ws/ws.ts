@@ -1,4 +1,4 @@
-import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
+import { GatewayOpcodes } from "../types/codes/gatewayOpcodes.ts";
 
 export interface DiscordenoShard {
   /** The shard id number. */
@@ -43,7 +43,7 @@ export interface DiscordenoShard {
 }
 
 export interface WebSocketRequest {
-  op: DiscordGatewayOpcodes;
+  op: GatewayOpcodes;
   d: unknown;
   // guildId: bigint;
   // shardId: number;

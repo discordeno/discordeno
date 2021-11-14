@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype */
-export enum DiscordApplicationCommandOptionTypes {
+export enum ApplicationCommandOptionTypes {
   SubCommand = 1,
   SubCommandGroup,
   String,
@@ -11,6 +11,3 @@ export enum DiscordApplicationCommandOptionTypes {
   Mentionable,
   Number,
 }
-
-export type ApplicationCommandOptionTypes = DiscordApplicationCommandOptionTypes;
-export const ApplicationCommandOptionTypes = DiscordApplicationCommandOptionTypes;

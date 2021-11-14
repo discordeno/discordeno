@@ -1,4 +1,4 @@
-import type { InviteMetadata } from "../../types/invites/invite_metadata.ts";
+import type { InviteMetadata } from "../../types/invites/inviteMetadata.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Deletes an invite for the given code. Requires `MANAGE_CHANNELS` or `MANAGE_GUILD` permission */

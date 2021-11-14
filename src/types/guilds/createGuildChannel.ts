@@ -1,4 +1,4 @@
-import { DiscordChannelTypes } from "../channels/channel_types.ts";
+import { ChannelTypes } from "../channels/channelTypes.ts";
 import { DiscordOverwrite, Overwrite } from "../channels/overwrite.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 
@@ -6,7 +6,7 @@ export interface CreateGuildChannel {
   /** Channel name (1-100 characters) */
   name: string;
   /** The type of channel */
-  type?: DiscordChannelTypes;
+  type?: ChannelTypes;
   /** Channel topic (0-1024 characters) */
   topic?: string;
   /** The bitrate (in bits) of the voice channel (voice only) */

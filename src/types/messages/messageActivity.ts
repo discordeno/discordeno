@@ -1,9 +1,9 @@
-import { DiscordMessageActivityTypes } from "./message_activity_types.ts";
+import { MessageActivityTypes } from "./messageActivityTypes.ts";
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure */
 export interface MessageActivity {
   /** Type of message activity */
-  type: DiscordMessageActivityTypes;
+  type: MessageActivityTypes;
   /** `party_id` from a Rich Presence event */
   partyId?: string;
 }

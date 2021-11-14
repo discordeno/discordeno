@@ -1,9 +1,9 @@
 import { Bot } from "../bot.ts";
-import { ChannelTypes } from "../types/channels/channel_types.ts";
+import { ChannelTypes } from "../types/channels/channelTypes.ts";
 import {
   InteractionData,
   ButtonData,
-  DiscordInteractionTypes,
+  InteractionTypes,
   Interaction,
   SelectMenuData,
   InteractionDataResolved,
@@ -141,7 +141,7 @@ export interface DiscordenoInteraction {
   /** For the message the button was attached to */
   message?: DiscordenoMessage;
   /** The type of interaction */
-  type: DiscordInteractionTypes;
+  type: InteractionTypes;
   /** A continuation token for responding to the interaction */
   token: string;
   /** Read-only property, always `1` */

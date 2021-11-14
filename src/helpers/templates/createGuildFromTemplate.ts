@@ -1,5 +1,5 @@
 import type { Guild } from "../../types/guilds/guild.ts";
-import type { CreateGuildFromTemplate } from "../../types/templates/create_guild_from_template.ts";
+import type { CreateGuildFromTemplate } from "../../types/templates/createGuildFromTemplate.ts";
 import type { Bot } from "../../bot.ts";
 
 /**

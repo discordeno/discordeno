@@ -1,6 +1,6 @@
 import { Bot } from "../../../src/bot.ts";
-import { CreateGuildChannel } from "../../../src/types/guilds/create_guild_channel.ts";
-import { DiscordChannelTypes } from "../../../src/types/mod.ts";
+import { CreateGuildChannel } from "../../../src/types/guilds/createGuildChannel.ts";
+import { ChannelTypes } from "../../../src/types/mod.ts";
 import { assertExists, assertEquals } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
 
@@ -9,7 +9,7 @@ export async function createChannelTests(bot: Bot, guildId: bigint, options: Cre
 
   // Assertions
   assertExists(channel);
-  assertEquals(channel.type, options.type || DiscordChannelTypes.GuildText);
+  assertEquals(channel.type, options.type || ChannelTypes.GuildText);
 
   // Delay the execution to allow event to be processed
   await delayUntil(10000, () => bot.cache.channels.has(channel.id));

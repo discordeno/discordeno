@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import type { GetGuildWidgetImageQuery } from "../../types/guilds/get_guild_widget_image.ts";
+import type { GetGuildWidgetImageQuery } from "../../types/guilds/getGuildWidgetImage.ts";
 
 /** Returns the widget image URL for the guild. */
 export async function getWidgetImageURL(bot: Bot, guildId: bigint, options?: GetGuildWidgetImageQuery) {

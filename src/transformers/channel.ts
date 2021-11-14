@@ -2,11 +2,11 @@ import { Channel } from "../types/channels/channel.ts";
 import { Bot } from "../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordOverwrite } from "../types/channels/overwrite.ts";
-import { DiscordChannelTypes } from "../types/channels/channel_types.ts";
-import type { DiscordenoVoiceState } from "./voice_state.ts";
+import { ChannelTypes } from "../types/channels/channelTypes.ts";
+import type { DiscordenoVoiceState } from "./voiceState.ts";
 import { Collection } from "../util/collection.ts";
 import { DiscordenoUser } from "./member.ts";
-import { DiscordVideoQualityModes } from "../types/channels/video_quality_modes.ts";
+import { VideoQualityModes } from "../types/channels/videoQualityModes.ts";
 
 // function merge(allow: string, deny: string, id: string, type: number) {
 //   return BigInt(`0x${type}g${BigInt(id)}g${BigInt(allow).toString(16)}g${BigInt(deny).toString(16)}`);
@@ -57,7 +57,9 @@ export function transformChannel(
     guildId: payload.guildId || (payload.channel.guild_id ? bot.transformers.snowflake(payload.channel.guild_id) : 0n),
     lastPinTimestamp: payload.channel.last_pin_timestamp ? Date.parse(payload.channel.last_pin_timestamp) : undefined,
     permissionOverwrites: payload.channel.permission_overwrites
-      ? payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow, o.deny, o.id, o.type))
+      ? // TODO: fix this
+        // @ts-ignore
+        payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow, o.deny, o.id, o.type))
       : [],
 
     // TRANSFORMED STUFF BELOW
@@ -72,13 +74,13 @@ export function transformChannel(
       : undefined,
     parentId: payload.channel.parent_id ? bot.transformers.snowflake(payload.channel.parent_id) : undefined,
     // TODO: stage channels?
-    voiceStates: payload.channel.type === DiscordChannelTypes.GuildVoice ? new Collection() : undefined,
+    voiceStates: payload.channel.type === ChannelTypes.GuildVoice ? new Collection() : undefined,
   };
 }
 
 export interface DiscordenoChannel {
   /** The type of channel */
-  type: DiscordChannelTypes;
+  type: ChannelTypes;
   /** Sorting position of the channel */
   position?: number;
   /** The name of the channel (1-100 characters) */
@@ -102,7 +104,7 @@ export interface DiscordenoChannel {
   /** Voice region id for the voice channel, automatic when set to null */
   rtcRegion?: string | null;
   /** The camera video quality mode of the voice channel, 1 when not present */
-  videoQualityMode?: DiscordVideoQualityModes;
+  videoQualityMode?: VideoQualityModes;
   // TODO(threads): consider a ThreadChannel object
   /** An approximate count of messages in a thread, stops counting at 50 */
   messageCount?: number;

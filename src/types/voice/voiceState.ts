@@ -1,4 +1,4 @@
-import { GuildMemberWithUser } from "../members/guild_member.ts";
+import { GuildMemberWithUser } from "../members/guildMember.ts";
 
 /** https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure */
 export interface VoiceState {

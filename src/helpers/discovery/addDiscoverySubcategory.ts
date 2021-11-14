@@ -1,4 +1,4 @@
-import type { AddGuildDiscoverySubcategory } from "../../types/discovery/add_guild_discovery_subcategory.ts";
+import type { AddGuildDiscoverySubcategory } from "../../types/discovery/addGuildDiscoverySubcategory.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Add a discovery subcategory to the guild. Requires the `MANAGE_GUILD` permission. */

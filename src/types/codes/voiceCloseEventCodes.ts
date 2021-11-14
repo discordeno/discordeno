@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice */
-export enum DiscordVoiceCloseEventCodes {
+export enum VoiceCloseEventCodes {
   UnknownOpcode = 4001,
   FailedToDecodePayload,
   NotAuthenticated,
@@ -14,6 +14,3 @@ export enum DiscordVoiceCloseEventCodes {
   VoiceServerCrashed,
   UnknownEncryptionMode,
 }
-
-export type VoiceCloseEventCodes = DiscordVoiceCloseEventCodes;
-export const VoiceCloseEventCodes = DiscordVoiceCloseEventCodes;

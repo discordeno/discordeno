@@ -1,4 +1,4 @@
-import { DiscordMessageStickerFormatTypes } from "./message_sticker_format_types.ts";
+import { MessageStickerFormatTypes } from "./messageStickerFormatTypes.ts";
 
 export interface MessageStickerItem {
   /** Id of the sticker */
@@ -6,5 +6,5 @@ export interface MessageStickerItem {
   /** Name of the sticker */
   name: string;
   /** Type of sticker format */
-  formatType: DiscordMessageStickerFormatTypes;
+  formatType: MessageStickerFormatTypes;
 }

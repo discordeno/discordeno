@@ -1,4 +1,4 @@
-import type { CreateGuildBan } from "../../types/guilds/create_guild_ban.ts";
+import type { CreateGuildBan } from "../../types/guilds/createGuildBan.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Ban a user from the guild and optionally delete previous messages sent by the user. Requires the BAN_MEMBERS permission. */

@@ -3,12 +3,12 @@ import { Message } from "../types/messages/message.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoAttachment } from "./attachment.ts";
-import { DiscordMessageStickerFormatTypes } from "../types/messages/message_sticker_format_types.ts";
+import { MessageStickerFormatTypes } from "../types/messages/messageStickerFormatTypes.ts";
 import { DiscordenoMember, DiscordenoUser } from "./member.ts";
 import { DiscordenoEmbed } from "./embed.ts";
-import { DiscordMessageTypes } from "../types/messages/message_types.ts";
-import { DiscordMessageActivityTypes } from "../types/messages/message_activity_types.ts";
-import { DiscordInteractionTypes } from "../types/interactions/interaction_types.ts";
+import { MessageTypes } from "../types/messages/messageTypes.ts";
+import { MessageActivityTypes } from "../types/messages/messageActivityTypes.ts";
+import { InteractionTypes } from "../types/interactions/interactionTypes.ts";
 import { DiscordenoComponent } from "./component.ts";
 import { Application } from "../types/applications/application.ts";
 import { DiscordenoThread } from "./thread.ts";
@@ -147,7 +147,7 @@ export interface DiscordenoMessage {
     /** Name of the sticker */
     name: string;
     /** Type of sticker format */
-    formatType: DiscordMessageStickerFormatTypes;
+    formatType: MessageStickerFormatTypes;
   }[];
 
   /**
@@ -166,11 +166,11 @@ export interface DiscordenoMessage {
   /** Used for validating a message was sent */
   nonce?: number | string;
   /** Type of message */
-  type: DiscordMessageTypes;
+  type: MessageTypes;
   /** Sent with Rich Presence-related chat embeds */
   activity?: {
     /** Type of message activity */
-    type: DiscordMessageActivityTypes;
+    type: MessageActivityTypes;
     /** `party_id` from a Rich Presence event */
     partyId?: string;
   };
@@ -188,7 +188,7 @@ export interface DiscordenoMessage {
     /** Id of the interaction */
     id: bigint;
     /** The type of interaction */
-    type: DiscordInteractionTypes;
+    type: InteractionTypes;
     /** The name of the ApplicationCommand */
     name: string;
     /** The user who invoked the interaction */

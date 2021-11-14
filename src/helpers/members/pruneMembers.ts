@@ -1,4 +1,4 @@
-import type { BeginGuildPrune } from "../../types/guilds/begin_guild_prune.ts";
+import type { BeginGuildPrune } from "../../types/guilds/beginGuildPrune.ts";
 import type { Bot } from "../../bot.ts";
 
 /**

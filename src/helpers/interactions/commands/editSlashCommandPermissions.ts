@@ -1,6 +1,6 @@
-import type { ApplicationCommandPermissions } from "../../../types/interactions/commands/application_command_permissions.ts";
+import type { ApplicationCommandPermissions } from "../../../types/interactions/commands/applicationCommandPermissions.ts";
 import type { Bot } from "../../../bot.ts";
-import { GuildApplicationCommandPermissions } from "../../../types/interactions/commands/guild_application_command_permissions.ts";
+import { GuildApplicationCommandPermissions } from "../../../types/interactions/commands/guildApplicationCommandPermissions.ts";
 
 /** Edits command permissions for a specific command for your application in a guild. */
 export async function editSlashCommandPermissions(

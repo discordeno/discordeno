@@ -1,4 +1,4 @@
-import { RoleTags } from "./role_tags.ts";
+import { RoleTags } from "./roleTags.ts";
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
 export interface Role {
