@@ -122,7 +122,7 @@ export function transformInteractionDataResolved(
     );
   }
 
-  return resolved;
+  return transformed;
 }
 
 export interface DiscordenoInteraction {
