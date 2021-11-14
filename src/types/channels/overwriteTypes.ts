@@ -1,7 +1,4 @@
-export enum DiscordOverwriteTypes {
+export enum OverwriteTypes {
   Role,
   Member,
 }
-
-export type OverwriteTypes = DiscordOverwriteTypes;
-export const OverwriteTypes = DiscordOverwriteTypes;

@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types */
-export enum DiscordAllowedMentionsTypes {
+export enum AllowedMentionsTypes {
   /** Controls role mentions */
   RoleMentions = "roles",
   /** Controls user mentions */
@@ -7,6 +7,3 @@ export enum DiscordAllowedMentionsTypes {
   /** Controls @everyone and @here mentions */
   EveryoneMentions = "everyone",
 }
-
-export type AllowedMentionsTypes = DiscordAllowedMentionsTypes;
-export const AllowedMentionsTypes = DiscordAllowedMentionsTypes;

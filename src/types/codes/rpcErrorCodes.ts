@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#rpc */
-export enum DiscordRpcErrorCodes {
+export enum RpcErrorCodes {
   UnknownError = 1000,
   InvalidPayload = 4000,
   InvalidCommand = 4002,
@@ -17,6 +17,3 @@ export enum DiscordRpcErrorCodes {
   SelectVoiceForceRequired,
   CaptureShortcutAlreadyListening,
 }
-
-export type RpcErrorCodes = DiscordRpcErrorCodes;
-export const RpcErrorCodes = DiscordRpcErrorCodes;

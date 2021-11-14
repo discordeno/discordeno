@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/resources/guild#get-guild-widget-image-widget-style-options */
-export enum DiscordGetGuildWidgetImageStyleOptions {
+export enum GetGuildWidgetImageStyleOptions {
   /** Shield style widget with Discord icon and guild members online count */
   Shield = "shield",
   /** Large image with guild icon, name and online count. "POWERED BY DISCORD" as the footer of the widget */
@@ -11,6 +11,3 @@ export enum DiscordGetGuildWidgetImageStyleOptions {
   /** Large Discord logo at the top of the widget. Guild icon, name and online count in the middle portion of the widget and a "JOIN MY SERVER" button at the bottom */
   Banner4 = "banner4",
 }
-
-export type GetGuildWidgetImageStyleOptions = DiscordGetGuildWidgetImageStyleOptions;
-export const GetGuildWidgetImageStyleOptions = DiscordGetGuildWidgetImageStyleOptions;

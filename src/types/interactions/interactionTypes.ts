@@ -1,10 +1,7 @@
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */
-export enum DiscordInteractionTypes {
+export enum InteractionTypes {
   Ping = 1,
   ApplicationCommand,
   MessageComponent,
   ApplicationCommandAutocomplete,
 }
-
-export type InteractionTypes = DiscordInteractionTypes;
-export const InteractionTypes = DiscordInteractionTypes;

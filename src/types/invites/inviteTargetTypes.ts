@@ -1,8 +1,5 @@
 /** https://discord.com/developers/docs/resources/invite#invite-object-invite-target-types */
-export enum DiscordInviteTargetTypes {
+export enum InviteTargetTypes {
   Stream = 1,
   EmbeddedApplication,
 }
-
-export type InviteTargetTypes = DiscordInviteTargetTypes;
-export const InviteTargetTypes = DiscordInviteTargetTypes;

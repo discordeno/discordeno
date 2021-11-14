@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events */
-export enum DiscordAuditLogEvents {
+export enum AuditLogEvents {
   GuildUpdate = 1,
   ChannelCreate = 10,
   ChannelUpdate,
@@ -45,6 +45,3 @@ export enum DiscordAuditLogEvents {
   ThreadUpdate,
   ThreadDelete,
 }
-
-export type AuditLogEvents = DiscordAuditLogEvents;
-export const AuditLogEvents = DiscordAuditLogEvents;

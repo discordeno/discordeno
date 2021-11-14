@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#opcodes-and-status-codes */
-export enum DiscordGatewayCloseEventCodes {
+export enum GatewayCloseEventCodes {
   UnknownError = 4000,
   UnknownOpcode,
   DecodeError,
@@ -15,6 +15,3 @@ export enum DiscordGatewayCloseEventCodes {
   InvalidIntents,
   DisallowedIntents,
 }
-
-export type GatewayCloseEventCodes = DiscordGatewayCloseEventCodes;
-export const GatewayCloseEventCodes = DiscordGatewayCloseEventCodes;

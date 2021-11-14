@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/resources/user#user-object-user-flags */
-export enum DiscordUserFlags {
+export enum UserFlags {
   None,
   DiscordEmployee = 1 << 0,
   ParteneredServerOwner = 1 << 1,
@@ -16,6 +16,3 @@ export enum DiscordUserFlags {
   DiscordCertifiedModerator = 1 << 18,
   BotHttpInteractions = 1 << 19,
 }
-
-export type UserFlags = DiscordUserFlags;
-export const UserFlags = DiscordUserFlags;

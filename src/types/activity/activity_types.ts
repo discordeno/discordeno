@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-types */
-export enum DiscordActivityTypes {
+export enum ActivityTypes {
   Game,
   Streaming,
   Listening,
@@ -7,6 +7,3 @@ export enum DiscordActivityTypes {
   Custom = 4,
   Competing,
 }
-
-export type ActivityTypes = DiscordActivityTypes;
-export const ActivityTypes = DiscordActivityTypes;

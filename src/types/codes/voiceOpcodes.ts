@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice */
-export enum DiscordVoiceOpcodes {
+export enum VoiceOpcodes {
   Identify,
   SelectProtocol,
   Ready,
@@ -12,6 +12,3 @@ export enum DiscordVoiceOpcodes {
   Resumed,
   ClientDisconnect = 13,
 }
-
-export type VoiceOpcodes = DiscordVoiceOpcodes;
-export const VoiceOpcodes = DiscordVoiceOpcodes;

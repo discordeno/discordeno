@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/topics/oauth2#application-application-flags */
-export enum DiscordApplicationFlags {
+export enum ApplicationFlags {
   GatewayPresence = 1 << 12,
   GatewayPresenceLimited = 1 << 13,
   GatewayGuildMembers = 1 << 14,
@@ -9,6 +9,3 @@ export enum DiscordApplicationFlags {
   GatewayMessageCount = 1 << 18,
   GatewayMessageContentLimited = 1 << 19,
 }
-
-export type ApplicationFlags = DiscordApplicationFlags;
-export const ApplicationFlags = DiscordApplicationFlags;

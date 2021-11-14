@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#json */
-export enum DiscordJsonErrorCodes {
+export enum JsonErrorCodes {
   GeneralError,
   UnknownAccount = 10001,
   UnknownApplication,
@@ -129,6 +129,3 @@ export enum DiscordJsonErrorCodes {
   MaximumNumberOfActiveThreadsReached = 160006,
   MaximumNumberOfActiveAnnouncementThreadsReached = 160007,
 }
-
-export type JsonErrrorCodes = DiscordJsonErrorCodes;
-export const JsonErrrorCodes = DiscordJsonErrorCodes;

@@ -1,5 +1,5 @@
 /** https://discord.com/developers/docs/resources/channel#message-object-message-types */
-export enum DiscordMessageTypes {
+export enum MessageTypes {
   Default,
   RecipientAdd,
   RecipientRemove,
@@ -24,6 +24,3 @@ export enum DiscordMessageTypes {
   GuildInviteReminder,
   ContextMenuCommand,
 }
-
-export type MessageTypes = DiscordMessageTypes;
-export const MessageTypes = DiscordMessageTypes;
