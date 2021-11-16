@@ -149,6 +149,12 @@ import { startThreadWithoutMessage } from "./channels/threads/startThreadWithout
 import { unarchiveThread } from "./channels/threads/unarchiveThread.ts";
 import { unlockThread } from "./channels/threads/unlockThread.ts";
 import { cloneChannel } from "./channels/cloneChannel.ts";
+import { createScheduledEvent } from "./guilds/scheduledEvents/createScheduledEvent.ts";
+import { deleteScheduledEvent } from "./guilds/scheduledEvents/deleteScheduledEvent.ts";
+import { editScheduledEvent } from "./guilds/scheduledEvents/editScheduledEvent.ts";
+import { getScheduledEvent } from "./guilds/scheduledEvents/getScheduledEvent.ts";
+import { getScheduledEvents } from "./guilds/scheduledEvents/getScheduledEvents.ts";
+import { getScheduledEventUsers } from "./guilds/scheduledEvents/getScheduledEventUsers.ts";
 
 export {
   addDiscoverySubcategory,
@@ -168,6 +174,7 @@ export {
   createGuildTemplate,
   createInvite,
   createRole,
+  createScheduledEvent,
   createSlashCommand,
   createStageInstance,
   createWebhook,
@@ -181,6 +188,7 @@ export {
   deleteMessage,
   deleteMessages,
   deleteRole,
+  deleteScheduledEvent,
   deleteSlashCommand,
   deleteSlashResponse,
   deleteStageInstance,
@@ -200,6 +208,7 @@ export {
   editMember,
   editMessage,
   editRole,
+  editScheduledEvent,
   editSlashResponse,
   editSlashCommandPermissions,
   editWebhook,
@@ -237,6 +246,9 @@ export {
   getPruneCount,
   getReactions,
   getRoles,
+  getScheduledEvent,
+  getScheduledEvents,
+  getScheduledEventUsers,
   getSlashCommand,
   getSlashCommandPermission,
   getSlashCommandPermissions,

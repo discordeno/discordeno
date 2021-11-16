@@ -4,4 +4,6 @@ export interface GetInvite {
   withCounts?: boolean;
   /** Whether the invite should contain the expiration date */
   withExpiration?: boolean;
+  /** the guild scheduled event to include with the invite */
+  scheduledEventId?: bigint;
 }

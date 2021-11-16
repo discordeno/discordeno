@@ -7,5 +7,6 @@ export async function getInvite(bot: Bot, inviteCode: string, options?: GetInvit
   return await bot.rest.runMethod<InviteMetadata>(bot.rest, "get", bot.constants.endpoints.INVITE(inviteCode), {
     with_counts: options?.withCounts || false,
     with_expiration: options?.withExpiration || false,
+    guild_scheduled_event_id: options?.scheduledEventId?.toString(),
   });
 }

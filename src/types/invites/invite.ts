@@ -4,6 +4,7 @@ import { Application } from "../applications/application.ts";
 import { User } from "../users/user.ts";
 import { TargetTypes } from "./targetTypes.ts";
 import { InviteStageInstance } from "./inviteStageInstance.ts";
+import { ScheduledEvent } from "../guilds/scheduledEvents.ts";
 
 /** https://discord.com/developers/docs/resources/invite#invite-object */
 export interface Invite {
@@ -29,4 +30,6 @@ export interface Invite {
   expiresAt?: string | null;
   /** Stage instance data if there is a public Stage instance in the Stage channel this invite is for */
   stageInstance?: InviteStageInstance;
+  /** guild scheduled event data */
+  guildScheduledEvent?: ScheduledEvent;
 }

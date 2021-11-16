@@ -92,6 +92,8 @@ import { transformAuditlogEntry } from "./transformers/auditlogEntry.ts";
 import { transformApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
 import { StatusUpdate } from "./types/gateway/statusUpdate.ts";
 import { calculateBits, calculatePermissions } from "./util/permissions.ts";
+import { transformScheduledEvent } from "./transformers/scheduledEvent.ts";
+import { DiscordenoScheduledEvent } from "./transformers/scheduledEvent.ts";
 
 type CacheOptions =
   | {
@@ -133,6 +135,11 @@ export function createEventHandlers(events: Partial<EventHandlers>): EventHandle
 
   return {
     debug: events.debug ?? ignore,
+    scheduledEventCreate: events.scheduledEventCreate ?? ignore,
+    scheduledEventUpdate: events.scheduledEventUpdate ?? ignore,
+    scheduledEventDelete: events.scheduledEventDelete ?? ignore,
+    scheduledEventUserAdd: events.scheduledEventUserAdd ?? ignore,
+    scheduledEventUserRemove: events.scheduledEventUserRemove ?? ignore,
     ready: events.ready ?? ignore,
     dispatchRequirements: events.dispatchRequirements ?? ignore,
     integrationCreate: events.integrationCreate ?? ignore,
@@ -478,6 +485,7 @@ export interface Helpers {
   createGuildTemplate: typeof helpers.createGuildTemplate;
   createInvite: typeof helpers.createInvite;
   createRole: typeof helpers.createRole;
+  createScheduledEvent: typeof helpers.createScheduledEvent;
   createSlashCommand: typeof helpers.createSlashCommand;
   createStageInstance: typeof helpers.createStageInstance;
   createWebhook: typeof helpers.createWebhook;
@@ -491,6 +499,7 @@ export interface Helpers {
   deleteMessage: typeof helpers.deleteMessage;
   deleteMessages: typeof helpers.deleteMessages;
   deleteRole: typeof helpers.deleteRole;
+  deleteScheduledEvent: typeof helpers.deleteScheduledEvent;
   deleteSlashCommand: typeof helpers.deleteSlashCommand;
   deleteSlashResponse: typeof helpers.deleteSlashResponse;
   deleteStageInstance: typeof helpers.deleteStageInstance;
@@ -510,6 +519,7 @@ export interface Helpers {
   editMember: typeof helpers.editMember;
   editMessage: typeof helpers.editMessage;
   editRole: typeof helpers.editRole;
+  editScheduledEvent: typeof helpers.editScheduledEvent;
   editSlashResponse: typeof helpers.editSlashResponse;
   editSlashCommandPermissions: typeof helpers.editSlashCommandPermissions;
   editWebhook: typeof helpers.editWebhook;
@@ -547,6 +557,9 @@ export interface Helpers {
   getPruneCount: typeof helpers.getPruneCount;
   getReactions: typeof helpers.getReactions;
   getRoles: typeof helpers.getRoles;
+  getScheduledEvent: typeof helpers.getScheduledEvent;
+  getScheduledEvents: typeof helpers.getScheduledEvents;
+  getScheduledEventUsers: typeof helpers.getScheduledEventUsers;
   getSlashCommand: typeof helpers.getSlashCommand;
   getSlashCommandPermission: typeof helpers.getSlashCommandPermission;
   getSlashCommandPermissions: typeof helpers.getSlashCommandPermissions;
@@ -644,6 +657,7 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     createGuildTemplate: options.createGuildTemplate || helpers.createGuildTemplate,
     createInvite: options.createInvite || helpers.createInvite,
     createRole: options.createRole || helpers.createRole,
+    createScheduledEvent: options.createScheduledEvent || helpers.createScheduledEvent,
     createSlashCommand: options.createSlashCommand || helpers.createSlashCommand,
     createStageInstance: options.createStageInstance || helpers.createStageInstance,
     createWebhook: options.createWebhook || helpers.createWebhook,
@@ -657,6 +671,7 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     deleteMessage: options.deleteMessage || helpers.deleteMessage,
     deleteMessages: options.deleteMessages || helpers.deleteMessages,
     deleteRole: options.deleteRole || helpers.deleteRole,
+    deleteScheduledEvent: options.deleteScheduledEvent || helpers.deleteScheduledEvent,
     deleteSlashCommand: options.deleteSlashCommand || helpers.deleteSlashCommand,
     deleteSlashResponse: options.deleteSlashResponse || helpers.deleteSlashResponse,
     deleteStageInstance: options.deleteStageInstance || helpers.deleteStageInstance,
@@ -676,6 +691,7 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     editMember: options.editMember || helpers.editMember,
     editMessage: options.editMessage || helpers.editMessage,
     editRole: options.editRole || helpers.editRole,
+    editScheduledEvent: options.editScheduledEvent || helpers.editScheduledEvent,
     editSlashResponse: options.editSlashResponse || helpers.editSlashResponse,
     editSlashCommandPermissions: options.editSlashCommandPermissions || helpers.editSlashCommandPermissions,
     editWebhook: options.editWebhook || helpers.editWebhook,
@@ -713,6 +729,9 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     getPruneCount: options.getPruneCount || helpers.getPruneCount,
     getReactions: options.getReactions || helpers.getReactions,
     getRoles: options.getRoles || helpers.getRoles,
+    getScheduledEvent: options.getScheduledEvent || helpers.getScheduledEvent,
+    getScheduledEventUsers: options.getScheduledEventUsers || helpers.getScheduledEventUsers,
+    getScheduledEvents: options.getScheduledEvents || helpers.getScheduledEvents,
     getSlashCommand: options.getSlashCommand || helpers.getSlashCommand,
     getSlashCommandPermission: options.getSlashCommandPermission || helpers.getSlashCommandPermission,
     getSlashCommandPermissions: options.getSlashCommandPermissions || helpers.getSlashCommandPermissions,
@@ -803,6 +822,7 @@ export interface Transformers {
   webhook: typeof transformWebhook;
   auditlogEntry: typeof transformAuditlogEntry;
   applicationCommandPermission: typeof transformApplicationCommandPermission;
+  scheduledEvent: typeof transformScheduledEvent;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -829,7 +849,8 @@ export function createTransformers(options: Partial<Transformers>) {
     snowflake: options.snowflake || snowflakeToBigint,
     webhook: options.webhook || transformWebhook,
     auditlogEntry: options.auditlogEntry || transformAuditlogEntry,
-    applicationCommandPermission: transformApplicationCommandPermission,
+    applicationCommandPermission: options.applicationCommandPermission || transformApplicationCommandPermission,
+    scheduledEvent: options.scheduledEvent || transformScheduledEvent,
   };
 }
 
@@ -939,6 +960,27 @@ export interface GatewayManager {
 
 export interface EventHandlers {
   debug: (text: string, ...args: any[]) => unknown;
+  scheduledEventCreate: (bot: Bot, event: DiscordenoScheduledEvent) => unknown;
+  scheduledEventUpdate: (bot: Bot, event: DiscordenoScheduledEvent) => unknown;
+  scheduledEventDelete: (bot: Bot, event: DiscordenoScheduledEvent) => unknown;
+  /** Sent when a user has subscribed to a guild scheduled event. EXPERIMENTAL! */
+  scheduledEventUserAdd: (
+    bot: Bot,
+    payload: {
+      guildScheduledEventId: bigint;
+      guildId: bigint;
+      userId: bigint;
+    }
+  ) => unknown;
+  /** Sent when a user has unsubscribed to a guild scheduled event. EXPERIMENTAL! */
+  scheduledEventUserRemove: (
+    bot: Bot,
+    payload: {
+      guildScheduledEventId: bigint;
+      guildId: bigint;
+      userId: bigint;
+    }
+  ) => unknown;
   ready: (
     bot: Bot,
     payload: {
@@ -1156,6 +1198,11 @@ export interface BotGatewayHandlerOptions {
   GUILD_ROLE_CREATE: typeof handlers.handleGuildRoleCreate;
   GUILD_ROLE_DELETE: typeof handlers.handleGuildRoleDelete;
   GUILD_ROLE_UPDATE: typeof handlers.handleGuildRoleUpdate;
+  GUILD_SCHEDULED_EVENT_CREATE: typeof handlers.handleGuildScheduledEventCreate;
+  GUILD_SCHEDULED_EVENT_UPDATE: typeof handlers.handleGuildScheduledEventUpdate;
+  GUILD_SCHEDULED_EVENT_DELETE: typeof handlers.handleGuildScheduledEventDelete;
+  GUILD_SCHEDULED_EVENT_USER_ADD: typeof handlers.handleGuildScheduledEventUserAdd;
+  GUILD_SCHEDULED_EVENT_USER_REMOVE: typeof handlers.handleGuildScheduledEventUserRemove;
   GUILD_UPDATE: typeof handlers.handleGuildUpdate;
   INTERACTION_CREATE: typeof handlers.handleInteractionCreate;
   INVITE_CREATE: typeof handlers.handleInviteCreate;

@@ -32,7 +32,8 @@ export type AuditLogChange =
         | "inviter_id"
         | "nick"
         | "avatar_hash"
-        | "id";
+        | "id"
+        | "location";
     }
   | {
       newValue: number;
@@ -56,7 +57,9 @@ export type AuditLogChange =
         | "user_limit"
         | "privacy_level"
         | "auto_archive_duration"
-        | "default_auto_archive_duration";
+        | "default_auto_archive_duration"
+        | "entity_type"
+        | "status";
     }
   | {
       newValue: Partial<Role>;

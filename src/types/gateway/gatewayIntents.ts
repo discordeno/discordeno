@@ -96,6 +96,15 @@ export enum GatewayIntents {
    * - TYPING_START
    */
   DirectMessageTyping = 1 << 14,
+
+  /**
+   * - GUILD_SCHEDULED_EVENT_CREATE
+   * - GUILD_SCHEDULED_EVENT_UPDATE
+   * - GUILD_SCHEDULED_EVENT_DELETE
+   * - GUILD_SCHEDULED_EVENT_USER_ADD this is experimental and unstable.
+   * - GUILD_SCHEDULED_EVENT_USER_REMOVE this is experimental and unstable.
+   */
+  GuildScheduledEvents = (1 << 16),
 }
 
 export type Intents = GatewayIntents;

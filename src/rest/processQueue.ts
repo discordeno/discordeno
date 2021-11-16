@@ -45,6 +45,7 @@ export function processQueue(rest: RestManager, id: string) {
     const query =
       queuedRequest.request.method.toUpperCase() === "GET" && queuedRequest.payload.body
         ? Object.keys(queuedRequest.payload.body)
+            .filter((key) => (queuedRequest.payload.body as Record<string, string>)[key] !== undefined)
             .map(
               (key) =>
                 `${encodeURIComponent(key)}=${encodeURIComponent(

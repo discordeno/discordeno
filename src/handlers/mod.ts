@@ -46,6 +46,11 @@ import { handleVoiceServerUpdate } from "./voice/VOICE_SERVER_UPDATE.ts";
 import { handleVoiceStateUpdate } from "./voice/VOICE_STATE_UPDATE.ts";
 import { handleWebhooksUpdate } from "./webhooks/WEBHOOKS_UPDATE.ts";
 import { handleGuildLoaded } from "./guilds/GUILD_LOADED_DD.ts";
+import { handleGuildScheduledEventCreate } from "./guilds/scheduledEvents/GUILD_SCHEDULED_EVENT_CREATE.ts";
+import { handleGuildScheduledEventDelete } from "./guilds/scheduledEvents/GUILD_SCHEDULED_EVENT_DELETE.ts";
+import { handleGuildScheduledEventUpdate } from "./guilds/scheduledEvents/GUILD_SCHEDULED_EVENT_UPDATE.ts";
+import { handleGuildScheduledEventUserAdd } from "./guilds/scheduledEvents/GUILD_SCHEDULED_EVENT_USER_ADD.ts";
+import { handleGuildScheduledEventUserRemove } from "./guilds/scheduledEvents/GUILD_SCHEDULED_EVENT_USER_REMOVE.ts";
 
 export {
   handleChannelCreate,
@@ -67,6 +72,11 @@ export {
   handleGuildRoleDelete,
   handleGuildRoleUpdate,
   handleGuildUpdate,
+  handleGuildScheduledEventCreate,
+  handleGuildScheduledEventDelete,
+  handleGuildScheduledEventUpdate,
+  handleGuildScheduledEventUserAdd,
+  handleGuildScheduledEventUserRemove,
   handleIntegrationCreate,
   handleIntegrationDelete,
   handleIntegrationUpdate,

@@ -59,6 +59,7 @@ export function transformAuditlogEntry(
         case "topic":
         case "code":
         case "nick":
+        case "location":
           return {
             key: change.key,
             old: change.old_value,
@@ -81,6 +82,8 @@ export function transformAuditlogEntry(
         case "expire_grace_period":
         case "user_limit":
         case "privacy_level":
+        case "entity_type":
+        case "status":
           return {
             key: change.key,
             old: change.old_value ? Number(change.old_value) : undefined,

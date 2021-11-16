@@ -66,6 +66,8 @@ export enum BitwisePermissionFlags {
   USE_SLASH_COMMANDS = 0x80000000,
   /** Allows for requesting to speak in stage channels. */
   REQUEST_TO_SPEAK = 0x0100000000,
+  /** Allows for creating, editing, and deleting scheduled events */
+  MANAGE_EVENTS = 0x0200000000,
   /** Allows for deleting and archiving threads, and viewing all private threads */
   MANAGE_THREADS = 0x0400000000,
   /** Allows for creating threads */
