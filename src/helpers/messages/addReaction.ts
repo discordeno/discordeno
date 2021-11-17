@@ -11,6 +11,7 @@ export async function addReaction(bot: Bot, channelId: bigint, messageId: bigint
   return await bot.rest.runMethod<undefined>(
     bot.rest,
     "put",
-    bot.constants.endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, encodeURIComponent(reaction))
+    bot.constants.endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, encodeURIComponent(reaction)),
+    {}
   );
 }
