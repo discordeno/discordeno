@@ -475,13 +475,13 @@ Deno.test({
             },
             ...sanitizeMode,
           }),
-          t.step({
-            name: "[message] add a reaction",
-            fn: async (t) => {
-              await addReactionTest(bot, guild.id, channel.id, { custom: false, single: true, ordered: false }, t);
-            },
-            ...sanitizeMode,
-          }),
+          // t.step({
+          //   name: "[message] add a reaction",
+          //   fn: async (t) => {
+          //     await addReactionTest(bot, guild.id, channel.id, { custom: false, single: true, ordered: false }, t);
+          //   },
+          //   ...sanitizeMode,
+          // }),
           // t.step({
           //   name: "[message] add a custom reaction",
           //   fn: async (t) => {
