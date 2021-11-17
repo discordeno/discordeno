@@ -81,18 +81,18 @@ export const CACHED_COMMUNITY_GUILD_ID = 907350958810480671n;
 Deno.test({
   name: "[Bot] - Starting Tests",
   fn: async (t) => {
-    // const token = Deno.env.get("DISCORD_TOKEN")!;
-    // if (!token) {
-    //   throw new Error("DISCORD_TOKEN not found");
-    // }
+    const token = Deno.env.get("DISCORD_TOKEN")!;
+    if (!token) {
+      throw new Error("DISCORD_TOKEN not found");
+    }
 
-    const botId = BigInt(atob(UNITTEST_TOKEN.split(".")[0]));
-    // const botId = BigInt(atob(token.split(".")[0]));
+    // const botId = BigInt(atob(UNITTEST_TOKEN.split(".")[0]));
+    const botId = BigInt(atob(token.split(".")[0]));
 
     let startedAt = 0;
     const bot = createBot({
-      token: UNITTEST_TOKEN || Deno.env.get("DISCORD_TOKEN"),
-      // token: Deno.env.get("DISCORD_TOKEN")!,
+      // token: UNITTEST_TOKEN || Deno.env.get("DISCORD_TOKEN"),
+      token: Deno.env.get("DISCORD_TOKEN")!,
       botId,
       events: createEventHandlers({
         ready: () => {
@@ -475,13 +475,13 @@ Deno.test({
             },
             ...sanitizeMode,
           }),
-          // t.step({
-          //   name: "[message] add a reaction",
-          //   fn: async (t) => {
-          //     await addReactionTest(bot, guild.id, channel.id, { custom: false, single: true, ordered: false }, t);
-          //   },
-          //   ...sanitizeMode,
-          // }),
+          t.step({
+            name: "[message] add a reaction",
+            fn: async (t) => {
+              await addReactionTest(bot, guild.id, channel.id, { custom: false, single: true, ordered: false }, t);
+            },
+            ...sanitizeMode,
+          }),
           // t.step({
           //   name: "[message] add a custom reaction",
           //   fn: async (t) => {
