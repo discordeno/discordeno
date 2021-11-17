@@ -18,7 +18,12 @@ export async function removeReaction(
     bot.rest,
     "delete",
     options?.userId
-      ? bot.constants.endpoints.CHANNEL_MESSAGE_REACTION_USER(channelId, messageId, reaction, options.userId)
-      : bot.constants.endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction)
+      ? bot.constants.endpoints.CHANNEL_MESSAGE_REACTION_USER(
+          channelId,
+          messageId,
+          encodeURIComponent(reaction),
+          options.userId
+        )
+      : bot.constants.endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, encodeURIComponent(reaction))
   );
 }
