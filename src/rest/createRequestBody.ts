@@ -38,13 +38,13 @@ export function createRequestBody(rest: RestManager, queuedRequest: { request: R
 
     form.append("payload_json", JSON.stringify({ ...queuedRequest.payload.body, file: undefined }));
     queuedRequest.payload.body.file = form;
-  } else if (!["GET", "DELETE", "HEAD"].includes(queuedRequest.request.method)) {
+  } else if (!["GET", "DELETE", "HEAD"].includes(queuedRequest.request.method.toUpperCase())) {
     headers["Content-Type"] = "application/json";
 
-    if (!queuedRequest.payload.body) queuedRequest.payload.body = {};
+    if (!queuedRequest.payload.body) headers["Content-Length"] = "0";
   }
 
-  if (!queuedRequest.payload.body) headers["Content-Length"] = "0";
+  // if (!queuedRequest.payload.body) headers["Content-Length"] = "0";
   return {
     headers,
     body: (queuedRequest.payload.body?.file ?? JSON.stringify(queuedRequest.payload.body)) as FormData | string,
