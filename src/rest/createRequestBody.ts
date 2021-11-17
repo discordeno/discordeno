@@ -47,7 +47,7 @@ export function createRequestBody(rest: RestManager, queuedRequest: { request: R
   if (!queuedRequest.payload.body) headers["Content-Length"] = "0";
   return {
     headers,
-    body: (queuedRequest.payload.body?.file || JSON.stringify(queuedRequest.payload.body)) as FormData | string,
+    body: (queuedRequest.payload.body?.file ?? JSON.stringify(queuedRequest.payload.body)) as FormData | string,
     method: queuedRequest.request.method.toUpperCase(),
   };
 }

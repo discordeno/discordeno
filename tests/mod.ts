@@ -538,6 +538,7 @@ Deno.test({
             },
             ...sanitizeMode,
           }),
+
           t.step({
             name: "[message] pin a message",
             fn: async (t) => {
