@@ -127,7 +127,7 @@ export function createBot<C extends CacheOptions = CacheOptions>(
   // @ts-ignore itoh cache types plz
   bot.cache = createCache(bot as Bot, options.cache);
 
-  return bot as unknown as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
+  return (bot as unknown) as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
 }
 
 export function createEventHandlers(events: Partial<EventHandlers>): EventHandlers {
@@ -410,6 +410,9 @@ export function createGatewayManager(
 }
 
 export async function stopBot(bot: Bot) {
+  // Clear interval
+  clearInterval(bot.cache.unrepliedInteractionsInterval);
+
   // STOP WS
   bot.gateway.shards.forEach((shard) => {
     clearInterval(shard.heartbeat.intervalId);

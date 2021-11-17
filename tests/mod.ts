@@ -1007,14 +1007,6 @@ Deno.test({
         ...sanitizeMode,
       }),
 
-      t.step({
-        name: "[post] clear intervals",
-        fn: () => {
-          clearInterval(bot.cache.unrepliedInteractionsInterval);
-        },
-        ...sanitizeMode,
-      }),
-
       // CONDUCT MEMORY BENCHMARK TESTS
 
       await t.step({
