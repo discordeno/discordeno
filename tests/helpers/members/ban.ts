@@ -10,7 +10,7 @@ export async function banTest(bot: Bot, t: Deno.TestContext, guildId: bigint, id
     banCounters.set(user.id, true);
   };
 
-  await bot.helpers.ban(guildId, id, options);
+  await bot.helpers.banMember(guildId, id, options);
 
   await delayUntil(10000, () => banCounters.get(id));
 

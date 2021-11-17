@@ -3,7 +3,7 @@ import type { Emoji } from "../types/emojis/emoji.ts";
 import type { Guild } from "../types/guilds/guild.ts";
 import { Collection } from "../util/collection.ts";
 import { DiscordenoRole } from "./role.ts";
-import { DiscordenoVoiceState } from "./voice_state.ts";
+import { DiscordenoVoiceState } from "./voiceState.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
 export function transformGuild(
@@ -85,7 +85,8 @@ export function transformGuild(
     ),
 
     id: guildId,
-    ownerId: bot.transformers.snowflake(payload.guild.owner_id),
+    // WEIRD EDGE CASE WITH BOT CREATED SERVERS
+    ownerId: payload.guild.owner_id ? bot.transformers.snowflake(payload.guild.owner_id) : 0n,
     permissions: payload.guild.permissions ? bot.transformers.snowflake(payload.guild.permissions) : 0n,
     afkChannelId: payload.guild.afk_channel_id ? bot.transformers.snowflake(payload.guild.afk_channel_id) : undefined,
     widgetChannelId: payload.guild.widget_channel_id

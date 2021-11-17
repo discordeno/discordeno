@@ -9,7 +9,7 @@ export const GATEWAY_VERSION = 9;
 
 // TODO: update this version
 /** https://github.com/discordeno/discordeno/releases */
-export const DISCORDENO_VERSION = "13.0.0-rc1";
+export const DISCORDENO_VERSION = "13.0.0-rc5";
 
 /** https://discord.com/developers/docs/reference#user-agent */
 export const USER_AGENT = `DiscordBot (https://github.com/discordeno/discordeno, v${DISCORDENO_VERSION})`;
@@ -105,6 +105,9 @@ export const endpoints = {
   GUILD_PREVIEW: (guildId: bigint) => `${GUILDS_BASE(guildId)}/preview`,
   UPDATE_VOICE_STATE: (guildId: bigint, userId?: bigint) => `${GUILDS_BASE(guildId)}/voice-states/${userId ?? "@me"}`,
   GUILD_WELCOME_SCREEN: (guildId: bigint) => `${GUILDS_BASE(guildId)}/welcome-screen`,
+  GUILD_SCHEDULED_EVENTS: (guildId: bigint) => `${GUILDS_BASE(guildId)}/scheduled-events`,
+  GUILD_SCHEDULED_EVENT: (guildId: bigint, eventId: bigint) => `${GUILDS_BASE(guildId)}/scheduled-events/${eventId}`,
+  GUILD_SCHEDULED_EVENT_USERS: (guildId: bigint, eventId: bigint) => `${GUILDS_BASE(guildId)}/scheduled-events/${eventId}/users`,
 
   // Voice
   VOICE_REGIONS: `${baseEndpoints.BASE_URL}/voice/regions`,

@@ -1,13 +1,13 @@
 // deno-lint-ignore-file no-unused-vars
-import { checkRateLimits } from "./check_rate_limits.ts";
-import { cleanupQueues } from "./cleanup_queues.ts";
-import { createRequestBody } from "./create_request_body.ts";
-import { processQueue } from "./process_queue.ts";
-import { processRateLimitedPaths } from "./process_rate_limited_paths.ts";
-import { processRequest } from "./process_request.ts";
-import { processRequestHeaders } from "./process_request_headers.ts";
-import { runMethod } from "./run_method.ts";
-import { simplifyUrl } from "./simplify_url.ts";
+import { checkRateLimits } from "./checkRateLimits.ts";
+import { cleanupQueues } from "./cleanupQueues.ts";
+import { createRequestBody } from "./createRequestBody.ts";
+import { processQueue } from "./processQueue.ts";
+import { processRateLimitedPaths } from "./processRateLimitedPaths.ts";
+import { processRequest } from "./processRequest.ts";
+import { processRequestHeaders } from "./processRequestHeaders.ts";
+import { runMethod } from "./runMethod.ts";
+import { simplifyUrl } from "./simplifyUrl.ts";
 
 export const rest = {
   /** The bot token for this rest client. */

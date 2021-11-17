@@ -1,7 +1,7 @@
 import { Bot } from "../../bot.ts";
 import { statusTypes } from "../../transformers/presence.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { GuildMembersChunk } from "../../types/members/guild_members_chunk.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import type { GuildMembersChunk } from "../../types/members/guildMembersChunk.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export async function handleGuildMembersChunk(bot: Bot, data: DiscordGatewayPayload) {

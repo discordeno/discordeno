@@ -1,5 +1,5 @@
 import type { Channel } from "../../../types/channels/channel.ts";
-import type { StartThreadWithoutMessage } from "../../../types/channels/threads/start_thread.ts";
+import type { StartThreadWithoutMessage } from "../../../types/channels/threads/startThread.ts";
 import type { Bot } from "../../../bot.ts";
 
 /** Creates a new private thread. Returns a thread channel. */

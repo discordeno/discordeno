@@ -1,18 +1,17 @@
-import { isButton } from "../helpers/type_guards/is_button.ts";
 import { Errors } from "../types/discordeno/errors.ts";
-import type { ApplicationCommandOption } from "../types/interactions/commands/application_command_option.ts";
-import type { ApplicationCommandOptionChoice } from "../types/interactions/commands/application_command_option_choice.ts";
-import { DiscordApplicationCommandOptionTypes } from "../types/interactions/commands/application_command_option_types.ts";
-import type { CreateGlobalApplicationCommand } from "../types/interactions/commands/create_global_application_command.ts";
-import type { EditGlobalApplicationCommand } from "../types/interactions/commands/edit_global_application_command.ts";
-import { ButtonStyles } from "../types/messages/components/button_styles.ts";
-import type { MessageComponents } from "../types/messages/components/message_components.ts";
-import type { DiscordImageFormat } from "../types/misc/image_format.ts";
-import type { DiscordImageSize } from "../types/misc/image_size.ts";
+import type { ApplicationCommandOption } from "../types/interactions/commands/applicationCommandOption.ts";
+import type { ApplicationCommandOptionChoice } from "../types/interactions/commands/applicationCommandOptionChoice.ts";
+import { ApplicationCommandOptionTypes } from "../types/interactions/commands/applicationCommandOptionTypes.ts";
+import type { CreateGlobalApplicationCommand } from "../types/interactions/commands/createGlobalApplicationCommand.ts";
+import type { EditGlobalApplicationCommand } from "../types/interactions/commands/editGlobalApplicationCommand.ts";
+import { ButtonStyles } from "../types/messages/components/buttonStyles.ts";
+import type { MessageComponents } from "../types/messages/components/messageComponents.ts";
+import type { ImageFormat } from "../types/misc/imageFormat.ts";
+import type { ImageSize } from "../types/misc/imageSize.ts";
 import { CONTEXT_MENU_COMMANDS_NAME_REGEX, SLASH_COMMANDS_NAME_REGEX } from "./constants.ts";
-import { isSelectMenu } from "../helpers/type_guards/is_select_menu.ts";
-import { ApplicationCommandTypes } from "../types/interactions/commands/application_command_types.ts";
+import { ApplicationCommandTypes } from "../types/interactions/commands/applicationCommandTypes.ts";
 import { Bot } from "../bot.ts";
+import { MessageComponentTypes } from "../types/messages/components/messageComponentTypes.ts";
 
 /** Pause the execution for a given amount of milliseconds. */
 export function delay(ms: number): Promise<void> {
@@ -24,14 +23,14 @@ export function delay(ms: number): Promise<void> {
 }
 
 /** Help format an image url. */
-export const formatImageURL = (url: string, size: DiscordImageSize = 128, format?: DiscordImageFormat) => {
+export const formatImageURL = (url: string, size: ImageSize = 128, format?: ImageFormat) => {
   return `${url}.${format || (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
 };
 
 export function validateSlashOptionChoices(
   bot: Bot,
   choices: ApplicationCommandOptionChoice[],
-  optionType: DiscordApplicationCommandOptionTypes
+  optionType: ApplicationCommandOptionTypes
 ) {
   return choices.every((choice) => {
     bot.events.debug(`Running for of loop in validateSlashOptionChoices function.`);
@@ -40,13 +39,13 @@ export function validateSlashOptionChoices(
     }
 
     if (
-      optionType === DiscordApplicationCommandOptionTypes.String &&
+      optionType === ApplicationCommandOptionTypes.String &&
       (typeof choice.value !== "string" || choice.value.length < 1 || choice.value.length > 100)
     ) {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICE_VALUE_TYPE);
     }
 
-    if (optionType === DiscordApplicationCommandOptionTypes.Integer && typeof choice.value !== "number") {
+    if (optionType === ApplicationCommandOptionTypes.Integer && typeof choice.value !== "number") {
       throw new Error(Errors.INVALID_SLASH_OPTIONS_CHOICE_VALUE_TYPE);
     }
   });
@@ -63,10 +62,7 @@ export function validateSlashOptions(bot: Bot, options: ApplicationCommandOption
 
     if (option.choices?.length) {
       if (option.choices.length > 25) throw new Error(Errors.TOO_MANY_SLASH_OPTION_CHOICES);
-      if (
-        option.type !== DiscordApplicationCommandOptionTypes.String &&
-        option.type !== DiscordApplicationCommandOptionTypes.Integer
-      )
+      if (option.type !== ApplicationCommandOptionTypes.String && option.type !== ApplicationCommandOptionTypes.Integer)
         throw new Error(Errors.ONLY_STRING_OR_INTEGER_OPTIONS_CAN_HAVE_CHOICES);
     }
 
@@ -165,7 +161,7 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
       throw new Error(Errors.TOO_MANY_COMPONENTS);
     } else if (
       component.components?.length > 1 &&
-      component.components.some((subcomponent) => isSelectMenu(subcomponent))
+      component.components.some((subcomponent) => subcomponent.type === MessageComponentTypes.SelectMenu)
     ) {
       throw new Error(Errors.COMPONENT_SELECT_MUST_BE_ALONE);
     }
@@ -176,7 +172,7 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
       }
 
       // 5 Link buttons can not have a customId
-      if (isButton(subcomponent)) {
+      if (subcomponent.type === MessageComponentTypes.Button) {
         if (subcomponent.style === ButtonStyles.Link && subcomponent.customId) {
           throw new Error(Errors.LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID);
         }
@@ -192,7 +188,7 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
         subcomponent.emoji = makeEmojiFromString(subcomponent.emoji);
       }
 
-      if (isSelectMenu(subcomponent)) {
+      if (subcomponent.type === MessageComponentTypes.SelectMenu) {
         if (subcomponent.placeholder && !bot.utils.validateLength(subcomponent.placeholder, { max: 100 })) {
           throw new Error(Errors.COMPONENT_PLACEHOLDER_TOO_BIG);
         }

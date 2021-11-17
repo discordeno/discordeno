@@ -1,4 +1,4 @@
-import { DiscordGatewayOpcodes } from "../types/codes/gateway_opcodes.ts";
+import { GatewayOpcodes } from "../types/codes/gatewayOpcodes.ts";
 import { GatewayManager } from "../bot.ts";
 
 export function identify(gateway: GatewayManager, shardId: number, maxShards: number) {
@@ -43,7 +43,7 @@ export function identify(gateway: GatewayManager, shardId: number, maxShards: nu
       gateway,
       shardId,
       {
-        op: DiscordGatewayOpcodes.Identify,
+        op: GatewayOpcodes.Identify,
         d: {
           token: gateway.token,
           compress: gateway.compress,

@@ -1,5 +1,5 @@
-import { IdentifyConnectionProperties } from "./identify_connection_properties.ts";
-import { StatusUpdate } from "./status_update.ts";
+import { IdentifyConnectionProperties } from "./identifyConnectionProperties.ts";
+import { StatusUpdate } from "./statusUpdate.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#identify */
 export interface Identify {

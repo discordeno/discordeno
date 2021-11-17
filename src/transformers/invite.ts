@@ -1,5 +1,5 @@
 import { Bot } from "../bot.ts";
-import { InviteCreate, DiscordTargetTypes, User, Application } from "../types/mod.ts";
+import { InviteCreate, TargetTypes, User, Application } from "../types/mod.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoApplication } from "./application.ts";
 import { DiscordenoUser } from "./member.ts";
@@ -52,7 +52,7 @@ export interface DiscordenoInvite {
   /** The maximum number of times the invite can be used */
   maxUses: number;
   /** The type of target for this voice channel invite */
-  targetType: DiscordTargetTypes;
+  targetType: TargetTypes;
   /** The target user for this invite */
   targetUser?: DiscordenoUser;
   /** The embedded application to open for this voice channel embedded application invite */

@@ -1,6 +1,6 @@
 import { Bot } from "../bot.ts";
-import { AuditLogEntry } from "../types/audit_log/audit_log_entry.ts";
-import { DiscordAuditLogEvents } from "../types/audit_log/audit_log_events.ts";
+import { AuditLogEntry } from "../types/auditLog/auditLogEntry.ts";
+import { AuditLogEvents } from "../types/auditLog/auditLogEvents.ts";
 import { DiscordOverwrite, Overwrite } from "../types/channels/overwrite.ts";
 import { Role } from "../types/permissions/role.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
@@ -59,6 +59,7 @@ export function transformAuditlogEntry(
         case "topic":
         case "code":
         case "nick":
+        case "location":
           return {
             key: change.key,
             old: change.old_value,
@@ -81,6 +82,8 @@ export function transformAuditlogEntry(
         case "expire_grace_period":
         case "user_limit":
         case "privacy_level":
+        case "entity_type":
+        case "status":
           return {
             key: change.key,
             old: change.old_value ? Number(change.old_value) : undefined,
@@ -142,7 +145,7 @@ export interface DiscordenoAuditLogEntry {
   /** id of the entry */
   id: bigint;
   /** Type of action that occured */
-  actionType: DiscordAuditLogEvents;
+  actionType: AuditLogEvents;
   /** Additional info for certain action types */
   options?: {
     /** Number of days after which inactive members were kicked */

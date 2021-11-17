@@ -1,3 +1,3 @@
-export * from "./image_format.ts";
-export * from "./image_size.ts";
-export * from "./typing_start.ts";
+export * from "./imageFormat.ts";
+export * from "./imageSize.ts";
+export * from "./typingStart.ts";

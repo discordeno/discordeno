@@ -2,8 +2,9 @@ import { Channel } from "../channels/channel.ts";
 import { Guild } from "../guilds/guild.ts";
 import { Application } from "../applications/application.ts";
 import { User } from "../users/user.ts";
-import { DiscordTargetTypes } from "./target_types.ts";
-import { InviteStageInstance } from "./invite_stage_instance.ts";
+import { TargetTypes } from "./targetTypes.ts";
+import { InviteStageInstance } from "./inviteStageInstance.ts";
+import { ScheduledEvent } from "../guilds/scheduledEvents.ts";
 
 /** https://discord.com/developers/docs/resources/invite#invite-object */
 export interface Invite {
@@ -16,7 +17,7 @@ export interface Invite {
   /** The user who created the invite */
   inviter?: User;
   /** The type of target for this voice channel invite */
-  targetType?: DiscordTargetTypes;
+  targetType?: TargetTypes;
   /** The target user for this invite */
   targetUser?: User;
   /** The embedded application to open for this voice channel embedded application invite */
@@ -29,4 +30,6 @@ export interface Invite {
   expiresAt?: string | null;
   /** Stage instance data if there is a public Stage instance in the Stage channel this invite is for */
   stageInstance?: InviteStageInstance;
+  /** guild scheduled event data */
+  guildScheduledEvent?: ScheduledEvent;
 }

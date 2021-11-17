@@ -4,7 +4,7 @@ import type { DiscordenoGuild } from "./transformers/guild.ts";
 import type { DiscordenoMember, DiscordenoUser } from "./transformers/member.ts";
 import type { DiscordenoMessage } from "./transformers/message.ts";
 import { DiscordenoPresence } from "./transformers/presence.ts";
-import { GuildMember } from "./types/members/guild_member.ts";
+import { GuildMember } from "./types/members/guildMember.ts";
 import { Collection } from "./util/collection.ts";
 
 function messageSweeper(bot: Bot, message: DiscordenoMessage) {
@@ -68,12 +68,14 @@ export function createCache(
     tableCreator?: (bot: Bot, tableName: TableNames) => CacheHandler<any> | AsyncCacheHandler<any>;
   }
 ): Omit<Cache, "execute"> | Omit<AsyncCache, "execute"> {
+  let cache: Cache | AsyncCache;
+
   if (options.isAsync) {
     if (!options.tableCreator) {
       throw new Error("Async cache requires a tableCreator to be passed.");
     }
 
-    const cache = {
+    cache = {
       guilds: options.tableCreator(bot, "guilds"),
       users: options.tableCreator(bot, "users"),
       members: options.tableCreator(bot, "members"),
@@ -85,34 +87,50 @@ export function createCache(
       dispatchedGuildIds: options.tableCreator(bot, "dispatchedGuildIds"),
       dispatchedChannelIds: options.tableCreator(bot, "dispatchedChannelIds"),
       activeGuildIds: options.tableCreator(bot, "activeGuildIds"),
-      executedSlashCommands: new Set(),
+      unrepliedInteractions: new Set<bigint>(),
       fetchAllMembersProcessingRequests: new Map(),
       execute: async function () {
         throw new Error("Async Cache requires a custom execute function to be implemented.");
       },
     } as AsyncCache;
+  } else {
+    if (!options.tableCreator) options.tableCreator = createTable;
 
-    return cache;
+    cache = {
+      guilds: options.tableCreator(bot, "guilds"),
+      users: options.tableCreator(bot, "users"),
+      members: options.tableCreator(bot, "members"),
+      channels: options.tableCreator(bot, "channels"),
+      messages: options.tableCreator(bot, "messages"),
+      presences: options.tableCreator(bot, "presences"),
+      // threads: options.tableCreator(bot, "threads"),
+      unavailableGuilds: options.tableCreator(bot, "unavailableGuilds"),
+      dispatchedGuildIds: new Set(),
+      dispatchedChannelIds: new Set(),
+      activeGuildIds: new Set(),
+      unrepliedInteractions: new Set<bigint>(),
+      fetchAllMembersProcessingRequests: new Map(),
+    } as Cache;
+
+    cache.execute = createExecute(cache);
   }
-  if (!options.tableCreator) options.tableCreator = createTable;
 
-  const cache = {
-    guilds: options.tableCreator(bot, "guilds"),
-    users: options.tableCreator(bot, "users"),
-    members: options.tableCreator(bot, "members"),
-    channels: options.tableCreator(bot, "channels"),
-    messages: options.tableCreator(bot, "messages"),
-    presences: options.tableCreator(bot, "presences"),
-    // threads: options.tableCreator(bot, "threads"),
-    unavailableGuilds: options.tableCreator(bot, "unavailableGuilds"),
-    dispatchedGuildIds: new Set(),
-    dispatchedChannelIds: new Set(),
-    activeGuildIds: new Set(),
-    executedSlashCommands: new Set(),
-    fetchAllMembersProcessingRequests: new Map(),
-  } as Cache;
-
-  cache.execute = createExecute(cache);
+  // Interaction sweeper in case users don't reply do slash commands
+  // PS: always reply .-. its good practise
+  setInterval(() => {
+    const values = cache.unrepliedInteractions.values();
+    const now = Date.now();
+    for (let val; (val = values.next().value); ) {
+      // Interaction is older than 15 minutes
+      // and a reply has never been send
+      // so remove it from cache
+      // PS: DON'T USE THIS CODE TO CONVERT DC SNOWFLAKES TO UNIX
+      // SINCE U WILL GET AN INVALID RESULT
+      if ((val >> 22n) + 1420071300000n < now) {
+        cache.unrepliedInteractions.delete(val);
+      }
+    }
+  }, 300000);
 
   return cache;
 }
@@ -131,7 +149,7 @@ export interface Cache {
   dispatchedGuildIds: Set<bigint>;
   dispatchedChannelIds: Set<bigint>;
   activeGuildIds: Set<bigint>;
-  executedSlashCommands: Set<string>;
+  unrepliedInteractions: Set<bigint>;
   fetchAllMembersProcessingRequests: Map<string, Function>;
   execute: CacheExecutor;
 }
@@ -154,7 +172,7 @@ export interface AsyncCache {
   dispatchedGuildIds: AsyncCacheHandler<bigint>;
   dispatchedChannelIds: AsyncCacheHandler<bigint>;
   activeGuildIds: AsyncCacheHandler<bigint>;
-  executedSlashCommands: Set<string>;
+  unrepliedInteractions: Set<bigint>;
   fetchAllMembersProcessingRequests: Map<string, Function>;
   execute: CacheExecutor;
 }

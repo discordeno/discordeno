@@ -1,19 +1,19 @@
-import { PresenceUpdate } from "../activity/presence_update.ts";
+import { PresenceUpdate } from "../activity/presenceUpdate.ts";
 import { Channel } from "../channels/channel.ts";
 import { Emoji } from "../emojis/emoji.ts";
-import { GuildMember } from "../members/guild_member.ts";
+import { GuildMember } from "../members/guildMember.ts";
 import { Role } from "../permissions/role.ts";
-import { VoiceState } from "../voice/voice_state.ts";
-import { DiscordDefaultMessageNotificationLevels } from "./default_message_notification_levels.ts";
-import { DiscordExplicitContentFilterLevels } from "./explicit_content_filter_levels.ts";
-import { DiscordGuildFeatures } from "./guild_features.ts";
-import { DiscordMfaLevels } from "./mfa_levels.ts";
-import { DiscordPremiumTiers } from "./premium_tiers.ts";
-import { DiscordSystemChannelFlags } from "./system_channel_flags.ts";
-import { DiscordVerificationLevels } from "./verification_levels.ts";
-import { WelcomeScreen } from "./welcome_screen.ts";
-import type { StageInstance } from "../channels/stage_instance.ts";
-import { GuildNsfwLevel } from "./guild_nsfw_level.ts";
+import { VoiceState } from "../voice/voiceState.ts";
+import { DefaultMessageNotificationLevels } from "./defaultMessageNotificationLevels.ts";
+import { ExplicitContentFilterLevels } from "./explicitContentFilterLevels.ts";
+import { GuildFeatures } from "./guildFeatures.ts";
+import { MfaLevels } from "./mfaLevels.ts";
+import { PremiumTiers } from "./premiumTiers.ts";
+import { SystemChannelFlags } from "./systemChannelFlags.ts";
+import { VerificationLevels } from "./verificationLevels.ts";
+import { WelcomeScreen } from "./welcomeScreen.ts";
+import type { StageInstance } from "../channels/stageInstance.ts";
+import { GuildNsfwLevel } from "./guildNsfwLevel.ts";
 
 /** https://discord.com/developers/docs/resources/guild#guild-object */
 export interface Guild {
@@ -44,25 +44,25 @@ export interface Guild {
   /** The channel id that the widget will generate an invite to, or null if set to no invite */
   widgetChannelId?: string | null;
   /** Verification level required for the guild */
-  verificationLevel: DiscordVerificationLevels;
+  verificationLevel: VerificationLevels;
   /** Default message notifications level */
-  defaultMessageNotifications: DiscordDefaultMessageNotificationLevels;
+  defaultMessageNotifications: DefaultMessageNotificationLevels;
   /** Explicit content filter level */
-  explicitContentFilter: DiscordExplicitContentFilterLevels;
+  explicitContentFilter: ExplicitContentFilterLevels;
   /** Roles in the guild */
   roles: Role[];
   /** Custom guild emojis */
   emojis: Emoji[];
   /** Enabled guild features */
-  features: DiscordGuildFeatures[];
+  features: GuildFeatures[];
   /** Required MFA level for the guild */
-  mfaLevel: DiscordMfaLevels;
+  mfaLevel: MfaLevels;
   /** Application id of the guild creator if it is bot-created */
   applicationId: string | null;
   /** The id of the channel where guild notices such as welcome messages and boost events are posted */
   systemChannelId: string | null;
   /** System channel flags */
-  systemChannelFlags: DiscordSystemChannelFlags;
+  systemChannelFlags: SystemChannelFlags;
   /** The id of the channel where community guilds can display rules and/or guidelines */
   rulesChannelId: string | null;
   /** When this guild was joined at */
@@ -95,7 +95,7 @@ export interface Guild {
   /** Banner hash */
   banner: string | null;
   /** Premium tier (Server Boost level) */
-  premiumTier: DiscordPremiumTiers;
+  premiumTier: PremiumTiers;
   /** The number of boosts this guild currently has */
   premiumSubscriptionCount?: number;
   /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */

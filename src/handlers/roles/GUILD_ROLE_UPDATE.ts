@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { GuildRoleUpdate } from "../../types/guilds/guild_role_update.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import type { GuildRoleUpdate } from "../../types/guilds/guildRoleUpdate.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export async function handleGuildRoleUpdate(bot: Bot, data: DiscordGatewayPayload) {

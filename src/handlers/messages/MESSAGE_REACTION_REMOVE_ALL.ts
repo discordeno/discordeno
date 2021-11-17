@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gateway_payload.ts";
-import type { MessageReactionRemoveAll } from "../../types/messages/message_reaction_remove_all.ts";
+import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import type { MessageReactionRemoveAll } from "../../types/messages/messageReactionRemoveAll.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export async function handleMessageReactionRemoveAll(bot: Bot, data: DiscordGatewayPayload) {

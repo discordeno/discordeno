@@ -1,17 +1,17 @@
-import { ActivityAssets } from "./activity_assets.ts";
-import { ActivityButton } from "./activity_button.ts";
-import { ActivityEmoji } from "./activity_emoji.ts";
-import { ActivityParty } from "./activity_party.ts";
-import { ActivitySecrets } from "./activity_secrets.ts";
-import { ActivityTimestamps } from "./activity_timestamps.ts";
-import { DiscordActivityTypes } from "./activity_types.ts";
+import { ActivityAssets } from "./activityAssets.ts";
+import { ActivityButton } from "./activityButton.ts";
+import { ActivityEmoji } from "./activityEmoji.ts";
+import { ActivityParty } from "./activityParty.ts";
+import { ActivitySecrets } from "./activitySecrets.ts";
+import { ActivityTimestamps } from "./activityTimestamps.ts";
+import { ActivityTypes } from "./activityTypes.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object */
 export interface Activity {
   /** The activity's name */
   name: string;
   /** Activity type */
-  type: DiscordActivityTypes;
+  type: ActivityTypes;
   /** Stream url, is validated when type is 1 */
   url?: string | null;
   /** Unix timestamp of when the activity was added to the user's session */

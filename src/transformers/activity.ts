@@ -1,6 +1,6 @@
 import { Bot } from "../bot.ts";
 import { Activity } from "../types/activity/activity.ts";
-import { DiscordActivityTypes } from "../types/activity/activity_types.ts";
+import { ActivityTypes } from "../types/activity/activityTypes.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoEmoji } from "./emoji.ts";
 
@@ -36,7 +36,7 @@ export interface DiscordenoActivity {
   /** The activity's name */
   name: string;
   /** Activity type */
-  type: DiscordActivityTypes;
+  type: ActivityTypes;
   /** Stream url, is validated when type is 1 */
   url?: string;
   /** Unix timestamp of when the activity was added to the user's session */

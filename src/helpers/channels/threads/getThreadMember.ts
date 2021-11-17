@@ -1,5 +1,5 @@
 import type { Bot } from "../../../bot.ts";
-import { ThreadMember } from "../../../types/channels/threads/thread_member.ts";
+import { ThreadMember } from "../../../types/channels/threads/threadMember.ts";
 
 /** Returns thread members objects that are members of the thread. */
 export async function getThreadMember(bot: Bot, threadId: bigint, userId: bigint) {

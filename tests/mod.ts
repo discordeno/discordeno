@@ -4,43 +4,43 @@ import {
   channelOverwriteHasPermission,
   createBot,
   createEventHandlers,
-  DiscordChannelTypes,
-  DiscordOverwriteTypes,
+  ChannelTypes,
+  OverwriteTypes,
   setupBot,
   startBot,
   stopBot,
 } from "../mod.ts";
 import { assertEquals, assertExists, enableCachePlugin } from "./deps.ts";
-import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/delete_message.ts";
-import { getMessagesTest } from "./helpers/messages/get_messages.ts";
-import { deleteMessagesWithoutReasonTest, deleteMessagesWithReasonTest } from "./helpers/messages/delete_messages.ts";
+import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
+import { getMessagesTest } from "./helpers/messages/getMessages.ts";
+import { deleteMessagesWithoutReasonTest, deleteMessagesWithReasonTest } from "./helpers/messages/deleteMessages.ts";
 import { delayUntil } from "./utils.ts";
 import {
   sendMessageWithComponents,
   sendMessageWithEmbedsTest,
   sendMessageWithTextTest,
-} from "./helpers/messages/send_message.ts";
+} from "./helpers/messages/sendMessage.ts";
 
 // CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
 import "./local.ts";
-import { getMessageTest } from "./helpers/messages/get_message.ts";
+import { getMessageTest } from "./helpers/messages/getMessage.ts";
 import { addReactionTest } from "./helpers/messages/reactions.ts";
-import { editMessageTest } from "./helpers/messages/edit_message.ts";
-import { fetchSingleMemberTest } from "./helpers/members/fetch_members.ts";
+import { editMessageTest } from "./helpers/messages/editMessage.ts";
+import { fetchSingleMemberTest } from "./helpers/members/fetchMembers.ts";
 import { pinMessageTests } from "./helpers/messages/pin.ts";
 import { removeAllReactionTests, removeReactionEmojiTest, removeReactionTest } from "./helpers/messages/reactions.ts";
-import { createInviteTest } from "./helpers/invites/create_invite.ts";
-import { deleteInviteTest } from "./helpers/invites/delete_invite.ts";
-import { getChannelInvitesTest } from "./helpers/invites/get_channels_invites.ts";
-import { getInviteTest } from "./helpers/invites/get_invite.ts";
-import { getInvitesTest } from "./helpers/invites/get_invites.ts";
-import { createChannelTests } from "./helpers/channels/create_channel.ts";
-import { deleteChannelTests } from "./helpers/channels/delete_channel.ts";
-import { createEmojiTest } from "./helpers/emojis/create_emoji.ts";
-import { deleteEmojiWithoutReasonTest, deleteEmojiWithReasonTest } from "./helpers/emojis/delete_emoji.ts";
-import { editEmojiTest } from "./helpers/emojis/edit_emoji.ts";
-import { getEmojiTest } from "./helpers/emojis/get_emoji.ts";
-import { getEmojisTest } from "./helpers/emojis/get_emojis.ts";
+import { createInviteTest } from "./helpers/invites/createInvite.ts";
+import { deleteInviteTest } from "./helpers/invites/deleteInvite.ts";
+import { getChannelInvitesTest } from "./helpers/invites/getChannelInvites.ts";
+import { getInviteTest } from "./helpers/invites/getInvite.ts";
+import { getInvitesTest } from "./helpers/invites/getInvites.ts";
+import { createChannelTests } from "./helpers/channels/createChannel.ts";
+import { deleteChannelTests } from "./helpers/channels/deleteChannel.ts";
+import { createEmojiTest } from "./helpers/emojis/createEmoji.ts";
+import { deleteEmojiWithoutReasonTest, deleteEmojiWithReasonTest } from "./helpers/emojis/deleteEmoji.ts";
+import { editEmojiTest } from "./helpers/emojis/editEmoji.ts";
+import { getEmojiTest } from "./helpers/emojis/getEmoji.ts";
+import { getEmojisTest } from "./helpers/emojis/getEmojis.ts";
 import { getBansTest, unbanTest, banTest } from "./helpers/members/ban.ts";
 import { createRoleTests } from "./helpers/roles/createRole.ts";
 import { deleteRoleTests } from "./helpers/roles/deleteRole.ts";
@@ -63,6 +63,11 @@ import { channelOverwriteHasPermissionTest } from "./helpers/channels/channelOve
 import { cloneChannelTests } from "./helpers/channels/cloneChannel.ts";
 import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOverwrite.ts";
 import { editChannelTests } from "./helpers/channels/editChannel.ts";
+import { createScheduledEventTests } from "./helpers/guilds/scheduledEvents/createScheduledEvent.ts";
+import { ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../src/types/guilds/scheduledEvents.ts";
+import { GuildFeatures } from "../src/types/guilds/guildFeatures.ts";
+import { editScheduledEventTests } from "./helpers/guilds/scheduledEvents/editScheduledEvent.ts";
+import { deleteScheduledEventTests } from "./helpers/guilds/scheduledEvents/deleteScheduledEvent.ts";
 
 // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
 const sanitizeMode = {
@@ -70,6 +75,8 @@ const sanitizeMode = {
   sanitizeOps: false,
   sanitizeExit: false,
 };
+
+export const CACHED_COMMUNITY_GUILD_ID = 907350958810480671n;
 
 Deno.test({
   name: "[Bot] - Starting Tests",
@@ -93,7 +100,15 @@ Deno.test({
         },
         // debug: console.log,
       }),
-      intents: ["Guilds", "GuildEmojis", "GuildMessages", "GuildMessageReactions", "GuildBans", "GuildMembers"],
+      intents: [
+        "Guilds",
+        "GuildEmojis",
+        "GuildMessages",
+        "GuildMessageReactions",
+        "GuildBans",
+        "GuildMembers",
+        "GuildScheduledEvents",
+      ],
       cache: {
         isAsync: false,
       },
@@ -110,6 +125,8 @@ Deno.test({
     // DELETE GUILDS IF LESS THAN 10 SERVERS AS SAFETY MEASURE
     if (bot.cache.guilds.size() <= 10) {
       bot.cache.guilds.forEach(async (guild) => {
+        // DO NOT DELETE OUR CACHED TEST SERVER FOR COMMUNITY FEATURES
+        if (guild.id === CACHED_COMMUNITY_GUILD_ID) return;
         if (guild.ownerId === bot.id) await bot.helpers.deleteGuild(guild.id);
       });
     }
@@ -131,6 +148,140 @@ Deno.test({
     if (!bot.cache.guilds.has(guild.id)) {
       throw new Error(`The guild seemed to be created but it was not cached. ${guild.id.toString()}`);
     }
+
+    // GUILD SCHEDULED EVENTS TESTS
+    await t.step("Guild Scheduled Event related tests", async (t) => {
+      await Promise.all([
+        t.step({
+          name: "[scheduled event] create a guild scheduled event with stage entity",
+          fn: async (t) => {
+            await createScheduledEventTests(
+              bot,
+              CACHED_COMMUNITY_GUILD_ID,
+              {
+                name: "lfg",
+                description: "itoh is an imposter",
+                scheduledStartTime: Date.now() + 600000,
+                privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
+                entityType: ScheduledEventEntityType.StageInstance,
+              },
+              t
+            );
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[scheduled event] create a guild scheduled event with stage entity with an end time.",
+          fn: async (t) => {
+            await createScheduledEventTests(
+              bot,
+              CACHED_COMMUNITY_GUILD_ID,
+              {
+                name: "lfg",
+                description: "itoh is an imposter",
+                scheduledStartTime: Date.now() + 600000,
+                scheduledEndTime: Date.now() + (600000 + 1),
+                privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
+                entityType: ScheduledEventEntityType.StageInstance,
+              },
+              t
+            );
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[scheduled event] create a guild scheduled event with voice entity",
+          fn: async (t) => {
+            await createScheduledEventTests(
+              bot,
+              guild.id,
+              {
+                name: "lfg",
+                description: "itoh is an imposter",
+                scheduledStartTime: Date.now() + 600000,
+                privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
+                entityType: ScheduledEventEntityType.Voice,
+              },
+              t
+            );
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[scheduled event] create a guild scheduled event with voice entity with an end time.",
+          fn: async (t) => {
+            await createScheduledEventTests(
+              bot,
+              guild.id,
+              {
+                name: "lfg",
+                description: "itoh is an imposter",
+                scheduledStartTime: Date.now() + 600000,
+                scheduledEndTime: Date.now() + (600000 + 1),
+                privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
+                entityType: ScheduledEventEntityType.Voice,
+              },
+              t
+            );
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[scheduled event] create a guild scheduled event with external entity",
+          fn: async (t) => {
+            await createScheduledEventTests(
+              bot,
+              guild.id,
+              {
+                name: "lfg",
+                description: "itoh is an imposter",
+                scheduledStartTime: Date.now() + 600000,
+                scheduledEndTime: Date.now() + 1200000,
+                privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
+                entityType: ScheduledEventEntityType.External,
+                location: "heaven",
+              },
+              t
+            );
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[scheduled event] create a guild scheduled event with external entity with an end time.",
+          fn: async (t) => {
+            await createScheduledEventTests(
+              bot,
+              guild.id,
+              {
+                name: "lfg",
+                description: "itoh is an imposter",
+                scheduledStartTime: Date.now() + 600000,
+                scheduledEndTime: Date.now() + (600000 + 1),
+                privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
+                entityType: ScheduledEventEntityType.External,
+                location: "heaven",
+              },
+              t
+            );
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[scheduled event] edit a scheduled event",
+          fn: async (t) => {
+            await editScheduledEventTests(bot, CACHED_COMMUNITY_GUILD_ID, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[scheduled event] delete a scheduled event",
+          fn: async (t) => {
+            await deleteScheduledEventTests(bot, guild.id, t);
+          },
+          ...sanitizeMode,
+        }),
+      ]);
+    });
 
     // GUILD TESTS GROUPED
     await t.step("Guild related tests", async (t) => {
@@ -246,7 +397,7 @@ Deno.test({
 
       // Assertions
       assertExists(channel);
-      assertEquals(channel.type, DiscordChannelTypes.GuildText);
+      assertEquals(channel.type, ChannelTypes.GuildText);
 
       // ALL MESSAGE RELATED TESTS THAT DEPEND ON AN EXISTING CHANNEL
       await t.step("Message related tests", async (t) => {
@@ -421,7 +572,7 @@ Deno.test({
               guild.id,
               {
                 name: "Discordeno-test",
-                type: DiscordChannelTypes.GuildCategory,
+                type: ChannelTypes.GuildCategory,
               },
               t
             );
@@ -431,7 +582,7 @@ Deno.test({
         // t.step({
         //   name: "[channel] create a new news channel",
         //   async fn() {
-        //     await createChannelTests(bot, guild.id,{ name: "Discordeno-test", type: DiscordChannelTypes.GUILD_NEWS}, t);
+        //     await createChannelTests(bot, guild.id,{ name: "Discordeno-test", type: ChannelTypes.GUILD_NEWS}, t);
         //   },
         //   ...sanitizeMode,
         // }),
@@ -439,7 +590,7 @@ Deno.test({
         // t.step({
         //   name: "[channel] create a new store channel",
         //   async fn() {
-        //     await createChannelTests(bot, guild.id,{ name: "Discordeno-test", type: DiscordChannelTypes.GUILD_STORE}, t);
+        //     await createChannelTests(bot, guild.id,{ name: "Discordeno-test", type: ChannelTypes.GUILD_STORE}, t);
         //   },
         //   ...sanitizeMode,
         // }),
@@ -451,7 +602,7 @@ Deno.test({
               guild.id,
               {
                 name: "Discordeno-test",
-                type: DiscordChannelTypes.GuildVoice,
+                type: ChannelTypes.GuildVoice,
               },
               t
             );
@@ -466,7 +617,7 @@ Deno.test({
               guild.id,
               {
                 name: "discordeno-test",
-                type: DiscordChannelTypes.GuildVoice,
+                type: ChannelTypes.GuildVoice,
                 bitrate: 32000,
               },
               t
@@ -482,7 +633,7 @@ Deno.test({
               guild.id,
               {
                 name: "Discordeno-test",
-                type: DiscordChannelTypes.GuildVoice,
+                type: ChannelTypes.GuildVoice,
                 userLimit: 32,
               },
               t
@@ -523,7 +674,7 @@ Deno.test({
                 permissionOverwrites: [
                   {
                     id: bot.id,
-                    type: DiscordOverwriteTypes.Member,
+                    type: OverwriteTypes.Member,
                     allow: ["VIEW_CHANNEL"],
                     deny: [],
                   },
@@ -864,6 +1015,7 @@ Deno.test({
       }),
     ]);
 
+    await bot.helpers.deleteGuild(guild.id);
     await stopBot(bot);
   },
   ...sanitizeMode,

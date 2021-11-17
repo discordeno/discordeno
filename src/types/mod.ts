@@ -1,6 +1,6 @@
 export * from "./activity/mod.ts";
 export * from "./applications/mod.ts";
-export * from "./audit_log/mod.ts";
+export * from "./auditLog/mod.ts";
 export * from "./channels/mod.ts";
 export * from "./codes/mod.ts";
 export * from "./discordeno/mod.ts";

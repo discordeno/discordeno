@@ -1,7 +1,7 @@
 import { User } from "../users/user.ts";
-import { IntegrationAccount } from "./integration_account.ts";
-import { IntegrationApplication } from "./integration_application.ts";
-import { DiscordIntegrationExpireBehaviors } from "./integration_expire_behaviors.ts";
+import { IntegrationAccount } from "./integrationAccount.ts";
+import { IntegrationApplication } from "./integrationApplication.ts";
+import { IntegrationExpireBehaviors } from "./integrationExpireBehaviors.ts";
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
 export interface Integration {
@@ -20,7 +20,7 @@ export interface Integration {
   /** Whether emoticons should be synced for this integration (twitch only currently) */
   enableEmoticons?: boolean;
   /** The behavior of expiring subscribers */
-  expireBehavior?: DiscordIntegrationExpireBehaviors;
+  expireBehavior?: IntegrationExpireBehaviors;
   /** The grace period (in days) before expiring subscribers */
   expireGracePeriod?: number;
   /** User for this integration */

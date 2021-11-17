@@ -1,6 +1,6 @@
 import { Bot } from "../bot.ts";
 import { Application } from "../types/applications/application.ts";
-import { DiscordApplicationFlags } from "../types/applications/application_flags.ts";
+import { ApplicationFlags } from "../types/applications/applicationFlags.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoUser } from "./member.ts";
 import { DiscordenoTeam } from "./team.ts";
@@ -66,5 +66,5 @@ export interface DiscordenoApplication {
   /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
   coverImage?: string;
   /** The application's public flags */
-  flags?: DiscordApplicationFlags;
+  flags?: ApplicationFlags;
 }
