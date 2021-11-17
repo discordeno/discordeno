@@ -117,7 +117,8 @@ export function createCache(
 
   // Interaction sweeper in case users don't reply do slash commands
   // PS: always reply .-. its good practise
-  setInterval(() => {
+
+  cache.unrepliedInteractionsInterval = setInterval(() => {
     const values = cache.unrepliedInteractions.values();
     const now = Date.now();
     for (let val; (val = values.next().value); ) {
@@ -150,6 +151,7 @@ export interface Cache {
   dispatchedChannelIds: Set<bigint>;
   activeGuildIds: Set<bigint>;
   unrepliedInteractions: Set<bigint>;
+  unrepliedInteractionsInterval?: number;
   fetchAllMembersProcessingRequests: Map<string, Function>;
   execute: CacheExecutor;
 }
@@ -173,6 +175,7 @@ export interface AsyncCache {
   dispatchedChannelIds: AsyncCacheHandler<bigint>;
   activeGuildIds: AsyncCacheHandler<bigint>;
   unrepliedInteractions: Set<bigint>;
+  unrepliedInteractionsInterval?: number;
   fetchAllMembersProcessingRequests: Map<string, Function>;
   execute: CacheExecutor;
 }
