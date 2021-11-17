@@ -1,4 +1,4 @@
-import { UNITTEST_TOKEN } from "../configs.ts";
+// import { UNITTEST_TOKEN } from "../configs.ts";
 import { memoryBenchmarks } from "../benchmarks/index.ts";
 import {
   channelOverwriteHasPermission,
