@@ -2,6 +2,7 @@ import { Bot } from "../../../../src/bot.ts";
 import { ChannelTypes } from "../../../../src/types/channels/channelTypes.ts";
 import { CreateScheduledEvent, ScheduledEventEntityType } from "../../../../src/types/guilds/scheduledEvents.ts";
 import { assertEquals, assertExists } from "../../../deps.ts";
+import { CACHED_COMMUNITY_GUILD_ID } from "../../../mod.ts";
 
 export async function createScheduledEventTests(
   bot: Bot,
@@ -9,23 +10,34 @@ export async function createScheduledEventTests(
   options: CreateScheduledEvent,
   t: Deno.TestContext
 ) {
-  if ([ScheduledEventEntityType.StageInstance, ScheduledEventEntityType.Voice].includes(options.entityType)) {
-    const channel = await bot.helpers.createChannel(guildId, {
-      name: "entity",
-      type:
-        options.entityType === ScheduledEventEntityType.Voice ? ChannelTypes.GuildVoice : ChannelTypes.GuildStageVoice,
-    });
+  const channel = [
+    ScheduledEventEntityType.StageInstance,
+    ScheduledEventEntityType.Voice,
+    ScheduledEventEntityType.External,
+  ].includes(options.entityType)
+    ? await bot.helpers.createChannel(guildId, {
+        name: "entity",
+        type:
+          options.entityType === ScheduledEventEntityType.Voice
+            ? ChannelTypes.GuildVoice
+            : options.entityType === ScheduledEventEntityType.StageInstance
+            ? ChannelTypes.GuildStageVoice
+            : ChannelTypes.GuildText,
+      })
+    : undefined;
 
-    options.channelId = channel.id;
-  }
+  if (channel && options.entityType !== ScheduledEventEntityType.External) options.channelId = channel.id;
 
   const event = await bot.helpers.createScheduledEvent(guildId, options);
+
+  if (channel && guildId === CACHED_COMMUNITY_GUILD_ID) {
+    await bot.helpers.deleteChannel(channel.id);
+  }
 
   // Assertions
   assertExists(event.id);
 
   assertEquals(event.channelId, options.channelId);
-  assertEquals(event.speakerIds?.length, options.speakerIds?.length);
   assertEquals(event.location, options.location);
   assertEquals(event.name, options.name);
   assertEquals(event.description, options.description);

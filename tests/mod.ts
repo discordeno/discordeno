@@ -65,6 +65,9 @@ import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOve
 import { editChannelTests } from "./helpers/channels/editChannel.ts";
 import { createScheduledEventTests } from "./helpers/guilds/scheduledEvents/createScheduledEvent.ts";
 import { ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../src/types/guilds/scheduledEvents.ts";
+import { GuildFeatures } from "../src/types/guilds/guildFeatures.ts";
+import { editScheduledEventTests } from "./helpers/guilds/scheduledEvents/editScheduledEvent.ts";
+import { deleteScheduledEventTests } from "./helpers/guilds/scheduledEvents/deleteScheduledEvent.ts";
 
 // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
 const sanitizeMode = {
@@ -72,6 +75,8 @@ const sanitizeMode = {
   sanitizeOps: false,
   sanitizeExit: false,
 };
+
+export const CACHED_COMMUNITY_GUILD_ID = 907350958810480671n;
 
 Deno.test({
   name: "[Bot] - Starting Tests",
@@ -95,7 +100,15 @@ Deno.test({
         },
         // debug: console.log,
       }),
-      intents: ["Guilds", "GuildEmojis", "GuildMessages", "GuildMessageReactions", "GuildBans", "GuildMembers", "GuildScheduledEvents"],
+      intents: [
+        "Guilds",
+        "GuildEmojis",
+        "GuildMessages",
+        "GuildMessageReactions",
+        "GuildBans",
+        "GuildMembers",
+        "GuildScheduledEvents",
+      ],
       cache: {
         isAsync: false,
       },
@@ -112,6 +125,8 @@ Deno.test({
     // DELETE GUILDS IF LESS THAN 10 SERVERS AS SAFETY MEASURE
     if (bot.cache.guilds.size() <= 10) {
       bot.cache.guilds.forEach(async (guild) => {
+        // DO NOT DELETE OUR CACHED TEST SERVER FOR COMMUNITY FEATURES
+        if (guild.id === CACHED_COMMUNITY_GUILD_ID) return;
         if (guild.ownerId === bot.id) await bot.helpers.deleteGuild(guild.id);
       });
     }
@@ -137,119 +152,134 @@ Deno.test({
     // GUILD SCHEDULED EVENTS TESTS
     await t.step("Guild Scheduled Event related tests", async (t) => {
       await Promise.all([
-  //       channelId?: bigint;
-  // speakerIds?: bigint[];
-  // location?: string;
-  // name: string;
-  // description: string;
-  // scheduledStartTime: number;
-  // scheduledEndTime?: number;
-  // privacyLevel: ScheduledEventPrivacyLevel;
-  // entityType: ScheduledEventEntityType;
-        // t.step({
-        //   name: "[scheduled event] create a public scheduled event with no entity",
-        //   fn: async (t) => {
-        //     await createScheduledEventTests(bot, guild.id, {
-        //       name: "lfg",
-        //       description: "lfg it is",
-        //       scheduledStartTime: Date.now() + 600000,
-        //       privacyLevel: ScheduledEventPrivacyLevel.Public,
-        //       entityType: ScheduledEventEntityType.None,
-        //     }, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
-        // t.step({
-        //   name: "[scheduled event] create a guild scheduled event with no entity",
-        //   fn: async (t) => {
-        //     await createScheduledEventTests(bot, guild.id, {
-        //       name: "lfg",
-        //       description: "lfg it is",
-        //       scheduledStartTime: Date.now() + 600000,
-        //       privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
-        //       entityType: ScheduledEventEntityType.None,
-        //     }, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
-        // t.step({
-        //   name: "[scheduled event] create a public scheduled event with stage entity",
-        //   fn: async (t) => {
-        //     await createScheduledEventTests(bot, guild.id, {
-        //       name: "lfg",
-        //       description: "lfg it is",
-        //       scheduledStartTime: Date.now() + 600000,
-        //       privacyLevel: ScheduledEventPrivacyLevel.Public,
-        //       entityType: ScheduledEventEntityType.StageInstance,
-        //     }, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
-        // t.step({
-        //   name: "[scheduled event] create a guild scheduled event with stage entity",
-        //   fn: async (t) => {
-        //     await createScheduledEventTests(bot, guild.id, {
-        //       name: "lfg",
-        //       description: "lfg it is",
-        //       scheduledStartTime: Date.now() + 600000,
-        //       privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
-        //       entityType: ScheduledEventEntityType.StageInstance,
-        //     }, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
-        // t.step({
-        //   name: "[scheduled event] create a public scheduled event with voice entity",
-        //   fn: async (t) => {
-        //     await createScheduledEventTests(bot, guild.id, {
-        //       name: "lfg",
-        //       description: "lfg it is",
-        //       scheduledStartTime: Date.now() + 600000,
-        //       privacyLevel: ScheduledEventPrivacyLevel.Public,
-        //       entityType: ScheduledEventEntityType.Voice,
-        //     }, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
-        // t.step({
-        //   name: "[scheduled event] create a guild scheduled event with voice entity",
-        //   fn: async (t) => {
-        //     await createScheduledEventTests(bot, guild.id, {
-        //       name: "lfg",
-        //       description: "lfg it is",
-        //       scheduledStartTime: Date.now() + 600000,
-        //       privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
-        //       entityType: ScheduledEventEntityType.Voice,
-        //     }, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
-        // t.step({
-        //   name: "[scheduled event] create a public scheduled event with external entity",
-        //   fn: async (t) => {
-        //     await createScheduledEventTests(bot, guild.id, {
-        //       name: "lfg",
-        //       description: "lfg it is",
-        //       scheduledStartTime: Date.now() + 600000,
-        //       privacyLevel: ScheduledEventPrivacyLevel.Public,
-        //       entityType: ScheduledEventEntityType.External,
-        //     }, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
-        // t.step({
-        //   name: "[scheduled event] create a guild scheduled event with external entity",
-        //   fn: async (t) => {
-        //     await createScheduledEventTests(bot, guild.id, {
-        //       name: "lfg",
-        //       description: "lfg it is",
-        //       scheduledStartTime: Date.now() + 600000,
-        //       privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
-        //       entityType: ScheduledEventEntityType.External,
-        //     }, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
+        t.step({
+          name: "[scheduled event] create a guild scheduled event with stage entity",
+          fn: async (t) => {
+            await createScheduledEventTests(
+              bot,
+              CACHED_COMMUNITY_GUILD_ID,
+              {
+                name: "lfg",
+                description: "itoh is an imposter",
+                scheduledStartTime: Date.now() + 600000,
+                privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
+                entityType: ScheduledEventEntityType.StageInstance,
+              },
+              t
+            );
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[scheduled event] create a guild scheduled event with stage entity with an end time.",
+          fn: async (t) => {
+            await createScheduledEventTests(
+              bot,
+              CACHED_COMMUNITY_GUILD_ID,
+              {
+                name: "lfg",
+                description: "itoh is an imposter",
+                scheduledStartTime: Date.now() + 600000,
+                scheduledEndTime: Date.now() + (600000 + 1),
+                privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
+                entityType: ScheduledEventEntityType.StageInstance,
+              },
+              t
+            );
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[scheduled event] create a guild scheduled event with voice entity",
+          fn: async (t) => {
+            await createScheduledEventTests(
+              bot,
+              guild.id,
+              {
+                name: "lfg",
+                description: "itoh is an imposter",
+                scheduledStartTime: Date.now() + 600000,
+                privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
+                entityType: ScheduledEventEntityType.Voice,
+              },
+              t
+            );
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[scheduled event] create a guild scheduled event with voice entity with an end time.",
+          fn: async (t) => {
+            await createScheduledEventTests(
+              bot,
+              guild.id,
+              {
+                name: "lfg",
+                description: "itoh is an imposter",
+                scheduledStartTime: Date.now() + 600000,
+                scheduledEndTime: Date.now() + (600000 + 1),
+                privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
+                entityType: ScheduledEventEntityType.Voice,
+              },
+              t
+            );
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[scheduled event] create a guild scheduled event with external entity",
+          fn: async (t) => {
+            await createScheduledEventTests(
+              bot,
+              guild.id,
+              {
+                name: "lfg",
+                description: "itoh is an imposter",
+                scheduledStartTime: Date.now() + 600000,
+                scheduledEndTime: Date.now() + 1200000,
+                privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
+                entityType: ScheduledEventEntityType.External,
+                location: "heaven",
+              },
+              t
+            );
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[scheduled event] create a guild scheduled event with external entity with an end time.",
+          fn: async (t) => {
+            await createScheduledEventTests(
+              bot,
+              guild.id,
+              {
+                name: "lfg",
+                description: "itoh is an imposter",
+                scheduledStartTime: Date.now() + 600000,
+                scheduledEndTime: Date.now() + (600000 + 1),
+                privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
+                entityType: ScheduledEventEntityType.External,
+                location: "heaven",
+              },
+              t
+            );
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[scheduled event] edit a scheduled event",
+          fn: async (t) => {
+            await editScheduledEventTests(bot, CACHED_COMMUNITY_GUILD_ID, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[scheduled event] delete a scheduled event",
+          fn: async (t) => {
+            await deleteScheduledEventTests(bot, guild.id, t);
+          },
+          ...sanitizeMode,
+        }),
       ]);
     });
 
@@ -985,6 +1015,7 @@ Deno.test({
       }),
     ]);
 
+    await bot.helpers.deleteGuild(guild.id);
     await stopBot(bot);
   },
   ...sanitizeMode,

@@ -20,7 +20,6 @@ export function transformScheduledEvent(
     scheduledStartTime: Date.parse(payload.scheduled_start_time),
     scheduledEndTime: payload.scheduled_end_time ? Date.parse(payload.scheduled_end_time) : undefined,
     entityId: payload.entity_id ? bot.transformers.snowflake(payload.entity_id) : undefined,
-    speakerIds: payload.entity_metadata?.speaker_ids?.map((id) => bot.transformers.snowflake(id)),
     creator: payload.creator ? bot.transformers.user(bot, payload.creator) : undefined,
 
     name: payload.name,
@@ -58,8 +57,6 @@ export interface DiscordenoScheduledEvent {
   entityType: ScheduledEventEntityType;
   /** any additional id of the hosting entity associated with event */
   entityId?: bigint;
-  /** the speakers of the stage channel */
-  speakerIds?: bigint[];
   /** location of the event */
   location?: string;
   /** the user that created the scheduled event */

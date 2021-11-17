@@ -5,7 +5,7 @@ export function processRateLimitedPaths(rest: RestManager) {
   const now = Date.now();
 
   for (const [key, value] of rest.ratelimitedPaths.entries()) {
-    rest.debug(`[REST - processRateLimitedPaths] Running for of loop.`);
+    rest.debug(`[REST - processRateLimitedPaths] Running for of loop. ${value.resetTimestamp - now}`);
     // IF THE TIME HAS NOT REACHED CANCEL
     if (value.resetTimestamp > now) continue;
 

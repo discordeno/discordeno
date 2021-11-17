@@ -34,15 +34,14 @@ export interface ScheduledEvent {
 }
 
 export enum ScheduledEventPrivacyLevel {
-  /** the scheduled event is public and available in discovery */
-  Public = 1,
+  /** the scheduled event is public and available in discovery. DISCORD DEVS DISABLED THIS! WILL ERROR IF USED! */
+  // Public = 1,
   /** the scheduled event is only accessible to guild members */
-  GuildOnly,
+  GuildOnly = 2,
 }
 
 export enum ScheduledEventEntityType {
-  None,
-  StageInstance,
+  StageInstance = 1,
   Voice,
   External,
 }
@@ -55,8 +54,6 @@ export enum ScheduledEventStatus {
 }
 
 export interface ScheduledEventEntityMetadata {
-  /** the speakers of the stage channel */
-  speakerIds?: string[];
   /** location of the event */
   location?: string;
 }
@@ -82,8 +79,6 @@ export interface ScheduledEventUserAdd {
 export interface CreateScheduledEvent {
   /** the channel id of the scheduled event */
   channelId?: bigint;
-  /** the speakers of the stage channel */
-  speakerIds?: bigint[];
   /** location of the event */
   location?: string;
   /** the name of the scheduled event */
@@ -95,7 +90,7 @@ export interface CreateScheduledEvent {
   /** the time the scheduled event will end if it does end. */
   scheduledEndTime?: number;
   /** the privacy level of the scheduled event */
-  privacyLevel: ScheduledEventPrivacyLevel;
+  privacyLevel?: ScheduledEventPrivacyLevel;
   /** the type of hosting entity associated with a scheduled event */
   entityType: ScheduledEventEntityType;
 }
@@ -103,8 +98,6 @@ export interface CreateScheduledEvent {
 export interface EditScheduledEvent {
   /** the channel id of the scheduled event */
   channelId: bigint;
-  /** the speakers of the stage channel */
-  speakerIds: bigint[];
   /** location of the event */
   location: string;
   /** the name of the scheduled event */
@@ -126,8 +119,6 @@ export interface EditScheduledEvent {
 export interface EditScheduledEvent {
   /** the channel id of the scheduled event */
   channelId: bigint;
-  /** the speakers of the stage channel */
-  speakerIds: bigint[];
   /** location of the event */
   location: string;
   /** the name of the scheduled event */
