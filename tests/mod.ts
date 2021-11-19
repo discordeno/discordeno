@@ -1,6 +1,6 @@
-import { UNITTEST_TOKEN } from "../configs.ts";
+// import { UNITTEST_TOKEN } from "../configs.ts";
 import { memoryBenchmarks } from "../benchmarks/index.ts";
-import { createBot, createEventHandlers, ChannelTypes, OverwriteTypes, setupBot, startBot, stopBot } from "../mod.ts";
+import { createBot, createEventHandlers, ChannelTypes, OverwriteTypes, setupBot, startBot } from "../mod.ts";
 import { assertEquals, assertExists, enableCachePlugin } from "./deps.ts";
 import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
 import { getMessagesTest } from "./helpers/messages/getMessages.ts";
@@ -68,13 +68,13 @@ const sanitizeMode = {
   sanitizeExit: false,
 };
 
-const botId = BigInt(atob(UNITTEST_TOKEN.split(".")[0]));
-// const botId = BigInt(atob(Deno.env.get("DISCORD_TOKEN")!.split(".")[0]));
+// const botId = BigInt(atob(UNITTEST_TOKEN.split(".")[0]));
+const botId = BigInt(atob(Deno.env.get("DISCORD_TOKEN")!.split(".")[0]));
 
 let startedAt = 0;
 const bot = createBot({
-  token: UNITTEST_TOKEN || Deno.env.get("DISCORD_TOKEN"),
-  // token: Deno.env.get("DISCORD_TOKEN")!,
+  // token: UNITTEST_TOKEN || Deno.env.get("DISCORD_TOKEN"),
+  token: Deno.env.get("DISCORD_TOKEN")!,
   botId,
   events: createEventHandlers({
     ready: () => {
