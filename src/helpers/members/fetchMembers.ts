@@ -45,5 +45,5 @@ export function fetchMembers(
         nonce,
       },
     });
-  }) as Promise<Collection<bigint, DiscordenoMember>>;
+  }) as Promise<void>;
 }

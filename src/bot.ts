@@ -1199,8 +1199,8 @@ export interface BotGatewayHandlerOptions {
   GUILD_ROLE_DELETE: typeof handlers.handleGuildRoleDelete;
   GUILD_ROLE_UPDATE: typeof handlers.handleGuildRoleUpdate;
   GUILD_SCHEDULED_EVENT_CREATE: typeof handlers.handleGuildScheduledEventCreate;
-  GUILD_SCHEDULED_EVENT_UPDATE: typeof handlers.handleGuildScheduledEventUpdate;
   GUILD_SCHEDULED_EVENT_DELETE: typeof handlers.handleGuildScheduledEventDelete;
+  GUILD_SCHEDULED_EVENT_UPDATE: typeof handlers.handleGuildScheduledEventUpdate;
   GUILD_SCHEDULED_EVENT_USER_ADD: typeof handlers.handleGuildScheduledEventUserAdd;
   GUILD_SCHEDULED_EVENT_USER_REMOVE: typeof handlers.handleGuildScheduledEventUserRemove;
   GUILD_UPDATE: typeof handlers.handleGuildUpdate;
@@ -1263,6 +1263,12 @@ export function createBotGatewayHandlers(
     GUILD_ROLE_DELETE: options.GUILD_ROLE_DELETE ?? handlers.handleGuildRoleDelete,
     GUILD_ROLE_UPDATE: options.GUILD_ROLE_UPDATE ?? handlers.handleGuildRoleUpdate,
     GUILD_UPDATE: options.GUILD_UPDATE ?? handlers.handleGuildUpdate,
+    // guild events
+    GUILD_SCHEDULED_EVENT_CREATE: options.GUILD_SCHEDULED_EVENT_CREATE ?? handlers.handleGuildScheduledEventCreate,
+    GUILD_SCHEDULED_EVENT_DELETE: options.GUILD_SCHEDULED_EVENT_DELETE ?? handlers.handleGuildScheduledEventDelete,
+    GUILD_SCHEDULED_EVENT_UPDATE: options.GUILD_SCHEDULED_EVENT_UPDATE ?? handlers.handleGuildScheduledEventUpdate,
+    GUILD_SCHEDULED_EVENT_USER_ADD: options.GUILD_SCHEDULED_EVENT_USER_ADD ?? handlers.handleGuildScheduledEventUserAdd,
+    GUILD_SCHEDULED_EVENT_USER_REMOVE: options.GUILD_SCHEDULED_EVENT_USER_REMOVE ?? handlers.handleGuildScheduledEventUserRemove,
     // interactions
     INTERACTION_CREATE: options.INTERACTION_CREATE ?? handlers.handleInteractionCreate,
     // invites

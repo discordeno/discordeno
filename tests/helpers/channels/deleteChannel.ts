@@ -1,4 +1,6 @@
 import { Bot } from "../../../src/bot.ts";
+import { Channel } from "../../../src/types/channels/channel.ts";
+import { SnakeCasedPropertiesDeep } from "../../../src/types/util.ts";
 import { delayUntil } from "../../utils.ts";
 
 export async function deleteChannelTests(bot: Bot, guildId: bigint, options: { reason?: string }, t: Deno.TestContext) {
@@ -13,6 +15,8 @@ export async function deleteChannelTests(bot: Bot, guildId: bigint, options: { r
     throw new Error("The channel should have been created but it is not in the cache.");
   }
 
+  const CHANNEL_DELETE = bot.handlers.CHANNEL_DELETE;
+  
   // Delete the channel now without a reason
   await bot.helpers.deleteChannel(channel.id, options.reason);
   // wait to give it time for event

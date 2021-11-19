@@ -9,6 +9,8 @@ export async function handleGuildMembersChunk(bot: Bot, data: DiscordGatewayPayl
 
   const guildId = bot.transformers.snowflake(payload.guild_id);
 
+  if (payload.nonce && payload.chunk_index >= payload.chunk_count - 1) bot.cache.fetchAllMembersProcessingRequests.get(payload.nonce)?.(`Member fetching complete. Nonce: ${payload.nonce}`);
+
   return {
     guildId,
     members: payload.members.map((m) =>

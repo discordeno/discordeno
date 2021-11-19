@@ -60,6 +60,13 @@ export async function editScheduledEventTests(bot: Bot, guildId: bigint, t: Deno
   });
   assertEquals(edited2.entityType, ScheduledEventEntityType.External);
 
+  edited3 = await bot.helpers.editScheduledEvent(guildId, event.id, {
+    entityType: ScheduledEventEntityType.Voice,
+    channelId: voice.id,
+  });
+  assertEquals(edited2.entityType, ScheduledEventEntityType.External);
+  assertEquals(edited3.entityType, ScheduledEventEntityType.Voice);
+
   await bot.helpers.deleteChannel(voice.id);
   await bot.helpers.deleteChannel(channel.id);
 }

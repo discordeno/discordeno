@@ -16,11 +16,11 @@ export function transformScheduledEvent(
     id: bot.transformers.snowflake(payload.id),
     guildId: bot.transformers.snowflake(payload.guild_id),
     channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
-    creatorId: payload.creator_id ? bot.transformers.snowflake(payload.creator_id) : undefined,
+    creatorId: payload.creator_id ? bot.transformers.snowflake(payload.creator_id) : 0n,
     scheduledStartTime: Date.parse(payload.scheduled_start_time),
     scheduledEndTime: payload.scheduled_end_time ? Date.parse(payload.scheduled_end_time) : undefined,
     entityId: payload.entity_id ? bot.transformers.snowflake(payload.entity_id) : undefined,
-    creator: payload.creator ? bot.transformers.user(bot, payload.creator) : undefined,
+    creator: bot.transformers.user(bot, payload.creator!),
 
     name: payload.name,
     description: payload.description,

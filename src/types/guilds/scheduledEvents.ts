@@ -77,7 +77,7 @@ export interface ScheduledEventUserAdd {
 }
 
 export interface CreateScheduledEvent {
-  /** the channel id of the scheduled event */
+  /** the channel id of the scheduled event. */
   channelId?: bigint;
   /** location of the event */
   location?: string;
@@ -96,29 +96,8 @@ export interface CreateScheduledEvent {
 }
 
 export interface EditScheduledEvent {
-  /** the channel id of the scheduled event */
-  channelId: bigint;
-  /** location of the event */
-  location: string;
-  /** the name of the scheduled event */
-  name: string;
-  /** the description of the scheduled event */
-  description: string;
-  /** the time the scheduled event will start */
-  scheduledStartTime: number;
-  /** the time the scheduled event will end if it does end. */
-  scheduledEndTime?: number;
-  /** the privacy level of the scheduled event */
-  privacyLevel: ScheduledEventPrivacyLevel;
-  /** the type of hosting entity associated with a scheduled event */
-  entityType: ScheduledEventEntityType;
-  /** the status of the scheduled event */
-  status: ScheduledEventStatus;
-}
-
-export interface EditScheduledEvent {
-  /** the channel id of the scheduled event */
-  channelId: bigint;
+  /** the channel id of the scheduled event. null if switching to external event. */
+  channelId: bigint | null;
   /** location of the event */
   location: string;
   /** the name of the scheduled event */
@@ -147,4 +126,8 @@ export interface GetScheduledEventUsers {
   limit?: number;
   /** Whether to also have member objects provided. Defaults to false. */
   withMember?: boolean;
+  /** consider only users before given user id */
+  before?: bigint;
+  /** consider only users after given user id */
+  after?: bigint;
 }

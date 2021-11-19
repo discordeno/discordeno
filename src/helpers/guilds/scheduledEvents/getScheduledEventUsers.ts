@@ -9,13 +9,13 @@ export async function getScheduledEventUsers(
   bot: Bot,
   guildId: bigint,
   eventId: bigint,
-  options?: { withMember?: false }
+  options?: GetScheduledEventUsers & { withMember?: false }
 ): Promise<Collection<bigint, DiscordenoUser>>;
 export async function getScheduledEventUsers(
   bot: Bot,
   guildId: bigint,
   eventId: bigint,
-  options?: { withMember: true }
+  options?: GetScheduledEventUsers & { withMember: true }
 ): Promise<Collection<bigint, { user: DiscordenoUser; member: DiscordenoMember }>>;
 export async function getScheduledEventUsers(
   bot: Bot,
@@ -28,7 +28,7 @@ export async function getScheduledEventUsers(
   // TODO: validate limit
   // TODO: is the guild member omit user
 
-  const result = await bot.rest.runMethod<(User & { member?: GuildMember })[]>(
+  const result = await bot.rest.runMethod<({ user: User, member?: GuildMember })[]>(
     bot.rest,
     "get",
     bot.constants.endpoints.GUILD_SCHEDULED_EVENT_USERS(guildId, eventId),
@@ -41,7 +41,7 @@ export async function getScheduledEventUsers(
   if (!options?.withMember) {
     return new Collection(
       result.map((res) => {
-        const user = bot.transformers.user(bot, res);
+        const user = bot.transformers.user(bot, res.user);
         return [user.id, user];
       })
     );
@@ -49,7 +49,7 @@ export async function getScheduledEventUsers(
 
   return new Collection(
     result.map((res) => {
-      const user = bot.transformers.user(bot, res);
+      const user = bot.transformers.user(bot, res.user);
       const member = bot.transformers.member(bot, res.member!, guildId, user.id);
 
       return [user.id, { member, user }];

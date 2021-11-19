@@ -1,4 +1,4 @@
-// import { UNITTEST_TOKEN } from "../configs.ts";
+import { UNITTEST_TOKEN } from "../configs.ts";
 import { memoryBenchmarks } from "../benchmarks/index.ts";
 import {
   channelOverwriteHasPermission,
@@ -81,18 +81,13 @@ export const CACHED_COMMUNITY_GUILD_ID = 907350958810480671n;
 Deno.test({
   name: "[Bot] - Starting Tests",
   fn: async (t) => {
-    const token = Deno.env.get("DISCORD_TOKEN")!;
-    if (!token) {
-      throw new Error("DISCORD_TOKEN not found");
-    }
-
-    // const botId = BigInt(atob(UNITTEST_TOKEN.split(".")[0]));
-    const botId = BigInt(atob(token.split(".")[0]));
+    const botId = BigInt(atob(UNITTEST_TOKEN.split(".")[0]));
+    // const botId = BigInt(atob(token.split(".")[0]));
 
     let startedAt = 0;
     const bot = createBot({
-      // token: UNITTEST_TOKEN || Deno.env.get("DISCORD_TOKEN"),
-      token: Deno.env.get("DISCORD_TOKEN")!,
+      token: UNITTEST_TOKEN || Deno.env.get("DISCORD_TOKEN"),
+      // token: Deno.env.get("DISCORD_TOKEN")!,
       botId,
       events: createEventHandlers({
         ready: () => {
@@ -149,7 +144,8 @@ Deno.test({
       throw new Error(`The guild seemed to be created but it was not cached. ${guild.id.toString()}`);
     }
 
-    // GUILD SCHEDULED EVENTS TESTS
+    let timer = Date.now();
+    console.log('GUILD SCHEDULED EVENTS TESTS',)
     await t.step("Guild Scheduled Event related tests", async (t) => {
       await Promise.all([
         t.step({
@@ -283,7 +279,8 @@ Deno.test({
       ]);
     });
 
-    // GUILD TESTS GROUPED
+    console.log('GUILD TESTS GROUPED', (Date.now() - timer) / 1000, 'seconds');
+    timer = Date.now();
     await t.step("Guild related tests", async (t) => {
       await Promise.all([
         t.step({
@@ -391,7 +388,8 @@ Deno.test({
       ]);
     });
 
-    // CHANNEL TESTS GROUPED
+    console.log('CHANNEL TESTS GROUPED', (Date.now() - timer) / 1000, 'seconds');
+    timer = Date.now();
     await t.step("Channel related tests", async (t) => {
       const channel = await bot.helpers.createChannel(guild.id, { name: "Discordeno-test" });
 
@@ -399,11 +397,13 @@ Deno.test({
       assertExists(channel);
       assertEquals(channel.type, ChannelTypes.GuildText);
 
-      // ALL MESSAGE RELATED TESTS THAT DEPEND ON AN EXISTING CHANNEL
+      console.log('ALL MESSAGE RELATED TESTS THAT DEPEND ON AN EXISTING CHANNEL', (Date.now() - timer) / 1000, 'seconds');
+      timer = Date.now();
       await t.step("Message related tests", async (t) => {
         const message = await bot.helpers.sendMessage(channel.id, "Hello Skillz");
 
-        // CONDUCT ALL TESTS RELATED TO A MESSAGE HERE
+        console.log('CONDUCT ALL TESTS RELATED TO A MESSAGE HERE', (Date.now() - timer) / 1000, 'seconds');
+        timer = Date.now();
         await Promise.all([
           t.step({
             name: "[message] send message with text",
@@ -475,80 +475,81 @@ Deno.test({
             },
             ...sanitizeMode,
           }),
-          // t.step({
-          //   name: "[message] add a reaction",
-          //   fn: async (t) => {
-          //     await addReactionTest(bot, guild.id, channel.id, { custom: false, single: true, ordered: false }, t);
-          //   },
-          //   ...sanitizeMode,
-          // }),
-          // t.step({
-          //   name: "[message] add a custom reaction",
-          //   fn: async (t) => {
-          //     await addReactionTest(bot, guild.id, channel.id, { custom: true, single: true, ordered: false }, t);
-          //   },
-          //   ...sanitizeMode,
-          // }),
-          // t.step({
-          //   name: "[message] add multiple reactions",
-          //   fn: async (t) => {
-          //     await addReactionTest(bot, guild.id, channel.id, { custom: false, single: false, ordered: false }, t);
-          //   },
-          //   ...sanitizeMode,
-          // }),
-          // t.step({
-          //   name: "[message] add multiple custom reactions",
-          //   fn: async (t) => {
-          //     await addReactionTest(bot, guild.id, channel.id, { custom: true, single: false, ordered: false }, t);
-          //   },
-          //   ...sanitizeMode,
-          // }),
-          // t.step({
-          //   name: "[message] add multiple reactions in order",
-          //   fn: async (t) => {
-          //     await addReactionTest(bot, guild.id, channel.id, { custom: false, single: false, ordered: true }, t);
-          //   },
-          //   ...sanitizeMode,
-          // }),
-          // t.step({
-          //   name: "[message] add multiple custom reactions in order",
-          //   fn: async (t) => {
-          //     await addReactionTest(bot, guild.id, channel.id, { custom: true, single: false, ordered: true }, t);
-          //   },
-          //   ...sanitizeMode,
-          // }),
-          // t.step({
-          //   name: "[message] remove a reaction.",
-          //   fn: async (t) => {
-          //     await removeReactionTest(bot, channel.id, t);
-          //   },
-          //   ...sanitizeMode,
-          // }),
-          // t.step({
-          //   name: "[message] remove all reactions.",
-          //   fn: async (t) => {
-          //     await removeAllReactionTests(bot, channel.id, t);
-          //   },
-          //   ...sanitizeMode,
-          // }),
-          // t.step({
-          //   name: "[message] remove emoji reactions.",
-          //   fn: async (t) => {
-          //     await removeReactionEmojiTest(bot, channel.id, t);
-          //   },
-          //   ...sanitizeMode,
-          // }),
-          // t.step({
-          //   name: "[message] pin a message",
-          //   fn: async (t) => {
-          //     await pinMessageTests(bot, channel.id, message.id, t);
-          //   },
-          //   ...sanitizeMode,
-          // }),
+          t.step({
+            name: "[message] add a reaction",
+            fn: async (t) => {
+              await addReactionTest(bot, guild.id, channel.id, { custom: false, single: true, ordered: false }, t);
+            },
+            ...sanitizeMode,
+          }),
+          t.step({
+            name: "[message] add a custom reaction",
+            fn: async (t) => {
+              await addReactionTest(bot, guild.id, channel.id, { custom: true, single: true, ordered: false }, t);
+            },
+            ...sanitizeMode,
+          }),
+          t.step({
+            name: "[message] add multiple reactions",
+            fn: async (t) => {
+              await addReactionTest(bot, guild.id, channel.id, { custom: false, single: false, ordered: false }, t);
+            },
+            ...sanitizeMode,
+          }),
+          t.step({
+            name: "[message] add multiple custom reactions",
+            fn: async (t) => {
+              await addReactionTest(bot, guild.id, channel.id, { custom: true, single: false, ordered: false }, t);
+            },
+            ...sanitizeMode,
+          }),
+          t.step({
+            name: "[message] add multiple reactions in order",
+            fn: async (t) => {
+              await addReactionTest(bot, guild.id, channel.id, { custom: false, single: false, ordered: true }, t);
+            },
+            ...sanitizeMode,
+          }),
+          t.step({
+            name: "[message] add multiple custom reactions in order",
+            fn: async (t) => {
+              await addReactionTest(bot, guild.id, channel.id, { custom: true, single: false, ordered: true }, t);
+            },
+            ...sanitizeMode,
+          }),
+          t.step({
+            name: "[message] remove a reaction.",
+            fn: async (t) => {
+              await removeReactionTest(bot, channel.id, t);
+            },
+            ...sanitizeMode,
+          }),
+          t.step({
+            name: "[message] remove all reactions.",
+            fn: async (t) => {
+              await removeAllReactionTests(bot, channel.id, t);
+            },
+            ...sanitizeMode,
+          }),
+          t.step({
+            name: "[message] remove emoji reactions.",
+            fn: async (t) => {
+              await removeReactionEmojiTest(bot, channel.id, t);
+            },
+            ...sanitizeMode,
+          }),
+          t.step({
+            name: "[message] pin a message",
+            fn: async (t) => {
+              await pinMessageTests(bot, channel.id, message.id, t);
+            },
+            ...sanitizeMode,
+          }),
         ]);
       });
 
-      // ALL CHANNEL RELATED TESTS CAN GO HERE
+      console.log('ALL CHANNEL RELATED TESTS CAN GO HERE', (Date.now() - timer) / 1000, 'seconds');
+      timer = Date.now();
       await Promise.all([
         t.step({
           name: "[channel] send message with text",
@@ -560,7 +561,7 @@ Deno.test({
         t.step({
           name: "[channel] create a new text channel",
           async fn() {
-            await createChannelTests(bot, guild.id, { name: "Discordeno-test" }, t);
+            await createChannelTests(bot, guild.id, { name: "Discordeno-test" }, false, t);
           },
           ...sanitizeMode,
         }),
@@ -574,26 +575,25 @@ Deno.test({
                 name: "Discordeno-test",
                 type: ChannelTypes.GuildCategory,
               },
+              false,
               t
             );
           },
           ...sanitizeMode,
         }),
-        // t.step({
-        //   name: "[channel] create a new news channel",
-        //   async fn() {
-        //     await createChannelTests(bot, guild.id,{ name: "Discordeno-test", type: ChannelTypes.GUILD_NEWS}, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
-
-        // t.step({
-        //   name: "[channel] create a new store channel",
-        //   async fn() {
-        //     await createChannelTests(bot, guild.id,{ name: "Discordeno-test", type: ChannelTypes.GUILD_STORE}, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
+        t.step({
+          name: "[channel] create a new news channel",
+          async fn() {
+            await createChannelTests(
+              bot,
+              CACHED_COMMUNITY_GUILD_ID,
+              { name: "Discordeno-test", type: ChannelTypes.GuildNews },
+              true,
+              t
+            );
+          },
+          ...sanitizeMode,
+        }),
         t.step({
           name: "[channel] create a new voice channel",
           async fn() {
@@ -604,6 +604,7 @@ Deno.test({
                 name: "Discordeno-test",
                 type: ChannelTypes.GuildVoice,
               },
+              false,
               t
             );
           },
@@ -620,6 +621,7 @@ Deno.test({
                 type: ChannelTypes.GuildVoice,
                 bitrate: 32000,
               },
+              false,
               t
             );
           },
@@ -636,6 +638,7 @@ Deno.test({
                 type: ChannelTypes.GuildVoice,
                 userLimit: 32,
               },
+              false,
               t
             );
           },
@@ -651,6 +654,7 @@ Deno.test({
                 name: "Discordeno-test",
                 rateLimitPerUser: 2423,
               },
+              false,
               t
             );
           },
@@ -659,7 +663,7 @@ Deno.test({
         t.step({
           name: "[channel] create a new text channel with NSFW",
           async fn() {
-            await createChannelTests(bot, guild.id, { name: "Discordeno-test", nsfw: true }, t);
+            await createChannelTests(bot, guild.id, { name: "Discordeno-test", nsfw: true }, false, t);
           },
           ...sanitizeMode,
         }),
@@ -680,32 +684,33 @@ Deno.test({
                   },
                 ],
               },
+              false,
               t
             );
           },
           ...sanitizeMode,
         }),
-        // t.step({
-        //   name: "[channel] delete a channel with a reason",
-        //   async fn() {
-        //     await deleteChannelTests(
-        //       bot,
-        //       guild.id,
-        //       {
-        //         reason: "with a reason",
-        //       },
-        //       t
-        //     );
-        //   },
-        //   ...sanitizeMode,
-        // }),
-        // t.step({
-        //   name: "[channel] delete a channel without a reason",
-        //   async fn() {
-        //     await deleteChannelTests(bot, guild.id, {}, t);
-        //   },
-        //   ...sanitizeMode,
-        // }),
+        t.step({
+          name: "[channel] delete a channel with a reason",
+          async fn() {
+            await deleteChannelTests(
+              bot,
+              guild.id,
+              {
+                reason: "with a reason",
+              },
+              t
+            );
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[channel] delete a channel without a reason",
+          async fn() {
+            await deleteChannelTests(bot, guild.id, {}, t);
+          },
+          ...sanitizeMode,
+        }),
         t.step({
           name: "[channel] filter all category channels",
           async fn() {
@@ -750,7 +755,8 @@ Deno.test({
         }),
       ]);
 
-      // ALL TEST RELATED TO INVITES
+      console.log('ALL TEST RELATED TO INVITES', (Date.now() - timer) / 1000, 'seconds');
+      timer = Date.now();
       await t.step("Invites related tests", async (t) => {
         await Promise.all([
           t.step({
@@ -792,76 +798,75 @@ Deno.test({
       });
     });
 
-    // MEMBER TESTS GROUPED
-    // await t.step("Members related tests", async (t) => {
-    //   // THESE BAN TESTS SHOULD BE DONE ONE BY ONE
-    //   await t.step({
-    //     name: "[member] ban user from guild without reason",
-    //     fn: async (t) => {
-    //       // THIS IS WOLF, IF ANYTHING BREAKS BLAME HIM!
-    //       await banTest(bot, t, guild.id, 270273690074087427n, { reason: "Blame Wolf" });
-    //     },
-    //     ...sanitizeMode,
-    //   });
+    console.log('MEMBER TESTS GROUPED', (Date.now() - timer) / 1000, 'seconds');
+    timer = Date.now();
+    await t.step("Members related tests", async (t) => {
+      // THESE BAN TESTS SHOULD BE DONE ONE BY ONE
+      await t.step({
+        name: "[member] ban user from guild without reason",
+        fn: async (t) => {
+          // THIS IS WOLF, IF ANYTHING BREAKS BLAME HIM!
+          await banTest(bot, t, guild.id, 270273690074087427n, { reason: "Blame Wolf" });
+        },
+        ...sanitizeMode,
+      });
+      await t.step({
+        name: "[member] get a single user's ban",
+        fn: async (t) => {
+          assertExists(await bot.helpers.getBan(guild.id, 270273690074087427n));
+        },
+        ...sanitizeMode,
+      });
+      await t.step({
+        name: "[member] ban member from guild without reason",
+        fn: async (t) => {
+          // THIS IS IAN, HE PLAY'S GOLDEN SUN. BAN BEFORE HE MAKES US ADDICTED TO IT!!!
+          await banTest(bot, t, guild.id, 90339695967350784n);
+        },
+        ...sanitizeMode,
+      });
+      await t.step({
+        name: "[member] get bans on a server",
+        fn: async (t) => {
+          await getBansTest(bot, t, guild.id);
+        },
+        ...sanitizeMode,
+      });
+      await Promise.all([
+        t.step({
+          name: "[member] fetch a single member by id",
+          fn: async (t) => {
+            await fetchSingleMemberTest(bot, guild.id, t);
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[member] format a members avatar url",
+          fn: async (t) => {
+            assertEquals(
+              bot.helpers.avatarURL(130136895395987456n, 8840, {
+                avatar: 4055337350987360625717955448021200177333n,
+              }),
+              "https://cdn.discordapp.com/avatars/130136895395987456/eae5905ad2d18d7c8deca20478b088b5.jpg?size=128"
+            );
+          },
+          ...sanitizeMode,
+        }),
+        t.step({
+          name: "[member] unban member from guild",
+          fn: async (t) => {
+            await Promise.all([
+              unbanTest(bot, t, guild.id, 270273690074087427n),
+              unbanTest(bot, t, guild.id, 90339695967350784n),
+            ]);
+          },
+          ...sanitizeMode,
+        }),
+      ]);
+    });
 
-    //   await t.step({
-    //     name: "[member] get a single user's ban",
-    //     fn: async (t) => {
-    //       assertExists(await bot.helpers.getBan(guild.id, 270273690074087427n));
-    //     },
-    //     ...sanitizeMode,
-    //   });
-
-    //   await t.step({
-    //     name: "[member] ban member from guild without reason",
-    //     fn: async (t) => {
-    //       // THIS IS IAN, HE PLAY'S GOLDEN SUN. BAN BEFORE HE MAKES US ADDICTED TO IT!!!
-    //       await banTest(bot, t, guild.id, 90339695967350784n);
-    //     },
-    //     ...sanitizeMode,
-    //   });
-    //   await t.step({
-    //     name: "[member] get bans on a server",
-    //     fn: async (t) => {
-    //       await getBansTest(bot, t, guild.id);
-    //     },
-    //     ...sanitizeMode,
-    //   });
-
-    //   await Promise.all([
-    //     t.step({
-    //       name: "[member] fetch a single member by id",
-    //       fn: async (t) => {
-    //         await fetchSingleMemberTest(bot, guild.id, t);
-    //       },
-    //       ...sanitizeMode,
-    //     }),
-    //     t.step({
-    //       name: "[member] format a members avatar url",
-    //       fn: async (t) => {
-    //         assertEquals(
-    //           bot.helpers.avatarURL(130136895395987456n, 8840, {
-    //             avatar: 4055337350987360625717955448021200177333n,
-    //           }),
-    //           "https://cdn.discordapp.com/avatars/130136895395987456/eae5905ad2d18d7c8deca20478b088b5.jpg?size=128"
-    //         );
-    //       },
-    //       ...sanitizeMode,
-    //     }),
-    //     t.step({
-    //       name: "[member] unban member from guild",
-    //       fn: async (t) => {
-    //         await Promise.all([
-    //           unbanTest(bot, t, guild.id, 270273690074087427n),
-    //           unbanTest(bot, t, guild.id, 90339695967350784n),
-    //         ]);
-    //       },
-    //       ...sanitizeMode,
-    //     }),
-    //   ]);
-    // });
-
-    // EMOJIS TESTS GROUPED
+    console.log('EMOJIS TESTS GROUPED', (Date.now() - timer) / 1000, 'seconds');
+    timer = Date.now();
     await t.step("Emojis related tests", async (t) => {
       await Promise.all([
         t.step({
@@ -909,7 +914,8 @@ Deno.test({
       ]);
     });
 
-    // ROLE RELATED TESTS
+    console.log('ROLE RELATED TESTS', (Date.now() - timer) / 1000, 'seconds');
+    timer = Date.now();
     await t.step({
       name: "[Role] Role related tests",
       fn: async (t) => {
@@ -950,13 +956,13 @@ Deno.test({
             },
             ...sanitizeMode,
           }),
-          // t.step({
-          //   name: "[Role] edit a role",
-          //   fn: async (t) => {
-          //     await editRoleTests(bot, guild.id, t);
-          //   },
-          //   ...sanitizeMode,
-          // }),
+          t.step({
+            name: "[Role] edit a role",
+            fn: async (t) => {
+              await editRoleTests(bot, guild.id, t);
+            },
+            ...sanitizeMode,
+          }),
           t.step({
             name: "[Role] add a role to a member",
             fn: async (t) => {
@@ -975,7 +981,8 @@ Deno.test({
       },
     });
 
-    // SOME MISC TESTS
+    console.log('SOME MISC TESTS', (Date.now() - timer) / 1000, 'seconds');
+    timer = Date.now();
     await Promise.all([
       t.step({
         name: "[User] get a user and transform",
@@ -1005,15 +1012,17 @@ Deno.test({
         },
         ...sanitizeMode,
       }),
-      // CONDUCT MEMORY BENCHMARK TESTS
-
-      await t.step({
-        name: "[Memory] Benchmark memory tests",
-        fn: async (t) => {
-          await memoryBenchmarks(bot, true);
-        },
-      }),
     ]);
+
+    console.log('CONDUCT MEMORY BENCHMARK TESTS', (Date.now() - timer) / 1000, 'seconds');
+    timer = Date.now();
+
+    await t.step({
+      name: "[Memory] Benchmark memory tests",
+      fn: async (t) => {
+        await memoryBenchmarks(bot, true);
+      },
+    });
 
     await bot.helpers.deleteGuild(guild.id);
     await stopBot(bot);
