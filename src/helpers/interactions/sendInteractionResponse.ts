@@ -134,9 +134,7 @@ export async function sendInteractionResponse(
   };
 
   // A reply has never been send
-  if (bot.cache.unrepliedInteractions.has(id)) {
-    bot.cache.unrepliedInteractions.delete(id);
-
+  if (bot.cache.unrepliedInteractions.delete(id)) {
     return await bot.rest.runMethod(bot.rest, "post", bot.constants.endpoints.INTERACTION_ID_TOKEN(id, token), {
       type: options.type,
       data,
