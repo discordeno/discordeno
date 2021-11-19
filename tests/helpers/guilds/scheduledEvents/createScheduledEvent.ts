@@ -1,8 +1,9 @@
 import { Bot } from "../../../../src/bot.ts";
 import { ChannelTypes } from "../../../../src/types/channels/channelTypes.ts";
 import { CreateScheduledEvent, ScheduledEventEntityType } from "../../../../src/types/guilds/scheduledEvents.ts";
+import { CACHED_COMMUNITY_GUILD_ID } from "../../../constants.ts";
 import { assertEquals, assertExists } from "../../../deps.ts";
-import { CACHED_COMMUNITY_GUILD_ID } from "../../../mod.ts";
+
 
 export async function createScheduledEventTests(
   bot: Bot,
