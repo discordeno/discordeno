@@ -1,315 +1,186 @@
-import { channelOverwriteHasPermission } from "./channels/channelOverwriteHasPermission.ts";
-import { createChannel } from "./channels/createChannel.ts";
-import { deleteChannel } from "./channels/deleteChannel.ts";
-import { deleteChannelOverwrite } from "./channels/deleteChannelOverwrite.ts";
-import { editChannel } from "./channels/editChannel.ts";
-import { editChannelOverwrite } from "./channels/editChannelOverwrite.ts";
-import { followChannel } from "./channels/followChannel.ts";
-import { getChannel } from "./channels/getChannel.ts";
-import { getChannels } from "./channels/getChannels.ts";
-import { getChannelWebhooks } from "./channels/getChannelWebhooks.ts";
-import { getPins } from "./channels/getPins.ts";
-import { startTyping } from "./channels/startTyping.ts";
-import { swapChannels } from "./channels/swapChannels.ts";
-import { updateBotVoiceState } from "./channels/updateBotVoiceState.ts";
-import { addDiscoverySubcategory } from "./discovery/addDiscoverySubcategory.ts";
-import { editDiscovery } from "./discovery/editDiscovery.ts";
-import { getDiscoveryCategories } from "./discovery/getDiscoveryCategories.ts";
-import { removeDiscoverySubcategory } from "./discovery/removeDiscoverySubcategory.ts";
-import { validDiscoveryTerm } from "./discovery/validDiscoveryTerm.ts";
-import { createEmoji } from "./emojis/createEmoji.ts";
-import { deleteEmoji } from "./emojis/deleteEmoji.ts";
-import { editEmoji } from "./emojis/editEmoji.ts";
-import { emojiURL } from "./emojis/emojiUrl.ts";
-import { getEmoji } from "./emojis/getEmoji.ts";
-import { getEmojis } from "./emojis/getEmojis.ts";
-import { createGuild } from "./guilds/createGuild.ts";
-import { deleteGuild } from "./guilds/deleteGuild.ts";
-import { editGuild } from "./guilds/editGuild.ts";
-import { editWelcomeScreen } from "./guilds/editWelcomeScreen.ts";
-import { editWidget } from "./guilds/editWidget.ts";
-import { getAuditLogs } from "./guilds/getAuditLogs.ts";
-import { getAvailableVoiceRegions } from "./guilds/getAvailableVoiceRegions.ts";
-import { getBan } from "./guilds/getBan.ts";
-import { getBans } from "./guilds/getBans.ts";
-import { getGuild } from "./guilds/getGuild.ts";
-import { getGuildPreview } from "./guilds/getGuildPreview.ts";
-import { getPruneCount } from "./guilds/getPruneCount.ts";
-import { getVanityURL } from "./guilds/getVanityUrl.ts";
-import { getVoiceRegions } from "./guilds/getVoiceRegions.ts";
-import { getWelcomeScreen } from "./guilds/getWelcomeScreen.ts";
-import { getWidget } from "./guilds/getWidget.ts";
-import { getWidgetImageURL } from "./guilds/getWidgetImageUrl.ts";
-import { getWidgetSettings } from "./guilds/getWidgetSettings.ts";
-import { guildBannerURL } from "./guilds/guildBannerUrl.ts";
-import { guildIconURL } from "./guilds/guildIconUrl.ts";
-import { guildSplashURL } from "./guilds/guildSplashUrl.ts";
-import { leaveGuild } from "./guilds/leaveGuild.ts";
-import { deleteIntegration } from "./integrations/deleteIntegration.ts";
-import { getIntegrations } from "./integrations/getIntegrations.ts";
-import { batchEditSlashCommandPermissions } from "./interactions/commands/batchEditSlashCommandPermissions.ts";
-import { createSlashCommand } from "./interactions/commands/createSlashCommand.ts";
-import { deleteSlashCommand } from "./interactions/commands/deleteSlashCommand.ts";
-import { deleteSlashResponse } from "./interactions/commands/deleteSlashResponse.ts";
-import { editSlashCommandPermissions } from "./interactions/commands/editSlashCommandPermissions.ts";
-import { editSlashResponse } from "./interactions/commands/editSlashResponse.ts";
-import { getSlashCommand } from "./interactions/commands/getSlashCommand.ts";
-import { getSlashCommands } from "./interactions/commands/getSlashCommands.ts";
-import { getSlashCommandPermission } from "./interactions/commands/getSlashCommandPermission.ts";
-import { getSlashCommandPermissions } from "./interactions/commands/getSlashCommandPermissions.ts";
-import { upsertSlashCommand } from "./interactions/commands/upsertSlashCommand.ts";
-import { upsertSlashCommands } from "./interactions/commands/upsertSlashCommands.ts";
-import { getOriginalInteractionResponse } from "./interactions/getOriginalInteractionResponse.ts";
-import { sendInteractionResponse } from "./interactions/sendInteractionResponse.ts";
-import { createInvite } from "./invites/createInvite.ts";
-import { deleteInvite } from "./invites/deleteInvite.ts";
-import { getChannelInvites } from "./invites/getChannelInvites.ts";
-import { getInvite } from "./invites/getInvite.ts";
-import { getInvites } from "./invites/getInvites.ts";
-import { avatarURL } from "./members/avatarUrl.ts";
-import { banMember } from "./members/banMember.ts";
-import { disconnectMember } from "./members/disconnectMember.ts";
-import { editBotNickname } from "./members/editBotNickname.ts";
-import { editMember } from "./members/editMember.ts";
-import { fetchMembers } from "./members/fetchMembers.ts";
-import { getMember } from "./members/getMember.ts";
-import { getMembers } from "./members/getMembers.ts";
-import { kickMember } from "./members/kickMember.ts";
-import { moveMember } from "./members/moveMember.ts";
-import { pruneMembers } from "./members/pruneMembers.ts";
-import { getDmChannel } from "./members/getDmChannel.ts";
-import { unbanMember } from "./members/unbanMember.ts";
-import { addReaction } from "./messages/addReaction.ts";
-import { addReactions } from "./messages/addReactions.ts";
-import { deleteMessage } from "./messages/deleteMessage.ts";
-import { deleteMessages } from "./messages/deleteMessages.ts";
-import { editMessage } from "./messages/editMessage.ts";
-import { getMessage } from "./messages/getMessage.ts";
-import { getMessages } from "./messages/getMessages.ts";
-import { getReactions } from "./messages/getReactions.ts";
-import { pinMessage } from "./messages/pinMessage.ts";
-import { publishMessage } from "./messages/publishMessage.ts";
-import { removeAllReactions } from "./messages/removeAllReactions.ts";
-import { removeReaction } from "./messages/removeReaction.ts";
-import { removeReactionEmoji } from "./messages/removeReactionEmoji.ts";
-import { sendMessage } from "./messages/sendMessage.ts";
-import { suppressEmbeds } from "./messages/suppressEmbeds.ts";
-import { unpinMessage } from "./messages/unpinMessage.ts";
-import { editBotProfile } from "./misc/editBotProfile.ts";
-import { editBotStatus } from "./misc/editBotStatus.ts";
-import { getGatewayBot } from "./misc/getGatewayBot.ts";
-import { getUser } from "./misc/getUser.ts";
-import { getApplicationInfo } from "./oauth/getApplicationInfo.ts";
-import { addRole } from "./roles/addRole.ts";
-import { createRole } from "./roles/createRole.ts";
-import { deleteRole } from "./roles/deleteRole.ts";
-import { editRole } from "./roles/editRole.ts";
-import { getRoles } from "./roles/getRoles.ts";
-import { removeRole } from "./roles/removeRole.ts";
-import { createGuildFromTemplate } from "./templates/createGuildFromTemplate.ts";
-import { createGuildTemplate } from "./templates/createGuildTemplate.ts";
-import { deleteGuildTemplate } from "./templates/deleteGuildTemplate.ts";
-import { editGuildTemplate } from "./templates/editGuildTemplate.ts";
-import { getGuildTemplates } from "./templates/getGuildTemplates.ts";
-import { getTemplate } from "./templates/getTemplate.ts";
-import { syncGuildTemplate } from "./templates/syncGuildTemplate.ts";
+//channels
+export * from "./channels/channelOverwriteHasPermission.ts";
+export * from "./channels/createChannel.ts";
+export * from "./channels/deleteChannel.ts";
+export * from "./channels/deleteChannelOverwrite.ts";
+export * from "./channels/editChannel.ts";
+export * from "./channels/editChannelOverwrite.ts";
+export * from "./channels/followChannel.ts";
+export * from "./channels/getChannel.ts";
+export * from "./channels/getChannels.ts";
+export * from "./channels/getChannelWebhooks.ts";
+export * from "./channels/getPins.ts";
+export * from "./channels/startTyping.ts";
+export * from "./channels/swapChannels.ts";
+export * from "./channels/updateBotVoiceState.ts";
 
-import { createWebhook } from "./webhooks/createWebhook.ts";
-import { deleteWebhook } from "./webhooks/deleteWebhook.ts";
-import { deleteWebhookMessage } from "./webhooks/deleteWebhookMessage.ts";
-import { deleteWebhookWithToken } from "./webhooks/deleteWebhookWithToken.ts";
-import { editWebhook } from "./webhooks/editWebhook.ts";
-import { editWebhookMessage } from "./webhooks/editWebhookMessage.ts";
-import { editWebhookWithToken } from "./webhooks/editWebhookWithToken.ts";
-import { getWebhook } from "./webhooks/getWebhook.ts";
-import { getWebhooks } from "./webhooks/getWebhooks.ts";
-import { getWebhookMessage } from "./webhooks/getWebhookMessage.ts";
-import { getWebhookWithToken } from "./webhooks/getWebhookWithToken.ts";
-import { sendWebhook } from "./webhooks/sendWebhook.ts";
-import { createStageInstance } from "./channels/createStageInstance.ts";
-import { updateStageInstance } from "./channels/updateStageInstance.ts";
-import { getStageInstance } from "./channels/getStageInstance.ts";
-import { deleteStageInstance } from "./channels/deleteStageInstance.ts";
-import { connectToVoiceChannel } from "./voice/connectToVoiceChannel.ts";
+//discovery
+export * from "./discovery/addDiscoverySubcategory.ts";
+export * from "./discovery/editDiscovery.ts";
+export * from "./discovery/getDiscoveryCategories.ts";
+export * from "./discovery/removeDiscoverySubcategory.ts";
+export * from "./discovery/validDiscoveryTerm.ts";
 
-import { addToThread } from "./channels/threads/addToThread.ts";
-import { archiveThread } from "./channels/threads/archiveThread.ts";
-import { deleteThread } from "./channels/threads/deleteThread.ts";
-import { editThread } from "./channels/threads/editThread.ts";
-import { getActiveThreads } from "./channels/threads/getActiveThreads.ts";
-import { getArchivedThreads } from "./channels/threads/getArchivedThreads.ts";
-import { getThreadMember } from "./channels/threads/getThreadMember.ts";
-import { getThreadMembers } from "./channels/threads/getThreadMembers.ts";
-import { joinThread } from "./channels/threads/joinThread.ts";
-import { leaveThread } from "./channels/threads/leaveThread.ts";
-import { lockThread } from "./channels/threads/lockThread.ts";
-import { removeThreadMember } from "./channels/threads/removeThreadMember.ts";
-import { startThreadWithMessage } from "./channels/threads/startThreadWithMessage.ts";
-import { startThreadWithoutMessage } from "./channels/threads/startThreadWithoutMessage.ts";
-import { unarchiveThread } from "./channels/threads/unarchiveThread.ts";
-import { unlockThread } from "./channels/threads/unlockThread.ts";
-import { cloneChannel } from "./channels/cloneChannel.ts";
-import { createScheduledEvent } from "./guilds/scheduledEvents/createScheduledEvent.ts";
-import { deleteScheduledEvent } from "./guilds/scheduledEvents/deleteScheduledEvent.ts";
-import { editScheduledEvent } from "./guilds/scheduledEvents/editScheduledEvent.ts";
-import { getScheduledEvent } from "./guilds/scheduledEvents/getScheduledEvent.ts";
-import { getScheduledEvents } from "./guilds/scheduledEvents/getScheduledEvents.ts";
-import { getScheduledEventUsers } from "./guilds/scheduledEvents/getScheduledEventUsers.ts";
+//emojis
+export * from "./emojis/createEmoji.ts";
+export * from "./emojis/deleteEmoji.ts";
+export * from "./emojis/editEmoji.ts";
+export * from "./emojis/emojiUrl.ts";
+export * from "./emojis/getEmoji.ts";
+export * from "./emojis/getEmojis.ts";
 
-export {
-  addDiscoverySubcategory,
-  addReaction,
-  addReactions,
-  addRole,
-  avatarURL,
-  banMember,
-  batchEditSlashCommandPermissions,
-  channelOverwriteHasPermission,
-  cloneChannel,
-  connectToVoiceChannel,
-  createChannel,
-  createEmoji,
-  createGuild,
-  createGuildFromTemplate,
-  createGuildTemplate,
-  createInvite,
-  createRole,
-  createScheduledEvent,
-  createSlashCommand,
-  createStageInstance,
-  createWebhook,
-  deleteChannel,
-  deleteChannelOverwrite,
-  deleteEmoji,
-  deleteGuild,
-  deleteGuildTemplate,
-  deleteIntegration,
-  deleteInvite,
-  deleteMessage,
-  deleteMessages,
-  deleteRole,
-  deleteScheduledEvent,
-  deleteSlashCommand,
-  deleteSlashResponse,
-  deleteStageInstance,
-  deleteWebhook,
-  deleteWebhookMessage,
-  deleteWebhookWithToken,
-  disconnectMember,
-  editBotNickname,
-  editBotProfile,
-  editBotStatus,
-  editChannel,
-  editChannelOverwrite,
-  editDiscovery,
-  editEmoji,
-  editGuild,
-  editGuildTemplate,
-  editMember,
-  editMessage,
-  editRole,
-  editScheduledEvent,
-  editSlashResponse,
-  editSlashCommandPermissions,
-  editWebhook,
-  editWebhookMessage,
-  editWebhookWithToken,
-  editWelcomeScreen,
-  editWidget,
-  emojiURL,
-  fetchMembers,
-  followChannel,
-  getAuditLogs,
-  getAvailableVoiceRegions,
-  getBan,
-  getBans,
-  getChannel,
-  getChannelInvites,
-  getChannels,
-  getChannelWebhooks,
-  getDiscoveryCategories,
-  getEmoji,
-  getEmojis,
-  getGatewayBot,
-  getGuild,
-  getGuildPreview,
-  getGuildTemplates,
-  getIntegrations,
-  getInvite,
-  getInvites,
-  getMember,
-  getMembers,
-  getMessage,
-  getMessages,
-  getOriginalInteractionResponse,
-  getPins,
-  getPruneCount,
-  getReactions,
-  getRoles,
-  getScheduledEvent,
-  getScheduledEvents,
-  getScheduledEventUsers,
-  getSlashCommand,
-  getSlashCommandPermission,
-  getSlashCommandPermissions,
-  getSlashCommands,
-  getStageInstance,
-  getTemplate,
-  getUser,
-  getApplicationInfo,
-  getVanityURL,
-  getVoiceRegions,
-  getWebhook,
-  getWebhookMessage,
-  getWebhooks,
-  getWebhookWithToken,
-  getWelcomeScreen,
-  getWidget,
-  getWidgetImageURL,
-  getWidgetSettings,
-  guildBannerURL,
-  guildIconURL,
-  guildSplashURL,
-  kickMember,
-  leaveGuild,
-  moveMember,
-  pinMessage,
-  pruneMembers,
-  publishMessage,
-  removeAllReactions,
-  removeDiscoverySubcategory,
-  removeReaction,
-  removeReactionEmoji,
-  removeRole,
-  getDmChannel,
-  sendInteractionResponse,
-  sendMessage,
-  sendWebhook,
-  startTyping,
-  swapChannels,
-  syncGuildTemplate,
-  unbanMember,
-  unpinMessage,
-  updateBotVoiceState,
-  updateStageInstance,
-  upsertSlashCommand,
-  upsertSlashCommands,
-  validDiscoveryTerm,
-  addToThread,
-  archiveThread,
-  deleteThread,
-  editThread,
-  getActiveThreads,
-  getArchivedThreads,
-  getThreadMember,
-  getThreadMembers,
-  joinThread,
-  leaveThread,
-  lockThread,
-  removeThreadMember,
-  startThreadWithMessage,
-  startThreadWithoutMessage,
-  unarchiveThread,
-  unlockThread,
-  suppressEmbeds,
-};
+//guilds
+export * from "./guilds/createGuild.ts";
+export * from "./guilds/deleteGuild.ts";
+export * from "./guilds/editGuild.ts";
+export * from "./guilds/editWelcomeScreen.ts";
+export * from "./guilds/editWidget.ts";
+export * from "./guilds/getAuditLogs.ts";
+export * from "./guilds/getAvailableVoiceRegions.ts";
+export * from "./guilds/getBan.ts";
+export * from "./guilds/getBans.ts";
+export * from "./guilds/getGuild.ts";
+export * from "./guilds/getGuildPreview.ts";
+export * from "./guilds/getPruneCount.ts";
+export * from "./guilds/getVanityUrl.ts";
+export * from "./guilds/getVoiceRegions.ts";
+export * from "./guilds/getWelcomeScreen.ts";
+export * from "./guilds/getWidget.ts";
+export * from "./guilds/getWidgetImageUrl.ts";
+export * from "./guilds/getWidgetSettings.ts";
+export * from "./guilds/guildBannerUrl.ts";
+export * from "./guilds/guildIconUrl.ts";
+export * from "./guilds/guildSplashUrl.ts";
+export * from "./guilds/leaveGuild.ts";
+
+//intergrations
+export * from "./integrations/deleteIntegration.ts";
+export * from "./integrations/getIntegrations.ts";
+
+//interactions
+export * from "./interactions/commands/batchEditSlashCommandPermissions.ts";
+export * from "./interactions/commands/createSlashCommand.ts";
+export * from "./interactions/commands/deleteSlashCommand.ts";
+export * from "./interactions/commands/deleteSlashResponse.ts";
+export * from "./interactions/commands/editSlashCommandPermissions.ts";
+export * from "./interactions/commands/editSlashResponse.ts";
+export * from "./interactions/commands/getSlashCommand.ts";
+export * from "./interactions/commands/getSlashCommands.ts";
+export * from "./interactions/commands/getSlashCommandPermission.ts";
+export * from "./interactions/commands/getSlashCommandPermissions.ts";
+export * from "./interactions/commands/upsertSlashCommand.ts";
+export * from "./interactions/commands/upsertSlashCommands.ts";
+export * from "./interactions/getOriginalInteractionResponse.ts";
+export * from "./interactions/sendInteractionResponse.ts";
+
+//invites
+export * from "./invites/createInvite.ts";
+export * from "./invites/deleteInvite.ts";
+export * from "./invites/getChannelInvites.ts";
+export * from "./invites/getInvite.ts";
+export * from "./invites/getInvites.ts";
+
+//members
+export * from "./members/avatarUrl.ts";
+export * from "./members/banMember.ts";
+export * from "./members/disconnectMember.ts";
+export * from "./members/editBotNickname.ts";
+export * from "./members/editMember.ts";
+export * from "./members/fetchMembers.ts";
+export * from "./members/getMember.ts";
+export * from "./members/getMembers.ts";
+export * from "./members/kickMember.ts";
+export * from "./members/moveMember.ts";
+export * from "./members/pruneMembers.ts";
+export * from "./members/getDmChannel.ts";
+export * from "./members/unbanMember.ts";
+
+//messages
+export * from "./messages/addReaction.ts";
+export * from "./messages/addReactions.ts";
+export * from "./messages/deleteMessage.ts";
+export * from "./messages/deleteMessages.ts";
+export * from "./messages/editMessage.ts";
+export * from "./messages/getMessage.ts";
+export * from "./messages/getMessages.ts";
+export * from "./messages/getReactions.ts";
+export * from "./messages/pinMessage.ts";
+export * from "./messages/publishMessage.ts";
+export * from "./messages/removeAllReactions.ts";
+export * from "./messages/removeReaction.ts";
+export * from "./messages/removeReactionEmoji.ts";
+export * from "./messages/sendMessage.ts";
+export * from "./messages/suppressEmbeds.ts";
+export * from "./messages/unpinMessage.ts";
+
+//misc
+export * from "./misc/editBotProfile.ts";
+export * from "./misc/editBotStatus.ts";
+export * from "./misc/getGatewayBot.ts";
+export * from "./misc/getUser.ts";
+
+//oauth
+export * from "./oauth/getApplicationInfo.ts";
+
+//roles
+export * from "./roles/addRole.ts";
+export * from "./roles/createRole.ts";
+export * from "./roles/deleteRole.ts";
+export * from "./roles/editRole.ts";
+export * from "./roles/getRoles.ts";
+export * from "./roles/removeRole.ts";
+
+//templates
+export * from "./templates/createGuildFromTemplate.ts";
+export * from "./templates/createGuildTemplate.ts";
+export * from "./templates/deleteGuildTemplate.ts";
+export * from "./templates/editGuildTemplate.ts";
+export * from "./templates/getGuildTemplates.ts";
+export * from "./templates/getTemplate.ts";
+export * from "./templates/syncGuildTemplate.ts";
+
+//webhooks
+export * from "./webhooks/createWebhook.ts";
+export * from "./webhooks/deleteWebhook.ts";
+export * from "./webhooks/deleteWebhookMessage.ts";
+export * from "./webhooks/deleteWebhookWithToken.ts";
+export * from "./webhooks/editWebhook.ts";
+export * from "./webhooks/editWebhookMessage.ts";
+export * from "./webhooks/editWebhookWithToken.ts";
+export * from "./webhooks/getWebhook.ts";
+export * from "./webhooks/getWebhooks.ts";
+export * from "./webhooks/getWebhookMessage.ts";
+export * from "./webhooks/getWebhookWithToken.ts";
+export * from "./webhooks/sendWebhook.ts";
+
+//channels
+export * from "./channels/createStageInstance.ts";
+export * from "./channels/updateStageInstance.ts";
+export * from "./channels/getStageInstance.ts";
+export * from "./channels/deleteStageInstance.ts";
+export * from "./voice/connectToVoiceChannel.ts";
+export * from "./channels/threads/addToThread.ts";
+export * from "./channels/threads/archiveThread.ts";
+export * from "./channels/threads/deleteThread.ts";
+export * from "./channels/threads/editThread.ts";
+export * from "./channels/threads/getActiveThreads.ts";
+export * from "./channels/threads/getArchivedThreads.ts";
+export * from "./channels/threads/getThreadMember.ts";
+export * from "./channels/threads/getThreadMembers.ts";
+export * from "./channels/threads/joinThread.ts";
+export * from "./channels/threads/leaveThread.ts";
+export * from "./channels/threads/lockThread.ts";
+export * from "./channels/threads/removeThreadMember.ts";
+export * from "./channels/threads/startThreadWithMessage.ts";
+export * from "./channels/threads/startThreadWithoutMessage.ts";
+export * from "./channels/threads/unarchiveThread.ts";
+export * from "./channels/threads/unlockThread.ts";
+export * from "./channels/cloneChannel.ts";
+
+//guilds
+export * from "./guilds/scheduledEvents/createScheduledEvent.ts";
+export * from "./guilds/scheduledEvents/deleteScheduledEvent.ts";
+export * from "./guilds/scheduledEvents/editScheduledEvent.ts";
+export * from "./guilds/scheduledEvents/getScheduledEvent.ts";
+export * from "./guilds/scheduledEvents/getScheduledEvents.ts";
+export * from "./guilds/scheduledEvents/getScheduledEventUsers.ts";
