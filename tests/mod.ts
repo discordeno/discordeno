@@ -81,7 +81,7 @@ Deno.test({
   name: "[Bot] - Starting Tests",
   fn: async (t) => {
     // const botId = BigInt(atob(UNITTEST_TOKEN.split(".")[0]));
-    const botId = BigInt(atob(token.split(".")[0]));
+    const botId = BigInt(atob(Deno.env.get("DISCORD_TOKEN")!.split(".")[0]));
 
     let startedAt = 0;
     const bot = createBot({
