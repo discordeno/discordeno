@@ -1,7 +1,6 @@
-import { UNITTEST_TOKEN } from "../configs.ts";
+// import { UNITTEST_TOKEN } from "../configs.ts";
 import { memoryBenchmarks } from "../benchmarks/index.ts";
 import {
-  channelOverwriteHasPermission,
   createBot,
   createEventHandlers,
   ChannelTypes,
@@ -81,13 +80,13 @@ export const CACHED_COMMUNITY_GUILD_ID = 907350958810480671n;
 Deno.test({
   name: "[Bot] - Starting Tests",
   fn: async (t) => {
-    const botId = BigInt(atob(UNITTEST_TOKEN.split(".")[0]));
-    // const botId = BigInt(atob(token.split(".")[0]));
+    // const botId = BigInt(atob(UNITTEST_TOKEN.split(".")[0]));
+    const botId = BigInt(atob(token.split(".")[0]));
 
     let startedAt = 0;
     const bot = createBot({
-      token: UNITTEST_TOKEN || Deno.env.get("DISCORD_TOKEN"),
-      // token: Deno.env.get("DISCORD_TOKEN")!,
+      // token: UNITTEST_TOKEN || Deno.env.get("DISCORD_TOKEN"),
+      token: Deno.env.get("DISCORD_TOKEN")!,
       botId,
       events: createEventHandlers({
         ready: () => {
