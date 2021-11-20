@@ -68,6 +68,7 @@ export enum JsonErrorCodes {
   GuildAlreadyHasTemplate = 30031,
   MaximumNumberOfBansForNonGuildMembersHaveBeenExceeded = 30035,
   MaximumNumberOfBansFetchesHasBeenReached = 30037,
+  MaximumNumberOfUncompletedGuildScheduledEventsReached = 30038,
   MaximumNumberOfStickersReached = 30039,
   MaximumNumberOfPruneRequestsHasBeenReachedTryAgainLater,
   MaximumNumberOfGuildWidgetSettingsUpdatesHasBeenReachedTryAgainLater = 30042,
