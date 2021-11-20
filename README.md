@@ -36,20 +36,27 @@ TODO: add coverage back when it is stable
 Here is a minimal example to get started with:
 
 ```typescript
-import { createBot } from "https://deno.land/x/discordeno/mod.ts";
+import { createBot, setupBot, startBot } from "https://deno.land/x/discordeno/mod.ts";
+import { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/discordeno_cache_plugin@0.0.9/mod.ts";
 
-startBot({
+const bot = createBot({
   token: "BOT_TOKEN",
   intents: ["Guilds", "GuildMessages"],
-  eventHandlers: {
+  botId: 830361895559102474n,
+  events: {
     ready() {
       console.log("Successfully connected to gateway");
     },
-    messageCreate(message) {
+    messageCreate(bot, message) {
       // Process the message with your command handler here
     },
   },
+  cache: { isAsync: false },
 });
+setupBot(bot);
+enableCachePlugin(bot);
+enableCacheSweepers(bot);
+startBot(bot);
 ```
 
 ### Templates
