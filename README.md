@@ -40,9 +40,9 @@ import { createBot, setupBot, startBot } from "https://deno.land/x/discordeno/mo
 import { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/discordeno_cache_plugin@0.0.9/mod.ts";
 
 const bot = createBot({
-  token: "BOT_TOKEN",
+  token: "BOT_TOKEN", // change this to your bots token
   intents: ["Guilds", "GuildMessages"],
-  botId: 830361895559102474n,
+  botId: BigInt("BOT_ID"), // change this to your bots id
   events: {
     ready() {
       console.log("Successfully connected to gateway");
