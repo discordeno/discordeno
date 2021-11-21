@@ -102,7 +102,7 @@ export async function processGlobalQueue(rest: RestManager) {
 
         if (
           rest.invalidRequestErrorStatuses.includes(response.status) &&
-          !(response.status === 429 && response.headers.get("X-RateLimit-Scope"))
+          !(response.status === 429 && response.headers.get("X-RateLimit-Scope") === "shared")
         ) {
           // INCREMENT CURRENT INVALID REQUESTS
           ++rest.invalidRequests;
