@@ -120,12 +120,15 @@ export function createBot<C extends CacheOptions = CacheOptions>(
     activeGuildIds: new Set<bigint>(),
     constants: createBotConstants(),
     handlers: createBotGatewayHandlers({}),
+    utils: createUtils(options.utils ?? {}),
+    transformers: createTransformers(options.transformers ?? {}),
     enabledPlugins: new Set(),
     handleDiscordPayload: options.handleDiscordPayload,
-  };
+  } as unknown as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
 
   // @ts-ignore itoh cache types plz
   bot.cache = createCache(bot as Bot, options.cache);
+  bot.helpers = createHelpers(bot as Bot, options.helpers ?? {});
 
   return bot as unknown as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
 }
@@ -266,18 +269,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
   };
 }
 
-export function setupBot(bot: Bot) {
-  bot.utils = createUtils({});
-  bot.transformers = createTransformers(bot.transformers || {});
-  bot.helpers = createHelpers(bot);
-
-  return bot;
-}
-
 export async function startBot(bot: Bot) {
-  // SETUP BOT
-  bot = setupBot(bot);
-
   // START REST
   bot.rest = createRestManager({ token: bot.token, debug: bot.events.debug });
   if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot();
@@ -431,6 +423,9 @@ export interface CreateBotOptions<C extends CacheOptions = CacheOptions> {
   rest?: Omit<CreateRestManagerOptions, "token">;
   handleDiscordPayload?: GatewayManager["handleDiscordPayload"];
   cache: C;
+  utils?: Partial<ReturnType<typeof createUtils>>;
+  transformers?: Partial<ReturnType<typeof createTransformers>>;
+  helpers?: Partial<Helpers>;
 }
 
 export type UnPromise<T extends Promise<unknown>> = T extends Promise<infer K> ? K : never;

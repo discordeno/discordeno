@@ -36,7 +36,7 @@ TODO: add coverage back when it is stable
 Here is a minimal example to get started with:
 
 ```typescript
-import { createBot, setupBot, startBot } from "https://deno.land/x/discordeno/mod.ts";
+import { createBot, startBot } from "https://deno.land/x/discordeno/mod.ts";
 import { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/discordeno_cache_plugin@0.0.9/mod.ts";
 
 const bot = createBot({
@@ -53,10 +53,10 @@ const bot = createBot({
   },
   cache: { isAsync: false },
 });
-setupBot(bot);
+
 enableCachePlugin(bot);
 enableCacheSweepers(bot);
-startBot(bot);
+await startBot(bot);
 ```
 
 ### Templates

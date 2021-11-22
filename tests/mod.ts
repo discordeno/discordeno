@@ -1,5 +1,5 @@
 // import { UNITTEST_TOKEN } from "../configs.ts";
-import { createBot, createEventHandlers, ChannelTypes, OverwriteTypes, setupBot, startBot } from "../mod.ts";
+import { createBot, createEventHandlers, ChannelTypes, OverwriteTypes, startBot } from "../mod.ts";
 import { assertEquals, assertExists, enableCachePlugin } from "./deps.ts";
 import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
 import { getMessagesTest } from "./helpers/messages/getMessages.ts";
@@ -64,7 +64,7 @@ export const bot = createBot({
     isAsync: false,
   },
 });
-setupBot(bot);
+
 // @ts-ignore
 enableCachePlugin(bot);
 await startBot(bot);
