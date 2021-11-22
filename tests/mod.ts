@@ -18,11 +18,6 @@ import { addReactionTest } from "./helpers/messages/reactions.ts";
 import { editMessageTest } from "./helpers/messages/editMessage.ts";
 import { pinMessageTests } from "./helpers/messages/pin.ts";
 import { removeAllReactionTests, removeReactionEmojiTest, removeReactionTest } from "./helpers/messages/reactions.ts";
-import { createInviteTest } from "./helpers/invites/createInvite.ts";
-import { deleteInviteTest } from "./helpers/invites/deleteInvite.ts";
-import { getChannelInvitesTest } from "./helpers/invites/getChannelInvites.ts";
-import { getInviteTest } from "./helpers/invites/getInvite.ts";
-import { getInvitesTest } from "./helpers/invites/getInvites.ts";
 import { createChannelTests } from "./helpers/channels/createChannel.ts";
 import { deleteChannelTests } from "./helpers/channels/deleteChannel.ts";
 import { createGuildTests } from "./helpers/guilds/createGuild.ts";
@@ -63,6 +58,7 @@ export const bot = createBot({
     "GuildBans",
     "GuildMembers",
     "GuildScheduledEvents",
+    "GuildVoiceStates"
   ],
   cache: {
     isAsync: false,
@@ -568,6 +564,7 @@ Deno.test({
   ...sanitizeMode,
 });
 
+import "./channels/connectToVoice.ts";
 import "./emoji/createEmoji.ts";
 import "./emoji/deleteEmojiWithReason.ts";
 import "./emoji/deleteEmojiWithoutReason.ts";
