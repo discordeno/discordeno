@@ -26,6 +26,7 @@ TODO: add coverage back when it is stable
 - **Cross Runtime**: Supports both Deno and Node.js runtimes.
 - **Standalone REST, Gateway, Custom Cache & more**: Discordeno provides the ability to have almost every part of a bot as a standalone piece.
 - **Plugins:** Library is designed to let you plugin and override any part of the code. Never deal with the headaches of maintaining your fork just to get something customized for your needs. You can use plugins for almost anything, for example we have a few official plugins. The cache plugin that enables caching everything. The sweeper plugin that enables sweepers to clean the cache every once in a while. Finally, the permission plugin that internally checks all missing permissions before forwarding a request to the Discord API so that the client does not get globally banned by Discord.
+- **Flexibility:** If your bot does not need certain properties from objects then you can simply remove them. For example, if your bot does not need `Channel.topic` you should not have to store it. This can save you GBs of memory. Doing this for any property on any object is as simple as a few lines of code.
 
 ### REST
 
