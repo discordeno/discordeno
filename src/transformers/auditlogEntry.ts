@@ -20,12 +20,12 @@ export function transformAuditlogEntry(
           return {
             key: change.key,
             new: {
-              id: bot.transformers.snowflake(change.new_value.id!),
+              id: change.new_value.id ? bot.transformers.snowflake(change.new_value.id) : undefined,
               name: change.new_value.name,
             },
             old: {
-              id: bot.transformers.snowflake(change.old_value.id!),
-              name: change.old_value.name,
+              id: change.old_value?.id ? bot.transformers.snowflake(change.old_value.id) : undefined,
+              name: change.old_value?.name,
             },
           };
         case "discovery_splash_hash":

@@ -63,7 +63,7 @@ export type AuditLogChange =
     }
   | {
       newValue: Partial<Role>;
-      oldValue: Partial<Role>;
+      oldValue?: Partial<Role>;
       key: "$add" | "$remove";
     }
   | {
