@@ -5,6 +5,9 @@ import type { ExecuteWebhook } from "../../types/webhooks/executeWebhook.ts";
 
 /** Send a webhook with webhook Id and webhook token */
 export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: string, options: ExecuteWebhook) {
+  // DEFAULT TO TRUE
+  options.wait = options.wait ?? true;
+  
   if (!options.content && !options.file && !options.embeds) {
     throw new Error(bot.constants.Errors.INVALID_WEBHOOK_OPTIONS);
   }

@@ -16,8 +16,10 @@ export async function createWebhook(bot: Bot, channelId: bigint, options: Create
     throw new Error(bot.constants.Errors.INVALID_WEBHOOK_NAME);
   }
 
-  return await bot.rest.runMethod<Webhook>(bot.rest, "post", bot.constants.endpoints.CHANNEL_WEBHOOKS(channelId), {
+  const result = await bot.rest.runMethod<Webhook>(bot.rest, "post", bot.constants.endpoints.CHANNEL_WEBHOOKS(channelId), {
     ...options,
     avatar: options.avatar ? await bot.utils.urlToBase64(options.avatar) : undefined,
   });
+
+  return bot.transformers.webhook(bot, result);
 }

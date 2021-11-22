@@ -58,7 +58,7 @@ export const bot = createBot({
     "GuildBans",
     "GuildMembers",
     "GuildScheduledEvents",
-    "GuildVoiceStates"
+    "GuildVoiceStates",
   ],
   cache: {
     isAsync: false,
@@ -598,6 +598,10 @@ import "./scheduledEvents/createVoiceEventWithEndtime.ts";
 import "./scheduledEvents/createVoiceEventWithoutEndtime.ts";
 import "./scheduledEvents/deleteEvent.ts";
 import "./scheduledEvents/editEvent.ts";
+import "./webhooks/deleteWebhook.ts";
+import "./webhooks/deleteWebhookWithToken.ts";
+import "./webhooks/sendWebhook.ts";
+import "./webhooks/webhooks.ts";
 // await bot.helpers.deleteGuild(guild.id);
 
 // await stopBot(bot);
