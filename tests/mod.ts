@@ -1,4 +1,4 @@
-import { UNITTEST_TOKEN } from "../configs.ts";
+// import { UNITTEST_TOKEN } from "../configs.ts";
 import { createBot, createEventHandlers, ChannelTypes, OverwriteTypes, setupBot, startBot } from "../mod.ts";
 import { assertEquals, assertExists, enableCachePlugin } from "./deps.ts";
 import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
@@ -41,13 +41,13 @@ import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOve
 import { editChannelTests } from "./helpers/channels/editChannel.ts";
 import { CACHED_COMMUNITY_GUILD_ID, sanitizeMode } from "./constants.ts";
 
-const botId = BigInt(atob(UNITTEST_TOKEN.split(".")[0]));
-// const botId = BigInt(atob(Deno.env.get("DISCORD_TOKEN")!.split(".")[0]));
+// const botId = BigInt(atob(UNITTEST_TOKEN.split(".")[0]));
+const botId = BigInt(atob(Deno.env.get("DISCORD_TOKEN")!.split(".")[0]));
 
 let startedAt = 0;
 export const bot = createBot({
-  token: UNITTEST_TOKEN || Deno.env.get("DISCORD_TOKEN"),
-  // token: Deno.env.get("DISCORD_TOKEN")!,
+  // token: UNITTEST_TOKEN || Deno.env.get("DISCORD_TOKEN"),
+  token: Deno.env.get("DISCORD_TOKEN")!,
   botId,
   events: createEventHandlers({
     ready: () => {
