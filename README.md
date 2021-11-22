@@ -17,21 +17,21 @@ TODO: add coverage back when it is stable
 ## Features
 
 - **Secure & stable**: Discordeno is actively maintained to ensure great
-  performance and convenience. Moreover, it internally checks all missing
-  permissions before forwarding a request to the Discord API so that the client
-  does not get
-  [globally banned by Discord](https://discord.com/developers/docs/topics/rate-limits#invalid-request-limit).
+  performance and convenience.
 - **Simple, Efficient, & Lightweight**: Discordeno is simplistic, easy-to-use
-  and versatile while being efficient and lightweight.
+  and versatile while being efficient and lightweight. No caching by default.
 - [**Functional API**](https://en.wikipedia.org/wiki/Functional_programming):
   The functional API ensures overall concise yet performant code while removing
   the difficulties of extending built-in classes and inheritance.
 - **Cross Runtime**: Supports both Deno and Node.js runtimes.
 - **Standalone REST, Gateway, Custom Cache & more**: Discordeno provides the ability to have almost every part of a bot as a standalone piece.
+- **Plugins:** Library is designed to let you plugin and override any part of the code. Never deal with the headaches of maintaining your fork just to get something customized for your needs. You can use plugins for almost anything, for example we have a few official plugins. The cache plugin that enables caching everything. The sweeper plugin that enables sweepers to clean the cache every once in a while. Finally, the permission plugin that internally checks all missing permissions before forwarding a request to the Discord API so that the client does not get globally banned by Discord.
 
 ### REST
 
 - [x] Easily host on any serverless infrastructure.
+- [x] Freedom from Invalid Request 1 Hour Downtimes
+  - [x] Discordeno will protect your bot from going down for an hour and will instead decrease the maximum downtime to 10 minutes.
 - [x] Freedom from global rate limit errors
   - [x] As your bot grows, you want to handle global rate limits better. Shards don't communicate fast enough to truly handle it properly so this allows 1 rest handler across the entire bot.
   - [x] In fact, you can host multiple instances of your bot and all connect to the same rest server.
