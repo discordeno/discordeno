@@ -1,5 +1,4 @@
 // import { UNITTEST_TOKEN } from "../configs.ts";
-import { memoryBenchmarks } from "../benchmarks/index.ts";
 import { createBot, createEventHandlers, ChannelTypes, OverwriteTypes, setupBot, startBot } from "../mod.ts";
 import { assertEquals, assertExists, enableCachePlugin } from "./deps.ts";
 import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
@@ -17,7 +16,6 @@ import "./local.ts";
 import { getMessageTest } from "./helpers/messages/getMessage.ts";
 import { addReactionTest } from "./helpers/messages/reactions.ts";
 import { editMessageTest } from "./helpers/messages/editMessage.ts";
-import { fetchSingleMemberTest } from "./helpers/members/fetchMembers.ts";
 import { pinMessageTests } from "./helpers/messages/pin.ts";
 import { removeAllReactionTests, removeReactionEmojiTest, removeReactionTest } from "./helpers/messages/reactions.ts";
 import { createInviteTest } from "./helpers/invites/createInvite.ts";
@@ -27,18 +25,6 @@ import { getInviteTest } from "./helpers/invites/getInvite.ts";
 import { getInvitesTest } from "./helpers/invites/getInvites.ts";
 import { createChannelTests } from "./helpers/channels/createChannel.ts";
 import { deleteChannelTests } from "./helpers/channels/deleteChannel.ts";
-import { createEmojiTest } from "./helpers/emojis/createEmoji.ts";
-import { deleteEmojiWithoutReasonTest, deleteEmojiWithReasonTest } from "./helpers/emojis/deleteEmoji.ts";
-import { editEmojiTest } from "./helpers/emojis/editEmoji.ts";
-import { getEmojiTest } from "./helpers/emojis/getEmoji.ts";
-import { getEmojisTest } from "./helpers/emojis/getEmojis.ts";
-import { getBansTest, unbanTest, banTest } from "./helpers/members/ban.ts";
-import { createRoleTests } from "./helpers/roles/createRole.ts";
-import { deleteRoleTests } from "./helpers/roles/deleteRole.ts";
-import { getRolesTest } from "./helpers/roles/getRoles.ts";
-import { editRoleTests } from "./helpers/roles/editRole.ts";
-import { addRoleTest, removeRoleTest } from "./helpers/roles/roleChanges.ts";
-import { getUserTests } from "./helpers/misc/user.ts";
 import { createGuildTests } from "./helpers/guilds/createGuild.ts";
 import { deleteGuildTests } from "./helpers/guilds/deleteGuild.ts";
 import { editGuildTests } from "./helpers/guilds/editGuild.ts";
@@ -48,31 +34,18 @@ import { getBanTests } from "./helpers/guilds/getBan.ts";
 import { getBansTests } from "./helpers/guilds/getBans.ts";
 import { getGuildTests } from "./helpers/guilds/getGuild.ts";
 import { getVanityURLTests } from "./helpers/guilds/getVanityUrl.ts";
-import { getDiscoveryCategoriesTest, validDiscoveryTermTest } from "./helpers/misc/discoveries.ts";
 import { categoryChildrenTest } from "./helpers/channels/categoryChannels.ts";
 import { channelOverwriteHasPermissionTest } from "./helpers/channels/channelOverwriteHasPermission.ts";
 import { cloneChannelTests } from "./helpers/channels/cloneChannel.ts";
 import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOverwrite.ts";
 import { editChannelTests } from "./helpers/channels/editChannel.ts";
-import { createScheduledEventTests } from "./helpers/guilds/scheduledEvents/createScheduledEvent.ts";
-import { ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../src/types/guilds/scheduledEvents.ts";
-import { GuildFeatures } from "../src/types/guilds/guildFeatures.ts";
-import { editScheduledEventTests } from "./helpers/guilds/scheduledEvents/editScheduledEvent.ts";
-import { deleteScheduledEventTests } from "./helpers/guilds/scheduledEvents/deleteScheduledEvent.ts";
-import { CACHED_COMMUNITY_GUILD_ID } from "./constants.ts";
-
-// CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
-const sanitizeMode = {
-  sanitizeResources: false,
-  sanitizeOps: false,
-  sanitizeExit: false,
-};
+import { CACHED_COMMUNITY_GUILD_ID, sanitizeMode } from "./constants.ts";
 
 // const botId = BigInt(atob(UNITTEST_TOKEN.split(".")[0]));
 const botId = BigInt(atob(Deno.env.get("DISCORD_TOKEN")!.split(".")[0]));
 
 let startedAt = 0;
-const bot = createBot({
+export const bot = createBot({
   // token: UNITTEST_TOKEN || Deno.env.get("DISCORD_TOKEN"),
   token: Deno.env.get("DISCORD_TOKEN")!,
   botId,
@@ -117,7 +90,7 @@ if (bot.cache.guilds.size() <= 10) {
 await delayUntil(10000, () => Boolean(startedAt));
 
 // CREATE ONE GUILD SO WE CAN REUSE LATER TO SAVE RATE LIMITS
-const guild = await bot.helpers.createGuild({ name: "Discordeno Test" });
+export const guild = await bot.helpers.createGuild({ name: "Discordeno Test" });
 
 // Assertions
 assertExists(guild);
@@ -131,142 +104,15 @@ if (!bot.cache.guilds.has(guild.id)) {
   throw new Error(`The guild seemed to be created but it was not cached. ${guild.id.toString()}`);
 }
 
-const channel = await bot.helpers.createChannel(guild.id, { name: "Discordeno-test" });
+export const channel = await bot.helpers.createChannel(guild.id, { name: "Discordeno-test" });
 
 // Assertions
 assertExists(channel);
 assertEquals(channel.type, ChannelTypes.GuildText);
 
-const message = await bot.helpers.sendMessage(channel.id, "Hello Skillz");
+export const message = await bot.helpers.sendMessage(channel.id, "Hello Skillz");
 
-Deno.test({
-  name: "[scheduled event] create a guild scheduled event with stage entity",
-  fn: async (t) => {
-    await createScheduledEventTests(
-      bot,
-      CACHED_COMMUNITY_GUILD_ID,
-      {
-        name: "lfg",
-        description: "itoh is an imposter",
-        scheduledStartTime: Date.now() + 600000,
-        privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
-        entityType: ScheduledEventEntityType.StageInstance,
-      },
-      t
-    );
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[scheduled event] create a guild scheduled event with stage entity with an end time.",
-  fn: async (t) => {
-    await createScheduledEventTests(
-      bot,
-      CACHED_COMMUNITY_GUILD_ID,
-      {
-        name: "lfg",
-        description: "itoh is an imposter",
-        scheduledStartTime: Date.now() + 600000,
-        scheduledEndTime: Date.now() + (600000 + 1),
-        privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
-        entityType: ScheduledEventEntityType.StageInstance,
-      },
-      t
-    );
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[scheduled event] create a guild scheduled event with voice entity",
-  fn: async (t) => {
-    await createScheduledEventTests(
-      bot,
-      guild.id,
-      {
-        name: "lfg",
-        description: "itoh is an imposter",
-        scheduledStartTime: Date.now() + 600000,
-        privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
-        entityType: ScheduledEventEntityType.Voice,
-      },
-      t
-    );
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[scheduled event] create a guild scheduled event with voice entity with an end time.",
-  fn: async (t) => {
-    await createScheduledEventTests(
-      bot,
-      guild.id,
-      {
-        name: "lfg",
-        description: "itoh is an imposter",
-        scheduledStartTime: Date.now() + 600000,
-        scheduledEndTime: Date.now() + (600000 + 1),
-        privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
-        entityType: ScheduledEventEntityType.Voice,
-      },
-      t
-    );
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[scheduled event] create a guild scheduled event with external entity",
-  fn: async (t) => {
-    await createScheduledEventTests(
-      bot,
-      guild.id,
-      {
-        name: "lfg",
-        description: "itoh is an imposter",
-        scheduledStartTime: Date.now() + 600000,
-        scheduledEndTime: Date.now() + 1200000,
-        privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
-        entityType: ScheduledEventEntityType.External,
-        location: "heaven",
-      },
-      t
-    );
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[scheduled event] create a guild scheduled event with external entity with an end time.",
-  fn: async (t) => {
-    await createScheduledEventTests(
-      bot,
-      guild.id,
-      {
-        name: "lfg",
-        description: "itoh is an imposter",
-        scheduledStartTime: Date.now() + 600000,
-        scheduledEndTime: Date.now() + (600000 + 1),
-        privacyLevel: ScheduledEventPrivacyLevel.GuildOnly,
-        entityType: ScheduledEventEntityType.External,
-        location: "heaven",
-      },
-      t
-    );
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[scheduled event] edit a scheduled event",
-  fn: async (t) => {
-    await editScheduledEventTests(bot, CACHED_COMMUNITY_GUILD_ID, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[scheduled event] delete a scheduled event",
-  fn: async (t) => {
-    await deleteScheduledEventTests(bot, guild.id, t);
-  },
-  ...sanitizeMode,
-});
+import "./benchmark.ts";
 
 Deno.test({
   name: "[guild] format a guild's icon url",
@@ -722,242 +568,39 @@ Deno.test({
   ...sanitizeMode,
 });
 
-Deno.test({
-  name: "[invite] create an invite",
-  async fn(t) {
-    await createInviteTest(bot, channel.id, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[invite] delete an invite",
-  async fn(t) {
-    await deleteInviteTest(bot, channel.id, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[invite] get channels invites",
-  async fn(t) {
-    await getChannelInvitesTest(bot, channel.id, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[invite] get invite",
-  async fn(t) {
-    await getInviteTest(bot, channel.id, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[invite] get invites",
-  async fn(t) {
-    await getInvitesTest(bot, channel.id, guild.id, t);
-  },
-  ...sanitizeMode,
-});
-
-// THESE BAN TESTS SHOULD BE DONE ONE BY ONE
-Deno.test({
-  name: "[member] ban user from guild without reason",
-  fn: async (t) => {
-    // THIS IS WOLF, IF ANYTHING BREAKS BLAME HIM!
-    await banTest(bot, t, guild.id, 270273690074087427n, { reason: "Blame Wolf" });
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[member] get a single user's ban",
-  fn: async (t) => {
-    assertExists(await bot.helpers.getBan(guild.id, 270273690074087427n));
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[member] ban member from guild without reason",
-  fn: async (t) => {
-    // THIS IS IAN, HE PLAY'S GOLDEN SUN. BAN BEFORE HE MAKES US ADDICTED TO IT!!!
-    await banTest(bot, t, guild.id, 90339695967350784n);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[member] get bans on a server",
-  fn: async (t) => {
-    await getBansTest(bot, t, guild.id);
-  },
-  ...sanitizeMode,
-});
-
-Deno.test({
-  name: "[member] fetch a single member by id",
-  fn: async (t) => {
-    await fetchSingleMemberTest(bot, guild.id, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[member] format a members avatar url",
-  fn: async (t) => {
-    assertEquals(
-      bot.helpers.avatarURL(130136895395987456n, 8840, {
-        avatar: 4055337350987360625717955448021200177333n,
-      }),
-      "https://cdn.discordapp.com/avatars/130136895395987456/eae5905ad2d18d7c8deca20478b088b5.jpg?size=128"
-    );
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[member] unban member from guild",
-  fn: async (t) => {
-    await Promise.all([
-      unbanTest(bot, t, guild.id, 270273690074087427n),
-      unbanTest(bot, t, guild.id, 90339695967350784n),
-    ]);
-  },
-  ...sanitizeMode,
-});
-
-Deno.test({
-  name: "[emoji] create an emoji",
-  fn: async (t) => {
-    await createEmojiTest(bot, guild.id, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[emoji] delete an emoji without a reason",
-  fn: async (t) => {
-    await deleteEmojiWithoutReasonTest(bot, guild.id, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[emoji] delete an emoji with a reason",
-  fn: async (t) => {
-    await deleteEmojiWithReasonTest(bot, guild.id, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[emoji] edit an emoji",
-  fn: async (t) => {
-    await editEmojiTest(bot, guild.id, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[emoji] get an emoji",
-  fn: async (t) => {
-    await getEmojiTest(bot, guild.id, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[emoji] get multiple emojis",
-  fn: async (t) => {
-    await getEmojisTest(bot, guild.id, t);
-  },
-  ...sanitizeMode,
-});
-
-Deno.test({
-  name: "[Role] get all roles on a server",
-  fn: async (t) => {
-    await getRolesTest(bot, guild.id, t);
-  },
-  ...sanitizeMode,
-});
-
-Deno.test({
-  name: "[Role] create a role without a reason",
-  fn: async (t) => {
-    await createRoleTests(bot, guild.id, {}, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[Role] create a role with a reason",
-  fn: async (t) => {
-    await createRoleTests(bot, guild.id, { reason: "Blame wolfy" }, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[Role] delete a role without a reason",
-  fn: async (t) => {
-    await deleteRoleTests(bot, guild.id, {}, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[Role] delete a role with a reason",
-  fn: async (t) => {
-    await deleteRoleTests(bot, guild.id, { reason: "Blame wolfy" }, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[Role] edit a role",
-  fn: async (t) => {
-    await editRoleTests(bot, guild.id, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[Role] add a role to a member",
-  fn: async (t) => {
-    await addRoleTest(bot, guild.id, { reason: "Blame wolf" }, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[Role] remove a role to a member",
-  fn: async (t) => {
-    await removeRoleTest(bot, guild.id, { reason: "Blame wolf" }, t);
-  },
-  ...sanitizeMode,
-});
-
-Deno.test({
-  name: "[User] get a user and transform",
-  fn: async (t) => {
-    await getUserTests(bot, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[tranform] snowflake to bigint",
-  fn: async (t) => {
-    assertEquals(130136895395987456n, bot.transformers.snowflake("130136895395987456"));
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[discovery] Validate a discovery search term",
-  fn: async (t) => {
-    await validDiscoveryTermTest(bot, t);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[discovery] get categories from discovery",
-  fn: async (t) => {
-    await getDiscoveryCategoriesTest(bot, t);
-  },
-  ...sanitizeMode,
-});
-
-Deno.test({
-  name: "[Memory] Benchmark memory tests",
-  fn: async (t) => {
-    await memoryBenchmarks(bot, true);
-  },
-  ...sanitizeMode,
-});
-
+import "./emoji/createEmoji.ts";
+import "./emoji/deleteEmojiWithReason.ts";
+import "./emoji/deleteEmojiWithoutReason.ts";
+import "./emoji/editEmoji.ts";
+import "./emoji/getEmoji.ts";
+import "./emoji/getMultipleEmojis.ts";
+import "./invite/createInvite.ts";
+import "./invite/deleteInvite.ts";
+import "./invite/getChannelInvites.ts";
+import "./invite/getInvite.ts";
+import "./invite/getInvites.ts";
+import "./members/avatarlUrl.ts";
+import "./members/ban.ts";
+import "./misc/getDiscoveryCategories.ts";
+import "./misc/getUser.ts";
+import "./misc/snowflake.ts";
+import "./misc/validateDiscovery.ts";
+import "./role/addRole.ts";
+import "./role/createRoleWithoutReason.ts";
+import "./role/createRoleWithReason.ts";
+import "./role/deleteRoleWithoutReason.ts";
+import "./role/deleteRoleWithReason.ts";
+import "./role/editRole.ts";
+import "./role/getAllRoles.ts";
+import "./role/removeRole.ts";
+import "./scheduledEvents/createExternalEventWithEndtime.ts";
+import "./scheduledEvents/createExternalEventWithoutEndtime.ts";
+import "./scheduledEvents/createStageEventWithEndtime.ts";
+import "./scheduledEvents/createStageEventWithoutEndtime.ts";
+import "./scheduledEvents/createVoiceEventWithEndtime.ts";
+import "./scheduledEvents/createVoiceEventWithoutEndtime.ts";
+import "./scheduledEvents/deleteEvent.ts";
+import "./scheduledEvents/editEvent.ts";
 // await bot.helpers.deleteGuild(guild.id);
 
 // await stopBot(bot);
