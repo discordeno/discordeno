@@ -8,9 +8,16 @@ export async function createStageInstance(bot: Bot, channelId: bigint, topic: st
     throw new Error(bot.constants.Errors.INVALID_TOPIC_LENGTH);
   }
 
-  return await bot.rest.runMethod<StageInstance>(bot.rest, "post", bot.constants.endpoints.STAGE_INSTANCES, {
-    channel_id: channelId,
+  const result = await bot.rest.runMethod<StageInstance>(bot.rest, "post", bot.constants.endpoints.STAGE_INSTANCES, {
+    channel_id: channelId.toString(),
     topic,
-    privacy_level: privacyLevel,
+    privacy_level: privacyLevel || PrivacyLevel.GuildOnly,
   });
+
+  return {
+    id: bot.transformers.snowflake(result.id),
+    guildId: bot.transformers.snowflake(result.guild_id),
+    channelId: bot.transformers.snowflake(result.channel_id),
+    topic: result.topic,
+  };
 }
