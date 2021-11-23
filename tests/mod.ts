@@ -569,6 +569,7 @@ import "./emoji/createEmoji.ts";
 import "./emoji/deleteEmojiWithReason.ts";
 import "./emoji/deleteEmojiWithoutReason.ts";
 import "./emoji/editEmoji.ts";
+import "./emoji/emojiUrl.ts";
 import "./emoji/getEmoji.ts";
 import "./emoji/getMultipleEmojis.ts";
 import "./invite/createInvite.ts";

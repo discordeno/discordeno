@@ -522,7 +522,7 @@ export interface Helpers {
   editWebhookWithToken: typeof helpers.editWebhookWithToken;
   editWelcomeScreen: typeof helpers.editWelcomeScreen;
   editWidget: typeof helpers.editWidget;
-  emojiURL: typeof helpers.emojiURL;
+  emojiUrl: typeof helpers.emojiUrl;
   fetchMembers: typeof helpers.fetchMembers;
   followChannel: typeof helpers.followChannel;
   getAuditLogs: typeof helpers.getAuditLogs;
@@ -694,7 +694,7 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     editWebhookWithToken: options.editWebhookWithToken || helpers.editWebhookWithToken,
     editWelcomeScreen: options.editWelcomeScreen || helpers.editWelcomeScreen,
     editWidget: options.editWidget || helpers.editWidget,
-    emojiURL: options.emojiURL || helpers.emojiURL,
+    emojiUrl: options.emojiUrl || helpers.emojiUrl,
     fetchMembers: options.fetchMembers || helpers.fetchMembers,
     followChannel: options.followChannel || helpers.followChannel,
     getAuditLogs: options.getAuditLogs || helpers.getAuditLogs,
