@@ -30,7 +30,7 @@ Deno.test("[webhooks] Send a message with a webhook", async (t) => {
     assertNotEquals(edited.content, message.content);
   });
 
-  await t.step("[webhooks] Edit a webhook message", async () => {
+  await t.step("[webhooks] Delete a webhook message", async () => {
     assertExists(webhook.token);
     await bot.helpers.deleteWebhookMessage(webhook.id, webhook.token, message.id);
   });
