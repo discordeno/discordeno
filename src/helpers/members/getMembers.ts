@@ -1,4 +1,3 @@
-import { GatewayIntents } from "../../types/gateway/gatewayIntents.ts";
 import type { GuildMemberWithUser } from "../../types/members/guildMember.ts";
 import type { ListGuildMembers } from "../../types/members/listGuildMembers.ts";
 import type { Bot } from "../../bot.ts";
