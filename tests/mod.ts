@@ -42,7 +42,7 @@ const botId = BigInt(atob(UNITTEST_TOKEN.split(".")[0]));
 
 let startedAt = 0;
 export const bot = createBot({
-  token: UNITTEST_TOKEN || Deno.env.get("DISCORD_TOKEN"),
+  token: UNITTEST_TOKEN,
   botId,
   events: createEventHandlers({
     ready: () => {
