@@ -86,7 +86,6 @@ import { transformAttachment } from "./transformers/attachment.ts";
 import { transformEmbed } from "./transformers/embed.ts";
 import { transformComponent } from "./transformers/component.ts";
 import { AsyncCache, AsyncCacheHandler, Cache, CacheHandler, createCache, TableNames } from "./cache.ts";
-import { transformThread } from "./transformers/thread.ts";
 import { transformWebhook } from "./transformers/webhook.ts";
 import { transformAuditlogEntry } from "./transformers/auditlogEntry.ts";
 import { transformApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
@@ -813,7 +812,6 @@ export interface Transformers {
   attachment: typeof transformAttachment;
   embed: typeof transformEmbed;
   component: typeof transformComponent;
-  thread: typeof transformThread;
   webhook: typeof transformWebhook;
   auditlogEntry: typeof transformAuditlogEntry;
   applicationCommandPermission: typeof transformApplicationCommandPermission;
@@ -839,7 +837,6 @@ export function createTransformers(options: Partial<Transformers>) {
     role: options.role || transformRole,
     user: options.user || transformUser,
     team: options.team || transformTeam,
-    thread: options.thread || transformThread,
     voiceState: options.voiceState || transformVoiceState,
     snowflake: options.snowflake || snowflakeToBigint,
     webhook: options.webhook || transformWebhook,

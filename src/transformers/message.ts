@@ -11,7 +11,7 @@ import { MessageActivityTypes } from "../types/messages/messageActivityTypes.ts"
 import { InteractionTypes } from "../types/interactions/interactionTypes.ts";
 import { DiscordenoComponent } from "./component.ts";
 import { Application } from "../types/applications/application.ts";
-import { DiscordenoThread } from "./thread.ts";
+import { DiscordenoChannel } from "./channel.ts";
 
 export function transformMessage(bot: Bot, payload: SnakeCasedPropertiesDeep<Message>): DiscordenoMessage {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
@@ -53,7 +53,7 @@ export function transformMessage(bot: Bot, payload: SnakeCasedPropertiesDeep<Mes
           user: bot.transformers.user(bot, payload.interaction.user),
         }
       : undefined,
-    thread: payload.thread ? bot.transformers.thread(bot, payload.thread) : undefined,
+    thread: payload.thread ? bot.transformers.channel(bot, { channel: payload.thread, guildId }) : undefined,
     components: payload.components?.map((component) => bot.transformers.component(bot, component)),
     stickerItems: payload.sticker_items?.map((sticker) => ({
       id: bot.transformers.snowflake(sticker.id),
@@ -195,7 +195,7 @@ export interface DiscordenoMessage {
     user: DiscordenoUser;
   };
   /** The thread that was started from this message, includes thread member object */
-  thread?: DiscordenoThread;
+  thread?: DiscordenoChannel;
   /** The components related to this message */
   components?: DiscordenoComponent[];
 }

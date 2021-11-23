@@ -1,23 +1,11 @@
 import { Channel } from "../types/channels/channel.ts";
 import { Bot } from "../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { DiscordOverwrite } from "../types/channels/overwrite.ts";
 import { ChannelTypes } from "../types/channels/channelTypes.ts";
 import type { DiscordenoVoiceState } from "./voiceState.ts";
 import { Collection } from "../util/collection.ts";
 import { DiscordenoUser } from "./member.ts";
 import { VideoQualityModes } from "../types/channels/videoQualityModes.ts";
-
-// function merge(allow: string, deny: string, id: string, type: number) {
-//   return BigInt(`0x${type}g${BigInt(id)}g${BigInt(allow).toString(16)}g${BigInt(deny).toString(16)}`);
-// }
-
-// export function separateOverwrites(thing: bigint) {
-//   return thing
-//     .toString(16)
-//     .split("g")
-//     .map((x, index) => index ? BigInt(`0x${x}`) : Number(x)) as [number, bigint, bigint, bigint];
-// }
 
 const Mask = (1n << 64n) - 1n;
 
@@ -75,6 +63,16 @@ export function transformChannel(
     parentId: payload.channel.parent_id ? bot.transformers.snowflake(payload.channel.parent_id) : undefined,
     // TODO: stage channels?
     voiceStates: payload.channel.type === ChannelTypes.GuildVoice ? new Collection() : undefined,
+
+    memberCount: payload.channel.member_count,
+    messageCount: payload.channel.message_count,
+    archiveTimestamp: payload.channel.thread_metadata?.archive_timestamp
+      ? Date.parse(payload.channel.thread_metadata.archive_timestamp)
+      : undefined,
+    autoArchiveDuration: payload.channel.thread_metadata?.auto_archive_duration,
+    botIsMember: Boolean(payload.channel.member),
+    archived: payload.channel.thread_metadata?.archived,
+    locked: payload.channel.thread_metadata?.locked,
   };
 }
 
@@ -111,23 +109,22 @@ export interface DiscordenoChannel {
   /** An approximate count of users in a thread, stops counting at 50 */
   memberCount?: number;
   /** Thread-specifig fields not needed by other channels */
-  threadMetadata?: {
-    /** Whether the thread is archived */
-    archived: boolean;
-    /** Duration in minutes to automatically archive the thread after recent activity */
-    autoArchiveDuration: 60 | 1440 | 4320 | 10080;
-    // TODO(threads): channel struct should convert this to a unixx
-    /** Timestamp when the thread's archive status was last changed, used for calculating recent activity */
-    archiveTimestamp: string;
-    /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
-    locked?: boolean;
-    /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
-    invitable?: boolean;
-  };
+  /** Whether the thread is archived */
+  archived?: boolean;
+  /** Duration in minutes to automatically archive the thread after recent activity */
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080;
+  /** Timestamp when the thread's archive status was last changed, used for calculating recent activity */
+  archiveTimestamp?: number;
+  /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
+  locked?: boolean;
+  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
+  invitable?: boolean;
   /** The time the current user last joined the thread */
   threadJoinTimestamp?: number;
   /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
   defaultAutoArchiveDuration?: number;
+  /** Whether or not the bot is part of this channel thread. */
+  botIsMember: boolean;
   /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a slash command interaction */
   permissions?: bigint;
 
