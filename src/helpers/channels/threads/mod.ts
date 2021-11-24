@@ -1,5 +1,4 @@
 export * from "./addToThread.ts";
-export * from "./archiveThread.ts";
 export * from "./deleteThread.ts";
 export * from "./editThread.ts";
 export * from "./getActiveThreads.ts";
@@ -11,5 +10,4 @@ export * from "./lockThread.ts";
 export * from "./removeThreadMember.ts";
 export * from "./startThreadWithoutMessage.ts";
 export * from "./startThreadWithMessage.ts";
-export * from "./unarchiveThread.ts";
 export * from "./unlockThread.ts";

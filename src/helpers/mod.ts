@@ -159,7 +159,6 @@ export * from "./channels/getStageInstance.ts";
 export * from "./channels/deleteStageInstance.ts";
 export * from "./voice/connectToVoiceChannel.ts";
 export * from "./channels/threads/addToThread.ts";
-export * from "./channels/threads/archiveThread.ts";
 export * from "./channels/threads/deleteThread.ts";
 export * from "./channels/threads/editThread.ts";
 export * from "./channels/threads/getActiveThreads.ts";
@@ -172,7 +171,6 @@ export * from "./channels/threads/lockThread.ts";
 export * from "./channels/threads/removeThreadMember.ts";
 export * from "./channels/threads/startThreadWithMessage.ts";
 export * from "./channels/threads/startThreadWithoutMessage.ts";
-export * from "./channels/threads/unarchiveThread.ts";
 export * from "./channels/threads/unlockThread.ts";
 export * from "./channels/cloneChannel.ts";
 

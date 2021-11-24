@@ -589,7 +589,6 @@ export interface Helpers {
   upsertSlashCommands: typeof helpers.upsertSlashCommands;
   validDiscoveryTerm: typeof helpers.validDiscoveryTerm;
   addToThread: typeof helpers.addToThread;
-  archiveThread: typeof helpers.archiveThread;
   deleteThread: typeof helpers.deleteThread;
   editThread: typeof helpers.editThread;
   getActiveThreads: typeof helpers.getActiveThreads;
@@ -602,7 +601,6 @@ export interface Helpers {
   removeThreadMember: typeof helpers.removeThreadMember;
   startThreadWithoutMessage: typeof helpers.startThreadWithoutMessage;
   startThreadWithMessage: typeof helpers.startThreadWithMessage;
-  unarchiveThread: typeof helpers.unarchiveThread;
   unlockThread: typeof helpers.unlockThread;
 }
 
@@ -760,7 +758,6 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     upsertSlashCommands: options.upsertSlashCommands || helpers.upsertSlashCommands,
     validDiscoveryTerm: options.validDiscoveryTerm || helpers.validDiscoveryTerm,
     addToThread: options.addToThread || helpers.addToThread,
-    archiveThread: options.archiveThread || helpers.archiveThread,
     deleteThread: options.deleteThread || helpers.deleteThread,
     editThread: options.editThread || helpers.editThread,
     getActiveThreads: options.getActiveThreads || helpers.getActiveThreads,
@@ -773,7 +770,6 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     removeThreadMember: options.removeThreadMember || helpers.removeThreadMember,
     startThreadWithoutMessage: options.startThreadWithoutMessage || helpers.startThreadWithoutMessage,
     startThreadWithMessage: options.startThreadWithMessage || helpers.startThreadWithMessage,
-    unarchiveThread: options.unarchiveThread || helpers.unarchiveThread,
     unlockThread: options.unlockThread || helpers.unlockThread,
   };
 }
