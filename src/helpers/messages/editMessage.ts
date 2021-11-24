@@ -7,10 +7,6 @@ import { MessageComponentTypes } from "../../types/messages/components/messageCo
 export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: string | EditMessage) {
   if (typeof content === "string") content = { content };
 
-  if (content.components?.length) {
-    bot.utils.validateComponents(bot, content.components);
-  }
-
   content.embeds?.splice(10);
 
   if (content.content && content.content.length > 2000) {

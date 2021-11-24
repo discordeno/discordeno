@@ -12,8 +12,6 @@ export async function upsertSlashCommand(
   options: EditGlobalApplicationCommand,
   guildId?: bigint
 ) {
-  [options] = bot.utils.validateSlashCommands(bot, [options]);
-
   return await bot.rest.runMethod<ApplicationCommand>(
     bot.rest,
     "patch",

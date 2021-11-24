@@ -15,9 +15,6 @@ export async function sendInteractionResponse(
   token: string,
   options: DiscordenoInteractionResponse
 ) {
-  // TODO: add more options validations
-  if (options.data?.components) bot.utils.validateComponents(bot, options.data.components);
-
   // If the user wants this as a private message mark it ephemeral
   if (options.private) {
     options.data = { ...options.data, flags: 64 };

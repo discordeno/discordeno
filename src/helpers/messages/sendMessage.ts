@@ -13,10 +13,6 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
     throw new Error(bot.constants.Errors.MESSAGE_MAX_LENGTH);
   }
 
-  if (content.components?.length) {
-    bot.utils.validateComponents(bot, content.components);
-  }
-
   if (content.allowedMentions) {
     if (content.allowedMentions.users?.length) {
       if (content.allowedMentions.parse?.includes(AllowedMentionsTypes.UserMentions)) {

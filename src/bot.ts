@@ -62,10 +62,6 @@ import {
   delay,
   formatImageURL,
   hasProperty,
-  validateComponents,
-  validateSlashCommands,
-  validateSlashOptionChoices,
-  validateSlashOptions,
 } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { calculateShardId } from "./util/calculateShardId.ts";
@@ -312,13 +308,9 @@ export function createUtils(options: Partial<HelperUtils>) {
     iconHashToBigInt,
     iconBigintToHash,
     validateLength,
-    validateSlashOptions,
-    validateSlashOptionChoices,
-    validateComponents,
     hasProperty,
     urlToBase64,
     formatImageURL,
-    validateSlashCommands,
     calculateBits,
     calculatePermissions,
   };
@@ -332,13 +324,9 @@ export interface HelperUtils {
   iconHashToBigInt: typeof iconHashToBigInt;
   iconBigintToHash: typeof iconBigintToHash;
   validateLength: typeof validateLength;
-  validateSlashOptions: typeof validateSlashOptions;
-  validateSlashOptionChoices: typeof validateSlashOptionChoices;
-  validateComponents: typeof validateComponents;
   hasProperty: typeof hasProperty;
   urlToBase64: typeof urlToBase64;
   formatImageURL: typeof formatImageURL;
-  validateSlashCommands: typeof validateSlashCommands;
   calculateBits: typeof calculateBits;
   calculatePermissions: typeof calculatePermissions;
 }

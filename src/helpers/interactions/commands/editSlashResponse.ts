@@ -9,10 +9,6 @@ export async function editSlashResponse(bot: Bot, token: string, options: Discor
     throw Error(bot.constants.Errors.MESSAGE_MAX_LENGTH);
   }
 
-  if (options.components?.length) {
-    bot.utils.validateComponents(bot, options.components);
-  }
-
   if (options.embeds && options.embeds.length > 10) {
     options.embeds.splice(10);
   }

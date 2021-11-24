@@ -40,10 +40,6 @@ export async function editWebhookMessage(
     }
   }
 
-  if (options.components?.length) {
-    bot.utils.validateComponents(bot, options.components);
-  }
-
   const result = await bot.rest.runMethod<Message>(
     bot.rest,
     "patch",
