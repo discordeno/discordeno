@@ -33,7 +33,6 @@ TODO: add coverage back when it is stable
 
 ### REST
 
-- [x] Easily host on any serverless infrastructure.
 - [x] Freedom from Invalid Request 1 Hour Downtimes
   - [x] Discordeno will protect your bot from going down for an hour and will instead decrease the maximum downtime to 10 minutes.
 - [x] Freedom from global rate limit errors
