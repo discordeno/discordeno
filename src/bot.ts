@@ -453,7 +453,7 @@ export interface Helpers {
   addRole: typeof helpers.addRole;
   avatarURL: typeof helpers.avatarURL;
   banMember: typeof helpers.banMember;
-  batchEditSlashCommandPermissions: typeof helpers.batchEditSlashCommandPermissions;
+  batchEditApplicationCommandPermissions: typeof helpers.batchEditApplicationCommandPermissions;
   channelOverwriteHasPermission: typeof helpers.channelOverwriteHasPermission;
   cloneChannel: typeof helpers.cloneChannel;
   connectToVoiceChannel: typeof helpers.connectToVoiceChannel;
@@ -465,7 +465,7 @@ export interface Helpers {
   createInvite: typeof helpers.createInvite;
   createRole: typeof helpers.createRole;
   createScheduledEvent: typeof helpers.createScheduledEvent;
-  createSlashCommand: typeof helpers.createSlashCommand;
+  createApplicationCommand: typeof helpers.createApplicationCommand;
   createStageInstance: typeof helpers.createStageInstance;
   createWebhook: typeof helpers.createWebhook;
   deleteChannel: typeof helpers.deleteChannel;
@@ -479,8 +479,8 @@ export interface Helpers {
   deleteMessages: typeof helpers.deleteMessages;
   deleteRole: typeof helpers.deleteRole;
   deleteScheduledEvent: typeof helpers.deleteScheduledEvent;
-  deleteSlashCommand: typeof helpers.deleteSlashCommand;
-  deleteSlashResponse: typeof helpers.deleteSlashResponse;
+  deleteApplicationCommand: typeof helpers.deleteApplicationCommand;
+  deleteInteractionResponse: typeof helpers.deleteInteractionResponse;
   deleteStageInstance: typeof helpers.deleteStageInstance;
   deleteWebhook: typeof helpers.deleteWebhook;
   deleteWebhookMessage: typeof helpers.deleteWebhookMessage;
@@ -499,8 +499,8 @@ export interface Helpers {
   editMessage: typeof helpers.editMessage;
   editRole: typeof helpers.editRole;
   editScheduledEvent: typeof helpers.editScheduledEvent;
-  editSlashResponse: typeof helpers.editSlashResponse;
-  editSlashCommandPermissions: typeof helpers.editSlashCommandPermissions;
+  editInteractionResponse: typeof helpers.editInteractionResponse;
+  editApplicationCommandPermissions: typeof helpers.editApplicationCommandPermissions;
   editWebhook: typeof helpers.editWebhook;
   editWebhookMessage: typeof helpers.editWebhookMessage;
   editWebhookWithToken: typeof helpers.editWebhookWithToken;
@@ -539,10 +539,10 @@ export interface Helpers {
   getScheduledEvent: typeof helpers.getScheduledEvent;
   getScheduledEvents: typeof helpers.getScheduledEvents;
   getScheduledEventUsers: typeof helpers.getScheduledEventUsers;
-  getSlashCommand: typeof helpers.getSlashCommand;
-  getSlashCommandPermission: typeof helpers.getSlashCommandPermission;
-  getSlashCommandPermissions: typeof helpers.getSlashCommandPermissions;
-  getSlashCommands: typeof helpers.getSlashCommands;
+  getApplicationCommand: typeof helpers.getApplicationCommand;
+  getApplicationCommandPermission: typeof helpers.getApplicationCommandPermission;
+  getApplicationCommandPermissions: typeof helpers.getApplicationCommandPermissions;
+  getApplicationCommands: typeof helpers.getApplicationCommands;
   getStageInstance: typeof helpers.getStageInstance;
   getTemplate: typeof helpers.getTemplate;
   getUser: typeof helpers.getUser;
@@ -582,8 +582,8 @@ export interface Helpers {
   unpinMessage: typeof helpers.unpinMessage;
   updateBotVoiceState: typeof helpers.updateBotVoiceState;
   updateStageInstance: typeof helpers.updateStageInstance;
-  upsertSlashCommand: typeof helpers.upsertSlashCommand;
-  upsertSlashCommands: typeof helpers.upsertSlashCommands;
+  upsertApplicationCommand: typeof helpers.upsertApplicationCommand;
+  upsertApplicationCommands: typeof helpers.upsertApplicationCommands;
   validDiscoveryTerm: typeof helpers.validDiscoveryTerm;
   addToThread: typeof helpers.addToThread;
   deleteThread: typeof helpers.deleteThread;
@@ -619,8 +619,8 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     addRole: options.addRole || helpers.addRole,
     avatarURL: options.avatarURL || helpers.avatarURL,
     banMember: options.banMember || helpers.banMember,
-    batchEditSlashCommandPermissions:
-      options.batchEditSlashCommandPermissions || helpers.batchEditSlashCommandPermissions,
+    batchEditApplicationCommandPermissions:
+      options.batchEditApplicationCommandPermissions || helpers.batchEditApplicationCommandPermissions,
     channelOverwriteHasPermission: options.channelOverwriteHasPermission || helpers.channelOverwriteHasPermission,
     cloneChannel: options.cloneChannel || helpers.cloneChannel,
     connectToVoiceChannel: options.connectToVoiceChannel || helpers.connectToVoiceChannel,
@@ -632,7 +632,7 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     createInvite: options.createInvite || helpers.createInvite,
     createRole: options.createRole || helpers.createRole,
     createScheduledEvent: options.createScheduledEvent || helpers.createScheduledEvent,
-    createSlashCommand: options.createSlashCommand || helpers.createSlashCommand,
+    createApplicationCommand: options.createApplicationCommand || helpers.createApplicationCommand,
     createStageInstance: options.createStageInstance || helpers.createStageInstance,
     createWebhook: options.createWebhook || helpers.createWebhook,
     deleteChannel: options.deleteChannel || helpers.deleteChannel,
@@ -646,8 +646,8 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     deleteMessages: options.deleteMessages || helpers.deleteMessages,
     deleteRole: options.deleteRole || helpers.deleteRole,
     deleteScheduledEvent: options.deleteScheduledEvent || helpers.deleteScheduledEvent,
-    deleteSlashCommand: options.deleteSlashCommand || helpers.deleteSlashCommand,
-    deleteSlashResponse: options.deleteSlashResponse || helpers.deleteSlashResponse,
+    deleteApplicationCommand: options.deleteApplicationCommand || helpers.deleteApplicationCommand,
+    deleteInteractionResponse: options.deleteInteractionResponse || helpers.deleteInteractionResponse,
     deleteStageInstance: options.deleteStageInstance || helpers.deleteStageInstance,
     deleteWebhook: options.deleteWebhook || helpers.deleteWebhook,
     deleteWebhookMessage: options.deleteWebhookMessage || helpers.deleteWebhookMessage,
@@ -666,8 +666,9 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     editMessage: options.editMessage || helpers.editMessage,
     editRole: options.editRole || helpers.editRole,
     editScheduledEvent: options.editScheduledEvent || helpers.editScheduledEvent,
-    editSlashResponse: options.editSlashResponse || helpers.editSlashResponse,
-    editSlashCommandPermissions: options.editSlashCommandPermissions || helpers.editSlashCommandPermissions,
+    editInteractionResponse: options.editInteractionResponse || helpers.editInteractionResponse,
+    editApplicationCommandPermissions:
+      options.editApplicationCommandPermissions || helpers.editApplicationCommandPermissions,
     editWebhook: options.editWebhook || helpers.editWebhook,
     editWebhookMessage: options.editWebhookMessage || helpers.editWebhookMessage,
     editWebhookWithToken: options.editWebhookWithToken || helpers.editWebhookWithToken,
@@ -706,10 +707,11 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     getScheduledEvent: options.getScheduledEvent || helpers.getScheduledEvent,
     getScheduledEventUsers: options.getScheduledEventUsers || helpers.getScheduledEventUsers,
     getScheduledEvents: options.getScheduledEvents || helpers.getScheduledEvents,
-    getSlashCommand: options.getSlashCommand || helpers.getSlashCommand,
-    getSlashCommandPermission: options.getSlashCommandPermission || helpers.getSlashCommandPermission,
-    getSlashCommandPermissions: options.getSlashCommandPermissions || helpers.getSlashCommandPermissions,
-    getSlashCommands: options.getSlashCommands || helpers.getSlashCommands,
+    getApplicationCommand: options.getApplicationCommand || helpers.getApplicationCommand,
+    getApplicationCommandPermission: options.getApplicationCommandPermission || helpers.getApplicationCommandPermission,
+    getApplicationCommandPermissions:
+      options.getApplicationCommandPermissions || helpers.getApplicationCommandPermissions,
+    getApplicationCommands: options.getApplicationCommands || helpers.getApplicationCommands,
     getStageInstance: options.getStageInstance || helpers.getStageInstance,
     getTemplate: options.getTemplate || helpers.getTemplate,
     getUser: options.getUser || helpers.getUser,
@@ -749,8 +751,8 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     unpinMessage: options.unpinMessage || helpers.unpinMessage,
     updateBotVoiceState: options.updateBotVoiceState || helpers.updateBotVoiceState,
     updateStageInstance: options.updateStageInstance || helpers.updateStageInstance,
-    upsertSlashCommand: options.upsertSlashCommand || helpers.upsertSlashCommand,
-    upsertSlashCommands: options.upsertSlashCommands || helpers.upsertSlashCommands,
+    upsertApplicationCommand: options.upsertApplicationCommand || helpers.upsertApplicationCommand,
+    upsertApplicationCommands: options.upsertApplicationCommands || helpers.upsertApplicationCommands,
     validDiscoveryTerm: options.validDiscoveryTerm || helpers.validDiscoveryTerm,
     addToThread: options.addToThread || helpers.addToThread,
     deleteThread: options.deleteThread || helpers.deleteThread,

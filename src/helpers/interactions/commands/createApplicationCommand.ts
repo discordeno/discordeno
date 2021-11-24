@@ -4,7 +4,7 @@ import type { Bot } from "../../../bot.ts";
 import { ApplicationCommandOption } from "../../../types/interactions/commands/applicationCommandOption.ts";
 
 /**
- * There are two kinds of Slash Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:
+ * There are two kinds of Application Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:
  *
  * - Your app **cannot** have two global commands with the same name
  * - Your app **cannot** have two guild commands within the same name **on the same guild**
@@ -14,7 +14,7 @@ import { ApplicationCommandOption } from "../../../types/interactions/commands/a
  * Global commands are cached for **1 hour**. That means that new global commands will fan out slowly across all guilds, and will be guaranteed to be updated in an hour.
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
-export async function createSlashCommand(bot: Bot, options: CreateGlobalApplicationCommand, guildId?: bigint) {
+export async function createApplicationCommand(bot: Bot, options: CreateGlobalApplicationCommand, guildId?: bigint) {
   return await bot.rest.runMethod<ApplicationCommand>(
     bot.rest,
     "post",

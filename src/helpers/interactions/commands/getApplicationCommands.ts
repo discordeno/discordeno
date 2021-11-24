@@ -3,7 +3,7 @@ import { Collection } from "../../../util/collection.ts";
 import type { Bot } from "../../../bot.ts";
 
 /** Fetch all the global commands for your application. */
-export async function getSlashCommands(bot: Bot, guildId?: bigint) {
+export async function getApplicationCommands(bot: Bot, guildId?: bigint) {
   const result = await bot.rest.runMethod<ApplicationCommand[]>(
     bot.rest,
     "get",

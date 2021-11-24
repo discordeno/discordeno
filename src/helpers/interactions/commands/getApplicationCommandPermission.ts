@@ -2,7 +2,7 @@ import type { GuildApplicationCommandPermissions } from "../../../types/interact
 import type { Bot } from "../../../bot.ts";
 
 /** Fetches command permissions for a specific command for your application in a guild. Returns a GuildApplicationCommandPermissions object. */
-export async function getSlashCommandPermission(bot: Bot, guildId: bigint, commandId: bigint) {
+export async function getApplicationCommandPermission(bot: Bot, guildId: bigint, commandId: bigint) {
   return await bot.rest.runMethod<GuildApplicationCommandPermissions>(
     bot.rest,
     "get",

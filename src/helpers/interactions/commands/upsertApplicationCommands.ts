@@ -8,7 +8,7 @@ import type { Bot } from "../../../bot.ts";
  *
  * **NOTE:** Any slash commands that are not specified in this function will be **deleted**. If you don't provide the commandId and rename your command, the command gets a new Id.
  */
-export async function upsertSlashCommands(
+export async function upsertApplicationCommands(
   bot: Bot,
   options: MakeRequired<EditGlobalApplicationCommand, "name">[],
   guildId?: bigint

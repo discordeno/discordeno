@@ -3,7 +3,7 @@ import type { Bot } from "../../../bot.ts";
 import { GuildApplicationCommandPermissions } from "../../../types/interactions/commands/guildApplicationCommandPermissions.ts";
 
 /** Edits command permissions for a specific command for your application in a guild. */
-export async function editSlashCommandPermissions(
+export async function editApplicationCommandPermissions(
   bot: Bot,
   guildId: bigint,
   commandId: bigint,

@@ -58,18 +58,18 @@ export * from "./integrations/deleteIntegration.ts";
 export * from "./integrations/getIntegrations.ts";
 
 //interactions
-export * from "./interactions/commands/batchEditSlashCommandPermissions.ts";
-export * from "./interactions/commands/createSlashCommand.ts";
-export * from "./interactions/commands/deleteSlashCommand.ts";
-export * from "./interactions/commands/deleteSlashResponse.ts";
-export * from "./interactions/commands/editSlashCommandPermissions.ts";
-export * from "./interactions/commands/editSlashResponse.ts";
-export * from "./interactions/commands/getSlashCommand.ts";
-export * from "./interactions/commands/getSlashCommands.ts";
-export * from "./interactions/commands/getSlashCommandPermission.ts";
-export * from "./interactions/commands/getSlashCommandPermissions.ts";
-export * from "./interactions/commands/upsertSlashCommand.ts";
-export * from "./interactions/commands/upsertSlashCommands.ts";
+export * from "./interactions/commands/batchEditApplicationCommandPermissions.ts";
+export * from "./interactions/commands/createApplicationCommand.ts";
+export * from "./interactions/commands/deleteApplicationCommand.ts";
+export * from "./interactions/commands/deleteInteractionResponse.ts";
+export * from "./interactions/commands/editApplicationCommandPermissions.ts";
+export * from "./interactions/commands/editInteractionResponse.ts";
+export * from "./interactions/commands/getApplicationCommand.ts";
+export * from "./interactions/commands/getApplicationCommands.ts";
+export * from "./interactions/commands/getApplicationCommandPermission.ts";
+export * from "./interactions/commands/getApplicationCommandPermissions.ts";
+export * from "./interactions/commands/upsertApplicationCommand.ts";
+export * from "./interactions/commands/upsertApplicationCommands.ts";
 export * from "./interactions/getOriginalInteractionResponse.ts";
 export * from "./interactions/sendInteractionResponse.ts";
 

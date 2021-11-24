@@ -1,7 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 
 /** Deletes a slash command. */
-export async function deleteSlashCommand(bot: Bot, id: bigint, guildId?: bigint) {
+export async function deleteApplicationCommand(bot: Bot, id: bigint, guildId?: bigint) {
   return await bot.rest.runMethod<undefined>(
     bot.rest,
     "delete",

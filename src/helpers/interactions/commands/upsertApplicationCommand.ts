@@ -1,12 +1,12 @@
 import type { ApplicationCommand } from "../../../types/interactions/commands/applicationCommand.ts";
 import type { EditGlobalApplicationCommand } from "../../../types/interactions/commands/editGlobalApplicationCommand.ts";
 import type { Bot } from "../../../bot.ts";
-import { makeOptionsForCommand } from "./createSlashCommand.ts";
+import { makeOptionsForCommand } from "./createApplicationCommand.ts";
 
 /**
  * Edit an existing slash command. If this command did not exist, it will create it.
  */
-export async function upsertSlashCommand(
+export async function upsertApplicationCommand(
   bot: Bot,
   commandId: bigint,
   options: EditGlobalApplicationCommand,

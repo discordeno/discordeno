@@ -1,4 +1,4 @@
-export * from "./createSlashCommand.ts";
+export * from "./createApplicationCommand.ts";
 export * from "./editWebhookMessage.ts";
 export * from "./errors.ts";
 export * from "./fileContent.ts";

@@ -4,7 +4,7 @@ import { AllowedMentionsTypes } from "../../../types/messages/allowedMentionsTyp
 import { MessageComponentTypes } from "../../../types/messages/components/messageComponentTypes.ts";
 
 /** To edit your response to a slash command. If a messageId is not provided it will default to editing the original response. */
-export async function editSlashResponse(bot: Bot, token: string, options: DiscordenoEditWebhookMessage) {
+export async function editInteractionResponse(bot: Bot, token: string, options: DiscordenoEditWebhookMessage) {
   if (options.content && options.content.length > 2000) {
     throw Error(bot.constants.Errors.MESSAGE_MAX_LENGTH);
   }
