@@ -5,3 +5,4 @@ configs.ts
 # npm stuff
 .npmignore
 package.json
+npm/

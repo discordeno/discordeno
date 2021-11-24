@@ -1,4 +1,4 @@
-import { build } from "https://deno.land/x/dnt@0.6.0/mod.ts";
+import { build } from "https://deno.land/x/dnt@0.7.3/mod.ts";
 import { DISCORDENO_VERSION } from "./mod.ts";
 
 await Deno.remove("npm", { recursive: true }).catch((_) => {});
