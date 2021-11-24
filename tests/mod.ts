@@ -584,6 +584,7 @@ import "./invite/getInvites.ts";
 import "./members/avatarlUrl.ts";
 import "./members/ban.ts";
 import "./members/getDmChannel.ts";
+import "./members/getMember.ts";
 import "./misc/getApplicationInfo.ts";
 import "./misc/getDiscoveryCategories.ts";
 import "./misc/getUser.ts";
