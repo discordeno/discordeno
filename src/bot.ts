@@ -597,11 +597,9 @@ export interface Helpers {
   getThreadMembers: typeof helpers.getThreadMembers;
   joinThread: typeof helpers.joinThread;
   leaveThread: typeof helpers.leaveThread;
-  lockThread: typeof helpers.lockThread;
   removeThreadMember: typeof helpers.removeThreadMember;
   startThreadWithoutMessage: typeof helpers.startThreadWithoutMessage;
   startThreadWithMessage: typeof helpers.startThreadWithMessage;
-  unlockThread: typeof helpers.unlockThread;
 }
 
 export function createHelpers(bot: Bot, customHelpers?: Partial<Helpers>): FinalHelpers {
@@ -766,11 +764,9 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     getThreadMembers: options.getThreadMembers || helpers.getThreadMembers,
     joinThread: options.joinThread || helpers.joinThread,
     leaveThread: options.leaveThread || helpers.leaveThread,
-    lockThread: options.lockThread || helpers.lockThread,
     removeThreadMember: options.removeThreadMember || helpers.removeThreadMember,
     startThreadWithoutMessage: options.startThreadWithoutMessage || helpers.startThreadWithoutMessage,
     startThreadWithMessage: options.startThreadWithMessage || helpers.startThreadWithMessage,
-    unlockThread: options.unlockThread || helpers.unlockThread,
   };
 }
 
