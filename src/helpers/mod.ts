@@ -110,7 +110,6 @@ export * from "./messages/removeAllReactions.ts";
 export * from "./messages/removeReaction.ts";
 export * from "./messages/removeReactionEmoji.ts";
 export * from "./messages/sendMessage.ts";
-export * from "./messages/suppressEmbeds.ts";
 export * from "./messages/unpinMessage.ts";
 
 //misc

@@ -616,7 +616,6 @@ export interface Helpers {
   startThreadWithMessage: typeof helpers.startThreadWithMessage;
   unarchiveThread: typeof helpers.unarchiveThread;
   unlockThread: typeof helpers.unlockThread;
-  suppressEmbeds: typeof helpers.suppressEmbeds;
 }
 
 export function createHelpers(bot: Bot, customHelpers?: Partial<Helpers>): FinalHelpers {
@@ -788,7 +787,6 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     startThreadWithMessage: options.startThreadWithMessage || helpers.startThreadWithMessage,
     unarchiveThread: options.unarchiveThread || helpers.unarchiveThread,
     unlockThread: options.unlockThread || helpers.unlockThread,
-    suppressEmbeds: options.suppressEmbeds || helpers.suppressEmbeds,
   };
 }
 

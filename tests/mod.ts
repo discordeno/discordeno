@@ -565,7 +565,7 @@ Deno.test({
 });
 
 import "./channels/connectToVoice.ts";
-import "./channels/stageInstances.ts"
+import "./channels/stageInstances.ts";
 import "./emoji/createEmoji.ts";
 import "./emoji/deleteEmojiWithReason.ts";
 import "./emoji/deleteEmojiWithoutReason.ts";
@@ -581,9 +581,12 @@ import "./invite/getInvites.ts";
 import "./members/avatarlUrl.ts";
 import "./members/ban.ts";
 import "./members/getDmChannel.ts";
+import "./misc/getApplicationInfo.ts";
 import "./misc/getDiscoveryCategories.ts";
 import "./misc/getUser.ts";
+import "./misc/getVoiceRegions.ts";
 import "./misc/snowflake.ts";
+import "./misc/typing.ts";
 import "./misc/validateDiscovery.ts";
 import "./role/addRole.ts";
 import "./role/createRoleWithoutReason.ts";
