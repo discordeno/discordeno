@@ -58,11 +58,7 @@ import {
   processGatewayQueue,
 } from "./ws/mod.ts";
 import { validateLength } from "./util/validateLength.ts";
-import {
-  delay,
-  formatImageURL,
-  hasProperty,
-} from "./util/utils.ts";
+import { delay, formatImageURL, hasProperty } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { calculateShardId } from "./util/calculateShardId.ts";
 import * as handlers from "./handlers/mod.ts";
@@ -89,6 +85,7 @@ import { StatusUpdate } from "./types/gateway/statusUpdate.ts";
 import { calculateBits, calculatePermissions } from "./util/permissions.ts";
 import { transformScheduledEvent } from "./transformers/scheduledEvent.ts";
 import { DiscordenoScheduledEvent } from "./transformers/scheduledEvent.ts";
+import { transformThreadMember } from "./transformers/threadMember.ts";
 
 type CacheOptions =
   | {
@@ -794,6 +791,7 @@ export interface Transformers {
   auditlogEntry: typeof transformAuditlogEntry;
   applicationCommandPermission: typeof transformApplicationCommandPermission;
   scheduledEvent: typeof transformScheduledEvent;
+  threadMember: typeof transformThreadMember;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -821,6 +819,7 @@ export function createTransformers(options: Partial<Transformers>) {
     auditlogEntry: options.auditlogEntry || transformAuditlogEntry,
     applicationCommandPermission: options.applicationCommandPermission || transformApplicationCommandPermission,
     scheduledEvent: options.scheduledEvent || transformScheduledEvent,
+    threadMember: options.threadMember || transformThreadMember,
   };
 }
 
@@ -1238,7 +1237,8 @@ export function createBotGatewayHandlers(
     GUILD_SCHEDULED_EVENT_DELETE: options.GUILD_SCHEDULED_EVENT_DELETE ?? handlers.handleGuildScheduledEventDelete,
     GUILD_SCHEDULED_EVENT_UPDATE: options.GUILD_SCHEDULED_EVENT_UPDATE ?? handlers.handleGuildScheduledEventUpdate,
     GUILD_SCHEDULED_EVENT_USER_ADD: options.GUILD_SCHEDULED_EVENT_USER_ADD ?? handlers.handleGuildScheduledEventUserAdd,
-    GUILD_SCHEDULED_EVENT_USER_REMOVE: options.GUILD_SCHEDULED_EVENT_USER_REMOVE ?? handlers.handleGuildScheduledEventUserRemove,
+    GUILD_SCHEDULED_EVENT_USER_REMOVE:
+      options.GUILD_SCHEDULED_EVENT_USER_REMOVE ?? handlers.handleGuildScheduledEventUserRemove,
     // interactions
     INTERACTION_CREATE: options.INTERACTION_CREATE ?? handlers.handleInteractionCreate,
     // invites

@@ -12,11 +12,6 @@ export interface StartThreadBase {
   reason?: string;
 }
 
-export interface StartThreadWithMessage extends StartThreadBase {
-  /** The message id with which to start a thread on. */
-  messageId: bigint;
-}
-
 export interface StartThreadWithoutMessage extends StartThreadBase {
   /** the type of thread to create */
   type: ChannelTypes.GuildNewsThread | ChannelTypes.GuildPublicThread | ChannelTypes.GuildPrivateThread;

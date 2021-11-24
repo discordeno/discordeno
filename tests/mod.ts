@@ -565,7 +565,10 @@ Deno.test({
 });
 
 import "./channels/connectToVoice.ts";
+import "./channels/getChannel.ts";
+import "./channels/getChannels.ts";
 import "./channels/stageInstances.ts";
+import "./channels/threads.ts";
 import "./emoji/createEmoji.ts";
 import "./emoji/deleteEmojiWithReason.ts";
 import "./emoji/deleteEmojiWithoutReason.ts";

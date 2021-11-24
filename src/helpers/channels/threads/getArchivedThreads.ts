@@ -13,38 +13,35 @@ export async function getArchivedThreads(
     type?: "public" | "private" | "privateJoinedThreads";
   }
 ) {
-  // const permissions = new Set<PermissionStrings>(["READ_MESSAGE_HISTORY"]);
-  // if (options?.type === "private") permissions.add("MANAGE_THREADS");
-  // // TODO: pagination
-  // const result = (await bot.rest.runMethod(
-  //   bot.rest,
-  //   "get",
-  //   options?.type === "privateJoinedThreads"
-  //     ? bot.constants.endpoints.THREAD_ARCHIVED_PRIVATE_JOINED(channelId)
-  //     : options?.type === "private"
-  //     ? bot.constants.endpoints.THREAD_ARCHIVED_PRIVATE(channelId)
-  //     : bot.constants.endpoints.THREAD_ARCHIVED_PUBLIC(channelId),
-  //   options
-  //     ? {
-  //         before: options.before,
-  //         limit: options.limit,
-  //         type: options.type,
-  //       }
-  //     : {}
-  // )) as ListActiveThreads;
-  // const threads = new Collection(
-  //   result.threads.map((t) => {
-  //     const ddThread = channelToThread(t);
-  //     return [ddThread.id, ddThread];
-  //   })
-  // );
-  // for (const member of result.members) {
-  //   const thread = threads.get(bot.transformers.snowflake(member.id!));
-  //   thread?.members.set(bot.transformers.snowflake(member.userId!), {
-  //     userId: bot.transformers.snowflake(member.userId!),
-  //     flags: member.flags,
-  //     joinTimestamp: Date.parse(member.joinTimestamp),
-  //   });
-  // }
-  // return threads;
+  const result = (await bot.rest.runMethod<ListActiveThreads>(
+    bot.rest,
+    "get",
+    options?.type === "privateJoinedThreads"
+      ? bot.constants.endpoints.THREAD_ARCHIVED_PRIVATE_JOINED(channelId)
+      : options?.type === "private"
+      ? bot.constants.endpoints.THREAD_ARCHIVED_PRIVATE(channelId)
+      : bot.constants.endpoints.THREAD_ARCHIVED_PUBLIC(channelId),
+    options
+      ? {
+          before: options.before,
+          limit: options.limit,
+          type: options.type,
+        }
+      : {}
+  ));
+  
+  return {
+    threads: new Collection(
+      result.threads.map((t) => {
+        const thread = bot.transformers.channel(bot, { channel: t });
+        return [thread.id, thread];
+      })
+    ),
+    members: new Collection(
+      result.members.map((m) => {
+        const member = bot.transformers.threadMember(bot, m);
+        return [member.id, member];
+      })
+    ),
+  };;
 }
