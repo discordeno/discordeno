@@ -564,11 +564,14 @@ Deno.test({
   ...sanitizeMode,
 });
 
+//channels
 import "./channels/connectToVoice.ts";
 import "./channels/getChannel.ts";
 import "./channels/getChannels.ts";
 import "./channels/stageInstances.ts";
 import "./channels/threads.ts";
+
+//emoji
 import "./emoji/createEmoji.ts";
 import "./emoji/deleteEmojiWithReason.ts";
 import "./emoji/deleteEmojiWithoutReason.ts";
@@ -576,15 +579,22 @@ import "./emoji/editEmoji.ts";
 import "./emoji/emojiUrl.ts";
 import "./emoji/getEmoji.ts";
 import "./emoji/getMultipleEmojis.ts";
+
+//invite
 import "./invite/createInvite.ts";
 import "./invite/deleteInvite.ts";
 import "./invite/getChannelInvites.ts";
 import "./invite/getInvite.ts";
 import "./invite/getInvites.ts";
+
+//members
 import "./members/avatarlUrl.ts";
 import "./members/ban.ts";
+import "./members/editBotNickname.ts";
 import "./members/getDmChannel.ts";
 import "./members/getMember.ts";
+
+//misc
 import "./misc/getApplicationInfo.ts";
 import "./misc/getDiscoveryCategories.ts";
 import "./misc/getUser.ts";
@@ -592,6 +602,8 @@ import "./misc/getVoiceRegions.ts";
 import "./misc/snowflake.ts";
 import "./misc/typing.ts";
 import "./misc/validateDiscovery.ts";
+
+//role
 import "./role/addRole.ts";
 import "./role/createRoleWithoutReason.ts";
 import "./role/createRoleWithReason.ts";
@@ -600,6 +612,8 @@ import "./role/deleteRoleWithReason.ts";
 import "./role/editRole.ts";
 import "./role/getAllRoles.ts";
 import "./role/removeRole.ts";
+
+//scheduledEvents
 import "./scheduledEvents/createExternalEventWithEndtime.ts";
 import "./scheduledEvents/createExternalEventWithoutEndtime.ts";
 import "./scheduledEvents/createStageEventWithEndtime.ts";
@@ -608,6 +622,8 @@ import "./scheduledEvents/createVoiceEventWithEndtime.ts";
 import "./scheduledEvents/createVoiceEventWithoutEndtime.ts";
 import "./scheduledEvents/deleteEvent.ts";
 import "./scheduledEvents/editEvent.ts";
+
+//webhooks
 import "./webhooks/deleteWebhook.ts";
 import "./webhooks/deleteWebhookWithToken.ts";
 import "./webhooks/sendWebhook.ts";
