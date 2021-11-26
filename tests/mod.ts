@@ -86,7 +86,7 @@ if (bot.cache.guilds.size() <= 10) {
 await delayUntil(10000, () => Boolean(startedAt));
 
 // CREATE ONE GUILD SO WE CAN REUSE LATER TO SAVE RATE LIMITS
-export const guild = await bot.helpers.createGuild({ name: "Discordeno Test" });
+export const guild = await bot.helpers.getGuild(CACHED_COMMUNITY_GUILD_ID);
 
 // Assertions
 assertExists(guild);

@@ -1,4 +1,4 @@
-export const CACHED_COMMUNITY_GUILD_ID = 907350958810480671n;
+export const CACHED_COMMUNITY_GUILD_ID = 907350958810480671n; // revert back to 907350958810480671n when testing is finished
 
 // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
 export const sanitizeMode = {
