@@ -13,6 +13,8 @@ jobs:
           deno-version: ${{ matrix.deno }}
       - name: Cache dependencies
         run: deno cache mod.ts
+      - name: Prepare configs file
+        run: cp configs.example.ts configs.ts
       - name: Run tests if requested by maintainers
         if: ${{ github.event.issue.pull_request && github.event.comment.body == 'run-tests' && (github.actor == 'Skillz4Killz' || github.actor == 'itohatweb') }}
         run: DISCORD_TOKEN=${{ env.DISCORD_TOKEN }} deno test --unstable --coverage=coverage -A tests/mod.ts
