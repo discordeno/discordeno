@@ -602,6 +602,7 @@ import "./misc/getVoiceRegions.ts";
 import "./misc/snowflake.ts";
 import "./misc/typing.ts";
 import "./misc/validateDiscovery.ts";
+import "./misc/editBotStatus.ts"
 
 //role
 import "./role/addRole.ts";
