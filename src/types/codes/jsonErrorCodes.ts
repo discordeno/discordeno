@@ -122,7 +122,7 @@ export enum JsonErrorCodes {
   ThisServerNeedsMoreBoostsToPerformThisAction = 50101,
   TwoFactorIsRequiredForThisOperation = 60003,
   NoUsersWithDiscordTagExist = 80004,
-  ReqctionWasBlocked = 90001,
+  ReactionWasBlocked = 90001,
   ApiResourceIsCurrentlyOverloadedTryAgainALittleLater = 130000,
   TheStageIsAlreadyOpen = 150006,
   CannotReplyWithoutPermissionToReadMessageHistory = 160002,
