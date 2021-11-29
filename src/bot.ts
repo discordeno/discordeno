@@ -586,7 +586,6 @@ export interface Helpers {
   upsertApplicationCommands: typeof helpers.upsertApplicationCommands;
   validDiscoveryTerm: typeof helpers.validDiscoveryTerm;
   addToThread: typeof helpers.addToThread;
-  deleteThread: typeof helpers.deleteThread;
   editThread: typeof helpers.editThread;
   getActiveThreads: typeof helpers.getActiveThreads;
   getArchivedThreads: typeof helpers.getArchivedThreads;
@@ -755,7 +754,6 @@ export function createBaseHelpers(options: Partial<Helpers>) {
     upsertApplicationCommands: options.upsertApplicationCommands || helpers.upsertApplicationCommands,
     validDiscoveryTerm: options.validDiscoveryTerm || helpers.validDiscoveryTerm,
     addToThread: options.addToThread || helpers.addToThread,
-    deleteThread: options.deleteThread || helpers.deleteThread,
     editThread: options.editThread || helpers.editThread,
     getActiveThreads: options.getActiveThreads || helpers.getActiveThreads,
     getArchivedThreads: options.getArchivedThreads || helpers.getArchivedThreads,

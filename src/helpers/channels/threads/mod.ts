@@ -1,5 +1,4 @@
 export * from "./addToThread.ts";
-export * from "./deleteThread.ts";
 export * from "./editThread.ts";
 export * from "./getActiveThreads.ts";
 export * from "./getArchivedThreads.ts";

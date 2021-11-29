@@ -54,6 +54,6 @@ Deno.test("[thread] Start a thread", async (t) => {
   });
 
   await t.step("[thread] Delete a thread", async () => {
-    await bot.helpers.deleteThread(thread.id);
+    await bot.helpers.deleteChannel(thread.id);
   });
 });
