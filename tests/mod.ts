@@ -59,6 +59,7 @@ export const bot = createBot({
     "GuildMembers",
     "GuildScheduledEvents",
     "GuildVoiceStates",
+    "GuildPresences"
   ],
   cache: {
     isAsync: false,
