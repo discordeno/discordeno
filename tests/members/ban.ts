@@ -66,7 +66,7 @@ Deno.test({
         });
     
         // Assertions
-        assertExists(bot.members..get(BigInt(`${bot.id}${guild.id}`)));
+        assertExists(bot.members.get(BigInt(`${bot.id}${guild.id}`)));
       },
     });
     
