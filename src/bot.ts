@@ -86,6 +86,8 @@ import { calculateBits, calculatePermissions } from "./util/permissions.ts";
 import { transformScheduledEvent } from "./transformers/scheduledEvent.ts";
 import { DiscordenoScheduledEvent } from "./transformers/scheduledEvent.ts";
 import { transformThreadMember } from "./transformers/threadMember.ts";
+import { transformApplicationCommandOption } from "./transformers/applicationCommandOption.ts";
+import { transformApplicationCommand } from "./transformers/applicationCommand.ts";
 
 type CacheOptions =
   | {
@@ -492,6 +494,8 @@ export interface Transformers {
   component: typeof transformComponent;
   webhook: typeof transformWebhook;
   auditlogEntry: typeof transformAuditlogEntry;
+  applicationCommand: typeof transformApplicationCommand;
+  applicationCommandOption: typeof transformApplicationCommandOption;
   applicationCommandPermission: typeof transformApplicationCommandPermission;
   scheduledEvent: typeof transformScheduledEvent;
   threadMember: typeof transformThreadMember;
@@ -520,6 +524,8 @@ export function createTransformers(options: Partial<Transformers>) {
     snowflake: options.snowflake || snowflakeToBigint,
     webhook: options.webhook || transformWebhook,
     auditlogEntry: options.auditlogEntry || transformAuditlogEntry,
+    applicationCommand: options.applicationCommand || transformApplicationCommand,
+    applicationCommandOption: options.applicationCommandOption || transformApplicationCommandOption,
     applicationCommandPermission: options.applicationCommandPermission || transformApplicationCommandPermission,
     scheduledEvent: options.scheduledEvent || transformScheduledEvent,
     threadMember: options.threadMember || transformThreadMember,

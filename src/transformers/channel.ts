@@ -135,7 +135,7 @@ export interface DiscordenoChannel {
   guildId: bigint;
   /** The id of the last message sent in this channel (may not point to an existing or valid message) */
   lastMessageId?: bigint;
-  /** id of the DM creator */
+  /** id of the DM creator or thread */
   ownerId?: bigint;
   /** Application id of the group DM creator if it is bot-created */
   applicationId?: bigint;

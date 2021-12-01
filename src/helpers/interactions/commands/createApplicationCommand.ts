@@ -15,7 +15,7 @@ import { ApplicationCommandOption } from "../../../types/interactions/commands/a
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
 export async function createApplicationCommand(bot: Bot, options: CreateGlobalApplicationCommand, guildId?: bigint) {
-  return await bot.rest.runMethod<ApplicationCommand>(
+  const result = await bot.rest.runMethod<ApplicationCommand>(
     bot.rest,
     "post",
     guildId
@@ -28,6 +28,8 @@ export async function createApplicationCommand(bot: Bot, options: CreateGlobalAp
       options: options.options ? makeOptionsForCommand(options.options) : undefined,
     }
   );
+
+  return bot.transformers.applicationCommand(bot, result);
 }
 
 // @ts-ignore TODO: see if we can make this not circular
