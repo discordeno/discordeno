@@ -4,11 +4,7 @@ import { Collection } from "../../util/collection.ts";
 import { Bot } from "../../bot.ts";
 
 /**
- * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM cache.members.filter()
- * @param bot
- * @param guildId
- * @param query Query string to match username(s) and nickname(s) against
- * @param options
+ * Query string to match username(s) and nickname(s) against
  */
 export async function searchMembers(
   bot: Bot,

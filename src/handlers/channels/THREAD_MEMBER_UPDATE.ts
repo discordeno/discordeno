@@ -1,5 +1,3 @@
-// import { eventHandlers } from "../../bot.ts";
-// import { cacheHandlers } from "../../cache.ts";
 import { ThreadMember } from "../../types/channels/threads/threadMember.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
 import { snowflakeToBigint } from "../../util/bigint.ts";

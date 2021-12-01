@@ -77,7 +77,6 @@ import { urlToBase64 } from "./util/urlToBase64.ts";
 import { transformAttachment } from "./transformers/attachment.ts";
 import { transformEmbed } from "./transformers/embed.ts";
 import { transformComponent } from "./transformers/component.ts";
-import { AsyncCache, AsyncCacheHandler, Cache, CacheHandler, createCache, TableNames } from "./cache.ts";
 import { transformWebhook } from "./transformers/webhook.ts";
 import { transformAuditlogEntry } from "./transformers/auditlogEntry.ts";
 import { transformApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
@@ -89,21 +88,7 @@ import { transformThreadMember } from "./transformers/threadMember.ts";
 import { transformApplicationCommandOption } from "./transformers/applicationCommandOption.ts";
 import { transformApplicationCommand } from "./transformers/applicationCommand.ts";
 
-type CacheOptions =
-  | {
-      isAsync: true;
-      // deno-lint-ignore no-explicit-any
-      tableCreator: (tableName: TableNames) => AsyncCacheHandler<any>;
-    }
-  | {
-      isAsync: false;
-      // deno-lint-ignore no-explicit-any
-      tableCreator?: (tableName: TableNames) => CacheHandler<any>;
-    };
-
-export function createBot<C extends CacheOptions = CacheOptions>(
-  options: CreateBotOptions<C>
-): Bot<C extends { isAsync: true } ? AsyncCache : Cache> {
+export function createBot(options: CreateBotOptions): Bot {
   const bot = {
     id: options.botId,
     applicationId: options.applicationId || options.botId,
@@ -118,13 +103,15 @@ export function createBot<C extends CacheOptions = CacheOptions>(
     transformers: createTransformers(options.transformers ?? {}),
     enabledPlugins: new Set(),
     handleDiscordPayload: options.handleDiscordPayload,
-  } as unknown as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
+    cache: {
+      unrepliedInteractions: new Set<bigint>(),
+      fetchAllMembersProcessingRequests: new Map(),
+    },
+  } as Bot;
 
-  // @ts-ignore itoh cache types plz
-  bot.cache = createCache(bot as Bot, options.cache);
-  bot.helpers = createHelpers(bot as Bot, options.helpers ?? {});
+  bot.helpers = createHelpers(bot, options.helpers ?? {});
 
-  return bot as unknown as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
+  return bot as Bot;
 }
 
 export function createEventHandlers(events: Partial<EventHandlers>): EventHandlers {
@@ -399,7 +386,7 @@ export async function stopBot(bot: Bot) {
   return bot;
 }
 
-export interface CreateBotOptions<C extends CacheOptions = CacheOptions> {
+export interface CreateBotOptions {
   token: string;
   botId: bigint;
   applicationId?: bigint;
@@ -408,7 +395,10 @@ export interface CreateBotOptions<C extends CacheOptions = CacheOptions> {
   botGatewayData?: GetGatewayBot;
   rest?: Omit<CreateRestManagerOptions, "token">;
   handleDiscordPayload?: GatewayManager["handleDiscordPayload"];
-  cache: C;
+  cache: {
+    unrepliedInteractions: Set<bigint>;
+    fetchAllMembersProcessingRequests: Map<string, Function>;
+  };
   utils?: Partial<ReturnType<typeof createUtils>>;
   transformers?: Partial<ReturnType<typeof createTransformers>>;
   helpers?: Partial<Helpers>;
@@ -416,20 +406,9 @@ export interface CreateBotOptions<C extends CacheOptions = CacheOptions> {
 
 export type UnPromise<T extends Promise<unknown>> = T extends Promise<infer K> ? K : never;
 
-// export type CreatedBot = ReturnType<typeof createBot>;
-
-// export type Bot = CreatedBot & {
-//   utils: HelperUtils;
-//   rest: RestManager;
-//   gateway: GatewayManager;
-//   transformers: Transformers;
-//   helpers: Helpers;
-// };
-
-export interface Bot<C extends Cache | AsyncCache = AsyncCache | Cache> {
+export interface Bot {
   id: bigint;
   applicationId: bigint;
-
   token: string;
   intents: GatewayIntents;
   urlWSS: string;
@@ -443,7 +422,10 @@ export interface Bot<C extends Cache | AsyncCache = AsyncCache | Cache> {
   handlers: ReturnType<typeof createBotGatewayHandlers>;
   activeGuildIds: Set<bigint>;
   constants: ReturnType<typeof createBotConstants>;
-  cache: C;
+  cache: {
+    unrepliedInteractions: Set<bigint>;
+    fetchAllMembersProcessingRequests: Map<string, Function>;
+  };
   enabledPlugins: Set<string>;
   handleDiscordPayload?: GatewayManager["handleDiscordPayload"];
 }
@@ -451,7 +433,7 @@ export interface Bot<C extends Cache | AsyncCache = AsyncCache | Cache> {
 export const defaultHelpers = { ...helpers };
 export type DefaultHelpers = typeof defaultHelpers;
 // deno-lint-ignore no-empty-interface
-export interface Helpers extends DefaultHelpers { } // Use interface for declaration merging
+export interface Helpers extends DefaultHelpers {} // Use interface for declaration merging
 
 export function createHelpers(bot: Bot, customHelpers?: Partial<Helpers>): FinalHelpers {
   const converted = {} as FinalHelpers;
