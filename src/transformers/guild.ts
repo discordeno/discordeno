@@ -5,6 +5,7 @@ import { Collection } from "../util/collection.ts";
 import { DiscordenoRole } from "./role.ts";
 import { DiscordenoVoiceState } from "./voiceState.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordenoEmoji } from "./emoji.ts";
 
 export function transformGuild(
   bot: Bot,
@@ -77,7 +78,10 @@ export function transformGuild(
         return [result.id, result];
       })
     ),
-    emojis: new Collection((payload.guild.emojis || []).map((emoji) => [bot.transformers.snowflake(emoji.id!), emoji])),
+    emojis: new Collection((payload.guild.emojis || []).map((emoji) => {
+      const em = bot.transformers.emoji(bot, emoji);
+      return [em.id!, em]
+    })),
     voiceStates: new Collection(
       (payload.guild.voice_states || [])
         .map((vs) => bot.transformers.voiceState(bot, { voiceState: vs, guildId }))
@@ -162,7 +166,7 @@ export interface DiscordenoGuild
   /** The Voice State data for each user in a voice channel in this server. */
   voiceStates: Collection<bigint, DiscordenoVoiceState>;
   /** Custom guild emojis */
-  emojis: Collection<bigint, Emoji>;
+  emojis: Collection<bigint, DiscordenoEmoji>;
   /** Holds all the boolean toggles. */
   bitfield: bigint;
   /** When this guild was joined at */
