@@ -17,9 +17,9 @@ export async function cloneChannelTests(
   assertEquals(cloned.type, channel.type);
 
   // Delay the execution to allow CHANNEL_CREATE event to be processed
-  await delayUntil(10000, () => bot.cache.channels.has(cloned.id));
+  await delayUntil(10000, () => bot.channels.has(cloned.id));
 
-  assertExists(bot.cache.channels.has(cloned.id));
+  assertExists(bot.channels.has(cloned.id));
   assertEquals(channel.topic, cloned.topic);
   assertEquals(channel.bitrate, cloned.bitrate);
   assertEquals(channel.permissionOverwrites.length, cloned.permissionOverwrites.length);

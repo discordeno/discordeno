@@ -4,7 +4,13 @@ import { ChannelTypes } from "../../../src/types/mod.ts";
 import { assertExists, assertEquals } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
 
-export async function createChannelTests(bot: Bot, guildId: bigint, options: CreateGuildChannel, autoDelete: boolean, t: Deno.TestContext) {
+export async function createChannelTests(
+  bot: Bot,
+  guildId: bigint,
+  options: CreateGuildChannel,
+  autoDelete: boolean,
+  t: Deno.TestContext
+) {
   const channel = await bot.helpers.createChannel(guildId, options);
 
   // Assertions
@@ -12,9 +18,9 @@ export async function createChannelTests(bot: Bot, guildId: bigint, options: Cre
   assertEquals(channel.type, options.type || ChannelTypes.GuildText);
 
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, () => bot.cache.channels.has(channel.id));
+  await delayUntil(10000, () => bot.channels.has(channel.id));
 
-  if (!bot.cache.channels.has(channel.id)) {
+  if (!bot.channels.has(channel.id)) {
     throw new Error("The channel seemed to be created but it was not cached.");
   }
 

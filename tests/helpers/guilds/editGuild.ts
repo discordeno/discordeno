@@ -15,9 +15,9 @@ export async function editGuildTests(bot: Bot, guildId: bigint, t: Deno.TestCont
   assertExists(guild);
 
   // Delay the execution to allow event to be processed
-  // await delayUntil(10000, async () => bot.cache.guilds.get(guild.id)?.name === "Discordeno Test 1.0");
+  // await delayUntil(10000, async () => bot.guilds.get(guild.id)?.name === "Discordeno Test 1.0");
 
-  // if (!bot.cache.guilds.has(guild.id)) {
+  // if (!bot.guilds.has(guild.id)) {
   // throw new Error(`The guild seemed to be edited but the cache didn't got updated.`);
   // }
 }

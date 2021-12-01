@@ -41,7 +41,7 @@ if (!UNITTEST_TOKEN) throw new Error("Token was not provided.");
 const botId = BigInt(atob(UNITTEST_TOKEN.split(".")[0]));
 
 let startedAt = 0;
-export const bot = createBot({
+const baseBot = createBot({
   token: UNITTEST_TOKEN,
   botId,
   events: createEventHandlers({
@@ -59,15 +59,11 @@ export const bot = createBot({
     "GuildMembers",
     "GuildScheduledEvents",
     "GuildVoiceStates",
-    "GuildPresences"
+    "GuildPresences",
   ],
-  cache: {
-    isAsync: false,
-  },
 });
 
-// @ts-ignore
-enableCachePlugin(bot);
+const bot = enableCachePlugin(baseBot);
 await startBot(bot);
 
 // Delay the execution to allow READY events to be processed
@@ -75,8 +71,8 @@ await delayUntil(10000, () => Boolean(startedAt));
 console.log("Bot online");
 
 // DELETE GUILDS IF LESS THAN 10 SERVERS AS SAFETY MEASURE
-if (bot.cache.guilds.size() <= 10) {
-  bot.cache.guilds.forEach(async (guild) => {
+if (bot.guilds.size() <= 10) {
+  bot.guilds.forEach(async (guild) => {
     // DO NOT DELETE OUR CACHED TEST SERVER FOR COMMUNITY FEATURES
     if (guild.id === CACHED_COMMUNITY_GUILD_ID) return;
     if (guild.ownerId === bot.id) await bot.helpers.deleteGuild(guild.id);
@@ -94,10 +90,10 @@ assertExists(guild);
 assertExists(guild.id);
 
 // Delay the execution to allow GUILD_CREATE event to be processed
-await delayUntil(10000, () => bot.cache.guilds.has(guild.id));
+await delayUntil(10000, () => bot.guilds.has(guild.id));
 
 // FINAL CHECK TO THROW IF MISSING STILL
-if (!bot.cache.guilds.has(guild.id)) {
+if (!bot.guilds.has(guild.id)) {
   throw new Error(`The guild seemed to be created but it was not cached. ${guild.id.toString()}`);
 }
 
@@ -603,7 +599,7 @@ import "./misc/getVoiceRegions.ts";
 import "./misc/snowflake.ts";
 import "./misc/typing.ts";
 import "./misc/validateDiscovery.ts";
-import "./misc/editBotStatus.ts"
+import "./misc/editBotStatus.ts";
 
 //role
 import "./role/addRole.ts";

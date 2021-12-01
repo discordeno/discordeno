@@ -14,17 +14,10 @@ export async function getMessagesTest(bot: Bot, channelId: bigint, t: Deno.TestC
   // Delay the execution by to allow MESSAGE_CREATE event to be processed
   await delayUntil(
     10000,
-    () =>
-      bot.cache.messages.has(message.id) &&
-      bot.cache.messages.has(secondMessage.id) &&
-      bot.cache.messages.has(thirdMessage.id)
+    () => bot.messages.has(message.id) && bot.messages.has(secondMessage.id) && bot.messages.has(thirdMessage.id)
   );
   // Make sure the messages was created.
-  if (
-    !bot.cache.messages.has(message.id) ||
-    !bot.cache.messages.has(secondMessage.id) ||
-    !bot.cache.messages.has(thirdMessage.id)
-  ) {
+  if (!bot.messages.has(message.id) || !bot.messages.has(secondMessage.id) || !bot.messages.has(thirdMessage.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
   }
 

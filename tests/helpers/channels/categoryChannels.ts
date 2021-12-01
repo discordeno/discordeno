@@ -12,9 +12,9 @@ export async function categoryChildrenTest(bot: Bot, guildId: bigint, t: Deno.Te
   // Assertions
   assertExists(category);
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, () => bot.cache.channels.has(category.id));
+  await delayUntil(10000, () => bot.channels.has(category.id));
 
-  assertExists(bot.cache.channels.has(category.id));
+  assertExists(bot.channels.has(category.id));
 
   const channelsToCreate = [1, 2, 3, 4, 5];
   const channels = await Promise.all(
@@ -26,14 +26,14 @@ export async function categoryChildrenTest(bot: Bot, guildId: bigint, t: Deno.Te
     )
   );
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, () => channels.every((c) => bot.cache.channels.has(c.id)));
+  await delayUntil(10000, () => channels.every((c) => bot.channels.has(c.id)));
 
   // If every channel is not present in the cache, error out
-  if (!channels.every((c) => bot.cache.channels.has(c.id))) {
+  if (!channels.every((c) => bot.channels.has(c.id))) {
     throw new Error("The channels seemed to be created but it was not cached.");
   }
 
-  // const ids = bot.cache.channels.filter((c) => c.parentId === category.id);
+  // const ids = bot.channels.filter((c) => c.parentId === category.id);
   // if (ids.size !== channels.length || !channels.every((c) => ids.has(c.id))) {
   //   console.log("cccc 1", ids.size, channels.length);
   //   console.log(

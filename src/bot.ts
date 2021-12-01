@@ -395,10 +395,6 @@ export interface CreateBotOptions {
   botGatewayData?: GetGatewayBot;
   rest?: Omit<CreateRestManagerOptions, "token">;
   handleDiscordPayload?: GatewayManager["handleDiscordPayload"];
-  cache: {
-    unrepliedInteractions: Set<bigint>;
-    fetchAllMembersProcessingRequests: Map<string, Function>;
-  };
   utils?: Partial<ReturnType<typeof createUtils>>;
   transformers?: Partial<ReturnType<typeof createTransformers>>;
   helpers?: Partial<Helpers>;

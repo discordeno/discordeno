@@ -10,9 +10,9 @@ async function ifItFailsBlameWolf(bot: Bot, channelId: bigint, content: string |
   // Assertions
   assertExists(message);
   // Delay the execution by to allow MESSAGE_CREATE event to be processed
-  await delayUntil(10000, () => bot.cache.messages.has(message.id));
+  await delayUntil(10000, () => bot.messages.has(message.id));
   // Make sure the message was created.
-  if (!bot.cache.messages.has(message.id)) {
+  if (!bot.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
   }
 }

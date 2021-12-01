@@ -6,6 +6,6 @@ Deno.test({
   fn: async (t) => {
     const roles = await bot.helpers.getRoles(guild.id);
 
-    assertEquals(bot.cache.guilds.get(guild.id)?.roles.size, roles.size);
+    assertEquals(bot.guilds.get(guild.id)?.roles.size, roles.size);
   },
 });

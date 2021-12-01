@@ -1,4 +1,4 @@
-import { assertExists,assertEquals } from "../deps.ts";
+import { assertExists, assertEquals } from "../deps.ts";
 import { bot, guild } from "../mod.ts";
 import { delayUntil } from "../utils.ts";
 
@@ -12,9 +12,9 @@ Deno.test({
     assertExists(role);
 
     // Delay the execution to allow event to be processed
-    await delayUntil(10000, () => bot.cache.guilds.get(guild.id)?.roles.has(role.id));
+    await delayUntil(10000, () => bot.guilds.get(guild.id)?.roles.has(role.id));
 
-    if (!bot.cache.guilds.get(guild.id)?.roles.has(role.id)) {
+    if (!bot.guilds.get(guild.id)?.roles.has(role.id)) {
       throw new Error(`The role seemed to be created but it was not cached.`);
     }
 
@@ -23,8 +23,8 @@ Deno.test({
     });
 
     // Delay the execution to allow event to be processed
-    await delayUntil(10000, () => bot.cache.guilds.get(guild.id)?.roles.get(role.id)?.name === "#rememberAyntee");
+    await delayUntil(10000, () => bot.guilds.get(guild.id)?.roles.get(role.id)?.name === "#rememberAyntee");
 
-    assertEquals(bot.cache.guilds.get(guild.id)?.roles.get(role.id)?.name === "#rememberAyntee", true);
+    assertEquals(bot.guilds.get(guild.id)?.roles.get(role.id)?.name === "#rememberAyntee", true);
   },
 });

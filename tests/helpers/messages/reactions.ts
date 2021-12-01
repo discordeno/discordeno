@@ -17,9 +17,9 @@ export async function addReactionTest(
   assertExists(message);
 
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, () => bot.cache.messages.has(message.id));
+  await delayUntil(10000, () => bot.messages.has(message.id));
 
-  if (!bot.cache.messages.has(message.id)) {
+  if (!bot.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
   }
 
@@ -83,9 +83,9 @@ export async function removeAllReactionTests(bot: Bot, channelId: bigint, t: Den
   assertExists(message);
 
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, () => bot.cache.messages.has(message.id));
+  await delayUntil(10000, () => bot.messages.has(message.id));
 
-  if (!bot.cache.messages.has(message.id)) {
+  if (!bot.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
   }
 
@@ -124,9 +124,9 @@ export async function removeReactionTest(bot: Bot, channelId: bigint, t: Deno.Te
   assertExists(message);
 
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, () => bot.cache.messages.has(message.id));
+  await delayUntil(10000, () => bot.messages.has(message.id));
 
-  if (!bot.cache.messages.has(message.id)) {
+  if (!bot.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
   }
 
@@ -166,15 +166,15 @@ export async function removeReactionEmojiTest(bot: Bot, channelId: bigint, t: De
   assertExists(message);
 
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, () => bot.cache.messages.has(message.id));
+  await delayUntil(10000, () => bot.messages.has(message.id));
 
-  if (!bot.cache.messages.has(message.id)) {
+  if (!bot.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
   }
 
   reactionCounters.set(message.id, 0);
 
-  bot.events.reactionAdd
+  bot.events.reactionAdd;
 
   bot.events.reactionRemoveEmoji = function (bot, payload) {
     reactionCounters.set(payload.messageId, 0);

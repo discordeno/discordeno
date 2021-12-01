@@ -13,9 +13,9 @@ export async function createEmojiTest(bot: Bot, guildId: bigint, t: Deno.TestCon
   assertExists(emoji);
 
   // // Delay the execution to allow event to be processed
-  // await delayUntil(10000, async () => bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id));
+  // await delayUntil(10000, async () => bot.guilds.get(guildId)?.emojis?.has(emoji.id));
 
-  // if (!bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id)) {
+  // if (!bot.guilds.get(guildId)?.emojis?.has(emoji.id)) {
   //   throw new Error("The emoji seemed to be created but it was not cached.");
   // }
 }

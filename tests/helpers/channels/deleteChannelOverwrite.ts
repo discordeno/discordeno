@@ -1,9 +1,8 @@
-import { Bot, createChannel, ChannelTypes, channelOverwriteHasPermission, OverwriteTypes } from "../../../mod.ts";
-import { Cache } from "../../../src/cache.ts";
+import { Bot, ChannelTypes, channelOverwriteHasPermission, OverwriteTypes } from "../../../mod.ts";
 import { assertExists, assertEquals } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
 
-export async function deleteChannelOverwriteTests(bot: Bot<Cache>, guildId: bigint, t: Deno.TestContext) {
+export async function deleteChannelOverwriteTests(bot: Bot, guildId: bigint, t: Deno.TestContext) {
   const channel = await bot.helpers.createChannel(guildId, {
     name: "Discordeno-test",
     permissionOverwrites: [
@@ -21,29 +20,26 @@ export async function deleteChannelOverwriteTests(bot: Bot<Cache>, guildId: bigi
   assertEquals(channel.type, ChannelTypes.GuildText);
 
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, () => bot.cache.channels.has(channel.id));
+  await delayUntil(10000, () => bot.channels.has(channel.id));
 
-  if (!bot.cache.channels.has(channel.id)) {
+  if (!bot.channels.has(channel.id)) {
     throw new Error("The channel seemed to be created but it was not cached.");
   }
 
   assertEquals(channel.permissionOverwrites.length, 1);
 
   assertEquals(
-    channelOverwriteHasPermission(
-      channel.guildId,
-      bot.id,
-      bot.cache.channels.get(channel.id)?.permissionOverwrites || [],
-      ["VIEW_CHANNEL"]
-    ),
+    channelOverwriteHasPermission(channel.guildId, bot.id, bot.channels.get(channel.id)?.permissionOverwrites || [], [
+      "VIEW_CHANNEL",
+    ]),
     true
   );
 
   await bot.helpers.deleteChannelOverwrite(channel.id, bot.id);
 
-  await delayUntil(10000, () => bot.cache.channels.get(channel.id)?.permissionOverwrites?.length === 0);
+  await delayUntil(10000, () => bot.channels.get(channel.id)?.permissionOverwrites?.length === 0);
 
-  if (bot.cache.channels.get(channel.id)?.permissionOverwrites?.length !== 0) {
+  if (bot.channels.get(channel.id)?.permissionOverwrites?.length !== 0) {
     throw new Error("The channel permission overwrite was supposed to be deleted but it does not appear to be.");
   }
 }
