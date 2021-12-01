@@ -18,8 +18,8 @@ export class Collection<K, V> extends Map<K, V> {
 
     this.sweeper = options;
     this.sweeper.intervalId = setInterval(() => {
-      this.map(async (value, key) => {
-        if (!(await this.sweeper?.filter(options.bot!, value, key))) return;
+      this.forEach((value, key) => {
+        if (!this.sweeper?.filter(value, key, options.bot)) return;
 
         this.delete(key);
         return key;
@@ -39,7 +39,7 @@ export class Collection<K, V> extends Map<K, V> {
     this.startSweeper({ filter: this.sweeper.filter, interval: newInterval });
   }
 
-  changeSweeperFilter(newFilter: (bot: Bot, value: V, key: K) => boolean | Promise<boolean>) {
+  changeSweeperFilter(newFilter: (value: V, key: K, bot: Bot) => boolean) {
     if (!this.sweeper) return;
 
     this.startSweeper({ filter: newFilter, interval: this.sweeper.interval });
@@ -136,7 +136,7 @@ interface CollectionOptions<K, V> {
 
 interface CollectionSweeper<K, V> {
   /** The filter to determine whether an element should be deleted or not */
-  filter: (bot: Bot, value: V, key: K) => boolean | Promise<boolean>;
+  filter: (value: V, key: K, ...args: any[]) => boolean;
   /** The interval in which the sweeper should run */
   interval: number;
   /** The bot object itself */
