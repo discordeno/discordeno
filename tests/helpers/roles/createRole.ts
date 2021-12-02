@@ -1,8 +1,8 @@
-import { Bot } from "../../../src/bot.ts";
 import { assertExists } from "../../deps.ts";
+import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
-export async function createRoleTests(bot: Bot, guildId: bigint, options: { reason?: string }, t: Deno.TestContext) {
+export async function createRoleTests(guildId: bigint, options: { reason?: string }) {
   const role = await bot.helpers.createRole(guildId, { name: "hoti" }, options.reason);
 
   assertExists(role);

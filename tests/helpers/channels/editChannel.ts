@@ -1,8 +1,8 @@
-import { Bot } from "../../../src/bot.ts";
 import { assertEquals } from "../../deps.ts";
+import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
-export async function editChannelTests(bot: Bot, guildId: bigint, options: { reason?: string }, t: Deno.TestContext) {
+export async function editChannelTests(guildId: bigint, options: { reason?: string }) {
   // Create the necessary channels
   const channel = await bot.helpers.createChannel(guildId, {
     name: "edit-channel",

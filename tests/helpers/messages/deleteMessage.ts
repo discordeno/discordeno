@@ -1,8 +1,8 @@
-import { Bot } from "../../../src/bot.ts";
 import { assertExists } from "../../deps.ts";
+import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
-async function ifItFailsBlameWolf(bot: Bot, channelId: bigint, reason?: string) {
+async function ifItFailsBlameWolf(channelId: bigint, reason?: string) {
   const message = await bot.helpers.sendMessage(channelId, "Hello World!");
 
   // Assertions
@@ -25,10 +25,10 @@ async function ifItFailsBlameWolf(bot: Bot, channelId: bigint, reason?: string) 
   }
 }
 
-export async function deleteMessageWithoutReasonTest(bot: Bot, channelId: bigint, t: Deno.TestContext) {
-  await ifItFailsBlameWolf(bot, channelId);
+export async function deleteMessageWithoutReasonTest(channelId: bigint) {
+  await ifItFailsBlameWolf(channelId);
 }
 
-export async function deleteMessageWithReasonTest(bot: Bot, channelId: bigint, t: Deno.TestContext) {
-  await ifItFailsBlameWolf(bot, channelId, "with a reason");
+export async function deleteMessageWithReasonTest(channelId: bigint) {
+  await ifItFailsBlameWolf(channelId, "with a reason");
 }

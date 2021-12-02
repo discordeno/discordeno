@@ -1,11 +1,11 @@
-import { Bot } from "../../../src/bot.ts";
 import { assertEquals } from "../../deps.ts";
+import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
-export async function pinMessageTests(bot: Bot, channelId: bigint, messageId: bigint, t: Deno.TestContext) {
+export async function pinMessageTests(channelId: bigint, messageId: bigint) {
   let pinned = false;
 
-  bot.events.channelPinsUpdate = function (bot, payload) {
+  bot.events.channelPinsUpdate = function (_, payload) {
     if (payload.channelId === channelId) pinned = !pinned;
   };
 

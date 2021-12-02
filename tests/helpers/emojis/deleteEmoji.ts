@@ -28,10 +28,10 @@ export async function ifItFailsBlameWolf(bot: Bot, guildId: bigint, reason?: str
   // }
 }
 
-export async function deleteEmojiWithReasonTest(bot: Bot, guildId: bigint, t: Deno.TestContext) {
+export async function deleteEmojiWithReasonTest(guildId: bigint) {
   await ifItFailsBlameWolf(bot, guildId);
 }
 
-export async function deleteEmojiWithoutReasonTest(bot: Bot, guildId: bigint, t: Deno.TestContext) {
+export async function deleteEmojiWithoutReasonTest(guildId: bigint) {
   await ifItFailsBlameWolf(bot, guildId, "with a reason");
 }

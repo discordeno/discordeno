@@ -1,7 +1,7 @@
 import { Bot } from "../../../src/bot.ts";
 import { assertEquals } from "../../deps.ts";
 
-export async function getRolesTest(bot: Bot, guildId: bigint, t: Deno.TestContext) {
+export async function getRolesTest(guildId: bigint) {
   const roles = await bot.helpers.getRoles(guildId);
 
   assertEquals(bot.guilds.get(guildId)?.roles.size, roles.size);

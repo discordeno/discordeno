@@ -1,9 +1,9 @@
-import { Bot } from "../../../src/bot.ts";
 import { ChannelTypes } from "../../../src/types/channels/channelTypes.ts";
 import { assertExists } from "../../deps.ts";
+import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
-export async function categoryChildrenTest(bot: Bot, guildId: bigint, t: Deno.TestContext) {
+export async function categoryChildrenTest(guildId: bigint) {
   const category = await bot.helpers.createChannel(guildId, {
     name: "Discordeno-test",
     type: ChannelTypes.GuildCategory,

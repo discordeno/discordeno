@@ -2,7 +2,7 @@ import { Bot } from "../../../src/bot.ts";
 import { assertEquals, assertExists } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
 
-export async function editRoleTests(bot: Bot, guildId: bigint, t: Deno.TestContext) {
+export async function editRoleTests(guildId: bigint) {
   const role = await bot.helpers.createRole(guildId, {
     name: "hoti",
   });

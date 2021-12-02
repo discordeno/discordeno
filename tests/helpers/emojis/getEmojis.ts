@@ -2,7 +2,7 @@ import { Bot } from "../../../src/bot.ts";
 import { assertExists } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
 
-export async function getEmojisTest(bot: Bot, guildId: bigint, t: Deno.TestContext) {
+export async function getEmojisTest(guildId: bigint) {
   const emoji = await bot.helpers.createEmoji(guildId, {
     name: "blamewolf",
     image: "https://cdn.discordapp.com/emojis/814955268123000832.png",

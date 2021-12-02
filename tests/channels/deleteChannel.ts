@@ -1,7 +1,7 @@
-import { bot } from "../../mod.ts";
-import { delayUntil } from "../../utils.ts";
+import { bot, guild } from "../mod.ts";
+import { delayUntil } from "../utils.ts";
 
-export async function deleteChannelTests(guildId: bigint, options: { reason?: string }) {
+async function deleteChannelTests(guildId: bigint, options: { reason?: string }) {
   // Create the necessary channels
   const channel = await bot.helpers.createChannel(guildId, {
     name: "delete-channel",
@@ -23,3 +23,18 @@ export async function deleteChannelTests(guildId: bigint, options: { reason?: st
     throw new Error("The channel should have been deleted but it is still in cache.");
   }
 }
+
+Deno.test({
+  name: "[channel] delete a channel with a reason",
+  async fn(t) {
+    await deleteChannelTests(guild.id, {
+      reason: "with a reason",
+    });
+  },
+});
+Deno.test({
+  name: "[channel] delete a channel without a reason",
+  async fn(t) {
+    await deleteChannelTests(guild.id, {});
+  },
+});

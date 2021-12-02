@@ -6,7 +6,7 @@ import { delayUntil } from "../utils.ts";
 Deno.test({
   name: "[Role] create a role with a reason",
   fn: async (t) => {
-    await createRoleTests(bot, guild.id, { reason: "Blame wolfy" }, t);
+    await createRoleTests(guild.id, { reason: "Blame wolfy" });
 
     const role = await bot.helpers.createRole(guild.id, { name: "hoti" }, "Blame wolfy");
 

@@ -1,15 +1,13 @@
-import { Bot } from "../../../src/bot.ts";
 import { CreateGuildChannel } from "../../../src/types/guilds/createGuildChannel.ts";
 import { ChannelTypes } from "../../../src/types/mod.ts";
 import { assertExists, assertEquals } from "../../deps.ts";
+import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
 export async function createChannelTests(
-  bot: Bot,
   guildId: bigint,
   options: CreateGuildChannel,
   autoDelete: boolean,
-  t: Deno.TestContext
 ) {
   const channel = await bot.helpers.createChannel(guildId, options);
 

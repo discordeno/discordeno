@@ -1,15 +1,12 @@
-import { Bot } from "../../../src/bot.ts";
 import { DiscordenoChannel } from "../../../src/transformers/channel.ts";
 import { assertExists, assertEquals } from "../../deps.ts";
+import { bot, channel } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
 export async function cloneChannelTests(
-  bot: Bot,
-  guildId: bigint,
-  channel: DiscordenoChannel,
   options: { reason?: string },
-  t: Deno.TestContext
 ) {
+  // @ts-ignore for itoh
   const cloned = await bot.helpers.cloneChannel(channel, options.reason);
 
   //Assertations

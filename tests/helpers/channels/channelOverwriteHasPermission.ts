@@ -1,8 +1,9 @@
-import { Bot, createChannel, ChannelTypes, channelOverwriteHasPermission, OverwriteTypes } from "../../../mod.ts";
+import { ChannelTypes, channelOverwriteHasPermission, OverwriteTypes } from "../../../mod.ts";
 import { assertExists, assertEquals } from "../../deps.ts";
+import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
-export async function channelOverwriteHasPermissionTest(bot: Bot, guildId: bigint, t: Deno.TestContext) {
+export async function channelOverwriteHasPermissionTest(guildId: bigint) {
   const channel = await bot.helpers.createChannel(guildId, {
     name: "Discordeno-test",
     permissionOverwrites: [

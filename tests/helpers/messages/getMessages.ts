@@ -1,8 +1,8 @@
-import { Bot } from "../../../src/bot.ts";
 import { assertEquals, assertExists } from "../../deps.ts";
+import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
-export async function getMessagesTest(bot: Bot, channelId: bigint, t: Deno.TestContext) {
+export async function getMessagesTest(channelId: bigint) {
   const message = await bot.helpers.sendMessage(channelId, "Hello World!");
   const secondMessage = await bot.helpers.sendMessage(channelId, "Hello World 2!");
   const thirdMessage = await bot.helpers.sendMessage(channelId, "Hello World 3!");

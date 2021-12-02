@@ -1,11 +1,11 @@
-import { Bot } from "../../../src/bot.ts";
 import { assertExists } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
 import { CreateMessage } from "../../../src/types/messages/createMessage.ts";
 import { MessageComponentTypes } from "../../../src/types/messages/components/messageComponentTypes.ts";
 import { ButtonStyles } from "../../../src/types/messages/components/buttonStyles.ts";
+import { bot } from "../../mod.ts";
 
-async function ifItFailsBlameWolf(bot: Bot, channelId: bigint, content: string | CreateMessage) {
+async function ifItFailsBlameWolf(channelId: bigint, content: string | CreateMessage) {
   const message = await bot.helpers.sendMessage(channelId, content);
   // Assertions
   assertExists(message);
@@ -17,12 +17,12 @@ async function ifItFailsBlameWolf(bot: Bot, channelId: bigint, content: string |
   }
 }
 
-export async function sendMessageWithTextTest(bot: Bot, channelId: bigint, t: Deno.TestContext) {
-  await ifItFailsBlameWolf(bot, channelId, "Hello World!");
+export async function sendMessageWithTextTest(channelId: bigint) {
+  await ifItFailsBlameWolf(channelId, "Hello World!");
 }
 
-export async function sendMessageWithComponents(bot: Bot, channelId: bigint, t: Deno.TestContext) {
-  await ifItFailsBlameWolf(bot, channelId, {
+export async function sendMessageWithComponents(channelId: bigint) {
+  await ifItFailsBlameWolf(channelId, {
     content: "Hello World!",
     components: [
       {
@@ -57,8 +57,8 @@ export async function sendMessageWithComponents(bot: Bot, channelId: bigint, t: 
   });
 }
 
-export async function sendMessageWithEmbedsTest(bot: Bot, channelId: bigint, t: Deno.TestContext) {
-  await ifItFailsBlameWolf(bot, channelId, {
+export async function sendMessageWithEmbedsTest(channelId: bigint) {
+  await ifItFailsBlameWolf(channelId, {
     embeds: [
       {
         title: "Hello World",

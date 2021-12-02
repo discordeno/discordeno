@@ -1,10 +1,8 @@
-import { Bot } from "../../../src/bot.ts";
-import { CreateGuildChannel } from "../../../src/types/guilds/createGuildChannel.ts";
-import { ChannelTypes } from "../../../src/types/mod.ts";
 import { assertExists, assertEquals } from "../../deps.ts";
+import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
-export async function createGuildTests(bot: Bot, t: Deno.TestContext) {
+export async function createGuildTests() {
   const guild = await bot.helpers.createGuild({
     name: "Isekai Maid Fake Server",
   });

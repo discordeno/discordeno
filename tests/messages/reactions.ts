@@ -1,14 +1,19 @@
-import { Bot } from "../../../src/bot.ts";
-import { assertEquals, assertExists } from "../../deps.ts";
-import { bot } from "../../mod.ts";
-import { delayUntil } from "../../utils.ts";
-
-const reactionCounters = new Map<bigint, number>();
+import { Bot } from "../../mod.ts";
+import { reactionCounters } from "../constants.ts";
+import { assertExists, assertEquals } from "../deps.ts";
+// import {
+//   addReactionTest,
+//   removeReactionTest,
+//   removeAllReactionTests,
+//   removeReactionEmojiTest,
+// } from "../helpers/messages/reactions.ts";
+import { bot, guild, channel } from "../mod.ts";
+import { delayUntil } from "../utils.ts";
 
 export async function addReactionTest(
   guildId: bigint,
   channelId: bigint,
-  options: { custom: boolean; single: boolean; ordered: boolean }
+  options: { custom: boolean; single: boolean; ordered: boolean },
 ) {
   const message = await bot.helpers.sendMessage(channelId, "Hello World!");
 
@@ -90,11 +95,11 @@ export async function removeAllReactionTests(channelId: bigint) {
 
   reactionCounters.set(message.id, 0);
 
-  bot.events.reactionRemoveAll = function (bot, payload) {
+  bot.events.reactionRemoveAll = function (_, payload) {
     reactionCounters.set(payload.messageId, 0);
   };
 
-  bot.events.reactionAdd = function (bot, payload) {
+  bot.events.reactionAdd = function (_, payload) {
     const current = reactionCounters.get(payload.messageId) || 0;
     reactionCounters.set(payload.messageId, current + 1);
   };
@@ -200,3 +205,58 @@ export async function removeReactionEmojiTest(channelId: bigint) {
   // Check if the reactions has been deleted
   assertEquals(reactionCounters.get(message.id), 0);
 }
+
+Deno.test({
+  name: "[message] add a reaction",
+  fn: async (t) => {
+    await addReactionTest(guild.id, channel.id, { custom: false, single: true, ordered: false });
+  },
+});
+Deno.test({
+  name: "[message] add a custom reaction",
+  fn: async (t) => {
+    await addReactionTest(guild.id, channel.id, { custom: true, single: true, ordered: false });
+  },
+});
+Deno.test({
+  name: "[message] add multiple reactions",
+  fn: async (t) => {
+    await addReactionTest(guild.id, channel.id, { custom: false, single: false, ordered: false });
+  },
+});
+Deno.test({
+  name: "[message] add multiple custom reactions",
+  fn: async (t) => {
+    await addReactionTest(guild.id, channel.id, { custom: true, single: false, ordered: false });
+  },
+});
+Deno.test({
+  name: "[message] add multiple reactions in order",
+  fn: async (t) => {
+    await addReactionTest(guild.id, channel.id, { custom: false, single: false, ordered: true });
+  },
+});
+Deno.test({
+  name: "[message] add multiple custom reactions in order",
+  fn: async (t) => {
+    await addReactionTest(guild.id, channel.id, { custom: true, single: false, ordered: true });
+  },
+});
+Deno.test({
+  name: "[message] remove a reaction.",
+  fn: async (t) => {
+    await removeReactionTest(channel.id);
+  },
+});
+Deno.test({
+  name: "[message] remove all reactions.",
+  fn: async (t) => {
+    await removeAllReactionTests(channel.id);
+  },
+});
+Deno.test({
+  name: "[message] remove emoji reactions.",
+  fn: async (t) => {
+    await removeReactionEmojiTest(channel.id);
+  },
+});

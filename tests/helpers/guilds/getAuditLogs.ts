@@ -1,7 +1,7 @@
-import { Bot } from "../../../src/bot.ts";
 import { assertExists } from "../../deps.ts";
+import { bot } from "../../mod.ts";
 
-export async function getAuditLogsTests(bot: Bot, guildId: bigint, t: Deno.TestContext) {
+export async function getAuditLogsTests(guildId: bigint) {
   const logs = await bot.helpers.getAuditLogs(guildId);
 
   // Assertions

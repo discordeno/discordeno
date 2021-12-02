@@ -1,9 +1,12 @@
-import { Bot } from "../../../../src/bot.ts";
 import { ChannelTypes } from "../../../../src/types/channels/channelTypes.ts";
-import { CreateScheduledEvent, ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../../../../src/types/guilds/scheduledEvents.ts";
+import {
+  ScheduledEventEntityType,
+  ScheduledEventPrivacyLevel,
+} from "../../../../src/types/guilds/scheduledEvents.ts";
 import { assertEquals } from "../../../deps.ts";
+import { bot } from "../../../mod.ts";
 
-export async function editScheduledEventTests(bot: Bot, guildId: bigint, t: Deno.TestContext) {
+export async function editScheduledEventTests(guildId: bigint) {
   const channel = await bot.helpers.createChannel(guildId, {
     name: "entity",
     type: ChannelTypes.GuildStageVoice,

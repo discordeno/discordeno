@@ -9,5 +9,5 @@ export const sanitizeMode = {
 
 // USED FOR ROLE CHANGE EVENTS
 export const roleChanges = new Map<bigint, bigint[]>();
-
 export const banCounters = new Map<bigint, boolean>();
+export const reactionCounters = new Map<bigint, number>();
