@@ -107,9 +107,27 @@ export function createBot(options: CreateBotOptions): Bot {
       unrepliedInteractions: new Set<bigint>(),
       fetchAllMembersProcessingRequests: new Map(),
     },
+    rest: createRestManager({ token: options.token, debug: options.events.debug }),
   } as Bot;
 
   bot.helpers = createHelpers(bot, options.helpers ?? {});
+  bot.gateway = createGatewayManager({
+    token: bot.token,
+    intents: bot.intents,
+    debug: bot.events.debug,
+    handleDiscordPayload:
+      bot.handleDiscordPayload ??
+      async function (_, data: DiscordGatewayPayload, shardId: number) {
+        // TRIGGER RAW EVENT
+        bot.events.raw(bot as Bot, data, shardId);
+
+        if (!data.t) return;
+
+        // RUN DISPATCH CHECK
+        await bot.events.dispatchRequirements(bot as Bot, data, shardId);
+        bot.handlers[data.t as GatewayDispatchEventNames]?.(bot as Bot, data, shardId);
+      },
+  });
 
   return bot as Bot;
 }
@@ -251,36 +269,17 @@ export function createRestManager(options: CreateRestManagerOptions) {
 }
 
 export async function startBot(bot: Bot) {
-  // START REST
-  bot.rest = createRestManager({ token: bot.token, debug: bot.events.debug });
   if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot();
 
   // START WS
-  bot.gateway = createGatewayManager({
-    token: bot.token,
-    intents: bot.intents,
-    urlWSS: bot.botGatewayData.url,
-    shardsRecommended: bot.botGatewayData.shards,
-    sessionStartLimitTotal: bot.botGatewayData.sessionStartLimit.total,
-    sessionStartLimitRemaining: bot.botGatewayData.sessionStartLimit.remaining,
-    sessionStartLimitResetAfter: bot.botGatewayData.sessionStartLimit.resetAfter,
-    maxConcurrency: bot.botGatewayData.sessionStartLimit.maxConcurrency,
-    lastShardId: bot.botGatewayData.shards,
-    maxShards: bot.botGatewayData.shards,
-    debug: bot.events.debug,
-    handleDiscordPayload:
-      bot.handleDiscordPayload ??
-      async function (_, data: DiscordGatewayPayload, shardId: number) {
-        // TRIGGER RAW EVENT
-        bot.events.raw(bot as Bot, data, shardId);
-
-        if (!data.t) return;
-
-        // RUN DISPATCH CHECK
-        await bot.events.dispatchRequirements(bot as Bot, data, shardId);
-        bot.handlers[data.t as GatewayDispatchEventNames]?.(bot as Bot, data, shardId);
-      },
-  });
+  bot.gateway.urlWSS = bot.botGatewayData.url;
+  bot.gateway.shardsRecommended = bot.botGatewayData.shards;
+  bot.gateway.sessionStartLimitTotal = bot.botGatewayData.sessionStartLimit.total;
+  bot.gateway.sessionStartLimitRemaining = bot.botGatewayData.sessionStartLimit.remaining;
+  bot.gateway.sessionStartLimitResetAfter = bot.botGatewayData.sessionStartLimit.resetAfter;
+  bot.gateway.maxConcurrency = bot.botGatewayData.sessionStartLimit.maxConcurrency;
+  bot.gateway.lastShardId = bot.botGatewayData.shards;
+  bot.gateway.maxShards = bot.botGatewayData.shards;
 
   bot.gateway.spawnShards(bot.gateway);
 }
