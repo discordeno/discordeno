@@ -1,5 +1,4 @@
 //channels
-export * from "./channels/channelOverwriteHasPermission.ts";
 export * from "./channels/createChannel.ts";
 export * from "./channels/deleteChannel.ts";
 export * from "./channels/deleteChannelOverwrite.ts";

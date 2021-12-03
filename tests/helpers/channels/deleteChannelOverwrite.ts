@@ -1,5 +1,5 @@
-import { ChannelTypes, channelOverwriteHasPermission, OverwriteTypes } from "../../../mod.ts";
-import { assertExists, assertEquals } from "../../deps.ts";
+import { ChannelTypes, OverwriteTypes } from "../../../mod.ts";
+import { assertExists, assertEquals, channelOverwriteHasPermission } from "../../deps.ts";
 import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 

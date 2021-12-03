@@ -30,7 +30,6 @@ import { getBansTests } from "./helpers/guilds/getBans.ts";
 import { getGuildTests } from "./helpers/guilds/getGuild.ts";
 import { getVanityURLTests } from "./helpers/guilds/getVanityUrl.ts";
 import { categoryChildrenTest } from "./helpers/channels/categoryChannels.ts";
-import { channelOverwriteHasPermissionTest } from "./helpers/channels/channelOverwriteHasPermission.ts";
 import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOverwrite.ts";
 import { editChannelTests } from "./helpers/channels/editChannel.ts";
 import { CACHED_COMMUNITY_GUILD_ID, sanitizeMode } from "./constants.ts";
@@ -264,13 +263,6 @@ Deno.test({
   name: "[channel] filter all category channels",
   async fn(t) {
     await categoryChildrenTest(guild.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[channel] edit a channel permission overwrite",
-  async fn(t) {
-    await channelOverwriteHasPermissionTest(guild.id);
   },
   ...sanitizeMode,
 });
