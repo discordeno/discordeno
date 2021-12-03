@@ -169,7 +169,6 @@ export * from "./channels/threads/leaveThread.ts";
 export * from "./channels/threads/removeThreadMember.ts";
 export * from "./channels/threads/startThreadWithMessage.ts";
 export * from "./channels/threads/startThreadWithoutMessage.ts";
-export * from "./channels/cloneChannel.ts";
 
 //guilds
 export * from "./guilds/scheduledEvents/createScheduledEvent.ts";

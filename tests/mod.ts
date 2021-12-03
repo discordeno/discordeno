@@ -31,7 +31,6 @@ import { getGuildTests } from "./helpers/guilds/getGuild.ts";
 import { getVanityURLTests } from "./helpers/guilds/getVanityUrl.ts";
 import { categoryChildrenTest } from "./helpers/channels/categoryChannels.ts";
 import { channelOverwriteHasPermissionTest } from "./helpers/channels/channelOverwriteHasPermission.ts";
-import { cloneChannelTests } from "./helpers/channels/cloneChannel.ts";
 import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOverwrite.ts";
 import { editChannelTests } from "./helpers/channels/editChannel.ts";
 import { CACHED_COMMUNITY_GUILD_ID, sanitizeMode } from "./constants.ts";
@@ -272,20 +271,6 @@ Deno.test({
   name: "[channel] edit a channel permission overwrite",
   async fn(t) {
     await channelOverwriteHasPermissionTest(guild.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[channel] clone a channel w/o a reason",
-  async fn(t) {
-    await cloneChannelTests({});
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[channel] clone a channel w/ a reason",
-  async fn(t) {
-    await cloneChannelTests({ reason: "Blame wolf" });
   },
   ...sanitizeMode,
 });
