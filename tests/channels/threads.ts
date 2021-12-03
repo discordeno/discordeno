@@ -35,6 +35,7 @@ Deno.test("[thread] Start a thread", async (t) => {
 
     await t.step("[thread] Edit and archive a thread", async () => {
       const edited = await bot.helpers.editChannel(thread.id, {
+        // @ts-ignore
         archived: true,
         name: "new name",
         autoArchiveDuration: 1440,

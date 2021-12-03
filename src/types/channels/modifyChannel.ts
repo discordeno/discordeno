@@ -22,7 +22,7 @@ export interface ModifyChannel {
   /** Channel or category-specific permissions */
   permissionOverwrites?: Overwrite[] | null;
   /** Id of the new parent category for a channel */
-  parentId?: string | null;
+  parentId?: bigint | null;
   /** Voice region id for the voice channel, automatic when set to null */
   rtcRegion?: string | null;
   /** The camera video quality mode of the voice channel */
