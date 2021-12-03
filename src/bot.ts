@@ -271,7 +271,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
 export async function startBot(bot: Bot) {
   if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot();
 
-  // START WS
+  // SETUP GATEWAY LOGIN INFO
   bot.gateway.urlWSS = bot.botGatewayData.url;
   bot.gateway.shardsRecommended = bot.botGatewayData.shards;
   bot.gateway.sessionStartLimitTotal = bot.botGatewayData.sessionStartLimit.total;
