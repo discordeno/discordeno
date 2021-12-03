@@ -85,6 +85,8 @@ export async function sendInteractionResponse(
       roles: options.data.allowedMentions!.roles?.map((id) => id.toString()),
     },
     file: options.data.file,
+    custom_id: options.data.customId,
+    title: options.data.title,
     components: options.data.components?.map((component) => ({
       type: component.type,
       components: component.components.map((subcomponent) => {
