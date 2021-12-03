@@ -159,7 +159,6 @@ export * from "./channels/getStageInstance.ts";
 export * from "./channels/deleteStageInstance.ts";
 export * from "./voice/connectToVoiceChannel.ts";
 export * from "./channels/threads/addToThread.ts";
-export * from "./channels/threads/editThread.ts";
 export * from "./channels/threads/getActiveThreads.ts";
 export * from "./channels/threads/getArchivedThreads.ts";
 export * from "./channels/threads/getThreadMember.ts";

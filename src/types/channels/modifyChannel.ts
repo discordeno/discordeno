@@ -1,6 +1,5 @@
-import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { ChannelTypes } from "./channelTypes.ts";
-import { DiscordOverwrite, Overwrite } from "./overwrite.ts";
+import { Overwrite } from "./overwrite.ts";
 import { VideoQualityModes } from "./videoQualityModes.ts";
 
 export interface ModifyChannel {
@@ -28,10 +27,12 @@ export interface ModifyChannel {
   rtcRegion?: string | null;
   /** The camera video quality mode of the voice channel */
   videoQualityMode?: VideoQualityModes;
-}
-
-/** https://discord.com/developers/docs/resources/channel#modify-channel */
-export interface DiscordModifyChannel extends SnakeCasedPropertiesDeep<Omit<ModifyChannel, "permissionOverwrites">> {
-  // deno-lint-ignore camelcase
-  permission_overwrites?: DiscordOverwrite[];
+  /** Whether the thread is archived */
+  archived?: boolean;
+  /** Duration in minutes to automatically archive the thread after recent activity */
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080;
+  /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
+  locked?: boolean;
+  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
+  invitable?: boolean;
 }
