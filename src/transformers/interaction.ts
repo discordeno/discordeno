@@ -9,6 +9,7 @@ import {
   InteractionDataResolved,
   MessageComponentTypes,
   InteractionDataOption,
+  MessageComponents,
 } from "../types/mod.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { Collection } from "../util/collection.ts";
@@ -41,6 +42,7 @@ export function transformInteraction(bot: Bot, payload: SnakeCasedPropertiesDeep
       ? {
           componentType: payload.data.component_type,
           customId: payload.data.custom_id,
+          components: payload.data.components,
           values: payload.data.values,
           id: payload.data.id ? bot.transformers.snowflake(payload.data.id) : undefined,
           name: payload.data.name,
@@ -152,6 +154,8 @@ export interface DiscordenoInteraction {
     componentType?: MessageComponentTypes;
     /** The custom id provided for this component. */
     customId?: string;
+    /** The components if its a Modal Submit interaction. */
+    components?: MessageComponents;
     /** The values chosen by the user. */
     values?: string[];
     /** The Id of the invoked command */

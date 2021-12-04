@@ -7,9 +7,11 @@ export enum InteractionResponseTypes {
   /** ACK an interaction and edit a response later, the user sees a loading state */
   DeferredChannelMessageWithSource = 5,
   /** For components, ACK an interaction and edit the original message later; the user does not see a loading state */
-  DeferredUpdateMessage,
+  DeferredUpdateMessage = 6,
   /** For components, edit the message the component was attached to */
-  UpdateMessage,
+  UpdateMessage = 7,
   /** For Application Command Options, send an autocomplete result */
-  ApplicationCommandAutocompleteResult,
+  ApplicationCommandAutocompleteResult = 8,
+  /** For Command or Component interactions, send a Modal response */
+  Modal = 9,
 }
