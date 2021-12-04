@@ -3,7 +3,9 @@ export enum MessageComponentTypes {
   /** A row of components at the bottom of a message */
   ActionRow = 1,
   /** A button! */
-  Button,
+  Button = 2,
   /** A select menu. */
-  SelectMenu,
+  SelectMenu = 3,
+  /** An Input Text. */
+  InputText = 4,
 }
