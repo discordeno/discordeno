@@ -16,6 +16,7 @@ export * from "./channels/updateVoiceState.ts";
 //discovery
 export * from "./discovery/addDiscoverySubcategory.ts";
 export * from "./discovery/editDiscovery.ts";
+export * from "./discovery/getDiscovery.ts";
 export * from "./discovery/getDiscoveryCategories.ts";
 export * from "./discovery/removeDiscoverySubcategory.ts";
 export * from "./discovery/validDiscoveryTerm.ts";
