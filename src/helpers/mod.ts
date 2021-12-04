@@ -11,7 +11,7 @@ export * from "./channels/getChannelWebhooks.ts";
 export * from "./channels/getPins.ts";
 export * from "./channels/startTyping.ts";
 export * from "./channels/swapChannels.ts";
-export * from "./channels/updateBotVoiceState.ts";
+export * from "./channels/updateVoiceState.ts";
 
 //discovery
 export * from "./discovery/addDiscoverySubcategory.ts";
