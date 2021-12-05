@@ -7,5 +7,5 @@ import type { Bot } from "../../bot.ts";
  * this endpoint may be called to let the user know that the bot is processing their message.
  */
 export async function startTyping(bot: Bot, channelId: bigint) {
-  return await bot.rest.runMethod<undefined>(bot.rest, "post", bot.constants.endpoints.CHANNEL_TYPING(channelId));
+  await bot.rest.runMethod<undefined>(bot.rest, "post", bot.constants.endpoints.CHANNEL_TYPING(channelId));
 }
