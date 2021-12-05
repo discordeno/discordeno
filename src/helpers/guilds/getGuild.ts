@@ -8,7 +8,7 @@ import type { Bot } from "../../bot.ts";
 export async function getGuild(
   bot: Bot,
   guildId: bigint,
-  options: { counts?: boolean; addToCache?: boolean } = {
+  options: { counts?: boolean } = {
     counts: true,
   }
 ) {
@@ -16,10 +16,8 @@ export async function getGuild(
     with_counts: options.counts,
   });
 
-  const guild = bot.transformers.guild(bot, {
+  return bot.transformers.guild(bot, {
     guild: result,
     shardId: bot.utils.calculateShardId(bot.gateway, guildId),
   });
-
-  return guild;
 }

@@ -87,6 +87,9 @@ import { DiscordenoScheduledEvent } from "./transformers/scheduledEvent.ts";
 import { transformThreadMember } from "./transformers/threadMember.ts";
 import { transformApplicationCommandOption } from "./transformers/applicationCommandOption.ts";
 import { transformApplicationCommand } from "./transformers/applicationCommand.ts";
+import { transformWelcomeScreen } from "./transformers/welcomeScreen.ts";
+import { transformVoiceRegion } from "./transformers/voiceRegion.ts";
+import { transformWidget } from "./transformers/widget.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -476,6 +479,9 @@ export interface Transformers {
   applicationCommandPermission: typeof transformApplicationCommandPermission;
   scheduledEvent: typeof transformScheduledEvent;
   threadMember: typeof transformThreadMember;
+  welcomeScreen: typeof transformWelcomeScreen;
+  voiceRegion: typeof transformVoiceRegion;
+  widget: typeof transformWidget;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -506,6 +512,9 @@ export function createTransformers(options: Partial<Transformers>) {
     applicationCommandPermission: options.applicationCommandPermission || transformApplicationCommandPermission,
     scheduledEvent: options.scheduledEvent || transformScheduledEvent,
     threadMember: options.threadMember || transformThreadMember,
+    welcomeScreen: options.welcomeScreen || transformWelcomeScreen,
+    voiceRegion: options.voiceRegion || transformVoiceRegion,
+    widget: options.widget || transformWidget,
   };
 }
 
