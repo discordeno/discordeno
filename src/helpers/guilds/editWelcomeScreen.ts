@@ -9,7 +9,7 @@ export async function editWelcomeScreen(bot: Bot, guildId: bigint, options: Modi
     bot.constants.endpoints.GUILD_WELCOME_SCREEN(guildId),
     {
       enabled: options.enabled,
-      welcomeScreen: options.welcomeScreen?.map((welcomeScreen) => {
+      welcome_screen: options.welcomeScreen?.map((welcomeScreen) => {
         return {
           channel_id: welcomeScreen.channelId,
           description: welcomeScreen.description,
