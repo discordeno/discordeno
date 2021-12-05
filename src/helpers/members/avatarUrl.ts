@@ -11,16 +11,18 @@ export function avatarURL(
     avatar?: string | bigint;
     size?: ImageSize;
     format?: ImageFormat;
-  }
+  } = {},
 ) {
   return options.avatar
     ? bot.utils.formatImageURL(
-        bot.constants.endpoints.USER_AVATAR(
-          userId,
-          typeof options.avatar === "string" ? options.avatar : bot.utils.iconBigintToHash(options.avatar)
-        ),
-        options.size || 128,
-        options.format
-      )
+      bot.constants.endpoints.USER_AVATAR(
+        userId,
+        typeof options.avatar === "string"
+          ? options.avatar
+          : bot.utils.iconBigintToHash(options.avatar),
+      ),
+      options.size || 128,
+      options.format,
+    )
     : bot.constants.endpoints.USER_DEFAULT_AVATAR(Number(discriminator) % 5);
 }

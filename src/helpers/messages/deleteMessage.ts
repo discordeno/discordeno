@@ -6,7 +6,7 @@ export async function deleteMessage(
   channelId: bigint,
   messageId: bigint,
   reason?: string,
-  delayMilliseconds = 0
+  delayMilliseconds?: number
 ) {
   if (delayMilliseconds) await bot.utils.delay(delayMilliseconds);
 
