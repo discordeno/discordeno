@@ -29,6 +29,7 @@ export * from "./modifyGuildRole.ts";
 export * from "./modifyGuildRolePositions.ts";
 export * from "./modifyGuildWelcomeScreen.ts";
 export * from "./premiumTiers.ts";
+export * from "./scheduledEvents.ts";
 export * from "./systemChannelFlags.ts";
 export * from "./unavailableGuild.ts";
 export * from "./updateOthersVoiceState.ts";
