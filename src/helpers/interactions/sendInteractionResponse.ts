@@ -1,6 +1,6 @@
 import type { DiscordenoInteractionResponse } from "../../types/discordeno/interactionResponse.ts";
 import type { Bot } from "../../bot.ts";
-import { AllowedMentions } from "../../types/messages/allowedMentions.ts";
+// import { AllowedMentions } from "../../types/messages/allowedMentions.ts";
 import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
 
 /**
@@ -13,7 +13,7 @@ export async function sendInteractionResponse(
   bot: Bot,
   id: bigint,
   token: string,
-  options: DiscordenoInteractionResponse
+  options: DiscordenoInteractionResponse,
 ) {
   // If the user wants this as a private message mark it ephemeral
   if (options.private) {
@@ -38,43 +38,43 @@ export async function sendInteractionResponse(
       color: embed.color,
       footer: embed.footer
         ? {
-            text: embed.footer.text,
-            icon_url: embed.footer.iconUrl,
-            proxy_icon_url: embed.footer.proxyIconUrl,
-          }
+          text: embed.footer.text,
+          icon_url: embed.footer.iconUrl,
+          proxy_icon_url: embed.footer.proxyIconUrl,
+        }
         : undefined,
       image: embed.image
         ? {
-            url: embed.image.url,
-            proxy_url: embed.image.proxyUrl,
-            height: embed.image.height,
-            width: embed.image.width,
-          }
+          url: embed.image.url,
+          proxy_url: embed.image.proxyUrl,
+          height: embed.image.height,
+          width: embed.image.width,
+        }
         : undefined,
       thumbnail: embed.thumbnail
         ? {
-            url: embed.thumbnail.url,
-            proxy_url: embed.thumbnail.proxyUrl,
-            height: embed.thumbnail.height,
-            width: embed.thumbnail.width,
-          }
+          url: embed.thumbnail.url,
+          proxy_url: embed.thumbnail.proxyUrl,
+          height: embed.thumbnail.height,
+          width: embed.thumbnail.width,
+        }
         : undefined,
       video: embed.video
         ? {
-            url: embed.video.url,
-            proxy_url: embed.video.proxyUrl,
-            height: embed.video.height,
-            width: embed.video.width,
-          }
+          url: embed.video.url,
+          proxy_url: embed.video.proxyUrl,
+          height: embed.video.height,
+          width: embed.video.width,
+        }
         : undefined,
       provider: embed.provider,
       author: embed.author
         ? {
-            name: embed.author.name,
-            url: embed.author.url,
-            icon_url: embed.author.iconUrl,
-            proxy_icon_url: embed.author.proxyIconUrl,
-          }
+          name: embed.author.name,
+          url: embed.author.url,
+          icon_url: embed.author.iconUrl,
+          proxy_icon_url: embed.author.proxyIconUrl,
+        }
         : undefined,
       fields: embed.fields,
     })),
@@ -90,7 +90,7 @@ export async function sendInteractionResponse(
     components: options.data.components?.map((component) => ({
       type: component.type,
       components: component.components.map((subcomponent) => {
-        if (subcomponent.type === MessageComponentTypes.SelectMenu)
+        if (subcomponent.type === MessageComponentTypes.SelectMenu) {
           return {
             type: subcomponent.type,
             custom_id: subcomponent.customId,
@@ -103,29 +103,32 @@ export async function sendInteractionResponse(
               description: option.description,
               emoji: option.emoji
                 ? {
-                    id: option.emoji.id?.toString(),
-                    name: option.emoji.name,
-                    animated: option.emoji.animated,
-                  }
+                  id: option.emoji.id?.toString(),
+                  name: option.emoji.name,
+                  animated: option.emoji.animated,
+                }
                 : undefined,
               default: option.default,
             })),
           };
+        }
 
         return {
           type: subcomponent.type,
           custom_id: subcomponent.customId,
           label: subcomponent.label,
           style: subcomponent.style,
-          emoji: subcomponent.emoji
+          emoji: "emoji" in subcomponent
             ? {
-                id: subcomponent.emoji.id?.toString(),
-                name: subcomponent.emoji.name,
-                animated: subcomponent.emoji.animated,
-              }
+              id: subcomponent.emoji?.id?.toString(),
+              name: subcomponent.emoji?.name,
+              animated: subcomponent.emoji?.animated,
+            }
             : undefined,
-          url: subcomponent.url,
-          disabled: subcomponent.disabled,
+          url: "url" in subcomponent ? subcomponent.url : undefined,
+          disabled: "disabled" in subcomponent
+            ? subcomponent.disabled
+            : undefined,
         };
       }),
     })),
@@ -134,12 +137,22 @@ export async function sendInteractionResponse(
 
   // A reply has never been send
   if (bot.cache.unrepliedInteractions.delete(id)) {
-    return await bot.rest.runMethod(bot.rest, "post", bot.constants.endpoints.INTERACTION_ID_TOKEN(id, token), {
-      type: options.type,
-      data,
-    });
+    return await bot.rest.runMethod<typeof data>(
+      bot.rest,
+      "post",
+      bot.constants.endpoints.INTERACTION_ID_TOKEN(id, token),
+      {
+        type: options.type,
+        data,
+      },
+    );
   }
 
   // If its already been executed, we need to send a followup response
-  return await bot.rest.runMethod(bot.rest, "post", bot.constants.endpoints.WEBHOOK(bot.applicationId, token), data);
+  return await bot.rest.runMethod<typeof data>(
+    bot.rest,
+    "post",
+    bot.constants.endpoints.WEBHOOK(bot.applicationId, token),
+    data,
+  );
 }
