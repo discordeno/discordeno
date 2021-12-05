@@ -1,6 +1,5 @@
 import type { DiscordenoInteractionResponse } from "../../types/discordeno/interactionResponse.ts";
 import type { Bot } from "../../bot.ts";
-// import { AllowedMentions } from "../../types/messages/allowedMentions.ts";
 import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
 
 /**
