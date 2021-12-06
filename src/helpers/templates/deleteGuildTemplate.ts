@@ -6,7 +6,7 @@ import type { Bot } from "../../bot.ts";
  * Requires the `MANAGE_GUILD` permission.
  */
 export async function deleteGuildTemplate(bot: Bot, guildId: bigint, templateCode: string) {
-  return await bot.rest.runMethod<Template>(
+  await bot.rest.runMethod<Template>(
     bot.rest,
     "delete",
     `${bot.constants.endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`
