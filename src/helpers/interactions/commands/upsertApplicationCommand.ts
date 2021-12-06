@@ -4,7 +4,7 @@ import type { Bot } from "../../../bot.ts";
 import { makeOptionsForCommand } from "./createApplicationCommand.ts";
 
 /**
- * Edit an existing slash command. If this command did not exist, it will create it.
+ * Edit an existing application command. If this command did not exist, it will create it.
  */
 export async function upsertApplicationCommand(
   bot: Bot,
@@ -12,7 +12,7 @@ export async function upsertApplicationCommand(
   options: EditGlobalApplicationCommand,
   guildId?: bigint
 ) {
-  return await bot.rest.runMethod<ApplicationCommand>(
+  const result = await bot.rest.runMethod<ApplicationCommand>(
     bot.rest,
     "patch",
     guildId
@@ -25,4 +25,6 @@ export async function upsertApplicationCommand(
       options: options.options ? makeOptionsForCommand(options.options) : undefined,
     }
   );
+
+  return bot.transformers.applicationCommand(bot, result);
 }

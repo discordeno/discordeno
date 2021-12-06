@@ -17,4 +17,6 @@ export interface InputTextComponent {
   minLength?: number;
   /** The maximum length of the text the user has to provide */
   maxLength?: number;
+  /** Whether or not this input is required. */
+  required?: boolean;
 }

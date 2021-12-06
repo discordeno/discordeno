@@ -70,6 +70,9 @@ export * from "./interactions/commands/getApplicationCommandPermission.ts";
 export * from "./interactions/commands/getApplicationCommandPermissions.ts";
 export * from "./interactions/commands/upsertApplicationCommand.ts";
 export * from "./interactions/commands/upsertApplicationCommands.ts";
+export * from "./interactions/followups/deleteFollowupMessage.ts";
+export * from "./interactions/followups/editFollowupMessage.ts";
+export * from "./interactions/followups/getFollowupMessage.ts";
 export * from "./interactions/getOriginalInteractionResponse.ts";
 export * from "./interactions/sendInteractionResponse.ts";
 

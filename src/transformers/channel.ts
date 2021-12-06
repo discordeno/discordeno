@@ -125,7 +125,7 @@ export interface DiscordenoChannel {
   defaultAutoArchiveDuration?: number;
   /** Whether or not the bot is part of this channel thread. */
   botIsMember: boolean;
-  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a slash command interaction */
+  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a application command interaction */
   permissions?: bigint;
 
   permissionOverwrites: bigint[];

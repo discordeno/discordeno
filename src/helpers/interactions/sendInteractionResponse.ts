@@ -1,10 +1,10 @@
 import type { DiscordenoInteractionResponse } from "../../types/discordeno/interactionResponse.ts";
 import type { Bot } from "../../bot.ts";
-import { AllowedMentions } from "../../types/messages/allowedMentions.ts";
 import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
+import { Message } from "../../types/messages/message.ts";
 
 /**
- * Send a response to a users slash command. The command data will have the id and token necessary to respond.
+ * Send a response to a users application command. The command data will have the id and token necessary to respond.
  * Interaction `tokens` are valid for **15 minutes** and can be used to send followup messages.
  *
  * NOTE: By default we will suppress mentions. To enable mentions, just pass any mentions object.
@@ -90,6 +90,18 @@ export async function sendInteractionResponse(
     components: options.data.components?.map((component) => ({
       type: component.type,
       components: component.components.map((subcomponent) => {
+        if (subcomponent.type === MessageComponentTypes.InputText) {
+          return {
+            type: subcomponent.type,
+            style: subcomponent.style,
+            custom_id: subcomponent.customId,
+            label: subcomponent.label,
+            placeholder: subcomponent.placeholder,
+            min_length: subcomponent.minLength ?? subcomponent.required === false ? 0 : subcomponent.minLength,
+            max_length: subcomponent.maxLength,
+          };
+        }
+
         if (subcomponent.type === MessageComponentTypes.SelectMenu)
           return {
             type: subcomponent.type,
@@ -134,12 +146,15 @@ export async function sendInteractionResponse(
 
   // A reply has never been send
   if (bot.cache.unrepliedInteractions.delete(id)) {
-    return await bot.rest.runMethod(bot.rest, "post", bot.constants.endpoints.INTERACTION_ID_TOKEN(id, token), {
+    return await bot.rest.runMethod<undefined>(bot.rest, "post", bot.constants.endpoints.INTERACTION_ID_TOKEN(id, token), {
       type: options.type,
       data,
     });
+
   }
 
   // If its already been executed, we need to send a followup response
-  return await bot.rest.runMethod(bot.rest, "post", bot.constants.endpoints.WEBHOOK(bot.applicationId, token), data);
+  const result = await bot.rest.runMethod<Message>(bot.rest, "post", bot.constants.endpoints.WEBHOOK(bot.applicationId, token), data);
+
+  return bot.transformers.message(bot, result);
 }

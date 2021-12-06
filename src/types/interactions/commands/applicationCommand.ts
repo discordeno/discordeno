@@ -17,7 +17,7 @@ export interface ApplicationCommand {
   options?: ApplicationCommandOption[];
   /** Whether the command is enbaled by default when the app is added to a guild */
   defaultPermission?: boolean;
-  /** The type of command. By default this is a slash command(ChatInput). */
+  /** The type of command. By default this is a application command(ChatInput). */
   type?: ApplicationCommandTypes;
   /** Autoincrementing version identifier updated during substantial record changes */
   version: string;
