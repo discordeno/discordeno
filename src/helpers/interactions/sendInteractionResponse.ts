@@ -142,6 +142,7 @@ export async function sendInteractionResponse(
       }),
     })),
     flags: options.data.flags,
+    choices: options.data.choices,
   };
 
   // A reply has never been send
@@ -150,7 +151,6 @@ export async function sendInteractionResponse(
       type: options.type,
       data,
     });
-
   }
 
   // If its already been executed, we need to send a followup response
