@@ -3,6 +3,7 @@ import { Embed } from "../../embeds/embed.ts";
 import { AllowedMentions } from "../../messages/allowedMentions.ts";
 import { MessageComponents } from "../../messages/components/messageComponents.ts";
 import { CreateMessage } from "../../messages/createMessage.ts";
+import { ApplicationCommandOptionChoice } from "./applicationCommandOptionChoice.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
 export interface InteractionApplicationCommandCallbackData {
@@ -29,4 +30,6 @@ export interface InteractionApplicationCommandCallbackData {
   components?: MessageComponents;
   /** Set to `64` to make your response ephemeral */
   flags?: number;
+  /** autocomplete choices (max of 25 choices) */
+  choices?: ApplicationCommandOptionChoice[];
 }

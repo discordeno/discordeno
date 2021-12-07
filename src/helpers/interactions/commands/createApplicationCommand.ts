@@ -1,5 +1,5 @@
 import type { ApplicationCommand } from "../../../types/interactions/commands/applicationCommand.ts";
-import type { CreateGlobalApplicationCommand } from "../../../types/interactions/commands/createGlobalApplicationCommand.ts";
+import type { CreateApplicationCommand } from "../../../types/interactions/commands/createGlobalApplicationCommand.ts";
 import type { Bot } from "../../../bot.ts";
 import { ApplicationCommandOption } from "../../../types/interactions/commands/applicationCommandOption.ts";
 
@@ -14,7 +14,7 @@ import { ApplicationCommandOption } from "../../../types/interactions/commands/a
  * Global commands are cached for **1 hour**. That means that new global commands will fan out slowly across all guilds, and will be guaranteed to be updated in an hour.
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
-export async function createApplicationCommand(bot: Bot, options: CreateGlobalApplicationCommand, guildId?: bigint) {
+export async function createApplicationCommand(bot: Bot, options: CreateApplicationCommand, guildId?: bigint) {
   const result = await bot.rest.runMethod<ApplicationCommand>(
     bot.rest,
     "post",

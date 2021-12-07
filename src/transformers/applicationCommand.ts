@@ -18,7 +18,7 @@ export function transformApplicationCommand(
     type: payload.type,
     version: payload.version,
 
-    options: payload.options?.map(option => bot.transformers.applicationCommandOption(bot, option))
+    options: payload.options?.map((option) => bot.transformers.applicationCommandOption(bot, option)),
   };
 }
 
@@ -37,7 +37,7 @@ export interface DiscordenoApplicationCommand {
   options?: DiscordenoApplicationCommandOption[];
   /** Whether the command is enbaled by default when the app is added to a guild */
   defaultPermission?: boolean;
-  /** The type of command. By default this is a slash command(ChatInput). */
+  /** The type of command. By default this is a application command(ChatInput). */
   type?: ApplicationCommandTypes;
   /** Autoincrementing version identifier updated during substantial record changes */
   version: string;

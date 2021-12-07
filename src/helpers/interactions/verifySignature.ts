@@ -1,4 +1,4 @@
-import { verify } from "https://unpkg.com/@evan/wasm@0.0.87/target/ed25519/deno.js";
+import { verify } from "https://unpkg.com/@evan/wasm@0.0.93/target/ed25519/deno.js";
 
 export function verifySignature({ publicKey, signature, timestamp, body }: VerifySignatureOptions): {
   isValid: boolean;

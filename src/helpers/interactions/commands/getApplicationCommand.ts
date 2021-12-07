@@ -11,9 +11,5 @@ export async function getApplicationCommand(bot: Bot, commandId: bigint, guildId
       : bot.constants.endpoints.COMMANDS_ID(bot.applicationId, commandId)
   );
 
-  return {
-    ...result,
-    id: bot.transformers.snowflake(result.id),
-    applicationId: bot.transformers.snowflake(result.application_id),
-  };
+  return bot.transformers.applicationCommand(bot, result);
 }
