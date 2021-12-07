@@ -58,7 +58,7 @@ TODO: add coverage back when it is stable
     - ✅ Manual: You can also trigger this manually should you choose.
 - ✅ **Horizontal Scaling:**
   - ✅ The proxy system allows you to scale the bot horizontally. When you reach a huge size, you can either keep spending more money to keep beefing up your server or you can buy several cheaper servers and scale horizontally. The proxy means you can have WS handling on a completely separate system.
-- ✅ **No Loss Restarts:** 
+- ✅ **No Loss Restarts:**
   - ✅ When you restart a bot without the proxy system, normally you would lose many events. Users may be using commands or messages are sent that will not be filtered. As your bot's grow this number rises dramatically. Users may join who wont get the auto-roles or any other actions your bot should take. With the proxy system, you can keep restarting your bot and never lose any events. Events will be put into a queue while your bot is down(max size of queue is customizable), once the bot is available the queue will begin processing all events.
 - ✅ **Controllers:**
   - ✅ The controller aspect gives you full control over everything inside the proxy. You can provide a function to simply override the handler. For example, if you would like a certain function to do something different, instead of having to fork and maintain your fork, you can just provide a function to override.
@@ -91,11 +91,10 @@ const bot = createBot({
       // Process the message with your command handler here
     },
   },
-  cache: { isAsync: false },
 });
 
-enableCachePlugin(bot);
-enableCacheSweepers(bot);
+enableCachePlugin(enableCacheSweepers(bot));
+
 await startBot(bot);
 ```
 
