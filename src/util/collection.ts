@@ -129,12 +129,12 @@ export class Collection<K, V> extends Map<K, V> {
   }
 }
 
-interface CollectionOptions<K, V> {
+export interface CollectionOptions<K, V> {
   sweeper?: CollectionSweeper<K, V>;
   maxSize?: number;
 }
 
-interface CollectionSweeper<K, V> {
+export interface CollectionSweeper<K, V> {
   /** The filter to determine whether an element should be deleted or not */
   filter: (value: V, key: K, ...args: any[]) => boolean;
   /** The interval in which the sweeper should run */
