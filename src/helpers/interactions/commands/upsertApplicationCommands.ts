@@ -4,6 +4,7 @@ import type { MakeRequired } from "../../../types/util.ts";
 import type { Bot } from "../../../bot.ts";
 import { Collection } from "../../../util/collection.ts";
 import { ApplicationCommandOption } from "../../../types/interactions/commands/applicationCommandOption.ts";
+import { makeOptionsForCommand } from "./createApplicationCommand.ts";
 
 /**
  * Bulk edit existing application commands. If a command does not exist, it will create it.
@@ -25,7 +26,7 @@ export async function upsertApplicationCommands(
       name: option.name,
       description: option.description,
       type: option.type,
-      options: option.options?.map((opt) => optionToSnakeCase(opt)),
+      options: option.options ? makeOptionsForCommand(option.options) : undefined,
       default_permission: option.defaultPermission,
     }))
   );
@@ -36,22 +37,4 @@ export async function upsertApplicationCommands(
       return [command.id, command];
     })
   );
-}
-
-function optionToSnakeCase(option: ApplicationCommandOption): Record<string, any> {
-  return {
-    type: option.type,
-    name: option.name,
-    description: option.description,
-    required: option.required,
-    choices: option.choices?.map((choice) => ({
-      name: choice.name,
-      value: choice.value,
-    })),
-    options: option.options?.map((o) => optionToSnakeCase(o)),
-    autocomplete: option.autocomplete,
-    channel_types: option.channelTypes,
-    min_value: option.minValue,
-    max_value: option.maxValue,
-  };
 }

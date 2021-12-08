@@ -42,5 +42,8 @@ export function makeOptionsForCommand(options: ApplicationCommandOption[]) {
     choices: option.choices,
     options: option.options ? makeOptionsForCommand(option.options) : undefined,
     channel_types: option.channelTypes,
+    autocomplete: option.autocomplete,
+    min_value: option.minValue,
+    max_value: option.maxValue,
   }));
 }
