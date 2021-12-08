@@ -86,14 +86,12 @@ export * from "./invites/getInvites.ts";
 //members
 export * from "./members/avatarUrl.ts";
 export * from "./members/banMember.ts";
-export * from "./members/disconnectMember.ts";
 export * from "./members/editBotNickname.ts";
 export * from "./members/editMember.ts";
 export * from "./members/fetchMembers.ts";
 export * from "./members/getMember.ts";
 export * from "./members/getMembers.ts";
 export * from "./members/kickMember.ts";
-export * from "./members/moveMember.ts";
 export * from "./members/pruneMembers.ts";
 export * from "./members/getDmChannel.ts";
 export * from "./members/unbanMember.ts";

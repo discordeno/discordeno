@@ -10,7 +10,7 @@ export async function searchMembers(
   bot: Bot,
   guildId: bigint,
   query: string,
-  options?: Omit<SearchGuildMembers, "query"> & { cache?: boolean }
+  options?: Omit<SearchGuildMembers, "query">
 ) {
   if (options?.limit) {
     if (options.limit < 1) throw new Error(bot.constants.Errors.MEMBER_SEARCH_LIMIT_TOO_LOW);
