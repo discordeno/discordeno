@@ -6,14 +6,7 @@ import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
 export async function createInvite(bot: Bot, channelId: bigint, options: CreateChannelInvite = {}) {
-  if (options.maxAge && (options.maxAge < 0 || options.maxAge > 604800)) {
-    throw new Error(Errors.INVITE_MAX_AGE_INVALID);
-  }
-  if (options.maxUses && (options.maxUses < 0 || options.maxUses > 100)) {
-    throw new Error(Errors.INVITE_MAX_USES_INVALID);
-  }
-
-  return await bot.rest.runMethod<InviteMetadata>(
+  const result = await bot.rest.runMethod<InviteMetadata>(
     bot.rest,
     "post",
     bot.constants.endpoints.CHANNEL_INVITES(channelId),
@@ -27,4 +20,12 @@ export async function createInvite(bot: Bot, channelId: bigint, options: CreateC
       target_application_id: options.targetUserId,
     }
   );
+
+  return {
+    uses: result.uses,
+    maxUses: result.max_uses,
+    maxAge: result.max_age,
+    temporary: result.temporary,
+    createdAt: result.created_at,
+  };
 }
