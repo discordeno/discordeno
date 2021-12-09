@@ -81,7 +81,7 @@ export interface DiscordenoComponent {
   customId?: string;
   /** whether the component is disabled, default false */
   disabled?: boolean;
-  /** For different styles/colors of the buttons */
+  /** For different styles/colors of the buttons or TextInput */
   style?: ButtonStyles | TextStyles;
   /** text that appears on the button (max 80 characters) */
   label?: string;
