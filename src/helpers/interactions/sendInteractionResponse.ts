@@ -129,15 +129,16 @@ export async function sendInteractionResponse(
           custom_id: subcomponent.customId,
           label: subcomponent.label,
           style: subcomponent.style,
-          emoji: subcomponent.emoji
-            ? {
-                id: subcomponent.emoji.id?.toString(),
-                name: subcomponent.emoji.name,
-                animated: subcomponent.emoji.animated,
-              }
-            : undefined,
-          url: subcomponent.url,
-          disabled: subcomponent.disabled,
+          emoji:
+            "emoji" in subcomponent && subcomponent.emoji
+              ? {
+                  id: subcomponent.emoji.id?.toString(),
+                  name: subcomponent.emoji.name,
+                  animated: subcomponent.emoji.animated,
+                }
+              : undefined,
+          url: "url" in subcomponent ? subcomponent.url : undefined,
+          disabled: "disabled" in subcomponent ? subcomponent.disabled : undefined,
         };
       }),
     })),
