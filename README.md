@@ -79,7 +79,7 @@ Here is a minimal example to get started with:
 import { createBot, startBot } from "https://deno.land/x/discordeno/mod.ts";
 import { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/discordeno_cache_plugin@0.0.9/mod.ts";
 
-const bot = createBot({
+const baseBot = createBot({
   token: Deno.env.get("DISCORD_TOKEN"),
   intents: ["Guilds", "GuildMessages"],
   botId: Deno.env.get("BOT_ID"),
@@ -93,7 +93,9 @@ const bot = createBot({
   },
 });
 
-enableCachePlugin(enableCacheSweepers(bot));
+const bot = enableCachePlugin(baseBot);
+
+enableCacheSweepers(bot);
 
 await startBot(bot);
 ```
