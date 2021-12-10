@@ -79,21 +79,23 @@ Here is a minimal example to get started with:
 import { createBot, startBot } from "https://deno.land/x/discordeno/mod.ts";
 import { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/discordeno_cache_plugin@0.0.9/mod.ts";
 
-const bot = createBot({
-  token: Deno.env.get("DISCORD_TOKEN"),
-  intents: ["Guilds", "GuildMessages"],
-  botId: Deno.env.get("BOT_ID"),
-  events: {
-    ready() {
-      console.log("Successfully connected to gateway");
+const bot = enableCachePlugin(
+  createBot({
+    token: Deno.env.get("DISCORD_TOKEN"),
+    intents: ["Guilds", "GuildMessages"],
+    botId: Deno.env.get("BOT_ID"),
+    events: {
+      ready() {
+        console.log("Successfully connected to gateway");
+      },
+      messageCreate(bot, message) {
+        // Process the message with your command handler here
+      },
     },
-    messageCreate(bot, message) {
-      // Process the message with your command handler here
-    },
-  },
-});
+  })
+);
 
-enableCachePlugin(enableCacheSweepers(bot));
+enableCacheSweepers(bot);
 
 await startBot(bot);
 ```
