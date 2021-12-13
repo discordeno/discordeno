@@ -114,4 +114,6 @@ export interface Guild {
   nsfwLevel: GuildNsfwLevel;
   /** Stage instances in the guild */
   stageInstances?: StageInstance[];
+  /** Whether the guild has the boost progress bar enabled */
+  premiumProgressBarEnabled: boolean;
 }
