@@ -13,7 +13,7 @@ export interface Invite {
   /** The guild this invite is for */
   guild?: Partial<Guild>;
   /** The channel this invite is for */
-  channel: Partial<Channel>;
+  channel: Partial<Channel> | null;
   /** The user who created the invite */
   inviter?: User;
   /** The type of target for this voice channel invite */
