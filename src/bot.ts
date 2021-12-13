@@ -52,7 +52,7 @@ import {
   createShard,
   identify,
   heartbeat,
-  tellClusterToIdentify,
+  tellWorkerToIdentify,
   sendShardMessage,
   DiscordenoShard,
   processGatewayQueue,
@@ -335,8 +335,8 @@ export function createGatewayManager(
     spawnShardDelay: options.spawnShardDelay ?? 2600,
     maxShards: options.maxShards ?? options.shardsRecommended ?? 0,
     useOptimalLargeBotSharding: options.useOptimalLargeBotSharding ?? true,
-    shardsPerCluster: options.shardsPerCluster ?? 25,
-    maxClusters: options.maxClusters ?? 4,
+    shardsPerWorker: options.shardsPerWorker ?? 25,
+    maxWorkers: options.maxWorkers ?? 4,
     firstShardId: options.firstShardId ?? 0,
     lastShardId: options.lastShardId ?? options.maxShards ?? options.shardsRecommended ?? 1,
     token: options.token ?? "",
@@ -364,7 +364,7 @@ export function createGatewayManager(
     createShard: options.createShard ?? createShard,
     identify: options.identify ?? identify,
     heartbeat: options.heartbeat ?? heartbeat,
-    tellClusterToIdentify,
+    tellWorkerToIdentify,
     debug: options.debug || function () {},
     resharder: options.resharder ?? resharder,
     handleOnMessage: options.handleOnMessage ?? handleOnMessage,
@@ -536,9 +536,9 @@ export interface GatewayManager {
   /** Whether or not the resharder should automatically switch to LARGE BOT SHARDING when you are above 100K servers. */
   useOptimalLargeBotSharding: boolean;
   /** The amount of shards to load per worker. */
-  shardsPerCluster: number;
+  shardsPerWorker: number;
   /** The maximum amount of workers to use for your bot. */
-  maxClusters: number;
+  maxWorkers: number;
   /** The first shard Id to start spawning. */
   firstShardId: number;
   /** The last shard Id for this worker. */
@@ -605,7 +605,7 @@ export interface GatewayManager {
   /** Sends the discord payload to another server. */
   handleDiscordPayload: (gateway: GatewayManager, data: GatewayPayload, shardId: number) => any;
   /** Tell the worker to begin identifying this shard  */
-  tellClusterToIdentify: typeof tellClusterToIdentify;
+  tellWorkerToIdentify: typeof tellWorkerToIdentify;
   /** Handle the different logs. Used for debugging. */
   debug: (text: string, ...args: any[]) => unknown;
   /** Handles resharding the bot when necessary. */

@@ -2,7 +2,7 @@
 import { GatewayManager } from "../bot.ts";
 
 export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
-  /** Stored as bucketId: [clusterId, [ShardIds]] */
+  /** Stored as bucketId: [workerId, [ShardIds]] */
   const maxShards = gateway.lastShardId || gateway.maxShards;
   let worker = 0;
 
@@ -21,18 +21,18 @@ export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
     if (!bucket) throw new Error("Bucket not found when spawning shards.");
 
     // FIND A QUEUE IN THIS BUCKET THAT HAS SPACE
-    const queue = bucket.workers.find((q) => q.length < gateway.shardsPerCluster + 1);
+    const queue = bucket.workers.find((q) => q.length < gateway.shardsPerWorker + 1);
     if (queue) {
       // IF THE QUEUE HAS SPACE JUST ADD IT TO THIS QUEUE
       queue.push(i);
     } else {
-      if (worker + 1 <= gateway.maxClusters) worker++;
+      if (worker + 1 <= gateway.maxWorkers) worker++;
       // ADD A NEW QUEUE FOR THIS SHARD
       bucket.workers.push([worker, i]);
     }
   }
 
-  // SPREAD THIS OUT TO DIFFERENT CLUSTERS TO BEGIN STARTING UP
+  // SPREAD THIS OUT TO DIFFERENT WORKERS TO BEGIN STARTING UP
   gateway.buckets.forEach(async (bucket, bucketId) => {
     gateway.debug(`2. Running forEach loop in spawnShards function.`);
     for (const [workerId, ...queue] of bucket.workers) {
@@ -40,7 +40,7 @@ export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
 
       queue.forEach((shardId) => {
         bucket.createNextShard.push(async () => {
-          await gateway.tellClusterToIdentify(gateway, workerId, shardId, bucketId);
+          await gateway.tellWorkerToIdentify(gateway, workerId, shardId, bucketId);
         });
       });
 
