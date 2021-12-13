@@ -40,4 +40,6 @@ export interface ModifyGuild {
   preferredLocale?: string | null;
   /** Enabled guild features */
   features?: GuildFeatures[];
+  /** Whether the guild's boost progress bar should be enabled. */
+  premiumProgressBarEnabled?: boolean;
 }
