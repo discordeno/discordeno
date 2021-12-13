@@ -78,10 +78,12 @@ export function transformGuild(
         return [result.id, result];
       })
     ),
-    emojis: new Collection((payload.guild.emojis || []).map((emoji) => {
-      const em = bot.transformers.emoji(bot, emoji);
-      return [em.id!, em]
-    })),
+    emojis: new Collection(
+      (payload.guild.emojis || []).map((emoji) => {
+        const em = bot.transformers.emoji(bot, emoji);
+        return [em.id!, em];
+      })
+    ),
     voiceStates: new Collection(
       (payload.guild.voice_states || [])
         .map((vs) => bot.transformers.voiceState(bot, { voiceState: vs, guildId }))
@@ -106,6 +108,7 @@ export function transformGuild(
     publicUpdatesChannelId: payload.guild.public_updates_channel_id
       ? bot.transformers.snowflake(payload.guild.public_updates_channel_id)
       : undefined,
+    premiumProgressBarEnabled: payload.guild.premium_progress_bar_enabled,
   };
 }
 
