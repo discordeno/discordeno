@@ -7,7 +7,7 @@ export function avatarURL(
   bot: Bot,
   userId: bigint,
   discriminator: number,
-  options: {
+  options?: {
     avatar?: string | bigint;
     size?: ImageSize;
     format?: ImageFormat;
