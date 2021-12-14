@@ -1,9 +1,8 @@
 /** Begin spawning shards. */
 import { GatewayManager } from "../bot.ts";
 
-export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
+export function prepareBuckets(gateway: GatewayManager, firstShardId: number, lastShardId: number) {
   /** Stored as bucketId: [workerId, [ShardIds]] */
-  const maxShards = gateway.lastShardId || gateway.maxShards;
   let worker = 0;
 
   for (let i = 0; i < gateway.maxConcurrency; i++) {
@@ -14,7 +13,7 @@ export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
   }
 
   // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
-  for (let i = firstShardId; i < maxShards; i++) {
+  for (let i = firstShardId; i < lastShardId; i++) {
     gateway.debug(`1. Running for loop in spawnShards function.`);
     const bucketId = i % gateway.maxConcurrency;
     const bucket = gateway.buckets.get(bucketId);
@@ -31,6 +30,11 @@ export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
       bucket.workers.push([worker, i]);
     }
   }
+}
+
+export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
+  // PREPARES ALL SHARDS IN SPECIFIC BUCKETS
+  prepareBuckets(gateway, firstShardId, gateway.lastShardId ? gateway.lastShardId + 1 : gateway.maxShards);
 
   // SPREAD THIS OUT TO DIFFERENT WORKERS TO BEGIN STARTING UP
   gateway.buckets.forEach(async (bucket, bucketId) => {

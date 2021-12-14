@@ -49,6 +49,7 @@ import {
   resume,
   resharder,
   spawnShards,
+  prepareBuckets,
   createShard,
   identify,
   heartbeat,
@@ -360,6 +361,7 @@ export function createGatewayManager(
     buckets: new Collection(),
     utf8decoder: new TextDecoder(),
 
+    prepareBuckets: options.prepareBuckets ?? prepareBuckets,
     spawnShards: options.spawnShards ?? spawnShards,
     createShard: options.createShard ?? createShard,
     identify: options.identify ?? identify,
@@ -594,6 +596,8 @@ export interface GatewayManager {
 
   // METHODS
 
+  /** Prepares the buckets for identifying */
+  prepareBuckets: typeof prepareBuckets;
   /** The handler for spawning ALL the shards. */
   spawnShards: typeof spawnShards;
   /** Create the websocket and adds the proper handlers to the websocket. */
