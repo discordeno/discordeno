@@ -6,8 +6,8 @@ import type { Bot } from "../../bot.ts";
 export function guildIconURL(
   bot: Bot,
   id: bigint,
+  icon?: string | bigint,
   options?: {
-    icon?: string | bigint;
     size?: ImageSize;
     format?: ImageFormat;
   }
