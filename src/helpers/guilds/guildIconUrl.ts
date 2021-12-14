@@ -12,7 +12,7 @@ export function guildIconURL(
     format?: ImageFormat;
   }
 ) {
-  return options.icon
+  return icon
     ? bot.utils.formatImageURL(
         bot.constants.endpoints.GUILD_ICON(
           id,
