@@ -5,7 +5,7 @@ import type { Bot } from "../../bot.ts";
 /** Modifies the bot's username or avatar.
  * NOTE: username: if changed may cause the bot's discriminator to be randomized.
  */
-export async function editBotProfile(bot: Bot, options: { username?: string; botAvatarURL?: string | null }) {
+export async function editBotProfile(bot: Bot, options?: { username?: string; botAvatarURL?: string | null }) {
   // Nothing was edited
   if (!options.username && options.botAvatarURL === undefined) return;
   // Check username requirements if username was provided
