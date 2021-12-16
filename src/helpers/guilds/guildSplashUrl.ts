@@ -16,10 +16,10 @@ export function guildSplashURL(
     ? bot.utils.formatImageURL(
         bot.constants.endpoints.GUILD_SPLASH(
           id,
-          typeof options.splash === "string" ? options.splash : bot.utils.iconBigintToHash(options.splash)
+          typeof splash === "string" ? splash : bot.utils.iconBigintToHash(splash)
         ),
-        options.size || 128,
-        options.format
+        options?.size || 128,
+        options?.format
       )
     : undefined;
 }
