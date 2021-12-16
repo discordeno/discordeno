@@ -120,6 +120,7 @@ export enum JsonErrorCodes {
   ThisServerIsNotAvailableInYourLocation = 50095,
   ThisServerNeedsMonetizationEnabledInOrderToPerformThisAction = 50097,
   ThisServerNeedsMoreBoostsToPerformThisAction = 50101,
+  TheRequestBodyContainsInvalidJSON = 50109,
   TwoFactorIsRequiredForThisOperation = 60003,
   NoUsersWithDiscordTagExist = 80004,
   ReactionWasBlocked = 90001,
