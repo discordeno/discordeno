@@ -42,13 +42,12 @@ export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
     for (const [workerId, ...queue] of bucket.workers) {
       gateway.debug(`3. Running for of loop in spawnShards function.`);
 
-      queue.forEach((shardId) => {
+      for (const shardId of queue) {
         bucket.createNextShard.push(async () => {
           await gateway.tellWorkerToIdentify(gateway, workerId, shardId, bucketId);
         });
-      });
-
-      await bucket.createNextShard.shift()?.();
+      }
     }
+    await bucket.createNextShard.shift()?.();
   });
 }
