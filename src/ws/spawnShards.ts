@@ -15,6 +15,10 @@ export function prepareBuckets(gateway: GatewayManager, firstShardId: number, la
   // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
   for (let i = firstShardId; i < lastShardId; i++) {
     gateway.debug(`1. Running for loop in spawnShards function.`);
+    if (i >= gateway.maxShards) {
+      continue;
+    }
+    
     const bucketId = i % gateway.maxConcurrency;
     const bucket = gateway.buckets.get(bucketId);
     if (!bucket) throw new Error("Bucket not found when spawning shards.");
