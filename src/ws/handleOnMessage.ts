@@ -14,11 +14,8 @@ import { decompressWith } from "./deps.ts";
 /** Handler for handling every message event from websocket. */
 // deno-lint-ignore no-explicit-any
 export async function handleOnMessage(gateway: GatewayManager, message: any, shardId: number) {
-  if (message instanceof ArrayBuffer) {
-    message = new Uint8Array(message);
-  }
 
-  if (message instanceof Uint8Array) {
+  if (gateway.compress && message instanceof Uint8Array) {
     message = decompressWith(message, 0, (slice: Uint8Array) => gateway.utf8decoder.decode(slice));
   }
 
