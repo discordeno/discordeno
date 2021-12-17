@@ -575,7 +575,6 @@ export interface GatewayManager {
     {
       shardId: number;
       resolve: (value: unknown) => void;
-      startedAt: number;
     }
   >;
   /** Stored as bucketId: { workers: [workerId, [ShardIds]], createNextShard: boolean } */
