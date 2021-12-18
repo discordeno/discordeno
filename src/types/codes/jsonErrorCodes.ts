@@ -133,4 +133,13 @@ export enum JsonErrorCodes {
   ThreadIsLocked = 160005,
   MaximumNumberOfActiveThreadsReached = 160006,
   MaximumNumberOfActiveAnnouncementThreadsReached = 160007,
+  InvalidJsonForUploadedLottieFile = 170001,
+  UploadedLottiesCannotContainRasterizedImagesSuchAsPngOrJpeg,
+  StickerMaximumFramerateExceeded,
+  StickerFrameCountExceedsMaximumOf1000Frames,
+  LottieAnimationMaximumDimensionsExceeded,
+  StickerFrameRateIsEitherTooSmallOrTooLarge,
+  StickerAnimationDurationExceedsMaximumOf5Seconds,
+  CannotUpdateAFinishedEvent = 180000,
+  FailedToCreateStageNeededForStageEvent = 180002,
 }
