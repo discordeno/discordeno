@@ -3,7 +3,7 @@ export enum GatewayOpcodes {
   Dispatch,
   Heartbeat,
   Identify,
-  PresenseUpdate,
+  PresenceUpdate,
   VoiceStateUpdate,
   Resume = 6,
   Reconnect,
