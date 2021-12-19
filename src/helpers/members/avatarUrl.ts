@@ -8,7 +8,7 @@ export function avatarURL(
   userId: bigint,
   discriminator: number,
   options?: {
-    avatar?: string | bigint;
+    avatar: string | bigint | undefined;
     size?: ImageSize;
     format?: ImageFormat;
   }
