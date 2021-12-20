@@ -6,7 +6,7 @@ import type { Bot } from "../../bot.ts";
 export function guildSplashURL(
   bot: Bot,
   id: bigint,
-  splash: string | bigint | undefined,
+  splash: bigint | undefined,
   options?: {
     size?: ImageSize;
     format?: ImageFormat;
