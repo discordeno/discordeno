@@ -9,6 +9,7 @@ export enum GatewayOpcodes {
   /** Update the client's presence. */
   PresenceUpdate,
   /** Used to join/leave or move between voice channels. */
+
   VoiceStateUpdate,
   /** Resume a previous session that was disconnected. */
   Resume = 6,
