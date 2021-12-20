@@ -1,5 +1,6 @@
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#json */
 export enum JsonErrorCodes {
+  /** General error (such as a malformed request body, amongst other things) */
   GeneralError,
   UnknownAccount = 10001,
   UnknownApplication,
@@ -109,6 +110,7 @@ export enum JsonErrorCodes {
   InvalidRole,
   InvalidRecipients = 50033,
   AMessageProvidedWasTooOldToBulkDelete,
+  /** Invalid form body (returned for both `application/json` and `multipart/form-data` bodies), or invalid `Content-Type` provided */
   InvalidFormBodyOrContentTypeProvided,
   AnInviteWasAcceptedToAGuildTheApplicationsBotIsNotIn,
   InvalidApiVersionProvided = 50041,
