@@ -5,10 +5,7 @@ import { sanitizeMode } from "./constants.ts";
 Deno.test({
   name: "[Memory] Benchmark memory tests",
   fn: async (t) => {
-    await memoryBenchmarks(bot, {
-      log: true,
-      table: true,
-    });
+    await memoryBenchmarks(bot);
   },
   ...sanitizeMode,
 });
