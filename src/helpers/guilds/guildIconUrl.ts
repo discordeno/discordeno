@@ -6,20 +6,20 @@ import type { Bot } from "../../bot.ts";
 export function guildIconURL(
   bot: Bot,
   id: bigint,
-  options: {
-    icon?: string | bigint;
+  icon: bigint | undefined,
+  options?: {
     size?: ImageSize;
     format?: ImageFormat;
   }
 ) {
-  return options.icon
+  return icon
     ? bot.utils.formatImageURL(
         bot.constants.endpoints.GUILD_ICON(
           id,
-          typeof options.icon === "string" ? options.icon : bot.utils.iconBigintToHash(options.icon)
+          typeof icon === "string" ? icon : bot.utils.iconBigintToHash(icon)
         ),
-        options.size || 128,
-        options.format
+        options?.size || 128,
+        options?.format
       )
     : undefined;
 }
