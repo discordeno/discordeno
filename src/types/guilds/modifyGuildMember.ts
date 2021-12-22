@@ -11,5 +11,5 @@ export interface ModifyGuildMember {
   /** Id of channel to move user to (if they are connected to voice). Requires the `MOVE_MEMBERS` permission */
   channelId?: bigint | null;
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission */
-  communication_disabled_until?: number;
+  communicationDisabledUntil?: number;
 }
