@@ -10,10 +10,5 @@ export async function createStageInstance(bot: Bot, channelId: bigint, topic: st
     privacy_level: privacyLevel || PrivacyLevel.GuildOnly,
   });
 
-  return {
-    id: bot.transformers.snowflake(result.id),
-    guildId: bot.transformers.snowflake(result.guild_id),
-    channelId: bot.transformers.snowflake(result.channel_id),
-    topic: result.topic,
-  };
+  return bot.transformers.stageInstance(bot, result);
 }

@@ -91,6 +91,7 @@ import { transformApplicationCommand } from "./transformers/applicationCommand.t
 import { transformWelcomeScreen } from "./transformers/welcomeScreen.ts";
 import { transformVoiceRegion } from "./transformers/voiceRegion.ts";
 import { transformWidget } from "./transformers/widget.ts";
+import { transformStageInstance } from "./transformers/stageInstance.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -484,6 +485,7 @@ export interface Transformers {
   welcomeScreen: typeof transformWelcomeScreen;
   voiceRegion: typeof transformVoiceRegion;
   widget: typeof transformWidget;
+  stageInstance: typeof transformStageInstance;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -517,6 +519,7 @@ export function createTransformers(options: Partial<Transformers>) {
     welcomeScreen: options.welcomeScreen || transformWelcomeScreen,
     voiceRegion: options.voiceRegion || transformVoiceRegion,
     widget: options.widget || transformWidget,
+    stageInstance: options.stageInstance || transformStageInstance,
   };
 }
 
