@@ -5,9 +5,9 @@ import type { User } from "../users/user.ts";
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-structure */
 export interface Sticker {
   /** [Id of the sticker](https://discord.com/developers/docs/reference#image-formatting) */
-  id: bigint;
+  id: string;
   /** Id of the pack the sticker is from */
-  packId?: bigint;
+  packId?: string;
   /** Name of the sticker */
   name: string;
   /** Description of the sticker */
@@ -21,7 +21,7 @@ export interface Sticker {
   /**  Whether or not the sticker is available */
   available?: boolean;
   /** Id of the guild that owns this sticker */
-  guildId?: bigint;
+  guildId?: string;
   /** The user that uploaded the sticker */
   user?: User;
   /** A sticker's sort order within a pack */
