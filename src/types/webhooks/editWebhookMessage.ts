@@ -13,9 +13,14 @@ export interface EditWebhookMessage {
   /** The contents of the file being sent/edited */
   file?: FileContent | FileContent[] | null;
   /** Allowed mentions for the message */
-  allowedMentions?: AllowedMentions | null;
+  allowedMentions?: Omit<AllowedMentions, "users" | "roles"> & {
+    /** Array of role_ids to mention (Max size of 100) */
+    roles?: bigint[];
+    /** Array of user_ids to mention (Max size of 100) */
+    users?: bigint[];
+  };
   /** Attached files to keep */
-  attachments?: Attachment | null;
+  attachments?: (Omit<Attachment, "id"> & { id: bigint })[] | null;
   /** The components you would like to have sent in this message */
   components?: MessageComponents;
 }

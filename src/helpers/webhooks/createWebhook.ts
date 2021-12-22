@@ -8,18 +8,15 @@ import type { Webhook } from "../../types/webhooks/webhook.ts";
  * Webhook names cannot be: 'clyde'
  */
 export async function createWebhook(bot: Bot, channelId: bigint, options: CreateWebhook) {
-  if (
-    // Specific usernames that discord does not allow
-    options.name === "clyde" ||
-    !bot.utils.validateLength(options.name, { min: 2, max: 32 })
-  ) {
-    throw new Error(bot.constants.Errors.INVALID_WEBHOOK_NAME);
-  }
-
-  const result = await bot.rest.runMethod<Webhook>(bot.rest, "post", bot.constants.endpoints.CHANNEL_WEBHOOKS(channelId), {
-    ...options,
-    avatar: options.avatar ? await bot.utils.urlToBase64(options.avatar) : undefined,
-  });
+  const result = await bot.rest.runMethod<Webhook>(
+    bot.rest,
+    "post",
+    bot.constants.endpoints.CHANNEL_WEBHOOKS(channelId),
+    {
+      ...options,
+      avatar: options.avatar ? await bot.utils.urlToBase64(options.avatar) : undefined,
+    }
+  );
 
   return bot.transformers.webhook(bot, result);
 }

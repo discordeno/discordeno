@@ -2,6 +2,7 @@ import { Embed } from "../embeds/embed.ts";
 import { AllowedMentions } from "../messages/allowedMentions.ts";
 import { FileContent } from "../discordeno/fileContent.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
+import { MessageComponents } from "../messages/components/messageComponents.ts";
 
 /** https://discord.com/developers/docs/resources/webhook#execute-webhook */
 export interface ExecuteWebhook {
@@ -28,6 +29,8 @@ export interface ExecuteWebhook {
     /** Array of user_ids to mention (Max size of 100) */
     users?: bigint[];
   };
+  /** the components to include with the message */
+  components: MessageComponents;
 }
 
 export type DiscordExecuteWebhook = SnakeCasedPropertiesDeep<Omit<ExecuteWebhook, "wait">>;

@@ -18,12 +18,22 @@ export async function editInteractionResponse(bot: Bot, token: string, options: 
       allowed_mentions: options.allowedMentions
         ? {
             parse: options.allowedMentions.parse,
-            roles: options.allowedMentions.roles,
-            users: options.allowedMentions.users,
+            roles: options.allowedMentions.roles?.map((id) => id.toString()),
+            users: options.allowedMentions.users?.map((id) => id.toString()),
             replied_user: options.allowedMentions.repliedUser,
           }
         : undefined,
-      attachments: options.attachments,
+      attachments: options.attachments?.map((attachment) => ({
+        id: attachment.id.toString(),
+        filename: attachment.filename,
+        content_type: attachment.contentType,
+        size: attachment.size,
+        url: attachment.url,
+        proxy_url: attachment.proxyUrl,
+        height: attachment.height,
+        width: attachment.width,
+        ephemeral: attachment.ephemeral,
+      })),
       components: options.components?.map((component) => ({
         type: component.type,
         components: component.components.map((subcomponent) => {
@@ -79,7 +89,7 @@ export async function editInteractionResponse(bot: Bot, token: string, options: 
           };
         }),
       })),
-      message_id: options.messageId,
+      message_id: options.messageId?.toString(),
     }
   );
 

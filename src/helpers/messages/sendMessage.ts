@@ -5,36 +5,7 @@ import type { Bot } from "../../bot.ts";
 import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
-export async function sendMessage(bot: Bot, channelId: bigint, content: string | CreateMessage) {
-  if (typeof content === "string") content = { content };
-
-  // Use ... for content length due to unicode characters and js .length handling
-  if (content.content && !bot.utils.validateLength(content.content, { max: 2000 })) {
-    throw new Error(bot.constants.Errors.MESSAGE_MAX_LENGTH);
-  }
-
-  if (content.allowedMentions) {
-    if (content.allowedMentions.users?.length) {
-      if (content.allowedMentions.parse?.includes(AllowedMentionsTypes.UserMentions)) {
-        content.allowedMentions.parse = content.allowedMentions.parse.filter((p) => p !== "users");
-      }
-
-      if (content.allowedMentions.users.length > 100) {
-        content.allowedMentions.users = content.allowedMentions.users.slice(0, 100);
-      }
-    }
-
-    if (content.allowedMentions.roles?.length) {
-      if (content.allowedMentions.parse?.includes(AllowedMentionsTypes.RoleMentions)) {
-        content.allowedMentions.parse = content.allowedMentions.parse.filter((p) => p !== "roles");
-      }
-
-      if (content.allowedMentions.roles.length > 100) {
-        content.allowedMentions.roles = content.allowedMentions.roles.slice(0, 100);
-      }
-    }
-  }
-
+export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMessage) {
   const result = await bot.rest.runMethod<Message>(
     bot.rest,
     "post",
@@ -170,3 +141,4 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: string |
 
   return bot.transformers.message(bot, result);
 }
+

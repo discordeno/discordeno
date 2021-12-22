@@ -4,16 +4,8 @@ import type { Bot } from "../../bot.ts";
 import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
 
 /** Edit the message. */
-export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: string | EditMessage) {
-  if (typeof content === "string") content = { content };
-
-  content.embeds?.splice(10);
-
-  if (content.content && content.content.length > 2000) {
-    throw new Error(bot.constants.Errors.MESSAGE_MAX_LENGTH);
-  }
-
-  const result = await bot.rest.runMethod<Message>(
+export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: EditMessage) {
+    const result = await bot.rest.runMethod<Message>(
     bot.rest,
     "patch",
     bot.constants.endpoints.CHANNEL_MESSAGE(channelId, messageId),

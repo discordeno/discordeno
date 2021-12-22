@@ -6,24 +6,6 @@ import type { Bot } from "../../bot.ts";
  * NOTE: username: if changed may cause the bot's discriminator to be randomized.
  */
 export async function editBotProfile(bot: Bot, options: { username?: string; botAvatarURL?: string | null }) {
-  // Nothing was edited
-  if (!options.username && options.botAvatarURL === undefined) return;
-  // Check username requirements if username was provided
-  if (options.username) {
-    if (options.username.length > 32) {
-      throw new Error(Errors.USERNAME_MAX_LENGTH);
-    }
-    if (options.username.length < 2) {
-      throw new Error(Errors.USERNAME_MIN_LENGTH);
-    }
-    if (["@", "#", ":", "```"].some((char) => options.username!.includes(char))) {
-      throw new Error(Errors.USERNAME_INVALID_CHARACTER);
-    }
-    if (["discordtag", "everyone", "here"].includes(options.username)) {
-      throw new Error(Errors.USERNAME_INVALID_USERNAME);
-    }
-  }
-
   const avatar = options?.botAvatarURL ? await bot.utils.urlToBase64(options?.botAvatarURL) : options?.botAvatarURL;
 
   const result = await bot.rest.runMethod<User>(bot.rest, "patch", bot.constants.endpoints.USER_BOT, {
