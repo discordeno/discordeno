@@ -1,7 +1,7 @@
 import { Bot } from "../../../src/bot.ts";
 import { assertEquals, assertExists } from "../../deps.ts";
 
-export async function getInviteTest(bot: Bot, channelId: bigint, t: Deno.TestContext) {
+export async function getInviteTest(channelId: bigint) {
   const invite = await bot.helpers.createInvite(channelId, {
     maxAge: 86400,
     maxUses: 0,

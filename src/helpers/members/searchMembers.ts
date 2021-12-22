@@ -4,17 +4,13 @@ import { Collection } from "../../util/collection.ts";
 import { Bot } from "../../bot.ts";
 
 /**
- * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM cache.members.filter()
- * @param bot
- * @param guildId
- * @param query Query string to match username(s) and nickname(s) against
- * @param options
+ * Query string to match username(s) and nickname(s) against
  */
 export async function searchMembers(
   bot: Bot,
   guildId: bigint,
   query: string,
-  options?: Omit<SearchGuildMembers, "query"> & { cache?: boolean }
+  options?: Omit<SearchGuildMembers, "query">
 ) {
   if (options?.limit) {
     if (options.limit < 1) throw new Error(bot.constants.Errors.MEMBER_SEARCH_LIMIT_TOO_LOW);

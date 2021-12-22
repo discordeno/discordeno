@@ -13,9 +13,9 @@ Deno.test({
     assertExists(role);
 
     // Delay the execution to allow event to be processed
-    await delayUntil(10000, () => bot.cache.guilds.get(guild.id)?.roles.has(role.id));
+    await delayUntil(10000, () => bot.guilds.get(guild.id)?.roles.has(role.id));
 
-    assertExists(bot.cache.guilds.get(guild.id)?.roles.has(role.id));
+    assertExists(bot.guilds.get(guild.id)?.roles.has(role.id));
 
     bot.events.guildMemberUpdate = function (bot, member, user) {
       roleChanges.set(user.id, member.roles);

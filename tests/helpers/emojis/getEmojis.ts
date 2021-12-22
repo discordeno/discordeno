@@ -2,7 +2,7 @@ import { Bot } from "../../../src/bot.ts";
 import { assertExists } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
 
-export async function getEmojisTest(bot: Bot, guildId: bigint, t: Deno.TestContext) {
+export async function getEmojisTest(guildId: bigint) {
   const emoji = await bot.helpers.createEmoji(guildId, {
     name: "blamewolf",
     image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
@@ -13,9 +13,9 @@ export async function getEmojisTest(bot: Bot, guildId: bigint, t: Deno.TestConte
   assertExists(emoji);
 
   // // Delay the execution to allow event to be processed
-  // await delayUntil(10000, async () => bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id));
+  // await delayUntil(10000, async () => bot.guilds.get(guildId)?.emojis?.has(emoji.id));
 
-  // if (!bot.cache.guilds.get(guildId)?.emojis?.has(emoji.id)) {
+  // if (!bot.guilds.get(guildId)?.emojis?.has(emoji.id)) {
   //   throw new Error("The emoji seemed to be created but it was not cached.");
   // }
 

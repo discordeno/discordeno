@@ -2,10 +2,7 @@ import { Bot } from "../../bot.ts";
 
 /** Kick a member from the server */
 export async function kickMember(bot: Bot, guildId: bigint, memberId: bigint, reason?: string) {
-  return await bot.rest.runMethod<undefined>(
-    bot.rest,
-    "delete",
-    bot.constants.endpoints.GUILD_MEMBER(guildId, memberId),
-    { reason }
-  );
+  await bot.rest.runMethod<undefined>(bot.rest, "delete", bot.constants.endpoints.GUILD_MEMBER(guildId, memberId), {
+    reason,
+  });
 }

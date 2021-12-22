@@ -49,10 +49,11 @@ import {
   resume,
   resharder,
   spawnShards,
+  prepareBuckets,
   createShard,
   identify,
   heartbeat,
-  tellClusterToIdentify,
+  tellWorkerToIdentify,
   sendShardMessage,
   DiscordenoShard,
   processGatewayQueue,
@@ -77,7 +78,6 @@ import { urlToBase64 } from "./util/urlToBase64.ts";
 import { transformAttachment } from "./transformers/attachment.ts";
 import { transformEmbed } from "./transformers/embed.ts";
 import { transformComponent } from "./transformers/component.ts";
-import { AsyncCache, AsyncCacheHandler, Cache, CacheHandler, createCache, TableNames } from "./cache.ts";
 import { transformWebhook } from "./transformers/webhook.ts";
 import { transformAuditlogEntry } from "./transformers/auditlogEntry.ts";
 import { transformApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
@@ -86,22 +86,13 @@ import { calculateBits, calculatePermissions } from "./util/permissions.ts";
 import { transformScheduledEvent } from "./transformers/scheduledEvent.ts";
 import { DiscordenoScheduledEvent } from "./transformers/scheduledEvent.ts";
 import { transformThreadMember } from "./transformers/threadMember.ts";
+import { transformApplicationCommandOption } from "./transformers/applicationCommandOption.ts";
+import { transformApplicationCommand } from "./transformers/applicationCommand.ts";
+import { transformWelcomeScreen } from "./transformers/welcomeScreen.ts";
+import { transformVoiceRegion } from "./transformers/voiceRegion.ts";
+import { transformWidget } from "./transformers/widget.ts";
 
-type CacheOptions =
-  | {
-      isAsync: true;
-      // deno-lint-ignore no-explicit-any
-      tableCreator: (tableName: TableNames) => AsyncCacheHandler<any>;
-    }
-  | {
-      isAsync: false;
-      // deno-lint-ignore no-explicit-any
-      tableCreator?: (tableName: TableNames) => CacheHandler<any>;
-    };
-
-export function createBot<C extends CacheOptions = CacheOptions>(
-  options: CreateBotOptions<C>
-): Bot<C extends { isAsync: true } ? AsyncCache : Cache> {
+export function createBot(options: CreateBotOptions): Bot {
   const bot = {
     id: options.botId,
     applicationId: options.applicationId || options.botId,
@@ -116,13 +107,33 @@ export function createBot<C extends CacheOptions = CacheOptions>(
     transformers: createTransformers(options.transformers ?? {}),
     enabledPlugins: new Set(),
     handleDiscordPayload: options.handleDiscordPayload,
-  } as unknown as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
+    cache: {
+      unrepliedInteractions: new Set<bigint>(),
+      fetchAllMembersProcessingRequests: new Map(),
+    },
+    rest: createRestManager({ token: options.token, debug: options.events.debug }),
+  } as Bot;
 
-  // @ts-ignore itoh cache types plz
-  bot.cache = createCache(bot as Bot, options.cache);
-  bot.helpers = createHelpers(bot as Bot, options.helpers ?? {});
+  bot.helpers = createHelpers(bot, options.helpers ?? {});
+  bot.gateway = createGatewayManager({
+    token: bot.token,
+    intents: bot.intents,
+    debug: bot.events.debug,
+    handleDiscordPayload:
+      bot.handleDiscordPayload ??
+      async function (_, data: DiscordGatewayPayload, shardId: number) {
+        // TRIGGER RAW EVENT
+        bot.events.raw(bot as Bot, data, shardId);
 
-  return bot as unknown as Bot<C extends { isAsync: true } ? AsyncCache : Cache>;
+        if (!data.t) return;
+
+        // RUN DISPATCH CHECK
+        await bot.events.dispatchRequirements(bot as Bot, data, shardId);
+        bot.handlers[data.t as GatewayDispatchEventNames]?.(bot as Bot, data, shardId);
+      },
+  });
+
+  return bot as Bot;
 }
 
 export function createEventHandlers(events: Partial<EventHandlers>): EventHandlers {
@@ -262,36 +273,17 @@ export function createRestManager(options: CreateRestManagerOptions) {
 }
 
 export async function startBot(bot: Bot) {
-  // START REST
-  bot.rest = createRestManager({ token: bot.token, debug: bot.events.debug });
   if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot();
 
-  // START WS
-  bot.gateway = createGatewayManager({
-    token: bot.token,
-    intents: bot.intents,
-    urlWSS: bot.botGatewayData.url,
-    shardsRecommended: bot.botGatewayData.shards,
-    sessionStartLimitTotal: bot.botGatewayData.sessionStartLimit.total,
-    sessionStartLimitRemaining: bot.botGatewayData.sessionStartLimit.remaining,
-    sessionStartLimitResetAfter: bot.botGatewayData.sessionStartLimit.resetAfter,
-    maxConcurrency: bot.botGatewayData.sessionStartLimit.maxConcurrency,
-    lastShardId: bot.botGatewayData.shards,
-    maxShards: bot.botGatewayData.shards,
-    debug: bot.events.debug,
-    handleDiscordPayload:
-      bot.handleDiscordPayload ??
-      async function (_, data: DiscordGatewayPayload, shardId: number) {
-        // TRIGGER RAW EVENT
-        bot.events.raw(bot as Bot, data, shardId);
-
-        if (!data.t) return;
-
-        // RUN DISPATCH CHECK
-        await bot.events.dispatchRequirements(bot as Bot, data, shardId);
-        bot.handlers[data.t as GatewayDispatchEventNames]?.(bot as Bot, data, shardId);
-      },
-  });
+  // SETUP GATEWAY LOGIN INFO
+  bot.gateway.urlWSS = bot.botGatewayData.url;
+  bot.gateway.shardsRecommended = bot.botGatewayData.shards;
+  bot.gateway.sessionStartLimitTotal = bot.botGatewayData.sessionStartLimit.total;
+  bot.gateway.sessionStartLimitRemaining = bot.botGatewayData.sessionStartLimit.remaining;
+  bot.gateway.sessionStartLimitResetAfter = bot.botGatewayData.sessionStartLimit.resetAfter;
+  bot.gateway.maxConcurrency = bot.botGatewayData.sessionStartLimit.maxConcurrency;
+  bot.gateway.lastShardId = bot.botGatewayData.shards;
+  bot.gateway.maxShards = bot.botGatewayData.shards;
 
   bot.gateway.spawnShards(bot.gateway);
 }
@@ -344,8 +336,8 @@ export function createGatewayManager(
     spawnShardDelay: options.spawnShardDelay ?? 2600,
     maxShards: options.maxShards ?? options.shardsRecommended ?? 0,
     useOptimalLargeBotSharding: options.useOptimalLargeBotSharding ?? true,
-    shardsPerCluster: options.shardsPerCluster ?? 25,
-    maxClusters: options.maxClusters ?? 4,
+    shardsPerWorker: options.shardsPerWorker ?? 25,
+    maxWorkers: options.maxWorkers ?? 4,
     firstShardId: options.firstShardId ?? 0,
     lastShardId: options.lastShardId ?? options.maxShards ?? options.shardsRecommended ?? 1,
     token: options.token ?? "",
@@ -369,11 +361,12 @@ export function createGatewayManager(
     buckets: new Collection(),
     utf8decoder: new TextDecoder(),
 
+    prepareBuckets: options.prepareBuckets ?? prepareBuckets,
     spawnShards: options.spawnShards ?? spawnShards,
     createShard: options.createShard ?? createShard,
     identify: options.identify ?? identify,
     heartbeat: options.heartbeat ?? heartbeat,
-    tellClusterToIdentify,
+    tellWorkerToIdentify,
     debug: options.debug || function () {},
     resharder: options.resharder ?? resharder,
     handleOnMessage: options.handleOnMessage ?? handleOnMessage,
@@ -397,7 +390,7 @@ export async function stopBot(bot: Bot) {
   return bot;
 }
 
-export interface CreateBotOptions<C extends CacheOptions = CacheOptions> {
+export interface CreateBotOptions {
   token: string;
   botId: bigint;
   applicationId?: bigint;
@@ -406,7 +399,6 @@ export interface CreateBotOptions<C extends CacheOptions = CacheOptions> {
   botGatewayData?: GetGatewayBot;
   rest?: Omit<CreateRestManagerOptions, "token">;
   handleDiscordPayload?: GatewayManager["handleDiscordPayload"];
-  cache: C;
   utils?: Partial<ReturnType<typeof createUtils>>;
   transformers?: Partial<ReturnType<typeof createTransformers>>;
   helpers?: Partial<Helpers>;
@@ -414,20 +406,9 @@ export interface CreateBotOptions<C extends CacheOptions = CacheOptions> {
 
 export type UnPromise<T extends Promise<unknown>> = T extends Promise<infer K> ? K : never;
 
-// export type CreatedBot = ReturnType<typeof createBot>;
-
-// export type Bot = CreatedBot & {
-//   utils: HelperUtils;
-//   rest: RestManager;
-//   gateway: GatewayManager;
-//   transformers: Transformers;
-//   helpers: Helpers;
-// };
-
-export interface Bot<C extends Cache | AsyncCache = AsyncCache | Cache> {
+export interface Bot {
   id: bigint;
   applicationId: bigint;
-
   token: string;
   intents: GatewayIntents;
   urlWSS: string;
@@ -441,163 +422,18 @@ export interface Bot<C extends Cache | AsyncCache = AsyncCache | Cache> {
   handlers: ReturnType<typeof createBotGatewayHandlers>;
   activeGuildIds: Set<bigint>;
   constants: ReturnType<typeof createBotConstants>;
-  cache: C;
+  cache: {
+    unrepliedInteractions: Set<bigint>;
+    fetchAllMembersProcessingRequests: Map<string, Function>;
+  };
   enabledPlugins: Set<string>;
   handleDiscordPayload?: GatewayManager["handleDiscordPayload"];
 }
 
-export interface Helpers {
-  addDiscoverySubcategory: typeof helpers.addDiscoverySubcategory;
-  addReaction: typeof helpers.addReaction;
-  addReactions: typeof helpers.addReactions;
-  addRole: typeof helpers.addRole;
-  avatarURL: typeof helpers.avatarURL;
-  banMember: typeof helpers.banMember;
-  batchEditApplicationCommandPermissions: typeof helpers.batchEditApplicationCommandPermissions;
-  channelOverwriteHasPermission: typeof helpers.channelOverwriteHasPermission;
-  cloneChannel: typeof helpers.cloneChannel;
-  connectToVoiceChannel: typeof helpers.connectToVoiceChannel;
-  createChannel: typeof helpers.createChannel;
-  createEmoji: typeof helpers.createEmoji;
-  createGuild: typeof helpers.createGuild;
-  createGuildFromTemplate: typeof helpers.createGuildFromTemplate;
-  createGuildTemplate: typeof helpers.createGuildTemplate;
-  createInvite: typeof helpers.createInvite;
-  createRole: typeof helpers.createRole;
-  createScheduledEvent: typeof helpers.createScheduledEvent;
-  createApplicationCommand: typeof helpers.createApplicationCommand;
-  createStageInstance: typeof helpers.createStageInstance;
-  createWebhook: typeof helpers.createWebhook;
-  deleteChannel: typeof helpers.deleteChannel;
-  deleteChannelOverwrite: typeof helpers.deleteChannelOverwrite;
-  deleteEmoji: typeof helpers.deleteEmoji;
-  deleteGuild: typeof helpers.deleteGuild;
-  deleteGuildTemplate: typeof helpers.deleteGuildTemplate;
-  deleteIntegration: typeof helpers.deleteIntegration;
-  deleteInvite: typeof helpers.deleteInvite;
-  deleteMessage: typeof helpers.deleteMessage;
-  deleteMessages: typeof helpers.deleteMessages;
-  deleteRole: typeof helpers.deleteRole;
-  deleteScheduledEvent: typeof helpers.deleteScheduledEvent;
-  deleteApplicationCommand: typeof helpers.deleteApplicationCommand;
-  deleteInteractionResponse: typeof helpers.deleteInteractionResponse;
-  deleteStageInstance: typeof helpers.deleteStageInstance;
-  deleteWebhook: typeof helpers.deleteWebhook;
-  deleteWebhookMessage: typeof helpers.deleteWebhookMessage;
-  deleteWebhookWithToken: typeof helpers.deleteWebhookWithToken;
-  disconnectMember: typeof helpers.disconnectMember;
-  editBotNickname: typeof helpers.editBotNickname;
-  editBotProfile: typeof helpers.editBotProfile;
-  editBotStatus: typeof helpers.editBotStatus;
-  editChannel: typeof helpers.editChannel;
-  editChannelOverwrite: typeof helpers.editChannelOverwrite;
-  editDiscovery: typeof helpers.editDiscovery;
-  editEmoji: typeof helpers.editEmoji;
-  editGuild: typeof helpers.editGuild;
-  editGuildTemplate: typeof helpers.editGuildTemplate;
-  editMember: typeof helpers.editMember;
-  editMessage: typeof helpers.editMessage;
-  editRole: typeof helpers.editRole;
-  editScheduledEvent: typeof helpers.editScheduledEvent;
-  editInteractionResponse: typeof helpers.editInteractionResponse;
-  editApplicationCommandPermissions: typeof helpers.editApplicationCommandPermissions;
-  editWebhook: typeof helpers.editWebhook;
-  editWebhookMessage: typeof helpers.editWebhookMessage;
-  editWebhookWithToken: typeof helpers.editWebhookWithToken;
-  editWelcomeScreen: typeof helpers.editWelcomeScreen;
-  editWidget: typeof helpers.editWidget;
-  emojiUrl: typeof helpers.emojiUrl;
-  fetchMembers: typeof helpers.fetchMembers;
-  followChannel: typeof helpers.followChannel;
-  getAuditLogs: typeof helpers.getAuditLogs;
-  getAvailableVoiceRegions: typeof helpers.getAvailableVoiceRegions;
-  getBan: typeof helpers.getBan;
-  getBans: typeof helpers.getBans;
-  getChannel: typeof helpers.getChannel;
-  getChannelInvites: typeof helpers.getChannelInvites;
-  getChannels: typeof helpers.getChannels;
-  getChannelWebhooks: typeof helpers.getChannelWebhooks;
-  getDiscoveryCategories: typeof helpers.getDiscoveryCategories;
-  getEmoji: typeof helpers.getEmoji;
-  getEmojis: typeof helpers.getEmojis;
-  getGatewayBot: typeof helpers.getGatewayBot;
-  getGuild: typeof helpers.getGuild;
-  getGuildPreview: typeof helpers.getGuildPreview;
-  getGuildTemplates: typeof helpers.getGuildTemplates;
-  getIntegrations: typeof helpers.getIntegrations;
-  getInvite: typeof helpers.getInvite;
-  getInvites: typeof helpers.getInvites;
-  getMember: typeof helpers.getMember;
-  getMembers: typeof helpers.getMembers;
-  getMessage: typeof helpers.getMessage;
-  getMessages: typeof helpers.getMessages;
-  getOriginalInteractionResponse: typeof helpers.getOriginalInteractionResponse;
-  getPins: typeof helpers.getPins;
-  getPruneCount: typeof helpers.getPruneCount;
-  getReactions: typeof helpers.getReactions;
-  getRoles: typeof helpers.getRoles;
-  getScheduledEvent: typeof helpers.getScheduledEvent;
-  getScheduledEvents: typeof helpers.getScheduledEvents;
-  getScheduledEventUsers: typeof helpers.getScheduledEventUsers;
-  getApplicationCommand: typeof helpers.getApplicationCommand;
-  getApplicationCommandPermission: typeof helpers.getApplicationCommandPermission;
-  getApplicationCommandPermissions: typeof helpers.getApplicationCommandPermissions;
-  getApplicationCommands: typeof helpers.getApplicationCommands;
-  getStageInstance: typeof helpers.getStageInstance;
-  getTemplate: typeof helpers.getTemplate;
-  getUser: typeof helpers.getUser;
-  getApplicationInfo: typeof helpers.getApplicationInfo;
-  getVanityURL: typeof helpers.getVanityURL;
-  getVoiceRegions: typeof helpers.getVoiceRegions;
-  getWebhook: typeof helpers.getWebhook;
-  getWebhookMessage: typeof helpers.getWebhookMessage;
-  getWebhooks: typeof helpers.getWebhooks;
-  getWebhookWithToken: typeof helpers.getWebhookWithToken;
-  getWelcomeScreen: typeof helpers.getWelcomeScreen;
-  getWidget: typeof helpers.getWidget;
-  getWidgetImageURL: typeof helpers.getWidgetImageURL;
-  getWidgetSettings: typeof helpers.getWidgetSettings;
-  guildBannerURL: typeof helpers.guildBannerURL;
-  guildIconURL: typeof helpers.guildIconURL;
-  guildSplashURL: typeof helpers.guildSplashURL;
-  kickMember: typeof helpers.kickMember;
-  leaveGuild: typeof helpers.leaveGuild;
-  moveMember: typeof helpers.moveMember;
-  pinMessage: typeof helpers.pinMessage;
-  pruneMembers: typeof helpers.pruneMembers;
-  publishMessage: typeof helpers.publishMessage;
-  removeAllReactions: typeof helpers.removeAllReactions;
-  removeDiscoverySubcategory: typeof helpers.removeDiscoverySubcategory;
-  removeReaction: typeof helpers.removeReaction;
-  removeReactionEmoji: typeof helpers.removeReactionEmoji;
-  removeRole: typeof helpers.removeRole;
-  getDmChannel: typeof helpers.getDmChannel;
-  sendInteractionResponse: typeof helpers.sendInteractionResponse;
-  sendMessage: typeof helpers.sendMessage;
-  sendWebhook: typeof helpers.sendWebhook;
-  startTyping: typeof helpers.startTyping;
-  swapChannels: typeof helpers.swapChannels;
-  syncGuildTemplate: typeof helpers.syncGuildTemplate;
-  unbanMember: typeof helpers.unbanMember;
-  unpinMessage: typeof helpers.unpinMessage;
-  updateBotVoiceState: typeof helpers.updateBotVoiceState;
-  updateStageInstance: typeof helpers.updateStageInstance;
-  upsertApplicationCommand: typeof helpers.upsertApplicationCommand;
-  upsertApplicationCommands: typeof helpers.upsertApplicationCommands;
-  validDiscoveryTerm: typeof helpers.validDiscoveryTerm;
-  addToThread: typeof helpers.addToThread;
-  deleteThread: typeof helpers.deleteThread;
-  editThread: typeof helpers.editThread;
-  getActiveThreads: typeof helpers.getActiveThreads;
-  getArchivedThreads: typeof helpers.getArchivedThreads;
-  getThreadMember: typeof helpers.getThreadMember;
-  getThreadMembers: typeof helpers.getThreadMembers;
-  joinThread: typeof helpers.joinThread;
-  leaveThread: typeof helpers.leaveThread;
-  removeThreadMember: typeof helpers.removeThreadMember;
-  startThreadWithoutMessage: typeof helpers.startThreadWithoutMessage;
-  startThreadWithMessage: typeof helpers.startThreadWithMessage;
-}
+export const defaultHelpers = { ...helpers };
+export type DefaultHelpers = typeof defaultHelpers;
+// deno-lint-ignore no-empty-interface
+export interface Helpers extends DefaultHelpers {} // Use interface for declaration merging
 
 export function createHelpers(bot: Bot, customHelpers?: Partial<Helpers>): FinalHelpers {
   const converted = {} as FinalHelpers;
@@ -613,159 +449,8 @@ export function createHelpers(bot: Bot, customHelpers?: Partial<Helpers>): Final
 
 export function createBaseHelpers(options: Partial<Helpers>) {
   return {
-    addDiscoverySubcategory: options.addDiscoverySubcategory || helpers.addDiscoverySubcategory,
-    addReaction: options.addReaction || helpers.addReaction,
-    addReactions: options.addReactions || helpers.addReactions,
-    addRole: options.addRole || helpers.addRole,
-    avatarURL: options.avatarURL || helpers.avatarURL,
-    banMember: options.banMember || helpers.banMember,
-    batchEditApplicationCommandPermissions:
-      options.batchEditApplicationCommandPermissions || helpers.batchEditApplicationCommandPermissions,
-    channelOverwriteHasPermission: options.channelOverwriteHasPermission || helpers.channelOverwriteHasPermission,
-    cloneChannel: options.cloneChannel || helpers.cloneChannel,
-    connectToVoiceChannel: options.connectToVoiceChannel || helpers.connectToVoiceChannel,
-    createChannel: options.createChannel || helpers.createChannel,
-    createEmoji: options.createEmoji || helpers.createEmoji,
-    createGuild: options.createGuild || helpers.createGuild,
-    createGuildFromTemplate: options.createGuildFromTemplate || helpers.createGuildFromTemplate,
-    createGuildTemplate: options.createGuildTemplate || helpers.createGuildTemplate,
-    createInvite: options.createInvite || helpers.createInvite,
-    createRole: options.createRole || helpers.createRole,
-    createScheduledEvent: options.createScheduledEvent || helpers.createScheduledEvent,
-    createApplicationCommand: options.createApplicationCommand || helpers.createApplicationCommand,
-    createStageInstance: options.createStageInstance || helpers.createStageInstance,
-    createWebhook: options.createWebhook || helpers.createWebhook,
-    deleteChannel: options.deleteChannel || helpers.deleteChannel,
-    deleteChannelOverwrite: options.deleteChannelOverwrite || helpers.deleteChannelOverwrite,
-    deleteEmoji: options.deleteEmoji || helpers.deleteEmoji,
-    deleteGuild: options.deleteGuild || helpers.deleteGuild,
-    deleteGuildTemplate: options.deleteGuildTemplate || helpers.deleteGuildTemplate,
-    deleteIntegration: options.deleteIntegration || helpers.deleteIntegration,
-    deleteInvite: options.deleteInvite || helpers.deleteInvite,
-    deleteMessage: options.deleteMessage || helpers.deleteMessage,
-    deleteMessages: options.deleteMessages || helpers.deleteMessages,
-    deleteRole: options.deleteRole || helpers.deleteRole,
-    deleteScheduledEvent: options.deleteScheduledEvent || helpers.deleteScheduledEvent,
-    deleteApplicationCommand: options.deleteApplicationCommand || helpers.deleteApplicationCommand,
-    deleteInteractionResponse: options.deleteInteractionResponse || helpers.deleteInteractionResponse,
-    deleteStageInstance: options.deleteStageInstance || helpers.deleteStageInstance,
-    deleteWebhook: options.deleteWebhook || helpers.deleteWebhook,
-    deleteWebhookMessage: options.deleteWebhookMessage || helpers.deleteWebhookMessage,
-    deleteWebhookWithToken: options.deleteWebhookWithToken || helpers.deleteWebhookWithToken,
-    disconnectMember: options.disconnectMember || helpers.disconnectMember,
-    editBotNickname: options.editBotNickname || helpers.editBotNickname,
-    editBotProfile: options.editBotProfile || helpers.editBotProfile,
-    editBotStatus: options.editBotStatus || helpers.editBotStatus,
-    editChannel: options.editChannel || helpers.editChannel,
-    editChannelOverwrite: options.editChannelOverwrite || helpers.editChannelOverwrite,
-    editDiscovery: options.editDiscovery || helpers.editDiscovery,
-    editEmoji: options.editEmoji || helpers.editEmoji,
-    editGuild: options.editGuild || helpers.editGuild,
-    editGuildTemplate: options.editGuildTemplate || helpers.editGuildTemplate,
-    editMember: options.editMember || helpers.editMember,
-    editMessage: options.editMessage || helpers.editMessage,
-    editRole: options.editRole || helpers.editRole,
-    editScheduledEvent: options.editScheduledEvent || helpers.editScheduledEvent,
-    editInteractionResponse: options.editInteractionResponse || helpers.editInteractionResponse,
-    editApplicationCommandPermissions:
-      options.editApplicationCommandPermissions || helpers.editApplicationCommandPermissions,
-    editWebhook: options.editWebhook || helpers.editWebhook,
-    editWebhookMessage: options.editWebhookMessage || helpers.editWebhookMessage,
-    editWebhookWithToken: options.editWebhookWithToken || helpers.editWebhookWithToken,
-    editWelcomeScreen: options.editWelcomeScreen || helpers.editWelcomeScreen,
-    editWidget: options.editWidget || helpers.editWidget,
-    emojiUrl: options.emojiUrl || helpers.emojiUrl,
-    fetchMembers: options.fetchMembers || helpers.fetchMembers,
-    followChannel: options.followChannel || helpers.followChannel,
-    getAuditLogs: options.getAuditLogs || helpers.getAuditLogs,
-    getAvailableVoiceRegions: options.getAvailableVoiceRegions || helpers.getAvailableVoiceRegions,
-    getBan: options.getBan || helpers.getBan,
-    getBans: options.getBans || helpers.getBans,
-    getChannel: options.getChannel || helpers.getChannel,
-    getChannelInvites: options.getChannelInvites || helpers.getChannelInvites,
-    getChannels: options.getChannels || helpers.getChannels,
-    getChannelWebhooks: options.getChannelWebhooks || helpers.getChannelWebhooks,
-    getDiscoveryCategories: options.getDiscoveryCategories || helpers.getDiscoveryCategories,
-    getEmoji: options.getEmoji || helpers.getEmoji,
-    getEmojis: options.getEmojis || helpers.getEmojis,
-    getGatewayBot: options.getGatewayBot || helpers.getGatewayBot,
-    getGuild: options.getGuild || helpers.getGuild,
-    getGuildPreview: options.getGuildPreview || helpers.getGuildPreview,
-    getGuildTemplates: options.getGuildTemplates || helpers.getGuildTemplates,
-    getIntegrations: options.getIntegrations || helpers.getIntegrations,
-    getInvite: options.getInvite || helpers.getInvite,
-    getInvites: options.getInvites || helpers.getInvites,
-    getMember: options.getMember || helpers.getMember,
-    getMembers: options.getMembers || helpers.getMembers,
-    getMessage: options.getMessage || helpers.getMessage,
-    getMessages: options.getMessages || helpers.getMessages,
-    getOriginalInteractionResponse: options.getOriginalInteractionResponse || helpers.getOriginalInteractionResponse,
-    getPins: options.getPins || helpers.getPins,
-    getPruneCount: options.getPruneCount || helpers.getPruneCount,
-    getReactions: options.getReactions || helpers.getReactions,
-    getRoles: options.getRoles || helpers.getRoles,
-    getScheduledEvent: options.getScheduledEvent || helpers.getScheduledEvent,
-    getScheduledEventUsers: options.getScheduledEventUsers || helpers.getScheduledEventUsers,
-    getScheduledEvents: options.getScheduledEvents || helpers.getScheduledEvents,
-    getApplicationCommand: options.getApplicationCommand || helpers.getApplicationCommand,
-    getApplicationCommandPermission: options.getApplicationCommandPermission || helpers.getApplicationCommandPermission,
-    getApplicationCommandPermissions:
-      options.getApplicationCommandPermissions || helpers.getApplicationCommandPermissions,
-    getApplicationCommands: options.getApplicationCommands || helpers.getApplicationCommands,
-    getStageInstance: options.getStageInstance || helpers.getStageInstance,
-    getTemplate: options.getTemplate || helpers.getTemplate,
-    getUser: options.getUser || helpers.getUser,
-    getApplicationInfo: options.getApplicationInfo || helpers.getApplicationInfo,
-    getVanityURL: options.getVanityURL || helpers.getVanityURL,
-    getVoiceRegions: options.getVoiceRegions || helpers.getVoiceRegions,
-    getWebhook: options.getWebhook || helpers.getWebhook,
-    getWebhookMessage: options.getWebhookMessage || helpers.getWebhookMessage,
-    getWebhooks: options.getWebhooks || helpers.getWebhooks,
-    getWebhookWithToken: options.getWebhookWithToken || helpers.getWebhookWithToken,
-    getWelcomeScreen: options.getWelcomeScreen || helpers.getWelcomeScreen,
-    getWidget: options.getWidget || helpers.getWidget,
-    getWidgetImageURL: options.getWidgetImageURL || helpers.getWidgetImageURL,
-    getWidgetSettings: options.getWidgetSettings || helpers.getWidgetSettings,
-    guildBannerURL: options.guildBannerURL || helpers.guildBannerURL,
-    guildIconURL: options.guildIconURL || helpers.guildIconURL,
-    guildSplashURL: options.guildSplashURL || helpers.guildSplashURL,
-    kickMember: options.kickMember || helpers.kickMember,
-    leaveGuild: options.leaveGuild || helpers.leaveGuild,
-    moveMember: options.moveMember || helpers.moveMember,
-    pinMessage: options.pinMessage || helpers.pinMessage,
-    pruneMembers: options.pruneMembers || helpers.pruneMembers,
-    publishMessage: options.publishMessage || helpers.publishMessage,
-    removeAllReactions: options.removeAllReactions || helpers.removeAllReactions,
-    removeDiscoverySubcategory: options.removeDiscoverySubcategory || helpers.removeDiscoverySubcategory,
-    removeReaction: options.removeReaction || helpers.removeReaction,
-    removeReactionEmoji: options.removeReactionEmoji || helpers.removeReactionEmoji,
-    removeRole: options.removeRole || helpers.removeRole,
-    getDmChannel: options.getDmChannel || helpers.getDmChannel,
-    sendInteractionResponse: options.sendInteractionResponse || helpers.sendInteractionResponse,
-    sendMessage: options.sendMessage || helpers.sendMessage,
-    sendWebhook: options.sendWebhook || helpers.sendWebhook,
-    startTyping: options.startTyping || helpers.startTyping,
-    swapChannels: options.swapChannels || helpers.swapChannels,
-    syncGuildTemplate: options.syncGuildTemplate || helpers.syncGuildTemplate,
-    unbanMember: options.unbanMember || helpers.unbanMember,
-    unpinMessage: options.unpinMessage || helpers.unpinMessage,
-    updateBotVoiceState: options.updateBotVoiceState || helpers.updateBotVoiceState,
-    updateStageInstance: options.updateStageInstance || helpers.updateStageInstance,
-    upsertApplicationCommand: options.upsertApplicationCommand || helpers.upsertApplicationCommand,
-    upsertApplicationCommands: options.upsertApplicationCommands || helpers.upsertApplicationCommands,
-    validDiscoveryTerm: options.validDiscoveryTerm || helpers.validDiscoveryTerm,
-    addToThread: options.addToThread || helpers.addToThread,
-    deleteThread: options.deleteThread || helpers.deleteThread,
-    editThread: options.editThread || helpers.editThread,
-    getActiveThreads: options.getActiveThreads || helpers.getActiveThreads,
-    getArchivedThreads: options.getArchivedThreads || helpers.getArchivedThreads,
-    getThreadMember: options.getThreadMember || helpers.getThreadMember,
-    getThreadMembers: options.getThreadMembers || helpers.getThreadMembers,
-    joinThread: options.joinThread || helpers.joinThread,
-    leaveThread: options.leaveThread || helpers.leaveThread,
-    removeThreadMember: options.removeThreadMember || helpers.removeThreadMember,
-    startThreadWithoutMessage: options.startThreadWithoutMessage || helpers.startThreadWithoutMessage,
-    startThreadWithMessage: options.startThreadWithMessage || helpers.startThreadWithMessage,
+    ...defaultHelpers,
+    ...options,
   };
 }
 
@@ -791,9 +476,14 @@ export interface Transformers {
   component: typeof transformComponent;
   webhook: typeof transformWebhook;
   auditlogEntry: typeof transformAuditlogEntry;
+  applicationCommand: typeof transformApplicationCommand;
+  applicationCommandOption: typeof transformApplicationCommandOption;
   applicationCommandPermission: typeof transformApplicationCommandPermission;
   scheduledEvent: typeof transformScheduledEvent;
   threadMember: typeof transformThreadMember;
+  welcomeScreen: typeof transformWelcomeScreen;
+  voiceRegion: typeof transformVoiceRegion;
+  widget: typeof transformWidget;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -819,9 +509,14 @@ export function createTransformers(options: Partial<Transformers>) {
     snowflake: options.snowflake || snowflakeToBigint,
     webhook: options.webhook || transformWebhook,
     auditlogEntry: options.auditlogEntry || transformAuditlogEntry,
+    applicationCommand: options.applicationCommand || transformApplicationCommand,
+    applicationCommandOption: options.applicationCommandOption || transformApplicationCommandOption,
     applicationCommandPermission: options.applicationCommandPermission || transformApplicationCommandPermission,
     scheduledEvent: options.scheduledEvent || transformScheduledEvent,
     threadMember: options.threadMember || transformThreadMember,
+    welcomeScreen: options.welcomeScreen || transformWelcomeScreen,
+    voiceRegion: options.voiceRegion || transformVoiceRegion,
+    widget: options.widget || transformWidget,
   };
 }
 
@@ -843,9 +538,9 @@ export interface GatewayManager {
   /** Whether or not the resharder should automatically switch to LARGE BOT SHARDING when you are above 100K servers. */
   useOptimalLargeBotSharding: boolean;
   /** The amount of shards to load per worker. */
-  shardsPerCluster: number;
+  shardsPerWorker: number;
   /** The maximum amount of workers to use for your bot. */
-  maxClusters: number;
+  maxWorkers: number;
   /** The first shard Id to start spawning. */
   firstShardId: number;
   /** The last shard Id for this worker. */
@@ -880,7 +575,6 @@ export interface GatewayManager {
     {
       shardId: number;
       resolve: (value: unknown) => void;
-      startedAt: number;
     }
   >;
   /** Stored as bucketId: { workers: [workerId, [ShardIds]], createNextShard: boolean } */
@@ -901,6 +595,8 @@ export interface GatewayManager {
 
   // METHODS
 
+  /** Prepares the buckets for identifying */
+  prepareBuckets: typeof prepareBuckets;
   /** The handler for spawning ALL the shards. */
   spawnShards: typeof spawnShards;
   /** Create the websocket and adds the proper handlers to the websocket. */
@@ -912,7 +608,7 @@ export interface GatewayManager {
   /** Sends the discord payload to another server. */
   handleDiscordPayload: (gateway: GatewayManager, data: GatewayPayload, shardId: number) => any;
   /** Tell the worker to begin identifying this shard  */
-  tellClusterToIdentify: typeof tellClusterToIdentify;
+  tellWorkerToIdentify: typeof tellWorkerToIdentify;
   /** Handle the different logs. Used for debugging. */
   debug: (text: string, ...args: any[]) => unknown;
   /** Handles resharding the bot when necessary. */

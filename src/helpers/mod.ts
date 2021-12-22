@@ -1,5 +1,4 @@
 //channels
-export * from "./channels/channelOverwriteHasPermission.ts";
 export * from "./channels/createChannel.ts";
 export * from "./channels/deleteChannel.ts";
 export * from "./channels/deleteChannelOverwrite.ts";
@@ -12,11 +11,12 @@ export * from "./channels/getChannelWebhooks.ts";
 export * from "./channels/getPins.ts";
 export * from "./channels/startTyping.ts";
 export * from "./channels/swapChannels.ts";
-export * from "./channels/updateBotVoiceState.ts";
+export * from "./channels/updateVoiceState.ts";
 
 //discovery
 export * from "./discovery/addDiscoverySubcategory.ts";
 export * from "./discovery/editDiscovery.ts";
+export * from "./discovery/getDiscovery.ts";
 export * from "./discovery/getDiscoveryCategories.ts";
 export * from "./discovery/removeDiscoverySubcategory.ts";
 export * from "./discovery/validDiscoveryTerm.ts";
@@ -70,6 +70,9 @@ export * from "./interactions/commands/getApplicationCommandPermission.ts";
 export * from "./interactions/commands/getApplicationCommandPermissions.ts";
 export * from "./interactions/commands/upsertApplicationCommand.ts";
 export * from "./interactions/commands/upsertApplicationCommands.ts";
+export * from "./interactions/followups/deleteFollowupMessage.ts";
+export * from "./interactions/followups/editFollowupMessage.ts";
+export * from "./interactions/followups/getFollowupMessage.ts";
 export * from "./interactions/getOriginalInteractionResponse.ts";
 export * from "./interactions/sendInteractionResponse.ts";
 
@@ -83,14 +86,12 @@ export * from "./invites/getInvites.ts";
 //members
 export * from "./members/avatarUrl.ts";
 export * from "./members/banMember.ts";
-export * from "./members/disconnectMember.ts";
 export * from "./members/editBotNickname.ts";
 export * from "./members/editMember.ts";
 export * from "./members/fetchMembers.ts";
 export * from "./members/getMember.ts";
 export * from "./members/getMembers.ts";
 export * from "./members/kickMember.ts";
-export * from "./members/moveMember.ts";
 export * from "./members/pruneMembers.ts";
 export * from "./members/getDmChannel.ts";
 export * from "./members/unbanMember.ts";
@@ -159,8 +160,6 @@ export * from "./channels/getStageInstance.ts";
 export * from "./channels/deleteStageInstance.ts";
 export * from "./voice/connectToVoiceChannel.ts";
 export * from "./channels/threads/addToThread.ts";
-export * from "./channels/threads/deleteThread.ts";
-export * from "./channels/threads/editThread.ts";
 export * from "./channels/threads/getActiveThreads.ts";
 export * from "./channels/threads/getArchivedThreads.ts";
 export * from "./channels/threads/getThreadMember.ts";
@@ -170,7 +169,6 @@ export * from "./channels/threads/leaveThread.ts";
 export * from "./channels/threads/removeThreadMember.ts";
 export * from "./channels/threads/startThreadWithMessage.ts";
 export * from "./channels/threads/startThreadWithoutMessage.ts";
-export * from "./channels/cloneChannel.ts";
 
 //guilds
 export * from "./guilds/scheduledEvents/createScheduledEvent.ts";

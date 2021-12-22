@@ -6,20 +6,20 @@ import type { Bot } from "../../bot.ts";
 export function guildSplashURL(
   bot: Bot,
   id: bigint,
-  options: {
-    splash?: string | bigint;
+  splash: bigint | undefined,
+  options?: {
     size?: ImageSize;
     format?: ImageFormat;
   }
 ) {
-  return options.splash
+  return splash
     ? bot.utils.formatImageURL(
         bot.constants.endpoints.GUILD_SPLASH(
           id,
-          typeof options.splash === "string" ? options.splash : bot.utils.iconBigintToHash(options.splash)
+          typeof splash === "string" ? splash : bot.utils.iconBigintToHash(splash)
         ),
-        options.size || 128,
-        options.format
+        options?.size || 128,
+        options?.format
       )
     : undefined;
 }

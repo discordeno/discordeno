@@ -88,6 +88,18 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
       components: content.components?.map((component) => ({
         type: component.type,
         components: component.components.map((subcomponent) => {
+          if (subcomponent.type === MessageComponentTypes.InputText) {
+            return {
+              type: subcomponent.type,
+              style: subcomponent.style,
+              custom_id: subcomponent.customId,
+              label: subcomponent.label,
+              placeholder: subcomponent.placeholder,
+              min_length: subcomponent.minLength ?? subcomponent.required === false ? 0 : subcomponent.minLength,
+              max_length: subcomponent.maxLength,
+            };
+          }
+          
           if (subcomponent.type === MessageComponentTypes.SelectMenu)
             return {
               type: subcomponent.type,
@@ -115,15 +127,16 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
             custom_id: subcomponent.customId,
             label: subcomponent.label,
             style: subcomponent.style,
-            emoji: subcomponent.emoji
-              ? {
-                  id: subcomponent.emoji.id?.toString(),
-                  name: subcomponent.emoji.name,
-                  animated: subcomponent.emoji.animated,
-                }
-              : undefined,
-            url: subcomponent.url,
-            disabled: subcomponent.disabled,
+            emoji:
+              "emoji" in subcomponent && subcomponent.emoji
+                ? {
+                    id: subcomponent.emoji.id?.toString(),
+                    name: subcomponent.emoji.name,
+                    animated: subcomponent.emoji.animated,
+                  }
+                : undefined,
+            url: "url" in subcomponent ? subcomponent.url : undefined,
+            disabled: "disabled" in subcomponent ? subcomponent.disabled : undefined,
           };
         }),
       })),

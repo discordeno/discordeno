@@ -1,9 +1,8 @@
 /** Begin spawning shards. */
 import { GatewayManager } from "../bot.ts";
 
-export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
-  /** Stored as bucketId: [clusterId, [ShardIds]] */
-  const maxShards = gateway.lastShardId || gateway.maxShards;
+export function prepareBuckets(gateway: GatewayManager, firstShardId: number, lastShardId: number) {
+  /** Stored as bucketId: [workerId, [ShardIds]] */
   let worker = 0;
 
   for (let i = 0; i < gateway.maxConcurrency; i++) {
@@ -14,37 +13,45 @@ export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
   }
 
   // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
-  for (let i = firstShardId; i < maxShards; i++) {
+  for (let i = firstShardId; i < lastShardId; i++) {
     gateway.debug(`1. Running for loop in spawnShards function.`);
+    if (i >= gateway.maxShards) {
+      continue;
+    }
+    
     const bucketId = i % gateway.maxConcurrency;
     const bucket = gateway.buckets.get(bucketId);
     if (!bucket) throw new Error("Bucket not found when spawning shards.");
 
     // FIND A QUEUE IN THIS BUCKET THAT HAS SPACE
-    const queue = bucket.workers.find((q) => q.length < gateway.shardsPerCluster + 1);
+    const queue = bucket.workers.find((q) => q.length < gateway.shardsPerWorker + 1);
     if (queue) {
       // IF THE QUEUE HAS SPACE JUST ADD IT TO THIS QUEUE
       queue.push(i);
     } else {
-      if (worker + 1 <= gateway.maxClusters) worker++;
+      if (worker + 1 <= gateway.maxWorkers) worker++;
       // ADD A NEW QUEUE FOR THIS SHARD
       bucket.workers.push([worker, i]);
     }
   }
+}
 
-  // SPREAD THIS OUT TO DIFFERENT CLUSTERS TO BEGIN STARTING UP
+export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
+  // PREPARES ALL SHARDS IN SPECIFIC BUCKETS
+  prepareBuckets(gateway, firstShardId, gateway.lastShardId ? gateway.lastShardId + 1 : gateway.maxShards);
+
+  // SPREAD THIS OUT TO DIFFERENT WORKERS TO BEGIN STARTING UP
   gateway.buckets.forEach(async (bucket, bucketId) => {
     gateway.debug(`2. Running forEach loop in spawnShards function.`);
     for (const [workerId, ...queue] of bucket.workers) {
       gateway.debug(`3. Running for of loop in spawnShards function.`);
 
-      queue.forEach((shardId) => {
+      for (const shardId of queue) {
         bucket.createNextShard.push(async () => {
-          await gateway.tellClusterToIdentify(gateway, workerId, shardId, bucketId);
+          await gateway.tellWorkerToIdentify(gateway, workerId, shardId, bucketId);
         });
-      });
-
-      await bucket.createNextShard.shift()?.();
+      }
     }
+    await bucket.createNextShard.shift()?.();
   });
 }

@@ -1,28 +1,28 @@
-import { Bot } from "../../../src/bot.ts";
 import { assertExists } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
 import { CreateMessage } from "../../../src/types/messages/createMessage.ts";
 import { MessageComponentTypes } from "../../../src/types/messages/components/messageComponentTypes.ts";
 import { ButtonStyles } from "../../../src/types/messages/components/buttonStyles.ts";
+import { bot } from "../../mod.ts";
 
-async function ifItFailsBlameWolf(bot: Bot, channelId: bigint, content: string | CreateMessage) {
+async function ifItFailsBlameWolf(channelId: bigint, content: string | CreateMessage) {
   const message = await bot.helpers.sendMessage(channelId, content);
   // Assertions
   assertExists(message);
   // Delay the execution by to allow MESSAGE_CREATE event to be processed
-  await delayUntil(10000, () => bot.cache.messages.has(message.id));
+  await delayUntil(10000, () => bot.messages.has(message.id));
   // Make sure the message was created.
-  if (!bot.cache.messages.has(message.id)) {
+  if (!bot.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
   }
 }
 
-export async function sendMessageWithTextTest(bot: Bot, channelId: bigint, t: Deno.TestContext) {
-  await ifItFailsBlameWolf(bot, channelId, "Hello World!");
+export async function sendMessageWithTextTest(channelId: bigint) {
+  await ifItFailsBlameWolf(channelId, "Hello World!");
 }
 
-export async function sendMessageWithComponents(bot: Bot, channelId: bigint, t: Deno.TestContext) {
-  await ifItFailsBlameWolf(bot, channelId, {
+export async function sendMessageWithComponents(channelId: bigint) {
+  await ifItFailsBlameWolf(channelId, {
     content: "Hello World!",
     components: [
       {
@@ -57,8 +57,8 @@ export async function sendMessageWithComponents(bot: Bot, channelId: bigint, t: 
   });
 }
 
-export async function sendMessageWithEmbedsTest(bot: Bot, channelId: bigint, t: Deno.TestContext) {
-  await ifItFailsBlameWolf(bot, channelId, {
+export async function sendMessageWithEmbedsTest(channelId: bigint) {
+  await ifItFailsBlameWolf(channelId, {
     embeds: [
       {
         title: "Hello World",

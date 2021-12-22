@@ -2,7 +2,7 @@ import type { ApplicationCommand } from "../../../types/interactions/commands/ap
 import { Collection } from "../../../util/collection.ts";
 import type { Bot } from "../../../bot.ts";
 
-/** Fetch all the global commands for your application. */
+/** Fetch all the commands for your application. If a guild id is not provided, it will fetch global commands. */
 export async function getApplicationCommands(bot: Bot, guildId?: bigint) {
   const result = await bot.rest.runMethod<ApplicationCommand[]>(
     bot.rest,
@@ -13,13 +13,9 @@ export async function getApplicationCommands(bot: Bot, guildId?: bigint) {
   );
 
   return new Collection(
-    result.map((command) => [
-      command.name,
-      {
-        ...command,
-        id: bot.transformers.snowflake(command.id),
-        applicationId: bot.transformers.snowflake(command.application_id),
-      },
-    ])
+    result.map((res) => {
+      const command = bot.transformers.applicationCommand(bot, res);
+      return [command.id, command];
+    })
   );
 }

@@ -35,13 +35,17 @@ export async function editChannel(bot: Bot, channelId: bigint, options: ModifyCh
     name: options.name,
     topic: options.topic,
     bitrate: options.bitrate,
-    userLimit: options.userLimit,
-    rateLimitPerUser: options.rateLimitPerUser,
+    user_limit: options.userLimit,
+    rate_limit_per_user: options.rateLimitPerUser,
     position: options.position,
-    parentId: options.parentId,
+    parent_id: options.parentId === null ? null : options.parentId?.toString(),
     nsfw: options.nsfw,
     type: options.type,
-    permissionOverwrites: options.permissionOverwrites
+    archived: options.archived,
+    auto_archive_duration: options.autoArchiveDuration,
+    locked: options.locked,
+    invitable: options.invitable,
+    permission_overwrites: options.permissionOverwrites
       ? options.permissionOverwrites?.map((overwrite) => {
           return {
             ...overwrite,

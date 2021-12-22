@@ -1,4 +1,4 @@
-import { assertEquals, assertExists, assertNotEquals, assertThrows } from "../deps.ts";
+import { assertEquals, assertExists, assertNotEquals } from "../deps.ts";
 import { bot, guild } from "../mod.ts";
 
 Deno.test("[thread] Start a thread", async (t) => {
@@ -34,7 +34,8 @@ Deno.test("[thread] Start a thread", async (t) => {
     assertEquals(archived.members.size, 0);
 
     await t.step("[thread] Edit and archive a thread", async () => {
-      const edited = await bot.helpers.editThread(thread.id, {
+      const edited = await bot.helpers.editChannel(thread.id, {
+        // @ts-ignore
         archived: true,
         name: "new name",
         autoArchiveDuration: 1440,
@@ -54,6 +55,6 @@ Deno.test("[thread] Start a thread", async (t) => {
   });
 
   await t.step("[thread] Delete a thread", async () => {
-    await bot.helpers.deleteThread(thread.id);
+    await bot.helpers.deleteChannel(thread.id);
   });
 });

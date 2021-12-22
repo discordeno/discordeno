@@ -6,9 +6,6 @@ import { GatewayOpcodes } from "../../types/codes/gatewayOpcodes.ts";
 import type { DiscordenoMember } from "../../transformers/member.ts";
 
 /**
- * ⚠️ BEGINNER DEVS!! YOU SHOULD ALMOST NEVER NEED THIS AND YOU CAN GET FROM cache.members.get()
- *
- * ADVANCED:
  * Highly recommended to use this function to fetch members instead of getMember from REST.
  * REST: 50/s global(across all shards) rate limit with ALL requests this included
  * GW(this function): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is now 960/m.

@@ -1,15 +1,14 @@
 import { Bot } from "../../../src/bot.ts";
 import { assertEquals, assertExists } from "../../deps.ts";
+import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
 const reactionCounters = new Map<bigint, number>();
 
 export async function addReactionTest(
-  bot: Bot,
   guildId: bigint,
   channelId: bigint,
-  options: { custom: boolean; single: boolean; ordered: boolean },
-  t: Deno.TestContext
+  options: { custom: boolean; single: boolean; ordered: boolean }
 ) {
   const message = await bot.helpers.sendMessage(channelId, "Hello World!");
 
@@ -17,9 +16,9 @@ export async function addReactionTest(
   assertExists(message);
 
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, () => bot.cache.messages.has(message.id));
+  await delayUntil(10000, () => bot.messages.has(message.id));
 
-  if (!bot.cache.messages.has(message.id)) {
+  if (!bot.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
   }
 
@@ -76,16 +75,16 @@ export async function addReactionTest(
   assertEquals(reactionCounters.get(message.id), options.single ? 1 : emojiIds.length);
 }
 
-export async function removeAllReactionTests(bot: Bot, channelId: bigint, t: Deno.TestContext) {
+export async function removeAllReactionTests(channelId: bigint) {
   const message = await bot.helpers.sendMessage(channelId, "Hello World!");
 
   // Assertions
   assertExists(message);
 
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, () => bot.cache.messages.has(message.id));
+  await delayUntil(10000, () => bot.messages.has(message.id));
 
-  if (!bot.cache.messages.has(message.id)) {
+  if (!bot.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
   }
 
@@ -117,16 +116,16 @@ export async function removeAllReactionTests(bot: Bot, channelId: bigint, t: Den
   assertEquals(reactionCounters.get(message.id), 0);
 }
 
-export async function removeReactionTest(bot: Bot, channelId: bigint, t: Deno.TestContext) {
+export async function removeReactionTest(channelId: bigint) {
   const message = await bot.helpers.sendMessage(channelId, "Hello World!");
 
   // Assertions
   assertExists(message);
 
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, () => bot.cache.messages.has(message.id));
+  await delayUntil(10000, () => bot.messages.has(message.id));
 
-  if (!bot.cache.messages.has(message.id)) {
+  if (!bot.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
   }
 
@@ -159,22 +158,22 @@ export async function removeReactionTest(bot: Bot, channelId: bigint, t: Deno.Te
   assertEquals(reactionCounters.get(message.id), 2);
 }
 
-export async function removeReactionEmojiTest(bot: Bot, channelId: bigint, t: Deno.TestContext) {
+export async function removeReactionEmojiTest(channelId: bigint) {
   const message = await bot.helpers.sendMessage(channelId, "Hello World!");
 
   // Assertions
   assertExists(message);
 
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, () => bot.cache.messages.has(message.id));
+  await delayUntil(10000, () => bot.messages.has(message.id));
 
-  if (!bot.cache.messages.has(message.id)) {
+  if (!bot.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
   }
 
   reactionCounters.set(message.id, 0);
 
-  bot.events.reactionAdd
+  bot.events.reactionAdd;
 
   bot.events.reactionRemoveEmoji = function (bot, payload) {
     reactionCounters.set(payload.messageId, 0);

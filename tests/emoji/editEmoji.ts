@@ -15,9 +15,9 @@ Deno.test({
     assertExists(emoji);
 
     // Delay the execution to allow event to be processed
-    await delayUntil(10000, async () => bot.cache.guilds.get(guild.id)?.emojis?.has(emoji.id));
+    await delayUntil(10000, async () => bot.guilds.get(guild.id)?.emojis?.has(emoji.id));
 
-    if (!bot.cache.guilds.get(guild.id)?.emojis?.has(emoji.id)) {
+    if (!bot.guilds.get(guild.id)?.emojis?.has(emoji.id)) {
       throw new Error("The emoji seemed to be created but it was not cached.");
     }
 
@@ -25,12 +25,9 @@ Deno.test({
       name: "blamewolf_infinite",
     });
 
-    await delayUntil(
-      10000,
-      async () => bot.cache.guilds.get(guild.id)?.emojis?.get(emoji.id)?.name === "blamewolf_infinite"
-    );
+    await delayUntil(10000, async () => bot.guilds.get(guild.id)?.emojis?.get(emoji.id)?.name === "blamewolf_infinite");
 
-    if (bot.cache.guilds.get(guild.id)?.emojis?.get(emoji.id)?.name !== "blamewolf_infinite") {
+    if (bot.guilds.get(guild.id)?.emojis?.get(emoji.id)?.name !== "blamewolf_infinite") {
       throw new Error("The emoji seemed to be edited but the cache was not updated.");
     }
   },

@@ -1,9 +1,8 @@
 import { Bot } from "../../../src/bot.ts";
-import { Cache } from "../../../src/cache.ts";
 import { assertEquals, assertExists } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
 
-export async function editRoleTests(bot: Bot<Cache>, guildId: bigint, t: Deno.TestContext) {
+export async function editRoleTests(guildId: bigint) {
   const role = await bot.helpers.createRole(guildId, {
     name: "hoti",
   });
@@ -11,9 +10,9 @@ export async function editRoleTests(bot: Bot<Cache>, guildId: bigint, t: Deno.Te
   assertExists(role);
 
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, () => bot.cache.guilds.get(guildId)?.roles.has(role.id));
+  await delayUntil(10000, () => bot.guilds.get(guildId)?.roles.has(role.id));
 
-  if (!bot.cache.guilds.get(guildId)?.roles.has(role.id)) {
+  if (!bot.guilds.get(guildId)?.roles.has(role.id)) {
     throw new Error(`The role seemed to be created but it was not cached.`);
   }
 
@@ -22,7 +21,7 @@ export async function editRoleTests(bot: Bot<Cache>, guildId: bigint, t: Deno.Te
   });
 
   // Delay the execution to allow event to be processed
-  await delayUntil(10000, () => bot.cache.guilds.get(guildId)?.roles.get(role.id)?.name === "#rememberAyntee");
+  await delayUntil(10000, () => bot.guilds.get(guildId)?.roles.get(role.id)?.name === "#rememberAyntee");
 
-  assertEquals(bot.cache.guilds.get(guildId)?.roles.get(role.id)?.name === "#rememberAyntee", true);
+  assertEquals(bot.guilds.get(guildId)?.roles.get(role.id)?.name === "#rememberAyntee", true);
 }

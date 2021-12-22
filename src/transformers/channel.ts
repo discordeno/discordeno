@@ -125,7 +125,7 @@ export interface DiscordenoChannel {
   defaultAutoArchiveDuration?: number;
   /** Whether or not the bot is part of this channel thread. */
   botIsMember: boolean;
-  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a slash command interaction */
+  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a application command interaction */
   permissions?: bigint;
 
   permissionOverwrites: bigint[];
@@ -135,7 +135,7 @@ export interface DiscordenoChannel {
   guildId: bigint;
   /** The id of the last message sent in this channel (may not point to an existing or valid message) */
   lastMessageId?: bigint;
-  /** id of the DM creator */
+  /** id of the DM creator or thread */
   ownerId?: bigint;
   /** Application id of the group DM creator if it is bot-created */
   applicationId?: bigint;

@@ -61,18 +61,10 @@ export function identify(gateway: GatewayManager, shardId: number, maxShards: nu
     );
   };
 
-  return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      reject(`[Identify Failure] Shard ${shardId} has not received READY event in over a minute.`);
-    }, 600000);
-
+  return new Promise((resolve) => {
     gateway.loadingShards.set(shardId, {
       shardId,
-      resolve: (args) => {
-        clearTimeout(timeout);
-        resolve(args);
-      },
-      startedAt: Date.now(),
+      resolve
     });
   });
 }

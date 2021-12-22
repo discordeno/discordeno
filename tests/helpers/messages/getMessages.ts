@@ -1,8 +1,8 @@
-import { Bot } from "../../../src/bot.ts";
 import { assertEquals, assertExists } from "../../deps.ts";
+import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
-export async function getMessagesTest(bot: Bot, channelId: bigint, t: Deno.TestContext) {
+export async function getMessagesTest(channelId: bigint) {
   const message = await bot.helpers.sendMessage(channelId, "Hello World!");
   const secondMessage = await bot.helpers.sendMessage(channelId, "Hello World 2!");
   const thirdMessage = await bot.helpers.sendMessage(channelId, "Hello World 3!");
@@ -14,17 +14,10 @@ export async function getMessagesTest(bot: Bot, channelId: bigint, t: Deno.TestC
   // Delay the execution by to allow MESSAGE_CREATE event to be processed
   await delayUntil(
     10000,
-    () =>
-      bot.cache.messages.has(message.id) &&
-      bot.cache.messages.has(secondMessage.id) &&
-      bot.cache.messages.has(thirdMessage.id)
+    () => bot.messages.has(message.id) && bot.messages.has(secondMessage.id) && bot.messages.has(thirdMessage.id)
   );
   // Make sure the messages was created.
-  if (
-    !bot.cache.messages.has(message.id) ||
-    !bot.cache.messages.has(secondMessage.id) ||
-    !bot.cache.messages.has(thirdMessage.id)
-  ) {
+  if (!bot.messages.has(message.id) || !bot.messages.has(secondMessage.id) || !bot.messages.has(thirdMessage.id)) {
     throw new Error("The message seemed to be sent but it was not cached.");
   }
 

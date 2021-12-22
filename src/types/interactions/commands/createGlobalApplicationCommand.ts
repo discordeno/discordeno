@@ -2,7 +2,7 @@ import { ApplicationCommandOption } from "./applicationCommandOption.ts";
 import { ApplicationCommandTypes } from "./applicationCommandTypes.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#create-global-application-command-json-params */
-export interface CreateGlobalApplicationCommand {
+export interface CreateApplicationCommand {
   /** 1-31 character name matching lowercase `^[\w-]{1,32}$` */
   name: string;
   /** 1-100 character description */

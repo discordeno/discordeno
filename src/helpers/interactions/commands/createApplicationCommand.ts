@@ -1,5 +1,5 @@
 import type { ApplicationCommand } from "../../../types/interactions/commands/applicationCommand.ts";
-import type { CreateGlobalApplicationCommand } from "../../../types/interactions/commands/createGlobalApplicationCommand.ts";
+import type { CreateApplicationCommand } from "../../../types/interactions/commands/createGlobalApplicationCommand.ts";
 import type { Bot } from "../../../bot.ts";
 import { ApplicationCommandOption } from "../../../types/interactions/commands/applicationCommandOption.ts";
 
@@ -14,8 +14,8 @@ import { ApplicationCommandOption } from "../../../types/interactions/commands/a
  * Global commands are cached for **1 hour**. That means that new global commands will fan out slowly across all guilds, and will be guaranteed to be updated in an hour.
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
-export async function createApplicationCommand(bot: Bot, options: CreateGlobalApplicationCommand, guildId?: bigint) {
-  return await bot.rest.runMethod<ApplicationCommand>(
+export async function createApplicationCommand(bot: Bot, options: CreateApplicationCommand, guildId?: bigint) {
+  const result = await bot.rest.runMethod<ApplicationCommand>(
     bot.rest,
     "post",
     guildId
@@ -28,6 +28,8 @@ export async function createApplicationCommand(bot: Bot, options: CreateGlobalAp
       options: options.options ? makeOptionsForCommand(options.options) : undefined,
     }
   );
+
+  return bot.transformers.applicationCommand(bot, result);
 }
 
 // @ts-ignore TODO: see if we can make this not circular
@@ -40,5 +42,8 @@ export function makeOptionsForCommand(options: ApplicationCommandOption[]) {
     choices: option.choices,
     options: option.options ? makeOptionsForCommand(option.options) : undefined,
     channel_types: option.channelTypes,
+    autocomplete: option.autocomplete,
+    min_value: option.minValue,
+    max_value: option.maxValue,
   }));
 }

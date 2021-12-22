@@ -8,7 +8,7 @@ export async function removeReactionEmoji(bot: Bot, channelId: bigint, messageId
     reaction = reaction.substring(3, reaction.length - 1);
   }
 
-  return await bot.rest.runMethod<undefined>(
+  await bot.rest.runMethod<undefined>(
     bot.rest,
     "delete",
     bot.constants.endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction)

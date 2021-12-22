@@ -62,7 +62,7 @@ export enum BitwisePermissionFlags {
   MANAGE_WEBHOOKS = 0x20000000,
   /** Allows management and editing of emojis */
   MANAGE_EMOJIS = 0x40000000,
-  /** Allows members to use slash commands in text channels */
+  /** Allows members to use application commands in text channels */
   USE_SLASH_COMMANDS = 0x80000000,
   /** Allows for requesting to speak in stage channels. */
   REQUEST_TO_SPEAK = 0x0100000000,

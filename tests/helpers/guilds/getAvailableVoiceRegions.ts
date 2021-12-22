@@ -1,7 +1,7 @@
-import { Bot } from "../../../src/bot.ts";
-import { assertExists, assertEquals } from "../../deps.ts";
+import { assertExists } from "../../deps.ts";
+import { bot } from "../../mod.ts";
 
-export async function getAvailableVoiceRegionsTests(bot: Bot, t: Deno.TestContext) {
+export async function getAvailableVoiceRegionsTests() {
   const regions = await bot.helpers.getAvailableVoiceRegions();
 
   // Assertions

@@ -1,8 +1,7 @@
-import { Bot } from "../../../src/bot.ts";
 import { assertExists, assertEquals } from "../../deps.ts";
-import { delayUntil } from "../../utils.ts";
+import { bot } from "../../mod.ts";
 
-export async function getBanTests(bot: Bot, guildId: bigint, t: Deno.TestContext) {
+export async function getBanTests(guildId: bigint) {
   await bot.helpers.banMember(guildId, 379643682984296448n);
 
   const fetchedBan = await bot.helpers.getBan(guildId, 379643682984296448n);

@@ -4,16 +4,6 @@ import { AtLeastOne } from "../../types/util.ts";
 
 /** Updates fields of an existing Stage instance. Requires the user to be a moderator of the Stage channel. */
 export async function updateStageInstance(bot: Bot, channelId: bigint, data: AtLeastOne<Pick<StageInstance, "topic">>) {
-  if (
-    data.topic &&
-    !bot.utils.validateLength(data.topic, {
-      min: 1,
-      max: 120,
-    })
-  ) {
-    throw new Error(bot.constants.Errors.INVALID_TOPIC_LENGTH);
-  }
-
   const result = await bot.rest.runMethod<StageInstance>(
     bot.rest,
     "patch",

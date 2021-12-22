@@ -1,4 +1,4 @@
-import { Message, User, Role, Channel, MessageComponentTypes } from "../../mod.ts";
+import { Message, User, Role, Channel, MessageComponentTypes, MessageComponents } from "../../mod.ts";
 import { InteractionGuildMember } from "../interactionGuildMember.ts";
 import { InteractionDataOption } from "./applicationCommandInteractionDataOption.ts";
 
@@ -7,6 +7,8 @@ export interface InteractionData {
   componentType?: MessageComponentTypes;
   /** The custom id provided for this component. */
   customId?: string;
+  /** The components if its a Modal Submit interaction. */
+  components?: MessageComponents;
   /** The values chosen by the user. */
   values?: string[];
   /** The Id of the invoked command */

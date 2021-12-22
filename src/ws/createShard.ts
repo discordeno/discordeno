@@ -4,8 +4,6 @@ import { GatewayManager } from "../bot.ts";
 export function createShard(gateway: GatewayManager, shardId: number) {
   const socket = new WebSocket(`${gateway.urlWSS}/?v=9&encoding=json`);
 
-  socket.binaryType = "arraybuffer";
-
   socket.onerror = (errorEvent) => {
     gateway.debug("GW ERROR", { shardId, error: errorEvent });
   };

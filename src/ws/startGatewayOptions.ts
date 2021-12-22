@@ -15,10 +15,10 @@ export interface StartGatewayOptions {
   lastShardId?: number;
   /** The url to forward all payloads to. */
   url: string;
-  /** The amount of shards per cluster. By default this is 25. Use this to spread the load from shards to different CPU cores. */
-  shardsPerCluster?: number;
-  /** The maximum amount of clusters available. By default this is 4. Another way to think of cluster is how many CPU cores does your server/machine have. */
-  maxClusters?: number;
+  /** The amount of shards per worker. By default this is 25. Use this to spread the load from shards to different CPU cores. */
+  shardsPerWorker?: number;
+  /** The maximum amount of workers available. By default this is 4. Another way to think of worker is how many CPU cores does your server/machine have. */
+  maxWorkers?: number;
   /** Whether or not you want to allow automated sharding. By default this is true. */
   reshard?: boolean;
   /** The authorization key that the bot http server will expect. */

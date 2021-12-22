@@ -6,4 +6,3 @@ export * from "./src/transformers/mod.ts";
 export * from "./src/types/mod.ts";
 export * from "./src/util/mod.ts";
 export * from "./src/ws/mod.ts";
-export * from "./src/cache.ts";

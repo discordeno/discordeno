@@ -9,5 +9,5 @@ export * from "./resume.ts";
 export * from "./spawnShards.ts";
 export * from "./sendShardMessage.ts";
 export * from "./startGatewayOptions.ts";
-export * from "./tellClusterToIdentify.ts";
+export * from "./tellWorkerToIdentify.ts";
 export * from "./ws.ts";

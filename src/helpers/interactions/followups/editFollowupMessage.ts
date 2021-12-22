@@ -11,36 +11,6 @@ export async function editFollowupMessage(
   messageId: bigint,
   options: EditWebhookMessage
 ) {
-  if (options.content && options.content.length > 2000) {
-    throw Error(bot.constants.Errors.MESSAGE_MAX_LENGTH);
-  }
-
-  if (options.embeds && options.embeds.length > 10) {
-    options.embeds.splice(10);
-  }
-
-  if (options.allowedMentions) {
-    if (options.allowedMentions.users?.length) {
-      if (options.allowedMentions.parse?.includes(AllowedMentionsTypes.UserMentions)) {
-        options.allowedMentions.parse = options.allowedMentions.parse.filter((p) => p !== "users");
-      }
-
-      if (options.allowedMentions.users.length > 100) {
-        options.allowedMentions.users = options.allowedMentions.users.slice(0, 100);
-      }
-    }
-
-    if (options.allowedMentions.roles?.length) {
-      if (options.allowedMentions.parse?.includes(AllowedMentionsTypes.RoleMentions)) {
-        options.allowedMentions.parse = options.allowedMentions.parse.filter((p) => p !== "roles");
-      }
-
-      if (options.allowedMentions.roles.length > 100) {
-        options.allowedMentions.roles = options.allowedMentions.roles.slice(0, 100);
-      }
-    }
-  }
-
   const result = await bot.rest.runMethod<Message>(
     bot.rest,
     "patch",
@@ -61,6 +31,18 @@ export async function editFollowupMessage(
       components: options.components?.map((component) => ({
         type: component.type,
         components: component.components.map((subcomponent) => {
+          if (subcomponent.type === MessageComponentTypes.InputText) {
+            return {
+              type: subcomponent.type,
+              style: subcomponent.style,
+              custom_id: subcomponent.customId,
+              label: subcomponent.label,
+              placeholder: subcomponent.placeholder,
+              min_length: subcomponent.minLength ?? subcomponent.required === false ? 0 : subcomponent.minLength,
+              max_length: subcomponent.maxLength,
+            };
+          }
+
           if (subcomponent.type === MessageComponentTypes.SelectMenu)
             return {
               type: subcomponent.type,

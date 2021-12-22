@@ -7,8 +7,8 @@ export async function editChannelOverwrite(
   channelId: bigint,
   overwriteId: bigint,
   options: Omit<Overwrite, "id">
-): Promise<undefined> {
-  return await bot.rest.runMethod<undefined>(
+) {
+  await bot.rest.runMethod<undefined>(
     bot.rest,
     "put",
     bot.constants.endpoints.CHANNEL_OVERWRITE(channelId, overwriteId),

@@ -26,8 +26,10 @@ export async function editBotProfile(bot: Bot, options: { username?: string; bot
 
   const avatar = options?.botAvatarURL ? await bot.utils.urlToBase64(options?.botAvatarURL) : options?.botAvatarURL;
 
-  return await bot.rest.runMethod<User>(bot.rest, "patch", bot.constants.endpoints.USER_BOT, {
+  const result = await bot.rest.runMethod<User>(bot.rest, "patch", bot.constants.endpoints.USER_BOT, {
     username: options.username?.trim(),
     avatar,
   });
+
+  return bot.transformers.user(bot, result);
 }

@@ -1,16 +1,16 @@
-import { Bot } from "../../../src/bot.ts";
 import { assertExists } from "../../deps.ts";
+import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
-export async function editMessageTest(bot: Bot, channelId: bigint, t: Deno.TestContext) {
+export async function editMessageTest(channelId: bigint) {
   const message = await bot.helpers.sendMessage(channelId, "Hello World!");
 
   // Assertions
   assertExists(message);
   // Delay the execution by to allow MESSAGE_CREATE event to be processed
-  await delayUntil(10000, () => bot.cache.messages.has(message.id));
+  await delayUntil(10000, () => bot.messages.has(message.id));
   // Make sure the message was created.
-  if (!bot.cache.messages.has(message.id)) {
+  if (!bot.messages.has(message.id)) {
     throw new Error("The message seemed to be sent but it was not cached. Reason: ${reason}");
   }
 
@@ -18,9 +18,9 @@ export async function editMessageTest(bot: Bot, channelId: bigint, t: Deno.TestC
   await bot.helpers.editMessage(channelId, message.id, "Goodbye World!");
 
   // Wait to give it time for MESSAGE_UPDATE event
-  // await delayUntil(10000, async () => bot.cache.messages.get(message.id)?.content === "Goodbye World!");
+  // await delayUntil(10000, async () => bot.messages.get(message.id)?.content === "Goodbye World!");
   // Make sure it was edited
-  // if (bot.cache.messages.get(message.id)?.content !== "Goodbye World!") {
+  // if (bot.messages.get(message.id)?.content !== "Goodbye World!") {
   // throw new Error("The message should have been edited but it was not.");
   // }
 }
