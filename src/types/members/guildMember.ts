@@ -6,6 +6,8 @@ export interface GuildMember {
   user?: User;
   /** This users guild nickname */
   nick?: string | null;
+  /** The members custom avatar for this server. */
+  avatar?: string;
   /** Array of role object ids */
   roles: string[];
   /** When the user joined the guild */
@@ -18,10 +20,10 @@ export interface GuildMember {
   mute?: boolean;
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
   pending?: boolean;
-  /** The members custom avatar for this server. */
-  avatar?: string;
   /** The permissions this member has in the guild. Only present on interaction events. */
   permissions?: string;
+  /** when the user's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out */
+  communicationDisabledUntil?: number;
 }
 
 // We use these types much since user always exists unless its a `CREATE_MESSAGE` or `MESSAGE_UPDATE` event

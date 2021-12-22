@@ -7,7 +7,7 @@ export function editBotStatus(bot: Bot, data: Omit<StatusUpdate, "afk" | "since"
     bot.events.debug(`Running forEach loop in editBotStatus function.`);
 
     bot.gateway.sendShardMessage(bot.gateway, shard, {
-      op: GatewayOpcodes.StatusUpdate,
+      op: GatewayOpcodes.PresenceUpdate,
       d: {
         since: null,
         afk: false,

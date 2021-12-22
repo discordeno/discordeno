@@ -6,5 +6,5 @@ import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 export async function handleThreadCreate(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as SnakeCasedPropertiesDeep<Channel>;
 
-  // bot.events.threadCreate(bot, payload);
+  bot.events.threadCreate(bot, bot.transformers.channel(bot, { channel: payload }));
 }
