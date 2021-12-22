@@ -12,8 +12,6 @@ export function transformStageInstance(
     guildId: bot.transformers.snowflake(payload.guild_id),
     channelId: bot.transformers.snowflake(payload.channel_id),
     topic: payload.topic,
-    privacyLevel: payload.privacy_level,
-    discoverableDisabled: payload.discoverable_disabled,
   };
 }
 
@@ -26,8 +24,4 @@ export interface DiscordenoStageInstance {
   channelId: bigint;
   /** The topic of the Stage instance (1-120 characters) */
   topic: string;
-  /** The privacy level of the Stage instance */
-  privacyLevel: PrivacyLevel;
-  /** Whether or not Stage discovery is disabled */
-  discoverableDisabled: boolean;
 }
