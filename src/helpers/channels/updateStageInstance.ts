@@ -13,10 +13,5 @@ export async function updateStageInstance(bot: Bot, channelId: bigint, data: AtL
     }
   );
 
-  return {
-    id: bot.transformers.snowflake(result.id),
-    guildId: bot.transformers.snowflake(result.guild_id),
-    channelId: bot.transformers.snowflake(result.channel_id),
-    topic: result.topic,
-  };
+  return bot.transformers.stageInstance(bot, result);
 }
