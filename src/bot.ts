@@ -85,7 +85,7 @@ import { StatusUpdate } from "./types/gateway/statusUpdate.ts";
 import { calculateBits, calculatePermissions } from "./util/permissions.ts";
 import { transformScheduledEvent } from "./transformers/scheduledEvent.ts";
 import { DiscordenoScheduledEvent } from "./transformers/scheduledEvent.ts";
-import { transformThreadMember } from "./transformers/threadMember.ts";
+import { DiscordenoThreadMember, transformThreadMember } from "./transformers/threadMember.ts";
 import { transformApplicationCommandOption } from "./transformers/applicationCommandOption.ts";
 import { transformApplicationCommand } from "./transformers/applicationCommand.ts";
 import { transformWelcomeScreen } from "./transformers/welcomeScreen.ts";
@@ -142,6 +142,10 @@ export function createEventHandlers(events: Partial<EventHandlers>): EventHandle
 
   return {
     debug: events.debug ?? ignore,
+    threadCreate: events.threadCreate ?? ignore,
+    threadDelete: events.threadDelete ?? ignore,
+    threadMembersUpdate: events.threadMembersUpdate ?? ignore,
+    threadUpdate: events.threadUpdate ?? ignore,
     scheduledEventCreate: events.scheduledEventCreate ?? ignore,
     scheduledEventUpdate: events.scheduledEventUpdate ?? ignore,
     scheduledEventDelete: events.scheduledEventDelete ?? ignore,
@@ -630,6 +634,18 @@ export interface GatewayManager {
 
 export interface EventHandlers {
   debug: (text: string, ...args: any[]) => unknown;
+  threadCreate: (bot: Bot, thread: DiscordenoChannel) => unknown;
+  threadDelete: (bot: Bot, thread: DiscordenoChannel) => unknown;
+  threadMembersUpdate: (
+    bot: Bot,
+    payload: {
+      id: bigint;
+      guildId: bigint;
+      addedMembers?: DiscordenoThreadMember[];
+      removedMemberIds?: bigint[];
+    }
+  ) => unknown;
+  threadUpdate: (bot: Bot, thread: DiscordenoChannel) => unknown;
   scheduledEventCreate: (bot: Bot, event: DiscordenoScheduledEvent) => unknown;
   scheduledEventUpdate: (bot: Bot, event: DiscordenoScheduledEvent) => unknown;
   scheduledEventDelete: (bot: Bot, event: DiscordenoScheduledEvent) => unknown;

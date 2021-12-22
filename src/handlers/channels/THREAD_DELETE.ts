@@ -1,12 +1,9 @@
+import { Bot } from "../../bot.ts";
 import { Channel } from "../../types/channels/channel.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import { snowflakeToBigint } from "../../util/bigint.ts";
+import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
-export async function handleThreadDelete(data: DiscordGatewayPayload) {
-  // const payload = data.d as Channel;
-  // const cachedChannel = await cacheHandlers.get("threads", snowflakeToBigint(payload.id));
-  // if (!cachedChannel) return;
-  // await cacheHandlers.delete("threads", snowflakeToBigint(payload.id));
-  // await cacheHandlers.forEach("DELETE_MESSAGES_FROM_CHANNEL", { channelId: snowflakeToBigint(payload.id) });
-  // eventHandlers.threadDelete?.(cachedChannel);
+export async function handleThreadDelete(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as SnakeCasedPropertiesDeep<Channel>;
+  bot.events.threadDelete(bot, bot.transformers.channel(bot, { channel: payload }));
 }
