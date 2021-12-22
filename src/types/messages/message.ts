@@ -73,7 +73,7 @@ export interface Message {
   activity?: MessageActivity;
   /** Sent with Rich Presence-related chat embeds */
   application?: Partial<Application>;
-  /** If the message is a response to an Interaction, this is the id of the interaction's application */
+  /** if the message is an Interaction or application-owned webhook, this is the id of the application */
   applicationId?: string;
   /** Data showing the source of a crossposted channel follow add, pin or reply message */
   messageReference?: Omit<MessageReference, "failIfNotExists">;

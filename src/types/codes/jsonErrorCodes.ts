@@ -1,5 +1,6 @@
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#json */
 export enum JsonErrorCodes {
+  /** General error (such as a malformed request body, amongst other things) */
   GeneralError,
   UnknownAccount = 10001,
   UnknownApplication,
@@ -67,6 +68,7 @@ export enum JsonErrorCodes {
   MaximumNumberOfServerMembersReached,
   MaximumNumberOfServerCategoriesHasBeenReached = 30030,
   GuildAlreadyHasTemplate = 30031,
+  MaxNumberOfThreadParticipantsHasBeenReached = 30033,
   MaximumNumberOfBansForNonGuildMembersHaveBeenExceeded = 30035,
   MaximumNumberOfBansFetchesHasBeenReached = 30037,
   MaximumNumberOfUncompletedGuildScheduledEventsReached = 30038,
@@ -108,9 +110,12 @@ export enum JsonErrorCodes {
   InvalidRole,
   InvalidRecipients = 50033,
   AMessageProvidedWasTooOldToBulkDelete,
+  /** Invalid form body (returned for both `application/json` and `multipart/form-data` bodies), or invalid `Content-Type` provided */
   InvalidFormBodyOrContentTypeProvided,
   AnInviteWasAcceptedToAGuildTheApplicationsBotIsNotIn,
   InvalidApiVersionProvided = 50041,
+  FileUploadedExceedsTheMaximumSize = 50045,
+  InvalidFileUploaded,
   CannotSelfRedeemThisGift = 50054,
   InvalidGuild,
   PaymentSourceRequiredToRedeemGift = 50070,
@@ -133,4 +138,13 @@ export enum JsonErrorCodes {
   ThreadIsLocked = 160005,
   MaximumNumberOfActiveThreadsReached = 160006,
   MaximumNumberOfActiveAnnouncementThreadsReached = 160007,
+  InvalidJsonForUploadedLottieFile = 170001,
+  UploadedLottiesCannotContainRasterizedImagesSuchAsPngOrJpeg,
+  StickerMaximumFramerateExceeded,
+  StickerFrameCountExceedsMaximumOf1000Frames,
+  LottieAnimationMaximumDimensionsExceeded,
+  StickerFrameRateIsEitherTooSmallOrTooLarge,
+  StickerAnimationDurationExceedsMaximumOf5Seconds,
+  CannotUpdateAFinishedEvent = 180000,
+  FailedToCreateStageNeededForStageEvent = 180002,
 }

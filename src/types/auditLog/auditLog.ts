@@ -3,6 +3,7 @@ import { Integration } from "../integrations/integration.ts";
 import { User } from "../users/user.ts";
 import { Webhook } from "../webhooks/webhook.ts";
 import { AuditLogEntry } from "./auditLogEntry.ts";
+import { ScheduledEvent } from "../guilds/scheduledEvents.ts";
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-object */
 export interface AuditLog {
@@ -16,4 +17,6 @@ export interface AuditLog {
   integrations: Partial<Integration>[];
   /** List of threads found in the audit log. */
   threads: Channel[];
+  /** List of guild scheduled events found in the audit log */
+  scheduledEvents: ScheduledEvent[];
 }
