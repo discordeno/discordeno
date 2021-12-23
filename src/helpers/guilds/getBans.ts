@@ -1,7 +1,7 @@
 import type { Ban } from "../../types/guilds/ban.ts";
 import type { Bot } from "../../bot.ts";
 import { Collection } from "../../util/collection.ts";
-import { DiscordenoUser } from "../../transformers/member.ts";
+import { DiscordenoUser } from "../../transformers/user.ts";
 
 /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
 export async function getBans(bot: Bot, guildId: bigint) {

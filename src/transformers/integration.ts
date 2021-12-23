@@ -2,7 +2,7 @@ import { Bot } from "../bot.ts";
 import { IntegrationCreateUpdate } from "../types/integrations/integrationCreateUpdate.ts";
 import { IntegrationExpireBehaviors } from "../types/mod.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { DiscordenoUser } from "./member.ts";
+import { DiscordenoUser } from "./user.ts";
 
 export function transformIntegration(bot: Bot, payload: SnakeCasedPropertiesDeep<IntegrationCreateUpdate>) {
   return {

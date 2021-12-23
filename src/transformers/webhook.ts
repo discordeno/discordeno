@@ -2,7 +2,7 @@ import { Bot } from "../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { WebhookTypes } from "../types/webhooks/webhookTypes.ts";
 import { Webhook } from "../types/webhooks/webhook.ts";
-import { DiscordenoUser } from "./member.ts";
+import { DiscordenoUser } from "./user.ts";
 
 export function transformWebhook(bot: Bot, payload: SnakeCasedPropertiesDeep<Webhook>): DiscordenoWebhook {
   return {

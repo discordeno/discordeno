@@ -2,7 +2,7 @@ import { Bot } from "../bot.ts";
 import { InviteCreate, TargetTypes, User, Application } from "../types/mod.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoApplication } from "./application.ts";
-import { DiscordenoUser } from "./member.ts";
+import { DiscordenoUser } from "./user.ts";
 
 export function transformInvite(bot: Bot, invite: SnakeCasedPropertiesDeep<InviteCreate>): DiscordenoInvite {
   return {

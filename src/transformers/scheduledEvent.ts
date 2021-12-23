@@ -6,7 +6,7 @@ import {
   ScheduledEventStatus,
 } from "../types/guilds/scheduledEvents.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { DiscordenoUser } from "./member.ts";
+import { DiscordenoUser } from "./user.ts";
 
 export function transformScheduledEvent(
   bot: Bot,

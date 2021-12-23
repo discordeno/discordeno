@@ -1,7 +1,7 @@
 import { Bot } from "../bot.ts";
 import { Emoji } from "../types/emojis/emoji.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { DiscordenoUser } from "./member.ts";
+import { DiscordenoUser } from "./user.ts";
 
 export function transformEmoji(bot: Bot, payload: SnakeCasedPropertiesDeep<Emoji>): DiscordenoEmoji {
   return {

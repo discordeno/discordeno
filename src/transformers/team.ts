@@ -2,7 +2,7 @@ import { Bot } from "../bot.ts";
 import { Team } from "../types/teams/team.ts";
 import { TeamMembershipStates } from "../types/teams/teamMembershipStates.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { DiscordenoUser } from "./member.ts";
+import { DiscordenoUser } from "./user.ts";
 
 export function transformTeam(bot: Bot, payload: SnakeCasedPropertiesDeep<Team>): DiscordenoTeam {
   const id = bot.transformers.snowflake(payload.id);

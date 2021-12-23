@@ -3,8 +3,9 @@ import { Message } from "../types/messages/message.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoAttachment } from "./attachment.ts";
-import { MessageStickerFormatTypes } from "../types/messages/messageStickerFormatTypes.ts";
-import { DiscordenoMember, DiscordenoUser } from "./member.ts";
+import { StickerFormatTypes } from "../types/stickers/stickerFormatTypes.ts";
+import { DiscordenoMember } from "./member.ts";
+import { DiscordenoUser } from "./user.ts";
 import { DiscordenoEmbed } from "./embed.ts";
 import { MessageTypes } from "../types/messages/messageTypes.ts";
 import { MessageActivityTypes } from "../types/messages/messageActivityTypes.ts";
@@ -147,7 +148,7 @@ export interface DiscordenoMessage {
     /** Name of the sticker */
     name: string;
     /** Type of sticker format */
-    formatType: MessageStickerFormatTypes;
+    formatType: StickerFormatTypes;
   }[];
 
   /**

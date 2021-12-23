@@ -2,7 +2,7 @@ import { Bot } from "../bot.ts";
 import { PresenceUpdate } from "../types/activity/presenceUpdate.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoActivity } from "./activity.ts";
-import { DiscordenoUser } from "./member.ts";
+import { DiscordenoUser } from "./user.ts";
 
 export const statusTypes = {
   online: 0,

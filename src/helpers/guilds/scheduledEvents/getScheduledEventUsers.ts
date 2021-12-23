@@ -1,5 +1,6 @@
 import { Bot } from "../../../bot.ts";
-import { DiscordenoMember, DiscordenoUser } from "../../../transformers/member.ts";
+import { DiscordenoMember } from "../../../transformers/member.ts";
+import { DiscordenoUser } from "../../../transformers/user.ts";
 import { GetScheduledEventUsers } from "../../../types/guilds/scheduledEvents.ts";
 import { GuildMember } from "../../../types/members/guildMember.ts";
 import { User } from "../../../types/users/user.ts";
@@ -28,7 +29,7 @@ export async function getScheduledEventUsers(
   // TODO: validate limit
   // TODO: is the guild member omit user
 
-  const result = await bot.rest.runMethod<({ user: User, member?: GuildMember })[]>(
+  const result = await bot.rest.runMethod<{ user: User; member?: GuildMember }[]>(
     bot.rest,
     "get",
     bot.constants.endpoints.GUILD_SCHEDULED_EVENT_USERS(guildId, eventId),

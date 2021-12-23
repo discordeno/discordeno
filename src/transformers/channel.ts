@@ -4,7 +4,7 @@ import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { ChannelTypes } from "../types/channels/channelTypes.ts";
 import type { DiscordenoVoiceState } from "./voiceState.ts";
 import { Collection } from "../util/collection.ts";
-import { DiscordenoUser } from "./member.ts";
+import { DiscordenoUser } from "./user.ts";
 import { VideoQualityModes } from "../types/channels/videoQualityModes.ts";
 
 const Mask = (1n << 64n) - 1n;

@@ -14,7 +14,8 @@ import {
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { Collection } from "../util/collection.ts";
 import { DiscordenoChannel } from "./channel.ts";
-import { DiscordenoMember, DiscordenoUser } from "./member.ts";
+import { DiscordenoMember } from "./member.ts";
+import { DiscordenoUser } from "./user.ts";
 import { DiscordenoMessage } from "./message.ts";
 import { DiscordenoRole } from "./role.ts";
 

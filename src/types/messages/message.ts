@@ -10,10 +10,10 @@ import { Attachment } from "./attachment.ts";
 import { MessageComponents } from "./components/messageComponents.ts";
 import { MessageActivity } from "./messageActivity.ts";
 import { MessageReference } from "./messageReference.ts";
-import { MessageSticker } from "./messageSticker.ts";
+import { Sticker } from "../stickers/sticker.ts";
 import { MessageTypes } from "./messageTypes.ts";
 import { Reaction } from "./reaction.ts";
-import { MessageStickerItem } from "./messageStickerItem.ts";
+import { StickerItem } from "../stickers/stickerItem.ts";
 
 /** https://discord.com/developers/docs/resources/channel#message-object */
 export interface Message {
@@ -83,7 +83,7 @@ export interface Message {
    * The stickers sent with the message (bots currently can only receive messages with stickers, not send)
    * @deprecated
    */
-  stickers?: MessageSticker[];
+  stickers?: Sticker[];
   /**
    * The message associated with the `message_reference`
    * Note: This field is only returned for messages with a `type` of `19` (REPLY). If the message is a reply but the `referenced_message` field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.
@@ -96,5 +96,5 @@ export interface Message {
   /** The components related to this message */
   components?: MessageComponents;
   /** Sent if the message contains stickers */
-  stickerItems?: MessageStickerItem[];
+  stickerItems?: StickerItem[];
 }

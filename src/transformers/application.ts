@@ -2,7 +2,7 @@ import { Bot } from "../bot.ts";
 import { Application } from "../types/applications/application.ts";
 import { ApplicationFlags } from "../types/applications/applicationFlags.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { DiscordenoUser } from "./member.ts";
+import { DiscordenoUser } from "./user.ts";
 import { DiscordenoTeam } from "./team.ts";
 
 export function transformApplication(bot: Bot, payload: SnakeCasedPropertiesDeep<Application>): DiscordenoApplication {
