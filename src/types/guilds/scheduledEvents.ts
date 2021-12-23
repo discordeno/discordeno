@@ -93,6 +93,7 @@ export interface CreateScheduledEvent {
   privacyLevel?: ScheduledEventPrivacyLevel;
   /** the type of hosting entity associated with a scheduled event */
   entityType: ScheduledEventEntityType;
+  reason?: string;
 }
 
 export interface EditScheduledEvent {
@@ -114,6 +115,7 @@ export interface EditScheduledEvent {
   entityType: ScheduledEventEntityType;
   /** the status of the scheduled event */
   status: ScheduledEventStatus;
+  reason?: string;
 }
 
 export interface GetScheduledEvents {

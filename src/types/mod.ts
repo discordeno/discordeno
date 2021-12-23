@@ -17,6 +17,7 @@ export * from "./messages/mod.ts";
 export * from "./misc/mod.ts";
 export * from "./oauth2/mod.ts";
 export * from "./permissions/mod.ts";
+export * from "./stickers/mod.ts";
 export * from "./teams/mod.ts";
 export * from "./templates/mod.ts";
 export * from "./users/mod.ts";
