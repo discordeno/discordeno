@@ -39,6 +39,7 @@ export async function createScheduledEvent(bot: Bot, guildId: bigint, options: C
       scheduled_end_time: options.scheduledEndTime ? new Date(options.scheduledEndTime).toISOString() : undefined,
       privacy_level: options.privacyLevel || ScheduledEventPrivacyLevel.GuildOnly,
       entity_type: options.entityType,
+      reason: options.reason,
     }
   );
 
