@@ -1,5 +1,5 @@
 import { UNITTEST_TOKEN } from "../configs.ts";
-import { createBot, createEventHandlers, ChannelTypes, OverwriteTypes, startBot } from "../mod.ts";
+import { createBot, createEventHandlers, ChannelTypes, startBot } from "../mod.ts";
 import { assertEquals, assertExists, enableCachePlugin } from "./deps.ts";
 import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
 import { getMessagesTest } from "./helpers/messages/getMessages.ts";
@@ -14,12 +14,8 @@ import {
 // CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
 import "./local.ts";
 import { getMessageTest } from "./helpers/messages/getMessage.ts";
-import { addReactionTest } from "./helpers/messages/reactions.ts";
 import { editMessageTest } from "./helpers/messages/editMessage.ts";
 import { pinMessageTests } from "./helpers/messages/pin.ts";
-import { removeAllReactionTests, removeReactionEmojiTest, removeReactionTest } from "./helpers/messages/reactions.ts";
-import { createChannelTests } from "./helpers/channels/createChannel.ts";
-import { deleteChannelTests } from "./helpers/channels/deleteChannel.ts";
 import { createGuildTests } from "./helpers/guilds/createGuild.ts";
 import { deleteGuildTests } from "./helpers/guilds/deleteGuild.ts";
 import { editGuildTests } from "./helpers/guilds/editGuild.ts";
@@ -103,7 +99,7 @@ export const channel = await bot.helpers.createChannel(guild.id, { name: "Discor
 assertExists(channel);
 assertEquals(channel.type, ChannelTypes.GuildText);
 
-export const message = await bot.helpers.sendMessage(channel.id, "Hello Skillz");
+export const message = await bot.helpers.sendMessage(channel.id, { content: "Hello Skillz" });
 
 import "./benchmark.ts";
 

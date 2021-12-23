@@ -1,4 +1,4 @@
-import { assertExists } from "../deps.ts";
+import { assertExists, assertEquals } from "../deps.ts";
 import { bot } from "../mod.ts";
 
 Deno.test({
@@ -7,6 +7,6 @@ Deno.test({
     const user = await bot.helpers.getUser(bot.id);
     assertExists(user);
 
-    assertExists(bot.transformers.user(bot, user));
+    assertEquals(user.id, bot.id);
   },
 });

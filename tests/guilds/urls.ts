@@ -4,11 +4,9 @@ import { bot, guild } from "../mod.ts";
 Deno.test({
   name: "[guild] format a guild's icon url",
   fn: () => {
-    assertEquals(bot.helpers.guildIconURL(guild.id, { icon: guild.icon }), undefined);
+    assertEquals(bot.helpers.guildIconURL(guild.id, guild.icon), undefined);
     assertEquals(
-      bot.helpers.guildIconURL(785384884197392384n, {
-        icon: 3837424427068676005442449262648382018748n,
-      }),
+      bot.helpers.guildIconURL(785384884197392384n, 3837424427068676005442449262648382018748n),
       "https://cdn.discordapp.com/icons/785384884197392384/46f50fb412eab14ec455d5cf777154bc.jpg?size=128"
     );
   },
@@ -30,11 +28,9 @@ Deno.test({
 Deno.test({
   name: "[guild] format a guild's splash url",
   fn: () => {
-    assertEquals(bot.helpers.guildSplashURL(guild.id, { splash: guild.splash }), undefined);
+    assertEquals(bot.helpers.guildSplashURL(guild.id, guild.splash), undefined);
     assertEquals(
-      bot.helpers.guildSplashURL(785384884197392384n, {
-        splash: 3837424427068676005442449262648382018748n,
-      }),
+      bot.helpers.guildSplashURL(785384884197392384n, 3837424427068676005442449262648382018748n),
       "https://cdn.discordapp.com/splashes/785384884197392384/46f50fb412eab14ec455d5cf777154bc.jpg?size=128"
     );
   },

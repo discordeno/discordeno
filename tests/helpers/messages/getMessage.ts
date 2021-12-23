@@ -4,7 +4,7 @@ import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
 export async function getMessageTest(channelId: bigint) {
-  const message = await bot.helpers.sendMessage(channelId, "Hello World!");
+  const message = await bot.helpers.sendMessage(channelId, { content: "Hello World!" });
 
   // Assertions
   assertExists(message);

@@ -5,7 +5,7 @@ import { MessageComponentTypes } from "../../../src/types/messages/components/me
 import { ButtonStyles } from "../../../src/types/messages/components/buttonStyles.ts";
 import { bot } from "../../mod.ts";
 
-async function ifItFailsBlameWolf(channelId: bigint, content: string | CreateMessage) {
+async function ifItFailsBlameWolf(channelId: bigint, content: CreateMessage) {
   const message = await bot.helpers.sendMessage(channelId, content);
   // Assertions
   assertExists(message);
@@ -18,7 +18,7 @@ async function ifItFailsBlameWolf(channelId: bigint, content: string | CreateMes
 }
 
 export async function sendMessageWithTextTest(channelId: bigint) {
-  await ifItFailsBlameWolf(channelId, "Hello World!");
+  await ifItFailsBlameWolf(channelId, { content: "Hello World!" });
 }
 
 export async function sendMessageWithComponents(channelId: bigint) {

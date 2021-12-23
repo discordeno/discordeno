@@ -1,5 +1,5 @@
 import { Bot } from "../bot.ts";
-import { InviteCreate, TargetTypes, User, Application } from "../types/mod.ts";
+import { InviteCreate, TargetTypes, Invite } from "../types/mod.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoApplication } from "./application.ts";
 import { DiscordenoUser } from "./member.ts";

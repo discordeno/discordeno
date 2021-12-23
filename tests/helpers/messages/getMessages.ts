@@ -3,9 +3,9 @@ import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
 export async function getMessagesTest(channelId: bigint) {
-  const message = await bot.helpers.sendMessage(channelId, "Hello World!");
-  const secondMessage = await bot.helpers.sendMessage(channelId, "Hello World 2!");
-  const thirdMessage = await bot.helpers.sendMessage(channelId, "Hello World 3!");
+  const message = await bot.helpers.sendMessage(channelId, { content: "Hello World!" });
+  const secondMessage = await bot.helpers.sendMessage(channelId, {content: "Hello World 2!"});
+  const thirdMessage = await bot.helpers.sendMessage(channelId, {content: "Hello World 3!"});
 
   // Assertions
   assertExists(message);

@@ -30,7 +30,7 @@ export interface ExecuteWebhook {
     users?: bigint[];
   };
   /** the components to include with the message */
-  components: MessageComponents;
+  components?: MessageComponents;
 }
 
 export type DiscordExecuteWebhook = SnakeCasedPropertiesDeep<Omit<ExecuteWebhook, "wait">>;

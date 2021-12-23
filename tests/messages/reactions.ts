@@ -15,7 +15,7 @@ export async function addReactionTest(
   channelId: bigint,
   options: { custom: boolean; single: boolean; ordered: boolean },
 ) {
-  const message = await bot.helpers.sendMessage(channelId, "Hello World!");
+  const message = await bot.helpers.sendMessage(channelId, { content: "Hello World!" });
 
   // Assertions
   assertExists(message);
@@ -81,7 +81,7 @@ export async function addReactionTest(
 }
 
 export async function removeAllReactionTests(channelId: bigint) {
-  const message = await bot.helpers.sendMessage(channelId, "Hello World!");
+  const message = await bot.helpers.sendMessage(channelId, { content: "Hello World!" });
 
   // Assertions
   assertExists(message);
@@ -122,7 +122,7 @@ export async function removeAllReactionTests(channelId: bigint) {
 }
 
 export async function removeReactionTest(channelId: bigint) {
-  const message = await bot.helpers.sendMessage(channelId, "Hello World!");
+  const message = await bot.helpers.sendMessage(channelId, { content: "Hello World!" });
 
   // Assertions
   assertExists(message);
@@ -164,7 +164,7 @@ export async function removeReactionTest(channelId: bigint) {
 }
 
 export async function removeReactionEmojiTest(channelId: bigint) {
-  const message = await bot.helpers.sendMessage(channelId, "Hello World!");
+  const message = await bot.helpers.sendMessage(channelId, { content: "Hello World!" });
 
   // Assertions
   assertExists(message);

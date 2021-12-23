@@ -23,7 +23,7 @@ Deno.test({
 
     bot.guilds.get(guild.id)?.emojis?.delete(emoji.id);
 
-    const getEmoji = await bot.helpers.getEmoji(guild.id, emoji.id, true);
+    const getEmoji = await bot.helpers.getEmoji(guild.id, emoji.id);
 
     // Assertions
     assertExists(getEmoji);

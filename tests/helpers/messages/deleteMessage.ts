@@ -3,7 +3,7 @@ import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
 async function ifItFailsBlameWolf(channelId: bigint, reason?: string) {
-  const message = await bot.helpers.sendMessage(channelId, "Hello World!");
+  const message = await bot.helpers.sendMessage(channelId, { content: "Hello World!" });
 
   // Assertions
   assertExists(message);

@@ -3,7 +3,7 @@ import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
 export async function editMessageTest(channelId: bigint) {
-  const message = await bot.helpers.sendMessage(channelId, "Hello World!");
+  const message = await bot.helpers.sendMessage(channelId, { content: "Hello World!"});
 
   // Assertions
   assertExists(message);
@@ -15,7 +15,7 @@ export async function editMessageTest(channelId: bigint) {
   }
 
   // Edit the message
-  await bot.helpers.editMessage(channelId, message.id, "Goodbye World!");
+  await bot.helpers.editMessage(channelId, message.id, {content: "Goodbye World!"});
 
   // Wait to give it time for MESSAGE_UPDATE event
   // await delayUntil(10000, async () => bot.messages.get(message.id)?.content === "Goodbye World!");
