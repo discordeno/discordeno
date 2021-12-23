@@ -3,7 +3,7 @@ import { Message } from "../types/messages/message.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoAttachment } from "./attachment.ts";
-import { MessageStickerFormatTypes } from "../types/messages/messageStickerFormatTypes.ts";
+import { StickerFormatTypes } from "../types/stickers/stickerFormatTypes.ts";
 import { DiscordenoMember, DiscordenoUser } from "./member.ts";
 import { DiscordenoEmbed } from "./embed.ts";
 import { MessageTypes } from "../types/messages/messageTypes.ts";
@@ -147,7 +147,7 @@ export interface DiscordenoMessage {
     /** Name of the sticker */
     name: string;
     /** Type of sticker format */
-    formatType: MessageStickerFormatTypes;
+    formatType: StickerFormatTypes;
   }[];
 
   /**
