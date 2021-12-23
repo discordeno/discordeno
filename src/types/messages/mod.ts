@@ -25,7 +25,5 @@ export * from "./messageReactionRemove.ts";
 export * from "./messageReactionRemoveAll.ts";
 export * from "./messageReactionRemoveEmoji.ts";
 export * from "./messageReference.ts";
-export * from "./messageSticker.ts";
-export * from "./messageStickerFormatTypes.ts";
 export * from "./messageTypes.ts";
 export * from "./reaction.ts";
