@@ -32,7 +32,6 @@ export async function editScheduledEvent(
       privacy_level: options.privacyLevel,
       entity_type: options.entityType,
       status: options.status,
-      reason: options.reason,
     }
   );
 
