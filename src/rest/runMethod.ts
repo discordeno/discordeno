@@ -44,8 +44,8 @@ export async function runMethod<T = any>(
       {
         url,
         method,
-        reject: (error) => {
-          console.error(error);
+        reject: (error: unknown) => {
+          errorStack.message = (error as Error)?.message;
           reject(errorStack);
         },
         respond: (data: { status: number; body?: string }) =>
