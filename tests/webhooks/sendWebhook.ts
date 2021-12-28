@@ -9,6 +9,7 @@ Deno.test("[webhooks] Send a message with a webhook", async (t) => {
   assertExists(webhook.token);
   const message = await bot.helpers.sendWebhook(webhook.id, webhook.token, {
     content: "discordeno is best lib",
+    wait: true,
   });
 
   assertExists(message);
