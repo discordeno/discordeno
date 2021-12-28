@@ -49,6 +49,6 @@ export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuild
         : undefined,
     })),
     threads: auditlog.threads.map((thread) => bot.transformers.channel(bot, { channel: thread, guildId })),
-    scheduledEvents: auditlog.scheduled_events.map((event) => bot.transformers.scheduledEvent(bot, event)),
+    scheduledEvents: auditlog.guild_scheduled_events.map((event) => bot.transformers.scheduledEvent(bot, event)),
   };
 }
