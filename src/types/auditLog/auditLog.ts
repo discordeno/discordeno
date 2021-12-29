@@ -18,5 +18,5 @@ export interface AuditLog {
   /** List of threads found in the audit log. */
   threads: Channel[];
   /** List of guild scheduled events found in the audit log */
-  scheduledEvents: ScheduledEvent[];
+  guildScheduledEvents: ScheduledEvent[];
 }
