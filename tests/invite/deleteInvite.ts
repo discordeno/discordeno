@@ -1,4 +1,4 @@
-import { assertExists } from "../deps.ts";
+import { assertExists, assertRejects } from "../deps.ts";
 import { bot, channel } from "../mod.ts";
 
 Deno.test({
@@ -14,9 +14,9 @@ Deno.test({
     // Assertions
     assertExists(invite);
 
-    const deletedInvite = await bot.helpers.deleteInvite(invite.code);
+    await bot.helpers.deleteInvite(invite.code);
 
     // Assertions
-    assertExists(deletedInvite);
+    assertRejects(() => bot.helpers.getInvite(invite.code));
   },
 });
