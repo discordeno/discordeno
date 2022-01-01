@@ -25,7 +25,8 @@ export async function runMethod<T = any>(
     const result = await fetch(url, {
       body: JSON.stringify(body || {}),
       headers: {
-        authorization: rest.secretKey,
+        "Authorization": rest.secretKey,
+        "Content-Type": "application/json"
       },
       method: method.toUpperCase(),
     }).catch((error) => {
