@@ -13,7 +13,7 @@ export async function getWebhookMessage(
   messageId: bigint,
   options?: GetWebhookMessageOptions
 ) {
-  let url = bot.constants.endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId);
+  let url = bot.constants.endpoints.WEBHOOK_MESSAGE_FETCH(webhookId, webhookToken, messageId, { thread_id: options?.threadId.toString() || "" });
 
   // QUERY PARAMS
   if (options?.threadId) {

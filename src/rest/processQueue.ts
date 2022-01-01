@@ -41,29 +41,12 @@ export function processQueue(rest: RestManager, id: string) {
     if (bucketResetIn) continue;
     // EXECUTE THE REQUEST
 
-    // IF THIS IS A GET REQUEST, CHANGE THE BODY TO QUERY PARAMETERS
-    const query =
-      queuedRequest.request.method.toUpperCase() === "GET" && queuedRequest.payload.body
-        ? Object.keys(queuedRequest.payload.body)
-            .filter((key) => (queuedRequest.payload.body as Record<string, string>)[key] !== undefined)
-            .map(
-              (key) =>
-                `${encodeURIComponent(key)}=${encodeURIComponent(
-                  (queuedRequest.payload.body as Record<string, string>)[key]
-                )}`
-            )
-            .join("&")
-        : "";
-    const urlToUse =
-      queuedRequest.request.method.toUpperCase() === "GET" && query
-        ? `${queuedRequest.request.url}?${query}`
-        : queuedRequest.request.url;
     // CUSTOM HANDLER FOR USER TO LOG OR WHATEVER WHENEVER A FETCH IS MADE
     rest.debug(`[REST - Add To Global Queue] ${JSON.stringify(queuedRequest.payload)}`);
     rest.globalQueue.push({
       ...queuedRequest,
       basicURL,
-      urlToUse,
+      urlToUse: queuedRequest.request.url,
     });
     rest.processGlobalQueue(rest);
     queue.requests.shift();

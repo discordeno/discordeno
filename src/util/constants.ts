@@ -109,11 +109,24 @@ export const endpoints = {
   GUILD_SCHEDULED_EVENT: (guildId: bigint, eventId: bigint) => `${GUILDS_BASE(guildId)}/scheduled-events/${eventId}`,
   GUILD_SCHEDULED_EVENT_USERS: (guildId: bigint, eventId: bigint) =>
     `${GUILDS_BASE(guildId)}/scheduled-events/${eventId}/users`,
+  GUILD_FETCH: (guildId: bigint, options: { counts: boolean }) =>
+    `${GUILDS_BASE(guildId)}?with_counts=${options.counts}`,
 
   // Voice
   VOICE_REGIONS: `${baseEndpoints.BASE_URL}/voice/regions`,
 
   INVITE: (inviteCode: string) => `${baseEndpoints.BASE_URL}/invites/${inviteCode}`,
+  INVITE_FETCH: (
+    inviteCode: string,
+    options: {
+      with_counts: boolean;
+      with_expiration: boolean;
+      guild_scheduled_event_id: string;
+    }
+  ) =>
+    `${endpoints.INVITE(inviteCode)}?with_counts=${options.with_counts}&with_expiration=${
+      options.with_expiration
+    }&guild_scheduled_event_id=${options.guild_scheduled_event_id}`,
 
   WEBHOOK: (webhookId: bigint, token: string) => `${baseEndpoints.BASE_URL}/webhooks/${webhookId}/${token}`,
   WEBHOOK_ID: (webhookId: bigint) => `${baseEndpoints.BASE_URL}/webhooks/${webhookId}`,
@@ -121,6 +134,7 @@ export const endpoints = {
     `${baseEndpoints.BASE_URL}/webhooks/${webhookId}/${token}/messages/${messageId}`,
   WEBHOOK_MESSAGE_ORIGINAL: (webhookId: bigint, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${webhookId}/${token}/messages/@original`,
+  WEBHOOK_MESSAGE_FETCH: (webhookId: bigint, token: string, messageId: bigint, options: { thread_id: string }) => `${endpoints.WEBHOOK_MESSAGE(webhookId, token, messageId)}?thread_id=${options.thread_id}`,
   WEBHOOK_SLACK: (webhookId: bigint, token: string) => `${baseEndpoints.BASE_URL}/webhooks/${webhookId}/${token}/slack`,
   WEBHOOK_GITHUB: (webhookId: bigint, token: string) =>
     `${baseEndpoints.BASE_URL}/webhooks/${webhookId}/${token}/github`,
