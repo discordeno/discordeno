@@ -124,7 +124,7 @@ export interface GetScheduledEvents {
 }
 
 export interface GetScheduledEventUsers {
-  /** how many users to receive from the event. Defaults to 100. */
+  /** 	number of users to return (up to maximum 100). Defaults to 100 */
   limit?: number;
   /** Whether to also have member objects provided. Defaults to false. */
   withMember?: boolean;

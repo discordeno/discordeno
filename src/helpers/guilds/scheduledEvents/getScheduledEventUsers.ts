@@ -4,6 +4,7 @@ import { GetScheduledEventUsers } from "../../../types/guilds/scheduledEvents.ts
 import { GuildMember } from "../../../types/members/guildMember.ts";
 import { User } from "../../../types/users/user.ts";
 import { Collection } from "../../../util/collection.ts";
+import { validateLength } from "../../../util/mod.ts";
 
 export async function getScheduledEventUsers(
   bot: Bot,
@@ -25,10 +26,13 @@ export async function getScheduledEventUsers(
 ): Promise<
   Collection<bigint, DiscordenoUser> | Collection<bigint, { user: DiscordenoUser; member: DiscordenoMember }>
 > {
-  // TODO: validate limit
+  if (options?.limit && options.limit > 100) {
+    throw new Error("Limit must be less than or equals to 100");
+  }
+
   // TODO: is the guild member omit user
 
-  const result = await bot.rest.runMethod<({ user: User, member?: GuildMember })[]>(
+  const result = await bot.rest.runMethod<{ user: User; member?: GuildMember }[]>(
     bot.rest,
     "get",
     bot.constants.endpoints.GUILD_SCHEDULED_EVENT_USERS(guildId, eventId),
