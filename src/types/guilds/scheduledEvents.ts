@@ -124,9 +124,9 @@ export interface GetScheduledEvents {
 }
 
 export interface GetScheduledEventUsers {
-  /** number of users to return (up to maximum 100), defaults to 100. */
+  /** number of users to return (up to maximum 100), defaults to 100 */
   limit?: number;
-  /** whether to also have member objects provided, defaults to false. */
+  /** whether to also have member objects provided, defaults to false */
   withMember?: boolean;
   /** consider only users before given user id */
   before?: bigint;

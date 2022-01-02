@@ -4,7 +4,6 @@ import { GetScheduledEventUsers } from "../../../types/guilds/scheduledEvents.ts
 import { GuildMember } from "../../../types/members/guildMember.ts";
 import { User } from "../../../types/users/user.ts";
 import { Collection } from "../../../util/collection.ts";
-import { validateLength } from "../../../util/mod.ts";
 
 export async function getScheduledEventUsers(
   bot: Bot,
