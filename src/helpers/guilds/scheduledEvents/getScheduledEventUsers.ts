@@ -25,10 +25,6 @@ export async function getScheduledEventUsers(
 ): Promise<
   Collection<bigint, DiscordenoUser> | Collection<bigint, { user: DiscordenoUser; member: DiscordenoMember }>
 > {
-  if (options?.limit && options.limit > 100) {
-    throw new Error("Limit must be less than or equals to 100");
-  }
-
   // TODO: is the guild member omit user
 
   const result = await bot.rest.runMethod<{ user: User; member?: GuildMember }[]>(
