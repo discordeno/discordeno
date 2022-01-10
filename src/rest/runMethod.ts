@@ -35,6 +35,12 @@ export async function runMethod<T = any>(
       throw errorStack;
     });
 
+    if (!result.ok) {
+      errorStack.message = result.statusText as Error['message'];
+      console.error(`Invalid authorization key.`);
+      throw errorStack;
+    }
+
     return result.status !== 204 ? await result.json() : undefined;
   }
 
