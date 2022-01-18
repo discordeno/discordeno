@@ -112,7 +112,7 @@ export function createBot(options: CreateBotOptions): Bot {
       unrepliedInteractions: new Set<bigint>(),
       fetchAllMembersProcessingRequests: new Map(),
     },
-    rest: createRestManager({ token: options.token, debug: options.events.debug }),
+    rest: createRestManager({ token: options.token, debug: options.events.debug, secretKey: options.secretKey ?? undefined }),
   } as Bot;
 
   bot.helpers = createHelpers(bot, options.helpers ?? {});
@@ -399,6 +399,7 @@ export interface CreateBotOptions {
   token: string;
   botId: bigint;
   applicationId?: bigint;
+  secretKey?: string;
   events: Partial<EventHandlers>;
   intents: (keyof typeof GatewayIntents)[];
   botGatewayData?: GetGatewayBot;
