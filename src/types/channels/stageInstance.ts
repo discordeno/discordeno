@@ -12,6 +12,6 @@ export interface StageInstance {
   topic: string;
   /** The privacy level of the Stage instance */
   privacyLevel: PrivacyLevel;
-  /** Whether or not Stage discovery is disabled */
+  /** Whether or not Stage Discovery is disabled (deprecated) */
   discoverableDisabled: boolean;
 }
