@@ -8,12 +8,12 @@ export async function createEmoji(bot: Bot, guildId: bigint, options: CreateGuil
     options.image = await bot.utils.urlToBase64(options.image);
   }
 
-  const emoji = await bot.rest.runMethod<Emoji>(
-    bot.rest,
-    "post",
-    bot.constants.endpoints.GUILD_EMOJIS(guildId),
-    options
-  );
+  const emoji = await bot.rest.runMethod<Emoji>(bot.rest, "post", bot.constants.endpoints.GUILD_EMOJIS(guildId), {
+    name: options.name,
+    image: options.image,
+    roles: options.roles?.map((role) => role.toString()),
+    reason: options.reason,
+  });
 
   return {
     ...emoji,
