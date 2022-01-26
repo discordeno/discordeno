@@ -3,4 +3,5 @@ export interface CreateWebhook {
   name: string;
   /** Image for the default webhook avatar */
   avatar?: string | null;
+  reason?: string;
 }

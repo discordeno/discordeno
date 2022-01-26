@@ -6,4 +6,5 @@ export interface ModifyWebhook {
   avatar?: string | null;
   /** The new channel id this webhook should be moved to */
   channelId?: string;
+  reason?: string;
 }
