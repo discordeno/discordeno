@@ -75,6 +75,7 @@ export enum JsonErrorCodes {
   MaximumNumberOfStickersReached = 30039,
   MaximumNumberOfPruneRequestsHasBeenReachedTryAgainLater,
   MaximumNumberOfGuildWidgetSettingsUpdatesHasBeenReachedTryAgainLater = 30042,
+  MaximumNumberOfEditsToMessagesOlderThan1HourReachedTryAgainLater = 30046,
   UnauthorizedProvideAValidTokenAndTryAgain = 40001,
   YouNeedToVerifyYourAccountInOrderToPerformThisAction,
   YouAreOpeningDirectMessagesTooFast,
