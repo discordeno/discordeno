@@ -33,8 +33,6 @@ export interface Channel {
   rateLimitPerUser?: number;
   /** The recipients of the DM */
   recipients?: User[];
-  /** Icon hash of the group DM */
-  icon?: string | null;
   /** Id of the creator of the group DM or thread */
   ownerId?: string;
   /** Application id of the group DM creator if it is bot-created */
