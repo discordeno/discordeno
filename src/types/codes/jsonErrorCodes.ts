@@ -118,6 +118,7 @@ export enum JsonErrorCodes {
   InvalidFileUploaded,
   CannotSelfRedeemThisGift = 50054,
   InvalidGuild,
+  InvalidMessageType = 50068,
   PaymentSourceRequiredToRedeemGift = 50070,
   CannotDeleteAChannelRequiredForCommunityGuilds = 50074,
   InvalidStickerSent = 50081,
