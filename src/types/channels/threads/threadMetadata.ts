@@ -11,5 +11,5 @@ export interface ThreadMetadata {
   /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
   invitable?: boolean;
   /** Timestamp when the thread was created; only populated for threads created after 2022-01-09 */
-  createTimestamp: number;
+  createTimestamp: string;
 }
