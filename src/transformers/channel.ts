@@ -146,5 +146,5 @@ export interface DiscordenoChannel {
   /** The voice states that are in this channel assuming it is a voice channel. */
   voiceStates?: Collection<bigint, DiscordenoVoiceState>;
   /** timestamp when the thread was created; only populated for threads created after 2022-01-09 */
-  createTimestamp?: string;
+  createTimestamp?: number;
 }
