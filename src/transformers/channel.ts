@@ -74,7 +74,7 @@ export function transformChannel(
     archived: payload.channel.thread_metadata?.archived,
     locked: payload.channel.thread_metadata?.locked,
     invitable: payload.channel.invitable,
-    createTimestamp: payload.channel.create_timestamp,
+    createTimestamp: payload.channel.create_timestamp ? Date.parse(payload.channel.create_timestamp) : undefined,
   };
 }
 
