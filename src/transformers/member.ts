@@ -60,7 +60,7 @@ export function transformMember(
     permissions: payload.permissions ? bot.transformers.snowflake(payload.permissions) : undefined,
     communicationDisabledUntil: payload.communication_disabled_until
       ? Date.parse(payload.communication_disabled_until)
-      : null,
+      : undefined,
   };
 }
 
@@ -89,6 +89,6 @@ export interface DiscordenoMember {
   avatar?: bigint;
   /** The permissions this member has in the guild. Only present on interaction events. */
   permissions?: bigint;
-  /** when the user's timeout will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out */
-  communicationDisabledUntil?: number | null;
+  /** when the user's timeout will expire and the user will be able to communicate in the guild again, undefined or a time in the past if the user is not timed out */
+  communicationDisabledUntil?: number;
 }
