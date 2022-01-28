@@ -23,7 +23,7 @@ export async function runMethod<T = any>(
   // For proxies we don't need to do any of the legwork so we just forward the request
   if (!url.startsWith(`${BASE_URL}/v${API_VERSION}`) && !url.startsWith(IMAGE_BASE_URL)) {
     const result = await fetch(url, {
-      body: JSON.stringify(body),
+      body: body ? JSON.stringify(body) : undefined,
       headers: {
         Authorization: rest.secretKey,
         "Content-Type": "application/json",
