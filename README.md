@@ -119,6 +119,10 @@ templates:
 - [Amethyst](https://github.com/AmethystFramework/framework)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
+### Recommended plugins
+- ABC
+- XYZ
+
 ## Links
 
 - [Website](https://discordeno.mod.land)
