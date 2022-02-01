@@ -1,19 +1,17 @@
 import { Bot } from "../bot.ts";
 import { ChannelTypes } from "../types/channels/channelTypes.ts";
 import {
-  InteractionData,
-  ButtonData,
   InteractionTypes,
   Interaction,
-  SelectMenuData,
   InteractionDataResolved,
   MessageComponentTypes,
   InteractionDataOption,
   MessageComponents,
+  Attachment,
 } from "../types/mod.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { Collection } from "../util/collection.ts";
-import { DiscordenoChannel } from "./channel.ts";
+import { DiscordenoAttachment } from "./attachment.ts";
 import { DiscordenoMember, DiscordenoUser } from "./member.ts";
 import { DiscordenoMessage } from "./message.ts";
 import { DiscordenoRole } from "./role.ts";
@@ -68,6 +66,7 @@ export function transformInteractionDataResolved(
     members?: Collection<bigint, DiscordenoMember>;
     roles?: Collection<bigint, DiscordenoRole>;
     channels?: Collection<bigint, { id: bigint; name: string; type: ChannelTypes; permissions: bigint }>;
+    attachments?: Collection<bigint, DiscordenoAttachment>;
   } = {};
 
   if (resolved.messages) {
@@ -120,6 +119,15 @@ export function transformInteractionDataResolved(
             permissions: bot.transformers.snowflake(channel.permissions),
           },
         ];
+      })
+    );
+  }
+
+  if (resolved.attachments) {
+    transformed.attachments = new Collection(
+      Object.entries(resolved.attachments).map(([key, value]) => {
+        const id = bot.transformers.snowflake(key);
+        return [id, bot.transformers.attachment(bot, value as SnakeCasedPropertiesDeep<Attachment>)];
       })
     );
   }
@@ -182,6 +190,8 @@ export interface DiscordenoInteraction {
           permissions: bigint;
         }
       >;
+      /** The Ids and attachments objects */
+      attachments?: Collection<bigint, DiscordenoAttachment>;
     };
     /** The params + values from the user */
     options?: InteractionDataOption[];
