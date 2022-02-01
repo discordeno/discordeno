@@ -1,0 +1,3 @@
+discordeno/guide:
+  - source: docs/
+    dest: ./

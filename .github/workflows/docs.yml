@@ -5,17 +5,28 @@ on:
     paths:
       - "docs/**"
 
+# jobs:
+#   file_sync:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Fetching Local Repository
+#         uses: actions/checkout@master
+#       - name: File Sync
+#         uses: kbrashears5/github-action-file-sync@v2.0.0
+#         with:
+#           REPOSITORIES: |
+#             discordeno/guide@main
+#           FILES: |
+#             docs/=
+#           TOKEN: ${{ secrets.DOCS_SYNC }}
+
 jobs:
-  file_sync:
+  sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetching Local Repository
+      - name: Checkout Repository
         uses: actions/checkout@master
-      - name: File Sync
-        uses: kbrashears5/github-action-file-sync@v2.0.0
+      - name: Run GitHub File Sync
+        uses: BetaHuhn/repo-file-sync-action@v1
         with:
-          REPOSITORIES: |
-            discordeno/guide@main
-          FILES: |
-            docs/=
-          TOKEN: ${{ secrets.DOCS_SYNC }}
+          GH_PAT: ${{ secrets.DOCS_SYNC }}
