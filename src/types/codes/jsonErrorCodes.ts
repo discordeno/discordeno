@@ -124,6 +124,7 @@ export enum JsonErrorCodes {
   TriedToPerformAnOperationOnAnArchivedThreadSuchAsEditingAMessageOrAddingAUserToTheThread = 50083,
   InvalidThreadNotificationSettings,
   BeforeValueIsEarlierThanTheThreadCreationDate,
+  CommunityServerChannelsMustBeTextChannels,
   ThisServerIsNotAvailableInYourLocation = 50095,
   ThisServerNeedsMonetizationEnabledInOrderToPerformThisAction = 50097,
   ThisServerNeedsMoreBoostsToPerformThisAction = 50101,
