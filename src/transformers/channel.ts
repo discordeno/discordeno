@@ -39,7 +39,6 @@ export function transformChannel(
     userLimit: payload.channel.user_limit,
     rateLimitPerUser: payload.channel.rate_limit_per_user,
     recipients: payload.channel.recipients?.map((r) => bot.transformers.user(bot, r)),
-    icon: payload.channel.icon ? bot.utils.iconHashToBigInt(payload.channel.icon) : undefined,
     rtcRegion: payload.channel.rtc_region,
     videoQualityMode: payload.channel.video_quality_mode,
     guildId: payload.guildId || (payload.channel.guild_id ? bot.transformers.snowflake(payload.channel.guild_id) : 0n),
