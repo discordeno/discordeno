@@ -72,6 +72,8 @@ export function transformChannel(
     botIsMember: Boolean(payload.channel.member),
     archived: payload.channel.thread_metadata?.archived,
     locked: payload.channel.thread_metadata?.locked,
+    invitable: payload.channel.invitable,
+    createTimestamp: payload.channel.create_timestamp ? Date.parse(payload.channel.create_timestamp) : undefined,
   };
 }
 
@@ -142,4 +144,6 @@ export interface DiscordenoChannel {
   parentId?: bigint;
   /** The voice states that are in this channel assuming it is a voice channel. */
   voiceStates?: Collection<bigint, DiscordenoVoiceState>;
+  /** timestamp when the thread was created; only populated for threads created after 2022-01-09 */
+  createTimestamp?: number;
 }

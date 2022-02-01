@@ -58,4 +58,8 @@ export interface Channel {
   defaultAutoArchiveDuration?: number;
   /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a application command interaction */
   permissions?: string;
+  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
+  invitable?: boolean;
+  /** timestamp when the thread was created; only populated for threads created after 2022-01-09 */
+  createTimestamp?: string;
 }
