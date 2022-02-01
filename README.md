@@ -119,6 +119,12 @@ templates:
 - [Amethyst](https://github.com/AmethystFramework/framework)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
+### Plugins
+- [Cache Plugin](plugins/cache)
+- [Fileloader Plugin](plugins/fileloader)
+- [Helpers Plugin](plugins/helpers)
+- [Permissions Plugin](plugins/permissions)
+
 ## Links
 
 - [Website](https://discordeno.mod.land)
