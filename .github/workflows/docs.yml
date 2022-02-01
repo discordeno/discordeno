@@ -5,21 +5,6 @@ on:
     paths:
       - "docs/**"
 
-# jobs:
-#   file_sync:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Fetching Local Repository
-#         uses: actions/checkout@master
-#       - name: File Sync
-#         uses: kbrashears5/github-action-file-sync@v2.0.0
-#         with:
-#           REPOSITORIES: |
-#             discordeno/guide@main
-#           FILES: |
-#             docs/=
-#           TOKEN: ${{ secrets.DOCS_SYNC }}
-
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -30,3 +15,5 @@ jobs:
         uses: BetaHuhn/repo-file-sync-action@v1
         with:
           GH_PAT: ${{ secrets.DOCS_SYNC }}
+          SKIP_PR: true
+          COMMIT_EACH_FILE: false
