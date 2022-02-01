@@ -1,6 +1,12 @@
 name: Test
+
 on:
   push:
+    paths:
+      - "plugins/**"
+      - "src/**"
+      - "tests/**"
+
 jobs:
   test:
     runs-on: ubuntu-latest
