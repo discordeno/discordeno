@@ -1,3 +1,6 @@
 discordeno/guide:
   - source: docs/
     dest: ./
+    exclude: |
+      README.md
+      LICENSE
