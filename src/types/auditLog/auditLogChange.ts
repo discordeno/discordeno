@@ -79,7 +79,8 @@ export type AuditLogChange =
         | "mute"
         | "enable_emoticons"
         | "archived"
-        | "locked";
+        | "locked"
+        | "invitable";
     }
   | {
       newValue: Overwrite[];
