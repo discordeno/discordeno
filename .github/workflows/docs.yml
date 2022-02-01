@@ -17,5 +17,5 @@ jobs:
           REPOSITORIES: |
             discordeno/guide@main
           FILES: |
-            docs/=/
+            docs/=
           TOKEN: ${{ secrets.DOCS_SYNC }}
