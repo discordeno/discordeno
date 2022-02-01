@@ -19,5 +19,3 @@ jobs:
           FILES: |
             docs/=sync/
           TOKEN: ${{ secrets.DOCS_SYNC }}
-          GIT_EMAIL: to@itoh.at
-          GIT_USERNAME: itohatweb
