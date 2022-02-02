@@ -92,6 +92,7 @@ import { transformWelcomeScreen } from "./transformers/welcomeScreen.ts";
 import { transformVoiceRegion } from "./transformers/voiceRegion.ts";
 import { transformWidget } from "./transformers/widget.ts";
 import { transformStageInstance } from "./transformers/stageInstance.ts";
+import { transformSticker } from "./transformers/sticker.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -112,7 +113,11 @@ export function createBot(options: CreateBotOptions): Bot {
       unrepliedInteractions: new Set<bigint>(),
       fetchAllMembersProcessingRequests: new Map(),
     },
-    rest: createRestManager({ token: options.token, debug: options.events.debug, secretKey: options.secretKey ?? undefined }),
+    rest: createRestManager({
+      token: options.token,
+      debug: options.events.debug,
+      secretKey: options.secretKey ?? undefined,
+    }),
   } as Bot;
 
   bot.helpers = createHelpers(bot, options.helpers ?? {});
@@ -491,6 +496,7 @@ export interface Transformers {
   voiceRegion: typeof transformVoiceRegion;
   widget: typeof transformWidget;
   stageInstance: typeof transformStageInstance;
+  sticker: typeof transformSticker;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -525,6 +531,7 @@ export function createTransformers(options: Partial<Transformers>) {
     voiceRegion: options.voiceRegion || transformVoiceRegion,
     widget: options.widget || transformWidget,
     stageInstance: options.stageInstance || transformStageInstance,
+    sticker: options.sticker || transformSticker,
   };
 }
 
