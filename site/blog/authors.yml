@@ -1,17 +1,11 @@
-endi:
-  name: Endilie Yacop Sucipto
-  title: Maintainer of Docusaurus
-  url: https://github.com/endiliey
-  image_url: https://github.com/endiliey.png
+itoh:
+  name: ITOH
+  title: Maintainer of Discordeno
+  url: https://github.com/itohatweb
+  image_url: https://github.com/itohatweb.png
 
-yangshun:
-  name: Yangshun Tay
-  title: Front End Engineer @ Facebook
-  url: https://github.com/yangshun
-  image_url: https://github.com/yangshun.png
-
-slorber:
-  name: Sébastien Lorber
-  title: Docusaurus maintainer
-  url: https://sebastienlorber.com
-  image_url: https://github.com/slorber.png
+skillz:
+  name: Skillz
+  title: Maintainer of Discordeno
+  url: https://github.com/Skillz4Killz
+  image_url: https://github.com/Skillz4Killz.png

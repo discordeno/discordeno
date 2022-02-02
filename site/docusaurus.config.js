@@ -47,7 +47,7 @@ const config = {
         title: "Discordeno",
         logo: {
           alt: "My Site Logo",
-          src: "img/logo.png",
+          src: "img/logo.svg",
         },
         items: [
           {
@@ -112,7 +112,19 @@ const config = {
     [
       require.resolve("@easyops-cn/docusaurus-search-local"),
       {
+        indexDocs: true,
+        indexBlog: true,
+        indexPages: true,
+        docsRouteBasePath: ["/docs"],
+        blogRouteBasePath: ["/blog"],
+        language: ["en"],
         hashed: true,
+        docsDir: ["docs"],
+        blogDir: ["blog"],
+        removeDefaultStopWordFilter: true,
+        highlightSearchTermsOnTargetPage: true,
+        searchResultLimits: 8,
+        searchResultContextMaxLength: 50,
       },
     ],
   ],
