@@ -59,6 +59,10 @@ export async function resharder(oldGateway: GatewayManager) {
       // STILL PENDING ON SOME SHARDS TO BE CREATED
       if (pending) return;
 
+      // ENABLE EVENTS ON NEW SHARDS AND IGNORE EVENTS ON OLD
+      gateway.handleDiscordPayload = oldGateway.handleDiscordPayload;
+      oldGateway.handleDiscordPayload = function () {};
+
       // SHUT DOWN ALL SHARDS IF NOTHING IN QUEUE
       oldGateway.shards.forEach((shard) => {
         // CLOSE THIS SHARD IT HAS NO QUEUE
@@ -66,6 +70,7 @@ export async function resharder(oldGateway: GatewayManager) {
           oldGateway.closeWS(shard.ws, 3066, "Shard has been resharded. Closing shard since it has no queue.");
         }
 
+        // IF QUEUE EXISTS GIVE IT 5 MINUTES TO COMPLETE
         setTimeout(() => {
           oldGateway.closeWS(shard.ws, 3066, "Shard has been resharded. Delayed closing shard since it had a queue.");
         }, 300000);
