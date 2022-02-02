@@ -67,7 +67,7 @@ export async function resharder(oldGateway: GatewayManager) {
       oldGateway.shards.forEach((shard) => {
         // CLOSE THIS SHARD IT HAS NO QUEUE
         if (!shard.processingQueue && !shard.queue.length) {
-          oldGateway.closeWS(shard.ws, 3066, "Shard has been resharded. Closing shard since it has no queue.");
+          return oldGateway.closeWS(shard.ws, 3066, "Shard has been resharded. Closing shard since it has no queue.");
         }
 
         // IF QUEUE EXISTS GIVE IT 5 MINUTES TO COMPLETE
