@@ -2,7 +2,7 @@ import { User } from "../users/user.ts";
 import { GuildMember } from "../members/guildMember.ts";
 import { InteractionTypes } from "./interactionTypes.ts";
 
-/** https://discord.com/developers/docs/interactions/slash-commands#messageinteraction */
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#message-interaction-object-message-interaction-structure */
 export interface MessageInteraction {
   /** Id of the interaction */
   id: string;

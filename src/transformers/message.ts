@@ -51,6 +51,7 @@ export function transformMessage(bot: Bot, payload: SnakeCasedPropertiesDeep<Mes
           type: payload.interaction.type,
           name: payload.interaction.name,
           user: bot.transformers.user(bot, payload.interaction.user),
+          member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
         }
       : undefined,
     thread: payload.thread ? bot.transformers.channel(bot, { channel: payload.thread, guildId }) : undefined,
@@ -193,6 +194,8 @@ export interface DiscordenoMessage {
     name: string;
     /** The user who invoked the interaction */
     user: DiscordenoUser;
+    /** The member who invoked the interaction in the guild */
+    member?: Partial<DiscordenoMember>;
   };
   /** The thread that was started from this message, includes thread member object */
   thread?: DiscordenoChannel;
