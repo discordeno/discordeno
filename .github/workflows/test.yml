@@ -24,7 +24,7 @@ jobs:
       - name: Prepare configs file
         run: cp configs.example.ts configs.ts
       - name: Run test script for maintainers
-        if: ${{ github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' }}
+        if: ${{ github.actor == 'Skillz4Killz' }}
         run: deno test --unstable --coverage=coverage -A tests/mod.ts
       - name: Create coverage report
         if: github.ref == 'refs/heads/main'
