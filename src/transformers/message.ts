@@ -51,7 +51,31 @@ export function transformMessage(bot: Bot, payload: SnakeCasedPropertiesDeep<Mes
           type: payload.interaction.type,
           name: payload.interaction.name,
           user: bot.transformers.user(bot, payload.interaction.user),
-          member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
+          member: payload.interaction.member
+            ? {
+                id: userId,
+                guildId,
+                nick: payload.interaction.member.nick ?? undefined,
+                roles: payload.interaction.member.roles?.map((id) => BigInt(id)),
+                joinedAt: payload.interaction.member.joined_at
+                  ? Date.parse(payload.interaction.member.joined_at)
+                  : undefined,
+                premiumSince: payload.interaction.member.premium_since
+                  ? Date.parse(payload.interaction.member.premium_since)
+                  : undefined,
+                deaf: payload.interaction.member.deaf,
+                mute: payload.interaction.member.mute,
+                pending: payload.interaction.member.pending,
+                cachedAt: Date.now(),
+                avatar: payload.interaction.member.avatar
+                  ? bot.utils.iconHashToBigInt(payload.interaction.member.avatar)
+                  : undefined,
+                permissions: payload.interaction.member.permissions
+                  ? bot.transformers.snowflake(payload.interaction.member.permissions)
+                  : undefined,
+                communicationDisabledUntil: payload.interaction.member.communication_disabled_until,
+              }
+            : undefined,
         }
       : undefined,
     thread: payload.thread ? bot.transformers.channel(bot, { channel: payload.thread, guildId }) : undefined,
