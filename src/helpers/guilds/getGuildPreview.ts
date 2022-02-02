@@ -20,6 +20,6 @@ export async function getGuildPreview(bot: Bot, guildId: bigint) {
     approximateMemberCount: result.approximate_member_count,
     approximatePresenceCount: result.approximate_presence_count,
     description: result.description ?? undefined,
-    stickers: result.stickers,
+    stickers: result.stickers.map((payload) => {}),
   };
 }
