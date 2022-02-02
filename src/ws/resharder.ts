@@ -49,7 +49,7 @@ export async function resharder(oldGateway: GatewayManager) {
     const timer = setInterval(() => {
       let pending = false;
       for (let i = oldGateway.firstShardId; i < oldGateway.lastShardId; i++) {
-        const shard = oldGateway.shards.get(i);
+        const shard = gateway.shards.get(i);
         if (!shard?.ready) {
           pending = true;
           break;
