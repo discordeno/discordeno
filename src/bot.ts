@@ -112,7 +112,11 @@ export function createBot(options: CreateBotOptions): Bot {
       unrepliedInteractions: new Set<bigint>(),
       fetchAllMembersProcessingRequests: new Map(),
     },
-    rest: createRestManager({ token: options.token, debug: options.events.debug, secretKey: options.secretKey ?? undefined }),
+    rest: createRestManager({
+      token: options.token,
+      debug: options.events.debug,
+      secretKey: options.secretKey ?? undefined,
+    }),
   } as Bot;
 
   bot.helpers = createHelpers(bot, options.helpers ?? {});
@@ -133,6 +137,12 @@ export function createBot(options: CreateBotOptions): Bot {
         bot.handlers[data.t as GatewayDispatchEventNames]?.(bot as Bot, data, shardId);
       },
   });
+
+  // Check Resharding once a day
+  setInterval(async () => {
+    const resharded = await bot.gateway.resharder(bot.gateway);
+    if (resharded) bot.gateway = resharded;
+  }, 86400000);
 
   return bot as Bot;
 }
@@ -549,9 +559,9 @@ export interface GatewayManager {
   shardsPerWorker: number;
   /** The maximum amount of workers to use for your bot. */
   maxWorkers: number;
-  /** The first shard Id to start spawning. */
+  /** The first shard id to start spawning. */
   firstShardId: number;
-  /** The last shard Id for this worker. */
+  /** The last shard id to spawn. */
   lastShardId: number;
   token: string;
   compress: boolean;
