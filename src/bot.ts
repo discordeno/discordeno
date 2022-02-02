@@ -112,7 +112,11 @@ export function createBot(options: CreateBotOptions): Bot {
       unrepliedInteractions: new Set<bigint>(),
       fetchAllMembersProcessingRequests: new Map(),
     },
-    rest: createRestManager({ token: options.token, debug: options.events.debug, secretKey: options.secretKey ?? undefined }),
+    rest: createRestManager({
+      token: options.token,
+      debug: options.events.debug,
+      secretKey: options.secretKey ?? undefined,
+    }),
   } as Bot;
 
   bot.helpers = createHelpers(bot, options.helpers ?? {});
@@ -781,8 +785,6 @@ export interface EventHandlers {
       guildId: bigint;
       channelId: bigint;
       topic: string;
-      privacyLevel: number;
-      discoverableDisabled: boolean;
     }
   ) => any;
   stageInstanceDelete: (
@@ -792,8 +794,6 @@ export interface EventHandlers {
       guildId: bigint;
       channelId: bigint;
       topic: string;
-      privacyLevel: number;
-      discoverableDisabled: boolean;
     }
   ) => any;
   stageInstanceUpdate: (
@@ -803,8 +803,6 @@ export interface EventHandlers {
       guildId: bigint;
       channelId: bigint;
       topic: string;
-      privacyLevel: number;
-      discoverableDisabled: boolean;
     }
   ) => any;
   // TODO: THREADS

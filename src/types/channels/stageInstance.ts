@@ -1,5 +1,3 @@
-import { PrivacyLevel } from "./privacyLevel.ts";
-
 /** https://discord.com/developers/docs/resources/stage-instance#auto-closing-stage-instance-structure */
 export interface StageInstance {
   /** The id of this Stage instance */
@@ -10,8 +8,4 @@ export interface StageInstance {
   channelId: string;
   /** The topic of the Stage instance (1-120 characters) */
   topic: string;
-  /** The privacy level of the Stage instance */
-  privacyLevel: PrivacyLevel;
-  /** Whether or not Stage discovery is disabled */
-  discoverableDisabled: boolean;
 }
