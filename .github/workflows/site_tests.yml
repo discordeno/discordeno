@@ -5,6 +5,10 @@ on:
     paths:
       - "docs/**"
 
+defaults:
+  run:
+    working-directory: site
+
 jobs:
   test-deploy:
     name: Test deployment
@@ -12,12 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-        working-directory: site
         with:
           node-version: 14.x
           cache: npm
       - name: Test build
-        working-directory: site
         run: |
           npm ci
           npm run build
