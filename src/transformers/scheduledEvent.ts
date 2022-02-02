@@ -29,7 +29,7 @@ export function transformScheduledEvent(
     entityType: payload.entity_type,
     userCount: payload.user_count || 0,
     location: payload.entity_metadata?.location,
-    image: payload.image,
+    image: payload.image ? bot.utils.iconHashToBigInt(payload.image) : null,
   };
 }
 
@@ -65,5 +65,5 @@ export interface DiscordenoScheduledEvent {
   /** the number of users subscribed to the scheduled event */
   userCount: number;
   /** the cover image hash of the scheduled event */
-  image: string | null;
+  image: bigint | null;
 }
