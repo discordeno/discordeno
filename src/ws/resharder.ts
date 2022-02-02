@@ -77,7 +77,7 @@ export async function resharder(oldGateway: GatewayManager) {
       });
       // STOP TIMER
       clearInterval(timer);
-      oldGateway.debug("[Resharding] Complete.");
+      gateway.debug("[Resharding] Complete.");
       resolve(gateway);
     }, 30000);
   }) as Promise<GatewayManager>;
