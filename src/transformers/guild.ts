@@ -39,10 +39,6 @@ export function transformGuild(
       channelId: bot.transformers.snowflake(si.channel_id),
       /** The topic of the Stage instance (1-120 characters) */
       topic: si.topic,
-      /** The privacy level of the Stage instance */
-      privacyLevel: si.privacy_level,
-      /** Whether or not Stage discovery is disabled */
-      discoverableDisabled: si.discoverable_disabled,
     })),
     systemChannelFlags: payload.guild.system_channel_flags,
     vanityUrlCode: payload.guild.vanity_url_code,
@@ -190,10 +186,6 @@ export interface DiscordenoGuild
     channelId: bigint;
     /** The topic of the Stage instance (1-120 characters) */
     topic: string;
-    /** The privacy level of the Stage instance */
-    privacyLevel: number;
-    /** Whether or not Stage discovery is disabled */
-    discoverableDisabled: boolean;
   }[];
   welcomeScreen?: {
     /** The server description shown in the welcome screen */
