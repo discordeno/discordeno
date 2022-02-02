@@ -5,7 +5,7 @@ import { GetGatewayBot } from "../types/gateway/getGatewayBot.ts";
 export async function resharder(oldGateway: GatewayManager) {
   oldGateway.debug("[Resharding] Checking if resharding is needed.");
   // TODO: is it possible to route this to REST?
-  const results = (await fetch(`https://discord.com/api/oldGateway/bot`, {
+  const results = (await fetch(`https://discord.com/api/gateway/bot`, {
     headers: { Authorization: oldGateway.token },
   }).then((res) => res.json())) as GetGatewayBot;
 
