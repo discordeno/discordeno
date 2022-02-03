@@ -1,8 +1,5 @@
 import { BotWithCache, ScheduledEventEntityType } from "../../deps.ts";
-import {
-  requireBotChannelPermissions,
-  requireBotGuildPermissions,
-} from "../permissions.ts";
+import { requireBotChannelPermissions, requireBotGuildPermissions } from "../permissions.ts";
 
 export function createScheduledEvent(bot: BotWithCache) {
   const createScheduledEventOld = bot.helpers.createScheduledEvent;

@@ -10,7 +10,7 @@ export async function updateStageInstance(bot: Bot, channelId: bigint, data: AtL
     bot.constants.endpoints.STAGE_INSTANCE(channelId),
     {
       topic: data.topic,
-    }
+    },
   );
 
   return bot.transformers.stageInstance(bot, result);

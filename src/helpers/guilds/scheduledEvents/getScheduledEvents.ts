@@ -10,14 +10,14 @@ export async function getScheduledEvents(bot: Bot, guildId: bigint, options?: Ge
     "get",
     bot.constants.endpoints.GUILD_SCHEDULED_EVENTS(guildId),
     {
-        with_user_count: options?.withUserCount,
-    }
+      with_user_count: options?.withUserCount,
+    },
   );
 
   return new Collection<bigint, DiscordenoScheduledEvent>(
     events.map((e) => {
       const event = bot.transformers.scheduledEvent(bot, e);
       return [event.id, event];
-    })
+    }),
   );
 }

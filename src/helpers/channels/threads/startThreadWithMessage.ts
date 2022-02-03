@@ -7,7 +7,7 @@ export async function startThreadWithMessage(
   bot: Bot,
   channelId: bigint,
   messageId: bigint,
-  options: StartThreadBase
+  options: StartThreadBase,
 ) {
   const result = await bot.rest.runMethod<Channel>(
     bot.rest,
@@ -16,7 +16,7 @@ export async function startThreadWithMessage(
     {
       name: options.name,
       auto_archive_duration: options.autoArchiveDuration,
-    }
+    },
   );
 
   return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) });

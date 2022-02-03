@@ -8,7 +8,7 @@ import { DiscordenoUser } from "./member.ts";
 
 export function transformAuditlogEntry(
   bot: Bot,
-  payload: SnakeCasedPropertiesDeep<AuditLogEntry>
+  payload: SnakeCasedPropertiesDeep<AuditLogEntry>,
 ): DiscordenoAuditLogEntry {
   return {
     id: bot.transformers.snowflake(payload.id),
@@ -121,15 +121,15 @@ export function transformAuditlogEntry(
     actionType: payload.action_type,
     options: payload.options
       ? {
-          deleteMemberDays: payload.options.delete_member_days ? Number(payload.options.delete_member_days) : 0,
-          membersRemoved: payload.options.members_removed ? Number(payload.options.members_removed) : 0,
-          channelId: payload.options.channel_id ? bot.transformers.snowflake(payload.options.channel_id) : undefined,
-          messageId: payload.options.message_id ? bot.transformers.snowflake(payload.options.message_id) : undefined,
-          count: payload.options.count ? Number(payload.options.count) : 0,
-          id: payload.options.id ? bot.transformers.snowflake(payload.options.id) : undefined,
-          type: Number(payload.options.type),
-          roleName: payload.options.role_name,
-        }
+        deleteMemberDays: payload.options.delete_member_days ? Number(payload.options.delete_member_days) : 0,
+        membersRemoved: payload.options.members_removed ? Number(payload.options.members_removed) : 0,
+        channelId: payload.options.channel_id ? bot.transformers.snowflake(payload.options.channel_id) : undefined,
+        messageId: payload.options.message_id ? bot.transformers.snowflake(payload.options.message_id) : undefined,
+        count: payload.options.count ? Number(payload.options.count) : 0,
+        id: payload.options.id ? bot.transformers.snowflake(payload.options.id) : undefined,
+        type: Number(payload.options.type),
+        roleName: payload.options.role_name,
+      }
       : undefined,
     reason: payload.reason,
   };
@@ -171,86 +171,86 @@ export interface DiscordenoAuditLogEntry {
 
 export type DiscordenoAuditLogChange =
   | {
-      new: bigint;
-      old: bigint;
-      key:
-        | "discovery_splash_hash"
-        | "banner_hash"
-        | "rules_channel_id"
-        | "public_updates_channel_id"
-        | "icon_hash"
-        | "splash_hash"
-        | "owner_id"
-        | "widget_channel_id"
-        | "system_channel_id"
-        | "application_id"
-        | "permissions"
-        | "allow"
-        | "deny"
-        | "channel_id"
-        | "inviter_id"
-        | "avatar_hash"
-        | "id";
-    }
+    new: bigint;
+    old: bigint;
+    key:
+      | "discovery_splash_hash"
+      | "banner_hash"
+      | "rules_channel_id"
+      | "public_updates_channel_id"
+      | "icon_hash"
+      | "splash_hash"
+      | "owner_id"
+      | "widget_channel_id"
+      | "system_channel_id"
+      | "application_id"
+      | "permissions"
+      | "allow"
+      | "deny"
+      | "channel_id"
+      | "inviter_id"
+      | "avatar_hash"
+      | "id";
+  }
   | {
-      new: string;
-      old: string;
-      key:
-        | "name"
-        | "description"
-        | "preferred_locale"
-        | "region"
-        | "afk_channel_id"
-        | "vanity_url_code"
-        | "topic"
-        | "code"
-        | "nick";
-    }
+    new: string;
+    old: string;
+    key:
+      | "name"
+      | "description"
+      | "preferred_locale"
+      | "region"
+      | "afk_channel_id"
+      | "vanity_url_code"
+      | "topic"
+      | "code"
+      | "nick";
+  }
   | {
-      new: number;
-      old: number;
-      key:
-        | "afk_timeout"
-        | "mfa_level"
-        | "verification_level"
-        | "explicit_content_filter"
-        | "default_messagae_notifications"
-        | "prune_delete_days"
-        | "position"
-        | "bitrate"
-        | "rate_limit_per_user"
-        | "color"
-        | "max_uses"
-        | "uses"
-        | "max_age"
-        | "expire_behavior"
-        | "expire_grace_period"
-        | "user_limit"
-        | "privacy_level";
-    }
+    new: number;
+    old: number;
+    key:
+      | "afk_timeout"
+      | "mfa_level"
+      | "verification_level"
+      | "explicit_content_filter"
+      | "default_messagae_notifications"
+      | "prune_delete_days"
+      | "position"
+      | "bitrate"
+      | "rate_limit_per_user"
+      | "color"
+      | "max_uses"
+      | "uses"
+      | "max_age"
+      | "expire_behavior"
+      | "expire_grace_period"
+      | "user_limit"
+      | "privacy_level";
+  }
   | {
-      new: {
-        name: string;
-        id: bigint;
-      };
-      old: {
-        name: string;
-        id: bigint;
-      };
-      key: "$add" | "$remove";
-    }
-  | {
-      new: boolean;
-      old: boolean;
-      key: "widget_enabled" | "nsfw" | "hoist" | "mentionable" | "temporary" | "deaf" | "mute" | "enable_emoticons";
-    }
-  | {
-      new: DiscordOverwrite[];
-      old: DiscordOverwrite[];
-      key: "permission_overwrites";
-    }
-  | {
-      new: string | number;
-      old: string | number;
-      key: "type";
+    new: {
+      name: string;
+      id: bigint;
     };
+    old: {
+      name: string;
+      id: bigint;
+    };
+    key: "$add" | "$remove";
+  }
+  | {
+    new: boolean;
+    old: boolean;
+    key: "widget_enabled" | "nsfw" | "hoist" | "mentionable" | "temporary" | "deaf" | "mute" | "enable_emoticons";
+  }
+  | {
+    new: DiscordOverwrite[];
+    old: DiscordOverwrite[];
+    key: "permission_overwrites";
+  }
+  | {
+    new: string | number;
+    old: string | number;
+    key: "type";
+  };

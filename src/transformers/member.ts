@@ -43,7 +43,7 @@ export function transformMember(
   bot: Bot,
   payload: SnakeCasedPropertiesDeep<GuildMember>,
   guildId: bigint,
-  userId: bigint
+  userId: bigint,
 ): DiscordenoMember {
   return {
     id: userId,

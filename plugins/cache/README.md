@@ -1,9 +1,8 @@
 # cache-plugin
 
-This is an official plugin maintained by Discordeno. This plugin provides
-automatic caching. Remember Discordeno does not cache by default. This plugin is
-NOT recommended for big bot developers but this is useful for smaller bots who
-just want simple functionality.
+This is an official plugin maintained by Discordeno. This plugin provides automatic caching. Remember Discordeno does
+not cache by default. This plugin is NOT recommended for big bot developers but this is useful for smaller bots who just
+want simple functionality.
 
 ## Usage
 

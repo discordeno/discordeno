@@ -26,7 +26,7 @@ export function separateOverwrites(v: bigint) {
 
 export function transformChannel(
   bot: Bot,
-  payload: { channel: SnakeCasedPropertiesDeep<Channel> } & { guildId?: bigint }
+  payload: { channel: SnakeCasedPropertiesDeep<Channel> } & { guildId?: bigint },
 ): DiscordenoChannel {
   return {
     // UNTRANSFORMED STUFF HERE
@@ -45,7 +45,7 @@ export function transformChannel(
     lastPinTimestamp: payload.channel.last_pin_timestamp ? Date.parse(payload.channel.last_pin_timestamp) : undefined,
     permissionOverwrites: payload.channel.permission_overwrites
       ? // TODO: fix this
-        // @ts-ignore
+      // @ts-ignore
         payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow, o.deny, o.id, o.type))
       : [],
 
@@ -56,9 +56,8 @@ export function transformChannel(
       ? bot.transformers.snowflake(payload.channel.last_message_id)
       : undefined,
     ownerId: payload.channel.owner_id ? bot.transformers.snowflake(payload.channel.owner_id) : undefined,
-    applicationId: payload.channel.application_id
-      ? bot.transformers.snowflake(payload.channel.application_id)
-      : undefined,
+    applicationId: payload.channel.application_id ? bot.transformers.snowflake(payload.channel.application_id)
+    : undefined,
     parentId: payload.channel.parent_id ? bot.transformers.snowflake(payload.channel.parent_id) : undefined,
     // TODO: stage channels?
     voiceStates: payload.channel.type === ChannelTypes.GuildVoice ? new Collection() : undefined,

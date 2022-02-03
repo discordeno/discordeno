@@ -1,49 +1,44 @@
 ---
 sidebar_position: 3
 ---
+
 # Migrating
 
 ## Migrating from Discord.js
 
-This migration guide is not intended to discredit Discord.js authors/maintainers
-or Discord.js itself. In fact, Discord.js is the most popular Node.js library,
-admired and praised by a lot of JavaScript developers.
+This migration guide is not intended to discredit Discord.js authors/maintainers or Discord.js itself. In fact,
+Discord.js is the most popular Node.js library, admired and praised by a lot of JavaScript developers.
 
 ## Finding an Open-Source Discord Bot
 
-For the purposes of this guide, I wanted to find a moderation bot that is
-totally open source to show an example of how to convert the bot to Discordeno.
-Trying to find one was not easy as most bot's were not using the latest
-Discord.JS version 12. Trying to find one that was using TypeScript made it even
-more difficult. My next best solution was to find a moderation bot that was
-recently updated(showing it is maintained or recently built). The best one I
-could find was [Zodiac Bot](https://github.com/Nukestye/Zodiac).
+For the purposes of this guide, I wanted to find a moderation bot that is totally open source to show an example of how
+to convert the bot to Discordeno. Trying to find one was not easy as most bot's were not using the latest Discord.JS
+version 12. Trying to find one that was using TypeScript made it even more difficult. My next best solution was to find
+a moderation bot that was recently updated(showing it is maintained or recently built). The best one I could find was
+[Zodiac Bot](https://github.com/Nukestye/Zodiac).
 
 For the purposes of this guide, I will be using the current
 [latest commit](https://github.com/Nukestye/Zodiac/tree/213891a38af1b7ecbd068b661ef9062ab58cc818)
 
 ## Preparations
 
-- First, create a Discordeno Bot using the
-  [Generator Template](https://github.com/discordeno/template) I will name
-  it Zodiac.
+- First, create a Discordeno Bot using the [Generator Template](https://github.com/discordeno/template) I will name it
+  Zodiac.
 
 - Then `git clone https://github.com/Skillz4Killz/Zodiac.git`
 
-Now that I had the repository cloned, I could begin. Note that although the bot
-we are converting is built in JavaScript, I converted all code to TypeScript in
-this Guide as Discordeno is designed to be the best lib for TypeScript
+Now that I had the repository cloned, I could begin. Note that although the bot we are converting is built in
+JavaScript, I converted all code to TypeScript in this Guide as Discordeno is designed to be the best lib for TypeScript
 developers.
 
 Time to get started!
 
 ## Converting main.js (index file)
 
-The first thing is to convert the `main.js` file which would be the app.js or
-index.js file. This is the file that is run to start your bot. In this case, the
-bot developer chose `main.js`. In Deno, the initial file is named `mod.ts` so we
-can go ahead and opt for the Deno pattern. Note: there is already a `mod.ts`
-file created and prebuilt entirely using the Generator.
+The first thing is to convert the `main.js` file which would be the app.js or index.js file. This is the file that is
+run to start your bot. In this case, the bot developer chose `main.js`. In Deno, the initial file is named `mod.ts` so
+we can go ahead and opt for the Deno pattern. Note: there is already a `mod.ts` file created and prebuilt entirely using
+the Generator.
 
 Current Discord.JS Code:
 
@@ -73,9 +68,7 @@ fs.readdir("./src/events/", (err, files) => {
     const { once } = eventFunction;
     try {
       emitter[
-        once
-          ? "once"
-          : "on"
+        once ? "once" : "on"
       ](event, (...args) => eventFunction.run(...args));
     } catch (error) {
       console.error(error.stack);
@@ -175,22 +168,14 @@ startBot({
 });
 ```
 
-Something we haven't converted yet from the `main.js` files is the event
-listeners. To do that, we will open up the events folder and find the
-corresponding event or create it if necessary. In this case, we have the `ready`
-event and there is already a `ready.ts` file. We can just use that.
+Something we haven't converted yet from the `main.js` files is the event listeners. To do that, we will open up the
+events folder and find the corresponding event or create it if necessary. In this case, we have the `ready` event and
+there is already a `ready.ts` file. We can just use that.
 
 In our `ready.ts` file we can add the `ready` event listener.
 
 ```ts
-import {
-  ActivityType,
-  botCache,
-  cache,
-  chooseRandom,
-  editBotsStatus,
-  StatusTypes,
-} from "../../deps.ts";
+import { ActivityType, botCache, cache, chooseRandom, editBotsStatus, StatusTypes } from "../../deps.ts";
 import { registerTasks } from "./../utils/taskHelper.ts";
 
 botCache.eventHandlers.ready = function () {
@@ -225,19 +210,15 @@ botCache.eventHandlers.ready = function () {
 };
 ```
 
-To understand this code, we are setting a function to be run when the bot is
-`ready`. Then the bot will edit the bots status every 5 seconds. Notice, that
-Discordeno provides a nice clean util function to choose a random item from an
-array. You also have beautiful enums provided that prevent you from making any
-typos/mistakes.
+To understand this code, we are setting a function to be run when the bot is `ready`. Then the bot will edit the bots
+status every 5 seconds. Notice, that Discordeno provides a nice clean util function to choose a random item from an
+array. You also have beautiful enums provided that prevent you from making any typos/mistakes.
 
-We have now converted the entire `main.js` file, in a matter of seconds. The
-Discordeno official generator took care of the majority of workload and we just
-modified the `ready.ts` file.
+We have now converted the entire `main.js` file, in a matter of seconds. The Discordeno official generator took care of
+the majority of workload and we just modified the `ready.ts` file.
 
-`Note:` I did remove some generally well known "bad practices" such as global
-vars and such. Overall, you will see the functionality of the project will not
-change as we progress through this guide.
+`Note:` I did remove some generally well known "bad practices" such as global vars and such. Overall, you will see the
+functionality of the project will not change as we progress through this guide.
 
 ## Converting Commands
 
@@ -330,9 +311,8 @@ createCommand({
 });
 ```
 
-Awesome, that is a full command converted from Discord.JS to Discordeno. See how
-easy it is! Let's convert one more command to see how to really take full
-advantage of Discordeno template and have something amazing.
+Awesome, that is a full command converted from Discord.JS to Discordeno. See how easy it is! Let's convert one more
+command to see how to really take full advantage of Discordeno template and have something amazing.
 
 Discord.JS Kick Command Version
 
@@ -455,9 +435,7 @@ createCommand({
       .addField("Reason >", args.reason)
       .addField("Time", message.timestamp.toString());
 
-    const reportchannel = message.guild?.channels.find((channel) =>
-      channel.name === "report"
-    );
+    const reportchannel = message.guild?.channels.find((channel) => channel.name === "report");
     if (!reportchannel) {
       return message.reply("*`Report channel cannot be found!`*");
     }
@@ -477,20 +455,16 @@ interface KickArgs {
 }
 ```
 
-Let's take a minute and explain the differences here. The first thing you will
-probably notice is different is the `arguments` property. Discordeno provides
-the `arguments` property because it provides argument
-handling/parsing/validating internally. You don't need to be splitting the
-message content or going through and validating it yourself. All you do is tell
-Discordeno that you want a member and a reason. It will do the magic and hard
-work to get you that data before you even run the command. You just do
-`args.member` and you have access to the full member object. There are a lot
-more powerful aspects to Discordeno like arguments. Keep diving in and you will
-find all the wonderful tools available to give you the best developer experience
-possible.
+Let's take a minute and explain the differences here. The first thing you will probably notice is different is the
+`arguments` property. Discordeno provides the `arguments` property because it provides argument
+handling/parsing/validating internally. You don't need to be splitting the message content or going through and
+validating it yourself. All you do is tell Discordeno that you want a member and a reason. It will do the magic and hard
+work to get you that data before you even run the command. You just do `args.member` and you have access to the full
+member object. There are a lot more powerful aspects to Discordeno like arguments. Keep diving in and you will find all
+the wonderful tools available to give you the best developer experience possible.
 
 ### Need More Examples/Help
 
-If you still need more help converting other aspects of your bot please contact
-me at [Discord](https://discord.com/invite/5vBgXk3UcZ). I will continue adding
-more examples to this guide as more people request them.
+If you still need more help converting other aspects of your bot please contact me at
+[Discord](https://discord.com/invite/5vBgXk3UcZ). I will continue adding more examples to this guide as more people
+request them.

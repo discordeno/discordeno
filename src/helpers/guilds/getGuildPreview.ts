@@ -6,7 +6,7 @@ export async function getGuildPreview(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<GuildPreview>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_PREVIEW(guildId)
+    bot.constants.endpoints.GUILD_PREVIEW(guildId),
   );
 
   return {

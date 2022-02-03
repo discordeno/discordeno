@@ -13,48 +13,48 @@ export function transformEmbed(bot: Bot, payload: SnakeCasedPropertiesDeep<Embed
     color: payload.color,
     footer: payload.footer
       ? {
-          text: payload.footer.text,
-          iconUrl: payload.footer.icon_url,
-          proxyIconUrl: payload.footer.proxy_icon_url,
-        }
+        text: payload.footer.text,
+        iconUrl: payload.footer.icon_url,
+        proxyIconUrl: payload.footer.proxy_icon_url,
+      }
       : undefined,
     image: payload.image
       ? {
-          url: payload.image.url,
-          proxyUrl: payload.image.proxy_url,
-          height: payload.image.height,
-          width: payload.image.width,
-        }
+        url: payload.image.url,
+        proxyUrl: payload.image.proxy_url,
+        height: payload.image.height,
+        width: payload.image.width,
+      }
       : undefined,
     thumbnail: payload.thumbnail
       ? {
-          url: payload.thumbnail.url,
-          proxyUrl: payload.thumbnail.proxy_url,
-          height: payload.thumbnail.height,
-          width: payload.thumbnail.width,
-        }
+        url: payload.thumbnail.url,
+        proxyUrl: payload.thumbnail.proxy_url,
+        height: payload.thumbnail.height,
+        width: payload.thumbnail.width,
+      }
       : undefined,
     video: payload.video
       ? {
-          url: payload.video.url,
-          proxyUrl: payload.video.proxy_url,
-          height: payload.video.height,
-          width: payload.video.width,
-        }
+        url: payload.video.url,
+        proxyUrl: payload.video.proxy_url,
+        height: payload.video.height,
+        width: payload.video.width,
+      }
       : undefined,
     provider: payload.provider
       ? {
-          name: payload.provider.name,
-          url: payload.provider.url,
-        }
+        name: payload.provider.name,
+        url: payload.provider.url,
+      }
       : undefined,
     author: payload.author
       ? {
-          name: payload.author.name,
-          url: payload.author.url,
-          iconUrl: payload.author.icon_url,
-          proxyIconUrl: payload.author.proxy_icon_url,
-        }
+        name: payload.author.name,
+        url: payload.author.url,
+        iconUrl: payload.author.icon_url,
+        proxyIconUrl: payload.author.proxy_icon_url,
+      }
       : undefined,
     fields: payload.fields?.map((field) => ({
       name: field.name,

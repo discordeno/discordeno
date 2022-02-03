@@ -6,7 +6,7 @@ export async function removeReaction(
   channelId: bigint,
   messageId: bigint,
   reaction: string,
-  options?: { userId?: bigint }
+  options?: { userId?: bigint },
 ) {
   if (reaction.startsWith("<:")) {
     reaction = reaction.substring(2, reaction.length - 1);
@@ -19,11 +19,11 @@ export async function removeReaction(
     "delete",
     options?.userId
       ? bot.constants.endpoints.CHANNEL_MESSAGE_REACTION_USER(
-          channelId,
-          messageId,
-          encodeURIComponent(reaction),
-          options.userId
-        )
-      : bot.constants.endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, encodeURIComponent(reaction))
+        channelId,
+        messageId,
+        encodeURIComponent(reaction),
+        options.userId,
+      )
+      : bot.constants.endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, encodeURIComponent(reaction)),
   );
 }

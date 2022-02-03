@@ -9,7 +9,7 @@ export async function followChannel(bot: Bot, sourceChannelId: bigint, targetCha
     bot.constants.endpoints.CHANNEL_FOLLOW(sourceChannelId),
     {
       webhook_channel_id: targetChannelId,
-    }
+    },
   );
 
   return bot.transformers.snowflake(data.webhook_id);

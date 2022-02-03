@@ -1,9 +1,4 @@
-import {
-  AllowedMentionsTypes,
-  BotWithCache,
-  ChannelTypes,
-  PermissionStrings,
-} from "../../deps.ts";
+import { AllowedMentionsTypes, BotWithCache, ChannelTypes, PermissionStrings } from "../../deps.ts";
 import { validateComponents } from "../components.ts";
 import { requireBotChannelPermissions } from "../permissions.ts";
 

@@ -1,5 +1,5 @@
 import { banCounters } from "../constants.ts";
-import { assertExists, assertEquals } from "../deps.ts";
+import { assertEquals, assertExists } from "../deps.ts";
 import { bot, guild } from "../mod.ts";
 import { delayUntil } from "../utils.ts";
 
@@ -40,11 +40,11 @@ Deno.test({
         bot.events.guildBanAdd = function (_, user) {
           banCounters.set(user.id, true);
         };
-    
+
         await bot.helpers.banMember(guild.id, ianID, { reason: "Blame Wolf" });
-    
+
         await delayUntil(10000, () => banCounters.get(ianID));
-    
+
         assertEquals(banCounters.get(wolfID), true);
       },
     });
@@ -56,7 +56,7 @@ Deno.test({
         assertEquals(bans.size > 1, true);
       },
     });
-    
+
     await t.step({
       name: "[member] fetch a single member by id",
       fn: async () => {
@@ -64,30 +64,26 @@ Deno.test({
           userIds: [bot.id],
           limit: 1,
         });
-    
+
         // Assertions
         assertExists(bot.members.get(BigInt(`${bot.id}${guild.id}`)));
       },
     });
-    
+
     await t.step({
       name: "[member] unban member from guild",
       fn: async () => {
         bot.events.guildBanRemove = function (bot, user, guildId) {
           banCounters.set(user.id, false);
         };
-    
+
         await Promise.all([bot.helpers.unbanMember(guild.id, wolfID), bot.helpers.unbanMember(guild.id, ianID)]);
-    
+
         await delayUntil(10000, () => !banCounters.get(wolfID) && !banCounters.get(ianID));
-    
+
         assertEquals(banCounters.get(wolfID), false);
         assertEquals(banCounters.get(ianID), false);
       },
     });
   },
 });
-
-
-
-

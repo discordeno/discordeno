@@ -32,7 +32,7 @@ export function createRequestBody(rest: RestManager, queuedRequest: { request: R
       form.append(
         `file${i}`,
         (queuedRequest.payload.body.file as FileContent[])[i].blob,
-        (queuedRequest.payload.body.file as FileContent[])[i].name
+        (queuedRequest.payload.body.file as FileContent[])[i].name,
       );
     }
 

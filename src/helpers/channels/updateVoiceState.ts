@@ -42,6 +42,6 @@ export async function updateUserVoiceState(bot: Bot, guildId: bigint, options: U
       channel_id: options.channelId,
       suppress: options.suppress,
       user_id: options.userId,
-    }
+    },
   );
 }

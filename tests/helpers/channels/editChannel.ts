@@ -21,7 +21,7 @@ export async function editChannelTests(guildId: bigint, options: { reason?: stri
     {
       name: "new-name",
     },
-    options.reason
+    options.reason,
   );
 
   // wait to give it time for events to process

@@ -7,11 +7,11 @@ import type { ExecuteWebhook } from "../../types/webhooks/executeWebhook.ts";
 export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: string, options: ExecuteWebhook) {
   const allowedMentions = options.allowedMentions
     ? {
-        parse: options.allowedMentions.parse,
-        repliedUser: options.allowedMentions.repliedUser,
-        users: options.allowedMentions.users?.map((id) => id.toString()),
-        roles: options.allowedMentions.roles?.map((id) => id.toString()),
-      }
+      parse: options.allowedMentions.parse,
+      repliedUser: options.allowedMentions.repliedUser,
+      users: options.allowedMentions.users?.map((id) => id.toString()),
+      roles: options.allowedMentions.roles?.map((id) => id.toString()),
+    }
     : { parse: [] };
 
   const result = await bot.rest.runMethod<Message>(
@@ -31,7 +31,7 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
       embeds: options.embeds,
       allowed_mentions: allowedMentions,
       component: options.components,
-    }
+    },
   );
   if (!options.wait) return;
 

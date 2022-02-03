@@ -8,10 +8,10 @@ export async function getDiscoveryCategories(bot: Bot) {
   const result = await bot.rest.runMethod<DiscoveryCategory[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.DISCOVERY_CATEGORIES
+    bot.constants.endpoints.DISCOVERY_CATEGORIES,
   );
 
   return new Collection<number, SnakeCasedPropertiesDeep<DiscoveryCategory>>(
-    result.map((category) => [category.id, category])
+    result.map((category) => [category.id, category]),
   );
 }

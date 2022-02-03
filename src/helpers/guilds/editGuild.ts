@@ -20,7 +20,7 @@ export async function editGuild(bot: Bot, guildId: bigint, options: ModifyGuild,
     bot.rest,
     "patch",
     bot.constants.endpoints.GUILDS_BASE(guildId),
-    options
+    options,
   );
 
   return bot.transformers.guild(bot, {

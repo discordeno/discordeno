@@ -1,5 +1,5 @@
 import {
-Bot,
+  Bot,
   Channel,
   Collection,
   GuildBanAddRemove,
@@ -85,18 +85,14 @@ export function setupCacheRemovals<B extends Bot>(bot: BotWithCache<B>) {
     bot.events.messageDelete(bot, {
       id,
       channelId: bot.transformers.snowflake(payload.channel_id),
-      guildId: payload.guild_id
-        ? bot.transformers.snowflake(payload.guild_id)
-        : undefined,
+      guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
     }, message);
     bot.messages.delete(id);
   };
 
   bot.handlers.MESSAGE_DELETE_BULK = function (_, data, shardId) {
     const payload = data.d as SnakeCasedPropertiesDeep<MessageDeleteBulk>;
-    payload.ids.forEach((id) =>
-      bot.messages.delete(bot.transformers.snowflake(id))
-    );
+    payload.ids.forEach((id) => bot.messages.delete(bot.transformers.snowflake(id)));
     MESSAGE_DELETE_BULK(bot, data, shardId);
   };
 

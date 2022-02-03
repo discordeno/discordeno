@@ -14,10 +14,10 @@ export function transformComponent(bot: Bot, payload: SnakeCasedPropertiesDeep<C
     label: payload.label,
     emoji: payload.emoji
       ? {
-          id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined,
-          name: payload.emoji.name,
-          animated: payload.emoji.animated,
-        }
+        id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined,
+        name: payload.emoji.name,
+        animated: payload.emoji.animated,
+      }
       : undefined,
     url: payload.url,
     options: payload.options?.map((option) => ({
@@ -26,10 +26,10 @@ export function transformComponent(bot: Bot, payload: SnakeCasedPropertiesDeep<C
       description: option.description,
       emoji: option.emoji
         ? {
-            id: option.emoji.id ? bot.transformers.snowflake(option.emoji.id) : undefined,
-            name: option.emoji.name,
-            animated: option.emoji.animated,
-          }
+          id: option.emoji.id ? bot.transformers.snowflake(option.emoji.id) : undefined,
+          name: option.emoji.name,
+          animated: option.emoji.animated,
+        }
         : undefined,
       default: option.default,
     })),

@@ -7,7 +7,7 @@ export async function getChannelInvites(bot: Bot, channelId: bigint) {
   const result = await bot.rest.runMethod<InviteMetadata[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.CHANNEL_INVITES(channelId)
+    bot.constants.endpoints.CHANNEL_INVITES(channelId),
   );
 
   return new Collection(
@@ -20,6 +20,6 @@ export async function getChannelInvites(bot: Bot, channelId: bigint) {
         temporary: invite.temporary,
         createdAt: Date.parse(invite.created_at),
       },
-    ])
+    ]),
   );
 }

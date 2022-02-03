@@ -4,7 +4,7 @@ import { WelcomeScreen } from "../types/guilds/welcomeScreen.ts";
 
 export function transformWelcomeScreen(
   bot: Bot,
-  payload: SnakeCasedPropertiesDeep<WelcomeScreen>
+  payload: SnakeCasedPropertiesDeep<WelcomeScreen>,
 ): DiscordenoWelcomeScreen {
   return {
     description: payload.description ?? undefined,

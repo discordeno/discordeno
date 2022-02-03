@@ -5,6 +5,6 @@ export async function removeAllReactions(bot: Bot, channelId: bigint, messageId:
   await bot.rest.runMethod<undefined>(
     bot.rest,
     "delete",
-    bot.constants.endpoints.CHANNEL_MESSAGE_REACTIONS(channelId, messageId)
+    bot.constants.endpoints.CHANNEL_MESSAGE_REACTIONS(channelId, messageId),
   );
 }

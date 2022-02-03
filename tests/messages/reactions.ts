@@ -1,13 +1,13 @@
 import { Bot } from "../../mod.ts";
 import { reactionCounters } from "../constants.ts";
-import { assertExists, assertEquals } from "../deps.ts";
+import { assertEquals, assertExists } from "../deps.ts";
 // import {
 //   addReactionTest,
 //   removeReactionTest,
 //   removeAllReactionTests,
 //   removeReactionEmojiTest,
 // } from "../helpers/messages/reactions.ts";
-import { bot, guild, channel } from "../mod.ts";
+import { bot, channel, guild } from "../mod.ts";
 import { delayUntil } from "../utils.ts";
 
 export async function addReactionTest(

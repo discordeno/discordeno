@@ -7,7 +7,7 @@ export async function editWebhookMessage(
   bot: Bot,
   webhookId: bigint,
   webhookToken: string,
-  options: EditWebhookMessage & { messageId?: bigint; threadId?: bigint }
+  options: EditWebhookMessage & { messageId?: bigint; threadId?: bigint },
 ) {
   let url = options.messageId
     ? bot.constants.endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, options.messageId)
@@ -24,11 +24,11 @@ export async function editWebhookMessage(
     file: options.file,
     allowed_mentions: options.allowedMentions
       ? {
-          parse: options.allowedMentions.parse,
-          roles: options.allowedMentions.roles?.map((id) => id.toString()),
-          users: options.allowedMentions.users?.map((id) => id.toString()),
-          replied_user: options.allowedMentions.repliedUser,
-        }
+        parse: options.allowedMentions.parse,
+        roles: options.allowedMentions.roles?.map((id) => id.toString()),
+        users: options.allowedMentions.users?.map((id) => id.toString()),
+        replied_user: options.allowedMentions.repliedUser,
+      }
       : undefined,
     attachments: options.attachments?.map((attachment) => ({
       id: attachment.id.toString(),
@@ -56,7 +56,7 @@ export async function editWebhookMessage(
           };
         }
 
-        if (subcomponent.type === MessageComponentTypes.SelectMenu)
+        if (subcomponent.type === MessageComponentTypes.SelectMenu) {
           return {
             type: subcomponent.type,
             custom_id: subcomponent.customId,
@@ -69,28 +69,28 @@ export async function editWebhookMessage(
               description: option.description,
               emoji: option.emoji
                 ? {
-                    id: option.emoji.id?.toString(),
-                    name: option.emoji.name,
-                    animated: option.emoji.animated,
-                  }
+                  id: option.emoji.id?.toString(),
+                  name: option.emoji.name,
+                  animated: option.emoji.animated,
+                }
                 : undefined,
               default: option.default,
             })),
           };
+        }
 
         return {
           type: subcomponent.type,
           custom_id: subcomponent.customId,
           label: subcomponent.label,
           style: subcomponent.style,
-          emoji:
-            "emoji" in subcomponent && subcomponent.emoji
-              ? {
-                  id: subcomponent.emoji.id?.toString(),
-                  name: subcomponent.emoji.name,
-                  animated: subcomponent.emoji.animated,
-                }
-              : undefined,
+          emoji: "emoji" in subcomponent && subcomponent.emoji
+            ? {
+              id: subcomponent.emoji.id?.toString(),
+              name: subcomponent.emoji.name,
+              animated: subcomponent.emoji.animated,
+            }
+            : undefined,
           url: "url" in subcomponent ? subcomponent.url : undefined,
           disabled: "disabled" in subcomponent ? subcomponent.disabled : undefined,
         };

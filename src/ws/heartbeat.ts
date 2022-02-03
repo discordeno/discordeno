@@ -19,7 +19,7 @@ export async function heartbeat(gateway: GatewayManager, shardId: number, interv
     JSON.stringify({
       op: GatewayOpcodes.Heartbeat,
       d: shard.previousSequenceNumber,
-    })
+    }),
   );
 
   shard.heartbeat.keepAlive = true;
@@ -54,7 +54,7 @@ export async function heartbeat(gateway: GatewayManager, shardId: number, interv
       JSON.stringify({
         op: GatewayOpcodes.Heartbeat,
         d: currentShard.previousSequenceNumber,
-      })
+      }),
     );
   }, shard.heartbeat.interval);
 }
