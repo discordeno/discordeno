@@ -21,6 +21,8 @@ jobs:
           deno-version: ${{ matrix.deno }}
       - name: Cache dependencies
         run: deno cache mod.ts
+      - name: Check Formatting
+        run: deno fmt --check
       - name: Prepare configs file
         run: cp configs.example.ts configs.ts
       - name: Run test script for maintainers
