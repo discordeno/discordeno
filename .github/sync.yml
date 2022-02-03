@@ -1,4 +1,4 @@
-discordeno/site:
+discordeno/guide:
   - source: site/
     dest: ./
     exclude: |
