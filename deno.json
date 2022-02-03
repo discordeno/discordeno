@@ -1,0 +1,10 @@
+{
+  "fmt": {
+    "files": {
+      "exclude": ["benchmarks/", "site/node_modules/", "site/build", "site/.docusaurus", "site/.cache-loader"]
+    },
+    "options": {
+      "lineWidth": 120
+    }
+  }
+}
