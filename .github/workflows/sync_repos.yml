@@ -1,9 +1,10 @@
-name: Site Sync
+name: Sync Repos
 
 on:
   push:
     paths:
       - "site/**"
+      - "template/**"
 
 jobs:
   sync:
@@ -14,7 +15,7 @@ jobs:
       - name: Run GitHub File Sync
         uses: BetaHuhn/repo-file-sync-action@v1
         with:
-          GH_PAT: ${{ secrets.DOCS_SYNC }}
+          GH_PAT: ${{ secrets.REPO_SYNC }}
           GIT_EMAIL: to@itoh.at
           GIT_USERNAME: itohatweb
           SKIP_PR: true
