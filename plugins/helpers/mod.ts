@@ -24,11 +24,16 @@ import {
 import { disconnectMember } from "./src/disconnectMember.ts";
 import { getMembersPaginated } from "./src/getMembersPaginated.ts";
 import { moveMember } from "./src/moveMember.ts";
+import { sendTextMessage } from "./src/sendTextMessage.ts";
 
 export interface BotWithHelpersPlugin extends Bot {
   helpers: FinalHelpers & {
     sendDirectMessage: (
       userId: bigint,
+      content: string | CreateMessage
+    ) => Promise<DiscordenoMessage>;
+    sendTextMessage: (
+      channelId: bigint,
       content: string | CreateMessage
     ) => Promise<DiscordenoMessage>;
     suppressEmbeds: (
@@ -76,6 +81,10 @@ export function enableHelpersPlugin(rawBot: Bot): BotWithHelpersPlugin {
     userId: bigint,
     content: string | CreateMessage
   ) => sendDirectMessage(bot, userId, content);
+  bot.helpers.sendTextMessage = (
+    channelId: bigint,
+    content: string | CreateMessage
+  ) => sendTextMessage(bot, channelId, content);
   bot.helpers.suppressEmbeds = (channelId: bigint, messageId: bigint) =>
     suppressEmbeds(bot, channelId, messageId);
   bot.helpers.archiveThread = (threadId: bigint) =>
