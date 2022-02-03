@@ -11,32 +11,56 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: "Easy to Use",
+    title: "REST does not rest!",
     image: "/img/undraw_docusaurus_mountain.svg",
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and used to get your website up and running
-        quickly.
+        <ul>
+          <li>Restart without losing any requests.</li>
+          <li>Prevent Invalid 1 Hour Discord Bans.</li>
+          <li>Freedom from global rate limit errors.</li>
+          <li>Single source of contact to API.</li>
+          <li>Beautiful analytics plugins.</li>
+          <li>Scalability! Scalability! Scalability!</li>
+        </ul>
       </>
     ),
   },
   {
-    title: "Focus on What Matters",
+    title: "Zero Downtime Updates",
     image: "/img/undraw_docusaurus_tree.svg",
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go ahead and move your docs into the{" "}
-        <code>docs</code> directory.
+        <ul>
+          <li>Instant bot restarts/updates.</li>
+          <li>
+            Automated sharding &{" "}
+            <strong>
+              <i>re</i>
+            </strong>
+            sharding.
+          </li>
+          <li>Scale horizontally and save money!</li>
+          <li>Stop losing events during reboots!</li>
+          <li>Max efficiency with Shards/Worker!</li>
+          <li>Scalability! Scalability! Scalability!</li>
+        </ul>
       </>
     ),
   },
   {
-    title: "Powered by React",
+    title: "No More Forks!",
     image: "/img/undraw_docusaurus_react.svg",
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can be extended while reusing the same
-        header and footer.
+        <ul>
+          <li>100% customizable without forking!</li>
+          <li>By default, the lib caches NOTHING!</li>
+          <li>100% Custom cache support.</li>
+          <li>Cache only the props your bot needs.</li>
+          <li>Customize any internal function!</li>
+          <li>Scalability! Scalability! Scalability!</li>
+        </ul>
       </>
     ),
   },
@@ -46,11 +70,7 @@ function Feature({ title, image, description }: FeatureItem) {
   return (
     <div className={clsx("col col--4")}>
       <div className="text--center">
-        <img
-          className={styles.featureSvg}
-          alt={title}
-          src={useBaseUrl(image)}
-        />
+        <img className={styles.featureSvg} alt={title} src={useBaseUrl(image)} />
       </div>
       <div className="text--center padding-horiz--md">
         <h3>{title}</h3>
@@ -65,7 +85,9 @@ export default function HomepageFeatures(): JSX.Element {
     <section className={styles.features}>
       <div className="container">
         <div className="row">
-          {FeatureList.map((props, idx) => <Feature key={idx} {...props} />)}
+          {FeatureList.map((props, idx) => (
+            <Feature key={idx} {...props} />
+          ))}
         </div>
       </div>
     </section>

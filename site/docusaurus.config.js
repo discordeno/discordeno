@@ -7,7 +7,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Discordeno",
-  tagline: "A Highly scalable Discord Library",
+  tagline: "Making Scalable Bots Easy!",
   url: "https://discordeno.mod.land",
   baseUrl: "/",
   onBrokenLinks: "throw",
