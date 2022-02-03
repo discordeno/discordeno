@@ -3,7 +3,7 @@ name: Test Docusaurus build
 on:
   pull_request:
     paths:
-      - "docs/**"
+      - "site/**"
 
 jobs:
   test-deploy:
