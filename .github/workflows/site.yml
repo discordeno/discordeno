@@ -1,9 +1,9 @@
-name: Docs
+name: Site Sync
 
 on:
   push:
     paths:
-      - "docs/**"
+      - "site/**"
 
 jobs:
   sync:
