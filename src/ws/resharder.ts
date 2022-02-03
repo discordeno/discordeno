@@ -58,7 +58,7 @@ export async function resharder(oldGateway: GatewayManager) {
 
       // STOP TIMER
       clearInterval(timer);
-      await resharderCloseOldShards(oldGateway);
+      await gateway.resharderCloseOldShards(oldGateway);
       gateway.debug("[Resharding] Complete.");
       resolve(gateway);
     }, 30000);
