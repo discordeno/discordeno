@@ -1,0 +1,24 @@
+{
+  "deno.enable": true,
+  "deno.lint": true,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true,
+    "source.fixAll": true
+  },
+  "editor.defaultFormatter": "denoland.vscode-deno",
+  "deno.suggest.imports.hosts": {
+    "https://deno.land": true
+  },
+  "discord.enabled": true,
+  "cSpell.words": [
+    "denoland",
+    "Discordeno",
+    "Kwik",
+    "Loglevels",
+    "msgpack",
+    "Slowmode",
+    "upsert"
+  ],
+  "deno.unstable": true
+}
