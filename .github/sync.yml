@@ -1,5 +1,5 @@
-discordeno/guide:
-  - source: docs/
+discordeno/site:
+  - source: site/
     dest: ./
     exclude: |
       README.md
