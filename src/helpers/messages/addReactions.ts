@@ -6,7 +6,7 @@ export async function addReactions(
   channelId: bigint,
   messageId: bigint,
   reactions: string[],
-  ordered = false
+  ordered = false,
 ) {
   if (!ordered) {
     await Promise.all(reactions.map((reaction) => bot.helpers.addReaction(channelId, messageId, reaction)));

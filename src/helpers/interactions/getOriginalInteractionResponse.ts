@@ -7,7 +7,7 @@ export async function getOriginalInteractionResponse(bot: Bot, token: string) {
   const result = await bot.rest.runMethod<Message>(
     bot.rest,
     "get",
-    bot.constants.endpoints.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token)
+    bot.constants.endpoints.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token),
   );
 
   return bot.transformers.message(bot, result);

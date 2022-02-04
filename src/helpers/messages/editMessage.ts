@@ -5,7 +5,7 @@ import { MessageComponentTypes } from "../../types/messages/components/messageCo
 
 /** Edit the message. */
 export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: EditMessage) {
-    const result = await bot.rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<Message>(
     bot.rest,
     "patch",
     bot.constants.endpoints.CHANNEL_MESSAGE(channelId, messageId),
@@ -20,43 +20,43 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
         color: embed.color,
         footer: embed.footer
           ? {
-              text: embed.footer.text,
-              icon_url: embed.footer.iconUrl,
-              proxy_icon_url: embed.footer.proxyIconUrl,
-            }
+            text: embed.footer.text,
+            icon_url: embed.footer.iconUrl,
+            proxy_icon_url: embed.footer.proxyIconUrl,
+          }
           : undefined,
         image: embed.image
           ? {
-              url: embed.image.url,
-              proxy_url: embed.image.proxyUrl,
-              height: embed.image.height,
-              width: embed.image.width,
-            }
+            url: embed.image.url,
+            proxy_url: embed.image.proxyUrl,
+            height: embed.image.height,
+            width: embed.image.width,
+          }
           : undefined,
         thumbnail: embed.thumbnail
           ? {
-              url: embed.thumbnail.url,
-              proxy_url: embed.thumbnail.proxyUrl,
-              height: embed.thumbnail.height,
-              width: embed.thumbnail.width,
-            }
+            url: embed.thumbnail.url,
+            proxy_url: embed.thumbnail.proxyUrl,
+            height: embed.thumbnail.height,
+            width: embed.thumbnail.width,
+          }
           : undefined,
         video: embed.video
           ? {
-              url: embed.video.url,
-              proxy_url: embed.video.proxyUrl,
-              height: embed.video.height,
-              width: embed.video.width,
-            }
+            url: embed.video.url,
+            proxy_url: embed.video.proxyUrl,
+            height: embed.video.height,
+            width: embed.video.width,
+          }
           : undefined,
         provider: embed.provider,
         author: embed.author
           ? {
-              name: embed.author.name,
-              url: embed.author.url,
-              icon_url: embed.author.iconUrl,
-              proxy_icon_url: embed.author.proxyIconUrl,
-            }
+            name: embed.author.name,
+            url: embed.author.url,
+            icon_url: embed.author.iconUrl,
+            proxy_icon_url: embed.author.proxyIconUrl,
+          }
           : undefined,
         fields: embed.fields,
       })),
@@ -91,8 +91,8 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
               max_length: subcomponent.maxLength,
             };
           }
-          
-          if (subcomponent.type === MessageComponentTypes.SelectMenu)
+
+          if (subcomponent.type === MessageComponentTypes.SelectMenu) {
             return {
               type: subcomponent.type,
               custom_id: subcomponent.customId,
@@ -105,34 +105,34 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
                 description: option.description,
                 emoji: option.emoji
                   ? {
-                      id: option.emoji.id?.toString(),
-                      name: option.emoji.name,
-                      animated: option.emoji.animated,
-                    }
+                    id: option.emoji.id?.toString(),
+                    name: option.emoji.name,
+                    animated: option.emoji.animated,
+                  }
                   : undefined,
                 default: option.default,
               })),
             };
+          }
 
           return {
             type: subcomponent.type,
             custom_id: subcomponent.customId,
             label: subcomponent.label,
             style: subcomponent.style,
-            emoji:
-              "emoji" in subcomponent && subcomponent.emoji
-                ? {
-                    id: subcomponent.emoji.id?.toString(),
-                    name: subcomponent.emoji.name,
-                    animated: subcomponent.emoji.animated,
-                  }
-                : undefined,
+            emoji: "emoji" in subcomponent && subcomponent.emoji
+              ? {
+                id: subcomponent.emoji.id?.toString(),
+                name: subcomponent.emoji.name,
+                animated: subcomponent.emoji.animated,
+              }
+              : undefined,
             url: "url" in subcomponent ? subcomponent.url : undefined,
             disabled: "disabled" in subcomponent ? subcomponent.disabled : undefined,
           };
         }),
       })),
-    }
+    },
   );
 
   return bot.transformers.message(bot, result);

@@ -8,12 +8,14 @@ export async function runMethod<T = any>(
   url: string,
   body?: unknown,
   retryCount = 0,
-  bucketId?: string
+  bucketId?: string,
 ): Promise<SnakeCasedPropertiesDeep<T>> {
   rest.debug(
-    `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${JSON.stringify(
-      body
-    )}`
+    `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${
+      JSON.stringify(
+        body,
+      )
+    }`,
   );
 
   const errorStack = new Error("Location:");
@@ -23,10 +25,10 @@ export async function runMethod<T = any>(
   // For proxies we don't need to do any of the legwork so we just forward the request
   if (!url.startsWith(`${BASE_URL}/v${API_VERSION}`) && !url.startsWith(IMAGE_BASE_URL)) {
     const result = await fetch(url, {
-      body: JSON.stringify(body || {}),
+      body: body ? JSON.stringify(body) : undefined,
       headers: {
-        "Authorization": rest.secretKey,
-        "Content-Type": "application/json"
+        Authorization: rest.secretKey,
+        "Content-Type": "application/json",
       },
       method: method.toUpperCase(),
     }).catch((error) => {
@@ -36,7 +38,7 @@ export async function runMethod<T = any>(
     });
 
     if (!result.ok) {
-      errorStack.message = result.statusText as Error['message'];
+      errorStack.message = result.statusText as Error["message"];
       console.error(`Error: ${errorStack.message}`);
       throw errorStack;
     }
@@ -62,7 +64,7 @@ export async function runMethod<T = any>(
         bucketId,
         body: body as Record<string, unknown> | undefined,
         retryCount,
-      }
+      },
     );
   });
 }

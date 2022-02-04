@@ -1,8 +1,5 @@
 import { BotWithCache, PermissionStrings } from "../deps.ts";
-import {
-  requireBotChannelPermissions,
-  requireBotGuildPermissions,
-} from "./permissions.ts";
+import { requireBotChannelPermissions, requireBotGuildPermissions } from "./permissions.ts";
 
 export default function editMember(bot: BotWithCache) {
   const editMemberOld = bot.helpers.editMember;

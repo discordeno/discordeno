@@ -1,19 +1,17 @@
 import { Bot } from "../bot.ts";
 import { ChannelTypes } from "../types/channels/channelTypes.ts";
 import {
-  InteractionData,
-  ButtonData,
-  InteractionTypes,
+  Attachment,
   Interaction,
-  SelectMenuData,
-  InteractionDataResolved,
-  MessageComponentTypes,
   InteractionDataOption,
+  InteractionDataResolved,
+  InteractionTypes,
   MessageComponents,
+  MessageComponentTypes,
 } from "../types/mod.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { Collection } from "../util/collection.ts";
-import { DiscordenoChannel } from "./channel.ts";
+import { DiscordenoAttachment } from "./attachment.ts";
 import { DiscordenoMember, DiscordenoUser } from "./member.ts";
 import { DiscordenoMessage } from "./message.ts";
 import { DiscordenoRole } from "./role.ts";
@@ -40,19 +38,19 @@ export function transformInteraction(bot: Bot, payload: SnakeCasedPropertiesDeep
     // @ts-ignore figure this out
     data: payload.data
       ? {
-          componentType: payload.data.component_type,
-          customId: payload.data.custom_id,
-          components: payload.data.components,
-          values: payload.data.values,
-          id: payload.data.id ? bot.transformers.snowflake(payload.data.id) : undefined,
-          name: payload.data.name,
-          resolved: payload.data.resolved
-            ? transformInteractionDataResolved(bot, payload.data.resolved, guildId)
-            : undefined,
-          // @ts-ignore TODO: figure this out
-          options: payload.data.options,
-          targetId: payload.data.target_id ? bot.transformers.snowflake(payload.data.target_id) : undefined,
-        }
+        componentType: payload.data.component_type,
+        customId: payload.data.custom_id,
+        components: payload.data.components,
+        values: payload.data.values,
+        id: payload.data.id ? bot.transformers.snowflake(payload.data.id) : undefined,
+        name: payload.data.name,
+        resolved: payload.data.resolved
+          ? transformInteractionDataResolved(bot, payload.data.resolved, guildId)
+          : undefined,
+        // @ts-ignore TODO: figure this out
+        options: payload.data.options,
+        targetId: payload.data.target_id ? bot.transformers.snowflake(payload.data.target_id) : undefined,
+      }
       : undefined,
   };
 }
@@ -60,7 +58,7 @@ export function transformInteraction(bot: Bot, payload: SnakeCasedPropertiesDeep
 export function transformInteractionDataResolved(
   bot: Bot,
   resolved: SnakeCasedPropertiesDeep<InteractionDataResolved>,
-  guildId?: bigint
+  guildId?: bigint,
 ) {
   const transformed: {
     messages?: Collection<bigint, DiscordenoMessage>;
@@ -68,6 +66,7 @@ export function transformInteractionDataResolved(
     members?: Collection<bigint, DiscordenoMember>;
     roles?: Collection<bigint, DiscordenoRole>;
     channels?: Collection<bigint, { id: bigint; name: string; type: ChannelTypes; permissions: bigint }>;
+    attachments?: Collection<bigint, DiscordenoAttachment>;
   } = {};
 
   if (resolved.messages) {
@@ -75,7 +74,7 @@ export function transformInteractionDataResolved(
       Object.entries(resolved.messages).map(([id, value]) => {
         const message = bot.transformers.message(bot, value);
         return [message.id, message];
-      })
+      }),
     );
   }
 
@@ -84,7 +83,7 @@ export function transformInteractionDataResolved(
       Object.entries(resolved.users).map(([id, value]) => {
         const user = bot.transformers.user(bot, value);
         return [user.id, user];
-      })
+      }),
     );
   }
 
@@ -93,7 +92,7 @@ export function transformInteractionDataResolved(
       Object.entries(resolved.members).map(([id, value]) => {
         const member = bot.transformers.member(bot, value, guildId, bot.transformers.snowflake(id));
         return [member.id, member];
-      })
+      }),
     );
   }
 
@@ -102,7 +101,7 @@ export function transformInteractionDataResolved(
       Object.entries(resolved.roles).map(([id, value]) => {
         const role = bot.transformers.role(bot, { role: value, guildId });
         return [role.id, role];
-      })
+      }),
     );
   }
 
@@ -120,7 +119,16 @@ export function transformInteractionDataResolved(
             permissions: bot.transformers.snowflake(channel.permissions),
           },
         ];
-      })
+      }),
+    );
+  }
+
+  if (resolved.attachments) {
+    transformed.attachments = new Collection(
+      Object.entries(resolved.attachments).map(([key, value]) => {
+        const id = bot.transformers.snowflake(key);
+        return [id, bot.transformers.attachment(bot, value as SnakeCasedPropertiesDeep<Attachment>)];
+      }),
     );
   }
 
@@ -182,6 +190,8 @@ export interface DiscordenoInteraction {
           permissions: bigint;
         }
       >;
+      /** The Ids and attachments objects */
+      attachments?: Collection<bigint, DiscordenoAttachment>;
     };
     /** The params + values from the user */
     options?: InteractionDataOption[];

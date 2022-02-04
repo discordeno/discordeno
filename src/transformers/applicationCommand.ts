@@ -6,7 +6,7 @@ import { DiscordenoApplicationCommandOption } from "./applicationCommandOption.t
 
 export function transformApplicationCommand(
   bot: Bot,
-  payload: SnakeCasedPropertiesDeep<ApplicationCommand>
+  payload: SnakeCasedPropertiesDeep<ApplicationCommand>,
 ): DiscordenoApplicationCommand {
   return {
     id: bot.transformers.snowflake(payload.id),

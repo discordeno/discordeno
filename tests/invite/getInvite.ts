@@ -1,4 +1,4 @@
-import { assertExists, assertEquals, assertNotEquals } from "../deps.ts";
+import { assertEquals, assertExists, assertNotEquals } from "../deps.ts";
 import { bot, channel, guild } from "../mod.ts";
 
 Deno.test({

@@ -39,9 +39,9 @@ export function transformMessage(bot: Bot, payload: SnakeCasedPropertiesDeep<Mes
     type: payload.type,
     activity: payload.activity
       ? {
-          type: payload.activity.type,
-          partyId: payload.activity.party_id,
-        }
+        type: payload.activity.type,
+        partyId: payload.activity.party_id,
+      }
       : undefined,
     application: payload.application,
     flags: payload.flags,
@@ -51,6 +51,31 @@ export function transformMessage(bot: Bot, payload: SnakeCasedPropertiesDeep<Mes
           type: payload.interaction.type,
           name: payload.interaction.name,
           user: bot.transformers.user(bot, payload.interaction.user),
+          member: payload.interaction.member
+            ? {
+                id: userId,
+                guildId,
+                nick: payload.interaction.member.nick ?? undefined,
+                roles: payload.interaction.member.roles?.map((id) => BigInt(id)),
+                joinedAt: payload.interaction.member.joined_at
+                  ? Date.parse(payload.interaction.member.joined_at)
+                  : undefined,
+                premiumSince: payload.interaction.member.premium_since
+                  ? Date.parse(payload.interaction.member.premium_since)
+                  : undefined,
+                deaf: payload.interaction.member.deaf,
+                mute: payload.interaction.member.mute,
+                pending: payload.interaction.member.pending,
+                cachedAt: Date.now(),
+                avatar: payload.interaction.member.avatar
+                  ? bot.utils.iconHashToBigInt(payload.interaction.member.avatar)
+                  : undefined,
+                permissions: payload.interaction.member.permissions
+                  ? bot.transformers.snowflake(payload.interaction.member.permissions)
+                  : undefined,
+                communicationDisabledUntil: payload.interaction.member.communication_disabled_until,
+              }
+            : undefined,
         }
       : undefined,
     thread: payload.thread ? bot.transformers.channel(bot, { channel: payload.thread, guildId }) : undefined,
@@ -70,16 +95,16 @@ export function transformMessage(bot: Bot, payload: SnakeCasedPropertiesDeep<Mes
     applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
     messageReference: payload.message_reference
       ? {
-          messageId: payload.message_reference.message_id
-            ? bot.transformers.snowflake(payload.message_reference.message_id)
-            : undefined,
-          channelId: payload.message_reference.channel_id
-            ? bot.transformers.snowflake(payload.message_reference.channel_id)
-            : undefined,
-          guildId: payload.message_reference.guild_id
-            ? bot.transformers.snowflake(payload.message_reference.guild_id)
-            : undefined,
-        }
+        messageId: payload.message_reference.message_id
+          ? bot.transformers.snowflake(payload.message_reference.message_id)
+          : undefined,
+        channelId: payload.message_reference.channel_id
+          ? bot.transformers.snowflake(payload.message_reference.channel_id)
+          : undefined,
+        guildId: payload.message_reference.guild_id
+          ? bot.transformers.snowflake(payload.message_reference.guild_id)
+          : undefined,
+      }
       : undefined,
     mentionedUserIds: payload.mentions ? payload.mentions.map((m) => bot.transformers.snowflake(m.id)) : [],
     mentionedRoleIds: payload.mention_roles ? payload.mention_roles.map((id) => bot.transformers.snowflake(id)) : [],
@@ -193,6 +218,8 @@ export interface DiscordenoMessage {
     name: string;
     /** The user who invoked the interaction */
     user: DiscordenoUser;
+    /** The member who invoked the interaction in the guild */
+    member?: Partial<DiscordenoMember>;
   };
   /** The thread that was started from this message, includes thread member object */
   thread?: DiscordenoChannel;

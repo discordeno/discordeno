@@ -1,4 +1,4 @@
-import { assertExists, assertEquals } from "../../deps.ts";
+import { assertEquals, assertExists } from "../../deps.ts";
 import { bot } from "../../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../../constants.ts";
 
@@ -29,7 +29,7 @@ Deno.test({
         name: "test",
         description: "Test slash command from the ddeno unit tests",
       },
-      CACHED_COMMUNITY_GUILD_ID
+      CACHED_COMMUNITY_GUILD_ID,
     );
   },
 });

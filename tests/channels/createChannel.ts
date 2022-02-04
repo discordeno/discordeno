@@ -1,6 +1,6 @@
 import { ChannelTypes, CreateGuildChannel, OverwriteTypes } from "../../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../constants.ts";
-import { assertExists, assertEquals } from "../deps.ts";
+import { assertEquals, assertExists } from "../deps.ts";
 import { bot, guild } from "../mod.ts";
 import { delayUntil } from "../utils.ts";
 
@@ -28,7 +28,7 @@ async function createChannelTests(guildId: bigint, options: CreateGuildChannel, 
 
   if (options.permissionOverwrites && channel.permissionOverwrites?.length !== options.permissionOverwrites.length) {
     throw new Error(
-      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites."
+      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites.",
     );
   }
 
@@ -52,7 +52,7 @@ Deno.test({
         name: "Discordeno-test",
         type: ChannelTypes.GuildCategory,
       },
-      false
+      false,
     );
   },
 });
@@ -62,7 +62,7 @@ Deno.test({
     await createChannelTests(
       CACHED_COMMUNITY_GUILD_ID,
       { name: "Discordeno-test", type: ChannelTypes.GuildNews },
-      true
+      true,
     );
   },
 });
@@ -75,7 +75,7 @@ Deno.test({
         name: "Discordeno-test",
         type: ChannelTypes.GuildVoice,
       },
-      false
+      false,
     );
   },
 });
@@ -89,7 +89,7 @@ Deno.test({
         type: ChannelTypes.GuildVoice,
         bitrate: 32000,
       },
-      false
+      false,
     );
   },
 });
@@ -103,7 +103,7 @@ Deno.test({
         type: ChannelTypes.GuildVoice,
         userLimit: 32,
       },
-      false
+      false,
     );
   },
 });
@@ -116,7 +116,7 @@ Deno.test({
         name: "Discordeno-test",
         rateLimitPerUser: 2423,
       },
-      false
+      false,
     );
   },
 });
@@ -142,7 +142,7 @@ Deno.test({
           },
         ],
       },
-      false
+      false,
     );
   },
 });

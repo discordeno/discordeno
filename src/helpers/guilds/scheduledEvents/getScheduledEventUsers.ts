@@ -9,19 +9,19 @@ export async function getScheduledEventUsers(
   bot: Bot,
   guildId: bigint,
   eventId: bigint,
-  options?: GetScheduledEventUsers & { withMember?: false }
+  options?: GetScheduledEventUsers & { withMember?: false },
 ): Promise<Collection<bigint, DiscordenoUser>>;
 export async function getScheduledEventUsers(
   bot: Bot,
   guildId: bigint,
   eventId: bigint,
-  options?: GetScheduledEventUsers & { withMember: true }
+  options?: GetScheduledEventUsers & { withMember: true },
 ): Promise<Collection<bigint, { user: DiscordenoUser; member: DiscordenoMember }>>;
 export async function getScheduledEventUsers(
   bot: Bot,
   guildId: bigint,
   eventId: bigint,
-  options?: GetScheduledEventUsers
+  options?: GetScheduledEventUsers,
 ): Promise<
   Collection<bigint, DiscordenoUser> | Collection<bigint, { user: DiscordenoUser; member: DiscordenoMember }>
 > {
@@ -34,7 +34,7 @@ export async function getScheduledEventUsers(
     {
       limit: options?.limit,
       with_members: options?.withMember,
-    }
+    },
   );
 
   if (!options?.withMember) {
@@ -42,7 +42,7 @@ export async function getScheduledEventUsers(
       result.map((res) => {
         const user = bot.transformers.user(bot, res.user);
         return [user.id, user];
-      })
+      }),
     );
   }
 
@@ -52,6 +52,6 @@ export async function getScheduledEventUsers(
       const member = bot.transformers.member(bot, res.member!, guildId, user.id);
 
       return [user.id, { member, user }];
-    })
+    }),
   );
 }

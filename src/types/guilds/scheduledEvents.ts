@@ -31,6 +31,8 @@ export interface ScheduledEvent {
   creator?: User;
   /** the number of users subscribed to the scheduled event */
   userCount?: number;
+  /** the cover image hash of the scheduled event */
+  image: string | null;
 }
 
 export enum ScheduledEventPrivacyLevel {

@@ -7,7 +7,7 @@ export async function editGuildTests(guildId: bigint) {
     {
       name: "Discordeno Test 1.0",
     },
-    0
+    0,
   );
 
   // Assertions

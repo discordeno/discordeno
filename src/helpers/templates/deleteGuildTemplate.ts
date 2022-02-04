@@ -9,6 +9,6 @@ export async function deleteGuildTemplate(bot: Bot, guildId: bigint, templateCod
   await bot.rest.runMethod<Template>(
     bot.rest,
     "delete",
-    `${bot.constants.endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`
+    `${bot.constants.endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
   );
 }

@@ -7,7 +7,7 @@ export async function getIntegrations(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<Integration[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_INTEGRATIONS(guildId)
+    bot.constants.endpoints.GUILD_INTEGRATIONS(guildId),
   );
 
   return new Collection(
@@ -31,6 +31,6 @@ export async function getIntegrations(bot: Bot, guildId: bigint) {
         application: res.application,
       });
       return [integration.id, integration];
-    })
+    }),
   );
 }

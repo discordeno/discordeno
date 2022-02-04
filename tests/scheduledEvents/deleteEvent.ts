@@ -1,4 +1,4 @@
-import { ScheduledEventPrivacyLevel, ScheduledEventEntityType } from "../../src/types/guilds/scheduledEvents.ts";
+import { ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../../src/types/guilds/scheduledEvents.ts";
 import { bot, guild } from "../mod.ts";
 
 Deno.test({

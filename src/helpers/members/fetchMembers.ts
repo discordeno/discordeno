@@ -14,7 +14,7 @@ export function fetchMembers(
   bot: Bot,
   guildId: bigint,
   shardId: number,
-  options?: Omit<RequestGuildMembers, "guildId">
+  options?: Omit<RequestGuildMembers, "guildId">,
 ) {
   // You can request 1 member without the intent
   // Check if intents is not 0 as proxy ws won't set intents in other instances

@@ -9,9 +9,9 @@ export async function banMember(bot: Bot, guildId: bigint, id: bigint, options?:
     bot.constants.endpoints.GUILD_BAN(guildId, id),
     options
       ? {
-          delete_message_days: options.deleteMessageDays,
-          reason: options.reason,
-        }
-      : {}
+        delete_message_days: options.deleteMessageDays,
+        reason: options.reason,
+      }
+      : {},
   );
 }

@@ -6,7 +6,7 @@ export async function editBotNickname(bot: Bot, guildId: bigint, options: { nick
     bot.rest,
     "patch",
     bot.constants.endpoints.USER_NICK(guildId),
-    options
+    options,
   );
 
   return response.nick;

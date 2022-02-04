@@ -1,6 +1,6 @@
 import { ChannelTypes } from "../../mod.ts";
-import { ScheduledEventPrivacyLevel, ScheduledEventEntityType } from "../../src/types/guilds/scheduledEvents.ts";
-import { assertExists, assertEquals } from "../deps.ts";
+import { ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../../src/types/guilds/scheduledEvents.ts";
+import { assertEquals, assertExists } from "../deps.ts";
 import { bot, guild } from "../mod.ts";
 
 Deno.test({

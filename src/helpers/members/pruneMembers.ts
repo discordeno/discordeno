@@ -18,7 +18,7 @@ export async function pruneMembers(bot: Bot, guildId: bigint, options: BeginGuil
       days: options.days,
       compute_prune_count: options.computePruneCount,
       include_roles: options.includeRoles,
-    }
+    },
   );
 
   return result.pruned;

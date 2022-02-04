@@ -10,6 +10,6 @@ export async function getAvailableVoiceRegions(bot: Bot) {
     result.map((region) => {
       const voiceRegion = bot.transformers.voiceRegion(bot, region);
       return [voiceRegion.id, voiceRegion];
-    })
+    }),
   );
 }

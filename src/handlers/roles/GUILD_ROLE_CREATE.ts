@@ -7,6 +7,6 @@ export async function handleGuildRoleCreate(bot: Bot, data: DiscordGatewayPayloa
   const payload = data.d as SnakeCasedPropertiesDeep<GuildRoleCreate>;
   bot.events.roleCreate(
     bot,
-    bot.transformers.role(bot, { role: payload.role, guildId: bot.transformers.snowflake(payload.guild_id) })
+    bot.transformers.role(bot, { role: payload.role, guildId: bot.transformers.snowflake(payload.guild_id) }),
   );
 }

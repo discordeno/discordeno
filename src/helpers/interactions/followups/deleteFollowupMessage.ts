@@ -5,6 +5,6 @@ export async function deleteFollowupMessage(bot: Bot, interactionToken: string, 
   await bot.rest.runMethod<undefined>(
     bot.rest,
     "delete",
-    bot.constants.endpoints.WEBHOOK_MESSAGE(bot.applicationId, interactionToken, messageId)
+    bot.constants.endpoints.WEBHOOK_MESSAGE(bot.applicationId, interactionToken, messageId),
   );
 }

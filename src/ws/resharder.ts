@@ -25,7 +25,7 @@ export async function resharder(oldGateway: GatewayManager, results: GetGatewayB
     gateway.debug("[Resharding] Using optimal large bot sharding solution.");
     gateway.maxShards = Math.ceil(
       gateway.maxShards /
-        (results.sessionStartLimit.maxConcurrency === 1 ? 16 : results.sessionStartLimit.maxConcurrency)
+        (results.sessionStartLimit.maxConcurrency === 1 ? 16 : results.sessionStartLimit.maxConcurrency),
     );
   }
 

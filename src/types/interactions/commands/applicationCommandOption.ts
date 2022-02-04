@@ -16,7 +16,7 @@ export interface ApplicationCommandOption {
   choices?: ApplicationCommandOptionChoice[];
   /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
   options?: ApplicationCommandOption[];
-  /** Whether this option should make autocomplete interactions. */
+  /** if autocomplete interactions are enabled for this `String`, `Integer`, or `Number` type option */
   autocomplete?: boolean;
   /** If the option is a channel type, the channels shown will be restricted to these types */
   channelTypes?: ChannelTypes[];

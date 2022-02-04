@@ -18,7 +18,7 @@ export function prepareBuckets(gateway: GatewayManager, firstShardId: number, la
     if (i >= gateway.maxShards) {
       continue;
     }
-    
+
     const bucketId = i % gateway.maxConcurrency;
     const bucket = gateway.buckets.get(bucketId);
     if (!bucket) throw new Error("Bucket not found when spawning shards.");

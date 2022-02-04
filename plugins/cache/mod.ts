@@ -1,14 +1,6 @@
-import {
-  Bot,
-  Collection,
-  GuildEmojisUpdate,
-  SnakeCasedPropertiesDeep,
-} from "./deps.ts";
+import { Bot, Collection, GuildEmojisUpdate, SnakeCasedPropertiesDeep } from "./deps.ts";
 import { setupCacheRemovals } from "./src/setupCacheRemovals.ts";
-import {
-  addCacheCollections,
-  BotWithCache,
-} from "./src/addCacheCollections.ts";
+import { addCacheCollections, BotWithCache } from "./src/addCacheCollections.ts";
 import { setupCacheEdits } from "./src/setupCacheEdits.ts";
 
 // PLUGINS MUST TAKE A BOT ARGUMENT WHICH WILL BE MODIFIED
@@ -20,8 +12,7 @@ export function enableCachePlugin<B extends Bot = Bot>(rawBot: B): BotWithCache<
   const bot = addCacheCollections(rawBot);
 
   // Get the unmodified transformer.
-  const { guild, user, member, channel, message, presence, role } =
-    bot.transformers;
+  const { guild, user, member, channel, message, presence, role } = bot.transformers;
   // Override the transformer
   bot.transformers.guild = function (_, payload) {
     // Run the unmodified transformer

@@ -7,7 +7,7 @@ export function verifySignature({ publicKey, signature, timestamp, body }: Verif
   const isValid = verify(
     hexToUint8Array(publicKey),
     hexToUint8Array(signature),
-    new TextEncoder().encode(timestamp + body)
+    new TextEncoder().encode(timestamp + body),
   );
 
   return { isValid, body };

@@ -10,13 +10,13 @@ import getChannelWebhooks from "./getChannelWebhooks.ts";
 import swapChannels from "./swapChannels.ts";
 
 export default function setupChannelPermChecks(bot: BotWithCache) {
-    setupThreadPermChecks(bot);
-    setupStagePermChecks(bot);
-    deleteChannel(bot);
-    deleteChannelOverwrite(bot);
-    editChannel(bot);
-    editChannelOverwrite(bot);
-    followChannel(bot);
-    getChannelWebhooks(bot);
-    swapChannels(bot);
+  setupThreadPermChecks(bot);
+  setupStagePermChecks(bot);
+  deleteChannel(bot);
+  deleteChannelOverwrite(bot);
+  editChannel(bot);
+  editChannelOverwrite(bot);
+  followChannel(bot);
+  getChannelWebhooks(bot);
+  swapChannels(bot);
 }

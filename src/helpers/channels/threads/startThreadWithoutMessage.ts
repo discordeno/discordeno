@@ -11,7 +11,7 @@ export async function startThreadWithoutMessage(bot: Bot, channelId: bigint, opt
     {
       name: options.name,
       auto_archive_duration: options.autoArchiveDuration,
-    }
+    },
   );
 
   return bot.transformers.channel(bot, {

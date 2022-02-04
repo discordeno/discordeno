@@ -6,7 +6,7 @@ export async function getFollowupMessage(bot: Bot, interactionToken: string, mes
   const result = await bot.rest.runMethod<Message>(
     bot.rest,
     "get",
-    bot.constants.endpoints.WEBHOOK_MESSAGE(bot.applicationId, interactionToken, messageId)
+    bot.constants.endpoints.WEBHOOK_MESSAGE(bot.applicationId, interactionToken, messageId),
   );
 
   return bot.transformers.message(bot, result);
