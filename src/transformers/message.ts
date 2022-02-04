@@ -47,11 +47,36 @@ export function transformMessage(bot: Bot, payload: SnakeCasedPropertiesDeep<Mes
     flags: payload.flags,
     interaction: payload.interaction
       ? {
-        id: bot.transformers.snowflake(payload.interaction.id),
-        type: payload.interaction.type,
-        name: payload.interaction.name,
-        user: bot.transformers.user(bot, payload.interaction.user),
-      }
+          id: bot.transformers.snowflake(payload.interaction.id),
+          type: payload.interaction.type,
+          name: payload.interaction.name,
+          user: bot.transformers.user(bot, payload.interaction.user),
+          member: payload.interaction.member
+            ? {
+                id: userId,
+                guildId,
+                nick: payload.interaction.member.nick ?? undefined,
+                roles: payload.interaction.member.roles?.map((id) => BigInt(id)),
+                joinedAt: payload.interaction.member.joined_at
+                  ? Date.parse(payload.interaction.member.joined_at)
+                  : undefined,
+                premiumSince: payload.interaction.member.premium_since
+                  ? Date.parse(payload.interaction.member.premium_since)
+                  : undefined,
+                deaf: payload.interaction.member.deaf,
+                mute: payload.interaction.member.mute,
+                pending: payload.interaction.member.pending,
+                cachedAt: Date.now(),
+                avatar: payload.interaction.member.avatar
+                  ? bot.utils.iconHashToBigInt(payload.interaction.member.avatar)
+                  : undefined,
+                permissions: payload.interaction.member.permissions
+                  ? bot.transformers.snowflake(payload.interaction.member.permissions)
+                  : undefined,
+                communicationDisabledUntil: payload.interaction.member.communication_disabled_until,
+              }
+            : undefined,
+        }
       : undefined,
     thread: payload.thread ? bot.transformers.channel(bot, { channel: payload.thread, guildId }) : undefined,
     components: payload.components?.map((component) => bot.transformers.component(bot, component)),
@@ -193,6 +218,8 @@ export interface DiscordenoMessage {
     name: string;
     /** The user who invoked the interaction */
     user: DiscordenoUser;
+    /** The member who invoked the interaction in the guild */
+    member?: Partial<DiscordenoMember>;
   };
   /** The thread that was started from this message, includes thread member object */
   thread?: DiscordenoChannel;
