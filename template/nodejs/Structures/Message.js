@@ -1,0 +1,42 @@
+const DestructObject = require("./DestructObject");
+
+const Channel = require("./Channel");
+const Guild = require("./Guild");
+
+class Message extends DestructObject{
+    //constructor(client: import("discordeno").Bot, message = {}) {
+    constructor(client, message = {}) {
+        super(message);
+        this.client = client;
+        this.channel = new Channel(client, {id: this.channel_id || this.channelId});
+        this.guild = new Guild(client, {id: this.guild_id || this.guildId});
+    }
+
+    async edit(options){
+        return this.client.helpers.editMessage(this.channel.id, this.id, options);
+    }
+
+    async reply(options = {}){
+        if(!options.messageReference) options.messageReference = {messageId: this.id, channelId: this.channel.id, guildId: this.guild.id};
+        return this.client.helpers.sendMessage(this.channel.id, options);
+    }
+
+    async delete(options = {}){
+        return this.client.helpers.deleteMessage(this.channel.id, this.id, options.reason, options.delayMilliseconds);
+    }
+
+    async react(emoji){
+        return this.client.helpers.addReaction(this.channel.id, this.id, emoji);
+    }
+    
+    async pin(){
+        return this.client.helpers.pinMessage(this.channel.id, this.id);
+    }
+
+    async unpin(){
+        return this.client.helpers.unpinMessage(this.channel.id, this.id);
+    }
+
+
+}
+module.exports = Message;
