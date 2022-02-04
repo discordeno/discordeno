@@ -23,5 +23,5 @@ export interface GuildMemberUpdate {
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
   pending?: boolean;
   /** when the user's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out */
-  communicationDisabledUntil?: number;
+  communicationDisabledUntil?: string;
 }
