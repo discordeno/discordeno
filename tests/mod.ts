@@ -1,6 +1,5 @@
-import { UNITTEST_TOKEN } from "../configs.ts";
 import { ChannelTypes, createBot, createEventHandlers, startBot } from "../mod.ts";
-import { assertEquals, assertExists, enableCachePlugin } from "./deps.ts";
+import { assertEquals, assertExists, dotenv, enableCachePlugin } from "./deps.ts";
 import { deleteMessageWithoutReasonTest, deleteMessageWithReasonTest } from "./helpers/messages/deleteMessage.ts";
 import { getMessagesTest } from "./helpers/messages/getMessages.ts";
 import { deleteMessagesWithoutReasonTest, deleteMessagesWithReasonTest } from "./helpers/messages/deleteMessages.ts";
@@ -30,13 +29,16 @@ import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOve
 import { editChannelTests } from "./helpers/channels/editChannel.ts";
 import { CACHED_COMMUNITY_GUILD_ID, sanitizeMode } from "./constants.ts";
 
-if (!UNITTEST_TOKEN) throw new Error("Token was not provided.");
+dotenv({ export: true });
 
-const botId = BigInt(atob(UNITTEST_TOKEN.split(".")[0]));
+let TOKEN = Deno.env.get("DISCORD_TOKEN");
+if (!TOKEN) throw new Error("Token was not provided.");
+
+const botId = BigInt(atob(TOKEN.split(".")[0]));
 
 let startedAt = 0;
 const baseBot = createBot({
-  token: UNITTEST_TOKEN,
+  token: TOKEN,
   botId,
   events: createEventHandlers({
     ready: () => {
