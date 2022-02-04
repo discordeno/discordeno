@@ -8,6 +8,6 @@ export async function getDmChannel(bot: Bot, userId: bigint) {
   const dmChannelData = await bot.rest.runMethod<Channel>(bot.rest, "post", bot.constants.endpoints.USER_DM, {
     recipient_id: userId.toString(),
   });
-  
+
   return bot.transformers.channel(bot, { channel: dmChannelData });
 }

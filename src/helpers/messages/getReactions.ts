@@ -9,7 +9,7 @@ export async function getReactions(
   channelId: bigint,
   messageId: bigint,
   reaction: string,
-  options?: GetReactions
+  options?: GetReactions,
 ) {
   if (reaction.startsWith("<:")) {
     reaction = reaction.substring(2, reaction.length - 1);
@@ -21,7 +21,7 @@ export async function getReactions(
     bot.rest,
     "get",
     bot.constants.endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, encodeURIComponent(reaction)),
-    options
+    options,
   );
 
   return new Collection(users.map((user) => [user.id, user]));

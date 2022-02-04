@@ -9,6 +9,6 @@ export async function deleteChannel(bot: Bot, channelId: bigint, reason?: string
     bot.constants.endpoints.CHANNEL_BASE(channelId),
     {
       reason,
-    }
+    },
   );
 }

@@ -15,7 +15,7 @@ export async function createGuildFromTemplate(bot: Bot, templateCode: string, da
     bot.rest,
     "post",
     bot.constants.endpoints.GUILD_TEMPLATE(templateCode),
-    data
+    data,
   );
 
   return bot.transformers.guild(bot, {

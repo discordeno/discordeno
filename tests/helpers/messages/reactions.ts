@@ -8,7 +8,7 @@ const reactionCounters = new Map<bigint, number>();
 export async function addReactionTest(
   guildId: bigint,
   channelId: bigint,
-  options: { custom: boolean; single: boolean; ordered: boolean }
+  options: { custom: boolean; single: boolean; ordered: boolean },
 ) {
   const message = await bot.helpers.sendMessage(channelId, { content: "Hello World!" });
 

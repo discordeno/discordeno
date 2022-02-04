@@ -10,7 +10,7 @@ export async function sendDirectMessage(
   content: string | CreateMessage,
 ) {
   if (typeof content === "string") content = { content };
-  
+
   // GET CHANNEL ID FROM CACHE OR CREATE THE CHANNEL FOR THIS USER
   const cachedChannelId = dmChannelIds.get(userId);
   // IF ID IS CACHED SEND MESSAGE DIRECTLY

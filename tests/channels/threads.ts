@@ -29,7 +29,7 @@ Deno.test("[thread] Start a thread", async (t) => {
   });
 
   await t.step("[thread] Get archived threads", async (t) => {
-    const archived = await bot.helpers.getArchivedThreads(channel.id); 
+    const archived = await bot.helpers.getArchivedThreads(channel.id);
     assertEquals(archived.threads.size, 0);
     assertEquals(archived.members.size, 0);
 

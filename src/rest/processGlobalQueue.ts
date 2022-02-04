@@ -28,7 +28,7 @@ export async function processGlobalQueue(rest: RestManager) {
         rest.debug(
           `[REST - processGlobalQueue] Freeze global queue because of invalid requests. Time Remaining: ${
             time / 1000
-          } seconds.`
+          } seconds.`,
         );
         rest.processGlobalQueue(rest);
       }, 1000);
@@ -75,7 +75,7 @@ export async function processGlobalQueue(rest: RestManager) {
 
       if (response.status < 200 || response.status >= 400) {
         rest.debug(
-          `[REST - httpError] Payload: ${JSON.stringify(request.payload)} | Response: ${JSON.stringify(response)}`
+          `[REST - httpError] Payload: ${JSON.stringify(request.payload)} | Response: ${JSON.stringify(response)}`,
         );
 
         let error = "REQUEST_UNKNOWN_ERROR";
@@ -118,8 +118,9 @@ export async function processGlobalQueue(rest: RestManager) {
 
         // If NOT rate limited remove from queue
         if (response.status !== 429) {
-          if (response.type)
-          console.log(JSON.stringify(await response.json()));
+          if (response.type) {
+            console.log(JSON.stringify(await response.json()));
+          }
 
           request.request.reject(new Error(`[${response.status}] ${error}`));
         } else {
@@ -127,7 +128,7 @@ export async function processGlobalQueue(rest: RestManager) {
             rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(request.payload)}`);
             // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
             request.request.reject(
-              new Error(`[${response.status}] The request was rate limited and it maxed out the retries limit.`)
+              new Error(`[${response.status}] The request was rate limited and it maxed out the retries limit.`),
             );
             continue;
           }

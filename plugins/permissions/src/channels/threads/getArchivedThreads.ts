@@ -11,9 +11,7 @@ export default function getArchivedThreads(bot: BotWithCache) {
       await requireBotChannelPermissions(
         bot,
         channel,
-        options?.type === "private"
-          ? ["READ_MESSAGE_HISTORY", "MANAGE_THREADS"]
-          : ["READ_MESSAGE_HISTORY"],
+        options?.type === "private" ? ["READ_MESSAGE_HISTORY", "MANAGE_THREADS"] : ["READ_MESSAGE_HISTORY"],
       );
     }
 

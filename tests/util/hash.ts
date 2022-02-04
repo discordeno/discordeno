@@ -1,4 +1,4 @@
-import { iconHashToBigInt, iconBigintToHash } from "../../src/util/hash.ts";
+import { iconBigintToHash, iconHashToBigInt } from "../../src/util/hash.ts";
 import { assertEquals } from "../deps.ts";
 const iconHash = "4bbb271a13f7195031adcc06a2d867ce";
 const iconBigInt = 3843769888406823508519992434416504301518n;

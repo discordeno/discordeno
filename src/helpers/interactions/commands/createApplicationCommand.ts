@@ -26,7 +26,7 @@ export async function createApplicationCommand(bot: Bot, options: CreateApplicat
       description: options.description,
       type: options.type,
       options: options.options ? makeOptionsForCommand(options.options) : undefined,
-    }
+    },
   );
 
   return bot.transformers.applicationCommand(bot, result);

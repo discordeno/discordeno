@@ -1,4 +1,4 @@
-import { Message, User, Role, Channel, MessageComponentTypes, MessageComponents } from "../../mod.ts";
+import { Channel, Message, MessageComponents, MessageComponentTypes, Role, User } from "../../mod.ts";
 import { InteractionGuildMember } from "../interactionGuildMember.ts";
 import { InteractionDataOption } from "./applicationCommandInteractionDataOption.ts";
 

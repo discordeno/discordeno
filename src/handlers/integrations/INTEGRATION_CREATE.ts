@@ -6,6 +6,6 @@ import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 export function handleIntegrationCreate(bot: Bot, data: DiscordGatewayPayload) {
   bot.events.integrationCreate(
     bot,
-    bot.transformers.integration(bot, data.d as SnakeCasedPropertiesDeep<IntegrationCreateUpdate>)
+    bot.transformers.integration(bot, data.d as SnakeCasedPropertiesDeep<IntegrationCreateUpdate>),
   );
 }

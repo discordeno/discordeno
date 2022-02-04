@@ -7,7 +7,7 @@ Deno.test({
     assertEquals(bot.helpers.guildIconURL(guild.id, guild.icon), undefined);
     assertEquals(
       bot.helpers.guildIconURL(785384884197392384n, 3837424427068676005442449262648382018748n),
-      "https://cdn.discordapp.com/icons/785384884197392384/46f50fb412eab14ec455d5cf777154bc.jpg?size=128"
+      "https://cdn.discordapp.com/icons/785384884197392384/46f50fb412eab14ec455d5cf777154bc.jpg?size=128",
     );
   },
 });
@@ -20,7 +20,7 @@ Deno.test({
       bot.helpers.guildBannerURL(613425648685547541n, {
         banner: 3919584870146358272366452115178209474142n,
       }),
-      "https://cdn.discordapp.com/banners/613425648685547541/84c4964c115c128fb9100952c3b4f65e.jpg?size=128"
+      "https://cdn.discordapp.com/banners/613425648685547541/84c4964c115c128fb9100952c3b4f65e.jpg?size=128",
     );
   },
 });
@@ -31,7 +31,7 @@ Deno.test({
     assertEquals(bot.helpers.guildSplashURL(guild.id, guild.splash), undefined);
     assertEquals(
       bot.helpers.guildSplashURL(785384884197392384n, 3837424427068676005442449262648382018748n),
-      "https://cdn.discordapp.com/splashes/785384884197392384/46f50fb412eab14ec455d5cf777154bc.jpg?size=128"
+      "https://cdn.discordapp.com/splashes/785384884197392384/46f50fb412eab14ec455d5cf777154bc.jpg?size=128",
     );
   },
 });

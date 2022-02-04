@@ -34,5 +34,5 @@ export function editEmoji(bot: BotWithCache) {
 export default function setupEmojiPermChecks(bot: BotWithCache) {
   createEmoji(bot);
   deleteEmoji(bot);
-  editEmoji(bot)
+  editEmoji(bot);
 }

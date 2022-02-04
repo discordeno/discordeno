@@ -4,27 +4,25 @@ import { CreateScheduledEvent, ScheduledEventEntityType } from "../../../../src/
 import { CACHED_COMMUNITY_GUILD_ID } from "../../../constants.ts";
 import { assertEquals, assertExists } from "../../../deps.ts";
 
-
 export async function createScheduledEventTests(
   bot: Bot,
   guildId: bigint,
   options: CreateScheduledEvent,
-  t: Deno.TestContext
+  t: Deno.TestContext,
 ) {
   const channel = [
-    ScheduledEventEntityType.StageInstance,
-    ScheduledEventEntityType.Voice,
-    ScheduledEventEntityType.External,
-  ].includes(options.entityType)
+      ScheduledEventEntityType.StageInstance,
+      ScheduledEventEntityType.Voice,
+      ScheduledEventEntityType.External,
+    ].includes(options.entityType)
     ? await bot.helpers.createChannel(guildId, {
-        name: "entity",
-        type:
-          options.entityType === ScheduledEventEntityType.Voice
-            ? ChannelTypes.GuildVoice
-            : options.entityType === ScheduledEventEntityType.StageInstance
-            ? ChannelTypes.GuildStageVoice
-            : ChannelTypes.GuildText,
-      })
+      name: "entity",
+      type: options.entityType === ScheduledEventEntityType.Voice
+        ? ChannelTypes.GuildVoice
+        : options.entityType === ScheduledEventEntityType.StageInstance
+        ? ChannelTypes.GuildStageVoice
+        : ChannelTypes.GuildText,
+    })
     : undefined;
 
   if (channel && options.entityType !== ScheduledEventEntityType.External) options.channelId = channel.id;

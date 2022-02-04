@@ -7,7 +7,7 @@ export async function getChannelWebhooks(bot: Bot, channelId: bigint) {
   const result = await bot.rest.runMethod<Webhook[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.CHANNEL_WEBHOOKS(channelId)
+    bot.constants.endpoints.CHANNEL_WEBHOOKS(channelId),
   );
 
   return new Collection(result.map((webhook) => [webhook.id, webhook]));

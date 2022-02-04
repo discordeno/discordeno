@@ -6,13 +6,13 @@ import { GuildApplicationCommandPermissions } from "../../../types/interactions/
 export async function batchEditApplicationCommandPermissions(
   bot: Bot,
   guildId: bigint,
-  options: { id: string; permissions: ApplicationCommandPermissions[] }[]
+  options: { id: string; permissions: ApplicationCommandPermissions[] }[],
 ) {
   const result = await bot.rest.runMethod<GuildApplicationCommandPermissions[]>(
     bot.rest,
     "put",
     bot.constants.endpoints.COMMANDS_PERMISSIONS(bot.applicationId, guildId),
-    options
+    options,
   );
 
   return result.map((res) => bot.transformers.applicationCommandPermission(bot, res));

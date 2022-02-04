@@ -1,9 +1,4 @@
-import {
-  Bot,
-  ButtonStyles,
-  MessageComponents,
-  MessageComponentTypes,
-} from "../deps.ts";
+import { Bot, ButtonStyles, MessageComponents, MessageComponentTypes } from "../deps.ts";
 
 export function validateComponents(bot: Bot, components: MessageComponents) {
   if (!components?.length) return;
@@ -20,9 +15,7 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
       throw new Error("Too many components.");
     } else if (
       component.components?.length > 1 &&
-      component.components.some((subcomponent) =>
-        subcomponent.type === MessageComponentTypes.SelectMenu
-      )
+      component.components.some((subcomponent) => subcomponent.type === MessageComponentTypes.SelectMenu)
     ) {
       throw new Error("Select component must be alone.");
     }

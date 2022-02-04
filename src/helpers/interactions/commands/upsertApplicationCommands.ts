@@ -14,7 +14,7 @@ import { makeOptionsForCommand } from "./createApplicationCommand.ts";
 export async function upsertApplicationCommands(
   bot: Bot,
   options: MakeRequired<EditGlobalApplicationCommand, "name">[],
-  guildId?: bigint
+  guildId?: bigint,
 ) {
   const result = await bot.rest.runMethod<ApplicationCommand[]>(
     bot.rest,
@@ -28,13 +28,13 @@ export async function upsertApplicationCommands(
       type: option.type,
       options: option.options ? makeOptionsForCommand(option.options) : undefined,
       default_permission: option.defaultPermission,
-    }))
+    })),
   );
 
   return new Collection(
     result.map((res) => {
       const command = bot.transformers.applicationCommand(bot, res);
       return [command.id, command];
-    })
+    }),
   );
 }

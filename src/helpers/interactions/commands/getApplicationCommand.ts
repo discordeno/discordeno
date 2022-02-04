@@ -8,7 +8,7 @@ export async function getApplicationCommand(bot: Bot, commandId: bigint, guildId
     "get",
     guildId
       ? bot.constants.endpoints.COMMANDS_GUILD_ID(bot.applicationId, guildId, commandId)
-      : bot.constants.endpoints.COMMANDS_ID(bot.applicationId, commandId)
+      : bot.constants.endpoints.COMMANDS_ID(bot.applicationId, commandId),
   );
 
   return bot.transformers.applicationCommand(bot, result);

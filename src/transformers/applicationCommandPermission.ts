@@ -5,7 +5,7 @@ import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
 export function transformApplicationCommandPermission(
   bot: Bot,
-  payload: SnakeCasedPropertiesDeep<GuildApplicationCommandPermissions>
+  payload: SnakeCasedPropertiesDeep<GuildApplicationCommandPermissions>,
 ): DiscordenoApplicationCommandPermission {
   return {
     id: bot.transformers.snowflake(payload.id),

@@ -10,16 +10,16 @@ export function guildIconURL(
   options?: {
     size?: ImageSize;
     format?: ImageFormat;
-  }
+  },
 ) {
   return icon
     ? bot.utils.formatImageURL(
-        bot.constants.endpoints.GUILD_ICON(
-          id,
-          typeof icon === "string" ? icon : bot.utils.iconBigintToHash(icon)
-        ),
-        options?.size || 128,
-        options?.format
-      )
+      bot.constants.endpoints.GUILD_ICON(
+        id,
+        typeof icon === "string" ? icon : bot.utils.iconBigintToHash(icon),
+      ),
+      options?.size || 128,
+      options?.format,
+    )
     : undefined;
 }
