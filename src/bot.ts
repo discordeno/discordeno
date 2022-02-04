@@ -59,6 +59,7 @@ import {
   DiscordenoShard,
   processGatewayQueue,
   resharderCloseOldShards,
+  startReshardingChecks,
 } from "./ws/mod.ts";
 import { validateLength } from "./util/validateLength.ts";
 import { delay, formatImageURL, hasProperty } from "./util/utils.ts";
@@ -142,7 +143,7 @@ export function createBot(options: CreateBotOptions): Bot {
 
   // Check Resharding once a day
   setInterval(async () => {
-    const resharded = await bot.gateway.resharder(bot.gateway);
+    const resharded = await bot.gateway.startReshardingChecks(bot.gateway);
     if (resharded) bot.gateway = resharded;
   }, 86400000);
 
@@ -388,6 +389,7 @@ export function createGatewayManager(
     resharder: options.resharder ?? resharder,
     resharderIsPending: options.resharderIsPending ?? resharderIsPending,
     resharderCloseOldShards: options.resharderCloseOldShards ?? resharderCloseOldShards,
+    startReshardingChecks: options.startReshardingChecks ?? startReshardingChecks,
     handleOnMessage: options.handleOnMessage ?? handleOnMessage,
     processGatewayQueue: options.processGatewayQueue ?? processGatewayQueue,
     closeWS: options.closeWS ?? closeWS,
@@ -639,6 +641,8 @@ export interface GatewayManager {
   resharderIsPending: typeof resharderIsPending;
   /** Handles closing all shards from old gateway when resharder process is complete. */
   resharderCloseOldShards: typeof resharderCloseOldShards;
+  /** Handles checking whetheror not it is time to reshard and triggers resharding. */
+  startReshardingChecks: typeof startReshardingChecks;
   /** Handles the message events from websocket. */
   handleOnMessage: typeof handleOnMessage;
   /** Handles processing queue of requests send to this shard. */

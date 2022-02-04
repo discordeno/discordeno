@@ -2,20 +2,7 @@ import { createGatewayManager, GatewayManager } from "../bot.ts";
 import { GetGatewayBot } from "../types/gateway/getGatewayBot.ts";
 
 /** The handler to automatically reshard when necessary. */
-export async function resharder(oldGateway: GatewayManager) {
-  oldGateway.debug("[Resharding] Checking if resharding is needed.");
-  // TODO: is it possible to route this to REST?
-  const results = (await fetch(`https://discord.com/api/gateway/bot`, {
-    headers: { Authorization: oldGateway.token },
-  }).then((res) => res.json())) as GetGatewayBot;
-
-  const percentage = ((results.shards - oldGateway.maxShards) / oldGateway.maxShards) * 100;
-  // Less than necessary% being used so do nothing
-  if (percentage < oldGateway.reshardPercentage) return;
-
-  // Don't have enough identify rate limits to reshard
-  if (results.sessionStartLimit.remaining < results.shards) return;
-
+export async function resharder(oldGateway: GatewayManager, results: GetGatewayBot) {
   oldGateway.debug("[Resharding] Starting the reshard process.");
 
   const gateway = createGatewayManager({
@@ -55,7 +42,6 @@ export async function resharder(oldGateway: GatewayManager) {
       gateway.handleDiscordPayload = oldGateway.handleDiscordPayload;
       oldGateway.handleDiscordPayload = function () {};
 
-
       // STOP TIMER
       clearInterval(timer);
       await gateway.resharderCloseOldShards(oldGateway);
@@ -93,4 +79,24 @@ export async function resharderCloseOldShards(oldGateway: GatewayManager) {
       oldGateway.closeWS(shard.ws, 3066, "Shard has been resharded. Delayed closing shard since it had a queue.");
     }, 300000);
   });
+}
+
+/** Handler that by default will check to see if resharding should occur. Can be overriden if you have multiple servers and you want to communicate through redis pubsub or whatever you prefer. */
+export async function startReshardingChecks(gateway: GatewayManager) {
+  gateway.debug("[Resharding] Checking if resharding is needed.");
+
+  // TODO: is it possible to route this to REST?
+  const results = (await fetch(`https://discord.com/api/gateway/bot`, {
+    headers: { Authorization: gateway.token },
+  }).then((res) => res.json())) as GetGatewayBot;
+
+  const percentage = ((results.shards - gateway.maxShards) / gateway.maxShards) * 100;
+  // Less than necessary% being used so do nothing
+  if (percentage < gateway.reshardPercentage) return;
+
+  // Don't have enough identify rate limits to reshard
+  if (results.sessionStartLimit.remaining < results.shards) return;
+
+  // MULTI-SERVER BOTS OVERRIDE THIS IF YOU NEED TO RESHARD SERVER BY SERVER
+  return gateway.resharder(gateway, results);
 }
