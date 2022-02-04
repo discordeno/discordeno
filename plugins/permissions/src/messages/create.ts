@@ -163,7 +163,7 @@ export function editMessage(bot: BotWithCache) {
 
     if (
       content.content &&
-      bot.utils.validateLength(content.content, { max: 2000 })
+      !bot.utils.validateLength(content.content, { max: 2000 })
     ) {
       throw new Error(
         "A message content can not contain more than 2000 characters.",
