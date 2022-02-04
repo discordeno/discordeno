@@ -1,5 +1,5 @@
 import { ChannelTypes, OverwriteTypes } from "../../../mod.ts";
-import { assertExists, assertEquals, channelOverwriteHasPermission } from "../../deps.ts";
+import { assertEquals, assertExists, channelOverwriteHasPermission } from "../../deps.ts";
 import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
@@ -33,7 +33,7 @@ export async function deleteChannelOverwriteTests(guildId: bigint) {
     channelOverwriteHasPermission(channel.guildId, bot.id, bot.channels.get(channel.id)?.permissionOverwrites || [], [
       "VIEW_CHANNEL",
     ]),
-    true
+    true,
   );
 
   await bot.helpers.deleteChannelOverwrite(channel.id, bot.id);

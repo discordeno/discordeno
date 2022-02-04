@@ -6,7 +6,7 @@ export async function getWidget(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<GuildWidgetDetails>(
     bot.rest,
     "get",
-    `${bot.constants.endpoints.GUILD_WIDGET(guildId)}.json`
+    `${bot.constants.endpoints.GUILD_WIDGET(guildId)}.json`,
   );
 
   return {

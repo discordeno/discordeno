@@ -8,12 +8,14 @@ export async function runMethod<T = any>(
   url: string,
   body?: unknown,
   retryCount = 0,
-  bucketId?: string
+  bucketId?: string,
 ): Promise<SnakeCasedPropertiesDeep<T>> {
   rest.debug(
-    `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${JSON.stringify(
-      body
-    )}`
+    `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${
+      JSON.stringify(
+        body,
+      )
+    }`,
   );
 
   const errorStack = new Error("Location:");
@@ -62,7 +64,7 @@ export async function runMethod<T = any>(
         bucketId,
         body: body as Record<string, unknown> | undefined,
         retryCount,
-      }
+      },
     );
   });
 }

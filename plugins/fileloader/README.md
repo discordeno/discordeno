@@ -19,7 +19,7 @@ const bot = enableFileLoaderPlugin(
         console.log("Bot Ready");
       },
     },
-  })
+  }),
 );
 
 bot.fastFileLoader([

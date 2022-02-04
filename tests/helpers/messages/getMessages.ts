@@ -4,8 +4,8 @@ import { delayUntil } from "../../utils.ts";
 
 export async function getMessagesTest(channelId: bigint) {
   const message = await bot.helpers.sendMessage(channelId, { content: "Hello World!" });
-  const secondMessage = await bot.helpers.sendMessage(channelId, {content: "Hello World 2!"});
-  const thirdMessage = await bot.helpers.sendMessage(channelId, {content: "Hello World 3!"});
+  const secondMessage = await bot.helpers.sendMessage(channelId, { content: "Hello World 2!" });
+  const thirdMessage = await bot.helpers.sendMessage(channelId, { content: "Hello World 3!" });
 
   // Assertions
   assertExists(message);
@@ -14,7 +14,7 @@ export async function getMessagesTest(channelId: bigint) {
   // Delay the execution by to allow MESSAGE_CREATE event to be processed
   await delayUntil(
     10000,
-    () => bot.messages.has(message.id) && bot.messages.has(secondMessage.id) && bot.messages.has(thirdMessage.id)
+    () => bot.messages.has(message.id) && bot.messages.has(secondMessage.id) && bot.messages.has(thirdMessage.id),
   );
   // Make sure the messages was created.
   if (!bot.messages.has(message.id) || !bot.messages.has(secondMessage.id) || !bot.messages.has(thirdMessage.id)) {

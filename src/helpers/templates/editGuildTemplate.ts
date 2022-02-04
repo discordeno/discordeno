@@ -22,6 +22,6 @@ export async function editGuildTemplate(bot: Bot, guildId: bigint, templateCode:
     {
       name: data.name,
       description: data.description,
-    }
+    },
   );
 }

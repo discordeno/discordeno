@@ -6,6 +6,6 @@ export async function removeRole(bot: Bot, guildId: bigint, memberId: bigint, ro
     bot.rest,
     "delete",
     bot.constants.endpoints.GUILD_MEMBER_ROLE(guildId, memberId, roleId),
-    { reason }
+    { reason },
   );
 }

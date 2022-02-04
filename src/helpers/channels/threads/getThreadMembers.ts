@@ -6,7 +6,7 @@ export async function getThreadMembers(bot: Bot, threadId: bigint) {
   const result = await bot.rest.runMethod<ThreadMember[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.THREAD_MEMBERS(threadId)
+    bot.constants.endpoints.THREAD_MEMBERS(threadId),
   );
   return result;
 

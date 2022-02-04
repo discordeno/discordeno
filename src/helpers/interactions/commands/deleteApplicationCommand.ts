@@ -7,6 +7,6 @@ export async function deleteApplicationCommand(bot: Bot, id: bigint, guildId?: b
     "delete",
     guildId
       ? bot.constants.endpoints.COMMANDS_GUILD_ID(bot.applicationId, guildId, id)
-      : bot.constants.endpoints.COMMANDS_ID(bot.applicationId, id)
+      : bot.constants.endpoints.COMMANDS_ID(bot.applicationId, id),
   );
 }

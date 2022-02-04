@@ -1,7 +1,7 @@
 import { UNITTEST_TOKEN } from "../configs.ts";
-import { createBot, createEventHandlers, ChannelTypes, startBot } from "../mod.ts";
+import { ChannelTypes, createBot, createEventHandlers, startBot } from "../mod.ts";
 import { assertEquals, assertExists, enableCachePlugin } from "./deps.ts";
-import { deleteMessageWithReasonTest, deleteMessageWithoutReasonTest } from "./helpers/messages/deleteMessage.ts";
+import { deleteMessageWithoutReasonTest, deleteMessageWithReasonTest } from "./helpers/messages/deleteMessage.ts";
 import { getMessagesTest } from "./helpers/messages/getMessages.ts";
 import { deleteMessagesWithoutReasonTest, deleteMessagesWithReasonTest } from "./helpers/messages/deleteMessages.ts";
 import { delayUntil } from "./utils.ts";
@@ -254,7 +254,6 @@ Deno.test({
   ...sanitizeMode,
 });
 
-
 Deno.test({
   name: "[channel] filter all category channels",
   async fn(t) {
@@ -357,4 +356,3 @@ import "./webhooks/deleteWebhook.ts";
 import "./webhooks/deleteWebhookWithToken.ts";
 import "./webhooks/sendWebhook.ts";
 import "./webhooks/webhooks.ts";
-

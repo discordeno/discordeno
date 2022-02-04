@@ -6,7 +6,7 @@ export function transformRole(
   bot: Bot,
   payload: { role: SnakeCasedPropertiesDeep<Role> } & {
     guildId: bigint;
-  }
+  },
 ): DiscordenoRole {
   return {
     // UNTRANSFORMED STUFF HERE
@@ -14,8 +14,7 @@ export function transformRole(
     guildId: payload.guildId,
     position: payload.role.position,
     color: payload.role.color,
-    bitfield:
-      (payload.role.hoist ? 1n : 0n) |
+    bitfield: (payload.role.hoist ? 1n : 0n) |
       (payload.role.managed ? 2n : 0n) |
       (payload.role.mentionable ? 4n : 0n) |
       (payload.role.tags?.premium_subscriber ? 8n : 0n),

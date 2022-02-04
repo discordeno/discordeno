@@ -7,8 +7,9 @@ export function resume(gateway: GatewayManager, shardId: number) {
   // NOW WE HANDLE RESUMING THIS SHARD
   // Get the old data for this shard necessary for resuming
   const oldShard = gateway.shards.get(shardId);
-  if (!oldShard)
+  if (!oldShard) {
     return gateway.debug(`[Error] Trying to resume a shard (id: ${shardId}) that was not first identified.`);
+  }
 
   // HOW TO CLOSE OLD SHARD SOCKET!!!
   gateway.closeWS(oldShard.ws, 3064, "Resuming the shard, closing old shard.");
@@ -57,7 +58,7 @@ export function resume(gateway: GatewayManager, shardId: number) {
           seq: previousSequenceNumber,
         },
       },
-      true
+      true,
     );
   };
 }

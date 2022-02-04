@@ -1,12 +1,12 @@
-import { Bot } from './deps.ts';
+import { Bot } from "./deps.ts";
 
 // iMpOrTaNt to make sure files can be reloaded properly!
 export let uniqueFilePathCounter = 0;
 export let paths: string[] = [];
 
-/** Recursively generates an array of unique paths to import using `fileLoader()` 
+/** Recursively generates an array of unique paths to import using `fileLoader()`
  * (**Is** windows compatible)
-*/
+ */
 export async function importDirectory(path: string) {
   path = path.replaceAll("\\", "/");
   const files = Deno.readDirSync(Deno.realPathSync(path));
@@ -18,9 +18,11 @@ export async function importDirectory(path: string) {
     if (file.isFile) {
       if (!currentPath.endsWith(".ts")) continue;
       paths.push(
-        `import "${Deno.mainModule.substring(0, Deno.mainModule.lastIndexOf("/"))}/${currentPath.substring(
-          currentPath.indexOf("src/")
-        )}#${uniqueFilePathCounter}";`
+        `import "${Deno.mainModule.substring(0, Deno.mainModule.lastIndexOf("/"))}/${
+          currentPath.substring(
+            currentPath.indexOf("src/"),
+          )
+        }#${uniqueFilePathCounter}";`,
       );
       continue;
     }
@@ -50,13 +52,13 @@ export async function fastFileLoader(
    */
   between?: (path: string, uniqueFilePathCounter: number, paths: string[]) => void,
   /** A function that runs before **actually** importing all the files. */
-  before?: (uniqueFilePathCounter: number, paths: string[]) => void
+  before?: (uniqueFilePathCounter: number, paths: string[]) => void,
 ) {
   await Promise.all(
     [...paths].map((path) => {
       if (between) between(path, uniqueFilePathCounter, paths);
-      importDirectory(path)
-    })
+      importDirectory(path);
+    }),
   );
 
   if (before) before(uniqueFilePathCounter, paths);
@@ -66,12 +68,12 @@ export async function fastFileLoader(
 
 /** Extend the Bot with the Plugin's added functions */
 export interface BotWithFileLoader extends Bot {
-  /** Recursively generates an array of unique paths to import using `fileLoader()` 
+  /** Recursively generates an array of unique paths to import using `fileLoader()`
    * (**Is** windows compatible)
-  */
-  importDirectory: (path: string) => void,
+   */
+  importDirectory: (path: string) => void;
   /** Writes, then imports all everything in fileloader.ts */
-  fileLoader: () => void,
+  fileLoader: () => void;
   /** This function will import the specified directories */
   fastFileLoader: (
     /** An array of directories to import recursively. */
@@ -81,8 +83,8 @@ export interface BotWithFileLoader extends Bot {
      */
     between?: (path: string, uniqueFilePathCounter: number, paths: string[]) => void,
     /** A function that runs before **actually** importing all the files. */
-    before?: (uniqueFilePathCounter: number, paths: string[]) => void
-  ) => void,
+    before?: (uniqueFilePathCounter: number, paths: string[]) => void,
+  ) => void;
 }
 
 /** Pass in a (compatible) bot instance, and get sweet file loader goodness.

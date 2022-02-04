@@ -15,7 +15,7 @@ export async function editMember(bot: Bot, guildId: bigint, memberId: bigint, op
       deaf: options.deaf,
       channel_id: options.channelId,
       communication_disabled_until: options.communicationDisabledUntil,
-    }
+    },
   );
 
   return bot.transformers.member(bot, result, guildId, memberId);

@@ -47,12 +47,12 @@ export async function editChannel(bot: Bot, channelId: bigint, options: ModifyCh
     invitable: options.invitable,
     permission_overwrites: options.permissionOverwrites
       ? options.permissionOverwrites?.map((overwrite) => {
-          return {
-            ...overwrite,
-            allow: overwrite.allow ? bot.utils.calculateBits(overwrite.allow) : "0",
-            deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : "0",
-          };
-        })
+        return {
+          ...overwrite,
+          allow: overwrite.allow ? bot.utils.calculateBits(overwrite.allow) : "0",
+          deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : "0",
+        };
+      })
       : undefined,
     reason,
   });

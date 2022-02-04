@@ -6,6 +6,6 @@ export async function addDiscoverySubcategory(bot: Bot, guildId: bigint, categor
   await bot.rest.runMethod<AddGuildDiscoverySubcategory>(
     bot.rest,
     "post",
-    bot.constants.endpoints.DISCOVERY_SUBCATEGORY(guildId, categoryId)
+    bot.constants.endpoints.DISCOVERY_SUBCATEGORY(guildId, categoryId),
   );
 }

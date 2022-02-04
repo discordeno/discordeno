@@ -11,7 +11,7 @@ export async function getArchivedThreads(
   channelId: bigint,
   options?: ListPublicArchivedThreads & {
     type?: "public" | "private" | "privateJoinedThreads";
-  }
+  },
 ) {
   const result = (await bot.rest.runMethod<ListActiveThreads>(
     bot.rest,
@@ -23,25 +23,25 @@ export async function getArchivedThreads(
       : bot.constants.endpoints.THREAD_ARCHIVED_PUBLIC(channelId),
     options
       ? {
-          before: options.before,
-          limit: options.limit,
-          type: options.type,
-        }
-      : {}
+        before: options.before,
+        limit: options.limit,
+        type: options.type,
+      }
+      : {},
   ));
-  
+
   return {
     threads: new Collection(
       result.threads.map((t) => {
         const thread = bot.transformers.channel(bot, { channel: t });
         return [thread.id, thread];
-      })
+      }),
     ),
     members: new Collection(
       result.members.map((m) => {
         const member = bot.transformers.threadMember(bot, m);
         return [member.id, member];
-      })
+      }),
     ),
-  };;
+  };
 }

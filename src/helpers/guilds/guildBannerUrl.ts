@@ -10,16 +10,16 @@ export function guildBannerURL(
     banner?: string | bigint;
     size?: ImageSize;
     format?: ImageFormat;
-  }
+  },
 ) {
   return options.banner
     ? bot.utils.formatImageURL(
-        bot.constants.endpoints.GUILD_BANNER(
-          id,
-          typeof options.banner === "string" ? options.banner : bot.utils.iconBigintToHash(options.banner)
-        ),
-        options.size || 128,
-        options.format
-      )
+      bot.constants.endpoints.GUILD_BANNER(
+        id,
+        typeof options.banner === "string" ? options.banner : bot.utils.iconBigintToHash(options.banner),
+      ),
+      options.size || 128,
+      options.format,
+    )
     : undefined;
 }

@@ -4,7 +4,7 @@ import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
 export function transformStageInstance(
   bot: Bot,
-  payload: SnakeCasedPropertiesDeep<StageInstance>
+  payload: SnakeCasedPropertiesDeep<StageInstance>,
 ): DiscordenoStageInstance {
   return {
     id: bot.transformers.snowflake(payload.id),

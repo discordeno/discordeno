@@ -7,13 +7,13 @@ export async function getVoiceRegions(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<VoiceRegion[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_REGIONS(guildId)
+    bot.constants.endpoints.GUILD_REGIONS(guildId),
   );
 
   return new Collection(
     result.map((reg) => {
       const region = bot.transformers.voiceRegion(bot, reg);
       return [region.id, region];
-    })
+    }),
   );
 }

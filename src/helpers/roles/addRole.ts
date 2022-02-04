@@ -6,6 +6,6 @@ export async function addRole(bot: Bot, guildId: bigint, memberId: bigint, roleI
     bot.rest,
     "put",
     bot.constants.endpoints.GUILD_MEMBER_ROLE(guildId, memberId, roleId),
-    { reason }
+    { reason },
   );
 }

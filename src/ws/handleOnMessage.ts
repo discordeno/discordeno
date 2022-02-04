@@ -15,8 +15,10 @@ import { decompressWith } from "./deps.ts";
 // deno-lint-ignore no-explicit-any
 export async function handleOnMessage(gateway: GatewayManager, message: any, shardId: number) {
   if (gateway.compress && message instanceof Blob) {
-    message = decompressWith(new Uint8Array(await message.arrayBuffer()), 0, (slice: Uint8Array) =>
-      gateway.utf8decoder.decode(slice)
+    message = decompressWith(
+      new Uint8Array(await message.arrayBuffer()),
+      0,
+      (slice: Uint8Array) => gateway.utf8decoder.decode(slice),
     );
   }
 
@@ -40,7 +42,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
           op: GatewayOpcodes.Heartbeat,
           d: shard?.previousSequenceNumber,
         },
-        true
+        true,
       );
       break;
     case GatewayOpcodes.Hello:
