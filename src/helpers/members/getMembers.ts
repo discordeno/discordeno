@@ -17,13 +17,13 @@ export async function getMembers(bot: Bot, guildId: bigint, options: ListGuildMe
     {
       limit: options?.limit ?? options.memberCount,
       after: options?.after,
-    }
+    },
   );
 
   return new Collection(
     result.map((res) => {
       const member = bot.transformers.member(bot, res, guildId, bot.transformers.snowflake(res.user.id));
       return [member.id, member];
-    })
+    }),
   );
 }

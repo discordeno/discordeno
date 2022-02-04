@@ -17,12 +17,8 @@ export function calculateBasePermissions(
   guildOrId: bigint | DiscordenoGuild,
   memberOrId: bigint | DiscordenoMember,
 ) {
-  const guild = typeof guildOrId === "bigint"
-    ? bot.guilds.get(guildOrId)
-    : guildOrId;
-  const member = typeof memberOrId === "bigint"
-    ? bot.members.get(memberOrId)
-    : memberOrId;
+  const guild = typeof guildOrId === "bigint" ? bot.guilds.get(guildOrId) : guildOrId;
+  const member = typeof memberOrId === "bigint" ? bot.members.get(memberOrId) : memberOrId;
 
   if (!guild || !member) return 8n;
 
@@ -49,16 +45,12 @@ export function calculateChannelOverwrites(
   channelOrId: bigint | DiscordenoChannel,
   memberOrId: bigint | DiscordenoMember,
 ) {
-  const channel = typeof channelOrId === "bigint"
-    ? bot.channels.get(channelOrId)
-    : channelOrId;
+  const channel = typeof channelOrId === "bigint" ? bot.channels.get(channelOrId) : channelOrId;
 
   // This is a DM channel so return ADMINISTRATOR permission
   if (!channel?.guildId) return 8n;
 
-  const member = typeof memberOrId === "bigint"
-    ? bot.members.get(memberOrId)
-    : memberOrId;
+  const member = typeof memberOrId === "bigint" ? bot.members.get(memberOrId) : memberOrId;
 
   if (!channel || !member) return 8n;
 
@@ -192,9 +184,7 @@ export function missingPermissions(
 ) {
   if (permissionBits & 8n) return [];
 
-  return permissions.filter((permission) =>
-    !(permissionBits & BigInt(BitwisePermissionFlags[permission]))
-  );
+  return permissions.filter((permission) => !(permissionBits & BigInt(BitwisePermissionFlags[permission])));
 }
 
 /** Get the missing Guild permissions this member has */
@@ -343,15 +333,12 @@ export function highestRole(
   guildOrId: bigint | DiscordenoGuild,
   memberOrId: bigint | DiscordenoMember,
 ) {
-  const guild = typeof guildOrId === "bigint"
-    ? bot.guilds.get(guildOrId)
-    : guildOrId;
+  const guild = typeof guildOrId === "bigint" ? bot.guilds.get(guildOrId) : guildOrId;
   if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
   // Get the roles from the member
-  const memberRoles =
-    (typeof memberOrId === "bigint" ? bot.members.get(memberOrId) : memberOrId)
-      ?.roles;
+  const memberRoles = (typeof memberOrId === "bigint" ? bot.members.get(memberOrId) : memberOrId)
+    ?.roles;
   // This member has no roles so the highest one is the @everyone role
   if (!memberRoles) return guild.roles.get(guild.id)!;
 
@@ -424,13 +411,12 @@ export function channelOverwriteHasPermission(
   guildId: bigint,
   id: bigint,
   overwrites: bigint[],
-  permissions: PermissionStrings[]
+  permissions: PermissionStrings[],
 ) {
-  const overwrite =
-    overwrites.find((perm) => {
-      const [_, bitID] = separateOverwrites(perm);
-      return id === bitID;
-    }) ||
+  const overwrite = overwrites.find((perm) => {
+    const [_, bitID] = separateOverwrites(perm);
+    return id === bitID;
+  }) ||
     overwrites.find((perm) => {
       const [_, bitID] = separateOverwrites(perm);
       return bitID === guildId;

@@ -8,6 +8,6 @@ export async function handleGuildRoleUpdate(bot: Bot, data: DiscordGatewayPayloa
 
   bot.events.roleUpdate(
     bot,
-    bot.transformers.role(bot, { role: payload.role, guildId: bot.transformers.snowflake(payload.guild_id) })
+    bot.transformers.role(bot, { role: payload.role, guildId: bot.transformers.snowflake(payload.guild_id) }),
   );
 }

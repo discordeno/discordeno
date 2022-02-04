@@ -5,7 +5,7 @@ export async function tellWorkerToIdentify(
   gateway: GatewayManager,
   _workerId: number,
   shardId: number,
-  _bucketId: number
+  _bucketId: number,
 ) {
   await gateway.identify(gateway, shardId, gateway.maxShards);
 }

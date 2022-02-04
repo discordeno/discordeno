@@ -39,9 +39,9 @@ export function transformMessage(bot: Bot, payload: SnakeCasedPropertiesDeep<Mes
     type: payload.type,
     activity: payload.activity
       ? {
-          type: payload.activity.type,
-          partyId: payload.activity.party_id,
-        }
+        type: payload.activity.type,
+        partyId: payload.activity.party_id,
+      }
       : undefined,
     application: payload.application,
     flags: payload.flags,
@@ -95,16 +95,16 @@ export function transformMessage(bot: Bot, payload: SnakeCasedPropertiesDeep<Mes
     applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
     messageReference: payload.message_reference
       ? {
-          messageId: payload.message_reference.message_id
-            ? bot.transformers.snowflake(payload.message_reference.message_id)
-            : undefined,
-          channelId: payload.message_reference.channel_id
-            ? bot.transformers.snowflake(payload.message_reference.channel_id)
-            : undefined,
-          guildId: payload.message_reference.guild_id
-            ? bot.transformers.snowflake(payload.message_reference.guild_id)
-            : undefined,
-        }
+        messageId: payload.message_reference.message_id
+          ? bot.transformers.snowflake(payload.message_reference.message_id)
+          : undefined,
+        channelId: payload.message_reference.channel_id
+          ? bot.transformers.snowflake(payload.message_reference.channel_id)
+          : undefined,
+        guildId: payload.message_reference.guild_id
+          ? bot.transformers.snowflake(payload.message_reference.guild_id)
+          : undefined,
+      }
       : undefined,
     mentionedUserIds: payload.mentions ? payload.mentions.map((m) => bot.transformers.snowflake(m.id)) : [],
     mentionedRoleIds: payload.mention_roles ? payload.mention_roles.map((id) => bot.transformers.snowflake(id)) : [],

@@ -57,14 +57,14 @@ export function identify(gateway: GatewayManager, shardId: number, maxShards: nu
           presence: gateway.presence,
         },
       },
-      true
+      true,
     );
   };
 
   return new Promise((resolve) => {
     gateway.loadingShards.set(shardId, {
       shardId,
-      resolve
+      resolve,
     });
   });
 }

@@ -12,7 +12,7 @@ export async function editDiscovery(bot: Bot, guildId: bigint, data: ModifyGuild
       primary_category_id: data.primaryCategoryId,
       keywords: data.keywords,
       emoji_discoverability_enabled: data.emojiDiscoverabilityEnabled,
-    }
+    },
   );
 
   return {

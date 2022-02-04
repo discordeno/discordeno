@@ -1,0 +1,13 @@
+discordeno/guide:
+  - source: site/
+    dest: ./
+    exclude: |
+      README.md
+      LICENSE
+
+discordeno/template:
+  - source: template/
+    dest: ./
+    exclude: |
+      README.md
+      LICENSE

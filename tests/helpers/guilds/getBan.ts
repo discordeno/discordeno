@@ -1,4 +1,4 @@
-import { assertExists, assertEquals } from "../../deps.ts";
+import { assertEquals, assertExists } from "../../deps.ts";
 import { bot } from "../../mod.ts";
 
 export async function getBanTests(guildId: bigint) {

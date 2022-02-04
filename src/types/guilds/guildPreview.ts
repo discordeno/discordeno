@@ -1,5 +1,6 @@
 import { Emoji } from "../emojis/emoji.ts";
 import { GuildFeatures } from "./guildFeatures.ts";
+import { Sticker } from "../stickers/sticker.ts";
 
 /** https://discord.com/developers/docs/resources/guild#guild-preview-object */
 export interface GuildPreview {
@@ -23,4 +24,6 @@ export interface GuildPreview {
   approximatePresenceCount: number;
   /** The description for the guild, if the guild is discoverable */
   description: string | null;
+  /** Custom guild stickers */
+  stickers: Sticker[];
 }

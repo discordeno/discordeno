@@ -1,9 +1,4 @@
-import {
-  AllowedMentionsTypes,
-  BotWithCache,
-  ChannelTypes,
-  PermissionStrings,
-} from "../../deps.ts";
+import { AllowedMentionsTypes, BotWithCache, ChannelTypes, PermissionStrings } from "../../deps.ts";
 import { validateComponents } from "../components.ts";
 import { requireBotChannelPermissions } from "../permissions.ts";
 
@@ -163,7 +158,7 @@ export function editMessage(bot: BotWithCache) {
 
     if (
       content.content &&
-      bot.utils.validateLength(content.content, { max: 2000 })
+      !bot.utils.validateLength(content.content, { max: 2000 })
     ) {
       throw new Error(
         "A message content can not contain more than 2000 characters.",

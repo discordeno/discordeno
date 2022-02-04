@@ -8,7 +8,7 @@ export async function connectToVoiceChannel(
   bot: Bot,
   guildId: bigint,
   channelId: bigint,
-  options?: AtLeastOne<Omit<UpdateVoiceState, "guildId" | "channelId">>
+  options?: AtLeastOne<Omit<UpdateVoiceState, "guildId" | "channelId">>,
 ) {
   bot.gateway.sendShardMessage(bot.gateway, bot.utils.calculateShardId(bot.gateway, guildId), {
     op: GatewayOpcodes.VoiceStateUpdate,

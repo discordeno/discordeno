@@ -12,6 +12,6 @@ export async function handleChannelDelete(bot: Bot, data: DiscordGatewayPayload)
     bot.transformers.channel(bot, {
       channel: payload,
       guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
-    })
+    }),
   );
 }

@@ -7,17 +7,18 @@ export default function connectToVoiceChannel(bot: BotWithCache) {
   bot.helpers.connectToVoiceChannel = async function (
     guildId,
     channelId,
-    options
+    options,
   ) {
     const channel = await bot.channels.get(channelId);
     if (!channel) throw new Error("CHANNEL_NOT_FOUND");
 
     if (
       [ChannelTypes.GuildStageVoice, ChannelTypes.GuildVoice].includes(
-        channel.type
+        channel.type,
       )
-    )
+    ) {
       throw new Error("INVALID_CHANNEL_TYPE");
+    }
 
     const guild = channel?.guildId && bot.guilds.get(channel.guildId);
     if (!guild) throw new Error("GUILD_NOT_FOUND");
@@ -33,8 +34,9 @@ export default function connectToVoiceChannel(bot: BotWithCache) {
       channel.userLimit &&
       guild.voiceStates.filter((vs) => vs.channelId === channelId).size >=
         channel.userLimit
-    )
+    ) {
       permsNeeded.push("MANAGE_CHANNELS");
+    }
 
     await requireBotChannelPermissions(bot, channel, permsNeeded);
 

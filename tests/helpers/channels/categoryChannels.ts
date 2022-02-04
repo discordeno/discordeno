@@ -23,7 +23,7 @@ export async function categoryChildrenTest(guildId: bigint) {
         name: `Discordeno-test-${num}`,
         parentId: category.id,
       })
-    )
+    ),
   );
   // Delay the execution to allow event to be processed
   await delayUntil(10000, () => channels.every((c) => bot.channels.has(c.id)));

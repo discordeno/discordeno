@@ -1,6 +1,12 @@
 name: Test
+
 on:
   push:
+    paths:
+      - "plugins/**"
+      - "src/**"
+      - "tests/**"
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -15,8 +21,6 @@ jobs:
           deno-version: ${{ matrix.deno }}
       - name: Cache dependencies
         run: deno cache mod.ts
-      - name: Prepare configs file
-        run: cp configs.example.ts configs.ts
       - name: Run test script for maintainers
         if: ${{ github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' }}
         run: deno test --unstable --coverage=coverage -A tests/mod.ts

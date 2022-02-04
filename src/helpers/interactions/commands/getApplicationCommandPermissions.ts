@@ -7,13 +7,13 @@ export async function getApplicationCommandPermissions(bot: Bot, guildId: bigint
   const result = await bot.rest.runMethod<GuildApplicationCommandPermissions[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.COMMANDS_PERMISSIONS(bot.applicationId, guildId)
+    bot.constants.endpoints.COMMANDS_PERMISSIONS(bot.applicationId, guildId),
   );
 
   return new Collection(
     result.map((res) => {
       const perms = bot.transformers.applicationCommandPermission(bot, res);
       return [perms.id, perms];
-    })
+    }),
   );
 }

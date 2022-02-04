@@ -6,7 +6,7 @@ export async function editChannelOverwrite(
   bot: Bot,
   channelId: bigint,
   overwriteId: bigint,
-  options: Omit<Overwrite, "id">
+  options: Omit<Overwrite, "id">,
 ) {
   await bot.rest.runMethod<undefined>(
     bot.rest,
@@ -16,6 +16,6 @@ export async function editChannelOverwrite(
       allow: options.allow ? bot.utils.calculateBits(options.allow) : "0",
       deny: options.deny ? bot.utils.calculateBits(options.deny) : "0",
       type: options.type,
-    }
+    },
   );
 }

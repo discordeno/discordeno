@@ -1,11 +1,10 @@
 import { Bot } from "../bot.ts";
 import { StageInstance } from "../types/channels/stageInstance.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { PrivacyLevel } from "../types/channels/privacyLevel.ts";
 
 export function transformStageInstance(
   bot: Bot,
-  payload: SnakeCasedPropertiesDeep<StageInstance>
+  payload: SnakeCasedPropertiesDeep<StageInstance>,
 ): DiscordenoStageInstance {
   return {
     id: bot.transformers.snowflake(payload.id),

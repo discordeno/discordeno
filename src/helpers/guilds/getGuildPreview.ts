@@ -6,7 +6,7 @@ export async function getGuildPreview(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<GuildPreview>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_PREVIEW(guildId)
+    bot.constants.endpoints.GUILD_PREVIEW(guildId),
   );
 
   return {
@@ -20,5 +20,6 @@ export async function getGuildPreview(bot: Bot, guildId: bigint) {
     approximateMemberCount: result.approximate_member_count,
     approximatePresenceCount: result.approximate_presence_count,
     description: result.description ?? undefined,
+    stickers: result.stickers.map((sticker) => bot.transformers.sticker(bot, sticker)),
   };
 }

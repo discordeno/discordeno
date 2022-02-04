@@ -26,13 +26,13 @@ export function transformIntegration(bot: Bot, payload: SnakeCasedPropertiesDeep
     revoked: payload.revoked,
     application: payload.application
       ? {
-          id: bot.transformers.snowflake(payload.application.id),
-          name: payload.application.name,
-          icon: payload.application.icon ? bot.utils.iconHashToBigInt(payload.application.icon) : undefined,
-          description: payload.application.description,
-          summary: payload.application.summary,
-          bot: payload.application.bot ? bot.transformers.user(bot, payload.application.bot) : undefined,
-        }
+        id: bot.transformers.snowflake(payload.application.id),
+        name: payload.application.name,
+        icon: payload.application.icon ? bot.utils.iconHashToBigInt(payload.application.icon) : undefined,
+        description: payload.application.description,
+        summary: payload.application.summary,
+        bot: payload.application.bot ? bot.transformers.user(bot, payload.application.bot) : undefined,
+      }
       : undefined,
   };
 }

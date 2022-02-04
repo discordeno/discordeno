@@ -16,7 +16,7 @@ export async function editWelcomeScreen(bot: Bot, guildId: bigint, options: Modi
         emoji_name: welcomeScreen.emojiName,
       })),
       description: options.description,
-    }
+    },
   );
 
   return bot.transformers.welcomeScreen(bot, result);

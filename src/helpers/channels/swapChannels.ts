@@ -18,6 +18,6 @@ export async function swapChannels(bot: Bot, guildId: bigint, channelPositions: 
         lock_positions: channelPosition.lockPositions,
         parent_id: channelPosition.parentId,
       };
-    })
+    }),
   );
 }

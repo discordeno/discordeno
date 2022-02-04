@@ -1,5 +1,5 @@
 import { Bot } from "../../../src/bot.ts";
-import { assertExists, assertEquals } from "../../deps.ts";
+import { assertEquals, assertExists } from "../../deps.ts";
 
 export async function getVanityURLTests(guildId: bigint) {
   // TODO: VANITY IS BROKEN ATM FROM DISCORDS SIDE

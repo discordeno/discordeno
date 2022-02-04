@@ -22,3 +22,4 @@ export * from "./team.ts";
 export * from "./threadMember.ts";
 export * from "./voiceState.ts";
 export * from "./webhook.ts";
+export * from "./sticker.ts";

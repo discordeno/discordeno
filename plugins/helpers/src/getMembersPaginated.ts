@@ -1,10 +1,4 @@
-import {
-  Bot,
-  Collection,
-  DiscordenoMember,
-  GuildMemberWithUser,
-  ListGuildMembers,
-} from "../deps.ts";
+import { Bot, Collection, DiscordenoMember, GuildMemberWithUser, ListGuildMembers } from "../deps.ts";
 
 /**
  * Highly recommended to **NOT** use this function to get members instead use fetchMembers().
@@ -14,7 +8,7 @@ import {
 export async function getMembersPaginated(
   bot: Bot,
   guildId: bigint,
-  options: ListGuildMembers & { memberCount: number }
+  options: ListGuildMembers & { memberCount: number },
 ) {
   const members = new Collection<bigint, DiscordenoMember>();
 
@@ -28,18 +22,20 @@ export async function getMembersPaginated(
 
     if (options?.limit && options.limit > 1000) {
       console.log(
-        `Paginating get members from REST. #${loops} / ${Math.ceil(
-          (options?.limit ?? 1) / 1000
-        )}`
+        `Paginating get members from REST. #${loops} / ${
+          Math.ceil(
+            (options?.limit ?? 1) / 1000,
+          )
+        }`,
       );
     }
 
     const result = await bot.rest.runMethod<GuildMemberWithUser[]>(
       bot.rest,
       "get",
-      `${bot.constants.endpoints.GUILD_MEMBERS(guildId)}?limit=${
-        membersLeft > 1000 ? 1000 : membersLeft
-      }${options?.after ? `&after=${options.after}` : ""}`
+      `${bot.constants.endpoints.GUILD_MEMBERS(guildId)}?limit=${membersLeft > 1000 ? 1000 : membersLeft}${
+        options?.after ? `&after=${options.after}` : ""
+      }`,
     );
 
     const discordenoMembers = result.map((member) =>
@@ -47,7 +43,7 @@ export async function getMembersPaginated(
         bot,
         member,
         guildId,
-        bot.transformers.snowflake(member.user.id)
+        bot.transformers.snowflake(member.user.id),
       )
     );
 

@@ -9,13 +9,13 @@ export async function getApplicationCommands(bot: Bot, guildId?: bigint) {
     "get",
     guildId
       ? bot.constants.endpoints.COMMANDS_GUILD(bot.applicationId, guildId)
-      : bot.constants.endpoints.COMMANDS(bot.applicationId)
+      : bot.constants.endpoints.COMMANDS(bot.applicationId),
   );
 
   return new Collection(
     result.map((res) => {
       const command = bot.transformers.applicationCommand(bot, res);
       return [command.id, command];
-    })
+    }),
   );
 }

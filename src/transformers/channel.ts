@@ -26,7 +26,7 @@ export function separateOverwrites(v: bigint) {
 
 export function transformChannel(
   bot: Bot,
-  payload: { channel: SnakeCasedPropertiesDeep<Channel> } & { guildId?: bigint }
+  payload: { channel: SnakeCasedPropertiesDeep<Channel> } & { guildId?: bigint },
 ): DiscordenoChannel {
   return {
     // UNTRANSFORMED STUFF HERE
@@ -39,14 +39,13 @@ export function transformChannel(
     userLimit: payload.channel.user_limit,
     rateLimitPerUser: payload.channel.rate_limit_per_user,
     recipients: payload.channel.recipients?.map((r) => bot.transformers.user(bot, r)),
-    icon: payload.channel.icon ? bot.utils.iconHashToBigInt(payload.channel.icon) : undefined,
     rtcRegion: payload.channel.rtc_region,
     videoQualityMode: payload.channel.video_quality_mode,
     guildId: payload.guildId || (payload.channel.guild_id ? bot.transformers.snowflake(payload.channel.guild_id) : 0n),
     lastPinTimestamp: payload.channel.last_pin_timestamp ? Date.parse(payload.channel.last_pin_timestamp) : undefined,
     permissionOverwrites: payload.channel.permission_overwrites
       ? // TODO: fix this
-        // @ts-ignore
+      // @ts-ignore
         payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow, o.deny, o.id, o.type))
       : [],
 
@@ -57,9 +56,8 @@ export function transformChannel(
       ? bot.transformers.snowflake(payload.channel.last_message_id)
       : undefined,
     ownerId: payload.channel.owner_id ? bot.transformers.snowflake(payload.channel.owner_id) : undefined,
-    applicationId: payload.channel.application_id
-      ? bot.transformers.snowflake(payload.channel.application_id)
-      : undefined,
+    applicationId: payload.channel.application_id ? bot.transformers.snowflake(payload.channel.application_id)
+    : undefined,
     parentId: payload.channel.parent_id ? bot.transformers.snowflake(payload.channel.parent_id) : undefined,
     // TODO: stage channels?
     voiceStates: payload.channel.type === ChannelTypes.GuildVoice ? new Collection() : undefined,
@@ -73,6 +71,8 @@ export function transformChannel(
     botIsMember: Boolean(payload.channel.member),
     archived: payload.channel.thread_metadata?.archived,
     locked: payload.channel.thread_metadata?.locked,
+    invitable: payload.channel.invitable,
+    createTimestamp: payload.channel.create_timestamp ? Date.parse(payload.channel.create_timestamp) : undefined,
   };
 }
 
@@ -143,4 +143,6 @@ export interface DiscordenoChannel {
   parentId?: bigint;
   /** The voice states that are in this channel assuming it is a voice channel. */
   voiceStates?: Collection<bigint, DiscordenoVoiceState>;
+  /** timestamp when the thread was created; only populated for threads created after 2022-01-09 */
+  createTimestamp?: number;
 }

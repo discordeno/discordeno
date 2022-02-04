@@ -5,6 +5,6 @@ export async function removeDiscoverySubcategory(bot: Bot, guildId: bigint, cate
   await bot.rest.runMethod<undefined>(
     bot.rest,
     "delete",
-    bot.constants.endpoints.DISCOVERY_SUBCATEGORY(guildId, categoryId)
+    bot.constants.endpoints.DISCOVERY_SUBCATEGORY(guildId, categoryId),
   );
 }

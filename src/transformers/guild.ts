@@ -9,7 +9,7 @@ import { DiscordenoEmoji } from "./emoji.ts";
 
 export function transformGuild(
   bot: Bot,
-  payload: { guild: SnakeCasedPropertiesDeep<Guild> } & { shardId: number }
+  payload: { guild: SnakeCasedPropertiesDeep<Guild> } & { shardId: number },
 ): DiscordenoGuild {
   const guildId = bot.transformers.snowflake(payload.guild.id);
 
@@ -39,29 +39,24 @@ export function transformGuild(
       channelId: bot.transformers.snowflake(si.channel_id),
       /** The topic of the Stage instance (1-120 characters) */
       topic: si.topic,
-      /** The privacy level of the Stage instance */
-      privacyLevel: si.privacy_level,
-      /** Whether or not Stage discovery is disabled */
-      discoverableDisabled: si.discoverable_disabled,
     })),
     systemChannelFlags: payload.guild.system_channel_flags,
     vanityUrlCode: payload.guild.vanity_url_code,
     verificationLevel: payload.guild.verification_level,
     welcomeScreen: payload.guild.welcome_screen
       ? {
-          description: payload.guild.welcome_screen.description ?? undefined,
-          welcomeChannels: payload.guild.welcome_screen.welcome_channels.map((wc) => ({
-            channelId: bot.transformers.snowflake(wc.channel_id),
-            description: wc.description,
-            emojiId: wc.emoji_id ? bot.transformers.snowflake(wc.emoji_id) : undefined,
-            emojiName: wc.emoji_name ?? undefined,
-          })),
-        }
+        description: payload.guild.welcome_screen.description ?? undefined,
+        welcomeChannels: payload.guild.welcome_screen.welcome_channels.map((wc) => ({
+          channelId: bot.transformers.snowflake(wc.channel_id),
+          description: wc.description,
+          emojiId: wc.emoji_id ? bot.transformers.snowflake(wc.emoji_id) : undefined,
+          emojiName: wc.emoji_name ?? undefined,
+        })),
+      }
       : undefined,
     discoverySplash: payload.guild.discovery_splash,
 
-    bitfield:
-      (payload.guild.owner ? 1n : 0n) |
+    bitfield: (payload.guild.owner ? 1n : 0n) |
       (payload.guild.widget_enabled ? 2n : 0n) |
       (payload.guild.large ? 4n : 0n) |
       (payload.guild.unavailable ? 8n : 0n),
@@ -76,18 +71,18 @@ export function transformGuild(
       payload.guild.roles?.map((role) => {
         const result = bot.transformers.role(bot, { role, guildId });
         return [result.id, result];
-      })
+      }),
     ),
     emojis: new Collection(
       (payload.guild.emojis || []).map((emoji) => {
         const em = bot.transformers.emoji(bot, emoji);
         return [em.id!, em];
-      })
+      }),
     ),
     voiceStates: new Collection(
       (payload.guild.voice_states || [])
         .map((vs) => bot.transformers.voiceState(bot, { voiceState: vs, guildId }))
-        .map((vs) => [vs.userId, vs])
+        .map((vs) => [vs.userId, vs]),
     ),
 
     id: guildId,
@@ -99,12 +94,10 @@ export function transformGuild(
       ? bot.transformers.snowflake(payload.guild.widget_channel_id)
       : undefined,
     applicationId: payload.guild.application_id ? bot.transformers.snowflake(payload.guild.application_id) : undefined,
-    systemChannelId: payload.guild.system_channel_id
-      ? bot.transformers.snowflake(payload.guild.system_channel_id)
-      : undefined,
-    rulesChannelId: payload.guild.rules_channel_id
-      ? bot.transformers.snowflake(payload.guild.rules_channel_id)
-      : undefined,
+    systemChannelId: payload.guild.system_channel_id ? bot.transformers.snowflake(payload.guild.system_channel_id)
+    : undefined,
+    rulesChannelId: payload.guild.rules_channel_id ? bot.transformers.snowflake(payload.guild.rules_channel_id)
+    : undefined,
     publicUpdatesChannelId: payload.guild.public_updates_channel_id
       ? bot.transformers.snowflake(payload.guild.public_updates_channel_id)
       : undefined,
@@ -112,8 +105,8 @@ export function transformGuild(
   };
 }
 
-export interface DiscordenoGuild
-  extends Omit<
+export interface DiscordenoGuild extends
+  Omit<
     Guild,
     | "roles"
     | "presences"
@@ -190,10 +183,6 @@ export interface DiscordenoGuild
     channelId: bigint;
     /** The topic of the Stage instance (1-120 characters) */
     topic: string;
-    /** The privacy level of the Stage instance */
-    privacyLevel: number;
-    /** Whether or not Stage discovery is disabled */
-    discoverableDisabled: boolean;
   }[];
   welcomeScreen?: {
     /** The server description shown in the welcome screen */

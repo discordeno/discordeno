@@ -23,7 +23,7 @@ export async function resharder(gateway: GatewayManager) {
   if (gateway.maxShards && gateway.useOptimalLargeBotSharding) {
     gateway.maxShards = Math.ceil(
       gateway.maxShards /
-        (results.sessionStartLimit.maxConcurrency === 1 ? 16 : results.sessionStartLimit.maxConcurrency)
+        (results.sessionStartLimit.maxConcurrency === 1 ? 16 : results.sessionStartLimit.maxConcurrency),
     );
   }
 
