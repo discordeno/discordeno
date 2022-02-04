@@ -10,7 +10,7 @@ export async function searchMembers(
   bot: Bot,
   guildId: bigint,
   query: string,
-  options?: Omit<SearchGuildMembers, "query">
+  options?: Omit<SearchGuildMembers, "query">,
 ) {
   if (options?.limit) {
     if (options.limit < 1) throw new Error(bot.constants.Errors.MEMBER_SEARCH_LIMIT_TOO_LOW);
@@ -26,13 +26,13 @@ export async function searchMembers(
     {
       ...options,
       query,
-    }
+    },
   );
 
   return new Collection(
     result.map((member) => {
       const m = bot.transformers.member(bot, member, guildId, bot.transformers.snowflake(member.user.id));
       return [m.id, m];
-    })
+    }),
   );
 }

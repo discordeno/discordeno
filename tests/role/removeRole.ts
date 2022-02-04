@@ -1,5 +1,5 @@
 import { roleChanges } from "../constants.ts";
-import { assertExists, assertEquals } from "../deps.ts";
+import { assertEquals, assertExists } from "../deps.ts";
 import { bot, guild } from "../mod.ts";
 import { delayUntil } from "../utils.ts";
 

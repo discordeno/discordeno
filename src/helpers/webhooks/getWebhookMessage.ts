@@ -11,7 +11,7 @@ export async function getWebhookMessage(
   webhookId: bigint,
   webhookToken: string,
   messageId: bigint,
-  options?: GetWebhookMessageOptions
+  options?: GetWebhookMessageOptions,
 ) {
   let url = bot.constants.endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId);
 

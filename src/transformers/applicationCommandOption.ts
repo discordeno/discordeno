@@ -7,7 +7,7 @@ import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
 export function transformApplicationCommandOption(
   bot: Bot,
-  payload: SnakeCasedPropertiesDeep<ApplicationCommandOption>
+  payload: SnakeCasedPropertiesDeep<ApplicationCommandOption>,
 ): DiscordenoApplicationCommandOption {
   return {
     type: payload.type,

@@ -9,6 +9,6 @@ export async function syncGuildTemplate(bot: Bot, guildId: bigint, templateCode:
   return await bot.rest.runMethod<Template>(
     bot.rest,
     "put",
-    `${bot.constants.endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`
+    `${bot.constants.endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
   );
 }

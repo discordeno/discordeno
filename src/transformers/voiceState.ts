@@ -4,11 +4,10 @@ import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
 export function transformVoiceState(
   bot: Bot,
-  payload: { voiceState: SnakeCasedPropertiesDeep<VoiceState> } & { guildId: bigint }
+  payload: { voiceState: SnakeCasedPropertiesDeep<VoiceState> } & { guildId: bigint },
 ): DiscordenoVoiceState {
   return {
-    bitfield:
-      (payload.voiceState.deaf ? 1n : 0n) |
+    bitfield: (payload.voiceState.deaf ? 1n : 0n) |
       (payload.voiceState.mute ? 2n : 0n) |
       (payload.voiceState.self_deaf ? 4n : 0n) |
       (payload.voiceState.self_mute ? 8n : 0n) |
@@ -22,10 +21,10 @@ export function transformVoiceState(
     sessionId: payload.voiceState.session_id,
 
     channelId: payload.voiceState.channel_id ? bot.transformers.snowflake(payload.voiceState.channel_id) : undefined,
-    guildId:
-      payload.guildId || (payload.voiceState.guild_id ? bot.transformers.snowflake(payload.voiceState.guild_id) : 0n),
-    userId:
-      payload.guildId || (payload.voiceState.user_id ? bot.transformers.snowflake(payload.voiceState.user_id) : 0n),
+    guildId: payload.guildId ||
+      (payload.voiceState.guild_id ? bot.transformers.snowflake(payload.voiceState.guild_id) : 0n),
+    userId: payload.guildId ||
+      (payload.voiceState.user_id ? bot.transformers.snowflake(payload.voiceState.user_id) : 0n),
   };
 }
 

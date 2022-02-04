@@ -9,7 +9,7 @@ export async function getMember(bot: Bot, guildId: bigint, id: bigint) {
   const data = await bot.rest.runMethod<GuildMemberWithUser>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_MEMBER(guildId, id)
+    bot.constants.endpoints.GUILD_MEMBER(guildId, id),
   );
 
   return bot.transformers.member(bot, data, guildId, id);

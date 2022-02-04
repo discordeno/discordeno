@@ -7,7 +7,7 @@ export async function editApplicationCommandPermissions(
   bot: Bot,
   guildId: bigint,
   commandId: bigint,
-  options: ApplicationCommandPermissions[]
+  options: ApplicationCommandPermissions[],
 ) {
   const result = await bot.rest.runMethod<GuildApplicationCommandPermissions>(
     bot.rest,
@@ -15,7 +15,7 @@ export async function editApplicationCommandPermissions(
     bot.constants.endpoints.COMMANDS_PERMISSION(bot.applicationId, guildId, commandId),
     {
       permissions: options,
-    }
+    },
   );
 
   return bot.transformers.applicationCommandPermission(bot, result);

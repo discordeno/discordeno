@@ -1,8 +1,5 @@
 import { ChannelTypes } from "../../../../src/types/channels/channelTypes.ts";
-import {
-  ScheduledEventEntityType,
-  ScheduledEventPrivacyLevel,
-} from "../../../../src/types/guilds/scheduledEvents.ts";
+import { ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../../../../src/types/guilds/scheduledEvents.ts";
 import { assertEquals } from "../../../deps.ts";
 import { bot } from "../../../mod.ts";
 

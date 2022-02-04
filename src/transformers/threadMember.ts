@@ -4,7 +4,7 @@ import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
 export function transformThreadMember(
   bot: Bot,
-  payload: SnakeCasedPropertiesDeep<ThreadMember>
+  payload: SnakeCasedPropertiesDeep<ThreadMember>,
 ): DiscordenoThreadMember {
   return {
     id: payload.user_id ? bot.transformers.snowflake(payload.user_id) : undefined,

@@ -10,7 +10,7 @@ import { DiscordenoUser } from "./member.ts";
 
 export function transformScheduledEvent(
   bot: Bot,
-  payload: SnakeCasedPropertiesDeep<ScheduledEvent>
+  payload: SnakeCasedPropertiesDeep<ScheduledEvent>,
 ): DiscordenoScheduledEvent {
   return {
     id: bot.transformers.snowflake(payload.id),

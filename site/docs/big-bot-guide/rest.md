@@ -5,7 +5,8 @@ sidebar_label: Step 1 - REST
 
 # Creating A Standalone REST Process
 
-The first thing we want to make is our standalone REST process. This process will be used by almost every other process, so it is going to be the foundation of the bot.
+The first thing we want to make is our standalone REST process. This process will be used by almost every other process,
+so it is going to be the foundation of the bot.
 
 Before, we dive into how, here is a quick summary of why you will want a standalone REST process.
 
@@ -13,19 +14,18 @@ Before, we dive into how, here is a quick summary of why you will want a standal
 
 - Easily host on any serverless infrastructure.
 - Freedom from global rate limit errors
-  - As your bot grows, you want to handle global rate limits better. Shards
-    don't communicate fast enough to truly handle it properly so this allows 1
-    rest handler across the entire bot.
-  - In fact, you can host multiple instances of your bot and all connect to the
-    same rest server.
+  - As your bot grows, you want to handle global rate limits better. Shards don't communicate fast enough to truly
+    handle it properly so this allows 1 rest handler across the entire bot.
+  - In fact, you can host multiple instances of your bot and all connect to the same rest server.
 - REST does not rest!
-  - Separate rest means if your bot for whatever reason crashes, your requests
-    that are queued will still keep going and will not be lost.
-  - Seamless updates! When you want to update and reboot the bot, you could
-    potentially lose tons of messages or responses that are in queue. Using this
-    you could restart your bot without ever worrying about losing any responses.
+  - Separate rest means if your bot for whatever reason crashes, your requests that are queued will still keep going and
+    will not be lost.
+  - Seamless updates! When you want to update and reboot the bot, you could potentially lose tons of messages or
+    responses that are in queue. Using this you could restart your bot without ever worrying about losing any responses.
 - Single source of contact to Discord API
-    - This will allow you to make requests to discord from anywhere including a bot dashboard. You no longer need to have to communicate to your bot processes just to make a request or anything. Free up your bot process for processing bot events.
+  - This will allow you to make requests to discord from anywhere including a bot dashboard. You no longer need to have
+    to communicate to your bot processes just to make a request or anything. Free up your bot process for processing bot
+    events.
 - Scalability! Scalability! Scalability!
 
 ## Preparations
@@ -55,20 +55,24 @@ const rest = createRestManager({
 
 - `createRestManager` is imported from your deps file which should have exported everything from discordeno.
 - `DISCORD_TOKEN` is the bots token itself.
-- `REST_AUTHORIZATION` is a special password you want to use to authenticate that requests being sent to your port are indeed from you.
-- `customUrl` the url where this rest process will be running. This can be localhost which we are using in this guide if you want all processes on same VPS or separate them to different servers for horizontal scaling. `REST_PORT` is just the port where you want the process hosted.
+- `REST_AUTHORIZATION` is a special password you want to use to authenticate that requests being sent to your port are
+  indeed from you.
+- `customUrl` the url where this rest process will be running. This can be localhost which we are using in this guide if
+  you want all processes on same VPS or separate them to different servers for horizontal scaling. `REST_PORT` is just
+  the port where you want the process hosted.
 
 Now you have an entire Rest manager ready and waiting. Only thing you need now, is to listen for requests.
 
 ## Creating HTTP Listener
 
-Since this is not a beginner guide, I am assuming you know already how to create a HTTP listener. There are enough guides on this out there. I will only cover the rough functionality.
+Since this is not a beginner guide, I am assuming you know already how to create a HTTP listener. There are enough
+guides on this out there. I will only cover the rough functionality.
 
 ```ts
 // START LISTENING TO THE URL(localhost)
 const server = Deno.listen({ port: REST_PORT });
 console.info(
-  `HTTP webserver running.  Access it at:  http://localhost:${REST_PORT}/`
+  `HTTP webserver running.  Access it at:  http://localhost:${REST_PORT}/`,
 );
 
 // Connections to the server will be yielded up as an async iterable.
@@ -91,7 +95,7 @@ async function handleRequest(conn: Deno.Conn) {
       return requestEvent.respondWith(
         new Response(JSON.stringify({ error: "Invalid authorization key." }), {
           status: 401,
-        })
+        }),
       );
     }
 
@@ -105,10 +109,12 @@ async function handleRequest(conn: Deno.Conn) {
       // USE THE SAME METHOD THAT CAME IN. IF DELETE CAME IN WE SEND DELETE OUT
       requestEvent.request.method as any,
       // OVERWRITE THE CUSTOM URL WITH DISCORDS BASE URL
-      `${BASE_URL}/v${rest.version}${requestEvent.request.url.substring(
-        rest.customUrl.length
-      )}`,
-      json
+      `${BASE_URL}/v${rest.version}${
+        requestEvent.request.url.substring(
+          rest.customUrl.length,
+        )
+      }`,
+      json,
     );
 
     // RETURN DISCORDS RESPONSE BACK TO THE PROCESS MAKING THE REQUEST
@@ -116,13 +122,13 @@ async function handleRequest(conn: Deno.Conn) {
       requestEvent.respondWith(
         new Response(JSON.stringify(result), {
           status: 200,
-        })
+        }),
       );
     } else {
       requestEvent.respondWith(
         new Response(undefined, {
           status: 204,
-        })
+        }),
       );
     }
   }

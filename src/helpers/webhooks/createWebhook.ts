@@ -16,7 +16,7 @@ export async function createWebhook(bot: Bot, channelId: bigint, options: Create
       name: options.name,
       avatar: options.avatar ? await bot.utils.urlToBase64(options.avatar) : undefined,
       reason: options.reason,
-    }
+    },
   );
 
   return bot.transformers.webhook(bot, result);

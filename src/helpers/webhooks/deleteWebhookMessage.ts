@@ -10,7 +10,7 @@ export async function deleteWebhookMessage(
   webhookId: bigint,
   webhookToken: string,
   messageId: bigint,
-  options?: DeleteWebhookMessageOptions
+  options?: DeleteWebhookMessageOptions,
 ) {
   let url = bot.constants.endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId);
 

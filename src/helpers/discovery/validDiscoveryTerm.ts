@@ -7,7 +7,7 @@ export async function validDiscoveryTerm(bot: Bot, term: string) {
     bot.rest,
     "get",
     bot.constants.endpoints.DISCOVERY_VALID_TERM,
-    { term }
+    { term },
   );
 
   return result.valid;

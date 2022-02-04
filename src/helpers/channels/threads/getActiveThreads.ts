@@ -8,7 +8,7 @@ export async function getActiveThreads(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<ListActiveThreads>(
     bot.rest,
     "get",
-    bot.constants.endpoints.THREAD_ACTIVE(guildId)
+    bot.constants.endpoints.THREAD_ACTIVE(guildId),
   );
 
   return {
@@ -16,13 +16,13 @@ export async function getActiveThreads(bot: Bot, guildId: bigint) {
       result.threads.map((t) => {
         const thread = bot.transformers.channel(bot, { channel: t });
         return [thread.id, thread];
-      })
+      }),
     ),
     members: new Collection(
       result.members.map((m) => {
         const member = bot.transformers.threadMember(bot, m);
         return [member.id, member];
-      })
+      }),
     ),
   };
 }

@@ -10,6 +10,6 @@ export async function handleGuildMemberUpdate(bot: Bot, data: DiscordGatewayPayl
   bot.events.guildMemberUpdate(
     bot,
     bot.transformers.member(bot, payload, bot.transformers.snowflake(payload.guild_id), user.id),
-    user
+    user,
   );
 }

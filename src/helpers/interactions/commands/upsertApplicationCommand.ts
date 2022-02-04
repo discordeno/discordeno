@@ -10,7 +10,7 @@ export async function upsertApplicationCommand(
   bot: Bot,
   commandId: bigint,
   options: EditGlobalApplicationCommand,
-  guildId?: bigint
+  guildId?: bigint,
 ) {
   const result = await bot.rest.runMethod<ApplicationCommand>(
     bot.rest,
@@ -23,7 +23,7 @@ export async function upsertApplicationCommand(
       description: options.description,
       type: options.type,
       options: options.options ? makeOptionsForCommand(options.options) : undefined,
-    }
+    },
   );
 
   return bot.transformers.applicationCommand(bot, result);

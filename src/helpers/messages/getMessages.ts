@@ -11,7 +11,7 @@ import type { Bot } from "../../bot.ts";
 export async function getMessages(
   bot: Bot,
   channelId: bigint,
-  options?: GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit
+  options?: GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit,
 ) {
   if (options?.limit && (options.limit < 0 || options.limit > 100)) {
     throw new Error(bot.constants.Errors.INVALID_GET_MESSAGES_LIMIT);
@@ -27,7 +27,7 @@ export async function getMessages(
     bot.rest,
     "get",
     bot.constants.endpoints.CHANNEL_MESSAGES(channelId),
-    options
+    options,
   );
 
   return await Promise.all(result.map((res) => bot.transformers.message(bot, res)));

@@ -10,5 +10,5 @@ export enum ApplicationCommandOptionTypes {
   Role,
   Mentionable,
   Number,
-  Attachment
+  Attachment,
 }

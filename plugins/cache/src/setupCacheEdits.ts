@@ -41,7 +41,7 @@ export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
   bot.handlers.MESSAGE_REACTION_ADD = function (_, data, shardId) {
     const payload = data.d as SnakeCasedPropertiesDeep<MessageReactionAdd>;
 
-    const messageId = bot.transformers.snowflake(payload.message_id)
+    const messageId = bot.transformers.snowflake(payload.message_id);
     const message = bot.messages.get(messageId);
 
     const emoji = bot.transformers.emoji(bot, payload.emoji);
@@ -71,12 +71,12 @@ export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
     }
 
     MESSAGE_REACTION_ADD(bot, data, shardId);
-  }
+  };
 
   bot.handlers.MESSAGE_REACTION_REMOVE = function (_, data, shardId) {
     const payload = data.d as SnakeCasedPropertiesDeep<MessageReactionRemove>;
 
-    const messageId = bot.transformers.snowflake(payload.message_id)
+    const messageId = bot.transformers.snowflake(payload.message_id);
     const message = bot.messages.get(messageId);
 
     const emoji = bot.transformers.emoji(bot, payload.emoji);
@@ -102,7 +102,7 @@ export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
     }
 
     MESSAGE_REACTION_REMOVE(bot, data, shardId);
-  }
+  };
 
   bot.handlers.MESSAGE_REACTION_REMOVE_ALL = function (_, data, shardId) {
     const payload = data.d as SnakeCasedPropertiesDeep<MessageReactionRemoveAll>;
@@ -116,5 +116,5 @@ export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
     }
 
     MESSAGE_REACTION_REMOVE_ALL(bot, data, shardId);
-  }
+  };
 }

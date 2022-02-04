@@ -21,7 +21,7 @@ export const formatImageURL = (url: string, size: ImageSize = 128, format?: Imag
 // deno-lint-ignore ban-types
 export function hasProperty<T extends {}, Y extends PropertyKey = string>(
   obj: T,
-  prop: Y
+  prop: Y,
 ): obj is T & Record<Y, unknown> {
   // deno-lint-ignore no-prototype-builtins
   return obj.hasOwnProperty(prop);

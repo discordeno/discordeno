@@ -9,6 +9,6 @@ export async function handleGuildBanRemove(bot: Bot, data: DiscordGatewayPayload
   await bot.events.guildBanRemove(
     bot,
     bot.transformers.user(bot, payload.user),
-    bot.transformers.snowflake(payload.guild_id)
+    bot.transformers.snowflake(payload.guild_id),
   );
 }

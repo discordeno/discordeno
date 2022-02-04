@@ -8,7 +8,7 @@ export async function getInvites(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<InviteMetadata[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_INVITES(guildId)
+    bot.constants.endpoints.GUILD_INVITES(guildId),
   );
 
   return new Collection(
@@ -21,6 +21,6 @@ export async function getInvites(bot: Bot, guildId: bigint) {
         temporary: invite.temporary,
         createdAt: Date.parse(invite.created_at),
       },
-    ])
+    ]),
   );
 }

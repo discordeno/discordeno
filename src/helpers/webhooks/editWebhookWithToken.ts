@@ -8,7 +8,7 @@ export async function editWebhookWithToken(
   bot: Bot,
   webhookId: bigint,
   webhookToken: string,
-  options: Omit<ModifyWebhook, "channelId">
+  options: Omit<ModifyWebhook, "channelId">,
 ) {
   const result = await bot.rest.runMethod<Webhook>(
     bot.rest,
@@ -17,7 +17,7 @@ export async function editWebhookWithToken(
     {
       name: options.name,
       avatar: options.avatar,
-    }
+    },
   );
 
   return bot.transformers.webhook(bot, result);

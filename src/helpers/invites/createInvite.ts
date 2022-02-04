@@ -16,7 +16,7 @@ export async function createInvite(bot: Bot, channelId: bigint, options: CreateC
       target_type: options.targetType,
       target_user_id: options.targetUserId,
       target_application_id: options.targetUserId,
-    }
+    },
   );
 
   return {

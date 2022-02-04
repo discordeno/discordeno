@@ -1,6 +1,6 @@
 import { CreateGuildChannel } from "../../../src/types/guilds/createGuildChannel.ts";
 import { ChannelTypes } from "../../../src/types/mod.ts";
-import { assertExists, assertEquals } from "../../deps.ts";
+import { assertEquals, assertExists } from "../../deps.ts";
 import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
 
@@ -32,7 +32,7 @@ export async function createChannelTests(
 
   if (options.permissionOverwrites && channel.permissionOverwrites?.length !== options.permissionOverwrites.length) {
     throw new Error(
-      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites."
+      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites.",
     );
   }
 

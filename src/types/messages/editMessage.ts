@@ -17,11 +17,11 @@ export interface EditMessage {
   /** Allowed mentions for the message */
   allowedMentions?:
     | (Omit<AllowedMentions, "users" | "roles"> & {
-        /** Array of role_ids to mention (Max size of 100) */
-        roles?: bigint[];
-        /** Array of user_ids to mention (Max size of 100) */
-        users?: bigint[];
-      })
+      /** Array of role_ids to mention (Max size of 100) */
+      roles?: bigint[];
+      /** Array of user_ids to mention (Max size of 100) */
+      users?: bigint[];
+    })
     | null;
   /** Attached files to keep */
   attachments?: Attachment[];
