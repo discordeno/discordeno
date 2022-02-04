@@ -1,28 +1,20 @@
 import { ChannelTypes, createBot, createEventHandlers, startBot } from "../mod.ts";
-import "./benchmark.ts";
-// channels
-import "./channels/connectToVoice.ts";
-import "./channels/createChannel.ts";
-import "./channels/deleteChannel.ts";
-import "./channels/getChannel.ts";
-import "./channels/getChannels.ts";
-import "./channels/stageInstances.ts";
-import "./channels/threads.ts";
-import { CACHED_COMMUNITY_GUILD_ID, sanitizeMode } from "./constants.ts";
 import { assertEquals, assertExists, enableCachePlugin } from "./deps.ts";
-// emoji
-import "./emoji/createEmoji.ts";
-import "./emoji/deleteEmojiWithoutReason.ts";
-import "./emoji/deleteEmojiWithReason.ts";
-import "./emoji/editEmoji.ts";
-import "./emoji/emojiUrl.ts";
-import "./emoji/getEmoji.ts";
-import "./emoji/getMultipleEmojis.ts";
-// guilds
-import "./guilds/urls.ts";
-import { categoryChildrenTest } from "./helpers/channels/categoryChannels.ts";
-import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOverwrite.ts";
-import { editChannelTests } from "./helpers/channels/editChannel.ts";
+import { deleteMessageWithoutReasonTest, deleteMessageWithReasonTest } from "./helpers/messages/deleteMessage.ts";
+import { getMessagesTest } from "./helpers/messages/getMessages.ts";
+import { deleteMessagesWithoutReasonTest, deleteMessagesWithReasonTest } from "./helpers/messages/deleteMessages.ts";
+import { delayUntil } from "./utils.ts";
+import {
+  sendMessageWithComponents,
+  sendMessageWithEmbedsTest,
+  sendMessageWithTextTest,
+} from "./helpers/messages/sendMessage.ts";
+
+// CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
+import "./local.ts";
+import { getMessageTest } from "./helpers/messages/getMessage.ts";
+import { editMessageTest } from "./helpers/messages/editMessage.ts";
+import { pinMessageTests } from "./helpers/messages/pin.ts";
 import { createGuildTests } from "./helpers/guilds/createGuild.ts";
 import { deleteGuildTests } from "./helpers/guilds/deleteGuild.ts";
 import { editGuildTests } from "./helpers/guilds/editGuild.ts";
@@ -32,69 +24,12 @@ import { getBanTests } from "./helpers/guilds/getBan.ts";
 import { getBansTests } from "./helpers/guilds/getBans.ts";
 import { getGuildTests } from "./helpers/guilds/getGuild.ts";
 import { getVanityURLTests } from "./helpers/guilds/getVanityUrl.ts";
-import { deleteMessageWithoutReasonTest, deleteMessageWithReasonTest } from "./helpers/messages/deleteMessage.ts";
-import { deleteMessagesWithoutReasonTest, deleteMessagesWithReasonTest } from "./helpers/messages/deleteMessages.ts";
-import { editMessageTest } from "./helpers/messages/editMessage.ts";
-import { getMessageTest } from "./helpers/messages/getMessage.ts";
-import { getMessagesTest } from "./helpers/messages/getMessages.ts";
-import { pinMessageTests } from "./helpers/messages/pin.ts";
-import {
-  sendMessageWithComponents,
-  sendMessageWithEmbedsTest,
-  sendMessageWithTextTest,
-} from "./helpers/messages/sendMessage.ts";
-// invite
-import "./invite/createInvite.ts";
-import "./invite/deleteInvite.ts";
-import "./invite/getChannelInvites.ts";
-import "./invite/getInvite.ts";
-import "./invite/getInvites.ts";
-// CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
-import "./local.ts";
-// members
-import "./members/avatarlUrl.ts";
-import "./members/ban.ts";
-import "./members/editBotNickname.ts";
-import "./members/getDmChannel.ts";
-import "./members/getMember.ts";
-// messages
-import "./messages/reactions.ts";
-import "./misc/editBotStatus.ts";
-// misc
-import "./misc/getApplicationInfo.ts";
-import "./misc/getDiscoveryCategories.ts";
-import "./misc/getUser.ts";
-import "./misc/getVoiceRegions.ts";
-import "./misc/snowflake.ts";
-import "./misc/typing.ts";
-import "./misc/validateDiscovery.ts";
-// role
-import "./role/addRole.ts";
-import "./role/createRoleWithoutReason.ts";
-import "./role/createRoleWithReason.ts";
-import "./role/deleteRoleWithoutReason.ts";
-import "./role/deleteRoleWithReason.ts";
-import "./role/editRole.ts";
-import "./role/getAllRoles.ts";
-import "./role/removeRole.ts";
-// scheduledEvents
-import "./scheduledEvents/createExternalEventWithEndtime.ts";
-import "./scheduledEvents/createExternalEventWithoutEndtime.ts";
-import "./scheduledEvents/createStageEventWithEndtime.ts";
-import "./scheduledEvents/createStageEventWithoutEndtime.ts";
-import "./scheduledEvents/createVoiceEventWithEndtime.ts";
-import "./scheduledEvents/createVoiceEventWithoutEndtime.ts";
-import "./scheduledEvents/deleteEvent.ts";
-import "./scheduledEvents/editEvent.ts";
-import { delayUntil } from "./utils.ts";
-// webhooks
-import "./webhooks/deleteWebhook.ts";
-import "./webhooks/deleteWebhookWithToken.ts";
-import "./webhooks/sendWebhook.ts";
-import "./webhooks/webhooks.ts";
+import { categoryChildrenTest } from "./helpers/channels/categoryChannels.ts";
+import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOverwrite.ts";
+import { editChannelTests } from "./helpers/channels/editChannel.ts";
+import { CACHED_COMMUNITY_GUILD_ID, sanitizeMode } from "./constants.ts";
 
-let TOKEN = Deno.env.get("DISCORD_TOKEN");
-
+let TOKEN = Deno.env.get("DISCORD_TOKEN")
 if (!TOKEN) throw new Error("Token was not provided.");
 
 const botId = BigInt(atob(TOKEN.split(".")[0]));
@@ -165,6 +100,8 @@ assertExists(channel);
 assertEquals(channel.type, ChannelTypes.GuildText);
 
 export const message = await bot.helpers.sendMessage(channel.id, { content: "Hello Skillz" });
+
+import "./benchmark.ts";
 
 Deno.test({
   name: "[guild] create a guild",
@@ -345,3 +282,77 @@ Deno.test({
   },
   ...sanitizeMode,
 });
+
+// channels
+import "./channels/connectToVoice.ts";
+import "./channels/createChannel.ts";
+import "./channels/deleteChannel.ts";
+import "./channels/getChannel.ts";
+import "./channels/getChannels.ts";
+import "./channels/stageInstances.ts";
+import "./channels/threads.ts";
+
+// emoji
+import "./emoji/createEmoji.ts";
+import "./emoji/deleteEmojiWithReason.ts";
+import "./emoji/deleteEmojiWithoutReason.ts";
+import "./emoji/editEmoji.ts";
+import "./emoji/emojiUrl.ts";
+import "./emoji/getEmoji.ts";
+import "./emoji/getMultipleEmojis.ts";
+
+// guilds
+import "./guilds/urls.ts";
+
+// invite
+import "./invite/createInvite.ts";
+import "./invite/deleteInvite.ts";
+import "./invite/getChannelInvites.ts";
+import "./invite/getInvite.ts";
+import "./invite/getInvites.ts";
+
+// members
+import "./members/avatarlUrl.ts";
+import "./members/ban.ts";
+import "./members/editBotNickname.ts";
+import "./members/getDmChannel.ts";
+import "./members/getMember.ts";
+
+// messages
+import "./messages/reactions.ts";
+
+// misc
+import "./misc/getApplicationInfo.ts";
+import "./misc/getDiscoveryCategories.ts";
+import "./misc/getUser.ts";
+import "./misc/getVoiceRegions.ts";
+import "./misc/snowflake.ts";
+import "./misc/typing.ts";
+import "./misc/validateDiscovery.ts";
+import "./misc/editBotStatus.ts";
+
+// role
+import "./role/addRole.ts";
+import "./role/createRoleWithoutReason.ts";
+import "./role/createRoleWithReason.ts";
+import "./role/deleteRoleWithoutReason.ts";
+import "./role/deleteRoleWithReason.ts";
+import "./role/editRole.ts";
+import "./role/getAllRoles.ts";
+import "./role/removeRole.ts";
+
+// scheduledEvents
+import "./scheduledEvents/createExternalEventWithEndtime.ts";
+import "./scheduledEvents/createExternalEventWithoutEndtime.ts";
+import "./scheduledEvents/createStageEventWithEndtime.ts";
+import "./scheduledEvents/createStageEventWithoutEndtime.ts";
+import "./scheduledEvents/createVoiceEventWithEndtime.ts";
+import "./scheduledEvents/createVoiceEventWithoutEndtime.ts";
+import "./scheduledEvents/deleteEvent.ts";
+import "./scheduledEvents/editEvent.ts";
+
+// webhooks
+import "./webhooks/deleteWebhook.ts";
+import "./webhooks/deleteWebhookWithToken.ts";
+import "./webhooks/sendWebhook.ts";
+import "./webhooks/webhooks.ts";
