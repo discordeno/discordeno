@@ -70,7 +70,9 @@ export function transformMessage(bot: Bot, payload: SnakeCasedPropertiesDeep<Mes
             : undefined,
             permissions: payload.interaction.member.permissions
               ? bot.transformers.snowflake(payload.interaction.member.permissions) : undefined,
-            communicationDisabledUntil: payload.interaction.member.communication_disabled_until,
+            communicationDisabledUntil: payload.interaction.member.communication_disabled_until
+              ? Date.parse(payload.interaction.member.communication_disabled_until)
+              : undefined,
           }
           : undefined,
       }
