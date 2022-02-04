@@ -58,9 +58,6 @@ import {
   sendShardMessage,
   spawnShards,
   tellWorkerToIdentify,
-  sendShardMessage,
-  DiscordenoShard,
-  processGatewayQueue,
   resharderCloseOldShards,
   startReshardingChecks,
 } from "./ws/mod.ts";
