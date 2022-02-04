@@ -29,7 +29,7 @@ import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOve
 import { editChannelTests } from "./helpers/channels/editChannel.ts";
 import { CACHED_COMMUNITY_GUILD_ID, sanitizeMode } from "./constants.ts";
 
-let TOKEN = Deno.env.get("DISCORD_TOKEN")
+let TOKEN = Deno.env.get("DISCORD_TOKEN");
 if (!TOKEN) throw new Error("Token was not provided.");
 
 const botId = BigInt(atob(TOKEN.split(".")[0]));
