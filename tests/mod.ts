@@ -1,5 +1,5 @@
 import { ChannelTypes, createBot, createEventHandlers, startBot } from "../mod.ts";
-import { assertEquals, assertExists, enableCachePlugin } from "./deps.ts";
+import { assertEquals, assertExists, dotenv, enableCachePlugin } from "./deps.ts";
 import { deleteMessageWithoutReasonTest, deleteMessageWithReasonTest } from "./helpers/messages/deleteMessage.ts";
 import { getMessagesTest } from "./helpers/messages/getMessages.ts";
 import { deleteMessagesWithoutReasonTest, deleteMessagesWithReasonTest } from "./helpers/messages/deleteMessages.ts";
@@ -28,6 +28,8 @@ import { categoryChildrenTest } from "./helpers/channels/categoryChannels.ts";
 import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOverwrite.ts";
 import { editChannelTests } from "./helpers/channels/editChannel.ts";
 import { CACHED_COMMUNITY_GUILD_ID, sanitizeMode } from "./constants.ts";
+
+dotenv({ export: true });
 
 let TOKEN = Deno.env.get("DISCORD_TOKEN");
 if (!TOKEN) throw new Error("Token was not provided.");
