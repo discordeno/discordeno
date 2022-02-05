@@ -1,10 +1,18 @@
 const DestructObject = require("./DestructObject");
+const Guild = require("./Guild");
 
 class Channel extends DestructObject{
     ///constructor(client: import("discordeno").Bot, channel = {}) {
-    constructor(client, channel = {}) {
+    constructor(client, channel = {}, options = {}) {
         super(channel);
+        if(options.guild) this.guild = options.guild;
+        else if(channel.guildId) this.guild = new Guild(client, {id: channel.guildId});
+
         this.client = client;
+    }
+
+    async create(options = {}, reason){
+        return this.client.helpers.createChannel(this.guildId, options, reason);
     }
 
     async edit(options = {}, reason){
@@ -13,10 +21,6 @@ class Channel extends DestructObject{
 
     async delete(reason){
         return this.client.helpers.deleteChannel(this.id, reason);
-    }
-
-    async create(options = {}, reason){
-        return this.client.helpers.createChannel(this.guildId, options, reason);
     }
 
     async send(options = {}){

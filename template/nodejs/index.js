@@ -3,6 +3,7 @@ const deno = require('discordeno');
 const configs = require('../config.json');
 const Component = require('./Structures/Component');
 const Embed = require('./Structures/Embed');
+const Interaction = require('./Structures/Interaction');
 const Message = require('./Structures/Message');
 
 const client = deno.createBot({
@@ -10,13 +11,21 @@ const client = deno.createBot({
         ready() {
             console.log("Successfully connected to gateway");
         },
+        interactionCreate(client, interaction){
+            const i = new Interaction(client, interaction);
+            i.reply({content: `hello`});
+        },
         messageCreate(client, message) {
             if (message.content === "!ping") {
+                //Convert String to Bigint
+                const bigint = BigInt("853274694097698836");
+
                 const msg = new Message(client, message);
-                msg.reply({content: 'hello'})
+                //msg.member.roles.add({roleId: bigint});
+              /*   msg.reply({content: 'hello'})
                 msg.pin();
                 msg.unpin();
-                msg.react('🐱');
+                msg.react('🐱'); */
                 const embed = new Embed().setTitle("Pong!").setDescription("This is a test embed!").setColor(0x00ff00).toJSON();
                 const button = new Component().setType('BUTTON').setStyle('LINK').setLabel("Click me!").setUrl("https://google.com").toJSON();
                 const button2 = new Component().setType(2).setStyle('DANGER').setLabel("EYES").setCustomId('s222').toJSON();

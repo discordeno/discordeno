@@ -2,14 +2,18 @@ const DestructObject = require("./DestructObject");
 
 const Channel = require("./Channel");
 const Guild = require("./Guild");
+const Member = require("./Member");
+const User = require("./User");
 
 class Message extends DestructObject{
     //constructor(client: import("discordeno").Bot, message = {}) {
     constructor(client, message = {}) {
         super(message);
         this.client = client;
-        this.channel = new Channel(client, {id: this.channel_id || this.channelId});
         this.guild = new Guild(client, {id: this.guild_id || this.guildId});
+        this.channel = new Channel(client, {id: this.channel_id || this.channelId}, {guild: this.guild});
+        this.member = new Member(client, message.member, {guild: this.guild});
+        this.author = new User(client, {id: this.author_id || this.authorId, tag: this.tag, bot: this.isBot});
     }
 
     async edit(options){
