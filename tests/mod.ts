@@ -290,12 +290,12 @@ export const message = await bot.helpers.sendMessage(channel.id, {
 // });
 
 // channels
-// import "./channels/connectToVoice.ts";
-// import "./channels/createChannel.ts";
-// import "./channels/deleteChannel.ts";
-// import "./channels/getChannel.ts";
-// import "./channels/getChannels.ts";
-// import "./channels/stageInstances.ts";
+import "./channels/connectToVoice.ts";
+import "./channels/createChannel.ts";
+import "./channels/deleteChannel.ts";
+import "./channels/getChannel.ts";
+import "./channels/getChannels.ts";
+import "./channels/stageInstances.ts";
 // import "./channels/threads.ts";
 
 // // emoji
