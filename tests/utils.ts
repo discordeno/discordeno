@@ -9,7 +9,10 @@ export function delayUntil(
     if ((await isReady()) || Date.now() >= maxTime) {
       resolve();
     } else {
-      setTimeout(() => hackyFix(resolve), timeoutTime);
+      setTimeout(() => {
+        console.log("utils delayuntil timeout ran");
+        hackyFix(resolve);
+      }, timeoutTime);
     }
   }
 

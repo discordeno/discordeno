@@ -4,7 +4,6 @@ import {
   assertEquals,
   assertExists,
   dotenv,
-  // enableCachePlugin,
 } from "./deps.ts";
 import { deleteMessageWithoutReasonTest, deleteMessageWithReasonTest } from "./helpers/messages/deleteMessage.ts";
 import { getMessagesTest } from "./helpers/messages/getMessages.ts";
@@ -290,9 +289,6 @@ export const message = await bot.helpers.sendMessage(channel.id, {
 //   ...sanitizeMode,
 // });
 
-// CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
-import "./local.ts";
-
 // channels
 // import "./channels/connectToVoice.ts";
 // import "./channels/createChannel.ts";
@@ -366,6 +362,9 @@ import "./local.ts";
 // import "./webhooks/deleteWebhookWithToken.ts";
 // import "./webhooks/sendWebhook.ts";
 // import "./webhooks/webhooks.ts";
+
+// TESTS THAT DON'T REQUIRE API CONNECTION
+import "./local.ts";
 
 // // BENCHMARK TESTING
 import "./benchmark.ts";

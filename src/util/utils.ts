@@ -5,6 +5,7 @@ import type { ImageSize } from "../types/misc/imageSize.ts";
 export function delay(ms: number): Promise<void> {
   return new Promise((res): number =>
     setTimeout((): void => {
+      console.log('utils delay timeout ran')
       res();
     }, ms)
   );
