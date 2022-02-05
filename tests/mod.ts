@@ -294,17 +294,17 @@ import "./channels/getChannels.ts";
 import "./channels/stageInstances.ts";
 // import "./channels/threads.ts";
 
-// // emoji
-// import "./emoji/createEmoji.ts";
-// import "./emoji/deleteEmojiWithReason.ts";
-// import "./emoji/deleteEmojiWithoutReason.ts";
-// import "./emoji/editEmoji.ts";
-// import "./emoji/emojiUrl.ts";
-// import "./emoji/getEmoji.ts";
-// import "./emoji/getMultipleEmojis.ts";
+// emoji
+import "./emoji/createEmoji.ts";
+import "./emoji/deleteEmojiWithReason.ts";
+import "./emoji/deleteEmojiWithoutReason.ts";
+import "./emoji/editEmoji.ts";
+import "./emoji/emojiUrl.ts";
+import "./emoji/getEmoji.ts";
+import "./emoji/getMultipleEmojis.ts";
 
-// // guilds
-// import "./guilds/urls.ts";
+// guilds
+import "./guilds/urls.ts";
 
 // // invite
 // import "./invite/createInvite.ts";
@@ -313,25 +313,25 @@ import "./channels/stageInstances.ts";
 // import "./invite/getInvite.ts";
 // import "./invite/getInvites.ts";
 
-// // members
-// import "./members/avatarlUrl.ts";
-// import "./members/ban.ts";
-// import "./members/editBotNickname.ts";
-// import "./members/getDmChannel.ts";
-// import "./members/getMember.ts";
+// members
+import "./members/avatarlUrl.ts";
+import "./members/ban.ts";
+import "./members/editBotNickname.ts";
+import "./members/getDmChannel.ts";
+import "./members/getMember.ts";
 
-// // messages
+// messages
 // import "./messages/reactions.ts";
 
-// // misc
-// import "./misc/getApplicationInfo.ts";
-// import "./misc/getDiscoveryCategories.ts";
-// import "./misc/getUser.ts";
+// misc
+import "./misc/getApplicationInfo.ts";
+import "./misc/getDiscoveryCategories.ts";
+import "./misc/getUser.ts";
 // import "./misc/getVoiceRegions.ts";
-// import "./misc/snowflake.ts";
-// import "./misc/typing.ts";
-// import "./misc/validateDiscovery.ts";
-// import "./misc/editBotStatus.ts";
+import "./misc/snowflake.ts";
+import "./misc/typing.ts";
+import "./misc/validateDiscovery.ts";
+import "./misc/editBotStatus.ts";
 
 // // role
 // import "./role/addRole.ts";
