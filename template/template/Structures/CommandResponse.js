@@ -39,4 +39,4 @@ class Responses {
     }
 
 }
-module.export = Responses;
+module.exports = Responses;

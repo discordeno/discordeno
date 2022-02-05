@@ -1,3 +1,4 @@
+
 const deno = require('discordeno');
 
 const configs = require('../config.json');
@@ -16,7 +17,8 @@ const client = deno.createBot({
             i.reply({content: `hello`});
         },
         messageCreate(client, message) {
-            if (message.content === "!ping") {
+            client.commands.isCommand(message);
+            if (message.content === "!!ping") {
                 //Convert String to Bigint
                 const bigint = BigInt("853274694097698836");
 
@@ -58,6 +60,10 @@ const client = deno.createBot({
     intents: ['Guilds', 'GuildMessages'],
     token: configs.token,
 })
+
+const CommandManager = require('./Managers/CommandManager.js');
+client.commands = new CommandManager(client);
+client.commands.load({})
 
 deno.startBot(client)
 
