@@ -1,10 +1,6 @@
 import enableCachePlugin from "../plugins/cache/mod.ts";
 import { ChannelTypes, createBot, createEventHandlers, startBot } from "../mod.ts";
-import {
-  assertEquals,
-  assertExists,
-  dotenv,
-} from "./deps.ts";
+import { assertEquals, assertExists, dotenv } from "./deps.ts";
 import { deleteMessageWithoutReasonTest, deleteMessageWithReasonTest } from "./helpers/messages/deleteMessage.ts";
 import { getMessagesTest } from "./helpers/messages/getMessages.ts";
 import { deleteMessagesWithoutReasonTest, deleteMessagesWithReasonTest } from "./helpers/messages/deleteMessages.ts";

@@ -22,7 +22,7 @@ export function processRateLimitedPaths(rest: RestManager) {
     rest.processingRateLimitedPaths = true;
     // RECHECK IN 1 SECOND
     setTimeout(() => {
-      console.log('process rate lilmited paths timeout ran')
+      console.log("process rate lilmited paths timeout ran");
       rest.debug(`[REST - processRateLimitedPaths] Running setTimeout.`);
       rest.processRateLimitedPaths(rest);
     }, 1000);

@@ -22,7 +22,7 @@ export function processQueue(rest: RestManager, id: string) {
         queue.isWaiting = true;
 
         setTimeout(() => {
-          console.log('process queue timeout ran')
+          console.log("process queue timeout ran");
           queue.isWaiting = false;
 
           rest.debug(`[REST - processQueue] rate limited, running setTimeout.`);
