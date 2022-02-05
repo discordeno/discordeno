@@ -68,16 +68,14 @@ export async function resharderIsPending(
   gateway: GatewayManager,
   oldGateway: GatewayManager,
 ) {
-  let pending = false;
   for (let i = gateway.firstShardId; i < gateway.maxShards; i++) {
     const shard = gateway.shards.get(i);
     if (!shard?.ready) {
-      pending = true;
-      break;
+      return true;
     }
   }
 
-  return pending;
+  return false;
 }
 
 /** Handler that by default closes all shards in the old gateway. Can be overriden if you have multiple servers and you want to communicate through redis pubsub or whatever you prefer. */
