@@ -5,7 +5,7 @@ import { GetGatewayBot } from "../types/gateway/getGatewayBot.ts";
 export async function resharder(gateway: GatewayManager) {
   // TODO: is it possible to route this to REST?
   const results = (await fetch(`https://discord.com/api/gateway/bot`, {
-    headers: { Authorization: gateway.token },
+    headers: { Authorization: `Bot ${gateway.token}` },
   }).then((res) => res.json())) as GetGatewayBot;
 
   const percentage = ((results.shards - gateway.maxShards) / gateway.maxShards) * 100;

@@ -98,7 +98,7 @@ export function createBot(options: CreateBotOptions): Bot {
   const bot = {
     id: options.botId,
     applicationId: options.applicationId || options.botId,
-    token: `Bot ${options.token}`,
+    token: options.token,
     events: createEventHandlers(options.events),
     intents: options.intents.reduce((bits, next) => (bits |= GatewayIntents[next]), 0),
     botGatewayData: options.botGatewayData,
@@ -242,7 +242,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
     invalidRequestFrozenAt: 0,
     invalidRequestErrorStatuses: [401, 403, 429],
     version,
-    token: `${options.token.startsWith("Bot ") ? "" : "Bot "}${options.token}`,
+    token: options.token,
     maxRetryCount: options.maxRetryCount || 10,
     secretKey: options.secretKey || "discordeno_best_lib_ever",
     customUrl: options.customUrl || "",
