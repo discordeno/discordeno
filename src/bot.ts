@@ -10,7 +10,11 @@ import {
   runMethod,
   simplifyUrl,
 } from "./rest/mod.ts";
-import type { RestPayload, RestRateLimitedPath, RestRequest } from "./rest/rest.ts";
+import type {
+  RestPayload,
+  RestRateLimitedPath,
+  RestRequest,
+} from "./rest/rest.ts";
 import { GatewayIntents, Intents } from "./types/gateway/gatewayIntents.ts";
 import { GetGatewayBot } from "./types/gateway/getGatewayBot.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
@@ -42,7 +46,11 @@ import {
   USER_AGENT,
 } from "./util/constants.ts";
 import { Errors } from "./types/discordeno/errors.ts";
-import { DiscordGatewayPayload, GatewayDispatchEventNames, GatewayPayload } from "./types/gateway/gatewayPayload.ts";
+import {
+  DiscordGatewayPayload,
+  GatewayDispatchEventNames,
+  GatewayPayload,
+} from "./types/gateway/gatewayPayload.ts";
 import {
   closeWS,
   createShard,
@@ -53,21 +61,27 @@ import {
   prepareBuckets,
   processGatewayQueue,
   resharder,
+  resharderCloseOldShards,
   resharderIsPending,
   resume,
   sendShardMessage,
   spawnShards,
-  tellWorkerToIdentify,
-  resharderCloseOldShards,
   startReshardingChecks,
+  tellWorkerToIdentify,
 } from "./ws/mod.ts";
 import { validateLength } from "./util/validateLength.ts";
 import { delay, formatImageURL, hasProperty } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { calculateShardId } from "./util/calculateShardId.ts";
 import * as handlers from "./handlers/mod.ts";
-import { DiscordenoInteraction, transformInteraction } from "./transformers/interaction.ts";
-import { DiscordenoIntegration, transformIntegration } from "./transformers/integration.ts";
+import {
+  DiscordenoInteraction,
+  transformInteraction,
+} from "./transformers/interaction.ts";
+import {
+  DiscordenoIntegration,
+  transformIntegration,
+} from "./transformers/integration.ts";
 import { Emoji } from "./types/emojis/emoji.ts";
 import { transformApplication } from "./transformers/application.ts";
 import { transformTeam } from "./transformers/team.ts";
@@ -75,7 +89,10 @@ import { DiscordenoInvite, transformInvite } from "./transformers/invite.ts";
 import * as helpers from "./helpers/mod.ts";
 import { DiscordenoEmoji, transformEmoji } from "./transformers/emoji.ts";
 import { transformActivity } from "./transformers/activity.ts";
-import { DiscordenoPresence, transformPresence } from "./transformers/presence.ts";
+import {
+  DiscordenoPresence,
+  transformPresence,
+} from "./transformers/presence.ts";
 import { DiscordReady } from "./types/gateway/ready.ts";
 import { urlToBase64 } from "./util/urlToBase64.ts";
 import { transformAttachment } from "./transformers/attachment.ts";
@@ -88,7 +105,10 @@ import { StatusUpdate } from "./types/gateway/statusUpdate.ts";
 import { calculateBits, calculatePermissions } from "./util/permissions.ts";
 import { transformScheduledEvent } from "./transformers/scheduledEvent.ts";
 import { DiscordenoScheduledEvent } from "./transformers/scheduledEvent.ts";
-import { DiscordenoThreadMember, transformThreadMember } from "./transformers/threadMember.ts";
+import {
+  DiscordenoThreadMember,
+  transformThreadMember,
+} from "./transformers/threadMember.ts";
 import { transformApplicationCommandOption } from "./transformers/applicationCommandOption.ts";
 import { transformApplicationCommand } from "./transformers/applicationCommand.ts";
 import { transformWelcomeScreen } from "./transformers/welcomeScreen.ts";
@@ -103,7 +123,10 @@ export function createBot(options: CreateBotOptions): Bot {
     applicationId: options.applicationId || options.botId,
     token: `Bot ${options.token}`,
     events: createEventHandlers(options.events),
-    intents: options.intents.reduce((bits, next) => (bits |= GatewayIntents[next]), 0),
+    intents: options.intents.reduce(
+      (bits, next) => (bits |= GatewayIntents[next]),
+      0,
+    ),
     botGatewayData: options.botGatewayData,
     activeGuildIds: new Set<bigint>(),
     constants: createBotConstants(),
@@ -137,20 +160,20 @@ export function createBot(options: CreateBotOptions): Bot {
 
         // RUN DISPATCH CHECK
         await bot.events.dispatchRequirements(bot as Bot, data, shardId);
-        bot.handlers[data.t as GatewayDispatchEventNames]?.(bot as Bot, data, shardId);
+        bot.handlers[data.t as GatewayDispatchEventNames]?.(
+          bot as Bot,
+          data,
+          shardId,
+        );
       },
   });
-
-  // Check Resharding once a day
-  setInterval(async () => {
-    const resharded = await bot.gateway.startReshardingChecks(bot.gateway);
-    if (resharded) bot.gateway = resharded;
-  }, 86400000);
 
   return bot as Bot;
 }
 
-export function createEventHandlers(events: Partial<EventHandlers>): EventHandlers {
+export function createEventHandlers(
+  events: Partial<EventHandlers>,
+): EventHandlers {
   function ignore() {}
 
   return {
@@ -280,8 +303,10 @@ export function createRestManager(options: CreateRestManagerOptions) {
     checkRateLimits: options.checkRateLimits || checkRateLimits,
     cleanupQueues: options.cleanupQueues || cleanupQueues,
     processQueue: options.processQueue || processQueue,
-    processRateLimitedPaths: options.processRateLimitedPaths || processRateLimitedPaths,
-    processRequestHeaders: options.processRequestHeaders || processRequestHeaders,
+    processRateLimitedPaths: options.processRateLimitedPaths ||
+      processRateLimitedPaths,
+    processRequestHeaders: options.processRequestHeaders ||
+      processRequestHeaders,
     processRequest: options.processRequest || processRequest,
     createRequestBody: options.createRequestBody || createRequestBody,
     runMethod: options.runMethod || runMethod,
@@ -291,15 +316,21 @@ export function createRestManager(options: CreateRestManagerOptions) {
 }
 
 export async function startBot(bot: Bot) {
-  if (!bot.botGatewayData) bot.botGatewayData = await bot.helpers.getGatewayBot();
+  if (!bot.botGatewayData) {
+    bot.botGatewayData = await bot.helpers.getGatewayBot();
+  }
 
   // SETUP GATEWAY LOGIN INFO
   bot.gateway.urlWSS = bot.botGatewayData.url;
   bot.gateway.shardsRecommended = bot.botGatewayData.shards;
-  bot.gateway.sessionStartLimitTotal = bot.botGatewayData.sessionStartLimit.total;
-  bot.gateway.sessionStartLimitRemaining = bot.botGatewayData.sessionStartLimit.remaining;
-  bot.gateway.sessionStartLimitResetAfter = bot.botGatewayData.sessionStartLimit.resetAfter;
-  bot.gateway.maxConcurrency = bot.botGatewayData.sessionStartLimit.maxConcurrency;
+  bot.gateway.sessionStartLimitTotal =
+    bot.botGatewayData.sessionStartLimit.total;
+  bot.gateway.sessionStartLimitRemaining =
+    bot.botGatewayData.sessionStartLimit.remaining;
+  bot.gateway.sessionStartLimitResetAfter =
+    bot.botGatewayData.sessionStartLimit.resetAfter;
+  bot.gateway.maxConcurrency =
+    bot.botGatewayData.sessionStartLimit.maxConcurrency;
   bot.gateway.lastShardId = bot.botGatewayData.shards;
   bot.gateway.maxShards = bot.botGatewayData.shards;
 
@@ -339,7 +370,9 @@ export interface HelperUtils {
 }
 
 export function createGatewayManager(
-  options: Partial<GatewayManager> & Pick<GatewayManager, "handleDiscordPayload">,
+  options:
+    & Partial<GatewayManager>
+    & Pick<GatewayManager, "handleDiscordPayload">,
 ): GatewayManager {
   return {
     cache: {
@@ -357,7 +390,8 @@ export function createGatewayManager(
     shardsPerWorker: options.shardsPerWorker ?? 25,
     maxWorkers: options.maxWorkers ?? 4,
     firstShardId: options.firstShardId ?? 0,
-    lastShardId: options.lastShardId ?? options.maxShards ?? options.shardsRecommended ?? 1,
+    lastShardId: options.lastShardId ?? options.maxShards ??
+      options.shardsRecommended ?? 1,
     token: options.token ?? "",
     compress: options.compress ?? false,
     $os: options.$os ?? "linux",
@@ -365,7 +399,10 @@ export function createGatewayManager(
     $device: options.$device ?? "Discordeno",
     intents:
       (Array.isArray(options.intents)
-        ? options.intents.reduce((bits, next) => (bits |= GatewayIntents[next]), 0)
+        ? options.intents.reduce(
+          (bits, next) => (bits |= GatewayIntents[next]),
+          0,
+        )
         : options.intents) ?? 0,
     shard: options.shard ?? [0, options.shardsRecommended ?? 1],
     urlWSS: options.urlWSS ?? "wss://gateway.discord.gg/?v=9&encoding=json",
@@ -388,8 +425,10 @@ export function createGatewayManager(
     debug: options.debug || function () {},
     resharder: options.resharder ?? resharder,
     resharderIsPending: options.resharderIsPending ?? resharderIsPending,
-    resharderCloseOldShards: options.resharderCloseOldShards ?? resharderCloseOldShards,
-    startReshardingChecks: options.startReshardingChecks ?? startReshardingChecks,
+    resharderCloseOldShards: options.resharderCloseOldShards ??
+      resharderCloseOldShards,
+    startReshardingChecks: options.startReshardingChecks ??
+      startReshardingChecks,
     handleOnMessage: options.handleOnMessage ?? handleOnMessage,
     processGatewayQueue: options.processGatewayQueue ?? processGatewayQueue,
     closeWS: options.closeWS ?? closeWS,
@@ -403,7 +442,11 @@ export async function stopBot(bot: Bot) {
   // STOP WS
   bot.gateway.shards.forEach((shard) => {
     clearInterval(shard.heartbeat.intervalId);
-    bot.gateway.closeWS(shard.ws, 3061, "Discordeno Testing Finished! Do Not RESUME!");
+    bot.gateway.closeWS(
+      shard.ws,
+      3061,
+      "Discordeno Testing Finished! Do Not RESUME!",
+    );
   });
 
   await delay(5000);
@@ -426,7 +469,9 @@ export interface CreateBotOptions {
   helpers?: Partial<Helpers>;
 }
 
-export type UnPromise<T extends Promise<unknown>> = T extends Promise<infer K> ? K : never;
+export type UnPromise<T extends Promise<unknown>> = T extends Promise<infer K>
+  ? K
+  : never;
 
 export interface Bot {
   id: bigint;
@@ -457,11 +502,20 @@ export type DefaultHelpers = typeof defaultHelpers;
 // deno-lint-ignore no-empty-interface
 export interface Helpers extends DefaultHelpers {} // Use interface for declaration merging
 
-export function createHelpers(bot: Bot, customHelpers?: Partial<Helpers>): FinalHelpers {
+export function createHelpers(
+  bot: Bot,
+  customHelpers?: Partial<Helpers>,
+): FinalHelpers {
   const converted = {} as FinalHelpers;
-  for (const [name, fun] of Object.entries({ ...createBaseHelpers(customHelpers || {}) })) {
+  for (
+    const [name, fun] of Object.entries({
+      ...createBaseHelpers(customHelpers || {}),
+    })
+  ) {
     // @ts-ignore - TODO: make the types better
-    converted[name as keyof FinalHelpers] = (...args: RemoveFirstFromTuple<Parameters<typeof fun>>) =>
+    converted[name as keyof FinalHelpers] = (
+      ...args: RemoveFirstFromTuple<Parameters<typeof fun>>
+    ) =>
       // @ts-ignore - TODO: make the types better
       fun(bot, ...args);
   }
@@ -533,9 +587,12 @@ export function createTransformers(options: Partial<Transformers>) {
     snowflake: options.snowflake || snowflakeToBigint,
     webhook: options.webhook || transformWebhook,
     auditlogEntry: options.auditlogEntry || transformAuditlogEntry,
-    applicationCommand: options.applicationCommand || transformApplicationCommand,
-    applicationCommandOption: options.applicationCommandOption || transformApplicationCommandOption,
-    applicationCommandPermission: options.applicationCommandPermission || transformApplicationCommandPermission,
+    applicationCommand: options.applicationCommand ||
+      transformApplicationCommand,
+    applicationCommandOption: options.applicationCommandOption ||
+      transformApplicationCommandOption,
+    applicationCommandPermission: options.applicationCommandPermission ||
+      transformApplicationCommandPermission,
     scheduledEvent: options.scheduledEvent || transformScheduledEvent,
     threadMember: options.threadMember || transformThreadMember,
     welcomeScreen: options.welcomeScreen || transformWelcomeScreen,
@@ -632,7 +689,11 @@ export interface GatewayManager {
   /** Begins heartbeating of the shard to keep it alive. */
   heartbeat: typeof heartbeat;
   /** Sends the discord payload to another server. */
-  handleDiscordPayload: (gateway: GatewayManager, data: GatewayPayload, shardId: number) => any;
+  handleDiscordPayload: (
+    gateway: GatewayManager,
+    data: GatewayPayload,
+    shardId: number,
+  ) => any;
   /** Tell the worker to begin identifying this shard  */
   tellWorkerToIdentify: typeof tellWorkerToIdentify;
   /** Handle the different logs. Used for debugging. */
@@ -707,7 +768,10 @@ export interface EventHandlers {
   ) => any;
   interactionCreate: (bot: Bot, interaction: DiscordenoInteraction) => any;
   integrationCreate: (bot: Bot, integration: DiscordenoIntegration) => any;
-  integrationDelete: (bot: Bot, payload: { id: bigint; guildId: bigint; applicationId?: bigint }) => any;
+  integrationDelete: (
+    bot: Bot,
+    payload: { id: bigint; guildId: bigint; applicationId?: bigint },
+  ) => any;
   integrationUpdate: (bot: Bot, payload: { guildId: bigint }) => any;
   inviteCreate: (bot: Bot, invite: DiscordenoInvite) => any;
   inviteDelete: (
@@ -718,16 +782,28 @@ export interface EventHandlers {
       code: string;
     },
   ) => any;
-  guildMemberAdd: (bot: Bot, member: DiscordenoMember, user: DiscordenoUser) => any;
+  guildMemberAdd: (
+    bot: Bot,
+    member: DiscordenoMember,
+    user: DiscordenoUser,
+  ) => any;
   guildMemberRemove: (bot: Bot, user: DiscordenoUser, guildId: bigint) => any;
-  guildMemberUpdate: (bot: Bot, member: DiscordenoMember, user: DiscordenoUser) => any;
+  guildMemberUpdate: (
+    bot: Bot,
+    member: DiscordenoMember,
+    user: DiscordenoUser,
+  ) => any;
   messageCreate: (bot: Bot, message: DiscordenoMessage) => any;
   messageDelete: (
     bot: Bot,
     payload: { id: bigint; channelId: bigint; guildId?: bigint },
     message?: DiscordenoMessage,
   ) => any;
-  messageUpdate: (bot: Bot, message: DiscordenoMessage, oldMessage?: DiscordenoMessage) => any;
+  messageUpdate: (
+    bot: Bot,
+    message: DiscordenoMessage,
+    oldMessage?: DiscordenoMessage,
+  ) => any;
   reactionAdd: (
     bot: Bot,
     payload: {
@@ -766,8 +842,15 @@ export interface EventHandlers {
       guildId?: bigint;
     },
   ) => any;
-  presenceUpdate: (bot: Bot, presence: DiscordenoPresence, oldPresence?: DiscordenoPresence) => any;
-  voiceServerUpdate: (bot: Bot, payload: { token: string; endpoint?: string; guildId: bigint }) => any;
+  presenceUpdate: (
+    bot: Bot,
+    presence: DiscordenoPresence,
+    oldPresence?: DiscordenoPresence,
+  ) => any;
+  voiceServerUpdate: (
+    bot: Bot,
+    payload: { token: string; endpoint?: string; guildId: bigint },
+  ) => any;
   voiceStateUpdate: (
     bot: Bot,
     voiceState: {
@@ -788,7 +871,11 @@ export interface EventHandlers {
     },
   ) => any;
   channelCreate: (bot: Bot, channel: DiscordenoChannel) => any;
-  dispatchRequirements: (bot: Bot, data: GatewayPayload, shardId: number) => any;
+  dispatchRequirements: (
+    bot: Bot,
+    data: GatewayPayload,
+    shardId: number,
+  ) => any;
   voiceChannelLeave: (
     bot: Bot,
     voiceState: DiscordenoVoiceState,
@@ -796,7 +883,10 @@ export interface EventHandlers {
     channel?: DiscordenoChannel,
   ) => any;
   channelDelete: (bot: Bot, channel: DiscordenoChannel) => any;
-  channelPinsUpdate: (bot: Bot, data: { guildId?: bigint; channelId: bigint; lastPinTimestamp?: number }) => any;
+  channelPinsUpdate: (
+    bot: Bot,
+    data: { guildId?: bigint; channelId: bigint; lastPinTimestamp?: number },
+  ) => any;
   channelUpdate: (bot: Bot, channel: DiscordenoChannel) => any;
   stageInstanceCreate: (
     bot: Bot,
@@ -843,7 +933,10 @@ export interface EventHandlers {
   roleCreate: (bot: Bot, role: DiscordenoRole) => any;
   roleDelete: (bot: Bot, payload: { guildId: bigint; roleId: bigint }) => any;
   roleUpdate: (bot: Bot, role: DiscordenoRole) => any;
-  webhooksUpdate: (bot: Bot, payload: { channelId: bigint; guildId: bigint }) => any;
+  webhooksUpdate: (
+    bot: Bot,
+    payload: { channelId: bigint; guildId: bigint },
+  ) => any;
   botUpdate: (bot: Bot, user: DiscordenoUser) => any;
   typingStart: (
     bot: Bot,
@@ -906,8 +999,10 @@ export interface BotGatewayHandlerOptions {
   GUILD_SCHEDULED_EVENT_CREATE: typeof handlers.handleGuildScheduledEventCreate;
   GUILD_SCHEDULED_EVENT_DELETE: typeof handlers.handleGuildScheduledEventDelete;
   GUILD_SCHEDULED_EVENT_UPDATE: typeof handlers.handleGuildScheduledEventUpdate;
-  GUILD_SCHEDULED_EVENT_USER_ADD: typeof handlers.handleGuildScheduledEventUserAdd;
-  GUILD_SCHEDULED_EVENT_USER_REMOVE: typeof handlers.handleGuildScheduledEventUserRemove;
+  GUILD_SCHEDULED_EVENT_USER_ADD:
+    typeof handlers.handleGuildScheduledEventUserAdd;
+  GUILD_SCHEDULED_EVENT_USER_REMOVE:
+    typeof handlers.handleGuildScheduledEventUserRemove;
   GUILD_UPDATE: typeof handlers.handleGuildUpdate;
   INTERACTION_CREATE: typeof handlers.handleInteractionCreate;
   INVITE_CREATE: typeof handlers.handleInviteCreate;
@@ -917,7 +1012,8 @@ export interface BotGatewayHandlerOptions {
   MESSAGE_DELETE: typeof handlers.handleMessageDelete;
   MESSAGE_REACTION_ADD: typeof handlers.handleMessageReactionAdd;
   MESSAGE_REACTION_REMOVE_ALL: typeof handlers.handleMessageReactionRemoveAll;
-  MESSAGE_REACTION_REMOVE_EMOJI: typeof handlers.handleMessageReactionRemoveEmoji;
+  MESSAGE_REACTION_REMOVE_EMOJI:
+    typeof handlers.handleMessageReactionRemoveEmoji;
   MESSAGE_REACTION_REMOVE: typeof handlers.handleMessageReactionRemove;
   MESSAGE_UPDATE: typeof handlers.handleMessageUpdate;
   PRESENCE_UPDATE: typeof handlers.handlePresenceUpdate;
@@ -933,14 +1029,18 @@ export interface BotGatewayHandlerOptions {
 
 export function createBotGatewayHandlers(
   options: Partial<BotGatewayHandlerOptions>,
-): Record<GatewayDispatchEventNames | "GUILD_LOADED_DD", (bot: Bot, data: GatewayPayload, shardId: number) => any> {
+): Record<
+  GatewayDispatchEventNames | "GUILD_LOADED_DD",
+  (bot: Bot, data: GatewayPayload, shardId: number) => any
+> {
   return {
     // misc
     READY: options.READY ?? handlers.handleReady,
     // channels
     CHANNEL_CREATE: options.CHANNEL_CREATE ?? handlers.handleChannelCreate,
     CHANNEL_DELETE: options.CHANNEL_DELETE ?? handlers.handleChannelDelete,
-    CHANNEL_PINS_UPDATE: options.CHANNEL_PINS_UPDATE ?? handlers.handleChannelPinsUpdate,
+    CHANNEL_PINS_UPDATE: options.CHANNEL_PINS_UPDATE ??
+      handlers.handleChannelPinsUpdate,
     CHANNEL_UPDATE: options.CHANNEL_UPDATE ?? handlers.handleChannelUpdate,
     // THREAD_CREATE: options.THREAD_CREATE ?? handlers.handleThreadCreate,
     // THREAD_UPDATE: options.THREAD_UPDATE ?? handlers.handleThreadUpdate,
@@ -948,9 +1048,12 @@ export function createBotGatewayHandlers(
     // THREAD_LIST_SYNC: options.THREAD_LIST_SYNC ?? handlers.handleThreadListSync,
     // THREAD_MEMBER_UPDATE: options.THREAD_MEMBER_UPDATE ?? handlers.handleThreadMemberUpdate,
     // THREAD_MEMBERS_UPDATE: options.THREAD_MEMBERS_UPDATE ?? handlers.handleThreadMembersUpdate,
-    STAGE_INSTANCE_CREATE: options.STAGE_INSTANCE_CREATE ?? handlers.handleStageInstanceCreate,
-    STAGE_INSTANCE_UPDATE: options.STAGE_INSTANCE_UPDATE ?? handlers.handleStageInstanceUpdate,
-    STAGE_INSTANCE_DELETE: options.STAGE_INSTANCE_DELETE ?? handlers.handleStageInstanceDelete,
+    STAGE_INSTANCE_CREATE: options.STAGE_INSTANCE_CREATE ??
+      handlers.handleStageInstanceCreate,
+    STAGE_INSTANCE_UPDATE: options.STAGE_INSTANCE_UPDATE ??
+      handlers.handleStageInstanceUpdate,
+    STAGE_INSTANCE_DELETE: options.STAGE_INSTANCE_DELETE ??
+      handlers.handleStageInstanceDelete,
 
     // guilds
     GUILD_BAN_ADD: options.GUILD_BAN_ADD ?? handlers.handleGuildBanAdd,
@@ -958,50 +1061,74 @@ export function createBotGatewayHandlers(
     GUILD_CREATE: options.GUILD_CREATE ?? handlers.handleGuildCreate,
     GUILD_LOADED_DD: options.GUILD_LOADED_DD ?? handlers.handleGuildLoaded,
     GUILD_DELETE: options.GUILD_DELETE ?? handlers.handleGuildDelete,
-    GUILD_EMOJIS_UPDATE: options.GUILD_EMOJIS_UPDATE ?? handlers.handleGuildEmojisUpdate,
-    GUILD_INTEGRATIONS_UPDATE: options.GUILD_INTEGRATIONS_UPDATE ?? handlers.handleGuildIntegrationsUpdate,
+    GUILD_EMOJIS_UPDATE: options.GUILD_EMOJIS_UPDATE ??
+      handlers.handleGuildEmojisUpdate,
+    GUILD_INTEGRATIONS_UPDATE: options.GUILD_INTEGRATIONS_UPDATE ??
+      handlers.handleGuildIntegrationsUpdate,
     GUILD_MEMBER_ADD: options.GUILD_MEMBER_ADD ?? handlers.handleGuildMemberAdd,
-    GUILD_MEMBER_REMOVE: options.GUILD_MEMBER_REMOVE ?? handlers.handleGuildMemberRemove,
-    GUILD_MEMBER_UPDATE: options.GUILD_MEMBER_UPDATE ?? handlers.handleGuildMemberUpdate,
-    GUILD_MEMBERS_CHUNK: options.GUILD_MEMBERS_CHUNK ?? handlers.handleGuildMembersChunk,
-    GUILD_ROLE_CREATE: options.GUILD_ROLE_CREATE ?? handlers.handleGuildRoleCreate,
-    GUILD_ROLE_DELETE: options.GUILD_ROLE_DELETE ?? handlers.handleGuildRoleDelete,
-    GUILD_ROLE_UPDATE: options.GUILD_ROLE_UPDATE ?? handlers.handleGuildRoleUpdate,
+    GUILD_MEMBER_REMOVE: options.GUILD_MEMBER_REMOVE ??
+      handlers.handleGuildMemberRemove,
+    GUILD_MEMBER_UPDATE: options.GUILD_MEMBER_UPDATE ??
+      handlers.handleGuildMemberUpdate,
+    GUILD_MEMBERS_CHUNK: options.GUILD_MEMBERS_CHUNK ??
+      handlers.handleGuildMembersChunk,
+    GUILD_ROLE_CREATE: options.GUILD_ROLE_CREATE ??
+      handlers.handleGuildRoleCreate,
+    GUILD_ROLE_DELETE: options.GUILD_ROLE_DELETE ??
+      handlers.handleGuildRoleDelete,
+    GUILD_ROLE_UPDATE: options.GUILD_ROLE_UPDATE ??
+      handlers.handleGuildRoleUpdate,
     GUILD_UPDATE: options.GUILD_UPDATE ?? handlers.handleGuildUpdate,
     // guild events
-    GUILD_SCHEDULED_EVENT_CREATE: options.GUILD_SCHEDULED_EVENT_CREATE ?? handlers.handleGuildScheduledEventCreate,
-    GUILD_SCHEDULED_EVENT_DELETE: options.GUILD_SCHEDULED_EVENT_DELETE ?? handlers.handleGuildScheduledEventDelete,
-    GUILD_SCHEDULED_EVENT_UPDATE: options.GUILD_SCHEDULED_EVENT_UPDATE ?? handlers.handleGuildScheduledEventUpdate,
-    GUILD_SCHEDULED_EVENT_USER_ADD: options.GUILD_SCHEDULED_EVENT_USER_ADD ?? handlers.handleGuildScheduledEventUserAdd,
-    GUILD_SCHEDULED_EVENT_USER_REMOVE: options.GUILD_SCHEDULED_EVENT_USER_REMOVE ??
-      handlers.handleGuildScheduledEventUserRemove,
+    GUILD_SCHEDULED_EVENT_CREATE: options.GUILD_SCHEDULED_EVENT_CREATE ??
+      handlers.handleGuildScheduledEventCreate,
+    GUILD_SCHEDULED_EVENT_DELETE: options.GUILD_SCHEDULED_EVENT_DELETE ??
+      handlers.handleGuildScheduledEventDelete,
+    GUILD_SCHEDULED_EVENT_UPDATE: options.GUILD_SCHEDULED_EVENT_UPDATE ??
+      handlers.handleGuildScheduledEventUpdate,
+    GUILD_SCHEDULED_EVENT_USER_ADD: options.GUILD_SCHEDULED_EVENT_USER_ADD ??
+      handlers.handleGuildScheduledEventUserAdd,
+    GUILD_SCHEDULED_EVENT_USER_REMOVE:
+      options.GUILD_SCHEDULED_EVENT_USER_REMOVE ??
+        handlers.handleGuildScheduledEventUserRemove,
     // interactions
-    INTERACTION_CREATE: options.INTERACTION_CREATE ?? handlers.handleInteractionCreate,
+    INTERACTION_CREATE: options.INTERACTION_CREATE ??
+      handlers.handleInteractionCreate,
     // invites
     INVITE_CREATE: options.INVITE_CREATE ?? handlers.handleInviteCreate,
     INVITE_DELETE: options.INVITE_DELETE ?? handlers.handleInviteCreate,
     // messages
     MESSAGE_CREATE: options.MESSAGE_CREATE ?? handlers.handleMessageCreate,
-    MESSAGE_DELETE_BULK: options.MESSAGE_DELETE_BULK ?? handlers.handleMessageDeleteBulk,
+    MESSAGE_DELETE_BULK: options.MESSAGE_DELETE_BULK ??
+      handlers.handleMessageDeleteBulk,
     MESSAGE_DELETE: options.MESSAGE_DELETE ?? handlers.handleMessageDelete,
-    MESSAGE_REACTION_ADD: options.MESSAGE_REACTION_ADD ?? handlers.handleMessageReactionAdd,
-    MESSAGE_REACTION_REMOVE_ALL: options.MESSAGE_REACTION_REMOVE_ALL ?? handlers.handleMessageReactionRemoveAll,
-    MESSAGE_REACTION_REMOVE_EMOJI: options.MESSAGE_REACTION_REMOVE_EMOJI ?? handlers.handleMessageReactionRemoveEmoji,
-    MESSAGE_REACTION_REMOVE: options.MESSAGE_REACTION_REMOVE ?? handlers.handleMessageReactionRemove,
+    MESSAGE_REACTION_ADD: options.MESSAGE_REACTION_ADD ??
+      handlers.handleMessageReactionAdd,
+    MESSAGE_REACTION_REMOVE_ALL: options.MESSAGE_REACTION_REMOVE_ALL ??
+      handlers.handleMessageReactionRemoveAll,
+    MESSAGE_REACTION_REMOVE_EMOJI: options.MESSAGE_REACTION_REMOVE_EMOJI ??
+      handlers.handleMessageReactionRemoveEmoji,
+    MESSAGE_REACTION_REMOVE: options.MESSAGE_REACTION_REMOVE ??
+      handlers.handleMessageReactionRemove,
     MESSAGE_UPDATE: options.MESSAGE_UPDATE ?? handlers.handleMessageUpdate,
     // presence
     PRESENCE_UPDATE: options.PRESENCE_UPDATE ?? handlers.handlePresenceUpdate,
     TYPING_START: options.TYPING_START ?? handlers.handleTypingStart,
     USER_UPDATE: options.USER_UPDATE ?? handlers.handleUserUpdate,
     // voice
-    VOICE_SERVER_UPDATE: options.VOICE_SERVER_UPDATE ?? handlers.handleVoiceServerUpdate,
-    VOICE_STATE_UPDATE: options.VOICE_STATE_UPDATE ?? handlers.handleVoiceStateUpdate,
+    VOICE_SERVER_UPDATE: options.VOICE_SERVER_UPDATE ??
+      handlers.handleVoiceServerUpdate,
+    VOICE_STATE_UPDATE: options.VOICE_STATE_UPDATE ??
+      handlers.handleVoiceStateUpdate,
     // webhooks
     WEBHOOKS_UPDATE: options.WEBHOOKS_UPDATE ?? handlers.handleWebhooksUpdate,
     // integrations
-    INTEGRATION_CREATE: options.INTEGRATION_CREATE ?? handlers.handleIntegrationCreate,
-    INTEGRATION_UPDATE: options.INTEGRATION_UPDATE ?? handlers.handleIntegrationUpdate,
-    INTEGRATION_DELETE: options.INTEGRATION_DELETE ?? handlers.handleIntegrationDelete,
+    INTEGRATION_CREATE: options.INTEGRATION_CREATE ??
+      handlers.handleIntegrationCreate,
+    INTEGRATION_UPDATE: options.INTEGRATION_UPDATE ??
+      handlers.handleIntegrationUpdate,
+    INTEGRATION_DELETE: options.INTEGRATION_DELETE ??
+      handlers.handleIntegrationDelete,
   };
 }
 
@@ -1009,5 +1136,7 @@ export type RemoveFirstFromTuple<T extends any[]> = T["length"] extends 0 ? []
   : ((...b: T) => void) extends (a: any, ...b: infer I) => void ? I
   : [];
 export type FinalHelpers = {
-  [K in keyof Helpers]: (...args: RemoveFirstFromTuple<Parameters<Helpers[K]>>) => ReturnType<Helpers[K]>;
+  [K in keyof Helpers]: (
+    ...args: RemoveFirstFromTuple<Parameters<Helpers[K]>>
+  ) => ReturnType<Helpers[K]>;
 };
