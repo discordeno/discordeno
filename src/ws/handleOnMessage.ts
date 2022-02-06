@@ -105,10 +105,12 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
         gateway.loadingShards.get(shardId)?.resolve(true);
         gateway.loadingShards.delete(shardId);
         // Wait few seconds to spawn next shard
-        setTimeout(() => {
-          const bucket = gateway.buckets.get(shardId % gateway.maxConcurrency);
-          if (bucket) bucket.createNextShard.shift()?.();
-        }, gateway.spawnShardDelay);
+        const bucket = gateway.buckets.get(shardId % gateway.maxConcurrency);
+        if (bucket?.createNextShard.length) {
+          setTimeout(() => {
+            bucket.createNextShard.shift()?.();
+          }, gateway.spawnShardDelay);
+        }
       }
 
       // Update the sequence number if it is present
@@ -149,7 +151,9 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
           // ADD TO LOCAL CACHE FOR FUTURE EVENTS.
           gateway.cache.editedMessages.set(id, content);
           // REMOVE AFTER 10 SECONDS FROM CACHE
-          setTimeout(() => gateway.cache.editedMessages.delete(id), 10000);
+          setTimeout(() => {
+            gateway.cache.editedMessages.delete(id);
+          }, 10000);
         }
       }
 
