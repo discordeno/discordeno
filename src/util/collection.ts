@@ -18,7 +18,6 @@ export class Collection<K, V> extends Map<K, V> {
 
     this.sweeper = options;
     this.sweeper.intervalId = setInterval(() => {
-      console.log("collection interval ran");
       this.forEach((value, key) => {
         if (!this.sweeper?.filter(value, key, options.bot)) return;
 

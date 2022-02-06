@@ -10,7 +10,6 @@ export function delayUntil(
       resolve();
     } else {
       setTimeout(() => {
-        console.log("utils delayuntil timeout ran");
         hackyFix(resolve);
       }, timeoutTime);
     }

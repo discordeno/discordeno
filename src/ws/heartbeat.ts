@@ -28,7 +28,6 @@ export async function heartbeat(gateway: GatewayManager, shardId: number, interv
   shard.heartbeat.interval = interval;
 
   shard.heartbeat.intervalId = setInterval(async () => {
-    console.log("heartbeat interval ran");
     gateway.debug("GW DEBUG", `Running setInterval in heartbeat file. Shard: ${shardId}`);
     const currentShard = gateway.shards.get(shardId);
     if (!currentShard) return;

@@ -27,7 +27,7 @@ import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOve
 import { editChannelTests } from "./helpers/channels/editChannel.ts";
 import { CACHED_COMMUNITY_GUILD_ID, sanitizeMode } from "./constants.ts";
 
-const x = dotenv({ export: true, path: `${Deno.cwd()}/.env` });
+dotenv({ export: true, path: `${Deno.cwd()}/.env` });
 
 let TOKEN = Deno.env.get("DISCORD_TOKEN");
 if (!TOKEN) throw new Error("Token was not provided.");
@@ -75,6 +75,7 @@ if (bot.guilds.size <= 10) {
 
 // Delay the execution to allow delete guilds to be processed
 await delayUntil(10000, () => Boolean(startedAt));
+console.log("[SETUP] Preparing the guild where tests will be done.");
 
 // CREATE ONE GUILD SO WE CAN REUSE LATER TO SAVE RATE LIMITS
 export const guild = await bot.helpers.createGuild({ name: "Discordeno Test" });
@@ -93,6 +94,7 @@ if (!bot.guilds.has(guild.id)) {
   );
 }
 
+console.log("[SETUP] Preparing the channel where tests will be done.");
 export const channel = await bot.helpers.createChannel(guild.id, {
   name: "Discordeno-test",
 });
@@ -101,6 +103,7 @@ export const channel = await bot.helpers.createChannel(guild.id, {
 assertExists(channel);
 assertEquals(channel.type, ChannelTypes.GuildText);
 
+console.log("[SETUP] Preparing the message on which tests will be done.");
 export const message = await bot.helpers.sendMessage(channel.id, {
   content: "Hello Skillz",
 });
@@ -353,11 +356,11 @@ import "./scheduledEvents/createVoiceEventWithoutEndtime.ts";
 // import "./scheduledEvents/deleteEvent.ts";
 // import "./scheduledEvents/editEvent.ts";
 
-// // webhooks
-// import "./webhooks/deleteWebhook.ts";
-// import "./webhooks/deleteWebhookWithToken.ts";
-// import "./webhooks/sendWebhook.ts";
-// import "./webhooks/webhooks.ts";
+// webhooks
+import "./webhooks/deleteWebhook.ts";
+import "./webhooks/deleteWebhookWithToken.ts";
+import "./webhooks/sendWebhook.ts";
+import "./webhooks/webhooks.ts";
 
 // TESTS THAT DON'T REQUIRE API CONNECTION
 import "./local.ts";

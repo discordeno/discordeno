@@ -108,7 +108,6 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
         const bucket = gateway.buckets.get(shardId % gateway.maxConcurrency);
         if (bucket?.createNextShard.length) {
           setTimeout(() => {
-            console.log("handle on message timeout ran");
             bucket.createNextShard.shift()?.();
           }, gateway.spawnShardDelay);
         }
@@ -153,7 +152,6 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
           gateway.cache.editedMessages.set(id, content);
           // REMOVE AFTER 10 SECONDS FROM CACHE
           setTimeout(() => {
-            console.log("handle on message 2 timeout ran");
             gateway.cache.editedMessages.delete(id);
           }, 10000);
         }

@@ -14,7 +14,6 @@ export async function processGlobalQueue(rest: RestManager) {
     // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
     if (rest.globallyRateLimited) {
       setTimeout(() => {
-        console.log("process global queue timeout 1 ran");
         rest.debug(`[REST - processGlobalQueue] Globally rate limited, running setTimeout.`);
         rest.processGlobalQueue(rest);
       }, 1000);
@@ -25,7 +24,6 @@ export async function processGlobalQueue(rest: RestManager) {
 
     if (rest.invalidRequests === rest.maxInvalidRequests - rest.invalidRequestsSafetyAmount) {
       setTimeout(() => {
-        console.log("process global queue timeout 2 ran");
         const time = rest.invalidRequestsInterval - (Date.now() - rest.invalidRequestFrozenAt);
         rest.debug(
           `[REST - processGlobalQueue] Freeze global queue because of invalid requests. Time Remaining: ${
@@ -52,7 +50,6 @@ export async function processGlobalQueue(rest: RestManager) {
     if (urlResetIn || bucketResetIn) {
       // ONLY ADD TIMEOUT IF ANOTHER QUEUE IS NOT PENDING
       setTimeout(() => {
-        console.log("process global queue timeout 3 ran");
         rest.debug(`[REST - processGlobalQueue] rate limited, running setTimeout.`);
         // THIS REST IS RATE LIMITED, SO PUSH BACK TO START
         rest.globalQueue.unshift(request);

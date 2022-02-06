@@ -109,7 +109,6 @@ function processEditChannelQueue(bot: Bot) {
 
   if (editChannelNameTopicQueue.size) {
     setTimeout(() => {
-      console.log("edit channel timeout ran");
       bot.events.debug(`Running setTimeout in EDIT_CHANNEL file.`);
       processEditChannelQueue(bot);
     }, 60000);
