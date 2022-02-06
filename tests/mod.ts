@@ -359,8 +359,8 @@ import "./scheduledEvents/createVoiceEventWithoutEndtime.ts";
 // webhooks
 import "./webhooks/deleteWebhook.ts";
 import "./webhooks/deleteWebhookWithToken.ts";
-import "./webhooks/sendWebhook.ts";
-import "./webhooks/webhooks.ts";
+// import "./webhooks/sendWebhook.ts";
+// import "./webhooks/webhooks.ts";
 
 // TESTS THAT DON'T REQUIRE API CONNECTION
 import "./local.ts";
