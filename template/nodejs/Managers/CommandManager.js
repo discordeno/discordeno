@@ -46,11 +46,20 @@ class CommandManager {
         return pull;
     }
 
+    reloadCommand(commandName) {
+        const command = this.cache.get(commandName);
+        if (!command) return;
+        console.log(command.path)
+        const commandPath = path.join(command.path);
+        delete require.cache[require.resolve(commandPath)];
+        return this.loadCommand(commandPath);
+    }
+
     isCommand(message){
         if(message.isBot) return false;
         const prefix  = '!';
         const escapeRegex = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const prefixRegex = new RegExp(`^(<@!?${this.client.userId}>|${escapeRegex(prefix)})\\s*`);
+        const prefixRegex = new RegExp(`^(<@!?${this.client.id}>|${escapeRegex(prefix)})\\s*`);
         if (!prefixRegex.test(message.content)) return false;
 
         const [, matchedPrefix] = message.content.match(prefixRegex);
@@ -63,7 +72,8 @@ class CommandManager {
     async onMessage(message, guild, args) {
         const commandName = args.shift().toLowerCase();
         const command = this.cache.get(commandName) //|| this.cache.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
-        if (!command && message.content.includes(this.client.userId)) {
+        if (!command && message.content.includes(this.client.id)) {
+            //Handle, when Command has not been found
             const options = { content: 'I did not found the Command!' }
             this.client.helpers.sendMessage(message.channelId, options);
         }
@@ -71,8 +81,9 @@ class CommandManager {
 
         const messagecommand = new command({ manager: this, message: message, client: this.client, args: args, settings: {}, commandName: command.name });
         messagecommand.execute()?.catch?.((error) => {
-            /* this.client.errorhandler.createrr(this.client, `message in ${message.guild.name}(${'`' + message.guild.id + '`'})`, message.content, error)
-            return messagecommand.onError((error.code ?? 'custom')) */
+            console.log(error);
+            // Call Function on CommandResponse.js, handle the error
+            return messagecommand.onError((error?? 'custom')) 
         })
     }
 }

@@ -10,7 +10,7 @@ class DestructObject{
     }
 
     toJSON(){
-        return this;
+        return {...this};
     }
 }
 module.exports = DestructObject;

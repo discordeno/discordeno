@@ -60,8 +60,13 @@ class Embed {
         return this;
     }
 
-    addFields(fields) {
-        this.fields = fields;
+    addField(field) {
+        this.fields.push(field);
+        return this;
+    }
+
+    addFields(...fields) {
+        fields.map(x => this.addField(x));
         return this;
     }
 
@@ -71,7 +76,7 @@ class Embed {
             type: 'rich',
             description: this.description,
             color: this.color,
-            timestamp: this.timestamp ? new Date(this.timestamp) : null,
+            timestamp: this.timestamp ? new Date(this.timestamp).toISOString() : null,
             thumbnail: this.thumbnail,
             image: this.image,
             fields: this.fields,
@@ -79,11 +84,11 @@ class Embed {
             author: this.author ? {
                 name: this.author.name,
                 url: this.author.url,
-                icon_url: this.author.icon_url,
+                iconUrl: this.author.icon_url ||  this.author.iconUrl ,
             } : null,
             footer: this.footer ? {
                 text: this.footer.text,
-                icon_url: this.footer.icon_url,
+                iconUrl: this.footer.icon_url || this.footer.iconUrl,
             } : null,
         };
     }

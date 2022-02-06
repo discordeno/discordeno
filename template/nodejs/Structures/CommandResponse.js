@@ -1,13 +1,7 @@
 class Responses {
     constructor(data) {
         this.manager = data.manager;
-        this.message = data.message;
-        this.interaction = data.interaction;
-        this.client = data.client;
-        this.settings = data.settings ?? {}
-
-    /*     this.args = this._validateArguments(data.args);
-        this.commandName = this._setCommandName(data.commandName); */
+        this.args = this._validateArguments(data.args);
         this.replied = false;
     }
 
@@ -38,5 +32,15 @@ class Responses {
         if (this.message) return this.message.channel.send(content)
     }
 
+
+    onError(error) {
+        return this.reply({content:`A unknown Error happend: \n> ${error}`});
+    }
+    
+
+    _validateArguments(args) {
+        this.args = args;
+        return args;
+    }
 }
 module.exports = Responses;
