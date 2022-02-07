@@ -82,7 +82,7 @@ await build({
     bugs: {
       url: "https://github.com/discordeno/discordeno/issues",
     },
-    homepage: "https://github.com/discordeno/discordeno#readme",
+    homepage: "https://discordeno.mod.land",
   },
   compilerOptions: { target: "ES2020" },
 });
