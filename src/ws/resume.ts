@@ -53,7 +53,7 @@ export function resume(gateway: GatewayManager, shardId: number) {
       {
         op: GatewayOpcodes.Resume,
         d: {
-          token: gateway.token,
+          token: `Bot ${gateway.token}`,
           session_id: sessionId,
           seq: previousSequenceNumber,
         },

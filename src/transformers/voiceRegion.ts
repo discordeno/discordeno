@@ -4,7 +4,7 @@ import { VoiceRegion } from "../types/voice/voiceRegion.ts";
 
 export function transformVoiceRegion(bot: Bot, payload: SnakeCasedPropertiesDeep<VoiceRegion>): DiscordenoVoiceRegion {
   return {
-    id: bot.transformers.snowflake(payload.id),
+    id: payload.id,
     name: payload.name,
     optimal: payload.optimal,
     deprecated: payload.deprecated,
@@ -13,8 +13,8 @@ export function transformVoiceRegion(bot: Bot, payload: SnakeCasedPropertiesDeep
 }
 
 export interface DiscordenoVoiceRegion {
-  /** Unique Id for the region */
-  id: bigint;
+  /** Id for the region. This is in the form of like us-west and not a snowflake id. */
+  id: string;
   /** Name of the region */
   name: string;
   /** true for a single server that is closest to the current user's client */

@@ -1,5 +1,6 @@
+import enableCachePlugin from "../plugins/cache/mod.ts";
 import { ChannelTypes, createBot, createEventHandlers, startBot } from "../mod.ts";
-import { assertEquals, assertExists, dotenv, enableCachePlugin } from "./deps.ts";
+import { assertEquals, assertExists, dotenv } from "./deps.ts";
 import { deleteMessageWithoutReasonTest, deleteMessageWithReasonTest } from "./helpers/messages/deleteMessage.ts";
 import { getMessagesTest } from "./helpers/messages/getMessages.ts";
 import { deleteMessagesWithoutReasonTest, deleteMessagesWithReasonTest } from "./helpers/messages/deleteMessages.ts";
@@ -9,9 +10,6 @@ import {
   sendMessageWithEmbedsTest,
   sendMessageWithTextTest,
 } from "./helpers/messages/sendMessage.ts";
-
-// CONDUCT LOCAL TESTS FIRST BEFORE RUNNING API TEST
-import "./local.ts";
 import { getMessageTest } from "./helpers/messages/getMessage.ts";
 import { editMessageTest } from "./helpers/messages/editMessage.ts";
 import { pinMessageTests } from "./helpers/messages/pin.ts";
@@ -29,7 +27,7 @@ import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOve
 import { editChannelTests } from "./helpers/channels/editChannel.ts";
 import { CACHED_COMMUNITY_GUILD_ID, sanitizeMode } from "./constants.ts";
 
-dotenv({ export: true });
+dotenv({ export: true, path: `${Deno.cwd()}/.env` });
 
 let TOKEN = Deno.env.get("DISCORD_TOKEN");
 if (!TOKEN) throw new Error("Token was not provided.");
@@ -59,9 +57,7 @@ const baseBot = createBot({
   ],
 });
 
-// @ts-ignore
 export const bot = enableCachePlugin(baseBot);
-// @ts-ignore
 await startBot(bot);
 
 // Delay the execution to allow READY events to be processed
@@ -79,6 +75,7 @@ if (bot.guilds.size <= 10) {
 
 // Delay the execution to allow delete guilds to be processed
 await delayUntil(10000, () => Boolean(startedAt));
+console.log("[SETUP] Preparing the guild where tests will be done.");
 
 // CREATE ONE GUILD SO WE CAN REUSE LATER TO SAVE RATE LIMITS
 export const guild = await bot.helpers.createGuild({ name: "Discordeno Test" });
@@ -92,18 +89,24 @@ await delayUntil(10000, () => bot.guilds.has(guild.id));
 
 // FINAL CHECK TO THROW IF MISSING STILL
 if (!bot.guilds.has(guild.id)) {
-  throw new Error(`The guild seemed to be created but it was not cached. ${guild.id.toString()}`);
+  throw new Error(
+    `The guild seemed to be created but it was not cached. ${guild.id.toString()}`,
+  );
 }
 
-export const channel = await bot.helpers.createChannel(guild.id, { name: "Discordeno-test" });
+console.log("[SETUP] Preparing the channel where tests will be done.");
+export const channel = await bot.helpers.createChannel(guild.id, {
+  name: "Discordeno-test",
+});
 
 // Assertions
 assertExists(channel);
 assertEquals(channel.type, ChannelTypes.GuildText);
 
-export const message = await bot.helpers.sendMessage(channel.id, { content: "Hello Skillz" });
-
-import "./benchmark.ts";
+console.log("[SETUP] Preparing the message on which tests will be done.");
+export const message = await bot.helpers.sendMessage(channel.id, {
+  content: "Hello Skillz",
+});
 
 Deno.test({
   name: "[guild] create a guild",
@@ -292,7 +295,7 @@ import "./channels/deleteChannel.ts";
 import "./channels/getChannel.ts";
 import "./channels/getChannels.ts";
 import "./channels/stageInstances.ts";
-import "./channels/threads.ts";
+// import "./channels/threads.ts";
 
 // emoji
 import "./emoji/createEmoji.ts";
@@ -308,10 +311,10 @@ import "./guilds/urls.ts";
 
 // invite
 import "./invite/createInvite.ts";
-import "./invite/deleteInvite.ts";
-import "./invite/getChannelInvites.ts";
-import "./invite/getInvite.ts";
-import "./invite/getInvites.ts";
+// import "./invite/deleteInvite.ts";
+// import "./invite/getChannelInvites.ts";
+// import "./invite/getInvite.ts";
+// import "./invite/getInvites.ts";
 
 // members
 import "./members/avatarlUrl.ts";
@@ -321,13 +324,13 @@ import "./members/getDmChannel.ts";
 import "./members/getMember.ts";
 
 // messages
-import "./messages/reactions.ts";
+// import "./messages/reactions.ts";
 
 // misc
 import "./misc/getApplicationInfo.ts";
 import "./misc/getDiscoveryCategories.ts";
 import "./misc/getUser.ts";
-import "./misc/getVoiceRegions.ts";
+// import "./misc/getVoiceRegions.ts";
 import "./misc/snowflake.ts";
 import "./misc/typing.ts";
 import "./misc/validateDiscovery.ts";
@@ -350,11 +353,17 @@ import "./scheduledEvents/createStageEventWithEndtime.ts";
 import "./scheduledEvents/createStageEventWithoutEndtime.ts";
 import "./scheduledEvents/createVoiceEventWithEndtime.ts";
 import "./scheduledEvents/createVoiceEventWithoutEndtime.ts";
-import "./scheduledEvents/deleteEvent.ts";
-import "./scheduledEvents/editEvent.ts";
+// import "./scheduledEvents/deleteEvent.ts";
+// import "./scheduledEvents/editEvent.ts";
 
 // webhooks
 import "./webhooks/deleteWebhook.ts";
 import "./webhooks/deleteWebhookWithToken.ts";
-import "./webhooks/sendWebhook.ts";
-import "./webhooks/webhooks.ts";
+// import "./webhooks/sendWebhook.ts";
+// import "./webhooks/webhooks.ts";
+
+// TESTS THAT DON'T REQUIRE API CONNECTION
+import "./local.ts";
+
+// // BENCHMARK TESTING
+import "./benchmark.ts";

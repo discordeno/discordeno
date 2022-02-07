@@ -12,7 +12,7 @@ Deno.test("[webhooks] Webhook related tests", async (t) => {
   });
 
   await t.step("[webhooks] Edit a webhook", async () => {
-    const edited = await bot.helpers.editWebhook(channel.id, webhook.id, {
+    const edited = await bot.helpers.editWebhook(webhook.id, {
       name: "edited",
     });
 
