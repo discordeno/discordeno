@@ -39,23 +39,23 @@ await build({
     },
     {
       name: "./plugins",
-      path: "src/plugins/mod.ts",
+      path: "plugins/mod.ts",
     },
     {
       name: "./cache-plugin",
-      path: "src/plugins/cache/mod.ts",
+      path: "plugins/cache/mod.ts",
     },
     {
       name: "./fileloader-plugin",
-      path: "src/plugins/fileloader/mod.ts",
+      path: "plugins/fileloader/mod.ts",
     },
     {
       name: "./helpers-plugin",
-      path: "src/plugins/helpers/mod.ts",
+      path: "plugins/helpers/mod.ts",
     },
     {
       name: "./permissions-plugin",
-      path: "src/plugins/permissions/mod.ts",
+      path: "plugins/permissions/mod.ts",
     },
   ],
   outDir: "./npm",
