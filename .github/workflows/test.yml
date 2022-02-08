@@ -6,6 +6,11 @@ on:
       - "plugins/**"
       - "src/**"
       - "tests/**"
+  pull_request:
+    paths:
+      - "plugins/**"
+      - "src/**"
+      - "tests/**"
 
 jobs:
   test:
