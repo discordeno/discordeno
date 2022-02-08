@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 ---
 # Create Application
 1. Go to the [Developer Portal](https://discord.com/developers/applications) and create a new application.

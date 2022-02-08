@@ -1,12 +1,13 @@
 ---
-sidebar_position: 2
+sidebar_position: 4
 ---
 # Create Components
 With the depreciation of the `message intent`, components will play an increasingly important role in the future. Discord released a lot of new components. Of course, this opens up completely new possibilities. On the one hand, it improves the user experience and, on the other hand, the interactions can be handled by the dev easily.
 
 To take advantage of this, we'll go into more detail on how to use them.
 
-As already mentioned in the Embed Guide, we also recommend using raw api data to create a component.
+As already mentioned in the Embed page, we also recommend using raw api data to create a component.
+
 Although this could be uncomfortable for some users, so we are elaborating, how to use our `Components` template, which can be found [here](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Component.js).
 
 ## Different Components:
@@ -32,7 +33,8 @@ There are different styles of buttons, which can be used:
 ![Different Button Styles](https://discord.com/assets/7bb017ce52cfd6575e21c058feb3883b.png)
 
 ### SelectMenu (`type: 3`):
-SelectMenus are typically same to a dropdown menu in HTMl. They accepts a range of allowed selects, which send a interaction payload, when a user selected sth. from the menu.
+SelectMenus are typically same to a dropdown menu in HTMl. 
+They accept a range of allowed selects, which sends a interaction payload, when a user selects sth. from the menu.
 
 ![Select Menu](https://discord.com/assets/0845178564ed70a6c657d9b40d1de8fc.png)
 
@@ -64,21 +66,26 @@ const button = new Button().setType(2)
 const button2 = new Button().setType(2)
 const actionRow = new ActionRow().setType(1).setComponents(button, button2);
 ```
-**The Code will obviously not work, since its a missing a lot required of data and the other reason is, that we can't send a class to Discord, we need to sth. to transform it into a json object.**
+**The Code will obviously not work, since its a missing a lot required of data.**
+**The other reason is, that we can't send a class to Discord, we need sth. to transform it into a json object.**
 
 **Copy the Code from [here](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Component.js), so we can use it to create a component.**
 
 ### Create Button
 ```js
 const button = new Component().setType('BUTTON').setStyle('LINK').setLabel("Click me!").setUrl("https://google.com").toJSON();
+///Button with raw types
 const button2 = new Component().setType(2).setStyle(4).setLabel("DO NOT CLICK").setCustomId('12345').toJSON();
+
 const actionrow = new Component().setType(`ACTION_ROW`).setComponents(button, button2).toJSON();
+//Message to send
 const messageoptions = {content: "hello", components: [actionrow]};
+//You can also use the Message Structure 
 client.helpers.sendMessage(channelId, messageoptions);
 ```
-As you can see you can use strings instead of numbers (types) which you can't remember anyway. 
+As you can see you can use strings instead of numbers (types), which you can't remember anyway. 
 * Every Button needs a customId, except the Link Button
-* You can also use the raw types, but strings are also supported, because they are replace with the CONSTANTS in the component template.
+* You can also use the raw types, but strings are also supported, because they are replaced with the `CONSTANTS` in the component template.
 
 ### Select Menu
 ```js
@@ -103,8 +110,11 @@ As you can see you can use strings instead of numbers (types) which you can't re
         default: true,
     },
 ]).setPlaceholder('Select an option').toJSON();
+
 const actionrow = new Component().setType(`ACTION_ROW`).setComponents(select).toJSON();
+
 const messageoptions = {content: "hello", components: [actionrow]};
+
 client.helpers.sendMessage(channelId, messageoptions);
 ```
 The upper examples shows some options, which can be used for a Select Menu.
@@ -112,8 +122,8 @@ The upper examples shows some options, which can be used for a Select Menu.
 ### Recieve Interactions:
 When a user clicks on a Button, or selects an option from a Select Menu, Discord sends a interaction payload, which contains the information about the interaction.
 
-You probably need this inorder to handle the user's interaction, which can be done by listing to the `interactionCreate` event.
-A `InteractionCollector` can also be used to handle the interaction, which requires some tweaks, but will be added soon in the Guide and the Template Repo.
+You probably need this inorder to handle the user's interaction, which can be done by listening to the `interactionCreate` event.
+A `InteractionCollector` can also be used to handle the interaction, which requires some tweaks, but will be added soon in the guide and the template repo.
 
 
 

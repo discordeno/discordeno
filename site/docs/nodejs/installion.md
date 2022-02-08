@@ -10,7 +10,7 @@ Then open the downloaded file and follow the instructions of the installer to in
 
 ## Create a Folder
 Open your File Explorer and create a new folder (Ex: `discordbot`) in your wished directory.
-After this open your Coding IDE and create a new file (Ex: `index.js`) in the folder you just created.
+After this open your Coding IDE and create a new file (Ex: `index.js`) in the folder you created.
 
 ### Initalize NPM
 Inorder to keep track of the dependencies, you need to initialize NPM, which creates a `package.json` file.

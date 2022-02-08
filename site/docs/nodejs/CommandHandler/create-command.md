@@ -1,9 +1,11 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 ---
 # Create Command
-One of the most important features we wanted in our template. Was that the same code used to handle Slash Commands and MessageCommands.
-This can be done by saving the static class in the command cache and creating a constructor and passing the wished data. Moreover the `BaseCommand` is extended with the `Response Command` class. So you can take advantage of functions such as `.reply()`
+One of the most important features we wanted in our template, was that you can use the same code for handling `slash commands` and `message based commands`.
+
+This can be done by saving the static class in the command cache and creating a constructor and passing the wished data. 
+Moreover the `BaseCommand` is extended with the `Response Command` class. So you can take advantage of functions such as `.reply()`
 
 **Copy the [`BaseCommand`](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/BaseCommand.js) & [`CommandResponses`](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/CommandResponses.js) code from the template**
 
@@ -38,9 +40,9 @@ class pingcommand extends BaseCommand {
 module.exports = pingcommand;
 ```
 * The `BaseCommand` is extended with the `CommandResponses` class.
-* The Ping Command class is been extende with the `BaseCommand` class.
-* Some static properties are assigned to the Ping Command class, inorder to access in the cache, such as `name`, `description`, `usage`, `category` and `slash`...
-* The `execute()` function will be called, when the command has been called by the user
+* The Ping Command class is been extended with the `BaseCommand` class.
+* Some static properties are assigned to the Ping Command class, inorder to access it in the cache, such as `name`, `description`, `usage`, `category` and `slash`...
+* The `execute()` function will be called, when the command has been run by the user.
 * The constructor allows to access data, such as `this.message`, `this.args`, `this.client`...
 
 You can customize the CommandManager file, inorder to pass arguments in the `execute()` function.

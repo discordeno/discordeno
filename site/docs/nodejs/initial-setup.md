@@ -1,9 +1,9 @@
 ---
-sidebar_position: 2
+sidebar_position: 4
 ---
 # Initial Setup
 ## Config File
-On long-term you should save your configs in a `.env` file. Out of simplicity we are saving it on a `config.json` file.
+On long-term you should save your configs in a `.env` file. Out of simplicity we are saving it in a `config.json` file.
 
 Create a file named `config.json` in your project folde and insert the following content:
 ```json
@@ -43,5 +43,5 @@ Now you can run your bot by running the following command:
 node index.js
 ```
 
-You are now ready to use your bot and add other functionalities. Besides that you are probably asking yourself how you should design your code, so it is maintable and scalable.
-Go to the next page [design](/docs/nodejs/design) to learn more about how to design your code and good code pratices.
+You are now ready to use your bot and add other functionalities. Besides that you are probably asking yourself, how you should design your code, so it is maintable and scalable.
+Go to the next page [design](/docs/nodejs/design) to learn more about how to design your code and other good code practices.

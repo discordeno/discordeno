@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 ---
 # Create Embeds
 Embeds are widely used in your code in order to display the content in a better format.
@@ -45,7 +45,7 @@ const embed = new Embed()
 client.helpers.sendMessage(channelId, {embeds: [embed]})
 ```
 
-You can also use the `Channel Structure` from the template repo, which was mentioned earlier in the Guide.
+
 ```js
 const Channel = require('./structures/Channel') //path to structure
 const channel = new Channel(client, data)

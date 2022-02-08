@@ -1,14 +1,16 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 ---
 # Handle Event
 When an event is fired, Discordeno sends two important things, the `client` instance and the `payload`.
-As mentioned in the Structures Guide the `payload` object, does not contain any functions, its a plain json object.
+
+As mentioned in the `Structure` section the `payload` object, does not contain any functions, its a plain json object.
+
 Inorder to take use of our nice built structures, we need to transform the payload into a structure.
 
 **The Structures can be found [here](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures)**
 
-Sometimes its important to listen to events, inorder to get informed of changes and updating the cache.
+Sometimes its important to listen to events, inorder to get informed of changes and updating the cache based on it.
 
 ### Message Event:
 ```js
@@ -21,8 +23,9 @@ module.exports = async(client, payload) => {
 ```
 
 ### Ready Event:
-There is a small speciality on the Ready Event. It fires Shard wise, in other words it fires every time a shard becomes ready.
-In order to fire the "real event" a small code snippet has to be added to the Ready Event.
+There is a small difference on the `ready` Event. The Event is fired `shard` wise, in other words it fires every time a `shard` becomes ready.
+
+In order to fire the "real event" a small code snippet has to be added to the `ready` Event.
 ```js
 const User = require('../Structures/User');
 module.exports = async(client, payload) => {

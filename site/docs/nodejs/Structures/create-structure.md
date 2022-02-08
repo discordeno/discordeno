@@ -13,7 +13,7 @@ You got a channel object and now you want to use it for sending a message to the
 }
 ```
 
-The first recommended way would be of course:
+The first recommended way would be:
 ```js
 client.helpers.sendMessage(channelId, {content: 'hello'})
 ```
@@ -63,4 +63,4 @@ const guild = new Guild(client, data) //DenoClient and DenoPayloadData
 Some popular functions have been added to the structure, so you can use them. 
 You as a user can of course add your own functions and customize the structures to fit your needs 
 
-We're going to give a better insight into how create 'Embeds' or 'Components' with the template structures 
+We're going to give a better insight into how create 'Embeds' or 'Components' with the template structures.

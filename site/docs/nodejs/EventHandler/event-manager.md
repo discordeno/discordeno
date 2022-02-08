@@ -69,9 +69,9 @@ class EventManager {
 }
 module.exports = EventManager;
 ```
-This code above, which also can be found in the [Template Repo]([here](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Managers/EventManager.js) will loop through all the files in the `events` folder and load the functions into the `_events` object.
+This code above, which also can be found in the [template repo](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Managers/EventManager.js) will loop through all the files in the `events` folder and load the functions into the `_events` object.
 
-So that the client also knows which events it should execute, you need to pass the functions in the `_events` object 
+So that the client also knows which events it should execute, you need to pass the functions in the `createBot<options>.events` object 
 
 ```js
 const Discord = require('discordeno');
@@ -89,4 +89,5 @@ Discord.startBot(client)
 ```
 Moreover, you can customize the EventManager to add more functionalities and fit it to your needs or even emit events, by extending it...
 
-Of course you wonder what you can do with all this data now. We will explain this further on the next page `Handle-Event`.
+Of course you wonder what you can do with all this data now. 
+We will explain this further on the next page `Handle-Event`.
