@@ -1,4 +1,4 @@
-import { GatewayManager } from "../bot.ts";
+import { GatewayManager } from "./gateway_manager.ts";
 import { GatewayOpcodes } from "../types/codes/gatewayOpcodes.ts";
 import type { DiscordGatewayPayload } from "../types/gateway/gatewayPayload.ts";
 import type { DiscordHello } from "../types/gateway/hello.ts";
