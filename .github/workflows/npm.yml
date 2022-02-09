@@ -23,7 +23,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16.x'
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: 'https://registry.npmjs.org/'
       - name: npm build
         run: deno run -A ./dnt.ts ${{steps.get_tag_version.outputs.TAG_VERSION}}
       - name: npm publish
