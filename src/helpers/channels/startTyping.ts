@@ -1,4 +1,3 @@
-import { ChannelTypes } from "../../types/channels/channelTypes.ts";
 import type { Bot } from "../../bot.ts";
 
 /**

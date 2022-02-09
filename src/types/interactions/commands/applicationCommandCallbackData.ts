@@ -2,7 +2,6 @@ import { FileContent } from "../../discordeno/fileContent.ts";
 import { Embed } from "../../embeds/embed.ts";
 import { AllowedMentions } from "../../messages/allowedMentions.ts";
 import { MessageComponents } from "../../messages/components/messageComponents.ts";
-import { CreateMessage } from "../../messages/createMessage.ts";
 import { ApplicationCommandOptionChoice } from "./applicationCommandOptionChoice.ts";
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */

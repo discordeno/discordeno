@@ -1,19 +1,5 @@
-import {
-  checkRateLimits,
-  cleanupQueues,
-  createRequestBody,
-  createRestManager,
-  CreateRestManagerOptions,
-  processGlobalQueue,
-  processQueue,
-  processRateLimitedPaths,
-  processRequest,
-  processRequestHeaders,
-  runMethod,
-  simplifyUrl,
-} from "./rest/mod.ts";
-import type { RestPayload, RestRateLimitedPath, RestRequest } from "./rest/rest.ts";
-import { GatewayIntents, Intents } from "./types/gateway/gatewayIntents.ts";
+import { createRestManager, CreateRestManagerOptions } from "./rest/mod.ts";
+import { GatewayIntents } from "./types/gateway/gatewayIntents.ts";
 import { GetGatewayBot } from "./types/gateway/getGatewayBot.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
 import { Collection } from "./util/collection.ts";
@@ -45,23 +31,7 @@ import {
 } from "./util/constants.ts";
 import { Errors } from "./types/discordeno/errors.ts";
 import { DiscordGatewayPayload, GatewayDispatchEventNames, GatewayPayload } from "./types/gateway/gatewayPayload.ts";
-import {
-  closeWS,
-  createGatewayManager,
-  createShard,
-  DiscordenoShard,
-  GatewayManager,
-  handleOnMessage,
-  heartbeat,
-  identify,
-  prepareBuckets,
-  processGatewayQueue,
-  resharder,
-  resume,
-  sendShardMessage,
-  spawnShards,
-  tellWorkerToIdentify,
-} from "./ws/mod.ts";
+import { createGatewayManager, GatewayManager } from "./ws/mod.ts";
 import { validateLength } from "./util/validateLength.ts";
 import { delay, formatImageURL, hasProperty } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
@@ -85,7 +55,6 @@ import { transformComponent } from "./transformers/component.ts";
 import { transformWebhook } from "./transformers/webhook.ts";
 import { transformAuditlogEntry } from "./transformers/auditlogEntry.ts";
 import { transformApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
-import { StatusUpdate } from "./types/gateway/statusUpdate.ts";
 import { calculateBits, calculatePermissions } from "./util/permissions.ts";
 import { transformScheduledEvent } from "./transformers/scheduledEvent.ts";
 import { DiscordenoScheduledEvent } from "./transformers/scheduledEvent.ts";

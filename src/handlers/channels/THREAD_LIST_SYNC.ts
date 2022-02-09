@@ -2,7 +2,6 @@ import { Bot } from "../../bot.ts";
 import { ThreadListSync } from "../../types/channels/threads/threadListSync.ts";
 import { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
 import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
-import { Collection } from "../../util/collection.ts";
 
 export async function handleThreadListSync(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as SnakeCasedPropertiesDeep<ThreadListSync>;

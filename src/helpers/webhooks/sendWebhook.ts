@@ -1,5 +1,4 @@
 import type { Bot } from "../../bot.ts";
-import { AllowedMentionsTypes } from "../../types/messages/allowedMentionsTypes.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { ExecuteWebhook } from "../../types/webhooks/executeWebhook.ts";
 

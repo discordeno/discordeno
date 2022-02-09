@@ -1,6 +1,5 @@
 import type { InviteMetadata } from "../../types/invites/inviteMetadata.ts";
 import { Collection } from "../../util/collection.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 import type { Bot } from "../../bot.ts";
 
 /** Get all the invites for this guild. Requires MANAGE_GUILD permission */

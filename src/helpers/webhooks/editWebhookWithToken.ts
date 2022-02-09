@@ -1,7 +1,6 @@
 import type { ModifyWebhook } from "../../types/webhooks/modifyWebhook.ts";
 import type { Webhook } from "../../types/webhooks/webhook.ts";
 import type { Bot } from "../../bot.ts";
-import type { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 /** Edit a webhook. Returns the updated webhook object on success. */
 export async function editWebhookWithToken(
