@@ -6,7 +6,7 @@ import { handleOnMessage } from "./handleOnMessage.ts";
 import { heartbeat } from "./heartbeat.ts";
 import { identify } from "./identify.ts";
 import { processGatewayQueue } from "./processGatewayQueue.ts";
-import { resharder } from "./resharder.ts";
+import { resharder, resharderCloseOldShards, resharderIsPending, startReshardingChecks } from "./resharder.ts";
 import { resume } from "./resume.ts";
 import { sendShardMessage } from "./sendShardMessage.ts";
 import { prepareBuckets, spawnShards } from "./spawnShards.ts";
@@ -166,8 +166,17 @@ export interface GatewayManager {
   tellWorkerToIdentify: typeof tellWorkerToIdentify;
   /** Handle the different logs. Used for debugging. */
   debug: (text: string, ...args: any[]) => unknown;
-  /** Handles resharding the bot when necessary. */
-  resharder: typeof resharder;
+  /** The methods related to resharding. */
+  resharding: {
+    /** Handles resharding the bot when necessary. */
+    resharder: typeof resharder;
+    /** Handles checking if all new shards are online in the new gateway. */
+    isPending: typeof resharderIsPending;
+    /** Handles closeing all shards in the old gateway. */
+    closeOldShards: typeof resharderCloseOldShards;
+    /** Handles checking if it is time to reshard and triggers the resharder */
+    check: typeof startReshardingChecks;
+  }
   /** Handles the message events from websocket. */
   handleOnMessage: typeof handleOnMessage;
   /** Handles processing queue of requests send to this shard. */

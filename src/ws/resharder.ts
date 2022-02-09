@@ -1,5 +1,5 @@
 import { GetGatewayBot } from "../types/gateway/getGatewayBot.ts";
-import { GatewayManager } from "./gateway_manager.ts";
+import { GatewayManager, createGatewayManager } from "./gateway_manager.ts";
 
 /** The handler to automatically reshard when necessary. */
 export async function resharder(
@@ -41,7 +41,7 @@ export async function resharder(
   return new Promise((resolve) => {
     // TIMER TO KEEP CHECKING WHEN ALL SHARDS HAVE RESHARDED
     const timer = setInterval(async () => {
-      const pending = await gateway.resharderIsPending(gateway, oldGateway);
+      const pending = await gateway.resharding.isPending(gateway, oldGateway);
       // STILL PENDING ON SOME SHARDS TO BE CREATED
       if (pending) return;
 
@@ -56,7 +56,7 @@ export async function resharder(
 
       // STOP TIMER
       clearInterval(timer);
-      await gateway.resharderCloseOldShards(oldGateway);
+      await gateway.resharding.closeOldShards(oldGateway);
       gateway.debug("[Resharding] Complete.");
       resolve(gateway);
     }, 30000);
@@ -124,5 +124,5 @@ export async function startReshardingChecks(gateway: GatewayManager) {
   if (results.sessionStartLimit.remaining < results.shards) return;
 
   // MULTI-SERVER BOTS OVERRIDE THIS IF YOU NEED TO RESHARD SERVER BY SERVER
-  return gateway.resharder(gateway, results);
+  return gateway.resharding.resharder(gateway, results);
 }
