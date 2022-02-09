@@ -6,8 +6,4 @@
     "options": {
       "lineWidth": 120
     }
-  },
-  "compilerOptions": {
-    "noUnusedLocals": true
-  }
 }
