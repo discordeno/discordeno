@@ -11,3 +11,4 @@ export * from "./sendShardMessage.ts";
 export * from "./startGatewayOptions.ts";
 export * from "./tellWorkerToIdentify.ts";
 export * from "./ws.ts";
+export * from "./gateway_manager.ts";

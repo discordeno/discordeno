@@ -1,5 +1,5 @@
 import { GatewayOpcodes } from "../types/codes/gatewayOpcodes.ts";
-import { GatewayManager } from "../bot.ts";
+import { GatewayManager } from "./gateway_manager.ts";
 
 export function resume(gateway: GatewayManager, shardId: number) {
   gateway.debug("GW RESUMING", { shardId });
@@ -53,7 +53,7 @@ export function resume(gateway: GatewayManager, shardId: number) {
       {
         op: GatewayOpcodes.Resume,
         d: {
-          token: gateway.token,
+          token: `Bot ${gateway.token}`,
           session_id: sessionId,
           seq: previousSequenceNumber,
         },

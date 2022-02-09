@@ -4,5 +4,5 @@ Deno.test("[webhooks] Delete a webhook", async () => {
   const webhook = await bot.helpers.createWebhook(channel.id, {
     name: "natico",
   });
-  await bot.helpers.deleteWebhook(channel.id, webhook.id);
+  await bot.helpers.deleteWebhook(webhook.id);
 });

@@ -1,5 +1,6 @@
 /** Begin spawning shards. */
-import { GatewayManager } from "../bot.ts";
+
+import { GatewayManager } from "./gateway_manager.ts";
 
 export function prepareBuckets(gateway: GatewayManager, firstShardId: number, lastShardId: number) {
   /** Stored as bucketId: [workerId, [ShardIds]] */

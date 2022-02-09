@@ -1,5 +1,5 @@
-import { createGatewayManager, GatewayManager } from "../bot.ts";
 import { GetGatewayBot } from "../types/gateway/getGatewayBot.ts";
+import { GatewayManager } from "./gateway_manager.ts";
 
 /** The handler to automatically reshard when necessary. */
 export async function resharder(

@@ -5,14 +5,10 @@ import { delayUntil } from "../utils.ts";
 
 Deno.test("[misc] edit the bot's status", async function () {
   bot.events.presenceUpdate = function (_bot, presense, _oldPresense) {
-    console.log("in pu");
-    console.log("in pu");
     assertExists(presense);
   };
 
   bot.events.botUpdate = function (bot, user) {
-    console.log("in bu");
-    console.log("in bu");
   };
 
   bot.helpers.editBotStatus({

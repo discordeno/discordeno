@@ -1,5 +1,5 @@
 import { delay } from "../util/utils.ts";
-import { GatewayManager } from "../bot.ts";
+import { GatewayManager } from "./gateway_manager.ts";
 
 export async function processGatewayQueue(gateway: GatewayManager, id: number) {
   const shard = gateway.shards.get(id);
@@ -32,7 +32,7 @@ export async function processGatewayQueue(gateway: GatewayManager, id: number) {
     shard.queueCounter++;
 
     // Handle if the requests have been maxed
-    if (shard.queueCounter >= 118) {
+    if (shard.queueCounter >= 116) {
       gateway.debug("GW MAX_REQUESTS", {
         message: "Max gateway requests per minute reached setting timeout for one minute",
         shardId: shard.id,
