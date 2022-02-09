@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Getting Started
 
-If you are reading this, you probably want to start using Discordeno or switch from popular libraries like [Discord.js](https://discord.js.org/).
+If you are reading this, you probably want to start using Discordeno or switch from popular libraries like Discord.js.
 
 When you never coded a Discord Bot before, you can start with using Deno instead of Node.js, since it has all functionalities. Although on some cases, Deno does not fit in your use case, because of missing packages or a too large code base to migrate to a slightly different language.
 
