@@ -1,46 +1,56 @@
+const Message = require("./Message");
+
 class Responses {
-    constructor(data) {
-        this.manager = data.manager;
-        this.args = this._validateArguments(data.args);
-        this.replied = false;
+  constructor(data) {
+    this.manager = data.manager;
+    this.args = this._validateArguments(data.args);
+    this.replied = false;
+  }
+
+  async reply(content) {
+    // When just a string is passed, we assume it's the content -> transform to correct formatted payload
+    if (typeof content === "string") content = { content };
+    if (this.interaction) {
+      if (this.replied) return this.followUp(content);
+      const reply = await this.interaction.reply(content);
+
+      //Assign properties to the response
+      const response = new Message(this.client, reply);
+
+      this.replied = true;
+      return response;
     }
+    if (this.message) {
+      if (this.replied) return this.followUp(content);
 
-    async reply(content) {
-        if (this.interaction) {
-            if (this.replied) return (await this.followUp(content))
-            let reply = await this.interaction.reply(content);
-            if (!reply) reply = {};
-            reply.delete = (() => { });
+      const msg = await this.message.channel.send(content);
 
-            this.replied = true;
-            return reply;
-        }
-        if (this.message) {
-            if (this.replied) return this.followUp(content)
-            this.replied = true;
-            return this.message.channel.send(content)
-        }
+      //Assign properties to the response
+      const response = new Message(this.client, msg);
+      this.replied = true;
     }
+  }
 
-    async followUp(content) {
-        if (this.interaction) {
-            let reply = await this.interaction.followUp(content);
-            if (!reply) reply = {};
-            reply.delete = (() => { });
-            return reply;
-        }
-        if (this.message) return this.message.channel.send(content)
+  async followUp(content) {
+    if (this.interaction) {
+      const reply = await this.interaction.followUp(content);
+      const response = new Message(this.client, reply);
+      return response;
     }
-
-
-    onError(error) {
-        return this.reply({content:`A unknown Error happend: \n> ${error}`});
+    if (this.message) {
+      const msg = await this.message.channel.send(content);
+      const response = new Message(this.client, msg);
+      return response;
     }
-    
+  }
 
-    _validateArguments(args) {
-        this.args = args;
-        return args;
-    }
+  onError(error) {
+    return this.reply({ content: `A unknown Error happend: \n> ${error}` });
+  }
+
+  _validateArguments(args) {
+    this.args = args;
+    return args;
+  }
 }
 module.exports = Responses;

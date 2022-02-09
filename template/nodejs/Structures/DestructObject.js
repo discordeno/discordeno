@@ -1,16 +1,16 @@
-class DestructObject{
-    constructor(message = {}){
-        this.destructObject(message);
+class DestructObject {
+  constructor(message = {}) {
+    this.destructObject(message);
+  }
+  destructObject(message) {
+    for (let [key, value] of Object.entries(message)) {
+      this[key] = value;
     }
-    destructObject(message){
-        for (let [key, value] of Object.entries(message)) {
-            this[key] = value;
-        }
-        return this;
-    }
+    return this;
+  }
 
-    toJSON(){
-        return {...this};
-    }
+  toJSON() {
+    return { ...this };
+  }
 }
 module.exports = DestructObject;

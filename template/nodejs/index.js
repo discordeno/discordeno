@@ -1,23 +1,24 @@
+const deno = require("discordeno");
 
-const deno = require('discordeno');
+// Ideally you should switch this to .env but for a template a config json is enough
+const config = require("../config.json");
 
-const config = require('../config.json');
-
-const EventManager = require('./Managers/EventManager.js');
+const EventManager = require("./Managers/EventManager.js");
+// looping through all events and registering them
 const events = new EventManager({});
 
 const client = deno.createBot({
-    events: events.load({}),
-    intents: ['Guilds', 'GuildMessages'],
-    token: config.token,
-})
+  events: events.load({}),
+  intents: ["Guilds", "GuildMessages"],
+  token: config.token,
+});
 
 client.config = config;
 
-const CommandManager = require('./Managers/CommandManager.js');
+// looping through all commands and registering them in .cache of the class
+const CommandManager = require("./Managers/CommandManager.js");
 client.commands = new CommandManager(client);
-client.commands.load({})
+client.commands.load({});
 
-deno.startBot(client)
-
-
+// Starts your Bot
+deno.startBot(client);
