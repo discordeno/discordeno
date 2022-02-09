@@ -2,7 +2,6 @@ import type { GuildMemberWithUser } from "../../types/members/guildMember.ts";
 import type { ListGuildMembers } from "../../types/members/listGuildMembers.ts";
 import type { Bot } from "../../bot.ts";
 import { Collection } from "../../util/collection.ts";
-import type { DiscordenoMember } from "../../transformers/member.ts";
 
 /**
  * Highly recommended to **NOT** use this function to get members instead use fetchMembers().

@@ -1,6 +1,5 @@
 import type { DiscordenoEditWebhookMessage } from "../../../types/discordeno/editWebhookMessage.ts";
 import type { Bot } from "../../../bot.ts";
-import { AllowedMentionsTypes } from "../../../types/messages/allowedMentionsTypes.ts";
 import { MessageComponentTypes } from "../../../types/messages/components/messageComponentTypes.ts";
 
 /** To edit your response to a application command. If a messageId is not provided it will default to editing the original response. */

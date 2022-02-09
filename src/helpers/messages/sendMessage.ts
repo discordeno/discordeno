@@ -1,4 +1,3 @@
-import { AllowedMentionsTypes } from "../../types/messages/allowedMentionsTypes.ts";
 import type { CreateMessage } from "../../types/messages/createMessage.ts";
 import type { Message } from "../../types/messages/message.ts";
 import type { Bot } from "../../bot.ts";

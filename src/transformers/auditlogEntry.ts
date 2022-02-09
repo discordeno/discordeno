@@ -1,10 +1,8 @@
 import { Bot } from "../bot.ts";
 import { AuditLogEntry } from "../types/auditLog/auditLogEntry.ts";
 import { AuditLogEvents } from "../types/auditLog/auditLogEvents.ts";
-import { DiscordOverwrite, Overwrite } from "../types/channels/overwrite.ts";
-import { Role } from "../types/permissions/role.ts";
+import { DiscordOverwrite } from "../types/channels/overwrite.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { DiscordenoUser } from "./member.ts";
 
 export function transformAuditlogEntry(
   bot: Bot,

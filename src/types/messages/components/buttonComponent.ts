@@ -1,4 +1,3 @@
-import { SnakeCasedPropertiesDeep } from "../../util.ts";
 import { ButtonStyles } from "./buttonStyles.ts";
 import { MessageComponentTypes } from "./messageComponentTypes.ts";
 

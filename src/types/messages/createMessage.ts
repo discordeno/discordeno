@@ -1,6 +1,5 @@
 import { Embed } from "../embeds/embed.ts";
 import { AllowedMentions } from "../messages/allowedMentions.ts";
-import { MessageReference } from "../messages/messageReference.ts";
 import { FileContent } from "../discordeno/fileContent.ts";
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 import { MessageComponents } from "./components/messageComponents.ts";
