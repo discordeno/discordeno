@@ -186,9 +186,9 @@ export interface GatewayManager {
     resharder: typeof resharder;
     /** Handles checking if all new shards are online in the new gateway. */
     isPending: typeof resharderIsPending;
-    /** Handles closeing all shards in the old gateway. */
+    /** Handles closing all shards in the old gateway. */
     closeOldShards: typeof resharderCloseOldShards;
-    /** Handles checking if it is time to reshard and triggers the resharder */
+    /** Handles checking if it is time to reshard and triggers the resharder. */
     check: typeof startReshardingChecks;
     /** Handler to mark a guild id with its new shard id in cache. */
     markNewGuildShardId: typeof markNewGuildShardId;
