@@ -16,7 +16,7 @@ export async function resharder(
     handleDiscordPayload: async function (_, data, shardId) {
       if (data.t === "READY") {
         const payload = data.d as DiscordReady;
-        await gateway.resharding.markNewGuildShardId(payload.guilds.map(g => BigInt(g.id)), shardId);
+        await gateway.resharding.markNewGuildShardId(payload.guilds.map((g) => BigInt(g.id)), shardId);
       }
     },
   });
