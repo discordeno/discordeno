@@ -51,10 +51,10 @@ export async function resharder(
       // ENABLE EVENTS ON NEW SHARDS AND IGNORE EVENTS ON OLD
       const oldHandler = oldGateway.handleDiscordPayload;
       gateway.handleDiscordPayload = oldHandler;
-      oldGateway.handleDiscordPayload = function (_, data, shardId) {
+      oldGateway.handleDiscordPayload = function (og, data, shardId) {
         // ALLOW EXCEPTION FOR CHUNKING TO PREVENT REQUESTS FREEZING
         if (data.t !== "GUILD_MEMBERS_CHUNK") return;
-        oldHandler(_, data, shardId);
+        oldHandler(og, data, shardId);
       };
 
       // STOP TIMER
