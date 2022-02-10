@@ -1,4 +1,3 @@
-import { Errors } from "../../types/discordeno/errors.ts";
 import type { User } from "../../types/users/user.ts";
 import type { Bot } from "../../bot.ts";
 

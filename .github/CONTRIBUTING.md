@@ -17,6 +17,7 @@
 
 ## Style Guide
 
+- Do not make changes to the `deno.json` configuration file.
 - File names shall use camel case.
 - Comply with
   [these guidelines for inclusive code](https://chromium.googlesource.com/chromium/src/+/master/styleguide/inclusive_code.md).

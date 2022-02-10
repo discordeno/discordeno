@@ -1,5 +1,5 @@
 import { Bot } from "../../../bot.ts";
-import { EditScheduledEvent, ScheduledEvent, ScheduledEventEntityType } from "../../../types/guilds/scheduledEvents.ts";
+import { EditScheduledEvent, ScheduledEvent } from "../../../types/guilds/scheduledEvents.ts";
 
 /** Modify a guild scheduled event. To start or end an event, use this endpoint to modify the event's status. */
 export async function editScheduledEvent(

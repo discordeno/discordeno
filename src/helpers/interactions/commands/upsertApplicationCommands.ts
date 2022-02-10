@@ -3,7 +3,6 @@ import type { EditGlobalApplicationCommand } from "../../../types/interactions/c
 import type { MakeRequired } from "../../../types/util.ts";
 import type { Bot } from "../../../bot.ts";
 import { Collection } from "../../../util/collection.ts";
-import { ApplicationCommandOption } from "../../../types/interactions/commands/applicationCommandOption.ts";
 import { makeOptionsForCommand } from "./createApplicationCommand.ts";
 
 /**

@@ -1,9 +1,7 @@
 import type { RequestGuildMembers } from "../../types/members/requestGuildMembers.ts";
-import { Collection } from "../../util/collection.ts";
 import type { Bot } from "../../bot.ts";
 import { GatewayIntents } from "../../types/gateway/gatewayIntents.ts";
 import { GatewayOpcodes } from "../../types/codes/gatewayOpcodes.ts";
-import type { DiscordenoMember } from "../../transformers/member.ts";
 
 /**
  * Highly recommended to use this function to fetch members instead of getMember from REST.
