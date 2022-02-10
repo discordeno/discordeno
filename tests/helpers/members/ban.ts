@@ -1,4 +1,4 @@
-import { Bot } from "../../../src/bot.ts";
+import { Bot } from "../../../bot.ts";
 import { CreateGuildBan } from "../../../types/mod.ts";
 import { assertEquals } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";

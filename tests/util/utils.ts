@@ -1,4 +1,4 @@
-import { delay, hasProperty } from "../../src/util/utils.ts";
+import { delay, hasProperty } from "../../util/utils.ts";
 import { assertEquals } from "../deps.ts";
 
 // hasProperty

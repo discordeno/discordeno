@@ -1,4 +1,4 @@
-import { Bot } from "../../../src/bot.ts";
+import { Bot } from "../../../bot.ts";
 import { assertExists } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
 
