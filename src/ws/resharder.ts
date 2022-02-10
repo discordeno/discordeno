@@ -115,7 +115,7 @@ export async function startReshardingChecks(gateway: GatewayManager) {
   // TODO: is it possible to route this to REST?
   const results = (await fetch(`https://discord.com/api/gateway/bot`, {
     headers: {
-      Authorization: `${gateway.token.startsWith("Bot ") ? "" : "Bot "}${gateway.token}`,
+      Authorization: `Bot ${gateway.token}`,
     },
   }).then((res) => res.json())) as GetGatewayBot;
 
