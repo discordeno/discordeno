@@ -37,14 +37,8 @@ import { delay, formatImageURL, hasProperty } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { calculateShardId } from "./util/calculateShardId.ts";
 import * as handlers from "./handlers/mod.ts";
-import {
-  DiscordenoInteraction,
-  transformInteraction,
-} from "./transformers/interaction.ts";
-import {
-  DiscordenoIntegration,
-  transformIntegration,
-} from "./transformers/integration.ts";
+import { DiscordenoInteraction, transformInteraction } from "./transformers/interaction.ts";
+import { DiscordenoIntegration, transformIntegration } from "./transformers/integration.ts";
 import { Emoji } from "./types/emojis/emoji.ts";
 import { transformApplication } from "./transformers/application.ts";
 import { transformTeam } from "./transformers/team.ts";
@@ -52,10 +46,7 @@ import { DiscordenoInvite, transformInvite } from "./transformers/invite.ts";
 import * as helpers from "./helpers/mod.ts";
 import { DiscordenoEmoji, transformEmoji } from "./transformers/emoji.ts";
 import { transformActivity } from "./transformers/activity.ts";
-import {
-  DiscordenoPresence,
-  transformPresence,
-} from "./transformers/presence.ts";
+import { DiscordenoPresence, transformPresence } from "./transformers/presence.ts";
 import { DiscordReady } from "./types/gateway/ready.ts";
 import { urlToBase64 } from "./util/urlToBase64.ts";
 import { transformAttachment } from "./transformers/attachment.ts";
@@ -67,10 +58,7 @@ import { transformApplicationCommandPermission } from "./transformers/applicatio
 import { calculateBits, calculatePermissions } from "./util/permissions.ts";
 import { transformScheduledEvent } from "./transformers/scheduledEvent.ts";
 import { DiscordenoScheduledEvent } from "./transformers/scheduledEvent.ts";
-import {
-  DiscordenoThreadMember,
-  transformThreadMember,
-} from "./transformers/threadMember.ts";
+import { DiscordenoThreadMember, transformThreadMember } from "./transformers/threadMember.ts";
 import { transformApplicationCommandOption } from "./transformers/applicationCommandOption.ts";
 import { transformApplicationCommand } from "./transformers/applicationCommand.ts";
 import { transformWelcomeScreen } from "./transformers/welcomeScreen.ts";
@@ -203,14 +191,10 @@ export async function startBot(bot: Bot) {
   // SETUP GATEWAY LOGIN INFO
   bot.gateway.urlWSS = bot.botGatewayData.url;
   bot.gateway.shardsRecommended = bot.botGatewayData.shards;
-  bot.gateway.sessionStartLimitTotal =
-    bot.botGatewayData.sessionStartLimit.total;
-  bot.gateway.sessionStartLimitRemaining =
-    bot.botGatewayData.sessionStartLimit.remaining;
-  bot.gateway.sessionStartLimitResetAfter =
-    bot.botGatewayData.sessionStartLimit.resetAfter;
-  bot.gateway.maxConcurrency =
-    bot.botGatewayData.sessionStartLimit.maxConcurrency;
+  bot.gateway.sessionStartLimitTotal = bot.botGatewayData.sessionStartLimit.total;
+  bot.gateway.sessionStartLimitRemaining = bot.botGatewayData.sessionStartLimit.remaining;
+  bot.gateway.sessionStartLimitResetAfter = bot.botGatewayData.sessionStartLimit.resetAfter;
+  bot.gateway.maxConcurrency = bot.botGatewayData.sessionStartLimit.maxConcurrency;
   bot.gateway.lastShardId = bot.botGatewayData.shards;
   bot.gateway.maxShards = bot.botGatewayData.shards;
 
@@ -280,8 +264,7 @@ export interface CreateBotOptions {
   helpers?: Partial<Helpers>;
 }
 
-export type UnPromise<T extends Promise<unknown>> = T extends Promise<infer K>
-  ? K
+export type UnPromise<T extends Promise<unknown>> = T extends Promise<infer K> ? K
   : never;
 
 export interface Bot {
@@ -697,10 +680,8 @@ export interface BotGatewayHandlerOptions {
   GUILD_SCHEDULED_EVENT_CREATE: typeof handlers.handleGuildScheduledEventCreate;
   GUILD_SCHEDULED_EVENT_DELETE: typeof handlers.handleGuildScheduledEventDelete;
   GUILD_SCHEDULED_EVENT_UPDATE: typeof handlers.handleGuildScheduledEventUpdate;
-  GUILD_SCHEDULED_EVENT_USER_ADD:
-    typeof handlers.handleGuildScheduledEventUserAdd;
-  GUILD_SCHEDULED_EVENT_USER_REMOVE:
-    typeof handlers.handleGuildScheduledEventUserRemove;
+  GUILD_SCHEDULED_EVENT_USER_ADD: typeof handlers.handleGuildScheduledEventUserAdd;
+  GUILD_SCHEDULED_EVENT_USER_REMOVE: typeof handlers.handleGuildScheduledEventUserRemove;
   GUILD_UPDATE: typeof handlers.handleGuildUpdate;
   INTERACTION_CREATE: typeof handlers.handleInteractionCreate;
   INVITE_CREATE: typeof handlers.handleInviteCreate;
@@ -710,8 +691,7 @@ export interface BotGatewayHandlerOptions {
   MESSAGE_DELETE: typeof handlers.handleMessageDelete;
   MESSAGE_REACTION_ADD: typeof handlers.handleMessageReactionAdd;
   MESSAGE_REACTION_REMOVE_ALL: typeof handlers.handleMessageReactionRemoveAll;
-  MESSAGE_REACTION_REMOVE_EMOJI:
-    typeof handlers.handleMessageReactionRemoveEmoji;
+  MESSAGE_REACTION_REMOVE_EMOJI: typeof handlers.handleMessageReactionRemoveEmoji;
   MESSAGE_REACTION_REMOVE: typeof handlers.handleMessageReactionRemove;
   MESSAGE_UPDATE: typeof handlers.handleMessageUpdate;
   PRESENCE_UPDATE: typeof handlers.handlePresenceUpdate;
@@ -786,9 +766,8 @@ export function createBotGatewayHandlers(
       handlers.handleGuildScheduledEventUpdate,
     GUILD_SCHEDULED_EVENT_USER_ADD: options.GUILD_SCHEDULED_EVENT_USER_ADD ??
       handlers.handleGuildScheduledEventUserAdd,
-    GUILD_SCHEDULED_EVENT_USER_REMOVE:
-      options.GUILD_SCHEDULED_EVENT_USER_REMOVE ??
-        handlers.handleGuildScheduledEventUserRemove,
+    GUILD_SCHEDULED_EVENT_USER_REMOVE: options.GUILD_SCHEDULED_EVENT_USER_REMOVE ??
+      handlers.handleGuildScheduledEventUserRemove,
     // interactions
     INTERACTION_CREATE: options.INTERACTION_CREATE ??
       handlers.handleInteractionCreate,
