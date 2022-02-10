@@ -3,9 +3,16 @@ name: Test
 on:
   push:
     paths:
+      - "handlers/**"
+      - "helpers/**"
       - "plugins/**"
+      - "rest/**"
       - "src/**"
       - "tests/**"
+      - "transformers/**"
+      - "types/**"
+      - "util/**"
+      - "ws/**"
 
 jobs:
   test:

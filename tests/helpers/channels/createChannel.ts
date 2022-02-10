@@ -1,5 +1,5 @@
-import { CreateGuildChannel } from "../../../src/types/guilds/createGuildChannel.ts";
-import { ChannelTypes } from "../../../src/types/mod.ts";
+import { CreateGuildChannel } from "../../../types/guilds/createGuildChannel.ts";
+import { ChannelTypes } from "../../../types/mod.ts";
 import { assertEquals, assertExists } from "../../deps.ts";
 import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";
