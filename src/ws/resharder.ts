@@ -1,5 +1,7 @@
 import { GetGatewayBot } from "../types/gateway/getGatewayBot.ts";
-import { GatewayManager, createGatewayManager } from "./gateway_manager.ts";
+import { DiscordReady } from "../types/gateway/ready.ts";
+import { Collection } from "../util/collection.ts";
+import { createGatewayManager, GatewayManager } from "./gateway_manager.ts";
 
 /** The handler to automatically reshard when necessary. */
 export async function resharder(
@@ -11,15 +13,20 @@ export async function resharder(
   const gateway = createGatewayManager({
     ...oldGateway,
     // IGNORE EVENTS FOR NOW
-    handleDiscordPayload: async function () {},
+    handleDiscordPayload: async function (_, data, shardId) {
+      if (data.t === "READY") {
+        const payload = data.d as DiscordReady;
+        for (const guild of payload.guilds) {
+          gateway.resharding.markNewGuildShardId(BigInt(guild.id), shardId);
+        }
+      }
+    },
   });
 
   // Begin resharding
   gateway.maxShards = results.shards;
   // FOR MANUAL SHARD CONTROL, OVERRIDE THIS SHARD ID!
-  gateway.lastShardId = oldGateway.lastShardId === oldGateway.maxShards
-    ? gateway.maxShards
-    : oldGateway.lastShardId;
+  gateway.lastShardId = oldGateway.lastShardId === oldGateway.maxShards ? gateway.maxShards : oldGateway.lastShardId;
   gateway.shardsRecommended = results.shards;
   gateway.sessionStartLimitTotal = results.sessionStartLimit.total;
   gateway.sessionStartLimitRemaining = results.sessionStartLimit.remaining;
@@ -30,9 +37,7 @@ export async function resharder(
     gateway.debug("[Resharding] Using optimal large bot sharding solution.");
     gateway.maxShards = Math.ceil(
       gateway.maxShards /
-        (results.sessionStartLimit.maxConcurrency === 1
-          ? 16
-          : results.sessionStartLimit.maxConcurrency),
+        (results.sessionStartLimit.maxConcurrency === 1 ? 16 : results.sessionStartLimit.maxConcurrency),
     );
   }
 
@@ -56,6 +61,7 @@ export async function resharder(
 
       // STOP TIMER
       clearInterval(timer);
+      await gateway.resharding.editGuildShardIds();
       await gateway.resharding.closeOldShards(oldGateway);
       gateway.debug("[Resharding] Complete.");
       resolve(gateway);
@@ -109,14 +115,11 @@ export async function startReshardingChecks(gateway: GatewayManager) {
   // TODO: is it possible to route this to REST?
   const results = (await fetch(`https://discord.com/api/gateway/bot`, {
     headers: {
-      Authorization: `${
-        gateway.token.startsWith("Bot ") ? "" : "Bot "
-      }${gateway.token}`,
+      Authorization: `${gateway.token.startsWith("Bot ") ? "" : "Bot "}${gateway.token}`,
     },
   }).then((res) => res.json())) as GetGatewayBot;
 
-  const percentage =
-    ((results.shards - gateway.maxShards) / gateway.maxShards) * 100;
+  const percentage = ((results.shards - gateway.maxShards) / gateway.maxShards) * 100;
   // Less than necessary% being used so do nothing
   if (percentage < gateway.reshardPercentage) return;
 
@@ -125,4 +128,14 @@ export async function startReshardingChecks(gateway: GatewayManager) {
 
   // MULTI-SERVER BOTS OVERRIDE THIS IF YOU NEED TO RESHARD SERVER BY SERVER
   return gateway.resharding.resharder(gateway, results);
+}
+
+/** Handler that by default will save the new shard id for each guild this becomes ready in new gateway. This can be overriden to save the shard ids in a redis cache layer or whatever you prefer. These ids will be used later to update all guilds. */
+export async function markNewGuildShardId(guildId: bigint, shardId: number) {
+  // PLACEHOLDER TO LET YOU MARK A GUILD ID AND SHARDID FOR LATER USE ONCE RESHARDED
+}
+
+/** Handler that by default does not do anything since by default the library will not cache. */
+export async function reshardingEditGuildShardIds() {
+  // PLACEHOLDER TO LET YOU UPDATE CACHED GUILDS
 }
