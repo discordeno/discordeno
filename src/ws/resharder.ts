@@ -16,9 +16,7 @@ export async function resharder(
     handleDiscordPayload: async function (_, data, shardId) {
       if (data.t === "READY") {
         const payload = data.d as DiscordReady;
-        for (const guild of payload.guilds) {
-          gateway.resharding.markNewGuildShardId(BigInt(guild.id), shardId);
-        }
+        await gateway.resharding.markNewGuildShardId(payload.guilds.map(g => BigInt(g.id)), shardId);
       }
     },
   });
@@ -131,7 +129,7 @@ export async function startReshardingChecks(gateway: GatewayManager) {
 }
 
 /** Handler that by default will save the new shard id for each guild this becomes ready in new gateway. This can be overriden to save the shard ids in a redis cache layer or whatever you prefer. These ids will be used later to update all guilds. */
-export async function markNewGuildShardId(guildId: bigint, shardId: number) {
+export async function markNewGuildShardId(guildIds: bigint[], shardId: number) {
   // PLACEHOLDER TO LET YOU MARK A GUILD ID AND SHARDID FOR LATER USE ONCE RESHARDED
 }
 
