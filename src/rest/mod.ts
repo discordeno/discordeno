@@ -9,3 +9,4 @@ export * from "./processRequestHeaders.ts";
 export * from "./rest.ts";
 export * from "./runMethod.ts";
 export * from "./simplifyUrl.ts";
+export * from "./rest_manager.ts";

@@ -1,5 +1,4 @@
 import { Bot } from "../bot.ts";
-import type { Emoji } from "../types/emojis/emoji.ts";
 import type { Guild } from "../types/guilds/guild.ts";
 import { Collection } from "../util/collection.ts";
 import { DiscordenoRole } from "./role.ts";

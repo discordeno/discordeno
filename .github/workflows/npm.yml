@@ -5,7 +5,7 @@ on:
     tags:
 
 jobs:
-  test:
+  publish:
     runs-on: ubuntu-latest
     strategy:
       matrix:
