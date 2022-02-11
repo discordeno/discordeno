@@ -5,7 +5,7 @@ export interface ModifyWebhook {
   /** Image for the default webhook avatar */
   avatar?: string | null;
   /** The new channel id this webhook should be moved to */
-  channelId?: string;
+  channelId?: bigint;
   /** The reason you are modifying this webhook */
   reason?: string;
 }

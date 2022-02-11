@@ -8,9 +8,6 @@ export default function editMember(bot: BotWithCache) {
     const requiredPerms: Set<PermissionStrings> = new Set();
 
     if (options.nick) {
-      if (options.nick.length > 32) {
-        throw new Error("NICKNAMES_MAX_LENGTH");
-      }
       requiredPerms.add("MANAGE_NICKNAMES");
     }
 
@@ -41,7 +38,7 @@ export default function editMember(bot: BotWithCache) {
           "MOVE_MEMBERS",
         ]);
         if (memberVoiceState) {
-          await requireBotChannelPermissions(
+          requireBotChannelPermissions(
             bot,
             memberVoiceState?.channelId,
             [
@@ -49,13 +46,13 @@ export default function editMember(bot: BotWithCache) {
             ],
           );
         }
-        await requireBotChannelPermissions(bot, options.channelId, [
+        requireBotChannelPermissions(bot, options.channelId, [
           ...requiredVoicePerms,
         ]);
       }
     }
 
-    await requireBotGuildPermissions(bot, guildId, [
+    requireBotGuildPermissions(bot, guildId, [
       ...requiredPerms,
     ]);
 

@@ -1,8 +1,8 @@
-import { BotWithCache } from "../../deps.ts";
+import { Bot } from "../../deps.ts";
 import setupInteractionCommandPermChecks from "./commands.ts";
 import editFollowupMessage from "./editFollowupMessage.ts";
 
-export function sendInteractionResponse(bot: BotWithCache) {
+export function sendInteractionResponse(bot: Bot) {
   const sendInteractionResponseOld = bot.helpers.sendInteractionResponse;
 
   bot.helpers.sendInteractionResponse = function (id, token, options) {
@@ -25,7 +25,8 @@ export function sendInteractionResponse(bot: BotWithCache) {
   };
 }
 
-export default function setupInteractionPermChecks(bot: BotWithCache) {
+export default function setupInteractionPermChecks(bot: Bot) {
   setupInteractionCommandPermChecks(bot);
   editFollowupMessage(bot);
+  sendInteractionResponse(bot);
 }

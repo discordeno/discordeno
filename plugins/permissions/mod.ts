@@ -5,11 +5,9 @@ import setupEditMember from "./src/editMember.ts";
 import setupEmojiPermChecks from "./src/emojis.ts";
 import setupGuildPermChecks from "./src/guilds/mod.ts";
 import setupIntegrationPermChecks from "./src/integrations.ts";
-import setupInteractionPermChecks from "./src/interactions/mod.ts";
 import setupInvitesPermChecks from "./src/invites.ts";
 import setupMemberPermChecks from "./src/members/mod.ts";
 import setupMessagePermChecks from "./src/messages/mod.ts";
-import setupMiscPermChecks from "./src/misc/mod.ts";
 import setupRolePermChecks from "./src/roles/mod.ts";
 import setupWebhooksPermChecks from "./src/webhooks/mod.ts";
 
@@ -30,11 +28,9 @@ export function enablePermissionsPlugin(bot: BotWithCache) {
   setupEditMember(bot);
   setupGuildPermChecks(bot);
   setupIntegrationPermChecks(bot);
-  setupInteractionPermChecks(bot);
   setupInvitesPermChecks(bot);
   setupMemberPermChecks(bot);
   setupMessagePermChecks(bot);
-  setupMiscPermChecks(bot);
   setupRolePermChecks(bot);
   setupWebhooksPermChecks(bot);
 

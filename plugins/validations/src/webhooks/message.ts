@@ -1,15 +1,19 @@
-import { AllowedMentionsTypes, BotWithCache } from "../../deps.ts";
+import { AllowedMentionsTypes, Bot } from "../../deps.ts";
+import { validateComponents } from "../components.ts";
 
-export default function editFollowupMessage(bot: BotWithCache) {
-  const editFollowupMessageOld = bot.helpers.editFollowupMessage;
+export function editWebhookMessage(bot: Bot) {
+  const editWebhookMessageOld = bot.helpers.editWebhookMessage;
 
-  bot.helpers.editFollowupMessage = function (
-    token,
-    messageId,
+  bot.helpers.editWebhookMessage = function (
+    webhookId,
+    webhookToken,
     options,
   ) {
-    if (options.content && options.content.length > 2000) {
-      throw Error("MESSAGE_MAX_LENGTH");
+    if (
+      options.content &&
+      !bot.utils.validateLength(options.content, { max: 2000 })
+    ) {
+      throw Error("The content can not exceed 2000 characters.");
     }
 
     if (options.embeds && options.embeds.length > 10) {
@@ -56,6 +60,12 @@ export default function editFollowupMessage(bot: BotWithCache) {
       }
     }
 
-    return editFollowupMessageOld(token, messageId, options);
+    if (options.components) validateComponents(bot, options.components);
+
+    return editWebhookMessageOld(webhookId, webhookToken, options);
   };
+}
+
+export default function setupMessageWebhookPermChecks(bot: Bot) {
+  editWebhookMessage(bot);
 }

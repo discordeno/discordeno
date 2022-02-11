@@ -7,7 +7,7 @@ export async function editWebhook(bot: Bot, webhookId: bigint, options: ModifyWe
   const result = await bot.rest.runMethod<Webhook>(bot.rest, "patch", bot.constants.endpoints.WEBHOOK_ID(webhookId), {
     name: options.name,
     avatar: options.avatar,
-    channel_id: options.channelId,
+    channel_id: options.channelId?.toString(),
     reason: options.reason,
   });
 

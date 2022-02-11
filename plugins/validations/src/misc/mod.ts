@@ -1,6 +1,6 @@
-import { BotWithCache } from "../../deps.ts";
+import { Bot } from "../../deps.ts";
 
-export function editBotProfile(bot: BotWithCache) {
+export function editBotProfile(bot: Bot) {
   const editBotProfileOld = bot.helpers.editBotProfile;
 
   bot.helpers.editBotProfile = function (
@@ -40,6 +40,6 @@ export function editBotProfile(bot: BotWithCache) {
   };
 }
 
-export default function setupMiscPermChecks(bot: BotWithCache) {
+export default function setupMiscPermChecks(bot: Bot) {
   editBotProfile(bot);
 }

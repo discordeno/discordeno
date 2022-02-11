@@ -5,12 +5,6 @@ export default function removeThreadMember(bot: BotWithCache) {
   const removeThreadMemberOld = bot.helpers.removeThreadMember;
 
   bot.helpers.removeThreadMember = async function (threadId, userId) {
-    if (userId === bot.id) {
-      throw new Error(
-        "To remove the bot from a thread, you must use bot.helpers.leaveThread()",
-      );
-    }
-
     const channel = bot.channels.get(threadId);
 
     if (channel) {
@@ -24,7 +18,7 @@ export default function removeThreadMember(bot: BotWithCache) {
         !(bot.id === channel.ownerId &&
           channel.type === ChannelTypes.GuildPrivateThread)
       ) {
-        await requireBotChannelPermissions(bot, channel, ["MANAGE_MESSAGES"]);
+        requireBotChannelPermissions(bot, channel, ["MANAGE_MESSAGES"]);
       }
     }
 

@@ -3,13 +3,13 @@ import {
   ApplicationCommandOption,
   ApplicationCommandOptionTypes,
   ApplicationCommandTypes,
-  BotWithCache,
+  Bot,
   CONTEXT_MENU_COMMANDS_NAME_REGEX,
   SLASH_COMMANDS_NAME_REGEX,
 } from "../../deps.ts";
 
 export function validateApplicationCommandOptions(
-  bot: BotWithCache,
+  bot: Bot,
   options: ApplicationCommandOption[],
 ) {
   const requiredOptions: ApplicationCommandOption[] = [];
@@ -73,7 +73,7 @@ export function validateApplicationCommandOptions(
   return [...requiredOptions, ...optionalOptions];
 }
 
-export function createApplicationCommand(bot: BotWithCache) {
+export function createApplicationCommand(bot: Bot) {
   const createApplicationCommandOld = bot.helpers.createApplicationCommand;
 
   bot.helpers.createApplicationCommand = function (options, guildId) {
@@ -139,7 +139,7 @@ export function createApplicationCommand(bot: BotWithCache) {
   };
 }
 
-export function editInteractionResponse(bot: BotWithCache) {
+export function editInteractionResponse(bot: Bot) {
   const editInteractionResponseOld = bot.helpers.editInteractionResponse;
 
   bot.helpers.editInteractionResponse = function (token, options) {
@@ -195,7 +195,7 @@ export function editInteractionResponse(bot: BotWithCache) {
   };
 }
 
-export default function setupInteractionCommandPermChecks(bot: BotWithCache) {
+export default function setupInteractionCommandPermChecks(bot: Bot) {
   createApplicationCommand(bot);
   editInteractionResponse(bot);
 }

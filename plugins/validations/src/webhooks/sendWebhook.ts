@@ -1,23 +1,15 @@
-import { AllowedMentionsTypes, BotWithCache } from "../../deps.ts";
+import { AllowedMentionsTypes, Bot } from "../../deps.ts";
 import { validateComponents } from "../components.ts";
 
-export function editWebhookMessage(bot: BotWithCache) {
-  const editWebhookMessageOld = bot.helpers.editWebhookMessage;
+export default function sendWebhook(bot: Bot) {
+  const sendWebhookOld = bot.helpers.sendWebhook;
 
-  bot.helpers.editWebhookMessage = function (
-    webhookId,
-    webhookToken,
-    options,
-  ) {
+  bot.helpers.sendWebhook = function (webhookId, webhookToken, options) {
     if (
       options.content &&
       !bot.utils.validateLength(options.content, { max: 2000 })
     ) {
-      throw Error("The content can not exceed 2000 characters.");
-    }
-
-    if (options.embeds && options.embeds.length > 10) {
-      options.embeds.splice(10);
+      throw new Error("The content should not exceed 2000 characters.");
     }
 
     if (options.allowedMentions) {
@@ -60,12 +52,16 @@ export function editWebhookMessage(bot: BotWithCache) {
       }
     }
 
-    if (options.components) validateComponents(bot, options.components);
+    if (options.components) {
+      validateComponents(bot, options.components);
+    }
 
-    return editWebhookMessageOld(webhookId, webhookToken, options);
+    if (!options.content && !options.file && !options.embeds) {
+      throw new Error(
+        "You must provide a value for at least one of content, embeds, or file.",
+      );
+    }
+
+    return sendWebhookOld(webhookId, webhookToken, options);
   };
-}
-
-export default function setupMessageWebhookPermChecks(bot: BotWithCache) {
-  editWebhookMessage(bot);
 }

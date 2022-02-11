@@ -9,7 +9,7 @@ export default function connectToVoiceChannel(bot: BotWithCache) {
     channelId,
     options,
   ) {
-    const channel = await bot.channels.get(channelId);
+    const channel = bot.channels.get(channelId);
     if (!channel) throw new Error("CHANNEL_NOT_FOUND");
 
     if (
@@ -38,7 +38,7 @@ export default function connectToVoiceChannel(bot: BotWithCache) {
       permsNeeded.push("MANAGE_CHANNELS");
     }
 
-    await requireBotChannelPermissions(bot, channel, permsNeeded);
+    requireBotChannelPermissions(bot, channel, permsNeeded);
 
     return connectToVoiceChannelOld(guildId, channelId, options);
   };
