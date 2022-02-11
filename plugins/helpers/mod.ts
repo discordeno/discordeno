@@ -18,9 +18,14 @@ import { archiveThread, editThread, lockThread, unarchiveThread, unlockThread } 
 import { disconnectMember } from "./src/disconnectMember.ts";
 import { getMembersPaginated } from "./src/getMembersPaginated.ts";
 import { moveMember } from "./src/moveMember.ts";
+import { fetchAndRetrieveMembers } from "./src/fetchAndRetrieveMembers.ts";
+import { BotWithCache } from "../cache/src/addCacheCollections.ts";
 
 export interface BotWithHelpersPlugin extends Bot {
   helpers: FinalHelpers & {
+    fetchAndRetrieveMembers: (
+      guildId: bigint,
+    ) => Promise<Collection<bigint, DiscordenoMember>>;
     sendDirectMessage: (
       userId: bigint,
       content: string | CreateMessage,
@@ -70,6 +75,9 @@ export interface BotWithHelpersPlugin extends Bot {
 export function enableHelpersPlugin(rawBot: Bot): BotWithHelpersPlugin {
   const bot = rawBot as BotWithHelpersPlugin;
 
+  bot.helpers.fetchAndRetrieveMembers = (
+    guildId: bigint,
+  ) => fetchAndRetrieveMembers(bot as unknown as BotWithCache, guildId);
   bot.helpers.sendDirectMessage = (
     userId: bigint,
     content: string | CreateMessage,
