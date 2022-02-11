@@ -1,5 +1,4 @@
-import { AllowedMentionsTypes, BotWithCache, ChannelTypes, PermissionStrings } from "../../deps.ts";
-import { validateComponents } from "../components.ts";
+import { BotWithCache, ChannelTypes, PermissionStrings } from "../../deps.ts";
 import { requireBotChannelPermissions } from "../permissions.ts";
 
 export function sendMessage(bot: BotWithCache) {
