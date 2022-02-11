@@ -11,7 +11,7 @@ on:
       - "transformers/**"
       - "types/**"
       - "util/**"
-      - "ws/**"
+      - "gateway/**"
   pull_request:
     paths:
       - "handlers/**"
@@ -22,7 +22,7 @@ on:
       - "transformers/**"
       - "types/**"
       - "util/**"
-      - "ws/**"
+      - "gateway/**"
 
 jobs:
   test:
