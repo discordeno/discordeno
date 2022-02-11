@@ -5,4 +5,4 @@ export * from "./rest/mod.ts";
 export * from "./transformers/mod.ts";
 export * from "./types/mod.ts";
 export * from "./util/mod.ts";
-export * from "./ws/mod.ts";
+export * from "./gateway/mod.ts";
