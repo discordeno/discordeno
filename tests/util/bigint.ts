@@ -1,4 +1,4 @@
-import { bigintToSnowflake, snowflakeToBigint } from "../../src/util/bigint.ts";
+import { bigintToSnowflake, snowflakeToBigint } from "../../util/bigint.ts";
 import { assertEquals, assertNotEquals } from "../deps.ts";
 
 Deno.test("[Local Test] - snowflakeToBigint ", () => {

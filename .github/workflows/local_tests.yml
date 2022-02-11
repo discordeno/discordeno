@@ -3,14 +3,26 @@ name: Local Tests Only
 on:
   push:
     paths:
+      - "handlers/**"
+      - "helpers/**"
       - "plugins/**"
-      - "src/**"
+      - "rest/**"
       - "tests/**"
+      - "transformers/**"
+      - "types/**"
+      - "util/**"
+      - "gateway/**"
   pull_request:
     paths:
+      - "handlers/**"
+      - "helpers/**"
       - "plugins/**"
-      - "src/**"
+      - "rest/**"
       - "tests/**"
+      - "transformers/**"
+      - "types/**"
+      - "util/**"
+      - "gateway/**"
 
 jobs:
   test:
