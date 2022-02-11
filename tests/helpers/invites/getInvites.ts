@@ -1,4 +1,4 @@
-import { Bot } from "../../../src/bot.ts";
+import { Bot } from "../../../bot.ts";
 import { assertEquals, assertExists } from "../../deps.ts";
 
 export async function getInvitesTest(bot: Bot, channelId: bigint, guildId: bigint, t: Deno.TestContext) {

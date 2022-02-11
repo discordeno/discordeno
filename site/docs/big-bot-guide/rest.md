@@ -32,7 +32,7 @@ Before, we dive into how, here is a quick summary of why you will want a standal
 
 Before going further, you should have already made the following pieces:
 
-- src/rest/mod.ts
+- rest/mod.ts
 - deps.ts (Make sure to import discordeno)
 - configs.ts
 - Deno extension(if you are using deno, this is required)

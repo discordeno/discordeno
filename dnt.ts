@@ -27,15 +27,15 @@ await build({
     "./mod.ts",
     {
       name: "./rest",
-      path: "src/rest/mod.ts",
+      path: "rest/mod.ts",
     },
     {
       name: "./gateway",
-      path: "src/ws/mod.ts",
+      path: "gateway/mod.ts",
     },
     {
       name: "./types",
-      path: "src/types/mod.ts",
+      path: "types/mod.ts",
     },
     {
       name: "./plugins",

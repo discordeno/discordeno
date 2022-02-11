@@ -1,8 +1,8 @@
 import { assertExists } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
-import { CreateMessage } from "../../../src/types/messages/createMessage.ts";
-import { MessageComponentTypes } from "../../../src/types/messages/components/messageComponentTypes.ts";
-import { ButtonStyles } from "../../../src/types/messages/components/buttonStyles.ts";
+import { CreateMessage } from "../../../types/messages/createMessage.ts";
+import { MessageComponentTypes } from "../../../types/messages/components/messageComponentTypes.ts";
+import { ButtonStyles } from "../../../types/messages/components/buttonStyles.ts";
 import { bot } from "../../mod.ts";
 
 async function ifItFailsBlameWolf(channelId: bigint, content: CreateMessage) {

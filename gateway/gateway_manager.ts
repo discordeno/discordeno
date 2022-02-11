@@ -6,7 +6,14 @@ import { handleOnMessage } from "./handleOnMessage.ts";
 import { heartbeat } from "./heartbeat.ts";
 import { identify } from "./identify.ts";
 import { processGatewayQueue } from "./processGatewayQueue.ts";
-import { resharder } from "./resharder.ts";
+import {
+  markNewGuildShardId,
+  resharder,
+  resharderCloseOldShards,
+  resharderIsPending,
+  reshardingEditGuildShardIds,
+  startReshardingChecks,
+} from "./resharder.ts";
 import { resume } from "./resume.ts";
 import { sendShardMessage } from "./sendShardMessage.ts";
 import { prepareBuckets, spawnShards } from "./spawnShards.ts";
@@ -67,7 +74,14 @@ export function createGatewayManager(
     heartbeat: options.heartbeat ?? heartbeat,
     tellWorkerToIdentify,
     debug: options.debug || function () {},
-    resharder: options.resharder ?? resharder,
+    resharding: {
+      resharder: options.resharding?.resharder ?? resharder,
+      isPending: options.resharding?.isPending ?? resharderIsPending,
+      closeOldShards: options.resharding?.closeOldShards ?? resharderCloseOldShards,
+      check: options.resharding?.check ?? startReshardingChecks,
+      markNewGuildShardId: options.resharding?.markNewGuildShardId ?? markNewGuildShardId,
+      editGuildShardIds: options.resharding?.editGuildShardIds ?? reshardingEditGuildShardIds,
+    },
     handleOnMessage: options.handleOnMessage ?? handleOnMessage,
     processGatewayQueue: options.processGatewayQueue ?? processGatewayQueue,
     closeWS: options.closeWS ?? closeWS,
@@ -166,8 +180,21 @@ export interface GatewayManager {
   tellWorkerToIdentify: typeof tellWorkerToIdentify;
   /** Handle the different logs. Used for debugging. */
   debug: (text: string, ...args: any[]) => unknown;
-  /** Handles resharding the bot when necessary. */
-  resharder: typeof resharder;
+  /** The methods related to resharding. */
+  resharding: {
+    /** Handles resharding the bot when necessary. */
+    resharder: typeof resharder;
+    /** Handles checking if all new shards are online in the new gateway. */
+    isPending: typeof resharderIsPending;
+    /** Handles closing all shards in the old gateway. */
+    closeOldShards: typeof resharderCloseOldShards;
+    /** Handles checking if it is time to reshard and triggers the resharder. */
+    check: typeof startReshardingChecks;
+    /** Handler to mark a guild id with its new shard id in cache. */
+    markNewGuildShardId: typeof markNewGuildShardId;
+    /** Handler to update all guilds in cache with the new shard id. */
+    editGuildShardIds: typeof reshardingEditGuildShardIds;
+  };
   /** Handles the message events from websocket. */
   handleOnMessage: typeof handleOnMessage;
   /** Handles processing queue of requests send to this shard. */
