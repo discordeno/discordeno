@@ -77,7 +77,7 @@ export function enableHelpersPlugin(rawBot: Bot): BotWithHelpersPlugin {
   bot.helpers.sendTextMessage = (
     channelId: bigint,
     content: string | CreateMessage,
-  ) => sendDirectMessage(bot, channelId, content);
+  ) => sendTextMessage(bot, channelId, content);
   bot.helpers.suppressEmbeds = (channelId: bigint, messageId: bigint) => suppressEmbeds(bot, channelId, messageId);
   bot.helpers.archiveThread = (threadId: bigint) => archiveThread(bot, threadId);
   bot.helpers.unarchiveThread = (threadId: bigint) => unarchiveThread(bot, threadId);
