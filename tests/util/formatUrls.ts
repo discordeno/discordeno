@@ -1,4 +1,4 @@
-import { formatImageURL } from "../../src/util/utils.ts";
+import { formatImageURL } from "../../util/utils.ts";
 import { assertEquals } from "../deps.ts";
 
 Deno.test({

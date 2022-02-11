@@ -1,4 +1,4 @@
-import { validateLength } from "../../src/util/validateLength.ts";
+import { validateLength } from "../../util/validateLength.ts";
 import { assertEquals } from "../deps.ts";
 
 Deno.test({

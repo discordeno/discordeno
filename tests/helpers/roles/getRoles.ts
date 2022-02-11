@@ -1,4 +1,4 @@
-import { Bot } from "../../../src/bot.ts";
+import { Bot } from "../../../bot.ts";
 import { assertEquals } from "../../deps.ts";
 
 export async function getRolesTest(guildId: bigint) {
