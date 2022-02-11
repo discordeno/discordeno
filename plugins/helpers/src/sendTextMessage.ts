@@ -1,4 +1,4 @@
-import { Bot, Collection, CreateMessage } from "../deps.ts";
+import { Bot, CreateMessage } from "../deps.ts";
 
 /** Sends a text message. */
 export async function sendTextMessage(
