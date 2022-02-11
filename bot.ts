@@ -31,7 +31,7 @@ import {
 } from "./util/constants.ts";
 import { Errors } from "./types/discordeno/errors.ts";
 import { DiscordGatewayPayload, GatewayDispatchEventNames, GatewayPayload } from "./types/gateway/gatewayPayload.ts";
-import { createGatewayManager, GatewayManager } from "./ws/mod.ts";
+import { createGatewayManager, GatewayManager } from "./gateway/mod.ts";
 import { validateLength } from "./util/validateLength.ts";
 import { delay, formatImageURL, hasProperty } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";

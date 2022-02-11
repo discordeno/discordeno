@@ -31,7 +31,7 @@ await build({
     },
     {
       name: "./gateway",
-      path: "ws/mod.ts",
+      path: "gateway/mod.ts",
     },
     {
       name: "./types",
