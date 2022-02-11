@@ -19,4 +19,6 @@ export interface InputTextComponent {
   maxLength?: number;
   /** Whether or not this input is required. */
   required?: boolean;
+  /** Pre-filled value for input text. */
+  value?: string;
 }

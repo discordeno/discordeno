@@ -5,6 +5,8 @@ export * from "./components/actionRow.ts";
 export * from "./components/buttonComponent.ts";
 export * from "./components/buttonData.ts";
 export * from "./components/buttonStyles.ts";
+export * from "./components/inputTextComponent.ts";
+export * from "./components/textStyles.ts";
 export * from "./components/messageComponentTypes.ts";
 export * from "./components/messageComponents.ts";
 export * from "./components/selectData.ts";

@@ -1,9 +1,7 @@
 import { ListActiveThreads } from "../../../types/channels/threads/listActiveThreads.ts";
 import { ListPublicArchivedThreads } from "../../../types/channels/threads/listPublicArchivedThreads.ts";
-import { PermissionStrings } from "../../../types/permissions/permissionStrings.ts";
 import { Collection } from "../../../util/collection.ts";
 import type { Bot } from "../../../bot.ts";
-// import { channelToThread } from "../../../util/transformers/channel_to_thread.ts";
 
 /** Get the archived threads for this channel, defaults to public */
 export async function getArchivedThreads(
