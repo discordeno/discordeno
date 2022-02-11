@@ -26,6 +26,7 @@ This is a top level component, which contains a limited amount of other componen
 - A Action row can not include a action row.
 - A Action row can maximal have 5 Buttons
 - A Action row can maximal have 1 SelectMenu
+- A Action row can maximal have 1 Text Input
 
 ### Button (`type: 2`):
 
@@ -53,6 +54,15 @@ interaction payload, when a user selects sth. from the menu.
 - You can specify a range of allowed selects (`minValue` and `maxValue`)
 - Every Select Item can have a emoji and has a `value`, inorder to identify the select item
 - A default Select Item can be set, which will be selected by default
+
+### Text Input (`type: 4`):
+
+TextInputs are interactive components, which can just be sent inside with the modal response type.
+
+- You can specify a range of text length (`minLength` and `maxLength`)
+- You can add a placeholder and prefilled value and if the text input is required
+- A Action row can maximal have 1 Text Input
+
 
 ## Send Components
 
@@ -141,6 +151,39 @@ client.helpers.sendMessage(channelId, messageoptions);
 ```
 
 The upper examples shows some options, which can be used for a Select Menu.
+
+### Using Text Input
+
+Text Inputs can just be used with the modal response type.
+```js
+
+        const textinput = new Component()
+            .setType("TEXT_INPUT")
+            .setStyle("SHORT")
+            .setCustomId("t1")
+            .setLabel("User ID")
+            .setPlaceholder("User ID")
+            .setRequired(true)
+            .setMaxLength(20)
+            .setMinLength(1)
+            .toJSON();
+            
+        const textinput2 = new Component()
+            .setType("TEXT_INPUT")
+            .setStyle("PARAGRAPH")
+            .setCustomId("t2")
+            .setLabel("Reason")
+            .setPlaceholder("Reason for Ban")
+            .setRequired(false)
+            .setMaxLength(300)
+            .toJSON();
+
+        const actionrow = new Component().setType(1).setComponents(textinput).toJSON();
+        const actionrow2 = new Component().setType(1).setComponents(textinput2).toJSON();
+
+        new Interaction(client, interaction).popupModal({ customId: "ban_modal", title: "Ban User", components: [actionrow, actionrow2] })
+```
+
 
 ### Recieve Interactions:
 
