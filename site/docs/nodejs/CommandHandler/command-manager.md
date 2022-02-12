@@ -8,6 +8,7 @@ You probably have currently something like this in your code:
 
 ```js
 const Discord = require("discordeno");
+// Ideally you should switch this to .env
 const config = require("./config.json");
 
 const client = Discord.createBot({
