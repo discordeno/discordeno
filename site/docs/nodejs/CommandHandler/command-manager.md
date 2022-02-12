@@ -12,14 +12,10 @@ const config = require("./config.json");
 
 const client = Discord.createBot({
   events: {
-    ready() {
-      console.log("Successfully connected to gateway");
-    },
     messageCreate(client, message) {
       if (message.content === "!ping") {
         client.helpers.sendMessage(message.channelId, { content: "pong" });
       }
-      console.log(`Recieved message: ${message.content || message.embeds}`);
     },
   },
   intents: ["Guilds", "GuildMessages"],
@@ -72,11 +68,18 @@ The Manager also includes a handler for executing the command, when a message ha
 
 **Currently it does not include any checks for permissions or for cooldowns/ratelimits, this will be added soon.**
 
-Message Create Event
+### Message Create Event:
 
 ```js
 module.exports = async (client, message) => {
   client.commands.isCommand(message);
+};
+```
+
+### Interaction Create Event:
+```js
+module.exports = async (client, interaction) => {
+  client.commands.isInteraction(interaction);
 };
 ```
 

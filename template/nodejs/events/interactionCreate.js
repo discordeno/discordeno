@@ -1,3 +1,3 @@
-module.exports = async (client, interaction) => {
-  client.commands.isInteraction(interaction);
-};
+module.exports = async(client, interaction) => {
+    client.commands.isInteraction(interaction);
+}

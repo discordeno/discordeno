@@ -25,6 +25,15 @@ module.exports = async (client, payload) => {
 };
 ```
 
+### Interaction Event:
+```js
+const Interaction = require("./structures/Interaction");
+module.exports = async (client, payload) => {
+  const interaction = new Interaction(client, payload);
+  if (interaction.data.name === "ping") return interaction.reply({content: "pong"});
+};
+```
+
 ### Ready Event:
 
 There is a small difference on the `ready` Event. The Event is fired `shard` wise, in other words it fires every time a

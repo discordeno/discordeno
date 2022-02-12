@@ -6,9 +6,9 @@ sidebar_position: 4
 
 ## Config File
 
-On long-term you should save your configs in a `.env` file. Out of simplicity we are saving it in a `config.json` file.
+Ideally, you should save your configs in a `.env` file. Out of simplicity for this guide, we are saving it on a `config.json` file.
 
-Create a file named `config.json` in your project folde and insert the following content:
+Create a file named `config.json` in your project folder and insert the following content:
 
 ```json
 {
@@ -27,14 +27,8 @@ const config = require("./config.json");
 
 const client = Discord.createBot({
   events: {
-    ready() {
-      console.log("Successfully connected to gateway");
-    },
-    messageCreate(client, message) {
-      if (message.content === "!ping") {
-        client.helpers.sendMessage(message.channelId, { content: "pong" });
-      }
-      console.log(`Recieved message: ${message.content || message.embeds}`);
+    ready(client, payload) {
+      console.log(`Successfully connected Shard ${payload.shardId} to gateway`);
     },
   },
   intents: ["Guilds", "GuildMessages"],
@@ -49,6 +43,8 @@ Now you can run your bot by running the following command:
 ```cli
 node index.js
 ```
+
+**Go to the page [Slash Command](./slash-command) and deploy your first command inorder to test your bot.**
 
 You are now ready to use your bot and add other functionalities. Besides that you are probably asking yourself, how you
 should design your code, so it is maintable and scalable. Go to the next page [design](/docs/nodejs/design) to learn

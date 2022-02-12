@@ -45,7 +45,10 @@ Ready Event:
 
 ```js
 module.exports = (client, payload) => {
-  console.log(`Successfully connected to gateway as ${payload.user.username}`);
+   if (payload.shardId + 1 === client.gateway.maxShards) {
+    //All Shards are ready
+    console.log("Successfully connected to the gateway as " + payload.user.username);
+  }
 };
 ```
 

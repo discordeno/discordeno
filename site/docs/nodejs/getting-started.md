@@ -22,22 +22,20 @@ Discordeno was built with the purpose of being scalable, flexible and easy to us
 
 Libraries such as `Discord.js`, `Eris` etc. often have a excessive caching behaviour, which can just be slightly
 modified without breaking the whole library. There is a lack of customization and a lot of nested classes, which makes
-it nearly impossible to edit the code without having unwished side effects. Moreover scability is just possible on a
-limited extent.
+it nearly impossible to edit the code without having unwished side effects. Moreover scalability is only possible on a limited extent.
 
 Discordeno has been kept plain and simple, which opens up a lot of opportunities for customization such as
 `custom-caching (custom-property-caching)`, `Standalone Rest, Gateway, Cache` and more. Check the detailed advantages
 [here](https://github.com/discordeno/discordeno).
 
-This guide will also help you making your Code more scalable and easier to maintain with bringing you closer to the
+This guide will also help you making your code more scalable and easier to maintain with bringing you closer to the
 Discord API.
 
 # Before you start
 
-Before you start digging in this guide, you should have a solid understanding of `javascript`, when you are not familiar
-with it, then you should take a look at some popular resources.
+Before you start digging in this guide, you should have a solid understanding of `javascript`. If you are not familiar with it, then you should take a look at some popular resources.
 
 - https://www.w3schools.com/js/DEFAULT.asp
 - https://developer.mozilla.org/en-US/docs/Web/JavaScript
 
-A basic understanding is of great importance in order to solve problem skillfully...
+A basic understanding is of great importance in order to solve problems skillfully...
