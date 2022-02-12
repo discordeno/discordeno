@@ -25,6 +25,8 @@ export function transformInteraction(bot: Bot, payload: SnakeCasedPropertiesDeep
     type: payload.type,
     token: payload.token,
     version: payload.version,
+    locale: payload.locale,
+    guildLocale: payload.guild_locale,
 
     // TRANSFORMED STUFF BELOW
     guildId,
@@ -198,4 +200,9 @@ export interface DiscordenoInteraction {
     /** The target id if this is a context menu command. */
     targetId?: bigint;
   };
+
+  /** The selected language of the invoking user */
+  locale?: string;
+  /** The guild's preferred locale, if invoked in a guild */
+  guildLocale?: string;
 }
