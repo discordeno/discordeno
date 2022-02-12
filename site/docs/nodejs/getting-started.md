@@ -22,7 +22,7 @@ Discordeno was built with the purpose of being scalable, flexible and easy to us
 
 Libraries such as `Discord.js`, `Eris` etc. often have a excessive caching behaviour, which can just be slightly
 modified without breaking the whole library. There is a lack of customization and a lot of nested classes, which makes
-it nearly impossible to edit the code without having unwished side effects. Moreover scability is just possible on a
+it nearly impossible to edit the code without having undesired side effects. Moreover scalability is only possible on a
 limited extent.
 
 Discordeno has been kept plain and simple, which opens up a lot of opportunities for customization such as
