@@ -5,28 +5,12 @@ import type { User } from "../types/users/user.ts";
 import type { UserFlags } from "../types/users/userFlags.ts";
 import type { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
-export interface DiscordenoUser {
-  id: bigint;
-  username: string;
-  discriminator: number;
-  avatar?: bigint;
-  bot?: boolean;
-  system?: boolean;
-  locale?: string;
-  verified?: boolean;
-  email?: string | null;
-  flags?: UserFlags;
-  mfaEnabled?: boolean;
-  premiumType?: PremiumTypes;
-  publicFlags?: UserFlags;
-}
-
-export function transformUser(bot: Bot, payload: SnakeCasedPropertiesDeep<User>): DiscordenoUser {
+export function transformUser(bot: Bot, payload: SnakeCasedPropertiesDeep<User>): User {
   return {
-    id: bot.transformers.snowflake(payload.id || ""),
+    id: payload.id,
     username: payload.username,
-    discriminator: Number(payload.discriminator),
-    avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,
+    discriminator: payload.discriminator,
+    avatar: payload.avatar,
     bot: payload.bot,
     system: payload.system,
     locale: payload.locale,
