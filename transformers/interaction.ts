@@ -203,6 +203,6 @@ export interface DiscordenoInteraction {
 
   /** The selected language of the invoking user */
   locale?: string;
-  /** The guild's preferred locale, if invoked in a guild */
+  /** The guild's preferred locale, if invoked in a guild. WARNING HIGHLY INACCURATE IN MOST SERVERS! */
   guildLocale?: string;
 }
