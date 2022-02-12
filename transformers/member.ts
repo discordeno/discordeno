@@ -1,8 +1,6 @@
 import type { Bot } from "../bot.ts";
 import type { GuildMember } from "../types/members/guildMember.ts";
-import type { PremiumTypes } from "../types/users/premiumTypes.ts";
 import type { User } from "../types/users/user.ts";
-import type { UserFlags } from "../types/users/userFlags.ts";
 import type { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
 export function transformUser(bot: Bot, payload: SnakeCasedPropertiesDeep<User>): User {
