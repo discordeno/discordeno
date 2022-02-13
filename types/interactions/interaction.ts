@@ -27,4 +27,9 @@ export interface Interaction {
   message?: Message;
 
   data?: InteractionData;
+
+  /** The selected language of the invoking user */
+  locale?: string;
+  /** The guild's preferred locale, if invoked in a guild */
+  guildLocale?: string;
 }
