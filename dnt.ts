@@ -83,6 +83,37 @@ await build({
       url: "https://github.com/discordeno/discordeno/issues",
     },
     homepage: "https://discordeno.mod.land",
+    typesVersions: {
+      "*": {
+        "*": [
+          "./types/mod.d.ts",
+        ],
+        "rest": [
+          "./types/rest/mod.d.ts",
+        ],
+        "gateway": [
+          "./types/gateway/mod.d.ts",
+        ],
+        "types": [
+          "./types/types/mod.d.ts",
+        ],
+        "plugins": [
+          "./types/plugins/mod.d.ts",
+        ],
+        "cache-plugin": [
+          "./types/plugins/cache/mod.d.ts",
+        ],
+        "fileloader-plugin": [
+          "./types/plugins/fileloader/mod.d.ts",
+        ],
+        "helpers-plugin": [
+          "./types/plugins/helpers/mod.d.ts",
+        ],
+        "permissions-plugin": [
+          "./types/plugins/permissions/mod.d.ts",
+        ],
+      },
+    },
   },
   compilerOptions: { target: "ES2020" },
 });
