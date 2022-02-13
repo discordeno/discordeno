@@ -55,6 +55,15 @@ export default function editMember(bot: BotWithCache) {
       }
     }
 
+    if (options.communicationDisabledUntil) {
+      const guild = bot.guilds.get(guildId);
+      const member = bot.members.get(memberId);
+      if (memberId === guild?.ownerId) throw new Error("member is the owner of the guild");
+      if (!member?.permissions) throw new Error("member does not exist");
+      const permissions = bot.utils.calculatePermissions(member?.permissions);
+      if (permissions.includes("ADMINISTRATOR")) throw new Error("member has the `ADMINISTRATOR` permission");
+    }
+
     await requireBotGuildPermissions(bot, guildId, [
       ...requiredPerms,
     ]);
