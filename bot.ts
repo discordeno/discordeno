@@ -63,9 +63,10 @@ import { transformApplicationCommandOption } from "./transformers/applicationCom
 import { transformApplicationCommand } from "./transformers/applicationCommand.ts";
 import { transformWelcomeScreen } from "./transformers/welcomeScreen.ts";
 import { transformVoiceRegion } from "./transformers/voiceRegion.ts";
-import { transformWidget } from "./transformers/widget.ts";
+import { transformWidgetSettings } from "./transformers/widgetSettings.ts";
 import { transformStageInstance } from "./transformers/stageInstance.ts";
 import { transformSticker } from "./transformers/sticker.ts";
+import { transformGetWidget } from "./transformers/getWidget.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -353,9 +354,10 @@ export interface Transformers {
   threadMember: typeof transformThreadMember;
   welcomeScreen: typeof transformWelcomeScreen;
   voiceRegion: typeof transformVoiceRegion;
-  widget: typeof transformWidget;
+  widgetSettings: typeof transformWidgetSettings;
   stageInstance: typeof transformStageInstance;
   sticker: typeof transformSticker;
+  getWidget: typeof transformGetWidget;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -391,9 +393,10 @@ export function createTransformers(options: Partial<Transformers>) {
     threadMember: options.threadMember || transformThreadMember,
     welcomeScreen: options.welcomeScreen || transformWelcomeScreen,
     voiceRegion: options.voiceRegion || transformVoiceRegion,
-    widget: options.widget || transformWidget,
+    widgetSettings: options.widgetSettings || transformWidgetSettings,
     stageInstance: options.stageInstance || transformStageInstance,
     sticker: options.sticker || transformSticker,
+    getWidget: options.getWidget || transformGetWidget,
   };
 }
 
