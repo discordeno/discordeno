@@ -60,7 +60,7 @@ export type AuditLogChange =
       | "default_auto_archive_duration"
       | "entity_type"
       | "status"
-      | "communicationDisabledUntil";
+      | "communication_disabled_until";
   }
   | {
     newValue: Partial<Role>;
