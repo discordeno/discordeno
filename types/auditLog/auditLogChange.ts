@@ -63,8 +63,8 @@ export type AuditLogChange =
       | "communication_disabled_until";
   }
   | {
-    newValue: Partial<Role>;
-    oldValue?: Partial<Role>;
+    newValue: Partial<Role>[];
+    oldValue?: Partial<Role>[];
     key: "$add" | "$remove";
   }
   | {
