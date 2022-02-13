@@ -1,4 +1,4 @@
-import { DiscordStatusTypes } from "../../mod.ts";
+import { DiscordStatusTypes } from "../gateway/statusTypes.ts";
 
 /** https://discord.com/developers/docs/resources/guild#get-guild-widget-object-get-guild-widget-structure */
 export interface GetGuildWidget {
