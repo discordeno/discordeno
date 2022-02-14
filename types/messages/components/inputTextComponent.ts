@@ -1,7 +1,7 @@
 import { MessageComponentTypes } from "./messageComponentTypes.ts";
 import { TextStyles } from "./textStyles.ts";
 
-// TODO: docs link
+/** https://discord.com/developers/docs/interactions/message-components#text-inputs-text-input-structure */
 export interface InputTextComponent {
   /** InputText Component is of type 3 */
   type: MessageComponentTypes.InputText;
