@@ -57,11 +57,15 @@ export default function editMember(bot: BotWithCache) {
 
     if (options.communicationDisabledUntil) {
       const guild = bot.guilds.get(guildId);
-      const member = bot.members.get(memberId);
-      if (memberId === guild?.ownerId) throw new Error("The owner of a guild can not be timed out.");
-      if (!member?.permissions) throw new Error("member does not exist");
-      const permissions = bot.utils.calculatePermissions(member.permissions);
-      if (permissions.includes("ADMINISTRATOR")) throw new Error("member has the `ADMINISTRATOR` permission");
+      const member = bot.members.get(BigInt(`${memberId}${guildId}`));
+      if (memberId === guild?.ownerId) throw new Error("The owner of a guild cannot be timed out.");
+
+      // TODO error message
+      if (!member?.permissions) throw new Error("member?.permissions is undefined");
+
+      if (bot.utils.calculatePermissions(member.permissions).includes("ADMINISTRATOR")) {
+        throw new Error("ADMINISTRATOR cannot be timed out");
+      }
     }
 
     await requireBotGuildPermissions(bot, guildId, [
