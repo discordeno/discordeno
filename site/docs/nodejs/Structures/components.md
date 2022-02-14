@@ -4,35 +4,47 @@ sidebar_position: 4
 
 # Create Components
 
-With the depreciation of the `message intent`, components will play an increasingly important role in the future.
-Discord released a lot of new components. Of course, this opens up completely new possibilities. On the one hand, it
-improves the user experience and, on the other hand, the interactions can be handled by the dev easily.
+Since Discord has decided to make message content accessible only to privileged bots, components will play an
+increasingly important role in the future. Discord has released some components already and many more will follow. Of
+course, this opens up completely new possibilities. On the one hand, it improves the user experience and on the other
+hand, the interactions can be easily handled by the developer.
 
 To take advantage of this, we'll go into more detail on how to use them.
 
-As already mentioned in the Embed page, we also recommend using raw api data to create a component.
+:::note Runtime Overhead
 
-Although this could be uncomfortable for some users, so we are elaborating, how to use our `Components` template, which
-can be found [here](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Component.js).
+Constructor classes are nice to use and make your code look better, but they incur a slight runtime overhead compared to
+just using raw data because they still execute methods, which takes more time to process.
+
+:::
+
+We already have a Template for `Components`, which can be found
+[here](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Component.js).
 
 ## Different Components:
 
-There are different components, which can be used to create a Component of specific type.
+There are many different components, which you can quickly read about here:
 
 ### Action Row (`type: 1`):
 
 This is a top level component, which contains a limited amount of other components. It can be described as container.
 
-- A Action row can not include a action row.
-- A Action row can maximal have 5 Buttons
-- A Action row can maximal have 1 SelectMenu
-- A Action row can maximal have 1 Text Input
+An Action Row ...
+
+- can not include an action row
+- can maximal have 5 Buttons
+- can have 1 SelectMenu
+- can have 1 Text Input (only available in modal responses)
 
 ### Button (`type: 2`):
 
-Buttons are interactive components, which can be in a message and sent a interaction payload, when a user clicked on it.
+Buttons are interactive components, are bound to a message and they sent an interaction payload, when a user clicks on
+it.
 
-- Can just be sent inside an action row
+![Different Button Styles](https://i.imgur.com/jUE2Kp0.png)
+
+- Needs a customId, except the Link Button
+- An Action Row can have maximal 5 Buttons
 
 There are different styles of buttons, which can be used:
 
@@ -42,88 +54,93 @@ There are different styles of buttons, which can be used:
 - `4` - DANGER - red - customId required
 - `5` - LINK - grey - url required
 
-![Different Button Styles](https://discord.com/assets/7bb017ce52cfd6575e21c058feb3883b.png)
+### Select Menu (`type: 3`):
 
-### SelectMenu (`type: 3`):
-
-SelectMenus are typically same to a dropdown menu in HTMl. They accept a range of allowed selects, which sends a
+Select Menus are a simple drop-down with selectable options. They accept a set of allowed selects, which sends an
 interaction payload, when a user selects sth. from the menu.
 
-![Select Menu](https://discord.com/assets/0845178564ed70a6c657d9b40d1de8fc.png)
+![Select Menu](https://i.imgur.com/42Hwiuw.png)
 
 - You can specify a range of allowed selects (`minValue` and `maxValue`)
-- Every Select Item can have a emoji and has a `value`, inorder to identify the select item
-- A default Select Item can be set, which will be selected by default
+- Every Select Item can have an `emoji` and has a `value`, in order to identify the selected item
+- A default Select Item can be set
+- An Action Row can have maximal 1 Select Menu
 
 ### Text Input (`type: 4`):
 
-TextInputs are interactive components, which can just be sent inside with the modal response type.
+Text Inputs are interactive components, which can just be sent with a modal response.
 
 - You can specify a range of text length (`minLength` and `maxLength`)
-- You can add a placeholder and prefilled value and if the text input is required
-- A Action row can maximal have 1 Text Input
-
+- You can add a placeholder, a pre-filled value and specify whether the text input is required
+- An Action Row can have maximal 1 Text Input
 
 ## Send Components
 
-As mentioned above there are different types of components. This requires to define a type, so that Discord can know,
-which component you want to use...
+As mentioned above there are different types of components. This requires to define a type, so that Discord knows, which
+component you want to use.
 
 ```js
-class Component {
-    constructor(options = {}) {
+class ActionRow {
+  constructor(options = {}) {
+    this.type = 1;
+  }
 
-    }
-    setType(type) {
-        this.type = type;
-        return this;
-    }
-
-    .setComponets(...components) {
-        this.components = components;
-        return this;
-    }
+  setComponents(...components) {
+    this.components = components;
+    return this;
+  }
+}
 ```
 
 ```js
-const button = new Button().setType(2);
-const button2 = new Button().setType(2);
-const actionRow = new ActionRow().setType(1).setComponents(button, button2);
+const button = new Button();
+const button2 = new Button();
+const actionRow = new ActionRow().setComponents(button, button2);
 ```
 
-**The Code will obviously not work, since its a missing a lot required of data.** **The other reason is, that we can't
-send a class to Discord, we need sth. to transform it into a json object.**
+This code will obviously not work because it's a missing a lot required of data. The other reason is that we can't send
+a class to Discord, we need sth. to transform it to a json object.
 
-**Copy the Code from [here](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Component.js),
-so we can use it to create a component.**
+We have a pre-made class for components which you can find
+[here](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Component.js).
 
-### Create Button
+### Button
 
 ```js
-const button = new Component().setType("BUTTON").setStyle("LINK").setLabel("Click me!").setUrl("https://google.com")
+const button = new Component()
+  .setType("BUTTON")
+  .setStyle("LINK")
+  .setLabel("Click me!")
+  .setUrl("https://google.com")
   .toJSON();
-///Button with raw types
-const button2 = new Component().setType(2).setStyle(4).setLabel("DO NOT CLICK").setCustomId("12345").toJSON();
 
-const actionrow = new Component().setType(`ACTION_ROW`).setComponents(button, button2).toJSON();
-//Message to send
-const messageoptions = { content: "hello", components: [actionrow] };
-//You can also use the Message Structure
-client.helpers.sendMessage(channelId, messageoptions);
+// Button with raw types
+const button2 = new Component()
+  .setType(2)
+  .setStyle(4)
+  .setLabel("DO NOT CLICK")
+  .setCustomId("12345")
+  .toJSON();
+
+const actionRow = new Component()
+  .setType("ACTION_ROW")
+  .setComponents(button, button2)
+  .toJSON();
+
+// Message to send
+const messageOptions = { content: "hello", components: [actionRow] };
+
+await client.helpers.sendMessage(channelId, messageOptions); // You can also use the Message Structure
 ```
 
-As you can see you can use strings instead of numbers (types), which you can't remember anyway.
-
-- Every Button needs a customId, except the Link Button
-- You can also use the raw types, but strings are also supported, because they are replaced with the `CONSTANTS` in the
-  component template.
+As you can see, for simplicity you can use strings instead of numbers (types), which are hard to remember.
 
 ### Select Menu
 
 ```js
-const select = new Component()
+const selectMenu = new Component()
   .setType("SELECT_MENU")
-  .setCustomId(`sksk98h`)
+  .setCustomId("12345")
   .setOptions([
     {
       label: "Option 1",
@@ -141,55 +158,62 @@ const select = new Component()
       description: `Default option...`,
       default: true,
     },
-  ]).setPlaceholder("Select an option").toJSON();
+  ])
+  .setPlaceholder("Select an option")
+  .toJSON();
 
-const actionrow = new Component().setType(`ACTION_ROW`).setComponents(select).toJSON();
+const actionRow = new Component()
+  .setType("ACTION_ROW")
+  .setComponents(selectMenu)
+  .toJSON();
 
-const messageoptions = { content: "hello", components: [actionrow] };
+const messageOptions = { content: "hello", components: [actionRow] };
 
-client.helpers.sendMessage(channelId, messageoptions);
+client.helpers.sendMessage(channelId, messageOptions); // You can also use the Message Structure
 ```
 
-The upper examples shows some options, which can be used for a Select Menu.
+### Text Input
 
-### Using Text Input
-
-Text Inputs can just be used with the modal response type.
 ```js
+const textInput = new Component()
+  .setType("TEXT_INPUT")
+  .setStyle("SHORT")
+  .setCustomId("t1")
+  .setLabel("User ID")
+  .setPlaceholder("User ID")
+  .setRequired(true)
+  .setMaxLength(20)
+  .setMinLength(1)
+  .toJSON();
 
-        const textinput = new Component()
-            .setType("TEXT_INPUT")
-            .setStyle("SHORT")
-            .setCustomId("t1")
-            .setLabel("User ID")
-            .setPlaceholder("User ID")
-            .setRequired(true)
-            .setMaxLength(20)
-            .setMinLength(1)
-            .toJSON();
-            
-        const textinput2 = new Component()
-            .setType("TEXT_INPUT")
-            .setStyle("PARAGRAPH")
-            .setCustomId("t2")
-            .setLabel("Reason")
-            .setPlaceholder("Reason for Ban")
-            .setRequired(false)
-            .setMaxLength(300)
-            .toJSON();
+const textInput2 = new Component()
+  .setType("TEXT_INPUT")
+  .setStyle("PARAGRAPH")
+  .setCustomId("t2")
+  .setLabel("Reason")
+  .setPlaceholder("Reason for Ban")
+  .setRequired(false)
+  .setMaxLength(300)
+  .toJSON();
 
-        const actionrow = new Component().setType(1).setComponents(textinput).toJSON();
-        const actionrow2 = new Component().setType(1).setComponents(textinput2).toJSON();
+const actionRow = new Component().setType("ACTION_ROW").setComponents(textInput).toJSON();
+const actionRow2 = new Component().setType("ACTION_ROW").setComponents(textInput2).toJSON();
 
-        new Interaction(client, interaction).popupModal({ customId: "ban_modal", title: "Ban User", components: [actionrow, actionrow2] })
+new Interaction(client, interaction).popupModal({
+  customId: "ban_modal",
+  title: "Ban User",
+  components: [actionRow, actionRow2],
+});
 ```
 
+### Receive Interactions
 
-### Recieve Interactions:
+When a user clicks a button or selects an option from a Select Menu, Discord sends an `interactionCreate` event, which
+contains the information necessary to process it.
 
-When a user clicks on a Button, or selects an option from a Select Menu, Discord sends a interaction payload, which
-contains the information about the interaction.
+:::note Collecting
 
-You probably need this inorder to handle the user's interaction, which can be done by listening to the
-`interactionCreate` event. A `InteractionCollector` can also be used to handle the interaction, which requires some
-tweaks, but will be added soon in the guide and the template repo.
+An `InteractionCollector` can also be used to handle prompts, which requires some tweaks, but will be added soon in the
+guide and the template repo.
+
+:::

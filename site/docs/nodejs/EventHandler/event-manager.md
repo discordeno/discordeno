@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Create Event Manager
 
-In order to listen to certain events, you have to provide functions for the event on the deno client.
+In order to process certain events, you must provide the Discordeno client with functions for these events.
 
 ```js
 const Discord = require("discordeno");
@@ -12,42 +12,47 @@ const config = require("./config.json");
 
 const client = Discord.createBot({
   events: {
-    ready() {
-      console.log("Successfully connected to gateway");
+    ready(client, payload) {
+      console.log(`Successfully connected Shard ${payload.shardId} to the gateway`);
     },
-    messageCreate(client, message) {
+
+    async messageCreate(client, message) {
       if (message.content === "!ping") {
-        client.helpers.sendMessage(message.channelId, { content: "pong" });
+        await client.helpers.sendMessage(message.channelId, { content: "pong" });
       }
-      console.log(`Recieved message: ${message.content || message.embeds}`);
+
+      console.log(`Received message: ${message.content || message.embeds}`);
     },
   },
   intents: ["Guilds", "GuildMessages"],
-  token: configs.token,
+  token: config.token,
 });
+
 Discord.startBot(client);
 ```
 
-If you now listen to many events and the functions also have a large code, the overview can of course get lost very
-quickly.
+As you listen to more and more events, the functions code grows along with them, so you can quickly lose track.
 
-To avoid this, we recommend storing the event functions in a separate folder.
+To avoid this, we recommend storing the event functions divided into files in a separate folder.
 
 ## Create Event Folder
 
-Create a folder named `events` in your project folder.
+Create a folder called `events` in your project folder.
 
-Add your first event in the file named `ready.js` in the `events` folder. The Event File will be named camelCase, so
-that it can be understood by the client. e.g `message` -> `messageCreate.js`. You can check the Typings inorder to know
-the namings of the events.
+:::info note
+
+The event files have to be named using camelCase so that they can be understood by the client. e.g `message` ->
+`messageCreate.js`. You can check the typings see how the events are called.
+
+:::
 
 Ready Event:
 
 ```js
 module.exports = (client, payload) => {
-   if (payload.shardId + 1 === client.gateway.maxShards) {
-    //All Shards are ready
-    console.log("Successfully connected to the gateway as " + payload.user.username);
+  if (payload.shardId + 1 === client.gateway.maxShards) {
+    // All Shards are ready
+    console.log(`Successfully connected to the gateway as ${payload.user.username}#${payload.user.discriminator}`);
   }
 };
 ```
@@ -57,7 +62,9 @@ module.exports = (client, payload) => {
 ```js
 const fs = require("fs");
 const path = require("path");
+
 const resolveFolder = (folderName) => path.resolve(__dirname, ".", folderName);
+
 class EventManager {
   constructor(client) {
     this.cache = new Map();
@@ -68,23 +75,27 @@ class EventManager {
     const eventsFolder = resolveFolder("../events");
     fs.readdirSync(eventsFolder).map(async (file) => {
       if (!file.endsWith(".js")) return;
+
       const fileName = path.join(eventsFolder, file);
       const event = require(fileName);
       const eventName = file.split(".")[0];
+
       this._events[`${eventName}`] = event;
     });
+
     return this._events;
   }
 }
+
 module.exports = EventManager;
 ```
 
-This code above, which also can be found in the
+The code above, which can also be found in the
 [template repo](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Managers/EventManager.js) will loop
 through all the files in the `events` folder and load the functions into the `_events` object.
 
-So that the client also knows which events it should execute, you need to pass the functions in the
-`createBot<options>.events` object
+In order to let the client know which events should be processed, you need to pass the functions in the
+`createBot<options>.events` object.
 
 ```js
 const Discord = require("discordeno");
@@ -96,13 +107,13 @@ const events = new EventManager({});
 const client = Discord.createBot({
   events: events.load({}),
   intents: ["Guilds", "GuildMessages"],
-  token: configs.token,
+  token: config.token,
 });
+
 Discord.startBot(client);
 ```
 
-Moreover, you can customize the EventManager to add more functionalities and fit it to your needs or even emit events,
-by extending it...
+Moreover, you can customize the `EventManager` and add more functionality to it and make it exactly fit your your needs
+or even emit events, by extending it.
 
-Of course you wonder what you can do with all this data now. We will explain this further on the next page
-`Handle-Event`.
+Of course you wonder what you can do with all of this now. We will explain this further on the next page.

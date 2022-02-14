@@ -1,32 +1,39 @@
 ---
 sidebar_position: 5
 ---
-# Slash Commands
-Due to the depreciation of message intent, message commands will play a subordinate role in the future. Discord users will be more used to slash commands. That's why it's essential that every bot offers them.
 
-In the following we will show how to create slash commands 
+# Slash Commands
+
+Since Discord has decided to make message content accessible only to privileged bots, message commands will play a
+subordinate role in the future. Discord users will be more used to slash commands. That's why it's essential that every
+bot offers them.
+
+In the following we will show you how to create slash commands:
 
 ## Deploying Slash Commands
-There is a distinction between global commands and guild commands. Global Commands take a while to appear in all guilds. Guild Commands are deployed directly, but have a strict rate limit. 
 
-That is the reason, why we are showing now how to deploy guild commands, in order to test them immediately.
+There is a difference between global and guild commands. Global commands take a while to appear in all guilds. Guild
+commands show up directly.
+
+For this reason, we will now show how to create guild commands, in order to test them immediately.
 
 ```js
+const guildId = BigInt("YOUR_GUILD_ID");
 const command = {
-    name: 'ping',
-    description: 'Retrives the Bot latency',
-    options:[],
-}
-client.helpers.createApplicationCommand(command, BigInt('GUILDID'));
+  name: "ping",
+  description: "Retrieves the Bot latency",
+  options: [],
+};
+
+client.helpers.createApplicationCommand(command, guildId);
 ```
 
-This is a very simple example, you can also add sub commands group and sub commands...
+This is just very simple example, you can also add sub commands, select options and much more.
 
 ## Handling Slash Commands
 
-Discord sends a Websocket Event, when a user runs a slash command.
-You can listen to this event by add the `interactionCreate` function in the client.
-
+Discord sends a WebSocket Event, when a user runs a slash command. You can listen to this event by add the
+`interactionCreate` function in the client.
 
 ```js
 const Discord = require("discordeno");
@@ -35,19 +42,23 @@ const config = require("./config.json");
 const client = Discord.createBot({
   events: {
     ready(client, payload) {
-      console.log(`Successfully connected Shard ${payload.shardId} to gateway`);
+      console.log(`Successfully connected Shard ${payload.shardId} to the gateway`);
     },
-    interactionCreate(client, interaction) {
+    async interactionCreate(client, interaction) {
       if (interaction.data?.name === "ping") {
-        client.helpers.sendInteractionResponse(interaction.id, interaction.token, { type: Discord.InteractionResponseTypes.ChannelMessageWithSource, data: { content: "Pong!" } });
+        return await client.helpers.sendInteractionResponse(interaction.id, interaction.token, {
+          type: Discord.InteractionResponseTypes.ChannelMessageWithSource,
+          data: { content: "🏓 Pong!" },
+        });
       }
     },
   },
-  intents: ["Guilds", "GuildMessages"],
-  token: configs.token,
+  intents: ["Guilds"],
+  token: config.token,
 });
 
 Discord.startBot(client);
 ```
 
-The handling may see complicated in the beginning, but as mentioned before, we will introduce [structures](./design) to make it easier.
+The handling may see complicated in the beginning, but as mentioned before, we will introduce structures to make it
+easier.
