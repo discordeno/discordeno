@@ -44,7 +44,7 @@
 
 - Must use camel case (same property name as in the docs just in camel case).
 - Each field or property must be accompanied with a reasonable JSDoc comment right above its type definition.
-- Must be placed inside of the types module (in `src/types` directory).
+- Must be placed inside of the types module (in `types` directory).
 
 Example:
 
