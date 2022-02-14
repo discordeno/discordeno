@@ -132,7 +132,6 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMe
           };
         }),
       })),
-      sticker_ids: content.stickerIds?.map((id) => id.toString()),
       file: content.file,
       flags: content.flags.toString(),
     },

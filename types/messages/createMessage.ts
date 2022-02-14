@@ -34,8 +34,6 @@ export interface CreateMessage {
   };
   /** The components you would like to have sent in this message */
   components?: MessageComponents;
-  /** IDs of up to 3 stickers in the server to send in the message */
-  stickerIds?: string[];
   /** The contents of the file being sent */
   file?: FileContent | FileContent[];
   /** message flags combined as a bitfield (only SUPPRESS_EMBEDS can be set) */
