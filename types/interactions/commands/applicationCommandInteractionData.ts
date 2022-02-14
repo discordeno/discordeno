@@ -1,6 +1,7 @@
 import { Channel, Message, MessageComponents, MessageComponentTypes, Role, User } from "../../mod.ts";
 import { InteractionGuildMember } from "../interactionGuildMember.ts";
 import { InteractionDataOption } from "./applicationCommandInteractionDataOption.ts";
+import { Attachment } from "../../messages/attachment.ts";
 
 export interface InteractionData {
   /** The type of component */
@@ -15,7 +16,7 @@ export interface InteractionData {
   id: string;
   /** The name of the invoked command */
   name: string;
-  /** Converted users + roles + channels */
+  /** converted users + roles + channels + attachments */
   resolved?: {
     /** The Ids and Message objects */
     messages?: Record<string, Message>;
@@ -27,6 +28,8 @@ export interface InteractionData {
     roles?: Record<string, Role>;
     /** The Ids and partial Channel objects */
     channels?: Record<string, Pick<Channel, "id" | "name" | "type" | "permissions">>;
+    /** the ids and attachment objects */
+    attachments: Record<string, Attachment>;
   };
   /** The params + values from the user */
   options?: InteractionDataOption[];
