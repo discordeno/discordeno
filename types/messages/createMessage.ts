@@ -32,10 +32,14 @@ export interface CreateMessage {
     /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
     failIfNotExists: boolean;
   };
-  /** The contents of the file being sent */
-  file?: FileContent | FileContent[];
   /** The components you would like to have sent in this message */
   components?: MessageComponents;
+  /** IDs of up to 3 stickers in the server to send in the message */
+  stickerIds?: string[];
+  /** The contents of the file being sent */
+  file?: FileContent | FileContent[];
+  /** message flags combined as a bitfield (only SUPPRESS_EMBEDS can be set) */
+  flags: bigint;
 }
 
 /** https://discord.com/developers/docs/resources/channel#create-message */

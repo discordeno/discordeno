@@ -69,7 +69,14 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMe
           replied_user: content.allowedMentions?.repliedUser,
         }
         : undefined,
-      file: content.file,
+      message_reference: content.messageReference
+        ? {
+          message_id: content.messageReference.messageId?.toString(),
+          channel_id: content.messageReference.channelId?.toString(),
+          guild_id: content.messageReference.guildId?.toString(),
+          fail_if_not_exists: content.messageReference.failIfNotExists === true,
+        }
+        : undefined,
       components: content.components?.map((component) => ({
         type: component.type,
         components: component.components.map((subcomponent) => {
@@ -125,16 +132,9 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMe
           };
         }),
       })),
-      ...(content.messageReference?.messageId
-        ? {
-          message_reference: {
-            message_id: content.messageReference.messageId.toString(),
-            channel_id: content.messageReference.channelId?.toString(),
-            guild_id: content.messageReference.guildId?.toString(),
-            fail_if_not_exists: content.messageReference.failIfNotExists === true,
-          },
-        }
-        : {}),
+      sticker_ids: content.stickerIds?.map((id) => id.toString()),
+      file: content.file,
+      flags: content.flags.toString(),
     },
   );
 
