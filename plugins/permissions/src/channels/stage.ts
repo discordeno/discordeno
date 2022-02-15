@@ -21,7 +21,7 @@ export function createStageInstance(bot: BotWithCache) {
   };
 }
 
-export function asyncdeleteStageInstance(bot: BotWithCache) {
+export function deleteStageInstance(bot: BotWithCache) {
   const deleteStageInstanceOld = bot.helpers.deleteStageInstance;
 
   bot.helpers.deleteStageInstance = async function (channelId) {
