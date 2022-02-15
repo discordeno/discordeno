@@ -69,9 +69,9 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMe
           replied_user: content.allowedMentions?.repliedUser,
         }
         : undefined,
-      message_reference: content.messageReference
+      message_reference: content.messageReference?.messageId
         ? {
-          message_id: content.messageReference.messageId?.toString(),
+          message_id: content.messageReference.messageId.toString(),
           channel_id: content.messageReference.channelId?.toString(),
           guild_id: content.messageReference.guildId?.toString(),
           fail_if_not_exists: content.messageReference.failIfNotExists === true,
