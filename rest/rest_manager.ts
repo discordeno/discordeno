@@ -10,9 +10,10 @@ import { RestPayload, RestRateLimitedPath, RestRequest } from "./rest.ts";
 import { runMethod } from "./runMethod.ts";
 import { simplifyUrl } from "./simplifyUrl.ts";
 import { baseEndpoints } from "../util/constants.ts";
+import { API_VERSION } from "../util/constants.ts";
 
 export function createRestManager(options: CreateRestManagerOptions) {
-  const version = options.version || "9";
+  const version = options.version || API_VERSION;
 
   if (options.customUrl) {
     baseEndpoints.BASE_URL = `${options.customUrl}/v${version}`;

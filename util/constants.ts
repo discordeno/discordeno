@@ -2,14 +2,14 @@
 export const BASE_URL = "https://discord.com/api";
 
 /** https://discord.com/developers/docs/reference#api-versioning-api-versions */
-export const API_VERSION = 9;
+export const API_VERSION = 10;
 
 /** https://discord.com/developers/docs/topics/gateway#gateways-gateway-versions */
-export const GATEWAY_VERSION = 9;
+export const GATEWAY_VERSION = 10;
 
 // TODO: update this version
 /** https://github.com/discordeno/discordeno/releases */
-export const DISCORDENO_VERSION = "13.0.0-rc19";
+export const DISCORDENO_VERSION = "13.0.0-rc20";
 
 /** https://discord.com/developers/docs/reference#user-agent */
 export const USER_AGENT = `DiscordBot (https://github.com/discordeno/discordeno, v${DISCORDENO_VERSION})`;

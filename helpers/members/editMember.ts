@@ -10,11 +10,13 @@ export async function editMember(bot: Bot, guildId: bigint, memberId: bigint, op
     bot.constants.endpoints.GUILD_MEMBER(guildId, memberId),
     {
       nick: options.nick,
-      roles: options.roles,
+      roles: options.roles?.map((id) => id.toString()),
       mute: options.mute,
       deaf: options.deaf,
-      channel_id: options.channelId,
-      communication_disabled_until: options.communicationDisabledUntil,
+      channel_id: options.channelId?.toString(),
+      communication_disabled_until: options.communicationDisabledUntil
+        ? new Date(options.communicationDisabledUntil).toISOString()
+        : undefined,
     },
   );
 
