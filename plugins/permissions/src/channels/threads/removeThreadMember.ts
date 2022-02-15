@@ -28,6 +28,6 @@ export default function removeThreadMember(bot: BotWithCache) {
       }
     }
 
-    return removeThreadMemberOld(threadId, userId);
+    return await removeThreadMemberOld(threadId, userId);
   };
 }

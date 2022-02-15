@@ -5,7 +5,7 @@ import { highestRole, requireBotGuildPermissions } from "../permissions.ts";
 export default function editRole(bot: BotWithCache) {
   const editRoleOld = bot.helpers.editRole;
 
-  bot.helpers.editRole = function (
+  bot.helpers.editRole = async function (
     guildId,
     id,
     options,
@@ -26,6 +26,6 @@ export default function editRole(bot: BotWithCache) {
       requireBotGuildPermissions(bot, guild, ["MANAGE_ROLES"]);
     }
 
-    return editRoleOld(guildId, id, options);
+    return await editRoleOld(guildId, id, options);
   };
 }
