@@ -133,7 +133,7 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMe
         }),
       })),
       file: content.file,
-      flags: content.flags.toString(),
+      flags: content.flags?.toString() || "0",
     },
   );
 

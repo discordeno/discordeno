@@ -37,7 +37,7 @@ export interface CreateMessage {
   /** The contents of the file being sent */
   file?: FileContent | FileContent[];
   /** message flags combined as a bitfield (only SUPPRESS_EMBEDS can be set) */
-  flags: bigint;
+  flags?: 0 | 4;
 }
 
 /** https://discord.com/developers/docs/resources/channel#create-message */
