@@ -1,13 +1,13 @@
 const DestructObject = require("./DestructObject");
-const Guild = require("./Guild");
 
 class Channel extends DestructObject{
     constructor(client, channel = {}, options = {}) {
         super(channel);
-        if(options.guild) this.guild = options.guild;
-        else if(channel.guildId) this.guild = new Guild(client, {id: channel.guildId});
-
         this.client = client;
+        
+        if(options.guild) this.guild = options.guild;
+        else if(channel.guildId) this.guild = client.guilds.forge({id:this.guildId});
+
     }
 
     async create(options = {}, reason){

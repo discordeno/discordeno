@@ -1,10 +1,13 @@
 class DestructObject{
-    constructor(message = {}){
-        this.destructObject(message);
+    constructor(message = {}, removeFields = {}){
+        this._raw = message;
+        this.destructObject(message, removeFields);
     }
-    destructObject(message){
+    destructObject(message, removeFields){
         for (let [key, value] of Object.entries(message)) {
-            this[key] = value;
+            if(!removeFields[key]) {
+                this[key] = value;
+            } else this[`_${key}`] = value;
         }
         return this;
     }

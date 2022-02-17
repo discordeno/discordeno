@@ -1,12 +1,16 @@
 const DestructObject = require("./DestructObject");
-const Guild = require("./Guild");
+const Permissions = require("./Permissions");
 
 class Role extends DestructObject{
     constructor(client, role = {}, options = {}) {
-        super(role);
+        super(role, {'permissions': true});
         if(options.guild) this.guild = options.guild;
-        else if(role.guildId) this.guild = new Guild(client, {id: role.guildId});
+        else if(role.guildId) this.guild = client.guilds.forge({id: this.guildId});
         this.client = client;
+    }
+
+    get permissions() {
+        return new Permissions(this._permissions).freeze();
     }
 }
 module.exports = Role;

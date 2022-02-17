@@ -1,18 +1,14 @@
 const DestructObject = require("./DestructObject");
 
-const Channel = require("./Channel");
-const Guild = require("./Guild");
-const Member = require("./Member");
-const User = require("./User");
-
 class Message extends DestructObject{
-    constructor(client, message = {}) {
+    constructor(client, message = {},  options = {}) {
         super(message);
         this.client = client;
-        this.guild = new Guild(client, {id: this.guild_id || this.guildId});
-        this.channel = new Channel(client, {id: this.channel_id || this.channelId}, {guild: this.guild});
-        this.member = new Member(client, message.member, {guild: this.guild});
-        this.author = new User(client, {id: this.author_id || this.authorId, username: this.tag?.split('#')[0], discriminator: this.tag?.split('#')[1] , bot: this.isBot});
+        if(options.guild) this.guild  = options.guild;
+        else this.guild = client.guilds.forge({id: this.guildId});
+        this.channel = this.guild.channels.forge({id: this.channelId}, {guild: this.guild});
+        this.member = this.guild.members.forge({...message.member}, {guild: this.guild});
+        this.author = client.users.forge({id: this.authorId, username: this.tag?.split('#')[0], discriminator: this.tag?.split('#')[1] , bot: this.isBot});
     }
 
     async edit(options){

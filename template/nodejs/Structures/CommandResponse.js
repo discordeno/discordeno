@@ -1,4 +1,4 @@
-const Message = require("./Message");
+//const {Message} = require("./export");
 
 class Responses {
     constructor(data) {
@@ -15,7 +15,7 @@ class Responses {
             const reply = await this.interaction.reply(content);
 
             //Assign properties to the response
-            const response = new Message(this.client, reply);
+            const response = this.client.messages.forge(reply, {guild: this.guild});
 
             this.replied = true;
             return response;
@@ -26,7 +26,7 @@ class Responses {
             const msg = await this.message.channel.send(content);
 
             //Assign properties to the response
-            const response = new Message(this.client, msg);
+            const response = this.client.messages.forge(msg, {guild: this.guild});
             this.replied = true;
             return response;
         }
@@ -35,12 +35,12 @@ class Responses {
     async followUp(content) {
         if (this.interaction) {
             const reply = await this.interaction.followUp(content);
-            const response = new Message(this.client, reply);
+            const response = this.client.messages.forge(reply);
             return response;
         }
         if (this.message) {
             const msg = await this.message.channel.send(content);
-            const response = new Message(this.client, msg);
+            const response = this.client.messages.forge(msg);
             return response;
         }
     }

@@ -1,7 +1,8 @@
-const Role = require("../Structures/Role");
-class Roles{
+const {Role} = require("../Structures/export");
+class RoleManager{
     constructor(client, data ={}, options = {}){
         this.client = client;
+        if(options.roles) this.cache  = options.roles;
         if(options.member) this.member = options.member;
         if(options.guild) this.guild  = options.guild;
     }
@@ -10,8 +11,8 @@ class Roles{
         return new Role(this.client, options).create(options, reason);
     }
 
-    forge(data = {}){
-        return new Roles(this.client, data)
+    forge(data = {} , options = {}){
+        return new Role(this.client, data, {guild: options.guild});
     }
 
     async add(options = {}, reason){
@@ -25,5 +26,9 @@ class Roles{
         const memberId = (this.member? this.member.id : options.memberId);
         return this.client.helpers.removeRole(guildId, memberId, options.roleId, reason);
     }
+
+    forgeManager(data = {}, options = {}){
+        return new RoleManager(this.client, data, {guild: options.guild, member: options.member, roles: options.roles});
+    }
 }
-module.exports = Roles;
+module.exports = RoleManager;
