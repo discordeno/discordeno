@@ -2,24 +2,28 @@
 sidebar_position: 1
 ---
 
-# Getting Started with a Event Handler:
+# Getting Started with the Event Handler
 
-An EventHandler is essential to process the data, which Discord has sent.
+An event handler is essential to process the data, which Discord sends to you.
 
-With a good implementation, you can introduce a nice structure in the code and thus have a good overview in long term.
+With a good implementation, you will have a nice code structure and thus have a good overview in long term.
 
-You probably know the EventEmitter from other libraries, since they are also used in many other libraries in general.
+Since the `EventEmitter` class is commonly used you probably already know it from other libraries.
 
-Discordeno decided against it as it comes with some downsides which are mentioned below.
+Discordeno decided against it as it comes with several downsides which are mentioned below.
 
-The performance had a more important role than the handling, however, the EventManager system can be easily implemented
-since it only needs a few changes in the code.
+Performance plays a more important role than handling, however this event management system can be easily implemented
+since it only needs a few changes in your code.
 
-- Event listeners often create memory leaks that are difficult to debug
-- Errors can only be found with difficulty because event-listeners often bind many functions to themselves (e.g: Listen
-  on the same Event with different Functions)
-- Lots of fragmented pieces of event code making maintaibility more difficult.
+- It's easy to create memory leaks, when you add too many listeners or go carelessly with it.
+- Many fragmented parts of event code complicate maintenance.
+- ErrorHandling is difficult and debugging is harder when many listeners are open for the same events.
 
-In the following we will show you, how to create a EventHandler/Manager, which is compitable with Discordeno's Client.
+In the following we will show you, how to create an event manager, which is compatible with Discordeno's Client.
 
-Head on to the Page `Event-Manager` to see how to create a EventManager.
+:::info template
+
+You can also copy the
+[`EventManager` from the template repo](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Managers/EventManager.js).
+
+:::

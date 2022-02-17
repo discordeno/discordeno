@@ -17,14 +17,14 @@ export function transformAuditlogEntry(
         case "$remove":
           return {
             key: change.key,
-            new: {
-              id: change.new_value.id ? bot.transformers.snowflake(change.new_value.id) : undefined,
-              name: change.new_value.name,
-            },
-            old: {
-              id: change.old_value?.id ? bot.transformers.snowflake(change.old_value.id) : undefined,
-              name: change.old_value?.name,
-            },
+            new: change.new_value?.map((val) => ({
+              id: val.id ? bot.transformers.snowflake(val.id) : undefined,
+              name: val.name,
+            })),
+            old: change.old_value?.map((val) => ({
+              id: val?.id ? bot.transformers.snowflake(val.id) : undefined,
+              name: val?.name,
+            })),
           };
         case "discovery_splash_hash":
         case "banner_hash":
@@ -230,11 +230,11 @@ export type DiscordenoAuditLogChange =
     new: {
       name: string;
       id: bigint;
-    };
+    }[];
     old: {
       name: string;
       id: bigint;
-    };
+    }[];
     key: "$add" | "$remove";
   }
   | {

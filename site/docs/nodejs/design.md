@@ -4,15 +4,15 @@ sidebar_position: 6
 
 # Design
 
-In order to ensure long-term scalibility and maintainability, the code structure is of enormous importance. The
-following shows how the code structure should be set up.
+In order to ensure long-term scalability and maintainability, the code structure is of enormous importance. In the
+following, we show how such a code structure could look like.
 
-The essential parts are a `CommandHandler/CommandManager`, `EventHandler/EventManager`, a lot of `Structures` inorder to
-code faster and easier and `Plugins`, where your different feature codes will be such as `Commands`, `DB Stuff`...
+The essential parts are a `CommandHandler/CommandManager`, `EventHandler/EventManager`, lots of `Structures` in order to
+code faster and `Plugins`, where your different features will be, such as `Commands`, `DB Stuff`...
 
 ## Code Structure
 
-We recommend follwing structure for your code:
+We recommend following structure for your code:
 
 ```root
 ├index.js
@@ -32,63 +32,56 @@ We recommend follwing structure for your code:
 └── ...
 ```
 
-In the following we will explain why this structure is suitable, if you want to continue to follow this guide you should
-create these folders.
+The following explains why this structure is suitable. If you want to follow this guide further, you should create these
+folders.
 
-In the `Manager` folder the Managers will be added e.g. `CommandManager.js`, `EventManager.js`. Generally codes, which
+In the `Managers` folder the Managers will be added e.g. `CommandManager.js`, `EventManager.js`. Generally codes, which
 manage the system.
 
-While in the `Structures` folder mainly classes are added like `BaseCommand.js`, `CommmandResponse.js`, `Embed.js`,
-`Components.js`, which makes it easier transforming objects and inheriting properties such as functions.
+While in the `Structures` folder mainly classes are added like `BaseCommand.js`, `CommandResponse.js`, `Embed.js`,
+`Components.js`, which make it easier to add methods to objects.
 
 The `events` folder will contain the event handlers such as `messageCreate.js`, `debug.js`
 
 Your many useful features and categories end up in the `Plugins` folder, where they should be categorically divided into
-many folders
+many folders.
 
-The util class will have functions or classes that will help you convert certain things, such as timestamps, into a
-human-readable format...
+The `Util` folder contains functions or classes that help you convert certain things, such as timestamps, into a
+human-readable format.
 
 ## CommandHandler & BaseCommand
 
-The `CommandHandler` is the main class of the bot, which will handle all the commands and the events recieved from
+The `CommandHandler` is the main class of the bot, which will handle all the commands and the events received from
 Discord.
 
 The `BaseCommand` is the base class of all commands, which will be extended with the`CommandResponse` class.
 
-### Steps showed in the following Guide:
+### Steps showed in the following Guide
 
-- Loading Commands from different Plugins
-- Deploying Slash Commands
+- Loading commands from different plugins
+- Deploying slash commands
 - Handling `messageCreate` & `interactionCreate` events
-- Command Ratelimit Handling
-- One Command Code for handling `Interaction` & `Message` Command
-- Validating User given arguments
-- Correct Permissions and Error Handling
-- Hot-Reloading Commands
-
-- Creating Message Collectors and Interaction Collectors...
+- Command rate limit handling
+- Handle `Interaction` & `Message` commands with the same code
+- Validating user provided arguments
+- Correct permission and error handling
+- Hot reloading commands
+- Creating message and interaction collectors
 
 ## EventHandler
 
-You probably recognized that Discordeno does not use a `EventEmitter` for firing the events, but instead your custom
-Event-function is fired.
+You probably realized that Discordeno does not use an `EventEmitter` to fire the events, but your own event function is
+fired.
 
-There are ways to adapt to an EventEmitter, but we decided against it for the following reasons:
+There are ways to adapt to an `EventEmitter`, but we decided against it for the following reasons:
 
-- EventEmitters often create memory leaks, when you add to many listeners and go uncarefully with it.
-- Lots of fragmented pieces of event code making maintaibility more difficult.
-- ErrorHandling is difficult and debugging is harder, when many listeners on the same events are opened.
-
-### Steps showed in the following Guide:
-
-- Loading Events from `events` folder
-- How to handle Events
-- Hot-Reloading Events
+- It's easy to create memory leaks, when you add too many listeners or go carelessly with it.
+- Many fragmented parts of event code complicate maintenance.
+- ErrorHandling is difficult and debugging is harder when many listeners are open for the same events.
 
 ## Structures
 
-Structures are essential to replace larger parts of code with ready-made codes and to modify them if necessary.
+Structures are essential to abstract larger parts of code in smaller ready-made methods and to modify them if necessary.
 
 Example:
 
@@ -97,6 +90,7 @@ class Command {
   static name = "ping";
   static aliases = ["pong"];
   static botPermission = ["SEND_EMBED_LINKS"];
+
   run(message, args) {
     // do something
   }
@@ -106,6 +100,9 @@ class Command {
 It would be annoying adding everytime the `botPermission` property to the class Command, when the Permission is used
 from every Command, then it is unnecessary to add it, when you can extend the class.
 
+It would be annoying to add the `botPermission` property to the command class every time the same permissions are used
+by each command. Extending the class makes this extra step obsolete.
+
 ```js
 class BaseCommand {
   constructor(client) {
@@ -113,84 +110,64 @@ class BaseCommand {
     this.basePermission = ["SEND_EMBED_LINKS"];
   }
 }
+
 class Command extends BaseCommand {
   static name = "ping";
   static aliases = ["pong"];
+
   constructor(data) {
     super(data);
   }
+
   run(message, args) {
     // do something
   }
 }
 ```
 
-### Steps showed in the following Guide:
-
-- Creating a `BaseCommand` class and `CommandResponse` class
-- Easily creating `Embeds` & `Components`
-
 ## Plugins
 
-The Plugins folder will help you categorize your code into many parts to give some structure.
+The plugins folder helps you categorize your code into many parts to give some structure.
 
-Of course, this has many advantages, you have a much clearer code, you can debug problems much more easier...
+Of course, this has many advantages, you have a much clearer code, you can debug problems much easier.
 
-This also opens up possibilities for open source contribution, since not all parts of the code have to be published
-inorder to add new plugins, since they are "independent".
+This also opens possibilities for open source contributions, since not all parts of the code have to be published in
+order to add new plugins, since they are "independent".
 
-There will be a main `Plugins` folder, which will contain the Bot Plugins. This contains a `General` Plugin, where
-general bot commands will be listed.
-
-### Steps showed in the following Guide:
-
-- Creating a `BasePlugin` class
-- Creating the `General` Plugin, which contains some general commands such as `help`
-- Adding new Plugins
+There will be the main `Plugins` folder, which by default contains a `General` folder for all your base commands. The
+`Plugins` folder will also contain all your other plugins.
 
 ## Error Handling
 
-One of the most important points is the way you handle errors, to allow a user-friendly ux and to find bugs much faster.
+One of the most important things is how to handle errors. This is done to provide a user-friendly experience and to find
+errors faster.
 
-You should catch errors where you can and log them into your logger to fix them later. There are several opensource
-`Sentry`'s which gives you a good look through a website at recent errors.
+You should catch errors and log them in your logger so you can fix them later. There are several open source `Sentry`'s
+that give you a good overview of the latest errors through a website.
 
-Few errors naturally have a positive effect on maintaibility and scalability.
+Sometimes errors have a positive effect on maintainability and scalability.
 
-In addition, the handling of errors generated by the user is very important to increase transparency. If the user
-doesn't know why the error happened, then they will be very surprised what they did wrong and could even remove your
-bot.
-
-### Steps showed in the following Guide:
-
-- Handling Internal Errors
-- Handling User/Command Errors
-- Filtering Errors and logging them out
+In addition, handling errors caused by users is very important to increase transparency. If they don't know why the
+error happened, then they'll be very surprised with what they did wrong and might even remove your bot from their
+server.
 
 ## Caching
 
-Normally libraries cache all the info they get, this can be of course helpful in the beginning to discover all the
-functionalities.
+Normally libraries cache all the info they get, which can of course be helpful at the beginning to discover all
+functionalities but later it turns out to be a resource-consuming method. Therefore, this way should be avoided.
 
-Later it turns out to be a resource-consuming method. Therefore, this way should be prevented.
+Discordeno allows `Custom Caching` and even `Custom Property Caching` which gives you fine-grained control over the
+caching of data. Normally you only need 20% of the data received by Discord, which makes caching unnecessary in most
+cases.
 
-Discordeno allows `Custom Caching` and even `Custom Property Caching`, which allow you fine-grained control over the
-caching of data. Normally you only need 20% of the data received from Discord, which makes caching redundant/useless in
-some places.
-
-There are also some `Filter` and `Sweeper` method to empty unused cache or to cache only specifically...
-
-### Steps showed in the following Guide:
-
-- Taking advantage of Custom Caching
-- Transforming the Cache with `./Structures` to use the functions such as `.send()`
+There are also some `Filter` and `Sweeper` methods which help you to empty unused cache values.
 
 ## Cross Communication & Scaling
 
-If you run many different processes, such as a Welcomer Api, communication is of central importance in order to send or
-receive data, which then can execute certain actions.
+If you are running many different processes, such as a Welcomer API, communication is of central importance in order to
+send or receive data, with which you can then perform certain actions.
 
-Cross communication can be easily done with sockets or a tcp client.
+Cross communication can be easily done with sockets or a TCP client.
 
 This brings up this Structure:
 
@@ -204,12 +181,12 @@ Bridge (Heart)
 - Machine 4 -> Dashboard
 ```
 
-It's important to use something fast to have a proper "realtime" communication.
+It's important to use something fast to have a proper "real time" communication.
 
 Discordeno already offers many internal options for scaling bots, no matter what size.
 
-When scaling, you will probably separate many parts from your bot and put them into separate processes, such as their
-own `RestManager, Gateway Manager`...
+As you scale, you will likely separate many parts of your bot and put them in separate processes, such as a
+`RestManager`, a `Gateway Manager` etc.
 
 This of course opens up a lot of possibilities:
 
@@ -217,13 +194,10 @@ This of course opens up a lot of possibilities:
 - Global cache
 - Synced rate limits
 
-[Check the Github Readme for more information](https://github.com/discordeno/discordeno)
+[Check the Github Readme for more information](https://github.com/discordeno/discordeno#features)
 
-### Steps showed in the following Guide:
+:::tip congratulations
 
-- Clustering your Bot
-- Cross-Communication
-- Standalone Processes
+You just learned how to design a scalable bot, let's get into implementing it with the next pages.
 
-**Congratulations, you now know how to design a scalable bot, let's go to the appropriate pages to implement your design
-in reality**
+:::

@@ -59,11 +59,12 @@ export type AuditLogChange =
       | "auto_archive_duration"
       | "default_auto_archive_duration"
       | "entity_type"
-      | "status";
+      | "status"
+      | "communication_disabled_until";
   }
   | {
-    newValue: Partial<Role>;
-    oldValue?: Partial<Role>;
+    newValue: Partial<Role>[];
+    oldValue?: Partial<Role>[];
     key: "$add" | "$remove";
   }
   | {

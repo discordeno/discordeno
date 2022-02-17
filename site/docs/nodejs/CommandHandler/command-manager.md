@@ -4,11 +4,11 @@ sidebar_position: 2
 
 # Command Manager
 
-You probably have currently something like this in your code:
+Currently, you probably have something like this in your code:
 
 ```js
 const Discord = require("discordeno");
-// Ideally you should switch this to .env
+// Ideally you should move to an `.env` file
 const config = require("./config.json");
 
 const client = Discord.createBot({
@@ -20,16 +20,17 @@ const client = Discord.createBot({
     },
   },
   intents: ["Guilds", "GuildMessages"],
-  token: configs.token,
+  token: config.token,
 });
+
 Discord.startBot(client);
 ```
 
-If you add many commands and also have a large code, the overview can of course get lost very quickly.
+Of course, if you add more and more commands and as your code base grows, you can lose track very quickly.
 
-To avoid this, we recommend storing the commands in a separate folder with seperate categories.
+To avoid this, it is recommended to store the commands in separate folders divided into different categories.
 
-[We introduced earlier our plugin structure, which has a lot of advantages.](../design.md)
+[Previously, we introduced you to our plugin structure, which has a lot of advantages.](../design.md)
 
 ```root
 ├Plugins/
@@ -44,30 +45,32 @@ To avoid this, we recommend storing the commands in a separate folder with seper
 └── ...
 ```
 
-**Clone this file from the
-[template repo](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Managers/CommandManager.js)**
+**Get [this file](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Managers/CommandManager.js) from
+the [nodejs template](https://github.com/discordeno/discordeno/tree/main/template)**
 
 ```js
 const CommandManager = require("./template/Managers/CommandManager.js");
 const manager = new CommandManager({});
-manager.load({ plugin: true }); ///loads the Command
+manager.load({ plugin: true }); // Load the commands
 client.commands = manager;
 
-client.commands.cache.get("ping"); //returns the command
+client.commands.cache.get("ping"); // Get the `ping` command
 ```
 
-The Manager will automatically iterate through all files in the folder and load them in the cache property, which is
-mapped on the command name.
+The Manager will automatically iterate through all files in the folder and then load them into the cache property, which
+is mapped on the command name.
 
-**The [Create Command](./create-command.md) will show you how to create a command.**
+**Take a look at [Create Command](./create-command.md) to learn how to create a command.**
 
 ## Handle Command
 
-The Manager also includes a handler for executing the command, when a message has been recieved.
+The manager also contains a handler for executing the command when a message is received.
 
-### Important Note:
+:::important
 
-**Currently it does not include any checks for permissions or for cooldowns/ratelimits, this will be added soon.**
+Currently checks for permissions, cooldowns, and rate limits are not covered, but these will be added soon.
+
+:::
 
 ### Message Create Event:
 
@@ -78,10 +81,11 @@ module.exports = async (client, message) => {
 ```
 
 ### Interaction Create Event:
+
 ```js
 module.exports = async (client, interaction) => {
   client.commands.isInteraction(interaction);
 };
 ```
 
-You can also customize the `isCommand` function to your usecase.
+You can also customize the `isCommand` function to your use case.
