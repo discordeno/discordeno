@@ -4,7 +4,7 @@ import { validateComponents } from "../components.ts";
 export default function sendWebhook(bot: BotWithCache) {
   const sendWebhookOld = bot.helpers.sendWebhook;
 
-  bot.helpers.sendWebhook = function (webhookId, webhookToken, options) {
+  bot.helpers.sendWebhook = async function (webhookId, webhookToken, options) {
     if (
       options.content &&
       !bot.utils.validateLength(options.content, { max: 2000 })
@@ -62,6 +62,6 @@ export default function sendWebhook(bot: BotWithCache) {
       );
     }
 
-    return sendWebhookOld(webhookId, webhookToken, options);
+    return await sendWebhookOld(webhookId, webhookToken, options);
   };
 }

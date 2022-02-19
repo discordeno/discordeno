@@ -5,7 +5,7 @@ import { highestRole, requireBotGuildPermissions } from "../permissions.ts";
 export default function addRole(bot: BotWithCache) {
   const addRoleOld = bot.helpers.addRole;
 
-  bot.helpers.addRole = function (
+  bot.helpers.addRole = async function (
     guildId,
     memberId,
     roleId,
@@ -27,6 +27,6 @@ export default function addRole(bot: BotWithCache) {
       requireBotGuildPermissions(bot, guild, ["MANAGE_ROLES"]);
     }
 
-    return addRoleOld(guildId, memberId, roleId, reason);
+    return await addRoleOld(guildId, memberId, roleId, reason);
   };
 }
