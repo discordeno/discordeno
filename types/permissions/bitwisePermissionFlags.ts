@@ -70,7 +70,7 @@ export enum BitwisePermissionFlags {
   MANAGE_EVENTS = 0x0000000200000000,
   /** Allows for deleting and archiving threads, and viewing all private threads */
   MANAGE_THREADS = 0x0000000400000000,
-  /** Allows for creating threads */
+  /** Allows for creating public and announcement threads */
   CREATE_PUBLIC_THREADS = 0x0000000800000000,
   /** Allows for creating private threads */
   CREATE_PRIVATE_THREADS = 0x0000001000000000,
