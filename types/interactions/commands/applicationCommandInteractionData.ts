@@ -16,7 +16,7 @@ export interface InteractionData {
   id: string;
   /** The name of the invoked command */
   name: string;
-  /** converted users + roles + channels + attachments */
+  /** Converted users + roles + channels + attachments */
   resolved?: {
     /** The Ids and Message objects */
     messages?: Record<string, Message>;
@@ -28,7 +28,7 @@ export interface InteractionData {
     roles?: Record<string, Role>;
     /** The Ids and partial Channel objects */
     channels?: Record<string, Pick<Channel, "id" | "name" | "type" | "permissions">>;
-    /** the ids and attachment objects */
+    /** The ids and attachment objects */
     attachments: Record<string, Attachment>;
   };
   /** The params + values from the user */
