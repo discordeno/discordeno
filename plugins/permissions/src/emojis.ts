@@ -4,30 +4,30 @@ import { requireBotGuildPermissions } from "./permissions.ts";
 export function createEmoji(bot: BotWithCache) {
   const createEmojiOld = bot.helpers.createEmoji;
 
-  bot.helpers.createEmoji = function (guildId, id) {
+  bot.helpers.createEmoji = async function (guildId, id) {
     requireBotGuildPermissions(bot, guildId, ["MANAGE_EMOJIS"]);
 
-    return createEmojiOld(guildId, id);
+    return await createEmojiOld(guildId, id);
   };
 }
 
 export function deleteEmoji(bot: BotWithCache) {
   const deleteEmojiOld = bot.helpers.deleteEmoji;
 
-  bot.helpers.deleteEmoji = function (guildId, id) {
+  bot.helpers.deleteEmoji = async function (guildId, id) {
     requireBotGuildPermissions(bot, guildId, ["MANAGE_EMOJIS"]);
 
-    return deleteEmojiOld(guildId, id);
+    return await deleteEmojiOld(guildId, id);
   };
 }
 
 export function editEmoji(bot: BotWithCache) {
   const editEmojiOld = bot.helpers.editEmoji;
 
-  bot.helpers.editEmoji = function (guildId, id, options) {
+  bot.helpers.editEmoji = async function (guildId, id, options) {
     requireBotGuildPermissions(bot, guildId, ["MANAGE_EMOJIS"]);
 
-    return editEmojiOld(guildId, id, options);
+    return await editEmojiOld(guildId, id, options);
   };
 }
 

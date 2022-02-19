@@ -4,13 +4,13 @@ import { requireBotGuildPermissions } from "../permissions.ts";
 export default function createRole(bot: BotWithCache) {
   const createRoleOld = bot.helpers.createRole;
 
-  bot.helpers.createRole = function (
+  bot.helpers.createRole = async function (
     guildId,
     options,
     reason,
   ) {
     requireBotGuildPermissions(bot, guildId, ["MANAGE_ROLES"]);
 
-    return createRoleOld(guildId, options, reason);
+    return await createRoleOld(guildId, options, reason);
   };
 }

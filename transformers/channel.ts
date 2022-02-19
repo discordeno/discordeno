@@ -71,8 +71,10 @@ export function transformChannel(
     botIsMember: Boolean(payload.channel.member),
     archived: payload.channel.thread_metadata?.archived,
     locked: payload.channel.thread_metadata?.locked,
-    invitable: payload.channel.invitable,
-    createTimestamp: payload.channel.create_timestamp ? Date.parse(payload.channel.create_timestamp) : undefined,
+    invitable: payload.channel.thread_metadata?.invitable,
+    createTimestamp: payload.channel.thread_metadata?.create_timestamp
+      ? Date.parse(payload.channel.thread_metadata.create_timestamp)
+      : undefined,
   };
 }
 

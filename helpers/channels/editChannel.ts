@@ -46,13 +46,12 @@ export async function editChannel(bot: Bot, channelId: bigint, options: ModifyCh
     locked: options.locked,
     invitable: options.invitable,
     permission_overwrites: options.permissionOverwrites
-      ? options.permissionOverwrites?.map((overwrite) => {
-        return {
-          ...overwrite,
-          allow: overwrite.allow ? bot.utils.calculateBits(overwrite.allow) : "0",
-          deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : "0",
-        };
-      })
+      ? options.permissionOverwrites?.map((overwrite) => ({
+        id: overwrite.id.toString(),
+        type: overwrite.type,
+        allow: overwrite.allow ? bot.utils.calculateBits(overwrite.allow) : null,
+        deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : null,
+      }))
       : undefined,
     reason,
   });

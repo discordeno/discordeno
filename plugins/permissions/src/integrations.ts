@@ -4,20 +4,20 @@ import { requireBotGuildPermissions } from "./permissions.ts";
 export function deleteIntegration(bot: BotWithCache) {
   const deleteIntegrationOld = bot.helpers.deleteIntegration;
 
-  bot.helpers.deleteIntegration = function (guildId, id) {
+  bot.helpers.deleteIntegration = async function (guildId, id) {
     requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-    return deleteIntegrationOld(guildId, id);
+    return await deleteIntegrationOld(guildId, id);
   };
 }
 
 export function getIntegrations(bot: BotWithCache) {
   const getIntegrationsOld = bot.helpers.getIntegrations;
 
-  bot.helpers.getIntegrations = function (guildId) {
+  bot.helpers.getIntegrations = async function (guildId) {
     requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-    return getIntegrationsOld(guildId);
+    return await getIntegrationsOld(guildId);
   };
 }
 
