@@ -4,7 +4,7 @@ import { requireBotChannelPermissions } from "../permissions.ts";
 export default function createWebhook(bot: BotWithCache) {
   const createWebhookOld = bot.helpers.createWebhook;
 
-  bot.helpers.createWebhook = function (channelId, options) {
+  bot.helpers.createWebhook = async function (channelId, options) {
     requireBotChannelPermissions(bot, channelId, ["MANAGE_WEBHOOKS"]);
 
     if (
@@ -17,6 +17,6 @@ export default function createWebhook(bot: BotWithCache) {
       );
     }
 
-    return createWebhookOld(channelId, options);
+    return await createWebhookOld(channelId, options);
   };
 }

@@ -3,7 +3,7 @@ import { AllowedMentionsTypes, BotWithCache } from "../../deps.ts";
 export default function editFollowupMessage(bot: BotWithCache) {
   const editFollowupMessageOld = bot.helpers.editFollowupMessage;
 
-  bot.helpers.editFollowupMessage = function (
+  bot.helpers.editFollowupMessage = async function (
     token,
     messageId,
     options,
@@ -56,6 +56,6 @@ export default function editFollowupMessage(bot: BotWithCache) {
       }
     }
 
-    return editFollowupMessageOld(token, messageId, options);
+    return await editFollowupMessageOld(token, messageId, options);
   };
 }

@@ -4,7 +4,7 @@ import { requireBotChannelPermissions, requireBotGuildPermissions } from "../per
 export function createScheduledEvent(bot: BotWithCache) {
   const createScheduledEventOld = bot.helpers.createScheduledEvent;
 
-  bot.helpers.createScheduledEvent = function (guildId, options) {
+  bot.helpers.createScheduledEvent = async function (guildId, options) {
     if (options.entityType === ScheduledEventEntityType.StageInstance) {
       if (!options.channelId) {
         throw new Error(
@@ -64,14 +64,14 @@ export function createScheduledEvent(bot: BotWithCache) {
       "MANAGE_EVENTS",
     ]);
 
-    return createScheduledEventOld(guildId, options);
+    return await createScheduledEventOld(guildId, options);
   };
 }
 
 export function editScheduledEvent(bot: BotWithCache) {
   const editScheduledEventOld = bot.helpers.editScheduledEvent;
 
-  bot.helpers.editScheduledEvent = function (guildId, eventId, options) {
+  bot.helpers.editScheduledEvent = async function (guildId, eventId, options) {
     if (options.entityType === ScheduledEventEntityType.StageInstance) {
       if (!options.channelId) {
         throw new Error(
@@ -131,7 +131,7 @@ export function editScheduledEvent(bot: BotWithCache) {
       "MANAGE_EVENTS",
     ]);
 
-    return editScheduledEventOld(guildId, eventId, options);
+    return await editScheduledEventOld(guildId, eventId, options);
   };
 }
 

@@ -14,7 +14,6 @@ export function transformApplication(bot: Bot, payload: SnakeCasedPropertiesDeep
     botRequireCodeGrant: payload.bot_require_code_grant,
     termsOfServiceUrl: payload.terms_of_service_url,
     privacyPolicyUrl: payload.privacy_policy_url,
-    summary: payload.summary,
     verifyKey: payload.verify_key,
     primarySkuId: payload.primary_sku_id,
     slug: payload.slug,
@@ -51,8 +50,6 @@ export interface DiscordenoApplication {
   privacyPolicyUrl?: string;
   /** Partial user object containing info on the owner of the application */
   owner?: Partial<DiscordenoUser>;
-  /** If this application is a game sold on Discord, this field will be the summary field for the store page of its primary sku */
-  summary: string;
   /** The hex encoded key for verification in interactions and the GameSDK's GetTicket */
   verifyKey: string;
   /** If the application belongs to a team, this will be a list of the members of that team */
