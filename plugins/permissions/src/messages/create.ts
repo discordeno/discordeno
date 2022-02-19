@@ -5,7 +5,7 @@ import { requireBotChannelPermissions } from "../permissions.ts";
 export function sendMessage(bot: BotWithCache) {
   const sendMessageOld = bot.helpers.sendMessage;
 
-  bot.helpers.sendMessage = function (
+  bot.helpers.sendMessage = async function (
     channelId,
     content,
   ) {
@@ -90,7 +90,7 @@ export function sendMessage(bot: BotWithCache) {
       }
     }
 
-    return sendMessageOld(channelId, content);
+    return await sendMessageOld(channelId, content);
   };
 }
 

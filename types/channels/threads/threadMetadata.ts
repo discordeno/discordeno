@@ -7,9 +7,9 @@ export interface ThreadMetadata {
   /** Timestamp when the thread's archive status was last changed, used for calculating recent activity */
   archiveTimestamp: string;
   /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
-  locked?: boolean;
+  locked: boolean;
   /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
   invitable?: boolean;
   /** Timestamp when the thread was created; only populated for threads created after 2022-01-09 */
-  createTimestamp: string;
+  createTimestamp?: string | null;
 }
