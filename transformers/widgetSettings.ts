@@ -1,15 +1,18 @@
 import { Bot } from "../bot.ts";
-import { GuildWidget } from "../types/guilds/guildWidget.ts";
+import { GuildWidgetSettings } from "../types/guilds/guildWidgetSettings.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
-export function transformWidget(bot: Bot, payload: SnakeCasedPropertiesDeep<GuildWidget>): DiscordenoWidget {
+export function transformWidgetSettings(
+  bot: Bot,
+  payload: SnakeCasedPropertiesDeep<GuildWidgetSettings>,
+): DiscordenoWidgetSettings {
   return {
     channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
     enabled: payload.enabled,
   };
 }
 
-export interface DiscordenoWidget {
+export interface DiscordenoWidgetSettings {
   /** Whether the widget is enabled */
   enabled: boolean;
   /** The widget channel id */
