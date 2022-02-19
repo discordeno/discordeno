@@ -59,6 +59,6 @@ export default function editMember(bot: BotWithCache) {
       ...requiredPerms,
     ]);
 
-    return editMemberOld(guildId, memberId, options);
+    return await editMemberOld(guildId, memberId, options);
   };
 }

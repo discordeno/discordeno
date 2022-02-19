@@ -4,7 +4,7 @@ import { requireBotChannelPermissions } from "./permissions.ts";
 export function createInvite(bot: BotWithCache) {
   const createInviteOld = bot.helpers.createInvite;
 
-  bot.helpers.createInvite = function (channelId, options = {}) {
+  bot.helpers.createInvite = async function (channelId, options = {}) {
     if (options.maxAge && (options.maxAge < 0 || options.maxAge > 604800)) {
       throw new Error(
         "The max age for an invite must be between 0 and 604800.",
@@ -16,27 +16,27 @@ export function createInvite(bot: BotWithCache) {
 
     requireBotChannelPermissions(bot, channelId, ["CREATE_INSTANT_INVITE"]);
 
-    return createInviteOld(channelId, options);
+    return await createInviteOld(channelId, options);
   };
 }
 
 export function getChannelInvites(bot: BotWithCache) {
   const getChannelInvitesOld = bot.helpers.getChannelInvites;
 
-  bot.helpers.getChannelInvites = function (channelId) {
+  bot.helpers.getChannelInvites = async function (channelId) {
     requireBotChannelPermissions(bot, channelId, ["MANAGE_CHANNELS"]);
 
-    return getChannelInvitesOld(channelId);
+    return await getChannelInvitesOld(channelId);
   };
 }
 
 export function getInvites(bot: BotWithCache) {
   const getInvitesOld = bot.helpers.getInvites;
 
-  bot.helpers.getInvites = function (guildId) {
+  bot.helpers.getInvites = async function (guildId) {
     requireBotChannelPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-    return getInvitesOld(guildId);
+    return await getInvitesOld(guildId);
   };
 }
 
