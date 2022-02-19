@@ -4,7 +4,7 @@ import { requireBotChannelPermissions } from "../permissions.ts";
 export function getMessage(bot: BotWithCache) {
   const getMessageOld = bot.helpers.getMessage;
 
-  bot.helpers.getMessage = function (
+  bot.helpers.getMessage = async function (
     channelId,
     messageId,
   ) {
@@ -15,14 +15,14 @@ export function getMessage(bot: BotWithCache) {
       ]);
     }
 
-    return getMessageOld(channelId, messageId);
+    return await getMessageOld(channelId, messageId);
   };
 }
 
 export function getMessages(bot: BotWithCache) {
   const getMessagesOld = bot.helpers.getMessages;
 
-  bot.helpers.getMessages = function (
+  bot.helpers.getMessages = async function (
     channelId,
     options,
   ) {
@@ -34,7 +34,7 @@ export function getMessages(bot: BotWithCache) {
       ]);
     }
 
-    return getMessagesOld(channelId, options);
+    return await getMessagesOld(channelId, options);
   };
 }
 

@@ -4,9 +4,9 @@ import { requireBotGuildPermissions } from "../permissions.ts";
 export default function editGuild(bot: BotWithCache) {
   const editGuildOld = bot.helpers.editGuild;
 
-  bot.helpers.editGuild = function (guildId, options, shardId) {
+  bot.helpers.editGuild = async function (guildId, options, shardId) {
     requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-    return editGuildOld(guildId, options, shardId);
+    return await editGuildOld(guildId, options, shardId);
   };
 }

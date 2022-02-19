@@ -4,7 +4,7 @@ import { validateComponents } from "../components.ts";
 export function editWebhookMessage(bot: BotWithCache) {
   const editWebhookMessageOld = bot.helpers.editWebhookMessage;
 
-  bot.helpers.editWebhookMessage = function (
+  bot.helpers.editWebhookMessage = async function (
     webhookId,
     webhookToken,
     options,
@@ -62,7 +62,7 @@ export function editWebhookMessage(bot: BotWithCache) {
 
     if (options.components) validateComponents(bot, options.components);
 
-    return editWebhookMessageOld(webhookId, webhookToken, options);
+    return await editWebhookMessageOld(webhookId, webhookToken, options);
   };
 }
 

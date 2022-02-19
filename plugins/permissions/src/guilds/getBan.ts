@@ -4,9 +4,9 @@ import { requireBotGuildPermissions } from "../permissions.ts";
 export default function getBan(bot: BotWithCache) {
   const getBanOld = bot.helpers.getBan;
 
-  bot.helpers.getBan = function (guildId, memberId) {
+  bot.helpers.getBan = async function (guildId, memberId) {
     requireBotGuildPermissions(bot, guildId, ["BAN_MEMBERS"]);
 
-    return getBanOld(guildId, memberId);
+    return await getBanOld(guildId, memberId);
   };
 }
