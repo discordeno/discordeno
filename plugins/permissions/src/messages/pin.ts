@@ -4,7 +4,7 @@ import { requireBotChannelPermissions } from "../permissions.ts";
 export function pinMessage(bot: BotWithCache) {
   const pinMessageOld = bot.helpers.pinMessage;
 
-  bot.helpers.pinMessage = function (
+  bot.helpers.pinMessage = async function (
     channelId,
     messageId,
   ) {
@@ -12,14 +12,14 @@ export function pinMessage(bot: BotWithCache) {
       "MANAGE_MESSAGES",
     ]);
 
-    return pinMessageOld(channelId, messageId);
+    return await pinMessageOld(channelId, messageId);
   };
 }
 
 export function unpinMessage(bot: BotWithCache) {
   const unpinMessageOld = bot.helpers.unpinMessage;
 
-  bot.helpers.unpinMessage = function (
+  bot.helpers.unpinMessage = async function (
     channelId,
     messageId,
   ) {
@@ -27,7 +27,7 @@ export function unpinMessage(bot: BotWithCache) {
       "MANAGE_MESSAGES",
     ]);
 
-    return unpinMessageOld(channelId, messageId);
+    return await unpinMessageOld(channelId, messageId);
   };
 }
 

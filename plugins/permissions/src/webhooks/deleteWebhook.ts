@@ -4,9 +4,9 @@ import { requireBotChannelPermissions } from "../permissions.ts";
 export default function deleteWebhook(bot: BotWithCache) {
   const deleteWebhookOld = bot.helpers.deleteWebhook;
 
-  bot.helpers.deleteWebhook = function (channelId, options) {
+  bot.helpers.deleteWebhook = async function (channelId, options) {
     requireBotChannelPermissions(bot, channelId, ["MANAGE_WEBHOOKS"]);
 
-    return deleteWebhookOld(channelId, options);
+    return await deleteWebhookOld(channelId, options);
   };
 }
