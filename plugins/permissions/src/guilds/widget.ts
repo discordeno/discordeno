@@ -4,10 +4,10 @@ import { requireBotGuildPermissions } from "../permissions.ts";
 export function editWidget(bot: BotWithCache) {
   const editWidgetOld = bot.helpers.editWidget;
 
-  bot.helpers.editWidget = function (guildId, enabled, channelId) {
+  bot.helpers.editWidget = async function (guildId, enabled, channelId) {
     requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-    return editWidgetOld(guildId, enabled, channelId);
+    return await editWidgetOld(guildId, enabled, channelId);
   };
 }
 

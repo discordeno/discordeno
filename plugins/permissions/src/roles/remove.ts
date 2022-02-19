@@ -5,7 +5,7 @@ import { highestRole, requireBotGuildPermissions } from "../permissions.ts";
 export default function removeRole(bot: BotWithCache) {
   const removeRoleOld = bot.helpers.removeRole;
 
-  bot.helpers.removeRole = function (
+  bot.helpers.removeRole = async function (
     guildId,
     memberId,
     roleId,
@@ -27,6 +27,6 @@ export default function removeRole(bot: BotWithCache) {
       requireBotGuildPermissions(bot, guild, ["MANAGE_ROLES"]);
     }
 
-    return removeRoleOld(guildId, memberId, roleId, reason);
+    return await removeRoleOld(guildId, memberId, roleId, reason);
   };
 }

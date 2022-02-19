@@ -76,7 +76,7 @@ export function validateApplicationCommandOptions(
 export function createApplicationCommand(bot: BotWithCache) {
   const createApplicationCommandOld = bot.helpers.createApplicationCommand;
 
-  bot.helpers.createApplicationCommand = function (options, guildId) {
+  bot.helpers.createApplicationCommand = async function (options, guildId) {
     const isChatInput = !options.type ||
       options.type === ApplicationCommandTypes.ChatInput;
 
@@ -135,14 +135,14 @@ export function createApplicationCommand(bot: BotWithCache) {
       options.options = validateApplicationCommandOptions(bot, options.options);
     }
 
-    return createApplicationCommandOld(options, guildId);
+    return await createApplicationCommandOld(options, guildId);
   };
 }
 
 export function editInteractionResponse(bot: BotWithCache) {
   const editInteractionResponseOld = bot.helpers.editInteractionResponse;
 
-  bot.helpers.editInteractionResponse = function (token, options) {
+  bot.helpers.editInteractionResponse = async function (token, options) {
     if (options.content && options.content.length > 2000) {
       throw Error(bot.constants.Errors.MESSAGE_MAX_LENGTH);
     }
@@ -191,7 +191,7 @@ export function editInteractionResponse(bot: BotWithCache) {
       }
     }
 
-    return editInteractionResponseOld(token, options);
+    return await editInteractionResponseOld(token, options);
   };
 }
 
