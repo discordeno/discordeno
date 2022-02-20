@@ -1,16 +1,16 @@
 
 
 class Permissions {
-    constructor() {
-
+    constructor(permission) {
+        this.bits = this.transform(permission);
     }
 
     _has(permission) {
         const hasPermssion = this.transform(permission);
-        return (permission === hasPermssion)
+        return (this.bits & hasPermssion) === hasPermssion;
     }
 
-    has(permission, checkAdministrator = true) {
+    has(permission, checkAdministrator = false) {
         return (checkAdministrator && this._has(this.constructor.FLAGS.ADMINISTRATOR)) || this._has(permission);
     }
 

@@ -1,4 +1,4 @@
-const {Emoji} = require('../Structures/export');
+const Emoji = require("../Structures/Emoji");
 class Emojis{
     constructor(client, data ={}, options = {}){
         this.client = client;

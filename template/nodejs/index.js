@@ -1,5 +1,5 @@
 
-const Discord = require('discordeno');
+const Discord = require('discordeno.js');
 
 // Ideally you should switch this to .env but for a template a config json is enough
 const config = require('../config.json');
@@ -14,14 +14,14 @@ const baseBot = Discord.createBot({
     token: config.token,
 })
 
-const {enableCachePlugin} = require('./Managers/CacheManager.js');
-const client = enableCachePlugin(baseBot, {
-    channels: {
-        properties: ['guildId', 'id'],
-    }
-});
+
+
+const client = Discord.enableCachePlugin(baseBot, {});
 
 client.config = config;
+
+// Inorder to use Collectors
+client.eventListener = events;
 
 
 // looping through all commands and registering them in .cache of the class
@@ -29,20 +29,14 @@ const CommandManager = require('./Managers/CommandManager.js');
 client.commands = new CommandManager(client);
 client.commands.load({})
 
-
-client.user = {id: '12345678901234567'};
+//Will be overwritten as soon as the bot is ready
+client.user = { id: '12345678901234567' };
 // Starts your Bot
 Discord.startBot(client)
 
-/* const packets = require('../../customcache/test.json');
-console.log(packets.length);
-packets.forEach(packet => {
-    client.gateway.handleDiscordPayload(client, packet, 0);
-}) */
 /* 
 * You should handle all errors and fix the issues in your codes...
-* process.on('unhandledRejection', (reason, p) => {console.log(reason, p)})
 */
-
+process.on('unhandledRejection', (reason, p) => { console.log(reason, p) })
 
 

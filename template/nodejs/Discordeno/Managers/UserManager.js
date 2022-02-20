@@ -1,4 +1,4 @@
-const {User} = require("../Structures/export");
+const User = require("../Structures/User");
 class Users{
     constructor(client, data ={}, options = {}){
         this.client = client;
@@ -6,7 +6,7 @@ class Users{
     }
 
     forge(data = {}){
-        return new User(this.client, data, {guild: this.guild})
+        return new User(this.client, data)
     }
 }
 module.exports = Users;

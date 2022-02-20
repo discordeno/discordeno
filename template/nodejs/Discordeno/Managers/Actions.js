@@ -1,11 +1,13 @@
 
 function GUILD_LOADED_DD(bot, packet, shardId) {
-    return bot.transformers.guild(bot, { guild: packet.d, _cache: true }, shardId);
+    return; //no op
+    return bot.transformers.guild(bot, { guild: packet.d }, shardId);
 }
 
 const GUILD_CREATE = GUILD_LOADED_DD;
 
 function GUILD_UPDATE(bot, packet, shardId) {
+    return; //no op
     const guild = bot.guilds.cache.base({ id: packet.d.id }, packet.d);
     return bot.guilds.cache.patch(guild.id, guild);
 }
@@ -13,20 +15,19 @@ function GUILD_UPDATE(bot, packet, shardId) {
 function GUILD_DELETE(bot, packet, shardId) {
     const guild = bot.guilds.cache._get(packet.d.id);
     if (!guild) return;
-    guild.channels.clear();
-    guild.threads.clear();
-    guild.members.clear();
-    guild.roles.clear();
-    guild.emojis.clear();
-    guild.stageInstances.clear();
-    bot.guilds.cache.GUILD_DELETE(packet.d.id);
+    guild.channels?.clear();
+    guild.threads?.clear();
+    guild.members?.clear();
+    guild.roles?.clear();
+    guild.emojis?.clear();
+    guild.stageInstances?.clear();
+    bot.guilds.cache.delete(packet.d.id);
     return guild;
 }
 
 function GUILD_MEMBERS_CHUNK(bot, packet, shardId) {
-    const guild = bot.guilds.cache.base({ id: packet.d.guild_id }, { members: true });
+    const guild = bot.guilds.cache.base({ id: packet.d.guild_id });
     guild.members = packet.d.members.map(x => bot.transformers.member(bot, x, packet.d.guild_id, BigInt(x.user.id)));
-    packet.d._cache = true;
     return bot.guilds.cache.patch(packet.d.id, guild);
 }
 
@@ -61,15 +62,14 @@ function GUILD_EMOJIS_UPDATE(bot, packet, shardId) {
 }
 
 function GUILD_MEMBER_ADD(bot, packet, shardId) {
-    const guild = bot.guilds.cache.base({ id: packet.d.guild_id }, { members: true });
+    const guild = bot.guilds.cache.base({ id: packet.d.guild_id });
 
     if (!guild.memberCount) guild.memberCount = 0;
     guild.memberCount++;
 
     guild.members = [
         bot.transformers.member(bot, packet.d, packet.d.guild_id, BigInt(packet.d.user.id))
-    ],
-        packet.d._cache = true;
+    ];
     return bot.guilds.cache.patch(guild.id, guild);
 }
 
@@ -80,24 +80,20 @@ function GUILD_MEMBER_REMOVE(bot, packet, shardId) {
     if (!guild.memberCount) guild.memberCount = 0;
     guild.memberCount--;
 
-    guild.members.delete(BigInt(packet.d.user.id));
+    guild.members?.delete(BigInt(packet.d.user.id));
     return bot.guilds.cache._set(guild.id, guild);
 }
 
 function GUILD_MEMBER_UPDATE(bot, packet, shardId) {
-    let guild = bot.guilds.cache._get(packet.d.guild_id);
-    if (!guild) {
-        guild = { id: packet.d.guild_id };
-        guild = bot.guilds.cache.base(guild, { members: true });
-    };
-
+    const guild = bot.guilds.cache.base(packet.d.guild_id);
     const member = bot.transformers.member(bot, packet.d, packet.d.guild_id, BigInt(packet.d.user.id))
-
-    guild.members.patch(packet.d.user.id, member);
-    return bot.guilds.cache._set(guild.id, guild);
+    guild.members = [member];
+    //console.log(member.roles, guild)
+    return bot.guilds.cache.patch(guild.id, guild);
 }
 
 function GUILD_ROLE_CREATE(bot, packet, shardId) {
+    return; //no op
     const guild_id = BigInt(packet.d.guild_id);
     
     const guild = bot.guilds.cache.base({id: guild_id}, { roles: true });
@@ -107,6 +103,7 @@ function GUILD_ROLE_CREATE(bot, packet, shardId) {
 }
 
 function GUILD_ROLE_UPDATE(bot, packet, shardId) {
+    return; //no op
     const guild = bot.guilds.cache._get(packet.d.guild_id);
     if (!guild) {
         guild = { id: packet.d.guild_id };
@@ -120,7 +117,7 @@ function GUILD_ROLE_UPDATE(bot, packet, shardId) {
 
 function GUILD_ROLE_DELETE(bot, packet, shardId) {
     const guild = bot.guilds.cache._get(packet.d.guild_id);
-    if (guild) {
+    if (guild?.roles) {
         guild.roles.delete(packet.d.role_id);
     } else {
         return bot.roles.cache.delete(packet.d.role_id);
@@ -129,6 +126,7 @@ function GUILD_ROLE_DELETE(bot, packet, shardId) {
 }
 
 function CHANNEL_CREATE(bot, packet, shardId) {
+    return; //no op
     const guild = bot.guilds.cache.base({id: packet.d.guild_id}, { channels: true });
 
     guild.channels = [bot.transformers.channel(bot, { channel: packet.d, guildId: BigInt(packet.d.guild_id) })];
@@ -136,6 +134,7 @@ function CHANNEL_CREATE(bot, packet, shardId) {
 }
 
 function CHANNEL_UPDATE(bot, packet, shardId) {
+    return; //no op
     const guild = bot.guilds.cache._get(packet.d.guild_id);
     if (!guild) {
         guild = { id: packet.d.guild_id };
@@ -149,7 +148,7 @@ function CHANNEL_UPDATE(bot, packet, shardId) {
 
 function CHANNEL_DELETE(bot, packet, shardId) {
     const guild = bot.guilds.cache._get(packet.d.guild_id);
-    if (guild) {
+    if (guild?.channels) {
         guild.channels.delete(packet.d.id);
     } else {
         return bot.channels.cache.delete(packet.d.id);
@@ -158,12 +157,14 @@ function CHANNEL_DELETE(bot, packet, shardId) {
 }
 
 function THREAD_CREATE(bot, packet, shardId) {
+    return; //no op
     const guild = bot.guilds.cache.base({id: packet.d.guild_id}, { threads: true });
     guild.threads = bot.transformers.channel(bot,{ channel: packet.d, guildId: BigInt(packet.d.guild_id) });
     return bot.guilds.cache.patch(guild.id, guild);
 }
 
 function THREAD_UPDATE(bot, packet, shardId) {
+    return; //no op
     const guild = bot.guilds.cache._get(packet.d.guild_id);
     if (!guild) {
         guild.id = packet.d.guild_id;
@@ -188,12 +189,14 @@ function THREAD_DELETE(bot, packet, shardId) {
 /// Interaction Based Events
 
 function MESSAGE_CREATE(bot, packet, shardId) {
+    return; //no op
     const channel = bot.channels.cache.base({id: packet.d.channel_id}, { messages: true });
     channel.messages = [bot.transformers.message(bot, packet.d)];
     return bot.channels.cache.patch(channel.id, channel);
 }
 
 function MESSAGE_UPDATE(bot, packet, shardId) {
+    return; //no op
     const channel = bot.channels.cache._get(packet.d.channel_id);
     if (!channel) return;
     const message = bot.transformers.message(bot, packet.d);
@@ -203,20 +206,20 @@ function MESSAGE_UPDATE(bot, packet, shardId) {
 
 function MESSAGE_DELETE(bot, packet, shardId) {
     const channel = bot.channels.cache._get(packet.d.channel_id);
-    if (channel) {
+    if (channel?.message) {
         channel.messages.delete(packet.d.id);
     } else {
-        return bot.messages.cache._delete(packet.d.id);
+        return bot.messages.cache.delete(packet.d.id);
     }
     return bot.channels.cache._set(channel.id, channel);
 }
 
 function MESSAGE_DELETE_BULK(bot, packet, shardId) {
     const channel = bot.channels.cache._get(packet.d.channel_id);
-    if (channel) {
+    if (channel?.messages) {
         packet.d.ids.forEach(id => channel.messages.delete(id));
     } else {
-        return packet.d.ids.forEach(id => bot.messages.cache._delete(id));
+        return packet.d.ids.forEach(id => bot.messages.cache.delete(id));
     }
     return bot.channels.cache._set(channel.id, channel);
 }
@@ -224,9 +227,9 @@ function MESSAGE_DELETE_BULK(bot, packet, shardId) {
 function MESSAGE_REACTION_ADD(bot, packet, shardId) {
     const channel = bot.channels.cache._get(packet.d.channel_id);
     if (!channel) return;
-    const message = channel.messages._get(packet.d.message_id);
+    const message = channel.messages?._get(packet.d.message_id);
     if (!message) return;
-    const reaction = message.reactions.find(r => r.emoji.id === packet.d.emoji.id);
+    const reaction = message.reactions?.find(r => r.emoji.id === packet.d.emoji.id);
     if (reaction) {
         reaction.count = reaction.count + 1;
         message.reactions.splice(message.reactions.indexOf(reaction), 1);
@@ -240,9 +243,9 @@ function MESSAGE_REACTION_ADD(bot, packet, shardId) {
 function MESSAGE_REACTION_REMOVE(bot, packet, shardId) {
     const channel = bot.channels.cache._get(packet.d.channel_id);
     if (!channel) return;
-    const message = channel.messages._get(packet.d.message_id);
+    const message = channel.messages?._get(packet.d.message_id);
     if (!message) return;
-    const reaction = message.reactions.find(r => r.emoji.id === packet.d.emoji.id);
+    const reaction = message.reactions?.find(r => r.emoji.id === packet.d.emoji.id);
     if (reaction) {
         reaction.count = reaction.count - 1;
         message.reactions.splice(message.reactions.indexOf(reaction), 1);
@@ -255,7 +258,7 @@ function MESSAGE_REACTION_REMOVE(bot, packet, shardId) {
 function MESSAGE_REACTION_REMOVE_ALL(bot, packet, shardId) {
     const channel = bot.channels.cache._get(packet.d.channel_id);
     if (!channel) return;
-    const message = channel.messages._get(packet.d.message_id);
+    const message = channel.messages?._get(packet.d.message_id);
     if (!message) return;
     message.reactions = [];
     channel.messages.patch(message.id, message);
@@ -265,7 +268,7 @@ function MESSAGE_REACTION_REMOVE_ALL(bot, packet, shardId) {
 function MESSAGE_REACTION_REMOVE_EMOJI(bot, packet, shardId) {
     const channel = bot.channels.cache._get(packet.d.channel_id);
     if (!channel) return;
-    const message = channel.messages._get(packet.d.message_id);
+    const message = channel.messages?._get(packet.d.message_id);
     if (!message) return;
     message.reactions = message.reactions.filter(r => r.emoji.id !== packet.d.emoji.id);
     channel.messages.patch(message.id, message);
@@ -274,7 +277,7 @@ function MESSAGE_REACTION_REMOVE_EMOJI(bot, packet, shardId) {
 
 
 function INTERACTION_CREATE(bot, packet, shardId) {
-    return packet.d;
+    return packet;
 }
 
 module.exports = {
@@ -302,6 +305,7 @@ module.exports = {
 
     THREAD_CREATE: THREAD_CREATE,
     THREAD_UPDATE: THREAD_UPDATE,
+    THREAD_DELETE: THREAD_DELETE,
 
     INTERACTION_CREATE: INTERACTION_CREATE,
 

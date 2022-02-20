@@ -24,6 +24,7 @@ class Interaction extends DestructObject {
 
         this.guild = client.guilds.forge({ id: this.guildId });
         this.channel = client.channels.forge({ id: this.channelId }, { guild: this.guild });
+        this.member = this.guild.members.forge({...interaction.member, id: this.user.id}, {guild: this.guild});
     }
 
     isCommand() { return this.type === Constants.INTERACTION_TYPES.APPLICATION_COMMAND; }

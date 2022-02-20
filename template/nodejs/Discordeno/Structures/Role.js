@@ -10,7 +10,7 @@ class Role extends DestructObject{
     }
 
     get permissions() {
-        return new Permissions(this._permissions).freeze();
+        return new Permissions((this._permissions|| 0n)).freeze();
     }
 }
 module.exports = Role;

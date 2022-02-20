@@ -7,7 +7,9 @@ class DestructObject{
         for (let [key, value] of Object.entries(message)) {
             if(!removeFields[key]) {
                 this[key] = value;
-            } else this[`_${key}`] = value;
+            } else {
+                this[`_${key}`] = value;
+            }
         }
         return this;
     }

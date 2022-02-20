@@ -8,7 +8,7 @@ class EventManager extends EventEmitter {
     constructor(client) {
         super();
         this.cache = new Map();
-        this._events = {};
+        this.allEvents = {};
     }
 
     load(options = {}) {
@@ -18,15 +18,13 @@ class EventManager extends EventEmitter {
             const fileName = path.join(eventsFolder, file);
             const event = require(fileName);
             const eventName = file.split(".")[0];
-            this._events[`${eventName}`] = event;
-            /* When the event should be emitted on client.events.on(eventName, (...args) => {...}) 
-                this._events[`${eventName}`] = function(...args) {
-                    this.emit(eventName, ...args);
-                    return event(...args);
-                };
-            */
+         
+            this.allEvents[`${eventName}`] = (...args) => {
+                this.emit(eventName, ...args);
+                return event(...args);
+            };
         })
-        return this._events;
+        return this.allEvents;
     }
 
 }

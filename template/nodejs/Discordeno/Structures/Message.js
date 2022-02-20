@@ -7,7 +7,7 @@ class Message extends DestructObject{
         if(options.guild) this.guild  = options.guild;
         else this.guild = client.guilds.forge({id: this.guildId});
         this.channel = this.guild.channels.forge({id: this.channelId}, {guild: this.guild});
-        this.member = this.guild.members.forge({...message.member}, {guild: this.guild});
+        this.member = this.guild.members.forge({...message.member, id: this.authorId}, {guild: this.guild});
         this.author = client.users.forge({id: this.authorId, username: this.tag?.split('#')[0], discriminator: this.tag?.split('#')[1] , bot: this.isBot});
     }
 

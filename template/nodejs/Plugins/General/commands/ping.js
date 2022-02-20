@@ -1,5 +1,5 @@
 const BaseCommand = require('../../../Structures/BaseCommand.js')
-const Embed = require('../../../Structures/Embed.js')
+const {Embed} = require('discordeno.js')
 class pingcommand extends BaseCommand {
 	static name = 'ping';
 	static description = 'See if the bot latency is okay';

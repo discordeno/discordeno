@@ -1,5 +1,5 @@
 const BaseCommand = require('../../../Structures/BaseCommand.js')
-const Embed = require('../../../Structures/Embed.js')
+const {Embed} = require('discordeno.js')
 class evalcommand extends BaseCommand {
     static name = 'eval';
     static description = 'danger !!!';

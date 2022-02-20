@@ -1,5 +1,3 @@
-//const {Message} = require("./export");
-
 class Responses {
     constructor(data) {
         this.manager = data.manager;

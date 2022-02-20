@@ -1,4 +1,4 @@
-const {Channel} = require("../Structures/export");
+const Channel = require("../Structures/Channel");
 class ChannelManager{
     constructor(client, data ={}, options = {}){
         this.client = client;
@@ -13,8 +13,8 @@ class ChannelManager{
 
     forge(data = {}, options = {}){
         if(options.guild){
-           if(options.guild.channels.cache.has(data.id)) return options.guild.channels.cache.get(data.id);
-        }else if(this.client.channels.cache.has(data.id)) return this.client.channels.cache.get(data.id);
+           if(options.guild.channels.cache?.has(data.id)) return options.guild.channels.cache.get(data.id, {guild: options.guild});  
+        }else if(this.client.channels.cache?.has(data.id)) return this.client.channels.cache.get(data.id, {guild: options.guild});
         return new Channel(this.client, data, {guild: options.guild})
     } 
 

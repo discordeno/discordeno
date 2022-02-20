@@ -1,7 +1,6 @@
 
 const UtilCommand = require('./CommandResponse.js')
-const Message = require('./Message.js')
-const Interaction = require('./Interaction.js')
+const {Message, Interaction} = require('discordeno.js')
 class BaseCommand extends UtilCommand {
      constructor(data) {
           super(data)
