@@ -4,7 +4,7 @@ import { requireBotChannelPermissions } from "../permissions.ts";
 export function createStageInstance(bot: BotWithCache) {
   const createStageInstanceOld = bot.helpers.createStageInstance;
 
-  bot.helpers.createStageInstance = async function (channelId, topic, privacyLevel) {
+  bot.helpers.createStageInstance = async function (channelId, topic) {
     if (!bot.utils.validateLength(topic, { max: 120, min: 1 })) {
       throw new Error(
         "The topic length for creating a stage instance must be between 1-120.",
@@ -17,7 +17,7 @@ export function createStageInstance(bot: BotWithCache) {
       "MOVE_MEMBERS",
     ]);
 
-    return await createStageInstanceOld(channelId, topic, privacyLevel);
+    return await createStageInstanceOld(channelId, topic);
   };
 }
 
