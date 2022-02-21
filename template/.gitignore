@@ -3,3 +3,7 @@ fileloader.ts
 
 # Folder made by Kwik db to watch guild command versions
 db/
+
+# Ignore modules/files for nodejs
+nodejs/node_modules/
+nodejs/package-lock.json
