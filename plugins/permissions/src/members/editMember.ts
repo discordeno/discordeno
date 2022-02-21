@@ -4,7 +4,7 @@ import { requireBotGuildPermissions } from "../permissions.ts";
 export default function editMember(bot: BotWithCache) {
   const editMemberOld = bot.helpers.editMember;
 
-  bot.helpers.editMember = function (guildId, memberId, options) {
+  bot.helpers.editMember = async function (guildId, memberId, options) {
     const requiredPerms: PermissionStrings[] = [];
     if (options.roles) requiredPerms.push("MANAGE_ROLES");
     // NULL IS ALLOWED
@@ -17,6 +17,6 @@ export default function editMember(bot: BotWithCache) {
       requireBotGuildPermissions(bot, guildId, requiredPerms);
     }
 
-    return editMemberOld(guildId, memberId, options);
+    return await editMemberOld(guildId, memberId, options);
   };
 }

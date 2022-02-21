@@ -8,7 +8,7 @@ export interface ScheduledEvent {
   /** the channel id in which the scheduled event will be hosted if specified */
   channelId: string | null;
   /** the id of the user that created the scheduled event */
-  creatorId?: string;
+  creatorId?: string | null;
   /** the name of the scheduled event */
   name: string;
   /** the description of the scheduled event */
