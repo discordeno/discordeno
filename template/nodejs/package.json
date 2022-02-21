@@ -11,6 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "discordeno": "^13.0.0-rc20",
-    "discordeno.js": "file:Discordeno"
+    "discordeno.js": "file:Discord"
   }
 }
