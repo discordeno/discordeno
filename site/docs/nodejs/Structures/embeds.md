@@ -57,7 +57,7 @@ await channel.send({ embeds: [embed] });
 ```
 
 You probably want more methods which you can use to create embeds.
-[We also have a Template for this](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Embed.js)
+[We also have a Template for this](https://github.com/discordeno/discordeno/tree/main/template/nodejs/discord/structures/Embed.js)
 
 ### Using the Embed Structure:
 

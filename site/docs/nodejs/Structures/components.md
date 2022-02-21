@@ -19,7 +19,7 @@ just using raw data because they still execute methods, which takes more time to
 :::
 
 We already have a Template for `Components`, which can be found
-[here](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Component.js).
+[here](https://github.com/discordeno/discordeno/tree/main/template/nodejs/discord/structures/Component.js).
 
 ## Different Components:
 
@@ -102,7 +102,7 @@ This code will obviously not work because it's a missing a lot required of data.
 a class to Discord, we need sth. to transform it to a json object.
 
 We have a pre-made class for components which you can find
-[here](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Component.js).
+[here](https://github.com/discordeno/discordeno/tree/main/template/nodejs/discord/structures/Component.js).
 
 ### Button
 
@@ -211,9 +211,4 @@ new Interaction(client, interaction).popupModal({
 When a user clicks a button or selects an option from a Select Menu, Discord sends an `interactionCreate` event, which
 contains the information necessary to process it.
 
-:::note Collecting
 
-An `InteractionCollector` can also be used to handle prompts, which requires some tweaks, but will be added soon in the
-guide and the template repo.
-
-:::
