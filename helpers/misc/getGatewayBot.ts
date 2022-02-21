@@ -5,14 +5,5 @@ import type { Bot } from "../../bot.ts";
 export async function getGatewayBot(bot: Bot): Promise<GetGatewayBot> {
   const result = await bot.rest.runMethod<GetGatewayBot>(bot.rest, "get", bot.constants.endpoints.GATEWAY_BOT);
 
-  return {
-    url: result.url,
-    shards: result.shards,
-    sessionStartLimit: {
-      total: result.session_start_limit.total,
-      remaining: result.session_start_limit.remaining,
-      resetAfter: result.session_start_limit.reset_after,
-      maxConcurrency: result.session_start_limit.max_concurrency,
-    },
-  };
+  return bot.transformers.gatewayBot(result);
 }

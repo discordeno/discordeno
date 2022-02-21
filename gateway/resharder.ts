@@ -1,6 +1,6 @@
+import { transformGatewayBot } from "../transformers/gatewayBot.ts";
 import { GetGatewayBot } from "../types/gateway/getGatewayBot.ts";
 import { DiscordReady } from "../types/gateway/ready.ts";
-import { Collection } from "../util/collection.ts";
 import { createGatewayManager, GatewayManager } from "./gateway_manager.ts";
 
 /** The handler to automatically reshard when necessary. */
@@ -12,14 +12,22 @@ export async function resharder(
 
   const gateway = createGatewayManager({
     ...oldGateway,
-    // IGNORE EVENTS FOR NOW
-    handleDiscordPayload: async function (_, data, shardId) {
-      if (data.t === "READY") {
-        const payload = data.d as DiscordReady;
-        await gateway.resharding.markNewGuildShardId(payload.guilds.map((g) => BigInt(g.id)), shardId);
-      }
-    },
   });
+
+  for (const key of Object.keys(oldGateway)) {
+    if (key === "handleDiscordPayload") {
+      gateway.handleDiscordPayload = async function (_, data, shardId) {
+        if (data.t === "READY") {
+          const payload = data.d as DiscordReady;
+          await gateway.resharding.markNewGuildShardId(payload.guilds.map((g) => BigInt(g.id)), shardId);
+        }
+      };
+      continue;
+    }
+
+    // USE ANY CUSTOMIZED HANDLERS FROM OLD GATEWAY
+    if (typeof key === "function") gateway[key] = oldGateway[key];
+  }
 
   // Begin resharding
   gateway.maxShards = results.shards;
@@ -31,7 +39,7 @@ export async function resharder(
   gateway.sessionStartLimitResetAfter = results.sessionStartLimit.resetAfter;
   gateway.maxConcurrency = results.sessionStartLimit.maxConcurrency;
   // If more than 100K servers, begin switching to 16x sharding
-  if (gateway.maxShards && gateway.useOptimalLargeBotSharding) {
+  if (gateway.maxShards > 60 && gateway.useOptimalLargeBotSharding) {
     gateway.debug("[Resharding] Using optimal large bot sharding solution.");
     gateway.maxShards = Math.ceil(
       gateway.maxShards /
@@ -115,7 +123,7 @@ export async function startReshardingChecks(gateway: GatewayManager) {
     headers: {
       Authorization: `Bot ${gateway.token}`,
     },
-  }).then((res) => res.json())) as GetGatewayBot;
+  }).then((res) => res.json()).then((res) => transformGatewayBot(res))) as GetGatewayBot;
 
   const percentage = ((results.shards - gateway.maxShards) / gateway.maxShards) * 100;
   // Less than necessary% being used so do nothing

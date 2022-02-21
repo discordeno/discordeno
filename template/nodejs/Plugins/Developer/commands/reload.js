@@ -1,5 +1,5 @@
 const BaseCommand = require('../../../Structures/BaseCommand.js')
-const {Embed} = require('discordeno.js')
+
 class reloadcommand extends BaseCommand {
     static name = 'reload';
     static description = 'Reloads a Command';

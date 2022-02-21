@@ -42,7 +42,7 @@ export function transformInteraction(bot: Bot, payload: SnakeCasedPropertiesDeep
       ? {
         componentType: payload.data.component_type,
         customId: payload.data.custom_id,
-        components: payload.data.components,
+        components: payload.data.components?.map((component) => bot.transformers.component(bot, component)),
         values: payload.data.values,
         id: payload.data.id ? bot.transformers.snowflake(payload.data.id) : undefined,
         name: payload.data.name,

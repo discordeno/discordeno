@@ -4,7 +4,7 @@ import { requireBotGuildPermissions } from "../permissions.ts";
 export default function deleteChannel(bot: BotWithCache) {
   const deleteChannelOld = bot.helpers.deleteChannel;
 
-  bot.helpers.deleteChannel = function (channelId, reason) {
+  bot.helpers.deleteChannel = async function (channelId, reason) {
     const channel = bot.channels.get(channelId);
 
     if (channel?.guildId) {
@@ -32,6 +32,6 @@ export default function deleteChannel(bot: BotWithCache) {
       );
     }
 
-    return deleteChannelOld(channelId, reason);
+    return await deleteChannelOld(channelId, reason);
   };
 }

@@ -1,3 +1,4 @@
+
 class Responses {
     constructor(data) {
         this.manager = data.manager;
