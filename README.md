@@ -133,7 +133,7 @@ it's not easy. Discordeno is designed and built with all of the issues in mind t
 when they initially started writing Discord bots using existing libraries. If you are a beginner, you can check out
 these awesome official and unofficial templates:
 
-- [Discordeno Template (official)](https://github.com/discordeno/template)
+- [Discordeno Template (official)](https://github.com/discordeno/discordeno/tree/main/template)
 - [Serverless Slash Commands Template (official)](https://github.com/discordeno/serverless-deno-deploy-template)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
