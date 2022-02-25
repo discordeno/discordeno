@@ -16,7 +16,7 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
         type: embed.type,
         description: embed.description,
         url: embed.url,
-        timestamp: embed.timestamp,
+        timestamp: embed.timestamp ? new Date(embed.timestamp).toISOString() : undefined,
         color: embed.color,
         footer: embed.footer
           ? {
