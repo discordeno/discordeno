@@ -16,5 +16,5 @@ export interface SelectOption {
     animated?: boolean;
   };
   /** Will render this option as already-selected by default. */
-  default: boolean;
+  default?: boolean;
 }
