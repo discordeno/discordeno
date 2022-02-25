@@ -18,9 +18,7 @@ jobs:
           deno-version: ${{ matrix.deno }}
       - name: Get tag version
         id: get_tag_version
-        run: |
-          version=`cat util/constants.ts | grep 'export const DISCORDENO_VERSION' | awk -F'= ' '{print $2}' | tr -d '"|;'`
-          echo "DISCORDENO_VERSION=$version" >> $GITHUB_ENV
+        run: echo "DISCORDENO_VERSION=$(cat util/constants.ts | grep 'export const DISCORDENO_VERSION' | awk -F'= ' '{print $2}' | tr -d '"|;')" >> $GITHUB_ENV
       - name: Create tag
         run: git tag ${{ env.DISCORDENO_VERSION }} && git push --tags
 
