@@ -7,7 +7,7 @@ import {
   enableCachePlugin,
   enableCacheSweepers,
   enableHelpersPlugin,
-  enablePermissionsPlugin
+  enablePermissionsPlugin,
 } from "./deps.ts";
 import { Command } from "./src/types/commands.ts";
 

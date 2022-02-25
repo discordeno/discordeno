@@ -114,7 +114,7 @@ export interface DiscordenoComponent {
       animated?: boolean;
     };
     /** Will render this option as already-selected by default. */
-    default: boolean;
+    default?: boolean;
   }[];
   /** A custom placeholder text if nothing is selected. Maximum 100 characters. */
   placeholder?: string;
