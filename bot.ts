@@ -396,7 +396,7 @@ export function createTransformers(options: Partial<Transformers>) {
     widget: options.widget || transformWidget,
     stageInstance: options.stageInstance || transformStageInstance,
     sticker: options.sticker || transformSticker,
-    gatewayBot: options.gatewayBot || transformGatewayBot
+    gatewayBot: options.gatewayBot || transformGatewayBot,
   };
 }
 
