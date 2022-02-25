@@ -15,6 +15,6 @@ export default function getArchivedThreads(bot: BotWithCache) {
       );
     }
 
-    return getArchivedThreadsOld(channelId, options);
+    return await getArchivedThreadsOld(channelId, options);
   };
 }

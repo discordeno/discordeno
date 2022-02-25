@@ -9,7 +9,7 @@ import {
   enableHelpersPlugin,
   enablePermissionsPlugin,
 } from "./deps.ts";
-import { Command } from "./types/commands.ts";
+import { Command } from "./src/types/commands.ts";
 
 // MAKE THE BASIC BOT OBJECT
 const bot = createBot({

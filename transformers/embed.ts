@@ -42,12 +42,7 @@ export function transformEmbed(bot: Bot, payload: SnakeCasedPropertiesDeep<Embed
         width: payload.video.width,
       }
       : undefined,
-    provider: payload.provider
-      ? {
-        name: payload.provider.name,
-        url: payload.provider.url,
-      }
-      : undefined,
+    provider: payload.provider,
     author: payload.author
       ? {
         name: payload.author.name,
@@ -56,11 +51,7 @@ export function transformEmbed(bot: Bot, payload: SnakeCasedPropertiesDeep<Embed
         proxyIconUrl: payload.author.proxy_icon_url,
       }
       : undefined,
-    fields: payload.fields?.map((field) => ({
-      name: field.name,
-      value: field.value,
-      inline: field.inline,
-    })),
+    fields: payload.fields,
   };
 }
 

@@ -18,6 +18,7 @@ export function createRequestBody(rest: RestManager, queuedRequest: { request: R
   // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
   if (queuedRequest.payload.body?.reason) {
     headers["X-Audit-Log-Reason"] = encodeURIComponent(queuedRequest.payload.body.reason as string);
+    queuedRequest.payload.body.reason = undefined;
   }
 
   // IF A FILE/ATTACHMENT IS PRESENT WE NEED SPECIAL HANDLING
