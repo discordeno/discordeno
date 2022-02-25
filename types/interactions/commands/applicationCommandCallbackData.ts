@@ -27,7 +27,7 @@ export interface InteractionApplicationCommandCallbackData {
   title?: string;
   /** The components you would like to have sent in this message */
   components?: MessageComponents;
-  /** Set to `64` to make your response ephemeral */
+  /** message flags combined as a bitfield (only SUPPRESS_EMBEDS and EPHEMERAL can be set) */
   flags?: number;
   /** autocomplete choices (max of 25 choices) */
   choices?: ApplicationCommandOptionChoice[];
