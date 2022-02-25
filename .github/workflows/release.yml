@@ -1,0 +1,23 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        deno: ["v1.x"]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denoland/setup-deno@main
+        with:
+          deno-version: ${{ matrix.deno }}
+      - name: Get tag version
+        id: get_tag_version
+        run: echo ::set-output name=TAG_VERSION::${cat util/constants.ts | grep 'export const DISCORDENO_VERSION' | awk -F'= ' '{print $2}' | tr -d '"|;'}
+      - name: Create tag
+        run: git tag ${{steps.get_tag_version.outputs.TAG_VERSION}} && git push --tags
