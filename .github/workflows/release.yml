@@ -22,5 +22,5 @@ jobs:
           version=`cat util/constants.ts | grep 'export const DISCORDENO_VERSION' | awk -F'= ' '{print $2}' | tr -d '"|;'`
           echo "DISCORDENO_VERSION=$version" >> $GITHUB_ENV
       - name: Create tag
-        run: echo ${{ env.MY_VARIABLE }}
+        run: git tag ${{ env.MY_VARIABLE }} && git push --tags
 
