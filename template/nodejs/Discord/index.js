@@ -23,12 +23,15 @@ module.exports = {
   Role: require("./Structures/Role"),
   User: require("./Structures/User"),
   Emoji: require("./Structures/Emoji"),
-  Collection: require("./Structures/Collection"),
   Component: require("./Structures/Component"),
   Embed: require("./Structures/Embed"),
   Emoji: require("./Structures/Emoji"),
   Interaction: require("./Structures/Interaction"),
+  Webhook: require("./Structures/Webhook"),
+
   DestructObject: require("./Structures/DestructObject"),
+  CacheCollection: require("./Structures/CacheCollection"),
+  Collection: require("./Structures/Collection"),
 
   ///Util:
   Collector: require("./Util/Collectors"),

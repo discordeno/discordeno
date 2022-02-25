@@ -1,17 +1,41 @@
 const Role = require("../Structures/Role");
+const Collection = require("../Structures/Collection");
 class RoleManager {
+  /** 
+  * @param {import('discordeno').Bot} client
+  */
   constructor(client, data = {}, options = {}) {
     this.client = client;
-    if (options.roles) this.cache = options.roles;
     if (options.member) this.member = options.member;
     if (options.guild) this.guild = options.guild;
+
+    this.cache = options.roles || new Collection();
   }
 
   async create(options = {}, reason) {
     return new Role(this.client, options).create(options, reason);
   }
 
+  async fetch(options = {}) {
+    if (typeof options === "string") options = { id: options };
+
+    const guildId = options.guildId || this.guild?.id;
+    const roleId = options.id;
+
+    if (this.cache?.has(roleId)) return this.cache.get(roleId, { guild: this.guild });
+
+
+    const rawRoles = await this.client.helpers.getRoles(guildId);
+    const roles = new Collection();
+    for (const role of rawRoles) {
+      roles.set(role.id, this.forge(role, { guild: this.guild }));
+    }
+    
+    return roleId ? roles.get(roleId) : roles;
+  }
+
   forge(data = {}, options = {}) {
+    if(typeof data === "string") data = {id: data};
     if (options.guild) {
       if (options.guild.roles.cache?.has(data.id)) {
         return options.guild.roles.cache.get(data.id, { guild: options.guild });
@@ -36,6 +60,10 @@ class RoleManager {
 
   forgeManager(data = {}, options = {}) {
     return new RoleManager(this.client, data, { guild: options.guild, member: options.member, roles: options.roles });
+  }
+
+  get highest() {
+    return this.cache?.map(r => r).sort((a, b) => b.position - a.position)?.[0];
   }
 }
 module.exports = RoleManager;

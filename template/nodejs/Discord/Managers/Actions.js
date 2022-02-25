@@ -1,3 +1,4 @@
+const Collection = require('../Structures/Collection')
 function GUILD_LOADED_DD(bot, packet, shardId) {
   return; //no op
   return bot.transformers.guild(bot, { guild: packet.d }, shardId);
@@ -38,7 +39,7 @@ function GUILD_EMOJIS_UPDATE(bot, packet, shardId) {
   }
 
   const old = guild.emojis.values({ raw: true });
-  const rawEmojis = new Map(packet.d.emojis.map((x) => [x.id, x]));
+  const rawEmojis = new Collection(packet.d.emojis.map((x) => [x.id, x]));
 
   for (const emoji of packet.d.emojis) {
     const cachedEmoji = guild.emojis._get(emoji.id);

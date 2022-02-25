@@ -1,4 +1,7 @@
 const { EventEmitter } = require("events");
+
+const Collection = require("../Structures/Collection")
+
 class Collector extends EventEmitter {
   constructor(event, options = {}) {
     super();
@@ -7,7 +10,7 @@ class Collector extends EventEmitter {
 
     this.client = options.client;
 
-    this.items = new Map();
+    this.items = new Collection();
 
     this.filter = options.filter || ((a) => true);
 

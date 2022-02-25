@@ -8,7 +8,7 @@ const MessageManager = require("./MessageManager");
 const MemberManager = require("./MemberManager");
 
 ///Structures
-const Collection = require("../Structures/Collection");
+const Collection = require("../Structures/CacheCollection");
 const Guild = require("../Structures/Guild");
 const User = require("../Structures/User");
 const Emoji = require("../Structures/Emoji");

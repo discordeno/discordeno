@@ -12,5 +12,12 @@ class Role extends DestructObject {
   get permissions() {
     return new Permissions(this._permissions || 0n).freeze();
   }
+
+  async delete(options){
+    const guildId = this.guildId || this.guilld?.id;
+    const role = await this.client.helpers.deleteRole(guildId, this.id);
+    return role;
+  }
+
 }
 module.exports = Role;

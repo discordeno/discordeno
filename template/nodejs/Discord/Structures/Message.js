@@ -1,4 +1,5 @@
 const DestructObject = require("./DestructObject");
+const Collection = require("./Collection")
 
 class Message extends DestructObject {
   constructor(client, message = {}, options = {}) {
@@ -42,5 +43,35 @@ class Message extends DestructObject {
   async unpin() {
     return this.client.helpers.unpinMessage(this.channel.id, this.id);
   }
+
+
+  ///Parse Members:
+  get mentions()  {
+    const channels = new Collection();
+    const members = new Collection();
+    const roles = new Collection();
+    const users = new Collection();
+  
+    this.mentionedUserIds.forEach((u)=> {
+      users.set(u, this.client.users.forge({ id: u }));
+    })
+
+    this.mentionedRoleIds.forEach((r)=> {
+      roles.set(r, this.guild.roles.forge({ id: r }, { guild: this.guild }));
+    })
+
+    this.mentionedChannelIds.forEach((c)=> {
+      channels.set(c, this.guild.channels.forge({ id: c }, { guild: this.guild }));
+    })
+
+    return {
+      channels,
+      members,
+      roles,
+      users,
+    }
+
+  }
+
 }
 module.exports = Message;

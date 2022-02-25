@@ -1,13 +1,18 @@
 const Member = require("../Structures/Member");
+const Collection = require("../Structures/Collection");
 class Members {
+  /** 
+  * @param {import('discordeno').Bot} client
+  */
   constructor(client, data = {}, options = {}) {
     this.client = client;
 
-    if (options.members) this.cache = options.members;
+    this.cache = options.members || new Collection();
     if (options.guild) this.guild = options.guild;
   }
 
   forge(data = {}, options = {}) {
+    if(typeof data === "string") data = {id: data};
     if (options.guild) {
       if (options.guild.members.cache?.has(data.id)) {
         return options.guild.members.cache.get(data.id, { guild: options.guild });
@@ -20,8 +25,21 @@ class Members {
     return new Members(this.client, data, { guild: options.guild, members: options.members });
   }
 
-  async fetch(id) {
-    if (typeof id === "string") id = BigInt(id);
+  async fetch(options = {}) {
+    if(typeof options === "string") options = {id: options};
+
+    const guildId = options.guildId || this.guild?.id;
+    const memberId = options.id;
+
+    if(!memberId){
+      const rawMembers = await this.client.helpers.getMembers(guildId, options);
+      const members = new Collection();
+      for(const member of rawMembers){
+        members.set(member.id, this.forge(member, {guild: this.guild}));
+      }
+      return members;
+    }
+
     if (this.cache?.has(id)) return this.cache.get(id, { guild: this.guild });
     const member = await this.client.helpers.getMember(this.guild.id, id);
     return this.forge(member, { guild: this.guild });
