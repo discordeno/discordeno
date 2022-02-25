@@ -16,12 +16,14 @@ jobs:
       - uses: denoland/setup-deno@main
         with:
           deno-version: ${{ matrix.deno }}
-      - name: Get last tag version
-        #run: echo "DISCORDENO_VERSION_OLD=$(GITHUB_REF/refs\/tags\//)" >> $GITHUB_ENV
-        run: echo "DISCORDENO_VERSION_OLD=$(cat util/constants.ts | grep 'export const DISCORDENO_VERSION' | awk -F'= ' '{print $2}' | tr -d '"|;')" >> $GITHUB_ENV
+      # Taken from: https://github.com/denoland/dnt#github-actions---npm-publish-on-tag
+      - name: Get tag version
+        if: startsWith(github.ref, 'refs/tags/')
+        id: get_tag_version
+        run: echo ::set-output name=TAG_VERSION::${GITHUB_REF/refs\/tags\//}
       - name: Get new tag version
         run: echo "DISCORDENO_VERSION=$(cat util/constants.ts | grep 'export const DISCORDENO_VERSION' | awk -F'= ' '{print $2}' | tr -d '"|;')" >> $GITHUB_ENV
       - name: Create tag
-        if: ${{ env.DISCORDENO_VERSION != env.DISCORDENO_VERSION_OLD }}
+        if: ${{ env.DISCORDENO_VERSION != steps.get_tag_version.outputs.TAG_VERSION }}
         run: git tag ${{ env.DISCORDENO_VERSION }} && git push --tags
 
