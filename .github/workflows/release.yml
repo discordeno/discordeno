@@ -20,6 +20,4 @@ jobs:
         id: get_tag_version
         run: |
           version=`cat util/constants.ts | grep 'export const DISCORDENO_VERSION' | awk -F'= ' '{print $2}' | tr -d '"|;'`
-          echo ::set-output name=TAG_VERSION::${$version}
-      - name: Create tag
-        run: git tag ${{steps.get_tag_version.outputs.TAG_VERSION}} && git push --tags
+          git tag ${{version}} && git push --tags
