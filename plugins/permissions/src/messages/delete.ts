@@ -4,7 +4,7 @@ import { requireBotChannelPermissions } from "../permissions.ts";
 export function deleteMessage(bot: BotWithCache) {
   const deleteMessageOld = bot.helpers.deleteMessage;
 
-  bot.helpers.deleteMessage = function (
+  bot.helpers.deleteMessage = async function (
     channelId,
     messageId,
     reason,
@@ -27,14 +27,14 @@ export function deleteMessage(bot: BotWithCache) {
       );
     }
 
-    return deleteMessageOld(channelId, messageId, reason, milliseconds);
+    return await deleteMessageOld(channelId, messageId, reason, milliseconds);
   };
 }
 
 export function deleteMessages(bot: BotWithCache) {
   const deleteMessagesOld = bot.helpers.deleteMessages;
 
-  bot.helpers.deleteMessages = function (
+  bot.helpers.deleteMessages = async function (
     channelId,
     ids,
     reason,
@@ -70,7 +70,7 @@ export function deleteMessages(bot: BotWithCache) {
       "MANAGE_MESSAGES",
     ]);
 
-    return deleteMessagesOld(channelId, ids, reason);
+    return await deleteMessagesOld(channelId, ids, reason);
   };
 }
 

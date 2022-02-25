@@ -3,7 +3,7 @@ import { BotWithCache } from "../../deps.ts";
 export function editBotProfile(bot: BotWithCache) {
   const editBotProfileOld = bot.helpers.editBotProfile;
 
-  bot.helpers.editBotProfile = function (
+  bot.helpers.editBotProfile = async function (
     options,
   ) {
     // Nothing was edited
@@ -36,7 +36,7 @@ export function editBotProfile(bot: BotWithCache) {
       }
     }
 
-    return editBotProfileOld(options);
+    return await editBotProfileOld(options);
   };
 }
 

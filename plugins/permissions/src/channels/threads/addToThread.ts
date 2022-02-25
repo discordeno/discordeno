@@ -21,6 +21,6 @@ export default function addToThread(bot: BotWithCache) {
       await requireBotChannelPermissions(bot, channel, ["SEND_MESSAGES"]);
     }
 
-    return addToThreadOld(threadId, userId);
+    return await addToThreadOld(threadId, userId);
   };
 }

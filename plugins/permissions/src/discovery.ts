@@ -4,40 +4,40 @@ import { requireBotGuildPermissions } from "./permissions.ts";
 export function addDiscoverySubcategory(bot: BotWithCache) {
   const addDiscoverySubcategoryOld = bot.helpers.addDiscoverySubcategory;
 
-  bot.helpers.addDiscoverySubcategory = function (guildId, categoryId) {
+  bot.helpers.addDiscoverySubcategory = async function (guildId, categoryId) {
     requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-    return addDiscoverySubcategoryOld(guildId, categoryId);
+    return await addDiscoverySubcategoryOld(guildId, categoryId);
   };
 }
 
 export function removeDiscoverySubcategory(bot: BotWithCache) {
   const removeDiscoverySubcategoryOld = bot.helpers.removeDiscoverySubcategory;
 
-  bot.helpers.removeDiscoverySubcategory = function (guildId, categoryId) {
+  bot.helpers.removeDiscoverySubcategory = async function (guildId, categoryId) {
     requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-    return removeDiscoverySubcategoryOld(guildId, categoryId);
+    return await removeDiscoverySubcategoryOld(guildId, categoryId);
   };
 }
 
 export function getDiscovery(bot: BotWithCache) {
   const getDiscoveryOld = bot.helpers.getDiscovery;
 
-  bot.helpers.getDiscovery = function (guildId) {
+  bot.helpers.getDiscovery = async function (guildId) {
     requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-    return getDiscoveryOld(guildId);
+    return await getDiscoveryOld(guildId);
   };
 }
 
 export function editDiscovery(bot: BotWithCache) {
   const editDiscoveryOld = bot.helpers.editDiscovery;
 
-  bot.helpers.editDiscovery = function (guildId, data) {
+  bot.helpers.editDiscovery = async function (guildId, data) {
     requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-    return editDiscoveryOld(guildId, data);
+    return await editDiscoveryOld(guildId, data);
   };
 }
 
