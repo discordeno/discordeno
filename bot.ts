@@ -66,6 +66,7 @@ import { transformVoiceRegion } from "./transformers/voiceRegion.ts";
 import { transformWidget } from "./transformers/widget.ts";
 import { transformStageInstance } from "./transformers/stageInstance.ts";
 import { transformSticker } from "./transformers/sticker.ts";
+import { transformGatewayBot } from "./transformers/gatewayBot.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -326,6 +327,7 @@ export function createBaseHelpers(options: Partial<Helpers>) {
 
 export interface Transformers {
   snowflake: typeof snowflakeToBigint;
+  gatewayBot: typeof transformGatewayBot;
   channel: typeof transformChannel;
   guild: typeof transformGuild;
   user: typeof transformUser;
@@ -394,6 +396,7 @@ export function createTransformers(options: Partial<Transformers>) {
     widget: options.widget || transformWidget,
     stageInstance: options.stageInstance || transformStageInstance,
     sticker: options.sticker || transformSticker,
+    gatewayBot: options.gatewayBot || transformGatewayBot
   };
 }
 

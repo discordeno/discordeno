@@ -23,7 +23,7 @@ export interface EditMessage {
       users?: bigint[];
     })
     | null;
-  /** Attached files to keep */
+  /** When specified (adding new attachments), attachments which are not provided in this list will be removed. */
   attachments?: Attachment[];
   /** The components you would like to have sent in this message */
   components?: MessageComponents;

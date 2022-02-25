@@ -15,7 +15,7 @@ export function prepareBuckets(gateway: GatewayManager, firstShardId: number, la
 
   // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
   for (let i = firstShardId; i < lastShardId; i++) {
-    gateway.debug(`1. Running for loop in spawnShards function.`);
+    gateway.debug(`1. Running for loop in spawnShards function for shardId ${i}.`);
     if (i >= gateway.maxShards) {
       continue;
     }

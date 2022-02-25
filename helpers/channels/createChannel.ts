@@ -22,11 +22,11 @@ export async function createChannel(bot: Bot, guildId: bigint, options?: CreateG
         position: options.position,
         parent_id: options.parentId?.toString(),
         nsfw: options.nsfw,
-        permission_overwrites: options?.permissionOverwrites?.map((perm) => ({
-          id: perm.id.toString(),
-          type: perm.type,
-          allow: perm.allow ? bot.utils.calculateBits(perm.allow) : "0",
-          deny: perm.deny ? bot.utils.calculateBits(perm.deny) : "0",
+        permission_overwrites: options?.permissionOverwrites?.map((overwrite) => ({
+          id: overwrite.id.toString(),
+          type: overwrite.type,
+          allow: overwrite.allow ? bot.utils.calculateBits(overwrite.allow) : null,
+          deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : null,
         })),
         type: options?.type || ChannelTypes.GuildText,
         reason,

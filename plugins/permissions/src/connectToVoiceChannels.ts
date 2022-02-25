@@ -40,6 +40,6 @@ export default function connectToVoiceChannel(bot: BotWithCache) {
 
     await requireBotChannelPermissions(bot, channel, permsNeeded);
 
-    return connectToVoiceChannelOld(guildId, channelId, options);
+    return await connectToVoiceChannelOld(guildId, channelId, options);
   };
 }
