@@ -203,7 +203,7 @@ export interface GatewayManager {
   processGatewayQueue: typeof processGatewayQueue;
   /** Closes shard WebSocket connection properly. */
   closeWS: typeof closeWS;
-  /** Use this function to stop the gateway properly */
+  /** Use this function to stop the gateway properly. */
   stopGateway: typeof stopGateway;
   /** Properly adds a message to the shards queue. */
   sendShardMessage: typeof sendShardMessage;
