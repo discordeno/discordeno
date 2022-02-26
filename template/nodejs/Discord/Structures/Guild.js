@@ -1,4 +1,5 @@
 const DestructObject = require("./DestructObject");
+const {transformOptions} = require("../Util/transformOptions");
 
 class Guild extends DestructObject {
   constructor(client, guild = {}, options = {}) {
@@ -15,6 +16,7 @@ class Guild extends DestructObject {
   }
 
   async fetchAuditLogs(options ={}) {
+    options = transformOptions(options);
     return this.client.helpers.getAuditLogs(this.id, options);
   }
 }

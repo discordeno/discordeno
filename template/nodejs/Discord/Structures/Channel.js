@@ -1,5 +1,6 @@
 const DestructObject = require("./DestructObject");
 const PermissionOverwrites = require("./permissionOverwrites");
+const {transformOptions} = require("../Util/transformOptions");
 
 class Channel extends DestructObject {
   constructor(client, channel = {}, options = {}) {
@@ -13,10 +14,12 @@ class Channel extends DestructObject {
   }
 
   async create(options = {}, reason) {
+    options = transformOptions(options);
     return this.client.helpers.createChannel(this.guildId, options, reason);
   }
 
   async edit(options = {}, reason) {
+    options = transformOptions(options);
     return this.client.helpers.editChannel(this.id, options, reason);
   }
 
@@ -24,7 +27,8 @@ class Channel extends DestructObject {
     return this.client.helpers.deleteChannel(this.id, reason);
   }
 
-  async send(options = {}) {
+  async send(options = {}) {    
+    options = transformOptions(options, {content: true});
     return this.client.helpers.sendMessage(this.id, options);
   }
   

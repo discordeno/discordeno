@@ -1,5 +1,6 @@
 const Role = require("../Structures/Role");
 const Collection = require("../Structures/Collection");
+const {transformOptions} = require("../Util/transformOptions");
 class RoleManager {
   /** 
   * @param {import('discordeno').Bot} client
@@ -17,7 +18,7 @@ class RoleManager {
   }
 
   async fetch(options = {}) {
-    if (typeof options === "string") options = { id: options };
+    options = transformOptions(options);
 
     const guildId = options.guildId || this.guild?.id;
     const roleId = options.id;
@@ -35,7 +36,8 @@ class RoleManager {
   }
 
   forge(data = {}, options = {}) {
-    if(typeof data === "string") data = {id: data};
+    data = transformOptions(data);
+
     if (options.guild) {
       if (options.guild.roles.cache?.has(data.id)) {
         return options.guild.roles.cache.get(data.id, { guild: options.guild });
@@ -47,12 +49,16 @@ class RoleManager {
   }
 
   async add(options = {}, reason) {
+    options = transformOptions(options);
+
     const guildId = (this.guild ? this.guild.id : options.guildId);
     const memberId = (this.member ? this.member.id : options.memberId);
     return this.client.helpers.addRole(guildId, memberId, options.roleId, reason);
   }
 
   async remove(options = {}, reason) {
+    options = transformOptions(options);
+
     const guildId = (this.guild ? this.guild.id : options.guildId);
     const memberId = (this.member ? this.member.id : options.memberId);
     return this.client.helpers.removeRole(guildId, memberId, options.roleId, reason);

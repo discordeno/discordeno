@@ -16,7 +16,7 @@ class Collector extends EventEmitter {
 
     this.max = options.max;
 
-    this._timeout = options.timeout || 10000;
+    this._timeout = options.timeout || options.time || 10000;
 
     this._collectFunction = this.collectFunction.bind(this);
 

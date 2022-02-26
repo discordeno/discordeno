@@ -75,7 +75,7 @@ class Embed {
       type: "rich",
       description: this.description,
       color: this.color,
-      timestamp: this.timestamp ? new Date(this.timestamp).toISOString() : null,
+      timestamp: this.timestamp ? new Date(this.timestamp) : null,
       thumbnail: this.thumbnail,
       image: this.image,
       fields: this.fields,

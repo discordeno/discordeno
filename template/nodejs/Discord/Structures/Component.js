@@ -1,3 +1,5 @@
+const {getEmoji} = require('../Util/Util');
+
 const Constants = {
   PRIMARY: 1,
   SECONDARY: 2,
@@ -14,7 +16,7 @@ const Constants = {
 };
 class Component {
   constructor(options = {}) {
-    this.type = options.type;
+    this.type = typeof options.type === "string" ?  Constants[options.type] : options.type;
     this.custom_id = options.custom_id ?? options.customId;
     this.disabled = options.disabled;
     this.style = options.style;
@@ -29,7 +31,7 @@ class Component {
     this.max_values = options.max_values ?? options.maxValues;
 
     //Action Row
-    this.components = options.components;
+    this.components = options.components ?? [];
 
     //Modal
     this.value = options.value;
@@ -77,7 +79,7 @@ class Component {
   }
 
   setEmoji(emoji) {
-    this.emoji = emoji;
+    this.emoji = getEmoji(emoji);
     return this;
   }
 
@@ -128,13 +130,18 @@ class Component {
     return this;
   }
 
+  addComponents(...components) {
+    components.forEach((c) => this.components.push(c));
+    return this;
+  }
+
   toJSON() {
     if (!this.type) throw new Error("Component must have a type");
     const json = {
       type: this.type,
     };
     if (this.type === 1) {
-      json.components = this.components;
+      json.components = this.components.map((c) => c.toJSON?.());
     }
 
     if (this.type === 2) {

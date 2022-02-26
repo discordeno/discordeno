@@ -1,10 +1,12 @@
 const Guild = require("../Structures/Guild");
+const {transformOptions} = require("../Util/transformOptions");
+
 class Guilds {
   constructor(client, data = {}, options = {}) {
     this.client = client;
   }
   forge(data = {}) {
-    if(typeof data === "string") data = {id: data};
+    data = transformOptions(data);
 
     if (!data.id) throw new Error("No Guild ID Provided");
     if (typeof data.id === "string") data.id = BigInt(data.id);
@@ -25,8 +27,7 @@ class Guilds {
   }
 
   async fetch(options = {}) {
-    if(typeof options === "string") options = { id: options };
-    if(typeof options.id === "string") options.id = BigInt(options.id); 
+    options = transformOptions(options);
 
     const guild = await this.client.helpers.getGuild(options.id, options);
     return this.forge(guild);

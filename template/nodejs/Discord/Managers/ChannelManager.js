@@ -1,5 +1,7 @@
 const Channel = require("../Structures/Channel");
-const Collection = require("../Structures/Collection")
+const Collection = require("../Structures/Collection");
+const {transformOptions} = require("../Util/transformOptions");
+
 class ChannelManager {
   /** 
   * @param {import('discordeno').Bot} client
@@ -16,7 +18,7 @@ class ChannelManager {
   }
 
   async fetch(options = {}){
-    if(typeof options === "string") options = {id: options};
+    options = transformOptions(options);
 
     const guildId = options.guildId || this.guild?.id;
     const channelId = options.id;
@@ -36,7 +38,7 @@ class ChannelManager {
   }
 
   forge(data = {}, options = {}) {
-    if(typeof data === "string") data = {id: options};
+    data = transformOptions(data);
 
     if (options.guild) {
       if (options.guild.channels.cache?.has(data.id)) {

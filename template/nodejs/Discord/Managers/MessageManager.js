@@ -1,18 +1,20 @@
 const Message = require("../Structures/Message");
 const Collection = require("../Structures/Collection");
+const { transformOptions } = require("../Util/transformOptions");
 
 class MessageManager {
   constructor(client, data = {}, options = {}) {
     this.client = client;
     if (options.guild) this.guild = options.guild;
     if (options.channel) this.channel = options.channel;
-    
+
     this.cache = options.messages || new Collection();
 
   }
 
   forge(data = {}, options = {}) {
-    if(typeof data === "string") data = {id: data};
+    data = transformOptions(data);
+
     if (options.channel) {
       if (options.channel.messages.cache?.has(data.id)) {
         return options.channel.messages.cache.get(data.id, { guild: options.guild, channel: options.channel });
@@ -28,8 +30,7 @@ class MessageManager {
   }
 
   async fetch(options = {}) {
-    if (typeof options === "string") options = { id: options };
-    if (typeof options.id === "string") options.id = BigInt(options.id);
+    options = transformOptions(options);
 
     if (this.cache?.has(options.id)) return this.cache.get(options.id, { guild: this.guild, channel: this.channel });
 

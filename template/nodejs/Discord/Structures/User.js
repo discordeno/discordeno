@@ -1,4 +1,5 @@
 const DestructObject = require("./DestructObject");
+const {transformOptions} = require("../Util/transformOptions");
 
 class User extends DestructObject {
   constructor(client, user = {}) {
@@ -16,6 +17,7 @@ class User extends DestructObject {
   }
 
   async send(options = {}) {
+    options = transformOptions(options);
     const channel = await this.client.helpers.getDmChannel(this.id);
     return this.client.helpers.sendMessage(channel.id, options);
   }

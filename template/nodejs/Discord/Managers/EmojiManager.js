@@ -1,5 +1,6 @@
 const Emoji = require("../Structures/Emoji");
 const Collection = require("../Structures/Collection");
+const {transformOptions} = require("../Util/transformOptions");
 class Emojis {
   /** 
   * @param {import('discordeno').Bot} client
@@ -11,14 +12,14 @@ class Emojis {
   }
 
   async create(options = {}, reason) {
+    options = transformOptions(options);
     const guildId = options.guildId || this.guild?.id;
 
     return this.client.helpers.createEmoji(guildId, options)
   }
 
   forge(data = {}, options = {}) {
-    if(typeof data === "string") data = {id: data};
-
+    data = transformOptions(data);
     return new Emoji(this.client, data, { guild: options.guild });
   }
 
@@ -27,7 +28,7 @@ class Emojis {
   }
 
   async fetch(options = {}){
-    if(typeof options === "string") options = {id: options};
+    options = transformOptions(options);
 
     const guildId = options.guildId || this.guild?.id;
     const emojiId = options.id;

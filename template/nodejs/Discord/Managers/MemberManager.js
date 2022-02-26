@@ -1,5 +1,6 @@
 const Member = require("../Structures/Member");
 const Collection = require("../Structures/Collection");
+const {transformOptions} = require("../Util/transformOptions");
 class Members {
   /** 
   * @param {import('discordeno').Bot} client
@@ -12,7 +13,8 @@ class Members {
   }
 
   forge(data = {}, options = {}) {
-    if(typeof data === "string") data = {id: data};
+    data = transformOptions(data);
+
     if (options.guild) {
       if (options.guild.members.cache?.has(data.id)) {
         return options.guild.members.cache.get(data.id, { guild: options.guild });
@@ -26,8 +28,7 @@ class Members {
   }
 
   async fetch(options = {}) {
-    if(typeof options === "string") options = {id: options};
-
+    options = transformOptions(options);
     const guildId = options.guildId || this.guild?.id;
     const memberId = options.id;
 

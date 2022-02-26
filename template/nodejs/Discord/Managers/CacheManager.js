@@ -1,11 +1,14 @@
 // Managers
+const GuildManager = require("./GuildManager");
 const ChannelManager = require("./ChannelManager");
 const RoleManager = require("./RoleManager");
-const GuildManager = require("./GuildManager");
-const UserManager = require("./UserManager");
 const EmojiManager = require("./EmojiManager");
-const MessageManager = require("./MessageManager");
+
 const MemberManager = require("./MemberManager");
+const UserManager = require("./UserManager");
+
+const MessageManager = require("./MessageManager");
+const InteractionManager = require("./InteractionManager");
 
 ///Structures
 const Collection = require("../Structures/CacheCollection");
@@ -124,6 +127,9 @@ class CacheManager {
     const memberOptions = createOptions(client, options.members, Member);
     client.members = new MemberManager(client);
     client.members.cache = new Collection(memberOptions);
+
+    client.interactions = new InteractionManager(client);
+
     return CacheManager.overwriteHandlers(client);
   }
 }

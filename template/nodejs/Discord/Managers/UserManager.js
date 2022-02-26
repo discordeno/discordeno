@@ -1,5 +1,7 @@
 const User = require("../Structures/User");
 const Collection = require("../Structures/Collection");
+const {transformOptions} = require("../Util/transformOptions");
+
 class Users {
   /** 
   * @param {import('discordeno').Bot} client
@@ -12,7 +14,8 @@ class Users {
   }
 
   async fetch(options = {}) {
-    if (typeof options === "string") options = { id: options };
+    options = transformOptions(options);
+
     const userId = options.id;
     if (this.cache?.has(userId)) return this.cache.get(userId);
     const user = await this.client.helpers.getUser(userId);
@@ -20,7 +23,8 @@ class Users {
   }
 
   forge(data = {}) {
-    if(typeof data === "string") data = {id: data};
+    data = transformOptions(data);
+    
     return new User(this.client, data);
   }
 }

@@ -1,4 +1,5 @@
 const DestructObject = require("./DestructObject");
+const {transformOptions} = require("../Util/transformOptions");
 
 class Webhook extends DestructObject {
   constructor(client, webhook = {}) {
@@ -7,6 +8,8 @@ class Webhook extends DestructObject {
   }
 
   async send(options = {}) {
+    options = transformOptions(options);
+
     const id = options.id || this.id;
     const token = options.token || this.token;
     const message = await this.client.helpers.sendWebhook(id,token, options);
@@ -14,12 +17,16 @@ class Webhook extends DestructObject {
   }
 
   async edit(options = {}){
+    options = transformOptions(options);
+
     const id = options.id || this.id;
     const webhook = await this.client.helpers.editWebhook(id,options);
     return new Webhook(this.client,webhook);
   } 
 
   async fetchMessage(options={}){
+    options = transformOptions(options);
+
     const id = options.id || this.id;
     const token = options.token || this.token;
 
@@ -31,6 +38,8 @@ class Webhook extends DestructObject {
 
 
   async editMessage(options = {}){
+    options = transformOptions(options);
+
     const id = options.id || this.id;
     const token = options.token || this.token;
 
@@ -42,6 +51,8 @@ class Webhook extends DestructObject {
   }
 
   async delete(options = {}){
+    options = transformOptions(options);
+
     const id = options.id || this.id;
 
     const reason = options.reason;

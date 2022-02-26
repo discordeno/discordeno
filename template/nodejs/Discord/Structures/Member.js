@@ -1,6 +1,7 @@
 const DestructObject = require("./DestructObject");
 const Permissions = require("./Permissions");
-const Collection = require("./Collection")
+const Collection = require("./Collection");
+const {transformOptions} = require("../Util/transformOptions");
 
 class Member extends DestructObject {
   /** 
@@ -28,10 +29,13 @@ class Member extends DestructObject {
   }
 
   async send(options = {}) {
+    options = transformOptions(options, {content: true});
     return this.client.users.forge({ id: this.id }).send(options);
   }
 
   async kick(options = {}){
+    options = transformOptions(options);
+
     const id = options.id || this.id;
     const guildId = options.guildId || this.guildId || this.guild?.id;
     const reason = options.reason;
@@ -40,6 +44,8 @@ class Member extends DestructObject {
   }
 
   async ban(options = {}){
+    options = transformOptions(options);
+
     const id = options.id || this.id;
     const guildId = options.guildId || this.guildId || this.guild?.id;
 
@@ -47,12 +53,16 @@ class Member extends DestructObject {
   }
 
   async unban(options = {}){
+    options = transformOptions(options);
+
     const id = options.id || this.id;
     const guildId = options.guildId || this.guildId || this.guild?.id;
     return this.client.helpers.unbanMember(guildId, id);
   }
 
   async edit(options = {}){
+    options = transformOptions(options);
+
     const id = options.id || this.id;
     const guildId = options.guildId || this.guildId || this.guild?.id;
 

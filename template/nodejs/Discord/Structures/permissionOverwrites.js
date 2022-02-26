@@ -1,4 +1,5 @@
 const DestructObject = require("./DestructObject");
+const {transformOptions} = require("../Util/transformOptions");
 
 const seperateOverwrites = (m) => m;
 
@@ -14,15 +15,17 @@ class permissionOverwrites extends DestructObject {
     }
 
     has(overwriteId) {
-        return this.permissionOverwrites.find(overwrite => seperateOverwrites(overwrite).id === overwriteId);
+        return this.permissionOverwrites.find(overwrite => seperateOverwrites(overwrite).id === BigInt(overwriteId));
     }
 
     get(overwriteId) {
-        const overwrite = this.permissionOverwrites.find(overwrite => seperateOverwrites(overwrite).id === overwriteId);
+        const overwrite = this.permissionOverwrites.find(overwrite => seperateOverwrites(overwrite).id === BigInt(overwriteId));
         return new permissionOverwrites(this.client, overwrite, { channel: this.channel });
     }
 
     edit(options = {}) {
+        options = transformOptions(options);
+
         const channelId = options.channelId || this.channel?.id;
         const overwriteId = options.overwriteId || options.id || this.overwriteId;
 
@@ -30,6 +33,8 @@ class permissionOverwrites extends DestructObject {
     }
 
     delete(options = {}) {
+        options = transformOptions(options);
+
         const channelId = options.channelId || this.channel?.id;
         const overwriteId = options.overwriteId || options.id || this.overwriteId;
 
