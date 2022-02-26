@@ -38,6 +38,10 @@ await build({
       path: "types/mod.ts",
     },
     {
+      name: "./transformers",
+      path: "transformers/mod.ts",
+    },
+    {
       name: "./plugins",
       path: "plugins/mod.ts",
     },
