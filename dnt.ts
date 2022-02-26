@@ -101,6 +101,9 @@ await build({
         "types": [
           "./types/types/mod.d.ts",
         ],
+        "transformers": [
+          "./types/transformers/mod.d.ts",
+        ],
         "plugins": [
           "./types/plugins/mod.d.ts",
         ],
