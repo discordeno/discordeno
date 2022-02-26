@@ -3,9 +3,9 @@ import { User } from "../users/user.ts";
 /** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
 export interface Emoji {
   /** Emoji id */
-  id?: string;
+  id: string;
   /** Emoji name (can only be null in reaction emoji objects) */
-  name?: string;
+  name: string;
   /** Roles allowed to use this emoji */
   roles?: string[];
   /** User that created this emoji */
@@ -15,7 +15,7 @@ export interface Emoji {
   /** Whether this emoji is managed */
   managed?: boolean;
   /** Whether this emoji is animated */
-  animated?: boolean;
+  animated: boolean;
   /** Whether this emoji can be used, may be false due to loss of Server Boosts */
   available?: boolean;
 }
