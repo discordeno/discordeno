@@ -235,17 +235,7 @@ export interface HelperUtils {
 }
 
 export async function stopBot(bot: Bot) {
-  // STOP WS
-  bot.gateway.shards.forEach((shard) => {
-    clearInterval(shard.heartbeat.intervalId);
-    bot.gateway.closeWS(
-      shard.ws,
-      3061,
-      "Discordeno Testing Finished! Do Not RESUME!",
-    );
-  });
-
-  await delay(5000);
+  await bot.gateway.stopGateway(bot.gateway);
 
   return bot;
 }

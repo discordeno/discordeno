@@ -17,6 +17,7 @@ import {
 import { resume } from "./resume.ts";
 import { sendShardMessage } from "./sendShardMessage.ts";
 import { prepareBuckets, spawnShards } from "./spawnShards.ts";
+import { stopGateway } from "./stopGateway";
 import { tellWorkerToIdentify } from "./tellWorkerToIdentify.ts";
 import { DiscordenoShard } from "./ws.ts";
 
@@ -85,6 +86,7 @@ export function createGatewayManager(
     handleOnMessage: options.handleOnMessage ?? handleOnMessage,
     processGatewayQueue: options.processGatewayQueue ?? processGatewayQueue,
     closeWS: options.closeWS ?? closeWS,
+    stopGateway: options.stopGateway ?? stopGateway,
     sendShardMessage: options.sendShardMessage ?? sendShardMessage,
     resume: options.resume ?? resume,
     handleDiscordPayload: options.handleDiscordPayload,
@@ -201,6 +203,8 @@ export interface GatewayManager {
   processGatewayQueue: typeof processGatewayQueue;
   /** Closes shard WebSocket connection properly. */
   closeWS: typeof closeWS;
+  /** Use this function to stop the gateway properly */
+  stopGateway: typeof stopGateway;
   /** Properly adds a message to the shards queue. */
   sendShardMessage: typeof sendShardMessage;
   /** Properly resume an old shards session. */
