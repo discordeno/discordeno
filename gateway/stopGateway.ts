@@ -10,5 +10,5 @@ export async function stopGateway(gateway: GatewayManager) {
         );
       });
 
-    return await delay(5000);
+    await delay(5000);
 }
