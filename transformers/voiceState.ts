@@ -23,8 +23,7 @@ export function transformVoiceState(
     channelId: payload.voiceState.channel_id ? bot.transformers.snowflake(payload.voiceState.channel_id) : undefined,
     guildId: payload.guildId ||
       (payload.voiceState.guild_id ? bot.transformers.snowflake(payload.voiceState.guild_id) : 0n),
-    userId: payload.guildId ||
-      (payload.voiceState.user_id ? bot.transformers.snowflake(payload.voiceState.user_id) : 0n),
+    userId: payload.voiceState.user_id ? bot.transformers.snowflake(payload.voiceState.user_id) : 0n,
   };
 }
 
