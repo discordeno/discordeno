@@ -15,7 +15,7 @@ class Members {
   forge(data = {}, options = {}) {
     data = transformOptions(data);
 
-    if (options.guild) {
+    if (options.guild && data.id) {
       if (options.guild.members.cache?.has(data.id)) {
         return options.guild.members.cache.get(data.id, { guild: options.guild });
       }

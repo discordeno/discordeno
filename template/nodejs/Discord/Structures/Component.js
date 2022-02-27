@@ -25,7 +25,7 @@ class Component {
     this.url = options.url;
 
     //Select Menu
-    this.options = options.options;
+    this.options = options.options ?? [];
     this.placeholder = options.placeholder;
     this.min_values = options.min_values ?? options.minValues;
     this.max_values = options.max_values ?? options.maxValues;
@@ -95,6 +95,11 @@ class Component {
     return this;
   }
 
+  addOptions(...options) {
+    options.forEach((c) => this.options.push(c));
+    return this;
+  }
+
   setValue(value) {
     this.value = value;
     return this;
@@ -155,7 +160,11 @@ class Component {
 
     if (this.type === 3) {
       json.customId = this.custom_id;
-      json.options = this.options;
+      json.options = this.options?.map((o) => {
+        if (typeof o.emoji === "object") return o;
+        o.emoji = getEmoji(o.emoji);
+        return o;
+      });
       json.placeholder = this.placeholder;
       json.minValues = this.min_values;
       json.maxValues = this.max_values;

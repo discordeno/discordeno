@@ -4,7 +4,7 @@ module.exports = {
         if(defaults.content){
             if (typeof options === "string") options = { content: options };
         }
-        if (typeof options === "string") options = { id: options };
+        if (typeof options !== "object") options = { id: options };
         if (typeof options.id === "string") options.id = BigInt(options.id);
 
         if(options.guildId) options.guildId = BigInt(options.guildId);

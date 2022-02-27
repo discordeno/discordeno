@@ -17,12 +17,18 @@ class ChannelManager {
     return new Channel(this.client, options).create(options, reason);
   }
 
+  async delete(options = {}) {
+    options = transformOptions(options);
+    return new Channel(this.client, {id: options.id}).delete(options.reason);
+  }
+
   async fetch(options = {}){
     options = transformOptions(options);
-
+  
     const guildId = options.guildId || this.guild?.id;
     const channelId = options.id;
-
+  
+    
     if(!channelId){
       const rawChannels = await this.client.helpers.getChannels(guildId);
       const channels = new Collection();
@@ -34,6 +40,7 @@ class ChannelManager {
 
     if (this.cache?.has(channelId)) return this.cache.get(channelId, { guild: this.guild });
     const channel = await this.client.helpers.getChannel(channelId);
+
     return this.forge(channel, {guild: this})
   }
 

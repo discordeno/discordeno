@@ -27,9 +27,14 @@ class Channel extends DestructObject {
     return this.client.helpers.deleteChannel(this.id, reason);
   }
 
+  async fetch(){
+    return this.client.channels.fetch(this.id);
+  }
+
   async send(options = {}) {    
     options = transformOptions(options, {content: true});
-    return this.client.helpers.sendMessage(this.id, options);
+    const msg = await this.client.helpers.sendMessage(this.id, options);
+    return this.client.messages.forge(msg, { channel: this , guild: this.guild });
   }
   
   get permissionOverwrites() {

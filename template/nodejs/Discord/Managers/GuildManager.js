@@ -8,7 +8,6 @@ class Guilds {
   forge(data = {}) {
     data = transformOptions(data);
 
-    if (!data.id) throw new Error("No Guild ID Provided");
     if (typeof data.id === "string") data.id = BigInt(data.id);
     if (this.client.guilds.cache?.has(data.id)) {
       const v = this.client.guilds.cache?._get(data.id);

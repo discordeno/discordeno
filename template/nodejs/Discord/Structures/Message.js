@@ -30,12 +30,12 @@ class Message extends DestructObject {
     if (!options.messageReference) {
       options.messageReference = { messageId: this.id, channelId: this.channel.id, guildId: this.guild.id };
     }
-    return this.client.helpers.sendMessage(this.channel.id, options);
+    const msg = await this.client.helpers.sendMessage(this.channel.id, options);
+    return this.client.messages.forge(msg, { guild: this.guild , channel: this.channel });
   }
 
   async delete(options = {}) {
     options = transformOptions(options);
-
     return this.client.helpers.deleteMessage(this.channel.id, this.id, options.reason, options.delayMilliseconds);
   }
 
