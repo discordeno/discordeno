@@ -6,7 +6,8 @@ export async function stopGateway(gateway: GatewayManager, code = 3061, reason =
         clearInterval(shard.heartbeat.intervalId);
         gateway.closeWS(
           shard.ws,
-          3061,
+          code,
+
           reason,
         );
       });
