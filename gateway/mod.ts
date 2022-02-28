@@ -12,4 +12,4 @@ export * from "./startGatewayOptions.ts";
 export * from "./tellWorkerToIdentify.ts";
 export * from "./shard.ts";
 export * from "./gateway_manager.ts";
-export * from './safeRequestsPerShard.ts'
+export * from "./safeRequestsPerShard.ts";
