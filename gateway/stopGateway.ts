@@ -7,7 +7,7 @@ export async function stopGateway(gateway: GatewayManager, code = 3061, reason =
         gateway.closeWS(
           shard.ws,
           3061,
-          "Discordeno Testing Finished! Do Not RESUME!",
+          reason,
         );
       });
 
