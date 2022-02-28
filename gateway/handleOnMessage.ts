@@ -47,6 +47,8 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
       break;
     case GatewayOpcodes.Hello:
       gateway.heartbeat(gateway, shardId, (messageData.d as DiscordHello).heartbeat_interval);
+      // UPDATES THE SAFE AMOUNT OF SHARDS BASED ON THE INTERVAL
+      if (shard) shard.safeRequestsPerShard = gateway.safeRequestsPerShard(gateway, shard);
       break;
     case GatewayOpcodes.HeartbeatACK:
       if (gateway.shards.has(shardId)) {

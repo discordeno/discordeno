@@ -1,5 +1,6 @@
 import { GatewayIntents, GatewayPayload, StatusUpdate } from "../types/mod.ts";
 import { Collection } from "../util/collection.ts";
+import { safeRequestsPerShard } from "./safeRequestsPerShard.ts";
 import { closeWS } from "./closeWs.ts";
 import { createShard } from "./createShard.ts";
 import { handleOnMessage } from "./handleOnMessage.ts";
@@ -18,7 +19,7 @@ import { resume } from "./resume.ts";
 import { sendShardMessage } from "./sendShardMessage.ts";
 import { prepareBuckets, spawnShards } from "./spawnShards.ts";
 import { tellWorkerToIdentify } from "./tellWorkerToIdentify.ts";
-import { DiscordenoShard } from "./ws.ts";
+import { DiscordenoShard } from "./shard.ts";
 
 /** Create a new Gateway Manager.
  *
@@ -30,6 +31,8 @@ export function createGatewayManager(
   options: Partial<GatewayManager> & Pick<GatewayManager, "handleDiscordPayload">,
 ): GatewayManager {
   return {
+    queueResetInterval: 60000,
+    maxRequestsPerInterval: 120,
     cache: {
       guildIds: new Set(),
       loadingGuildIds: new Set(),
@@ -87,6 +90,7 @@ export function createGatewayManager(
     closeWS: options.closeWS ?? closeWS,
     sendShardMessage: options.sendShardMessage ?? sendShardMessage,
     resume: options.resume ?? resume,
+    safeRequestsPerShard: options.safeRequestsPerShard ?? safeRequestsPerShard,
     handleDiscordPayload: options.handleDiscordPayload,
   };
 }
@@ -155,6 +159,10 @@ export interface GatewayManager {
     }
   >;
   utf8decoder: TextDecoder;
+  /** The amount of milliseconds the gateway rate limit will reset in. By default 60000 or 1 minute. */
+  queueResetInterval: number;
+  /** The maximum amount of requests that the gateway can make before being rate limited. By default 120. */
+  maxRequestsPerInterval: number;
 
   cache: {
     guildIds: Set<bigint>;
@@ -205,4 +213,6 @@ export interface GatewayManager {
   sendShardMessage: typeof sendShardMessage;
   /** Properly resume an old shards session. */
   resume: typeof resume;
+  /** Calculates the number of requests in a shard that are safe to be used. */
+  safeRequestsPerShard: typeof safeRequestsPerShard;
 }
