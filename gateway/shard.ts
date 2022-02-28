@@ -40,13 +40,11 @@ export interface DiscordenoShard {
   queueStartedAt: number;
   /** The request counter of the queue. */
   queueCounter: number;
+  /** The safe number of requests that can be made while preserving some for required things like heartbeating. */
+  safeRequestsPerShard: number;
 }
 
 export interface WebSocketRequest {
   op: GatewayOpcodes;
   d: unknown;
-  // guildId: bigint;
-  // shardId: number;
-  // nonce?: bigint;
-  // options?: Record<string, unknown>;
 }

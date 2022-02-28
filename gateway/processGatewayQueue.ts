@@ -15,7 +15,7 @@ export async function processGatewayQueue(gateway: GatewayManager, id: number) {
     }
 
     const now = Date.now();
-    if (now - shard.queueStartedAt >= 60000) {
+    if (now - shard.queueStartedAt >= gateway.queueResetInterval) {
       shard.queueStartedAt = now;
       shard.queueCounter = 0;
     }
@@ -28,16 +28,20 @@ export async function processGatewayQueue(gateway: GatewayManager, id: number) {
 
     shard.ws.send(JSON.stringify(request));
 
-    // Counter is useful for preventing 120/m requests.
+    // Counter is useful for preventing max requests.
     shard.queueCounter++;
 
     // Handle if the requests have been maxed
-    if (shard.queueCounter >= 116) {
-      gateway.debug("GW MAX_REQUESTS", {
-        message: "Max gateway requests per minute reached setting timeout for one minute",
-        shardId: shard.id,
-      });
-      await delay(60000);
+    if (shard.queueCounter >= shard.safeRequestsPerShard) {
+      const remaining = shard.queueStartedAt + gateway.queueResetInterval - Date.now();
+      if (remaining > 0) {
+        gateway.debug("GW MAX REQUESTS", {
+          message: `Max gateway requests per minute reached setting timeout for ${remaining}ms`,
+          shardId: shard.id,
+        });
+        await delay(remaining);
+      }
+
       shard.queueCounter = 0;
       continue;
     }
