@@ -36,6 +36,8 @@ export function identify(gateway: GatewayManager, shardId: number, maxShards: nu
     processingQueue: false,
     queueStartedAt: Date.now(),
     queueCounter: 0,
+    // BY DEFAULT SET TO 120. EDIT IN HELLO
+    safeRequestsPerShard: 120,
   });
 
   socket.onopen = () => {

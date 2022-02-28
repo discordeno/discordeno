@@ -43,6 +43,7 @@ export function resume(gateway: GatewayManager, shardId: number) {
     processingQueue: false,
     queueStartedAt: Date.now(),
     queueCounter: 0,
+    safeRequestsPerShard: oldShard.safeRequestsPerShard || 120,
   });
 
   // Resume on open

@@ -1,5 +1,5 @@
 import { GatewayManager } from "./gateway_manager.ts";
-import { DiscordenoShard, WebSocketRequest } from "./ws.ts";
+import { DiscordenoShard, WebSocketRequest } from "./shard.ts";
 
 export function sendShardMessage(
   gateway: GatewayManager,
