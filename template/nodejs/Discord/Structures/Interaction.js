@@ -1,5 +1,5 @@
 const DestructObject = require("./DestructObject");
-const {transformOptions} = require("../Util/transformOptions");
+const { transformOptions } = require("../Util/transformOptions");
 
 const Constants = {
     DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE: 5,
@@ -18,6 +18,9 @@ const Constants = {
     }
 }
 class Interaction extends DestructObject {
+    /** 
+    * @param {import('discordeno').Bot} client
+    */
     constructor(client, interaction = {}) {
         super(interaction);
         this.raw = interaction;
@@ -25,7 +28,7 @@ class Interaction extends DestructObject {
 
         this.guild = client.guilds.forge({ id: this.guildId });
         this.channel = client.channels.forge({ id: this.channelId }, { guild: this.guild });
-        this.member = this.guild.members.forge({...interaction.member, id: this.user.id}, {guild: this.guild});
+        this.member = this.guild.members.forge({ ...interaction.member, id: this.user.id }, { guild: this.guild });
     }
 
     isCommand() { return this.type === Constants.INTERACTION_TYPES.APPLICATION_COMMAND; }
@@ -54,10 +57,10 @@ class Interaction extends DestructObject {
     }
 
     async reply(options = {}) {
-        options = transformOptions(options, {content: true});
+        options = transformOptions(options, { content: true });
 
         const Payload = { data: options, type: Constants.CHANNEL_MESSAGE_WITH_SOURCE };
-        if(options.ephemeral) Payload.private = true;
+        if (options.ephemeral) Payload.private = true;
         this.ephemeral = Payload.private;
 
         this.replied = true;
@@ -73,7 +76,7 @@ class Interaction extends DestructObject {
     }
 
     async editReply(options = {}) {
-        options = transformOptions(options, {content: true});
+        options = transformOptions(options, { content: true });
         this.replied = true;
         return this.client.helpers.editInteractionResponse(this.token, options);
     }
@@ -86,13 +89,13 @@ class Interaction extends DestructObject {
     }
 
     async followUp(options = {}) {
-        options = transformOptions(options, {content: true});
+        options = transformOptions(options, { content: true });
         const Payload = { data: options, type: Constants.CHANNEL_MESSAGE_WITH_SOURCE };
         return this.client.helpers.sendInteractionResponse(this.id, this.token, Payload);
     }
 
     async update(options = {}) {
-        options = transformOptions(options, {content: true});
+        options = transformOptions(options, { content: true });
         const Payload = { data: options, type: Constants.UPDATE_MESSAGE };
         this.replied = true;
         return this.client.helpers.sendInteractionResponse(this.id, this.token, Payload);

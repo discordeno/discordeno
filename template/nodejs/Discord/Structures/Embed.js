@@ -1,3 +1,4 @@
+// @todo add color support, and .toJSON() on Embed
 class Embed {
   constructor(options = {}) {
     this.title = options.title;
@@ -39,6 +40,7 @@ class Embed {
   }
 
   setColor(color) {
+    if(typeof color === "string") color = HEXToVBColor(color);
     this.color = color;
     return this;
   }
@@ -70,12 +72,12 @@ class Embed {
   }
 
   toJSON() {
-    return {
+    const embedObject = {
       title: this.title,
       type: "rich",
       description: this.description,
       color: this.color,
-      timestamp: this.timestamp ? new Date(this.timestamp) : null,
+      timestamp: this.timestamp ? new Date(this.timestamp).toISOString() : null,
       thumbnail: this.thumbnail,
       image: this.image,
       fields: this.fields,
@@ -84,16 +86,23 @@ class Embed {
         ? {
           name: this.author.name,
           url: this.author.url,
-          iconUrl: this.author.icon_url || this.author.iconUrl,
+          iconUrl: this.author.icon_url || this.author.iconUrl || this.author.iconURL,
         }
         : null,
       footer: this.footer
         ? {
           text: this.footer.text,
-          iconUrl: this.footer.icon_url || this.footer.iconUrl,
+          iconUrl: this.footer.icon_url || this.footer.iconUrl || this.footer.iconURL,
         }
         : null,
     };
+    Object.assign(this, embedObject);
+    return embedObject;
   }
 }
 module.exports = Embed;
+
+function HEXToVBColor(rrggbb) {
+  var bbggrr = rrggbb.substr(4, 2) + rrggbb.substr(2, 2) + rrggbb.substr(0, 2);
+  return parseInt(bbggrr, 16);
+}

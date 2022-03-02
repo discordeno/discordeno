@@ -45,5 +45,6 @@ class Members {
     const member = await this.client.helpers.getMember(this.guild.id, id);
     return this.forge(member, { guild: this.guild });
   }
+
 }
 module.exports = Members;

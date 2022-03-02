@@ -9,12 +9,10 @@ class Collection extends BaseCollection {
   }
 
   has(k) {
-    if (typeof k === "string") k = BigInt(k);
     return super.has(k);
   }
 
   delete(k) {
-    if (typeof k === "string") k = BigInt(k);
     return super.delete(k);
   }
 
@@ -73,7 +71,6 @@ class Collection extends BaseCollection {
 
   set(k, v, options) {
     if (!v) return null;
-    if (typeof k === "string") k = BigInt(k);
     //if (super.has(k)) return this.patch(k, v);
 
     if (this.context === "guild" && this.properties.includes("channels") && v.channels) {
@@ -152,7 +149,6 @@ class Collection extends BaseCollection {
   }
 
   get(k, options = {}) {
-    if (typeof k === "string") k = BigInt(k);
     if (!super.has(k)) return null;
     const v = super.get(k);
     const edit = this.transform(v, options);
@@ -281,9 +277,6 @@ class CloneCollection extends BaseCollection {
     } else this.createKey = (k) => k;
   }
   has(key) {
-    if (typeof key === "string") key = BigInt(key);
-
-    const unmodifiedKey = key;
     const createdKey = this.createKey(key);
     // if (this.memberGuildId) console.log('has', key, super.has(unmodifiedKey));
 
@@ -291,7 +284,6 @@ class CloneCollection extends BaseCollection {
   }
 
   get(key, options = {}) {
-    if (typeof key === "string") key = BigInt(key);
     key = this.createKey(key);
     return this.cache.get(key, { transformedKey: true, ...options });
   }
@@ -303,7 +295,6 @@ class CloneCollection extends BaseCollection {
   }
 
   set(key, value) {
-    if (typeof key === "string") key = BigInt(key);
     super.set(key, true);
     //if (this.memberGuildId) console.log('set', key, super.has(key));
     if (typeof value !== "object") return true;
