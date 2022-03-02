@@ -329,7 +329,11 @@ const rest = createRestManager({
 });
 ```
 
-So now there is only one thing left the `handleQueue` function. First we get the first item from the queue using `.shift()`. Then we check to see if that item exists. If it does not exist, we mark the queue as no longer processing and cancel out. However, if it does exist, we send a fetch request to the bot event handler process. In the `.catch()` we will add this event back in to the start of the queue in case the bot is still down. Finally we call this function again to run the next item in the queue.
+So now there is only one thing left the `handleQueue` function. First we get the first item from the queue using
+`.shift()`. Then we check to see if that item exists. If it does not exist, we mark the queue as no longer processing
+and cancel out. However, if it does exist, we send a fetch request to the bot event handler process. In the `.catch()`
+we will add this event back in to the start of the queue in case the bot is still down. Finally we call this function
+again to run the next item in the queue.
 
 ```ts
 async function handleQueue() {
@@ -479,7 +483,8 @@ async function handleInteractionQueueing(gateway, data: GatewayPayload, shardId:
 }
 ```
 
-If you have any questions please contact us on discord. Note, you can take this concept and expand on it as much as you like. You can swap out the fetch() with websockets or any other system you like to communicate between your processes.
+If you have any questions please contact us on discord. Note, you can take this concept and expand on it as much as you
+like. You can swap out the fetch() with websockets or any other system you like to communicate between your processes.
 
 ## Spawning Shards
 
