@@ -484,7 +484,7 @@ async function handleInteractionQueueing(gateway, data: GatewayPayload, shardId:
 ```
 
 If you have any questions please contact us on discord. Note, you can take this concept and expand on it as much as you
-like. You can swap out the fetch() with websockets or any other system you like to communicate between your processes.
+like. You can swap out the fetch() with websockets or any other system you like to communicate between your processes. I highly recommend you take some time to add checks in place to prevent adding to queue when the queue reaches a certain size. You don't want this to become a memory leak of infinite size and crash your gateway. So take the time to do this right in your setup.
 
 ## Spawning Shards
 
