@@ -228,6 +228,259 @@ handleDiscordPayload: async function (_, data, shardId) {
 You can change this function to use a WS or any form of communication you prefer to use to send this to your event
 handler.
 
+## Gateway Queue
+
+One thing we can add on here, which you will find already done in the template if you are using it. However, it is still
+good to read this to learn and understand the logic behind it. When you need a downtime for whatever reason, you can
+create a queue like system to avoid any missed events. Let's create a simple queue. If it errors, assuming something
+like the bot event listener process is down for whatever reason, the `.catch` will run adding this event to the queue to
+try again in one second by calling the `handleQueue` function.
+
+```ts
+.catch(() => {
+  // IF FAILED TRY TO QUEUE MAYBE LISTENER IS DOWN
+  queue.events.push({ shardId, data });
+  setTimeout(handleQueue, 1000);
+});
+```
+
+Now TypeScript will probably throw some errors at your face, so let's fix those real quick. Create an object that will
+hold the queue of events for our gateway.
+
+```ts
+const queue: GatewayQueue = {
+  processing: false,
+  events: [],
+};
+
+export interface QueuedEvent {
+  data: GatewayPayload;
+  shardId: number;
+}
+
+export interface GatewayQueue {
+  processing: boolean;
+  events: QueuedEvent[];
+}
+
+async function handleQueue() {
+  // PLACEHOLDER FUNCTION THAT WILL HANDLE PROCESSING THE QUEUE
+}
+```
+
+Alrighty, since TypeScript stopped being annoying, let's continue. Next, we should make sure to avoid fetching when the
+queue is already processing or has events queued up. This will help us preserve the order of events in the queue.
+
+```ts
+handleDiscordPayload: async function (_, data, shardId) {
+// IF QUEUE IS RUNNING JUST ADD TO QUEUE
+if (queue.processing) {
+  if (data.t === "INTERACTION_CREATE") return handleInteractionQueueing(gateway, data, shardId);
+
+  return queue.events.push({ shardId, data });
+}
+
+await fetch(`${EVENT_HANDLER_URL}:${EVENT_HANDLER_PORT}`, {
+```
+
+Typescript must be at it again so let's shut it up again. Keep in mind that we are handling interaction events
+separately because they require a response within 3 seconds or they will become invalid. In this function first we
+automatically respond to the ones that can not be deferred. For the interactions that can be deferred, we will simply
+defer them and add this event to the queue.
+
+```ts
+async function handleInteractionQueueing(gateway: GatewayManager, data: GatewayPayload, shardId: number) {
+  if (data.t !== "INTERACTION_CREATE") return;
+
+  const interaction = data.d as SnakeCasedPropertiesDeep<Interaction>;
+  // IF THIS INTERACTION IS NOT DEFERABLE
+  if ([InteractionTypes.ModalSubmit, InteractionTypes.ApplicationCommandAutocomplete].includes(interaction.type)) {
+    return await rest.runMethod(
+      rest,
+      "post",
+      endpoints.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token),
+      {
+        type: InteractionResponseTypes.ChannelMessageWithSource,
+        data: {
+          content:
+            `The bot is having a temporary issue, please try again or contact us at https://discord.gg/${BOT_SERVER_INVITE_CODE}`,
+        },
+      },
+    );
+  }
+
+  await rest.runMethod(rest, "post", endpoints.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token), {
+    type: InteractionResponseTypes.DeferredChannelMessageWithSource,
+  });
+
+  // ADD EVENT TO QUEUE
+  queue.events.push({ shardId, data });
+}
+```
+
+Oh no, TypeScript is at it again. We need to make a REST manager so that our gateway proxy can communicate with our REST
+proxy. We then can make use of it to send a POST request.
+
+```ts
+const rest = createRestManager({
+  token: DISCORD_TOKEN,
+  secretKey: REST_AUTHORIZATION,
+  customUrl: REST_URL,
+});
+```
+
+So now there is only one thing left the `handleQueue` function. First we get the first item from the queue using `.shift()`. Then we check to see if that item exists. If it does not exist, we mark the queue as no longer processing and cancel out. However, if it does exist, we send a fetch request to the bot event handler process. In the `.catch()` we will add this event back in to the start of the queue in case the bot is still down. Finally we call this function again to run the next item in the queue.
+
+```ts
+async function handleQueue() {
+  const event = queue.events.shift();
+  // QUEUE IS EMPTY
+  if (!event) {
+    console.log("GATEWAY QUEUE ENDING");
+    queue.processing = false;
+    return;
+  }
+
+  await fetch(`${EVENT_HANDLER_URL}:${EVENT_HANDLER_PORT}`, {
+    headers: {
+      Authorization: EVENT_HANDLER_SECRET_KEY,
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify({
+      shardId: event.shardId,
+      data: event.data,
+    }),
+  })
+    .then((res) => {
+      res.text();
+      handleQueue();
+    })
+    .catch(() => {
+      // EVENT HANDLER STILL NOT ACCEPTING REQUEST. SO ADD BACK TO QUEUE
+      queue.events.unshift(event);
+      setTimeout(handleQueue, 1000);
+    });
+}
+```
+
+Full code is below:
+
+```ts
+const rest = createRestManager({
+  token: DISCORD_TOKEN,
+  secretKey: REST_AUTHORIZATION,
+  customUrl: REST_URL,
+});
+
+const queue: GatewayQueue = {
+  processing: false,
+  events: [],
+};
+
+export interface QueuedEvent {
+  data: GatewayPayload;
+  shardId: number;
+}
+
+export interface GatewayQueue {
+  processing: boolean;
+  events: QueuedEvent[];
+}
+
+const gateway = createGatewayManager({
+  // ... OTHER PROPERTIES HERE SHORTENED FOR GUIDE
+  handleDiscordPayload: async function (_, data, shardId) {
+    // IF QUEUE IS RUNNING JUST ADD TO QUEUE
+    if (queue.processing) {
+      if (data.t === "INTERACTION_CREATE") return handleInteractionQueueing(gateway, data, shardId);
+
+      return queue.events.push({ shardId, data });
+    }
+
+    await fetch(`${EVENT_HANDLER_URL}:${EVENT_HANDLER_PORT}`, {
+      headers: {
+        Authorization: gateway.secretKey,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({
+        shardId,
+        data,
+      }),
+    })
+      // THIS IS FOR DENO MEMORY LEAK
+      .then((res) => res.text())
+      .catch(() => {
+        // IF FAILED TRY TO QUEUE MAYBE LISTENER IS DOWN
+        queue.events.push({ shardId, data });
+        setTimeout(handleQueue, 1000);
+      });
+  },
+});
+
+async function handleQueue() {
+  // TRY THE FIRST ITEM IN THE QUEUE
+  const event = queue.events.shift();
+  // QUEUE IS EMPTY
+  if (!event) {
+    console.log("GATEWAY QUEUE ENDING");
+    queue.processing = false;
+    return;
+  }
+
+  await fetch(`${EVENT_HANDLER_URL}:${EVENT_HANDLER_PORT}`, {
+    headers: {
+      Authorization: EVENT_HANDLER_SECRET_KEY,
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify({
+      shardId: event.shardId,
+      data: event.data,
+    }),
+  })
+    .then((res) => {
+      res.text();
+    })
+    .catch(() => {
+      // EVENT HANDLER STILL NOT ACCEPTING REQUEST. SO ADD BACK TO QUEUE
+      queue.events.unshift(event);
+      // RETRY IN ONE SECOND
+      setTimeout(handleQueue, 1000);
+    });
+}
+
+async function handleInteractionQueueing(gateway, data: GatewayPayload, shardId: number) {
+  if (data.t !== "INTERACTION_CREATE") return;
+  const interaction = data.d as SnakeCasedPropertiesDeep<Interaction>;
+  // IF THIS INTERACTION IS NOT DEFERABLE
+  if ([InteractionTypes.ModalSubmit, InteractionTypes.ApplicationCommandAutocomplete].includes(interaction.type)) {
+    return await rest.runMethod(
+      rest,
+      "post",
+      endpoints.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token),
+      {
+        type: InteractionResponseTypes.ChannelMessageWithSource,
+        data: {
+          content:
+            `The bot is having a temporary issue, please try again or contact us at https://discord.gg/${BOT_SERVER_INVITE_CODE}`,
+        },
+      },
+    );
+  }
+
+  await rest.runMethod(rest, "post", endpoints.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token), {
+    type: InteractionResponseTypes.DeferredChannelMessageWithSource,
+  });
+
+  // ADD EVENT TO QUEUE
+  queue.events.push({ shardId, data });
+}
+```
+
+If you have any questions please contact us on discord. Note, you can take this concept and expand on it as much as you like. You can swap out the fetch() with websockets or any other system you like to communicate between your processes.
+
 ## Spawning Shards
 
 Once you are ready and the gateway has been created as you desired, we can begin spawning the shards.
