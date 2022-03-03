@@ -55,6 +55,19 @@ export default function editMember(bot: BotWithCache) {
       }
     }
 
+    if (options.communicationDisabledUntil) {
+      const guild = bot.guilds.get(guildId);
+      const member = bot.members.get(BigInt(`${memberId}${guildId}`));
+      if (memberId === guild?.ownerId) throw new Error("The owner of a guild cannot be timed out.");
+
+      // TODO error message
+      if (!member?.permissions) throw new Error("member?.permissions is undefined");
+
+      if (bot.utils.calculatePermissions(member.permissions).includes("ADMINISTRATOR")) {
+        throw new Error("ADMINISTRATOR cannot be timed out");
+      }
+    }
+
     await requireBotGuildPermissions(bot, guildId, [
       ...requiredPerms,
     ]);
