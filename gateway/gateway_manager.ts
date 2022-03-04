@@ -18,7 +18,7 @@ import {
 import { resume } from "./resume.ts";
 import { sendShardMessage } from "./sendShardMessage.ts";
 import { prepareBuckets, spawnShards } from "./spawnShards.ts";
-import { stopGateway } from "./stopGateway";
+import { stopGateway } from "./stopGateway.ts";
 import { tellWorkerToIdentify } from "./tellWorkerToIdentify.ts";
 import { DiscordenoShard } from "./shard.ts";
 
