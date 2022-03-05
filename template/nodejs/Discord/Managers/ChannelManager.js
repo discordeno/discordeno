@@ -14,7 +14,13 @@ class ChannelManager {
   }
 
   async create(options = {}, reason) {
+    if(!options.guildId) options.guildId = this.guild?.id;
     return new Channel(this.client, options).create(options, reason);
+  }
+
+  async edit(options = {}, reason) {
+    if(!options.guildId) options.guildId = this.guild?.id;
+    return this.forge(options, {guild: this.guild}).edit(options, reason);
   }
 
   async delete(options = {}) {

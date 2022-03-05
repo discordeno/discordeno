@@ -46,5 +46,28 @@ class Members {
     return this.forge(member, { guild: this.guild });
   }
 
+  async edit(options = {}) {
+    options = transformOptions(options);
+    const member = this.forge(options, { guild: this.guild });
+    return member.edit(options);
+  }
+
+  async kick(options = {}) {
+    options = transformOptions(options);
+    const member = this.forge(options, { guild: this.guild });
+    return member.kick(options);
+  }
+
+  async ban(options = {}) {
+    options = transformOptions(options);
+    const member = this.forge(options, { guild: this.guild });
+    return member.ban(options);
+  }
+
+  async unban(options = {}) {
+    options = transformOptions(options);
+    const member = this.forge(options, { guild: this.guild });
+    return member.unban(options);
+  }
 }
 module.exports = Members;

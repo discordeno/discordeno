@@ -32,6 +32,7 @@ module.exports = {
   DestructObject: require("./Structures/DestructObject"),
   CacheCollection: require("./Structures/CacheCollection"),
   Collection: require("./Structures/Collection"),
+  Permissions: require("./Structures/Permissions"),
 
   ///Util:
   Collector: require("./Util/Collectors"),
