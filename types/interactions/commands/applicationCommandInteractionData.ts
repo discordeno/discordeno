@@ -1,7 +1,12 @@
-import { Channel, Message, MessageComponents, MessageComponentTypes, Role, User } from "../../mod.ts";
 import { InteractionGuildMember } from "../interactionGuildMember.ts";
 import { InteractionDataOption } from "./applicationCommandInteractionDataOption.ts";
 import { Attachment } from "../../messages/attachment.ts";
+import { MessageComponentTypes } from "../../messages/components/messageComponentTypes.ts";
+import { MessageComponents } from "../../messages/components/messageComponents.ts";
+import { Message } from "../../messages/message.ts";
+import { User } from "../../users/user.ts";
+import { Role } from "../../permissions/role.ts";
+import { Channel } from "../../channels/channel.ts";
 
 export interface InteractionData {
   /** The type of component */

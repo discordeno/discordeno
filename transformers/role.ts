@@ -1,5 +1,5 @@
 import { Bot } from "../bot.ts";
-import { Role } from "../types/mod.ts";
+import { Role } from "../types/permissions/role.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 
 export function transformRole(

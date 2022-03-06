@@ -1,14 +1,12 @@
 import { Bot } from "../bot.ts";
 import { ChannelTypes } from "../types/channels/channelTypes.ts";
-import {
-  Attachment,
-  Interaction,
-  InteractionDataOption,
-  InteractionDataResolved,
-  InteractionTypes,
-  MessageComponents,
-  MessageComponentTypes,
-} from "../types/mod.ts";
+import { InteractionDataOption } from "../types/interactions/commands/applicationCommandInteractionDataOption.ts";
+import { InteractionDataResolved } from "../types/interactions/commands/applicationCommandInteractionDataResolved.ts";
+import { Interaction } from "../types/interactions/interaction.ts";
+import { InteractionTypes } from "../types/interactions/interactionTypes.ts";
+import { Attachment } from "../types/messages/attachment.ts";
+import { MessageComponents } from "../types/messages/components/messageComponents.ts";
+import { MessageComponentTypes } from "../types/messages/components/messageComponentTypes.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { Collection } from "../util/collection.ts";
 import { DiscordenoAttachment } from "./attachment.ts";

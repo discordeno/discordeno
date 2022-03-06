@@ -1,6 +1,6 @@
 import { Bot } from "../bot.ts";
 import { IntegrationCreateUpdate } from "../types/integrations/integrationCreateUpdate.ts";
-import { IntegrationExpireBehaviors } from "../types/mod.ts";
+import { IntegrationExpireBehaviors } from "../types/integrations/integrationExpireBehaviors.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoUser } from "./member.ts";
 

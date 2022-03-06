@@ -1,4 +1,3 @@
-import { GatewayIntents, GatewayPayload, StatusUpdate } from "../types/mod.ts";
 import { Collection } from "../util/collection.ts";
 import { safeRequestsPerShard } from "./safeRequestsPerShard.ts";
 import { closeWS } from "./closeWs.ts";
@@ -21,6 +20,9 @@ import { prepareBuckets, spawnShards } from "./spawnShards.ts";
 import { stopGateway } from "./stopGateway.ts";
 import { tellWorkerToIdentify } from "./tellWorkerToIdentify.ts";
 import { DiscordenoShard } from "./shard.ts";
+import { GatewayIntents } from "../types/gateway/gatewayIntents.ts";
+import { StatusUpdate } from "../types/gateway/statusUpdate.ts";
+import { GatewayPayload } from "../types/gateway/gatewayPayload.ts";
 
 /** Create a new Gateway Manager.
  *

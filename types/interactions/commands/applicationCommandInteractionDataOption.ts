@@ -1,4 +1,6 @@
-import { Channel, GuildMember, Role } from "../../mod.ts";
+import { Channel } from "../../channels/channel.ts";
+import { GuildMember } from "../../members/guildMember.ts";
+import { Role } from "../../permissions/role.ts";
 import { ApplicationCommandOptionTypes } from "./applicationCommandOptionTypes.ts";
 
 export type InteractionDataOption = {
