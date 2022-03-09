@@ -1,5 +1,5 @@
 import { Channel } from "../../channels/channel.ts";
-import { GuildMember } from "../../members/guildMember.ts";
+import { DiscordMember } from "../../discord.ts";
 import { Role } from "../../permissions/role.ts";
 import { ApplicationCommandOptionTypes } from "./applicationCommandOptionTypes.ts";
 
@@ -9,7 +9,7 @@ export type InteractionDataOption = {
   /** value of application command option type */
   type: ApplicationCommandOptionTypes;
   /** the value of the pair */
-  value?: string | boolean | number | GuildMember | Channel | Role;
+  value?: string | boolean | number | DiscordMember | Channel | Role;
   /** present if this option is a group or subcommand */
   options?: InteractionDataOption[];
   /** true if this option is the currently focused option for autocomplete */

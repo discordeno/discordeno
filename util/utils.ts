@@ -1,5 +1,4 @@
-import type { ImageFormat } from "../types/misc/imageFormat.ts";
-import type { ImageSize } from "../types/misc/imageSize.ts";
+import { ImageFormat, ImageSize } from "../types/discordeno.ts";
 
 /** Pause the execution for a given amount of milliseconds. */
 export function delay(ms: number): Promise<void> {

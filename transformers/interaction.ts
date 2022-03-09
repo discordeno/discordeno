@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { ChannelTypes } from "../types/channels/channelTypes.ts";
+import { Member, User } from "../types/discordeno.ts";
 import { InteractionDataOption } from "../types/interactions/commands/applicationCommandInteractionDataOption.ts";
 import { InteractionDataResolved } from "../types/interactions/commands/applicationCommandInteractionDataResolved.ts";
 import { Interaction } from "../types/interactions/interaction.ts";
@@ -62,8 +63,8 @@ export function transformInteractionDataResolved(
 ) {
   const transformed: {
     messages?: Collection<bigint, DiscordenoMessage>;
-    users?: Collection<bigint, DiscordenoUser>;
-    members?: Collection<bigint, DiscordenoMember>;
+    users?: Collection<bigint, User>;
+    members?: Collection<bigint, Member>;
     roles?: Collection<bigint, DiscordenoRole>;
     channels?: Collection<bigint, { id: bigint; name: string; type: ChannelTypes; permissions: bigint }>;
     attachments?: Collection<bigint, DiscordenoAttachment>;
@@ -147,7 +148,7 @@ export interface DiscordenoInteraction {
   /** Guild member data for the invoking user, including permissions */
   member?: DiscordenoMember;
   /** User object for the invoking user, if invoked in a DM */
-  user: DiscordenoUser;
+  user: User;
   /** For the message the button was attached to */
   message?: DiscordenoMessage;
   /** The type of interaction */

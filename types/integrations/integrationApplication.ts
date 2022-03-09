@@ -1,4 +1,4 @@
-import { User } from "../users/user.ts";
+import { DiscordUser } from "../discord.ts";
 
 /** https://discord.com/developers/docs/resources/guild#integration-application-object-integration-application-structure */
 export interface IntegrationApplication {
@@ -13,5 +13,5 @@ export interface IntegrationApplication {
   /** The summary of the app */
   summary: string;
   /** The bot associated with this application */
-  bot?: User;
+  bot?: DiscordUser;
 }

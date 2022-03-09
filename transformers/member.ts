@@ -1,9 +1,9 @@
 import type { Bot } from "../bot.ts";
-import type { GuildMember } from "../types/members/guildMember.ts";
-import type { PremiumTypes } from "../types/users/premiumTypes.ts";
-import type { User } from "../types/users/user.ts";
-import type { UserFlags } from "../types/users/userFlags.ts";
-import type { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordMember, DiscordUser } from "../types/discord.ts";
+import { Member, User } from "../types/discordeno.ts";
+import { PremiumTypes, UserFlags } from "../types/shared.ts";
+import { MemberToggles } from "./toggles/member.ts";
+import { UserToggles } from "./toggles/user.ts";
 
 export interface DiscordenoUser {
   id: bigint;
@@ -21,30 +21,27 @@ export interface DiscordenoUser {
   publicFlags?: UserFlags;
 }
 
-export function transformUser(bot: Bot, payload: SnakeCasedPropertiesDeep<User>): DiscordenoUser {
+export function transformUser(bot: Bot, payload: DiscordUser): User {
   return {
     id: bot.transformers.snowflake(payload.id || ""),
     username: payload.username,
     discriminator: Number(payload.discriminator),
     avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,
-    bot: payload.bot,
-    system: payload.system,
     locale: payload.locale,
-    verified: payload.verified,
-    email: payload.email,
+    email: payload.email ?? undefined,
     flags: payload.flags,
-    mfaEnabled: payload.mfa_enabled,
     premiumType: payload.premium_type,
     publicFlags: payload.public_flags,
+    toggles: new UserToggles(payload),
   };
 }
 
 export function transformMember(
   bot: Bot,
-  payload: SnakeCasedPropertiesDeep<GuildMember>,
+  payload: DiscordMember,
   guildId: bigint,
   userId: bigint,
-): DiscordenoMember {
+): Member {
   return {
     id: userId,
     guildId,
@@ -52,23 +49,18 @@ export function transformMember(
     roles: payload.roles.map((id) => BigInt(id)),
     joinedAt: Date.parse(payload.joined_at),
     premiumSince: payload.premium_since ? Date.parse(payload.premium_since) : undefined,
-    deaf: payload.deaf,
-    mute: payload.mute,
-    pending: payload.pending,
-    cachedAt: Date.now(),
     avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,
     permissions: payload.permissions ? bot.transformers.snowflake(payload.permissions) : undefined,
     communicationDisabledUntil: payload.communication_disabled_until
       ? Date.parse(payload.communication_disabled_until)
       : undefined,
+    toggles: new MemberToggles(payload),
   };
 }
 
 export interface DiscordenoMember {
   /** The user's id */
   id: bigint;
-  /** When the member has been cached the last time. */
-  cachedAt: number;
   /** The guild id where this member exists */
   guildId: bigint;
   /** The nickname for this member in this server */

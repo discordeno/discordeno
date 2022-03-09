@@ -1,8 +1,8 @@
 import { Bot } from "../bot.ts";
+import { Application } from "../types/discordeno.ts";
 import { InviteCreate } from "../types/invites/inviteCreate.ts";
 import { TargetTypes } from "../types/invites/targetTypes.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { DiscordenoApplication } from "./application.ts";
 import { DiscordenoUser } from "./member.ts";
 
 export function transformInvite(bot: Bot, invite: SnakeCasedPropertiesDeep<InviteCreate>): DiscordenoInvite {
@@ -57,7 +57,7 @@ export interface DiscordenoInvite {
   /** The target user for this invite */
   targetUser?: DiscordenoUser;
   /** The embedded application to open for this voice channel embedded application invite */
-  targetApplication?: Partial<DiscordenoApplication>;
+  targetApplication?: Partial<Application>;
   /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
   temporary: boolean;
   /** How many times the invite has been used (always will be 0) */

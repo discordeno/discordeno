@@ -1,10 +1,9 @@
 import { Channel } from "../channels/channel.ts";
 import { Guild } from "../guilds/guild.ts";
-import { Application } from "../applications/application.ts";
-import { User } from "../users/user.ts";
 import { TargetTypes } from "./targetTypes.ts";
 import { InviteStageInstance } from "./inviteStageInstance.ts";
 import { ScheduledEvent } from "../guilds/scheduledEvents.ts";
+import { DiscordApplication, DiscordUser } from "../discord.ts";
 
 /** https://discord.com/developers/docs/resources/invite#invite-object */
 export interface Invite {
@@ -15,13 +14,13 @@ export interface Invite {
   /** The channel this invite is for */
   channel: Partial<Channel> | null;
   /** The user who created the invite */
-  inviter?: User;
+  inviter?: DiscordUser;
   /** The type of target for this voice channel invite */
   targetType?: TargetTypes;
   /** The target user for this invite */
-  targetUser?: User;
+  targetUser?: DiscordUser;
   /** The embedded application to open for this voice channel embedded application invite */
-  targetApplication?: Partial<Application>;
+  targetApplication?: Partial<DiscordApplication>;
   /** Approximate count of online members (only present when target_user is set) */
   approximatePresenceCount?: number;
   /** Approximate count of total members */

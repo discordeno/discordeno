@@ -67,6 +67,7 @@ import { transformWidget } from "./transformers/widget.ts";
 import { transformStageInstance } from "./transformers/stageInstance.ts";
 import { transformSticker } from "./transformers/sticker.ts";
 import { transformGatewayBot } from "./transformers/gatewayBot.ts";
+import { Member } from "./types/discordeno.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -619,7 +620,7 @@ export interface EventHandlers {
       channelId: bigint;
       userId: bigint;
       timestamp: number;
-      member: DiscordenoMember | undefined;
+      member: Member | undefined;
     },
   ) => any;
 }

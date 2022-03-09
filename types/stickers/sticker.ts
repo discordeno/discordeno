@@ -1,6 +1,6 @@
+import { DiscordUser } from "../discord.ts";
 import type { StickerFormatTypes } from "./stickerFormatTypes.ts";
 import type { StickerTypes } from "./stickerTypes.ts";
-import type { User } from "../users/user.ts";
 
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-structure */
 export interface Sticker {
@@ -23,7 +23,7 @@ export interface Sticker {
   /** Id of the guild that owns this sticker */
   guildId?: string;
   /** The user that uploaded the sticker */
-  user?: User;
+  user?: DiscordUser;
   /** A sticker's sort order within a pack */
   sortValue?: number;
 }

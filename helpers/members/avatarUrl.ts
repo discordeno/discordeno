@@ -1,6 +1,5 @@
-import type { ImageFormat } from "../../types/misc/imageFormat.ts";
-import type { ImageSize } from "../../types/misc/imageSize.ts";
 import type { Bot } from "../../bot.ts";
+import { ImageFormat, ImageSize } from "../../types/discordeno.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
 export function avatarURL(

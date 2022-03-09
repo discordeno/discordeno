@@ -10,8 +10,8 @@ import { MessageTypes } from "../types/messages/messageTypes.ts";
 import { MessageActivityTypes } from "../types/messages/messageActivityTypes.ts";
 import { InteractionTypes } from "../types/interactions/interactionTypes.ts";
 import { DiscordenoComponent } from "./component.ts";
-import { Application } from "../types/applications/application.ts";
 import { DiscordenoChannel } from "./channel.ts";
+import { DiscordApplication } from "../types/discord.ts";
 
 export function transformMessage(bot: Bot, payload: SnakeCasedPropertiesDeep<Message>): DiscordenoMessage {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
@@ -65,7 +65,6 @@ export function transformMessage(bot: Bot, payload: SnakeCasedPropertiesDeep<Mes
             deaf: payload.interaction.member.deaf,
             mute: payload.interaction.member.mute,
             pending: payload.interaction.member.pending,
-            cachedAt: Date.now(),
             avatar: payload.interaction.member.avatar ? bot.utils.iconHashToBigInt(payload.interaction.member.avatar)
             : undefined,
             permissions: payload.interaction.member.permissions
@@ -198,7 +197,7 @@ export interface DiscordenoMessage {
     partyId?: string;
   };
   /** Sent with Rich Presence-related chat embeds */
-  application?: Partial<SnakeCasedPropertiesDeep<Application>>;
+  application?: Partial<SnakeCasedPropertiesDeep<DiscordApplication>>;
   /** Message flags combined as a bitfield */
   flags?: number;
   /**

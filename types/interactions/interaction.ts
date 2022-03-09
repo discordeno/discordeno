@@ -1,5 +1,5 @@
+import { DiscordUser } from "../discord.ts";
 import { Message } from "../messages/message.ts";
-import { User } from "../users/user.ts";
 import { InteractionData } from "./commands/applicationCommandInteractionData.ts";
 import { InteractionGuildMember } from "./interactionGuildMember.ts";
 import { InteractionTypes } from "./interactionTypes.ts";
@@ -18,7 +18,7 @@ export interface Interaction {
   /** Guild member data for the invoking user, including permissions */
   member?: InteractionGuildMember;
   /** User object for the invoking user, if invoked in a DM */
-  user?: User;
+  user?: DiscordUser;
   /** A continuation token for responding to the interaction */
   token: string;
   /** Read-only property, always `1` */

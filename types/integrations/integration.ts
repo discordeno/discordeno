@@ -1,4 +1,4 @@
-import { User } from "../users/user.ts";
+import { DiscordUser } from "../discord.ts";
 import { IntegrationAccount } from "./integrationAccount.ts";
 import { IntegrationApplication } from "./integrationApplication.ts";
 import { IntegrationExpireBehaviors } from "./integrationExpireBehaviors.ts";
@@ -24,7 +24,7 @@ export interface Integration {
   /** The grace period (in days) before expiring subscribers */
   expireGracePeriod?: number;
   /** User for this integration */
-  user?: User;
+  user?: DiscordUser;
   /** Integration account information */
   account: IntegrationAccount;
   /** When this integration was last synced */

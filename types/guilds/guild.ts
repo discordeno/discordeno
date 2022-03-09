@@ -1,7 +1,6 @@
 import { PresenceUpdate } from "../activity/presenceUpdate.ts";
 import { Channel } from "../channels/channel.ts";
 import { Emoji } from "../emojis/emoji.ts";
-import { GuildMember } from "../members/guildMember.ts";
 import { Role } from "../permissions/role.ts";
 import { VoiceState } from "../voice/voiceState.ts";
 import { DefaultMessageNotificationLevels } from "./defaultMessageNotificationLevels.ts";
@@ -14,6 +13,7 @@ import { VerificationLevels } from "./verificationLevels.ts";
 import { WelcomeScreen } from "./welcomeScreen.ts";
 import type { StageInstance } from "../channels/stageInstance.ts";
 import { GuildNsfwLevel } from "./guildNsfwLevel.ts";
+import { DiscordMember } from "../discord.ts";
 
 /** https://discord.com/developers/docs/resources/guild#guild-object */
 export interface Guild {
@@ -76,7 +76,7 @@ export interface Guild {
   /** States of members currently in voice channels; lacks the guild_id key */
   voiceStates?: Omit<VoiceState, "guildId">[];
   /** Users in the guild */
-  members?: GuildMember[];
+  members?: DiscordMember[];
   /** Channels in the guild */
   channels?: Channel[];
   // TODO: check if need to omit

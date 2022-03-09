@@ -1,6 +1,5 @@
-import type { ImageFormat } from "../../types/misc/imageFormat.ts";
-import type { ImageSize } from "../../types/misc/imageSize.ts";
 import type { Bot } from "../../bot.ts";
+import { ImageFormat, ImageSize } from "../../types/discordeno.ts";
 
 /** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
 export function guildBannerURL(

@@ -1,5 +1,4 @@
-import { Application } from "../applications/application.ts";
-import { User } from "../users/user.ts";
+import { DiscordApplication, DiscordUser } from "../discord.ts";
 import { TargetTypes } from "./targetTypes.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#invite-create */
@@ -13,7 +12,7 @@ export interface InviteCreate {
   /** The guild of the invite */
   guildId?: string;
   /** The user that created the invite */
-  inviter?: User;
+  inviter?: DiscordUser;
   /** How long the invite is valid for (in seconds) */
   maxAge: number;
   /** The maximum number of times the invite can be used */
@@ -21,9 +20,9 @@ export interface InviteCreate {
   /** The type of target for this voice channel invite */
   targetType: TargetTypes;
   /** The target user for this invite */
-  targetUser?: User;
+  targetUser?: DiscordUser;
   /** The embedded application to open for this voice channel embedded application invite */
-  targetApplication?: Partial<Application>;
+  targetApplication?: Partial<DiscordApplication>;
   /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
   temporary: boolean;
   /** How many times the invite has been used (always will be 0) */

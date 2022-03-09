@@ -1,4 +1,4 @@
-import { User } from "../users/user.ts";
+import { DiscordUser } from "../discord.ts";
 import { ChannelTypes } from "./channelTypes.ts";
 import { Overwrite } from "./overwrite.ts";
 import { ThreadMember } from "./threads/threadMember.ts";
@@ -32,7 +32,7 @@ export interface Channel {
   /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
   rateLimitPerUser?: number;
   /** The recipients of the DM */
-  recipients?: User[];
+  recipients?: DiscordUser[];
   /** Id of the creator of the group DM or thread */
   ownerId?: string;
   /** Application id of the group DM creator if it is bot-created */

@@ -1,5 +1,5 @@
+import { DiscordUser } from "../discord.ts";
 import { Guild } from "../guilds/guild.ts";
-import { User } from "../users/user.ts";
 
 /** https://discord.com/developers/docs/resources/template#template-object-template-structure */
 export interface Template {
@@ -14,7 +14,7 @@ export interface Template {
   /** The Id of the user who created the template */
   creatorId: string;
   /** The user who created the template */
-  creator: User;
+  creator: DiscordUser;
   /** When this template was created */
   createdAt: string;
   /** When this template was last synced to the source guild */

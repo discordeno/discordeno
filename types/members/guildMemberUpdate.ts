@@ -1,4 +1,4 @@
-import { User } from "../users/user.ts";
+import { DiscordUser } from "../discord.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#guild-member-update */
 export interface GuildMemberUpdate {
@@ -7,7 +7,7 @@ export interface GuildMemberUpdate {
   /** User role ids */
   roles: string[];
   /** The user */
-  user: User;
+  user: DiscordUser;
   /** Nickname of the user in the guild */
   nick?: string | null;
   /** the member's [guild avatar hash](https://discord.com/developers/docs/reference#image-formatting) */

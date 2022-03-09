@@ -1,7 +1,5 @@
 import { Bot } from "../bot.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { EmbedTypes } from "../types/embeds/embedTypes.ts";
-import { Embed } from "../types/embeds/embed.ts";
 
 export function transformEmbed(bot: Bot, payload: SnakeCasedPropertiesDeep<Embed>): DiscordenoEmbed {
   return {

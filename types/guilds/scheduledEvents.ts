@@ -1,4 +1,4 @@
-import { User } from "../users/user.ts";
+import { DiscordUser } from "../discord.ts";
 
 export interface ScheduledEvent {
   /** the id of the scheduled event */
@@ -28,7 +28,7 @@ export interface ScheduledEvent {
   /** the entity metadata for the scheduled event */
   entityMetadata: ScheduledEventEntityMetadata | null;
   /** the user that created the scheduled event */
-  creator?: User;
+  creator?: DiscordUser;
   /** the number of users subscribed to the scheduled event */
   userCount?: number;
   /** the cover image hash of the scheduled event */
