@@ -1,3 +1,5 @@
+import { PresenceUpdate } from "../transformers/presence.ts";
+import { Role } from "../transformers/role.ts";
 import { EmojiToggles } from "../transformers/toggles/emoji.ts";
 import { MemberToggles } from "../transformers/toggles/member.ts";
 import { RoleToggles } from "../transformers/toggles/role.ts";
@@ -550,26 +552,6 @@ export interface Guild extends BaseGuild {
   stageInstances?: StageInstance[];
 }
 
-/** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
-export interface Role extends BaseRole {
-  /** Role id */
-  id: bigint;
-  /** The guild id where this role is */
-  guildId: bigint;
-  /** The role toggle values for this role. */
-  toggles: RoleToggles;
-  /** Permission bit set */
-  permissions: bigint;
-  /** the role emoji hash */
-  icon?: bigint;
-  /** The id of the bot this role belongs to */
-  botId?: bigint;
-  /** The id of the integration this role belongs to */
-  integrationId?: bigint;
-  /** Whether this is the guild's premium subscriber role */
-  premiumSubscriber?: boolean;
-}
-
 /** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
 export interface Emoji extends BaseEmoji {
   /** Emoji id */
@@ -626,24 +608,6 @@ export interface Channel extends BaseChannel {
   permissions?: bigint;
 }
 
-/** https://discord.com/developers/docs/topics/gateway#presence-update */
-export interface PresenceUpdate extends BasePresenceUpdate {
-  /** Either "idle", "dnd", "online", or "offline" */
-  status: number;
-  /** The user presence is being updated for */
-  user: User;
-  /** id of the guild */
-  guildId: bigint;
-  /** User's current activities */
-  activities: Activity[];
-  /** The user's status set for an active desktop (Windows, Linux, Mac) application session */
-  desktop?: string;
-  /** The user's status set for an active mobile (iOS, Android) application session */
-  mobile?: string;
-  /** The user's status set for an active web (browser, bot account) application session */
-  web?: string;
-}
-
 /** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure */
 export interface WelcomeScreen extends BaseWelcomeScreen {
   /** The server description shown in the welcome screen */
@@ -698,39 +662,6 @@ export interface ThreadMember extends BaseThreadMember {
   userId?: bigint;
   /** The time the current user last joined the thread */
   joinTimestamp: number;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object */
-export interface Activity extends BaseActivity {
-  partyId?: bigint;
-  partyCurrentSize?: number;
-  partyMaxSize?: number;
-  largeImage?: string;
-  largeText?: string;
-  smallImage?: string;
-  smallText?: string;
-  join?: string;
-  spectate?: string;
-  match?: string;
-  
-  /** Unix time (in milliseconds) of when the activity started */
-  startedAt?: number;
-  /** Unix time (in milliseconds) of when the activity ends */
-  endedAt?: number;
-  /** Unix timestamps for start and/or end of the game */
-  timestamps?: ActivityTimestamps;
-  /** Application id for the game */
-  applicationId?: bigint;
-  /** The emoji used for a custom status */
-  emoji?: ActivityEmoji;
-  /** Information for the current party of the player */
-  party?: ActivityParty;
-  /** Images for the presence and their hover texts */
-  assets?: ActivityAssets;
-  /** Secrets for Rich Presence joining and spectating */
-  secrets?: ActivitySecrets;
-  /** The custom buttons shown in the Rich Presence (max 2) */
-  buttons?: ActivityButton[];
 }
 
 /** https://discord.com/developers/docs/topics/gateway#client-status-object */

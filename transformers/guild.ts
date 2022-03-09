@@ -1,10 +1,10 @@
 import { Bot } from "../bot.ts";
 import { Collection } from "../util/collection.ts";
-import { DiscordenoRole } from "./role.ts";
 import { DiscordenoVoiceState } from "./voiceState.ts";
 import { DiscordenoEmoji } from "./emoji.ts";
 import { DiscordGuild } from "../types/discord.ts";
 import { Guild } from "../types/discordeno.ts";
+import { Role } from "./role.ts";
 
 export function transformGuild(
   bot: Bot,
@@ -150,7 +150,7 @@ export interface DiscordenoGuild extends
   /** Total number of members in this guild */
   memberCount: number;
   /** The roles in the guild */
-  roles: Collection<bigint, DiscordenoRole>;
+  roles: Collection<bigint, Role>;
   /** The presences of all the users in the guild. */
   // presences: Collection<bigint, DiscordenoPresence>;
   /** The Voice State data for each user in a voice channel in this server. */

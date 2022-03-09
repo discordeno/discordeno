@@ -1,6 +1,6 @@
 import { Bot } from "../bot.ts";
 import { ChannelTypes } from "../types/channels/channelTypes.ts";
-import { Member, Role, User } from "../types/discordeno.ts";
+import { Member, User } from "../types/discordeno.ts";
 import { InteractionDataOption } from "../types/interactions/commands/applicationCommandInteractionDataOption.ts";
 import { InteractionDataResolved } from "../types/interactions/commands/applicationCommandInteractionDataResolved.ts";
 import { Interaction } from "../types/interactions/interaction.ts";
@@ -13,7 +13,7 @@ import { Collection } from "../util/collection.ts";
 import { DiscordenoAttachment } from "./attachment.ts";
 import { DiscordenoMember, DiscordenoUser } from "./member.ts";
 import { DiscordenoMessage } from "./message.ts";
-import { DiscordenoRole } from "./role.ts";
+import { Role } from "./role.ts";
 
 export function transformInteraction(bot: Bot, payload: SnakeCasedPropertiesDeep<Interaction>): DiscordenoInteraction {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
@@ -180,7 +180,7 @@ export interface DiscordenoInteraction {
       /** The Ids and partial Member objects */
       members?: Collection<bigint, DiscordenoMember>;
       /** The Ids and Role objects */
-      roles?: Collection<bigint, DiscordenoRole>;
+      roles?: Collection<bigint, Role>;
       /** The Ids and partial Channel objects */
       channels?: Collection<
         bigint,

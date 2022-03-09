@@ -8,9 +8,9 @@ import {
   DiscordenoGuild,
   DiscordenoMember,
   DiscordenoMessage,
-  DiscordenoRole,
   DiscordenoUser,
   DiscordenoVoiceState,
+  Role,
   transformChannel,
   transformGuild,
   transformMember,
@@ -45,7 +45,7 @@ import { DiscordenoInvite, transformInvite } from "./transformers/invite.ts";
 import * as helpers from "./helpers/mod.ts";
 import { DiscordenoEmoji, transformEmoji } from "./transformers/emoji.ts";
 import { transformActivity } from "./transformers/activity.ts";
-import { DiscordenoPresence, transformPresence } from "./transformers/presence.ts";
+import { PresenceUpdate, transformPresence } from "./transformers/presence.ts";
 import { DiscordReady } from "./types/gateway/ready.ts";
 import { urlToBase64 } from "./util/urlToBase64.ts";
 import { transformAttachment } from "./transformers/attachment.ts";
@@ -66,7 +66,7 @@ import { transformWidget } from "./transformers/widget.ts";
 import { transformStageInstance } from "./transformers/stageInstance.ts";
 import { transformSticker } from "./transformers/sticker.ts";
 import { transformGatewayBot } from "./transformers/gatewayBot.ts";
-import { Guild, Member, PresenceUpdate, Role } from "./types/discordeno.ts";
+import { Guild, Member } from "./types/discordeno.ts";
 import { DiscordEmoji } from "./types/discord.ts";
 
 export function createBot(options: CreateBotOptions): Bot {

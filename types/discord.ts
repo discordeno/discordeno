@@ -345,7 +345,7 @@ export interface DiscordGuild extends SnakeCasedPropertiesDeep<BaseGuild> {
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
-export interface DiscordRole extends SnakeCasedPropertiesDeep<BaseRole> {
+export interface DiscordRole {
   /** Role id */
   id: string;
   /** If this role is showed seperately in the user listing */
@@ -360,6 +360,14 @@ export interface DiscordRole extends SnakeCasedPropertiesDeep<BaseRole> {
   tags?: DiscordRoleTags;
   /** the role emoji hash */
   icon?: string;
+  /** Role name */
+  name: string;
+  /** Integer representation of hexadecimal color code */
+  color: number;
+  /** Position of this role */
+  position: number;
+  /** role unicode emoji */
+  unicode_emoji?: string;
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure */

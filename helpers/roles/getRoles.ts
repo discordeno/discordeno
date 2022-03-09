@@ -1,6 +1,5 @@
 import type { Bot } from "../../bot.ts";
 import { Collection } from "../../util/collection.ts";
-import { DiscordenoRole } from "../../transformers/role.ts";
 import { DiscordRole } from "../../types/discord.ts";
 
 /** Returns a list of role objects for the guild.
