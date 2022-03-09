@@ -1,5 +1,5 @@
-import { Emoji } from "../emojis/emoji.ts";
-import { GuildFeatures } from "./guildFeatures.ts";
+import { DiscordEmoji } from "../discord.ts";
+import { GuildFeatures } from "../shared.ts";
 import { Sticker } from "../stickers/sticker.ts";
 
 /** https://discord.com/developers/docs/resources/guild#guild-preview-object */
@@ -15,7 +15,7 @@ export interface GuildPreview {
   /** Discovery splash hash */
   discoverySplash: string | null;
   /** Custom guild emojis */
-  emojis: Emoji[];
+  emojis: DiscordEmoji[];
   /** Enabled guild features */
   features: GuildFeatures[];
   /** Approximate number of members in this guild */

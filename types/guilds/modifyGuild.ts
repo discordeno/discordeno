@@ -1,7 +1,9 @@
-import { DefaultMessageNotificationLevels } from "./defaultMessageNotificationLevels.ts";
-import { ExplicitContentFilterLevels } from "./explicitContentFilterLevels.ts";
-import { GuildFeatures } from "./guildFeatures.ts";
-import { SystemChannelFlags } from "./systemChannelFlags.ts";
+import {
+  DefaultMessageNotificationLevels,
+  ExplicitContentFilterLevels,
+  GuildFeatures,
+  SystemChannelFlags,
+} from "../shared.ts";
 import { VerificationLevels } from "./verificationLevels.ts";
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild */

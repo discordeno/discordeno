@@ -1,19 +1,16 @@
 import { Bot } from "../bot.ts";
-import { Emoji } from "../types/emojis/emoji.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordEmoji } from "../types/discord.ts";
+import { Emoji } from "../types/discordeno.ts";
 import { DiscordenoUser } from "./member.ts";
+import { EmojiToggles } from "./toggles/emoji.ts";
 
-export function transformEmoji(bot: Bot, payload: SnakeCasedPropertiesDeep<Emoji>): DiscordenoEmoji {
+export function transformEmoji(bot: Bot, payload: DiscordEmoji): Emoji {
   return {
     id: payload.id ? bot.transformers.snowflake(payload.id) : undefined,
     name: payload.name || undefined,
     roles: payload.roles?.map((id) => bot.transformers.snowflake(id)),
     user: payload.user ? bot.transformers.user(bot, payload.user) : undefined,
-    // TODO: change to bitfield?
-    requireColons: payload.require_colons,
-    managed: payload.managed,
-    animated: payload.animated,
-    available: payload.available,
+    toggles: new EmojiToggles(payload),
   };
 }
 

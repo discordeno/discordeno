@@ -4,9 +4,8 @@ import { Attachment } from "../../messages/attachment.ts";
 import { MessageComponentTypes } from "../../messages/components/messageComponentTypes.ts";
 import { MessageComponents } from "../../messages/components/messageComponents.ts";
 import { Message } from "../../messages/message.ts";
-import { Role } from "../../permissions/role.ts";
 import { Channel } from "../../channels/channel.ts";
-import { DiscordUser } from "../../discord.ts";
+import { DiscordRole, DiscordUser } from "../../discord.ts";
 
 export interface InteractionData {
   /** The type of component */
@@ -30,7 +29,7 @@ export interface InteractionData {
     /** The Ids and partial Member objects */
     members?: Record<string, Omit<InteractionGuildMember, "user" | "deaf" | "mute">>;
     /** The Ids and Role objects */
-    roles?: Record<string, Role>;
+    roles?: Record<string, DiscordRole>;
     /** The Ids and partial Channel objects */
     channels?: Record<string, Pick<Channel, "id" | "name" | "type" | "permissions">>;
     /** The ids and attachment objects */

@@ -1,4 +1,4 @@
-import { Activity } from "../activity/activity.ts";
+import { Activity } from "../discordeno.ts";
 import { DiscordStatusTypes } from "./statusTypes.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#update-status */

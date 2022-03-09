@@ -1,8 +1,10 @@
 import { Bot } from "../bot.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordWebhook } from "../types/discord.ts";
+import { Webhook } from "../types/discordeno.ts";
+import { WebhookTypes } from "../types/shared.ts";
 import { DiscordenoUser } from "./member.ts";
 
-export function transformWebhook(bot: Bot, payload: SnakeCasedPropertiesDeep<Webhook>): DiscordenoWebhook {
+export function transformWebhook(bot: Bot, payload: DiscordWebhook): Webhook {
   return {
     id: bot.transformers.snowflake(payload.id),
     type: payload.type,

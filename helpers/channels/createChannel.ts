@@ -1,7 +1,7 @@
 import type { Channel } from "../../types/channels/channel.ts";
-import { ChannelTypes } from "../../types/channels/channelTypes.ts";
 import type { CreateGuildChannel } from "../../types/guilds/createGuildChannel.ts";
 import type { Bot } from "../../bot.ts";
+import { ChannelTypes } from "../../types/shared.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(bot: Bot, guildId: bigint, options?: CreateGuildChannel, reason?: string) {

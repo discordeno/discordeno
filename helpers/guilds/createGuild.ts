@@ -1,10 +1,10 @@
 import type { CreateGuild } from "../../types/guilds/createGuild.ts";
-import type { Guild } from "../../types/guilds/guild.ts";
 import type { Bot } from "../../bot.ts";
+import { DiscordGuild } from "../../types/discord.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createGuild(bot: Bot, options: CreateGuild) {
-  const result = await bot.rest.runMethod<Guild>(bot.rest, "post", bot.constants.endpoints.GUILDS, {
+  const result = await bot.rest.runMethod<DiscordGuild>(bot.rest, "post", bot.constants.endpoints.GUILDS, {
     name: options.name,
     afk_channel_id: options.afkChannelId,
     afk_timeout: options.afkTimeout,

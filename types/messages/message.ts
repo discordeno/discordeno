@@ -10,7 +10,7 @@ import { Sticker } from "../stickers/sticker.ts";
 import { MessageTypes } from "./messageTypes.ts";
 import { Reaction } from "./reaction.ts";
 import { StickerItem } from "../stickers/stickerItem.ts";
-import { DiscordApplication, DiscordMember, DiscordUser } from "../discord.ts";
+import { DiscordApplication, DiscordEmbed, DiscordMember, DiscordUser } from "../discord.ts";
 
 /** https://discord.com/developers/docs/resources/channel#message-object */
 export interface Message {
@@ -55,7 +55,7 @@ export interface Message {
   /** Any attached files */
   attachments: Attachment[];
   /** Any embedded content */
-  embeds: Embed[];
+  embeds: DiscordEmbed[];
   /** Reactions to the message */
   reactions?: Reaction[];
   /** Used for validating a message was sent */

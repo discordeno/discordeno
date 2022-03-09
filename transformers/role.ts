@@ -1,23 +1,22 @@
 import { Bot } from "../bot.ts";
-import { Role } from "../types/permissions/role.ts";
+import { DiscordRole } from "../types/discord.ts";
+import { Role } from "../types/discordeno.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { RoleToggle, RoleToggles } from "./toggles/role.ts";
 
 export function transformRole(
   bot: Bot,
-  payload: { role: SnakeCasedPropertiesDeep<Role> } & {
+  payload: { role: DiscordRole } & {
     guildId: bigint;
   },
-): DiscordenoRole {
+): Role {
   return {
     // UNTRANSFORMED STUFF HERE
     name: payload.role.name,
     guildId: payload.guildId,
     position: payload.role.position,
     color: payload.role.color,
-    bitfield: (payload.role.hoist ? 1n : 0n) |
-      (payload.role.managed ? 2n : 0n) |
-      (payload.role.mentionable ? 4n : 0n) |
-      (payload.role.tags?.premium_subscriber ? 8n : 0n),
+    toggles: new RoleToggles(payload.role),
 
     // TRANSFORMED STUFF BELOW
     id: bot.transformers.snowflake(payload.role.id),

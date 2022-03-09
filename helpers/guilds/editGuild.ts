@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import type { Guild } from "../../types/guilds/guild.ts";
+import { DiscordGuild } from "../../types/discord.ts";
 import type { ModifyGuild } from "../../types/guilds/modifyGuild.ts";
 
 /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
@@ -16,7 +16,7 @@ export async function editGuild(bot: Bot, guildId: bigint, options: ModifyGuild,
     options.splash = await bot.utils.urlToBase64(options.splash);
   }
 
-  const result = await bot.rest.runMethod<Guild>(
+  const result = await bot.rest.runMethod<DiscordGuild>(
     bot.rest,
     "patch",
     bot.constants.endpoints.GUILDS_BASE(guildId),

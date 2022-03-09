@@ -22,7 +22,7 @@ export function editBotStatus(bot: Bot, data: Omit<StatusUpdate, "afk" | "since"
               end: activity.timestamps.end,
             }
             : undefined,
-          applicationId: activity.applicationId?.toString(),
+          application_id: activity.applicationId?.toString(),
           details: activity.details,
           state: activity.state,
           emoji: activity.emoji

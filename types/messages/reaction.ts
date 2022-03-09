@@ -1,4 +1,4 @@
-import { Emoji } from "../emojis/emoji.ts";
+import { DiscordEmoji } from "../discord.ts";
 
 /** https://discord.com/developers/docs/resources/channel#reaction-object */
 export interface Reaction {
@@ -7,5 +7,5 @@ export interface Reaction {
   /** Whether the current user reacted using this emoji */
   me: boolean;
   /** Emoji information */
-  emoji: Partial<Emoji>;
+  emoji: Partial<DiscordEmoji>;
 }

@@ -1,6 +1,6 @@
 import type { Bot } from "../../bot.ts";
+import { ExecuteWebhook } from "../../types/discordeno.ts";
 import type { Message } from "../../types/messages/message.ts";
-import type { ExecuteWebhook } from "../../types/webhooks/executeWebhook.ts";
 
 /** Send a webhook with webhook Id and webhook token */
 export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: string, options: ExecuteWebhook) {

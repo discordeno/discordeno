@@ -1,6 +1,6 @@
-import type { ModifyWebhook } from "../../types/webhooks/modifyWebhook.ts";
-import type { Webhook } from "../../types/webhooks/webhook.ts";
 import type { Bot } from "../../bot.ts";
+import { DiscordWebhook } from "../../types/discord.ts";
+import { ModifyWebhook } from "../../types/discordeno.ts";
 
 /** Edit a webhook. Returns the updated webhook object on success. */
 export async function editWebhookWithToken(
@@ -9,7 +9,7 @@ export async function editWebhookWithToken(
   webhookToken: string,
   options: Omit<ModifyWebhook, "channelId">,
 ) {
-  const result = await bot.rest.runMethod<Webhook>(
+  const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
     "patch",
     bot.constants.endpoints.WEBHOOK(webhookId, webhookToken),

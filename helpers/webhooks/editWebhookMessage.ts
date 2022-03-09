@@ -1,7 +1,7 @@
 import type { Message } from "../../types/messages/message.ts";
-import type { EditWebhookMessage } from "../../types/webhooks/editWebhookMessage.ts";
 import type { Bot } from "../../bot.ts";
 import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
+import { EditWebhookMessage } from "../../types/discordeno.ts";
 
 export async function editWebhookMessage(
   bot: Bot,

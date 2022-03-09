@@ -1,6 +1,6 @@
 import { Bot } from "../bot.ts";
 import { ChannelTypes } from "../types/channels/channelTypes.ts";
-import { Member, User } from "../types/discordeno.ts";
+import { Member, Role, User } from "../types/discordeno.ts";
 import { InteractionDataOption } from "../types/interactions/commands/applicationCommandInteractionDataOption.ts";
 import { InteractionDataResolved } from "../types/interactions/commands/applicationCommandInteractionDataResolved.ts";
 import { Interaction } from "../types/interactions/interaction.ts";
@@ -65,7 +65,7 @@ export function transformInteractionDataResolved(
     messages?: Collection<bigint, DiscordenoMessage>;
     users?: Collection<bigint, User>;
     members?: Collection<bigint, Member>;
-    roles?: Collection<bigint, DiscordenoRole>;
+    roles?: Collection<bigint, Role>;
     channels?: Collection<bigint, { id: bigint; name: string; type: ChannelTypes; permissions: bigint }>;
     attachments?: Collection<bigint, DiscordenoAttachment>;
   } = {};

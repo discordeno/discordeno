@@ -1,10 +1,10 @@
 import { Bot } from "../bot.ts";
-import { Activity } from "../types/activity/activity.ts";
 import { ActivityTypes } from "../types/activity/activityTypes.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordActivity } from "../types/discord.ts";
+import { Activity } from "../types/discordeno.ts";
 import { DiscordenoEmoji } from "./emoji.ts";
 
-export function transformActivity(bot: Bot, payload: SnakeCasedPropertiesDeep<Activity>): DiscordenoActivity {
+export function transformActivity(bot: Bot, payload: DiscordActivity): Activity {
   return {
     name: payload.name,
     type: payload.type,
@@ -15,8 +15,12 @@ export function transformActivity(bot: Bot, payload: SnakeCasedPropertiesDeep<Ac
     applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
     details: payload.details ?? undefined,
     state: payload.state ?? undefined,
-    emoji: payload.emoji ? bot.transformers.emoji(bot, payload.emoji) : undefined,
-    partyId: payload.party?.id,
+    emoji: payload.emoji ? {
+      name: payload.emoji.name,
+      animated: payload.emoji.animated,
+      id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined,
+    } : undefined,
+    partyId: payload.party?.id ? bot.transformers.snowflake(payload.party.id) : undefined,
     partyCurrentSize: payload.party?.size?.[0],
     partyMaxSize: payload.party?.size?.[1],
     largeImage: payload.assets?.large_image,
@@ -28,7 +32,7 @@ export function transformActivity(bot: Bot, payload: SnakeCasedPropertiesDeep<Ac
     match: payload.secrets?.match,
     instance: payload.instance,
     flags: payload.flags,
-    buttonLabels: payload.buttons?.map((button) => button.label),
+    buttons: payload.buttons
   };
 }
 

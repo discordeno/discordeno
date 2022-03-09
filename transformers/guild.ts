@@ -1,15 +1,15 @@
 import { Bot } from "../bot.ts";
-import type { Guild } from "../types/guilds/guild.ts";
 import { Collection } from "../util/collection.ts";
 import { DiscordenoRole } from "./role.ts";
 import { DiscordenoVoiceState } from "./voiceState.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoEmoji } from "./emoji.ts";
+import { DiscordGuild } from "../types/discord.ts";
+import { Guild } from "../types/discordeno.ts";
 
 export function transformGuild(
   bot: Bot,
-  payload: { guild: SnakeCasedPropertiesDeep<Guild> } & { shardId: number },
-): DiscordenoGuild {
+  payload: { guild: DiscordGuild } & { shardId: number },
+): Guild {
   const guildId = bot.transformers.snowflake(payload.guild.id);
 
   return {
@@ -53,12 +53,7 @@ export function transformGuild(
         })),
       }
       : undefined,
-    discoverySplash: payload.guild.discovery_splash,
-
-    bitfield: (payload.guild.owner ? 1n : 0n) |
-      (payload.guild.widget_enabled ? 2n : 0n) |
-      (payload.guild.large ? 4n : 0n) |
-      (payload.guild.unavailable ? 8n : 0n),
+    discoverySplash: payload.guild.discovery_splash ? bot.utils.iconHashToBigInt(payload.guild.discovery_splash) : undefined,
 
     joinedAt: payload.guild.joined_at ? Date.parse(payload.guild.joined_at) : undefined,
     memberCount: payload.guild.member_count ?? 0,

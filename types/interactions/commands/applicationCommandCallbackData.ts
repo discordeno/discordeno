@@ -1,5 +1,5 @@
+import { Embed } from "../../discordeno.ts";
 import { FileContent } from "../../discordeno/fileContent.ts";
-import { Embed } from "../../embeds/embed.ts";
 import { AllowedMentions } from "../../messages/allowedMentions.ts";
 import { MessageComponents } from "../../messages/components/messageComponents.ts";
 import { ApplicationCommandOptionChoice } from "./applicationCommandOptionChoice.ts";

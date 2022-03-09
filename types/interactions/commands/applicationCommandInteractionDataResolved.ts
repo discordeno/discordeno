@@ -1,8 +1,7 @@
 import { Channel } from "../../channels/channel.ts";
-import { DiscordUser } from "../../discord.ts";
+import { DiscordRole, DiscordUser } from "../../discord.ts";
 import { Attachment } from "../../messages/attachment.ts";
 import { Message } from "../../messages/message.ts";
-import { Role } from "../../permissions/role.ts";
 import { InteractionGuildMember } from "../interactionGuildMember.ts";
 
 export interface InteractionDataResolved {
@@ -13,7 +12,7 @@ export interface InteractionDataResolved {
   /** The Ids and partial Member objects */
   members?: Record<string, Omit<InteractionGuildMember, "user" | "deaf" | "mute">>;
   /** The Ids and Role objects */
-  roles?: Record<string, Role>;
+  roles?: Record<string, DiscordRole>;
   /** The Ids and partial Channel objects */
   channels?: Record<string, Pick<Channel, "id" | "name" | "type" | "permissions">>;
   /** The Ids and attachments objects */

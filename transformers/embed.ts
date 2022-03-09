@@ -1,7 +1,9 @@
 import { Bot } from "../bot.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordEmbed } from "../types/discord.ts";
+import { Embed } from "../types/discordeno.ts";
+import { EmbedTypes } from "../types/shared.ts";
 
-export function transformEmbed(bot: Bot, payload: SnakeCasedPropertiesDeep<Embed>): DiscordenoEmbed {
+export function transformEmbed(bot: Bot, payload: DiscordEmbed): Embed {
   return {
     title: payload.title,
     type: payload.type,

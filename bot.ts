@@ -39,7 +39,6 @@ import { calculateShardId } from "./util/calculateShardId.ts";
 import * as handlers from "./handlers/mod.ts";
 import { DiscordenoInteraction, transformInteraction } from "./transformers/interaction.ts";
 import { DiscordenoIntegration, transformIntegration } from "./transformers/integration.ts";
-import { Emoji } from "./types/emojis/emoji.ts";
 import { transformApplication } from "./transformers/application.ts";
 import { transformTeam } from "./transformers/team.ts";
 import { DiscordenoInvite, transformInvite } from "./transformers/invite.ts";
@@ -67,7 +66,8 @@ import { transformWidget } from "./transformers/widget.ts";
 import { transformStageInstance } from "./transformers/stageInstance.ts";
 import { transformSticker } from "./transformers/sticker.ts";
 import { transformGatewayBot } from "./transformers/gatewayBot.ts";
-import { Member } from "./types/discordeno.ts";
+import { Guild, Member, PresenceUpdate, Role } from "./types/discordeno.ts";
+import { DiscordEmoji } from "./types/discord.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -519,8 +519,8 @@ export interface EventHandlers {
   ) => any;
   presenceUpdate: (
     bot: Bot,
-    presence: DiscordenoPresence,
-    oldPresence?: DiscordenoPresence,
+    presence: PresenceUpdate,
+    oldPresence?: PresenceUpdate,
   ) => any;
   voiceServerUpdate: (
     bot: Bot,
@@ -590,24 +590,23 @@ export interface EventHandlers {
       topic: string;
     },
   ) => any;
-  // TODO: THREADS
   guildEmojisUpdate: (
     bot: Bot,
     payload: {
       guildId: bigint;
-      emojis: Collection<bigint, Emoji>;
+      emojis: Collection<bigint, DiscordEmoji>;
     },
   ) => any;
   guildBanAdd: (bot: Bot, user: DiscordenoUser, guildId: bigint) => any;
   guildBanRemove: (bot: Bot, user: DiscordenoUser, guildId: bigint) => any;
-  guildLoaded: (bot: Bot, guild: DiscordenoGuild) => any;
-  guildCreate: (bot: Bot, guild: DiscordenoGuild) => any;
+  guildLoaded: (bot: Bot, guild: Guild) => any;
+  guildCreate: (bot: Bot, guild: Guild) => any;
   guildDelete: (bot: Bot, id: bigint, shardId: number) => any;
-  guildUpdate: (bot: Bot, guild: DiscordenoGuild) => any;
+  guildUpdate: (bot: Bot, guild: Guild) => any;
   raw: (bot: Bot, data: GatewayPayload, shardId: number) => any;
-  roleCreate: (bot: Bot, role: DiscordenoRole) => any;
+  roleCreate: (bot: Bot, role: Role) => any;
   roleDelete: (bot: Bot, payload: { guildId: bigint; roleId: bigint }) => any;
-  roleUpdate: (bot: Bot, role: DiscordenoRole) => any;
+  roleUpdate: (bot: Bot, role: Role) => any;
   webhooksUpdate: (
     bot: Bot,
     payload: { channelId: bigint; guildId: bigint },

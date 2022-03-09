@@ -1,5 +1,4 @@
-import { DiscordUser } from "../discord.ts";
-import { Activity } from "./activity.ts";
+import { DiscordActivity, DiscordUser } from "../discord.ts";
 import { ClientStatus } from "./clientStatus.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#presence-update */
@@ -11,7 +10,7 @@ export interface PresenceUpdate {
   /** Either "idle", "dnd", "online", or "offline" */
   status: "idle" | "dnd" | "online" | "offline";
   /** User's current activities */
-  activities: Activity[];
+  activities: DiscordActivity[];
   /** User's platform-dependent status */
   clientStatus: ClientStatus;
 }

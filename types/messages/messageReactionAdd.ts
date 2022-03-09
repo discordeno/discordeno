@@ -1,4 +1,4 @@
-import { Emoji } from "../emojis/emoji.ts";
+import { DiscordEmoji } from "../discord.ts";
 import { GuildMemberWithUser } from "../members/guildMember.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-add */
@@ -14,5 +14,5 @@ export interface MessageReactionAdd {
   /** The member who reacted if this happened in a guild */
   member?: GuildMemberWithUser;
   /** The emoji used to react */
-  emoji: Partial<Emoji>;
+  emoji: Partial<DiscordEmoji>;
 }

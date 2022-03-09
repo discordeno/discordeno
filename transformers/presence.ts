@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
-import { PresenceUpdate } from "../types/activity/presenceUpdate.ts";
+import { DiscordPresenceUpdate } from "../types/discord.ts";
+import { PresenceUpdate } from "../types/discordeno.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { DiscordenoActivity } from "./activity.ts";
 import { DiscordenoUser } from "./member.ts";
@@ -12,7 +13,7 @@ export const statusTypes = {
   offline: 4,
 } as const;
 
-export function transformPresence(bot: Bot, payload: SnakeCasedPropertiesDeep<PresenceUpdate>): DiscordenoPresence {
+export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate): PresenceUpdate {
   return {
     user: bot.transformers.user(bot, payload.user),
     guildId: bot.transformers.snowflake(payload.guild_id),

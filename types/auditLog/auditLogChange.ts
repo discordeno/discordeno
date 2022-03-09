@@ -1,5 +1,5 @@
 import { Overwrite } from "../channels/overwrite.ts";
-import { Role } from "../permissions/role.ts";
+import { DiscordRole } from "../discord.ts";
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
 export type AuditLogChange =
@@ -63,8 +63,8 @@ export type AuditLogChange =
       | "communication_disabled_until";
   }
   | {
-    newValue: Partial<Role>[];
-    oldValue?: Partial<Role>[];
+    newValue: Partial<DiscordRole>[];
+    oldValue?: Partial<DiscordRole>[];
     key: "$add" | "$remove";
   }
   | {

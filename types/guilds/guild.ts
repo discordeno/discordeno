@@ -1,19 +1,13 @@
 import { PresenceUpdate } from "../activity/presenceUpdate.ts";
 import { Channel } from "../channels/channel.ts";
-import { Emoji } from "../emojis/emoji.ts";
-import { Role } from "../permissions/role.ts";
 import { VoiceState } from "../voice/voiceState.ts";
-import { DefaultMessageNotificationLevels } from "./defaultMessageNotificationLevels.ts";
-import { ExplicitContentFilterLevels } from "./explicitContentFilterLevels.ts";
-import { GuildFeatures } from "./guildFeatures.ts";
-import { MfaLevels } from "./mfaLevels.ts";
 import { PremiumTiers } from "./premiumTiers.ts";
-import { SystemChannelFlags } from "./systemChannelFlags.ts";
 import { VerificationLevels } from "./verificationLevels.ts";
-import { WelcomeScreen } from "./welcomeScreen.ts";
 import type { StageInstance } from "../channels/stageInstance.ts";
 import { GuildNsfwLevel } from "./guildNsfwLevel.ts";
 import { DiscordMember } from "../discord.ts";
+import { DefaultMessageNotificationLevels, ExplicitContentFilterLevels, GuildFeatures, MfaLevels, SystemChannelFlags } from "../shared.ts";
+import { DiscordRole,DiscordEmoji,DiscordWelcomeScreen } from "../discord.ts";
 
 /** https://discord.com/developers/docs/resources/guild#guild-object */
 export interface Guild {
@@ -50,9 +44,9 @@ export interface Guild {
   /** Explicit content filter level */
   explicitContentFilter: ExplicitContentFilterLevels;
   /** Roles in the guild */
-  roles: Role[];
+  roles: DiscordRole[];
   /** Custom guild emojis */
-  emojis: Emoji[];
+  emojis: DiscordEmoji[];
   /** Enabled guild features */
   features: GuildFeatures[];
   /** Required MFA level for the guild */
@@ -109,7 +103,7 @@ export interface Guild {
   /**	Approximate number of non-offline members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
   approximatePresenceCount?: number;
   /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
-  welcomeScreen?: WelcomeScreen;
+  welcomeScreen?: DiscordWelcomeScreen;
   /** Guild NSFW level */
   nsfwLevel: GuildNsfwLevel;
   /** Stage instances in the guild */

@@ -1,19 +1,14 @@
-import type { VoiceState } from "../types/voice/voiceState.ts";
 import { Bot } from "../bot.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordVoiceState } from "../types/discord.ts";
+import { VoiceState } from "../types/discordeno.ts";
+import { VoiceStateToggles } from "./toggles/voice.ts";
 
 export function transformVoiceState(
   bot: Bot,
-  payload: { voiceState: SnakeCasedPropertiesDeep<VoiceState> } & { guildId: bigint },
-): DiscordenoVoiceState {
+  payload: { voiceState: DiscordVoiceState } & { guildId: bigint },
+): VoiceState {
   return {
-    bitfield: (payload.voiceState.deaf ? 1n : 0n) |
-      (payload.voiceState.mute ? 2n : 0n) |
-      (payload.voiceState.self_deaf ? 4n : 0n) |
-      (payload.voiceState.self_mute ? 8n : 0n) |
-      (payload.voiceState.self_stream ? 16n : 0n) |
-      (payload.voiceState.self_video ? 32n : 0n) |
-      (payload.voiceState.suppress ? 64n : 0n),
+    toggles: new VoiceStateToggles(payload.voiceState),
 
     requestToSpeakTimestamp: payload.voiceState.request_to_speak_timestamp
       ? Date.parse(payload.voiceState.request_to_speak_timestamp)

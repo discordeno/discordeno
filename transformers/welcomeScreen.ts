@@ -1,10 +1,9 @@
 import { Bot } from "../bot.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { WelcomeScreen } from "../types/guilds/welcomeScreen.ts";
+import { DiscordWelcomeScreen } from "../types/discord.ts";
 
 export function transformWelcomeScreen(
   bot: Bot,
-  payload: SnakeCasedPropertiesDeep<WelcomeScreen>,
+  payload: DiscordWelcomeScreen,
 ): DiscordenoWelcomeScreen {
   return {
     description: payload.description ?? undefined,

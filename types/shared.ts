@@ -560,6 +560,8 @@ export enum SystemChannelFlags {
 
 /** https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure */
 export interface BaseVoiceState {
+  /** The session id for this voice state */
+  sessionId: string;
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-object */
@@ -594,8 +596,7 @@ export interface BaseChannel {
 
 /** https://discord.com/developers/docs/topics/gateway#presence-update */
 export interface BasePresenceUpdate {
-  /** Either "idle", "dnd", "online", or "offline" */
-  status: "idle" | "dnd" | "online" | "offline";
+  
 }
 
 /** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure */

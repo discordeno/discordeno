@@ -24,6 +24,7 @@ import {
   BaseEmbedVideo,
   BaseEmoji,
   BaseGuild,
+  BaseIncomingWebhook,
   BaseIntegration,
   BaseIntegrationAccount,
   BaseIntegrationApplication,
@@ -245,7 +246,7 @@ export interface DiscordAttachment extends SnakeCasedPropertiesDeep<BaseAttachme
 /** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
 export type DiscordWebhook = DiscordIncomingWebhook | DiscordApplicationWebhook;
 
-export interface DiscordIncomingWebhook {
+export interface DiscordIncomingWebhook extends SnakeCasedPropertiesDeep<BaseIncomingWebhook> {
   /** The id of the webhook */
   id: string;
   /** The guild id this webhook is for */
@@ -267,10 +268,24 @@ export interface DiscordIncomingWebhook {
 }
 
 export interface DiscordApplicationWebhook extends SnakeCasedPropertiesDeep<BaseApplicationWebhook> {
+  /** The id of the webhook */
+  id: string;
   /** The guild id this webhook is for */
-  guildId?: string | null;
+  guild_id?: string | null;
   /** The channel id this webhook is for */
-  channelId?: string | null;
+  channel_id?: string | null;
+  /** The user this webhook was created by (not returned when getting a webhook with its token) */
+  user?: DiscordUser;
+  /** The default name of the webhook */
+  name: string | null;
+  /** The default user avatar hash of the webhook */
+  avatar: string | null;
+  /** The bot/OAuth2 application that created this webhook */
+  application_id: string | null;
+  /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks) */
+  source_guild?: Partial<DiscordGuild>;
+  /** The channel that this webhook is following (returned for Channel Follower Webhooks) */
+  source_channel?: Partial<DiscordChannel>;
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object */
@@ -304,9 +319,9 @@ export interface DiscordGuild extends SnakeCasedPropertiesDeep<BaseGuild> {
   /** The id of the channel where community guilds can display rules and/or guidelines */
   rules_channel_id: string | null;
   /** When this guild was joined at */
-  joinedAt?: string;
+  joined_at?: string;
   /** States of members currently in voice channels; lacks the guild_id key */
-  voiceStates?: Omit<DiscordVoiceState, "guildId">[];
+  voice_states?: Omit<DiscordVoiceState, "guildId">[];
   /** Users in the guild */
   members?: DiscordMember[];
   /** Channels in the guild */
@@ -320,13 +335,13 @@ export interface DiscordGuild extends SnakeCasedPropertiesDeep<BaseGuild> {
   banner: string | null;
   // TODO: Can be optimized to a number but is it worth it?
   /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
-  preferredLocale: string;
+  preferred_locale: string;
   /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
   public_updates_channel_id: string | null;
   /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
-  welcomeScreen?: DiscordWelcomeScreen;
+  welcome_screen?: DiscordWelcomeScreen;
   /** Stage instances in the guild */
-  stageInstances?: DiscordStageInstance[];
+  stage_instances?: DiscordStageInstance[];
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
@@ -385,8 +400,6 @@ export interface DiscordVoiceState extends SnakeCasedPropertiesDeep<BaseVoiceSta
   user_id: string;
   /** The guild member this voice state is for */
   member?: DiscordMemberWithUser;
-  /** The session id for this voice state */
-  session_id: string;
   /** Whether this user is deafened by the server */
   deaf: boolean;
   /** Whether this user is muted by the server */
@@ -435,6 +448,8 @@ export interface DiscordChannel extends SnakeCasedPropertiesDeep<BaseChannel> {
 
 /** https://discord.com/developers/docs/topics/gateway#presence-update */
 export interface DiscordPresenceUpdate extends SnakeCasedPropertiesDeep<BasePresenceUpdate> {
+  /** Either "idle", "dnd", "online", or "offline" */
+  status: "idle" | "dnd" | "online" | "offline";
   /** The user presence is being updated for */
   user: DiscordUser;
   /** id of the guild */
@@ -545,7 +560,6 @@ export interface DiscordActivitySecrets extends SnakeCasedPropertiesDeep<BaseAct
 // https://github.com/discord/discord-api-docs/pull/2219
 // TODO: add documentation link
 export interface DiscordActivityButton extends SnakeCasedPropertiesDeep<BaseActivityButton> {
-
 }
 
 export interface DiscordOverwrite extends SnakeCasedPropertiesDeep<BaseOverwrite> {

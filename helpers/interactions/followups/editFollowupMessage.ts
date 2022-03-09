@@ -1,4 +1,5 @@
 import { Bot } from "../../../bot.ts";
+import { EditWebhookMessage } from "../../../types/discordeno.ts";
 import { MessageComponentTypes } from "../../../types/messages/components/messageComponentTypes.ts";
 import { Message } from "../../../types/messages/message.ts";
 

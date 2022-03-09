@@ -3,6 +3,7 @@ import { MemberToggles } from "../transformers/toggles/member.ts";
 import { RoleToggles } from "../transformers/toggles/role.ts";
 import { UserToggles } from "../transformers/toggles/user.ts";
 import { VoiceStateToggles } from "../transformers/toggles/voice.ts";
+import { Collection } from "../util/collection.ts";
 import {
   AllowedMentionsTypes,
   BaseActivity,
@@ -12,6 +13,7 @@ import {
   BaseActivityParty,
   BaseActivitySecrets,
   BaseActivityTimestamps,
+  BaseAllowedMentions,
   BaseApplication,
   BaseAttachment,
   BaseChannel,
@@ -361,7 +363,7 @@ export interface InputTextComponent {
 }
 
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
-export interface AllowedMentions {
+export interface AllowedMentions extends BaseAllowedMentions {
   /** Array of role_ids to mention (Max size of 100) */
   roles?: bigint[];
   /** Array of user_ids to mention (Max size of 100) */
@@ -407,18 +409,8 @@ export interface EditWebhookMessage {
 
 /** https://discord.com/developers/docs/resources/channel#embed-object */
 export interface Embed extends BaseEmbed {
-  /** Title of embed */
-  title?: string;
-  /** Type of embed (always "rich" for webhook embeds) */
-  type?: EmbedTypes;
-  /** Description of embed */
-  description?: string;
-  /** Url of embed */
-  url?: string;
   /** Timestamp of embed content */
-  timestamp?: string;
-  /** Color code of the embed */
-  color?: number;
+  timestamp?: number;
   /** Footer information */
   footer?: EmbedFooter;
   /** Image information */
@@ -505,6 +497,8 @@ export interface ApplicationWebhook extends Omit<IncomingWebhook, "channelId"> {
 export interface Guild extends BaseGuild {
   /** Guild id */
   id: bigint;
+  /** The shard id where this guild is */
+  shardId: number;
   /** Icon hash */
   icon?: bigint;
   /** Icon hash, returned when in the template object */
@@ -522,9 +516,9 @@ export interface Guild extends BaseGuild {
   /** The channel id that the widget will generate an invite to, or null if set to no invite */
   widgetChannelId?: bigint;
   /** Roles in the guild */
-  roles: Role[];
+  roles: Collection<bigint, Role>;
   /** Custom guild emojis */
-  emojis: Emoji[];
+  emojis: Collection<bigint, Emoji>;
   /** Application id of the guild creator if it is bot-created */
   applicationId?: bigint;
   /** The id of the channel where guild notices such as welcome messages and boost events are posted */
@@ -534,7 +528,7 @@ export interface Guild extends BaseGuild {
   /** When this guild was joined at */
   joinedAt?: number;
   /** States of members currently in voice channels; lacks the guild_id key */
-  voiceStates?: Omit<VoiceState, "guildId">[];
+  voiceStates?: Collection<bigint, VoiceState>;
   /** Users in the guild */
   members?: Member[];
   /** Channels in the guild */
@@ -544,7 +538,7 @@ export interface Guild extends BaseGuild {
   /** Presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
   presences?: Partial<PresenceUpdate>[];
   /** Banner hash */
-  banner: bigint;
+  banner?: bigint;
   // TODO: Can be optimized to a number but is it worth it?
   /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
   preferredLocale: string;
@@ -560,6 +554,8 @@ export interface Guild extends BaseGuild {
 export interface Role extends BaseRole {
   /** Role id */
   id: bigint;
+  /** The guild id where this role is */
+  guildId: bigint;
   /** The role toggle values for this role. */
   toggles: RoleToggles;
   /** Permission bit set */
@@ -596,8 +592,6 @@ export interface VoiceState extends BaseVoiceState {
   userId: bigint;
   /** The guild member this voice state is for */
   member?: MemberWithUser;
-  /** The session id for this voice state */
-  sessionId: bigint;
   /** The boolean toggle values for this voice state */
   toggles: VoiceStateToggles;
   /** The time at which the user requested to speak */
@@ -634,14 +628,20 @@ export interface Channel extends BaseChannel {
 
 /** https://discord.com/developers/docs/topics/gateway#presence-update */
 export interface PresenceUpdate extends BasePresenceUpdate {
+  /** Either "idle", "dnd", "online", or "offline" */
+  status: number;
   /** The user presence is being updated for */
   user: User;
   /** id of the guild */
   guildId: bigint;
   /** User's current activities */
   activities: Activity[];
-  /** User's platform-dependent status */
-  clientStatus: ClientStatus;
+  /** The user's status set for an active desktop (Windows, Linux, Mac) application session */
+  desktop?: string;
+  /** The user's status set for an active mobile (iOS, Android) application session */
+  mobile?: string;
+  /** The user's status set for an active web (browser, bot account) application session */
+  web?: string;
 }
 
 /** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure */
@@ -702,6 +702,21 @@ export interface ThreadMember extends BaseThreadMember {
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object */
 export interface Activity extends BaseActivity {
+  partyId?: bigint;
+  partyCurrentSize?: number;
+  partyMaxSize?: number;
+  largeImage?: string;
+  largeText?: string;
+  smallImage?: string;
+  smallText?: string;
+  join?: string;
+  spectate?: string;
+  match?: string;
+  
+  /** Unix time (in milliseconds) of when the activity started */
+  startedAt?: number;
+  /** Unix time (in milliseconds) of when the activity ends */
+  endedAt?: number;
   /** Unix timestamps for start and/or end of the game */
   timestamps?: ActivityTimestamps;
   /** Application id for the game */
