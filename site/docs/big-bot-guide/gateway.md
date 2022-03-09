@@ -525,7 +525,7 @@ option was added to allow you to choose how many shards should be managed by eac
 When shards are spawn they are triggered by a method on gateway.
 
 ```ts
-gateway.tellClusterToIdentify = async function (gateway, workerId, shardId, bucketId) {
+gateway.tellWorkerToIdentify = async function (gateway, workerId, shardId, bucketId) {
   await gateway.identify(gateway, shardId, gateway.maxShards);
 };
 ```
