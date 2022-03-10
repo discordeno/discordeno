@@ -1,6 +1,6 @@
-import type { GetGuildAuditLog } from "../../types/auditLog/getGuildAuditLog.ts";
 import type { Bot } from "../../bot.ts";
 import { DiscordAuditLog } from "../../types/discord.ts";
+import { AuditLogEvents } from "../../types/shared.ts";
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
 export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuildAuditLog) {
@@ -51,4 +51,16 @@ export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuild
     threads: auditlog.threads.map((thread) => bot.transformers.channel(bot, { channel: thread, guildId })),
     scheduledEvents: auditlog.guild_scheduled_events?.map((event) => bot.transformers.scheduledEvent(bot, event)),
   };
+}
+
+/** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
+export interface GetGuildAuditLog {
+  /** Filter the log for actions made by a user */
+  userId?: bigint | string;
+  /** The type of audit log event */
+  actionType?: AuditLogEvents;
+  /** Filter the log before a certain entry id */
+  before?: bigint | string;
+  /** How many entries are returned (default 50, minimum 1, maximum 100) */
+  limit?: number;
 }
