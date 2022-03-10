@@ -33,32 +33,6 @@ import {
   TextStyles,
 } from "./shared.ts";
 
-/** https://discord.com/developers/docs/resources/user#connection-object */
-export interface Connection extends BaseConnection {
-  /** An array of partial server integrations */
-  integrations?: Integration[];
-}
-
-/** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
-export interface Integration extends BaseIntegration {
-  /** User for this integration */
-  user?: User;
-  /** Integration account information */
-  account: IntegrationAccount;
-  /** The bot/OAuth2 application for discord integrations */
-  application?: IntegrationApplication;
-}
-
-/** https://discord.com/developers/docs/resources/guild#integration-account-object-integration-account-structure */
-export interface IntegrationAccount extends BaseIntegrationAccount {
-}
-
-/** https://discord.com/developers/docs/resources/guild#integration-application-object-integration-application-structure */
-export interface IntegrationApplication {
-  /** The bot associated with this application */
-  bot?: User;
-}
-
 /**
  * https://discord.com/developers/docs/reference#image-formatting
  * json is only for stickers

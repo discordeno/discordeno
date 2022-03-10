@@ -1,10 +1,9 @@
 import { Bot } from "../../bot.ts";
+import { DiscordIntegrationDelete } from "../../types/discord.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import type { IntegrationDelete } from "../../types/integrations/integrationDelete.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export function handleIntegrationDelete(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<IntegrationDelete>;
+  const payload = data.d as DiscordIntegrationDelete;
 
   bot.events.integrationDelete(bot, {
     id: bot.transformers.snowflake(payload.id),

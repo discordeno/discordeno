@@ -39,7 +39,7 @@ import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { calculateShardId } from "./util/calculateShardId.ts";
 import * as handlers from "./handlers/mod.ts";
 import { Interaction, transformInteraction } from "./transformers/interaction.ts";
-import { DiscordenoIntegration, transformIntegration } from "./transformers/integration.ts";
+import { Integration, transformIntegration } from "./transformers/integration.ts";
 import { transformApplication } from "./transformers/application.ts";
 import { transformTeam } from "./transformers/team.ts";
 import { DiscordenoInvite, transformInvite } from "./transformers/invite.ts";
@@ -441,7 +441,7 @@ export interface EventHandlers {
     rawPayload: DiscordReady,
   ) => any;
   interactionCreate: (bot: Bot, interaction: Interaction) => any;
-  integrationCreate: (bot: Bot, integration: DiscordenoIntegration) => any;
+  integrationCreate: (bot: Bot, integration: Integration) => any;
   integrationDelete: (
     bot: Bot,
     payload: { id: bigint; guildId: bigint; applicationId?: bigint },

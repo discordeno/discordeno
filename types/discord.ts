@@ -114,6 +114,29 @@ export interface DiscordIntegrationApplication extends SnakeCasedPropertiesDeep<
   bot?: DiscordUser;
 }
 
+/** https://github.com/discord/discord-api-docs/blob/master/docs/topics/Gateway.md#integration-create-event-additional-fields */
+export interface DiscordIntegrationCreateUpdate extends DiscordIntegration {
+  /** Id of the guild */
+  guild_id: string;
+}
+
+/** https://github.com/discord/discord-api-docs/blob/master/docs/topics/Gateway.md#integration-delete-event-fields */
+export interface DiscordIntegrationDelete {
+  /** Integration id */
+  id: string;
+  /** Id of the guild */
+  guild_id: string;
+  /** Id of the bot/OAuth2 application for this discord integration */
+  application_id?: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#guild-integrations-update */
+export interface DiscordGuildIntegrationsUpdate {
+  /** id of the guild whose integrations were updated */
+  guild_id: string;
+}
+
+
 /** https://discord.com/developers/docs/topics/gateway#typing-start */
 export interface DiscordTypingStart extends SnakeCasedPropertiesDeep<BaseTypingStart> {
   /** id of the channel */
