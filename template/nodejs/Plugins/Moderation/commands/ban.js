@@ -1,5 +1,5 @@
 const BaseCommand = require("../../../Structures/BaseCommand.js");
-const Component = require("../../../Structures/Component.js");
+const {Component} = require("discordeno.js");
 
 class bancommand extends BaseCommand {
   static name = "ban";

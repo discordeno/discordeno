@@ -1,3 +1,5 @@
+const {getEmoji} = require('../Util/Util');
+
 const Constants = {
   PRIMARY: 1,
   SECONDARY: 2,
@@ -14,7 +16,7 @@ const Constants = {
 };
 class Component {
   constructor(options = {}) {
-    this.type = options.type;
+    this.type = typeof options.type === "string" ?  Constants[options.type] : options.type;
     this.custom_id = options.custom_id ?? options.customId;
     this.disabled = options.disabled;
     this.style = options.style;
@@ -23,13 +25,13 @@ class Component {
     this.url = options.url;
 
     //Select Menu
-    this.options = options.options;
+    this.options = options.options ?? [];
     this.placeholder = options.placeholder;
     this.min_values = options.min_values ?? options.minValues;
     this.max_values = options.max_values ?? options.maxValues;
 
     //Action Row
-    this.components = options.components;
+    this.components = options.components ?? [];
 
     //Modal
     this.value = options.value;
@@ -77,7 +79,7 @@ class Component {
   }
 
   setEmoji(emoji) {
-    this.emoji = emoji;
+    this.emoji = getEmoji(emoji);
     return this;
   }
 
@@ -90,6 +92,11 @@ class Component {
 
   setOptions(options) {
     this.options = options;
+    return this;
+  }
+
+  addOptions(...options) {
+    options.forEach((c) => this.options.push(c));
     return this;
   }
 
@@ -128,13 +135,18 @@ class Component {
     return this;
   }
 
+  addComponents(...components) {
+    components.forEach((c) => this.components.push(c));
+    return this;
+  }
+
   toJSON() {
     if (!this.type) throw new Error("Component must have a type");
     const json = {
       type: this.type,
     };
     if (this.type === 1) {
-      json.components = this.components;
+      json.components = this.components.map((c) => c.toJSON?.());
     }
 
     if (this.type === 2) {
@@ -148,7 +160,11 @@ class Component {
 
     if (this.type === 3) {
       json.customId = this.custom_id;
-      json.options = this.options;
+      json.options = this.options?.map((o) => {
+        if (typeof o.emoji === "object") return o;
+        o.emoji = getEmoji(o.emoji);
+        return o;
+      });
       json.placeholder = this.placeholder;
       json.minValues = this.min_values;
       json.maxValues = this.max_values;
@@ -164,6 +180,11 @@ class Component {
       json.required = this.required;
       json.value = this.value;
       json.placeholder = this.placeholder;
+    }
+
+    if (this.type === 5) {
+      json.customId = this.custom_id;
+      json.disabled = this.disabled;
     }
     return json;
   }

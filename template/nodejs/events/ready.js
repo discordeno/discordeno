@@ -1,4 +1,4 @@
-const User = require("../Structures/User");
+const { User } = require("discordeno.js");
 module.exports = async (client, payload) => {
   client.user = new User(client, payload.user);
 
