@@ -1,6 +1,6 @@
-import type { Channel } from "../../../types/channels/channel.ts";
 import type { StartThreadBase } from "../../../types/channels/threads/startThread.ts";
 import type { Bot } from "../../../bot.ts";
+import { DiscordChannel } from "../../../types/discord.ts";
 
 /** Creates a new public thread from an existing message. Returns a thread channel. */
 export async function startThreadWithMessage(
@@ -9,7 +9,7 @@ export async function startThreadWithMessage(
   messageId: bigint,
   options: StartThreadBase,
 ) {
-  const result = await bot.rest.runMethod<Channel>(
+  const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     "post",
     bot.constants.endpoints.THREAD_START_PUBLIC(channelId, messageId),

@@ -4,13 +4,13 @@ import { GetGatewayBot } from "./types/gateway/getGatewayBot.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
 import { Collection } from "./util/collection.ts";
 import {
-  DiscordenoChannel,
-  DiscordenoGuild,
-  DiscordenoMember,
-  DiscordenoMessage,
-  DiscordenoUser,
+Channel,
   DiscordenoVoiceState,
+  Guild,
+  Member,
+  Message,
   Role,
+  ScheduledEvent,
   transformChannel,
   transformGuild,
   transformMember,
@@ -18,6 +18,7 @@ import {
   transformRole,
   transformUser,
   transformVoiceState,
+  User,
 } from "./transformers/mod.ts";
 import {
   baseEndpoints,
@@ -37,7 +38,7 @@ import { delay, formatImageURL, hasProperty } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { calculateShardId } from "./util/calculateShardId.ts";
 import * as handlers from "./handlers/mod.ts";
-import { DiscordenoInteraction, transformInteraction } from "./transformers/interaction.ts";
+import { Interaction, transformInteraction } from "./transformers/interaction.ts";
 import { DiscordenoIntegration, transformIntegration } from "./transformers/integration.ts";
 import { transformApplication } from "./transformers/application.ts";
 import { transformTeam } from "./transformers/team.ts";
@@ -56,7 +57,6 @@ import { transformAuditlogEntry } from "./transformers/auditlogEntry.ts";
 import { transformApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
 import { calculateBits, calculatePermissions } from "./util/permissions.ts";
 import { transformScheduledEvent } from "./transformers/scheduledEvent.ts";
-import { DiscordenoScheduledEvent } from "./transformers/scheduledEvent.ts";
 import { DiscordenoThreadMember, transformThreadMember } from "./transformers/threadMember.ts";
 import { transformApplicationCommandOption } from "./transformers/applicationCommandOption.ts";
 import { transformApplicationCommand } from "./transformers/applicationCommand.ts";
@@ -66,7 +66,6 @@ import { transformWidget } from "./transformers/widget.ts";
 import { transformStageInstance } from "./transformers/stageInstance.ts";
 import { transformSticker } from "./transformers/sticker.ts";
 import { transformGatewayBot } from "./transformers/gatewayBot.ts";
-import { Guild, Member } from "./types/discordeno.ts";
 import { DiscordEmoji } from "./types/discord.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
@@ -395,8 +394,8 @@ export type RestManager = ReturnType<typeof createRestManager>;
 
 export interface EventHandlers {
   debug: (text: string, ...args: any[]) => unknown;
-  threadCreate: (bot: Bot, thread: DiscordenoChannel) => unknown;
-  threadDelete: (bot: Bot, thread: DiscordenoChannel) => unknown;
+  threadCreate: (bot: Bot, thread: Channel) => unknown;
+  threadDelete: (bot: Bot, thread: Channel) => unknown;
   threadMembersUpdate: (
     bot: Bot,
     payload: {
@@ -406,10 +405,10 @@ export interface EventHandlers {
       removedMemberIds?: bigint[];
     },
   ) => unknown;
-  threadUpdate: (bot: Bot, thread: DiscordenoChannel) => unknown;
-  scheduledEventCreate: (bot: Bot, event: DiscordenoScheduledEvent) => unknown;
-  scheduledEventUpdate: (bot: Bot, event: DiscordenoScheduledEvent) => unknown;
-  scheduledEventDelete: (bot: Bot, event: DiscordenoScheduledEvent) => unknown;
+  threadUpdate: (bot: Bot, thread: Channel) => unknown;
+  scheduledEventCreate: (bot: Bot, event: ScheduledEvent) => unknown;
+  scheduledEventUpdate: (bot: Bot, event: ScheduledEvent) => unknown;
+  scheduledEventDelete: (bot: Bot, event: ScheduledEvent) => unknown;
   /** Sent when a user has subscribed to a guild scheduled event. EXPERIMENTAL! */
   scheduledEventUserAdd: (
     bot: Bot,
@@ -433,7 +432,7 @@ export interface EventHandlers {
     payload: {
       shardId: number;
       v: number;
-      user: DiscordenoUser;
+      user: User;
       guilds: bigint[];
       sessionId: string;
       shard?: number[];
@@ -441,7 +440,7 @@ export interface EventHandlers {
     },
     rawPayload: DiscordReady,
   ) => any;
-  interactionCreate: (bot: Bot, interaction: DiscordenoInteraction) => any;
+  interactionCreate: (bot: Bot, interaction: Interaction) => any;
   integrationCreate: (bot: Bot, integration: DiscordenoIntegration) => any;
   integrationDelete: (
     bot: Bot,
@@ -459,25 +458,25 @@ export interface EventHandlers {
   ) => any;
   guildMemberAdd: (
     bot: Bot,
-    member: DiscordenoMember,
-    user: DiscordenoUser,
+    member: Member,
+    user: User,
   ) => any;
-  guildMemberRemove: (bot: Bot, user: DiscordenoUser, guildId: bigint) => any;
+  guildMemberRemove: (bot: Bot, user: User, guildId: bigint) => any;
   guildMemberUpdate: (
     bot: Bot,
-    member: DiscordenoMember,
-    user: DiscordenoUser,
+    member: Member,
+    user: User,
   ) => any;
-  messageCreate: (bot: Bot, message: DiscordenoMessage) => any;
+  messageCreate: (bot: Bot, message: Message) => any;
   messageDelete: (
     bot: Bot,
     payload: { id: bigint; channelId: bigint; guildId?: bigint },
-    message?: DiscordenoMessage,
+    message?: Message,
   ) => any;
   messageUpdate: (
     bot: Bot,
-    message: DiscordenoMessage,
-    oldMessage?: DiscordenoMessage,
+    message: Message,
+    oldMessage?: Message,
   ) => any;
   reactionAdd: (
     bot: Bot,
@@ -486,7 +485,7 @@ export interface EventHandlers {
       channelId: bigint;
       messageId: bigint;
       guildId?: bigint;
-      member?: DiscordenoMember;
+      member?: Member;
       emoji: DiscordenoEmoji;
     },
   ) => any;
@@ -532,8 +531,8 @@ export interface EventHandlers {
       guildId?: bigint;
       channelId?: bigint;
       userId: bigint;
-      member?: DiscordenoMember;
-      user?: DiscordenoUser;
+      member?: Member;
+      user?: User;
       sessionId: string;
       deaf: boolean;
       mute: boolean;
@@ -545,7 +544,7 @@ export interface EventHandlers {
       requestToSpeakTimestamp?: number;
     },
   ) => any;
-  channelCreate: (bot: Bot, channel: DiscordenoChannel) => any;
+  channelCreate: (bot: Bot, channel: Channel) => any;
   dispatchRequirements: (
     bot: Bot,
     data: GatewayPayload,
@@ -554,15 +553,15 @@ export interface EventHandlers {
   voiceChannelLeave: (
     bot: Bot,
     voiceState: DiscordenoVoiceState,
-    guild: DiscordenoGuild,
-    channel?: DiscordenoChannel,
+    guild: Guild,
+    channel?: Channel,
   ) => any;
-  channelDelete: (bot: Bot, channel: DiscordenoChannel) => any;
+  channelDelete: (bot: Bot, channel: Channel) => any;
   channelPinsUpdate: (
     bot: Bot,
     data: { guildId?: bigint; channelId: bigint; lastPinTimestamp?: number },
   ) => any;
-  channelUpdate: (bot: Bot, channel: DiscordenoChannel) => any;
+  channelUpdate: (bot: Bot, channel: Channel) => any;
   stageInstanceCreate: (
     bot: Bot,
     data: {
@@ -597,8 +596,8 @@ export interface EventHandlers {
       emojis: Collection<bigint, DiscordEmoji>;
     },
   ) => any;
-  guildBanAdd: (bot: Bot, user: DiscordenoUser, guildId: bigint) => any;
-  guildBanRemove: (bot: Bot, user: DiscordenoUser, guildId: bigint) => any;
+  guildBanAdd: (bot: Bot, user: User, guildId: bigint) => any;
+  guildBanRemove: (bot: Bot, user: User, guildId: bigint) => any;
   guildLoaded: (bot: Bot, guild: Guild) => any;
   guildCreate: (bot: Bot, guild: Guild) => any;
   guildDelete: (bot: Bot, id: bigint, shardId: number) => any;
@@ -611,7 +610,7 @@ export interface EventHandlers {
     bot: Bot,
     payload: { channelId: bigint; guildId: bigint },
   ) => any;
-  botUpdate: (bot: Bot, user: DiscordenoUser) => any;
+  botUpdate: (bot: Bot, user: User) => any;
   typingStart: (
     bot: Bot,
     payload: {

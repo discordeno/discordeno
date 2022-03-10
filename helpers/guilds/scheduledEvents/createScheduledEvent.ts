@@ -1,7 +1,7 @@
 import { Bot } from "../../../bot.ts";
+import { DiscordScheduledEvent } from "../../../types/discord.ts";
 import {
   CreateScheduledEvent,
-  ScheduledEvent,
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
 } from "../../../types/guilds/scheduledEvents.ts";
@@ -30,7 +30,7 @@ export async function createScheduledEvent(bot: Bot, guildId: bigint, options: C
     throw new Error("Cannot schedule event to end before starting.");
   }
 
-  const event = await bot.rest.runMethod<ScheduledEvent>(
+  const event = await bot.rest.runMethod<DiscordScheduledEvent>(
     bot.rest,
     "post",
     bot.constants.endpoints.GUILD_SCHEDULED_EVENTS(guildId),

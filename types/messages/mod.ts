@@ -15,7 +15,6 @@ export * from "./components/selectOption.ts";
 export * from "./createMessage.ts";
 export * from "./editMessage.ts";
 export * from "./getMessages.ts";
-export * from "./message.ts";
 export * from "./messageActivity.ts";
 export * from "./messageActivityTypes.ts";
 export * from "./messageDelete.ts";

@@ -1,6 +1,6 @@
 import type { Bot } from "../../bot.ts";
+import { DiscordMessage } from "../../types/discord.ts";
 import { ExecuteWebhook } from "../../types/discordeno.ts";
-import type { Message } from "../../types/messages/message.ts";
 
 /** Send a webhook with webhook Id and webhook token */
 export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: string, options: ExecuteWebhook) {
@@ -13,7 +13,7 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
     }
     : { parse: [] };
 
-  const result = await bot.rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "post",
     `${bot.constants.endpoints.WEBHOOK(webhookId, webhookToken)}?wait=${options.wait ?? false}${

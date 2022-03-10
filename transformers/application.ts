@@ -1,8 +1,7 @@
 import { Bot } from "../bot.ts";
 import { DiscordApplication } from "../types/discord.ts";
-import { Application } from "../types/discordeno.ts";
 
-export function transformApplication(bot: Bot, payload: DiscordApplication): Application {
+export function transformApplication(bot: Bot, payload: DiscordApplication) {
   return {
     name: payload.name,
     description: payload.description,
@@ -25,3 +24,5 @@ export function transformApplication(bot: Bot, payload: DiscordApplication): App
     guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
   };
 }
+
+export interface Application extends ReturnType<typeof transformApplication> {}

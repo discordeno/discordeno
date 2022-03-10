@@ -1,5 +1,6 @@
 import { SnakeCasedPropertiesDeep } from "../util.ts";
 
+/** https://discord.com/developers/docs/resources/guild#get-guild-widget-example-get-guild-widget */
 export interface GuildWidgetDetails {
   id: string;
   name: string;

@@ -30,7 +30,6 @@
   "extensions": [
     "denoland.vscode-deno",
     "pkief.material-icon-theme",
-    "coenraads.bracket-pair-colorizer",
     "equinusocio.vsc-material-theme",
     "tabnine.tabnine-vscode"
   ],

@@ -1,8 +1,8 @@
 import { Bot } from "../bot.ts";
-import { Application } from "../types/discordeno.ts";
 import { InviteCreate } from "../types/invites/inviteCreate.ts";
 import { TargetTypes } from "../types/invites/targetTypes.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { Application } from "./application.ts";
 import { DiscordenoUser } from "./member.ts";
 
 export function transformInvite(bot: Bot, invite: SnakeCasedPropertiesDeep<InviteCreate>): DiscordenoInvite {

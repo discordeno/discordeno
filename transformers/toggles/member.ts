@@ -11,10 +11,12 @@ export const MemberToggle = {
 };
 
 export class MemberToggles extends ToggleBitfield {
-  constructor(member: DiscordMember) {
+  constructor(member: Partial<DiscordMember>) {
     super();
 
     if (member.deaf) this.add(MemberToggle.deaf);
+    if (member.mute) this.add(MemberToggle.mute);
+    if (member.pending) this.add(MemberToggle.pending);
   }
 
   /** Whether the user belongs to an OAuth2 application */

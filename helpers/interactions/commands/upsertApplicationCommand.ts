@@ -1,7 +1,7 @@
-import type { ApplicationCommand } from "../../../types/interactions/commands/applicationCommand.ts";
 import type { EditGlobalApplicationCommand } from "../../../types/interactions/commands/editGlobalApplicationCommand.ts";
 import type { Bot } from "../../../bot.ts";
 import { makeOptionsForCommand } from "./createApplicationCommand.ts";
+import { DiscordApplicationCommand } from "../../../types/discord.ts";
 
 /**
  * Edit an existing application command. If this command did not exist, it will create it.
@@ -12,7 +12,7 @@ export async function upsertApplicationCommand(
   options: EditGlobalApplicationCommand,
   guildId?: bigint,
 ) {
-  const result = await bot.rest.runMethod<ApplicationCommand>(
+  const result = await bot.rest.runMethod<DiscordApplicationCommand>(
     bot.rest,
     "patch",
     guildId

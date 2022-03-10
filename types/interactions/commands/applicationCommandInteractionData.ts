@@ -3,9 +3,8 @@ import { InteractionDataOption } from "./applicationCommandInteractionDataOption
 import { Attachment } from "../../messages/attachment.ts";
 import { MessageComponentTypes } from "../../messages/components/messageComponentTypes.ts";
 import { MessageComponents } from "../../messages/components/messageComponents.ts";
-import { Message } from "../../messages/message.ts";
 import { Channel } from "../../channels/channel.ts";
-import { DiscordRole, DiscordUser } from "../../discord.ts";
+import { DiscordMessage, DiscordRole, DiscordUser } from "../../discord.ts";
 
 export interface InteractionData {
   /** The type of component */
@@ -23,7 +22,7 @@ export interface InteractionData {
   /** Converted users + roles + channels + attachments */
   resolved?: {
     /** The Ids and Message objects */
-    messages?: Record<string, Message>;
+    messages?: Record<string, DiscordMessage>;
     /** The Ids and User objects */
     users?: Record<string, DiscordUser>;
     /** The Ids and partial Member objects */

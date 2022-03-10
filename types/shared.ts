@@ -790,6 +790,171 @@ export interface BaseMemberWithUser extends BaseMember {
 
 }
 
+/** https://discord.com/developers/docs/resources/channel#message-object-message-types */
+export enum MessageTypes {
+  Default,
+  RecipientAdd,
+  RecipientRemove,
+  Call,
+  ChannelNameChange,
+  ChannelIconChange,
+  ChannelPinnedMessage,
+  GuildMemberJoin,
+  UserPremiumGuildSubscription,
+  UserPremiumGuildSubscriptionTier1,
+  UserPremiumGuildSubscriptionTier2,
+  UserPremiumGuildSubscriptionTier3,
+  ChannelFollowAdd,
+  GuildDiscoveryDisqualified = 14,
+  GuildDiscoveryRequalified,
+  GuildDiscoveryGracePeriodInitialWarning,
+  GuildDiscoveryGracePeriodFinalWarning,
+  ThreadCreated,
+  Reply,
+  ChatInputCommand,
+  ThreadStarterMessage,
+  GuildInviteReminder,
+  ContextMenuCommand,
+}
+
+/** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
+export enum MessageActivityTypes {
+  Join = 1,
+  Spectate,
+  Listen,
+  JoinRequest,
+}
+
+/** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types */
+export enum StickerTypes {
+  /** an official sticker in a pack, part of Nitro or in a removed purchasable pack */
+  Standard = 1,
+  /** a sticker uploaded to a Boosted guild for the guild's members */
+  Guild,
+}
+
+/** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types */
+export enum StickerFormatTypes {
+  Png = 1,
+  Apng,
+  Lottie,
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */
+export enum InteractionTypes {
+  Ping = 1,
+  ApplicationCommand = 2,
+  MessageComponent = 3,
+  ApplicationCommandAutocomplete = 4,
+  ModalSubmit = 5,
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype */
+export enum ApplicationCommandOptionTypes {
+  SubCommand = 1,
+  SubCommandGroup,
+  String,
+  Integer,
+  Boolean,
+  User,
+  Channel,
+  Role,
+  Mentionable,
+  Number,
+  Attachment,
+}
+
+/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events */
+export enum AuditLogEvents {
+  GuildUpdate = 1,
+  ChannelCreate = 10,
+  ChannelUpdate,
+  ChannelDelete,
+  ChannelOverwriteCreate,
+  ChannelOverwriteUpdate,
+  ChannelOverwriteDelete,
+  MemberKick = 20,
+  MemberPrune,
+  MemberBanAdd,
+  MemberBanRemove,
+  MemberUpdate,
+  MemberRoleUpdate,
+  MemberMove,
+  MemberDisconnect,
+  BotAdd,
+  RoleCreate = 30,
+  RoleUpdate,
+  RoleDelete,
+  InviteCreate = 40,
+  InviteUpdate,
+  InviteDelete,
+  WebhookCreate = 50,
+  WebhookUpdate,
+  WebhookDelete,
+  EmojiCreate = 60,
+  EmojiUpdate,
+  EmojiDelete,
+  MessageDelete = 72,
+  MessageBulkDelete,
+  MessagePin,
+  MessageUnpin,
+  IntegrationCreate = 80,
+  IntegrationUpdate,
+  IntegrationDelete,
+  StageInstanceCreate,
+  StageInstanceUpdate,
+  StageInstanceDelete,
+  StickerCreate = 90,
+  StickerUpdate,
+  StickerDelete,
+  GuildScheduledEventCreate = 100,
+  GuildScheduledEventUpdate,
+  GuildScheduledEventDelete,
+  ThreadCreate = 110,
+  ThreadUpdate,
+  ThreadDelete,
+}
+
+export enum ScheduledEventPrivacyLevel {
+  /** the scheduled event is public and available in discovery. DISCORD DEVS DISABLED THIS! WILL ERROR IF USED! */
+  // Public = 1,
+  /** the scheduled event is only accessible to guild members */
+  GuildOnly = 2,
+}
+
+export enum ScheduledEventEntityType {
+  StageInstance = 1,
+  Voice,
+  External,
+}
+
+export enum ScheduledEventStatus {
+  Scheduled = 1,
+  Active,
+  Completed,
+  Canceled,
+}
+
+/** https://discord.com/developers/docs/resources/invite#invite-object-target-user-types */
+export enum TargetTypes {
+  Stream = 1,
+  EmbeddedApplication,
+}
+
+export enum ApplicationCommandTypes {
+  /** A text-based command that shows up when a user types `/` */
+  ChatInput = 1,
+  /** A UI-based command that shows up when you right click or tap on a user */
+  User,
+  /** A UI-based command that shows up when you right click or tap on a message */
+  Message,
+}
+
+export enum ApplicationCommandPermissionTypes {
+  Role = 1,
+  User,
+}
+
 // UTILS
 
 // deno-lint-ignore-file ban-types no-explicit-any
@@ -924,3 +1089,4 @@ export type CamelCasedPropertiesDeep<Value> = Value extends Function ? Value
 export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
 
 export type MakeRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+

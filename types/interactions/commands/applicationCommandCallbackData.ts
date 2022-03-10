@@ -1,4 +1,4 @@
-import { Embed } from "../../discordeno.ts";
+import { Embed } from "../../../transformers/embed.ts";
 import { FileContent } from "../../discordeno/fileContent.ts";
 import { AllowedMentions } from "../../messages/allowedMentions.ts";
 import { MessageComponents } from "../../messages/components/messageComponents.ts";

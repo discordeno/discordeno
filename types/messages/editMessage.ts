@@ -1,5 +1,5 @@
+import { Embed } from "../../transformers/embed.ts";
 import { FileContent } from "../discordeno/fileContent.ts";
-import { DiscordenoEmbed } from "../../transformers/embed.ts";
 import { AllowedMentions } from "./allowedMentions.ts";
 import { Attachment } from "./attachment.ts";
 import { MessageComponents } from "./components/messageComponents.ts";
@@ -9,7 +9,7 @@ export interface EditMessage {
   /** The new message contents (up to 2000 characters) */
   content?: string | null;
   /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: DiscordenoEmbed[] | null;
+  embeds?: Embed[] | null;
   /** Edit the flags of the message (only `SUPRESS_EMBEDS` can currently be set/unset) */
   flags?: 4 | null;
   /** The contents of the file being sent/edited */

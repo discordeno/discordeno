@@ -1,17 +1,10 @@
 import { Bot } from "../bot.ts";
-import {
-  ScheduledEvent,
-  ScheduledEventEntityType,
-  ScheduledEventPrivacyLevel,
-  ScheduledEventStatus,
-} from "../types/guilds/scheduledEvents.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { DiscordenoUser } from "./member.ts";
+import { DiscordScheduledEvent } from "../types/discord.ts";
 
 export function transformScheduledEvent(
   bot: Bot,
-  payload: SnakeCasedPropertiesDeep<ScheduledEvent>,
-): DiscordenoScheduledEvent {
+  payload: DiscordScheduledEvent,
+) {
   return {
     id: bot.transformers.snowflake(payload.id),
     guildId: bot.transformers.snowflake(payload.guild_id),
@@ -33,37 +26,4 @@ export function transformScheduledEvent(
   };
 }
 
-export interface DiscordenoScheduledEvent {
-  /** the id of the scheduled event */
-  id: bigint;
-  /** the guild id which the scheduled event belongs to */
-  guildId: bigint;
-  /** the channel id in which the scheduled event will be hosted if specified */
-  channelId?: bigint;
-  /** the id of the user that created the scheduled event */
-  creatorId: bigint;
-  /** the name of the scheduled event */
-  name: string;
-  /** the description of the scheduled event */
-  description: string;
-  /** the time the scheduled event will start */
-  scheduledStartTime: number;
-  /** the time the scheduled event will end if it does end. */
-  scheduledEndTime?: number;
-  /** the privacy level of the scheduled event */
-  privacyLevel: ScheduledEventPrivacyLevel;
-  /** the status of the scheduled event */
-  status: ScheduledEventStatus;
-  /** the type of hosting entity associated with a scheduled event */
-  entityType: ScheduledEventEntityType;
-  /** any additional id of the hosting entity associated with event */
-  entityId?: bigint;
-  /** location of the event */
-  location?: string;
-  /** the user that created the scheduled event */
-  creator?: DiscordenoUser;
-  /** the number of users subscribed to the scheduled event */
-  userCount: number;
-  /** the cover image hash of the scheduled event */
-  image?: bigint;
-}
+export interface ScheduledEvent extends ReturnType<typeof transformScheduledEvent> {}

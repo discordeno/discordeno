@@ -1,7 +1,7 @@
-import type { Channel } from "../../types/channels/channel.ts";
 import type { ModifyChannel } from "../../types/channels/modifyChannel.ts";
 import type { Bot } from "../../bot.ts";
-import { DiscordenoChannel } from "../../transformers/channel.ts";
+import { Channel } from "../../transformers/channel.ts";
+import { DiscordChannel } from "../../types/discord.ts";
 
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(bot: Bot, channelId: bigint, options: ModifyChannel, reason?: string) {
@@ -21,7 +21,7 @@ export async function editChannel(bot: Bot, channelId: bigint, options: ModifyCh
       request.amount = 2;
       request.timestamp = Date.now() + 600000;
     } else {
-      return new Promise<DiscordenoChannel>((resolve, reject) => {
+      return new Promise<Channel>((resolve, reject) => {
         // 2 have already been used add to queue
         request.items.push({ channelId, options, resolve, reject });
         if (editChannelProcessing) return;
@@ -31,7 +31,7 @@ export async function editChannel(bot: Bot, channelId: bigint, options: ModifyCh
     }
   }
 
-  const result = await bot.rest.runMethod<Channel>(bot.rest, "patch", bot.constants.endpoints.CHANNEL_BASE(channelId), {
+  const result = await bot.rest.runMethod<DiscordChannel>(bot.rest, "patch", bot.constants.endpoints.CHANNEL_BASE(channelId), {
     name: options.name,
     topic: options.topic,
     bitrate: options.bitrate,
@@ -66,7 +66,7 @@ interface EditChannelRequest {
   items: {
     channelId: bigint;
     options: ModifyChannel;
-    resolve: (channel: DiscordenoChannel) => void;
+    resolve: (channel: Channel) => void;
     // deno-lint-ignore no-explicit-any
     reject: (error: any) => void;
   }[];

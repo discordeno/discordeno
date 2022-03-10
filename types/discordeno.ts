@@ -1,14 +1,9 @@
-import { PresenceUpdate } from "../transformers/presence.ts";
-import { Role } from "../transformers/role.ts";
+import { Application } from "../transformers/application.ts";
+import { Embed } from "../transformers/embed.ts";
+import { Member, User } from "../transformers/member.ts";
 import { EmojiToggles } from "../transformers/toggles/emoji.ts";
-import { MemberToggles } from "../transformers/toggles/member.ts";
-import { RoleToggles } from "../transformers/toggles/role.ts";
-import { UserToggles } from "../transformers/toggles/user.ts";
 import { VoiceStateToggles } from "../transformers/toggles/voice.ts";
-import { Collection } from "../util/collection.ts";
 import {
-  AllowedMentionsTypes,
-  BaseActivity,
   BaseActivityAssets,
   BaseActivityButton,
   BaseActivityEmoji,
@@ -16,27 +11,13 @@ import {
   BaseActivitySecrets,
   BaseActivityTimestamps,
   BaseAllowedMentions,
-  BaseApplication,
   BaseAttachment,
-  BaseChannel,
   BaseClientStatus,
   BaseConnection,
-  BaseEmbed,
-  BaseEmbedAuthor,
-  BaseEmbedField,
-  BaseEmbedFooter,
-  BaseEmbedImage,
-  BaseEmbedProvider,
-  BaseEmbedThumbnail,
-  BaseEmbedVideo,
   BaseEmoji,
-  BaseGuild,
-  BaseIncomingWebhook,
   BaseIntegration,
   BaseIntegrationAccount,
   BaseOverwrite,
-  BasePresenceUpdate,
-  BaseRole,
   BaseStageInstance,
   BaseTeam,
   BaseTeamMember,
@@ -44,33 +25,13 @@ import {
   BaseThreadMemberBase,
   BaseThreadMetadata,
   BaseTypingStart,
-  BaseUser,
   BaseVoiceState,
   BaseWelcomeScreen,
   BaseWelcomeScreenChannel,
   ButtonStyles,
-  EmbedTypes,
   MessageComponentTypes,
   TextStyles,
 } from "./shared.ts";
-
-/** https://discord.com/developers/docs/resources/user#user-object */
-export interface User extends BaseUser {
-  /** The user's id */
-  id: bigint;
-  /** The user's 4-digit discord-tag converted to a number. */
-  discriminator: number;
-  /** The user's avatar hash */
-  avatar?: bigint;
-  /** The boolean value toggles that the user has */
-  toggles: UserToggles;
-  /** The user's chosen language option */
-  locale?: string;
-  /** The user's email */
-  email?: string;
-  /** the user's banner, or null if unset */
-  banner?: bigint;
-}
 
 /** https://discord.com/developers/docs/resources/user#connection-object */
 export interface Connection extends BaseConnection {
@@ -119,32 +80,6 @@ export interface TypingStart extends BaseTypingStart {
   member?: Member;
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-member-object */
-export interface Member {
-  /** The id of this user. */
-  id: bigint;
-  /** The id of the guild this member is in. */
-  guildId: bigint;
-  /** The user this guild member represents */
-  user?: User;
-  /** This users guild nickname */
-  nick?: string;
-  /** The members custom avatar for this server. */
-  avatar?: bigint;
-  /** Array of role object ids */
-  roles: bigint[];
-  /** When the user joined the guild */
-  joinedAt: number;
-  /** When the user started boosing the guild */
-  premiumSince?: number;
-  /** The permissions this member has in the guild. Only present on interaction events. */
-  permissions?: bigint;
-  /** when the user's timeout will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out */
-  communicationDisabledUntil?: number;
-  /** The boolean toggles values on this member. */
-  toggles: MemberToggles;
-}
-
 /** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
 export type OAuth2Scopes =
   | "bot"
@@ -182,26 +117,6 @@ export interface GetCurrentAuthorizationInformation {
   expires: string;
   /** The user who has authorized, if the user has authorized with the `identify` scope */
   user?: User;
-}
-
-/** https://discord.com/developers/docs/topics/oauth2#application-object */
-export interface Application extends BaseApplication {
-  /** The id of the app */
-  id: bigint;
-  /** The icon hash of the app */
-  icon?: bigint;
-  /** When false only app owner can join the app's bot to guilds */
-  botPublic: boolean;
-  /** When true the app's bot will only join upon completion of the full oauth2 code grant flow */
-  botRequireCodeGrant: boolean;
-  /** Partial user object containing info on the owner of the application */
-  owner?: Partial<User>;
-  /** If the application belongs to a team, this will be a list of the members of that team */
-  team?: Team;
-  /** If this application is a game sold on Discord, this field will be the guild to which it has been linked */
-  guildId?: bigint;
-  /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
-  coverImage?: bigint;
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
@@ -409,53 +324,6 @@ export interface EditWebhookMessage {
   components?: MessageComponents;
 }
 
-/** https://discord.com/developers/docs/resources/channel#embed-object */
-export interface Embed extends BaseEmbed {
-  /** Timestamp of embed content */
-  timestamp?: number;
-  /** Footer information */
-  footer?: EmbedFooter;
-  /** Image information */
-  image?: EmbedImage;
-  /** Thumbnail information */
-  thumbnail?: EmbedThumbnail;
-  /** Video information */
-  video?: EmbedVideo;
-  /** Provider information */
-  provider?: EmbedProvider;
-  /** Author information */
-  author?: EmbedAuthor;
-  /** Fields information */
-  fields?: EmbedField[];
-}
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-author-structure */
-export interface EmbedAuthor extends BaseEmbedAuthor {
-}
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure */
-export interface EmbedField extends BaseEmbedField {
-}
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure */
-export interface EmbedFooter extends BaseEmbedFooter {
-}
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-image-structure */
-export interface EmbedImage extends BaseEmbedImage {
-}
-
-export interface EmbedProvider extends BaseEmbedProvider {
-}
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-thumbnail-structure */
-export interface EmbedThumbnail extends BaseEmbedThumbnail {
-}
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-video-structure */
-export interface EmbedVideo extends BaseEmbedVideo {
-}
-
 /** https://discord.com/developers/docs/resources/channel#attachment-object */
 export interface Attachment extends BaseAttachment {
   /** Attachment id */
@@ -464,92 +332,6 @@ export interface Attachment extends BaseAttachment {
   height?: number;
   /** Width of file (if image) */
   width?: number;
-}
-
-/** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
-export type Webhook = IncomingWebhook | ApplicationWebhook;
-
-export interface IncomingWebhook extends BaseIncomingWebhook {
-  /** The id of the webhook */
-  id: bigint;
-  /** The guild id this webhook is for */
-  guildId?: bigint;
-  /** The channel id this webhook is for */
-  channelId: bigint;
-  /** The user this webhook was created by (not returned when getting a webhook with its token) */
-  user?: User;
-  /** The default name of the webhook */
-  name?: string;
-  /** The default user avatar hash of the webhook */
-  avatar?: bigint;
-  /** The bot/OAuth2 application that created this webhook */
-  applicationId?: bigint;
-  /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks) */
-  sourceGuild?: Partial<Guild>;
-  /** The channel that this webhook is following (returned for Channel Follower Webhooks) */
-  sourceChannel?: Partial<Channel>;
-}
-
-export interface ApplicationWebhook extends Omit<IncomingWebhook, "channelId"> {
-  /** The channel id this webhook is for */
-  channelId?: bigint;
-}
-
-/** https://discord.com/developers/docs/resources/guild#guild-object */
-export interface Guild extends BaseGuild {
-  /** Guild id */
-  id: bigint;
-  /** The shard id where this guild is */
-  shardId: number;
-  /** Icon hash */
-  icon?: bigint;
-  /** Icon hash, returned when in the template object */
-  iconHash?: bigint;
-  /** Splash hash */
-  splash?: bigint;
-  /** Discovery splash hash; only present for guilds with the "DISCOVERABLE" feature */
-  discoverySplash?: bigint;
-  /** Id of the owner */
-  ownerId: bigint;
-  /** Total permissions for the user in the guild (excludes overwrites) */
-  permissions?: bigint;
-  /** Id of afk channel */
-  afkChannelId?: bigint;
-  /** The channel id that the widget will generate an invite to, or null if set to no invite */
-  widgetChannelId?: bigint;
-  /** Roles in the guild */
-  roles: Collection<bigint, Role>;
-  /** Custom guild emojis */
-  emojis: Collection<bigint, Emoji>;
-  /** Application id of the guild creator if it is bot-created */
-  applicationId?: bigint;
-  /** The id of the channel where guild notices such as welcome messages and boost events are posted */
-  systemChannelId?: bigint;
-  /** The id of the channel where community guilds can display rules and/or guidelines */
-  rulesChannelId?: bigint;
-  /** When this guild was joined at */
-  joinedAt?: number;
-  /** States of members currently in voice channels; lacks the guild_id key */
-  voiceStates?: Collection<bigint, VoiceState>;
-  /** Users in the guild */
-  members?: Member[];
-  /** Channels in the guild */
-  channels?: Channel[];
-  /** All active threads in the guild that the current user has permission to view */
-  threads?: Channel[];
-  /** Presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
-  presences?: Partial<PresenceUpdate>[];
-  /** Banner hash */
-  banner?: bigint;
-  // TODO: Can be optimized to a number but is it worth it?
-  /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
-  preferredLocale: string;
-  /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
-  publicUpdatesChannelId?: bigint;
-  /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
-  welcomeScreen?: WelcomeScreen;
-  /** Stage instances in the guild */
-  stageInstances?: StageInstance[];
 }
 
 /** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
@@ -578,34 +360,6 @@ export interface VoiceState extends BaseVoiceState {
   toggles: VoiceStateToggles;
   /** The time at which the user requested to speak */
   requestToSpeakTimestamp?: number;
-}
-
-/** https://discord.com/developers/docs/resources/channel#channel-object */
-export interface Channel extends BaseChannel {
-  /** The id of the channel */
-  id: bigint;
-  /** The id of the guild */
-  guildId?: bigint;
-  /** Explicit permission overwrites for members and roles */
-  permissionOverwrites?: bigint[];
-  /** Whether the channel is nsfw */
-  nsfw?: boolean;
-  /** The id of the last message sent in this channel (may not point to an existing or valid message) */
-  lastMessageId?: bigint;
-  /** Id of the creator of the group DM or thread */
-  ownerId?: bigint;
-  /** Application id of the group DM creator if it is bot-created */
-  applicationId?: bigint;
-  /** For guild channels: Id of the parent category for a channel (each parent category can contain up to 50 channels), for threads: id of the text channel this thread was created */
-  parentId?: bigint;
-  /** When the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
-  lastPinTimestamp?: number;
-  /** Thread-specifig fields not needed by other channels */
-  threadMetadata?: ThreadMetadata;
-  /** Thread member object for the current user, if they have joined the thread, only included on certain API endpoints */
-  member?: ThreadMember;
-  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a application command interaction */
-  permissions?: bigint;
 }
 
 /** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure */

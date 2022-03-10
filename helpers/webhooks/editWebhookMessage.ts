@@ -1,7 +1,7 @@
-import type { Message } from "../../types/messages/message.ts";
 import type { Bot } from "../../bot.ts";
 import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
 import { EditWebhookMessage } from "../../types/discordeno.ts";
+import { DiscordMessage } from "../../types/discord.ts";
 
 export async function editWebhookMessage(
   bot: Bot,
@@ -18,7 +18,7 @@ export async function editWebhookMessage(
     url += `?thread_id=${options.threadId}`;
   }
 
-  const result = await bot.rest.runMethod<Message>(bot.rest, "patch", url, {
+  const result = await bot.rest.runMethod<DiscordMessage>(bot.rest, "patch", url, {
     content: options.content,
     embeds: options.embeds,
     file: options.file,

@@ -1,7 +1,7 @@
 import type { DiscordenoInteractionResponse } from "../../types/discordeno/interactionResponse.ts";
 import type { Bot } from "../../bot.ts";
 import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
-import { Message } from "../../types/messages/message.ts";
+import { DiscordMessage } from "../../types/discord.ts";
 
 /**
  * Send a response to a users application command. The command data will have the id and token necessary to respond.
@@ -160,7 +160,7 @@ export async function sendInteractionResponse(
   }
 
   // If its already been executed, we need to send a followup response
-  const result = await bot.rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "post",
     bot.constants.endpoints.WEBHOOK(bot.applicationId, token),

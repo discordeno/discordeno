@@ -1,7 +1,6 @@
-import { GetGatewayBot } from "../types/gateway/getGatewayBot.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordGetGatewayBot } from "../types/discord.ts";
 
-export function transformGatewayBot(payload: SnakeCasedPropertiesDeep<GetGatewayBot>): GetGatewayBot {
+export function transformGatewayBot(payload: DiscordGetGatewayBot) {
   return {
     url: payload.url,
     shards: payload.shards,
@@ -13,3 +12,5 @@ export function transformGatewayBot(payload: SnakeCasedPropertiesDeep<GetGateway
     },
   };
 }
+
+export interface GetGatewayBot extends ReturnType<typeof transformGatewayBot> {}

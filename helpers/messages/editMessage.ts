@@ -1,11 +1,11 @@
 import type { EditMessage } from "../../types/messages/editMessage.ts";
-import type { Message } from "../../types/messages/message.ts";
 import type { Bot } from "../../bot.ts";
 import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
+import { DiscordMessage } from "../../types/discord.ts";
 
 /** Edit the message. */
 export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: EditMessage) {
-  const result = await bot.rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "patch",
     bot.constants.endpoints.CHANNEL_MESSAGE(channelId, messageId),

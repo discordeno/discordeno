@@ -9,7 +9,7 @@ export async function runMethod<T = any>(
   body?: unknown,
   retryCount = 0,
   bucketId?: string,
-): Promise<SnakeCasedPropertiesDeep<T>> {
+): Promise<T> {
   rest.debug(
     `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${
       JSON.stringify(

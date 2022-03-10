@@ -4,8 +4,8 @@ import type {
   GetMessagesBefore,
   GetMessagesLimit,
 } from "../../types/messages/getMessages.ts";
-import type { Message } from "../../types/messages/message.ts";
 import type { Bot } from "../../bot.ts";
+import { DiscordMessage } from "../../types/discord.ts";
 
 /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
 export async function getMessages(
@@ -23,7 +23,7 @@ export async function getMessages(
     if (bot.utils.hasProperty(options, "after")) options.after = (options.after as bigint).toString();
   }
 
-  const result = await bot.rest.runMethod<Message[]>(
+  const result = await bot.rest.runMethod<DiscordMessage[]>(
     bot.rest,
     "get",
     bot.constants.endpoints.CHANNEL_MESSAGES(channelId),

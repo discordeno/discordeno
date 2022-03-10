@@ -1,7 +1,7 @@
 import { Bot } from "../../../bot.ts";
+import { DiscordMessage } from "../../../types/discord.ts";
 import { EditWebhookMessage } from "../../../types/discordeno.ts";
 import { MessageComponentTypes } from "../../../types/messages/components/messageComponentTypes.ts";
-import { Message } from "../../../types/messages/message.ts";
 
 /** Edits a followup message for an Interaction. Functions the same as edit webhook message, however this uses your interaction token instead of bot token. Does not support ephemeral followups. */
 export async function editFollowupMessage(
@@ -10,7 +10,7 @@ export async function editFollowupMessage(
   messageId: bigint,
   options: EditWebhookMessage,
 ) {
-  const result = await bot.rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "patch",
     bot.constants.endpoints.WEBHOOK_MESSAGE(bot.applicationId, interactionToken, messageId),

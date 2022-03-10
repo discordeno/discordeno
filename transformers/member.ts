@@ -1,6 +1,5 @@
 import type { Bot } from "../bot.ts";
 import { DiscordMember, DiscordUser } from "../types/discord.ts";
-import { Member, User } from "../types/discordeno.ts";
 import { PremiumTypes, UserFlags } from "../types/shared.ts";
 import { MemberToggles } from "./toggles/member.ts";
 import { UserToggles } from "./toggles/user.ts";
@@ -21,7 +20,7 @@ export interface DiscordenoUser {
   publicFlags?: UserFlags;
 }
 
-export function transformUser(bot: Bot, payload: DiscordUser): User {
+export function transformUser(bot: Bot, payload: DiscordUser) {
   return {
     id: bot.transformers.snowflake(payload.id || ""),
     username: payload.username,
@@ -41,7 +40,7 @@ export function transformMember(
   payload: DiscordMember,
   guildId: bigint,
   userId: bigint,
-): Member {
+) {
   return {
     id: userId,
     guildId,
@@ -58,29 +57,5 @@ export function transformMember(
   };
 }
 
-export interface DiscordenoMember {
-  /** The user's id */
-  id: bigint;
-  /** The guild id where this member exists */
-  guildId: bigint;
-  /** The nickname for this member in this server */
-  nick?: string;
-  /** The role ids this user has */
-  roles: bigint[];
-  /** When this member joined */
-  joinedAt: number;
-  /** When this member began boosting this server if this member is boosting the server. */
-  premiumSince?: number;
-  /** Whether or not the member is deafened. */
-  deaf?: boolean;
-  /** Whether or not the member is muted. */
-  mute?: boolean;
-  /** Whether or not this member is pending in server verification. */
-  pending?: boolean;
-  /** The members avatar for this server. */
-  avatar?: bigint;
-  /** The permissions this member has in the guild. Only present on interaction events. */
-  permissions?: bigint;
-  /** when the user's timeout will expire and the user will be able to communicate in the guild again, undefined or a time in the past if the user is not timed out */
-  communicationDisabledUntil?: number;
-}
+export interface Member extends ReturnType<typeof transformMember> {}
+export interface User extends ReturnType<typeof transformUser> {}

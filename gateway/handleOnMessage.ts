@@ -5,11 +5,11 @@ import type { DiscordHello } from "../types/gateway/hello.ts";
 import type { DiscordReady } from "../types/gateway/ready.ts";
 import { Guild } from "../types/guilds/guild.ts";
 import { UnavailableGuild } from "../types/guilds/unavailableGuild.ts";
-import { Message } from "../types/messages/mod.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
+import { DiscordMessage } from "../types/discord.ts";
 
 /** Handler for handling every message event from websocket. */
 // deno-lint-ignore no-explicit-any
@@ -142,7 +142,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
 
       // MESSAGE_UPDATE CAN SPAM FOR NO REASON USE THIS TO IGNORE
       if (messageData.t === "MESSAGE_UPDATE") {
-        const payload = messageData.d as SnakeCasedPropertiesDeep<Message>;
+        const payload = messageData.d as DiscordMessage;
 
         const id = snowflakeToBigint(payload.id);
         const content = payload.content || "";

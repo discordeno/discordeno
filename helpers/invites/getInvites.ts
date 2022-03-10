@@ -1,10 +1,10 @@
-import type { InviteMetadata } from "../../types/invites/inviteMetadata.ts";
 import { Collection } from "../../util/collection.ts";
 import type { Bot } from "../../bot.ts";
+import { DiscordInviteMetadata } from "../../types/discord.ts";
 
 /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
 export async function getInvites(bot: Bot, guildId: bigint) {
-  const result = await bot.rest.runMethod<InviteMetadata[]>(
+  const result = await bot.rest.runMethod<DiscordInviteMetadata[]>(
     bot.rest,
     "get",
     bot.constants.endpoints.GUILD_INVITES(guildId),

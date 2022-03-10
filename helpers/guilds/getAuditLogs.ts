@@ -1,6 +1,6 @@
-import type { AuditLog } from "../../types/auditLog/auditLog.ts";
 import type { GetGuildAuditLog } from "../../types/auditLog/getGuildAuditLog.ts";
 import type { Bot } from "../../bot.ts";
+import { DiscordAuditLog } from "../../types/discord.ts";
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
 export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuildAuditLog) {
@@ -8,7 +8,7 @@ export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuild
   if (options?.before) options.before = options.before.toString();
   if (options?.limit) options.limit = options.limit >= 1 && options.limit <= 100 ? options.limit : 50;
 
-  const auditlog = await bot.rest.runMethod<AuditLog>(
+  const auditlog = await bot.rest.runMethod<DiscordAuditLog>(
     bot.rest,
     "get",
     bot.constants.endpoints.GUILD_AUDIT_LOGS(guildId),

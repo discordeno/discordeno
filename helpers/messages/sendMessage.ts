@@ -1,11 +1,11 @@
 import type { CreateMessage } from "../../types/messages/createMessage.ts";
-import type { Message } from "../../types/messages/message.ts";
 import type { Bot } from "../../bot.ts";
 import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
+import { DiscordMessage } from "../../types/discord.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMessage) {
-  const result = await bot.rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "post",
     bot.constants.endpoints.CHANNEL_MESSAGES(channelId),

@@ -1,10 +1,10 @@
 import type { CreateChannelInvite } from "../../types/invites/createChannelInvite.ts";
 import type { Bot } from "../../bot.ts";
-import { Invite } from "../../types/invites/invite.ts";
+import { DiscordInvite } from "../../types/discord.ts";
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
 export async function createInvite(bot: Bot, channelId: bigint, options: CreateChannelInvite = {}) {
-  const result = await bot.rest.runMethod<Invite>(
+  const result = await bot.rest.runMethod<DiscordInvite>(
     bot.rest,
     "post",
     bot.constants.endpoints.CHANNEL_INVITES(channelId),

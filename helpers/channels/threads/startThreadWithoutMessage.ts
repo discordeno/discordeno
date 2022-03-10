@@ -1,10 +1,10 @@
-import type { Channel } from "../../../types/channels/channel.ts";
 import type { StartThreadWithoutMessage } from "../../../types/channels/threads/startThread.ts";
 import type { Bot } from "../../../bot.ts";
+import { DiscordChannel } from "../../../types/discord.ts";
 
 /** Creates a new private thread. Returns a thread channel. */
 export async function startThreadWithoutMessage(bot: Bot, channelId: bigint, options: StartThreadWithoutMessage) {
-  const result = await bot.rest.runMethod<Channel>(
+  const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     "post",
     bot.constants.endpoints.THREAD_START_PRIVATE(channelId),

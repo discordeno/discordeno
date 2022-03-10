@@ -1,5 +1,4 @@
-import { DiscordUser } from "../discord.ts";
-import { Message } from "../messages/message.ts";
+import { DiscordMessage, DiscordUser } from "../discord.ts";
 import { InteractionData } from "./commands/applicationCommandInteractionData.ts";
 import { InteractionGuildMember } from "./interactionGuildMember.ts";
 import { InteractionTypes } from "./interactionTypes.ts";
@@ -24,7 +23,7 @@ export interface Interaction {
   /** Read-only property, always `1` */
   version: 1;
   /** For the message the button was attached to */
-  message?: Message;
+  message?: DiscordMessage;
 
   data?: InteractionData;
 

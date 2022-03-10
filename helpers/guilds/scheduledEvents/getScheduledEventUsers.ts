@@ -1,6 +1,6 @@
 import { Bot } from "../../../bot.ts";
+import { Member, User } from "../../../transformers/member.ts";
 import { DiscordMember, DiscordUser } from "../../../types/discord.ts";
-import { Member, User } from "../../../types/discordeno.ts";
 import { GetScheduledEventUsers } from "../../../types/guilds/scheduledEvents.ts";
 import { Collection } from "../../../util/collection.ts";
 
