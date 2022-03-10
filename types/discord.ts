@@ -63,9 +63,7 @@ import {
   StickerFormatTypes,
   StickerTypes,
   TargetTypes,
-  TeamMembershipStates,
   TextStyles,
-  VisibilityTypes,
 } from "./shared.ts";
 
 /** https://discord.com/developers/docs/resources/user#user-object */

@@ -3,13 +3,12 @@ import { GatewayOpcodes } from "../types/codes/gatewayOpcodes.ts";
 import type { DiscordGatewayPayload } from "../types/gateway/gatewayPayload.ts";
 import type { DiscordHello } from "../types/gateway/hello.ts";
 import type { DiscordReady } from "../types/gateway/ready.ts";
-import { Guild } from "../types/guilds/guild.ts";
 import { UnavailableGuild } from "../types/guilds/unavailableGuild.ts";
 import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
-import { DiscordMessage } from "../types/discord.ts";
+import { DiscordGuild, DiscordMessage } from "../types/discord.ts";
 
 /** Handler for handling every message event from websocket. */
 // deno-lint-ignore no-explicit-any
@@ -125,7 +124,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
 
       // MUST HANDLE GUILD_CREATE EVENTS AS THEY ARE EXPENSIVE WITHOUT GATEWAY CACHE
       if (messageData.t === "GUILD_CREATE") {
-        const id = snowflakeToBigint((messageData.d as SnakeCasedPropertiesDeep<Guild>).id);
+        const id = snowflakeToBigint((messageData.d as DiscordGuild).id);
 
         // SHARD RESUMED MOST LIKELY, THEY EMIT GUILD CREATES. OR GUILD BECAME AVAILABLE AGAIN
         if (gateway.cache.guildIds.has(id)) return;

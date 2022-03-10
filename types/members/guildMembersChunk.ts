@@ -1,4 +1,4 @@
-import { PresenceUpdate } from "../activity/presenceUpdate.ts";
+import { DiscordPresenceUpdate } from "../discord.ts";
 import { GuildMemberWithUser } from "../members/guildMember.ts";
 
 /** https://discord.com/developers/docs/topics/gateway#guild-members-chunk */
@@ -14,7 +14,7 @@ export interface GuildMembersChunk {
   /** If passing an invalid id to `REQUEST_GUILD_MEMBERS`, it will be returned here */
   notFound?: string[];
   /** If passing true to `REQUEST_GUILD_MEMBERS`, presences of the returned members will be here */
-  presences?: PresenceUpdate[];
+  presences?: DiscordPresenceUpdate[];
   /** The nonce used in the Guild Members Request */
   nonce?: string;
 }

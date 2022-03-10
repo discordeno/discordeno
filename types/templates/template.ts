@@ -1,5 +1,4 @@
-import { DiscordUser } from "../discord.ts";
-import { Guild } from "../guilds/guild.ts";
+import { DiscordGuild, DiscordUser } from "../discord.ts";
 
 /** https://discord.com/developers/docs/resources/template#template-object-template-structure */
 export interface Template {
@@ -22,7 +21,7 @@ export interface Template {
   /** The Id of the guild this template is based on */
   sourceGuildId: string;
   /** The guild snapshot this template contains */
-  serializedSourceGuild: Partial<Guild>;
+  serializedSourceGuild: Partial<DiscordGuild>;
   /** Whether the template has unsynced changes */
   isDirty: boolean | null;
 }
