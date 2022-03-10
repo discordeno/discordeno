@@ -1,6 +1,6 @@
 const DestructObject = require("./DestructObject");
 const Collection = require("./Collection");
-const {transformOptions} = require("../Util/transformOptions");
+const {transformOptions, transformAttachments} = require("../Util/transformOptions");
 
 class Message extends DestructObject {
   constructor(client, message = {}, options = {}) {
@@ -21,11 +21,19 @@ class Message extends DestructObject {
   async edit(options) {
     options = transformOptions(options);
 
+    if(options.attachments){
+      options.file = transformAttachments(options.attachments);
+    }
+
     return this.client.helpers.editMessage(this.channel.id, this.id, options);
   }
 
   async reply(options = {}) {
     options = transformOptions(options, {content: true});
+
+    if(options.attachments){
+      options.file = transformAttachments(options.attachments);
+    }
 
     if (!options.messageReference) {
       options.messageReference = { messageId: this.id, channelId: this.channel.id, guildId: this.guild.id };

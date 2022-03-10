@@ -8,7 +8,7 @@ class Permissions {
     return (this.bits & hasPermssion) === hasPermssion;
   }
 
-  has(permission, checkAdministrator = false) {
+  has(permission, checkAdministrator = true) {
     return (checkAdministrator && this._has(this.constructor.FLAGS.ADMINISTRATOR)) || this._has(permission);
   }
 
@@ -26,6 +26,10 @@ class Permissions {
 
   freeze() {
     return Object.freeze(this);
+  }
+
+  toArray(){
+    return Object.keys(Permissions.FLAGS).filter(p => this.has(p, false));
   }
 }
 

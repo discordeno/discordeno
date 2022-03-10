@@ -17,12 +17,12 @@ class MessageManager {
 
     if (options.channel) {
       if (options.channel.messages.cache?.has(data.id)) {
-        return options.channel.messages.cache.get(data.id, { guild: options.guild, channel: options.channel });
+        return options.channel.messages.cache.get(data.id, { guild: options.guild ?? this.guild, channel: options.channel });
       }
     } else if (this.client.messages.cache?.has(data.id)) {
-      return this.client.messages.cache.get(data.id, { guild: options.guild });
+      return this.client.messages.cache.get(data.id, { guild: options.guild ?? this.guild });
     }
-    return new Message(this.client, data, { guild: options.guild, channel: options.channel });
+    return new Message(this.client, data, { guild: options.guild ?? this.guild, channel: options.channel });
   }
 
   forgeManager(data = {}, options = {}) {

@@ -24,11 +24,13 @@ class Embed {
   }
 
   setThumbnail(thumbnail) {
+    if(typeof thumbnail === "string") thumbnail = {url: thumbnail};
     this.thumbnail = thumbnail;
     return this;
   }
 
   setImage(image) {
+    if(typeof image === "string") image = {url: image};
     this.image = image;
     return this;
   }

@@ -181,6 +181,11 @@ class Component {
       json.value = this.value;
       json.placeholder = this.placeholder;
     }
+
+    if (this.type === 5) {
+      json.customId = this.custom_id;
+      json.disabled = this.disabled;
+    }
     return json;
   }
 }

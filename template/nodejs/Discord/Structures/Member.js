@@ -14,6 +14,8 @@ class Member extends DestructObject {
     if (options.guild) this.guild = options.guild;
     else this.guild = client.guilds.forge({ id: this.guildId });
 
+    this.user = client.users.forge({ id: member.id, username: member.username, discriminator: member.discriminator, avatar: member.avatar, bot: member.bot });
+
     this.roles = client.roles.forgeManager({}, {
       guild: options.guild,
       member: this,

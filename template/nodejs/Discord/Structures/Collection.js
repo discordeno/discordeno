@@ -1,4 +1,5 @@
-class Collection extends Map{
+const Discord = require('discordeno');
+class Collection extends Discord.Collection{
     constructor(){
         super();
     }

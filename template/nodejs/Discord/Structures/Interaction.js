@@ -1,5 +1,5 @@
 const DestructObject = require("./DestructObject");
-const { transformOptions } = require("../Util/transformOptions");
+const { transformOptions, transformAttachments } = require("../Util/transformOptions");
 
 const Constants = {
     DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE: 5,
@@ -60,6 +60,10 @@ class Interaction extends DestructObject {
     async reply(options = {}) {
         options = transformOptions(options, { content: true });
 
+        if (options.attachments) {
+            options.file = transformAttachments(options.attachments);
+        }
+
         const Payload = { data: options, type: Constants.CHANNEL_MESSAGE_WITH_SOURCE };
         if (options.ephemeral) Payload.private = true;
         this.ephemeral = Payload.private;
@@ -78,6 +82,11 @@ class Interaction extends DestructObject {
 
     async editReply(options = {}) {
         options = transformOptions(options, { content: true });
+
+        if (options.attachments) {
+            options.file = transformAttachments(options.attachments);
+        }
+
         this.replied = true;
         return this.client.helpers.editInteractionResponse(this.token, options);
     }
@@ -91,12 +100,22 @@ class Interaction extends DestructObject {
 
     async followUp(options = {}) {
         options = transformOptions(options, { content: true });
+
+        if (options.attachments) {
+            options.file = transformAttachments(options.attachments);
+        }
+
         const Payload = { data: options, type: Constants.CHANNEL_MESSAGE_WITH_SOURCE };
         return this.client.helpers.sendInteractionResponse(this.id, this.token, Payload);
     }
 
     async update(options = {}) {
         options = transformOptions(options, { content: true });
+
+        if (options.attachments) {
+            options.file = transformAttachments(options.attachments);
+        }
+
         const Payload = { data: options, type: Constants.UPDATE_MESSAGE };
         this.replied = true;
         return this.client.helpers.sendInteractionResponse(this.id, this.token, Payload);
