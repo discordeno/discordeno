@@ -1056,6 +1056,353 @@ export enum BitwisePermissionFlags {
 
 export type PermissionStrings = keyof typeof BitwisePermissionFlags;
 
+/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice */
+export enum VoiceOpcodes {
+  /** Begin a voice websocket connection. */
+  Identify,
+  /** Select the voice protocol. */
+  SelectProtocol,
+  /** Complete the websocket handshake. */
+  Ready,
+  /** Keep the websocket connection alive. */
+  Heartbeat,
+  /** Describe the session. */
+  SessionDescription,
+  /** Indicate which users are speaking. */
+  Speaking,
+  /** Sent to acknowledge a received client heartbeat. */
+  HeartbeatACK,
+  /** Resume a connection. */
+  Resume,
+  /** Time to wait between sending heartbeats in milliseconds. */
+  Hello,
+  /** Acknowledge a successful session resume. */
+  Resumed,
+  /** A client has disconnected from the voice channel */
+  ClientDisconnect = 13,
+}
+
+/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice */
+export enum VoiceCloseEventCodes {
+  /** You sent an invalid [opcode](https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice-voice-opcodes). */
+  UnknownOpcode = 4001,
+  /** You sent a invalid payload in your [identifying](https://discord.com/developers/docs/topics/gateway#identify) to the Gateway. */
+  FailedToDecodePayload,
+  /** You sent a payload before [identifying](https://discord.com/developers/docs/topics/gateway#identify) with the Gateway. */
+  NotAuthenticated,
+  /** The token you sent in your [identify](https://discord.com/developers/docs/topics/gateway#identify) payload is incorrect. */
+  AuthenticationFailed,
+  /** You sent more than one [identify](https://discord.com/developers/docs/topics/gateway#identify) payload. Stahp. */
+  AlreadyAuthenticated,
+  /** Your session is no longer valid. */
+  SessionNoLongerValid,
+  /** Your session has timed out. */
+  SessionTimedOut = 4009,
+  /** We can't find the server you're trying to connect to. */
+  ServerNotFound = 4011,
+  /** We didn't recognize the [protocol](https://discord.com/developers/docs/topics/voice-connections#establishing-a-voice-udp-connection-example-select-protocol-payload) you sent. */
+  UnknownProtocol,
+  /** Channel was deleted, you were kicked, voice server changed, or the main gateway session was dropped. Should not reconnect. */
+  Disconnect = 4014,
+  /** The server crashed. Our bad! Try [resuming](https://discord.com/developers/docs/topics/voice-connections#resuming-voice-connection). */
+  VoiceServerCrashed,
+  /** We didn't recognize your [encryption](https://discord.com/developers/docs/topics/voice-connections#encrypting-and-sending-voice). */
+  UnknownEncryptionMode,
+}
+
+/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#rpc */
+export enum RpcErrorCodes {
+  /** An unknown error occurred. */
+  UnknownError = 1000,
+  /** You sent an invalid payload. */
+  InvalidPayload = 4000,
+  /** Invalid command name specified. */
+  InvalidCommand = 4002,
+  /** Invalid guild ID specified. */
+  InvalidGuild,
+  /** Invalid event name specified. */
+  InvalidEvent,
+  /** Invalid channel ID specified. */
+  InvalidChannel,
+  /** You lack permissions to access the given resource. */
+  InvalidPermissions,
+  /** An invalid OAuth2 application ID was used to authorize or authenticate with. */
+  InvalidClientId,
+  /** An invalid OAuth2 application origin was used to authorize or authenticate with. */
+  InvalidOrigin,
+  /** An invalid OAuth2 token was used to authorize or authenticate with. */
+  InvalidToken,
+  /** The specified user ID was invalid. */
+  InvalidUser,
+  /** A standard OAuth2 error occurred; check the data object for the OAuth2 error details. */
+  OAuth2Error = 5000,
+  /** An asynchronous `SELECT_TEXT_CHANNEL`/`SELECT_VOICE_CHANNEL` command timed out. */
+  SelectChannelTimedOut,
+  /** An asynchronous `GET_GUILD` command timed out. */
+  GetGuildTimedOut,
+  /** You tried to join a user to a voice channel but the user was already in one. */
+  SelectVoiceForceRequired,
+  /** You tried to capture more than one shortcut key at once. */
+  CaptureShortcutAlreadyListening,
+}
+
+/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#rpc */
+export enum RpcCloseEventCodes {
+  /** You connected to the RPC server with an invalid client ID. */
+  InvalidClientId = 4000,
+  /** You connected to the RPC server with an invalid origin. */
+  InvalidOrigin,
+  /** You are being rate limited. */
+  RateLimited,
+  /** The OAuth2 token associated with a connection was revoked, get a new one! */
+  TokenRevoked,
+  /** The RPC Server version specified in the connection string was not valid. */
+  InvalidVersion,
+  /** The encoding specified in the connection string was not valid. */
+  InvalidEncoding,
+}
+
+/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#json */
+export enum JsonErrorCodes {
+  /** General error (such as a malformed request body, amongst other things) */
+  GeneralError,
+  UnknownAccount = 10001,
+  UnknownApplication,
+  UnknownChannel,
+  UnknownGuild,
+  UnknownIntegration,
+  UnknownInvite,
+  UnknownMember,
+  UnknownMessage,
+  UnknownPermissionOverwrite,
+  UnknownProvider,
+  UnknownRole,
+  UnknownToken,
+  UnknownUser,
+  UnknownEmoji,
+  UnknownWebhook,
+  UnknownWebhookService,
+  UnknownSession = 10020,
+  UnknownBan = 10026,
+  UnknownSKU,
+  UnknownStoreListing,
+  UnknownEntitlement,
+  UnknownBuild,
+  UnknownLobby,
+  UnknownBranch,
+  UnknownStoreDirectoryLayout,
+  UnknownRedistributable = 10036,
+  UnknownGiftCode = 10038,
+  UnknownStream = 10049,
+  UnknownPremiumServerSubscribeCooldown,
+  UnknownGuildTemplate = 10057,
+  UnknownDiscoveryCategory = 10059,
+  UnknownSticker,
+  UnknownInteraction = 10062,
+  UnknownApplicationCommand = 10063,
+  UnknownApplicationCommandPermissions = 10066,
+  UnknownStageInstance,
+  UnknownGuildMemberVerificationForm,
+  UnknownGuildWelcomeScreen,
+  UnknownGuildScheduledEvent,
+  UnknownGuildScheduledEventUser,
+  BotsCannotUseThisEndpoint = 20001,
+  OnlyBotsCanUseThisEndpoint,
+  ExplicitContentCannotBeSentToTheDesiredRecipient = 20009,
+  YouAreNotAuthorizedToPerformThisActionOnThisApplication = 20012,
+  ThisActionCannotBePerformedDueToSlowmodeRateLimit = 20016,
+  OnlyTheOwnerOfThisAccountCanPerformThisAction = 20018,
+  ThisMessageCannotBeEditedDueToAnnouncementRateLimits = 20022,
+  TheChannelYouAreWritingHasHitTheWriteRateLimit = 20028,
+  TheWriteActionYouArePerformingOnTheServerHasHitTheWriteRateLimit,
+  YourStageTopicOrServerNameOrServerDescriptionOrChannelNamesContainsWordsThatAreNotAllowedForPublicStages = 20031,
+  GuildPremiumSubscriptionLevelTooLow = 20035,
+  MaximumNumberOfGuildsReached = 30001,
+  MaximumNumberOfFriendsReached,
+  MaximumNumberOfPinsReachedForTheChannel,
+  MaximumNumberOfRecipientsReached,
+  MaximumNumberOfGuildRolesReached,
+  MaximumNumberOfWebhooksReached = 30007,
+  MaximumNumberOfEmojisReached,
+  MaximumNumberOfReactionsReached = 30010,
+  MaximumNumberOfGuildChannelsReached = 30013,
+  MaximumNumberOfAttachmentsInAMessageReached = 30015,
+  MaximumNumberOfInvitesReached,
+  MaximumNumberOfAnimatedEmojisReached = 30018,
+  MaximumNumberOfServerMembersReached,
+  MaximumNumberOfServerCategoriesHasBeenReached = 30030,
+  GuildAlreadyHasTemplate = 30031,
+  MaxNumberOfThreadParticipantsHasBeenReached = 30033,
+  MaximumNumberOfBansForNonGuildMembersHaveBeenExceeded = 30035,
+  MaximumNumberOfBansFetchesHasBeenReached = 30037,
+  MaximumNumberOfUncompletedGuildScheduledEventsReached = 30038,
+  MaximumNumberOfStickersReached = 30039,
+  MaximumNumberOfPruneRequestsHasBeenReachedTryAgainLater,
+  MaximumNumberOfGuildWidgetSettingsUpdatesHasBeenReachedTryAgainLater = 30042,
+  MaximumNumberOfEditsToMessagesOlderThan1HourReachedTryAgainLater = 30046,
+  UnauthorizedProvideAValidTokenAndTryAgain = 40001,
+  YouNeedToVerifyYourAccountInOrderToPerformThisAction,
+  YouAreOpeningDirectMessagesTooFast,
+  SendMessagesHasBeenTemporarilyDisabled,
+  RequestEntityTooLargeTrySendingSomethingSmallerInSize,
+  ThisFeatureHasBeenTemporarilyDisabledServerSide,
+  ThisUserBannedFromThisGuild,
+  TargetUserIsNotConnectedToVoice = 40032,
+  ThisMessageHasAlreadyBeenCrossposted = 40033,
+  AnApplicationCommandWithThatNameAlreadyExists = 40041,
+  InteractionHasAlreadyBeenAcknowledged = 40060,
+  MissingAccess = 50001,
+  InvalidAccountType,
+  CannotExecuteActionOnADMChannel,
+  GuildWidgetDisabled,
+  CannotEditMessageAuthoredByAnotherUser,
+  CannotSendAnEmptyMessage,
+  CannotSendMessagesToThisUser,
+  CannotSendMessagesInAVoiceChannel,
+  ChannelVerificationLevelIsTooHighForYouToGainAccess,
+  OAuth2ApplicationDoesNotHaveABot,
+  OAuth2ApplicationLimitReached,
+  InvalidOAuth2State,
+  YouLackPermissionsToPerformThatAction,
+  InvalidAuthenticationTokenProvided,
+  NoteWasTooLong,
+  ProvidedTooFewOrTooManyMessagesToDeleteMustProvideAtLeast2AndFewerThan100MessagesToDelete,
+  AMessageCanOnlyBePinnedInTheChannelItWasSentIn = 50019,
+  InviteCodeWasEitherInvalidOrTaken,
+  CannotExecuteActionOnASystemMessage,
+  CannotExecuteActionOnThisChannelType = 50024,
+  InvalidOAuth2AccessTokenProvided,
+  MissingRequiredOAuth2Scope,
+  InvalidWebhookTokenProvided,
+  InvalidRole,
+  InvalidRecipients = 50033,
+  AMessageProvidedWasTooOldToBulkDelete,
+  /** Invalid form body (returned for both `application/json` and `multipart/form-data` bodies), or invalid `Content-Type` provided */
+  InvalidFormBodyOrContentTypeProvided,
+  AnInviteWasAcceptedToAGuildTheApplicationsBotIsNotIn,
+  InvalidApiVersionProvided = 50041,
+  FileUploadedExceedsTheMaximumSize = 50045,
+  InvalidFileUploaded,
+  CannotSelfRedeemThisGift = 50054,
+  InvalidGuild,
+  InvalidMessageType = 50068,
+  PaymentSourceRequiredToRedeemGift = 50070,
+  CannotDeleteAChannelRequiredForCommunityGuilds = 50074,
+  InvalidStickerSent = 50081,
+  TriedToPerformAnOperationOnAnArchivedThreadSuchAsEditingAMessageOrAddingAUserToTheThread = 50083,
+  InvalidThreadNotificationSettings,
+  BeforeValueIsEarlierThanTheThreadCreationDate,
+  CommunityServerChannelsMustBeTextChannels,
+  ThisServerIsNotAvailableInYourLocation = 50095,
+  ThisServerNeedsMonetizationEnabledInOrderToPerformThisAction = 50097,
+  ThisServerNeedsMoreBoostsToPerformThisAction = 50101,
+  TheRequestBodyContainsInvalidJSON = 50109,
+  TwoFactorIsRequiredForThisOperation = 60003,
+  NoUsersWithDiscordTagExist = 80004,
+  ReactionWasBlocked = 90001,
+  ApiResourceIsCurrentlyOverloadedTryAgainALittleLater = 130000,
+  TheStageIsAlreadyOpen = 150006,
+  CannotReplyWithoutPermissionToReadMessageHistory = 160002,
+  AThreadHasAlreadyBeenCreatedForThisMessage = 160004,
+  ThreadIsLocked = 160005,
+  MaximumNumberOfActiveThreadsReached = 160006,
+  MaximumNumberOfActiveAnnouncementThreadsReached = 160007,
+  InvalidJsonForUploadedLottieFile = 170001,
+  UploadedLottiesCannotContainRasterizedImagesSuchAsPngOrJpeg,
+  StickerMaximumFramerateExceeded,
+  StickerFrameCountExceedsMaximumOf1000Frames,
+  LottieAnimationMaximumDimensionsExceeded,
+  StickerFrameRateIsEitherTooSmallOrTooLarge,
+  StickerAnimationDurationExceedsMaximumOf5Seconds,
+  CannotUpdateAFinishedEvent = 180000,
+  FailedToCreateStageNeededForStageEvent = 180002,
+}
+
+/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#http */
+export enum HTTPResponseCodes {
+  /** The request completed successfully. */
+  Ok = 200,
+  /** The entity was created successfully. */
+  Created,
+  /** The request completed successfully but returned no content. */
+  NoContent = 204,
+  /** The entity was not modified (no action was taken). */
+  NotModified = 304,
+  /** The request was improperly formatted, or the server couldn't understand it. */
+  BadRequest = 400,
+  /** The `Authorization` header was missing or invalid. */
+  Unauthorized,
+  /** The `Authorization` token you passed did not have permission to the resource. */
+  Forbidden = 403,
+  /** The resource at the location specified doesn't exist. */
+  NotFound,
+  /** The HTTP method used is not valid for the location specified. */
+  MethodNotAllowed,
+  /** You are being rate limited, see [Rate Limits](https://discord.com/developers/docs/topics/rate-limits). */
+  TooManyRequests = 429,
+  /** There was not a gateway available to process your request. Wait a bit and retry. */
+  GatewayUnavailable = 502,
+}
+
+/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes */
+export enum GatewayOpcodes {
+  /** An event was dispatched. */
+  Dispatch,
+  /** Fired periodically by the client to keep the connection alive. */
+  Heartbeat,
+  /** Starts a new session during the initial handshake. */
+  Identify,
+  /** Update the client's presence. */
+  PresenceUpdate,
+  /** Used to join/leave or move between voice channels. */
+
+  VoiceStateUpdate,
+  /** Resume a previous session that was disconnected. */
+  Resume = 6,
+  /** You should attempt to reconnect and resume immediately. */
+  Reconnect,
+  /** Request information about offline guild members in a large guild. */
+  RequestGuildMembers,
+  /** The session has been invalidated. You should reconnect and identify/resume accordingly. */
+  InvalidSession,
+  /** Sent immediately after connecting, contains the `heartbeat_interval` to use. */
+  Hello,
+  /** Sent in response to receiving a heartbeat to acknowledge that it has been received. */
+  HeartbeatACK,
+}
+
+/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#opcodes-and-status-codes */
+export enum GatewayCloseEventCodes {
+  /** We're not sure what went wrong. Try reconnecting? */
+  UnknownError = 4000,
+  /** You sent an invalid [Gateway opcode](https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes) or an invalid payload for an opcode. Don't do that! */
+  UnknownOpcode,
+  /** You sent an invalid [payload](https://discord.com/developers/docs/topics/gateway#sending-payloads) to us. Don't do that! */
+  DecodeError,
+  /** You sent us a payload prior to [identifying](https://discord.com/developers/docs/topics/gateway#identify). */
+  NotAuthenticated,
+  /** The account token sent with your [identify payload](https://discord.com/developers/docs/topics/gateway#identify) is incorrect. */
+  AuthenticationFailed,
+  /** You sent more than one identify payload. Don't do that! */
+  AlreadyAuthenticated,
+  /** The sequence sent when [resuming](https://discord.com/developers/docs/topics/gateway#resume) the session was invalid. Reconnect and start a new session. */
+  InvalidSeq = 4007,
+  /** Woah nelly! You're sending payloads to us too quickly. Slow it down! You will be disconnected on receiving this. */
+  RateLimited,
+  /** Your session timed out. Reconnect and start a new one. */
+  SessionTimedOut,
+  /** You sent us an invalid [shard when identifying](https://discord.com/developers/docs/topics/gateway#sharding). */
+  InvalidShard,
+  /** The session would have handled too many guilds - you are required to [shard](https://discord.com/developers/docs/topics/gateway#sharding) your connection in order to connect. */
+  ShardingRequired,
+  /** You sent an invalid version for the gateway. */
+  InvalidApiVersion,
+  /** You sent an invalid intent for a [Gateway Intent](https://discord.com/developers/docs/topics/gateway#gateway-intents). You may have incorrectly calculated the bitwise value. */
+  InvalidIntents,
+  /** You sent a disallowed intent for a [Gateway Intent](https://discord.com/developers/docs/topics/gateway#gateway-intents). You may have tried to specify an intent that you [have not enabled or are not approved for](https://discord.com/developers/docs/topics/gateway#privileged-intents). */
+  DisallowedIntents,
+}
+
 // UTILS
 
 // deno-lint-ignore-file ban-types no-explicit-any
