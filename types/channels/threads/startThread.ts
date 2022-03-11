@@ -1,4 +1,4 @@
-import { ChannelTypes } from "../channelTypes.ts";
+import { ChannelTypes } from "../../shared.ts";
 
 // TODO: add docs link
 export interface StartThreadBase {

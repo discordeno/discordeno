@@ -1,6 +1,5 @@
-import { ChannelTypes } from "./channelTypes.ts";
-import { Overwrite } from "./overwrite.ts";
-import { VideoQualityModes } from "./videoQualityModes.ts";
+import { Overwrite, OverwriteReadable } from "../discordeno.ts";
+import { ChannelTypes, VideoQualityModes } from "../shared.ts";
 
 export interface ModifyChannel {
   /** 1-100 character channel name */
@@ -20,7 +19,7 @@ export interface ModifyChannel {
   /** The user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit */
   userLimit?: number | null;
   /** Channel or category-specific permissions */
-  permissionOverwrites?: Overwrite[] | null;
+  permissionOverwrites?: OverwriteReadable[] | null;
   /** Id of the new parent category for a channel */
   parentId?: bigint | null;
   /** Voice region id for the voice channel, automatic when set to null */

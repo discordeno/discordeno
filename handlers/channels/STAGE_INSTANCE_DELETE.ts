@@ -1,10 +1,9 @@
 import type { Bot } from "../../bot.ts";
-import type { StageInstance } from "../../types/channels/stageInstance.ts";
+import { DiscordStageInstance } from "../../types/discord.ts";
 import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
 
 export function handleStageInstanceDelete(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<StageInstance>;
+  const payload = data.d as DiscordStageInstance;
 
   bot.events.stageInstanceDelete(bot, {
     id: bot.transformers.snowflake(payload.id),

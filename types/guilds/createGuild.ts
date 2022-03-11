@@ -1,5 +1,4 @@
-import { Channel } from "../channels/channel.ts";
-import { DiscordRole } from "../discord.ts";
+import { DiscordChannel, DiscordRole } from "../discord.ts";
 import { DefaultMessageNotificationLevels, ExplicitContentFilterLevels, SystemChannelFlags } from "../shared.ts";
 import { VerificationLevels } from "./verificationLevels.ts";
 
@@ -18,7 +17,7 @@ export interface CreateGuild {
   /** New guild roles (first role is the everyone role) */
   roles?: DiscordRole[];
   /** New guild's channels */
-  channels?: Partial<Channel>[];
+  channels?: Partial<DiscordChannel>[];
   /** Id for afk channel */
   afkChannelId?: string;
   /** Afk timeout in seconds */

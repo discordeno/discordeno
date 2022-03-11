@@ -30,6 +30,7 @@ import {
   BaseWelcomeScreenChannel,
   ButtonStyles,
   MessageComponentTypes,
+  PermissionStrings,
   TextStyles,
 } from "./shared.ts";
 
@@ -372,6 +373,16 @@ export interface Overwrite extends BaseOverwrite {
   /** Permission bit set */
   deny?: bigint;
 }
+
+export interface OverwriteReadable extends BaseOverwrite {
+  /** Role or user id */
+  id: bigint;
+  /** Permission bit set */
+  allow?: PermissionStrings[];
+  /** Permission bit set */
+  deny?: PermissionStrings[];
+}
+
 
 export interface ThreadMetadata extends BaseThreadMetadata {
   /** Timestamp when the thread's archive status was last changed, used for calculating recent activity */

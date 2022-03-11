@@ -1,12 +1,12 @@
-import type { Overwrite } from "../../types/channels/overwrite.ts";
 import type { Bot } from "../../bot.ts";
+import { OverwriteReadable } from "../../types/discordeno.ts";
 
 /** Edit the channel permission overwrites for a user or role in this channel. Requires `MANAGE_ROLES` permission. */
 export async function editChannelOverwrite(
   bot: Bot,
   channelId: bigint,
   overwriteId: bigint,
-  options: Omit<Overwrite, "id">,
+  options: Omit<OverwriteReadable, "id">,
 ) {
   await bot.rest.runMethod<undefined>(
     bot.rest,

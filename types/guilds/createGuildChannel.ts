@@ -1,6 +1,5 @@
-import { ChannelTypes } from "../channels/channelTypes.ts";
-import { DiscordOverwrite, Overwrite } from "../channels/overwrite.ts";
-import { SnakeCasedPropertiesDeep } from "../util.ts";
+import { OverwriteReadable } from "../discordeno.ts";
+import { ChannelTypes } from "../shared.ts";
 
 export interface CreateGuildChannel {
   /** Channel name (1-100 characters) */
@@ -18,16 +17,9 @@ export interface CreateGuildChannel {
   /** Sorting position of the channel */
   position?: number;
   /** The channel's permission overwrites */
-  permissionOverwrites?: Overwrite[];
+  permissionOverwrites?: OverwriteReadable[];
   /** Id of the parent category for a channel */
   parentId?: bigint;
   /** Whether the channel is nsfw */
   nsfw?: boolean;
-}
-
-/** https://discord.com/developers/docs/resources/guild#create-guild-channel */
-export interface DiscordCreateGuildChannel
-  extends SnakeCasedPropertiesDeep<Omit<CreateGuildChannel, "permissionOverwrites">> {
-  // deno-lint-ignore camelcase
-  permission_overwrites: DiscordOverwrite[];
 }

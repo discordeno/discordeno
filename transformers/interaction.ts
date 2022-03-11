@@ -1,6 +1,6 @@
 import { Bot } from "../bot.ts";
-import { ChannelTypes } from "../types/channels/channelTypes.ts";
 import { DiscordAttachment, DiscordInteraction, DiscordInteractionDataResolved } from "../types/discord.ts";
+import { ChannelTypes } from "../types/shared.ts";
 import { Collection } from "../util/collection.ts";
 import { DiscordenoAttachment } from "./attachment.ts";
 import { Member, User } from "./member.ts";

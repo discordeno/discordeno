@@ -1,4 +1,4 @@
-import { ChannelTypes } from "../../channels/channelTypes.ts";
+import { ChannelTypes } from "../../shared.ts";
 import { ApplicationCommandOptionChoice } from "./applicationCommandOptionChoice.ts";
 import { ApplicationCommandOptionTypes } from "./applicationCommandOptionTypes.ts";
 

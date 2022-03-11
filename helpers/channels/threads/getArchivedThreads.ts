@@ -1,4 +1,3 @@
-import { ListActiveThreads } from "../../../types/channels/threads/listActiveThreads.ts";
 import { ListPublicArchivedThreads } from "../../../types/channels/threads/listPublicArchivedThreads.ts";
 import { Collection } from "../../../util/collection.ts";
 import type { Bot } from "../../../bot.ts";
