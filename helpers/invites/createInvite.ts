@@ -1,6 +1,6 @@
-import type { CreateChannelInvite } from "../../types/invites/createChannelInvite.ts";
 import type { Bot } from "../../bot.ts";
 import { DiscordInvite } from "../../types/discord.ts";
+import { CreateChannelInvite } from "../../types/discordeno.ts";
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
 export async function createInvite(bot: Bot, channelId: bigint, options: CreateChannelInvite = {}) {

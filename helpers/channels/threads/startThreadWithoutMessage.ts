@@ -1,6 +1,6 @@
-import type { StartThreadWithoutMessage } from "../../../types/channels/threads/startThread.ts";
 import type { Bot } from "../../../bot.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
+import { StartThreadWithoutMessage } from "../../../types/discordeno.ts";
 
 /** Creates a new private thread. Returns a thread channel. */
 export async function startThreadWithoutMessage(bot: Bot, channelId: bigint, options: StartThreadWithoutMessage) {

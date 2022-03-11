@@ -106,25 +106,6 @@ export interface ModifyThread {
   rateLimitPerUser?: number;
 }
 
-// TODO: add docs link
-export interface StartThreadBase {
-  /** 1-100 character thread name */
-  name: string;
-  /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration: 60 | 1440 | 4320 | 10080;
-  /** Amount of seconds a user has to wait before sending another message (0-21600) */
-  rateLimitPerUser?: number | null;
-  /** The reason you are creating the thread */
-  reason?: string;
-}
-
-export interface StartThreadWithoutMessage extends StartThreadBase {
-  /** the type of thread to create */
-  type: ChannelTypes.GuildNewsThread | ChannelTypes.GuildPublicThread | ChannelTypes.GuildPrivateThread;
-  /** whether non-moderators can add other non-moderators to a thread; only available when creating a private thread */
-  invitable?: boolean;
-}
-
 export interface ThreadMemberBase {
   /** Any user-thread settings, currently only used for notifications */
   flags: number;
@@ -636,31 +617,6 @@ export interface MessageActivity {
   partyId?: string;
 }
 
-
-/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
-export interface GetMessagesLimit {
-  /** Max number of messages to return (1-100) default 50 */
-  limit?: number;
-}
-
-/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
-export interface GetMessagesAround extends GetMessagesLimit {
-  /** Get messages around this message id */
-  around?: bigint;
-}
-
-/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
-export interface GetMessagesBefore extends GetMessagesLimit {
-  /** Get messages before this message id */
-  before?: bigint;
-}
-
-/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
-export interface GetMessagesAfter extends GetMessagesLimit {
-  /** Get messages after this message id */
-  after?: bigint;
-}
-
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
 export type GetMessages = GetMessagesLimit & GetMessagesAfter & GetMessagesBefore & GetMessagesAround;
 
@@ -1019,23 +975,6 @@ export interface SearchGuildMembers {
   limit?: number;
 }
 
-export interface CreateChannelInvite {
-  /** Duration of invite in seconds before expiry, or 0 for never. Between 0 and 604800 (7 days). Default: 86400 (24 hours) */
-  maxAge?: number;
-  /** Max number of users or 0 for unlimited. Between 0 and 100. Default: 0 */
-  maxUses?: number;
-  /** Whether this invite only grants temporary membership. Default: false */
-  temporary?: boolean;
-  /** If true, don't try to reuse simmilar invite (useful for creating many unique one time use invites). Default: false */
-  unique?: boolean;
-  /** The type of target for this voice channel invite */
-  targetType?: InviteTargetTypes;
-  /** The id of the user whose stream to display for this invite, required if `target_type` is 1, the user must be streaming in the channel */
-  targetUserId?: string;
-  /** The id of the embedded application to open for this invite, required if `target_type` is 2, the application must have the `EMBEDDED` flag */
-  targetApplicationId?: string;
-}
-
 /** https://discord.com/developers/docs/resources/invite#get-invite */
 export interface GetInvite {
   /** Whether the invite should contain approximate member counts */
@@ -1094,12 +1033,6 @@ export interface InviteStageInstance {
   speakerCount: number;
   /** The topic of the Stage instance (1-120 characters) */
   topic: string;
-}
-
-/** https://discord.com/developers/docs/resources/invite#invite-object-invite-target-types */
-export enum InviteTargetTypes {
-  Stream = 1,
-  EmbeddedApplication,
 }
 
 /** https://discord.com/developers/docs/resources/invite#invite-object-target-user-types */

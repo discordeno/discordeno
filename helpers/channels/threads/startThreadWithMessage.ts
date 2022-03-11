@@ -1,6 +1,6 @@
-import type { StartThreadBase } from "../../../types/channels/threads/startThread.ts";
 import type { Bot } from "../../../bot.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
+import { StartThreadBase } from "../../../types/discordeno.ts";
 
 /** Creates a new public thread from an existing message. Returns a thread channel. */
 export async function startThreadWithMessage(

@@ -1,11 +1,6 @@
-import type {
-  GetMessagesAfter,
-  GetMessagesAround,
-  GetMessagesBefore,
-  GetMessagesLimit,
-} from "../../types/messages/getMessages.ts";
 import type { Bot } from "../../bot.ts";
 import { DiscordMessage } from "../../types/discord.ts";
+import { GetMessagesAfter, GetMessagesAround, GetMessagesBefore, GetMessagesLimit } from "../../types/discordeno.ts";
 
 /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
 export async function getMessages(

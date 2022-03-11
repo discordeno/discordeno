@@ -596,7 +596,6 @@ export interface BaseChannel {
 
 /** https://discord.com/developers/docs/topics/gateway#presence-update */
 export interface BasePresenceUpdate {
-  
 }
 
 /** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure */
@@ -787,7 +786,6 @@ export interface BaseActivityButton {
 }
 
 export interface BaseMemberWithUser extends BaseMember {
-
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-types */
@@ -1403,6 +1401,12 @@ export enum GatewayCloseEventCodes {
   DisallowedIntents,
 }
 
+/** https://discord.com/developers/docs/resources/invite#invite-object-invite-target-types */
+export enum InviteTargetTypes {
+  Stream = 1,
+  EmbeddedApplication,
+}
+
 // UTILS
 
 // deno-lint-ignore-file ban-types no-explicit-any
@@ -1537,4 +1541,3 @@ export type CamelCasedPropertiesDeep<Value> = Value extends Function ? Value
 export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
 
 export type MakeRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
-
