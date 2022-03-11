@@ -1,6 +1,6 @@
-import { GetInvite } from "../../types/invites/getInvite.ts";
 import type { Bot } from "../../bot.ts";
 import { DiscordInviteMetadata } from "../../types/discord.ts";
+import { GetInvite } from "../../types/discordeno.ts";
 
 /** Returns an invite for the given code or throws an error if the invite doesn't exists. */
 export async function getInvite(bot: Bot, inviteCode: string, options?: GetInvite) {

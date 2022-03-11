@@ -1,7 +1,6 @@
-import type { RequestGuildMembers } from "../../types/members/requestGuildMembers.ts";
 import type { Bot } from "../../bot.ts";
-import { GatewayIntents } from "../../types/gateway/gatewayIntents.ts";
-import { GatewayOpcodes } from "../../types/codes/gatewayOpcodes.ts";
+import { RequestGuildMembers } from "../../types/discordeno.ts";
+import { GatewayOpcodes, GatewayIntents } from "../../types/shared.ts";
 
 /**
  * Highly recommended to use this function to fetch members instead of getMember from REST.

@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import type { GetGuildWidgetImageQuery } from "../../types/guilds/getGuildWidgetImage.ts";
+import { GetGuildWidgetImageQuery } from "../../types/discordeno.ts";
 
 /** Returns the widget image URL for the guild. */
 export async function getWidgetImageURL(bot: Bot, guildId: bigint, options?: GetGuildWidgetImageQuery) {

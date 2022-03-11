@@ -1,7 +1,7 @@
-import type { CreateMessage } from "../../types/messages/createMessage.ts";
 import type { Bot } from "../../bot.ts";
-import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
 import { DiscordMessage } from "../../types/discord.ts";
+import { CreateMessage } from "../../types/discordeno.ts";
+import { MessageComponentTypes } from "../../types/shared.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMessage) {

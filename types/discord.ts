@@ -50,6 +50,7 @@ import {
   ButtonStyles,
   ChannelTypes,
   EmbedTypes,
+  GatewayEventNames,
   GuildFeatures,
   IntegrationExpireBehaviors,
   InteractionTypes,
@@ -547,9 +548,14 @@ export interface DiscordThreadMemberBase extends SnakeCasedPropertiesDeep<BaseTh
 
 export interface DiscordThreadMember extends SnakeCasedPropertiesDeep<BaseThreadMember> {
   /** The id of the thread */
-  id?: string;
+  id: string;
   /** The id of the user */
-  user_id?: string;
+  user_id: string;
+  /** The time the current user last joined the thread */
+  join_timestamp: string;
+}
+
+export interface DiscordThreadMemberGuildCreate extends SnakeCasedPropertiesDeep<BaseThreadMember> {
   /** The time the current user last joined the thread */
   join_timestamp: string;
 }
@@ -1462,4 +1468,68 @@ export interface DiscordFollowedChannel {
   channel_id: string;
   /** Created target webhook id */
   webhook_id: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#payloads-gateway-payload-structure */
+export interface DiscordGatewayPayload {
+  /** opcode for the payload */
+  op: number;
+  /** Event data */
+  d: unknown | null;
+  /** Sequence number, used for resuming sessions and heartbeats */
+  s: number | null;
+  /** The event name for this payload */
+  t: GatewayEventNames | null;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#guild-members-chunk */
+export interface DiscordGuildMembersChunk {
+  /** The id of the guild */
+  guild_id: string;
+  /** Set of guild members */
+  members: DiscordMemberWithUser[];
+  /** The chunk index in the expected chunks for this response (0 <= chunk_index < chunk_count) */
+  chunk_index: number;
+  /** The total number of expected chunks for this response */
+  chunk_count: number;
+  /** If passing an invalid id to `REQUEST_GUILD_MEMBERS`, it will be returned here */
+  not_found?: string[];
+  /** If passing true to `REQUEST_GUILD_MEMBERS`, presences of the returned members will be here */
+  presences?: DiscordPresenceUpdate[];
+  /** The nonce used in the Guild Members Request */
+  nonce?: string;
+}
+
+export interface DiscordComponent {
+  /** component type */
+  type: MessageComponentTypes;
+  /** a developer-defined identifier for the component, max 100 characters */
+  customId?: string;
+  /** whether the component is disabled, default false */
+  disabled?: boolean;
+  /** For different styles/colors of the buttons */
+  style?: ButtonStyles | TextStyles;
+  /** text that appears on the button (max 80 characters) */
+  label?: string;
+  /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
+  emoji?: {
+    /** Emoji id */
+    id?: string;
+    /** Emoji name */
+    name?: string;
+    /** Whether this emoji is animated */
+    animated?: boolean;
+  };
+  /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
+  url?: string;
+  /** The choices! Maximum of 25 items. */
+  options?: DiscordSelectOption[];
+  /** A custom placeholder text if nothing is selected. Maximum 100 characters. */
+  placeholder?: string;
+  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  min_values?: number;
+  /** The maximum number of items that can be selected. Default 1. Between 1-25. */
+  max_values?: number;
+  /** a list of child components */
+  components?: DiscordComponent[];
 }

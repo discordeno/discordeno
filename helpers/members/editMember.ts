@@ -1,10 +1,10 @@
-import type { ModifyGuildMember } from "../../types/guilds/modifyGuildMember.ts";
-import type { GuildMemberWithUser } from "../../types/members/guildMember.ts";
 import type { Bot } from "../../bot.ts";
+import { DiscordMemberWithUser } from "../../types/discord.ts";
+import { ModifyGuildMember } from "../../types/discordeno.ts";
 
 /** Edit the member */
 export async function editMember(bot: Bot, guildId: bigint, memberId: bigint, options: ModifyGuildMember) {
-  const result = await bot.rest.runMethod<GuildMemberWithUser>(
+  const result = await bot.rest.runMethod<DiscordMemberWithUser>(
     bot.rest,
     "patch",
     bot.constants.endpoints.GUILD_MEMBER(guildId, memberId),

@@ -4,6 +4,8 @@ import { Member, User } from "../transformers/member.ts";
 import { EmojiToggles } from "../transformers/toggles/emoji.ts";
 import { VoiceStateToggles } from "../transformers/toggles/voice.ts";
 import {
+  ApplicationCommandOptionTypes,
+  ApplicationCommandTypes,
   BaseActivityAssets,
   BaseActivityButton,
   BaseActivityEmoji,
@@ -13,10 +15,7 @@ import {
   BaseAllowedMentions,
   BaseAttachment,
   BaseClientStatus,
-  BaseConnection,
   BaseEmoji,
-  BaseIntegration,
-  BaseIntegrationAccount,
   BaseOverwrite,
   BaseStageInstance,
   BaseTeam,
@@ -30,6 +29,7 @@ import {
   BaseWelcomeScreenChannel,
   ButtonStyles,
   ChannelTypes,
+  GetGuildWidgetImageStyleOptions,
   InviteTargetTypes,
   MessageComponentTypes,
   PermissionStrings,
@@ -385,7 +385,6 @@ export interface OverwriteReadable extends BaseOverwrite {
   deny?: PermissionStrings[];
 }
 
-
 export interface ThreadMetadata extends BaseThreadMetadata {
   /** Timestamp when the thread's archive status was last changed, used for calculating recent activity */
   archiveTimestamp: number;
@@ -411,7 +410,6 @@ export interface ClientStatus extends BaseClientStatus {
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-timestamps */
 export interface ActivityTimestamps extends BaseActivityTimestamps {
-  
 }
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-emoji */
@@ -436,13 +434,11 @@ export interface ActivityAssets extends BaseActivityAssets {
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-secrets */
 export interface ActivitySecrets extends BaseActivitySecrets {
-
 }
 
 // https://github.com/discord/discord-api-docs/pull/2219
 // TODO: add documentation link
 export interface ActivityButton extends BaseActivityButton {
-
 }
 
 export interface MemberWithUser extends Member {
@@ -508,4 +504,135 @@ export interface CreateChannelInvite {
   targetUserId?: string;
   /** The id of the embedded application to open for this invite, required if `target_type` is 2, the application must have the `EMBEDDED` flag */
   targetApplicationId?: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#request-guild-members */
+export interface RequestGuildMembers {
+  /** id of the guild to get members for */
+  guildId: bigint;
+  /** String that username starts with, or an empty string to return all members */
+  query?: string;
+  /** Maximum number of members to send matching the query; a limit of 0 can be used with an empty string query to return all members */
+  limit: number;
+  /** Used to specify if we want the presences of the matched members */
+  presences?: boolean;
+  /** Used to specify which users you wish to fetch */
+  userIds?: bigint[];
+  /** Nonce to identify the Guild Members Chunk response */
+  nonce?: string;
+}
+
+export interface CreateMessage {
+  /** The message contents (up to 2000 characters) */
+  content?: string;
+  /** true if this is a TTS message */
+  tts?: boolean;
+  /** Embedded `rich` content (up to 6000 characters) */
+  embeds?: Embed[];
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions;
+  /** Include to make your message a reply */
+  messageReference?: {
+    /** id of the originating message */
+    messageId?: bigint;
+    /**
+     * id of the originating message's channel
+     * Note: `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.
+     */
+    channelId?: bigint;
+    /** id of the originating message's guild */
+    guildId?: bigint;
+    /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
+    failIfNotExists: boolean;
+  };
+  /** The contents of the file being sent */
+  file?: FileContent | FileContent[];
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents;
+}
+
+/** https://discord.com/developers/docs/resources/invite#get-invite */
+export interface GetInvite {
+  /** Whether the invite should contain approximate member counts */
+  withCounts?: boolean;
+  /** Whether the invite should contain the expiration date */
+  withExpiration?: boolean;
+  /** the guild scheduled event to include with the invite */
+  scheduledEventId?: bigint;
+}
+
+/** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
+export interface BeginGuildPrune {
+  /** Number of days to prune (1 or more), default: 7 */
+  days?: number;
+  /** Whether 'pruned' is returned, discouraged for large guilds, default: true */
+  computePruneCount?: boolean;
+  /** Role(s) ro include, default: none */
+  includeRoles?: string[];
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#create-global-application-command-json-params */
+export interface CreateApplicationCommand {
+  /** 1-31 character name matching lowercase `^[\w-]{1,32}$` */
+  name: string;
+  /** 1-100 character description */
+  description: string;
+  /** The type of the command */
+  type?: ApplicationCommandTypes;
+  /** The parameters for the command */
+  options?: ApplicationCommandOption[];
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption */
+export interface ApplicationCommandOption {
+  /** Value of Application Command Option Type */
+  type: ApplicationCommandOptionTypes;
+  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
+  name: string;
+  /** 1-100 character description */
+  description: string;
+  /** If the parameter is required or optional--default `false` */
+  required?: boolean;
+  /** Choices for `string` and `int` types for the user to pick from */
+  choices?: ApplicationCommandOptionChoice[];
+  /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
+  options?: ApplicationCommandOption[];
+  /** if autocomplete interactions are enabled for this `String`, `Integer`, or `Number` type option */
+  autocomplete?: boolean;
+  /** If the option is a channel type, the channels shown will be restricted to these types */
+  channelTypes?: ChannelTypes[];
+  /** Minimum number desired. */
+  minValue?: number;
+  /** Maximum number desired. */
+  maxValue?: number;
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptionchoice */
+export interface ApplicationCommandOptionChoice {
+  /** 1-100 character choice name */
+  name: string;
+  /** Value of the choice, up to 100 characters if string */
+  value: string | number;
+}
+
+/** https://discord.com/developers/docs/resources/guild#modify-guild-member */
+export interface ModifyGuildMember {
+  /** Value to set users nickname to. Requires the `MANAGE_NICKNAMES` permission */
+  nick?: string | null;
+  /** Array of role ids the member is assigned. Requires the `MANAGE_ROLES` permission */
+  roles?: bigint[] | null;
+  /** Whether the user is muted in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MUTE_MEMBERS` permission */
+  mute?: boolean | null;
+  /** Whether the user is deafened in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MOVE_MEMBERS` permission */
+  deaf?: boolean | null;
+  /** Id of channel to move user to (if they are connected to voice). Requires the `MOVE_MEMBERS` permission */
+  channelId?: bigint | null;
+  /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission */
+  communicationDisabledUntil?: number;
+}
+
+/** https://discord.com/developers/docs/resources/guild#get-guild-widget-image-query-string-params */
+export interface GetGuildWidgetImageQuery {
+  /** Style of the widget returned, default: shield */
+  style?: GetGuildWidgetImageStyleOptions;
 }

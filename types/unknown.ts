@@ -645,40 +645,6 @@ export interface EditMessage {
   components?: MessageComponents;
 }
 
-export interface CreateMessage {
-  /** The message contents (up to 2000 characters) */
-  content?: string;
-  /** true if this is a TTS message */
-  tts?: boolean;
-  /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Embed[];
-  /** Allowed mentions for the message */
-  allowedMentions?: Omit<AllowedMentions, "users" | "roles"> & {
-    /** Array of role_ids to mention (Max size of 100) */
-    roles?: bigint[];
-    /** Array of user_ids to mention (Max size of 100) */
-    users?: bigint[];
-  };
-  /** Include to make your message a reply */
-  messageReference?: {
-    /** id of the originating message */
-    messageId?: bigint;
-    /**
-     * id of the originating message's channel
-     * Note: `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.
-     */
-    channelId?: bigint;
-    /** id of the originating message's guild */
-    guildId?: bigint;
-    /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
-    failIfNotExists: boolean;
-  };
-  /** The contents of the file being sent */
-  file?: FileContent | FileContent[];
-  /** The components you would like to have sent in this message */
-  components?: MessageComponents;
-}
-
 /** https://discord.com/developers/docs/resources/channel#create-message */
 export type DiscordCreateMessage = SnakeCasedPropertiesDeep<Omit<CreateMessage, "file">>;
 
@@ -893,24 +859,6 @@ export interface GuildMemberRemove {
   user: DiscordUser;
 }
 
-/** https://discord.com/developers/docs/topics/gateway#guild-members-chunk */
-export interface GuildMembersChunk {
-  /** The id of the guild */
-  guildId: string;
-  /** Set of guild members */
-  members: GuildMemberWithUser[];
-  /** The chunk index in the expected chunks for this response (0 <= chunk_index < chunk_count) */
-  chunkIndex: number;
-  /** The total number of expected chunks for this response */
-  chunkCount: number;
-  /** If passing an invalid id to `REQUEST_GUILD_MEMBERS`, it will be returned here */
-  notFound?: string[];
-  /** If passing true to `REQUEST_GUILD_MEMBERS`, presences of the returned members will be here */
-  presences?: DiscordPresenceUpdate[];
-  /** The nonce used in the Guild Members Request */
-  nonce?: string;
-}
-
 /** https://discord.com/developers/docs/topics/gateway#guild-member-update */
 export interface GuildMemberUpdate {
   /** The id of the guild */
@@ -951,38 +899,12 @@ export interface ModifyCurrentUserNick {
   nick?: string | null;
 }
 
-/** https://discord.com/developers/docs/topics/gateway#request-guild-members */
-export interface RequestGuildMembers {
-  /** id of the guild to get members for */
-  guildId: bigint;
-  /** String that username starts with, or an empty string to return all members */
-  query?: string;
-  /** Maximum number of members to send matching the query; a limit of 0 can be used with an empty string query to return all members */
-  limit: number;
-  /** Used to specify if we want the presences of the matched members */
-  presences?: boolean;
-  /** Used to specify which users you wish to fetch */
-  userIds?: bigint[];
-  /** Nonce to identify the Guild Members Chunk response */
-  nonce?: string;
-}
-
 /** https://discord.com/developers/docs/resources/guild#search-guild-members-query-string-params */
 export interface SearchGuildMembers {
   /** Query string to match username(s) and nickname(s) against */
   query: string;
   /** Max number of members to return (1-1000). Default: 1 */
   limit?: number;
-}
-
-/** https://discord.com/developers/docs/resources/invite#get-invite */
-export interface GetInvite {
-  /** Whether the invite should contain approximate member counts */
-  withCounts?: boolean;
-  /** Whether the invite should contain the expiration date */
-  withExpiration?: boolean;
-  /** the guild scheduled event to include with the invite */
-  scheduledEventId?: bigint;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#invite-create */
@@ -1069,180 +991,9 @@ export interface ModifyGuildEmoji {
   roles?: bigint[] | null;
 }
 
-/** https://discord.com/developers/docs/topics/gateway#list-of-intents */
-export enum GatewayIntents {
-  /**
-   * - GUILD_CREATE
-   * - GUILD_DELETE
-   * - GUILD_ROLE_CREATE
-   * - GUILD_ROLE_UPDATE
-   * - GUILD_ROLE_DELETE
-   * - CHANNEL_CREATE
-   * - CHANNEL_UPDATE
-   * - CHANNEL_DELETE
-   * - CHANNEL_PINS_UPDATE
-   * - THREAD_CREATE
-   * - THREAD_UPDATE
-   * - THREAD_DELETE
-   * - THREAD_LIST_SYNC
-   * - THREAD_MEMBER_UPDATE
-   * - THREAD_MEMBERS_UPDATE
-   * - STAGE_INSTANCE_CREATE
-   * - STAGE_INSTANCE_UPDATE
-   * - STAGE_INSTANCE_DELETE
-   */
-  Guilds = 1 << 0,
-  /**
-   * - GUILD_MEMBER_ADD
-   * - GUILD_MEMBER_UPDATE
-   * - GUILD_MEMBER_REMOVE
-   */
-  GuildMembers = 1 << 1,
-  /**
-   * - GUILD_BAN_ADD
-   * - GUILD_BAN_REMOVE
-   */
-  GuildBans = 1 << 2,
-  /**
-   * - GUILD_EMOJIS_UPDATE
-   */
-  GuildEmojis = 1 << 3,
-  /**
-   * - GUILD_INTEGRATIONS_UPDATE
-   * - INTEGRATION_CREATE
-   * - INTEGRATION_UPDATE
-   * - INTEGRATION_DELETE
-   */
-  GuildIntegrations = 1 << 4,
-  /** Enables the following events:
-   * - WEBHOOKS_UPDATE
-   */
-  GuildWebhooks = 1 << 5,
-  /**
-   * - INVITE_CREATE
-   * - INVITE_DELETE
-   */
-  GuildInvites = 1 << 6,
-  /**
-   * - VOICE_STATE_UPDATE
-   */
-  GuildVoiceStates = 1 << 7,
-  /**
-   * - PRESENCE_UPDATE
-   */
-  GuildPresences = 1 << 8,
-  /**
-   * - MESSAGE_CREATE
-   * - MESSAGE_UPDATE
-   * - MESSAGE_DELETE
-   */
-  GuildMessages = 1 << 9,
-  /**
-   * - MESSAGE_REACTION_ADD
-   * - MESSAGE_REACTION_REMOVE
-   * - MESSAGE_REACTION_REMOVE_ALL
-   * - MESSAGE_REACTION_REMOVE_EMOJI
-   */
-  GuildMessageReactions = 1 << 10,
-  /**
-   * - TYPING_START
-   */
-  GuildMessageTyping = 1 << 11,
-  /**
-   * - CHANNEL_CREATE
-   * - MESSAGE_CREATE
-   * - MESSAGE_UPDATE
-   * - MESSAGE_DELETE
-   * - CHANNEL_PINS_UPDATE
-   */
-  DirectMessages = 1 << 12,
-  /**
-   * - MESSAGE_REACTION_ADD
-   * - MESSAGE_REACTION_REMOVE
-   * - MESSAGE_REACTION_REMOVE_ALL
-   * - MESSAGE_REACTION_REMOVE_EMOJI
-   */
-  DirectMessageReactions = 1 << 13,
-  /**
-   * - TYPING_START
-   */
-  DirectMessageTyping = 1 << 14,
 
-  /**
-   * - GUILD_SCHEDULED_EVENT_CREATE
-   * - GUILD_SCHEDULED_EVENT_UPDATE
-   * - GUILD_SCHEDULED_EVENT_DELETE
-   * - GUILD_SCHEDULED_EVENT_USER_ADD this is experimental and unstable.
-   * - GUILD_SCHEDULED_EVENT_USER_REMOVE this is experimental and unstable.
-   */
-  GuildScheduledEvents = (1 << 16),
-}
 
 export type Intents = GatewayIntents;
-
-export interface GatewayPayload {
-  /** opcode for the payload */
-  op: number;
-  /** Event data */
-  d: unknown | null;
-  /** Sequence number, used for resuming sessions and heartbeats */
-  s: number | null;
-  /** The event name for this payload */
-  t: GatewayEventNames | null;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#payloads-gateway-payload-structure */
-export type DiscordGatewayPayload = GatewayPayload;
-export type GatewayDispatchEventNames =
-  | "READY"
-  | "CHANNEL_CREATE"
-  | "CHANNEL_DELETE"
-  | "CHANNEL_PINS_UPDATE"
-  | "CHANNEL_UPDATE"
-  | "GUILD_BAN_ADD"
-  | "GUILD_BAN_REMOVE"
-  | "GUILD_CREATE"
-  | "GUILD_DELETE"
-  | "GUILD_EMOJIS_UPDATE"
-  | "GUILD_INTEGRATIONS_UPDATE"
-  | "GUILD_MEMBER_ADD"
-  | "GUILD_MEMBER_REMOVE"
-  | "GUILD_MEMBER_UPDATE"
-  | "GUILD_MEMBERS_CHUNK"
-  | "GUILD_ROLE_CREATE"
-  | "GUILD_ROLE_DELETE"
-  | "GUILD_ROLE_UPDATE"
-  | "GUILD_UPDATE"
-  | "GUILD_SCHEDULED_EVENT_CREATE"
-  | "GUILD_SCHEDULED_EVENT_DELETE"
-  | "GUILD_SCHEDULED_EVENT_UPDATE"
-  | "GUILD_SCHEDULED_EVENT_USER_ADD"
-  | "GUILD_SCHEDULED_EVENT_USER_REMOVE"
-  | "INTERACTION_CREATE"
-  | "INVITE_CREATE"
-  | "INVITE_DELETE"
-  | "MESSAGE_CREATE"
-  | "MESSAGE_DELETE_BULK"
-  | "MESSAGE_DELETE"
-  | "MESSAGE_REACTION_ADD"
-  | "MESSAGE_REACTION_REMOVE_ALL"
-  | "MESSAGE_REACTION_REMOVE_EMOJI"
-  | "MESSAGE_REACTION_REMOVE"
-  | "MESSAGE_UPDATE"
-  | "PRESENCE_UPDATE"
-  | "TYPING_START"
-  | "USER_UPDATE"
-  | "VOICE_SERVER_UPDATE"
-  | "VOICE_STATE_UPDATE"
-  | "WEBHOOKS_UPDATE"
-  | "INTEGRATION_CREATE"
-  | "INTEGRATION_UPDATE"
-  | "INTEGRATION_DELETE"
-  | "STAGE_INSTANCE_CREATE"
-  | "STAGE_INSTANCE_UPDATE"
-  | "STAGE_INSTANCE_DELETE";
-
-export type GatewayEventNames = GatewayDispatchEventNames | "READY" | "RESUMED";
 
 /** https://discord.com/developers/docs/topics/gateway#connecting-gateway-url-params */
 export interface GatewayURLParams {
@@ -1360,16 +1111,6 @@ export interface Ban {
   user: DiscordUser;
 }
 
-/** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
-export interface BeginGuildPrune {
-  /** Number of days to prune (1 or more), default: 7 */
-  days?: number;
-  /** Whether 'pruned' is returned, discouraged for large guilds, default: true */
-  computePruneCount?: boolean;
-  /** Role(s) ro include, default: none */
-  includeRoles?: string[];
-}
-
 /** https://discord.com/developers/docs/resources/guild#create-guild */
 export interface CreateGuild {
   /** Name of the guild (1-100 characters) */
@@ -1459,26 +1200,6 @@ export interface GetGuildPruneCountQuery {
   days?: number;
   /** Role(s) to include, default: none */
   includeRoles: string | string[];
-}
-
-/** https://discord.com/developers/docs/resources/guild#get-guild-widget-image-query-string-params */
-export interface GetGuildWidgetImageQuery {
-  /** Style of the widget returned, default: shield */
-  style?: GetGuildWidgetImageStyleOptions;
-}
-
-/** https://discord.com/developers/docs/resources/guild#get-guild-widget-image-widget-style-options */
-export enum GetGuildWidgetImageStyleOptions {
-  /** Shield style widget with Discord icon and guild members online count */
-  Shield = "shield",
-  /** Large image with guild icon, name and online count. "POWERED BY DISCORD" as the footer of the widget */
-  Banner1 = "banner1",
-  /** Smaller widget style with guild icon, name and online count. Split on the right with Discord logo */
-  Banner2 = "banner2",
-  /** Large image with guild icon, name and online count. In the footer, Discord logo on the left and "Chat Now" on the right */
-  Banner3 = "banner3",
-  /** Large Discord logo at the top of the widget. Guild icon, name and online count in the middle portion of the widget and a "JOIN MY SERVER" button at the bottom */
-  Banner4 = "banner4",
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-ban-add */
@@ -1605,22 +1326,6 @@ export interface ModifyGuildChannelPositions {
   lockPositions?: boolean | null;
   /** The new parent ID for the channel that is moved */
   parentId?: string | null;
-}
-
-/** https://discord.com/developers/docs/resources/guild#modify-guild-member */
-export interface ModifyGuildMember {
-  /** Value to set users nickname to. Requires the `MANAGE_NICKNAMES` permission */
-  nick?: string | null;
-  /** Array of role ids the member is assigned. Requires the `MANAGE_ROLES` permission */
-  roles?: bigint[] | null;
-  /** Whether the user is muted in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MUTE_MEMBERS` permission */
-  mute?: boolean | null;
-  /** Whether the user is deafened in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MOVE_MEMBERS` permission */
-  deaf?: boolean | null;
-  /** Id of channel to move user to (if they are connected to voice). Requires the `MOVE_MEMBERS` permission */
-  channelId?: bigint | null;
-  /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission */
-  communicationDisabledUntil?: number;
 }
 
 export interface ModifyGuildRole {
@@ -1951,53 +1656,6 @@ export interface InteractionDataResolved {
   attachments?: Record<string, Attachment>;
 }
 
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption */
-export interface ApplicationCommandOption {
-  /** Value of Application Command Option Type */
-  type: ApplicationCommandOptionTypes;
-  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
-  name: string;
-  /** 1-100 character description */
-  description: string;
-  /** If the parameter is required or optional--default `false` */
-  required?: boolean;
-  /** Choices for `string` and `int` types for the user to pick from */
-  choices?: ApplicationCommandOptionChoice[];
-  /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
-  options?: ApplicationCommandOption[];
-  /** if autocomplete interactions are enabled for this `String`, `Integer`, or `Number` type option */
-  autocomplete?: boolean;
-  /** If the option is a channel type, the channels shown will be restricted to these types */
-  channelTypes?: ChannelTypes[];
-  /** Minimum number desired. */
-  minValue?: number;
-  /** Maximum number desired. */
-  maxValue?: number;
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptionchoice */
-export interface ApplicationCommandOptionChoice {
-  /** 1-100 character choice name */
-  name: string;
-  /** Value of the choice, up to 100 characters if string */
-  value: string | number;
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype */
-export enum ApplicationCommandOptionTypes {
-  SubCommand = 1,
-  SubCommandGroup,
-  String,
-  Integer,
-  Boolean,
-  User,
-  Channel,
-  Role,
-  Mentionable,
-  Number,
-  Attachment,
-}
-
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandpermissions */
 export interface ApplicationCommandPermissions {
   /** The id of the role or user */
@@ -2020,18 +1678,6 @@ export enum ApplicationCommandTypes {
   User,
   /** A UI-based command that shows up when you right click or tap on a message */
   Message,
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#create-global-application-command-json-params */
-export interface CreateApplicationCommand {
-  /** 1-31 character name matching lowercase `^[\w-]{1,32}$` */
-  name: string;
-  /** 1-100 character description */
-  description: string;
-  /** The type of the command */
-  type?: ApplicationCommandTypes;
-  /** The parameters for the command */
-  options?: ApplicationCommandOption[];
 }
 
 export interface CreateGlobalContextMenuCommand {

@@ -1,7 +1,6 @@
-import type { CreateApplicationCommand } from "../../../types/interactions/commands/createGlobalApplicationCommand.ts";
 import type { Bot } from "../../../bot.ts";
-import { ApplicationCommandOption } from "../../../types/interactions/commands/applicationCommandOption.ts";
 import { DiscordApplicationCommand } from "../../../types/discord.ts";
+import { CreateApplicationCommand } from "../../../types/discordeno.ts";
 
 /**
  * There are two kinds of Application Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:

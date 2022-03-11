@@ -1,5 +1,5 @@
-import type { BeginGuildPrune } from "../../types/guilds/beginGuildPrune.ts";
 import type { Bot } from "../../bot.ts";
+import { BeginGuildPrune } from "../../types/discordeno.ts";
 
 /**
  * Begin a prune operation. Requires the KICK_MEMBERS permission. Returns an object with one 'pruned' key indicating the number of members that were removed in the prune operation. For large guilds it's recommended to set the computePruneCount option to false, forcing 'pruned' to null. Fires multiple Guild Member Remove Gateway events.

@@ -1342,33 +1342,6 @@ export enum HTTPResponseCodes {
   GatewayUnavailable = 502,
 }
 
-/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes */
-export enum GatewayOpcodes {
-  /** An event was dispatched. */
-  Dispatch,
-  /** Fired periodically by the client to keep the connection alive. */
-  Heartbeat,
-  /** Starts a new session during the initial handshake. */
-  Identify,
-  /** Update the client's presence. */
-  PresenceUpdate,
-  /** Used to join/leave or move between voice channels. */
-
-  VoiceStateUpdate,
-  /** Resume a previous session that was disconnected. */
-  Resume = 6,
-  /** You should attempt to reconnect and resume immediately. */
-  Reconnect,
-  /** Request information about offline guild members in a large guild. */
-  RequestGuildMembers,
-  /** The session has been invalidated. You should reconnect and identify/resume accordingly. */
-  InvalidSession,
-  /** Sent immediately after connecting, contains the `heartbeat_interval` to use. */
-  Hello,
-  /** Sent in response to receiving a heartbeat to acknowledge that it has been received. */
-  HeartbeatACK,
-}
-
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#opcodes-and-status-codes */
 export enum GatewayCloseEventCodes {
   /** We're not sure what went wrong. Try reconnecting? */
@@ -1405,6 +1378,207 @@ export enum GatewayCloseEventCodes {
 export enum InviteTargetTypes {
   Stream = 1,
   EmbeddedApplication,
+}
+
+/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes */
+export enum GatewayOpcodes {
+  /** An event was dispatched. */
+  Dispatch,
+  /** Fired periodically by the client to keep the connection alive. */
+  Heartbeat,
+  /** Starts a new session during the initial handshake. */
+  Identify,
+  /** Update the client's presence. */
+  PresenceUpdate,
+  /** Used to join/leave or move between voice channels. */
+
+  VoiceStateUpdate,
+  /** Resume a previous session that was disconnected. */
+  Resume = 6,
+  /** You should attempt to reconnect and resume immediately. */
+  Reconnect,
+  /** Request information about offline guild members in a large guild. */
+  RequestGuildMembers,
+  /** The session has been invalidated. You should reconnect and identify/resume accordingly. */
+  InvalidSession,
+  /** Sent immediately after connecting, contains the `heartbeat_interval` to use. */
+  Hello,
+  /** Sent in response to receiving a heartbeat to acknowledge that it has been received. */
+  HeartbeatACK,
+}
+
+export type GatewayDispatchEventNames =
+  | "READY"
+  | "CHANNEL_CREATE"
+  | "CHANNEL_DELETE"
+  | "CHANNEL_PINS_UPDATE"
+  | "CHANNEL_UPDATE"
+  | "GUILD_BAN_ADD"
+  | "GUILD_BAN_REMOVE"
+  | "GUILD_CREATE"
+  | "GUILD_DELETE"
+  | "GUILD_EMOJIS_UPDATE"
+  | "GUILD_INTEGRATIONS_UPDATE"
+  | "GUILD_MEMBER_ADD"
+  | "GUILD_MEMBER_REMOVE"
+  | "GUILD_MEMBER_UPDATE"
+  | "GUILD_MEMBERS_CHUNK"
+  | "GUILD_ROLE_CREATE"
+  | "GUILD_ROLE_DELETE"
+  | "GUILD_ROLE_UPDATE"
+  | "GUILD_UPDATE"
+  | "GUILD_SCHEDULED_EVENT_CREATE"
+  | "GUILD_SCHEDULED_EVENT_DELETE"
+  | "GUILD_SCHEDULED_EVENT_UPDATE"
+  | "GUILD_SCHEDULED_EVENT_USER_ADD"
+  | "GUILD_SCHEDULED_EVENT_USER_REMOVE"
+  | "INTERACTION_CREATE"
+  | "INVITE_CREATE"
+  | "INVITE_DELETE"
+  | "MESSAGE_CREATE"
+  | "MESSAGE_DELETE_BULK"
+  | "MESSAGE_DELETE"
+  | "MESSAGE_REACTION_ADD"
+  | "MESSAGE_REACTION_REMOVE_ALL"
+  | "MESSAGE_REACTION_REMOVE_EMOJI"
+  | "MESSAGE_REACTION_REMOVE"
+  | "MESSAGE_UPDATE"
+  | "PRESENCE_UPDATE"
+  | "TYPING_START"
+  | "USER_UPDATE"
+  | "VOICE_SERVER_UPDATE"
+  | "VOICE_STATE_UPDATE"
+  | "WEBHOOKS_UPDATE"
+  | "INTEGRATION_CREATE"
+  | "INTEGRATION_UPDATE"
+  | "INTEGRATION_DELETE"
+  | "STAGE_INSTANCE_CREATE"
+  | "STAGE_INSTANCE_UPDATE"
+  | "STAGE_INSTANCE_DELETE";
+
+export type GatewayEventNames = GatewayDispatchEventNames | "READY" | "RESUMED";
+
+/** https://discord.com/developers/docs/topics/gateway#list-of-intents */
+export enum GatewayIntents {
+  /**
+   * - GUILD_CREATE
+   * - GUILD_DELETE
+   * - GUILD_ROLE_CREATE
+   * - GUILD_ROLE_UPDATE
+   * - GUILD_ROLE_DELETE
+   * - CHANNEL_CREATE
+   * - CHANNEL_UPDATE
+   * - CHANNEL_DELETE
+   * - CHANNEL_PINS_UPDATE
+   * - THREAD_CREATE
+   * - THREAD_UPDATE
+   * - THREAD_DELETE
+   * - THREAD_LIST_SYNC
+   * - THREAD_MEMBER_UPDATE
+   * - THREAD_MEMBERS_UPDATE
+   * - STAGE_INSTANCE_CREATE
+   * - STAGE_INSTANCE_UPDATE
+   * - STAGE_INSTANCE_DELETE
+   */
+  Guilds = 1 << 0,
+  /**
+   * - GUILD_MEMBER_ADD
+   * - GUILD_MEMBER_UPDATE
+   * - GUILD_MEMBER_REMOVE
+   */
+  GuildMembers = 1 << 1,
+  /**
+   * - GUILD_BAN_ADD
+   * - GUILD_BAN_REMOVE
+   */
+  GuildBans = 1 << 2,
+  /**
+   * - GUILD_EMOJIS_UPDATE
+   */
+  GuildEmojis = 1 << 3,
+  /**
+   * - GUILD_INTEGRATIONS_UPDATE
+   * - INTEGRATION_CREATE
+   * - INTEGRATION_UPDATE
+   * - INTEGRATION_DELETE
+   */
+  GuildIntegrations = 1 << 4,
+  /** Enables the following events:
+   * - WEBHOOKS_UPDATE
+   */
+  GuildWebhooks = 1 << 5,
+  /**
+   * - INVITE_CREATE
+   * - INVITE_DELETE
+   */
+  GuildInvites = 1 << 6,
+  /**
+   * - VOICE_STATE_UPDATE
+   */
+  GuildVoiceStates = 1 << 7,
+  /**
+   * - PRESENCE_UPDATE
+   */
+  GuildPresences = 1 << 8,
+  /**
+   * - MESSAGE_CREATE
+   * - MESSAGE_UPDATE
+   * - MESSAGE_DELETE
+   */
+  GuildMessages = 1 << 9,
+  /**
+   * - MESSAGE_REACTION_ADD
+   * - MESSAGE_REACTION_REMOVE
+   * - MESSAGE_REACTION_REMOVE_ALL
+   * - MESSAGE_REACTION_REMOVE_EMOJI
+   */
+  GuildMessageReactions = 1 << 10,
+  /**
+   * - TYPING_START
+   */
+  GuildMessageTyping = 1 << 11,
+  /**
+   * - CHANNEL_CREATE
+   * - MESSAGE_CREATE
+   * - MESSAGE_UPDATE
+   * - MESSAGE_DELETE
+   * - CHANNEL_PINS_UPDATE
+   */
+  DirectMessages = 1 << 12,
+  /**
+   * - MESSAGE_REACTION_ADD
+   * - MESSAGE_REACTION_REMOVE
+   * - MESSAGE_REACTION_REMOVE_ALL
+   * - MESSAGE_REACTION_REMOVE_EMOJI
+   */
+  DirectMessageReactions = 1 << 13,
+  /**
+   * - TYPING_START
+   */
+  DirectMessageTyping = 1 << 14,
+
+  /**
+   * - GUILD_SCHEDULED_EVENT_CREATE
+   * - GUILD_SCHEDULED_EVENT_UPDATE
+   * - GUILD_SCHEDULED_EVENT_DELETE
+   * - GUILD_SCHEDULED_EVENT_USER_ADD this is experimental and unstable.
+   * - GUILD_SCHEDULED_EVENT_USER_REMOVE this is experimental and unstable.
+   */
+  GuildScheduledEvents = (1 << 16),
+}
+
+/** https://discord.com/developers/docs/resources/guild#get-guild-widget-image-widget-style-options */
+export enum GetGuildWidgetImageStyleOptions {
+  /** Shield style widget with Discord icon and guild members online count */
+  Shield = "shield",
+  /** Large image with guild icon, name and online count. "POWERED BY DISCORD" as the footer of the widget */
+  Banner1 = "banner1",
+  /** Smaller widget style with guild icon, name and online count. Split on the right with Discord logo */
+  Banner2 = "banner2",
+  /** Large image with guild icon, name and online count. In the footer, Discord logo on the left and "Chat Now" on the right */
+  Banner3 = "banner3",
+  /** Large Discord logo at the top of the widget. Guild icon, name and online count in the middle portion of the widget and a "JOIN MY SERVER" button at the bottom */
+  Banner4 = "banner4",
 }
 
 // UTILS
