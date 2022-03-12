@@ -490,16 +490,6 @@ export interface SearchGuildMembers {
   limit?: number;
 }
 
-/** https://discord.com/developers/docs/topics/gateway#invite-delete */
-export interface InviteDelete {
-  /** The channel of the invite */
-  channelId: string;
-  /** The guild of the invite */
-  guildId?: string;
-  /** The unique invite code */
-  code: string;
-}
-
 export interface InviteStageInstance {
   /** The members speaking in the Stage */
   members: Partial<DiscordMember>[];
@@ -716,15 +706,6 @@ export enum ScheduledEventStatus {
 export interface ScheduledEventEntityMetadata {
   /** location of the event */
   location?: string;
-}
-
-export interface ScheduledEventUserRemove {
-  /** id of the guild scheduled event  */
-  guildScheduledEventId: string;
-  /** id of the user                   */
-  userId: string;
-  /** id of the guild */
-  guildId: string;
 }
 
 export interface CreateScheduledEvent {

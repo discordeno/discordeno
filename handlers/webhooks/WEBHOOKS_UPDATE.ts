@@ -1,6 +1,5 @@
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
 import { Bot } from "../../bot.ts";
-import { DiscordWebhookUpdate } from "../../types/discord.ts";
+import { DiscordGatewayPayload, DiscordWebhookUpdate } from "../../types/discord.ts";
 
 export function handleWebhooksUpdate(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordWebhookUpdate;

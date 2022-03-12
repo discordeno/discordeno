@@ -1,6 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { DiscordIntegrationCreateUpdate } from "../../types/discord.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import { DiscordGatewayPayload, DiscordIntegrationCreateUpdate } from "../../types/discord.ts";
 
 export function handleIntegrationCreate(bot: Bot, data: DiscordGatewayPayload) {
   bot.events.integrationCreate(

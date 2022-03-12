@@ -1,6 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import { DiscordGuild } from "../../types/discord.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import { DiscordGatewayPayload, DiscordGuild } from "../../types/discord.ts";
 
 export async function handleGuildUpdate(bot: Bot, data: DiscordGatewayPayload, shardId: number) {
   const payload = data.d as DiscordGuild;

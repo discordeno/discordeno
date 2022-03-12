@@ -1,6 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { DiscordThreadListSync } from "../../types/discord.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import { DiscordGatewayPayload, DiscordThreadListSync } from "../../types/discord.ts";
 
 export async function handleThreadListSync(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordThreadListSync;

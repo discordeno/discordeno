@@ -1,6 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import { DiscordStageInstance } from "../../types/discord.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import { DiscordGatewayPayload, DiscordStageInstance } from "../../types/discord.ts";
 
 export function handleStageInstanceUpdate(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordStageInstance;

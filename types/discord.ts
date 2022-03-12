@@ -1809,3 +1809,22 @@ export interface DiscordBan {
   /** The banned user */
   user: DiscordUser;
 }
+
+export interface DiscordScheduledEventUserRemove {
+  /** id of the guild scheduled event */
+  guild_scheduled_event_id: string;
+  /** id of the user */
+  user_id: string;
+  /** id of the guild */
+  guild_id: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#invite-delete */
+export interface DiscordInviteDelete {
+  /** The channel of the invite */
+  channel_id: string;
+  /** The guild of the invite */
+  guild_id?: string;
+  /** The unique invite code */
+  code: string;
+}

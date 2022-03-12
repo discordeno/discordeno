@@ -1,6 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { DiscordTypingStart } from "../../types/discord.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import { DiscordGatewayPayload, DiscordTypingStart } from "../../types/discord.ts";
 
 export function handleTypingStart(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordTypingStart;

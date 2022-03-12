@@ -1,6 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { DiscordIntegrationDelete } from "../../types/discord.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
+import { DiscordGatewayPayload, DiscordIntegrationDelete } from "../../types/discord.ts";
 
 export function handleIntegrationDelete(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordIntegrationDelete;
