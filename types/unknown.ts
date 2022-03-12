@@ -517,18 +517,6 @@ export enum TargetTypes {
   EmbeddedApplication,
 }
 
-/** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
-export interface CreateGuildEmoji {
-  /** Name of the emoji */
-  name: string;
-  /** The 128x128 emoji image */
-  image: string;
-  /** Roles allowed to use this emoji */
-  roles?: bigint[];
-  /** The reason you are creating this emoji */
-  reason?: string;
-}
-
 export type Intents = GatewayIntents;
 
 /** https://discord.com/developers/docs/topics/gateway#connecting-gateway-url-params */
@@ -589,14 +577,6 @@ export interface SessionStartLimit {
   resetAfter: number;
   /** The number of identify requests allowed per 5 seconds */
   maxConcurrency: number;
-}
-
-/** https://discord.com/developers/docs/resources/guild#ban-object */
-export interface Ban {
-  /** The reason for the ban */
-  reason: string | null;
-  /** The banned user */
-  user: DiscordUser;
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-role */
@@ -676,16 +656,6 @@ export interface ModifyGuildRolePositions {
   id: string;
   /** Sorting position of the role */
   position?: number | null;
-}
-
-/** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */
-export interface ModifyGuildWelcomeScreen {
-  /** Whether the welcome screen is enabled */
-  enabled?: boolean | null;
-  /** Channels linked in the welcome screen and their display options */
-  welcomeScreen?: WelcomeScreenChannel[] | null;
-  /** The server description to show in the welcome screen */
-  description?: string | null;
 }
 
 export interface ScheduledEvent {
@@ -775,11 +745,6 @@ export interface CreateScheduledEvent {
   /** the type of hosting entity associated with a scheduled event */
   entityType: ScheduledEventEntityType;
   reason?: string;
-}
-
-export interface GetScheduledEvents {
-  /** include number of users subscribed to each event */
-  withUserCount?: boolean;
 }
 
 export interface GetScheduledEventUsers {

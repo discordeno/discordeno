@@ -1801,3 +1801,11 @@ export interface DiscordGuildMemberRemove {
   /** The user who was removed */
   user: DiscordUser;
 }
+
+/** https://discord.com/developers/docs/resources/guild#ban-object */
+export interface DiscordBan {
+  /** The reason for the ban */
+  reason: string | null;
+  /** The banned user */
+  user: DiscordUser;
+}
