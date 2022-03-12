@@ -137,7 +137,6 @@ export interface DiscordGuildIntegrationsUpdate {
   guild_id: string;
 }
 
-
 /** https://discord.com/developers/docs/topics/gateway#typing-start */
 export interface DiscordTypingStart extends SnakeCasedPropertiesDeep<BaseTypingStart> {
   /** id of the channel */
@@ -191,7 +190,7 @@ export interface DiscordApplication extends SnakeCasedPropertiesDeep<BaseApplica
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
-export interface DiscordTeam extends SnakeCasedPropertiesDeep<BaseTeam> {
+export interface DiscordTeam {
   /** A hash of the image of the team's icon */
   icon: string | null;
   /** The unique id of the team */
@@ -200,6 +199,8 @@ export interface DiscordTeam extends SnakeCasedPropertiesDeep<BaseTeam> {
   members: DiscordTeamMember[];
   /** The user id of the current team owner */
   owner_user_id: string;
+  /** The name of the team */
+  name: string;
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-members-object */
@@ -1563,7 +1564,7 @@ export interface DiscordGuildBanAddRemove {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove */
-export interface DiscordMessageReactionRemove extends Omit<DiscordMessageReactionAdd, "member"> {};
+export interface DiscordMessageReactionRemove extends Omit<DiscordMessageReactionAdd, "member"> {}
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-add */
 export interface DiscordMessageReactionAdd {
@@ -1642,7 +1643,7 @@ export interface DiscordReady {
 }
 
 /** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */
-export interface DiscordUnavailableGuild extends Pick<DiscordGuild, "id" | "unavailable"> {};
+export interface DiscordUnavailableGuild extends Pick<DiscordGuild, "id" | "unavailable"> {}
 
 /** https://discord.com/developers/docs/topics/gateway#message-delete-bulk */
 export interface DiscordMessageDeleteBulk {
@@ -1768,7 +1769,8 @@ export interface DiscordGuildMemberUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all */
-export interface DiscordMessageReactionRemoveAll extends Pick<DiscordMessageReactionAdd, "channel_id" | "message_id" | "guild_id"> {};
+export interface DiscordMessageReactionRemoveAll
+  extends Pick<DiscordMessageReactionAdd, "channel_id" | "message_id" | "guild_id"> {}
 
 // TODO: add docs link
 export interface DiscordValidateDiscoverySearchTerm {
@@ -1794,7 +1796,10 @@ export interface DiscordScheduledEventUserAdd {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-emoji */
-export type DiscordMessageReactionRemoveEmoji = Pick<DiscordMessageReactionAdd, "channel_id" | "guild_id" | "message_id" | "emoji">;
+export type DiscordMessageReactionRemoveEmoji = Pick<
+  DiscordMessageReactionAdd,
+  "channel_id" | "guild_id" | "message_id" | "emoji"
+>;
 
 /** https://discord.com/developers/docs/topics/gateway#guild-member-remove */
 export interface DiscordGuildMemberRemove {

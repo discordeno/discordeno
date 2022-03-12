@@ -1,16 +1,10 @@
 import { Application } from "../transformers/application.ts";
-import { ApplicationCommandOption } from "../transformers/applicationCommandOption.ts";
 import { Attachment } from "../transformers/attachment.ts";
-import { Channel } from "../transformers/channel.ts";
 import { SelectOption } from "../transformers/component.ts";
 import { Embed } from "../transformers/embed.ts";
 import { Member, User } from "../transformers/member.ts";
-import { Role } from "../transformers/role.ts";
 import { EmojiToggles } from "../transformers/toggles/emoji.ts";
-import { VoiceStateToggles } from "../transformers/toggles/voice.ts";
 import {
-  ApplicationCommandOptionTypes,
-  ApplicationCommandTypes,
   BaseActivityAssets,
   BaseActivityButton,
   BaseActivityEmoji,
@@ -18,32 +12,25 @@ import {
   BaseActivitySecrets,
   BaseActivityTimestamps,
   BaseAllowedMentions,
-  BaseAttachment,
   BaseClientStatus,
   BaseEmoji,
   BaseOverwrite,
   BaseStageInstance,
   BaseTeam,
   BaseTeamMember,
-  BaseThreadMember,
   BaseThreadMemberBase,
   BaseThreadMetadata,
   BaseTypingStart,
-  BaseVoiceState,
   BaseWelcomeScreen,
   BaseWelcomeScreenChannel,
   ButtonStyles,
   ChannelTypes,
-  DefaultMessageNotificationLevels,
-  ExplicitContentFilterLevels,
   GetGuildWidgetImageStyleOptions,
   InteractionResponseTypes,
   InviteTargetTypes,
   MessageComponentTypes,
   PermissionStrings,
-  SystemChannelFlags,
   TextStyles,
-VerificationLevels,
 } from "./shared.ts";
 
 /**
@@ -54,18 +41,6 @@ export type ImageFormat = "jpg" | "jpeg" | "png" | "webp" | "gif" | "json";
 
 /** https://discord.com/developers/docs/reference#image-formatting */
 export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048;
-
-/** https://discord.com/developers/docs/topics/gateway#typing-start */
-export interface TypingStart extends BaseTypingStart {
-  /** id of the channel */
-  channelId: bigint;
-  /** id of the guild */
-  guildId?: bigint;
-  /** id of the user */
-  userId: bigint;
-  /** The member who started typing if this happened in a guild */
-  member?: Member;
-}
 
 /** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
 export type OAuth2Scopes =
@@ -104,18 +79,6 @@ export interface GetCurrentAuthorizationInformation {
   expires: string;
   /** The user who has authorized, if the user has authorized with the `identify` scope */
   user?: User;
-}
-
-/** https://discord.com/developers/docs/topics/teams#data-models-team-object */
-export interface Team extends BaseTeam {
-  /** A hash of the image of the team's icon */
-  icon?: bigint;
-  /** The unique id of the team */
-  id: bigint;
-  /** The members of the team */
-  members: TeamMember[];
-  /** The user id of the current team owner */
-  ownerUserId: bigint;
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-members-object */

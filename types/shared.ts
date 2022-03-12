@@ -166,12 +166,6 @@ export interface BaseApplication {
   flags?: ApplicationFlags;
 }
 
-/** https://discord.com/developers/docs/topics/teams#data-models-team-object */
-export interface BaseTeam {
-  /** The name of the team */
-  name: string;
-}
-
 /** https://discord.com/developers/docs/topics/teams#data-models-team-members-object */
 export interface BaseTeamMember {
   /** The user's membership state on the team */
