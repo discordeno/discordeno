@@ -281,6 +281,8 @@ export interface DiscordAttachment extends SnakeCasedPropertiesDeep<BaseAttachme
   height?: number | null;
   /** Width of file (if image) */
   width?: number | null;
+  /** whether this attachment is ephemeral. Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists. */
+  ephemeral?: boolean;
 }
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
@@ -1504,7 +1506,7 @@ export interface DiscordComponent {
   /** component type */
   type: MessageComponentTypes;
   /** a developer-defined identifier for the component, max 100 characters */
-  customId?: string;
+  custom_id?: string;
   /** whether the component is disabled, default false */
   disabled?: boolean;
   /** For different styles/colors of the buttons */

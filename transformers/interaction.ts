@@ -2,7 +2,7 @@ import { Bot } from "../bot.ts";
 import { DiscordAttachment, DiscordInteraction, DiscordInteractionDataResolved } from "../types/discord.ts";
 import { ChannelTypes } from "../types/shared.ts";
 import { Collection } from "../util/collection.ts";
-import { DiscordenoAttachment } from "./attachment.ts";
+import { Attachment } from "./attachment.ts";
 import { Member, User } from "./member.ts";
 import { Message } from "./message.ts";
 import { Role } from "./role.ts";
@@ -59,7 +59,7 @@ export function transformInteractionDataResolved(
     members?: Collection<bigint, Member>;
     roles?: Collection<bigint, Role>;
     channels?: Collection<bigint, { id: bigint; name: string; type: ChannelTypes; permissions: bigint }>;
-    attachments?: Collection<bigint, DiscordenoAttachment>;
+    attachments?: Collection<bigint, Attachment>;
   } = {};
 
   if (resolved.messages) {

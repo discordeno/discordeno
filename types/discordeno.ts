@@ -1,5 +1,8 @@
 import { Application } from "../transformers/application.ts";
+import { ApplicationCommandOption } from "../transformers/applicationCommandOption.ts";
+import { Attachment } from "../transformers/attachment.ts";
 import { Channel } from "../transformers/channel.ts";
+import { SelectOption } from "../transformers/component.ts";
 import { Embed } from "../transformers/embed.ts";
 import { Member, User } from "../transformers/member.ts";
 import { Role } from "../transformers/role.ts";
@@ -196,26 +199,6 @@ export interface SelectMenuComponent {
   options: SelectOption[];
 }
 
-export interface SelectOption {
-  /** The user-facing name of the option. Maximum 25 characters. */
-  label: string;
-  /** The dev-defined value of the option. Maximum 100 characters. */
-  value: string;
-  /** An additional description of the option. Maximum 50 characters. */
-  description?: string;
-  /** The id, name, and animated properties of an emoji. */
-  emoji?: {
-    /** Emoji id */
-    id?: string;
-    /** Emoji name */
-    name?: string;
-    /** Whether this emoji is animated */
-    animated?: boolean;
-  };
-  /** Will render this option as already-selected by default. */
-  default?: boolean;
-}
-
 /** https://discord.com/developers/docs/interactions/message-components#buttons-button-object */
 export interface ButtonComponent {
   /** All button components have type 2 */
@@ -298,19 +281,9 @@ export interface EditWebhookMessage {
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions;
   /** Attached files to keep */
-  attachments?: (Omit<Attachment, "id"> & { id: bigint })[] | null;
+  attachments?: Attachment[];
   /** The components you would like to have sent in this message */
   components?: MessageComponents;
-}
-
-/** https://discord.com/developers/docs/resources/channel#attachment-object */
-export interface Attachment extends BaseAttachment {
-  /** Attachment id */
-  id: bigint;
-  /** Height of file (if image) */
-  height?: number;
-  /** Width of file (if image) */
-  width?: number;
 }
 
 /** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
@@ -323,22 +296,6 @@ export interface Emoji extends BaseEmoji {
   user?: User;
   /** The boolean toggle values for this emoji */
   toggles: EmojiToggles;
-}
-
-/** https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure */
-export interface VoiceState extends BaseVoiceState {
-  /** The guild id this voice state is for */
-  guildId?: bigint;
-  /** The channel id this user is connected to */
-  channelId?: bigint;
-  /** The user id this voice state is for */
-  userId: bigint;
-  /** The guild member this voice state is for */
-  member?: MemberWithUser;
-  /** The boolean toggle values for this voice state */
-  toggles: VoiceStateToggles;
-  /** The time at which the user requested to speak */
-  requestToSpeakTimestamp?: number;
 }
 
 /** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure */
@@ -395,15 +352,6 @@ export interface ThreadMetadata extends BaseThreadMetadata {
 }
 
 export interface ThreadMemberBase extends BaseThreadMemberBase {
-}
-
-export interface ThreadMember extends BaseThreadMember {
-  /** The id of the thread */
-  id?: bigint;
-  /** The id of the user */
-  userId?: bigint;
-  /** The time the current user last joined the thread */
-  joinTimestamp: number;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#client-status-object */
@@ -585,30 +533,6 @@ export interface CreateApplicationCommand {
   options?: ApplicationCommandOption[];
 }
 
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption */
-export interface ApplicationCommandOption {
-  /** Value of Application Command Option Type */
-  type: ApplicationCommandOptionTypes;
-  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
-  name: string;
-  /** 1-100 character description */
-  description: string;
-  /** If the parameter is required or optional--default `false` */
-  required?: boolean;
-  /** Choices for `string` and `int` types for the user to pick from */
-  choices?: ApplicationCommandOptionChoice[];
-  /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
-  options?: ApplicationCommandOption[];
-  /** if autocomplete interactions are enabled for this `String`, `Integer`, or `Number` type option */
-  autocomplete?: boolean;
-  /** If the option is a channel type, the channels shown will be restricted to these types */
-  channelTypes?: ChannelTypes[];
-  /** Minimum number desired. */
-  minValue?: number;
-  /** Maximum number desired. */
-  maxValue?: number;
-}
-
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptionchoice */
 export interface ApplicationCommandOptionChoice {
   /** 1-100 character choice name */
@@ -645,29 +569,6 @@ export interface ListGuildMembers {
   limit?: number;
   /** The highest user id in the previous page. Default: 0 */
   after?: string;
-}
-
-export interface CreateGuildChannel {
-  /** Channel name (1-100 characters) */
-  name: string;
-  /** The type of channel */
-  type?: ChannelTypes;
-  /** Channel topic (0-1024 characters) */
-  topic?: string;
-  /** The bitrate (in bits) of the voice channel (voice only) */
-  bitrate?: number;
-  /** The user limit of the voice channel (voice only) */
-  userLimit?: number;
-  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
-  rateLimitPerUser?: number;
-  /** Sorting position of the channel */
-  position?: number;
-  /** The channel's permission overwrites */
-  permissionOverwrites?: OverwriteReadable[];
-  /** Id of the parent category for a channel */
-  parentId?: bigint;
-  /** Whether the channel is nsfw */
-  nsfw?: boolean;
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */

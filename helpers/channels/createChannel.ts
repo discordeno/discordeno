@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { ChannelTypes } from "../../types/shared.ts";
 import { DiscordChannel } from "../../types/discord.ts";
+import { OverwriteReadable } from "../../types/discordeno.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(bot: Bot, guildId: bigint, options?: CreateGuildChannel, reason?: string) {
@@ -34,4 +35,27 @@ export async function createChannel(bot: Bot, guildId: bigint, options?: CreateG
   );
 
   return bot.transformers.channel(bot, { channel: result, guildId });
+}
+
+export interface CreateGuildChannel {
+  /** Channel name (1-100 characters) */
+  name: string;
+  /** The type of channel */
+  type?: ChannelTypes;
+  /** Channel topic (0-1024 characters) */
+  topic?: string;
+  /** The bitrate (in bits) of the voice channel (voice only) */
+  bitrate?: number;
+  /** The user limit of the voice channel (voice only) */
+  userLimit?: number;
+  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
+  rateLimitPerUser?: number;
+  /** Sorting position of the channel */
+  position?: number;
+  /** The channel's permission overwrites */
+  permissionOverwrites?: OverwriteReadable[];
+  /** Id of the parent category for a channel */
+  parentId?: bigint;
+  /** Whether the channel is nsfw */
+  nsfw?: boolean;
 }

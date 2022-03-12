@@ -1,7 +1,8 @@
 import type { Bot } from "../../bot.ts";
+import { Attachment } from "../../transformers/attachment.ts";
 import { Embed } from "../../transformers/embed.ts";
 import { DiscordMessage } from "../../types/discord.ts";
-import { AllowedMentions, Attachment, FileContent, MessageComponents } from "../../types/discordeno.ts";
+import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
 import { MessageComponentTypes } from "../../types/shared.ts";
 
 /** Edit the message. */

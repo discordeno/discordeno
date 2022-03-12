@@ -1,12 +1,11 @@
 import { Bot } from "../bot.ts";
 import { DiscordVoiceState } from "../types/discord.ts";
-import { VoiceState } from "../types/discordeno.ts";
 import { VoiceStateToggles } from "./toggles/voice.ts";
 
 export function transformVoiceState(
   bot: Bot,
   payload: { voiceState: DiscordVoiceState } & { guildId: bigint },
-): VoiceState {
+) {
   return {
     toggles: new VoiceStateToggles(payload.voiceState),
 
@@ -22,17 +21,4 @@ export function transformVoiceState(
   };
 }
 
-export interface DiscordenoVoiceState {
-  /** The guild id */
-  guildId: bigint;
-  /** The channel id this user is connected to */
-  channelId?: bigint;
-  /** The user id this voice state is for */
-  userId: bigint;
-  /** Holds all the boolean toggles. */
-  bitfield: bigint;
-  /** The time at which the user requested to speak */
-  requestToSpeakTimestamp?: number;
-  /** The unique session id */
-  sessionId: string;
-}
+export interface VoiceState extends ReturnType<typeof transformVoiceState> {};

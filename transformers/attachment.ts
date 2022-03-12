@@ -11,6 +11,7 @@ export function transformAttachment(bot: Bot, payload: DiscordAttachment) {
     proxyUrl: payload.proxy_url,
     height: payload.height ?? undefined,
     width: payload.width ?? undefined,
+    ephemeral: payload.ephemeral,
   };
 }
 

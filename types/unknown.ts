@@ -57,15 +57,6 @@ export interface ThreadMemberBase {
   flags: number;
 }
 
-export interface ThreadMember extends ThreadMemberBase {
-  /** The id of the thread */
-  id?: string;
-  /** The id of the user */
-  userId?: string;
-  /** The time the current user last joined the thread */
-  joinTimestamp: string;
-}
-
 export interface ThreadMemberOnGuildCreate extends ThreadMemberBase {
   /** The time the current user last joined the thread */
   joinTimestamp: string;
@@ -152,63 +143,6 @@ export interface DiscoveryMetadata {
   categoryIds: number[];
 }
 
-/** https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure */
-export interface VoiceState {
-  /** The guild id this voice state is for */
-  guildId?: string;
-  /** The channel id this user is connected to */
-  channelId: string | null;
-  /** The user id this voice state is for */
-  userId: string;
-  /** The guild member this voice state is for */
-  member?: GuildMemberWithUser;
-  /** The session id for this voice state */
-  sessionId: string;
-  /** Whether this user is deafened by the server */
-  deaf: boolean;
-  /** Whether this user is muted by the server */
-  mute: boolean;
-  /** Whether this user is locally deafened */
-  selfDeaf: boolean;
-  /** Whether this user is locally muted */
-  selfMute: boolean;
-  /** Whether this user is streaming using "Go Live" */
-  selfStream?: boolean;
-  /** Whether this user's camera is enabled */
-  selfVideo: boolean;
-  /** Whether this user is muted by the current user */
-  suppress: boolean;
-  /** The time at which the user requested to speak */
-  requestToSpeakTimestamp: string | null;
-}
-
-/** https://discord.com/developers/docs/resources/channel#message-object-message-types */
-export enum MessageTypes {
-  Default,
-  RecipientAdd,
-  RecipientRemove,
-  Call,
-  ChannelNameChange,
-  ChannelIconChange,
-  ChannelPinnedMessage,
-  GuildMemberJoin,
-  UserPremiumGuildSubscription,
-  UserPremiumGuildSubscriptionTier1,
-  UserPremiumGuildSubscriptionTier2,
-  UserPremiumGuildSubscriptionTier3,
-  ChannelFollowAdd,
-  GuildDiscoveryDisqualified = 14,
-  GuildDiscoveryRequalified,
-  GuildDiscoveryGracePeriodInitialWarning,
-  GuildDiscoveryGracePeriodFinalWarning,
-  ThreadCreated,
-  Reply,
-  ChatInputCommand,
-  ThreadStarterMessage,
-  GuildInviteReminder,
-  ContextMenuCommand,
-}
-
 /** https://discord.com/developers/docs/resources/channel#message-object-message-reference-structure */
 export interface MessageReference {
   /** id of the originating message */
@@ -244,14 +178,6 @@ export enum MessageFlags {
   Loading = 1 << 7,
   /** This message failed to mention some roles and add their members to the thread */
   FailedToMentionSomeRolesInThread = 1 << 8,
-}
-
-/** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
-export enum MessageActivityTypes {
-  Join = 1,
-  Spectate,
-  Listen,
-  JoinRequest,
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure */
@@ -290,16 +216,6 @@ export interface Attachment {
   ephemeral?: boolean;
 }
 
-/** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types */
-export enum AllowedMentionsTypes {
-  /** Controls role mentions */
-  RoleMentions = "roles",
-  /** Controls user mentions */
-  UserMentions = "users",
-  /** Controls @everyone and @here mentions */
-  EveryoneMentions = "everyone",
-}
-
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
 export interface AllowedMentions {
   /** An array of allowed mention types to parse from the content. */
@@ -310,34 +226,6 @@ export interface AllowedMentions {
   users?: string[];
   /** For replies, whether to mention the author of the message being replied to (default false) */
   repliedUser?: boolean;
-}
-
-export enum TextStyles {
-  /** Intended for short single-line text */
-  Short = 1,
-  /** Intended for much longer inputs */
-  Paragraph = 2,
-}
-
-// TODO: add dock link
-export interface SelectOption {
-  /** The user-facing name of the option. Maximum 25 characters. */
-  label: string;
-  /** The dev-defined value of the option. Maximum 100 characters. */
-  value: string;
-  /** An additional description of the option. Maximum 50 characters. */
-  description?: string;
-  /** The id, name, and animated properties of an emoji. */
-  emoji?: {
-    /** Emoji id */
-    id?: string;
-    /** Emoji name */
-    name?: string;
-    /** Whether this emoji is animated */
-    animated?: boolean;
-  };
-  /** Will render this option as already-selected by default. */
-  default?: boolean;
 }
 
 // TODO: add dock link
@@ -365,18 +253,6 @@ export interface SelectMenuData {
   values: string[];
 }
 
-/** https://discord.com/developers/docs/interactions/message-components#component-types */
-export enum MessageComponentTypes {
-  /** A container for other components */
-  ActionRow = 1,
-  /** A button object */
-  Button = 2,
-  /** A select menu for picking from choices */
-  SelectMenu = 3,
-  /** A text input object */
-  InputText = 4,
-}
-
 export type ActionRowComponents = ButtonComponent | SelectMenuComponent;
 
 export type MessageComponents = ActionRow[];
@@ -401,20 +277,6 @@ export interface InputTextComponent {
   required?: boolean;
   /** Pre-filled value for input text. */
   value?: string;
-}
-
-/** https://discord.com/developers/docs/interactions/message-components#buttons-button-styles */
-export enum ButtonStyles {
-  /** A blurple button */
-  Primary = 1,
-  /** A grey button */
-  Secondary,
-  /** A green button */
-  Success,
-  /** A red button */
-  Danger,
-  /** A button that navigates to a URL */
-  Link,
 }
 
 export interface ButtonData {
@@ -486,14 +348,6 @@ export interface InviteStageInstance {
   /** The topic of the Stage instance (1-120 characters) */
   topic: string;
 }
-
-/** https://discord.com/developers/docs/resources/invite#invite-object-target-user-types */
-export enum TargetTypes {
-  Stream = 1,
-  EmbeddedApplication,
-}
-
-export type Intents = GatewayIntents;
 
 /** https://discord.com/developers/docs/topics/gateway#connecting-gateway-url-params */
 export interface GatewayURLParams {
@@ -634,100 +488,9 @@ export interface ModifyGuildRolePositions {
   position?: number | null;
 }
 
-export interface ScheduledEvent {
-  /** the id of the scheduled event */
-  id: string;
-  /** the guild id which the scheduled event belongs to */
-  guildId: string;
-  /** the channel id in which the scheduled event will be hosted if specified */
-  channelId: string | null;
-  /** the id of the user that created the scheduled event */
-  creatorId?: string | null;
-  /** the name of the scheduled event */
-  name: string;
-  /** the description of the scheduled event */
-  description: string;
-  /** the time the scheduled event will start */
-  scheduledStartTime: string;
-  /** the time the scheduled event will end if it does end. */
-  scheduledEndTime: string | null;
-  /** the privacy level of the scheduled event */
-  privacyLevel: ScheduledEventPrivacyLevel;
-  /** the status of the scheduled event */
-  status: ScheduledEventStatus;
-  /** the type of hosting entity associated with a scheduled event */
-  entityType: ScheduledEventEntityType;
-  /** any additional id of the hosting entity associated with event */
-  entityId: string | null;
-  /** the entity metadata for the scheduled event */
-  entityMetadata: ScheduledEventEntityMetadata | null;
-  /** the user that created the scheduled event */
-  creator?: DiscordUser;
-  /** the number of users subscribed to the scheduled event */
-  userCount?: number;
-  /** the cover image hash of the scheduled event */
-  image: string | null;
-}
-
-export enum ScheduledEventPrivacyLevel {
-  /** the scheduled event is public and available in discovery. DISCORD DEVS DISABLED THIS! WILL ERROR IF USED! */
-  // Public = 1,
-  /** the scheduled event is only accessible to guild members */
-  GuildOnly = 2,
-}
-
-export enum ScheduledEventEntityType {
-  StageInstance = 1,
-  Voice,
-  External,
-}
-
-export enum ScheduledEventStatus {
-  Scheduled = 1,
-  Active,
-  Completed,
-  Canceled,
-}
-
 export interface ScheduledEventEntityMetadata {
   /** location of the event */
   location?: string;
-}
-
-/** https://discord.com/developers/docs/resources/guild#guild-object-verification-level */
-export enum VerificationLevels {
-  /** Unrestricted */
-  None,
-  /** Must have verified email on account */
-  Low,
-  /** Must be registered on Discord for longer than 5 minutes */
-  Medium,
-  /** Must be a member of the server for longer than 10 minutes */
-  High,
-  /** Must have a verified phone number */
-  VeryHigh,
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommand */
-export interface ApplicationCommand {
-  /** Unique id of the command */
-  id: string;
-  /** Unique id of the parent application */
-  applicationId: string;
-  /** Guild id of the command, if not global */
-  guildId?: string;
-  /** 1-32 character name matching */
-  name: string;
-  /** 1-100 character description */
-  description?: string;
-  /** The parameters for the command */
-  options?: ApplicationCommandOption[];
-  /** Whether the command is enbaled by default when the app is added to a guild */
-  defaultPermission?: boolean;
-  /** The type of command. By default this is a application command(ChatInput). */
-  type?: ApplicationCommandTypes;
-  /** Autoincrementing version identifier updated during substantial record changes */
-  version: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#application-command-delete-application-command-extra-fields */
@@ -783,35 +546,6 @@ export interface InteractionDataOption {
   focused?: boolean;
 };
 
-export interface InteractionDataResolved {
-  /** The Ids and Message objects */
-  messages?: Record<string, Message>;
-  /** The Ids and User objects */
-  users?: Record<string, DiscordUser>;
-  /** The Ids and partial Member objects */
-  members?: Record<string, Omit<InteractionGuildMember, "user" | "deaf" | "mute">>;
-  /** The Ids and Role objects */
-  roles?: Record<string, DiscordRole>;
-  /** The Ids and partial Channel objects */
-  channels?: Record<string, Pick<Channel, "id" | "name" | "type" | "permissions">>;
-  /** The Ids and attachments objects */
-  attachments?: Record<string, Attachment>;
-}
-
-export enum ApplicationCommandPermissionTypes {
-  Role = 1,
-  User,
-}
-
-export enum ApplicationCommandTypes {
-  /** A text-based command that shows up when a user types `/` */
-  ChatInput = 1,
-  /** A UI-based command that shows up when you right click or tap on a user */
-  User,
-  /** A UI-based command that shows up when you right click or tap on a message */
-  Message,
-}
-
 export interface CreateGlobalContextMenuCommand {
   /** 1-31 character name matching `^[\w-]{1,32}$` */
   name: string;
@@ -851,49 +585,10 @@ export interface GuildApplicationCommandPermissions {
   permissions: ApplicationCommandPermissions[];
 }
 
-export interface Interaction {
-  /** Id of the interaction */
-  id: string;
-  /** Id of the application this interaction is for */
-  applicationId: string;
-  /** The type of interaction */
-  type: InteractionTypes;
-  /** The guild it was sent from */
-  guildId?: string;
-  /** The channel it was sent from */
-  channelId?: string;
-  /** Guild member data for the invoking user, including permissions */
-  member?: InteractionGuildMember;
-  /** User object for the invoking user, if invoked in a DM */
-  user?: DiscordUser;
-  /** A continuation token for responding to the interaction */
-  token: string;
-  /** Read-only property, always `1` */
-  version: 1;
-  /** For the message the button was attached to */
-  message?: DiscordMessage;
-
-  data?: InteractionData;
-
-  /** The selected language of the invoking user */
-  locale?: string;
-  /** The guild's preferred locale, if invoked in a guild */
-  guildLocale?: string;
-}
-
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */
 export interface InteractionGuildMember extends GuildMemberWithUser {
   /** Total permissions of the member in the channel, including overwrites, returned when in the interaction object */
   permissions: string;
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */
-export enum InteractionTypes {
-  Ping = 1,
-  ApplicationCommand = 2,
-  MessageComponent = 3,
-  ApplicationCommandAutocomplete = 4,
-  ModalSubmit = 5,
 }
 
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#message-interaction-object-message-interaction-structure */

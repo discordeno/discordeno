@@ -2,8 +2,8 @@ import { createRestManager, CreateRestManagerOptions } from "./rest/mod.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
 import { Collection } from "./util/collection.ts";
 import {
-Channel,
-  DiscordenoVoiceState,
+  Channel,
+  VoiceState,
   Guild,
   Member,
   Message,
@@ -156,7 +156,6 @@ export function createEventHandlers(
     voiceServerUpdate: events.voiceServerUpdate ?? ignore,
     voiceStateUpdate: events.voiceStateUpdate ?? ignore,
     channelCreate: events.channelCreate ?? ignore,
-    voiceChannelLeave: events.voiceChannelLeave ?? ignore,
     channelDelete: events.channelDelete ?? ignore,
     channelPinsUpdate: events.channelPinsUpdate ?? ignore,
     channelUpdate: events.channelUpdate ?? ignore,
@@ -523,34 +522,13 @@ export interface EventHandlers {
   ) => any;
   voiceStateUpdate: (
     bot: Bot,
-    voiceState: {
-      guildId?: bigint;
-      channelId?: bigint;
-      userId: bigint;
-      member?: Member;
-      user?: User;
-      sessionId: string;
-      deaf: boolean;
-      mute: boolean;
-      selfDeaf: boolean;
-      selfMute: boolean;
-      selfStream?: boolean;
-      selfVideo: boolean;
-      suppress: boolean;
-      requestToSpeakTimestamp?: number;
-    },
+    voiceState: VoiceState,
   ) => any;
   channelCreate: (bot: Bot, channel: Channel) => any;
   dispatchRequirements: (
     bot: Bot,
     data: DiscordGatewayPayload,
     shardId: number,
-  ) => any;
-  voiceChannelLeave: (
-    bot: Bot,
-    voiceState: DiscordenoVoiceState,
-    guild: Guild,
-    channel?: Channel,
   ) => any;
   channelDelete: (bot: Bot, channel: Channel) => any;
   channelPinsUpdate: (
