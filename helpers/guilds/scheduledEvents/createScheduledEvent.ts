@@ -1,10 +1,6 @@
 import { Bot } from "../../../bot.ts";
 import { DiscordScheduledEvent } from "../../../types/discord.ts";
-import {
-  CreateScheduledEvent,
-  ScheduledEventEntityType,
-  ScheduledEventPrivacyLevel,
-} from "../../../types/guilds/scheduledEvents.ts";
+import { ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../../../types/shared.ts";
 
 /** Create a guild scheduled event in the guild. A guild can have a maximum of 100 events with `SCHEDULED` or `ACTIVE` status at any time. */
 export async function createScheduledEvent(bot: Bot, guildId: bigint, options: CreateScheduledEvent) {
@@ -48,4 +44,24 @@ export async function createScheduledEvent(bot: Bot, guildId: bigint, options: C
   );
 
   return bot.transformers.scheduledEvent(bot, event);
+}
+
+export interface CreateScheduledEvent {
+  /** the channel id of the scheduled event. */
+  channelId?: bigint;
+  /** location of the event */
+  location?: string;
+  /** the name of the scheduled event */
+  name: string;
+  /** the description of the scheduled event */
+  description: string;
+  /** the time the scheduled event will start */
+  scheduledStartTime: number;
+  /** the time the scheduled event will end if it does end. */
+  scheduledEndTime?: number;
+  /** the privacy level of the scheduled event */
+  privacyLevel?: ScheduledEventPrivacyLevel;
+  /** the type of hosting entity associated with a scheduled event */
+  entityType: ScheduledEventEntityType;
+  reason?: string;
 }

@@ -1,7 +1,6 @@
 import { Bot } from "../../../bot.ts";
 import { Member, User } from "../../../transformers/member.ts";
 import { DiscordMember, DiscordUser } from "../../../types/discord.ts";
-import { GetScheduledEventUsers } from "../../../types/guilds/scheduledEvents.ts";
 import { Collection } from "../../../util/collection.ts";
 
 export async function getScheduledEventUsers(
@@ -51,4 +50,15 @@ export async function getScheduledEventUsers(
       return [user.id, { member, user }];
     }),
   );
+}
+
+export interface GetScheduledEventUsers {
+  /** number of users to return (up to maximum 100), defaults to 100 */
+  limit?: number;
+  /** whether to also have member objects provided, defaults to false */
+  withMember?: boolean;
+  /** consider only users before given user id */
+  before?: bigint;
+  /** consider only users after given user id */
+  after?: bigint;
 }

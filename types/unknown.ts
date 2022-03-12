@@ -152,20 +152,6 @@ export interface DiscoveryMetadata {
   categoryIds: number[];
 }
 
-/** https://discord.com/developers/docs/resources/voice#voice-region-object-voice-region-structure */
-export interface VoiceRegion {
-  /** Unique Id for the region */
-  id: string;
-  /** Name of the region */
-  name: string;
-  /** true for a single server that is closest to the current user's client */
-  optimal: boolean;
-  /** Whether this is a deprecated voice region (avoid swithing to these) */
-  deprecated: boolean;
-  /** Whether this is a custom voice region (used for events/etc) */
-  custom: boolean;
-}
-
 /** https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure */
 export interface VoiceState {
   /** The guild id this voice state is for */
@@ -707,39 +693,6 @@ export interface ScheduledEventEntityMetadata {
   /** location of the event */
   location?: string;
 }
-
-export interface CreateScheduledEvent {
-  /** the channel id of the scheduled event. */
-  channelId?: bigint;
-  /** location of the event */
-  location?: string;
-  /** the name of the scheduled event */
-  name: string;
-  /** the description of the scheduled event */
-  description: string;
-  /** the time the scheduled event will start */
-  scheduledStartTime: number;
-  /** the time the scheduled event will end if it does end. */
-  scheduledEndTime?: number;
-  /** the privacy level of the scheduled event */
-  privacyLevel?: ScheduledEventPrivacyLevel;
-  /** the type of hosting entity associated with a scheduled event */
-  entityType: ScheduledEventEntityType;
-  reason?: string;
-}
-
-export interface GetScheduledEventUsers {
-  /** number of users to return (up to maximum 100), defaults to 100 */
-  limit?: number;
-  /** whether to also have member objects provided, defaults to false */
-  withMember?: boolean;
-  /** consider only users before given user id */
-  before?: bigint;
-  /** consider only users after given user id */
-  after?: bigint;
-}
-
-
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-verification-level */
 export enum VerificationLevels {
