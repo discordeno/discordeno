@@ -1533,3 +1533,177 @@ export interface DiscordComponent {
   /** a list of child components */
   components?: DiscordComponent[];
 }
+
+/** https://discord.com/developers/docs/topics/gateway#channel-pins-update */
+export interface DiscordChannelPinsUpdate {
+  /** The id of the guild */
+  guild_id?: string;
+  /** The id of the channel */
+  channel_id: string;
+  /** The time at which the most recent pinned message was pinned */
+  last_pin_timestamp?: string | null;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#guild-role-delete */
+export interface DiscordGuildRoleDelete {
+  /** id of the guild */
+  guild_id: string;
+  /** id of the role */
+  role_id: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#guild-ban-add */
+export interface DiscordGuildBanAddRemove {
+  /** id of the guild */
+  guild_id: string;
+  /** The banned user */
+  user: DiscordUser;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#message-reaction-remove */
+export interface DiscordMessageReactionRemove extends Omit<DiscordMessageReactionAdd, "member"> {};
+
+/** https://discord.com/developers/docs/topics/gateway#message-reaction-add */
+export interface DiscordMessageReactionAdd {
+  /** The id of the user */
+  user_id: string;
+  /** The id of the channel */
+  channel_id: string;
+  /** The id of the message */
+  message_id: string;
+  /** The id of the guild */
+  guild_id?: string;
+  /** The member who reacted if this happened in a guild */
+  member?: DiscordMemberWithUser;
+  /** The emoji used to react */
+  emoji: Partial<DiscordEmoji>;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#voice-server-update */
+export interface DiscordVoiceServerUpdate {
+  /** Voice connection token */
+  token: string;
+  /** The guild this voice server update is for */
+  guild_id: string;
+  /** The voice server host */
+  endpoint: string | null;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#invite-create */
+export interface DiscordInviteCreate {
+  /** The channel the invite is for */
+  channel_id: string;
+  /** The unique invite code */
+  code: string;
+  /** The time at which the invite was created */
+  created_at: string;
+  /** The guild of the invite */
+  guild_id?: string;
+  /** The user that created the invite */
+  inviter?: DiscordUser;
+  /** How long the invite is valid for (in seconds) */
+  max_age: number;
+  /** The maximum number of times the invite can be used */
+  max_uses: number;
+  /** The type of target for this voice channel invite */
+  target_type: TargetTypes;
+  /** The target user for this invite */
+  target_user?: DiscordUser;
+  /** The embedded application to open for this voice channel embedded application invite */
+  target_application?: Partial<DiscordApplication>;
+  /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
+  temporary: boolean;
+  /** How many times the invite has been used (always will be 0) */
+  uses: number;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#hello */
+export interface DiscordHello {
+  /** The interval (in milliseconds) the client should heartbeat with */
+  heartbeat_interval: number;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#ready */
+export interface DiscordReady {
+  /** Gateway version */
+  v: number;
+  /** Information about the user including email */
+  user: DiscordUser;
+  /** The guilds the user is in */
+  guilds: UnavailableGuild[];
+  /** Used for resuming connections */
+  session_id: string;
+  /** The shard information associated with this session, if sent when identifying */
+  shard?: [number, number];
+  /** Contains id and flags */
+  application: Partial<DiscordApplication> & Pick<DiscordApplication, "id" | "flags">;
+}
+
+/** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */
+export interface UnavailableGuild extends Pick<DiscordGuild, "id" | "unavailable"> {};
+
+/** https://discord.com/developers/docs/topics/gateway#message-delete-bulk */
+export interface DiscordMessageDeleteBulk {
+  /** The ids of the messages */
+  ids: string[];
+  /** The id of the channel */
+  channel_id: string;
+  /** The id of the guild */
+  guild_id?: string;
+}
+
+/** https://discord.com/developers/docs/resources/template#template-object-template-structure */
+export interface DiscordTemplate {
+  /** The template code (unique Id) */
+  code: string;
+  /** Template name */
+  name: string;
+  /** The description for the template */
+  description: string | null;
+  /** Number of times this template has been used */
+  usage_count: number;
+  /** The Id of the user who created the template */
+  creator_id: string;
+  /** The user who created the template */
+  creator: DiscordUser;
+  /** When this template was created */
+  created_at: string;
+  /** When this template was last synced to the source guild */
+  updated_at: string;
+  /** The Id of the guild this template is based on */
+  source_guild_id: string;
+  /** The guild snapshot this template contains */
+  serialized_source_guild: Partial<DiscordGuild>;
+  /** Whether the template has unsynced changes */
+  is_dirty: boolean | null;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#guild-member-add */
+export interface DiscordGuildMemberAdd extends DiscordMemberWithUser {
+  /** id of the guild */
+  guild_id: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#message-delete */
+export interface DiscordMessageDelete {
+  /** The id of the message */
+  id: string;
+  /** The id of the channel */
+  channel_id: string;
+  /** The id of the guild */
+  guild_id?: string;
+}
+
+// TODO: add docs link
+export interface DiscordThreadMembersUpdate {
+  /** The id of the thread */
+  id: string;
+  /** The id of the guild */
+  guild_id: string;
+  /** The users who were added to the thread */
+  added_members?: DiscordThreadMember[];
+  /** The id of the users who were removed from the thread */
+  removed_member_ids?: string[];
+  /** the approximate number of members in the thread, capped at 50 */
+  member_count: number;
+}

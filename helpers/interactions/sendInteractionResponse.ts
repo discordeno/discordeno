@@ -1,7 +1,7 @@
-import type { DiscordenoInteractionResponse } from "../../types/discordeno/interactionResponse.ts";
 import type { Bot } from "../../bot.ts";
-import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
 import { DiscordMessage } from "../../types/discord.ts";
+import { InteractionResponse } from "../../types/discordeno.ts";
+import { MessageComponentTypes } from "../../types/shared.ts";
 
 /**
  * Send a response to a users application command. The command data will have the id and token necessary to respond.
@@ -13,13 +13,8 @@ export async function sendInteractionResponse(
   bot: Bot,
   id: bigint,
   token: string,
-  options: DiscordenoInteractionResponse,
+  options: InteractionResponse,
 ) {
-  // If the user wants this as a private message mark it ephemeral
-  if (options.private) {
-    options.data = { ...options.data, flags: 64 };
-  }
-
   // If no mentions are provided, force disable mentions
   if (!options.data?.allowedMentions) {
     options.data = { ...options.data, allowedMentions: { parse: [] } };

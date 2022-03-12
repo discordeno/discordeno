@@ -1,10 +1,8 @@
 import type { Bot } from "../../bot.ts";
-import type { ChannelPinsUpdate } from "../../types/channels/channelPinsUpdate.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordChannelPinsUpdate, DiscordGatewayPayload } from "../../types/discord.ts";
 
 export async function handleChannelPinsUpdate(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<ChannelPinsUpdate>;
+  const payload = data.d as DiscordChannelPinsUpdate;
 
   bot.events.channelPinsUpdate(bot, {
     guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,

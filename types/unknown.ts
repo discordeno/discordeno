@@ -36,51 +36,6 @@ export interface BotAuthenticationFlowQuery {
   disableGuildSelect: boolean;
 }
 
-/** https://discord.com/developers/docs/topics/gateway#channel-pins-update */
-export interface ChannelPinsUpdate {
-  /** The id of the guild */
-  guildId?: string;
-  /** The id of the channel */
-  channelId: string;
-  /** The time at which the most recent pinned message was pinned */
-  lastPinTimestamp?: string | null;
-}
-
-export interface ModifyChannel {
-  /** 1-100 character channel name */
-  name?: string;
-  /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
-  type?: ChannelTypes;
-  /** The position of the channel in the left-hand listing */
-  position?: number | null;
-  /** 0-1024 character channel topic */
-  topic?: string | null;
-  /** Whether the channel is nsfw */
-  nsfw?: boolean | null;
-  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
-  rateLimitPerUser?: number | null;
-  /** The bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers) */
-  bitrate?: number | null;
-  /** The user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit */
-  userLimit?: number | null;
-  /** Channel or category-specific permissions */
-  permissionOverwrites?: OverwriteReadable[] | null;
-  /** Id of the new parent category for a channel */
-  parentId?: bigint | null;
-  /** Voice region id for the voice channel, automatic when set to null */
-  rtcRegion?: string | null;
-  /** The camera video quality mode of the voice channel */
-  videoQualityMode?: VideoQualityModes;
-  /** Whether the thread is archived */
-  archived?: boolean;
-  /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration?: 60 | 1440 | 4320 | 10080;
-  /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
-  locked?: boolean;
-  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
-  invitable?: boolean;
-}
-
 // TODO: add docs link
 export interface ListPublicArchivedThreads {
   // TODO: convert unix to ISO9601 timestamp
@@ -139,18 +94,6 @@ export interface ThreadMembersUpdateBase {
   memberCount: number;
 }
 
-// TODO: add docs link
-export interface ThreadMembersUpdate extends ThreadMembersUpdateBase {
-  /** The id of the thread */
-  id: string;
-  /** The id of the guild */
-  guildId: string;
-  /** The users who were added to the thread */
-  addedMembers?: ThreadMember[];
-  /** The id of the users who were removed from the thread */
-  removedMemberIds?: string[];
-}
-
 export interface ThreadMembersUpdateModified extends ThreadMembersUpdateBase {
   /** The id of the thread */
   id: bigint;
@@ -169,145 +112,11 @@ export interface DiscordenoCreateApplicationCommand extends CreateApplicationCom
   guildId: string;
 }
 
-export interface DiscordenoEditWebhookMessage extends EditWebhookMessage {
-  /** Id of the message you want to edit if undefined the initial response message will be edited */
-  messageId?: bigint;
-}
-
-export interface DiscordenoInteractionResponse extends InteractionResponse {
-  /** Set to true if the response should be private */
-  private?: boolean;
-}
-
 export interface FileContent {
   /** The file blob */
   blob: Blob;
   /** The name of the file */
   name: string;
-}
-
-export enum Errors {
-  // Bot Role errors
-  BOTS_HIGHEST_ROLE_TOO_LOW = "BOTS_HIGHEST_ROLE_TOO_LOW",
-  // Channel Errors
-  CHANNEL_NOT_FOUND = "CHANNEL_NOT_FOUND",
-  CHANNEL_NOT_IN_GUILD = "CHANNEL_NOT_IN_GUILD",
-  CHANNEL_NOT_TEXT_BASED = "CHANNEL_NOT_TEXT_BASED",
-  CHANNEL_NOT_STAGE_VOICE = "CHANNEL_NOT_STAGE_VOICE",
-  MESSAGE_MAX_LENGTH = "MESSAGE_MAX_LENGTH",
-  RULES_CHANNEL_CANNOT_BE_DELETED = "RULES_CHANNEL_CANNOT_BE_DELETED",
-  UPDATES_CHANNEL_CANNOT_BE_DELETED = "UPDATES_CHANNEL_CANNOT_BE_DELETED",
-  INVALID_TOPIC_LENGTH = "INVALID_TOPIC_LENGTH",
-  // Guild Errors
-  GUILD_NOT_DISCOVERABLE = "GUILD_NOT_DISCOVERABLE",
-  GUILD_WIDGET_NOT_ENABLED = "GUILD_WIDGET_NOT_ENABLED",
-  GUILD_NOT_FOUND = "GUILD_NOT_FOUND",
-  MEMBER_NOT_FOUND = "MEMBER_NOT_FOUND",
-  MEMBER_NOT_IN_VOICE_CHANNEL = "MEMBER_NOT_IN_VOICE_CHANNEL",
-  MEMBER_SEARCH_LIMIT_TOO_HIGH = "MEMBER_SEARCH_LIMIT_TOO_HIGH",
-  MEMBER_SEARCH_LIMIT_TOO_LOW = "MEMBER_SEARCH_LIMIT_TOO_LOW",
-  PRUNE_MAX_DAYS = "PRUNE_MAX_DAYS",
-  ROLE_NOT_FOUND = "ROLE_NOT_FOUND",
-  // Thread errors
-  INVALID_THREAD_PARENT_CHANNEL_TYPE = "INVALID_THREAD_PARENT_CHANNEL_TYPE",
-  GUILD_NEWS_CHANNEL_ONLY_SUPPORT_PUBLIC_THREADS = "GUILD_NEWS_CHANNEL_ONLY_SUPPORT_PUBLIC_THREADS",
-  NOT_A_THREAD_CHANNEL = "NOT_A_THREAD_CHANNEL",
-  MISSING_MANAGE_THREADS_AND_NOT_MEMBER = "MISSING_MANAGE_THREADS_AND_NOT_MEMBER",
-  CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD = "CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD",
-  HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS =
-    "HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS",
-  // Message Get Errors
-  INVALID_GET_MESSAGES_LIMIT = "INVALID_GET_MESSAGES_LIMIT",
-  // Message Delete Errors
-  DELETE_MESSAGES_MIN = "DELETE_MESSAGES_MIN",
-  PRUNE_MIN_DAYS = "PRUNE_MIN_DAYS",
-  // Interaction Errors
-  INVALID_SLASH_DESCRIPTION = "INVALID_SLASH_DESCRIPTION",
-  INVALID_SLASH_NAME = "INVALID_SLASH_NAME",
-  INVALID_SLASH_OPTIONS = "INVALID_SLASH_OPTIONS",
-  INVALID_SLASH_OPTIONS_CHOICES = "INVALID_SLASH_OPTIONS_CHOICES",
-  TOO_MANY_SLASH_OPTIONS = "TOO_MANY_SLASH_OPTIONS",
-  INVALID_SLASH_OPTION_CHOICE_NAME = "INVALID_SLASH_OPTION_CHOICE_NAME",
-  INVALID_SLASH_OPTIONS_CHOICE_VALUE_TYPE = "INVALID_SLASH_OPTIONS_CHOICE_VALUE_TYPE",
-  TOO_MANY_SLASH_OPTION_CHOICES = "TOO_MANY_SLASH_OPTION_CHOICES",
-  ONLY_STRING_OR_INTEGER_OPTIONS_CAN_HAVE_CHOICES = "ONLY_STRING_OR_INTEGER_OPTIONS_CAN_HAVE_CHOICES",
-  INVALID_SLASH_OPTION_NAME = "INVALID_SLASH_OPTION_NAME",
-  INVALID_SLASH_OPTION_DESCRIPTION = "INVALID_SLASH_OPTION_DESCRIPTION",
-  INVALID_CONTEXT_MENU_COMMAND_NAME = "INVALID_CONTEXT_MENU_COMMAND_NAME",
-  INVALID_CONTEXT_MENU_COMMAND_DESCRIPTION = "INVALID_CONTEXT_MENU_COMMAND_DESCRIPTION",
-  // Webhook Errors
-  INVALID_WEBHOOK_NAME = "INVALID_WEBHOOK_NAME",
-  INVALID_WEBHOOK_OPTIONS = "INVALID_WEBHOOK_OPTIONS",
-  // Permission Errors
-  MISSING_ADD_REACTIONS = "MISSING_ADD_REACTIONS",
-  MISSING_ADMINISTRATOR = "MISSING_ADMINISTRATOR",
-  MISSING_ATTACH_FILES = "MISSING_ATTACH_FILES",
-  MISSING_BAN_MEMBERS = "MISSING_BAN_MEMBERS",
-  MISSING_CHANGE_NICKNAME = "MISSING_CHANGE_NICKNAME",
-  MISSING_CONNECT = "MISSING_CONNECT",
-  MISSING_CREATE_INSTANT_INVITE = "MISSING_CREATE_INSTANT_INVITE",
-  MISSING_DEAFEN_MEMBERS = "MISSING_DEAFEN_MEMBERS",
-  MISSING_EMBED_LINKS = "MISSING_EMBED_LINKS",
-  MISSING_INTENT_GUILD_MEMBERS = "MISSING_INTENT_GUILD_MEMBERS",
-  MISSING_KICK_MEMBERS = "MISSING_KICK_MEMBERS",
-  MISSING_MANAGE_CHANNELS = "MISSING_MANAGE_CHANNELS",
-  MISSING_MANAGE_EMOJIS = "MISSING_MANAGE_EMOJIS",
-  MISSING_MANAGE_GUILD = "MISSING_MANAGE_GUILD",
-  MISSING_MANAGE_MESSAGES = "MISSING_MANAGE_MESSAGES",
-  MISSING_MANAGE_NICKNAMES = "MISSING_MANAGE_NICKNAMES",
-  MISSING_MANAGE_ROLES = "MISSING_MANAGE_ROLES",
-  MISSING_MANAGE_WEBHOOKS = "MISSING_MANAGE_WEBHOOKS",
-  MISSING_MENTION_EVERYONE = "MISSING_MENTION_EVERYONE",
-  MISSING_MOVE_MEMBERS = "MISSING_MOVE_MEMBERS",
-  MISSING_MUTE_MEMBERS = "MISSING_MUTE_MEMBERS",
-  MISSING_PRIORITY_SPEAKER = "MISSING_PRIORITY_SPEAKER",
-  MISSING_READ_MESSAGE_HISTORY = "MISSING_READ_MESSAGE_HISTORY",
-  MISSING_SEND_MESSAGES = "MISSING_SEND_MESSAGES",
-  MISSING_SEND_TTS_MESSAGES = "MISSING_SEND_TTS_MESSAGES",
-  MISSING_SPEAK = "MISSING_SPEAK",
-  MISSING_STREAM = "MISSING_STREAM",
-  MISSING_USE_VAD = "MISSING_USE_VAD",
-  MISSING_USE_EXTERNAL_EMOJIS = "MISSING_USE_EXTERNAL_EMOJIS",
-  MISSING_VIEW_AUDIT_LOG = "MISSING_VIEW_AUDIT_LOG",
-  MISSING_VIEW_CHANNEL = "MISSING_VIEW_CHANNEL",
-  MISSING_VIEW_GUILD_INSIGHTS = "MISSING_VIEW_GUILD_INSIGHTS",
-  // User Errors
-  NICKNAMES_MAX_LENGTH = "NICKNAMES_MAX_LENGTH",
-  USERNAME_INVALID_CHARACTER = "USERNAME_INVALID_CHARACTER",
-  USERNAME_INVALID_USERNAME = "USERNAME_INVALID_USERNAME",
-  USERNAME_MAX_LENGTH = "USERNAME_MAX_LENGTH",
-  USERNAME_MIN_LENGTH = "USERNAME_MIN_LENGTH",
-  NONCE_TOO_LONG = "NONCE_TOO_LONG",
-  INVITE_MAX_AGE_INVALID = "INVITE_MAX_AGE_INVALID",
-  INVITE_MAX_USES_INVALID = "INVITE_MAX_USES_INVALID",
-  // API Errors
-  RATE_LIMIT_RETRY_MAXED = "RATE_LIMIT_RETRY_MAXED",
-  REQUEST_CLIENT_ERROR = "REQUEST_CLIENT_ERROR",
-  REQUEST_SERVER_ERROR = "REQUEST_SERVER_ERROR",
-  REQUEST_UNKNOWN_ERROR = "REQUEST_UNKNOWN_ERROR",
-  // Component Errors
-  TOO_MANY_COMPONENTS = "TOO_MANY_COMPONENTS",
-  TOO_MANY_ACTION_ROWS = "TOO_MANY_ACTION_ROWS",
-  LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID = "LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID",
-  COMPONENT_LABEL_TOO_BIG = "COMPONENT_LABEL_TOO_BIG",
-  COMPONENT_CUSTOM_ID_TOO_BIG = "COMPONENT_CUSTOM_ID_TOO_BIG",
-  BUTTON_REQUIRES_CUSTOM_ID = "BUTTON_REQUIRES_CUSTOM_ID",
-  COMPONENT_SELECT_MUST_BE_ALONE = "COMPONENT_SELECT_MUST_BE_ALONE",
-  COMPONENT_PLACEHOLDER_TOO_BIG = "COMPONENT_PLACEHOLDER_TOO_BIG",
-  COMPONENT_SELECT_MINVALUE_TOO_LOW = "COMPONENT_SELECT_MINVALUE_TOO_LOW",
-  COMPONENT_SELECT_MINVALUE_TOO_MANY = "COMPONENT_SELECT_MINVALUE_TOO_MANY",
-  COMPONENT_SELECT_MAXVALUE_TOO_LOW = "COMPONENT_SELECT_MAXVALUE_TOO_LOW",
-  COMPONENT_SELECT_MAXVALUE_TOO_MANY = "COMPONENT_SELECT_MAXVALUE_TOO_MANY",
-  COMPONENT_SELECT_OPTIONS_TOO_LOW = "COMPONENT_SELECT_OPTIONS_TOO_LOW",
-  COMPONENT_SELECT_OPTIONS_TOO_MANY = "COMPONENT_SELECT_OPTIONS_TOO_MANY",
-  SELECT_OPTION_LABEL_TOO_BIG = "SELECT_OPTION_LABEL_TOO_BIG",
-  SELECT_OPTION_VALUE_TOO_BIG = "SELECT_OPTION_VALUE_TOO_BIG",
-  SELECT_OPTION_TOO_MANY_DEFAULTS = "SELECT_OPTION_TOO_MANY_DEFAULTS",
-  COMPONENT_SELECT_MIN_HIGHER_THAN_MAX = "COMPONENT_SELECT_MIN_HIGHER_THAN_MAX",
-  CANNOT_ADD_USER_TO_ARCHIVED_THREADS = "CANNOT_ADD_USER_TO_ARCHIVED_THREADS",
-  CANNOT_LEAVE_ARCHIVED_THREAD = "CANNOT_LEAVE_ARCHIVED_THREAD",
-  CANNOT_REMOVE_FROM_ARCHIVED_THREAD = "CANNOT_REMOVE_FROM_ARCHIVED_THREAD",
-  YOU_CAN_NOT_DM_THE_BOT_ITSELF = "YOU_CAN_NOT_DM_THE_BOT_ITSELF",
 }
 
 export interface AddGuildDiscoverySubcategory {
@@ -339,16 +148,6 @@ export interface ValidateDiscoverySearchTerm {
   valid: boolean;
 }
 
-// TODO: add docs link
-export interface ModifyGuildDiscoveryMetadata {
-  /** The id of the primary discovery category. Default: 0 */
-  primaryCategoryId?: number | null;
-  /** Up to 10 discovery search kekywords. Default: null */
-  keywords?: string[] | null;
-  /** Whether guild info is shown when custom emojis are clicked. Default: true */
-  emojiDiscoverabilityEnabled?: boolean | null;
-}
-
 //TODO: add docs link
 export interface DiscoveryName {
   /** The name in English */
@@ -375,18 +174,6 @@ export interface DiscoveryMetadata {
   categoryIds: number[];
 }
 
-/** https://discord.com/developers/docs/topics/gateway#update-voice-state */
-export interface UpdateVoiceState {
-  /** id of the guild */
-  guildId: string;
-  /** id of the voice channel client wants to join (null if disconnecting) */
-  channelId: string | null;
-  /** Is the client muted */
-  selfMute: boolean;
-  /** Is the client deafened */
-  selfDeaf: boolean;
-}
-
 /** https://discord.com/developers/docs/resources/voice#voice-region-object-voice-region-structure */
 export interface VoiceRegion {
   /** Unique Id for the region */
@@ -399,16 +186,6 @@ export interface VoiceRegion {
   deprecated: boolean;
   /** Whether this is a custom voice region (used for events/etc) */
   custom: boolean;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#voice-server-update */
-export interface VoiceServerUpdate {
-  /** Voice connection token */
-  token: string;
-  /** The guild this voice server update is for */
-  guildId: string;
-  /** The voice server host */
-  endpoint: string | null;
 }
 
 /** https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure */
@@ -440,49 +217,6 @@ export interface VoiceState {
   /** The time at which the user requested to speak */
   requestToSpeakTimestamp: string | null;
 }
-
-/** https://discord.com/developers/docs/resources/template#template-object-template-structure */
-export interface Template {
-  /** The template code (unique Id) */
-  code: string;
-  /** Template name */
-  name: string;
-  /** The description for the template */
-  description: string | null;
-  /** Number of times this template has been used */
-  usageCount: number;
-  /** The Id of the user who created the template */
-  creatorId: string;
-  /** The user who created the template */
-  creator: DiscordUser;
-  /** When this template was created */
-  createdAt: string;
-  /** When this template was last synced to the source guild */
-  updatedAt: string;
-  /** The Id of the guild this template is based on */
-  sourceGuildId: string;
-  /** The guild snapshot this template contains */
-  serializedSourceGuild: Partial<DiscordGuild>;
-  /** Whether the template has unsynced changes */
-  isDirty: boolean | null;
-}
-
-/** https://discord.com/developers/docs/resources/template#modify-guild-template */
-export interface ModifyGuildTemplate {
-  /** Name of the template (1-100 characters) */
-  name?: string;
-  /** Description of the template (0-120 characters) */
-  description?: string | null;
-}
-
-/** https://discord.com/developers/docs/resources/template#create-guild-from-template-json-params */
-export interface CreateGuildFromTemplate {
-  /** Name of the guild (2-100 characters) */
-  name: string;
-  /** base64 128x128 image for the guild icon */
-  icon?: string;
-}
-
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-types */
 export enum MessageTypes {
@@ -532,25 +266,6 @@ export type MessageReactionRemoveEmoji = Pick<MessageReactionAdd, "channelId" | 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all */
 export type MessageReactionRemoveAll = Pick<MessageReactionAdd, "channelId" | "messageId" | "guildId">;
 
-/** https://discord.com/developers/docs/topics/gateway#message-reaction-remove */
-export type MessageReactionRemove = Omit<MessageReactionAdd, "member">;
-
-/** https://discord.com/developers/docs/topics/gateway#message-reaction-add */
-export interface MessageReactionAdd {
-  /** The id of the user */
-  userId: string;
-  /** The id of the channel */
-  channelId: string;
-  /** The id of the message */
-  messageId: string;
-  /** The id of the guild */
-  guildId?: string;
-  /** The member who reacted if this happened in a guild */
-  member?: GuildMemberWithUser;
-  /** The emoji used to react */
-  emoji: Partial<DiscordEmoji>;
-}
-
 /** https://discord.com/developers/docs/resources/channel#get-reactions-query-string-params */
 export interface GetReactions {
   /** Get users after this user Id */
@@ -579,26 +294,6 @@ export enum MessageFlags {
   Loading = 1 << 7,
   /** This message failed to mention some roles and add their members to the thread */
   FailedToMentionSomeRolesInThread = 1 << 8,
-}
-
-/** https://discord.com/developers/docs/topics/gateway#message-delete-bulk */
-export interface MessageDeleteBulk {
-  /** The ids of the messages */
-  ids: string[];
-  /** The id of the channel */
-  channelId: string;
-  /** The id of the guild */
-  guildId?: string;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#message-delete */
-export interface MessageDelete {
-  /** The id of the message */
-  id: string;
-  /** The id of the channel */
-  channelId: string;
-  /** The id of the guild */
-  guildId?: string;
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
@@ -842,15 +537,6 @@ export interface ActionRow {
     | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent];
 }
 
-/** https://discord.com/developers/docs/resources/guild#guild-member-object */
-export type GuildMemberWithUser = Omit<DiscordMember, "user"> & { user: DiscordUser };
-
-/** https://discord.com/developers/docs/topics/gateway#guild-member-add */
-export interface GuildMemberAdd extends GuildMemberWithUser {
-  /** id of the guild */
-  guildId: string;
-}
-
 /** https://discord.com/developers/docs/topics/gateway#guild-member-remove */
 export interface GuildMemberRemove {
   /** The id of the guild */
@@ -885,14 +571,6 @@ export interface GuildMemberUpdate {
   communicationDisabledUntil?: string;
 }
 
-/** https://discord.com/developers/docs/resources/guild#list-guild-members */
-export interface ListGuildMembers {
-  /** Max number of members to return (1-1000). Default: 1 */
-  limit?: number;
-  /** The highest user id in the previous page. Default: 0 */
-  after?: string;
-}
-
 /** https://discord.com/developers/docs/resources/guild#modify-current-user-nick */
 export interface ModifyCurrentUserNick {
   /** Value to set users nickname to. Requires the CHANGENICKNAME permission */
@@ -906,35 +584,6 @@ export interface SearchGuildMembers {
   /** Max number of members to return (1-1000). Default: 1 */
   limit?: number;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#invite-create */
-export interface InviteCreate {
-  /** The channel the invite is for */
-  channelId: string;
-  /** The unique invite code */
-  code: string;
-  /** The time at which the invite was created */
-  createdAt: string;
-  /** The guild of the invite */
-  guildId?: string;
-  /** The user that created the invite */
-  inviter?: DiscordUser;
-  /** How long the invite is valid for (in seconds) */
-  maxAge: number;
-  /** The maximum number of times the invite can be used */
-  maxUses: number;
-  /** The type of target for this voice channel invite */
-  targetType: TargetTypes;
-  /** The target user for this invite */
-  targetUser?: DiscordUser;
-  /** The embedded application to open for this voice channel embedded application invite */
-  targetApplication?: Partial<DiscordApplication>;
-  /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
-  temporary: boolean;
-  /** How many times the invite has been used (always will be 0) */
-  uses: number;
-}
-
 
 /** https://discord.com/developers/docs/topics/gateway#invite-delete */
 export interface InviteDelete {
@@ -983,16 +632,6 @@ export interface GuildEmojisUpdate {
   emojis: DiscordEmoji[];
 }
 
-/** https://discord.com/developers/docs/resources/emoji#modify-guild-emoji */
-export interface ModifyGuildEmoji {
-  /** Name of the emoji */
-  name?: string;
-  /** Roles allowed to use this emoji */
-  roles?: bigint[] | null;
-}
-
-
-
 export type Intents = GatewayIntents;
 
 /** https://discord.com/developers/docs/topics/gateway#connecting-gateway-url-params */
@@ -1004,24 +643,6 @@ export interface GatewayURLParams {
   /** The (optional) compression of gateway packets */
   compress?: string;
 }
-
-/** https://discord.com/developers/docs/topics/gateway#get-gateway-bot */
-export interface GetGatewayBot {
-  /** The WSS URL that can be used for connecting to the gateway */
-  url: string;
-  /** The recommended number of shards to use when connecting */
-  shards: number;
-  /** Information on the current session start limit */
-  sessionStartLimit: SessionStartLimit;
-}
-
-export interface Hello {
-  /** The interval (in milliseconds) the client should heartbeat with */
-  heartbeatInterval: number;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#hello */
-export type DiscordHello = SnakeCasedPropertiesDeep<Hello>;
 
 /** https://discord.com/developers/docs/topics/gateway#identify */
 export interface Identify {
@@ -1051,24 +672,6 @@ export interface IdentifyConnectionProperties {
   $device: string;
 }
 
-/** https://discord.com/developers/docs/topics/gateway#ready */
-export interface Ready {
-  /** Gateway version */
-  v: number;
-  /** Information about the user including email */
-  user: DiscordUser;
-  /** The guilds the user is in */
-  guilds: UnavailableGuild[];
-  /** Used for resuming connections */
-  sessionId: string;
-  /** The shard information associated with this session, if sent when identifying */
-  shard?: [number, number];
-  /** Contains id and flags */
-  application: Partial<DiscordApplication> & Pick<DiscordApplication, "id" | "flags">;
-}
-
-export type DiscordReady = SnakeCasedPropertiesDeep<Ready>;
-
 /** https://discord.com/developers/docs/topics/gateway#resume */
 export interface Resume {
   /** Session token */
@@ -1091,18 +694,6 @@ export interface SessionStartLimit {
   maxConcurrency: number;
 }
 
-/** https://discord.com/developers/docs/topics/gateway#update-status */
-export interface StatusUpdate {
-  /** Unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
-  since: number | null;
-  /** The user's activities */
-  activities: Activity[];
-  /** The user's new status */
-  status: DiscordStatusTypes;
-  /** Whether or not the client is afk */
-  afk: boolean;
-}
-
 /** https://discord.com/developers/docs/resources/guild#ban-object */
 export interface Ban {
   /** The reason for the ban */
@@ -1111,76 +702,12 @@ export interface Ban {
   user: DiscordUser;
 }
 
-/** https://discord.com/developers/docs/resources/guild#create-guild */
-export interface CreateGuild {
-  /** Name of the guild (1-100 characters) */
-  name: string;
-  /** Base64 128x128 image for the guild icon */
-  icon?: string;
-  /** Verification level */
-  verificationLevel?: VerificationLevels;
-  /** Default message notification level */
-  defaultMessageNotifications?: DefaultMessageNotificationLevels;
-  /** Explicit content filter level */
-  explicitContentFilter?: ExplicitContentFilterLevels;
-  /** New guild roles (first role is the everyone role) */
-  roles?: DiscordRole[];
-  /** New guild's channels */
-  channels?: Partial<DiscordChannel>[];
-  /** Id for afk channel */
-  afkChannelId?: string;
-  /** Afk timeout in seconds */
-  afkTimeout?: number;
-  /** The id of the channel where guild notices such as welcome messages and boost events are posted */
-  systemChannelId?: string;
-  /** System channel flags */
-  systemChannelFlags?: SystemChannelFlags;
-}
-
 /** https://discord.com/developers/docs/resources/guild#create-guild-ban */
 export interface CreateGuildBan {
   /** Number of days to delete messages for (0-7) */
   deleteMessageDays?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
   /** Reason for the ban */
   reason?: string;
-}
-
-export interface CreateGuildChannel {
-  /** Channel name (1-100 characters) */
-  name: string;
-  /** The type of channel */
-  type?: ChannelTypes;
-  /** Channel topic (0-1024 characters) */
-  topic?: string;
-  /** The bitrate (in bits) of the voice channel (voice only) */
-  bitrate?: number;
-  /** The user limit of the voice channel (voice only) */
-  userLimit?: number;
-  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
-  rateLimitPerUser?: number;
-  /** Sorting position of the channel */
-  position?: number;
-  /** The channel's permission overwrites */
-  permissionOverwrites?: OverwriteReadable[];
-  /** Id of the parent category for a channel */
-  parentId?: bigint;
-  /** Whether the channel is nsfw */
-  nsfw?: boolean;
-}
-
-export interface CreateGuildRole {
-  /** Name of the role, default: "new role" */
-  name?: string;
-  /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
-  permissions?: PermissionStrings[];
-  /** RGB color value, default: 0 */
-  color?: number;
-  /** Whether the role should be displayed separately in the sidebar, default: false */
-  hoist?: boolean;
-  /** Whether the role should be mentionable, default: false */
-  mentionable?: boolean;
-  /** The role's unicode emoji (if the guild has the `ROLE_ICONS` feature) */
-  unicodeEmoji?: string;
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-role */
@@ -1252,14 +779,6 @@ export interface GuildRoleCreate {
   role: DiscordRole;
 }
 
-/** https://discord.com/developers/docs/topics/gateway#guild-role-delete */
-export interface GuildRoleDelete {
-  /** id of the guild */
-  guildId: string;
-  /** id of the role */
-  roleId: string;
-}
-
 /** https://discord.com/developers/docs/topics/gateway#guild-role-update */
 export interface GuildRoleUpdate {
   /** The id of the guild */
@@ -1314,18 +833,6 @@ export interface ModifyGuild {
   features?: GuildFeatures[];
   /** Whether the guild's boost progress bar should be enabled */
   premiumProgressBarEnabled?: boolean;
-}
-
-/** https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions */
-export interface ModifyGuildChannelPositions {
-  /** Channel id */
-  id: string;
-  /** Sorting position of the channel */
-  position: number | null;
-  /** Syncs the permission overwrites with the new parent, if moving to a new category */
-  lockPositions?: boolean | null;
-  /** The new parent ID for the channel that is moved */
-  parentId?: string | null;
 }
 
 export interface ModifyGuildRole {
@@ -1500,28 +1007,7 @@ export interface GetScheduledEventUsers {
   after?: bigint;
 }
 
-/** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */
-export type UnavailableGuild = Pick<DiscordGuild, "id" | "unavailable">;
 
-/** https://discord.com/developers/docs/resources/guild#update-user-voice-state */
-export interface UpdateOthersVoiceState {
-  /** The id of the channel the user is currently in */
-  channelId: bigint;
-  /** Toggles the user's suppress state */
-  suppress?: boolean;
-  /** The user id to target */
-  userId: bigint;
-}
-
-/** https://discord.com/developers/docs/resources/guild#update-current-user-voice-state */
-export interface UpdateSelfVoiceState {
-  /** The id of the channel the user is currently in */
-  channelId: bigint;
-  /** Toggles the user's suppress state */
-  suppress?: boolean;
-  /** Sets the user's request to speak */
-  requestToSpeakTimestamp?: number | null;
-}
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-verification-level */
 export enum VerificationLevels {
@@ -1557,35 +1043,6 @@ export interface ApplicationCommand {
   type?: ApplicationCommandTypes;
   /** Autoincrementing version identifier updated during substantial record changes */
   version: string;
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
-export interface InteractionApplicationCommandCallbackData {
-  /** The message contents (up to 2000 characters) */
-  content?: string;
-  /** true if this is a TTS message */
-  tts?: boolean;
-  /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Embed[];
-  /** Allowed mentions for the message */
-  allowedMentions?: Omit<AllowedMentions, "users" | "roles"> & {
-    /** Array of role_ids to mention (Max size of 100) */
-    roles?: bigint[];
-    /** Array of user_ids to mention (Max size of 100) */
-    users?: bigint[];
-  };
-  /** The contents of the file being sent */
-  file?: FileContent | FileContent[];
-  /** The customId you want to use for this modal response. */
-  customId?: string;
-  /** The title you want to use for this modal response. */
-  title?: string;
-  /** The components you would like to have sent in this message */
-  components?: MessageComponents;
-  /** message flags combined as a bitfield (only SUPPRESS_EMBEDS and EPHEMERAL can be set) */
-  flags?: number;
-  /** autocomplete choices (max of 25 choices) */
-  choices?: ApplicationCommandOptionChoice[];
 }
 
 /** https://discord.com/developers/docs/topics/gateway#application-command-delete-application-command-extra-fields */
@@ -1654,16 +1111,6 @@ export interface InteractionDataResolved {
   channels?: Record<string, Pick<Channel, "id" | "name" | "type" | "permissions">>;
   /** The Ids and attachments objects */
   attachments?: Record<string, Attachment>;
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandpermissions */
-export interface ApplicationCommandPermissions {
-  /** The id of the role or user */
-  id: string;
-  /** Role or User */
-  type: ApplicationCommandPermissionTypes;
-  /** `true` to allow, `false`, to disallow */
-  permission: boolean;
 }
 
 export enum ApplicationCommandPermissionTypes {
@@ -1767,32 +1214,6 @@ export interface Interaction {
 export interface InteractionGuildMember extends GuildMemberWithUser {
   /** Total permissions of the member in the channel, including overwrites, returned when in the interaction object */
   permissions: string;
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
-export interface InteractionResponse {
-  /** The type of response */
-  type: InteractionResponseTypes;
-  /** An optional response message */
-  data?: InteractionApplicationCommandCallbackData;
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
-export enum InteractionResponseTypes {
-  /** ACK a `Ping` */
-  Pong = 1,
-  /** Respond to an interaction with a message */
-  ChannelMessageWithSource = 4,
-  /** ACK an interaction and edit a response later, the user sees a loading state */
-  DeferredChannelMessageWithSource = 5,
-  /** For components, ACK an interaction and edit the original message later; the user does not see a loading state */
-  DeferredUpdateMessage = 6,
-  /** For components, edit the message the component was attached to */
-  UpdateMessage = 7,
-  /** For Application Command Options, send an autocomplete result */
-  ApplicationCommandAutocompleteResult = 8,
-  /** For Command or Component interactions, send a Modal response */
-  Modal = 9,
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */

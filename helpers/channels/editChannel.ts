@@ -1,7 +1,8 @@
-import type { ModifyChannel } from "../../types/channels/modifyChannel.ts";
 import type { Bot } from "../../bot.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
+import { OverwriteReadable } from "../../types/discordeno.ts";
+import { ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
 
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(bot: Bot, channelId: bigint, options: ModifyChannel, reason?: string) {
@@ -31,30 +32,35 @@ export async function editChannel(bot: Bot, channelId: bigint, options: ModifyCh
     }
   }
 
-  const result = await bot.rest.runMethod<DiscordChannel>(bot.rest, "patch", bot.constants.endpoints.CHANNEL_BASE(channelId), {
-    name: options.name,
-    topic: options.topic,
-    bitrate: options.bitrate,
-    user_limit: options.userLimit,
-    rate_limit_per_user: options.rateLimitPerUser,
-    position: options.position,
-    parent_id: options.parentId === null ? null : options.parentId?.toString(),
-    nsfw: options.nsfw,
-    type: options.type,
-    archived: options.archived,
-    auto_archive_duration: options.autoArchiveDuration,
-    locked: options.locked,
-    invitable: options.invitable,
-    permission_overwrites: options.permissionOverwrites
-      ? options.permissionOverwrites?.map((overwrite) => ({
-        id: overwrite.id.toString(),
-        type: overwrite.type,
-        allow: overwrite.allow ? bot.utils.calculateBits(overwrite.allow) : null,
-        deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : null,
-      }))
-      : undefined,
-    reason,
-  });
+  const result = await bot.rest.runMethod<DiscordChannel>(
+    bot.rest,
+    "patch",
+    bot.constants.endpoints.CHANNEL_BASE(channelId),
+    {
+      name: options.name,
+      topic: options.topic,
+      bitrate: options.bitrate,
+      user_limit: options.userLimit,
+      rate_limit_per_user: options.rateLimitPerUser,
+      position: options.position,
+      parent_id: options.parentId === null ? null : options.parentId?.toString(),
+      nsfw: options.nsfw,
+      type: options.type,
+      archived: options.archived,
+      auto_archive_duration: options.autoArchiveDuration,
+      locked: options.locked,
+      invitable: options.invitable,
+      permission_overwrites: options.permissionOverwrites
+        ? options.permissionOverwrites?.map((overwrite) => ({
+          id: overwrite.id.toString(),
+          type: overwrite.type,
+          allow: overwrite.allow ? bot.utils.calculateBits(overwrite.allow) : null,
+          deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : null,
+        }))
+        : undefined,
+      reason,
+    },
+  );
 
   return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) });
 }
@@ -114,4 +120,39 @@ function processEditChannelQueue(bot: Bot) {
   } else {
     editChannelProcessing = false;
   }
+}
+
+export interface ModifyChannel {
+  /** 1-100 character channel name */
+  name?: string;
+  /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
+  type?: ChannelTypes;
+  /** The position of the channel in the left-hand listing */
+  position?: number | null;
+  /** 0-1024 character channel topic */
+  topic?: string | null;
+  /** Whether the channel is nsfw */
+  nsfw?: boolean | null;
+  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
+  rateLimitPerUser?: number | null;
+  /** The bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers) */
+  bitrate?: number | null;
+  /** The user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit */
+  userLimit?: number | null;
+  /** Channel or category-specific permissions */
+  permissionOverwrites?: OverwriteReadable[] | null;
+  /** Id of the new parent category for a channel */
+  parentId?: bigint | null;
+  /** Voice region id for the voice channel, automatic when set to null */
+  rtcRegion?: string | null;
+  /** The camera video quality mode of the voice channel */
+  videoQualityMode?: VideoQualityModes;
+  /** Whether the thread is archived */
+  archived?: boolean;
+  /** Duration in minutes to automatically archive the thread after recent activity */
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080;
+  /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
+  locked?: boolean;
+  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
+  invitable?: boolean;
 }

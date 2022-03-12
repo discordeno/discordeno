@@ -1,10 +1,8 @@
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import type { VoiceState } from "../../types/voice/voiceState.ts";
 import { Bot } from "../../bot.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordGatewayPayload, DiscordVoiceState } from "../../types/discord.ts";
 
 export async function handleVoiceStateUpdate(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<VoiceState>;
+  const payload = data.d as DiscordVoiceState;
   if (!payload.guild_id) return;
 
   const guildId = bot.transformers.snowflake(payload.guild_id);

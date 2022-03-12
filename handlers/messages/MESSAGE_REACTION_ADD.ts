@@ -1,10 +1,8 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import type { MessageReactionAdd } from "../../types/messages/messageReactionAdd.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordGatewayPayload, DiscordMessageReactionAdd } from "../../types/discord.ts";
 
 export async function handleMessageReactionAdd(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<MessageReactionAdd>;
+  const payload = data.d as DiscordMessageReactionAdd;
 
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
   const userId = bot.transformers.snowflake(payload.user_id);

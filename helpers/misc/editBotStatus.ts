@@ -1,8 +1,9 @@
 import type { Bot } from "../../bot.ts";
-import { GatewayOpcodes } from "../../types/codes/gatewayOpcodes.ts";
-import type { StatusUpdate } from "../../types/gateway/statusUpdate.ts";
+import { Activity } from "../../transformers/activity.ts";
+import { StatusTypes } from "../../transformers/presence.ts";
+import { GatewayOpcodes } from "../../types/shared.ts";
 
-export function editBotStatus(bot: Bot, data: Omit<StatusUpdate, "afk" | "since">) {
+export function editBotStatus(bot: Bot, data: StatusUpdate) {
   bot.gateway.shards.forEach((shard) => {
     bot.events.debug(`Running forEach loop in editBotStatus function.`);
 
@@ -59,4 +60,16 @@ export function editBotStatus(bot: Bot, data: Omit<StatusUpdate, "afk" | "since"
       },
     });
   });
+}
+
+/** https://discord.com/developers/docs/topics/gateway#update-status */
+export interface StatusUpdate {
+  // /** Unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
+  // since: number | null;
+  /** The user's activities */
+  activities: Activity[];
+  /** The user's new status */
+  status: StatusTypes;
+  // /** Whether or not the client is afk */
+  // afk: boolean;
 }

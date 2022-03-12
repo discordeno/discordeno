@@ -1,6 +1,8 @@
 import { Application } from "../transformers/application.ts";
+import { Channel } from "../transformers/channel.ts";
 import { Embed } from "../transformers/embed.ts";
 import { Member, User } from "../transformers/member.ts";
+import { Role } from "../transformers/role.ts";
 import { EmojiToggles } from "../transformers/toggles/emoji.ts";
 import { VoiceStateToggles } from "../transformers/toggles/voice.ts";
 import {
@@ -29,11 +31,16 @@ import {
   BaseWelcomeScreenChannel,
   ButtonStyles,
   ChannelTypes,
+  DefaultMessageNotificationLevels,
+  ExplicitContentFilterLevels,
   GetGuildWidgetImageStyleOptions,
+  InteractionResponseTypes,
   InviteTargetTypes,
   MessageComponentTypes,
   PermissionStrings,
+  SystemChannelFlags,
   TextStyles,
+VerificationLevels,
 } from "./shared.ts";
 
 /**
@@ -289,12 +296,7 @@ export interface EditWebhookMessage {
   /** The contents of the file being sent/edited */
   file?: FileContent | FileContent[];
   /** Allowed mentions for the message */
-  allowedMentions?: Omit<AllowedMentions, "users" | "roles"> & {
-    /** Array of role_ids to mention (Max size of 100) */
-    roles?: bigint[];
-    /** Array of user_ids to mention (Max size of 100) */
-    users?: bigint[];
-  };
+  allowedMentions?: AllowedMentions;
   /** Attached files to keep */
   attachments?: (Omit<Attachment, "id"> & { id: bigint })[] | null;
   /** The components you would like to have sent in this message */
@@ -635,4 +637,67 @@ export interface ModifyGuildMember {
 export interface GetGuildWidgetImageQuery {
   /** Style of the widget returned, default: shield */
   style?: GetGuildWidgetImageStyleOptions;
+}
+
+/** https://discord.com/developers/docs/resources/guild#list-guild-members */
+export interface ListGuildMembers {
+  /** Max number of members to return (1-1000). Default: 1000 */
+  limit?: number;
+  /** The highest user id in the previous page. Default: 0 */
+  after?: string;
+}
+
+export interface CreateGuildChannel {
+  /** Channel name (1-100 characters) */
+  name: string;
+  /** The type of channel */
+  type?: ChannelTypes;
+  /** Channel topic (0-1024 characters) */
+  topic?: string;
+  /** The bitrate (in bits) of the voice channel (voice only) */
+  bitrate?: number;
+  /** The user limit of the voice channel (voice only) */
+  userLimit?: number;
+  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
+  rateLimitPerUser?: number;
+  /** Sorting position of the channel */
+  position?: number;
+  /** The channel's permission overwrites */
+  permissionOverwrites?: OverwriteReadable[];
+  /** Id of the parent category for a channel */
+  parentId?: bigint;
+  /** Whether the channel is nsfw */
+  nsfw?: boolean;
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
+export interface InteractionResponse {
+  /** The type of response */
+  type: InteractionResponseTypes;
+  /** An optional response message */
+  data?: InteractionApplicationCommandCallbackData;
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
+export interface InteractionApplicationCommandCallbackData {
+  /** The message contents (up to 2000 characters) */
+  content?: string;
+  /** true if this is a TTS message */
+  tts?: boolean;
+  /** Embedded `rich` content (up to 6000 characters) */
+  embeds?: Embed[];
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions;
+  /** The contents of the file being sent */
+  file?: FileContent | FileContent[];
+  /** The customId you want to use for this modal response. */
+  customId?: string;
+  /** The title you want to use for this modal response. */
+  title?: string;
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents;
+  /** message flags combined as a bitfield (only SUPPRESS_EMBEDS and EPHEMERAL can be set) */
+  flags?: number;
+  /** autocomplete choices (max of 25 choices) */
+  choices?: ApplicationCommandOptionChoice[];
 }

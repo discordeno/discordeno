@@ -1,12 +1,9 @@
-import type { GuildMemberWithUser } from "../../types/members/guildMember.ts";
 import type { Bot } from "../../bot.ts";
+import { DiscordMemberWithUser } from "../../types/discord.ts";
 
-/** Returns a guild member object for the specified user.
- *
- * ⚠️ **ADVANCED USE ONLY: Your members will be cached in your guild most likely. Only use this when you are absolutely sure the member is not cached.**
- */
+/** Returns a guild member object for the specified user. */
 export async function getMember(bot: Bot, guildId: bigint, id: bigint) {
-  const data = await bot.rest.runMethod<GuildMemberWithUser>(
+  const data = await bot.rest.runMethod<DiscordMemberWithUser>(
     bot.rest,
     "get",
     bot.constants.endpoints.GUILD_MEMBER(guildId, id),

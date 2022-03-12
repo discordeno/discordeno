@@ -1,6 +1,6 @@
-import type { CreateGuildRole } from "../../types/guilds/createGuildRole.ts";
 import type { Bot } from "../../bot.ts";
 import { DiscordRole } from "../../types/discord.ts";
+import { PermissionStrings } from "../../types/shared.ts";
 
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
 export async function createRole(bot: Bot, guildId: bigint, options: CreateGuildRole, reason?: string) {
@@ -13,10 +13,23 @@ export async function createRole(bot: Bot, guildId: bigint, options: CreateGuild
     reason,
   });
 
-  const role = bot.transformers.role(bot, {
+  return bot.transformers.role(bot, {
     role: result,
     guildId,
   });
+}
 
-  return role;
+export interface CreateGuildRole {
+  /** Name of the role, default: "new role" */
+  name?: string;
+  /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
+  permissions?: PermissionStrings[];
+  /** RGB color value, default: 0 */
+  color?: number;
+  /** Whether the role should be displayed separately in the sidebar, default: false */
+  hoist?: boolean;
+  /** Whether the role should be mentionable, default: false */
+  mentionable?: boolean;
+  /** The role's unicode emoji (if the guild has the `ROLE_ICONS` feature) */
+  unicodeEmoji?: string;
 }

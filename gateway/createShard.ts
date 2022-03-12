@@ -1,4 +1,4 @@
-import { GatewayCloseEventCodes } from "../types/codes/gatewayCloseEventCodes.ts";
+import { GatewayCloseEventCodes } from "../types/shared.ts";
 import { GatewayManager } from "./gateway_manager.ts";
 
 export function createShard(gateway: GatewayManager, shardId: number) {

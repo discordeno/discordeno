@@ -1,6 +1,5 @@
-import type { ModifyGuildTemplate } from "../../types/templates/modifyGuildTemplate.ts";
-import type { Template } from "../../types/templates/template.ts";
 import type { Bot } from "../../bot.ts";
+import { DiscordTemplate } from "../../types/discord.ts";
 
 /**
  * Edit a template's metadata.
@@ -15,7 +14,7 @@ export async function editGuildTemplate(bot: Bot, guildId: bigint, templateCode:
     throw new Error("The description can only be in between 0-120 characters.");
   }
 
-  return await bot.rest.runMethod<Template>(
+  return await bot.rest.runMethod<DiscordTemplate>(
     bot.rest,
     "patch",
     `${bot.constants.endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
@@ -24,4 +23,12 @@ export async function editGuildTemplate(bot: Bot, guildId: bigint, templateCode:
       description: data.description,
     },
   );
+}
+
+/** https://discord.com/developers/docs/resources/template#modify-guild-template */
+export interface ModifyGuildTemplate {
+  /** Name of the template (1-100 characters) */
+  name?: string;
+  /** Description of the template (0-120 characters) */
+  description?: string | null;
 }

@@ -62,7 +62,7 @@ export interface BotWithHelpersPlugin extends Bot {
     ) => Promise<DiscordenoMember>;
     getMembersPaginated: (
       guildId: bigint,
-      options: ListGuildMembers & { memberCount: number },
+      options: ListGuildMembers,
     ) => Promise<Collection<bigint, DiscordenoMember>>;
     moveMember: (
       guildId: bigint,
@@ -105,7 +105,7 @@ export function enableHelpersPlugin(rawBot: Bot): BotWithHelpersPlugin {
   bot.helpers.disconnectMember = (guildId: bigint, memberId: bigint) => disconnectMember(bot, guildId, memberId);
   bot.helpers.getMembersPaginated = (
     guildId: bigint,
-    options: ListGuildMembers & { memberCount: number },
+    options: ListGuildMembers,
   ) => getMembersPaginated(bot, guildId, options);
   bot.helpers.moveMember = (
     guildId: bigint,

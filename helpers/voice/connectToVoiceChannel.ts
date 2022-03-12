@@ -1,7 +1,6 @@
-import type { UpdateVoiceState } from "../../types/voice/updateVoiceState.ts";
 import type { AtLeastOne } from "../../types/util.ts";
 import type { Bot } from "../../bot.ts";
-import { GatewayOpcodes } from "../../types/codes/gatewayOpcodes.ts";
+import { GatewayOpcodes } from "../../types/shared.ts";
 
 /** Connect or join a voice channel inside a guild. By default, the "selfDeaf" option is true. Requires `CONNECT` and `VIEW_CHANNEL` permissions. */
 export async function connectToVoiceChannel(
@@ -19,4 +18,16 @@ export async function connectToVoiceChannel(
       self_deaf: options?.selfDeaf ?? true,
     },
   });
+}
+
+/** https://discord.com/developers/docs/topics/gateway#update-voice-state */
+export interface UpdateVoiceState {
+  /** id of the guild */
+  guildId: string;
+  /** id of the voice channel client wants to join (null if disconnecting) */
+  channelId: string | null;
+  /** Is the client muted */
+  selfMute: boolean;
+  /** Is the client deafened */
+  selfDeaf: boolean;
 }

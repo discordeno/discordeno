@@ -1,4 +1,3 @@
-import type { CreateGuildChannel } from "../../types/guilds/createGuildChannel.ts";
 import type { Bot } from "../../bot.ts";
 import { ChannelTypes } from "../../types/shared.ts";
 import { DiscordChannel } from "../../types/discord.ts";

@@ -1,5 +1,3 @@
-import type { UpdateOthersVoiceState } from "../../types/guilds/updateOthersVoiceState.ts";
-import type { UpdateSelfVoiceState } from "../../types/guilds/updateSelfVoiceState.ts";
 import type { Bot } from "../../bot.ts";
 
 /**
@@ -44,4 +42,25 @@ export async function updateUserVoiceState(bot: Bot, guildId: bigint, options: U
       user_id: options.userId,
     },
   );
+}
+
+
+/** https://discord.com/developers/docs/resources/guild#update-current-user-voice-state */
+export interface UpdateSelfVoiceState {
+  /** The id of the channel the user is currently in */
+  channelId: bigint;
+  /** Toggles the user's suppress state */
+  suppress?: boolean;
+  /** Sets the user's request to speak */
+  requestToSpeakTimestamp?: number | null;
+}
+
+/** https://discord.com/developers/docs/resources/guild#update-user-voice-state */
+export interface UpdateOthersVoiceState {
+  /** The id of the channel the user is currently in */
+  channelId: bigint;
+  /** Toggles the user's suppress state */
+  suppress?: boolean;
+  /** The user id to target */
+  userId: bigint;
 }

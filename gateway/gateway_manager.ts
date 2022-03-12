@@ -20,9 +20,9 @@ import { prepareBuckets, spawnShards } from "./spawnShards.ts";
 import { stopGateway } from "./stopGateway.ts";
 import { tellWorkerToIdentify } from "./tellWorkerToIdentify.ts";
 import { DiscordenoShard } from "./shard.ts";
-import { GatewayIntents } from "../types/gateway/gatewayIntents.ts";
-import { StatusUpdate } from "../types/gateway/statusUpdate.ts";
-import { GatewayPayload } from "../types/gateway/gatewayPayload.ts";
+import { GatewayIntents } from "../types/shared.ts";
+import { StatusUpdate } from "../helpers/misc/editBotStatus.ts";
+import { DiscordGatewayPayload } from "../types/discord.ts";
 
 /** Create a new Gateway Manager.
  *
@@ -187,7 +187,7 @@ export interface GatewayManager {
   /** Begins heartbeating of the shard to keep it alive. */
   heartbeat: typeof heartbeat;
   /** Sends the discord payload to another server. */
-  handleDiscordPayload: (gateway: GatewayManager, data: GatewayPayload, shardId: number) => any;
+  handleDiscordPayload: (gateway: GatewayManager, data: DiscordGatewayPayload, shardId: number) => any;
   /** Tell the worker to begin identifying this shard  */
   tellWorkerToIdentify: typeof tellWorkerToIdentify;
   /** Handle the different logs. Used for debugging. */
