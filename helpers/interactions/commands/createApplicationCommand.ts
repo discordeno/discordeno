@@ -1,6 +1,6 @@
 import type { Bot } from "../../../bot.ts";
+import { ApplicationCommandOption, ApplicationCommandTypes } from "../../../mod.ts";
 import { DiscordApplicationCommand } from "../../../types/discord.ts";
-import { CreateApplicationCommand } from "../../../types/discordeno.ts";
 
 /**
  * There are two kinds of Application Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:
@@ -45,4 +45,16 @@ export function makeOptionsForCommand(options: ApplicationCommandOption[]) {
     min_value: option.minValue,
     max_value: option.maxValue,
   }));
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#create-global-application-command-json-params */
+export interface CreateApplicationCommand {
+  /** 1-31 character name matching lowercase `^[\w-]{1,32}$` */
+  name: string;
+  /** 1-100 character description */
+  description: string;
+  /** The type of the command */
+  type?: ApplicationCommandTypes;
+  /** The parameters for the command */
+  options?: ApplicationCommandOption[];
 }

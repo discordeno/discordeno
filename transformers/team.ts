@@ -1,8 +1,7 @@
 import { Bot } from "../bot.ts";
 import { DiscordTeam } from "../types/discord.ts";
-import { Team } from "../types/discordeno.ts";
 
-export function transformTeam(bot: Bot, payload: DiscordTeam): Team {
+export function transformTeam(bot: Bot, payload: DiscordTeam) {
   const id = bot.transformers.snowflake(payload.id);
 
   return {
@@ -19,3 +18,5 @@ export function transformTeam(bot: Bot, payload: DiscordTeam): Team {
     })),
   };
 }
+
+export interface Team extends ReturnType<typeof transformTeam> {};

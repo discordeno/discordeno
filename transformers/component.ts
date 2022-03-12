@@ -38,6 +38,7 @@ export function transformComponent(bot: Bot, payload: DiscordComponent): Compone
 }
 
 // export interface Component extends ReturnType<typeof transformComponent> {};
+// THIS TRANSFORMER HAS A CIRCULAR REFERENCE TO CALL ITSELF FOR COMPONENTS SO AN AUTOMATED TYPE CAN NOT BE CREATED!
 
 export interface Component {
   /** component type */

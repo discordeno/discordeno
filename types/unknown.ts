@@ -89,11 +89,6 @@ export interface ThreadMembersUpdateModified extends ThreadMembersUpdateBase {
   // \* In this gateway event, the thread member objects will also include the [guild member](#DOCS_RESOURCES_GUILD/guild-member-object) and [presence](#DOCS_TOPICS_GATEWAY/presence) objects for each added thread member.
 }
 
-export interface DiscordenoCreateApplicationCommand extends CreateApplicationCommand {
-  /** Id of the guild to create a guild only application command */
-  guildId: string;
-}
-
 export interface FileContent {
   /** The file blob */
   blob: Blob;

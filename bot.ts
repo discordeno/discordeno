@@ -40,7 +40,7 @@ import { transformApplication } from "./transformers/application.ts";
 import { transformTeam } from "./transformers/team.ts";
 import { Invite, transformInvite } from "./transformers/invite.ts";
 import * as helpers from "./helpers/mod.ts";
-import { DiscordenoEmoji, transformEmoji } from "./transformers/emoji.ts";
+import { Emoji, transformEmoji } from "./transformers/emoji.ts";
 import { transformActivity } from "./transformers/activity.ts";
 import { PresenceUpdate, transformPresence } from "./transformers/presence.ts";
 import { urlToBase64 } from "./util/urlToBase64.ts";
@@ -481,7 +481,7 @@ export interface EventHandlers {
       messageId: bigint;
       guildId?: bigint;
       member?: Member;
-      emoji: DiscordenoEmoji;
+      emoji: Emoji;
     },
   ) => any;
   reactionRemove: (
@@ -491,7 +491,7 @@ export interface EventHandlers {
       channelId: bigint;
       messageId: bigint;
       guildId?: bigint;
-      emoji: DiscordenoEmoji;
+      emoji: Emoji;
     },
   ) => any;
   reactionRemoveEmoji: (
@@ -500,7 +500,7 @@ export interface EventHandlers {
       channelId: bigint;
       messageId: bigint;
       guildId?: bigint;
-      emoji: DiscordenoEmoji;
+      emoji: Emoji;
     },
   ) => any;
   reactionRemoveAll: (

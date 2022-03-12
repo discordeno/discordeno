@@ -1,24 +1,7 @@
 import type { Bot } from "../bot.ts";
 import { DiscordMember, DiscordUser } from "../types/discord.ts";
-import { PremiumTypes, UserFlags } from "../types/shared.ts";
 import { MemberToggles } from "./toggles/member.ts";
 import { UserToggles } from "./toggles/user.ts";
-
-export interface DiscordenoUser {
-  id: bigint;
-  username: string;
-  discriminator: number;
-  avatar?: bigint;
-  bot?: boolean;
-  system?: boolean;
-  locale?: string;
-  verified?: boolean;
-  email?: string | null;
-  flags?: UserFlags;
-  mfaEnabled?: boolean;
-  premiumType?: PremiumTypes;
-  publicFlags?: UserFlags;
-}
 
 export function transformUser(bot: Bot, payload: DiscordUser) {
   return {
