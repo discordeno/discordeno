@@ -1,10 +1,8 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import type { MessageReactionRemoveAll } from "../../types/messages/messageReactionRemoveAll.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordGatewayPayload, DiscordMessageReactionRemoveAll } from "../../types/discord.ts";
 
 export async function handleMessageReactionRemoveAll(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<MessageReactionRemoveAll>;
+  const payload = data.d as DiscordMessageReactionRemoveAll;
 
   bot.events.reactionRemoveAll(bot, {
     channelId: bot.transformers.snowflake(payload.channel_id),

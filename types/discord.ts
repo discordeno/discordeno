@@ -1630,7 +1630,7 @@ export interface DiscordReady {
   /** Information about the user including email */
   user: DiscordUser;
   /** The guilds the user is in */
-  guilds: UnavailableGuild[];
+  guilds: DiscordUnavailableGuild[];
   /** Used for resuming connections */
   session_id: string;
   /** The shard information associated with this session, if sent when identifying */
@@ -1640,7 +1640,7 @@ export interface DiscordReady {
 }
 
 /** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */
-export interface UnavailableGuild extends Pick<DiscordGuild, "id" | "unavailable"> {};
+export interface DiscordUnavailableGuild extends Pick<DiscordGuild, "id" | "unavailable"> {};
 
 /** https://discord.com/developers/docs/topics/gateway#message-delete-bulk */
 export interface DiscordMessageDeleteBulk {
@@ -1706,4 +1706,98 @@ export interface DiscordThreadMembersUpdate {
   removed_member_ids?: string[];
   /** the approximate number of members in the thread, capped at 50 */
   member_count: number;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#guild-role-create */
+export interface DiscordGuildRoleCreate {
+  /** The id of the guild */
+  guild_id: string;
+  /** The role created */
+  role: DiscordRole;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#guild-emojis-update */
+export interface DiscordGuildEmojisUpdate {
+  /** id of the guild */
+  guild_id: string;
+  /** Array of emojis */
+  emojis: DiscordEmoji[];
+}
+
+export interface DiscordAddGuildDiscoverySubcategory {
+  /** The guild Id of the subcategory was added to */
+  guild_id: string;
+  /** The Id of the subcategory added */
+  category_id: number;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#guild-ban-add */
+export interface DiscordGuildBanAddRemove {
+  /** id of the guild */
+  guild_id: string;
+  /** The banned user */
+  user: DiscordUser;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#guild-member-update */
+export interface DiscordGuildMemberUpdate {
+  /** The id of the guild */
+  guild_id: string;
+  /** User role ids */
+  roles: string[];
+  /** The user */
+  user: DiscordUser;
+  /** Nickname of the user in the guild */
+  nick?: string | null;
+  /** the member's [guild avatar hash](https://discord.com/developers/docs/reference#image-formatting) */
+  avatar: string;
+  /** When the user joined the guild */
+  joined_at: string;
+  /** When the user starting boosting the guild */
+  premium_since?: string | null;
+  /** whether the user is deafened in voice channels */
+  deaf?: boolean;
+  /** whether the user is muted in voice channels */
+  mute?: boolean;
+  /** Whether the user has not yet passed the guild's Membership Screening requirements */
+  pending?: boolean;
+  /** when the user's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out */
+  communication_disabled_until?: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all */
+export interface DiscordMessageReactionRemoveAll extends Pick<DiscordMessageReactionAdd, "channel_id" | "message_id" | "guild_id"> {};
+
+// TODO: add docs link
+export interface DiscordValidateDiscoverySearchTerm {
+  /** Whether the provided term is valid */
+  valid: boolean;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#guild-role-update */
+export interface DiscordGuildRoleUpdate {
+  /** The id of the guild */
+  guild_id: string;
+  /** The role updated */
+  role: DiscordRole;
+}
+
+export interface DiscordScheduledEventUserAdd {
+  /** id of the guild scheduled event  */
+  guild_scheduled_event_id: string;
+  /** id of the user                   */
+  user_id: string;
+  /** id of the guild */
+  guild_id: string;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-emoji */
+export type DiscordMessageReactionRemoveEmoji = Pick<DiscordMessageReactionAdd, "channel_id" | "guild_id" | "message_id" | "emoji">;
+
+/** https://discord.com/developers/docs/topics/gateway#guild-member-remove */
+export interface DiscordGuildMemberRemove {
+  /** The id of the guild */
+  guild_id: string;
+  /** The user who was removed */
+  user: DiscordUser;
 }

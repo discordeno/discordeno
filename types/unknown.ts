@@ -36,15 +36,6 @@ export interface BotAuthenticationFlowQuery {
   disableGuildSelect: boolean;
 }
 
-// TODO: add docs link
-export interface ListPublicArchivedThreads {
-  // TODO: convert unix to ISO9601 timestamp
-  /** Returns threads before this timestamp. UNIX or ISO8601 timestamp */
-  before?: number | string;
-  /** Optional maximum number of threads to return */
-  limit?: number;
-}
-
 /** https://discord.com/developers/docs/resources/channel#modify-channel-json-params-thread */
 export interface ModifyThread {
   /** 1-100 character thread name */
@@ -119,13 +110,6 @@ export interface FileContent {
   name: string;
 }
 
-export interface AddGuildDiscoverySubcategory {
-  /** The guild Id of the subcategory was added to */
-  guildId: string;
-  /** The Id of the subcategory added */
-  categoryId: number;
-}
-
 //TODO: add docs link
 export interface DiscoveryCategory {
   /** Numeric id of the category */
@@ -140,12 +124,6 @@ export interface DiscoveryCategory {
 export interface ValidateDiscoverySearchTermParams {
   /** The search term to check */
   term: string;
-}
-
-// TODO: add docs link
-export interface ValidateDiscoverySearchTerm {
-  /** Whether the provided term is valid */
-  valid: boolean;
 }
 
 //TODO: add docs link
@@ -260,20 +238,6 @@ export interface MessageReference {
   failIfNotExists: boolean;
 }
 
-/** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-emoji */
-export type MessageReactionRemoveEmoji = Pick<MessageReactionAdd, "channelId" | "guildId" | "messageId" | "emoji">;
-
-/** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all */
-export type MessageReactionRemoveAll = Pick<MessageReactionAdd, "channelId" | "messageId" | "guildId">;
-
-/** https://discord.com/developers/docs/resources/channel#get-reactions-query-string-params */
-export interface GetReactions {
-  /** Get users after this user Id */
-  after?: string;
-  /** Max number of users to return (1-100) */
-  limit?: number;
-}
-
 /** https://discord.com/developers/docs/resources/channel#message-object-message-flags */
 export enum MessageFlags {
   /** This message has been published to subscribed channels (via Channel Following) */
@@ -314,31 +278,6 @@ export interface MessageActivity {
 
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
 export type GetMessages = GetMessagesLimit & GetMessagesAfter & GetMessagesBefore & GetMessagesAround;
-
-/** https://discord.com/developers/docs/resources/channel#edit-message-json-params */
-export interface EditMessage {
-  /** The new message contents (up to 2000 characters) */
-  content?: string | null;
-  /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Embed[] | null;
-  /** Edit the flags of the message (only `SUPRESS_EMBEDS` can currently be set/unset) */
-  flags?: 4 | null;
-  /** The contents of the file being sent/edited */
-  file?: FileContent | FileContent[] | null;
-  /** Allowed mentions for the message */
-  allowedMentions?:
-    | (Omit<AllowedMentions, "users" | "roles"> & {
-      /** Array of role_ids to mention (Max size of 100) */
-      roles?: bigint[];
-      /** Array of user_ids to mention (Max size of 100) */
-      users?: bigint[];
-    })
-    | null;
-  /** When specified (adding new attachments), attachments which are not provided in this list will be removed. */
-  attachments?: Attachment[];
-  /** The components you would like to have sent in this message */
-  components?: MessageComponents;
-}
 
 /** https://discord.com/developers/docs/resources/channel#create-message */
 export type DiscordCreateMessage = SnakeCasedPropertiesDeep<Omit<CreateMessage, "file">>;
@@ -537,40 +476,6 @@ export interface ActionRow {
     | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent];
 }
 
-/** https://discord.com/developers/docs/topics/gateway#guild-member-remove */
-export interface GuildMemberRemove {
-  /** The id of the guild */
-  guildId: string;
-  /** The user who was removed */
-  user: DiscordUser;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#guild-member-update */
-export interface GuildMemberUpdate {
-  /** The id of the guild */
-  guildId: string;
-  /** User role ids */
-  roles: string[];
-  /** The user */
-  user: DiscordUser;
-  /** Nickname of the user in the guild */
-  nick?: string | null;
-  /** the member's [guild avatar hash](https://discord.com/developers/docs/reference#image-formatting) */
-  avatar: string;
-  /** When the user joined the guild */
-  joinedAt: string;
-  /** When the user starting boosting the guild */
-  premiumSince?: string | null;
-  /** whether the user is deafened in voice channels */
-  deaf?: boolean;
-  /** whether the user is muted in voice channels */
-  mute?: boolean;
-  /** Whether the user has not yet passed the guild's Membership Screening requirements */
-  pending?: boolean;
-  /** when the user's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out */
-  communicationDisabledUntil?: string;
-}
-
 /** https://discord.com/developers/docs/resources/guild#modify-current-user-nick */
 export interface ModifyCurrentUserNick {
   /** Value to set users nickname to. Requires the CHANGENICKNAME permission */
@@ -622,14 +527,6 @@ export interface CreateGuildEmoji {
   roles?: bigint[];
   /** The reason you are creating this emoji */
   reason?: string;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#guild-emojis-update */
-export interface GuildEmojisUpdate {
-  /** id of the guild */
-  guildId: string;
-  /** Array of emojis */
-  emojis: DiscordEmoji[];
 }
 
 export type Intents = GatewayIntents;
@@ -702,14 +599,6 @@ export interface Ban {
   user: DiscordUser;
 }
 
-/** https://discord.com/developers/docs/resources/guild#create-guild-ban */
-export interface CreateGuildBan {
-  /** Number of days to delete messages for (0-7) */
-  deleteMessageDays?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
-  /** Reason for the ban */
-  reason?: string;
-}
-
 /** https://discord.com/developers/docs/resources/guild#create-guild-role */
 export interface DiscordCreateGuildRole extends Omit<CreateGuildRole, "permissions"> {
   permissions?: string;
@@ -719,22 +608,6 @@ export interface DiscordCreateGuildRole extends Omit<CreateGuildRole, "permissio
 export interface GetGuildQuery {
   /** When true, will return approximate member and presence counts for the guild */
   withCounts?: boolean;
-}
-
-/** https://discord.com/developers/docs/resources/guild#get-guild-prune-count */
-export interface GetGuildPruneCountQuery {
-  /** Number of days to count prune for (1 or more), default: 7 */
-  days?: number;
-  /** Role(s) to include, default: none */
-  includeRoles: string | string[];
-}
-
-/** https://discord.com/developers/docs/topics/gateway#guild-ban-add */
-export interface GuildBanAddRemove {
-  /** id of the guild */
-  guildId: string;
-  /** The banned user */
-  user: DiscordUser;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-ban-remove */
@@ -771,68 +644,12 @@ export interface GuildPreview {
   stickers: Sticker[];
 }
 
-/** https://discord.com/developers/docs/topics/gateway#guild-role-create */
-export interface GuildRoleCreate {
-  /** The id of the guild */
-  guildId: string;
-  /** The role created */
-  role: DiscordRole;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#guild-role-update */
-export interface GuildRoleUpdate {
-  /** The id of the guild */
-  guildId: string;
-  /** The role updated */
-  role: DiscordRole;
-}
-
 /** https://discord.com/developers/docs/resources/guild#guild-widget-object-guild-widget-structure */
 export interface GuildWidget {
   /** Whether the widget is enabled */
   enabled: boolean;
   /** The widget channel id */
   channelId: string | null;
-}
-
-/** https://discord.com/developers/docs/resources/guild#modify-guild */
-export interface ModifyGuild {
-  /** Guild name */
-  name?: string;
-  /** Verification level */
-  verificationLevel?: VerificationLevels | null;
-  /** Default message notification filter level */
-  defaultMessageNotifications?: DefaultMessageNotificationLevels | null;
-  /** Explicit content filter level */
-  explicitContentFilter?: ExplicitContentFilterLevels | null;
-  /** Id for afk channel */
-  afkChannelId?: bigint | null;
-  /** Afk timeout in seconds */
-  afkTimeout?: number;
-  /** Base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has the `ANIMATED_ICON` feature) */
-  icon?: string | null;
-  /** User id to transfer guild ownership to (must be owner) */
-  ownerId?: bigint;
-  /** Base64 16:9 png/jpeg image for the guild splash (when the server has `INVITE_SPLASH` feature) */
-  splash?: string | null;
-  /** Base64 16:9 png/jpeg image for the guild discovery spash (when the server has the `DISCOVERABLE` feature) */
-  discoverySplash?: string | null;
-  /** Base64 16:9 png/jpeg image for the guild banner (when the server has BANNER feature) */
-  banner?: string | null;
-  /** The id of the channel where guild notices such as welcome messages and boost events are posted */
-  systemChannelId?: bigint | null;
-  /** System channel flags */
-  systemChannelFlags?: SystemChannelFlags;
-  /** The id of the channel where Community guilds display rules and/or guidelines */
-  rulesChannelId?: bigint | null;
-  /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
-  publicUpdatesChannelId?: bigint | null;
-  /** The preferred locale of a Community guild used in server discovery and notices from Discord; defaults to "en-US" */
-  preferredLocale?: string | null;
-  /** Enabled guild features */
-  features?: GuildFeatures[];
-  /** Whether the guild's boost progress bar should be enabled */
-  premiumProgressBarEnabled?: boolean;
 }
 
 export interface ModifyGuildRole {
@@ -940,15 +757,6 @@ export interface ScheduledEventUserRemove {
   guildId: string;
 }
 
-export interface ScheduledEventUserAdd {
-  /** id of the guild scheduled event  */
-  guildScheduledEventId: string;
-  /** id of the user                   */
-  userId: string;
-  /** id of the guild */
-  guildId: string;
-}
-
 export interface CreateScheduledEvent {
   /** the channel id of the scheduled event. */
   channelId?: bigint;
@@ -966,28 +774,6 @@ export interface CreateScheduledEvent {
   privacyLevel?: ScheduledEventPrivacyLevel;
   /** the type of hosting entity associated with a scheduled event */
   entityType: ScheduledEventEntityType;
-  reason?: string;
-}
-
-export interface EditScheduledEvent {
-  /** the channel id of the scheduled event. null if switching to external event. */
-  channelId: bigint | null;
-  /** location of the event */
-  location: string;
-  /** the name of the scheduled event */
-  name: string;
-  /** the description of the scheduled event */
-  description: string;
-  /** the time the scheduled event will start */
-  scheduledStartTime: number;
-  /** the time the scheduled event will end if it does end. */
-  scheduledEndTime?: number;
-  /** the privacy level of the scheduled event */
-  privacyLevel: ScheduledEventPrivacyLevel;
-  /** the type of hosting entity associated with a scheduled event */
-  entityType: ScheduledEventEntityType;
-  /** the status of the scheduled event */
-  status: ScheduledEventStatus;
   reason?: string;
 }
 
@@ -1142,20 +928,6 @@ export interface CreateGuildApplicationCommand {
   description?: string;
   /** The parameters for the command */
   options?: ApplicationCommandOption[];
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#edit-global-application-command-json-params */
-export interface EditGlobalApplicationCommand {
-  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
-  name?: string;
-  /** 1-100 character description */
-  description?: string;
-  /** The type of the command */
-  type?: ApplicationCommandTypes;
-  /** The parameters for the command */
-  options?: ApplicationCommandOption[] | null;
-  /** Whether the command is enabled by default when the app is added to a guild. Default: true */
-  defaultPermission?: boolean;
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#edit-guild-application-command-json-params */

@@ -8,7 +8,6 @@ export * from "./resharder.ts";
 export * from "./resume.ts";
 export * from "./spawnShards.ts";
 export * from "./sendShardMessage.ts";
-export * from "./startGatewayOptions.ts";
 export * from "./tellWorkerToIdentify.ts";
 export * from "./shard.ts";
 export * from "./gateway_manager.ts";

@@ -1,9 +1,9 @@
-import type { EditGlobalApplicationCommand } from "../../../types/interactions/commands/editGlobalApplicationCommand.ts";
 import type { MakeRequired } from "../../../types/util.ts";
 import type { Bot } from "../../../bot.ts";
 import { Collection } from "../../../util/collection.ts";
 import { makeOptionsForCommand } from "./createApplicationCommand.ts";
 import { DiscordApplicationCommand } from "../../../types/discord.ts";
+import { EditGlobalApplicationCommand } from "./upsertApplicationCommand.ts";
 
 /**
  * Bulk edit existing application commands. If a command does not exist, it will create it.

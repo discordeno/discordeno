@@ -1,10 +1,8 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import type { MessageReactionRemoveEmoji } from "../../types/messages/messageReactionRemoveEmoji.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordGatewayPayload, DiscordMessageReactionRemoveEmoji } from "../../types/discord.ts";
 
 export async function handleMessageReactionRemoveEmoji(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<MessageReactionRemoveEmoji>;
+  const payload = data.d as DiscordMessageReactionRemoveEmoji;
 
   bot.events.reactionRemoveEmoji(bot, {
     channelId: bot.transformers.snowflake(payload.channel_id),

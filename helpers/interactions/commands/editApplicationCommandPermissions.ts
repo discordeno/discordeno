@@ -1,6 +1,6 @@
-import type { ApplicationCommandPermissions } from "../../../types/interactions/commands/applicationCommandPermissions.ts";
 import type { Bot } from "../../../bot.ts";
 import { DiscordGuildApplicationCommandPermissions } from "../../../types/discord.ts";
+import { ApplicationCommandPermissions } from "./batchEditApplicationCommandPermissions.ts";
 
 /** Edits command permissions for a specific command for your application in a guild. */
 export async function editApplicationCommandPermissions(

@@ -1,10 +1,8 @@
 import type { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import type { GuildBanAddRemove } from "../../types/guilds/guildBanAddRemove.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordGatewayPayload, DiscordGuildBanAddRemove } from "../../types/discord.ts";
 
 export async function handleGuildBanRemove(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<GuildBanAddRemove>;
+  const payload = data.d as DiscordGuildBanAddRemove;
 
   await bot.events.guildBanRemove(
     bot,

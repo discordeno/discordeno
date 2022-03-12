@@ -1,4 +1,3 @@
-import type { GetReactions } from "../../types/messages/messageGetReactions.ts";
 import { Collection } from "../../util/collection.ts";
 import type { Bot } from "../../bot.ts";
 import { DiscordUser } from "../../types/discord.ts";
@@ -28,4 +27,12 @@ export async function getReactions(
     const user = bot.transformers.user(bot, u);
     return [user.id, user];
   }));
+}
+
+/** https://discord.com/developers/docs/resources/channel#get-reactions-query-string-params */
+export interface GetReactions {
+  /** Get users after this user Id */
+  after?: string;
+  /** Max number of users to return (1-100) */
+  limit?: number;
 }
