@@ -1,7 +1,9 @@
 import type { Bot } from "../../bot.ts";
-import { EditWebhookMessage } from "../../types/discordeno.ts";
+import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 import { MessageComponentTypes } from "../../types/shared.ts";
+import { Attachment } from "../../transformers/attachment.ts";
+import { Embed } from "../../transformers/embed.ts";
 
 export async function editWebhookMessage(
   bot: Bot,
@@ -100,4 +102,20 @@ export async function editWebhookMessage(
   });
 
   return bot.transformers.message(bot, result);
+}
+
+/** https://discord.com/developers/docs/resources/webhook#edit-webhook-message-jsonform-params */
+export interface EditWebhookMessage {
+  /** The message contents (up to 2000 characters) */
+  content?: string;
+  /** Embedded `rich` content */
+  embeds?: Embed[];
+  /** The contents of the file being sent/edited */
+  file?: FileContent | FileContent[];
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions;
+  /** Attached files to keep */
+  attachments?: Attachment[];
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents;
 }

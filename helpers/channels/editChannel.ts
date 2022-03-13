@@ -1,8 +1,8 @@
 import type { Bot } from "../../bot.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
-import { OverwriteReadable } from "../../types/discordeno.ts";
 import { ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
+import { OverwriteReadable } from "./editChannelOverwrite.ts";
 
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(bot: Bot, channelId: bigint, options: ModifyChannel, reason?: string) {

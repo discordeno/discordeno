@@ -1,6 +1,5 @@
 import type { Bot } from "../../bot.ts";
 import { DiscordWelcomeScreen } from "../../types/discord.ts";
-import { WelcomeScreenChannel } from "../../types/discordeno.ts";
 
 export async function editWelcomeScreen(bot: Bot, guildId: bigint, options: ModifyGuildWelcomeScreen) {
   const result = await bot.rest.runMethod<DiscordWelcomeScreen>(
@@ -30,4 +29,15 @@ export interface ModifyGuildWelcomeScreen {
   welcomeScreen?: WelcomeScreenChannel[] | null;
   /** The server description to show in the welcome screen */
   description?: string | null;
+}
+
+export interface WelcomeScreenChannel {
+  /** The channel's id */
+  channelId: bigint;
+  /** The emoji id, if the emoji is custom */
+  emojiId?: bigint;
+  /** The emoji name if custom, the unicode character if standard, or `null` if no emoji is set */
+  emojiName?: string;
+  /** The description shown for the channel */
+  description: string;
 }

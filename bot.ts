@@ -292,8 +292,8 @@ export function createHelpers(
       ...createBaseHelpers(customHelpers || {}),
     })
   ) {
-    // @ts-ignore - TODO: make the types better
     converted[name as keyof FinalHelpers] = (
+      // @ts-ignore - TODO: make the types better
       ...args: RemoveFirstFromTuple<Parameters<typeof fun>>
     ) =>
       // @ts-ignore - TODO: make the types better

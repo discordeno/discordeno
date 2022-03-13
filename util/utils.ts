@@ -1,4 +1,4 @@
-import { ImageFormat, ImageSize } from "../types/discordeno.ts";
+import { ImageFormat, ImageSize } from "../helpers/members/avatarUrl.ts";
 
 /** Pause the execution for a given amount of milliseconds. */
 export function delay(ms: number): Promise<void> {
@@ -10,9 +10,9 @@ export function delay(ms: number): Promise<void> {
 }
 
 /** Help format an image url. */
-export const formatImageURL = (url: string, size: ImageSize = 128, format?: ImageFormat) => {
+export function formatImageURL(url: string, size: ImageSize = 128, format?: ImageFormat) {
   return `${url}.${format || (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
-};
+}
 
 // Typescript is not so good as we developers so we need this little utility function to help it out
 // Taken from https://fettblog.eu/typescript-hasownproperty/

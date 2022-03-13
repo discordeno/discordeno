@@ -40,12 +40,9 @@ export function transformChannel(
     guildId: payload.guildId || (payload.channel.guild_id ? bot.transformers.snowflake(payload.channel.guild_id) : 0n),
     lastPinTimestamp: payload.channel.last_pin_timestamp ? Date.parse(payload.channel.last_pin_timestamp) : undefined,
     permissionOverwrites: payload.channel.permission_overwrites
-      ? // TODO: fix this
-      // @ts-ignore
-        payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow, o.deny, o.id, o.type))
+      ? payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow || "0", o.deny || "0", o.id, o.type))
       : [],
 
-    // TRANSFORMED STUFF BELOW
     id: bot.transformers.snowflake(payload.channel.id),
     permissions: payload.channel.permissions ? bot.transformers.snowflake(payload.channel.permissions) : undefined,
     lastMessageId: payload.channel.last_message_id
@@ -55,9 +52,6 @@ export function transformChannel(
     applicationId: payload.channel.application_id ? bot.transformers.snowflake(payload.channel.application_id)
     : undefined,
     parentId: payload.channel.parent_id ? bot.transformers.snowflake(payload.channel.parent_id) : undefined,
-    // TODO: stage channels?
-    voiceStates: payload.channel.type === ChannelTypes.GuildVoice ? new Collection() : undefined,
-
     memberCount: payload.channel.member_count,
     messageCount: payload.channel.message_count,
     archiveTimestamp: payload.channel.thread_metadata?.archive_timestamp

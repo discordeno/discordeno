@@ -1,7 +1,7 @@
 import { Bot } from "../../../bot.ts";
 import { DiscordMessage } from "../../../types/discord.ts";
-import { EditWebhookMessage } from "../../../types/discordeno.ts";
 import { MessageComponentTypes } from "../../../types/shared.ts";
+import { EditWebhookMessage } from "../../webhooks/editWebhookMessage.ts";
 
 /** Edits a followup message for an Interaction. Functions the same as edit webhook message, however this uses your interaction token instead of bot token. Does not support ephemeral followups. */
 export async function editFollowupMessage(

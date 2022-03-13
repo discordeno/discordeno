@@ -1,7 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { ChannelTypes } from "../../types/shared.ts";
 import { DiscordChannel } from "../../types/discord.ts";
-import { OverwriteReadable } from "../../types/discordeno.ts";
+import { OverwriteReadable } from "./editChannelOverwrite.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(bot: Bot, guildId: bigint, options?: CreateGuildChannel, reason?: string) {

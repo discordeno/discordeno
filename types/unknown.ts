@@ -20,20 +20,6 @@ export interface ModifyCurrentUser {
   avatar?: string;
 }
 
-/** https://discord.com/developers/docs/topics/oauth2#bot-authorization-flow-bot-auth-parameters */
-export interface BotAuthenticationFlowQuery {
-  /** App's client id */
-  clientId: string;
-  /** Needs to include bot for the bot flow */
-  scope: OAuth2Scopes[];
-  /** The permissions you're requesting */
-  permissions: string;
-  /** Pre-fills the dropdown picker with a guild for the user */
-  guildId: string;
-  /** True or false—disallows the user from changing the guild dropdown */
-  disableGuildSelect: boolean;
-}
-
 /** https://discord.com/developers/docs/resources/channel#modify-channel-json-params-thread */
 export interface ModifyThread {
   /** 1-100 character thread name */
@@ -247,8 +233,6 @@ export interface SelectMenuData {
 }
 
 export type ActionRowComponents = ButtonComponent | SelectMenuComponent;
-
-export type MessageComponents = ActionRow[];
 
 /** https://discord.com/developers/docs/interactions/message-components#text-inputs-text-input-structure */
 export interface InputTextComponent {

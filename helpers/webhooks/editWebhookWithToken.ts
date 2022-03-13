@@ -1,6 +1,6 @@
 import type { Bot } from "../../bot.ts";
 import { DiscordWebhook } from "../../types/discord.ts";
-import { ModifyWebhook } from "../../types/discordeno.ts";
+import { ModifyWebhook } from "./editWebhook.ts";
 
 /** Edit a webhook. Returns the updated webhook object on success. */
 export async function editWebhookWithToken(
