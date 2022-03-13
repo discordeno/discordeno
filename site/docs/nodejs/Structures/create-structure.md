@@ -24,7 +24,7 @@ await client.helpers.sendMessage(data.id, { content: "hello" });
 However, you probably want to use something shorter, such as the following:
 
 ```js
-const Channel {
+class Channel {
     constructor(client, data) {
         this.client = client;
         this.id = data.id;
