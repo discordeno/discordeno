@@ -53,12 +53,11 @@ export async function runMethod<T = any>(
       {
         url,
         method,
-        reject: (error: unknown) => {
-          errorStack.message = (error as Error)?.message;
+        reject: (data) => {
+          errorStack.message = (data.error.raw).message;
           reject(errorStack);
         },
-        respond: (data: { status: number; body?: string }) =>
-          resolve(data.status !== 204 ? JSON.parse(data.body ?? "{}") : (undefined as unknown as T)),
+        respond: (data) => resolve(data.status !== 204 ? JSON.parse(data.body ?? "{}") : (undefined as unknown as T)),
       },
       {
         bucketId,
