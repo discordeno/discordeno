@@ -33,4 +33,4 @@ export function transformInvite(bot: Bot, invite: DiscordInviteCreate) {
   };
 }
 
-export interface Invite extends ReturnType<typeof transformInvite> {};
+export interface Invite extends ReturnType<typeof transformInvite> {}

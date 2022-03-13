@@ -21,5 +21,5 @@ export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate) {
   };
 }
 
-export interface PresenceUpdate extends ReturnType<typeof transformPresence> {};
+export interface PresenceUpdate extends ReturnType<typeof transformPresence> {}
 export type StatusTypes = keyof typeof statusTypes;

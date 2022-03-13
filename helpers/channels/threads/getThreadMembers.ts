@@ -11,8 +11,8 @@ export async function getThreadMembers(bot: Bot, threadId: bigint) {
   );
   // return result;
 
-  return new Collection(result.map(res => {
+  return new Collection(result.map((res) => {
     const member = bot.transformers.threadMember(bot, res);
     return [member.id, member];
-  }))
+  }));
 }

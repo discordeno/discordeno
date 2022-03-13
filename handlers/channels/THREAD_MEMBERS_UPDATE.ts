@@ -10,4 +10,3 @@ export async function handleThreadMembersUpdate(bot: Bot, data: DiscordGatewayPa
     removedMemberIds: payload.removed_member_ids?.map((id) => bot.transformers.snowflake(id)),
   });
 }
-

@@ -34,4 +34,4 @@ export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreate
   };
 }
 
-export interface Integration extends ReturnType<typeof transformIntegration> {};
+export interface Integration extends ReturnType<typeof transformIntegration> {}

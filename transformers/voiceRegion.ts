@@ -11,4 +11,4 @@ export function transformVoiceRegion(bot: Bot, payload: DiscordVoiceRegion) {
   };
 }
 
-export interface VoiceRegions extends ReturnType<typeof transformVoiceRegion> {};
+export interface VoiceRegions extends ReturnType<typeof transformVoiceRegion> {}

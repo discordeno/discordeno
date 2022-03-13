@@ -1,5 +1,5 @@
 import { Bot } from "../bot.ts";
-import { MessageComponentTypes,ButtonStyles,TextStyles } from "../mod.ts";
+import { ButtonStyles, MessageComponentTypes, TextStyles } from "../mod.ts";
 import { DiscordComponent, DiscordSelectOption } from "../types/discord.ts";
 
 export function transformComponent(bot: Bot, payload: DiscordComponent): Component {

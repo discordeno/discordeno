@@ -130,4 +130,4 @@ export function transformAuditlogEntry(
   };
 }
 
-export interface AuditLogEntry extends ReturnType<typeof transformAuditlogEntry> {};
+export interface AuditLogEntry extends ReturnType<typeof transformAuditlogEntry> {}

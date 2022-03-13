@@ -12,11 +12,13 @@ export function transformActivity(bot: Bot, payload: DiscordActivity) {
     applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
     details: payload.details ?? undefined,
     state: payload.state ?? undefined,
-    emoji: payload.emoji ? {
-      name: payload.emoji.name,
-      animated: payload.emoji.animated,
-      id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined,
-    } : undefined,
+    emoji: payload.emoji
+      ? {
+        name: payload.emoji.name,
+        animated: payload.emoji.animated,
+        id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined,
+      }
+      : undefined,
     partyId: payload.party?.id ? bot.transformers.snowflake(payload.party.id) : undefined,
     partyCurrentSize: payload.party?.size?.[0],
     partyMaxSize: payload.party?.size?.[1],
@@ -29,8 +31,8 @@ export function transformActivity(bot: Bot, payload: DiscordActivity) {
     match: payload.secrets?.match,
     instance: payload.instance,
     flags: payload.flags,
-    buttons: payload.buttons
+    buttons: payload.buttons,
   };
 }
 
-export interface Activity extends ReturnType<typeof transformActivity> {};
+export interface Activity extends ReturnType<typeof transformActivity> {}

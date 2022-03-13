@@ -3,7 +3,6 @@ import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
 import { Collection } from "./util/collection.ts";
 import {
   Channel,
-  VoiceState,
   Guild,
   Member,
   Message,
@@ -17,6 +16,7 @@ import {
   transformUser,
   transformVoiceState,
   User,
+  VoiceState,
 } from "./transformers/mod.ts";
 import {
   baseEndpoints,

@@ -537,7 +537,7 @@ export interface InteractionDataOption {
   options?: InteractionDataOption[];
   /** true if this option is the currently focused option for autocomplete */
   focused?: boolean;
-};
+}
 
 export interface CreateGlobalContextMenuCommand {
   /** 1-31 character name matching `^[\w-]{1,32}$` */

@@ -21,4 +21,4 @@ export function transformVoiceState(
   };
 }
 
-export interface VoiceState extends ReturnType<typeof transformVoiceState> {};
+export interface VoiceState extends ReturnType<typeof transformVoiceState> {}

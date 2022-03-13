@@ -49,7 +49,9 @@ export function transformGuild(
         })),
       }
       : undefined,
-    discoverySplash: payload.guild.discovery_splash ? bot.utils.iconHashToBigInt(payload.guild.discovery_splash) : undefined,
+    discoverySplash: payload.guild.discovery_splash
+      ? bot.utils.iconHashToBigInt(payload.guild.discovery_splash)
+      : undefined,
 
     joinedAt: payload.guild.joined_at ? Date.parse(payload.guild.joined_at) : undefined,
     memberCount: payload.guild.member_count ?? 0,
@@ -80,9 +82,8 @@ export function transformGuild(
     ownerId: payload.guild.owner_id ? bot.transformers.snowflake(payload.guild.owner_id) : 0n,
     permissions: payload.guild.permissions ? bot.transformers.snowflake(payload.guild.permissions) : 0n,
     afkChannelId: payload.guild.afk_channel_id ? bot.transformers.snowflake(payload.guild.afk_channel_id) : undefined,
-    widgetChannelId: payload.guild.widget_channel_id
-      ? bot.transformers.snowflake(payload.guild.widget_channel_id)
-      : undefined,
+    widgetChannelId: payload.guild.widget_channel_id ? bot.transformers.snowflake(payload.guild.widget_channel_id)
+    : undefined,
     applicationId: payload.guild.application_id ? bot.transformers.snowflake(payload.guild.application_id) : undefined,
     systemChannelId: payload.guild.system_channel_id ? bot.transformers.snowflake(payload.guild.system_channel_id)
     : undefined,
@@ -95,4 +96,4 @@ export function transformGuild(
   };
 }
 
-export interface Guild extends ReturnType<typeof transformGuild> {};
+export interface Guild extends ReturnType<typeof transformGuild> {}

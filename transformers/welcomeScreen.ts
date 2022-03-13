@@ -16,4 +16,4 @@ export function transformWelcomeScreen(
   };
 }
 
-export interface WelcomeScreen extends ReturnType<typeof transformWelcomeScreen> {};
+export interface WelcomeScreen extends ReturnType<typeof transformWelcomeScreen> {}

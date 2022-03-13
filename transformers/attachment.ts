@@ -15,4 +15,4 @@ export function transformAttachment(bot: Bot, payload: DiscordAttachment) {
   };
 }
 
-export interface Attachment extends ReturnType<typeof transformAttachment> {};
+export interface Attachment extends ReturnType<typeof transformAttachment> {}

@@ -2,7 +2,14 @@ import { GatewayManager } from "./gateway_manager.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
-import { DiscordGatewayPayload, DiscordGuild, DiscordHello, DiscordMessage, DiscordReady, DiscordUnavailableGuild } from "../types/discord.ts";
+import {
+  DiscordGatewayPayload,
+  DiscordGuild,
+  DiscordHello,
+  DiscordMessage,
+  DiscordReady,
+  DiscordUnavailableGuild,
+} from "../types/discord.ts";
 import { GatewayOpcodes } from "../types/shared.ts";
 
 /** Handler for handling every message event from websocket. */

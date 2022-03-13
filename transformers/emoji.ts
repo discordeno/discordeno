@@ -12,4 +12,4 @@ export function transformEmoji(bot: Bot, payload: DiscordEmoji) {
   };
 }
 
-export interface Emoji extends ReturnType<typeof transformEmoji> {};
+export interface Emoji extends ReturnType<typeof transformEmoji> {}

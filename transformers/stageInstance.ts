@@ -13,4 +13,4 @@ export function transformStageInstance(
   };
 }
 
-export interface StageInstance extends ReturnType<typeof transformStageInstance> {};
+export interface StageInstance extends ReturnType<typeof transformStageInstance> {}

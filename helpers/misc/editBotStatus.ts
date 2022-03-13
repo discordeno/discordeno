@@ -47,11 +47,13 @@ export function editBotStatus(bot: Bot, data: StatusUpdate) {
               small_text: activity.smallText,
             }
             : undefined,
-          secrets: activity.join || activity.spectate || activity.match ? {
-            join: activity.join,
-            spectate: activity.spectate,
-            match: activity.match,
-          } : undefined,
+          secrets: activity.join || activity.spectate || activity.match
+            ? {
+              join: activity.join,
+              spectate: activity.spectate,
+              match: activity.match,
+            }
+            : undefined,
           instance: activity.instance,
           flags: activity.flags,
           buttons: activity.buttons,

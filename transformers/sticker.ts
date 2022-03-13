@@ -17,4 +17,4 @@ export function transformSticker(bot: Bot, payload: DiscordSticker) {
   };
 }
 
-export interface Sticker extends ReturnType<typeof transformSticker> {};
+export interface Sticker extends ReturnType<typeof transformSticker> {}

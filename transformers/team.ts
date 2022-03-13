@@ -19,4 +19,4 @@ export function transformTeam(bot: Bot, payload: DiscordTeam) {
   };
 }
 
-export interface Team extends ReturnType<typeof transformTeam> {};
+export interface Team extends ReturnType<typeof transformTeam> {}

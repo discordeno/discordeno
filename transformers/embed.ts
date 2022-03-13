@@ -53,4 +53,4 @@ export function transformEmbed(bot: Bot, payload: DiscordEmbed) {
   };
 }
 
-export interface Embed extends ReturnType<typeof transformEmbed> {};
+export interface Embed extends ReturnType<typeof transformEmbed> {}
