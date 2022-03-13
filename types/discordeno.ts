@@ -16,17 +16,13 @@ import {
   BaseEmoji,
   BaseOverwrite,
   BaseStageInstance,
-  BaseTeam,
   BaseTeamMember,
   BaseThreadMemberBase,
   BaseThreadMetadata,
-  BaseTypingStart,
   BaseWelcomeScreen,
   BaseWelcomeScreenChannel,
   ButtonStyles,
   ChannelTypes,
-  GetGuildWidgetImageStyleOptions,
-  InteractionResponseTypes,
   InviteTargetTypes,
   MessageComponentTypes,
   PermissionStrings,
@@ -224,15 +220,6 @@ export interface FileContent {
   name: string;
 }
 
-export interface CreateWebhook {
-  /** Name of the webhook (1-80 characters) */
-  name: string;
-  /** Image for the default webhook avatar */
-  avatar?: bigint | null;
-  /** The reason you are creating this webhook */
-  reason?: string;
-}
-
 /** https://discord.com/developers/docs/resources/webhook#edit-webhook-message-jsonform-params */
 export interface EditWebhookMessage {
   /** The message contents (up to 2000 characters) */
@@ -247,18 +234,6 @@ export interface EditWebhookMessage {
   attachments?: Attachment[];
   /** The components you would like to have sent in this message */
   components?: MessageComponents;
-}
-
-/** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
-export interface Emoji extends BaseEmoji {
-  /** Emoji id */
-  id?: bigint;
-  /** Roles allowed to use this emoji */
-  roles?: bigint[];
-  /** User that created this emoji */
-  user?: User;
-  /** The boolean toggle values for this emoji */
-  toggles: EmojiToggles;
 }
 
 /** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure */
@@ -277,16 +252,6 @@ export interface WelcomeScreenChannel extends BaseWelcomeScreenChannel {
   emojiId?: bigint;
   /** The emoji name if custom, the unicode character if standard, or `null` if no emoji is set */
   emojiName?: string;
-}
-
-/** https://discord.com/developers/docs/resources/stage-instance#auto-closing-stage-instance-structure */
-export interface StageInstance extends BaseStageInstance {
-  /** The id of this Stage instance */
-  id: bigint;
-  /** The guild id of the associated Stage channel */
-  guildId: bigint;
-  /** The id of the associated Stage channel */
-  channelId: bigint;
 }
 
 export interface Overwrite extends BaseOverwrite {
@@ -314,46 +279,6 @@ export interface ThreadMetadata extends BaseThreadMetadata {
   createTimestamp?: number;
 }
 
-export interface ThreadMemberBase extends BaseThreadMemberBase {
-}
-
-/** https://discord.com/developers/docs/topics/gateway#client-status-object */
-export interface ClientStatus extends BaseClientStatus {
-}
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-timestamps */
-export interface ActivityTimestamps extends BaseActivityTimestamps {
-}
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-emoji */
-export interface ActivityEmoji extends BaseActivityEmoji {
-  /** The id of the emoji */
-  id?: bigint;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-party */
-export interface ActivityParty extends BaseActivityParty {
-  /** The id of the party */
-  id?: bigint;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-assets */
-export interface ActivityAssets extends BaseActivityAssets {
-  /** The id for a large asset of the activity, usually a snowflake */
-  largeImage?: bigint;
-  /** The id for a small asset of the activity, usually a snowflake */
-  smallImage?: bigint;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-secrets */
-export interface ActivitySecrets extends BaseActivitySecrets {
-}
-
-// https://github.com/discord/discord-api-docs/pull/2219
-// TODO: add documentation link
-export interface ActivityButton extends BaseActivityButton {
-}
-
 export interface MemberWithUser extends Member {
   /** The user object for this member */
   user: User;
@@ -376,180 +301,4 @@ export interface StartThreadWithoutMessage extends StartThreadBase {
   type: ChannelTypes.GuildNewsThread | ChannelTypes.GuildPublicThread | ChannelTypes.GuildPrivateThread;
   /** whether non-moderators can add other non-moderators to a thread; only available when creating a private thread */
   invitable?: boolean;
-}
-
-/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
-export interface GetMessagesLimit {
-  /** Max number of messages to return (1-100) default 50 */
-  limit?: number;
-}
-
-/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
-export interface GetMessagesAround extends GetMessagesLimit {
-  /** Get messages around this message id */
-  around?: bigint;
-}
-
-/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
-export interface GetMessagesBefore extends GetMessagesLimit {
-  /** Get messages before this message id */
-  before?: bigint;
-}
-
-/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
-export interface GetMessagesAfter extends GetMessagesLimit {
-  /** Get messages after this message id */
-  after?: bigint;
-}
-
-export interface CreateChannelInvite {
-  /** Duration of invite in seconds before expiry, or 0 for never. Between 0 and 604800 (7 days). Default: 86400 (24 hours) */
-  maxAge?: number;
-  /** Max number of users or 0 for unlimited. Between 0 and 100. Default: 0 */
-  maxUses?: number;
-  /** Whether this invite only grants temporary membership. Default: false */
-  temporary?: boolean;
-  /** If true, don't try to reuse simmilar invite (useful for creating many unique one time use invites). Default: false */
-  unique?: boolean;
-  /** The type of target for this voice channel invite */
-  targetType?: InviteTargetTypes;
-  /** The id of the user whose stream to display for this invite, required if `target_type` is 1, the user must be streaming in the channel */
-  targetUserId?: string;
-  /** The id of the embedded application to open for this invite, required if `target_type` is 2, the application must have the `EMBEDDED` flag */
-  targetApplicationId?: string;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#request-guild-members */
-export interface RequestGuildMembers {
-  /** id of the guild to get members for */
-  guildId: bigint;
-  /** String that username starts with, or an empty string to return all members */
-  query?: string;
-  /** Maximum number of members to send matching the query; a limit of 0 can be used with an empty string query to return all members */
-  limit: number;
-  /** Used to specify if we want the presences of the matched members */
-  presences?: boolean;
-  /** Used to specify which users you wish to fetch */
-  userIds?: bigint[];
-  /** Nonce to identify the Guild Members Chunk response */
-  nonce?: string;
-}
-
-export interface CreateMessage {
-  /** The message contents (up to 2000 characters) */
-  content?: string;
-  /** true if this is a TTS message */
-  tts?: boolean;
-  /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Embed[];
-  /** Allowed mentions for the message */
-  allowedMentions?: AllowedMentions;
-  /** Include to make your message a reply */
-  messageReference?: {
-    /** id of the originating message */
-    messageId?: bigint;
-    /**
-     * id of the originating message's channel
-     * Note: `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.
-     */
-    channelId?: bigint;
-    /** id of the originating message's guild */
-    guildId?: bigint;
-    /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
-    failIfNotExists: boolean;
-  };
-  /** The contents of the file being sent */
-  file?: FileContent | FileContent[];
-  /** The components you would like to have sent in this message */
-  components?: MessageComponents;
-}
-
-/** https://discord.com/developers/docs/resources/invite#get-invite */
-export interface GetInvite {
-  /** Whether the invite should contain approximate member counts */
-  withCounts?: boolean;
-  /** Whether the invite should contain the expiration date */
-  withExpiration?: boolean;
-  /** the guild scheduled event to include with the invite */
-  scheduledEventId?: bigint;
-}
-
-/** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
-export interface BeginGuildPrune {
-  /** Number of days to prune (1 or more), default: 7 */
-  days?: number;
-  /** Whether 'pruned' is returned, discouraged for large guilds, default: true */
-  computePruneCount?: boolean;
-  /** Role(s) ro include, default: none */
-  includeRoles?: string[];
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptionchoice */
-export interface ApplicationCommandOptionChoice {
-  /** 1-100 character choice name */
-  name: string;
-  /** Value of the choice, up to 100 characters if string */
-  value: string | number;
-}
-
-/** https://discord.com/developers/docs/resources/guild#modify-guild-member */
-export interface ModifyGuildMember {
-  /** Value to set users nickname to. Requires the `MANAGE_NICKNAMES` permission */
-  nick?: string | null;
-  /** Array of role ids the member is assigned. Requires the `MANAGE_ROLES` permission */
-  roles?: bigint[] | null;
-  /** Whether the user is muted in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MUTE_MEMBERS` permission */
-  mute?: boolean | null;
-  /** Whether the user is deafened in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MOVE_MEMBERS` permission */
-  deaf?: boolean | null;
-  /** Id of channel to move user to (if they are connected to voice). Requires the `MOVE_MEMBERS` permission */
-  channelId?: bigint | null;
-  /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission */
-  communicationDisabledUntil?: number;
-}
-
-/** https://discord.com/developers/docs/resources/guild#get-guild-widget-image-query-string-params */
-export interface GetGuildWidgetImageQuery {
-  /** Style of the widget returned, default: shield */
-  style?: GetGuildWidgetImageStyleOptions;
-}
-
-/** https://discord.com/developers/docs/resources/guild#list-guild-members */
-export interface ListGuildMembers {
-  /** Max number of members to return (1-1000). Default: 1000 */
-  limit?: number;
-  /** The highest user id in the previous page. Default: 0 */
-  after?: string;
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
-export interface InteractionResponse {
-  /** The type of response */
-  type: InteractionResponseTypes;
-  /** An optional response message */
-  data?: InteractionApplicationCommandCallbackData;
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
-export interface InteractionApplicationCommandCallbackData {
-  /** The message contents (up to 2000 characters) */
-  content?: string;
-  /** true if this is a TTS message */
-  tts?: boolean;
-  /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Embed[];
-  /** Allowed mentions for the message */
-  allowedMentions?: AllowedMentions;
-  /** The contents of the file being sent */
-  file?: FileContent | FileContent[];
-  /** The customId you want to use for this modal response. */
-  customId?: string;
-  /** The title you want to use for this modal response. */
-  title?: string;
-  /** The components you would like to have sent in this message */
-  components?: MessageComponents;
-  /** message flags combined as a bitfield (only SUPPRESS_EMBEDS and EPHEMERAL can be set) */
-  flags?: number;
-  /** autocomplete choices (max of 25 choices) */
-  choices?: ApplicationCommandOptionChoice[];
 }

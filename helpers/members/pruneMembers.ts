@@ -1,5 +1,4 @@
 import type { Bot } from "../../bot.ts";
-import { BeginGuildPrune } from "../../types/discordeno.ts";
 
 /**
  * Begin a prune operation. Requires the KICK_MEMBERS permission. Returns an object with one 'pruned' key indicating the number of members that were removed in the prune operation. For large guilds it's recommended to set the computePruneCount option to false, forcing 'pruned' to null. Fires multiple Guild Member Remove Gateway events.
@@ -22,4 +21,14 @@ export async function pruneMembers(bot: Bot, guildId: bigint, options: BeginGuil
   );
 
   return result.pruned;
+}
+
+/** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
+export interface BeginGuildPrune {
+  /** Number of days to prune (1 or more), default: 7 */
+  days?: number;
+  /** Whether 'pruned' is returned, discouraged for large guilds, default: true */
+  computePruneCount?: boolean;
+  /** Role(s) ro include, default: none */
+  includeRoles?: string[];
 }

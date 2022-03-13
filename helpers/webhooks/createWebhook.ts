@@ -1,6 +1,5 @@
 import type { Bot } from "../../bot.ts";
 import { DiscordWebhook } from "../../types/discord.ts";
-import { CreateWebhook } from "../../types/discordeno.ts";
 
 /**
  * Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
@@ -20,4 +19,13 @@ export async function createWebhook(bot: Bot, channelId: bigint, options: Create
   );
 
   return bot.transformers.webhook(bot, result);
+}
+
+export interface CreateWebhook {
+  /** Name of the webhook (1-80 characters) */
+  name: string;
+  /** Image for the default webhook avatar */
+  avatar?: bigint | null;
+  /** The reason you are creating this webhook */
+  reason?: string;
 }
