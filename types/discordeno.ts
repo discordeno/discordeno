@@ -1,10 +1,5 @@
 import { SelectOption } from "../transformers/component.ts";
-import {
-  BaseAllowedMentions,
-  ButtonStyles,
-  MessageComponentTypes,
-  TextStyles,
-} from "./shared.ts";
+import { AllowedMentionsTypes, ButtonStyles, MessageComponentTypes, TextStyles } from "./shared.ts";
 
 export type MessageComponents = ActionRow[];
 
@@ -83,7 +78,12 @@ export interface InputTextComponent {
 }
 
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
-export interface AllowedMentions extends BaseAllowedMentions {
+export interface AllowedMentions {
+  /** An array of allowed mention types to parse from the content. */
+  parse?: AllowedMentionsTypes[];
+  /** For replies, whether to mention the author of the message being replied to (default false) */
+  repliedUser?: boolean;
+
   /** Array of role_ids to mention (Max size of 100) */
   roles?: bigint[];
   /** Array of user_ids to mention (Max size of 100) */
@@ -96,5 +96,3 @@ export interface FileContent {
   /** The name of the file */
   name: string;
 }
-
-
