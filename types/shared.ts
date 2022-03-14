@@ -1,19 +1,3 @@
-/** https://discord.com/developers/docs/resources/user#user-object */
-export interface BaseUser {
-  /** The user's username, not unique across the platform */
-  username: string;
-  /** The user's chosen language option */
-  locale?: string;
-  /** The flags on a user's account */
-  flags?: UserFlags;
-  /** The type of Nitro subscription on a user's account */
-  premiumType?: PremiumTypes;
-  /** The public flags on a user's account */
-  publicFlags?: UserFlags;
-  /** the user's banner color encoded as an integer representation of hexadecimal color code */
-  accentColor?: number;
-}
-
 /** https://discord.com/developers/docs/resources/user#user-object-premium-types */
 export enum PremiumTypes {
   None,
@@ -40,76 +24,6 @@ export enum UserFlags {
   BotHttpInteractions = 1 << 19,
 }
 
-/** https://discord.com/developers/docs/resources/user#connection-object */
-export interface BaseConnection {
-  /** id of the connection account */
-  id: string;
-  /** The username of the connection account */
-  name: string;
-  /** The service of the connection (twitch, youtube) */
-  type: string;
-  /** Whether the connection is revoked */
-  revoked?: boolean;
-  /** Whether the connection is verified */
-  verified: boolean;
-  /** Whether friend sync is enabled for this connection */
-  friendSync: boolean;
-  /** Whether activities related to this connection will be shown in presence updates */
-  showActivity: boolean;
-  /** Visibility of this connection */
-  visibility: VisibilityTypes;
-}
-
-/** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
-export interface BaseIntegration {
-  /** Integration Id */
-  id: string;
-  /** Integration name */
-  name: string;
-  /** Integration type (twitch, youtube or discord) */
-  type: "twitch" | "youtube" | "discord";
-  /** Is this integration enabled */
-  enabled: boolean;
-  /** Is this integration syncing */
-  syncing?: boolean;
-  /** Role Id that this integration uses for "subscribers" */
-  roleId?: string;
-  /** Whether emoticons should be synced for this integration (twitch only currently) */
-  enableEmoticons?: boolean;
-  /** The behavior of expiring subscribers */
-  expireBehavior?: IntegrationExpireBehaviors;
-  /** The grace period (in days) before expiring subscribers */
-  expireGracePeriod?: number;
-  /** When this integration was last synced */
-  syncedAt?: string;
-  /** How many subscribers this integration has */
-  subscriberCount?: number;
-  /** Has this integration been revoked */
-  revoked?: boolean;
-}
-
-/** https://discord.com/developers/docs/resources/guild#integration-account-object-integration-account-structure */
-export interface BaseIntegrationAccount {
-  /** Id of the account */
-  id: string;
-  /** Name of the account */
-  name: string;
-}
-
-/** https://discord.com/developers/docs/resources/guild#integration-application-object-integration-application-structure */
-export interface BaseIntegrationApplication {
-  /** The id of the app */
-  id: string;
-  /** The name of the app */
-  name: string;
-  /** the icon hash of the app */
-  icon: string | null;
-  /** The description of the app */
-  description: string;
-  /** The summary of the app */
-  summary: string;
-}
-
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
 export enum IntegrationExpireBehaviors {
   RemoveRole,
@@ -122,56 +36,6 @@ export enum VisibilityTypes {
   None,
   /** Visible to everyone */
   Everyone,
-}
-
-/** https://discord.com/developers/docs/topics/gateway#typing-start */
-export interface BaseTypingStart {
-  /** Unix time (in seconds) of when the user started typing */
-  timestamp: number;
-}
-
-/** https://discord.com/developers/docs/resources/guild#guild-member-object */
-export interface BaseMember {
-  /** Whether the user is deafened in voice channels */
-  deaf?: boolean;
-  /** Whether the user is muted in voice channels */
-  mute?: boolean;
-  /** Whether the user has not yet passed the guild's Membership Screening requirements */
-  pending?: boolean;
-}
-
-/** https://discord.com/developers/docs/topics/oauth2#application-object */
-export interface BaseApplication {
-  /** The name of the app */
-  name: string;
-  /** The description of the app */
-  description: string;
-  /** An array of rpc origin urls, if rpc is enabled */
-  rpcOrigins?: string[];
-  /** When false only app owner can join the app's bot to guilds */
-  botPublic: boolean;
-  /** When true the app's bot will only join upon completion of the full oauth2 code grant flow */
-  botRequireCodeGrant: boolean;
-  /** The url of the app's terms of service */
-  termsOfServiceUrl?: string;
-  /** The url of the app's privacy policy */
-  privacyPolicyUrl?: string;
-  /** The hex encoded key for verification in interactions and the GameSDK's GetTicket */
-  verifyKey: string;
-  /** If this application is a game sold on Discord, this field will be the id of the "Game SKU" that is created, if exists */
-  primarySkuId?: string;
-  /** If this application is a game sold on Discord, this field will be the URL slug that links to the store page */
-  slug?: string;
-  /** The application's public flags */
-  flags?: ApplicationFlags;
-}
-
-/** https://discord.com/developers/docs/topics/teams#data-models-team-members-object */
-export interface BaseTeamMember {
-  /** The user's membership state on the team */
-  membershipState: TeamMembershipStates;
-  /** Will always be `["*"]` */
-  permissions: "*"[];
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum */
@@ -190,14 +54,6 @@ export enum ApplicationFlags {
   Embedded = 1 << 17,
   GatewayMessageCount = 1 << 18,
   GatewayMessageContentLimited = 1 << 19,
-}
-
-/** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
-export interface BaseAllowedMentions {
-  /** An array of allowed mention types to parse from the content. */
-  parse?: AllowedMentionsTypes[];
-  /** For replies, whether to mention the author of the message being replied to (default false) */
-  repliedUser?: boolean;
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#component-types */
@@ -253,184 +109,8 @@ export enum WebhookTypes {
   Application,
 }
 
-/** https://discord.com/developers/docs/resources/channel#embed-object */
-export interface BaseEmbed {
-  /** Title of embed */
-  title?: string;
-  /** Type of embed (always "rich" for webhook embeds) */
-  type?: EmbedTypes;
-  /** Description of embed */
-  description?: string;
-  /** Url of embed */
-  url?: string;
-  /** Color code of the embed */
-  color?: number;
-}
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-author-structure */
-export interface BaseEmbedAuthor {
-  /** Name of author */
-  name: string;
-  /** Url of author */
-  url?: string;
-  /** Url of author icon (only supports http(s) and attachments) */
-  iconUrl?: string;
-  /** A proxied url of author icon */
-  proxyIconUrl?: string;
-}
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure */
-export interface BaseEmbedField {
-  /** Name of the field */
-  name: string;
-  /** Value of the field */
-  value: string;
-  /** Whether or not this field should display inline */
-  inline?: boolean;
-}
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure */
-export interface BaseEmbedFooter {
-  /** Footer text */
-  text: string;
-  /** Url of footer icon (only supports http(s) and attachments) */
-  iconUrl?: string;
-  /** A proxied url of footer icon */
-  proxyIconUrl?: string;
-}
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-image-structure */
-export interface BaseEmbedImage {
-  /** Source url of image (only supports http(s) and attachments) */
-  url: string;
-  /** A proxied url of the image */
-  proxyUrl?: string;
-  /** Height of image */
-  height?: number;
-  /** Width of image */
-  width?: number;
-}
-
-export interface BaseEmbedProvider {
-  /** Name of provider */
-  name?: string;
-  /** Url of provider */
-  url?: string;
-}
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-thumbnail-structure */
-export interface BaseEmbedThumbnail {
-  /** Source url of thumbnail (only supports http(s) and attachments) */
-  url: string;
-  /** A proxied url of the thumbnail */
-  proxyUrl?: string;
-  /** Height of thumbnail */
-  height?: number;
-  /** Width of thumbnail */
-  width?: number;
-}
-
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-types */
 export type EmbedTypes = "rich" | "image" | "video" | "gifv" | "article" | "link";
-
-/** https://discord.com/developers/docs/resources/channel#embed-object-embed-video-structure */
-export interface BaseEmbedVideo {
-  /** Source url of video */
-  url?: string;
-  /** A proxied url of the video */
-  proxyUrl?: string;
-  /** Height of video */
-  height?: number;
-  /** Width of video */
-  width?: number;
-}
-
-/** https://discord.com/developers/docs/resources/channel#attachment-object */
-export interface BaseAttachment {
-  /** Name of file attached */
-  filename: string;
-  /** The attachment's [media type](https://en.wikipedia.org/wiki/Media_type) */
-  contentType?: string;
-  /** Size of file in bytes */
-  size: number;
-  /** Source url of file */
-  url: string;
-  /** A proxied url of file */
-  proxyUrl: string;
-  /** Whether this attachment is ephemeral */
-  ephemeral?: boolean;
-}
-
-/** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
-export type BaseWebhook = BaseIncomingWebhook | BaseApplicationWebhook;
-
-export interface BaseIncomingWebhook {
-  /** The type of the webhook */
-  type: WebhookTypes;
-  /** The secure token of the webhook (returned for Incomming Webhooks) */
-  token?: string;
-  /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
-  url?: string;
-}
-
-export interface BaseApplicationWebhook extends BaseIncomingWebhook {
-  type: WebhookTypes.Application;
-}
-
-/** https://discord.com/developers/docs/resources/guild#guild-object */
-export interface BaseGuild {
-  /** Guild name (2-100 characaters, excluding trailing and leading whitespace) */
-  name: string;
-  /** True if the user is the owner of the guild */
-  owner?: boolean;
-  /** Afk timeout in seconds */
-  afkTimeout: number;
-  /** True if the server widget is enabled */
-  widgetEnabled?: boolean;
-  /** Verification level required for the guild */
-  verificationLevel: VerificationLevels;
-  /** Default message notifications level */
-  defaultMessageNotifications: DefaultMessageNotificationLevels;
-  /** Explicit content filter level */
-  explicitContentFilter: ExplicitContentFilterLevels;
-  /** Enabled guild features */
-  features: GuildFeatures[];
-  /** Required MFA level for the guild */
-  mfaLevel: MfaLevels;
-  /** System channel flags */
-  systemChannelFlags: SystemChannelFlags;
-  /** True if this is considered a large guild */
-  large?: boolean;
-  /** True if this guild is unavailable due to an outage */
-  unavailable?: boolean;
-  /** Total number of members in this guild */
-  memberCount?: number;
-  /** The maximum number of presences for the guild (the default value, currently 25000, is in effect when null is returned) */
-  maxPresences?: number | null;
-  /** The maximum number of members for the guild */
-  maxMembers?: number;
-  /** The vaniy url code for the guild */
-  vanityUrlCode: string | null;
-  /** The description of a Community guild */
-  description: string | null;
-  /** Premium tier (Server Boost level) */
-  premiumTier: PremiumTiers;
-  /** The number of boosts this guild currently has */
-  premiumSubscriptionCount?: number;
-  // TODO: Can be optimized to a number but is it worth it?
-  /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
-  preferredLocale: string;
-  /** The maximum amount of users in a video channel */
-  maxVideoChannelUsers?: number;
-  /** Approximate number of members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
-  approximateMemberCount?: number;
-  /**	Approximate number of non-offline members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
-  approximatePresenceCount?: number;
-  /** Guild NSFW level */
-  nsfwLevel: GuildNsfwLevel;
-  /** Whether the guild has the boost progress bar enabled */
-  premiumProgressBarEnabled: boolean;
-}
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level */
 export enum DefaultMessageNotificationLevels {
@@ -474,12 +154,6 @@ export interface BaseRole {
   position: number;
   /** role unicode emoji */
   unicodeEmoji?: string;
-}
-
-/** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
-export interface BaseEmoji {
-  /** Emoji name (can only be null in reaction emoji objects) */
-  name?: string;
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-guild-features */
@@ -552,62 +226,6 @@ export enum SystemChannelFlags {
   SuppressJoinNotificationReplies = 1 << 3,
 }
 
-/** https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure */
-export interface BaseVoiceState {
-  /** The session id for this voice state */
-  sessionId: string;
-}
-
-/** https://discord.com/developers/docs/resources/channel#channel-object */
-export interface BaseChannel {
-  /** The type of channel */
-  type: ChannelTypes;
-  /** Sorting position of the channel */
-  position?: number;
-  /** The name of the channel (1-100 characters) */
-  name?: string;
-  /** The channel topic (0-1024 characters) */
-  topic?: string | null;
-  /** Whether the channel is nsfw */
-  nsfw?: boolean;
-  /** The bitrate (in bits) of the voice channel */
-  bitrate?: number;
-  /** The user limit of the voice channel */
-  userLimit?: number;
-  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
-  rateLimitPerUser?: number;
-  /** Voice region id for the voice channel, automatic when set to null */
-  rtcRegion?: string | null;
-  /** The camera video quality mode of the voice channel, 1 when not present */
-  videoQualityMode?: VideoQualityModes;
-  /** An approximate count of messages in a thread, stops counting at 50 */
-  messageCount?: number;
-  /** An approximate count of users in a thread, stops counting at 50 */
-  memberCount?: number;
-  /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
-  defaultAutoArchiveDuration?: number;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#presence-update */
-export interface BasePresenceUpdate {
-}
-
-/** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure */
-export interface BaseWelcomeScreen {
-}
-
-/** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure */
-export interface BaseWelcomeScreenChannel {
-  /** The description shown for the channel */
-  description: string;
-}
-
-/** https://discord.com/developers/docs/resources/stage-instance#auto-closing-stage-instance-structure */
-export interface BaseStageInstance {
-  /** The topic of the Stage instance (1-120 characters) */
-  topic: string;
-}
-
 /** https://discord.com/developers/docs/resources/guild#guild-object-premium-tier */
 export enum PremiumTiers {
   /** Guild has not unlocked any Server Boost perks */
@@ -654,11 +272,6 @@ export enum ChannelTypes {
   GuildStageVoice = 13,
 }
 
-export interface BaseOverwrite {
-  /** Either 0 (role) or 1 (member) */
-  type: OverwriteTypes;
-}
-
 export enum OverwriteTypes {
   Role,
   Member,
@@ -671,55 +284,6 @@ export enum VideoQualityModes {
   Full,
 }
 
-export interface BaseThreadMetadata {
-  /** Whether the thread is archived */
-  archived: boolean;
-  /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration: 60 | 1440 | 4320 | 10080;
-  /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
-  locked: boolean;
-  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
-  invitable?: boolean;
-}
-
-export interface BaseThreadMemberBase {
-  /** Any user-thread settings, currently only used for notifications */
-  flags: number;
-}
-
-export interface BaseThreadMember extends BaseThreadMemberBase {
-}
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object */
-export interface BaseActivity {
-  /** The activity's name */
-  name: string;
-  /** Activity type */
-  type: ActivityTypes;
-  /** Stream url, is validated when type is 1 */
-  url?: string | null;
-  /** Unix timestamp of when the activity was added to the user's session */
-  createdAt: number;
-  /** What the player is currently doing */
-  details?: string | null;
-  /** The user's current party status */
-  state?: string | null;
-  /** Whether or not the activity is an instanced game session */
-  instance?: boolean;
-  /** Activity flags `OR`d together, describes what the payload includes */
-  flags?: number;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#client-status-object */
-export interface BaseClientStatus {
-  /** The user's status set for an active desktop (Windows, Linux, Mac) application session */
-  desktop?: string;
-  /** The user's status set for an active mobile (iOS, Android) application session */
-  mobile?: string;
-  /** The user's status set for an active web (browser, bot account) application session */
-  web?: string;
-}
-
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-types */
 export enum ActivityTypes {
   Game,
@@ -728,58 +292,6 @@ export enum ActivityTypes {
   Watching,
   Custom = 4,
   Competing,
-}
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-timestamps */
-export interface BaseActivityTimestamps {
-  /** Unix time (in milliseconds) of when the activity started */
-  start?: number;
-  /** Unix time (in milliseconds) of when the activity ends */
-  end?: number;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-emoji */
-export interface BaseActivityEmoji {
-  /** The name of the emoji */
-  name: string;
-  /** Whether this emoji is animated */
-  animated?: boolean;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-party */
-export interface BaseActivityParty {
-  /** Used to show the party's current and maximum size */
-  size?: [currentSize: number, maxSize: number];
-}
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-assets */
-export interface BaseActivityAssets {
-  /** Text displayed when hovering over the large image of the activity */
-  largeText?: string;
-  /** Text displayed when hovering over the small image of the activity */
-  smallText?: string;
-}
-
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-secrets */
-export interface BaseActivitySecrets {
-  /** The secret for joining a party */
-  join?: string;
-  /** The secret for spectating a game */
-  spectate?: string;
-  /** The secret for a specific instanced match */
-  match?: string;
-}
-
-// https://github.com/discord/discord-api-docs/pull/2219
-// TODO: add documentation link
-export interface BaseActivityButton {
-  /** The text shown on the button (1-32 characters) */
-  label: string;
-  /** The url opened when clicking the button (1-512 characters) */
-  url: string;
-}
-
-export interface BaseMemberWithUser extends BaseMember {
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-types */

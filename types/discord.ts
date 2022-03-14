@@ -1,72 +1,59 @@
 import {
+  ActivityTypes,
   AllowedMentionsTypes,
   ApplicationCommandOptionTypes,
   ApplicationCommandPermissionTypes,
   ApplicationCommandTypes,
+  ApplicationFlags,
   AuditLogEvents,
-  BaseActivity,
-  BaseActivityAssets,
-  BaseActivityButton,
-  BaseActivityEmoji,
-  BaseActivityParty,
-  BaseActivitySecrets,
-  BaseActivityTimestamps,
-  BaseAllowedMentions,
-  BaseApplication,
-  BaseApplicationWebhook,
-  BaseAttachment,
-  BaseChannel,
-  BaseClientStatus,
-  BaseConnection,
-  BaseEmbed,
-  BaseEmbedAuthor,
-  BaseEmbedField,
-  BaseEmbedFooter,
-  BaseEmbedImage,
-  BaseEmbedProvider,
-  BaseEmbedThumbnail,
-  BaseEmbedVideo,
-  BaseEmoji,
-  BaseGuild,
-  BaseIncomingWebhook,
-  BaseIntegration,
-  BaseIntegrationAccount,
-  BaseIntegrationApplication,
-  BaseMember,
-  BaseOverwrite,
-  BasePresenceUpdate,
-  BaseStageInstance,
-  BaseTeamMember,
-  BaseThreadMember,
-  BaseThreadMemberBase,
-  BaseThreadMetadata,
-  BaseTypingStart,
-  BaseUser,
-  BaseVoiceState,
-  BaseWelcomeScreen,
-  BaseWelcomeScreenChannel,
   ButtonStyles,
   ChannelTypes,
+  DefaultMessageNotificationLevels,
   EmbedTypes,
+  ExplicitContentFilterLevels,
   GatewayEventNames,
   GuildFeatures,
+  GuildNsfwLevel,
   IntegrationExpireBehaviors,
   InteractionTypes,
   MessageActivityTypes,
   MessageComponentTypes,
   MessageTypes,
+  MfaLevels,
+  OverwriteTypes,
+  PremiumTiers,
+  PremiumTypes,
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
-  SnakeCasedPropertiesDeep,
   StickerFormatTypes,
   StickerTypes,
+  SystemChannelFlags,
   TargetTypes,
+  TeamMembershipStates,
   TextStyles,
+  UserFlags,
+  VerificationLevels,
+  VideoQualityModes,
+  VisibilityTypes,
+  WebhookTypes,
 } from "./shared.ts";
 
 /** https://discord.com/developers/docs/resources/user#user-object */
-export interface DiscordUser extends SnakeCasedPropertiesDeep<BaseUser> {
+export interface DiscordUser {
+  /** The user's username, not unique across the platform */
+  username: string;
+  /** The user's chosen language option */
+  locale?: string;
+  /** The flags on a user's account */
+  flags?: UserFlags;
+  /** The type of Nitro subscription on a user's account */
+  premiumType?: PremiumTypes;
+  /** The public flags on a user's account */
+  publicFlags?: UserFlags;
+  /** the user's banner color encoded as an integer representation of hexadecimal color code */
+  accentColor?: number;
+
   /** The user's id */
   id: string;
   /** The user's 4-digit discord-tag */
@@ -88,13 +75,55 @@ export interface DiscordUser extends SnakeCasedPropertiesDeep<BaseUser> {
 }
 
 /** https://discord.com/developers/docs/resources/user#connection-object */
-export interface DiscordConnection extends SnakeCasedPropertiesDeep<BaseConnection> {
+export interface DiscordConnection {
+  /** id of the connection account */
+  id: string;
+  /** The username of the connection account */
+  name: string;
+  /** The service of the connection (twitch, youtube) */
+  type: string;
+  /** Whether the connection is revoked */
+  revoked?: boolean;
+  /** Whether the connection is verified */
+  verified: boolean;
+  /** Whether friend sync is enabled for this connection */
+  friendSync: boolean;
+  /** Whether activities related to this connection will be shown in presence updates */
+  showActivity: boolean;
+  /** Visibility of this connection */
+  visibility: VisibilityTypes;
+
   /** An array of partial server integrations */
   integrations?: DiscordIntegration[];
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
-export interface DiscordIntegration extends SnakeCasedPropertiesDeep<BaseIntegration> {
+export interface DiscordIntegration {
+  /** Integration Id */
+  id: string;
+  /** Integration name */
+  name: string;
+  /** Integration type (twitch, youtube or discord) */
+  type: "twitch" | "youtube" | "discord";
+  /** Is this integration enabled */
+  enabled: boolean;
+  /** Is this integration syncing */
+  syncing?: boolean;
+  /** Role Id that this integration uses for "subscribers" */
+  roleId?: string;
+  /** Whether emoticons should be synced for this integration (twitch only currently) */
+  enableEmoticons?: boolean;
+  /** The behavior of expiring subscribers */
+  expireBehavior?: IntegrationExpireBehaviors;
+  /** The grace period (in days) before expiring subscribers */
+  expireGracePeriod?: number;
+  /** When this integration was last synced */
+  syncedAt?: string;
+  /** How many subscribers this integration has */
+  subscriberCount?: number;
+  /** Has this integration been revoked */
+  revoked?: boolean;
+
   /** User for this integration */
   user?: DiscordUser;
   /** Integration account information */
@@ -104,11 +133,26 @@ export interface DiscordIntegration extends SnakeCasedPropertiesDeep<BaseIntegra
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-account-object-integration-account-structure */
-export interface DiscordIntegrationAccount extends SnakeCasedPropertiesDeep<BaseIntegrationAccount> {
+export interface DiscordIntegrationAccount {
+  /** Id of the account */
+  id: string;
+  /** Name of the account */
+  name: string;
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-application-object-integration-application-structure */
-export interface DiscordIntegrationApplication extends SnakeCasedPropertiesDeep<BaseIntegrationApplication> {
+export interface DiscordIntegrationApplication {
+  /** The id of the app */
+  id: string;
+  /** The name of the app */
+  name: string;
+  /** the icon hash of the app */
+  icon: string | null;
+  /** The description of the app */
+  description: string;
+  /** The summary of the app */
+  summary: string;
+
   /** The bot associated with this application */
   bot?: DiscordUser;
 }
@@ -136,7 +180,10 @@ export interface DiscordGuildIntegrationsUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#typing-start */
-export interface DiscordTypingStart extends SnakeCasedPropertiesDeep<BaseTypingStart> {
+export interface DiscordTypingStart {
+  /** Unix time (in seconds) of when the user started typing */
+  timestamp: number;
+
   /** id of the channel */
   channel_id: string;
   /** id of the guild */
@@ -148,7 +195,14 @@ export interface DiscordTypingStart extends SnakeCasedPropertiesDeep<BaseTypingS
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */
-export interface DiscordMember extends SnakeCasedPropertiesDeep<BaseMember> {
+export interface DiscordMember {
+  /** Whether the user is deafened in voice channels */
+  deaf?: boolean;
+  /** Whether the user is muted in voice channels */
+  mute?: boolean;
+  /** Whether the user has not yet passed the guild's Membership Screening requirements */
+  pending?: boolean;
+
   /** The user this guild member represents */
   user?: DiscordUser;
   /** This users guild nickname */
@@ -168,7 +222,30 @@ export interface DiscordMember extends SnakeCasedPropertiesDeep<BaseMember> {
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#application-object */
-export interface DiscordApplication extends SnakeCasedPropertiesDeep<BaseApplication> {
+export interface DiscordApplication {
+  /** The name of the app */
+  name: string;
+  /** The description of the app */
+  description: string;
+  /** An array of rpc origin urls, if rpc is enabled */
+  rpcOrigins?: string[];
+  /** When false only app owner can join the app's bot to guilds */
+  botPublic: boolean;
+  /** When true the app's bot will only join upon completion of the full oauth2 code grant flow */
+  botRequireCodeGrant: boolean;
+  /** The url of the app's terms of service */
+  termsOfServiceUrl?: string;
+  /** The url of the app's privacy policy */
+  privacyPolicyUrl?: string;
+  /** The hex encoded key for verification in interactions and the GameSDK's GetTicket */
+  verifyKey: string;
+  /** If this application is a game sold on Discord, this field will be the id of the "Game SKU" that is created, if exists */
+  primarySkuId?: string;
+  /** If this application is a game sold on Discord, this field will be the URL slug that links to the store page */
+  slug?: string;
+  /** The application's public flags */
+  flags?: ApplicationFlags;
+
   /** The id of the app */
   id: string;
   /** The icon hash of the app */
@@ -202,7 +279,12 @@ export interface DiscordTeam {
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-members-object */
-export interface DiscordTeamMember extends SnakeCasedPropertiesDeep<BaseTeamMember> {
+export interface DiscordTeamMember {
+  /** The user's membership state on the team */
+  membershipState: TeamMembershipStates;
+  /** Will always be `["*"]` */
+  permissions: "*"[];
+
   /** The id of the parent team of which they are a member */
   team_id: string;
   /** The avatar, discriminator, id, and username of the user */
@@ -218,7 +300,12 @@ export interface DiscordWebhookUpdate {
 }
 
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
-export interface DiscordAllowedMentions extends SnakeCasedPropertiesDeep<BaseAllowedMentions> {
+export interface DiscordAllowedMentions {
+  /** An array of allowed mention types to parse from the content. */
+  parse?: AllowedMentionsTypes[];
+  /** For replies, whether to mention the author of the message being replied to (default false) */
+  repliedUser?: boolean;
+
   /** Array of role_ids to mention (Max size of 100) */
   roles?: string[];
   /** Array of user_ids to mention (Max size of 100) */
@@ -226,7 +313,18 @@ export interface DiscordAllowedMentions extends SnakeCasedPropertiesDeep<BaseAll
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object */
-export interface DiscordEmbed extends BaseEmbed {
+export interface DiscordEmbed {
+  /** Title of embed */
+  title?: string;
+  /** Type of embed (always "rich" for webhook embeds) */
+  type?: EmbedTypes;
+  /** Description of embed */
+  description?: string;
+  /** Url of embed */
+  url?: string;
+  /** Color code of the embed */
+  color?: number;
+
   /** Timestamp of embed content */
   timestamp?: string;
   /** Footer information */
@@ -246,34 +344,93 @@ export interface DiscordEmbed extends BaseEmbed {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-author-structure */
-export interface DiscordEmbedAuthor extends SnakeCasedPropertiesDeep<BaseEmbedAuthor> {
+export interface DiscordEmbedAuthor {
+  /** Name of author */
+  name: string;
+  /** Url of author */
+  url?: string;
+  /** Url of author icon (only supports http(s) and attachments) */
+  iconUrl?: string;
+  /** A proxied url of author icon */
+  proxyIconUrl?: string;
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure */
-export interface DiscordEmbedField extends SnakeCasedPropertiesDeep<BaseEmbedField> {
+export interface DiscordEmbedField {
+  /** Name of the field */
+  name: string;
+  /** Value of the field */
+  value: string;
+  /** Whether or not this field should display inline */
+  inline?: boolean;
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure */
-export interface DiscordEmbedFooter extends SnakeCasedPropertiesDeep<BaseEmbedFooter> {
+export interface DiscordEmbedFooter {
+  /** Footer text */
+  text: string;
+  /** Url of footer icon (only supports http(s) and attachments) */
+  iconUrl?: string;
+  /** A proxied url of footer icon */
+  proxyIconUrl?: string;
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-image-structure */
-export interface DiscordEmbedImage extends SnakeCasedPropertiesDeep<BaseEmbedImage> {
+export interface DiscordEmbedImage {
+  /** Source url of image (only supports http(s) and attachments) */
+  url: string;
+  /** A proxied url of the image */
+  proxyUrl?: string;
+  /** Height of image */
+  height?: number;
+  /** Width of image */
+  width?: number;
 }
 
-export interface DiscordEmbedProvider extends SnakeCasedPropertiesDeep<BaseEmbedProvider> {
+export interface DiscordEmbedProvider {
+  /** Name of provider */
+  name?: string;
+  /** Url of provider */
+  url?: string;
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-thumbnail-structure */
-export interface DiscordEmbedThumbnail extends SnakeCasedPropertiesDeep<BaseEmbedThumbnail> {
+export interface DiscordEmbedThumbnail {
+  /** Source url of thumbnail (only supports http(s) and attachments) */
+  url: string;
+  /** A proxied url of the thumbnail */
+  proxyUrl?: string;
+  /** Height of thumbnail */
+  height?: number;
+  /** Width of thumbnail */
+  width?: number;
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-video-structure */
-export interface DiscordEmbedVideo extends SnakeCasedPropertiesDeep<BaseEmbedVideo> {
+export interface DiscordEmbedVideo {
+  /** Source url of video */
+  url?: string;
+  /** A proxied url of the video */
+  proxyUrl?: string;
+  /** Height of video */
+  height?: number;
+  /** Width of video */
+  width?: number;
 }
 
 /** https://discord.com/developers/docs/resources/channel#attachment-object */
-export interface DiscordAttachment extends SnakeCasedPropertiesDeep<BaseAttachment> {
+export interface DiscordAttachment {
+  /** Name of file attached */
+  filename: string;
+  /** The attachment's [media type](https://en.wikipedia.org/wiki/Media_type) */
+  contentType?: string;
+  /** Size of file in bytes */
+  size: number;
+  /** Source url of file */
+  url: string;
+  /** A proxied url of file */
+  proxyUrl: string;
+
   /** Attachment id */
   id: string;
   /** Height of file (if image) */
@@ -287,7 +444,14 @@ export interface DiscordAttachment extends SnakeCasedPropertiesDeep<BaseAttachme
 /** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
 export type DiscordWebhook = DiscordIncomingWebhook | DiscordApplicationWebhook;
 
-export interface DiscordIncomingWebhook extends SnakeCasedPropertiesDeep<BaseIncomingWebhook> {
+export interface DiscordIncomingWebhook {
+  /** The type of the webhook */
+  type: WebhookTypes;
+  /** The secure token of the webhook (returned for Incomming Webhooks) */
+  token?: string;
+  /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
+  url?: string;
+
   /** The id of the webhook */
   id: string;
   /** The guild id this webhook is for */
@@ -308,7 +472,14 @@ export interface DiscordIncomingWebhook extends SnakeCasedPropertiesDeep<BaseInc
   source_channel?: Partial<DiscordChannel>;
 }
 
-export interface DiscordApplicationWebhook extends SnakeCasedPropertiesDeep<BaseApplicationWebhook> {
+export interface DiscordApplicationWebhook {
+  /** The type of the webhook */
+  type: WebhookTypes.Application;
+  /** The secure token of the webhook (returned for Incomming Webhooks) */
+  token?: string;
+  /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
+  url?: string;
+
   /** The id of the webhook */
   id: string;
   /** The guild id this webhook is for */
@@ -330,7 +501,59 @@ export interface DiscordApplicationWebhook extends SnakeCasedPropertiesDeep<Base
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object */
-export interface DiscordGuild extends SnakeCasedPropertiesDeep<BaseGuild> {
+export interface DiscordGuild {
+  /** Guild name (2-100 characaters, excluding trailing and leading whitespace) */
+  name: string;
+  /** True if the user is the owner of the guild */
+  owner?: boolean;
+  /** Afk timeout in seconds */
+  afkTimeout: number;
+  /** True if the server widget is enabled */
+  widgetEnabled?: boolean;
+  /** Verification level required for the guild */
+  verificationLevel: VerificationLevels;
+  /** Default message notifications level */
+  defaultMessageNotifications: DefaultMessageNotificationLevels;
+  /** Explicit content filter level */
+  explicitContentFilter: ExplicitContentFilterLevels;
+  /** Enabled guild features */
+  features: GuildFeatures[];
+  /** Required MFA level for the guild */
+  mfaLevel: MfaLevels;
+  /** System channel flags */
+  systemChannelFlags: SystemChannelFlags;
+  /** True if this is considered a large guild */
+  large?: boolean;
+  /** True if this guild is unavailable due to an outage */
+  unavailable?: boolean;
+  /** Total number of members in this guild */
+  memberCount?: number;
+  /** The maximum number of presences for the guild (the default value, currently 25000, is in effect when null is returned) */
+  maxPresences?: number | null;
+  /** The maximum number of members for the guild */
+  maxMembers?: number;
+  /** The vaniy url code for the guild */
+  vanityUrlCode: string | null;
+  /** The description of a Community guild */
+  description: string | null;
+  /** Premium tier (Server Boost level) */
+  premiumTier: PremiumTiers;
+  /** The number of boosts this guild currently has */
+  premiumSubscriptionCount?: number;
+  // TODO: Can be optimized to a number but is it worth it?
+  /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
+  preferredLocale: string;
+  /** The maximum amount of users in a video channel */
+  maxVideoChannelUsers?: number;
+  /** Approximate number of members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
+  approximateMemberCount?: number;
+  /**	Approximate number of non-offline members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
+  approximatePresenceCount?: number;
+  /** Guild NSFW level */
+  nsfwLevel: GuildNsfwLevel;
+  /** Whether the guild has the boost progress bar enabled */
+  premiumProgressBarEnabled: boolean;
+
   /** Guild id */
   id: string;
   /** Icon hash */
@@ -422,7 +645,10 @@ export interface DiscordRoleTags {
 }
 
 /** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
-export interface DiscordEmoji extends SnakeCasedPropertiesDeep<BaseEmoji> {
+export interface DiscordEmoji {
+  /** Emoji name (can only be null in reaction emoji objects) */
+  name?: string;
+
   /** Emoji id */
   id?: string;
   /** Roles allowed to use this emoji */
@@ -440,7 +666,10 @@ export interface DiscordEmoji extends SnakeCasedPropertiesDeep<BaseEmoji> {
 }
 
 /** https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure */
-export interface DiscordVoiceState extends SnakeCasedPropertiesDeep<BaseVoiceState> {
+export interface DiscordVoiceState {
+  /** The session id for this voice state */
+  sessionId: string;
+
   /** The guild id this voice state is for */
   guild_id?: string;
   /** The channel id this user is connected to */
@@ -468,7 +697,32 @@ export interface DiscordVoiceState extends SnakeCasedPropertiesDeep<BaseVoiceSta
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-object */
-export interface DiscordChannel extends SnakeCasedPropertiesDeep<BaseChannel> {
+export interface DiscordChannel {
+  /** The type of channel */
+  type: ChannelTypes;
+  /** Sorting position of the channel */
+  position?: number;
+  /** The name of the channel (1-100 characters) */
+  name?: string;
+  /** The channel topic (0-1024 characters) */
+  topic?: string | null;
+  /** The bitrate (in bits) of the voice channel */
+  bitrate?: number;
+  /** The user limit of the voice channel */
+  userLimit?: number;
+  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
+  rateLimitPerUser?: number;
+  /** Voice region id for the voice channel, automatic when set to null */
+  rtcRegion?: string | null;
+  /** The camera video quality mode of the voice channel, 1 when not present */
+  videoQualityMode?: VideoQualityModes;
+  /** An approximate count of messages in a thread, stops counting at 50 */
+  messageCount?: number;
+  /** An approximate count of users in a thread, stops counting at 50 */
+  memberCount?: number;
+  /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
+  defaultAutoArchiveDuration?: number;
+
   /** The id of the channel */
   id: string;
   /** The id of the guild */
@@ -496,7 +750,7 @@ export interface DiscordChannel extends SnakeCasedPropertiesDeep<BaseChannel> {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#presence-update */
-export interface DiscordPresenceUpdate extends SnakeCasedPropertiesDeep<BasePresenceUpdate> {
+export interface DiscordPresenceUpdate {
   /** Either "idle", "dnd", "online", or "offline" */
   status: "idle" | "dnd" | "online" | "offline";
   /** The user presence is being updated for */
@@ -510,7 +764,7 @@ export interface DiscordPresenceUpdate extends SnakeCasedPropertiesDeep<BasePres
 }
 
 /** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure */
-export interface DiscordWelcomeScreen extends SnakeCasedPropertiesDeep<BaseWelcomeScreen> {
+export interface DiscordWelcomeScreen {
   /** The server description shown in the welcome screen */
   description: string | null;
   /** The channels shown in the welcome screen, up to 5 */
@@ -518,7 +772,10 @@ export interface DiscordWelcomeScreen extends SnakeCasedPropertiesDeep<BaseWelco
 }
 
 /** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure */
-export interface DiscordWelcomeScreenChannel extends SnakeCasedPropertiesDeep<BaseWelcomeScreenChannel> {
+export interface DiscordWelcomeScreenChannel {
+  /** The description shown for the channel */
+  description: string;
+
   /** The channel's id */
   channel_id: string;
   /** The emoji id, if the emoji is custom */
@@ -528,7 +785,10 @@ export interface DiscordWelcomeScreenChannel extends SnakeCasedPropertiesDeep<Ba
 }
 
 /** https://discord.com/developers/docs/resources/stage-instance#auto-closing-stage-instance-structure */
-export interface DiscordStageInstance extends SnakeCasedPropertiesDeep<BaseStageInstance> {
+export interface DiscordStageInstance {
+  /** The topic of the Stage instance (1-120 characters) */
+  topic: string;
+
   /** The id of this Stage instance */
   id: string;
   /** The guild id of the associated Stage channel */
@@ -537,17 +797,31 @@ export interface DiscordStageInstance extends SnakeCasedPropertiesDeep<BaseStage
   channel_id: string;
 }
 
-export interface DiscordThreadMetadata extends SnakeCasedPropertiesDeep<BaseThreadMetadata> {
+export interface DiscordThreadMetadata {
+  /** Whether the thread is archived */
+  archived: boolean;
+  /** Duration in minutes to automatically archive the thread after recent activity */
+  autoArchiveDuration: 60 | 1440 | 4320 | 10080;
+  /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
+  locked: boolean;
+  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
+  invitable?: boolean;
+
   /** Timestamp when the thread's archive status was last changed, used for calculating recent activity */
   archive_timestamp: string;
   /** Timestamp when the thread was created; only populated for threads created after 2022-01-09 */
   create_timestamp?: string | null;
 }
 
-export interface DiscordThreadMemberBase extends SnakeCasedPropertiesDeep<BaseThreadMemberBase> {
+export interface DiscordThreadMemberBase {
+  /** Any user-thread settings, currently only used for notifications */
+  flags: number;
 }
 
-export interface DiscordThreadMember extends SnakeCasedPropertiesDeep<BaseThreadMember> {
+export interface DiscordThreadMember {
+  /** Any user-thread settings, currently only used for notifications */
+  flags: number;
+
   /** The id of the thread */
   id: string;
   /** The id of the user */
@@ -556,13 +830,33 @@ export interface DiscordThreadMember extends SnakeCasedPropertiesDeep<BaseThread
   join_timestamp: string;
 }
 
-export interface DiscordThreadMemberGuildCreate extends SnakeCasedPropertiesDeep<BaseThreadMember> {
+export interface DiscordThreadMemberGuildCreate {
+  /** Any user-thread settings, currently only used for notifications */
+  flags: number;
+
   /** The time the current user last joined the thread */
   join_timestamp: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object */
-export interface DiscordActivity extends SnakeCasedPropertiesDeep<BaseActivity> {
+export interface DiscordActivity {
+  /** The activity's name */
+  name: string;
+  /** Activity type */
+  type: ActivityTypes;
+  /** Stream url, is validated when type is 1 */
+  url?: string | null;
+  /** Unix timestamp of when the activity was added to the user's session */
+  createdAt: number;
+  /** What the player is currently doing */
+  details?: string | null;
+  /** The user's current party status */
+  state?: string | null;
+  /** Whether or not the activity is an instanced game session */
+  instance?: boolean;
+  /** Activity flags `OR`d together, describes what the payload includes */
+  flags?: number;
+
   /** Unix timestamps for start and/or end of the game */
   timestamps?: DiscordActivityTimestamps;
   /** Application id for the game */
@@ -580,27 +874,50 @@ export interface DiscordActivity extends SnakeCasedPropertiesDeep<BaseActivity> 
 }
 
 /** https://discord.com/developers/docs/topics/gateway#client-status-object */
-export interface DiscordClientStatus extends SnakeCasedPropertiesDeep<BaseClientStatus> {
+export interface DiscordClientStatus {
+  /** The user's status set for an active desktop (Windows, Linux, Mac) application session */
+  desktop?: string;
+  /** The user's status set for an active mobile (iOS, Android) application session */
+  mobile?: string;
+  /** The user's status set for an active web (browser, bot account) application session */
+  web?: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-timestamps */
-export interface DiscordActivityTimestamps extends SnakeCasedPropertiesDeep<BaseActivityTimestamps> {
+export interface DiscordActivityTimestamps {
+  /** Unix time (in milliseconds) of when the activity started */
+  start?: number;
+  /** Unix time (in milliseconds) of when the activity ends */
+  end?: number;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-emoji */
-export interface DiscordActivityEmoji extends SnakeCasedPropertiesDeep<BaseActivityEmoji> {
+export interface DiscordActivityEmoji {
+  /** The name of the emoji */
+  name: string;
+  /** Whether this emoji is animated */
+  animated?: boolean;
+
   /** The id of the emoji */
   id?: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-party */
-export interface DiscordActivityParty extends SnakeCasedPropertiesDeep<BaseActivityParty> {
+export interface DiscordActivityParty {
+  /** Used to show the party's current and maximum size */
+  size?: [currentSize: number, maxSize: number];
+
   /** The id of the party */
   id?: string;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-assets */
-export interface DiscordActivityAssets extends SnakeCasedPropertiesDeep<BaseActivityAssets> {
+export interface DiscordActivityAssets {
+  /** Text displayed when hovering over the large image of the activity */
+  largeText?: string;
+  /** Text displayed when hovering over the small image of the activity */
+  smallText?: string;
+
   /** The id for a large asset of the activity, usually a snowflake */
   large_image?: string;
   /** The id for a small asset of the activity, usually a snowflake */
@@ -608,15 +925,28 @@ export interface DiscordActivityAssets extends SnakeCasedPropertiesDeep<BaseActi
 }
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-secrets */
-export interface DiscordActivitySecrets extends SnakeCasedPropertiesDeep<BaseActivitySecrets> {
+export interface DiscordActivitySecrets {
+  /** The secret for joining a party */
+  join?: string;
+  /** The secret for spectating a game */
+  spectate?: string;
+  /** The secret for a specific instanced match */
+  match?: string;
 }
 
 // https://github.com/discord/discord-api-docs/pull/2219
 // TODO: add documentation link
-export interface DiscordActivityButton extends SnakeCasedPropertiesDeep<BaseActivityButton> {
+export interface DiscordActivityButton {
+  /** The text shown on the button (1-32 characters) */
+  label: string;
+  /** The url opened when clicking the button (1-512 characters) */
+  url: string;
 }
 
-export interface DiscordOverwrite extends SnakeCasedPropertiesDeep<BaseOverwrite> {
+export interface DiscordOverwrite {
+  /** Either 0 (role) or 1 (member) */
+  type: OverwriteTypes;
+
   /** Role or user id */
   id: string;
   /** Permission bit set */
