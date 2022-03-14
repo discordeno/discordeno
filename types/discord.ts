@@ -48,11 +48,11 @@ export interface DiscordUser {
   /** The flags on a user's account */
   flags?: UserFlags;
   /** The type of Nitro subscription on a user's account */
-  premiumType?: PremiumTypes;
+  premium_type?: PremiumTypes;
   /** The public flags on a user's account */
-  publicFlags?: UserFlags;
+  public_flags?: UserFlags;
   /** the user's banner color encoded as an integer representation of hexadecimal color code */
-  accentColor?: number;
+  accent_color?: number;
 
   /** The user's id */
   id: string;
@@ -110,17 +110,17 @@ export interface DiscordIntegration {
   /** Is this integration syncing */
   syncing?: boolean;
   /** Role Id that this integration uses for "subscribers" */
-  roleId?: string;
+  role_id?: string;
   /** Whether emoticons should be synced for this integration (twitch only currently) */
-  enableEmoticons?: boolean;
+  enable_emoticons?: boolean;
   /** The behavior of expiring subscribers */
-  expireBehavior?: IntegrationExpireBehaviors;
+  expire_behavior?: IntegrationExpireBehaviors;
   /** The grace period (in days) before expiring subscribers */
-  expireGracePeriod?: number;
+  expire_grace_period?: number;
   /** When this integration was last synced */
-  syncedAt?: string;
+  synced_at?: string;
   /** How many subscribers this integration has */
-  subscriberCount?: number;
+  subscriber_count?: number;
   /** Has this integration been revoked */
   revoked?: boolean;
 
@@ -228,19 +228,15 @@ export interface DiscordApplication {
   /** The description of the app */
   description: string;
   /** An array of rpc origin urls, if rpc is enabled */
-  rpcOrigins?: string[];
-  /** When false only app owner can join the app's bot to guilds */
-  botPublic: boolean;
-  /** When true the app's bot will only join upon completion of the full oauth2 code grant flow */
-  botRequireCodeGrant: boolean;
+  rpc_origins?: string[];
   /** The url of the app's terms of service */
-  termsOfServiceUrl?: string;
+  terms_of_service_url?: string;
   /** The url of the app's privacy policy */
-  privacyPolicyUrl?: string;
+  privacy_policy_url?: string;
   /** The hex encoded key for verification in interactions and the GameSDK's GetTicket */
-  verifyKey: string;
+  verify_key: string;
   /** If this application is a game sold on Discord, this field will be the id of the "Game SKU" that is created, if exists */
-  primarySkuId?: string;
+  primary_sku_id?: string;
   /** If this application is a game sold on Discord, this field will be the URL slug that links to the store page */
   slug?: string;
   /** The application's public flags */
@@ -281,7 +277,7 @@ export interface DiscordTeam {
 /** https://discord.com/developers/docs/topics/teams#data-models-team-members-object */
 export interface DiscordTeamMember {
   /** The user's membership state on the team */
-  membershipState: TeamMembershipStates;
+  membership_state: TeamMembershipStates;
   /** Will always be `["*"]` */
   permissions: "*"[];
 
@@ -350,9 +346,9 @@ export interface DiscordEmbedAuthor {
   /** Url of author */
   url?: string;
   /** Url of author icon (only supports http(s) and attachments) */
-  iconUrl?: string;
+  icon_url?: string;
   /** A proxied url of author icon */
-  proxyIconUrl?: string;
+  proxy_icon_url?: string;
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure */
@@ -370,9 +366,9 @@ export interface DiscordEmbedFooter {
   /** Footer text */
   text: string;
   /** Url of footer icon (only supports http(s) and attachments) */
-  iconUrl?: string;
+  icon_url?: string;
   /** A proxied url of footer icon */
-  proxyIconUrl?: string;
+  proxy_icon_url?: string;
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-image-structure */
@@ -380,7 +376,7 @@ export interface DiscordEmbedImage {
   /** Source url of image (only supports http(s) and attachments) */
   url: string;
   /** A proxied url of the image */
-  proxyUrl?: string;
+  proxy_url?: string;
   /** Height of image */
   height?: number;
   /** Width of image */
@@ -399,7 +395,7 @@ export interface DiscordEmbedThumbnail {
   /** Source url of thumbnail (only supports http(s) and attachments) */
   url: string;
   /** A proxied url of the thumbnail */
-  proxyUrl?: string;
+  proxy_url?: string;
   /** Height of thumbnail */
   height?: number;
   /** Width of thumbnail */
@@ -411,7 +407,7 @@ export interface DiscordEmbedVideo {
   /** Source url of video */
   url?: string;
   /** A proxied url of the video */
-  proxyUrl?: string;
+  proxy_url?: string;
   /** Height of video */
   height?: number;
   /** Width of video */
@@ -423,13 +419,13 @@ export interface DiscordAttachment {
   /** Name of file attached */
   filename: string;
   /** The attachment's [media type](https://en.wikipedia.org/wiki/Media_type) */
-  contentType?: string;
+  content_type?: string;
   /** Size of file in bytes */
   size: number;
   /** Source url of file */
   url: string;
   /** A proxied url of file */
-  proxyUrl: string;
+  proxy_url: string;
 
   /** Attachment id */
   id: string;
@@ -507,52 +503,49 @@ export interface DiscordGuild {
   /** True if the user is the owner of the guild */
   owner?: boolean;
   /** Afk timeout in seconds */
-  afkTimeout: number;
+  afk_timeout: number;
   /** True if the server widget is enabled */
-  widgetEnabled?: boolean;
+  widget_enabled?: boolean;
   /** Verification level required for the guild */
-  verificationLevel: VerificationLevels;
+  verification_level: VerificationLevels;
   /** Default message notifications level */
-  defaultMessageNotifications: DefaultMessageNotificationLevels;
+  default_message_notifications: DefaultMessageNotificationLevels;
   /** Explicit content filter level */
-  explicitContentFilter: ExplicitContentFilterLevels;
+  explicit_content_filter: ExplicitContentFilterLevels;
   /** Enabled guild features */
   features: GuildFeatures[];
   /** Required MFA level for the guild */
-  mfaLevel: MfaLevels;
+  mfa_level: MfaLevels;
   /** System channel flags */
-  systemChannelFlags: SystemChannelFlags;
+  system_channel_flags: SystemChannelFlags;
   /** True if this is considered a large guild */
   large?: boolean;
   /** True if this guild is unavailable due to an outage */
   unavailable?: boolean;
   /** Total number of members in this guild */
-  memberCount?: number;
+  member_count?: number;
   /** The maximum number of presences for the guild (the default value, currently 25000, is in effect when null is returned) */
-  maxPresences?: number | null;
+  max_presences?: number | null;
   /** The maximum number of members for the guild */
-  maxMembers?: number;
+  max_members?: number;
   /** The vaniy url code for the guild */
-  vanityUrlCode: string | null;
+  vanity_url_code: string | null;
   /** The description of a Community guild */
   description: string | null;
   /** Premium tier (Server Boost level) */
-  premiumTier: PremiumTiers;
+  premium_tier: PremiumTiers;
   /** The number of boosts this guild currently has */
-  premiumSubscriptionCount?: number;
-  // TODO: Can be optimized to a number but is it worth it?
-  /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
-  preferredLocale: string;
+  premium_subscription_count?: number;
   /** The maximum amount of users in a video channel */
-  maxVideoChannelUsers?: number;
+  max_video_channel_users?: number;
   /** Approximate number of members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
-  approximateMemberCount?: number;
+  approximate_member_count?: number;
   /**	Approximate number of non-offline members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
-  approximatePresenceCount?: number;
+  approximate_presence_count?: number;
   /** Guild NSFW level */
-  nsfwLevel: GuildNsfwLevel;
+  nsfw_level: GuildNsfwLevel;
   /** Whether the guild has the boost progress bar enabled */
-  premiumProgressBarEnabled: boolean;
+  premium_progress_bar_enabled: boolean;
 
   /** Guild id */
   id: string;
@@ -668,7 +661,7 @@ export interface DiscordEmoji {
 /** https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure */
 export interface DiscordVoiceState {
   /** The session id for this voice state */
-  sessionId: string;
+  session_id: string;
 
   /** The guild id this voice state is for */
   guild_id?: string;
@@ -709,19 +702,19 @@ export interface DiscordChannel {
   /** The bitrate (in bits) of the voice channel */
   bitrate?: number;
   /** The user limit of the voice channel */
-  userLimit?: number;
+  user_limit?: number;
   /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
-  rateLimitPerUser?: number;
+  rate_limit_per_user?: number;
   /** Voice region id for the voice channel, automatic when set to null */
-  rtcRegion?: string | null;
+  rtc_region?: string | null;
   /** The camera video quality mode of the voice channel, 1 when not present */
-  videoQualityMode?: VideoQualityModes;
+  video_quality_mode?: VideoQualityModes;
   /** An approximate count of messages in a thread, stops counting at 50 */
-  messageCount?: number;
+  message_count?: number;
   /** An approximate count of users in a thread, stops counting at 50 */
-  memberCount?: number;
+  member_count?: number;
   /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
-  defaultAutoArchiveDuration?: number;
+  default_auto_archive_duration?: number;
 
   /** The id of the channel */
   id: string;
@@ -801,7 +794,7 @@ export interface DiscordThreadMetadata {
   /** Whether the thread is archived */
   archived: boolean;
   /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration: 60 | 1440 | 4320 | 10080;
+  auto_archive_duration: 60 | 1440 | 4320 | 10080;
   /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
   locked: boolean;
   /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
@@ -847,7 +840,7 @@ export interface DiscordActivity {
   /** Stream url, is validated when type is 1 */
   url?: string | null;
   /** Unix timestamp of when the activity was added to the user's session */
-  createdAt: number;
+  created_at: number;
   /** What the player is currently doing */
   details?: string | null;
   /** The user's current party status */
@@ -914,9 +907,9 @@ export interface DiscordActivityParty {
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-assets */
 export interface DiscordActivityAssets {
   /** Text displayed when hovering over the large image of the activity */
-  largeText?: string;
+  large_text?: string;
   /** Text displayed when hovering over the small image of the activity */
-  smallText?: string;
+  small_text?: string;
 
   /** The id for a large asset of the activity, usually a snowflake */
   large_image?: string;
