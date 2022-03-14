@@ -1226,3 +1226,14 @@ export enum Errors {
 export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
 
 export type MakeRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+
+// THANK YOU YUI FOR SHARING THIS!
+export type CamelCase<S extends string> = S extends `${infer P1}_${infer P2}${infer P3}`
+  ? `${Lowercase<P1>}${Uppercase<P2>}${CamelCase<P3>}`
+  : Lowercase<S>;
+export type Camelize<T> = {
+  [K in keyof T as CamelCase<string & K>]: T[K] extends Array<infer U> ? U extends {} ? Array<Camelize<U>>
+  : T[K]
+    : T[K] extends {} ? Camelize<T[K]>
+    : never;
+};
